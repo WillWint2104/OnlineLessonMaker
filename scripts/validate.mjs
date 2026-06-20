@@ -66,13 +66,21 @@ for (const file of targets) {
     warn('uses localStorage/sessionStorage — the app is meant to be stateless; confirm this is intended');
   }
 
-  // 4) guardrail: surface third-party runtime hosts (firewall review)
+  // 4) firewall guardrail: third-party runtime hosts in <script>/<link>.
+  //    HARD FAIL for the app (lesson-studio.html must be self-contained so a
+  //    published lesson makes zero third-party requests); WARNING for
+  //    lessons/*.html (teachers may legitimately embed external video/images).
   const hosts = new Set();
   for (const m of html.matchAll(/<(?:script|link)[^>]+(?:src|href)="(https?:\/\/[^"']+)"/g)) {
     try { hosts.add(new URL(m[1]).host); } catch { /* ignore */ }
   }
   if (hosts.size) {
-    warn('third-party runtime hosts referenced (verify school firewall / consider vendoring): ' + [...hosts].join(', '));
+    const list = [...hosts].join(', ');
+    if (file === 'lesson-studio.html') {
+      fail(`third-party runtime host(s) in <script>/<link>: ${list} — the app must be self-contained (vendor it; see HANDOFF §8)`);
+    } else {
+      warn(`third-party runtime hosts referenced (verify school firewall / consider vendoring): ${list}`);
+    }
   }
 }
 

@@ -12,8 +12,23 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   requests), meta-refresh redirect to `lesson-studio.html` with a visible fallback link.
   Stops `https://willwint2104.github.io/OnlineLessonMaker/` returning 404; becomes the
   course hub later.
+- `assets/vendor/` — vendored `model-viewer.min.js` (same-origin, not inlined) and a
+  tiny self-contained `sample-cube.glb`. Dev-only generators: `scripts/vendor-fonts.mjs`
+  (inlines latin woff2 from `@fontsource/*` as base64 `@font-face` + points model-viewer
+  local) and `scripts/make-sample-glb.mjs`.
 
 ### Changed
+- **Firewall hardening — `lesson-studio.html` now makes ZERO third-party requests.**
+  Replaced the Google Fonts `<link>`/preconnects with base64-inlined `@font-face` for the
+  exact families/weights previously linked (Hanken Grotesk, EB Garamond, Space Grotesk,
+  Marcellus, Cinzel, Fraunces, Oswald); vendored `@google/model-viewer` to a same-origin
+  file; swapped the seed 3D model from `modelviewer.dev/Astronaut.glb` to local
+  `assets/vendor/sample-cube.glb`. Inlining fonts (~319 KB raw) keeps exported lessons
+  font-complete with no external files. `scripts/validate.mjs` now **hard-fails** on
+  third-party `<script>`/`<link>` hosts in the app (still only warns for `lessons/*.html`,
+  where teachers may embed external video/images). _Caveat:_ exported lessons hosted under
+  `/lessons/` reference model-viewer at a root-relative `assets/vendor/…` path — see
+  HANDOFF §8 for the one-step fix when publishing a 3D lesson.
 - **`deploy-pages` gains a `workflow_dispatch` trigger.** Auto-merge runs as
   `github-actions[bot]` (`GITHUB_TOKEN`), and GitHub doesn't fire workflows on
   `GITHUB_TOKEN` pushes — so the `push: main` trigger never runs on auto-merged commits.

@@ -31,7 +31,11 @@ README.md                   # quick start
 .coderabbit.yaml            # CodeRabbit PR-review config
 .gitignore
 scripts/
-  validate.mjs              # CI checks: JSON valid, engine syntax valid, guardrails
+  validate.mjs              # CI checks: JSON valid, engine syntax valid, firewall guardrails
+  shots.mjs                 # Playwright theme × slide screenshot harness
+  vendor-fonts.mjs          # dev: base64-inline @fontsource woff2 into the app
+  make-sample-glb.mjs       # dev: emit assets/vendor/sample-cube.glb
+assets/vendor/              # same-origin runtime assets (model-viewer.min.js, sample-cube.glb)
 lessons/                    # exported, published lessons (served to students)
   README.md
 .github/workflows/
@@ -160,10 +164,11 @@ regress to features that break those.
 
 ## 6. Known limitations / risks
 
-- **Third‑party runtime deps (top risk for school delivery):** Google Fonts
-  (`fonts.googleapis.com`, `fonts.gstatic.com`) and `model-viewer` (`cdn.jsdelivr.net`), plus
-  the sample GLB from `modelviewer.dev`. If a school firewall blocks these, fonts fall back
-  (cosmetic) and 3D breaks. **Fix: vendor them** (see Firewall + Roadmap).
+- **Third‑party runtime deps — RESOLVED for the app.** Fonts are base64‑inlined and
+  `model-viewer` + the sample GLB are same‑origin under `assets/vendor/`; the app makes zero
+  third‑party requests and `validate.mjs` hard‑fails if that regresses (see §8). Only
+  *teacher‑added* media in a lesson can still reach third parties. (Published 3D lessons need
+  the vendor file copied into `/lessons/assets/vendor/` — §8.3.)
 - **Embeds** (YouTube etc.) are frequently blocked on school networks; ClickView usually is
   not. Pasted external image/video URLs may also be blocked.
 - **No persistence / no collaboration.** One author, one file. Concurrent edits aren't a
@@ -203,11 +208,17 @@ the one Pages domain your school allowlists.
 
 1. **Allowlist one domain** — `willwint2104.github.io` (this repo's GitHub Pages host).
    Already confirmed reachable at school. One ask, done.
-2. **Vendor the fonts** into the repo and point the `<link>` at local `woff2` (kills
-   `fonts.googleapis.com` / `fonts.gstatic.com`). _Planned — see Roadmap._
-3. **Self‑host `model-viewer`** (`npm i @google/model-viewer`, copy the dist file into the
-   repo, point the `<script src>` at it) and host your own GLB files in `/lessons/assets/`.
-   _Planned — see Roadmap._
+2. **Fonts — VENDORED ✓.** The Google Fonts `<link>`/preconnects are gone; the exact
+   families/weights are base64‑inlined as `@font-face` in `lesson-studio.html`
+   (regenerate with `node scripts/vendor-fonts.mjs`). Because they're inlined, **exported
+   lessons carry their fonts with zero external files**.
+3. **`model-viewer` — VENDORED ✓** to `assets/vendor/model-viewer.min.js` (same‑origin,
+   not inlined). The seed 3D slide uses a local `assets/vendor/sample-cube.glb`
+   (`node scripts/make-sample-glb.mjs`). _Caveat for published 3D lessons:_ the app
+   references model‑viewer at the **root‑relative** `assets/vendor/…`, which resolves at
+   the site root but **not** from `/lessons/<name>.html`. When you publish a lesson that
+   actually uses 3D, copy `model-viewer.min.js` (and your GLB) into `/lessons/assets/vendor/`
+   so the lesson's relative path resolves. Host your own GLB files in `/lessons/assets/`.
 4. **Host media in‑repo / same‑origin** where possible (`/lessons/assets/…`). Pasted
    third‑party image/video URLs are the main thing IT can't predict.
 5. **Video:** prefer your school's sanctioned platform (ClickView in most NSW schools is
@@ -215,14 +226,17 @@ the one Pages domain your school allowlists.
 6. **HTTPS** is automatic on GitHub Pages.
 
 Only the `willwint2104.github.io` host needs to be reachable (already confirmed at school).
-Until vendoring is done, a lesson still works behind a firewall **except** web‑fonts (falls
-back to system fonts) and 3D (needs jsDelivr) — so **vendoring fonts + model‑viewer is next**
-(Roadmap / Priority 1) to get a lesson to **zero third‑party requests**. If your school
-blocks jsDelivr, avoid the `model3d`/3D source until that's done.
+**The app itself now makes zero third‑party requests** (`scripts/validate.mjs` hard‑fails if a
+third‑party `<script>`/`<link>` host reappears in `lesson-studio.html`). Remaining external
+requests in a published lesson come only from **teacher‑added** media (pasted image/video URLs,
+YouTube embeds) — `lessons/*.html` only *warns*, by design.
 
 ## 9. Roadmap / next up
 
-- **Vendor fonts + model‑viewer** (firewall hardening) — highest priority for school use.
+- ~~**Vendor fonts + model‑viewer** (firewall hardening)~~ — **DONE** (fonts base64‑inlined;
+  model‑viewer + sample GLB same‑origin under `assets/vendor/`; validator hard‑fails on app
+  third‑party hosts). Follow‑up: copy the vendor file into `/lessons/assets/vendor/` for any
+  published 3D lesson (see §8.3).
 - **WW1 design pass** — apply the WW1 visual direction over the existing slide types and wire
   the NSW Stage 5 History (HT5‑…) outcomes into the outcomes slide (as Egypt carries AH11‑…).
 - Optional: light "archive" sidebars per theme (currently Rome/Wellbeing/WW1 keep dark

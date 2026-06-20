@@ -8,6 +8,14 @@
     "shots": "node scripts/shots.mjs"
   },
   "devDependencies": {
+    "@fontsource/cinzel": "^5.2.8",
+    "@fontsource/eb-garamond": "^5.2.7",
+    "@fontsource/fraunces": "^5.2.9",
+    "@fontsource/hanken-grotesk": "^5.2.8",
+    "@fontsource/marcellus": "^5.2.8",
+    "@fontsource/oswald": "^5.2.8",
+    "@fontsource/space-grotesk": "^5.2.10",
+    "@google/model-viewer": "^4.3.1",
     "playwright": "^1.45.0"
   }
 }
