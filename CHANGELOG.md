@@ -7,6 +7,16 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **Hosting switched from Cloudflare Pages → GitHub Pages.** Added
+  `.github/workflows/deploy-pages.yml` (deploys the repo root on push to `main` via GitHub
+  Actions); removed `deploy-cloudflare.yml`. Docs (HANDOFF §7–§8, README, `docs/CHECKING.md`,
+  PR template, CLAUDE.md) updated to the live URL
+  `https://willwint2104.github.io/OnlineLessonMaker/`. Note: GitHub Pages has **no native
+  per-PR preview** — pre-merge visual review is the `screenshots` artifact + local
+  `node scripts/shots.mjs`; open the live page after merge. Added `.gitattributes`
+  (`* text=auto eol=lf`); dropped the now-unused `.wrangler/` ignore.
+
 ### Added
 - Dev tooling baseline (not part of the single-file app): `package.json` (dev-only
   `playwright`), `scripts/shots.mjs` (theme × slide screenshot harness),
