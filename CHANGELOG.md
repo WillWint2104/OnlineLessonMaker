@@ -8,6 +8,11 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **`deploy-pages` gains a `workflow_dispatch` trigger.** Auto-merge runs as
+  `github-actions[bot]` (`GITHUB_TOKEN`), and GitHub doesn't fire workflows on
+  `GITHUB_TOKEN` pushes — so the `push: main` trigger never runs on auto-merged commits.
+  Publish the current `main` manually with
+  `gh workflow run "Deploy to GitHub Pages" --ref main`.
 - **Hosting switched from Cloudflare Pages → GitHub Pages.** Added
   `.github/workflows/deploy-pages.yml` (deploys the repo root on push to `main` via GitHub
   Actions); removed `deploy-cloudflare.yml`. Docs (HANDOFF §7–§8, README, `docs/CHECKING.md`,
