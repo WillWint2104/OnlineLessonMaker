@@ -1,11 +1,17 @@
 name: Deploy to GitHub Pages
 
-# Publishes the repo root (the app + lessons/) to GitHub Pages on every push to main.
+# Publishes the repo root (the app + lessons/) to GitHub Pages.
 # One-time setup: Settings → Pages → Source = GitHub Actions.
+#
+# Note: PRs are auto-merged by github-actions[bot] (GITHUB_TOKEN), and GitHub does NOT
+# fire workflows on GITHUB_TOKEN-driven pushes — so the push trigger below will not run
+# on auto-merged commits. Use the workflow_dispatch trigger to publish the current main:
+#   gh workflow run "Deploy to GitHub Pages" --ref main
 
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
