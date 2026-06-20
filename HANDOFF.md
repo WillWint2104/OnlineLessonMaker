@@ -135,7 +135,17 @@ handler). Hand‑editable via the **⌗ JSON** panel. Fields:
 - `==text==` inside a notes `bd` marks it as a "record this" phrase.
 - Present mode: **click** advances (left ~20% goes back); **← / →** also navigate; the
   Back/Next bar is hidden in Present.
-- Cards fill their container and **scroll internally** when content is long.
+- **Present-mode discussion (A2):** in Present, `source`/`question` slides show their
+  teaching content but render questions as numbered **discussion pills** (Q1, Q2 …) rather
+  than inline answerable cards. A pill opens the question large in the lightbox (prompt →
+  click reveals model answer / look-for / pitfalls). Pills behave like hotspots — they
+  don't advance the slide; clicking elsewhere advances. **Study mode is unchanged**
+  (questions inline + answerable). `setPresent()` re-renders so the present view applies.
+- **Per-slide `layout` (A1):** any slide may carry `"layout": "fit" | "scroll"`
+  (default `fit` = the one-screen behaviour below). `scroll` opts that slide into
+  long-form vertical scrolling (`.stagewrap.layout-scroll`). **Present always forces fit.**
+- Cards fill their container and **scroll internally** when content is long (the `fit`
+  default).
 
 ## 5. Working on the engine
 
