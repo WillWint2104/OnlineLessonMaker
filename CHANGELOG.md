@@ -7,6 +7,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- Root `index.html` landing page — self-contained (system fonts, no third-party
+  requests), meta-refresh redirect to `lesson-studio.html` with a visible fallback link.
+  Stops `https://willwint2104.github.io/OnlineLessonMaker/` returning 404; becomes the
+  course hub later.
+
 ### Changed
 - **`deploy-pages` gains a `workflow_dispatch` trigger.** Auto-merge runs as
   `github-actions[bot]` (`GITHUB_TOKEN`), and GitHub doesn't fire workflows on
