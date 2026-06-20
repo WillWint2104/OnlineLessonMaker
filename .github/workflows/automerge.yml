@@ -1,0 +1,29 @@
+name: Auto-merge
+
+# Turns on GitHub's native auto-merge for a PR as soon as it opens.
+# GitHub then merges it automatically once branch-protection conditions are met
+# (the `validate` check is green and any required reviews/approvals are in).
+#
+# One-time setup (otherwise this no-ops):
+#   • Settings → General → Pull Requests → enable "Allow auto-merge"
+#   • Settings → Branches → protect `main`: require the "validate" status check
+#     (and, if you want a gate, require 1 approval and let CodeRabbit approve).
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, synchronize]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  enable-auto-merge:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable auto-merge (squash)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge --auto --squash "$PR_URL"

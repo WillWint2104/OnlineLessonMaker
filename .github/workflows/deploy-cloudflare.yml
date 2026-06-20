@@ -1,0 +1,30 @@
+name: Deploy to Cloudflare Pages (optional)
+
+# OPTIONAL. Prefer the Cloudflare Pages **Git integration** (dashboard → Pages →
+# Connect to Git) which needs NO secrets and deploys on merge automatically.
+#
+# Use this workflow ONLY if you'd rather deploy from CI. It stays OFF unless you:
+#   • set repo Variable  USE_CI_DEPLOY = true   (Settings → Secrets and variables → Actions → Variables)
+#   • add Secrets  CLOUDFLARE_API_TOKEN  and  CLOUDFLARE_ACCOUNT_ID
+# Do NOT use this together with the dashboard Git integration (double deploys).
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    if: vars.USE_CI_DEPLOY == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=lesson-studio --branch=main

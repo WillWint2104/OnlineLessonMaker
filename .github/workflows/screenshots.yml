@@ -1,0 +1,32 @@
+name: Screenshots
+
+# INFORMATIONAL ONLY — this workflow uploads a visual artifact for review.
+# It must NOT be a required status check. Only `validate` gates merge / auto-merge.
+
+on:
+  pull_request:
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Render theme/slide screenshots
+        run: node scripts/shots.mjs
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: screenshots/

@@ -1,0 +1,42 @@
+# CodeRabbit configuration — https://docs.coderabbit.ai
+# Reviews PRs for this single-file lesson app. Tune to taste.
+language: en-AU
+
+tone_instructions: >
+  This repo is a single self-contained HTML file (inline CSS + one classic <script>) plus
+  exported lesson HTML files. There is no build step or framework. Keep reviews practical
+  and concise; the author is a teacher, not a full-time engineer.
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  review_status: true
+  auto_review:
+    enabled: true
+    drafts: false
+  path_instructions:
+    - path: "lesson-studio.html"
+      instructions: >
+        Single-file app. FLAG: any use of localStorage/sessionStorage (the app must stay
+        stateless); any NEW third-party runtime dependency (script src / link href / font /
+        iframe host) — these break school firewalls and must be vendored/served same-origin;
+        user content interpolated into HTML without esc() (XSS); changes that would make the
+        JSON in <script id="lesson-data"> fail to parse; and accessibility regressions
+        (focus, ARIA on interactive dots, reduced-motion). Do NOT ask to add a build system,
+        framework, or bundler.
+    - path: "lessons/**/*.html"
+      instructions: >
+        Exported, published student-facing lessons. Confirm the file parses and references
+        only same-origin or school-allowlisted assets. Do not rewrite generated content.
+    - path: ".github/workflows/**"
+      instructions: >
+        CI / auto-merge / deploy. Watch for over-broad permissions and any secrets printed
+        to logs.
+
+  path_filters:
+    - "!**/*.min.js"
+
+chat:
+  auto_reply: true

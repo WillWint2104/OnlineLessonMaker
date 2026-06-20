@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Grotesk:wght@500;600;700&family=Marcellus&family=Cinzel:wght@500;600&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+<style>
+:root{
+  --canvas:#f4f5f8; --surface:#ffffff; --text:#181b22; --muted:#6a7180; --line:#e7e9ee; --bd:#373c46;
+  --accent:#5b5bd6; --accent-soft:#edecfb; --accent-ink:#2c2a78;
+  --sidebar:#1d1b39; --sidebar-2:#272452; --sidebar-text:#c8c5e6; --sidebar-mut:#7c789f;
+  --sidebar-title:#ffffff; --sidebar-itemtext:#eceaf8; --sidebar-hover:rgba(255,255,255,.05);
+  --sidebar-sep:rgba(255,255,255,.07); --sidebar-icon:rgba(255,255,255,.07); --sidebar-track:rgba(255,255,255,.1);
+  --hero:linear-gradient(135deg,#5b5bd6,#a07be8);
+  --ok:#1f9d6b; --warn:#d98324;
+  --display:"Space Grotesk"; --display-spacing:-.01em;
+  --radius:18px; --shadow:0 1px 2px rgba(20,22,30,.05),0 12px 32px -12px rgba(20,22,30,.18);
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+/* ---- TOPIC THEMES — applied via data-theme on <html>; removing the attribute reverts cleanly ---- */
+:root[data-theme="egypt"]{
+  --canvas:#efe6d8; --surface:#fdf8f0; --text:#1c1b1b; --muted:#6f5a50; --line:#e4d7cb; --bd:#3a302b;
+  --accent:#a8482a; --accent-soft:#f6e3d6; --accent-ink:#7a3115;
+  --sidebar:#efe6da; --sidebar-2:#f3ddcd; --sidebar-text:#5a4a41; --sidebar-mut:#9a8473;
+  --sidebar-title:#2a211c; --sidebar-itemtext:#2a211c; --sidebar-hover:rgba(124,80,40,.09);
+  --sidebar-sep:rgba(28,27,27,.10); --sidebar-icon:rgba(124,80,40,.12); --sidebar-track:rgba(28,27,27,.12);
+  --hero:linear-gradient(135deg,#7a3115 0%,#a8482a 45%,#cf8a4f 100%);
+  --shadow:0 1px 2px rgba(92,46,20,.07),0 16px 40px -16px rgba(92,46,20,.28);
+  --display:"EB Garamond"; --display-spacing:0; --radius:8px;
+  --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%20fill%3D%27black%27%3E%3Cpath%20d%3D%27M50%2016%20C58%2033%2058%2052%2050%2067%20C42%2052%2042%2033%2050%2016%20Z%27%2F%3E%3Cpath%20d%3D%27M50%2067%20C39%2061%2029%2049%2026%2030%20C42%2033%2052%2047%2053%2063%20Z%27%2F%3E%3Cpath%20d%3D%27M50%2067%20C61%2061%2071%2049%2074%2030%20C58%2033%2048%2047%2047%2063%20Z%27%2F%3E%3Cpath%20d%3D%27M21%2058%20C29%2078%2039%2087%2050%2089%20C61%2087%2071%2078%2079%2058%20C67%2065%2057%2066%2050%2066%20C43%2066%2033%2065%2021%2058%20Z%27%2F%3E%3C%2Fsvg%3E");
+}
+:root[data-theme="rome"]{
+  --canvas:#f4f1ea; --surface:#fbf8f2; --text:#211a1a; --muted:#836b66; --line:#e7ddd2; --bd:#3c2f2c;
+  --accent:#9e2b34; --accent-soft:#f2dcdc; --accent-ink:#5e151c; --shadow:0 1px 2px rgba(70,20,24,.07),0 16px 40px -16px rgba(70,20,24,.26);
+  --sidebar:#241318; --sidebar-2:#3a1f26; --sidebar-text:#e3cdd1; --sidebar-mut:#a07a80;
+  --hero:linear-gradient(135deg,#5a121b 0%,#9e2b34 50%,#b8893f 100%);
+  --display:"Cinzel"; --display-spacing:.02em; --radius:7px;
+  --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%20fill%3D%27black%27%3E%3Cpath%20d%3D%27M50%2095%20C33%2092%2022%2080%2018%2064%20C15%2052%2016%2040%2022%2028%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%274.5%27%2F%3E%3Cpath%20d%3D%27M50%2095%20C67%2092%2078%2080%2082%2064%20C85%2052%2084%2040%2078%2028%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%274.5%27%2F%3E%3Cellipse%20cx%3D%2728%27%20cy%3D%2782%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%2840%2028%2082%29%27%2F%3E%3Cellipse%20cx%3D%2721%27%20cy%3D%2771%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%2862%2021%2071%29%27%2F%3E%3Cellipse%20cx%3D%2717%27%20cy%3D%2759%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%2885%2017%2059%29%27%2F%3E%3Cellipse%20cx%3D%2717%27%20cy%3D%2746%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%28108%2017%2046%29%27%2F%3E%3Cellipse%20cx%3D%2722%27%20cy%3D%2734%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%28130%2022%2034%29%27%2F%3E%3Cellipse%20cx%3D%2731%27%20cy%3D%2725%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%28150%2031%2025%29%27%2F%3E%3Cellipse%20cx%3D%2772%27%20cy%3D%2782%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%28-40%2072%2082%29%27%2F%3E%3Cellipse%20cx%3D%2779%27%20cy%3D%2771%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%28-62%2079%2071%29%27%2F%3E%3Cellipse%20cx%3D%2783%27%20cy%3D%2759%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%28-85%2083%2059%29%27%2F%3E%3Cellipse%20cx%3D%2783%27%20cy%3D%2746%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%28-108%2083%2046%29%27%2F%3E%3Cellipse%20cx%3D%2778%27%20cy%3D%2734%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%28-130%2078%2034%29%27%2F%3E%3Cellipse%20cx%3D%2769%27%20cy%3D%2725%27%20rx%3D%279%27%20ry%3D%274.3%27%20transform%3D%27rotate%28-150%2069%2025%29%27%2F%3E%3C%2Fsvg%3E");
+}
+:root[data-theme="wellbeing"]{
+  --canvas:#f1f5f1; --surface:#fbfdf9; --text:#16201b; --muted:#5f766b; --line:#dde9e1; --bd:#2c3a33;
+  --accent:#3f9d7a; --accent-soft:#daf0e6; --accent-ink:#1d5e44; --shadow:0 1px 2px rgba(20,60,44,.06),0 14px 36px -14px rgba(20,70,50,.22);
+  --sidebar:#143028; --sidebar-2:#1e4438; --sidebar-text:#c5e2d6; --sidebar-mut:#76a08f;
+  --hero:linear-gradient(135deg,#2f8f6b 0%,#5cae84 45%,#d9a441 100%);
+  --display:"Fraunces"; --display-spacing:0; --radius:22px;
+  --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%20fill%3D%27black%27%3E%3Cpath%20d%3D%27M50%2094%20C50%2068%2050%2040%2050%2010%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%275%27%20stroke-linecap%3D%27round%27%2F%3E%3Cellipse%20cx%3D%2736%27%20cy%3D%2772%27%20rx%3D%2712%27%20ry%3D%276%27%20transform%3D%27rotate%28-38%2036%2072%29%27%2F%3E%3Cellipse%20cx%3D%2764%27%20cy%3D%2760%27%20rx%3D%2712%27%20ry%3D%276%27%20transform%3D%27rotate%2838%2064%2060%29%27%2F%3E%3Cellipse%20cx%3D%2737%27%20cy%3D%2748%27%20rx%3D%2711%27%20ry%3D%275.5%27%20transform%3D%27rotate%28-38%2037%2048%29%27%2F%3E%3Cellipse%20cx%3D%2763%27%20cy%3D%2736%27%20rx%3D%2711%27%20ry%3D%275.5%27%20transform%3D%27rotate%2838%2063%2036%29%27%2F%3E%3Cellipse%20cx%3D%2750%27%20cy%3D%2718%27%20rx%3D%279%27%20ry%3D%275%27%2F%3E%3C%2Fsvg%3E");
+}
+:root[data-theme="ww1"]{
+  --canvas:#edeae2; --surface:#f7f4ec; --text:#1f1c17; --muted:#7c7464; --line:#ddd6c8; --bd:#393327;
+  --accent:#a23b32; --accent-soft:#ecd9d3; --accent-ink:#6a221c; --shadow:0 1px 2px rgba(60,50,30,.07),0 16px 40px -16px rgba(60,50,30,.26);
+  --sidebar:#26261f; --sidebar-2:#37372d; --sidebar-text:#d4cfc0; --sidebar-mut:#8f8b78;
+  --hero:linear-gradient(135deg,#3a3a2e 0%,#5a5544 55%,#a23b32 100%);
+  --display:"Oswald"; --display-spacing:.015em; --radius:5px;
+  --motif:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%20fill%3D%27black%27%3E%3Cpath%20d%3D%27M50%2052%20C50%2066%2050%2080%2050%2094%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%275%27%20stroke-linecap%3D%27round%27%2F%3E%3Cellipse%20cx%3D%2750%27%20cy%3D%2730%27%20rx%3D%2715%27%20ry%3D%2719%27%2F%3E%3Cellipse%20cx%3D%2734%27%20cy%3D%2744%27%20rx%3D%2719%27%20ry%3D%2715%27%2F%3E%3Cellipse%20cx%3D%2766%27%20cy%3D%2744%27%20rx%3D%2719%27%20ry%3D%2715%27%2F%3E%3Cellipse%20cx%3D%2750%27%20cy%3D%2752%27%20rx%3D%2715%27%20ry%3D%2713%27%2F%3E%3Ccircle%20cx%3D%2750%27%20cy%3D%2742%27%20r%3D%276%27%20fill%3D%27white%27%2F%3E%3C%2Fsvg%3E");
+}
+*{box-sizing:border-box;}
+html,body{height:100%;margin:0;}
+body{font-family:"Hanken Grotesk",system-ui,sans-serif;color:var(--text);
+  background:var(--grain),var(--canvas);background-attachment:fixed;
+  display:flex;overflow:hidden;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,.disp{font-family:var(--display,"Space Grotesk"),"EB Garamond",serif;letter-spacing:var(--display-spacing,-.01em);}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit;}
+
+/* ---------------- SIDEBAR ---------------- */
+.side{width:288px;flex:0 0 288px;background:var(--sidebar);color:var(--sidebar-text);
+  border-right:1px solid var(--sidebar-sep);
+  display:flex;flex-direction:column;height:100vh;}
+.brand{padding:22px 22px 16px;display:flex;align-items:center;gap:11px;}
+.brand .mark{width:30px;height:30px;border-radius:9px;background:var(--hero);flex:0 0 30px;}
+.brand b{font-family:var(--display,"Space Grotesk");font-size:1.04rem;color:var(--sidebar-title);font-weight:600;letter-spacing:-.01em;
+  display:block;line-height:1.1;}
+.brand small{color:var(--sidebar-mut);font-size:.72rem;}
+.prog{padding:4px 22px 14px;}
+.prog .bar{height:5px;border-radius:99px;background:var(--sidebar-track);overflow:hidden;}
+.prog .fill{height:100%;background:var(--hero);width:0;transition:width .4s cubic-bezier(.2,.7,.2,1);}
+.prog .lab{font-size:.7rem;color:var(--sidebar-mut);margin-top:7px;letter-spacing:.02em;}
+.nav{flex:1;overflow-y:auto;padding:6px 12px 14px;}
+.nav::-webkit-scrollbar{width:8px;} .nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:8px;}
+.nitem{display:flex;align-items:center;gap:11px;padding:10px 11px;border-radius:11px;cursor:pointer;
+  color:var(--sidebar-text);transition:background .15s;margin-bottom:2px;position:relative;}
+.nitem:hover{background:var(--sidebar-hover);}
+.nitem.on{background:var(--sidebar-2);}
+.nitem.on::before{content:"";position:absolute;left:-2px;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--accent);}
+.nitem .ico{width:30px;height:30px;border-radius:8px;background:var(--sidebar-icon);
+  display:flex;align-items:center;justify-content:center;flex:0 0 30px;color:var(--sidebar-text);}
+.nitem.on .ico{background:var(--accent);color:#fff;}
+.nitem .tx{min-width:0;}
+.nitem .tx b{display:block;font-size:.84rem;font-weight:500;color:var(--sidebar-itemtext);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.nitem .tx span{font-size:.68rem;color:var(--sidebar-mut);text-transform:uppercase;letter-spacing:.06em;}
+.nitem .grip{margin-left:auto;display:none;gap:2px;}
+body.edit .nitem .grip{display:flex;}
+.nitem .grip button{color:var(--sidebar-mut);font-size:.8rem;padding:2px 4px;border-radius:5px;line-height:1;}
+.nitem .grip button:hover{color:#fff;background:rgba(255,255,255,.1);}
+.addbar{padding:10px 16px 16px;border-top:1px solid var(--sidebar-sep);display:none;flex-wrap:wrap;gap:6px;}
+body.edit .addbar{display:flex;}
+.addbar .lbl{width:100%;font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--sidebar-mut);margin-bottom:2px;}
+.chip{font-size:.74rem;padding:6px 10px;border-radius:8px;background:var(--sidebar-icon);color:var(--sidebar-text);}
+.chip:hover{background:var(--accent);color:#fff;}
+
+/* ---------------- MAIN ---------------- */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;min-width:0;}
+.top{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;padding:0 22px;}
+.top .ltitle{font-family:var(--display,"Space Grotesk");font-weight:600;font-size:1rem;}
+.top .spacer{flex:1;}
+.seg{display:flex;background:var(--canvas);border:1px solid var(--line);border-radius:10px;padding:3px;}
+.seg button{font-size:.8rem;font-weight:500;padding:6px 14px;border-radius:7px;color:var(--muted);}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.06);}
+.themebox{display:none;align-items:center;gap:8px;}
+body.edit .themebox{display:flex;}
+.themebox label{font-size:.76rem;color:var(--muted);}
+.themebox select{font-family:inherit;font-size:.8rem;border:1px solid var(--line);border-radius:8px;
+  padding:6px 9px;background:var(--surface);color:var(--text);}
+.btn{font-size:.82rem;font-weight:600;padding:8px 15px;border-radius:10px;background:var(--accent);color:#fff;
+  display:inline-flex;align-items:center;gap:7px;box-shadow:0 6px 16px -8px var(--accent);}
+.btn:hover{filter:brightness(1.06);}
+.btn.ghost{background:var(--canvas);color:var(--text);border:1px solid var(--line);box-shadow:none;}
+
+.stagewrap{flex:1;min-height:0;overflow:hidden;padding:34px;display:flex;justify-content:center;}
+.stage{width:100%;max-width:880px;min-height:0;display:flex;flex-direction:column;}
+#slide{flex:1;min-height:0;display:flex;flex-direction:column;}
+.foot{flex:0 0 auto;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 34px;border-top:1px solid var(--line);background:var(--surface);}
+.foot .nbtn{display:inline-flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
+  padding:11px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);}
+.foot .nbtn:hover{border-color:var(--accent);color:var(--accent-ink);}
+.foot .nbtn[disabled]{opacity:.4;pointer-events:none;}
+.foot .count{font-size:.78rem;color:var(--muted);}
+
+/* ---------------- CARD ---------------- */
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow-y:auto;overflow-x:hidden;border:1px solid color-mix(in srgb,var(--text) 8%,transparent);flex:1;min-height:0;display:flex;flex-direction:column;justify-content:safe center;}
+.eyebrow{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);}
+.editable{outline:none;border-radius:6px;transition:box-shadow .15s,background .15s;}
+body.edit .editable{box-shadow:inset 0 0 0 1px var(--line);background:#fafbfc;padding:2px 6px;margin:-2px -6px;}
+body.edit .editable:focus{box-shadow:inset 0 0 0 2px var(--accent);background:#fff;}
+body.edit [data-edit-only]{display:revert;}
+[data-edit-only]{display:none;}
+
+/* cover */
+.cover .hero{position:relative;min-height:340px;background:var(--hero);display:flex;align-items:flex-end;padding:38px;overflow:hidden;}
+.cover .hero.has-img{background-image:var(--cover-img);background-size:cover;background-position:center;}
+.cover .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 120% at 85% 12%,rgba(255,255,255,.2),transparent 52%);mix-blend-mode:soft-light;}
+.cover .hero-veil{position:absolute;inset:0;z-index:0;background:linear-gradient(to top,rgba(34,18,10,.66),rgba(34,18,10,.08) 55%,rgba(34,18,10,.34));}
+.cover .hero-inner{position:relative;z-index:2;}
+.cover .tag{color:rgba(255,255,255,.92);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;
+  display:inline-flex;align-items:center;gap:11px;}
+.cover .tag::before{content:"";width:30px;height:1px;background:rgba(255,255,255,.6);}
+.cover h1{color:#fff;font-size:3rem;line-height:1.04;margin:.5rem 0 12px;text-shadow:0 2px 22px rgba(0,0,0,.4);}
+.cover .sub{color:rgba(255,255,255,.9);font-size:1.12rem;line-height:1.5;max-width:46ch;}
+.cover .hero.drop.dragover{outline:3px dashed rgba(255,255,255,.8);outline-offset:-12px;}
+.cover-tools{display:none;gap:8px;align-items:center;padding:14px;}
+body.edit .cover-tools{display:flex;}
+.cover-tools input{flex:1;font-family:inherit;font-size:.82rem;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);}
+.frame.dragover,.srcframe.dragover{outline:3px dashed var(--accent);outline-offset:-6px;}
+.dropnote{display:none;}
+body.edit .dropnote{display:block;font-size:.74rem;color:var(--muted);margin-top:7px;}
+
+/* generic card body */
+.pad{padding:32px;}
+.ehead h2{font-size:1.6rem;margin:8px 0 0;}
+.notes-body{margin-top:20px;display:flex;flex-direction:column;gap:18px;}
+.nblock h3{font-size:1.02rem;margin:0 0 6px;color:var(--text);}
+.nblock .bd{font-size:1.0rem;line-height:1.62;color:var(--bd);}
+.guide{margin-top:24px;background:var(--accent-soft);border-radius:14px;padding:16px 18px;display:flex;gap:12px;}
+.guide .gi{flex:0 0 26px;width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;}
+.guide .gt{font-size:.92rem;line-height:1.55;color:var(--accent-ink);}
+.guide .gt b{display:block;margin-bottom:2px;font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;}
+.note-legend{display:flex;align-items:center;gap:8px;margin:16px 0 10px;}
+.note-toggle{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:.68rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;color:var(--accent);border:1px solid var(--accent);padding:6px 13px;border-radius:99px;}
+.note-toggle:hover,.note-toggle.on{background:var(--accent);color:#fff;}
+.noteable{transition:background .2s,box-shadow .2s;border-radius:3px;}
+.notes-body.reveal .noteable{background:var(--accent-soft);box-shadow:inset 0 -2px 0 0 var(--accent);padding:0 2px;}
+.note-legend .lg{display:inline-flex;align-items:center;gap:6px;font-size:.66rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.07em;padding:5px 11px;border-radius:99px;}
+.note-legend .lg svg{width:13px;height:13px;}
+.note-legend .read{color:var(--bd);background:color-mix(in srgb,var(--text) 7%,transparent);}
+.note-legend .note{color:var(--accent-ink);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);}
+.zone.read{border-left:3px solid color-mix(in srgb,var(--text) 14%,transparent);padding-left:18px;}
+.zone-lab{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
+.zone.read .notes-body{margin-top:12px;}
+.outlist{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column;gap:14px;counter-reset:o;}
+.outlist li{display:flex;gap:14px;align-items:flex-start;font-size:1.05rem;line-height:1.5;color:var(--bd);}
+.outlist li::before{content:counter(o);counter-increment:o;flex:0 0 30px;width:30px;height:30px;border-radius:50%;
+  background:var(--accent-soft);color:var(--accent-ink);font-weight:700;font-size:.92rem;display:flex;align-items:center;
+  justify-content:center;border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);}
+.card.outcomes{justify-content:flex-start;}
+.out2{flex:1;display:grid;grid-template-columns:1.32fr .88fr;gap:28px;align-items:stretch;min-height:0;}
+@media(max-width:840px){.out2{grid-template-columns:1fr;}}
+.out2-media{display:flex;flex-direction:column;min-height:0;}
+.out2-media .srcframe{flex:1;aspect-ratio:auto;min-height:340px;}
+.out2-panel{display:flex;flex-direction:column;background:color-mix(in srgb,var(--accent) 4%,var(--surface));
+  border:1px solid var(--line);border-radius:12px;padding:26px;}
+.out2-panel .eyebrow{margin-bottom:8px;}
+.out2-panel h2{font-family:var(--display);font-size:1.5rem;line-height:1.15;margin:0 0 4px;}
+.out2-panel .outlist{margin-top:16px;}
+.out2-foot{margin-top:auto;padding-top:20px;}
+.syl-btn{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;font-weight:600;
+  text-transform:uppercase;letter-spacing:.07em;font-size:.76rem;padding:13px 20px;border-radius:10px;box-shadow:0 10px 24px -10px var(--accent);}
+.syl-btn:hover{filter:brightness(1.06);} .syl-btn svg{width:15px;height:15px;}
+.syllabus{margin-top:24px;border:1px solid var(--line);border-radius:12px;padding:18px 20px;background:color-mix(in srgb,var(--accent) 3%,var(--surface));}
+.syl-h{display:flex;align-items:center;gap:8px;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);margin-bottom:4px;}
+.syl-h svg{width:14px;height:14px;}
+.syl{display:flex;gap:14px;align-items:baseline;padding:11px 0;border-top:1px solid color-mix(in srgb,var(--text) 7%,transparent);}
+.syl .code{flex:0 0 auto;font-weight:700;font-size:.76rem;letter-spacing:.02em;color:var(--accent-ink);background:var(--accent-soft);
+  border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);padding:3px 9px;border-radius:6px;font-family:ui-monospace,Menlo,Consolas,monospace;}
+.syl .syt{font-size:.92rem;line-height:1.45;color:var(--bd);}
+.syl-pop{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 28px;max-width:620px;width:90vw;
+  max-height:80vh;overflow:auto;box-shadow:0 30px 80px -20px rgba(0,0,0,.6);}
+.syl-pop-h{display:flex;align-items:center;gap:9px;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:4px;}
+.syl-pop-h svg{width:15px;height:15px;}
+
+/* media containers */
+.frame{margin-top:20px;border-radius:14px;overflow:hidden;background:#0d0e12;aspect-ratio:16/9;position:relative;
+  display:flex;align-items:center;justify-content:center;}
+.frame img{width:100%;height:100%;object-fit:cover;display:block;}
+.frame iframe{width:100%;height:100%;border:0;display:block;}
+.frame .ph{color:#7e8492;font-size:.92rem;text-align:center;padding:20px;}
+.frame .ph svg{opacity:.5;margin-bottom:8px;}
+.cap{margin-top:11px;font-size:.86rem;color:var(--muted);font-style:italic;}
+.setrow{display:none;margin-top:12px;gap:8px;}
+body.edit .setrow{display:flex;}
+.setrow input{flex:1;font-family:inherit;font-size:.82rem;padding:9px 12px;border:1px solid var(--line);
+  border-radius:9px;background:var(--surface);color:var(--text);}
+.setrow .btn{padding:8px 14px;}
+.hint{font-size:.74rem;color:var(--muted);margin-top:6px;display:none;}
+body.edit .hint{display:block;}
+
+/* questions */
+.q-skill{display:inline-flex;align-items:center;gap:7px;background:var(--accent-soft);color:var(--accent-ink);
+  font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;padding:5px 11px;border-radius:99px;
+  border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);}
+.qcard{border:1px solid color-mix(in srgb,var(--text) 11%,transparent);border-radius:14px;padding:20px 22px;
+  background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.03);margin-top:16px;}
+.qhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
+.qtag{display:inline-flex;align-items:center;gap:7px;font-size:.7rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--accent);background:var(--accent-soft);padding:5px 11px;border-radius:99px;
+  border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);}
+.qtag svg{width:13px;height:13px;}
+.qprompt{font-size:1.12rem;line-height:1.5;font-weight:600;color:var(--text);}
+.answer{margin-top:16px;}
+.alabel{font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:7px;}
+.answer textarea{width:100%;min-height:104px;font-family:inherit;font-size:.96rem;line-height:1.55;
+  padding:13px 15px;border:1.5px solid var(--line);border-radius:11px;resize:vertical;
+  color:var(--text);background:color-mix(in srgb,var(--accent) 5%,var(--surface));}
+.answer textarea:focus{outline:none;border-color:var(--accent);background:var(--surface);}
+.review-btn{margin-top:13px;font-size:.78rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;
+  display:inline-flex;align-items:center;gap:7px;padding:10px 16px;border-radius:10px;border:1px solid var(--accent);}
+.review-btn:hover{background:var(--accent);color:#fff;}
+.guidance{margin-top:14px;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:none;}
+.guidance.show{display:block;animation:rise .35s cubic-bezier(.2,.7,.2,1);}
+@keyframes rise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.gsec{padding:16px 18px;border-top:1px solid var(--line);}
+.gsec:first-child{border-top:0;}
+.gsec .lab{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px;
+  display:flex;align-items:center;gap:7px;}
+.gsec.model{background:var(--accent-soft);} .gsec.model .lab{color:var(--accent-ink);}
+.gsec.model .bd{font-size:.96rem;line-height:1.6;color:var(--accent-ink);}
+.gsec.imp .lab{color:var(--ok);} .gsec.pit .lab{color:var(--warn);}
+.checklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.checklist li{display:flex;gap:10px;font-size:.92rem;line-height:1.45;color:var(--bd);}
+.checklist li::before{content:"";flex:0 0 17px;width:17px;height:17px;border-radius:50%;margin-top:2px;
+  background:var(--ok);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E") center/15px no-repeat;}
+.checklist.pit li::before{background:var(--warn);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E") center/15px no-repeat;}
+.qedit{display:none;flex-direction:column;gap:10px;margin-top:12px;}
+body.edit .qedit{display:flex;}
+body.edit .answer,body.edit .review-btn{opacity:.4;pointer-events:none;}
+.qedit textarea,.qedit input{width:100%;font-family:inherit;font-size:.86rem;padding:9px 12px;border:1px solid var(--line);
+  border-radius:9px;background:#fafbfc;color:var(--text);resize:vertical;}
+.qedit .mini{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;}
+.qadd{display:none;}
+body.edit .qadd{display:inline-flex;margin-top:16px;font-size:.82rem;font-weight:600;color:var(--accent);
+  align-items:center;gap:6px;padding:8px 13px;border:1px dashed var(--accent);border-radius:10px;}
+.qdel{margin-left:auto;font-size:.74rem;color:var(--warn);}
+
+.editnote{display:none;}
+body.edit .editnote{display:flex;align-items:center;gap:9px;background:#fff7ed;border:1px solid #fbd9a8;
+  color:#8a5212;border-radius:12px;padding:12px 16px;font-size:.85rem;margin-bottom:20px;}
+@media (max-width:820px){ .side{display:none;} .stagewrap{padding:18px;} }
+
+/* ---------------- JSON DATA PANEL ---------------- */
+#dataBtn{display:none;}
+body.edit #dataBtn{display:inline-flex;}
+.modal{position:fixed;inset:0;background:rgba(20,22,30,.55);backdrop-filter:blur(2px);
+  display:flex;align-items:center;justify-content:center;z-index:60;padding:24px;}
+.modal[hidden]{display:none;}
+.sheet{background:var(--surface);border-radius:18px;width:min(780px,100%);max-height:88vh;
+  display:flex;flex-direction:column;box-shadow:0 36px 90px -24px rgba(0,0,0,.55);overflow:hidden;}
+.sheet-h{display:flex;align-items:center;justify-content:space-between;padding:17px 22px;border-bottom:1px solid var(--line);}
+.sheet-h b{font-family:"Space Grotesk";font-size:1.04rem;}
+.sheet-h button{font-size:1rem;color:var(--muted);width:30px;height:30px;border-radius:8px;}
+.sheet-h button:hover{background:var(--canvas);}
+.sheet-note{padding:15px 22px 0;margin:0;font-size:.86rem;line-height:1.5;color:var(--muted);}
+#jsonArea{margin:14px 22px;flex:1;min-height:320px;white-space:pre;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.79rem;line-height:1.55;
+  padding:14px;border:1px solid var(--line);border-radius:12px;background:#fbfbfd;color:var(--text);resize:vertical;}
+#jsonArea:focus{outline:none;border-color:var(--accent);}
+.sheet-err{padding:0 22px;color:#d14343;font-size:.82rem;min-height:18px;}
+.sheet-f{display:flex;gap:10px;align-items:center;padding:14px 22px;border-top:1px solid var(--line);}
+
+/* ---------------- SOURCE + POINTS OF INTEREST ---------------- */
+.credit{font-size:.8rem;color:var(--muted);font-style:italic;margin-top:9px;}
+.source-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;margin-top:18px;align-items:start;}
+.source-grid.stack{grid-template-columns:1fr;}
+@media(max-width:780px){.source-grid{grid-template-columns:1fr;}}
+.srctext{font-size:1.08rem;line-height:1.72;color:var(--bd);background:color-mix(in srgb,var(--accent) 3%,var(--surface));border:1px solid var(--line);
+  border-radius:12px;padding:22px 24px;font-family:"EB Garamond",Georgia,"Times New Roman",serif;}
+.poi-text{cursor:pointer;border-bottom:2px dotted var(--accent);transition:background .15s;border-radius:2px;}
+.poi-text:hover{background:var(--accent-soft);}
+.poi-text sup{color:var(--accent);font-weight:700;font-size:.6em;padding-left:1px;}
+.srcframe{position:relative;border-radius:14px;overflow:hidden;background:#0d0e12;aspect-ratio:4/3;
+  display:flex;align-items:center;justify-content:center;}
+.srcframe img{width:100%;height:100%;object-fit:cover;}
+.source-grid.stack .source-pane .srcframe{aspect-ratio:16/9;max-height:480px;}
+.srcframe.model{aspect-ratio:auto;height:420px;max-width:560px;width:100%;margin-inline:auto;background:radial-gradient(circle at 50% 38%,#2b2842,#131120);}
+.ws-stack{display:flex;flex-direction:column;gap:22px;margin-top:8px;}
+.ws-stack .srcframe{aspect-ratio:16/9;max-height:480px;}
+.srcframe model-viewer{width:100%;height:100%;background:transparent;}
+.srcframe .ph{color:#7e8492;font-size:.9rem;text-align:center;padding:18px;}
+.poi{position:absolute;width:28px;height:28px;border-radius:50%;transform:translate(-50%,-50%);
+  background:var(--accent);color:#fff;font-size:.8rem;font-weight:700;border:2px solid #fff;cursor:pointer;
+  box-shadow:0 3px 10px rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;
+  animation:poipulse 2.6s infinite;z-index:2;}
+@keyframes poipulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.5),0 3px 10px rgba(0,0,0,.45);}50%{box-shadow:0 0 0 8px rgba(255,255,255,0),0 3px 10px rgba(0,0,0,.45);}}
+.poi.k-window{background:#5a3a2c;} .poi.k-video{background:#1f6f5c;}
+.poi[data-poidrag]{cursor:grab;animation:none;} .poi[data-poidrag]:active{cursor:grabbing;}
+.poi-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 28px;max-width:560px;width:90vw;
+  box-shadow:0 30px 80px -20px rgba(0,0,0,.6);max-height:84vh;overflow:auto;}
+.poi-card.video{max-width:900px;}
+.poi-card-h{font-family:var(--display);font-size:1.4rem;line-height:1.2;margin-bottom:10px;color:var(--text);}
+.poi-card-b{font-size:1rem;line-height:1.6;color:var(--bd);}
+.poi-video{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000;margin-bottom:4px;}
+.poi-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.poi-editor{margin-top:14px;border:1px dashed color-mix(in srgb,var(--accent) 40%,transparent);border-radius:12px;
+  padding:14px 16px;background:color-mix(in srgb,var(--accent) 3%,var(--surface));}
+.poi-editor-h{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:11px;}
+.poi-edit{display:grid;grid-template-columns:24px 124px 1fr 1fr 1fr 28px;gap:8px;align-items:center;margin-bottom:8px;}
+.poi-edit-n{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;font-size:.76rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.poi-edit select,.poi-edit input{font-family:inherit;font-size:.82rem;padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--text);min-width:0;}
+@media(max-width:760px){.poi-edit{grid-template-columns:24px 1fr 28px;}.poi-edit input,.poi-edit select{grid-column:2;}}
+.q-pane{min-width:0;}
+.q-pane .qcard:first-of-type{margin-top:0;}
+.poi-pop{position:fixed;z-index:80;background:#1c1a36;color:#e9e7f6;border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;padding:12px 15px;font-size:.86rem;line-height:1.5;max-width:300px;
+  box-shadow:0 22px 56px -18px rgba(0,0,0,.65);opacity:0;transform:translateY(6px);pointer-events:none;
+  transition:opacity .15s,transform .15s;}
+.poi-pop.show{opacity:1;transform:translateY(0);}
+.poi-pop b{display:block;margin-bottom:4px;color:#fff;font-family:"Space Grotesk";font-size:.82rem;}
+
+/* ---- per-theme iconography (mask-tinted; appears only under a theme) ---- */
+.brand .mark{position:relative;}
+.brand .mark::after{content:"";position:absolute;inset:0;display:none;background:rgba(255,255,255,.95);
+  -webkit-mask:var(--motif) center/58% no-repeat;mask:var(--motif) center/58% no-repeat;}
+:root[data-theme] .brand .mark::after{display:block;}
+.cover .hero::before{content:"";position:absolute;display:none;top:-42px;right:-28px;width:288px;height:288px;
+  z-index:1;pointer-events:none;background:rgba(255,255,255,.11);
+  -webkit-mask:var(--motif) center/contain no-repeat;mask:var(--motif) center/contain no-repeat;}
+:root[data-theme] .cover .hero::before{display:block;}
+.eyebrow{display:inline-flex;align-items:center;}
+.eyebrow::before{content:"";width:0;height:14px;background:var(--accent);
+  -webkit-mask:var(--motif) center/contain no-repeat;mask:var(--motif) center/contain no-repeat;transition:width .2s;}
+:root[data-theme] .eyebrow::before{width:15px;margin-right:8px;}
+
+/* ===================================================================
+   STITCH MUSEUM SLIDE LAYOUTS — each a distinct, selectable slide type
+   =================================================================== */
+.split{display:grid;gap:30px;align-items:stretch;}
+.split.info-media{grid-template-columns:.92fr 1.08fr;}
+.split.media-panel{grid-template-columns:1.02fr .98fr;}
+@media(max-width:840px){.split{grid-template-columns:1fr!important;}}
+
+/* --- artifact detail --- */
+.art-info .eyebrow{margin-bottom:10px;}
+.art-title{font-family:var(--display);font-size:2.1rem;line-height:1.1;margin:0 0 14px;}
+.art-desc{font-size:1.02rem;line-height:1.6;color:var(--bd);max-width:44ch;}
+.specs{margin-top:22px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:color-mix(in srgb,var(--accent) 3%,var(--surface));}
+.specs .sh{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);
+  padding:13px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);}
+.specrow{display:flex;justify-content:space-between;gap:14px;padding:12px 16px;font-size:.94rem;
+  border-top:1px solid color-mix(in srgb,var(--text) 6%,transparent);}
+.specrow:nth-of-type(1){border-top:0;}
+.specrow .k{color:var(--muted);} .specrow .v{font-weight:600;text-align:right;}
+.art-cta{margin-top:20px;display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;
+  font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem;padding:13px 22px;border-radius:10px;
+  box-shadow:0 10px 24px -10px var(--accent);}
+.art-info{display:flex;flex-direction:column;}
+.art-info .specs{margin-top:auto;}
+.art-media{display:flex;flex-direction:column;}
+.artframe{position:relative;border-radius:12px;overflow:hidden;background:#0d0e12;flex:1;min-height:400px;
+  display:flex;align-items:center;justify-content:center;}
+.artframe img{width:100%;height:100%;object-fit:cover;}
+.artframe .ph{color:#7e8492;text-align:center;padding:18px;font-size:.9rem;}
+.artframe .scale{position:absolute;top:12px;right:14px;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.85);text-shadow:0 1px 4px rgba(0,0,0,.6);}
+.ctrlbar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:4px;
+  background:color-mix(in srgb,var(--surface) 92%,transparent);border-radius:12px;padding:6px;box-shadow:0 12px 30px -12px rgba(0,0,0,.55);}
+.ctrlbar button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.58rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--accent);padding:6px 14px;border-radius:8px;font-weight:600;}
+.ctrlbar button:hover{background:var(--accent-soft);}
+.ctrlbar svg{width:18px;height:18px;}
+
+/* --- worksheet (visual/source analysis) --- */
+.worksheet .ehead .sub-it{font-style:italic;color:var(--muted);font-size:.96rem;margin-top:4px;}
+.panel{background:color-mix(in srgb,var(--accent) 4%,var(--surface));border:1px solid var(--line);border-radius:12px;padding:24px;}
+.panel-h{font-family:var(--display);font-size:1.25rem;margin:0;}
+.panel-sub{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:3px;
+  padding-bottom:14px;border-bottom:1px solid var(--line);}
+.wsfield{margin-top:18px;}
+.wsfield .n{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:5px;}
+.wsfield .hl{font-size:.84rem;font-style:italic;color:var(--muted);margin-bottom:9px;}
+.matrix{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.matrix .cell .lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:5px;font-weight:600;}
+.minput{width:100%;font-family:inherit;font-size:.92rem;color:var(--text);background:color-mix(in srgb,var(--accent) 4%,var(--surface));
+  border:0;border-bottom:1.5px solid var(--line);border-radius:8px 8px 0 0;padding:11px 13px;}
+.minput:focus{outline:none;border-bottom-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--surface));}
+textarea.minput{min-height:74px;line-height:1.5;resize:vertical;}
+.figrow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:11px;
+  font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);}
+.figrow .tag{background:var(--accent-soft);color:var(--accent-ink);padding:3px 9px;border-radius:6px;font-weight:600;
+  border:1px solid color-mix(in srgb,var(--accent) 24%,transparent);}
+.ws-actions{display:flex;gap:12px;align-items:center;margin-top:22px;}
+.ws-actions .btn[disabled]{opacity:.5;cursor:default;}
+.ws-add{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;}
+
+/* --- analysis task --- */
+.task{text-align:center;}
+.modtag{display:inline-flex;align-items:center;gap:14px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);}
+.modtag::before,.modtag::after{content:"";width:38px;height:2px;background:var(--accent);}
+.taskbar{height:3px;border-radius:3px;background:var(--line);margin:16px auto 12px;max-width:660px;overflow:hidden;}
+.taskbar .f{height:100%;background:var(--accent);}
+.section-lab{font-size:.74rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);}
+.taskq{font-family:var(--display);font-size:2rem;line-height:1.25;max-width:26ch;margin:16px auto 28px;}
+.taskrow{display:grid;grid-template-columns:1fr 1.1fr;gap:28px;align-items:start;text-align:left;}
+@media(max-width:780px){.taskrow{grid-template-columns:1fr;}}
+.taskimg,.ex-img{position:relative;border-radius:12px;overflow:hidden;background:#0d0e12;aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;}
+.taskimg img,.ex-img img{width:100%;height:100%;object-fit:cover;}
+.taskimg .ph,.ex-img .ph{color:#7e8492;text-align:center;padding:16px;font-size:.88rem;}
+.task-resp .rlab{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin-bottom:9px;}
+.task-resp .minput{min-height:120px;}
+
+/* --- external interactive (launch card) --- */
+.exhibit{display:grid;grid-template-columns:1fr 1.1fr;gap:32px;align-items:stretch;}
+@media(max-width:780px){.exhibit{grid-template-columns:1fr;}}
+.ex-img{aspect-ratio:auto;height:100%;min-height:400px;}
+.ex-body{display:flex;flex-direction:column;}
+.ex-body .feat{margin-top:auto;}
+.ex-title{font-family:var(--display);font-size:2.1rem;line-height:1.08;margin:8px 0 12px;}
+.ex-desc{font-size:1rem;line-height:1.6;color:var(--bd);}
+.feat{list-style:none;margin:18px 0 22px;padding:0;display:flex;flex-direction:column;gap:12px;}
+.feat li{display:flex;gap:11px;align-items:center;font-size:.96rem;color:var(--bd);}
+.feat li::before{content:"";flex:0 0 22px;width:22px;height:22px;border-radius:50%;background:var(--accent);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'/%3E%3C/svg%3E");background-size:14px;background-position:center;background-repeat:no-repeat;}
+.launch{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;font-weight:600;
+  text-transform:uppercase;letter-spacing:.08em;font-size:.84rem;padding:15px 26px;border-radius:10px;
+  box-shadow:0 12px 26px -10px var(--accent);}
+.launch:hover{filter:brightness(1.06);}
+.launch svg{width:18px;height:18px;}
+.meta{font-size:.78rem;color:var(--muted);margin-top:14px;}
+
+/* --- lesson complete --- */
+.complete{text-align:center;display:flex;flex-direction:column;justify-content:center;padding-top:40px;padding-bottom:40px;}
+.complete .medal{width:84px;height:84px;margin:0 auto 18px;border-radius:50%;background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 26%,transparent);}
+.complete h1{font-family:var(--display);font-size:2.6rem;margin:0 0 6px;color:var(--accent);}
+.complete .lead{font-style:italic;font-size:1.1rem;color:var(--muted);margin-bottom:28px;}
+.bento{display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left;max-width:680px;margin:0 auto 26px;}
+@media(max-width:700px){.bento{grid-template-columns:1fr;}}
+.bento .b{border:1px solid var(--line);border-radius:12px;padding:22px;background:var(--surface);}
+.bento .b-h{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.bento .achieve{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 26%,transparent);
+  text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.bento .achieve .badge{width:52px;height:52px;border-radius:13px;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.bento .achieve .badge svg{width:28px;height:28px;}
+.bento .b-title{font-family:var(--display);font-size:1.2rem;color:var(--accent-ink);margin-bottom:4px;}
+.bento .b-desc{font-size:.9rem;color:var(--muted);line-height:1.5;}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+
+/* --- cover (centered hero redesign) --- */
+.cover2 .hero{flex:1;min-height:380px;align-items:center;justify-content:center;text-align:center;padding:54px 40px;}
+.cover2 .hero::before{display:none!important;}
+.cover2 .hero-inner{max-width:640px;}
+.cover2 .emblem{display:none;width:46px;height:46px;margin:0 auto 18px;background:rgba(255,255,255,.92);
+  -webkit-mask:var(--motif) center/contain no-repeat;mask:var(--motif) center/contain no-repeat;}
+:root[data-theme] .cover2 .emblem{display:block;}
+.cover2 .eyebrow2{display:inline-flex;align-items:center;gap:14px;color:rgba(255,255,255,.92);
+  font-size:.76rem;text-transform:uppercase;letter-spacing:.18em;font-weight:600;}
+.cover2 .eyebrow2::before,.cover2 .eyebrow2::after{content:"";width:38px;height:1px;background:rgba(255,255,255,.5);}
+.cover2 h1{color:#fff;font-family:var(--display);font-size:3.3rem;line-height:1.08;margin:16px 0 8px;text-shadow:0 2px 24px rgba(0,0,0,.4);}
+.cover2 h1 em{font-style:italic;display:block;}
+.cover2 .sub{color:rgba(255,255,255,.9);font-size:1.1rem;line-height:1.5;max-width:44ch;margin:0 auto;}
+.cover2 .start{margin-top:26px;display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;
+  font-weight:600;text-transform:uppercase;letter-spacing:.1em;font-size:.86rem;padding:15px 32px;border-radius:10px;
+  box-shadow:0 14px 30px -12px rgba(0,0,0,.5);}
+.cover2 .est{margin-top:20px;color:rgba(255,255,255,.82);font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;}
+.cover2 .est b{display:block;font-family:var(--display);font-size:1.1rem;letter-spacing:0;text-transform:none;margin-top:2px;color:#fff;}
+
+/* ---- present (board) mode ---- */
+#presentExit{display:none;position:fixed;top:16px;right:18px;z-index:90;align-items:center;gap:8px;cursor:pointer;
+  background:rgba(0,0,0,.55);color:#fff;font-size:.85rem;font-weight:600;padding:9px 15px;border-radius:10px;}
+#presentExit:hover{background:rgba(0,0,0,.72);}
+body.present #presentExit{display:flex;}
+body.present .side,body.present .top{display:none;}
+body.present .stagewrap{padding:4vh 5vw;}
+body.present .stage{max-width:1600px;}
+body.present .card{box-shadow:none;}
+body.present .answer{display:none;}
+body.present .cover h1{font-size:clamp(3rem,6vw,5rem);}
+body.present .cover .sub{font-size:clamp(1.2rem,2.4vw,1.8rem);max-width:60ch;}
+body.present .ehead h2{font-size:clamp(1.8rem,3.4vw,2.8rem);}
+body.present .nblock h3{font-size:clamp(1.1rem,2vw,1.5rem);}
+body.present .nblock .bd,body.present .lead,body.present .gsec .bd,body.present .checklist li,body.present .guide .gt{font-size:clamp(1.05rem,1.8vw,1.35rem);line-height:1.6;}
+body.present .qprompt{font-size:clamp(1.3rem,2.6vw,1.9rem);}
+body.present .srctext{font-size:clamp(1.2rem,2.2vw,1.6rem);line-height:1.8;}
+body.present .foot .nbtn{font-size:1.05rem;padding:14px 26px;}
+body.present .foot .count{font-size:1rem;}
+body.present .minput{display:none;}
+body.present .taskq{font-size:clamp(1.8rem,4vw,3rem);max-width:30ch;}
+body.present .art-title,body.present .ex-title,body.present .panel-h{font-size:clamp(1.7rem,3.2vw,2.6rem);}
+body.present .art-desc,body.present .ex-desc,body.present .specrow,body.present .feat li{font-size:clamp(1.05rem,1.8vw,1.35rem);}
+body.present .cover2 h1{font-size:clamp(3rem,6.5vw,5.2rem);}
+body.present .complete h1{font-size:clamp(2.6rem,5vw,4rem);}
+body.present .outlist li{font-size:clamp(1.1rem,2vw,1.5rem);}
+body.present .foot{display:none;}
+body.present .source-pane .srcframe{max-height:46vh;}
+body.present .ws-stack .srcframe{max-height:46vh;}
+body.present .srcframe.model{height:min(58vh,540px);}
+body.present .out2-media .srcframe{min-height:0;}
+body.present .cover2 .hero{min-height:0;}
+body.present .card{cursor:pointer;}
+body.present .card a,body.present .card button,body.present .card .poi,body.present .card model-viewer,body.present .card input,body.present .card textarea{cursor:auto;}
+
+/* ---- expand button + lightbox ---- */
+.expand{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:9px;z-index:3;cursor:pointer;
+  background:rgba(0,0,0,.45);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.05rem;opacity:.85;}
+.expand:hover{opacity:1;background:rgba(0,0,0,.7);}
+#lightbox{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:5vh 5vw;
+  background:rgba(8,8,12,.6);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);}
+#lightbox.show{display:flex;}
+#lightbox .lb-frame{position:relative;border-radius:14px;overflow:hidden;box-shadow:0 40px 100px -20px rgba(0,0,0,.75);}
+#lightbox .lb-frame img{max-width:90vw;max-height:90vh;display:block;object-fit:contain;}
+#lightbox .lb-frame.model{width:min(86vw,86vh);height:min(86vw,86vh);background:radial-gradient(circle at 50% 40%,#2b2842,#131120);}
+#lightbox .lb-frame.model model-viewer{width:100%;height:100%;}
+#lightbox .lb-close{position:fixed;top:18px;right:22px;width:44px;height:44px;border-radius:50%;font-size:1.2rem;
+  background:rgba(255,255,255,.16);color:#fff;z-index:101;}
+#lightbox .lb-close:hover{background:rgba(255,255,255,.28);}
+</style>
+</head>
+<body class="study">
+
+<aside class="side">
+  <div class="brand">
+    <div class="mark"></div>
+    <div><b id="brandTitle">Lesson Studio</b><small>Interactive lesson</small></div>
+  </div>
+  <div class="prog"><div class="bar"><div class="fill" id="progFill"></div></div><div class="lab" id="progLab"></div></div>
+  <nav class="nav" id="nav"></nav>
+  <div class="addbar" id="addbar">
+    <span class="lbl">Add a card</span>
+    <button class="chip" data-add="notes">Notes</button>
+    <button class="chip" data-add="image">Image</button>
+    <button class="chip" data-add="video">Video</button>
+    <button class="chip" data-add="question">Question</button>
+    <button class="chip" data-add="source">Source</button>
+    <button class="chip" data-add="model3d">3D</button>
+    <button class="chip" data-add="cover">Section</button>
+    <button class="chip" data-add="outcomes">Outcomes</button>
+    <button class="chip" data-add="artifact">Artifact</button>
+    <button class="chip" data-add="worksheet">Worksheet</button>
+    <button class="chip" data-add="external">External</button>
+    <button class="chip" data-add="complete">Complete</button>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="top">
+    <span class="ltitle" id="topTitle">Lesson</span>
+    <span class="spacer"></span>
+    <div class="themebox">
+      <label>Theme</label>
+      <select id="themeSel">
+        <option value="neutral">Neutral (no theme)</option>
+        <option value="egypt">Egypt · Y11 Ancient History</option>
+        <option value="rome">Rome · Y12 Ancient History</option>
+        <option value="wellbeing">Wellbeing in Australia · Y10 Geography</option>
+        <option value="ww1">WW1 · Y9 History</option>
+      </select>
+    </div>
+    <div class="seg" id="modeSeg">
+      <button data-mode="study" class="on">Study</button>
+      <button data-mode="edit">Edit</button>
+    </div>
+    <button class="btn ghost" id="presentBtn">⤢ Present</button>
+    <button class="btn ghost" id="dataBtn">⌗ JSON</button>
+    <button class="btn" id="exportBtn">↧ Export</button>
+  </header>
+  <div class="stagewrap"><div class="stage">
+    <div class="editnote" id="editnote">✎ Edit mode — click any text to change it, set images and video links, then Export when you're done.</div>
+    <div id="slide"></div>
+  </div></div>
+  <div class="foot">
+    <button class="nbtn" id="prev">← Back</button>
+    <span class="count" id="count"></span>
+    <button class="nbtn" id="next">Next →</button>
+  </div>
+</div>
+
+<button id="presentExit">Exit fullscreen ✕</button>
+<div id="lightbox"><button class="lb-close" id="lbClose">✕</button><div class="lb-body"></div></div>
+
+<div class="modal" id="modal" hidden>
+  <div class="sheet">
+    <div class="sheet-h"><b>Lesson data · JSON</b><button id="modalX" title="Close">✕</button></div>
+    <p class="sheet-note">Paste a lesson JSON to build the whole slideshow instantly — or copy the current one to save and re-edit later. Notes, questions, model answers, improve-points and pitfalls all live in here.</p>
+    <textarea id="jsonArea" spellcheck="false"></textarea>
+    <div class="sheet-err" id="jsonErr"></div>
+    <div class="sheet-f">
+      <button class="btn ghost" id="jsonCopy">Copy</button>
+      <button class="btn ghost" id="jsonDl">Download .json</button>
+      <span style="flex:1"></span>
+      <button class="btn" id="jsonLoad">Load JSON →</button>
+    </div>
+  </div>
+</div>
+
+<script id="lesson-data" type="application/json">
+{
+  "meta":{"title":"Tutankhamun — The Human Remains File","theme":"egypt"},
+  "slides":[
+    {"type":"cover","tag":"Year 11 · Ancient History","title":"Tutankhamun","sub":"Investigating the condition of Tutankhamun's body and the cause of his death.","startLabel":"Start lesson","est":"15 minutes"},
+    {"type":"outcomes","eyebrow":"Learning outcomes","heading":"By the end of this lesson you will be able to…","image":"","outcomes":["Distinguish damage caused by ancient embalmers and robbers from damage caused by the 1925 examination","Assess the reliability of Howard Carter as an eyewitness source","Weigh the 1968 murder theory against the 2005 CT and 2010 DNA evidence"],"syllabus":[{"code":"AH11-6","text":"Analyses and interprets different types of sources for evidence to support an historical account or argument"},{"code":"AH11-7","text":"Discusses and evaluates differing interpretations and representations of the past"},{"code":"AH11-10","text":"Discusses contemporary methods and issues involved in the investigation of ancient history"}]},
+    {"type":"artifact","eyebrow":"Artifact detail","title":"The Death Mask","desc":"Crafted from two layers of high-karat gold and inlaid with lapis lazuli, carnelian, obsidian and turquoise. It covered the head and shoulders of the mummy.","image":"","scale":"Viewing scale 1:1","specs":[{"k":"Material","v":"Gold, lapis lazuli, carnelian"},{"k":"Date","v":"c. 1323 BCE · Dynasty XVIII"},{"k":"Mass","v":"10.23 kg (22.6 lb)"},{"k":"Find site","v":"KV62, Valley of the Kings"}],"ctaLabel":"Analyse the inscription"},
+    {"type":"worksheet","heading":"Source analysis: The Book of the Dead","subtitle":"Examining a funerary papyrus fragment (Thebes, c. 1275 BCE)","image":"","fig":"Fig 1.1: Funerary papyrus fragment","tag":"Primary artifact","panelTitle":"Analysis worksheet","panelSub":"Iconography & symbolism","fields":[{"kind":"text","n":"1. Material & physicality","hint":"Describe the visual texture, colour palette and the state of the edges."},{"kind":"matrix","n":"2. Symbolism matrix","hint":"Identify the key symbols and figures.","cells":[{"lbl":"Crown type","ph":"e.g. Nemes"},{"lbl":"Offering","ph":"e.g. Ma'at"}]},{"kind":"text","n":"3. Contextual interpretation","hint":"What is the intended spiritual purpose of this scroll?"}]},
+    {"type":"external","eyebrow":"Special exhibit","title":"The Virtual Autopsy","desc":"Step inside the 2005 CT investigation led by Zahi Hawass and Ashraf Selim. Rotate the reconstructed skull, inspect the broken left femur, and weigh the murder theory against the evidence.","image":"","features":["Interactive CT cross-sections of the skull","Rotate the 3D facial reconstruction","Compare the 1968 X-ray with the 2005 CT"],"url":"","meta":"Estimated time: 15–20 mins · Opens in a new tab","launchLabel":"Launch the investigation"},
+    {"type":"notes","heading":"The 1925 examination","blocks":[
+      {"h":"Discovery and first autopsy","bd":"Howard Carter found the tomb in ==1922==. The mummy was not examined until ==11 November 1925==, by Carter and the anatomist ==Douglas Derry==."},
+      {"h":"Why the body is damaged","bd":"Hardened embalming resin had cemented the body into the coffin and to the gold mask. To remove it — and recover the jewellery inside the wrappings — ==the examiners cut the mummy into several pieces==. So much of the damage Carter describes was ==caused by his own 1925 examination==, not only by ancient robbers."}
+    ],"guide":"As you read, record TWO columns: the damage Carter names, and who caused it (ancient embalmers / robbers / the 1925 team). You'll reuse both in your Source 6A annotations."},
+    {"type":"video","heading":"The virtual autopsy (2005 CT scan)","url":"","cap":"Paste the documentary segment you want — the CT-based virtual autopsy."},
+    {"type":"image","heading":"Inside the tomb","src":"","cap":"A Harry Burton photograph of the discovery sets up Carter's account."},
+    {"type":"source","heading":"Source 6A — Carter's account of the royal mummy","credit":"Howard Carter, The Tomb of Tut-ankh-Amen, 1927 (public domain)","media":{
+      "kind":"text",
+      "text":"The mummy was found to be in a position of great disorder. The whole of the outer bandaging was entirely decomposed and had fallen away into a mass of black dust.\n\nThe face of the King appeared in perfect condition beneath the golden portrait mask. The body itself, however, had suffered greatly. The transverse division across the abdominal region showed that the mummy had been severed in two pieces, either in antiquity or during the later robbing of the outer shrines. The head had become detached from the body.",
+      "pois":[
+        {"anchor":"mass of black dust","title":"What kind of damage?","info":"This is the decomposed bandaging — damage to the wrappings, not the body itself. Useful for separating the types of damage."},
+        {"anchor":"severed in two pieces","title":"Ancient or modern?","info":"Carter leaves the cause open. But his own 1925 team cut the body apart to free it from the hardened resin — a modern cause he plays down."},
+        {"anchor":"either in antiquity or during the later robbing","title":"What is missing?","info":"Notice what this list leaves out: the examination team itself. That omission is the key to judging his reliability."}
+      ]},
+      "items":[
+        {"prompt":"What evidence of damage does Carter describe, and what most likely caused it?","model":"Carter describes the outer bandaging decomposed to black dust, the body severed in two, and the head detached. The likely cause is a combination: ancient embalming resin and possible robber disturbance, AND the 1925 team, who cut the body apart to free it from the resin.","improve":["Name at least two specific pieces of damage","Say the cause is a combination, not one factor","Mention the 1925 team as a modern cause"],"pitfalls":["Blaming only the ancient robbers","Copying the source without naming a cause"]},
+        {"prompt":"Is Carter a reliable witness to the mummy's condition? Why or why not?","model":"Partly. He is a first-hand eyewitness and trained excavator — a strength. But he took part in the damage and had reason to downplay it, and worked with 1920s assumptions. Eyewitness does not mean neutral.","improve":["Give a strength AND a limitation","Use the idea that he caused some of the damage","Reach a judgement (\"partly reliable because…\")"],"pitfalls":["\"Reliable because he was there\" with no limitation","Treating eyewitness as automatically objective"]}
+      ]},
+    {"type":"source","heading":"Source 6B — The death mask as evidence","credit":"Photograph of a museum object","media":{
+      "kind":"image","src":"",
+      "pois":[
+        {"x":50,"y":30,"kind":"window","title":"The face","info":"Idealised, youthful, serene — a representation, not a portrait. What does that mean for its reliability as evidence of his real appearance? Compare it with the reconstructed face from the 2005 CT scan, which is built from the skull rather than from royal ideology."},
+        {"x":50,"y":70,"kind":"tooltip","title":"Inscription","info":"Spells from the Book of the Dead — evidence of belief and ritual, not of the body."}
+      ]},
+      "items":[
+        {"prompt":"How useful is the mask as evidence of what Tutankhamun actually looked like?","model":"Limited. The mask is an idealised image made for the afterlife, not a realistic portrait, so it is strong evidence of belief and royal ideology but weak evidence of his real appearance — for which the CT scan is far better.","improve":["Distinguish what it IS good evidence for (belief/ideology)","From what it is weak evidence for (real appearance)","Compare with a better source (the CT scan)"],"pitfalls":["Treating the mask as a photograph of his face"]}
+      ]},
+    {"type":"model3d","heading":"Artefact — explore in 3D","credit":"Sample model — replace with your Meshy export","media":{
+      "kind":"model3d","src":"https://modelviewer.dev/shared-assets/models/Astronaut.glb","poster":"","pois":[]},
+      "items":[
+        {"prompt":"Choose one feature of this artefact and explain what it suggests about the people who made it.","model":"A strong answer selects a specific feature, describes it accurately, and links it to a reasoned inference about skill, belief, or status — while acknowledging the artefact alone cannot prove the inference.","improve":["Name a specific feature","Make an inference, not just a description","Acknowledge the limits of object-only evidence"],"pitfalls":["Only describing what it looks like","Over-claiming from a single object"]}
+      ]},
+    {"type":"complete","title":"Lesson complete!","lead":"You've investigated the body, the damage and the cause of death.","gainedTitle":"Knowledge gained","gained":["Separated ancient damage from the 1925 examination","Judged Carter's reliability as an eyewitness","Weighed the murder theory against the 2005 CT evidence"],"badgeTitle":"Source Analyst","badgeDesc":"Earned for completing the Human Remains File."}
+  ]
+}
+</script>
+
+<script>
+/* Topic themes live in CSS as :root[data-theme="…"] — see <style>. This keeps swaps clean. */
+const ICON={
+  cover:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg>',
+  notes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h11l3 3v15H5z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>',
+  video:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>',
+  image:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5L5 20"/></svg>',
+  question:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.1 1-1.1 1.8"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>',
+  source:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h9l5 5v13H5z"/><path d="M14 3v5h5"/><path d="M8 13h8M8 17h6"/></svg>',
+  model3d:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9z"/><path d="M12 2v9l8-4.5M12 11L4 6.5M12 11v9"/></svg>',
+  artifact:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 21h14M6 21V9M18 21V9M4 9l8-5 8 5z"/></svg>',
+  worksheet:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+  task:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.1 1-1.1 1.8"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>',
+  external:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 4h6v6M20 4l-9 9M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></svg>',
+  complete:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/></svg>',
+  zoom:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>',
+  info:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.6" r=".7" fill="currentColor"/></svg>',
+  launch:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>',
+  medal:'<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/><path d="M12 6.4l.85 1.7 1.9.28-1.37 1.33.32 1.88L12 10.8l-1.7.9.32-1.88L9.25 8.5l1.9-.28z" fill="currentColor" stroke="none"/></svg>',
+  book:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6c-2-1.4-5-1.4-7 0v12c2-1.4 5-1.4 7 0 2-1.4 5-1.4 7 0V6c-2-1.4-5-1.4-7 0z"/><path d="M12 6v12"/></svg>',
+  outcomes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>'};
+const TYPELAB={cover:"Section",notes:"Notes",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes"};
+
+let LESSON=JSON.parse(document.getElementById('lesson-data').textContent);
+let cur=0, mode='study';
+const $=s=>document.querySelector(s);
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function getP(o,p){return p.split('.').reduce((a,k)=>a?.[k],o);}
+function setP(o,p,v){const ks=p.split('.');const last=ks.pop();let t=o;ks.forEach(k=>t=t[k]);t[last]=v;}
+
+function setTheme(name){
+  // One attribute swaps every variable at once; removing it reverts to the neutral defaults.
+  if(!name||name==='neutral') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme',name);
+}
+function toEmbed(url){
+  if(!url) return '';
+  url=url.trim();
+  let m=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);
+  if(m) return 'https://www.youtube.com/embed/'+m[1];
+  return url; // ClickView embed link or other iframe URL pasted directly
+}
+function markNotes(text){ return esc(text).replace(/==([^=]+)==/g,'<span class="noteable">$1</span>'); }
+function title(s){
+  if(s.type==='cover') return s.title||'Section';
+  if(s.type==='question') return s.skill||'Question';
+  if(s.type==='artifact'||s.type==='external') return s.title||TYPELAB[s.type];
+  if(s.type==='task') return 'Analysis task';
+  if(s.type==='complete') return s.title||'Complete';
+  if(s.type==='worksheet') return s.heading||'Worksheet';
+  if(s.type==='outcomes') return s.heading||'Learning outcomes';
+  return s.heading||TYPELAB[s.type];
+}
+
+/* ---------- render ---------- */
+function render(){
+  setTheme(LESSON.meta.theme);
+  $('#topTitle').textContent=LESSON.meta.title;
+  $('#brandTitle').textContent=LESSON.meta.title;
+  $('#themeSel').value=LESSON.meta.theme;
+  renderNav(); renderSlide();
+}
+function renderNav(){
+  const nav=$('#nav');
+  nav.innerHTML=LESSON.slides.map((s,i)=>`
+    <div class="nitem ${i===cur?'on':''}" data-go="${i}">
+      <div class="ico">${ICON[s.type]||ICON.notes}</div>
+      <div class="tx"><b>${esc(title(s))}</b><span>${TYPELAB[s.type]||s.type}</span></div>
+      <div class="grip">
+        <button data-move="${i}:-1" title="Up">▲</button>
+        <button data-move="${i}:1" title="Down">▼</button>
+        <button data-del="${i}" title="Delete">✕</button>
+      </div>
+    </div>`).join('');
+  const pct=LESSON.slides.length>1?(cur/(LESSON.slides.length-1))*100:100;
+  $('#progFill').style.width=pct+'%';
+  $('#progLab').textContent=`Card ${cur+1} of ${LESSON.slides.length}`;
+  $('#count').textContent=`${cur+1} / ${LESSON.slides.length}`;
+}
+const ed=`contenteditable="${mode==='edit'}"`;
+function eb(path,val,tag='div',cls=''){ // editable block
+  return `<${tag} class="editable ${cls}" data-bind="${path}" contenteditable="${mode==='edit'}">${val||''}</${tag}>`;
+}
+function qItems(i, items){
+  return (items||[]).map((q,j)=>`<div class="qcard">
+    <div class="qhead"><span class="qtag">${ICON.question} Question ${j+1}</span>${mode==='edit'?`<button class="qdel" data-delq="${i}:${j}">remove</button>`:''}</div>
+    <div class="qprompt editable" data-bind="slides.${i}.items.${j}.prompt" contenteditable="${mode==='edit'}">${esc(q.prompt)}</div>
+    <div class="answer"><div class="alabel">Your answer</div><textarea placeholder="Type your answer here…"></textarea></div>
+    <button class="review-btn" data-rev="${i}:${j}">✦ Reveal model answer to compare</button>
+    <div class="guidance" id="g-${i}-${j}">
+      <div class="gsec model"><div class="lab">${ICON.question} Model answer — compare yours with this</div><div class="bd">${esc(q.model)}</div></div>
+      <div class="gsec imp"><div class="lab">✓ To improve, check you've…</div>
+        <ul class="checklist">${(q.improve||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+      <div class="gsec pit"><div class="lab">! Common pitfalls</div>
+        <ul class="checklist pit">${(q.pitfalls||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    </div>
+    <div class="qedit">
+      <span class="mini">Model answer</span>
+      <textarea data-bind="slides.${i}.items.${j}.model">${esc(q.model)}</textarea>
+      <span class="mini">To improve — one per line</span>
+      <textarea data-split="slides.${i}.items.${j}.improve">${esc((q.improve||[]).join('\n'))}</textarea>
+      <span class="mini">Pitfalls — one per line</span>
+      <textarea data-split="slides.${i}.items.${j}.pitfalls">${esc((q.pitfalls||[]).join('\n'))}</textarea>
+    </div>
+  </div>`).join('')+`<button class="qadd" data-addq="${i}">＋ add another question</button>`;
+}
+function sourceMedia(i,m){
+  if(m.kind==='image'){
+    const dots=poiDotsFor(i,m.pois);
+    return `<div class="srcframe" ${mode==='edit'?`data-drop="slides.${i}.media.src"`:''}>${m.src?`<img src="${esc(m.src)}" alt="">${mode!=='edit'?`<button class="expand" data-expand="${i}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}${dots}</div>
+      <div class="setrow"><input data-setsrc="${i}" value="${esc(m.src||'')}" placeholder="Paste an image URL"><button class="btn" data-applysrc="${i}">Set image</button></div>
+      ${mode==='edit'?poiEditor(i,m):`<div class="hint">Click a numbered hotspot — it opens a tooltip, a window card, or a video, depending on its type.</div>`}`;
+  }
+  if(m.kind==='model3d'){
+    const hot=(m.pois||[]).map((p,k)=>p.position?`<button slot="hotspot-${k}" class="poi mv" data-position="${esc(p.position)}" ${p.normal?`data-normal="${esc(p.normal)}"`:''} data-poi data-title="${esc(p.title||'')}" data-info="${esc(p.info||'')}">${k+1}</button>`:'').join('');
+    return `<div class="srcframe model">${m.src?`<model-viewer src="${esc(m.src)}" camera-controls auto-rotate touch-action="pan-y" shadow-intensity="1" exposure="1" ${m.poster?`poster="${esc(m.poster)}"`:''}>${hot}</model-viewer>${mode!=='edit'?`<button class="expand" data-expand="${i}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.model3d}<br>No model yet — paste a Meshy .glb URL</div>`}</div>
+      <div class="setrow"><input data-setsrc="${i}" value="${esc(m.src||'')}" placeholder="Paste a Meshy .glb / .gltf URL"><button class="btn" data-applysrc="${i}">Set model</button></div>
+      <div class="hint">Export from Meshy as GLB, host the file, paste its URL. Drag to rotate · scroll to zoom.</div>`;
+  }
+  let txt=esc(m.text||'');
+  (m.pois||[]).forEach((p,k)=>{ const a=esc(p.anchor||''); if(a&&txt.includes(a)){ txt=txt.replace(a,`<span class="poi-text" data-poi data-title="${esc(p.title||'Look closer')}" data-info="${esc(p.info||'')}">${a}<sup>${k+1}</sup></span>`); } });
+  return `<div class="srctext">${txt.replace(/\n/g,'<br>')}</div>
+    <div class="hint">Underlined phrases are optional points of interest — click for guidance, or read past them.</div>`;
+}
+function poiDotsFor(i,pois){
+  return (pois||[]).map((p,k)=>`<button class="poi k-${esc(p.kind||'tooltip')}" style="left:${p.x}%;top:${p.y}%" data-poi data-kind="${esc(p.kind||'tooltip')}" data-title="${esc(p.title||'')}" data-info="${esc(p.info||'')}" data-url="${esc(p.url||'')}"${mode==='edit'?` data-poidrag="${i}:${k}"`:''}>${k+1}</button>`).join('');
+}
+function poiEditor(i,m){
+  const rows=(m.pois||[]).map((p,k)=>`<div class="poi-edit">
+    <span class="poi-edit-n">${k+1}</span>
+    <select data-poikind="${i}:${k}">
+      <option value="tooltip"${(p.kind||'tooltip')==='tooltip'?' selected':''}>Tooltip card</option>
+      <option value="window"${p.kind==='window'?' selected':''}>Window card</option>
+      <option value="video"${p.kind==='video'?' selected':''}>Video card</option>
+    </select>
+    <input data-bind="slides.${i}.media.pois.${k}.title" value="${esc(p.title||'')}" placeholder="Title">
+    <input data-bind="slides.${i}.media.pois.${k}.info" value="${esc(p.info||'')}" placeholder="Text / caption">
+    <input data-bind="slides.${i}.media.pois.${k}.url" value="${esc(p.url||'')}" placeholder="Video URL (for video card)">
+    <button class="qdel" data-delpoi="${i}:${k}">✕</button>
+  </div>`).join('');
+  return `<div class="poi-editor"><div class="poi-editor-h">Hotspots — drag a numbered dot on the image to reposition</div>${rows}<button class="qadd" data-addpoi="${i}">＋ add a hotspot</button></div>`;
+}
+function openPoi(b){
+  if(mode==='edit') return;
+  const kind=b.dataset.kind||'tooltip', t=b.dataset.title||'', info=b.dataset.info||'', url=b.dataset.url||'';
+  if(kind==='video'){ const e=toEmbed(url); lb(`<div class="poi-card video">${t?`<div class="poi-card-h">${esc(t)}</div>`:''}${e?`<div class="poi-video"><iframe src="${esc(e)}" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`:`<div class="poi-card-b">No video URL set for this hotspot yet.</div>`}${info?`<div class="poi-card-b">${esc(info)}</div>`:''}</div>`); }
+  else if(kind==='window'){ lb(`<div class="poi-card window">${t?`<div class="poi-card-h">${esc(t)}</div>`:''}<div class="poi-card-b">${esc(info)}</div></div>`); }
+  else { showPoi(b,t,info); }
+}
+let poiPop;
+function showPoi(t,title,info){
+  if(!poiPop){ poiPop=document.createElement('div'); poiPop.className='poi-pop'; document.body.appendChild(poiPop); document.addEventListener('click',()=>poiPop.classList.remove('show')); }
+  poiPop.innerHTML=(title?`<b>${esc(title)}</b>`:'')+`<span>${esc(info||'')}</span>`;
+  const r=t.getBoundingClientRect(), pw=Math.min(300,window.innerWidth-24);
+  poiPop.style.width=pw+'px'; let left=r.left+r.width/2-pw/2; left=Math.max(12,Math.min(left,window.innerWidth-pw-12));
+  poiPop.style.left=left+'px'; poiPop.style.top=(r.bottom+10)+'px'; poiPop.classList.add('show');
+}
+function renderSlide(){
+  const s=LESSON.slides[cur], i=cur; let h='';
+  if(s.type==='cover'){
+    const bg=s.bg||'';
+    h=`<div class="card cover cover2">
+      <div class="hero ${bg?'has-img':''} ${mode==='edit'?'drop':''}" ${mode==='edit'?`data-drop="slides.${i}.bg"`:''} ${bg?`style="--cover-img:url('${bg.replace(/'/g,'%27')}')"`:''}>
+        ${bg?'<div class="hero-veil"></div>':''}
+        <div class="hero-inner">
+          <div class="emblem"></div>
+          <div class="eyebrow2 editable" data-bind="slides.${i}.tag" contenteditable="${mode==='edit'}">${esc(s.tag)}</div>
+          <h1><span class="editable" data-bind="slides.${i}.title" contenteditable="${mode==='edit'}">${esc(s.title)}</span>${(s.titleItalic!==undefined||mode==='edit')?`<em class="editable" data-bind="slides.${i}.titleItalic" contenteditable="${mode==='edit'}">${esc(s.titleItalic||'')}</em>`:''}</h1>
+          <div class="sub editable" data-bind="slides.${i}.sub" contenteditable="${mode==='edit'}">${esc(s.sub)}</div>
+          ${mode!=='edit'?`<button class="start" data-advance>${esc(s.startLabel||'Start lesson')} →</button>`:''}
+          ${(s.est!==undefined||mode==='edit')?`<div class="est">Estimated time<b class="editable" data-bind="slides.${i}.est" contenteditable="${mode==='edit'}">${esc(s.est||'15 minutes')}</b></div>`:''}
+        </div>
+      </div>
+      <div class="cover-tools">
+        <input data-urlfield="slides.${i}.bg" value="${esc(bg)}" placeholder="Hero image URL — or drag an image onto the banner">
+        <button class="btn" data-applyurl="slides.${i}.bg">Set</button>
+        ${bg?`<button class="btn ghost" data-clearbg="${i}">Clear</button>`:''}
+      </div>
+    </div>`;
+  }
+  else if(s.type==='notes'){
+    h=`<div class="card pad notes">
+      <div class="eyebrow">Notes</div>
+      <div class="ehead"><h2 class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading)}</h2></div>
+      <div class="note-legend"><span class="lg read">${ICON.book} Reading</span><span class="lg note">✎ Notes to take</span><button class="note-toggle" data-notetoggle>✎ Highlight what to record</button></div>
+      <div class="zone read">
+        <div class="zone-lab">Reading — read this</div>
+        <div class="notes-body">`+
+        s.blocks.map((b,j)=>`<div class="nblock">
+          <h3 class="editable" data-bind="slides.${i}.blocks.${j}.h" contenteditable="${mode==='edit'}">${esc(b.h)}</h3>
+          <div class="bd editable" data-bind="slides.${i}.blocks.${j}.bd" contenteditable="${mode==='edit'}">${mode==='edit'?esc(b.bd):markNotes(b.bd)}</div></div>`).join('')+
+      `</div></div>
+      <div class="guide note"><div class="gi">✎</div><div class="gt"><b>Notes to take — what to write down</b>
+        <span class="editable" data-bind="slides.${i}.guide" contenteditable="${mode==='edit'}">${esc(s.guide)}</span></div></div>
+      <button class="qadd" data-addblock="${i}">＋ add a note block</button>
+    </div>`;
+  }
+  else if(s.type==='video'){
+    const src=toEmbed(s.url);
+    h=`<div class="card pad">
+      <div class="eyebrow">Watch</div>
+      <div class="ehead"><h2 class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading)}</h2></div>
+      <div class="frame">${src?`<iframe src="${esc(src)}" allowfullscreen></iframe>`:
+        `<div class="ph">${ICON.video}<br>No video yet — add a link in Edit mode</div>`}</div>
+      <div class="cap editable" data-bind="slides.${i}.cap" contenteditable="${mode==='edit'}">${esc(s.cap)}</div>
+      <div class="setrow"><input data-setv="${i}" value="${esc(s.url)}" placeholder="Paste a YouTube link or a ClickView embed link"><button class="btn" data-applyv="${i}">Set video</button></div>
+      <div class="hint">YouTube watch/share links convert automatically. For ClickView, use Share → Embed and paste that link.</div>
+    </div>`;
+  }
+  else if(s.type==='image'){
+    h=`<div class="card pad">
+      <div class="eyebrow">Look</div>
+      <div class="ehead"><h2 class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading)}</h2></div>
+      <div class="frame" ${mode==='edit'?`data-drop="slides.${i}.src"`:''}>${s.src?`<img src="${esc(s.src)}" alt="">${mode!=='edit'?`<button class="expand" data-expand="${i}" title="Expand">⤢</button>`:''}`:
+        `<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}</div>
+      <div class="cap editable" data-bind="slides.${i}.cap" contenteditable="${mode==='edit'}">${esc(s.cap)}</div>
+      <div class="setrow"><input data-seti="${i}" value="${esc(s.src)}" placeholder="Paste an image URL"><button class="btn" data-applyi="${i}">Set image</button></div>
+      <div class="dropnote">Drag a file from your computer to embed it, or drag/paste a URL to link it.</div>
+    </div>`;
+  }
+  else if(s.type==='question'){
+    h=`<div class="card pad">
+      <span class="q-skill">${ICON.question} <span class="editable" data-bind="slides.${i}.skill" contenteditable="${mode==='edit'}">${esc(s.skill)}</span></span>
+      <div class="ehead" style="margin-top:14px"><h2 class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading)}</h2></div>
+      ${qItems(i,s.items)}
+    </div>`;
+  }
+  else if(s.type==='source'||s.type==='model3d'){
+    if(!s.media) s.media={kind:(s.type==='model3d'?'model3d':'text'),src:s.src||'',poster:s.poster||'',pois:s.pois||[],text:s.text||''};
+    const m=s.media, stack=(m.kind==='model3d');
+    const hasQ=(s.items&&s.items.length)||mode==='edit';
+    h=`<div class="card pad">
+      <span class="q-skill">${ICON[s.type==='model3d'?'model3d':'source']} <span class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading||'')}</span></span>
+      ${s.credit!==undefined?`<div class="credit editable" data-bind="slides.${i}.credit" contenteditable="${mode==='edit'}">${esc(s.credit)}</div>`:''}
+      <div class="source-grid stack">
+        <div class="source-pane">${sourceMedia(i,m)}</div>
+        ${hasQ?`<div class="q-pane">${qItems(i,s.items||[])}</div>`:''}
+      </div>
+    </div>`;
+  }
+  else if(s.type==='artifact'){
+    const specs=(s.specs||[]).map((r,j)=>`<div class="specrow"><span class="k editable" data-bind="slides.${i}.specs.${j}.k" contenteditable="${mode==='edit'}">${esc(r.k)}</span><span class="v editable" data-bind="slides.${i}.specs.${j}.v" contenteditable="${mode==='edit'}">${esc(r.v)}</span></div>`).join('');
+    h=`<div class="card pad">
+      <div class="split info-media">
+        <div class="art-info">
+          <div class="eyebrow editable" data-bind="slides.${i}.eyebrow" contenteditable="${mode==='edit'}">${esc(s.eyebrow||'Artifact detail')}</div>
+          <h2 class="art-title editable" data-bind="slides.${i}.title" contenteditable="${mode==='edit'}">${esc(s.title)}</h2>
+          <div class="art-desc editable" data-bind="slides.${i}.desc" contenteditable="${mode==='edit'}">${esc(s.desc)}</div>
+          <div class="specs"><div class="sh">${ICON.artifact} Material specs</div>${specs}</div>
+          ${mode==='edit'?`<button class="qadd" data-addspec="${i}">＋ add spec row</button>`:''}
+          ${((s.ctaLabel||'')||mode==='edit')?`<button class="art-cta" ${mode==='edit'?'':'data-advance'}><span class="editable" data-bind="slides.${i}.ctaLabel" contenteditable="${mode==='edit'}">${esc(s.ctaLabel||'')}</span> →</button>`:''}
+        </div>
+        <div class="art-media">
+          <div class="artframe" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`<img src="${esc(s.image)}" alt="">
+            <span class="scale editable" data-bind="slides.${i}.scale" contenteditable="${mode==='edit'}">${esc(s.scale||'Viewing scale 1:1')}</span>
+            ${mode!=='edit'?`<div class="ctrlbar"><button data-expandsrc="${esc(s.image)}">${ICON.zoom}Zoom</button><button data-expandsrc="${esc(s.image)}">${ICON.info}Detail</button></div>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}</div>
+          <div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Paste an image URL"><button class="btn" data-applyurl="slides.${i}.image">Set image</button></div>
+          <div class="dropnote">Drag a file to embed, or drag/paste a URL to link it.</div>
+        </div>
+      </div>
+    </div>`;
+  }
+  else if(s.type==='worksheet'){
+    const fields=(s.fields||[]).map((f,j)=>{
+      const lab=`<div class="n editable" data-bind="slides.${i}.fields.${j}.n" contenteditable="${mode==='edit'}">${esc(f.n||'')}</div>`;
+      const hint=(f.hint!==undefined||mode==='edit')?`<div class="hl editable" data-bind="slides.${i}.fields.${j}.hint" contenteditable="${mode==='edit'}">${esc(f.hint||'')}</div>`:'';
+      const del=mode==='edit'?`<button class="qdel" data-delfield="${i}:${j}">remove</button>`:'';
+      if(f.kind==='matrix'){
+        const cells=(f.cells||[]).map((c,k)=>`<div class="cell"><div class="lbl editable" data-bind="slides.${i}.fields.${j}.cells.${k}.lbl" contenteditable="${mode==='edit'}">${esc(c.lbl||'')}</div><input class="minput" placeholder="${esc(c.ph||'')}"></div>`).join('');
+        return `<div class="wsfield">${lab}${hint}<div class="matrix">${cells}</div>${del}</div>`;
+      }
+      return `<div class="wsfield">${lab}${hint}<textarea class="minput" placeholder="Write here…"></textarea>${del}</div>`;
+    }).join('');
+    h=`<div class="card pad worksheet">
+      <div class="ehead"><h2 class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading||'')}</h2>
+      <div class="sub-it editable" data-bind="slides.${i}.subtitle" contenteditable="${mode==='edit'}">${esc(s.subtitle||'')}</div></div>
+      <div class="ws-stack">
+        <div class="ws-media">
+          <div class="srcframe" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`<img src="${esc(s.image)}" alt="">${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}</div>
+          <div class="figrow"><span class="editable" data-bind="slides.${i}.fig" contenteditable="${mode==='edit'}">${esc(s.fig||'')}</span><span class="tag editable" data-bind="slides.${i}.tag" contenteditable="${mode==='edit'}">${esc(s.tag||'')}</span></div>
+          <div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Paste an image URL"><button class="btn" data-applyurl="slides.${i}.image">Set image</button></div>
+        </div>
+        <div class="panel">
+          <div class="panel-h editable" data-bind="slides.${i}.panelTitle" contenteditable="${mode==='edit'}">${esc(s.panelTitle||'Analysis worksheet')}</div>
+          <div class="panel-sub editable" data-bind="slides.${i}.panelSub" contenteditable="${mode==='edit'}">${esc(s.panelSub||'')}</div>
+          ${fields}
+          ${mode==='edit'?`<div class="ws-add"><button class="qadd" data-addfield="${i}:text">＋ text field</button><button class="qadd" data-addfield="${i}:matrix">＋ matrix field</button></div>`:`<div class="ws-actions"><button class="btn ghost" disabled>Save draft</button><button class="btn" data-advance>Submit analysis</button></div>`}
+        </div>
+      </div>
+    </div>`;
+  }
+  else if(s.type==='task'){
+    h=`<div class="card pad task">
+      <div class="modtag editable" data-bind="slides.${i}.module" contenteditable="${mode==='edit'}">${esc(s.module||'Analysis module')}</div>
+      <div class="taskbar"><div class="f" style="width:${s.progress||60}%"></div></div>
+      <div class="section-lab editable" data-bind="slides.${i}.section" contenteditable="${mode==='edit'}">${esc(s.section||'')}</div>
+      <div class="taskq editable" data-bind="slides.${i}.question" contenteditable="${mode==='edit'}">${esc(s.question||'')}</div>
+      <div class="taskrow">
+        <div class="task-media">
+          <div class="taskimg" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`<img src="${esc(s.image)}" alt="">${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image / add URL below</div>`}</div>
+          <div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Paste an image URL"><button class="btn" data-applyurl="slides.${i}.image">Set</button></div>
+        </div>
+        <div class="task-resp">
+          <div class="rlab editable" data-bind="slides.${i}.respLabel" contenteditable="${mode==='edit'}">${esc(s.respLabel||'Student analysis response')}</div>
+          <textarea class="minput" placeholder="Enter your historical analysis here…"></textarea>
+          ${mode==='edit'
+            ? `<div class="qedit"><span class="mini">Model answer — students reveal it with ✦ Review</span><textarea data-bind="slides.${i}.model">${esc(s.model||'')}</textarea></div>`
+            : ((s.model||'')
+                ? `<button class="review-btn" data-reveal="#tg-${i}">✦ Review my answer</button><div class="guidance" id="tg-${i}"><div class="gsec model"><div class="lab">${ICON.question} Model answer</div><div class="bd">${esc(s.model)}</div></div></div>`
+                : `<button class="btn" data-advance>Submit analysis</button>`)}
+        </div>
+      </div>
+    </div>`;
+  }
+  else if(s.type==='external'){
+    const feats=(s.features||[]).map((x,j)=>`<li><span class="editable" data-bind="slides.${i}.features.${j}" contenteditable="${mode==='edit'}">${esc(x)}</span>${mode==='edit'?`<button class="qdel" data-delfeat="${i}:${j}">✕</button>`:''}</li>`).join('');
+    h=`<div class="card pad">
+      <div class="exhibit">
+        <div class="ex-img" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`<img src="${esc(s.image)}" alt="">`:`<div class="ph">${ICON.image}<br>Drag an image / add URL</div>`}</div>
+        <div class="ex-body">
+          <div class="eyebrow editable" data-bind="slides.${i}.eyebrow" contenteditable="${mode==='edit'}">${esc(s.eyebrow||'Special exhibit')}</div>
+          <h2 class="ex-title editable" data-bind="slides.${i}.title" contenteditable="${mode==='edit'}">${esc(s.title)}</h2>
+          <div class="ex-desc editable" data-bind="slides.${i}.desc" contenteditable="${mode==='edit'}">${esc(s.desc)}</div>
+          <ul class="feat">${feats}</ul>
+          ${mode==='edit'?`<button class="qadd" data-addfeat="${i}">＋ feature</button>`:''}
+          <div><button class="launch" data-launch="${esc(s.url||'')}">${ICON.launch} <span class="editable" data-bind="slides.${i}.launchLabel" contenteditable="${mode==='edit'}">${esc(s.launchLabel||'Launch activity')}</span> →</button></div>
+          <div class="meta editable" data-bind="slides.${i}.meta" contenteditable="${mode==='edit'}">${esc(s.meta||'')}</div>
+          ${mode==='edit'?`<div class="setrow"><input data-urlfield="slides.${i}.url" value="${esc(s.url||'')}" placeholder="Activity URL (ClickView, Genially, etc.)"><button class="btn" data-applyurl="slides.${i}.url">Set link</button></div><div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Image URL"><button class="btn" data-applyurl="slides.${i}.image">Set image</button></div>`:''}
+        </div>
+      </div>
+    </div>`;
+  }
+  else if(s.type==='complete'){
+    const gained=(s.gained||[]).map((x,j)=>`<li><span class="editable" data-bind="slides.${i}.gained.${j}" contenteditable="${mode==='edit'}">${esc(x)}</span>${mode==='edit'?`<button class="qdel" data-delgain="${i}:${j}">✕</button>`:''}</li>`).join('');
+    h=`<div class="card pad complete">
+      <div class="medal">${ICON.medal}</div>
+      <h1 class="editable" data-bind="slides.${i}.title" contenteditable="${mode==='edit'}">${esc(s.title||'Lesson complete!')}</h1>
+      <div class="lead editable" data-bind="slides.${i}.lead" contenteditable="${mode==='edit'}">${esc(s.lead||'')}</div>
+      <div class="bento">
+        <div class="b">
+          <div class="b-h">${ICON.book} <span class="editable" data-bind="slides.${i}.gainedTitle" contenteditable="${mode==='edit'}">${esc(s.gainedTitle||'Knowledge gained')}</span></div>
+          <ul class="checklist">${gained}</ul>
+          ${mode==='edit'?`<button class="qadd" data-addgain="${i}">＋ point</button>`:''}
+        </div>
+        <div class="b achieve">
+          <div class="badge">${ICON.medal}</div>
+          <div class="b-title editable" data-bind="slides.${i}.badgeTitle" contenteditable="${mode==='edit'}">${esc(s.badgeTitle||'Achievement')}</div>
+          <div class="b-desc editable" data-bind="slides.${i}.badgeDesc" contenteditable="${mode==='edit'}">${esc(s.badgeDesc||'')}</div>
+        </div>
+      </div>
+      <div class="cta-row"><button class="btn" data-goto="0">Restart lesson →</button></div>
+    </div>`;
+  }
+  else if(s.type==='outcomes'){
+    const items=(s.outcomes||[]).map((x,j)=>`<li><span class="editable" data-bind="slides.${i}.outcomes.${j}" contenteditable="${mode==='edit'}">${esc(x)}</span>${mode==='edit'?`<button class="qdel" data-delout="${i}:${j}">✕</button>`:''}</li>`).join('');
+    const sylInline=(s.syllabus||[]).map((c,j)=>`<div class="syl"><span class="code editable" data-bind="slides.${i}.syllabus.${j}.code" contenteditable="true">${esc(c.code||'')}</span><div class="syt editable" data-bind="slides.${i}.syllabus.${j}.text" contenteditable="true">${esc(c.text||'')}</div><button class="qdel" data-delsyl="${i}:${j}">✕</button></div>`).join('');
+    h=`<div class="card pad outcomes">
+      <div class="out2">
+        <div class="out2-media">
+          <div class="srcframe" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`<img src="${esc(s.image)}" alt="">${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}</div>
+          ${mode==='edit'?`<div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Paste an image URL"><button class="btn" data-applyurl="slides.${i}.image">Set image</button></div>`:''}
+        </div>
+        <div class="out2-panel">
+          <div class="eyebrow editable" data-bind="slides.${i}.eyebrow" contenteditable="${mode==='edit'}">${esc(s.eyebrow||'Learning outcomes')}</div>
+          <h2 class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading||'By the end of this lesson you will be able to…')}</h2>
+          <ul class="outlist">${items}</ul>
+          ${mode==='edit'?`<button class="qadd" data-addout="${i}">＋ add an outcome</button>`:''}
+          <div class="out2-foot"><button class="syl-btn" data-sylpop="${i}">${ICON.book} NSW syllabus links →</button></div>
+        </div>
+      </div>
+      ${mode==='edit'?`<div class="syllabus"><div class="syl-h">${ICON.book} NSW syllabus links — shown to students in a popup</div>${sylInline}<button class="qadd" data-addsyl="${i}">＋ add a syllabus link</button></div>`:''}
+    </div>`;
+  }
+  $('#slide').innerHTML=h;
+  wire();
+  $('#prev').disabled=cur===0; $('#next').disabled=cur===LESSON.slides.length-1;
+}
+
+/* ---------- wire interactions ---------- */
+function wire(){
+  $('#slide').querySelectorAll('[data-bind]').forEach(el=>{
+    el.addEventListener('input',()=>{ setP(LESSON, el.dataset.bind, (el.tagName==='TEXTAREA'||el.tagName==='INPUT')?el.value:el.innerHTML); });
+  });
+  $('#slide').querySelectorAll('[data-split]').forEach(el=>{
+    el.addEventListener('input',()=>{ setP(LESSON, el.dataset.split, el.value.split('\n').map(x=>x.trim()).filter(Boolean)); });
+  });
+  $('#slide').querySelectorAll('[data-rev]').forEach(b=>b.onclick=()=>{
+    const[i,j]=b.dataset.rev.split(':'); const g=$('#g-'+i+'-'+j);
+    g.classList.toggle('show'); b.innerHTML=g.classList.contains('show')?'✦ Hide guidance':'✦ Review my answer';
+  });
+  const ap=$('#slide').querySelector('[data-applyi]'); if(ap) ap.onclick=()=>{const i=ap.dataset.applyi;LESSON.slides[i].src=$('#slide').querySelector('[data-seti]').value.trim();renderSlide();};
+  const av=$('#slide').querySelector('[data-applyv]'); if(av) av.onclick=()=>{const i=av.dataset.applyv;LESSON.slides[i].url=$('#slide').querySelector('[data-setv]').value.trim();renderSlide();};
+  const aq=$('#slide').querySelector('[data-addq]'); if(aq) aq.onclick=()=>{const i=aq.dataset.addq;LESSON.slides[i].items.push({prompt:"New question",model:"Model answer.",improve:["Point one"],pitfalls:["Pitfall one"]});renderSlide();};
+  $('#slide').querySelectorAll('[data-delq]').forEach(b=>b.onclick=()=>{const[i,j]=b.dataset.delq.split(':');LESSON.slides[i].items.splice(j,1);renderSlide();});
+  const ab=$('#slide').querySelector('[data-addblock]'); if(ab) ab.onclick=()=>{const i=ab.dataset.addblock;LESSON.slides[i].blocks.push({h:"New heading",bd:"Note text."});renderSlide();};
+  const nt=$('#slide').querySelector('[data-notetoggle]'); if(nt) nt.onclick=()=>{const nb=$('#slide').querySelector('.notes-body');if(!nb)return;const on=nb.classList.toggle('reveal');nt.classList.toggle('on',on);nt.innerHTML=on?'✓ Showing what to record':'✎ Highlight what to record';};
+  const as=$('#slide').querySelector('[data-applysrc]'); if(as) as.onclick=()=>{const i=as.dataset.applysrc;LESSON.slides[i].media.src=$('#slide').querySelector('[data-setsrc]').value.trim();renderSlide();};
+  $('#slide').querySelectorAll('[data-poi]').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();openPoi(b);}));
+  const apoi=$('#slide').querySelector('[data-addpoi]'); if(apoi) apoi.onclick=()=>{const si=apoi.dataset.addpoi;const m=LESSON.slides[si].media;(m.pois=m.pois||[]).push({x:50,y:50,kind:'tooltip',title:'New hotspot',info:'',url:''});renderSlide();};
+  $('#slide').querySelectorAll('[data-delpoi]').forEach(b=>b.onclick=()=>{const[si,ki]=b.dataset.delpoi.split(':');LESSON.slides[si].media.pois.splice(ki,1);renderSlide();});
+  $('#slide').querySelectorAll('[data-poikind]').forEach(sel=>sel.onchange=()=>{const[si,ki]=sel.dataset.poikind.split(':');LESSON.slides[si].media.pois[ki].kind=sel.value;renderSlide();});
+  $('#slide').querySelectorAll('[data-poidrag]').forEach(dot=>{
+    dot.addEventListener('pointerdown',ev=>{ev.preventDefault();ev.stopPropagation();
+      const frame=dot.closest('.srcframe'); if(!frame)return;
+      const[si,ki]=dot.dataset.poidrag.split(':').map(Number);
+      const move=e=>{const r=frame.getBoundingClientRect();
+        let x=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100)), y=Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100));
+        dot.style.left=x+'%'; dot.style.top=y+'%';
+        const p=LESSON.slides[si].media.pois[ki]; p.x=Math.round(x*10)/10; p.y=Math.round(y*10)/10;};
+      const up=()=>{document.removeEventListener('pointermove',move);document.removeEventListener('pointerup',up);};
+      document.addEventListener('pointermove',move); document.addEventListener('pointerup',up);
+    });
+  });
+  $('#slide').querySelectorAll('[data-expand]').forEach(b=>b.onclick=()=>expand(+b.dataset.expand));
+  $('#slide').querySelectorAll('[data-drop]').forEach(z=>{
+    z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('dragover');});
+    z.addEventListener('dragleave',()=>z.classList.remove('dragover'));
+    z.addEventListener('drop',e=>{
+      e.preventDefault(); z.classList.remove('dragover');
+      const path=z.dataset.drop, dt=e.dataTransfer;
+      if(dt.files&&dt.files[0]&&dt.files[0].type.startsWith('image/')){
+        const fr=new FileReader(); fr.onload=()=>{ setP(LESSON,path,fr.result); renderSlide(); }; fr.readAsDataURL(dt.files[0]);
+      } else { const u=(dt.getData('text/uri-list')||dt.getData('text/plain')||'').trim(); if(u){ setP(LESSON,path,u); renderSlide(); } }
+    });
+  });
+  const abg=$('#slide').querySelector('[data-applybg]'); if(abg) abg.onclick=()=>{const i=abg.dataset.applybg;LESSON.slides[i].bg=$('#slide').querySelector('[data-setsrc]').value.trim();renderSlide();};
+  const cbg=$('#slide').querySelector('[data-clearbg]'); if(cbg) cbg.onclick=()=>{const i=cbg.dataset.clearbg;delete LESSON.slides[i].bg;renderSlide();};
+  // ---- new museum-layout interactions ----
+  $('#slide').querySelectorAll('[data-applyurl]').forEach(b=>b.onclick=()=>{
+    const p=b.dataset.applyurl, inp=$('#slide').querySelector('[data-urlfield="'+p+'"]');
+    if(inp){ setP(LESSON,p,inp.value.trim()); renderSlide(); }});
+  $('#slide').querySelectorAll('[data-advance]').forEach(b=>b.onclick=()=>go(cur+1));
+  $('#slide').querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>go(+b.dataset.goto));
+  $('#slide').querySelectorAll('[data-launch]').forEach(b=>b.onclick=()=>{const u=b.dataset.launch;if(u)window.open(u,'_blank','noopener');});
+  $('#slide').querySelectorAll('[data-reveal]').forEach(b=>b.onclick=()=>{const t=$(b.dataset.reveal);if(t)t.classList.toggle('show');});
+  $('#slide').querySelectorAll('[data-expandsrc]').forEach(b=>b.onclick=()=>{const s=b.dataset.expandsrc;if(s)lb('<div class="lb-frame"><img src="'+esc(s)+'" alt=""></div>');});
+  const asp=$('#slide').querySelector('[data-addspec]'); if(asp) asp.onclick=()=>{LESSON.slides[asp.dataset.addspec].specs.push({k:'Label',v:'Value'});renderSlide();};
+  $('#slide').querySelectorAll('[data-addfield]').forEach(b=>b.onclick=()=>{const[i,k]=b.dataset.addfield.split(':');
+    LESSON.slides[i].fields.push(k==='matrix'?{kind:'matrix',n:'New field',hint:'',cells:[{lbl:'Label A',ph:''},{lbl:'Label B',ph:''}]}:{kind:'text',n:'New field',hint:''});renderSlide();});
+  $('#slide').querySelectorAll('[data-delfield]').forEach(b=>b.onclick=()=>{const[i,j]=b.dataset.delfield.split(':');LESSON.slides[i].fields.splice(j,1);renderSlide();});
+  const afe=$('#slide').querySelector('[data-addfeat]'); if(afe) afe.onclick=()=>{LESSON.slides[afe.dataset.addfeat].features.push('New feature');renderSlide();};
+  $('#slide').querySelectorAll('[data-delfeat]').forEach(b=>b.onclick=()=>{const[i,j]=b.dataset.delfeat.split(':');LESSON.slides[i].features.splice(j,1);renderSlide();});
+  const agn=$('#slide').querySelector('[data-addgain]'); if(agn) agn.onclick=()=>{LESSON.slides[agn.dataset.addgain].gained.push('New point');renderSlide();};
+  $('#slide').querySelectorAll('[data-delgain]').forEach(b=>b.onclick=()=>{const[i,j]=b.dataset.delgain.split(':');LESSON.slides[i].gained.splice(j,1);renderSlide();});
+  const aou=$('#slide').querySelector('[data-addout]'); if(aou) aou.onclick=()=>{LESSON.slides[aou.dataset.addout].outcomes.push('New outcome');renderSlide();};
+  $('#slide').querySelectorAll('[data-delout]').forEach(b=>b.onclick=()=>{const[i,j]=b.dataset.delout.split(':');LESSON.slides[i].outcomes.splice(j,1);renderSlide();});
+  const asy=$('#slide').querySelector('[data-addsyl]'); if(asy) asy.onclick=()=>{const sl=LESSON.slides[asy.dataset.addsyl];(sl.syllabus=sl.syllabus||[]).push({code:'',text:'New syllabus link'});renderSlide();};
+  $('#slide').querySelectorAll('[data-delsyl]').forEach(b=>b.onclick=()=>{const[i,j]=b.dataset.delsyl.split(':');LESSON.slides[i].syllabus.splice(j,1);renderSlide();});
+  $('#slide').querySelectorAll('[data-sylpop]').forEach(b=>b.onclick=()=>{
+    const sl=LESSON.slides[b.dataset.sylpop];
+    const rows=(sl.syllabus||[]).map(c=>`<div class="syl"><span class="code">${esc(c.code||'')}</span><div class="syt">${esc(c.text||'')}</div></div>`).join('')||'<div class="syt" style="color:var(--muted)">No syllabus links added yet.</div>';
+    lb('<div class="syl-pop"><div class="syl-pop-h">'+ICON.book+' Linked to the NSW syllabus</div>'+rows+'</div>');
+  });
+}
+
+/* ---------- navigation & chrome ---------- */
+function go(i){ if(i<0||i>=LESSON.slides.length)return; cur=i; renderNav(); renderSlide();
+  $('.stagewrap').scrollTop=0; }
+$('#prev').onclick=()=>go(cur-1); $('#next').onclick=()=>go(cur+1);
+$('#nav').onclick=e=>{
+  const go_=e.target.closest('[data-go]'); const mv=e.target.closest('[data-move]'); const dl=e.target.closest('[data-del]');
+  if(mv){const[i,d]=mv.dataset.move.split(':').map(Number);const ni=i+d;if(ni<0||ni>=LESSON.slides.length)return;
+    const a=LESSON.slides;[a[i],a[ni]]=[a[ni],a[i]];cur=ni;renderNav();renderSlide();return;}
+  if(dl){const i=+dl.dataset.del;if(LESSON.slides.length<=1)return;LESSON.slides.splice(i,1);if(cur>=LESSON.slides.length)cur=LESSON.slides.length-1;renderNav();renderSlide();return;}
+  if(go_)go(+go_.dataset.go);
+};
+$('#addbar').onclick=e=>{const b=e.target.closest('[data-add]');if(!b)return;
+  const T=b.dataset.add, tpl={
+    cover:{type:'cover',tag:'Section',title:'New section',sub:'Subtitle'},
+    notes:{type:'notes',heading:'Notes',blocks:[{h:'Heading',bd:'Note text.'}],guide:'Guidance for note-taking.'},
+    image:{type:'image',heading:'Image',src:'',cap:'Caption'},
+    video:{type:'video',heading:'Video',url:'',cap:'Caption'},
+    question:{type:'question',skill:'Skill',heading:'Practise',items:[{prompt:'New question',model:'Model answer.',improve:['Point one'],pitfalls:['Pitfall one']}]},
+    source:{type:'source',heading:'Source — title',credit:'Citation',media:{kind:'text',text:'Paste the source extract here.',pois:[]},items:[{prompt:'Question',model:'Model answer.',improve:['Point'],pitfalls:['Pitfall']}]},
+    model3d:{type:'model3d',heading:'Artefact in 3D',media:{kind:'model3d',src:'',poster:'',pois:[]},items:[]},
+    artifact:{type:'artifact',eyebrow:'Artifact detail',title:'The artefact',desc:'A short description of the object and why it matters as evidence.',image:'',scale:'Viewing scale 1:1',specs:[{k:'Material',v:'—'},{k:'Date',v:'—'},{k:'Find site',v:'—'}],ctaLabel:''},
+    worksheet:{type:'worksheet',heading:'Source analysis',subtitle:'Examining the source',image:'',fig:'Fig 1.1: Source',tag:'Primary source',panelTitle:'Analysis worksheet',panelSub:'Observation & interpretation',fields:[{kind:'text',n:'1. Observation',hint:'What do you notice first?'},{kind:'matrix',n:'2. Key details',hint:'Identify the essentials',cells:[{lbl:'Detail A',ph:'e.g. …'},{lbl:'Detail B',ph:'e.g. …'}]},{kind:'text',n:'3. Interpretation',hint:'What does it mean, and how do you know?'}]},
+    task:{type:'task',module:'Analysis module',section:'Section 1 of 1: Interpretation',progress:60,question:'Write the analytical question here.',image:'',respLabel:'Student analysis response',model:''},
+    external:{type:'external',eyebrow:'Special exhibit',title:'External activity',desc:'Describe the activity students will launch.',image:'',features:['What they will do','A second feature','A third feature'],url:'',meta:'Estimated time: 15 mins',launchLabel:'Launch activity'},
+    complete:{type:'complete',title:'Lesson complete!',lead:"You've finished this lesson.",gainedTitle:'Knowledge gained',gained:['Point one','Point two','Point three'],badgeTitle:'Well done',badgeDesc:'Earned for completing this lesson.'},
+    outcomes:{type:'outcomes',eyebrow:'Learning outcomes',heading:'By the end of this lesson you will be able to…',image:'',outcomes:['Describe …','Explain …','Evaluate …'],syllabus:[{code:'AH11-6',text:'Link to a NSW syllabus outcome'}]}
+  }[T];
+  LESSON.slides.splice(cur+1,0,JSON.parse(JSON.stringify(tpl))); go(cur+1);
+};
+$('#modeSeg').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;
+  mode=b.dataset.mode; document.body.className=mode;
+  $('#modeSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.mode===mode));
+  renderSlide();
+};
+$('#themeSel').onchange=e=>{LESSON.meta.theme=e.target.value;setTheme(e.target.value);renderNav();};
+document.addEventListener('keydown',e=>{
+  const t=e.target; if(t.matches('textarea,input,[contenteditable=true]'))return;
+  if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);
+});
+
+/* ---------- export ---------- */
+$('#exportBtn').onclick=()=>{
+  document.getElementById('lesson-data').textContent=JSON.stringify(LESSON,null,2);
+  const clone=document.documentElement.cloneNode(true);
+  clone.querySelector('#slide').innerHTML='';        // re-renders fresh from data on open
+  clone.querySelector('body').className='study';
+  const html='<!DOCTYPE html>\n'+clone.outerHTML;
+  const blob=new Blob([html],{type:'text/html'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=(LESSON.meta.title||'lesson').replace(/[^\w]+/g,'-').toLowerCase()+'.html';
+  a.click(); URL.revokeObjectURL(a.href);
+};
+
+/* ---------- JSON data panel ---------- */
+const modal=$('#modal');
+$('#dataBtn').onclick=()=>{ $('#jsonArea').value=JSON.stringify(LESSON,null,2); $('#jsonErr').textContent=''; modal.hidden=false; };
+$('#modalX').onclick=()=>modal.hidden=true;
+modal.onclick=e=>{ if(e.target===modal) modal.hidden=true; };
+$('#jsonLoad').onclick=()=>{
+  try{
+    let d=JSON.parse($('#jsonArea').value);
+    if(Array.isArray(d)) d={meta:{title:LESSON.meta.title,theme:LESSON.meta.theme},slides:d};
+    if(!d.slides||!Array.isArray(d.slides)) throw new Error('Your JSON needs a "slides" array.');
+    d.meta=Object.assign({title:'Lesson',theme:'indigo'}, d.meta||{});
+    LESSON=d; cur=0; modal.hidden=true; render();
+  }catch(err){ $('#jsonErr').textContent='⚠ '+err.message; }
+};
+$('#jsonCopy').onclick=()=>{ try{navigator.clipboard.writeText(JSON.stringify(LESSON,null,2));}catch(e){} $('#jsonCopy').textContent='Copied ✓'; setTimeout(()=>$('#jsonCopy').textContent='Copy',1200); };
+$('#jsonDl').onclick=()=>{ const b=new Blob([JSON.stringify(LESSON,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=(LESSON.meta.title||'lesson').replace(/[^\w]+/g,'-').toLowerCase()+'.json'; a.click(); URL.revokeObjectURL(a.href); };
+
+/* ---- expand / lightbox ---- */
+function lb(html){ const el=$('#lightbox'); el.querySelector('.lb-body').innerHTML=html; el.classList.add('show');
+  el.querySelectorAll('[data-poi]').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();openPoi(b);})); }
+function closeLb(){ const el=$('#lightbox'); el.classList.remove('show'); el.querySelector('.lb-body').innerHTML=''; }
+function expand(i){ const s=LESSON.slides[i];
+  if(s.type==='image'){ if(s.src) lb(`<div class="lb-frame"><img src="${esc(s.src)}" alt=""></div>`); return; }
+  const m=s.media||{};
+  if(m.kind==='model3d'){ if(m.src) lb(`<div class="lb-frame model"><model-viewer src="${esc(m.src)}" camera-controls auto-rotate touch-action="pan-y" shadow-intensity="1" exposure="1"></model-viewer></div>`); }
+  else if(m.src){ lb(`<div class="lb-frame"><img src="${esc(m.src)}" alt="">${poiDotsFor(i,m.pois)}</div>`); }
+}
+$('#lbClose').onclick=closeLb;
+$('#lightbox').onclick=e=>{ if(e.target.id==='lightbox') closeLb(); };
+
+/* ---- present (board) mode ---- */
+function setPresent(on){
+  document.body.classList.toggle('present',on);
+  if(on){ const el=document.documentElement, rf=el.requestFullscreen||el.webkitRequestFullscreen;
+    if(rf){ try{ const p=rf.call(el); if(p&&p.catch)p.catch(()=>{}); }catch(e){} } }
+  else if(document.fullscreenElement&&document.exitFullscreen){ document.exitFullscreen().catch(()=>{}); }
+}
+$('#presentBtn').onclick=()=>{
+  if(mode==='edit'){ mode='study'; document.body.className='study'; $('#modeSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.mode==='study')); renderSlide(); }
+  setPresent(true);
+};
+$('#presentExit').onclick=()=>setPresent(false);
+$('.stagewrap').addEventListener('click',e=>{
+  if(!document.body.classList.contains('present'))return;
+  if($('#lightbox').classList.contains('show'))return;
+  if(e.target.closest('button,a,select,textarea,input,model-viewer,[data-poi],[contenteditable=true]'))return;
+  if(e.clientX < window.innerWidth*0.22) go(cur-1); else go(cur+1);
+});
+document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement && document.body.classList.contains('present')) setPresent(false); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#lightbox').classList.contains('show')) closeLb(); });
+
+render();
+</script>
+</body>
+</html>
