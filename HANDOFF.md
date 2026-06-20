@@ -37,7 +37,7 @@ lessons/                    # exported, published lessons (served to students)
 .github/workflows/
   validate.yml              # runs scripts/validate.mjs on every PR/push
   automerge.yml             # enables GitHub auto-merge on clean PRs
-  deploy-cloudflare.yml     # OPTIONAL CI deploy (off unless USE_CI_DEPLOY=true)
+  deploy-pages.yml          # deploys the repo root to GitHub Pages on push to main
 ```
 
 The **app** (`lesson-studio.html`) is published too, so you can author from any machine.
@@ -172,35 +172,37 @@ regress to features that break those.
 - **Accessibility** has not had a dedicated pass (focus rings, ARIA on hotspot buttons,
   keyboard access to hotspots, `prefers-reduced-motion` for the dot pulse, contrast audit).
 
-## 7. Deployment (Cloudflare Pages) & the "auto‑export" question
+## 7. Deployment (GitHub Pages) & the "auto‑export" question
 
-**Reality check:** the browser app can't securely push straight to Cloudflare (that would
-mean embedding an API token in a public HTML file). The clean, automatic flow is:
+**Reality check:** the browser app can't securely push anywhere itself (that would mean
+embedding a token in a public HTML file). The clean, automatic flow is:
 
 ```
 Author in lesson-studio.html  →  Export (downloads a standalone study-mode .html)
    →  drop it into /lessons/   →  commit / open PR
    →  CodeRabbit reviews  →  checks pass  →  auto-merge to main
-   →  Cloudflare Pages auto-deploys  →  student link: https://<project>.pages.dev/lessons/<name>.html
+   →  GitHub Pages auto-deploys  →  student link:
+        https://willwint2104.github.io/OnlineLessonMaker/lessons/<name>.html
 ```
 
-**Recommended: Cloudflare Pages Git integration (no secrets).**
-1. Cloudflare dashboard → Workers & Pages → Create → Pages → **Connect to Git** → pick this repo.
-2. Framework preset: **None**. Build command: _(empty)_. Build output dir: **/** (repo root).
-3. Production branch: `main`. Save. Every merge to `main` now deploys automatically.
-4. The app is at `…/lesson-studio.html`; lessons at `…/lessons/<name>.html`.
+**GitHub Pages via GitHub Actions (no secrets).** The site is the repo root, deployed by
+`.github/workflows/deploy-pages.yml` on every push to `main`.
+1. One-time: **Settings → Pages → Source = GitHub Actions** (already set).
+2. Every merge to `main` runs `deploy-pages` and publishes the repo root automatically.
+3. The app is at `…/lesson-studio.html`; lessons at `…/lessons/<name>.html`.
 
-Optional alternative: `deploy-cloudflare.yml` (Wrangler in CI). It's **off** unless you set
-repo variable `USE_CI_DEPLOY=true` and add `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID`
-secrets. Use **either** the dashboard integration **or** this workflow, not both.
+**No native per‑PR preview.** GitHub Pages has no built‑in preview deployment, so
+**pre‑merge visual review = the `screenshots` artifact** (uploaded by the Screenshots
+workflow on every PR) **plus `node scripts/shots.mjs` locally**; open the **live**
+`github.io` page to confirm once the change is on `main`.
 
 ## 8. School firewall — make a lesson "transmit cleanly"
 
 The goal: a published lesson makes **zero third‑party requests** — everything served from
 the one Pages domain your school allowlists.
 
-1. **Ask IT to allowlist one domain** — your `*.pages.dev` project domain (or a custom
-   domain you map). One ask, done.
+1. **Allowlist one domain** — `willwint2104.github.io` (this repo's GitHub Pages host).
+   Already confirmed reachable at school. One ask, done.
 2. **Vendor the fonts** into the repo and point the `<link>` at local `woff2` (kills
    `fonts.googleapis.com` / `fonts.gstatic.com`). _Planned — see Roadmap._
 3. **Self‑host `model-viewer`** (`npm i @google/model-viewer`, copy the dist file into the
@@ -210,11 +212,13 @@ the one Pages domain your school allowlists.
    third‑party image/video URLs are the main thing IT can't predict.
 5. **Video:** prefer your school's sanctioned platform (ClickView in most NSW schools is
    allowlisted) over YouTube. `toEmbed` passes ClickView/iframe links through unchanged.
-6. **HTTPS** is automatic on Pages.
+6. **HTTPS** is automatic on GitHub Pages.
 
+Only the `willwint2104.github.io` host needs to be reachable (already confirmed at school).
 Until vendoring is done, a lesson still works behind a firewall **except** web‑fonts (falls
-back to system fonts) and 3D (needs jsDelivr). If your school blocks jsDelivr, avoid the
-`model3d`/3D source until step 3 is done.
+back to system fonts) and 3D (needs jsDelivr) — so **vendoring fonts + model‑viewer is next**
+(Roadmap / Priority 1) to get a lesson to **zero third‑party requests**. If your school
+blocks jsDelivr, avoid the `model3d`/3D source until that's done.
 
 ## 9. Roadmap / next up
 

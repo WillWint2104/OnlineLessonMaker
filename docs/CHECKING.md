@@ -19,11 +19,13 @@ Default coverage: `neutral, egypt, rome, wellbeing, ww1` × slides `cover, outco
 artifact, notes, source‑6B, complete`. Change with env vars, e.g.
 `THEMES=egypt,ww1 SLIDES=0,1,9 node scripts/shots.mjs`.
 
-## Layer 3 — Cloudflare preview deployment (automatic, the real thing)
-With the Pages **Git integration** connected, every PR/branch gets its own **preview URL**.
-Open it to use the actual app in a real browser — ideally **on the school network**, which
-is the only place that truly answers "will it transmit to students?" (fonts, 3D, embeds,
-firewall). Merge only deploys to production after this looks right.
+## Layer 3 — GitHub Pages production after merge (the real thing)
+GitHub Pages has **no native per‑PR preview**. So pre‑merge, lean on the **screenshots
+artifact** (Layer 2) plus `node scripts/shots.mjs` locally; post‑merge, `deploy-pages` ships
+`main` and you open the **live** `https://willwint2104.github.io/OnlineLessonMaker/` page in a
+real browser — ideally **on the school network**, the only place that truly answers "will it
+transmit to students?" (fonts, 3D, embeds, firewall). Because there's no preview, do the
+visual review carefully at Layers 1–2 before merge.
 
 ## Layer 4 — This chat (on demand)
 When we change something here, I render the affected themes/slides and show them inline
@@ -55,8 +57,9 @@ content slide (fills board, click + arrows, no nav bar) and **Edit** mode (text 
 hotspot drag works).
 
 ## Cadence
-- **Every PR:** Layer 1 must be green; skim Layer 2; open Layer 3 preview if the change is
-  visual or touches delivery.
-- **Before a lesson goes to a class:** open the Cloudflare **production** URL on the school
+- **Every PR:** Layer 1 must be green; skim Layer 2 (there's no PR preview — this is the
+  pre-merge visual check); open the live Layer 3 page after merge if the change is visual or
+  touches delivery.
+- **Before a lesson goes to a class:** open the GitHub Pages **production** URL on the school
   network and click through the whole lesson once.
 - **Log it:** add a line to `CHANGELOG.md` so "what changed and was it checked" stays visible.

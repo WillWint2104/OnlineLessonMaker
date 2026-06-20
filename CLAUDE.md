@@ -35,7 +35,7 @@ the surrounding code — don't reformat unrelated lines.
     (Web‑fonts and 3D only load with internet; offline they fall back — expected.)
   - If you touched engine/layout, re‑check the slices listed in `docs/CHECKING.md`.
 - Open the PR with `gh pr create` and fill the PR template. CodeRabbit reviews, the
-  `validate` check gates, auto‑merge lands it when clean, Cloudflare Pages deploys `main`.
+  `validate` check gates, auto‑merge lands it when clean, GitHub Pages deploys `main`.
   Don't bypass review or force‑merge.
 - In the same PR, update `CHANGELOG.md` (and `HANDOFF.md` roadmap if scope changed).
 
