@@ -557,6 +557,31 @@ body.present .out2-media .srcframe{min-height:0;}
 body.present .cover2 .hero{min-height:0;}
 body.present .card{cursor:pointer;}
 body.present .card a,body.present .card button,body.present .card .poi,body.present .card model-viewer,body.present .card input,body.present .card textarea{cursor:auto;}
+/* A2 — present-mode discussion pills */
+.present-disc{margin-top:20px;}
+.disc-lab{display:flex;align-items:center;gap:8px;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:12px;}
+.disc-lab svg{width:15px;height:15px;}
+.qpills{display:flex;flex-wrap:wrap;gap:12px;}
+.qpill{font-family:var(--display);font-weight:600;font-size:clamp(1rem,1.6vw,1.3rem);letter-spacing:var(--display-spacing);padding:12px 24px;border-radius:var(--radius);
+  background:var(--accent-soft);color:var(--accent-ink);border:1px solid color-mix(in srgb,var(--accent) 32%,transparent);cursor:pointer;transition:transform .08s ease,background .15s;}
+.qpill:hover{background:color-mix(in srgb,var(--accent) 16%,var(--surface));transform:translateY(-1px);}
+.qpill:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+/* A2 — big question overlay (present discussion) */
+#lightbox .qbig{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:42px 46px;max-width:900px;width:92vw;max-height:88vh;overflow:auto;box-shadow:0 40px 100px -20px rgba(0,0,0,.6);cursor:pointer;}
+.qbig-num{display:flex;align-items:center;gap:9px;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:14px;}
+.qbig-num svg{width:16px;height:16px;}
+.qbig-prompt{font-family:var(--display);font-size:clamp(1.6rem,3vw,2.5rem);line-height:1.25;color:var(--text);letter-spacing:var(--display-spacing);}
+.qbig-disc{margin-top:26px;border-top:1px solid var(--line);padding-top:22px;display:flex;flex-direction:column;gap:18px;}
+.qbig-disc .gsec .lab{display:flex;align-items:center;gap:7px;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:7px;}
+.qbig-disc .gsec .lab svg{width:14px;height:14px;}
+.qbig-disc .bd{font-size:clamp(1.05rem,1.7vw,1.3rem);line-height:1.6;color:var(--bd);}
+.qbig-disc .checklist{margin:0;padding-left:1.15em;font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.55;color:var(--bd);}
+.qbig-hint{margin-top:22px;font-size:.85rem;color:var(--muted);}
+/* A1 — opt-in long-form scrolling layout (per-slide "layout":"scroll") */
+.stagewrap.layout-scroll{overflow-y:auto;align-items:flex-start;}
+.stagewrap.layout-scroll .stage,.stagewrap.layout-scroll #slide{min-height:auto;}
+.stagewrap.layout-scroll #slide{flex:none;}
+.stagewrap.layout-scroll .card{flex:none;min-height:auto;overflow:visible;justify-content:flex-start;}
 
 /* ---- expand button + lightbox ---- */
 .expand{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:9px;z-index:3;cursor:pointer;
@@ -803,6 +828,35 @@ function qItems(i, items){
     </div>
   </div>`).join('')+`<button class="qadd" data-addq="${i}">＋ add another question</button>`;
 }
+// A2: in PRESENT mode, source/question slides surface their questions as numbered
+// discussion pills instead of inline answerable cards. A pill opens the question
+// large in the lightbox; a click inside reveals the model answer / discussion points.
+function qPills(i, items){
+  if(!items||!items.length) return '';
+  const pills=items.map((q,j)=>`<button class="qpill" data-qpill="${i}:${j}">Q${j+1}</button>`).join('');
+  return `<div class="present-disc"><div class="disc-lab">${ICON.question} Discussion — tap a question</div>
+    <div class="qpills">${pills}</div></div>`;
+}
+function openPresentQuestion(i,j){
+  const q=(LESSON.slides[i].items||[])[j]; if(!q) return;
+  const improve=(q.improve||[]).map(x=>`<li>${esc(x)}</li>`).join('');
+  const pit=(q.pitfalls||[]).map(x=>`<li>${esc(x)}</li>`).join('');
+  lb(`<div class="qbig" data-qbig>
+    <div class="qbig-num">${ICON.question} Question ${j+1}</div>
+    <div class="qbig-prompt">${esc(q.prompt)}</div>
+    <div class="qbig-disc" hidden>
+      <div class="gsec model"><div class="lab">${ICON.question} Model answer — discussion</div><div class="bd">${esc(q.model||'')}</div></div>
+      ${improve?`<div class="gsec imp"><div class="lab">✓ Look for…</div><ul class="checklist">${improve}</ul></div>`:''}
+      ${pit?`<div class="gsec pit"><div class="lab">! Common pitfalls</div><ul class="checklist pit">${pit}</ul></div>`:''}
+    </div>
+    <div class="qbig-hint" data-qbig-hint>Click to reveal the discussion points · Esc to close</div>
+  </div>`);
+  const box=$('#lightbox').querySelector('[data-qbig]');
+  if(box) box.addEventListener('click',()=>{
+    const disc=box.querySelector('.qbig-disc'), hint=box.querySelector('[data-qbig-hint]');
+    if(disc&&disc.hidden){ disc.hidden=false; if(hint) hint.textContent='Esc or ✕ to close · click a pill for the next question'; }
+  });
+}
 function sourceMedia(i,m){
   if(m.kind==='image'){
     const dots=poiDotsFor(i,m.pois);
@@ -856,6 +910,7 @@ function showPoi(t,title,info){
 }
 function renderSlide(){
   const s=LESSON.slides[cur], i=cur; let h='';
+  const present=document.body.classList.contains('present');
   if(s.type==='cover'){
     const bg=s.bg||'';
     h=`<div class="card cover cover2">
@@ -921,7 +976,7 @@ function renderSlide(){
     h=`<div class="card pad">
       <span class="q-skill">${ICON.question} <span class="editable" data-bind="slides.${i}.skill" contenteditable="${mode==='edit'}">${esc(s.skill)}</span></span>
       <div class="ehead" style="margin-top:14px"><h2 class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading)}</h2></div>
-      ${qItems(i,s.items)}
+      ${present?qPills(i,s.items):qItems(i,s.items)}
     </div>`;
   }
   else if(s.type==='source'||s.type==='model3d'){
@@ -933,7 +988,7 @@ function renderSlide(){
       ${s.credit!==undefined?`<div class="credit editable" data-bind="slides.${i}.credit" contenteditable="${mode==='edit'}">${esc(s.credit)}</div>`:''}
       <div class="source-grid stack">
         <div class="source-pane">${sourceMedia(i,m)}</div>
-        ${hasQ?`<div class="q-pane">${qItems(i,s.items||[])}</div>`:''}
+        ${hasQ?`<div class="q-pane">${present?qPills(i,s.items||[]):qItems(i,s.items||[])}</div>`:''}
       </div>
     </div>`;
   }
@@ -1072,6 +1127,9 @@ function renderSlide(){
   }
   $('#slide').innerHTML=h;
   wire();
+  // A1: per-slide layout — "scroll" allows long-form vertical scrolling; "fit"
+  // (default) keeps the slide to one screen. Present always uses fit.
+  $('.stagewrap').classList.toggle('layout-scroll', !present && s.layout==='scroll');
   $('#prev').disabled=cur===0; $('#next').disabled=cur===LESSON.slides.length-1;
 }
 
@@ -1128,6 +1186,7 @@ function wire(){
   $('#slide').querySelectorAll('[data-applyurl]').forEach(b=>b.onclick=()=>{
     const p=b.dataset.applyurl, inp=$('#slide').querySelector('[data-urlfield="'+p+'"]');
     if(inp){ setP(LESSON,p,inp.value.trim()); renderSlide(); }});
+  $('#slide').querySelectorAll('[data-qpill]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); const[i,j]=b.dataset.qpill.split(':').map(Number); openPresentQuestion(i,j); });
   $('#slide').querySelectorAll('[data-advance]').forEach(b=>b.onclick=()=>go(cur+1));
   $('#slide').querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>go(+b.dataset.goto));
   $('#slide').querySelectorAll('[data-launch]').forEach(b=>b.onclick=()=>{const u=b.dataset.launch;if(u)window.open(u,'_blank','noopener');});
@@ -1241,6 +1300,7 @@ function setPresent(on){
   if(on){ const el=document.documentElement, rf=el.requestFullscreen||el.webkitRequestFullscreen;
     if(rf){ try{ const p=rf.call(el); if(p&&p.catch)p.catch(()=>{}); }catch(e){} } }
   else if(document.fullscreenElement&&document.exitFullscreen){ document.exitFullscreen().catch(()=>{}); }
+  renderSlide();   // re-render so present-mode question pills / fit layout take effect
 }
 $('#presentBtn').onclick=()=>{
   if(mode==='edit'){ mode='study'; document.body.className='study'; $('#modeSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.mode==='study')); renderSlide(); }

@@ -8,6 +8,15 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Present-mode discussion (A2)** — in Present mode, `source`/`question` slides render
+  the teaching content but surface questions as numbered **discussion pills** (Q1, Q2 …)
+  instead of inline answerable cards. Tapping a pill opens the question large in the
+  lightbox (big readable prompt → click to reveal the model answer / "look for" /
+  "pitfalls"). Pills don't advance the slide (treated like hotspots); clicking elsewhere
+  advances as before. **Study mode is unchanged** — questions stay inline and answerable.
+- **Per-slide `layout` (A1)** — optional `"layout": "fit" | "scroll"` (default = `fit`,
+  current behaviour). `scroll` allows intentional long-form vertical scrolling; Present
+  always uses `fit`.
 - Root `index.html` landing page — self-contained (system fonts, no third-party
   requests), meta-refresh redirect to `lesson-studio.html` with a visible fallback link.
   Stops `https://willwint2104.github.io/OnlineLessonMaker/` returning 404; becomes the
