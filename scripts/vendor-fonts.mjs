@@ -26,6 +26,9 @@ const FONTS = [
   ['Cinzel',         'cinzel',         [['500', 'normal'], ['600', 'normal']]],
   ['Fraunces',       'fraunces',       [['500', 'normal'], ['600', 'normal']]],
   ['Oswald',         'oswald',         [['500', 'normal'], ['600', 'normal'], ['700', 'normal']]],
+  ['Archivo Narrow', 'archivo-narrow', [['600', 'normal'], ['700', 'normal']]],
+  ['Source Serif 4', 'source-serif-4', [['400', 'normal'], ['400', 'italic']]],
+  ['Courier Prime',  'courier-prime',  [['400', 'normal'], ['700', 'normal']]],
 ];
 
 let css = '';

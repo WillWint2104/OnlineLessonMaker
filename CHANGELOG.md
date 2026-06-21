@@ -7,6 +7,21 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **WW1 "Great War Archive" theme — fidelity pass.** Retoned the `:root[data-theme="ww1"]`
+  token block: warm-paper canvas (`#fcf9f0`), oxidised-crimson accent (`#6a020a`), slate
+  "command-post" sidebar, dark sepia/charcoal hero, **hard stacked-paper shadow**
+  (`3px 3px 0`), sharp radius. New type (theme-scoped, no other theme touched): **Archivo
+  Narrow** display (UPPERCASE headlines), **Source Serif 4** body, **Courier Prime**
+  eyebrows/metadata — vendored via `@fontsource` and base64-inlined (validate still reports
+  no third-party host). New **motif** (coordinate-tick / crimson-stamp emblem) + a
+  weathered-paper `--grain`. `--accent-ink` kept a dark oxidised crimson (the spec's `#fff`
+  would be white-on-light-pink everywhere the token is used — unreadable); white-on-crimson
+  chips noted for the polish pass. CSS tokens + motif + fonts only — no engine changes;
+  STUDY / PRESENT / EXPORT and the data model unchanged. HT5 (Stage 5 History) outcomes
+  codes documented in the theme; a dedicated ww1 sample lesson is the place to wire them
+  (the shared seed stays Egypt/AH11).
+
 ### Added
 - **Slide-type palette** — a categorised, wireframe-thumbnail "add a slide" surface (Edit
   only, bottom strip) replacing the append-only chip menu. Category tags (All · Structure ·

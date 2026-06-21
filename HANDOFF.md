@@ -264,8 +264,15 @@ YouTube embeds) — `lessons/*.html` only *warns*, by design.
   model‑viewer + sample GLB same‑origin under `assets/vendor/`; validator hard‑fails on app
   third‑party hosts). Follow‑up: copy the vendor file into `/lessons/assets/vendor/` for any
   published 3D lesson (see §8.3).
-- **WW1 design pass** — apply the WW1 visual direction over the existing slide types and wire
-  the NSW Stage 5 History (HT5‑…) outcomes into the outcomes slide (as Egypt carries AH11‑…).
+- ~~**WW1 design pass**~~ — **DONE (visual)**: the `ww1` "Great War Archive" theme is retoned
+  (warm-paper canvas, oxidised-crimson accent, slate command-post sidebar, dark sepia hero,
+  hard stacked-paper shadow, sharp radius; Archivo Narrow UPPERCASE display, Source Serif 4
+  body, Courier Prime eyebrows/metadata — all vendored/inlined; coordinate-tick/crimson-stamp
+  motif + weathered-paper grain). **Follow-ups:** olive-drab button token + container-0/button-4
+  radius split (polish); white-on-crimson chips (accent-ink is dark for contrast); and a **ww1
+  sample lesson** to carry the HT5 (Stage 5 History) outcomes codes — the live seed is the
+  Egypt/AH11 Tutankhamun lesson, so HT5 wiring belongs in a dedicated ww1 sample, not the
+  shared seed.
 - Optional: light "archive" sidebars per theme (currently Rome/Wellbeing/WW1 keep dark
   sidebars; Egypt is light).
 - Decide the **`task`** type: delete or rebuild.
