@@ -832,7 +832,7 @@ function render(){
   $('#topTitle').textContent=LESSON.meta.title;
   $('#brandTitle').textContent=LESSON.meta.title;
   $('#themeSel').value=LESSON.meta.theme;
-  renderNav(); renderSlide(); renderPalette();
+  renderNav(); renderSlide();
 }
 function renderNav(){
   const nav=$('#nav');
@@ -1442,17 +1442,17 @@ $('#nav').onclick=e=>{
   nav.addEventListener('dragstart',e=>{
     if(mode!=='edit'){ return; }
     const it=e.target.closest('.nitem'); if(!it){ return; }
-    from=+it.dataset.go; e.dataTransfer.effectAllowed='move';
+    from=+it.dataset.go; paletteType=null;   // starting a reorder — never treat it as a palette insert
+    e.dataTransfer.effectAllowed='move';
     try{ e.dataTransfer.setData('text/plain',String(from)); }catch(_){ }
     it.classList.add('dragging');
   });
   nav.addEventListener('dragover',e=>{
     if(mode!=='edit' || (from===null && !paletteType)) return;
-    const it=e.target.closest('.nitem'); if(!it) return;
-    e.preventDefault(); e.dataTransfer.dropEffect=paletteType?'copy':'move';
-    const after=dropAfter(it,e.clientY);
+    e.preventDefault(); e.dataTransfer.dropEffect=paletteType?'copy':'move';   // allow drop even over empty nav space (palette append-at-end)
+    const it=e.target.closest('.nitem');
     nav.querySelectorAll('.nitem').forEach(n=>n.classList.remove('drop-before','drop-after'));
-    it.classList.add(after?'drop-after':'drop-before');
+    if(it) it.classList.add(dropAfter(it,e.clientY)?'drop-after':'drop-before');
   });
   nav.addEventListener('drop',e=>{
     if(mode!=='edit' || (from===null && !paletteType)) return;
@@ -1623,7 +1623,7 @@ $('.stagewrap').addEventListener('click',e=>{
 document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement && document.body.classList.contains('present')) setPresent(false); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#lightbox').classList.contains('show')) closeLb(); });
 
-render();
+render(); renderPalette();   // palette content is static (per category) — build it once, not on every render()
 </script>
 </body>
 </html>
