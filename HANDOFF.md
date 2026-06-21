@@ -53,8 +53,9 @@ Everything is driven by one object, `LESSON`, of shape:
 
 ```js
 LESSON = {
-  meta:   { title, theme },          // theme: neutral|egypt|rome|wellbeing|ww1
-  slides: [ { type, ... }, ... ]     // one object per slide, see Data model
+  meta:   { title, theme,            // theme: neutral|egypt|rome|wellbeing|ww1
+            subject?, year?, unit?, outcomes? },   // optional program-map tags (Edit › Lesson)
+  slides: [ { type, ..., layout? }, ... ]          // layout?: "fit"|"scroll"; see Data model
 }
 ```
 
@@ -64,9 +65,15 @@ LESSON = {
 - `wire()` runs **after every render** and attaches all event handlers (the DOM is rebuilt
   each slide, so handlers are re‑attached each time — there are no long‑lived listeners on
   slide content).
-- **Live editing** uses `data-bind="slides.N.field"` (writes back via `setP`) on
-  `contenteditable` elements and `<input>`/`<textarea>`; `data-split` does the same but
-  splits a textarea into an array (one item per line).
+- **Editing is the Edit-mode inspector** (not inline contenteditable any more). In Edit the
+  canvas renders **Study-identical** (`renderCanvas()` temporarily forces `mode='study'` while
+  building, so no contenteditable / inline editors / edit-only sizing — true WYSIWYG).
+  `tagZones()` then adds `data-zone` hooks (derived from the existing `data-bind` paths +
+  media wells) and the selection outline; clicking a zone sets `selZone` and
+  `renderInspector()` builds a schema-driven right panel. Panel fields still use
+  `data-bind`/`setP` (and `data-split` for one-per-line arrays); a panel `input` calls
+  `renderCanvas()` (canvas-only, so the field keeps focus). STUDY/PRESENT/EXPORT and the data
+  model are untouched — Edit is a UI layer.
 - **Theming** is pure CSS custom properties: `:root[data-theme="…"]` blocks define the
   palette/fonts/motif; `setTheme(name)` sets/removes the `data-theme` attribute on `<html>`.
 - **Lightbox / popups** (`lb(html)` / `closeLb()`) inject arbitrary HTML into a shared
@@ -77,7 +84,9 @@ LESSON = {
 
 | Function | Role |
 |---|---|
-| `renderSlide()` | builds the current slide's HTML (switch on `s.type`) |
+| `renderSlide()` | `renderCanvas()` + `renderInspector()` |
+| `renderCanvas()` | builds the slide HTML (switch on `s.type`); Study-identical even in Edit |
+| `tagZones()` / `renderInspector()` | Edit-mode: tag `data-zone`s + selection; build the right properties panel |
 | `wire()` | (re)attaches all handlers after a render |
 | `setP/getP` | read/write a dotted path into `LESSON` (e.g. `slides.3.title`) |
 | `esc(s)` | HTML‑escape (use for **all** user content interpolated into HTML) |
