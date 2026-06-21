@@ -8,6 +8,23 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Inspector "media block" — centralised add / replace / remove / fit / focus / zoom for all
+  media.** The Edit inspector now manages every image zone (cover hero, slide image, artifact /
+  outcomes / worksheet / external image, source-image) from one panel block: a thumbnail (or a
+  **"Drop an image or paste a URL"** drop area when empty), **Replace** / **Remove**, an image-URL
+  field, a **Fit** segmented control (Cover / Contain → CSS `object-fit`), a **Focus & zoom**
+  control (drag pad + 3×3 quick-pick → `object-position`; zoom 1.0–2.5× → image `transform: scale`),
+  and — for the **cover hero only** — a **"Behind the gradient"** toggle + **Overlay strength**
+  slider (full-bleed image behind the theme gradient at the chosen opacity, title/content on top).
+  New per-media data (all with back-compatible defaults so existing slides are unaffected):
+  `fit` (`"cover"` default), `focus:{x,y}` (0–1, default `.5,.5`), `zoom` (default `1`); cover adds
+  `heroBg` (default `false`) and `overlay` (0–1, default `.66`). **Dropped-image fix:** dropping an
+  image **file** onto the panel drop area *or* the selected media well on the (now scale-aware)
+  canvas reads it as a data URL and embeds it **inline** in the lesson (self-contained / firewall-
+  safe, no external host); dropping/pasting a **URL** sets the field. Render is identical across
+  Study / Present / Export and survives Export; all URLs `esc()`-d. Interactive embeds keep their
+  Activity-URL + Source-fallback fields (integrated, not duplicated); 3D models keep URL + remove.
+  (Freeform crop is a deliberate separate follow-up.)
 - **"Open source" fallback link on embed-bearing slides (video / external).** School networks
   block embeds (X-Frame-Options / policy), so an **always-visible** `<a target="_blank"
   rel="noopener noreferrer">` opens the original in a new tab even when the embed is present.

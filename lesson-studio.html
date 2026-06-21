@@ -248,10 +248,11 @@ body.edit [data-edit-only]{display:revert;}
 
 /* cover */
 .cover .hero{position:relative;min-height:340px;background:var(--hero);display:flex;align-items:flex-end;padding:38px;overflow:hidden;}
-.cover .hero.has-img{background-image:var(--cover-img);background-size:cover;background-position:center;}
 .cover .hero::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(120% 120% at 85% 12%,rgba(255,255,255,.2),transparent 52%);mix-blend-mode:soft-light;}
 .cover .hero-veil{position:absolute;inset:0;z-index:0;background:linear-gradient(to top,rgba(34,18,10,.66),rgba(34,18,10,.08) 55%,rgba(34,18,10,.34));}
+.cover .hero-img{position:absolute;inset:0;width:100%;height:100%;z-index:0;}
+.cover .hero.hero-bg .hero-veil{background:var(--hero);}
 .cover .hero-inner{position:relative;z-index:2;}
 .cover .tag{color:rgba(255,255,255,.92);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;
   display:inline-flex;align-items:center;gap:11px;}
@@ -431,6 +432,36 @@ body.edit .inspector{display:flex;flex-direction:column;width:340px;flex:0 0 340
 .inspector .seg2 button.on{background:var(--accent);color:#fff;}
 .inspector .muted{color:var(--muted);font-weight:400;}
 .inspector .small{font-size:.74rem;line-height:1.4;}
+/* ----- media block ----- */
+.inspector .mblock{display:flex;flex-direction:column;gap:9px;}
+.inspector .ibtn{font-size:.78rem;font-weight:600;color:var(--accent);padding:5px 10px;border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:7px;background:var(--surface);}
+.inspector .ibtn:hover{background:var(--accent-soft);}
+.inspector .mthumb{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface);}
+.inspector .mthumb img{display:block;width:100%;height:130px;object-fit:cover;}
+.inspector .mthumb-acts{position:absolute;left:0;right:0;bottom:0;display:flex;gap:7px;justify-content:flex-end;padding:7px;
+  background:linear-gradient(to top,rgba(0,0,0,.55),transparent);}
+.inspector .mthumb-acts .ibtn,.inspector .mthumb-acts .ibtn-x{background:rgba(255,255,255,.92);color:#222;border-color:transparent;}
+.inspector .mdrop{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;font-size:.78rem;color:var(--muted);
+  border:2px dashed var(--line);border-radius:10px;padding:18px 12px;background:var(--surface);}
+.inspector .mdrop-ic{opacity:.6;}.inspector .mdrop-ic svg{width:26px;height:26px;}
+.inspector .mdrop.dragover,.inspector .mthumb.dragover{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
+.inspector .mwarn{font-size:.74rem;line-height:1.4;color:#8a4b12;background:#fff3e0;border:1px solid #f0c890;border-radius:7px;padding:6px 9px;}
+.inspector .mfwrap{display:flex;align-items:center;gap:12px;}
+.inspector .mfocus{position:relative;width:108px;height:108px;flex:none;border:1px solid var(--line);border-radius:9px;cursor:crosshair;touch-action:none;
+  background:var(--surface) repeating-linear-gradient(0deg,transparent 0 35px,color-mix(in srgb,var(--line) 50%,transparent) 35px 36px),
+             repeating-linear-gradient(90deg,transparent 0 35px,color-mix(in srgb,var(--line) 50%,transparent) 35px 36px);}
+.inspector .mfpresets{display:grid;grid-template-columns:repeat(3,16px);grid-template-rows:repeat(3,16px);gap:5px;}
+.inspector .mfpresets button{width:16px;height:16px;border:1px solid var(--line);border-radius:4px;background:var(--surface);}
+.inspector .mfpresets button:hover{border-color:var(--accent);background:var(--accent-soft);}
+.inspector .mfpresets button.on{background:var(--accent);border-color:var(--accent);}
+.inspector .mfpoint{position:absolute;width:13px;height:13px;border-radius:50%;background:var(--accent);border:2px solid #fff;
+  box-shadow:0 1px 4px rgba(0,0,0,.4);transform:translate(-50%,-50%);pointer-events:none;}
+.inspector .mrow{display:flex;align-items:center;gap:10px;}
+.inspector .mrl{font-size:.74rem;font-weight:600;color:var(--muted);min-width:52px;}
+.inspector .mrow input[type=range]{flex:1;accent-color:var(--accent);}
+.inspector .mrv{font-size:.76rem;font-weight:600;color:var(--text);min-width:42px;text-align:right;}
+.inspector .mcheck{display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:600;color:var(--text);cursor:pointer;}
+.inspector .mcheck input{accent-color:var(--accent);}
 /* ===== slide-type palette (Edit only) ===== */
 .palette{display:none;}
 body.edit .palette{display:flex;flex-direction:column;gap:9px;padding:11px 16px 13px;border-top:1px solid var(--line);background:var(--surface);}
@@ -892,6 +923,22 @@ function sourceFallback(s){
   const label=s.sourceLabel || (s.type==='video'?'Open video ↗':'Open the interactive ↗');
   return `<a class="src-fallback" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
 }
+/* ---- media display props (fit / focus / zoom), stored on the slide; safe numeric/enum values ---- */
+function mFocus(s){ const f=s.focus||{}; const c=v=>{ v=+v; return isNaN(v)?0.5:Math.max(0,Math.min(1,v)); }; return {x:c(f.x),y:c(f.y)}; }
+function mZoom(s){ const z=+s.zoom; return isNaN(z)?1:Math.max(1,Math.min(2.5,z)); }
+function mFit(s){ return s.fit==='contain'?'contain':'cover'; }
+function mOverlay(s){ return s.overlay===undefined?0.66:Math.max(0,Math.min(1,(+s.overlay||0))); }
+function imgStyle(s){ const f=mFocus(s), z=mZoom(s), px=(f.x*100).toFixed(1)+'%', py=(f.y*100).toFixed(1)+'%';
+  let st=`object-fit:${mFit(s)};object-position:${px} ${py};`;
+  if(z!==1) st+=`transform:scale(${z});transform-origin:${px} ${py};`;   // no transform at default zoom → no compositing layer / blur on unchanged images
+  return st; }
+function imgEl(src,s,extra){ return `<img src="${esc(src)}" alt="" style="${imgStyle(s)}"${extra||''}>`; }
+/* Embed a dropped/picked image FILE inline (data URL) so the lesson stays self-contained / firewall-safe.
+   No external host. Large files are soft-warned in the media block (no blocking dialog). */
+function setMediaFile(path,file){ if(!file||!file.type||!file.type.startsWith('image/')) return;
+  const fr=new FileReader(); fr.onload=()=>{ setP(LESSON,path,fr.result); renderSlide(); }; fr.readAsDataURL(file); }
+function pickMediaFile(path){ const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+  inp.onchange=()=>{ if(inp.files&&inp.files[0]) setMediaFile(path,inp.files[0]); }; inp.click(); }
 function title(s){
   if(s.type==='cover') return s.title||'Section';
   if(s.type==='question') return s.skill||'Question';
@@ -988,7 +1035,7 @@ function openPresentQuestion(i,j){
 function sourceMedia(i,m){
   if(m.kind==='image'){
     const dots=poiDotsFor(i,m.pois);
-    return `<div class="srcframe" ${mode==='edit'?`data-drop="slides.${i}.media.src"`:''}>${m.src?`<img src="${esc(m.src)}" alt="">${mode!=='edit'?`<button class="expand" data-expand="${i}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}${dots}</div>
+    return `<div class="srcframe" ${mode==='edit'?`data-drop="slides.${i}.media.src"`:''}>${m.src?`${imgEl(m.src,m)}${mode!=='edit'?`<button class="expand" data-expand="${i}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}${dots}</div>
       <div class="setrow"><input data-setsrc="${i}" value="${esc(m.src||'')}" placeholder="Paste an image URL"><button class="btn" data-applysrc="${i}">Set image</button></div>
       ${mode==='edit'?poiEditor(i,m):`<div class="hint">Click a numbered hotspot — it opens a tooltip, a window card, or a video, depending on its type.</div>`}`;
   }
@@ -1045,9 +1092,12 @@ function renderCanvas(){
   try {
   if(s.type==='cover'){
     const bg=s.bg||'';
+    const heroOn=!!bg&&!!s.heroBg;                                  // "behind the gradient" — image sits behind the THEME gradient (default false: behind a dark legibility veil)
+    const ov=mOverlay(s);
     h=`<div class="card cover cover2">
-      <div class="hero ${bg?'has-img':''} ${mode==='edit'?'drop':''}" ${mode==='edit'?`data-drop="slides.${i}.bg"`:''} ${bg?`style="--cover-img:url('${bg.replace(/'/g,'%27')}')"`:''}>
-        ${bg?'<div class="hero-veil"></div>':''}
+      <div class="hero ${heroOn?'hero-bg':''} ${mode==='edit'?'drop':''}" ${mode==='edit'?`data-drop="slides.${i}.bg"`:''}>
+        ${bg?imgEl(bg,s,' class="hero-img"'):''}
+        ${bg?`<div class="hero-veil"${heroOn?` style="opacity:${ov.toFixed(2)}"`:''}></div>`:''}
         <div class="hero-inner">
           <div class="emblem"></div>
           <div class="eyebrow2 editable" data-bind="slides.${i}.tag" contenteditable="${mode==='edit'}">${esc(s.tag)}</div>
@@ -1098,7 +1148,7 @@ function renderCanvas(){
     h=`<div class="card pad">
       <div class="eyebrow">Look</div>
       <div class="ehead"><h2 class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading)}</h2></div>
-      <div class="frame" ${mode==='edit'?`data-drop="slides.${i}.src"`:''}>${s.src?`<img src="${esc(s.src)}" alt="">${mode!=='edit'?`<button class="expand" data-expand="${i}" title="Expand">⤢</button>`:''}`:
+      <div class="frame" ${mode==='edit'?`data-drop="slides.${i}.src"`:''}>${s.src?`${imgEl(s.src,s)}${mode!=='edit'?`<button class="expand" data-expand="${i}" title="Expand">⤢</button>`:''}`:
         `<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}</div>
       <div class="cap editable" data-bind="slides.${i}.cap" contenteditable="${mode==='edit'}">${esc(s.cap)}</div>
       <div class="setrow"><input data-seti="${i}" value="${esc(s.src)}" placeholder="Paste an image URL"><button class="btn" data-applyi="${i}">Set image</button></div>
@@ -1138,7 +1188,7 @@ function renderCanvas(){
           ${((s.ctaLabel||'')||mode==='edit')?`<button class="art-cta" ${mode==='edit'?'':'data-advance'}><span class="editable" data-bind="slides.${i}.ctaLabel" contenteditable="${mode==='edit'}">${esc(s.ctaLabel||'')}</span> →</button>`:''}
         </div>
         <div class="art-media">
-          <div class="artframe" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`<img src="${esc(s.image)}" alt="">
+          <div class="artframe" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`${imgEl(s.image,s)}
             <span class="scale editable" data-bind="slides.${i}.scale" contenteditable="${mode==='edit'}">${esc(s.scale||'Viewing scale 1:1')}</span>
             ${mode!=='edit'?`<div class="ctrlbar"><button data-expandsrc="${esc(s.image)}">${ICON.zoom}Zoom</button><button data-expandsrc="${esc(s.image)}">${ICON.info}Detail</button></div>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}</div>
           <div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Paste an image URL"><button class="btn" data-applyurl="slides.${i}.image">Set image</button></div>
@@ -1163,7 +1213,7 @@ function renderCanvas(){
       <div class="sub-it editable" data-bind="slides.${i}.subtitle" contenteditable="${mode==='edit'}">${esc(s.subtitle||'')}</div></div>
       <div class="ws-stack">
         <div class="ws-media">
-          <div class="srcframe" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`<img src="${esc(s.image)}" alt="">${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}</div>
+          <div class="srcframe" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`${imgEl(s.image,s)}${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}</div>
           <div class="figrow"><span class="editable" data-bind="slides.${i}.fig" contenteditable="${mode==='edit'}">${esc(s.fig||'')}</span><span class="tag editable" data-bind="slides.${i}.tag" contenteditable="${mode==='edit'}">${esc(s.tag||'')}</span></div>
           <div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Paste an image URL"><button class="btn" data-applyurl="slides.${i}.image">Set image</button></div>
         </div>
@@ -1184,7 +1234,7 @@ function renderCanvas(){
       <div class="taskq editable" data-bind="slides.${i}.question" contenteditable="${mode==='edit'}">${esc(s.question||'')}</div>
       <div class="taskrow">
         <div class="task-media">
-          <div class="taskimg" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`<img src="${esc(s.image)}" alt="">${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image / add URL below</div>`}</div>
+          <div class="taskimg" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`${imgEl(s.image,s)}${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image / add URL below</div>`}</div>
           <div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Paste an image URL"><button class="btn" data-applyurl="slides.${i}.image">Set</button></div>
         </div>
         <div class="task-resp">
@@ -1203,7 +1253,7 @@ function renderCanvas(){
     const feats=(s.features||[]).map((x,j)=>`<li><span class="editable" data-bind="slides.${i}.features.${j}" contenteditable="${mode==='edit'}">${esc(x)}</span>${mode==='edit'?`<button class="qdel" data-delfeat="${i}:${j}">✕</button>`:''}</li>`).join('');
     h=`<div class="card pad">
       <div class="exhibit">
-        <div class="ex-img" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`<img src="${esc(s.image)}" alt="">`:`<div class="ph">${ICON.image}<br>Drag an image / add URL</div>`}</div>
+        <div class="ex-img" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`${imgEl(s.image,s)}`:`<div class="ph">${ICON.image}<br>Drag an image / add URL</div>`}</div>
         <div class="ex-body">
           <div class="eyebrow editable" data-bind="slides.${i}.eyebrow" contenteditable="${mode==='edit'}">${esc(s.eyebrow||'Special exhibit')}</div>
           <h2 class="ex-title editable" data-bind="slides.${i}.title" contenteditable="${mode==='edit'}">${esc(s.title)}</h2>
@@ -1244,7 +1294,7 @@ function renderCanvas(){
     h=`<div class="card pad outcomes">
       <div class="out2">
         <div class="out2-media">
-          <div class="srcframe" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`<img src="${esc(s.image)}" alt="">${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}</div>
+          <div class="srcframe" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`${imgEl(s.image,s)}${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image here, or add a URL below</div>`}</div>
           ${mode==='edit'?`<div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Paste an image URL"><button class="btn" data-applyurl="slides.${i}.image">Set image</button></div>`:''}
         </div>
         <div class="out2-panel">
@@ -1305,10 +1355,11 @@ function zoneFromField(f){
   return f;
 }
 function mediaInfo(i,s){
-  if(s.type==='cover')  return {path:`slides.${i}.bg`,  kind:'image'};
-  if(s.type==='image')  return {path:`slides.${i}.src`, kind:'image'};
-  if(s.type==='source'||s.type==='model3d'){ const k=(s.media&&s.media.kind)||'text'; return {path:`slides.${i}.media.${k==='text'?'text':'src'}`, kind:k}; }
-  return {path:`slides.${i}.image`, kind:'image'};   // outcomes / artifact / worksheet / external
+  // path = the URL field; props = where fit/focus/zoom live; obj = the object holding props
+  if(s.type==='cover')  return {path:`slides.${i}.bg`,  kind:'image', props:`slides.${i}`, obj:s};
+  if(s.type==='image')  return {path:`slides.${i}.src`, kind:'image', props:`slides.${i}`, obj:s};
+  if(s.type==='source'||s.type==='model3d'){ const k=(s.media&&s.media.kind)||'text'; return {path:`slides.${i}.media.${k==='text'?'text':'src'}`, kind:k, props:`slides.${i}.media`, obj:(s.media||{})}; }   // read-only: never inject media on render (setP creates the path on write)
+  return {path:`slides.${i}.image`, kind:'image', props:`slides.${i}`, obj:s};   // outcomes / artifact / worksheet / external
 }
 function tagZones(s,i){
   const slide=$('#slide');
@@ -1335,12 +1386,43 @@ function inList(label,path,arr){ return `<label>${esc(label)} <span class="muted
 function ig(zone,sel,inner){ return `<div class="ig ${zone===sel?'cur':''}" data-fz="${zone}">${inner}</div>`; }
 function mediaEditor(i,s){
   const mi=mediaInfo(i,s);
+  // Source TEXT media → plain textarea, no image controls.
   if(mi.kind==='text') return inA('Source text',mi.path,getP(LESSON,mi.path));
-  const lab=mi.kind==='model'||mi.kind==='model3d'?'Model URL (.glb / .gltf)':'Image URL';
-  const val=getP(LESSON,mi.path)||'';
-  let h=inT(lab,mi.path,val)+`<div class="muted small">Tip: you can also drag an image straight onto the well on the canvas.</div>`;
-  if(val) h+=`<button class="ibtn-x" data-clearmedia="${mi.path}">Clear media</button>`;
-  // Source-image hotspots: reuse the existing editor (add/remove/kind/title/text); drag-reposition stays on the canvas.
+  // 3D MODEL → URL + remove (model-viewer fills its frame; fit/focus/zoom don't apply).
+  if(mi.kind==='model3d'){
+    const mv=getP(LESSON,mi.path)||'';
+    let h=inT('Model URL (.glb / .gltf)',mi.path,mv);
+    if(mv) h+=`<button class="ibtn-x" data-clearmedia="${mi.path}">Remove model</button>`;
+    return h;
+  }
+  // IMAGE → full media block (thumbnail/drop · replace/remove · URL · fit · focus & zoom).
+  const url=getP(LESSON,mi.path)||'';
+  const o=mi.obj, fit=mFit(o), z=mZoom(o), f=mFocus(o);
+  let h=`<div class="mblock">`;
+  if(url){
+    h+=`<div class="mthumb" data-mediadrop="${mi.path}"><img src="${esc(url)}" alt="">
+        <div class="mthumb-acts"><button class="ibtn" data-mediapick="${mi.path}">Replace</button><button class="ibtn-x" data-clearmedia="${mi.path}">Remove</button></div></div>`;
+    if(url.slice(0,5)==='data:' && url.length>4200000) h+=`<div class="mwarn">⚠ This embedded image is large (~${(url.length*0.75/1048576).toFixed(1)}MB) and will bloat the exported lesson.</div>`;
+  } else {
+    h+=`<div class="mdrop" data-mediadrop="${mi.path}"><div class="mdrop-ic">${ICON.image}</div><div>Drop an image or paste a URL</div><button class="ibtn" data-mediapick="${mi.path}">Choose file…</button></div>`;
+  }
+  h+=`<label>Image URL</label><input class="ii" data-mediaurl="${mi.path}" value="${esc(url)}" placeholder="Paste or drop an image URL">`;
+  h+=`<label>Fit</label><div class="seg2"><button data-fit="cover" data-fitprop="${mi.props}" class="${fit==='cover'?'on':''}">Cover</button><button data-fit="contain" data-fitprop="${mi.props}" class="${fit==='contain'?'on':''}">Contain</button></div>`;
+  const near=(a,b)=>Math.abs(a-b)<0.02;
+  h+=`<label>Focus &amp; zoom</label><div class="mfwrap">`+
+     `<div class="mfocus" data-focus="${mi.props}" title="Click or drag to set the focus point"><div class="mfpoint" style="left:${(f.x*100).toFixed(1)}%;top:${(f.y*100).toFixed(1)}%"></div></div>`+
+     `<div class="mfpresets" data-focus="${mi.props}">`+
+       [0,0.5,1].map(yy=>[0,0.5,1].map(xx=>`<button data-fx="${xx}" data-fy="${yy}" class="${(near(f.x,xx)&&near(f.y,yy))?'on':''}" title="Quick pick"></button>`).join('')).join('')+
+     `</div></div>`;
+  h+=`<div class="mrow"><span class="mrl">Zoom</span><input type="range" min="1" max="2.5" step="0.05" value="${z}" data-zoom="${mi.props}"><span class="mrv" data-zoomval>${z.toFixed(2)}×</span></div>`;
+  h+=`</div>`;
+  // Cover hero only: full-bleed image behind the theme gradient + overlay strength.
+  if(s.type==='cover'){
+    const heroOn=!!s.heroBg, ov=mOverlay(s);
+    h+=`<label class="mcheck"><input type="checkbox" data-herobg ${heroOn?'checked':''}> Behind the gradient</label>`;
+    h+=`<div class="mrow"><span class="mrl">Overlay</span><input type="range" min="0" max="1" step="0.05" value="${ov}" data-overlay ${heroOn?'':'disabled'}><span class="mrv" data-overlayval>${Math.round(ov*100)}%</span></div>`;
+  }
+  // Source-image hotspots: reuse the existing editor; drag-reposition stays on the canvas.
   if(s.media&&s.media.kind==='image') h+=poiEditor(i,s.media);
   return h;
 }
@@ -1434,6 +1516,32 @@ function wireInspector(){
     (s[key]=s[key]||[]).push(JSON.parse(JSON.stringify(def))); renderSlide(); });
   ins.querySelectorAll('[data-delrep]').forEach(b=>b.onclick=()=>{ const[key,i,j]=b.dataset.delrep.split(':'); LESSON.slides[+i][key].splice(+j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-clearmedia]').forEach(b=>b.onclick=()=>{ setP(LESSON,b.dataset.clearmedia,''); renderSlide(); });
+  // ---- media block: add/replace/remove · url · fit · focus · zoom · cover hero ----
+  ins.querySelectorAll('[data-mediapick]').forEach(b=>b.onclick=()=>pickMediaFile(b.dataset.mediapick));
+  ins.querySelectorAll('[data-mediaurl]').forEach(el=>el.addEventListener('input',()=>{ setP(LESSON,el.dataset.mediaurl,el.value.trim()); renderCanvas(); }));
+  ins.querySelectorAll('[data-fit]').forEach(b=>b.onclick=()=>{ setP(LESSON,b.dataset.fitprop+'.fit',b.dataset.fit); renderSlide(); });
+  ins.querySelectorAll('[data-zoom]').forEach(sl=>sl.addEventListener('input',()=>{ setP(LESSON,sl.dataset.zoom+'.zoom',+sl.value);
+    const v=sl.parentNode.querySelector('[data-zoomval]'); if(v) v.textContent=Number(sl.value).toFixed(2)+'×'; renderCanvas(); }));
+  ins.querySelectorAll('[data-fx]').forEach(b=>b.onclick=()=>{ const fp=b.closest('[data-focus]').dataset.focus; setP(LESSON,fp+'.focus',{x:+b.dataset.fx,y:+b.dataset.fy}); renderSlide(); });
+  const fz=ins.querySelector('.mfocus[data-focus]');
+  if(fz){ const pt=fz.querySelector('.mfpoint'), fp=fz.dataset.focus;
+    const place=e=>{ const r=fz.getBoundingClientRect(); if(!r.width||!r.height) return;
+      const x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width)), y=Math.max(0,Math.min(1,(e.clientY-r.top)/r.height));
+      if(pt){ pt.style.left=(x*100).toFixed(1)+'%'; pt.style.top=(y*100).toFixed(1)+'%'; }
+      setP(LESSON,fp+'.focus',{x:Math.round(x*1000)/1000,y:Math.round(y*1000)/1000}); renderCanvas(); };
+    fz.addEventListener('pointerdown',e=>{ if(e.target.closest('[data-fx]')) return; e.preventDefault(); place(e);
+      const mv=ee=>place(ee), up=()=>{ document.removeEventListener('pointermove',mv); document.removeEventListener('pointerup',up); };
+      document.addEventListener('pointermove',mv); document.addEventListener('pointerup',up); }); }
+  const hb=ins.querySelector('[data-herobg]'); if(hb) hb.onchange=()=>{ LESSON.slides[cur].heroBg=hb.checked; renderSlide(); };
+  const ovl=ins.querySelector('[data-overlay]'); if(ovl) ovl.addEventListener('input',()=>{ LESSON.slides[cur].overlay=+ovl.value;
+    const v=ins.querySelector('[data-overlayval]'); if(v) v.textContent=Math.round(ovl.value*100)+'%'; renderCanvas(); });
+  ins.querySelectorAll('[data-mediadrop]').forEach(z=>{
+    z.addEventListener('dragover',e=>{ e.preventDefault(); z.classList.add('dragover'); });
+    z.addEventListener('dragleave',()=>z.classList.remove('dragover'));
+    z.addEventListener('drop',e=>{ e.preventDefault(); z.classList.remove('dragover'); const path=z.dataset.mediadrop, dt=e.dataTransfer;
+      if(dt.files&&dt.files[0]&&dt.files[0].type.startsWith('image/')) setMediaFile(path,dt.files[0]);
+      else { const u=(dt.getData('text/uri-list')||dt.getData('text/plain')||'').trim(); if(u){ setP(LESSON,path,u); renderSlide(); } } });
+  });
   // hotspot editor (reused poiEditor controls, scoped to the panel)
   const apoi=ins.querySelector('[data-addpoi]'); if(apoi) apoi.onclick=()=>{ const si=apoi.dataset.addpoi; const m=LESSON.slides[si].media; (m.pois=m.pois||[]).push({x:50,y:50,kind:'tooltip',title:'New hotspot',info:'',url:''}); renderSlide(); };
   ins.querySelectorAll('[data-delpoi]').forEach(b=>b.onclick=()=>{ const[si,ki]=b.dataset.delpoi.split(':'); LESSON.slides[si].media.pois.splice(ki,1); renderSlide(); });
@@ -1482,9 +1590,8 @@ function wire(){
     z.addEventListener('drop',e=>{
       e.preventDefault(); z.classList.remove('dragover');
       const path=z.dataset.drop, dt=e.dataTransfer;
-      if(dt.files&&dt.files[0]&&dt.files[0].type.startsWith('image/')){
-        const fr=new FileReader(); fr.onload=()=>{ setP(LESSON,path,fr.result); renderSlide(); }; fr.readAsDataURL(dt.files[0]);
-      } else { const u=(dt.getData('text/uri-list')||dt.getData('text/plain')||'').trim(); if(u){ setP(LESSON,path,u); renderSlide(); } }
+      if(dt.files&&dt.files[0]&&dt.files[0].type.startsWith('image/')) setMediaFile(path,dt.files[0]);
+      else { const u=(dt.getData('text/uri-list')||dt.getData('text/plain')||'').trim(); if(u){ setP(LESSON,path,u); renderSlide(); } }
     });
   });
   const abg=$('#slide').querySelector('[data-applybg]'); if(abg) abg.onclick=()=>{const i=abg.dataset.applybg;LESSON.slides[i].bg=$('#slide').querySelector('[data-setsrc]').value.trim();renderSlide();};
