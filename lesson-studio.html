@@ -73,14 +73,18 @@
   /* "Terra Anima" fidelity pass. NSW Stage 5 Geography (GE5) is this theme's outcomes
      family — e.g. GE5-1/2 (environments & change), GE5-5 (sustainability), GE5-7/8 (acquires
      & communicates geographical information). Wire GE5 codes into a wellbeing sample lesson. */
-  --canvas:#fbfaee; --surface:#ffffff; --text:#1b1c15; --muted:#444840; --line:#c4c8bd; --bd:#c4c8bd;
+  --canvas:#fbfaee; --surface:#ffffff; --text:#1b1c15; --muted:#444840; --line:#c4c8bd; --bd:#353a2e;
+  /* NOTE: --bd is the body-text token (12 sites: .nblock .bd, .srctext, .outlist/.checklist li,
+     .art-desc, .ex-desc, .syl .syt…), NOT a border. The spec's "#c4c8bd / muted-sage card border"
+     is the CARD BORDER → handled by the scoped .card{border-color:#b9cda9} below; --bd stays a
+     dark sage so body text is readable on the light canvas/surface. */
   --accent:#4f6144; --accent-soft:#d4e9c4; --accent-ink:#2f4128;
   /* NOTE: spec asked accent-ink:#fff, but this token is text on LIGHT surfaces — the
      --accent-soft chips (.q-skill, .gsec.model, .syl .code, .qpill…) AND --surface/--canvas
      (.gsec.model .bd, .guide .gt). #fff is unreadable there, so it's a dark sage; white-on-
      sage chips + terracotta CTA / sky-blue pill tokens are noted for the polish pass. */
   --ok:#4f6144; --warn:#95482c;   /* sage "improve", terracotta "pitfall" — palette-true */
-  --sidebar:#f1eee3; --sidebar-2:#4f6144; --sidebar-text:#1b1c15; --sidebar-mut:#75786f;
+  --sidebar:#f1eee3; --sidebar-2:#4f6144; --sidebar-text:#1b1c15; --sidebar-mut:#62675a;   /* darkened from #75786f → ~4.5:1 on the light rail */
   /* LIGHT rail — Egypt-style dark-on-light overrides, themed sage */
   --sidebar-title:#1b1c15; --sidebar-itemtext:#1b1c15; --sidebar-hover:rgba(79,97,68,.10);
   --sidebar-sep:rgba(27,28,21,.10); --sidebar-icon:rgba(79,97,68,.14); --sidebar-track:rgba(27,28,21,.12);
@@ -95,9 +99,11 @@
 :root[data-theme="wellbeing"] .eyebrow,:root[data-theme="wellbeing"] .eyebrow2,:root[data-theme="wellbeing"] .q-skill,:root[data-theme="wellbeing"] .est,:root[data-theme="wellbeing"] .meta,:root[data-theme="wellbeing"] .prog .lab,:root[data-theme="wellbeing"] .zone-lab,:root[data-theme="wellbeing"] .gsec .lab{font-family:"Inter",system-ui,sans-serif;font-weight:600;text-transform:uppercase;}
 :root[data-theme="wellbeing"] .credit{font-family:"EB Garamond",Georgia,serif;}   /* keep the citation editorial (Inter has no italic vendored) */
 :root[data-theme="wellbeing"] .nitem.on .tx b,:root[data-theme="wellbeing"] .nitem.on .tx span{color:#fff;}   /* white text on the dark-sage active-item fill */
-:root[data-theme="wellbeing"] .cover2 h1 em{color:var(--accent);font-weight:600;}   /* the sage accent word — EB Garamond italic 600 */
+:root[data-theme="wellbeing"] .nitem.on::before{background:var(--accent-soft);}   /* visible indicator bar (here the active fill --sidebar-2 equals --accent) */
+:root[data-theme="wellbeing"] .cover2 h1 em{font-weight:600;}   /* EB Garamond italic-600 accent word; stays white on the sage hero (a sage colour would be low-contrast there) */
 :root[data-theme="wellbeing"] .card{border-color:#b9cda9;border-radius:.875rem;}   /* muted-sage card border, organic radius */
-:root[data-theme="wellbeing"] .checklist:not(.pit) li::before{background:transparent;border:2px solid var(--accent);}   /* topo-ring dots (leave .pit warn-coloured) */
+/* (the checkmark .checklist bullets keep their mask + are now sage via --ok; a true topo/leaf
+   bullet would need replacing that mask — left for the polish pass) */
 :root[data-theme="ww1"]{
   /* "Great War Archive" fidelity pass. NSW Stage 5 History (HT5) is this theme's outcomes
      code family — e.g. HT5-3 (motives/actions of past individuals & groups), HT5-5 (cause &
