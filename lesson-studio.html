@@ -83,20 +83,23 @@
      carries AH11-; wire HT5 codes into a ww1 sample lesson's outcomes slide. */
   --canvas:#fcf9f0; --surface:#f6f3ea; --text:#1c1c17; --muted:#58413f; --line:#d8cdc0; --bd:#31312b;
   --accent:#6a020a; --accent-soft:#f0d7d0; --accent-ink:#560109;
-  /* NOTE: spec asked accent-ink:#fff, but this token is only ever text on the light
-     --accent-soft surface (.q-skill, .gsec.model, .syl .code, .qpill…), where #fff is
-     unreadable. Kept a dark oxidised crimson; white-on-crimson chips are a polish-pass item. */
+  /* NOTE: spec asked accent-ink:#fff, but this token is text on LIGHT surfaces — the
+     --accent-soft chips (.q-skill, .gsec.model, .syl .code, .qpill…) AND --surface/--canvas
+     (.gsec.model .bd, .foot .nbtn:hover, .guide .gt). #fff would be unreadable on all of
+     them, so it's a dark oxidised crimson; white-on-crimson chips are a polish-pass item. */
+  --ok:#5a632e; --warn:#9a5b1a;   /* themed to the palette: olive-drab "improve", ochre "pitfall" (root green/orange clash) */
   --sidebar:#243343; --sidebar-2:#1b2632; --sidebar-text:#e7eef6; --sidebar-mut:#9fb2c6;
   --hero:linear-gradient(135deg,#3a332b,#1c1c17);
   --shadow:3px 3px 0 rgba(28,28,23,.16);   /* hard, thin, stacked-paper — not soft/blurred */
-  --display:'Archivo Narrow'; --display-spacing:-.02em; --radius:.25rem;   /* sharp; buttons ~4px */
+  --display:"Archivo Narrow"; --display-spacing:-.02em; --radius:.25rem;   /* sharp; buttons ~4px */
   --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)' opacity='0.06'/%3E%3C/svg%3E");
   --motif:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='black'%3E%3Crect x='18' y='18' width='64' height='5'/%3E%3Crect x='18' y='77' width='64' height='5'/%3E%3Crect x='18' y='18' width='5' height='64'/%3E%3Crect x='77' y='18' width='5' height='64'/%3E%3Crect x='48' y='8' width='4' height='8'/%3E%3Crect x='48' y='84' width='4' height='8'/%3E%3Crect x='8' y='48' width='8' height='4'/%3E%3Crect x='84' y='48' width='8' height='4'/%3E%3Cpath d='M50 33 L55.5 45 L69 47 L59 56.5 L62.5 70 L50 62.5 L37.5 70 L41 56.5 L31 47 L44.5 45 Z'/%3E%3C/svg%3E");
 }
 /* ww1 companion type rules (theme-scoped; no other theme affected) */
-:root[data-theme="ww1"] body{font-family:'Source Serif 4',Georgia,'Times New Roman',serif;}
+:root[data-theme="ww1"] body{font-family:"Source Serif 4",Georgia,"Times New Roman",serif;}
 :root[data-theme="ww1"] h1,:root[data-theme="ww1"] h2,:root[data-theme="ww1"] .disp,:root[data-theme="ww1"] .brand b{text-transform:uppercase;}
-:root[data-theme="ww1"] .eyebrow,:root[data-theme="ww1"] .eyebrow2,:root[data-theme="ww1"] .credit,:root[data-theme="ww1"] .q-skill,:root[data-theme="ww1"] .est,:root[data-theme="ww1"] .meta,:root[data-theme="ww1"] .prog .lab,:root[data-theme="ww1"] .zone-lab{font-family:'Courier Prime',ui-monospace,monospace;}
+:root[data-theme="ww1"] .eyebrow,:root[data-theme="ww1"] .eyebrow2,:root[data-theme="ww1"] .credit,:root[data-theme="ww1"] .q-skill,:root[data-theme="ww1"] .est,:root[data-theme="ww1"] .meta,:root[data-theme="ww1"] .prog .lab,:root[data-theme="ww1"] .zone-lab{font-family:"Courier Prime",ui-monospace,monospace;}
+:root[data-theme="ww1"] .credit{font-style:normal;}   /* Courier Prime italic isn't vendored — upright typewriter, not faux-oblique */
 *{box-sizing:border-box;}
 html,body{height:100%;margin:0;}
 body{font-family:"Hanken Grotesk",system-ui,sans-serif;color:var(--text);
