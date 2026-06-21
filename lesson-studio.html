@@ -650,6 +650,8 @@ textarea.minput{min-height:74px;line-height:1.5;resize:vertical;}
 .exhibit{display:grid;grid-template-columns:1fr 1.1fr;gap:32px;align-items:stretch;}
 @media(max-width:780px){.exhibit{grid-template-columns:1fr;}}
 .ex-img{aspect-ratio:auto;height:100%;min-height:400px;}
+.ex-img.ex-embed{background:#fff;}
+.ex-img iframe{width:100%;height:100%;border:0;display:block;}
 .ex-body{display:flex;flex-direction:column;}
 .ex-body .feat{margin-top:auto;}
 .ex-title{font-family:var(--display);font-size:2.1rem;line-height:1.08;margin:8px 0 12px;}
@@ -825,46 +827,293 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 
 <script id="lesson-data" type="application/json">
 {
-  "meta":{"title":"Tutankhamun — The Human Remains File","theme":"egypt"},
-  "slides":[
-    {"type":"cover","tag":"Year 11 · Ancient History","title":"Tutankhamun","sub":"Investigating the condition of Tutankhamun's body and the cause of his death.","startLabel":"Start lesson","est":"15 minutes"},
-    {"type":"outcomes","eyebrow":"Learning outcomes","heading":"By the end of this lesson you will be able to…","image":"","outcomes":["Distinguish damage caused by ancient embalmers and robbers from damage caused by the 1925 examination","Assess the reliability of Howard Carter as an eyewitness source","Weigh the 1968 murder theory against the 2005 CT and 2010 DNA evidence"],"syllabus":[{"code":"AH11-6","text":"Analyses and interprets different types of sources for evidence to support an historical account or argument"},{"code":"AH11-7","text":"Discusses and evaluates differing interpretations and representations of the past"},{"code":"AH11-10","text":"Discusses contemporary methods and issues involved in the investigation of ancient history"}]},
-    {"type":"artifact","eyebrow":"Artifact detail","title":"The Death Mask","desc":"Crafted from two layers of high-karat gold and inlaid with lapis lazuli, carnelian, obsidian and turquoise. It covered the head and shoulders of the mummy.","image":"","scale":"Viewing scale 1:1","specs":[{"k":"Material","v":"Gold, lapis lazuli, carnelian"},{"k":"Date","v":"c. 1323 BCE · Dynasty XVIII"},{"k":"Mass","v":"10.23 kg (22.6 lb)"},{"k":"Find site","v":"KV62, Valley of the Kings"}],"ctaLabel":"Analyse the inscription"},
-    {"type":"worksheet","heading":"Source analysis: The Book of the Dead","subtitle":"Examining a funerary papyrus fragment (Thebes, c. 1275 BCE)","image":"","fig":"Fig 1.1: Funerary papyrus fragment","tag":"Primary artifact","panelTitle":"Analysis worksheet","panelSub":"Iconography & symbolism","fields":[{"kind":"text","n":"1. Material & physicality","hint":"Describe the visual texture, colour palette and the state of the edges."},{"kind":"matrix","n":"2. Symbolism matrix","hint":"Identify the key symbols and figures.","cells":[{"lbl":"Crown type","ph":"e.g. Nemes"},{"lbl":"Offering","ph":"e.g. Ma'at"}]},{"kind":"text","n":"3. Contextual interpretation","hint":"What is the intended spiritual purpose of this scroll?"}]},
-    {"type":"external","eyebrow":"Special exhibit","title":"The Virtual Autopsy","desc":"Step inside the 2005 CT investigation led by Zahi Hawass and Ashraf Selim. Rotate the reconstructed skull, inspect the broken left femur, and weigh the murder theory against the evidence.","image":"","features":["Interactive CT cross-sections of the skull","Rotate the 3D facial reconstruction","Compare the 1968 X-ray with the 2005 CT"],"url":"","meta":"Estimated time: 15–20 mins · Opens in a new tab","launchLabel":"Launch the investigation"},
-    {"type":"notes","heading":"The 1925 examination","blocks":[
-      {"h":"Discovery and first autopsy","bd":"Howard Carter found the tomb in ==1922==. The mummy was not examined until ==11 November 1925==, by Carter and the anatomist ==Douglas Derry==."},
-      {"h":"Why the body is damaged","bd":"Hardened embalming resin had cemented the body into the coffin and to the gold mask. To remove it — and recover the jewellery inside the wrappings — ==the examiners cut the mummy into several pieces==. So much of the damage Carter describes was ==caused by his own 1925 examination==, not only by ancient robbers."}
-    ],"guide":"As you read, record TWO columns: the damage Carter names, and who caused it (ancient embalmers / robbers / the 1925 team). You'll reuse both in your Source 6A annotations."},
-    {"type":"video","heading":"The virtual autopsy (2005 CT scan)","url":"","cap":"Paste the documentary segment you want — the CT-based virtual autopsy."},
-    {"type":"image","heading":"Inside the tomb","src":"","cap":"A Harry Burton photograph of the discovery sets up Carter's account."},
-    {"type":"source","heading":"Source 6A — Carter's account of the royal mummy","credit":"Howard Carter, The Tomb of Tut-ankh-Amen, 1927 (public domain)","media":{
-      "kind":"text",
-      "text":"The mummy was found to be in a position of great disorder. The whole of the outer bandaging was entirely decomposed and had fallen away into a mass of black dust.\n\nThe face of the King appeared in perfect condition beneath the golden portrait mask. The body itself, however, had suffered greatly. The transverse division across the abdominal region showed that the mummy had been severed in two pieces, either in antiquity or during the later robbing of the outer shrines. The head had become detached from the body.",
-      "pois":[
-        {"anchor":"mass of black dust","title":"What kind of damage?","info":"This is the decomposed bandaging — damage to the wrappings, not the body itself. Useful for separating the types of damage."},
-        {"anchor":"severed in two pieces","title":"Ancient or modern?","info":"Carter leaves the cause open. But his own 1925 team cut the body apart to free it from the hardened resin — a modern cause he plays down."},
-        {"anchor":"either in antiquity or during the later robbing","title":"What is missing?","info":"Notice what this list leaves out: the examination team itself. That omission is the key to judging his reliability."}
-      ]},
-      "items":[
-        {"prompt":"What evidence of damage does Carter describe, and what most likely caused it?","model":"Carter describes the outer bandaging decomposed to black dust, the body severed in two, and the head detached. The likely cause is a combination: ancient embalming resin and possible robber disturbance, AND the 1925 team, who cut the body apart to free it from the resin.","improve":["Name at least two specific pieces of damage","Say the cause is a combination, not one factor","Mention the 1925 team as a modern cause"],"pitfalls":["Blaming only the ancient robbers","Copying the source without naming a cause"]},
-        {"prompt":"Is Carter a reliable witness to the mummy's condition? Why or why not?","model":"Partly. He is a first-hand eyewitness and trained excavator — a strength. But he took part in the damage and had reason to downplay it, and worked with 1920s assumptions. Eyewitness does not mean neutral.","improve":["Give a strength AND a limitation","Use the idea that he caused some of the damage","Reach a judgement (\"partly reliable because…\")"],"pitfalls":["\"Reliable because he was there\" with no limitation","Treating eyewitness as automatically objective"]}
-      ]},
-    {"type":"source","heading":"Source 6B — The death mask as evidence","credit":"Photograph of a museum object","media":{
-      "kind":"image","src":"",
-      "pois":[
-        {"x":50,"y":30,"kind":"window","title":"The face","info":"Idealised, youthful, serene — a representation, not a portrait. What does that mean for its reliability as evidence of his real appearance? Compare it with the reconstructed face from the 2005 CT scan, which is built from the skull rather than from royal ideology."},
-        {"x":50,"y":70,"kind":"tooltip","title":"Inscription","info":"Spells from the Book of the Dead — evidence of belief and ritual, not of the body."}
-      ]},
-      "items":[
-        {"prompt":"How useful is the mask as evidence of what Tutankhamun actually looked like?","model":"Limited. The mask is an idealised image made for the afterlife, not a realistic portrait, so it is strong evidence of belief and royal ideology but weak evidence of his real appearance — for which the CT scan is far better.","improve":["Distinguish what it IS good evidence for (belief/ideology)","From what it is weak evidence for (real appearance)","Compare with a better source (the CT scan)"],"pitfalls":["Treating the mask as a photograph of his face"]}
-      ]},
-    {"type":"model3d","heading":"Artefact — explore in 3D","credit":"Sample model — replace with your Meshy export","media":{
-      "kind":"model3d","src":"assets/vendor/sample-cube.glb","poster":"","pois":[]},
-      "items":[
-        {"prompt":"Choose one feature of this artefact and explain what it suggests about the people who made it.","model":"A strong answer selects a specific feature, describes it accurately, and links it to a reasoned inference about skill, belief, or status — while acknowledging the artefact alone cannot prove the inference.","improve":["Name a specific feature","Make an inference, not just a description","Acknowledge the limits of object-only evidence"],"pitfalls":["Only describing what it looks like","Over-claiming from a single object"]}
-      ]},
-    {"type":"complete","title":"Lesson complete!","lead":"You've investigated the body, the damage and the cause of death.","gainedTitle":"Knowledge gained","gained":["Separated ancient damage from the 1925 examination","Judged Carter's reliability as an eyewitness","Weighed the murder theory against the 2005 CT evidence"],"badgeTitle":"Source Analyst","badgeDesc":"Earned for completing the Human Remains File."}
+  "meta": {
+    "title": "Case File 6 — Investigating the Remains",
+    "theme": "egypt"
+  },
+  "slides": [
+    {
+      "type": "cover",
+      "tag": "Year 11 · Ancient History · Case File 6",
+      "title": "Investigating the Remains",
+      "sub": "What limitations do historians face when investigating Tutankhamun's physical remains?",
+      "startLabel": "Open the case file",
+      "est": "≈60 minutes"
+    },
+    {
+      "type": "outcomes",
+      "eyebrow": "Case File 6 · The Human Remains File",
+      "heading": "By the end of this lesson you will be able to…",
+      "image": "",
+      "outcomes": [
+        "Separate damage caused by ancient embalmers and robbers from damage caused by the 1925 examination",
+        "Assess the reliability of Howard Carter as an eyewitness source",
+        "Weigh the 1968 murder theory against the 2005 CT and 2010 DNA evidence",
+        "Judge the most likely cause of death — and identify the limitations of the evidence"
+      ],
+      "syllabus": [
+        {
+          "code": "AH11-6",
+          "text": "Analyses and interprets different types of sources for evidence to support an historical account or argument"
+        },
+        {
+          "code": "AH11-7",
+          "text": "Discusses and evaluates differing interpretations and representations of the past"
+        },
+        {
+          "code": "AH11-10",
+          "text": "Discusses contemporary methods and issues involved in the investigation of ancient history"
+        }
+      ]
+    },
+    {
+      "type": "video",
+      "heading": "Optional · Howard Carter's discovery (5 min)",
+      "url": "",
+      "cap": "Optional context — how Carter found the tomb in 1922. Paste your National Geographic clip here; watch in class if time allows, or set it for home. The lesson works without it."
+    },
+    {
+      "type": "notes",
+      "heading": "The body and its damage",
+      "blocks": [
+        {
+          "h": "Discovery and first examination",
+          "bd": "Howard Carter found the tomb in ==1922==. The mummy was not examined until ==11 November 1925==, by Carter and the anatomist ==Douglas Derry==."
+        },
+        {
+          "h": "Why the body is damaged",
+          "bd": "Hardened embalming resin had cemented the body into the coffin and to the gold mask. To free it — and recover the jewellery in the wrappings — ==the examiners cut the mummy into several pieces==. So much of the damage Carter describes was ==caused by his own 1925 examination==, not only by ancient robbers."
+        }
+      ],
+      "guide": "As you read the next slide, separate the damage Carter NAMES from WHO caused it (ancient embalmers / robbers / the 1925 team). You'll reuse both in your Source 6A annotations."
+    },
+    {
+      "type": "source",
+      "heading": "Source 6A — Carter's account of the royal mummy",
+      "credit": "Howard Carter, The Tomb of Tut-ankh-Amen, 1927 (public domain)",
+      "media": {
+        "kind": "text",
+        "text": "The mummy was found to be in a position of great disorder. The whole of the outer bandaging was entirely decomposed and had fallen away into a mass of black dust.\n\nThe face of the King appeared in perfect condition beneath the golden portrait mask. The body itself, however, had suffered greatly. The transverse division across the abdominal region showed that the mummy had been severed in two pieces, either in antiquity or during the later robbing of the outer shrines. The head had become detached from the body.",
+        "pois": [
+          {
+            "anchor": "mass of black dust",
+            "title": "What kind of damage?",
+            "info": "This is the decomposed bandaging — damage to the wrappings, not the body itself. Useful for separating the types of damage."
+          },
+          {
+            "anchor": "severed in two pieces",
+            "title": "Ancient or modern?",
+            "info": "Carter leaves the cause open. But his own 1925 team cut the body apart to free it from the hardened resin — a modern cause he plays down."
+          },
+          {
+            "anchor": "either in antiquity or during the later robbing",
+            "title": "What is missing?",
+            "info": "Notice what this list leaves out: the examination team itself. That omission is the key to judging his reliability."
+          }
+        ]
+      },
+      "items": [
+        {
+          "prompt": "What evidence of DAMAGE does Carter describe?",
+          "model": "He names three kinds: the outer bandaging decomposed to black dust, the body severed in two across the abdomen, and the head detached from the body — while noting the face beneath the mask was well preserved.",
+          "improve": [
+            "List each specific damage Carter names",
+            "Separate damage to the wrappings from damage to the body",
+            "Note what was NOT damaged (the face) too"
+          ],
+          "pitfalls": [
+            "Saying 'the mummy was damaged' without specifics"
+          ]
+        },
+        {
+          "prompt": "What CAUSED this damage — ancient or modern factors?",
+          "model": "A mix. Decomposition and ancient robbers explain some, but the severing of the body and the detached head owe much to the 1925 examination, when the team cut the resin-cemented mummy apart to free it from the coffin and mask.",
+          "improve": [
+            "Distinguish ancient causes (robbers, decay) from modern (the 1925 examination)",
+            "Use the resin problem to explain why the team cut the body",
+            "Note that Carter understates the modern cause"
+          ],
+          "pitfalls": [
+            "Blaming only 'tomb robbers'",
+            "Treating all the damage as ancient"
+          ]
+        },
+        {
+          "prompt": "How does this damage LIMIT what scientists can learn about Tutankhamun?",
+          "model": "A body that is fragmented, missing parts and contaminated by resin is harder to read reliably — damage from 1925 can be mistaken for ancient injury, which is exactly what fuelled the wrong theories later and is why new scans were needed.",
+          "improve": [
+            "Link fragmentation to unreliable reading of injuries",
+            "Give an example: a modern cut mistaken for an ancient wound",
+            "Connect to why later CT/DNA work was needed"
+          ],
+          "pitfalls": [
+            "Saying 'we can still learn everything'"
+          ]
+        },
+        {
+          "prompt": "Is Carter a RELIABLE witness to the mummy's condition? Why or why not?",
+          "model": "Partly. He is a first-hand eyewitness with detailed observation, which is valuable — but he also caused much of the damage, and he leaves the cause open ('in antiquity or during the later robbing'), downplaying his team's role. Reliable on WHAT he saw; less reliable on WHY.",
+          "improve": [
+            "Weigh his strength (eyewitness, detailed) against his bias (he caused damage)",
+            "Use how he leaves the cause open",
+            "Separate reliability about observation from reliability about cause"
+          ],
+          "pitfalls": [
+            "Calling him simply 'reliable' or 'unreliable'",
+            "Ignoring his conflict of interest"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "notes",
+      "heading": "Investigations over time",
+      "blocks": [
+        {
+          "h": "1925 — Carter & Derry (eyewitness)",
+          "bd": "The first examination. Detailed — but the team ==cut the body apart== to free it from the resin, so it both recorded AND damaged the evidence."
+        },
+        {
+          "h": "1968 — Harrison's X-ray",
+          "bd": "A Liverpool team X-rayed the body. A ==small bone fragment== in the skull led some to argue ==murder by a blow to the head==. Missing ribs and sternum fed chariot-accident and birth-defect theories."
+        },
+        {
+          "h": "2005 — Hawass CT scan (1700 images)",
+          "bd": "A 'virtual autopsy' ==ruled out the blow to the head== (the fragment was post-mortem) and showed the ==missing ribs were removed by Carter's team==, not by injury. It detailed a ==fracture to the left femur==."
+        },
+        {
+          "h": "2010 — DNA study",
+          "bd": "Found ==malaria==, a ==club foot== and other inherited conditions — pointing to a frail king whose ==leg fracture plus infection== may have been fatal, rather than murder."
+        }
+      ],
+      "guide": "✏️ Workbook Task 1: build your evidence chart — EARLY (Carter 1925; X-ray 1968) vs MODERN (CT 2005; DNA 2010). For each, record what it REVEALED and what it could NOT determine."
+    },
+    {
+      "type": "external",
+      "eyebrow": "Interactive · the modern evidence",
+      "title": "The 2005 Virtual Autopsy",
+      "desc": "Explore the CT investigation region by region — the skull, the broken left femur, the club foot, and the final verdict. Use it to fill the MODERN column of your evidence chart and to start forming a view on the cause of death.",
+      "image": "",
+      "features": [
+        "Skull — the fragment that wasn't murder",
+        "Left thigh — the femur fracture",
+        "Left foot — club foot & Köhler disease",
+        "The verdict — weigh the theories"
+      ],
+      "url": "https://willwint2104.github.io/OnlineLessonMaker/interactives/tutankhamun-ct-scan.html",
+      "meta": "~10 min · interactive · embeds inline, or use the link",
+      "launchLabel": "Open the CT investigation ↗"
+    },
+    {
+      "type": "source",
+      "heading": "Source 6B — The modern report (2005 CT · 2010 DNA)",
+      "credit": "Summary of the Hawass team's findings, paraphrased",
+      "media": {
+        "kind": "text",
+        "text": "The 2005 CT scan produced about 1700 images. It found no evidence of a blow to the head, identified a fracture to the left femur, and concluded the missing ribs had been removed by Carter's team. The 2010 DNA study identified malaria and several inherited conditions, including a club foot. Together they describe a frail young king whose leg fracture and infection — not murder — most likely caused his death.",
+        "pois": [
+          {
+            "anchor": "no evidence of a blow to the head",
+            "title": "Overturning a theory",
+            "info": "This directly reverses the 1968 reading. New technology changed the interpretation — a key limitation of earlier evidence."
+          },
+          {
+            "anchor": "removed by Carter's team",
+            "title": "Modern damage, again",
+            "info": "What looked like injury was actually caused by the 1925 examination — the same problem you met in Source 6A."
+          }
+        ]
+      },
+      "items": [
+        {
+          "prompt": "Compare the reliability of Carter's 1927 account with the 2005 CT report. What are the advantages and limitations of each?",
+          "model": "Carter is a first-hand eyewitness with rich descriptive detail, but he is non-expert on cause, has a conflict of interest (he caused damage) and writes before modern science. The CT report is systematic, repeatable, expert and non-destructive, and can see inside the body — but it interprets images, depends on the technology of its time, and is itself contested. Each is strong where the other is weak.",
+          "improve": [
+            "Give advantages AND limitations for BOTH sources",
+            "Use the Toolkit lenses (missing / damaged / changing / bias)",
+            "Conclude which is more reliable for WHAT (observation vs cause)"
+          ],
+          "pitfalls": [
+            "Just saying 'the CT scan is better'",
+            "Ignoring that the CT report is also interpreted and contested"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "source",
+      "heading": "Your verdict — how did Tutankhamun die?",
+      "credit": "Weigh the competing explanations",
+      "media": {
+        "kind": "text",
+        "text": "MURDER (a blow to the head): proposed from the 1968 X-ray — but the 2005 CT scan ruled it out; the bone fragment was post-mortem.\n\nCHARIOT ACCIDENT: suggested by the leg fracture, and once by the missing ribs — but the ribs were removed by Carter's team, so this now rests mainly on the femur fracture.\n\nDISEASE & FRAILTY: the 2010 DNA evidence — malaria, a club foot and other conditions — points to a frail king whose sudden leg fracture and infection together may have been fatal.",
+        "pois": [
+          {
+            "anchor": "ruled it out",
+            "title": "Changing interpretation",
+            "info": "The strongest 'murder' evidence was overturned by better technology."
+          },
+          {
+            "anchor": "may have been fatal",
+            "title": "Likely, not certain",
+            "info": "Even the latest study offers a probable scenario, not proof — the evidence remains limited and contested."
+          }
+        ]
+      },
+      "items": [
+        {
+          "prompt": "What do you consider the most likely cause of Tutankhamun's death? Justify your judgement with specific evidence.",
+          "model": "A defensible answer favours disease-and-accident: a frail king (malaria, club foot, other conditions) whose left-femur fracture and infection most likely proved fatal — while explicitly rejecting murder because the 2005 CT scan showed the skull fragment was post-mortem. The key is to commit to a judgement and support it with named evidence.",
+          "improve": [
+            "Commit to ONE most-likely cause",
+            "Justify with specific named evidence (CT, DNA, the femur)",
+            "Explain why you reject the alternatives, especially murder"
+          ],
+          "pitfalls": [
+            "Listing theories without choosing",
+            "Asserting murder despite the CT evidence",
+            "No specific evidence"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "notes",
+      "heading": "Case Review — the limitations of the evidence",
+      "blocks": [
+        {
+          "h": "Missing evidence",
+          "bd": "Parts of the body are gone or were removed (ribs, sternum). ==What is lost can never be read.=="
+        },
+        {
+          "h": "Damaged evidence",
+          "bd": "Decomposition, ancient robbers AND the 1925 examination all damaged the body — ==modern damage can be mistaken for ancient injury.=="
+        },
+        {
+          "h": "Changing interpretations",
+          "bd": "The 1968 'murder' reading was overturned by the 2005 CT scan. ==New technology keeps rewriting the conclusion.=="
+        },
+        {
+          "h": "Human error & bias",
+          "bd": "Investigators — including Carter — brought assumptions; some saw 'murder' where the body showed none. ==Who investigates shapes what is found.=="
+        }
+      ],
+      "guide": "✏️ Workbook Case Review: In a paragraph, answer the inquiry question — what are the key limitations historians and scientists face when investigating Tutankhamun's remains? Use all four lenses, with a specific example of each."
+    },
+    {
+      "type": "complete",
+      "title": "Case closed — for now",
+      "lead": "You've separated ancient damage from the 1925 examination, judged Carter's reliability, weighed early against modern evidence, and reached a verdict on the cause of death.",
+      "gainedTitle": "What you can now do",
+      "gained": [
+        "Separate ancient damage from the 1925 examination",
+        "Judge an eyewitness source's reliability (Carter)",
+        "Weigh early evidence (X-ray) against modern (CT, DNA)",
+        "Identify the limitations historians face with physical remains"
+      ],
+      "badgeTitle": "Source Analyst — Case File 6",
+      "badgeDesc": "Earned for completing the Human Remains File."
+    }
   ]
 }
 </script>
@@ -1253,7 +1502,7 @@ function renderCanvas(){
     const feats=(s.features||[]).map((x,j)=>`<li><span class="editable" data-bind="slides.${i}.features.${j}" contenteditable="${mode==='edit'}">${esc(x)}</span>${mode==='edit'?`<button class="qdel" data-delfeat="${i}:${j}">✕</button>`:''}</li>`).join('');
     h=`<div class="card pad">
       <div class="exhibit">
-        <div class="ex-img" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.image?`${imgEl(s.image,s)}`:`<div class="ph">${ICON.image}<br>Drag an image / add URL</div>`}</div>
+        <div class="ex-img${s.url?' ex-embed':''}" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.url?`<iframe src="${esc(s.url)}" title="${esc(s.title||'Interactive')}" allowfullscreen loading="lazy"></iframe>`:(s.image?`${imgEl(s.image,s)}`:`<div class="ph">${ICON.image}<br>Drag an image / add URL</div>`)}</div>
         <div class="ex-body">
           <div class="eyebrow editable" data-bind="slides.${i}.eyebrow" contenteditable="${mode==='edit'}">${esc(s.eyebrow||'Special exhibit')}</div>
           <h2 class="ex-title editable" data-bind="slides.${i}.title" contenteditable="${mode==='edit'}">${esc(s.title)}</h2>
