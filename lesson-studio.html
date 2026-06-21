@@ -72,7 +72,8 @@
      Gold STROKES (card border, button text, indicator bar) applied via the scoped rules below;
      --bd / --accent-ink stay dark for readable text. White-on-gold/secondary-button = polish. */
   --accent:#4b0082; --accent-soft:#f0dbff; --accent-ink:#3a1452;
-  --ok:#3f7a4f; --warn:#9e2b34;   /* classical green "improve", Roman crimson "pitfall" */
+  --ok:#356b43; --warn:#9e2b34;   /* classical green "improve", Roman crimson "pitfall" */
+  --gold:#c5b358; --gold-bright:#d9c879; --marble:#f3e9d6;   /* Roman-gold strokes, button text, marble title — applied in the scoped rules below */
   --sidebar:#faf3ee; --sidebar-2:#4b0082; --sidebar-text:#1e1b18; --sidebar-mut:#6e6473;
   /* LIGHT rail — Egypt-style dark-on-light overrides, themed purple */
   --sidebar-title:#1e1b18; --sidebar-itemtext:#1e1b18; --sidebar-hover:rgba(75,0,130,.08);
@@ -87,12 +88,12 @@
 :root[data-theme="rome"] body{font-family:"Source Sans 3",system-ui,sans-serif;}
 :root[data-theme="rome"] .eyebrow,:root[data-theme="rome"] .eyebrow2,:root[data-theme="rome"] .q-skill,:root[data-theme="rome"] .est,:root[data-theme="rome"] .meta,:root[data-theme="rome"] .prog .lab,:root[data-theme="rome"] .zone-lab,:root[data-theme="rome"] .gsec .lab{font-family:"Source Sans 3",system-ui,sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
 :root[data-theme="rome"] .credit{font-family:"EB Garamond",Georgia,serif;}   /* editorial citation */
-:root[data-theme="rome"] .card{border:1px solid #c5b358;border-top:4px solid var(--accent);}   /* Roman-gold stroke + imperial-purple top bar (radius 0 from --radius) */
-:root[data-theme="rome"] .btn,:root[data-theme="rome"] .start,:root[data-theme="rome"] .syl-btn,:root[data-theme="rome"] .art-cta,:root[data-theme="rome"] .launch{color:#d9c879;border:1px solid #c5b358;border-radius:0;box-shadow:none;}   /* gold text on purple, square, gold outline */
-:root[data-theme="rome"] .nitem.on .tx b,:root[data-theme="rome"] .nitem.on .tx span{color:#fff;}   /* white text on the purple active-item fill */
-:root[data-theme="rome"] .nitem.on::before{background:#c5b358;}   /* gold indicator bar (here active fill --sidebar-2 equals --accent) */
-:root[data-theme="rome"] .cover h1,:root[data-theme="rome"] .cover2 h1{color:#f3e9d6;}   /* gold/marble title on the imperial-dusk hero */
-:root[data-theme="rome"] .cover2 h1 em{color:#d9c879;font-weight:500;}   /* EB Garamond italic-500 subtitle accent, gold */
+:root[data-theme="rome"] .card{border:1px solid var(--gold);border-top:4px solid var(--accent);}   /* Roman-gold stroke + imperial-purple top bar (radius 0 from --radius) */
+:root[data-theme="rome"] .btn,:root[data-theme="rome"] .start,:root[data-theme="rome"] .syl-btn,:root[data-theme="rome"] .art-cta,:root[data-theme="rome"] .launch{border-radius:0;}   /* carved-stone: all buttons square */
+:root[data-theme="rome"] .btn:not(.ghost),:root[data-theme="rome"] .start,:root[data-theme="rome"] .syl-btn,:root[data-theme="rome"] .art-cta,:root[data-theme="rome"] .launch{color:var(--gold-bright);border:1px solid var(--gold);box-shadow:none;}   /* gold text + outline on the FILLED purple buttons only — ghost/secondary keep their dark text on the light bg */
+:root[data-theme="rome"] .nitem.on .tx b,:root[data-theme="rome"] .nitem.on .tx span{color:#fff;}   /* white text on the purple active-item fill (the ::before bar keeps the default purple, which reads on the cream rail) */
+:root[data-theme="rome"] .cover2 h1{color:var(--marble);}   /* marble title on the imperial-dusk hero */
+:root[data-theme="rome"] .cover2 h1 em{color:var(--gold-bright);font-weight:500;}   /* EB Garamond italic-500 subtitle accent, gold */
 :root[data-theme="rome"] .outlist li::before,:root[data-theme="rome"] .feat li::before,:root[data-theme="rome"] .q-skill{border-radius:0;}   /* imperial mosaic squares + chips */
 :root[data-theme="wellbeing"]{
   /* "Terra Anima" fidelity pass. NSW Stage 5 Geography (GE5) is this theme's outcomes
