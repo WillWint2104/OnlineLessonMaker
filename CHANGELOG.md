@@ -8,6 +8,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Published student lesson: `lessons/case-file-6-investigating-the-remains.html`** — the
+  self-contained Study-mode export of Case File 6, hosted **byte-for-byte** as exported (live at
+  `/OnlineLessonMaker/lessons/case-file-6-investigating-the-remains.html`). Embeds the
+  first-party CT-scan interactive inline with an "Open ↗" fallback; its optional video slide
+  carries a third-party YouTube URL (a `lessons/*.html` host warning is expected, not a failure).
+  Verified rendered over HTTP via `scripts/verify-lesson-page.mjs`.
 - **Case File 6 — "Investigating the Remains" loaded as the app's lesson** (11 slides, Egypt
   theme): swapped the `#lesson-data` JSON in `lesson-studio.html`. Its CT-investigation slide
   embeds the same-origin `interactives/tutankhamun-ct-scan.html` explorer.
