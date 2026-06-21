@@ -123,11 +123,6 @@ body.edit .nitem:active{cursor:grabbing;}
 .nitem.drop-before::after,.nitem.drop-after::after{content:"";position:absolute;left:6px;right:6px;height:3px;border-radius:3px;background:var(--accent);box-shadow:0 0 0 1px var(--sidebar);}
 .nitem.drop-before::after{top:-3px;}
 .nitem.drop-after::after{bottom:-3px;}
-.addbar{padding:10px 16px 16px;border-top:1px solid var(--sidebar-sep);display:none;flex-wrap:wrap;gap:6px;}
-body.edit .addbar{display:flex;}
-.addbar .lbl{width:100%;font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--sidebar-mut);margin-bottom:2px;}
-.chip{font-size:.74rem;padding:6px 10px;border-radius:8px;background:var(--sidebar-icon);color:var(--sidebar-text);}
-.chip:hover{background:var(--accent);color:#fff;}
 
 /* ---------------- MAIN ---------------- */
 .main{flex:1;display:flex;flex-direction:column;height:100vh;min-width:0;}
@@ -347,6 +342,27 @@ body.edit .inspector{display:flex;flex-direction:column;width:340px;flex:0 0 340
 .inspector .seg2 button.on{background:var(--accent);color:#fff;}
 .inspector .muted{color:var(--muted);font-weight:400;}
 .inspector .small{font-size:.74rem;line-height:1.4;}
+/* ===== slide-type palette (Edit only) ===== */
+.palette{display:none;}
+body.edit .palette{display:flex;flex-direction:column;gap:9px;padding:11px 16px 13px;border-top:1px solid var(--line);background:var(--surface);}
+.pal-tags{display:flex;flex-wrap:wrap;gap:7px;}
+.pal-tags button{font-size:.75rem;font-weight:600;color:var(--muted);padding:5px 13px;border-radius:999px;border:1px solid var(--line);background:var(--canvas);}
+.pal-tags button:hover{color:var(--text);}
+.pal-tags button.on{background:var(--accent);color:#fff;border-color:transparent;}
+.pal-scroll-wrap{display:flex;align-items:center;gap:6px;}
+.pal-chev{flex:0 0 auto;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:1.15rem;line-height:1;display:flex;align-items:center;justify-content:center;}
+.pal-chev:hover{color:var(--accent);border-color:var(--accent);}
+.pal-row{display:flex;gap:10px;overflow-x:auto;scroll-behavior:smooth;padding:3px 2px;scrollbar-width:thin;}
+.pal-thumb{flex:0 0 auto;width:98px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;border:1px solid var(--line);border-radius:11px;background:var(--canvas);cursor:grab;transition:border-color .12s,transform .08s,box-shadow .12s;}
+.pal-thumb:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow);}
+.pal-thumb:active{cursor:grabbing;}
+.wf-box{width:100%;height:50px;border-radius:7px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--accent);}
+.wf{width:82px;height:52px;}
+.wf rect,.wf path,.wf circle{fill:currentColor;opacity:.3;}
+.wf .f{opacity:.13;}
+.wf .l2{opacity:.55;}
+.wf .s{fill:none;stroke:currentColor;stroke-width:2;opacity:.45;}
+.pal-lbl{font-size:.73rem;font-weight:600;color:var(--text);}
 @media (max-width:820px){ .side{display:none;} .stagewrap{padding:18px;}
   body.edit .inspector{position:fixed;right:0;top:0;bottom:0;z-index:60;box-shadow:-12px 0 40px -20px rgba(0,0,0,.5);} }
 
@@ -653,21 +669,6 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
   </div>
   <div class="prog"><div class="bar"><div class="fill" id="progFill"></div></div><div class="lab" id="progLab"></div></div>
   <nav class="nav" id="nav"></nav>
-  <div class="addbar" id="addbar">
-    <span class="lbl">Add a card</span>
-    <button class="chip" data-add="notes">Notes</button>
-    <button class="chip" data-add="image">Image</button>
-    <button class="chip" data-add="video">Video</button>
-    <button class="chip" data-add="question">Question</button>
-    <button class="chip" data-add="source">Source</button>
-    <button class="chip" data-add="model3d">3D</button>
-    <button class="chip" data-add="cover">Section</button>
-    <button class="chip" data-add="outcomes">Outcomes</button>
-    <button class="chip" data-add="artifact">Artifact</button>
-    <button class="chip" data-add="worksheet">Worksheet</button>
-    <button class="chip" data-add="external">External</button>
-    <button class="chip" data-add="complete">Complete</button>
-  </div>
 </aside>
 
 <div class="main">
@@ -701,6 +702,7 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
     <span class="count" id="count"></span>
     <button class="nbtn" id="next">Next →</button>
   </div>
+  <div class="palette" id="palette"></div>
 </div>
 
 <aside class="inspector" id="inspector"></aside>
@@ -1433,31 +1435,38 @@ $('#nav').onclick=e=>{
   if(go_)go(+go_.dataset.go);
 };
 // ---- edit-mode drag-to-reorder of the slide list (native HTML5 DnD) ----
+function clearDropMarks(){ $('#nav').querySelectorAll('.nitem').forEach(n=>n.classList.remove('drop-before','drop-after','dragging')); }
 (()=>{
   const nav=$('#nav'); let from=null;
-  const clearMarks=()=>nav.querySelectorAll('.nitem').forEach(n=>n.classList.remove('drop-before','drop-after','dragging'));
+  const clearMarks=clearDropMarks;
   const dropAfter=(it,y)=>{ const r=it.getBoundingClientRect(); return (y-r.top) > r.height/2; };
   nav.addEventListener('dragstart',e=>{
     if(mode!=='edit'){ return; }
     const it=e.target.closest('.nitem'); if(!it){ return; }
-    from=+it.dataset.go; e.dataTransfer.effectAllowed='move';
+    from=+it.dataset.go; paletteType=null;   // starting a reorder — never treat it as a palette insert
+    e.dataTransfer.effectAllowed='move';
     try{ e.dataTransfer.setData('text/plain',String(from)); }catch(_){ }
     it.classList.add('dragging');
   });
   nav.addEventListener('dragover',e=>{
-    if(mode!=='edit'||from===null) return;
-    const it=e.target.closest('.nitem'); if(!it) return;
-    e.preventDefault(); e.dataTransfer.dropEffect='move';
-    const after=dropAfter(it,e.clientY);
+    if(mode!=='edit' || (from===null && !paletteType)) return;
+    e.preventDefault(); e.dataTransfer.dropEffect=paletteType?'copy':'move';   // allow drop even over empty nav space (palette append-at-end)
+    const it=e.target.closest('.nitem');
     nav.querySelectorAll('.nitem').forEach(n=>n.classList.remove('drop-before','drop-after'));
-    it.classList.add(after?'drop-after':'drop-before');
+    if(it) it.classList.add(dropAfter(it,e.clientY)?'drop-after':'drop-before');
   });
   nav.addEventListener('drop',e=>{
-    if(mode!=='edit'||from===null) return;
+    if(mode!=='edit' || (from===null && !paletteType)) return;
     e.preventDefault();
-    const it=e.target.closest('.nitem'); const f=from; from=null;
+    const it=e.target.closest('.nitem');
     const after=it?dropAfter(it,e.clientY):false; clearMarks();
-    if(!it){ return; }
+    if(paletteType){                                       // insert NEW slide from the palette
+      const t=paletteType; paletteType=null;
+      const idx = it ? (+it.dataset.go + (after?1:0)) : LESSON.slides.length;
+      insertSlide(t, idx); return;
+    }
+    const f=from; from=null;                               // else: reorder existing slide
+    if(!it) return;
     const to=+it.dataset.go; if(to===f) return;
     const a=LESSON.slides, curSlide=a[cur];
     let insert=to+(after?1:0); if(f<insert) insert--;     // adjust for the removal shift
@@ -1466,26 +1475,77 @@ $('#nav').onclick=e=>{
     cur=a.indexOf(curSlide);                              // keep the viewed slide selected (by identity)
     renderNav(); renderSlide();
   });
-  nav.addEventListener('dragend',()=>{ from=null; clearMarks(); });
+  nav.addEventListener('dragend',()=>{ from=null; paletteType=null; clearMarks(); });
 })();
-$('#addbar').onclick=e=>{const b=e.target.closest('[data-add]');if(!b)return;
-  const T=b.dataset.add, tpl={
-    cover:{type:'cover',tag:'Section',title:'New section',sub:'Subtitle'},
-    notes:{type:'notes',heading:'Notes',blocks:[{h:'Heading',bd:'Note text.'}],guide:'Guidance for note-taking.'},
-    image:{type:'image',heading:'Image',src:'',cap:'Caption'},
-    video:{type:'video',heading:'Video',url:'',cap:'Caption'},
-    question:{type:'question',skill:'Skill',heading:'Practise',items:[{prompt:'New question',model:'Model answer.',improve:['Point one'],pitfalls:['Pitfall one']}]},
-    source:{type:'source',heading:'Source — title',credit:'Citation',media:{kind:'text',text:'Paste the source extract here.',pois:[]},items:[{prompt:'Question',model:'Model answer.',improve:['Point'],pitfalls:['Pitfall']}]},
-    model3d:{type:'model3d',heading:'Artefact in 3D',media:{kind:'model3d',src:'',poster:'',pois:[]},items:[]},
-    artifact:{type:'artifact',eyebrow:'Artifact detail',title:'The artefact',desc:'A short description of the object and why it matters as evidence.',image:'',scale:'Viewing scale 1:1',specs:[{k:'Material',v:'—'},{k:'Date',v:'—'},{k:'Find site',v:'—'}],ctaLabel:''},
-    worksheet:{type:'worksheet',heading:'Source analysis',subtitle:'Examining the source',image:'',fig:'Fig 1.1: Source',tag:'Primary source',panelTitle:'Analysis worksheet',panelSub:'Observation & interpretation',fields:[{kind:'text',n:'1. Observation',hint:'What do you notice first?'},{kind:'matrix',n:'2. Key details',hint:'Identify the essentials',cells:[{lbl:'Detail A',ph:'e.g. …'},{lbl:'Detail B',ph:'e.g. …'}]},{kind:'text',n:'3. Interpretation',hint:'What does it mean, and how do you know?'}]},
-    task:{type:'task',module:'Analysis module',section:'Section 1 of 1: Interpretation',progress:60,question:'Write the analytical question here.',image:'',respLabel:'Student analysis response',model:''},
-    external:{type:'external',eyebrow:'Special exhibit',title:'External activity',desc:'Describe the activity students will launch.',image:'',features:['What they will do','A second feature','A third feature'],url:'',meta:'Estimated time: 15 mins',launchLabel:'Launch activity'},
-    complete:{type:'complete',title:'Lesson complete!',lead:"You've finished this lesson.",gainedTitle:'Knowledge gained',gained:['Point one','Point two','Point three'],badgeTitle:'Well done',badgeDesc:'Earned for completing this lesson.'},
-    outcomes:{type:'outcomes',eyebrow:'Learning outcomes',heading:'By the end of this lesson you will be able to…',image:'',outcomes:['Describe …','Explain …','Evaluate …'],syllabus:[{code:'AH11-6',text:'Link to a NSW syllabus outcome'}]}
-  }[T];
-  LESSON.slides.splice(cur+1,0,JSON.parse(JSON.stringify(tpl))); go(cur+1);
+/* ---------- slide factory (shared by the palette) ---------- */
+const SLIDE_FACTORY={
+  cover:{type:'cover',tag:'Section',title:'New section',sub:'Subtitle'},
+  notes:{type:'notes',heading:'Notes',blocks:[{h:'Heading',bd:'Note text.'}],guide:'Guidance for note-taking.'},
+  image:{type:'image',heading:'Image',src:'',cap:'Caption'},
+  video:{type:'video',heading:'Video',url:'',cap:'Caption'},
+  question:{type:'question',skill:'Skill',heading:'Practise',items:[{prompt:'New question',model:'Model answer.',improve:['Point one'],pitfalls:['Pitfall one']}]},
+  source:{type:'source',heading:'Source — title',credit:'Citation',media:{kind:'text',text:'Paste the source extract here.',pois:[]},items:[{prompt:'Question',model:'Model answer.',improve:['Point'],pitfalls:['Pitfall']}]},
+  model3d:{type:'model3d',heading:'Artefact in 3D',media:{kind:'model3d',src:'',poster:'',pois:[]},items:[]},
+  artifact:{type:'artifact',eyebrow:'Artifact detail',title:'The artefact',desc:'A short description of the object and why it matters as evidence.',image:'',scale:'Viewing scale 1:1',specs:[{k:'Material',v:'—'},{k:'Date',v:'—'},{k:'Find site',v:'—'}],ctaLabel:''},
+  worksheet:{type:'worksheet',heading:'Source analysis',subtitle:'Examining the source',image:'',fig:'Fig 1.1: Source',tag:'Primary source',panelTitle:'Analysis worksheet',panelSub:'Observation & interpretation',fields:[{kind:'text',n:'1. Observation',hint:'What do you notice first?'},{kind:'matrix',n:'2. Key details',hint:'Identify the essentials',cells:[{lbl:'Detail A',ph:'e.g. …'},{lbl:'Detail B',ph:'e.g. …'}]},{kind:'text',n:'3. Interpretation',hint:'What does it mean, and how do you know?'}]},
+  task:{type:'task',module:'Analysis module',section:'Section 1 of 1: Interpretation',progress:60,question:'Write the analytical question here.',image:'',respLabel:'Student analysis response',model:''},
+  external:{type:'external',eyebrow:'Special exhibit',title:'External activity',desc:'Describe the activity students will launch.',image:'',features:['What they will do','A second feature','A third feature'],url:'',meta:'Estimated time: 15 mins',launchLabel:'Launch activity'},
+  complete:{type:'complete',title:'Lesson complete!',lead:"You've finished this lesson.",gainedTitle:'Knowledge gained',gained:['Point one','Point two','Point three'],badgeTitle:'Well done',badgeDesc:'Earned for completing this lesson.'},
+  outcomes:{type:'outcomes',eyebrow:'Learning outcomes',heading:'By the end of this lesson you will be able to…',image:'',outcomes:['Describe …','Explain …','Evaluate …'],syllabus:[{code:'AH11-6',text:'Link to a NSW syllabus outcome'}]}
 };
+function makeSlide(t){ return JSON.parse(JSON.stringify(SLIDE_FACTORY[t])); }
+// zone to auto-select after inserting, so the new slide opens editable in the inspector
+const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title'};
+function insertSlide(type, atIndex){
+  if(!SLIDE_FACTORY[type]) return;
+  const idx=Math.max(0,Math.min(LESSON.slides.length, atIndex));
+  LESSON.slides.splice(idx,0, makeSlide(type));
+  cur=idx; selZone=PALETTE_DEFAULT_ZONE[type]||null;   // select + load the new slide in the inspector
+  renderNav(); renderSlide(); $('.stagewrap').scrollTop=0;
+}
+
+/* ---------- slide-type palette (categorised wireframe "add a slide" surface) ---------- */
+let paletteCat='all', paletteType=null;
+const PAL_CATS=[['all','All'],['structure','Structure'],['text','Text & notes'],['media','Media'],['source','Source & questions']];
+// Hand-built wireframe thumbnails (static SVG, NOT a live render). currentColor = accent.
+const PALETTE=[
+  {t:'cover',label:'Section',cat:'structure',wf:'<rect x="6" y="8" width="68" height="28" rx="3" class="f"/><rect x="28" y="18" width="24" height="5" rx="2" class="l2"/><rect x="32" y="27" width="16" height="3" rx="1"/><rect x="24" y="42" width="32" height="4" rx="2" class="l2"/>'},
+  {t:'outcomes',label:'Outcomes',cat:'structure',wf:'<rect x="6" y="9" width="26" height="34" rx="3" class="f"/><rect x="38" y="11" width="32" height="4" class="l2"/><rect x="38" y="22" width="32" height="3"/><rect x="38" y="30" width="32" height="3"/><rect x="38" y="38" width="22" height="3"/>'},
+  {t:'complete',label:'Complete',cat:'structure',wf:'<circle cx="40" cy="19" r="9" class="s"/><rect x="26" y="36" width="28" height="4" rx="2" class="l2"/><rect x="32" y="44" width="16" height="3" rx="1"/>'},
+  {t:'notes',label:'Notes',cat:'text',wf:'<rect x="6" y="9" width="34" height="5" rx="2" class="l2"/><rect x="6" y="20" width="44" height="3"/><rect x="6" y="27" width="44" height="3"/><rect x="6" y="34" width="36" height="3"/><rect x="56" y="9" width="18" height="34" rx="3" class="f"/>'},
+  {t:'image',label:'Image',cat:'media',wf:'<rect x="6" y="8" width="68" height="30" rx="3" class="f"/><circle cx="22" cy="20" r="4" class="s"/><path d="M13 38 L33 23 L48 38" class="s"/><rect x="20" y="43" width="40" height="4" rx="2"/>'},
+  {t:'video',label:'Video',cat:'media',wf:'<rect x="10" y="8" width="60" height="34" rx="3" class="f"/><path d="M35 17 L35 33 L49 25 Z" class="l2"/><rect x="24" y="46" width="32" height="3" rx="1"/>'},
+  {t:'model3d',label:'3D',cat:'media',wf:'<rect x="20" y="18" width="24" height="24" class="s"/><rect x="34" y="10" width="24" height="24" class="s"/><path d="M20 18 L34 10 M44 18 L58 10 M44 42 L58 34 M20 42 L34 34" class="s"/>'},
+  {t:'source',label:'Source',cat:'source',wf:'<rect x="6" y="9" width="30" height="34" rx="3" class="f"/><rect x="42" y="11" width="30" height="3" class="l2"/><rect x="42" y="20" width="30" height="3"/><rect x="42" y="28" width="30" height="3"/><rect x="42" y="37" width="20" height="6" rx="2" class="s"/>'},
+  {t:'question',label:'Question',cat:'source',wf:'<rect x="6" y="9" width="14" height="6" rx="2" class="l2"/><rect x="6" y="21" width="58" height="3"/><rect x="6" y="28" width="48" height="3"/><rect x="6" y="36" width="68" height="11" rx="2" class="s"/>'},
+  {t:'worksheet',label:'Worksheet',cat:'source',wf:'<rect x="6" y="8" width="68" height="17" rx="3" class="f"/><rect x="6" y="31" width="68" height="5" rx="2" class="s"/><rect x="6" y="40" width="68" height="5" rx="2" class="s"/>'},
+  {t:'artifact',label:'Artifact',cat:'source',wf:'<rect x="6" y="11" width="30" height="4" class="l2"/><rect x="6" y="21" width="30" height="3"/><rect x="6" y="28" width="30" height="3"/><rect x="6" y="36" width="18" height="6" rx="2" class="s"/><rect x="44" y="9" width="30" height="34" rx="3" class="f"/>'},
+  {t:'external',label:'External',cat:'source',wf:'<rect x="6" y="9" width="26" height="34" rx="3" class="f"/><rect x="38" y="11" width="32" height="4" class="l2"/><rect x="38" y="21" width="32" height="3"/><rect x="38" y="28" width="24" height="3"/><rect x="38" y="36" width="24" height="7" rx="3" class="s"/>'}
+];
+function renderPalette(){
+  const pal=$('#palette'); if(!pal) return;
+  const tags=PAL_CATS.map(([c,l])=>`<button data-cat="${c}" class="${paletteCat===c?'on':''}">${esc(l)}</button>`).join('');
+  const items=PALETTE.filter(x=>paletteCat==='all'||x.cat===paletteCat).map(x=>
+    `<button class="pal-thumb" draggable="true" data-ptype="${esc(x.t)}" title="Add ${esc(x.label)} slide">
+      <span class="wf-box"><svg class="wf" viewBox="0 0 80 52" xmlns="http://www.w3.org/2000/svg">${x.wf}</svg></span>
+      <span class="pal-lbl">${esc(x.label)}</span></button>`).join('');
+  pal.innerHTML=`<div class="pal-tags">${tags}</div>
+    <div class="pal-scroll-wrap"><button class="pal-chev" data-scroll="-1" title="Scroll left">‹</button>
+    <div class="pal-row" id="palRow">${items}</div>
+    <button class="pal-chev" data-scroll="1" title="Scroll right">›</button></div>`;
+  wirePalette();
+}
+function wirePalette(){
+  const pal=$('#palette');
+  pal.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{ paletteCat=b.dataset.cat; renderPalette(); });
+  pal.querySelectorAll('[data-scroll]').forEach(b=>b.onclick=()=>{ const row=$('#palRow'); if(row) row.scrollBy({left:170*(+b.dataset.scroll),behavior:'smooth'}); });
+  pal.querySelectorAll('.pal-thumb').forEach(th=>{
+    th.onclick=()=>insertSlide(th.dataset.ptype, cur+1);                         // click → insert after current
+    th.addEventListener('dragstart',ev=>{ paletteType=th.dataset.ptype; ev.dataTransfer.effectAllowed='copy';
+      try{ ev.dataTransfer.setData('text/plain','new:'+th.dataset.ptype); }catch(_){ } });
+    th.addEventListener('dragend',()=>{ paletteType=null; clearDropMarks(); });
+  });
+}
 $('#modeSeg').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;
   mode=b.dataset.mode; document.body.className=mode;
   $('#modeSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.mode===mode));
@@ -1503,6 +1563,7 @@ $('#exportBtn').onclick=()=>{
   const clone=document.documentElement.cloneNode(true);
   clone.querySelector('#slide').innerHTML='';        // re-renders fresh from data on open
   const ins=clone.querySelector('#inspector'); if(ins) ins.innerHTML='';   // edit-only panel never ships
+  const pal=clone.querySelector('#palette'); if(pal) pal.innerHTML='';     // edit-only palette never ships
   clone.querySelector('body').className='study';
   const html='<!DOCTYPE html>\n'+clone.outerHTML;
   const blob=new Blob([html],{type:'text/html'});
@@ -1563,7 +1624,7 @@ $('.stagewrap').addEventListener('click',e=>{
 document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement && document.body.classList.contains('present')) setPresent(false); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#lightbox').classList.contains('show')) closeLb(); });
 
-render();
+render(); renderPalette();   // palette content is static (per category) — build it once, not on every render()
 </script>
 </body>
 </html>

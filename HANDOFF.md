@@ -106,8 +106,11 @@ LESSON = {
 
 ## 4. Data model (slide types)
 
-Add a slide via **Edit → "Add a card"** (factory defaults live in the `#addbar` click
-handler). Hand‑editable via the **⌗ JSON** panel. Fields:
+Add a slide from the **slide-type palette** (the categorised wireframe strip at the bottom
+of the Edit area): **drag** a thumbnail onto the slide list to insert at a position, or
+**click** it to insert after the current slide. New slides come from `SLIDE_FACTORY`
+(`makeSlide(type)`) and open selected in the inspector. Hand‑editable via the **⌗ JSON**
+panel. Fields:
 
 - **cover** — `{ tag, title, sub, titleItalic?, startLabel?, est? }`
 - **outcomes** — `{ eyebrow, heading, image, outcomes:[string], syllabus:[{code,text}] }`

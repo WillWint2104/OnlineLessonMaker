@@ -8,6 +8,18 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Slide-type palette** — a categorised, wireframe-thumbnail "add a slide" surface (Edit
+  only, bottom strip) replacing the append-only chip menu. Category tags (All · Structure ·
+  Text & notes · Media · Source & questions) filter a horizontally-scrollable row of
+  hand-built wireframe thumbnails (one per type, with chevrons). **Drag** a thumbnail onto
+  the slide list to insert a new slide at that position (the reorder drop-indicator is
+  reused; a new-type token in `dataTransfer` distinguishes insert from reorder); **click** a
+  thumbnail to insert after the current slide. New slides reuse the existing factory
+  (extracted to `SLIDE_FACTORY` / `makeSlide`) and open selected in the inspector. Sidebar
+  drag-reorder / ✕ / ▲▼ unchanged. STUDY / PRESENT / EXPORT and the data model unchanged.
+
+### Removed
+- The old sidebar "Add a card" chip bar (`#addbar`) — superseded by the palette.
 - **Edit-mode inspector** — replaces inline-contenteditable editing with a **clean,
   Study-identical canvas + a right-hand properties panel**. Clicking a tagged region
   (`data-zone`) selects it (2px accent outline) and loads its fields in the panel; typing
