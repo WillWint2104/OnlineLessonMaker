@@ -1435,9 +1435,10 @@ $('#nav').onclick=e=>{
   if(go_)go(+go_.dataset.go);
 };
 // ---- edit-mode drag-to-reorder of the slide list (native HTML5 DnD) ----
+function clearDropMarks(){ $('#nav').querySelectorAll('.nitem').forEach(n=>n.classList.remove('drop-before','drop-after','dragging')); }
 (()=>{
   const nav=$('#nav'); let from=null;
-  const clearMarks=()=>nav.querySelectorAll('.nitem').forEach(n=>n.classList.remove('drop-before','drop-after','dragging'));
+  const clearMarks=clearDropMarks;
   const dropAfter=(it,y)=>{ const r=it.getBoundingClientRect(); return (y-r.top) > r.height/2; };
   nav.addEventListener('dragstart',e=>{
     if(mode!=='edit'){ return; }
@@ -1542,7 +1543,7 @@ function wirePalette(){
     th.onclick=()=>insertSlide(th.dataset.ptype, cur+1);                         // click → insert after current
     th.addEventListener('dragstart',ev=>{ paletteType=th.dataset.ptype; ev.dataTransfer.effectAllowed='copy';
       try{ ev.dataTransfer.setData('text/plain','new:'+th.dataset.ptype); }catch(_){ } });
-    th.addEventListener('dragend',()=>{ paletteType=null; $('#nav').querySelectorAll('.nitem').forEach(n=>n.classList.remove('drop-before','drop-after')); });
+    th.addEventListener('dragend',()=>{ paletteType=null; clearDropMarks(); });
   });
 }
 $('#modeSeg').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;
