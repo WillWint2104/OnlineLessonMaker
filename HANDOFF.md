@@ -86,6 +86,7 @@ LESSON = {
 |---|---|
 | `renderSlide()` | `renderCanvas()` + `renderInspector()` |
 | `renderCanvas()` | builds the slide HTML (switch on `s.type`); Study-identical even in Edit |
+| `fitCanvas()` | scales the fixed 1280×720 `.canvas` (`transform:scale(s)`) to fit the `.stage`; FIT vs SCROLL; sizes the `.canvasfit` footprint. A ResizeObserver on `.stage` re-runs it |
 | `tagZones()` / `renderInspector()` | Edit-mode: tag `data-zone`s + selection; build the right properties panel |
 | `wire()` | (re)attaches all handlers after a render |
 | `setP/getP` | read/write a dotted path into `LESSON` (e.g. `slides.3.title`) |
@@ -171,6 +172,14 @@ are enforced by CI (`scripts/validate.mjs`):
 
 1. The **last `<script>`** in the file (the engine) must pass `node --check` (valid JS).
 2. The embedded `#lesson-data` JSON must `JSON.parse` and contain a `slides` array.
+
+**Scaled-canvas invariant:** slide content lives in a fixed 1280×720 `.canvas` that is
+`transform:scale(s)`-d to fit. Any code that converts a pointer event to slide coordinates
+MUST stay scale-safe — derive the fraction from the element's `getBoundingClientRect()`
+(which is *post-transform*, i.e. already scaled) and pointer `clientX/Y`, or rely on
+`e.target`/`closest` hit-testing (transform-aware). Never mix screen pixels with the
+*logical* 1280/720 (that needs `/s`). Today the hotspot drag (`data-poidrag`) and inspector
+zone clicks both use gBCR/`closest`, so they need no scale division — keep it that way.
 
 Plus guardrails CI warns on:
 - No `localStorage` / `sessionStorage` (the app is intentionally stateless; it also keeps it

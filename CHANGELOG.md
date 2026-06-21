@@ -8,6 +8,18 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **Slides render on a fixed-aspect 1280×720 canvas that scales to fit (deck model).** The
+  per-type layouts now lay out inside a logical 1280×720 `.canvas` which is scaled with
+  `transform: scale(s)` (centred in the `.stage`) — **identical across Edit / Study / Present /
+  Export**. FIT (default) `s = min(stageW/1280, stageH/720)`; SCROLL (`slide.layout==='scroll'`)
+  `s = stageW/1280` and the canvas grows taller and the stage scrolls. `s` is recomputed by a
+  **ResizeObserver on `.stage`** (reacts to the nav opening/closing, window resize, present
+  chrome) — no window-resize listener. Present mode now uses the **same canvas + scale** (the
+  old per-element `font-size:clamp`/`vh` present rules are gone — the uniform transform replaces
+  them); Export clones the sizing script so a published lesson scales identically. Pointer→slide
+  maths (hotspot drag-to-place, inspector zone selection) is **scale-safe** — it uses
+  `getBoundingClientRect()` (post-transform) + percentages / `closest`, so no scale division is
+  needed (verified: a hotspot dropped at a target lands at the correct %).
 - **Rome "Imperial Scholar" theme — fidelity pass.** Retoned `:root[data-theme="rome"]`:
   warm-marble canvas (`#fff8f5`), **imperial-purple** accent (`#4b0082`) + **Roman-gold**
   (`#c5b358`) strokes, a **light** rail with a **gold** active-indicator bar (the active fill
