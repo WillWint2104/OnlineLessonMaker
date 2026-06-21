@@ -865,7 +865,7 @@ let LESSON=JSON.parse(document.getElementById('lesson-data').textContent);
 let cur=0, mode='study';
 let selZone=null;   // Edit-mode inspector: selected zone id within the current slide (null = none)
 const $=s=>document.querySelector(s);
-const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');   // escapes quotes too — esc() is used inside double-quoted HTML attributes (href/src/value/data-*), so attribute-context injection is closed
 function getP(o,p){return p.split('.').reduce((a,k)=>a?.[k],o);}
 function setP(o,p,v){const ks=p.split('.');const last=ks.pop();let t=o;ks.forEach(k=>t=t[k]);t[last]=v;}
 
@@ -888,6 +888,7 @@ function markNotes(text){ return esc(text).replace(/==([^=]+)==/g,'<span class="
    click-ignore list). */
 function sourceFallback(s){
   const url=(s.sourceUrl||s.url||'').trim(); if(!url) return '';
+  if(!/^(https?:)?\/\//i.test(url)) return '';   // only an absolute link is a useful fallback (a bare ClickView id would 404 as a relative URL)
   const label=s.sourceLabel || (s.type==='video'?'Open video ↗':'Open the interactive ↗');
   return `<a class="src-fallback" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
 }
