@@ -20,15 +20,15 @@ const APP = path.join(root, 'lesson-studio.html');
 // Exactly the families/weights that were in the Google Fonts <link>.
 const FONTS = [
   ['Hanken Grotesk', 'hanken-grotesk', [['400', 'normal'], ['500', 'normal'], ['600', 'normal'], ['700', 'normal']]],
-  ['EB Garamond',    'eb-garamond',    [['400', 'normal'], ['500', 'normal'], ['600', 'normal'], ['400', 'italic'], ['500', 'italic']]],
+  ['EB Garamond',    'eb-garamond',    [['400', 'normal'], ['500', 'normal'], ['600', 'normal'], ['400', 'italic'], ['500', 'italic'], ['600', 'italic']]],
   ['Space Grotesk',  'space-grotesk',  [['500', 'normal'], ['600', 'normal'], ['700', 'normal']]],
   ['Marcellus',      'marcellus',      [['400', 'normal']]],
   ['Cinzel',         'cinzel',         [['500', 'normal'], ['600', 'normal']]],
-  ['Fraunces',       'fraunces',       [['500', 'normal'], ['600', 'normal']]],
   ['Oswald',         'oswald',         [['500', 'normal'], ['600', 'normal'], ['700', 'normal']]],
   ['Archivo Narrow', 'archivo-narrow', [['600', 'normal'], ['700', 'normal']]],
   ['Source Serif 4', 'source-serif-4', [['400', 'normal'], ['400', 'italic']]],
   ['Courier Prime',  'courier-prime',  [['400', 'normal'], ['700', 'normal']]],
+  ['Inter',          'inter',          [['400', 'normal'], ['600', 'normal']]],
 ];
 
 let css = '';

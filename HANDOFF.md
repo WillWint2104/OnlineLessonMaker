@@ -273,8 +273,14 @@ YouTube embeds) — `lessons/*.html` only *warns*, by design.
   sample lesson** to carry the HT5 (Stage 5 History) outcomes codes — the live seed is the
   Egypt/AH11 Tutankhamun lesson, so HT5 wiring belongs in a dedicated ww1 sample, not the
   shared seed.
-- Optional: light "archive" sidebars per theme (currently Rome/Wellbeing/WW1 keep dark
-  sidebars; Egypt is light).
+- ~~**Wellbeing design pass**~~ — **DONE (visual)**: the `wellbeing` "Terra Anima" theme is
+  retoned (off-white canvas + white sheets, sage accent, **light** command rail with white-on-
+  sage active item, misty-sage hero, soft sage-tinted shadow, organic radius; EB Garamond
+  display + Inter body/labels, vendored/inlined; topographic-contour `--grain` watermark +
+  leaf `--motif` + topo-ring list bullets). Follow-ups: terracotta CTA + sky-blue pill tokens
+  (need a secondary/info token + CSS), white-on-sage chips (accent-ink is dark for contrast),
+  and a **wellbeing sample lesson** carrying the GE5 (Stage 5 Geography) outcomes codes.
+- Sidebar style is now per-theme: Egypt + Wellbeing are **light** rails; Rome/WW1 are dark.
 - Decide the **`task`** type: delete or rebuild.
 - **Accessibility** pass (focus, ARIA, keyboard hotspots, reduced‑motion, contrast).
 - Optional extra Stitch layouts (hotspot side‑panel, lecture‑notes split, richer video).
