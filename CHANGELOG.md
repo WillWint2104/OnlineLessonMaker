@@ -8,6 +8,11 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Drag-to-reorder slides (Edit mode)** — slide-list items in the sidebar are now
+  draggable (native HTML5 DnD, no new dependency); dropping rewrites `LESSON.slides` into
+  the new order, with a drop indicator line between items. The ✕/▲▼ buttons are kept. The
+  current slide is tracked **by identity**, so the slide you're viewing stays selected after
+  a reorder. Edit mode only; re-renders after a drop. (Inline canvas text editing untouched.)
 - **Present-mode discussion (A2)** — in Present mode, `source`/`question` slides render
   the teaching content but surface questions as numbered **discussion pills** (Q1, Q2 …)
   instead of inline answerable cards. Tapping a pill opens the question large in the

@@ -132,6 +132,11 @@ handler). Hand‑editable via the **⌗ JSON** panel. Fields:
   text/url and add/remove.
 
 ### Authoring conventions worth knowing
+- **Reordering slides (Edit mode):** the sidebar slide list supports **drag-to-reorder**
+  (native HTML5 DnD) in addition to the ✕/▲▼ buttons; a drop line shows where the slide
+  will land. `cur` is tracked **by identity** across a reorder, so the open slide stays
+  selected. Handlers are delegated on `#nav` (`dragstart`/`dragover`/`drop`/`dragend`);
+  items get `draggable` only in edit mode, so `renderNav()` runs on mode switch.
 - `==text==` inside a notes `bd` marks it as a "record this" phrase.
 - Present mode: **click** advances (left ~20% goes back); **← / →** also navigate; the
   Back/Next bar is hidden in Present.
