@@ -3,7 +3,7 @@ import { chromium } from 'playwright';
 // Verify a standalone exported lesson page: cover title, slide count, and the
 // external slide embedding the CT interactive inline with an "Open ↗" fallback.
 // URL is passed via env (so it works for both a local server and the live deploy).
-const URL = process.env.URL || 'http://localhost:8090/lessons/case-file-6-investigating-the-remains.html';
+const PAGE_URL = process.env.URL || 'http://localhost:8090/lessons/case-file-6-investigating-the-remains.html';
 const OUT = process.env.OUT || 'screenshots/case6-lesson.png';
 const EMBED = 'interactives/tutankhamun-ct-scan.html';
 
@@ -12,7 +12,7 @@ const page = await browser.newPage();
 const errs = [];
 page.on('pageerror', e => errs.push(String(e)));
 page.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
-const resp = await page.goto(URL, { waitUntil: 'networkidle' });
+const resp = await page.goto(PAGE_URL, { waitUntil: 'networkidle' });
 await page.waitForTimeout(500);
 
 const results = [];
@@ -50,8 +50,13 @@ ok('CT slide embeds the interactive inline (iframe)', ext.isEmbed, `src=${ext.if
 ok('"Open ↗" fallback present, points at the interactive', /↗/.test(ext.launchLabel) && ext.launchTarget.includes(EMBED), `label="${ext.launchLabel}"`);
 
 // same-origin iframe content (only on the live github.io deploy)
-const same = (() => { try { return new URL(ext.iframeSrc).origin === new URL(URL).origin; } catch { return false; } })();
+const same = (() => { try { return new URL(ext.iframeSrc).origin === new URL(PAGE_URL).origin; } catch { return false; } })();
 if (same) {
+  // iframe loads async (cross-origin fetch + in-frame Babel compile) — wait for it to paint
+  await page.waitForFunction(() => {
+    const ifr = document.querySelector('#slide .ex-img iframe');
+    try { return /THE VERDICT/i.test(ifr?.contentDocument?.body?.innerText || ''); } catch { return false; }
+  }, { timeout: 20000 }).catch(() => {});
   const f = await page.evaluate(() => {
     const ifr = document.querySelector('#slide .ex-img iframe');
     try { const t = ifr.contentDocument?.body?.innerText || ''; return { ok: /THE VERDICT/i.test(t) && !/\[bundle\] error/i.test(t) }; }
