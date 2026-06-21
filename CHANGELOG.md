@@ -8,6 +8,13 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Case File 6 — "Investigating the Remains" loaded as the app's lesson** (11 slides, Egypt
+  theme): swapped the `#lesson-data` JSON in `lesson-studio.html`. Its CT-investigation slide
+  embeds the same-origin `interactives/tutankhamun-ct-scan.html` explorer.
+- **`external` slides now embed their activity URL inline** (an `<iframe>` in the exhibit panel)
+  instead of only offering a launch button — the existing **launch button stays as the "Open ↗"
+  fallback** (school networks that block the iframe can still open it in a new tab). Image wells
+  are used only when no URL is set. Verified with `scripts/verify-casefile6.mjs`.
 - **Standalone interactive: "The Body of Tutankhamun" CT-scan explorer**, hosted at
   `interactives/tutankhamun-ct-scan.html` (live at
   `/OnlineLessonMaker/interactives/tutankhamun-ct-scan.html`). A self-contained React + Babel
