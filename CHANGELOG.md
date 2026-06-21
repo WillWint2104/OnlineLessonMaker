@@ -8,6 +8,16 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Standalone interactive: "The Body of Tutankhamun" CT-scan explorer**, hosted at
+  `interactives/tutankhamun-ct-scan.html` (live at
+  `/OnlineLessonMaker/interactives/tutankhamun-ct-scan.html`). A self-contained React + Babel
+  bundle with all assets inlined (zero external hosts — only the `w3.org` SVG namespace),
+  shipped **byte-for-byte** as authored. `scripts/validate.mjs` now also scans
+  `interactives/*.html` under the **warn-only** firewall/storage guardrails (no lesson-JSON /
+  engine-JS checks, since an interactive is not a LESSON document). Verified rendered **served
+  over HTTP** (the bundle requires a server; it fails on `file://`) via
+  `scripts/verify-interactive.mjs`: real region tabs (FULL BODY / SKULL / LEFT THIGH / LEFT
+  FOOT / THE VERDICT), no `[bundle] error`, and zero requests leaving localhost.
 - **Inspector "media block" — centralised add / replace / remove / fit / focus / zoom for all
   media.** The Edit inspector now manages every image zone (cover hero, slide image, artifact /
   outcomes / worksheet / external image, source-image) from one panel block: a thumbnail (or a
