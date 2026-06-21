@@ -330,6 +330,10 @@ body.edit .dropnote{display:block;font-size:.74rem;color:var(--muted);margin-top
 .frame .ph{color:#7e8492;font-size:.92rem;text-align:center;padding:20px;}
 .frame .ph svg{opacity:.5;margin-bottom:8px;}
 .cap{margin-top:11px;font-size:.86rem;color:var(--muted);font-style:italic;}
+.src-fallback{margin-top:12px;align-self:flex-start;display:inline-flex;align-items:center;gap:7px;
+  font-size:.84rem;font-weight:600;text-decoration:none;padding:9px 15px;border-radius:10px;
+  background:var(--accent-soft);color:var(--accent-ink);border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);}
+.src-fallback:hover{background:color-mix(in srgb,var(--accent) 14%,var(--surface));}
 .setrow{display:none;margin-top:12px;gap:8px;}
 body.edit .setrow{display:flex;}
 .setrow input{flex:1;font-family:inherit;font-size:.82rem;padding:9px 12px;border:1px solid var(--line);
@@ -861,7 +865,7 @@ let LESSON=JSON.parse(document.getElementById('lesson-data').textContent);
 let cur=0, mode='study';
 let selZone=null;   // Edit-mode inspector: selected zone id within the current slide (null = none)
 const $=s=>document.querySelector(s);
-const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');   // escapes quotes too — esc() is used inside double-quoted HTML attributes (href/src/value/data-*), so attribute-context injection is closed
 function getP(o,p){return p.split('.').reduce((a,k)=>a?.[k],o);}
 function setP(o,p,v){const ks=p.split('.');const last=ks.pop();let t=o;ks.forEach(k=>t=t[k]);t[last]=v;}
 
@@ -878,6 +882,16 @@ function toEmbed(url){
   return url; // ClickView embed link or other iframe URL pasted directly
 }
 function markNotes(text){ return esc(text).replace(/==([^=]+)==/g,'<span class="noteable">$1</span>'); }
+/* Always-visible fallback link for embed-bearing slides (video/external): embeds get blocked
+   at school, so this opens the original source in a new tab. href = sourceUrl || original media
+   URL (so there's always a working link); never advances the slide (an <a> is in the present
+   click-ignore list). */
+function sourceFallback(s){
+  const url=(s.sourceUrl||s.url||'').trim(); if(!url) return '';
+  if(!/^(https?:)?\/\//i.test(url)) return '';   // only an absolute link is a useful fallback (a bare ClickView id would 404 as a relative URL)
+  const label=s.sourceLabel || (s.type==='video'?'Open video ↗':'Open the interactive ↗');
+  return `<a class="src-fallback" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
+}
 function title(s){
   if(s.type==='cover') return s.title||'Section';
   if(s.type==='question') return s.skill||'Question';
@@ -1074,6 +1088,7 @@ function renderCanvas(){
       <div class="ehead"><h2 class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading)}</h2></div>
       <div class="frame">${src?`<iframe src="${esc(src)}" allowfullscreen></iframe>`:
         `<div class="ph">${ICON.video}<br>No video yet — add a link in Edit mode</div>`}</div>
+      ${sourceFallback(s)}
       <div class="cap editable" data-bind="slides.${i}.cap" contenteditable="${mode==='edit'}">${esc(s.cap)}</div>
       <div class="setrow"><input data-setv="${i}" value="${esc(s.url)}" placeholder="Paste a YouTube link or a ClickView embed link"><button class="btn" data-applyv="${i}">Set video</button></div>
       <div class="hint">YouTube watch/share links convert automatically. For ClickView, use Share → Embed and paste that link.</div>
@@ -1195,7 +1210,7 @@ function renderCanvas(){
           <div class="ex-desc editable" data-bind="slides.${i}.desc" contenteditable="${mode==='edit'}">${esc(s.desc)}</div>
           <ul class="feat">${feats}</ul>
           ${mode==='edit'?`<button class="qadd" data-addfeat="${i}">＋ feature</button>`:''}
-          <div><button class="launch" data-launch="${esc(s.url||'')}">${ICON.launch} <span class="editable" data-bind="slides.${i}.launchLabel" contenteditable="${mode==='edit'}">${esc(s.launchLabel||'Launch activity')}</span> →</button></div>
+          <div><button class="launch" data-launch="${esc(s.sourceUrl||s.url||'')}">${ICON.launch} <span class="editable" data-bind="slides.${i}.launchLabel" contenteditable="${mode==='edit'}">${esc(s.launchLabel||'Launch activity')}</span> →</button></div>
           <div class="meta editable" data-bind="slides.${i}.meta" contenteditable="${mode==='edit'}">${esc(s.meta||'')}</div>
           ${mode==='edit'?`<div class="setrow"><input data-urlfield="slides.${i}.url" value="${esc(s.url||'')}" placeholder="Activity URL (ClickView, Genially, etc.)"><button class="btn" data-applyurl="slides.${i}.url">Set link</button></div><div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Image URL"><button class="btn" data-applyurl="slides.${i}.image">Set image</button></div>`:''}
         </div>
@@ -1366,13 +1381,13 @@ function inspectorForm(i,s,sel){
     case 'outcomes': return T('eyebrow','Eyebrow')+T('heading','Heading','area')+M()+L('outcomes','Outcomes')+syllabusGroup(i,s,sel);
     case 'notes': return T('heading','Heading')+repeatGroup(i,s,sel,'blocks','Block','Reading blocks',(b,j)=>inT('Heading',`slides.${i}.blocks.${j}.h`,b.h)+inA('Body (==text== marks "record this")',`slides.${i}.blocks.${j}.bd`,b.bd),'Add block')+T('guide','Notes-to-take guidance','area');
     case 'image': return T('heading','Heading')+M()+T('cap','Caption');
-    case 'video': return T('heading','Heading')+T('url','Video URL (YouTube / ClickView)')+T('cap','Caption');
+    case 'video': return T('heading','Heading')+T('url','Video URL (YouTube / ClickView)')+T('cap','Caption')+T('sourceUrl','Source / fallback link — opens in a new tab')+T('sourceLabel','Fallback button label');
     case 'question': return T('skill','Skill')+T('heading','Heading')+qGroup(i,s,sel);
     case 'source': return T('heading','Heading')+T('credit','Credit / citation')+M()+qGroup(i,s,sel);
     case 'model3d': return T('heading','Heading')+M()+qGroup(i,s,sel);
     case 'artifact': return T('eyebrow','Eyebrow')+T('title','Title')+T('desc','Description','area')+repeatGroup(i,s,sel,'specs','Spec','Material specs',(r,j)=>inT('Label',`slides.${i}.specs.${j}.k`,r.k)+inT('Value',`slides.${i}.specs.${j}.v`,r.v),'Add spec')+T('scale','Scale label')+T('ctaLabel','CTA button label')+M();
     case 'worksheet': return T('heading','Heading')+T('subtitle','Subtitle')+M()+T('fig','Figure caption')+T('tag','Tag')+T('panelTitle','Panel title')+T('panelSub','Panel subtitle')+repeatGroup(i,s,sel,'fields','Field','Worksheet fields',(f,j)=>inT('Number / label',`slides.${i}.fields.${j}.n`,f.n)+inT('Hint',`slides.${i}.fields.${j}.hint`,f.hint)+(f.kind==='matrix'?(f.cells||[]).map((c,k)=>inT('Cell '+(k+1)+' label',`slides.${i}.fields.${j}.cells.${k}.lbl`,c.lbl)).join(''):''),'Add field');
-    case 'external': return T('eyebrow','Eyebrow')+T('title','Title')+T('desc','Description','area')+L('features','Features')+T('url','Activity URL')+T('meta','Meta line')+T('launchLabel','Launch button label')+M();
+    case 'external': return T('eyebrow','Eyebrow')+T('title','Title')+T('desc','Description','area')+L('features','Features')+T('url','Activity URL')+T('sourceUrl','Source / fallback link — overrides Activity URL')+T('meta','Meta line')+T('launchLabel','Launch button label')+M();
     case 'complete': return T('title','Title')+T('lead','Lead','area')+T('gainedTitle','Knowledge-gained title')+L('gained','Knowledge gained')+T('badgeTitle','Badge title')+T('badgeDesc','Badge description');
     default: return '<div class="muted small">No editable fields.</div>';
   }

@@ -7,6 +7,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **"Open source" fallback link on embed-bearing slides (video / external).** School networks
+  block embeds (X-Frame-Options / policy), so an **always-visible** `<a target="_blank"
+  rel="noopener noreferrer">` opens the original in a new tab even when the embed is present.
+  Video renders the button below the embed; external reuses its existing **launch** button (no
+  duplicate). New optional `slide.sourceUrl` (href = `sourceUrl` || the original media URL, so
+  there's always a working link) + `slide.sourceLabel` (default "Open video ↗" / "Open the
+  interactive ↗"), live-edited from the inspector's **Source / fallback link** field. In Present
+  the link opens without advancing the slide (an `<a>` is already in the click-ignore list). All
+  output is `esc()`-d; Study / Present / Export otherwise unchanged.
+
 ### Changed
 - **Slides render on a fixed-aspect 1280×720 canvas that scales to fit (deck model).** The
   per-type layouts now lay out inside a logical 1280×720 `.canvas` which is scaled with
