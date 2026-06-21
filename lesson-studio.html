@@ -116,6 +116,13 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 body.edit .nitem .grip{display:flex;}
 .nitem .grip button{color:var(--sidebar-mut);font-size:.8rem;padding:2px 4px;border-radius:5px;line-height:1;}
 .nitem .grip button:hover{color:#fff;background:rgba(255,255,255,.1);}
+/* edit-mode drag-to-reorder */
+body.edit .nitem{cursor:grab;}
+body.edit .nitem:active{cursor:grabbing;}
+.nitem.dragging{opacity:.4;}
+.nitem.drop-before::after,.nitem.drop-after::after{content:"";position:absolute;left:6px;right:6px;height:3px;border-radius:3px;background:var(--accent);box-shadow:0 0 0 1px var(--sidebar);}
+.nitem.drop-before::after{top:-3px;}
+.nitem.drop-after::after{bottom:-3px;}
 .addbar{padding:10px 16px 16px;border-top:1px solid var(--sidebar-sep);display:none;flex-wrap:wrap;gap:6px;}
 body.edit .addbar{display:flex;}
 .addbar .lbl{width:100%;font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--sidebar-mut);margin-bottom:2px;}
@@ -787,7 +794,7 @@ function render(){
 function renderNav(){
   const nav=$('#nav');
   nav.innerHTML=LESSON.slides.map((s,i)=>`
-    <div class="nitem ${i===cur?'on':''}" data-go="${i}">
+    <div class="nitem ${i===cur?'on':''}" data-go="${i}" ${mode==='edit'?'draggable="true"':''}>
       <div class="ico">${ICON[s.type]||ICON.notes}</div>
       <div class="tx"><b>${esc(title(s))}</b><span>${TYPELAB[s.type]||s.type}</span></div>
       <div class="grip">
@@ -1222,6 +1229,42 @@ $('#nav').onclick=e=>{
   if(dl){const i=+dl.dataset.del;if(LESSON.slides.length<=1)return;LESSON.slides.splice(i,1);if(cur>=LESSON.slides.length)cur=LESSON.slides.length-1;renderNav();renderSlide();return;}
   if(go_)go(+go_.dataset.go);
 };
+// ---- edit-mode drag-to-reorder of the slide list (native HTML5 DnD) ----
+(()=>{
+  const nav=$('#nav'); let from=null;
+  const clearMarks=()=>nav.querySelectorAll('.nitem').forEach(n=>n.classList.remove('drop-before','drop-after','dragging'));
+  const dropAfter=(it,y)=>{ const r=it.getBoundingClientRect(); return (y-r.top) > r.height/2; };
+  nav.addEventListener('dragstart',e=>{
+    if(mode!=='edit'){ return; }
+    const it=e.target.closest('.nitem'); if(!it){ return; }
+    from=+it.dataset.go; e.dataTransfer.effectAllowed='move';
+    try{ e.dataTransfer.setData('text/plain',String(from)); }catch(_){ }
+    it.classList.add('dragging');
+  });
+  nav.addEventListener('dragover',e=>{
+    if(mode!=='edit'||from===null) return;
+    const it=e.target.closest('.nitem'); if(!it) return;
+    e.preventDefault(); e.dataTransfer.dropEffect='move';
+    const after=dropAfter(it,e.clientY);
+    nav.querySelectorAll('.nitem').forEach(n=>n.classList.remove('drop-before','drop-after'));
+    it.classList.add(after?'drop-after':'drop-before');
+  });
+  nav.addEventListener('drop',e=>{
+    if(mode!=='edit'||from===null) return;
+    e.preventDefault();
+    const it=e.target.closest('.nitem'); const f=from; from=null;
+    const after=it?dropAfter(it,e.clientY):false; clearMarks();
+    if(!it){ return; }
+    const to=+it.dataset.go; if(to===f) return;
+    const a=LESSON.slides, curSlide=a[cur];
+    let insert=to+(after?1:0); if(f<insert) insert--;     // adjust for the removal shift
+    insert=Math.max(0,Math.min(a.length-1,insert));
+    a.splice(insert,0,a.splice(f,1)[0]);                  // move the slide
+    cur=a.indexOf(curSlide);                              // keep the viewed slide selected (by identity)
+    renderNav(); renderSlide();
+  });
+  nav.addEventListener('dragend',()=>{ from=null; clearMarks(); });
+})();
 $('#addbar').onclick=e=>{const b=e.target.closest('[data-add]');if(!b)return;
   const T=b.dataset.add, tpl={
     cover:{type:'cover',tag:'Section',title:'New section',sub:'Subtitle'},
@@ -1243,7 +1286,7 @@ $('#addbar').onclick=e=>{const b=e.target.closest('[data-add]');if(!b)return;
 $('#modeSeg').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;
   mode=b.dataset.mode; document.body.className=mode;
   $('#modeSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.mode===mode));
-  renderSlide();
+  renderNav(); renderSlide();   // renderNav so the slide list picks up edit-only draggable
 };
 $('#themeSel').onchange=e=>{LESSON.meta.theme=e.target.value;setTheme(e.target.value);renderNav();};
 document.addEventListener('keydown',e=>{
