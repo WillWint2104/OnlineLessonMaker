@@ -8,6 +8,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Edit-mode inspector** — replaces inline-contenteditable editing with a **clean,
+  Study-identical canvas + a right-hand properties panel**. Clicking a tagged region
+  (`data-zone`) selects it (2px accent outline) and loads its fields in the panel; typing
+  updates the canvas live and persists to `LESSON` (no Apply button), preserving the
+  selection. Questions (source/question) edit as add/removable groups in the scrolling
+  panel; media zones show a URL field (drag-onto-the-well still works on the canvas). A
+  per-slide **Layout** segmented control (Fit | Scroll → `slide.layout`) and editable
+  **lesson meta** (subject / year / unit / outcomes codes → `LESSON.meta`, additive) live
+  in persistent Slide / Lesson sections. **Edit-mode UI layer only — STUDY, PRESENT,
+  EXPORT and the LESSON data model are unchanged.** Sidebar (drag-reorder / ✕ / ▲▼)
+  unchanged. _Follow-up:_ source-image hotspot editing stays as-is for now (noted in panel).
 - **Drag-to-reorder slides (Edit mode)** — slide-list items in the sidebar are now
   draggable (native HTML5 DnD, no new dependency); dropping rewrites `LESSON.slides` into
   the new order, with a drop indicator line between items. The ✕/▲▼ buttons are kept. The

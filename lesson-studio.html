@@ -162,8 +162,8 @@ body.edit .themebox{display:flex;}
 .card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow-y:auto;overflow-x:hidden;border:1px solid color-mix(in srgb,var(--text) 8%,transparent);flex:1;min-height:0;display:flex;flex-direction:column;justify-content:safe center;}
 .eyebrow{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);}
 .editable{outline:none;border-radius:6px;transition:box-shadow .15s,background .15s;}
-body.edit .editable{box-shadow:inset 0 0 0 1px var(--line);background:#fafbfc;padding:2px 6px;margin:-2px -6px;}
-body.edit .editable:focus{box-shadow:inset 0 0 0 2px var(--accent);background:#fff;}
+/* Edit canvas is Study-identical now (the inspector does the editing) — no per-element
+   highlight/contenteditable styling. Selection outline lives on [data-zone].zsel below. */
 body.edit [data-edit-only]{display:revert;}
 [data-edit-only]{display:none;}
 
@@ -298,7 +298,7 @@ body.edit .hint{display:block;}
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E") center/15px no-repeat;}
 .qedit{display:none;flex-direction:column;gap:10px;margin-top:12px;}
 body.edit .qedit{display:flex;}
-body.edit .answer,body.edit .review-btn{opacity:.4;pointer-events:none;}
+/* (Edit canvas renders Study-identical; the old answer/review dimming is gone.) */
 .qedit textarea,.qedit input{width:100%;font-family:inherit;font-size:.86rem;padding:9px 12px;border:1px solid var(--line);
   border-radius:9px;background:#fafbfc;color:var(--text);resize:vertical;}
 .qedit .mini{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;}
@@ -310,7 +310,42 @@ body.edit .qadd{display:inline-flex;margin-top:16px;font-size:.82rem;font-weight
 .editnote{display:none;}
 body.edit .editnote{display:flex;align-items:center;gap:9px;background:#fff7ed;border:1px solid #fbd9a8;
   color:#8a5212;border-radius:12px;padding:12px 16px;font-size:.85rem;margin-bottom:20px;}
-@media (max-width:820px){ .side{display:none;} .stagewrap{padding:18px;} }
+/* ===== Edit-mode zone selection (canvas) ===== */
+body.edit #slide [data-zone]{cursor:pointer;border-radius:8px;}
+body.edit #slide [data-zone] *{pointer-events:none;}      /* clicks select the zone, not its contents */
+body.edit #slide [data-zone]:hover{box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent);}
+body.edit #slide [data-zone].zsel{outline:2px solid var(--accent);outline-offset:2px;}
+/* ===== Edit-mode inspector (right panel) ===== */
+.inspector{display:none;}
+body.edit .inspector{display:flex;flex-direction:column;width:340px;flex:0 0 340px;height:100vh;overflow-y:auto;
+  background:var(--surface);border-left:1px solid var(--line);padding:18px 18px 40px;gap:14px;}
+.inspector .ins-h{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:-.01em;}
+.inspector .ihint{color:var(--muted);font-size:.9rem;padding:18px 14px;border:1px dashed var(--line);border-radius:12px;text-align:center;}
+.inspector .isec{border:1px solid var(--line);border-radius:12px;padding:13px 14px;display:flex;flex-direction:column;gap:9px;background:var(--canvas);}
+.inspector .isec-h{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);}
+.inspector .ig{display:flex;flex-direction:column;gap:4px;border-radius:8px;padding:6px;margin:-6px;}
+.inspector .ig.cur{background:var(--accent-soft);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 35%,transparent);}
+.inspector label{font-size:.74rem;font-weight:600;color:var(--muted);}
+.inspector .ii,.inspector .ia{width:100%;font-family:inherit;font-size:.86rem;color:var(--text);background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;padding:8px 10px;}
+.inspector .ia{min-height:62px;line-height:1.5;resize:vertical;}
+.inspector .ii:focus,.inspector .ia:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
+.inspector .qlist{display:flex;flex-direction:column;gap:11px;}
+.inspector .qg{border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--surface);}
+.inspector .qg.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
+.inspector .qg-h{display:flex;align-items:center;justify-content:space-between;font-size:.82rem;}
+.inspector .ibtn-x{color:var(--muted);font-size:.85rem;padding:2px 6px;border-radius:6px;}
+.inspector .ibtn-x:hover{color:#fff;background:var(--accent);}
+.inspector .ibtn-add{align-self:flex-start;font-size:.8rem;font-weight:600;color:var(--accent);padding:7px 11px;
+  border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;background:var(--surface);}
+.inspector .ibtn-add:hover{background:var(--accent-soft);}
+.inspector .seg2{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+.inspector .seg2 button{padding:7px 16px;font-size:.82rem;font-weight:600;color:var(--muted);background:var(--surface);}
+.inspector .seg2 button.on{background:var(--accent);color:#fff;}
+.inspector .muted{color:var(--muted);font-weight:400;}
+.inspector .small{font-size:.74rem;line-height:1.4;}
+@media (max-width:820px){ .side{display:none;} .stagewrap{padding:18px;}
+  body.edit .inspector{position:fixed;right:0;top:0;bottom:0;z-index:60;box-shadow:-12px 0 40px -20px rgba(0,0,0,.5);} }
 
 /* ---------------- JSON DATA PANEL ---------------- */
 #dataBtn{display:none;}
@@ -655,7 +690,7 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
     <button class="btn" id="exportBtn">↧ Export</button>
   </header>
   <div class="stagewrap"><div class="stage">
-    <div class="editnote" id="editnote">✎ Edit mode — click any text to change it, set images and video links, then Export when you're done.</div>
+    <div class="editnote" id="editnote">✎ Edit mode — click any part of the slide to edit it in the panel on the right, then Export when you're done.</div>
     <div id="slide"></div>
   </div></div>
   <div class="foot">
@@ -664,6 +699,8 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
     <button class="nbtn" id="next">Next →</button>
   </div>
 </div>
+
+<aside class="inspector" id="inspector"></aside>
 
 <button id="presentExit">Exit fullscreen ✕</button>
 <div id="lightbox"><button class="lb-close" id="lbClose">✕</button><div class="lb-body"></div></div>
@@ -754,6 +791,7 @@ const TYPELAB={cover:"Section",notes:"Notes",video:"Video",image:"Image",questio
 
 let LESSON=JSON.parse(document.getElementById('lesson-data').textContent);
 let cur=0, mode='study';
+let selZone=null;   // Edit-mode inspector: selected zone id within the current slide (null = none)
 const $=s=>document.querySelector(s);
 const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function getP(o,p){return p.split('.').reduce((a,k)=>a?.[k],o);}
@@ -915,7 +953,10 @@ function showPoi(t,title,info){
   poiPop.style.width=pw+'px'; let left=r.left+r.width/2-pw/2; left=Math.max(12,Math.min(left,window.innerWidth-pw-12));
   poiPop.style.left=left+'px'; poiPop.style.top=(r.bottom+10)+'px'; poiPop.classList.add('show');
 }
-function renderSlide(){
+function renderSlide(){ renderCanvas(); renderInspector(); }
+function renderCanvas(){
+  const realEdit=(mode==='edit'), _savedMode=mode;
+  if(realEdit) mode='study';   // Edit canvas renders Study-identical (no contenteditable, no inline editors, true WYSIWYG)
   const s=LESSON.slides[cur], i=cur; let h='';
   const present=document.body.classList.contains('present');
   if(s.type==='cover'){
@@ -1133,11 +1174,152 @@ function renderSlide(){
     </div>`;
   }
   $('#slide').innerHTML=h;
+  if(realEdit) mode=_savedMode;          // restore before tagging/wiring
+  if(realEdit) tagZones(s,i);            // Edit: add data-zone hooks + media drop target + selection outline
   wire();
   // A1: per-slide layout — "scroll" allows long-form vertical scrolling; "fit"
   // (default) keeps the slide to one screen. Present always uses fit.
   $('.stagewrap').classList.toggle('layout-scroll', !present && s.layout==='scroll');
   $('#prev').disabled=cur===0; $('#next').disabled=cur===LESSON.slides.length-1;
+}
+
+/* ===================== EDIT-MODE INSPECTOR =====================
+   Edit-mode UI layer only — STUDY/PRESENT/EXPORT and the LESSON data model are
+   unchanged. The canvas renders Study-identical; tagZones() adds data-zone hooks
+   (derived from the existing data-bind paths + media wells), and renderInspector()
+   builds a schema-driven properties panel that reuses setP. */
+function zoneFromField(f){
+  let m;
+  if(m=f.match(/^(outcomes|gained|features)\.\d+$/)) return m[1];
+  if(m=f.match(/^(blocks|specs|fields)\.(\d+)/)) return ({blocks:'block',specs:'spec',fields:'field'}[m[1]])+'.'+m[2];
+  if(/^syllabus\./.test(f)) return 'syllabus';
+  return f;
+}
+function mediaInfo(i,s){
+  if(s.type==='cover')  return {path:`slides.${i}.bg`,  kind:'image'};
+  if(s.type==='image')  return {path:`slides.${i}.src`, kind:'image'};
+  if(s.type==='source'||s.type==='model3d'){ const k=(s.media&&s.media.kind)||'text'; return {path:`slides.${i}.media.${k==='text'?'text':'src'}`, kind:k}; }
+  return {path:`slides.${i}.image`, kind:'image'};   // outcomes / artifact / worksheet / external
+}
+function tagZones(s,i){
+  const slide=$('#slide');
+  slide.querySelectorAll('.editable[data-bind]').forEach(el=>{
+    if(el.closest('.qcard')) return;                       // questions are one zone (the card)
+    const m=(el.dataset.bind||'').match(/^slides\.\d+\.(.+)$/); if(!m) return;
+    el.dataset.zone=zoneFromField(m[1]);
+  });
+  slide.querySelectorAll('.qcard').forEach((c,j)=>{ c.dataset.zone='q.'+j; });
+  let well=null;
+  if(s.type==='cover') well=slide.querySelector('.hero');
+  else if(s.type==='image') well=slide.querySelector('.frame');
+  else if(s.type==='artifact') well=slide.querySelector('.artframe');
+  else if(s.type==='external') well=slide.querySelector('.ex-img');
+  else well=slide.querySelector('.srcframe')||slide.querySelector('.srctext');   // source/model3d/outcomes/worksheet
+  if(well){ const mi=mediaInfo(i,s); well.dataset.zone='media'; if(mi.kind!=='text') well.dataset.drop=mi.path; }
+  if(selZone) slide.querySelectorAll('[data-zone="'+selZone+'"]').forEach(el=>el.classList.add('zsel'));
+}
+// ---- inspector field builders ----
+function inT(label,path,val){ return `<label>${esc(label)}</label><input class="ii" data-bind="${path}" value="${esc(val||'')}">`; }
+function inA(label,path,val){ return `<label>${esc(label)}</label><textarea class="ia" data-bind="${path}">${esc(val||'')}</textarea>`; }
+function inList(label,path,arr){ return `<label>${esc(label)} <span class="muted">(one per line)</span></label><textarea class="ia" data-split="${path}">${esc((arr||[]).join('\n'))}</textarea>`; }
+function ig(zone,sel,inner){ return `<div class="ig ${zone===sel?'cur':''}" data-fz="${zone}">${inner}</div>`; }
+function mediaEditor(i,s){
+  const mi=mediaInfo(i,s);
+  if(mi.kind==='text') return inA('Source text',mi.path,getP(LESSON,mi.path));
+  const lab=mi.kind==='model'||mi.kind==='model3d'?'Model URL (.glb / .gltf)':'Image URL';
+  let extra='';
+  if((s.media&&s.media.kind==='image')) extra=`<div class="muted small">Hotspot editing for this image is unchanged from before — coming to the panel in a follow-up.</div>`;
+  return inT(lab,mi.path,getP(LESSON,mi.path))+`<div class="muted small">Tip: you can also drag an image straight onto the well on the canvas.</div>`+extra;
+}
+function qGroup(i,s,sel){
+  const items=s.items||[];
+  const groups=items.map((q,j)=>`<div class="qg ${('q.'+j)===sel?'cur':''}" data-fz="q.${j}">
+    <div class="qg-h"><b>Question ${j+1}</b><button class="ibtn-x" data-delqi="${i}:${j}" title="Remove question">✕</button></div>
+    ${inA('Prompt',`slides.${i}.items.${j}.prompt`,q.prompt)}
+    ${inA('Model answer',`slides.${i}.items.${j}.model`,q.model)}
+    ${inList('Look for',`slides.${i}.items.${j}.improve`,q.improve)}
+    ${inList('Common pitfalls',`slides.${i}.items.${j}.pitfalls`,q.pitfalls)}
+  </div>`).join('');
+  return `<div class="isec"><div class="isec-h">Questions <span class="muted">(${items.length})</span></div>
+    <div class="qlist">${groups||'<div class="muted small">No questions yet.</div>'}</div>
+    <button class="ibtn-add" data-addqi="${i}">＋ Add question</button></div>`;
+}
+function repeatGroup(i,s,sel,key,labelOne,labelSec,fieldsFor,addLabel){
+  const rows=(s[key]||[]).map((r,j)=>`<div class="qg ${(({blocks:'block',specs:'spec',fields:'field'}[key])+'.'+j)===sel?'cur':''}" data-fz="${({blocks:'block',specs:'spec',fields:'field'}[key])}.${j}">
+    <div class="qg-h"><b>${labelOne} ${j+1}</b><button class="ibtn-x" data-delrep="${key}:${i}:${j}" title="Remove">✕</button></div>
+    ${fieldsFor(r,j)}</div>`).join('');
+  return `<div class="isec"><div class="isec-h">${labelSec}</div>${rows||'<div class="muted small">None yet.</div>'}
+    <button class="ibtn-add" data-addrep="${key}:${i}">＋ ${addLabel}</button></div>`;
+}
+function syllabusGroup(i,s,sel){
+  const rows=(s.syllabus||[]).map((c,j)=>`<div class="qg ${'syllabus'===sel?'cur':''}" data-fz="syllabus">
+    <div class="qg-h"><b>Link ${j+1}</b><button class="ibtn-x" data-delrep="syllabus:${i}:${j}" title="Remove">✕</button></div>
+    ${inT('Code',`slides.${i}.syllabus.${j}.code`,c.code)}${inT('Text',`slides.${i}.syllabus.${j}.text`,c.text)}</div>`).join('');
+  return `<div class="isec"><div class="isec-h">NSW syllabus links</div>${rows||'<div class="muted small">None yet.</div>'}
+    <button class="ibtn-add" data-addrep="syllabus:${i}">＋ Add link</button></div>`;
+}
+function inspectorForm(i,s,sel){
+  const T=(z,l,k='text')=>{ const path=`slides.${i}.${z}`; const v=getP(LESSON,path);
+    return ig(z,sel, k==='area'?inA(l,path,v):inT(l,path,v)); };
+  const M=()=>ig('media',sel,`<label>Media</label>`+mediaEditor(i,s));
+  const L=(z,l)=>ig(z,sel,inList(l,`slides.${i}.${z}`,s[z]));
+  switch(s.type){
+    case 'cover': return T('tag','Eyebrow / tag')+T('title','Title')+T('titleItalic','Title (italic part)')+T('sub','Subtitle','area')+T('startLabel','Start button label')+T('est','Estimated time')+M();
+    case 'outcomes': return T('eyebrow','Eyebrow')+T('heading','Heading','area')+M()+L('outcomes','Outcomes')+syllabusGroup(i,s,sel);
+    case 'notes': return T('heading','Heading')+repeatGroup(i,s,sel,'blocks','Block','Reading blocks',(b,j)=>inT('Heading',`slides.${i}.blocks.${j}.h`,b.h)+inA('Body (==text== marks "record this")',`slides.${i}.blocks.${j}.bd`,b.bd),'Add block')+T('guide','Notes-to-take guidance','area');
+    case 'image': return T('heading','Heading')+M()+T('cap','Caption');
+    case 'video': return T('heading','Heading')+T('url','Video URL (YouTube / ClickView)')+T('cap','Caption');
+    case 'question': return T('skill','Skill')+T('heading','Heading')+qGroup(i,s,sel);
+    case 'source': return T('heading','Heading')+T('credit','Credit / citation')+M()+qGroup(i,s,sel);
+    case 'model3d': return T('heading','Heading')+M()+qGroup(i,s,sel);
+    case 'artifact': return T('eyebrow','Eyebrow')+T('title','Title')+T('desc','Description','area')+repeatGroup(i,s,sel,'specs','Spec','Material specs',(r,j)=>inT('Label',`slides.${i}.specs.${j}.k`,r.k)+inT('Value',`slides.${i}.specs.${j}.v`,r.v),'Add spec')+T('scale','Scale label')+T('ctaLabel','CTA button label')+M();
+    case 'worksheet': return T('heading','Heading')+T('subtitle','Subtitle')+M()+T('fig','Figure caption')+T('tag','Tag')+T('panelTitle','Panel title')+T('panelSub','Panel subtitle')+repeatGroup(i,s,sel,'fields','Field','Worksheet fields',(f,j)=>inT('Number / label',`slides.${i}.fields.${j}.n`,f.n)+inT('Hint',`slides.${i}.fields.${j}.hint`,f.hint)+(f.kind==='matrix'?(f.cells||[]).map((c,k)=>inT('Cell '+(k+1)+' label',`slides.${i}.fields.${j}.cells.${k}.lbl`,c.lbl)).join(''):''),'Add field');
+    case 'external': return T('eyebrow','Eyebrow')+T('title','Title')+T('desc','Description','area')+L('features','Features')+T('url','Activity URL')+T('meta','Meta line')+T('launchLabel','Launch button label')+M();
+    case 'complete': return T('title','Title')+T('lead','Lead','area')+T('gainedTitle','Knowledge-gained title')+L('gained','Knowledge gained')+T('badgeTitle','Badge title')+T('badgeDesc','Badge description');
+    default: return '<div class="muted small">No editable fields.</div>';
+  }
+}
+function metaSection(){
+  const m=LESSON.meta||{};
+  return `<div class="isec"><div class="isec-h">Lesson</div>
+    <div class="ig">${inMeta('Subject','subject',m.subject)}</div>
+    <div class="ig">${inMeta('Year','year',m.year)}</div>
+    <div class="ig">${inMeta('Unit','unit',m.unit)}</div>
+    <div class="ig"><label>Outcomes codes <span class="muted">(comma-separated)</span></label><input class="ii" data-metacodes value="${esc(Array.isArray(m.outcomes)?m.outcomes.join(', '):(m.outcomes||''))}"></div>
+    <div class="muted small">Theme is set from the top bar.</div></div>`;
+}
+function inMeta(label,key,val){ return `<label>${esc(label)}</label><input class="ii" data-meta="${key}" value="${esc(val==null?'':String(val))}">`; }
+function layoutSection(){
+  const s=LESSON.slides[cur], v=(s.layout==='scroll')?'scroll':'fit';
+  return `<div class="isec"><div class="isec-h">Slide</div>
+    <label>Layout</label>
+    <div class="seg2"><button data-layout="fit" class="${v==='fit'?'on':''}">Fit</button><button data-layout="scroll" class="${v==='scroll'?'on':''}">Scroll</button></div>
+    <div class="muted small">Fit keeps the slide to one screen. Scroll allows long-form vertical scrolling. Present always uses Fit.</div></div>`;
+}
+function renderInspector(){
+  const ins=$('#inspector'); if(!ins) return;
+  if(mode!=='edit'){ ins.innerHTML=''; return; }
+  const s=LESSON.slides[cur], i=cur;
+  const top = selZone===null
+    ? `<div class="ihint">Select a part of the slide to edit it here.</div>`
+    : `<div class="isec"><div class="isec-h">${TYPELAB[s.type]||s.type} · fields</div>${inspectorForm(i,s,selZone)}</div>`;
+  ins.innerHTML=`<div class="ins-h">Inspector</div>${top}${layoutSection()}${metaSection()}`;
+  wireInspector();
+  const c=ins.querySelector('.cur'); if(c) c.scrollIntoView({block:'nearest'});
+}
+function wireInspector(){
+  const ins=$('#inspector');
+  ins.querySelectorAll('[data-bind]').forEach(el=>el.addEventListener('input',()=>{ setP(LESSON, el.dataset.bind, el.value); renderCanvas(); }));
+  ins.querySelectorAll('[data-split]').forEach(el=>el.addEventListener('input',()=>{ setP(LESSON, el.dataset.split, el.value.split('\n').map(x=>x.trim()).filter(Boolean)); renderCanvas(); }));
+  ins.querySelectorAll('[data-meta]').forEach(el=>el.addEventListener('input',()=>{ LESSON.meta=LESSON.meta||{}; LESSON.meta[el.dataset.meta]=el.value; }));
+  const mc=ins.querySelector('[data-metacodes]'); if(mc) mc.addEventListener('input',()=>{ LESSON.meta=LESSON.meta||{}; LESSON.meta.outcomes=mc.value.split(',').map(x=>x.trim()).filter(Boolean); });
+  ins.querySelectorAll('[data-layout]').forEach(b=>b.onclick=()=>{ const s=LESSON.slides[cur]; if(b.dataset.layout==='fit') delete s.layout; else s.layout='scroll'; renderSlide(); });
+  const aq=ins.querySelector('[data-addqi]'); if(aq) aq.onclick=()=>{ const i=+aq.dataset.addqi; (LESSON.slides[i].items=LESSON.slides[i].items||[]).push({prompt:'New question',model:'Model answer.',improve:['Point one'],pitfalls:['Pitfall one']}); selZone='q.'+(LESSON.slides[i].items.length-1); renderSlide(); };
+  ins.querySelectorAll('[data-delqi]').forEach(b=>b.onclick=()=>{ const[i,j]=b.dataset.delqi.split(':').map(Number); LESSON.slides[i].items.splice(j,1); selZone=null; renderSlide(); });
+  ins.querySelectorAll('[data-addrep]').forEach(b=>b.onclick=()=>{ const[key,i]=b.dataset.addrep.split(':'); const s=LESSON.slides[+i];
+    const def={blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'}}[key];
+    (s[key]=s[key]||[]).push(JSON.parse(JSON.stringify(def))); renderSlide(); });
+  ins.querySelectorAll('[data-delrep]').forEach(b=>b.onclick=()=>{ const[key,i,j]=b.dataset.delrep.split(':'); LESSON.slides[+i][key].splice(+j,1); selZone=null; renderSlide(); });
 }
 
 /* ---------- wire interactions ---------- */
@@ -1219,9 +1401,17 @@ function wire(){
 }
 
 /* ---------- navigation & chrome ---------- */
-function go(i){ if(i<0||i>=LESSON.slides.length)return; cur=i; renderNav(); renderSlide();
+function go(i){ if(i<0||i>=LESSON.slides.length)return; cur=i; selZone=null; renderNav(); renderSlide();
   $('.stagewrap').scrollTop=0; }
 $('#prev').onclick=()=>go(cur-1); $('#next').onclick=()=>go(cur+1);
+// Edit-mode zone selection: click a tagged region on the canvas to select + load its fields
+$('#slide').addEventListener('click',e=>{
+  if(mode!=='edit') return;
+  if($('#lightbox').classList.contains('show')) return;
+  const z=e.target.closest('[data-zone]');
+  selZone = z ? z.dataset.zone : null;
+  renderSlide();
+});
 $('#nav').onclick=e=>{
   const go_=e.target.closest('[data-go]'); const mv=e.target.closest('[data-move]'); const dl=e.target.closest('[data-del]');
   if(mv){const[i,d]=mv.dataset.move.split(':').map(Number);const ni=i+d;if(ni<0||ni>=LESSON.slides.length)return;
@@ -1299,6 +1489,7 @@ $('#exportBtn').onclick=()=>{
   document.getElementById('lesson-data').textContent=JSON.stringify(LESSON,null,2);
   const clone=document.documentElement.cloneNode(true);
   clone.querySelector('#slide').innerHTML='';        // re-renders fresh from data on open
+  const ins=clone.querySelector('#inspector'); if(ins) ins.innerHTML='';   // edit-only panel never ships
   clone.querySelector('body').className='study';
   const html='<!DOCTYPE html>\n'+clone.outerHTML;
   const blob=new Blob([html],{type:'text/html'});
