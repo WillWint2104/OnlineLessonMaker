@@ -8,6 +8,20 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **Rome "Imperial Scholar" theme — fidelity pass.** Retoned `:root[data-theme="rome"]`:
+  warm-marble canvas (`#fff8f5`), **imperial-purple** accent (`#4b0082`) + **Roman-gold**
+  (`#c5b358`) strokes, a **light** rail with a **gold** active-indicator bar (the active fill
+  `--sidebar-2` equals `--accent`, so the bar is scoped gold), imperial-dusk hero, **hard
+  purple "stone-slab" shadow** (`4px 4px 0`), **square** radius. New type (theme-scoped):
+  **EB Garamond** display + **Source Sans 3** body / 600 UPPERCASE labels — Source Sans 3
+  vendored via `@fontsource`/base64-inlined (no third-party host); **Cinzel removed** (rome
+  was its only user). Motif: marble `--grain` + laurel `--motif` + mosaic-square list
+  markers; cards = white + 1px gold stroke + 4px purple top bar. **Gold lives in scoped
+  strokes / button text** (gold-on-purple, 7.7:1) — `--bd` (body text, 12 sites) and
+  `--accent-ink` (chip text on light `--accent-soft`) stay **dark** so text is readable
+  (the spec's gold there would be ~1.6:1). CSS tokens + motif + fonts only — no engine
+  changes; STUDY/PRESENT/EXPORT + data model unchanged; other themes untouched. AH12 (Y12/HSC
+  Ancient History) codes documented; a rome sample lesson is the place to wire them.
 - **Wellbeing "Terra Anima" theme — fidelity pass.** Retoned `:root[data-theme="wellbeing"]`:
   off-white canvas (`#fbfaee`) + white sheets, **sage** accent (`#4f6144`), a **light**
   "command rail" sidebar (Egypt-style dark-on-light overrides, themed sage) with the active

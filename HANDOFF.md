@@ -280,7 +280,16 @@ YouTube embeds) — `lessons/*.html` only *warns*, by design.
   leaf `--motif` + topo-ring list bullets). Follow-ups: terracotta CTA + sky-blue pill tokens
   (need a secondary/info token + CSS), white-on-sage chips (accent-ink is dark for contrast),
   and a **wellbeing sample lesson** carrying the GE5 (Stage 5 Geography) outcomes codes.
-- Sidebar style is now per-theme: Egypt + Wellbeing are **light** rails; Rome/WW1 are dark.
+- **Rome design pass** — **DONE (visual)**: the `rome` "Imperial Scholar" theme is retoned
+  (warm-marble canvas, **imperial-purple** accent + **Roman-gold** strokes, light rail with a
+  gold active-indicator bar, imperial-dusk hero, hard purple "stone-slab" shadow, square radius;
+  EB Garamond display + Source Sans 3 body/labels, vendored/inlined — **Cinzel dropped** as
+  orphaned; marble `--grain` + laurel `--motif` + mosaic-square list markers; cards = white +
+  gold stroke + purple top bar). Gold lives in scoped strokes/button-text (not `--bd`/
+  `--accent-ink`, which stay dark for readable text). Follow-ups: secondary gold-outline button +
+  laurel-divider rule + square inputs/chips; a **rome sample lesson** carrying AH12 (Y12/HSC
+  Ancient History) codes — Rome = Y12 (AH12), distinct from Egypt = Y11 (AH11).
+- Sidebar style is now per-theme: Egypt + Wellbeing + Rome are **light** rails; WW1 is dark.
 - Decide the **`task`** type: delete or rebuild.
 - **Accessibility** pass (focus, ARIA, keyboard hotspots, reduced‑motion, contrast).
 - Optional extra Stitch layouts (hotspot side‑panel, lecture‑notes split, richer video).
