@@ -34,7 +34,9 @@ await page.dispatchEvent('#inspector [data-mediaurl]', 'input');
 await page.waitForTimeout(100);
 // re-select (panel rebuilt on renderCanvas? no — renderCanvas only; thumbnail not yet). Force reselect to refresh panel.
 await page.click('#slide .hero'); await page.waitForTimeout(100);
-ok('cover: URL sets hero bg (has-img, default not behind gradient)', await exists('#slide .hero.has-img'));
+ok('cover: URL sets hero image (rendered as <img>, default not behind gradient)', await exists('#slide .hero-img') && !(await exists('#slide .hero.hero-bg')));
+const defFit = await page.$eval('#slide .hero-img', el => el.getAttribute('style'));
+ok('cover: default cover honors fit/focus (object-fit/position present, no transform at z=1)', /object-fit:cover;object-position:50\.0% 50\.0%;$/.test(defFit), defFit);
 ok('cover: media thumbnail now shown', await exists('#inspector .mthumb'));
 
 // toggle "Behind the gradient"
@@ -84,7 +86,7 @@ ok('cover: dragging focus pad sets object-position (~80% 25%)', /object-position
 await page.click('#slide .hero'); await page.waitForTimeout(80);
 await page.click('#inspector .mthumb-acts [data-clearmedia]');
 await page.waitForTimeout(120);
-ok('cover: Remove clears hero image', !(await exists('#slide .hero.has-img')) && !(await exists('#slide .hero-img')));
+ok('cover: Remove clears hero image', !(await exists('#slide .hero-img')));
 ok('cover: empty drop state shown after remove', await exists('#inspector .mdrop'));
 
 // ---- DROP simulation on panel drop area (DataTransfer file) ----
@@ -102,10 +104,8 @@ const dropped = await page.evaluate(async (png) => {
 }, PNG);
 await page.waitForTimeout(200);
 const coverBgIsData = await page.evaluate(() => {
-  const el = document.querySelector('#slide .hero');
-  const cssVar = getComputedStyle(el).getPropertyValue('--cover-img') || '';
   const img = document.querySelector('#slide .hero-img');
-  return (cssVar.includes('data:image')) || (img && img.src.startsWith('data:image'));
+  return !!(img && img.src.startsWith('data:image'));
 });
 ok('cover: dropping image FILE on panel embeds inline (data URL)', dropped==='dropped' && coverBgIsData, `drop=${dropped}`);
 
