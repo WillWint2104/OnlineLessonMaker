@@ -222,7 +222,7 @@ body.edit .themebox{display:flex;}
 /* Fixed-aspect 1280x720 canvas, scaled with transform to fit the stage (JS: fitCanvas).
    .stage = area between the sidebar and the window edges; .canvasfit = the scaled footprint
    (JS-sized) centred in the stage; .canvas = the logical 1280x720 slide, transform:scale(s). */
-.stage{flex:1;min-height:0;position:relative;overflow:auto;padding:24px;display:flex;align-items:center;justify-content:center;}
+.stage{flex:1;min-height:0;position:relative;overflow:auto;scrollbar-gutter:stable;padding:24px;display:flex;align-items:center;justify-content:center;}
 .canvasfit{position:relative;flex:0 0 auto;}                                   /* width/height set by JS to the scaled footprint */
 .canvas{position:absolute;top:0;left:0;width:1280px;height:720px;transform-origin:top left;
   display:flex;flex-direction:column;overflow:hidden;}                          /* transform:scale(s) set by JS */
@@ -388,7 +388,7 @@ body.edit .qadd{display:inline-flex;margin-top:16px;font-size:.82rem;font-weight
 
 .editnote{display:none;}
 body.edit .editnote{display:flex;align-items:center;gap:9px;background:#fff7ed;border:1px solid #fbd9a8;
-  color:#8a5212;border-radius:12px;padding:9px 14px;font-size:.8rem;
+  color:#8a5212;border-radius:12px;padding:9px 14px;font-size:.8rem;pointer-events:none;
   position:absolute;top:10px;left:50%;transform:translateX(-50%);max-width:92%;z-index:6;box-shadow:var(--shadow);}
 /* ===== Edit-mode zone selection (canvas) ===== */
 body.edit #slide *{pointer-events:none;}                   /* clean preview: nothing on the canvas is live... */
@@ -1254,12 +1254,12 @@ function renderCanvas(){
 function fitCanvas(){
   const stage=$('#stage'), fit=$('#canvasFit'), canvas=$('#canvas');
   if(!stage||!canvas||!fit) return;
+  const sw=stage.clientWidth, sh=stage.clientHeight;
+  if(!sw||!sh) return;                              // guard before any mutation (no half-updated state)
   const s0=LESSON.slides[cur]||{};
   const scroll = s0.layout==='scroll' && !document.body.classList.contains('present');
   canvas.classList.toggle('scroll', scroll);
   canvas.style.height = scroll ? 'auto' : '720px';
-  const sw=stage.clientWidth, sh=stage.clientHeight;
-  if(!sw||!sh) return;
   const s = scroll ? (sw/1280) : Math.min(sw/1280, sh/720);
   canvas.style.transform = 'scale('+s+')';
   const ch = scroll ? canvas.offsetHeight : 720;   // logical (unscaled) content height
@@ -1267,12 +1267,14 @@ function fitCanvas(){
   fit.style.height = (ch*s)+'px';
   stage.style.alignItems = scroll ? 'flex-start' : 'center';
 }
-let _canvasRO;
+let _canvasRO, _fitRAF=0;
+function scheduleFit(){ if(_fitRAF) return; _fitRAF=requestAnimationFrame(()=>{ _fitRAF=0; fitCanvas(); }); }  // coalesce RO bursts → one fit/frame (no layout thrash / scrollbar oscillation)
 function setupCanvasObserver(){
-  const stage=$('#stage'); if(!stage||typeof ResizeObserver==='undefined') return;
-  if(_canvasRO) return;                        // once: it survives re-renders (the #stage node is stable)
-  _canvasRO=new ResizeObserver(()=>fitCanvas());   // reacts to nav open/close, window resize, present chrome
-  _canvasRO.observe(stage);
+  const stage=$('#stage'), canvas=$('#canvas'); if(!stage||typeof ResizeObserver==='undefined') return;
+  if(_canvasRO) return;                        // once: #stage/#canvas are stable nodes (only #slide.innerHTML changes)
+  _canvasRO=new ResizeObserver(()=>scheduleFit());
+  _canvasRO.observe(stage);                    // nav open/close, window resize, present chrome
+  if(canvas) _canvasRO.observe(canvas);        // scroll-mode content growth (e.g. media/fonts loading late) → re-fit the footprint
 }
 
 /* ===================== EDIT-MODE INSPECTOR =====================
@@ -1450,7 +1452,7 @@ function wire(){
     dot.addEventListener('pointerdown',ev=>{ev.preventDefault();ev.stopPropagation();
       const frame=dot.closest('.srcframe'); if(!frame)return;
       const[si,ki]=dot.dataset.poidrag.split(':').map(Number);
-      const move=e=>{const r=frame.getBoundingClientRect();
+      const move=e=>{const r=frame.getBoundingClientRect(); if(!r.width||!r.height)return;   // collapsed/unloaded frame → don't write NaN %
         let x=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100)), y=Math.max(0,Math.min(100,(e.clientY-r.top)/r.height*100));
         dot.style.left=x+'%'; dot.style.top=y+'%';
         const p=LESSON.slides[si].media.pois[ki]; p.x=Math.round(x*10)/10; p.y=Math.round(y*10)/10;};
