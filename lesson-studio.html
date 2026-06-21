@@ -311,10 +311,13 @@ body.edit .qadd{display:inline-flex;margin-top:16px;font-size:.82rem;font-weight
 body.edit .editnote{display:flex;align-items:center;gap:9px;background:#fff7ed;border:1px solid #fbd9a8;
   color:#8a5212;border-radius:12px;padding:12px 16px;font-size:.85rem;margin-bottom:20px;}
 /* ===== Edit-mode zone selection (canvas) ===== */
-body.edit #slide [data-zone]{cursor:pointer;border-radius:8px;}
-body.edit #slide [data-zone] *{pointer-events:none;}      /* clicks select the zone, not its contents */
+body.edit #slide *{pointer-events:none;}                   /* clean preview: nothing on the canvas is live... */
+body.edit #slide [data-zone]{pointer-events:auto;cursor:pointer;border-radius:8px;}   /* ...except zones (click selects the most specific one, incl. nested) */
+body.edit #slide .poi[data-poidrag]{pointer-events:auto;cursor:grab;}                 /* ...and hotspots stay draggable */
 body.edit #slide [data-zone]:hover{box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent);}
 body.edit #slide [data-zone].zsel{outline:2px solid var(--accent);outline-offset:2px;}
+/* keep the old inline-edit chrome OFF the clean canvas — editing lives in the inspector now */
+body.edit #slide .cover-tools,body.edit #slide .setrow,body.edit #slide .hint,body.edit #slide .dropnote{display:none;}
 /* ===== Edit-mode inspector (right panel) ===== */
 .inspector{display:none;}
 body.edit .inspector{display:flex;flex-direction:column;width:340px;flex:0 0 340px;height:100vh;overflow-y:auto;
@@ -956,9 +959,10 @@ function showPoi(t,title,info){
 function renderSlide(){ renderCanvas(); renderInspector(); }
 function renderCanvas(){
   const realEdit=(mode==='edit'), _savedMode=mode;
-  if(realEdit) mode='study';   // Edit canvas renders Study-identical (no contenteditable, no inline editors, true WYSIWYG)
   const s=LESSON.slides[cur], i=cur; let h='';
   const present=document.body.classList.contains('present');
+  if(realEdit) mode='study';   // Edit canvas renders Study-identical (no contenteditable, no inline editors, true WYSIWYG)
+  try {
   if(s.type==='cover'){
     const bg=s.bg||'';
     h=`<div class="card cover cover2">
@@ -1173,8 +1177,8 @@ function renderCanvas(){
       ${mode==='edit'?`<div class="syllabus"><div class="syl-h">${ICON.book} NSW syllabus links — shown to students in a popup</div>${sylInline}<button class="qadd" data-addsyl="${i}">＋ add a syllabus link</button></div>`:''}
     </div>`;
   }
+  } finally { if(realEdit) mode=_savedMode; }   // always restore mode, even if a branch throws
   $('#slide').innerHTML=h;
-  if(realEdit) mode=_savedMode;          // restore before tagging/wiring
   if(realEdit) tagZones(s,i);            // Edit: add data-zone hooks + media drop target + selection outline
   wire();
   // A1: per-slide layout — "scroll" allows long-form vertical scrolling; "fit"
@@ -1216,6 +1220,7 @@ function tagZones(s,i){
   else if(s.type==='external') well=slide.querySelector('.ex-img');
   else well=slide.querySelector('.srcframe')||slide.querySelector('.srctext');   // source/model3d/outcomes/worksheet
   if(well){ const mi=mediaInfo(i,s); well.dataset.zone='media'; if(mi.kind!=='text') well.dataset.drop=mi.path; }
+  if(s.media&&s.media.kind==='image') slide.querySelectorAll('.srcframe .poi').forEach((d,k)=>{ d.dataset.poidrag=i+':'+k; });   // keep hotspots drag-repositionable on the canvas
   if(selZone) slide.querySelectorAll('[data-zone="'+selZone+'"]').forEach(el=>el.classList.add('zsel'));
 }
 // ---- inspector field builders ----
@@ -1227,9 +1232,12 @@ function mediaEditor(i,s){
   const mi=mediaInfo(i,s);
   if(mi.kind==='text') return inA('Source text',mi.path,getP(LESSON,mi.path));
   const lab=mi.kind==='model'||mi.kind==='model3d'?'Model URL (.glb / .gltf)':'Image URL';
-  let extra='';
-  if((s.media&&s.media.kind==='image')) extra=`<div class="muted small">Hotspot editing for this image is unchanged from before — coming to the panel in a follow-up.</div>`;
-  return inT(lab,mi.path,getP(LESSON,mi.path))+`<div class="muted small">Tip: you can also drag an image straight onto the well on the canvas.</div>`+extra;
+  const val=getP(LESSON,mi.path)||'';
+  let h=inT(lab,mi.path,val)+`<div class="muted small">Tip: you can also drag an image straight onto the well on the canvas.</div>`;
+  if(val) h+=`<button class="ibtn-x" data-clearmedia="${mi.path}">Clear media</button>`;
+  // Source-image hotspots: reuse the existing editor (add/remove/kind/title/text); drag-reposition stays on the canvas.
+  if(s.media&&s.media.kind==='image') h+=poiEditor(i,s.media);
+  return h;
 }
 function qGroup(i,s,sel){
   const items=s.items||[];
@@ -1320,6 +1328,11 @@ function wireInspector(){
     const def={blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'}}[key];
     (s[key]=s[key]||[]).push(JSON.parse(JSON.stringify(def))); renderSlide(); });
   ins.querySelectorAll('[data-delrep]').forEach(b=>b.onclick=()=>{ const[key,i,j]=b.dataset.delrep.split(':'); LESSON.slides[+i][key].splice(+j,1); selZone=null; renderSlide(); });
+  ins.querySelectorAll('[data-clearmedia]').forEach(b=>b.onclick=()=>{ setP(LESSON,b.dataset.clearmedia,''); renderSlide(); });
+  // hotspot editor (reused poiEditor controls, scoped to the panel)
+  const apoi=ins.querySelector('[data-addpoi]'); if(apoi) apoi.onclick=()=>{ const si=apoi.dataset.addpoi; const m=LESSON.slides[si].media; (m.pois=m.pois||[]).push({x:50,y:50,kind:'tooltip',title:'New hotspot',info:'',url:''}); renderSlide(); };
+  ins.querySelectorAll('[data-delpoi]').forEach(b=>b.onclick=()=>{ const[si,ki]=b.dataset.delpoi.split(':'); LESSON.slides[si].media.pois.splice(ki,1); renderSlide(); });
+  ins.querySelectorAll('[data-poikind]').forEach(sel=>sel.onchange=()=>{ const[si,ki]=sel.dataset.poikind.split(':'); LESSON.slides[si].media.pois[ki].kind=sel.value; renderSlide(); });
 }
 
 /* ---------- wire interactions ---------- */

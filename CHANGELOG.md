@@ -16,9 +16,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   panel; media zones show a URL field (drag-onto-the-well still works on the canvas). A
   per-slide **Layout** segmented control (Fit | Scroll → `slide.layout`) and editable
   **lesson meta** (subject / year / unit / outcomes codes → `LESSON.meta`, additive) live
-  in persistent Slide / Lesson sections. **Edit-mode UI layer only — STUDY, PRESENT,
-  EXPORT and the LESSON data model are unchanged.** Sidebar (drag-reorder / ✕ / ▲▼)
-  unchanged. _Follow-up:_ source-image hotspot editing stays as-is for now (noted in panel).
+  in persistent Slide / Lesson sections. The canvas is fully inert except zone selection
+  (and draggable hotspots) — no inline-edit chrome, no live Study controls. Source-image
+  **hotspot editing** (add / remove / kind / title / text) lives in the panel's media view
+  (reused `poiEditor`); dots stay **drag-repositionable on the canvas**. **Edit-mode UI
+  layer only — STUDY, PRESENT, EXPORT and the LESSON data model are unchanged.** Sidebar
+  (drag-reorder / ✕ / ▲▼) unchanged.
 - **Drag-to-reorder slides (Edit mode)** — slide-list items in the sidebar are now
   draggable (native HTML5 DnD, no new dependency); dropping rewrites `LESSON.slides` into
   the new order, with a drop indicator line between items. The ✕/▲▼ buttons are kept. The
