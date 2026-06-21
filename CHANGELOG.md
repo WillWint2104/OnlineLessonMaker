@@ -8,6 +8,19 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **Wellbeing "Terra Anima" theme — fidelity pass.** Retoned `:root[data-theme="wellbeing"]`:
+  off-white canvas (`#fbfaee`) + white sheets, **sage** accent (`#4f6144`), a **light**
+  "command rail" sidebar (Egypt-style dark-on-light overrides, themed sage) with the active
+  item flipped **white-on-sage**, misty-sage hero, **soft** sage-tinted ambient shadow,
+  organic radius. New type (theme-scoped): **EB Garamond** display + **Inter** body / Inter
+  600 UPPERCASE labels — Inter vendored via `@fontsource`/base64-inlined, EB Garamond gains
+  **italic 600** (the sage accent word); validate still reports no third-party host.
+  Motif: a topographic-contour `--grain` watermark + leaf `--motif` + topo-ring checklist
+  bullets. `--accent-ink` kept dark sage (spec `#fff` would be unreadable on the light
+  `--accent-soft`/surfaces); `--ok`/`--warn` themed sage/terracotta. Removed the now-unused
+  **Fraunces** font (wellbeing was its only user). CSS tokens + motif + fonts only — no
+  engine changes; STUDY/PRESENT/EXPORT + data model unchanged; other themes untouched. GE5
+  (Stage 5 Geography) codes documented; a wellbeing sample lesson is the place to wire them.
 - **WW1 "Great War Archive" theme — fidelity pass.** Retoned the `:root[data-theme="ww1"]`
   token block: warm-paper canvas (`#fcf9f0`), oxidised-crimson accent (`#6a020a`), slate
   "command-post" sidebar, dark sepia/charcoal hero, **hard stacked-paper shadow**
