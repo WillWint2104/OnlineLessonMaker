@@ -120,7 +120,10 @@ panel. Fields:
 - **notes** — `{ heading, blocks:[{h,bd}], guide }`
   `bd` supports `==markers==` → revealed by the **Highlight what to record** toggle.
 - **image** — `{ heading, src, cap }`
-- **video** — `{ heading, url, cap }` (`url` → `toEmbed`)
+- **video** — `{ heading, url, cap, sourceUrl?, sourceLabel? }` (`url` → `toEmbed`). An
+  always-visible **"Open source" fallback link** renders below the embed (school networks block
+  embeds): `href = sourceUrl || url`; text = `sourceLabel || "Open video ↗"`. `target=_blank
+  rel=noopener noreferrer`; in Present it opens the source without advancing the slide.
 - **question** — `{ skill, heading, items:[{prompt,model,improve:[string],pitfalls:[string]}] }`
 - **source** — `{ heading, credit, media, items:[question…] }`
   `media.kind` is `text` / `image` / `model3d`:
@@ -131,7 +134,9 @@ panel. Fields:
 - **artifact** — `{ eyebrow, title, desc, image, scale?, specs:[{k,v}], ctaLabel }`
 - **worksheet** — `{ heading, subtitle, image, fig, tag, panelTitle, panelSub, fields }`
   `fields[]` are `{kind:'text', n, hint}` or `{kind:'matrix', n, hint, cells:[{lbl,ph}]}`
-- **external** — `{ eyebrow, title, desc, image, features:[string], url, meta, launchLabel }`
+- **external** — `{ eyebrow, title, desc, image, features:[string], url, meta, launchLabel, sourceUrl? }`
+  The existing **launch** button is the fallback (opens in a new tab); its target is
+  `sourceUrl || url`, so `sourceUrl` overrides the Activity URL without adding a second button.
 - **complete** — `{ title, lead, gainedTitle, gained:[string], badgeTitle, badgeDesc }`
 - **task** — _dormant._ Render branch + factory still exist but it's removed from the Add
   menu and seed. Decide: delete fully or rebuild. Don't ship it as‑is.
