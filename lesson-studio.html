@@ -310,6 +310,57 @@ body.edit .dropnote{display:block;font-size:.74rem;color:var(--muted);margin-top
 .zone.read{border-left:3px solid color-mix(in srgb,var(--text) 14%,transparent);padding-left:18px;}
 .zone-lab{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);}
 .zone.read .notes-body{margin-top:12px;}
+/* "Students record this" badge — Edit only (CSS reveal; the canvas force-renders as study,
+   so it can't be JS mode-gated). Never ships in Study/Present/Export. */
+.rec-badge{display:none;align-items:center;gap:6px;margin-top:10px;font-size:.66rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--accent-ink);background:var(--accent-soft);
+  border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);padding:5px 12px;border-radius:99px;}
+body.edit .rec-badge{display:inline-flex;}
+
+/* ---- TEXT slide (reference — read/understand, NOT for recording) ----
+   Deliberately calm & light, the opposite of notes: muted tones, no accent-soft "record"
+   highlight, a small neutral "Reference" cue. */
+.text-slide .tx-ref{display:inline-flex;align-items:center;gap:7px;font-size:.67rem;font-weight:600;letter-spacing:.03em;
+  color:var(--muted);background:color-mix(in srgb,var(--text) 5%,transparent);border:1px solid var(--line);
+  padding:5px 12px;border-radius:99px;margin-bottom:16px;}
+.text-slide .tx-ref svg{width:13px;height:13px;}
+.text-slide .tx-eyebrow{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);}
+.text-slide .tx-head{font-size:1.6rem;margin:6px 0 0;}
+.tx-body{margin-top:20px;display:flex;flex-direction:column;gap:16px;}
+.tx-body.cols{display:block;column-count:2;column-gap:44px;}
+.tx-body.cols .tx-block{break-inside:avoid;margin:0 0 16px;}
+.tx-block h3{font-size:1.0rem;margin:0 0 5px;font-weight:600;color:var(--text);}
+.tx-block p{font-size:1.02rem;line-height:1.7;color:var(--bd);margin:0;}
+.tx-lead{font-family:var(--display);font-size:1.5rem;line-height:1.42;font-weight:500;color:var(--text);
+  letter-spacing:var(--display-spacing);margin:0 0 20px;}
+.tx-note{margin-top:24px;font-size:.85rem;line-height:1.5;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;}
+
+/* ---- TEXT + IMAGE slide ---- */
+.ti{display:grid;gap:32px;flex:1;min-height:0;align-items:start;}
+.ti.imageRight{grid-template-columns:1.08fr .92fr;}
+.ti.imageLeft{grid-template-columns:.92fr 1.08fr;}
+.ti.imageLeft .ti-text{order:2;} .ti.imageLeft .ti-media{order:1;}
+.ti.imageTop{grid-template-columns:1fr;}
+.ti.imageTop .ti-text{order:2;} .ti.imageTop .ti-media{order:1;}
+.ti-text{display:flex;flex-direction:column;min-height:0;}
+.ti-text .tx-body{margin-top:16px;}
+.ti-media{display:flex;flex-direction:column;min-height:0;align-self:stretch;}
+.ti-img{position:relative;border-radius:14px;overflow:hidden;background:#0d0e12;flex:1;min-height:260px;
+  display:flex;align-items:center;justify-content:center;}
+.ti.imageTop .ti-img{aspect-ratio:16/6;min-height:0;flex:none;}
+.ti-img img{width:100%;height:100%;}
+.ti-img .ph{color:#7e8492;font-size:.9rem;text-align:center;padding:18px;}
+.ti-img.dragover{outline:3px dashed var(--accent);outline-offset:-6px;}
+.ti-cap{font-size:.8rem;color:var(--muted);font-style:italic;margin-top:9px;}
+/* full-bleed variant: image fills the card, heading + caption overlaid */
+.card.ti-fullcard{padding:0;overflow:hidden;}
+.ti-full{position:relative;flex:1;min-height:0;display:flex;align-items:flex-end;}
+.ti-full .ti-img{position:absolute;inset:0;border-radius:0;min-height:0;}
+.ti-full .ti-veil{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(10,10,14,.82),rgba(10,10,14,.06) 62%);}
+.ti-full .ti-full-inner{position:relative;z-index:2;padding:42px;max-width:760px;}
+.ti-full .tx-ref{color:rgba(255,255,255,.85);background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25);}
+.ti-full .tx-head{color:#fff;font-size:2.5rem;line-height:1.06;text-shadow:0 2px 22px rgba(0,0,0,.45);}
+.ti-full .ti-cap{color:rgba(255,255,255,.86);font-style:normal;margin-top:14px;}
 .outlist{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column;gap:14px;counter-reset:o;}
 .outlist li{display:flex;gap:14px;align-items:flex-start;font-size:1.05rem;line-height:1.5;color:var(--bd);}
 .outlist li::before{content:counter(o);counter-increment:o;flex:0 0 30px;width:30px;height:30px;border-radius:50%;
@@ -504,7 +555,7 @@ body.edit .palette{display:flex;flex-direction:column;gap:9px;padding:11px 16px 
 .pal-chev{flex:0 0 auto;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:1.15rem;line-height:1;display:flex;align-items:center;justify-content:center;}
 .pal-chev:hover{color:var(--accent);border-color:var(--accent);}
 .pal-row{display:flex;gap:10px;overflow-x:auto;scroll-behavior:smooth;padding:3px 2px;scrollbar-width:thin;}
-.pal-thumb{flex:0 0 auto;width:98px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;border:1px solid var(--line);border-radius:11px;background:var(--canvas);cursor:grab;transition:border-color .12s,transform .08s,box-shadow .12s;}
+.pal-thumb{flex:0 0 auto;width:116px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px;border:1px solid var(--line);border-radius:11px;background:var(--canvas);cursor:grab;transition:border-color .12s,transform .08s,box-shadow .12s;}
 .pal-thumb:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow);}
 .pal-thumb:active{cursor:grabbing;}
 .wf-box{width:100%;height:50px;border-radius:7px;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--accent);}
@@ -513,7 +564,8 @@ body.edit .palette{display:flex;flex-direction:column;gap:9px;padding:11px 16px 
 .wf .f{opacity:.13;}
 .wf .l2{opacity:.55;}
 .wf .s{fill:none;stroke:currentColor;stroke-width:2;opacity:.45;}
-.pal-lbl{font-size:.73rem;font-weight:600;color:var(--text);}
+.pal-lbl{font-size:.73rem;font-weight:600;color:var(--text);text-align:center;}
+.pal-desc{font-size:.61rem;line-height:1.3;color:var(--muted);text-align:center;}
 /* ---------- responsive: condense, don't collide (usable to ~1280×720) ---------- */
 @media (max-width:1280px){
   .side{width:248px;flex-basis:248px;}
@@ -1188,6 +1240,8 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 const ICON={
   cover:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18"/></svg>',
   notes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h11l3 3v15H5z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>',
+  text:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 11h16M4 16h10"/></svg>',
+  textImage:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="9" height="9" rx="1.5"/><circle cx="6.2" cy="7" r="1"/><path d="M3 11l2.4-2 2.1 1.6M16 5h5M16 9h4M4 17h16M4 20h11"/></svg>',
   video:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>',
   image:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5L5 20"/></svg>',
   question:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.1 1-1.1 1.8"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>',
@@ -1204,7 +1258,7 @@ const ICON={
   medal:'<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/><path d="M12 6.4l.85 1.7 1.9.28-1.37 1.33.32 1.88L12 10.8l-1.7.9.32-1.88L9.25 8.5l1.9-.28z" fill="currentColor" stroke="none"/></svg>',
   book:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6c-2-1.4-5-1.4-7 0v12c2-1.4 5-1.4 7 0 2-1.4 5-1.4 7 0V6c-2-1.4-5-1.4-7 0z"/><path d="M12 6v12"/></svg>',
   outcomes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>'};
-const TYPELAB={cover:"Section",notes:"Notes",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes"};
+const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes"};
 
 let LESSON=JSON.parse(document.getElementById('lesson-data').textContent);
 let cur=0, mode='study';
@@ -1227,6 +1281,11 @@ function toEmbed(url){
   return url; // ClickView embed link or other iframe URL pasted directly
 }
 function markNotes(text){ return esc(text).replace(/==([^=]+)==/g,'<span class="noteable">$1</span>'); }
+/* text/textImage body blocks {h?,p} — editable on canvas; the optional heading shows in
+   study/present only when set (always editable in Edit). off=index offset (lead uses it). */
+function textBlocks(i,arr,key,off){ off=off||0;
+  return (arr||[]).map((b,j)=>`<div class="tx-block">${(b.h||mode==='edit')?`<h3 class="editable" data-bind="slides.${i}.${key}.${j+off}.h" contenteditable="${mode==='edit'}">${esc(b.h||'')}</h3>`:''}<p class="editable" data-bind="slides.${i}.${key}.${j+off}.p" contenteditable="${mode==='edit'}">${esc(b.p||'')}</p></div>`).join('');
+}
 /* Always-visible fallback link for embed-bearing slides (video/external): embeds get blocked
    at school, so this opens the original source in a new tab. href = sourceUrl || original media
    URL (so there's always a working link); never advances the slide (an <a> is in the present
@@ -1431,6 +1490,7 @@ function renderCanvas(){
   else if(s.type==='notes'){
     h=`<div class="card pad notes">
       <div class="eyebrow">Notes</div>
+      <div class="rec-badge">✍ Students record this — write in books</div>
       <div class="ehead"><h2 class="editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading)}</h2></div>
       <div class="note-legend"><span class="lg read">${ICON.book} Reading</span><span class="lg note">✎ Notes to take</span><button class="note-toggle" data-notetoggle>✎ Highlight what to record</button></div>
       <div class="zone read">
@@ -1444,6 +1504,44 @@ function renderCanvas(){
         <span class="editable" data-bind="slides.${i}.guide" contenteditable="${mode==='edit'}">${esc(s.guide)}</span></div></div>
       <button class="qadd" data-addblock="${i}">＋ add a note block</button>
     </div>`;
+  }
+  else if(s.type==='text'){
+    const variant=['prose','lead','columns'].includes(s.variant)?s.variant:'prose';
+    const blocks=s.blocks||[];
+    let body;
+    if(variant==='lead' && blocks.length){
+      const first=blocks[0];
+      body=`<div class="tx-body">
+        <p class="tx-lead editable" data-bind="slides.${i}.blocks.0.p" contenteditable="${mode==='edit'}">${esc(first.p||'')}</p>
+        ${textBlocks(i,blocks.slice(1),'blocks',1)}</div>`;
+    } else {
+      body=`<div class="tx-body ${variant==='columns'?'cols':''}">${textBlocks(i,blocks,'blocks')}</div>`;
+    }
+    h=`<div class="card pad text-slide">
+      <span class="tx-ref">${ICON.book} Reference — you don't need to copy this down</span>
+      <div class="ehead"><h2 class="tx-head editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading||'')}</h2></div>
+      ${body}
+      ${(s.note||mode==='edit')?`<div class="tx-note editable" data-bind="slides.${i}.note" contenteditable="${mode==='edit'}">${esc(s.note||'')}</div>`:''}
+    </div>`;
+  }
+  else if(s.type==='textImage'){
+    if(!s.image) s.image={src:'',cap:'',alt:'',focus:{x:0.5,y:0.5}};   // normalise the required image object (mirrors source/media)
+    const variant=['imageRight','imageLeft','imageTop','full'].includes(s.variant)?s.variant:'imageRight';
+    const img=s.image;
+    const imgWell=`<div class="ti-img" ${mode==='edit'?`data-drop="slides.${i}.image.src"`:''}>${img.src?`<img src="${esc(img.src)}" alt="${esc(img.alt||'')}" style="${imgStyle(img)}">`:`<div class="ph">${ICON.image}<br>Add an image — drag a file onto here, or set a path / URL in the panel</div>`}</div>`;
+    const caption=(img.cap||mode==='edit')?`<div class="ti-cap editable" data-bind="slides.${i}.image.cap" contenteditable="${mode==='edit'}">${esc(img.cap||'')}</div>`:'';
+    const heading=`<div class="ehead"><h2 class="tx-head editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading||'')}</h2></div>`;
+    if(variant==='full'){
+      h=`<div class="card ti-fullcard"><div class="ti-full">
+        ${imgWell}<div class="ti-veil"></div>
+        <div class="ti-full-inner"><span class="tx-ref">${ICON.book} Reference</span>${heading}${caption}</div>
+      </div></div>`;
+    } else {
+      h=`<div class="card pad"><div class="ti ${variant}">
+        <div class="ti-text"><span class="tx-ref">${ICON.book} Reference — not for copying down</span>${heading}<div class="tx-body">${textBlocks(i,s.body,'body')}</div></div>
+        <div class="ti-media">${imgWell}${caption}</div>
+      </div></div>`;
+    }
   }
   else if(s.type==='video'){
     const src=toEmbed(s.url);
@@ -1670,7 +1768,7 @@ function setupCanvasObserver(){
 function zoneFromField(f){
   let m;
   if(m=f.match(/^(outcomes|gained|features)\.\d+$/)) return m[1];
-  if(m=f.match(/^(blocks|specs|fields)\.(\d+)/)) return ({blocks:'block',specs:'spec',fields:'field'}[m[1]])+'.'+m[2];
+  if(m=f.match(/^(blocks|body|specs|fields)\.(\d+)/)) return ({blocks:'block',body:'body',specs:'spec',fields:'field'}[m[1]])+'.'+m[2];
   if(/^syllabus\./.test(f)) return 'syllabus';
   return f;
 }
@@ -1678,6 +1776,7 @@ function mediaInfo(i,s){
   // path = the URL field; props = where fit/focus/zoom live; obj = the object holding props
   if(s.type==='cover')  return {path:`slides.${i}.bg`,  kind:'image', props:`slides.${i}`, obj:s};
   if(s.type==='image')  return {path:`slides.${i}.src`, kind:'image', props:`slides.${i}`, obj:s};
+  if(s.type==='textImage') return {path:`slides.${i}.image.src`, kind:'image', props:`slides.${i}.image`, obj:(s.image||{})};
   if(s.type==='source'||s.type==='model3d'){ const k=(s.media&&s.media.kind)||'text'; return {path:`slides.${i}.media.${k==='text'?'text':'src'}`, kind:k, props:`slides.${i}.media`, obj:(s.media||{})}; }   // read-only: never inject media on render (setP creates the path on write)
   return {path:`slides.${i}.image`, kind:'image', props:`slides.${i}`, obj:s};   // outcomes / artifact / worksheet / external
 }
@@ -1693,6 +1792,7 @@ function tagZones(s,i){
   if(s.type==='cover') well=slide.querySelector('.hero');
   else if(s.type==='image') well=slide.querySelector('.frame');
   else if(s.type==='artifact') well=slide.querySelector('.artframe');
+  else if(s.type==='textImage') well=slide.querySelector('.ti-img');
   else if(s.type==='external') well=slide.querySelector('.ex-img');
   else well=slide.querySelector('.srcframe')||slide.querySelector('.srctext');   // source/model3d/outcomes/worksheet
   if(well){ const mi=mediaInfo(i,s); well.dataset.zone='media'; if(mi.kind!=='text') well.dataset.drop=mi.path; }
@@ -1703,7 +1803,16 @@ function tagZones(s,i){
 function inT(label,path,val){ return `<label>${esc(label)}</label><input class="ii" data-bind="${path}" value="${esc(val||'')}">`; }
 function inA(label,path,val){ return `<label>${esc(label)}</label><textarea class="ia" data-bind="${path}">${esc(val||'')}</textarea>`; }
 function inList(label,path,arr){ return `<label>${esc(label)} <span class="muted">(one per line)</span></label><textarea class="ia" data-split="${path}">${esc((arr||[]).join('\n'))}</textarea>`; }
+function inSel(label,path,val,opts){ return `<label>${esc(label)}</label><select class="ii" data-bind="${path}">`+opts.map(([v,l])=>`<option value="${esc(v)}"${v===val?' selected':''}>${esc(l)}</option>`).join('')+`</select>`; }
 function ig(zone,sel,inner){ return `<div class="ig ${zone===sel?'cur':''}" data-fz="${zone}">${inner}</div>`; }
+/* Notes ⇄ Text conversion banner shown in the inspector for both types — makes the
+   record-vs-reference distinction explicit and one click to switch. */
+function convertNotice(i,s){
+  const isNotes=s.type==='notes', to=isNotes?'text':'notes';
+  return `<div class="isec convert-sec"><div class="isec-h">${isNotes?'Notes — students RECORD this':'Text — reference, not recorded'}</div>
+    <div class="muted small">${isNotes?'Key information students write down in their books.':'Explains or informs — not meant to be copied down.'}</div>
+    <button class="ibtn-add" data-convert="${to}">⇄ Convert to ${isNotes?'Text (reference)':'Notes (record)'}</button></div>`;
+}
 function mediaEditor(i,s){
   const mi=mediaInfo(i,s);
   // Source TEXT media → plain textarea, no image controls.
@@ -1760,7 +1869,7 @@ function qGroup(i,s,sel){
     <button class="ibtn-add" data-addqi="${i}">＋ Add question</button></div>`;
 }
 function repeatGroup(i,s,sel,key,labelOne,labelSec,fieldsFor,addLabel){
-  const rows=(s[key]||[]).map((r,j)=>`<div class="qg ${(({blocks:'block',specs:'spec',fields:'field'}[key])+'.'+j)===sel?'cur':''}" data-fz="${({blocks:'block',specs:'spec',fields:'field'}[key])}.${j}">
+  const rows=(s[key]||[]).map((r,j)=>`<div class="qg ${(({blocks:'block',body:'body',specs:'spec',fields:'field'}[key])+'.'+j)===sel?'cur':''}" data-fz="${({blocks:'block',body:'body',specs:'spec',fields:'field'}[key])}.${j}">
     <div class="qg-h"><b>${labelOne} ${j+1}</b><button class="ibtn-x" data-delrep="${key}:${i}:${j}" title="Remove">✕</button></div>
     ${fieldsFor(r,j)}</div>`).join('');
   return `<div class="isec"><div class="isec-h">${labelSec}</div>${rows||'<div class="muted small">None yet.</div>'}
@@ -1778,10 +1887,13 @@ function inspectorForm(i,s,sel){
     return ig(z,sel, k==='area'?inA(l,path,v):inT(l,path,v)); };
   const M=()=>ig('media',sel,`<label>Media</label>`+mediaEditor(i,s));
   const L=(z,l)=>ig(z,sel,inList(l,`slides.${i}.${z}`,s[z]));
+  const SEL=(z,l,opts)=>{ const path=`slides.${i}.${z}`; return ig(z,sel,inSel(l,path,getP(LESSON,path),opts)); };
   switch(s.type){
     case 'cover': return T('tag','Eyebrow / tag')+T('title','Title')+T('titleItalic','Title (italic part)')+T('sub','Subtitle','area')+T('startLabel','Start button label')+T('est','Estimated time')+M();
     case 'outcomes': return T('eyebrow','Eyebrow')+T('heading','Heading','area')+M()+L('outcomes','Outcomes')+syllabusGroup(i,s,sel);
-    case 'notes': return T('heading','Heading')+repeatGroup(i,s,sel,'blocks','Block','Reading blocks',(b,j)=>inT('Heading',`slides.${i}.blocks.${j}.h`,b.h)+inA('Body (==text== marks "record this")',`slides.${i}.blocks.${j}.bd`,b.bd),'Add block')+T('guide','Notes-to-take guidance','area');
+    case 'notes': return convertNotice(i,s)+T('heading','Heading')+repeatGroup(i,s,sel,'blocks','Block','Reading blocks',(b,j)=>inT('Heading',`slides.${i}.blocks.${j}.h`,b.h)+inA('Body (==text== marks "record this")',`slides.${i}.blocks.${j}.bd`,b.bd),'Add block')+T('guide','Notes-to-take guidance','area');
+    case 'text': return convertNotice(i,s)+T('heading','Heading')+SEL('variant','Layout variant',[['prose','Prose — single column'],['lead','Lead — standfirst + prose'],['columns','Columns — two columns']])+repeatGroup(i,s,sel,'blocks','Block','Body blocks',(b,j)=>inT('Heading (optional)',`slides.${i}.blocks.${j}.h`,b.h)+inA('Paragraph',`slides.${i}.blocks.${j}.p`,b.p),'Add block')+T('note','Reference note (optional)','area');
+    case 'textImage': return T('heading','Heading')+SEL('variant','Layout variant',[['imageRight','Image right'],['imageLeft','Image left'],['imageTop','Image on top'],['full','Full-bleed image']])+repeatGroup(i,s,sel,'body','Block','Body blocks',(b,j)=>inT('Heading (optional)',`slides.${i}.body.${j}.h`,b.h)+inA('Paragraph',`slides.${i}.body.${j}.p`,b.p),'Add block')+M()+T('image.cap','Image caption')+T('image.alt','Alt text (accessibility)');
     case 'image': return T('heading','Heading')+M()+T('cap','Caption');
     case 'video': return T('heading','Heading')+T('url','Video URL (YouTube / ClickView)')+T('cap','Caption')+T('sourceUrl','Source / fallback link — opens in a new tab')+T('sourceLabel','Fallback button label');
     case 'question': return T('skill','Skill')+T('heading','Heading')+qGroup(i,s,sel);
@@ -1832,10 +1944,12 @@ function wireInspector(){
   const aq=ins.querySelector('[data-addqi]'); if(aq) aq.onclick=()=>{ const i=+aq.dataset.addqi; (LESSON.slides[i].items=LESSON.slides[i].items||[]).push({prompt:'New question',model:'Model answer.',improve:['Point one'],pitfalls:['Pitfall one']}); selZone='q.'+(LESSON.slides[i].items.length-1); renderSlide(); };
   ins.querySelectorAll('[data-delqi]').forEach(b=>b.onclick=()=>{ const[i,j]=b.dataset.delqi.split(':').map(Number); LESSON.slides[i].items.splice(j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-addrep]').forEach(b=>b.onclick=()=>{ const[key,i]=b.dataset.addrep.split(':'); const s=LESSON.slides[+i];
-    const def={blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'}}[key];
+    const def=(key==='body'||(key==='blocks'&&s.type!=='notes')) ? {h:'',p:'New paragraph.'}   // text/textImage blocks use {h,p}; notes use {h,bd}
+      : {blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'}}[key];
     (s[key]=s[key]||[]).push(JSON.parse(JSON.stringify(def))); renderSlide(); });
   ins.querySelectorAll('[data-delrep]').forEach(b=>b.onclick=()=>{ const[key,i,j]=b.dataset.delrep.split(':'); LESSON.slides[+i][key].splice(+j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-clearmedia]').forEach(b=>b.onclick=()=>{ setP(LESSON,b.dataset.clearmedia,''); renderSlide(); });
+  ins.querySelectorAll('[data-convert]').forEach(b=>b.onclick=()=>convertSlide(cur,b.dataset.convert));
   // ---- media block: add/replace/remove · url · fit · focus · zoom · cover hero ----
   ins.querySelectorAll('[data-mediapick]').forEach(b=>b.onclick=()=>pickMediaFile(b.dataset.mediapick));
   ins.querySelectorAll('[data-mediaurl]').forEach(el=>el.addEventListener('input',()=>{ setP(LESSON,el.dataset.mediaurl,el.value.trim()); renderCanvas(); }));
@@ -2011,6 +2125,8 @@ function clearDropMarks(){ $('#nav').querySelectorAll('.nitem').forEach(n=>n.cla
 const SLIDE_FACTORY={
   cover:{type:'cover',tag:'Section',title:'New section',sub:'Subtitle'},
   notes:{type:'notes',heading:'Notes',blocks:[{h:'Heading',bd:'Note text.'}],guide:'Guidance for note-taking.'},
+  text:{type:'text',heading:'Reference',variant:'prose',blocks:[{h:'',p:'Explanatory text students read to understand — not meant to be copied down.'}],note:''},
+  textImage:{type:'textImage',heading:'Heading',variant:'imageRight',body:[{h:'',p:'Information paired with a supporting visual.'}],image:{src:'',cap:'Caption',alt:'',focus:{x:0.5,y:0.5}}},
   image:{type:'image',heading:'Image',src:'',cap:'Caption'},
   video:{type:'video',heading:'Video',url:'',cap:'Caption'},
   question:{type:'question',skill:'Skill',heading:'Practise',items:[{prompt:'New question',model:'Model answer.',improve:['Point one'],pitfalls:['Pitfall one']}]},
@@ -2024,8 +2140,23 @@ const SLIDE_FACTORY={
   outcomes:{type:'outcomes',eyebrow:'Learning outcomes',heading:'By the end of this lesson you will be able to…',image:'',outcomes:['Describe …','Explain …','Evaluate …'],syllabus:[{code:'AH11-6',text:'Link to a NSW syllabus outcome'}]}
 };
 function makeSlide(t){ return JSON.parse(JSON.stringify(SLIDE_FACTORY[t])); }
+/* Convert a slide between notes (RECORD) and text (REFERENCE), preserving heading + block
+   text. notes blocks use {h,bd} (==marks==); text blocks use {h,p} (markers stripped). */
+function convertSlide(idx,to){
+  const s=LESSON.slides[idx]; if(!s) return;
+  if(to==='text' && s.type==='notes'){
+    LESSON.slides[idx]={type:'text',heading:s.heading||'Reference',variant:'prose',
+      blocks:(s.blocks||[]).map(b=>({h:b.h||'',p:(b.bd||'').replace(/==([^=]+)==/g,'$1')})),
+      note:s.guide||''};
+  } else if(to==='notes' && s.type==='text'){
+    LESSON.slides[idx]={type:'notes',heading:s.heading||'Notes',
+      blocks:(s.blocks||[]).map(b=>({h:b.h||'',bd:b.p||''})),
+      guide:s.note||'Guidance for note-taking.'};
+  } else return;
+  selZone='heading'; renderNav(); renderSlide(); $('#stage').scrollTop=0;
+}
 // zone to auto-select after inserting, so the new slide opens editable in the inspector
-const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title'};
+const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title'};
 function insertSlide(type, atIndex){
   if(!SLIDE_FACTORY[type]) return;
   const idx=Math.max(0,Math.min(LESSON.slides.length, atIndex));
@@ -2042,7 +2173,9 @@ const PALETTE=[
   {t:'cover',label:'Section',cat:'structure',wf:'<rect x="6" y="8" width="68" height="28" rx="3" class="f"/><rect x="28" y="18" width="24" height="5" rx="2" class="l2"/><rect x="32" y="27" width="16" height="3" rx="1"/><rect x="24" y="42" width="32" height="4" rx="2" class="l2"/>'},
   {t:'outcomes',label:'Outcomes',cat:'structure',wf:'<rect x="6" y="9" width="26" height="34" rx="3" class="f"/><rect x="38" y="11" width="32" height="4" class="l2"/><rect x="38" y="22" width="32" height="3"/><rect x="38" y="30" width="32" height="3"/><rect x="38" y="38" width="22" height="3"/>'},
   {t:'complete',label:'Complete',cat:'structure',wf:'<circle cx="40" cy="19" r="9" class="s"/><rect x="26" y="36" width="28" height="4" rx="2" class="l2"/><rect x="32" y="44" width="16" height="3" rx="1"/>'},
-  {t:'notes',label:'Notes',cat:'text',wf:'<rect x="6" y="9" width="34" height="5" rx="2" class="l2"/><rect x="6" y="20" width="44" height="3"/><rect x="6" y="27" width="44" height="3"/><rect x="6" y="34" width="36" height="3"/><rect x="56" y="9" width="18" height="34" rx="3" class="f"/>'},
+  {t:'notes',label:'Notes',cat:'text',desc:'Key information for students to RECORD (write in books).',wf:'<rect x="6" y="9" width="34" height="5" rx="2" class="l2"/><rect x="6" y="20" width="44" height="3"/><rect x="6" y="27" width="44" height="3"/><rect x="6" y="34" width="36" height="3"/><rect x="56" y="9" width="18" height="34" rx="3" class="f"/>'},
+  {t:'text',label:'Text',cat:'text',desc:'Explains or informs — not for copying down.',wf:'<rect x="6" y="9" width="22" height="4" rx="2" class="l2"/><rect x="6" y="19" width="68" height="3"/><rect x="6" y="26" width="68" height="3"/><rect x="6" y="33" width="68" height="3"/><rect x="6" y="40" width="46" height="3"/>'},
+  {t:'textImage',label:'Text + image',cat:'text',desc:'Information paired with a supporting visual.',wf:'<rect x="6" y="9" width="38" height="34" rx="2" class="f"/><circle cx="16" cy="20" r="3" class="s"/><path d="M10 38 L22 27 L34 38" class="s"/><rect x="50" y="11" width="24" height="3"/><rect x="50" y="19" width="24" height="3"/><rect x="50" y="27" width="20" height="3"/><rect x="50" y="35" width="24" height="3"/>'},
   {t:'image',label:'Image',cat:'media',wf:'<rect x="6" y="8" width="68" height="30" rx="3" class="f"/><circle cx="22" cy="20" r="4" class="s"/><path d="M13 38 L33 23 L48 38" class="s"/><rect x="20" y="43" width="40" height="4" rx="2"/>'},
   {t:'video',label:'Video',cat:'media',wf:'<rect x="10" y="8" width="60" height="34" rx="3" class="f"/><path d="M35 17 L35 33 L49 25 Z" class="l2"/><rect x="24" y="46" width="32" height="3" rx="1"/>'},
   {t:'model3d',label:'3D',cat:'media',wf:'<rect x="20" y="18" width="24" height="24" class="s"/><rect x="34" y="10" width="24" height="24" class="s"/><path d="M20 18 L34 10 M44 18 L58 10 M44 42 L58 34 M20 42 L34 34" class="s"/>'},
@@ -2056,9 +2189,9 @@ function renderPalette(){
   const pal=$('#palette'); if(!pal) return;
   const tags=PAL_CATS.map(([c,l])=>`<button data-cat="${c}" class="${paletteCat===c?'on':''}">${esc(l)}</button>`).join('');
   const items=PALETTE.filter(x=>paletteCat==='all'||x.cat===paletteCat).map(x=>
-    `<button class="pal-thumb" draggable="true" data-ptype="${esc(x.t)}" title="Add ${esc(x.label)} slide">
+    `<button class="pal-thumb" draggable="true" data-ptype="${esc(x.t)}" title="${esc(x.desc||('Add '+x.label+' slide'))}">
       <span class="wf-box"><svg class="wf" viewBox="0 0 80 52" xmlns="http://www.w3.org/2000/svg">${x.wf}</svg></span>
-      <span class="pal-lbl">${esc(x.label)}</span></button>`).join('');
+      <span class="pal-lbl">${esc(x.label)}</span>${x.desc?`<span class="pal-desc">${esc(x.desc)}</span>`:''}</button>`).join('');
   pal.innerHTML=`<div class="pal-tags">${tags}</div>
     <div class="pal-scroll-wrap"><button class="pal-chev" data-scroll="-1" title="Scroll left">‹</button>
     <div class="pal-row" id="palRow">${items}</div>
