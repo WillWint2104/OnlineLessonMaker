@@ -8,6 +8,25 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Three published student lessons + two self-contained interactives.** Published as standalone
+  Study-mode exports under `lessons/` (same wrapper / embedded `#lesson-data` mechanism as the POW
+  lesson), hosted byte-for-byte as exported:
+  - `lessons/the-scientific-investigation-file.html` — *Tutankhamun: The Scientific Investigation
+    File* (Year 11, Egypt theme, 11 slides). Its `external` slide embeds/links
+    `interactives/tutankhamun-dna-station.html`.
+  - `lessons/seneca-burrus-and-the-freedmen.html` — *Imperial Court Relationships: Seneca, Burrus &
+    the Freedmen* (Year 12, Rome theme, 10 slides).
+  - `lessons/indigenous-wellbeing-in-australia.html` — *Indigenous Wellbeing in Australia* (Year 10,
+    Wellbeing theme, 13 slides). Its `external` slide embeds/links
+    `interactives/indigenous-population-pyramid.html`.
+  - `interactives/indigenous-population-pyramid.html` — self-contained SVG population pyramid
+    (Indigenous vs non-Indigenous age structure), hover/focus tooltips, zero external requests.
+  - `interactives/tutankhamun-dna-station.html` — self-contained forensic DNA-analysis station
+    (vendored), zero external requests.
+  Verified with `scripts/verify-publish-batch.mjs`: both interactives load with zero external
+  network requests; all three lessons render in their themes; the Year 11 / Year 10 `external`
+  buttons resolve to the correct interactive URLs. `validate` green (lessons/interactives are
+  warn-only; no external `<script>`/`<link>` hosts).
 - **New `infographic` slide type — native data, no charting library.** Renders three variants
   drawn entirely from JSON as inline SVG/CSS (so figures scale with the zoom control and stay
   editable): **stat** (big-number cards with optional icon + delta chip), **bar** (labelled
