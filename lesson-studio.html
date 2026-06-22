@@ -320,10 +320,10 @@ body.edit .rec-badge{display:inline-flex;}
 /* ---- TEXT slide (reference — read/understand, NOT for recording) ----
    Deliberately calm & light, the opposite of notes: muted tones, no accent-soft "record"
    highlight, a small neutral "Reference" cue. */
-.text-slide .tx-ref{display:inline-flex;align-items:center;gap:7px;font-size:.67rem;font-weight:600;letter-spacing:.03em;
+.tx-ref{display:inline-flex;align-self:flex-start;align-items:center;gap:7px;font-size:.67rem;font-weight:600;letter-spacing:.03em;
   color:var(--muted);background:color-mix(in srgb,var(--text) 5%,transparent);border:1px solid var(--line);
   padding:5px 12px;border-radius:99px;margin-bottom:16px;}
-.text-slide .tx-ref svg{width:13px;height:13px;}
+.tx-ref svg{width:13px;height:13px;}
 .text-slide .tx-eyebrow{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);}
 .text-slide .tx-head{font-size:1.6rem;margin:6px 0 0;}
 .tx-body{margin-top:20px;display:flex;flex-direction:column;gap:16px;}
@@ -333,6 +333,7 @@ body.edit .rec-badge{display:inline-flex;}
 .tx-block p{font-size:1.02rem;line-height:1.7;color:var(--bd);margin:0;}
 .tx-lead{font-family:var(--display);font-size:1.5rem;line-height:1.42;font-weight:500;color:var(--text);
   letter-spacing:var(--display-spacing);margin:0 0 20px;}
+.tx-block-h{font-size:1.0rem;margin:0 0 6px;font-weight:600;color:var(--text);}
 .tx-note{margin-top:24px;font-size:.85rem;line-height:1.5;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;}
 
 /* ---- TEXT + IMAGE slide ---- */
@@ -359,6 +360,9 @@ body.edit .rec-badge{display:inline-flex;}
 .ti-full .ti-veil{position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(10,10,14,.82),rgba(10,10,14,.06) 62%);}
 .ti-full .ti-full-inner{position:relative;z-index:2;padding:42px;max-width:760px;}
 .ti-full .tx-ref{color:rgba(255,255,255,.85);background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25);}
+.ti-full .tx-body{margin-top:16px;}
+.ti-full .tx-block h3{color:#fff;}
+.ti-full .tx-block p{color:rgba(255,255,255,.92);text-shadow:0 1px 12px rgba(0,0,0,.45);}
 .ti-full .tx-head{color:#fff;font-size:2.5rem;line-height:1.06;text-shadow:0 2px 22px rgba(0,0,0,.45);}
 .ti-full .ti-cap{color:rgba(255,255,255,.86);font-style:normal;margin-top:14px;}
 .outlist{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column;gap:14px;counter-reset:o;}
@@ -1512,6 +1516,7 @@ function renderCanvas(){
     if(variant==='lead' && blocks.length){
       const first=blocks[0];
       body=`<div class="tx-body">
+        ${first.h?`<h3 class="tx-block-h editable" data-bind="slides.${i}.blocks.0.h" contenteditable="${mode==='edit'}">${esc(first.h)}</h3>`:''}
         <p class="tx-lead editable" data-bind="slides.${i}.blocks.0.p" contenteditable="${mode==='edit'}">${esc(first.p||'')}</p>
         ${textBlocks(i,blocks.slice(1),'blocks',1)}</div>`;
     } else {
@@ -1534,7 +1539,7 @@ function renderCanvas(){
     if(variant==='full'){
       h=`<div class="card ti-fullcard"><div class="ti-full">
         ${imgWell}<div class="ti-veil"></div>
-        <div class="ti-full-inner"><span class="tx-ref">${ICON.book} Reference</span>${heading}${caption}</div>
+        <div class="ti-full-inner"><span class="tx-ref">${ICON.book} Reference</span>${heading}${(s.body&&s.body.length)?`<div class="tx-body">${textBlocks(i,s.body,'body')}</div>`:''}${caption}</div>
       </div></div>`;
     } else {
       h=`<div class="card pad"><div class="ti ${variant}">
@@ -2144,14 +2149,15 @@ function makeSlide(t){ return JSON.parse(JSON.stringify(SLIDE_FACTORY[t])); }
    text. notes blocks use {h,bd} (==marks==); text blocks use {h,p} (markers stripped). */
 function convertSlide(idx,to){
   const s=LESSON.slides[idx]; if(!s) return;
+  const keep=s.layout?{layout:s.layout}:{};   // preserve unrelated per-slide fields (e.g. scroll layout)
   if(to==='text' && s.type==='notes'){
-    LESSON.slides[idx]={type:'text',heading:s.heading||'Reference',variant:'prose',
+    LESSON.slides[idx]=Object.assign({type:'text',heading:s.heading||'Reference',variant:'prose',
       blocks:(s.blocks||[]).map(b=>({h:b.h||'',p:(b.bd||'').replace(/==([^=]+)==/g,'$1')})),
-      note:s.guide||''};
+      note:s.guide||''}, keep);
   } else if(to==='notes' && s.type==='text'){
-    LESSON.slides[idx]={type:'notes',heading:s.heading||'Notes',
+    LESSON.slides[idx]=Object.assign({type:'notes',heading:s.heading||'Notes',
       blocks:(s.blocks||[]).map(b=>({h:b.h||'',bd:b.p||''})),
-      guide:s.note||'Guidance for note-taking.'};
+      guide:s.note||'Guidance for note-taking.'}, keep);
   } else return;
   selZone='heading'; renderNav(); renderSlide(); $('#stage').scrollTop=0;
 }
