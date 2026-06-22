@@ -8,6 +8,22 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **New `infographic` slide type — native data, no charting library.** Renders three variants
+  drawn entirely from JSON as inline SVG/CSS (so figures scale with the zoom control and stay
+  editable): **stat** (big-number cards with optional icon + delta chip), **bar** (labelled
+  horizontal bars on a muted track), and **donut** (one SVG ring from `figures[0].parts` with a
+  legend + optional centre label). Built on the existing theme tokens via a new data palette
+  (`--data-1/2/3` = primary sage / secondary terracotta / tertiary sky), so every theme inherits
+  it; Terra Anima (wellbeing) treatment shown in the screenshots. **Interactive, library-free:**
+  hover / tap / keyboard-focus on any bar, segment, or stat reveals its exact value in a tooltip
+  and dims the siblings; bars/donut animate once on load, suppressed under
+  `prefers-reduced-motion` (the reveal still works). Inspector edits heading/eyebrow/intro/variant/
+  source, the figures list (label/value/unit/pct/delta/colour token + add/remove/reorder) and, for
+  donut, the parts list + centre label; palette entry added. The worksheet generator builds a
+  "data table to complete + interpretation question" from `figures[].label/value/pct` and
+  `figures[].parts`. No new third-party host. Verified with `scripts/verify-infographic.mjs`
+  (20 checks: all variants render, tooltip reveal on pointer + focus, reduced-motion suppression,
+  zero external hosts) — screenshots under `screenshots/infographic/`.
 - **Published student lesson: `lessons/case-file-6-investigating-the-remains.html`** — the
   self-contained Study-mode export of Case File 6, hosted **byte-for-byte** as exported (live at
   `/OnlineLessonMaker/lessons/case-file-6-investigating-the-remains.html`). Embeds the

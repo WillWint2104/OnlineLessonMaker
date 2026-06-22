@@ -50,6 +50,9 @@
   --font-scale:1;
   /* organic leaf bullet — original SVG silhouette used as a mask so it tints with --accent (theme-aware) */
   --leaf:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5C7.4 7 6.7 14 11 21.5c.2-5.3 1.6-8.7 6-11.6C18.3 8.9 16 7.2 12 2.5Z'/%3E%3C/svg%3E");
+  /* infographic data palette — primary follows the theme accent; secondary/tertiary are a
+     terracotta + sky that read on any theme's white sheet (Terra Anima: sage / terracotta / sky) */
+  --data-1:var(--accent); --data-2:#c2703f; --data-3:#5b8aa6;
   --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
 }
 /* ---- TOPIC THEMES — applied via data-theme on <html>; removing the attribute reverts cleanly ---- */
@@ -425,6 +428,66 @@ body.edit #slide .ed-head[data-zone].zsel,body.edit #slide .ed-eyebrow[data-zone
 .gc-text{font-size:.96rem;line-height:1.5;color:var(--bd);}
 .gc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;}
 @media(max-width:900px){.list-grid{grid-template-columns:1fr 1fr;}}
+
+/* ---- infographic slide (native data: SVG/CSS, no charting lib) ---- */
+.ig-intro{font-size:1.06rem;line-height:1.55;color:var(--bd);max-width:60ch;margin:10px 0 0;}
+.ig-source{font-size:.78rem;font-style:italic;color:var(--muted);margin-top:18px;}
+.ig-body{margin-top:24px;}
+/* shared interactive state: active element pops, siblings dim */
+.ig-figs.has-active .ig-fig:not(.ig-active),.ig-legend.has-active li:not(.ig-active){opacity:.42;}
+.ig-fig{transition:opacity .15s;}
+.ig-fig:focus-visible,.ig-seg:focus-visible,.ig-legend li:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+/* stat — big-number cards */
+.ig-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:18px;}
+.ig-stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 22px;
+  display:flex;flex-direction:column;gap:4px;cursor:default;}
+.ig-stat .ig-icon{color:var(--c);margin-bottom:6px;}.ig-stat .ig-icon svg{width:26px;height:26px;}
+.ig-num{font-family:var(--display);font-weight:600;font-size:3rem;line-height:1;color:var(--c);
+  font-variant-numeric:tabular-nums;letter-spacing:var(--display-spacing);display:flex;align-items:baseline;gap:4px;}
+.ig-num .ig-unit{font-size:1.3rem;font-weight:600;}
+.ig-lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:7px;}
+.ig-delta{align-self:flex-start;margin-top:8px;font-size:.7rem;font-weight:700;letter-spacing:.04em;
+  color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 30%,transparent);
+  padding:2px 9px;border-radius:99px;}
+/* bar — labelled horizontal bars */
+.ig-bars{display:flex;flex-direction:column;gap:18px;max-width:none;}
+.ig-bar{display:flex;flex-direction:column;gap:7px;}
+.ig-bar-h{display:flex;justify-content:space-between;align-items:baseline;gap:14px;}
+.ig-bar-lbl{font-size:1rem;font-weight:600;color:var(--text);}
+.ig-bar-val{font-family:var(--display);font-weight:600;font-size:1.1rem;color:var(--c);font-variant-numeric:tabular-nums;}
+.ig-track{height:12px;border-radius:99px;background:color-mix(in srgb,var(--line) 70%,var(--surface));overflow:hidden;}
+.ig-fill{height:100%;width:var(--p,0%);background:var(--c);border-radius:99px;transform-origin:left center;}
+/* donut */
+.ig-donut{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;}
+.ig-ring-wrap{position:relative;width:230px;height:230px;flex:none;}
+.ig-ring{width:100%;height:100%;}
+.ig-ring-track{fill:none;stroke:color-mix(in srgb,var(--line) 70%,var(--surface));stroke-width:13;}
+.ig-seg{fill:none;stroke-width:13;stroke-linecap:butt;cursor:pointer;transition:stroke-width .15s,opacity .15s;}
+.ig-seg.ig-active{stroke-width:16;}
+.ig-ring.has-active .ig-seg:not(.ig-active){opacity:.42;}
+.ig-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;}
+.ig-center b{font-family:var(--display);font-weight:600;font-size:1.6rem;color:var(--text);line-height:1.05;}
+.ig-center span{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-top:3px;}
+.ig-legend{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;}
+.ig-legend li{display:flex;align-items:center;gap:11px;font-size:1rem;color:var(--bd);cursor:default;border-radius:6px;padding:3px 5px;margin:-3px -5px;transition:opacity .15s;}
+.ig-sw{flex:0 0 14px;width:14px;height:14px;border-radius:4px;background:var(--c);}
+.ig-legend .ig-leg-pct{margin-left:auto;font-family:var(--display);font-weight:600;color:var(--c);font-variant-numeric:tabular-nums;}
+@media(max-width:780px){.ig-donut{grid-template-columns:1fr;justify-items:center;}}
+/* value tooltip (pointer / focus reveal) */
+.ig-tip{position:fixed;z-index:80;background:var(--text);color:var(--surface);font-size:.82rem;line-height:1.35;
+  padding:7px 11px;border-radius:8px;box-shadow:0 8px 24px -8px rgba(0,0,0,.5);pointer-events:none;opacity:0;
+  transform:translateY(3px);transition:opacity .12s,transform .12s;max-width:260px;}
+.ig-tip.show{opacity:1;transform:translateY(0);}
+.ig-tip b{font-family:var(--display);font-weight:600;}
+/* load animation — bars grow, donut sweeps; skipped in Edit (stable while authoring) and for reduced-motion */
+@media (prefers-reduced-motion: no-preference){
+  body:not(.edit) .ig-fill{animation:igbar .7s cubic-bezier(.2,.7,.2,1) both;}
+  body:not(.edit) .ig-seg{animation:igseg .8s ease both;}
+  body:not(.edit) .ig-ring-grow{transform-box:fill-box;transform-origin:center;animation:iggrow .8s cubic-bezier(.2,.7,.2,1) both;}
+}
+@keyframes igbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes igseg{from{opacity:0}to{opacity:1}}
+@keyframes iggrow{from{transform:rotate(-26deg)}to{transform:rotate(0)}}
 .outlist{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column;gap:14px;counter-reset:o;}
 .outlist li{display:flex;gap:14px;align-items:flex-start;font-size:1.05rem;line-height:1.5;color:var(--bd);}
 .outlist li::before{content:counter(o);counter-increment:o;flex:0 0 30px;width:30px;height:30px;border-radius:50%;
@@ -955,6 +1018,11 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 .ws-srcbox{border:1px solid #bbb;background:#f7f7f3;border-radius:6px;padding:11px 14px;margin:7px 0 4px;
   font-size:.92rem;line-height:1.5;color:#222;white-space:pre-wrap;}
 .ws-credit{font-size:.76rem;color:#666;margin:2px 0 4px;}
+.ws-table{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:.92rem;break-inside:avoid;}
+.ws-table caption{caption-side:top;text-align:left;font-size:.82rem;color:#555;margin-bottom:5px;}
+.ws-table th,.ws-table td{border:1px solid #999;padding:6px 9px;text-align:left;vertical-align:middle;}
+.ws-table th{background:#f3f4ef;font-weight:700;color:#222;}
+.ws-table td.ws-fill{background:#fff;min-width:70px;height:9mm;}
 .ws-check{list-style:none;margin:8px 0 0;padding:0;}
 .ws-check li{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px;font-size:.96rem;color:#1a1a1a;break-inside:avoid;}
 .ws-check li::before{content:"";flex:0 0 15px;width:15px;height:15px;border:1.5px solid #555;border-radius:3px;margin-top:2px;}
@@ -1366,6 +1434,7 @@ const ICON={
   text:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 11h16M4 16h10"/></svg>',
   textImage:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="9" height="9" rx="1.5"/><circle cx="6.2" cy="7" r="1"/><path d="M3 11l2.4-2 2.1 1.6M16 5h5M16 9h4M4 17h16M4 20h11"/></svg>',
   list:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6h11M9 12h11M9 18h8"/><circle cx="4.5" cy="6" r="1.3" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r="1.3" fill="currentColor" stroke="none"/></svg>',
+  infographic:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16"/><rect x="5" y="12" width="3.5" height="6" rx="1"/><rect x="10.25" y="8" width="3.5" height="10" rx="1"/><rect x="15.5" y="4" width="3.5" height="14" rx="1"/></svg>',
   video:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>',
   image:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5L5 20"/></svg>',
   question:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.1 1-1.1 1.8"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>',
@@ -1382,7 +1451,21 @@ const ICON={
   medal:'<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/><path d="M12 6.4l.85 1.7 1.9.28-1.37 1.33.32 1.88L12 10.8l-1.7.9.32-1.88L9.25 8.5l1.9-.28z" fill="currentColor" stroke="none"/></svg>',
   book:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6c-2-1.4-5-1.4-7 0v12c2-1.4 5-1.4 7 0 2-1.4 5-1.4 7 0V6c-2-1.4-5-1.4-7 0z"/><path d="M12 6v12"/></svg>',
   outcomes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>'};
-const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes"};
+const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes"};
+/* infographic data palette: figure.color is a theme token, never a raw hex; defaults cycle */
+const IG_TOKENS=['primary','secondary','tertiary'];
+function igColor(c){ return c==='secondary'?'var(--data-2)':c==='tertiary'?'var(--data-3)':'var(--data-1)'; }
+function igFigColor(f,j){ return igColor((f&&f.color)||IG_TOKENS[j%3]); }
+/* tiny built-in inline-SVG icon set for stat cards (no icon font / CDN) */
+const IG_ICONS={
+  people:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 6.5a3 3 0 0 1 0 5.6M17 14.4A5.5 5.5 0 0 1 20.5 19.5"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 11l8-6 8 6"/><path d="M6 10v9h12v-9"/></svg>',
+  moon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 14.5A8 8 0 1 1 9.5 4 6.3 6.3 0 0 0 20 14.5Z"/></svg>',
+  heart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20S4 14.6 4 9.4A4.4 4.4 0 0 1 12 6.8 4.4 4.4 0 0 1 20 9.4C20 14.6 12 20 12 20Z"/></svg>',
+  brain:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 4a3 3 0 0 0-3 3 3 3 0 0 0-1 5.5A3 3 0 0 0 7 18a2.5 2.5 0 0 0 5 0V5a2 2 0 0 0-3-1Z"/><path d="M15 4a3 3 0 0 1 3 3 3 3 0 0 1 1 5.5A3 3 0 0 1 17 18a2.5 2.5 0 0 1-5 0"/></svg>',
+  leaf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 19c0-8 6-13 14-13 0 8-5 14-13 14M5 19c2-4 5-6 9-7"/></svg>',
+  alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4 3 19h18L12 4Z"/><path d="M12 10v4"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>'};
 
 let LESSON=JSON.parse(document.getElementById('lesson-data').textContent);
 let cur=0, mode='study';
@@ -1714,6 +1797,64 @@ function renderCanvas(){
       ${body}
     </div>`;
   }
+  else if(s.type==='infographic'){
+    if(!Array.isArray(s.figures)) s.figures=[];
+    const variant=['stat','bar','donut'].includes(s.variant)?s.variant:'stat';
+    const figs=s.figures;
+    const eyebrow=(s.eyebrow||mode==='edit')?`<div class="ed-eyebrow editable" data-bind="slides.${i}.eyebrow" contenteditable="${mode==='edit'}">${esc(s.eyebrow||'Data')}</div>`:'';
+    const headEl=`<h2 class="ed-head editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading||'')}</h2>`;
+    const intro=(s.intro||mode==='edit')?`<p class="ig-intro editable" data-bind="slides.${i}.intro" contenteditable="${mode==='edit'}">${esc(s.intro||'')}</p>`:'';
+    const source=(s.source||mode==='edit')?`<div class="ig-source editable" data-bind="slides.${i}.source" contenteditable="${mode==='edit'}">${esc(s.source||'')}</div>`:'';
+    let body;
+    if(variant==='bar'){
+      body=`<div class="ig-figs ig-bars">`+figs.map((f,j)=>{
+        const c=igFigColor(f,j), pct=Math.max(0,Math.min(100,+f.pct||0));
+        const valTxt=(f.value!=null&&f.value!=='')?`${esc(String(f.value))}${esc(f.unit||'')}`:`${pct}%`;
+        const lbl=esc(f.label||''), tip=`<b>${valTxt}</b> · ${lbl}`;
+        return `<div class="ig-fig ig-bar" tabindex="0" role="group" aria-label="${lbl}: ${valTxt}" data-igtip="${tip}" style="--c:${c};--p:${pct}%">
+          <div class="ig-bar-h"><span class="ig-bar-lbl editable" data-bind="slides.${i}.figures.${j}.label" contenteditable="${mode==='edit'}">${lbl}</span><span class="ig-bar-val">${valTxt}</span></div>
+          <div class="ig-track"><div class="ig-fill"></div></div></div>`;
+      }).join('')+`</div>`;
+    } else if(variant==='donut'){
+      const parts=((figs[0]&&Array.isArray(figs[0].parts))?figs[0].parts:(Array.isArray(s.parts)?s.parts:[]));
+      const tot=parts.reduce((a,p)=>a+(+p.pct||0),0)||100, gap=parts.length>1?1.6:0;
+      let cum=0;
+      const segs=parts.map((p,k)=>{ const c=igColor(p.color||IG_TOKENS[k%3]); const pn=(+p.pct||0)/tot*100, dash=Math.max(0,pn-gap);
+        const seg=`<circle class="ig-seg" data-seg="${k}" tabindex="0" role="img" aria-label="${esc(p.label||'')}: ${(+p.pct||0)}%" data-igtip="<b>${(+p.pct||0)}%</b> · ${esc(p.label||'')}" cx="50" cy="50" r="40" pathLength="100" stroke="${c}" stroke-dasharray="${dash.toFixed(2)} ${(100-dash).toFixed(2)}" stroke-dashoffset="${(-cum).toFixed(2)}"></circle>`;
+        cum+=pn; return seg; }).join('');
+      const legend=parts.map((p,k)=>{ const c=igColor(p.color||IG_TOKENS[k%3]);
+        return `<li tabindex="0" data-seg="${k}" aria-label="${esc(p.label||'')}: ${(+p.pct||0)}%" data-igtip="<b>${(+p.pct||0)}%</b> · ${esc(p.label||'')}" style="--c:${c}"><span class="ig-sw"></span><span>${esc(p.label||'')}</span><span class="ig-leg-pct">${(+p.pct||0)}%</span></li>`; }).join('');
+      let center='';
+      if(s.centerLabel){ const cl=String(s.centerLabel).split('|'); center=`<div class="ig-center"><b>${esc(cl[0])}</b>${cl[1]?`<span>${esc(cl.slice(1).join(' '))}</span>`:''}</div>`; }
+      body=`<div class="ig-donut">
+        <div class="ig-ring-wrap">
+          <svg class="ig-ring" viewBox="0 0 100 100" role="img" aria-label="${esc(s.heading||'Composition')} — ${parts.map(p=>esc(p.label||'')+' '+(+p.pct||0)+'%').join(', ')}">
+            <circle class="ig-ring-track" cx="50" cy="50" r="40"></circle>
+            <g class="ig-ring-grow" transform="rotate(-90 50 50)">${segs||'<circle class="ig-ring-track" cx="50" cy="50" r="40"></circle>'}</g>
+          </svg>${center}
+        </div>
+        <ul class="ig-legend">${legend||`<li class="muted">No segments yet — add them in the panel.</li>`}</ul>
+      </div>`;
+    } else {
+      body=`<div class="ig-figs ig-stats">`+figs.map((f,j)=>{
+        const c=igFigColor(f,j);
+        const num=(f.value!=null&&f.value!=='')?String(f.value):(f.pct!=null?String(f.pct):'');
+        const unit=f.unit||((f.value==null||f.value==='')&&f.pct!=null?'%':'');
+        const lbl=esc(f.label||''), tip=`<b>${esc(num)}${esc(unit)}</b> · ${lbl}`;
+        return `<div class="ig-fig ig-stat" tabindex="0" role="group" aria-label="${lbl}: ${esc(num)}${esc(unit)}${f.delta?', change '+esc(f.delta):''}" data-igtip="${tip}" style="--c:${c}">
+          ${f.icon&&IG_ICONS[f.icon]?`<span class="ig-icon">${IG_ICONS[f.icon]}</span>`:''}
+          <div class="ig-num"><span>${esc(num)}</span>${unit?`<span class="ig-unit">${esc(unit)}</span>`:''}</div>
+          <div class="ig-lbl editable" data-bind="slides.${i}.figures.${j}.label" contenteditable="${mode==='edit'}">${lbl}</div>
+          ${f.delta?`<div class="ig-delta">${esc(f.delta)}</div>`:''}</div>`;
+      }).join('')+`</div>`;
+    }
+    h=`<div class="card pad ed-slide ig-slide">
+      <div class="list-head-wrap">${eyebrow}${headEl}</div>
+      ${intro}
+      <div class="ig-body">${body}</div>
+      ${source}
+    </div>`;
+  }
   else if(s.type==='video'){
     const src=toEmbed(s.url);
     h=`<div class="card pad">
@@ -1941,6 +2082,7 @@ function zoneFromField(f){
   if(m=f.match(/^(outcomes|gained|features)\.\d+$/)) return m[1];
   if(m=f.match(/^(blocks|body|specs|fields)\.(\d+)/)) return ({blocks:'block',body:'body',specs:'spec',fields:'field'}[m[1]])+'.'+m[2];
   if(m=f.match(/^items\.(\d+)/)) return 'item.'+m[1];
+  if(m=f.match(/^figures\.(\d+)/)) return 'figure.'+m[1];
   if(/^syllabus\./.test(f)) return 'syllabus';
   return f;
 }
@@ -1972,7 +2114,7 @@ function tagZones(s,i){
   if(selZone) slide.querySelectorAll('[data-zone="'+selZone+'"]').forEach(el=>el.classList.add('zsel'));
 }
 // ---- inspector field builders ----
-function inT(label,path,val){ return `<label>${esc(label)}</label><input class="ii" data-bind="${path}" value="${esc(val||'')}">`; }
+function inT(label,path,val){ return `<label>${esc(label)}</label><input class="ii" data-bind="${path}" value="${esc(val==null?'':String(val))}">`; }
 function inA(label,path,val){ return `<label>${esc(label)}</label><textarea class="ia" data-bind="${path}">${esc(val||'')}</textarea>`; }
 function inList(label,path,arr){ return `<label>${esc(label)} <span class="muted">(one per line)</span></label><textarea class="ia" data-split="${path}">${esc((arr||[]).join('\n'))}</textarea>`; }
 function inSel(label,path,val,opts){ return `<label>${esc(label)}</label><select class="ii" data-bind="${path}">`+opts.map(([v,l])=>`<option value="${esc(v)}"${v===val?' selected':''}>${esc(l)}</option>`).join('')+`</select>`; }
@@ -2069,6 +2211,38 @@ function listItemsGroup(i,s,sel){
     ${rows||'<div class="muted small">No items yet.</div>'}
     <button class="ibtn-add" data-additem="${i}">＋ Add item</button></div>`;
 }
+const IG_COLOR_OPTS=[['primary','Primary (sage)'],['secondary','Secondary (terracotta)'],['tertiary','Tertiary (sky)']];
+function figuresGroup(i,s,sel){
+  const figs=s.figures||[];
+  const iconOpts=[['','— none —']].concat(Object.keys(IG_ICONS).map(k=>[k,k[0].toUpperCase()+k.slice(1)]));
+  const rows=figs.map((f,j)=>`<div class="qg ${('figure.'+j)===sel?'cur':''}" data-fz="figure.${j}">
+    <div class="qg-h"><b>Figure ${j+1}</b><span class="qg-tools">
+      <button class="ibtn-x" data-movefig="${i}:${j}:-1" title="Move up">▲</button>
+      <button class="ibtn-x" data-movefig="${i}:${j}:1" title="Move down">▼</button>
+      <button class="ibtn-x" data-delfig="${i}:${j}" title="Remove">✕</button></span></div>
+    ${inT('Label',`slides.${i}.figures.${j}.label`,f.label)}
+    ${inT('Value',`slides.${i}.figures.${j}.value`,f.value)}${inT('Unit',`slides.${i}.figures.${j}.unit`,f.unit)}
+    ${inT('Percent 0–100 (for bars)',`slides.${i}.figures.${j}.pct`,f.pct)}${inT('Delta (e.g. -14%)',`slides.${i}.figures.${j}.delta`,f.delta)}
+    ${inSel('Colour',`slides.${i}.figures.${j}.color`,f.color||IG_TOKENS[j%3],IG_COLOR_OPTS)}
+    ${inSel('Icon (stat, optional)',`slides.${i}.figures.${j}.icon`,f.icon||'',iconOpts)}</div>`).join('');
+  return `<div class="isec"><div class="isec-h">Figures <span class="muted">(${figs.length})</span></div>
+    ${rows||'<div class="muted small">No figures yet.</div>'}
+    <button class="ibtn-add" data-addfig="${i}">＋ Add figure</button></div>`;
+}
+function partsGroup(i,s,sel){
+  const parts=(s.figures&&s.figures[0]&&s.figures[0].parts)||[];
+  const rows=parts.map((p,k)=>`<div class="qg ${('part.'+k)===sel?'cur':''}" data-fz="part.${k}">
+    <div class="qg-h"><b>Segment ${k+1}</b><span class="qg-tools">
+      <button class="ibtn-x" data-movepart="${i}:${k}:-1" title="Move up">▲</button>
+      <button class="ibtn-x" data-movepart="${i}:${k}:1" title="Move down">▼</button>
+      <button class="ibtn-x" data-delpart="${i}:${k}" title="Remove">✕</button></span></div>
+    ${inT('Label',`slides.${i}.figures.0.parts.${k}.label`,p.label)}
+    ${inT('Percent 0–100',`slides.${i}.figures.0.parts.${k}.pct`,p.pct)}
+    ${inSel('Colour',`slides.${i}.figures.0.parts.${k}.color`,p.color||IG_TOKENS[k%3],IG_COLOR_OPTS)}</div>`).join('');
+  return `<div class="isec"><div class="isec-h">Donut segments <span class="muted">(${parts.length})</span></div>
+    ${rows||'<div class="muted small">No segments yet.</div>'}
+    <button class="ibtn-add" data-addpart="${i}">＋ Add segment</button></div>`;
+}
 /* slide types whose printed questions come from `items[].prompt` (not slide.q), and the
    structural types the worksheet generator handles specially — both exclude the slide.q panel. */
 const WS_ITEMS=new Set(['source','question','model3d']);   // questions come from items[].prompt
@@ -2105,6 +2279,11 @@ function inspectorForm(i,s,sel){
     case 'text': return convertNotice(i,s)+T('heading','Heading')+SEL('variant','Layout variant',[['prose','Prose — single column'],['twoColumn','Two-column — text + aside'],['lead','Lead — centred standfirst']])+repeatGroup(i,s,sel,'blocks','Block','Body blocks',(b,j)=>inT('Sub-heading (optional)',`slides.${i}.blocks.${j}.h`,b.h)+inA('Paragraph',`slides.${i}.blocks.${j}.p`,b.p),'Add block')+T('note','Pull-quote / aside (optional)','area');
     case 'textImage': return T('heading','Heading')+SEL('variant','Layout variant',[['imageRight','Image right'],['imageLeft','Image left'],['imageTop','Image on top'],['full','Full-bleed image']])+repeatGroup(i,s,sel,'body','Block','Body blocks',(b,j)=>inT('Sub-heading (optional)',`slides.${i}.body.${j}.h`,b.h)+inA('Paragraph',`slides.${i}.body.${j}.p`,b.p),'Add block')+M()+T('image.cap','Image caption')+T('image.alt','Alt text (accessibility)');
     case 'list': return T('heading','Heading')+T('eyebrow','Eyebrow')+SEL('variant','Layout variant',[['bullets','Bullets — organic list'],['cards','Cards — definition cards'],['grid','Grid — 3-up cards']])+listItemsGroup(i,s,sel);
+    case 'infographic': { const v=['stat','bar','donut'].includes(s.variant)?s.variant:'stat';
+      return T('heading','Heading')+T('eyebrow','Eyebrow')+T('intro','Intro line','area')
+        +SEL('variant','Chart type',[['stat','Stat — big-number cards'],['bar','Bar — labelled bars'],['donut','Donut — composition']])
+        +(v==='donut'?T('centerLabel','Centre label (use | for a 2nd line)')+partsGroup(i,s,sel):figuresGroup(i,s,sel))
+        +T('source','Source / citation'); }
     case 'image': return T('heading','Heading')+M()+T('cap','Caption');
     case 'video': return T('heading','Heading')+T('url','Video URL (YouTube / ClickView)')+T('cap','Caption')+T('sourceUrl','Source / fallback link — opens in a new tab')+T('sourceLabel','Fallback button label');
     case 'question': return T('skill','Skill')+T('heading','Heading')+qGroup(i,s,sel);
@@ -2148,6 +2327,9 @@ function renderInspector(){
 function wireInspector(){
   const ins=$('#inspector');
   ins.querySelectorAll('[data-bind]').forEach(el=>el.addEventListener('input',()=>{ setP(LESSON, el.dataset.bind, el.value); renderCanvas(); }));
+  // infographic: switching variant swaps the figures editor ⇄ donut-segments editor, so re-render the form
+  const igVar=ins.querySelector('[data-bind$=".variant"]');
+  if(igVar && (LESSON.slides[cur]||{}).type==='infographic') igVar.addEventListener('change',()=>{ renderInspector(); });
   ins.querySelectorAll('[data-split]').forEach(el=>el.addEventListener('input',()=>{ setP(LESSON, el.dataset.split, el.value.split('\n').map(x=>x.trim()).filter(Boolean)); renderCanvas(); }));
   ins.querySelectorAll('[data-meta]').forEach(el=>el.addEventListener('input',()=>{ LESSON.meta=LESSON.meta||{}; LESSON.meta[el.dataset.meta]=el.value; }));
   const mc=ins.querySelector('[data-metacodes]'); if(mc) mc.addEventListener('input',()=>{ LESSON.meta=LESSON.meta||{}; LESSON.meta.outcomes=mc.value.split(',').map(x=>x.trim()).filter(Boolean); });
@@ -2170,6 +2352,18 @@ function wireInspector(){
   ins.querySelectorAll('[data-delwq]').forEach(b=>b.onclick=()=>{ const[si,j]=b.dataset.delwq.split(':').map(Number); LESSON.slides[si].q.splice(j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-movewq]').forEach(b=>b.onclick=()=>{ const[si,j,d]=b.dataset.movewq.split(':').map(Number); const arr=LESSON.slides[si].q; const nj=j+d;
     if(nj<0||nj>=arr.length) return; [arr[j],arr[nj]]=[arr[nj],arr[j]]; selZone='wq.'+nj; renderSlide(); });
+  // ---- infographic figures + donut segments ----
+  const afig=ins.querySelector('[data-addfig]'); if(afig) afig.onclick=()=>{ const si=+afig.dataset.addfig; const s=LESSON.slides[si];
+    (s.figures=s.figures||[]).push({label:'New figure',value:'',unit:'',pct:50,delta:'',color:''}); selZone='figure.'+(s.figures.length-1); renderSlide(); };
+  ins.querySelectorAll('[data-delfig]').forEach(b=>b.onclick=()=>{ const[si,j]=b.dataset.delfig.split(':').map(Number); LESSON.slides[si].figures.splice(j,1); selZone=null; renderSlide(); });
+  ins.querySelectorAll('[data-movefig]').forEach(b=>b.onclick=()=>{ const[si,j,d]=b.dataset.movefig.split(':').map(Number); const arr=LESSON.slides[si].figures, nj=j+d;
+    if(nj<0||nj>=arr.length) return; [arr[j],arr[nj]]=[arr[nj],arr[j]]; selZone='figure.'+nj; renderSlide(); });
+  const apart=ins.querySelector('[data-addpart]'); if(apart) apart.onclick=()=>{ const si=+apart.dataset.addpart; const s=LESSON.slides[si];
+    if(!s.figures||!s.figures[0]) s.figures=[{label:'Composition',parts:[]}]; const p=(s.figures[0].parts=s.figures[0].parts||[]);
+    p.push({label:'Segment',pct:10,color:''}); selZone='part.'+(p.length-1); renderSlide(); };
+  ins.querySelectorAll('[data-delpart]').forEach(b=>b.onclick=()=>{ const[si,k]=b.dataset.delpart.split(':').map(Number); LESSON.slides[si].figures[0].parts.splice(k,1); selZone=null; renderSlide(); });
+  ins.querySelectorAll('[data-movepart]').forEach(b=>b.onclick=()=>{ const[si,k,d]=b.dataset.movepart.split(':').map(Number); const arr=LESSON.slides[si].figures[0].parts, nk=k+d;
+    if(nk<0||nk>=arr.length) return; [arr[k],arr[nk]]=[arr[nk],arr[k]]; selZone='part.'+nk; renderSlide(); });
   // ---- media block: add/replace/remove · url · fit · focus · zoom · cover hero ----
   ins.querySelectorAll('[data-mediapick]').forEach(b=>b.onclick=()=>pickMediaFile(b.dataset.mediapick));
   ins.querySelectorAll('[data-mediaurl]').forEach(el=>el.addEventListener('input',()=>{ setP(LESSON,el.dataset.mediaurl,el.value.trim()); renderCanvas(); }));
@@ -2277,6 +2471,41 @@ function wire(){
     const rows=(sl.syllabus||[]).map(c=>`<div class="syl"><span class="code">${esc(c.code||'')}</span><div class="syt">${esc(c.text||'')}</div></div>`).join('')||'<div class="syt" style="color:var(--muted)">No syllabus links added yet.</div>';
     lb('<div class="syl-pop"><div class="syl-pop-h">'+ICON.book+' Linked to the NSW syllabus</div>'+rows+'</div>');
   });
+  wireInfographic();
+}
+/* infographic interactivity: hover / tap / focus reveals each figure's value in a tooltip and
+   highlights it (siblings dim). No library — plain pointer/focus handlers. */
+let igTipEl;
+function igTip(){ if(!igTipEl){ igTipEl=document.createElement('div'); igTipEl.className='ig-tip'; document.body.appendChild(igTipEl);
+    document.addEventListener('pointerdown',e=>{ if(!e.target.closest('[data-igtip]')) igTipEl.classList.remove('show'); }); } return igTipEl; }
+function igShowTip(el){ const tip=igTip(); tip.innerHTML=el.dataset.igtip||''; const r=el.getBoundingClientRect();
+  let left=r.left+r.width/2-tip.offsetWidth/2; left=Math.max(8,Math.min(left,window.innerWidth-tip.offsetWidth-8));
+  tip.style.left=left+'px'; tip.style.top=Math.max(8,r.top-tip.offsetHeight-9)+'px'; tip.classList.add('show'); }
+function igHideTip(){ if(igTipEl) igTipEl.classList.remove('show'); }
+function wireInfographic(){
+  const slide=$('#slide'), ig=slide.querySelector('.ig-slide'); if(!ig) return;
+  // stat / bar figures
+  ig.querySelectorAll('.ig-figs.ig-stats .ig-fig, .ig-figs.ig-bars .ig-fig').forEach(el=>{
+    const grp=el.parentElement;
+    const on=()=>{ igShowTip(el); el.classList.add('ig-active'); grp.classList.add('has-active'); };
+    const off=()=>{ igHideTip(); el.classList.remove('ig-active'); grp.classList.remove('has-active'); };
+    el.addEventListener('pointerenter',on); el.addEventListener('pointerleave',off);
+    el.addEventListener('focus',on); el.addEventListener('blur',off);
+    el.addEventListener('click',e=>{ e.stopPropagation(); on(); });   // touch tap
+  });
+  // donut: pair each segment with its legend item by data-seg
+  const ring=ig.querySelector('.ig-ring'), legend=ig.querySelector('.ig-legend');
+  if(ring&&legend){
+    ig.querySelectorAll('[data-seg]').forEach(el=>{
+      const pair=[...ig.querySelectorAll('[data-seg="'+el.dataset.seg+'"]')];
+      const tipFrom=el.dataset.igtip?el:pair.find(p=>p.dataset.igtip)||el;
+      const on=()=>{ igShowTip(tipFrom); pair.forEach(p=>p.classList.add('ig-active')); ring.classList.add('has-active'); legend.classList.add('has-active'); };
+      const off=()=>{ igHideTip(); pair.forEach(p=>p.classList.remove('ig-active')); ring.classList.remove('has-active'); legend.classList.remove('has-active'); };
+      el.addEventListener('pointerenter',on); el.addEventListener('pointerleave',off);
+      el.addEventListener('focus',on); el.addEventListener('blur',off);
+      el.addEventListener('click',e=>{ e.stopPropagation(); on(); });
+    });
+  }
 }
 
 /* ---------- navigation & chrome ---------- */
@@ -2348,6 +2577,7 @@ const SLIDE_FACTORY={
   text:{type:'text',heading:'Reference',variant:'prose',blocks:[{h:'',p:'Explanatory text students read to understand — not meant to be copied down.'}],note:''},
   textImage:{type:'textImage',heading:'Heading',variant:'imageRight',body:[{h:'',p:'Information paired with a supporting visual.'}],image:{src:'',cap:'Caption',alt:'',focus:{x:0.5,y:0.5}}},
   list:{type:'list',heading:'Key terms',eyebrow:'Reference',variant:'bullets',items:[{label:'Term',text:'A short definition or description students can refer to.',img:'',tags:[]},{label:'Term',text:'Another point of reference.',img:'',tags:[]}]},
+  infographic:{type:'infographic',heading:'By the numbers',eyebrow:'The data',intro:'A quick read of the key figures.',source:'Source: add the citation here',variant:'bar',figures:[{label:'First factor',pct:45,color:'primary'},{label:'Second factor',pct:34,color:'secondary'},{label:'Third factor',pct:21,color:'tertiary'}]},
   image:{type:'image',heading:'Image',src:'',cap:'Caption'},
   video:{type:'video',heading:'Video',url:'',cap:'Caption'},
   question:{type:'question',skill:'Skill',heading:'Practise',items:[{prompt:'New question',model:'Model answer.',improve:['Point one'],pitfalls:['Pitfall one']}]},
@@ -2378,7 +2608,7 @@ function convertSlide(idx,to){
   selZone='heading'; renderNav(); renderSlide(); $('#stage').scrollTop=0;
 }
 // zone to auto-select after inserting, so the new slide opens editable in the inspector
-const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title'};
+const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title'};
 function insertSlide(type, atIndex){
   if(!SLIDE_FACTORY[type]) return;
   const idx=Math.max(0,Math.min(LESSON.slides.length, atIndex));
@@ -2399,6 +2629,7 @@ const PALETTE=[
   {t:'text',label:'Text',cat:'text',desc:'Explains or informs — not for copying down.',wf:'<rect x="6" y="9" width="22" height="4" rx="2" class="l2"/><rect x="6" y="19" width="68" height="3"/><rect x="6" y="26" width="68" height="3"/><rect x="6" y="33" width="68" height="3"/><rect x="6" y="40" width="46" height="3"/>'},
   {t:'textImage',label:'Text + image',cat:'text',desc:'Information paired with a supporting visual.',wf:'<rect x="6" y="9" width="38" height="34" rx="2" class="f"/><circle cx="16" cy="20" r="3" class="s"/><path d="M10 38 L22 27 L34 38" class="s"/><rect x="50" y="11" width="24" height="3"/><rect x="50" y="19" width="24" height="3"/><rect x="50" y="27" width="20" height="3"/><rect x="50" y="35" width="24" height="3"/>'},
   {t:'list',label:'List',cat:'text',desc:'A display list — terms, examples or features. Reference, not record-style notes.',wf:'<path d="M8 11 C6 13 7 15 9 15 C8 13 9 12 11 11 C9.5 11 8.6 11.6 8 12.6 C8 12 8 11.5 8 11Z" class="l2"/><path d="M8 23 C6 25 7 27 9 27 C8 25 9 24 11 23 C9.5 23 8.6 23.6 8 24.6 C8 24 8 23.5 8 23Z" class="l2"/><path d="M8 35 C6 37 7 39 9 39 C8 37 9 36 11 35 C9.5 35 8.6 35.6 8 36.6 C8 36 8 35.5 8 35Z" class="l2"/><rect x="18" y="11" width="50" height="3"/><rect x="18" y="23" width="50" height="3"/><rect x="18" y="35" width="40" height="3"/>'},
+  {t:'infographic',label:'Infographic',cat:'media',desc:'Native data — donut / bar / stat. Drawn from JSON, scales + stays editable.',wf:'<rect x="8" y="30" width="9" height="14" rx="2" class="s"/><rect x="21" y="22" width="9" height="22" rx="2" class="l2"/><rect x="34" y="14" width="9" height="30" rx="2"/><circle cx="60" cy="22" r="12" class="s"/><path d="M60 10 A12 12 0 0 1 71 26 L60 22 Z" class="l2"/>'},
   {t:'image',label:'Image',cat:'media',wf:'<rect x="6" y="8" width="68" height="30" rx="3" class="f"/><circle cx="22" cy="20" r="4" class="s"/><path d="M13 38 L33 23 L48 38" class="s"/><rect x="20" y="43" width="40" height="4" rx="2"/>'},
   {t:'video',label:'Video',cat:'media',wf:'<rect x="10" y="8" width="60" height="34" rx="3" class="f"/><path d="M35 17 L35 33 L49 25 Z" class="l2"/><rect x="24" y="46" width="32" height="3" rx="1"/>'},
   {t:'model3d',label:'3D',cat:'media',wf:'<rect x="20" y="18" width="24" height="24" class="s"/><rect x="34" y="10" width="24" height="24" class="s"/><path d="M20 18 L34 10 M44 18 L58 10 M44 42 L58 34 M20 42 L34 34" class="s"/>'},
@@ -2515,6 +2746,22 @@ function buildWorksheet(){
         :`<div class="ws-q"><div class="ws-q-h ws-placeholder">[ Worksheet question needed — Slide ${i+1} ]</div>${wsLines(4)}</div>`;
       out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">${esc(title(s)||'Worksheet')}</h2>${qhtml}</section>`; return;
     }
+    if(s.type==='infographic'){                                       // native-data slide → a data table to complete + an interpretation question
+      const variant=['stat','bar','donut'].includes(s.variant)?s.variant:'stat';
+      const figs=Array.isArray(s.figures)?s.figures:[];
+      const rows=variant==='donut'?(((figs[0]&&figs[0].parts)||s.parts||[])):figs;   // donut reads the parts list; stat/bar read the figures
+      const valHead=variant==='bar'||variant==='donut'?'Value (%)':'Value';
+      let tbl='';
+      if(rows.length){
+        const body=rows.map(r=>`<tr><td>${esc(r.label||'—')}</td><td class="ws-fill"></td></tr>`).join('');
+        tbl=`<table class="ws-table"><caption>Read the infographic, then complete the table.</caption>
+          <thead><tr><th>${esc(variant==='donut'?'Segment':'Figure')}</th><th>${valHead}</th></tr></thead>
+          <tbody>${body}</tbody></table>`;
+      }
+      const interp=(s.q&&s.q.length)?s.q.map(q=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(wsQText(q))}</div>${wsLines(wsQLines(q))}</div>`; }).join('')
+        : (()=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>What does this data show about ${esc(title(s)||'the topic')}? Refer to the figures above in your answer.</div>${wsLines(4)}</div>`; })();
+      out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">${esc(title(s)||'By the numbers')}</h2>${tbl}${interp}</section>`; return;
+    }
     if(s.type==='complete'){ hadComplete=true; out+=endSection(ref); return; }
     // content slide → printed questions come ONLY from slide.q; otherwise a marked placeholder (never invented)
     const qs=(s.q||[]);
@@ -2580,7 +2827,7 @@ $('#presentExit').onclick=()=>setPresent(false);
 $('#stage').addEventListener('click',e=>{
   if(!document.body.classList.contains('present'))return;
   if($('#lightbox').classList.contains('show'))return;
-  if(e.target.closest('button,a,select,textarea,input,model-viewer,[data-poi],[contenteditable=true]'))return;
+  if(e.target.closest('button,a,select,textarea,input,model-viewer,[data-poi],[data-igtip],[contenteditable=true]'))return;
   if(e.clientX < window.innerWidth*0.22) go(cur-1); else go(cur+1);
 });
 document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement && document.body.classList.contains('present')) setPresent(false); });
