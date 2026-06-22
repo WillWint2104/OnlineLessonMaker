@@ -934,14 +934,15 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 .ws-bar #wsPrint{margin-left:auto;}
 .ws-sheet{max-width:210mm;margin:22px auto 40px;background:#fff;color:#1a1a1a;padding:18mm 16mm;
   box-shadow:0 6px 28px rgba(0,0,0,.18);font-family:"Hanken Grotesk",system-ui,sans-serif;font-size:11.5pt;line-height:1.45;}
-.ws-sheet *{ -webkit-print-color-adjust:exact;print-color-adjust:exact; }
+#worksheet,#worksheet *,#worksheet *::before,#worksheet *::after{ -webkit-print-color-adjust:exact;print-color-adjust:exact; }   /* checkbox/accent borders + tints print even with "no background graphics" */
 #worksheet h1,#worksheet h2{text-transform:none;}   /* id beats theme `:root[data-theme] h2` rules — worksheet reads the same in every theme (e.g. ww1 uppercases headings) */
 .ws-doc-h{margin:0 0 4px;font-family:var(--display);font-size:1.9rem;color:#111;letter-spacing:var(--display-spacing);}
 .ws-doc-sub{color:#444;font-size:1rem;margin:0 0 14px;}
 .ws-id{display:flex;gap:26px;margin:14px 0 6px;padding-bottom:6px;border-bottom:2px solid #222;}
 .ws-id .f{flex:1;display:flex;align-items:flex-end;gap:8px;font-size:.85rem;font-weight:600;color:#333;}
 .ws-id .f .ln{flex:1;border-bottom:1px solid #555;height:1.15em;}
-.ws-sec{margin:20px 0 0;break-inside:avoid;page-break-inside:avoid;}
+.ws-sec{margin:20px 0 0;}   /* sections may flow across pages (a long one would otherwise overflow / waste a page); individual .ws-q stay together */
+.ws-sec-h{break-after:avoid;}
 .ws-ref{display:inline-block;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
   color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 40%,#aaa);border-radius:4px;padding:2px 8px;margin-bottom:7px;}
 .ws-sec-h{font-family:var(--display);font-size:1.16rem;color:#111;margin:0 0 6px;}
@@ -2070,8 +2071,8 @@ function listItemsGroup(i,s,sel){
 }
 /* slide types whose printed questions come from `items[].prompt` (not slide.q), and the
    structural types the worksheet generator handles specially — both exclude the slide.q panel. */
-const WS_ITEMS=new Set(['source','question','model3d']);
-const WS_SPECIAL=new Set(['cover','outcomes','notes','complete']);
+const WS_ITEMS=new Set(['source','question','model3d']);   // questions come from items[].prompt
+const WS_SPECIAL=new Set(['cover','outcomes','notes','complete','worksheet']);   // handled their own way (worksheet prints its fields[])
 const wsIsContent=t=>!WS_ITEMS.has(t)&&!WS_SPECIAL.has(t);
 function worksheetSection(i,s,sel){
   // normalise slide.q to {text,lines} objects so editing always works (accepts legacy strings)
@@ -2449,6 +2450,7 @@ $('#exportBtn').onclick=()=>{
   clone.querySelector('#slide').innerHTML='';        // re-renders fresh from data on open
   const ins=clone.querySelector('#inspector'); if(ins) ins.innerHTML='';   // edit-only panel never ships
   const pal=clone.querySelector('#palette'); if(pal) pal.innerHTML='';     // edit-only palette never ships
+  const ws=clone.querySelector('#worksheet'); if(ws){ ws.classList.remove('show'); ws.setAttribute('aria-hidden','true'); const sh=ws.querySelector('#wsSheet'); if(sh) sh.innerHTML=''; }   // never ship a generated/open worksheet
   clone.classList.remove('ins-collapsed','editnote-off');                 // never bake the author's UI state into the export
   clone.style.removeProperty('--font-scale');                            // start students at 100% (their own zoom is per-browser)
   clone.querySelector('body').className='study';
@@ -2470,7 +2472,13 @@ function buildWorksheet(){
   if(!total) return `<div class="ws-empty">This lesson has no slides yet.</div>`;
   const cover=slides.find(s=>s.type==='cover');
   const inquiry=esc((cover&&cover.sub)||'');
-  let qn=0, coverUsed=false;
+  let qn=0, coverUsed=false, hadComplete=false;
+  const endSection=(ref)=>{   // whole-lesson extended response (from the cover inquiry) + TEEEC, in one unbreakable block
+    let h=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">Extended response — the whole inquiry</h2><div class="ws-q">`;
+    if(inquiry){ qn++; h+=`<div class="ws-q-h"><span class="qn">Q${qn}</span>${inquiry}</div>`; }
+    else h+=`<div class="ws-q-h ws-placeholder">[ Worksheet question needed — extended response (set the cover’s inquiry) ]</div>`;
+    return h+`<div class="ws-teeec"><b>TEEEC</b> — Topic sentence · Explain · Evidence · Elaborate · Concluding link. Use evidence from across the lesson.</div>${wsLines(14)}</div></section>`;
+  };
   let out=`<div class="ws-head">
     <h1 class="ws-doc-h">${esc(LESSON.meta&&LESSON.meta.title||'Lesson')} — Worksheet</h1>
     ${inquiry?`<p class="ws-doc-sub"><b>Inquiry:</b> ${inquiry}</p>`:''}
@@ -2496,18 +2504,18 @@ function buildWorksheet(){
       const items=(s.items||[]);
       let box='';
       if(s.type==='source'){ const t=(s.media&&s.media.kind==='text'&&s.media.text)||s.text||'';
-        if(t) box=`<div class="ws-srcbox">${esc(t)}</div>`; if(s.credit) box+=`<div class="ws-credit">${esc(s.credit)}</div>`; }
+        if(t){ box=`<div class="ws-srcbox">${esc(t)}</div>`; if(s.credit) box+=`<div class="ws-credit">${esc(s.credit)}</div>`; } }
       const qhtml=items.length?items.map(it=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(it.prompt||'')}</div>${wsLines(it.lines||4)}</div>`; }).join('')
         :`<div class="ws-q"><div class="ws-q-h ws-placeholder">[ Worksheet question needed — Slide ${i+1} ]</div>${wsLines(4)}</div>`;
       out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">${esc(title(s)||(s.type==='source'?'Source':'Questions'))}</h2>${box}${qhtml}</section>`; return;
     }
-    if(s.type==='complete'){
-      const endQ=inquiry||esc(s.lead||'');
-      out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">Extended response — the whole inquiry</h2>`;
-      if(endQ){ qn++; out+=`<div class="ws-q-h"><span class="qn">Q${qn}</span>${endQ}</div>`; }
-      else out+=`<div class="ws-q-h ws-placeholder">[ Worksheet question needed — extended response ]</div>`;
-      out+=`<div class="ws-teeec"><b>TEEEC</b> — Topic sentence · Explain · Evidence · Elaborate · Concluding link. Use evidence from across the lesson.</div>${wsLines(14)}</section>`; return;
+    if(s.type==='worksheet'){                                          // the on-screen analysis-worksheet slide → print its fields[] as prompts
+      const fields=(s.fields||[]);
+      const qhtml=fields.length?fields.map(f=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(f.n||'')}</div>${f.hint?`<div class="ws-credit">${esc(f.hint)}</div>`:''}${wsLines(f.kind==='matrix'?2:3)}</div>`; }).join('')
+        :`<div class="ws-q"><div class="ws-q-h ws-placeholder">[ Worksheet question needed — Slide ${i+1} ]</div>${wsLines(4)}</div>`;
+      out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">${esc(title(s)||'Worksheet')}</h2>${qhtml}</section>`; return;
     }
+    if(s.type==='complete'){ hadComplete=true; out+=endSection(ref); return; }
     // content slide → printed questions come ONLY from slide.q; otherwise a marked placeholder (never invented)
     const qs=(s.q||[]);
     let qhtml;
@@ -2515,6 +2523,7 @@ function buildWorksheet(){
     else qhtml=`<div class="ws-q"><div class="ws-q-h ws-placeholder">[ Worksheet question needed — Slide ${i+1} ]</div>${wsLines(4)}</div>`;
     out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">${esc(title(s)||TYPELAB[s.type]||'Slide')}</h2>${qhtml}</section>`;
   });
+  if(!hadComplete) out+=endSection('');   // lessons without a 'complete' slide still get the whole-lesson extended response
   return out;
 }
 function openWorksheet(){ $('#wsSheet').innerHTML=buildWorksheet(); const el=$('#worksheet');
