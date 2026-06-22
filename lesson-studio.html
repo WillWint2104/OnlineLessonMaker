@@ -47,6 +47,7 @@
   --ok:#1f9d6b; --warn:#d98324;
   --display:"Space Grotesk"; --display-spacing:-.01em;
   --radius:18px; --shadow:0 1px 2px rgba(20,22,30,.05),0 12px 32px -12px rgba(20,22,30,.18);
+  --font-scale:1;
   --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
 }
 /* ---- TOPIC THEMES — applied via data-theme on <html>; removing the attribute reverts cleanly ---- */
@@ -156,16 +157,21 @@
 :root[data-theme="ww1"] .credit{font-style:normal;}   /* Courier Prime italic isn't vendored — upright typewriter, not faux-oblique */
 *{box-sizing:border-box;}
 html,body{height:100%;margin:0;}
+/* Global text-zoom: rem-based text reads this; chrome height is min-height so it never clips.
+   In Present the chrome is hidden, so this scales slide text only (the primary use case). */
+html{font-size:calc(100% * var(--font-scale,1));}
 body{font-family:"Hanken Grotesk",system-ui,sans-serif;color:var(--text);
   background:var(--grain),var(--canvas);background-attachment:fixed;
-  display:flex;overflow:hidden;-webkit-font-smoothing:antialiased;}
+  display:flex;flex-direction:column;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;}
+/* full-width top bar spans above all three columns → its buttons are never under the inspector */
+.appbody{flex:1;min-height:0;display:flex;}
 h1,h2,h3,.disp{font-family:var(--display,"Space Grotesk"),"EB Garamond",serif;letter-spacing:var(--display-spacing,-.01em);}
 button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit;}
 
 /* ---------------- SIDEBAR ---------------- */
 .side{width:288px;flex:0 0 288px;background:var(--sidebar);color:var(--sidebar-text);
   border-right:1px solid var(--sidebar-sep);
-  display:flex;flex-direction:column;height:100vh;}
+  display:flex;flex-direction:column;height:100%;min-height:0;}
 .brand{padding:22px 22px 16px;display:flex;align-items:center;gap:11px;}
 .brand .mark{width:30px;height:30px;border-radius:9px;background:var(--hero);flex:0 0 30px;}
 .brand b{font-family:var(--display,"Space Grotesk");font-size:1.04rem;color:var(--sidebar-title);font-weight:600;letter-spacing:-.01em;
@@ -201,11 +207,23 @@ body.edit .nitem:active{cursor:grabbing;}
 .nitem.drop-after::after{bottom:-3px;}
 
 /* ---------------- MAIN ---------------- */
-.main{flex:1;display:flex;flex-direction:column;height:100vh;min-width:0;}
-.top{height:60px;flex:0 0 60px;background:var(--surface);border-bottom:1px solid var(--line);
-  display:flex;align-items:center;gap:14px;padding:0 22px;}
-.top .ltitle{font-family:var(--display,"Space Grotesk");font-weight:600;font-size:1rem;}
-.top .spacer{flex:1;}
+.main{flex:1;display:flex;flex-direction:column;height:100%;min-height:0;min-width:0;}
+.top{min-height:60px;flex:0 0 auto;background:var(--surface);border-bottom:1px solid var(--line);
+  display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:9px 18px;}   /* wrap (never overflow) when text-zoom enlarges the chrome or the window is narrow */
+/* Title takes the slack and ellipsises so the action buttons (Present / ⌗ JSON / Export) are
+   NEVER pushed off-screen or under the inspector. Action controls never shrink. */
+.top .ltitle{flex:1 1 0;min-width:32px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-family:var(--display,"Space Grotesk");font-weight:600;font-size:1rem;}
+.top .themebox,.top .seg,.top .fz,.top .btn{flex:0 0 auto;}
+/* text-zoom control */
+.fz{display:flex;align-items:center;gap:1px;background:var(--canvas);border:1px solid var(--line);border-radius:10px;padding:3px;}
+.fz .fzbtn{font-size:.82rem;font-weight:700;padding:5px 9px;border-radius:7px;color:var(--muted);line-height:1;}
+.fz .fzbtn:hover{color:var(--text);background:var(--surface);}
+.fz .fzval{font-size:.72rem;font-weight:600;color:var(--text);min-width:40px;text-align:center;font-variant-numeric:tabular-nums;}
+.fz.fz-float{display:none;position:fixed;bottom:16px;left:18px;z-index:90;background:rgba(0,0,0,.6);border-color:transparent;box-shadow:0 6px 20px -8px rgba(0,0,0,.6);}
+.fz.fz-float .fzbtn{color:#e7e7ef;} .fz.fz-float .fzbtn:hover{background:rgba(255,255,255,.16);color:#fff;}
+.fz.fz-float .fzval{color:#fff;}
+body.present .fz.fz-float{display:flex;}
 .seg{display:flex;background:var(--canvas);border:1px solid var(--line);border-radius:10px;padding:3px;}
 .seg button{font-size:.8rem;font-weight:500;padding:6px 14px;border-radius:7px;color:var(--muted);}
 .seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.06);}
@@ -391,10 +409,15 @@ body.edit .qadd{display:inline-flex;margin-top:16px;font-size:.82rem;font-weight
   align-items:center;gap:6px;padding:8px 13px;border:1px dashed var(--accent);border-radius:10px;}
 .qdel{margin-left:auto;font-size:.74rem;color:var(--warn);}
 
+/* Help banner: a slim bar ABOVE the canvas (normal flow) — never overlaps slide content.
+   Dismissable (× hides it; remembered). */
 .editnote{display:none;}
-body.edit .editnote{display:flex;align-items:center;gap:9px;background:#fff7ed;border:1px solid #fbd9a8;
-  color:#8a5212;border-radius:12px;padding:9px 14px;font-size:.8rem;pointer-events:none;
-  position:absolute;top:10px;left:50%;transform:translateX(-50%);max-width:92%;z-index:6;box-shadow:var(--shadow);}
+body.edit .editnote{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  background:#fff7ed;border-bottom:1px solid #fbd9a8;color:#8a5212;padding:7px 18px;font-size:.8rem;flex:0 0 auto;}
+html.editnote-off body.edit .editnote{display:none;}
+.editnote b{font-weight:700;}
+.editnote-x{flex:0 0 auto;color:#8a5212;font-size:.95rem;line-height:1;padding:3px 7px;border-radius:6px;}
+.editnote-x:hover{background:#f6d9a8;}
 /* ===== Edit-mode zone selection (canvas) ===== */
 body.edit #slide *{pointer-events:none;}                   /* clean preview: nothing on the canvas is live... */
 body.edit #slide [data-zone]{pointer-events:auto;cursor:pointer;border-radius:8px;}   /* ...except zones (click selects the most specific one, incl. nested) */
@@ -405,9 +428,17 @@ body.edit #slide [data-zone].zsel{outline:2px solid var(--accent);outline-offset
 body.edit #slide .cover-tools,body.edit #slide .setrow,body.edit #slide .hint,body.edit #slide .dropnote{display:none;}
 /* ===== Edit-mode inspector (right panel) ===== */
 .inspector{display:none;}
-body.edit .inspector{display:flex;flex-direction:column;width:340px;flex:0 0 340px;height:100vh;overflow-y:auto;
+body.edit .inspector{display:flex;flex-direction:column;width:340px;flex:0 0 340px;height:100%;overflow-y:auto;
   background:var(--surface);border-left:1px solid var(--line);padding:18px 18px 40px;gap:14px;}
-.inspector .ins-h{font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:-.01em;}
+/* collapsed: panel hidden, canvas reclaims the space; a thin rail reopens it */
+html.ins-collapsed body.edit .inspector{display:none;}
+#insReopen{display:none;}
+html.ins-collapsed body.edit #insReopen{display:flex;align-items:center;gap:6px;position:fixed;top:50%;transform:translateY(-50%);right:0;z-index:55;
+  background:var(--accent);color:#fff;font-size:.74rem;font-weight:600;padding:11px 11px;border-radius:10px 0 0 10px;box-shadow:-6px 6px 20px -10px rgba(0,0,0,.5);}
+#insReopen:hover{filter:brightness(1.06);}
+.inspector .ins-h{display:flex;align-items:center;justify-content:space-between;font-family:var(--display);font-weight:600;font-size:1.05rem;letter-spacing:-.01em;}
+.inspector .ins-x{font-family:system-ui,sans-serif;font-size:1.1rem;line-height:1;color:var(--muted);padding:4px 9px;border-radius:8px;border:1px solid var(--line);background:var(--canvas);}
+.inspector .ins-x:hover{color:var(--text);border-color:var(--accent);}
 .inspector .ihint{color:var(--muted);font-size:.9rem;padding:18px 14px;border:1px dashed var(--line);border-radius:12px;text-align:center;}
 .inspector .isec{border:1px solid var(--line);border-radius:12px;padding:13px 14px;display:flex;flex-direction:column;gap:9px;background:var(--canvas);}
 .inspector .isec-h{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);}
@@ -483,8 +514,25 @@ body.edit .palette{display:flex;flex-direction:column;gap:9px;padding:11px 16px 
 .wf .l2{opacity:.55;}
 .wf .s{fill:none;stroke:currentColor;stroke-width:2;opacity:.45;}
 .pal-lbl{font-size:.73rem;font-weight:600;color:var(--text);}
+/* ---------- responsive: condense, don't collide (usable to ~1280×720) ---------- */
+@media (max-width:1280px){
+  .side{width:248px;flex-basis:248px;}
+  body.edit .inspector{width:312px;flex-basis:312px;}
+  .top{gap:9px;padding:8px 14px;}
+  .stage{padding:16px;}
+}
+@media (max-width:1080px){
+  .side{width:216px;flex-basis:216px;}
+  body.edit .inspector{width:288px;flex-basis:288px;}
+  .themebox label{display:none;}                 /* keep the select, drop its label to save width */
+}
 @media (max-width:820px){ .side{display:none;} .stage{padding:12px;}
-  body.edit .inspector{position:fixed;right:0;top:0;bottom:0;z-index:60;box-shadow:-12px 0 40px -20px rgba(0,0,0,.5);} }
+  /* inspector becomes an overlay so the canvas keeps full width */
+  body.edit .inspector{position:fixed;right:0;top:0;bottom:0;width:min(340px,86vw);flex-basis:auto;z-index:60;box-shadow:-12px 0 40px -20px rgba(0,0,0,.5);} }
+@media (max-width:680px){
+  .top{flex-wrap:wrap;}                           /* toolbar wraps instead of overflowing */
+  .top .ltitle{flex-basis:100%;}
+}
 
 /* ---------------- JSON DATA PANEL ---------------- */
 #dataBtn{display:none;}
@@ -714,9 +762,10 @@ body.present #presentExit{display:flex;}
 /* Present uses the SAME 1280x720 canvas, just scaled larger (sidebar hidden). The old
    per-element font-size:clamp / vh media rules are gone — the uniform transform does the
    scaling, so the board renders identically to Study. */
-body.present .side,body.present .top,body.present .foot,body.present .answer,body.present .minput{display:none;}
-body.present .stage{padding:2vh 2vw;}
-body.present .card{box-shadow:none;}
+body.present .side,body.present .top,body.present .foot,body.present .answer,body.present .minput,body.present .editnote{display:none;}
+/* Present fills the screen: minimal symmetric padding so the 16:9 canvas maximises; no scrollbar. */
+body.present .stage{padding:1.2vh 1.2vw;overflow:hidden;scrollbar-gutter:auto;}
+body.present .card{box-shadow:none;width:100%;}
 body.present .card{cursor:pointer;}
 body.present .card a,body.present .card button,body.present .card .poi,body.present .card model-viewer,body.present .card input,body.present .card textarea{cursor:auto;}
 /* A2 — present-mode discussion pills */
@@ -760,6 +809,33 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 </head>
 <body class="study">
 
+<header class="top">
+  <span class="ltitle" id="topTitle" title="">Lesson</span>
+  <div class="themebox">
+    <label>Theme</label>
+    <select id="themeSel">
+      <option value="neutral">Neutral (no theme)</option>
+      <option value="egypt">Egypt · Y11 Ancient History</option>
+      <option value="rome">Rome · Y12 Ancient History</option>
+      <option value="wellbeing">Wellbeing in Australia · Y10 Geography</option>
+      <option value="ww1">WW1 · Y9 History</option>
+    </select>
+  </div>
+  <div class="seg" id="modeSeg">
+    <button data-mode="study" class="on">Study</button>
+    <button data-mode="edit">Edit</button>
+  </div>
+  <div class="fz" id="fzBar" title="Text size">
+    <button class="fzbtn" data-zoomstep="-1" aria-label="Smaller text">A−</button>
+    <span class="fzval" role="status" aria-live="polite" aria-label="Text size">100%</span>
+    <button class="fzbtn" data-zoomstep="1" aria-label="Larger text">A+</button>
+  </div>
+  <button class="btn ghost" id="presentBtn">⤢ Present</button>
+  <button class="btn ghost" id="dataBtn">⌗ JSON</button>
+  <button class="btn" id="exportBtn">↧ Export</button>
+</header>
+
+<div class="appbody">
 <aside class="side">
   <div class="brand">
     <div class="mark"></div>
@@ -770,29 +846,11 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 </aside>
 
 <div class="main">
-  <header class="top">
-    <span class="ltitle" id="topTitle">Lesson</span>
-    <span class="spacer"></span>
-    <div class="themebox">
-      <label>Theme</label>
-      <select id="themeSel">
-        <option value="neutral">Neutral (no theme)</option>
-        <option value="egypt">Egypt · Y11 Ancient History</option>
-        <option value="rome">Rome · Y12 Ancient History</option>
-        <option value="wellbeing">Wellbeing in Australia · Y10 Geography</option>
-        <option value="ww1">WW1 · Y9 History</option>
-      </select>
-    </div>
-    <div class="seg" id="modeSeg">
-      <button data-mode="study" class="on">Study</button>
-      <button data-mode="edit">Edit</button>
-    </div>
-    <button class="btn ghost" id="presentBtn">⤢ Present</button>
-    <button class="btn ghost" id="dataBtn">⌗ JSON</button>
-    <button class="btn" id="exportBtn">↧ Export</button>
-  </header>
+  <div class="editnote" id="editnote">
+    <span>✎ <b>Edit mode</b> — click any part of the slide to edit it in the panel on the right, then Export when you're done.</span>
+    <button class="editnote-x" id="editnoteX" title="Dismiss" aria-label="Dismiss">✕</button>
+  </div>
   <div class="stage" id="stage">
-    <div class="editnote" id="editnote">✎ Edit mode — click any part of the slide to edit it in the panel on the right, then Export when you're done.</div>
     <div class="canvasfit" id="canvasFit"><div class="canvas" id="canvas">
       <div id="slide"></div>
     </div></div>
@@ -806,7 +864,14 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 </div>
 
 <aside class="inspector" id="inspector"></aside>
+</div><!-- /.appbody -->
+<button id="insReopen" title="Open the inspector">‹ Inspector</button>
 
+<div class="fz fz-float" id="fzPresent" title="Text size">
+  <button class="fzbtn" data-zoomstep="-1" aria-label="Smaller text">A−</button>
+  <span class="fzval" role="status" aria-live="polite" aria-label="Text size">100%</span>
+  <button class="fzbtn" data-zoomstep="1" aria-label="Larger text">A+</button>
+</div>
 <button id="presentExit">Exit fullscreen ✕</button>
 <div id="lightbox"><button class="lb-close" id="lbClose">✕</button><div class="lb-body"></div></div>
 
@@ -1202,7 +1267,7 @@ function title(s){
 /* ---------- render ---------- */
 function render(){
   setTheme(LESSON.meta.theme);
-  $('#topTitle').textContent=LESSON.meta.title;
+  $('#topTitle').textContent=LESSON.meta.title; $('#topTitle').title=LESSON.meta.title||'';
   $('#brandTitle').textContent=LESSON.meta.title;
   $('#themeSel').value=LESSON.meta.theme;
   setupCanvasObserver();
@@ -1568,12 +1633,18 @@ function renderCanvas(){
 function fitCanvas(){
   const stage=$('#stage'), fit=$('#canvasFit'), canvas=$('#canvas');
   if(!stage||!canvas||!fit) return;
-  const sw=stage.clientWidth, sh=stage.clientHeight;
-  if(!sw||!sh) return;                              // guard before any mutation (no half-updated state)
+  // Use the CONTENT area (subtract padding) so a Fit slide scaled to fill never spills past the
+  // padding edge → no spurious scrollbar; and Present maximises into the true available space.
+  const cs=getComputedStyle(stage);
+  const padX=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight);
+  const padY=parseFloat(cs.paddingTop)+parseFloat(cs.paddingBottom);
+  const sw=stage.clientWidth-padX, sh=stage.clientHeight-padY;
+  if(!(sw>0)||!(sh>0)) return;                      // guard before any mutation (no half-updated state)
   const s0=LESSON.slides[cur]||{};
   const scroll = s0.layout==='scroll' && !document.body.classList.contains('present');
   canvas.classList.toggle('scroll', scroll);
   canvas.style.height = scroll ? 'auto' : '720px';
+  stage.style.overflow = scroll ? 'auto' : 'hidden';   // Fit = one screen, never scrolls
   const s = scroll ? (sw/1280) : Math.min(sw/1280, sh/720);
   canvas.style.transform = 'scale('+s+')';
   const ch = scroll ? canvas.offsetHeight : 720;   // logical (unscaled) content height
@@ -1747,7 +1818,7 @@ function renderInspector(){
   const top = selZone===null
     ? `<div class="ihint">Select a part of the slide to edit it here.</div>`
     : `<div class="isec"><div class="isec-h">${TYPELAB[s.type]||s.type} · fields</div>${inspectorForm(i,s,selZone)}</div>`;
-  ins.innerHTML=`<div class="ins-h">Inspector</div>${top}${layoutSection()}${metaSection()}`;
+  ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${top}${layoutSection()}${metaSection()}`;
   wireInspector();
   const c=ins.querySelector('.cur'); if(c) c.scrollIntoView({block:'nearest'});
 }
@@ -2023,6 +2094,8 @@ $('#exportBtn').onclick=()=>{
   clone.querySelector('#slide').innerHTML='';        // re-renders fresh from data on open
   const ins=clone.querySelector('#inspector'); if(ins) ins.innerHTML='';   // edit-only panel never ships
   const pal=clone.querySelector('#palette'); if(pal) pal.innerHTML='';     // edit-only palette never ships
+  clone.classList.remove('ins-collapsed','editnote-off');                 // never bake the author's UI state into the export
+  clone.style.removeProperty('--font-scale');                            // start students at 100% (their own zoom is per-browser)
   clone.querySelector('body').className='study';
   const html='<!DOCTYPE html>\n'+clone.outerHTML;
   const blob=new Blob([html],{type:'text/html'});
@@ -2083,6 +2156,28 @@ $('#stage').addEventListener('click',e=>{
 document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement && document.body.classList.contains('present')) setPresent(false); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#lightbox').classList.contains('show')) closeLb(); });
 
+/* ---------- global text-zoom (--font-scale), persisted in localStorage ---------- */
+const FZ_STEPS=[1,1.25,1.5,1.75];
+function fzGet(){ let v; try{ v=parseFloat(localStorage.getItem('ls-font-scale')); }catch(e){} return FZ_STEPS.includes(v)?v:1; }
+function fzApply(v){ document.documentElement.style.setProperty('--font-scale',String(v));
+  document.querySelectorAll('.fzval').forEach(e=>e.textContent=Math.round(v*100)+'%');
+  if(typeof fitCanvas==='function') fitCanvas(); }
+function fzSet(dir){ dir=Math.sign(+dir)||0; let i=FZ_STEPS.indexOf(fzGet()); i=Math.max(0,Math.min(FZ_STEPS.length-1,i+dir));
+  const v=FZ_STEPS[i]; try{ localStorage.setItem('ls-font-scale',String(v)); }catch(e){} fzApply(v); }
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-zoomstep]'); if(b){ e.preventDefault(); fzSet(+b.dataset.zoomstep); } });
+
+/* ---------- inspector collapse / reopen (state on <html>, survives mode switches) ---------- */
+function insCollapse(on){ document.documentElement.classList.toggle('ins-collapsed',on);
+  if(typeof fitCanvas==='function') requestAnimationFrame(fitCanvas); }
+$('#insReopen').onclick=()=>insCollapse(false);
+document.addEventListener('click',e=>{ if(e.target.closest('#insCollapse')) insCollapse(true); });
+
+/* ---------- edit-mode help banner: dismissable (remembered) ---------- */
+(function(){ try{ if(localStorage.getItem('ls-editnote')==='off') document.documentElement.classList.add('editnote-off'); }catch(e){}
+  const x=$('#editnoteX'); if(x) x.onclick=()=>{ document.documentElement.classList.add('editnote-off');
+    try{ localStorage.setItem('ls-editnote','off'); }catch(e){} if(typeof fitCanvas==='function') requestAnimationFrame(fitCanvas); }; })();
+
+fzApply(fzGet());            // apply saved zoom before first paint
 render(); renderPalette();   // palette content is static (per category) — build it once, not on every render()
 </script>
 </body>
