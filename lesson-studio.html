@@ -351,7 +351,6 @@ body.edit #slide .ed-head[data-zone].zsel,body.edit #slide .ed-eyebrow[data-zone
   box-shadow:inset 0 -2px 0 0 color-mix(in srgb,var(--accent) 48%,transparent);}
 
 /* ---- text variants ---- */
-.text-slide .ed-note{margin-top:24px;}
 .tx-cols{display:grid;grid-template-columns:1.25fr .75fr;gap:42px;align-items:start;margin-top:22px;}
 .tx-cols .ed-body{margin-top:0;}
 .tx-aside{padding-left:22px;border-left:1px solid var(--line);}
@@ -362,6 +361,9 @@ body.edit #slide .ed-head[data-zone].zsel,body.edit #slide .ed-eyebrow[data-zone
 .text-slide.lead .ed-head{font-size:2.9rem;max-width:20ch;}
 .ed-divider{width:56px;height:2px;background:var(--accent);border:0;border-radius:2px;margin:22px 0;opacity:.85;}
 .ed-lead{font-family:var(--display);font-size:1.55rem;line-height:1.5;font-style:italic;color:var(--bd);max-width:48ch;margin:0;}
+/* in the centred lead layout, extra blocks + the note read as centred prose (quote loses its left rule) */
+.text-slide.lead .ed-block{max-width:52ch;margin-top:16px;}
+.text-slide.lead .ed-quote{border:0;padding:0;margin-top:18px;max-width:48ch;}
 
 /* ---- textImage ---- */
 .ti{display:grid;gap:42px;flex:1;min-height:0;align-items:center;}
@@ -1575,10 +1577,17 @@ function renderCanvas(){
     const headEl=`<h2 class="ed-head editable" data-bind="slides.${i}.heading" contenteditable="${mode==='edit'}">${esc(s.heading||'')}</h2>`;
     const quote=(p)=>`<blockquote class="ed-quote editable" data-bind="slides.${i}.note" contenteditable="${mode==='edit'}">${esc(p)}</blockquote>`;
     if(variant==='lead'){
-      const lead=(blocks[0]&&blocks[0].p)||'';
+      // first paragraph is the big centred lead; any further blocks + the note still render
+      // below it (centred) so nothing the inspector lets you author is silently dropped.
+      const inner=blocks.map((b,j)=>{
+        const hEl=b.h?`<h3 class="ed-subhead editable" data-bind="slides.${i}.blocks.${j}.h" contenteditable="${mode==='edit'}">${esc(b.h)}</h3>`:'';
+        const pEl=`<p class="${j===0?'ed-lead':''} editable" data-bind="slides.${i}.blocks.${j}.p" contenteditable="${mode==='edit'}">${esc(b.p||'')}</p>`;
+        return j===0?`${hEl}${pEl}`:`<div class="ed-block">${hEl}${pEl}</div>`;
+      }).join('');
       h=`<div class="card pad text-slide ed-slide lead">
         ${refChip}${headEl}<hr class="ed-divider">
-        <p class="ed-lead editable" data-bind="slides.${i}.blocks.0.p" contenteditable="${mode==='edit'}">${esc(lead)}</p>
+        ${inner}
+        ${(s.note||mode==='edit')?quote(s.note||''):''}
       </div>`;
     } else if(variant==='twoColumn'){
       h=`<div class="card pad text-slide ed-slide">
