@@ -1456,6 +1456,10 @@ const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image
 const IG_TOKENS=['primary','secondary','tertiary'];
 function igColor(c){ return c==='secondary'?'var(--data-2)':c==='tertiary'?'var(--data-3)':'var(--data-1)'; }
 function igFigColor(f,j){ return igColor((f&&f.color)||IG_TOKENS[j%3]); }
+/* Tooltip value/label travel in plain data-* attrs (NOT pre-built HTML): igShowTip re-escapes
+   them at show time before innerHTML, so a label like `<img onerror=…>` can't inject — the
+   attribute decode + innerHTML parse would otherwise double-decode a single esc(). Pass RAW. */
+function igTipData(value,label){ return `data-igtip data-igv="${esc(value==null?'':String(value))}" data-igl="${esc(label==null?'':String(label))}"`; }
 /* tiny built-in inline-SVG icon set for stat cards (no icon font / CDN) */
 const IG_ICONS={
   people:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 6.5a3 3 0 0 1 0 5.6M17 14.4A5.5 5.5 0 0 1 20.5 19.5"/></svg>',
@@ -1809,9 +1813,9 @@ function renderCanvas(){
     if(variant==='bar'){
       body=`<div class="ig-figs ig-bars">`+figs.map((f,j)=>{
         const c=igFigColor(f,j), pct=Math.max(0,Math.min(100,+f.pct||0));
-        const valTxt=(f.value!=null&&f.value!=='')?`${esc(String(f.value))}${esc(f.unit||'')}`:`${pct}%`;
-        const lbl=esc(f.label||''), tip=`<b>${valTxt}</b> · ${lbl}`;
-        return `<div class="ig-fig ig-bar" tabindex="0" role="group" aria-label="${lbl}: ${valTxt}" data-igtip="${tip}" style="--c:${c};--p:${pct}%">
+        const valRaw=(f.value!=null&&f.value!=='')?`${String(f.value)}${f.unit||''}`:`${pct}%`;
+        const valTxt=esc(valRaw), lbl=esc(f.label||'');
+        return `<div class="ig-fig ig-bar" tabindex="0" role="group" aria-label="${lbl}: ${valTxt}" ${igTipData(valRaw,f.label||'')} style="--c:${c};--p:${pct}%">
           <div class="ig-bar-h"><span class="ig-bar-lbl editable" data-bind="slides.${i}.figures.${j}.label" contenteditable="${mode==='edit'}">${lbl}</span><span class="ig-bar-val">${valTxt}</span></div>
           <div class="ig-track"><div class="ig-fill"></div></div></div>`;
       }).join('')+`</div>`;
@@ -1820,10 +1824,10 @@ function renderCanvas(){
       const tot=parts.reduce((a,p)=>a+(+p.pct||0),0)||100, gap=parts.length>1?1.6:0;
       let cum=0;
       const segs=parts.map((p,k)=>{ const c=igColor(p.color||IG_TOKENS[k%3]); const pn=(+p.pct||0)/tot*100, dash=Math.max(0,pn-gap);
-        const seg=`<circle class="ig-seg" data-seg="${k}" tabindex="0" role="img" aria-label="${esc(p.label||'')}: ${(+p.pct||0)}%" data-igtip="<b>${(+p.pct||0)}%</b> · ${esc(p.label||'')}" cx="50" cy="50" r="40" pathLength="100" stroke="${c}" stroke-dasharray="${dash.toFixed(2)} ${(100-dash).toFixed(2)}" stroke-dashoffset="${(-cum).toFixed(2)}"></circle>`;
+        const seg=`<circle class="ig-seg" data-seg="${k}" tabindex="0" role="img" aria-label="${esc(p.label||'')}: ${(+p.pct||0)}%" ${igTipData((+p.pct||0)+'%',p.label||'')} cx="50" cy="50" r="40" pathLength="100" stroke="${c}" stroke-dasharray="${dash.toFixed(2)} ${(100-dash).toFixed(2)}" stroke-dashoffset="${(-cum).toFixed(2)}"></circle>`;
         cum+=pn; return seg; }).join('');
       const legend=parts.map((p,k)=>{ const c=igColor(p.color||IG_TOKENS[k%3]);
-        return `<li tabindex="0" data-seg="${k}" aria-label="${esc(p.label||'')}: ${(+p.pct||0)}%" data-igtip="<b>${(+p.pct||0)}%</b> · ${esc(p.label||'')}" style="--c:${c}"><span class="ig-sw"></span><span>${esc(p.label||'')}</span><span class="ig-leg-pct">${(+p.pct||0)}%</span></li>`; }).join('');
+        return `<li tabindex="0" data-seg="${k}" aria-label="${esc(p.label||'')}: ${(+p.pct||0)}%" ${igTipData((+p.pct||0)+'%',p.label||'')} style="--c:${c}"><span class="ig-sw"></span><span>${esc(p.label||'')}</span><span class="ig-leg-pct">${(+p.pct||0)}%</span></li>`; }).join('');
       let center='';
       if(s.centerLabel){ const cl=String(s.centerLabel).split('|'); center=`<div class="ig-center"><b>${esc(cl[0])}</b>${cl[1]?`<span>${esc(cl.slice(1).join(' '))}</span>`:''}</div>`; }
       body=`<div class="ig-donut">
@@ -1840,8 +1844,8 @@ function renderCanvas(){
         const c=igFigColor(f,j);
         const num=(f.value!=null&&f.value!=='')?String(f.value):(f.pct!=null?String(f.pct):'');
         const unit=f.unit||((f.value==null||f.value==='')&&f.pct!=null?'%':'');
-        const lbl=esc(f.label||''), tip=`<b>${esc(num)}${esc(unit)}</b> · ${lbl}`;
-        return `<div class="ig-fig ig-stat" tabindex="0" role="group" aria-label="${lbl}: ${esc(num)}${esc(unit)}${f.delta?', change '+esc(f.delta):''}" data-igtip="${tip}" style="--c:${c}">
+        const lbl=esc(f.label||'');
+        return `<div class="ig-fig ig-stat" tabindex="0" role="group" aria-label="${lbl}: ${esc(num)}${esc(unit)}${f.delta?', change '+esc(f.delta):''}" ${igTipData(num+unit,f.label||'')} style="--c:${c}">
           ${f.icon&&IG_ICONS[f.icon]?`<span class="ig-icon">${IG_ICONS[f.icon]}</span>`:''}
           <div class="ig-num"><span>${esc(num)}</span>${unit?`<span class="ig-unit">${esc(unit)}</span>`:''}</div>
           <div class="ig-lbl editable" data-bind="slides.${i}.figures.${j}.label" contenteditable="${mode==='edit'}">${lbl}</div>
@@ -2478,7 +2482,9 @@ function wire(){
 let igTipEl;
 function igTip(){ if(!igTipEl){ igTipEl=document.createElement('div'); igTipEl.className='ig-tip'; document.body.appendChild(igTipEl);
     document.addEventListener('pointerdown',e=>{ if(!e.target.closest('[data-igtip]')) igTipEl.classList.remove('show'); }); } return igTipEl; }
-function igShowTip(el){ const tip=igTip(); tip.innerHTML=el.dataset.igtip||''; const r=el.getBoundingClientRect();
+function igShowTip(el){ const tip=igTip(); const v=el.dataset.igv||'', l=el.dataset.igl||'';
+  tip.innerHTML='<b>'+esc(v)+'</b>'+(l?' · '+esc(l):'');   // re-escape here: dataset already decoded the attr once, innerHTML parses again
+  const r=el.getBoundingClientRect();
   let left=r.left+r.width/2-tip.offsetWidth/2; left=Math.max(8,Math.min(left,window.innerWidth-tip.offsetWidth-8));
   tip.style.left=left+'px'; tip.style.top=Math.max(8,r.top-tip.offsetHeight-9)+'px'; tip.classList.add('show'); }
 function igHideTip(){ if(igTipEl) igTipEl.classList.remove('show'); }
@@ -2498,8 +2504,7 @@ function wireInfographic(){
   if(ring&&legend){
     ig.querySelectorAll('[data-seg]').forEach(el=>{
       const pair=[...ig.querySelectorAll('[data-seg="'+el.dataset.seg+'"]')];
-      const tipFrom=el.dataset.igtip?el:pair.find(p=>p.dataset.igtip)||el;
-      const on=()=>{ igShowTip(tipFrom); pair.forEach(p=>p.classList.add('ig-active')); ring.classList.add('has-active'); legend.classList.add('has-active'); };
+      const on=()=>{ igShowTip(el); pair.forEach(p=>p.classList.add('ig-active')); ring.classList.add('has-active'); legend.classList.add('has-active'); };   // segment + legend both carry the tip data; show from the hovered one
       const off=()=>{ igHideTip(); pair.forEach(p=>p.classList.remove('ig-active')); ring.classList.remove('has-active'); legend.classList.remove('has-active'); };
       el.addEventListener('pointerenter',on); el.addEventListener('pointerleave',off);
       el.addEventListener('focus',on); el.addEventListener('blur',off);
@@ -2682,6 +2687,7 @@ $('#exportBtn').onclick=()=>{
   const ins=clone.querySelector('#inspector'); if(ins) ins.innerHTML='';   // edit-only panel never ships
   const pal=clone.querySelector('#palette'); if(pal) pal.innerHTML='';     // edit-only palette never ships
   const ws=clone.querySelector('#worksheet'); if(ws){ ws.classList.remove('show'); ws.setAttribute('aria-hidden','true'); const sh=ws.querySelector('#wsSheet'); if(sh) sh.innerHTML=''; }   // never ship a generated/open worksheet
+  clone.querySelectorAll('.ig-tip').forEach(t=>t.remove());                // drop any infographic tooltip created on hover (recreated fresh on demand)
   clone.classList.remove('ins-collapsed','editnote-off');                 // never bake the author's UI state into the export
   clone.style.removeProperty('--font-scale');                            // start students at 100% (their own zoom is per-browser)
   clone.querySelector('body').className='study';

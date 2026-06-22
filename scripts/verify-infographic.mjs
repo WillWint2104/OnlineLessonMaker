@@ -160,6 +160,25 @@ const hosts = await page.evaluate(() => {
 });
 ok('infographic introduces no external hosts', hosts.length === 0, JSON.stringify(hosts));
 
+// --- XSS: a malicious label must NOT execute when revealed in the tooltip ---
+// (the tooltip value round-trips through a data-* attr → dataset → innerHTML; a single esc()
+//  would be decoded twice. Regression guard for that double-decode sink.)
+const xssPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+await xssPage.goto(URL, { waitUntil: 'networkidle' });
+await xssPage.evaluate(() => {
+  LESSON.slides = [{ type: 'infographic', heading: 'X', variant: 'bar',
+    figures: [{ label: '<img src=x onerror="window.__xss=1">', pct: 50, color: 'primary' }] }];
+  cur = 0; renderNav(); renderSlide();
+});
+await xssPage.click('#presentBtn');
+await xssPage.hover('.ig-bar');
+await xssPage.waitForTimeout(400);
+const fired = await xssPage.evaluate(() => window.__xss === 1);
+const tipHtml = await xssPage.evaluate(() => { const t = document.querySelector('.ig-tip'); return t ? t.innerHTML : ''; });
+ok('XSS: malicious label does not execute in tooltip', !fired, `tip=${tipHtml}`);
+ok('XSS: malicious label is rendered as escaped text', /&lt;img/.test(tipHtml));
+await xssPage.close();
+
 await browser.close();
 console.log(results.join('\n'));
 console.log('\nPage errors: ' + (errs.length ? '\n' + errs.join('\n') : '(none)'));
