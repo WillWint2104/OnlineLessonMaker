@@ -921,6 +921,54 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 #lightbox .lb-close{position:fixed;top:18px;right:22px;width:44px;height:44px;border-radius:50%;font-size:1.2rem;
   background:rgba(255,255,255,.16);color:#fff;z-index:101;}
 #lightbox .lb-close:hover{background:rgba(255,255,255,.28);}
+
+/* ============ WORKSHEET GENERATOR (print to PDF) ============
+   On-screen preview overlay + an @media print block (gated on body.ws-open) that hides app
+   chrome and lays the sheet out for A4. Accents pull from theme tokens; body stays ink-on-white. */
+#worksheet{display:none;position:fixed;inset:0;z-index:200;background:#e8e9e3;overflow:auto;}
+#worksheet.show{display:block;}
+.ws-bar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:11px 22px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(0,0,0,.08);}
+.ws-bar-title{font-family:var(--display);font-weight:600;font-size:1.05rem;color:var(--text);}
+.ws-bar-hint{font-size:.78rem;color:var(--muted);}
+.ws-bar #wsPrint{margin-left:auto;}
+.ws-sheet{max-width:210mm;margin:22px auto 40px;background:#fff;color:#1a1a1a;padding:18mm 16mm;
+  box-shadow:0 6px 28px rgba(0,0,0,.18);font-family:"Hanken Grotesk",system-ui,sans-serif;font-size:11.5pt;line-height:1.45;}
+#worksheet,#worksheet *,#worksheet *::before,#worksheet *::after{ -webkit-print-color-adjust:exact;print-color-adjust:exact; }   /* checkbox/accent borders + tints print even with "no background graphics" */
+#worksheet h1,#worksheet h2{text-transform:none;}   /* id beats theme `:root[data-theme] h2` rules — worksheet reads the same in every theme (e.g. ww1 uppercases headings) */
+.ws-doc-h{margin:0 0 4px;font-family:var(--display);font-size:1.9rem;color:#111;letter-spacing:var(--display-spacing);}
+.ws-doc-sub{color:#444;font-size:1rem;margin:0 0 14px;}
+.ws-id{display:flex;gap:26px;margin:14px 0 6px;padding-bottom:6px;border-bottom:2px solid #222;}
+.ws-id .f{flex:1;display:flex;align-items:flex-end;gap:8px;font-size:.85rem;font-weight:600;color:#333;}
+.ws-id .f .ln{flex:1;border-bottom:1px solid #555;height:1.15em;}
+.ws-sec{margin:20px 0 0;}   /* sections may flow across pages (a long one would otherwise overflow / waste a page); individual .ws-q stay together */
+.ws-sec-h{break-after:avoid;}
+.ws-ref{display:inline-block;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 40%,#aaa);border-radius:4px;padding:2px 8px;margin-bottom:7px;}
+.ws-sec-h{font-family:var(--display);font-size:1.16rem;color:#111;margin:0 0 6px;}
+.ws-q{margin:12px 0 0;break-inside:avoid;page-break-inside:avoid;}
+.ws-q-h{font-weight:600;font-size:1rem;color:#111;margin:0 0 5px;display:flex;gap:8px;}
+.ws-q-h .qn{color:var(--accent);font-weight:700;flex:0 0 auto;}
+.ws-placeholder{color:#b03a2e;font-style:italic;font-weight:600;}
+.ws-lines{margin-top:5px;}
+.ws-rule{height:8.5mm;border-bottom:1px solid #c0c0c0;}
+.ws-srcbox{border:1px solid #bbb;background:#f7f7f3;border-radius:6px;padding:11px 14px;margin:7px 0 4px;
+  font-size:.92rem;line-height:1.5;color:#222;white-space:pre-wrap;}
+.ws-credit{font-size:.76rem;color:#666;margin:2px 0 4px;}
+.ws-check{list-style:none;margin:8px 0 0;padding:0;}
+.ws-check li{display:flex;gap:10px;align-items:flex-start;margin:0 0 8px;font-size:.96rem;color:#1a1a1a;break-inside:avoid;}
+.ws-check li::before{content:"";flex:0 0 15px;width:15px;height:15px;border:1.5px solid #555;border-radius:3px;margin-top:2px;}
+.ws-teeec{font-size:.82rem;color:#3a3a3a;background:#f3f4ef;border-left:3px solid var(--accent);padding:8px 12px;margin:8px 0;border-radius:0 4px 4px 0;}
+.ws-teeec b{color:var(--accent);}
+.ws-empty{color:#666;font-style:italic;padding:30px 0;text-align:center;}
+@media print{
+  body.ws-open{background:#fff !important;}
+  body.ws-open > *{display:none !important;}
+  body.ws-open > #worksheet{display:block !important;position:static;background:#fff;overflow:visible;}
+  body.ws-open #worksheet .ws-bar{display:none !important;}
+  body.ws-open .ws-sheet{max-width:none;margin:0;box-shadow:none;padding:0;font-size:11pt;}
+  @page{size:A4;margin:14mm 13mm;}
+}
 </style>
 </head>
 <body class="study">
@@ -947,6 +995,7 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
     <button class="fzbtn" data-zoomstep="1" aria-label="Larger text">A+</button>
   </div>
   <button class="btn ghost" id="presentBtn">⤢ Present</button>
+  <button class="btn ghost" id="worksheetBtn" title="Build a printable worksheet from this lesson">▤ Worksheet</button>
   <button class="btn ghost" id="dataBtn">⌗ JSON</button>
   <button class="btn" id="exportBtn">↧ Export</button>
 </header>
@@ -990,6 +1039,16 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 </div>
 <button id="presentExit">Exit fullscreen ✕</button>
 <div id="lightbox"><button class="lb-close" id="lbClose">✕</button><div class="lb-body"></div></div>
+
+<div id="worksheet" aria-hidden="true">
+  <div class="ws-bar">
+    <span class="ws-bar-title">Worksheet preview</span>
+    <span class="ws-bar-hint">Use Print → “Save as PDF” for a clean A4 worksheet. App chrome is hidden on print.</span>
+    <button class="btn" id="wsPrint">⎙ Print / Save PDF</button>
+    <button class="btn ghost" id="wsClose">Close</button>
+  </div>
+  <div class="ws-sheet" id="wsSheet"></div>
+</div>
 
 <div class="modal" id="modal" hidden>
   <div class="sheet">
@@ -2010,6 +2069,29 @@ function listItemsGroup(i,s,sel){
     ${rows||'<div class="muted small">No items yet.</div>'}
     <button class="ibtn-add" data-additem="${i}">＋ Add item</button></div>`;
 }
+/* slide types whose printed questions come from `items[].prompt` (not slide.q), and the
+   structural types the worksheet generator handles specially — both exclude the slide.q panel. */
+const WS_ITEMS=new Set(['source','question','model3d']);   // questions come from items[].prompt
+const WS_SPECIAL=new Set(['cover','outcomes','notes','complete','worksheet']);   // handled their own way (worksheet prints its fields[])
+const wsIsContent=t=>!WS_ITEMS.has(t)&&!WS_SPECIAL.has(t);
+function worksheetSection(i,s,sel){
+  // normalise slide.q to {text,lines} objects so editing always works (accepts legacy strings)
+  if(Array.isArray(s.q)) s.q=s.q.map(x=>typeof x==='string'?{text:x,lines:3}:(x&&typeof x==='object'?x:{text:'',lines:3}));
+  const qs=s.q||[];
+  const rows=qs.map((q,j)=>`<div class="qg ${('wq.'+j)===sel?'cur':''}" data-fz="wq.${j}">
+    <div class="qg-h"><b>Q${j+1}</b><span class="qg-tools">
+      <button class="ibtn-x" data-movewq="${i}:${j}:-1" title="Move up">▲</button>
+      <button class="ibtn-x" data-movewq="${i}:${j}:1" title="Move down">▼</button>
+      <button class="ibtn-x" data-delwq="${i}:${j}" title="Remove question">✕</button></span></div>
+    ${inA('Question',`slides.${i}.q.${j}.text`,q.text)}
+    <label>Write-in lines</label><input class="ii" type="number" min="0" max="20" data-bind="slides.${i}.q.${j}.lines" value="${esc(String(q.lines==null?3:q.lines))}"></div>`).join('');
+  return `<div class="isec"><div class="isec-h">Worksheet</div>
+    <div class="muted small">Questions printed for this slide on the worksheet. Leave empty to print a “question needed” placeholder — questions are never auto-invented.</div>
+    ${rows}
+    <button class="ibtn-add" data-addwq="${i}">＋ Add worksheet question</button>
+    <label style="margin-top:8px">Transcript / source material <span class="muted">(never printed — informs question-writing)</span></label>
+    <textarea class="ia" data-bind="slides.${i}.transcript" placeholder="Paste a video transcript or an interactive's key data/notes here.">${esc(s.transcript||'')}</textarea></div>`;
+}
 function inspectorForm(i,s,sel){
   const T=(z,l,k='text')=>{ const path=`slides.${i}.${z}`; const v=getP(LESSON,path);
     return ig(z,sel, k==='area'?inA(l,path,v):inT(l,path,v)); };
@@ -2058,7 +2140,7 @@ function renderInspector(){
   const s=LESSON.slides[cur], i=cur;
   const top = selZone===null
     ? `<div class="ihint">Select a part of the slide to edit it here.</div>`
-    : `<div class="isec"><div class="isec-h">${TYPELAB[s.type]||s.type} · fields</div>${inspectorForm(i,s,selZone)}</div>`;
+    : `<div class="isec"><div class="isec-h">${TYPELAB[s.type]||s.type} · fields</div>${inspectorForm(i,s,selZone)}</div>${wsIsContent(s.type)?worksheetSection(i,s,selZone):''}`;
   ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${top}${layoutSection()}${metaSection()}`;
   wireInspector();
   const c=ins.querySelector('.cur'); if(c) c.scrollIntoView({block:'nearest'});
@@ -2083,6 +2165,11 @@ function wireInspector(){
   ins.querySelectorAll('[data-delitem]').forEach(b=>b.onclick=()=>{ const[si,j]=b.dataset.delitem.split(':').map(Number); LESSON.slides[si].items.splice(j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-moveitem]').forEach(b=>b.onclick=()=>{ const[si,j,d]=b.dataset.moveitem.split(':').map(Number); const arr=LESSON.slides[si].items; const nj=j+d;
     if(nj<0||nj>=arr.length) return; [arr[j],arr[nj]]=[arr[nj],arr[j]]; selZone='item.'+nj; renderSlide(); });
+  // ---- worksheet questions (slide.q) ----
+  const awq=ins.querySelector('[data-addwq]'); if(awq) awq.onclick=()=>{ const si=+awq.dataset.addwq; const s=LESSON.slides[si]; (s.q=s.q||[]).push({text:'New worksheet question.',lines:3}); selZone='wq.'+(s.q.length-1); renderSlide(); };
+  ins.querySelectorAll('[data-delwq]').forEach(b=>b.onclick=()=>{ const[si,j]=b.dataset.delwq.split(':').map(Number); LESSON.slides[si].q.splice(j,1); selZone=null; renderSlide(); });
+  ins.querySelectorAll('[data-movewq]').forEach(b=>b.onclick=()=>{ const[si,j,d]=b.dataset.movewq.split(':').map(Number); const arr=LESSON.slides[si].q; const nj=j+d;
+    if(nj<0||nj>=arr.length) return; [arr[j],arr[nj]]=[arr[nj],arr[j]]; selZone='wq.'+nj; renderSlide(); });
   // ---- media block: add/replace/remove · url · fit · focus · zoom · cover hero ----
   ins.querySelectorAll('[data-mediapick]').forEach(b=>b.onclick=()=>pickMediaFile(b.dataset.mediapick));
   ins.querySelectorAll('[data-mediaurl]').forEach(el=>el.addEventListener('input',()=>{ setP(LESSON,el.dataset.mediaurl,el.value.trim()); renderCanvas(); }));
@@ -2363,6 +2450,7 @@ $('#exportBtn').onclick=()=>{
   clone.querySelector('#slide').innerHTML='';        // re-renders fresh from data on open
   const ins=clone.querySelector('#inspector'); if(ins) ins.innerHTML='';   // edit-only panel never ships
   const pal=clone.querySelector('#palette'); if(pal) pal.innerHTML='';     // edit-only palette never ships
+  const ws=clone.querySelector('#worksheet'); if(ws){ ws.classList.remove('show'); ws.setAttribute('aria-hidden','true'); const sh=ws.querySelector('#wsSheet'); if(sh) sh.innerHTML=''; }   // never ship a generated/open worksheet
   clone.classList.remove('ins-collapsed','editnote-off');                 // never bake the author's UI state into the export
   clone.style.removeProperty('--font-scale');                            // start students at 100% (their own zoom is per-browser)
   clone.querySelector('body').className='study';
@@ -2372,6 +2460,79 @@ $('#exportBtn').onclick=()=>{
   a.download=(LESSON.meta.title||'lesson').replace(/[^\w]+/g,'-').toLowerCase()+'.html';
   a.click(); URL.revokeObjectURL(a.href);
 };
+
+/* ---------- worksheet generator: build a printable worksheet from the loaded JSON ---------- */
+function wsLines(n){ n=(n==null?3:parseInt(n,10)); if(isNaN(n)) n=3; n=Math.max(0,Math.min(20,n));
+  let r=''; for(let k=0;k<n;k++) r+='<div class="ws-rule"></div>'; return `<div class="ws-lines">${r}</div>`; }
+function wsRef(i,total,heading){ return `<div class="ws-ref">Slide ${i+1} / ${total}${heading?` — ${esc(heading)}`:''}</div>`; }
+function wsQText(q){ return typeof q==='string'?q:((q&&q.text)||''); }
+function wsQLines(q){ return (q&&typeof q==='object'&&q.lines!=null)?q.lines:3; }
+function buildWorksheet(){
+  const slides=(LESSON.slides||[]), total=slides.length;
+  if(!total) return `<div class="ws-empty">This lesson has no slides yet.</div>`;
+  const cover=slides.find(s=>s.type==='cover');
+  const inquiry=esc((cover&&cover.sub)||'');
+  let qn=0, coverUsed=false, hadComplete=false;
+  const endSection=(ref)=>{   // whole-lesson extended response (from the cover inquiry) + TEEEC, in one unbreakable block
+    let h=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">Extended response — the whole inquiry</h2><div class="ws-q">`;
+    if(inquiry){ qn++; h+=`<div class="ws-q-h"><span class="qn">Q${qn}</span>${inquiry}</div>`; }
+    else h+=`<div class="ws-q-h ws-placeholder">[ Worksheet question needed — extended response (set the cover’s inquiry) ]</div>`;
+    return h+`<div class="ws-teeec"><b>TEEEC</b> — Topic sentence · Explain · Evidence · Elaborate · Concluding link. Use evidence from across the lesson.</div>${wsLines(14)}</div></section>`;
+  };
+  let out=`<div class="ws-head">
+    <h1 class="ws-doc-h">${esc(LESSON.meta&&LESSON.meta.title||'Lesson')} — Worksheet</h1>
+    ${inquiry?`<p class="ws-doc-sub"><b>Inquiry:</b> ${inquiry}</p>`:''}
+    <div class="ws-id"><div class="f">Name <span class="ln"></span></div><div class="f">Class <span class="ln"></span></div><div class="f">Date <span class="ln"></span></div></div>
+  </div>`;
+  slides.forEach((s,i)=>{
+    const ref=wsRef(i,total,title(s));
+    if(s.type==='cover'){
+      if(!coverUsed){ coverUsed=true; return; }                       // first cover = the header above
+      out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">${esc(s.title||'Section')}</h2></section>`; return;
+    }
+    if(s.type==='outcomes'){
+      const outs=(s.outcomes||[]).filter(Boolean);
+      out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">What you should be able to do</h2>
+        ${outs.length?`<ul class="ws-check">${outs.map(o=>`<li>${esc(o)}</li>`).join('')}</ul>`:''}</section>`; return;
+    }
+    if(s.type==='notes'){
+      const blocks=(s.blocks||[]);
+      out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">Record the key points</h2>
+        ${blocks.map(b=>`<div class="ws-q"><div class="ws-q-h">${esc(b.h||'Key point')}</div>${wsLines(b.lines||3)}</div>`).join('')||wsLines(5)}</section>`; return;
+    }
+    if(WS_ITEMS.has(s.type)){                                          // source / question / model3d → items[].prompt
+      const items=(s.items||[]);
+      let box='';
+      if(s.type==='source'){ const t=(s.media&&s.media.kind==='text'&&s.media.text)||s.text||'';
+        if(t){ box=`<div class="ws-srcbox">${esc(t)}</div>`; if(s.credit) box+=`<div class="ws-credit">${esc(s.credit)}</div>`; } }
+      const qhtml=items.length?items.map(it=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(it.prompt||'')}</div>${wsLines(it.lines||4)}</div>`; }).join('')
+        :`<div class="ws-q"><div class="ws-q-h ws-placeholder">[ Worksheet question needed — Slide ${i+1} ]</div>${wsLines(4)}</div>`;
+      out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">${esc(title(s)||(s.type==='source'?'Source':'Questions'))}</h2>${box}${qhtml}</section>`; return;
+    }
+    if(s.type==='worksheet'){                                          // the on-screen analysis-worksheet slide → print its fields[] as prompts
+      const fields=(s.fields||[]);
+      const qhtml=fields.length?fields.map(f=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(f.n||'')}</div>${f.hint?`<div class="ws-credit">${esc(f.hint)}</div>`:''}${wsLines(f.kind==='matrix'?2:3)}</div>`; }).join('')
+        :`<div class="ws-q"><div class="ws-q-h ws-placeholder">[ Worksheet question needed — Slide ${i+1} ]</div>${wsLines(4)}</div>`;
+      out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">${esc(title(s)||'Worksheet')}</h2>${qhtml}</section>`; return;
+    }
+    if(s.type==='complete'){ hadComplete=true; out+=endSection(ref); return; }
+    // content slide → printed questions come ONLY from slide.q; otherwise a marked placeholder (never invented)
+    const qs=(s.q||[]);
+    let qhtml;
+    if(qs.length) qhtml=qs.map(q=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(wsQText(q))}</div>${wsLines(wsQLines(q))}</div>`; }).join('');
+    else qhtml=`<div class="ws-q"><div class="ws-q-h ws-placeholder">[ Worksheet question needed — Slide ${i+1} ]</div>${wsLines(4)}</div>`;
+    out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">${esc(title(s)||TYPELAB[s.type]||'Slide')}</h2>${qhtml}</section>`;
+  });
+  if(!hadComplete) out+=endSection('');   // lessons without a 'complete' slide still get the whole-lesson extended response
+  return out;
+}
+function openWorksheet(){ $('#wsSheet').innerHTML=buildWorksheet(); const el=$('#worksheet');
+  el.classList.add('show'); el.setAttribute('aria-hidden','false'); document.body.classList.add('ws-open'); el.scrollTop=0; }
+function closeWorksheet(){ const el=$('#worksheet'); el.classList.remove('show'); el.setAttribute('aria-hidden','true'); document.body.classList.remove('ws-open'); }
+$('#worksheetBtn').onclick=openWorksheet;
+$('#wsClose').onclick=closeWorksheet;
+$('#wsPrint').onclick=()=>window.print();
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#worksheet').classList.contains('show')) closeWorksheet(); });
 
 /* ---------- JSON data panel ---------- */
 const modal=$('#modal');
