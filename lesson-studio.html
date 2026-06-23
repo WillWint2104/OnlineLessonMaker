@@ -3125,13 +3125,18 @@ const PACK_ICONS={
 };
 function tpIc(name,size){ size=size||22; const p=PACK_ICONS[name]||PACK_ICONS.image;
   return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`; }
-/* image slot: a real (relative repo) image if given, else the theme gradient placeholder
-   (the gradient lives on the container's CSS) + a small "… placeholder" corner tag. */
+/* Normalise an image field to a path string. Accepts a bare relative path ("assets/foo.jpg")
+   OR an object that carries the path under `src`/`image` (e.g. imageText's {src,caption,tag}) —
+   so a supplied path always renders no matter which shape the author used. */
+function tpSrc(image){ if(image&&typeof image==='object') return String(image.src||image.image||'').trim(); return String(image||'').trim(); }
+/* image slot: a real (relative repo) image if a path is given, else the theme gradient
+   placeholder (the gradient lives on the container's CSS) + a small "… placeholder" corner tag. */
 function tpImg(image,phLabel,phIcon){
-  if(image && String(image).trim()) return `<img class="tp-img-real" src="${esc(image)}" alt="${esc(phLabel||'')}">`;
+  const src=tpSrc(image);
+  if(src) return `<img class="tp-img-real" src="${esc(src)}" alt="${esc(phLabel||'')}">`;
   return `<div class="tp-ph-tag">${tpIc(phIcon||'image',18)}<span>${esc(phLabel||'Image placeholder')}</span></div>`;
 }
-function tpHasImg(image){ return !!(image && String(image).trim()); }
+function tpHasImg(image){ return !!tpSrc(image); }
 function tpNum(v,d){ return (v===0||v)?v:d; }   // keep an explicit 0
 /* xp / progress reused across types */
 function tpXP(s){ return (s.xp===0||s.xp)?String(s.xp):'0'; }
@@ -3214,7 +3219,7 @@ function imOutcomes(s){
 }
 
 function imImageText(s){
-  const img=s.image||{};
+  const img=(s.image&&typeof s.image==='object')?s.image:{src:s.image||''};
   const secs=Array.isArray(s.sections)?s.sections:[];
   const sicons=['armor','dumbbell','target'];
   const points=secs.map((sec,j)=>`<div class="tp-point"><span class="tp-pic">${tpIc(sec.icon||sicons[j%3],20)}</span><div><h3 class="tp-serif tp-ph3">${esc(sec.heading||'')}</h3><p class="tp-pbody">${esc(sec.body||'')}</p></div></div>`).join('');
@@ -3326,7 +3331,6 @@ function mhTitle(s){
         <div class="tp-hero">
           ${tpImg(s.image,'Archival plate placeholder','archive')}
           <div class="tp-hover"></div>
-          <div class="tp-playover" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:74px;height:74px;border-radius:9999px;background:rgba(132,15,22,.2);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;color:#fff;">${tpIc('play',36)}</div>
           <div class="tp-hc"><div class="tp-hcmax">
             ${s.eyebrow?`<span class="tp-modlab">${esc(s.eyebrow)}</span>`:''}
             <h1 class="tp-htitle">${esc(s.title||'')}</h1>
@@ -3368,7 +3372,7 @@ function mhOutcomes(s){
 }
 
 function mhImageText(s){
-  const img=s.image||{};
+  const img=(s.image&&typeof s.image==='object')?s.image:{src:s.image||''};
   const secs=Array.isArray(s.sections)?s.sections:[];
   const comps=secs.map(sec=>`<div class="tp-comp"><h4>${esc(sec.heading||'')}</h4><p>${esc(sec.body||'')}</p></div>`).join('');
   const sup=Array.isArray(s.supplemental)?s.supplemental:[];
@@ -3624,7 +3628,29 @@ function packSourceAnalysis(s,i){
 
 /* ---------- guidedResponse (short + extended; shared DOM, theme via CSS) ---------- */
 function packGuidedResponse(s,i){
-  const mode=(s.mode==='extended')?'extended':'short';
+  const mode = s.mode==='extended' ? 'extended' : (s.mode==='quiz' ? 'quiz' : 'short');
+  if(mode==='quiz'){
+    // single-slide quiz: numbered questions, each revealing its own model answer after an attempt
+    const qs=Array.isArray(s.questions)?s.questions:[];
+    const qHtml=qs.map((q,k)=>{ const fid='q'+k;
+      return `<li class="tp-para tp-quizitem" data-tp-block><div class="tp-phead"><span class="tp-pnum">${k+1}</span><div>
+          <label class="tp-plabel" for="${fid}-ta">${esc(q.question||'')}</label>
+          ${q.marks?`<div class="tp-tmeta"><span class="tp-marks">${esc(q.marks)}</span></div>`:''}</div></div>
+        <textarea id="${fid}-ta" class="tp-answ" rows="2" data-tp-field="${fid}" aria-label="Question ${k+1} — your answer" placeholder="Type your answer..."></textarea>
+        <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="question ${k+1}" data-tp-donelabel="Answer shown">${tpIc('lightbulb',15)} Reveal answer</button></div>
+        <div class="tp-pmodel" id="${fid}-model" data-tp-model role="region" aria-label="Answer for question ${k+1}"><div class="tp-pmh">${tpIc('check',14)} Answer</div><p>${esc(q.answer||'')}</p></div></li>`;
+    }).join('');
+    return tpLive()+packHead(s,tpProg(s,40))
+      +`<main class="tp-main tp-scrollmain"><div class="tp-gr-wrap">
+          <span class="tp-scrollnote">Scrolls within the slide · content-heavy types only</span>
+          <div class="tp-gr-lh"><div class="tp-sa-ey"><span class="rule"></span><span>${esc(s.eyebrow||'Quick Quiz')}</span></div>
+            <h1 class="tp-gr-h1 tp-serif">${esc(s.title||'')}</h1>
+            <div class="tp-sa-meta"><span class="tp-sa-tag">${tpIc('quiz',14)} ${esc(s.tag||'Starter quiz')}</span>${s.time?`<span class="tp-sa-mtime">${tpIc('clock',14)} ${esc(s.time)}</span>`:''}</div></div>
+          ${s.intro?`<p class="tp-sa-lead">${esc(s.intro)}</p>`:'<p class="tp-sa-lead">Answer each question in the box, then reveal the model answer — they stay on this slide.</p>'}
+          <ol class="tp-scaff">${qHtml||'<li class="tp-para"><p class="tp-pguide">No questions yet.</p></li>'}</ol>
+        </div></main>`
+      +packFoot(s,s.cta||'Continue');
+  }
   if(mode==='short'){
     const crit=Array.isArray(s.criteria)?s.criteria:[];
     return tpLive()+packHead(s,tpProg(s,80))
