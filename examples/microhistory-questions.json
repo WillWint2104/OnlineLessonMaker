@@ -1,0 +1,104 @@
+{
+  "meta": { "title": "MicroHistory Archive — Source & Response Tasks", "theme": "microhistory" },
+  "slides": [
+    {
+      "type": "title",
+      "eyebrow": "Module 04 · Great War Tactics",
+      "title": "The Somme: Sources & Findings",
+      "subtitle": "Analyse a command source, then file your written findings on the Western Front.",
+      "cta": "Begin briefing",
+      "progress": 5,
+      "xp": 125,
+      "wordmark": "The Great War Archive",
+      "meta": [
+        { "label": "Archival Access", "value": "Intelligence Briefing 4A-1916", "icon": "shield" },
+        { "label": "Duration", "value": "25 Minutes" },
+        { "label": "Level", "value": "Scholarly" }
+      ]
+    },
+    {
+      "type": "sourceAnalysis",
+      "eyebrow": "Document Analysis · Archive 44-B",
+      "title": "Source A — Haig's Somme Diary",
+      "tag": "Primary Source",
+      "time": "15 min task · 14 marks",
+      "progress": 72,
+      "xp": 125,
+      "source": {
+        "label": "Document #1916-SOM-01",
+        "transcript": "\"The general situation was favourable. The men were in splendid spirits, and very few of the enemy could have survived our terrific bombardment.\" — Haig's diary, 1 July 1916"
+      },
+      "provenance": [
+        { "icon": "doc", "label": "Origin", "value": "Private war diary" },
+        { "icon": "calendar", "label": "Date", "value": "1 July 1916" },
+        { "icon": "personCircle", "label": "Author", "value": "F.M. Sir Douglas Haig" },
+        { "icon": "lock", "label": "Classification", "value": "Personal record" }
+      ],
+      "tasks": [
+        { "numeral": "I", "question": "Identify the origin, date and purpose of Source A. Who created it, and why?", "marks": "3 marks", "skill": "Origin & Purpose", "model": "Source A is an extract from the private war diary of Field Marshal Sir Douglas Haig, commander of the BEF, written on 1 July 1916 — the opening day of the Battle of the Somme. As a personal diary it was a private record, though Haig was conscious it might shape his later reputation." },
+        { "numeral": "II", "question": "Assess the reliability of this source as evidence for the success of the first day of the Somme.", "marks": "5 marks", "skill": "Reliability", "model": "Its reliability is mixed. As a first-hand commander's account it is immediate and authoritative, but Haig had strong motive to present the day favourably and sat far behind the front line. His optimistic tone jars against the ~57,000 British casualties of that single day, exposing both his bias and the limits of his information." },
+        { "numeral": "III", "question": "Evaluate the usefulness of this source for a historian studying British command on the Western Front.", "marks": "6 marks", "skill": "Usefulness", "model": "Despite its bias the source is highly useful: it lays bare the assumptions of British high command and how detachment and optimism shaped decisions. Corroborated with casualty returns and soldiers' letters, it helps explain the gulf between command expectation and front-line reality." }
+      ],
+      "hint": { "label": "Archivist's approach", "text": "Weigh Origin, Purpose, Value and Limitation (OPVL). A source's bias does not make it useless — it makes it useful evidence of perspective." },
+      "cta": "Continue"
+    },
+    {
+      "type": "guidedResponse",
+      "mode": "short",
+      "eyebrow": "Short Response",
+      "title": "Explain the stalemate",
+      "marks": "4 marks",
+      "time": "3–4 sentences",
+      "progress": 80,
+      "xp": 125,
+      "question": "Explain two reasons why trench warfare produced a stalemate on the Western Front.",
+      "model": "Defensive technology outpaced offensive tactics: machine guns and barbed wire made infantry advances across No Man's Land catastrophic, while deep, crenellated trench systems could absorb and survive artillery bombardment. With both sides equally entrenched along a continuous 475-mile line, neither could outflank the other, so attacks won metres at the cost of thousands of lives.",
+      "criteria": [
+        "Identifies two valid factors (e.g. machine guns/wire, trench depth, continuous line).",
+        "Explains how each prevented a breakthrough.",
+        "Uses accurate historical terminology."
+      ],
+      "cta": "Continue"
+    },
+    {
+      "type": "guidedResponse",
+      "mode": "extended",
+      "eyebrow": "Extended Response",
+      "title": "Assess the technology that broke the deadlock",
+      "marks": "20 marks",
+      "time": "~600 words · 20 marks",
+      "progress": 86,
+      "xp": 125,
+      "focusReading": true,
+      "question": "'New technology, not new tactics, finally broke the deadlock of the Western Front.' Assess this statement.",
+      "stimulus": { "label": "Stimulus · Source B", "text": "\"The monster approached... it passed over the trenches like a giant beetle, impervious to machine gun fire.\" — Archival field report, 1916" },
+      "paragraphs": [
+        { "label": "Introduction", "guide": "State your thesis. Does the evidence favour technology, tactics, or their combination?", "model": "While the tank and the aeroplane captured the imagination, the deadlock broke only when new technology was married to new tactics. This response argues that technology was necessary but not sufficient — the decisive change was the combined-arms doctrine of 1918." },
+        { "label": "Body 1 — Technology", "guide": "Examine the tank, artillery advances and air power.", "model": "The Mark I tank could cross wire and trenches that pinned infantry, and the creeping barrage and aerial reconnaissance transformed the battlefield. Yet early tanks were slow, unreliable and few in number, and could not hold ground alone." },
+        { "label": "Body 2 — Tactics", "guide": "Address the creeping barrage, infiltration and combined arms.", "model": "The breakthroughs of 1918 came from coordinating these tools: infantry advanced behind a creeping barrage, tanks crushed strongpoints, and aircraft directed fire. Infiltration tactics bypassed strongpoints rather than assaulting them head-on." },
+        { "label": "Conclusion", "guide": "Reach a clear judgement on technology versus tactics.", "model": "Technology supplied the means, but tactics supplied the method. The deadlock broke not because of any single weapon but because commanders finally learned to combine them — making the statement only half true." }
+      ],
+      "cta": "Continue"
+    },
+    {
+      "type": "outro",
+      "eyebrow": "Module Debrief",
+      "title": "The Somme: Sources & Findings",
+      "subtitle": "Module complete. Your findings are filed — the archive thanks you for your service, Researcher.",
+      "progress": 100,
+      "xp": 125,
+      "stamp": "FILE CLOSED",
+      "stats": [
+        { "icon": "trophy", "label": "XP Earned", "value": "+125" },
+        { "icon": "doc", "label": "Tasks Filed", "value": "6 / 6" }
+      ],
+      "recap": [
+        { "icon": "map", "title": "Source Skills", "body": "Reading Haig's diary critically as evidence for British command." },
+        { "icon": "pen", "title": "Short Response", "body": "Explaining the causes of the trench stalemate." },
+        { "icon": "shield", "title": "Extended Response", "body": "Assessing technology versus tactics on the Western Front." }
+      ],
+      "actions": { "review": "Review Module", "next": "Next Module" },
+      "footer": "File No: 1916-S-OBJ · The Great War Archive"
+    }
+  ]
+}

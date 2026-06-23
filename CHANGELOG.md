@@ -8,6 +8,20 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Three new typed-answer slide types in the imperium + microhistory pack** — `sourceAnalysis`,
+  `guidedResponse` (`mode: "short"` | `"extended"`) and `outro`. Extends the existing
+  `renderPackSlide` machinery (shared DOM, theme-scoped CSS, reused chrome); existing types and
+  themes are untouched. Features: per-task / per-paragraph **model answers revealed only after a
+  non-empty attempt** (short mode locks the box after submit), **session-kept typed answers** in
+  in-memory runtime state keyed by slide + field (restored on navigation, cleared on reload — no
+  `localStorage`), **in-canvas scroll** between fixed header/footer, an accessible **Focus reading**
+  modal (role=dialog, aria-modal, Esc/×, focus moves in and returns to the trigger), and the
+  **outro hides its score tile gracefully** when no score stat is supplied. Accessibility baseline
+  is always on: labelled textareas, focusable stimulus/question regions, `aria-live` reveal
+  announcements, visible focus rings. The present-mode skip-guard is reused (`data-tp-done` = all
+  boxes filled) so a background click can't skip an unanswered task. `SCHEMA.md` updated; worked
+  examples `examples/{imperium,microhistory}-questions.json`. Verified with
+  `scripts/verify-newtypes.mjs` (28 checks across both themes); `validate` green.
 - **Published showcase lessons for the two new themes** — `lessons/imperium-scholar-sample.html`
   and `lessons/microhistory-archive-sample.html`, standalone self-contained exports of the
   `examples/*.json` worked lessons (all 7 pack slide types each), so the imperium/microhistory

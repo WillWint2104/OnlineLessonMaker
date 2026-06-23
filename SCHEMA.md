@@ -29,7 +29,7 @@ Each example exercises all seven types end‑to‑end. A lesson is:
 | Field | Type | Notes |
 |---|---|---|
 | `theme` | — | Set once on `meta.theme` (`"imperium"` \| `"microhistory"`), not per slide. |
-| `type` | string | One of `title`, `outcomes`, `text`, `imageText`, `infographic`, `video`, `knowledgeCheck`. |
+| `type` | string | One of `title`, `outcomes`, `text`, `imageText`, `infographic`, `video`, `knowledgeCheck`, `sourceAnalysis`, `guidedResponse`, `outro`. |
 | `progress` | number 0–100 | Drives the header progress bar (and footer/qbar where shown). |
 | `xp` | number \| string | Shown in the header XP chip. |
 | `hp` | string | Optional header HP chip (e.g. `"5"`, `"65%"`). |
@@ -51,7 +51,8 @@ small “… placeholder” corner tag. No external URLs — they are blocked by
   check cross target flag book quote pin doc star external clipboard refrack mail info bust
   ribbon armor dumbbell stopwatch brain monument backpack wheat map temple pagoda silk spice
   grain zoomIn zoomOut bookmark personCircle film pause fullscreen calendar quiz notes
-  checkCircle xCircle lightbulb colosseum tank`. Unknown names fall back to a generic icon.
+  checkCircle xCircle lightbulb colosseum tank focus lock list pen quotemark refresh scope
+  laurel vault`. Unknown names fall back to a generic icon.
 
 ---
 
@@ -149,6 +150,75 @@ stays disabled until a correct answer is chosen** (wrong answers can be retried)
 | `feedback` | `{correctTitle,correctText,incorrectTitle,incorrectText}` | both | Shown after answering. |
 | `artifact` | `{image?,id?,caption?}` | both | imperium → figure + reference tag; microhistory → polaroid + caption. |
 | `note` | `{title,text}` | microhistory | Archivist’s‑note box. |
+
+---
+
+## `sourceAnalysis`
+
+A primary source (image placeholder and/or transcript) with provenance beside scaffolded analysis
+tasks. The source column is **sticky**; the whole slide **scrolls within the canvas**. Each task has
+its own typed answer box; **its model answer unlocks only after a non‑empty attempt in that box**
+(per‑task gate). A **Focus reading** button opens an accessible modal (role=dialog, Esc / × to close,
+focus returns to the trigger). Answers are kept in memory for the session and restored when you
+navigate back (no `localStorage`). imperium = ivory scholar cards + Roman‑numeral ring task numbers;
+microhistory = polaroid source + dossier provenance + square hard‑bordered task numbers.
+
+| Field | Type | Used by | Notes |
+|---|---|---|---|
+| `eyebrow` | string | both | Section label. |
+| `title` | string | both | Source heading. |
+| `tag` | string | both | Pill beside the meta line (e.g. *Primary Source*). |
+| `time` | string | both | Meta line (e.g. *15 min · 14 marks*). |
+| `source` | `{image?,label?,transcript?}` | both | The source: gradient placeholder unless `image` is a relative path; `label` is the source name; `transcript` shows under the image and feeds Focus reading. |
+| `provenance[]` | `{icon?,label,value}` | both | Provenance rows (Origin / Date / Author / …). |
+| `tasks[]` | `{numeral?,question,marks?,skill?,model}` | both | One typed box + revealable `model` per task (`numeral` defaults to I/II/III…). |
+| `hint` | `{label,text}` | both | Optional approach note. |
+| `focusQuestion` | string | both | Optional prompt shown in the Focus reading modal. |
+| `cta` | string | both | Footer button (default *Continue*). |
+
+## `guidedResponse`
+
+Scaffolded writing. `mode` selects the layout. The whole slide **scrolls within the canvas**, answers
+are **session‑kept**, and reveals are gated on a non‑empty attempt.
+
+- **`mode: "short"`** — one labelled textarea + **Submit attempt** → reveals a single model response
+  plus a marking‑guide list (the box becomes read‑only after submit).
+- **`mode: "extended"`** — an author‑defined list of **paragraph boxes** (e.g. Introduction / Body /
+  Conclusion); each has guidance, its own textarea, and **its own model paragraph revealed after that
+  box's attempt**. Set `focusReading: true` to add a **Focus reading** modal (question + stimulus).
+
+| Field | Type | Used by | Notes |
+|---|---|---|---|
+| `mode` | `"short"` \| `"extended"` | both | Layout selector (default `short`). |
+| `eyebrow` | string | both | Section label. |
+| `title` | string | both | Task heading. |
+| `marks` | string | both | Marks pill in the question header. |
+| `time` | string | both | Meta line (e.g. *3–4 sentences*, *~600 words*). |
+| `question` | string | both | The prompt. |
+| `stimulus` | `{label,text}` | both | Optional source/stimulus box. |
+| `model` | string | both (short) | Model response revealed after submit. |
+| `criteria[]` | string[] | both (short) | Marking‑guide bullets. |
+| `paragraphs[]` | `{label,guide,model}` | both (extended) | One box + revealable model per paragraph. |
+| `focusReading` | boolean | both (extended) | Adds the Focus reading modal. |
+| `cta` | string | both | Footer button (default *Continue*). |
+
+## `outro`
+
+Lesson‑complete screen. Up to **3 stat tiles** — **omit the score entry from `stats[]` to hide that
+tile** (it degrades gracefully). imperium = laurel‑wreath crest + gold glow; microhistory =
+*FILE CLOSED* stamp + dossier vault crest.
+
+| Field | Type | Used by | Notes |
+|---|---|---|---|
+| `eyebrow` | string | both | Above the headline (imperium → ruled label; microhistory → chip). |
+| `title` | string | both | Completion headline. |
+| `subtitle` | string | both | Standfirst. |
+| `stats[]` | `{icon?,label,value}` | both | Up to 3 tiles (XP / score / tasks). **Leave a tile out to hide it.** |
+| `recap[]` | `{icon?,title,body}` | both | “What you covered” list. |
+| `recapLabel` | string | both | Optional list heading (default *What you covered*). |
+| `actions` | `{review?,next?}` | both | Ghost *Review* (restarts the lesson) + primary *Next* (advances). |
+| `stamp` | string | microhistory | Stamp text (default *FILE CLOSED*). |
+| `footer` | string | both | Footnote line. |
 
 ---
 

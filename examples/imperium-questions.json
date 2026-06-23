@@ -1,0 +1,103 @@
+{
+  "meta": { "title": "Imperium Scholar — Source & Response Tasks", "theme": "imperium" },
+  "slides": [
+    {
+      "type": "title",
+      "eyebrow": "Module 01",
+      "title": "Augustus & the Sources",
+      "subtitle": "Source analysis and scaffolded written responses on the rise of Augustus.",
+      "cta": "Begin tasks",
+      "progress": 5,
+      "xp": 40,
+      "meta": [
+        { "label": "Duration", "value": "25 Mins", "icon": "clock" },
+        { "label": "Reward", "value": "60 XP", "icon": "trophy" },
+        { "label": "Skill", "value": "Source work", "icon": "scroll" }
+      ]
+    },
+    {
+      "type": "sourceAnalysis",
+      "eyebrow": "Source Analysis",
+      "title": "The Res Gestae Divi Augusti",
+      "tag": "Primary Source",
+      "time": "15 min task · 14 marks",
+      "progress": 72,
+      "xp": 60,
+      "source": {
+        "label": "Source A",
+        "transcript": "\"I found Rome a city of bricks and left it a city of marble. In my sixth and seventh consulships I transferred the republic from my power to the dominion of the senate and people of Rome.\" — Res Gestae Divi Augusti"
+      },
+      "provenance": [
+        { "icon": "doc", "label": "Origin", "value": "Inscribed bronze pillars, Rome" },
+        { "icon": "calendar", "label": "Date", "value": "14 CE (after Augustus' death)" },
+        { "icon": "personCircle", "label": "Author", "value": "Augustus (autobiographical)" },
+        { "icon": "scroll", "label": "Type", "value": "Official state record" }
+      ],
+      "tasks": [
+        { "numeral": "I", "question": "Identify the origin, date and purpose of this source. Who created it, and for what audience?", "marks": "3 marks", "skill": "Origin & Purpose", "model": "The Res Gestae is an autobiographical inscription composed by the emperor Augustus and published after his death in 14 CE, set on bronze pillars and copied across the empire. Its purpose was to present an official, favourable record of his achievements to the Roman people and posterity." },
+        { "numeral": "II", "question": "Assess the reliability of the Res Gestae as evidence for Augustus' reign. What are its limitations?", "marks": "5 marks", "skill": "Reliability", "model": "As a first-hand account it is invaluable, but its reliability is limited by clear bias: Augustus selects achievements that glorify him and omits the violence and proscriptions of his rise. It is propaganda as much as record — reliable for what Augustus wished to project, less so for objective events." },
+        { "numeral": "III", "question": "Evaluate the usefulness of this source for a historian studying the transition from Republic to Empire.", "marks": "6 marks", "skill": "Usefulness", "model": "Despite its bias, the source is highly useful: it reveals how Augustus wished to be seen and how he legitimised one-man rule in republican language. A historian gains direct insight into imperial self-presentation, provided it is corroborated with sources such as Tacitus and Suetonius." }
+      ],
+      "hint": { "label": "Scholarly approach", "text": "Frame your evaluation around Origin, Purpose, Value and Limitation (OPVL). A source's bias does not make it useless — it makes it useful evidence of perspective." },
+      "cta": "Continue"
+    },
+    {
+      "type": "guidedResponse",
+      "mode": "short",
+      "eyebrow": "Short Response",
+      "title": "Explain the role of the Senate",
+      "marks": "4 marks",
+      "time": "3–4 sentences",
+      "progress": 80,
+      "xp": 60,
+      "question": "Explain two ways the Senate maintained its authority during the Roman Republic.",
+      "model": "The Senate maintained authority through its auctoritas — the moral weight of collective prestige that magistrates dared not defy — and through the mos maiorum, the binding 'custom of the ancestors' that framed every decree. It further entrenched power via control of the treasury and oversight of state religion, ensuring no magistrate could act without senatorial sanction.",
+      "criteria": [
+        "Identifies two valid mechanisms (e.g. auctoritas, mos maiorum, control of finance/religion).",
+        "Explains how each sustained senatorial authority.",
+        "Uses accurate historical terminology."
+      ],
+      "cta": "Continue"
+    },
+    {
+      "type": "guidedResponse",
+      "mode": "extended",
+      "eyebrow": "Extended Response",
+      "title": "Assess the impact of Augustus",
+      "marks": "20 marks",
+      "time": "~600 words · 20 marks",
+      "progress": 86,
+      "xp": 60,
+      "focusReading": true,
+      "question": "'Augustus restored the Republic in name but founded a monarchy in fact.' Assess this statement with reference to his political, military and religious powers.",
+      "stimulus": { "label": "Stimulus · Source A", "text": "\"In my sixth and seventh consulships, after I had extinguished civil wars, I transferred the republic from my power to the dominion of the senate and people of Rome.\" — Res Gestae, 34" },
+      "paragraphs": [
+        { "label": "Introduction", "guide": "State your thesis and define the terms — what would 'in name' versus 'in fact' each require?", "model": "Augustus's settlement of 27 BCE presented a restored Republic, yet the substance of power rested with him alone. This response argues that while republican forms endured, Augustus founded a de facto monarchy through his accumulation of political, military and religious authority." },
+        { "label": "Body 1 — Political", "guide": "Examine his constitutional powers. Which offices and grants let him dominate the state legally?", "model": "Politically, Augustus held tribunicia potestas — granting perpetual veto and the right to convene Senate and people — alongside imperium maius, which placed every province under his ultimate command. No single magistrate had ever lawfully combined such powers." },
+        { "label": "Body 2 — Military & Religious", "guide": "Address his control of the legions and the state religion.", "model": "The legions swore personal loyalty to Augustus and depended on him for pay and discharge, giving him a private army in all but name. As pontifex maximus he controlled the state cult and calendar, fusing political command with sacred authority in one person." },
+        { "label": "Conclusion", "guide": "Reach a clear judgement on the 'name vs fact' proposition.", "model": "The 'restoration' was therefore largely symbolic: republican institutions survived only insofar as they served Augustus. In name a princeps among equals, in fact the sole ruler — a monarchy clothed in republican garments." }
+      ],
+      "cta": "Continue"
+    },
+    {
+      "type": "outro",
+      "eyebrow": "Lesson Complete",
+      "title": "Augustus & the Sources",
+      "subtitle": "Well done — you've completed the source-analysis and response tasks on the rise of Augustus.",
+      "progress": 100,
+      "xp": 60,
+      "stats": [
+        { "icon": "trophy", "label": "XP Earned", "value": "+60" },
+        { "icon": "target", "label": "Knowledge Checks", "value": "2 / 2" },
+        { "icon": "trophy", "label": "Tasks Completed", "value": "5 / 5" }
+      ],
+      "recap": [
+        { "icon": "scope", "title": "Source Reliability", "body": "Reading the Res Gestae critically using OPVL." },
+        { "icon": "pen", "title": "Short Response", "body": "Explaining the foundations of senatorial authority." },
+        { "icon": "scroll", "title": "Extended Response", "body": "Assessing Augustus' settlement paragraph by paragraph." }
+      ],
+      "actions": { "review": "Review Lesson", "next": "Next Lesson" },
+      "footer": "Curriculum AH12-6 · Roman Republic • Augustan Age"
+    }
+  ]
+}
