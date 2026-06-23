@@ -1480,6 +1480,202 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 :root[data-theme="microhistory"] .tp-archnote h4{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;}
 :root[data-theme="microhistory"] .tp-archnote p{font-size:14px;font-style:italic;line-height:1.5;color:var(--on-surface);}
 
+
+/* ===================== NEW TYPES: sourceAnalysis / guidedResponse / outro ===================== */
+/* ---- shared structure (theme via tokens; theme-specific looks below) ---- */
+.tp-slide .tp-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
+.tp-slide :focus-visible{outline:3px solid var(--primary);outline-offset:2px;}
+.tp-slide .tp-scrollmain{justify-content:flex-start;align-items:stretch;}
+.tp-slide .tp-outromain{align-items:center;justify-content:safe center;}
+.tp-slide .tp-sa-wrap{max-width:1060px;margin:0 auto;width:100%;padding:6px 6px 18px;}
+.tp-slide .tp-gr-wrap{max-width:880px;margin:0 auto;width:100%;padding:6px 6px 18px;}
+.tp-slide .tp-scrollnote{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--on-surface-variant);background:var(--surface-container);border:1px dashed var(--outline-variant);border-radius:9999px;padding:5px 14px;display:inline-block;margin-bottom:14px;}
+.tp-slide .tp-sa-lh,.tp-slide .tp-gr-lh2{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px;}
+.tp-slide .tp-gr-lh{margin-bottom:18px;}
+.tp-slide .tp-sa-ey{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.tp-slide .tp-sa-ey .rule{width:28px;height:2px;background:var(--secondary-container);}
+.tp-slide .tp-sa-ey span:last-child{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);}
+.tp-slide .tp-sa-h1,.tp-slide .tp-gr-h1{font-family:var(--tp-serif);font-weight:700;font-size:34px;line-height:1.1;letter-spacing:-.02em;margin-bottom:10px;}
+.tp-slide .tp-sa-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.tp-slide .tp-sa-tag{display:inline-flex;align-items:center;gap:6px;background:var(--secondary-container);color:var(--on-secondary-container);padding:5px 12px;border-radius:9999px;font-size:12px;font-weight:600;}
+.tp-slide .tp-sa-mtime{display:inline-flex;align-items:center;gap:6px;color:var(--on-surface-variant);font-size:12px;font-weight:600;}
+.tp-slide .tp-focusbtn{display:inline-flex;align-items:center;gap:7px;background:var(--surface-lowest);color:var(--primary);padding:9px 16px;border-radius:9999px;font:inherit;font-weight:600;font-size:13px;cursor:pointer;border:1.5px solid var(--primary);flex-shrink:0;}
+.tp-slide .tp-sa-grid{display:grid;grid-template-columns:40% 60%;gap:24px;align-items:start;}
+.tp-slide .tp-srccol{position:sticky;top:0;}
+.tp-slide .tp-srcframe{position:relative;aspect-ratio:4/5;overflow:hidden;}
+.tp-slide .tp-saph{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.5);}
+.tp-slide .tp-saph span{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;}
+.tp-slide .tp-srclabel{position:absolute;bottom:14px;left:14px;color:#fff;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;}
+.tp-slide .tp-sazoom{position:absolute;bottom:14px;right:14px;width:36px;height:36px;border-radius:9999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;color:#fff;}
+.tp-slide .tp-transcript{margin-top:14px;padding:14px 16px;}
+.tp-slide .tp-tl{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--secondary);margin-bottom:6px;}
+.tp-slide .tp-transcript p{font-size:14px;font-style:italic;line-height:1.55;color:var(--on-surface-variant);}
+.tp-slide .tp-prov{margin-top:14px;padding:16px;}
+.tp-slide .tp-provh{display:flex;align-items:center;gap:6px;color:var(--primary);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;}
+.tp-slide .tp-prow{display:flex;align-items:flex-start;gap:10px;padding:6px 0;}
+.tp-slide .tp-prow+.tp-prow{border-top:1px dashed var(--outline-variant);}
+.tp-slide .tp-prow .pi{color:var(--primary);flex-shrink:0;margin-top:1px;}
+.tp-slide .tp-prow .pk{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--on-surface-variant);}
+.tp-slide .tp-prow .pv{display:block;font-size:14px;font-weight:600;color:var(--on-surface);}
+.tp-slide .tp-sa-h2{font-family:var(--tp-serif);font-weight:700;font-size:22px;margin-bottom:6px;}
+.tp-slide .tp-sa-lead{font-size:14px;line-height:1.5;color:var(--on-surface-variant);margin-bottom:16px;}
+.tp-slide .tp-tasks,.tp-slide .tp-scaff{list-style:none;display:flex;flex-direction:column;gap:16px;margin:0;padding:0;}
+.tp-slide .tp-task,.tp-slide .tp-para{padding:18px;}
+.tp-slide .tp-thead,.tp-slide .tp-phead{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;}
+.tp-slide .tp-tnum{flex-shrink:0;width:36px;height:36px;font-family:var(--tp-serif);font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.tp-slide .tp-pnum{flex-shrink:0;width:30px;height:30px;border-radius:9999px;background:var(--primary);color:#fff;font-family:var(--tp-serif);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;}
+.tp-slide .tp-tlead{flex:1;}
+.tp-slide .tp-tq{display:block;font-size:16px;line-height:1.45;color:var(--on-surface);margin-bottom:8px;cursor:pointer;}
+.tp-slide .tp-plabel{display:block;font-size:16px;font-weight:700;color:var(--on-surface);}
+.tp-slide .tp-pguide{font-size:13px;line-height:1.45;color:var(--on-surface-variant);margin-top:2px;}
+.tp-slide .tp-tmeta{display:flex;gap:8px;flex-wrap:wrap;}
+.tp-slide .tp-marks{font-size:11px;font-weight:700;color:var(--on-secondary-container);background:var(--secondary-container);padding:3px 10px;}
+.tp-slide .tp-skill{font-size:11px;font-weight:600;color:var(--primary);background:var(--primary-fixed);padding:3px 10px;}
+.tp-slide .tp-answ{width:100%;padding:12px 14px;font-family:var(--tp-body);font-size:15px;line-height:1.6;color:var(--on-surface);background:#fff;resize:vertical;border:1.5px solid var(--outline-variant);border-radius:10px;background-image:repeating-linear-gradient(transparent,transparent 30px,var(--surface-container) 30px,var(--surface-container) 31px);}
+.tp-slide .tp-answ:focus-visible{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-fixed);}
+.tp-slide .tp-answ-invalid{border-color:#ba1a1a !important;}
+.tp-slide .tp-trow{margin-top:10px;}
+.tp-slide .tp-reveal-btn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-weight:600;font-size:13px;cursor:pointer;padding:8px 14px;}
+.tp-slide .tp-reveal-btn[disabled]{opacity:.5;cursor:not-allowed;}
+.tp-slide .tp-tmodel,.tp-slide .tp-pmodel{display:none;margin-top:12px;padding:14px 16px;}
+.tp-slide .tp-tmodel.tp-shown,.tp-slide .tp-pmodel.tp-shown{display:block;}
+.tp-slide .tp-tmh,.tp-slide .tp-pmh{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin-bottom:6px;}
+.tp-slide .tp-tmodel p,.tp-slide .tp-pmodel p{font-size:14px;line-height:1.6;color:var(--on-surface);}
+.tp-slide .tp-hint{margin-top:16px;padding:14px;display:flex;gap:10px;}
+.tp-slide .tp-hint .hi{color:var(--secondary);flex-shrink:0;}
+.tp-slide .tp-hint .hl{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);margin-bottom:3px;}
+.tp-slide .tp-hint p{font-size:13px;line-height:1.5;color:var(--on-surface-variant);}
+/* guidedResponse */
+.tp-slide .tp-gr-card{padding:26px;}
+.tp-slide .tp-qbox{border-left:4px solid var(--primary);padding:18px 20px;margin-bottom:18px;background:var(--surface-container-low);border-radius:12px;}
+.tp-slide .tp-qh{display:flex;align-items:center;gap:8px;margin-bottom:8px;color:var(--primary);}
+.tp-slide .tp-qh span:first-of-type,.tp-slide .tp-qh .t{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.tp-slide .tp-qh .marks{margin-left:auto;font-size:11px;font-weight:700;color:var(--on-secondary-container);background:var(--secondary-container);padding:3px 10px;border-radius:9999px;}
+.tp-slide .tp-qtext{font-size:18px;line-height:1.5;color:var(--on-surface);}
+.tp-slide .tp-stim,.tp-slide .tp-stim2{background:#FAF9F6;border:1px solid var(--outline-variant);border-radius:12px;padding:14px 16px;margin-bottom:18px;}
+.tp-slide .tp-stim .stiml,.tp-slide .tp-stim2 .stiml{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--secondary);margin-bottom:5px;}
+.tp-slide .tp-stim p,.tp-slide .tp-stim2 p{font-size:14px;font-style:italic;line-height:1.5;color:var(--on-surface-variant);}
+.tp-slide .tp-answh{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--on-surface-variant);margin-bottom:8px;}
+.tp-slide .tp-gr-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px;flex-wrap:wrap;}
+.tp-slide .tp-hintnote{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--on-surface-variant);}
+.tp-slide .tp-submit{display:inline-flex;align-items:center;gap:6px;background:var(--primary);color:var(--on-primary);border:none;padding:11px 22px;border-radius:9999px;font:inherit;font-weight:600;font-size:14px;cursor:pointer;}
+.tp-slide .tp-submit:disabled{opacity:.55;cursor:default;}
+.tp-slide .tp-reveal{display:none;margin-top:22px;border-top:1px dashed var(--outline-variant);padding-top:20px;}
+.tp-slide .tp-reveal.tp-shown{display:block;}
+.tp-slide .tp-rvtop{margin-bottom:14px;}
+.tp-slide .tp-rvbadge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:.04em;color:#3a7d44;background:#e7f3ea;border:1px solid #bfe0c7;padding:5px 12px;border-radius:9999px;}
+.tp-slide .tp-rvgrid{display:grid;grid-template-columns:3fr 2fr;gap:18px;}
+.tp-slide .tp-grmodel{background:var(--primary-fixed);border-radius:12px;padding:18px;}
+.tp-slide .tp-grmodel .mh{display:flex;align-items:center;gap:6px;color:var(--primary);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;}
+.tp-slide .tp-grmodel p{font-size:15px;line-height:1.6;color:var(--on-surface);}
+.tp-slide .tp-crit{background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:12px;padding:18px;}
+.tp-slide .tp-crit .ch{display:flex;align-items:center;gap:6px;color:var(--secondary);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;}
+.tp-slide .tp-crit ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin:0;padding:0;}
+.tp-slide .tp-crit li{display:flex;gap:8px;font-size:14px;line-height:1.45;color:var(--on-surface-variant);}
+.tp-slide .tp-crit .ci{color:#3a7d44;flex-shrink:0;margin-top:2px;}
+.tp-slide .tp-qcard2{border-left:4px solid var(--primary);border-radius:12px;padding:18px 20px;margin-bottom:14px;background:var(--surface-container-low);}
+.tp-slide .tp-scaffh{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);margin:4px 0 14px;}
+/* focus overlay (in-slide) */
+.tp-slide .tp-overlay{position:absolute;inset:0;z-index:60;background:rgba(30,26,32,.55);display:flex;align-items:center;justify-content:center;padding:26px;}
+.tp-slide .tp-overlay[hidden]{display:none;}
+.tp-slide .tp-fpanel{background:var(--surface-lowest);max-width:760px;width:100%;max-height:88%;overflow-y:auto;padding:32px 34px;position:relative;border-radius:20px;}
+.tp-slide .tp-fclose{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:9999px;background:var(--surface-container);border:none;color:var(--on-surface);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.tp-slide .tp-fey{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:14px;}
+.tp-slide .tp-fq{font-family:var(--tp-serif);font-size:25px;line-height:1.25;color:var(--on-surface);margin-bottom:22px;}
+.tp-slide .tp-fstiml{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--secondary);margin-bottom:8px;}
+.tp-slide .tp-fstim{font-size:18px;line-height:1.6;font-style:italic;color:var(--on-surface-variant);background:#FAF9F6;border-radius:14px;padding:20px;}
+/* outro */
+.tp-slide .tp-outrocard{position:relative;background:var(--surface-lowest);max-width:760px;width:100%;padding:42px 40px;text-align:center;overflow:hidden;margin:auto;}
+.tp-slide .tp-glow{position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:420px;height:240px;background:radial-gradient(ellipse at center,rgba(252,212,0,.22),transparent 70%);pointer-events:none;}
+.tp-slide .tp-crest{position:relative;width:92px;height:92px;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;}
+.tp-slide .tp-o-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--secondary);margin-bottom:10px;}
+.tp-slide .tp-o-eyebrow .r{width:22px;height:2px;background:var(--secondary-container);}
+.tp-slide .tp-o-h1{font-family:var(--tp-serif);font-weight:700;font-size:40px;line-height:1.08;letter-spacing:-.02em;color:var(--on-surface);margin-bottom:10px;}
+.tp-slide .tp-o-sub{font-size:17px;line-height:1.55;color:var(--on-surface-variant);max-width:520px;margin:0 auto 26px;}
+.tp-slide .tp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px;}
+.tp-slide .tp-stat{padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.tp-slide .tp-stat .si{color:var(--primary);margin-bottom:4px;}
+.tp-slide .tp-stat .sv{font-family:var(--tp-serif);font-weight:700;font-size:25px;color:var(--primary);}
+.tp-slide .tp-stat .sl{font-size:12px;font-weight:600;color:var(--on-surface-variant);text-align:center;}
+.tp-slide .tp-recaph{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin-bottom:12px;}
+.tp-slide .tp-recap{list-style:none;display:flex;flex-direction:column;gap:10px;text-align:left;margin:0 0 28px;padding:0;}
+.tp-slide .tp-rc{display:flex;align-items:center;gap:14px;padding:13px 16px;}
+.tp-slide .tp-rc .rci{flex-shrink:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center;}
+.tp-slide .tp-rc div{flex:1;}
+.tp-slide .tp-rc .rct{display:block;font-size:15px;font-weight:700;color:var(--on-surface);}
+.tp-slide .tp-rc .rcb{display:block;font-size:13px;line-height:1.45;color:var(--on-surface-variant);margin-top:2px;}
+.tp-slide .tp-rc .rck{flex-shrink:0;color:#3a7d44;}
+.tp-slide .tp-o-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.tp-slide .tp-obtn{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;font:inherit;font-weight:600;font-size:15px;cursor:pointer;border:none;}
+.tp-slide .tp-o-footnote{margin-top:22px;font-size:12px;color:var(--on-surface-variant);display:flex;align-items:center;gap:6px;justify-content:center;}
+
+/* ---- IMPERIUM looks ---- */
+:root[data-theme="imperium"] .tp-srcframe{border-radius:16px;background:linear-gradient(150deg,#5d2e8c,#2c0051);border:1px solid var(--outline-variant);}
+:root[data-theme="imperium"] .tp-srclabel{background:rgba(28,0,51,.55);border-radius:9999px;}
+:root[data-theme="imperium"] .tp-transcript{background:#FAF9F6;border:1px solid var(--outline-variant);border-radius:12px;}
+:root[data-theme="imperium"] .tp-prov{background:var(--surface-lowest);border:1px solid var(--outline-variant);border-left:4px solid var(--primary);border-radius:12px;}
+:root[data-theme="imperium"] .tp-task,:root[data-theme="imperium"] .tp-para{background:var(--surface-lowest);border:1px solid var(--outline-variant);border-radius:16px;}
+:root[data-theme="imperium"] .tp-tnum{border-radius:9999px;border:2px solid var(--primary-container);color:var(--primary);}
+:root[data-theme="imperium"] .tp-marks,:root[data-theme="imperium"] .tp-skill{border-radius:9999px;}
+:root[data-theme="imperium"] .tp-reveal-btn{background:var(--primary-fixed);color:var(--primary);border:none;border-radius:9999px;}
+:root[data-theme="imperium"] .tp-tmodel,:root[data-theme="imperium"] .tp-pmodel{background:var(--primary-fixed);border-radius:12px;}
+:root[data-theme="imperium"] .tp-gr-card{background:var(--surface-lowest);border:1px solid var(--outline-variant);border-radius:20px;}
+:root[data-theme="imperium"] .tp-fpanel{box-shadow:0 24px 60px rgba(30,26,32,.4);}
+:root[data-theme="imperium"] .tp-outrocard{border:1px solid var(--outline-variant);border-radius:28px;}
+:root[data-theme="imperium"] .tp-crest{border-radius:9999px;background:var(--primary);color:var(--secondary-container);box-shadow:0 0 0 8px var(--primary-fixed);}
+:root[data-theme="imperium"] .tp-stat{background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:18px;}
+:root[data-theme="imperium"] .tp-rc{background:#FAF9F6;border:1px solid var(--outline-variant);border-radius:14px;}
+:root[data-theme="imperium"] .tp-rc .rci{border-radius:9999px;background:var(--primary-fixed);color:var(--primary);}
+:root[data-theme="imperium"] .tp-obtn{border-radius:9999px;}
+:root[data-theme="imperium"] .tp-obtn.primary{background:var(--primary);color:var(--on-primary);}
+:root[data-theme="imperium"] .tp-obtn.ghost{background:var(--surface-lowest);border:1.5px solid var(--outline-variant);color:var(--on-surface);}
+
+/* ---- MICROHISTORY looks (hard borders, offset shadows, square numbers, polaroid) ---- */
+:root[data-theme="microhistory"] .tp-scrollnote{border-radius:4px;font-family:var(--tp-mono);}
+:root[data-theme="microhistory"] .tp-focusbtn{border:2px solid var(--on-surface);color:var(--on-surface);border-radius:6px;box-shadow:3px 3px 0 0 var(--on-surface);}
+:root[data-theme="microhistory"] .tp-sa-tag{border:1px solid var(--outline);}
+:root[data-theme="microhistory"] .tp-sa-srcwrap{background:#fff;border:12px solid #fff;box-shadow:4px 4px 0 0 var(--ink);transform:rotate(-1.5deg);display:block;}
+:root[data-theme="microhistory"] .tp-srcframe{background:linear-gradient(150deg,#6f6150,#2c2620);}
+:root[data-theme="microhistory"] .tp-srclabel{background:rgba(37,24,23,.7);}
+:root[data-theme="microhistory"] .tp-transcript{background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--ink);}
+:root[data-theme="microhistory"] .tp-prov{background:var(--surface-container-highest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--ink);}
+:root[data-theme="microhistory"] .tp-provh{font-family:var(--tp-mono);}
+:root[data-theme="microhistory"] .tp-task,:root[data-theme="microhistory"] .tp-para{background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--ink);border-radius:0;}
+:root[data-theme="microhistory"] .tp-tnum{border:2px solid var(--on-surface);background:var(--surface-variant);color:var(--on-surface);font-family:var(--tp-mono);}
+:root[data-theme="microhistory"] .tp-pnum{border-radius:0;}
+:root[data-theme="microhistory"] .tp-marks{border:1px solid var(--outline);}
+:root[data-theme="microhistory"] .tp-skill{color:var(--on-primary);background:var(--primary-container);}
+:root[data-theme="microhistory"] .tp-answ{border:2px solid var(--outline);border-radius:0;}
+:root[data-theme="microhistory"] .tp-answ:focus-visible{box-shadow:0 0 0 3px var(--secondary-fixed);}
+:root[data-theme="microhistory"] .tp-reveal-btn{background:var(--surface-container-highest);color:var(--primary);border:2px solid var(--on-surface);box-shadow:3px 3px 0 0 var(--ink);}
+:root[data-theme="microhistory"] .tp-tmodel,:root[data-theme="microhistory"] .tp-pmodel{background:var(--secondary-container);border:2px solid var(--on-surface);}
+:root[data-theme="microhistory"] .tp-tmh,:root[data-theme="microhistory"] .tp-pmh{font-family:var(--tp-mono);}
+:root[data-theme="microhistory"] .tp-hint{background:var(--surface-container-highest);border:2px dashed var(--outline);}
+:root[data-theme="microhistory"] .tp-gr-card{background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--ink);}
+:root[data-theme="microhistory"] .tp-qbox,:root[data-theme="microhistory"] .tp-qcard2{border-radius:0;}
+:root[data-theme="microhistory"] .tp-stim,:root[data-theme="microhistory"] .tp-stim2{background:var(--surface-container-low);border:2px solid var(--on-surface);border-radius:0;}
+:root[data-theme="microhistory"] .tp-submit{border:2px solid var(--on-surface);box-shadow:3px 3px 0 0 var(--ink);border-radius:0;}
+:root[data-theme="microhistory"] .tp-grmodel{background:var(--secondary-container);border:2px solid var(--on-surface);border-radius:0;}
+:root[data-theme="microhistory"] .tp-crit{border:2px solid var(--on-surface);border-radius:0;background:var(--surface-container-low);}
+:root[data-theme="microhistory"] .tp-fpanel{border:2px solid var(--on-surface);box-shadow:8px 8px 0 0 var(--ink);border-radius:0;}
+:root[data-theme="microhistory"] .tp-fclose{border:2px solid var(--on-surface);border-radius:0;background:var(--surface-container);}
+:root[data-theme="microhistory"] .tp-fey,:root[data-theme="microhistory"] .tp-fq,:root[data-theme="microhistory"] .tp-fstiml{font-family:var(--tp-mono);}
+:root[data-theme="microhistory"] .tp-fstim{background:var(--surface-container-highest);border:2px solid var(--on-surface);border-radius:0;}
+:root[data-theme="microhistory"] .tp-outrocard{border:2px solid var(--on-surface);box-shadow:8px 8px 0 0 var(--ink);border-radius:0;}
+:root[data-theme="microhistory"] .tp-stampmark{position:absolute;top:24px;right:24px;transform:rotate(-12deg);border:3px solid var(--primary);color:var(--primary);font-family:var(--tp-mono);font-weight:700;font-size:15px;letter-spacing:.12em;padding:6px 14px;opacity:.85;}
+:root[data-theme="microhistory"] .tp-crest{border:3px solid var(--on-surface);background:var(--primary);color:var(--secondary-fixed);box-shadow:5px 5px 0 0 var(--ink);border-radius:0;}
+:root[data-theme="microhistory"] .tp-o-eyebrow{background:var(--primary-container);color:var(--on-primary);font-family:var(--tp-mono);padding:5px 14px;letter-spacing:.12em;}
+:root[data-theme="microhistory"] .tp-o-eyebrow .r{display:none;}
+:root[data-theme="microhistory"] .tp-stat{background:var(--surface-container-highest);border:2px solid var(--on-surface);border-radius:0;}
+:root[data-theme="microhistory"] .tp-stat .sv{font-family:var(--tp-mono);}
+:root[data-theme="microhistory"] .tp-recaph{font-family:var(--tp-mono);}
+:root[data-theme="microhistory"] .tp-rc{background:var(--surface-container-low);border:2px solid var(--on-surface);}
+:root[data-theme="microhistory"] .tp-rc .rci{border:2px solid var(--on-surface);background:var(--secondary-container);color:var(--primary);}
+:root[data-theme="microhistory"] .tp-obtn{border:2px solid var(--on-surface);text-transform:uppercase;letter-spacing:.04em;font-size:14px;}
+:root[data-theme="microhistory"] .tp-obtn.primary{background:var(--primary);color:var(--on-primary);box-shadow:4px 4px 0 0 var(--ink);}
+:root[data-theme="microhistory"] .tp-obtn.ghost{background:var(--surface-lowest);color:var(--on-surface);}
+:root[data-theme="microhistory"] .tp-o-footnote{font-family:var(--tp-mono);}
+
 </style>
 </head>
 <body class="study">
@@ -3320,8 +3516,8 @@ function packText(s){
 }
 
 /* ===================== dispatch ===================== */
-const IM_PACK={ title:imTitle, outcomes:imOutcomes, imageText:imImageText, text:packText, infographic:imInfographic, video:imVideo, knowledgeCheck:imKnowledge };
-const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:packText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge };
+const IM_PACK={ title:imTitle, outcomes:imOutcomes, imageText:imImageText, text:packText, infographic:imInfographic, video:imVideo, knowledgeCheck:imKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:packGuidedResponse, outro:packOutro };
+const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:packText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:packGuidedResponse, outro:packOutro };
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
@@ -3341,6 +3537,7 @@ function wirePack(){
   root.querySelectorAll('[data-tp-continue]').forEach(b=>{
     b.addEventListener('click',()=>{ if(b.disabled) return; if(present && cur<LESSON.slides.length-1) go(cur+1); });
   });
+  wirePackTyped();
   const kc=root.querySelector('[data-tp-kc]'); if(!kc) return;
   const cont=root.querySelector('[data-tp-continue]');
   const opts=[...kc.querySelectorAll('[data-tp-opt]')];
@@ -3355,6 +3552,217 @@ function wirePack(){
     if(fb) fb.hidden=false;
     if(correct){ answered=true; kc.dataset.tpDone='1'; if(cont){ cont.disabled=false; } }   // tp-done unlocks present click-advance past the gate
   }));
+}
+
+/* ===== NEW TYPED-ANSWER + OUTRO PACK TYPES (sourceAnalysis, guidedResponse, outro) ===== */
+Object.assign(PACK_ICONS,{
+  focus:'<path d="M4 8V5a1 1 0 011-1h3M20 8V5a1 1 0 00-1-1h-3M4 16v3a1 1 0 001 1h3M20 16v3a1 1 0 01-1 1h-3"/><circle cx="12" cy="12" r="3"/>',
+  lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/>',
+  list:'<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>',
+  pen:'<path d="M14 4l6 6M4 20l1-4L16 5l3 3L8 19l-4 1z"/>',
+  quotemark:'<path d="M7 7H4v5h3l-1 4M17 7h-3v5h3l-1 4"/>',
+  refresh:'<path d="M4 12a8 8 0 108-8M4 12V7M4 12h5"/>',
+  scope:'<path d="M12 4a8 8 0 018 8M12 8a4 4 0 014 4v3M12 12v5M8 12a4 4 0 014-4M6 14v2a6 6 0 0012 0"/>',
+  laurel:'<path d="M12 4v3M7 5.5c-2 2-2.5 6-1 9.5M17 5.5c2 2 2.5 6 1 9.5M9 18c1 1 4.5 1 6 0M12 7l1.6 3.3 3.6.4-2.7 2.4.8 3.5L12 14.8 8.7 16.6l.8-3.5L6.8 10.7l3.6-.4z"/>',
+  vault:'<path d="M9 11V7a3 3 0 116 0v4M5 21h14M6 21v-3a3 3 0 013-3h6a3 3 0 013 3v3"/>'
+});
+/* in-memory, session-only runtime state for typed answers + revealed models.
+   Keyed by slide index → { ans:{field:value}, shown:{field:true} }. NO localStorage.
+   Cleared on lesson (re)load — see #jsonLoad and the initial render. */
+let TP_RUNTIME={};
+function tpRT(){ return (TP_RUNTIME[cur]=TP_RUNTIME[cur]||{ans:{},shown:{}}); }
+
+function tpLive(){ return `<div class="tp-sr-only" aria-live="polite" data-tp-live></div>`; }
+function tpFocusOverlay(eyebrow,question,stimLabel,stimText){
+  return `<div class="tp-overlay" data-tp-overlay role="dialog" aria-modal="true" aria-label="Focus reading" hidden>
+    <div class="tp-fpanel"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close focus reading">${tpIc('close',20)}</button>
+      ${eyebrow?`<div class="tp-fey">${esc(eyebrow)}</div>`:''}<p class="tp-fq">${esc(question||'')}</p>
+      ${stimText?`<div class="tp-fstiml">${esc(stimLabel||'Stimulus')}</div><p class="tp-fstim">${esc(stimText)}</p>`:''}</div></div>`;
+}
+
+/* ---------- sourceAnalysis (shared DOM, theme via CSS) ---------- */
+function packSourceAnalysis(s,i){
+  const src=s.source||{};
+  const prov=Array.isArray(s.provenance)?s.provenance:[];
+  const tasks=Array.isArray(s.tasks)?s.tasks:[];
+  const rn=['I','II','III','IV','V','VI','VII','VIII'];
+  const provHtml=prov.map(p=>`<div class="tp-prow"><span class="pi">${tpIc(p.icon||'doc',18)}</span><div><span class="pk">${esc(p.label||'')}</span><span class="pv">${esc(p.value||'')}</span></div></div>`).join('');
+  const tasksHtml=tasks.map((t,j)=>{ const fid='t'+j, num=esc(t.numeral||rn[j]||String(j+1));
+    return `<li class="tp-task" data-tp-block><div class="tp-thead"><span class="tp-tnum">${num}</span><div class="tp-tlead">
+        <label class="tp-tq" for="${fid}-ta">${esc(t.question||'')}</label>
+        <div class="tp-tmeta">${t.marks?`<span class="tp-marks">${esc(t.marks)}</span>`:''}${t.skill?`<span class="tp-skill">${esc(t.skill)}</span>`:''}</div></div></div>
+      <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="Task ${num}${t.skill?': '+esc(t.skill):''} — your response" placeholder="Type your response..."></textarea>
+      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="task ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button></div>
+      <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model answer for task ${num}"><div class="tp-tmh">${tpIc('check',14)} Model answer${t.skill?' · '+esc(t.skill):''}</div><p>${esc(t.model||'')}</p></div></li>`;
+  }).join('');
+  const fEy=(src.label?esc(src.label)+' · ':'')+'Transcript';
+  return tpLive()+packHead(s,tpProg(s,72))
+    +`<main class="tp-main tp-scrollmain"><div class="tp-sa-wrap">
+        <span class="tp-scrollnote">Scrolls within the slide · content-heavy types only</span>
+        <div class="tp-sa-lh"><div>${s.eyebrow?`<div class="tp-sa-ey"><span class="rule"></span><span>${esc(s.eyebrow)}</span></div>`:''}
+            <h1 class="tp-sa-h1 tp-serif">${esc(s.title||'')}</h1>
+            <div class="tp-sa-meta">${s.tag?`<span class="tp-sa-tag">${tpIc('doc',14)} ${esc(s.tag)}</span>`:''}${s.time?`<span class="tp-sa-mtime">${tpIc('clock',14)} ${esc(s.time)}</span>`:''}</div></div>
+          ${(src.transcript||tpHasImg(src.image))?`<button class="tp-focusbtn" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}</div>
+        <div class="tp-sa-grid">
+          <div class="tp-srccol">
+            <div class="tp-sa-srcwrap"><div class="tp-srcframe" tabindex="0" role="group" aria-label="${esc(src.label||'Source')} image">
+              ${tpHasImg(src.image)?tpImg(src.image,'Source placeholder','doc'):`<div class="tp-saph">${tpIc('doc',18)}<span>Source placeholder</span></div>`}
+              ${src.label?`<div class="tp-srclabel">${esc(src.label)}</div>`:''}<div class="tp-sazoom">${tpIc('zoomIn',18)}</div></div></div>
+            ${src.transcript?`<div class="tp-transcript" tabindex="0" role="group" aria-label="${esc(src.label||'Source')} transcript"><span class="tp-tl">Transcript${src.label?' · '+esc(src.label):''}</span><p>${esc(src.transcript)}</p></div>`:''}
+            ${provHtml?`<div class="tp-prov"><div class="tp-provh">${tpIc('scope',16)} Provenance</div>${provHtml}</div>`:''}
+          </div>
+          <div class="tp-taskcol"><h2 class="tp-sa-h2 tp-serif">Analysis Tasks</h2>
+            <p class="tp-sa-lead">Examine the source, then answer each task in the box provided. The model answer for each task unlocks once you submit your attempt.</p>
+            <ol class="tp-tasks">${tasksHtml||'<li class="tp-task"><p class="tp-sa-lead">No tasks yet.</p></li>'}</ol>
+            ${s.hint?`<div class="tp-hint"><span class="hi">${tpIc('lightbulb',20)}</span><div><span class="hl">${esc(s.hint.label||'Hint')}</span><p>${esc(s.hint.text||'')}</p></div></div>`:''}
+          </div>
+        </div>
+      </div></main>`
+    +packFoot(s,s.cta||'Continue')
+    +tpFocusOverlay(fEy, s.focusQuestion||'Analyse the source, applying the source-analysis skills indicated for each task.', src.label?('Transcript · '+(src.label)):'Transcript', src.transcript||'');
+}
+
+/* ---------- guidedResponse (short + extended; shared DOM, theme via CSS) ---------- */
+function packGuidedResponse(s,i){
+  const mode=(s.mode==='extended')?'extended':'short';
+  if(mode==='short'){
+    const crit=Array.isArray(s.criteria)?s.criteria:[];
+    return tpLive()+packHead(s,tpProg(s,80))
+      +`<main class="tp-main tp-scrollmain"><div class="tp-gr-wrap">
+          <span class="tp-scrollnote">Scrolls within the slide · content-heavy types only</span>
+          <div class="tp-gr-lh"><div class="tp-sa-ey"><span class="rule"></span><span>${esc(s.eyebrow||'Short Response')}</span></div>
+            <h1 class="tp-gr-h1 tp-serif">${esc(s.title||'')}</h1>
+            <div class="tp-sa-meta"><span class="tp-sa-tag">${tpIc('pen',14)} Written Task</span>${s.time?`<span class="tp-sa-mtime">${tpIc('clock',14)} ${esc(s.time)}</span>`:''}</div></div>
+          <article class="tp-gr-card" data-tp-block>
+            <div class="tp-qbox"><div class="tp-qh">${tpIc('quotemark',18)}<span>Question</span>${s.marks?`<span class="marks">${esc(s.marks)}</span>`:''}</div>
+              <p class="tp-qtext">${esc(s.question||'')}</p></div>
+            ${s.stimulus?`<div class="tp-stim" tabindex="0" role="group" aria-label="Stimulus"><span class="stiml">${esc(s.stimulus.label||'Stimulus')}</span><p>${esc(s.stimulus.text||'')}</p></div>`:''}
+            <label class="tp-answh" for="gr0-ta">Your response</label>
+            <textarea id="gr0-ta" class="tp-answ" rows="5" data-tp-field="gr0" aria-label="Your response" placeholder="Type your response here..."></textarea>
+            <div class="tp-gr-actions"><span class="tp-hintnote" data-tp-hintnote>${tpIc('lock',15)} The model response unlocks after you submit an attempt.</span>
+              <button class="tp-submit" type="button" aria-expanded="false" aria-controls="gr0-reveal" data-tp-reveal="gr0" data-tp-submit data-tp-revname="this task" data-tp-donelabel="Attempt submitted">Submit attempt ${tpIc('arrowRight',16)}</button></div>
+            <div class="tp-reveal" id="gr0-reveal" data-tp-model>
+              <div class="tp-rvtop"><span class="tp-rvbadge">${tpIc('check',16)} Attempt submitted</span></div>
+              <div class="tp-rvgrid">
+                <div class="tp-grmodel"><div class="mh">${tpIc('lightbulb',16)}<span>Model response</span></div><p>${esc(s.model||'')}</p></div>
+                ${crit.length?`<div class="tp-crit"><div class="ch">${tpIc('list',16)}<span>Marking guide</span></div><ul>${crit.map(c=>`<li><span class="ci">${tpIc('check',14)}</span>${esc(c)}</li>`).join('')}</ul></div>`:''}
+              </div></div>
+          </article>
+        </div></main>`
+      +packFoot(s,s.cta||'Continue');
+  }
+  // extended
+  const paras=Array.isArray(s.paragraphs)?s.paragraphs:[];
+  const parasHtml=paras.map((p,k)=>{ const fid='p'+k, lbl=esc(p.label||('Paragraph '+(k+1)));
+    return `<li class="tp-para" data-tp-block><div class="tp-phead"><span class="tp-pnum">${k+1}</span><div>
+        <label class="tp-plabel" for="${fid}-ta">${lbl}</label><p class="tp-pguide">${esc(p.guide||'')}</p></div></div>
+      <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="${lbl} — your paragraph" placeholder="Write your ${lbl.toLowerCase()} here..."></textarea>
+      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="${lbl}" data-tp-donelabel="Model paragraph shown">${tpIc('lightbulb',15)} Reveal model paragraph</button></div>
+      <div class="tp-pmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model paragraph for ${lbl}"><div class="tp-pmh">${tpIc('check',14)} Model · ${lbl}</div><p>${esc(p.model||'')}</p></div></li>`;
+  }).join('');
+  const st=s.stimulus||null;
+  return tpLive()+packHead(s,tpProg(s,86))
+    +`<main class="tp-main tp-scrollmain"><div class="tp-gr-wrap tp-gr-ext">
+        <span class="tp-scrollnote">Scrolls within the slide · content-heavy types only</span>
+        <div class="tp-gr-lh2"><div><div class="tp-sa-ey"><span class="rule"></span><span>${esc(s.eyebrow||'Extended Response')}</span></div>
+            <h1 class="tp-gr-h1 tp-serif">${esc(s.title||'')}</h1>
+            <div class="tp-sa-meta"><span class="tp-sa-tag">${tpIc('pen',14)} Written Task</span>${s.time?`<span class="tp-sa-mtime">${tpIc('clock',14)} ${esc(s.time)}</span>`:''}</div></div>
+          ${s.focusReading?`<button class="tp-focusbtn" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}</div>
+        <section class="tp-qcard2" tabindex="0" role="group" aria-label="Essay question"><div class="tp-qh"><span class="t">Question</span>${s.marks?`<span class="marks">${esc(s.marks)}</span>`:''}</div><p class="tp-qtext">${esc(s.question||'')}</p></section>
+        ${st?`<section class="tp-stim2" tabindex="0" role="group" aria-label="Stimulus source"><span class="stiml">${esc(st.label||'Stimulus')}</span><p>${esc(st.text||'')}</p></section>`:''}
+        <h2 class="tp-scaffh">${tpIc('quotemark',16)} Build your response — paragraph by paragraph</h2>
+        <ol class="tp-scaff">${parasHtml||'<li class="tp-para"><p class="tp-pguide">No paragraphs yet.</p></li>'}</ol>
+      </div></main>`
+    +packFoot(s,s.cta||'Continue')
+    +(s.focusReading?tpFocusOverlay('Question', s.question||'', (st&&st.label)||'Stimulus', (st&&st.text)||''):'');
+}
+
+/* ---------- outro (lesson complete; shared DOM, theme via CSS) ---------- */
+function packOutro(s,i){
+  const theme=(LESSON.meta&&LESSON.meta.theme)||'';
+  const stats=Array.isArray(s.stats)?s.stats:[];
+  const recap=Array.isArray(s.recap)?s.recap:[];
+  const acts=s.actions||{};
+  const crest = theme==='imperium'?tpIc('laurel',50):tpIc('vault',46);
+  const statHtml=stats.map(t=>`<div class="tp-stat"><span class="si">${tpIc(t.icon||'star',24)}</span><span class="sv tp-serif">${esc(t.value||'')}</span><span class="sl">${esc(t.label||'')}</span></div>`).join('');
+  const recapHtml=recap.map(r=>`<li class="tp-rc"><span class="rci">${tpIc(r.icon||'check',20)}</span><div><span class="rct">${esc(r.title||'')}</span><span class="rcb">${esc(r.body||'')}</span></div><span class="rck">${tpIc('check',18)}</span></li>`).join('');
+  return (theme==='microhistory'?`<div class="tp-grain"></div>`:'')
+    +packHead(s,tpProg(s,100))
+    +`<main class="tp-main tp-outromain"><section class="tp-outrocard" aria-label="Lesson complete summary">
+        ${theme==='imperium'?'<div class="tp-glow"></div>':''}
+        ${theme==='microhistory'?`<div class="tp-stampmark">${esc(s.stamp||'FILE CLOSED')}</div>`:''}
+        <div class="tp-crest">${crest}</div>
+        ${s.eyebrow?`<div class="tp-o-eyebrow"><span class="r"></span>${esc(s.eyebrow)}<span class="r"></span></div>`:''}
+        <h1 class="tp-o-h1 tp-serif">${esc(s.title||'')}</h1>
+        ${s.subtitle?`<p class="tp-o-sub">${esc(s.subtitle)}</p>`:''}
+        ${statHtml?`<div class="tp-stats">${statHtml}</div>`:''}
+        ${recapHtml?`<div class="tp-recaph">${tpIc('book',16)} ${esc(s.recapLabel||'What you covered')}</div><ul class="tp-recap">${recapHtml}</ul>`:''}
+        ${(acts.review||acts.next)?`<div class="tp-o-actions">
+          ${acts.review?`<button class="tp-obtn ghost" type="button" data-tp-review>${tpIc('refresh',18)} ${esc(acts.review)}</button>`:''}
+          ${acts.next?`<button class="tp-obtn primary" type="button" data-tp-continue>${esc(acts.next)} ${tpIc('arrowRight',18)}</button>`:''}
+        </div>`:''}
+        ${s.footer?`<p class="tp-o-footnote">${tpIc('target',14)} ${esc(s.footer)}</p>`:''}
+      </section></main>`;
+}
+
+/* ---------- interactivity for the typed-answer + focus-modal types ---------- */
+function wirePackTyped(){
+  const slide=$('#slide'); const root=slide.querySelector('.tp-slide'); if(!root) return;
+  const present=document.body.classList.contains('present');
+  const type=root.dataset.tpType||'';
+  const live=root.querySelector('[data-tp-live]');
+  const announce=(m)=>{ if(live) live.textContent=m; };
+  // review (outro) → restart the lesson from the first slide
+  const rv=root.querySelector('[data-tp-review]'); if(rv) rv.addEventListener('click',()=>go(0));
+  const gated=(type==='sourceAnalysis'||type==='guidedResponse');
+  if(!gated && type!=='outro' && !root.querySelector('[data-tp-block]')) { /* nothing typed here */ }
+  const rt=tpRT();
+  // session answers: restore + persist
+  const tas=[...root.querySelectorAll('textarea[data-tp-field]')];
+  const recomputeDone=()=>{
+    if(!gated) return;
+    const allFilled = tas.length>0 && tas.every(t=>t.value.trim().length>0);
+    root.dataset.tpKc='1';                                   // mark for the present skip-guard
+    if(allFilled) root.dataset.tpDone='1'; else delete root.dataset.tpDone;
+  };
+  tas.forEach(ta=>{ const f=ta.dataset.tpField;
+    if(rt.ans[f]!=null) ta.value=rt.ans[f];                  // restore session value
+    ta.addEventListener('input',()=>{ rt.ans[f]=ta.value; recomputeDone(); });
+  });
+  // reveal buttons (per-task / per-paragraph / short submit) — gate on a non-empty attempt in the same block
+  root.querySelectorAll('[data-tp-reveal]').forEach(btn=>{
+    const block=btn.closest('[data-tp-block]'); if(!block) return;
+    const ta=block.querySelector('textarea[data-tp-field]');
+    const model=block.querySelector('[data-tp-model]');
+    const fid=btn.dataset.tpReveal;
+    const doReveal=(fromRestore)=>{
+      if(model) model.classList.add('tp-shown');
+      btn.setAttribute('aria-expanded','true'); btn.disabled=true; btn.textContent=btn.dataset.tpDonelabel||'Model answer shown';
+      if(btn.hasAttribute('data-tp-submit')){ if(ta) ta.setAttribute('readonly',''); const hn=block.querySelector('[data-tp-hintnote]'); if(hn) hn.style.display='none'; }
+      rt.shown[fid]=true;
+      if(!fromRestore) announce('Model '+(btn.dataset.tpDonelabel&&/paragraph/i.test(btn.dataset.tpDonelabel)?'paragraph':'answer')+' for '+(btn.dataset.tpRevname||'this task')+' revealed.');
+    };
+    if(rt.shown[fid]) doReveal(true);                        // restore revealed state
+    btn.addEventListener('click',()=>{
+      if(btn.disabled) return;
+      if(ta && !ta.value.trim()){ ta.focus(); ta.classList.add('tp-answ-invalid'); announce('Write your response to '+(btn.dataset.tpRevname||'this task')+' before revealing the model answer.'); return; }
+      if(ta) ta.classList.remove('tp-answ-invalid');
+      doReveal(false);
+    });
+  });
+  recomputeDone();
+  // Focus reading modal
+  const overlay=root.querySelector('[data-tp-overlay]');
+  const openBtn=root.querySelector('[data-tp-focus-open]');
+  if(overlay && openBtn){
+    let escH=null;
+    const close=()=>{ overlay.hidden=true; if(escH){ document.removeEventListener('keydown',escH); escH=null; } openBtn.focus(); };
+    const open=()=>{ overlay.hidden=false; const c=overlay.querySelector('[data-tp-focus-close]'); if(c) c.focus();
+      escH=(e)=>{ if(e.key==='Escape') close(); }; document.addEventListener('keydown',escH);
+      overlay.addEventListener('click',(e)=>{ if(e.target===overlay) close(); }, {once:false}); };
+    openBtn.addEventListener('click',open);
+    const cl=overlay.querySelector('[data-tp-focus-close]'); if(cl) cl.addEventListener('click',close);
+  }
 }
 
 /* <<< THEMED SLIDE PACK <<< */
@@ -3757,7 +4165,7 @@ $('#jsonLoad').onclick=()=>{
     if(Array.isArray(d)) d={meta:{title:LESSON.meta.title,theme:LESSON.meta.theme},slides:d};
     if(!d.slides||!Array.isArray(d.slides)) throw new Error('Your JSON needs a "slides" array.');
     d.meta=Object.assign({title:'Lesson',theme:'indigo'}, d.meta||{});
-    LESSON=d; cur=0; modal.hidden=true; render();
+    LESSON=d; cur=0; TP_RUNTIME={}; modal.hidden=true; render();
   }catch(err){ $('#jsonErr').textContent='⚠ '+err.message; }
 };
 $('#jsonCopy').onclick=()=>{ try{navigator.clipboard.writeText(JSON.stringify(LESSON,null,2));}catch(e){} $('#jsonCopy').textContent='Copied ✓'; setTimeout(()=>$('#jsonCopy').textContent='Copy',1200); };
