@@ -1,5 +1,8 @@
 {
-  "meta": { "title": "MicroHistory Archive — Sample Lesson", "theme": "microhistory" },
+  "meta": {
+    "title": "MicroHistory Archive — Sample Lesson",
+    "theme": "microhistory"
+  },
   "slides": [
     {
       "type": "title",
@@ -7,18 +10,42 @@
       "eyebrow": "Module 04 · Great War Tactics",
       "title": "The Stalemate on the Western Front",
       "subtitle": "An analysis of trench warfare and the technological race to break the lines.",
-      "image": "",
+      "image": "assets/sample-image.png",
       "cta": "Start Lesson",
-      "progress": 4, "xp": 125, "hp": "65%",
+      "progress": 4,
+      "xp": 125,
+      "hp": "65%",
       "meta": [
-        { "label": "Archival Access", "value": "Intelligence Briefing 4A-1916", "icon": "shield" },
-        { "label": "Duration", "value": "12 Minutes" },
-        { "label": "Level", "value": "Scholarly" }
+        {
+          "label": "Archival Access",
+          "value": "Intelligence Briefing 4A-1916",
+          "icon": "shield"
+        },
+        {
+          "label": "Duration",
+          "value": "12 Minutes"
+        },
+        {
+          "label": "Level",
+          "value": "Scholarly"
+        }
       ],
       "context": [
-        { "icon": "archive", "title": "Strategic Overview", "body": "Map analysis of the Hindenburg Line and the complex defensive systems of 1916." },
-        { "icon": "gear", "title": "The Tech Race", "body": "Early tank prototypes, chemical warfare advancements, and aerial reconnaissance." },
-        { "icon": "person", "title": "Primary Sources", "body": "Digitised field reports and soldier correspondence from the archive vaults." }
+        {
+          "icon": "archive",
+          "title": "Strategic Overview",
+          "body": "Map analysis of the Hindenburg Line and the complex defensive systems of 1916."
+        },
+        {
+          "icon": "gear",
+          "title": "The Tech Race",
+          "body": "Early tank prototypes, chemical warfare advancements, and aerial reconnaissance."
+        },
+        {
+          "icon": "person",
+          "title": "Primary Sources",
+          "body": "Digitised field reports and soldier correspondence from the archive vaults."
+        }
       ]
     },
     {
@@ -26,19 +53,45 @@
       "wordmark": "The Great War Archive",
       "summaryLabel": "Module Summary",
       "title": "Outcomes & Intelligence",
-      "progress": 18, "xp": 125, "hp": "65%",
-      "footer": { "left": "File No: 1916-S-OBJ", "right": "Strictly Confidential" },
+      "progress": 18,
+      "xp": 125,
+      "hp": "65%",
+      "footer": {
+        "left": "File No: 1916-S-OBJ",
+        "right": "Strictly Confidential"
+      },
       "objectives": [
-        { "body": "Analyse the evolution of trench construction techniques and their impact on defensive warfare across the Western Front." },
-        { "body": "Evaluate the tactical impact and mechanical limitations of the Mark I tank during its initial deployment." },
-        { "body": "Decipher primary correspondence to understand the socio-psychological state of infantrymen under siege conditions." }
+        {
+          "body": "Analyse the evolution of trench construction techniques and their impact on defensive warfare across the Western Front."
+        },
+        {
+          "body": "Evaluate the tactical impact and mechanical limitations of the Mark I tank during its initial deployment."
+        },
+        {
+          "body": "Decipher primary correspondence to understand the socio-psychological state of infantrymen under siege conditions."
+        }
       ],
       "reference": [
-        { "title": "Haig's Field Diaries", "sub": "Primary Source • 1916", "icon": "ribbon" },
-        { "title": "Somme Trench Map", "sub": "Cartography • Sheet 57c", "icon": "archive" },
-        { "title": "Soldier's Letters", "sub": "Archival Records • Personal", "icon": "mail" }
+        {
+          "title": "Haig's Field Diaries",
+          "sub": "Primary Source • 1916",
+          "icon": "ribbon"
+        },
+        {
+          "title": "Somme Trench Map",
+          "sub": "Cartography • Sheet 57c",
+          "icon": "archive"
+        },
+        {
+          "title": "Soldier's Letters",
+          "sub": "Archival Records • Personal",
+          "icon": "mail"
+        }
       ],
-      "note": { "label": "Archivist's Note", "text": "Cross-reference these letters with the map to identify the 'Hedgehog' redoubts mentioned in Private Evans' diary entry." },
+      "note": {
+        "label": "Archivist's Note",
+        "text": "Cross-reference these letters with the map to identify the 'Hedgehog' redoubts mentioned in Private Evans' diary entry."
+      },
       "cta": "Complete Module"
     },
     {
@@ -46,17 +99,24 @@
       "classification": "Classification: Level 01",
       "title": "The Outbreak of War",
       "date": "June 28, 1914",
-      "progress": 32, "xp": 125,
+      "progress": 32,
+      "xp": 125,
       "body": [
         "The assassination of Archduke Franz Ferdinand, heir to the Austro-Hungarian throne, was the spark that ignited the powder keg of European tensions. In the streets of Sarajevo, Gavrilo Princip, a 19-year-old Serbian nationalist, fired the shots that would echo across a century.",
         "The political landscape of 1914 was defined by a complex web of mutual defence treaties. When Austria-Hungary declared war on Serbia, the gears of the alliance system began to turn with terrifying mechanical precision.",
         "By August, the great powers were locked in a conflict that few expected to last more than a few months. The Schlieffen Plan — Germany's strategy to knock France out quickly by invading through neutral Belgium — ultimately drew Great Britain into the fray."
       ],
-      "pullQuote": { "text": "The lights are going out all over Europe; we shall not see them lit again in our lifetime.", "source": "Sir Edward Grey, 1914" },
+      "pullQuote": {
+        "text": "The lights are going out all over Europe; we shall not see them lit again in our lifetime.",
+        "source": "Sir Edward Grey, 1914"
+      },
       "sidebar": {
         "image": "",
         "caption": "The Gräf & Stift Double Phaeton",
-        "note": { "title": "Archivist's Note", "text": "Princip belonged to 'The Black Hand', a secret military society. His success was largely accidental; the motorcade had taken a wrong turn and stalled right in front of him." },
+        "note": {
+          "title": "Archivist's Note",
+          "text": "Princip belonged to 'The Black Hand', a secret military society. His success was largely accidental; the motorcade had taken a wrong turn and stalled right in front of him."
+        },
         "progress": 32
       }
     },
@@ -64,20 +124,52 @@
       "type": "imageText",
       "moduleLabel": "Module 04 · Great War Tactics",
       "title": "Life in the Trenches",
-      "progress": 50, "xp": 125,
-      "image": { "tag": "Document #84-TF-1916", "caption": "Plate IV — Standardised British trench construction, Somme sector, late 1916." },
+      "progress": 50,
+      "xp": 125,
+      "image": {
+        "tag": "Document #84-TF-1916",
+        "caption": "Plate IV — Standardised British trench construction, Somme sector, late 1916.",
+        "src": "assets/sample-image.png"
+      },
       "sectionsLabel": "Structural Components",
       "sections": [
-        { "heading": "The Parapet", "body": "The front wall, reinforced with sandbags and timber to protect against direct rifle fire and shrapnel." },
-        { "heading": "Fire Step", "body": "A raised ledge that let soldiers stand high enough to see over the parapet and fire during an attack." },
-        { "heading": "Duckboards", "body": "Wooden slats laid at the bottom of the trench to provide a dry walkway above the standing water and mud." },
-        { "heading": "The Parados", "body": "The rear wall, designed to protect soldiers from the concussive blast of shells falling behind the lines." }
+        {
+          "heading": "The Parapet",
+          "body": "The front wall, reinforced with sandbags and timber to protect against direct rifle fire and shrapnel."
+        },
+        {
+          "heading": "Fire Step",
+          "body": "A raised ledge that let soldiers stand high enough to see over the parapet and fire during an attack."
+        },
+        {
+          "heading": "Duckboards",
+          "body": "Wooden slats laid at the bottom of the trench to provide a dry walkway above the standing water and mud."
+        },
+        {
+          "heading": "The Parados",
+          "body": "The rear wall, designed to protect soldiers from the concussive blast of shells falling behind the lines."
+        }
       ],
-      "note": { "label": "Archival Note", "text": "Trenches were never built in straight lines. A zig-zag or 'crenellated' pattern stopped a single shell or raider from clearing the whole length of the trench." },
+      "note": {
+        "label": "Archival Note",
+        "text": "Trenches were never built in straight lines. A zig-zag or 'crenellated' pattern stopped a single shell or raider from clearing the whole length of the trench."
+      },
       "supplemental": [
-        { "icon": "backpack", "title": "The Mud & Disease", "body": "Explore the sanitary challenges, including widespread 'Trench Foot' and 'Trench Fever'." },
-        { "icon": "wheat", "title": "Rations & Supplies", "body": "Examine a standard infantry pack and the reliance on bully beef and hard biscuits." },
-        { "icon": "brain", "title": "The Silent War", "body": "The psychological toll of waiting, shell shock, and the sound of enemy tunnelling." }
+        {
+          "icon": "backpack",
+          "title": "The Mud & Disease",
+          "body": "Explore the sanitary challenges, including widespread 'Trench Foot' and 'Trench Fever'."
+        },
+        {
+          "icon": "wheat",
+          "title": "Rations & Supplies",
+          "body": "Examine a standard infantry pack and the reliance on bully beef and hard biscuits."
+        },
+        {
+          "icon": "brain",
+          "title": "The Silent War",
+          "body": "The psychological toll of waiting, shell shock, and the sound of enemy tunnelling."
+        }
       ],
       "cta": "Continue"
     },
@@ -86,24 +178,54 @@
       "eyebrow": "Field Intelligence · Archive 44-B",
       "title": "The Western Front",
       "subtitle": "Visualising the static 475-mile line of trenches that stretched from the Swiss border to the North Sea, defining the brutal stalemate of World War I.",
-      "progress": 66, "xp": 125,
+      "progress": 66,
+      "xp": 125,
       "map": {
         "legendLabel": "Map Legend",
         "markers": [
-          { "x": 33, "y": 25, "label": "Ypres Salient" },
-          { "x": 50, "y": 50, "label": "Verdun Fortress" },
-          { "x": 72, "y": 72, "label": "Swiss Neutral Zone" }
+          {
+            "x": 33,
+            "y": 25,
+            "label": "Ypres Salient"
+          },
+          {
+            "x": 50,
+            "y": 50,
+            "label": "Verdun Fortress"
+          },
+          {
+            "x": 72,
+            "y": 72,
+            "label": "Swiss Neutral Zone"
+          }
         ],
         "legend": [
-          { "label": "Primary Trench Line", "type": "line" },
-          { "label": "Allied Territory", "type": "square" },
-          { "label": "Strategic Objective", "type": "dot" }
+          {
+            "label": "Primary Trench Line",
+            "type": "line"
+          },
+          {
+            "label": "Allied Territory",
+            "type": "square"
+          },
+          {
+            "label": "Strategic Objective",
+            "type": "dot"
+          }
         ]
       },
       "metricsLabel": "Front Metrics",
       "metrics": [
-        { "label": "Total Length", "value": "764 KM", "pct": 75 },
-        { "label": "Stalemate Duration", "value": "1,500+ Days", "pct": 100 }
+        {
+          "label": "Total Length",
+          "value": "764 KM",
+          "pct": 75
+        },
+        {
+          "label": "Stalemate Duration",
+          "value": "1,500+ Days",
+          "pct": 100
+        }
       ],
       "exploreLabel": "Examine Tactics",
       "note": {
@@ -113,9 +235,18 @@
         "role": "Royal Logistics, 1917"
       },
       "footnotes": [
-        { "title": "Trench Depth", "body": "Typically 12 feet deep, constructed in a zig-zag pattern to minimise blast impacts." },
-        { "title": "No Man's Land", "body": "The deadly territory between opposing lines, often ranging from 50 to 250 yards wide." },
-        { "title": "Logistic Network", "body": "Behind the front lay millions of miles of telephone wire and secondary supply trenches." }
+        {
+          "title": "Trench Depth",
+          "body": "Typically 12 feet deep, constructed in a zig-zag pattern to minimise blast impacts."
+        },
+        {
+          "title": "No Man's Land",
+          "body": "The deadly territory between opposing lines, often ranging from 50 to 250 yards wide."
+        },
+        {
+          "title": "Logistic Network",
+          "body": "Behind the front lay millions of miles of telephone wire and secondary supply trenches."
+        }
       ],
       "cta": "Continue Exploration"
     },
@@ -124,18 +255,31 @@
       "eyebrow": "Archival Footage",
       "title": "Video: The First Tanks",
       "date": "Sept 15, 1916",
-      "image": "",
+      "image": "assets/sample-image.png",
       "timestamp": "02:14 / 06:45",
-      "progress": 82, "xp": 125,
+      "progress": 82,
+      "xp": 125,
       "body": "In September 1916, during the Battle of the Somme, the British army unveiled a secret weapon that would change the face of warfare forever. The Mark I tank marked the first time armoured, motorised vehicles were used in combat, designed to break the bloody stalemate of trench warfare.",
       "quote": "The monster approached... it passed over the trenches like a giant beetle, impervious to machine gun fire. — Archival Field Report, 1916.",
       "metadataLabel": "Artifact Metadata",
       "metaCta": "View Blueprint",
       "metadata": [
-        { "key": "Class:", "value": "Heavy Tank" },
-        { "key": "Crew:", "value": "8 Men" },
-        { "key": "Speed:", "value": "3.7 mph" },
-        { "key": "Armament:", "value": "Two 6-pounder guns" }
+        {
+          "key": "Class:",
+          "value": "Heavy Tank"
+        },
+        {
+          "key": "Crew:",
+          "value": "8 Men"
+        },
+        {
+          "key": "Speed:",
+          "value": "3.7 mph"
+        },
+        {
+          "key": "Armament:",
+          "value": "Two 6-pounder guns"
+        }
       ],
       "prev": "Previous: Trench Layouts",
       "next": "Next: Aviation Aces",
@@ -145,13 +289,27 @@
       "type": "knowledgeCheck",
       "wordmark": "The Great War Archive",
       "title": "Knowledge Check: Trench Warfare",
-      "progress": 95, "xp": 125,
+      "progress": 95,
+      "xp": 125,
       "question": "Which breakthrough technology is most credited with finally ending the static stalemate of trench warfare?",
       "options": [
-        { "label": "A", "text": "Heavy Cavalry Regiments" },
-        { "label": "B", "text": "The Tank", "correct": true },
-        { "label": "C", "text": "Surveillance Hot Air Balloons" },
-        { "label": "D", "text": "Viking Longships" }
+        {
+          "label": "A",
+          "text": "Heavy Cavalry Regiments"
+        },
+        {
+          "label": "B",
+          "text": "The Tank",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Surveillance Hot Air Balloons"
+        },
+        {
+          "label": "D",
+          "text": "Viking Longships"
+        }
       ],
       "feedback": {
         "correctTitle": "Field Report: Accurate",
@@ -159,8 +317,15 @@
         "incorrectTitle": "Insufficient Data",
         "incorrectText": "Incorrect. Consider the limitations of traditional mobility against entrenched machine gun nests. Try again."
       },
-      "artifact": { "image": "", "id": "Artifact #842-W", "caption": "A steel beast designed to bridge the chasm of No Man's Land." },
-      "note": { "title": "Archivist's Note", "text": "Tanks were first developed by the British Navy — hence the term 'Landships' — under the cover of a 'water tank' production project to maintain secrecy." },
+      "artifact": {
+        "image": "",
+        "id": "Artifact #842-W",
+        "caption": "A steel beast designed to bridge the chasm of No Man's Land."
+      },
+      "note": {
+        "title": "Archivist's Note",
+        "text": "Tanks were first developed by the British Navy — hence the term 'Landships' — under the cover of a 'water tank' production project to maintain secrecy."
+      },
       "cta": "Finish Lesson"
     }
   ]

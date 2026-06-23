@@ -1,31 +1,65 @@
 {
-  "meta": { "title": "Imperium Scholar — Sample Lesson", "theme": "imperium" },
+  "meta": {
+    "title": "Imperium Scholar — Sample Lesson",
+    "theme": "imperium"
+  },
   "slides": [
     {
       "type": "title",
       "eyebrow": "Module 01",
       "title": "Foundations of Empire",
       "subtitle": "An exploration of Roman governance, military might, and cultural legacy.",
-      "image": "",
+      "image": "assets/sample-image.png",
       "cta": "Start Lesson",
-      "progress": 2, "xp": 0, "hp": "5",
+      "progress": 2,
+      "xp": 0,
+      "hp": "5",
       "meta": [
-        { "label": "Duration", "value": "15 Mins", "icon": "clock" },
-        { "label": "Reward", "value": "40 XP", "icon": "trophy" },
-        { "label": "Difficulty", "value": "Intro", "icon": "scroll" }
+        {
+          "label": "Duration",
+          "value": "15 Mins",
+          "icon": "clock"
+        },
+        {
+          "label": "Reward",
+          "value": "40 XP",
+          "icon": "trophy"
+        },
+        {
+          "label": "Difficulty",
+          "value": "Intro",
+          "icon": "scroll"
+        }
       ]
     },
     {
       "type": "outcomes",
       "eyebrow": "Module 01",
       "title": "Learning Objectives",
-      "progress": 16, "xp": "1,250", "hp": "5",
+      "progress": 16,
+      "xp": "1,250",
+      "hp": "5",
       "objectives": [
-        { "numeral": "I", "heading": "Pillars of Governance", "body": "Identify and explain the three core elements of the Roman constitution and their balance of power." },
-        { "numeral": "II", "heading": "Engineering Analysis", "body": "Evaluate the impact of architectural innovations like the arch and concrete on urban expansion." },
-        { "numeral": "III", "heading": "Primary Synthesis", "body": "Synthesise conflicting accounts of the Fall of the Republic into a coherent scholarly argument." }
+        {
+          "numeral": "I",
+          "heading": "Pillars of Governance",
+          "body": "Identify and explain the three core elements of the Roman constitution and their balance of power."
+        },
+        {
+          "numeral": "II",
+          "heading": "Engineering Analysis",
+          "body": "Evaluate the impact of architectural innovations like the arch and concrete on urban expansion."
+        },
+        {
+          "numeral": "III",
+          "heading": "Primary Synthesis",
+          "body": "Synthesise conflicting accounts of the Fall of the Republic into a coherent scholarly argument."
+        }
       ],
-      "footer": { "left": "Curriculum AH12-6", "right": "ROMAN REPUBLIC • AUGUSTAN AGE" },
+      "footer": {
+        "left": "Curriculum AH12-6",
+        "right": "ROMAN REPUBLIC • AUGUSTAN AGE"
+      },
       "cta": "Continue"
     },
     {
@@ -33,17 +67,24 @@
       "classification": "Source Reading I",
       "title": "The Fall of the Republic",
       "date": "44 BCE",
-      "progress": 30, "xp": "1,250",
+      "progress": 30,
+      "xp": "1,250",
       "body": [
         "The assassination of Julius Caesar on the Ides of March was the spark that toppled the fragile balance of the late Republic. In the Senate house, a conspiracy of senators who feared his accumulating power fired the act that would echo through the age.",
         "The political landscape of the first century BCE was defined by personal armies loyal to generals rather than the state. When ambition outran institution, the machinery of the Republic began to fail with terrifying momentum.",
         "By 27 BCE, Octavian had emerged from the civil wars as Augustus, the first citizen — princeps — cloaking monarchy in republican forms and inaugurating two centuries of imperial peace."
       ],
-      "pullQuote": { "text": "I found Rome a city of bricks and left it a city of marble.", "source": "Augustus (attrib.)" },
+      "pullQuote": {
+        "text": "I found Rome a city of bricks and left it a city of marble.",
+        "source": "Augustus (attrib.)"
+      },
       "sidebar": {
         "image": "",
         "caption": "A denarius bearing the portrait of Augustus",
-        "note": { "title": "Scholar's Note", "text": "Augustus never used the title 'king'. His genius lay in preserving the appearance of the Republic while holding its substance." },
+        "note": {
+          "title": "Scholar's Note",
+          "text": "Augustus never used the title 'king'. His genius lay in preserving the appearance of the Republic while holding its substance."
+        },
         "progress": 30
       }
     },
@@ -51,17 +92,39 @@
       "type": "imageText",
       "eyebrow": "Ancient Warfare",
       "title": "The Roman Legionary",
-      "progress": 45, "xp": "1,250",
-      "image": { "tag": "Primary Source Illustration", "caption": "Reconstruction of a 1st-century legionary" },
+      "progress": 45,
+      "xp": "1,250",
+      "image": {
+        "tag": "Primary Source Illustration",
+        "caption": "Reconstruction of a 1st-century legionary",
+        "src": "assets/sample-image.png"
+      },
       "sections": [
-        { "icon": "armor", "heading": "Standard Equipment", "body": "The Scutum (shield), Pilum (javelin), and Gladius (short sword) formed a lethal trinity of defensive and offensive capability." },
-        { "icon": "dumbbell", "heading": "Rigorous Training", "body": "Recruits were trained to march 20 Roman miles in 5 hours carrying 60 lbs of gear, ensuring logistical superiority." }
+        {
+          "icon": "armor",
+          "heading": "Standard Equipment",
+          "body": "The Scutum (shield), Pilum (javelin), and Gladius (short sword) formed a lethal trinity of defensive and offensive capability."
+        },
+        {
+          "icon": "dumbbell",
+          "heading": "Rigorous Training",
+          "body": "Recruits were trained to march 20 Roman miles in 5 hours carrying 60 lbs of gear, ensuring logistical superiority."
+        }
       ],
       "supplemental": [
-        { "icon": "stopwatch", "title": "3 min read" },
-        { "icon": "brain", "title": "Intermediate" }
+        {
+          "icon": "stopwatch",
+          "title": "3 min read"
+        },
+        {
+          "icon": "brain",
+          "title": "Intermediate"
+        }
       ],
-      "note": { "text": "The Romans owed their conquest of the world to no other cause than military training, discipline and army organisation.", "label": "Vegetius" },
+      "note": {
+        "text": "The Romans owed their conquest of the world to no other cause than military training, discipline and army organisation.",
+        "label": "Vegetius"
+      },
       "cta": "Continue"
     },
     {
@@ -70,28 +133,68 @@
       "time": "5 min read",
       "title": "The Silk Road Trade",
       "subtitle": "Explore the intricate network of land and maritime routes that connected the Roman Empire with the wealth of the Han Dynasty and beyond.",
-      "progress": 60, "xp": "1,250",
+      "progress": 60,
+      "xp": "1,250",
       "map": {
         "legendLabel": "Trade Legend",
         "routes": [
-          { "d": "M90,250 Q260,150 430,240 T720,210", "color": "#451274", "width": 3.5 },
-          { "d": "M90,300 Q300,410 500,320 T720,300", "color": "#caa400", "width": 3.5, "dash": "2 9" }
+          {
+            "d": "M90,250 Q260,150 430,240 T720,210",
+            "color": "#451274",
+            "width": 3.5
+          },
+          {
+            "d": "M90,300 Q300,410 500,320 T720,300",
+            "color": "#caa400",
+            "width": 3.5,
+            "dash": "2 9"
+          }
         ],
         "markers": [
-          { "x": 9, "y": 24, "label": "Rome", "icon": "temple" },
-          { "x": 80, "y": 42, "label": "Luoyang", "icon": "pagoda" }
+          {
+            "x": 9,
+            "y": 24,
+            "label": "Rome",
+            "icon": "temple"
+          },
+          {
+            "x": 80,
+            "y": 42,
+            "label": "Luoyang",
+            "icon": "pagoda"
+          }
         ],
         "legend": [
-          { "label": "Primary Land Route", "color": "var(--primary)" },
-          { "label": "Maritime Route", "color": "var(--secondary-container)" }
+          {
+            "label": "Primary Land Route",
+            "color": "var(--primary)"
+          },
+          {
+            "label": "Maritime Route",
+            "color": "var(--secondary-container)"
+          }
         ]
       },
       "footnotes": [
-        { "icon": "silk", "title": "Silk & Textiles", "body": "Luxury fabrics from the East, coveted by Roman elites as markers of status." },
-        { "icon": "spice", "title": "Spices & Incense", "body": "Cinnamon, pepper, and frankincense for culinary, medicinal, and ritual use." },
-        { "icon": "grain", "title": "Grain & Glass", "body": "Roman exports — glass vessels, wine, and olive oil — sent eastward in return." }
+        {
+          "icon": "silk",
+          "title": "Silk & Textiles",
+          "body": "Luxury fabrics from the East, coveted by Roman elites as markers of status."
+        },
+        {
+          "icon": "spice",
+          "title": "Spices & Incense",
+          "body": "Cinnamon, pepper, and frankincense for culinary, medicinal, and ritual use."
+        },
+        {
+          "icon": "grain",
+          "title": "Grain & Glass",
+          "body": "Roman exports — glass vessels, wine, and olive oil — sent eastward in return."
+        }
       ],
-      "note": { "quote": "The Silk Road was not a single path, but a shifting network of desert caravans and monsoon-driven ships that reshaped the ancient world's economy." },
+      "note": {
+        "quote": "The Silk Road was not a single path, but a shifting network of desert caravans and monsoon-driven ships that reshaped the ancient world's economy."
+      },
       "cta": "Continue"
     },
     {
@@ -99,14 +202,23 @@
       "eyebrow": "Video",
       "time": "4 min remaining",
       "title": "The Colosseum: Engineering Marvel",
-      "image": "",
+      "image": "assets/sample-image.png",
       "timestamp": "01:42 / 04:15",
-      "progress": 78, "xp": "1,250",
+      "progress": 78,
+      "xp": "1,250",
       "calloutTitle": "The Velarium System",
       "body": "To protect the 50,000+ spectators from the scorching Roman sun, engineers installed the Velarium — a massive retractable awning made of canvas, operated by a detachment of sailors from the Roman Navy using complex ropes and pulleys anchored to 240 exterior masts.",
       "metadata": [
-        { "icon": "quiz", "key": "Quick Quiz", "value": "Test your knowledge" },
-        { "icon": "notes", "key": "Study Notes", "value": "Download PDF transcript" }
+        {
+          "icon": "quiz",
+          "key": "Quick Quiz",
+          "value": "Test your knowledge"
+        },
+        {
+          "icon": "notes",
+          "key": "Study Notes",
+          "value": "Download PDF transcript"
+        }
       ],
       "cta": "Continue"
     },
@@ -114,14 +226,31 @@
       "type": "knowledgeCheck",
       "eyebrow": "Ancient Rome",
       "title": "Knowledge Check: Architecture",
-      "progress": 90, "xp": "1,250",
+      "progress": 90,
+      "xp": "1,250",
       "question": "Which architectural element allowed the Romans to build massive structures like the Aqueducts?",
-      "artifact": { "image": "", "id": "Reference: II. Roman Engineering" },
+      "artifact": {
+        "image": "",
+        "id": "Reference: II. Roman Engineering"
+      },
       "options": [
-        { "label": "A", "text": "The Arch", "correct": true },
-        { "label": "B", "text": "The Column" },
-        { "label": "C", "text": "The Spire" },
-        { "label": "D", "text": "The Buttress" }
+        {
+          "label": "A",
+          "text": "The Arch",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "The Column"
+        },
+        {
+          "label": "C",
+          "text": "The Spire"
+        },
+        {
+          "label": "D",
+          "text": "The Buttress"
+        }
       ],
       "feedback": {
         "correctTitle": "Correct",

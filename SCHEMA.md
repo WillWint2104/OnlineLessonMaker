@@ -42,6 +42,14 @@ Every image slot is **optional**. Provide a **relative repo path** (e.g. `"asset
 to render the image; **omit it / leave `""`** to render the theme’s gradient placeholder with a
 small “… placeholder” corner tag. No external URLs — they are blocked by `validate.mjs`.
 
+Every image field accepts **either a bare path string** (`"image": "assets/foo.jpg"`) **or an
+object carrying the path under `src`** (`"image": {"src": "assets/foo.jpg", "tag": "…"}` — used by
+`imageText`). Where a field nests the image (`source.image`, `artifact.image`, `map.image`,
+`sidebar.image`), set the path on that nested key. The image fields per type are:
+`title.image`, `outcomes.image` *(imperium only — the microhistory dossier outcomes has no image
+area)*, `imageText.image[.src]`, `infographic.map.image`, `video.image`, `knowledgeCheck.artifact.image`,
+`text.sidebar.image`, `sourceAnalysis.source.image`.
+
 ### Colour & icon tokens
 
 - Colours are theme tokens — you normally don’t set them. Where a field accepts a colour
@@ -186,10 +194,14 @@ are **session‑kept**, and reveals are gated on a non‑empty attempt.
 - **`mode: "extended"`** — an author‑defined list of **paragraph boxes** (e.g. Introduction / Body /
   Conclusion); each has guidance, its own textarea, and **its own model paragraph revealed after that
   box's attempt**. Set `focusReading: true` to add a **Focus reading** modal (question + stimulus).
+- **`mode: "quiz"`** — a numbered **question list on a single slide**; each question has its own answer
+  box and a **Reveal answer** button that shows the model answer after a non‑empty attempt (keyboard‑
+  operable, `aria-expanded`, announced via the slide's live region). Use this instead of splitting a
+  starter quiz across separate question / answer slides.
 
 | Field | Type | Used by | Notes |
 |---|---|---|---|
-| `mode` | `"short"` \| `"extended"` | both | Layout selector (default `short`). |
+| `mode` | `"short"` \| `"extended"` \| `"quiz"` | both | Layout selector (default `short`). |
 | `eyebrow` | string | both | Section label. |
 | `title` | string | both | Task heading. |
 | `marks` | string | both | Marks pill in the question header. |
@@ -200,6 +212,9 @@ are **session‑kept**, and reveals are gated on a non‑empty attempt.
 | `criteria[]` | string[] | both (short) | Marking‑guide bullets. |
 | `paragraphs[]` | `{label,guide,model}` | both (extended) | One box + revealable model per paragraph. |
 | `focusReading` | boolean | both (extended) | Adds the Focus reading modal. |
+| `questions[]` | `{question,answer,marks?}` | both (quiz) | Numbered question, answer box + revealable answer. |
+| `tag` | string | both (quiz) | Meta pill (default *Starter quiz*). |
+| `intro` | string | both (quiz) | Lead line under the heading. |
 | `cta` | string | both | Footer button (default *Continue*). |
 
 ## `outro`

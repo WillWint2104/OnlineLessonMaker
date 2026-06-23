@@ -7,6 +7,27 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **Editable images on every pack slide type.** Image fields now accept a **bare relative path
+  string** as well as an object (`{src,…}`); previously `imageText` only read `image.src`, so a
+  natural `"image": "assets/foo.jpg"` was ignored and always showed the placeholder. A new shared
+  `tpSrc()` normaliser routes every image slot (`title/outcomes/video.image`, `imageText.image[.src]`,
+  `infographic.map.image`, `knowledgeCheck.artifact.image`, `text.sidebar.image`,
+  `sourceAnalysis.source.image`) through `tpImg`, so a supplied path always renders an escaped
+  `<img>` and an empty value still falls back to the gradient placeholder. (microhistory `outcomes`
+  has no image area by design — its WW1 dossier reference has none.)
+- **microhistory `title` no longer reads as a video.** Removed the large play-button overlay from
+  the WW1 title hero; `type:"title"` renders the title/cover layout (hero + dossier meta footer +
+  context cards) in both themes, matching imperium.
+
+### Added
+- **`guidedResponse` `mode:"quiz"`** — a numbered question list on a **single slide**, each question
+  with its own answer box and a **Reveal answer** button that shows the model answer after a
+  non-empty attempt (keyboard-operable, `aria-expanded`, announced via the slide's live region) —
+  replacing the split question-slide / answer-slide pattern. Verified with `scripts/verify-pack-fixes.mjs`
+  (both example lessons, both themes: images render + load, empty slots placeholder, title-not-video,
+  quiz reveal). `validate` green.
+
 ### Added
 - **Three new typed-answer slide types in the imperium + microhistory pack** — `sourceAnalysis`,
   `guidedResponse` (`mode: "short"` | `"extended"`) and `outro`. Extends the existing
