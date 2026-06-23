@@ -8,6 +8,10 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Published showcase lessons for the two new themes** — `lessons/imperium-scholar-sample.html`
+  and `lessons/microhistory-archive-sample.html`, standalone self-contained exports of the
+  `examples/*.json` worked lessons (all 7 pack slide types each), so the imperium/microhistory
+  themes are directly viewable on the live site. Zero external requests; `validate` green.
 - **Two new themes + a JSON-rendered "themed slide pack": `imperium` (Imperium Scholar · Rome)
   and `microhistory` (MicroHistory Archive · WW1).** When `meta.theme` is one of these, every
   slide is routed through a dedicated pack renderer (`renderPackSlide`) that reproduces the
