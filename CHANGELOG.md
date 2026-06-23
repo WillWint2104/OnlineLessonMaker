@@ -8,6 +8,24 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Two new themes + a JSON-rendered "themed slide pack": `imperium` (Imperium Scholar · Rome)
+  and `microhistory` (MicroHistory Archive · WW1).** When `meta.theme` is one of these, every
+  slide is routed through a dedicated pack renderer (`renderPackSlide`) that reproduces the
+  reference slide designs natively from JSON for seven types — `title`, `outcomes`, `text`,
+  `imageText`, `infographic`, `video`, `knowledgeCheck`. Each theme has a distinct visual
+  language (imperium: Playfair Display + flat tonal outlined cards, purple/gold; microhistory:
+  Courier Prime + hard offset shadows, polaroid frames, paper-dot grain, dossier metaphor) with
+  one shared header/footer component per theme. `knowledgeCheck` is interactive — selecting an
+  option reveals feedback and **Continue stays disabled until a correct answer** (also gating the
+  present-mode click-to-advance). Image slots render a themed gradient placeholder + "… placeholder"
+  tag until a local asset path is supplied. Self-contained: only one new vendored font (Playfair
+  Display, base64-inlined; Courier Prime/Inter/Hanken Grotesk were already vendored), inline CSS,
+  inline SVG icons, no external host. All pack CSS is `tp-`-prefixed and scoped under the two
+  themes, so the existing themes/renderers/published lessons are untouched (regression-tested).
+  Adds `SCHEMA.md` (author-facing field reference) and one worked example lesson per theme under
+  `examples/` (paste into ⌗ JSON → Load JSON). Verified with `scripts/verify-theme-pack.mjs` (all
+  7 types render in both themes, fonts apply, placeholders show, knowledgeCheck gating works, zero
+  external requests, existing `egypt` theme still renders via the engine); `validate` green.
 - **Three published student lessons + two self-contained interactives.** Published as standalone
   Study-mode exports under `lessons/` (same wrapper / embedded `#lesson-data` mechanism as the POW
   lesson), hosted byte-for-byte as exported:
