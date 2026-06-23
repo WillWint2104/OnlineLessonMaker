@@ -21,6 +21,21 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   context cards) in both themes, matching imperium.
 
 ### Added
+- **Images inspector panel (themed slide pack).** In Edit mode, selecting an `imperium`/`microhistory`
+  slide now shows an **Images** section in the inspector that lists every image slot on that slide with
+  a human-readable label (Hero image · Outcomes image · Sidebar image · Image · Map image · Video still ·
+  Artifact image · Source image) and an editable **repo-relative path** field. Slots are detected
+  generically across all pack types and both themes — the known per-type fields (`image`, `image.src`,
+  `map.image`, `artifact.image`, `source.image`, `sidebar.image`) are always listed (even when absent, so
+  a path can be added) and a recursive scan surfaces any stray `image`/`img` field. Typing a path updates
+  the slide data and re-renders live with a small inline thumbnail; an empty field falls back to the
+  themed gradient placeholder. **External URLs are rejected** (repo-relative only — the school firewall /
+  `validate.mjs` allow same-origin assets); the actual image files are still added under `assets/` and
+  committed separately. Inputs are labelled (`<label for>`) with logical tab order, and paths round-trip:
+  they appear in the exported / ⌗ JSON and re-populate the panel on load. Still one self-contained file,
+  no `localStorage`, no third-party host; `esc()` on every interpolation. `validate` green; verified in a
+  headless DOM across both example lessons in both themes (slot listing, render-on-set, clear-to-placeholder,
+  external-URL rejection, JSON export/import round-trip).
 - **`guidedResponse` `mode:"quiz"`** — a numbered question list on a **single slide**, each question
   with its own answer box and a **Reveal answer** button that shows the model answer after a
   non-empty attempt (keyboard-operable, `aria-expanded`, announced via the slide's live region) —
