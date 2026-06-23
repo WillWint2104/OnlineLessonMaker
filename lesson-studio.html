@@ -658,6 +658,14 @@ html.ins-collapsed body.edit #insReopen{display:flex;align-items:center;gap:6px;
   border:1px solid var(--line);border-radius:8px;padding:8px 10px;}
 .inspector .ia{min-height:62px;line-height:1.5;resize:vertical;}
 .inspector .ii:focus,.inspector .ia:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
+.inspector .imgslot{display:flex;flex-direction:column;gap:5px;}
+.inspector .imgslot-row{display:flex;gap:9px;align-items:center;}
+.inspector .imgslot-row .ii{flex:1;min-width:0;}
+.inspector .imgslot-th{flex:0 0 auto;width:42px;height:42px;border-radius:8px;overflow:hidden;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);color:var(--muted);}
+.inspector .imgslot-th img{width:100%;height:100%;object-fit:cover;display:block;}
+.inspector .imgslot .ii.bad{border-color:#d9534f;box-shadow:0 0 0 2px color-mix(in srgb,#d9534f 22%,transparent);}
+.inspector .imgslot-msg{font-size:.72rem;color:#d9534f;}
+.inspector .imgslot-msg:empty{display:none;}
 .inspector .qlist{display:flex;flex-direction:column;gap:11px;}
 .inspector .qg{border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--surface);}
 .inspector .qg.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
@@ -2964,6 +2972,68 @@ function layoutSection(){
     <div class="seg2"><button data-layout="fit" class="${v==='fit'?'on':''}">Fit</button><button data-layout="scroll" class="${v==='scroll'?'on':''}">Scroll</button></div>
     <div class="muted small">Fit keeps the slide to one screen. Scroll allows long-form vertical scrolling. Present always uses Fit.</div></div>`;
 }
+/* ---------- Images panel (themed slide pack: imperium / microhistory) ----------
+   Lists every image slot on the current pack slide as a labelled, repo-relative
+   path field with a live thumbnail. Editing a path re-renders the slide; an empty
+   path falls back to the theme gradient placeholder (existing tpImg behaviour).
+   External URLs are rejected — the school firewall / validate.mjs allow only
+   same-origin assets. Round-trips: paths land in the slide JSON (⌗ / Export) and
+   loading JSON re-populates the panel (it reads straight off LESSON.slides). */
+const PACK_IMG_SLOTS={            // [path-within-slide, label, onlyTheme?] — always shown so an absent slot can still be filled in
+  title:          [['image','Hero image']],
+  outcomes:       [['image','Outcomes image','imperium']],   // microhistory's dossier outcomes has no image area
+  imageText:      [['image','Image']],                       // string OR {src,caption,tag} — handled by imgSlotAt
+  infographic:    [['map.image','Map image']],
+  video:          [['image','Video still']],
+  knowledgeCheck: [['artifact.image','Artifact image']],
+  sourceAnalysis: [['source.image','Source image']],
+  text:           [['sidebar.image','Sidebar image']],
+};
+/* not a repo-relative path: any URL scheme (http:, https:, data:, mailto:…) or a protocol-relative // */
+const isExtPath=v=>/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test((v||'').trim());
+/* current string value + the exact dot-path to write it to. An `image` field may be a bare
+   string OR an object {src,…} (imageText) — write to `.src` in that case so caption/tag survive. */
+function imgSlotAt(s,rel){ const v=getP(s,rel);
+  if(v&&typeof v==='object') return {path:rel+'.src',value:String(v.src||'').trim()};
+  return {path:rel,value:String(v==null?'':v).trim()}; }
+/* every image slot on a slide: the type's known slots (always present) + any stray image/img
+   field found anywhere in the data (future-proofs per-section/per-item images in the pack). */
+function imageSlots(i,s){
+  const out=[], seen=new Set(), theme=LESSON.meta&&LESSON.meta.theme, cap=x=>x?x.charAt(0).toUpperCase()+x.slice(1):x;
+  (PACK_IMG_SLOTS[s.type]||[]).forEach(([rel,label,onlyTheme])=>{ if(onlyTheme&&theme!==onlyTheme) return;
+    const r=imgSlotAt(s,rel); out.push({path:r.path,label,value:r.value}); seen.add(r.path); });
+  const walk=(node,prefix,ctx)=>{
+    if(Array.isArray(node)){ node.forEach((v,idx)=>{ if(v&&typeof v==='object') walk(v,prefix+'.'+idx,ctx+' '+(idx+1)); }); return; }
+    if(!node||typeof node!=='object') return;
+    for(const k in node){ const v=node[k], p=prefix?prefix+'.'+k:k;
+      if(k==='image'||k==='img'){
+        const r=(v&&typeof v==='object')?{path:p+'.src',value:String(v.src||'').trim()}:{path:p,value:String(v==null?'':v).trim()};
+        if(!seen.has(r.path)){ seen.add(r.path); out.push({path:r.path,label:(p==='image'||p==='img')?'Image':(cap(ctx.trim())||'Nested')+' image',value:r.value}); }
+      } else if(v&&typeof v==='object'){ walk(v,p,k); } }
+  };
+  walk(s,'','');
+  return out;
+}
+/* write a path string into the slide, creating intermediate {} containers as needed
+   (e.g. a `source.image` on a slide that had no `source` yet). Empty string keeps the
+   key but renders the placeholder (tpHasImg('') is false). */
+function setImgPath(root,path,v){ const ks=path.split('.'), last=ks.pop(); let t=root;
+  for(const k of ks){ if(t[k]==null||typeof t[k]!=='object') t[k]={}; t=t[k]; } t[last]=v; }
+function imagesSection(i,s){
+  if(!PACK_THEMES.has(LESSON.meta&&LESSON.meta.theme)) return '';   // pack themes only; other themes use the media block
+  const slots=imageSlots(i,s);
+  if(!slots.length) return `<div class="isec"><div class="isec-h">Images</div><div class="muted small">This slide type has no image slots.</div></div>`;
+  const rows=slots.map((sl,n)=>{ const id='imgslot-'+i+'-'+n, has=!!sl.value&&!isExtPath(sl.value);
+    return `<div class="imgslot"><label for="${id}">${esc(sl.label)}</label>
+      <div class="imgslot-row">
+        <span class="imgslot-th${has?'':' empty'}" data-imgth>${has?`<img src="${esc(sl.value)}" alt="" loading="lazy">`:tpIc('image',16)}</span>
+        <input class="ii" id="${id}" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="assets/example.jpg" value="${esc(sl.value)}" data-imgslot="slides.${i}.${sl.path}" aria-describedby="${id}-h">
+      </div>
+      <div class="imgslot-msg" id="${id}-h" data-imgmsg></div></div>`; }).join('');
+  return `<div class="isec"><div class="isec-h">Images <span class="muted">(${slots.length})</span></div>
+    <div class="muted small">Repo-relative paths only (e.g. <code>assets/coin.jpg</code>). Add the file under <code>assets/</code> and commit it separately; leave blank for the theme placeholder.</div>
+    ${rows}</div>`;
+}
 function renderInspector(){
   const ins=$('#inspector'); if(!ins) return;
   if(mode!=='edit'){ ins.innerHTML=''; return; }
@@ -2971,7 +3041,7 @@ function renderInspector(){
   const top = selZone===null
     ? `<div class="ihint">Select a part of the slide to edit it here.</div>`
     : `<div class="isec"><div class="isec-h">${TYPELAB[s.type]||s.type} · fields</div>${inspectorForm(i,s,selZone)}</div>${wsIsContent(s.type)?worksheetSection(i,s,selZone):''}`;
-  ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${top}${layoutSection()}${metaSection()}`;
+  ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${top}${imagesSection(i,s)}${layoutSection()}${metaSection()}`;
   wireInspector();
   const c=ins.querySelector('.cur'); if(c) c.scrollIntoView({block:'nearest'});
 }
@@ -3045,6 +3115,19 @@ function wireInspector(){
   const apoi=ins.querySelector('[data-addpoi]'); if(apoi) apoi.onclick=()=>{ const si=apoi.dataset.addpoi; const m=LESSON.slides[si].media; (m.pois=m.pois||[]).push({x:50,y:50,kind:'tooltip',title:'New hotspot',info:'',url:''}); renderSlide(); };
   ins.querySelectorAll('[data-delpoi]').forEach(b=>b.onclick=()=>{ const[si,ki]=b.dataset.delpoi.split(':'); LESSON.slides[si].media.pois.splice(ki,1); renderSlide(); });
   ins.querySelectorAll('[data-poikind]').forEach(sel=>sel.onchange=()=>{ const[si,ki]=sel.dataset.poikind.split(':'); LESSON.slides[si].media.pois[ki].kind=sel.value; renderSlide(); });
+  // ---- Images panel (pack themes): repo-relative path per image slot + live thumbnail ----
+  const phIcon=tpIc('image',16);
+  ins.querySelectorAll('[data-imgslot]').forEach(el=>{
+    const slot=el.closest('.imgslot'), th=slot&&slot.querySelector('[data-imgth]'), msg=slot&&slot.querySelector('[data-imgmsg]');
+    const setThumb=v=>{ if(!th) return; th.innerHTML=''; if(v){ th.classList.remove('empty'); const im=new Image(); im.alt=''; im.loading='lazy';
+        im.onerror=()=>{ th.classList.add('empty'); th.innerHTML=phIcon; }; im.src=v; th.appendChild(im); }
+      else { th.classList.add('empty'); th.innerHTML=phIcon; } };
+    el.addEventListener('input',()=>{ const v=el.value.trim();
+      if(v&&isExtPath(v)){ el.classList.add('bad'); if(msg) msg.textContent='Use a repo-relative path (no external URLs).'; return; }   // validator allows only same-origin assets
+      el.classList.remove('bad'); if(msg) msg.textContent='';
+      setImgPath(LESSON, el.dataset.imgslot, v); setThumb(v); renderCanvas(); });
+    const im=th&&th.querySelector('img'); if(im) im.onerror=()=>{ th.classList.add('empty'); th.innerHTML=phIcon; };   // existing path that no longer resolves → placeholder icon
+  });
 }
 
 /* ---------- wire interactions ---------- */
