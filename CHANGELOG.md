@@ -8,6 +8,23 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **GeoLearn theme (Geography) — a third self-contained pack theme.** Clean/flat/calm academic
+  direction: teal-on-mint, **Inter** (reuses the already-vendored face — no web-font link), 20px
+  rounded cards, hairline borders, a soft `0 1px 3px rgba(0,0,0,.06)` shadow. Registered as
+  `data-theme="geolearn"` with the exact token palette and added to the theme selector, so
+  `setTheme('geolearn')` works like the others. Bespoke renderers (universal top/bottom chrome,
+  integrated icon-mark header on every type, locked sizing — fixed 64px/84px bars with the content
+  region scrolling, core components never squished, automatic omission of empty optional blocks, and
+  a branded teal gradient placeholder for missing images) for **title, outcomes, text (article/
+  studyguide), imageText (panel/gallery), infographic, video, knowledgeCheck, interactive**, plus the
+  shared `guidedResponse`/`sourceAnalysis`/`outro` renderers restyled to GeoLearn tokens. Focused-card
+  modals (Syllabus/Resources/Case study, glossary terms, infographic Key points, video transcript) with
+  Esc/backdrop/×/focus-return; knowledgeCheck gating + session-kept typed answers reuse the existing
+  pack wiring. Self-contained: inline SVG icons, CSS variables, embedded font — `validate` stays green.
+- **Theme-aware slide-type registry.** The add-a-slide palette + preview now derive each theme's
+  supported types from its actually-implemented renderers (`THEME_TYPES = keys(IM_PACK/MH_PACK/GL_PACK)`),
+  so switching theme updates the list and only that theme's types are offered.
+
 - **Embed images in the Images panel (drag-and-drop + file picker).** Each image slot in the
   Edit-mode Images panel now accepts an image **dragged from the desktop onto its thumbnail** or
   chosen via a **“Choose file”** native picker; the file is read with `FileReader.readAsDataURL` and
@@ -20,25 +37,6 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   in every pack slide type and both themes; **Clear** restores the gradient placeholder. Round-trips
   through ⌗ JSON export/import and the standalone-page export.
 
-### Fixed
-- **Edit preview no longer crushed by the side panels.** In Edit mode the fixed-aspect 1280×720
-  preview now keeps a legible minimum scale (floored at 0.46) instead of shrinking arbitrarily as the
-  nav + inspector eat width, and the stage **scrolls** when a floored slide exceeds the available
-  area. Study / Present / Export keep the exact previous fit (no floor, maximise) so published
-  lessons are unchanged.
-- **Editable images on every pack slide type.** Image fields now accept a **bare relative path
-  string** as well as an object (`{src,…}`); previously `imageText` only read `image.src`, so a
-  natural `"image": "assets/foo.jpg"` was ignored and always showed the placeholder. A new shared
-  `tpSrc()` normaliser routes every image slot (`title/outcomes/video.image`, `imageText.image[.src]`,
-  `infographic.map.image`, `knowledgeCheck.artifact.image`, `text.sidebar.image`,
-  `sourceAnalysis.source.image`) through `tpImg`, so a supplied path always renders an escaped
-  `<img>` and an empty value still falls back to the gradient placeholder. (microhistory `outcomes`
-  has no image area by design — its WW1 dossier reference has none.)
-- **microhistory `title` no longer reads as a video.** Removed the large play-button overlay from
-  the WW1 title hero; `type:"title"` renders the title/cover layout (hero + dossier meta footer +
-  context cards) in both themes, matching imperium.
-
-### Added
 - **Images inspector panel (themed slide pack).** In Edit mode, selecting an `imperium`/`microhistory`
   slide now shows an **Images** section in the inspector that lists every image slot on that slide with
   a human-readable label (Hero image · Outcomes image · Sidebar image · Image · Map image · Video still ·
@@ -61,7 +59,6 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   (both example lessons, both themes: images render + load, empty slots placeholder, title-not-video,
   quiz reveal). `validate` green.
 
-### Added
 - **Three new typed-answer slide types in the imperium + microhistory pack** — `sourceAnalysis`,
   `guidedResponse` (`mode: "short"` | `"extended"`) and `outro`. Extends the existing
   `renderPackSlide` machinery (shared DOM, theme-scoped CSS, reused chrome); existing types and
@@ -183,7 +180,26 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   the link opens without advancing the slide (an `<a>` is already in the click-ignore list). All
   output is `esc()`-d; Study / Present / Export otherwise unchanged.
 
+- **Slide-type palette** — a categorised, wireframe-thumbnail "add a slide" surface (Edit
+  only, bottom strip) replacing the append-only chip menu. Category tags (All · Structure ·
+  Text & notes · Media · Source & questions) filter a horizontally-scrollable row of
+  hand-built wireframe thumbnails (one per type, with chevrons). **Drag** a thumbnail onto
+  the slide list to insert a new slide at that position (the reorder drop-indicator is
+  reused; a new-type token in `dataTransfer` distinguishes insert from reorder); **click** a
+  thumbnail to insert after the current slide. New slides reuse the existing factory
+  (extracted to `SLIDE_FACTORY` / `makeSlide`) and open selected in the inspector. Sidebar
+  drag-reorder / ✕ / ▲▼ unchanged. STUDY / PRESENT / EXPORT and the data model unchanged.
+
+- Dev tooling baseline (not part of the single-file app): `package.json` (dev-only
+  `playwright`), `scripts/shots.mjs` (theme × slide screenshot harness),
+  `.github/workflows/screenshots.yml` (informational PR artifact, non-gating),
+  `.github/pull_request_template.md`, this changelog, and `docs/CHECKING.md`.
+
 ### Changed
+- **Studio themes reduced to `imperium`, `microhistory`, `geolearn`.** Default lesson now starts EMPTY
+  with a friendly empty-state (no "type not available" on a fresh editor); loading JSON whose type the
+  active theme doesn't implement degrades to a calm in-canvas message instead of erroring.
+
 - **Slides render on a fixed-aspect 1280×720 canvas that scales to fit (deck model).** The
   per-type layouts now lay out inside a logical 1280×720 `.canvas` which is scaled with
   `transform: scale(s)` (centred in the `.stage`) — **identical across Edit / Study / Present /
@@ -237,18 +253,37 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   codes documented in the theme; a dedicated ww1 sample lesson is the place to wire them
   (the shared seed stays Egypt/AH11).
 
-### Added
-- **Slide-type palette** — a categorised, wireframe-thumbnail "add a slide" surface (Edit
-  only, bottom strip) replacing the append-only chip menu. Category tags (All · Structure ·
-  Text & notes · Media · Source & questions) filter a horizontally-scrollable row of
-  hand-built wireframe thumbnails (one per type, with chevrons). **Drag** a thumbnail onto
-  the slide list to insert a new slide at that position (the reorder drop-indicator is
-  reused; a new-type token in `dataTransfer` distinguishes insert from reorder); **click** a
-  thumbnail to insert after the current slide. New slides reuse the existing factory
-  (extracted to `SLIDE_FACTORY` / `makeSlide`) and open selected in the inspector. Sidebar
-  drag-reorder / ✕ / ▲▼ unchanged. STUDY / PRESENT / EXPORT and the data model unchanged.
+- **Firewall hardening — `lesson-studio.html` now makes ZERO third-party requests.**
+  Replaced the Google Fonts `<link>`/preconnects with base64-inlined `@font-face` for the
+  exact families/weights previously linked (Hanken Grotesk, EB Garamond, Space Grotesk,
+  Marcellus, Cinzel, Fraunces, Oswald); vendored `@google/model-viewer` to a same-origin
+  file; swapped the seed 3D model from `modelviewer.dev/Astronaut.glb` to local
+  `assets/vendor/sample-cube.glb`. Inlining fonts (~319 KB raw) keeps exported lessons
+  font-complete with no external files. `scripts/validate.mjs` now **hard-fails** on
+  third-party `<script>`/`<link>` hosts in the app (still only warns for `lessons/*.html`,
+  where teachers may embed external video/images). _Caveat:_ exported lessons hosted under
+  `/lessons/` reference model-viewer at a root-relative `assets/vendor/…` path — see
+  HANDOFF §8 for the one-step fix when publishing a 3D lesson.
+- **`deploy-pages` gains a `workflow_dispatch` trigger.** Auto-merge runs as
+  `github-actions[bot]` (`GITHUB_TOKEN`), and GitHub doesn't fire workflows on
+  `GITHUB_TOKEN` pushes — so the `push: main` trigger never runs on auto-merged commits.
+  Publish the current `main` manually with
+  `gh workflow run "Deploy to GitHub Pages" --ref main`.
+- **Hosting switched from Cloudflare Pages → GitHub Pages.** Added
+  `.github/workflows/deploy-pages.yml` (deploys the repo root on push to `main` via GitHub
+  Actions); removed `deploy-cloudflare.yml`. Docs (HANDOFF §7–§8, README, `docs/CHECKING.md`,
+  PR template, CLAUDE.md) updated to the live URL
+  `https://willwint2104.github.io/OnlineLessonMaker/`. Note: GitHub Pages has **no native
+  per-PR preview** — pre-merge visual review is the `screenshots` artifact + local
+  `node scripts/shots.mjs`; open the live page after merge. Added `.gitattributes`
+  (`* text=auto eol=lf`); dropped the now-unused `.wrangler/` ignore.
 
 ### Removed
+- **Egypt theme removed from the studio engine + selector** (token block, selector entry). Legacy slide
+  types (`cover`, `notes`, …) and the other legacy themes (`neutral`/`rome`/`ww1`/`wellbeing`) are
+  hidden from the selector/palette via the manifest (their dormant renderers/CSS stay in the file).
+  **Nothing under `lessons/` or `interactives/` was touched** — exported pages are unchanged.
+
 - The old sidebar "Add a card" chip bar (`#addbar`) — superseded by the palette.
 - **Edit-mode inspector** — replaces inline-contenteditable editing with a **clean,
   Study-identical canvas + a right-hand properties panel**. Clicking a tagged region
@@ -287,37 +322,23 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   (inlines latin woff2 from `@fontsource/*` as base64 `@font-face` + points model-viewer
   local) and `scripts/make-sample-glb.mjs`.
 
-### Changed
-- **Firewall hardening — `lesson-studio.html` now makes ZERO third-party requests.**
-  Replaced the Google Fonts `<link>`/preconnects with base64-inlined `@font-face` for the
-  exact families/weights previously linked (Hanken Grotesk, EB Garamond, Space Grotesk,
-  Marcellus, Cinzel, Fraunces, Oswald); vendored `@google/model-viewer` to a same-origin
-  file; swapped the seed 3D model from `modelviewer.dev/Astronaut.glb` to local
-  `assets/vendor/sample-cube.glb`. Inlining fonts (~319 KB raw) keeps exported lessons
-  font-complete with no external files. `scripts/validate.mjs` now **hard-fails** on
-  third-party `<script>`/`<link>` hosts in the app (still only warns for `lessons/*.html`,
-  where teachers may embed external video/images). _Caveat:_ exported lessons hosted under
-  `/lessons/` reference model-viewer at a root-relative `assets/vendor/…` path — see
-  HANDOFF §8 for the one-step fix when publishing a 3D lesson.
-- **`deploy-pages` gains a `workflow_dispatch` trigger.** Auto-merge runs as
-  `github-actions[bot]` (`GITHUB_TOKEN`), and GitHub doesn't fire workflows on
-  `GITHUB_TOKEN` pushes — so the `push: main` trigger never runs on auto-merged commits.
-  Publish the current `main` manually with
-  `gh workflow run "Deploy to GitHub Pages" --ref main`.
-- **Hosting switched from Cloudflare Pages → GitHub Pages.** Added
-  `.github/workflows/deploy-pages.yml` (deploys the repo root on push to `main` via GitHub
-  Actions); removed `deploy-cloudflare.yml`. Docs (HANDOFF §7–§8, README, `docs/CHECKING.md`,
-  PR template, CLAUDE.md) updated to the live URL
-  `https://willwint2104.github.io/OnlineLessonMaker/`. Note: GitHub Pages has **no native
-  per-PR preview** — pre-merge visual review is the `screenshots` artifact + local
-  `node scripts/shots.mjs`; open the live page after merge. Added `.gitattributes`
-  (`* text=auto eol=lf`); dropped the now-unused `.wrangler/` ignore.
-
-### Added
-- Dev tooling baseline (not part of the single-file app): `package.json` (dev-only
-  `playwright`), `scripts/shots.mjs` (theme × slide screenshot harness),
-  `.github/workflows/screenshots.yml` (informational PR artifact, non-gating),
-  `.github/pull_request_template.md`, this changelog, and `docs/CHECKING.md`.
+### Fixed
+- **Edit preview no longer crushed by the side panels.** In Edit mode the fixed-aspect 1280×720
+  preview now keeps a legible minimum scale (floored at 0.46) instead of shrinking arbitrarily as the
+  nav + inspector eat width, and the stage **scrolls** when a floored slide exceeds the available
+  area. Study / Present / Export keep the exact previous fit (no floor, maximise) so published
+  lessons are unchanged.
+- **Editable images on every pack slide type.** Image fields now accept a **bare relative path
+  string** as well as an object (`{src,…}`); previously `imageText` only read `image.src`, so a
+  natural `"image": "assets/foo.jpg"` was ignored and always showed the placeholder. A new shared
+  `tpSrc()` normaliser routes every image slot (`title/outcomes/video.image`, `imageText.image[.src]`,
+  `infographic.map.image`, `knowledgeCheck.artifact.image`, `text.sidebar.image`,
+  `sourceAnalysis.source.image`) through `tpImg`, so a supplied path always renders an escaped
+  `<img>` and an empty value still falls back to the gradient placeholder. (microhistory `outcomes`
+  has no image area by design — its WW1 dossier reference has none.)
+- **microhistory `title` no longer reads as a video.** Removed the large play-button overlay from
+  the WW1 title hero; `type:"title"` renders the title/cover layout (hero + dossier meta footer +
+  context cards) in both themes, matching imperium.
 
 ## Baseline — verified state at bootstrap (2026-06-20)
 
