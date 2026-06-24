@@ -665,7 +665,19 @@ html.ins-collapsed body.edit #insReopen{display:flex;align-items:center;gap:6px;
 .inspector .imgslot-th img{width:100%;height:100%;object-fit:cover;display:block;}
 .inspector .imgslot .ii.bad{border-color:#d9534f;box-shadow:0 0 0 2px color-mix(in srgb,#d9534f 22%,transparent);}
 .inspector .imgslot-msg{font-size:.72rem;color:#d9534f;}
+.inspector .imgslot-msg.warn{color:#b06a00;}
 .inspector .imgslot-msg:empty{display:none;}
+.inspector .imgslot-th[data-imgdrop]{cursor:copy;}
+.inspector .imgslot-th.dragover{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
+.inspector .ii.is-embedded{color:var(--muted);font-style:italic;background:var(--canvas);cursor:default;}
+.inspector .imgslot-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.inspector .imgslot-btn{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;font-weight:600;color:var(--accent);
+  padding:4px 9px;border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:7px;background:var(--surface);}
+.inspector .imgslot-btn:hover{background:var(--accent-soft);}
+.inspector .imgslot-btn svg{width:13px;height:13px;}
+.inspector .imgslot-clear{color:var(--muted);border-color:var(--line);}
+.inspector .imgslot-clear:hover{color:#d9534f;border-color:#d9534f;background:transparent;}
+.inspector .imgslot-or{font-size:.68rem;color:var(--muted);}
 .inspector .qlist{display:flex;flex-direction:column;gap:11px;}
 .inspector .qg{border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--surface);}
 .inspector .qg.cur{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
@@ -2710,16 +2722,26 @@ function fitCanvas(){
   const sw=stage.clientWidth-padX, sh=stage.clientHeight-padY;
   if(!(sw>0)||!(sh>0)) return;                      // guard before any mutation (no half-updated state)
   const s0=LESSON.slides[cur]||{};
+  const editing=document.body.classList.contains('edit');   // floor + scroll is an EDITOR affordance; Study/Present/Export are untouched
   const scroll = s0.layout==='scroll' && !document.body.classList.contains('present');
   canvas.classList.toggle('scroll', scroll);
   canvas.style.height = scroll ? 'auto' : '720px';
-  stage.style.overflow = scroll ? 'auto' : 'hidden';   // Fit = one screen, never scrolls
-  const s = scroll ? (sw/1280) : Math.min(sw/1280, sh/720);
+  let s, fitsW=true, fitsH=true;
+  if(scroll){ s = sw/1280; }
+  else {
+    const fitS = Math.min(sw/1280, sh/720);
+    // Editor: don't shrink the preview below a legible floor when the side panels crowd it — let the
+    // stage scroll instead. Study/Present/Export keep the exact fit (s===fitS) ⇒ no behavioural change.
+    s = editing ? Math.max(fitS, 0.46) : fitS;
+    fitsW = 1280*s <= sw+0.5; fitsH = 720*s <= sh+0.5;
+  }
   canvas.style.transform = 'scale('+s+')';
   const ch = scroll ? canvas.offsetHeight : 720;   // logical (unscaled) content height
   fit.style.width = (1280*s)+'px';
   fit.style.height = (ch*s)+'px';
-  stage.style.alignItems = scroll ? 'flex-start' : 'center';
+  stage.style.overflow = (scroll || !fitsW || !fitsH) ? 'auto' : 'hidden';   // Fit-that-fits = one screen; a floored/overflowing slide scrolls
+  stage.style.alignItems = (scroll || !fitsH) ? 'flex-start' : 'center';
+  stage.style.justifyContent = fitsW ? 'center' : 'flex-start';            // flex-start when overflowing keeps the top-left reachable (centered overflow clips)
 }
 let _canvasRO, _fitRAF=0;
 function scheduleFit(){ if(_fitRAF) return; _fitRAF=requestAnimationFrame(()=>{ _fitRAF=0; fitCanvas(); }); }  // coalesce RO bursts → one fit/frame (no layout thrash / scrollbar oscillation)
@@ -2991,6 +3013,11 @@ const PACK_IMG_SLOTS={            // [path-within-slide, label, onlyTheme?] — 
 };
 /* not a repo-relative path: any URL scheme (http:, https:, data:, mailto:…) or a protocol-relative // */
 const isExtPath=v=>/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test((v||'').trim());
+/* an EMBEDDED image — a self-contained base64 data URI. Interchangeable with a repo path for any
+   slot: it travels INSIDE the lesson JSON (and the standalone export), needs no repo file and no
+   third-party host, so it is allowed where a bare http(s) URL is not. */
+const isDataImg=v=>/^data:image\//i.test((v||'').trim());
+const isImgVal=v=>!!v&&(isDataImg(v)||!isExtPath(v));   // a usable slot value: data URI OR repo-relative path
 /* current string value + the exact dot-path to write it to. An `image` field may be a bare
    string OR an object {src,…} (imageText) — write to `.src` in that case so caption/tag survive. */
 function imgSlotAt(s,rel){ const v=getP(s,rel);
@@ -3019,19 +3046,45 @@ function imageSlots(i,s){
    key but renders the placeholder (tpHasImg('') is false). */
 function setImgPath(root,path,v){ const ks=path.split('.'), last=ks.pop(); let t=root;
   for(const k of ks){ if(t[k]==null||typeof t[k]!=='object') t[k]={}; t=t[k]; } t[last]=v; }
+/* Accept only real images (png/jpg/jpeg/webp/gif/svg) — by MIME, falling back to extension. */
+function isImgFile(f){ if(!f) return false; const t=(f.type||'').toLowerCase();
+  if(t) return /^image\/(png|jpe?g|webp|gif|svg\+xml)$/.test(t);
+  return /\.(png|jpe?g|webp|gif|svg)$/i.test(f.name||''); }
+/* Embed an image FILE into a slot as a base64 data URI (fully client-side — no upload, no host).
+   The data URI travels inside the lesson JSON and the standalone export. Writes via the shape-aware
+   setImgPath so an imageText {src,…} keeps its caption/tag. Rejects non-images; renders live. The
+   ~1.5 MB soft warning is surfaced (not blocked) by imagesSection's size badge after re-render. */
+function embedImageToSlot(path,file,msgEl){
+  if(!file) return;
+  if(!isImgFile(file)){ if(msgEl) msgEl.textContent='Not a supported image — use PNG, JPG, WEBP, GIF or SVG.'; return; }
+  const fr=new FileReader();
+  fr.onload=()=>{ setImgPath(LESSON,path,String(fr.result||'')); renderSlide(); };   // re-render: slot flips to the embedded summary + size badge
+  fr.onerror=()=>{ if(msgEl) msgEl.textContent='Could not read that file.'; };
+  fr.readAsDataURL(file);
+}
 function imagesSection(i,s){
   if(!PACK_THEMES.has(LESSON.meta&&LESSON.meta.theme)) return '';   // pack themes only; other themes use the media block
   const slots=imageSlots(i,s);
   if(!slots.length) return `<div class="isec"><div class="isec-h">Images</div><div class="muted small">This slide type has no image slots.</div></div>`;
-  const rows=slots.map((sl,n)=>{ const id='imgslot-'+i+'-'+n, has=!!sl.value&&!isExtPath(sl.value);
+  const rows=slots.map((sl,n)=>{ const id='imgslot-'+i+'-'+n, p=`slides.${i}.${sl.path}`;
+    const embedded=isDataImg(sl.value), has=isImgVal(sl.value);
+    const kb=embedded?Math.round(sl.value.length/1024):0, big=embedded&&sl.value.length>1.5*1024*1024;
+    const field = embedded
+      ? `<input class="ii is-embedded" id="${id}" type="text" readonly value="Embedded image · ${kb} KB${big?' · large':''}" aria-describedby="${id}-h">`
+      : `<input class="ii" id="${id}" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="assets/example.jpg" value="${esc(sl.value)}" data-imgslot="${p}" aria-describedby="${id}-h">`;
     return `<div class="imgslot"><label for="${id}">${esc(sl.label)}</label>
       <div class="imgslot-row">
-        <span class="imgslot-th${has?'':' empty'}" data-imgth>${has?`<img src="${esc(sl.value)}" alt="" loading="lazy">`:tpIc('image',16)}</span>
-        <input class="ii" id="${id}" type="text" inputmode="url" autocomplete="off" spellcheck="false" placeholder="assets/example.jpg" value="${esc(sl.value)}" data-imgslot="slides.${i}.${sl.path}" aria-describedby="${id}-h">
+        <span class="imgslot-th${has?'':' empty'}" data-imgth data-imgdrop="${p}" title="Drop an image here">${has?`<img src="${esc(sl.value)}" alt="" loading="lazy">`:tpIc('image',16)}</span>
+        ${field}
       </div>
-      <div class="imgslot-msg" id="${id}-h" data-imgmsg></div></div>`; }).join('');
+      <div class="imgslot-tools">
+        <button type="button" class="imgslot-btn" data-imgpick="${p}">${tpIc('image',13)} Choose file</button>
+        <span class="imgslot-or">or drag an image onto the thumbnail</span>
+        ${has?`<button type="button" class="imgslot-btn imgslot-clear" data-imgclear="${p}">Clear</button>`:''}
+      </div>
+      <div class="imgslot-msg${big?' warn':''}" id="${id}-h" data-imgmsg>${big?`Large embedded image (${kb} KB) — consider compressing it for fast loading.`:''}</div></div>`; }).join('');
   return `<div class="isec"><div class="isec-h">Images <span class="muted">(${slots.length})</span></div>
-    <div class="muted small">Repo-relative paths only (e.g. <code>assets/coin.jpg</code>). Add the file under <code>assets/</code> and commit it separately; leave blank for the theme placeholder.</div>
+    <div class="muted small">Drop or choose an image to <b>embed</b> it (travels inside the lesson — no repo file needed), or type a repo-relative path (e.g. <code>assets/coin.jpg</code>). Leave blank for the theme placeholder.</div>
     ${rows}</div>`;
 }
 function renderInspector(){
@@ -3115,19 +3168,31 @@ function wireInspector(){
   const apoi=ins.querySelector('[data-addpoi]'); if(apoi) apoi.onclick=()=>{ const si=apoi.dataset.addpoi; const m=LESSON.slides[si].media; (m.pois=m.pois||[]).push({x:50,y:50,kind:'tooltip',title:'New hotspot',info:'',url:''}); renderSlide(); };
   ins.querySelectorAll('[data-delpoi]').forEach(b=>b.onclick=()=>{ const[si,ki]=b.dataset.delpoi.split(':'); LESSON.slides[si].media.pois.splice(ki,1); renderSlide(); });
   ins.querySelectorAll('[data-poikind]').forEach(sel=>sel.onchange=()=>{ const[si,ki]=sel.dataset.poikind.split(':'); LESSON.slides[si].media.pois[ki].kind=sel.value; renderSlide(); });
-  // ---- Images panel (pack themes): repo-relative path per image slot + live thumbnail ----
+  // ---- Images panel (pack themes): embed (drop / Choose file) OR repo-relative path, + live thumbnail ----
   const phIcon=tpIc('image',16);
-  ins.querySelectorAll('[data-imgslot]').forEach(el=>{
+  ins.querySelectorAll('[data-imgslot]').forEach(el=>{   // editable path field (non-embedded slots)
     const slot=el.closest('.imgslot'), th=slot&&slot.querySelector('[data-imgth]'), msg=slot&&slot.querySelector('[data-imgmsg]');
     const setThumb=v=>{ if(!th) return; th.innerHTML=''; if(v){ th.classList.remove('empty'); const im=new Image(); im.alt=''; im.loading='lazy';
         im.onerror=()=>{ th.classList.add('empty'); th.innerHTML=phIcon; }; im.src=v; th.appendChild(im); }
       else { th.classList.add('empty'); th.innerHTML=phIcon; } };
     el.addEventListener('input',()=>{ const v=el.value.trim();
-      if(v&&isExtPath(v)){ el.classList.add('bad'); if(msg) msg.textContent='Use a repo-relative path (no external URLs).'; return; }   // validator allows only same-origin assets
+      if(v&&isExtPath(v)&&!isDataImg(v)){ el.classList.add('bad'); if(msg) msg.textContent='Use a repo-relative path or embed a file (no external URLs).'; return; }
       el.classList.remove('bad'); if(msg) msg.textContent='';
-      setImgPath(LESSON, el.dataset.imgslot, v); setThumb(v); renderCanvas(); });
+      setImgPath(LESSON, el.dataset.imgslot, v); setThumb(v); renderCanvas();
+      if(isDataImg(v)) renderInspector(); });   // pasted a data URI → flip the field to the embedded summary
     const im=th&&th.querySelector('img'); if(im) im.onerror=()=>{ th.classList.add('empty'); th.innerHTML=phIcon; };   // existing path that no longer resolves → placeholder icon
   });
+  ins.querySelectorAll('[data-imgpick]').forEach(b=>b.onclick=()=>{   // native file picker → embed as base64
+    const inp=document.createElement('input'); inp.type='file'; inp.accept='image/png,image/jpeg,image/webp,image/gif,image/svg+xml';
+    inp.onchange=()=>{ const msg=b.closest('.imgslot').querySelector('[data-imgmsg]'); if(inp.files&&inp.files[0]) embedImageToSlot(b.dataset.imgpick, inp.files[0], msg); };
+    inp.click(); });
+  ins.querySelectorAll('[data-imgdrop]').forEach(z=>{   // drag an image from the desktop onto the thumbnail → embed
+    z.addEventListener('dragover',e=>{ e.preventDefault(); z.classList.add('dragover'); });
+    z.addEventListener('dragleave',()=>z.classList.remove('dragover'));
+    z.addEventListener('drop',e=>{ e.preventDefault(); z.classList.remove('dragover');
+      const msg=z.closest('.imgslot').querySelector('[data-imgmsg]'), f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];
+      if(f) embedImageToSlot(z.dataset.imgdrop, f, msg); }); });
+  ins.querySelectorAll('[data-imgclear]').forEach(b=>b.onclick=()=>{ setImgPath(LESSON, b.dataset.imgclear, ''); renderSlide(); });   // empty → theme placeholder
 }
 
 /* ---------- wire interactions ---------- */
