@@ -23,7 +23,7 @@ if (!fs.existsSync(appPath)) {
   process.exit(1);
 }
 
-const THEMES = (process.env.THEMES || 'neutral,egypt,rome,wellbeing,ww1')
+const THEMES = (process.env.THEMES || 'imperium,microhistory,geolearn')
   .split(',').map((s) => s.trim()).filter(Boolean);
 // Default indices: 0 cover · 1 outcomes · 2 artifact · 5 notes · 9 source-6B · 11 complete
 const SLIDES = (process.env.SLIDES || '0,1,2,5,9,11')

@@ -8,6 +8,35 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **GeoLearn theme (Geography) — a third self-contained pack theme.** Clean/flat/calm academic
+  direction: teal-on-mint, **Inter** (reuses the already-vendored face — no web-font link), 20px
+  rounded cards, hairline borders, a soft `0 1px 3px rgba(0,0,0,.06)` shadow. Registered as
+  `data-theme="geolearn"` with the exact token palette and added to the theme selector, so
+  `setTheme('geolearn')` works like the others. Bespoke renderers (universal top/bottom chrome,
+  integrated icon-mark header on every type, locked sizing — fixed 64px/84px bars with the content
+  region scrolling, core components never squished, automatic omission of empty optional blocks, and
+  a branded teal gradient placeholder for missing images) for **title, outcomes, text (article/
+  studyguide), imageText (panel/gallery), infographic, video, knowledgeCheck, interactive**, plus the
+  shared `guidedResponse`/`sourceAnalysis`/`outro` renderers restyled to GeoLearn tokens. Focused-card
+  modals (Syllabus/Resources/Case study, glossary terms, infographic Key points, video transcript) with
+  Esc/backdrop/×/focus-return; knowledgeCheck gating + session-kept typed answers reuse the existing
+  pack wiring. Self-contained: inline SVG icons, CSS variables, embedded font — `validate` stays green.
+- **Theme-aware slide-type registry.** The add-a-slide palette + preview now derive each theme's
+  supported types from its actually-implemented renderers (`THEME_TYPES = keys(IM_PACK/MH_PACK/GL_PACK)`),
+  so switching theme updates the list and only that theme's types are offered.
+
+### Changed
+- **Studio themes reduced to `imperium`, `microhistory`, `geolearn`.** Default lesson now starts EMPTY
+  with a friendly empty-state (no "type not available" on a fresh editor); loading JSON whose type the
+  active theme doesn't implement degrades to a calm in-canvas message instead of erroring.
+
+### Removed
+- **Egypt theme removed from the studio engine + selector** (token block, selector entry). Legacy slide
+  types (`cover`, `notes`, …) and the other legacy themes (`neutral`/`rome`/`ww1`/`wellbeing`) are
+  hidden from the selector/palette via the manifest (their dormant renderers/CSS stay in the file).
+  **Nothing under `lessons/` or `interactives/` was touched** — exported pages are unchanged.
+
+### Added
 - **Embed images in the Images panel (drag-and-drop + file picker).** Each image slot in the
   Edit-mode Images panel now accepts an image **dragged from the desktop onto its thumbnail** or
   chosen via a **“Choose file”** native picker; the file is read with `FileReader.readAsDataURL` and
