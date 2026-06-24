@@ -2091,7 +2091,7 @@ let LESSON=JSON.parse(document.getElementById('lesson-data').textContent);
 let cur=0, mode='study';
 let selZone=null;   // Edit-mode inspector: selected zone id within the current slide (null = none)
 const $=s=>document.querySelector(s);
-const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');   // escapes quotes too — esc() is used inside double-quoted HTML attributes (href/src/value/data-*), so attribute-context injection is closed
+const esc=s=>{ s=(s||''); if(typeof s!=='string') s=String(s); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); };  // coerce non-strings so a numeric/array author field never throws; falsy stays '' (unchanged)   // escapes quotes too — esc() is used inside double-quoted HTML attributes (href/src/value/data-*), so attribute-context injection is closed
 function getP(o,p){return p.split('.').reduce((a,k)=>a?.[k],o);}
 function setP(o,p,v){const ks=p.split('.');const last=ks.pop();let t=o;ks.forEach(k=>t=t[k]);t[last]=v;}
 
@@ -3042,6 +3042,7 @@ function imagesSection(i,s){
 function renderInspector(){
   const ins=$('#inspector'); if(!ins) return;
   if(mode!=='edit'){ ins.innerHTML=''; return; }
+  if(!LESSON.slides.length){ ins.innerHTML=`<div class="ins-h"><span>Inspector</span></div><div class="ihint">No slides yet — add one from the palette below.</div>${metaSection()}`; wireInspector(); return; }
   const s=LESSON.slides[cur], i=cur;
   const top = selZone===null
     ? `<div class="ihint">Select a part of the slide to edit it here.</div>`
@@ -3683,7 +3684,7 @@ function glDialog(id,eyebrow,title,bodyHtml,cls){
       <div class="gl-dbody">${bodyHtml}</div></div></div>`;
 }
 function glPill(t){ return t?`<span class="gl-pill">${esc(t)}</span>`:''; }
-function glFocusBtn(present){ return `<button class="gl-focusbtn" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`; }
+function glFocusBtn(){ return `<button class="gl-focusbtn" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`; }
 
 /* 1) title — split card: image left / content right */
 function glTitle(s){
@@ -3803,7 +3804,7 @@ function glInfographic(s){
       +(s.thinkPrompt?`<div class="gl-think"><span class="gl-think-l">${tpIc('brain',16)} Think critically</span><p>${esc(s.thinkPrompt)}</p></div>`:''))); }
   const barHtml=pillars.length?`<div class="gl-pillars">${pillars.map(p=>`<div class="gl-pillar"><div class="gl-pl-h"><span>${esc(p.label||'')}</span><span>${esc(p.value||'')}</span></div><div class="gl-pl-track"><i style="width:${Math.max(0,Math.min(100,+p.pct||0))}%"></i></div></div>`).join('')}</div>`:'';
   return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-pad">
-    ${glHeader('infographic'in PACK_ICONS?'infographic':'layers',s.eyebrow||'Data',s.title||'By the numbers',{meta:s.subtitle?`<p class="gl-sub">${esc(s.subtitle)}</p>`:''})}
+    ${glHeader('layers',s.eyebrow||'Data',s.title||'By the numbers',{meta:s.subtitle?`<p class="gl-sub">${esc(s.subtitle)}</p>`:''})}
     <div class="gl-igstar">${glImg(map.image||s.image,s.title||'Infographic')}${legHtml}</div>
     ${btns.length?`<div class="gl-btnrow">${btns.join('')}</div>`:''}
     ${(s.interpretation||barHtml)?`<div class="gl-interp">${s.interpretation?`<div class="gl-interp-read"><span class="gl-eyebrow">What the map shows</span><p>${esc(s.interpretation)}</p></div>`:''}${barHtml}</div>`:''}
@@ -3880,9 +3881,9 @@ function wireGeoModals(){
     let escH=null;
     const close=()=>{ dlg.hidden=true; if(escH){ document.removeEventListener('keydown',escH); escH=null; } btn.focus(); };
     const open=()=>{ dlg.hidden=false; const c=dlg.querySelector('[data-gl-close]'); if(c) c.focus();
-      escH=(e)=>{ if(e.key==='Escape') close(); }; document.addEventListener('keydown',escH);
-      dlg.addEventListener('click',(e)=>{ if(e.target===dlg) close(); }); };
+      escH=(e)=>{ if(e.key==='Escape') close(); }; document.addEventListener('keydown',escH); };
     btn.addEventListener('click',open);
+    dlg.addEventListener('click',(e)=>{ if(e.target===dlg) close(); });   // backdrop → close (attached once)
     const c=dlg.querySelector('[data-gl-close]'); if(c) c.addEventListener('click',close);
   });
 }
