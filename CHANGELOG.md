@@ -7,7 +7,25 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Embed images in the Images panel (drag-and-drop + file picker).** Each image slot in the
+  Edit-mode Images panel now accepts an image **dragged from the desktop onto its thumbnail** or
+  chosen via a **“Choose file”** native picker; the file is read with `FileReader.readAsDataURL` and
+  stored as a **base64 data URI inside the lesson JSON** (fully client-side — no upload, no repo
+  file, no third-party host), so it travels with the standalone exported page. Written through the
+  existing shape-aware `setImgPath` (a bare `image` string, or `image.src` when the field is an
+  object, preserving caption/tag). A data URI and a repo-relative path are interchangeable values for
+  a slot — the path field still works; embedding is the primary flow. Accepts png/jpg/jpeg/webp/gif/
+  svg, rejects non-images with a message, and shows a non-blocking warning over ~1.5 MB. Renders live
+  in every pack slide type and both themes; **Clear** restores the gradient placeholder. Round-trips
+  through ⌗ JSON export/import and the standalone-page export.
+
 ### Fixed
+- **Edit preview no longer crushed by the side panels.** In Edit mode the fixed-aspect 1280×720
+  preview now keeps a legible minimum scale (floored at 0.46) instead of shrinking arbitrarily as the
+  nav + inspector eat width, and the stage **scrolls** when a floored slide exceeds the available
+  area. Study / Present / Export keep the exact previous fit (no floor, maximise) so published
+  lessons are unchanged.
 - **Editable images on every pack slide type.** Image fields now accept a **bare relative path
   string** as well as an object (`{src,…}`); previously `imageText` only read `image.src`, so a
   natural `"image": "assets/foo.jpg"` was ignored and always showed the placeholder. A new shared
