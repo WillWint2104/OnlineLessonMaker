@@ -15,12 +15,16 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `setTheme('geolearn')` works like the others. Bespoke renderers (universal top/bottom chrome,
   integrated icon-mark header on every type, locked sizing — fixed 64px/84px bars with the content
   region scrolling, core components never squished, automatic omission of empty optional blocks, and
-  a branded teal gradient placeholder for missing images) for **title, outcomes, text (article/
-  studyguide), imageText (panel/gallery), infographic, video, knowledgeCheck, interactive**, plus the
-  shared `guidedResponse`/`sourceAnalysis`/`outro` renderers restyled to GeoLearn tokens. Focused-card
+  a branded teal gradient placeholder for missing images) for **all 13 types** — title, outcomes,
+  text (article/studyguide), imageText (panel/gallery), infographic, video, knowledgeCheck,
+  guidedResponse (short/extended), sourceAnalysis, interactive, outro — each a faithful port of its
+  approved standalone mockup. **Reveal-notes** pen toggle on both text variants highlights author-
+  supplied note clauses in place; **key-term glossary** modals on the study guide. Focused-card
   modals (Syllabus/Resources/Case study, glossary terms, infographic Key points, video transcript) with
-  Esc/backdrop/×/focus-return; knowledgeCheck gating + session-kept typed answers reuse the existing
-  pack wiring. Self-contained: inline SVG icons, CSS variables, embedded font — `validate` stays green.
+  Esc/backdrop/×/focus-return; knowledgeCheck Continue-gated-until-correct + session-kept typed answers
+  (submit-to-reveal) reuse the existing pack wiring. Self-contained: inline SVG icons, CSS variables,
+  embedded font — `validate` stays green. Example: `examples/geolearn-sample.json` exercises every
+  type, variant and mode.
 - **Theme-aware slide-type registry.** The add-a-slide palette + preview now derive each theme's
   supported types from its actually-implemented renderers (`THEME_TYPES = keys(IM_PACK/MH_PACK/GL_PACK)`),
   so switching theme updates the list and only that theme's types are offered.

@@ -1,0 +1,317 @@
+{
+  "meta": { "title": "GeoLearn — Sample Lesson", "theme": "geolearn" },
+  "slides": [
+    {
+      "type": "title",
+      "brand": "GeoLearn Hub",
+      "eyebrow": "Module 04: Human Wellbeing",
+      "title": "The Global",
+      "titleAccent": "Development Challenge",
+      "subtitle": "Explore the multifaceted indices of prosperity and the persistent reality of global inequality in the 21st century.",
+      "image": "",
+      "meta": [
+        { "label": "Module", "value": "04 · Human Wellbeing", "icon": "layers" },
+        { "label": "Duration", "value": "45 minutes", "icon": "clock" },
+        { "label": "Level", "value": "Year 10 Geography", "icon": "flag" }
+      ],
+      "cta": "Begin lesson"
+    },
+    {
+      "type": "outcomes",
+      "eyebrow": "Learning outcomes",
+      "title": "By the end of this lesson",
+      "intro": "You will be able to interpret development indicators, compare wellbeing across regions, and evaluate strategies that reduce inequality.",
+      "objectives": [
+        { "heading": "Interpret indices", "body": "Read and compare HDI, GNI per capita and life-expectancy data." },
+        { "heading": "Explain disparity", "body": "Account for spatial patterns of wellbeing within and between countries." },
+        { "heading": "Evaluate responses", "body": "Judge the effectiveness of aid, trade and development programs." },
+        { "heading": "Communicate findings", "body": "Use geographic terminology to argue a position from evidence." }
+      ],
+      "syllabus": {
+        "eyebrow": "NSW Geography K–10",
+        "title": "Syllabus & Outcomes",
+        "description": "This lesson addresses the following Stage 5 outcomes.",
+        "outcomes": [
+          { "code": "GE5-3", "text": "Analyses the effect of interactions and connections between people, places and environments." },
+          { "code": "GE5-5", "text": "Assesses management strategies for places and environments for their sustainability." },
+          { "code": "GE5-8", "text": "Communicates geographical information using a range of methods and technologies." }
+        ]
+      },
+      "resources": {
+        "eyebrow": "Resources",
+        "title": "Resource Library",
+        "label": "Resource Library",
+        "items": [
+          { "title": "UNDP Human Development Report", "description": "The latest global HDI rankings and methodology.", "url": "https://hdr.undp.org", "icon": "doc" },
+          { "title": "Gapminder data tools", "description": "Animated income-vs-life-expectancy charts.", "url": "https://www.gapminder.org", "icon": "map" }
+        ]
+      },
+      "caseStudy": {
+        "eyebrow": "Case study",
+        "title": "Kerala, India",
+        "description": "A region whose social development outpaces its income — a useful counter-example for the lesson."
+      },
+      "cta": "Continue"
+    },
+    {
+      "type": "text",
+      "variant": "article",
+      "title": "Measuring what matters in development",
+      "readtime": "6 min read",
+      "pills": [ { "icon": "layers", "label": "Core concept" }, { "icon": "globe", "label": "Global scale" } ],
+      "body": [
+        "Development is more than wealth. [[A country can be income-rich yet score poorly on health and education.]] Geographers therefore use composite measures that combine several dimensions of wellbeing into a single comparable figure.",
+        "The **Human Development Index** blends income, schooling and life expectancy. ==Composite indices== smooth out the distortion that a single metric like GDP can create, but they also hide internal inequality. [[A national average tells you nothing about the gap between its richest and poorest regions.]]",
+        "Better data has changed the conversation. Where once a nation was simply labelled 'developed' or 'developing', analysts now map a continuous spectrum and track movement along it year by year."
+      ],
+      "sidebar": {
+        "label": "Insight",
+        "heading": "Averages deceive",
+        "quote": "Two countries with identical HDI scores can feel like entirely different places to live.",
+        "cta": "Explore the data"
+      },
+      "resources": [
+        { "icon": "doc", "label": "HDI technical notes", "href": "https://hdr.undp.org" },
+        { "icon": "map", "label": "World inequality database", "href": "https://wid.world" }
+      ],
+      "cta": "Continue"
+    },
+    {
+      "type": "text",
+      "variant": "studyguide",
+      "eyebrow": "Study guide",
+      "title": "Key terms for development geography",
+      "hint": "Hover a highlighted key term for its definition.",
+      "body": [
+        "Geographers describe inequality using a shared vocabulary. The ==Gini coefficient== captures how evenly income is spread, while the ==poverty line== marks the income below which basic needs cannot be met. [[Both measures depend on reliable national survey data, which many low-income countries lack.]]",
+        { "heading": "Reading the indices" },
+        "When you compare two places, always ask what the headline figure conceals. A high average ==life expectancy== can mask sharp differences between urban and rural populations.",
+        { "quote": "Not everything that counts can be counted, and not everything that can be counted counts." },
+        { "figure": { "image": "", "caption": "Figure 1 — Global HDI distribution, simplified choropleth." } }
+      ],
+      "keyTerms": [
+        { "term": "Gini coefficient", "definition": "A number from 0 (perfect equality) to 1 (one person holds all income) summarising income distribution." },
+        { "term": "poverty line", "definition": "The minimum income deemed adequate to meet basic needs in a given country." },
+        { "term": "life expectancy", "definition": "The average number of years a newborn is expected to live under current mortality rates." }
+      ],
+      "cta": "Continue"
+    },
+    {
+      "type": "imageText",
+      "variant": "panel",
+      "eyebrow": "Image & text",
+      "title": "Urban and rural divides",
+      "subtitle": "One country, two realities",
+      "image": { "src": "", "tag": "Mumbai, India", "caption": "Informal settlements sit within sight of high-rise finance districts." },
+      "pills": [ { "icon": "globe", "label": "Case study" }, { "label": "Stage 5" } ],
+      "lead": "Within a single fast-growing city, **access to services** can vary street by street. Comparing the two ends of the spectrum reveals the real texture of development.",
+      "comparison": [
+        { "label": "Urban core", "variant": "ok", "items": [
+          { "icon": "check", "text": "Reliable electricity and piped water" },
+          { "icon": "check", "text": "Hospitals within a short commute" },
+          { "icon": "check", "text": "Secondary schooling widely available" }
+        ] },
+        { "label": "Rural periphery", "variant": "warn", "items": [
+          { "icon": "warn", "text": "Intermittent power, well or tanker water" },
+          { "icon": "warn", "text": "Nearest clinic often hours away" },
+          { "icon": "warn", "text": "Schooling ends earlier, especially for girls" }
+        ] }
+      ],
+      "focusReading": true,
+      "cta": "Continue"
+    },
+    {
+      "type": "imageText",
+      "variant": "gallery",
+      "image": "",
+      "tag": "Satellite imagery",
+      "title": "Night-lights as a development proxy",
+      "lead": "Brightness at night **correlates** with electricity access and economic activity — a striking, if imperfect, picture of where development concentrates.",
+      "body": [
+        "Researchers use calibrated satellite luminosity to estimate GDP where survey data is missing or unreliable."
+      ],
+      "note": "Limitation: gas flaring and tourism can brighten regions that are not broadly developed.",
+      "cta": "Continue"
+    },
+    {
+      "type": "infographic",
+      "eyebrow": "Data",
+      "title": "Global development at a glance",
+      "description": "A choropleth of Human Development Index scores, with the spread of key indicators beneath it.",
+      "visual": { "title": "HDI by country, latest year", "subtitle": "Darker teal = higher development", "image": "" },
+      "badge": "Live data",
+      "legend": [
+        { "color": "#0c4a44", "label": "Very high (0.80+)" },
+        { "color": "#00685f", "label": "High (0.70–0.79)" },
+        { "color": "#6bd8cb", "label": "Medium (0.55–0.69)" },
+        { "color": "#bdece2", "label": "Low (<0.55)" }
+      ],
+      "interactiveMapUrl": "https://hdr.undp.org/data-center",
+      "mapLabel": "Open interactive map",
+      "interpretationTitle": "What the map shows",
+      "interpretationText": "Development clusters in **high-latitude, high-income** regions, but several middle-income nations have closed the gap rapidly through investment in health and schooling.",
+      "metrics": [
+        { "label": "Life expectancy", "fillPercent": 78, "percentageLabel": "78%" },
+        { "label": "Adult literacy", "fillPercent": 86, "percentageLabel": "86%" },
+        { "label": "Clean water access", "fillPercent": 71, "percentageLabel": "71%" }
+      ],
+      "keyPoints": {
+        "eyebrow": "Reading the data",
+        "title": "Three things to notice",
+        "items": [
+          { "icon": "globe", "heading": "Regional clusters", "body": "Neighbouring countries tend to share similar HDI bands." },
+          { "icon": "layers", "heading": "Rapid movers", "body": "Parts of South-East Asia have climbed two bands in a generation." },
+          { "icon": "info", "heading": "Hidden inequality", "body": "National colour hides large within-country gaps." }
+        ],
+        "thinkCritically": { "heading": "Think critically", "body": "If two countries share a colour, what further data would you request before concluding they are equally developed?" }
+      },
+      "cta": "Continue"
+    },
+    {
+      "type": "video",
+      "eyebrow": "Video",
+      "title": "What is human development?",
+      "image": "",
+      "timestamp": "00:00 / 06:24",
+      "duration": "6:24",
+      "summary": {
+        "title": "In this clip",
+        "body": "An overview of how the Human Development Index is built and why it reframed the way nations measure progress.",
+        "chips": [ { "icon": "check", "label": "HDI components" }, { "icon": "check", "label": "Income vs wellbeing" }, { "icon": "check", "label": "Worked example" } ]
+      },
+      "externalVideoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "urlLabel": "Open video",
+      "urlMeta": "Opens in a new tab",
+      "transcript": {
+        "paragraphs": [
+          "Development used to be measured almost entirely by income. The trouble is that money alone tells you little about how long people live or whether they can read.",
+          "The Human Development Index combines three dimensions — a long and healthy life, knowledge, and a decent standard of living — into one figure between zero and one.",
+          "Because it is a composite, the HDI lets us rank and track countries, but it still averages over the inequalities inside each nation."
+        ]
+      },
+      "cta": "Continue"
+    },
+    {
+      "type": "knowledgeCheck",
+      "badge": "Knowledge Check",
+      "eyebrow": "Check your understanding",
+      "question": "Which combination of dimensions does the **Human Development Index** measure?",
+      "options": [
+        { "label": "A", "text": "Income, military spending and population", "correct": false },
+        { "label": "B", "text": "Health, education and standard of living", "correct": true },
+        { "label": "C", "text": "Carbon emissions, trade and tourism", "correct": false },
+        { "label": "D", "text": "Rainfall, agriculture and land area", "correct": false }
+      ],
+      "feedback": {
+        "correctTitle": "Correct",
+        "correctText": "The HDI blends life expectancy, schooling and gross national income per capita.",
+        "incorrectTitle": "Not quite",
+        "incorrectText": "Think about the three things that most affect quality of life, then try again."
+      },
+      "cta": "Continue"
+    },
+    {
+      "type": "guidedResponse",
+      "mode": "short",
+      "kicker": "Short response",
+      "eyebrow": "Exam-style question",
+      "title": "Explain one limitation of the HDI",
+      "marks": "4 marks",
+      "pills": [ { "icon": "clock", "label": "8 minutes" } ],
+      "question": "**Explain** one limitation of using the Human Development Index to compare quality of life between countries.",
+      "stimulus": { "label": "Recall", "text": "The HDI is a national average combining income, schooling and life expectancy." },
+      "responseLabel": "Your response",
+      "model": "One limitation is that the HDI is a **national average** and therefore hides inequality within a country. Two nations may share an identical HDI while one distributes wellbeing evenly and the other concentrates it in a wealthy minority, so the index alone can misrepresent how most people actually live.",
+      "criteria": [
+        "Identifies a valid limitation",
+        "Explains why it matters with reasoning",
+        "Refers to the index's averaging",
+        "Uses geographic terminology"
+      ],
+      "cta": "Continue"
+    },
+    {
+      "type": "guidedResponse",
+      "mode": "extended",
+      "kicker": "Extended response",
+      "title": "Assess the usefulness of composite indices",
+      "marks": "8 marks",
+      "pills": [ { "icon": "clock", "label": "15 minutes" } ],
+      "question": "**Assess** the usefulness of composite indices for measuring development. Refer to specific examples in your answer.",
+      "stimulus": { "label": "Stimulus", "text": "Composite indices such as the HDI combine several indicators into one comparable score." },
+      "scaffoldLabel": "Build your response paragraph by paragraph",
+      "paragraphs": [
+        { "label": "Introduction", "guide": "State your judgement and define a composite index.", "model": "Composite indices are **highly useful** for comparison but limited as a complete picture; this response argues they are best used alongside disaggregated data." },
+        { "label": "Strengths", "guide": "Give one strength with an example.", "model": "Their main strength is comparability: by blending health, education and income the HDI lets us rank diverse nations on a single scale and track change over time." },
+        { "label": "Limitations", "guide": "Give one limitation with an example.", "model": "However, averaging conceals inequality — a high HDI can coexist with deep regional poverty, as within rapidly urbanising states." },
+        { "label": "Judgement", "guide": "Reach a supported conclusion.", "model": "On balance, composite indices are useful starting points whose conclusions must be tested against finer-grained evidence." }
+      ],
+      "cta": "Continue"
+    },
+    {
+      "type": "sourceAnalysis",
+      "eyebrow": "Source analysis",
+      "title": "Interpreting a development cartoon",
+      "pills": [ { "icon": "clock", "label": "12 minutes" } ],
+      "source": {
+        "image": "",
+        "label": "Source A — political cartoon, 2019",
+        "transcript": "A figure labelled 'Global Average' balances on a seesaw above two unequal crowds."
+      },
+      "provenance": [
+        { "label": "Origin", "value": "Independent newspaper, 2019" },
+        { "label": "Type", "value": "Political cartoon" },
+        { "label": "Purpose", "value": "To critique reliance on averages" }
+      ],
+      "tasksTitle": "Your tasks",
+      "intro": "Work through each task in order, writing a response before revealing the model answer.",
+      "tasks": [
+        { "numeral": "I", "question": "Identify the message of the source.", "marks": "2 marks", "skill": "Comprehension", "model": "The source argues that a single global average disguises a deeply unequal reality beneath it." },
+        { "numeral": "II", "question": "Explain how the cartoonist conveys this message.", "marks": "3 marks", "skill": "Analysis", "model": "By placing the 'average' figure on a seesaw above two unequal crowds, the cartoonist visually equates an average with an unstable balancing act that ignores the spread below." },
+        { "numeral": "III", "question": "Assess the usefulness of this source for a geographer studying inequality.", "marks": "4 marks", "skill": "Evaluation", "model": "It is useful for prompting critical thinking about averages, though as opinion it offers no data and would need pairing with statistical evidence." }
+      ],
+      "hint": { "title": "Approach", "body": "Name the technique, link it to the message, then weigh usefulness against reliability." },
+      "cta": "Continue"
+    },
+    {
+      "type": "interactive",
+      "eyebrow": "Interactive",
+      "title": "Build a development profile",
+      "lead": "Use the embedded tool to assemble a wellbeing profile for a country of your choice, then compare it with a partner's.",
+      "url": "lessons/the-scientific-investigation-file.html",
+      "embedLabel": "Embedded interactive loads here",
+      "fileLabel": "development-profile-builder.html",
+      "steps": [
+        { "title": "Choose a country", "description": "Select any nation from the dropdown to load its indicators." },
+        { "title": "Compare indicators", "description": "Toggle HDI, GNI and life expectancy to see how they relate." },
+        { "title": "Export your profile", "description": "Save a summary card to bring to the next discussion." }
+      ],
+      "launchLabel": "Open the interactive",
+      "meta": "Estimated time: 10 minutes",
+      "cta": "Continue"
+    },
+    {
+      "type": "outro",
+      "eyebrow": "Lesson Complete",
+      "title": "You've mapped the development challenge",
+      "subtitle": "You can now interpret composite indices, explain spatial inequality, and weigh the evidence behind development claims.",
+      "stats": [
+        { "icon": "check", "value": "13", "label": "Sections completed" },
+        { "icon": "clock", "value": "45m", "label": "Time invested" },
+        { "icon": "target", "value": "3", "label": "Outcomes met" }
+      ],
+      "recapTitle": "What we covered",
+      "recap": [
+        { "icon": "layers", "title": "Composite indices", "body": "How the HDI blends health, education and income." },
+        { "icon": "globe", "title": "Spatial inequality", "body": "Why national averages conceal local disparity." },
+        { "icon": "scope", "title": "Source evaluation", "body": "Judging the usefulness of development evidence." }
+      ],
+      "actions": {
+        "review": { "label": "Review lesson", "icon": "refresh" },
+        "next": { "label": "Next lesson", "icon": "arrowRight" }
+      },
+      "footer": "GeoLearn Hub · NSW Geography K–10",
+      "cta": "Finish"
+    }
+  ]
+}
