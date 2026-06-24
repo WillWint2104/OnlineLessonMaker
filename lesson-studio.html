@@ -3852,7 +3852,7 @@ function glInteractive(s){
   const steps=Array.isArray(s.steps)?s.steps:(Array.isArray(s.features)?s.features:[]);
   const stepHtml=steps.length?`<ol class="gl-howto">${steps.map(x=>`<li>${esc(typeof x==='string'?x:(x.text||x.body||''))}</li>`).join('')}</ol>`:'';
   const frame=url
-    ? `<iframe class="gl-iframe" src="${esc(url)}" title="${esc(s.title||'Interactive')}" loading="lazy" referrerpolicy="no-referrer"></iframe>`
+    ? `<iframe class="gl-iframe" src="${esc(url)}" title="${esc(s.title||'Interactive')}" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>`
     : `<div class="gl-embed-empty">${tpIc('compass',34)}<p>${esc(s.launchLabel||'Launch the interactive to begin')}</p></div>`;
   return glHead(s)+`<main class="gl-main gl-interactive"><div class="gl-pad gl-introw">
     <div class="gl-embedframe">${frame}${url?`<a class="gl-embed-open" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(s.openLabel||'Open the interactive')} ${tpIc('external',14)}</a>`:''}</div>
@@ -3875,6 +3875,7 @@ const GL_PACK={ title:glTitle, outcomes:glOutcomes, text:glText, imageText:glIma
 function wireGeoModals(){
   const slide=$('#slide'); const root=slide&&slide.querySelector('.tp-slide'); if(!root) return;
   const present=document.body.classList.contains('present');
+  // Back navigates in Present only, mirroring the shared data-tp-continue gate; in Study/Edit the sidebar + arrow keys drive navigation (the in-canvas bar is a delivery affordance).
   root.querySelectorAll('[data-tp-back]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; if(present && cur>0) go(cur-1); }));
   root.querySelectorAll('[data-gl-open]').forEach(btn=>{
     const id=btn.dataset.glOpen, dlg=root.querySelector('[data-gl-modal="'+id+'"]'); if(!dlg) return;
