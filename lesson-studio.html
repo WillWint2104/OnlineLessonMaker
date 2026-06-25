@@ -155,11 +155,11 @@
 :root[data-theme="geolearn"] .gl-msub{font-size:14px;color:var(--on-surface-variant);line-height:1.5;}
 
 /* ===================== TITLE ===================== */
-:root[data-theme="geolearn"] .gl-titlecard{width:100%;max-width:1200px;max-height:100%;margin:auto;background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;display:flex;}
+:root[data-theme="geolearn"] .gl-titlecard{width:100%;max-width:1200px;flex:1 1 auto;min-height:440px;max-height:100%;margin:auto;background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;display:flex;}
 :root[data-theme="geolearn"] .gl-imgcol{width:50%;height:100%;position:relative;overflow:hidden;background:linear-gradient(135deg,#0c4a44,#00685f 55%,#1f8d80);}
 :root[data-theme="geolearn"] .gl-imgcol .glow{position:absolute;inset:0;background:radial-gradient(120% 80% at 22% 24%,rgba(137,245,231,.22),transparent 60%);}
 :root[data-theme="geolearn"] .gl-imgcol .fade{position:absolute;inset:0;background:linear-gradient(to right,transparent,rgba(255,255,255,.10));}
-:root[data-theme="geolearn"] .gl-txtcol{width:50%;height:100%;padding:clamp(28px,4.2vh,60px) clamp(32px,3.6vw,60px);display:flex;flex-direction:column;justify-content:center;gap:clamp(14px,2.2vh,22px);min-width:0;}
+:root[data-theme="geolearn"] .gl-txtcol{width:50%;height:100%;padding:clamp(20px,3vh,40px) clamp(28px,3.2vw,52px);display:flex;flex-direction:column;justify-content:center;gap:clamp(10px,1.6vh,16px);min-width:0;overflow-y:auto;}
 :root[data-theme="geolearn"] .gl-badge{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;background:var(--secondary-container);color:var(--primary);padding:6px 16px;border-radius:9999px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
 :root[data-theme="geolearn"] .gl-bigtitle{font-size:clamp(30px,4.2vw,48px);line-height:1.08;letter-spacing:-.02em;font-weight:700;color:var(--on-surface);}
 :root[data-theme="geolearn"] .gl-bigtitle .accent{color:var(--primary);}
@@ -444,16 +444,16 @@
 
 /* ===================== OUTRO ===================== */
 :root[data-theme="geolearn"] .gl-outrowrap{max-width:1200px;margin:auto;width:100%;text-align:center;}
-:root[data-theme="geolearn"] .gl-crest{width:96px;height:96px;border-radius:9999px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 0 0 10px rgba(0,104,95,.10),0 10px 30px rgba(0,104,95,.25);}
+:root[data-theme="geolearn"] .gl-crest{width:72px;height:72px;border-radius:9999px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 4px;box-shadow:0 0 0 7px rgba(0,104,95,.10),0 8px 24px rgba(0,104,95,.22);}
 :root[data-theme="geolearn"] .gl-lc{display:inline-flex;align-items:center;gap:12px;margin:22px 0 6px;color:var(--primary);font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;} :root[data-theme="geolearn"] .gl-lc .r{width:28px;height:2px;background:var(--primary-fixed-dim);}
-:root[data-theme="geolearn"] .gl-outrowrap h1{font-size:clamp(30px,4vw,46px);line-height:1.08;letter-spacing:-.02em;font-weight:700;margin-bottom:12px;}
-:root[data-theme="geolearn"] .gl-lede{font-size:clamp(15px,1.4vw,18px);line-height:1.55;color:var(--on-surface-variant);max-width:54ch;margin:0 auto 30px;}
-:root[data-theme="geolearn"] .gl-ostats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:34px;}
-:root[data-theme="geolearn"] .gl-ostat{background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.05);padding:24px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;}
+:root[data-theme="geolearn"] .gl-outrowrap h1{font-size:clamp(24px,2.8vw,36px);line-height:1.1;letter-spacing:-.02em;font-weight:700;margin-bottom:6px;}
+:root[data-theme="geolearn"] .gl-lede{font-size:clamp(14px,1.3vw,17px);line-height:1.45;color:var(--on-surface-variant);max-width:62ch;margin:0 auto 14px;}
+:root[data-theme="geolearn"] .gl-ostats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
+:root[data-theme="geolearn"] .gl-ostat{background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,.05);padding:14px 14px;display:flex;flex-direction:column;align-items:center;gap:6px;}
 :root[data-theme="geolearn"] .gl-ostat .si{color:var(--primary);margin-bottom:6px;} :root[data-theme="geolearn"] .gl-ostat .sv{font-size:clamp(24px,2.8vw,32px);font-weight:700;letter-spacing:-.01em;color:var(--primary);} :root[data-theme="geolearn"] .gl-ostat .sl{font-size:13px;font-weight:600;color:var(--on-surface-variant);}
-:root[data-theme="geolearn"] .gl-covtitle{display:flex;align-items:center;gap:8px;justify-content:flex-start;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin-bottom:14px;} :root[data-theme="geolearn"] .gl-covtitle svg{color:var(--primary);}
-:root[data-theme="geolearn"] .gl-covlist{display:flex;flex-direction:column;gap:12px;text-align:left;margin-bottom:34px;}
-:root[data-theme="geolearn"] .gl-cov{display:flex;align-items:center;gap:16px;background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:16px;padding:18px 20px;}
+:root[data-theme="geolearn"] .gl-covtitle{display:flex;align-items:center;gap:8px;justify-content:flex-start;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin-bottom:8px;} :root[data-theme="geolearn"] .gl-covtitle svg{color:var(--primary);}
+:root[data-theme="geolearn"] .gl-covlist{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;text-align:left;margin-bottom:14px;}
+:root[data-theme="geolearn"] .gl-cov{display:flex;align-items:center;gap:12px;background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:14px;padding:11px 14px;}
 :root[data-theme="geolearn"] .gl-cov .ci{flex-shrink:0;width:44px;height:44px;border-radius:11px;background:var(--secondary-container);color:var(--primary);display:flex;align-items:center;justify-content:center;}
 :root[data-theme="geolearn"] .gl-cov .ct{flex:1;min-width:0;} :root[data-theme="geolearn"] .gl-cov h4{font-size:16px;font-weight:700;margin-bottom:2px;} :root[data-theme="geolearn"] .gl-cov p{font-size:14px;line-height:1.45;color:var(--on-surface-variant);}
 :root[data-theme="geolearn"] .gl-cov .ck{flex-shrink:0;color:var(--ok);}
@@ -3952,8 +3952,7 @@ function glText(s){
       return ''; }).join('');
     const modals=terms.map((t,k)=>glModal('gt'+k,'Key term',t.term||'',`<p class="gl-msub">${esc(t.definition||'')}</p>`)).join('');
     return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap">
-      ${glHas(s.eyebrow)?`<span class="gl-sgbadge">${esc(s.eyebrow)}</span>`:''}
-      <h1 class="gl-sg-h1">${glBR(s.title||'Study guide')}</h1><div class="gl-uline"></div>
+      ${glHeader('book', s.eyebrow||'Background', s.title||'Study guide')}
       <div class="gl-tiphint"><span class="ti">${tpIc('info',14)}</span> ${esc(s.hint||'Hover a highlighted key term for its definition.')} ${glNoteToggle()}</div>
       <div class="gl-bodycard"><article class="gl-article">${blockHtml}</article></div>
     </div></main>`+glFoot(s,s.cta||'Continue')+modals;
