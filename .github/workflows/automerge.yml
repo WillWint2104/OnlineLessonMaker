@@ -1,8 +1,19 @@
 name: Auto-merge
 
-# Turns on GitHub's native auto-merge for a PR as soon as it opens.
-# GitHub then merges it automatically once branch-protection conditions are met
-# (the `validate` check is green and any required reviews/approvals are in).
+# Auto-merge is armed by ONE deliberate action: marking a PR "Ready for review".
+#
+# Protocol — so staged / multi-commit PRs can't land before they're complete:
+#   • Open a PR as DRAFT while you're still pushing commits. A draft NEVER auto-merges,
+#     even with `validate` green (we don't trigger on `opened`, and GitHub also refuses
+#     auto-merge on drafts).
+#   • When the work is complete, click "Ready for review". That fires `ready_for_review`,
+#     which turns on GitHub's native auto-merge; GitHub then squash-merges once branch
+#     protection is satisfied (the `validate` check is green, plus any required reviews).
+#
+# We deliberately do NOT trigger on `opened` (or `synchronize`): opening a PR — even a
+# non-draft one — must not ship it, and pushing more commits must not ship it. The
+# draft→ready transition is the only thing that arms auto-merge. This keeps the `validate`
+# gate fully intact; it only changes WHEN auto-merge is enabled, never whether checks run.
 #
 # One-time setup (otherwise this no-ops):
 #   • Settings → General → Pull Requests → enable "Allow auto-merge"
@@ -11,7 +22,7 @@ name: Auto-merge
 
 on:
   pull_request:
-    types: [opened, reopened, ready_for_review, synchronize]
+    types: [ready_for_review]
 
 permissions:
   contents: write
@@ -19,7 +30,7 @@ permissions:
 
 jobs:
   enable-auto-merge:
-    if: github.event.pull_request.draft == false
+    if: github.event.pull_request.draft == false   # defense in depth — ready_for_review is always non-draft
     runs-on: ubuntu-latest
     steps:
       - name: Enable auto-merge (squash)
