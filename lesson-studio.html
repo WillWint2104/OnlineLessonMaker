@@ -3848,7 +3848,7 @@ function mhKnowledge(s){
 function packText(s){
   const body=Array.isArray(s.body)?s.body:[];
   const pq=s.pullQuote||null;
-  const pullHtml=pq?`<div class="tp-pull">“${esc(pq.text||'')}”${pq.source?`<span class="src">— ${esc(pq.source)}</span>`:''}</div>`:'';
+  const pullHtml=pq?`<div class="tp-pull">“${esc(pq.text||'')}”${pq.source?`<span class="src">${esc(pq.source)}</span>`:''}</div>`:'';
   let narr='';
   if(body.length){
     narr+=`<p class="tp-lead">${tpRich(body[0])}</p>`;
