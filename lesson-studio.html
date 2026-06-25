@@ -4869,22 +4869,67 @@ document.addEventListener('keydown',e=>{
 });
 
 /* ---------- export ---------- */
-$('#exportBtn').onclick=()=>{
-  document.getElementById('lesson-data').textContent=JSON.stringify(LESSON,null,2);
-  const clone=document.documentElement.cloneNode(true);
-  clone.querySelector('#slide').innerHTML='';        // re-renders fresh from data on open
-  const ins=clone.querySelector('#inspector'); if(ins) ins.innerHTML='';   // edit-only panel never ships
-  const pal=clone.querySelector('#palette'); if(pal) pal.innerHTML='';     // edit-only palette never ships
-  const ws=clone.querySelector('#worksheet'); if(ws){ ws.classList.remove('show'); ws.setAttribute('aria-hidden','true'); const sh=ws.querySelector('#wsSheet'); if(sh) sh.innerHTML=''; }   // never ship a generated/open worksheet
-  clone.querySelectorAll('.ig-tip').forEach(t=>t.remove());                // drop any infographic tooltip created on hover (recreated fresh on demand)
-  clone.classList.remove('ins-collapsed','editnote-off');                 // never bake the author's UI state into the export
-  clone.style.removeProperty('--font-scale');                            // start students at 100% (their own zoom is per-browser)
-  clone.querySelector('body').className='study';
-  const html='<!DOCTYPE html>\n'+clone.outerHTML;
-  const blob=new Blob([html],{type:'text/html'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=(LESSON.meta.title||'lesson').replace(/[^\w]+/g,'-').toLowerCase()+'.html';
-  a.click(); URL.revokeObjectURL(a.href);
+/* ---- Phase 5 Stage 2: inline remote media as data: URIs on export ----
+   Delivered/standalone lessons must make zero third-party requests (school firewalls).
+   The LIVE app keeps remote URLs (validate-safe: posters are <img>, not <script>/<link>);
+   on EXPORT we fetch every remote media asset and bake it in as a data: URI. Pure on a
+   deep clone — the in-memory LESSON is never mutated. */
+async function fetchDataURI(url,timeoutMs){
+  const ctl=new AbortController(); const t=setTimeout(()=>ctl.abort(),timeoutMs||8000);
+  try{
+    const r=await fetch(url,{signal:ctl.signal,mode:'cors'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const blob=await r.blob();
+    if(!/^image\//.test(blob.type)) throw new Error('not an image ('+blob.type+')');
+    return await new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>rej(fr.error||new Error('read failed')); fr.readAsDataURL(blob); });
+  } finally { clearTimeout(t); }
+}
+async function inlineRemoteAssets(lesson){
+  const out=JSON.parse(JSON.stringify(lesson||{}));
+  const isRemote=v=>typeof v==='string'&&/^https?:\/\//i.test(v);
+  const MEDIA_KEYS={image:1,src:1,poster:1,thumbnail:1,still:1,screenshot:1,img:1,bg:1,background:1};
+  // 1) bake the derived YouTube poster onto video slides that have no explicit inlinable poster
+  (out.slides||[]).forEach(s=>{ if(s&&s.type==='video'){
+    const has=isRemote(s.poster)||isRemote(s.thumbnail)||(s.image&&(isRemote(s.image)||(typeof s.image==='object'&&isRemote(s.image.src))));
+    if(!has){ const id=tpYTId(s.externalVideoUrl||s.url); if(id) s.poster='https://i.ytimg.com/vi/'+id+'/hqdefault.jpg'; }
+  }});
+  // 2) collect every remote media URL at a media key (any depth) — externalVideoUrl/url stay as hyperlinks
+  const tasks=[];
+  (function walk(o){ if(!o||typeof o!=='object') return;
+    if(Array.isArray(o)){ o.forEach(walk); return; }
+    Object.keys(o).forEach(k=>{ const v=o[k];
+      if(typeof v==='string'){ if(MEDIA_KEYS[k]&&isRemote(v)) tasks.push({o,k,url:v}); }
+      else if(v&&typeof v==='object') walk(v);
+    });
+  })(out);
+  // 3) fetch + inline; per-asset try/catch + hard timeout; on failure clear → renderer shows its themed placeholder
+  let inlined=0, failed=0;
+  for(const tk of tasks){ try{ tk.o[tk.k]=await fetchDataURI(tk.url,8000); inlined++; } catch(e){ tk.o[tk.k]=''; failed++; } }
+  return {lesson:out,inlined,failed,total:tasks.length};
+}
+$('#exportBtn').onclick=async ()=>{
+  const btn=$('#exportBtn'), label=btn.textContent; btn.disabled=true; btn.textContent='Exporting…';
+  try{
+    const res=await inlineRemoteAssets(LESSON);   // deep clone; in-memory LESSON untouched
+    document.getElementById('lesson-data').textContent=JSON.stringify(res.lesson,null,2);
+    const clone=document.documentElement.cloneNode(true);
+    clone.querySelector('#slide').innerHTML='';        // re-renders fresh from data on open
+    const ins=clone.querySelector('#inspector'); if(ins) ins.innerHTML='';   // edit-only panel never ships
+    const pal=clone.querySelector('#palette'); if(pal) pal.innerHTML='';     // edit-only palette never ships
+    const ws=clone.querySelector('#worksheet'); if(ws){ ws.classList.remove('show'); ws.setAttribute('aria-hidden','true'); const sh=ws.querySelector('#wsSheet'); if(sh) sh.innerHTML=''; }   // never ship a generated/open worksheet
+    clone.querySelectorAll('.ig-tip').forEach(t=>t.remove());                // drop any infographic tooltip created on hover (recreated fresh on demand)
+    clone.classList.remove('ins-collapsed','editnote-off');                 // never bake the author's UI state into the export
+    clone.style.removeProperty('--font-scale');                            // start students at 100% (their own zoom is per-browser)
+    clone.querySelector('body').className='study';
+    const html='<!DOCTYPE html>\n'+clone.outerHTML;
+    const blob=new Blob([html],{type:'text/html'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    a.download=(LESSON.meta.title||'lesson').replace(/[^\w]+/g,'-').toLowerCase()+'.html';
+    a.click(); URL.revokeObjectURL(a.href);
+  } finally {
+    document.getElementById('lesson-data').textContent=JSON.stringify(LESSON,null,2);   // restore the live #lesson-data
+    btn.disabled=false; btn.textContent=label;
+  }
 };
 
 /* ---------- worksheet generator: build a printable worksheet from the loaded JSON ---------- */
