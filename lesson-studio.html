@@ -3482,31 +3482,11 @@ function tpHP(s,d){ return (s.hp===0||s.hp)?String(s.hp):(d||''); }
 function tpProg(s,d){ let p=tpNum(s.progress,d); p=Math.max(0,Math.min(100,+p||0)); return p; }
 
 /* ---------------- IMPERIUM (Rome) shared chrome (one header + one footer, reused) ---------------- */
-function imHead(s,prog){   // brand wordmark + progress + hp/xp pills
-  return `<header class="tp-head"><div class="tp-ohin">
-    <div class="tp-brand">${esc(s.brand||'Imperium Scholar')}</div>
-    <div class="tp-htrack tp-htrack-mid"><i style="width:${tpProg(s,prog)}%"></i></div>
-    <div class="tp-pills">
-      <span class="tp-pill hp">${tpIc('heart',18)}${esc(tpHP(s,'5'))}</span>
-      <span class="tp-pill xp">${tpIc('trophy',18)}${esc(tpXP(s))} XP</span>
-    </div></div></header>`;
-}
-function imFoot(s,label,opts){ opts=opts||{};
-  return `<nav class="tp-foot"><button class="tp-cont"${opts.disabled?' disabled':''} data-tp-continue>${esc(label||s.cta||'Continue')} ${tpIc('arrowRight',18)}</button></nav>`;
-}
+function imHead(s,prog){ return ''; }   // in-slide header removed (Phase 2) — navigation is the player's outer #prev/#next
+function imFoot(s,label,opts){ return ''; }   // in-slide footer removed (Phase 2) — it duplicated the player nav
 /* ---------------- MICROHISTORY (WW1) chrome ---------------- */
-function mhHead(s,prog){
-  return `<header class="tp-head"><div class="tp-hl">
-      <span class="tp-wordmark">${esc(s.wordmark||'The Great War Archive')}</span>
-      <div class="tp-htrack"><i style="width:${tpProg(s,prog)}%"></i></div></div>
-    <div class="tp-hr">
-      <span class="xp">${tpIc('trophy',18)}${esc(tpXP(s))} XP</span>
-      <span class="hp">${tpIc('heart',18)}${esc(tpHP(s,'65%'))}</span>
-    </div></header>`;
-}
-function mhFoot(label,opts){ opts=opts||{};
-  return `<nav class="tp-foot"><button class="tp-cont"${opts.disabled?' disabled':''} data-tp-continue>${esc(label||'Continue')} ${tpIc('arrowRight',18)}</button></nav>`;
-}
+function mhHead(s,prog){ return ''; }   // in-slide header removed (Phase 2)
+function mhFoot(label,opts){ return ''; }   // in-slide footer removed (Phase 2)
 /* theme-agnostic chrome selectors (for renderers shared by both themes, e.g. text) */
 function packHead(s,prog){ const t=LESSON.meta&&LESSON.meta.theme; return t==='imperium'?imHead(s,prog):t==='geolearn'?glHead(s):mhHead(s,prog); }
 function packFoot(s,label,opts){ const t=LESSON.meta&&LESSON.meta.theme; return t==='imperium'?imFoot(s,label,opts):t==='geolearn'?glFoot(s,label,opts):mhFoot(label,opts); }
@@ -3891,15 +3871,7 @@ function glBR(t){ return esc(t||'').replace(/\n/g,'<br>'); }
 function glHas(v){ return v!=null && (Array.isArray(v)?v.length:String(v).trim().length); }
 
 /* universal top bar (~64px) */
-function glHead(s){
-  return `<header class="gl-app">
-    <span class="gl-wm">${esc((s&&s.brand)||'GeoLearn Hub')}</span>
-    <div class="gl-appr">
-      <nav class="gl-nav" aria-label="Sections"><a class="on">Curriculum</a><a>Resources</a><a>My Progress</a></nav>
-      <span class="gl-icns" aria-hidden="true"><span>${tpIc('heart',20)}</span><span>${tpIc('bolt',20)}</span><span>${tpIc('target',20)}</span></span>
-      <span class="gl-avatar" aria-hidden="true">${tpIc('globe',20)}</span>
-    </div></header>`;
-}
+function glHead(s){ return ''; }   // in-slide header removed (Phase 2)
 /* universal bottom bar (~84px): Back · progress + Step X of Y · Continue */
 function glFoot(s,label,opts){ return ''; }
 /* integrated icon-mark header (every scrolling type; never a breadcrumb) */
