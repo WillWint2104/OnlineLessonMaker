@@ -5679,4 +5679,67 @@ render(); renderPalette();   // palette content is static (per category) — bui
 </script>
 
 
+<!-- CTG-LIVE-FIX: link data placeholders to interactives (open externally) + hide Edit mode -->
+<style>
+/* Keep students in Study mode — hide the Edit toggle */
+#modeSeg [data-mode="edit"]{display:none!important;}
+/* Clickable chart placeholder */
+.tp-slide .gl-srcpanel.ctg-chart{cursor:pointer;}
+.tp-slide .gl-srcpanel.ctg-chart .zoom{cursor:pointer;}
+.ctg-openchart{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;
+  display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.96);color:#02564e;
+  border:1px solid var(--outline-variant,#bcc9c6);border-radius:9999px;padding:11px 18px;
+  font:600 14px/1 'Inter',system-ui,sans-serif;text-decoration:none;white-space:nowrap;cursor:pointer;
+  box-shadow:0 6px 18px rgba(0,80,72,.22);transition:box-shadow .15s,background .15s;}
+.ctg-openchart:hover{background:#fff;box-shadow:0 8px 24px rgba(0,80,72,.30);}
+</style>
+<script>
+(function(){
+  var MAP=[
+    {needle:'the life expectancy gap', url:'https://willwint2104.github.io/OnlineLessonMaker/interactives/closing-the-gap-life-expectancy.html'},
+    {needle:'what drives the health gap', url:'https://willwint2104.github.io/OnlineLessonMaker/interactives/closing-the-gap-causes.html'}
+  ];
+  function openExt(url){ window.open(url,'_blank','noopener'); }
+  function wire(){
+    try{
+      var slide=document.querySelector('#slide'); if(!slide) return;
+      var h1=slide.querySelector('.gl-header h1'); if(!h1) return;
+      var title=(h1.textContent||'').toLowerCase();
+      var hit=null; for(var i=0;i<MAP.length;i++){ if(title.indexOf(MAP[i].needle)>=0){ hit=MAP[i]; break; } }
+      if(!hit) return;
+      var panel=slide.querySelector('.gl-srcpanel'); if(!panel || panel.dataset.ctgWired==='1') return;
+      panel.dataset.ctgWired='1';
+      panel.classList.add('ctg-chart');
+      panel.setAttribute('role','link'); panel.setAttribute('tabindex','0');
+      panel.setAttribute('aria-label','Open interactive chart in a new tab');
+      panel.addEventListener('click',function(){ openExt(hit.url); });
+      panel.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openExt(hit.url); } });
+      var a=document.createElement('a');
+      a.className='ctg-openchart'; a.href=hit.url; a.target='_blank'; a.rel='noopener';
+      a.textContent='Open interactive chart \u2197';
+      a.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); openExt(hit.url); });
+      panel.appendChild(a);
+      var zoom=panel.querySelector('.zoom');
+      if(zoom){ zoom.setAttribute('role','button'); zoom.setAttribute('aria-label','Open interactive chart in a new tab');
+        zoom.addEventListener('click',function(e){ e.stopPropagation(); openExt(hit.url); }); }
+    }catch(e){}
+  }
+  function forceStudy(){
+    try{
+      var seg=document.querySelector('#modeSeg'); if(!seg) return;
+      var editBtn=seg.querySelector('[data-mode="edit"]'); if(editBtn) editBtn.style.display='none';
+      var studyBtn=seg.querySelector('[data-mode="study"]');
+      if(studyBtn && !studyBtn.classList.contains('on')) studyBtn.click();
+    }catch(e){}
+  }
+  function run(){ forceStudy(); wire(); }
+  function start(){
+    run();
+    var slide=document.querySelector('#slide');
+    if(slide) new MutationObserver(run).observe(slide,{childList:true});
+  }
+  if(document.readyState!=='loading') start(); else document.addEventListener('DOMContentLoaded',start);
+})();
+</script>
+
 </body></html>
