@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What drives the health gap? — Closing the Gap</title>
+<style>
+  :root{
+    --teal:#00685f; --teal-deep:#0c4a44; --ink:#16201c; --muted:#5a6b65;
+    --line:#e0eae6; --mint:#eef5f2; --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color:var(--ink); background:#f4f9f7;
+    display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;
+  }
+  .card{
+    width:100%; max-width:660px; background:var(--card); border:1px solid var(--line);
+    border-radius:20px; box-shadow:0 1px 3px rgba(0,0,0,.06); padding:26px 30px 24px;
+  }
+  .eyebrow{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--teal); background:#d7ede7; padding:5px 11px; border-radius:999px;}
+  h1{font-size:clamp(20px,3.4vw,26px); line-height:1.15; letter-spacing:-.01em; margin:12px 0 4px; font-weight:800;}
+  .sub{font-size:13.5px; color:var(--muted); margin:0 0 16px;}
+  .chartrow{display:flex; align-items:center; gap:26px; flex-wrap:wrap; justify-content:center;}
+  .donut{position:relative; width:200px; height:200px; flex:none;}
+  .donut svg{width:100%; height:100%; transform:rotate(-90deg);}
+  .seg{fill:none; stroke-width:14; stroke-linecap:butt;
+       transition:stroke-dasharray 1s cubic-bezier(.22,.61,.36,1);}
+  .center{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .center .big{font-size:34px; font-weight:800; color:var(--teal-deep); line-height:1; font-variant-numeric:tabular-nums;}
+  .center .cap{font-size:11px; color:var(--muted); margin-top:3px; max-width:96px; text-align:center; line-height:1.25;}
+  .legend{display:flex; flex-direction:column; gap:9px; min-width:210px;}
+  .lg{display:flex; align-items:center; gap:10px; font-size:13.5px; opacity:0; transform:translateY(4px);
+      transition:opacity .5s ease, transform .5s ease;}
+  .lg.in{opacity:1; transform:none;}
+  .lg .sw{width:13px; height:13px; border-radius:4px; flex:none;}
+  .lg .nm{flex:1;}
+  .lg .pc{font-weight:700; color:var(--teal-deep); font-variant-numeric:tabular-nums;}
+  .take{font-size:13px; color:var(--ink); background:var(--mint); border-left:4px solid var(--teal);
+    border-radius:8px; padding:10px 13px; line-height:1.5; margin-top:18px;}
+  .src{font-size:11px; color:#90a09a; margin-top:14px;}
+  @media (prefers-reduced-motion:reduce){
+    .seg{transition:none; stroke-dasharray:var(--final);}
+    .lg{transition:none; opacity:1; transform:none;}
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="eyebrow">Data · Causes</span>
+    <h1>What drives the health gap?</h1>
+    <p class="sub">Estimated share of the health gap explained by each factor.</p>
+
+    <div class="chartrow">
+      <div class="donut">
+        <svg viewBox="0 0 100 100" aria-label="Donut chart: factors driving the health gap">
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#eef3f1" stroke-width="14"></circle>
+          <circle class="seg" cx="50" cy="50" r="40" pathLength="100" stroke="#00685f" stroke-dasharray="0 100" stroke-dashoffset="0"   data-final="12.8 87.2" style="--final:12.8 87.2"></circle>
+          <circle class="seg" cx="50" cy="50" r="40" pathLength="100" stroke="#1f8d80" stroke-dasharray="0 100" stroke-dashoffset="-14" data-final="11.8 88.2" style="--final:11.8 88.2"></circle>
+          <circle class="seg" cx="50" cy="50" r="40" pathLength="100" stroke="#6cc3b3" stroke-dasharray="0 100" stroke-dashoffset="-27" data-final="7.8 92.2"  style="--final:7.8 92.2"></circle>
+          <circle class="seg" cx="50" cy="50" r="40" pathLength="100" stroke="#d3ddd9" stroke-dasharray="0 100" stroke-dashoffset="-36" data-final="62.8 37.2" style="--final:62.8 37.2"></circle>
+        </svg>
+        <div class="center"><span class="big" id="ctr">0%</span><span class="cap">social factors</span></div>
+      </div>
+
+      <div class="legend">
+        <div class="lg"><span class="sw" style="background:#00685f"></span><span class="nm">Employment</span><span class="pc">14%</span></div>
+        <div class="lg"><span class="sw" style="background:#1f8d80"></span><span class="nm">Household income</span><span class="pc">13%</span></div>
+        <div class="lg"><span class="sw" style="background:#6cc3b3"></span><span class="nm">Education</span><span class="pc">9%</span></div>
+        <div class="lg"><span class="sw" style="background:#d3ddd9"></span><span class="nm">Other factors</span><span class="pc">64%</span></div>
+      </div>
+    </div>
+
+    <div class="take">Jobs, income and education together explain about <b>a third</b> of the health gap. The rest comes from things like healthcare access, racism, environment and the ongoing effects of history.</div>
+    <p class="src">Source: AIHW, Size and sources of the health gap for Australia's First Nations people, 2024.</p>
+  </div>
+
+<script>
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var segs = [].slice.call(document.querySelectorAll('.seg'));
+  var rows = [].slice.call(document.querySelectorAll('.lg'));
+  var ctr  = document.getElementById('ctr');
+  var SOCIAL = 36;
+
+  function play(){
+    segs.forEach(function(c, i){
+      if (reduce){ c.setAttribute('stroke-dasharray', c.getAttribute('data-final')); return; }
+      c.style.transitionDelay = (i * 0.18) + 's';
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        c.setAttribute('stroke-dasharray', c.getAttribute('data-final'));
+      });});
+    });
+    rows.forEach(function(r, i){
+      if (reduce){ r.classList.add('in'); return; }
+      setTimeout(function(){ r.classList.add('in'); }, 250 + i*120);
+    });
+    countUp(ctr, SOCIAL, 1200);
+  }
+  function countUp(el, target, dur){
+    if (reduce){ el.textContent = target + '%'; return; }
+    var start = null;
+    function step(t){
+      if (start === null) start = t;
+      var p = Math.min(1, (t - start) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased) + '%';
+      if (p < 1) requestAnimationFrame(step); else el.textContent = target + '%';
+    }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(en){ if (en[0].isIntersecting){ play(); io.disconnect(); } });
+    io.observe(document.querySelector('.card'));
+  } else { play(); }
+  window.addEventListener('load', function(){ setTimeout(play, 50); }, {once:true});
+})();
+</script>
+</body>
+</html>
