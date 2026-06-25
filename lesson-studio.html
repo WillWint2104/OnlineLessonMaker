@@ -155,6 +155,23 @@
 :root[data-theme="geolearn"] .gl-msub{font-size:14px;color:var(--on-surface-variant);line-height:1.5;}
 
 /* ===================== TITLE ===================== */
+/* ---- GeoLearn title hero (imperium-structure, GeoLearn theme) ---- */
+:root[data-theme="geolearn"] .gl-twrap{width:100%;max-width:920px;margin:auto;display:flex;flex-direction:column;gap:16px;}
+:root[data-theme="geolearn"] .gl-thero{position:relative;width:100%;aspect-ratio:16/9;max-height:404px;border-radius:22px;overflow:hidden;background:linear-gradient(150deg,#0a8174 0%,#02564e 72%);box-shadow:0 14px 36px rgba(0,80,72,.26);}
+:root[data-theme="geolearn"] .gl-thimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+:root[data-theme="geolearn"] .gl-thscrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,58,52,.12) 0%,rgba(2,58,52,.42) 55%,rgba(2,58,52,.74) 100%);}
+:root[data-theme="geolearn"] .gl-thcontent{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 44px;}
+:root[data-theme="geolearn"] .gl-theyebrow{color:#a9ebdb;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px;text-shadow:0 2px 10px rgba(0,0,0,.35);}
+:root[data-theme="geolearn"] .gl-thtitle{color:#fff;font-size:clamp(34px,5vw,54px);line-height:1.04;font-weight:800;letter-spacing:-.02em;text-shadow:0 3px 18px rgba(0,0,0,.4);}
+:root[data-theme="geolearn"] .gl-thtitle .ac{color:#83e3cd;}
+:root[data-theme="geolearn"] .gl-thrule{width:84px;height:4px;background:#5ad1ba;border-radius:9999px;margin:16px auto;}
+:root[data-theme="geolearn"] .gl-thsub{color:#eaf7f2;font-size:clamp(15px,1.5vw,18px);line-height:1.5;max-width:58ch;margin:0 auto;text-shadow:0 2px 10px rgba(0,0,0,.42);}
+:root[data-theme="geolearn"] .gl-tmeta{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+:root[data-theme="geolearn"] .gl-tmcard{display:flex;align-items:center;gap:12px;background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:16px;padding:13px 16px;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+:root[data-theme="geolearn"] .gl-tmcard .mi{flex-shrink:0;width:40px;height:40px;border-radius:11px;background:var(--secondary-container);color:var(--primary);display:flex;align-items:center;justify-content:center;}
+:root[data-theme="geolearn"] .gl-tmcard .mt{display:flex;flex-direction:column;min-width:0;text-align:left;}
+:root[data-theme="geolearn"] .gl-tmcard .ml{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--on-surface-variant);}
+:root[data-theme="geolearn"] .gl-tmcard .mv{font-size:15px;font-weight:700;color:var(--on-surface);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 :root[data-theme="geolearn"] .gl-titlecard{width:100%;max-width:1200px;flex:1 1 auto;min-height:440px;max-height:100%;margin:auto;background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;display:flex;}
 :root[data-theme="geolearn"] .gl-imgcol{width:50%;height:100%;position:relative;overflow:hidden;background:linear-gradient(135deg,#0c4a44,#00685f 55%,#1f8d80);}
 :root[data-theme="geolearn"] .gl-imgcol .glow{position:absolute;inset:0;background:radial-gradient(120% 80% at 22% 24%,rgba(137,245,231,.22),transparent 60%);}
@@ -1491,6 +1508,21 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 .wsg-er{border:1.5px solid #2f7a68;border-radius:10px;padding:16px 18px;background:#f7fbf9;}
 .wsg-teeec{font-size:12.5px;background:#eef3f1;border-radius:6px;padding:8px 12px;margin:6px 0 12px;}
 @media print{ .wsg{max-width:none;} .wsg-line{height:30px;} }
+
+
+/* ---- GeoLearn worksheet: defined A4 pages ---- */
+body.ws-open #worksheet.wsg-on{background:#eaeef0;}
+.wsg-paged{display:flex;flex-direction:column;align-items:center;gap:22px;padding:22px 0;}
+.wsg-page{width:210mm;min-height:297mm;box-sizing:border-box;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.13);padding:15mm 15mm;display:flex;flex-direction:column;}
+.wsg-pghead{display:flex;justify-content:space-between;align-items:baseline;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#6b7d77;border-bottom:1px solid #e3ebe8;padding-bottom:7px;margin-bottom:16px;flex:none;}
+.wsg-pgbody{flex:1 1 auto;}
+.wsg-pgfoot{margin-top:auto;padding-top:8px;border-top:1px solid #e3ebe8;font-size:10px;color:#90a09a;display:flex;justify-content:space-between;flex:none;}
+@media print{
+  body.ws-open #worksheet.wsg-on{background:#fff;}
+  .wsg-paged{gap:0;padding:0;}
+  .wsg-page{width:auto;min-height:0;box-shadow:none;padding:0;break-after:page;}
+  .wsg-page:last-child{break-after:auto;}
+}
 
 .ws-sheet{max-width:210mm;margin:22px auto 40px;background:#fff;color:#1a1a1a;padding:18mm 16mm;
   box-shadow:0 6px 28px rgba(0,0,0,.18);font-family:"Hanken Grotesk",system-ui,sans-serif;font-size:11.5pt;line-height:1.45;}
@@ -3869,13 +3901,7 @@ function glHead(s){
     </div></header>`;
 }
 /* universal bottom bar (~84px): Back · progress + Step X of Y · Continue */
-function glFoot(s,label,opts){ opts=opts||{}; const st=glStep();
-  return `<footer class="gl-foot"><div class="gl-footin">
-    <button class="gl-bk" type="button" data-tp-back${st.i===0?' disabled':''}>${tpIc('arrowLeft',18)} ${esc((s&&s.backLabel)||'Back')}</button>
-    <div class="gl-fprog"><div class="bar"><i style="width:${st.pct}%"></i></div><span class="st">Step ${st.i+1} of ${st.n}</span></div>
-    <button class="gl-nx" type="button" data-tp-continue${opts.disabled?' disabled':''}>${esc(label||(s&&s.cta)||'Continue')} ${tpIc('arrowRight',18)}</button>
-  </div></footer>`;
-}
+function glFoot(s,label,opts){ return ''; }
 /* integrated icon-mark header (every scrolling type; never a breadcrumb) */
 function glHeader(icon,eyebrow,title,desc){
   return `<div class="gl-header"><span class="gl-mark">${tpIc(icon||'compass',26)}</span>
@@ -3895,15 +3921,18 @@ function glPills(arr){ if(!glHas(arr)) return '';
 function glTitle(s){
   const meta=Array.isArray(s.meta)?s.meta.slice(0,3):[];
   const dft=['layers','clock','flag'];
-  const cards=meta.map((m,j)=>`<div class="gl-mcard"><span class="mi">${tpIc(m.icon||dft[j]||'layers',20)}</span><div class="mt"><span class="ml">${esc(m.label||'')}</span><span class="mv">${esc(m.value||'')}</span></div></div>`).join('');
-  return glHead(s)+`<main class="gl-main gl-center"><div class="gl-titlecard">
-    <div class="gl-imgcol"><div class="glow"></div><div class="fade"></div>${glImg(s.image,s.title||'Cover image')}</div>
-    <div class="gl-txtcol">
-      ${glHas(s.eyebrow||s.badge||s.module)?`<span class="gl-badge">${esc(s.eyebrow||s.badge||s.module)}</span>`:''}
-      <h1 class="gl-bigtitle">${glBR(s.title)}${glHas(s.titleAccent)?`<br><span class="accent">${glBR(s.titleAccent)}</span>`:''}</h1>
-      ${glHas(s.subtitle)?`<p class="gl-standfirst">${esc(s.subtitle)}</p>`:''}
-      ${cards?`<div class="gl-meta">${cards}</div>`:''}
-    </div></div></main>`+glFoot(s,s.cta||'Continue');
+  const cards=meta.map((m,j)=>`<div class="gl-tmcard"><span class="mi">${tpIc(m.icon||dft[j]||'layers',20)}</span><div class="mt"><span class="ml">${esc(m.label||'')}</span><span class="mv">${esc(m.value||'')}</span></div></div>`).join('');
+  return glHead(s)+`<main class="gl-main gl-center"><div class="gl-twrap">
+    <div class="gl-thero">${glHas(s.image)?`<img class="gl-thimg" src="${esc(s.image)}" alt="">`:''}<div class="gl-thscrim"></div>
+      <div class="gl-thcontent">
+        ${glHas(s.eyebrow||s.badge||s.module)?`<div class="gl-theyebrow">${esc(s.eyebrow||s.badge||s.module)}</div>`:''}
+        <h1 class="gl-thtitle">${glBR(s.title)}${glHas(s.titleAccent)?`<br><span class="ac">${glBR(s.titleAccent)}</span>`:''}</h1>
+        <div class="gl-thrule"></div>
+        ${glHas(s.subtitle)?`<p class="gl-thsub">${esc(s.subtitle)}</p>`:''}
+      </div>
+    </div>
+    ${cards?`<div class="gl-tmeta">${cards}</div>`:''}
+  </div></main>`+glFoot(s,s.cta||'Continue');
 }
 
 /* ===================== 2) OUTCOMES — objectives + button row ===================== */
@@ -4840,6 +4869,46 @@ function wsQText(q){ return typeof q==='string'?q:((q&&q.text)||''); }
 function wsQLines(q){ return (q&&typeof q==='object'&&q.lines!=null)?q.lines:3; }
 
 /* ---------- GeoLearn worksheet generator (theme-aware) ---------- */
+
+/* ---------- GeoLearn worksheet pagination: split into A4 pages ---------- */
+function wsgPaginate(){
+  try{
+    const sheet=$('#wsSheet'); if(!sheet) return;
+    const wrap=sheet.querySelector('.wsg'); if(!wrap) return;
+    const head=wrap.querySelector('.wsg-head');
+    const secs=[].slice.call(wrap.children).filter(function(el){return el!==head;});
+    const title=esc((LESSON.meta&&LESSON.meta.title)||'Lesson')+' \u2014 Worksheet';
+    const paged=document.createElement('div'); paged.className='wsg-paged';
+    sheet.innerHTML=''; sheet.appendChild(paged);
+    const ws=$('#worksheet'); if(ws) ws.classList.add('wsg-on');
+    let body=null, foot=null, pageNo=0;
+    function newPage(withHead){
+      pageNo++;
+      const pg=document.createElement('div'); pg.className='wsg-page';
+      if(withHead && head){ pg.appendChild(head); }
+      else { const ph=document.createElement('div'); ph.className='wsg-pghead'; ph.innerHTML='<span>'+title+'</span><span>Page '+pageNo+'</span>'; pg.appendChild(ph); }
+      body=document.createElement('div'); body.className='wsg-pgbody'; pg.appendChild(body);
+      foot=document.createElement('div'); foot.className='wsg-pgfoot'; foot.innerHTML='<span>'+title+'</span><span class="pn">Page '+pageNo+'</span>'; pg.appendChild(foot);
+      paged.appendChild(pg);
+    }
+    newPage(true);
+    const LIMIT=function(){ const pg=body.parentElement; return pg.clientHeight - (pg.querySelector('.wsg-head')?pg.querySelector('.wsg-head').offsetHeight:(pg.querySelector('.wsg-pghead').offsetHeight)) - foot.offsetHeight - 24; };
+    let cap=LIMIT();
+    secs.forEach(function(sec){
+      body.appendChild(sec);
+      if(body.offsetHeight>cap && body.children.length>1){
+        body.removeChild(sec);
+        newPage(false); cap=LIMIT();
+        body.appendChild(sec);
+      }
+    });
+    const total=pageNo;
+    [].forEach.call(paged.querySelectorAll('.wsg-pghead span:last-child, .wsg-pgfoot .pn'), function(s){
+      s.textContent=s.textContent.replace(/Page (\d+)/, 'Page $1 of '+total);
+    });
+  }catch(e){ /* if pagination fails, leave single-sheet content */ }
+}
+
 function buildWorksheetGeo(){
   const slides=(LESSON.slides||[]); const total=slides.length;
   if(!total) return '<div class="ws-empty">This lesson has no slides yet.</div>';
@@ -4872,7 +4941,7 @@ function buildWorksheetGeo(){
     if(t==='text'){
       out+=open(i,'Notes',s.title||'Notes');
       const notes=notesFrom(s.body);
-      if(notes.length) out+=`<div class="wsg-sub">Key points to record</div><ul class="wsg-check tight">${notes.map(n=>`<li><span class="bx"></span><div>${esc(n)}</div></li>`).join('')}</ul>`;
+      out+=`<div class="wsg-sub">Key points to record</div>${L(notes.length?Math.min(12,Math.max(5,notes.length*2)):6)}`;
       const kt=Array.isArray(s.keyTerms)?s.keyTerms:[];
       if(kt.length){ out+=`<div class="wsg-sub">Key terms &mdash; write a definition in your own words</div>`;
         out+=kt.map(k=>`<div class="wsg-term"><b>${esc(k.term||'')}</b>${L(1)}</div>`).join(''); }
@@ -5014,8 +5083,8 @@ function buildWorksheet(){
   if(!hadComplete) out+=endSection('');   // lessons without a 'complete' slide still get the whole-lesson extended response
   return out;
 }
-function openWorksheet(){ $('#wsSheet').innerHTML=((LESSON.meta&&LESSON.meta.theme==='geolearn')?buildWorksheetGeo():buildWorksheet()); const el=$('#worksheet');
-  el.classList.add('show'); el.setAttribute('aria-hidden','false'); document.body.classList.add('ws-open'); el.scrollTop=0; }
+function openWorksheet(){ const _geo=(LESSON.meta&&LESSON.meta.theme==='geolearn'); $('#wsSheet').innerHTML=(_geo?buildWorksheetGeo():buildWorksheet()); const el=$('#worksheet');
+  el.classList.add('show'); el.setAttribute('aria-hidden','false'); document.body.classList.add('ws-open'); el.scrollTop=0; if(_geo){ wsgPaginate(); } else { el.classList.remove('wsg-on'); } }
 function closeWorksheet(){ const el=$('#worksheet'); el.classList.remove('show'); el.setAttribute('aria-hidden','true'); document.body.classList.remove('ws-open'); }
 $('#worksheetBtn').onclick=openWorksheet;
 $('#wsClose').onclick=closeWorksheet;
