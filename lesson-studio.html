@@ -1618,6 +1618,20 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-ph-tag{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;z-index:3;}
 .tp-ph-tag span{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;}
 .tp-img-real{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+/* ---- Phase 5: shared media-fill (themes set --media-grad; per-theme .tp-media-* hooks below) ---- */
+.tp-media-grad{position:absolute;inset:0;background:var(--media-grad,transparent);z-index:0;}
+.tp-media-img{position:absolute;inset:0;width:100%;height:100%;object-fit:var(--media-fit,cover);z-index:1;display:block;}
+.tp-media-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:1;color:var(--media-ph-ink,rgba(255,255,255,.6));}
+.tp-media-ph span{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
+.tp-media-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;width:72px;height:72px;border-radius:9999px;background:var(--primary,#2a2a2a);color:#fff;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.28);}
+.tp-media-ext{position:absolute;right:14px;bottom:14px;z-index:3;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.94);border-radius:9px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--primary,#2a2a2a);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.12);}
+/* per-theme media-overlay hooks — intentionally empty; bespoke play/affordance styling lands here later */
+:root[data-theme="imperium"] .tp-media-play{ /* hook */ }
+:root[data-theme="imperium"] .tp-media-ext{ /* hook */ }
+:root[data-theme="microhistory"] .tp-media-play{ /* hook */ }
+:root[data-theme="microhistory"] .tp-media-ext{ /* hook */ }
+:root[data-theme="geolearn"] .tp-media-play{ /* hook */ }
+:root[data-theme="geolearn"] .tp-media-ext{ /* hook */ }
 .tp-phmark{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;}
 .tp-phmark span{font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;}
 .tp-imgph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
@@ -3481,7 +3495,7 @@ function tpSrc(image){ if(image&&typeof image==='object') return String(image.sr
    placeholder (the gradient lives on the container's CSS) + a small "… placeholder" corner tag. */
 function tpImg(image,phLabel,phIcon){
   const src=tpSrc(image);
-  if(src) return `<img class="tp-img-real" src="${esc(src)}" alt="${esc(phLabel||'')}">`;
+  if(src) return `<img class="tp-img-real" src="${esc(src)}" alt="${esc(phLabel||'')}" loading="lazy" style="${tpFocusStyle(image)}" onerror="tpImgErr(this)">`;
   return `<div class="tp-ph-tag">${tpIc(phIcon||'image',18)}<span>${esc(phLabel||'Image placeholder')}</span></div>`;
 }
 function tpHasImg(image){ return !!tpSrc(image); }
@@ -3558,7 +3572,7 @@ function imImageText(s){
   return imHead(s,tpProg(s,60))
     +`<main class="tp-main"><div class="tp-llwrap">
       <div class="tp-llcard">
-        <div class="tp-llvisual">${tpHasImg(img.src)?tpImg(img.src,'Image placeholder','image'):`<div class="tp-imgph"><div class="tp-phmark">${tpIc('image',46)}<span>Image placeholder</span></div></div>`}
+        <div class="tp-llvisual">${tpHasImg(img)?tpImg(img,'Image placeholder','image'):`<div class="tp-imgph"><div class="tp-phmark">${tpIc('image',46)}<span>Image placeholder</span></div></div>`}
           ${img.tag?`<div class="tp-phbadge">${esc(img.tag)}</div>`:''}</div>
         <div class="tp-llcontent">
           ${(s.eyebrow||s.moduleLabel)?`<span class="tp-lleyebrow">${esc(s.eyebrow||s.moduleLabel)}</span>`:''}
@@ -3607,13 +3621,14 @@ function imVideo(s){
   const meta=Array.isArray(s.metadata)?s.metadata:[];
   const mi=['quiz','notes'];
   const subs=meta.map((m,j)=>`<div class="tp-subcard"><span class="tp-sc-ic ${j%2?'tert':'fixed'}">${tpIc(m.icon||mi[j%2],20)}</span><div><p class="tp-sc-t">${esc(m.key||'')}</p><p class="tp-sc-s">${esc(m.value||'')}</p></div></div>`).join('');
+  const poster=tpSrc(s.image)||tpVideoPoster(s);
   return imHead(s,tpProg(s,65))
     +`<main class="tp-main"><div class="tp-vwrap">
       <div class="tp-vcard">
         <div class="tp-vhead"><div class="tp-vmeta"><span class="tp-badge-gold">${esc(s.eyebrow||'Video')}</span><span class="tp-vmin">${esc(s.time||'')}</span></div>
           <h1 class="tp-serif tp-vtitle">${esc(s.title||'')}</h1></div>
         <div class="tp-vframe">
-          ${tpHasImg(s.image)?tpImg(s.image,'Video still placeholder','image'):`<div class="tp-vstill"></div><div class="tp-phmark tp-soft">${tpIc('image',20)}<span>Video still placeholder</span></div>`}
+          ${poster?tpImg(poster,'Video still','image'):`<div class="tp-vstill"></div><div class="tp-phmark tp-soft">${tpIc('image',20)}<span>Video still placeholder</span></div>`}
           <div class="tp-vplay">${tpIc('play',36)}</div>
           <div class="tp-vctrl">${tpIc('pause',20)}<div class="tp-vscrub"><i></i></div><span class="tp-vtime">${esc(s.timestamp||'01:42 / 04:15')}</span>${tpIc('fullscreen',18)}</div>
         </div>
@@ -3714,7 +3729,7 @@ function mhImageText(s){
       <div class="tp-ubar"></div>
       <div class="tp-itgrid">
         <div>
-          <div class="tp-polaroid"><div class="tp-pl-img">${tpHasImg(img.src)?tpImg(img.src,'Archival plate placeholder','monument'):`<div class="tp-phmark">${tpIc('monument',38)}<span>Archival plate placeholder</span></div>`}
+          <div class="tp-polaroid"><div class="tp-pl-img">${tpHasImg(img)?tpImg(img,'Archival plate placeholder','monument'):`<div class="tp-phmark">${tpIc('monument',38)}<span>Archival plate placeholder</span></div>`}
             ${img.tag?`<span class="tp-doctag">${esc(img.tag)}</span>`:''}</div></div>
           ${img.caption?`<p class="tp-plate">${esc(img.caption)}</p>`:''}
         </div>
@@ -3768,14 +3783,15 @@ function mhInfographic(s){
 function mhVideo(s){
   const meta=Array.isArray(s.metadata)?s.metadata:[];
   const mrows=meta.map(m=>`<div class="tp-mrow"><span class="tp-mk">${esc(m.key||'')}</span><span class="tp-mv">${esc(m.value||'')}</span></div>`).join('');
+  const poster=tpSrc(s.image)||tpVideoPoster(s);
   return mhHead(s,tpProg(s,65))
     +`<main class="tp-main"><div class="tp-wrap" style="display:flex;flex-direction:column;align-items:center;">
       <div class="tp-vcard2">
         <div class="tp-vhead2"><div>${s.eyebrow?`<div class="tp-veyebrow">${tpIc('film',14)}${esc(s.eyebrow)}</div>`:''}<h2 class="tp-vtitle2">${esc(s.title||'')}</h2></div>
           ${s.date?`<span class="tp-vdate">${tpIc('calendar',18)}${esc(s.date)}</span>`:''}</div>
         <div class="tp-player">
-          ${tpHasImg(s.image)?tpImg(s.image,'Video still placeholder','film'):`<div class="tp-sepia"></div>`}
-          <div class="tp-vph">${tpIc('film',20)}<span>Video still placeholder</span></div>
+          ${poster?tpImg(poster,'Video still','film'):`<div class="tp-sepia"></div>`}
+          ${poster?'':`<div class="tp-vph">${tpIc('film',20)}<span>Video still placeholder</span></div>`}
           <div class="tp-playbtn">${tpIc('play',40)}</div>
           <div class="tp-vctrl2">${tpIc('pause',22)}<div class="tp-vscrub2"><i></i></div><span class="tp-vtime2">${esc(s.timestamp||s.time||'02:14 / 06:45')}</span>${tpIc('fullscreen',20)}</div>
         </div>
@@ -3869,8 +3885,35 @@ function glStep(){ const n=Math.max(1,LESSON.slides.length); const i=Math.min(cu
 /* image slot → real <img> (path OR data: URI) or branded gradient placeholder.
    The parent supplies the teal/mint gradient; `dark` switches placeholder ink for light panels. */
 function glImg(image,alt,dark){ const src=tpSrc(image);
-  if(src) return `<img class="gl-img-real" src="${esc(src)}" alt="${esc(alt||'')}">`;
+  if(src) return `<img class="gl-img-real" src="${esc(src)}" alt="${esc(alt||'')}" loading="lazy" style="${tpFocusStyle(image)}" onerror="tpImgErr(this)">`;
   return `<div class="gl-ph${dark?' dark':''}" role="img" aria-label="${esc(alt||'Image placeholder')}">${tpIc('image',34)}<span>Image placeholder</span></div>`; }
+/* ---- Phase 5: shared media helpers (focal + gradient-behind + poster derivation + still-first) ----
+   One shared layer; packs only style (--media-grad, .tp-media-* overlay hooks). */
+function tpImgErr(el){ if(el) el.style.visibility='hidden'; }   /* broken/firewall-blocked remote asset → reveal the gradient-behind */
+function tpYTId(u){ const m=String(u||'').match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/); return m?m[1]:''; }
+function tpVideoPoster(s){ s=s||{}; const ex=tpSrc(s.poster)||tpSrc(s.thumbnail); if(ex) return ex; const id=tpYTId(s.externalVideoUrl||s.url||s.video); return id?('https://i.ytimg.com/vi/'+id+'/hqdefault.jpg'):''; }
+function tpFocusStyle(image){ const f=mFocus((image&&typeof image==='object')?image:{}); return 'object-position:'+Math.round(f.x*100)+'% '+Math.round(f.y*100)+'%'; }
+function tpMedia(media, kind, opts){ opts=opts||{};
+  const m=(media&&typeof media==='object')?media:{};
+  const pos=tpFocusStyle(m), fitVar=opts.fit?(';--media-fit:'+(opts.fit==='contain'?'contain':'cover')):'';
+  const phLabel=opts.phLabel||'';
+  const grad=`<div class="tp-media-grad" aria-hidden="true"></div>`;
+  const ph=`<div class="tp-media-ph" role="img" aria-label="${esc(phLabel||'Media placeholder')}">${tpIc(opts.phIcon||'image',30)}${phLabel?`<span>${esc(phLabel)}</span>`:''}</div>`;
+  const img=(src,alt)=>`<img class="tp-media-img" src="${esc(src)}" alt="${esc(alt||'')}" loading="lazy" style="${pos}${fitVar}" onerror="tpImgErr(this)">`;
+  let visual=ph, overlay='';
+  if(kind==='video'){
+    const poster=tpVideoPoster(m), url=tpSrc(m.externalVideoUrl||m.url);
+    if(poster) visual=img(poster,phLabel||'Video thumbnail');
+    if(opts.overlay!==false) overlay=`<button class="tp-media-play" type="button" aria-label="Play video">${tpIc('play',30)}</button>`+(url?`<a class="tp-media-ext" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${tpIc('external',14)} ${esc(opts.extLabel||'Watch on YouTube')}</a>`:'');
+  } else if(kind==='interactive'){
+    const still=tpSrc(m.still||m.screenshot||m.image), url=tpSrc(m.url);
+    if(still) visual=img(still,phLabel||'Interactive preview');
+    if(opts.affordance!==false && url) overlay=`<a class="tp-media-ext" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${tpIc('external',14)} ${esc(opts.extLabel||'Open interactive ↗')}</a>`;
+  } else {
+    const src=tpSrc(m.src||m.image); if(src) visual=img(src,phLabel);
+  }
+  return grad+visual+overlay;
+}
 /* inline emphasis: escape first, then a tiny safe subset.
    **bold**  ==highlight==  [[note clause]] (reveal-notes, complete standalone sentence) */
 function glRich(t){ return esc(t||'')
@@ -3993,7 +4036,7 @@ function glImageText(s){
     const lead=s.lead||(Array.isArray(s.body)?s.body[0]:s.body)||'';
     const content=`${glHas(s.tag)?`<span class="gl-gtag">${esc(s.tag)}</span>`:''}<h1>${glBR(s.title||'')}</h1>${lead?`<div class="gl-glead"><span class="accent"></span><p>${glRich(lead)}</p></div>`:''}${glHas(s.body)&&Array.isArray(s.body)?s.body.slice(1).map(b=>`<p class="gl-gbody">${glRich(typeof b==='string'?b:(b.content||''))}</p>`).join(''):''}${glHas(s.note)?`<p class="gl-gnote">${esc(s.note)}</p>`:''}`;
     return glHead(s)+`<main class="gl-main gl-center"><div class="gl-gallery">
-      <div class="gl-gimg"><div class="glow"></div>${glImg(img.src||img,s.title||'')}</div>
+      <div class="gl-gimg"><div class="glow"></div>${glImg(img,s.title||'')}</div>
       <div class="gl-gtext">${content}</div></div></main>`+glFoot(s,s.cta||'Continue');
   }
   /* panel */
@@ -4007,7 +4050,7 @@ function glImageText(s){
     <div class="gl-titlerow"><h1 class="gl-it-h1">${glBR(s.title||'')}</h1>${focus?`<button class="gl-focusbtn" type="button" data-tp-focus-open aria-haspopup="dialog"><span class="fi">${tpIc('focus',16)}</span> Focus reading</button>`:''}</div>
     ${glPills(s.pills)}
     <div class="gl-itrow">
-      <div class="gl-imgpanel">${glImg(img.src||img,s.title||'',true)}${glHas(img.tag||s.tag)?`<span class="tag">${esc(img.tag||s.tag)}</span>`:''}<span class="zoom">${tpIc('zoomIn',18)}</span></div>
+      <div class="gl-imgpanel">${glImg(img,s.title||'',true)}${glHas(img.tag||s.tag)?`<span class="tag">${esc(img.tag||s.tag)}</span>`:''}<span class="zoom">${tpIc('zoomIn',18)}</span></div>
       <div class="gl-contentcard">${s.subtitle?`<h2>${esc(s.subtitle)}</h2>`:''}${content}</div>
     </div></div></main>`+glFoot(s,s.cta||'Continue')
     +(focus?`<div class="gl-overlay" data-tp-overlay role="dialog" aria-modal="true" aria-label="Focus reading" hidden><div class="gl-modal"><div class="gl-mhead"><div><span class="gl-meye">${tpIc('focus',14)} Focus reading</span><h2>${esc(s.title||'')}</h2></div><button class="gl-mclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',20)}</button></div><div class="gl-contentcard" style="border:0;box-shadow:none;padding:0;">${content}</div></div></div>`:'');
@@ -4049,7 +4092,7 @@ function glVideo(s){
   return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap">
     <div class="gl-ey"><span class="rule"></span><span>${esc(s.eyebrow||'Video')}</span></div>
     <h1 class="gl-art-h1" style="margin-bottom:0;">${glBR(s.title||'Video')}</h1>
-    <div class="gl-player">${glImg(s.image,s.title||'Video still')}<button class="gl-playbtn" type="button" aria-label="Play">${tpIc('play',34)}</button>
+    <div class="gl-player">${glImg(tpSrc(s.image)||tpVideoPoster(s),s.title||'Video still')}<button class="gl-playbtn" type="button" aria-label="Play">${tpIc('play',34)}</button>
       <div class="gl-controls"><div class="gl-scrub"><i></i></div><div class="gl-crow"><div class="cside"><span>${tpIc('notes',18)}</span><span class="t">${esc(s.timestamp||s.duration||'00:00 / 00:00')}</span></div><div class="cside"><span>${tpIc('compass',18)}</span><span>${tpIc('fullscreen',18)}</span></div></div></div></div>
     <div class="gl-bento">
       <div class="gl-summary">${(sum.title||s.title)?`<h2>${esc(sum.title||s.title)}</h2>`:''}${(sum.body||s.body)?`<p>${esc(sum.body||s.body)}</p>`:''}${chipHtml}</div>
@@ -4151,9 +4194,12 @@ function glInteractive(s){
   const url=(s.url||'').trim();
   const steps=Array.isArray(s.steps)?s.steps:(Array.isArray(s.features)?s.features:[]);
   const stepHtml=steps.length?`<ol class="gl-steps">${steps.map((x,k)=>{ const o=typeof x==='string'?{description:x}:x; return `<li><span class="gl-sn">${k+1}</span><div>${o.title?`<h4>${esc(o.title)}</h4>`:''}<p>${esc(o.description||o.body||o.text||'')}</p></div></li>`; }).join('')}</ol>`:'';
-  const frame=url
-    ? `<iframe src="${esc(url)}" title="${esc(s.title||'Interactive')}" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe><span class="gl-frametag">${tpIc('cube',14)} Live interactive</span>`
-    : `<div class="eph"><span class="pi">${tpIc('cube',40)}</span><span class="pl">${esc(s.embedLabel||'Embedded interactive loads here')}</span>${s.fileLabel?`<span class="ps">${esc(s.fileLabel)}</span>`:''}</div>`;
+  const still=tpSrc(s.still||s.screenshot||s.image);
+  const frame=still
+    ? tpMedia(s,'interactive',{fit:'contain',phIcon:'cube',phLabel:s.embedLabel||'Interactive',affordance:false})+`<span class="gl-frametag">${tpIc('cube',14)} Interactive preview</span>`
+    : url
+      ? `<iframe src="${esc(url)}" title="${esc(s.title||'Interactive')}" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe><span class="gl-frametag">${tpIc('cube',14)} Live interactive</span>`
+      : `<div class="eph"><span class="pi">${tpIc('cube',40)}</span><span class="pl">${esc(s.embedLabel||'Embedded interactive loads here')}</span>${s.fileLabel?`<span class="ps">${esc(s.fileLabel)}</span>`:''}</div>`;
   return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap" style="flex:1;min-height:0;">
     ${glHeader('cube',s.eyebrow||'Interactive',s.title||'Interactive activity')}
     <div class="gl-introw">
