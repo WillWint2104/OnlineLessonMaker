@@ -212,12 +212,24 @@
 :root[data-theme="geolearn"] .gl-rcard .rext{flex-shrink:0;color:var(--outline);display:flex;}
 
 /* ===================== TEXT (article + studyguide) + reveal-notes ===================== */
-:root[data-theme="geolearn"] .gl-notetoggle{display:inline-flex;align-items:center;gap:8px;background:var(--surface-lowest);border:1.5px solid var(--outline-variant);border-radius:9999px;padding:8px 15px;font:inherit;font-weight:600;font-size:13px;color:var(--on-surface);cursor:pointer;}
-:root[data-theme="geolearn"] .gl-notetoggle .pi{color:var(--primary);display:flex;}
-:root[data-theme="geolearn"] .gl-notetoggle.on{background:var(--primary);color:#fff;border-color:var(--primary);}
-:root[data-theme="geolearn"] .gl-notetoggle.on .pi{color:#fff;}
-:root[data-theme="geolearn"] .gl-note-clause{transition:background .18s,box-shadow .18s;border-radius:4px;padding:0 2px;}
-:root[data-theme="geolearn"] .tp-slide.notes-on .gl-note-clause{background:var(--primary-fixed);box-shadow:0 0 0 3px var(--primary-fixed);color:var(--on-surface);}
+/* ---- Phase 3: shared reveal-notes mainstay (theme-neutral structure; packs set the vars + pen look) ----
+   [[note]] → .tp-noteclause, revealed by the pen toggling .notes-on on the slide root; ==highlight== → .tp-hl;
+   the reveal-pen is .tp-notepen and only renders when the slide carries a [[note]].
+   (.tp-noteclause, not .tp-note — microhistory already uses .tp-note for a block note callout.) */
+.tp-noteclause{transition:background .18s,box-shadow .18s;border-radius:4px;padding:0 2px;}
+.tp-slide.notes-on .tp-noteclause{background:var(--note-reveal-bg);box-shadow:0 0 0 3px var(--note-reveal-bg);color:var(--note-reveal-ink);}
+.tp-noterow{display:flex;justify-content:flex-end;margin:0 0 12px;}
+/* pen button — shared, auto-themed from each pack's tokens (reproduces geo's old .gl-notetoggle 1:1) */
+.tp-notepen{display:inline-flex;align-items:center;gap:8px;background:var(--surface-lowest);border:1.5px solid var(--outline-variant);border-radius:9999px;padding:8px 15px;font:inherit;font-weight:600;font-size:13px;color:var(--on-surface);cursor:pointer;}
+.tp-notepen .pi{color:var(--primary);display:flex;}
+.tp-notepen.on{background:var(--primary);color:#fff;border-color:var(--primary);}
+.tp-notepen.on .pi{color:#fff;}
+/* per-theme reveal-highlight + inline-highlight colours (geo keeps its primary-fixed teal exactly) */
+:root[data-theme="geolearn"] .tp-slide{--note-reveal-bg:var(--primary-fixed);--note-reveal-ink:var(--on-surface);}
+:root[data-theme="imperium"] .tp-slide{--note-reveal-bg:var(--secondary-fixed);--note-reveal-ink:var(--on-surface);}
+:root[data-theme="imperium"] .tp-hl{color:var(--primary);font-weight:600;}
+:root[data-theme="microhistory"] .tp-slide{--note-reveal-bg:var(--secondary-fixed);--note-reveal-ink:var(--on-surface);}
+:root[data-theme="microhistory"] .tp-hl{color:var(--primary);font-weight:600;}
 :root[data-theme="geolearn"] .gl-art-h1{font-size:clamp(30px,3.6vw,42px);line-height:1.12;letter-spacing:-.02em;font-weight:700;margin-bottom:14px;max-width:18ch;}
 :root[data-theme="geolearn"] .gl-readtime{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--on-surface-variant);}
 :root[data-theme="geolearn"] .gl-readtime .ri{color:var(--primary);display:flex;}
@@ -227,7 +239,7 @@
 :root[data-theme="geolearn"] .gl-prose p{font-size:clamp(15px,1.15vw,17px);line-height:1.7;color:var(--on-surface-variant);}
 :root[data-theme="geolearn"] .gl-prose p+p{margin-top:16px;}
 :root[data-theme="geolearn"] .gl-prose b{color:var(--on-surface);font-weight:700;}
-:root[data-theme="geolearn"] .gl-prose .hl{color:var(--primary);font-weight:600;}
+:root[data-theme="geolearn"] .gl-prose .tp-hl{color:var(--primary);font-weight:600;}
 :root[data-theme="geolearn"] .gl-dropcap::first-letter{float:left;font-size:64px;line-height:.82;font-weight:700;color:var(--primary);padding:6px 12px 0 0;}
 :root[data-theme="geolearn"] .gl-side{display:flex;flex-direction:column;gap:18px;}
 :root[data-theme="geolearn"] .gl-insight{background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:16px;padding:22px;position:relative;overflow:hidden;}
@@ -3839,9 +3851,9 @@ function packText(s){
   const pullHtml=pq?`<div class="tp-pull">“${esc(pq.text||'')}”${pq.source?`<span class="src">— ${esc(pq.source)}</span>`:''}</div>`:'';
   let narr='';
   if(body.length){
-    narr+=`<p class="tp-lead">${esc(body[0])}</p>`;
+    narr+=`<p class="tp-lead">${tpRich(body[0])}</p>`;
     const rest=body.slice(1);
-    rest.forEach((p,j)=>{ narr+=`<p class="tp-body">${esc(p)}</p>`; if(j===0) narr+=pullHtml; });
+    rest.forEach((p,j)=>{ narr+=`<p class="tp-body">${tpRich(p)}</p>`; if(j===0) narr+=pullHtml; });
     if(rest.length===0) narr+=pullHtml;
   } else { narr=pullHtml; }
   const sb=s.sidebar||{};
@@ -3852,9 +3864,9 @@ function packText(s){
       <div class="tp-dhead"><div>${s.classification?`<span class="tp-cls">${esc(s.classification)}</span>`:''}<h1 class="tp-dtitle">${esc(s.title||'')}</h1></div>
         ${s.date?`<span class="tp-datestamp">${esc(s.date)}</span>`:''}</div>
       <div class="tp-tgrid">
-        <section class="tp-narr">${narr}</section>
+        <section class="tp-narr">${tpHasNotes(body)?`<div class="tp-noterow">${tpNotePen()}</div>`:''}${narr}</section>
         <aside class="tp-aside">
-          ${(sb.image!==undefined||sb.caption)?`<div><div class="tp-tpolaroid"><div class="tp-tpl-img">${tpHasImg(sb.image)?tpImg(sb.image,'Photo placeholder','image'):`<div class="tp-phmark">${tpIc('image',24)}<span>Photo placeholder</span></div>`}</div></div>${sb.caption?`<p class="tp-pl-cap">${esc(sb.caption)}</p>`:''}</div>`:''}
+          ${tpHasImg(sb.image)?`<div><div class="tp-tpolaroid"><div class="tp-tpl-img">${tpImg(sb.image,'Photo placeholder','image')}</div></div>${sb.caption?`<p class="tp-pl-cap">${esc(sb.caption)}</p>`:''}</div>`:''}
           ${note?`<div class="tp-snote"><div class="sh">${tpIc('ribbon',16)}<h3>${esc(note.title||'Note')}</h3></div><p>${esc(note.text||'')}</p></div>`:''}
           ${prog!=null?`<div class="tp-sprog"><div class="pt"><span class="pl">${esc(sb.progressLabel||'Section Progress')}</span><span class="pv">${prog}%</span></div><div class="tp-ptrack"><i style="width:${prog}%"></i></div></div>`:''}
         </aside>
@@ -3914,12 +3926,23 @@ function tpMedia(media, kind, opts){ opts=opts||{};
   }
   return grad+visual+overlay;
 }
-/* inline emphasis: escape first, then a tiny safe subset.
-   **bold**  ==highlight==  [[note clause]] (reveal-notes, complete standalone sentence) */
-function glRich(t){ return esc(t||'')
-  .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
-  .replace(/==([^=]+)==/g,'<span class="hl">$1</span>')
-  .replace(/\[\[([^\]]+)\]\]/g,'<span class="gl-note-clause">$1</span>'); }
+/* ---- Phase 3: shared inline-markup + reveal-notes — one parser + one pen, themed via CSS ----
+   esc() first, then a tiny safe subset:
+     **bold**        → <b>…</b>
+     [[note clause]] → <span class="tp-note">…</span>   (revealed by the reveal-pen)
+     ==highlight==   → opts.term(word) key-term link when matched, else <span class="tp-hl">…</span>
+   Consumed by every pack text renderer (imperium/microhistory/geolearn); packs supply only CSS. */
+function tpRich(text, opts){ opts=opts||{};
+  return esc(text||'')
+    .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
+    .replace(/\[\[([^\]]+)\]\]/g,'<span class="tp-noteclause">$1</span>')
+    .replace(/==([^=]+)==/g,(m,w)=>{ if(opts.term){ const link=opts.term(w); if(link) return link; } return `<span class="tp-hl">${w}</span>`; });
+}
+/* the reveal-pen renders only when the body actually carries a [[note]] */
+function tpHasNotes(body){ const arr=Array.isArray(body)?body:[body]; return arr.some(b=>{ const t=typeof b==='string'?b:((b&&(b.content||b.quote||b.text))||''); return /\[\[[^\]]+\]\]/.test(t); }); }
+function tpNotePen(){ return `<button class="tp-notepen" type="button" data-tp-notes aria-pressed="false"><span class="pi">${tpIc('pen',16)}</span><span class="lbl"> Reveal notes</span></button>`; }
+/* geo alias — keeps all existing glRich call sites unchanged while the parser is now shared */
+function glRich(t,opts){ return tpRich(t,opts); }
 function glBR(t){ return esc(t||'').replace(/\n/g,'<br>'); }
 function glHas(v){ return v!=null && (Array.isArray(v)?v.length:String(v).trim().length); }
 
@@ -3986,17 +4009,14 @@ function glOutcomes(s){
 }
 
 /* ===================== 3) TEXT — article | studyguide (+ reveal-notes) ===================== */
-function glNoteToggle(){ return `<button class="gl-notetoggle" type="button" data-gl-notes aria-pressed="false"><span class="pi">${tpIc('pen',16)}</span><span class="lbl"> Reveal notes</span></button>`; }
+function glNoteToggle(){ return tpNotePen(); }
 function glText(s){
   const variant=s.variant==='studyguide'?'studyguide':'article';
   const body=Array.isArray(s.body)?s.body:(s.body?[s.body]:[]);
   if(variant==='studyguide'){
     const terms=Array.isArray(s.keyTerms||s.terms)?(s.keyTerms||s.terms):[];
     const tmap={}; terms.forEach((t,k)=>{ if(t&&t.term) tmap[String(t.term).toLowerCase()]='gt'+k; });
-    const kt=(t)=>esc(t||'')
-      .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
-      .replace(/\[\[([^\]]+)\]\]/g,'<span class="gl-note-clause">$1</span>')
-      .replace(/==([^=]+)==/g,(m,w)=>{ const id=tmap[w.trim().toLowerCase()]; return id?`<button class="gl-kt" type="button" data-gl-open="${id}">${esc(w)}</button>`:`<span class="hl">${esc(w)}</span>`; });
+    const kt=(t)=>tpRich(t,{term:(w)=>{ const id=tmap[w.trim().toLowerCase()]; return id?`<button class="gl-kt" type="button" data-gl-open="${id}">${esc(w)}</button>`:null; }});
     const blockHtml=body.map(b=>{
       if(typeof b==='string') return `<p>${kt(b)}</p>`;
       if(b.heading) return `<h2>${esc(b.heading)}</h2>`;
@@ -4007,7 +4027,7 @@ function glText(s){
     const modals=terms.map((t,k)=>glModal('gt'+k,'Key term',t.term||'',`<p class="gl-msub">${esc(t.definition||'')}</p>`)).join('');
     return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap">
       ${glHeader('book', s.eyebrow||'Background', s.title||'Study guide')}
-      <div class="gl-tiphint">${glNoteToggle()}</div>
+      ${tpHasNotes(body)?`<div class="gl-tiphint">${tpNotePen()}</div>`:''}
       <div class="gl-bodycard"><article class="gl-article">${blockHtml}</article></div>
     </div></main>`+glFoot(s,s.cta||'Continue')+modals;
   }
@@ -4021,7 +4041,7 @@ function glText(s){
   return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap">
     <h1 class="gl-art-h1">${glBR(s.title||'Reading')}</h1>
     ${(glHas(s.pills)||glHas(s.readtime))?`<div class="gl-pills">${glHas(s.pills)?(s.pills.map(p=>{const o=typeof p==='string'?{label:p}:p;return `<span class="gl-pill">${o.icon?`<span class="pi">${tpIc(o.icon,14)}</span>`:''}${esc(o.label||'')}</span>`;}).join('')):''}${glHas(s.readtime)?`<span class="gl-readtime"><span class="ri">${tpIc('clock',14)}</span> ${esc(s.readtime)}</span>`:''}</div>`:''}
-    <div class="gl-noterow">${glNoteToggle()}</div>
+    ${tpHasNotes(body)?`<div class="gl-noterow">${tpNotePen()}</div>`:''}
     <div class="${proseCls}">
       <div class="gl-prose">${body.map((p,j)=>{ const txt=typeof p==='string'?p:(p.content||''); return `<p${j===0?' class="gl-dropcap"':''}>${glRich(txt)}</p>`; }).join('')}</div>
       ${side}
@@ -4254,11 +4274,6 @@ function wireGeoModals(){
     dlg.addEventListener('click',(e)=>{ if(e.target===dlg) close(); });
     const c=dlg.querySelector('[data-gl-close]'); if(c) c.addEventListener('click',close);
   });
-  // reveal-notes pen toggle (scoped to this slide root)
-  root.querySelectorAll('[data-gl-notes]').forEach(nb=>nb.addEventListener('click',()=>{
-    const on=root.classList.toggle('notes-on'); nb.classList.toggle('on',on); nb.setAttribute('aria-pressed',on?'true':'false');
-    const lbl=nb.querySelector('.lbl'); if(lbl) lbl.textContent=on?' Hide notes':' Reveal notes';
-  }));
   // knowledge-check gating (Continue locked until the correct option is chosen; retry while wrong)
   const kc=root.querySelector('[data-gl-kc]');
   if(kc){
@@ -4306,6 +4321,11 @@ function wirePack(){
     b.addEventListener('click',()=>{ if(b.disabled) return; if(present && cur<LESSON.slides.length-1) go(cur+1); });
   });
   wirePackTyped();
+  // reveal-notes pen toggle (shared — all pack themes): toggles notes-on on the slide root
+  root.querySelectorAll('[data-tp-notes]').forEach(nb=>nb.addEventListener('click',()=>{
+    const on=root.classList.toggle('notes-on'); nb.classList.toggle('on',on); nb.setAttribute('aria-pressed',on?'true':'false');
+    const lbl=nb.querySelector('.lbl'); if(lbl) lbl.textContent=on?' Hide notes':' Reveal notes';
+  }));
   wireGeoModals();
   const kc=root.querySelector('[data-tp-kc]'); if(!kc) return;
   const cont=root.querySelector('[data-tp-continue]');
