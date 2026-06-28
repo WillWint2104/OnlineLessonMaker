@@ -4509,8 +4509,15 @@ function mhInteractive(s){
   const url=(s.url||'').trim();
   const steps=Array.isArray(s.steps)?s.steps:(Array.isArray(s.features)?s.features:[]);
   const stepHtml=steps.length?`<ol class="tp-isteps">${steps.map((x,k)=>{ const o=typeof x==='string'?{description:x}:x; return `<li><span class="tp-isn">${k+1}</span><div>${o.title?`<h4>${esc(o.title)}</h4>`:''}<p>${esc(o.description||o.body||o.text||'')}</p></div></li>`; }).join('')}</ol>`:'';
-  const questions=Array.isArray(s.questions)?s.questions:[];   // full-width answer questions below the embed row (flow into the worksheet)
-  const qBlock=questions.length?`<div class="tp-iqs"><h2 class="tp-iqs-h">${esc(s.questionsLabel||'Questions')}</h2><ol class="tp-tasks">${questions.map((q,k)=>`<li class="tp-task"><div class="tp-thead"><span class="tp-tnum">${esc(q.numeral||String(k+1))}</span><div class="tp-tlead"><span class="tp-tq">${esc(q.question||'')}</span>${(q.marks||q.skill)?`<div class="tp-tmeta">${q.marks?`<span class="tp-marks">${esc(q.marks)}</span>`:''}${q.skill?`<span class="tp-skill">${esc(q.skill)}</span>`:''}</div>`:''}</div></div></li>`).join('')}</ol></div>`:'';
+  const questions=Array.isArray(s.questions)?s.questions:[];   // full-width answerable tasks below the embed row — mirror packSourceAnalysis (textarea + reveal-model), gated on a non-empty attempt by the shared reveal JS; flow into the worksheet (answer-space only, model not printed)
+  const qBlock=questions.length?`<div class="tp-iqs"><h2 class="tp-iqs-h">${esc(s.questionsLabel||'Questions')}</h2><ol class="tp-tasks">${questions.map((q,k)=>{ const fid='iq'+k, num=esc(q.numeral||String(k+1));
+    return `<li class="tp-task" data-tp-block><div class="tp-thead"><span class="tp-tnum">${num}</span><div class="tp-tlead">
+        <label class="tp-tq" for="${fid}-ta">${esc(q.question||'')}</label>
+        ${(q.marks||q.skill)?`<div class="tp-tmeta">${q.marks?`<span class="tp-marks">${esc(q.marks)}</span>`:''}${q.skill?`<span class="tp-skill">${esc(q.skill)}</span>`:''}</div>`:''}</div></div>
+      <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="Question ${num}${q.skill?': '+esc(q.skill):''} — your response" placeholder="Type your response..."></textarea>
+      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="question ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button></div>
+      <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model answer for question ${num}"><div class="tp-tmh">${tpIc('check',14)} Model answer${q.skill?' · '+esc(q.skill):''}</div><p>${esc(q.model||'')}</p></div></li>`;
+  }).join('')}</ol></div>`:'';
   const still=tpSrc(s.still||s.screenshot||s.image);
   const frame=still
     ? tpMedia(s,'interactive',{fit:'contain',phIcon:'cube',phLabel:s.embedLabel||'Interactive',affordance:false})+`<span class="tp-iframetag">${tpIc('cube',14)} Interactive preview</span>`
@@ -4529,6 +4536,7 @@ function mhInteractive(s){
           ${steps.length?`<div class="tp-igtitle">How to use this interactive</div>${stepHtml}`:''}
           ${url?`<a class="tp-ilaunch" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(s.launchLabel||'Open the interactive')} <span class="li">${tpIc('external',16)}</span></a>`:''}
           ${glHas(s.meta)?`<div class="tp-iemeta">${tpIc('clock',14)} ${esc(s.meta)}</div>`:''}
+          ${(glHas(s.lead||s.desc)||steps.length||url||glHas(s.meta))?'':`<p class="tp-ilead">${esc(questions.length?'Explore the interactive, then complete the questions below.':'Open the interactive to explore this activity.')}</p>`}
         </div>
       </div>
       ${qBlock}
