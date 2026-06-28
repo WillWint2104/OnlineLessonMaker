@@ -14,6 +14,11 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   placeholder" box on sourceless short-answer slides. Additive CSS modifier
   (`.tp-sa-noart` / `.gl-noart`) — slides that DO carry a source render byte-identically.
   Verified by render (conscription + refugee lessons) and per-theme sample regression.
+- **GeoLearn `outcomes` no longer shows an empty "Image placeholder" panel when the slide has
+  no image.** `glOutcomes` renders the image inside the left panel only when one is supplied; the
+  panel (teal gradient + syllabus/resource buttons) stays when those buttons exist, and collapses
+  to a single full-width column (`.gl-oone`) when there's neither an image nor buttons. Geolearn-only;
+  imperium/microhistory byte-identical. Verified by render (refugee lesson + the geolearn sample).
 
 ### Fixed
 - **Microhistory text: `==term==` / `==highlight==` no longer break sentences.** A stale
