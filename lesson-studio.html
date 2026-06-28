@@ -2123,6 +2123,10 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-recap{list-style:none;display:flex;flex-direction:column;gap:8px;text-align:left;margin:0 0 16px;padding:0;}
 .tp-slide .tp-rc{display:flex;align-items:center;gap:13px;padding:11px 15px;}
 .tp-slide .tp-rc .rci{flex-shrink:0;width:38px;height:38px;display:flex;align-items:center;justify-content:center;}
+/* Image-path icons (tpIc <img>) fill their larger outro slots so detailed art stays legible;
+   line glyphs keep the size the renderer passes, and the width/height attrs remain the default elsewhere. */
+.tp-slide .tp-stat .si .tp-icimg{width:40px;height:40px;}
+.tp-slide .tp-rc .rci .tp-icimg{width:30px;height:30px;}
 .tp-slide .tp-rc div{flex:1;}
 .tp-slide .tp-rc .rct{display:block;font-size:15px;font-weight:700;color:var(--on-surface);}
 .tp-slide .tp-rc .rcb{display:block;font-size:13px;line-height:1.45;color:var(--on-surface-variant);margin-top:2px;}
@@ -3480,7 +3484,14 @@ const PACK_ICONS={
   colosseum:'<path d="M4 21h16M5 21V10l7-5 7 5v11M9 21v-6h6v6"/>',
   tank:'<path d="M3 14h2l1-3h9l2 3h4v3a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><circle cx="7" cy="18" r="1.5"/><circle cx="12" cy="18" r="1.5"/><circle cx="17" cy="18" r="1.5"/><path d="M14 8h5l-1 3"/>'
 };
-function tpIc(name,size){ size=size||22; const p=PACK_ICONS[name]||PACK_ICONS.image;
+/* An icon value may be a registry key (a glyph name) OR an image path/URL. It's treated as an
+   image when it is a data:/http(s) URL, has an image extension, or contains a slash — registry
+   keys never do. Image icons render as an <img> constrained to the size slot (object-fit:contain)
+   so they keep the same footprint as a glyph and can't overflow their badge. Works for any theme. */
+function tpIsImgIcon(v){ return typeof v==='string' && (/^(?:data:image\/|https?:\/\/)/i.test(v) || /\.(?:png|jpe?g|gif|svg|webp|avif)(?:[?#]|$)/i.test(v) || v.indexOf('/')>=0); }
+function tpIc(name,size){ size=size||22;
+  if(tpIsImgIcon(name)) return `<img class="tp-icimg" src="${esc(name)}" alt="" width="${size}" height="${size}" style="object-fit:contain;display:inline-block;vertical-align:middle;flex-shrink:0;">`;
+  const p=PACK_ICONS[name]||PACK_ICONS.image;
   return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`; }
 /* Normalise an image field to a path string. Accepts a bare relative path ("assets/foo.jpg")
    OR an object that carries the path under `src`/`image` (e.g. imageText's {src,caption,tag}) —
@@ -4891,7 +4902,9 @@ async function fetchDataURI(url,timeoutMs){
 async function inlineRemoteAssets(lesson){
   const out=JSON.parse(JSON.stringify(lesson||{}));
   const isRemote=v=>typeof v==='string'&&/^https?:\/\//i.test(v);
-  const MEDIA_KEYS={image:1,src:1,poster:1,thumbnail:1,still:1,screenshot:1,img:1,bg:1,background:1};
+  // a repo-relative image path (e.g. "assets/icons/imperium/icon-laurel.png") — NOT a URL, not data:
+  const isRelImg=v=>typeof v==='string'&&!/^(?:https?:|data:|#|mailto:)/i.test(v)&&/\.(?:png|jpe?g|gif|svg|webp|avif)(?:[?#]|$)/i.test(v);
+  const MEDIA_KEYS={image:1,src:1,poster:1,thumbnail:1,still:1,screenshot:1,img:1,bg:1,background:1,icon:1};
   // 1) bake the derived YouTube poster onto video slides that have no explicit inlinable poster
   (out.slides||[]).forEach(s=>{ if(s&&s.type==='video'){
     const has=isRemote(s.poster)||isRemote(s.thumbnail)||(s.image&&(isRemote(s.image)||(typeof s.image==='object'&&isRemote(s.image.src))));
@@ -4902,7 +4915,10 @@ async function inlineRemoteAssets(lesson){
   (function walk(o){ if(!o||typeof o!=='object') return;
     if(Array.isArray(o)){ o.forEach(walk); return; }
     Object.keys(o).forEach(k=>{ const v=o[k];
-      if(typeof v==='string'){ if(MEDIA_KEYS[k]&&isRemote(v)) tasks.push({o,k,url:v}); }
+      if(typeof v==='string'){
+        if(MEDIA_KEYS[k]&&isRemote(v)) tasks.push({o,k,url:v});
+        else if(k==='icon'&&isRelImg(v)) tasks.push({o,k,url:new URL(v,document.baseURI).href});   // repo-relative icon path → resolve + inline so exports stay self-contained
+      }
       else if(v&&typeof v==='object') walk(v);
     });
   })(out);
