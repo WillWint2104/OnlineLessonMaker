@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Australia's refugee intake — The Wellbeing of Refugees</title>
+<style>
+  :root{
+    --teal:#00685f; --teal-deep:#0c4a44; --teal-bright:#1f8d80; --ink:#16201c; --muted:#5a6b65;
+    --line:#e0eae6; --mint:#eef5f2; --card:#ffffff; --amber:#b9770e;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color:var(--ink); background:#f4f9f7;
+    display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;
+  }
+  .card{
+    width:100%; max-width:780px; background:var(--card); border:1px solid var(--line);
+    border-radius:20px; box-shadow:0 1px 3px rgba(0,0,0,.06); padding:28px 32px 26px;
+  }
+  .eyebrow{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--teal); background:#d7ede7; padding:5px 11px; border-radius:999px;}
+  h1{font-size:clamp(21px,3.6vw,28px); line-height:1.14; letter-spacing:-.01em; margin:12px 0 4px; font-weight:800;}
+  .sub{font-size:14.5px; line-height:1.55; color:var(--muted); margin:0 0 6px; max-width:64ch;}
+  .toggle{display:flex; gap:8px; margin:16px 0 18px;}
+  .toggle button{font:inherit; font-size:13px; font-weight:600; color:var(--teal); background:#eef5f2;
+    border:1px solid var(--line); border-radius:999px; padding:7px 15px; cursor:pointer;}
+  .toggle button.on{background:var(--teal); color:#fff; border-color:var(--teal);}
+  .chart{display:flex; align-items:flex-end; gap:14px; height:300px; padding:14px 6px 0; border-bottom:2px solid var(--line);}
+  .col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:8px;}
+  .bar{width:100%; max-width:74px; border-radius:10px 10px 0 0; background:linear-gradient(180deg,var(--teal-bright),var(--teal));
+    height:0; transition:height 1s cubic-bezier(.22,.61,.36,1); position:relative; min-height:2px;}
+  .bar.hist{background:linear-gradient(180deg,#c79a5b,var(--amber));}
+  .bar .val{position:absolute; top:-22px; left:50%; transform:translateX(-50%); font-size:12.5px; font-weight:700; color:var(--ink); white-space:nowrap; opacity:0; transition:opacity .4s .6s;}
+  .col.show .bar .val{opacity:1;}
+  .yr{font-size:12px; font-weight:600; color:var(--muted); text-align:center; line-height:1.3;}
+  .note{margin-top:16px; font-size:13px; line-height:1.5; color:var(--muted); background:var(--mint); border-radius:12px; padding:13px 16px;}
+  .note b{color:var(--ink);}
+  .ctx{margin-top:14px; display:flex; gap:12px; flex-wrap:wrap;}
+  .pill{font-size:12px; font-weight:600; color:var(--teal-deep); background:#e6f1ee; border:1px solid #cfe5df; border-radius:999px; padding:6px 13px;}
+  .foot{margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .src{font-size:11px; color:#8a9590; line-height:1.45; max-width:60ch;}
+  .replay{font:inherit; font-size:13px; font-weight:600; color:var(--teal); background:#eef5f2;
+    border:1px solid var(--line); border-radius:999px; padding:8px 16px; cursor:pointer; white-space:nowrap;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="eyebrow">Human Wellbeing · Australia</span>
+    <h1>Australia's refugee &amp; humanitarian intake</h1>
+    <p class="sub">How many people Australia resettles through its Humanitarian Program each year — and how today's intake compares with the past.</p>
+
+    <div class="toggle">
+      <button type="button" id="btnRecent" class="on">Recent years</button>
+      <button type="button" id="btnHistory">Historical peaks</button>
+    </div>
+
+    <div class="chart" id="chart"></div>
+
+    <div class="note" id="note"></div>
+
+    <div class="ctx">
+      <span class="pill">42.5M+ refugees worldwide</span>
+      <span class="pill">&lt;0.2% resettled anywhere this year</span>
+      <span class="pill">1 million humanitarian visas granted since WWII</span>
+    </div>
+
+    <div class="foot">
+      <span class="src">Sources: Dept. of Home Affairs (Humanitarian Program outcomes &amp; planning levels); Refugee Council of Australia; UNHCR. Figures are visas granted / program places.</span>
+      <button class="replay" type="button" id="replay">↺ Replay</button>
+    </div>
+  </div>
+
+<script>
+  // VERIFIED figures only — see sources line. No invented numbers.
+  const RECENT = {
+    note: 'Australia\u2019s core Humanitarian Program reached <b>20,000 places in 2023\u201324</b> \u2014 its highest level since 2012\u201313 \u2014 and has been held at 20,000 through to 2026\u201327. The 2022\u201323 year (17,875 visas) was the first <b>full delivery</b> of the program since 2018\u201319.',
+    bars: [
+      {yr:'2022\u201323', val:17875, label:'17,875'},
+      {yr:'2023\u201324', val:20000, label:'20,000'},
+      {yr:'2024\u201325', val:20000, label:'20,000'},
+      {yr:'2025\u201326', val:20000, label:'20,000'},
+      {yr:'2026\u201327', val:20000, label:'20,000'},
+    ],
+    max: 22000, hist:false
+  };
+  const HISTORY = {
+    note: 'Today\u2019s intake is large by recent standards but <b>well below historical peaks</b>. Australia\u2019s humanitarian intake peaked above <b>89,000 in 1949\u201350</b> (post-war resettlement), and passed 21,000 twice more: during the Fraser government\u2019s Indochinese resettlement, and the 2016\u201317 additional Syrian &amp; Iraqi intake.',
+    bars: [
+      {yr:'1949\u201350\n(post-war)', val:89000, label:'89,000+'},
+      {yr:'Fraser era\n(Indochinese)', val:21000, label:'21,000+'},
+      {yr:'2016\u201317\n(Syria/Iraq)', val:21000, label:'21,000+'},
+      {yr:'2023\u201327\n(current)', val:20000, label:'20,000'},
+    ],
+    max: 92000, hist:true
+  };
+
+  let current = RECENT;
+
+  function render(data){
+    const chart = document.getElementById('chart');
+    chart.innerHTML = '';
+    document.getElementById('note').innerHTML = data.note;
+    data.bars.forEach((b,i)=>{
+      const col = document.createElement('div'); col.className='col';
+      const bar = document.createElement('div'); bar.className='bar'+(data.hist?' hist':'');
+      const val = document.createElement('span'); val.className='val'; val.textContent=b.label;
+      const yr = document.createElement('div'); yr.className='yr'; yr.textContent=b.yr;
+      bar.appendChild(val); col.appendChild(bar); col.appendChild(yr); chart.appendChild(col);
+      const pct = Math.max(2,(b.val/data.max)*100);
+      setTimeout(()=>{ bar.style.height = pct+'%'; col.classList.add('show'); }, 80 + i*110);
+    });
+  }
+
+  function setMode(data, btnOnId, btnOffId){
+    current = data;
+    document.getElementById(btnOnId).classList.add('on');
+    document.getElementById(btnOffId).classList.remove('on');
+    render(data);
+  }
+
+  document.getElementById('btnRecent').addEventListener('click',()=>setMode(RECENT,'btnRecent','btnHistory'));
+  document.getElementById('btnHistory').addEventListener('click',()=>setMode(HISTORY,'btnHistory','btnRecent'));
+  document.getElementById('replay').addEventListener('click',()=>render(current));
+
+  setTimeout(()=>render(RECENT), 200);
+</script>
+</body>
+</html>

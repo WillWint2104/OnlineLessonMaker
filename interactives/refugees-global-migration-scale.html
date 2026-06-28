@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Global migration at a glance — The Wellbeing of Refugees</title>
+<style>
+  :root{
+    --teal:#00685f; --teal-deep:#0c4a44; --teal-bright:#1f8d80; --ink:#16201c; --muted:#5a6b65;
+    --line:#e0eae6; --mint:#eef5f2; --card:#ffffff; --amber:#b9770e;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color:var(--ink); background:#f4f9f7;
+    display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;
+  }
+  .card{
+    width:100%; max-width:760px; background:var(--card); border:1px solid var(--line);
+    border-radius:20px; box-shadow:0 1px 3px rgba(0,0,0,.06); padding:28px 32px 26px;
+  }
+  .eyebrow{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--teal); background:#d7ede7; padding:5px 11px; border-radius:999px;}
+  h1{font-size:clamp(21px,3.6vw,28px); line-height:1.14; letter-spacing:-.01em; margin:12px 0 4px; font-weight:800;}
+  .sub{font-size:14.5px; line-height:1.55; color:var(--muted); margin:0 0 22px; max-width:62ch;}
+  .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px;}
+  @media (max-width:560px){ .grid{grid-template-columns:1fr;} }
+  .stat{
+    position:relative; border:1px solid var(--line); border-radius:16px; padding:18px 20px;
+    background:linear-gradient(150deg,#f7fbfa,#eef5f2); overflow:hidden;
+  }
+  .stat.feature{grid-column:1 / -1; background:linear-gradient(150deg,var(--teal-deep),var(--teal) 60%,var(--teal-bright)); border:none; color:#fff;}
+  .stat .num{font-size:clamp(30px,6vw,46px); font-weight:800; letter-spacing:-.02em; line-height:1; color:var(--teal);}
+  .stat.feature .num{color:#fff;}
+  .stat .unit{font-size:15px; font-weight:700; margin-left:4px;}
+  .stat .lab{font-size:13px; font-weight:600; color:var(--muted); margin-top:8px; line-height:1.4;}
+  .stat.feature .lab{color:#d4efe9;}
+  .stat .bar{height:6px; border-radius:999px; background:rgba(0,104,95,.14); margin-top:14px; overflow:hidden;}
+  .stat.feature .bar{background:rgba(255,255,255,.22);}
+  .stat .bar > i{display:block; height:100%; width:0; border-radius:999px; background:var(--teal); transition:width 1.2s cubic-bezier(.22,.61,.36,1);}
+  .stat.feature .bar > i{background:#fff;}
+  .punch{
+    margin-top:18px; display:flex; align-items:center; gap:12px;
+    background:#fff7e8; border:1px solid #f0dcb4; border-radius:14px; padding:14px 18px;
+  }
+  .punch .big{font-size:clamp(20px,4vw,26px); font-weight:800; color:var(--amber); white-space:nowrap;}
+  .punch .txt{font-size:14px; font-weight:600; color:#7a5410; line-height:1.4;}
+  .foot{margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .src{font-size:11.5px; color:#8a9590;}
+  .replay{font:inherit; font-size:13px; font-weight:600; color:var(--teal); background:#eef5f2;
+    border:1px solid var(--line); border-radius:999px; padding:8px 16px; cursor:pointer;}
+  .replay:hover{background:#e2efeb;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="eyebrow">Human Wellbeing · Global scale</span>
+    <h1>Global migration at a glance</h1>
+    <p class="sub">People are on the move in greater numbers than ever before. These are the global figures behind the refugee story — watch how the scale builds.</p>
+
+    <div class="grid">
+      <div class="stat feature">
+        <div><span class="num" data-target="1000000000" data-suffix="" data-display="1 billion">0</span></div>
+        <div class="lab">migrants in the world today</div>
+        <div class="bar"><i data-fill="100"></i></div>
+      </div>
+
+      <div class="stat">
+        <div><span class="num" data-target="258" data-display="258">0</span><span class="unit">million</span></div>
+        <div class="lab">international migrants (crossed a border)</div>
+        <div class="bar"><i data-fill="34"></i></div>
+      </div>
+
+      <div class="stat">
+        <div><span class="num" data-target="763" data-display="763">0</span><span class="unit">million</span></div>
+        <div class="lab">internal migrants (moved within their own country)</div>
+        <div class="bar"><i data-fill="100"></i></div>
+      </div>
+
+      <div class="stat">
+        <div><span class="num" data-target="68" data-display="68">0</span><span class="unit">million</span></div>
+        <div class="lab">forcibly displaced — fled conflict, persecution or disaster</div>
+        <div class="bar"><i data-fill="9"></i></div>
+      </div>
+
+      <div class="stat">
+        <div><span class="num" data-target="1" data-display="1">0</span><span class="unit">in 7</span></div>
+        <div class="lab">of the world's population is a migrant</div>
+        <div class="bar"><i data-fill="14"></i></div>
+      </div>
+    </div>
+
+    <div class="punch">
+      <span class="big">1 in 7</span>
+      <span class="txt">of everyone on Earth is a migrant. Most move by choice — but tens of millions have no choice at all.</span>
+    </div>
+
+    <div class="foot">
+      <span class="src">Figures: global migration estimates (international &amp; internal migrants; forcibly displaced).</span>
+      <button class="replay" type="button" id="replay">↺ Replay</button>
+    </div>
+  </div>
+
+<script>
+  function animate(){
+    document.querySelectorAll('.num').forEach(el=>{
+      const target = parseFloat(el.dataset.target);
+      const display = el.dataset.display;
+      const dur = 1400; const start = performance.now();
+      function step(now){
+        const t = Math.min(1,(now-start)/dur);
+        const eased = 1 - Math.pow(1-t,3);
+        if(t<1){
+          // count toward the headline number; snap to the display string at the end
+          if(target>=1000000000){ el.textContent = (eased*1).toFixed(2).replace(/0+$/,'').replace(/\.$/,'')+' bn'; }
+          else { el.textContent = Math.round(eased*target).toString(); }
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = display;
+        }
+      }
+      requestAnimationFrame(step);
+    });
+    requestAnimationFrame(()=>{
+      document.querySelectorAll('.bar > i').forEach(b=>{ b.style.width = (b.dataset.fill||0)+'%'; });
+    });
+  }
+  function reset(){
+    document.querySelectorAll('.num').forEach(el=>el.textContent='0');
+    document.querySelectorAll('.bar > i').forEach(b=>b.style.width='0');
+  }
+  document.getElementById('replay').addEventListener('click',()=>{ reset(); setTimeout(animate,80); });
+  // run on load
+  setTimeout(animate, 200);
+</script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where Australia's refugees come from — The Wellbeing of Refugees</title>
+<style>
+  :root{
+    --teal:#00685f; --teal-deep:#0c4a44; --teal-bright:#1f8d80; --ink:#16201c; --muted:#5a6b65;
+    --line:#e0eae6; --mint:#eef5f2; --card:#ffffff; --amber:#b9770e;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    color:var(--ink); background:#f4f9f7;
+    display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;
+  }
+  .card{
+    width:100%; max-width:780px; background:var(--card); border:1px solid var(--line);
+    border-radius:20px; box-shadow:0 1px 3px rgba(0,0,0,.06); padding:28px 32px 26px;
+  }
+  .eyebrow{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--teal); background:#d7ede7; padding:5px 11px; border-radius:999px;}
+  h1{font-size:clamp(21px,3.6vw,28px); line-height:1.14; letter-spacing:-.01em; margin:12px 0 4px; font-weight:800;}
+  .sub{font-size:14.5px; line-height:1.55; color:var(--muted); margin:0 0 20px; max-width:64ch;}
+  .rows{display:flex; flex-direction:column; gap:11px;}
+  .row{display:grid; grid-template-columns:140px 1fr 64px; align-items:center; gap:12px;}
+  @media (max-width:560px){ .row{grid-template-columns:108px 1fr 54px;} }
+  .name{font-size:13.5px; font-weight:600; color:var(--ink); text-align:right; line-height:1.25;}
+  .track{background:var(--mint); border-radius:8px; height:26px; overflow:hidden; position:relative;}
+  .fill{height:100%; width:0; border-radius:8px; background:linear-gradient(90deg,var(--teal),var(--teal-bright));
+    transition:width 1s cubic-bezier(.22,.61,.36,1);}
+  .row.lead .fill{background:linear-gradient(90deg,var(--teal-deep),var(--teal));}
+  .row.other .fill{background:#b9c6c1;}
+  .num{font-size:13px; font-weight:700; color:var(--teal-deep); text-align:left; opacity:0; transition:opacity .4s .55s;}
+  .row.show .num{opacity:1;}
+  .punch{margin-top:20px; display:flex; align-items:center; gap:12px;
+    background:#fff7e8; border:1px solid #f0dcb4; border-radius:14px; padding:14px 18px;}
+  .punch .big{font-size:clamp(19px,3.6vw,24px); font-weight:800; color:var(--amber); white-space:nowrap;}
+  .punch .txt{font-size:13.5px; font-weight:600; color:#7a5410; line-height:1.4;}
+  .foot{margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .src{font-size:11px; color:#8a9590; line-height:1.45; max-width:62ch;}
+  .replay{font:inherit; font-size:13px; font-weight:600; color:var(--teal); background:#eef5f2;
+    border:1px solid var(--line); border-radius:999px; padding:8px 16px; cursor:pointer; white-space:nowrap;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="eyebrow">Human Wellbeing · Country of origin</span>
+    <h1>Where do Australia's refugees come from?</h1>
+    <p class="sub">Offshore Humanitarian Program visas granted in 2023&ndash;24, by the visa-holder's country of citizenship. These are the conflicts and crises people are fleeing before they rebuild their lives in Australia.</p>
+
+    <div class="rows" id="rows"></div>
+
+    <div class="punch">
+      <span class="big">4 in 5</span>
+      <span class="txt">of offshore grants went to people from just four countries &mdash; Afghanistan, Syria, Iraq and Myanmar &mdash; reflecting where the world's resettlement need was greatest.</span>
+    </div>
+
+    <div class="foot">
+      <span class="src">Source: Dept. of Home Affairs, 2023&ndash;24 Offshore Humanitarian Program Outcomes (data extracted 8 July 2024). Top 10 citizenships of 16,750 offshore grants.</span>
+      <button class="replay" type="button" id="replay">&#8635; Replay</button>
+    </div>
+  </div>
+
+<script>
+  // VERIFIED — Dept. of Home Affairs, 2023-24 Offshore Humanitarian Program Outcomes (extracted 8 Jul 2024).
+  // Total offshore grants = 16,750. No invented numbers.
+  const DATA = [
+    {name:'Afghanistan', val:6961, lead:true},
+    {name:'Syria', val:2804},
+    {name:'Iraq', val:1843},
+    {name:'Myanmar', val:1778},
+    {name:'DR Congo', val:1178},
+    {name:'Stateless', val:390},
+    {name:'Eritrea', val:371},
+    {name:'Ethiopia', val:334},
+    {name:'Venezuela', val:164},
+    {name:'Sudan', val:129},
+    {name:'Other', val:798, other:true},
+  ];
+  const MAX = 6961;
+
+  function render(){
+    const wrap = document.getElementById('rows');
+    wrap.innerHTML = '';
+    DATA.forEach((d,i)=>{
+      const row = document.createElement('div');
+      row.className = 'row' + (d.lead?' lead':'') + (d.other?' other':'');
+      const name = document.createElement('div'); name.className='name'; name.textContent=d.name;
+      const track = document.createElement('div'); track.className='track';
+      const fill = document.createElement('div'); fill.className='fill';
+      const num = document.createElement('div'); num.className='num'; num.textContent=d.val.toLocaleString();
+      track.appendChild(fill); row.appendChild(name); row.appendChild(track); row.appendChild(num);
+      wrap.appendChild(row);
+      const pct = Math.max(2,(d.val/MAX)*100);
+      setTimeout(()=>{ fill.style.width = pct+'%'; row.classList.add('show'); }, 80 + i*90);
+    });
+  }
+
+  document.getElementById('replay').addEventListener('click', render);
+  setTimeout(render, 200);
+</script>
+</body>
+</html>
