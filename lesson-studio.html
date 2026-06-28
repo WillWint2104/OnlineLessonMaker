@@ -1691,7 +1691,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="imperium"] .tp-pill.hp{background:var(--surface-container);border:1px solid var(--outline-variant);color:var(--primary);}
 :root[data-theme="imperium"] .tp-pill.xp{background:rgba(252,212,0,.2);border:1px solid rgba(112,93,0,.2);color:var(--secondary);}
 /* imperium · outcomes */
-:root[data-theme="imperium"] .tp-ocard{max-width:1000px;width:100%;aspect-ratio:16/9;background:#fff;border:1px solid var(--outline-variant);border-radius:12px;box-shadow:0 12px 34px -18px rgba(46,0,82,.3);position:relative;overflow:hidden;display:flex;margin:auto;}
+:root[data-theme="imperium"] .tp-ocard{max-width:1000px;width:100%;height:100%;max-height:100%;background:#fff;border:1px solid var(--outline-variant);border-radius:12px;box-shadow:0 12px 34px -18px rgba(46,0,82,.3);position:relative;overflow:hidden;display:flex;margin:auto;flex:none;}   /* fill the canvas height (was fixed 16/9 → objectives crowded); .tp-right scrolls if they exceed it */
 :root[data-theme="imperium"] .tp-left{width:40%;position:relative;display:flex;flex-direction:column;background:linear-gradient(150deg,#5d2e8c,#451274);}
 :root[data-theme="imperium"] .tp-left-img{position:absolute;inset:0;}
 :root[data-theme="imperium"] .tp-left-ph{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.5);z-index:2;}
@@ -1766,7 +1766,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-ctx .ci{color:var(--primary);} :root[data-theme="microhistory"] .tp-ctx h3{font-size:14px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--on-surface);font-family:var(--tp-body);}
 :root[data-theme="microhistory"] .tp-ctx p{font-size:14px;line-height:1.55;color:var(--on-surface-variant);}
 /* microhistory · outcomes */
-:root[data-theme="microhistory"] .tp-mhcard{width:100%;max-width:1040px;aspect-ratio:16/9;background:#fff;border:1px solid var(--ink);border-radius:20px;box-shadow:4px 4px 0 0 var(--ink);display:flex;flex-direction:column;overflow:hidden;position:relative;margin:auto;}
+:root[data-theme="microhistory"] .tp-mhcard{width:100%;max-width:1040px;height:100%;max-height:100%;background:#fff;border:1px solid var(--ink);border-radius:20px;box-shadow:4px 4px 0 0 var(--ink);display:flex;flex-direction:column;overflow:hidden;position:relative;margin:auto;flex:none;}   /* fill the canvas height (was fixed 16/9); .tp-lhs/.tp-rhs scroll internally if content exceeds */
 :root[data-theme="microhistory"] .tp-chead{padding:16px 32px;border-bottom:1px solid var(--outline-variant);background:var(--surface-container-low);display:flex;justify-content:space-between;align-items:flex-end;gap:16px;}
 :root[data-theme="microhistory"] .tp-chead .ms{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);display:block;margin-bottom:4px;}
 :root[data-theme="microhistory"] .tp-chead h1{font-family:var(--tp-mono);font-weight:700;font-size:26px;text-transform:uppercase;color:var(--on-surface);}
