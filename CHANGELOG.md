@@ -7,6 +7,14 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **sourceAnalysis collapses to a single task column when there's no source** (no image,
+  transcript or provenance) in `packSourceAnalysis` (imperium/microhistory) and `glSource`
+  (geolearn). Previously the source panel always rendered, showing an empty "Source/Image
+  placeholder" box on sourceless short-answer slides. Additive CSS modifier
+  (`.tp-sa-noart` / `.gl-noart`) — slides that DO carry a source render byte-identically.
+  Verified by render (conscription + refugee lessons) and per-theme sample regression.
+
 ### Fixed
 - **Microhistory text: `==term==` / `==highlight==` no longer break sentences.** A stale
   `:root[data-theme="microhistory"] .tp-hl{display:flex}` left over from the Phase-2 in-slide
