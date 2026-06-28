@@ -1837,15 +1837,6 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-supcard{background:var(--surface);border:1px solid var(--ink);border-radius:16px;padding:20px;box-shadow:4px 4px 0 0 var(--on-surface);}
 :root[data-theme="microhistory"] .tp-sup-h{display:flex;align-items:center;gap:10px;margin-bottom:10px;} :root[data-theme="microhistory"] .tp-sup-ic{color:var(--primary);display:flex;} :root[data-theme="microhistory"] .tp-supcard h5{font-size:15px;font-weight:700;letter-spacing:.03em;color:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-supcard p{font-size:14px;line-height:1.5;color:var(--on-surface-variant);}
-/* imageText two-column (article + sticky source sidebar), WW1-skinned. Reuses tp-itcard/tp-comp
-   (sections), tp-polaroid/tp-plate (plate), tp-supcard (supplemental), tp-itnote (note). */
-:root[data-theme="microhistory"] .tp-itwrap{width:100%;max-width:1024px;margin:0 auto;}
-:root[data-theme="microhistory"] .tp-itcols{display:grid;grid-template-columns:1.55fr 1fr;gap:28px;align-items:start;}
-:root[data-theme="microhistory"] .tp-itmain{min-width:0;}
-:root[data-theme="microhistory"] .tp-itside{display:flex;flex-direction:column;gap:18px;min-width:0;position:sticky;top:2px;align-self:start;}
-:root[data-theme="microhistory"] .tp-itfig{margin:0;}
-:root[data-theme="microhistory"] .tp-itside .tp-sup{display:flex;flex-direction:column;gap:14px;margin-top:0;}
-:root[data-theme="microhistory"] .tp-itside .tp-itnote{margin-top:0;}
 :root[data-theme="microhistory"] .tp-readrep{display:inline-block;margin-top:12px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);}
 
 /* ============================== TEXT (shared DOM, theme via tokens) ============================== */
@@ -3769,25 +3760,23 @@ function mhImageText(s){
   const sicons=['backpack','wheat','brain'];
   const supHtml=sup.length?`<div class="tp-sup">${sup.map((c,j)=>`<div class="tp-supcard"><div class="tp-sup-h"><span class="tp-sup-ic">${tpIc(c.icon||sicons[j%3],20)}</span><h5>${esc(c.title||'')}</h5></div><p>${esc(c.body||'')}</p>${c.link!==''?`<span class="tp-readrep">${esc(c.link||'Read report →')}</span>`:''}</div>`).join('')}</div>`:'';
   const note=s.note||null;
-  const figHtml=`<figure class="tp-itfig"><div class="tp-polaroid"><div class="tp-pl-img">${tpHasImg(img)?tpImg(img,'Archival plate placeholder','monument'):`<div class="tp-phmark">${tpIc('monument',38)}<span>Archival plate placeholder</span></div>`}${img.tag?`<span class="tp-doctag">${esc(img.tag)}</span>`:''}</div></div>${img.caption?`<figcaption class="tp-plate">${esc(img.caption)}</figcaption>`:''}</figure>`;
-  /* Two-column article + sticky source sidebar that fills the canvas — mirrors the geo/imperium
-     text-page structure, skinned entirely in WW1 tokens. Sections = article body (left); the archival
-     plate + supplemental + note = source sidebar (right). Long content scrolls edge-anchored on .tp-main. */
   return mhHead(s,tpProg(s,50))
-    +`<main class="tp-main tp-scrollmain"><div class="tp-itwrap">
+    +`<main class="tp-main"><div class="tp-wrap">
       ${s.moduleLabel?`<span class="tp-mhchip">${esc(s.moduleLabel)}</span>`:''}
       <h1 class="tp-htitle2">${esc(s.title||'')}</h1>
       <div class="tp-ubar"></div>
-      <div class="tp-itcols">
-        <div class="tp-itmain">
-          ${comps?`<div class="tp-itcard"><h3><span class="hi">${tpIc('monument',22)}</span>${esc(s.sectionsLabel||'Structural Components')}</h3>${comps}</div>`:''}
+      <div class="tp-itgrid">
+        <div>
+          <div class="tp-polaroid"><div class="tp-pl-img">${tpHasImg(img)?tpImg(img,'Archival plate placeholder','monument'):`<div class="tp-phmark">${tpIc('monument',38)}<span>Archival plate placeholder</span></div>`}
+            ${img.tag?`<span class="tp-doctag">${esc(img.tag)}</span>`:''}</div></div>
+          ${img.caption?`<p class="tp-plate">${esc(img.caption)}</p>`:''}
         </div>
-        <aside class="tp-itside">
-          ${figHtml}
-          ${supHtml}
+        <div>
+          <div class="tp-itcard"><h3><span class="hi">${tpIc('monument',22)}</span>${esc(s.sectionsLabel||'Structural Components')}</h3>${comps}</div>
           ${note?`<div class="tp-itnote"><span class="ni">${tpIc('info',22)}</span><div><span class="nlab">${esc(note.label||'Note')}</span><p>${esc(note.text||'')}</p></div></div>`:''}
-        </aside>
+        </div>
       </div>
+      ${supHtml}
     </div></main>`
     +mhFoot(s.cta||'Continue');
 }
