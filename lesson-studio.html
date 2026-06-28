@@ -1798,6 +1798,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-objl{list-style:none;display:flex;flex-direction:column;gap:15px;margin:0;padding:0;}
 :root[data-theme="microhistory"] .tp-objl li{display:flex;gap:12px;align-items:flex-start;}
 :root[data-theme="microhistory"] .tp-objl .dot{width:8px;height:8px;margin-top:7px;background:var(--primary);border-radius:9999px;flex-shrink:0;}
+/* numbered objective marker (mirrors geo/imperium numbering) — WW1 skin: oxblood ring + number, Courier Prime */
+:root[data-theme="microhistory"] .tp-objl .tp-onum{flex-shrink:0;width:25px;height:25px;margin-top:1px;border:2px solid var(--primary);background:var(--surface-lowest);color:var(--primary);font-family:var(--tp-mono);font-weight:700;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;border-radius:6px;}
 :root[data-theme="microhistory"] .tp-objl p{font-size:15px;line-height:1.5;color:var(--on-surface-variant);}
 :root[data-theme="microhistory"] .tp-artwrap{flex:1;display:flex;flex-direction:column;gap:10px;}
 :root[data-theme="microhistory"] .tp-artcard{display:flex;align-items:center;gap:14px;padding:11px;border:1px solid var(--outline-variant);border-radius:8px;background:var(--surface);box-shadow:1px 1px 0 var(--ink);text-decoration:none;color:inherit;}
@@ -1835,6 +1837,15 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-supcard{background:var(--surface);border:1px solid var(--ink);border-radius:16px;padding:20px;box-shadow:4px 4px 0 0 var(--on-surface);}
 :root[data-theme="microhistory"] .tp-sup-h{display:flex;align-items:center;gap:10px;margin-bottom:10px;} :root[data-theme="microhistory"] .tp-sup-ic{color:var(--primary);display:flex;} :root[data-theme="microhistory"] .tp-supcard h5{font-size:15px;font-weight:700;letter-spacing:.03em;color:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-supcard p{font-size:14px;line-height:1.5;color:var(--on-surface-variant);}
+/* imageText two-column (article + sticky source sidebar), WW1-skinned. Reuses tp-itcard/tp-comp
+   (sections), tp-polaroid/tp-plate (plate), tp-supcard (supplemental), tp-itnote (note). */
+:root[data-theme="microhistory"] .tp-itwrap{width:100%;max-width:1024px;margin:0 auto;}
+:root[data-theme="microhistory"] .tp-itcols{display:grid;grid-template-columns:1.55fr 1fr;gap:28px;align-items:start;}
+:root[data-theme="microhistory"] .tp-itmain{min-width:0;}
+:root[data-theme="microhistory"] .tp-itside{display:flex;flex-direction:column;gap:18px;min-width:0;position:sticky;top:2px;align-self:start;}
+:root[data-theme="microhistory"] .tp-itfig{margin:0;}
+:root[data-theme="microhistory"] .tp-itside .tp-sup{display:flex;flex-direction:column;gap:14px;margin-top:0;}
+:root[data-theme="microhistory"] .tp-itside .tp-itnote{margin-top:0;}
 :root[data-theme="microhistory"] .tp-readrep{display:inline-block;margin-top:12px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);}
 
 /* ============================== TEXT (shared DOM, theme via tokens) ============================== */
@@ -2201,6 +2212,10 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-answ:focus-visible{box-shadow:0 0 0 3px var(--secondary-fixed);}
 :root[data-theme="microhistory"] .tp-reveal-btn{background:var(--surface-container-highest);color:var(--primary);border:2px solid var(--on-surface);box-shadow:3px 3px 0 0 var(--ink);}
 :root[data-theme="microhistory"] .tp-tmodel,:root[data-theme="microhistory"] .tp-pmodel{background:var(--secondary-container);border:2px solid var(--on-surface);}
+/* infographic analysis-tasks block (reuses .tp-task/.tp-tnum/.tp-reveal-btn/.tp-tmodel above) */
+:root[data-theme="microhistory"] .tp-igtasks{margin-top:30px;border-top:2px solid var(--on-surface);padding-top:24px;}
+:root[data-theme="microhistory"] .tp-igtasks-h{font-family:var(--tp-mono);font-weight:700;font-size:22px;line-height:1.1;text-transform:uppercase;color:var(--on-surface);margin-bottom:6px;}
+:root[data-theme="microhistory"] .tp-igtasks-lead{font-size:14px;line-height:1.55;color:var(--on-surface-variant);margin-bottom:18px;max-width:72ch;}
 :root[data-theme="microhistory"] .tp-tmh,:root[data-theme="microhistory"] .tp-pmh{font-family:var(--tp-mono);}
 :root[data-theme="microhistory"] .tp-hint{background:var(--surface-container-highest);border:2px dashed var(--outline);}
 :root[data-theme="microhistory"] .tp-gr-card{background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--ink);}
@@ -3723,7 +3738,7 @@ function mhTitle(s){
 }
 function mhOutcomes(s){
   const objs=Array.isArray(s.objectives)?s.objectives:[];
-  const objHtml=objs.map(o=>`<li><span class="dot"></span><p>${o.heading?`<b>${esc(o.heading)}. </b>`:''}${esc(o.body||'')}</p></li>`).join('');
+  const objHtml=objs.map((o,j)=>`<li><span class="tp-onum">${esc(o.numeral||String(j+1))}</span><p>${o.heading?`<b>${esc(o.heading)}. </b>`:''}${esc(o.body||'')}</p></li>`).join('');
   const refs=Array.isArray(s.reference)?s.reference:(Array.isArray(s.acquired)?s.acquired:[]);
   const ricons=['ribbon','archive','mail'];
   const refHtml=refs.map((r,j)=>`<a class="tp-artcard"><span class="ai">${tpIc(r.icon||ricons[j%3],22)}</span><div class="at"><span class="atit">${esc(r.title||'')}</span><span class="asub">${esc(r.sub||'')}</span></div><span class="ao">${tpIc('external',18)}</span></a>`).join('');
@@ -3754,23 +3769,25 @@ function mhImageText(s){
   const sicons=['backpack','wheat','brain'];
   const supHtml=sup.length?`<div class="tp-sup">${sup.map((c,j)=>`<div class="tp-supcard"><div class="tp-sup-h"><span class="tp-sup-ic">${tpIc(c.icon||sicons[j%3],20)}</span><h5>${esc(c.title||'')}</h5></div><p>${esc(c.body||'')}</p>${c.link!==''?`<span class="tp-readrep">${esc(c.link||'Read report →')}</span>`:''}</div>`).join('')}</div>`:'';
   const note=s.note||null;
+  const figHtml=`<figure class="tp-itfig"><div class="tp-polaroid"><div class="tp-pl-img">${tpHasImg(img)?tpImg(img,'Archival plate placeholder','monument'):`<div class="tp-phmark">${tpIc('monument',38)}<span>Archival plate placeholder</span></div>`}${img.tag?`<span class="tp-doctag">${esc(img.tag)}</span>`:''}</div></div>${img.caption?`<figcaption class="tp-plate">${esc(img.caption)}</figcaption>`:''}</figure>`;
+  /* Two-column article + sticky source sidebar that fills the canvas — mirrors the geo/imperium
+     text-page structure, skinned entirely in WW1 tokens. Sections = article body (left); the archival
+     plate + supplemental + note = source sidebar (right). Long content scrolls edge-anchored on .tp-main. */
   return mhHead(s,tpProg(s,50))
-    +`<main class="tp-main"><div class="tp-wrap">
+    +`<main class="tp-main tp-scrollmain"><div class="tp-itwrap">
       ${s.moduleLabel?`<span class="tp-mhchip">${esc(s.moduleLabel)}</span>`:''}
       <h1 class="tp-htitle2">${esc(s.title||'')}</h1>
       <div class="tp-ubar"></div>
-      <div class="tp-itgrid">
-        <div>
-          <div class="tp-polaroid"><div class="tp-pl-img">${tpHasImg(img)?tpImg(img,'Archival plate placeholder','monument'):`<div class="tp-phmark">${tpIc('monument',38)}<span>Archival plate placeholder</span></div>`}
-            ${img.tag?`<span class="tp-doctag">${esc(img.tag)}</span>`:''}</div></div>
-          ${img.caption?`<p class="tp-plate">${esc(img.caption)}</p>`:''}
+      <div class="tp-itcols">
+        <div class="tp-itmain">
+          ${comps?`<div class="tp-itcard"><h3><span class="hi">${tpIc('monument',22)}</span>${esc(s.sectionsLabel||'Structural Components')}</h3>${comps}</div>`:''}
         </div>
-        <div>
-          <div class="tp-itcard"><h3><span class="hi">${tpIc('monument',22)}</span>${esc(s.sectionsLabel||'Structural Components')}</h3>${comps}</div>
+        <aside class="tp-itside">
+          ${figHtml}
+          ${supHtml}
           ${note?`<div class="tp-itnote"><span class="ni">${tpIc('info',22)}</span><div><span class="nlab">${esc(note.label||'Note')}</span><p>${esc(note.text||'')}</p></div></div>`:''}
-        </div>
+        </aside>
       </div>
-      ${supHtml}
     </div></main>`
     +mhFoot(s.cta||'Continue');
 }
@@ -3787,8 +3804,21 @@ function mhInfographic(s){
   const note=s.note||null;
   const foots=Array.isArray(s.footnotes)?s.footnotes:[];
   const footHtml=foots.length?`<div class="tp-footnotes">${foots.map(f=>`<div class="tp-foot-c"><h4>${esc(f.title||'')}</h4><p>${esc(f.body||'')}</p></div>`).join('')}</div>`:'';
-  return mhHead(s,tpProg(s,75))
-    +`<main class="tp-main"><div class="tp-wrap">
+  /* optional analysis tasks beneath the infographic — reuses the shared task-reveal mechanic
+     (data-tp-block / data-tp-reveal / data-tp-model; gated on a non-empty attempt). Absent → omitted,
+     and the page renders byte-for-byte as before. */
+  const tasks=Array.isArray(s.tasks)?s.tasks:[];
+  const tasksHtml=tasks.map((t,j)=>{ const fid='it'+j, num=esc(t.numeral||String(j+1));
+    return `<li class="tp-task" data-tp-block><div class="tp-thead"><span class="tp-tnum">${num}</span><div class="tp-tlead">
+        <label class="tp-tq" for="${fid}-ta">${esc(t.question||'')}</label>
+        <div class="tp-tmeta">${t.marks?`<span class="tp-marks">${esc(t.marks)}</span>`:''}${t.skill?`<span class="tp-skill">${esc(t.skill)}</span>`:''}</div></div></div>
+      <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="Task ${num}${t.skill?': '+esc(t.skill):''} — your response" placeholder="Type your response..."></textarea>
+      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="task ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button></div>
+      <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model answer for task ${num}"><div class="tp-tmh">${tpIc('check',14)} Model answer${t.skill?' · '+esc(t.skill):''}</div><p>${esc(t.model||'')}</p></div></li>`;
+  }).join('');
+  const taskBlock=tasks.length?`<div class="tp-igtasks"><h2 class="tp-igtasks-h">${esc(s.tasksLabel||'Analysis Tasks')}</h2><p class="tp-igtasks-lead">${esc(s.tasksLead||'Use the data above to answer each task. The model answer unlocks once you submit your attempt.')}</p><ol class="tp-tasks">${tasksHtml}</ol></div>`:'';
+  return (tasks.length?tpLive():'')+mhHead(s,tpProg(s,75))
+    +`<main class="tp-main${tasks.length?' tp-scrollmain':''}"><div class="tp-wrap">
       ${s.eyebrow?`<span class="tp-ig2-eyebrow">${esc(s.eyebrow)}</span>`:''}
       <h1 class="tp-htitle2">${esc(s.title||'')}</h1>
       ${s.subtitle?`<p class="tp-ig2-sub">${esc(s.subtitle)}</p>`:''}
@@ -3807,7 +3837,7 @@ function mhInfographic(s){
           ${s.exploreLabel?`<button class="tp-igcta">${esc(s.exploreLabel)} ${tpIc('arrowRight',20)}</button>`:''}
         </div>
       </div>
-      ${footHtml}
+      ${footHtml}${taskBlock}
     </div></main>`
     +mhFoot(s.cta||'Continue');
 }
