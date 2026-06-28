@@ -2278,6 +2278,9 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-ilaunch{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;background:var(--primary);color:var(--on-primary);border:2px solid var(--on-surface);box-shadow:3px 3px 0 0 var(--on-surface);border-radius:8px;padding:11px 18px;font-family:var(--tp-body);font-weight:700;font-size:14px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;}
 :root[data-theme="microhistory"] .tp-ilaunch .li{display:flex;}
 :root[data-theme="microhistory"] .tp-iemeta{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--on-surface-variant);}
+/* full-width questions block beneath the embed row (reuses .tp-tasks/.tp-task question cards) */
+:root[data-theme="microhistory"] .tp-iqs{margin-top:28px;border-top:2px solid var(--on-surface);padding-top:24px;}
+:root[data-theme="microhistory"] .tp-iqs-h{font-family:var(--tp-mono);font-weight:700;font-size:20px;line-height:1.1;text-transform:uppercase;color:var(--on-surface);margin-bottom:14px;}
 :root[data-theme="microhistory"] .tp-tmh,:root[data-theme="microhistory"] .tp-pmh{font-family:var(--tp-mono);}
 :root[data-theme="microhistory"] .tp-hint{background:var(--surface-container-highest);border:2px dashed var(--outline);}
 :root[data-theme="microhistory"] .tp-gr-card{background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--ink);}
@@ -4506,6 +4509,8 @@ function mhInteractive(s){
   const url=(s.url||'').trim();
   const steps=Array.isArray(s.steps)?s.steps:(Array.isArray(s.features)?s.features:[]);
   const stepHtml=steps.length?`<ol class="tp-isteps">${steps.map((x,k)=>{ const o=typeof x==='string'?{description:x}:x; return `<li><span class="tp-isn">${k+1}</span><div>${o.title?`<h4>${esc(o.title)}</h4>`:''}<p>${esc(o.description||o.body||o.text||'')}</p></div></li>`; }).join('')}</ol>`:'';
+  const questions=Array.isArray(s.questions)?s.questions:[];   // full-width answer questions below the embed row (flow into the worksheet)
+  const qBlock=questions.length?`<div class="tp-iqs"><h2 class="tp-iqs-h">${esc(s.questionsLabel||'Questions')}</h2><ol class="tp-tasks">${questions.map((q,k)=>`<li class="tp-task"><div class="tp-thead"><span class="tp-tnum">${esc(q.numeral||String(k+1))}</span><div class="tp-tlead"><span class="tp-tq">${esc(q.question||'')}</span>${(q.marks||q.skill)?`<div class="tp-tmeta">${q.marks?`<span class="tp-marks">${esc(q.marks)}</span>`:''}${q.skill?`<span class="tp-skill">${esc(q.skill)}</span>`:''}</div>`:''}</div></div></li>`).join('')}</ol></div>`:'';
   const still=tpSrc(s.still||s.screenshot||s.image);
   const frame=still
     ? tpMedia(s,'interactive',{fit:'contain',phIcon:'cube',phLabel:s.embedLabel||'Interactive',affordance:false})+`<span class="tp-iframetag">${tpIc('cube',14)} Interactive preview</span>`
@@ -4526,6 +4531,7 @@ function mhInteractive(s){
           ${glHas(s.meta)?`<div class="tp-iemeta">${tpIc('clock',14)} ${esc(s.meta)}</div>`:''}
         </div>
       </div>
+      ${qBlock}
     </div></main>`
     +mhFoot(s.cta||'Continue');
 }
@@ -5414,6 +5420,10 @@ function buildWorksheetMicro(){
       const qh=qs.map(q=>Q(esc(wsQText(q)), wsQLines(q))).join('')
         + tasks.map(tk=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(tk.question||'')}</div>${credit([tk.marks,tk.skill])}${wsLines(m2l(tk.marks))}</div>`; }).join('');
       sec(title(s)||'By the numbers', qh); return;
+    }
+    if(t==='interactive'){                                               // interactive embed → its questions[] (sized by marks like sourceAnalysis); none → skip
+      const iqs=Array.isArray(s.questions)?s.questions:[]; if(!iqs.length) return;
+      sec(title(s)||'Interactive', iqs.map(q=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(q.question||'')}</div>${credit([q.marks,q.skill])}${wsLines(m2l(q.marks))}</div>`; }).join('')); return;
     }
     const qs=Array.isArray(s.q)?s.q:[];                                  // generic content slide → ONLY explicit s.q[]; none → skip (no placeholder)
     if(qs.length) sec(title(s)||TYPELAB[t]||'Questions', qs.map(q=>Q(esc(wsQText(q)), wsQLines(q))).join(''));
