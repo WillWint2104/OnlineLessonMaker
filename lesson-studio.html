@@ -255,7 +255,7 @@
    dead space; the body grows into it. A long article grows past it and the page scrolls edge-anchored
    (the canvas-spanning .gl-main, per #54); the source-image sidebar holds via sticky. */
 :root[data-theme="geolearn"] .gl-wrap.gl-artwrap{min-height:100%;}
-:root[data-theme="geolearn"] .gl-artbody{flex:1 1 auto;min-height:0;}
+:root[data-theme="geolearn"] .gl-artbody{flex:1 1 auto;}   /* grow to fill when short; grow to CONTAIN the taller column when tall (no min-height:0, which let the card shrink below a tall sidebar → spill) */
 :root[data-theme="geolearn"] .gl-bodycard.two.gl-artbody{align-items:stretch;}
 :root[data-theme="geolearn"] .gl-bodycard.two.gl-artbody .gl-side{position:sticky;top:0;align-self:start;}
 :root[data-theme="geolearn"] .gl-sidefig{position:relative;aspect-ratio:4/3;border-radius:14px;overflow:hidden;border:1px solid var(--outline-variant);background:linear-gradient(135deg,#0c4a44,#00685f 60%,#1f8d80);}
@@ -4123,9 +4123,10 @@ function glText(s){
   /* article */
   const sb=s.sidebar||null, res=Array.isArray(s.resources)?s.resources:[];
   const sbImg=sb&&(sb.image||sb.src);                                    // source-image sidebar (imperium text-page reference), themed geo
+  const sbShowFig=sb&&(sbImg||sb.showImage||sb.imagePlaceholder);        // toggleable image container (top of sidebar): an image URL OR an explicit opt-in flag → glImg shows the branded teal placeholder when on without a URL; omitted entirely when neither (backward-compatible)
   const sbInsight=sb&&(sb.label||sb.heading||sb.quote||sb.cta);
   const side=(sb||res.length)?`<aside class="gl-side">
-    ${sbImg?`<figure class="gl-sidefig">${glImg(sb.image||sb.src,sb.caption||sb.heading||'Source')}${(sb.caption||sb.credit)?`<figcaption class="cap">${esc(sb.caption||sb.credit||'')}</figcaption>`:''}</figure>`:''}
+    ${sbShowFig?`<figure class="gl-sidefig">${glImg(sb.image||sb.src,sb.caption||sb.heading||'Source')}${(sb.caption||sb.credit)?`<figcaption class="cap">${esc(sb.caption||sb.credit||'')}</figcaption>`:''}</figure>`:''}
     ${sbInsight?`<div class="gl-insight">${sb.label?`<span class="lab">${tpIc('lightbulb',14)} ${esc(sb.label)}</span>`:''}${sb.heading?`<h3>${esc(sb.heading)}</h3>`:''}${sb.quote?`<blockquote>${esc(sb.quote)}</blockquote>`:''}${sb.cta?`<div class="div"></div><span class="more">${esc(sb.cta)} ${tpIc('arrowRight',14)}</span>`:''}</div>`:''}
     ${res.length?`<div class="gl-links">${res.map(r=>`<a class="gl-link"${r.href?` href="${esc(r.href)}" target="_blank" rel="noopener noreferrer"`:''}><span class="li">${tpIc(r.icon||'doc',16)}</span>${esc(r.label||r.title||'')}</a>`).join('')}</div>`:''}
   </aside>`:'';
