@@ -112,7 +112,7 @@
 :root[data-theme="geolearn"] .gl-nx[disabled]{opacity:.45;pointer-events:none;}
 /* content region: fixed between bars, scrolls internally */
 :root[data-theme="geolearn"] .gl-main{flex:1 1 auto;min-height:0;overflow-y:auto;padding:12px 32px;display:flex;flex-direction:column;}
-:root[data-theme="geolearn"] .gl-main.gl-center{align-items:center;justify-content:safe center;}
+:root[data-theme="geolearn"] .gl-main.gl-center{align-items:center;}   /* vertical centring via the child's margin:auto (scroll-safe); justify-content:center clips top-overflow */
 :root[data-theme="geolearn"] .gl-wrap{max-width:1200px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:16px;}
 :root[data-theme="geolearn"] .gl-wrap.gl-narrow{max-width:880px;}
 :root[data-theme="geolearn"] .gl-wrap.gl-mid{max-width:1200px;}
@@ -472,7 +472,7 @@
 :root[data-theme="geolearn"] .gl-iemeta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--on-surface-variant);margin-top:12px;} :root[data-theme="geolearn"] .gl-iemeta svg{color:var(--primary);}
 
 /* ===================== OUTRO ===================== */
-:root[data-theme="geolearn"] .gl-outrowrap{max-width:1200px;margin:auto;width:100%;text-align:center;}
+:root[data-theme="geolearn"] .gl-outrowrap{max-width:1200px;margin:auto;width:100%;text-align:center;flex:none;}
 :root[data-theme="geolearn"] .gl-crest{width:72px;height:72px;border-radius:9999px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;box-shadow:0 0 0 8px rgba(0,104,95,.10),0 8px 24px rgba(0,104,95,.22);}
 :root[data-theme="geolearn"] .gl-lc{display:inline-flex;align-items:center;gap:12px;margin:16px 0 6px;color:var(--primary);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;} :root[data-theme="geolearn"] .gl-lc .r{width:28px;height:2px;background:var(--primary-fixed-dim);}
 :root[data-theme="geolearn"] .gl-outrowrap h1{font-size:clamp(28px,3vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:700;margin-bottom:8px;}
@@ -2015,7 +2015,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
 .tp-slide :focus-visible{outline:3px solid var(--primary);outline-offset:2px;}
 .tp-slide .tp-scrollmain{justify-content:flex-start;align-items:stretch;}
-.tp-slide .tp-outromain{align-items:center;justify-content:safe center;}
+:root[data-theme="imperium"] .tp-main.tp-outromain,:root[data-theme="microhistory"] .tp-main.tp-outromain{align-items:center;justify-content:normal;}   /* outro: centre via the card's margin:auto (scroll-safe); justify-content:center clips top-overflow */
 .tp-slide .tp-sa-wrap{max-width:1060px;margin:0 auto;width:100%;padding:6px 6px 18px;}
 .tp-slide .tp-gr-wrap{max-width:880px;margin:0 auto;width:100%;padding:6px 6px 18px;}
 .tp-slide .tp-scrollnote{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--on-surface-variant);background:var(--surface-container);border:1px dashed var(--outline-variant);border-radius:9999px;padding:5px 14px;display:inline-block;margin-bottom:14px;}
@@ -2114,7 +2114,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fstiml{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--secondary);margin-bottom:8px;}
 .tp-slide .tp-fstim{font-size:18px;line-height:1.6;font-style:italic;color:var(--on-surface-variant);background:#FAF9F6;border-radius:14px;padding:20px;}
 /* outro */
-.tp-slide .tp-outrocard{position:relative;background:var(--surface-lowest);max-width:780px;width:100%;padding:26px 40px;text-align:center;overflow:hidden;margin:auto;}
+.tp-slide .tp-outrocard{position:relative;background:var(--surface-lowest);max-width:780px;width:100%;padding:26px 40px;text-align:center;overflow:hidden;margin:auto;flex:none;}
 .tp-slide .tp-glow{position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:420px;height:240px;background:radial-gradient(ellipse at center,rgba(252,212,0,.22),transparent 70%);pointer-events:none;}
 .tp-slide .tp-crest{position:relative;width:74px;height:74px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;}
 .tp-slide .tp-o-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--secondary);margin-bottom:8px;}
