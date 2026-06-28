@@ -5147,8 +5147,8 @@ function wsQLines(q){ return (q&&typeof q==='object'&&q.lines!=null)?q.lines:3; 
 function wsgPaginate(){
   try{
     const sheet=$('#wsSheet'); if(!sheet) return;
-    const wrap=sheet.querySelector('.wsg'); if(!wrap) return;
-    const head=wrap.querySelector('.wsg-head');
+    const wrap=sheet.querySelector('.wsg')||sheet;                       // geo wraps content in .wsg; the microhistory worksheet puts .ws-head/.ws-sec directly in the sheet
+    const head=wrap.querySelector('.wsg-head')||wrap.querySelector('.ws-head');
     const secs=[].slice.call(wrap.children).filter(function(el){return el!==head;});
     const title=esc((LESSON.meta&&LESSON.meta.title)||'Lesson')+' \u2014 Worksheet';
     const paged=document.createElement('div'); paged.className='wsg-paged';
@@ -5165,7 +5165,7 @@ function wsgPaginate(){
       paged.appendChild(pg);
     }
     newPage(true);
-    const LIMIT=function(){ const pg=body.parentElement; return pg.clientHeight - (pg.querySelector('.wsg-head')?pg.querySelector('.wsg-head').offsetHeight:(pg.querySelector('.wsg-pghead').offsetHeight)) - foot.offsetHeight - 24; };
+    const LIMIT=function(){ const pg=body.parentElement; const headEl=body.previousElementSibling; return pg.clientHeight - (headEl?headEl.offsetHeight:0) - foot.offsetHeight - 24; };   /* head is whatever precedes the body (.wsg-head/.ws-head on page 1, .wsg-pghead after) — class-agnostic so geo stays identical and micro works */
     let cap=LIMIT();
     secs.forEach(function(sec){
       body.appendChild(sec);
@@ -5367,9 +5367,9 @@ function buildWorksheetMicro(){
   });
   return out;
 }
-function openWorksheet(){ const theme=LESSON.meta&&LESSON.meta.theme, _geo=(theme==='geolearn');
-  $('#wsSheet').innerHTML=(_geo?buildWorksheetGeo():theme==='microhistory'?buildWorksheetMicro():buildWorksheet()); const el=$('#worksheet');
-  el.classList.add('show'); el.setAttribute('aria-hidden','false'); document.body.classList.add('ws-open'); el.scrollTop=0; if(_geo){ wsgPaginate(); } else { el.classList.remove('wsg-on'); } }
+function openWorksheet(){ const theme=LESSON.meta&&LESSON.meta.theme, _geo=(theme==='geolearn'), _micro=(theme==='microhistory');
+  $('#wsSheet').innerHTML=(_geo?buildWorksheetGeo():_micro?buildWorksheetMicro():buildWorksheet()); const el=$('#worksheet');
+  el.classList.add('show'); el.setAttribute('aria-hidden','false'); document.body.classList.add('ws-open'); el.scrollTop=0; if(_geo||_micro){ wsgPaginate(); } else { el.classList.remove('wsg-on'); } }
 function closeWorksheet(){ const el=$('#worksheet'); el.classList.remove('show'); el.setAttribute('aria-hidden','true'); document.body.classList.remove('ws-open'); }
 $('#worksheetBtn').onclick=openWorksheet;
 $('#wsClose').onclick=closeWorksheet;
