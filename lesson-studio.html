@@ -482,6 +482,9 @@
 
 /* ===================== INTERACTIVE ===================== */
 :root[data-theme="geolearn"] .gl-introw{display:grid;grid-template-columns:7fr 5fr;gap:24px;min-height:0;flex:1;align-items:stretch;}
+:root[data-theme="geolearn"] .gl-introw.gl-introw-q{flex:none;}   /* with questions below, the embed+steps row sizes to content (embed keeps its min-height) so the questions flow underneath and the slide scrolls */
+:root[data-theme="geolearn"] .gl-iqs{border-top:1px solid var(--outline-variant);padding-top:24px;}   /* full-width answerable questions below the interactive (reuses .gl-task cards) */
+:root[data-theme="geolearn"] .gl-iqs-h{font-size:clamp(20px,2.1vw,26px);font-weight:700;letter-spacing:-.01em;margin-bottom:16px;}
 :root[data-theme="geolearn"] .gl-embed{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--outline-variant);background:var(--surface-lowest);box-shadow:0 1px 3px rgba(0,0,0,.06);min-height:360px;height:100%;}
 :root[data-theme="geolearn"] .gl-embed iframe{width:100%;height:100%;border:0;display:block;}
 :root[data-theme="geolearn"] .gl-frametag{position:absolute;left:14px;top:14px;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.92);border:1px solid var(--outline-variant);border-radius:9px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--primary);z-index:2;pointer-events:none;}
@@ -4347,6 +4350,16 @@ function glInteractive(s){
   const url=(s.url||'').trim();
   const steps=Array.isArray(s.steps)?s.steps:(Array.isArray(s.features)?s.features:[]);
   const stepHtml=steps.length?`<ol class="gl-steps">${steps.map((x,k)=>{ const o=typeof x==='string'?{description:x}:x; return `<li><span class="gl-sn">${k+1}</span><div>${o.title?`<h4>${esc(o.title)}</h4>`:''}<p>${esc(o.description||o.body||o.text||'')}</p></div></li>`; }).join('')}</ol>`:'';
+  const questions=Array.isArray(s.questions)?s.questions:[];   // answerable tasks full-width BELOW the embed+steps row (mirrors mhInteractive #64) — reuse glSource's task markup so the shared reveal JS drives them; flow into the worksheet (answer-space only, model not printed)
+  const qBlock=questions.length?`<div class="gl-iqs"><h2 class="gl-iqs-h">${esc(s.questionsLabel||'Questions')}</h2>${questions.map((q,k)=>{ const fid='iq'+k, num=esc(q.numeral||String(k+1));
+    return `<div class="gl-task" data-tp-block><span class="gl-tnum">${num}</span><div>
+      <label class="gl-tq" for="${fid}-ta">${esc(q.question||'')}</label>
+      ${(q.marks||q.skill)?`<div class="gl-taskmeta">${q.marks?`<span class="gl-marks">${esc(q.marks)}</span>`:''}${q.skill?`<span class="gl-skill">${esc(q.skill)}</span>`:''}</div>`:''}
+      <textarea id="${fid}-ta" class="gl-gta" data-tp-field="${fid}" aria-label="Question ${num}${q.skill?': '+esc(q.skill):''} — your response" placeholder="Type your response..."></textarea>
+      <div class="gl-trow2"><button class="gl-submit" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-submit data-tp-revname="question ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',16)} Reveal model answer</button></div>
+      <div class="gl-greveal" id="${fid}-model" data-tp-model><div class="gl-modelc"><span class="mh">${tpIc('check',14)} Model answer</span><p>${glRich(q.model||'')}</p></div></div>
+    </div></div>`;
+  }).join('')}</div>`:'';
   const still=tpSrc(s.still||s.screenshot||s.image);
   const frame=still
     ? tpMedia(s,'interactive',{fit:'contain',phIcon:'cube',phLabel:s.embedLabel||'Interactive',affordance:false})+`<span class="gl-frametag">${tpIc('cube',14)} Interactive preview</span>`
@@ -4355,14 +4368,14 @@ function glInteractive(s){
       : `<div class="eph"><span class="pi">${tpIc('cube',40)}</span><span class="pl">${esc(s.embedLabel||'Embedded interactive loads here')}</span>${s.fileLabel?`<span class="ps">${esc(s.fileLabel)}</span>`:''}</div>`;
   return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap" style="flex:1;min-height:0;">
     ${glHeader('cube',s.eyebrow||'Interactive',s.title||'Interactive activity')}
-    <div class="gl-introw">
+    <div class="gl-introw${questions.length?' gl-introw-q':''}">
       <div class="gl-embed">${frame}</div>
       <div class="gl-guide">
         ${glHas(s.lead||s.desc)?`<p class="lead">${esc(s.lead||s.desc)}</p>`:''}
         ${steps.length?`<div class="gtitle">How to use this interactive</div>${stepHtml}`:''}
         ${url?`<a class="gl-launch" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(s.launchLabel||'Open the interactive')} <span class="li">${tpIc('external',16)}</span></a>`:''}
         ${glHas(s.meta)?`<div class="gl-iemeta">${tpIc('clock',14)} ${esc(s.meta)}</div>`:''}
-      </div></div></div></main>`+glFoot(s,s.cta||'Continue');
+      </div></div>${qBlock}</div></main>`+glFoot(s,s.cta||'Continue');
 }
 
 /* ===================== 11) OUTRO ===================== */
@@ -5284,8 +5297,8 @@ function buildWorksheetGeo(){
       ${inquiry?`<div class="wsg-inquiry"><span class="lab">Inquiry question</span><p>${inquiry}</p></div>`:''}
     </div>`;
   // ANSWER-RECORDING ONLY: emit a section solely for slides that pose questions to answer \u2014
-  // sourceAnalysis, guidedResponse, and infographic IF it carries tasks[]. Everything else
-  // (outcomes, text, video, knowledgeCheck, imageText, interactive, title, outro) \u2192 nothing.
+  // sourceAnalysis, guidedResponse, interactive (if it carries questions[]), and infographic IF it
+  // carries tasks[]. Everything else (outcomes, text, video, knowledgeCheck, imageText, title, outro) \u2192 nothing.
   const taskQ=(tk)=>`<div class="wsg-q"><div class="wsg-qh"><span class="wsg-qn">${esc(tk.numeral||'')}</span><div class="wsg-qtext">${esc(tk.question||'')}${(tk.marks||tk.skill)?`<div class="wsg-chips">${chips([tk.marks,tk.skill])}</div>`:''}</div></div>${L(m2l(tk.marks))}</div>`;
   slides.forEach((s,i)=>{
     const t=s.type;
@@ -5311,6 +5324,13 @@ function buildWorksheetGeo(){
       if(!tasks.length) return;                                          // no-tasks infographic \u2192 nothing (reference only)
       out+=open(i,'Data response',s.title||'By the numbers');
       out+=tasks.map(taskQ).join('');
+      out+=`</section>`; return;
+    }
+    if(t==='interactive'){                                               // interactive embed \u2192 its questions[] as answer-recording (sized by marks); model NOT printed; none \u2192 nothing
+      const iqs=Array.isArray(s.questions)?s.questions:[];
+      if(!iqs.length) return;
+      out+=open(i,'Interactive',s.title||'Interactive activity');
+      out+=iqs.map(taskQ).join('');
       out+=`</section>`; return;
     }
     // all other slide types are reference/formative, not answer-recording \u2192 emit nothing
