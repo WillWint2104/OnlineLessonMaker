@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Conscription Referendums, 1916 &amp; 1917</title>
+<style>
+  :root{
+    --canvas:#F2F0E9; --surface:#fff8f7; --accent:#840f16; --accent-soft:#f0d7d0;
+    --line:#e0bfbc; --ink:#251817; --muted:#6b5550; --no:#840f16; --yes:#3d6b5c; --shadow:4px 4px 0 0 #251817;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    font-family:'Courier Prime','Courier New',monospace; color:var(--ink); background:var(--canvas);
+    display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px;
+  }
+  .card{
+    width:100%; max-width:780px; background:var(--surface); border:2px solid var(--ink);
+    border-radius:8px; box-shadow:var(--shadow); padding:26px 30px 24px;
+  }
+  .eyebrow{display:inline-block; font-size:11px; font-weight:700; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--surface); background:var(--accent); padding:5px 12px; border-radius:4px;}
+  h1{font-size:clamp(20px,3.6vw,27px); line-height:1.16; letter-spacing:-.01em; margin:13px 0 4px; font-weight:700;}
+  .sub{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif; font-size:14px; line-height:1.55; color:var(--muted); margin:0 0 18px; max-width:64ch;}
+  .toggle{display:flex; gap:8px; margin:0 0 20px;}
+  .toggle button{font:inherit; font-size:13px; font-weight:700; color:var(--accent); background:var(--surface);
+    border:2px solid var(--ink); border-radius:6px; padding:8px 15px; cursor:pointer; box-shadow:2px 2px 0 0 var(--ink);}
+  .toggle button.on{background:var(--accent); color:var(--surface);}
+  .qline{font-family:system-ui,sans-serif; font-size:13.5px; font-style:italic; color:var(--ink); background:var(--accent-soft);
+    border-left:3px solid var(--accent); padding:11px 15px; border-radius:4px; margin:0 0 18px; line-height:1.45;}
+  .bars{display:flex; flex-direction:column; gap:16px;}
+  .row{display:grid; grid-template-columns:54px 1fr 130px; align-items:center; gap:14px;}
+  .rlab{font-weight:700; font-size:15px;}
+  .rlab.no{color:var(--no);} .rlab.yes{color:var(--yes);}
+  .track{background:#eaddd9; border:1.5px solid var(--ink); border-radius:5px; height:34px; overflow:hidden; position:relative;}
+  .fill{height:100%; width:0; transition:width 1.1s cubic-bezier(.22,.61,.36,1);}
+  .fill.no{background:repeating-linear-gradient(135deg,var(--no),var(--no) 9px,#9a2129 9px,#9a2129 18px);}
+  .fill.yes{background:var(--yes);}
+  .rnum{font-family:system-ui,sans-serif; font-size:13.5px; font-weight:700; text-align:right;}
+  .rnum .pct{display:block; font-size:11.5px; font-weight:600; color:var(--muted);}
+  .result{margin-top:20px; display:flex; align-items:center; gap:14px;
+    background:var(--accent-soft); border:2px solid var(--accent); border-radius:6px; padding:13px 17px;}
+  .result .stamp{font-size:clamp(16px,3.4vw,21px); font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; white-space:nowrap;}
+  .result .txt{font-family:system-ui,sans-serif; font-size:13px; font-weight:600; color:#6b2329; line-height:1.4;}
+  .states{margin-top:14px; font-family:system-ui,sans-serif; font-size:12.5px; color:var(--muted); line-height:1.5;}
+  .states b{color:var(--ink);}
+  .foot{margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .src{font-family:system-ui,sans-serif; font-size:10.5px; color:#9a8884; line-height:1.45; max-width:60ch;}
+  .replay{font:inherit; font-size:13px; font-weight:700; color:var(--accent); background:var(--surface);
+    border:2px solid var(--ink); border-radius:6px; padding:7px 15px; cursor:pointer; box-shadow:2px 2px 0 0 var(--ink); white-space:nowrap;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="eyebrow">Home front · A nation divided</span>
+    <h1>The Conscription Referendums</h1>
+    <p class="sub">Twice Australians were asked to vote on forcing men to serve overseas. Twice they said no. Compare the two votes that split the country.</p>
+
+    <div class="toggle">
+      <button type="button" id="b1916" class="on">1916 referendum</button>
+      <button type="button" id="b1917">1917 referendum</button>
+    </div>
+
+    <div class="qline" id="qline"></div>
+
+    <div class="bars">
+      <div class="row">
+        <div class="rlab no">NO</div>
+        <div class="track"><div class="fill no" id="fno"></div></div>
+        <div class="rnum"><span id="nno">0</span><span class="pct" id="pno"></span></div>
+      </div>
+      <div class="row">
+        <div class="rlab yes">YES</div>
+        <div class="track"><div class="fill yes" id="fyes"></div></div>
+        <div class="rnum"><span id="nyes">0</span><span class="pct" id="pyes"></span></div>
+      </div>
+    </div>
+
+    <div class="result">
+      <span class="stamp" id="stamp">REJECTED</span>
+      <span class="txt" id="rtxt"></span>
+    </div>
+
+    <div class="states" id="states"></div>
+
+    <div class="foot">
+      <span class="src">Sources: Australian War Memorial; National Museum of Australia; State Library of Victoria. Referendum dates: 28 Oct 1916 &amp; 20 Dec 1917.</span>
+      <button class="replay" type="button" id="replay">&#8635; Replay</button>
+    </div>
+  </div>
+
+<script>
+  // VERIFIED — AWM / NMA / SLV. Both referendums defeated.
+  const DATA = {
+    '1916': {
+      question: '\u201CAre you in favour of the Government having\u2026 compulsory powers over citizens in regard to requiring their military service\u2026 outside the Commonwealth?\u201D',
+      no: 1160033, yes: 1087557,
+      result: 'Defeated by a slim margin \u2014 about 3.2%.',
+      states: 'Voting <b>NO</b>: New South Wales, Queensland and South Australia (and a national majority).'
+    },
+    '1917': {
+      question: '\u201CAre you in favour of the proposal of the Commonwealth Government for reinforcing the Commonwealth Forces overseas?\u201D',
+      no: 1181747, yes: 1015159,
+      result: 'Defeated again \u2014 by a larger margin than 1916.',
+      states: 'Voting <b>NO</b>: New South Wales, Queensland, South Australia \u2014 and now Victoria too.'
+    }
+  };
+
+  let current = '1916';
+
+  function fmt(n){ return n.toLocaleString(); }
+
+  function render(key){
+    const d = DATA[key];
+    const total = d.no + d.yes;
+    const noPct = (d.no/total*100), yesPct = (d.yes/total*100);
+    document.getElementById('qline').textContent = d.question;
+    document.getElementById('rtxt').textContent = d.result;
+    document.getElementById('states').innerHTML = d.states;
+    // reset to 0 first
+    const fno = document.getElementById('fno'), fyes = document.getElementById('fyes');
+    fno.style.transition = 'none'; fyes.style.transition = 'none';
+    fno.style.width = '0'; fyes.style.width = '0';
+    document.getElementById('nno').textContent = '0';
+    document.getElementById('nyes').textContent = '0';
+    document.getElementById('pno').textContent = '';
+    document.getElementById('pyes').textContent = '';
+    // force the browser to commit the 0-width state (reflow) before animating
+    void fno.offsetWidth; void fyes.offsetWidth;
+    // animate bars (scaled to the larger side = 100%) — grows from 0 on the left
+    const max = Math.max(d.no, d.yes);
+    requestAnimationFrame(()=>{
+      fno.style.transition = ''; fyes.style.transition = '';
+      fno.style.width = (d.no/max*100)+'%';
+      fyes.style.width = (d.yes/max*100)+'%';
+    });
+    // count up numbers
+    countTo('nno', d.no); countTo('nyes', d.yes);
+    setTimeout(()=>{
+      document.getElementById('pno').textContent = noPct.toFixed(1)+'%';
+      document.getElementById('pyes').textContent = yesPct.toFixed(1)+'%';
+    }, 1100);
+  }
+
+  function countTo(id, target){
+    const el = document.getElementById(id); const dur=1000; const start=performance.now();
+    function step(now){ const t=Math.min(1,(now-start)/dur); const e=1-Math.pow(1-t,3);
+      el.textContent = Math.round(e*target).toLocaleString();
+      if(t<1) requestAnimationFrame(step); else el.textContent = target.toLocaleString(); }
+    requestAnimationFrame(step);
+  }
+
+  function setMode(key, onId, offId){
+    current = key;
+    document.getElementById(onId).classList.add('on');
+    document.getElementById(offId).classList.remove('on');
+    render(key);
+  }
+
+  document.getElementById('b1916').addEventListener('click',()=>setMode('1916','b1916','b1917'));
+  document.getElementById('b1917').addEventListener('click',()=>setMode('1917','b1917','b1916'));
+  document.getElementById('replay').addEventListener('click',()=>render(current));
+
+  setTimeout(()=>render('1916'), 200);
+</script>
+</body>
+</html>
