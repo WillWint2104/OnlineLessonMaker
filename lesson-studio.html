@@ -5200,43 +5200,16 @@ function buildWorksheetGeo(){
       <div class="wsg-id"><span>Name <i></i></span><span>Class <i></i></span><span>Date <i></i></span></div>
       ${inquiry?`<div class="wsg-inquiry"><span class="lab">Inquiry question</span><p>${inquiry}</p></div>`:''}
     </div>`;
+  // ANSWER-RECORDING ONLY: emit a section solely for slides that pose questions to answer \u2014
+  // sourceAnalysis, guidedResponse, and infographic IF it carries tasks[]. Everything else
+  // (outcomes, text, video, knowledgeCheck, imageText, interactive, title, outro) \u2192 nothing.
+  const taskQ=(tk)=>`<div class="wsg-q"><div class="wsg-qh"><span class="wsg-qn">${esc(tk.numeral||'')}</span><div class="wsg-qtext">${esc(tk.question||'')}${(tk.marks||tk.skill)?`<div class="wsg-chips">${chips([tk.marks,tk.skill])}</div>`:''}</div></div>${L(m2l(tk.marks))}</div>`;
   slides.forEach((s,i)=>{
     const t=s.type;
-    if(t==='title'||t==='outro') return;
-    if(t==='outcomes'){
-      const objs=Array.isArray(s.objectives)?s.objectives:[];
-      out+=open(i,'Learning goals',s.title||'What you should be able to do');
-      out+=`<ul class="wsg-check">${objs.map(o=>`<li><span class="bx"></span><div><b>${esc(o.heading||'')}</b>${o.body?` &mdash; ${esc(o.body)}`:''}</div></li>`).join('')}</ul>`;
-      const syl=s.syllabus&&Array.isArray(s.syllabus.outcomes)?s.syllabus.outcomes:[];
-      if(syl.length) out+=`<div class="wsg-note">Syllabus: ${syl.map(o=>(o.code?esc(o.code)+' \u2014 ':'')+esc(o.text||'')).join(' \u00b7 ')}</div>`;
-      out+=`</section>`; return;
-    }
-    if(t==='text'){
-      out+=open(i,'Notes',s.title||'Notes');
-      const notes=notesFrom(s.body);
-      out+=`<div class="wsg-sub">Key points to record</div>${L(notes.length?Math.min(12,Math.max(5,notes.length*2)):6)}`;
-      const kt=Array.isArray(s.keyTerms)?s.keyTerms:[];
-      if(kt.length){ out+=`<div class="wsg-sub">Key terms &mdash; write a definition in your own words</div>`;
-        out+=kt.map(k=>`<div class="wsg-term"><b>${esc(k.term||'')}</b>${L(1)}</div>`).join(''); }
-      if(!notes.length && !kt.length) out+=L(5);
-      out+=`</section>`; return;
-    }
-    if(t==='video'){
-      out+=open(i,'Watch',s.title||'Video');
-      const vsum=(s.summary&&typeof s.summary==='object')?(s.summary.body||''):(s.summary||'');
-      if(vsum) out+=`<p class="wsg-intro">${esc(vsum)}</p>`;
-      const vch=(s.summary&&Array.isArray(s.summary.chips))?s.summary.chips:[];
-      if(vch.length) out+=`<div class="wsg-note">Watch for: ${vch.map(c=>esc(c.label||'')).filter(Boolean).join(' \u00b7 ')}</div>`;
-      out+=`<div class="wsg-sub">Notes from the clip</div>${L(4)}</section>`; return;
-    }
     if(t==='sourceAnalysis'){
       const tasks=Array.isArray(s.tasks)?s.tasks:[];
       out+=open(i,'Source analysis',s.title||'Analyse the source');
-      const src=s.source||{};
-      if(src.label) out+=`<div class="wsg-src">${esc(src.label)}</div>`;
-      if(src.transcript) out+=`<div class="wsg-transcript">${esc(src.transcript)}</div>`;
-      if(s.intro) out+=`<p class="wsg-intro">${esc(s.intro)}</p>`;
-      out+=tasks.length?tasks.map(tk=>`<div class="wsg-q"><div class="wsg-qh"><span class="wsg-qn">${esc(tk.numeral||'')}</span><div class="wsg-qtext">${esc(tk.question||'')}${(tk.marks||tk.skill)?`<div class="wsg-chips">${chips([tk.marks,tk.skill])}</div>`:''}</div></div>${L(m2l(tk.marks))}</div>`).join(''):L(5);
+      out+=tasks.length?tasks.map(taskQ).join(''):L(5);
       out+=`</section>`; return;
     }
     if(t==='guidedResponse'){
@@ -5250,33 +5223,15 @@ function buildWorksheetGeo(){
       else out+=L(ext?14:6);
       out+=`</section>`; return;
     }
-    if(t==='knowledgeCheck'){
-      out+=open(i,'Knowledge check',stripM(s.question||'Multiple choice'));
-      const opts=Array.isArray(s.options)?s.options:[]; const AB=['A','B','C','D','E','F'];
-      out+=`<ul class="wsg-mc">${opts.map((o,k)=>`<li><span class="mc">${AB[k]||'?'}</span>${esc(typeof o==='string'?o:(o.text||o.label||''))}</li>`).join('')}</ul></section>`; return;
-    }
     if(t==='infographic'){
-      out+=open(i,'Data',s.title||'By the numbers');
-      const mets=Array.isArray(s.metrics)?s.metrics:[];
-      if(mets.length) out+=`<table class="wsg-table"><thead><tr><th>Indicator</th><th>Value</th></tr></thead><tbody>${mets.map(m=>`<tr><td>${esc(m.label||'')}</td><td class="fill"></td></tr>`).join('')}</tbody></table>`;
-      out+=`<div class="wsg-sub">What does this data show? Refer to the figures above.</div>${L(4)}</section>`; return;
+      const tasks=Array.isArray(s.tasks)?s.tasks:[];
+      if(!tasks.length) return;                                          // no-tasks infographic \u2192 nothing (reference only)
+      out+=open(i,'Data response',s.title||'By the numbers');
+      out+=tasks.map(taskQ).join('');
+      out+=`</section>`; return;
     }
-    if(t==='imageText'){ out+=open(i,'Reading',s.title||'Reading')+`<div class="wsg-sub">Key points</div>${L(4)}</section>`; return; }
-    if(t==='interactive'){
-      out+=open(i,'Activity',s.title||'Interactive activity');
-      const steps=Array.isArray(s.steps)?s.steps:[];
-      if(steps.length) out+=`<ol class="wsg-steps">${steps.map(st=>`<li>${esc(typeof st==='string'?st:(st.body||st.title||''))}</li>`).join('')}</ol>`;
-      out+=`<div class="wsg-sub">Your findings</div>${L(4)}</section>`; return;
-    }
-    out+=open(i,'Task',s.title||s.heading||'Task')+L(4)+`</section>`;
+    // all other slide types are reference/formative, not answer-recording \u2192 emit nothing
   });
-  if(inquiry){
-    out+=`<section class="wsg-sec wsg-er"><div class="wsg-ref">Putting it together</div>
-      <h2 class="wsg-sec-h">Extended response &mdash; the whole inquiry</h2>
-      <div class="wsg-q"><div class="wsg-qtext">${inquiry}</div></div>
-      <div class="wsg-teeec"><b>TEEEC</b> &mdash; Topic sentence &middot; Explain &middot; Evidence &middot; Elaborate &middot; Concluding link. Use evidence from across the lesson.</div>
-      ${L(16)}</section>`;
-  }
   out+=`</div>`;
   return out;
 }
@@ -5356,7 +5311,64 @@ function buildWorksheet(){
   if(!hadComplete) out+=endSection('');   // lessons without a 'complete' slide still get the whole-lesson extended response
   return out;
 }
-function openWorksheet(){ const _geo=(LESSON.meta&&LESSON.meta.theme==='geolearn'); $('#wsSheet').innerHTML=(_geo?buildWorksheetGeo():buildWorksheet()); const el=$('#worksheet');
+/* Microhistory worksheet — ANSWER-RECORDING ONLY. A fork of the shared buildWorksheet that reads
+   microhistory's actual (pack) field shapes and emits a section ONLY for question/answer sources:
+   sourceAnalysis tasks[], legacy source/question/model3d items[].prompt, guidedResponse scaffold,
+   the on-screen 'worksheet' slide's fields[], infographic interpretation questions (q[]/tasks[]),
+   and content slides' explicit s.q[]. Reference (outcomes, notes, video…) and the whole-inquiry
+   TEEEC footer are dropped; slides with no real questions are skipped (no placeholder). Uses the
+   shared ws-* markup so the non-geo worksheet path renders it. Shared buildWorksheet is untouched. */
+function buildWorksheetMicro(){
+  const slides=(LESSON.slides||[]), total=slides.length;
+  if(!total) return `<div class="ws-empty">This lesson has no slides yet.</div>`;
+  let qn=0;
+  const m2l=(marks)=>{ const mm=String(marks||'').match(/\d+/); const n=mm?parseInt(mm[0],10):0; return n>=8?14:n>=5?8:n>=3?5:3; };
+  const stripM=(t)=>String(t||'').replace(/\[\[(.+?)\]\]/g,'$1').replace(/==(.+?)==/g,'$1').replace(/\*\*(.+?)\*\*/g,'$1');
+  const credit=(arr)=>{ const v=arr.filter(Boolean).map(esc); return v.length?`<div class="ws-credit">${v.join(' · ')}</div>`:''; };
+  const Q=(text,lines)=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${text}</div>${wsLines(lines)}</div>`; };
+  let out=`<div class="ws-head">
+    <h1 class="ws-doc-h">${esc(LESSON.meta&&LESSON.meta.title||'Lesson')} — Worksheet</h1>
+    <div class="ws-id"><div class="f">Name <span class="ln"></span></div><div class="f">Class <span class="ln"></span></div><div class="f">Date <span class="ln"></span></div></div>
+  </div>`;
+  slides.forEach((s,i)=>{
+    const t=s.type, ref=wsRef(i,total,title(s));
+    const sec=(heading,inner)=>{ out+=`<section class="ws-sec">${ref}<h2 class="ws-sec-h">${esc(heading)}</h2>${inner}</section>`; };
+    if(t==='sourceAnalysis'){
+      const tasks=Array.isArray(s.tasks)?s.tasks:[]; if(!tasks.length) return;
+      sec(title(s)||'Source analysis', tasks.map(tk=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(tk.question||'')}</div>${credit([tk.marks,tk.skill])}${wsLines(m2l(tk.marks))}</div>`; }).join('')); return;
+    }
+    if(WS_ITEMS.has(t)){                                                  // legacy source/question/model3d → items[].prompt
+      const items=(s.items||[]); if(!items.length) return;
+      sec(title(s)||(t==='source'?'Source':'Questions'), items.map(it=>Q(esc(it.prompt||''), it.lines||4)).join('')); return;
+    }
+    if(t==='guidedResponse'){
+      const ext=(s.mode==='extended'); qn++;
+      let h=`<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${stripM(s.question||'')}</div>${credit([s.marks])}`;
+      if(s.stimulus&&(s.stimulus.text||s.stimulus.label)) h+=`<div class="ws-srcbox"><b>${esc(s.stimulus.label||'Stimulus')}:</b> ${esc(s.stimulus.text||'')}</div>`;
+      const paras=Array.isArray(s.paragraphs)?s.paragraphs:[];
+      h+= paras.length ? `</div>`+paras.map(p=>`<div class="ws-q"><div class="ws-q-h">${esc(p.label||'')}${p.guide?` — ${esc(p.guide)}`:''}</div>${wsLines(3)}</div>`).join('')
+                       : wsLines(ext?14:6)+`</div>`;
+      sec(title(s)||s.kicker||'Response task', h); return;
+    }
+    if(t==='worksheet'){                                                 // on-screen analysis-worksheet → fields[] prompts (answer recording)
+      const fields=(s.fields||[]); if(!fields.length) return;
+      sec(title(s)||'Worksheet', fields.map(f=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(f.n||'')}</div>${f.hint?`<div class="ws-credit">${esc(f.hint)}</div>`:''}${wsLines(f.kind==='matrix'?2:3)}</div>`; }).join('')); return;
+    }
+    if(t==='infographic'){                                               // ONLY interpretation questions — no data table, no auto fallback
+      const qs=Array.isArray(s.q)?s.q:[], tasks=Array.isArray(s.tasks)?s.tasks:[];
+      if(!qs.length && !tasks.length) return;
+      const qh=qs.map(q=>Q(esc(wsQText(q)), wsQLines(q))).join('')
+        + tasks.map(tk=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(tk.question||'')}</div>${credit([tk.marks,tk.skill])}${wsLines(m2l(tk.marks))}</div>`; }).join('');
+      sec(title(s)||'By the numbers', qh); return;
+    }
+    const qs=Array.isArray(s.q)?s.q:[];                                  // generic content slide → ONLY explicit s.q[]; none → skip (no placeholder)
+    if(qs.length) sec(title(s)||TYPELAB[t]||'Questions', qs.map(q=>Q(esc(wsQText(q)), wsQLines(q))).join(''));
+    // outcomes, notes, text, video, imageText, cover, knowledgeCheck, title, outro, complete → nothing
+  });
+  return out;
+}
+function openWorksheet(){ const theme=LESSON.meta&&LESSON.meta.theme, _geo=(theme==='geolearn');
+  $('#wsSheet').innerHTML=(_geo?buildWorksheetGeo():theme==='microhistory'?buildWorksheetMicro():buildWorksheet()); const el=$('#worksheet');
   el.classList.add('show'); el.setAttribute('aria-hidden','false'); document.body.classList.add('ws-open'); el.scrollTop=0; if(_geo){ wsgPaginate(); } else { el.classList.remove('wsg-on'); } }
 function closeWorksheet(){ const el=$('#worksheet'); el.classList.remove('show'); el.setAttribute('aria-hidden','true'); document.body.classList.remove('ws-open'); }
 $('#worksheetBtn').onclick=openWorksheet;
