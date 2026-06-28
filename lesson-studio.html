@@ -2207,6 +2207,31 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-igtasks{margin-top:30px;border-top:2px solid var(--on-surface);padding-top:24px;}
 :root[data-theme="microhistory"] .tp-igtasks-h{font-family:var(--tp-mono);font-weight:700;font-size:22px;line-height:1.1;text-transform:uppercase;color:var(--on-surface);margin-bottom:6px;}
 :root[data-theme="microhistory"] .tp-igtasks-lead{font-size:14px;line-height:1.55;color:var(--on-surface-variant);margin-bottom:18px;max-width:72ch;}
+/* guided response — paragraph scaffold (mhGuided). WW1 skin; reuses .tp-task/.tp-tnum/.tp-answ/
+   .tp-reveal-btn/.tp-tmodel for the paragraph blocks. */
+:root[data-theme="microhistory"] .tp-gpills{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+:root[data-theme="microhistory"] .tp-gpill{display:inline-flex;align-items:center;gap:7px;background:var(--surface-container);border:1.5px solid var(--on-surface);border-radius:6px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--on-surface);}
+:root[data-theme="microhistory"] .tp-gpill .pi{color:var(--primary);display:flex;}
+:root[data-theme="microhistory"] .tp-gcard{display:flex;flex-direction:column;gap:18px;}
+:root[data-theme="microhistory"] .tp-gq{background:var(--surface-lowest);border:2px solid var(--on-surface);border-left:6px solid var(--primary);border-radius:8px;box-shadow:4px 4px 0 0 var(--on-surface);padding:22px 24px;}
+:root[data-theme="microhistory"] .tp-gqhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+:root[data-theme="microhistory"] .tp-gqlabel{font-family:var(--tp-mono);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);}
+:root[data-theme="microhistory"] .tp-gqtext{font-size:17px;line-height:1.5;font-weight:600;color:var(--on-surface);}
+:root[data-theme="microhistory"] .tp-gstim{margin-top:14px;background:var(--surface-variant);border-left:4px solid var(--primary);padding:12px 16px;}
+:root[data-theme="microhistory"] .tp-gstiml{font-family:var(--tp-mono);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:5px;}
+:root[data-theme="microhistory"] .tp-gstim p{font-size:14px;line-height:1.55;color:var(--on-surface-variant);font-style:italic;}
+:root[data-theme="microhistory"] .tp-gscaffold{font-family:var(--tp-mono);font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--on-surface);margin:2px 0;}
+:root[data-theme="microhistory"] .tp-gpara .tp-phead{align-items:center;margin-bottom:8px;}
+:root[data-theme="microhistory"] .tp-plabel{font-family:var(--tp-mono);font-size:17px;font-weight:700;color:var(--on-surface);}
+:root[data-theme="microhistory"] .tp-pguide{font-size:14px;line-height:1.55;color:var(--on-surface-variant);margin-bottom:12px;}
+:root[data-theme="microhistory"] .tp-grow{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+:root[data-theme="microhistory"] .tp-unlock{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--on-surface-variant);}
+:root[data-theme="microhistory"] .tp-grlabel{font-family:var(--tp-mono);font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--on-surface);margin-bottom:8px;}
+:root[data-theme="microhistory"] .tp-gcrit{background:var(--secondary-container);border:2px solid var(--on-surface);border-radius:8px;padding:18px 20px;}
+:root[data-theme="microhistory"] .tp-gcrit-h{display:flex;align-items:center;gap:8px;font-family:var(--tp-mono);font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--on-surface);margin-bottom:10px;}
+:root[data-theme="microhistory"] .tp-gcrit ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
+:root[data-theme="microhistory"] .tp-gcrit li{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.45;color:var(--on-surface);}
+:root[data-theme="microhistory"] .tp-gcrit li .ci{color:var(--primary);flex-shrink:0;margin-top:1px;display:flex;}
 :root[data-theme="microhistory"] .tp-tmh,:root[data-theme="microhistory"] .tp-pmh{font-family:var(--tp-mono);}
 :root[data-theme="microhistory"] .tp-hint{background:var(--surface-container-highest);border:2px dashed var(--outline);}
 :root[data-theme="microhistory"] .tp-gr-card{background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--ink);}
@@ -4343,8 +4368,54 @@ function wireGeoModals(){
 function glEmptyState(){ return `<div class="gl-empty"><div class="gl-empty-card">${tpIc('layers',40)}<h2>Start your lesson</h2><p>Add a slide from the palette below, or load a lesson with ⌗ JSON.</p></div></div>`; }
 /* <<< GEOLEARN PACK <<< */
 
+/* MICROHISTORY guided response — paragraph-scaffold (extended) assessment, WW1-skinned. A microhistory-
+   only FORK of the shared quiz-style packGuidedResponse: mirrors glGuided's EXTENDED structure (qbox +
+   numbered paragraphs each with a guide, textarea, and submit-to-reveal a model paragraph) but reuses
+   the microhistory task/reveal classes (.tp-task/.tp-tnum/.tp-answ/.tp-reveal-btn/.tp-tmodel) and the
+   shared reveal wiring (data-tp-block / data-tp-reveal / data-tp-submit / data-tp-model) — no new JS. */
+function mhGuided(s){
+  const mode=s.mode==='short'?'short':'extended';   // default: paragraph scaffold
+  const stim=s.stimulus||null;
+  const pills=Array.isArray(s.pills)?s.pills:[];
+  const pillHtml=pills.length?`<div class="tp-gpills">${pills.map(p=>{const o=typeof p==='string'?{label:p}:p;return `<span class="tp-gpill">${o.icon?`<span class="pi">${tpIc(o.icon,14)}</span>`:''}${esc(o.label||'')}</span>`;}).join('')}</div>`:'';
+  const qbox=`<div class="tp-gq"><div class="tp-gqhead"><span class="tp-gqlabel">${esc(s.eyebrow||'Exam-style question')}</span>${s.marks?`<span class="tp-marks">${esc(s.marks)}</span>`:''}</div><div class="tp-gqtext">${tpRich(s.question||'')}</div>${stim?`<div class="tp-gstim"><div class="tp-gstiml">${esc(stim.label||'Stimulus')}</div><p>${esc(stim.text||'')}</p></div>`:''}</div>`;
+  const header=`<span class="tp-mhchip">${esc(s.kicker||s.moduleLabel||'Extended Response')}</span><h1 class="tp-htitle2">${esc(s.title||'Guided Response')}</h1><div class="tp-ubar"></div>${pillHtml}`;
+  const critOf=(crit,lbl)=>crit.length?`<div class="tp-gcrit"><div class="tp-gcrit-h">${tpIc('list',16)} ${esc(lbl||'What earns marks')}</div><ul>${crit.map(c=>`<li><span class="ci">${tpIc('check',14)}</span>${esc(typeof c==='string'?c:(c.text||''))}</li>`).join('')}</ul></div>`:'';
+  if(mode==='extended'){
+    const paras=Array.isArray(s.paragraphs)?s.paragraphs:[];
+    const body=paras.map((p,k)=>{ const fid='gp'+k, lbl=esc(p.label||('Paragraph '+(k+1)));
+      return `<div class="tp-task tp-gpara" data-tp-block>
+        <div class="tp-phead"><span class="tp-tnum">${k+1}</span><h3 class="tp-plabel">${lbl}</h3></div>
+        ${p.guide?`<p class="tp-pguide">${esc(p.guide)}</p>`:''}
+        <textarea id="${fid}-ta" class="tp-answ" rows="4" data-tp-field="${fid}" aria-label="${lbl} — your writing" placeholder="Write your ${esc((p.label||'paragraph').toLowerCase())} here..."></textarea>
+        <div class="tp-trow tp-grow"><span class="tp-unlock" data-tp-hintnote>${tpIc('lock',13)} Write something to reveal the model</span><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-submit data-tp-revname="${lbl}" data-tp-donelabel="Model paragraph shown">Submit ${tpIc('arrowRight',15)}</button></div>
+        <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model paragraph for ${lbl}"><div class="tp-tmh">${tpIc('check',14)} Model paragraph</div><p>${tpRich(p.model||'')}</p></div>
+      </div>`; }).join('');
+    const crit=Array.isArray(s.criteria)?s.criteria:[];
+    return tpLive()+mhHead(s,tpProg(s,60))
+      +`<main class="tp-main tp-scrollmain"><div class="tp-wrap">
+        ${header}
+        <div class="tp-gcard">${qbox}<div class="tp-gscaffold">${esc(s.scaffoldLabel||'Build your response paragraph by paragraph')}</div>${body}${critOf(crit,s.criteriaLabel)}</div>
+      </div></main>`
+      +mhFoot(s.cta||'Continue');
+  }
+  /* short fallback */
+  const model=s.model||(s.short&&s.short.model)||'';
+  const crit=Array.isArray(s.criteria||(s.short&&s.short.criteria))?(s.criteria||s.short.criteria):[];
+  return tpLive()+mhHead(s,tpProg(s,60))
+    +`<main class="tp-main tp-scrollmain"><div class="tp-wrap">
+      ${header}
+      <div class="tp-gcard" data-tp-block>${qbox}
+        <div class="tp-grlabel">${esc(s.responseLabel||'Your response')}</div>
+        <textarea id="gp0-ta" class="tp-answ" rows="5" data-tp-field="gp0" aria-label="Your response" placeholder="Type your response here..."></textarea>
+        <div class="tp-trow tp-grow"><span class="tp-unlock" data-tp-hintnote>${tpIc('lock',13)} Write something to unlock the model answer</span><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="gp0-model" data-tp-reveal="gp0" data-tp-submit data-tp-revname="this task" data-tp-donelabel="Model answer shown">Submit ${tpIc('arrowRight',15)}</button></div>
+        <div class="tp-tmodel" id="gp0-model" data-tp-model role="region" aria-label="Model answer"><div class="tp-tmh">${tpIc('check',14)} Model answer</div><p>${tpRich(model)}</p>${critOf(crit)}</div>
+      </div>
+    </div></main>`
+    +mhFoot(s.cta||'Continue');
+}
 const IM_PACK={ title:imTitle, outcomes:imOutcomes, imageText:imImageText, text:packText, infographic:imInfographic, video:imVideo, knowledgeCheck:imKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:packGuidedResponse, outro:packOutro };
-const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:packText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:packGuidedResponse, outro:packOutro };
+const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:packText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:mhGuided, outro:packOutro };
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
