@@ -49,7 +49,6 @@
   --ok:#1f9d6b; --warn:#d98324;
   --display:"Space Grotesk"; --display-spacing:-.01em;
   --radius:18px; --shadow:0 1px 2px rgba(20,22,30,.05),0 12px 32px -12px rgba(20,22,30,.18);
-  --font-scale:1;
   /* organic leaf bullet — original SVG silhouette used as a mask so it tints with --accent (theme-aware) */
   --leaf:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5C7.4 7 6.7 14 11 21.5c.2-5.3 1.6-8.7 6-11.6C18.3 8.9 16 7.2 12 2.5Z'/%3E%3C/svg%3E");
   /* infographic data palette — primary follows the theme accent; secondary/tertiary are a
@@ -622,9 +621,6 @@
 :root[data-theme="microhistory"] body{font-family:"Inter",system-ui,sans-serif;}
 *{box-sizing:border-box;}
 html,body{height:100%;margin:0;}
-/* Global text-zoom: rem-based text reads this; chrome height is min-height so it never clips.
-   In Present the chrome is hidden, so this scales slide text only (the primary use case). */
-html{font-size:calc(100% * var(--font-scale,1));}
 body{font-family:"Hanken Grotesk",system-ui,sans-serif;color:var(--text);
   background:var(--grain),var(--canvas);background-attachment:fixed;
   display:flex;flex-direction:column;height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;}
@@ -683,16 +679,7 @@ body.edit .nitem:active{cursor:grabbing;}
 .top .lmeta{flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.82rem;color:var(--muted);}
 .top .lmeta:empty{display:none;}
 .top .lmeta::before{content:"·";margin-right:9px;color:var(--line);}
-.top .themebox,.top .seg,.top .fz,.top .btn{flex:0 0 auto;}
-/* text-zoom control */
-.fz{display:flex;align-items:center;gap:1px;background:var(--canvas);border:1px solid var(--line);border-radius:10px;padding:3px;}
-.fz .fzbtn{font-size:.82rem;font-weight:700;padding:5px 9px;border-radius:7px;color:var(--muted);line-height:1;}
-.fz .fzbtn:hover{color:var(--text);background:var(--surface);}
-.fz .fzval{font-size:.72rem;font-weight:600;color:var(--text);min-width:40px;text-align:center;font-variant-numeric:tabular-nums;}
-.fz.fz-float{display:none;position:fixed;bottom:16px;left:18px;z-index:90;background:rgba(0,0,0,.6);border-color:transparent;box-shadow:0 6px 20px -8px rgba(0,0,0,.6);}
-.fz.fz-float .fzbtn{color:#e7e7ef;} .fz.fz-float .fzbtn:hover{background:rgba(255,255,255,.16);color:#fff;}
-.fz.fz-float .fzval{color:#fff;}
-body.present .fz.fz-float{display:flex;}
+.top .themebox,.top .seg,.top .btn{flex:0 0 auto;}
 .seg{display:flex;background:var(--canvas);border:1px solid var(--line);border-radius:10px;padding:3px;}
 .seg button{font-size:.8rem;font-weight:500;padding:6px 14px;border-radius:7px;color:var(--muted);}
 .seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.06);}
@@ -2223,11 +2210,6 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
     <button data-mode="study" class="on">Study</button>
     <button data-mode="edit">Edit</button>
   </div>
-  <div class="fz" id="fzBar" title="Text size">
-    <button class="fzbtn" data-zoomstep="-1" aria-label="Smaller text">A−</button>
-    <span class="fzval" role="status" aria-live="polite" aria-label="Text size">100%</span>
-    <button class="fzbtn" data-zoomstep="1" aria-label="Larger text">A+</button>
-  </div>
   <button class="btn ghost" id="presentBtn">⤢ Present</button>
   <button class="btn ghost" id="worksheetBtn" title="Build a printable worksheet from this lesson">▤ Worksheet</button>
   <button class="btn ghost" id="dataBtn">⌗ JSON</button>
@@ -2266,11 +2248,6 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 </div><!-- /.appbody -->
 <button id="insReopen" title="Open the inspector">‹ Inspector</button>
 
-<div class="fz fz-float" id="fzPresent" title="Text size">
-  <button class="fzbtn" data-zoomstep="-1" aria-label="Smaller text">A−</button>
-  <span class="fzval" role="status" aria-live="polite" aria-label="Text size">100%</span>
-  <button class="fzbtn" data-zoomstep="1" aria-label="Larger text">A+</button>
-</div>
 <button id="presentExit">Exit fullscreen ✕</button>
 <div id="lightbox"><button class="lb-close" id="lbClose">✕</button><div class="lb-body"></div></div>
 
@@ -4939,7 +4916,6 @@ $('#exportBtn').onclick=async ()=>{
     const ws=clone.querySelector('#worksheet'); if(ws){ ws.classList.remove('show'); ws.setAttribute('aria-hidden','true'); const sh=ws.querySelector('#wsSheet'); if(sh) sh.innerHTML=''; }   // never ship a generated/open worksheet
     clone.querySelectorAll('.ig-tip').forEach(t=>t.remove());                // drop any infographic tooltip created on hover (recreated fresh on demand)
     clone.classList.remove('ins-collapsed','editnote-off');                 // never bake the author's UI state into the export
-    clone.style.removeProperty('--font-scale');                            // start students at 100% (their own zoom is per-browser)
     clone.querySelector('body').className='study';
     const html='<!DOCTYPE html>\n'+clone.outerHTML;
     const blob=new Blob([html],{type:'text/html'});
@@ -5235,15 +5211,6 @@ $('#stage').addEventListener('click',e=>{
 document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement && document.body.classList.contains('present')) setPresent(false); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#lightbox').classList.contains('show')) closeLb(); });
 
-/* ---------- global text-zoom (--font-scale), persisted in localStorage ---------- */
-const FZ_STEPS=[1,1.25,1.5,1.75];
-function fzGet(){ let v; try{ v=parseFloat(localStorage.getItem('ls-font-scale')); }catch(e){} return FZ_STEPS.includes(v)?v:1; }
-function fzApply(v){ document.documentElement.style.setProperty('--font-scale',String(v));
-  document.querySelectorAll('.fzval').forEach(e=>e.textContent=Math.round(v*100)+'%');
-  if(typeof fitCanvas==='function') fitCanvas(); }
-function fzSet(dir){ dir=Math.sign(+dir)||0; let i=FZ_STEPS.indexOf(fzGet()); i=Math.max(0,Math.min(FZ_STEPS.length-1,i+dir));
-  const v=FZ_STEPS[i]; try{ localStorage.setItem('ls-font-scale',String(v)); }catch(e){} fzApply(v); }
-document.addEventListener('click',e=>{ const b=e.target.closest('[data-zoomstep]'); if(b){ e.preventDefault(); fzSet(+b.dataset.zoomstep); } });
 
 /* ---------- inspector collapse / reopen (state on <html>, survives mode switches) ---------- */
 function insCollapse(on){ document.documentElement.classList.toggle('ins-collapsed',on);
@@ -5256,7 +5223,6 @@ document.addEventListener('click',e=>{ if(e.target.closest('#insCollapse')) insC
   const x=$('#editnoteX'); if(x) x.onclick=()=>{ document.documentElement.classList.add('editnote-off');
     try{ localStorage.setItem('ls-editnote','off'); }catch(e){} if(typeof fitCanvas==='function') requestAnimationFrame(fitCanvas); }; })();
 
-fzApply(fzGet());            // apply saved zoom before first paint
 render(); renderPalette();   // palette content is static (per category) — build it once, not on every render()
 </script>
 </body>
