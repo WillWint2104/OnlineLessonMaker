@@ -2232,6 +2232,29 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-gcrit ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;}
 :root[data-theme="microhistory"] .tp-gcrit li{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.45;color:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-gcrit li .ci{color:var(--primary);flex-shrink:0;margin-top:1px;display:flex;}
+/* article text page (mhText) — two-column prose + sticky rich sidebar, WW1 skin. Mirrors geo glText
+   layout; reuses .tp-noterow/.tp-notepen (pen), .tp-tpolaroid/.tp-snote/.tp-sprog (sidebar pieces). */
+:root[data-theme="microhistory"] .tp-artwrap{display:flex;flex-direction:column;min-height:100%;max-width:1120px;}
+:root[data-theme="microhistory"] .tp-artbody{flex:1 1 auto;min-width:0;}
+:root[data-theme="microhistory"] .tp-artbody.two{display:grid;grid-template-columns:1.6fr 1fr;gap:30px;align-items:start;}
+:root[data-theme="microhistory"] .tp-prose{min-width:0;}
+:root[data-theme="microhistory"] .tp-prose p{font-size:16px;line-height:1.72;color:var(--on-surface-variant);}
+:root[data-theme="microhistory"] .tp-prose p+p{margin-top:16px;}
+:root[data-theme="microhistory"] .tp-prose b{color:var(--on-surface);font-weight:700;}
+:root[data-theme="microhistory"] .tp-prose .tp-dropcap::first-letter{float:left;font-family:var(--tp-mono);font-size:56px;line-height:.78;font-weight:700;color:var(--primary);padding:6px 12px 0 0;}
+:root[data-theme="microhistory"] .tp-artside{display:flex;flex-direction:column;gap:18px;min-width:0;position:sticky;top:2px;align-self:start;}
+:root[data-theme="microhistory"] .tp-artfig{margin:0;}
+:root[data-theme="microhistory"] .tp-artfig .tp-pl-cap{font-size:13px;font-style:italic;color:var(--on-surface-variant);margin-top:10px;padding-left:2px;}
+:root[data-theme="microhistory"] .tp-insight{background:var(--surface-container-low);border:2px solid var(--on-surface);border-radius:8px;box-shadow:4px 4px 0 0 var(--on-surface);padding:20px;}
+:root[data-theme="microhistory"] .tp-insight .tp-inlab{display:inline-flex;align-items:center;gap:7px;font-family:var(--tp-mono);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin-bottom:8px;}
+:root[data-theme="microhistory"] .tp-insight h3{font-family:var(--tp-mono);font-size:18px;font-weight:700;color:var(--on-surface);margin-bottom:10px;}
+:root[data-theme="microhistory"] .tp-insight blockquote{font-size:14px;line-height:1.6;color:var(--on-surface-variant);font-style:italic;margin:0;}
+:root[data-theme="microhistory"] .tp-insight .tp-indiv{height:2px;background:var(--on-surface);opacity:.16;margin:14px 0;}
+:root[data-theme="microhistory"] .tp-insight .tp-inmore{display:inline-flex;align-items:center;gap:7px;color:var(--primary);font-weight:700;font-size:13px;}
+:root[data-theme="microhistory"] .tp-links{display:flex;flex-direction:column;}
+:root[data-theme="microhistory"] .tp-link{display:flex;align-items:center;gap:12px;padding:11px 8px;color:var(--on-surface);font-size:14px;font-weight:600;text-decoration:none;border-bottom:1px solid var(--line);}
+:root[data-theme="microhistory"] .tp-link:last-child{border-bottom:none;}
+:root[data-theme="microhistory"] .tp-link .li{width:34px;height:34px;border:2px solid var(--on-surface);background:var(--surface-variant);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 :root[data-theme="microhistory"] .tp-tmh,:root[data-theme="microhistory"] .tp-pmh{font-family:var(--tp-mono);}
 :root[data-theme="microhistory"] .tp-hint{background:var(--surface-container-highest);border:2px dashed var(--outline);}
 :root[data-theme="microhistory"] .tp-gr-card{background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--ink);}
@@ -4414,8 +4437,45 @@ function mhGuided(s){
     </div></main>`
     +mhFoot(s.cta||'Continue');
 }
+/* MICROHISTORY article text page — two-column prose + rich sidebar, WW1-skinned. A microhistory-only
+   FORK of the shared packText that mirrors geolearn's glText ARTICLE layout (prose with the reveal-notes
+   pen on the left; sidebar = source figure + insight block + links on the right). Reuses the EXISTING
+   reveal-notes mechanic (tpHasNotes/tpNotePen/tpRich) and packText's mh-themed sidebar pieces
+   (.tp-tpolaroid figure, .tp-snote, .tp-sprog) so existing image/caption/note/progress slides don't
+   lose content — no new JS, no image expand/focus. */
+function mhText(s){
+  const body=Array.isArray(s.body)?s.body:(s.body?[s.body]:[]);
+  const sb=s.sidebar||null, res=Array.isArray(s.resources)?s.resources:[];
+  const sbImg=sb&&(sb.image||sb.src);
+  const sbInsight=sb&&(sb.label||sb.heading||sb.quote||sb.cta);
+  const sbNote=sb&&sb.note&&(sb.note.title||sb.note.text);                 // packText-shape note (backward-compat)
+  const prog=sb&&(sb.progress===0||sb.progress)?Math.max(0,Math.min(100,+sb.progress||0)):null;
+  const pills=Array.isArray(s.pills)?s.pills:[];
+  const pillrow=(pills.length||s.readtime)?`<div class="tp-gpills">${pills.map(p=>{const o=typeof p==='string'?{label:p}:p;return `<span class="tp-gpill">${o.icon?`<span class="pi">${tpIc(o.icon,14)}</span>`:''}${esc(o.label||'')}</span>`;}).join('')}${s.readtime?`<span class="tp-gpill"><span class="pi">${tpIc('clock',14)}</span> ${esc(s.readtime)}</span>`:''}</div>`:'';
+  const side=(sbImg||sbInsight||sbNote||prog!=null||res.length)?`<aside class="tp-artside">
+    ${sbImg?`<figure class="tp-artfig"><div class="tp-tpolaroid"><div class="tp-tpl-img">${tpImg(sb.image||sb.src,'Source image','image')}</div></div>${(sb.caption||sb.credit)?`<figcaption class="tp-pl-cap">${esc(sb.caption||sb.credit||'')}</figcaption>`:''}</figure>`:''}
+    ${sbInsight?`<div class="tp-insight">${sb.label?`<span class="tp-inlab">${tpIc('lightbulb',14)} ${esc(sb.label)}</span>`:''}${sb.heading?`<h3>${esc(sb.heading)}</h3>`:''}${sb.quote?`<blockquote>${esc(sb.quote)}</blockquote>`:''}${sb.cta?`<div class="tp-indiv"></div><span class="tp-inmore">${esc(sb.cta)} ${tpIc('arrowRight',14)}</span>`:''}</div>`:''}
+    ${sbNote?`<div class="tp-snote"><div class="sh">${tpIc('ribbon',16)}<h3>${esc(sb.note.title||'Note')}</h3></div><p>${esc(sb.note.text||'')}</p></div>`:''}
+    ${prog!=null?`<div class="tp-sprog"><div class="pt"><span class="pl">${esc(sb.progressLabel||'Section Progress')}</span><span class="pv">${prog}%</span></div><div class="tp-ptrack"><i style="width:${prog}%"></i></div></div>`:''}
+    ${res.length?`<div class="tp-links">${res.map(r=>`<a class="tp-link"${r.href?` href="${esc(r.href)}" target="_blank" rel="noopener noreferrer"`:''}><span class="li">${tpIc(r.icon||'doc',16)}</span>${esc(r.label||r.title||'')}</a>`).join('')}</div>`:''}
+  </aside>`:'';
+  const proseCls=side?'tp-artbody two':'tp-artbody';
+  return mhHead(s,tpProg(s,45))
+    +`<main class="tp-main tp-scrollmain"><div class="tp-wrap tp-artwrap">
+      ${s.eyebrow?`<span class="tp-mhchip">${esc(s.eyebrow)}</span>`:''}
+      <h1 class="tp-htitle2">${esc(s.title||'Reading')}</h1>
+      <div class="tp-ubar"></div>
+      ${pillrow}
+      ${tpHasNotes(body)?`<div class="tp-noterow">${tpNotePen()}</div>`:''}
+      <div class="${proseCls}">
+        <div class="tp-prose">${body.map((p,j)=>{const txt=typeof p==='string'?p:(p.content||'');return `<p${j===0?' class="tp-dropcap"':''}>${tpRich(txt)}</p>`;}).join('')}</div>
+        ${side}
+      </div>
+    </div></main>`
+    +mhFoot(s.cta||'Continue');
+}
 const IM_PACK={ title:imTitle, outcomes:imOutcomes, imageText:imImageText, text:packText, infographic:imInfographic, video:imVideo, knowledgeCheck:imKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:packGuidedResponse, outro:packOutro };
-const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:packText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:mhGuided, outro:packOutro };
+const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:mhText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:mhGuided, outro:packOutro };
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
