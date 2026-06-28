@@ -456,6 +456,7 @@
 
 /* ===================== SOURCEANALYSIS ===================== */
 :root[data-theme="geolearn"] .gl-sarow{display:grid;grid-template-columns:minmax(360px,5fr) 7fr;gap:26px;align-items:start;}
+:root[data-theme="geolearn"] .gl-sarow.gl-noart{grid-template-columns:1fr;}   /* no source panel → tasks span the full width */
 :root[data-theme="geolearn"] .gl-srccol{position:sticky;top:0;display:flex;flex-direction:column;gap:16px;}
 :root[data-theme="geolearn"] .gl-srcpanel{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--outline-variant);background:linear-gradient(135deg,#e8f3f0,#dbeee9);height:340px;}
 :root[data-theme="geolearn"] .gl-srcpanel .tag{position:absolute;left:16px;bottom:16px;max-width:calc(100% - 78px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(255,255,255,.95);border:1px solid var(--outline-variant);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--primary);z-index:2;}
@@ -2053,6 +2054,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-sa-mtime{display:inline-flex;align-items:center;gap:6px;color:var(--on-surface-variant);font-size:12px;font-weight:600;}
 .tp-slide .tp-focusbtn{display:inline-flex;align-items:center;gap:7px;background:var(--surface-lowest);color:var(--primary);padding:9px 16px;border-radius:9999px;font:inherit;font-weight:600;font-size:13px;cursor:pointer;border:1.5px solid var(--primary);flex-shrink:0;}
 .tp-slide .tp-sa-grid{display:grid;grid-template-columns:40% 60%;gap:24px;align-items:start;}
+.tp-slide .tp-sa-grid.tp-sa-noart{grid-template-columns:1fr;}   /* no source panel → tasks span the full width */
 .tp-slide .tp-srccol{position:sticky;top:0;}
 .tp-slide .tp-srcframe{position:relative;aspect-ratio:4/5;overflow:hidden;}
 .tp-slide .tp-saph{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.5);}
@@ -4311,6 +4313,7 @@ function glSource(s){
   const src=s.source||{};
   const prov=Array.isArray(s.provenance)?s.provenance:[];
   const tasks=Array.isArray(s.tasks)?s.tasks:[];
+  const hasArt=glHas(src.image||s.image)||!!src.transcript||prov.length>0;   // collapse to a single task column when the source panel has nothing (no image, transcript or provenance) — avoids an empty placeholder box
   const provHtml=prov.length?`<div class="gl-provc"><span class="ph2">${tpIc('doc',14)} Provenance</span>${prov.map(p=>`<div class="gl-saprow"><div class="pk">${esc(p.label||'')}</div><div class="pv">${esc(p.value||'')}</div></div>`).join('')}</div>`:'';
   const tasksHtml=tasks.map((t,j)=>{ const fid='t'+j, num=esc(t.numeral||String(j+1));
     return `<div class="gl-task" data-tp-block><span class="gl-tnum">${num}</span><div>
@@ -4323,12 +4326,12 @@ function glSource(s){
   return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap gl-mid">
     ${glHeader('scope',s.eyebrow||'Source analysis',s.title||'Analyse the source')}
     ${glPills(s.pills)}
-    <div class="gl-sarow">
-      <div class="gl-srccol">
+    <div class="gl-sarow${hasArt?'':' gl-noart'}">
+      ${hasArt?`<div class="gl-srccol">
         <div class="gl-srcpanel">${glImg(src.image||s.image,src.label||'Source',true)}${glHas(src.label||s.tag)?`<span class="tag">${esc(src.label||s.tag)}</span>`:''}<span class="zoom">${tpIc('zoomIn',18)}</span></div>
         ${src.transcript?`<div class="gl-transcriptbox"><span class="tl">Transcript</span><p>${esc(src.transcript)}</p></div>`:''}
         ${provHtml}
-      </div>
+      </div>`:''}
       <div class="gl-tasks">
         <h2>${esc(s.tasksTitle||'Your tasks')}</h2>${glHas(s.intro)?`<p class="gl-saintro">${esc(s.intro)}</p>`:''}
         ${tasksHtml}
@@ -4627,6 +4630,7 @@ function packSourceAnalysis(s,i){
   const src=s.source||{};
   const prov=Array.isArray(s.provenance)?s.provenance:[];
   const tasks=Array.isArray(s.tasks)?s.tasks:[];
+  const hasArt=tpHasImg(src.image)||!!src.transcript||prov.length>0;   // collapse to a single task column when there's nothing to show in the source panel (no image, transcript or provenance) — avoids an empty placeholder box
   const provHtml=prov.map(p=>`<div class="tp-prow"><span class="pi">${tpIc(p.icon||'doc',18)}</span><div><span class="pk">${esc(p.label||'')}</span><span class="pv">${esc(p.value||'')}</span></div></div>`).join('');
   const tasksHtml=tasks.map((t,j)=>{ const fid='t'+j, num=esc(t.numeral||String(j+1));
     return `<li class="tp-task" data-tp-block><div class="tp-thead"><span class="tp-tnum">${num}</span><div class="tp-tlead">
@@ -4644,14 +4648,14 @@ function packSourceAnalysis(s,i){
             <h1 class="tp-sa-h1 tp-serif">${esc(s.title||'')}</h1>
             <div class="tp-sa-meta">${s.tag?`<span class="tp-sa-tag">${tpIc('doc',14)} ${esc(s.tag)}</span>`:''}${s.time?`<span class="tp-sa-mtime">${tpIc('clock',14)} ${esc(s.time)}</span>`:''}</div></div>
           ${(src.transcript||tpHasImg(src.image))?`<button class="tp-focusbtn" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}</div>
-        <div class="tp-sa-grid">
-          <div class="tp-srccol">
+        <div class="tp-sa-grid${hasArt?'':' tp-sa-noart'}">
+          ${hasArt?`<div class="tp-srccol">
             <div class="tp-sa-srcwrap"><div class="tp-srcframe" tabindex="0" role="group" aria-label="${esc(src.label||'Source')} image">
               ${tpHasImg(src.image)?tpImg(src.image,'Source placeholder','doc'):`<div class="tp-saph">${tpIc('doc',18)}<span>Source placeholder</span></div>`}
               ${src.label?`<div class="tp-srclabel">${esc(src.label)}</div>`:''}<div class="tp-sazoom">${tpIc('zoomIn',18)}</div></div></div>
             ${src.transcript?`<div class="tp-transcript" tabindex="0" role="group" aria-label="${esc(src.label||'Source')} transcript"><span class="tp-tl">Transcript${src.label?' · '+esc(src.label):''}</span><p>${esc(src.transcript)}</p></div>`:''}
             ${provHtml?`<div class="tp-prov"><div class="tp-provh">${tpIc('scope',16)} Provenance</div>${provHtml}</div>`:''}
-          </div>
+          </div>`:''}
           <div class="tp-taskcol"><h2 class="tp-sa-h2 tp-serif">Analysis Tasks</h2>
             <p class="tp-sa-lead">Examine the source, then answer each task in the box provided. The model answer for each task unlocks once you submit your attempt.</p>
             <ol class="tp-tasks">${tasksHtml||'<li class="tp-task"><p class="tp-sa-lead">No tasks yet.</p></li>'}</ol>
