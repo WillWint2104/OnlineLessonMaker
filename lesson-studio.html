@@ -1752,7 +1752,9 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 
 /* ============================== MICROHISTORY ============================== */
 :root[data-theme="microhistory"] .tp-head{background:var(--background);border-bottom:1px solid var(--outline-variant);display:flex;justify-content:space-between;align-items:center;padding:10px 40px;}
-:root[data-theme="microhistory"] .tp-hl{display:flex;align-items:center;gap:20px;}
+/* (removed a stale `.tp-hl{display:flex}` left over from the Phase-2 in-slide header: it collided
+   with the rich-text highlight span `.tp-hl` (==term== / ==highlight==), forcing each highlighted
+   word onto its own line mid-sentence. The inline `.tp-hl` rule above now applies — terms flow inline.) */
 :root[data-theme="microhistory"] .tp-wordmark{font-family:var(--tp-mono);font-weight:700;font-size:18px;letter-spacing:.18em;text-transform:uppercase;color:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-htrack{height:12px;width:172px;background:var(--secondary-fixed);border-radius:9999px;overflow:hidden;}
 :root[data-theme="microhistory"] .tp-htrack>i{display:block;height:100%;background:var(--primary-container);border-radius:9999px;}
