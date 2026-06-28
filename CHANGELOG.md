@@ -29,6 +29,14 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   renderer output byte-identical across all three themes; verified by render.
 
 ### Added
+- **GeoLearn `interactive` slides can carry answerable questions (mirrors mhInteractive #64).**
+  `glInteractive` now reads `s.questions[]` (`{numeral?, question, marks?, skill?, model}`) and
+  renders a full-width **"Questions"** block BELOW the embed + "how to use" row — each a `.gl-task`
+  card (reusing glSource's task markup/classes/data-attributes) with a textarea + "Reveal model
+  answer" button + model region, driven by the existing shared reveal JS (no new JS). No
+  `questions[]` → renders exactly as before (byte-identical). `buildWorksheetGeo` emits those
+  questions as answer-recording (question + marks/skill + ruled lines sized by marks; model never
+  printed). Geolearn-only; microhistory/imperium renderers + their worksheets byte-identical.
 - **GeoLearn theme (Geography) — a third self-contained pack theme.** Clean/flat/calm academic
   direction: teal-on-mint, **Inter** (reuses the already-vendored face — no web-font link), 20px
   rounded cards, hairline borders, a soft `0 1px 3px rgba(0,0,0,.06)` shadow. Registered as
