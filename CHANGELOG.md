@@ -7,6 +7,14 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **Microhistory text: `==term==` / `==highlight==` no longer break sentences.** A stale
+  `:root[data-theme="microhistory"] .tp-hl{display:flex}` left over from the Phase-2 in-slide
+  header collided with the rich-text highlight span (also `.tp-hl`), turning each highlighted
+  word into a block and forcing it onto its own line mid-sentence. Removed the dead rule so the
+  inline `.tp-hl` styling applies and terms flow inline (as in geolearn). Microhistory CSS only;
+  renderer output byte-identical across all three themes; verified by render.
+
 ### Added
 - **GeoLearn theme (Geography) — a third self-contained pack theme.** Clean/flat/calm academic
   direction: teal-on-mint, **Inter** (reuses the already-vendored face — no web-font link), 20px
