@@ -685,6 +685,12 @@ body.edit .nitem:active{cursor:grabbing;}
 .seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.06);}
 .themebox{display:none;align-items:center;gap:8px;}
 body.edit .themebox{display:flex;}
+/* Export hygiene — a standalone export carries data-export on <html>; hide all authoring controls
+   (Edit, JSON, Export, theme switcher) so published pages show only Study/Present/Worksheet/nav. */
+:root[data-export] .themebox,
+:root[data-export] #dataBtn,
+:root[data-export] #exportBtn,
+:root[data-export] #modeSeg [data-mode="edit"]{display:none!important;}
 .themebox label{font-size:.76rem;color:var(--muted);}
 .themebox select{font-family:inherit;font-size:.8rem;border:1px solid var(--line);border-radius:8px;
   padding:6px 9px;background:var(--surface);color:var(--text);}
@@ -4855,6 +4861,7 @@ function wirePalette(){
   });
 }
 $('#modeSeg').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;
+  if(b.dataset.mode==='edit' && document.documentElement.hasAttribute('data-export'))return;   // published export: edit mode is hard-disabled (button is also hidden via CSS)
   mode=b.dataset.mode; document.body.className=mode;
   $('#modeSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.mode===mode));
   renderNav(); renderSlide();   // renderNav so the slide list picks up edit-only draggable
@@ -4916,6 +4923,7 @@ $('#exportBtn').onclick=async ()=>{
     const ws=clone.querySelector('#worksheet'); if(ws){ ws.classList.remove('show'); ws.setAttribute('aria-hidden','true'); const sh=ws.querySelector('#wsSheet'); if(sh) sh.innerHTML=''; }   // never ship a generated/open worksheet
     clone.querySelectorAll('.ig-tip').forEach(t=>t.remove());                // drop any infographic tooltip created on hover (recreated fresh on demand)
     clone.classList.remove('ins-collapsed','editnote-off');                 // never bake the author's UI state into the export
+    clone.setAttribute('data-export','1');                                 // mark as a published export: hides authoring controls (CSS) and hard-blocks edit mode (JS guard)
     clone.querySelector('body').className='study';
     const html='<!DOCTYPE html>\n'+clone.outerHTML;
     const blob=new Blob([html],{type:'text/html'});
