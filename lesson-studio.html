@@ -2255,6 +2255,39 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-link{display:flex;align-items:center;gap:12px;padding:11px 8px;color:var(--on-surface);font-size:14px;font-weight:600;text-decoration:none;border-bottom:1px solid var(--line);}
 :root[data-theme="microhistory"] .tp-link:last-child{border-bottom:none;}
 :root[data-theme="microhistory"] .tp-link .li{width:34px;height:34px;border:2px solid var(--on-surface);background:var(--surface-variant);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+/* interactive embed (mhInteractive) — iframe/still frame + guide + launch link, WW1 skin. Mirrors geo
+   glInteractive layout; reuses the shared tp-media-* still markup inside the framed embed. */
+/* top-anchor the interactive slide for ANY content amount: the mh .tp-main{justify-content:safe center}
+   (0,3,0) would otherwise vertically centre the wrap whenever it's shorter than the canvas, leaving an
+   empty band above the chip. min-height:100% on the wrap only nearly-fills (it resolves against .tp-main's
+   content box, not its border box), so it can't be relied on alone. Pin justify-content to flex-start for
+   the interactive main specifically — interactive-scoped, so other mh types keep their centring; on overflow
+   flex-start scrolls edge-anchored from the top (no top-clip). */
+:root[data-theme="microhistory"] .tp-slide[data-tp-type="interactive"] .tp-main{justify-content:flex-start;}
+:root[data-theme="microhistory"] .tp-iwrap{width:100%;max-width:1024px;margin:0 auto;display:flex;flex-direction:column;min-height:100%;}   /* fill the canvas so content top-anchors; reinforced by the interactive-scoped flex-start above — mirrors mhText's .tp-artwrap */
+:root[data-theme="microhistory"] .tp-introw{display:grid;grid-template-columns:1.55fr 1fr;gap:24px;align-items:start;}
+:root[data-theme="microhistory"] .tp-iembed{position:relative;aspect-ratio:16/9;min-width:0;background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--on-surface);border-radius:8px;overflow:hidden;}
+:root[data-theme="microhistory"] .tp-iembed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;}
+:root[data-theme="microhistory"] .tp-iembed .tp-media-img{object-fit:contain;background:var(--surface-variant);}
+:root[data-theme="microhistory"] .tp-iframetag{position:absolute;top:10px;left:10px;z-index:4;display:inline-flex;align-items:center;gap:6px;background:var(--primary);color:var(--on-primary);font-family:var(--tp-mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:5px 10px;border-radius:4px;}
+:root[data-theme="microhistory"] .tp-ieph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--on-surface-variant);text-align:center;padding:18px;}
+:root[data-theme="microhistory"] .tp-ieph .pi{color:var(--primary);}
+:root[data-theme="microhistory"] .tp-ieph .pl{font-family:var(--tp-mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+:root[data-theme="microhistory"] .tp-ieph .ps{font-size:13px;color:var(--on-surface-variant);}
+:root[data-theme="microhistory"] .tp-iguide{display:flex;flex-direction:column;gap:14px;min-width:0;}
+:root[data-theme="microhistory"] .tp-ilead{font-size:15px;line-height:1.6;color:var(--on-surface-variant);}
+:root[data-theme="microhistory"] .tp-igtitle{font-family:var(--tp-mono);font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--on-surface);}
+:root[data-theme="microhistory"] .tp-isteps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;}
+:root[data-theme="microhistory"] .tp-isteps li{display:flex;gap:11px;align-items:flex-start;}
+:root[data-theme="microhistory"] .tp-isn{flex-shrink:0;width:24px;height:24px;border:2px solid var(--on-surface);background:var(--surface-variant);color:var(--primary);font-family:var(--tp-mono);font-weight:700;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;border-radius:6px;margin-top:1px;}
+:root[data-theme="microhistory"] .tp-isteps h4{font-size:14px;font-weight:700;color:var(--on-surface);margin-bottom:2px;}
+:root[data-theme="microhistory"] .tp-isteps p{font-size:13.5px;line-height:1.5;color:var(--on-surface-variant);}
+:root[data-theme="microhistory"] .tp-ilaunch{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;background:var(--primary);color:var(--on-primary);border:2px solid var(--on-surface);box-shadow:3px 3px 0 0 var(--on-surface);border-radius:8px;padding:11px 18px;font-family:var(--tp-body);font-weight:700;font-size:14px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;}
+:root[data-theme="microhistory"] .tp-ilaunch .li{display:flex;}
+:root[data-theme="microhistory"] .tp-iemeta{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--on-surface-variant);}
+/* full-width questions block beneath the embed row (reuses .tp-tasks/.tp-task question cards) */
+:root[data-theme="microhistory"] .tp-iqs{margin-top:28px;border-top:2px solid var(--on-surface);padding-top:24px;}
+:root[data-theme="microhistory"] .tp-iqs-h{font-family:var(--tp-mono);font-weight:700;font-size:20px;line-height:1.1;text-transform:uppercase;color:var(--on-surface);margin-bottom:14px;}
 :root[data-theme="microhistory"] .tp-tmh,:root[data-theme="microhistory"] .tp-pmh{font-family:var(--tp-mono);}
 :root[data-theme="microhistory"] .tp-hint{background:var(--surface-container-highest);border:2px dashed var(--outline);}
 :root[data-theme="microhistory"] .tp-gr-card{background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--ink);}
@@ -4475,8 +4508,50 @@ function mhText(s){
     </div></main>`
     +mhFoot(s.cta||'Continue');
 }
+/* MICROHISTORY interactive embed — iframe/still + launch link, WW1-skinned. A microhistory-only FORK
+   of geolearn's glInteractive structure: a still preview (shared tpMedia) when one is supplied, else an
+   <iframe> embed of s.url, else a themed placeholder; always a real "Open the interactive ↗" launch
+   link when a url is present. Reuses the shared tpMedia/tpSrc helpers — no new JS. */
+function mhInteractive(s){
+  const url=(s.url||'').trim();
+  const steps=Array.isArray(s.steps)?s.steps:(Array.isArray(s.features)?s.features:[]);
+  const stepHtml=steps.length?`<ol class="tp-isteps">${steps.map((x,k)=>{ const o=typeof x==='string'?{description:x}:x; return `<li><span class="tp-isn">${k+1}</span><div>${o.title?`<h4>${esc(o.title)}</h4>`:''}<p>${esc(o.description||o.body||o.text||'')}</p></div></li>`; }).join('')}</ol>`:'';
+  const questions=Array.isArray(s.questions)?s.questions:[];   // full-width answerable tasks below the embed row — mirror packSourceAnalysis (textarea + reveal-model), gated on a non-empty attempt by the shared reveal JS; flow into the worksheet (answer-space only, model not printed)
+  const qBlock=questions.length?`<div class="tp-iqs"><h2 class="tp-iqs-h">${esc(s.questionsLabel||'Questions')}</h2><ol class="tp-tasks">${questions.map((q,k)=>{ const fid='iq'+k, num=esc(q.numeral||String(k+1));
+    return `<li class="tp-task" data-tp-block><div class="tp-thead"><span class="tp-tnum">${num}</span><div class="tp-tlead">
+        <label class="tp-tq" for="${fid}-ta">${esc(q.question||'')}</label>
+        ${(q.marks||q.skill)?`<div class="tp-tmeta">${q.marks?`<span class="tp-marks">${esc(q.marks)}</span>`:''}${q.skill?`<span class="tp-skill">${esc(q.skill)}</span>`:''}</div>`:''}</div></div>
+      <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="Question ${num}${q.skill?': '+esc(q.skill):''} — your response" placeholder="Type your response..."></textarea>
+      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="question ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button></div>
+      <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model answer for question ${num}"><div class="tp-tmh">${tpIc('check',14)} Model answer${q.skill?' · '+esc(q.skill):''}</div><p>${esc(q.model||'')}</p></div></li>`;
+  }).join('')}</ol></div>`:'';
+  const still=tpSrc(s.still||s.screenshot||s.image);
+  const frame=still
+    ? tpMedia(s,'interactive',{fit:'contain',phIcon:'cube',phLabel:s.embedLabel||'Interactive',affordance:false})+`<span class="tp-iframetag">${tpIc('cube',14)} Interactive preview</span>`
+    : url
+      ? `<iframe src="${esc(url)}" title="${esc(s.title||'Interactive')}" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe><span class="tp-iframetag">${tpIc('cube',14)} Live interactive</span>`
+      : `<div class="tp-ieph"><span class="pi">${tpIc('cube',40)}</span><span class="pl">${esc(s.embedLabel||'Embedded interactive loads here')}</span>${s.fileLabel?`<span class="ps">${esc(s.fileLabel)}</span>`:''}</div>`;
+  return mhHead(s,tpProg(s,55))
+    +`<main class="tp-main tp-scrollmain"><div class="tp-wrap tp-iwrap">
+      <span class="tp-mhchip">${esc(s.eyebrow||s.moduleLabel||'Interactive')}</span>
+      <h1 class="tp-htitle2">${esc(s.title||'Interactive activity')}</h1>
+      <div class="tp-ubar"></div>
+      <div class="tp-introw">
+        <div class="tp-iembed">${frame}</div>
+        <div class="tp-iguide">
+          ${glHas(s.lead||s.desc)?`<p class="tp-ilead">${esc(s.lead||s.desc)}</p>`:''}
+          ${steps.length?`<div class="tp-igtitle">How to use this interactive</div>${stepHtml}`:''}
+          ${url?`<a class="tp-ilaunch" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(s.launchLabel||'Open the interactive')} <span class="li">${tpIc('external',16)}</span></a>`:''}
+          ${glHas(s.meta)?`<div class="tp-iemeta">${tpIc('clock',14)} ${esc(s.meta)}</div>`:''}
+          ${(glHas(s.lead||s.desc)||steps.length||url||glHas(s.meta))?'':`<p class="tp-ilead">${esc(questions.length?'Explore the interactive, then complete the questions below.':'Open the interactive to explore this activity.')}</p>`}
+        </div>
+      </div>
+      ${qBlock}
+    </div></main>`
+    +mhFoot(s.cta||'Continue');
+}
 const IM_PACK={ title:imTitle, outcomes:imOutcomes, imageText:imImageText, text:packText, infographic:imInfographic, video:imVideo, knowledgeCheck:imKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:packGuidedResponse, outro:packOutro };
-const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:mhText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:mhGuided, outro:packOutro };
+const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:mhText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:mhGuided, interactive:mhInteractive, outro:packOutro };
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
@@ -5360,6 +5435,10 @@ function buildWorksheetMicro(){
       const qh=qs.map(q=>Q(esc(wsQText(q)), wsQLines(q))).join('')
         + tasks.map(tk=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(tk.question||'')}</div>${credit([tk.marks,tk.skill])}${wsLines(m2l(tk.marks))}</div>`; }).join('');
       sec(title(s)||'By the numbers', qh); return;
+    }
+    if(t==='interactive'){                                               // interactive embed → its questions[] (sized by marks like sourceAnalysis); none → skip
+      const iqs=Array.isArray(s.questions)?s.questions:[]; if(!iqs.length) return;
+      sec(title(s)||'Interactive', iqs.map(q=>{ qn++; return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span>${esc(q.question||'')}</div>${credit([q.marks,q.skill])}${wsLines(m2l(q.marks))}</div>`; }).join('')); return;
     }
     const qs=Array.isArray(s.q)?s.q:[];                                  // generic content slide → ONLY explicit s.q[]; none → skip (no placeholder)
     if(qs.length) sec(title(s)||TYPELAB[t]||'Questions', qs.map(q=>Q(esc(wsQText(q)), wsQLines(q))).join(''));
