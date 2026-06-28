@@ -196,11 +196,19 @@
 :root[data-theme="geolearn"] .gl-mcard .mv{font-size:15px;font-weight:700;color:var(--on-surface);}
 
 /* ===================== OUTCOMES ===================== */
-:root[data-theme="geolearn"] .gl-ocard{position:relative;width:100%;max-width:1200px;margin:auto;background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:6px;padding:clamp(26px,4vh,44px) clamp(32px,4.5vw,60px);}
+/* Outcomes — two-column card that fills the canvas: themed image panel + bottom-anchored buttons on
+   the left, eyebrow/title/intro/objectives on the right (right column scrolls if objectives overflow,
+   the image panel holds). Geo's own flat mint/teal aesthetic — imperium's tp-ocard is design ref only. */
+:root[data-theme="geolearn"] .gl-ocard{position:relative;width:100%;max-width:1200px;height:100%;max-height:100%;margin:auto;background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:row;overflow:hidden;flex:none;}
+:root[data-theme="geolearn"] .gl-oleft{position:relative;width:40%;flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(150deg,#0c4a44,#00685f 55%,#1f8d80);}
+:root[data-theme="geolearn"] .gl-oleft-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(2,58,52,.82),transparent 52%);z-index:1;pointer-events:none;}
+:root[data-theme="geolearn"] .gl-oleft-btns{position:relative;z-index:2;margin-top:auto;padding:22px;display:flex;flex-direction:column;gap:10px;}
+:root[data-theme="geolearn"] .gl-oleft-btns .gl-obtn{width:100%;justify-content:flex-start;}
+:root[data-theme="geolearn"] .gl-oright{width:60%;display:flex;flex-direction:column;overflow-y:auto;padding:clamp(26px,4vh,42px) clamp(28px,3.4vw,48px);}
 :root[data-theme="geolearn"] .gl-ocard .badge{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;background:var(--secondary-container);color:var(--on-secondary-container);padding:5px 14px;border-radius:9999px;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;}
-:root[data-theme="geolearn"] .gl-ocard h1{font-size:clamp(30px,3.6vw,44px);line-height:1.1;letter-spacing:-.02em;font-weight:700;margin-bottom:10px;}
-:root[data-theme="geolearn"] .gl-ointro{font-size:clamp(14px,1.2vw,17px);line-height:1.55;color:var(--on-surface-variant);max-width:60ch;margin-bottom:clamp(20px,3vh,30px);}
-:root[data-theme="geolearn"] .gl-objs{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2vh,22px) clamp(28px,3vw,48px);margin-bottom:clamp(22px,3.4vh,34px);}
+:root[data-theme="geolearn"] .gl-ocard h1{font-size:clamp(28px,3.2vw,40px);line-height:1.1;letter-spacing:-.02em;font-weight:700;margin-bottom:10px;}
+:root[data-theme="geolearn"] .gl-ointro{font-size:clamp(14px,1.2vw,17px);line-height:1.55;color:var(--on-surface-variant);max-width:60ch;margin-bottom:clamp(18px,2.6vh,26px);}
+:root[data-theme="geolearn"] .gl-objs{display:grid;grid-template-columns:1fr;gap:clamp(13px,1.9vh,18px);}
 :root[data-theme="geolearn"] .gl-obj{display:flex;gap:14px;align-items:flex-start;}
 :root[data-theme="geolearn"] .gl-chk{margin-top:2px;width:26px;height:26px;border-radius:7px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 :root[data-theme="geolearn"] .gl-obj .ot h3{font-size:clamp(15px,1.5vw,19px);font-weight:600;line-height:1.25;margin-bottom:2px;}
@@ -242,7 +250,17 @@
 :root[data-theme="geolearn"] .gl-readtime .ri{color:var(--primary);display:flex;}
 :root[data-theme="geolearn"] .gl-noterow{display:flex;justify-content:flex-end;margin:0 0 14px;}
 :root[data-theme="geolearn"] .gl-bodycard{background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:clamp(28px,3.4vw,44px);}
-:root[data-theme="geolearn"] .gl-bodycard.two{display:grid;grid-template-columns:1.55fr 1fr;gap:clamp(28px,3vw,44px);}
+:root[data-theme="geolearn"] .gl-bodycard.two{display:grid;grid-template-columns:1.55fr 1fr;gap:clamp(28px,3vw,44px);align-items:start;}
+/* Article fills the canvas: the wrap is at least canvas-tall so a short article never strands in
+   dead space; the body grows into it. A long article grows past it and the page scrolls edge-anchored
+   (the canvas-spanning .gl-main, per #54); the source-image sidebar holds via sticky. */
+:root[data-theme="geolearn"] .gl-wrap.gl-artwrap{min-height:100%;}
+:root[data-theme="geolearn"] .gl-artbody{flex:1 1 auto;min-height:0;}
+:root[data-theme="geolearn"] .gl-bodycard.two.gl-artbody{align-items:stretch;}
+:root[data-theme="geolearn"] .gl-bodycard.two.gl-artbody .gl-side{position:sticky;top:0;align-self:start;}
+:root[data-theme="geolearn"] .gl-sidefig{position:relative;aspect-ratio:4/3;border-radius:14px;overflow:hidden;border:1px solid var(--outline-variant);background:linear-gradient(135deg,#0c4a44,#00685f 60%,#1f8d80);}
+:root[data-theme="geolearn"] .gl-sidefig::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(2,58,52,.7),transparent 50%);pointer-events:none;}
+:root[data-theme="geolearn"] .gl-sidefig .cap{position:absolute;left:14px;right:14px;bottom:12px;z-index:2;color:#fff;font-size:12.5px;font-weight:600;line-height:1.35;}
 :root[data-theme="geolearn"] .gl-prose p{font-size:clamp(15px,1.15vw,17px);line-height:1.7;color:var(--on-surface-variant);}
 :root[data-theme="geolearn"] .gl-prose p+p{margin-top:16px;}
 :root[data-theme="geolearn"] .gl-prose b{color:var(--on-surface);font-weight:700;}
@@ -4001,12 +4019,14 @@ function glOutcomes(s){
       `<div class="gl-reslist">${resItems.map(r=>`<a class="gl-rcard"${r.url?` href="${esc(r.url)}" target="_blank" rel="noopener noreferrer"`:''}><span class="ric">${tpIc(r.icon||'doc',18)}</span><div class="rt"><h4>${esc(r.title||'')}</h4>${r.description?`<p>${esc(r.description)}</p>`:''}</div>${r.url?`<span class="rext">${tpIc('external',16)}</span>`:''}</a>`).join('')}</div>`)); }
   if(cs&&(cs.title||cs.description||cs.body)){ btns.push(`<button class="gl-obtn" type="button" data-gl-open="cs"><span class="bi">${tpIc('pin',16)}</span> ${esc(cs.label||'Case Study')}</button>`);
     modals.push(glModal('cs',cs.eyebrow||'Case study',cs.title||'Case Study',`<p class="gl-msub">${esc(cs.description||cs.body||'')}</p>`)); }
-  return glHead(s)+`<main class="gl-main gl-center"><div class="gl-ocard">
-    ${glHas(s.eyebrow)?`<span class="badge">${esc(s.eyebrow)}</span>`:''}
-    <h1>${glBR(s.title||'Learning outcomes')}</h1>
-    ${glHas(s.intro)?`<p class="gl-ointro">${esc(s.intro)}</p>`:''}
-    ${list?`<div class="gl-objs">${list}</div>`:''}
-    ${btns.length?`<div class="gl-btnrow">${btns.join('')}</div>`:''}
+  return glHead(s)+`<main class="gl-main gl-center"><div class="gl-ocard gl-otwo">
+    <section class="gl-oleft">${glImg(s.image,s.title||'Lesson image')}<div class="gl-oleft-grad"></div>${btns.length?`<div class="gl-oleft-btns">${btns.join('')}</div>`:''}</section>
+    <section class="gl-oright">
+      ${glHas(s.eyebrow)?`<span class="badge">${esc(s.eyebrow)}</span>`:''}
+      <h1>${glBR(s.title||'Learning outcomes')}</h1>
+      ${glHas(s.intro)?`<p class="gl-ointro">${esc(s.intro)}</p>`:''}
+      ${list?`<div class="gl-objs">${list}</div>`:''}
+    </section>
   </div></main>`+glFoot(s,s.cta||'Continue')+modals.join('');
 }
 
@@ -4035,16 +4055,19 @@ function glText(s){
   }
   /* article */
   const sb=s.sidebar||null, res=Array.isArray(s.resources)?s.resources:[];
+  const sbImg=sb&&(sb.image||sb.src);                                    // source-image sidebar (imperium text-page reference), themed geo
+  const sbInsight=sb&&(sb.label||sb.heading||sb.quote||sb.cta);
   const side=(sb||res.length)?`<aside class="gl-side">
-    ${sb?`<div class="gl-insight">${sb.label?`<span class="lab">${tpIc('lightbulb',14)} ${esc(sb.label)}</span>`:''}${sb.heading?`<h3>${esc(sb.heading)}</h3>`:''}${sb.quote?`<blockquote>${esc(sb.quote)}</blockquote>`:''}${sb.cta?`<div class="div"></div><span class="more">${esc(sb.cta)} ${tpIc('arrowRight',14)}</span>`:''}</div>`:''}
+    ${sbImg?`<figure class="gl-sidefig">${glImg(sb.image||sb.src,sb.caption||sb.heading||'Source')}${(sb.caption||sb.credit)?`<figcaption class="cap">${esc(sb.caption||sb.credit||'')}</figcaption>`:''}</figure>`:''}
+    ${sbInsight?`<div class="gl-insight">${sb.label?`<span class="lab">${tpIc('lightbulb',14)} ${esc(sb.label)}</span>`:''}${sb.heading?`<h3>${esc(sb.heading)}</h3>`:''}${sb.quote?`<blockquote>${esc(sb.quote)}</blockquote>`:''}${sb.cta?`<div class="div"></div><span class="more">${esc(sb.cta)} ${tpIc('arrowRight',14)}</span>`:''}</div>`:''}
     ${res.length?`<div class="gl-links">${res.map(r=>`<a class="gl-link"${r.href?` href="${esc(r.href)}" target="_blank" rel="noopener noreferrer"`:''}><span class="li">${tpIc(r.icon||'doc',16)}</span>${esc(r.label||r.title||'')}</a>`).join('')}</div>`:''}
   </aside>`:'';
   const proseCls=side?'gl-bodycard two':'gl-bodycard';
-  return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap">
+  return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap gl-artwrap">
     <h1 class="gl-art-h1">${glBR(s.title||'Reading')}</h1>
     ${(glHas(s.pills)||glHas(s.readtime))?`<div class="gl-pills">${glHas(s.pills)?(s.pills.map(p=>{const o=typeof p==='string'?{label:p}:p;return `<span class="gl-pill">${o.icon?`<span class="pi">${tpIc(o.icon,14)}</span>`:''}${esc(o.label||'')}</span>`;}).join('')):''}${glHas(s.readtime)?`<span class="gl-readtime"><span class="ri">${tpIc('clock',14)}</span> ${esc(s.readtime)}</span>`:''}</div>`:''}
     ${tpHasNotes(body)?`<div class="gl-noterow">${tpNotePen()}</div>`:''}
-    <div class="${proseCls}">
+    <div class="${proseCls} gl-artbody">
       <div class="gl-prose">${body.map((p,j)=>{ const txt=typeof p==='string'?p:(p.content||''); return `<p${j===0?' class="gl-dropcap"':''}>${glRich(txt)}</p>`; }).join('')}</div>
       ${side}
     </div></div></main>`+glFoot(s,s.cta||'Continue');
