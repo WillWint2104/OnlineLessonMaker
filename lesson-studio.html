@@ -2257,7 +2257,14 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-link .li{width:34px;height:34px;border:2px solid var(--on-surface);background:var(--surface-variant);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 /* interactive embed (mhInteractive) — iframe/still frame + guide + launch link, WW1 skin. Mirrors geo
    glInteractive layout; reuses the shared tp-media-* still markup inside the framed embed. */
-:root[data-theme="microhistory"] .tp-iwrap{width:100%;max-width:1024px;margin:0 auto;display:flex;flex-direction:column;min-height:100%;}   /* fill the canvas so content top-anchors (the mh .tp-main{justify-content:safe center} would otherwise vertically centre short content, leaving an empty band above) — mirrors mhText's .tp-artwrap */
+/* top-anchor the interactive slide for ANY content amount: the mh .tp-main{justify-content:safe center}
+   (0,3,0) would otherwise vertically centre the wrap whenever it's shorter than the canvas, leaving an
+   empty band above the chip. min-height:100% on the wrap only nearly-fills (it resolves against .tp-main's
+   content box, not its border box), so it can't be relied on alone. Pin justify-content to flex-start for
+   the interactive main specifically — interactive-scoped, so other mh types keep their centring; on overflow
+   flex-start scrolls edge-anchored from the top (no top-clip). */
+:root[data-theme="microhistory"] .tp-slide[data-tp-type="interactive"] .tp-main{justify-content:flex-start;}
+:root[data-theme="microhistory"] .tp-iwrap{width:100%;max-width:1024px;margin:0 auto;display:flex;flex-direction:column;min-height:100%;}   /* fill the canvas so content top-anchors; reinforced by the interactive-scoped flex-start above — mirrors mhText's .tp-artwrap */
 :root[data-theme="microhistory"] .tp-introw{display:grid;grid-template-columns:1.55fr 1fr;gap:24px;align-items:start;}
 :root[data-theme="microhistory"] .tp-iembed{position:relative;aspect-ratio:16/9;min-width:0;background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--on-surface);border-radius:8px;overflow:hidden;}
 :root[data-theme="microhistory"] .tp-iembed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;}
