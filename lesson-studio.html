@@ -87,7 +87,7 @@
 /* ----- GeoLearn slide shell: fixed chrome, scrolling content (locked sizing) -----
    Faithful port of the approved mockups. All classes gl-* prefixed + scoped under the
    theme so they never collide with the engine or the imperium/microhistory pack. */
-:root[data-theme="geolearn"] .tp-slide{display:flex;flex-direction:column;height:100%;position:relative;font-family:'Inter',system-ui,sans-serif;}
+:root[data-theme="geolearn"] .tp-slide{display:flex;flex-direction:column;height:100%;width:100%;align-self:stretch;position:relative;font-family:'Inter',system-ui,sans-serif;}   /* fill the canvas width: this is an in-flow child of #slide (align-items:center), so stretch it or it shrinks to content and every gl page sits in dead margin */
 /* universal top bar (64px) */
 :root[data-theme="geolearn"] .gl-app{flex:0 0 64px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:var(--surface);border-bottom:1px solid var(--outline-variant);}
 :root[data-theme="geolearn"] .gl-wm{font-weight:700;font-size:24px;color:var(--primary);letter-spacing:-.01em;}
@@ -110,7 +110,15 @@
 :root[data-theme="geolearn"] .gl-nx{display:flex;align-items:center;gap:8px;background:var(--primary);color:#fff;border:none;padding:12px 24px;border-radius:12px;font:inherit;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08);}
 :root[data-theme="geolearn"] .gl-nx[disabled]{opacity:.45;pointer-events:none;}
 /* content region: fixed between bars, scrolls internally */
-:root[data-theme="geolearn"] .gl-main{flex:1 1 auto;min-height:0;overflow-y:auto;padding:12px 32px;display:flex;flex-direction:column;}
+/* GeoLearn page-sizing contract. .gl-main is the per-page sizing box: it spans the full canvas
+   width (so the scroll boundary — and its scrollbar — rides the canvas/window right edge, not an
+   inset wrapper) and the canvas height. Horizontal gutters come from the inner wraps' max-width,
+   so a scrollbar never floats mid-page. One opt-in behaviour sits on top:
+     .gl-center → FIT-OR-FILL (title, outro, outcomes): child grows to fill / centres, never scrolls.
+   Plain .gl-main (content pages, incl. video) sizes to content and scrolls — edge-anchored — only
+   when it genuinely exceeds the canvas. Core components (e.g. the video player) keep their size and
+   the page scrolls; we never shrink a component to dodge a scrollbar. */
+:root[data-theme="geolearn"] .gl-main{flex:1 1 auto;min-height:0;align-self:stretch;overflow-y:auto;padding:12px 0;display:flex;flex-direction:column;}
 :root[data-theme="geolearn"] .gl-main.gl-center{align-items:center;}   /* vertical centring via the child's margin:auto (scroll-safe); justify-content:center clips top-overflow */
 :root[data-theme="geolearn"] .gl-wrap{max-width:1200px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:16px;}
 :root[data-theme="geolearn"] .gl-wrap.gl-narrow{max-width:880px;}
@@ -155,7 +163,7 @@
 
 /* ===================== TITLE ===================== */
 /* ---- GeoLearn title hero (imperium-structure, GeoLearn theme) ---- */
-:root[data-theme="geolearn"] .gl-twrap{width:100%;max-width:1040px;margin:auto;display:flex;flex-direction:column;gap:18px;flex:1 1 auto;min-height:0;justify-content:center;}
+:root[data-theme="geolearn"] .gl-twrap{width:100%;max-width:1200px;margin:auto;display:flex;flex-direction:column;gap:18px;flex:1 1 auto;min-height:0;justify-content:center;}
 :root[data-theme="geolearn"] .gl-thero{position:relative;width:100%;flex:1 1 auto;min-height:360px;border-radius:22px;overflow:hidden;background:linear-gradient(150deg,#0a8174 0%,#02564e 72%);box-shadow:0 14px 36px rgba(0,80,72,.26);}
 :root[data-theme="geolearn"] .gl-thimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 :root[data-theme="geolearn"] .gl-thscrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,58,52,.12) 0%,rgba(2,58,52,.42) 55%,rgba(2,58,52,.74) 100%);}
@@ -334,7 +342,7 @@
 :root[data-theme="geolearn"] .gl-ct p{font-size:14px;line-height:1.5;opacity:.94;}
 
 /* ===================== VIDEO ===================== */
-:root[data-theme="geolearn"] .gl-player{position:relative;width:100%;aspect-ratio:16/9;max-height:56vh;border-radius:20px;overflow:hidden;border:1px solid var(--outline-variant);background:linear-gradient(150deg,#16302b,#0c4a44 55%,#00685f);}
+:root[data-theme="geolearn"] .gl-player{position:relative;width:100%;max-width:900px;aspect-ratio:16/9;min-height:360px;margin-inline:auto;flex:none;border-radius:20px;overflow:hidden;border:1px solid var(--outline-variant);background:linear-gradient(150deg,#16302b,#0c4a44 55%,#00685f);}   /* the player holds a proper, consistent large 16:9 (canvas-relative px, not vh): max-width caps sprawl, min-height floors it on short windows; it never shrinks to dodge a scrollbar — the page scrolls instead */
 :root[data-theme="geolearn"] .gl-playbtn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:84px;height:84px;border-radius:9999px;background:rgba(0,104,95,.92);color:#fff;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px rgba(0,0,0,.3);z-index:2;}
 :root[data-theme="geolearn"] .gl-controls{position:absolute;left:0;right:0;bottom:0;padding:20px 22px;background:linear-gradient(to top,rgba(8,30,27,.85),transparent);z-index:2;}
 :root[data-theme="geolearn"] .gl-scrub{height:5px;background:rgba(255,255,255,.25);border-radius:9999px;position:relative;margin-bottom:14px;}
@@ -446,7 +454,7 @@
 :root[data-theme="geolearn"] .gl-task{display:grid;grid-template-columns:auto 1fr;gap:16px;padding-bottom:22px;margin-bottom:22px;border-bottom:1px solid var(--outline-variant);}
 :root[data-theme="geolearn"] .gl-tnum{width:38px;height:38px;border-radius:9999px;border:2px solid var(--primary);color:var(--primary);display:flex;align-items:center;justify-content:center;line-height:1;font-weight:700;font-size:14px;}
 :root[data-theme="geolearn"] .gl-tq{font-size:clamp(15px,1.3vw,17px);line-height:1.5;color:var(--on-surface);margin-bottom:10px;}
-:root[data-theme="geolearn"] .gl-tmeta{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;}
+:root[data-theme="geolearn"] .gl-taskmeta{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;}   /* sourceAnalysis task meta (marks/skill) — renamed from .gl-tmeta to stop colliding with the title meta-card grid */
 :root[data-theme="geolearn"] .gl-skill{background:var(--surface-container-high);color:var(--on-surface-variant);font-size:12px;font-weight:600;padding:5px 12px;border-radius:9999px;}
 :root[data-theme="geolearn"] .gl-trow2{display:flex;justify-content:flex-end;margin-top:10px;}
 :root[data-theme="geolearn"] .gl-approach{background:var(--primary-container);color:var(--on-primary-container);border-radius:16px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start;margin-top:4px;}
@@ -4181,7 +4189,7 @@ function glSource(s){
   const tasksHtml=tasks.map((t,j)=>{ const fid='t'+j, num=esc(t.numeral||String(j+1));
     return `<div class="gl-task" data-tp-block><span class="gl-tnum">${num}</span><div>
       <label class="gl-tq" for="${fid}-ta">${esc(t.question||'')}</label>
-      <div class="gl-tmeta">${t.marks?`<span class="gl-marks">${esc(t.marks)}</span>`:''}${t.skill?`<span class="gl-skill">${esc(t.skill)}</span>`:''}</div>
+      <div class="gl-taskmeta">${t.marks?`<span class="gl-marks">${esc(t.marks)}</span>`:''}${t.skill?`<span class="gl-skill">${esc(t.skill)}</span>`:''}</div>
       <textarea id="${fid}-ta" class="gl-gta" data-tp-field="${fid}" aria-label="Task ${num} — your response" placeholder="Type your response..."></textarea>
       <div class="gl-trow2"><button class="gl-submit" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-submit data-tp-revname="task ${num}" data-tp-donelabel="Model answer shown">Submit ${tpIc('arrowRight',16)}</button></div>
       <div class="gl-greveal" id="${fid}-model" data-tp-model><div class="gl-modelc"><span class="mh">${tpIc('check',14)} Model answer</span><p>${glRich(t.model||'')}</p></div></div>
