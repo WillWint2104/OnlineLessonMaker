@@ -2064,7 +2064,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-saph{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.5);}
 .tp-slide .tp-saph span{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;}
 .tp-slide .tp-srclabel{position:absolute;bottom:14px;left:14px;color:#fff;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;}
-.tp-slide .tp-sazoom{position:absolute;bottom:14px;right:14px;width:36px;height:36px;border-radius:9999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;color:#fff;}
+.tp-slide .tp-sazoom{position:absolute;bottom:14px;right:14px;width:36px;height:36px;border-radius:9999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;color:#fff;padding:0;font:inherit;cursor:pointer;}
+.tp-slide .tp-sazoom:hover{background:rgba(255,255,255,.3);}
 .tp-slide .tp-transcript{margin-top:14px;padding:14px 16px;}
 .tp-slide .tp-tl{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--secondary);margin-bottom:6px;}
 .tp-slide .tp-transcript p{font-size:14px;font-style:italic;line-height:1.55;color:var(--on-surface-variant);}
@@ -3998,7 +3999,10 @@ function packText(s){
     if(rest.length===0) narr+=pullHtml;
   } else { narr=pullHtml; }
   const sb=s.sidebar||{};
-  const note=sb.note||null;
+  const noteRaw=sb.note;                                                 // note may be a string OR an object; body under text|body|content, heading under title|label
+  const note=(typeof noteRaw==='string')?{text:noteRaw}:(noteRaw||null);
+  const noteText=note?(note.text||note.body||note.content||''):'';        // render the box ONLY when there's actual body text (no empty "NOTE" box)
+  const noteTitle=(note&&(note.title||note.label))||'Note';
   const prog=(sb.progress===0||sb.progress)?Math.max(0,Math.min(100,+sb.progress||0)):null;
   return packHead(s,tpProg(s,45))
     +`<main class="tp-main"><article class="tp-doc">
@@ -4007,12 +4011,13 @@ function packText(s){
       <div class="tp-tgrid">
         <section class="tp-narr">${tpHasNotes(body)?`<div class="tp-noterow">${tpNotePen()}</div>`:''}${narr}</section>
         <aside class="tp-aside">
-          ${tpHasImg(sb.image)?`<div><div class="tp-tpolaroid"><div class="tp-tpl-img">${tpImg(sb.image,'Photo placeholder','image')}</div></div>${sb.caption?`<p class="tp-pl-cap">${esc(sb.caption)}</p>`:''}</div>`:''}
-          ${note?`<div class="tp-snote"><div class="sh">${tpIc('ribbon',16)}<h3>${esc(note.title||'Note')}</h3></div><p>${esc(note.text||'')}</p></div>`:''}
+          <div><div class="tp-tpolaroid"><div class="tp-tpl-img">${tpImg(sb.image,'Photo placeholder','image')}${tpHasImg(sb.image)&&mode!=='edit'?tpZoomBtn(sb.caption||'Source image'):''}</div></div>${sb.caption?`<p class="tp-pl-cap">${esc(sb.caption)}</p>`:''}</div>
+          ${noteText?`<div class="tp-snote"><div class="sh">${tpIc('ribbon',16)}<h3>${esc(noteTitle)}</h3></div><p>${esc(noteText)}</p></div>`:''}
           ${prog!=null?`<div class="tp-sprog"><div class="pt"><span class="pl">${esc(sb.progressLabel||'Section Progress')}</span><span class="pv">${prog}%</span></div><div class="tp-ptrack"><i style="width:${prog}%"></i></div></div>`:''}
         </aside>
       </div>
     </article></main>`
+    +(mode!=='edit'&&tpHasImg(sb.image)?tpFocusImage(sb.image,sb.caption||'Source image'):'')
     +packFoot(s,s.cta||'Continue');
 }
 
@@ -4690,7 +4695,7 @@ function packSourceAnalysis(s,i){
           ${hasArt?`<div class="tp-srccol">
             <div class="tp-sa-srcwrap"><div class="tp-srcframe" tabindex="0" role="group" aria-label="${esc(src.label||'Source')} image">
               ${tpHasImg(src.image)?tpImg(src.image,'Source placeholder','doc'):`<div class="tp-saph">${tpIc('doc',18)}<span>Source placeholder</span></div>`}
-              ${src.label?`<div class="tp-srclabel">${esc(src.label)}</div>`:''}<div class="tp-sazoom">${tpIc('zoomIn',18)}</div></div></div>
+              ${src.label?`<div class="tp-srclabel">${esc(src.label)}</div>`:''}${tpHasImg(src.image)&&mode!=='edit'?`<button class="tp-sazoom" type="button" data-expandsrc="${esc(tpSrc(src.image))}" aria-label="View source larger" title="View larger">${tpIc('zoomIn',18)}</button>`:''}</div></div>
             ${src.transcript?`<div class="tp-transcript" tabindex="0" role="group" aria-label="${esc(src.label||'Source')} transcript"><span class="tp-tl">Transcript${src.label?' · '+esc(src.label):''}</span><p>${esc(src.transcript)}</p></div>`:''}
             ${provHtml?`<div class="tp-prov"><div class="tp-provh">${tpIc('scope',16)} Provenance</div>${provHtml}</div>`:''}
           </div>`:''}
