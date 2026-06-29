@@ -7,6 +7,16 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **External interactive slide: the image case now has an expand-to-lightbox affordance.** The
+  `external`-type `.ex-img` container rendered an image with no way to enlarge it. Added the standard
+  `⤢` expand button (`data-expandsrc`, picked up by the existing delegated handler — no new JS, no new
+  lightbox) for the **image** case only, in non-edit mode. The iframe case (`s.url`) is unchanged
+  (it has allowfullscreen + its own launch — a lightboxed iframe would be redundant), and the empty
+  placeholder is unchanged. One-line additive change in the legacy `renderCanvas` external renderer;
+  pack renderers (imperium/microhistory/geolearn) byte-identical. (Audit note: the `artframe` flagged
+  alongside it already opens in the lightbox via its existing Zoom/Detail buttons, so it was left as-is.)
+
 ### Changed
 - **sourceAnalysis collapses to a single task column when there's no source** (no image,
   transcript or provenance) in `packSourceAnalysis` (imperium/microhistory) and `glSource`
