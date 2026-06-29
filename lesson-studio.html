@@ -2981,7 +2981,7 @@ function renderCanvas(){
     const feats=(s.features||[]).map((x,j)=>`<li><span class="editable" data-bind="slides.${i}.features.${j}" contenteditable="${mode==='edit'}">${esc(x)}</span>${mode==='edit'?`<button class="qdel" data-delfeat="${i}:${j}">✕</button>`:''}</li>`).join('');
     h=`<div class="card pad">
       <div class="exhibit">
-        <div class="ex-img${s.url?' ex-embed':''}" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.url?`<iframe src="${esc(s.url)}" title="${esc(s.title||'Interactive')}" allowfullscreen loading="lazy"></iframe>`:(s.image?`${imgEl(s.image,s)}`:`<div class="ph">${ICON.image}<br>Drag an image / add URL</div>`)}</div>
+        <div class="ex-img${s.url?' ex-embed':''}" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.url?`<iframe src="${esc(s.url)}" title="${esc(s.title||'Interactive')}" allowfullscreen loading="lazy"></iframe>`:(s.image?`${imgEl(s.image,s)}${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image / add URL</div>`)}</div>
         <div class="ex-body">
           <div class="eyebrow editable" data-bind="slides.${i}.eyebrow" contenteditable="${mode==='edit'}">${esc(s.eyebrow||'Special exhibit')}</div>
           <h2 class="ex-title editable" data-bind="slides.${i}.title" contenteditable="${mode==='edit'}">${esc(s.title)}</h2>
