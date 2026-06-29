@@ -2138,6 +2138,12 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-overlay[hidden]{display:none;}
 .tp-slide .tp-fpanel{background:var(--surface-lowest);max-width:760px;width:100%;max-height:88%;overflow-y:auto;padding:32px 34px;position:relative;border-radius:20px;}
 .tp-slide .tp-fclose{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:9999px;background:var(--surface-container);border:none;color:var(--on-surface);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+/* image "view larger" affordance + image-bearing focus panel (imperium pack image renderers) */
+.tp-slide .tp-zoombtn{position:absolute;top:12px;right:12px;z-index:6;width:38px;height:38px;border-radius:9999px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(20,16,24,.62);color:#fff;border:1px solid rgba(255,255,255,.38);}
+.tp-slide .tp-zoombtn:hover{background:rgba(20,16,24,.85);}
+.tp-slide .tp-fpanel-img{max-width:1040px;padding:18px;}
+.tp-slide .tp-fpanel-img .tp-fstiml{margin:2px 0 12px;}
+.tp-slide .tp-fimg{display:block;width:100%;height:auto;max-height:78vh;object-fit:contain;border-radius:12px;}
 .tp-slide .tp-fey{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:14px;}
 .tp-slide .tp-fq{font-family:var(--tp-serif);font-size:25px;line-height:1.25;color:var(--on-surface);margin-bottom:22px;}
 .tp-slide .tp-fstiml{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--secondary);margin-bottom:8px;}
@@ -3672,7 +3678,7 @@ function imOutcomes(s){
   return imHead(s,tpProg(s,33))
     +`<main class="tp-main"><div class="tp-ocard">
       <section class="tp-left">
-        <div class="tp-left-img">${tpHasImg(s.image)?tpImg(s.image,'Image placeholder','bust'):''}</div>
+        <div class="tp-left-img">${tpHasImg(s.image)?`${tpImg(s.image,'Image placeholder','bust')}${mode!=='edit'?tpZoomBtn('Lesson image'):''}`:''}</div>
         ${tpHasImg(s.image)?'':`<div class="tp-left-ph">${tpIc('bust',20)}<span>Image placeholder</span></div>`}
         <div class="tp-left-grad"></div>
         <div class="tp-left-btnwrap"><button class="tp-syl">${esc(s.syllabusLabel||'View Full Syllabus')} ${tpIc('external',18)}</button></div>
@@ -3684,6 +3690,7 @@ function imOutcomes(s){
         ${(f.left||f.right)?`<div class="tp-ofoot"><span class="c1">${tpIc('ribbon',16)} ${esc(f.left||'')}</span><span class="c2">${esc(f.right||'')}</span></div>`:''}
       </section>
     </div></main>`
+    +(mode!=='edit'&&tpHasImg(s.image)?tpFocusImage(s.image,'Lesson image'):'')
     +imFoot(s,s.cta||'Continue');
 }
 
@@ -3699,7 +3706,7 @@ function imImageText(s){
   return imHead(s,tpProg(s,60))
     +`<main class="tp-main"><div class="tp-llwrap">
       <div class="tp-llcard">
-        <div class="tp-llvisual">${tpHasImg(img)?tpImg(img,'Image placeholder','image'):`<div class="tp-imgph"><div class="tp-phmark">${tpIc('image',46)}<span>Image placeholder</span></div></div>`}
+        <div class="tp-llvisual">${tpHasImg(img)?`${tpImg(img,'Image placeholder','image')}${mode!=='edit'?tpZoomBtn(img.tag||s.title||'Image'):''}`:`<div class="tp-imgph"><div class="tp-phmark">${tpIc('image',46)}<span>Image placeholder</span></div></div>`}
           ${img.tag?`<div class="tp-phbadge">${esc(img.tag)}</div>`:''}</div>
         <div class="tp-llcontent">
           ${(s.eyebrow||s.moduleLabel)?`<span class="tp-lleyebrow">${esc(s.eyebrow||s.moduleLabel)}</span>`:''}
@@ -3709,6 +3716,7 @@ function imImageText(s){
       </div>
       ${note?`<p class="tp-llquote tp-serif">“${esc(note.text||'')}”${note.label?` — ${esc(note.label)}`:''}</p>`:''}
     </div></main>`
+    +(mode!=='edit'&&tpHasImg(img)?tpFocusImage(img,img.tag||s.title||'Image'):'')
     +imFoot(s,s.cta||'Continue');
 }
 
@@ -3736,11 +3744,13 @@ function imInfographic(s){
           ${tpHasImg(map.image)?tpImg(map.image,'Map placeholder','image'):`<div class="tp-ig-mapfill"></div><div class="tp-phmark tp-soft">${tpIc('image',20)}<span>Map placeholder</span></div>`}
           ${routeHtml}${pinHtml}
           ${legHtml?`<div class="tp-ig-legend"><h4>${esc(map.legendLabel||'Legend')}</h4>${legHtml}</div>`:''}
+          ${mode!=='edit'&&tpHasImg(map.image)?tpZoomBtn(map.legendLabel||'Map'):''}
         </div>
         ${goodsHtml}
         ${note&&note.quote?`<div class="tp-ig-quote"><p>“${esc(note.quote)}”</p></div>`:''}
       </div>
     </div></main>`
+    +(mode!=='edit'&&tpHasImg(map.image)?tpFocusImage(map.image,map.legendLabel||'Map'):'')
     +imFoot(s,s.cta||'Continue');
 }
 
@@ -3756,6 +3766,7 @@ function imVideo(s){
           <h1 class="tp-serif tp-vtitle">${esc(s.title||'')}</h1></div>
         <div class="tp-vframe">
           ${poster?tpImg(poster,'Video still','image'):`<div class="tp-vstill"></div><div class="tp-phmark tp-soft">${tpIc('image',20)}<span>Video still placeholder</span></div>`}
+          ${poster&&mode!=='edit'?tpZoomBtn('Video still'):''}
           <div class="tp-vplay">${tpIc('play',36)}</div>
           <div class="tp-vctrl">${tpIc('pause',20)}<div class="tp-vscrub"><i></i></div><span class="tp-vtime">${esc(s.timestamp||'01:42 / 04:15')}</span>${tpIc('fullscreen',18)}</div>
         </div>
@@ -3763,6 +3774,7 @@ function imVideo(s){
         ${subs?`<div class="tp-subcards">${subs}</div>`:''}
       </div>
     </div></main>`
+    +(poster&&mode!=='edit'?tpFocusImage(poster,'Video still'):'')
     +imFoot(s,s.cta||'Continue');
 }
 
@@ -3780,11 +3792,12 @@ function imKnowledge(s){
     +`<main class="tp-main"><div class="tp-wrap"><div class="tp-kc-card" data-tp-kc>
       <div class="tp-kc-hdr"><div class="tp-metarow"><span class="tp-kc-badge">Completion: ${tpProg(s,65)}%</span>${s.eyebrow?`<span class="tp-kc-eyebrow">${esc(s.eyebrow)}</span>`:''}</div>
         <h1 class="tp-serif tp-kc-title">${esc(s.title||'Knowledge Check')}</h1></div>
-      <div class="tp-figure">${tpHasImg(art.image)?tpImg(art.image,'Image placeholder','colosseum'):`<div class="tp-phmark tp-soft">${tpIc('colosseum',30)}<span>Image placeholder</span></div>`}${(art.id||art.caption)?`<div class="tp-ref">${esc(art.id||art.caption)}</div>`:''}</div>
+      <div class="tp-figure">${tpHasImg(art.image)?`${tpImg(art.image,'Image placeholder','colosseum')}${mode!=='edit'?tpZoomBtn(art.id||art.caption||'Artifact'):''}`:`<div class="tp-phmark tp-soft">${tpIc('colosseum',30)}<span>Image placeholder</span></div>`}${(art.id||art.caption)?`<div class="tp-ref">${esc(art.id||art.caption)}</div>`:''}</div>
       ${s.question?`<p class="tp-kc-q">${esc(s.question)}</p>`:''}
       <div class="tp-kc-opts">${optHtml}</div>
       ${tpFeedback(s.feedback)}
     </div></div></main>`
+    +(mode!=='edit'&&tpHasImg(art.image)?tpFocusImage(art.image,art.id||art.caption||'Artifact'):'')
     +imFoot(s,s.cta||'Continue',{disabled:true});
 }
 
@@ -4638,6 +4651,16 @@ function tpFocusOverlay(eyebrow,question,stimLabel,stimText){
     <div class="tp-fpanel"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close focus reading">${tpIc('close',20)}</button>
       ${eyebrow?`<div class="tp-fey">${esc(eyebrow)}</div>`:''}<p class="tp-fq">${esc(question||'')}</p>
       ${stimText?`<div class="tp-fstiml">${esc(stimLabel||'Stimulus')}</div><p class="tp-fstim">${esc(stimText)}</p>`:''}</div></div>`;
+}
+/* image "view larger": a small affordance over an image container + an image-bearing variant of the
+   pack focus overlay. Reuses the existing data-tp-focus-open → data-tp-overlay handler (wirePackTyped,
+   content-agnostic) — no new lightbox, no handler change. Emitted ONLY by image-bearing imperium pack
+   renderers when a real image is present and not in edit mode; one per slide. */
+function tpZoomBtn(label){ return `<button class="tp-zoombtn" type="button" data-tp-focus-open aria-haspopup="dialog" title="${esc(label||'View larger')}" aria-label="${esc(label||'View larger')}">${tpIc('zoomIn',18)}</button>`; }
+function tpFocusImage(image,label,alt){ const src=tpSrc(image); if(!src) return '';
+  return `<div class="tp-overlay" data-tp-overlay role="dialog" aria-modal="true" aria-label="${esc(label||'Enlarged image')}" hidden>
+    <div class="tp-fpanel tp-fpanel-img"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',20)}</button>
+      ${label?`<div class="tp-fstiml">${esc(label)}</div>`:''}<img class="tp-fimg" src="${esc(src)}" alt="${esc(alt||label||'')}"></div></div>`;
 }
 
 /* ---------- sourceAnalysis (shared DOM, theme via CSS) ---------- */
