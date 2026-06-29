@@ -7,6 +7,18 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Imperium pack: "view larger" (focus overlay) on image-bearing slides.** `imImageText`,
+  `imInfographic` (map), `imVideo` (poster/still), `imOutcomes` and `imKnowledge` (artifact) now
+  show a small zoom affordance over their image that opens the image enlarged in the **existing pack
+  focus overlay** (`data-tp-focus-open` → `data-tp-overlay`, driven by the existing content-agnostic
+  handler — no new lightbox, no handler change). New shared helpers `tpZoomBtn` + `tpFocusImage`
+  (an image-bearing variant of the focus panel) are called **only** by these imperium renderers.
+  The affordance appears only when a real image is present (`tpHasImg`) and not in edit mode; never
+  on placeholders, the decorative `imTitle` hero, or video iframes. Imperium-only — geolearn +
+  microhistory renderer output byte-identical; `packSourceAnalysis`'s existing Focus-reading
+  unchanged. Verified by render (overlay opens/closes per type; image-less slide has no affordance).
+
 ### Fixed
 - **External interactive slide: the image case now has an expand-to-lightbox affordance.** The
   `external`-type `.ex-img` container rendered an image with no way to enlarge it. Added the standard
