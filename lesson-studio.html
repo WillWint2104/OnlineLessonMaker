@@ -1953,6 +1953,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="imperium"] .tp-vctrl{position:absolute;bottom:0;left:0;width:100%;padding:16px;display:flex;align-items:center;gap:14px;color:#fff;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);}
 :root[data-theme="imperium"] .tp-vscrub{flex-grow:1;height:6px;background:rgba(255,255,255,.3);border-radius:9999px;overflow:hidden;} :root[data-theme="imperium"] .tp-vscrub>i{display:block;width:33%;height:100%;background:#ffe16d;}
 :root[data-theme="imperium"] .tp-vtime{font-size:12px;font-weight:500;white-space:nowrap;}
+:root[data-theme="imperium"] .tp-vlink{position:absolute;top:14px;left:14px;z-index:7;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9999px;background:rgba(20,16,24,.66);color:#fff;font-size:12px;font-weight:600;text-decoration:none;border:1px solid rgba(255,255,255,.28);}
+:root[data-theme="imperium"] .tp-vlink:hover{background:rgba(20,16,24,.85);}
 :root[data-theme="imperium"] .tp-callout{background:var(--surface-container);border-left:4px solid var(--primary);border-radius:20px;padding:18px;display:flex;gap:12px;align-items:flex-start;}
 :root[data-theme="imperium"] .tp-ci{color:var(--primary);margin-top:2px;flex-shrink:0;}
 :root[data-theme="imperium"] .tp-ctitle{font-size:14px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--primary);margin-bottom:6px;}
@@ -1975,6 +1977,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-vctrl2{position:absolute;bottom:0;left:0;width:100%;padding:18px;display:flex;align-items:center;gap:20px;color:#fff;background:linear-gradient(to top,rgba(37,24,23,.8),transparent);z-index:5;}
 :root[data-theme="microhistory"] .tp-vscrub2{flex-grow:1;height:10px;background:rgba(225,194,153,.3);border-radius:9999px;overflow:hidden;} :root[data-theme="microhistory"] .tp-vscrub2>i{display:block;width:33%;height:100%;background:var(--primary-container);border-radius:9999px;}
 :root[data-theme="microhistory"] .tp-vtime2{font-size:12px;font-weight:600;white-space:nowrap;}
+:root[data-theme="microhistory"] .tp-vlink{position:absolute;top:14px;left:14px;z-index:7;display:inline-flex;align-items:center;gap:6px;padding:6px 11px;background:var(--primary-container);color:var(--on-surface);border:2px solid var(--on-surface);box-shadow:2px 2px 0 0 var(--on-surface);border-radius:4px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;}
+:root[data-theme="microhistory"] .tp-vlink:hover{transform:translate(1px,1px);box-shadow:1px 1px 0 0 var(--on-surface);}
 :root[data-theme="microhistory"] .tp-vcap{margin-top:20px;display:grid;grid-template-columns:2fr 1fr;gap:24px;border-top:1px solid var(--outline-variant);padding-top:20px;}
 :root[data-theme="microhistory"] .tp-vlead{font-size:18px;line-height:1.6;color:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-vquote{margin-top:12px;padding:12px;background:var(--surface-container-low);border-left:4px solid var(--primary);border-radius:8px;font-style:italic;font-size:16px;line-height:1.55;color:var(--on-surface-variant);}
@@ -3760,6 +3764,7 @@ function imVideo(s){
   const mi=['quiz','notes'];
   const subs=meta.map((m,j)=>`<div class="tp-subcard"><span class="tp-sc-ic ${j%2?'tert':'fixed'}">${tpIc(m.icon||mi[j%2],20)}</span><div><p class="tp-sc-t">${esc(m.key||'')}</p><p class="tp-sc-s">${esc(m.value||'')}</p></div></div>`).join('');
   const poster=tpSrc(s.image)||tpVideoPoster(s);
+  const url=(s.url||'').trim(), embed=toEmbed(url), watchLabel=s.metaCta||'Watch on YouTube ↗';
   return imHead(s,tpProg(s,65))
     +`<main class="tp-main"><div class="tp-vwrap">
       <div class="tp-vcard">
@@ -3768,7 +3773,8 @@ function imVideo(s){
         <div class="tp-vframe">
           ${poster?tpImg(poster,'Video still','image'):`<div class="tp-vstill"></div><div class="tp-phmark tp-soft">${tpIc('image',20)}<span>Video still placeholder</span></div>`}
           ${poster&&mode!=='edit'?tpZoomBtn('Video still'):''}
-          <div class="tp-vplay">${tpIc('play',36)}</div>
+          ${url?`<a class="tp-vlink" data-tp-vfallback href="${esc(url)}" target="_blank" rel="noopener noreferrer">${tpIc('external',14)} ${esc(watchLabel)}</a>`:''}
+          ${url?`<div class="tp-vplay" data-tp-playembed="${esc(embed)}" role="button" tabindex="0" aria-label="Play video">${tpIc('play',36)}</div>`:`<div class="tp-vplay">${tpIc('play',36)}</div>`}
           <div class="tp-vctrl">${tpIc('pause',20)}<div class="tp-vscrub"><i></i></div><span class="tp-vtime">${esc(s.timestamp||'01:42 / 04:15')}</span>${tpIc('fullscreen',18)}</div>
         </div>
         ${s.body?`<div class="tp-callout"><span class="tp-ci">${tpIc('info',22)}</span><div>${s.calloutTitle?`<h3 class="tp-ctitle">${esc(s.calloutTitle)}</h3>`:''}<p class="tp-cbody">${esc(s.body)}</p></div></div>`:''}
@@ -3938,6 +3944,7 @@ function mhVideo(s){
   const meta=Array.isArray(s.metadata)?s.metadata:[];
   const mrows=meta.map(m=>`<div class="tp-mrow"><span class="tp-mk">${esc(m.key||'')}</span><span class="tp-mv">${esc(m.value||'')}</span></div>`).join('');
   const poster=tpSrc(s.image)||tpVideoPoster(s);
+  const url=(s.url||'').trim(), embed=toEmbed(url), watchLabel=s.metaCta||'Watch on YouTube ↗';
   return mhHead(s,tpProg(s,65))
     +`<main class="tp-main"><div class="tp-wrap" style="display:flex;flex-direction:column;align-items:center;">
       <div class="tp-vcard2">
@@ -3946,7 +3953,8 @@ function mhVideo(s){
         <div class="tp-player">
           ${poster?tpImg(poster,'Video still','film'):`<div class="tp-sepia"></div>`}
           ${poster?'':`<div class="tp-vph">${tpIc('film',20)}<span>Video still placeholder</span></div>`}
-          <div class="tp-playbtn">${tpIc('play',40)}</div>
+          ${url?`<a class="tp-vlink" data-tp-vfallback href="${esc(url)}" target="_blank" rel="noopener noreferrer">${tpIc('external',14)} ${esc(watchLabel)}</a>`:''}
+          ${url?`<div class="tp-playbtn" data-tp-playembed="${esc(embed)}" role="button" tabindex="0" aria-label="Play video">${tpIc('play',40)}</div>`:`<div class="tp-playbtn">${tpIc('play',40)}</div>`}
           <div class="tp-vctrl2">${tpIc('pause',22)}<div class="tp-vscrub2"><i></i></div><span class="tp-vtime2">${esc(s.timestamp||s.time||'02:14 / 06:45')}</span>${tpIc('fullscreen',20)}</div>
         </div>
         <div class="tp-vcap">
@@ -4610,6 +4618,26 @@ function wirePack(){
     b.addEventListener('click',()=>{ if(b.disabled) return; if(present && cur<LESSON.slides.length-1) go(cur+1); });
   });
   wirePackTyped();
+  // video play affordance (imperium / microhistory pack video): swap the decorative poster for an
+  // inline embed iframe filling the same player frame and start playback. If there's no embeddable
+  // URL, fall through to opening the source in a new tab. The permanent fallback link is left in place
+  // so blocked embeds (e.g. ClickView) stay reachable after the swap.
+  root.querySelectorAll('[data-tp-playembed]').forEach(btn=>{
+    const play=()=>{
+      const embed=btn.dataset.tpPlayembed;
+      const frame=btn.closest('.tp-vframe,.tp-player');
+      if(!embed){ const fb=frame&&frame.querySelector('[data-tp-vfallback]'); const u=fb&&fb.getAttribute('href'); if(u) window.open(u,'_blank','noopener'); return; }
+      if(!frame){ window.open(embed,'_blank','noopener'); return; }
+      frame.querySelectorAll('img,.tp-vstill,.tp-sepia,.tp-phmark,.tp-vph,.tp-vplay,.tp-playbtn,.tp-vctrl,.tp-vctrl2,.tp-zoombtn').forEach(el=>el.remove());
+      const ifr=document.createElement('iframe');
+      ifr.src=embed+(embed.indexOf('?')<0?'?':'&')+'autoplay=1';   // user gesture present → playback starts; harmless on non-YouTube embeds
+      ifr.title='Video'; ifr.setAttribute('allow','autoplay; fullscreen'); ifr.setAttribute('allowfullscreen','');
+      ifr.style.cssText='position:absolute;inset:0;width:100%;height:100%;border:0;z-index:2;';
+      frame.appendChild(ifr);
+    };
+    btn.addEventListener('click',e=>{ e.stopPropagation(); play(); });
+    btn.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); play(); } });
+  });
   // reveal-notes pen toggle (shared — all pack themes): toggles notes-on on the slide root
   root.querySelectorAll('[data-tp-notes]').forEach(nb=>nb.addEventListener('click',()=>{
     const on=root.classList.toggle('notes-on'); nb.classList.toggle('on',on); nb.setAttribute('aria-pressed',on?'true':'false');
