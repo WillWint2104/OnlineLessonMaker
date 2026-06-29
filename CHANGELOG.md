@@ -7,6 +7,25 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **packText (imperium text slides): sidebar image container is always shown + expandable; NOTE box
+  renders its body (and disappears when empty).** (1) The sidebar IMAGE container now renders on every
+  text slide — the image when present (with a `tpZoomBtn` affordance + `tpFocusImage` overlay to view
+  it enlarged, reusing #71), or the standard "Photo placeholder" drop-target slot when absent. (2) The
+  empty-"NOTE" box is fixed: the note body is read from `text|body|content` and the heading from
+  `title|label`, and a bare-string note is accepted; the box renders **only** when there's body text
+  (no empty grey box). `packText` is imperium-only (microhistory→`mhText`, geolearn→`glText`), so this
+  changes imperium text slides only; geo/mh text renderers are byte-identical.
+- **packSourceAnalysis (imperium + microhistory): the source-panel zoom control now works.** The
+  `tp-sazoom` control was a dead `<div>`; it's now a button that opens the source image enlarged in the
+  existing `#lightbox` (via `data-expandsrc`, the same mechanism srcframe/taskimg/ex-img use — no new
+  lightbox), shown **only** when `tpHasImg(src.image)` (no dead control on the placeholder). The
+  transcript "Focus reading" overlay is unchanged. (The image zoom uses `#lightbox` rather than the
+  `tpFocusImage` focus overlay because the focus handler is one-overlay-per-slide and that overlay is
+  already used by the transcript Focus-reading on the same slide — this keeps both controls working
+  with no handler change.) Byte-identical for every current lesson (no current lesson has an
+  image-bearing packSourceAnalysis source).
+
 ### Added
 - **Imperium pack: "view larger" (focus overlay) on image-bearing slides.** `imImageText`,
   `imInfographic` (map), `imVideo` (poster/still), `imOutcomes` and `imKnowledge` (artifact) now
