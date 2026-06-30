@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Triangulation Builder — imperium interactive (prototype)</title>
+<style>
+  :root{
+    --canvas:#FBF8FD;--surface:#fff7fe;--text:#1e1a20;--muted:#4b4450;--faint:#7d7482;--outline:#cec3d2;
+    --ind:#451274;--ind-soft:#edecfb;--ind-ink:#3a1452;
+    --gold:#8a6d1f;--gold-soft:#f6edd6;--gold-ink:#5c4708;--gold-outline:#e6dcc4;
+    --verd:#2f6f63;--verd-soft:#e8f1ee;--verd-ink:#1f4a42;--verd-outline:#bcd6cd;
+    --display:"Playfair Display",Georgia,serif;--body:"EB Garamond",Georgia,serif;--sans:"Hanken Grotesk",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--canvas);color:var(--text);font-family:var(--body);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:26px;}
+  .slide{width:100%;max-width:1000px;background:var(--surface);border:1.4px solid var(--outline);border-radius:20px;box-shadow:0 10px 30px rgba(69,18,116,.13);padding:30px 34px 26px;}
+  .eb{font-family:var(--sans);font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ind);font-weight:600;}
+  .tr{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(25px,4vw,34px);color:var(--text);margin:6px 0 8px;letter-spacing:-.01em;}
+  .pill{font-family:var(--sans);font-size:13px;color:var(--ind-ink);background:var(--ind-soft);border-radius:20px;padding:7px 14px;white-space:nowrap;}
+  .lead{font-size:17px;color:var(--muted);margin:0 0 16px;max-width:74ch;}
+  .target{background:#f4eefb;border:1px solid var(--outline);border-radius:13px;padding:13px 16px;margin-bottom:18px;}
+  .target .tl{font-family:var(--sans);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ind);margin-bottom:9px;}
+  .qchips{display:flex;flex-wrap:wrap;gap:8px;}
+  .qchip{font-family:var(--body);font-size:14.5px;color:var(--muted);background:#fff;border:1.3px solid var(--outline);border-radius:11px;padding:8px 13px;cursor:pointer;line-height:1.35;transition:border-color .12s,background .12s;}
+  .qchip:hover{border-color:var(--ind);}
+  .qchip:focus-visible{outline:none;border-color:var(--ind);box-shadow:0 0 0 3px rgba(69,18,116,.18);}
+  .qchip.sel{border-color:var(--ind);background:var(--ind-soft);color:var(--ind-ink);}
+  .qchip b{font-weight:500;color:var(--ind-ink);}
+  .step{border:1.2px solid var(--outline);border-radius:15px;overflow:hidden;margin-bottom:16px;background:#faf7fe;}
+  .step.s-gold{background:#fdfaf3;border-color:var(--gold-outline);}
+  .step.s-verd{background:var(--verd-soft);border-color:var(--verd-outline);}
+  .stephead{appearance:none;width:100%;text-align:left;border:none;padding:11px 18px;display:flex;align-items:center;gap:11px;cursor:pointer;font-family:inherit;background:var(--ind);color:#fff;}
+  .step.s-gold .stephead{background:var(--gold);}
+  .step.s-verd .stephead{background:var(--verd);}
+  .stephead .num{font-family:var(--sans);font-weight:600;font-size:12px;background:rgba(255,255,255,.22);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .stephead h2{font-family:var(--display);font-weight:700;font-size:16.5px;color:#fff;margin:0;flex:1;}
+  .stephead .info{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border:1.3px solid rgba(255,255,255,.8);border-radius:50%;font-family:var(--sans);font-size:11px;color:#fff;flex:0 0 auto;}
+  .stephead:focus-visible{outline:3px solid rgba(255,255,255,.6);outline-offset:-3px;}
+  .stepdef{display:none;font-size:14.5px;line-height:1.55;color:var(--muted);padding:12px 17px;border-bottom:1px solid var(--outline);background:rgba(255,255,255,.5);}
+  .stepdef.show{display:block;}
+  .opts{padding:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:11px;}
+  .opt{border:1.4px solid var(--outline);border-radius:12px;padding:12px 15px;cursor:pointer;background:#fff;transition:border-color .12s,box-shadow .12s,background .12s;}
+  .opt:hover{border-color:var(--ind);}
+  .step.s-gold .opt:hover{border-color:var(--gold);}
+  .step.s-verd .opt:hover{border-color:var(--verd);}
+  .opt:focus-visible{outline:none;border-color:var(--ind);box-shadow:0 0 0 3px rgba(69,18,116,.18);}
+  .opt .who{font-family:var(--display);font-weight:700;font-size:15.5px;margin-bottom:3px;}
+  .opt .txt{font-size:15px;color:var(--muted);line-height:1.4;}
+  .opt.sel{border-color:var(--ind);background:var(--ind-soft);box-shadow:0 0 0 2px var(--ind) inset;}
+  .opt.sel .who{color:var(--ind-ink);}
+  .step.s-gold .opt.sel{border-color:var(--gold);background:var(--gold-soft);box-shadow:0 0 0 2px var(--gold) inset;}
+  .step.s-gold .opt.sel .who{color:var(--gold-ink);}
+  .step.s-verd .opt.sel{border-color:var(--verd);background:var(--verd-soft);box-shadow:0 0 0 2px var(--verd) inset;}
+  .step.s-verd .opt.sel .who{color:var(--verd-ink);}
+  .steptrans{display:none;margin:0 14px 14px;padding:11px 15px;border-radius:11px;font-size:15px;line-height:1.5;background:var(--ind-soft);color:var(--ind-ink);}
+  .step.s-gold .steptrans{background:var(--gold-soft);color:var(--gold-ink);}
+  .step.s-verd .steptrans{background:var(--verd-soft);color:var(--verd-ink);}
+  .steptrans.show{display:block;}
+  .steptrans b{font-family:var(--sans);font-size:12px;letter-spacing:.04em;text-transform:uppercase;font-weight:600;display:block;margin-bottom:3px;}
+  .out{margin-top:6px;background:#faf7fe;border:1.3px solid var(--outline);border-radius:15px;padding:18px 20px;display:none;}
+  .out.show{display:block;}
+  .out .oh{font-family:var(--sans);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ind);margin-bottom:9px;}
+  .out .sentence{font-size:19px;line-height:1.55;}
+  .out .sentence .pa{color:var(--ind);}
+  .out .sentence .pm{color:var(--gold-ink);}
+  .out .sentence .pv{color:var(--verd-ink);}
+  .why{margin-top:14px;background:var(--ind-soft);border-radius:12px;padding:13px 17px;font-size:15.5px;color:var(--ind-ink);line-height:1.5;}
+  .why b{font-family:var(--sans);font-size:12px;letter-spacing:.04em;text-transform:uppercase;font-weight:600;display:block;margin-bottom:4px;}
+  .foot{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+  .btn{appearance:none;font-family:var(--sans);font-size:14.5px;font-weight:600;border-radius:19px;padding:10px 22px;cursor:pointer;border:1.4px solid var(--ind);background:#fff;color:var(--ind);}
+  .btn.prim{background:var(--ind);color:#fff;}
+  .btn.prim[disabled]{opacity:.45;cursor:not-allowed;}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+</style>
+</head>
+<body>
+  <div class="slide">
+    <div class="tr">
+      <div>
+        <div class="eb">Exam skill &middot; Triangulation</div>
+        <h1>Build a triangulated argument</h1>
+      </div>
+      <div class="pill" id="pcount">0 of 3 chosen</div>
+    </div>
+    <p class="lead">Pick one source from each step. The strongest answers don&rsquo;t just cite, they set sources against each other and let physical evidence decide. Tap a step heading to see what it asks for.</p>
+
+    <div class="target">
+      <div class="tl">First, what are you arguing toward?</div>
+      <div class="qchips" id="qchips"></div>
+    </div>
+
+    <div class="step" data-step="a" id="step-a">
+      <button class="stephead" id="head-a" aria-expanded="false" aria-controls="def-a">
+        <span class="num">1</span><h2>The ancient claim</h2><span class="info" aria-hidden="true">i</span>
+      </button>
+      <div class="stepdef" id="def-a">A statement from a hostile ancient writer (Tacitus, Suetonius, Dio). This is your starting position, the view you will push against.</div>
+      <div class="opts" id="opts-a"></div>
+      <div class="steptrans" id="trans-a"></div>
+    </div>
+
+    <div class="step s-gold" data-step="m" id="step-m">
+      <button class="stephead" id="head-m" aria-expanded="false" aria-controls="def-m">
+        <span class="num">2</span><h2>The modern challenge</h2><span class="info" aria-hidden="true">i</span>
+      </button>
+      <div class="stepdef" id="def-m">A modern historian who reads the same evidence differently. This disagreement is where critical judgement shows.</div>
+      <div class="opts" id="opts-m"></div>
+      <div class="steptrans" id="trans-m"></div>
+    </div>
+
+    <div class="step s-verd" data-step="v" id="step-v">
+      <button class="stephead" id="head-v" aria-expanded="false" aria-controls="def-v">
+        <span class="num">3</span><h2>The adjudicator</h2><span class="info" aria-hidden="true">i</span>
+      </button>
+      <div class="stepdef" id="def-v">A physical source (coin, statue, inscription) that tips the balance, evidence the hostile writers could not spin.</div>
+      <div class="opts" id="opts-v"></div>
+      <div class="steptrans" id="trans-v"></div>
+    </div>
+
+    <div class="out" id="out">
+      <div class="oh">Your triangulated sentence</div>
+      <div class="sentence" id="sentence"></div>
+      <div class="why" id="why"></div>
+    </div>
+
+    <div class="foot">
+      <button class="btn" id="reset">Reset</button>
+      <button class="btn prim" id="cont" disabled>Continue</button>
+    </div>
+  </div>
+
+<script>
+(function(){
+  var QUESTIONS=[
+    {key:"influence",dir:"To what extent",text:"To what extent did Agrippina the Younger influence her time? (2021)",
+     gloss:"asks you to judge how far her influence actually reached and commit to a degree, not just describe it"},
+    {key:"legacy",dir:"Assess",text:"Assess the significance of Agrippina the Younger\u2019s legacy. (2022)",
+     gloss:"asks you to judge how significant her legacy was and reach a clear verdict"},
+    {key:"manoeuvres",dir:"Evaluate",text:"Evaluate the effectiveness of Agrippina\u2019s political manoeuvres. (2024)",
+     gloss:"asks you to judge how effective her manoeuvres were against criteria and reach a verdict"}
+  ];
+  var TRANS={
+    a:{lab:"What this move does",body:"You\u2019ve put the hostile case on the table. On its own it only echoes the ancient bias, so you haven\u2019t argued anything yet. You\u2019ve set up the claim that the rest of the sentence will test."},
+    m:{lab:"What this move does",body:"Now there\u2019s a genuine disagreement. Holding two readings against each other is where judgement begins, and it shows the examiner critical thinking. But a clash on its own still doesn\u2019t settle anything."},
+    v:{lab:"What this move does",body:"You\u2019ve brought in physical evidence the hostile writers couldn\u2019t shape. This is what lets you come down on one side with authority instead of just asserting it, which is what turns two opinions into a judgement."}
+  };
+  var OPTS={
+    a:[
+      {who:"Tacitus",txt:"a \u2018rigorous, almost masculine despotism\u2019",frag:"Tacitus dismisses her authority as a \u2018rigorous, almost masculine despotism\u2019"},
+      {who:"Tacitus",txt:"her power was mere \u2018illustrious bloodline\u2019",frag:"Tacitus reduces her power to a mere \u2018illustrious bloodline\u2019"},
+      {who:"Tacitus",txt:"the Guard should swear loyalty \u2018to herself, a woman\u2019",frag:"Tacitus records her demand that the Guard swear loyalty \u2018to herself, a woman\u2019"}
+    ],
+    m:[
+      {who:"Barrett",txt:"she \u2018transformed the regime of Claudius\u2019",frag:"yet Barrett reads the same reign as proof she \u2018transformed the regime of Claudius\u2019"},
+      {who:"Ginsburg",txt:"the charges are \u2018largely a literary construct\u2019",frag:"yet Ginsburg dismisses such charges as \u2018largely a literary construct\u2019"},
+      {who:"Ferrero",txt:"a \u2018respectable, active and energetic\u2019 steadying hand",frag:"yet Ferrero recasts her as a \u2018respectable, active and energetic\u2019 steadying hand"}
+    ],
+    v:[
+      {who:"Gemma Claudia",txt:"shows her as Claudius\u2019s equal",frag:"and the Gemma Claudia, showing her as Claudius\u2019s equal, tips the balance toward the revisionist reading"},
+      {who:"Sebasteion relief",txt:"she crowns Nero as his equal",frag:"and the Sebasteion relief, where she crowns Nero as his equal, tips the balance toward the revisionist reading"},
+      {who:"Imperial coinage",txt:"first living empress on official coins",frag:"and her place on official coinage, the first for a living empress, tips the balance toward the revisionist reading"}
+    ]
+  };
+  var chosen={a:null,m:null,v:null};
+  var qIndex=0;
+
+  function renderQ(){
+    var wrap=document.getElementById('qchips');wrap.innerHTML='';
+    QUESTIONS.forEach(function(q,i){
+      var c=document.createElement('div');
+      c.className='qchip'+(i===qIndex?' sel':'');
+      c.setAttribute('tabindex','0');c.setAttribute('role','button');
+      c.innerHTML='<b>'+q.dir+'</b> &middot; '+q.text;
+      function pick(){qIndex=i;renderQ();update();}
+      c.addEventListener('click',pick);
+      c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();}});
+      wrap.appendChild(c);
+    });
+  }
+  function renderStep(step){
+    var wrap=document.getElementById('opts-'+step);wrap.innerHTML='';
+    OPTS[step].forEach(function(o,i){
+      var el=document.createElement('div');
+      el.className='opt';el.setAttribute('tabindex','0');el.setAttribute('role','button');
+      el.innerHTML='<div class="who">'+o.who+'</div><div class="txt">'+o.txt+'</div>';
+      function pick(){
+        wrap.querySelectorAll('.opt').forEach(function(x){x.classList.remove('sel');});
+        el.classList.add('sel');chosen[step]=i;
+        var tr=document.getElementById('trans-'+step);
+        tr.innerHTML='<b>'+TRANS[step].lab+'</b>'+TRANS[step].body;
+        tr.classList.add('show');
+        update();
+      }
+      el.addEventListener('click',pick);
+      el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();}});
+      wrap.appendChild(el);
+    });
+  }
+  function count(){return ['a','m','v'].filter(function(s){return chosen[s]!==null;}).length;}
+  function update(){
+    document.getElementById('pcount').textContent=count()+' of 3 chosen';
+    if(count()===3){
+      var a=OPTS.a[chosen.a].frag,m=OPTS.m[chosen.m].frag,v=OPTS.v[chosen.v].frag;
+      document.getElementById('sentence').innerHTML='<span class="pa">'+a+',</span> <span class="pm">'+m+',</span> <span class="pv">'+v+'.</span>';
+      var q=QUESTIONS[qIndex];
+      document.getElementById('why').innerHTML='<b>How this answers the question</b>Read it back against \u201c'+q.text+'\u201d. The directive \u2018'+q.dir+'\u2019 '+q.gloss+'. Your sentence weighs a hostile claim against a modern reading and settles it with material evidence, which is a defensible judgement rather than a list. Open your paragraph with a sentence shaped like this and you are already answering.';
+      document.getElementById('out').classList.add('show');
+      document.getElementById('cont').disabled=false;
+    } else {
+      document.getElementById('out').classList.remove('show');
+      document.getElementById('cont').disabled=true;
+    }
+  }
+  ['a','m','v'].forEach(function(step){
+    renderStep(step);
+    var head=document.getElementById('head-'+step);
+    head.addEventListener('click',function(){
+      var def=document.getElementById('def-'+step);
+      var open=def.classList.toggle('show');
+      head.setAttribute('aria-expanded',open?'true':'false');
+    });
+  });
+  document.getElementById('reset').addEventListener('click',function(){
+    chosen={a:null,m:null,v:null};
+    ['a','m','v'].forEach(function(s){
+      renderStep(s);
+      document.getElementById('trans-'+s).classList.remove('show');
+      document.getElementById('def-'+s).classList.remove('show');
+      document.getElementById('head-'+s).setAttribute('aria-expanded','false');
+    });
+    update();
+  });
+  renderQ();
+  update();
+})();
+</script>
+</body>
+</html>
