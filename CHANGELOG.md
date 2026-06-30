@@ -8,6 +8,20 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Fixed
+- **imVideo + mhVideo (imperium + microhistory video slides): the play button + poster are no longer
+  dead.** The play affordance (`.tp-vplay` / `.tp-playbtn`) was decorative — no link, no handler — so
+  clicking did nothing despite the slide carrying the clip in `s.url`. It now carries
+  `data-tp-playembed="<toEmbed(s.url)>"` + `aria-label`, rendered active **only when `s.url` is set**
+  (the empty-state placeholder is unchanged). A permanent themed fallback link (`.tp-vlink`) is added
+  on each player to the raw `s.url` (`target="_blank" rel="noopener noreferrer"`, labelled from
+  `s.metaCta` or `Watch on YouTube ↗`) so blocked embeds (e.g. ClickView) stay reachable. `wirePack`
+  now wires `[data-tp-playembed]` (click + Enter/Space): it swaps the poster/still + fake controls for
+  an inline autoplay `<iframe>` (`allow="autoplay; fullscreen"`, `allowfullscreen`) filling the same
+  player frame; an empty embed falls through to opening `s.url` in a new tab, and the fallback link is
+  kept in place after the swap. Reuses the existing `toEmbed`/`tpVideoPoster`/`tpSrc`/`tpImg` helpers;
+  the iframe `src` is built at runtime from lesson data (no new third-party host — `validate` green).
+  geolearn (`glVideo`) and all other renderers are byte-identical. Verified by render in both themes
+  (poster→play swap; fallback link reachable before and after).
 - **packText (imperium text slides): sidebar image container is always shown + expandable; NOTE box
   renders its body (and disappears when empty).** (1) The sidebar IMAGE container now renders on every
   text slide — the image when present (with a `tpZoomBtn` affordance + `tpFocusImage` overlay to view
