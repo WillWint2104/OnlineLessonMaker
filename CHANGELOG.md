@@ -48,8 +48,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   stand-in still (via `tpMedia(s,'interactive',{…,affordance:false})`, placeholder when empty) + an
   "Open the interactive ↗" launch link (`s.launchLabel`, only when `s.url` set) + a numbered "How to
   use this interactive" steps list — but wears the pack chrome (`packHead`/`packFoot`, the shared
-  `.tp-sa-*` header + `.tp-i*` layout). It does **not** embed a live iframe; the launch link replaces
-  in-slide embedding (firewall-safe). `s.questions[]` render as type-and-reveal tasks reusing
+  `.tp-sa-*` header + `.tp-i*` layout). Two modes: **LAUNCH** (default) shows the stand-in still + the
+  launch link (firewall-safe — no live iframe); **EMBED** (`s.embed === true`, with `s.url`) plays the
+  activity inline in a generously-sized iframe (full-width, `min-height:560px`, `sandbox`/`loading=lazy`/
+  `referrerpolicy=no-referrer`) so light activities (sorter, sentence-builder) run in place, with the same
+  launch link beneath as a fallback when the embed is blocked. The iframe `src` is built at runtime from
+  same-origin lesson data, so no third-party host is added (`validate` green). `s.questions[]` render as type-and-reveal tasks reusing
   `packSourceAnalysis`'s task markup (`data-tp-block`/`-field`/`-reveal`/`-model`), so the existing
   `wirePackTyped` reveal logic drives them with **no new wiring**. Registered under `interactive` in
   both `IM_PACK` and `MH_PACK`. Microhistory reuses its existing `.tp-i*` CSS; a parallel imperium
