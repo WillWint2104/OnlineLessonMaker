@@ -41,6 +41,22 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   image-bearing packSourceAnalysis source).
 
 ### Added
+- **interactive slide type now renders in imperium + microhistory (shared `packInteractive`).** Both
+  themes previously had no `interactive` renderer, so those slides fell through to `packFallback`
+  ("not yet available in this theme") — microhistory's `mhInteractive` also tried to cram a live
+  iframe into a small box. New shared `packInteractive` mirrors geolearn's `glInteractive` pattern — a
+  stand-in still (via `tpMedia(s,'interactive',{…,affordance:false})`, placeholder when empty) + an
+  "Open the interactive ↗" launch link (`s.launchLabel`, only when `s.url` set) + a numbered "How to
+  use this interactive" steps list — but wears the pack chrome (`packHead`/`packFoot`, the shared
+  `.tp-sa-*` header + `.tp-i*` layout). It does **not** embed a live iframe; the launch link replaces
+  in-slide embedding (firewall-safe). `s.questions[]` render as type-and-reveal tasks reusing
+  `packSourceAnalysis`'s task markup (`data-tp-block`/`-field`/`-reveal`/`-model`), so the existing
+  `wirePackTyped` reveal logic drives them with **no new wiring**. Registered under `interactive` in
+  both `IM_PACK` and `MH_PACK`. Microhistory reuses its existing `.tp-i*` CSS; a parallel imperium
+  `.tp-i*` block (rounded cards, pill launch, serif questions heading) was added, both scoped to
+  `[data-tp-type="interactive"]`. geolearn's `glInteractive`/`GL_PACK` left exactly as-is. Verified by
+  render in both themes (no fallback; preview/launch/steps/questions present; reveal gating works;
+  graceful with none of url/steps/questions). `validate` green.
 - **Imperium pack: "view larger" (focus overlay) on image-bearing slides.** `imImageText`,
   `imInfographic` (map), `imVideo` (poster/still), `imOutcomes` and `imKnowledge` (artifact) now
   show a small zoom affordance over their image that opens the image enlarged in the **existing pack

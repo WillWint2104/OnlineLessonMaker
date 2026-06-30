@@ -2307,6 +2307,28 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 /* full-width questions block beneath the embed row (reuses .tp-tasks/.tp-task question cards) */
 :root[data-theme="microhistory"] .tp-iqs{margin-top:28px;border-top:2px solid var(--on-surface);padding-top:24px;}
 :root[data-theme="microhistory"] .tp-iqs-h{font-family:var(--tp-mono);font-weight:700;font-size:20px;line-height:1.1;text-transform:uppercase;color:var(--on-surface);margin-bottom:14px;}
+:root[data-theme="microhistory"] .tp-slide[data-tp-type="interactive"] .tp-iembed{--media-ph-ink:var(--on-surface-variant);}   /* legible cube/label placeholder on the light embed frame (packInteractive uses tpMedia's own placeholder) */
+/* imperium · interactive — shared packInteractive wearing imperium chrome (rounded soft cards, pill launch,
+   serif questions heading). geolearn keeps glInteractive; these only style data-tp-type="interactive". */
+:root[data-theme="imperium"] .tp-slide[data-tp-type="interactive"] .tp-main{justify-content:flex-start;}
+:root[data-theme="imperium"] .tp-iwrap{width:100%;max-width:1000px;margin:0 auto;display:flex;flex-direction:column;min-height:100%;}
+:root[data-theme="imperium"] .tp-introw{display:grid;grid-template-columns:1.55fr 1fr;gap:24px;align-items:start;}
+:root[data-theme="imperium"] .tp-iembed{position:relative;aspect-ratio:16/9;min-width:0;background:var(--surface-container);border:1px solid var(--outline-variant);border-radius:16px;overflow:hidden;--media-ph-ink:var(--on-surface-variant);}
+:root[data-theme="imperium"] .tp-iembed .tp-media-img{object-fit:contain;background:var(--surface-container);}
+:root[data-theme="imperium"] .tp-iframetag{position:absolute;top:12px;left:12px;z-index:4;display:inline-flex;align-items:center;gap:6px;background:var(--primary);color:var(--on-primary);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:9999px;}
+:root[data-theme="imperium"] .tp-iguide{display:flex;flex-direction:column;gap:14px;min-width:0;}
+:root[data-theme="imperium"] .tp-ilead{font-size:15px;line-height:1.6;color:var(--on-surface-variant);}
+:root[data-theme="imperium"] .tp-igtitle{font-size:13px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);}
+:root[data-theme="imperium"] .tp-isteps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;}
+:root[data-theme="imperium"] .tp-isteps li{display:flex;gap:11px;align-items:flex-start;}
+:root[data-theme="imperium"] .tp-isn{flex-shrink:0;width:24px;height:24px;border:2px solid var(--primary-container);background:var(--primary-fixed);color:var(--primary);font-weight:700;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;border-radius:9999px;margin-top:1px;}
+:root[data-theme="imperium"] .tp-isteps h4{font-size:14px;font-weight:700;color:var(--on-surface);margin-bottom:2px;}
+:root[data-theme="imperium"] .tp-isteps p{font-size:13.5px;line-height:1.5;color:var(--on-surface-variant);}
+:root[data-theme="imperium"] .tp-ilaunch{display:inline-flex;align-items:center;gap:9px;align-self:flex-start;background:var(--primary);color:var(--on-primary);border:none;border-radius:9999px;padding:11px 20px;font-weight:600;font-size:14px;letter-spacing:.02em;text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.18);}
+:root[data-theme="imperium"] .tp-ilaunch .li{display:flex;}
+:root[data-theme="imperium"] .tp-iemeta{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--on-surface-variant);}
+:root[data-theme="imperium"] .tp-iqs{margin-top:28px;border-top:1px solid var(--outline-variant);padding-top:24px;}
+:root[data-theme="imperium"] .tp-iqs-h{font-family:var(--tp-serif);font-weight:700;font-size:24px;line-height:1.1;color:var(--primary);margin-bottom:14px;}
 :root[data-theme="microhistory"] .tp-tmh,:root[data-theme="microhistory"] .tp-pmh{font-family:var(--tp-mono);}
 :root[data-theme="microhistory"] .tp-hint{background:var(--surface-container-highest);border:2px dashed var(--outline);}
 :root[data-theme="microhistory"] .tp-gr-card{background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--ink);}
@@ -4596,8 +4618,50 @@ function mhInteractive(s){
     </div></main>`
     +mhFoot(s.cta||'Continue');
 }
-const IM_PACK={ title:imTitle, outcomes:imOutcomes, imageText:imImageText, text:packText, infographic:imInfographic, video:imVideo, knowledgeCheck:imKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:packGuidedResponse, outro:packOutro };
-const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:mhText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:mhGuided, interactive:mhInteractive, outro:packOutro };
+/* SHARED interactive renderer for imperium + microhistory (geolearn keeps its own glInteractive).
+   Mirrors glInteractive's approach — a stand-in still + an "Open the interactive ↗" launch link +
+   how-to steps, NOT a live in-slide iframe — but wears the pack chrome (packHead/packFoot, the shared
+   .tp-sa-* header + .tp-i* layout + .tp-tasks question cards used by the other pack types). Reuses
+   tpMedia (still/placeholder), the .tp-ilaunch anchor pattern, and the reveal-model task markup from
+   packSourceAnalysis (data-tp-block/-field/-reveal/-model → driven by the existing wirePackTyped, so
+   no new wiring). Registered under `interactive` in BOTH IM_PACK and MH_PACK. */
+function packInteractive(s){
+  const url=(s.url||'').trim();
+  const steps=Array.isArray(s.steps)?s.steps:(Array.isArray(s.features)?s.features:[]);
+  const stepHtml=steps.length?`<ol class="tp-isteps">${steps.map((x,k)=>{ const o=typeof x==='string'?{description:x}:x; return `<li><span class="tp-isn">${k+1}</span><div>${o.title?`<h4>${esc(o.title)}</h4>`:''}<p>${esc(o.description||o.body||o.text||'')}</p></div></li>`; }).join('')}</ol>`:'';
+  const questions=Array.isArray(s.questions)?s.questions:[];   // type-and-reveal tasks beneath the embed row — reuse packSourceAnalysis's task markup so the shared reveal JS drives them (no new wiring)
+  const qBlock=questions.length?`<div class="tp-iqs"><h2 class="tp-iqs-h">${esc(s.questionsLabel||'Questions')}</h2><ol class="tp-tasks">${questions.map((q,k)=>{ const fid='iq'+k, num=esc(q.numeral||String(k+1));
+    return `<li class="tp-task" data-tp-block><div class="tp-thead"><span class="tp-tnum">${num}</span><div class="tp-tlead">
+        <label class="tp-tq" for="${fid}-ta">${esc(q.question||'')}</label>
+        ${(q.marks||q.skill)?`<div class="tp-tmeta">${q.marks?`<span class="tp-marks">${esc(q.marks)}</span>`:''}${q.skill?`<span class="tp-skill">${esc(q.skill)}</span>`:''}</div>`:''}</div></div>
+      <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="Question ${num}${q.skill?': '+esc(q.skill):''} — your response" placeholder="Type your response..."></textarea>
+      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="question ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button></div>
+      <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model answer for question ${num}"><div class="tp-tmh">${tpIc('check',14)} Model answer${q.skill?' · '+esc(q.skill):''}</div><p>${esc(q.model||'')}</p></div></li>`;
+  }).join('')}</ol></div>`:'';
+  const still=tpSrc(s.still||s.screenshot||s.image);
+  const frame=tpMedia(s,'interactive',{fit:'contain',phIcon:'cube',phLabel:s.embedLabel||'Interactive',affordance:false})
+    +(still?`<span class="tp-iframetag">${tpIc('cube',14)} Interactive preview</span>`:'');
+  return tpLive()+packHead(s,tpProg(s,55))
+    +`<main class="tp-main tp-scrollmain"><div class="tp-iwrap">
+      <span class="tp-scrollnote">Scrolls within the slide · content-heavy types only</span>
+      <div class="tp-sa-ey"><span class="rule"></span><span>${esc(s.eyebrow||s.moduleLabel||'Interactive')}</span></div>
+      <h1 class="tp-sa-h1 tp-serif">${esc(s.title||'Interactive activity')}</h1>
+      <div class="tp-introw">
+        <div class="tp-iembed">${frame}</div>
+        <div class="tp-iguide">
+          ${glHas(s.lead||s.desc)?`<p class="tp-ilead">${esc(s.lead||s.desc)}</p>`:''}
+          ${steps.length?`<div class="tp-igtitle">How to use this interactive</div>${stepHtml}`:''}
+          ${url?`<a class="tp-ilaunch" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(s.launchLabel||'Open the interactive ↗')} <span class="li">${tpIc('external',16)}</span></a>`:''}
+          ${glHas(s.meta)?`<div class="tp-iemeta">${tpIc('clock',14)} ${esc(s.meta)}</div>`:''}
+          ${(glHas(s.lead||s.desc)||steps.length||url||glHas(s.meta))?'':`<p class="tp-ilead">${esc(questions.length?'Explore the interactive, then complete the questions below.':'Open the interactive to explore this activity.')}</p>`}
+        </div>
+      </div>
+      ${qBlock}
+    </div></main>`
+    +packFoot(s,s.cta||'Continue');
+}
+const IM_PACK={ title:imTitle, outcomes:imOutcomes, imageText:imImageText, text:packText, infographic:imInfographic, video:imVideo, knowledgeCheck:imKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:packGuidedResponse, interactive:packInteractive, outro:packOutro };
+const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:mhText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:mhGuided, interactive:packInteractive, outro:packOutro };
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
