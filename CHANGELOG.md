@@ -8,6 +8,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Fixed
+- **Editor: the Links panel now covers `interactive` and `sourceAnalysis` slides (not just `video`), and
+  source slides gain an optional source link.** Extends #83's inspector **Links** panel via
+  `PACK_LINK_SLOTS`: `interactive` slides get **Interactive / activity link** (`s.url`) + **Launch button
+  label** (`s.launchLabel`) — both already consumed by `packInteractive`/`glInteractive`, so pasting a link
+  makes the launch button appear live; `sourceAnalysis` slides get **Source link** (`s.sourceUrl`) +
+  **Source link label** (`s.sourceCta`). To make the source field meaningful, `packSourceAnalysis`
+  (imperium + microhistory) now renders an opt-in "View source online ↗" link in the source panel when
+  `s.sourceUrl` is set — **byte-identical when unset**. geolearn is untouched: its `glSource` has no
+  source-link slot, so the Source-link field is suppressed for the geolearn theme and no geolearn output
+  changes. All link bindings stay top-level (setP doesn't create missing parents). New: per-slot
+  placeholder text and the shared `.tp-srclink` link style.
 - **Editor: the video inspector can now attach the video link + watch button.** A new **Links** panel
   (parallel to the Images panel, and always shown for the current pack slide type) gives the video slide
   two fields — **Video link** (`s.url`, feeds `toEmbed` + `tpVideoPoster`) and **Watch button label**
@@ -25,7 +36,6 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `.tp-slide` flow height (it is `position:absolute`/`height:100%` in a fixed board) and drop the inner
   `.tp-main`/`.gl-main` scroll clip. **Present / Study / Export never take this path**, so published
   rendering is byte-identical for all three themes.
-
 - **Microhistory video: watch-link no longer collides with the "Video still placeholder" label.** `.tp-vlink`
   and `.tp-vph` both sat `top:14px;left:14px`, so a posterless video rendered the "Watch on YouTube" button
   on top of the placeholder label. `.tp-vlink` now sits **top-right** (`right:14px`, no `left`) so it can
