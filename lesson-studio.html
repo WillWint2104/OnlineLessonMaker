@@ -2364,21 +2364,34 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 /* ===== Reading accessibility (MICROHISTORY ONLY) ===== */
 /* PART A — larger body + secondary reading text. All microhistory-scoped; overrides the earlier
    microhistory sizes by cascade (same specificity, declared later). imperium/geolearn unaffected. */
-:root[data-theme="microhistory"] .tp-prose p{font-size:19px;line-height:1.6;}
-:root[data-theme="microhistory"] .tp-comp p{font-size:19px;line-height:1.6;}
+:root[data-theme="microhistory"] .tp-prose p{font-size:20px;line-height:1.6;}
+:root[data-theme="microhistory"] .tp-comp p{font-size:20px;line-height:1.6;}
 :root[data-theme="microhistory"] .tp-ctx p,
 :root[data-theme="microhistory"] .tp-itnote p,
 :root[data-theme="microhistory"] .tp-supcard p,
 :root[data-theme="microhistory"] .tp-foot-c p,
 :root[data-theme="microhistory"] .tp-insight blockquote,
-:root[data-theme="microhistory"] .tp-plate{font-size:17px;line-height:1.6;}
-:root[data-theme="microhistory"] .tp-artfig .tp-pl-cap{font-size:17px;}
+:root[data-theme="microhistory"] .tp-plate{font-size:18px;line-height:1.6;}
+:root[data-theme="microhistory"] .tp-artfig .tp-pl-cap{font-size:18px;}
+/* CHANGE 2 — larger in-slide reading text on microhistory sourceAnalysis + guidedResponse (shared
+   renderers; sizing applied via microhistory-scoped CSS only, so imperium stays byte-identical).
+   Skill/marks labels (.tp-marks/.tp-skill) intentionally stay smaller. */
+:root[data-theme="microhistory"] .tp-transcript p,
+:root[data-theme="microhistory"] .tp-tq,
+:root[data-theme="microhistory"] .tp-tmodel p,
+:root[data-theme="microhistory"] .tp-sa-lead,
+:root[data-theme="microhistory"] .tp-gqtext,
+:root[data-theme="microhistory"] .tp-gstim p,
+:root[data-theme="microhistory"] .tp-plabel,
+:root[data-theme="microhistory"] .tp-pguide{font-size:20px;line-height:1.6;}
+:root[data-theme="microhistory"] .tp-flarge .tp-fmodel{color:var(--on-surface-variant);}
+:root[data-theme="microhistory"] .tp-flarge .tp-fmodel b{color:var(--primary);}
 /* PART B — per-page "Focus reading" LARGE-PRINT overlay (mhText/mhImageText). Reuses the shared
    .tp-overlay/.tp-fpanel/.tp-fclose chrome + the shared data-tp-focus-open/close handler. */
 :root[data-theme="microhistory"] .tp-fpanel-read{max-width:980px;}
 :root[data-theme="microhistory"] .tp-fread-h{font-family:var(--tp-mono);font-size:28px;line-height:1.2;color:var(--on-surface);margin:2px 0 20px;}
 :root[data-theme="microhistory"] .tp-flarge{max-width:none;}
-:root[data-theme="microhistory"] .tp-flarge p{font-size:30px;line-height:1.7;color:var(--on-surface);margin-bottom:22px;}
+:root[data-theme="microhistory"] .tp-flarge p{font-size:32px;line-height:1.7;color:var(--on-surface);margin-bottom:22px;}
 :root[data-theme="microhistory"] .tp-flarge h3{font-family:var(--tp-mono);font-size:19px;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin:10px 0 8px;}
 
 </style>
@@ -4531,7 +4544,8 @@ function mhGuided(s){
   const pills=Array.isArray(s.pills)?s.pills:[];
   const pillHtml=pills.length?`<div class="tp-gpills">${pills.map(p=>{const o=typeof p==='string'?{label:p}:p;return `<span class="tp-gpill">${o.icon?`<span class="pi">${tpIc(o.icon,14)}</span>`:''}${esc(o.label||'')}</span>`;}).join('')}</div>`:'';
   const qbox=`<div class="tp-gq"><div class="tp-gqhead"><span class="tp-gqlabel">${esc(s.eyebrow||'Exam-style question')}</span>${s.marks?`<span class="tp-marks">${esc(s.marks)}</span>`:''}</div><div class="tp-gqtext">${tpRich(s.question||'')}</div>${stim?`<div class="tp-gstim"><div class="tp-gstiml">${esc(stim.label||'Stimulus')}</div><p>${esc(stim.text||'')}</p></div>`:''}</div>`;
-  const header=`<span class="tp-mhchip">${esc(s.kicker||s.moduleLabel||'Extended Response')}</span><h1 class="tp-htitle2">${esc(s.title||'Guided Response')}</h1><div class="tp-ubar"></div>${pillHtml}`;
+  const focusBtn=s.question?`<button class="tp-focusbtn tp-focusread" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:'';
+  const header=`<span class="tp-mhchip">${esc(s.kicker||s.moduleLabel||'Extended Response')}</span><h1 class="tp-htitle2">${esc(s.title||'Guided Response')}</h1><div class="tp-ubar"></div>${pillHtml}${focusBtn}`;
   const critOf=(crit,lbl)=>crit.length?`<div class="tp-gcrit"><div class="tp-gcrit-h">${tpIc('list',16)} ${esc(lbl||'What earns marks')}</div><ul>${crit.map(c=>`<li><span class="ci">${tpIc('check',14)}</span>${esc(typeof c==='string'?c:(c.text||''))}</li>`).join('')}</ul></div>`:'';
   if(mode==='extended'){
     const paras=Array.isArray(s.paragraphs)?s.paragraphs:[];
@@ -4549,6 +4563,7 @@ function mhGuided(s){
         ${header}
         <div class="tp-gcard">${qbox}<div class="tp-gscaffold">${esc(s.scaffoldLabel||'Build your response paragraph by paragraph')}</div>${body}${critOf(crit,s.criteriaLabel)}</div>
       </div></main>`
+      +(s.question?mhReadOverlay(s.title||'Extended response',`<h3>Question${s.marks?' · '+esc(s.marks):''}</h3><p>${tpRich(s.question||'')}</p>${stim?`<h3>${esc(stim.label||'Stimulus')}</h3><p>${esc(stim.text||'')}</p>`:''}${paras.map((p,k)=>`<h3>${esc(p.label||('Paragraph '+(k+1)))}</h3>${p.guide?`<p>${esc(p.guide)}</p>`:''}${p.model?`<p class="tp-fmodel"><b>Model:</b> ${tpRich(p.model)}</p>`:''}`).join('')}`):'')
       +mhFoot(s.cta||'Continue');
   }
   /* short fallback */
@@ -4564,6 +4579,7 @@ function mhGuided(s){
         <div class="tp-tmodel" id="gp0-model" data-tp-model role="region" aria-label="Model answer"><div class="tp-tmh">${tpIc('check',14)} Model answer</div><p>${tpRich(model)}</p>${critOf(crit)}</div>
       </div>
     </div></main>`
+    +(s.question?mhReadOverlay(s.title||'Guided response',`<h3>Question${s.marks?' · '+esc(s.marks):''}</h3><p>${tpRich(s.question||'')}</p>${stim?`<h3>${esc(stim.label||'Stimulus')}</h3><p>${esc(stim.text||'')}</p>`:''}${model?`<p class="tp-fmodel"><b>Model:</b> ${tpRich(model)}</p>`:''}`):'')
     +mhFoot(s.cta||'Continue');
 }
 /* MICROHISTORY article text page — two-column prose + rich sidebar, WW1-skinned. A microhistory-only
@@ -4785,6 +4801,14 @@ function tpFocusOverlay(eyebrow,question,stimLabel,stimText){
       ${eyebrow?`<div class="tp-fey">${esc(eyebrow)}</div>`:''}<p class="tp-fq">${esc(question||'')}</p>
       ${stimText?`<div class="tp-fstiml">${esc(stimLabel||'Stimulus')}</div><p class="tp-fstim">${esc(stimText)}</p>`:''}</div></div>`;
 }
+/* Microhistory-only LARGE-PRINT "Focus reading" overlay presenting the full working content students
+   read (source transcript + tasks/models, or the essay question + stimulus + scaffold/models). Reuses
+   the shared .tp-overlay/.tp-fpanel/.tp-fclose chrome + the .tp-flarge large-print class + the shared
+   data-tp-focus-open/close handler — no new JS. Emitted ONLY for microhistory (imperium keeps
+   tpFocusOverlay, so imperium output stays byte-identical). */
+function mhReadOverlay(title, inner){
+  return `<div class="tp-overlay" data-tp-overlay role="dialog" aria-modal="true" aria-label="Focus reading" hidden><div class="tp-fpanel tp-fpanel-read"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close focus reading">${tpIc('close',20)}</button><div class="tp-fstiml">${tpIc('focus',14)} Focus reading</div><h2 class="tp-fread-h">${esc(title||'Reading')}</h2><div class="tp-flarge">${inner}</div></div></div>`;
+}
 /* image "view larger": a small affordance over an image container + an image-bearing variant of the
    pack focus overlay. Reuses the existing data-tp-focus-open → data-tp-overlay handler (wirePackTyped,
    content-agnostic) — no new lightbox, no handler change. Emitted ONLY by image-bearing imperium pack
@@ -4818,7 +4842,7 @@ function packSourceAnalysis(s,i){
         <div class="tp-sa-lh"><div>${s.eyebrow?`<div class="tp-sa-ey"><span class="rule"></span><span>${esc(s.eyebrow)}</span></div>`:''}
             <h1 class="tp-sa-h1 tp-serif">${esc(s.title||'')}</h1>
             <div class="tp-sa-meta">${s.tag?`<span class="tp-sa-tag">${tpIc('doc',14)} ${esc(s.tag)}</span>`:''}${s.time?`<span class="tp-sa-mtime">${tpIc('clock',14)} ${esc(s.time)}</span>`:''}</div></div>
-          ${(src.transcript||tpHasImg(src.image))?`<button class="tp-focusbtn" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}</div>
+          ${(((LESSON.meta&&LESSON.meta.theme)==='microhistory'?(src.transcript||tpHasImg(src.image)||tasks.length):(src.transcript||tpHasImg(src.image))))?`<button class="tp-focusbtn" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}</div>
         <div class="tp-sa-grid${hasArt?'':' tp-sa-noart'}">
           ${hasArt?`<div class="tp-srccol">
             <div class="tp-sa-srcwrap"><div class="tp-srcframe" tabindex="0" role="group" aria-label="${esc(src.label||'Source')} image">
@@ -4835,7 +4859,9 @@ function packSourceAnalysis(s,i){
         </div>
       </div></main>`
     +packFoot(s,s.cta||'Continue')
-    +tpFocusOverlay(fEy, s.focusQuestion||'Analyse the source, applying the source-analysis skills indicated for each task.', src.label?('Transcript · '+(src.label)):'Transcript', src.transcript||'');
+    +((LESSON.meta&&LESSON.meta.theme)==='microhistory'
+        ? mhReadOverlay(s.title||'Source analysis', `${src.transcript?`<h3>Transcript${src.label?' · '+esc(src.label):''}</h3><p>${esc(src.transcript)}</p>`:''}${tasks.map((t,j)=>`<h3>Task ${esc(t.numeral||String(j+1))}${t.marks?' · '+esc(t.marks):''}</h3><p>${esc(t.question||'')}</p>${t.model?`<p class="tp-fmodel"><b>Model answer:</b> ${esc(t.model)}</p>`:''}`).join('')}`)
+        : tpFocusOverlay(fEy, s.focusQuestion||'Analyse the source, applying the source-analysis skills indicated for each task.', src.label?('Transcript · '+(src.label)):'Transcript', src.transcript||''));
 }
 
 /* ---------- guidedResponse (short + extended; shared DOM, theme via CSS) ---------- */
