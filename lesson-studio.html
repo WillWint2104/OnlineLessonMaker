@@ -3603,7 +3603,7 @@ function linksSection(i,s){
     return `<div class="ig"><label for="${id}">${esc(label)}</label><input class="ii" id="${id}" type="text"${kind==='url'?' inputmode="url" autocomplete="off" spellcheck="false"':''} placeholder="${esc(phv)}" value="${esc(v==null?'':String(v))}" data-bind="${p}"></div>`;
   }).join('');
   return `<div class="isec"><div class="isec-h">Links</div>
-    <div class="muted small">Paste a link — the slide's player / launch button updates live.</div>
+    <div class="muted small">Paste a link — it appears live on the slide.</div>
     ${rows}</div>`;
 }
 function renderInspector(){
@@ -5023,7 +5023,8 @@ function packSourceAnalysis(s,i){
   const src=s.source||{};
   const prov=Array.isArray(s.provenance)?s.provenance:[];
   const tasks=Array.isArray(s.tasks)?s.tasks:[];
-  const srcUrl=(s.sourceUrl||'').trim();                              // optional link to the original source online (set via the inspector Links panel); rendered only when present → byte-identical when unset
+  const srcRaw=(s.sourceUrl||'').trim();
+  const srcUrl=/^(https?:)?\/\//i.test(srcRaw)?srcRaw:'';             // optional link to the original source online (inspector Links panel); only an absolute http(s)/protocol-relative link is rendered — mirrors sourceFallback(), blocking javascript:/data: hrefs and bare relative strings. Rendered only when present → byte-identical when unset
   const hasArt=tpHasImg(src.image)||!!src.transcript||prov.length>0||!!srcUrl;   // collapse to a single task column when there's nothing to show in the source panel (no image, transcript, provenance or link) — avoids an empty placeholder box
   const provHtml=prov.map(p=>`<div class="tp-prow"><span class="pi">${tpIc(p.icon||'doc',18)}</span><div><span class="pk">${esc(p.label||'')}</span><span class="pv">${esc(p.value||'')}</span></div></div>`).join('');
   const themeMH=(LESSON.meta&&LESSON.meta.theme)==='microhistory';

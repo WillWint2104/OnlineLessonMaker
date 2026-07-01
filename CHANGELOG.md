@@ -15,7 +15,9 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   makes the launch button appear live; `sourceAnalysis` slides get **Source link** (`s.sourceUrl`) +
   **Source link label** (`s.sourceCta`). To make the source field meaningful, `packSourceAnalysis`
   (imperium + microhistory) now renders an opt-in "View source online ↗" link in the source panel when
-  `s.sourceUrl` is set — **byte-identical when unset**. geolearn is untouched: its `glSource` has no
+  `s.sourceUrl` is set to an **absolute http(s)/protocol-relative** URL (same allow-list guard as
+  `sourceFallback` — blocks `javascript:`/`data:` hrefs) — **byte-identical when unset**. geolearn is
+  untouched: its `glSource` has no
   source-link slot, so the Source-link field is suppressed for the geolearn theme and no geolearn output
   changes. All link bindings stay top-level (setP doesn't create missing parents). New: per-slot
   placeholder text and the shared `.tp-srclink` link style.
