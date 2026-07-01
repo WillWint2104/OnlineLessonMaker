@@ -11,26 +11,36 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 - **Microhistory reading accessibility (this theme only).** (A) Larger reading text: main body prose
   (`.tp-prose p`, `.tp-comp p`) → **~20px**; small secondary text (context paragraphs, captions, notes,
   footnotes, insight quotes) → **~18px**; and the reading-heavy **sourceAnalysis + guidedResponse**
-  reading text (transcript, task questions, model answers; essay question, stimulus, scaffold guidance,
-  paragraph models) → **~20px** — all via microhistory-scoped overrides (no shared/global size changed;
-  skill/marks chips stay small). Text/source/guided slides use `.tp-scrollmain`, so the larger text
-  scrolls rather than clips. (B) A per-page **"Focus reading" large-print mode** on `mhText`,
-  `mhImageText`, `packSourceAnalysis` and `mhGuided` (rendered only when the slide carries prose): a
-  `.tp-focusbtn[data-tp-focus-open]` opens a `role="dialog"` `[data-tp-overlay]` that re-presents the
-  **full working content students read** as **large print** (new `.tp-flarge`: **32px** / line-height 1.7,
-  filling a ~980px modal without overflow, high contrast) — for source: transcript + task questions +
-  model answers; for guided: essay question + stimulus + scaffold labels/guides + paragraph models.
-  It **reuses the existing shared focus open/close handler** (Esc / close-button / backdrop, focus
-  management) — no new JS wiring — plus `tpIc`, `tpRich`, and the microhistory-styled `.tp-focusbtn` /
-  `.tp-overlay` / `.tp-fpanel` chrome. Because `packSourceAnalysis` is **shared** with imperium, its fuller
-  overlay is emitted **theme-gated** (microhistory only); imperium keeps the exact `tpFocusOverlay`, so its
-  output stays **byte-identical**. `mhGuided` is microhistory-specific (imperium uses `packGuidedResponse`,
+  in-slide question text (transcript, task questions; essay question, stimulus, scaffold guidance) →
+  **~20px** — all via microhistory-scoped overrides (no shared/global size changed; skill/marks chips
+  stay small). Text/source/guided slides use `.tp-scrollmain`, so the larger text scrolls rather than
+  clips. (B) A per-page **"Focus reading" large-print mode** on `mhText` and `mhImageText` (rendered
+  only when the slide carries prose): a `.tp-focusbtn[data-tp-focus-open]` opens a `role="dialog"`
+  `[data-tp-overlay]` that re-presents the **prose students read** as **large print** (new `.tp-flarge`:
+  **32px** / line-height 1.7, filling a ~980px modal without overflow, high contrast), reusing the
+  existing shared focus open/close handler (Esc / close-button / backdrop, focus management). (C) For the
+  **question** slide types — **sourceAnalysis** (microhistory branch) and **guidedResponse** (`mhGuided`)
+  — each question container gets its own **"Focus"** button (`.tp-qfocusbtn[data-mhq-focus]`) that opens
+  a **per-question focus modal** (`[data-tp-qmodal]`) showing **one question at a time** at large print:
+  the question prompt + its source/scaffold context (transcript for source; essay question + stimulus for
+  guided) in a `.tp-qmctx` header, and the student's **actual answer card moved into the modal** — so the
+  **same textarea, reveal button, and reveal state** are used. The **model answer stays gated behind the
+  existing reveal control**: it never appears in any large-print view before its reveal fires — verified
+  by render test (open modal → question + answer box visible, model hidden; type + reveal → model shown).
+  This **replaces** an earlier whole-slide read overlay for questions that concatenated the entire slide
+  (including model answers) into one modal, which leaked the model pre-attempt. Modal wiring
+  (`wirePackTyped`) is a no-op when no `[data-tp-qmodal]` is present, so it never runs for imperium/geolearn.
+  Because `packSourceAnalysis` is **shared** with imperium, the per-question Focus buttons + modal are
+  emitted **theme-gated** (microhistory only); imperium keeps the exact `tpFocusOverlay`, so its output
+  stays **byte-identical**. `mhGuided` is microhistory-specific (imperium uses `packGuidedResponse`,
   left untouched). `mhInfographic` carries no sustained body prose, so it gets the size bumps but not the
   button. **imperium + geolearn renderers and CSS are byte-identical** — verified by a direct
   `renderPackSlide` comparison of imperium sourceAnalysis + all guidedResponse modes. New pieces: the
-  `.tp-flarge` large-print class, the `mhReadOverlay` markup helper, and the microhistory size overrides.
-  Verified by render (larger body text, no clipping; the button opens/closes the 32px large-print overlay
-  with the full content via the shared handler; 0 console errors).
+  `.tp-flarge` large-print class, the `mhQFocusBtn()` / `mhQModal()` per-question markup helpers, the
+  move-DOM per-question modal wiring in `wirePackTyped`, and the microhistory size overrides. Verified by
+  render (larger body text, no clipping; text/imageText open the 32px large-print overlay via the shared
+  handler; question Focus modals show one question + context + answer box with the model gated until reveal
+  fires, and Esc/close/backdrop restore the card to the slide; 0 console errors).
 
 ### Fixed
 - **imVideo + mhVideo (imperium + microhistory video slides): the play button + poster are no longer
