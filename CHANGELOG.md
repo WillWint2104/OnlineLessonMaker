@@ -7,6 +7,25 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **Microhistory video: watch-link no longer collides with the "Video still placeholder" label.** `.tp-vlink`
+  and `.tp-vph` both sat `top:14px;left:14px`, so a posterless video rendered the "Watch on YouTube" button
+  on top of the placeholder label. `.tp-vlink` now sits **top-right** (`right:14px`, no `left`) so it can
+  never overlap the top-left placeholder — the same fix already applied inside the #81 text media overlay.
+  Applies in **all modes**; on postered videos it's a cosmetic move (button top-right on the poster).
+  microhistory-only (imperium's own `.tp-vlink` is a separate rule, untouched).
+
+### Changed
+- **Microhistory video page: content-first Present layout.** In Present, `mhVideo` now runs the same
+  thin-chrome / hero-in-a-bordered-card pattern as the #81 text page: a slim header (eyebrow + title; the
+  date is dropped), the dossier player **card fills the board** with the player as the hero, and beneath it
+  the lead plus a **compact "watch for" strip** — the metadata rendered as slim inline key/value chips in a
+  bordered container (`.tp-vwatch`) instead of the boxed sticky `.tp-artside` sidebar. Single-column, no
+  dead column, and all content stays inside the card (never on bare `--canvas`). **Study is unchanged**
+  (still the boxed `.tp-artside` metadata panel) apart from the watch-link relocation above — verified
+  byte-identical `renderPackSlide` output. All Present rules are theme + `data-tp-type="video"` scoped, so
+  imperium/geolearn and the other microhistory slide types are untouched.
+
 ### Added
 - **Microhistory text page: typed media container + focus overlay (Study *and* Present).** A text slide
   can carry an optional `media:{ type:"image"|"video"|"interactive", src|url, poster?, still?, caption?,

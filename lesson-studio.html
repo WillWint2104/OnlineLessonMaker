@@ -1983,11 +1983,31 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-vctrl2{position:absolute;bottom:0;left:0;width:100%;padding:18px;display:flex;align-items:center;gap:20px;color:#fff;background:linear-gradient(to top,rgba(37,24,23,.8),transparent);z-index:5;}
 :root[data-theme="microhistory"] .tp-vscrub2{flex-grow:1;height:10px;background:rgba(225,194,153,.3);border-radius:9999px;overflow:hidden;} :root[data-theme="microhistory"] .tp-vscrub2>i{display:block;width:33%;height:100%;background:var(--primary-container);border-radius:9999px;}
 :root[data-theme="microhistory"] .tp-vtime2{font-size:12px;font-weight:600;white-space:nowrap;}
-:root[data-theme="microhistory"] .tp-vlink{position:absolute;top:14px;left:14px;z-index:7;display:inline-flex;align-items:center;gap:6px;padding:6px 11px;background:var(--primary-container);color:var(--on-surface);border:2px solid var(--on-surface);box-shadow:2px 2px 0 0 var(--on-surface);border-radius:4px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;}
+:root[data-theme="microhistory"] .tp-vlink{position:absolute;top:14px;right:14px;z-index:7;display:inline-flex;align-items:center;gap:6px;padding:6px 11px;background:var(--primary-container);color:var(--on-surface);border:2px solid var(--on-surface);box-shadow:2px 2px 0 0 var(--on-surface);border-radius:4px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;}   /* top-RIGHT so it never overlaps the top-left .tp-vph placeholder label */
 :root[data-theme="microhistory"] .tp-vlink:hover{transform:translate(1px,1px);box-shadow:1px 1px 0 0 var(--on-surface);}
 :root[data-theme="microhistory"] .tp-vcap{margin-top:20px;display:grid;grid-template-columns:2fr 1fr;gap:24px;border-top:1px solid var(--outline-variant);padding-top:20px;}
 :root[data-theme="microhistory"] .tp-vlead{font-size:18px;line-height:1.6;color:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-vquote{margin-top:12px;padding:12px;background:var(--surface-container-low);border-left:4px solid var(--primary);border-radius:8px;font-style:italic;font-size:16px;line-height:1.55;color:var(--on-surface-variant);}
+/* compact "watch for" strip — Present-only alternative to the boxed .tp-artside: a bordered dossier
+   container holding the metadata as slim inline key/value chips (never on bare --canvas). */
+:root[data-theme="microhistory"] .tp-vwatch{border:2px solid var(--on-surface);border-radius:8px;background:var(--surface);box-shadow:3px 3px 0 0 var(--on-surface);padding:12px 14px;}
+:root[data-theme="microhistory"] .tp-vwatch-h{display:inline-flex;align-items:center;gap:6px;font-family:var(--tp-mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin-bottom:10px;}
+:root[data-theme="microhistory"] .tp-vwatch-list{display:flex;flex-wrap:wrap;gap:8px 10px;}
+:root[data-theme="microhistory"] .tp-vwatch-item{display:inline-flex;align-items:baseline;gap:8px;background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:6px;padding:6px 11px;}
+:root[data-theme="microhistory"] .tp-vwatch-k{font-family:var(--tp-mono);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);}
+:root[data-theme="microhistory"] .tp-vwatch-v{font-size:14px;font-weight:600;color:var(--on-surface);}
+/* content-first PRESENT (microhistory video): thin header, hero player fills the board, lead + compact
+   watch-for strip beneath — all inside the dossier card. Theme + type scoped so imperium/geolearn and the
+   other microhistory types are untouched; the single-column .tp-vcap comes from the #80 present rule. */
+:root[data-theme="microhistory"] body.present .tp-slide[data-tp-type="video"] .tp-main{align-items:stretch;}
+:root[data-theme="microhistory"] body.present .tp-slide[data-tp-type="video"] .tp-wrap{max-width:none;flex:1 1 auto;min-height:0;justify-content:flex-start;}
+:root[data-theme="microhistory"] body.present .tp-slide[data-tp-type="video"] .tp-vcard2{max-width:1180px;width:100%;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;}
+:root[data-theme="microhistory"] body.present .tp-slide[data-tp-type="video"] .tp-vhead2{margin-bottom:12px;}
+:root[data-theme="microhistory"] body.present .tp-slide[data-tp-type="video"] .tp-vtitle2{font-size:26px;}
+:root[data-theme="microhistory"] body.present .tp-slide[data-tp-type="video"] .tp-vdate{display:none;}
+:root[data-theme="microhistory"] body.present .tp-slide[data-tp-type="video"] .tp-player{flex:1 1 auto;min-height:0;aspect-ratio:auto;}
+:root[data-theme="microhistory"] body.present .tp-slide[data-tp-type="video"] .tp-vcap{flex:0 0 auto;margin-top:14px;padding-top:14px;gap:14px;}
+:root[data-theme="microhistory"] body.present .tp-slide[data-tp-type="video"] .tp-vlead{font-size:20px;}
 :root[data-theme="microhistory"] .tp-artside{background:var(--surface);padding:12px;border:1px solid var(--outline-variant);border-radius:8px;display:flex;flex-direction:column;gap:10px;}
 :root[data-theme="microhistory"] .tp-artside h3{font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--secondary);border-bottom:1px solid var(--outline-variant);padding-bottom:8px;}
 :root[data-theme="microhistory"] .tp-mrow{display:flex;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.04em;} :root[data-theme="microhistory"] .tp-mrow .tp-mkey{color:var(--on-surface-variant);} :root[data-theme="microhistory"] .tp-mrow .tp-mv{color:var(--on-surface);font-weight:700;}
@@ -4061,10 +4081,15 @@ function mhInfographic(s){
 }
 
 function mhVideo(s){
+  const present=document.body.classList.contains('present');
   const meta=Array.isArray(s.metadata)?s.metadata:[];
   const mrows=meta.map(m=>`<div class="tp-mrow"><span class="tp-mkey">${esc(m.key||'')}</span><span class="tp-mv">${esc(m.value||'')}</span></div>`).join('');
   const poster=tpSrc(s.image)||tpVideoPoster(s);
   const url=(s.url||'').trim(), embed=toEmbed(url), watchLabel=s.metaCta||'Watch on YouTube ↗';
+  // watch-for: Study keeps the boxed .tp-artside metadata panel; Present shows the same rows as a COMPACT
+  // inline strip (chips) in a bordered container — content-first, no sticky sidebar box, no dead column.
+  const artsideBox=mrows?`<div class="tp-artside"><h3>${esc(s.metadataLabel||'Metadata')}</h3>${mrows}${s.metaCta?`<button class="tp-blueprint">${esc(s.metaCta)}</button>`:''}</div>`:'';
+  const watchStrip=meta.length?`<div class="tp-vwatch"><span class="tp-vwatch-h">${tpIc('film',13)} ${esc(s.metadataLabel||'Watch for')}</span><div class="tp-vwatch-list">${meta.map(m=>`<div class="tp-vwatch-item"><span class="tp-vwatch-k">${esc(m.key||'')}</span><span class="tp-vwatch-v">${esc(m.value||'')}</span></div>`).join('')}</div></div>`:'';
   return mhHead(s,tpProg(s,65))
     +`<main class="tp-main"><div class="tp-wrap" style="display:flex;flex-direction:column;align-items:center;">
       <div class="tp-vcard2">
@@ -4079,7 +4104,7 @@ function mhVideo(s){
         </div>
         <div class="tp-vcap">
           <div>${s.body?`<p class="tp-vlead">${esc(s.body)}</p>`:''}${s.quote?`<div class="tp-vquote">“${esc(s.quote)}”</div>`:''}</div>
-          ${mrows?`<div class="tp-artside"><h3>${esc(s.metadataLabel||'Metadata')}</h3>${mrows}${s.metaCta?`<button class="tp-blueprint">${esc(s.metaCta)}</button>`:''}</div>`:''}
+          ${present?watchStrip:artsideBox}
         </div>
       </div>
       ${(s.prev||s.next)?`<div class="tp-foots">${s.prev?`<button>${tpIc('arrowLeft',18)} ${esc(s.prev)}</button>`:'<span></span>'}<span class="ln"></span>${s.next?`<button>${esc(s.next)} ${tpIc('arrowRight',18)}</button>`:'<span></span>'}</div>`:''}
