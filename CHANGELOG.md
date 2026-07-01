@@ -7,6 +7,23 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Microhistory reading accessibility (this theme only).** (A) Larger reading text: the main body
+  prose (`.tp-prose p`, `.tp-comp p`) is raised to ~16.5px and the small secondary text (context
+  paragraphs, captions, notes, footnotes, insight quotes — previously ~12–14px) to ~16px, all via
+  microhistory-scoped overrides (no shared/global size changed). Text slides use `.tp-scrollmain`, so
+  the larger text scrolls rather than clips. (B) A per-page **"Focus reading" large-print mode** on
+  `mhText` and `mhImageText` (only when the slide carries body prose): a `.tp-focusbtn[data-tp-focus-open]`
+  opens a `role="dialog"` `[data-tp-overlay]` that re-presents the slide's prose as **large print**
+  (new `.tp-flarge`: 21px / line-height 1.75 / max-width 62ch, high contrast on the theme surface).
+  It **reuses the existing shared focus open/close handler** (Esc / close-button / backdrop, focus
+  management) — no new JS wiring — plus `tpIc`, `tpRich`, and the existing microhistory-styled
+  `.tp-focusbtn` / `.tp-overlay` / `.tp-fpanel` chrome. `mhInfographic` carries no sustained body prose,
+  so it gets the size bumps but not the button. imperium + geolearn renderers and CSS are byte-identical;
+  the only new pieces are the `.tp-flarge` large-print class and the microhistory size overrides.
+  Verified by render (larger body text, no clipping; button opens/closes the large-print overlay via the
+  shared handler; 0 console errors).
+
 ### Fixed
 - **imVideo + mhVideo (imperium + microhistory video slides): the play button + poster are no longer
   dead.** The play affordance (`.tp-vplay` / `.tp-playbtn`) was decorative — no link, no handler — so

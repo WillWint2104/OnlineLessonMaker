@@ -2361,6 +2361,25 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-obtn.primary{background:var(--primary);color:var(--on-primary);box-shadow:4px 4px 0 0 var(--ink);}
 :root[data-theme="microhistory"] .tp-obtn.ghost{background:var(--surface-lowest);color:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-o-footnote{font-family:var(--tp-mono);}
+/* ===== Reading accessibility (MICROHISTORY ONLY) ===== */
+/* PART A — larger body + secondary reading text. All microhistory-scoped; overrides the earlier
+   microhistory sizes by cascade (same specificity, declared later). imperium/geolearn unaffected. */
+:root[data-theme="microhistory"] .tp-prose p{font-size:16.5px;line-height:1.66;}
+:root[data-theme="microhistory"] .tp-comp p{font-size:16.5px;line-height:1.6;}
+:root[data-theme="microhistory"] .tp-ctx p,
+:root[data-theme="microhistory"] .tp-itnote p,
+:root[data-theme="microhistory"] .tp-supcard p,
+:root[data-theme="microhistory"] .tp-foot-c p,
+:root[data-theme="microhistory"] .tp-insight blockquote,
+:root[data-theme="microhistory"] .tp-plate{font-size:16px;line-height:1.6;}
+:root[data-theme="microhistory"] .tp-artfig .tp-pl-cap{font-size:15px;}
+/* PART B — per-page "Focus reading" LARGE-PRINT overlay (mhText/mhImageText). Reuses the shared
+   .tp-overlay/.tp-fpanel/.tp-fclose chrome + the shared data-tp-focus-open/close handler. */
+:root[data-theme="microhistory"] .tp-fpanel-read{max-width:900px;}
+:root[data-theme="microhistory"] .tp-fread-h{font-family:var(--tp-mono);font-size:26px;line-height:1.2;color:var(--on-surface);margin:2px 0 18px;}
+:root[data-theme="microhistory"] .tp-flarge{max-width:62ch;margin:0 auto;}
+:root[data-theme="microhistory"] .tp-flarge p{font-size:21px;line-height:1.75;color:var(--on-surface);margin-bottom:18px;}
+:root[data-theme="microhistory"] .tp-flarge h3{font-family:var(--tp-mono);font-size:16px;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin:8px 0 8px;}
 
 </style>
 </head>
@@ -3902,6 +3921,7 @@ function mhImageText(s){
       ${s.moduleLabel?`<span class="tp-mhchip">${esc(s.moduleLabel)}</span>`:''}
       <h1 class="tp-htitle2">${esc(s.title||'')}</h1>
       <div class="tp-ubar"></div>
+      ${secs.some(x=>x&&x.body)?`<button class="tp-focusbtn tp-focusread" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}
       <div class="tp-itgrid">
         <div>
           <div class="tp-polaroid"><div class="tp-pl-img">${tpHasImg(img)?tpImg(img,'Archival plate placeholder','monument'):`<div class="tp-phmark">${tpIc('monument',38)}<span>Archival plate placeholder</span></div>`}
@@ -3915,6 +3935,7 @@ function mhImageText(s){
       </div>
       ${supHtml}
     </div></main>`
+    +(secs.some(x=>x&&x.body)?`<div class="tp-overlay" data-tp-overlay role="dialog" aria-modal="true" aria-label="Focus reading" hidden><div class="tp-fpanel tp-fpanel-read"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close focus reading">${tpIc('close',20)}</button><div class="tp-fstiml">${tpIc('focus',14)} Focus reading</div><h2 class="tp-fread-h">${esc(s.title||'')}</h2><div class="tp-flarge">${secs.map(sec=>`${sec.heading?`<h3>${esc(sec.heading)}</h3>`:''}${sec.body?`<p>${esc(sec.body)}</p>`:''}`).join('')}</div></div></div>`:'')
     +mhFoot(s.cta||'Continue');
 }
 
@@ -4574,12 +4595,14 @@ function mhText(s){
       <h1 class="tp-htitle2">${esc(s.title||'Reading')}</h1>
       <div class="tp-ubar"></div>
       ${pillrow}
+      ${body.length?`<button class="tp-focusbtn tp-focusread" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}
       ${tpHasNotes(body)?`<div class="tp-noterow">${tpNotePen()}</div>`:''}
       <div class="${proseCls}">
         <div class="tp-prose">${body.map((p,j)=>{const txt=typeof p==='string'?p:(p.content||'');return `<p${j===0?' class="tp-dropcap"':''}>${tpRich(txt)}</p>`;}).join('')}</div>
         ${side}
       </div>
     </div></main>`
+    +(body.length?`<div class="tp-overlay" data-tp-overlay role="dialog" aria-modal="true" aria-label="Focus reading" hidden><div class="tp-fpanel tp-fpanel-read"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close focus reading">${tpIc('close',20)}</button><div class="tp-fstiml">${tpIc('focus',14)} Focus reading</div><h2 class="tp-fread-h">${esc(s.title||'Reading')}</h2><div class="tp-flarge">${body.map(p=>{const txt=typeof p==='string'?p:(p.content||'');return `<p>${tpRich(txt)}</p>`;}).join('')}</div></div></div>`:'')
     +mhFoot(s.cta||'Continue');
 }
 /* MICROHISTORY interactive embed — iframe/still + launch link, WW1-skinned. A microhistory-only FORK
