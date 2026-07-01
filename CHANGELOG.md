@@ -8,6 +8,24 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Fixed
+- **Editor: the video inspector can now attach the video link + watch button.** A new **Links** panel
+  (parallel to the Images panel, and always shown for the current pack slide type) gives the video slide
+  two fields — **Video link** (`s.url`, feeds `toEmbed` + `tpVideoPoster`) and **Watch button label**
+  (`s.metaCta`). They bind `slides.<i>.<field>` and re-render the canvas on input, so pasting a YouTube /
+  ClickView link makes the player embed, poster and watch button appear live. Previously the video
+  inspector only exposed the still image, so there was no way to attach the video itself. Editor-only —
+  published output is unchanged. (`PACK_LINK_SLOTS` / `linksSection`, driven by the existing
+  `[data-bind]` wiring.)
+- **Editor: "fit" pack slides can now be scrolled in edit mode.** A fit slide whose content exceeds the
+  1280×720 board (e.g. a video slide's lead + WATCH FOR box) was clipped by the fixed-height,
+  `overflow:hidden` canvas, so the author couldn't reach or select content below the fold. In **edit mode
+  only**, pack fit slides now lay out at their natural height and the stage scrolls, so every part is
+  reachable and selectable. Implemented as an edit-scoped path in `fitCanvas` (natural height + stage
+  scroll, keeping the legible fit-scale) plus `body.edit .canvas.scroll` rules that give the pack
+  `.tp-slide` flow height (it is `position:absolute`/`height:100%` in a fixed board) and drop the inner
+  `.tp-main`/`.gl-main` scroll clip. **Present / Study / Export never take this path**, so published
+  rendering is byte-identical for all three themes.
+
 - **Microhistory video: watch-link no longer collides with the "Video still placeholder" label.** `.tp-vlink`
   and `.tp-vph` both sat `top:14px;left:14px`, so a posterless video rendered the "Watch on YouTube" button
   on top of the placeholder label. `.tp-vlink` now sits **top-right** (`right:14px`, no `left`) so it can
