@@ -740,6 +740,12 @@ body.edit .themebox{display:flex;}
 .canvas.scroll{height:auto;overflow:visible;}
 #slide{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;}
 .canvas.scroll #slide{flex:none;}
+/* EDIT-ONLY: pack fit slides lay out at natural height (min one board) so the stage scrolls and every
+   part is reachable/selectable. The pack .tp-slide is absolute inset:0 (geolearn .tp-slide is height:100%)
+   inside the fixed 720 board, so an auto-height canvas would collapse; give it flow height and drop the
+   inner scroll box's clip so content grows the canvas. Scoped to body.edit — Study/Present/Export untouched. */
+body.edit .canvas.scroll .tp-slide{position:relative;inset:auto;height:auto;min-height:720px;overflow:visible;}
+body.edit .canvas.scroll .tp-main,body.edit .canvas.scroll .gl-main{overflow:visible;}
 .foot{flex:0 0 auto;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 34px;border-top:1px solid var(--line);background:var(--surface);}
 .foot .nbtn{display:inline-flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
   padding:11px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);}
@@ -3205,11 +3211,16 @@ function fitCanvas(){
   if(!(sw>0)||!(sh>0)) return;                      // guard before any mutation (no half-updated state)
   const s0=LESSON.slides[cur]||{};
   const editing=document.body.classList.contains('edit');   // floor + scroll is an EDITOR affordance; Study/Present/Export are untouched
-  const scroll = s0.layout==='scroll' && !document.body.classList.contains('present');
+  const present=document.body.classList.contains('present');
+  // EDIT-ONLY: lay pack "fit" slides out at their natural height and let the stage scroll, so an author can
+  // reach + select content that would otherwise be clipped below the 720px canvas fold. Study / Present /
+  // Export never take this path, so published output is unchanged.
+  const packEdit = editing && !present && PACK_THEMES.has(LESSON.meta&&LESSON.meta.theme) && s0.layout!=='scroll';
+  const scroll = (s0.layout==='scroll' && !present) || packEdit;
   canvas.classList.toggle('scroll', scroll);
   canvas.style.height = scroll ? 'auto' : '720px';
   let s, fitsW=true, fitsH=true;
-  if(scroll){ s = sw/1280; }
+  if(scroll){ s = packEdit ? Math.max(Math.min(sw/1280, sh/720), 0.46) : sw/1280; }   // packEdit keeps the legible fit-scale; a layout:scroll slide fills the width
   else {
     const fitS = Math.min(sw/1280, sh/720);
     // Editor: don't shrink the preview below a legible floor when the side panels crowd it — let the
@@ -3569,6 +3580,25 @@ function imagesSection(i,s){
     <div class="muted small">Drop or choose an image to <b>embed</b> it (travels inside the lesson — no repo file needed), or type a repo-relative path (e.g. <code>assets/coin.jpg</code>). Leave blank for the theme placeholder.</div>
     ${rows}</div>`;
 }
+/* Link fields panel (themed slide pack) — the text/URL counterpart of the Images panel: always shown for
+   the current pack slide type so a link can be attached even when no zone is selected (pack canvases are
+   Study-identical, so inspectorForm's per-zone fields aren't reached). Each field binds slides.<i>.<field>
+   and is auto-wired (setP + renderCanvas) by wireInspector's [data-bind] handler, so editing s.url
+   re-renders the canvas → the player embed + watch button appear. Published output is unaffected. */
+const PACK_LINK_SLOTS={            // [path-within-slide, label, kind] — kind 'url' hints an inputmode
+  video: [['url','Video link','url'],['metaCta','Watch button label','text']],
+};
+function linksSection(i,s){
+  if(!PACK_THEMES.has(LESSON.meta&&LESSON.meta.theme)) return '';   // pack themes only
+  const slots=PACK_LINK_SLOTS[s.type]; if(!slots||!slots.length) return '';
+  const rows=slots.map(([rel,label,kind])=>{ const p=`slides.${i}.${rel}`, id='lnk-'+i+'-'+rel, v=getP(LESSON,p);
+    const ph=kind==='url'?'https://www.youtube.com/watch?v=…  or a ClickView embed link':'Watch on YouTube ↗';
+    return `<div class="ig"><label for="${id}">${esc(label)}</label><input class="ii" id="${id}" type="text"${kind==='url'?' inputmode="url" autocomplete="off" spellcheck="false"':''} placeholder="${esc(ph)}" value="${esc(v==null?'':String(v))}" data-bind="${p}"></div>`;
+  }).join('');
+  return `<div class="isec"><div class="isec-h">Links</div>
+    <div class="muted small">Paste the video link (YouTube or ClickView embed) — the player and watch button update live.</div>
+    ${rows}</div>`;
+}
 function renderInspector(){
   const ins=$('#inspector'); if(!ins) return;
   if(mode!=='edit'){ ins.innerHTML=''; return; }
@@ -3577,7 +3607,7 @@ function renderInspector(){
   const top = selZone===null
     ? `<div class="ihint">Select a part of the slide to edit it here.</div>`
     : `<div class="isec"><div class="isec-h">${TYPELAB[s.type]||s.type} · fields</div>${inspectorForm(i,s,selZone)}</div>${wsIsContent(s.type)?worksheetSection(i,s,selZone):''}`;
-  ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${top}${imagesSection(i,s)}${layoutSection()}${metaSection()}`;
+  ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${top}${imagesSection(i,s)}${linksSection(i,s)}${layoutSection()}${metaSection()}`;
   wireInspector();
   const c=ins.querySelector('.cur'); if(c) c.scrollIntoView({block:'nearest'});
 }
