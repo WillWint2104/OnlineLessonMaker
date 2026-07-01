@@ -9,13 +9,13 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ### Added
 - **Microhistory reading accessibility (this theme only).** (A) Larger reading text: the main body
-  prose (`.tp-prose p`, `.tp-comp p`) is raised to ~16.5px and the small secondary text (context
-  paragraphs, captions, notes, footnotes, insight quotes — previously ~12–14px) to ~16px, all via
+  prose (`.tp-prose p`, `.tp-comp p`) is raised to ~19px and the small secondary text (context
+  paragraphs, captions, notes, footnotes, insight quotes — previously ~12–14px) to ~17px, all via
   microhistory-scoped overrides (no shared/global size changed). Text slides use `.tp-scrollmain`, so
   the larger text scrolls rather than clips. (B) A per-page **"Focus reading" large-print mode** on
   `mhText` and `mhImageText` (only when the slide carries body prose): a `.tp-focusbtn[data-tp-focus-open]`
   opens a `role="dialog"` `[data-tp-overlay]` that re-presents the slide's prose as **large print**
-  (new `.tp-flarge`: 21px / line-height 1.75 / max-width 62ch, high contrast on the theme surface).
+  (new `.tp-flarge`: 30px / line-height 1.7, filling a ~980px modal without overflow, high contrast on the theme surface).
   It **reuses the existing shared focus open/close handler** (Esc / close-button / backdrop, focus
   management) — no new JS wiring — plus `tpIc`, `tpRich`, and the existing microhistory-styled
   `.tp-focusbtn` / `.tp-overlay` / `.tp-fpanel` chrome. `mhInfographic` carries no sustained body prose,
