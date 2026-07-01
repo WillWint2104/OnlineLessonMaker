@@ -1450,11 +1450,12 @@ body.present #presentExit{display:flex;}
    per-element font-size:clamp / vh media rules are gone — the uniform transform does the
    scaling, so the board renders identically to Study. */
 body.present .side,body.present .top,body.present .foot,body.present .answer,body.present .minput,body.present .editnote{display:none;}
-/* Present = presentation-first (microhistory only): core text full-width, secondary key-idea/metadata boxes dropped.
-   Theme-scoped (:root[data-theme="microhistory"] body.present ...) so it out-specifies the theme's own
-   :root[data-theme="microhistory"] .tp-artside/.tp-vcap rules; imperium + geolearn Present stay byte-identical. */
+/* Present = presentation-first VIDEO (microhistory only): drop the "WATCH FOR" box and collapse its caption
+   grid so the player runs full-width with no dead column. Theme-scoped (:root[data-theme="microhistory"]
+   body.present ...) so it out-specifies the theme's own .tp-artside/.tp-vcap rules; imperium + geolearn
+   Present stay byte-identical. The TEXT page has its own content-first Present layout (see .tp-readcard). */
 :root[data-theme="microhistory"] body.present .tp-artside{display:none;}
-:root[data-theme="microhistory"] body.present .tp-artbody.two,:root[data-theme="microhistory"] body.present .tp-tgrid,:root[data-theme="microhistory"] body.present .tp-vcap{grid-template-columns:1fr;}
+:root[data-theme="microhistory"] body.present .tp-vcap{grid-template-columns:1fr;}
 /* Present fills the screen: minimal symmetric padding so the 16:9 canvas maximises; no scrollbar. */
 body.present .stage{padding:1.2vh 1.2vw;overflow:hidden;scrollbar-gutter:auto;}
 body.present .card{box-shadow:none;width:100%;}
@@ -2279,6 +2280,40 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-link{display:flex;align-items:center;gap:12px;padding:11px 8px;color:var(--on-surface);font-size:14px;font-weight:600;text-decoration:none;border-bottom:1px solid var(--line);}
 :root[data-theme="microhistory"] .tp-link:last-child{border-bottom:none;}
 :root[data-theme="microhistory"] .tp-link .li{width:34px;height:34px;border:2px solid var(--on-surface);background:var(--surface-variant);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+/* mhText typed media control + focus overlay. The button is a maroon dossier chip (span[role=button], so
+   host button CSS can't blank the fill). The overlay reuses .tp-fpanel chrome; media renders inside it. */
+:root[data-theme="microhistory"] .tp-readctrls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:2px 0 4px;}
+:root[data-theme="microhistory"] .tp-mediabtn{display:inline-flex;align-items:center;gap:8px;background:var(--primary);color:var(--on-primary);border:2px solid var(--on-surface);box-shadow:3px 3px 0 0 var(--on-surface);border-radius:6px;padding:9px 16px;font-family:var(--tp-body);font-weight:700;font-size:14px;letter-spacing:.02em;cursor:pointer;user-select:none;}
+:root[data-theme="microhistory"] .tp-mediabtn:hover{background:var(--primary-container);}
+:root[data-theme="microhistory"] .tp-mediabtn:focus-visible{outline:3px solid var(--on-surface);outline-offset:2px;}
+:root[data-theme="microhistory"] .tp-fpanel-media{max-width:1040px;padding:20px 22px;}
+:root[data-theme="microhistory"] .tp-fpanel-media .tp-fimg{display:block;width:100%;height:auto;max-height:74vh;object-fit:contain;border:2px solid var(--on-surface);}
+:root[data-theme="microhistory"] .tp-fpanel-media .tp-player{width:100%;}
+:root[data-theme="microhistory"] .tp-fpanel-media .tp-vlink{left:auto;right:14px;}   /* standalone top-right so it never overlaps the top-left placeholder label */
+:root[data-theme="microhistory"] .tp-fpanel-media .tp-iembed{position:relative;aspect-ratio:16/9;background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--on-surface);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+:root[data-theme="microhistory"] .tp-fpanel-media .tp-iembed .tp-img-real{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+:root[data-theme="microhistory"] .tp-fmph{aspect-ratio:16/9;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--surface-container-low);border:2px solid var(--on-surface);color:var(--on-surface-variant);}
+:root[data-theme="microhistory"] .tp-fmph span{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
+:root[data-theme="microhistory"] .tp-fmcap{font-size:14px;line-height:1.55;color:var(--on-surface-variant);font-style:italic;margin-top:12px;}
+:root[data-theme="microhistory"] .tp-fmnote{margin-top:14px;background:var(--surface-container-low);border:2px solid var(--on-surface);box-shadow:3px 3px 0 0 var(--on-surface);padding:14px 16px;font-size:14px;line-height:1.55;color:var(--on-surface);}
+/* mhText CONTENT-FIRST PRESENT: thin header + a bordered reading card that fills the board (text never
+   sits on bare --canvas). Theme-scoped body.present so it never touches imperium/geolearn. */
+:root[data-theme="microhistory"] body.present .tp-artwrap-present{max-width:1180px;height:100%;gap:14px;}
+:root[data-theme="microhistory"] body.present .tp-thead-present{flex:0 0 auto;}
+:root[data-theme="microhistory"] body.present .tp-thead-present .tp-mhchip{margin-bottom:8px;}
+:root[data-theme="microhistory"] body.present .tp-thead-present .tp-htitle2{font-size:30px;line-height:1.08;margin-bottom:6px;}
+:root[data-theme="microhistory"] body.present .tp-thead-present .tp-ubar{display:none;}
+:root[data-theme="microhistory"] body.present .tp-readcard{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:16px;background:var(--surface);border:2px solid var(--on-surface);box-shadow:8px 8px 0 0 var(--on-surface);border-radius:8px;padding:clamp(24px,3vw,44px);overflow:auto;}
+:root[data-theme="microhistory"] body.present .tp-readcard .tp-readctrls{flex:0 0 auto;margin:0;}
+:root[data-theme="microhistory"] body.present .tp-readband{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;}
+:root[data-theme="microhistory"] body.present .tp-tlead{font-family:var(--tp-mono);font-weight:700;font-size:26px;line-height:1.4;color:var(--on-surface);margin-bottom:22px;}
+:root[data-theme="microhistory"] body.present .tp-tpoints{list-style:none;margin:0;padding:0;counter-reset:tpi;display:flex;flex-direction:column;gap:18px;}
+:root[data-theme="microhistory"] body.present .tp-tpoints li{counter-increment:tpi;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;}
+:root[data-theme="microhistory"] body.present .tp-tpoints li::before{content:counter(tpi);font-family:var(--tp-mono);font-weight:700;font-size:20px;color:var(--on-primary);background:var(--primary);border:2px solid var(--on-surface);box-shadow:2px 2px 0 0 var(--on-surface);width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+:root[data-theme="microhistory"] body.present .tp-tp-term{font-family:var(--tp-mono);font-weight:700;font-size:19px;letter-spacing:.02em;text-transform:uppercase;color:var(--on-surface);margin-bottom:4px;}
+:root[data-theme="microhistory"] body.present .tp-tp-text{font-size:20px;line-height:1.5;color:var(--on-surface-variant);}
+:root[data-theme="microhistory"] body.present .tp-readband .tp-prose{background:transparent;border:0;box-shadow:none;padding:0;}
+:root[data-theme="microhistory"] body.present .tp-readband .tp-prose p{font-size:20px;line-height:1.62;max-width:none;}
 /* interactive embed (mhInteractive) — iframe/still frame + guide + launch link, WW1 skin. Mirrors geo
    glInteractive layout; reuses the shared tp-media-* still markup inside the framed embed. */
 /* top-anchor the interactive slide for ANY content amount: the mh .tp-main{justify-content:safe center}
@@ -4611,7 +4646,8 @@ function mhGuided(s){
    reveal-notes mechanic (tpHasNotes/tpNotePen/tpRich) and packText's mh-themed sidebar pieces
    (.tp-tpolaroid figure, .tp-snote, .tp-sprog) so existing image/caption/note/progress slides don't
    lose content — no new JS, no image expand/focus. */
-function mhText(s){
+function mhText(s,i){
+  const present=document.body.classList.contains('present');
   const body=Array.isArray(s.body)?s.body:(s.body?[s.body]:[]);
   const sb=s.sidebar||null, res=Array.isArray(s.resources)?s.resources:[];
   const sbImg=sb&&(sb.image||sb.src);
@@ -4620,8 +4656,44 @@ function mhText(s){
   const prog=sb&&(sb.progress===0||sb.progress)?Math.max(0,Math.min(100,+sb.progress||0)):null;
   const pills=Array.isArray(s.pills)?s.pills:[];
   const pillrow=(pills.length||s.readtime)?`<div class="tp-gpills">${pills.map(p=>{const o=typeof p==='string'?{label:p}:p;return `<span class="tp-gpill">${o.icon?`<span class="pi">${tpIc(o.icon,14)}</span>`:''}${esc(o.label||'')}</span>`;}).join('')}${s.readtime?`<span class="tp-gpill"><span class="pi">${tpIc('clock',14)}</span> ${esc(s.readtime)}</span>`:''}</div>`:'';
-  const side=(sbImg||sbInsight||sbNote||prog!=null||res.length)?`<aside class="tp-artside">
-    ${sbImg?`<figure class="tp-artfig"><div class="tp-tpolaroid"><div class="tp-tpl-img">${tpImg(sb.image||sb.src,'Source image','image')}</div></div>${(sb.caption||sb.credit)?`<figcaption class="tp-pl-cap">${esc(sb.caption||sb.credit||'')}</figcaption>`:''}</figure>`:''}
+  // typed media container: explicit `media`, else synthesise an image plate from a legacy sidebar image
+  // (microhistory back-compat) so the old inline aside figure becomes a "View plate" button+overlay.
+  let media=(s.media&&typeof s.media==='object')?s.media:null;
+  if(!media && sbImg) media={type:'image',src:(sb.image||sb.src),caption:(sb.caption||sb.credit||'')};
+  const rid='mhread-'+i, mid='mhmedia-'+i;
+  const focusBtn=body.length?`<button class="tp-focusbtn tp-focusread" type="button" data-tp-focus-open="${rid}" aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:'';
+  const mediaBtn=media?mhMediaBtn(media,mid):'';
+  const ctrls=(focusBtn||mediaBtn)?`<div class="tp-readctrls">${focusBtn}${mediaBtn}</div>`:'';
+  const readOv=body.length?`<div class="tp-overlay" id="${rid}" data-tp-overlay role="dialog" aria-modal="true" aria-label="Focus reading" hidden><div class="tp-fpanel tp-fpanel-read"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close focus reading">${tpIc('close',20)}</button><div class="tp-fstiml">${tpIc('focus',14)} Focus reading</div><h2 class="tp-fread-h">${esc(s.title||'Reading')}</h2><div class="tp-flarge">${body.map(p=>{const txt=typeof p==='string'?p:(p.content||'');return `<p>${tpRich(txt)}</p>`;}).join('')}</div></div></div>`:'';
+  const mediaOv=media?mhMediaOverlay(media,mid,s.title):'';
+  const head=`${s.eyebrow?`<span class="tp-mhchip">${esc(s.eyebrow)}</span>`:''}
+      <h1 class="tp-htitle2">${esc(s.title||'Reading')}</h1>
+      <div class="tp-ubar"></div>`;
+  const proseHtml=`<div class="tp-prose">${body.map((p,j)=>{const txt=typeof p==='string'?p:(p.content||'');return `<p${j===0?' class="tp-dropcap"':''}>${tpRich(txt)}</p>`;}).join('')}</div>`;
+  if(present){
+    // CONTENT-FIRST PRESENT: thin header + a bordered reading card that fills the board. Body = lead +
+    // numbered points, else fall back to body[] paragraphs in the same card. Secondary aside dropped;
+    // media stays the button+overlay only.
+    const lead=s.lead||'';
+    const points=Array.isArray(s.points)?s.points:[];
+    const pointsHtml=points.length?`<ol class="tp-tpoints">${points.map(pt=>`<li><div><div class="tp-tp-term">${esc(pt.term||'')}</div><div class="tp-tp-text">${tpRich(pt.text||'')}</div></div></li>`).join('')}</ol>`:'';
+    const cardBody=(lead||points.length)
+      ? `${lead?`<p class="tp-tlead">${tpRich(lead)}</p>`:''}${pointsHtml}`
+      : proseHtml;
+    return mhHead(s,tpProg(s,45))
+      +`<main class="tp-main tp-scrollmain"><div class="tp-wrap tp-artwrap tp-artwrap-present">
+        <div class="tp-thead-present">${head}</div>
+        <div class="tp-readcard">
+          ${ctrls}
+          <div class="tp-readband">${cardBody}</div>
+        </div>
+      </div></main>`
+      +readOv+mediaOv
+      +mhFoot(s.cta||'Continue');
+  }
+  // STUDY: existing reading (body[]) intact; media = button+overlay (no inline figure); the aside keeps
+  // insight / note / progress / resources.
+  const side=(sbInsight||sbNote||prog!=null||res.length)?`<aside class="tp-artside">
     ${sbInsight?`<div class="tp-insight">${sb.label?`<span class="tp-inlab">${tpIc('lightbulb',14)} ${esc(sb.label)}</span>`:''}${sb.heading?`<h3>${esc(sb.heading)}</h3>`:''}${sb.quote?`<blockquote>${esc(sb.quote)}</blockquote>`:''}${sb.cta?`<div class="tp-indiv"></div><span class="tp-inmore">${esc(sb.cta)} ${tpIc('arrowRight',14)}</span>`:''}</div>`:''}
     ${sbNote?`<div class="tp-snote"><div class="sh">${tpIc('ribbon',16)}<h3>${esc(sb.note.title||'Note')}</h3></div><p>${esc(sb.note.text||'')}</p></div>`:''}
     ${prog!=null?`<div class="tp-sprog"><div class="pt"><span class="pl">${esc(sb.progressLabel||'Section Progress')}</span><span class="pv">${prog}%</span></div><div class="tp-ptrack"><i style="width:${prog}%"></i></div></div>`:''}
@@ -4630,18 +4702,16 @@ function mhText(s){
   const proseCls=side?'tp-artbody two':'tp-artbody';
   return mhHead(s,tpProg(s,45))
     +`<main class="tp-main tp-scrollmain"><div class="tp-wrap tp-artwrap">
-      ${s.eyebrow?`<span class="tp-mhchip">${esc(s.eyebrow)}</span>`:''}
-      <h1 class="tp-htitle2">${esc(s.title||'Reading')}</h1>
-      <div class="tp-ubar"></div>
+      ${head}
       ${pillrow}
-      ${body.length?`<button class="tp-focusbtn tp-focusread" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}
+      ${ctrls}
       ${tpHasNotes(body)?`<div class="tp-noterow">${tpNotePen()}</div>`:''}
       <div class="${proseCls}">
-        <div class="tp-prose">${body.map((p,j)=>{const txt=typeof p==='string'?p:(p.content||'');return `<p${j===0?' class="tp-dropcap"':''}>${tpRich(txt)}</p>`;}).join('')}</div>
+        ${proseHtml}
         ${side}
       </div>
     </div></main>`
-    +(body.length?`<div class="tp-overlay" data-tp-overlay role="dialog" aria-modal="true" aria-label="Focus reading" hidden><div class="tp-fpanel tp-fpanel-read"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close focus reading">${tpIc('close',20)}</button><div class="tp-fstiml">${tpIc('focus',14)} Focus reading</div><h2 class="tp-fread-h">${esc(s.title||'Reading')}</h2><div class="tp-flarge">${body.map(p=>{const txt=typeof p==='string'?p:(p.content||'');return `<p>${tpRich(txt)}</p>`;}).join('')}</div></div></div>`:'')
+    +readOv+mediaOv
     +mhFoot(s.cta||'Continue');
 }
 /* MICROHISTORY interactive embed — iframe/still + launch link, WW1-skinned. A microhistory-only FORK
@@ -4846,6 +4916,45 @@ function tpFocusImage(image,label,alt){ const src=tpSrc(image); if(!src) return 
     <div class="tp-fpanel tp-fpanel-img"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',20)}</button>
       ${label?`<div class="tp-fstiml">${esc(label)}</div>`:''}<img class="tp-fimg" src="${esc(src)}" alt="${esc(alt||label||'')}"></div></div>`;
 }
+/* MICROHISTORY text-page typed media: a single dossier control that opens a focus overlay carrying ONE
+   piece of media (image plate / video / interactive) — the media NEVER renders inline. The button is a
+   span[role=button][tabindex=0] (not a <button>) so host/base button CSS can't blank its maroon fill.
+   Both button and overlay reuse the generalised data-tp-focus-open="<overlayId>" → [data-tp-overlay]
+   handler in wirePackTyped, plus the existing video (data-tp-playembed) and interactive (tp-ilaunch)
+   paths — no new host, no new lightbox. Emitted ONLY by mhText, so imperium/geolearn are untouched. */
+function mhMediaType(m){ const t=String(m&&m.type||'').toLowerCase(); return (t==='video'||t==='interactive')?t:'image'; }
+function mhMediaBtn(media,ovId){
+  const t=mhMediaType(media);
+  const label=media.button||(t==='video'?'Play video':t==='interactive'?'Open interactive':'View plate');
+  const icon=t==='video'?'play':t==='interactive'?'cube':'image';
+  return `<span class="tp-mediabtn" role="button" tabindex="0" data-tp-focus-open="${esc(ovId)}" aria-haspopup="dialog">${tpIc(icon,16)} ${esc(label)}</span>`;
+}
+function mhMediaOverlay(media,ovId,title){
+  const t=mhMediaType(media);
+  const cap=media.caption?`<p class="tp-fmcap">${esc(media.caption)}</p>`:'';
+  let inner='', stiml='Plate';
+  if(t==='video'){
+    stiml='Video';
+    const url=(media.url||'').trim(), embed=toEmbed(url), poster=tpSrc(media.poster)||tpVideoPoster(media), watchLabel=media.watchLabel||'Watch on YouTube ↗';
+    inner=`<div class="tp-player tp-fmplayer">
+      ${poster?tpImg(poster,'Video still','film'):`<div class="tp-sepia"></div>`}
+      ${poster?'':`<div class="tp-vph">${tpIc('film',20)}<span>Video still placeholder</span></div>`}
+      ${url?`<a class="tp-vlink" data-tp-vfallback href="${esc(url)}" target="_blank" rel="noopener noreferrer">${tpIc('external',14)} ${esc(watchLabel)}</a>`:''}
+      ${url?`<div class="tp-playbtn" data-tp-playembed="${esc(embed)}" role="button" tabindex="0" aria-label="Play video">${tpIc('play',40)}</div>`:`<div class="tp-playbtn">${tpIc('play',40)}</div>`}
+    </div>${cap}`;
+  } else if(t==='interactive'){
+    stiml='Interactive';
+    const url=(media.url||'').trim(), still=tpSrc(media.still||media.screenshot||media.src||media.image);
+    const frame=still
+      ? `<div class="tp-iembed">${tpImg(still,'Interactive preview','cube')}<span class="tp-iframetag">${tpIc('cube',14)} Interactive preview</span></div>`
+      : `<div class="tp-iembed"><div class="tp-ieph"><span class="pi">${tpIc('cube',40)}</span><span class="pl">${esc(media.embedLabel||'Interactive activity')}</span></div></div>`;
+    inner=`${frame}${url?`<a class="tp-ilaunch" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(media.button||'Open interactive')} <span class="li">${tpIc('external',16)}</span></a>`:''}${cap}`;
+  } else {
+    const src=tpSrc(media.src||media.image);
+    inner=`${src?`<img class="tp-fimg" src="${esc(src)}" alt="${esc(media.caption||title||'Plate')}">`:`<div class="tp-fmph">${tpIc('image',40)}<span>Image placeholder</span></div>`}${cap}${media.note?`<div class="tp-fmnote">${esc(media.note)}</div>`:''}`;
+  }
+  return `<div class="tp-overlay" id="${esc(ovId)}" data-tp-overlay role="dialog" aria-modal="true" aria-label="${esc(title||stiml)}" hidden><div class="tp-fpanel tp-fpanel-media"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',20)}</button><div class="tp-fstiml">${esc(stiml)}</div>${inner}</div></div>`;
+}
 
 /* ---------- sourceAnalysis (shared DOM, theme via CSS) ---------- */
 function packSourceAnalysis(s,i){
@@ -5043,17 +5152,34 @@ function wirePackTyped(){
     });
   });
   recomputeDone();
-  // Focus reading modal
-  const overlay=root.querySelector('[data-tp-overlay]');
-  const openBtn=root.querySelector('[data-tp-focus-open]');
-  if(overlay && openBtn){
-    let escH=null;
-    const close=()=>{ overlay.hidden=true; if(escH){ document.removeEventListener('keydown',escH); escH=null; } openBtn.focus(); };
-    const open=()=>{ overlay.hidden=false; const c=overlay.querySelector('[data-tp-focus-close]'); if(c) c.focus();
-      escH=(e)=>{ if(e.key==='Escape') close(); }; document.addEventListener('keydown',escH);
-      overlay.addEventListener('click',(e)=>{ if(e.target===overlay) close(); }, {once:false}); };
-    openBtn.addEventListener('click',open);
-    const cl=overlay.querySelector('[data-tp-focus-close]'); if(cl) cl.addEventListener('click',close);
+  // Focus overlays (reading / image zoom / typed media). Generalised so a slide can carry MORE THAN ONE
+  // overlay: each open control may reference its overlay by id via data-tp-focus-open="<overlayId>";
+  // a bare data-tp-focus-open (no value) falls back to the slide's single [data-tp-overlay] (back-compat
+  // for the image-zoom / source-stimulus overlays). [data-tp-focus-close], scrim-click and Esc all close
+  // the containing overlay; span[role=button] opens on Enter/Space too.
+  const overlays=[...root.querySelectorAll('[data-tp-overlay]')];
+  const singleOverlay=overlays.length===1?overlays[0]:null;
+  const openBtns=[...root.querySelectorAll('[data-tp-focus-open]')];
+  if(overlays.length && openBtns.length){
+    const escFor=new Map();
+    const closeOv=(ov,opener)=>{ ov.hidden=true; const h=escFor.get(ov); if(h){ document.removeEventListener('keydown',h); escFor.delete(ov); } if(opener) opener.focus(); };
+    const openOv=(ov,opener)=>{ ov.hidden=false; const c=ov.querySelector('[data-tp-focus-close]'); if(c) c.focus();
+      const h=(e)=>{ if(e.key==='Escape') closeOv(ov,opener); }; escFor.set(ov,h); document.addEventListener('keydown',h); };
+    openBtns.forEach(btn=>{
+      const id=btn.getAttribute('data-tp-focus-open');
+      const ov=id?(root.querySelector('#'+id)||document.getElementById(id)):singleOverlay;
+      if(!ov) return;
+      // span[role=button] controls (the typed media button) must not also trip the Present click-to-advance
+      // handler on #stage (which only ignores real <button>/<a>); stop the bubble as the play button does.
+      // Gated on role=button so imperium/geolearn <button> focus-open controls are wired exactly as before.
+      const isSpanBtn=btn.getAttribute('role')==='button';
+      btn.addEventListener('click',e=>{ if(isSpanBtn) e.stopPropagation(); openOv(ov,btn); });
+      if(isSpanBtn) btn.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); openOv(ov,btn); } });
+    });
+    overlays.forEach(ov=>{
+      const cl=ov.querySelector('[data-tp-focus-close]'); if(cl) cl.addEventListener('click',()=>closeOv(ov,null));
+      ov.addEventListener('click',(e)=>{ if(e.target===ov) closeOv(ov,null); });
+    });
   }
   // microhistory PER-QUESTION focus modal: MOVE the focused card into the large-print modal slot; the
   // card keeps its wired textarea + reveal + model, so the model stays gated (never shown before reveal).

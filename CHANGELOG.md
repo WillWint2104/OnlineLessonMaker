@@ -7,6 +7,39 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Microhistory text page: typed media container + focus overlay (Study *and* Present).** A text slide
+  can carry an optional `media:{ type:"image"|"video"|"interactive", src|url, poster?, still?, caption?,
+  note?, button? }`. Media never renders inline — it renders as **one typed dossier control** in the
+  reading (image → "View plate", video → "Play video", interactive → "Open interactive"; `media.button`
+  overrides the label). The control is a maroon `span[role=button]` (not a `<button>`, so host button CSS
+  can't blank the fill) that opens a focus overlay (`.tp-fpanel-media`): a framed **image** + caption +
+  note; the **video** player (reusing the existing `data-tp-playembed` swap-to-iframe path, with the
+  watch-link moved standalone top-right so it never overlaps the placeholder label); or the **interactive**
+  still + an "Open interactive" launch (reusing `tp-ilaunch`). No new host — reuses `toEmbed` /
+  `tpVideoPoster` / the interactive markup. **Back-compat:** a legacy `sidebar.image` (with no `media`) is
+  synthesised into an image plate, so the old inline aside figure becomes a "View plate" button+overlay.
+- **Microhistory text page: content-first Present layout.** New optional `lead:"…"` and
+  `points:[{term,text}]` fields. In Present, a thin header (eyebrow + title) sits above a bordered reading
+  **card** (surface + 2px border + dossier shadow) that fills the board — text never sits on bare
+  `--canvas`. The card shows `lead` + numbered `points` (terms bold, `==keyterms==` via `.tp-hl`), falling
+  back to `body[]` paragraphs when `lead`/`points` are absent. The secondary aside (insight/note/progress/
+  resources) is dropped in Present; media stays the button+overlay only. No dead column. Study keeps the
+  existing `body[]` reading and its insight/note/progress/resources aside (only the inline figure moves to
+  the media button).
+
+### Changed
+- **Focus-overlay wiring generalised to support multiple overlays per slide.** Open controls may now
+  reference their overlay by id via `data-tp-focus-open="<overlayId>"`; a bare `data-tp-focus-open` still
+  falls back to the slide's single `[data-tp-overlay]` (back-compat for image-zoom / source-stimulus).
+  `[data-tp-focus-close]`, scrim-click and Esc each close their containing overlay; `span[role=button]`
+  controls open on Enter/Space and stop the click bubbling so Present's click-to-advance doesn't fire.
+  This lets the microhistory text slide run the **Focus-reading overlay and the media overlay
+  independently on the same slide**. Imperium/geolearn use only single, bare-referenced overlays, so their
+  markup is byte-identical and their overlay behaviour is unchanged (verified). Supersedes PR #80's interim
+  Present-text rules (kept #80's video `.tp-mk`→`.tp-mkey` fix and its video-Present `.tp-artside`/`.tp-vcap`
+  rules; the text page now uses the content-first card layout instead).
+
 ### Fixed
 - **Microhistory video "WATCH FOR" labels no longer overlap their descriptions.** The metadata
   sidebar rows reused the class `.tp-mk`, which is owned by the infographic map-marker system
