@@ -7,6 +7,26 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **Microhistory video "WATCH FOR" labels no longer overlap their descriptions.** The metadata
+  sidebar rows reused the class `.tp-mk`, which is owned by the infographic map-marker system
+  (`:root[data-theme="microhistory"] .tp-mk{position:absolute;transform:translate(-50%,-50%)}` — for
+  pinning dots on maps). That absolute-positioning + translate leaked into the video sidebar and yanked
+  each key label out of flow on top of its value. Renamed the video key class to `.tp-mkey` (renderer
+  `mhVideo` markup + the one `.tp-mrow .tp-mkey` colour rule); the map-marker `.tp-mk` /`.tp-mkdot`
+  /`.tp-mklab` are untouched. Keys now sit as clean key/value rows beside their descriptions.
+
+### Changed
+- **Microhistory Present mode is presentation-first (this theme only).** In Present, the secondary
+  boxes are dropped and the core text runs full-width: the text slide's key-idea aside and the video
+  "WATCH FOR" box (both `.tp-artside`) are hidden, and the two-column layouts collapse to one
+  (`.tp-artbody.two`, `.tp-tgrid`, `.tp-vcap` → `grid-template-columns:1fr`) so no dead column is left.
+  All rules are scoped `:root[data-theme="microhistory"] body.present …` — deliberately out-specifying
+  the theme's own `.tp-artside`/`.tp-vcap` rules (specificity 0,3,2 vs 0,3,0) and, crucially, **never**
+  using a bare `body.present .tp-*` selector, so **imperium + geolearn share the `tp-*` DOM but their
+  Present mode stays byte-identical to before**. Study / Worksheet / Export / edit views are unchanged
+  for every theme.
+
 ### Added
 - **Microhistory reading accessibility (this theme only).** (A) Larger reading text: main body prose
   (`.tp-prose p`, `.tp-comp p`) → **~20px**; small secondary text (context paragraphs, captions, notes,

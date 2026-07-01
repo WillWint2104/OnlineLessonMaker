@@ -1450,6 +1450,11 @@ body.present #presentExit{display:flex;}
    per-element font-size:clamp / vh media rules are gone — the uniform transform does the
    scaling, so the board renders identically to Study. */
 body.present .side,body.present .top,body.present .foot,body.present .answer,body.present .minput,body.present .editnote{display:none;}
+/* Present = presentation-first (microhistory only): core text full-width, secondary key-idea/metadata boxes dropped.
+   Theme-scoped (:root[data-theme="microhistory"] body.present ...) so it out-specifies the theme's own
+   :root[data-theme="microhistory"] .tp-artside/.tp-vcap rules; imperium + geolearn Present stay byte-identical. */
+:root[data-theme="microhistory"] body.present .tp-artside{display:none;}
+:root[data-theme="microhistory"] body.present .tp-artbody.two,:root[data-theme="microhistory"] body.present .tp-tgrid,:root[data-theme="microhistory"] body.present .tp-vcap{grid-template-columns:1fr;}
 /* Present fills the screen: minimal symmetric padding so the 16:9 canvas maximises; no scrollbar. */
 body.present .stage{padding:1.2vh 1.2vw;overflow:hidden;scrollbar-gutter:auto;}
 body.present .card{box-shadow:none;width:100%;}
@@ -1984,7 +1989,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-vquote{margin-top:12px;padding:12px;background:var(--surface-container-low);border-left:4px solid var(--primary);border-radius:8px;font-style:italic;font-size:16px;line-height:1.55;color:var(--on-surface-variant);}
 :root[data-theme="microhistory"] .tp-artside{background:var(--surface);padding:12px;border:1px solid var(--outline-variant);border-radius:8px;display:flex;flex-direction:column;gap:10px;}
 :root[data-theme="microhistory"] .tp-artside h3{font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--secondary);border-bottom:1px solid var(--outline-variant);padding-bottom:8px;}
-:root[data-theme="microhistory"] .tp-mrow{display:flex;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.04em;} :root[data-theme="microhistory"] .tp-mrow .tp-mk{color:var(--on-surface-variant);} :root[data-theme="microhistory"] .tp-mrow .tp-mv{color:var(--on-surface);font-weight:700;}
+:root[data-theme="microhistory"] .tp-mrow{display:flex;justify-content:space-between;font-size:12px;font-weight:600;letter-spacing:.04em;} :root[data-theme="microhistory"] .tp-mrow .tp-mkey{color:var(--on-surface-variant);} :root[data-theme="microhistory"] .tp-mrow .tp-mv{color:var(--on-surface);font-weight:700;}
 :root[data-theme="microhistory"] .tp-blueprint{width:100%;padding:8px;border:2px solid var(--on-surface);background:transparent;color:var(--on-surface);font-size:14px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border-radius:4px;cursor:pointer;margin-top:2px;}
 :root[data-theme="microhistory"] .tp-foots{margin-top:28px;width:100%;max-width:896px;display:flex;align-items:center;font-size:14px;font-weight:600;letter-spacing:-.01em;text-transform:uppercase;}
 :root[data-theme="microhistory"] .tp-foots button{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--on-surface-variant);cursor:pointer;font:inherit;}
@@ -4022,7 +4027,7 @@ function mhInfographic(s){
 
 function mhVideo(s){
   const meta=Array.isArray(s.metadata)?s.metadata:[];
-  const mrows=meta.map(m=>`<div class="tp-mrow"><span class="tp-mk">${esc(m.key||'')}</span><span class="tp-mv">${esc(m.value||'')}</span></div>`).join('');
+  const mrows=meta.map(m=>`<div class="tp-mrow"><span class="tp-mkey">${esc(m.key||'')}</span><span class="tp-mv">${esc(m.value||'')}</span></div>`).join('');
   const poster=tpSrc(s.image)||tpVideoPoster(s);
   const url=(s.url||'').trim(), embed=toEmbed(url), watchLabel=s.metaCta||'Watch on YouTube ↗';
   return mhHead(s,tpProg(s,65))
