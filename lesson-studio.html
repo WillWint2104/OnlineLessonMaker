@@ -2361,6 +2361,56 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-obtn.primary{background:var(--primary);color:var(--on-primary);box-shadow:4px 4px 0 0 var(--ink);}
 :root[data-theme="microhistory"] .tp-obtn.ghost{background:var(--surface-lowest);color:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-o-footnote{font-family:var(--tp-mono);}
+/* ===== Reading accessibility (MICROHISTORY ONLY) ===== */
+/* PART A — larger body + secondary reading text. All microhistory-scoped; overrides the earlier
+   microhistory sizes by cascade (same specificity, declared later). imperium/geolearn unaffected. */
+:root[data-theme="microhistory"] .tp-prose p{font-size:20px;line-height:1.6;}
+:root[data-theme="microhistory"] .tp-comp p{font-size:20px;line-height:1.6;}
+:root[data-theme="microhistory"] .tp-ctx p,
+:root[data-theme="microhistory"] .tp-itnote p,
+:root[data-theme="microhistory"] .tp-supcard p,
+:root[data-theme="microhistory"] .tp-foot-c p,
+:root[data-theme="microhistory"] .tp-insight blockquote,
+:root[data-theme="microhistory"] .tp-plate{font-size:18px;line-height:1.6;}
+:root[data-theme="microhistory"] .tp-artfig .tp-pl-cap{font-size:18px;}
+/* CHANGE 2 — larger in-slide reading text on microhistory sourceAnalysis + guidedResponse (shared
+   renderers; sizing applied via microhistory-scoped CSS only, so imperium stays byte-identical).
+   Skill/marks labels (.tp-marks/.tp-skill) intentionally stay smaller. */
+:root[data-theme="microhistory"] .tp-transcript p,
+:root[data-theme="microhistory"] .tp-tq,
+:root[data-theme="microhistory"] .tp-tmodel p,
+:root[data-theme="microhistory"] .tp-sa-lead,
+:root[data-theme="microhistory"] .tp-gqtext,
+:root[data-theme="microhistory"] .tp-gstim p,
+:root[data-theme="microhistory"] .tp-plabel,
+:root[data-theme="microhistory"] .tp-pguide{font-size:20px;line-height:1.6;}
+/* Per-question focus modal (microhistory sourceAnalysis + guidedResponse). The focused card is MOVED
+   into .tp-qslot at large-print size; the model region stays hidden until its reveal fires (gated). */
+:root[data-theme="microhistory"] .tp-qfocusbtn{display:inline-flex;align-items:center;gap:6px;background:var(--surface-lowest);color:var(--on-surface);border:2px solid var(--on-surface);border-radius:6px;box-shadow:2px 2px 0 0 var(--on-surface);padding:7px 12px;font-family:var(--tp-body);font-weight:700;font-size:13px;letter-spacing:.02em;cursor:pointer;}
+:root[data-theme="microhistory"] .tp-qfocusbtn:hover{background:var(--surface-container-high);}
+:root[data-theme="microhistory"] .tp-qmodal-panel{max-width:1000px;}
+:root[data-theme="microhistory"] .tp-qmctx{border-bottom:2px solid var(--on-surface);padding-bottom:16px;margin-bottom:18px;}
+:root[data-theme="microhistory"] .tp-qmctx-h{font-family:var(--tp-mono);font-size:16px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin:6px 0 6px;}
+:root[data-theme="microhistory"] .tp-qmctx p{font-size:28px;line-height:1.6;color:var(--on-surface);}
+:root[data-theme="microhistory"] .tp-qslot .tp-qfocusbtn,
+:root[data-theme="microhistory"] .tp-qslot .tp-tmeta{display:none;}
+:root[data-theme="microhistory"] .tp-qslot .tp-tq,
+:root[data-theme="microhistory"] .tp-qslot .tp-plabel{font-size:30px;line-height:1.3;}
+:root[data-theme="microhistory"] .tp-qslot .tp-pguide,
+:root[data-theme="microhistory"] .tp-qslot .tp-gqtext,
+:root[data-theme="microhistory"] .tp-qslot .tp-gstim p{font-size:26px;line-height:1.55;}
+:root[data-theme="microhistory"] .tp-qslot .tp-answ{font-size:22px;line-height:1.55;min-height:170px;}
+:root[data-theme="microhistory"] .tp-qslot .tp-tmodel p{font-size:24px;line-height:1.6;}
+:root[data-theme="microhistory"] .tp-qslot .tp-reveal-btn{font-size:16px;padding:11px 18px;}
+:root[data-theme="microhistory"] .tp-qslot .tp-task,
+:root[data-theme="microhistory"] .tp-qslot .tp-gcard{background:transparent;border:0;box-shadow:none;padding:0;margin:0;}
+/* PART B — per-page "Focus reading" LARGE-PRINT overlay (mhText/mhImageText). Reuses the shared
+   .tp-overlay/.tp-fpanel/.tp-fclose chrome + the shared data-tp-focus-open/close handler. */
+:root[data-theme="microhistory"] .tp-fpanel-read{max-width:980px;}
+:root[data-theme="microhistory"] .tp-fread-h{font-family:var(--tp-mono);font-size:28px;line-height:1.2;color:var(--on-surface);margin:2px 0 20px;}
+:root[data-theme="microhistory"] .tp-flarge{max-width:none;}
+:root[data-theme="microhistory"] .tp-flarge p{font-size:32px;line-height:1.7;color:var(--on-surface);margin-bottom:22px;}
+:root[data-theme="microhistory"] .tp-flarge h3{font-family:var(--tp-mono);font-size:19px;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin:10px 0 8px;}
 
 </style>
 </head>
@@ -3902,6 +3952,7 @@ function mhImageText(s){
       ${s.moduleLabel?`<span class="tp-mhchip">${esc(s.moduleLabel)}</span>`:''}
       <h1 class="tp-htitle2">${esc(s.title||'')}</h1>
       <div class="tp-ubar"></div>
+      ${secs.some(x=>x&&x.body)?`<button class="tp-focusbtn tp-focusread" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}
       <div class="tp-itgrid">
         <div>
           <div class="tp-polaroid"><div class="tp-pl-img">${tpHasImg(img)?tpImg(img,'Archival plate placeholder','monument'):`<div class="tp-phmark">${tpIc('monument',38)}<span>Archival plate placeholder</span></div>`}
@@ -3915,6 +3966,7 @@ function mhImageText(s){
       </div>
       ${supHtml}
     </div></main>`
+    +(secs.some(x=>x&&x.body)?`<div class="tp-overlay" data-tp-overlay role="dialog" aria-modal="true" aria-label="Focus reading" hidden><div class="tp-fpanel tp-fpanel-read"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close focus reading">${tpIc('close',20)}</button><div class="tp-fstiml">${tpIc('focus',14)} Focus reading</div><h2 class="tp-fread-h">${esc(s.title||'')}</h2><div class="tp-flarge">${secs.map(sec=>`${sec.heading?`<h3>${esc(sec.heading)}</h3>`:''}${sec.body?`<p>${esc(sec.body)}</p>`:''}`).join('')}</div></div></div>`:'')
     +mhFoot(s.cta||'Continue');
 }
 
@@ -4511,6 +4563,7 @@ function mhGuided(s){
   const pillHtml=pills.length?`<div class="tp-gpills">${pills.map(p=>{const o=typeof p==='string'?{label:p}:p;return `<span class="tp-gpill">${o.icon?`<span class="pi">${tpIc(o.icon,14)}</span>`:''}${esc(o.label||'')}</span>`;}).join('')}</div>`:'';
   const qbox=`<div class="tp-gq"><div class="tp-gqhead"><span class="tp-gqlabel">${esc(s.eyebrow||'Exam-style question')}</span>${s.marks?`<span class="tp-marks">${esc(s.marks)}</span>`:''}</div><div class="tp-gqtext">${tpRich(s.question||'')}</div>${stim?`<div class="tp-gstim"><div class="tp-gstiml">${esc(stim.label||'Stimulus')}</div><p>${esc(stim.text||'')}</p></div>`:''}</div>`;
   const header=`<span class="tp-mhchip">${esc(s.kicker||s.moduleLabel||'Extended Response')}</span><h1 class="tp-htitle2">${esc(s.title||'Guided Response')}</h1><div class="tp-ubar"></div>${pillHtml}`;
+  const gCtx=`<div class="tp-qmctx-h">${tpIc('quotemark',14)} Question${s.marks?' · '+esc(s.marks):''}</div><p>${tpRich(s.question||'')}</p>${stim?`<div class="tp-qmctx-h">${esc(stim.label||'Stimulus')}</div><p>${esc(stim.text||'')}</p>`:''}`;
   const critOf=(crit,lbl)=>crit.length?`<div class="tp-gcrit"><div class="tp-gcrit-h">${tpIc('list',16)} ${esc(lbl||'What earns marks')}</div><ul>${crit.map(c=>`<li><span class="ci">${tpIc('check',14)}</span>${esc(typeof c==='string'?c:(c.text||''))}</li>`).join('')}</ul></div>`:'';
   if(mode==='extended'){
     const paras=Array.isArray(s.paragraphs)?s.paragraphs:[];
@@ -4519,7 +4572,7 @@ function mhGuided(s){
         <div class="tp-phead"><span class="tp-tnum">${k+1}</span><h3 class="tp-plabel">${lbl}</h3></div>
         ${p.guide?`<p class="tp-pguide">${esc(p.guide)}</p>`:''}
         <textarea id="${fid}-ta" class="tp-answ" rows="4" data-tp-field="${fid}" aria-label="${lbl} — your writing" placeholder="Write your ${esc((p.label||'paragraph').toLowerCase())} here..."></textarea>
-        <div class="tp-trow tp-grow"><span class="tp-unlock" data-tp-hintnote>${tpIc('lock',13)} Write something to reveal the model</span><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-submit data-tp-revname="${lbl}" data-tp-donelabel="Model paragraph shown">Submit ${tpIc('arrowRight',15)}</button></div>
+        <div class="tp-trow tp-grow"><span class="tp-unlock" data-tp-hintnote>${tpIc('lock',13)} Write something to reveal the model</span><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-submit data-tp-revname="${lbl}" data-tp-donelabel="Model paragraph shown">Submit ${tpIc('arrowRight',15)}</button>${mhQFocusBtn()}</div>
         <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model paragraph for ${lbl}"><div class="tp-tmh">${tpIc('check',14)} Model paragraph</div><p>${tpRich(p.model||'')}</p></div>
       </div>`; }).join('');
     const crit=Array.isArray(s.criteria)?s.criteria:[];
@@ -4528,6 +4581,7 @@ function mhGuided(s){
         ${header}
         <div class="tp-gcard">${qbox}<div class="tp-gscaffold">${esc(s.scaffoldLabel||'Build your response paragraph by paragraph')}</div>${body}${critOf(crit,s.criteriaLabel)}</div>
       </div></main>`
+      +(s.question?mhQModal(s.title||'Extended response', gCtx):'')
       +mhFoot(s.cta||'Continue');
   }
   /* short fallback */
@@ -4539,10 +4593,11 @@ function mhGuided(s){
       <div class="tp-gcard" data-tp-block>${qbox}
         <div class="tp-grlabel">${esc(s.responseLabel||'Your response')}</div>
         <textarea id="gp0-ta" class="tp-answ" rows="5" data-tp-field="gp0" aria-label="Your response" placeholder="Type your response here..."></textarea>
-        <div class="tp-trow tp-grow"><span class="tp-unlock" data-tp-hintnote>${tpIc('lock',13)} Write something to unlock the model answer</span><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="gp0-model" data-tp-reveal="gp0" data-tp-submit data-tp-revname="this task" data-tp-donelabel="Model answer shown">Submit ${tpIc('arrowRight',15)}</button></div>
+        <div class="tp-trow tp-grow"><span class="tp-unlock" data-tp-hintnote>${tpIc('lock',13)} Write something to unlock the model answer</span><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="gp0-model" data-tp-reveal="gp0" data-tp-submit data-tp-revname="this task" data-tp-donelabel="Model answer shown">Submit ${tpIc('arrowRight',15)}</button>${mhQFocusBtn()}</div>
         <div class="tp-tmodel" id="gp0-model" data-tp-model role="region" aria-label="Model answer"><div class="tp-tmh">${tpIc('check',14)} Model answer</div><p>${tpRich(model)}</p>${critOf(crit)}</div>
       </div>
     </div></main>`
+    +(s.question?mhQModal(s.title||'Guided response', ''):'')
     +mhFoot(s.cta||'Continue');
 }
 /* MICROHISTORY article text page — two-column prose + rich sidebar, WW1-skinned. A microhistory-only
@@ -4574,12 +4629,14 @@ function mhText(s){
       <h1 class="tp-htitle2">${esc(s.title||'Reading')}</h1>
       <div class="tp-ubar"></div>
       ${pillrow}
+      ${body.length?`<button class="tp-focusbtn tp-focusread" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}
       ${tpHasNotes(body)?`<div class="tp-noterow">${tpNotePen()}</div>`:''}
       <div class="${proseCls}">
         <div class="tp-prose">${body.map((p,j)=>{const txt=typeof p==='string'?p:(p.content||'');return `<p${j===0?' class="tp-dropcap"':''}>${tpRich(txt)}</p>`;}).join('')}</div>
         ${side}
       </div>
     </div></main>`
+    +(body.length?`<div class="tp-overlay" data-tp-overlay role="dialog" aria-modal="true" aria-label="Focus reading" hidden><div class="tp-fpanel tp-fpanel-read"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close focus reading">${tpIc('close',20)}</button><div class="tp-fstiml">${tpIc('focus',14)} Focus reading</div><h2 class="tp-fread-h">${esc(s.title||'Reading')}</h2><div class="tp-flarge">${body.map(p=>{const txt=typeof p==='string'?p:(p.content||'');return `<p>${tpRich(txt)}</p>`;}).join('')}</div></div></div>`:'')
     +mhFoot(s.cta||'Continue');
 }
 /* MICROHISTORY interactive embed — iframe/still + launch link, WW1-skinned. A microhistory-only FORK
@@ -4762,6 +4819,18 @@ function tpFocusOverlay(eyebrow,question,stimLabel,stimText){
       ${eyebrow?`<div class="tp-fey">${esc(eyebrow)}</div>`:''}<p class="tp-fq">${esc(question||'')}</p>
       ${stimText?`<div class="tp-fstiml">${esc(stimLabel||'Stimulus')}</div><p class="tp-fstim">${esc(stimText)}</p>`:''}</div></div>`;
 }
+/* Microhistory-only PER-QUESTION large-print focus modal (source-analysis tasks + guided-response
+   paragraphs). Each question card carries a small "Focus" button (mhQFocusBtn); clicking it MOVES that
+   one card into this modal's slot at large-print size, above the shared reading context (ctxHtml =
+   transcript / essay question + stimulus). Because the SAME card is moved, its textarea + reveal button
+   + model region keep their exact wired state — the model answer stays gated behind the existing reveal
+   control and is NEVER shown before a reveal fires (no combined overlay, no ungated model). One modal per
+   slide; opened/closed by a minimal microhistory-scoped wirer in wirePackTyped (Esc/backdrop/close).
+   Emitted ONLY for microhistory, so imperium's shared-renderer output stays byte-identical. */
+function mhQFocusBtn(){ return `<button class="tp-qfocusbtn" type="button" data-mhq-focus aria-haspopup="dialog">${tpIc('focus',14)} Focus</button>`; }
+function mhQModal(title, ctxHtml){
+  return `<div class="tp-overlay tp-qmodal" data-tp-qmodal role="dialog" aria-modal="true" aria-label="Focus reading" hidden><div class="tp-fpanel tp-fpanel-read tp-qmodal-panel"><button class="tp-fclose" type="button" data-tp-qclose aria-label="Close focus reading">${tpIc('close',20)}</button><div class="tp-fstiml">${tpIc('focus',14)} Focus reading</div>${title?`<h2 class="tp-fread-h">${esc(title)}</h2>`:''}${ctxHtml?`<div class="tp-qmctx">${ctxHtml}</div>`:''}<div class="tp-qslot" data-tp-qslot></div></div></div>`;
+}
 /* image "view larger": a small affordance over an image container + an image-bearing variant of the
    pack focus overlay. Reuses the existing data-tp-focus-open → data-tp-overlay handler (wirePackTyped,
    content-agnostic) — no new lightbox, no handler change. Emitted ONLY by image-bearing imperium pack
@@ -4780,12 +4849,13 @@ function packSourceAnalysis(s,i){
   const tasks=Array.isArray(s.tasks)?s.tasks:[];
   const hasArt=tpHasImg(src.image)||!!src.transcript||prov.length>0;   // collapse to a single task column when there's nothing to show in the source panel (no image, transcript or provenance) — avoids an empty placeholder box
   const provHtml=prov.map(p=>`<div class="tp-prow"><span class="pi">${tpIc(p.icon||'doc',18)}</span><div><span class="pk">${esc(p.label||'')}</span><span class="pv">${esc(p.value||'')}</span></div></div>`).join('');
+  const themeMH=(LESSON.meta&&LESSON.meta.theme)==='microhistory';
   const tasksHtml=tasks.map((t,j)=>{ const fid='t'+j, num=esc(t.numeral||String(j+1));
     return `<li class="tp-task" data-tp-block><div class="tp-thead"><span class="tp-tnum">${num}</span><div class="tp-tlead">
         <label class="tp-tq" for="${fid}-ta">${esc(t.question||'')}</label>
         <div class="tp-tmeta">${t.marks?`<span class="tp-marks">${esc(t.marks)}</span>`:''}${t.skill?`<span class="tp-skill">${esc(t.skill)}</span>`:''}</div></div></div>
       <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="Task ${num}${t.skill?': '+esc(t.skill):''} — your response" placeholder="Type your response..."></textarea>
-      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="task ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button></div>
+      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="task ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button>${themeMH?mhQFocusBtn():''}</div>
       <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model answer for task ${num}"><div class="tp-tmh">${tpIc('check',14)} Model answer${t.skill?' · '+esc(t.skill):''}</div><p>${esc(t.model||'')}</p></div></li>`;
   }).join('');
   const fEy=(src.label?esc(src.label)+' · ':'')+'Transcript';
@@ -4795,7 +4865,7 @@ function packSourceAnalysis(s,i){
         <div class="tp-sa-lh"><div>${s.eyebrow?`<div class="tp-sa-ey"><span class="rule"></span><span>${esc(s.eyebrow)}</span></div>`:''}
             <h1 class="tp-sa-h1 tp-serif">${esc(s.title||'')}</h1>
             <div class="tp-sa-meta">${s.tag?`<span class="tp-sa-tag">${tpIc('doc',14)} ${esc(s.tag)}</span>`:''}${s.time?`<span class="tp-sa-mtime">${tpIc('clock',14)} ${esc(s.time)}</span>`:''}</div></div>
-          ${(src.transcript||tpHasImg(src.image))?`<button class="tp-focusbtn" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}</div>
+          ${((src.transcript||tpHasImg(src.image))&&(LESSON.meta&&LESSON.meta.theme)!=='microhistory')?`<button class="tp-focusbtn" type="button" data-tp-focus-open aria-haspopup="dialog">${tpIc('focus',16)} Focus reading</button>`:''}</div>
         <div class="tp-sa-grid${hasArt?'':' tp-sa-noart'}">
           ${hasArt?`<div class="tp-srccol">
             <div class="tp-sa-srcwrap"><div class="tp-srcframe" tabindex="0" role="group" aria-label="${esc(src.label||'Source')} image">
@@ -4812,7 +4882,9 @@ function packSourceAnalysis(s,i){
         </div>
       </div></main>`
     +packFoot(s,s.cta||'Continue')
-    +tpFocusOverlay(fEy, s.focusQuestion||'Analyse the source, applying the source-analysis skills indicated for each task.', src.label?('Transcript · '+(src.label)):'Transcript', src.transcript||'');
+    +(themeMH
+        ? mhQModal(s.title||'Source analysis', src.transcript?`<div class="tp-qmctx-h">${tpIc('doc',14)} Transcript${src.label?' · '+esc(src.label):''}</div><p>${esc(src.transcript)}</p>`:'')
+        : tpFocusOverlay(fEy, s.focusQuestion||'Analyse the source, applying the source-analysis skills indicated for each task.', src.label?('Transcript · '+(src.label)):'Transcript', src.transcript||''));
 }
 
 /* ---------- guidedResponse (short + extended; shared DOM, theme via CSS) ---------- */
@@ -4977,6 +5049,25 @@ function wirePackTyped(){
       overlay.addEventListener('click',(e)=>{ if(e.target===overlay) close(); }, {once:false}); };
     openBtn.addEventListener('click',open);
     const cl=overlay.querySelector('[data-tp-focus-close]'); if(cl) cl.addEventListener('click',close);
+  }
+  // microhistory PER-QUESTION focus modal: MOVE the focused card into the large-print modal slot; the
+  // card keeps its wired textarea + reveal + model, so the model stays gated (never shown before reveal).
+  // One modal per slide (emitted only for microhistory source/guided); Esc / close / backdrop dismiss and
+  // return the card to its place. No-op on other themes (no [data-tp-qmodal]).
+  const qmodal=root.querySelector('[data-tp-qmodal]');
+  if(qmodal){
+    const slot=qmodal.querySelector('[data-tp-qslot]');
+    let card=null,par=null,nxt=null,qesc=null,opener=null;
+    const closeQ=()=>{ if(card&&par){ par.insertBefore(card,nxt); } card=null; qmodal.hidden=true; if(qesc){ document.removeEventListener('keydown',qesc); qesc=null; } if(opener) opener.focus(); };
+    root.querySelectorAll('[data-mhq-focus]').forEach(btn=>btn.addEventListener('click',()=>{
+      const c=btn.closest('[data-tp-block]'); if(!c||!slot) return;
+      if(card) closeQ();
+      opener=btn; card=c; par=c.parentNode; nxt=c.nextSibling; slot.appendChild(c); qmodal.hidden=false;
+      const x=qmodal.querySelector('[data-tp-qclose]'); if(x) x.focus();
+      qesc=(e)=>{ if(e.key==='Escape') closeQ(); }; document.addEventListener('keydown',qesc);
+    }));
+    const qcl=qmodal.querySelector('[data-tp-qclose]'); if(qcl) qcl.addEventListener('click',closeQ);
+    qmodal.addEventListener('click',(e)=>{ if(e.target===qmodal) closeQ(); });
   }
 }
 
