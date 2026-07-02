@@ -8,6 +8,15 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Fixed
+- **Microhistory video page (Study): card width matches the text pages + WATCH FOR keys wrap cleanly.**
+  Two CSS-only, microhistory-scoped fixes: (1) `.tp-vcard2` `max-width` 896px → **1024px** so the Study
+  video card is no longer visibly narrower than the text pages' 1024px `.tp-wrap` (Present keeps its own
+  existing 1180px override from #82, untouched). (2) `.tp-mrow` switches from flex `space-between` to
+  `grid-template-columns:minmax(110px,auto) 1fr` (+`text-align:right` on the value, preserving the
+  key-left/value-right look) so keys like "The four punishments" hold one or two clean lines instead of
+  wrapping mid-word against their values. `.tp-mrow` is emitted only by `mhVideo`'s Study sidebar and the
+  rules are `:root[data-theme="microhistory"]`-scoped, so imperium + geolearn are byte-identical and the
+  Present video layout is unchanged.
 - **Editor: the Links panel now covers `interactive` and `sourceAnalysis` slides (not just `video`), and
   source slides gain an optional source link.** Extends #83's inspector **Links** panel via
   `PACK_LINK_SLOTS`: `interactive` slides get **Interactive / activity link** (`s.url`) + **Launch button
