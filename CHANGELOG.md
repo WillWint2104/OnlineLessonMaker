@@ -7,6 +7,15 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **New interactive: `interactives/versailles-terms.html` (Terms of the Treaty).** Self-contained
+  tap-to-sort activity: nine real Treaty of Versailles terms (incl. Article 231, the War Guilt Clause)
+  sorted into Territory / Military / Money / Blame, with per-term explanations on wrong placement,
+  expandable category definitions, progress counter and reset. Zero third-party hosts (inline CSS/JS,
+  system/monospace font stack) — `validate` green. Smoke-tested in Chromium: sorting, rejection
+  feedback and reset all work with 0 console errors. Standalone file only — `lesson-studio.html`
+  untouched.
+
 ### Changed
 - **Microhistory Study pages use the canvas width (supersedes the width half of the #85 entry below).**
   On wide screens the 1280×720 canvas letterboxes by design (fitCanvas untouched), but microhistory
