@@ -8,6 +8,47 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **Imperium Study width parity with microhistory (#86 values).** `:root[data-theme="imperium"]
+  .tp-wrap` max-width 800px → **1140px** and `.tp-main` padding `20px 16px` → **`16px 28px`**,
+  matching the microhistory values shipped in #86. Imperium-scoped only; geolearn untouched. Pages
+  with their own wrappers keep their designed caps (`.tp-doc` 880 for the text dossier / `.tp-ig-wrap`
+  800 / `.tp-vwrap` 800 / `.tp-llwrap` 1000 / `.tp-gr-wrap` 880 / `.tp-sa-wrap` 1060 / hero 880) — the
+  `.tp-wrap` pages (knowledgeCheck) span 1140 and every page gains the slimmer gutter. **Full parity
+  pass:** the per-page wrappers now share one consistent **1100px** cap — `.tp-doc` (text dossier),
+  `.tp-gr-wrap`, `.tp-ig-wrap`, `.tp-vwrap`, `.tp-llwrap`, `.tp-sa-wrap` and the title hero. The three
+  shared `.tp-slide` wrappers (`.tp-doc`/`.tp-gr-wrap`/`.tp-sa-wrap`) are bumped via imperium-scoped
+  **overrides**, not edits, so microhistory's packSourceAnalysis/guidedResponse keep their own caps
+  (verified: mh `.tp-sa-wrap` still 1060). **Prose guardrail:** widening pushed guidedResponse model
+  paragraphs to ~98ch, so gr prose is capped at **75ch** (`.tp-gr-wrap p{max-width:75ch}` — the column,
+  not the wrap; textareas stay full width). Probe-measured all single-column prose: text narrative
+  57ch, gr model 75ch, sourceAnalysis transcript 51ch, task questions 63ch — all ≤75ch. Re-swept all
+  ten imperium page types at a wide viewport: no overflow, grids/asides composed, Present unchanged
+  (one-screen min-fit, no scroll), geolearn + microhistory untouched. 0 console errors; `validate` green.
+
+### Fixed
+- **Source-image zoom renders at size in every mode + KC feedback hidden by default (engine, all
+  themes).** Three related fixes. (1) **ViewBox-only SVG images collapsed to 0×0 when enlarged** —
+  Chromium treats an SVG data-URI/file without width/height attributes as having no intrinsic size, so
+  both the `#lightbox` image (sourceAnalysis `tp-sazoom`) and the focus-overlay `.tp-fimg` rendered
+  invisible ("zoom opens nothing"). New `src`-targeted rules give SVG-sourced images a real box (the
+  SVG's own `preserveAspectRatio` contains the artwork); rasters are untouched. (2) **Zoom buttons are
+  now id-paired to their overlays**: `tpZoomBtn(label, id)` emits `data-tp-focus-open="<id>"` and
+  `tpFocusImage(…, id)` emits the matching overlay id, across all six call sites (lesson image, visual,
+  map, video still, artifact, text sidebar) — under the #81 generalised wiring a bare opener only
+  resolves on single-overlay slides, so any future multi-overlay slide would silently kill the zoom.
+  The bare fallback is kept and hardened: a bare opener now prefers the slide's single *unclaimed*
+  (id-less) overlay, so bare focus-reading buttons keep working next to id-paired zooms. (3) **KC
+  feedback cards were visible on fresh load in every mode** (not just Present): the
+  `.tp-feedback[hidden]` guard was out-cascaded by the later, equal-specificity themed `display:flex`
+  rules (`:root[data-theme]` = class-level). The guard is now `!important`, restoring hidden-by-default
+  while the answer flow still toggles via the `hidden` attribute. Verified in Chromium across
+  imperium + microhistory + geolearn, Study *and* Present *and* a real exported page: all five zoom
+  sites open/close (button, scrim, Esc) with real image height for SVG and raster; the sourceAnalysis
+  newspaper (SVG data URI) enlarges at 720px; KC fresh load shows no feedback, wrong → incorrect card
+  only, right → correct card only + advance gate unlocked; options clickable in Present (real
+  `<button>`s, covered by the existing #stage guard). 0 console errors; `validate` green.
+
+### Changed
 - **Study mode scales to width — no more letterbox gutters (engine, all themes).** `fitCanvas` used
   `min(sw/1280, sh/720)` for fit-layout slides in every mode, so on short/wide windows Study
   letterboxed dead canvas-background either side of every slide. Study/Edit now width-fill:
