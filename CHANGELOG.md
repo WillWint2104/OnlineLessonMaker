@@ -7,6 +7,18 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **Microhistory Study pages use the canvas width (supersedes the width half of the #85 entry below).**
+  On wide screens the 1280×720 canvas letterboxes by design (fitCanvas untouched), but microhistory
+  content added a second gutter inside it. Three CSS-only, microhistory-scoped values: (1) `.tp-main`
+  side padding 40px → **28px** (all page types); (2) `.tp-wrap` max-width 1024px → **1140px** — pages
+  with their own wrappers keep their caps (`.tp-artwrap` 1120 / `.tp-sa-wrap` 1060 / `.tp-iwrap` 1024 /
+  `.tp-gr-wrap` 880, all ≤1140 so nothing overflows); (3) `.tp-vcard2` max-width → **100%** so the
+  Study video card fills the wrap with no inner gutter beyond the `.tp-main` padding. Verified across
+  all 11 microhistory slide types: no horizontal overflow, grids intact, prose measures unchanged.
+  Present is untouched — the #81/#82 rules keep their own 1180px caps (verified) — and imperium +
+  geolearn are byte-identical (theme-scoped CSS only; imperium keeps its own `.tp-main` padding).
+
 ### Fixed
 - **Microhistory video page (Study): card width matches the text pages + WATCH FOR keys wrap cleanly.**
   Two CSS-only, microhistory-scoped fixes: (1) `.tp-vcard2` `max-width` 896px → **1024px** so the Study
