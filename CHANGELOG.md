@@ -7,6 +7,29 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **Source-image zoom renders at size in every mode + KC feedback hidden by default (engine, all
+  themes).** Three related fixes. (1) **ViewBox-only SVG images collapsed to 0×0 when enlarged** —
+  Chromium treats an SVG data-URI/file without width/height attributes as having no intrinsic size, so
+  both the `#lightbox` image (sourceAnalysis `tp-sazoom`) and the focus-overlay `.tp-fimg` rendered
+  invisible ("zoom opens nothing"). New `src`-targeted rules give SVG-sourced images a real box (the
+  SVG's own `preserveAspectRatio` contains the artwork); rasters are untouched. (2) **Zoom buttons are
+  now id-paired to their overlays**: `tpZoomBtn(label, id)` emits `data-tp-focus-open="<id>"` and
+  `tpFocusImage(…, id)` emits the matching overlay id, across all six call sites (lesson image, visual,
+  map, video still, artifact, text sidebar) — under the #81 generalised wiring a bare opener only
+  resolves on single-overlay slides, so any future multi-overlay slide would silently kill the zoom.
+  The bare fallback is kept and hardened: a bare opener now prefers the slide's single *unclaimed*
+  (id-less) overlay, so bare focus-reading buttons keep working next to id-paired zooms. (3) **KC
+  feedback cards were visible on fresh load in every mode** (not just Present): the
+  `.tp-feedback[hidden]` guard was out-cascaded by the later, equal-specificity themed `display:flex`
+  rules (`:root[data-theme]` = class-level). The guard is now `!important`, restoring hidden-by-default
+  while the answer flow still toggles via the `hidden` attribute. Verified in Chromium across
+  imperium + microhistory + geolearn, Study *and* Present *and* a real exported page: all five zoom
+  sites open/close (button, scrim, Esc) with real image height for SVG and raster; the sourceAnalysis
+  newspaper (SVG data URI) enlarges at 720px; KC fresh load shows no feedback, wrong → incorrect card
+  only, right → correct card only + advance gate unlocked; options clickable in Present (real
+  `<button>`s, covered by the existing #stage guard). 0 console errors; `validate` green.
+
 ### Changed
 - **Study mode scales to width — no more letterbox gutters (engine, all themes).** `fitCanvas` used
   `min(sw/1280, sh/720)` for fit-layout slides in every mode, so on short/wide windows Study
