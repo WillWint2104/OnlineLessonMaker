@@ -7,6 +7,22 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **Study mode scales to width — no more letterbox gutters (engine, all themes).** `fitCanvas` used
+  `min(sw/1280, sh/720)` for fit-layout slides in every mode, so on short/wide windows Study
+  letterboxed dead canvas-background either side of every slide. Study/Edit now width-fill:
+  `s = min(sw/1280, 1.3)` (capped so ultrawide monitors don't balloon the type); when the scaled 720
+  exceeds the viewport the stage scrolls vertically via the existing `!fitsH` path (`overflow:auto` +
+  `align-items:flex-start`, top edge reachable). The editor's 0.46 legibility floor is kept, and the
+  edit-only pack-scroll path adopts the same width-fill scale. **Present is byte-identical** — its
+  branch computes the exact same one-screen min-fit expression as before (verified numerically:
+  `s === minFit`, `overflow:hidden`, centred). The worksheet/print overlay and Export never route
+  through `fitCanvas` (verified), so they're untouched by construction. Scroll-layout slides keep
+  their existing `sw/1280` behaviour. Swept in Chromium: wide (1500×900) Study across microhistory +
+  imperium + geolearn × six page types → zero gutter; short+wide (1500×650) → gutter 0 (was ~271px of
+  letterbox at s=0.662, now s=0.898) with top and bottom reachable by scroll; narrow (1000×800)
+  unchanged (already width-limited); ultrawide capped at 1.3. 0 console errors; `validate` green.
+
 ### Added
 - **New interactive: `interactives/versailles-terms.html` (Terms of the Treaty).** Self-contained
   tap-to-sort activity: nine real Treaty of Versailles terms (incl. Article 231, the War Guilt Clause)

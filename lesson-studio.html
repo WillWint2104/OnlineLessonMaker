@@ -3201,7 +3201,9 @@ function renderCanvas(){
   fitCanvas();   // scale the 1280x720 canvas to the stage (A1 layout fit/scroll handled inside)
   $('#prev').disabled=cur===0; $('#next').disabled=cur===LESSON.slides.length-1;
 }
-/* ---- fixed-aspect canvas scaling (identical across Edit/Study/Present/Export) ---- */
+/* ---- fixed-aspect canvas scaling. Present = exact one-screen min-fit (unchanged). Study/Edit are
+   reading modes: they FILL WIDTH (capped) and scroll vertically, like a document — no letterbox
+   gutters. The worksheet/print overlay and Export never route through fitCanvas. ---- */
 function fitCanvas(){
   const stage=$('#stage'), fit=$('#canvasFit'), canvas=$('#canvas');
   if(!stage||!canvas||!fit) return;
@@ -3213,7 +3215,7 @@ function fitCanvas(){
   const sw=stage.clientWidth-padX, sh=stage.clientHeight-padY;
   if(!(sw>0)||!(sh>0)) return;                      // guard before any mutation (no half-updated state)
   const s0=LESSON.slides[cur]||{};
-  const editing=document.body.classList.contains('edit');   // floor + scroll is an EDITOR affordance; Study/Present/Export are untouched
+  const editing=document.body.classList.contains('edit');   // the 0.46 floor + pack-scroll are EDITOR affordances; Present keeps exact min-fit
   const present=document.body.classList.contains('present');
   // EDIT-ONLY: lay pack "fit" slides out at their natural height and let the stage scroll, so an author can
   // reach + select content that would otherwise be clipped below the 720px canvas fold. Study / Present /
@@ -3223,11 +3225,14 @@ function fitCanvas(){
   canvas.classList.toggle('scroll', scroll);
   canvas.style.height = scroll ? 'auto' : '720px';
   let s, fitsW=true, fitsH=true;
-  if(scroll){ s = packEdit ? Math.max(Math.min(sw/1280, sh/720), 0.46) : sw/1280; }   // packEdit keeps the legible fit-scale; a layout:scroll slide fills the width
+  if(scroll){ s = packEdit ? Math.max(Math.min(sw/1280, 1.3), 0.46) : sw/1280; }   // packEdit width-fills like Study (same cap) with the legible floor kept; a layout:scroll slide fills the width
   else {
-    const fitS = Math.min(sw/1280, sh/720);
+    // Present: exact one-screen min-fit — no scroll, pixel-identical to before. Study/Edit: fill the
+    // stage width (capped at 1.3 so ultrawide monitors don't balloon the type); when the scaled 720
+    // exceeds the viewport the existing !fitsH path scrolls the stage with the top edge reachable.
+    const fitS = present ? Math.min(sw/1280, sh/720) : Math.min(sw/1280, 1.3);
     // Editor: don't shrink the preview below a legible floor when the side panels crowd it — let the
-    // stage scroll instead. Study/Present/Export keep the exact fit (s===fitS) ⇒ no behavioural change.
+    // stage scroll instead.
     s = editing ? Math.max(fitS, 0.46) : fitS;
     fitsW = 1280*s <= sw+0.5; fitsH = 720*s <= sh+0.5;
   }
