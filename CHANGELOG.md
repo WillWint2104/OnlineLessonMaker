@@ -13,10 +13,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   matching the microhistory values shipped in #86. Imperium-scoped only; geolearn untouched. Pages
   with their own wrappers keep their designed caps (`.tp-doc` 880 for the text dossier / `.tp-ig-wrap`
   800 / `.tp-vwrap` 800 / `.tp-llwrap` 1000 / `.tp-gr-wrap` 880 / `.tp-sa-wrap` 1060 / hero 880) — the
-  `.tp-wrap` pages (knowledgeCheck) span 1140 and every page gains the slimmer gutter. Swept all ten
-  imperium page types at a wide viewport: no overflow; the text page's narrative column measures ~58ch
-  (well under the ~75ch readability cap, so no column capping was needed); Present unchanged
-  (one-screen min-fit, no scroll). 0 console errors; `validate` green.
+  `.tp-wrap` pages (knowledgeCheck) span 1140 and every page gains the slimmer gutter. **Full parity
+  pass:** the per-page wrappers now share one consistent **1100px** cap — `.tp-doc` (text dossier),
+  `.tp-gr-wrap`, `.tp-ig-wrap`, `.tp-vwrap`, `.tp-llwrap`, `.tp-sa-wrap` and the title hero. The three
+  shared `.tp-slide` wrappers (`.tp-doc`/`.tp-gr-wrap`/`.tp-sa-wrap`) are bumped via imperium-scoped
+  **overrides**, not edits, so microhistory's packSourceAnalysis/guidedResponse keep their own caps
+  (verified: mh `.tp-sa-wrap` still 1060). **Prose guardrail:** widening pushed guidedResponse model
+  paragraphs to ~98ch, so gr prose is capped at **75ch** (`.tp-gr-wrap p{max-width:75ch}` — the column,
+  not the wrap; textareas stay full width). Probe-measured all single-column prose: text narrative
+  57ch, gr model 75ch, sourceAnalysis transcript 51ch, task questions 63ch — all ≤75ch. Re-swept all
+  ten imperium page types at a wide viewport: no overflow, grids/asides composed, Present unchanged
+  (one-screen min-fit, no scroll), geolearn + microhistory untouched. 0 console errors; `validate` green.
 
 ### Fixed
 - **Source-image zoom renders at size in every mode + KC feedback hidden by default (engine, all
