@@ -1695,8 +1695,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="imperium"] .tp-hstat{display:flex;align-items:center;gap:4px;}
 :root[data-theme="imperium"] .tp-hstat.hp{color:var(--error);} :root[data-theme="imperium"] .tp-hstat.xp{color:var(--secondary);}
 :root[data-theme="imperium"] .tp-hstat b{color:var(--on-surface);font-weight:600;}
-:root[data-theme="imperium"] .tp-main{align-items:center;justify-content:safe center;padding:20px 16px;}
-:root[data-theme="imperium"] .tp-wrap{width:100%;max-width:800px;margin:auto;}
+:root[data-theme="imperium"] .tp-main{align-items:center;justify-content:safe center;padding:16px 28px;}   /* width parity with microhistory (#86): slim side gutter — the canvas already letterboxes by design */
+:root[data-theme="imperium"] .tp-wrap{width:100%;max-width:1140px;margin:auto;}   /* was 800 — parity with microhistory's 1140; pages with their own wrappers (.tp-doc 880 / .tp-ig-wrap 800 / .tp-vwrap 800 / .tp-llwrap 1000 / .tp-gr-wrap 880 / .tp-sa-wrap 1060 / hero 880) keep their caps */
 :root[data-theme="imperium"] .tp-wrap.tp-wrap-hero{max-width:880px;}   /* title hero only — keeps content slides at the original 800 */
 :root[data-theme="imperium"] .tp-foot{padding:16px;background:var(--surface);border-top:1px solid var(--surface-variant);display:flex;justify-content:center;}
 :root[data-theme="imperium"] .tp-cont,:root[data-theme="imperium"] .tp-start{width:100%;max-width:800px;background:var(--primary);color:var(--on-primary);border:none;border-radius:12px;padding:15px 24px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--tp-body);font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}

@@ -7,6 +7,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **Imperium Study width parity with microhistory (#86 values).** `:root[data-theme="imperium"]
+  .tp-wrap` max-width 800px → **1140px** and `.tp-main` padding `20px 16px` → **`16px 28px`**,
+  matching the microhistory values shipped in #86. Imperium-scoped only; geolearn untouched. Pages
+  with their own wrappers keep their designed caps (`.tp-doc` 880 for the text dossier / `.tp-ig-wrap`
+  800 / `.tp-vwrap` 800 / `.tp-llwrap` 1000 / `.tp-gr-wrap` 880 / `.tp-sa-wrap` 1060 / hero 880) — the
+  `.tp-wrap` pages (knowledgeCheck) span 1140 and every page gains the slimmer gutter. Swept all ten
+  imperium page types at a wide viewport: no overflow; the text page's narrative column measures ~58ch
+  (well under the ~75ch readability cap, so no column capping was needed); Present unchanged
+  (one-screen min-fit, no scroll). 0 console errors; `validate` green.
+
 ### Fixed
 - **Source-image zoom renders at size in every mode + KC feedback hidden by default (engine, all
   themes).** Three related fixes. (1) **ViewBox-only SVG images collapsed to 0×0 when enlarged** —
