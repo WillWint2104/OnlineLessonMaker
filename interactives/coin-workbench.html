@@ -6,42 +6,43 @@
 <title>Coin Workbench · interactive</title>
 <style>
   :root{
-    --paper:#f4f1ea;--card:#fbf9f4;--ink:#1a1a1a;--muted:#4a4640;--faint:#7a746a;--line:#1a1a1a;
-    --ox:#840f16;--ox-soft:#f3e2e2;--ox-ink:#5a0c10;--bronze:#6b5327;--bronze-soft:#efe8d8;
-    --mono:"Courier Prime","Courier New",Courier,monospace;
-    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --paper:#FBF8FD;--card:#fff7fe;--ink:#1e1a20;--muted:#4b4450;--faint:#847a8c;--line:#e8e0e9;
+    --ox:#451274;--ox-soft:#f0dbff;--ox-ink:#2c0051;--bronze:#8a6d1f;--bronze-soft:#f6ecc8;
+    --gold:#ffe16d;
+    --mono:"Playfair Display",Georgia,serif;
+    --sans:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   }
   *{box-sizing:border-box;}
   body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:22px;}
-  .doc{width:100%;max-width:960px;background:var(--card);border:2px solid var(--line);box-shadow:6px 6px 0 0 var(--line);padding:22px 24px 20px;}
-  .eb{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--ox);font-weight:700;}
+  .doc{width:100%;max-width:960px;background:var(--card);border:1px solid var(--line);box-shadow:0 10px 30px rgba(69,18,116,.10);border-radius:24px;padding:22px 26px 20px;}
+  .eb{font-family:var(--sans);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ox);font-weight:700;}
   .tr{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;}
-  h1{font-family:var(--mono);font-weight:700;font-size:clamp(20px,3.4vw,27px);margin:5px 0 6px;text-transform:uppercase;}
-  .pill{font-family:var(--mono);font-size:12.5px;color:#fff;background:var(--ox);padding:6px 12px;white-space:nowrap;border:2px solid var(--line);}
+  h1{font-family:var(--mono);font-weight:700;font-size:clamp(22px,3.6vw,30px);margin:5px 0 6px;}
+  .pill{font-family:var(--sans);font-weight:600;letter-spacing:.1em;text-transform:uppercase;font-size:11.5px;color:#fff;background:var(--ox);padding:7px 14px;white-space:nowrap;border:none;border-radius:20px;}
   .lead{font-size:15.5px;color:var(--muted);margin:0 0 14px;line-height:1.5;max-width:80ch;}
   .lab{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:10px 0 8px;}
   .grid{display:block;}
-  .ctab{appearance:none;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:7px 12px;cursor:pointer;border:2px solid var(--line);background:#fff;color:var(--ink);}
+  .ctab{appearance:none;font-family:var(--sans);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:8px 16px;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:20px;}
   .ctab.on{background:var(--ox);color:#fff;}
-  .stagewrap{border:2px solid var(--line);background:#181512;position:relative;overflow:hidden;}
+  .stagewrap{border:3px solid #5d2e8c;background:linear-gradient(140deg,#2b0a52,#160528);position:relative;overflow:hidden;border-radius:20px;}
   #stage{display:block;width:100%;aspect-ratio:4/3;touch-action:none;cursor:grab;}
   #stage.drag{cursor:grabbing;}
-  .pin{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:var(--ox);color:#fff;border:2px solid #fff;box-shadow:0 0 0 2px rgba(0,0,0,.45);font-family:var(--mono);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:opacity .15s;}
+  .pin{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:var(--ox);color:var(--gold);border:2px solid var(--gold);box-shadow:0 0 0 2px rgba(0,0,0,.45);font-family:var(--mono);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:opacity .15s;}
   .pin.dim{opacity:0;pointer-events:none;}
-  .pin.done{background:var(--bronze);}
+  .pin.done{background:#00685f;border-color:#fff;color:#fff;}
   .pin:focus-visible{outline:3px solid #fff;}
   .stagectl{position:absolute;left:10px;bottom:10px;display:flex;gap:8px;}
-  .sbtn{appearance:none;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:7px 12px;cursor:pointer;border:2px solid #fff;background:rgba(20,16,13,.72);color:#fff;}
+  .sbtn{appearance:none;font-family:var(--sans);font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;cursor:pointer;border:1px solid rgba(255,255,255,.5);background:rgba(22,5,40,.72);color:#fff;border-radius:20px;}
   .sbtn:hover{background:var(--ox);}
-  .attrib{position:absolute;right:10px;bottom:10px;font-family:var(--mono);font-size:10.5px;color:#cfc7ba;background:rgba(20,16,13,.6);padding:3px 8px;max-width:60%;text-align:right;}
-  .hint{position:absolute;left:10px;top:10px;font-family:var(--mono);font-size:11px;color:#e8ddca;background:rgba(20,16,13,.6);padding:4px 9px;}
-  .callout{border:2px solid var(--line);background:#fff;padding:13px 15px;margin-top:12px;display:none;}
+  .attrib{position:absolute;right:10px;bottom:10px;font-family:var(--sans);font-size:10.5px;color:#cfc7ba;background:rgba(20,16,13,.6);padding:3px 8px;max-width:60%;text-align:right;}
+  .hint{position:absolute;left:10px;top:10px;font-family:var(--sans);font-size:11px;color:#e8ddca;background:rgba(20,16,13,.6);padding:4px 9px;}
+  .callout{border:1px solid var(--line);background:#fff;padding:15px 17px;margin-top:12px;display:none;border-radius:16px;box-shadow:0 6px 18px rgba(69,18,116,.08);}
   .callout.show{display:block;}
   .callout .ct{font-family:var(--mono);font-weight:700;font-size:14.5px;text-transform:uppercase;margin:0 0 5px;display:flex;justify-content:space-between;gap:8px;align-items:baseline;}
-  .cat{font-family:var(--mono);font-size:11px;color:#fff;background:var(--bronze);padding:2px 8px;white-space:nowrap;}
+  .cat{font-family:var(--sans);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:10.5px;color:var(--ox-ink);background:var(--ox-soft);padding:3px 10px;white-space:nowrap;border-radius:12px;}
   .callout p{margin:0 0 10px;font-size:14.5px;line-height:1.5;color:var(--muted);}
-  .realbox{border-left:4px solid var(--bronze);background:var(--bronze-soft);padding:8px 11px;font-size:13.5px;color:var(--ink);}
-  .realbox .rl{font-family:var(--mono);font-weight:700;font-size:10.5px;letter-spacing:.08em;color:var(--bronze);display:block;margin-bottom:3px;}
+  .realbox{border-left:4px solid var(--ox);background:var(--ox-soft);padding:9px 12px;font-size:13.5px;color:var(--ink);border-radius:0 10px 10px 0;}
+  .realbox .rl{font-family:var(--sans);font-weight:700;font-size:10.5px;letter-spacing:.1em;color:var(--ox);display:block;margin-bottom:3px;}
   .btn{appearance:none;font-family:var(--mono);font-size:13px;font-weight:700;padding:8px 14px;cursor:pointer;border:2px solid var(--line);background:#fff;color:var(--ink);text-transform:uppercase;letter-spacing:.03em;}
   .btn:hover{box-shadow:3px 3px 0 0 var(--line);}
   .btn.primary{background:var(--ox);color:#fff;}
@@ -59,7 +60,7 @@
   .prog{font-family:var(--mono);font-size:13px;color:var(--muted);}
   .fb{min-height:20px;margin:8px 0 0;font-size:14px;color:var(--ox-ink);font-family:var(--mono);}
   details.place{margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--faint);}
-  details.place pre{background:#181512;color:#e8ddca;padding:10px;overflow:auto;font-size:11px;max-height:160px;}
+  details.place pre{background:#1d0836;color:#e9dcff;padding:10px;overflow:auto;font-size:11px;max-height:160px;}
 </style>
 </head>
 <body>
@@ -4064,7 +4065,7 @@ var canvas=document.getElementById('stage');
 var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 renderer.outputEncoding=THREE.sRGBEncoding;
-var scene=new THREE.Scene(); scene.background=new THREE.Color(0x181512);
+var scene=new THREE.Scene(); scene.background=new THREE.Color(0x1d0836);
 var camera=new THREE.PerspectiveCamera(34,4/3,0.01,50); camera.position.set(0,0,4.2);
 var key=new THREE.DirectionalLight(0xfff2dd,2.1); key.position.set(2.2,2.6,3.2); scene.add(key);
 var rim=new THREE.DirectionalLight(0xcfd8ff,0.65); rim.position.set(-3,-1.5,-2.5); scene.add(rim);
@@ -4143,7 +4144,7 @@ document.getElementById('light').addEventListener('click',function(){
   raking=!raking;
   if(raking){ key.position.set(3.4,0.35,0.9); key.intensity=2.6; amb.intensity=0.22; fill.intensity=0.15; }
   else { key.position.set(2.2,2.6,3.2); key.intensity=2.1; amb.intensity=0.55; fill.intensity=0.55; }
-  this.style.background=raking?'#840f16':'';
+  this.style.background=raking?'#5d2e8c':'';
 });
 
 /* ================= PINS ================= */
