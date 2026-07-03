@@ -7,6 +7,14 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **`interactives/coin-workbench.html` restyled to the imperium theme (full byte-for-byte
+  replacement).** The published coin workbench swapped for the maintainer-supplied imperium build:
+  imperium tokens present (`#451274`, Playfair Display, `#ffe16d`), zero stale WW1 tokens (`#840f16`,
+  Courier Prime), all three embedded coin models (`COIN_GLTF_450/500/510`) and the "ON THE REAL COIN"
+  callout intact, still self-contained (~8.06 MB; only licence-comment URLs). `validate` green.
+  Standalone content only — no engine or lesson files.
+
 ### Added
 - **New interactive: `interactives/coin-workbench.html` (3D coin workbench — Agrippina dot point 14).**
   Self-contained 3D source-examination tool: three coin models embedded as data URIs
