@@ -7,6 +7,15 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **New interactive: `interactives/coin-workbench.html` (3D coin workbench — Agrippina dot point 14).**
+  Self-contained 3D source-examination tool: three coin models embedded as data URIs
+  (`COIN_GLTF_450/500/510`) with a vendored three.js — intentionally large (~8.06 MB), zero external
+  hosts, no fetch calls, no blob URLs (sandbox-proofed by design; the only `https://` strings are
+  three.js licence/spec comments and the W3C namespace constant). Published byte-for-byte as supplied
+  by the maintainer — no reformatting. `validate` green (reports the file self-contained). Standalone
+  file only — `lesson-studio.html` untouched.
+
 ### Changed
 - **Imperium Study width parity with microhistory (#86 values).** `:root[data-theme="imperium"]
   .tp-wrap` max-width 800px → **1140px** and `.tp-main` padding `20px 16px` → **`16px 28px`**,
