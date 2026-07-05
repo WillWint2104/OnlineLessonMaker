@@ -8,6 +8,22 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **Imperium width parity, completion pass — the four page types #89 missed.** Unified-1100 bumps,
+  all in imperium's own already-scoped rules (microhistory has separate `.tp-iwrap`/`.tp-cont`/
+  `.tp-hsub` rules — untouched): `.tp-iwrap` 1000 → **1100** (the interactive/workbench page — the
+  live-embed `.tp-iembedlive` is `width:100%` of the wrap and probe-measured at the full new width);
+  `.tp-kc-card` 800 → **1100**; `.tp-ocard` 1000 → **1100**; `.tp-start`/`.tp-cont` 800 → **1100**
+  with the hero inner rail `.tp-hin` 920 → **1040** (proportionate). **Prose guardrails** (probe-
+  measured): the wider KC card stretched the question line to ~103ch and the interactive lead to
+  ~131ch — both now capped at **75ch** (`.tp-kc-q` / `.tp-ilead`, imperium-scoped; the text column,
+  not the card). `.tp-hsub` kept at its deliberate 512px subtitle measure (45ch — reads fine in the
+  1100 hero, not orphaned). Swept all eleven imperium page types incl. interactive EMBED mode with a
+  live iframe: every content card ~1100, no overflow, no prose > 75ch, KC options / outcomes /
+  interactive-task grids composed. microhistory + geolearn `renderPackSlide` **byte-identical to
+  main, 28/28** across themes × modes × types; Present unchanged (one-screen min-fit). `validate`
+  green.
+
+### Changed
 - **`interactives/coin-workbench.html` restyled to the imperium theme (full byte-for-byte
   replacement).** The published coin workbench swapped for the maintainer-supplied imperium build:
   imperium tokens present (`#451274`, Playfair Display, `#ffe16d`), zero stale WW1 tokens (`#840f16`,
