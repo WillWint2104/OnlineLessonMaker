@@ -1687,7 +1687,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 
 /* ============================== IMPERIUM ============================== */
 :root[data-theme="imperium"] .tp-head{background:var(--surface);border-bottom:1px solid var(--surface-variant);}
-:root[data-theme="imperium"] .tp-hin{display:flex;align-items:center;gap:8px;max-width:920px;margin:0 auto;padding:0 24px;height:60px;width:100%;}
+:root[data-theme="imperium"] .tp-hin{display:flex;align-items:center;gap:8px;max-width:1040px;margin:0 auto;padding:0 24px;height:60px;width:100%;}
 :root[data-theme="imperium"] .tp-hclose{color:var(--on-surface-variant);display:flex;}
 :root[data-theme="imperium"] .tp-htrack{flex:1;height:12px;background:var(--surface-variant);border-radius:9999px;overflow:hidden;margin:0 16px;}
 :root[data-theme="imperium"] .tp-htrack>i{display:block;height:100%;background:var(--primary);border-radius:9999px;}
@@ -1702,10 +1702,12 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="imperium"] .tp-doc{max-width:1100px;}
 :root[data-theme="imperium"] .tp-gr-wrap{max-width:1100px;}
 :root[data-theme="imperium"] .tp-sa-wrap{max-width:1100px;}
-:root[data-theme="imperium"] .tp-gr-wrap p{max-width:75ch;}   /* guardrail: the widened 1100 card must not stretch reading prose (model answers measured ~98ch unguarded) — cap the text column, not the wrap; textareas/inputs stay full width */
+:root[data-theme="imperium"] .tp-gr-wrap p{max-width:75ch;}
+:root[data-theme="imperium"] .tp-kc-q{max-width:75ch;}   /* guardrail (completion pass): the 1100 KC card must not stretch the question line (~103ch unguarded) */
+:root[data-theme="imperium"] .tp-ilead{max-width:75ch;}   /* guardrail (completion pass): interactive lead measured ~131ch at the 1100 wrap */   /* guardrail: the widened 1100 card must not stretch reading prose (model answers measured ~98ch unguarded) — cap the text column, not the wrap; textareas/inputs stay full width */
 :root[data-theme="imperium"] .tp-wrap.tp-wrap-hero{max-width:1100px;}   /* title hero — unified 1100 cap (width parity pass) */
 :root[data-theme="imperium"] .tp-foot{padding:16px;background:var(--surface);border-top:1px solid var(--surface-variant);display:flex;justify-content:center;}
-:root[data-theme="imperium"] .tp-cont,:root[data-theme="imperium"] .tp-start{width:100%;max-width:800px;background:var(--primary);color:var(--on-primary);border:none;border-radius:12px;padding:15px 24px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--tp-body);font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+:root[data-theme="imperium"] .tp-cont,:root[data-theme="imperium"] .tp-start{width:100%;max-width:1100px;background:var(--primary);color:var(--on-primary);border:none;border-radius:12px;padding:15px 24px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--tp-body);font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
 :root[data-theme="imperium"] .tp-cont:disabled{opacity:.4;cursor:not-allowed;}
 /* imperium · title */
 :root[data-theme="imperium"] .tp-newpill{display:flex;justify-content:center;margin-bottom:8px;}
@@ -1734,7 +1736,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="imperium"] .tp-pill.hp{background:var(--surface-container);border:1px solid var(--outline-variant);color:var(--primary);}
 :root[data-theme="imperium"] .tp-pill.xp{background:rgba(252,212,0,.2);border:1px solid rgba(112,93,0,.2);color:var(--secondary);}
 /* imperium · outcomes */
-:root[data-theme="imperium"] .tp-ocard{max-width:1000px;width:100%;height:100%;max-height:100%;background:#fff;border:1px solid var(--outline-variant);border-radius:12px;box-shadow:0 12px 34px -18px rgba(46,0,82,.3);position:relative;overflow:hidden;display:flex;margin:auto;flex:none;}   /* fill the canvas height (was fixed 16/9 → objectives crowded); .tp-right scrolls if they exceed it */
+:root[data-theme="imperium"] .tp-ocard{max-width:1100px;width:100%;height:100%;max-height:100%;background:#fff;border:1px solid var(--outline-variant);border-radius:12px;box-shadow:0 12px 34px -18px rgba(46,0,82,.3);position:relative;overflow:hidden;display:flex;margin:auto;flex:none;}   /* fill the canvas height (was fixed 16/9 → objectives crowded); .tp-right scrolls if they exceed it */
 :root[data-theme="imperium"] .tp-left{width:40%;position:relative;display:flex;flex-direction:column;background:linear-gradient(150deg,#5d2e8c,#451274);}
 :root[data-theme="imperium"] .tp-left-img{position:absolute;inset:0;}
 :root[data-theme="imperium"] .tp-left-ph{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.5);z-index:2;}
@@ -2036,7 +2038,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-feedback .ftitle{font-family:var(--tp-serif);font-weight:700;font-size:18px;}
 .tp-slide .tp-feedback .ftext{font-size:15px;line-height:1.55;margin-top:4px;color:var(--on-surface);}
 /* imperium · knowledgeCheck */
-:root[data-theme="imperium"] .tp-kc-card{background:var(--surface);border:1px solid var(--custom-outline);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:22px;margin:auto;width:100%;max-width:800px;}
+:root[data-theme="imperium"] .tp-kc-card{background:var(--surface);border:1px solid var(--custom-outline);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:22px;margin:auto;width:100%;max-width:1100px;}
 :root[data-theme="imperium"] .tp-kc-hdr{display:flex;flex-direction:column;gap:10px;}
 :root[data-theme="imperium"] .tp-metarow{display:flex;align-items:center;gap:10px;}
 :root[data-theme="imperium"] .tp-kc-badge{background:var(--secondary-container);color:var(--on-secondary-container);padding:4px 12px;border-radius:9999px;font-size:12px;font-weight:600;letter-spacing:.05em;}
@@ -2388,7 +2390,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 /* imperium · interactive — shared packInteractive wearing imperium chrome (rounded soft cards, pill launch,
    serif questions heading). geolearn keeps glInteractive; these only style data-tp-type="interactive". */
 :root[data-theme="imperium"] .tp-slide[data-tp-type="interactive"] .tp-main{justify-content:flex-start;}
-:root[data-theme="imperium"] .tp-iwrap{width:100%;max-width:1000px;margin:0 auto;display:flex;flex-direction:column;min-height:100%;}
+:root[data-theme="imperium"] .tp-iwrap{width:100%;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;min-height:100%;}
 :root[data-theme="imperium"] .tp-introw{display:grid;grid-template-columns:1.55fr 1fr;gap:24px;align-items:start;}
 :root[data-theme="imperium"] .tp-iembed{position:relative;aspect-ratio:16/9;min-width:0;background:var(--surface-container);border:1px solid var(--outline-variant);border-radius:16px;overflow:hidden;--media-ph-ink:var(--on-surface-variant);}
 :root[data-theme="imperium"] .tp-iembed .tp-media-img{object-fit:contain;background:var(--surface-container);}
