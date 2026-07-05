@@ -1702,9 +1702,9 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="imperium"] .tp-doc{max-width:1100px;}
 :root[data-theme="imperium"] .tp-gr-wrap{max-width:1100px;}
 :root[data-theme="imperium"] .tp-sa-wrap{max-width:1100px;}
-:root[data-theme="imperium"] .tp-gr-wrap p{max-width:75ch;}
+:root[data-theme="imperium"] .tp-gr-wrap p{max-width:75ch;}   /* guardrail: the widened 1100 card must not stretch reading prose (model answers measured ~98ch unguarded) — cap the text column, not the wrap; textareas/inputs stay full width */
 :root[data-theme="imperium"] .tp-kc-q{max-width:75ch;}   /* guardrail (completion pass): the 1100 KC card must not stretch the question line (~103ch unguarded) */
-:root[data-theme="imperium"] .tp-ilead{max-width:75ch;}   /* guardrail (completion pass): interactive lead measured ~131ch at the 1100 wrap */   /* guardrail: the widened 1100 card must not stretch reading prose (model answers measured ~98ch unguarded) — cap the text column, not the wrap; textareas/inputs stay full width */
+:root[data-theme="imperium"] .tp-ilead{max-width:75ch;}   /* guardrail (completion pass): interactive lead measured ~131ch at the 1100 wrap */
 :root[data-theme="imperium"] .tp-wrap.tp-wrap-hero{max-width:1100px;}   /* title hero — unified 1100 cap (width parity pass) */
 :root[data-theme="imperium"] .tp-foot{padding:16px;background:var(--surface);border-top:1px solid var(--surface-variant);display:flex;justify-content:center;}
 :root[data-theme="imperium"] .tp-cont,:root[data-theme="imperium"] .tp-start{width:100%;max-width:1100px;background:var(--primary);color:var(--on-primary);border:none;border-radius:12px;padding:15px 24px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--tp-body);font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
