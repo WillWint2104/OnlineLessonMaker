@@ -8,6 +8,14 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **Source-image zoom button visible on light images (contrast fix).** `.tp-zoombtn` (the top-right
+  "View larger" pill on source/reading images) was `background:rgba(20,16,24,.62)` with a white icon — on
+  a pale image (silver coin, white background) the pill washed out to a bare icon. Now a near-opaque
+  `rgba(20,16,24,.82)` pill with `box-shadow:0 2px 8px rgba(0,0,0,.45)` (hover deepened to `.95`); white
+  icon and light border kept for contrast on dark images. The sibling `.tp-focusbtn` (light-pill reading
+  control, which conversely vanishes on a *light* image) gets the same drop shadow — microhistory keeps
+  its hard WW1 offset shadow via the existing theme override. Global (un-scoped) rules — pure contrast fix,
+  no per-theme change; verified across imperium/microhistory/geolearn in Study + Present. `validate` green.
 - **`interactives/coin-workbench.html` — two-column layout + control spacing (content-only).** Republished
   the coin workbench with its two-column layout (`grid-template-columns:minmax(0,1.55fr)`), a square coin
   stage (`aspect-ratio:1/1`, the spacing fix) and the zoom/turn controls moved below the coin
