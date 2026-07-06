@@ -7,6 +7,24 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Key-term popups — `**bold**` joins the lookup + lifted to the shared imperium/microhistory text
+  pages.** `tpRich` now runs the same key-term lookup for `**bold**` as it already did for `==term==`:
+  when the slide carries `keyTerms`, a bold span whose text matches a term becomes the same clickable
+  definition button; non-matching bold stays a plain `<b>` (byte-identical when no `opts.term`, so every
+  existing pack text renderer is unaffected). The imperium (`packText`) and microhistory (`mhText`) text
+  pages gain the optional `s.keyTerms` support geolearn's studyguide already had: matched terms in the
+  body render as `.tp-kt` buttons paired by id with `tpTermModal` overlays, opened through the existing
+  `data-tp-focus-open` → `[data-tp-overlay]` handler in `wirePackTyped` (no new popup system, no new
+  host). New `.tp-kt` styling for imperium + microhistory mirrors geolearn's `.gl-kt`. Popups work in
+  **Study and in the edit preview**; on the **board (Present)** term buttons render as the plain
+  highlight/bold with no modals (teacher talks — no dead buttons). Slides without `keyTerms` are
+  **byte-identical to main** (6/6 across imperium/microhistory/geolearn × Study/Present; geolearn
+  no-keyTerm 2/2). Activates the dormant `keyTerms` on the conscription microhistory reading slide and
+  extends geolearn's existing 5 studyguide slides to `**bold**` matches; `validate` green, 0 console
+  errors, live open/close verified via close-button and Esc with correct id-paired disambiguation on the
+  multi-overlay microhistory reading page.
+
 ### Changed
 - **Imperium width parity, completion pass — the four page types #89 missed.** Unified-1100 bumps,
   all in imperium's own already-scoped rules (microhistory has separate `.tp-iwrap`/`.tp-cont`/

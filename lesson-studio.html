@@ -246,6 +246,9 @@
 :root[data-theme="imperium"] .tp-hl{color:var(--primary);font-weight:600;}
 :root[data-theme="microhistory"] .tp-slide{--note-reveal-bg:var(--secondary-fixed);--note-reveal-ink:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-hl{color:var(--primary);font-weight:600;}
+/* key-term buttons on the shared imperium/microhistory text page (pack equivalent of geolearn's .gl-kt) */
+:root[data-theme="imperium"] .tp-kt,:root[data-theme="microhistory"] .tp-kt{appearance:none;-webkit-appearance:none;font:inherit;line-height:inherit;cursor:help;color:var(--primary);font-weight:600;background:transparent;border:none;border-bottom:2px solid var(--secondary-fixed);border-radius:3px;padding:0 3px;}
+:root[data-theme="imperium"] .tp-kt:hover,:root[data-theme="imperium"] .tp-kt:focus,:root[data-theme="microhistory"] .tp-kt:hover,:root[data-theme="microhistory"] .tp-kt:focus{background:var(--secondary-fixed);border-bottom-color:var(--primary);outline:none;}
 :root[data-theme="geolearn"] .gl-art-h1{font-size:clamp(30px,3.6vw,42px);line-height:1.12;letter-spacing:-.02em;font-weight:700;margin-bottom:14px;max-width:18ch;}
 :root[data-theme="geolearn"] .gl-readtime{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--on-surface-variant);}
 :root[data-theme="geolearn"] .gl-readtime .ri{color:var(--primary);display:flex;}
@@ -4196,11 +4199,20 @@ function packText(s){
   const body=Array.isArray(s.body)?s.body:[];
   const pq=s.pullQuote||null;
   const pullHtml=pq?`<div class="tp-pull">“${esc(pq.text||'')}”${pq.source?`<span class="src">${esc(pq.source)}</span>`:''}</div>`:'';
+  // Optional key-term popups (parity with geolearn studyguide). ==term== and matching **bold** become
+  // clickable definition buttons paired with tpTermModal overlays (wired via the existing id-targeted
+  // data-tp-focus-open handler). Suppressed on the board (Present) — teacher talks — and absent entirely
+  // when the slide carries no keyTerms, so renderPackSlide stays byte-identical for existing lessons.
+  const present=document.body.classList.contains('present');
+  const terms=Array.isArray(s.keyTerms||s.terms)?(s.keyTerms||s.terms):[];
+  const tmap={}; terms.forEach((t,k)=>{ if(t&&t.term) tmap[String(t.term).trim().toLowerCase()]='ktp'+k; });
+  const ktLive=terms.length&&!present;
+  const kt=(t)=> ktLive ? tpRich(t,{term:(w)=>{ const id=tmap[w.trim().toLowerCase()]; return id?`<button class="tp-kt" type="button" data-tp-focus-open="${id}">${esc(w)}</button>`:null; }}) : tpRich(t);
   let narr='';
   if(body.length){
-    narr+=`<p class="tp-lead">${tpRich(body[0])}</p>`;
+    narr+=`<p class="tp-lead">${kt(body[0])}</p>`;
     const rest=body.slice(1);
-    rest.forEach((p,j)=>{ narr+=`<p class="tp-body">${tpRich(p)}</p>`; if(j===0) narr+=pullHtml; });
+    rest.forEach((p,j)=>{ narr+=`<p class="tp-body">${kt(p)}</p>`; if(j===0) narr+=pullHtml; });
     if(rest.length===0) narr+=pullHtml;
   } else { narr=pullHtml; }
   const sb=s.sidebar||{};
@@ -4223,6 +4235,7 @@ function packText(s){
       </div>
     </article></main>`
     +(mode!=='edit'&&tpHasImg(sb.image)?tpFocusImage(sb.image,sb.caption||'Source image',null,'ov-zoom-side'):'')
+    +(ktLive?terms.map((t,k)=>tpTermModal('ktp'+k,t.term||'',t.definition||'')).join(''):'')
     +packFoot(s,s.cta||'Continue');
 }
 
@@ -4285,7 +4298,7 @@ function tpMedia(media, kind, opts){ opts=opts||{};
    Consumed by every pack text renderer (imperium/microhistory/geolearn); packs supply only CSS. */
 function tpRich(text, opts){ opts=opts||{};
   return esc(text||'')
-    .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
+    .replace(/\*\*([^*]+)\*\*/g,(m,w)=>{ if(opts.term){ const link=opts.term(w); if(link) return link; } return `<b>${w}</b>`; })
     .replace(/\[\[([^\]]+)\]\]/g,'<span class="tp-noteclause">$1</span>')
     .replace(/==([^=]+)==/g,(m,w)=>{ if(opts.term){ const link=opts.term(w); if(link) return link; } return `<span class="tp-hl">${w}</span>`; });
 }
@@ -4368,9 +4381,11 @@ function glText(s){
   const variant=s.variant==='studyguide'?'studyguide':'article';
   const body=Array.isArray(s.body)?s.body:(s.body?[s.body]:[]);
   if(variant==='studyguide'){
+    const present=document.body.classList.contains('present');
     const terms=Array.isArray(s.keyTerms||s.terms)?(s.keyTerms||s.terms):[];
-    const tmap={}; terms.forEach((t,k)=>{ if(t&&t.term) tmap[String(t.term).toLowerCase()]='gt'+k; });
-    const kt=(t)=>tpRich(t,{term:(w)=>{ const id=tmap[w.trim().toLowerCase()]; return id?`<button class="gl-kt" type="button" data-gl-open="${id}">${esc(w)}</button>`:null; }});
+    const tmap={}; terms.forEach((t,k)=>{ if(t&&t.term) tmap[String(t.term).trim().toLowerCase()]='gt'+k; });
+    const ktLive=terms.length&&!present;                                  // no interactive term buttons on the board — teacher talks
+    const kt=(t)=> ktLive ? tpRich(t,{term:(w)=>{ const id=tmap[w.trim().toLowerCase()]; return id?`<button class="gl-kt" type="button" data-gl-open="${id}">${esc(w)}</button>`:null; }}) : tpRich(t);
     const blockHtml=body.map(b=>{
       if(typeof b==='string') return `<p>${kt(b)}</p>`;
       if(b.heading) return `<h2>${esc(b.heading)}</h2>`;
@@ -4378,7 +4393,7 @@ function glText(s){
       if(b.figure||b.image){ const f=b.figure||b; return `<figure class="gl-figure">${glImg(f.image||f.src,f.caption||'')}${f.caption?`<figcaption class="cap">${esc(f.caption)}</figcaption>`:''}</figure>`; }
       if(b.content) return `<p>${kt(b.content)}</p>`;
       return ''; }).join('');
-    const modals=terms.map((t,k)=>glModal('gt'+k,'Key term',t.term||'',`<p class="gl-msub">${esc(t.definition||'')}</p>`)).join('');
+    const modals=ktLive?terms.map((t,k)=>glModal('gt'+k,'Key term',t.term||'',`<p class="gl-msub">${esc(t.definition||'')}</p>`)).join(''):'';
     return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap">
       ${glHeader('book', s.eyebrow||'Background', s.title||'Study guide')}
       ${tpHasNotes(body)?`<div class="gl-tiphint">${tpNotePen()}</div>`:''}
@@ -4726,6 +4741,15 @@ function mhGuided(s){
 function mhText(s,i){
   const present=document.body.classList.contains('present');
   const body=Array.isArray(s.body)?s.body:(s.body?[s.body]:[]);
+  // Optional key-term popups (parity with geolearn studyguide / imperium packText). ==term== and matching
+  // **bold** in the reading body become clickable definition buttons paired with tpTermModal overlays,
+  // wired through the existing id-targeted data-tp-focus-open handler. Suppressed on the board (Present)
+  // and absent when the slide carries no keyTerms, so output stays byte-identical for existing lessons.
+  const terms=Array.isArray(s.keyTerms||s.terms)?(s.keyTerms||s.terms):[];
+  const tmap={}; terms.forEach((t,k)=>{ if(t&&t.term) tmap[String(t.term).trim().toLowerCase()]='ktp'+k; });
+  const ktLive=terms.length&&!present;
+  const kt=(t)=> ktLive ? tpRich(t,{term:(w)=>{ const id=tmap[w.trim().toLowerCase()]; return id?`<button class="tp-kt" type="button" data-tp-focus-open="${id}">${esc(w)}</button>`:null; }}) : tpRich(t);
+  const termOv=ktLive?terms.map((t,k)=>tpTermModal('ktp'+k,t.term||'',t.definition||'')).join(''):'';
   const sb=s.sidebar||null, res=Array.isArray(s.resources)?s.resources:[];
   const sbImg=sb&&(sb.image||sb.src);
   const sbInsight=sb&&(sb.label||sb.heading||sb.quote||sb.cta);
@@ -4746,7 +4770,7 @@ function mhText(s,i){
   const head=`${s.eyebrow?`<span class="tp-mhchip">${esc(s.eyebrow)}</span>`:''}
       <h1 class="tp-htitle2">${esc(s.title||'Reading')}</h1>
       <div class="tp-ubar"></div>`;
-  const proseHtml=`<div class="tp-prose">${body.map((p,j)=>{const txt=typeof p==='string'?p:(p.content||'');return `<p${j===0?' class="tp-dropcap"':''}>${tpRich(txt)}</p>`;}).join('')}</div>`;
+  const proseHtml=`<div class="tp-prose">${body.map((p,j)=>{const txt=typeof p==='string'?p:(p.content||'');return `<p${j===0?' class="tp-dropcap"':''}>${kt(txt)}</p>`;}).join('')}</div>`;
   if(present){
     // CONTENT-FIRST PRESENT: thin header + a bordered reading card that fills the board. Body = lead +
     // numbered points, else fall back to body[] paragraphs in the same card. Secondary aside dropped;
@@ -4765,7 +4789,7 @@ function mhText(s,i){
           <div class="tp-readband">${cardBody}</div>
         </div>
       </div></main>`
-      +readOv+mediaOv
+      +readOv+mediaOv+termOv
       +mhFoot(s.cta||'Continue');
   }
   // STUDY: existing reading (body[]) intact; media = button+overlay (no inline figure); the aside keeps
@@ -4788,7 +4812,7 @@ function mhText(s,i){
         ${side}
       </div>
     </div></main>`
-    +readOv+mediaOv
+    +readOv+mediaOv+termOv
     +mhFoot(s.cta||'Continue');
 }
 /* MICROHISTORY interactive embed — iframe/still + launch link, WW1-skinned. A microhistory-only FORK
@@ -4995,6 +5019,17 @@ function tpFocusImage(image,label,alt,ovId){ const src=tpSrc(image); if(!src) re
   return `<div class="tp-overlay" data-tp-overlay${ovId?` id="${esc(ovId)}"`:''} role="dialog" aria-modal="true" aria-label="${esc(label||'Enlarged image')}" hidden>
     <div class="tp-fpanel tp-fpanel-img"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',20)}</button>
       ${label?`<div class="tp-fstiml">${esc(label)}</div>`:''}<img class="tp-fimg" src="${esc(src)}" alt="${esc(alt||label||'')}"></div></div>`;
+}
+/* key-term definition modal for the shared imperium/microhistory text page — the pack equivalent of
+   geolearn's glModal. Mirrors the pack focus overlay (.tp-overlay/.tp-fpanel + [data-tp-focus-close];
+   .tp-fey/.tp-fq/.tp-fstim are already themed for both packs), so it needs no new modal CSS. Paired by
+   id with its .tp-kt term button and opened through the existing data-tp-focus-open handler in
+   wirePackTyped. Emitted only when the slide carries keyTerms and not in Present. */
+function tpTermModal(id,term,def){
+  return `<div class="tp-overlay" data-tp-overlay id="${esc(id)}" role="dialog" aria-modal="true" aria-label="${esc(term||'Key term')}" hidden>
+    <div class="tp-fpanel"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',20)}</button>
+      <div class="tp-fey">Key term</div><p class="tp-fq">${esc(term||'')}</p>
+      <p class="tp-fstim">${esc(def||'')}</p></div></div>`;
 }
 /* MICROHISTORY text-page typed media: a single dossier control that opens a focus overlay carrying ONE
    piece of media (image plate / video / interactive) — the media NEVER renders inline. The button is a
