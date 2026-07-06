@@ -2105,7 +2105,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-sa-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
 .tp-slide .tp-sa-tag{display:inline-flex;align-items:center;gap:6px;background:var(--secondary-container);color:var(--on-secondary-container);padding:5px 12px;border-radius:9999px;font-size:12px;font-weight:600;}
 .tp-slide .tp-sa-mtime{display:inline-flex;align-items:center;gap:6px;color:var(--on-surface-variant);font-size:12px;font-weight:600;}
-.tp-slide .tp-focusbtn{display:inline-flex;align-items:center;gap:7px;background:var(--surface-lowest);color:var(--primary);padding:9px 16px;border-radius:9999px;font:inherit;font-weight:600;font-size:13px;cursor:pointer;border:1.5px solid var(--primary);flex-shrink:0;}
+.tp-slide .tp-focusbtn{display:inline-flex;align-items:center;gap:7px;background:var(--surface-lowest);color:var(--primary);padding:9px 16px;border-radius:9999px;font:inherit;font-weight:600;font-size:13px;cursor:pointer;border:1.5px solid var(--primary);flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.45);}   /* shadow so the light pill separates from a light reading image too (microhistory keeps its hard WW1 offset shadow via the theme override below) */
 .tp-slide .tp-sa-grid{display:grid;grid-template-columns:40% 60%;gap:24px;align-items:start;}
 .tp-slide .tp-sa-grid.tp-sa-noart{grid-template-columns:1fr;}   /* no source panel → tasks span the full width */
 .tp-slide .tp-srccol{position:sticky;top:0;}
@@ -2192,8 +2192,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fpanel{background:var(--surface-lowest);max-width:760px;width:100%;max-height:88%;overflow-y:auto;padding:32px 34px;position:relative;border-radius:20px;}
 .tp-slide .tp-fclose{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:9999px;background:var(--surface-container);border:none;color:var(--on-surface);display:flex;align-items:center;justify-content:center;cursor:pointer;}
 /* image "view larger" affordance + image-bearing focus panel (imperium pack image renderers) */
-.tp-slide .tp-zoombtn{position:absolute;top:12px;right:12px;z-index:6;width:38px;height:38px;border-radius:9999px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(20,16,24,.62);color:#fff;border:1px solid rgba(255,255,255,.38);}
-.tp-slide .tp-zoombtn:hover{background:rgba(20,16,24,.85);}
+.tp-slide .tp-zoombtn{position:absolute;top:12px;right:12px;z-index:6;width:38px;height:38px;border-radius:9999px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(20,16,24,.82);color:#fff;border:1px solid rgba(255,255,255,.38);box-shadow:0 2px 8px rgba(0,0,0,.45);}   /* near-opaque pill + shadow so the button stays visible over light/pale images (silver coin, white bg) as well as dark ones */
+.tp-slide .tp-zoombtn:hover{background:rgba(20,16,24,.95);}
 .tp-slide .tp-fpanel-img{max-width:1040px;padding:18px;}
 .tp-slide .tp-fpanel-img .tp-fstiml{margin:2px 0 12px;}
 .tp-slide .tp-fimg{display:block;width:100%;height:auto;max-height:78vh;object-fit:contain;border-radius:12px;}
