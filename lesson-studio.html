@@ -4204,10 +4204,7 @@ function packText(s){
   // data-tp-focus-open handler). Suppressed on the board (Present) — teacher talks — and absent entirely
   // when the slide carries no keyTerms, so renderPackSlide stays byte-identical for existing lessons.
   const present=document.body.classList.contains('present');
-  const terms=Array.isArray(s.keyTerms||s.terms)?(s.keyTerms||s.terms):[];
-  const tmap={}; terms.forEach((t,k)=>{ if(t&&t.term) tmap[String(t.term).trim().toLowerCase()]='ktp'+k; });
-  const ktLive=terms.length&&!present;
-  const kt=(t)=> ktLive ? tpRich(t,{term:(w)=>{ const id=tmap[w.trim().toLowerCase()]; return id?`<button class="tp-kt" type="button" data-tp-focus-open="${id}">${esc(w)}</button>`:null; }}) : tpRich(t);
+  const {terms, live:ktLive, kt}=tpKeyTerms(s,present,'tp-kt','ktp');
   let narr='';
   if(body.length){
     narr+=`<p class="tp-lead">${kt(body[0])}</p>`;
@@ -4305,6 +4302,23 @@ function tpRich(text, opts){ opts=opts||{};
 /* the reveal-pen renders only when the body actually carries a [[note]] */
 function tpHasNotes(body){ const arr=Array.isArray(body)?body:[body]; return arr.some(b=>{ const t=typeof b==='string'?b:((b&&(b.content||b.quote||b.text))||''); return /\[\[[^\]]+\]\]/.test(t); }); }
 function tpNotePen(){ return `<button class="tp-notepen" type="button" data-tp-notes aria-pressed="false"><span class="pi">${tpIc('pen',16)}</span><span class="lbl"> Reveal notes</span></button>`; }
+/* Shared key-term popup wiring for the pack text pages (imperium packText / microhistory mhText, via the
+   data-tp-focus-open overlay handler) and the geolearn studyguide (data-gl-open / wireGeoModals). Builds
+   the term→modal-id map and a present-gated tpRich hook (kt) that turns a matched ==term== or **bold**
+   into a clickable definition button; suppressed on the board (Present) and inert when the slide carries
+   no keyTerms. `w` is already esc()'d by tpRich before the callback, so it's emitted as-is (no double
+   escape — mirrors the .tp-hl / <b> fallbacks). Callers own their button class / id prefix / open
+   attribute and emit their own modals from the returned terms. */
+function tpKeyTerms(s, present, btnCls, idPrefix, openAttr){
+  openAttr=openAttr||'data-tp-focus-open';
+  const terms=Array.isArray(s.keyTerms||s.terms)?(s.keyTerms||s.terms):[];
+  // key by the esc()'d term: tpRich escapes the text before the callback, so the matched `w` is already
+  // escaped — a term like "Ways & Means" must be compared as "ways &amp; means" or it never matches.
+  const tmap={}; terms.forEach((t,k)=>{ if(t&&t.term) tmap[esc(String(t.term)).trim().toLowerCase()]=idPrefix+k; });
+  const live=terms.length&&!present;
+  const kt=(t)=> live ? tpRich(t,{term:(w)=>{ const id=tmap[w.trim().toLowerCase()]; return id?`<button class="${btnCls}" type="button" ${openAttr}="${id}">${w}</button>`:null; }}) : tpRich(t);
+  return {terms, tmap, live, kt};
+}
 /* geo alias — keeps all existing glRich call sites unchanged while the parser is now shared */
 function glRich(t,opts){ return tpRich(t,opts); }
 function glBR(t){ return esc(t||'').replace(/\n/g,'<br>'); }
@@ -4382,10 +4396,8 @@ function glText(s){
   const body=Array.isArray(s.body)?s.body:(s.body?[s.body]:[]);
   if(variant==='studyguide'){
     const present=document.body.classList.contains('present');
-    const terms=Array.isArray(s.keyTerms||s.terms)?(s.keyTerms||s.terms):[];
-    const tmap={}; terms.forEach((t,k)=>{ if(t&&t.term) tmap[String(t.term).trim().toLowerCase()]='gt'+k; });
-    const ktLive=terms.length&&!present;                                  // no interactive term buttons on the board — teacher talks
-    const kt=(t)=> ktLive ? tpRich(t,{term:(w)=>{ const id=tmap[w.trim().toLowerCase()]; return id?`<button class="gl-kt" type="button" data-gl-open="${id}">${esc(w)}</button>`:null; }}) : tpRich(t);
+    const {terms, live:ktLive, kt}=tpKeyTerms(s,present,'gl-kt','gt','data-gl-open');   // no interactive term buttons on the board — teacher talks
+
     const blockHtml=body.map(b=>{
       if(typeof b==='string') return `<p>${kt(b)}</p>`;
       if(b.heading) return `<h2>${esc(b.heading)}</h2>`;
@@ -4745,10 +4757,7 @@ function mhText(s,i){
   // **bold** in the reading body become clickable definition buttons paired with tpTermModal overlays,
   // wired through the existing id-targeted data-tp-focus-open handler. Suppressed on the board (Present)
   // and absent when the slide carries no keyTerms, so output stays byte-identical for existing lessons.
-  const terms=Array.isArray(s.keyTerms||s.terms)?(s.keyTerms||s.terms):[];
-  const tmap={}; terms.forEach((t,k)=>{ if(t&&t.term) tmap[String(t.term).trim().toLowerCase()]='ktp'+k; });
-  const ktLive=terms.length&&!present;
-  const kt=(t)=> ktLive ? tpRich(t,{term:(w)=>{ const id=tmap[w.trim().toLowerCase()]; return id?`<button class="tp-kt" type="button" data-tp-focus-open="${id}">${esc(w)}</button>`:null; }}) : tpRich(t);
+  const {terms, live:ktLive, kt}=tpKeyTerms(s,present,'tp-kt','ktp');
   const termOv=ktLive?terms.map((t,k)=>tpTermModal('ktp'+k,t.term||'',t.definition||'')).join(''):'';
   const sb=s.sidebar||null, res=Array.isArray(s.resources)?s.resources:[];
   const sbImg=sb&&(sb.image||sb.src);
