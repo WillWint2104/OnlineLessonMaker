@@ -7,6 +7,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **JSON import box — non-sticky template + Clear / Load example (editor UX).** The ⌗ *Lesson data ·
+  JSON* panel no longer pre-fills the textarea with the current lesson on open, so there's nothing to
+  delete before pasting an import — it opens empty with a faded placeholder. Two buttons added to the
+  panel footer: **Clear** (beside *Load JSON →*) empties the textarea and any validation message, and
+  **Load example** drops the current lesson JSON in on demand (the old auto-fill behaviour, now opt-in —
+  handy for the copy-edit-reload workflow). `Copy`/`Download .json` are unchanged (they read `LESSON`
+  directly, not the textarea). Editor-only: no theme/render/Present impact, no data-model change. Verified
+  headless — open-empty, Load-example fills, Clear empties + clears the error, bad JSON still errors
+  in-place, valid JSON still imports & closes, reopen stays empty; `validate` green, 0 console errors.
+
 ### Added
 - **Key-term popups — `**bold**` joins the lookup + lifted to the shared imperium/microhistory text
   pages.** `tpRich` now runs the same key-term lookup for `**bold**` as it already did for `==term==`:
