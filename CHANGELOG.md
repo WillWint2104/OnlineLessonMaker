@@ -8,6 +8,18 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **Source-analysis image uses the standard zoom button (visible + working).** The `sourceAnalysis` source
+  image was the last slot on the old expand path: imperium/microhistory (`packSourceAnalysis`) rendered a
+  `.tp-sazoom` pill (`rgba(255,255,255,.16)` white icon — invisible over a pale image like the Nero coin)
+  wired to the legacy `data-expandsrc` lightbox, and geolearn (`glSource`) rendered a **dead decorative
+  `.zoom` span** that did nothing. All three now emit the shared `tpZoomBtn(…, 'ov-zoom-source')` + a
+  matching `tpFocusImage(…, 'ov-zoom-source')` overlay, so the source image is on the same id-targeted
+  focus system (#89) as every other image slot and inherits the visible solid-pill + shadow styling (#96)
+  — top-right, readable over any image, opens the shared zoom modal. Removed the now-dead `.tp-sazoom` and
+  `.gl-srcpanel .zoom` CSS. Edit-mode suppression (`mode!=='edit'`) preserved; Present + export consistent.
+  Byte-identical for image-less source slides in imperium/microhistory; geolearn image-less slides drop
+  only the previously-dead zoom icon (now consistent with the other two). `validate` green, 0 console
+  errors, verified in all three themes.
 - **Source-image zoom button visible on light images (contrast fix).** `.tp-zoombtn` (the top-right
   "View larger" pill on source/reading images) was `background:rgba(20,16,24,.62)` with a white icon — on
   a pale image (silver coin, white background) the pill washed out to a bare icon. Now a near-opaque

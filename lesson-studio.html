@@ -464,7 +464,6 @@
 :root[data-theme="geolearn"] .gl-srccol{position:sticky;top:0;display:flex;flex-direction:column;gap:16px;}
 :root[data-theme="geolearn"] .gl-srcpanel{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--outline-variant);background:linear-gradient(135deg,#e8f3f0,#dbeee9);height:340px;}
 :root[data-theme="geolearn"] .gl-srcpanel .tag{position:absolute;left:16px;bottom:16px;max-width:calc(100% - 78px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:rgba(255,255,255,.95);border:1px solid var(--outline-variant);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--primary);z-index:2;}
-:root[data-theme="geolearn"] .gl-srcpanel .zoom{position:absolute;right:16px;bottom:16px;width:42px;height:42px;border-radius:9999px;background:rgba(255,255,255,.95);border:1px solid var(--outline-variant);color:var(--primary);display:flex;align-items:center;justify-content:center;z-index:2;}
 :root[data-theme="geolearn"] .gl-transcriptbox{background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:16px;padding:16px 18px;}
 :root[data-theme="geolearn"] .gl-transcriptbox .tl{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin-bottom:6px;}
 :root[data-theme="geolearn"] .gl-transcriptbox p{font-size:14px;font-style:italic;line-height:1.55;color:var(--on-surface-variant);}
@@ -2113,8 +2112,6 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-saph{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.5);}
 .tp-slide .tp-saph span{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;}
 .tp-slide .tp-srclabel{position:absolute;bottom:14px;left:14px;color:#fff;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;}
-.tp-slide .tp-sazoom{position:absolute;bottom:14px;right:14px;width:36px;height:36px;border-radius:9999px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;color:#fff;padding:0;font:inherit;cursor:pointer;}
-.tp-slide .tp-sazoom:hover{background:rgba(255,255,255,.3);}
 .tp-slide .tp-transcript{margin-top:14px;padding:14px 16px;}
 .tp-slide .tp-tl{display:block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--secondary);margin-bottom:6px;}
 .tp-slide .tp-transcript p{font-size:14px;font-style:italic;line-height:1.55;color:var(--on-surface-variant);}
@@ -4586,7 +4583,7 @@ function glSource(s){
     ${glPills(s.pills)}
     <div class="gl-sarow${hasArt?'':' gl-noart'}">
       ${hasArt?`<div class="gl-srccol">
-        <div class="gl-srcpanel">${glImg(src.image||s.image,src.label||'Source',true)}${glHas(src.label||s.tag)?`<span class="tag">${esc(src.label||s.tag)}</span>`:''}<span class="zoom">${tpIc('zoomIn',18)}</span></div>
+        <div class="gl-srcpanel">${glImg(src.image||s.image,src.label||'Source',true)}${glHas(src.label||s.tag)?`<span class="tag">${esc(src.label||s.tag)}</span>`:''}${glHas(src.image||s.image)&&mode!=='edit'?tpZoomBtn(src.label||'Source image','ov-zoom-source'):''}</div>
         ${src.transcript?`<div class="gl-transcriptbox"><span class="tl">Transcript</span><p>${esc(src.transcript)}</p></div>`:''}
         ${provHtml}
       </div>`:''}
@@ -4595,7 +4592,8 @@ function glSource(s){
         ${tasksHtml}
         ${s.hint&&(s.hint.title||s.hint.body)?`<div class="gl-approach"><span class="ai">${tpIc('compass',18)}</span><div><h4>${esc(s.hint.title||'Approach')}</h4><p>${esc(s.hint.body||'')}</p></div></div>`:''}
       </div>
-    </div></div></main>`+glFoot(s,s.cta||'Continue');
+    </div></div></main>`+glFoot(s,s.cta||'Continue')
+    +(mode!=='edit'&&tpHasImg(src.image||s.image)?tpFocusImage(src.image||s.image,src.label||'Source',null,'ov-zoom-source'):'');   // shared id-targeted zoom overlay (#89) + visible .tp-zoombtn pill (#96), replacing the dead decorative .zoom span
 }
 
 /* ===================== 10) INTERACTIVE — external embed + guidance ===================== */
@@ -5113,7 +5111,7 @@ function packSourceAnalysis(s,i){
           ${hasArt?`<div class="tp-srccol">
             <div class="tp-sa-srcwrap"><div class="tp-srcframe" tabindex="0" role="group" aria-label="${esc(src.label||'Source')} image">
               ${tpHasImg(src.image)?tpImg(src.image,'Source placeholder','doc'):`<div class="tp-saph">${tpIc('doc',18)}<span>Source placeholder</span></div>`}
-              ${src.label?`<div class="tp-srclabel">${esc(src.label)}</div>`:''}${tpHasImg(src.image)&&mode!=='edit'?`<button class="tp-sazoom" type="button" data-expandsrc="${esc(tpSrc(src.image))}" aria-label="View source larger" title="View larger">${tpIc('zoomIn',18)}</button>`:''}</div></div>
+              ${src.label?`<div class="tp-srclabel">${esc(src.label)}</div>`:''}${tpHasImg(src.image)&&mode!=='edit'?tpZoomBtn(src.label||'Source image','ov-zoom-source'):''}</div></div>
             ${src.transcript?`<div class="tp-transcript" tabindex="0" role="group" aria-label="${esc(src.label||'Source')} transcript"><span class="tp-tl">Transcript${src.label?' · '+esc(src.label):''}</span><p>${esc(src.transcript)}</p></div>`:''}
             ${provHtml?`<div class="tp-prov"><div class="tp-provh">${tpIc('scope',16)} Provenance</div>${provHtml}</div>`:''}
             ${srcUrl?`<a class="tp-srclink" href="${esc(srcUrl)}" target="_blank" rel="noopener noreferrer">${tpIc('external',14)} ${esc(s.sourceCta||'View source online ↗')}</a>`:''}
@@ -5126,6 +5124,7 @@ function packSourceAnalysis(s,i){
         </div>
       </div></main>`
     +packFoot(s,s.cta||'Continue')
+    +(mode!=='edit'&&tpHasImg(src.image)?tpFocusImage(src.image,src.label||'Source',null,'ov-zoom-source'):'')   // source image now uses the shared id-targeted zoom overlay (#89), like every other image slot — .tp-zoombtn styling from #96 applies
     +(themeMH
         ? mhQModal(s.title||'Source analysis', src.transcript?`<div class="tp-qmctx-h">${tpIc('doc',14)} Transcript${src.label?' · '+esc(src.label):''}</div><p>${esc(src.transcript)}</p>`:'')
         : tpFocusOverlay(fEy, s.focusQuestion||'Analyse the source, applying the source-analysis skills indicated for each task.', src.label?('Transcript · '+(src.label)):'Transcript', src.transcript||''));
