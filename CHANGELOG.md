@@ -8,6 +8,13 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **`interactives/coin-workbench.html` — two-column layout + control spacing (content-only).** Republished
+  the coin workbench with its two-column layout (`grid-template-columns:minmax(0,1.55fr)`), a square coin
+  stage (`aspect-ratio:1/1`, the spacing fix) and the zoom/turn controls moved below the coin
+  (`.stagectl{display:flex}`). Full byte-for-byte replacement of the maintainer-supplied build (~8.06 MB);
+  imperium theme intact (`#451274`, Playfair Display), zero stale WW1 tokens (`#840f16`, Courier Prime),
+  all three coin models (`COIN_GLTF_450/500/510`) and the "ON THE REAL COIN" panel present; self-contained
+  (only three.js license / XML-namespace URLs, no third-party hosts). `validate` green.
 - **JSON import box — non-sticky template + Clear / Load example (editor UX).** The ⌗ *Lesson data ·
   JSON* panel no longer pre-fills the textarea with the current lesson on open, so there's nothing to
   delete before pasting an import — it opens empty with a faded placeholder. Two buttons added to the
