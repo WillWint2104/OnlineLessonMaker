@@ -1247,6 +1247,7 @@ body.edit #dataBtn{display:inline-flex;}
   font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.79rem;line-height:1.55;
   padding:14px;border:1px solid var(--line);border-radius:12px;background:#fbfbfd;color:var(--text);resize:vertical;}
 #jsonArea:focus{outline:none;border-color:var(--accent);}
+#jsonArea::placeholder{color:var(--muted);opacity:.7;font-style:italic;}
 .sheet-err{padding:0 22px;color:#d14343;font-size:.82rem;min-height:18px;}
 .sheet-f{display:flex;gap:10px;align-items:center;padding:14px 22px;border-top:1px solid var(--line);}
 
@@ -2567,12 +2568,14 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   <div class="sheet">
     <div class="sheet-h"><b>Lesson data · JSON</b><button id="modalX" title="Close">✕</button></div>
     <p class="sheet-note">Paste a lesson JSON to build the whole slideshow instantly — or copy the current one to save and re-edit later. Notes, questions, model answers, improve-points and pitfalls all live in here.</p>
-    <textarea id="jsonArea" spellcheck="false"></textarea>
+    <textarea id="jsonArea" spellcheck="false" placeholder="Paste a lesson JSON here, then Load JSON →   (or use “Load example” below)"></textarea>
     <div class="sheet-err" id="jsonErr"></div>
     <div class="sheet-f">
       <button class="btn ghost" id="jsonCopy">Copy</button>
       <button class="btn ghost" id="jsonDl">Download .json</button>
+      <button class="btn ghost" id="jsonExample">Load example</button>
       <span style="flex:1"></span>
+      <button class="btn ghost" id="jsonClear">Clear</button>
       <button class="btn" id="jsonLoad">Load JSON →</button>
     </div>
   </div>
@@ -5969,8 +5972,13 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#worksheet').cl
 
 /* ---------- JSON data panel ---------- */
 const modal=$('#modal');
-$('#dataBtn').onclick=()=>{ $('#jsonArea').value=JSON.stringify(LESSON,null,2); $('#jsonErr').textContent=''; modal.hidden=false; };
+/* Open empty (no sticky template): the box is the IMPORT target, so a fresh open shows the faded
+   placeholder — nothing to delete before pasting. Copy/Download still read LESSON directly, and
+   "Load example" drops the current lesson JSON in on demand for those who want to see/edit it. */
+$('#dataBtn').onclick=()=>{ $('#jsonArea').value=''; $('#jsonErr').textContent=''; modal.hidden=false; };
 $('#modalX').onclick=()=>modal.hidden=true;
+$('#jsonExample').onclick=()=>{ $('#jsonArea').value=JSON.stringify(LESSON,null,2); $('#jsonErr').textContent=''; $('#jsonArea').focus(); };
+$('#jsonClear').onclick=()=>{ $('#jsonArea').value=''; $('#jsonErr').textContent=''; $('#jsonArea').focus(); };
 modal.onclick=e=>{ if(e.target===modal) modal.hidden=true; };
 $('#jsonLoad').onclick=()=>{
   try{
