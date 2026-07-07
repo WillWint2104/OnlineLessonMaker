@@ -4933,7 +4933,7 @@ function packFallback(s){
    inheritance resolves theme -> lesson -> block (block wins, being applied last). Constrained to the
    colour slot whitelist (validate-don't-coerce — arbitrary properties can never be set). Absent (every
    current lesson) -> returns '' -> byte-identical output. */
-const TP_SLOT_WL=new Set(['surface','surface-2','ink','ink-muted','ink-faint','primary','on-primary','accent','line','focus-ring','scrim','on-scrim']);
+const TP_SLOT_WL=new Set(['surface','surface-2','primary','on-primary','accent','line','focus-ring','scrim','on-scrim']);   /* Phase 1 shipped slots; the --ink text-family is deferred to 1b (microhistory --ink collision) */
 function tpTokenStyle(s){
   const merged={};
   const add=o=>{ if(o&&typeof o==='object') for(const k in o){ const key=String(k).replace(/^--/,''); if(TP_SLOT_WL.has(key)&&(typeof o[k]==='string'||typeof o[k]==='number')) merged[key]=o[k]; } };
