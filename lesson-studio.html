@@ -4934,13 +4934,18 @@ function packFallback(s){
    colour slot whitelist (validate-don't-coerce — arbitrary properties can never be set). Absent (every
    current lesson) -> returns '' -> byte-identical output. */
 const TP_SLOT_WL=new Set(['surface','surface-2','primary','on-primary','accent','line','focus-ring','scrim','on-scrim']);   /* Phase 1 shipped slots; the --ink text-family is deferred to 1b (microhistory --ink collision) */
+/* closed colour grammar — a token VALUE may only be a hex / rgb[a]() / hsl[a]() / bare keyword / var(--slot).
+   This blocks CSS-separator injection (`;`, `{`, `url(...)`, quotes) so an imported lesson's tokens can't
+   break out of `--key:value` and add extra declarations (e.g. an external `background:url()` beacon). */
+const TP_TOKEN_VAL=/^(?:#[0-9a-fA-F]{3,8}|rgba?\([\d.,%\s/]+\)|hsla?\([\d.,%\s/]+\)|[a-zA-Z]+|var\(--[a-zA-Z0-9-]+\))$/;
 function tpTokenStyle(s){
   const merged={};
-  const add=o=>{ if(o&&typeof o==='object') for(const k in o){ const key=String(k).replace(/^--/,''); if(TP_SLOT_WL.has(key)&&(typeof o[k]==='string'||typeof o[k]==='number')) merged[key]=o[k]; } };
+  const add=o=>{ if(o&&typeof o==='object') for(const k in o){ const key=String(k).replace(/^--/,''); const v=o[k];
+    if(TP_SLOT_WL.has(key)&&(typeof v==='string'||typeof v==='number')){ const val=String(v).trim(); if(TP_TOKEN_VAL.test(val)) merged[key]=val; } } };
   add(LESSON&&LESSON.tokens);          // lesson override
   add(s&&s.tokens);                    // block override (applied last → wins)
   const keys=Object.keys(merged); if(!keys.length) return '';
-  return ' style="'+keys.map(k=>'--'+k+':'+esc(String(merged[k]))).join(';')+'"';
+  return ' style="'+keys.map(k=>'--'+k+':'+esc(merged[k])).join(';')+'"';   // esc() kept as attribute-context defence-in-depth
 }
 function renderPackSlide(s,i,present){
   const theme=(LESSON.meta&&LESSON.meta.theme)||'';
