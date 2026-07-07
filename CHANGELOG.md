@@ -8,6 +8,23 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **v2 Phase 1 — token slot layer (colour only, behaviour-preserving).** Foundation for the v2 token
+  cascade (`docs/v2` Layer 1, §4), delivered as a byte-identical refactor. In each theme's `.tp-slide`
+  block (geolearn, imperium, microhistory) the spec colour slots are declared as **aliases at their exact
+  current values** — `--surface-2`, `--accent`, `--line`, plus two new slots `--focus-ring` (= current
+  `var(--primary)` focus colour) and `--scrim`/`--on-scrim` (the fixed dark overlay `rgba(20,16,24,.82)`/
+  `#fff` — deliberately **NOT** `--surface`, which is near-white and would re-break the #96/#97 invisible
+  pill). Value-preserving literal sweep only where the token resolves identically: `color:#fff` →
+  `var(--on-primary)` on `--primary` backgrounds inside `.tp-slide` (`.tp-notepen.on`, `.tp-media-play`,
+  imperium `.tp-ref`, `.tp-pnum`), the focus outline → `var(--focus-ring)`, and the zoom pill →
+  `var(--scrim)`/`var(--on-scrim)`. New opt-in cascade hook (`tpTokenStyle`): `LESSON.tokens` / slide
+  `.tokens` inject whitelisted slot values inline on the `.tp-slide` root (theme → lesson → block, block
+  wins); absent on every current lesson → byte-identical output. **Proven no regression:** renderPackSlide
+  HTML 0 diffs and resolved computed-style 0 diffs across all 11 pack types × 3 themes × Study/Present,
+  screenshots pixel-identical, `validate` green, 0 console errors. **Deferred to Phase 1b:** the `--ink`
+  text-family (microhistory already defines `--ink:#1A1C1E` as structural border/shadow ink, distinct from
+  its `--on-surface` body text — aliasing it changed 35 border colours, so it's left untouched; the
+  canonical text token `--on-surface` already exists), and the spacing/type scales (per scope).
 - **`lessons/agrippina-coinage-as-a-source.html` — new published lesson.** Byte-for-byte exported imperium
   lesson (9 slides, ~9.4 MB), "Coinage as a Source" case study on Agrippina the Younger. Embeds the
   same-origin `interactives/coin-workbench.html` (two-column build already on `main`). Self-contained per

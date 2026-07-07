@@ -82,6 +82,8 @@
   --cardborder:#E2E8F0; --ok:#00685f; --okbg:#e7f3f0; --bad:#ba1a1a; --badbg:#ffe9e7; --error:#ba1a1a;
   --tp-serif:'Inter',system-ui,sans-serif; --tp-body:'Inter',system-ui,sans-serif; --tp-mono:'Inter',system-ui,sans-serif;
   --tp-rad:20px; --tp-rad-btn:12px; --tp-cardsh:0 1px 3px rgba(0,0,0,.06); --tp-polarot:0deg;
+  /* v2 Phase 1 slot layer (Layer 1, §4) — aliases at EXACT current values; --scrim is a fixed overlay, NOT --surface (docs/v2 §4 carve-out) */
+  --surface-2:var(--surface-container);--accent:var(--primary-fixed);--line:var(--outline-variant);--focus-ring:var(--primary);--scrim:rgba(20,16,24,.82);--on-scrim:#fff;
   background:var(--background); font-family:var(--tp-body); color:var(--on-surface);
 }
 /* ----- GeoLearn slide shell: fixed chrome, scrolling content (locked sizing) -----
@@ -238,8 +240,8 @@
 /* pen button — shared, auto-themed from each pack's tokens (reproduces geo's old .gl-notetoggle 1:1) */
 .tp-notepen{display:inline-flex;align-items:center;gap:8px;background:var(--surface-lowest);border:1.5px solid var(--outline-variant);border-radius:9999px;padding:8px 15px;font:inherit;font-weight:600;font-size:13px;color:var(--on-surface);cursor:pointer;}
 .tp-notepen .pi{color:var(--primary);display:flex;}
-.tp-notepen.on{background:var(--primary);color:#fff;border-color:var(--primary);}
-.tp-notepen.on .pi{color:#fff;}
+.tp-notepen.on{background:var(--primary);color:var(--on-primary);border-color:var(--primary);}
+.tp-notepen.on .pi{color:var(--on-primary);}
 /* per-theme reveal-highlight + inline-highlight colours (geo keeps its primary-fixed teal exactly) */
 :root[data-theme="geolearn"] .tp-slide{--note-reveal-bg:var(--primary-fixed);--note-reveal-ink:var(--on-surface);}
 :root[data-theme="imperium"] .tp-slide{--note-reveal-bg:var(--secondary-fixed);--note-reveal-ink:var(--on-surface);}
@@ -1649,6 +1651,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   --custom-outline:#E2D9F3;--roman-border:#F3E8FF;
   --tp-serif:'Playfair Display',Georgia,serif;--tp-body:'Hanken Grotesk',system-ui,sans-serif;--tp-mono:'Hanken Grotesk',system-ui,sans-serif;
   --tp-rad:20px;--tp-rad-btn:8px;--tp-cardsh:0 12px 34px -18px rgba(46,0,82,.3);--tp-polarot:0deg;
+  /* v2 Phase 1 slot layer (Layer 1, §4) — aliases at EXACT current values; --scrim is a fixed overlay, NOT --surface (docs/v2 §4 carve-out) */
+  --surface-2:var(--surface-container);--accent:var(--secondary-fixed);--line:var(--outline-variant);--focus-ring:var(--primary);--scrim:rgba(20,16,24,.82);--on-scrim:#fff;
   background:var(--background);font-family:var(--tp-body);color:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-slide{
   --primary:#840f16;--primary-container:#a52a2a;--on-primary:#fff;--on-primary-container:#ffc0bb;
@@ -1659,6 +1663,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   --on-surface:#251817;--on-surface-variant:#58413f;--outline:#8c716e;--outline-variant:#e0bfbc;--error:#ba1a1a;--ink:#1A1C1E;--desk:#F2F0E9;
   --tp-serif:'Courier Prime',ui-monospace,monospace;--tp-body:'Inter',system-ui,sans-serif;--tp-mono:'Courier Prime',ui-monospace,monospace;
   --tp-rad:20px;--tp-rad-btn:8px;--tp-cardsh:4px 4px 0 0 #251817;--tp-polarot:2deg;
+  /* v2 Phase 1 slot layer (Layer 1, §4) — aliases at EXACT current values; --scrim is a fixed overlay, NOT --surface (docs/v2 §4 carve-out) */
+  --surface-2:var(--surface-container);--accent:var(--secondary-fixed);--line:var(--outline-variant);--focus-ring:var(--primary);--scrim:rgba(20,16,24,.82);--on-scrim:#fff;
   background:var(--desk);font-family:var(--tp-body);color:var(--on-surface);}
 .tp-serif{font-family:var(--tp-serif);} .tp-mono{font-family:var(--tp-mono);}
 
@@ -1675,7 +1681,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-media-img{position:absolute;inset:0;width:100%;height:100%;object-fit:var(--media-fit,cover);z-index:1;display:block;}
 .tp-media-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:1;color:var(--media-ph-ink,rgba(255,255,255,.6));}
 .tp-media-ph span{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;}
-.tp-media-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;width:72px;height:72px;border-radius:9999px;background:var(--primary,#2a2a2a);color:#fff;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.28);}
+.tp-media-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;width:72px;height:72px;border-radius:9999px;background:var(--primary,#2a2a2a);color:var(--on-primary);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.28);}
 .tp-media-ext{position:absolute;right:14px;bottom:14px;z-index:3;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.94);border-radius:9px;padding:7px 12px;font-size:12px;font-weight:600;color:var(--primary,#2a2a2a);text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.12);}
 /* per-theme media-overlay hooks — intentionally empty; bespoke play/affordance styling lands here later */
 :root[data-theme="imperium"] .tp-media-play{ /* hook */ }
@@ -2049,7 +2055,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="imperium"] .tp-kc-title{font-weight:700;font-size:30px;line-height:38px;letter-spacing:-.01em;color:var(--primary);}
 :root[data-theme="imperium"] .tp-figure{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(140deg,#5d2e8c,#451274);}
 :root[data-theme="imperium"] .tp-figure .tp-phmark.tp-soft{position:absolute;top:14px;left:14px;flex-direction:row;color:rgba(255,255,255,.5);gap:7px;}
-:root[data-theme="imperium"] .tp-ref{position:absolute;bottom:16px;right:16px;background:var(--primary);color:#fff;font-size:12px;font-weight:600;letter-spacing:.02em;padding:5px 12px;border-radius:8px;}
+:root[data-theme="imperium"] .tp-ref{position:absolute;bottom:16px;right:16px;background:var(--primary);color:var(--on-primary);font-size:12px;font-weight:600;letter-spacing:.02em;padding:5px 12px;border-radius:8px;}
 :root[data-theme="imperium"] .tp-kc-q{font-size:18px;line-height:28px;color:var(--on-surface);}
 :root[data-theme="imperium"] .tp-kc-opts{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 :root[data-theme="imperium"] .tp-opt{display:flex;align-items:center;gap:16px;background:#fff;border:1px solid var(--custom-outline);border-radius:12px;padding:15px;cursor:pointer;text-align:left;font-family:var(--tp-body);transition:all .15s;}
@@ -2089,7 +2095,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 /* ===================== NEW TYPES: sourceAnalysis / guidedResponse / outro ===================== */
 /* ---- shared structure (theme via tokens; theme-specific looks below) ---- */
 .tp-slide .tp-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
-.tp-slide :focus-visible{outline:3px solid var(--primary);outline-offset:2px;}
+.tp-slide :focus-visible{outline:3px solid var(--focus-ring);outline-offset:2px;}
 .tp-slide .tp-scrollmain{justify-content:flex-start;align-items:stretch;}
 :root[data-theme="imperium"] .tp-main.tp-outromain,:root[data-theme="microhistory"] .tp-main.tp-outromain{align-items:center;justify-content:normal;}   /* outro: centre via the card's margin:auto (scroll-safe); justify-content:center clips top-overflow */
 .tp-slide .tp-sa-wrap{max-width:1060px;margin:0 auto;width:100%;padding:6px 6px 18px;}
@@ -2131,7 +2137,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-task,.tp-slide .tp-para{padding:18px;}
 .tp-slide .tp-thead,.tp-slide .tp-phead{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;}
 .tp-slide .tp-tnum{flex-shrink:0;width:36px;height:36px;font-family:var(--tp-serif);font-weight:700;font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center;}
-.tp-slide .tp-pnum{flex-shrink:0;width:30px;height:30px;border-radius:9999px;background:var(--primary);color:#fff;font-family:var(--tp-serif);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;}
+.tp-slide .tp-pnum{flex-shrink:0;width:30px;height:30px;border-radius:9999px;background:var(--primary);color:var(--on-primary);font-family:var(--tp-serif);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;}
 .tp-slide .tp-tlead{flex:1;}
 .tp-slide .tp-tq{display:block;font-size:16px;line-height:1.45;color:var(--on-surface);margin-bottom:8px;cursor:pointer;}
 .tp-slide .tp-plabel{display:block;font-size:16px;font-weight:700;color:var(--on-surface);}
@@ -2189,7 +2195,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fpanel{background:var(--surface-lowest);max-width:760px;width:100%;max-height:88%;overflow-y:auto;padding:32px 34px;position:relative;border-radius:20px;}
 .tp-slide .tp-fclose{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:9999px;background:var(--surface-container);border:none;color:var(--on-surface);display:flex;align-items:center;justify-content:center;cursor:pointer;}
 /* image "view larger" affordance + image-bearing focus panel (imperium pack image renderers) */
-.tp-slide .tp-zoombtn{position:absolute;top:12px;right:12px;z-index:6;width:38px;height:38px;border-radius:9999px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:rgba(20,16,24,.82);color:#fff;border:1px solid rgba(255,255,255,.38);box-shadow:0 2px 8px rgba(0,0,0,.45);}   /* near-opaque pill + shadow so the button stays visible over light/pale images (silver coin, white bg) as well as dark ones */
+.tp-slide .tp-zoombtn{position:absolute;top:12px;right:12px;z-index:6;width:38px;height:38px;border-radius:9999px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;background:var(--scrim);color:var(--on-scrim);border:1px solid rgba(255,255,255,.38);box-shadow:0 2px 8px rgba(0,0,0,.45);}   /* near-opaque pill + shadow so the button stays visible over light/pale images (silver coin, white bg) as well as dark ones; --scrim is a fixed overlay slot (NOT --surface — docs/v2 §4) */
 .tp-slide .tp-zoombtn:hover{background:rgba(20,16,24,.95);}
 .tp-slide .tp-fpanel-img{max-width:1040px;padding:18px;}
 .tp-slide .tp-fpanel-img .tp-fstiml{margin:2px 0 12px;}
@@ -4922,12 +4928,31 @@ function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
 }
+/* v2 Phase 1 — token cascade hook (Layer 1, §4). Theme tokens come from CSS; a lesson (LESSON.tokens) or
+   block (s.tokens) may override slot values, injected inline on the .tp-slide root so native CSS var
+   inheritance resolves theme -> lesson -> block (block wins, being applied last). Constrained to the
+   colour slot whitelist (validate-don't-coerce — arbitrary properties can never be set). Absent (every
+   current lesson) -> returns '' -> byte-identical output. */
+const TP_SLOT_WL=new Set(['surface','surface-2','primary','on-primary','accent','line','focus-ring','scrim','on-scrim']);   /* Phase 1 shipped slots; the --ink text-family is deferred to 1b (microhistory --ink collision) */
+/* closed colour grammar — a token VALUE may only be a hex / rgb[a]() / hsl[a]() / bare keyword / var(--slot).
+   This blocks CSS-separator injection (`;`, `{`, `url(...)`, quotes) so an imported lesson's tokens can't
+   break out of `--key:value` and add extra declarations (e.g. an external `background:url()` beacon). */
+const TP_TOKEN_VAL=/^(?:#[0-9a-fA-F]{3,8}|rgba?\([\d.,%\s/]+\)|hsla?\([\d.,%\s/]+\)|[a-zA-Z]+|var\(--[a-zA-Z0-9-]+\))$/;
+function tpTokenStyle(s){
+  const merged={};
+  const add=o=>{ if(o&&typeof o==='object') for(const k in o){ const key=String(k).replace(/^--/,''); const v=o[k];
+    if(TP_SLOT_WL.has(key)&&(typeof v==='string'||typeof v==='number')){ const val=String(v).trim(); if(TP_TOKEN_VAL.test(val)) merged[key]=val; } } };
+  add(LESSON&&LESSON.tokens);          // lesson override
+  add(s&&s.tokens);                    // block override (applied last → wins)
+  const keys=Object.keys(merged); if(!keys.length) return '';
+  return ' style="'+keys.map(k=>'--'+k+':'+esc(merged[k])).join(';')+'"';   // esc() kept as attribute-context defence-in-depth
+}
 function renderPackSlide(s,i,present){
   const theme=(LESSON.meta&&LESSON.meta.theme)||'';
   const table={imperium:IM_PACK,microhistory:MH_PACK,geolearn:GL_PACK}[theme]||{};
   const fn=table[s.type]||packFallback;
   let inner; try{ inner=fn(s,i); }catch(e){ inner=`<main class="tp-main"><div class="tp-wrap">Render error: ${esc(String(e.message||e))}</div></main>`; }
-  return `<div class="tp-slide" data-tp-theme="${esc(theme)}" data-tp-type="${esc(s.type||'')}">${inner}</div>`;
+  return `<div class="tp-slide"${tpTokenStyle(s)} data-tp-theme="${esc(theme)}" data-tp-type="${esc(s.type||'')}">${inner}</div>`;
 }
 /* knowledgeCheck interactivity (option select → feedback reveal → gate Continue). */
 function wirePack(){
