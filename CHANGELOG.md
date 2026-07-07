@@ -7,6 +7,13 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **`lessons/agrippina-coinage-as-a-source.html` — new published lesson.** Byte-for-byte exported imperium
+  lesson (9 slides, ~9.4 MB), "Coinage as a Source" case study on Agrippina the Younger. Embeds the
+  same-origin `interactives/coin-workbench.html` (two-column build already on `main`). Self-contained per
+  `validate` (video poster/links to YouTube are not third-party script/style hosts, same as the other
+  published lessons). `validate` green.
+
 ### Changed
 - **Source-analysis image uses the standard zoom button (visible + working).** The `sourceAnalysis` source
   image was the last slot on the old expand path: imperium/microhistory (`packSourceAnalysis`) rendered a
