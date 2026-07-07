@@ -48,6 +48,8 @@ docs/v3/v3-composable-pages.md  # v3 plan — composable pages & object interact
 The **app** (`lesson-studio.html`) is published too, so you can author from any machine.
 Exported **lessons** go in `/lessons` and are what students actually open.
 
+The **v2 rebuild spec** lives in [`docs/v2/onlinelessonmaker-v2-architecture.md`](docs/v2/onlinelessonmaker-v2-architecture.md) — the architecture constitution and entry point (the domain-pack specs are referenced from within it).
+
 ## 3. Architecture
 
 Everything is driven by one object, `LESSON`, of shape:
