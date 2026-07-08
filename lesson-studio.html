@@ -3989,6 +3989,13 @@ function tpFeedback(fb){ fb=fb||{};
   return `<div class="tp-feedback" data-tp-fb="correct" hidden><span class="fic ok">${tpIc('checkCircle',30)}</span><div><h3 class="ftitle">${esc(fb.correctTitle||'Correct')}</h3><p class="ftext">${esc(fb.correctText||'')}</p></div></div>`
     +`<div class="tp-feedback" data-tp-fb="incorrect" hidden><span class="fic no">${tpIc('xCircle',30)}</span><div><h3 class="ftitle">${esc(fb.incorrectTitle||'Not quite')}</h3><p class="ftext">${esc(fb.incorrectText||'')}</p></div></div>`;
 }
+/* shared: the reveal/submit answer button (Phase 2a extraction — byte-identical to the former inline copies).
+   Emits ONLY the <button>; callers keep their own row/hint/focus-btn wrappers. iconAfter → label before icon. */
+function tpRevealBtn(fid,o){ o=o||{};
+  const ic=o.icon?tpIc(o.icon,o.iconSize||15):'', lbl=o.label||'';
+  const inner=o.iconAfter?(lbl+' '+ic):(ic+' '+lbl);
+  return `<button class="${o.cls}" type="button" aria-expanded="false" aria-controls="${o.controls||(fid+'-model')}" data-tp-reveal="${fid}"${o.submit?' data-tp-submit':''} data-tp-revname="${o.revname}" data-tp-donelabel="${o.donelabel}">${inner}</button>`;
+}
 function imKnowledge(s){
   const opts=Array.isArray(s.options)?s.options:[];
   const letters=['A','B','C','D','E','F'];
@@ -4112,7 +4119,7 @@ function mhInfographic(s){
         <label class="tp-tq" for="${fid}-ta">${esc(t.question||'')}</label>
         <div class="tp-tmeta">${t.marks?`<span class="tp-marks">${esc(t.marks)}</span>`:''}${t.skill?`<span class="tp-skill">${esc(t.skill)}</span>`:''}</div></div></div>
       <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="Task ${num}${t.skill?': '+esc(t.skill):''} — your response" placeholder="Type your response..."></textarea>
-      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="task ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button></div>
+      <div class="tp-trow">${tpRevealBtn(fid,{cls:'tp-reveal-btn',icon:'lightbulb',iconSize:15,label:'Reveal model answer',revname:'task '+num,donelabel:'Model answer shown'})}</div>
       <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model answer for task ${num}"><div class="tp-tmh">${tpIc('check',14)} Model answer${t.skill?' · '+esc(t.skill):''}</div><p>${esc(t.model||'')}</p></div></li>`;
   }).join('');
   const taskBlock=tasks.length?`<div class="tp-igtasks"><h2 class="tp-igtasks-h">${esc(s.tasksLabel||'Analysis Tasks')}</h2><p class="tp-igtasks-lead">${esc(s.tasksLead||'Use the data above to answer each task. The model answer unlocks once you submit your attempt.')}</p><ol class="tp-tasks">${tasksHtml}</ol></div>`:'';
@@ -4539,7 +4546,7 @@ function glGuided(s){
       <div class="gl-parabody">
         <textarea id="${fid}-ta" class="gl-gta para" data-tp-field="${fid}" aria-label="${esc(p.label||('Paragraph '+(k+1)))} — your writing" placeholder="Write your ${esc((p.label||'paragraph').toLowerCase())} here..."></textarea>
         <div class="gl-gactions"><span class="gl-unlock"><span class="ui">${tpIc('lock',14)}</span> Write something to reveal the model</span>
-          <button class="gl-submit" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-submit data-tp-revname="${esc(p.label||('paragraph '+(k+1)))}" data-tp-donelabel="Model paragraph shown">Submit ${tpIc('arrowRight',16)}</button></div>
+          ${tpRevealBtn(fid,{cls:'gl-submit',icon:'arrowRight',iconSize:16,iconAfter:true,label:'Submit',submit:true,revname:esc(p.label||('paragraph '+(k+1))),donelabel:'Model paragraph shown'})}</div>
         <div class="gl-greveal" id="${fid}-model" data-tp-model><div class="gl-modelc"><span class="mh">${tpIc('check',14)} Model paragraph</span><p>${glRich(p.model||'')}</p></div></div>
       </div></div>`; }).join('');
     return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap">
@@ -4560,7 +4567,7 @@ function glGuided(s){
       <div class="gl-rlabel">${esc(s.responseLabel||'Your response')}</div>
       <textarea id="gr0-ta" class="gl-gta" data-tp-field="gr0" aria-label="Your response" placeholder="Type your response here..."></textarea>
       <div class="gl-gactions"><span class="gl-unlock"><span class="ui">${tpIc('lock',14)}</span> Write something to unlock the model answer</span>
-        <button class="gl-submit" type="button" aria-expanded="false" aria-controls="gr0-model" data-tp-reveal="gr0" data-tp-submit data-tp-revname="this task" data-tp-donelabel="Model answer shown">Submit ${tpIc('arrowRight',16)}</button></div>
+        ${tpRevealBtn('gr0',{cls:'gl-submit',icon:'arrowRight',iconSize:16,iconAfter:true,label:'Submit',submit:true,revname:'this task',donelabel:'Model answer shown'})}</div>
       <div class="gl-greveal" id="gr0-model" data-tp-model>
         <div class="gl-donechip">${tpIc('checkCircle',16)} Attempt submitted</div>
         <div class="gl-revgrid"><div class="gl-modelc"><span class="mh">${tpIc('check',14)} Model answer</span><p>${glRich(model)}</p></div>
@@ -4581,7 +4588,7 @@ function glSource(s){
       <label class="gl-tq" for="${fid}-ta">${esc(t.question||'')}</label>
       <div class="gl-taskmeta">${t.marks?`<span class="gl-marks">${esc(t.marks)}</span>`:''}${t.skill?`<span class="gl-skill">${esc(t.skill)}</span>`:''}</div>
       <textarea id="${fid}-ta" class="gl-gta" data-tp-field="${fid}" aria-label="Task ${num} — your response" placeholder="Type your response..."></textarea>
-      <div class="gl-trow2"><button class="gl-submit" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-submit data-tp-revname="task ${num}" data-tp-donelabel="Model answer shown">Submit ${tpIc('arrowRight',16)}</button></div>
+      <div class="gl-trow2">${tpRevealBtn(fid,{cls:'gl-submit',icon:'arrowRight',iconSize:16,iconAfter:true,label:'Submit',submit:true,revname:'task '+num,donelabel:'Model answer shown'})}</div>
       <div class="gl-greveal" id="${fid}-model" data-tp-model><div class="gl-modelc"><span class="mh">${tpIc('check',14)} Model answer</span><p>${glRich(t.model||'')}</p></div></div>
     </div></div>`; }).join('');
   return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap gl-mid">
@@ -4613,7 +4620,7 @@ function glInteractive(s){
       <label class="gl-tq" for="${fid}-ta">${esc(q.question||'')}</label>
       ${(q.marks||q.skill)?`<div class="gl-taskmeta">${q.marks?`<span class="gl-marks">${esc(q.marks)}</span>`:''}${q.skill?`<span class="gl-skill">${esc(q.skill)}</span>`:''}</div>`:''}
       <textarea id="${fid}-ta" class="gl-gta" data-tp-field="${fid}" aria-label="Question ${num}${q.skill?': '+esc(q.skill):''} — your response" placeholder="Type your response..."></textarea>
-      <div class="gl-trow2"><button class="gl-submit" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-submit data-tp-revname="question ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',16)} Reveal model answer</button></div>
+      <div class="gl-trow2">${tpRevealBtn(fid,{cls:'gl-submit',icon:'lightbulb',iconSize:16,label:'Reveal model answer',submit:true,revname:'question '+num,donelabel:'Model answer shown'})}</div>
       <div class="gl-greveal" id="${fid}-model" data-tp-model><div class="gl-modelc"><span class="mh">${tpIc('check',14)} Model answer</span><p>${glRich(q.model||'')}</p></div></div>
     </div></div>`;
   }).join('')}</div>`:'';
@@ -4723,7 +4730,7 @@ function mhGuided(s){
         <div class="tp-phead"><span class="tp-tnum">${k+1}</span><h3 class="tp-plabel">${lbl}</h3></div>
         ${p.guide?`<p class="tp-pguide">${esc(p.guide)}</p>`:''}
         <textarea id="${fid}-ta" class="tp-answ" rows="4" data-tp-field="${fid}" aria-label="${lbl} — your writing" placeholder="Write your ${esc((p.label||'paragraph').toLowerCase())} here..."></textarea>
-        <div class="tp-trow tp-grow"><span class="tp-unlock" data-tp-hintnote>${tpIc('lock',13)} Write something to reveal the model</span><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-submit data-tp-revname="${lbl}" data-tp-donelabel="Model paragraph shown">Submit ${tpIc('arrowRight',15)}</button>${mhQFocusBtn()}</div>
+        <div class="tp-trow tp-grow"><span class="tp-unlock" data-tp-hintnote>${tpIc('lock',13)} Write something to reveal the model</span>${tpRevealBtn(fid,{cls:'tp-reveal-btn',icon:'arrowRight',iconSize:15,iconAfter:true,label:'Submit',submit:true,revname:lbl,donelabel:'Model paragraph shown'})}${mhQFocusBtn()}</div>
         <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model paragraph for ${lbl}"><div class="tp-tmh">${tpIc('check',14)} Model paragraph</div><p>${tpRich(p.model||'')}</p></div>
       </div>`; }).join('');
     const crit=Array.isArray(s.criteria)?s.criteria:[];
@@ -4744,7 +4751,7 @@ function mhGuided(s){
       <div class="tp-gcard" data-tp-block>${qbox}
         <div class="tp-grlabel">${esc(s.responseLabel||'Your response')}</div>
         <textarea id="gp0-ta" class="tp-answ" rows="5" data-tp-field="gp0" aria-label="Your response" placeholder="Type your response here..."></textarea>
-        <div class="tp-trow tp-grow"><span class="tp-unlock" data-tp-hintnote>${tpIc('lock',13)} Write something to unlock the model answer</span><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="gp0-model" data-tp-reveal="gp0" data-tp-submit data-tp-revname="this task" data-tp-donelabel="Model answer shown">Submit ${tpIc('arrowRight',15)}</button>${mhQFocusBtn()}</div>
+        <div class="tp-trow tp-grow"><span class="tp-unlock" data-tp-hintnote>${tpIc('lock',13)} Write something to unlock the model answer</span>${tpRevealBtn('gp0',{cls:'tp-reveal-btn',icon:'arrowRight',iconSize:15,iconAfter:true,label:'Submit',submit:true,revname:'this task',donelabel:'Model answer shown'})}${mhQFocusBtn()}</div>
         <div class="tp-tmodel" id="gp0-model" data-tp-model role="region" aria-label="Model answer"><div class="tp-tmh">${tpIc('check',14)} Model answer</div><p>${tpRich(model)}</p>${critOf(crit)}</div>
       </div>
     </div></main>`
@@ -4845,7 +4852,7 @@ function mhInteractive(s){
         <label class="tp-tq" for="${fid}-ta">${esc(q.question||'')}</label>
         ${(q.marks||q.skill)?`<div class="tp-tmeta">${q.marks?`<span class="tp-marks">${esc(q.marks)}</span>`:''}${q.skill?`<span class="tp-skill">${esc(q.skill)}</span>`:''}</div>`:''}</div></div>
       <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="Question ${num}${q.skill?': '+esc(q.skill):''} — your response" placeholder="Type your response..."></textarea>
-      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="question ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button></div>
+      <div class="tp-trow">${tpRevealBtn(fid,{cls:'tp-reveal-btn',icon:'lightbulb',iconSize:15,label:'Reveal model answer',revname:'question '+num,donelabel:'Model answer shown'})}</div>
       <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model answer for question ${num}"><div class="tp-tmh">${tpIc('check',14)} Model answer${q.skill?' · '+esc(q.skill):''}</div><p>${esc(q.model||'')}</p></div></li>`;
   }).join('')}</ol></div>`:'';
   const still=tpSrc(s.still||s.screenshot||s.image);
@@ -4891,7 +4898,7 @@ function packInteractive(s){
         <label class="tp-tq" for="${fid}-ta">${esc(q.question||'')}</label>
         ${(q.marks||q.skill)?`<div class="tp-tmeta">${q.marks?`<span class="tp-marks">${esc(q.marks)}</span>`:''}${q.skill?`<span class="tp-skill">${esc(q.skill)}</span>`:''}</div>`:''}</div></div>
       <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="Question ${num}${q.skill?': '+esc(q.skill):''} — your response" placeholder="Type your response..."></textarea>
-      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="question ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button></div>
+      <div class="tp-trow">${tpRevealBtn(fid,{cls:'tp-reveal-btn',icon:'lightbulb',iconSize:15,label:'Reveal model answer',revname:'question '+num,donelabel:'Model answer shown'})}</div>
       <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model answer for question ${num}"><div class="tp-tmh">${tpIc('check',14)} Model answer${q.skill?' · '+esc(q.skill):''}</div><p>${esc(q.model||'')}</p></div></li>`;
   }).join('')}</ol></div>`:'';
   const still=tpSrc(s.still||s.screenshot||s.image);
@@ -5121,7 +5128,7 @@ function packSourceAnalysis(s,i){
         <label class="tp-tq" for="${fid}-ta">${esc(t.question||'')}</label>
         <div class="tp-tmeta">${t.marks?`<span class="tp-marks">${esc(t.marks)}</span>`:''}${t.skill?`<span class="tp-skill">${esc(t.skill)}</span>`:''}</div></div></div>
       <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="Task ${num}${t.skill?': '+esc(t.skill):''} — your response" placeholder="Type your response..."></textarea>
-      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="task ${num}" data-tp-donelabel="Model answer shown">${tpIc('lightbulb',15)} Reveal model answer</button>${themeMH?mhQFocusBtn():''}</div>
+      <div class="tp-trow">${tpRevealBtn(fid,{cls:'tp-reveal-btn',icon:'lightbulb',iconSize:15,label:'Reveal model answer',revname:'task '+num,donelabel:'Model answer shown'})}${themeMH?mhQFocusBtn():''}</div>
       <div class="tp-tmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model answer for task ${num}"><div class="tp-tmh">${tpIc('check',14)} Model answer${t.skill?' · '+esc(t.skill):''}</div><p>${esc(t.model||'')}</p></div></li>`;
   }).join('');
   const fEy=(src.label?esc(src.label)+' · ':'')+'Transcript';
@@ -5166,7 +5173,7 @@ function packGuidedResponse(s,i){
           <label class="tp-plabel" for="${fid}-ta">${esc(q.question||'')}</label>
           ${q.marks?`<div class="tp-tmeta"><span class="tp-marks">${esc(q.marks)}</span></div>`:''}</div></div>
         <textarea id="${fid}-ta" class="tp-answ" rows="2" data-tp-field="${fid}" aria-label="Question ${k+1} — your answer" placeholder="Type your answer..."></textarea>
-        <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="question ${k+1}" data-tp-donelabel="Answer shown">${tpIc('lightbulb',15)} Reveal answer</button></div>
+        <div class="tp-trow">${tpRevealBtn(fid,{cls:'tp-reveal-btn',icon:'lightbulb',iconSize:15,label:'Reveal answer',revname:'question '+(k+1),donelabel:'Answer shown'})}</div>
         <div class="tp-pmodel" id="${fid}-model" data-tp-model role="region" aria-label="Answer for question ${k+1}"><div class="tp-pmh">${tpIc('check',14)} Answer</div><p>${esc(q.answer||'')}</p></div></li>`;
     }).join('');
     return tpLive()+packHead(s,tpProg(s,40))
@@ -5195,7 +5202,7 @@ function packGuidedResponse(s,i){
             <label class="tp-answh" for="gr0-ta">Your response</label>
             <textarea id="gr0-ta" class="tp-answ" rows="5" data-tp-field="gr0" aria-label="Your response" placeholder="Type your response here..."></textarea>
             <div class="tp-gr-actions"><span class="tp-hintnote" data-tp-hintnote>${tpIc('lock',15)} The model response unlocks after you submit an attempt.</span>
-              <button class="tp-submit" type="button" aria-expanded="false" aria-controls="gr0-reveal" data-tp-reveal="gr0" data-tp-submit data-tp-revname="this task" data-tp-donelabel="Attempt submitted">Submit attempt ${tpIc('arrowRight',16)}</button></div>
+              ${tpRevealBtn('gr0',{cls:'tp-submit',icon:'arrowRight',iconSize:16,iconAfter:true,label:'Submit attempt',submit:true,controls:'gr0-reveal',revname:'this task',donelabel:'Attempt submitted'})}</div>
             <div class="tp-reveal" id="gr0-reveal" data-tp-model>
               <div class="tp-rvtop"><span class="tp-rvbadge">${tpIc('check',16)} Attempt submitted</span></div>
               <div class="tp-rvgrid">
@@ -5212,7 +5219,7 @@ function packGuidedResponse(s,i){
     return `<li class="tp-para" data-tp-block><div class="tp-phead"><span class="tp-pnum">${k+1}</span><div>
         <label class="tp-plabel" for="${fid}-ta">${lbl}</label><p class="tp-pguide">${esc(p.guide||'')}</p></div></div>
       <textarea id="${fid}-ta" class="tp-answ" rows="3" data-tp-field="${fid}" aria-label="${lbl} — your paragraph" placeholder="Write your ${lbl.toLowerCase()} here..."></textarea>
-      <div class="tp-trow"><button class="tp-reveal-btn" type="button" aria-expanded="false" aria-controls="${fid}-model" data-tp-reveal="${fid}" data-tp-revname="${lbl}" data-tp-donelabel="Model paragraph shown">${tpIc('lightbulb',15)} Reveal model paragraph</button></div>
+      <div class="tp-trow">${tpRevealBtn(fid,{cls:'tp-reveal-btn',icon:'lightbulb',iconSize:15,label:'Reveal model paragraph',revname:lbl,donelabel:'Model paragraph shown'})}</div>
       <div class="tp-pmodel" id="${fid}-model" data-tp-model role="region" aria-label="Model paragraph for ${lbl}"><div class="tp-pmh">${tpIc('check',14)} Model · ${lbl}</div><p>${esc(p.model||'')}</p></div></li>`;
   }).join('');
   const st=s.stimulus||null;
