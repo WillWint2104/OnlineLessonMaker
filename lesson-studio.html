@@ -4321,8 +4321,8 @@ function tpRich(text, opts){ opts=opts||{};
 /* the reveal-pen renders only when the body actually carries a [[note]] */
 function tpHasNotes(body){ const arr=Array.isArray(body)?body:[body]; return arr.some(b=>{ const t=typeof b==='string'?b:((b&&(b.content||b.quote||b.text))||''); return /\[\[[^\]]+\]\]/.test(t); }); }
 function tpNotePen(){ return `<button class="tp-notepen" type="button" data-tp-notes aria-pressed="false"><span class="pi">${tpIc('pen',16)}</span><span class="lbl"> Reveal notes</span></button>`; }
-/* Shared key-term popup wiring for the pack text pages (imperium packText / microhistory mhText, via the
-   data-tp-focus-open overlay handler) and the geolearn studyguide (data-gl-open / wireGeoModals). Builds
+/* Shared key-term popup wiring for the pack text pages (imperium packText / microhistory mhText / geolearn
+   glText) — all now via the shared data-tp-focus-open overlay handler (Phase 2c-i unified geolearn onto it). Builds
    the term→modal-id map and a present-gated tpRich hook (kt) that turns a matched ==term== or **bold**
    into a clickable definition button; suppressed on the board (Present) and inert when the slide carries
    no keyTerms. `w` is already esc()'d by tpRich before the callback, so it's emitted as-is (no double
@@ -4354,9 +4354,10 @@ function glHeader(icon,eyebrow,title,desc){
 }
 /* focused-card modal (dimmed backdrop, ×/Esc, focus-return — wired in wireGeo) */
 function glModal(id,eyebrow,title,bodyHtml){
-  return `<div class="gl-overlay" data-gl-modal="${esc(id)}" role="dialog" aria-modal="true" aria-label="${esc(title||eyebrow||'Details')}" hidden>
+  // Phase 2c-i: pack wiring (id + data-tp-overlay ↔ data-tp-focus-open; data-tp-focus-close) — .gl-modal skin unchanged.
+  return `<div class="gl-overlay" id="${esc(id)}" data-tp-overlay role="dialog" aria-modal="true" aria-label="${esc(title||eyebrow||'Details')}" hidden>
     <div class="gl-modal"><div class="gl-mhead"><div>${eyebrow?`<span class="gl-meye">${tpIc('info',14)} ${esc(eyebrow)}</span>`:''}${title?`<h2>${esc(title)}</h2>`:''}</div>
-      <button class="gl-mclose" type="button" data-gl-close aria-label="Close">${tpIc('close',20)}</button></div>
+      <button class="gl-mclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',20)}</button></div>
       ${bodyHtml}</div></div>`;
 }
 function glPills(arr){ if(!glHas(arr)) return '';
@@ -4388,13 +4389,13 @@ function glOutcomes(s){
   const syItems=syl&&Array.isArray(syl.outcomes||syl.items)?(syl.outcomes||syl.items):[];
   const resItems=Array.isArray(res)?res:(res&&Array.isArray(res.items)?res.items:[]);
   const btns=[]; const modals=[];
-  if(glHas(syItems)){ btns.push(`<button class="gl-obtn prim" type="button" data-gl-open="syl"><span class="bi">${tpIc('list',16)}</span> ${esc((syl&&syl.label)||'Syllabus & Outcomes')}</button>`);
+  if(glHas(syItems)){ btns.push(`<button class="gl-obtn prim" type="button" data-tp-focus-open="syl"><span class="bi">${tpIc('list',16)}</span> ${esc((syl&&syl.label)||'Syllabus & Outcomes')}</button>`);
     modals.push(glModal('syl',(syl&&syl.eyebrow)||'NSW Syllabus',(syl&&syl.title)||'Syllabus & Outcomes',
       `${syl&&syl.description?`<p class="gl-msub">${esc(syl.description)}</p>`:''}<ul class="gl-syllist">${syItems.map(it=>`<li class="gl-syl"><span class="sc">${esc(it.code||'')}</span><span class="st">${esc(it.text||'')}</span><span class="sk">${tpIc('check',16)}</span></li>`).join('')}</ul>`)); }
-  if(glHas(resItems)){ const ro=(res&&!Array.isArray(res))?res:{}; btns.push(`<button class="gl-obtn" type="button" data-gl-open="res"><span class="bi">${tpIc('book',16)}</span> ${esc(ro.label||'Resource Library')}</button>`);
+  if(glHas(resItems)){ const ro=(res&&!Array.isArray(res))?res:{}; btns.push(`<button class="gl-obtn" type="button" data-tp-focus-open="res"><span class="bi">${tpIc('book',16)}</span> ${esc(ro.label||'Resource Library')}</button>`);
     modals.push(glModal('res',ro.eyebrow||'Resources',ro.title||'Resource Library',
       `<div class="gl-reslist">${resItems.map(r=>`<a class="gl-rcard"${r.url?` href="${esc(r.url)}" target="_blank" rel="noopener noreferrer"`:''}><span class="ric">${tpIc(r.icon||'doc',18)}</span><div class="rt"><h4>${esc(r.title||'')}</h4>${r.description?`<p>${esc(r.description)}</p>`:''}</div>${r.url?`<span class="rext">${tpIc('external',16)}</span>`:''}</a>`).join('')}</div>`)); }
-  if(cs&&(cs.title||cs.description||cs.body)){ btns.push(`<button class="gl-obtn" type="button" data-gl-open="cs"><span class="bi">${tpIc('pin',16)}</span> ${esc(cs.label||'Case Study')}</button>`);
+  if(cs&&(cs.title||cs.description||cs.body)){ btns.push(`<button class="gl-obtn" type="button" data-tp-focus-open="cs"><span class="bi">${tpIc('pin',16)}</span> ${esc(cs.label||'Case Study')}</button>`);
     modals.push(glModal('cs',cs.eyebrow||'Case study',cs.title||'Case Study',`<p class="gl-msub">${esc(cs.description||cs.body||'')}</p>`)); }
   const hasImg=glHas(s.image), hasLeft=hasImg||btns.length>0;   // the left panel is worth showing if it has an image OR the syllabus/resource buttons; with neither, drop it (no empty "Image placeholder" strip)
   return glHead(s)+`<main class="gl-main gl-center"><div class="gl-ocard gl-otwo${hasLeft?'':' gl-oone'}">
@@ -4415,7 +4416,7 @@ function glText(s){
   const body=Array.isArray(s.body)?s.body:(s.body?[s.body]:[]);
   if(variant==='studyguide'){
     const present=document.body.classList.contains('present');
-    const {terms, live:ktLive, kt}=tpKeyTerms(s,present,'gl-kt','gt','data-gl-open');   // no interactive term buttons on the board — teacher talks
+    const {terms, live:ktLive, kt}=tpKeyTerms(s,present,'gl-kt','gt','data-tp-focus-open');   // Phase 2c-i: pack wiring (was data-gl-open); no interactive term buttons on the board — teacher talks
 
     const blockHtml=body.map(b=>{
       if(typeof b==='string') return `<p>${kt(b)}</p>`;
@@ -4489,7 +4490,7 @@ function glInfographic(s){
   const legHtml=legend.length?`<div class="gl-legend"><h3>${esc(s.legendTitle||'Legend')}</h3>${legend.map(l=>{const o=typeof l==='string'?{label:l}:l;return `<div class="gl-lg"><span class="sw" style="background:${esc(o.color||'var(--primary)')}"></span>${esc(o.label||'')}</div>`;}).join('')}</div>`:'';
   const btns=[]; const modals=[];
   if(href) btns.push(`<a class="gl-obtn prim" href="${esc(href)}" target="_blank" rel="noopener noreferrer"><span class="bi">${tpIc('map',16)}</span> ${esc(s.mapLabel||'Open interactive map')} ${tpIc('external',14)}</a>`);
-  if(kpItems.length){ btns.push(`<button class="gl-obtn" type="button" data-gl-open="kp"><span class="bi">${tpIc('lightbulb',16)}</span> ${esc((kp&&kp.label)||'Key points')}</button>`);
+  if(kpItems.length){ btns.push(`<button class="gl-obtn" type="button" data-tp-focus-open="kp"><span class="bi">${tpIc('lightbulb',16)}</span> ${esc((kp&&kp.label)||'Key points')}</button>`);
     const tc=kp&&kp.thinkCritically;
     modals.push(glModal('kp',(kp&&kp.eyebrow)||'Reading the data',(kp&&kp.title)||'Key points',
       `<div class="gl-ptgrid">${kpItems.map(k=>`<div class="gl-pt"><span class="gl-pti">${tpIc(k.icon||'info',18)}</span><div><h4>${esc(k.heading||'')}</h4><p>${esc(k.body||'')}</p></div></div>`).join('')}</div>`
@@ -4510,7 +4511,7 @@ function glVideo(s){
   const tr=s.transcript&&Array.isArray(s.transcript.paragraphs)?s.transcript.paragraphs:(Array.isArray(s.transcript)?s.transcript:[]);
   const side=[]; const modals=[];
   if(s.externalVideoUrl||s.url) side.push(`<a class="gl-actcard prim" href="${esc(s.externalVideoUrl||s.url)}" target="_blank" rel="noopener noreferrer"><span class="ai">${tpIc('play',20)}</span><div class="at"><h4>${esc(s.urlLabel||'Open video')}</h4><p>${esc(s.urlMeta||'Opens in a new tab')}</p></div><span class="chev">${tpIc('external',16)}</span></a>`);
-  if(tr.length){ side.push(`<button class="gl-actcard soft" type="button" data-gl-open="tr"><span class="ai">${tpIc('notes',20)}</span><div class="at"><h4>Read transcript</h4><p>${tr.length} paragraph${tr.length>1?'s':''}</p></div><span class="chev">${tpIc('arrowRight',16)}</span></button>`);
+  if(tr.length){ side.push(`<button class="gl-actcard soft" type="button" data-tp-focus-open="tr"><span class="ai">${tpIc('notes',20)}</span><div class="at"><h4>Read transcript</h4><p>${tr.length} paragraph${tr.length>1?'s':''}</p></div><span class="chev">${tpIc('arrowRight',16)}</span></button>`);
     modals.push(glModal('tr','Transcript',s.title||'Transcript',`<div class="gl-transcript">${tr.map(p=>`<p>${esc(p)}</p>`).join('')}</div>`)); }
   const chipHtml=chips.length?`<div class="gl-chips">${chips.map(c=>{const o=typeof c==='string'?{label:c}:c;return `<span class="gl-vsidechip">${tpIc(o.icon||'check',14)} ${esc(o.label||'')}</span>`;}).join('')}</div>`:'';
   return glHead(s)+`<main class="gl-main gl-scroll"><div class="gl-wrap">
@@ -4679,17 +4680,8 @@ function wireGeoModals(){
   root.querySelectorAll('[data-tp-back]').forEach(b=>b.addEventListener('click',()=>{ if(b.disabled) return; if(present && cur>0) go(cur-1); }));
   // outro review → first slide
   root.querySelectorAll('[data-tp-review]').forEach(b=>b.addEventListener('click',()=>{ if(present) go(0); }));
-  // focused-card modals (data-gl-open ↔ data-gl-modal)
-  root.querySelectorAll('[data-gl-open]').forEach(btn=>{
-    const id=btn.dataset.glOpen, dlg=root.querySelector('[data-gl-modal="'+id+'"]'); if(!dlg) return;
-    let escH=null;
-    const close=()=>{ dlg.hidden=true; if(escH){ document.removeEventListener('keydown',escH); escH=null; } btn.focus(); };
-    const open=()=>{ dlg.hidden=false; const c=dlg.querySelector('[data-gl-close]'); if(c) c.focus();
-      escH=(e)=>{ if(e.key==='Escape') close(); }; document.addEventListener('keydown',escH); };
-    btn.addEventListener('click',open);
-    dlg.addEventListener('click',(e)=>{ if(e.target===dlg) close(); });
-    const c=dlg.querySelector('[data-gl-close]'); if(c) c.addEventListener('click',close);
-  });
+  // Phase 2c-i: focused-card modals now ride the shared pack overlay handler (data-tp-focus-open ↔ id
+  // [data-tp-overlay] / data-tp-focus-close in wirePackTyped) — the old data-gl-open/modal/close block was removed.
   // knowledge-check gating (Continue locked until the correct option is chosen; retry while wrong)
   const kc=root.querySelector('[data-gl-kc]');
   if(kc){
@@ -5330,10 +5322,12 @@ function wirePackTyped(){
   const bareTarget=unclaimed.length===1?unclaimed[0]:singleOverlay;       // so a bare opener still resolves when every OTHER overlay on the slide is id-paired
   const openBtns=[...root.querySelectorAll('[data-tp-focus-open]')];
   if(overlays.length && openBtns.length){
-    const escFor=new Map();
-    const closeOv=(ov,opener)=>{ ov.hidden=true; const h=escFor.get(ov); if(h){ document.removeEventListener('keydown',h); escFor.delete(ov); } if(opener) opener.focus(); };
-    const openOv=(ov,opener)=>{ ov.hidden=false; const c=ov.querySelector('[data-tp-focus-close]'); if(c) c.focus();
-      const h=(e)=>{ if(e.key==='Escape') closeOv(ov,opener); }; escFor.set(ov,h); document.addEventListener('keydown',h); };
+    const escFor=new Map(), openerFor=new Map();
+    // Phase 2c-i: track the opener per overlay so focus returns to it on EVERY close path (Esc, close-button,
+    // backdrop) — APG dialog contract. Previously only Esc returned focus; button/backdrop dropped it to <body>.
+    const closeOv=(ov)=>{ ov.hidden=true; const h=escFor.get(ov); if(h){ document.removeEventListener('keydown',h); escFor.delete(ov); } const op=openerFor.get(ov); openerFor.delete(ov); if(op) op.focus(); };
+    const openOv=(ov,opener)=>{ ov.hidden=false; openerFor.set(ov,opener); const c=ov.querySelector('[data-tp-focus-close]'); if(c) c.focus();
+      const h=(e)=>{ if(e.key==='Escape') closeOv(ov); }; escFor.set(ov,h); document.addEventListener('keydown',h); };
     openBtns.forEach(btn=>{
       const id=btn.getAttribute('data-tp-focus-open');
       const ov=id?(root.querySelector('#'+id)||document.getElementById(id)):bareTarget;
@@ -5346,8 +5340,8 @@ function wirePackTyped(){
       if(isSpanBtn) btn.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); openOv(ov,btn); } });
     });
     overlays.forEach(ov=>{
-      const cl=ov.querySelector('[data-tp-focus-close]'); if(cl) cl.addEventListener('click',()=>closeOv(ov,null));
-      ov.addEventListener('click',(e)=>{ if(e.target===ov) closeOv(ov,null); });
+      const cl=ov.querySelector('[data-tp-focus-close]'); if(cl) cl.addEventListener('click',()=>closeOv(ov));
+      ov.addEventListener('click',(e)=>{ if(e.target===ov) closeOv(ov); });
     });
   }
   // microhistory PER-QUESTION focus modal: MOVE the focused card into the large-print modal slot; the
