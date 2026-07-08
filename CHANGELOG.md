@@ -7,6 +7,21 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **v2 Phase 2a — reveal-answer button molecule extraction (byte-identical).** The reveal/submit-answer
+  button was hand-inlined at 13 sites across the pack renderers (`mhInfographic`, `glGuided`, `glSource`,
+  `glInteractive`, `mhGuided`, `mhInteractive`, `packInteractive`, `packSourceAnalysis`,
+  `packGuidedResponse`), each writing the same `data-tp-reveal` / `data-tp-revname` / `data-tp-donelabel`
+  button by hand and differing only in class (`.tp-reveal-btn` / `.gl-submit` / `.tp-submit`), icon
+  (`lightbulb` / `arrowRight`, size 15/16) and label. All 13 now call one helper `tpRevealBtn(fid, {cls,
+  icon, iconSize, iconAfter, label, submit, controls, revname, donelabel})` that emits **only** the
+  `<button>`; every surrounding wrapper stays inline and untouched — the row (`.tp-trow` / `.gl-trow2` /
+  `.tp-trow.tp-grow`), the hint span (`.tp-unlock`), and any trailing `mhQFocusBtn()`. Pure mechanical
+  extraction, no width/spacing/modal/aesthetic change. **Proven no regression:** renderPackSlide HTML
+  **0 diffs** and computed-style **0 diffs** across every reveal-button path × imperium/microhistory/
+  geolearn × Study/Present (32 scenarios, 61 rendered buttons), `validate` green, no new console errors.
+  (Width-token consolidation is the separate Phase 2b; modal convergence is Phase 2c.)
+
 ### Added
 - **v2 Phase 1 — token slot layer (colour only, behaviour-preserving).** Foundation for the v2 token
   cascade (`docs/v2` Layer 1, §4), delivered as a byte-identical refactor. In each theme's `.tp-slide`
