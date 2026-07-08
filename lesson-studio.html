@@ -4667,9 +4667,8 @@ function glOutro(s){
 }
 
 /* dispatch table */
-const GL_PACK={ title:glTitle, outcomes:glOutcomes, text:glText, imageText:glImageText, infographic:glInfographic,
-  video:glVideo, knowledgeCheck:glKnowledge, guidedResponse:glGuided, sourceAnalysis:glSource,
-  interactive:glInteractive, outro:glOutro };
+/* v2 Phase 3a: geolearn renderers are registered in the consolidated block registry next to
+   renderPackSlide (registerBlock calls) — the GL_PACK monolith was removed. */
 
 /* GeoLearn wiring: focus/Key-points modals, knowledge-check gating, reveal-notes.
    Added to wirePack (after wirePackTyped); no-op when no gl hooks are present. */
@@ -4927,8 +4926,19 @@ function packInteractive(s){
     </div></main>`
     +packFoot(s,s.cta||'Continue');
 }
-const IM_PACK={ title:imTitle, outcomes:imOutcomes, imageText:imImageText, text:packText, infographic:imInfographic, video:imVideo, knowledgeCheck:imKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:packGuidedResponse, interactive:packInteractive, outro:packOutro };
-const MH_PACK={ title:mhTitle, outcomes:mhOutcomes, imageText:mhImageText, text:mhText, infographic:mhInfographic, video:mhVideo, knowledgeCheck:mhKnowledge, sourceAnalysis:packSourceAnalysis, guidedResponse:mhGuided, interactive:packInteractive, outro:packOutro };
+/* v2 Phase 3a — block registry (Layer 5). Replaces the IM_PACK/MH_PACK/GL_PACK theme monoliths with an
+   explicit type×theme registry. Renderers are LIFTED unchanged (the same named functions) and registered;
+   renderPackSlide resolves REGISTRY[type][theme]. Theme-primary semantics preserved — three renderers per
+   type stay three renderers, just registered instead of switched. Pure dispatch refactor: output is
+   byte-identical. New blocks (3b: labeledGraphic) register the same way. */
+const REGISTRY={}, THEME_TYPES={};
+function registerBlock(type,theme,fn){ (REGISTRY[type]||(REGISTRY[type]={}))[theme]=fn; (THEME_TYPES[theme]||(THEME_TYPES[theme]=[])).push(type); }   // THEME_TYPES[theme] preserves registration order = the former Object.keys(*_PACK) order (drives the editor palette)
+// imperium
+registerBlock('title','imperium',imTitle); registerBlock('outcomes','imperium',imOutcomes); registerBlock('imageText','imperium',imImageText); registerBlock('text','imperium',packText); registerBlock('infographic','imperium',imInfographic); registerBlock('video','imperium',imVideo); registerBlock('knowledgeCheck','imperium',imKnowledge); registerBlock('sourceAnalysis','imperium',packSourceAnalysis); registerBlock('guidedResponse','imperium',packGuidedResponse); registerBlock('interactive','imperium',packInteractive); registerBlock('outro','imperium',packOutro);
+// microhistory
+registerBlock('title','microhistory',mhTitle); registerBlock('outcomes','microhistory',mhOutcomes); registerBlock('imageText','microhistory',mhImageText); registerBlock('text','microhistory',mhText); registerBlock('infographic','microhistory',mhInfographic); registerBlock('video','microhistory',mhVideo); registerBlock('knowledgeCheck','microhistory',mhKnowledge); registerBlock('sourceAnalysis','microhistory',packSourceAnalysis); registerBlock('guidedResponse','microhistory',mhGuided); registerBlock('interactive','microhistory',packInteractive); registerBlock('outro','microhistory',packOutro);
+// geolearn — registration order matches the former GL_PACK key order (text/imageText and guidedResponse/sourceAnalysis swapped vs im/mh) so the geolearn palette order is unchanged
+registerBlock('title','geolearn',glTitle); registerBlock('outcomes','geolearn',glOutcomes); registerBlock('text','geolearn',glText); registerBlock('imageText','geolearn',glImageText); registerBlock('infographic','geolearn',glInfographic); registerBlock('video','geolearn',glVideo); registerBlock('knowledgeCheck','geolearn',glKnowledge); registerBlock('guidedResponse','geolearn',glGuided); registerBlock('sourceAnalysis','geolearn',glSource); registerBlock('interactive','geolearn',glInteractive); registerBlock('outro','geolearn',glOutro);
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
@@ -4954,8 +4964,8 @@ function tpTokenStyle(s){
 }
 function renderPackSlide(s,i,present){
   const theme=(LESSON.meta&&LESSON.meta.theme)||'';
-  const table={imperium:IM_PACK,microhistory:MH_PACK,geolearn:GL_PACK}[theme]||{};
-  const fn=table[s.type]||packFallback;
+  const byType=REGISTRY[s.type];                 // type×theme registry (Phase 3a); unknown type or theme → packFallback (matches the former IM/MH/GL_PACK lookup)
+  const fn=(byType&&byType[theme])||packFallback;
   let inner; try{ inner=fn(s,i); }catch(e){ inner=`<main class="tp-main"><div class="tp-wrap">Render error: ${esc(String(e.message||e))}</div></main>`; }
   return `<div class="tp-slide"${tpTokenStyle(s)} data-tp-theme="${esc(theme)}" data-tp-type="${esc(s.type||'')}">${inner}</div>`;
 }
@@ -5612,7 +5622,7 @@ const PALETTE=[
   {t:'external',label:'External',cat:'source',wf:'<rect x="6" y="9" width="26" height="34" rx="3" class="f"/><rect x="38" y="11" width="32" height="4" class="l2"/><rect x="38" y="21" width="32" height="3"/><rect x="38" y="28" width="24" height="3"/><rect x="38" y="36" width="24" height="7" rx="3" class="s"/>'}
 ];
 /* ---- theme-aware slide-type manifest (DERIVED from each theme's implemented renderers) ---- */
-const THEME_TYPES={ imperium:Object.keys(IM_PACK), microhistory:Object.keys(MH_PACK), geolearn:Object.keys(GL_PACK) };
+/* THEME_TYPES is now built by registerBlock (Phase 3a), preserving the former Object.keys(*_PACK) order */
 function themeTypes(){ return THEME_TYPES[(LESSON.meta&&LESSON.meta.theme)]||[]; }
 /* seed objects for the pack/geolearn types (used by the palette + insertSlide) */
 const PACK_FACTORY={

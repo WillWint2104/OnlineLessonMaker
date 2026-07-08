@@ -8,6 +8,20 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **v2 Phase 3a — block registry (byte-identical dispatch refactor).** Replaced the three implicit theme
+  monoliths (`IM_PACK`/`MH_PACK`/`GL_PACK`) with an explicit **type×theme registry**: `REGISTRY[type][theme]
+  = renderFn`, populated by 33 `registerBlock(type, theme, fn)` calls that lift each existing renderer
+  unchanged (same named functions — `packText`, `mhText`, `glText`, …). `renderPackSlide` now resolves
+  `REGISTRY[s.type][theme]` instead of the inline `{imperium:IM_PACK,…}[theme][s.type]` lookup, preserving
+  the `packFallback` default exactly (unknown type **or** theme → fallback). Theme-primary semantics kept —
+  three renderers per type stay three renderers, just registered instead of switched; no convergence, no
+  renderer touched, no new block. `THEME_TYPES` (editor palette order) is now built by `registerBlock` in
+  registration order, matching the former `Object.keys(*_PACK)` order per theme (geolearn registered in its
+  original key order so its palette is unchanged). **Proven byte-identical:** `renderPackSlide` output
+  0-diff across all 11 types × 3 themes × Study + Present (78 scenarios); the registered (type,theme)→fn set
+  matches the pre-refactor tables exactly (33/33) and `THEME_TYPES` order is preserved for all three themes;
+  computed styles unchanged (the diff is dispatch-mechanics only — no CSS, no renderer bodies); `validate`
+  green, 0 console errors. `labeledGraphic` (the first new registered block) is the separate Phase 3b.
 - **v2 Phase 2c-i — modal WIRING unification (geolearn onto the pack overlay handler).** The forked
   geolearn modals (`glModal` — syllabus/resources/case-study on outcomes, key-terms on studyguide text,
   key-points on infographic, transcript on video) now ride the **shared pack overlay handler** instead of
