@@ -8,6 +8,25 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **v2 Phase 2c-i — modal WIRING unification (geolearn onto the pack overlay handler).** The forked
+  geolearn modals (`glModal` — syllabus/resources/case-study on outcomes, key-terms on studyguide text,
+  key-points on infographic, transcript on video) now ride the **shared pack overlay handler** instead of
+  the bespoke `wireGeoModals` block: `glModal` emits `id` + `data-tp-overlay` (was `data-gl-modal`) and a
+  `data-tp-focus-close` button (was `data-gl-close`); every trigger switched `data-gl-open` →
+  `data-tp-focus-open` (incl. the geolearn `tpKeyTerms` open-attr). The now-dead `data-gl-open/modal/close`
+  block of `wireGeoModals` was deleted (zero remaining references). **The `.gl-overlay`/`.gl-modal`/
+  `.gl-mhead`/`.gl-mclose` skin and DOM structure are unchanged** — this is wiring only. Follows the
+  existing glText focus-overlay precedent (already on the pack handler). While unifying, the shared close
+  handler now returns focus to the opener on **every** close path (Esc, close-button, backdrop) — APG
+  dialog contract; previously only Esc returned focus, so button/backdrop dropped it to `<body>`. Net: no
+  geolearn regression (it already returned focus on all paths) **and** im/mh gain focus-return on
+  button/backdrop close. **Proven (screenshot-gated, appearance-neutral):** open-modal screenshots
+  before/after for all six geolearn modals are pixel-identical (max 26px / 0.002% sub-visible AA noise, off
+  the modal); behaviour checklist passes identically on baseline and branch for all six modals (open ·
+  focus-to-close-on-open · Esc-closes · Esc-focus-return · backdrop-closes · backdrop-focus-return ·
+  close-btn-closes · close-btn-focus-return); im/mh term/focus modals still open/close (spot-checked) and
+  now also return focus on close-button; `validate` green; 0 console errors. DOM/skin unification (2c-ii)
+  and `mhQModal` (card-move) remain deferred. No focus-trap yet (2c-ii).
 - **v2 Phase 2b-width — single width authority (`--tp-measure`).** Consolidated the ~25 per-wrapper
   `max-width` caps (ten values: 820/880/1024/1040/1060/1100/1120/1140/1180/1200) into two tokens on the
   `.tp-slide` block (Phase 1's home): `--tp-measure` (imperium 1140, microhistory 1140, geolearn 1200) and
