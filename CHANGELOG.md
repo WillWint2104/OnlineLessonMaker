@@ -8,6 +8,25 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **v2 Phase 2b-width — single width authority (`--tp-measure`).** Consolidated the ~25 per-wrapper
+  `max-width` caps (ten values: 820/880/1024/1040/1060/1100/1120/1140/1180/1200) into two tokens on the
+  `.tp-slide` block (Phase 1's home): `--tp-measure` (imperium 1140, microhistory 1140, geolearn 1200) and
+  `--tp-measure-narrow` (880). **Decision:** cards widen UP to the canvas measure — nothing narrows.
+  Collapsed to `var(--tp-measure)`: imperium `.tp-wrap/.tp-doc/.tp-gr-wrap/.tp-sa-wrap/.tp-wrap-hero/
+  .tp-ocard/.tp-llwrap/.tp-ig-wrap/.tp-vwrap/.tp-kc-card/.tp-iwrap` (the eleven 1100s → 1140); microhistory
+  `.tp-artwrap` (1120→1140), `.tp-mhcard` (1040→1140), `.tp-iwrap` (1024→1140), `.tp-sa-wrap` (1060→1140);
+  geolearn `.gl-wrap/.gl-twrap/.gl-titlecard/.gl-ocard/.gl-outrowrap` (1200, **no visual change**). Removed
+  the redundant `.gl-wrap.gl-mid` no-op modifier. **Kept deliberate (untouched):** every `ch` prose measure
+  (`.tp-gr-wrap p`/`.tp-kc-q`/`.tp-ilead` 75ch, `.tp-igtasks-lead` 72ch, `.tp-prose p` 70ch, geolearn
+  74/66/60/58/44ch); the narrow cards via `--tp-measure-narrow`/`.gl-narrow` (`.gl-kccard` 820, `.tp-doc`
+  ~880, `.tp-outrocard` 780); the canvas 1280×720 frame; all overlay/focus panels; column gutters
+  (`.tp-tgrid` 40px etc.); chrome (`.tp-hin`/`.tp-ohin`); present-mode board-fill (`.tp-vcard2`/
+  `.tp-artwrap-present` 1180). **Proven (screenshot-gated, NOT byte-identical — widths intentionally move):**
+  measured every wrapper before/after across all pack types × 3 themes — every shift is widen-or-same
+  (imperium +40; microhistory +20/+80/+100/+116; geolearn 0), **nothing narrows**, `canvasScrollW` stays
+  1280 (no horizontal overflow), two-column grids still compose at 1140; the imperium `.tp-gr-wrap` 75ch
+  cap keeps model-answer prose readable at the wider card. `validate` green; 0 console errors. (Vertical
+  rhythm is the separate 2b-rhythm; modal convergence is 2c.)
 - **v2 Phase 2a — reveal-answer button molecule extraction (byte-identical).** The reveal/submit-answer
   button was hand-inlined at 13 sites across the pack renderers (`mhInfographic`, `glGuided`, `glSource`,
   `glInteractive`, `mhGuided`, `mhInteractive`, `packInteractive`, `packSourceAnalysis`,

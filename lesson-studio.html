@@ -84,6 +84,8 @@
   --tp-rad:20px; --tp-rad-btn:12px; --tp-cardsh:0 1px 3px rgba(0,0,0,.06); --tp-polarot:0deg;
   /* v2 Phase 1 slot layer (Layer 1, §4) — aliases at EXACT current values; --scrim is a fixed overlay, NOT --surface (docs/v2 §4 carve-out) */
   --surface-2:var(--surface-container);--accent:var(--primary-fixed);--line:var(--outline-variant);--focus-ring:var(--primary);--scrim:rgba(20,16,24,.82);--on-scrim:#fff;
+  /* v2 Phase 2b width authority (Layer 3) — one measure per theme; geolearn runs wider by design */
+  --tp-measure:1200px;--tp-measure-narrow:880px;
   background:var(--background); font-family:var(--tp-body); color:var(--on-surface);
 }
 /* ----- GeoLearn slide shell: fixed chrome, scrolling content (locked sizing) -----
@@ -122,9 +124,9 @@
    the page scrolls; we never shrink a component to dodge a scrollbar. */
 :root[data-theme="geolearn"] .gl-main{flex:1 1 auto;min-height:0;align-self:stretch;overflow-y:auto;padding:12px 0;display:flex;flex-direction:column;}
 :root[data-theme="geolearn"] .gl-main.gl-center{align-items:center;}   /* vertical centring via the child's margin:auto (scroll-safe); justify-content:center clips top-overflow */
-:root[data-theme="geolearn"] .gl-wrap{max-width:1200px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:16px;}
-:root[data-theme="geolearn"] .gl-wrap.gl-narrow{max-width:880px;}
-:root[data-theme="geolearn"] .gl-wrap.gl-mid{max-width:1200px;}
+:root[data-theme="geolearn"] .gl-wrap{max-width:var(--tp-measure);margin:0 auto;width:100%;display:flex;flex-direction:column;gap:16px;}   /* Phase 2b: --tp-measure=1200 for geolearn (no visual change) */
+:root[data-theme="geolearn"] .gl-wrap.gl-narrow{max-width:var(--tp-measure-narrow);}
+/* Phase 2b: removed redundant .gl-wrap.gl-mid (was 1200 == base .gl-wrap, a no-op modifier) */
 /* shared placeholder */
 :root[data-theme="geolearn"] .gl-img-real{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 :root[data-theme="geolearn"] .gl-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:rgba(255,255,255,.55);}
@@ -165,7 +167,7 @@
 
 /* ===================== TITLE ===================== */
 /* ---- GeoLearn title hero (imperium-structure, GeoLearn theme) ---- */
-:root[data-theme="geolearn"] .gl-twrap{width:100%;max-width:1200px;margin:auto;display:flex;flex-direction:column;gap:18px;flex:1 1 auto;min-height:0;justify-content:center;}
+:root[data-theme="geolearn"] .gl-twrap{width:100%;max-width:var(--tp-measure);margin:auto;display:flex;flex-direction:column;gap:18px;flex:1 1 auto;min-height:0;justify-content:center;}
 :root[data-theme="geolearn"] .gl-thero{position:relative;width:100%;flex:1 1 auto;min-height:360px;border-radius:22px;overflow:hidden;background:linear-gradient(150deg,#0a8174 0%,#02564e 72%);box-shadow:0 14px 36px rgba(0,80,72,.26);}
 :root[data-theme="geolearn"] .gl-thimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
 :root[data-theme="geolearn"] .gl-thscrim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,58,52,.12) 0%,rgba(2,58,52,.42) 55%,rgba(2,58,52,.74) 100%);}
@@ -181,7 +183,7 @@
 :root[data-theme="geolearn"] .gl-tmcard .mt{display:flex;flex-direction:column;min-width:0;text-align:left;}
 :root[data-theme="geolearn"] .gl-tmcard .ml{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--on-surface-variant);}
 :root[data-theme="geolearn"] .gl-tmcard .mv{font-size:15px;font-weight:700;color:var(--on-surface);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-:root[data-theme="geolearn"] .gl-titlecard{width:100%;max-width:1200px;flex:1 1 auto;min-height:440px;max-height:100%;margin:auto;background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;display:flex;}
+:root[data-theme="geolearn"] .gl-titlecard{width:100%;max-width:var(--tp-measure);flex:1 1 auto;min-height:440px;max-height:100%;margin:auto;background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;display:flex;}
 :root[data-theme="geolearn"] .gl-imgcol{width:50%;height:100%;position:relative;overflow:hidden;background:linear-gradient(135deg,#0c4a44,#00685f 55%,#1f8d80);}
 :root[data-theme="geolearn"] .gl-imgcol .glow{position:absolute;inset:0;background:radial-gradient(120% 80% at 22% 24%,rgba(137,245,231,.22),transparent 60%);}
 :root[data-theme="geolearn"] .gl-imgcol .fade{position:absolute;inset:0;background:linear-gradient(to right,transparent,rgba(255,255,255,.10));}
@@ -201,7 +203,7 @@
 /* Outcomes — two-column card that fills the canvas: themed image panel + bottom-anchored buttons on
    the left, eyebrow/title/intro/objectives on the right (right column scrolls if objectives overflow,
    the image panel holds). Geo's own flat mint/teal aesthetic — imperium's tp-ocard is design ref only. */
-:root[data-theme="geolearn"] .gl-ocard{position:relative;width:100%;max-width:1200px;height:100%;max-height:100%;margin:auto;background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:row;overflow:hidden;flex:none;}
+:root[data-theme="geolearn"] .gl-ocard{position:relative;width:100%;max-width:var(--tp-measure);height:100%;max-height:100%;margin:auto;background:var(--surface-lowest);border:1px solid var(--cardborder);border-radius:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:row;overflow:hidden;flex:none;}
 :root[data-theme="geolearn"] .gl-oleft{position:relative;width:40%;flex-shrink:0;display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(150deg,#0c4a44,#00685f 55%,#1f8d80);}
 :root[data-theme="geolearn"] .gl-oleft-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(2,58,52,.82),transparent 52%);z-index:1;pointer-events:none;}
 :root[data-theme="geolearn"] .gl-oleft-btns{position:relative;z-index:2;margin-top:auto;padding:22px;display:flex;flex-direction:column;gap:10px;}
@@ -506,7 +508,7 @@
 :root[data-theme="geolearn"] .gl-iemeta{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--on-surface-variant);margin-top:12px;} :root[data-theme="geolearn"] .gl-iemeta svg{color:var(--primary);}
 
 /* ===================== OUTRO ===================== */
-:root[data-theme="geolearn"] .gl-outrowrap{max-width:1200px;margin:auto;width:100%;text-align:center;flex:none;}
+:root[data-theme="geolearn"] .gl-outrowrap{max-width:var(--tp-measure);margin:auto;width:100%;text-align:center;flex:none;}
 :root[data-theme="geolearn"] .gl-crest{width:72px;height:72px;border-radius:9999px;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;box-shadow:0 0 0 8px rgba(0,104,95,.10),0 8px 24px rgba(0,104,95,.22);}
 :root[data-theme="geolearn"] .gl-lc{display:inline-flex;align-items:center;gap:12px;margin:16px 0 6px;color:var(--primary);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;} :root[data-theme="geolearn"] .gl-lc .r{width:28px;height:2px;background:var(--primary-fixed-dim);}
 :root[data-theme="geolearn"] .gl-outrowrap h1{font-size:clamp(28px,3vw,40px);line-height:1.08;letter-spacing:-.02em;font-weight:700;margin-bottom:8px;}
@@ -1653,6 +1655,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   --tp-rad:20px;--tp-rad-btn:8px;--tp-cardsh:0 12px 34px -18px rgba(46,0,82,.3);--tp-polarot:0deg;
   /* v2 Phase 1 slot layer (Layer 1, §4) — aliases at EXACT current values; --scrim is a fixed overlay, NOT --surface (docs/v2 §4 carve-out) */
   --surface-2:var(--surface-container);--accent:var(--secondary-fixed);--line:var(--outline-variant);--focus-ring:var(--primary);--scrim:rgba(20,16,24,.82);--on-scrim:#fff;
+  /* v2 Phase 2b width authority (Layer 3) — cards widen up to the canvas measure (was a 1100/1140 split) */
+  --tp-measure:1140px;--tp-measure-narrow:880px;
   background:var(--background);font-family:var(--tp-body);color:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-slide{
   --primary:#840f16;--primary-container:#a52a2a;--on-primary:#fff;--on-primary-container:#ffc0bb;
@@ -1665,6 +1669,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   --tp-rad:20px;--tp-rad-btn:8px;--tp-cardsh:4px 4px 0 0 #251817;--tp-polarot:2deg;
   /* v2 Phase 1 slot layer (Layer 1, §4) — aliases at EXACT current values; --scrim is a fixed overlay, NOT --surface (docs/v2 §4 carve-out) */
   --surface-2:var(--surface-container);--accent:var(--secondary-fixed);--line:var(--outline-variant);--focus-ring:var(--primary);--scrim:rgba(20,16,24,.82);--on-scrim:#fff;
+  /* v2 Phase 2b width authority (Layer 3) — cards widen up to the canvas measure (was a 1024/1040/1120 spread); .tp-gr-wrap stays narrow (no 75ch prose cap in this theme) */
+  --tp-measure:1140px;--tp-measure-narrow:880px;
   background:var(--desk);font-family:var(--tp-body);color:var(--on-surface);}
 .tp-serif{font-family:var(--tp-serif);} .tp-mono{font-family:var(--tp-mono);}
 
@@ -1705,16 +1711,16 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="imperium"] .tp-hstat.hp{color:var(--error);} :root[data-theme="imperium"] .tp-hstat.xp{color:var(--secondary);}
 :root[data-theme="imperium"] .tp-hstat b{color:var(--on-surface);font-weight:600;}
 :root[data-theme="imperium"] .tp-main{align-items:center;justify-content:safe center;padding:16px 28px;}   /* width parity with microhistory (#86): slim side gutter — the canvas already letterboxes by design */
-:root[data-theme="imperium"] .tp-wrap{width:100%;max-width:1140px;margin:auto;}   /* was 800 — parity with microhistory's 1140; pages with their own wrappers (.tp-doc 880 / .tp-ig-wrap 800 / .tp-vwrap 800 / .tp-llwrap 1000 / .tp-gr-wrap 880 / .tp-sa-wrap 1060 / hero 880) keep their caps */
+:root[data-theme="imperium"] .tp-wrap{width:100%;max-width:var(--tp-measure);margin:auto;}   /* Phase 2b: single width authority (--tp-measure=1140); per-type caps collapsed here */
 /* Width-parity pass: one consistent 1100 cap for imperium's per-page wrappers. Overrides (not edits)
    of the shared .tp-slide rules so microhistory's packSourceAnalysis/guidedResponse keep their caps. */
-:root[data-theme="imperium"] .tp-doc{max-width:1100px;}
-:root[data-theme="imperium"] .tp-gr-wrap{max-width:1100px;}
-:root[data-theme="imperium"] .tp-sa-wrap{max-width:1100px;}
+:root[data-theme="imperium"] .tp-doc{max-width:var(--tp-measure);}
+:root[data-theme="imperium"] .tp-gr-wrap{max-width:var(--tp-measure);}   /* widens to 1140; .tp-gr-wrap p 75ch cap below keeps prose readable */
+:root[data-theme="imperium"] .tp-sa-wrap{max-width:var(--tp-measure);}
 :root[data-theme="imperium"] .tp-gr-wrap p{max-width:75ch;}   /* guardrail: the widened 1100 card must not stretch reading prose (model answers measured ~98ch unguarded) — cap the text column, not the wrap; textareas/inputs stay full width */
 :root[data-theme="imperium"] .tp-kc-q{max-width:75ch;}   /* guardrail (completion pass): the 1100 KC card must not stretch the question line (~103ch unguarded) */
 :root[data-theme="imperium"] .tp-ilead{max-width:75ch;}   /* guardrail (completion pass): interactive lead measured ~131ch at the 1100 wrap */
-:root[data-theme="imperium"] .tp-wrap.tp-wrap-hero{max-width:1100px;}   /* title hero — unified 1100 cap (width parity pass) */
+:root[data-theme="imperium"] .tp-wrap.tp-wrap-hero{max-width:var(--tp-measure);}   /* title hero — Phase 2b: folded into --tp-measure */
 :root[data-theme="imperium"] .tp-foot{padding:16px;background:var(--surface);border-top:1px solid var(--surface-variant);display:flex;justify-content:center;}
 :root[data-theme="imperium"] .tp-cont,:root[data-theme="imperium"] .tp-start{width:100%;max-width:1100px;background:var(--primary);color:var(--on-primary);border:none;border-radius:12px;padding:15px 24px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--tp-body);font-size:14px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
 :root[data-theme="imperium"] .tp-cont:disabled{opacity:.4;cursor:not-allowed;}
@@ -1745,7 +1751,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="imperium"] .tp-pill.hp{background:var(--surface-container);border:1px solid var(--outline-variant);color:var(--primary);}
 :root[data-theme="imperium"] .tp-pill.xp{background:rgba(252,212,0,.2);border:1px solid rgba(112,93,0,.2);color:var(--secondary);}
 /* imperium · outcomes */
-:root[data-theme="imperium"] .tp-ocard{max-width:1100px;width:100%;height:100%;max-height:100%;background:#fff;border:1px solid var(--outline-variant);border-radius:12px;box-shadow:0 12px 34px -18px rgba(46,0,82,.3);position:relative;overflow:hidden;display:flex;margin:auto;flex:none;}   /* fill the canvas height (was fixed 16/9 → objectives crowded); .tp-right scrolls if they exceed it */
+:root[data-theme="imperium"] .tp-ocard{max-width:var(--tp-measure);width:100%;height:100%;max-height:100%;background:#fff;border:1px solid var(--outline-variant);border-radius:12px;box-shadow:0 12px 34px -18px rgba(46,0,82,.3);position:relative;overflow:hidden;display:flex;margin:auto;flex:none;}   /* fill the canvas height (was fixed 16/9 → objectives crowded); .tp-right scrolls if they exceed it */
 :root[data-theme="imperium"] .tp-left{width:40%;position:relative;display:flex;flex-direction:column;background:linear-gradient(150deg,#5d2e8c,#451274);}
 :root[data-theme="imperium"] .tp-left-img{position:absolute;inset:0;}
 :root[data-theme="imperium"] .tp-left-ph{position:absolute;top:14px;left:14px;display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.5);z-index:2;}
@@ -1768,7 +1774,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="imperium"] .tp-ofoot .c2{font-size:12px;font-weight:500;letter-spacing:.14em;}
 
 /* imperium · imageText */
-:root[data-theme="imperium"] .tp-llwrap{max-width:1100px;width:100%;display:flex;flex-direction:column;align-items:center;margin:auto;}
+:root[data-theme="imperium"] .tp-llwrap{max-width:var(--tp-measure);width:100%;display:flex;flex-direction:column;align-items:center;margin:auto;}
 :root[data-theme="imperium"] .tp-llcard{background:var(--surface-lowest);border:2px solid var(--roman-border);border-radius:20px;overflow:hidden;display:flex;width:100%;min-height:440px;}
 :root[data-theme="imperium"] .tp-llvisual{width:50%;flex-shrink:0;position:relative;background:linear-gradient(140deg,var(--primary-container),var(--primary));}
 :root[data-theme="imperium"] .tp-llvisual .tp-phmark{color:rgba(255,255,255,.5);}
@@ -1797,7 +1803,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-hr .xp{display:flex;align-items:center;gap:6px;color:var(--primary);}
 :root[data-theme="microhistory"] .tp-hr .hp{display:flex;align-items:center;gap:6px;color:var(--on-surface-variant);}
 :root[data-theme="microhistory"] .tp-main{align-items:center;justify-content:safe center;padding:16px 28px;}   /* slimmer side gutter: the 1280 canvas already letterboxes on wide screens (fitCanvas, untouched) — don't add a second one inside it */
-:root[data-theme="microhistory"] .tp-wrap{width:100%;max-width:1140px;margin:auto;}   /* was 1024 — use the canvas; pages with their own wrappers (.tp-artwrap 1120 / .tp-sa-wrap 1060 / .tp-iwrap 1024 / .tp-gr-wrap 880) keep their caps */
+:root[data-theme="microhistory"] .tp-wrap{width:100%;max-width:var(--tp-measure);margin:auto;}   /* Phase 2b: single width authority (--tp-measure=1140); card caps collapsed here (.tp-gr-wrap stays narrow) */
 :root[data-theme="microhistory"] .tp-foot{padding:14px 40px;background:var(--surface);border-top:1px solid var(--outline-variant);display:flex;justify-content:center;}
 :root[data-theme="microhistory"] .tp-cont,:root[data-theme="microhistory"] .tp-start{display:flex;align-items:center;justify-content:center;gap:12px;background:var(--primary);color:var(--on-primary);border:none;border-radius:8px;padding:15px 64px;width:100%;max-width:672px;font-family:var(--tp-body);font-size:14px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;box-shadow:4px 4px 0 0 var(--on-surface);}
 :root[data-theme="microhistory"] .tp-cont:disabled{opacity:.45;cursor:not-allowed;box-shadow:2px 2px 0 0 var(--outline);}
@@ -1822,7 +1828,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-ctx .ci{color:var(--primary);} :root[data-theme="microhistory"] .tp-ctx h3{font-size:14px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--on-surface);font-family:var(--tp-body);}
 :root[data-theme="microhistory"] .tp-ctx p{font-size:14px;line-height:1.55;color:var(--on-surface-variant);}
 /* microhistory · outcomes */
-:root[data-theme="microhistory"] .tp-mhcard{width:100%;max-width:1040px;height:100%;max-height:100%;background:#fff;border:1px solid var(--ink);border-radius:20px;box-shadow:4px 4px 0 0 var(--ink);display:flex;flex-direction:column;overflow:hidden;position:relative;margin:auto;flex:none;}   /* fill the canvas height (was fixed 16/9); .tp-lhs/.tp-rhs scroll internally if content exceeds */
+:root[data-theme="microhistory"] .tp-mhcard{width:100%;max-width:var(--tp-measure);height:100%;max-height:100%;background:#fff;border:1px solid var(--ink);border-radius:20px;box-shadow:4px 4px 0 0 var(--ink);display:flex;flex-direction:column;overflow:hidden;position:relative;margin:auto;flex:none;}   /* fill the canvas height (was fixed 16/9); .tp-lhs/.tp-rhs scroll internally if content exceeds */
 :root[data-theme="microhistory"] .tp-chead{padding:16px 32px;border-bottom:1px solid var(--outline-variant);background:var(--surface-container-low);display:flex;justify-content:space-between;align-items:flex-end;gap:16px;}
 :root[data-theme="microhistory"] .tp-chead .ms{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);display:block;margin-bottom:4px;}
 :root[data-theme="microhistory"] .tp-chead h1{font-family:var(--tp-mono);font-weight:700;font-size:26px;text-transform:uppercase;color:var(--on-surface);}
@@ -1877,7 +1883,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-readrep{display:inline-block;margin-top:12px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);}
 
 /* ============================== TEXT (shared DOM, theme via tokens) ============================== */
-.tp-slide .tp-doc{background:var(--surface-lowest);border:2px solid var(--on-surface);border-radius:20px;width:100%;max-width:880px;padding:36px 40px;box-shadow:var(--tp-cardsh);position:relative;margin:auto;}
+.tp-slide .tp-doc{background:var(--surface-lowest);border:2px solid var(--on-surface);border-radius:20px;width:100%;max-width:var(--tp-measure-narrow);padding:36px 40px;box-shadow:var(--tp-cardsh);position:relative;margin:auto;}   /* Phase 2b: narrow reading card (~880); imperium widens via override above */
 .tp-slide .tp-dhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;border-bottom:1px solid var(--outline-variant);padding-bottom:18px;gap:16px;flex-wrap:wrap;}
 .tp-slide .tp-cls{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--secondary);display:block;margin-bottom:6px;}
 .tp-slide .tp-dtitle{font-family:var(--tp-serif);font-weight:700;font-size:36px;line-height:1.1;letter-spacing:-.02em;color:var(--on-surface);}
@@ -1905,7 +1911,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 
 /* ============================== INFOGRAPHIC ============================== */
 /* imperium · infographic (map + pins + legend + goods + quote) */
-:root[data-theme="imperium"] .tp-ig-wrap{max-width:1100px;margin:auto;width:100%;}
+:root[data-theme="imperium"] .tp-ig-wrap{max-width:var(--tp-measure);margin:auto;width:100%;}
 :root[data-theme="imperium"] .tp-ig-chips{display:flex;align-items:center;gap:8px;margin-bottom:18px;}
 :root[data-theme="imperium"] .tp-ig-badge{background:var(--primary);color:var(--on-primary);padding:5px 12px;border-radius:14px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
 :root[data-theme="imperium"] .tp-ig-time{display:inline-flex;align-items:center;gap:5px;background:var(--surface-container-high);color:var(--on-surface-variant);padding:5px 12px;border-radius:14px;font-size:12px;font-weight:500;}
@@ -1969,7 +1975,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 
 /* ============================== VIDEO ============================== */
 /* imperium · video */
-:root[data-theme="imperium"] .tp-vwrap{width:100%;max-width:1100px;margin:auto;}
+:root[data-theme="imperium"] .tp-vwrap{width:100%;max-width:var(--tp-measure);margin:auto;}
 :root[data-theme="imperium"] .tp-vcard{background:var(--surface-lowest);border:2px solid var(--roman-border);border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:20px;}
 :root[data-theme="imperium"] .tp-vhead{display:flex;flex-direction:column;gap:8px;}
 :root[data-theme="imperium"] .tp-vmeta{display:flex;align-items:center;gap:10px;}
@@ -2047,7 +2053,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-feedback .ftitle{font-family:var(--tp-serif);font-weight:700;font-size:18px;}
 .tp-slide .tp-feedback .ftext{font-size:15px;line-height:1.55;margin-top:4px;color:var(--on-surface);}
 /* imperium · knowledgeCheck */
-:root[data-theme="imperium"] .tp-kc-card{background:var(--surface);border:1px solid var(--custom-outline);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:22px;margin:auto;width:100%;max-width:1100px;}
+:root[data-theme="imperium"] .tp-kc-card{background:var(--surface);border:1px solid var(--custom-outline);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:22px;margin:auto;width:100%;max-width:var(--tp-measure);}
 :root[data-theme="imperium"] .tp-kc-hdr{display:flex;flex-direction:column;gap:10px;}
 :root[data-theme="imperium"] .tp-metarow{display:flex;align-items:center;gap:10px;}
 :root[data-theme="imperium"] .tp-kc-badge{background:var(--secondary-container);color:var(--on-secondary-container);padding:4px 12px;border-radius:9999px;font-size:12px;font-weight:600;letter-spacing:.05em;}
@@ -2098,8 +2104,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide :focus-visible{outline:3px solid var(--focus-ring);outline-offset:2px;}
 .tp-slide .tp-scrollmain{justify-content:flex-start;align-items:stretch;}
 :root[data-theme="imperium"] .tp-main.tp-outromain,:root[data-theme="microhistory"] .tp-main.tp-outromain{align-items:center;justify-content:normal;}   /* outro: centre via the card's margin:auto (scroll-safe); justify-content:center clips top-overflow */
-.tp-slide .tp-sa-wrap{max-width:1060px;margin:0 auto;width:100%;padding:6px 6px 18px;}
-.tp-slide .tp-gr-wrap{max-width:880px;margin:0 auto;width:100%;padding:6px 6px 18px;}
+.tp-slide .tp-sa-wrap{max-width:var(--tp-measure);margin:0 auto;width:100%;padding:6px 6px 18px;}   /* Phase 2b: widens to the measure (imperium override removed above) */
+.tp-slide .tp-gr-wrap{max-width:var(--tp-measure-narrow);margin:0 auto;width:100%;padding:6px 6px 18px;}   /* Phase 2b: stays narrow (~880) — microhistory has no 75ch prose cap; imperium widens it via the override above */
 .tp-slide .tp-scrollnote{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--on-surface-variant);background:var(--surface-container);border:1px dashed var(--outline-variant);border-radius:9999px;padding:5px 14px;display:inline-block;margin-bottom:14px;}
 .tp-slide .tp-sa-lh,.tp-slide .tp-gr-lh2{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px;}
 .tp-slide .tp-gr-lh{margin-bottom:18px;}
@@ -2305,7 +2311,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-gcrit li .ci{color:var(--primary);flex-shrink:0;margin-top:1px;display:flex;}
 /* article text page (mhText) — two-column prose + sticky rich sidebar, WW1 skin. Mirrors geo glText
    layout; reuses .tp-noterow/.tp-notepen (pen), .tp-tpolaroid/.tp-snote/.tp-sprog (sidebar pieces). */
-:root[data-theme="microhistory"] .tp-artwrap{display:flex;flex-direction:column;min-height:100%;max-width:1120px;}
+:root[data-theme="microhistory"] .tp-artwrap{display:flex;flex-direction:column;min-height:100%;max-width:var(--tp-measure);}
 :root[data-theme="microhistory"] .tp-artbody{flex:1 1 auto;min-width:0;}
 :root[data-theme="microhistory"] .tp-artbody.two{display:grid;grid-template-columns:1.6fr 1fr;gap:30px;align-items:start;}
 :root[data-theme="microhistory"] .tp-prose{min-width:0;align-self:start;background:var(--surface);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--on-surface);border-radius:8px;padding:clamp(24px,3vw,40px);}
@@ -2369,7 +2375,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    the interactive main specifically — interactive-scoped, so other mh types keep their centring; on overflow
    flex-start scrolls edge-anchored from the top (no top-clip). */
 :root[data-theme="microhistory"] .tp-slide[data-tp-type="interactive"] .tp-main{justify-content:flex-start;}
-:root[data-theme="microhistory"] .tp-iwrap{width:100%;max-width:1024px;margin:0 auto;display:flex;flex-direction:column;min-height:100%;}   /* fill the canvas so content top-anchors; reinforced by the interactive-scoped flex-start above — mirrors mhText's .tp-artwrap */
+:root[data-theme="microhistory"] .tp-iwrap{width:100%;max-width:var(--tp-measure);margin:0 auto;display:flex;flex-direction:column;min-height:100%;}   /* Phase 2b: folded into --tp-measure (was 1024); top-anchors via the interactive-scoped flex-start above */
 :root[data-theme="microhistory"] .tp-introw{display:grid;grid-template-columns:1.55fr 1fr;gap:24px;align-items:start;}
 :root[data-theme="microhistory"] .tp-iembed{position:relative;aspect-ratio:16/9;min-width:0;background:var(--surface-lowest);border:2px solid var(--on-surface);box-shadow:4px 4px 0 0 var(--on-surface);border-radius:8px;overflow:hidden;}
 :root[data-theme="microhistory"] .tp-iembed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;}
@@ -2397,7 +2403,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 /* imperium · interactive — shared packInteractive wearing imperium chrome (rounded soft cards, pill launch,
    serif questions heading). geolearn keeps glInteractive; these only style data-tp-type="interactive". */
 :root[data-theme="imperium"] .tp-slide[data-tp-type="interactive"] .tp-main{justify-content:flex-start;}
-:root[data-theme="imperium"] .tp-iwrap{width:100%;max-width:1100px;margin:0 auto;display:flex;flex-direction:column;min-height:100%;}
+:root[data-theme="imperium"] .tp-iwrap{width:100%;max-width:var(--tp-measure);margin:0 auto;display:flex;flex-direction:column;min-height:100%;}
 :root[data-theme="imperium"] .tp-introw{display:grid;grid-template-columns:1.55fr 1fr;gap:24px;align-items:start;}
 :root[data-theme="imperium"] .tp-iembed{position:relative;aspect-ratio:16/9;min-width:0;background:var(--surface-container);border:1px solid var(--outline-variant);border-radius:16px;overflow:hidden;--media-ph-ink:var(--on-surface-variant);}
 :root[data-theme="imperium"] .tp-iembed .tp-media-img{object-fit:contain;background:var(--surface-container);}
