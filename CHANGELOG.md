@@ -8,6 +8,28 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **`timeline` block — dated events on a connecting spine (Layer 5, §14; second new registered block).**
+  A static vertical list of events expressing "change over time": each event is a date marker on a spine
+  plus a card (title, body, optional image thumbnail, optional note). The event list **is** the content —
+  no rail, no progressive disclosure (both would hide content from print / export / screen-readers for no
+  comprehension gain); the only interaction is the shared reveal-pen and optional per-event image zoom.
+  **One token-clean renderer** (`renderTimeline`) registered across all three pack themes — zero literal
+  colour, every value from the Phase-1 slots, so imperium (purple/serif/soft), microhistory
+  (maroon/mono/hard-offset dossier) and geolearn (teal/sans/soft) skin it for free. Reuses `tpRich`
+  (`[[recordable notes]]` + `==keyterms==`), `tpImg`/`tpSrc` + the `imageSlots()` **walk** (per-event
+  images auto-listed in the editor — no `PACK_IMG_SLOTS` entry), `tpZoomBtn`/`tpFocusImage` + the shared
+  `data-tp-focus-open ↔ [data-tp-overlay]` handler (zoom, **zero new JS**), and `tpNotePen` + the shared
+  `[data-tp-notes]` pen wiring. a11y: real `<button>`s (pen/zoom), `--focus-ring`, `:focus-visible, :focus`
+  (inherited from the shared molecules). Namespace `tp-tl-`/`data-tl-` (verified unused; distinct from the
+  legend's `tp-lg-`); the `.tp-img-real` in-flow reset is applied to event thumbnails (the 3b bug).
+  Registry now carries **39 pairs** (13 types × 3); the 12 pre-existing types stay **byte-identical**.
+  Editor: palette thumbnail, factory seed, type label, and an events inspector (`repeatGroup` over
+  `date`/`title`/`body`/`note`). Schema: `{ type:'timeline', events:[{date, title, body, image?, note?}] }`
+  (vertical only — no orientation field).
+  - *Known token-scoping gap (inherited, not fixed here — [#106](https://github.com/WillWint2104/OnlineLessonMaker/issues/106)):*
+    `==keyterms==` in an event body render **unstyled in geolearn** (its `.tp-hl` is `.gl-prose`-scoped),
+    while `[[notes]]` reveal correctly in all three themes (`.tp-noteclause` is themed globally). Same gap
+    as `labeledGraphic`; fixing it belongs in the #106 token pass, not a per-block override.
 - **v2 Phase 3b — `labeledGraphic`, the first NEW registered block (Layer 5, §14).** Numbered markers placed
   at `x`/`y` percent over a static image, each linked to a callout in a sticky reading rail. The rail is
   BOTH the visual callout surface AND the **text-alternative** — a linear `<ol>` every marker maps to
