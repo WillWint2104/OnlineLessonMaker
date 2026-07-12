@@ -2135,6 +2135,27 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-lgr-reall{display:inline-flex;align-items:center;gap:5px;font-family:var(--tp-mono);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);}
 .tp-slide .tp-lgr-real p{font-size:13px;line-height:1.5;color:var(--on-surface);margin:4px 0 0;}
 .tp-slide .tp-lgr-empty{font-size:14px;color:var(--on-surface-variant);}
+/* Timeline block (prefix tp-tl-). TOKEN-ONLY (no literal colours): every surface/ink/line/accent from the
+   theme slots, so one renderer skins across imperium/microhistory/geolearn. Static vertical spine + cards. */
+.tp-slide .tp-tl-wrap{width:100%;max-width:var(--tp-measure-narrow);margin:0 auto;display:flex;flex-direction:column;min-height:100%;}
+.tp-slide .tp-tl-eyebrow{display:inline-block;font-family:var(--tp-mono);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:8px;}
+.tp-slide .tp-tl-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
+.tp-slide .tp-tl-h1{font-family:var(--tp-serif);font-size:30px;line-height:1.15;color:var(--on-surface);margin:0;}
+.tp-slide .tp-tl-list{list-style:none;margin:0;padding:0;position:relative;}
+.tp-slide .tp-tl-ev{position:relative;display:grid;grid-template-columns:34px minmax(0,1fr);gap:18px;padding-bottom:22px;}
+.tp-slide .tp-tl-ev:last-child{padding-bottom:0;}
+.tp-slide .tp-tl-marker{position:relative;display:flex;justify-content:center;}
+.tp-slide .tp-tl-marker::before{content:"";position:absolute;top:6px;bottom:-22px;left:50%;transform:translateX(-50%);width:2px;background:var(--outline-variant);}   /* the spine */
+.tp-slide .tp-tl-ev:last-child .tp-tl-marker::before{display:none;}
+.tp-slide .tp-tl-dot{position:relative;z-index:1;width:16px;height:16px;margin-top:4px;border-radius:9999px;background:var(--primary);border:2px solid var(--surface-lowest);box-shadow:0 0 0 2px var(--primary);}
+.tp-slide .tp-tl-card{background:var(--surface-lowest);border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);box-shadow:var(--tp-cardsh);padding:14px 16px;min-width:0;overflow:hidden;}
+.tp-slide .tp-tl-date{font-family:var(--tp-mono);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);}
+.tp-slide .tp-tl-title{font-family:var(--tp-body);font-size:16px;font-weight:700;color:var(--on-surface);margin:2px 0 6px;}
+.tp-slide .tp-tl-body{font-size:14px;line-height:1.6;color:var(--on-surface-variant);margin:0;}
+.tp-slide .tp-tl-note{font-size:13px;line-height:1.55;color:var(--on-surface-variant);font-style:italic;margin:8px 0 0;padding-left:10px;border-left:3px solid var(--outline-variant);}
+.tp-slide .tp-tl-thumb{position:relative;float:right;width:150px;margin:2px 0 8px 14px;border:1px solid var(--outline-variant);border-radius:8px;overflow:hidden;}
+.tp-slide .tp-tl-thumb img,.tp-slide .tp-tl-thumb .tp-img-real{position:static;inset:auto;display:block;width:100%;height:auto;object-fit:fill;}   /* reset the global .tp-img-real{position:absolute;inset:0} so the thumb sizes to its image (the 3b bug) */
+.tp-slide .tp-tl-empty{font-size:14px;color:var(--on-surface-variant);}
 :root[data-theme="imperium"] .tp-main.tp-outromain,:root[data-theme="microhistory"] .tp-main.tp-outromain{align-items:center;justify-content:normal;}   /* outro: centre via the card's margin:auto (scroll-safe); justify-content:center clips top-overflow */
 .tp-slide .tp-sa-wrap{max-width:var(--tp-measure);margin:0 auto;width:100%;padding:6px 6px 18px;}   /* Phase 2b: widens to the measure (imperium override removed above) */
 .tp-slide .tp-gr-wrap{max-width:var(--tp-measure-narrow);margin:0 auto;width:100%;padding:6px 6px 18px;}   /* Phase 2b: stays narrow (~880) — microhistory has no 75ch prose cap; imperium widens it via the override above */
@@ -2658,7 +2679,7 @@ const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image
 /* themes whose slides render through the dedicated JSON slide pack (renderPackSlide) */
 const PACK_THEMES=new Set(['imperium','microhistory','geolearn']);
 /* pack slide types → nav label (these themes use `title`/`type` rather than the engine's slide fields) */
-const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",outro:"Outro"};
+const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",outro:"Outro"};
 /* infographic data palette: figure.color is a theme token, never a raw hex; defaults cycle */
 const IG_TOKENS=['primary','secondary','tertiary'];
 function igColor(c){ return c==='secondary'?'var(--data-2)':c==='tertiary'?'var(--data-3)':'var(--data-1)'; }
@@ -3528,6 +3549,8 @@ function inspectorForm(i,s,sel){
     case 'labeledGraphic': return T('eyebrow','Eyebrow')+T('title','Title')
       +repeatGroup(i,s,sel,'markers','Marker','Markers',(m,j)=>inT('Number',`slides.${i}.markers.${j}.n`,m.n)+inT('x % (0–100)',`slides.${i}.markers.${j}.x`,m.x)+inT('y % (0–100)',`slides.${i}.markers.${j}.y`,m.y)+inT('Title',`slides.${i}.markers.${j}.title`,m.title)+inA('Body',`slides.${i}.markers.${j}.body`,m.body)+inA('On the real thing (optional)',`slides.${i}.markers.${j}.real`,m.real),'Add marker')
       +T('caption','Image caption')+T('railLabel','Rail heading');
+    case 'timeline': return T('eyebrow','Eyebrow')+T('title','Title')
+      +repeatGroup(i,s,sel,'events','Event','Events',(e,j)=>inT('Date',`slides.${i}.events.${j}.date`,e.date)+inT('Title',`slides.${i}.events.${j}.title`,e.title)+inA('Body',`slides.${i}.events.${j}.body`,e.body)+inA('Note (optional)',`slides.${i}.events.${j}.note`,e.note),'Add event');
     case 'question': return T('skill','Skill')+T('heading','Heading')+qGroup(i,s,sel);
     case 'source': return T('heading','Heading')+T('credit','Credit / citation')+M()+qGroup(i,s,sel);
     case 'model3d': return T('heading','Heading')+M()+qGroup(i,s,sel);
@@ -3698,7 +3721,7 @@ function wireInspector(){
   ins.querySelectorAll('[data-delqi]').forEach(b=>b.onclick=()=>{ const[i,j]=b.dataset.delqi.split(':').map(Number); LESSON.slides[i].items.splice(j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-addrep]').forEach(b=>b.onclick=()=>{ const[key,i]=b.dataset.addrep.split(':'); const s=LESSON.slides[+i];
     const def=(key==='body'||(key==='blocks'&&s.type!=='notes')) ? {h:'',p:'New paragraph.'}   // text/textImage blocks use {h,p}; notes use {h,bd}
-      : {blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'},markers:{n:'',x:50,y:50,title:'New marker',body:'',real:''}}[key];
+      : {blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'},markers:{n:'',x:50,y:50,title:'New marker',body:'',real:''},events:{date:'',title:'New event',body:'',note:'',image:''}}[key];
     (s[key]=s[key]||[]).push(JSON.parse(JSON.stringify(def))); renderSlide(); });
   ins.querySelectorAll('[data-delrep]').forEach(b=>b.onclick=()=>{ const[key,i,j]=b.dataset.delrep.split(':'); LESSON.slides[+i][key].splice(+j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-clearmedia]').forEach(b=>b.onclick=()=>{ setP(LESSON,b.dataset.clearmedia,''); renderSlide(); });
@@ -5011,6 +5034,46 @@ function renderLabeledGraphic(s,i){
 registerBlock('labeledGraphic','imperium',renderLabeledGraphic);
 registerBlock('labeledGraphic','microhistory',renderLabeledGraphic);
 registerBlock('labeledGraphic','geolearn',renderLabeledGraphic);
+/* Timeline (Layer 5, §14) — a static vertical list of dated events on a connecting spine, expressing
+   "change over time". The event list IS the content (no rail — nothing spatial to translate); the only
+   interaction is the shared reveal-pen (recordable [[notes]]) and optional per-event image zoom. ONE
+   token-clean renderer across all three pack themes (zero literal colour; every value from the Phase-1
+   slots). Reuses tpRich ([[notes]] + ==keyterms==), tpImg/tpSrc + the imageSlots() walk (per-event
+   images auto-listed in the editor — no PACK_IMG_SLOTS entry), tpZoomBtn/tpFocusImage + the shared
+   data-tp-focus-open ↔ [data-tp-overlay] handler (zoom, zero new wiring), and tpNotePen + the shared
+   [data-tp-notes] pen wiring in wirePack. a11y: real <button>s (pen/zoom), --focus-ring, :focus-visible+
+   :focus. Namespace tp-tl-/data-tl- (verified unused). ==keyterms== inherit the geolearn .tp-hl/.gl-prose
+   gap (issue #106) — no per-block override. */
+function renderTimeline(s,i){
+  const events=Array.isArray(s.events)?s.events:[];
+  const hasNotes=tpHasNotes(events.flatMap(e=>[(e&&e.body)||'',(e&&e.note)||'']));
+  const rows=events.map((e,k)=>{
+    const src=tpSrc(e.image), zid='tl'+i+'-ev'+k;
+    const thumb=src?`<div class="tp-tl-thumb">${tpImg(e.image,e.title||'Event image','image')}${tpZoomBtn('View larger',zid)}</div>`:'';
+    const ov=src?tpFocusImage(e.image,e.title||e.date||'Image',e.title||'',zid):'';
+    return `<li class="tp-tl-ev">
+      <div class="tp-tl-marker" aria-hidden="true"><span class="tp-tl-dot"></span></div>
+      <div class="tp-tl-card">
+        ${e.date?`<div class="tp-tl-date">${esc(e.date)}</div>`:''}
+        ${e.title?`<h3 class="tp-tl-title">${esc(e.title)}</h3>`:''}
+        ${thumb}
+        ${e.body?`<p class="tp-tl-body">${tpRich(e.body)}</p>`:''}
+        ${e.note?`<p class="tp-tl-note">${tpRich(e.note)}</p>`:''}
+      </div>${ov}
+    </li>`;
+  }).join('');
+  return `<main class="tp-main tp-scrollmain"><div class="tp-wrap tp-tl-wrap">
+    ${s.eyebrow?`<span class="tp-tl-eyebrow">${esc(s.eyebrow)}</span>`:''}
+    <div class="tp-tl-head">
+      ${s.title?`<h1 class="tp-tl-h1">${esc(s.title)}</h1>`:''}
+      ${hasNotes?tpNotePen():''}
+    </div>
+    ${events.length?`<ol class="tp-tl-list">${rows}</ol>`:`<p class="tp-tl-empty">No events yet — add dated events.</p>`}
+  </div></main>`;
+}
+registerBlock('timeline','imperium',renderTimeline);
+registerBlock('timeline','microhistory',renderTimeline);
+registerBlock('timeline','geolearn',renderTimeline);
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
@@ -5678,7 +5741,7 @@ function convertSlide(idx,to){
   selZone='heading'; renderNav(); renderSlide(); $('#stage').scrollTop=0;
 }
 // zone to auto-select after inserting, so the new slide opens editable in the inspector
-const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title',labeledGraphic:'title'};
+const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title',labeledGraphic:'title',timeline:'title'};
 function insertSlide(type, atIndex){
   if(!PACK_FACTORY[type] && !SLIDE_FACTORY[type]) return;
   const idx=Math.max(0,Math.min(LESSON.slides.length, atIndex));
@@ -5725,6 +5788,7 @@ const PACK_FACTORY={
   sourceAnalysis:{type:'sourceAnalysis',title:'Source',tag:'Primary source',source:{image:'',label:'Source'},provenance:[],tasks:[{question:'Analyse the source.',model:'A model answer.'}]},
   interactive:{type:'interactive',eyebrow:'Interactive',title:'Interactive activity',desc:'Describe the activity students will explore.',steps:['Open the activity','Explore the layers','Note what you find'],url:'',launchLabel:'Open the interactive'},
   labeledGraphic:{type:'labeledGraphic',eyebrow:'Examine the source',title:'Labelled diagram',image:'',markers:[{n:1,x:34,y:30,title:'Feature one',body:'What this feature shows.',real:'What to look for on the real object.'},{n:2,x:62,y:55,title:'Feature two',body:'Why it matters.'}],caption:'',railLabel:'Callouts'},
+  timeline:{type:'timeline',eyebrow:'Change over time',title:'Timeline',events:[{date:'Date one',title:'First event',body:'What happened, with a ==keyterm== and a [[recordable fact]].',note:'',image:''},{date:'Date two',title:'Second event',body:'How things changed.',note:'',image:''},{date:'Date three',title:'Third event',body:'The outcome.',note:'',image:''}]},
   outro:{type:'outro',eyebrow:'Lesson complete',title:'Well done',subtitle:'You have finished this lesson.',stats:[],recap:[]},
 };
 /* per-type palette label + wireframe (currentColor = accent) */
@@ -5734,6 +5798,7 @@ const PACK_PALETTE={
   text:{label:'Text',wf:'<rect x="6" y="9" width="22" height="4" rx="2" class="l2"/><rect x="6" y="19" width="68" height="3"/><rect x="6" y="26" width="64" height="3"/><rect x="6" y="33" width="58" height="3"/>'},
   imageText:{label:'Image + text',wf:'<rect x="6" y="9" width="34" height="34" rx="3" class="f"/><rect x="44" y="12" width="30" height="4" class="l2"/><rect x="44" y="22" width="30" height="3"/><rect x="44" y="29" width="24" height="3"/>'},
   labeledGraphic:{label:'Labeled graphic',wf:'<rect x="6" y="8" width="46" height="36" rx="3" class="f"/><circle cx="20" cy="20" r="4" class="s"/><circle cx="38" cy="30" r="4" class="s"/><rect x="58" y="11" width="16" height="3" class="l2"/><rect x="58" y="19" width="16" height="3"/><rect x="58" y="27" width="16" height="3"/><rect x="58" y="35" width="12" height="3"/>'},
+  timeline:{label:'Timeline',wf:'<circle cx="12" cy="13" r="4" class="s"/><circle cx="12" cy="26" r="4" class="s"/><circle cx="12" cy="39" r="4" class="l2"/><rect x="12" y="11" width="2" height="30" class="f"/><rect x="24" y="10" width="14" height="3" class="l2"/><rect x="24" y="16" width="48" height="3"/><rect x="24" y="23" width="14" height="3" class="l2"/><rect x="24" y="29" width="44" height="3"/><rect x="24" y="36" width="14" height="3" class="l2"/><rect x="24" y="42" width="40" height="3"/>'},
   infographic:{label:'Infographic',wf:'<rect x="6" y="8" width="68" height="26" rx="3" class="f"/><rect x="8" y="40" width="14" height="6" class="s"/><rect x="26" y="38" width="14" height="8" class="l2"/><rect x="44" y="42" width="14" height="4" class="s"/>'},
   video:{label:'Video',wf:'<rect x="10" y="8" width="60" height="34" rx="3" class="f"/><path d="M35 17 L35 33 L49 25 Z" class="l2"/><rect x="24" y="46" width="32" height="3" rx="1"/>'},
   knowledgeCheck:{label:'Knowledge check',wf:'<rect x="6" y="9" width="50" height="4" rx="2" class="l2"/><rect x="6" y="20" width="68" height="7" rx="3" class="s"/><rect x="6" y="31" width="68" height="7" rx="3" class="f"/>'},
