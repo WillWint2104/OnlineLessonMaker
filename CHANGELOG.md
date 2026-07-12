@@ -7,6 +7,28 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **v2 Phase 3b — `labeledGraphic`, the first NEW registered block (Layer 5, §14).** Numbered markers placed
+  at `x`/`y` percent over a static image, each linked to a callout in a sticky reading rail. The rail is
+  BOTH the visual callout surface AND the **text-alternative** — a linear `<ol>` every marker maps to
+  (`aria-controls` from each pin; `aria-current` on the active callout) so spatial content has a readable
+  linear form for low-vision / screen-reader students. Markers are `<button>`s (native keyboard); a visible
+  focus ring (`--focus-ring`) shows on keyboard, programmatic and AT focus; click / Enter / Space activates
+  the matching callout (and moves focus to it). **One SINGLE token-clean renderer** (`renderLabeledGraphic`)
+  is registered across all three pack themes — zero literal colour; every surface/ink/line/accent resolves
+  from the Phase-1 token slots, so imperium (purple/serif/soft), microhistory (maroon/mono/hard-offset
+  dossier) and geolearn (teal/sans/soft) skin it for free from the same function. Generalises the
+  coin-workbench hotspot pattern to 2D (fixed %-coords; no 3D projection/occlusion/rotation). Registry now
+  carries **36 pairs** (12 types × 3 themes); the 11 pre-existing types stay **byte-identical**. Editor:
+  palette thumbnail, factory seed, type label, image well (`image`), and a markers inspector
+  (`n`/`x`/`y`/`title`/`body`/`real` + caption + rail heading). Schema:
+  `{ type:'labeledGraphic', image, markers:[{n?,x,y,title,body,real?}], caption?, railLabel? }`. Prefix
+  `tp-lgr-` (distinct from the infographic legend's `tp-lg-`).
+  - *Known token-scoping gap (reported, not hardcoded, per the token-clean rule):* geolearn's `.tp-hl`
+    keyterm colour is scoped to `.gl-prose`, so `==keyterms==` inside a labeledGraphic callout render
+    unstyled in geolearn (coloured in imperium/microhistory). Text stays readable; fixing it belongs in a
+    token pass, not a per-block override.
+
 ### Changed
 - **v2 Phase 3a — block registry (byte-identical dispatch refactor).** Replaced the three implicit theme
   monoliths (`IM_PACK`/`MH_PACK`/`GL_PACK`) with an explicit **type×theme registry**: `REGISTRY[type][theme]
