@@ -2103,6 +2103,38 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0;}
 .tp-slide :focus-visible{outline:3px solid var(--focus-ring);outline-offset:2px;}
 .tp-slide .tp-scrollmain{justify-content:flex-start;align-items:stretch;}
+/* v2 Phase 3b — labeledGraphic block (prefix tp-lgr-; distinct from the infographic legend's tp-lg-).
+   TOKEN-ONLY (no literal colours): every surface/ink/line/accent comes from the theme slots, so one
+   renderer skins across imperium/microhistory/geolearn. Pins get a white (--on-primary) ring on a
+   --primary fill for contrast over any image — no literal drop-shadow. */
+.tp-slide .tp-lgr-wrap{width:100%;max-width:var(--tp-measure);margin:0 auto;display:flex;flex-direction:column;min-height:100%;}
+.tp-slide .tp-lgr-eyebrow{display:inline-block;font-family:var(--tp-mono);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:8px;}
+.tp-slide .tp-lgr-title{font-family:var(--tp-serif);font-size:30px;line-height:1.15;color:var(--on-surface);margin:0 0 18px;}
+.tp-slide .tp-lgr-body{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,1fr);gap:26px;align-items:start;flex:1 1 auto;min-height:0;}
+.tp-slide .tp-lgr-figure{margin:0;min-width:0;}
+.tp-slide .tp-lgr-frame{position:relative;border:2px solid var(--outline-variant);border-radius:var(--tp-rad-btn);overflow:hidden;background:var(--surface-container-low);box-shadow:var(--tp-cardsh);}
+.tp-slide .tp-lgr-frame img,.tp-slide .tp-lgr-frame .tp-img-real{position:static;inset:auto;display:block;width:100%;height:auto;object-fit:fill;}   /* reset the global .tp-img-real{position:absolute;inset:0} so the image is IN-FLOW and gives the frame its height → pins resolve against a real box for top/left % */
+.tp-slide .tp-lgr-frame .tp-ph-tag{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--on-surface-variant);font-size:13px;}
+.tp-slide .tp-lgr-cap{font-size:13px;font-style:italic;color:var(--on-surface-variant);margin-top:8px;}
+.tp-slide .tp-lgr-pin{position:absolute;transform:translate(-50%,-50%);width:30px;height:30px;padding:0;border-radius:9999px;border:2px solid var(--on-primary);background:var(--primary);color:var(--on-primary);font-family:var(--tp-mono);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.tp-slide .tp-lgr-pin:hover{filter:brightness(1.08);}
+.tp-slide .tp-lgr-pin.is-active{transform:translate(-50%,-50%) scale(1.18);outline:3px solid var(--focus-ring);outline-offset:2px;}
+.tp-slide .tp-lgr-pin:focus-visible,.tp-slide .tp-lgr-pin:focus{outline:3px solid var(--focus-ring);outline-offset:2px;}   /* keyboard + programmatic + AT focus all get the ring (inclusive by design) */
+.tp-slide .tp-lgr-rail{align-self:stretch;background:var(--surface-lowest);border:2px solid var(--outline-variant);border-radius:var(--tp-rad-btn);box-shadow:var(--tp-cardsh);padding:16px 16px 10px;position:sticky;top:2px;max-height:100%;overflow:auto;}
+.tp-slide .tp-lgr-railhd{display:flex;align-items:center;gap:6px;font-family:var(--tp-mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);margin-bottom:10px;}
+.tp-slide .tp-lgr-calls{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;}
+.tp-slide .tp-lgr-call{border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);padding:12px 14px;background:var(--surface);cursor:pointer;}
+.tp-slide .tp-lgr-call:hover{border-color:var(--primary);}
+.tp-slide .tp-lgr-call.is-active{border-color:var(--primary);box-shadow:inset 3px 0 0 0 var(--primary);}
+.tp-slide .tp-lgr-call:focus-visible,.tp-slide .tp-lgr-call:focus{outline:3px solid var(--focus-ring);outline-offset:2px;}
+.tp-slide .tp-lgr-callhd{display:flex;align-items:baseline;gap:9px;}
+.tp-slide .tp-lgr-calln{flex:0 0 auto;width:22px;height:22px;border-radius:9999px;background:var(--primary);color:var(--on-primary);font-family:var(--tp-mono);font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;}
+.tp-slide .tp-lgr-callt{font-family:var(--tp-body);font-size:15px;font-weight:700;color:var(--on-surface);margin:0;}
+.tp-slide .tp-lgr-callb{font-size:14px;line-height:1.55;color:var(--on-surface-variant);margin:8px 0 0;}
+.tp-slide .tp-lgr-real{margin-top:10px;padding:9px 11px;background:var(--surface-container-low);border-left:3px solid var(--primary);border-radius:6px;}
+.tp-slide .tp-lgr-reall{display:inline-flex;align-items:center;gap:5px;font-family:var(--tp-mono);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);}
+.tp-slide .tp-lgr-real p{font-size:13px;line-height:1.5;color:var(--on-surface);margin:4px 0 0;}
+.tp-slide .tp-lgr-empty{font-size:14px;color:var(--on-surface-variant);}
 :root[data-theme="imperium"] .tp-main.tp-outromain,:root[data-theme="microhistory"] .tp-main.tp-outromain{align-items:center;justify-content:normal;}   /* outro: centre via the card's margin:auto (scroll-safe); justify-content:center clips top-overflow */
 .tp-slide .tp-sa-wrap{max-width:var(--tp-measure);margin:0 auto;width:100%;padding:6px 6px 18px;}   /* Phase 2b: widens to the measure (imperium override removed above) */
 .tp-slide .tp-gr-wrap{max-width:var(--tp-measure-narrow);margin:0 auto;width:100%;padding:6px 6px 18px;}   /* Phase 2b: stays narrow (~880) — microhistory has no 75ch prose cap; imperium widens it via the override above */
@@ -2626,7 +2658,7 @@ const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image
 /* themes whose slides render through the dedicated JSON slide pack (renderPackSlide) */
 const PACK_THEMES=new Set(['imperium','microhistory','geolearn']);
 /* pack slide types → nav label (these themes use `title`/`type` rather than the engine's slide fields) */
-const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",outro:"Outro"};
+const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",outro:"Outro"};
 /* infographic data palette: figure.color is a theme token, never a raw hex; defaults cycle */
 const IG_TOKENS=['primary','secondary','tertiary'];
 function igColor(c){ return c==='secondary'?'var(--data-2)':c==='tertiary'?'var(--data-3)':'var(--data-1)'; }
@@ -3493,6 +3525,9 @@ function inspectorForm(i,s,sel){
         +T('source','Source / citation'); }
     case 'image': return T('heading','Heading')+M()+T('cap','Caption');
     case 'video': return T('heading','Heading')+T('url','Video URL (YouTube / ClickView)')+T('cap','Caption')+T('sourceUrl','Source / fallback link — opens in a new tab')+T('sourceLabel','Fallback button label');
+    case 'labeledGraphic': return T('eyebrow','Eyebrow')+T('title','Title')
+      +repeatGroup(i,s,sel,'markers','Marker','Markers',(m,j)=>inT('Number',`slides.${i}.markers.${j}.n`,m.n)+inT('x % (0–100)',`slides.${i}.markers.${j}.x`,m.x)+inT('y % (0–100)',`slides.${i}.markers.${j}.y`,m.y)+inT('Title',`slides.${i}.markers.${j}.title`,m.title)+inA('Body',`slides.${i}.markers.${j}.body`,m.body)+inA('On the real thing (optional)',`slides.${i}.markers.${j}.real`,m.real),'Add marker')
+      +T('caption','Image caption')+T('railLabel','Rail heading');
     case 'question': return T('skill','Skill')+T('heading','Heading')+qGroup(i,s,sel);
     case 'source': return T('heading','Heading')+T('credit','Credit / citation')+M()+qGroup(i,s,sel);
     case 'model3d': return T('heading','Heading')+M()+qGroup(i,s,sel);
@@ -3536,6 +3571,7 @@ const PACK_IMG_SLOTS={            // [path-within-slide, label, onlyTheme?] — 
   knowledgeCheck: [['artifact.image','Artifact image']],
   sourceAnalysis: [['source.image','Source image']],
   text:           [['sidebar.image','Sidebar image']],
+  labeledGraphic: [['image','Diagram image']],
 };
 /* not a repo-relative path: any URL scheme (http:, https:, data:, mailto:…) or a protocol-relative // */
 const isExtPath=v=>/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test((v||'').trim());
@@ -3662,7 +3698,7 @@ function wireInspector(){
   ins.querySelectorAll('[data-delqi]').forEach(b=>b.onclick=()=>{ const[i,j]=b.dataset.delqi.split(':').map(Number); LESSON.slides[i].items.splice(j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-addrep]').forEach(b=>b.onclick=()=>{ const[key,i]=b.dataset.addrep.split(':'); const s=LESSON.slides[+i];
     const def=(key==='body'||(key==='blocks'&&s.type!=='notes')) ? {h:'',p:'New paragraph.'}   // text/textImage blocks use {h,p}; notes use {h,bd}
-      : {blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'}}[key];
+      : {blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'},markers:{n:'',x:50,y:50,title:'New marker',body:'',real:''}}[key];
     (s[key]=s[key]||[]).push(JSON.parse(JSON.stringify(def))); renderSlide(); });
   ins.querySelectorAll('[data-delrep]').forEach(b=>b.onclick=()=>{ const[key,i,j]=b.dataset.delrep.split(':'); LESSON.slides[+i][key].splice(+j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-clearmedia]').forEach(b=>b.onclick=()=>{ setP(LESSON,b.dataset.clearmedia,''); renderSlide(); });
@@ -4939,6 +4975,42 @@ registerBlock('title','imperium',imTitle); registerBlock('outcomes','imperium',i
 registerBlock('title','microhistory',mhTitle); registerBlock('outcomes','microhistory',mhOutcomes); registerBlock('imageText','microhistory',mhImageText); registerBlock('text','microhistory',mhText); registerBlock('infographic','microhistory',mhInfographic); registerBlock('video','microhistory',mhVideo); registerBlock('knowledgeCheck','microhistory',mhKnowledge); registerBlock('sourceAnalysis','microhistory',packSourceAnalysis); registerBlock('guidedResponse','microhistory',mhGuided); registerBlock('interactive','microhistory',packInteractive); registerBlock('outro','microhistory',packOutro);
 // geolearn — registration order matches the former GL_PACK key order (text/imageText and guidedResponse/sourceAnalysis swapped vs im/mh) so the geolearn palette order is unchanged
 registerBlock('title','geolearn',glTitle); registerBlock('outcomes','geolearn',glOutcomes); registerBlock('text','geolearn',glText); registerBlock('imageText','geolearn',glImageText); registerBlock('infographic','geolearn',glInfographic); registerBlock('video','geolearn',glVideo); registerBlock('knowledgeCheck','geolearn',glKnowledge); registerBlock('guidedResponse','geolearn',glGuided); registerBlock('sourceAnalysis','geolearn',glSource); registerBlock('interactive','geolearn',glInteractive); registerBlock('outro','geolearn',glOutro);
+/* v2 Phase 3b — labeledGraphic (Layer 5, §14): the first NEW registered block. Numbered markers placed at
+   x/y% over a static image, each linked to a callout in a sticky reading rail. The rail is BOTH the visual
+   callout surface AND the text-alternative — a linear <ol> that every marker maps to (aria-controls). A
+   SINGLE token-clean renderer registered across all three pack themes: zero literal colour — every
+   surface/ink/line/accent resolves from the theme token slots (Phase 1), so imperium/microhistory/geolearn
+   skin it for free. Generalises the coin-workbench hotspot pattern to 2D (fixed %-coords; no 3D
+   projection/occlusion/rotation). Marker↔rail activation is wired in wirePackTyped ([data-tp-lg]). */
+function renderLabeledGraphic(s,i){
+  const markers=Array.isArray(s.markers)?s.markers:[];
+  const railLabel=s.railLabel||'Callouts';
+  const clamp=v=>Math.max(0,Math.min(100,(+v||0)));
+  const num=(m,k)=>(m.n!=null&&m.n!=='')?m.n:(k+1);
+  const pins=markers.map((m,k)=>`<button class="tp-lgr-pin" type="button" style="left:${clamp(m.x)}%;top:${clamp(m.y)}%" data-lgr-pin="${k}" aria-controls="lgr${i}-c${k}" aria-label="Marker ${esc(String(num(m,k)))}${m.title?': '+esc(m.title):''}"><span class="tp-lgr-pinn">${esc(String(num(m,k)))}</span></button>`).join('');
+  const calls=markers.map((m,k)=>`<li class="tp-lgr-call" id="lgr${i}-c${k}" data-lgr-call="${k}" tabindex="-1" aria-current="false">
+      <div class="tp-lgr-callhd"><span class="tp-lgr-calln">${esc(String(num(m,k)))}</span>${m.title?`<h3 class="tp-lgr-callt">${esc(m.title)}</h3>`:''}</div>
+      ${m.body?`<p class="tp-lgr-callb">${tpRich(m.body)}</p>`:''}
+      ${m.real?`<div class="tp-lgr-real"><span class="tp-lgr-reall">${tpIc('zoomIn',13)} On the real thing</span><p>${tpRich(m.real)}</p></div>`:''}
+    </li>`).join('');
+  return `<main class="tp-main tp-scrollmain"><div class="tp-wrap tp-lgr-wrap">
+    ${s.eyebrow?`<span class="tp-lgr-eyebrow">${esc(s.eyebrow)}</span>`:''}
+    ${s.title?`<h1 class="tp-lgr-title">${esc(s.title)}</h1>`:''}
+    <div class="tp-lgr-body" data-tp-lgr>
+      <figure class="tp-lgr-figure">
+        <div class="tp-lgr-frame">${tpImg(s.image,'Labelled diagram','image')}${pins}</div>
+        ${s.caption?`<figcaption class="tp-lgr-cap">${esc(s.caption)}</figcaption>`:''}
+      </figure>
+      <aside class="tp-lgr-rail" aria-label="${esc(railLabel)}">
+        <div class="tp-lgr-railhd">${tpIc('list',14)} ${esc(railLabel)}</div>
+        ${markers.length?`<ol class="tp-lgr-calls">${calls}</ol>`:`<p class="tp-lgr-empty">No callouts yet — add markers with x/y positions.</p>`}
+      </aside>
+    </div>
+  </div></main>`;
+}
+registerBlock('labeledGraphic','imperium',renderLabeledGraphic);
+registerBlock('labeledGraphic','microhistory',renderLabeledGraphic);
+registerBlock('labeledGraphic','geolearn',renderLabeledGraphic);
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
@@ -5373,6 +5445,22 @@ function wirePackTyped(){
     const qcl=qmodal.querySelector('[data-tp-qclose]'); if(qcl) qcl.addEventListener('click',closeQ);
     qmodal.addEventListener('click',(e)=>{ if(e.target===qmodal) closeQ(); });
   }
+  // v2 Phase 3b — labeledGraphic marker ↔ rail. A numbered pin (<button>, so Enter/Space fire click
+  // natively) activates its rail callout and vice-versa: aria-current on the active callout, .is-active on
+  // both, and the callout is scrolled into view (and focused when reached from a pin, so keyboard/SR users
+  // land on the text). The rail <ol> is the text-alternative. No-op when the slide has no [data-tp-lg].
+  const lg=root.querySelector('[data-tp-lgr]');
+  if(lg){
+    const pins=[...lg.querySelectorAll('[data-lgr-pin]')], calls=[...lg.querySelectorAll('[data-lgr-call]')];
+    const activate=(k,focusCall)=>{
+      pins.forEach(p=>p.classList.toggle('is-active',p.dataset.lgrPin===String(k)));
+      calls.forEach(c=>{ const on=c.dataset.lgrCall===String(k); c.classList.toggle('is-active',on); c.setAttribute('aria-current',on?'true':'false'); });
+      const call=calls.find(c=>c.dataset.lgrCall===String(k));
+      if(call){ call.scrollIntoView({block:'nearest'}); if(focusCall) call.focus(); }
+    };
+    pins.forEach(p=>p.addEventListener('click',()=>activate(p.dataset.lgrPin,true)));
+    calls.forEach(c=>c.addEventListener('click',()=>activate(c.dataset.lgrCall,false)));
+  }
 }
 
 /* <<< THEMED SLIDE PACK <<< */
@@ -5590,7 +5678,7 @@ function convertSlide(idx,to){
   selZone='heading'; renderNav(); renderSlide(); $('#stage').scrollTop=0;
 }
 // zone to auto-select after inserting, so the new slide opens editable in the inspector
-const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title'};
+const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title',labeledGraphic:'title'};
 function insertSlide(type, atIndex){
   if(!PACK_FACTORY[type] && !SLIDE_FACTORY[type]) return;
   const idx=Math.max(0,Math.min(LESSON.slides.length, atIndex));
@@ -5636,6 +5724,7 @@ const PACK_FACTORY={
   guidedResponse:{type:'guidedResponse',mode:'short',title:'Written task',question:'Write your response.',model:'A model response.',criteria:['Point one']},
   sourceAnalysis:{type:'sourceAnalysis',title:'Source',tag:'Primary source',source:{image:'',label:'Source'},provenance:[],tasks:[{question:'Analyse the source.',model:'A model answer.'}]},
   interactive:{type:'interactive',eyebrow:'Interactive',title:'Interactive activity',desc:'Describe the activity students will explore.',steps:['Open the activity','Explore the layers','Note what you find'],url:'',launchLabel:'Open the interactive'},
+  labeledGraphic:{type:'labeledGraphic',eyebrow:'Examine the source',title:'Labelled diagram',image:'',markers:[{n:1,x:34,y:30,title:'Feature one',body:'What this feature shows.',real:'What to look for on the real object.'},{n:2,x:62,y:55,title:'Feature two',body:'Why it matters.'}],caption:'',railLabel:'Callouts'},
   outro:{type:'outro',eyebrow:'Lesson complete',title:'Well done',subtitle:'You have finished this lesson.',stats:[],recap:[]},
 };
 /* per-type palette label + wireframe (currentColor = accent) */
@@ -5644,6 +5733,7 @@ const PACK_PALETTE={
   outcomes:{label:'Outcomes',wf:'<rect x="6" y="11" width="32" height="3"/><rect x="6" y="18" width="28" height="3"/><rect x="42" y="11" width="32" height="3"/><rect x="42" y="18" width="26" height="3"/><rect x="6" y="34" width="20" height="9" rx="3" class="l2"/><rect x="30" y="34" width="20" height="9" rx="3" class="s"/>'},
   text:{label:'Text',wf:'<rect x="6" y="9" width="22" height="4" rx="2" class="l2"/><rect x="6" y="19" width="68" height="3"/><rect x="6" y="26" width="64" height="3"/><rect x="6" y="33" width="58" height="3"/>'},
   imageText:{label:'Image + text',wf:'<rect x="6" y="9" width="34" height="34" rx="3" class="f"/><rect x="44" y="12" width="30" height="4" class="l2"/><rect x="44" y="22" width="30" height="3"/><rect x="44" y="29" width="24" height="3"/>'},
+  labeledGraphic:{label:'Labeled graphic',wf:'<rect x="6" y="8" width="46" height="36" rx="3" class="f"/><circle cx="20" cy="20" r="4" class="s"/><circle cx="38" cy="30" r="4" class="s"/><rect x="58" y="11" width="16" height="3" class="l2"/><rect x="58" y="19" width="16" height="3"/><rect x="58" y="27" width="16" height="3"/><rect x="58" y="35" width="12" height="3"/>'},
   infographic:{label:'Infographic',wf:'<rect x="6" y="8" width="68" height="26" rx="3" class="f"/><rect x="8" y="40" width="14" height="6" class="s"/><rect x="26" y="38" width="14" height="8" class="l2"/><rect x="44" y="42" width="14" height="4" class="s"/>'},
   video:{label:'Video',wf:'<rect x="10" y="8" width="60" height="34" rx="3" class="f"/><path d="M35 17 L35 33 L49 25 Z" class="l2"/><rect x="24" y="46" width="32" height="3" rx="1"/>'},
   knowledgeCheck:{label:'Knowledge check',wf:'<rect x="6" y="9" width="50" height="4" rx="2" class="l2"/><rect x="6" y="20" width="68" height="7" rx="3" class="s"/><rect x="6" y="31" width="68" height="7" rx="3" class="f"/>'},
