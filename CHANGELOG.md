@@ -7,6 +7,18 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **geolearn keyterm token gap ([#106](https://github.com/WillWint2104/OnlineLessonMaker/issues/106)).**
+  geolearn themed the `==keyterm==` highlight (`.tp-hl`) only inside `.gl-prose`, while imperium and
+  microhistory theme it globally — so keyterms rendered **unstyled in geolearn** everywhere outside prose
+  (labeledGraphic callouts, timeline event bodies, any future `tpRich` block). **De-scoped the existing
+  rule's selector** — `:root[data-theme="geolearn"] .gl-prose .tp-hl` → `:root[data-theme="geolearn"]
+  .tp-hl` — so keyterms theme in *any* geolearn context, matching the other two themes. One selector
+  change, no new rule, token-only (`color:var(--primary)`). Purely additive: the declaration is byte-
+  identical to what `.gl-prose` already had, so existing geolearn prose keyterms are unchanged (verified
+  computed-colour identical before/after); imperium + microhistory are untouched; all block markup stays
+  byte-identical (CSS-only change). Clears the caveat noted on both new blocks at once.
+
 ### Added
 - **`timeline` block — dated events on a connecting spine (Layer 5, §14; second new registered block).**
   A static vertical list of events expressing "change over time": each event is a date marker on a spine

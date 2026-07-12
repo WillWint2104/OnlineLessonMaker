@@ -272,7 +272,7 @@
 :root[data-theme="geolearn"] .gl-prose p{font-size:clamp(15px,1.15vw,17px);line-height:1.7;color:var(--on-surface-variant);}
 :root[data-theme="geolearn"] .gl-prose p+p{margin-top:16px;}
 :root[data-theme="geolearn"] .gl-prose b{color:var(--on-surface);font-weight:700;}
-:root[data-theme="geolearn"] .gl-prose .tp-hl{color:var(--primary);font-weight:600;}
+:root[data-theme="geolearn"] .tp-hl{color:var(--primary);font-weight:600;}   /* #106: de-scoped from .gl-prose so ==keyterms== theme in ANY geolearn context (new blocks — labeledGraphic/timeline — not just prose), matching imperium/microhistory. Same declaration → .gl-prose keyterms unchanged. */
 :root[data-theme="geolearn"] .gl-dropcap::first-letter{float:left;font-size:64px;line-height:.82;font-weight:700;color:var(--primary);padding:6px 12px 0 0;}
 :root[data-theme="geolearn"] .gl-side{display:flex;flex-direction:column;gap:18px;}
 :root[data-theme="geolearn"] .gl-insight{background:var(--surface-container-low);border:1px solid var(--outline-variant);border-radius:16px;padding:22px;position:relative;overflow:hidden;}
