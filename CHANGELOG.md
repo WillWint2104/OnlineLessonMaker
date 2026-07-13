@@ -8,6 +8,31 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Maths capability (PR3a) — inline `$…$` math in prose, engine-wide.** Foundation for the graph-question
+  block (PR3b). Lifts the studio's own equation editor (`interactives/equation-editor.html`) into the engine
+  as a self-contained, IIFE-scoped `TPMath` module — the **complete** node model, MathML renderer, LaTeX
+  serialiser and shunting-yard evaluator (verbatim, so there's **one** math code path, not a divergent copy;
+  the interactive editing UI is deliberately deferred to PR3b) — **plus a new string parser** so authors
+  write inline math as `$…$`. Exposed as engine-level `tpMathTree` / `tpMathRender` / `tpMathCompile` /
+  `tpMathLatex`. A `tpRichMath()` **wrapper** (NOT a change to the shared `tpRich`) extracts `$…$` → MathML
+  before `tpRich` runs, so math is never `esc()`'d nor caught by `**`/`[[`/`==`; it returns `tpRich(text)`
+  **verbatim** when the text has no `$` (fast path). Author syntax is a pragmatic LaTeX subset:
+  `x^2  a_1  (x-2)^2  \frac{a}{b}  \sqrt{x}  \sqrt[3]{x}  \pi \theta \le \times \cdot  \sin(x) …`;
+  ASCII `-` renders as a real minus, brackets become MathML `fence` nodes (so `tpMathCompile` groups them
+  correctly for function sampling — e.g. `(x-2)^2` and `x^2-4x+4` evaluate identically), and `\$` is a
+  literal dollar. The **LM Math** `@font-face` (base64 woff2, vendored from the equation editor) lives in the
+  studio `<style>` so it **travels with Export** (`document.documentElement.outerHTML` captures `<head>`);
+  a theme-agnostic `.tp-slide math` rule typesets it across all four themes with no colour of its own.
+  Wired into the prose fields of **text / sourceAnalysis / guidedResponse across all four themes**
+  (`kt` text-body hook, `glText`/`glGuided`/`glSource`, `mhGuided`/`mhText`, `packSourceAnalysis`/
+  `packGuidedResponse`). Note: the imperium/mathematics `packSourceAnalysis`/`packGuidedResponse` model &
+  question fields previously rendered via `esc()`; they now route through `tpRichMath`, which additionally
+  brings them to parity with the microhistory/geolearn forks (`**bold**`/`==key==`/`[[note]]` now render
+  there too) — byte-identical for any content without `$`/`**`/`==`/`[[`. Verified: **80/80** example
+  slide-renders byte-identical pre/post (study + present); `$…$` typesets in all 12 theme×type combinations
+  with no raw `$` leak and LM Math resolving; capability sampling correct; **export self-contains the font**
+  (reopened export re-renders typeset math, `document.fonts.check("16px 'LM Math'")` → true); validate green;
+  0 console errors. Still one file; no new third-party host (woff2 + MathML namespace are self-contained).
 - **Pen capability — `penResponse` block (handwriting / "show your working" canvas).** The engine had no
   drawing surface; this adds a reusable pen-canvas as a standalone registered block: a titled prompt + a
   pointer `<canvas>` (`data-tp-ink`) with **Pen / Eraser / Undo / Clear** (real `<button>`s, keyboard-
