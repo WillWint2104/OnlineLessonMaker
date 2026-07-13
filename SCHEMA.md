@@ -217,6 +217,36 @@ are **session‑kept**, and reveals are gated on a non‑empty attempt.
 | `intro` | string | both (quiz) | Lead line under the heading. |
 | `cta` | string | both | Footer button (default *Continue*). |
 
+## `graphQuestion`  *(Mathematics pack; renders in all four themes)*
+
+An interactive **coordinate plane** paired with an answer surface. The student answers by **typing a
+function** in the full equation editor (`answerMode: "equation"`), **plotting points** on the plane
+(`"points"`), or **both**. Marking is by **function sampling**, so any algebraically‑equivalent form is
+accepted — `(x-2)^2` and `x^2-4x+4` are both correct. Optionally lists **misconceptions** (wrong‑way
+answers) that return a specific message, and can embed a **“show your working” pen canvas**. Prose fields
+support inline `$…$` math. Answers are **session‑kept** (ephemeral, like every other response).
+
+`snap` controls the plotting *input feel* (lattice); `tolerance` controls *marking* — the two are separate.
+
+| Field | Type | Notes |
+|---|---|---|
+| `title` / `eyebrow` / `marks` | string | Heading, section label, marks pill. |
+| `prompt` | string | Question text; supports `$…$` math. |
+| `answerMode` | `"equation"` \| `"points"` \| `"both"` | How the student answers (default `equation`). |
+| `domain` | `[xmin, xmax]` | Plane x‑extent (default `[-5,5]`). |
+| `range` | `[ymin, ymax]` | Plane y‑extent (default `[-5,5]`). |
+| `grid` | number | Grid step in world units (default: a “nice” auto step). |
+| `given` | string (equation) | A base curve `y=f(x)` drawn on the plane for context (e.g. `x^2`). |
+| `answer` | `{equation?, points?}` | Target function and/or target points `[[x,y],…]`. |
+| `misconceptions[]` | `{equation, message}` | If the student’s function matches `equation`, show `message` (supports `$…$`). |
+| `snap` | number | Point‑plot snap step; `0` = free plotting (default `1`). |
+| `tolerance` | number | Marking tolerance in world units for points (default `0.25`). |
+| `working` | boolean | Embed a pen “show your working” canvas below the question. |
+
+Author syntax for equations (prompt `$…$` and the editor both accept it): `x^2  a_1  (x-2)^2
+\frac{a}{b}  \sqrt{x}  \sqrt[3]{x}  \pi  \theta  \le  \times  \sin(x)`; ASCII `-` renders as a real
+minus; `\$` is a literal dollar.
+
 ## `outro`
 
 Lesson‑complete screen. Up to **3 stat tiles** — **omit the score entry from `stats[]` to hide that

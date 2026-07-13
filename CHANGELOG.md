@@ -8,6 +8,28 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Graph-question block (PR3b) — `graphQuestion`, interactive coordinate plane + answer surface.** Consumes
+  the PR3a maths capability. A token-driven SVG plane (one grid implementation skinned by
+  `--graph-surface`/`-grid`/`-axis`, no per-theme copies) drawn from `domain`/`range`, with axes, labelled
+  ticks and an optional **given curve** `y=f(x)` (function-sampled to a path). The student answers by
+  **typing a function** in the **full interactive equation editor** — lifted from `interactives/equation-
+  editor.html` into `TPMath.editor()` (ribbon + caret field, reusing the exact PR3a render/compile/tex, one
+  code path) — and/or by **click-to-plot** (keyboard-accessible: arrow-key cursor + Enter to place/remove).
+  **Marking is by function SAMPLING**, so any equivalent form passes: `(x-2)^2` ≡ `x^2-4x+4`. **snap** is
+  input-feel only; **tolerance** is for marking — kept separate. **Misconception diagnosis**: if the
+  student's function matches a listed wrong-way answer (e.g. `(x+2)^2`), its specific message shows (with
+  `$…$` rendered). Optional embedded **“show your working” pen canvas** (reuses the PR2 `[data-tp-ink]`
+  wiring). One token-clean renderer registered **× all four themes** (registry now **60 pairs**); answers
+  are ephemeral in `TP_RUNTIME` and **survive slide navigation**; export self-contains the editor + font +
+  plane and re-mounts live on reopen. Editor: palette thumbnail, factory seed, type label, and an inspector
+  (mode / domain / range / given / answer / snap / tolerance / working / misconceptions). Schema:
+  `{ type:'graphQuestion', title, prompt?, domain, range, grid?, given?, answerMode, answer:{equation?,
+  points?}, misconceptions?[], snap?, tolerance?, working? }`. Also fixed: `TPMath.editor` no longer fires
+  `onChange` on its initial mount render (which would overwrite a restored answer). Verified across all four
+  themes: plane + grid tokens + given curve render, editor mounts and types (keyboard + ribbon), checking
+  accepts equivalent forms and fires the misconception path, points mode marks within tolerance, answer
+  persists across navigation, existing blocks stay byte-identical (80/80) and knowledgeCheck wiring intact;
+  validate green; 0 console errors. Still one file; no new third-party host.
 - **Maths capability (PR3a) — inline `$…$` math in prose, engine-wide.** Foundation for the graph-question
   block (PR3b). Lifts the studio's own equation editor (`interactives/equation-editor.html`) into the engine
   as a self-contained, IIFE-scoped `TPMath` module — the **complete** node model, MathML renderer, LaTeX
