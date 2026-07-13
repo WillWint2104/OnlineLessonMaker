@@ -8,6 +8,26 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Pen capability — `penResponse` block (handwriting / "show your working" canvas).** The engine had no
+  drawing surface; this adds a reusable pen-canvas as a standalone registered block: a titled prompt + a
+  pointer `<canvas>` (`data-tp-ink`) with **Pen / Eraser / Undo / Clear** (real `<button>`s, keyboard-
+  focusable, `--focus-ring`). Strokes are captured with **pressure-variable width** (`PointerEvent.pressure`,
+  round caps; falls back to constant on mouse/finger) and stored **as JSON in `TP_RUNTIME` per field** —
+  **ephemeral by design** (survive slide navigation within a session, vanish on reload, exactly like every
+  other response; persistence is a separate, larger gap not solved here). Pointer→canvas mapping uses
+  `getBoundingClientRect`, so it's correct under the scaled-slide transform. **One token-clean renderer
+  registered across all four pack themes** — the ink is `var(--student-ink)` (mathematics) falling back to
+  `var(--primary)` (imperium/microhistory/geolearn), read as the resolved canvas `color`; the canvas fills
+  `var(--graph-surface)` (white) with a `--surface-lowest` fallback; `touch-action:none` so drawing never
+  scrolls the page. Namespace `tp-ink-` / `data-tp-ink` (distinct from the reveal-note pen `tp-notepen`).
+  Wiring lives once in `wirePack` (`[data-tp-ink]`), so any future block (the graph block's "show your
+  working") can reuse it. Registry now **56 pairs** (14 types × 4 themes); the four existing themes stay
+  **byte-identical** (`renderPackSlide` unchanged — the block is additive). Editor: palette thumbnail,
+  factory seed, type label, and a title/prompt inspector. Schema:
+  `{ type:'penResponse', title, prompt, eyebrow? }`. Verified across all four themes: canvas + 4 tools
+  render, ink resolves to the theme token, strokes capture (with per-point pressure) + render, Undo/Clear/
+  Eraser work, buttons are keyboard-focusable with a visible ring, strokes survive slide navigation;
+  validate green; 0 console errors.
 - **Mathematics theme (v2 pack theme #4 — Cambridge Ext1 / NSW Stage 6).** A fourth registered pack theme
   on the type×theme registry — the first new theme since the Phase-1 token layer, and a real test of the
   "new theme is cheap" claim. Purely additive: `PACK_THEMES += 'mathematics'`, a `<select>` option, an

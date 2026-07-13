@@ -2194,6 +2194,20 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-tl-thumb{position:relative;float:right;width:150px;margin:2px 0 8px 14px;border:1px solid var(--outline-variant);border-radius:8px;overflow:hidden;}
 .tp-slide .tp-tl-thumb img,.tp-slide .tp-tl-thumb .tp-img-real{position:static;inset:auto;display:block;width:100%;height:auto;object-fit:fill;}   /* reset the global .tp-img-real{position:absolute;inset:0} so the thumb sizes to its image (the 3b bug) */
 .tp-slide .tp-tl-empty{font-size:14px;color:var(--on-surface-variant);}
+/* penResponse block (prefix tp-ink-; distinct from the reveal-note pen tp-notepen). TOKEN-ONLY: colour
+   reaches elements only via var(--slot). Ink = --student-ink (maths) falling back to --primary; the JS
+   reads the resolved canvas `color`. */
+.tp-slide .tp-ink-wrap{width:100%;max-width:var(--tp-measure-narrow);margin:0 auto;display:flex;flex-direction:column;min-height:100%;}
+.tp-slide .tp-ink-eyebrow{display:inline-block;font-family:var(--tp-mono);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:8px;}
+.tp-slide .tp-ink-title{font-family:var(--tp-serif);font-size:30px;line-height:1.15;color:var(--on-surface);margin:0 0 8px;}
+.tp-slide .tp-ink-prompt{font-size:16px;line-height:1.6;color:var(--on-surface-variant);margin:0 0 16px;}
+.tp-slide .tp-ink-pad{--ink:var(--student-ink,var(--primary));border:2px solid var(--outline-variant);border-radius:var(--tp-rad-btn);background:var(--surface-lowest);box-shadow:var(--tp-cardsh);overflow:hidden;}
+.tp-slide .tp-ink-toolbar{display:flex;flex-wrap:wrap;gap:8px;padding:10px 12px;background:var(--surface-container-low);border-bottom:1px solid var(--outline-variant);}
+.tp-slide .tp-ink-btn{display:inline-flex;align-items:center;gap:6px;background:var(--surface-lowest);color:var(--on-surface);border:1px solid var(--outline-variant);border-radius:6px;padding:7px 12px;font-family:var(--tp-body);font-weight:600;font-size:13px;cursor:pointer;}
+.tp-slide .tp-ink-btn:hover{border-color:var(--primary);}
+.tp-slide .tp-ink-btn[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary);}
+.tp-slide .tp-ink-btn:focus-visible,.tp-slide .tp-ink-btn:focus{outline:3px solid var(--focus-ring);outline-offset:2px;}
+.tp-slide .tp-ink-canvas{display:block;width:100%;height:auto;aspect-ratio:1000/560;background:var(--graph-surface,var(--surface-lowest));color:var(--ink);touch-action:none;cursor:crosshair;}
 :root[data-theme="imperium"] .tp-main.tp-outromain,:root[data-theme="microhistory"] .tp-main.tp-outromain{align-items:center;justify-content:normal;}   /* outro: centre via the card's margin:auto (scroll-safe); justify-content:center clips top-overflow */
 .tp-slide .tp-sa-wrap{max-width:var(--tp-measure);margin:0 auto;width:100%;padding:6px 6px 18px;}   /* Phase 2b: widens to the measure (imperium override removed above) */
 .tp-slide .tp-gr-wrap{max-width:var(--tp-measure-narrow);margin:0 auto;width:100%;padding:6px 6px 18px;}   /* Phase 2b: stays narrow (~880) — microhistory has no 75ch prose cap; imperium widens it via the override above */
@@ -2718,7 +2732,7 @@ const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image
 /* themes whose slides render through the dedicated JSON slide pack (renderPackSlide) */
 const PACK_THEMES=new Set(['imperium','microhistory','geolearn','mathematics']);
 /* pack slide types → nav label (these themes use `title`/`type` rather than the engine's slide fields) */
-const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",outro:"Outro"};
+const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",outro:"Outro"};
 /* infographic data palette: figure.color is a theme token, never a raw hex; defaults cycle */
 const IG_TOKENS=['primary','secondary','tertiary'];
 function igColor(c){ return c==='secondary'?'var(--data-2)':c==='tertiary'?'var(--data-3)':'var(--data-1)'; }
@@ -3590,6 +3604,7 @@ function inspectorForm(i,s,sel){
       +T('caption','Image caption')+T('railLabel','Rail heading');
     case 'timeline': return T('eyebrow','Eyebrow')+T('title','Title')
       +repeatGroup(i,s,sel,'events','Event','Events',(e,j)=>inT('Date',`slides.${i}.events.${j}.date`,e.date)+inT('Title',`slides.${i}.events.${j}.title`,e.title)+inA('Body',`slides.${i}.events.${j}.body`,e.body)+inA('Note (optional)',`slides.${i}.events.${j}.note`,e.note),'Add event');
+    case 'penResponse': return T('eyebrow','Eyebrow')+T('title','Title')+T('prompt','Prompt','area');
     case 'question': return T('skill','Skill')+T('heading','Heading')+qGroup(i,s,sel);
     case 'source': return T('heading','Heading')+T('credit','Credit / citation')+M()+qGroup(i,s,sel);
     case 'model3d': return T('heading','Heading')+M()+qGroup(i,s,sel);
@@ -5120,6 +5135,34 @@ registerBlock('timeline','geolearn',renderTimeline);
 registerBlock('title','mathematics',imTitle); registerBlock('outcomes','mathematics',imOutcomes); registerBlock('imageText','mathematics',imImageText); registerBlock('text','mathematics',packText); registerBlock('infographic','mathematics',imInfographic); registerBlock('video','mathematics',imVideo); registerBlock('knowledgeCheck','mathematics',imKnowledge); registerBlock('sourceAnalysis','mathematics',packSourceAnalysis); registerBlock('guidedResponse','mathematics',packGuidedResponse); registerBlock('interactive','mathematics',packInteractive); registerBlock('outro','mathematics',packOutro);
 registerBlock('labeledGraphic','mathematics',renderLabeledGraphic);
 registerBlock('timeline','mathematics',renderTimeline);
+/* penResponse — a handwriting/working canvas capability as a standalone block. A titled prompt + a pointer
+   canvas (data-tp-ink) with Pen/Eraser/Undo/Clear (real <button>s). Strokes are captured with
+   pressure-variable width, smoothed, and stored as JSON in TP_RUNTIME per field — EPHEMERAL (survive slide
+   navigation within a session, vanish on reload, exactly like every other response). ONE token-clean
+   renderer registered across all four pack themes; ink = var(--student-ink) (maths) falling back to
+   var(--primary). Wiring lives in wirePack ([data-tp-ink]); reusable later by the graph block for
+   "show your working". Namespace tp-ink-/data-tp-ink (distinct from the reveal-note pen tp-notepen). */
+function renderPenResponse(s,i){
+  const fid='ink'+i, prompt=s.prompt||s.body||'';
+  return `<main class="tp-main tp-scrollmain"><div class="tp-wrap tp-ink-wrap">
+    ${s.eyebrow?`<span class="tp-ink-eyebrow">${esc(s.eyebrow)}</span>`:''}
+    ${s.title?`<h1 class="tp-ink-title">${esc(s.title)}</h1>`:''}
+    ${prompt?`<p class="tp-ink-prompt">${tpRich(prompt)}</p>`:''}
+    <div class="tp-ink-pad" data-tp-ink="${fid}">
+      <div class="tp-ink-toolbar" role="toolbar" aria-label="Handwriting tools">
+        <button class="tp-ink-btn" type="button" data-tp-ink-tool="pen" aria-pressed="true">${tpIc('pen',15)} Pen</button>
+        <button class="tp-ink-btn" type="button" data-tp-ink-tool="eraser" aria-pressed="false">Eraser</button>
+        <button class="tp-ink-btn" type="button" data-tp-ink-undo aria-label="Undo last stroke">${tpIc('arrowLeft',15)} Undo</button>
+        <button class="tp-ink-btn" type="button" data-tp-ink-clear aria-label="Clear all strokes">${tpIc('x',15)} Clear</button>
+      </div>
+      <canvas class="tp-ink-canvas" data-tp-ink-canvas width="1000" height="560" role="img" aria-label="Handwriting response area — draw with a pen, mouse or finger. Ephemeral: not saved across reload."></canvas>
+    </div>
+  </div></main>`;
+}
+registerBlock('penResponse','imperium',renderPenResponse);
+registerBlock('penResponse','microhistory',renderPenResponse);
+registerBlock('penResponse','geolearn',renderPenResponse);
+registerBlock('penResponse','mathematics',renderPenResponse);
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
@@ -5184,6 +5227,36 @@ function wirePack(){
     const on=root.classList.toggle('notes-on'); nb.classList.toggle('on',on); nb.setAttribute('aria-pressed',on?'true':'false');
     const lbl=nb.querySelector('.lbl'); if(lbl) lbl.textContent=on?' Hide notes':' Reveal notes';
   }));
+  // v2 pen capability — handwriting canvas ([data-tp-ink]). Captures pointer strokes with pressure-variable
+  // width (round caps hide segment joins; falls back to constant on mouse/finger where pressure=0), and
+  // stores strokes-as-JSON in TP_RUNTIME per field (ephemeral). Pen/Eraser toggle, Undo (pop last stroke),
+  // Clear. Pointer→canvas mapping uses getBoundingClientRect so it's correct under the scaled slide
+  // transform. Ink colour = the resolved var(--ink) (student-ink for maths, primary elsewhere). No-op
+  // without [data-tp-ink]. Strokes redraw on re-wire so session work survives slide navigation.
+  root.querySelectorAll('[data-tp-ink]').forEach(pad=>{
+    const fid=pad.dataset.tpInk, canvas=pad.querySelector('[data-tp-ink-canvas]'); if(!canvas) return;
+    const ctx=canvas.getContext('2d'); const rt=tpRT();
+    let strokes; try{ const v=rt.ans[fid]; strokes=Array.isArray(v)?v:(typeof v==='string'&&v?JSON.parse(v):[]); }catch(e){ strokes=[]; }
+    let tool='pen', drawing=false, cur=null;
+    const redraw=()=>{ const ink=getComputedStyle(canvas).color||'#1f6fb2'; ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle=ink; ctx.fillStyle=ink;
+      for(const st of strokes){ ctx.globalCompositeOperation=st.e?'destination-out':'source-over'; const pts=st.p||[];
+        if(pts.length===1){ ctx.beginPath(); ctx.arc(pts[0].x,pts[0].y,Math.max(1,st.w*(0.3+(pts[0].pr||.5)))/1.6,0,6.2832); ctx.fill(); continue; }
+        for(let k=1;k<pts.length;k++){ const a=pts[k-1],b=pts[k]; ctx.beginPath(); ctx.lineWidth=Math.max(1,st.w*(0.35+((a.pr+b.pr)/2))); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } }
+      ctx.globalCompositeOperation='source-over'; };
+    const pos=e=>{ const r=canvas.getBoundingClientRect(); return {x:(e.clientX-r.left)/r.width*canvas.width, y:(e.clientY-r.top)/r.height*canvas.height, pr:(e.pressure>0?e.pressure:0.5)}; };
+    const save=()=>{ rt.ans[fid]=strokes; };
+    canvas.addEventListener('pointerdown',e=>{ e.preventDefault(); drawing=true; try{canvas.setPointerCapture(e.pointerId);}catch(_){}
+      cur={e:tool==='eraser', w:tool==='eraser'?26:5, p:[pos(e)]}; strokes.push(cur); redraw(); });
+    canvas.addEventListener('pointermove',e=>{ if(!drawing) return; cur.p.push(pos(e)); redraw(); });
+    const end=e=>{ if(!drawing) return; drawing=false; try{canvas.releasePointerCapture(e.pointerId);}catch(_){}; save(); };
+    canvas.addEventListener('pointerup',end); canvas.addEventListener('pointercancel',end);
+    pad.querySelectorAll('[data-tp-ink-tool]').forEach(btn=>btn.addEventListener('click',()=>{ tool=btn.dataset.tpInkTool;
+      pad.querySelectorAll('[data-tp-ink-tool]').forEach(b=>b.setAttribute('aria-pressed', b===btn?'true':'false')); }));
+    const undoB=pad.querySelector('[data-tp-ink-undo]'); if(undoB) undoB.addEventListener('click',()=>{ strokes.pop(); save(); redraw(); });
+    const clearB=pad.querySelector('[data-tp-ink-clear]'); if(clearB) clearB.addEventListener('click',()=>{ strokes=[]; save(); redraw(); });
+    redraw();   // restore session strokes
+  });
   wireGeoModals();
   const kc=root.querySelector('[data-tp-kc]'); if(!kc) return;
   const cont=root.querySelector('[data-tp-continue]');
@@ -5787,7 +5860,7 @@ function convertSlide(idx,to){
   selZone='heading'; renderNav(); renderSlide(); $('#stage').scrollTop=0;
 }
 // zone to auto-select after inserting, so the new slide opens editable in the inspector
-const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title',labeledGraphic:'title',timeline:'title'};
+const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title',labeledGraphic:'title',timeline:'title',penResponse:'title'};
 function insertSlide(type, atIndex){
   if(!PACK_FACTORY[type] && !SLIDE_FACTORY[type]) return;
   const idx=Math.max(0,Math.min(LESSON.slides.length, atIndex));
@@ -5835,6 +5908,7 @@ const PACK_FACTORY={
   interactive:{type:'interactive',eyebrow:'Interactive',title:'Interactive activity',desc:'Describe the activity students will explore.',steps:['Open the activity','Explore the layers','Note what you find'],url:'',launchLabel:'Open the interactive'},
   labeledGraphic:{type:'labeledGraphic',eyebrow:'Examine the source',title:'Labelled diagram',image:'',markers:[{n:1,x:34,y:30,title:'Feature one',body:'What this feature shows.',real:'What to look for on the real object.'},{n:2,x:62,y:55,title:'Feature two',body:'Why it matters.'}],caption:'',railLabel:'Callouts'},
   timeline:{type:'timeline',eyebrow:'Change over time',title:'Timeline',events:[{date:'Date one',title:'First event',body:'What happened, with a ==keyterm== and a [[recordable fact]].',note:'',image:''},{date:'Date two',title:'Second event',body:'How things changed.',note:'',image:''},{date:'Date three',title:'Third event',body:'The outcome.',note:'',image:''}]},
+  penResponse:{type:'penResponse',eyebrow:'Show your working',title:'Work it out',prompt:'Write or sketch your response in the space below.'},
   outro:{type:'outro',eyebrow:'Lesson complete',title:'Well done',subtitle:'You have finished this lesson.',stats:[],recap:[]},
 };
 /* per-type palette label + wireframe (currentColor = accent) */
@@ -5845,6 +5919,7 @@ const PACK_PALETTE={
   imageText:{label:'Image + text',wf:'<rect x="6" y="9" width="34" height="34" rx="3" class="f"/><rect x="44" y="12" width="30" height="4" class="l2"/><rect x="44" y="22" width="30" height="3"/><rect x="44" y="29" width="24" height="3"/>'},
   labeledGraphic:{label:'Labeled graphic',wf:'<rect x="6" y="8" width="46" height="36" rx="3" class="f"/><circle cx="20" cy="20" r="4" class="s"/><circle cx="38" cy="30" r="4" class="s"/><rect x="58" y="11" width="16" height="3" class="l2"/><rect x="58" y="19" width="16" height="3"/><rect x="58" y="27" width="16" height="3"/><rect x="58" y="35" width="12" height="3"/>'},
   timeline:{label:'Timeline',wf:'<circle cx="12" cy="13" r="4" class="s"/><circle cx="12" cy="26" r="4" class="s"/><circle cx="12" cy="39" r="4" class="l2"/><rect x="12" y="11" width="2" height="30" class="f"/><rect x="24" y="10" width="14" height="3" class="l2"/><rect x="24" y="16" width="48" height="3"/><rect x="24" y="23" width="14" height="3" class="l2"/><rect x="24" y="29" width="44" height="3"/><rect x="24" y="36" width="14" height="3" class="l2"/><rect x="24" y="42" width="40" height="3"/>'},
+  penResponse:{label:'Pen response',wf:'<rect x="6" y="10" width="68" height="34" rx="3" class="f"/><path d="M14 34 Q22 20 30 30 T46 28 Q54 22 60 32" class="s"/><rect x="10" y="6" width="10" height="3" rx="1" class="l2"/>'},
   infographic:{label:'Infographic',wf:'<rect x="6" y="8" width="68" height="26" rx="3" class="f"/><rect x="8" y="40" width="14" height="6" class="s"/><rect x="26" y="38" width="14" height="8" class="l2"/><rect x="44" y="42" width="14" height="4" class="s"/>'},
   video:{label:'Video',wf:'<rect x="10" y="8" width="60" height="34" rx="3" class="f"/><path d="M35 17 L35 33 L49 25 Z" class="l2"/><rect x="24" y="46" width="32" height="3" rx="1"/>'},
   knowledgeCheck:{label:'Knowledge check',wf:'<rect x="6" y="9" width="50" height="4" rx="2" class="l2"/><rect x="6" y="20" width="68" height="7" rx="3" class="s"/><rect x="6" y="31" width="68" height="7" rx="3" class="f"/>'},
