@@ -7,6 +7,14 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Interactive: equation editor (`interactives/equation-editor.html`).** A standalone, fully
+  self-contained equation editor — native MathML typesetting (no library), with the Latin Modern Math
+  font (OFL) embedded inline as base64 woff2. Zero fetch/XHR, zero `<script src>`, zero external
+  stylesheets, zero storage APIs. (The file references the MathML XML namespace URI
+  `http://www.w3.org/1998/Math/MathML`, which is a `createElementNS` specification identifier — never a
+  network request; `validate.mjs` only scans `<script>`/`<link>` tags, so it is not flagged.)
+
 ### Fixed
 - **geolearn keyterm token gap ([#106](https://github.com/WillWint2104/OnlineLessonMaker/issues/106)).**
   geolearn themed the `==keyterm==` highlight (`.tp-hl`) only inside `.gl-prose`, while imperium and
