@@ -250,6 +250,8 @@
 :root[data-theme="imperium"] .tp-hl{color:var(--primary);font-weight:600;}
 :root[data-theme="microhistory"] .tp-slide{--note-reveal-bg:var(--secondary-fixed);--note-reveal-ink:var(--on-surface);}
 :root[data-theme="microhistory"] .tp-hl{color:var(--primary);font-weight:600;}
+:root[data-theme="mathematics"] .tp-slide{--note-reveal-bg:var(--primary-fixed);--note-reveal-ink:var(--on-surface);}
+:root[data-theme="mathematics"] .tp-hl{color:var(--primary);font-weight:600;}
 /* key-term buttons on the shared imperium/microhistory text page (pack equivalent of geolearn's .gl-kt) */
 :root[data-theme="imperium"] .tp-kt,:root[data-theme="microhistory"] .tp-kt{appearance:none;-webkit-appearance:none;font:inherit;line-height:inherit;cursor:help;color:var(--primary);font-weight:600;background:transparent;border:none;border-bottom:2px solid var(--secondary-fixed);border-radius:3px;padding:0 3px;}
 :root[data-theme="imperium"] .tp-kt:hover,:root[data-theme="imperium"] .tp-kt:focus,:root[data-theme="microhistory"] .tp-kt:hover,:root[data-theme="microhistory"] .tp-kt:focus{background:var(--secondary-fixed);border-bottom-color:var(--primary);outline:none;}
@@ -656,6 +658,19 @@
   --display:"Courier Prime"; --display-spacing:-.02em; --radius:8px;
 }
 :root[data-theme="microhistory"] body{font-family:"Inter",system-ui,sans-serif;}
+:root[data-theme="mathematics"]{
+  /* Mathematics (Cambridge Ext1 / NSW Stage 6). Neutral slate-indigo scholarly chrome.
+     Fonts already vendored: Source Serif 4 (display) + Source Sans 3 (body). */
+  --canvas:#F6F7F9; --surface:#FBFCFE; --text:#1a1f2b; --muted:#434a58; --line:#E3E7EF; --bd:#1a1f2b;
+  --accent:#39496b; --accent-soft:#dbe4f7; --accent-ink:#1e2740;
+  --sidebar:#f1f3f7; --sidebar-2:#39496b; --sidebar-text:#1a1f2b; --sidebar-mut:#5b6373;
+  --sidebar-title:#1a1f2b; --sidebar-itemtext:#1a1f2b; --sidebar-hover:rgba(57,73,107,.08);
+  --sidebar-sep:rgba(26,31,43,.10); --sidebar-icon:rgba(57,73,107,.12); --sidebar-track:rgba(26,31,43,.12);
+  --hero:linear-gradient(140deg,#4a5c85,#39496b);
+  --shadow:0 1px 3px rgba(0,0,0,.06);
+  --display:'Source Serif 4'; --display-spacing:-.01em; --radius:14px;
+}
+:root[data-theme="mathematics"] body{font-family:'Source Sans 3',system-ui,sans-serif;}
 *{box-sizing:border-box;}
 html,body{height:100%;margin:0;}
 body{font-family:"Hanken Grotesk",system-ui,sans-serif;color:var(--text);
@@ -1672,6 +1687,29 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   /* v2 Phase 2b width authority (Layer 3) — cards widen up to the canvas measure (was a 1024/1040/1120 spread); .tp-gr-wrap stays narrow (no 75ch prose cap in this theme) */
   --tp-measure:1140px;--tp-measure-narrow:880px;
   background:var(--desk);font-family:var(--tp-body);color:var(--on-surface);}
+:root[data-theme="mathematics"] .tp-slide{
+  /* Mathematics slot palette — neutral slate-indigo; crisp figure surfaces + dark grid/axis for graphs.
+     Every value is a slot definition; elements are only ever coloured via var(--slot) (no literal colour
+     applied to a styling property). Fonts already vendored (Source Serif 4 / Source Sans 3 / Courier Prime). */
+  --primary:#39496b;--primary-container:#4a5c85;--on-primary:#ffffff;--on-primary-container:#dbe2f5;--primary-fixed:#dbe4f7;
+  --secondary:#4c5566;--secondary-container:#dee3ec;--secondary-fixed:#e7ecf5;--on-secondary-container:#3a4354;
+  --tertiary:#5b4b7a;--tertiary-fixed:#e9def5;--on-tertiary-fixed:#241a38;
+  --canvas:#F6F7F9;--background:#F6F7F9;--surface:#FBFCFE;--surface-lowest:#ffffff;
+  --surface-container-low:#f1f3f7;--surface-container:#eaedf3;--surface-container-high:#e4e8ef;--surface-container-highest:#dde2eb;--surface-variant:#dde2eb;
+  --on-surface:#1a1f2b;--on-surface-variant:#434a58;--outline:#6b7385;--outline-variant:#c3c9d6;--error:#ba1a1a;
+  --tp-serif:'Source Serif 4',Georgia,serif;--tp-body:'Source Sans 3',system-ui,sans-serif;--tp-mono:'Courier Prime',ui-monospace,monospace;
+  --tp-rad:14px;--tp-rad-btn:8px;--tp-cardsh:0 1px 3px rgba(0,0,0,.07);--tp-polarot:0deg;
+  /* v2 Phase 1 slot layer (Layer 1, §4) — aliases; --scrim is a fixed overlay, NOT --surface */
+  --surface-2:var(--surface-container);--accent:var(--primary-fixed);--line:var(--outline-variant);--focus-ring:var(--primary);--scrim:rgba(20,24,34,.82);--on-scrim:#fff;
+  /* v2 Phase 2b width authority (Layer 3) */
+  --tp-measure:1140px;--tp-measure-narrow:820px;
+  /* standardised correct/incorrect feedback pair (parity with geolearn --ok/--bad; consumed by graph checking, PR3) */
+  --ok:#1f7a54;--okbg:#e7f4ee;--bad:#ba1a1a;--badbg:#fdeceb;
+  /* mathematics figure/graph slots (consumed by the graph block, PR3): a crisp WHITE plot surface (not the
+     tinted --surface), a visible-but-subordinate grid, a dark axis (pastel --outline-variant is too light
+     for a coordinate grid), and a distinct student-ink accent for plotted points/curves */
+  --graph-surface:#ffffff;--graph-grid:#d3d9e5;--graph-axis:#333a49;--student-ink:#1f6fb2;
+  background:var(--background);font-family:var(--tp-body);color:var(--on-surface);}
 .tp-serif{font-family:var(--tp-serif);} .tp-mono{font-family:var(--tp-mono);}
 
 /* paper-dot grain overlay (microhistory) */
@@ -2569,6 +2607,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
       <option value="imperium">Imperium Scholar · Rome (Y12)</option>
       <option value="microhistory">MicroHistory Archive · WW1 (Y9)</option>
       <option value="geolearn">GeoLearn · Geography</option>
+      <option value="mathematics">Mathematics · Cambridge Ext1 (Y11)</option>
     </select>
   </div>
   <div class="seg" id="modeSeg">
@@ -2677,7 +2716,7 @@ const ICON={
   outcomes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>'};
 const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes"};
 /* themes whose slides render through the dedicated JSON slide pack (renderPackSlide) */
-const PACK_THEMES=new Set(['imperium','microhistory','geolearn']);
+const PACK_THEMES=new Set(['imperium','microhistory','geolearn','mathematics']);
 /* pack slide types → nav label (these themes use `title`/`type` rather than the engine's slide fields) */
 const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",outro:"Outro"};
 /* infographic data palette: figure.color is a theme token, never a raw hex; defaults cycle */
@@ -5074,6 +5113,13 @@ function renderTimeline(s,i){
 registerBlock('timeline','imperium',renderTimeline);
 registerBlock('timeline','microhistory',renderTimeline);
 registerBlock('timeline','geolearn',renderTimeline);
+// mathematics (PR1: theme only) — Tier A token-clean renderers (labeledGraphic/timeline) reused as-is;
+// Tier B pack* shared fns; Tier C the imperium forks re-registered so NOTHING hits packFallback. The
+// Tier-C forks (title/outcomes/imageText/infographic/video/knowledgeCheck) inherit the agnostic .tp-slide
+// base under the maths tokens and are BASE-STYLED by design — skinned later only if they look wrong.
+registerBlock('title','mathematics',imTitle); registerBlock('outcomes','mathematics',imOutcomes); registerBlock('imageText','mathematics',imImageText); registerBlock('text','mathematics',packText); registerBlock('infographic','mathematics',imInfographic); registerBlock('video','mathematics',imVideo); registerBlock('knowledgeCheck','mathematics',imKnowledge); registerBlock('sourceAnalysis','mathematics',packSourceAnalysis); registerBlock('guidedResponse','mathematics',packGuidedResponse); registerBlock('interactive','mathematics',packInteractive); registerBlock('outro','mathematics',packOutro);
+registerBlock('labeledGraphic','mathematics',renderLabeledGraphic);
+registerBlock('timeline','mathematics',renderTimeline);
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
