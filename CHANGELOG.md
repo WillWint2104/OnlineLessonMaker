@@ -8,6 +8,29 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Mathematics theme (v2 pack theme #4 — Cambridge Ext1 / NSW Stage 6).** A fourth registered pack theme
+  on the type×theme registry — the first new theme since the Phase-1 token layer, and a real test of the
+  "new theme is cheap" claim. Purely additive: `PACK_THEMES += 'mathematics'`, a `<select>` option, an
+  app-chrome token block, a `.tp-slide` Material slot block, and 13 `registerBlock` lines (registry now
+  **52 pairs** = 13 types × 4 themes). **Neutral slate-indigo scholarly palette** (`--primary:#39496b`),
+  Source Serif 4 / Source Sans 3 / Courier Prime (all already vendored). Adds a **standardised
+  `--ok/--okbg/--bad/--badbg` feedback pair** and **maths figure/graph slots** — `--graph-surface` (crisp
+  white, not the tinted `--surface`), `--graph-grid`, `--graph-axis` (dark; the pastel `--outline-variant`
+  is too light for a coordinate grid) and `--student-ink` — reserved now so the graph block (a later PR)
+  can consume them. **Token-clean:** the theme applies colour to elements only via `var(--slot)`; hex
+  appears solely in `--slot:value` palette definitions.
+  - **Renderer reuse (the token-layer payoff):** the two token-clean renderers (`renderLabeledGraphic`,
+    `renderTimeline`) and the shared `pack*` renderers (text/sourceAnalysis/guidedResponse/interactive/
+    outro) are registered **as-is** and skin correctly from the maths tokens. The six theme-forked types
+    (title/outcomes/imageText/infographic/video/knowledgeCheck) re-register the **imperium** forks so
+    **nothing hits packFallback** — these are **base-styled by design** (their polish lives in
+    imperium-scoped CSS that doesn't apply under `mathematics`), to be skinned in a follow-up only if the
+    Ch5A lesson needs it. No new renderers written.
+  - **Also unlocked (lands with the graph block PR):** once the MathML equation editor is vendored in, the
+    embedded math font makes engine-wide inline `$…$` MathML notation available.
+  - Verified: all **13 types render under `mathematics` with no packFallback**; the three existing themes
+    are **byte-identical** (`renderPackSlide` over the sample lessons); token-clean; validate green; 0
+    console errors.
 - **Interactive: equation editor (`interactives/equation-editor.html`).** A standalone, fully
   self-contained equation editor — native MathML typesetting (no library), with the Latin Modern Math
   font (OFL) embedded inline as base64 woff2. Zero fetch/XHR, zero `<script src>`, zero external
