@@ -2219,6 +2219,71 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-ink-btn[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary);}
 .tp-slide .tp-ink-btn:focus-visible,.tp-slide .tp-ink-btn:focus{outline:3px solid var(--focus-ring);outline-offset:2px;}
 .tp-slide .tp-ink-canvas{display:block;width:100%;height:auto;aspect-ratio:1000/560;background:var(--graph-surface,var(--surface-lowest));color:var(--ink);touch-action:none;cursor:crosshair;}
+/* graphQuestion (PR3b) — token-driven coordinate plane + answer surface; theme only via slots (no literal colour) */
+.tp-slide .tp-gq2-wrap{width:100%;max-width:var(--tp-measure);margin:0 auto;display:flex;flex-direction:column;gap:16px;padding:6px 6px 18px;}
+.tp-slide .tp-gq2-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+.tp-slide .tp-gq2-eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);}
+.tp-slide .tp-gq2-title{font-family:var(--tp-serif);font-weight:700;font-size:28px;line-height:1.12;letter-spacing:-.02em;margin:0;}
+.tp-slide .tp-gq2-marks{margin-left:auto;font-size:12px;font-weight:700;color:var(--on-surface-variant);border:1px solid var(--outline-variant);border-radius:9999px;padding:3px 12px;}
+.tp-slide .tp-gq2-prompt{font-family:var(--tp-body);font-size:16px;line-height:1.6;color:var(--on-surface);margin:0;}
+.tp-slide .tp-gq2-grid{display:grid;grid-template-columns:minmax(0,480px) minmax(260px,1fr);gap:20px;align-items:start;}
+@media(max-width:820px){ .tp-slide .tp-gq2-grid{grid-template-columns:1fr;} }
+.tp-slide .tp-gq2-planecol{min-width:0;}
+.tp-slide .tp-gq2-svg{display:block;width:100%;height:auto;aspect-ratio:1/1;border:2px solid var(--outline-variant);border-radius:var(--tp-rad-btn);box-shadow:var(--tp-cardsh);touch-action:none;}
+.tp-slide .tp-gq2-surface{fill:var(--graph-surface,var(--surface-lowest));}
+.tp-slide .tp-gq2-gl{stroke:var(--graph-grid,var(--outline-variant));stroke-width:1;}
+.tp-slide .tp-gq2-axis{stroke:var(--graph-axis,var(--on-surface));stroke-width:1.8;}
+.tp-slide .tp-gq2-lab{fill:var(--graph-axis,var(--on-surface-variant));font-family:var(--tp-body);font-size:12px;opacity:.85;}
+.tp-slide .tp-gq2-given{stroke:var(--graph-axis,var(--on-surface-variant));stroke-width:2;stroke-dasharray:5 4;opacity:.6;}
+.tp-slide .tp-gq2-student{stroke:var(--student-ink,var(--primary));stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
+.tp-slide .tp-gq2-answer{stroke:var(--ok,#1f7a54);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
+.tp-slide .tp-gq2-pt{fill:var(--student-ink,var(--primary));stroke:var(--graph-surface,#fff);stroke-width:1.5;cursor:pointer;}
+.tp-slide .tp-gq2-answercol{display:flex;flex-direction:column;gap:12px;min-width:0;}
+.tp-slide .tp-gq2-given-note{font-size:13px;color:var(--on-surface-variant);}
+.tp-slide .tp-gq2-fx{font-family:var(--tp-serif);font-style:italic;}
+.tp-slide .tp-gq2-eqlabel{font-size:13px;font-weight:600;color:var(--on-surface);display:flex;align-items:center;gap:6px;}
+.tp-slide .tp-gq2-yeq{font-family:'LM Math',serif;font-size:17px;}
+.tp-slide .tp-gq2-submit{font:inherit;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--tp-rad-btn);border:0;background:var(--primary);color:var(--on-primary);cursor:pointer;}
+.tp-slide .tp-gq2-submit:hover{filter:brightness(1.06);}
+.tp-slide .tp-gq2-submit:focus-visible,.tp-slide .tp-gq2-submit:focus{outline:var(--focus-ring,2px solid var(--primary));outline-offset:2px;}
+.tp-slide .tp-gq2-feedback:empty{display:none;}
+.tp-slide .tp-gq2-feedback{font-size:14px;line-height:1.5;border-radius:var(--tp-rad-btn);padding:11px 14px;}
+.tp-slide .tp-gq2-feedback.ok{background:var(--okbg,#e7f4ee);color:var(--ok,#1f7a54);border:1px solid var(--ok,#1f7a54);}
+.tp-slide .tp-gq2-feedback.bad{background:var(--badbg,#fdeceb);color:var(--bad,#ba1a1a);border:1px solid var(--bad,#ba1a1a);}
+.tp-slide .tp-gq2-feedback math{color:inherit;}
+.tp-slide .tp-gq2-pts,.tp-slide .tp-gq2-working{display:flex;flex-direction:column;gap:6px;}
+.tp-slide .tp-gq2-ptshead,.tp-slide .tp-gq2-workhead{font-size:13px;font-weight:600;color:var(--on-surface);display:flex;align-items:center;gap:6px;}
+.tp-slide .tp-gq2-ptscount{color:var(--on-surface-variant);font-weight:500;}
+.tp-slide .tp-gq2-ptshint{font-size:12.5px;color:var(--on-surface-variant);margin:0;}
+.tp-slide .tp-gq2-ptsclear{background:none;border:0;color:var(--primary);cursor:pointer;font:inherit;font-size:12.5px;text-decoration:underline;padding:0;}
+.tp-slide .tp-gq2-working{margin-top:4px;}
+/* equation editor (PR3b) — ribbon + field + caret, themed via slots */
+.tp-slide .tp-eqribbon{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;background:var(--surface-container,var(--surface-2));border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);padding:7px;}
+.tp-slide .tp-eqsymwell{display:flex;flex-wrap:wrap;gap:3px;max-width:190px;}
+.tp-slide .tp-eqsym{font-family:'LM Math',Cambria Math,serif;font-size:15px;min-width:26px;height:26px;border:1px solid var(--outline-variant);border-radius:6px;background:var(--surface);color:var(--on-surface);cursor:pointer;}
+.tp-slide .tp-eqsym:hover{background:var(--primary);color:var(--on-primary);}
+.tp-slide .tp-eqstructs{display:flex;flex-wrap:wrap;gap:4px;flex:1;}
+.tp-slide .tp-eqst{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border:1px solid var(--outline-variant);border-radius:7px;background:var(--surface);color:var(--on-surface);cursor:pointer;font:inherit;font-size:12px;}
+.tp-slide .tp-eqst:hover,.tp-slide .tp-eqst.open{border-color:var(--primary);color:var(--primary);}
+.tp-slide .tp-eqst .tp-eqico{color:currentColor;display:block;}
+.tp-slide .tp-eqst .tp-eqchev{font-size:9px;}
+.tp-slide .tp-eqgal{position:absolute;top:100%;left:0;margin-top:5px;z-index:40;background:var(--surface);border:1px solid var(--outline-variant);border-radius:10px;box-shadow:var(--tp-cardsh);padding:9px;display:none;min-width:180px;}
+.tp-slide .tp-eqgal.show{display:block;}
+.tp-slide .tp-eqsec{margin-bottom:8px;} .tp-slide .tp-eqsec:last-child{margin-bottom:0;}
+.tp-slide .tp-eqgh{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--on-surface-variant);margin:0 0 5px;}
+.tp-slide .tp-eqtiles{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
+.tp-slide .tp-eqtiles.c3{grid-template-columns:repeat(3,1fr);} .tp-slide .tp-eqtiles.c2{grid-template-columns:repeat(2,1fr);}
+.tp-slide .tp-eqtile{display:flex;align-items:center;justify-content:center;min-height:40px;padding:4px;border:1px solid var(--outline-variant);border-radius:7px;background:var(--surface-2,var(--surface));color:var(--on-surface);cursor:pointer;}
+.tp-slide .tp-eqtile:hover{border-color:var(--primary);background:var(--surface);}
+.tp-slide .tp-eqtile math{font-family:'LM Math',Cambria Math,serif;font-size:18px;}
+.tp-slide .tp-eqfieldwrap{position:relative;margin-top:8px;}
+.tp-slide .tp-eqfield{min-height:52px;border:1.5px solid var(--outline-variant);border-radius:var(--tp-rad-btn);background:var(--surface-lowest,var(--surface));padding:10px 12px;font-size:26px;color:var(--on-surface);cursor:text;overflow-x:auto;}
+.tp-slide .tp-eqfield:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--surface-container);}
+.tp-slide .tp-eqfield math{font-family:'LM Math',Cambria Math,STIX Two Math,serif;}
+.tp-slide .tp-eqfield mtext.ph{display:inline-block;width:.5em;height:.7em;border:1.4px dotted var(--outline);border-radius:2px;}
+.tp-slide .tp-eqfield mtext.ph.here{border-color:var(--primary);}
+.tp-slide .tp-eqcaret{position:absolute;width:2px;background:var(--primary);pointer-events:none;display:none;animation:tpblink 1s step-end infinite;}
+@keyframes tpblink{50%{opacity:0;}}
 :root[data-theme="imperium"] .tp-main.tp-outromain,:root[data-theme="microhistory"] .tp-main.tp-outromain{align-items:center;justify-content:normal;}   /* outro: centre via the card's margin:auto (scroll-safe); justify-content:center clips top-overflow */
 .tp-slide .tp-sa-wrap{max-width:var(--tp-measure);margin:0 auto;width:100%;padding:6px 6px 18px;}   /* Phase 2b: widens to the measure (imperium override removed above) */
 .tp-slide .tp-gr-wrap{max-width:var(--tp-measure-narrow);margin:0 auto;width:100%;padding:6px 6px 18px;}   /* Phase 2b: stays narrow (~880) — microhistory has no 75ch prose cap; imperium widens it via the override above */
@@ -2743,7 +2808,7 @@ const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image
 /* themes whose slides render through the dedicated JSON slide pack (renderPackSlide) */
 const PACK_THEMES=new Set(['imperium','microhistory','geolearn','mathematics']);
 /* pack slide types → nav label (these themes use `title`/`type` rather than the engine's slide fields) */
-const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",outro:"Outro"};
+const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",graphQuestion:"Graph question",outro:"Outro"};
 /* infographic data palette: figure.color is a theme token, never a raw hex; defaults cycle */
 const IG_TOKENS=['primary','secondary','tertiary'];
 function igColor(c){ return c==='secondary'?'var(--data-2)':c==='tertiary'?'var(--data-3)':'var(--data-1)'; }
@@ -3616,6 +3681,13 @@ function inspectorForm(i,s,sel){
     case 'timeline': return T('eyebrow','Eyebrow')+T('title','Title')
       +repeatGroup(i,s,sel,'events','Event','Events',(e,j)=>inT('Date',`slides.${i}.events.${j}.date`,e.date)+inT('Title',`slides.${i}.events.${j}.title`,e.title)+inA('Body',`slides.${i}.events.${j}.body`,e.body)+inA('Note (optional)',`slides.${i}.events.${j}.note`,e.note),'Add event');
     case 'penResponse': return T('eyebrow','Eyebrow')+T('title','Title')+T('prompt','Prompt','area');
+    case 'graphQuestion': return T('eyebrow','Eyebrow')+T('title','Title')+T('marks','Marks (e.g. "2 marks")')+T('prompt','Prompt (supports $…$ math)','area')
+      +SEL('answerMode','Answer mode',[['equation','Equation — type a function'],['points','Plot points'],['both','Both']])
+      +T('given','Given curve  y = f(x)  (e.g. x^2)')+T('answer.equation','Answer equation (e.g. (x-2)^2)')
+      +T('domain.0','x min')+T('domain.1','x max')+T('range.0','y min')+T('range.1','y max')
+      +T('grid','Grid step')+T('snap','Snap step (0 = free plotting)')+T('tolerance','Marking tolerance (world units)')
+      +SEL('working','Show-your-working canvas',[['','No'],['1','Yes — embed the pen canvas']])
+      +repeatGroup(i,s,sel,'misconceptions','Misconception','Common mistakes → targeted feedback',(m,j)=>inT('If they answer (equation)',`slides.${i}.misconceptions.${j}.equation`,m.equation)+inA('Feedback message (supports $…$)',`slides.${i}.misconceptions.${j}.message`,m.message),'Add misconception');
     case 'question': return T('skill','Skill')+T('heading','Heading')+qGroup(i,s,sel);
     case 'source': return T('heading','Heading')+T('credit','Credit / citation')+M()+qGroup(i,s,sel);
     case 'model3d': return T('heading','Heading')+M()+qGroup(i,s,sel);
@@ -4615,6 +4687,228 @@ const TPMath=(function(){
     }
     return row(null);
   }
+  /* ═══ interactive editor (PR3b) — lifted from the equation editor; single active instance, reuses the
+     node model + renderRowML + compile/tex above (one code path). ROOT/CUR live here; a caret-aware render
+     populates POS/ROWEL and places the caret. TPMath.editor(field,caret,symwell,structs,{initial,onChange})
+     mounts it onto slide DOM (wirePack rebinds each render). ═══ */
+  let ROOT=[]; let ED=null;
+  function slotsOf(n){ switch(n.t){
+    case 'frac':  return [n.num,n.den];
+    case 'sqrt':  return [n.rad];
+    case 'nroot': return [n.idx,n.rad];
+    case 'sup':   return [n.exp];
+    case 'sub':   return [n.idx];
+    case 'fence': return [n.body];
+    case 'fn':    return [n.arg];
+    case 'large': return [n.lo,n.hi,n.body];
+    case 'acc':   return [n.base];
+    case 'lim':   return [n.under,n.body];
+    case 'matrix':return n.rows.flat();
+    default:      return []; } }
+  const OWNER=new Map(), HOME=new Map();
+  function indexMaps(row,owner,slot){ OWNER.set(row,{node:owner,slot}); row.forEach(n=>{ HOME.set(n,row); slotsOf(n).forEach((s,k)=>indexMaps(s,n,k)); }); }
+  const S=s=>[...s].map(c=>N.ch(c));
+  function left(){
+    const {row,i}=CUR;
+    if(i>0){ const p=row[i-1], sl=slotsOf(p);
+      if(sl.length){ const L=sl[sl.length-1]; CUR={row:L,i:L.length}; } else CUR={row,i:i-1};
+      return; }
+    const o=OWNER.get(row); if(!o||!o.node) return;
+    const sl=slotsOf(o.node);
+    if(o.slot>0){ const p=sl[o.slot-1]; CUR={row:p,i:p.length}; return; }
+    const h=HOME.get(o.node); if(h) CUR={row:h,i:h.indexOf(o.node)};
+  }
+  function right(){
+    const {row,i}=CUR;
+    if(i<row.length){ const nx=row[i], sl=slotsOf(nx);
+      if(sl.length) CUR={row:sl[0],i:0}; else CUR={row,i:i+1};
+      return; }
+    const o=OWNER.get(row); if(!o||!o.node) return;
+    const sl=slotsOf(o.node);
+    if(o.slot<sl.length-1){ CUR={row:sl[o.slot+1],i:0}; return; }
+    const h=HOME.get(o.node); if(h) CUR={row:h,i:h.indexOf(o.node)+1};
+  }
+  function vert(d){
+    const o=OWNER.get(CUR.row); if(!o||!o.node) return;
+    const n=o.node;
+    if(n.t==='frac'){ if(d<0&&o.slot===1){ CUR={row:n.num,i:n.num.length}; return; } if(d>0&&o.slot===0){ CUR={row:n.den,i:n.den.length}; return; } }
+    if(n.t==='large'){ if(d<0&&o.slot===0){ CUR={row:n.hi,i:n.hi.length}; return; } if(d>0&&o.slot===1){ CUR={row:n.lo,i:n.lo.length}; return; } }
+    if((n.t==='sup'&&d>0)||(n.t==='sub'&&d<0)){ const h=HOME.get(n); if(h){ CUR={row:h,i:h.indexOf(n)+1}; return; } }
+    const h=HOME.get(n); if(h) CUR={row:h,i:h.indexOf(n)+(d>0?1:0)};
+  }
+  function insert(node){ CUR.row.splice(CUR.i,0,node); const sl=slotsOf(node); if(sl.length) CUR={row:sl[0],i:0}; else CUR={row:CUR.row,i:CUR.i+1}; caretRender(); }
+  function insertChar(c){ CUR.row.splice(CUR.i,0,N.ch(c)); CUR.i++; caretRender(); }
+  function backspace(){
+    const {row,i}=CUR;
+    if(i>0){ const p=row[i-1];
+      if(slotsOf(p).length){ const sl=slotsOf(p), L=sl[sl.length-1]; CUR={row:L,i:L.length}; caretRender(); return; }
+      row.splice(i-1,1); CUR={row,i:i-1}; caretRender(); return; }
+    const o=OWNER.get(row);
+    if(o&&o.node){ const h=HOME.get(o.node); if(h){ const at=h.indexOf(o.node); const keep=slotsOf(o.node).flat(); h.splice(at,1,...keep); CUR={row:h,i:at}; caretRender(); } }
+  }
+  function placeCaret(){
+    if(!ED) return; const caret=ED.caret;
+    const pos=POS.get(CUR.row);
+    if(!pos || !pos[CUR.i]){ caret.style.display='none'; return; }
+    const {el,side}=pos[CUR.i];
+    const b=el.getBoundingClientRect(), f=ED.field.getBoundingClientRect();
+    if(!b.height){ caret.style.display='none'; return; }
+    const x = side==='right' ? b.right : side==='mid' ? b.left+b.width/2 : b.left;
+    caret.style.display='block';
+    caret.style.left=(x - f.left + ED.field.scrollLeft - 1)+'px';
+    caret.style.top =(b.top - f.top)+'px';
+    caret.style.height=b.height+'px';
+  }
+  function caretRender(){
+    if(!ED) return;
+    OWNER.clear(); HOME.clear(); ROWEL.clear(); POS.clear();
+    indexMaps(ROOT,null,0);
+    const math=document.createElementNS(MML,'math');
+    math.setAttribute('display','inline'); math.setAttribute('xmlns',MML); math.setAttribute('class','tp-math');
+    math.appendChild(renderRowML(ROOT));
+    ED.field.innerHTML=''; ED.field.appendChild(math);
+    requestAnimationFrame(placeCaret);
+    if(ED.onChange) ED.onChange();
+  }
+  /* ribbon — symbol well + structure galleries (MathML tile previews) */
+  const IC=i=>`<svg viewBox="0 0 44 34" width="42" height="32" fill="none" style="display:block;color:currentColor">${i}</svg>`;
+  const TX=(x,y,s,t,it)=>`<text x="${x}" y="${y}" font-size="${s}" fill="currentColor" font-family="'LM Math',Cambria Math,STIX Two Math,serif" font-style="${it===false?'normal':'italic'}" text-anchor="middle">${t}</text>`;
+  const PB=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="1.5" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 1.6" fill="none" opacity=".55"/>`;
+  const ICONS={
+    fraction:IC(`${TX(22,14,13,'x')}<line x1="11" y1="18" x2="33" y2="18" stroke="currentColor" stroke-width="1.4"/>${TX(22,30,13,'y')}`),
+    script:IC(`${TX(16,25,17,'e')}${TX(29,15,11,'x')}`),
+    radical:IC(`${TX(9,13,9,'n')}<path d="M9 19 L13.5 27 L18 8 L38 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>${TX(27,24,13,'x')}`),
+    bracket:IC(`${TX(10,25,20,'(',false)}${PB(17,12,10,11)}${TX(34,25,20,')',false)}`),
+    fn:IC(`${TX(14,24,13,'sin',false)}${TX(33,24,14,'θ')}`),
+    large:IC(`${TX(20,27,24,'∑',false)}${PB(32,9,8,9)}`),
+    accent:IC(`<path d="M13 11 L31 11 M27.5 8.5 L31 11 L27.5 13.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>${TX(22,28,16,'v')}`),
+    matrix:IC(`<rect x="8" y="7" width="28" height="20" rx="2" stroke="currentColor" stroke-width="1.2" fill="none"/><line x1="22" y1="7" x2="22" y2="27" stroke="currentColor" stroke-width="1"/><line x1="8" y1="17" x2="36" y2="17" stroke="currentColor" stroke-width="1"/>`),
+    lim:IC(`${TX(22,18,14,'lim',false)}${TX(22,30,9,'n→∞',false)}`)
+  };
+  function tileML(build){
+    const math=document.createElementNS(MML,'math');
+    const saveR=ROOT, saveC=CUR;
+    const t=build();
+    const wrap=document.createElementNS(MML,'mrow');
+    const oldROWEL=new Map(ROWEL), oldPOS=new Map(POS);
+    CUR={row:[],i:0};
+    t.forEach(n=>wrap.appendChild(renderNodeML(n)));
+    math.appendChild(wrap);
+    ROWEL.clear(); oldROWEL.forEach((v,k)=>ROWEL.set(k,v));
+    POS.clear();  oldPOS.forEach((v,k)=>POS.set(k,v));
+    ROOT=saveR; CUR=saveC;
+    return math;
+  }
+  const GAL={
+    Fraction:{icon:ICONS.fraction,secs:[
+      ['Fraction',[[()=>[N.frac()],()=>N.frac()]],4],
+      ['Common',[
+        [()=>[N.frac(S('dy'),S('dx'))],()=>N.frac(S('dy'),S('dx'))],
+        [()=>[N.frac(S('1'),S('2'))],()=>N.frac(S('1'),S('2'))],
+        [()=>[N.frac([N.ch('π')],S('2'))],()=>N.frac([N.ch('π')],S('2'))]],4]]},
+    Script:{icon:ICONS.script,secs:[['Scripts',[
+      [()=>[N.ch('x'),N.sup()],()=>N.sup()],
+      [()=>[N.ch('x'),N.sub()],()=>N.sub()],
+      [()=>[N.ch('x'),N.sup(S('2'))],()=>N.sup(S('2'))],
+      [()=>[N.ch('x'),N.sup(S('3'))],()=>N.sup(S('3'))]],4]]},
+    Radical:{icon:ICONS.radical,secs:[
+      ['Radicals',[
+        [()=>[N.sqrt()],()=>N.sqrt()],
+        [()=>[N.nroot()],()=>N.nroot()],
+        [()=>[N.nroot(S('3'))],()=>N.nroot(S('3'))]],4],
+      ['Common',[[()=>[N.sqrt([N.ch('a'),N.sup(S('2')),N.ch('+'),N.ch('b'),N.sup(S('2'))])],
+        ()=>N.sqrt([N.ch('a'),N.sup(S('2')),N.ch('+'),N.ch('b'),N.sup(S('2'))])],
+        [()=>[N.frac([N.ch('−'),N.ch('b'),N.ch('±'),N.sqrt([N.ch('b'),N.sup(S('2')),N.ch('−'),N.ch('4'),N.ch('a'),N.ch('c')])],[N.ch('2'),N.ch('a')])],
+        ()=>N.frac([N.ch('−'),N.ch('b'),N.ch('±'),N.sqrt([N.ch('b'),N.sup(S('2')),N.ch('−'),N.ch('4'),N.ch('a'),N.ch('c')])],[N.ch('2'),N.ch('a')])]],2]]},
+    Bracket:{icon:ICONS.bracket,secs:[['Brackets',[
+      [()=>[N.fence('(',')')],()=>N.fence('(',')')],
+      [()=>[N.fence('[',']')],()=>N.fence('[',']')],
+      [()=>[N.fence('{','}')],()=>N.fence('{','}')],
+      [()=>[N.fence('|','|')],()=>N.fence('|','|')]],4]]},
+    Function:{icon:ICONS.fn,secs:[
+      ['Trigonometric',[[()=>[N.fn('sin')],()=>N.fn('sin')],[()=>[N.fn('cos')],()=>N.fn('cos')],[()=>[N.fn('tan')],()=>N.fn('tan')]],3],
+      ['Inverse',[[()=>[N.fn('arcsin')],()=>N.fn('arcsin')],[()=>[N.fn('arccos')],()=>N.fn('arccos')],[()=>[N.fn('arctan')],()=>N.fn('arctan')]],3],
+      ['Logarithm',[[()=>[N.fn('ln')],()=>N.fn('ln')],[()=>[N.fn('log')],()=>N.fn('log')]],3]]},
+    'Large operator':{icon:ICONS.large,secs:[['Operators',[
+      [()=>[N.large('∑',S('i=1'),S('n'))],()=>N.large('∑',S('i=1'),S('n'))],
+      [()=>[N.large('∏',S('i=1'),S('n'))],()=>N.large('∏',S('i=1'),S('n'))],
+      [()=>[N.large('∫',S('a'),S('b'))],()=>N.large('∫',S('a'),S('b'))]],4]]},
+    Limit:{icon:ICONS.lim,secs:[['Limit',[
+      [()=>[N.lim([N.ch('n'),N.ch('→'),N.ch('∞')])],()=>N.lim([N.ch('n'),N.ch('→'),N.ch('∞')])],
+      [()=>[N.lim([N.ch('x'),N.ch('→'),N.ch('0')])],()=>N.lim([N.ch('x'),N.ch('→'),N.ch('0')])]],2]]},
+    Matrix:{icon:ICONS.matrix,secs:[['Matrix',[
+      [()=>[N.matrix()],()=>N.matrix()],
+      [()=>[N.matrix([[S('a'),S('b')],[S('c'),S('d')]])],()=>N.matrix([[S('a'),S('b')],[S('c'),S('d')]])]],2]]},
+    Accent:{icon:ICONS.accent,secs:[['Accents',[
+      [()=>[N.acc('→',S('v'))],()=>N.acc('→')],
+      [()=>[N.acc('‾',S('x'))],()=>N.acc('‾')]],4]]}
+  };
+  const SYMS=['+','−','×','÷','±','=','≠','<','>','≤','≥','≈','∴','π','θ','α','β','λ','μ','σ','Δ','Σ','∞','°','∈','∪','∩','∝','→','⇒','∂','ℝ','ℤ'];
+  let openGal=null;
+  function closeGal(){ if(openGal){ openGal.g.classList.remove('show'); openGal.btn.classList.remove('open'); openGal=null; } }
+  function buildRibbon(symwellEl, structsEl){
+    symwellEl.innerHTML=''; structsEl.innerHTML='';
+    SYMS.forEach(c=>{ const b=document.createElement('button'); b.className='tp-eqsym'; b.type='button'; b.textContent=c; b.setAttribute('aria-label','Insert '+c); b.addEventListener('click',()=>{ ED.field.focus(); insertChar(c); }); symwellEl.appendChild(b); });
+    Object.entries(GAL).forEach(([name,cfg])=>{
+      const btn=document.createElement('button'); btn.className='tp-eqst'; btn.type='button'; btn.setAttribute('aria-haspopup','true');
+      btn.innerHTML=`<span class="tp-eqico">${cfg.icon}</span><span class="tp-eqnm">${name}</span><span class="tp-eqchev">▾</span>`;
+      const g=document.createElement('div'); g.className='tp-eqgal';
+      cfg.secs.forEach(([title,items,cols])=>{
+        const sec=document.createElement('div'); sec.className='tp-eqsec';
+        sec.innerHTML='<p class="tp-eqgh">'+title+'</p>';
+        const grid=document.createElement('div'); grid.className='tp-eqtiles'+(cols===3?' c3':cols===2?' c2':'');
+        items.forEach(([preview,make])=>{ const t=document.createElement('button'); t.className='tp-eqtile'; t.type='button'; t.appendChild(tileML(preview)); t.addEventListener('click',()=>{ ED.field.focus(); insert(make()); closeGal(); }); grid.appendChild(t); });
+        sec.appendChild(grid); g.appendChild(sec);
+      });
+      btn.addEventListener('click',e=>{ e.stopPropagation(); const was=g.classList.contains('show'); closeGal(); if(!was){ g.classList.add('show'); btn.classList.add('open'); openGal={g,btn}; requestAnimationFrame(()=>{ const r=g.getBoundingClientRect(); if(r.right>innerWidth-12){ g.style.left='auto'; g.style.right='0'; } }); } });
+      const h=document.createElement('div'); h.style.position='relative'; h.append(btn,g); structsEl.appendChild(h);
+    });
+  }
+  function editor(fieldEl, caretEl, symwellEl, structsEl, opts){
+    opts=opts||{};
+    if(ED&&ED.cleanup) ED.cleanup();
+    ROOT = opts.initial ? JSON.parse(JSON.stringify(opts.initial)) : [];
+    CUR={row:ROOT,i:0};
+    ED={field:fieldEl, caret:caretEl, onChange:opts.onChange||null, cleanup:null};
+    const onKey=e=>{
+      const k=e.key;
+      if(k==='ArrowLeft'){e.preventDefault();left();caretRender();return;}
+      if(k==='ArrowRight'){e.preventDefault();right();caretRender();return;}
+      if(k==='ArrowUp'){e.preventDefault();vert(-1);caretRender();return;}
+      if(k==='ArrowDown'){e.preventDefault();vert(1);caretRender();return;}
+      if(k==='Backspace'){e.preventDefault();backspace();return;}
+      if(k==='Tab'){e.preventDefault();e.shiftKey?left():right();caretRender();return;}
+      if(k==='Home'){e.preventDefault();CUR={row:CUR.row,i:0};caretRender();return;}
+      if(k==='End'){e.preventDefault();CUR={row:CUR.row,i:CUR.row.length};caretRender();return;}
+      if(k.length!==1) return;
+      e.preventDefault();
+      if(k==='/'){insert(N.frac());return;}
+      if(k==='^'){insert(N.sup());return;}
+      if(k==='_'){insert(N.sub());return;}
+      if(k==='('){insert(N.fence('(',')'));return;}
+      if(k==='|'){insert(N.fence('|','|'));return;}
+      let c=k; if(c==='-')c='−'; if(c==='*')c='×';
+      insertChar(c);
+    };
+    const onDown=e=>{
+      ED.field.focus();
+      let best=null,bd=Infinity;
+      POS.forEach((pos,row)=>{ pos.forEach((p,i)=>{ if(!p)return; const b=p.el.getBoundingClientRect(); if(!b.height)return; const x=p.side==='right'?b.right:p.side==='mid'?b.left+b.width/2:b.left; const y=b.top+b.height/2; const d=Math.hypot(e.clientX-x,(e.clientY-y)*1.7); if(d<bd){bd=d;best={row,i};} }); });
+      if(best){ CUR=best; caretRender(); }
+      e.preventDefault();
+    };
+    const onFocus=()=>placeCaret();
+    fieldEl.addEventListener('keydown',onKey);
+    fieldEl.addEventListener('mousedown',onDown);
+    fieldEl.addEventListener('focus',onFocus);
+    if(symwellEl&&structsEl) buildRibbon(symwellEl,structsEl);
+    const onDocClick=e=>{ if(!e.target.closest('.tp-eqgal')&&!e.target.closest('.tp-eqst')) closeGal(); };
+    const onEsc=e=>{ if(e.key==='Escape') closeGal(); };
+    document.addEventListener('click',onDocClick); document.addEventListener('keydown',onEsc);
+    ED.cleanup=()=>{ document.removeEventListener('click',onDocClick); document.removeEventListener('keydown',onEsc); closeGal(); };
+    const oc=ED.onChange; ED.onChange=null; caretRender(); ED.onChange=oc;   // initial mount render must NOT fire onChange (would overwrite a restored answer before the caller's editor ref is assigned)
+    return { latex:()=>tex(ROOT), tree:()=>JSON.parse(JSON.stringify(ROOT)), compile:()=>compile(ROOT), focus:()=>fieldEl.focus(), clear:()=>{ ROOT=[]; CUR={row:ROOT,i:0}; caretRender(); }, destroy:()=>{ if(ED&&ED.cleanup) ED.cleanup(); ED=null; } };
+  }
   /* ---- public surface ---- */
   const asRow=input=>Array.isArray(input)?input:parse(input);
   function render(input){
@@ -4624,7 +4918,7 @@ const TPMath=(function(){
     math.appendChild(renderRowML(asRow(input)));
     return math.outerHTML;
   }
-  return { N, tree:parse, render, compile:input=>compile(asRow(input)), latex:input=>tex(asRow(input)) };
+  return { N, tree:parse, render, compile:input=>compile(asRow(input)), latex:input=>tex(asRow(input)), editor };
 })();
 /* engine-level aliases — the capability surface named in the PR3a spec */
 function tpMathTree(str){ return TPMath.tree(str); }
@@ -5378,6 +5672,123 @@ registerBlock('penResponse','imperium',renderPenResponse);
 registerBlock('penResponse','microhistory',renderPenResponse);
 registerBlock('penResponse','geolearn',renderPenResponse);
 registerBlock('penResponse','mathematics',renderPenResponse);
+/* v2 Maths — graphQuestion (PR3b): a token-driven SVG coordinate plane + an answer surface. The student
+   enters a function with the full equation editor (answerMode 'equation'/'both', mounted in wirePack via
+   TPMath.editor) and/or plots points on the plane (answerMode 'points'/'both'). Marking is by FUNCTION
+   SAMPLING (wirePack) so (x-2)^2 and x^2-4x+4 both pass; snap is for INPUT FEEL only, tolerance for MARKING
+   — kept separate. Misconception diagnosis: a student function matching a listed wrong-way translation
+   returns its specific message. Optional embedded "show your working" pen canvas (reuses [data-tp-ink]).
+   ONE token-clean renderer × four themes; SVG skinned by --graph-surface/-grid/-axis/--student-ink/--ok. */
+function gqNiceStep(span){ const raw=span/10, p=Math.pow(10,Math.floor(Math.log10(raw))), n=raw/p; return (n<1.5?1:n<3.5?2:n<7.5?5:10)*p; }
+function gqSample(fnOrStr, x0,x1,y0,y1,W,H){                  // fn OR equation string → SVG path 'd' (breaks at asymptotes / non-finite)
+  let f=null;
+  if(typeof fnOrStr==='function') f=fnOrStr;
+  else { try{ const c=TPMath.compile(fnOrStr); if(!c.error) f=c.eval; }catch(e){} }
+  if(!f) return '';
+  const mx=x=>(x-x0)/(x1-x0)*W, my=y=>H-(y-y0)/(y1-y0)*H;
+  const NS=300; let d='', prev=null;
+  for(let k=0;k<=NS;k++){ const x=x0+(x1-x0)*k/NS; let y; try{ y=f(x); }catch(e){ y=NaN; }
+    if(!isFinite(y)){ prev=null; continue; }
+    const px=mx(x), py=my(y);
+    if(prev===null || Math.abs(py-prev)>H*1.5) d+='M'+px.toFixed(1)+' '+py.toFixed(1)+' ';
+    else d+='L'+px.toFixed(1)+' '+py.toFixed(1)+' ';
+    prev=py;
+  }
+  return d.trim();
+}
+function gqParams(s){                                          // shared plane geometry (gqPlane render + wirePack use identical mapping)
+  const W=480,H=480;
+  const dom=Array.isArray(s.domain)?s.domain:[-5,5], rng=Array.isArray(s.range)?s.range:[-5,5];
+  let x0=+dom[0],x1=+dom[1],y0=+rng[0],y1=+rng[1];
+  if(!(x1>x0)){ x0=-5; x1=5; } if(!(y1>y0)){ y0=-5; y1=5; }
+  const g=(+s.grid>0)?+s.grid:gqNiceStep(Math.max(x1-x0,y1-y0));
+  return {W,H,x0,x1,y0,y1,g};
+}
+function gqEqEqual(fA,fB,x0,x1){                               // equal by sampling → equivalent forms pass; wrong-way (differs by O(1)) fails
+  let n=0;
+  for(let k=0;k<=60;k++){ const x=x0+(x1-x0)*k/60; let a,b; try{a=fA(x);}catch(e){a=NaN;} try{b=fB(x);}catch(e){b=NaN;}
+    if(!isFinite(a)&&!isFinite(b)) continue;
+    if(!isFinite(a)||!isFinite(b)) return false;
+    n++; if(Math.abs(a-b) > 1e-4 + 1e-4*Math.abs(b)) return false; }
+  return n>0;
+}
+function gqPlane(s,i){
+  const {W,H,x0,x1,y0,y1,g}=gqParams(s);
+  const wantPts=s.answerMode==='points'||s.answerMode==='both';
+  const mx=x=>((x-x0)/(x1-x0)*W).toFixed(1), my=y=>(H-(y-y0)/(y1-y0)*H).toFixed(1);
+  const start=n=>Math.ceil(n/g)*g;
+  let grid='';
+  for(let x=start(x0); x<=x1+1e-9; x+=g){ grid+=`<line class="tp-gq2-gl" x1="${mx(x)}" y1="0" x2="${mx(x)}" y2="${H}"/>`; }
+  for(let y=start(y0); y<=y1+1e-9; y+=g){ grid+=`<line class="tp-gq2-gl" x1="0" y1="${my(y)}" x2="${W}" y2="${my(y)}"/>`; }
+  let axes='', ticks='';
+  const hasY = x0<=0 && x1>=0, hasX = y0<=0 && y1>=0;
+  if(hasX) axes+=`<line class="tp-gq2-axis" x1="0" y1="${my(0)}" x2="${W}" y2="${my(0)}"/>`;
+  if(hasY) axes+=`<line class="tp-gq2-axis" x1="${mx(0)}" y1="0" x2="${mx(0)}" y2="${H}"/>`;
+  const axY=hasX?+my(0):H, axX=hasY?+mx(0):0;
+  const nLabels=Math.round((x1-x0)/g);
+  if(nLabels<=24){
+    for(let x=start(x0); x<=x1+1e-9; x+=g){ if(Math.abs(x)<1e-9) continue; ticks+=`<text class="tp-gq2-lab" x="${mx(x)}" y="${Math.min(H-3,axY+13)}" text-anchor="middle">${(+x.toFixed(4))}</text>`; }
+    for(let y=start(y0); y<=y1+1e-9; y+=g){ if(Math.abs(y)<1e-9) continue; ticks+=`<text class="tp-gq2-lab" x="${Math.max(9,axX-5)}" y="${(+my(y)+3.5).toFixed(1)}" text-anchor="end">${(+y.toFixed(4))}</text>`; }
+    ticks+=`<text class="tp-gq2-lab" x="${(hasY?+mx(0)-5:9)}" y="${Math.min(H-3,axY+13)}" text-anchor="end">0</text>`;
+  }
+  const given = s.given? `<path class="tp-gq2-given" d="${gqSample(s.given,x0,x1,y0,y1,W,H)}" fill="none"/>`:'';
+  const ansD = (s.answer&&s.answer.equation)? gqSample(s.answer.equation,x0,x1,y0,y1,W,H) : '';
+  return `<svg class="tp-gq2-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Coordinate plane, x from ${x0} to ${x1}, y from ${y0} to ${y1}${s.given?', showing y = f(x)':''}." data-tp-gq-plane>
+    <defs><clipPath id="gqclip-${i}"><rect x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>
+    <rect class="tp-gq2-surface" x="0" y="0" width="${W}" height="${H}"/>
+    <g clip-path="url(#gqclip-${i})">${grid}${axes}${given}
+      <path class="tp-gq2-answer" d="${ansD}" fill="none" data-tp-gq-answercurve style="display:none"/>
+      <path class="tp-gq2-student" fill="none" data-tp-gq-studentcurve style="display:none"/>
+      <g data-tp-gq-points></g>
+      <circle class="tp-gq2-pt" data-tp-gq-cursor r="6" style="display:none;opacity:.4" pointer-events="none"/>
+    </g>${ticks}
+    <rect x="0" y="0" width="${W}" height="${H}" fill="transparent" data-tp-gq-hit${wantPts?` tabindex="0" role="application" aria-label="Plot area — arrow keys move the cursor, Enter places or removes a point"`:''} style="cursor:${wantPts?'crosshair':'default'}"/>
+  </svg>`;
+}
+function renderGraphQuestion(s,i){
+  const mode = s.answerMode==='points'?'points':s.answerMode==='both'?'both':'equation';
+  const wantEq = mode==='equation'||mode==='both';
+  const wantPts = mode==='points'||mode==='both';
+  const givenTxt = s.given? `<div class="tp-gq2-given-note">Given: <span class="tp-gq2-fx">y = f(x)</span> is drawn on the plane.</div>`:'';
+  const eqPanel = wantEq? `<div class="tp-gq2-eq" data-tp-eqwrap>
+      <label class="tp-gq2-eqlabel">Enter your answer: <span class="tp-gq2-yeq">y =</span></label>
+      <div class="tp-eqribbon"><div class="tp-eqsymwell" data-tp-eqsym></div><div class="tp-eqstructs" data-tp-eqstructs></div></div>
+      <div class="tp-eqfieldwrap"><div class="tp-eqfield" data-tp-eqfield tabindex="0" role="textbox" aria-label="Type your equation answer"></div><div class="tp-eqcaret" data-tp-eqcaret></div></div>
+    </div>`:'';
+  const ptPanel = wantPts? `<div class="tp-gq2-pts"><div class="tp-gq2-ptshead">${tpIc('target',15)||''} Plot points <span class="tp-gq2-ptscount" data-tp-gq-ptscount>0 placed</span></div>
+      <p class="tp-gq2-ptshint">Click the plane to place a point${(+s.snap!==0)?' (snaps to the grid)':''}. Click a point to remove it. <button class="tp-gq2-ptsclear" type="button" data-tp-gq-ptsclear>Clear points</button></p></div>`:'';
+  const working = s.working? `<div class="tp-gq2-working"><div class="tp-gq2-workhead">${tpIc('pen',15)||''} Show your working</div>
+      <div class="tp-ink-pad" data-tp-ink="gqink${i}">
+        <div class="tp-ink-toolbar" role="toolbar" aria-label="Handwriting tools">
+          <button class="tp-ink-btn" type="button" data-tp-ink-tool="pen" aria-pressed="true">${tpIc('pen',15)} Pen</button>
+          <button class="tp-ink-btn" type="button" data-tp-ink-tool="eraser" aria-pressed="false">Eraser</button>
+          <button class="tp-ink-btn" type="button" data-tp-ink-undo aria-label="Undo last stroke">${tpIc('arrowLeft',15)} Undo</button>
+          <button class="tp-ink-btn" type="button" data-tp-ink-clear aria-label="Clear all strokes">${tpIc('x',15)} Clear</button>
+        </div>
+        <canvas class="tp-ink-canvas" data-tp-ink-canvas width="1000" height="380" role="img" aria-label="Working area — draw with a pen, mouse or finger. Ephemeral."></canvas>
+      </div></div>`:'';
+  return `<main class="tp-main tp-scrollmain"><div class="tp-wrap tp-gq2-wrap" data-tp-gq="${i}" data-tp-gq-mode="${mode}">
+    <div class="tp-gq2-head">
+      ${s.eyebrow?`<span class="tp-gq2-eyebrow">${esc(s.eyebrow)}</span>`:''}
+      ${s.title?`<h1 class="tp-gq2-title">${esc(s.title)}</h1>`:''}
+      ${s.marks?`<span class="tp-gq2-marks">${esc(s.marks)}</span>`:''}
+    </div>
+    ${s.prompt?`<p class="tp-gq2-prompt">${tpRichMath(s.prompt)}</p>`:''}
+    <div class="tp-gq2-grid">
+      <div class="tp-gq2-planecol">${gqPlane(s,i)}</div>
+      <div class="tp-gq2-answercol">
+        ${givenTxt}${eqPanel}${ptPanel}
+        <div class="tp-gq2-actions"><button class="tp-gq2-submit" type="button" data-tp-gq-submit>${tpIc('check',15)||''} Check answer</button></div>
+        <div class="tp-gq2-feedback" data-tp-gq-feedback aria-live="polite"></div>
+      </div>
+    </div>
+    ${working}
+  </div></main>`;
+}
+registerBlock('graphQuestion','imperium',renderGraphQuestion);
+registerBlock('graphQuestion','microhistory',renderGraphQuestion);
+registerBlock('graphQuestion','geolearn',renderGraphQuestion);
+registerBlock('graphQuestion','mathematics',renderGraphQuestion);
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
@@ -5473,6 +5884,75 @@ function wirePack(){
     redraw();   // restore session strokes
   });
   wireGeoModals();
+  // v2 Maths — graphQuestion ([data-tp-gq]): mount the equation editor, click-to-plot, and check by function
+  // SAMPLING so equivalent forms pass, with misconception diagnosis. The "working" pen canvas is wired by the
+  // [data-tp-ink] handler above. Answers live in TP_RUNTIME (ephemeral). snap = INPUT feel; tolerance = MARKING.
+  root.querySelectorAll('[data-tp-gq]').forEach(gq=>{
+    const idx=+gq.dataset.tpGq; const s=(LESSON.slides&&LESSON.slides[idx])||{};
+    const mode=gq.dataset.tpGqMode||'equation';
+    const P=gqParams(s); const SVGNS='http://www.w3.org/2000/svg';
+    const svg=gq.querySelector('[data-tp-gq-plane]'); const rt=tpRT();
+    const toWorld=(cx,cy)=>{ const r=svg.getBoundingClientRect(); const px=(cx-r.left)/r.width*P.W, py=(cy-r.top)/r.height*P.H; return { x:P.x0+px/P.W*(P.x1-P.x0), y:P.y0+(1-py/P.H)*(P.y1-P.y0) }; };
+    const toPix=(x,y)=>({ px:(x-P.x0)/(P.x1-P.x0)*P.W, py:P.H-(y-P.y0)/(P.y1-P.y0)*P.H });
+    // ---- equation editor ----
+    let editor=null; const fld=gq.querySelector('[data-tp-eqfield]');
+    if(fld && (mode==='equation'||mode==='both')){
+      const eqKey='gqeq'+idx; const saved=rt.ans[eqKey];
+      editor=TPMath.editor(fld, gq.querySelector('[data-tp-eqcaret]'), gq.querySelector('[data-tp-eqsym]'), gq.querySelector('[data-tp-eqstructs]'),
+        { initial:(saved&&saved.tree)?saved.tree:null, onChange:()=>{ rt.ans[eqKey]={ tree:editor?editor.tree():null, latex:editor?editor.latex():'' }; } });
+    }
+    // ---- points (click-to-plot + keyboard) ----
+    const ptsKey='gqpts'+idx;
+    let pts=Array.isArray(rt.ans[ptsKey])?rt.ans[ptsKey].map(p=>p.slice()):[];
+    const ptsG=gq.querySelector('[data-tp-gq-points]'), ptCount=gq.querySelector('[data-tp-gq-ptscount]');
+    const snap=(+s.snap===0)?0:(+s.snap>0?+s.snap:P.g);
+    const drawPts=()=>{ if(!ptsG) return; ptsG.innerHTML=''; pts.forEach(([x,y])=>{ const {px,py}=toPix(x,y); const c=document.createElementNS(SVGNS,'circle'); c.setAttribute('class','tp-gq2-pt'); c.setAttribute('cx',px.toFixed(1)); c.setAttribute('cy',py.toFixed(1)); c.setAttribute('r','6'); ptsG.appendChild(c); }); if(ptCount) ptCount.textContent=pts.length+(pts.length===1?' placed':' placed'); rt.ans[ptsKey]=pts.map(p=>p.slice()); };
+    const togglePt=(x,y)=>{ if(snap){ x=Math.round(x/snap)*snap; y=Math.round(y/snap)*snap; } const near=pts.findIndex(([a,b])=>Math.hypot(a-x,b-y)<(snap?snap*0.5:(P.x1-P.x0)*0.02)); if(near>=0) pts.splice(near,1); else pts.push([x,y]); drawPts(); };
+    if(mode==='points'||mode==='both'){
+      drawPts();
+      const hit=gq.querySelector('[data-tp-gq-hit]'), cursor=gq.querySelector('[data-tp-gq-cursor]');
+      if(hit){
+        hit.addEventListener('click',e=>{ const {x,y}=toWorld(e.clientX,e.clientY); togglePt(x,y); });
+        let cx=0, cy=0;                                       // keyboard cursor (world coords), snapped to lattice
+        const step=snap||((P.x1-P.x0)/20);
+        const showCursor=()=>{ if(!cursor) return; const {px,py}=toPix(cx,cy); cursor.setAttribute('cx',px.toFixed(1)); cursor.setAttribute('cy',py.toFixed(1)); cursor.style.display=''; };
+        hit.addEventListener('focus',()=>{ cx=Math.min(Math.max(0,P.x0),P.x1); cy=Math.min(Math.max(0,P.y0),P.y1); showCursor(); });
+        hit.addEventListener('blur',()=>{ if(cursor) cursor.style.display='none'; });
+        hit.addEventListener('keydown',e=>{ const k=e.key;
+          if(k==='ArrowLeft'){cx=Math.max(P.x0,cx-step);} else if(k==='ArrowRight'){cx=Math.min(P.x1,cx+step);}
+          else if(k==='ArrowUp'){cy=Math.min(P.y1,cy+step);} else if(k==='ArrowDown'){cy=Math.max(P.y0,cy-step);}
+          else if(k==='Enter'||k===' '){ togglePt(cx,cy); } else return;
+          e.preventDefault(); showCursor(); });
+      }
+      const clr=gq.querySelector('[data-tp-gq-ptsclear]'); if(clr) clr.addEventListener('click',()=>{ pts=[]; drawPts(); });
+    }
+    // ---- check (sampling + misconception) ----
+    const fb=gq.querySelector('[data-tp-gq-feedback]'), studentCurve=gq.querySelector('[data-tp-gq-studentcurve]'), answerCurve=gq.querySelector('[data-tp-gq-answercurve]');
+    const setFb=(html,cls)=>{ if(fb){ fb.innerHTML=html; fb.className='tp-gq2-feedback '+cls; } };
+    const submit=gq.querySelector('[data-tp-gq-submit]');
+    if(submit) submit.addEventListener('click',()=>{
+      let ok=false, msg='';
+      if(mode==='equation'||mode==='both'){
+        const c=editor?editor.compile():null;
+        if(!c || c.error || (editor && editor.latex().trim()==='')){ setFb('Enter an equation first.','bad'); return; }
+        const tgt=(s.answer&&s.answer.equation)?TPMath.compile(s.answer.equation):null;
+        if(tgt && !tgt.error && gqEqEqual(c.eval,tgt.eval,P.x0,P.x1)) ok=true;
+        else { const mis=Array.isArray(s.misconceptions)?s.misconceptions:[];
+          for(const mc of mis){ const mf=TPMath.compile(mc.equation||''); if(mf && !mf.error && gqEqEqual(c.eval,mf.eval,P.x0,P.x1)){ msg=mc.message||''; break; } } }
+        if(studentCurve && editor){ studentCurve.setAttribute('d',gqSample(c.eval,P.x0,P.x1,P.y0,P.y1,P.W,P.H)); studentCurve.style.display=''; }
+      }
+      if(mode==='points' || (mode==='both' && ok)){
+        const ans=(s.answer&&Array.isArray(s.answer.points))?s.answer.points:[];
+        const tol=(+s.tolerance>0)?+s.tolerance:0.25;
+        const pOk = ans.length>0 && ans.every(([ax,ay])=>pts.some(([px,py])=>Math.hypot(px-ax,py-ay)<=tol)) && pts.every(([px,py])=>ans.some(([ax,ay])=>Math.hypot(px-ax,py-ay)<=tol));
+        ok = (mode==='points')? pOk : (ok && (ans.length? pOk : true));
+      }
+      if(answerCurve && answerCurve.getAttribute('d')) answerCurve.style.display='';
+      if(ok) setFb(tpIc('check',15)+' Correct — well done.','ok');
+      else if(msg) setFb(tpRichMath(msg),'bad');
+      else setFb('Not quite. Compare your curve with the model answer now shown on the plane.','bad');
+    });
+  });
   const kc=root.querySelector('[data-tp-kc]'); if(!kc) return;
   const cont=root.querySelector('[data-tp-continue]');
   const opts=[...kc.querySelectorAll('[data-tp-opt]')];
@@ -6075,7 +6555,7 @@ function convertSlide(idx,to){
   selZone='heading'; renderNav(); renderSlide(); $('#stage').scrollTop=0;
 }
 // zone to auto-select after inserting, so the new slide opens editable in the inspector
-const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title',labeledGraphic:'title',timeline:'title',penResponse:'title'};
+const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title',labeledGraphic:'title',timeline:'title',penResponse:'title',graphQuestion:'title'};
 function insertSlide(type, atIndex){
   if(!PACK_FACTORY[type] && !SLIDE_FACTORY[type]) return;
   const idx=Math.max(0,Math.min(LESSON.slides.length, atIndex));
@@ -6124,6 +6604,7 @@ const PACK_FACTORY={
   labeledGraphic:{type:'labeledGraphic',eyebrow:'Examine the source',title:'Labelled diagram',image:'',markers:[{n:1,x:34,y:30,title:'Feature one',body:'What this feature shows.',real:'What to look for on the real object.'},{n:2,x:62,y:55,title:'Feature two',body:'Why it matters.'}],caption:'',railLabel:'Callouts'},
   timeline:{type:'timeline',eyebrow:'Change over time',title:'Timeline',events:[{date:'Date one',title:'First event',body:'What happened, with a ==keyterm== and a [[recordable fact]].',note:'',image:''},{date:'Date two',title:'Second event',body:'How things changed.',note:'',image:''},{date:'Date three',title:'Third event',body:'The outcome.',note:'',image:''}]},
   penResponse:{type:'penResponse',eyebrow:'Show your working',title:'Work it out',prompt:'Write or sketch your response in the space below.'},
+  graphQuestion:{type:'graphQuestion',eyebrow:'Graphing',title:'Translate the graph',prompt:'The curve $y=f(x)$ is drawn below. Write the equation of $y=f(x-2)$.',domain:[-6,6],range:[-2,10],grid:2,given:'x^2',answerMode:'equation',answer:{equation:'(x-2)^2',points:[]},misconceptions:[{equation:'(x+2)^2',message:'That shifts the graph LEFT. $y=f(x-2)$ shifts it RIGHT by 2.'}],snap:1,tolerance:0.25,working:true},
   outro:{type:'outro',eyebrow:'Lesson complete',title:'Well done',subtitle:'You have finished this lesson.',stats:[],recap:[]},
 };
 /* per-type palette label + wireframe (currentColor = accent) */
@@ -6135,6 +6616,7 @@ const PACK_PALETTE={
   labeledGraphic:{label:'Labeled graphic',wf:'<rect x="6" y="8" width="46" height="36" rx="3" class="f"/><circle cx="20" cy="20" r="4" class="s"/><circle cx="38" cy="30" r="4" class="s"/><rect x="58" y="11" width="16" height="3" class="l2"/><rect x="58" y="19" width="16" height="3"/><rect x="58" y="27" width="16" height="3"/><rect x="58" y="35" width="12" height="3"/>'},
   timeline:{label:'Timeline',wf:'<circle cx="12" cy="13" r="4" class="s"/><circle cx="12" cy="26" r="4" class="s"/><circle cx="12" cy="39" r="4" class="l2"/><rect x="12" y="11" width="2" height="30" class="f"/><rect x="24" y="10" width="14" height="3" class="l2"/><rect x="24" y="16" width="48" height="3"/><rect x="24" y="23" width="14" height="3" class="l2"/><rect x="24" y="29" width="44" height="3"/><rect x="24" y="36" width="14" height="3" class="l2"/><rect x="24" y="42" width="40" height="3"/>'},
   penResponse:{label:'Pen response',wf:'<rect x="6" y="10" width="68" height="34" rx="3" class="f"/><path d="M14 34 Q22 20 30 30 T46 28 Q54 22 60 32" class="s"/><rect x="10" y="6" width="10" height="3" rx="1" class="l2"/>'},
+  graphQuestion:{label:'Graph question',wf:'<rect x="6" y="8" width="42" height="38" rx="3" class="f"/><path d="M6 30 H48 M24 8 V46" class="s"/><path d="M9 45 Q27 6 45 45" class="s"/><rect x="54" y="12" width="20" height="5" rx="1" class="l2"/><rect x="54" y="22" width="20" height="12" rx="2" class="f"/>'},
   infographic:{label:'Infographic',wf:'<rect x="6" y="8" width="68" height="26" rx="3" class="f"/><rect x="8" y="40" width="14" height="6" class="s"/><rect x="26" y="38" width="14" height="8" class="l2"/><rect x="44" y="42" width="14" height="4" class="s"/>'},
   video:{label:'Video',wf:'<rect x="10" y="8" width="60" height="34" rx="3" class="f"/><path d="M35 17 L35 33 L49 25 Z" class="l2"/><rect x="24" y="46" width="32" height="3" rx="1"/>'},
   knowledgeCheck:{label:'Knowledge check',wf:'<rect x="6" y="9" width="50" height="4" rx="2" class="l2"/><rect x="6" y="20" width="68" height="7" rx="3" class="s"/><rect x="6" y="31" width="68" height="7" rx="3" class="f"/>'},
