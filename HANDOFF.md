@@ -38,6 +38,7 @@ scripts/
 assets/vendor/              # same-origin runtime assets (model-viewer.min.js, sample-cube.glb)
 lessons/                    # exported, published lessons (served to students)
   README.md
+docs/v3/v3-composable-pages.md  # v3 plan — composable pages & object interactivity (read before Phase A)
 .github/workflows/
   validate.yml              # runs scripts/validate.mjs on every PR/push
   automerge.yml             # enables GitHub auto-merge on clean PRs
