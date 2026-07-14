@@ -223,8 +223,9 @@ An interactive **coordinate plane** paired with an answer surface. The student a
 function** in the full equation editor (`answerMode: "equation"`), **plotting points** on the plane
 (`"points"`), or **both**. Marking is by **function sampling**, so any algebraically‑equivalent form is
 accepted — `(x-2)^2` and `x^2-4x+4` are both correct. Optionally lists **misconceptions** (wrong‑way
-answers) that return a specific message, and can embed a **“show your working” pen canvas**. Prose fields
-support inline `$…$` math. Answers are **session‑kept** (ephemeral, like every other response).
+answers) that return a specific message. Prose fields support inline `$…$` math. Answers are
+**session‑kept** (ephemeral, like every other response). For "show your working", place a `penResponse`
+block beside it on a composed page (see composable pages) — the old `working:true` flag was removed in v3 A2.
 
 `snap` controls the plotting *input feel* (lattice); `tolerance` controls *marking* — the two are separate.
 
@@ -241,7 +242,6 @@ support inline `$…$` math. Answers are **session‑kept** (ephemeral, like eve
 | `misconceptions[]` | `{equation, message}` | If the student’s function matches `equation`, show `message` (supports `$…$`). |
 | `snap` | number | Point‑plot snap step; `0` = free plotting (default `1`). |
 | `tolerance` | number | Marking tolerance in world units for points (default `0.25`). |
-| `working` | boolean | Embed a pen “show your working” canvas below the question. |
 
 Author syntax for equations (prompt `$…$` and the editor both accept it): `x^2  a_1  (x-2)^2
 \frac{a}{b}  \sqrt{x}  \sqrt[3]{x}  \pi  \theta  \le  \times  \sin(x)`; ASCII `-` renders as a real
