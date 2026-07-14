@@ -8,6 +8,28 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Composable pages — A1 keystone + per-block-instance scoping (v3 Phase A).** Slides can now be a **stack
+  of blocks**, not one-block-per-slide. Additive: `renderPackSlide` renders `s.blocks[]` as fragments into a
+  `.tp-flow` auto-layout (`max-width:var(--tp-measure)` — the one width authority (#92) — flex column, gap
+  token); **absent `blocks[]` → the existing path, byte-identical.** `registerBlock(type,theme,pageFn,fragFn?)`
+  gains an optional fragment renderer stored in a **parallel `FRAG` map** (NOT boxed into `REGISTRY`, so the
+  legacy `REGISTRY[type][theme]` lookup and byte-identical page path are untouched); absent `fragFn` → the
+  block stays page-only (correct for title/outro/sourceAnalysis/…). **The real work was scoping**, per the
+  diagnose-first: fragments carry a per-instance block key `bk=${i}-${k}` and a `data-tp-block-path`, and (a)
+  `fragPenResponse` uses a bk-unique `data-tp-ink` so two pens on one page get **independent** strokes
+  (`wirePack`'s `[data-tp-ink]` already keys `rt.ans` by the attribute — no wiring change); (b) `graphQuestion`
+  wiring **stops reading `LESSON.slides[idx]`** and resolves its **own block** via the nearest
+  `[data-tp-block-path]` (fallback to the slide for the legacy page path — the silent-breakage bug fixed); (c)
+  `knowledgeCheck` wiring goes `querySelector → querySelectorAll` and **drops the `if(!kc) return` early return**
+  that skipped all wiring after it. First fragments: `penResponse` (exposes the slide-index collision, proves
+  the fix) and a **lean `text` primitive** (`fragText` — eyebrow + heading + prose with inline `$…$`; NOT
+  packText's humanities doc-grid, which stays page-only). Composite slides show **“Page”** in the editor rail.
+  Verified: **200** legacy renders byte-identical (every type × 4 themes × Study/Present + the example corpus);
+  a composite of two `penResponse` + a `text` renders in order in all four themes with **distinct ids
+  (`ink-0-0`/`ink-0-2`), independent `rt.ans` keys (draw on one, the other is untouched), zero duplicate DOM
+  ids**; Present keeps the whole flow in `.tp-main` with no separate flow scroll; legacy knowledgeCheck +
+  graphQuestion wiring regression-tested; validate green; 0 console errors. `graphQuestion.working:true`
+  becomes removable in A2 once composability lands. One file; no new third-party host.
 - **Graph-question block (PR3b) — `graphQuestion`, interactive coordinate plane + answer surface.** Consumes
   the PR3a maths capability. A token-driven SVG plane (one grid implementation skinned by
   `--graph-surface`/`-grid`/`-axis`, no per-theme copies) drawn from `domain`/`range`, with axes, labelled
