@@ -2219,6 +2219,15 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-ink-btn[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary);}
 .tp-slide .tp-ink-btn:focus-visible,.tp-slide .tp-ink-btn:focus{outline:3px solid var(--focus-ring);outline-offset:2px;}
 .tp-slide .tp-ink-canvas{display:block;width:100%;height:auto;aspect-ratio:1000/560;background:var(--graph-surface,var(--surface-lowest));color:var(--ink);touch-action:none;cursor:crosshair;}
+/* v3 A1 — composable-page auto-layout flow. One width authority (--tp-measure, #92); blocks stack in order
+   with a gap token. Fragments emit content only and inherit width from the flow. Theme via slots only. */
+.tp-slide .tp-flow{width:100%;max-width:var(--tp-measure);margin:auto;display:flex;flex-direction:column;gap:var(--tp-flow-gap,30px);padding:8px 6px 20px;}
+.tp-slide .tp-frag{width:100%;min-width:0;}
+.tp-slide .tp-frag-eyebrow{display:block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:6px;}
+.tp-slide .tp-frag-h{font-family:var(--tp-serif);font-weight:700;font-size:24px;line-height:1.14;letter-spacing:-.01em;margin:0 0 10px;color:var(--on-surface);}
+.tp-slide .tp-frag-prose{font-family:var(--tp-body);font-size:16px;line-height:1.65;color:var(--on-surface);}
+.tp-slide .tp-frag-prose p{margin:0 0 12px;} .tp-slide .tp-frag-prose p:last-child{margin-bottom:0;}
+.tp-slide .tp-frag-na{border:1px dashed var(--outline-variant);border-radius:var(--tp-rad-btn);padding:14px 16px;color:var(--on-surface-variant);font-family:var(--tp-body);font-size:14px;}
 /* graphQuestion (PR3b) — token-driven coordinate plane + answer surface; theme only via slots (no literal colour) */
 .tp-slide .tp-gq2-wrap{width:100%;max-width:var(--tp-measure);margin:0 auto;display:flex;flex-direction:column;gap:16px;padding:6px 6px 18px;}
 .tp-slide .tp-gq2-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
@@ -2911,7 +2920,7 @@ function renderNav(){
   nav.innerHTML=LESSON.slides.map((s,i)=>`
     <div class="nitem ${i===cur?'on':''}" data-go="${i}" ${mode==='edit'?'draggable="true"':''}>
       <div class="ico">${ICON[s.type]||ICON.notes}</div>
-      <div class="tx"><b>${esc(title(s))}</b><span>${TYPELAB[s.type]||s.type}</span></div>
+      <div class="tx"><b>${esc(title(s))}</b><span>${s.blocks?'Page':(TYPELAB[s.type]||s.type)}</span></div>
       <div class="grip">
         <button data-move="${i}:-1" title="Up">▲</button>
         <button data-move="${i}:1" title="Down">▼</button>
@@ -5553,8 +5562,8 @@ function packInteractive(s){
    renderPackSlide resolves REGISTRY[type][theme]. Theme-primary semantics preserved — three renderers per
    type stay three renderers, just registered instead of switched. Pure dispatch refactor: output is
    byte-identical. New blocks (3b: labeledGraphic) register the same way. */
-const REGISTRY={}, THEME_TYPES={};
-function registerBlock(type,theme,fn){ (REGISTRY[type]||(REGISTRY[type]={}))[theme]=fn; (THEME_TYPES[theme]||(THEME_TYPES[theme]=[])).push(type); }   // THEME_TYPES[theme] preserves registration order = the former Object.keys(*_PACK) order (drives the editor palette)
+const REGISTRY={}, THEME_TYPES={}, FRAG={};   // FRAG = parallel fragment-renderer map (v3 A1); NOT boxed into REGISTRY so the legacy `REGISTRY[type][theme]` lookup + byte-identical page path are untouched
+function registerBlock(type,theme,pageFn,fragFn){ (REGISTRY[type]||(REGISTRY[type]={}))[theme]=pageFn; if(fragFn)(FRAG[type]||(FRAG[type]={}))[theme]=fragFn; (THEME_TYPES[theme]||(THEME_TYPES[theme]=[])).push(type); }   // 4th arg optional: absent → block is page-only (title/outro/etc.). THEME_TYPES preserves registration order (drives the editor palette)
 // imperium
 registerBlock('title','imperium',imTitle); registerBlock('outcomes','imperium',imOutcomes); registerBlock('imageText','imperium',imImageText); registerBlock('text','imperium',packText); registerBlock('infographic','imperium',imInfographic); registerBlock('video','imperium',imVideo); registerBlock('knowledgeCheck','imperium',imKnowledge); registerBlock('sourceAnalysis','imperium',packSourceAnalysis); registerBlock('guidedResponse','imperium',packGuidedResponse); registerBlock('interactive','imperium',packInteractive); registerBlock('outro','imperium',packOutro);
 // microhistory
@@ -5668,10 +5677,37 @@ function renderPenResponse(s,i){
     </div>
   </div></main>`;
 }
-registerBlock('penResponse','imperium',renderPenResponse);
-registerBlock('penResponse','microhistory',renderPenResponse);
-registerBlock('penResponse','geolearn',renderPenResponse);
-registerBlock('penResponse','mathematics',renderPenResponse);
+/* v3 A1 — FRAGMENT renderers (content only, per-instance bk-scoped ids; theme-agnostic, one fn × 4 themes).
+   fragPenResponse: the pen pad with a bk-UNIQUE data-tp-ink, so two on one page get independent strokes —
+   wirePack's [data-tp-ink] handler already keys rt.ans by the attribute, needing NO wiring change. The page
+   renderer renderPenResponse is untouched (stays 'ink'+i for legacy byte-identity). */
+function fragPenResponse(b,bk){
+  const fid='ink-'+bk, prompt=b.prompt||b.body||'';
+  return `${b.eyebrow?`<span class="tp-ink-eyebrow">${esc(b.eyebrow)}</span>`:''}${b.title?`<h2 class="tp-frag-h">${esc(b.title)}</h2>`:''}${prompt?`<p class="tp-ink-prompt">${tpRich(prompt)}</p>`:''}
+    <div class="tp-ink-pad" data-tp-ink="${esc(fid)}">
+      <div class="tp-ink-toolbar" role="toolbar" aria-label="Handwriting tools">
+        <button class="tp-ink-btn" type="button" data-tp-ink-tool="pen" aria-pressed="true">${tpIc('pen',15)} Pen</button>
+        <button class="tp-ink-btn" type="button" data-tp-ink-tool="eraser" aria-pressed="false">Eraser</button>
+        <button class="tp-ink-btn" type="button" data-tp-ink-undo aria-label="Undo last stroke">${tpIc('arrowLeft',15)} Undo</button>
+        <button class="tp-ink-btn" type="button" data-tp-ink-clear aria-label="Clear all strokes">${tpIc('x',15)} Clear</button>
+      </div>
+      <canvas class="tp-ink-canvas" data-tp-ink-canvas width="1000" height="560" role="img" aria-label="Handwriting response area — draw with a pen, mouse or finger. Ephemeral: not saved across reload."></canvas>
+    </div>`;
+}
+/* fragText: a LEAN composable text primitive — eyebrow + heading + prose (inline $…$ via tpRichMath). NOT
+   packText (which carries the humanities doc-grid: prose + polaroid + note + progress); packText stays
+   page-only. Body accepts a string or an array of strings/{content|text}. */
+function fragText(b,bk){
+  const body=Array.isArray(b.body)?b.body:((b.body!=null&&b.body!=='')?[b.body]:[]);
+  const head=b.title||b.heading||'';
+  return `${b.eyebrow?`<span class="tp-frag-eyebrow">${esc(b.eyebrow)}</span>`:''}${head?`<h2 class="tp-frag-h">${esc(head)}</h2>`:''}<div class="tp-frag-prose">${body.map(p=>{ const t=typeof p==='string'?p:((p&&(p.content||p.text))||''); return `<p>${tpRichMath(t)}</p>`; }).join('')}</div>`;
+}
+registerBlock('penResponse','imperium',renderPenResponse,fragPenResponse);
+registerBlock('penResponse','microhistory',renderPenResponse,fragPenResponse);
+registerBlock('penResponse','geolearn',renderPenResponse,fragPenResponse);
+registerBlock('penResponse','mathematics',renderPenResponse,fragPenResponse);
+/* text — register the lean fragment alongside each theme's page renderer (page fn unchanged) */
+FRAG.text={imperium:fragText,microhistory:fragText,geolearn:fragText,mathematics:fragText};
 /* v2 Maths — graphQuestion (PR3b): a token-driven SVG coordinate plane + an answer surface. The student
    enters a function with the full equation editor (answerMode 'equation'/'both', mounted in wirePack via
    TPMath.editor) and/or plots points on the plane (answerMode 'points'/'both'). Marking is by FUNCTION
@@ -5812,9 +5848,24 @@ function tpTokenStyle(s){
   const keys=Object.keys(merged); if(!keys.length) return '';
   return ' style="'+keys.map(k=>'--'+k+':'+esc(merged[k])).join(';')+'"';   // esc() kept as attribute-context defence-in-depth
 }
+/* v3 A1 — composable-page fragment. A block on a composed page renders CONTENT ONLY (no <main>/<tp-wrap>);
+   the flow supplies chrome + width. Each fragment is wrapped in a .tp-frag carrying a per-instance block key
+   (bk = `${i}-${k}`) and its data path, so wiring can scope ids and resolve the block object (not the slide).
+   A type with no registered fragment stays page-only and shows a placeholder if dropped into a flow. */
+function renderFragment(b,i,k,theme){
+  const bk=i+'-'+k;
+  const fn=FRAG[b.type]&&FRAG[b.type][theme];
+  if(!fn) return `<div class="tp-frag tp-frag-na" data-tp-frag-type="${esc(b.type||'')}"><p>Block “${esc(b.type||'')}” can’t be placed on a composed page yet.</p></div>`;
+  let inner; try{ inner=fn(b,bk,i,k); }catch(e){ inner=`<p>Block render error: ${esc(String(e.message||e))}</p>`; }
+  return `<div class="tp-frag" data-tp-frag="${esc(bk)}" data-tp-block-path="slides.${i}.blocks.${k}" data-tp-frag-type="${esc(b.type||'')}">${inner}</div>`;
+}
 function renderPackSlide(s,i,present){
   const theme=(LESSON.meta&&LESSON.meta.theme)||'';
-  const byType=REGISTRY[s.type];                 // type×theme registry (Phase 3a); unknown type or theme → packFallback (matches the former IM/MH/GL_PACK lookup)
+  if(Array.isArray(s.blocks)){                   // v3 A1 — composite slide: a STACK of block fragments in an auto-layout flow
+    const inner=s.blocks.map((b,k)=>renderFragment(b,i,k,theme)).join('');
+    return `<div class="tp-slide"${tpTokenStyle(s)} data-tp-theme="${esc(theme)}" data-tp-type="page"><main class="tp-main tp-scrollmain"><div class="tp-flow">${inner}</div></main></div>`;
+  }
+  const byType=REGISTRY[s.type];                 // LEGACY type×theme registry (Phase 3a) — unchanged; no blocks[] → byte-identical
   const fn=(byType&&byType[theme])||packFallback;
   let inner; try{ inner=fn(s,i); }catch(e){ inner=`<main class="tp-main"><div class="tp-wrap">Render error: ${esc(String(e.message||e))}</div></main>`; }
   return `<div class="tp-slide"${tpTokenStyle(s)} data-tp-theme="${esc(theme)}" data-tp-type="${esc(s.type||'')}">${inner}</div>`;
@@ -5888,7 +5939,8 @@ function wirePack(){
   // SAMPLING so equivalent forms pass, with misconception diagnosis. The "working" pen canvas is wired by the
   // [data-tp-ink] handler above. Answers live in TP_RUNTIME (ephemeral). snap = INPUT feel; tolerance = MARKING.
   root.querySelectorAll('[data-tp-gq]').forEach(gq=>{
-    const idx=+gq.dataset.tpGq; const s=(LESSON.slides&&LESSON.slides[idx])||{};
+    const idx=+gq.dataset.tpGq; const bp=gq.closest('[data-tp-block-path]');
+    const s=bp?(getP(LESSON,bp.dataset.tpBlockPath)||{}):((LESSON.slides&&LESSON.slides[idx])||{});   // composite fragment → resolve its OWN block (not the slide); legacy page → LESSON.slides[i] (byte-identical behaviour)
     const mode=gq.dataset.tpGqMode||'equation';
     const P=gqParams(s); const SVGNS='http://www.w3.org/2000/svg';
     const svg=gq.querySelector('[data-tp-gq-plane]'); const rt=tpRT();
@@ -5953,20 +6005,21 @@ function wirePack(){
       else setFb('Not quite. Compare your curve with the model answer now shown on the plane.','bad');
     });
   });
-  const kc=root.querySelector('[data-tp-kc]'); if(!kc) return;
-  const cont=root.querySelector('[data-tp-continue]');
-  const opts=[...kc.querySelectorAll('[data-tp-opt]')];
-  let answered=false;
-  opts.forEach(opt=>opt.addEventListener('click',()=>{
-    if(answered && opt.dataset.tpCorrect!=='1') return;      // once correct chosen, lock; allow retry while wrong
-    const correct=opt.dataset.tpCorrect==='1';
-    opts.forEach(o=>o.classList.remove('tp-opt-sel'));
-    opt.classList.add('tp-opt-sel', correct?'tp-opt-correct':'tp-opt-wrong');
-    const fb=kc.querySelector(correct?'[data-tp-fb="correct"]':'[data-tp-fb="incorrect"]');
-    kc.querySelectorAll('[data-tp-fb]').forEach(f=>f.hidden=true);
-    if(fb) fb.hidden=false;
-    if(correct){ answered=true; kc.dataset.tpDone='1'; if(cont){ cont.disabled=false; } }   // tp-done unlocks present click-advance past the gate
-  }));
+  root.querySelectorAll('[data-tp-kc]').forEach(kc=>{               // v3 A1: querySelectorAll + NO early-return — a composite may hold >1 kc, and dropping `if(!kc) return` stops it skipping any wiring placed after it
+    const cont=root.querySelector('[data-tp-continue]');
+    const opts=[...kc.querySelectorAll('[data-tp-opt]')];
+    let answered=false;
+    opts.forEach(opt=>opt.addEventListener('click',()=>{
+      if(answered && opt.dataset.tpCorrect!=='1') return;      // once correct chosen, lock; allow retry while wrong
+      const correct=opt.dataset.tpCorrect==='1';
+      opts.forEach(o=>o.classList.remove('tp-opt-sel'));
+      opt.classList.add('tp-opt-sel', correct?'tp-opt-correct':'tp-opt-wrong');
+      const fb=kc.querySelector(correct?'[data-tp-fb="correct"]':'[data-tp-fb="incorrect"]');
+      kc.querySelectorAll('[data-tp-fb]').forEach(f=>f.hidden=true);
+      if(fb) fb.hidden=false;
+      if(correct){ answered=true; kc.dataset.tpDone='1'; if(cont){ cont.disabled=false; } }   // tp-done unlocks present click-advance past the gate
+    }));
+  });
 }
 
 /* ===== NEW TYPED-ANSWER + OUTRO PACK TYPES (sourceAnalysis, guidedResponse, outro) ===== */
