@@ -2260,12 +2260,11 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-gq2-feedback.ok{background:var(--okbg,#e7f4ee);color:var(--ok,#1f7a54);border:1px solid var(--ok,#1f7a54);}
 .tp-slide .tp-gq2-feedback.bad{background:var(--badbg,#fdeceb);color:var(--bad,#ba1a1a);border:1px solid var(--bad,#ba1a1a);}
 .tp-slide .tp-gq2-feedback math{color:inherit;}
-.tp-slide .tp-gq2-pts,.tp-slide .tp-gq2-working{display:flex;flex-direction:column;gap:6px;}
-.tp-slide .tp-gq2-ptshead,.tp-slide .tp-gq2-workhead{font-size:13px;font-weight:600;color:var(--on-surface);display:flex;align-items:center;gap:6px;}
+.tp-slide .tp-gq2-pts{display:flex;flex-direction:column;gap:6px;}
+.tp-slide .tp-gq2-ptshead{font-size:13px;font-weight:600;color:var(--on-surface);display:flex;align-items:center;gap:6px;}
 .tp-slide .tp-gq2-ptscount{color:var(--on-surface-variant);font-weight:500;}
 .tp-slide .tp-gq2-ptshint{font-size:12.5px;color:var(--on-surface-variant);margin:0;}
 .tp-slide .tp-gq2-ptsclear{background:none;border:0;color:var(--primary);cursor:pointer;font:inherit;font-size:12.5px;text-decoration:underline;padding:0;}
-.tp-slide .tp-gq2-working{margin-top:4px;}
 /* equation editor (PR3b) — ribbon + field + caret, themed via slots */
 .tp-slide .tp-eqribbon{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;background:var(--surface-container,var(--surface-2));border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);padding:7px;}
 .tp-slide .tp-eqsymwell{display:flex;flex-wrap:wrap;gap:3px;max-width:190px;}
@@ -3695,7 +3694,6 @@ function inspectorForm(i,s,sel){
       +T('given','Given curve  y = f(x)  (e.g. x^2)')+T('answer.equation','Answer equation (e.g. (x-2)^2)')
       +T('domain.0','x min')+T('domain.1','x max')+T('range.0','y min')+T('range.1','y max')
       +T('grid','Grid step')+T('snap','Snap step (0 = free plotting)')+T('tolerance','Marking tolerance (world units)')
-      +SEL('working','Show-your-working canvas',[['','No'],['1','Yes — embed the pen canvas']])
       +repeatGroup(i,s,sel,'misconceptions','Misconception','Common mistakes → targeted feedback',(m,j)=>inT('If they answer (equation)',`slides.${i}.misconceptions.${j}.equation`,m.equation)+inA('Feedback message (supports $…$)',`slides.${i}.misconceptions.${j}.message`,m.message),'Add misconception');
     case 'question': return T('skill','Skill')+T('heading','Heading')+qGroup(i,s,sel);
     case 'source': return T('heading','Heading')+T('credit','Credit / citation')+M()+qGroup(i,s,sel);
@@ -5694,13 +5692,60 @@ function fragPenResponse(b,bk){
       <canvas class="tp-ink-canvas" data-tp-ink-canvas width="1000" height="560" role="img" aria-label="Handwriting response area — draw with a pen, mouse or finger. Ephemeral: not saved across reload."></canvas>
     </div>`;
 }
-/* fragText: a LEAN composable text primitive — eyebrow + heading + prose (inline $…$ via tpRichMath). NOT
-   packText (which carries the humanities doc-grid: prose + polaroid + note + progress); packText stays
-   page-only. Body accepts a string or an array of strings/{content|text}. */
+/* fragText: a LEAN composable text primitive — eyebrow + heading + prose (inline $…$ + ==keyterm==/[[note]]
+   via the shared kt). NOT packText (which carries the humanities doc-grid); packText stays page-only. Body
+   is a string or array of strings/{content|text}. keyTerms modals are bk-scoped (ktp-${bk}-k) so two text
+   blocks on one page open their OWN definitions (the id-targeted data-tp-focus-open handler resolves by id).
+   No keyTerms → kt === tpRichMath, so output is unchanged from the A1 lean text. */
 function fragText(b,bk){
   const body=Array.isArray(b.body)?b.body:((b.body!=null&&b.body!=='')?[b.body]:[]);
   const head=b.title||b.heading||'';
-  return `${b.eyebrow?`<span class="tp-frag-eyebrow">${esc(b.eyebrow)}</span>`:''}${head?`<h2 class="tp-frag-h">${esc(head)}</h2>`:''}<div class="tp-frag-prose">${body.map(p=>{ const t=typeof p==='string'?p:((p&&(p.content||p.text))||''); return `<p>${tpRichMath(t)}</p>`; }).join('')}</div>`;
+  const present=document.body.classList.contains('present');
+  const {terms, live, kt}=tpKeyTerms(b, present, 'tp-kt', 'ktp-'+bk+'-');
+  const prose=body.map(p=>{ const t=typeof p==='string'?p:((p&&(p.content||p.text))||''); return `<p>${kt(t)}</p>`; }).join('');
+  const modals=live?terms.map((t,k)=>tpTermModal('ktp-'+bk+'-'+k, t.term||'', t.definition||'')).join(''):'';
+  return `${b.eyebrow?`<span class="tp-frag-eyebrow">${esc(b.eyebrow)}</span>`:''}${head?`<h2 class="tp-frag-h">${esc(head)}</h2>`:''}<div class="tp-frag-prose">${prose}</div>${modals}`;
+}
+/* fragLabeledGraphic: markers + callout rail; callout ids bk-scoped (lgr-${bk}-c${k}) + aria-controls so two
+   labelled graphics on one page don't share callout targets or duplicate ids. Content only (no main/tp-wrap). */
+function fragLabeledGraphic(b,bk){
+  const markers=Array.isArray(b.markers)?b.markers:[];
+  const railLabel=b.railLabel||'Callouts';
+  const clamp=v=>Math.max(0,Math.min(100,(+v||0)));
+  const num=(m,k)=>(m.n!=null&&m.n!=='')?m.n:(k+1);
+  const cid=k=>`lgr-${bk}-c${k}`;
+  const pins=markers.map((m,k)=>`<button class="tp-lgr-pin" type="button" style="left:${clamp(m.x)}%;top:${clamp(m.y)}%" data-lgr-pin="${k}" aria-controls="${cid(k)}" aria-label="Marker ${esc(String(num(m,k)))}${m.title?': '+esc(m.title):''}"><span class="tp-lgr-pinn">${esc(String(num(m,k)))}</span></button>`).join('');
+  const calls=markers.map((m,k)=>`<li class="tp-lgr-call" id="${cid(k)}" data-lgr-call="${k}" tabindex="-1" aria-current="false">
+      <div class="tp-lgr-callhd"><span class="tp-lgr-calln">${esc(String(num(m,k)))}</span>${m.title?`<h3 class="tp-lgr-callt">${esc(m.title)}</h3>`:''}</div>
+      ${m.body?`<p class="tp-lgr-callb">${tpRich(m.body)}</p>`:''}
+      ${m.real?`<div class="tp-lgr-real"><span class="tp-lgr-reall">${tpIc('zoomIn',13)} On the real thing</span><p>${tpRich(m.real)}</p></div>`:''}
+    </li>`).join('');
+  return `${b.eyebrow?`<span class="tp-lgr-eyebrow">${esc(b.eyebrow)}</span>`:''}${b.title?`<h2 class="tp-frag-h">${esc(b.title)}</h2>`:''}
+    <div class="tp-lgr-body" data-tp-lgr>
+      <figure class="tp-lgr-figure">
+        <div class="tp-lgr-frame">${tpImg(b.image,'Labelled diagram','image')}${pins}</div>
+        ${b.caption?`<figcaption class="tp-lgr-cap">${esc(b.caption)}</figcaption>`:''}
+      </figure>
+      <aside class="tp-lgr-rail" aria-label="${esc(railLabel)}">
+        <div class="tp-lgr-railhd">${tpIc('list',14)} ${esc(railLabel)}</div>
+        ${markers.length?`<ol class="tp-lgr-calls">${calls}</ol>`:`<p class="tp-lgr-empty">No callouts yet — add markers with x/y positions.</p>`}
+      </aside>
+    </div>`;
+}
+/* fragKnowledgeCheck: a LEAN check — question + options + feedback (attribute-driven: data-tp-kc / data-tp-opt
+   / data-tp-fb, no ids, no artifact image → no ov-zoom collision). wirePack already wires every [data-tp-kc]
+   (A1's querySelectorAll), and options/feedback are scoped within each card, so two checks gate independently.
+   The rich page renderers (imKnowledge/mhKnowledge/glKnowledge, with artifact + zoom) stay page-only. */
+function fragKnowledgeCheck(b,bk){
+  const opts=Array.isArray(b.options)?b.options:[];
+  const letters=['A','B','C','D','E','F'];
+  const optHtml=opts.map((o,j)=>`<button class="tp-opt" data-tp-opt data-tp-correct="${o.correct?'1':'0'}"><span class="okey">${esc(o.label||letters[j])}</span><span class="otext">${esc(o.text||'')}</span></button>`).join('');
+  return `<div class="tp-kc-card tp-kc-frag" data-tp-kc>
+      ${b.eyebrow?`<span class="tp-kc-eyebrow">${esc(b.eyebrow)}</span>`:''}
+      ${b.question?`<p class="tp-kc-q">${esc(b.question)}</p>`:''}
+      <div class="tp-kc-opts">${optHtml}</div>
+      ${tpFeedback(b.feedback)}
+    </div>`;
 }
 registerBlock('penResponse','imperium',renderPenResponse,fragPenResponse);
 registerBlock('penResponse','microhistory',renderPenResponse,fragPenResponse);
@@ -5708,6 +5753,10 @@ registerBlock('penResponse','geolearn',renderPenResponse,fragPenResponse);
 registerBlock('penResponse','mathematics',renderPenResponse,fragPenResponse);
 /* text — register the lean fragment alongside each theme's page renderer (page fn unchanged) */
 FRAG.text={imperium:fragText,microhistory:fragText,geolearn:fragText,mathematics:fragText};
+/* v3 A2 — register the remaining fragments (page renderers unchanged; frag stored in the parallel FRAG map).
+   One theme-agnostic fragment fn per type across all four themes (styled by the shared tp-lgr-/tp-kc- CSS). */
+FRAG.labeledGraphic={imperium:fragLabeledGraphic,microhistory:fragLabeledGraphic,geolearn:fragLabeledGraphic,mathematics:fragLabeledGraphic};
+FRAG.knowledgeCheck={imperium:fragKnowledgeCheck,microhistory:fragKnowledgeCheck,geolearn:fragKnowledgeCheck,mathematics:fragKnowledgeCheck};
 /* v2 Maths — graphQuestion (PR3b): a token-driven SVG coordinate plane + an answer surface. The student
    enters a function with the full equation editor (answerMode 'equation'/'both', mounted in wirePack via
    TPMath.editor) and/or plots points on the plane (answerMode 'points'/'both'). Marking is by FUNCTION
@@ -5748,7 +5797,7 @@ function gqEqEqual(fA,fB,x0,x1){                               // equal by sampl
     n++; if(Math.abs(a-b) > 1e-4 + 1e-4*Math.abs(b)) return false; }
   return n>0;
 }
-function gqPlane(s,i){
+function gqPlane(s,key){                                       // key = scope for the SVG clipPath id (slide index for a page block, bk for a fragment)
   const {W,H,x0,x1,y0,y1,g}=gqParams(s);
   const wantPts=s.answerMode==='points'||s.answerMode==='both';
   const mx=x=>((x-x0)/(x1-x0)*W).toFixed(1), my=y=>(H-(y-y0)/(y1-y0)*H).toFixed(1);
@@ -5770,9 +5819,9 @@ function gqPlane(s,i){
   const given = s.given? `<path class="tp-gq2-given" d="${gqSample(s.given,x0,x1,y0,y1,W,H)}" fill="none"/>`:'';
   const ansD = (s.answer&&s.answer.equation)? gqSample(s.answer.equation,x0,x1,y0,y1,W,H) : '';
   return `<svg class="tp-gq2-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Coordinate plane, x from ${x0} to ${x1}, y from ${y0} to ${y1}${s.given?', showing y = f(x)':''}." data-tp-gq-plane>
-    <defs><clipPath id="gqclip-${i}"><rect x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>
+    <defs><clipPath id="gqclip-${key}"><rect x="0" y="0" width="${W}" height="${H}"/></clipPath></defs>
     <rect class="tp-gq2-surface" x="0" y="0" width="${W}" height="${H}"/>
-    <g clip-path="url(#gqclip-${i})">${grid}${axes}${given}
+    <g clip-path="url(#gqclip-${key})">${grid}${axes}${given}
       <path class="tp-gq2-answer" d="${ansD}" fill="none" data-tp-gq-answercurve style="display:none"/>
       <path class="tp-gq2-student" fill="none" data-tp-gq-studentcurve style="display:none"/>
       <g data-tp-gq-points></g>
@@ -5781,7 +5830,11 @@ function gqPlane(s,i){
     <rect x="0" y="0" width="${W}" height="${H}" fill="transparent" data-tp-gq-hit${wantPts?` tabindex="0" role="application" aria-label="Plot area — arrow keys move the cursor, Enter places or removes a point"`:''} style="cursor:${wantPts?'crosshair':'default'}"/>
   </svg>`;
 }
-function renderGraphQuestion(s,i){
+/* v3 A2 — gqBody is the shared inner (page + fragment); `key` scopes data-tp-gq + the SVG clip. The
+   embedded "working" canvas (PR3b's working:true) is GONE — with composable pages a penResponse block sits
+   beside the graphQuestion, so the workaround is dead. `wrapClass` = 'tp-wrap tp-gq2-wrap' for the page,
+   'tp-gq2-wrap' for a fragment (the flow supplies width). */
+function gqBody(s,key,wrapClass){
   const mode = s.answerMode==='points'?'points':s.answerMode==='both'?'both':'equation';
   const wantEq = mode==='equation'||mode==='both';
   const wantPts = mode==='points'||mode==='both';
@@ -5793,17 +5846,7 @@ function renderGraphQuestion(s,i){
     </div>`:'';
   const ptPanel = wantPts? `<div class="tp-gq2-pts"><div class="tp-gq2-ptshead">${tpIc('target',15)||''} Plot points <span class="tp-gq2-ptscount" data-tp-gq-ptscount>0 placed</span></div>
       <p class="tp-gq2-ptshint">Click the plane to place a point${(+s.snap!==0)?' (snaps to the grid)':''}. Click a point to remove it. <button class="tp-gq2-ptsclear" type="button" data-tp-gq-ptsclear>Clear points</button></p></div>`:'';
-  const working = s.working? `<div class="tp-gq2-working"><div class="tp-gq2-workhead">${tpIc('pen',15)||''} Show your working</div>
-      <div class="tp-ink-pad" data-tp-ink="gqink${i}">
-        <div class="tp-ink-toolbar" role="toolbar" aria-label="Handwriting tools">
-          <button class="tp-ink-btn" type="button" data-tp-ink-tool="pen" aria-pressed="true">${tpIc('pen',15)} Pen</button>
-          <button class="tp-ink-btn" type="button" data-tp-ink-tool="eraser" aria-pressed="false">Eraser</button>
-          <button class="tp-ink-btn" type="button" data-tp-ink-undo aria-label="Undo last stroke">${tpIc('arrowLeft',15)} Undo</button>
-          <button class="tp-ink-btn" type="button" data-tp-ink-clear aria-label="Clear all strokes">${tpIc('x',15)} Clear</button>
-        </div>
-        <canvas class="tp-ink-canvas" data-tp-ink-canvas width="1000" height="380" role="img" aria-label="Working area — draw with a pen, mouse or finger. Ephemeral."></canvas>
-      </div></div>`:'';
-  return `<main class="tp-main tp-scrollmain"><div class="tp-wrap tp-gq2-wrap" data-tp-gq="${i}" data-tp-gq-mode="${mode}">
+  return `<div class="${wrapClass}" data-tp-gq="${key}" data-tp-gq-mode="${mode}">
     <div class="tp-gq2-head">
       ${s.eyebrow?`<span class="tp-gq2-eyebrow">${esc(s.eyebrow)}</span>`:''}
       ${s.title?`<h1 class="tp-gq2-title">${esc(s.title)}</h1>`:''}
@@ -5811,20 +5854,21 @@ function renderGraphQuestion(s,i){
     </div>
     ${s.prompt?`<p class="tp-gq2-prompt">${tpRichMath(s.prompt)}</p>`:''}
     <div class="tp-gq2-grid">
-      <div class="tp-gq2-planecol">${gqPlane(s,i)}</div>
+      <div class="tp-gq2-planecol">${gqPlane(s,key)}</div>
       <div class="tp-gq2-answercol">
         ${givenTxt}${eqPanel}${ptPanel}
         <div class="tp-gq2-actions"><button class="tp-gq2-submit" type="button" data-tp-gq-submit>${tpIc('check',15)||''} Check answer</button></div>
         <div class="tp-gq2-feedback" data-tp-gq-feedback aria-live="polite"></div>
       </div>
     </div>
-    ${working}
-  </div></main>`;
+  </div>`;
 }
-registerBlock('graphQuestion','imperium',renderGraphQuestion);
-registerBlock('graphQuestion','microhistory',renderGraphQuestion);
-registerBlock('graphQuestion','geolearn',renderGraphQuestion);
-registerBlock('graphQuestion','mathematics',renderGraphQuestion);
+function renderGraphQuestion(s,i){ return `<main class="tp-main tp-scrollmain">${gqBody(s,i,'tp-wrap tp-gq2-wrap')}</main>`; }
+function fragGraphQuestion(b,bk){ return gqBody(b,bk,'tp-gq2-wrap'); }
+registerBlock('graphQuestion','imperium',renderGraphQuestion,fragGraphQuestion);
+registerBlock('graphQuestion','microhistory',renderGraphQuestion,fragGraphQuestion);
+registerBlock('graphQuestion','geolearn',renderGraphQuestion,fragGraphQuestion);
+registerBlock('graphQuestion','mathematics',renderGraphQuestion,fragGraphQuestion);
 function packFallback(s){
   return `<main class="tp-main"><div class="tp-wrap" style="text-align:center;color:var(--on-surface-variant);font-family:var(--tp-body);">
     <p style="font-size:14px;letter-spacing:.1em;text-transform:uppercase;">Slide type "<b>${esc(s.type||'')}</b>" is not yet available in this theme.</p></div></main>`;
@@ -5939,8 +5983,8 @@ function wirePack(){
   // SAMPLING so equivalent forms pass, with misconception diagnosis. The "working" pen canvas is wired by the
   // [data-tp-ink] handler above. Answers live in TP_RUNTIME (ephemeral). snap = INPUT feel; tolerance = MARKING.
   root.querySelectorAll('[data-tp-gq]').forEach(gq=>{
-    const idx=+gq.dataset.tpGq; const bp=gq.closest('[data-tp-block-path]');
-    const s=bp?(getP(LESSON,bp.dataset.tpBlockPath)||{}):((LESSON.slides&&LESSON.slides[idx])||{});   // composite fragment → resolve its OWN block (not the slide); legacy page → LESSON.slides[i] (byte-identical behaviour)
+    const key=gq.dataset.tpGq; const bp=gq.closest('[data-tp-block-path]');   // key is the RAW scope string: "0" (page) or "0-1" (fragment bk) — used for the answer keys so two graphQuestions never share editor/points state
+    const s=bp?(getP(LESSON,bp.dataset.tpBlockPath)||{}):((LESSON.slides&&LESSON.slides[key])||{});   // composite fragment → resolve its OWN block; legacy page → LESSON.slides["0"] (string index === LESSON.slides[0], byte-identical behaviour)
     const mode=gq.dataset.tpGqMode||'equation';
     const P=gqParams(s); const SVGNS='http://www.w3.org/2000/svg';
     const svg=gq.querySelector('[data-tp-gq-plane]'); const rt=tpRT();
@@ -5949,12 +5993,12 @@ function wirePack(){
     // ---- equation editor ----
     let editor=null; const fld=gq.querySelector('[data-tp-eqfield]');
     if(fld && (mode==='equation'||mode==='both')){
-      const eqKey='gqeq'+idx; const saved=rt.ans[eqKey];
+      const eqKey='gqeq'+key; const saved=rt.ans[eqKey];
       editor=TPMath.editor(fld, gq.querySelector('[data-tp-eqcaret]'), gq.querySelector('[data-tp-eqsym]'), gq.querySelector('[data-tp-eqstructs]'),
         { initial:(saved&&saved.tree)?saved.tree:null, onChange:()=>{ rt.ans[eqKey]={ tree:editor?editor.tree():null, latex:editor?editor.latex():'' }; } });
     }
     // ---- points (click-to-plot + keyboard) ----
-    const ptsKey='gqpts'+idx;
+    const ptsKey='gqpts'+key;
     let pts=Array.isArray(rt.ans[ptsKey])?rt.ans[ptsKey].map(p=>p.slice()):[];
     const ptsG=gq.querySelector('[data-tp-gq-points]'), ptCount=gq.querySelector('[data-tp-gq-ptscount]');
     const snap=(+s.snap===0)?0:(+s.snap>0?+s.snap:P.g);
@@ -6379,8 +6423,7 @@ function wirePackTyped(){
   // natively) activates its rail callout and vice-versa: aria-current on the active callout, .is-active on
   // both, and the callout is scrolled into view (and focused when reached from a pin, so keyboard/SR users
   // land on the text). The rail <ol> is the text-alternative. No-op when the slide has no [data-tp-lg].
-  const lg=root.querySelector('[data-tp-lgr]');
-  if(lg){
+  root.querySelectorAll('[data-tp-lgr]').forEach(lg=>{             // v3 A2: querySelectorAll — two labelled graphics on one page each wire independently (pins/calls already scoped within `lg`)
     const pins=[...lg.querySelectorAll('[data-lgr-pin]')], calls=[...lg.querySelectorAll('[data-lgr-call]')];
     const activate=(k,focusCall)=>{
       pins.forEach(p=>p.classList.toggle('is-active',p.dataset.lgrPin===String(k)));
@@ -6390,7 +6433,7 @@ function wirePackTyped(){
     };
     pins.forEach(p=>p.addEventListener('click',()=>activate(p.dataset.lgrPin,true)));
     calls.forEach(c=>c.addEventListener('click',()=>activate(c.dataset.lgrCall,false)));
-  }
+  });
 }
 
 /* <<< THEMED SLIDE PACK <<< */
@@ -6657,7 +6700,7 @@ const PACK_FACTORY={
   labeledGraphic:{type:'labeledGraphic',eyebrow:'Examine the source',title:'Labelled diagram',image:'',markers:[{n:1,x:34,y:30,title:'Feature one',body:'What this feature shows.',real:'What to look for on the real object.'},{n:2,x:62,y:55,title:'Feature two',body:'Why it matters.'}],caption:'',railLabel:'Callouts'},
   timeline:{type:'timeline',eyebrow:'Change over time',title:'Timeline',events:[{date:'Date one',title:'First event',body:'What happened, with a ==keyterm== and a [[recordable fact]].',note:'',image:''},{date:'Date two',title:'Second event',body:'How things changed.',note:'',image:''},{date:'Date three',title:'Third event',body:'The outcome.',note:'',image:''}]},
   penResponse:{type:'penResponse',eyebrow:'Show your working',title:'Work it out',prompt:'Write or sketch your response in the space below.'},
-  graphQuestion:{type:'graphQuestion',eyebrow:'Graphing',title:'Translate the graph',prompt:'The curve $y=f(x)$ is drawn below. Write the equation of $y=f(x-2)$.',domain:[-6,6],range:[-2,10],grid:2,given:'x^2',answerMode:'equation',answer:{equation:'(x-2)^2',points:[]},misconceptions:[{equation:'(x+2)^2',message:'That shifts the graph LEFT. $y=f(x-2)$ shifts it RIGHT by 2.'}],snap:1,tolerance:0.25,working:true},
+  graphQuestion:{type:'graphQuestion',eyebrow:'Graphing',title:'Translate the graph',prompt:'The curve $y=f(x)$ is drawn below. Write the equation of $y=f(x-2)$.',domain:[-6,6],range:[-2,10],grid:2,given:'x^2',answerMode:'equation',answer:{equation:'(x-2)^2',points:[]},misconceptions:[{equation:'(x+2)^2',message:'That shifts the graph LEFT. $y=f(x-2)$ shifts it RIGHT by 2.'}],snap:1,tolerance:0.25},
   outro:{type:'outro',eyebrow:'Lesson complete',title:'Well done',subtitle:'You have finished this lesson.',stats:[],recap:[]},
 };
 /* per-type palette label + wireframe (currentColor = accent) */

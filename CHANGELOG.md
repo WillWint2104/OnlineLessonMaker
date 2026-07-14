@@ -8,6 +8,35 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Composable pages — A2 fragments for the remaining core blocks (v3 Phase A).** With A1's per-block-instance
+  scope in place, the three richer blocks can now sit in a composed flow: **`fragLabeledGraphic`**,
+  **`fragKnowledgeCheck`**, **`fragGraphQuestion`** (registered in the parallel `FRAG` map across all four
+  themes). Each bk-scopes what would otherwise collide: labelled-graphic **callout ids** become
+  `lgr-${bk}-c${k}` (+ `aria-controls`) and its wiring goes `querySelector → querySelectorAll` (two labelled
+  graphics on one page activate their own callouts); graphQuestion's `data-tp-gq`/SVG-clip (`gqclip-${key}`)
+  and the editor answer keys (`gqeq${key}`/`gqpts${key}`) key off the **raw scope string**, so two graphs
+  never share a plane or editor state — legacy pages pass `"0"` (=== index `0`, byte-identical). The lean
+  **`fragKnowledgeCheck`** is attribute-driven (`data-tp-kc`/`data-tp-opt`/`data-tp-fb`, no ids, no artifact
+  image) so two checks on one page **gate independently**; the rich page renderers (imKnowledge/mhKnowledge/
+  glKnowledge, with artifact + zoom) stay page-only. **`fragText` gains keyTerms** with bk-scoped modal ids
+  (`ktp-${bk}-k`) so two text blocks open their own definitions (the id-targeted focus-open handler resolves
+  by id).
+- **Removed `graphQuestion.working:true`** — the embedded-canvas workaround from PR3b existed *only* because a
+  `penResponse` block couldn't sit beside a graphQuestion. Now it can, so the flag, its canvas markup, its CSS
+  (`.tp-gq2-working`/`-workhead`), the factory seed field and the inspector control are all deleted. This
+  deletion is the proof the composable model was the right fix. `renderGraphQuestion` and `fragGraphQuestion`
+  now share `gqBody(s,key,wrapClass)`.
+
+  Verified: **192** legacy renders byte-identical vs `pre-v3a2` (every type except graphQuestion × 4 themes ×
+  Study/Present + the example corpus); graphQuestion's only change is the removed working canvas
+  (whitespace-identical, zero `data-tp-ink`). The nasty composite **`[graphQuestion, penResponse,
+  knowledgeCheck, labeledGraphic, knowledgeCheck]`** works in all four themes: the two knowledge checks gate
+  **independently**, graphQuestion marks equivalent forms + fires misconceptions, the pen is bk-scoped
+  (`ink-0-1`), the labelled graphic's marker activates its own callout, **zero duplicate DOM ids**. Two
+  labelled graphics → independent callouts; two keyTerm text blocks → independent popups. Legacy knowledge
+  check / graphQuestion / labelled graphic wiring regression-tested. validate green; 0 console errors.
+
+### Added
 - **Composable pages — A1 keystone + per-block-instance scoping (v3 Phase A).** Slides can now be a **stack
   of blocks**, not one-block-per-slide. Additive: `renderPackSlide` renders `s.blocks[]` as fragments into a
   `.tp-flow` auto-layout (`max-width:var(--tp-measure)` — the one width authority (#92) — flex column, gap
