@@ -3640,7 +3640,7 @@ const BLOCK_SEED={   // lean seeds for add-block (labeledGraphic/graphQuestion r
   knowledgeCheck:{type:'knowledgeCheck',question:'Which is correct?',options:[{text:'Option A',correct:true},{text:'Option B'}],feedback:{}},
 };
 function blockSeed(t){ return JSON.parse(JSON.stringify(BLOCK_SEED[t] || PACK_FACTORY[t] || {type:t})); }
-function fragTypesForAdd(){ const theme=(LESSON.meta&&LESSON.meta.theme)||''; return Object.keys(FRAG).filter(t=>FRAG[t]&&FRAG[t][theme]); }   // only FRAG-registered types (a type with no fragment can't be composed)
+function fragTypesForAdd(){ const theme=(LESSON.meta&&LESSON.meta.theme)||''; return Object.keys(FRAG).filter(t=>FRAG[t]&&FRAG[t][theme]).filter(t=>t!=='image'); }   // only FRAG-registered types (a type with no fragment can't be composed); 'image' stays FRAG-registered (renders + JSON-authorable) but is filtered from the palette — Phase C: offer once the image inspector exists
 function blockTextForm(i,b,sel,base){   // lean text block (fragText schema: title + body[] + keyTerms) — NOT packText's doc-grid form
   return ig('eyebrow',sel,inT('Eyebrow',`${base}.eyebrow`,b.eyebrow))
     +ig('title',sel,inT('Heading',`${base}.title`,b.title))
