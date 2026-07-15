@@ -7,6 +7,25 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Object interactivity — Phase B: interactions as a declaration over the shared effects.** Any composable
+  fragment can now carry `interactions:[{trigger:'click', effect, payload}]`, resolved to the **same
+  `data-tp-*` attributes wirePack already wires** — this is rewiring, not rebuilding, and **`wirePack` is
+  byte-identical** (proof it's a pure declaration layer). An **effects registry** (`INTERACTION_FX`, spec
+  Layer 6) maps `modal | zoom | tooltip | reveal` to their trigger attr + paired overlay markup; `goToPage`
+  is **not** registered (spec §14, out of scope) and is silently ignored. **`resolveInteractions(b, bk)`**
+  returns `{triggerAttrs, overlaysHtml}`: modal/zoom/tooltip ride the `data-tp-focus-open` ↔
+  `[data-tp-overlay id]` rail (the host `.tp-frag` gains `data-tp-focus-open` + `tabindex="0" role="button"`
+  so focus returns on close); reveal rides `data-tp-block` > `data-tp-reveal` + `[data-tp-model]` (no textarea
+  → reveals on click). **Every generated id is bk-scoped** (`int-${bk}-${n}`) so two interactive objects on
+  one page never collide — the load-bearing requirement. `renderFragment` stamps `triggerAttrs` on the
+  wrapper and appends `overlaysHtml`; a fragment **without** `interactions[]` is byte-identical. First
+  **object**: a minimal composable `image` (`fragImage({src, alt, interactions?})`, registered ×4 themes) —
+  the proving host; video/button/hotspot are Phase C. Verified: two `image` objects each with their own
+  modal open **their own** bk-scoped overlay in all four themes (0 duplicate ids, Esc closes, focus returns);
+  zoom + tooltip work independently; reveal toggles; `goToPage` is ignored (no crash, no navigation); 200
+  legacy renders byte-identical; `renderPackSlide` + `wirePack` untouched; validate green; 0 console errors.
+
 ### Fixed
 - **Knowledge-check fragment now skinned in all four themes (#119).** `fragKnowledgeCheck` emitted imperium's
   V1 legacy classes (`.tp-opt`/`.tp-kc-card`/`.okey`/…), styled only under `:root[data-theme="imperium"]`, so
