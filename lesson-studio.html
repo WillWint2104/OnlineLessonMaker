@@ -2426,6 +2426,18 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fpanel-img{max-width:1040px;padding:18px;}
 .tp-slide .tp-fpanel-img .tp-fstiml{margin:2px 0 12px;}
 .tp-slide .tp-fimg{display:block;width:100%;height:auto;max-height:78vh;object-fit:contain;border-radius:12px;}
+.tp-slide .tp-fpanel-tip{max-width:420px;padding:20px 22px;}   /* Phase B tooltip: a compact variant of the shared focus panel */
+/* Phase B — interactive image object + click-to-reveal container (token-driven, theme-agnostic) */
+.tp-slide .tp-int-img{display:block;max-width:100%;height:auto;border-radius:var(--tp-rad-btn);border:1px solid var(--outline-variant);}
+.tp-slide .tp-frag[data-tp-focus-open]{cursor:pointer;}
+.tp-slide .tp-int-imgph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:140px;border:1px dashed var(--outline-variant);border-radius:var(--tp-rad-btn);color:var(--on-surface-variant);background:var(--surface-container);}
+.tp-slide .tp-int-reveal{margin-top:10px;}
+.tp-slide .tp-int-revbtn{font:inherit;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:var(--tp-rad-btn);border:1px solid var(--outline-variant);background:var(--surface);color:var(--primary);cursor:pointer;}
+.tp-slide .tp-int-revbtn:hover{border-color:var(--primary);}
+.tp-slide .tp-int-revbtn:disabled{opacity:.7;cursor:default;}
+.tp-slide .tp-int-revbtn:focus-visible,.tp-slide .tp-int-revbtn:focus{outline:var(--focus-ring,2px solid var(--primary));outline-offset:2px;}
+.tp-slide .tp-int-revealed{display:none;margin-top:10px;padding:12px 14px;border-radius:var(--tp-rad-btn);border:1px solid var(--outline-variant);background:var(--surface-container);color:var(--on-surface);font-size:15px;line-height:1.5;}
+.tp-slide .tp-int-revealed.tp-shown{display:block;}
 .tp-slide .tp-fimg[src^="data:image/svg"],.tp-slide .tp-fimg[src$=".svg" i]{height:min(70vh,640px);}   /* viewBox-only SVGs have no intrinsic ratio → height:auto collapses to 0; give the box a height (SVG preserveAspectRatio contains it) */
 .tp-slide .tp-fey{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:14px;}
 .tp-slide .tp-fq{font-family:var(--tp-serif);font-size:25px;line-height:1.25;color:var(--on-surface);margin-bottom:22px;}
@@ -6000,12 +6012,44 @@ function tpTokenStyle(s){
    (bk = `${i}-${k}`) and its data path, so wiring can scope ids and resolve the block object (not the slide).
    A type with no registered fragment stays page-only and shows a placeholder if dropped into a flow. */
 function bid(){ return 'b'+Math.random().toString(36).slice(2,9); }   // v3 A3 — stable per-block id: minted once on add/convert, stored in the block, so reordering never moves a block's runtime answers (bk is bid, not positional)
+/* ═══════════════ Phase B — object interactivity (a DECLARATION over the shared effects) ═══════════════
+   An `interactions:[{trigger:'click', effect, payload}]` on any fragment resolves to the SAME data-tp-*
+   attributes wirePack ALREADY wires — modal/zoom/tooltip ride the data-tp-focus-open ↔ [data-tp-overlay id]
+   rail; reveal rides data-tp-block > data-tp-reveal + [data-tp-model] (no textarea → it reveals on click).
+   NO wirePack change: this is rewiring, not rebuilding. Every generated id is bk-scoped so two interactive
+   objects on one page never collide. goToPage is NOT registered (spec §14, out of scope) → silently ignored. */
+const INTERACTION_FX={
+  modal:(id,p)=>({ attrs:`data-tp-focus-open="${esc(id)}" tabindex="0" role="button" aria-haspopup="dialog" aria-label="${esc(p.title||'Show more')}"`, overlay:`<div class="tp-overlay" data-tp-overlay id="${esc(id)}" role="dialog" aria-modal="true" aria-label="${esc(p.title||'More')}" hidden><div class="tp-fpanel"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',20)}</button>${p.title?`<p class="tp-fq">${esc(p.title)}</p>`:''}${p.body?`<p class="tp-fstim">${tpRich(p.body)}</p>`:''}</div></div>` }),
+  zoom:(id,p,b)=>{ const src=tpSrc(p.src||(b&&b.src)||''); return { attrs:`data-tp-focus-open="${esc(id)}" tabindex="0" role="button" aria-haspopup="dialog" aria-label="${esc(p.label?('Enlarge — '+p.label):'Enlarge image')}"`, overlay:`<div class="tp-overlay" data-tp-overlay id="${esc(id)}" role="dialog" aria-modal="true" aria-label="${esc(p.label||'Enlarged image')}" hidden><div class="tp-fpanel tp-fpanel-img"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',20)}</button>${p.label?`<div class="tp-fstiml">${esc(p.label)}</div>`:''}${src?`<img class="tp-fimg" src="${esc(src)}" alt="${esc(p.alt||p.label||'')}">`:''}</div></div>` }; },
+  tooltip:(id,p)=>({ attrs:`data-tp-focus-open="${esc(id)}" tabindex="0" role="button" aria-haspopup="dialog" aria-label="${esc(p.title||'Show info')}"`, overlay:`<div class="tp-overlay tp-overlay-tip" data-tp-overlay id="${esc(id)}" role="dialog" aria-modal="true" aria-label="${esc(p.title||'Info')}" hidden><div class="tp-fpanel tp-fpanel-tip"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',18)}</button>${p.title?`<p class="tp-fq">${esc(p.title)}</p>`:''}<p class="tp-fstim">${tpRich(p.text||p.body||'')}</p></div></div>` }),
+  reveal:(id,p)=>({ attrs:'', overlay:`<div class="tp-int-reveal" data-tp-block><button class="tp-int-revbtn" type="button" data-tp-reveal="${esc(id)}" aria-expanded="false" aria-controls="${esc(id)}-model" data-tp-donelabel="${esc(p.doneLabel||p.label||'Shown')}">${esc(p.label||'Reveal')}</button><div class="tp-int-revealed" id="${esc(id)}-model" data-tp-model>${tpRich(p.text||p.body||'')}</div></div>` })
+};
+function resolveInteractions(b,bk){
+  const ints=Array.isArray(b&&b.interactions)?b.interactions:[];
+  let triggerAttrs='', overlaysHtml='', hostTaken=false;
+  ints.forEach((it,n)=>{
+    const fx=INTERACTION_FX[it&&it.effect];
+    if(!fx) return;                                          // unknown effect / goToPage → ignored (no crash, no navigation)
+    const r=fx('int-'+bk+'-'+n, (it&&it.payload)||{}, b);
+    if(r.attrs){ if(hostTaken) return; triggerAttrs+=r.attrs; hostTaken=true; }   // a host carries only ONE data-tp-focus-open; extra host-triggers are ignored (reveal takes no host attr, so it always coexists)
+    if(r.overlay) overlaysHtml+=r.overlay;
+  });
+  return {triggerAttrs, overlaysHtml};
+}
+/* Phase B proving object — a minimal composable image (video/button/hotspot are Phase C). Interactions are
+   wired generically by renderFragment (below), so fragImage only renders the picture. */
+function fragImage(b,bk){
+  const src=tpSrc(b.src), alt=esc(b.alt||'');
+  return src ? `<img class="tp-int-img" src="${esc(src)}" alt="${alt}" loading="lazy">` : `<div class="tp-int-imgph" role="img" aria-label="${alt||'Image placeholder'}">${tpIc('image',30)}<span>Image</span></div>`;
+}
+FRAG.image={imperium:fragImage,microhistory:fragImage,geolearn:fragImage,mathematics:fragImage};
 function renderFragment(b,i,k,theme){
   const bk=(b&&b.bid)?b.bid:(i+'-'+k);   // stable bid when present (editor-created); positional fallback for bid-less JSON composites
   const fn=FRAG[b.type]&&FRAG[b.type][theme];
   if(!fn) return `<div class="tp-frag tp-frag-na" data-tp-frag-type="${esc(b.type||'')}"><p>Block “${esc(b.type||'')}” can’t be placed on a composed page yet.</p></div>`;
   let inner; try{ inner=fn(b,bk,i,k); }catch(e){ inner=`<p>Block render error: ${esc(String(e.message||e))}</p>`; }
-  return `<div class="tp-frag" data-tp-frag="${esc(bk)}" data-tp-block-path="slides.${i}.blocks.${k}" data-tp-frag-type="${esc(b.type||'')}">${inner}</div>`;
+  const {triggerAttrs, overlaysHtml}=resolveInteractions(b,bk);   // Phase B: interactions[] → shared-effect attrs + overlays; empty when absent → byte-identical
+  return `<div class="tp-frag" data-tp-frag="${esc(bk)}" data-tp-block-path="slides.${i}.blocks.${k}" data-tp-frag-type="${esc(b.type||'')}"${triggerAttrs?' '+triggerAttrs:''}>${inner}${overlaysHtml}</div>`;
 }
 function renderPackSlide(s,i,present){
   const theme=(LESSON.meta&&LESSON.meta.theme)||'';

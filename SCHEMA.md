@@ -247,6 +247,28 @@ Author syntax for equations (prompt `$…$` and the editor both accept it): `x^2
 \frac{a}{b}  \sqrt{x}  \sqrt[3]{x}  \pi  \theta  \le  \times  \sin(x)`; ASCII `-` renders as a real
 minus; `\$` is a literal dollar.
 
+## Object interactivity *(composable pages — Phase B)*
+
+Any block on a **composed page** (`{ blocks:[…] }`) can declare interactivity as data, rather than being a
+fixed interactive block type:
+
+```json
+{ "type":"image", "src":"…", "alt":"…",
+  "interactions":[ { "trigger":"click", "effect":"modal",
+                     "payload":{ "title":"…", "body":"…" } } ] }
+```
+
+`effect` is one of **`modal`** (`payload:{title, body}`), **`zoom`** (`payload:{src?, label?, alt?}` — an
+enlarged-image overlay; `src` defaults to the host image), **`tooltip`** (`payload:{title?, text}` — a
+compact info overlay), or **`reveal`** (`payload:{label, text, doneLabel?}` — a click-to-reveal). `trigger`
+is `click`. `goToPage` is intentionally unsupported (out of scope) and is ignored. Modal/zoom/tooltip open a
+focus-trapped dialog (Esc closes, focus returns to the trigger); every generated id is scoped per block
+instance, so two interactive objects on one page never collide. Legacy slides and blocks **without**
+`interactions[]` are unaffected.
+
+**`image`** *(the first composable object; page-block only)* — `{ type:'image', src, alt?, interactions?[] }`.
+A plain picture that can carry interactions. (video / button / hotspot objects arrive in Phase C.)
+
 ## `outro`
 
 Lesson‑complete screen. Up to **3 stat tiles** — **omit the score entry from `stats[]` to hide that
