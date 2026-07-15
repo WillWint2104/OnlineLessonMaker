@@ -2113,6 +2113,25 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-feedback .fic{flex-shrink:0;margin-top:2px;} .tp-slide .tp-feedback .fic.ok{color:var(--primary);} .tp-slide .tp-feedback .fic.no{color:var(--error);}
 .tp-slide .tp-feedback .ftitle{font-family:var(--tp-serif);font-weight:700;font-size:18px;}
 .tp-slide .tp-feedback .ftext{font-size:15px;line-height:1.55;margin-top:4px;color:var(--on-surface);}
+/* v3 #119 — knowledge-check FRAGMENT skin: ONE theme-neutral, token-driven design consumed identically by
+   ALL FOUR themes (no data-theme prefix — imperium is just another token consumer, not the template). The
+   fragment's own classes (.fkc-*) are fully decoupled from imperium's V1 .tp-opt/.tp-kc-* family. Marking
+   reuses the shared tp-opt-sel/-correct/-wrong state hooks the wirePack JS already adds — no JS change. */
+.tp-slide .fkc-card{display:flex;flex-direction:column;gap:16px;width:100%;max-width:var(--tp-measure);margin:auto;background:var(--surface);border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);padding:22px;}
+.tp-slide .fkc-eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--on-surface-variant);}
+.tp-slide .fkc-q{font-family:var(--tp-serif);font-size:19px;line-height:1.4;color:var(--on-surface);margin:0;}
+.tp-slide .fkc-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+.tp-slide .fkc-opt{display:flex;align-items:center;gap:12px;text-align:left;font:inherit;background:var(--surface-lowest,var(--surface));border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);padding:12px 14px;cursor:pointer;color:var(--on-surface);transition:border-color .15s,background .15s;}
+.tp-slide .fkc-opt:hover{border-color:var(--primary);}
+.tp-slide .fkc-opt:focus-visible,.tp-slide .fkc-opt:focus{outline:var(--focus-ring,2px solid var(--primary));outline-offset:2px;}
+.tp-slide .fkc-key{flex-shrink:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:var(--surface-container,var(--surface));color:var(--primary);font-weight:700;font-size:16px;}
+.tp-slide .fkc-text{font-size:15px;line-height:1.4;}
+.tp-slide .fkc-opt.tp-opt-sel{border-color:var(--primary);}
+.tp-slide .fkc-opt.tp-opt-correct{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 12%,var(--surface));}
+.tp-slide .fkc-opt.tp-opt-correct .fkc-key{background:var(--primary);color:var(--on-primary);}
+.tp-slide .fkc-opt.tp-opt-wrong{border-color:var(--error);background:color-mix(in srgb,var(--error) 10%,var(--surface));}
+.tp-slide .fkc-opt.tp-opt-wrong .fkc-key{background:var(--error);color:var(--on-error,#fff);}
+.tp-slide .fkc-card .tp-feedback{background:var(--surface-container,var(--surface));border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);padding:14px 16px;display:flex;gap:12px;align-items:flex-start;margin-top:4px;}
 /* imperium · knowledgeCheck */
 :root[data-theme="imperium"] .tp-kc-card{background:var(--surface);border:1px solid var(--custom-outline);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:22px;margin:auto;width:100%;max-width:var(--tp-measure);}
 :root[data-theme="imperium"] .tp-kc-hdr{display:flex;flex-direction:column;gap:10px;}
@@ -5823,11 +5842,11 @@ function fragLabeledGraphic(b,bk){
 function fragKnowledgeCheck(b,bk){
   const opts=Array.isArray(b.options)?b.options:[];
   const letters=['A','B','C','D','E','F'];
-  const optHtml=opts.map((o,j)=>`<button class="tp-opt" data-tp-opt data-tp-correct="${o.correct?'1':'0'}"><span class="okey">${esc(o.label||letters[j])}</span><span class="otext">${esc(o.text||'')}</span></button>`).join('');
-  return `<div class="tp-kc-card tp-kc-frag" data-tp-kc>
-      ${b.eyebrow?`<span class="tp-kc-eyebrow">${esc(b.eyebrow)}</span>`:''}
-      ${b.question?`<p class="tp-kc-q">${esc(b.question)}</p>`:''}
-      <div class="tp-kc-opts">${optHtml}</div>
+  const optHtml=opts.map((o,j)=>`<button class="fkc-opt" data-tp-opt data-tp-correct="${o.correct?'1':'0'}"><span class="fkc-key">${esc(o.label||letters[j])}</span><span class="fkc-text">${esc(o.text||'')}</span></button>`).join('');
+  return `<div class="tp-kc-frag fkc-card" data-tp-kc>
+      ${b.eyebrow?`<span class="fkc-eyebrow">${esc(b.eyebrow)}</span>`:''}
+      ${b.question?`<p class="fkc-q">${esc(b.question)}</p>`:''}
+      <div class="fkc-opts">${optHtml}</div>
       ${tpFeedback(b.feedback)}
     </div>`;
 }
