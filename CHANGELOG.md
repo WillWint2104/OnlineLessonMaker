@@ -8,6 +8,25 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Object interactivity — Phase C1: author image interactivity in the editor (zero JSON).** The composable
+  `image` object is now fully authorable from the inspector — `blockImageForm({src, alt, interactions[]})`,
+  alongside `blockKcForm`/`blockTextForm` and separate from the legacy page-`image` case — and it's back in
+  the block palette (the Phase B gate is lifted). The **interactions sub-form** is a base-aware `repeatGroup`
+  offering **only resolver-supported effects** (`modal | zoom | tooltip | reveal`; `goToPage` is never
+  offered), with **payload fields shown conditionally by effect** (modal → title + body; tooltip → title +
+  text; zoom → optional caption; reveal → button label + revealed text) — the effect `<select>` carries
+  `data-reinspect` so switching it re-renders the payload fields. A **guard enforces the resolver's reality**
+  (a host effect stamps its trigger on the whole `.tp-frag`, so it owns every click and can't share the
+  object): a `modal`/`zoom`/`tooltip` interaction removes the "Add interaction" affordance (with an
+  explanatory note), a 2nd+ interaction defaults to `reveal` and the effect enum collapses to reveal-only, so
+  one object ends up as **one host effect _or_ any number of composing reveals**. `inSel` gained an optional
+  `extra` attrs param and `repeatGroup` an optional `addGuard`; both are omitted by every legacy caller, so
+  their output is byte-identical. **`resolveInteractions` + `renderPackSlide` + `wirePack` are untouched**
+  (this is authoring only). Verified: an interactive page built **entirely in the editor** — image A with a
+  `{click→modal}` (opens its bk-scoped overlay, Esc closes, focus returns) and image B with two `{reveal}`
+  (distinct `int-<bk>-0/-1` ids, toggle independently, no cross-fire) — renders in all four themes; the
+  conditional-field matrix and goToPage-absent hold; the multi-row list adds/deletes; 200 legacy renders
+  byte-identical; validate green; 0 console errors.
 - **Object interactivity — Phase B: interactions as a declaration over the shared effects.** Any composable
   fragment can now carry `interactions:[{trigger:'click', effect, payload}]`, resolved to the **same
   `data-tp-*` attributes wirePack already wires** — this is rewiring, not rebuilding, and **`wirePack` is
