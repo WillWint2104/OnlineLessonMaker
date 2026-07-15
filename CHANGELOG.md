@@ -8,6 +8,28 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Composable pages — A3 editor block-outline UI (v3 Phase A, final piece).** Composite pages are now
+  **authorable in the editor** — no hand-written JSON. When a slide is a composite (`s.blocks`), the inspector
+  shows a **block outline**: one row per block (type label + ↑/↓ reorder + delete), an **add-block palette of
+  the FRAG-registered types only** (text / penResponse / knowledgeCheck / labeledGraphic / graphQuestion — a
+  type with no fragment can't be composed), and selecting a row opens **that block's inspector**. The
+  **“Page (composable)”** palette entry creates an empty `{blocks:[]}`; **“Convert to composable page”** on a
+  legacy slide wraps its fields into `blocks:[{…}]` when the type has a fragment (page-only types show a clear
+  refuse message — nothing auto-converts). **Inspector rebasing:** `inspectorForm` and `repeatGroup` gained an
+  optional `base` path (default `slides.${i}`), so the **existing** case for penResponse / graphQuestion /
+  labeledGraphic edits a block at `slides.${i}.blocks.${k}` unchanged (repeatGroups — misconceptions, markers —
+  now address by full path); lean forms cover `text` and `knowledgeCheck` where the fragment schema differs
+  from the page schema. **Stable block id (`bid`):** minted once on add/convert and stored in the block, so
+  `renderFragment` keys ids/answers by `bid` (positional fallback for bid-less JSON composites) — **reordering
+  a block never moves its runtime answers** to the wrong block. Also fixed in passing: the graphQuestion
+  inspector's "Add misconception" (the def was missing). Editor-only surface → legacy `renderPackSlide` stays
+  byte-identical. Verified: **200** legacy renders byte-identical + the legacy inspector unchanged (markers
+  still use the `key:i` repeatGroup; edits land); **Ch5A built end-to-end in the editor** (Page → text +
+  graphQuestion + penResponse, fields via each block's inspector) renders correctly in all four themes with
+  typeset math, the plane, the pen, correct marking, and **zero duplicate ids**; reorder + delete work and a
+  stroke stays with its block across a reorder (stable `bid`, no leak); page-only types aren't offerable;
+  validate green; 0 console errors. **Phase A is complete** — Rise-style composable pages, authorable, with
+  the maths capability.
 - **Composable pages — A2 fragments for the remaining core blocks (v3 Phase A).** With A1's per-block-instance
   scope in place, the three richer blocks can now sit in a composed flow: **`fragLabeledGraphic`**,
   **`fragKnowledgeCheck`**, **`fragGraphQuestion`** (registered in the parallel `FRAG` map across all four
