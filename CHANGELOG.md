@@ -7,6 +7,22 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **Knowledge-check fragment now skinned in all four themes (#119).** `fragKnowledgeCheck` emitted imperium's
+  V1 legacy classes (`.tp-opt`/`.tp-kc-card`/`.okey`/…), styled only under `:root[data-theme="imperium"]`, so
+  the other three themes rendered the options as unstyled inline text. Decoupled the fragment from imperium's
+  V1 family: its markup now uses its own `.fkc-card`/`.fkc-opts`/`.fkc-opt`/`.fkc-key`/`.fkc-text`/`.fkc-eyebrow`/
+  `.fkc-q` classes (inside the `.tp-kc-frag` wrapper), skinned by **one theme-neutral, token-driven ruleset**
+  (`var(--surface)`/`--outline-variant`/`--primary`/`--on-primary`/`--error`/`--tp-rad-btn`/`--tp-measure`; no
+  `data-theme` in any selector). Imperium is now just another token consumer, not the template — the fragment
+  is one design skinned four ways. Marking reuses the shared `tp-opt-sel`/`-correct`/`-wrong` state hooks the
+  wirePack JS already adds (no JS change). The fragment's feedback box gets a token-driven container too (the
+  base `.tp-feedback` icon/title/text were already theme-agnostic; only the box was themed). **Legacy is
+  untouched:** every `:root[data-theme=…]` kc/opt rule, `imKnowledge`/`mhKnowledge`/`glKnowledge`, and
+  `renderPackSlide` are byte-identical; the fix is composite-only. Verified: options render as cards (key chip
+  + text) in all four themes with per-theme token colours, answer states show correct/wrong token-coloured,
+  200 legacy renders byte-identical, validate green, 0 console errors.
+
 ### Added
 - **Composable pages — A3 editor block-outline UI (v3 Phase A, final piece).** Composite pages are now
   **authorable in the editor** — no hand-written JSON. When a slide is a composite (`s.blocks`), the inspector
