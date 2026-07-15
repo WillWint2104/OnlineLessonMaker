@@ -1182,6 +1182,18 @@ html.ins-collapsed body.edit #insReopen{display:flex;align-items:center;gap:6px;
 .inspector .ibtn-add{align-self:flex-start;font-size:.8rem;font-weight:600;color:var(--accent);padding:7px 11px;
   border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-radius:8px;background:var(--surface);}
 .inspector .ibtn-add:hover{background:var(--accent-soft);}
+/* v3 A3 — block outline (composable-page authoring) */
+.inspector .blk-list{display:flex;flex-direction:column;gap:5px;}
+.inspector .blk-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:var(--surface);cursor:pointer;}
+.inspector .blk-row:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line));}
+.inspector .blk-row.cur{border-color:var(--accent);background:var(--accent-soft);}
+.inspector .blk-t{font-size:.85rem;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.inspector .blk-t .muted{font-weight:400;color:var(--muted);}
+.inspector .blk-ord{display:flex;gap:2px;flex-shrink:0;}
+.inspector .blk-ord .ibtn-x[disabled]{opacity:.3;pointer-events:none;}
+.inspector .blk-palette{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+.inspector .blk-add-t{font-size:.78rem;font-weight:600;color:var(--accent);padding:5px 9px;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:8px;background:var(--surface);cursor:pointer;}
+.inspector .blk-add-t:hover{background:var(--accent-soft);}
 .inspector .seg2{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
 .inspector .seg2 button{padding:7px 16px;font-size:.82rem;font-weight:600;color:var(--muted);background:var(--surface);}
 .inspector .seg2 button.on{background:var(--accent);color:#fff;}
@@ -3579,12 +3591,70 @@ function qGroup(i,s,sel){
     <div class="qlist">${groups||'<div class="muted small">No questions yet.</div>'}</div>
     <button class="ibtn-add" data-addqi="${i}">＋ Add question</button></div>`;
 }
-function repeatGroup(i,s,sel,key,labelOne,labelSec,fieldsFor,addLabel){
+function repeatGroup(i,s,sel,key,labelOne,labelSec,fieldsFor,addLabel,base){
+  const isBlock = base && base!==`slides.${i}`;   // v3 A3 — composite block → full-path add/del (data-addrepp/delrepp); else legacy key:i, byte-identical
   const rows=(s[key]||[]).map((r,j)=>`<div class="qg ${(({blocks:'block',body:'body',specs:'spec',fields:'field'}[key])+'.'+j)===sel?'cur':''}" data-fz="${({blocks:'block',body:'body',specs:'spec',fields:'field'}[key])}.${j}">
-    <div class="qg-h"><b>${labelOne} ${j+1}</b><button class="ibtn-x" data-delrep="${key}:${i}:${j}" title="Remove">✕</button></div>
+    <div class="qg-h"><b>${labelOne} ${j+1}</b><button class="ibtn-x" ${isBlock?`data-delrepp="${base}.${key}.${j}"`:`data-delrep="${key}:${i}:${j}"`} title="Remove">✕</button></div>
     ${fieldsFor(r,j)}</div>`).join('');
   return `<div class="isec"><div class="isec-h">${labelSec}</div>${rows||'<div class="muted small">None yet.</div>'}
-    <button class="ibtn-add" data-addrep="${key}:${i}">＋ ${addLabel}</button></div>`;
+    <button class="ibtn-add" ${isBlock?`data-addrepp="${base}.${key}"`:`data-addrep="${key}:${i}"`}>＋ ${addLabel}</button></div>`;
+}
+function repDef(key){   // default row for a repeatGroup add (shared by legacy + block handlers)
+  return {blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'},markers:{n:'',x:50,y:50,title:'New marker',body:'',real:''},events:{date:'',title:'New event',body:'',note:'',image:''},misconceptions:{equation:'',message:''},keyTerms:{term:'',definition:''},options:{text:'New option',correct:''}}[key] || {};
+}
+/* ═══════════ v3 A3 — composable-page authoring (block outline + rebased block inspectors) ═══════════ */
+const BLOCK_SEED={   // lean seeds for add-block (labeledGraphic/graphQuestion reuse the full factory; their schemas match the fragment)
+  text:{type:'text',title:'Heading',body:['New paragraph.']},
+  penResponse:{type:'penResponse',title:'Work it out',prompt:'Write your working here.'},
+  knowledgeCheck:{type:'knowledgeCheck',question:'Which is correct?',options:[{text:'Option A',correct:true},{text:'Option B'}],feedback:{}},
+};
+function blockSeed(t){ return JSON.parse(JSON.stringify(BLOCK_SEED[t] || PACK_FACTORY[t] || {type:t})); }
+function fragTypesForAdd(){ const theme=(LESSON.meta&&LESSON.meta.theme)||''; return Object.keys(FRAG).filter(t=>FRAG[t]&&FRAG[t][theme]); }   // only FRAG-registered types (a type with no fragment can't be composed)
+function blockTextForm(i,b,sel,base){   // lean text block (fragText schema: title + body[] + keyTerms) — NOT packText's doc-grid form
+  return ig('eyebrow',sel,inT('Eyebrow',`${base}.eyebrow`,b.eyebrow))
+    +ig('title',sel,inT('Heading',`${base}.title`,b.title))
+    +ig('body',sel,inList('Paragraphs (one per line)',`${base}.body`,b.body))
+    +repeatGroup(i,b,sel,'keyTerms','Key term','Key terms (optional)',(t,j)=>inT('Term',`${base}.keyTerms.${j}.term`,t.term)+inA('Definition',`${base}.keyTerms.${j}.definition`,t.definition),'Add key term',base);
+}
+function blockKcForm(i,b,sel,base){   // lean knowledgeCheck block (question + options + feedback) — the rich imKnowledge/… stay page-only
+  return ig('eyebrow',sel,inT('Eyebrow',`${base}.eyebrow`,b.eyebrow))
+    +ig('question',sel,inA('Question',`${base}.question`,b.question))
+    +repeatGroup(i,b,sel,'options','Option','Options',(o,j)=>inT('Option text',`${base}.options.${j}.text`,o.text)+inSel('Correct answer?',`${base}.options.${j}.correct`,o.correct?'1':'',[['','No'],['1','Yes']]),'Add option',base)
+    +ig('fbc',sel,inT('Feedback — correct',`${base}.feedback.correctText`,(b.feedback||{}).correctText))
+    +ig('fbi',sel,inT('Feedback — incorrect',`${base}.feedback.incorrectText`,(b.feedback||{}).incorrectText));
+}
+function blockForm(i,k,b,sel){   // dispatch: reuse the page inspector case (rebased) where schemas match; lean forms where they differ
+  const base=`slides.${i}.blocks.${k}`;
+  if(b.type==='text') return blockTextForm(i,b,sel,base);
+  if(b.type==='knowledgeCheck') return blockKcForm(i,b,sel,base);
+  return inspectorForm(i,b,sel,base);   // penResponse / graphQuestion / labeledGraphic — schemas match; base rebases every path
+}
+function blockOutline(i,s,sel){
+  const blocks=Array.isArray(s.blocks)?s.blocks:[];
+  const selK=(typeof sel==='string'&&sel.indexOf('block.')===0)?+sel.slice(6).split('.')[0]:null;
+  const rows=blocks.map((b,k)=>`<div class="blk-row${k===selK?' cur':''}" data-blocksel="${k}">
+      <span class="blk-t">${esc(TYPELAB[b.type]||b.type||'Block')}${b.title?` · <span class="muted">${esc(b.title)}</span>`:''}</span>
+      <span class="blk-ord"><button class="ibtn-x" data-blockmove="${k}:-1" title="Move up"${k===0?' disabled':''}>↑</button><button class="ibtn-x" data-blockmove="${k}:1" title="Move down"${k===blocks.length-1?' disabled':''}>↓</button><button class="ibtn-x" data-blockdel="${k}" title="Delete block">✕</button></span>
+    </div>`).join('');
+  const palette=fragTypesForAdd().map(t=>`<button class="blk-add-t" data-blockadd="${esc(t)}">＋ ${esc(TYPELAB[t]||t)}</button>`).join('');
+  const form=(selK!=null&&blocks[selK])?`<div class="isec"><div class="isec-h">${esc(TYPELAB[blocks[selK].type]||blocks[selK].type)} · fields</div>${blockForm(i,selK,blocks[selK],sel)}</div>`:`<div class="ihint">Select a block above to edit it, or add one.</div>`;
+  return `<div class="isec"><div class="isec-h">Blocks · composed page</div>
+    <div class="blk-list">${rows||'<div class="muted small">No blocks yet — add one below.</div>'}</div>
+    <div class="blk-palette">${palette}</div></div>${form}`;
+}
+function wireOutline(i){
+  const ins=$('#inspector'); const s=LESSON.slides[i]; if(!s) return;
+  ins.querySelectorAll('[data-blocksel]').forEach(el=>el.addEventListener('click',e=>{ if(e.target.closest('[data-blockmove],[data-blockdel]'))return; selZone='block.'+el.dataset.blocksel; renderSlide(); }));
+  ins.querySelectorAll('[data-blockmove]').forEach(bn=>bn.onclick=e=>{ e.stopPropagation(); const[k,d]=bn.dataset.blockmove.split(':').map(Number); const arr=s.blocks, nk=k+d; if(nk<0||nk>=arr.length)return; [arr[k],arr[nk]]=[arr[nk],arr[k]]; selZone='block.'+nk; renderSlide(); });   // bid is stable → moving a block does NOT move its runtime answers
+  ins.querySelectorAll('[data-blockdel]').forEach(bn=>bn.onclick=e=>{ e.stopPropagation(); s.blocks.splice(+bn.dataset.blockdel,1); selZone=null; renderSlide(); });
+  ins.querySelectorAll('[data-blockadd]').forEach(bn=>bn.onclick=()=>{ const t=bn.dataset.blockadd; const nb=blockSeed(t); nb.bid=bid(); (s.blocks=s.blocks||[]).push(nb); selZone='block.'+(s.blocks.length-1); renderSlide(); });
+}
+function convertToPage(i){
+  const s=LESSON.slides[i]; if(!s||Array.isArray(s.blocks)) return;
+  const theme=(LESSON.meta&&LESSON.meta.theme)||'';
+  if(!(FRAG[s.type]&&FRAG[s.type][theme])) return;   // page-only types can't be composed (guarded; the inspector shows a message instead of the button)
+  const block=JSON.parse(JSON.stringify(s)); block.bid=bid(); const keep=s.layout?{layout:s.layout}:{};
+  LESSON.slides[i]=Object.assign({blocks:[block]},keep); selZone='block.0'; renderNav(); renderSlide();
 }
 function syllabusGroup(i,s,sel){
   const rows=(s.syllabus||[]).map((c,j)=>`<div class="qg ${'syllabus'===sel?'cur':''}" data-fz="syllabus">
@@ -3663,12 +3733,13 @@ function worksheetSection(i,s,sel){
     <label style="margin-top:8px">Transcript / source material <span class="muted">(never printed — informs question-writing)</span></label>
     <textarea class="ia" data-bind="slides.${i}.transcript" placeholder="Paste a video transcript or an interactive's key data/notes here.">${esc(s.transcript||'')}</textarea></div>`;
 }
-function inspectorForm(i,s,sel){
-  const T=(z,l,k='text')=>{ const path=`slides.${i}.${z}`; const v=getP(LESSON,path);
+function inspectorForm(i,s,sel,base){
+  base=base||`slides.${i}`;   // v3 A3 — REBASE: a composite block passes base=`slides.${i}.blocks.${k}` so the SAME form edits the block; default keeps every legacy path (and output) identical
+  const T=(z,l,k='text')=>{ const path=`${base}.${z}`; const v=getP(LESSON,path);
     return ig(z,sel, k==='area'?inA(l,path,v):inT(l,path,v)); };
   const M=()=>ig('media',sel,`<label>Media</label>`+mediaEditor(i,s));
-  const L=(z,l)=>ig(z,sel,inList(l,`slides.${i}.${z}`,s[z]));
-  const SEL=(z,l,opts)=>{ const path=`slides.${i}.${z}`; return ig(z,sel,inSel(l,path,getP(LESSON,path),opts)); };
+  const L=(z,l)=>ig(z,sel,inList(l,`${base}.${z}`,s[z]));
+  const SEL=(z,l,opts)=>{ const path=`${base}.${z}`; return ig(z,sel,inSel(l,path,getP(LESSON,path),opts)); };
   switch(s.type){
     case 'cover': return T('tag','Eyebrow / tag')+T('title','Title')+T('titleItalic','Title (italic part)')+T('sub','Subtitle','area')+T('startLabel','Start button label')+T('est','Estimated time')+M();
     case 'outcomes': return T('eyebrow','Eyebrow')+T('heading','Heading','area')+M()+L('outcomes','Outcomes')+syllabusGroup(i,s,sel);
@@ -3684,7 +3755,7 @@ function inspectorForm(i,s,sel){
     case 'image': return T('heading','Heading')+M()+T('cap','Caption');
     case 'video': return T('heading','Heading')+T('url','Video URL (YouTube / ClickView)')+T('cap','Caption')+T('sourceUrl','Source / fallback link — opens in a new tab')+T('sourceLabel','Fallback button label');
     case 'labeledGraphic': return T('eyebrow','Eyebrow')+T('title','Title')
-      +repeatGroup(i,s,sel,'markers','Marker','Markers',(m,j)=>inT('Number',`slides.${i}.markers.${j}.n`,m.n)+inT('x % (0–100)',`slides.${i}.markers.${j}.x`,m.x)+inT('y % (0–100)',`slides.${i}.markers.${j}.y`,m.y)+inT('Title',`slides.${i}.markers.${j}.title`,m.title)+inA('Body',`slides.${i}.markers.${j}.body`,m.body)+inA('On the real thing (optional)',`slides.${i}.markers.${j}.real`,m.real),'Add marker')
+      +repeatGroup(i,s,sel,'markers','Marker','Markers',(m,j)=>inT('Number',`${base}.markers.${j}.n`,m.n)+inT('x % (0–100)',`${base}.markers.${j}.x`,m.x)+inT('y % (0–100)',`${base}.markers.${j}.y`,m.y)+inT('Title',`${base}.markers.${j}.title`,m.title)+inA('Body',`${base}.markers.${j}.body`,m.body)+inA('On the real thing (optional)',`${base}.markers.${j}.real`,m.real),'Add marker',base)
       +T('caption','Image caption')+T('railLabel','Rail heading');
     case 'timeline': return T('eyebrow','Eyebrow')+T('title','Title')
       +repeatGroup(i,s,sel,'events','Event','Events',(e,j)=>inT('Date',`slides.${i}.events.${j}.date`,e.date)+inT('Title',`slides.${i}.events.${j}.title`,e.title)+inA('Body',`slides.${i}.events.${j}.body`,e.body)+inA('Note (optional)',`slides.${i}.events.${j}.note`,e.note),'Add event');
@@ -3694,7 +3765,7 @@ function inspectorForm(i,s,sel){
       +T('given','Given curve  y = f(x)  (e.g. x^2)')+T('answer.equation','Answer equation (e.g. (x-2)^2)')
       +T('domain.0','x min')+T('domain.1','x max')+T('range.0','y min')+T('range.1','y max')
       +T('grid','Grid step')+T('snap','Snap step (0 = free plotting)')+T('tolerance','Marking tolerance (world units)')
-      +repeatGroup(i,s,sel,'misconceptions','Misconception','Common mistakes → targeted feedback',(m,j)=>inT('If they answer (equation)',`slides.${i}.misconceptions.${j}.equation`,m.equation)+inA('Feedback message (supports $…$)',`slides.${i}.misconceptions.${j}.message`,m.message),'Add misconception');
+      +repeatGroup(i,s,sel,'misconceptions','Misconception','Common mistakes → targeted feedback',(m,j)=>inT('If they answer (equation)',`${base}.misconceptions.${j}.equation`,m.equation)+inA('Feedback message (supports $…$)',`${base}.misconceptions.${j}.message`,m.message),'Add misconception',base);
     case 'question': return T('skill','Skill')+T('heading','Heading')+qGroup(i,s,sel);
     case 'source': return T('heading','Heading')+T('credit','Credit / citation')+M()+qGroup(i,s,sel);
     case 'model3d': return T('heading','Heading')+M()+qGroup(i,s,sel);
@@ -3844,10 +3915,19 @@ function renderInspector(){
   if(mode!=='edit'){ ins.innerHTML=''; return; }
   if(!LESSON.slides.length){ ins.innerHTML=`<div class="ins-h"><span>Inspector</span></div><div class="ihint">No slides yet — add one from the palette below.</div>${metaSection()}`; wireInspector(); return; }
   const s=LESSON.slides[cur], i=cur;
+  if(Array.isArray(s.blocks)){                                    // v3 A3 — composite page → block outline (blocks own their own media/links)
+    ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${blockOutline(i,s,selZone)}${layoutSection()}${metaSection()}`;
+    wireInspector(); wireOutline(i);
+    const c=ins.querySelector('.cur'); if(c) c.scrollIntoView({block:'nearest'});
+    return;
+  }
+  const theme=(LESSON.meta&&LESSON.meta.theme)||'';
+  const composable=!!(FRAG[s.type]&&FRAG[s.type][theme]);
+  const convert=`<div class="isec"><div class="isec-h">Page</div>${composable?`<button class="ibtn-add" data-topage>⤢ Convert to composable page</button>`:`<div class="muted small">“${TYPELAB[s.type]||s.type}” is a page-only block — it can’t be placed on a composed page.</div>`}</div>`;
   const top = selZone===null
     ? `<div class="ihint">Select a part of the slide to edit it here.</div>`
     : `<div class="isec"><div class="isec-h">${TYPELAB[s.type]||s.type} · fields</div>${inspectorForm(i,s,selZone)}</div>${wsIsContent(s.type)?worksheetSection(i,s,selZone):''}`;
-  ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${top}${imagesSection(i,s)}${linksSection(i,s)}${layoutSection()}${metaSection()}`;
+  ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${top}${imagesSection(i,s)}${linksSection(i,s)}${convert}${layoutSection()}${metaSection()}`;
   wireInspector();
   const c=ins.querySelector('.cur'); if(c) c.scrollIntoView({block:'nearest'});
 }
@@ -3865,11 +3945,15 @@ function wireInspector(){
   ins.querySelectorAll('[data-delqi]').forEach(b=>b.onclick=()=>{ const[i,j]=b.dataset.delqi.split(':').map(Number); LESSON.slides[i].items.splice(j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-addrep]').forEach(b=>b.onclick=()=>{ const[key,i]=b.dataset.addrep.split(':'); const s=LESSON.slides[+i];
     const def=(key==='body'||(key==='blocks'&&s.type!=='notes')) ? {h:'',p:'New paragraph.'}   // text/textImage blocks use {h,p}; notes use {h,bd}
-      : {blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'},markers:{n:'',x:50,y:50,title:'New marker',body:'',real:''},events:{date:'',title:'New event',body:'',note:'',image:''}}[key];
+      : {blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'},markers:{n:'',x:50,y:50,title:'New marker',body:'',real:''},events:{date:'',title:'New event',body:'',note:'',image:''},misconceptions:{equation:'',message:''}}[key];
     (s[key]=s[key]||[]).push(JSON.parse(JSON.stringify(def))); renderSlide(); });
   ins.querySelectorAll('[data-delrep]').forEach(b=>b.onclick=()=>{ const[key,i,j]=b.dataset.delrep.split(':'); LESSON.slides[+i][key].splice(+j,1); selZone=null; renderSlide(); });
+  // v3 A3 — full-path repeatGroup add/del for composite blocks (base=slides.i.blocks.k)
+  ins.querySelectorAll('[data-addrepp]').forEach(b=>b.onclick=()=>{ const path=b.dataset.addrepp, key=path.split('.').pop(); let arr=getP(LESSON,path); if(!Array.isArray(arr)){ setP(LESSON,path,[]); arr=getP(LESSON,path); } arr.push(JSON.parse(JSON.stringify(repDef(key)))); renderSlide(); });
+  ins.querySelectorAll('[data-delrepp]').forEach(b=>b.onclick=()=>{ const seg=b.dataset.delrepp.split('.'); const j=+seg.pop(); const arr=getP(LESSON,seg.join('.')); if(Array.isArray(arr)) arr.splice(j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-clearmedia]').forEach(b=>b.onclick=()=>{ setP(LESSON,b.dataset.clearmedia,''); renderSlide(); });
   ins.querySelectorAll('[data-convert]').forEach(b=>b.onclick=()=>convertSlide(cur,b.dataset.convert));
+  const tp=ins.querySelector('[data-topage]'); if(tp) tp.onclick=()=>convertToPage(cur);   // v3 A3 — convert a legacy slide into a composable page
   const ai=ins.querySelector('[data-additem]'); if(ai) ai.onclick=()=>{ const si=+ai.dataset.additem; const s=LESSON.slides[si]; (s.items=s.items||[]).push({label:'',text:'New item.',img:'',tags:[]}); selZone='item.'+(s.items.length-1); renderSlide(); };
   ins.querySelectorAll('[data-delitem]').forEach(b=>b.onclick=()=>{ const[si,j]=b.dataset.delitem.split(':').map(Number); LESSON.slides[si].items.splice(j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-moveitem]').forEach(b=>b.onclick=()=>{ const[si,j,d]=b.dataset.moveitem.split(':').map(Number); const arr=LESSON.slides[si].items; const nj=j+d;
@@ -5896,8 +5980,9 @@ function tpTokenStyle(s){
    the flow supplies chrome + width. Each fragment is wrapped in a .tp-frag carrying a per-instance block key
    (bk = `${i}-${k}`) and its data path, so wiring can scope ids and resolve the block object (not the slide).
    A type with no registered fragment stays page-only and shows a placeholder if dropped into a flow. */
+function bid(){ return 'b'+Math.random().toString(36).slice(2,9); }   // v3 A3 — stable per-block id: minted once on add/convert, stored in the block, so reordering never moves a block's runtime answers (bk is bid, not positional)
 function renderFragment(b,i,k,theme){
-  const bk=i+'-'+k;
+  const bk=(b&&b.bid)?b.bid:(i+'-'+k);   // stable bid when present (editor-created); positional fallback for bid-less JSON composites
   const fn=FRAG[b.type]&&FRAG[b.type][theme];
   if(!fn) return `<div class="tp-frag tp-frag-na" data-tp-frag-type="${esc(b.type||'')}"><p>Block “${esc(b.type||'')}” can’t be placed on a composed page yet.</p></div>`;
   let inner; try{ inner=fn(b,bk,i,k); }catch(e){ inner=`<p>Block render error: ${esc(String(e.message||e))}</p>`; }
@@ -6653,10 +6738,11 @@ function convertSlide(idx,to){
 // zone to auto-select after inserting, so the new slide opens editable in the inspector
 const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title',labeledGraphic:'title',timeline:'title',penResponse:'title',graphQuestion:'title'};
 function insertSlide(type, atIndex){
-  if(!PACK_FACTORY[type] && !SLIDE_FACTORY[type]) return;
+  const isPage=type==='__page';                                  // v3 A3 — "Page (composable)" palette entry → an empty composite ready for blocks
+  if(!isPage && !PACK_FACTORY[type] && !SLIDE_FACTORY[type]) return;
   const idx=Math.max(0,Math.min(LESSON.slides.length, atIndex));
-  LESSON.slides.splice(idx,0, makeSlide(type));
-  cur=idx; selZone=PALETTE_DEFAULT_ZONE[type]||null;   // select + load the new slide in the inspector
+  LESSON.slides.splice(idx,0, isPage?{blocks:[]}:makeSlide(type));
+  cur=idx; selZone=isPage?null:(PALETTE_DEFAULT_ZONE[type]||null);   // select + load the new slide in the inspector
   renderNav(); renderSlide(); $('#stage').scrollTop=0;
 }
 
@@ -6724,7 +6810,10 @@ const PACK_PALETTE={
 function renderPalette(){
   const pal=$('#palette'); if(!pal) return;
   const types=themeTypes();
-  const items=types.map(t=>{ const m=PACK_PALETTE[t]||{label:t,wf:''};
+  const pageTile = types.length ? `<button class="pal-thumb" draggable="true" data-ptype="__page" title="Add a composable Page — stack blocks in a flow">
+      <span class="wf-box"><svg class="wf" viewBox="0 0 80 52" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="6" width="64" height="10" rx="2" class="f"/><rect x="8" y="20" width="64" height="10" rx="2" class="s"/><rect x="8" y="34" width="64" height="10" rx="2" class="f"/></svg></span>
+      <span class="pal-lbl">Page</span></button>` : '';   // v3 A3 — composable page
+  const items=pageTile+types.map(t=>{ const m=PACK_PALETTE[t]||{label:t,wf:''};
     return `<button class="pal-thumb" draggable="true" data-ptype="${esc(t)}" title="Add ${esc(m.label)} slide">
       <span class="wf-box"><svg class="wf" viewBox="0 0 80 52" xmlns="http://www.w3.org/2000/svg">${m.wf||''}</svg></span>
       <span class="pal-lbl">${esc(m.label)}</span></button>`; }).join('');
