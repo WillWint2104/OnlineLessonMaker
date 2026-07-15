@@ -247,7 +247,7 @@ Author syntax for equations (prompt `$…$` and the editor both accept it): `x^2
 \frac{a}{b}  \sqrt{x}  \sqrt[3]{x}  \pi  \theta  \le  \times  \sin(x)`; ASCII `-` renders as a real
 minus; `\$` is a literal dollar.
 
-## Object interactivity *(composable pages — Phase B)*
+## Object interactivity *(composable pages — Phase B; image authoring — Phase C1)*
 
 Any block on a **composed page** (`{ blocks:[…] }`) can declare interactivity as data, rather than being a
 fixed interactive block type:
@@ -266,8 +266,17 @@ focus-trapped dialog (Esc closes, focus returns to the trigger); every generated
 instance, so two interactive objects on one page never collide. Legacy slides and blocks **without**
 `interactions[]` are unaffected.
 
+**One host effect _or_ many reveals per object.** `modal`, `zoom`, and `tooltip` are *host* effects — the
+trigger sits on the whole object, so it owns every click and **cannot coexist** with a second interaction on
+the same object. `reveal` renders its own button, so any number of reveals compose. To combine a window and a
+click-to-reveal, use **two image objects**.
+
 **`image`** *(the first composable object; page-block only)* — `{ type:'image', src, alt?, interactions?[] }`.
-A plain picture that can carry interactions. (video / button / hotspot objects arrive in Phase C.)
+A plain picture that can carry interactions. **Authorable in the editor (Phase C1):** add an `image` block
+from the page palette, set the URL/alt, and add interactions from its inspector — the effect picker offers
+only the four supported effects with payload fields matched to each, and enforces the one-host-or-many-reveals
+rule above (a host effect disables adding more; a second interaction defaults to `reveal`). (video / button /
+hotspot objects arrive in later Phase C steps.)
 
 ## `outro`
 

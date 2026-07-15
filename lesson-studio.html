@@ -3557,7 +3557,7 @@ function tagZones(s,i){
 function inT(label,path,val){ return `<label>${esc(label)}</label><input class="ii" data-bind="${path}" value="${esc(val==null?'':String(val))}">`; }
 function inA(label,path,val){ return `<label>${esc(label)}</label><textarea class="ia" data-bind="${path}">${esc(val||'')}</textarea>`; }
 function inList(label,path,arr){ return `<label>${esc(label)} <span class="muted">(one per line)</span></label><textarea class="ia" data-split="${path}">${esc((arr||[]).join('\n'))}</textarea>`; }
-function inSel(label,path,val,opts){ return `<label>${esc(label)}</label><select class="ii" data-bind="${path}">`+opts.map(([v,l])=>`<option value="${esc(v)}"${v===val?' selected':''}>${esc(l)}</option>`).join('')+`</select>`; }
+function inSel(label,path,val,opts,extra){ return `<label>${esc(label)}</label><select class="ii" data-bind="${path}"${extra?' '+extra:''}>`+opts.map(([v,l])=>`<option value="${esc(v)}"${v===val?' selected':''}>${esc(l)}</option>`).join('')+`</select>`; }   // optional `extra` attrs (e.g. data-reinspect to re-render the form on change)
 function ig(zone,sel,inner){ return `<div class="ig ${zone===sel?'cur':''}" data-fz="${zone}">${inner}</div>`; }
 /* Notes ⇄ Text conversion banner shown in the inspector for both types — makes the
    record-vs-reference distinction explicit and one click to switch. */
@@ -3622,25 +3622,29 @@ function qGroup(i,s,sel){
     <div class="qlist">${groups||'<div class="muted small">No questions yet.</div>'}</div>
     <button class="ibtn-add" data-addqi="${i}">＋ Add question</button></div>`;
 }
-function repeatGroup(i,s,sel,key,labelOne,labelSec,fieldsFor,addLabel,base){
+function repeatGroup(i,s,sel,key,labelOne,labelSec,fieldsFor,addLabel,base,addGuard){
   const isBlock = base && base!==`slides.${i}`;   // v3 A3 — composite block → full-path add/del (data-addrepp/delrepp); else legacy key:i, byte-identical
   const rows=(s[key]||[]).map((r,j)=>`<div class="qg ${(({blocks:'block',body:'body',specs:'spec',fields:'field'}[key])+'.'+j)===sel?'cur':''}" data-fz="${({blocks:'block',body:'body',specs:'spec',fields:'field'}[key])}.${j}">
     <div class="qg-h"><b>${labelOne} ${j+1}</b><button class="ibtn-x" ${isBlock?`data-delrepp="${base}.${key}.${j}"`:`data-delrep="${key}:${i}:${j}"`} title="Remove">✕</button></div>
     ${fieldsFor(r,j)}</div>`).join('');
+  const add=addGuard   // Phase C1 — an optional guard string replaces the Add affordance with a note (e.g. a host effect already claims the whole image object); omitted by every legacy caller ⇒ byte-identical
+    ? `<div class="muted small">${esc(addGuard)}</div>`
+    : `<button class="ibtn-add" ${isBlock?`data-addrepp="${base}.${key}"`:`data-addrep="${key}:${i}"`}>＋ ${addLabel}</button>`;
   return `<div class="isec"><div class="isec-h">${labelSec}</div>${rows||'<div class="muted small">None yet.</div>'}
-    <button class="ibtn-add" ${isBlock?`data-addrepp="${base}.${key}"`:`data-addrep="${key}:${i}"`}>＋ ${addLabel}</button></div>`;
+    ${add}</div>`;
 }
 function repDef(key){   // default row for a repeatGroup add (shared by legacy + block handlers)
-  return {blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'},markers:{n:'',x:50,y:50,title:'New marker',body:'',real:''},events:{date:'',title:'New event',body:'',note:'',image:''},misconceptions:{equation:'',message:''},keyTerms:{term:'',definition:''},options:{text:'New option',correct:''}}[key] || {};
+  return {blocks:{h:'New heading',bd:'Note text.'},specs:{k:'Label',v:'Value'},fields:{kind:'text',n:'New field',hint:''},syllabus:{code:'',text:'New link'},markers:{n:'',x:50,y:50,title:'New marker',body:'',real:''},events:{date:'',title:'New event',body:'',note:'',image:''},misconceptions:{equation:'',message:''},keyTerms:{term:'',definition:''},options:{text:'New option',correct:''},interactions:{trigger:'click',effect:'modal',payload:{}}}[key] || {};
 }
 /* ═══════════ v3 A3 — composable-page authoring (block outline + rebased block inspectors) ═══════════ */
 const BLOCK_SEED={   // lean seeds for add-block (labeledGraphic/graphQuestion reuse the full factory; their schemas match the fragment)
   text:{type:'text',title:'Heading',body:['New paragraph.']},
   penResponse:{type:'penResponse',title:'Work it out',prompt:'Write your working here.'},
   knowledgeCheck:{type:'knowledgeCheck',question:'Which is correct?',options:[{text:'Option A',correct:true},{text:'Option B'}],feedback:{}},
+  image:{type:'image',src:'',alt:'',interactions:[]},   // Phase C1 — composable image object (add interactivity via its inspector)
 };
 function blockSeed(t){ return JSON.parse(JSON.stringify(BLOCK_SEED[t] || PACK_FACTORY[t] || {type:t})); }
-function fragTypesForAdd(){ const theme=(LESSON.meta&&LESSON.meta.theme)||''; return Object.keys(FRAG).filter(t=>FRAG[t]&&FRAG[t][theme]).filter(t=>t!=='image'); }   // only FRAG-registered types (a type with no fragment can't be composed); 'image' stays FRAG-registered (renders + JSON-authorable) but is filtered from the palette — Phase C: offer once the image inspector exists
+function fragTypesForAdd(){ const theme=(LESSON.meta&&LESSON.meta.theme)||''; return Object.keys(FRAG).filter(t=>FRAG[t]&&FRAG[t][theme]); }   // only FRAG-registered types (a type with no fragment can't be composed) — image is now fully authorable (Phase C1), so it's offered too
 function blockTextForm(i,b,sel,base){   // lean text block (fragText schema: title + body[] + keyTerms) — NOT packText's doc-grid form
   return ig('eyebrow',sel,inT('Eyebrow',`${base}.eyebrow`,b.eyebrow))
     +ig('title',sel,inT('Heading',`${base}.title`,b.title))
@@ -3654,10 +3658,42 @@ function blockKcForm(i,b,sel,base){   // lean knowledgeCheck block (question + o
     +ig('fbc',sel,inT('Feedback — correct',`${base}.feedback.correctText`,(b.feedback||{}).correctText))
     +ig('fbi',sel,inT('Feedback — incorrect',`${base}.feedback.incorrectText`,(b.feedback||{}).incorrectText));
 }
+/* Phase C1 — lean form for the composable `image` object (schema {src, alt, interactions[]}), separate from
+   the legacy page-'image' inspector case. The interactions[] sub-form offers ONLY resolver-supported effects
+   (modal/zoom/tooltip/reveal — NOT goToPage) with payload fields conditional on the chosen effect; the effect
+   select carries data-reinspect so switching it re-renders the payload fields. Reuses inSel/inT/inA + the
+   base-aware repeatGroup (full-path add/del). */
+function blockImageForm(i,b,sel,base){
+  const its=Array.isArray(b.interactions)?b.interactions:[];
+  its.forEach(it=>{ if(it&&typeof it==='object'&&!it.payload) it.payload={}; });   // ensure payload exists so its dot-path fields bind (setP doesn't create intermediates); edit-only, render-invariant
+  const EFFECTS=[['modal','Window (modal)'],['zoom','Zoom image'],['tooltip','Tooltip'],['reveal','Click to reveal']];
+  /* Guard (matches the resolver's reality: renderFragment stamps the host-trigger on the WHOLE .tp-frag, so a
+     host effect (modal/zoom/tooltip) owns every click on the object — it can't coexist with a second interaction;
+     only `reveal` (its own button, non-host) composes). One object ⇒ ONE host effect OR any number of reveals. */
+  const HOST={modal:1,zoom:1,tooltip:1};
+  const hasHost=its.some(it=>it&&HOST[it.effect]);
+  const multi=its.length>1;   // 2+ interactions ⇒ reveals-only (host effects are unreachable here)
+  const guard=hasHost?'A full-frame effect (modal / zoom / tooltip) owns every click on the image, so it can’t share the object with another interaction. Use a second image object for more.':'';
+  return ig('src',sel,inT('Image URL / data URI',`${base}.src`,b.src))
+    +ig('alt',sel,inT('Alt text (accessibility)',`${base}.alt`,b.alt))
+    +repeatGroup(i,b,sel,'interactions','Interaction','Interactivity (optional)',(it,j)=>{
+      const ip=`${base}.interactions.${j}`, eff=(it&&it.effect)||'modal', pl=(it&&it.payload)||{};
+      const effOpts=multi?EFFECTS.filter(([v])=>v==='reveal'||v===eff):EFFECTS;   // in a multi-interaction object only reveals compose (keep current value for hand-authored data)
+      let pay='';
+      if(eff==='modal')        pay=inT('Title',`${ip}.payload.title`,pl.title)+inA('Body (supports **bold** / $…$)',`${ip}.payload.body`,pl.body);
+      else if(eff==='tooltip') pay=inT('Title (optional)',`${ip}.payload.title`,pl.title)+inA('Text',`${ip}.payload.text`,pl.text);
+      else if(eff==='zoom')    pay=inT('Caption (optional)',`${ip}.payload.label`,pl.label)+`<p class="muted small">Enlarges this image; leave blank to zoom as-is.</p>`;
+      else if(eff==='reveal')  pay=inT('Button label',`${ip}.payload.label`,pl.label)+inA('Revealed text',`${ip}.payload.text`,pl.text);
+      return inSel('Trigger',`${ip}.trigger`,(it&&it.trigger)||'click',[['click','Click']])
+        +inSel('Effect',`${ip}.effect`,eff,effOpts,'data-reinspect')
+        +pay;
+    },'Add interaction',base,guard);
+}
 function blockForm(i,k,b,sel){   // dispatch: reuse the page inspector case (rebased) where schemas match; lean forms where they differ
   const base=`slides.${i}.blocks.${k}`;
   if(b.type==='text') return blockTextForm(i,b,sel,base);
   if(b.type==='knowledgeCheck') return blockKcForm(i,b,sel,base);
+  if(b.type==='image') return blockImageForm(i,b,sel,base);   // Phase C1 — the composable image object (interactions authoring)
   return inspectorForm(i,b,sel,base);   // penResponse / graphQuestion / labeledGraphic — schemas match; base rebases every path
 }
 function blockOutline(i,s,sel){
@@ -3968,6 +4004,9 @@ function wireInspector(){
   // infographic: switching variant swaps the figures editor ⇄ donut-segments editor, so re-render the form
   const igVar=ins.querySelector('[data-bind$=".variant"]');
   if(igVar && (LESSON.slides[cur]||{}).type==='infographic') igVar.addEventListener('change',()=>{ renderInspector(); });
+  // Phase C1: fields marked data-reinspect (e.g. an interaction's effect select) re-render the form so the
+  // effect-conditional payload fields update. The [data-bind] input handler above has already saved the value.
+  ins.querySelectorAll('[data-reinspect]').forEach(el=>el.addEventListener('change',()=>{ renderInspector(); }));
   ins.querySelectorAll('[data-split]').forEach(el=>el.addEventListener('input',()=>{ setP(LESSON, el.dataset.split, el.value.split('\n').map(x=>x.trim()).filter(Boolean)); renderCanvas(); }));
   ins.querySelectorAll('[data-meta]').forEach(el=>el.addEventListener('input',()=>{ LESSON.meta=LESSON.meta||{}; LESSON.meta[el.dataset.meta]=el.value; }));
   const mc=ins.querySelector('[data-metacodes]'); if(mc) mc.addEventListener('input',()=>{ LESSON.meta=LESSON.meta||{}; LESSON.meta.outcomes=mc.value.split(',').map(x=>x.trim()).filter(Boolean); });
@@ -3980,7 +4019,7 @@ function wireInspector(){
     (s[key]=s[key]||[]).push(JSON.parse(JSON.stringify(def))); renderSlide(); });
   ins.querySelectorAll('[data-delrep]').forEach(b=>b.onclick=()=>{ const[key,i,j]=b.dataset.delrep.split(':'); LESSON.slides[+i][key].splice(+j,1); selZone=null; renderSlide(); });
   // v3 A3 — full-path repeatGroup add/del for composite blocks (base=slides.i.blocks.k)
-  ins.querySelectorAll('[data-addrepp]').forEach(b=>b.onclick=()=>{ const path=b.dataset.addrepp, key=path.split('.').pop(); let arr=getP(LESSON,path); if(!Array.isArray(arr)){ setP(LESSON,path,[]); arr=getP(LESSON,path); } arr.push(JSON.parse(JSON.stringify(repDef(key)))); renderSlide(); });
+  ins.querySelectorAll('[data-addrepp]').forEach(b=>b.onclick=()=>{ const path=b.dataset.addrepp, key=path.split('.').pop(); let arr=getP(LESSON,path); if(!Array.isArray(arr)){ setP(LESSON,path,[]); arr=getP(LESSON,path); } const def=(key==='interactions'&&arr.length)?{trigger:'click',effect:'reveal',payload:{}}:repDef(key); arr.push(JSON.parse(JSON.stringify(def))); renderSlide(); });   // Phase C1 — a 2nd+ interaction on one object defaults to reveal (the only composable effect; a host effect is exclusive)
   ins.querySelectorAll('[data-delrepp]').forEach(b=>b.onclick=()=>{ const seg=b.dataset.delrepp.split('.'); const j=+seg.pop(); const arr=getP(LESSON,seg.join('.')); if(Array.isArray(arr)) arr.splice(j,1); selZone=null; renderSlide(); });
   ins.querySelectorAll('[data-clearmedia]').forEach(b=>b.onclick=()=>{ setP(LESSON,b.dataset.clearmedia,''); renderSlide(); });
   ins.querySelectorAll('[data-convert]').forEach(b=>b.onclick=()=>convertSlide(cur,b.dataset.convert));
