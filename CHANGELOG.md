@@ -8,6 +8,27 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Composable pages — F1+F2: de-staged into flat, flowing pages (study-first).** A composable page
+  (`{blocks:[…]}`) no longer renders inside the fixed 720px stage frame: `fitCanvas` now puts a `blocks[]`
+  page in the existing `scroll` flow mode in Study, the editor preview pane AND Present alike (study-only
+  interim — Present gets the same flat page; `renderPackSlide`'s composable branch is present-blind and
+  unchanged), and new **page-scoped** rules (`.tp-slide[data-tp-type="page"]` → `position:relative;
+  height:auto; overflow:visible`; its `.tp-main` → `overflow:visible`) let the page grow to its content.
+  The app shell locks window scroll (`body{overflow:hidden}`), so **`#stage` owns scroll in both contexts**
+  — editor chrome (inspector/palette/toolbar/sidebar) stays put while the preview pane scrolls, and a
+  delivered/published (`data-export`) lesson scrolls the same pane. **Blocks animate in on scroll**
+  (`wirePageFlow`: an IntersectionObserver on `#stage` adds the entrance classes; flat pages only, never
+  while editing, `prefers-reduced-motion` honoured, and content defaults to visible without JS/IO).
+  **F2 snag audit:** of the 15 `position:fixed/sticky` rules, all 9 `fixed` are app-chrome outside the
+  canvas and untouched; the one sticky reachable on a flat page (`.tp-lgr-rail`) re-anchors naturally to
+  the stage scrollport (verified). One new snag found and fixed page-scoped: the Phase B `.tp-overlay`
+  (absolute `inset:0`) spans the whole flat document, so its `.tp-fpanel` is now `position:sticky` — the
+  dialog pins inside the visible pane instead of centring mid-document (Esc/focus-return verified). No
+  `100vh/100dvh` introduced; per-block `bid` identity + order preserved (the composable render string is
+  untouched — Q4 guardrail for the deferred present module). **Legacy frozen:** the legacy branch of
+  `renderPackSlide` and the shared base `.tp-slide`/`.tp-main`/`.tp-wrap` rules are unchanged; the legacy
+  Study/Present stage (fixed 720, exact min-fit) behaves identically; 200 legacy renders byte-identical;
+  validate green; 0 console errors.
 - **Object interactivity — Phase C1: author image interactivity in the editor (zero JSON).** The composable
   `image` object is now fully authorable from the inspector — `blockImageForm({src, alt, interactions[]})`,
   alongside `blockKcForm`/`blockTextForm` and separate from the legacy page-`image` case — and it's back in
