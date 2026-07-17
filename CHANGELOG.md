@@ -8,6 +8,20 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **S3 — the skill page: one small header block + full end-to-end composition.** New shared, token-driven
+  **`skillHeader`** block (the only new element): a lean skill header — breadcrumb/eyebrow + serif title +
+  "Skill N of M" count + a progress bar that **reuses `tpProg`** (for the clamped %) and the shared
+  **`.tp-ptrack`** primitive (no new progress code). One inspector form; theme-neutral (no `[data-theme]`
+  forks). With it, the **complete skill-mastery loop** is now authorable as a single flat composable page by
+  stacking shipped blocks: `skillHeader → text` (exposition + POI popups) `→ formula` (callout) `→
+  workedExample` (reveal demo) `→ practiceSet` (S2, interleaved self-checks + sticky mastery bar) `→
+  mastery` (∎). Proven end-to-end: the whole "Expanding a single bracket" skill authored from the palette
+  with zero hand-JSON, rendering as one scrolling page in ScholarMath and other themes by token swap —
+  Reveal → carded modal → three-way self-mark → the sticky bar aggregating → ∎ mastery. Contrast AA
+  (breadcrumb 5.39, title 16.91, count/sub 10.02). 200 legacy renders byte-identical;
+  `renderPackSlide`/`renderFragment`/`wirePack`/`resolveInteractions` + S1 (`fragSelfCheck`/`wireSelfCheck`)
+  + S2 (`fragPracticeSet`/`wirePracticeSet`) + `tpProg` unchanged; self-contained; session-only; validate
+  green; 0 console errors.
 - **S2 — the scrollable practice set + sticky mastery bar.** New shared, token-driven **`practiceSet`** block
   (renders in all themes): a set-as-container that **reuses the existing `items[]` pattern** (like
   `qGroup`/question — no general block nesting) and drives each item through **S1's `fragSelfCheck`** with a

@@ -309,6 +309,13 @@ inline `$…$`.
   with a live count and an ∎ when all clean. Set `reco` for the recommendation line. **Gating:** `gate:true`
   shows the first `batch` (default ⌈half⌉) questions, then a "Keep going" button reveals the rest; omit for
   short sets. Renders in every theme by token swap.
+- **`skillHeader`** *(S3 — skill-page header; shared, token-driven)* —
+  `{ type:'skillHeader', breadcrumb?, title, subtitle?, index?, total?, progress? }`. A lean skill header:
+  `breadcrumb`/eyebrow, serif `title` (`$…$` ok), optional `subtitle`; set both `index` and `total` for a
+  "Skill N of M" count; set `progress` (0–100) for a bar (reuses `tpProg` + the shared `.tp-ptrack`
+  primitive). Compose a full **skill page** by stacking `skillHeader → text → formula → workedExample →
+  practiceSet → mastery` on one composable page — the complete skill-mastery loop, authored from the
+  palette.
 - **`text` extensions** — `newthought` (string; rendered as a small-caps opening prefixed to the first
   paragraph) and per-`keyTerms`-row `kind` (`''` key term/POI · `'error'` red-pen classic error),
   `label` (tiny uppercase popup label), `num` (superscript footnote numeral — reserved for points you want
