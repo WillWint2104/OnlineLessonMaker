@@ -292,6 +292,15 @@ inline `$…$`.
   board behind a button on the existing `data-tp-reveal` rail.
 - **`mastery`** — `{ type:'mastery', text }`. Ink-native italic line ending in the ∎ tombstone — word it as
   a recommendation ("two clean expansions and this is mastered"), never a gate. Not a badge.
+- **`selfCheck`** *(S1 — self-check practice unit; shared, token-driven)* —
+  `{ type:'selfCheck', eyebrow?, prompt, hint?, revealLabel?, steps:[{desc, work?}], answer, qed? }`.
+  A prompt card with a **Reveal** button and optional **Hint** (rides the existing `data-tp-reveal` rail).
+  Reveal opens a carded **solution modal** on the existing Phase B focus-open rail: numbered **step cards**
+  (`desc` + optional mono `work`; both take `$…$`), an accent **answer card** (`answer`), and an ∎ **Q.E.D.**
+  seal unless `qed:false`. The modal footer carries a three-way **self-mark** — *Not yet* (keeps practising) /
+  *Partial* (revisit, no mastery credit) / *Got it* (counts) — stored per session only (no persistence).
+  Renders in every theme by token swap; the `mathematics`/`scholarmath` themes supply the `--sc-*` slots,
+  others use neutral fallbacks.
 - **`text` extensions** — `newthought` (string; rendered as a small-caps opening prefixed to the first
   paragraph) and per-`keyTerms`-row `kind` (`''` key term/POI · `'error'` red-pen classic error),
   `label` (tiny uppercase popup label), `num` (superscript footnote numeral — reserved for points you want

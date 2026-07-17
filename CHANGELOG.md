@@ -8,6 +8,27 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **S1 — ScholarMath default theme + the self-check practice unit.** A new **`scholarmath`** theme (cool
+  paper, green accent, board navy) added as a pure token variant (same #119 discipline: 3 value-only blocks —
+  chrome, `body`, `.tp-slide` slots — **zero structural `[data-theme]` rules**; fonts self-contained: Source
+  Serif 4 / Inter / Courier Prime already vendored). It reuses every existing composable fragment renderer
+  (a one-line loop mirrors the mathematics registrations), so composable pages render under it by token swap
+  alone. New shared, token-driven **`selfCheck`** block (renders in all five themes, authored once): a prompt
+  card (typeset `$…$`) with a **Reveal** button + optional **Hint** + a session status chip; Reveal opens a
+  **carded solution modal** — numbered step cards (first badge accent, later badges `--sc-step2`) + contained
+  mono working + an **accent answer card** with an **∎ Q.E.D.** seal, on a grid surface — and a **three-way
+  self-mark** footer (Not yet · Partial = revisit/no credit · Got it = counts). The modal rides the
+  **existing Phase B `data-tp-focus-open ↔ [data-tp-overlay id]` rail** and the hint the existing
+  `data-tp-reveal` rail — `resolveInteractions`/`wirePack` **reused, not rewritten** (byte-identical); the
+  self-mark is wired by the additive `wireSelfCheck()` (session-only via `TP_RUNTIME`, no `localStorage`).
+  Every `.tp-sc*` rule is shared with baked fallbacks so imperium/microhistory/geolearn/mathematics render
+  correctly too. Contrast: all pairs AA ≥4.5:1 — two spec values adjusted for AA text (`--muted #6B7280`→
+  `#5E646C`, `--amber #B7860B`→`#835F00`). Editor: `selfCheck` palette entry + lean form (context-aware step
+  default so `selfCheck` steps are `{desc,work}` while `workedExample` stays `{t,note}`). 200 legacy renders
+  byte-identical; `renderPackSlide`/`renderFragment`/`wirePack`/`resolveInteractions` unchanged; validate
+  green; 0 console errors. *(Interim: "Not yet" keeps the solution open for re-reading; a similar-variation
+  generator and a cross-page mastery ledger are future work — the stateless app tracks self-marks per session
+  only.)*
 - **Mathematics theme — "Paper & Board", the seed maths visual identity + core maths block treatments.**
   The `mathematics` token set is re-valued (values only — the selector count is unchanged, zero new
   structural `[data-theme=mathematics]` rules): warm paper `#F4F2EC`, blue-black ink `#1A1C22`, deep board
