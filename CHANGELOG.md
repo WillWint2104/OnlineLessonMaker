@@ -8,6 +8,22 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **S2 — the scrollable practice set + sticky mastery bar.** New shared, token-driven **`practiceSet`** block
+  (renders in all themes): a set-as-container that **reuses the existing `items[]` pattern** (like
+  `qGroup`/question — no general block nesting) and drives each item through **S1's `fragSelfCheck`** with a
+  per-item bk (`<setbid>-<j>`) so every id/self-mark key stays unique (reuse, not fork). A set header
+  (title/subtitle) + a **sticky mastery bar** (`position:sticky` — pins to the flat-page scroll owner
+  `#stage`) that aggregates the **existing `TP_RUNTIME` self-marks** across the set: clean (Got it) fills a
+  green segment, Partial fills amber with **no mastery credit**, pending stays grey, with a live count
+  ("2 of 4 clean · 1 to revisit") and an **∎ mastered** flag when every item is clean. Optional **keep-going
+  gating** for long sets shows a first batch then reveals the rest via the **existing `data-tp-reveal` rail**.
+  The bar is recomputed by the additive `wirePracticeSet()` (rides the self-mark click; no `wirePack` change,
+  no new state). Every `.tp-ps*` rule is shared with `--sc-*` fallbacks so all themes render by token swap.
+  Editor: `practiceSet` palette entry + form (header + gating config + `items[]` of self-checks via the
+  shared `scQFields`; context-aware item/step add defaults). Contrast AA (count/reco 16.91/10.02, accent
+  5.39, segments 4.55/4.91 on the track). 200 legacy renders byte-identical;
+  `renderPackSlide`/`renderFragment`/`wirePack`/`resolveInteractions`/`fragSelfCheck`/`wireSelfCheck`
+  unchanged; session-only (no `localStorage`); validate green; 0 console errors.
 - **S1 — ScholarMath default theme + the self-check practice unit.** A new **`scholarmath`** theme (cool
   paper, green accent, board navy) added as a pure token variant (same #119 discipline: 3 value-only blocks —
   chrome, `body`, `.tp-slide` slots — **zero structural `[data-theme]` rules**; fonts self-contained: Source

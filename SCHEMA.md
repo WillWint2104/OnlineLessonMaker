@@ -301,6 +301,14 @@ inline `$…$`.
   *Partial* (revisit, no mastery credit) / *Got it* (counts) — stored per session only (no persistence).
   Renders in every theme by token swap; the `mathematics`/`scholarmath` themes supply the `--sc-*` slots,
   others use neutral fallbacks.
+- **`practiceSet`** *(S2 — scrollable practice set + sticky mastery bar; shared, token-driven)* —
+  `{ type:'practiceSet', eyebrow?, title?, subtitle?, reco?, gate?, batch?, items:[<selfCheck>] }`.
+  A set header plus a **sticky mastery bar** and a column of `selfCheck` questions (`items[]`, each the
+  same shape as a `selfCheck` block — `{prompt, hint?, steps, answer, ...}`). The bar aggregates the
+  per-item self-marks (session state): green = clean (Got it), amber = Partial (no credit), grey = pending,
+  with a live count and an ∎ when all clean. Set `reco` for the recommendation line. **Gating:** `gate:true`
+  shows the first `batch` (default ⌈half⌉) questions, then a "Keep going" button reveals the rest; omit for
+  short sets. Renders in every theme by token swap.
 - **`text` extensions** — `newthought` (string; rendered as a small-caps opening prefixed to the first
   paragraph) and per-`keyTerms`-row `kind` (`''` key term/POI · `'error'` red-pen classic error),
   `label` (tiny uppercase popup label), `num` (superscript footnote numeral — reserved for points you want
