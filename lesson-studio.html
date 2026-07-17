@@ -1772,9 +1772,12 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   /* shared prose slots (Inter body) */
   --tp-prose-size:18px;--tp-prose-lh:1.7;
   /* Paper & Board treatment slots (formula/chalkboard/POI look right here too) */
-  --formula-fill:#F0F5F1;--formula-frame:#CFE0D5;--formula-stroke:#1A7A3C;
+  --formula-fill:#FFFFFF;--formula-frame:#E4E8EB;--formula-stroke:#1A7A3C;--formula-sh:0 1px 3px rgba(26,29,33,.07);   /* white card look + soft shadow (mockup match) */
   --wx-bg:#16202B;--wx-ink:#E8EDF2;--wx-dim:#9FB0C0;
   --poi:#1A7A3C;--redpen:#B23A34;--popup-surface:#FFFFFF;
+  /* per-block card treatment (mockup: white cards on the cool-grey --background, soft shadow, rounded) */
+  --frag-card-bg:#FFFFFF;--frag-card-border:1px solid #E4E8EB;--frag-card-rad:14px;--frag-card-sh:0 1px 3px rgba(26,29,33,.06),0 8px 20px -12px rgba(26,29,33,.12);--frag-card-pad:24px 28px;
+  --frag-card-hdr-rule:1px solid #E4E8EB;--frag-card-hdr-pad:16px;
   /* self-check slots (consumed by the SHARED .tp-sc* structures; other themes use the baked fallbacks) */
   --sc-accent:#1A7A3C;--sc-accent-tint:#E7F4EC;--sc-amber:#835F00;--sc-amber-tint:#FBF3DD;
   --sc-step2:#4B5AA8;--sc-step2-tint:#E9ECF7;--sc-wrong:#B23A34;--sc-board:#16202B;--sc-board-accent:#5EE39B;--sc-grid:#EDF0F2;
@@ -2326,12 +2329,24 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-frag-prose{font-family:var(--tp-body);font-size:var(--tp-prose-size,16px);line-height:var(--tp-prose-lh,1.65);color:var(--on-surface);}   /* prose slots (Paper & Board sizes Garamond up; other themes keep the 16/1.65 fallback) */
 .tp-slide .tp-frag-prose p{margin:0 0 12px;} .tp-slide .tp-frag-prose p:last-child{margin-bottom:0;}
 .tp-slide .tp-frag-na{border:1px dashed var(--outline-variant);border-radius:var(--tp-rad-btn);padding:14px 16px;color:var(--on-surface-variant);font-family:var(--tp-body);font-size:14px;}
+/* ═══ Polish — per-block CARD treatment (SHARED, opt-in via the --frag-card-* slots; every fallback is
+   transparent/none so a theme that doesn't set them is visually unchanged — no [data-theme] structural
+   fork). Scoped to composable pages, applied by frag-type: the "plain content" blocks (text/formula/
+   skillHeader/mastery) become white cards; blocks that already bring their own surface (self-check,
+   practice set, chalkboard) are untouched → never double-carded. ═══ */
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="text"],
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="skillHeader"],
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="mastery"]{
+  background:var(--frag-card-bg,transparent);border:var(--frag-card-border,0 solid transparent);
+  border-radius:var(--frag-card-rad,0);box-shadow:var(--frag-card-sh,none);padding:var(--frag-card-pad,0);}
+/* the skill header inside a card drops its own divider (the card is the boundary) when carded */
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="skillHeader"] .tp-skh{border-bottom:var(--frag-card-hdr-rule,1px solid var(--outline-variant));padding-bottom:var(--frag-card-hdr-pad,18px);}
 /* ═══ Paper & Board treatments (SHARED structures, token-driven — themes only supply values via the
    --formula-* / --wx-* / --poi / --redpen / --popup-surface slots; every fallback keeps other themes
    neutral). No [data-theme] selector below (the #119 discipline). ═══ */
 .tp-slide .tp-newthought{font-variant:small-caps;letter-spacing:.045em;}
 /* 2 — formula container: display maths framed (1px frame, 3px left-stroke, centred ink) */
-.tp-slide .tp-formula{margin:0;background:var(--formula-fill,var(--surface-container-low));border:1px solid var(--formula-frame,var(--outline-variant));border-left:3px solid var(--formula-stroke,var(--primary));border-radius:var(--tp-rad-btn);padding:20px 24px;text-align:center;color:var(--on-surface);}
+.tp-slide .tp-formula{margin:0;background:var(--formula-fill,var(--surface-container-low));border:1px solid var(--formula-frame,var(--outline-variant));border-left:3px solid var(--formula-stroke,var(--primary));border-radius:var(--tp-rad-btn);padding:20px 24px;text-align:center;color:var(--on-surface);box-shadow:var(--formula-sh,none);}   /* --formula-sh lets a theme card the formula (default none → unchanged) */
 .tp-slide .tp-formula math{font-size:1.35em;}
 .tp-slide .tp-formula-cap{display:block;margin-top:12px;font-family:var(--tp-body);font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--on-surface-variant);}
 /* 4 — chalkboard worked example (the signature): dark board, chalk steps, quiet eyebrow */
@@ -2415,7 +2430,12 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-ps-h{font-family:var(--tp-serif);font-size:26px;line-height:1.2;color:var(--on-surface);margin:0 0 6px;}
 .tp-slide .tp-ps-sub{font-size:var(--tp-prose-size,16px);line-height:1.55;color:var(--on-surface-variant);margin:0 0 4px;}
 /* sticky mastery bar — sticks to the flat-page scroll owner (#stage) */
-.tp-slide .tp-ps-bar{position:sticky;top:6px;z-index:6;margin:14px 0 20px;background:var(--surface-lowest);border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);box-shadow:var(--tp-cardsh);padding:13px 16px;display:flex;flex-direction:column;gap:9px;}
+/* Polish — mastery status bar moved to the END of the set via `order` (flex-column reorder; no DOM change →
+   fragPracticeSet byte-identical), so questions never scroll under it. NOTE: position:sticky is unreliable
+   here — the flat-page canvas is transform:scale()'d (fitCanvas width-fill), which breaks sticky's viewport
+   relationship (it pins mid-content). A static end-of-set summary bar is the robust choice that NEVER
+   overlaps content; true persistent pinning would need a JS scroll-follow (deferred). */
+.tp-slide .tp-ps-bar{order:99;margin:4px 0 0;background:var(--surface-lowest);border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);box-shadow:var(--tp-cardsh);padding:14px 18px;display:flex;flex-direction:column;gap:9px;}
 .tp-slide .tp-ps-bar.done{border-color:var(--sc-accent,var(--primary));}
 .tp-slide .tp-ps-track{height:9px;border-radius:9999px;background:var(--surface-container,#e7eaec);overflow:hidden;display:flex;}
 .tp-slide .tp-ps-seg{height:100%;transition:width .35s cubic-bezier(.2,.7,.2,1);}
@@ -2425,7 +2445,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-ps-count{font-family:var(--tp-body);font-size:13.5px;font-weight:700;color:var(--on-surface);font-variant-numeric:tabular-nums;}
 .tp-slide .tp-ps-reco{font-family:var(--tp-serif);font-style:italic;font-size:14.5px;color:var(--on-surface-variant);}
 .tp-slide .tp-ps-qed{font-style:normal;font-weight:700;color:var(--sc-accent,var(--primary));}
-.tp-slide .tp-ps-items{display:flex;flex-direction:column;gap:20px;}
+.tp-slide .tp-ps-items{display:flex;flex-direction:column;gap:20px;padding-bottom:14px;}   /* clearance so the last question clears the resting bottom bar */
 .tp-slide .tp-ps-item{width:100%;}
 .tp-slide .tp-ps-more{display:flex;flex-direction:column;gap:20px;}
 .tp-slide .tp-ps-keep{align-self:flex-start;display:inline-flex;align-items:center;gap:7px;font:inherit;font-size:15px;font-weight:600;padding:11px 20px;border-radius:var(--tp-rad-btn);background:transparent;border:1.5px dashed var(--outline-variant);color:var(--sc-accent,var(--primary));cursor:pointer;}

@@ -7,6 +7,23 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **Skill-page polish (S2/S3) — per-block cards + mastery-bar placement.** Two fixes from the first real
+  ScholarMath skill-page load, CSS/token-only (all render/wire logic byte-identical). **(1) Per-block cards:**
+  the "plain content" blocks (`text`/`formula`/`skillHeader`/`mastery`) now render as white cards on the
+  cool-grey background (soft shadow, rounded) to match the ScholarMath mockups — carded like the self-checks,
+  not flush. Token-driven and **opt-in**: a shared rule keyed on `data-tp-frag-type` reads new `--frag-card-*`
+  slots (+ `--formula-sh`) with transparent/none fallbacks, so ScholarMath sets them while every other theme
+  is visually unchanged — no `[data-theme]` structural fork, and blocks that bring their own surface
+  (self-check, practice set, chalkboard) are never double-carded. **(2) Mastery bar:** moved from a top-sticky
+  bar (which covered questions) to a clean **end-of-set summary card** via flexbox `order` (no DOM change →
+  `fragPracticeSet` byte-identical), so it never overlaps content. *Finding:* `position:sticky` can't pin in
+  the flat page — the canvas is `transform:scale()`'d (fitCanvas width-fill), which breaks sticky (it floats
+  mid-content); a static end-of-set bar is the robust choice (true persistent pinning would need JS
+  scroll-follow, deferred). Contrast AA; self-contained; 200 legacy renders byte-identical;
+  `renderPackSlide`/`renderFragment`/`wirePack`/`resolveInteractions` + `fragSelfCheck`/`fragPracticeSet`/
+  `fragSkillHeader` unchanged; validate green; 0 console errors.
+
 ### Added
 - **S3 — the skill page: one small header block + full end-to-end composition.** New shared, token-driven
   **`skillHeader`** block (the only new element): a lean skill header — breadcrumb/eyebrow + serif title +
