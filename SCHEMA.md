@@ -278,6 +278,28 @@ only the four supported effects with payload fields matched to each, and enforce
 rule above (a host effect disables adding more; a second interaction defaults to `reveal`). (video / button /
 hotspot objects arrive in later Phase C steps.)
 
+## Paper & Board blocks *(maths seed — shared token-driven structures, page-block only)*
+
+Introduced with the `mathematics` "Paper & Board" identity but **available to every theme** (themes only
+supply token values; neutral fallbacks are baked into the shared rules). Maths strings are typeset by the
+engine's TPMath (native MathML): block `math` fields take bare TPMath (`a(b+c)=ab+ac`); prose fields take
+inline `$…$`.
+
+- **`formula`** — `{ type:'formula', math, label? }`. Display maths in the framed container (1px frame,
+  3px left-stroke, centred ink; `--formula-fill/-frame/-stroke`).
+- **`workedExample`** — `{ type:'workedExample', eyebrow?, title?, steps:[{t, note?}], reveal?, revealLabel? }`.
+  The chalkboard: `--wx-bg` board, `--wx-ink` chalk steps, `--wx-dim` notes. `reveal` (truthy) hides the
+  board behind a button on the existing `data-tp-reveal` rail.
+- **`mastery`** — `{ type:'mastery', text }`. Ink-native italic line ending in the ∎ tombstone — word it as
+  a recommendation ("two clean expansions and this is mastered"), never a gate. Not a badge.
+- **`text` extensions** — `newthought` (string; rendered as a small-caps opening prefixed to the first
+  paragraph) and per-`keyTerms`-row `kind` (`''` key term/POI · `'error'` red-pen classic error),
+  `label` (tiny uppercase popup label), `num` (superscript footnote numeral — reserved for points you want
+  numbered and referable). A row with any of these renders as a **point-of-interest**: dotted `--poi`
+  underline inline (mark the term `**like this**` in prose), popup on the existing focus-open rail with a
+  `--poi` (or `--redpen`) left-stroke on `--popup-surface`. Rows with only `{term, definition}` render
+  exactly as before.
+
 ## `outro`
 
 Lesson‑complete screen. Up to **3 stat tiles** — **omit the score entry from `stats[]` to hide that
