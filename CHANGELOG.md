@@ -8,6 +8,25 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Mathematics theme — "Paper & Board", the seed maths visual identity + core maths block treatments.**
+  The `mathematics` token set is re-valued (values only — the selector count is unchanged, zero new
+  structural `[data-theme=mathematics]` rules): warm paper `#F4F2EC`, blue-black ink `#1A1C22`, deep board
+  green `#17352B`, POI green `#2F6B56` as `--primary`, red pen `#B23A34` **reserved for classic errors**,
+  EB Garamond (already vendored) sized up to 19px/1.72 via new shared prose slots. Maths is typeset by the
+  engine's own **TPMath → native MathML** (KaTeX is NOT the engine's renderer — vendoring it would breach
+  the no-third-party rule and roughly double the file; flagged in the PR). New **shared, token-driven
+  structures** available to every theme (themes only supply values; neutral fallbacks baked in):
+  **`formula`** block (display TPMath in the framed container — 1px `--formula-frame`, 3px `--formula-stroke`
+  left, `--formula-fill`), **`workedExample`** chalkboard block (`--wx-bg/--wx-ink/--wx-dim`; optional
+  reveal rides the EXISTING `data-tp-reveal` rail), **`mastery`** ∎ line (ink-native, recommend-don't-gate,
+  not a badge), **POI popups** — a `keyTerms` row with `kind`/`label`/`num` renders a dotted `--poi`
+  underline inline term (superscript numeral reserved via `num`; `kind:'error'` switches underline + popup
+  stroke to `--redpen`) whose popup rides the EXISTING Phase B `data-tp-focus-open ↔ [data-tp-overlay id]`
+  rail — `resolveInteractions`/`wirePack`/`tpKeyTerms`/`tpTermModal` all byte-identical; rows without those
+  fields take the original code path unchanged — and a **`newthought`** small-caps opening on the text
+  block. All authored in the editor (lean forms + palette entries). Contrast: every text/background pair
+  AA-verified ≥4.5:1 — one spec value adjusted (`--ink-faint #8A8578` → `#6E6A5E`, 3.29 → 4.83). 200 legacy
+  renders byte-identical (all four themes, Study/Present + examples); validate green; 0 console errors.
 - **Composable pages — F1+F2: de-staged into flat, flowing pages (study-first).** A composable page
   (`{blocks:[…]}`) no longer renders inside the fixed 720px stage frame: `fitCanvas` now puts a `blocks[]`
   page in the existing `scroll` flow mode in Study, the editor preview pane AND Present alike (study-only
