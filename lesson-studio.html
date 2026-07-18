@@ -2464,6 +2464,20 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-skh-sub{font-size:var(--tp-prose-size,16px);line-height:1.5;color:var(--on-surface-variant);margin:10px 0 0;max-width:62ch;}
 .tp-slide .tp-skh-prog{margin-top:16px;}
 @media (max-width:760px){ .tp-slide .tp-skh-title{font-size:26px;} }
+/* ═══ Banner / hero block (SHARED, token-driven, theme-neutral): a full-bleed background image with a
+   legibility veil and overlaid eyebrow / serif title / subtitle. Text is white over the veil; with no
+   image it falls back to a dark placeholder + ink-coloured text. No [data-theme] fork. ═══ */
+.tp-slide .tp-bn{position:relative;isolation:isolate;overflow:hidden;border-radius:var(--tp-rad);min-height:var(--bn-h,240px);display:flex;align-items:flex-end;background:var(--surface-container);}
+.tp-slide .tp-bn-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+.tp-slide .tp-bn-veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(12,16,22,.10) 0%,rgba(12,16,22,.66) 100%);}
+.tp-slide .tp-bn-ph{position:absolute;inset:0;z-index:0;display:flex;align-items:center;justify-content:center;color:var(--on-surface-variant);}
+.tp-slide .tp-bn-empty{border:1px solid var(--outline-variant);}
+.tp-slide .tp-bn-inner{position:relative;z-index:2;padding:26px 30px;max-width:var(--tp-measure);color:#fff;}
+.tp-slide .tp-bn-empty .tp-bn-inner{color:var(--on-surface);}   /* no image → dark ink on the light placeholder */
+.tp-slide .tp-bn-ey{font-family:var(--tp-body);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:inherit;opacity:.9;margin-bottom:8px;}
+.tp-slide .tp-bn-h{font-family:var(--tp-serif);font-size:clamp(26px,3.4vw,40px);line-height:1.1;letter-spacing:-.01em;margin:0;color:inherit;}
+.tp-slide .tp-bn-sub{font-family:var(--tp-body);font-size:16px;line-height:1.5;margin:10px 0 0;color:inherit;opacity:.94;max-width:56ch;}
+@media (max-width:760px){ .tp-slide .tp-bn{min-height:var(--bn-h-sm,190px);} .tp-slide .tp-bn-inner{padding:20px 18px;} }
 /* graphQuestion (PR3b) — token-driven coordinate plane + answer surface; theme only via slots (no literal colour) */
 .tp-slide .tp-gq2-wrap{width:100%;max-width:var(--tp-measure);margin:0 auto;display:flex;flex-direction:column;gap:16px;padding:6px 6px 18px;}
 .tp-slide .tp-gq2-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
@@ -3061,11 +3075,11 @@ const ICON={
   medal:'<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/><path d="M12 6.4l.85 1.7 1.9.28-1.37 1.33.32 1.88L12 10.8l-1.7.9.32-1.88L9.25 8.5l1.9-.28z" fill="currentColor" stroke="none"/></svg>',
   book:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6c-2-1.4-5-1.4-7 0v12c2-1.4 5-1.4 7 0 2-1.4 5-1.4 7 0V6c-2-1.4-5-1.4-7 0z"/><path d="M12 6v12"/></svg>',
   outcomes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>'};
-const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header"};
+const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner"};
 /* themes whose slides render through the dedicated JSON slide pack (renderPackSlide) */
 const PACK_THEMES=new Set(['imperium','microhistory','geolearn','mathematics','scholarmath']);   // S1 — ScholarMath is a token variant on the shared pack path (composable pages)
 /* pack slide types → nav label (these themes use `title`/`type` rather than the engine's slide fields) */
-const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",graphQuestion:"Graph question",outro:"Outro",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header"};
+const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",graphQuestion:"Graph question",outro:"Outro",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner"};
 /* infographic data palette: figure.color is a theme token, never a raw hex; defaults cycle */
 const IG_TOKENS=['primary','secondary','tertiary'];
 function igColor(c){ return c==='secondary'?'var(--data-2)':c==='tertiary'?'var(--data-3)':'var(--data-1)'; }
@@ -3862,6 +3876,7 @@ const BLOCK_SEED={   // lean seeds for add-block (labeledGraphic/graphQuestion r
       {type:'selfCheck',prompt:'Expand $-2(3x-5)$.',steps:[{desc:'Multiply BOTH terms by $-2$; mind the signs.',work:'$= -6x+10$'}],answer:'$-6x+10$'}
     ]},
   skillHeader:{type:'skillHeader',breadcrumb:'Algebra · Brackets',title:'Expanding a single bracket',subtitle:'',index:'3',total:'9',progress:'30'},   // S3 — skill-page header
+  banner:{type:'banner',src:'',alt:'',eyebrow:'Unit 4 · Algebra',title:'Working with brackets',subtitle:'Expand, factorise, and simplify.'},   // hero banner block
 };
 function blockSeed(t){ return JSON.parse(JSON.stringify(BLOCK_SEED[t] || PACK_FACTORY[t] || {type:t})); }
 function fragTypesForAdd(){ const theme=(LESSON.meta&&LESSON.meta.theme)||''; return Object.keys(FRAG).filter(t=>FRAG[t]&&FRAG[t][theme]); }   // only FRAG-registered types (a type with no fragment can't be composed) — image is now fully authorable (Phase C1), so it's offered too
@@ -3938,6 +3953,13 @@ function blockSelfCheckForm(i,b,sel,base){   // S1 — self-check: prompt + hint
     +scQFields(i,b,sel,base)
     +ig('qed',sel,inSel('Q.E.D. seal',`${base}.qed`,b.qed===false?'0':'1',[['1','Show ∎ Q.E.D.'],['0','Hide']]));
 }
+function blockBannerForm(i,b,sel,base){   // hero banner (background image + overlaid eyebrow/title/subtitle)
+  return ig('src',sel,inT('Background image URL / data URI',`${base}.src`,b.src))
+    +ig('alt',sel,inT('Alt text (accessibility)',`${base}.alt`,b.alt))
+    +ig('eyebrow',sel,inT('Eyebrow (optional)',`${base}.eyebrow`,b.eyebrow))
+    +ig('title',sel,inT('Title (use $…$ for maths)',`${base}.title`,b.title))
+    +ig('subtitle',sel,inA('Subtitle (optional)',`${base}.subtitle`,b.subtitle));
+}
 function blockSkillHeaderForm(i,b,sel,base){   // S3 — skill header (breadcrumb + title + count + progress); reuses tpProg at render
   return ig('breadcrumb',sel,inT('Breadcrumb / eyebrow',`${base}.breadcrumb`,b.breadcrumb))
     +ig('title',sel,inT('Skill title (use $…$ for maths)',`${base}.title`,b.title))
@@ -3967,6 +3989,7 @@ function blockForm(i,k,b,sel){   // dispatch: reuse the page inspector case (reb
   if(b.type==='selfCheck') return blockSelfCheckForm(i,b,sel,base);       // S1 — self-check practice unit
   if(b.type==='practiceSet') return blockPracticeSetForm(i,b,sel,base);   // S2 — practice set (items[] of self-checks)
   if(b.type==='skillHeader') return blockSkillHeaderForm(i,b,sel,base);   // S3 — skill-page header
+  if(b.type==='banner') return blockBannerForm(i,b,sel,base);             // hero banner block
   return inspectorForm(i,b,sel,base);   // penResponse / graphQuestion / labeledGraphic — schemas match; base rebases every path
 }
 function blockOutline(i,s,sel){
@@ -6318,6 +6341,20 @@ function fragSkillHeader(b,bk){
     </header>`;
 }
 FRAG.skillHeader={imperium:fragSkillHeader,microhistory:fragSkillHeader,geolearn:fragSkillHeader,mathematics:fragSkillHeader,scholarmath:fragSkillHeader};
+/* Banner / hero block — full-bleed background image + veil + overlaid eyebrow/title/subtitle. Shared,
+   token-driven, one fn × all themes. Reuses tpSrc for src resolution; placeholder when no image. */
+function fragBanner(b,bk){
+  const src=tpSrc(b.src), alt=esc(b.alt||'');
+  const bg = src ? `<img class="tp-bn-img" src="${esc(src)}" alt="${alt}" loading="lazy"><div class="tp-bn-veil" aria-hidden="true"></div>`
+                 : `<div class="tp-bn-ph" role="img" aria-label="${alt||'Banner image placeholder'}">${tpIc('image',34)}</div>`;
+  return `<section class="tp-bn${src?'':' tp-bn-empty'}">${bg}
+      <div class="tp-bn-inner">
+        ${b.eyebrow?`<div class="tp-bn-ey">${esc(b.eyebrow)}</div>`:''}
+        ${b.title?`<h1 class="tp-bn-h">${tpRichMath(b.title)}</h1>`:''}
+        ${b.subtitle?`<p class="tp-bn-sub">${tpRichMath(b.subtitle)}</p>`:''}
+      </div></section>`;
+}
+FRAG.banner={imperium:fragBanner,microhistory:fragBanner,geolearn:fragBanner,mathematics:fragBanner,scholarmath:fragBanner};
 /* v2 Maths — graphQuestion (PR3b): a token-driven SVG coordinate plane + an answer surface. The student
    enters a function with the full equation editor (answerMode 'equation'/'both', mounted in wirePack via
    TPMath.editor) and/or plots points on the plane (answerMode 'points'/'both'). Marking is by FUNCTION

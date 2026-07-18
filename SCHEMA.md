@@ -309,6 +309,12 @@ inline `$…$`.
   with a live count and an ∎ when all clean. Set `reco` for the recommendation line. **Gating:** `gate:true`
   shows the first `batch` (default ⌈half⌉) questions, then a "Keep going" button reveals the rest; omit for
   short sets. Renders in every theme by token swap.
+- **`banner`** *(hero block; shared, token-driven)* —
+  `{ type:'banner', src, alt?, eyebrow?, title, subtitle? }`. A full-bleed background image (`src` — URL or
+  data URI) with a legibility veil and an overlaid `eyebrow` / serif `title` (`$…$` ok) / `subtitle`. White
+  text over the veil; with no `src` it falls back to a dark placeholder with ink-coloured text. Rounded,
+  clipped, `--bn-h` min-height. Drop it at the top of a composable page as a hero. Renders in every theme by
+  token swap.
 - **`skillHeader`** *(S3 — skill-page header; shared, token-driven)* —
   `{ type:'skillHeader', breadcrumb?, title, subtitle?, index?, total?, progress? }`. A lean skill header:
   `breadcrumb`/eyebrow, serif `title` (`$…$` ok), optional `subtitle`; set both `index` and `total` for a
