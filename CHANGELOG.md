@@ -7,6 +7,14 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **Composable page reading column was narrow (~half width) at laptop sizes.** F1 made the flat page
+  `.tp-slide[data-tp-type="page"]` `position:relative` but not full-width; since `#slide` is `align-items:center`
+  it shrank to content width, collapsing the reading column to ~48% of the stage on narrower windows (legacy
+  slides fill via `position:absolute;inset:0`). Added `width:100%` to the flat-page slide so it fills to its
+  `--tp-measure` (~85%). CSS-only, all themes; 200 legacy renders byte-identical; validate green.
+
+
 ### Changed
 - **Skill-page polish (S2/S3) — per-block cards + mastery-bar placement.** Two fixes from the first real
   ScholarMath skill-page load, CSS/token-only (all render/wire logic byte-identical). **(1) Per-block cards:**

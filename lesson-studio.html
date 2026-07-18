@@ -2310,7 +2310,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    rule below is scoped to data-tp-type="page"; the shared base .tp-slide/.tp-main/.tp-wrap rules legacy
    slides use are untouched. The extra [data-tp-theme] (always present on pack slides) only out-ranks
    geolearn's `:root[data-theme="geolearn"] .tp-slide{height:100%}`. */
-.tp-slide[data-tp-type="page"][data-tp-theme]{position:relative;inset:auto;height:auto;min-height:720px;overflow:visible;}
+.tp-slide[data-tp-type="page"][data-tp-theme]{position:relative;inset:auto;height:auto;min-height:720px;overflow:visible;width:100%;}   /* width:100% — #slide is align-items:center, so without it a flat page shrinks to content width (reading column collapsed to ~half at laptop widths); legacy slides fill via inset:0 */
 .tp-slide[data-tp-type="page"] .tp-main{overflow:visible;}
 /* F2 — modal/zoom/tooltip overlays on a flat page: the absolute inset:0 dim now spans the whole document
    (its positioned ancestor is the full-height page), so pin the PANEL to the visible pane (sticky against
