@@ -33,6 +33,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **Banner / hero block.** New shared, token-driven `banner` block for composable pages: a full-bleed
+  background image with a legibility veil and an overlaid eyebrow / serif title / subtitle (white text over
+  the veil; dark ink on a placeholder when no image). One renderer skins across every theme via slots — no
+  `[data-theme]` fork — authored from the palette. Contrast AA (white/veil 13:1, ink/placeholder 14:1);
+  self-contained; 200 legacy renders byte-identical; renderPackSlide/renderFragment/wirePack/
+  resolveInteractions unchanged; validate green; 0 console errors.
 - **S3 — the skill page: one small header block + full end-to-end composition.** New shared, token-driven
   **`skillHeader`** block (the only new element): a lean skill header — breadcrumb/eyebrow + serif title +
   "Skill N of M" count + a progress bar that **reuses `tpProg`** (for the clamped %) and the shared
