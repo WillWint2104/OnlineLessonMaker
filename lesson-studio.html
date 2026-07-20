@@ -2687,6 +2687,27 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fpanel-tip{max-width:420px;padding:20px 22px;}   /* Phase B tooltip: a compact variant of the shared focus panel */
 /* Phase B — interactive image object + click-to-reveal container (token-driven, theme-agnostic) */
 .tp-slide .tp-int-img{display:block;max-width:100%;height:auto;border-radius:var(--tp-rad-btn);border:1px solid var(--outline-variant);}
+/* ═══ Stage B — image PLACEMENTS (opt-in via `placement`; an image with no placement keeps its current
+   bare-<img> rendering byte-identical). Reuses the audited precedents: figure/figcaption markup, the
+   .tp-lgr-cap caption recipe, .tp-int-img content-sizing (max-width:100%/height:auto — "a small image
+   stays small"), and the .tp-bn-split 1fr/1fr grid + 760px reflow. Token-only, no [data-theme] fork. ═══ */
+.tp-slide .tp-imgf{margin:0;}
+.tp-slide .tp-imgf img{display:block;max-width:100%;height:auto;border-radius:var(--tp-rad-btn);border:1px solid var(--outline-variant);object-fit:contain;}
+.tp-slide .tp-imgf-cap{font-size:13px;font-style:italic;color:var(--on-surface-variant);margin-top:8px;}
+/* contained — centred ~78% column, whole image, caption under */
+.tp-slide .tp-imgf-contained{width:78%;max-width:78%;margin-left:auto;margin-right:auto;}
+.tp-slide .tp-imgf-contained img{margin-left:auto;margin-right:auto;}
+/* beside — image + short text as ONE unit; reflows to 1-col */
+.tp-slide .tp-imgf-beside{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;}
+.tp-slide .tp-imgf-beside .tp-imgf-text{font-family:var(--tp-body);font-size:var(--tp-prose-size,16px);line-height:var(--tp-prose-lh,1.65);color:var(--on-surface);}
+/* pair — two images side by side with optional labels; reflows to 1-col */
+.tp-slide .tp-imgf-pair{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;}
+.tp-slide .tp-imgf-pair .tp-imgf-lab{display:block;margin-top:8px;font-family:var(--tp-body);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--on-surface-variant);}
+.tp-slide .tp-imgf-pair .tp-imgf-cap{grid-column:1/-1;}   /* caption spans both columns, sits under the pair */
+@media (max-width:760px){
+  .tp-slide .tp-imgf-beside,.tp-slide .tp-imgf-pair{grid-template-columns:1fr;}
+  .tp-slide .tp-imgf-contained{width:100%;max-width:100%;}
+}
 .tp-slide .tp-frag[data-tp-focus-open]{cursor:pointer;}
 .tp-slide .tp-int-imgph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:140px;border:1px dashed var(--outline-variant);border-radius:var(--tp-rad-btn);color:var(--on-surface-variant);background:var(--surface-container);}
 .tp-slide .tp-int-reveal{margin-top:10px;}
@@ -3953,8 +3974,22 @@ function blockImageForm(i,b,sel,base){
   const hasHost=its.some(it=>it&&HOST[it.effect]);
   const multi=its.length>1;   // 2+ interactions ⇒ reveals-only (host effects are unreachable here)
   const guard=hasHost?'A full-frame effect (modal / zoom / tooltip) owns every click on the image, so it can’t share the object with another interaction. Use a second image object for more.':'';
-  return ig('src',sel,inT('Image URL / data URI',`${base}.src`,b.src))
-    +ig('alt',sel,inT('Alt text (accessibility)',`${base}.alt`,b.alt))
+  /* Stage B — placement + its conditional fields. The alt warning is SOFT and fires only on a
+     placement-bearing image (i.e. one authored/edited in the new flow), so untouched legacy image
+     blocks are never nagged. */
+  const place=String(b.placement||'').trim();
+  const altWarn=(place && !String(b.alt||'').trim()) ? `<div class="mwarn">⚠ Alt text is required for accessibility — describe the image for screen-reader users.</div>` : '';
+  const pairWarn=(place==='pair' && ((b.a&&b.a.src&&!(b.a.alt||'').trim()) || (b.b&&b.b.src&&!(b.b.alt||'').trim()))) ? `<div class="mwarn">⚠ Each image in a comparison pair needs its own alt text.</div>` : '';
+  let placeFields='';
+  if(place==='beside') placeFields=ig('text',sel,inA('Text beside the image (one purpose-unit; $…$ for maths)',`${base}.text`,b.text));
+  else if(place==='pair') placeFields=
+      ig('a',sel,inT('Left image URL / data URI',`${base}.a.src`,(b.a||{}).src)+inT('Left alt text',`${base}.a.alt`,(b.a||{}).alt)+inT('Left label (optional)',`${base}.a.label`,(b.a||{}).label))
+     +ig('b',sel,inT('Right image URL / data URI',`${base}.b.src`,(b.b||{}).src)+inT('Right alt text',`${base}.b.alt`,(b.b||{}).alt)+inT('Right label (optional)',`${base}.b.label`,(b.b||{}).label));
+  return ig('placement',sel,inSel('Placement',`${base}.placement`,place,[['','Inline (default — bare image)'],['contained','Contained figure (centred ~78%, caption)'],['beside','Beside text (one unit, stacks on mobile)'],['pair','Comparison pair (two images)']],'data-reinspect'))
+    +ig('src',sel,inT('Image URL / data URI',`${base}.src`,b.src))
+    +ig('alt',sel,inT('Alt text (accessibility)',`${base}.alt`,b.alt)+altWarn+pairWarn)
+    +(place?ig('caption',sel,inT('Caption (optional, shown under the figure)',`${base}.caption`,b.caption)):'')
+    +placeFields
     +repeatGroup(i,b,sel,'interactions','Interaction','Interactivity (optional)',(it,j)=>{
       const ip=`${base}.interactions.${j}`, eff=(it&&it.effect)||'modal', pl=(it&&it.payload)||{};
       const effOpts=multi?EFFECTS.filter(([v])=>v==='reveal'||v===eff):EFFECTS;   // in a multi-interaction object only reveals compose (keep current value for hand-authored data)
@@ -6628,7 +6663,28 @@ function resolveInteractions(b,bk){
    wired generically by renderFragment (below), so fragImage only renders the picture. */
 function fragImage(b,bk){
   const src=tpSrc(b.src), alt=esc(b.alt||'');
+  /* Stage B — additive PLACEMENTS (contained | beside | pair). GUARD: with no `placement` the original
+     return runs verbatim, so every existing image block is byte-identical. `interactions[]` is applied by
+     renderFragment on the .tp-frag wrapper, so it is preserved intact on every placement. */
+  const place=String(b.placement||'').trim();
+  if(!place){
   return src ? `<img class="tp-int-img" src="${esc(src)}" alt="${alt}" loading="lazy">` : `<div class="tp-int-imgph" role="img" aria-label="${alt||'Image placeholder'}">${tpIc('image',30)}<span>Image</span></div>`;
+  }
+  const pic=(s,a)=>s ? `<img src="${esc(s)}" alt="${esc(a||'')}" loading="lazy">`
+                     : `<div class="tp-int-imgph" role="img" aria-label="${esc(a||'')||'Image placeholder'}">${tpIc('image',30)}<span>Image</span></div>`;
+  const cap=b.caption?`<figcaption class="tp-imgf-cap">${tpRichMath(b.caption)}</figcaption>`:'';
+  if(place==='beside'){
+    return `<figure class="tp-imgf tp-imgf-beside">
+      <div class="tp-imgf-media">${pic(src,b.alt)}${cap}</div>
+      <div class="tp-imgf-text">${b.text?tpRichMath(b.text):''}</div>
+    </figure>`;
+  }
+  if(place==='pair'){
+    const a=b.a||{}, c=b.b||{};
+    const one=(o,which)=>`<div class="tp-imgf-item">${pic(tpSrc(o.src),o.alt)}${o.label?`<span class="tp-imgf-lab">${esc(o.label)}</span>`:''}</div>`;
+    return `<figure class="tp-imgf tp-imgf-pair">${one(a,'a')}${one(c,'b')}${cap}</figure>`;
+  }
+  return `<figure class="tp-imgf tp-imgf-contained">${pic(src,b.alt)}${cap}</figure>`;   /* contained (default placement) */
 }
 FRAG.image={imperium:fragImage,microhistory:fragImage,geolearn:fragImage,mathematics:fragImage};
 /* S1 — ScholarMath composable coverage: the fragment renderers are theme-agnostic (one fn skins via slots),

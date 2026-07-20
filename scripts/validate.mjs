@@ -50,6 +50,22 @@ for (const { file, kind } of targets) {
         const parsed = JSON.parse(data[1]);
         if (!Array.isArray(parsed.slides)) throw new Error('"slides" array missing');
         ok(`lesson JSON OK (${parsed.slides.length} slides)`);
+
+        // 1b) accessibility (WARN ONLY, blocks Stage B): a placement-bearing `image` block should carry
+        // alt text. Deliberately NEVER fails — alt was optional when the existing corpus was authored, so
+        // a hard fail would break CI on already-shipped lessons.
+        // DEFERRED: escalate to `fail` once the corpus is alt-clean.
+        const noAlt = [];
+        (parsed.slides || []).forEach((s, si) => (Array.isArray(s.blocks) ? s.blocks : []).forEach((blk, bi) => {
+          if (!blk || blk.type !== 'image' || !String(blk.placement || '').trim()) return;
+          const miss = (o) => o && String(o.src || '').trim() && !String(o.alt || '').trim();
+          if (String(blk.placement).trim() === 'pair') {
+            if (miss(blk.a) || miss(blk.b)) noAlt.push(`slides[${si}].blocks[${bi}] (pair)`);
+          } else if (String(blk.src || '').trim() && !String(blk.alt || '').trim()) {
+            noAlt.push(`slides[${si}].blocks[${bi}]`);
+          }
+        }));
+        if (noAlt.length) warn(`image block(s) missing alt text — ${noAlt.join(', ')}`);
       } catch (e) {
         fail(`lesson JSON invalid — ${e.message}`);
       }
