@@ -33,6 +33,16 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **Blocks Stage A — purpose-unit section container + hero layouts.** New shared, token-driven `section`
+  block: heading (H2 + accent rule) + paragraphs + display equations all flowing inside **ONE card** (the
+  `.tp-sc` token recipe, always-on in all 5 themes), on a centred reading column via a new per-theme
+  `--tp-measure-read` (700px) token. Body is **container-scoped** 16.5px/1.62 (the global `--tp-prose-size`
+  is untouched, so shipped pages are unaffected). `flow[]` is a TYPED array (`para`/`subheading`/
+  `equation`) so an author orders mixed elements; the equation NESTS the existing panel by calling
+  `fragFormula` directly (the fragPracticeSet->fragSelfCheck precedent). `fragFormula` gains additive
+  `ref` / `lines` (aligned on `=`) / `shrink` support, and `banner` gains a `layout` field (Cover / Split /
+  Overlay / Minimal) + size + title scale — both **guarded so existing blocks render byte-identical**.
+  550 legacy renders byte-identical; frozen runtime unchanged; token-only; validate green.
 - **Banner / hero block.** New shared, token-driven `banner` block for composable pages: a full-bleed
   background image with a legibility veil and an overlaid eyebrow / serif title / subtitle (white text over
   the veil; dark ink on a placeholder when no image). One renderer skins across every theme via slots — no
