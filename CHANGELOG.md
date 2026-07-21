@@ -33,6 +33,16 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **Blocks Stage B — image placements.** The composable `image` block gains an additive `placement`
+  field (`contained` | `beside` | `pair`) rather than a second media block: contained = centred ~78% figure
+  with `figcaption`; beside = image + short text as one purpose-unit; pair = two images (fixed `a`/`b`
+  fields) with labels. All reflow to 1 column at 760px, reuse the audited `.tp-lgr-cap` caption recipe and
+  `.tp-int-img` content-sizing (a small image stays small), and preserve the Phase C1 `interactions[]`
+  authoring on every placement. GUARDED: an image with no `placement` renders byte-identical. Alt text is
+  enforced SOFTLY — an amber `.mwarn` in the editor on placement-bearing images only (legacy blocks are not
+  nagged) and a `validate` WARN that never fails CI. *Deferred: escalate the validate alt check to a hard
+  fail once the corpus is alt-clean.* 550 legacy renders byte-identical; frozen runtime unchanged;
+  token-only; validate green.
 - **Blocks Stage A — purpose-unit section container + hero layouts.** New shared, token-driven `section`
   block: heading (H2 + accent rule) + paragraphs + display equations all flowing inside **ONE card** (the
   `.tp-sc` token recipe, always-on in all 5 themes), on a centred reading column via a new per-theme
