@@ -2708,6 +2708,29 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   .tp-slide .tp-imgf-beside,.tp-slide .tp-imgf-pair{grid-template-columns:1fr;}
   .tp-slide .tp-imgf-contained{width:100%;max-width:100%;}
 }
+/* ═══ Stage D — videoEmbed block (SHARED, token-only, no [data-theme] fork). 16:9 responsive player
+   (poster + centred play button, NEVER autoplay); header ▶ eyebrow + title + CC/duration badges; footer =
+   transcript reveal (Phase B focus rail) LEFT + a filled accent "Watch on … ↗" pill RIGHT. ═══ */
+.tp-slide .tp-ve{background:var(--surface-lowest);border:1px solid var(--outline-variant);border-radius:var(--tp-rad);box-shadow:var(--tp-cardsh);overflow:hidden;}
+.tp-slide .tp-ve-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 18px 12px;flex-wrap:wrap;}
+.tp-slide .tp-ve-htext{min-width:0;}
+.tp-slide .tp-ve-eyebrow{display:flex;align-items:center;gap:6px;font-family:var(--tp-body);font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--primary);margin-bottom:4px;}
+.tp-slide .tp-ve-title{font-family:var(--tp-serif);font-size:20px;line-height:1.2;color:var(--on-surface);margin:0;}
+.tp-slide .tp-ve-badges{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+.tp-slide .tp-ve-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--tp-body);font-size:11px;font-weight:700;letter-spacing:.06em;padding:3px 8px;border-radius:6px;background:var(--surface-container);color:var(--on-surface-variant);}
+.tp-slide .tp-ve-frame{position:relative;width:100%;aspect-ratio:16/9;background:#0b0d10;}
+.tp-slide .tp-ve-if,.tp-slide .tp-ve-video{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
+.tp-slide .tp-ve-poster{position:absolute;inset:0;z-index:2;cursor:pointer;border:0;padding:0;width:100%;height:100%;background:#0b0d10;}
+.tp-slide .tp-ve-poster img{width:100%;height:100%;object-fit:cover;display:block;}
+.tp-slide .tp-ve-poster.tp-ve-hidden{display:none;}
+.tp-slide .tp-ve-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;width:72px;height:72px;border-radius:9999px;background:var(--primary);color:var(--on-primary);display:flex;align-items:center;justify-content:center;pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,.35);}
+.tp-slide .tp-ve-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px 14px;flex-wrap:wrap;}
+.tp-slide .tp-ve-tr{display:inline-flex;align-items:center;gap:6px;font:inherit;font-weight:600;font-size:13px;cursor:pointer;padding:8px 12px;border-radius:var(--tp-rad-btn);background:transparent;border:1px solid var(--outline-variant);color:var(--on-surface-variant);}
+.tp-slide .tp-ve-tr:hover{background:var(--surface-container-low);}
+.tp-slide .tp-ve-pill{display:inline-flex;align-items:center;gap:7px;font:inherit;font-weight:600;font-size:13.5px;text-decoration:none;padding:9px 16px;border-radius:9999px;background:var(--primary);color:var(--on-primary);}
+.tp-slide .tp-ve-pill:hover{filter:brightness(1.06);}
+.tp-slide .tp-ve-trbody{font-family:var(--tp-body);font-size:var(--tp-prose-size,16px);line-height:1.6;color:var(--on-surface);white-space:pre-wrap;}
+@media (max-width:760px){ .tp-slide .tp-ve-foot{gap:10px;} .tp-slide .tp-ve-play{width:56px;height:56px;} }
 .tp-slide .tp-frag[data-tp-focus-open]{cursor:pointer;}
 .tp-slide .tp-int-imgph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:140px;border:1px dashed var(--outline-variant);border-radius:var(--tp-rad-btn);color:var(--on-surface-variant);background:var(--surface-container);}
 .tp-slide .tp-int-reveal{margin-top:10px;}
@@ -3135,11 +3158,11 @@ const ICON={
   medal:'<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/><path d="M12 6.4l.85 1.7 1.9.28-1.37 1.33.32 1.88L12 10.8l-1.7.9.32-1.88L9.25 8.5l1.9-.28z" fill="currentColor" stroke="none"/></svg>',
   book:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6c-2-1.4-5-1.4-7 0v12c2-1.4 5-1.4 7 0 2-1.4 5-1.4 7 0V6c-2-1.4-5-1.4-7 0z"/><path d="M12 6v12"/></svg>',
   outcomes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>'};
-const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
+const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section",videoEmbed:"Video"};
 /* themes whose slides render through the dedicated JSON slide pack (renderPackSlide) */
 const PACK_THEMES=new Set(['imperium','microhistory','geolearn','mathematics','scholarmath']);   // S1 — ScholarMath is a token variant on the shared pack path (composable pages)
 /* pack slide types → nav label (these themes use `title`/`type` rather than the engine's slide fields) */
-const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",graphQuestion:"Graph question",outro:"Outro",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
+const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",graphQuestion:"Graph question",outro:"Outro",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section",videoEmbed:"Video"};
 /* infographic data palette: figure.color is a theme token, never a raw hex; defaults cycle */
 const IG_TOKENS=['primary','secondary','tertiary'];
 function igColor(c){ return c==='secondary'?'var(--data-2)':c==='tertiary'?'var(--data-3)':'var(--data-1)'; }
@@ -3938,6 +3961,7 @@ const BLOCK_SEED={   // lean seeds for add-block (labeledGraphic/graphQuestion r
   skillHeader:{type:'skillHeader',breadcrumb:'Algebra · Brackets',title:'Expanding a single bracket',subtitle:'',index:'3',total:'9',progress:'30'},   // S3 — skill-page header
   banner:{type:'banner',src:'',alt:'',eyebrow:'Unit 4 · Algebra',title:'Working with brackets',subtitle:'Expand, factorise, and simplify.'},   // hero banner block
   section:{type:'section',title:'A new idea',flow:[{kind:'para',text:'Explain the idea here. Inline maths goes in $…$.'},{kind:'equation',math:'a(b+c)=ab+ac'}]},   // Stage A — purpose-unit container
+  videoEmbed:{type:'videoEmbed',eyebrow:'Watch',title:'Video title',src:'',cc:false,duration:'',transcript:''},   // Stage D — video block (paste a YouTube/Vimeo link or an <iframe> embed)
 };
 function blockSeed(t){ return JSON.parse(JSON.stringify(BLOCK_SEED[t] || PACK_FACTORY[t] || {type:t})); }
 function fragTypesForAdd(){ const theme=(LESSON.meta&&LESSON.meta.theme)||''; return Object.keys(FRAG).filter(t=>FRAG[t]&&FRAG[t][theme]); }   // only FRAG-registered types (a type with no fragment can't be composed) — image is now fully authorable (Phase C1), so it's offered too
@@ -4040,6 +4064,18 @@ function blockBannerForm(i,b,sel,base){   // hero banner (background image + ove
 }
 /* Stage A — section container form: title + a TYPED flow[] whose fields switch by `kind`
    (the blockImageForm conditional-field precedent: inSel + data-reinspect re-renders the row). */
+function blockVideoEmbedForm(i,b,sel,base){   // Stage D — video: a link OR a pasted <iframe>, both through the extraction sanitizer
+  const v=tpVEmbed(b.src);
+  const note = !String(b.src||'').trim() ? ''
+    : v.ok ? `<div class="muted small">✓ ${esc(v.source)} — embedded via a rebuilt iframe (no autoplay).</div>`
+           : `<div class="mwarn">⚠ Not an allowed video host. Use YouTube, Vimeo, or a direct .mp4/.webm link — a pasted embed is accepted but only its <code>src</code> is kept.</div>`;
+  return ig('eyebrow',sel,inT('Eyebrow (default “Watch”)',`${base}.eyebrow`,b.eyebrow))
+    +ig('title',sel,inT('Title',`${base}.title`,b.title))
+    +ig('src',sel,inA('Video link or pasted <iframe> embed (YouTube / Vimeo / .mp4)',`${base}.src`,b.src)+note)
+    +ig('duration',sel,inT('Duration badge (optional, e.g. 4:12)',`${base}.duration`,b.duration))
+    +ig('cc',sel,inSel('Captions (CC) badge',`${base}.cc`,b.cc?'1':'',[['','No badge'],['1','Show CC']]))
+    +ig('transcript',sel,inA('Transcript (optional — revealed in a panel)',`${base}.transcript`,b.transcript));
+}
 function blockSectionForm(i,b,sel,base){
   return ig('title',sel,inT('Section heading (H2, use $…$ for maths)',`${base}.title`,b.title))
     +repeatGroup(i,b,sel,'flow','Element','Content (flows inside one card)',(it,j)=>{
@@ -4085,6 +4121,7 @@ function blockForm(i,k,b,sel){   // dispatch: reuse the page inspector case (reb
   if(b.type==='skillHeader') return blockSkillHeaderForm(i,b,sel,base);   // S3 — skill-page header
   if(b.type==='banner') return blockBannerForm(i,b,sel,base);             // hero banner block
   if(b.type==='section') return blockSectionForm(i,b,sel,base);           // Stage A — purpose-unit container
+  if(b.type==='videoEmbed') return blockVideoEmbedForm(i,b,sel,base);     // Stage D — video block
   return inspectorForm(i,b,sel,base);   // penResponse / graphQuestion / labeledGraphic — schemas match; base rebases every path
 }
 function blockOutline(i,s,sel){
@@ -6687,6 +6724,57 @@ function fragImage(b,bk){
   return `<figure class="tp-imgf tp-imgf-contained">${pic(src,b.alt)}${cap}</figure>`;   /* contained (default placement) */
 }
 FRAG.image={imperium:fragImage,microhistory:fragImage,geolearn:fragImage,mathematics:fragImage};
+/* Stage D — EXTRACTION-based video sanitizer. From a bare URL OR a pasted <iframe> blob it extracts ONLY
+   the src (every other attribute, any sibling <script>, any on*= handler is discarded — never reaches
+   output), normalises YouTube/Vimeo to a known embed URL, allowlists the host, and returns a re-emittable
+   embed. We NEVER render author markup — fragVideoEmbed builds its own <iframe> from the result. */
+const VE_HOSTS=/^(?:[a-z0-9-]+\.)*(?:youtube\.com|youtu\.be|youtube-nocookie\.com|vimeo\.com)$/i;
+function tpVeSrc(raw){ let s=String(raw||'').trim(); const m=s.match(/<iframe\b[^>]*?\bsrc\s*=\s*["']([^"']+)["']/i); return (m?m[1]:s).trim(); }
+function tpVEmbed(raw){
+  const s=tpVeSrc(raw);
+  if(!s) return {ok:false,embed:'',watch:'',source:'',kind:''};
+  if(/^https?:\/\/[^\s"'<>]+\.(?:mp4|webm)(?:[?#][^\s"'<>]*)?$/i.test(s)){ let h=''; try{h=new URL(s).host}catch(e){} return {ok:true,embed:s,watch:s,source:(h||'video').replace(/^www\./,''),kind:'file'}; }
+  let m=s.match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/i);
+  if(m) return {ok:true,embed:'https://www.youtube-nocookie.com/embed/'+m[1],watch:'https://www.youtube.com/watch?v='+m[1],source:'YouTube',kind:'iframe'};
+  m=s.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+  if(m) return {ok:true,embed:'https://player.vimeo.com/video/'+m[1],watch:'https://vimeo.com/'+m[1],source:'Vimeo',kind:'iframe'};
+  let host=''; try{host=new URL(s).host}catch(e){ return {ok:false,embed:'',watch:'',source:'',kind:''}; }
+  if(VE_HOSTS.test(host)) return {ok:true,embed:s,watch:s,source:host.replace(/^www\./,''),kind:'iframe'};
+  return {ok:false,embed:'',watch:s,source:host,kind:'',rejected:true};   // unknown host → not embedded (validate warns)
+}
+/* Stage D — the videoEmbed block. Poster + play overlay (never autoplays; the iframe carries no
+   allow=autoplay). Transcript reveal rides the EXISTING data-tp-focus-open rail; the play-overlay dismiss
+   is wired by the additive wireVideoEmbed() so wirePack stays byte-identical. One fn × all themes. */
+function fragVideoEmbed(b,bk){
+  const v=tpVEmbed(b.src);
+  const poster=tpSrc(b.poster)||tpVideoPoster({poster:b.poster,externalVideoUrl:v.watch||b.src});
+  let media;
+  if(!v.ok){
+    media=`<div class="tp-ve-poster" role="img" aria-label="No video yet">${tpIc('image',30)}</div>`;
+  } else if(v.kind==='file'){
+    media=`<video class="tp-ve-video" controls preload="metadata"${poster?` poster="${esc(poster)}"`:''}><source src="${esc(v.embed)}"></video>`;
+  } else {
+    // OUR iframe, rebuilt from scratch from the allowlisted src — no author markup, NO allow=autoplay
+    media=`<iframe class="tp-ve-if" src="${esc(v.embed)}" title="${esc(b.title||'Video')}" allow="fullscreen" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>`
+      +`<button class="tp-ve-poster" type="button" data-ve-play aria-label="Play ${esc(b.title||'video')}">${poster?`<img src="${esc(poster)}" alt="">`:''}<span class="tp-ve-play">${tpIc('play',30)}</span></button>`;
+  }
+  const badges=`${b.cc?`<span class="tp-ve-badge">CC</span>`:''}${b.duration?`<span class="tp-ve-badge">${tpIc('clock',12)} ${esc(b.duration)}</span>`:''}`;
+  const trId='tr-'+bk;
+  const foot=`<div class="tp-ve-foot">
+      ${b.transcript?`<button class="tp-ve-tr" type="button" data-tp-focus-open="${esc(trId)}" aria-haspopup="dialog">${tpIc('notes',15)} Transcript</button>`:'<span></span>'}
+      ${v.ok?`<a class="tp-ve-pill" href="${esc(v.watch)}" target="_blank" rel="noopener noreferrer">Watch on ${esc(v.source)} ${tpIc('external',13)}</a>`:''}
+    </div>`;
+  const overlay=b.transcript?`<div class="tp-overlay" data-tp-overlay id="${esc(trId)}" role="dialog" aria-modal="true" aria-label="Transcript" hidden><div class="tp-fpanel"><button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close">${tpIc('close',20)}</button><div class="tp-fey">Transcript</div><div class="tp-ve-trbody">${esc(b.transcript)}</div></div></div>`:'';
+  return `<section class="tp-ve" data-tp-ve="${esc(String(bk))}">
+      <div class="tp-ve-head"><div class="tp-ve-htext">
+        ${b.eyebrow||b.title?`<div class="tp-ve-eyebrow">${tpIc('play',12)} ${esc(b.eyebrow||'Watch')}</div>`:''}
+        ${b.title?`<h3 class="tp-ve-title">${esc(b.title)}</h3>`:''}
+      </div><div class="tp-ve-badges">${badges}</div></div>
+      <div class="tp-ve-frame">${media}</div>
+      ${foot}
+    </section>${overlay}`;
+}
+FRAG.videoEmbed={imperium:fragVideoEmbed,microhistory:fragVideoEmbed,geolearn:fragVideoEmbed,mathematics:fragVideoEmbed,scholarmath:fragVideoEmbed};
 /* S1 — ScholarMath composable coverage: the fragment renderers are theme-agnostic (one fn skins via slots),
    so ScholarMath reuses the SAME fns already registered for the other themes — no new renderers, no bespoke
    structural rules (values-only theme). Every composable type mapped for mathematics is mirrored here. */
@@ -7315,6 +7403,7 @@ function wire(){
   wirePageFlow();   // v3 F1 — flat composable pages: block entrance animation (no-op everywhere else)
   wireSelfCheck();  // S1 — self-check three-way self-mark (additive; wirePack stays byte-identical)
   wirePracticeSet();// S2 — sticky mastery bar aggregates the self-marks (additive; reads TP_RUNTIME)
+  wireVideoEmbed(); // Stage D — dismiss the poster overlay on play (additive; wirePack byte-identical)
 }
 /* S2 — practice-set mastery bar: aggregates the EXISTING per-item self-marks (TP_RUNTIME.scMark) into the
    sticky bar — clean (got) fills green, partial fills amber (no credit), pending stays grey — with a live
@@ -7334,6 +7423,13 @@ function wirePracticeSet(){
   });
   paint();
   root.querySelectorAll('[data-sc-mark]').forEach(btn=>btn.addEventListener('click',()=>requestAnimationFrame(paint)));   // after wireSelfCheck writes rt.scMark
+}
+/* Stage D — videoEmbed: clicking the poster play-overlay just hides it, revealing the already-loaded
+   iframe/video underneath (which the provider then plays on its own control — NEVER autoplayed). Additive;
+   wirePack untouched. No-op unless a videoEmbed block is present. */
+function wireVideoEmbed(){
+  const root=$('#slide'); if(!root||document.body.classList.contains('edit')) return;
+  root.querySelectorAll('[data-ve-play]').forEach(btn=>btn.addEventListener('click',()=>{ btn.classList.add('tp-ve-hidden'); }));
 }
 /* S1 — self-check self-mark: the three footer buttons set a per-block session status (TP_RUNTIME, ephemeral
    — no localStorage) reflected as a status chip on the question. Reveal/Esc/focus-return are the EXISTING
