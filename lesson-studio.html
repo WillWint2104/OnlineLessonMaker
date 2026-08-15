@@ -2439,6 +2439,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-ps-bar.done{border-color:var(--sc-accent,var(--primary));}
 .tp-slide .tp-ps-track{height:9px;border-radius:9999px;background:var(--surface-container,#e7eaec);overflow:hidden;display:flex;}
 .tp-slide .tp-ps-seg{height:100%;transition:width .35s cubic-bezier(.2,.7,.2,1);}
+@media (prefers-reduced-motion: reduce){ .tp-slide .tp-ps-seg{transition:none;} }   /* m4: mastery-bar fill must not animate when the viewer asked for reduced motion (the file's other motion is behind opt-in no-preference guards; this bar was not) */
 .tp-slide .tp-ps-seg.got{background:var(--sc-accent,var(--primary));}
 .tp-slide .tp-ps-seg.partial{background:var(--sc-amber,#835F00);}
 .tp-slide .tp-ps-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;}
@@ -2481,7 +2482,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 @media (max-width:760px){ .tp-slide .tp-unit{padding:20px 18px;} .tp-slide .tp-unit-h2{font-size:22px;} }
 /* extended display equation (opt-in: ref number / multi-line aligned on = / shrink-wrap). The default
    single-`math` path is untouched and byte-identical. */
-.tp-slide .tp-formula-x{position:relative;width:max-content;max-width:100%;margin-left:auto;margin-right:auto;}
+.tp-slide .tp-formula-x{position:relative;width:max-content;max-width:100%;margin-left:auto;margin-right:auto;overflow-x:auto;}   /* m3: a wide multi-line/ref equation scrolls within its own box (like .tp-sc-work) instead of forcing horizontal page scroll */
 .tp-slide .tp-formula-lines{display:grid;grid-template-columns:auto auto auto;align-items:baseline;gap:6px 8px;justify-content:center;}
 .tp-slide .tp-formula-line{display:contents;}
 .tp-slide .tp-formula-l{grid-column:1;justify-self:end;}
@@ -6686,7 +6687,7 @@ function resolveInteractions(b,bk){
 }
 /* Phase B proving object — a minimal composable image (video/button/hotspot are Phase C). Interactions are
    wired generically by renderFragment (below), so fragImage only renders the picture. */
-function fragImage(b,bk){
+function fragImage(b,bk,_i,_k,hostAttrs){   /* hostAttrs (m2): when a PLACED image carries an interaction, renderFragment passes the trigger here so it scopes to the <img>, not the whole figure — caption/prose stay non-interactive */
   const src=tpSrc(b.src), alt=esc(b.alt||'');
   /* Stage B — additive PLACEMENTS (contained | beside | pair). GUARD: with no `placement` the original
      return runs verbatim, so every existing image block is byte-identical. `interactions[]` is applied by
@@ -6695,21 +6696,21 @@ function fragImage(b,bk){
   if(!place){
   return src ? `<img class="tp-int-img" src="${esc(src)}" alt="${alt}" loading="lazy">` : `<div class="tp-int-imgph" role="img" aria-label="${alt||'Image placeholder'}">${tpIc('image',30)}<span>Image</span></div>`;
   }
-  const pic=(s,a)=>s ? `<img src="${esc(s)}" alt="${esc(a||'')}" loading="lazy">`
+  const pic=(s,a,h)=>s ? `<img src="${esc(s)}" alt="${esc(a||'')}" loading="lazy"${h?' '+h:''}>`
                      : `<div class="tp-int-imgph" role="img" aria-label="${esc(a||'')||'Image placeholder'}">${tpIc('image',30)}<span>Image</span></div>`;
   const cap=b.caption?`<figcaption class="tp-imgf-cap">${tpRichMath(b.caption)}</figcaption>`:'';
   if(place==='beside'){
     return `<figure class="tp-imgf tp-imgf-beside">
-      <div class="tp-imgf-media">${pic(src,b.alt)}${cap}</div>
+      <div class="tp-imgf-media">${pic(src,b.alt,hostAttrs)}${cap}</div>
       <div class="tp-imgf-text">${b.text?tpRichMath(b.text):''}</div>
     </figure>`;
   }
   if(place==='pair'){
     const a=b.a||{}, c=b.b||{};
-    const one=(o,which)=>`<div class="tp-imgf-item">${pic(tpSrc(o.src),o.alt)}${o.label?`<span class="tp-imgf-lab">${esc(o.label)}</span>`:''}</div>`;
+    const one=(o,which)=>`<div class="tp-imgf-item">${pic(tpSrc(o.src),o.alt,hostAttrs)}${o.label?`<span class="tp-imgf-lab">${esc(o.label)}</span>`:''}</div>`;
     return `<figure class="tp-imgf tp-imgf-pair">${one(a,'a')}${one(c,'b')}${cap}</figure>`;
   }
-  return `<figure class="tp-imgf tp-imgf-contained">${pic(src,b.alt)}${cap}</figure>`;   /* contained (default placement) */
+  return `<figure class="tp-imgf tp-imgf-contained">${pic(src,b.alt,hostAttrs)}${cap}</figure>`;   /* contained (default placement) */
 }
 FRAG.image={imperium:fragImage,microhistory:fragImage,geolearn:fragImage,mathematics:fragImage};
 /* S1 — ScholarMath composable coverage: the fragment renderers are theme-agnostic (one fn skins via slots),
@@ -6722,9 +6723,13 @@ function renderFragment(b,i,k,theme){
   const bk=(b&&b.bid)?b.bid:(i+'-'+k);   // stable bid when present (editor-created); positional fallback for bid-less JSON composites
   const fn=FRAG[b.type]&&FRAG[b.type][theme];
   if(!fn) return `<div class="tp-frag tp-frag-na" data-tp-frag-type="${esc(b.type||'')}"><p>Block “${esc(b.type||'')}” can’t be placed on a composed page yet.</p></div>`;
-  let inner; try{ inner=fn(b,bk,i,k); }catch(e){ inner=`<p>Block render error: ${esc(String(e.message||e))}</p>`; }
   const {triggerAttrs, overlaysHtml}=resolveInteractions(b,bk);   // Phase B: interactions[] → shared-effect attrs + overlays; empty when absent → byte-identical
-  return `<div class="tp-frag" data-tp-frag="${esc(bk)}" data-tp-block-path="slides.${i}.blocks.${k}" data-tp-frag-type="${esc(b.type||'')}"${triggerAttrs?' '+triggerAttrs:''}>${inner}${overlaysHtml}</div>`;
+  // m2: a PLACED image with an interaction scopes its trigger to the <img> (passed into fragImage as hostAttrs),
+  // so the caption/prose in a beside/pair/contained figure are NOT part of the "Enlarge image" button. Every
+  // other case (no placement, or no interaction) keeps the trigger on .tp-frag → byte-identical.
+  const placedImg = !!(b && b.type==='image' && String(b.placement||'').trim() && triggerAttrs);
+  let inner; try{ inner=fn(b,bk,i,k, placedImg?triggerAttrs:''); }catch(e){ inner=`<p>Block render error: ${esc(String(e.message||e))}</p>`; }
+  return `<div class="tp-frag" data-tp-frag="${esc(bk)}" data-tp-block-path="slides.${i}.blocks.${k}" data-tp-frag-type="${esc(b.type||'')}"${placedImg?'':(triggerAttrs?' '+triggerAttrs:'')}>${inner}${overlaysHtml}</div>`;
 }
 function renderPackSlide(s,i,present){
   const theme=(LESSON.meta&&LESSON.meta.theme)||'';

@@ -32,6 +32,20 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   lesson; 0 console errors; self-contained; no CSS/token change.
 
 ### Fixed
+- **Composable-block a11y (m2/m3/m4) — three small fixes from the read-pass triage.** **(m2)** A placed image
+  (`beside`/`pair`/`contained`) carrying an interaction stamped the "Enlarge image" trigger on the whole
+  `.tp-frag`, so the caption/prose became part of one giant button. `renderFragment` now passes the trigger
+  into `fragImage` as `hostAttrs` so it scopes to the `<img>` only; the figure's caption/prose stay
+  non-interactive. Guarded: with no placement **or** no interaction the trigger stays on `.tp-frag` →
+  byte-identical. **(m3)** Multi-line/`ref` display equations (`.tp-formula-x`) got `overflow-x:auto` (matching
+  `.tp-sc-work`) so a wide equation scrolls within its own box instead of forcing horizontal **page** scroll.
+  **(m4)** The practice-set mastery-bar fill (`.tp-ps-seg transition:width`) is now gated by
+  `@media (prefers-reduced-motion: reduce)` (the file's other motion sits behind opt-in `no-preference`
+  guards; this bar was missed). **Checked (painted behaviour):** interaction host is the `<img>` (role=button),
+  `.tp-frag` clean, prose not inside the button, plain-image path unchanged; wide equation → `overflow-x:auto`
+  and 0px page h-scroll; transition-duration `0s` under reduce / `.35s` without. Byte-identity **0 diffs across
+  1320 render units**; validate green; CSS/token-only except the m2 structural scope.
+
 - **Composable page reading column was narrow (~half width) at laptop sizes.** F1 made the flat page
   `.tp-slide[data-tp-type="page"]` `position:relative` but not full-width; since `#slide` is `align-items:center`
   it shrank to content width, collapsing the reading column to ~48% of the stage on narrower windows (legacy
