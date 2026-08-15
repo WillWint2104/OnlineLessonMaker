@@ -15,7 +15,12 @@ reviews:
   review_status: true
   auto_review:
     enabled: true
-    drafts: false
+    # Review PRs even while they are drafts. Our ops flow opens every PR as a
+    # draft, then marks it ready + auto-merges on green `validate` — which lands
+    # before CodeRabbit re-picks up a ready_for_review event. With drafts:false
+    # that meant every PR was skipped ("Review skipped — Draft detected") and got
+    # no review at all. drafts:true makes CodeRabbit review each PR on open.
+    drafts: true
   path_instructions:
     - path: "lesson-studio.html"
       instructions: >
