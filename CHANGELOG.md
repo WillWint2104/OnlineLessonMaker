@@ -56,6 +56,19 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 
 ### Changed
+- **Grading core (M2) — one `gradeResponse(kind, response, spec)` seam.** Extracted the graphQuestion
+  submit handler's DECISION logic (equation-equivalence by sampling + point-set within tolerance +
+  misconception matching) into a pure, DOM-free `gradeResponse('graph', {eval,points}, spec) →
+  {correct, detail}`. The handler stays the thin caller that compiles the student input and paints the
+  result — the decision is **deleted** from it, not duplicated. This is the single plug-in point the
+  coming graph/geometry question types (engine Stage 2+) register a new `kind` into, instead of copying
+  the check into `wirePack` a second time. **Scope (honest):** self-assessment (`selfCheck`/`practiceSet`
+  self-marks) is *not* grading and was left untouched; the real grader was the graphQuestion check, which
+  lives inside `wirePack` — so this edits `wirePack` (an approved, tested exception to frozen-fn identity,
+  Option B). **Checked:** grading-outcome byte-identity **15/15** (correct / equivalent-form / misconception
+  / wrong / points partial+extra+tolerance-boundary / both-mode / edge, diffed `{correct,detail}` vs the
+  `pre-grading-core` tag); render byte-identity **0 diffs / 1320 units** (types × 5 themes × Study/Present);
+  the other five frozen fns byte-identical; validate green; 0 console errors; token-only (no CSS change).
 - **Skill-page polish (S2/S3) — per-block cards + mastery-bar placement.** Two fixes from the first real
   ScholarMath skill-page load, CSS/token-only (all render/wire logic byte-identical). **(1) Per-block cards:**
   the "plain content" blocks (`text`/`formula`/`skillHeader`/`mastery`) now render as white cards on the
