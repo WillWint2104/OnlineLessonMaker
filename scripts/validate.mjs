@@ -66,6 +66,22 @@ for (const { file, kind } of targets) {
           }
         }));
         if (noAlt.length) warn(`image block(s) missing alt text — ${noAlt.join(', ')}`);
+
+        // 1c) video-host carve-out (blocks Stage D). WARN ONLY: a `videoEmbed` block whose src resolves to
+        // a host NOT on the narrow video allowlist is flagged. This is separate from the <script>/<link>
+        // firewall (§4 below), which is UNCHANGED — a code/font CDN in a <script src> still hard-FAILS.
+        // The allowance is scoped to VIDEO EMBED HOSTS only (iframes), never code/fonts.
+        const VIDEO_HOSTS = /^(?:[a-z0-9-]+\.)*(?:youtube\.com|youtu\.be|youtube-nocookie\.com|vimeo\.com)$/i;
+        const veSrc = (raw) => { const s = String(raw || '').trim(); const m = s.match(/<iframe\b[^>]*?\bsrc\s*=\s*["']([^"']+)["']/i); return (m ? m[1] : s).trim(); };
+        const badVideo = [];
+        (parsed.slides || []).forEach((s, si) => (Array.isArray(s.blocks) ? s.blocks : []).forEach((blk, bi) => {
+          if (!blk || blk.type !== 'videoEmbed') return;
+          const src = veSrc(blk.src); if (!src) return;
+          if (/\.(?:mp4|webm)(?:[?#]|$)/i.test(src)) return;                 // direct video file — allowed
+          let host = ''; try { host = new URL(src).host; } catch { /* not a URL */ }
+          if (!host || !VIDEO_HOSTS.test(host)) badVideo.push(`slides[${si}].blocks[${bi}]${host ? ` (${host})` : ''}`);
+        }));
+        if (badVideo.length) warn(`videoEmbed block(s) with a non-allowlisted host — ${badVideo.join(', ')}`);
       } catch (e) {
         fail(`lesson JSON invalid — ${e.message}`);
       }

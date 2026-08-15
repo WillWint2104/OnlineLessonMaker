@@ -33,6 +33,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **Blocks Stage D — videoEmbed block.** New shared `videoEmbed` block (named to avoid the legacy pack
+  `video` slide type + both TYPELAB maps): a 16:9 responsive player (poster + centred play button, NEVER
+  autoplay), header ▶ eyebrow + title + CC/duration badges, footer transcript reveal (Phase B focus rail)
+  + a filled accent "Watch on <source> ↗" pill. Accepts a YouTube/Vimeo/`.mp4` LINK or a pasted `<iframe>`,
+  both through an **extraction-based sanitizer** that keeps ONLY the `src` and re-emits our own iframe —
+  a pasted `<script>`, `onerror=` or `sandbox=` never reaches output. **Validator carve-out (the only
+  external-content allowance in the track):** a narrow positive host allowlist for `videoEmbed` blocks
+  (youtube/youtu.be/nocookie/vimeo + direct `.mp4`/`.webm`); an unknown host WARNS (never fails); the
+  `<script>/<link>` firewall is untouched, so a code/font CDN still hard-fails. Reveal rides the existing
+  rail (wirePack byte-identical); the poster dismiss is the additive wireVideoEmbed(). 550 legacy renders
+  byte-identical; legacy pack `video` renderers untouched; token-only; validate green.
 - **Blocks Stage B — image placements.** The composable `image` block gains an additive `placement`
   field (`contained` | `beside` | `pair`) rather than a second media block: contained = centred ~78% figure
   with `figcaption`; beside = image + short text as one purpose-unit; pair = two images (fixed `a`/`b`
