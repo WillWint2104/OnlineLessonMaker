@@ -6570,7 +6570,11 @@ function gqEqEqual(fA,fB,x0,x1){                               // equal by sampl
        kind      'graph' — the current check (equation-equivalence by sampling + point-set within tolerance)
        response  {eval:fn|null, points:[[x,y]…]}   (compiled / read from the DOM by the caller)
        spec      {mode:'equation'|'points'|'both', answer:{equation,points}, tolerance, misconceptions:[{equation,message}], x0, x1}
-       detail    a matched-misconception message (else '') — the caller formats the correct/generic copy */
+       detail    a matched-misconception message (else '') — the caller formats the correct/generic copy
+   @param   {string} kind
+   @param   {{eval:(Function|null), points:number[][]}} response
+   @param   {{mode:string, answer:object, tolerance:number, misconceptions:object[], x0:number, x1:number}} spec
+   @returns {{correct:boolean, detail:string}} GradeResult */
 function gradeResponse(kind, response, spec){
   if(kind!=='graph') return {correct:false, detail:''};   // seam: future geometry kinds (point-position / value-entry / set-membership) add cases here
   const s=spec||{}, r=response||{}, mode=s.mode||'equation';
