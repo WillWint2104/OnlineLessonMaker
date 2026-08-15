@@ -3215,8 +3215,7 @@ function textBlocks(i,arr,key,off){ off=off||0;
    URL (so there's always a working link); never advances the slide (an <a> is in the present
    click-ignore list). */
 function sourceFallback(s){
-  const url=(s.sourceUrl||s.url||'').trim(); if(!url) return '';
-  if(!/^(https?:)?\/\//i.test(url)) return '';   // only an absolute link is a useful fallback (a bare ClickView id would 404 as a relative URL)
+  const url=safeUrl(s.sourceUrl||s.url,'frame'); if(!url) return '';   // gated (CodeRabbit): blocks javascript:/data:/vbscript: AND protocol-relative //host; an https absolute or same-origin relative link passes through unchanged
   const label=s.sourceLabel || (s.type==='video'?'Open video ↗':'Open the interactive ↗');
   return `<a class="src-fallback" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
 }
@@ -6997,7 +6996,7 @@ function packSourceAnalysis(s,i){
   const prov=Array.isArray(s.provenance)?s.provenance:[];
   const tasks=Array.isArray(s.tasks)?s.tasks:[];
   const srcRaw=(s.sourceUrl||'').trim();
-  const srcUrl=/^(https?:)?\/\//i.test(srcRaw)?srcRaw:'';             // optional link to the original source online (inspector Links panel); only an absolute http(s)/protocol-relative link is rendered — mirrors sourceFallback(), blocking javascript:/data: hrefs and bare relative strings. Rendered only when present → byte-identical when unset
+  const srcUrl=safeUrl(srcRaw,'frame');             // gated (CodeRabbit): mirrors sourceFallback() — blocks javascript:/data: AND protocol-relative //host; an https absolute or same-origin relative link passes through. Rendered only when present → byte-identical when unset
   const hasArt=tpHasImg(src.image)||!!src.transcript||prov.length>0||!!srcUrl;   // collapse to a single task column when there's nothing to show in the source panel (no image, transcript, provenance or link) — avoids an empty placeholder box
   const provHtml=prov.map(p=>`<div class="tp-prow"><span class="pi">${tpIc(p.icon||'doc',18)}</span><div><span class="pk">${esc(p.label||'')}</span><span class="pv">${esc(p.value||'')}</span></div></div>`).join('');
   const themeMH=(LESSON.meta&&LESSON.meta.theme)==='microhistory';

@@ -17,7 +17,10 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   hosts got through. Added one central `safeUrl(raw, mode)` primitive applied at **every** URL sink's origin:
   `mode:'embed'` = https + an allowlisted video host (youtube/youtu.be/nocookie/vimeo) or a direct https
   `.mp4/.webm`; `mode:'frame'` = scheme-only (https absolute or same-origin relative) for open-ended
-  interactive embeds. Also re-gated the C2 value **after** the `.dataset` decode, at assignment time. An
+  interactive embeds. Also re-gated the C2 value **after** the `.dataset` decode, at assignment time. The two
+  source-link sinks (`sourceFallback`, `packSourceAnalysis`) that previously self-gated with
+  `/^(https?:)?\/\//` — which blocked `javascript:`/`data:` but **allowed protocol-relative `//host`** — now
+  route through `safeUrl(…,'frame')` too (CodeRabbit). An
   allowlisted URL passes through **unchanged** (so the corpus is byte-identical); a blocked URL becomes `''`
   and the sink renders its safe placeholder. **`scripts/validate.mjs`** now mirrors the gate: it scans
   `<iframe src>` + the `#lesson-data` `url`/`externalVideoUrl`/`sourceUrl` fields, **hard-fails** on a
