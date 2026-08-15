@@ -34,9 +34,43 @@ const warn = (m) => console.warn('  ⚠ ' + m);
 const fail = (m) => { console.error('  ✗ ' + m); failed = true; };
 const ok   = (m) => console.log('  ✓ ' + m);
 
+// ── URL safety (mirrors the runtime safeUrl() gate in lesson-studio.html) ──
+// A URL that reaches an <iframe src> / <a href> / window.open() must never carry a
+// dangerous scheme. Dangerous schemes are a HARD security boundary (the corpus carries
+// none, so this fails loudly if one is ever introduced). Non-allowlisted hosts are only
+// WARNED (the corpus legitimately embeds youtube + the project's own github.io), so a
+// teacher can review rather than have CI break on a safe embed.
+const DANGER_SCHEME = /^\s*(?:javascript|data|vbscript|file):/i;
+const PROTO_REL     = /^\/\//;                       // //host — inherits the page scheme
+const SAFE_URL_HOST = /(?:^|\.)(?:youtube\.com|youtu\.be|youtube-nocookie\.com|vimeo\.com|github\.io)$/i;
+const URL_KEYS      = /^(?:url|externalVideoUrl|sourceUrl)$/;   // fields that reach an iframe/href sink
+// Walk parsed lesson JSON, collecting string values under URL-bearing keys.
+function collectJsonUrls(node, out, at) {
+  if (node == null) return;
+  if (Array.isArray(node)) { node.forEach((v, i) => collectJsonUrls(v, out, `${at}[${i}]`)); return; }
+  if (typeof node === 'object') {
+    for (const [k, v] of Object.entries(node)) {
+      if (typeof v === 'string' && URL_KEYS.test(k)) { if (v.trim()) out.push({ url: v.trim(), at: `${at}.${k}` }); }
+      else collectJsonUrls(v, out, `${at}.${k}`);
+    }
+  }
+}
+// Classify collected URLs → { danger:[], warnHosts:[] }.
+function classifyUrls(hits) {
+  const danger = [], warnHosts = [];
+  for (const { url, at } of hits) {
+    if (DANGER_SCHEME.test(url) || PROTO_REL.test(url)) { danger.push(`${url} (${at})`); continue; }
+    let host = '';
+    try { host = new URL(url).host; } catch { continue; }   // relative / non-absolute → same-origin, safe
+    if (host && !SAFE_URL_HOST.test(host)) warnHosts.push(`${host} (${at})`);
+  }
+  return { danger, warnHosts };
+}
+
 for (const { file, kind } of targets) {
   console.log(`\n• ${file}`);
   const html = fs.readFileSync(file, 'utf8');
+  const urlHits = [];   // URL strings that reach an iframe/href sink (JSON url fields + literal <iframe src>)
 
   // Lesson-document checks (JSON data + engine JS) apply to the app and published
   // lessons only — a standalone interactive bundle is not a LESSON document.
@@ -66,6 +100,9 @@ for (const { file, kind } of targets) {
           }
         }));
         if (noAlt.length) warn(`image block(s) missing alt text — ${noAlt.join(', ')}`);
+
+        // 1c) URL safety: collect every URL-bearing field from the lesson JSON.
+        collectJsonUrls(parsed, urlHits, 'lesson');
       } catch (e) {
         fail(`lesson JSON invalid — ${e.message}`);
       }
@@ -112,6 +149,23 @@ for (const { file, kind } of targets) {
     }
   } else if (kind === 'interactive') {
     ok('self-contained bundle (no third-party <script>/<link> hosts)');
+  }
+
+  // 5) URL-sink safety: scan literal <iframe src> plus the JSON url fields (collected above)
+  //    for dangerous schemes (HARD FAIL — security boundary) and non-allowlisted embed
+  //    hosts (WARN — the corpus embeds youtube + the project's github.io). Template
+  //    placeholders like src="${esc(...)}" in the engine source are not real URLs — skip.
+  for (const m of html.matchAll(/<iframe\b[^>]*\bsrc="([^"]*)"/gi)) {
+    if (m[1] && !m[1].includes('${')) urlHits.push({ url: m[1], at: '<iframe src>' });
+  }
+  const { danger, warnHosts } = classifyUrls(urlHits);
+  if (danger.length) {
+    fail(`dangerous-scheme URL(s) in iframe src / url field(s): ${danger.join(', ')} — blocked at runtime by safeUrl(); never publish these`);
+  }
+  if (warnHosts.length) {
+    warn(`non-allowlisted embed host(s) (verify these are intended; runtime frame-gate allows any https host, video-gate does not): ${[...new Set(warnHosts)].join(', ')}`);
+  } else if (urlHits.length) {
+    ok(`embed URLs OK (${urlHits.length} checked — allowlisted hosts, no dangerous schemes)`);
   }
 }
 
