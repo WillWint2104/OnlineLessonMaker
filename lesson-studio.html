@@ -6374,7 +6374,7 @@ function fragFormula(b,bk){
     return `<span class="tp-formula-l">${tex(v.slice(0,i))}</span><span class="tp-formula-eq">=</span><span class="tp-formula-r">${tex(v.slice(i+1))}</span>`; };
   const src=lines.length?lines:[b.math];
   const grid=`<div class="tp-formula-lines">${src.map(s=>`<div class="tp-formula-line">${row(s)}</div>`).join('')}</div>`;
-  return `<figure class="tp-formula tp-formula-x${ref?' tp-formula-ref':''}">${grid}${b.label?`<figcaption class="tp-formula-cap">${esc(b.label)}</figcaption>`:''}${ref?`<span class="tp-formula-num">(${esc(ref)})</span>`:''}</figure>`;
+  return `<figure class="tp-formula tp-formula-x${ref?' tp-formula-ref':''}" tabindex="0" role="group" aria-label="Equation${ref?' '+esc(ref):''}">${grid}${b.label?`<figcaption class="tp-formula-cap">${esc(b.label)}</figcaption>`:''}${ref?`<span class="tp-formula-num">(${esc(ref)})</span>`:''}</figure>`;   /* CodeRabbit/WCAG 2.1.1: the overflow-x scroll box (m3) must be keyboard-focusable so keyboard users can scroll a wide equation */
 }
 function fragWorkedExample(b,bk){
   const steps=Array.isArray(b.steps)?b.steps:[];

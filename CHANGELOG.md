@@ -39,7 +39,9 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   non-interactive. Guarded: with no placement **or** no interaction the trigger stays on `.tp-frag` →
   byte-identical. **(m3)** Multi-line/`ref` display equations (`.tp-formula-x`) got `overflow-x:auto` (matching
   `.tp-sc-work`) so a wide equation scrolls within its own box instead of forcing horizontal **page** scroll.
-  **(m4)** The practice-set mastery-bar fill (`.tp-ps-seg transition:width`) is now gated by
+  The scroll box is also **keyboard-focusable** (`tabindex="0"` + `role="group"` + `aria-label`) so keyboard
+  users can scroll a wide equation (WCAG 2.1.1; CodeRabbit follow-up — no corpus lesson uses extended-formula
+  blocks, so this touches 0 corpus render units). **(m4)** The practice-set mastery-bar fill (`.tp-ps-seg transition:width`) is now gated by
   `@media (prefers-reduced-motion: reduce)` (the file's other motion sits behind opt-in `no-preference`
   guards; this bar was missed). **Checked (painted behaviour):** interaction host is the `<img>` (role=button),
   `.tp-frag` clean, prose not inside the button, plain-image path unchanged; wide equation → `overflow-x:auto`
