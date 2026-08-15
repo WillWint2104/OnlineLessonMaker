@@ -3172,12 +3172,37 @@ function setTheme(name){
   if(!name||name==='neutral') document.documentElement.removeAttribute('data-theme');
   else document.documentElement.setAttribute('data-theme',name);
 }
+/* ═══ Central URL gate (security boundary — see PR "central URL allowlist gate") ═══
+   Author URLs must never reach an <iframe src> / <a href> / window.open() with a
+   dangerous scheme. esc() closes attribute-breakout but NOT the scheme, so
+   javascript:/data:/vbscript:/file: and protocol-relative //host are blocked HERE,
+   centrally, at each URL's origin. An ALLOWED url is returned UNCHANGED (so an
+   all-allowlisted lesson renders byte-identically); a BLOCKED url returns '' and the
+   sink falls back to its safe placeholder / omits the link.
+     mode 'embed' — video: https + an allowlisted video host, OR a direct https .mp4/.webm.
+     mode 'frame' — interactive: scheme-only (https absolute, or same-origin relative);
+                    NO host allowlist, since school-hosted interactives are open-ended. */
+const EMBED_HOSTS=/^(?:[a-z0-9-]+\.)*(?:youtube\.com|youtu\.be|youtube-nocookie\.com|vimeo\.com)$/i;
+function safeUrl(raw,mode){
+  const s=String(raw==null?'':raw).trim();
+  if(!s) return '';
+  if(/^\s*(?:javascript|data|vbscript|file):/i.test(s)) return '';   // dangerous schemes — always blocked
+  if(/^\/\//.test(s)) return '';                                     // protocol-relative //host — blocked
+  if(mode==='embed'){
+    if(/^https:\/\/[^\s"'<>]+\.(?:mp4|webm)(?:[?#][^\s"'<>]*)?$/i.test(s)) return s;   // direct https video file
+    let u; try{ u=new URL(s); }catch(e){ return ''; }               // must be an absolute URL
+    return (u.protocol==='https:' && EMBED_HOSTS.test(u.host)) ? s : '';
+  }
+  // mode 'frame'
+  let u; try{ u=new URL(s); }catch(e){ return s; }                  // relative → same-origin, allowed unchanged
+  return u.protocol==='https:' ? s : '';                            // an absolute frame URL must be https
+}
 function toEmbed(url){
   if(!url) return '';
   url=url.trim();
   let m=url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);
   if(m) return 'https://www.youtube.com/embed/'+m[1];
-  return url; // ClickView embed link or other iframe URL pasted directly
+  return safeUrl(url,'embed'); // gated: an allowlisted video URL passes through unchanged, else '' (was: return url)
 }
 function markNotes(text){ return esc(text).replace(/==([^=]+)==/g,'<span class="noteable">$1</span>'); }
 /* text/textImage body blocks {h?,p} — editable on canvas; the optional heading shows in
@@ -3190,8 +3215,7 @@ function textBlocks(i,arr,key,off){ off=off||0;
    URL (so there's always a working link); never advances the slide (an <a> is in the present
    click-ignore list). */
 function sourceFallback(s){
-  const url=(s.sourceUrl||s.url||'').trim(); if(!url) return '';
-  if(!/^(https?:)?\/\//i.test(url)) return '';   // only an absolute link is a useful fallback (a bare ClickView id would 404 as a relative URL)
+  const url=safeUrl(s.sourceUrl||s.url,'frame'); if(!url) return '';   // gated (CodeRabbit): blocks javascript:/data:/vbscript: AND protocol-relative //host; an https absolute or same-origin relative link passes through unchanged
   const label=s.sourceLabel || (s.type==='video'?'Open video ↗':'Open the interactive ↗');
   return `<a class="src-fallback" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
 }
@@ -3675,16 +3699,17 @@ function renderCanvas(){
   }
   else if(s.type==='external'){
     const feats=(s.features||[]).map((x,j)=>`<li><span class="editable" data-bind="slides.${i}.features.${j}" contenteditable="${mode==='edit'}">${esc(x)}</span>${mode==='edit'?`<button class="qdel" data-delfeat="${i}:${j}">✕</button>`:''}</li>`).join('');
+    const exUrl=safeUrl(s.url,'frame');   // interactive embed — scheme-gated (blocks javascript:/data:; https/relative pass unchanged)
     h=`<div class="card pad">
       <div class="exhibit">
-        <div class="ex-img${s.url?' ex-embed':''}" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${s.url?`<iframe src="${esc(s.url)}" title="${esc(s.title||'Interactive')}" allowfullscreen loading="lazy"></iframe>`:(s.image?`${imgEl(s.image,s)}${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image / add URL</div>`)}</div>
+        <div class="ex-img${exUrl?' ex-embed':''}" ${mode==='edit'?`data-drop="slides.${i}.image"`:''}>${exUrl?`<iframe src="${esc(exUrl)}" title="${esc(s.title||'Interactive')}" allowfullscreen loading="lazy"></iframe>`:(s.image?`${imgEl(s.image,s)}${mode!=='edit'?`<button class="expand" data-expandsrc="${esc(s.image)}" title="Expand">⤢</button>`:''}`:`<div class="ph">${ICON.image}<br>Drag an image / add URL</div>`)}</div>
         <div class="ex-body">
           <div class="eyebrow editable" data-bind="slides.${i}.eyebrow" contenteditable="${mode==='edit'}">${esc(s.eyebrow||'Special exhibit')}</div>
           <h2 class="ex-title editable" data-bind="slides.${i}.title" contenteditable="${mode==='edit'}">${esc(s.title)}</h2>
           <div class="ex-desc editable" data-bind="slides.${i}.desc" contenteditable="${mode==='edit'}">${esc(s.desc)}</div>
           <ul class="feat">${feats}</ul>
           ${mode==='edit'?`<button class="qadd" data-addfeat="${i}">＋ feature</button>`:''}
-          <div><button class="launch" data-launch="${esc(s.sourceUrl||s.url||'')}">${ICON.launch} <span class="editable" data-bind="slides.${i}.launchLabel" contenteditable="${mode==='edit'}">${esc(s.launchLabel||'Launch activity')}</span> →</button></div>
+          <div><button class="launch" data-launch="${esc(safeUrl(s.sourceUrl||s.url,'frame'))}">${ICON.launch} <span class="editable" data-bind="slides.${i}.launchLabel" contenteditable="${mode==='edit'}">${esc(s.launchLabel||'Launch activity')}</span> →</button></div>
           <div class="meta editable" data-bind="slides.${i}.meta" contenteditable="${mode==='edit'}">${esc(s.meta||'')}</div>
           ${mode==='edit'?`<div class="setrow"><input data-urlfield="slides.${i}.url" value="${esc(s.url||'')}" placeholder="Activity URL (ClickView, Genially, etc.)"><button class="btn" data-applyurl="slides.${i}.url">Set link</button></div><div class="setrow"><input data-urlfield="slides.${i}.image" value="${esc(s.image||'')}" placeholder="Image URL"><button class="btn" data-applyurl="slides.${i}.image">Set image</button></div>`:''}
         </div>
@@ -4722,7 +4747,7 @@ function imVideo(s){
   const mi=['quiz','notes'];
   const subs=meta.map((m,j)=>`<div class="tp-subcard"><span class="tp-sc-ic ${j%2?'tert':'fixed'}">${tpIc(m.icon||mi[j%2],20)}</span><div><p class="tp-sc-t">${esc(m.key||'')}</p><p class="tp-sc-s">${esc(m.value||'')}</p></div></div>`).join('');
   const poster=tpSrc(s.image)||tpVideoPoster(s);
-  const url=(s.url||'').trim(), embed=toEmbed(url), watchLabel=s.metaCta||'Watch on YouTube ↗';
+  const url=safeUrl(s.url,'embed'), embed=toEmbed(url), watchLabel=s.metaCta||'Watch on YouTube ↗';
   return imHead(s,tpProg(s,65))
     +`<main class="tp-main"><div class="tp-vwrap">
       <div class="tp-vcard">
@@ -4912,7 +4937,7 @@ function mhVideo(s){
   const meta=Array.isArray(s.metadata)?s.metadata:[];
   const mrows=meta.map(m=>`<div class="tp-mrow"><span class="tp-mkey">${esc(m.key||'')}</span><span class="tp-mv">${esc(m.value||'')}</span></div>`).join('');
   const poster=tpSrc(s.image)||tpVideoPoster(s);
-  const url=(s.url||'').trim(), embed=toEmbed(url), watchLabel=s.metaCta||'Watch on YouTube ↗';
+  const url=safeUrl(s.url,'embed'), embed=toEmbed(url), watchLabel=s.metaCta||'Watch on YouTube ↗';
   // watch-for: Study keeps the boxed .tp-artside metadata panel; Present shows the same rows as a COMPACT
   // inline strip (chips) in a bordered container — content-first, no sticky sidebar box, no dead column.
   const artsideBox=mrows?`<div class="tp-artside"><h3>${esc(s.metadataLabel||'Metadata')}</h3>${mrows}${s.metaCta?`<button class="tp-blueprint">${esc(s.metaCta)}</button>`:''}</div>`:'';
@@ -5047,11 +5072,11 @@ function tpMedia(media, kind, opts){ opts=opts||{};
   const img=(src,alt)=>`<img class="tp-media-img" src="${esc(src)}" alt="${esc(alt||'')}" loading="lazy" style="${pos}${fitVar}" onerror="tpImgErr(this)">`;
   let visual=ph, overlay='';
   if(kind==='video'){
-    const poster=tpVideoPoster(m), url=tpSrc(m.externalVideoUrl||m.url);
+    const poster=tpVideoPoster(m), url=safeUrl(tpSrc(m.externalVideoUrl||m.url),'embed');
     if(poster) visual=img(poster,phLabel||'Video thumbnail');
     if(opts.overlay!==false) overlay=`<button class="tp-media-play" type="button" aria-label="Play video">${tpIc('play',30)}</button>`+(url?`<a class="tp-media-ext" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${tpIc('external',14)} ${esc(opts.extLabel||'Watch on YouTube')}</a>`:'');
   } else if(kind==='interactive'){
-    const still=tpSrc(m.still||m.screenshot||m.image), url=tpSrc(m.url);
+    const still=tpSrc(m.still||m.screenshot||m.image), url=safeUrl(tpSrc(m.url),'frame');
     if(still) visual=img(still,phLabel||'Interactive preview');
     if(opts.affordance!==false && url) overlay=`<a class="tp-media-ext" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${tpIc('external',14)} ${esc(opts.extLabel||'Open interactive ↗')}</a>`;
   } else {
@@ -5797,7 +5822,7 @@ function glSource(s){
 
 /* ===================== 10) INTERACTIVE — external embed + guidance ===================== */
 function glInteractive(s){
-  const url=(s.url||'').trim();
+  const url=safeUrl(s.url,'frame');
   const steps=Array.isArray(s.steps)?s.steps:(Array.isArray(s.features)?s.features:[]);
   const stepHtml=steps.length?`<ol class="gl-steps">${steps.map((x,k)=>{ const o=typeof x==='string'?{description:x}:x; return `<li><span class="gl-sn">${k+1}</span><div>${o.title?`<h4>${esc(o.title)}</h4>`:''}<p>${esc(o.description||o.body||o.text||'')}</p></div></li>`; }).join('')}</ol>`:'';
   const questions=Array.isArray(s.questions)?s.questions:[];   // answerable tasks full-width BELOW the embed+steps row (mirrors mhInteractive #64) — reuse glSource's task markup so the shared reveal JS drives them; flow into the worksheet (answer-space only, model not printed)
@@ -6019,7 +6044,7 @@ function mhText(s,i){
    <iframe> embed of s.url, else a themed placeholder; always a real "Open the interactive ↗" launch
    link when a url is present. Reuses the shared tpMedia/tpSrc helpers — no new JS. */
 function mhInteractive(s){
-  const url=(s.url||'').trim();
+  const url=safeUrl(s.url,'frame');
   const steps=Array.isArray(s.steps)?s.steps:(Array.isArray(s.features)?s.features:[]);
   const stepHtml=steps.length?`<ol class="tp-isteps">${steps.map((x,k)=>{ const o=typeof x==='string'?{description:x}:x; return `<li><span class="tp-isn">${k+1}</span><div>${o.title?`<h4>${esc(o.title)}</h4>`:''}<p>${esc(o.description||o.body||o.text||'')}</p></div></li>`; }).join('')}</ol>`:'';
   const questions=Array.isArray(s.questions)?s.questions:[];   // full-width answerable tasks below the embed row — mirror packSourceAnalysis (textarea + reveal-model), gated on a non-empty attempt by the shared reveal JS; flow into the worksheet (answer-space only, model not printed)
@@ -6064,7 +6089,7 @@ function mhInteractive(s){
    packSourceAnalysis (data-tp-block/-field/-reveal/-model → driven by the existing wirePackTyped, so
    no new wiring). Registered under `interactive` in BOTH IM_PACK and MH_PACK. */
 function packInteractive(s){
-  const url=(s.url||'').trim();
+  const url=safeUrl(s.url,'frame');
   const embed=s.embed===true&&!!url;   // EMBED mode: play a light activity inline (full-width iframe); LAUNCH mode (default) shows the stand-in still + launch link
   const steps=Array.isArray(s.steps)?s.steps:(Array.isArray(s.features)?s.features:[]);
   const stepHtml=steps.length?`<ol class="tp-isteps">${steps.map((x,k)=>{ const o=typeof x==='string'?{description:x}:x; return `<li><span class="tp-isn">${k+1}</span><div>${o.title?`<h4>${esc(o.title)}</h4>`:''}<p>${esc(o.description||o.body||o.text||'')}</p></div></li>`; }).join('')}</ol>`:'';
@@ -6727,7 +6752,7 @@ function wirePack(){
   // so blocked embeds (e.g. ClickView) stay reachable after the swap.
   root.querySelectorAll('[data-tp-playembed]').forEach(btn=>{
     const play=()=>{
-      const embed=btn.dataset.tpPlayembed;
+      const embed=safeUrl(btn.dataset.tpPlayembed,'embed');   // C2: re-gate the entity-decoded value at the sink (dataset decodes esc(), so re-validate before it reaches iframe.src)
       const frame=btn.closest('.tp-vframe,.tp-player');
       if(!embed){ const fb=frame&&frame.querySelector('[data-tp-vfallback]'); const u=fb&&fb.getAttribute('href'); if(u) window.open(u,'_blank','noopener'); return; }
       if(!frame){ window.open(embed,'_blank','noopener'); return; }
@@ -6944,7 +6969,7 @@ function mhMediaOverlay(media,ovId,title){
   let inner='', stiml='Plate';
   if(t==='video'){
     stiml='Video';
-    const url=(media.url||'').trim(), embed=toEmbed(url), poster=tpSrc(media.poster)||tpVideoPoster(media), watchLabel=media.watchLabel||'Watch on YouTube ↗';
+    const url=safeUrl(media.url,'embed'), embed=toEmbed(url), poster=tpSrc(media.poster)||tpVideoPoster(media), watchLabel=media.watchLabel||'Watch on YouTube ↗';
     inner=`<div class="tp-player tp-fmplayer">
       ${poster?tpImg(poster,'Video still','film'):`<div class="tp-sepia"></div>`}
       ${poster?'':`<div class="tp-vph">${tpIc('film',20)}<span>Video still placeholder</span></div>`}
@@ -6953,7 +6978,7 @@ function mhMediaOverlay(media,ovId,title){
     </div>${cap}`;
   } else if(t==='interactive'){
     stiml='Interactive';
-    const url=(media.url||'').trim(), still=tpSrc(media.still||media.screenshot||media.src||media.image);
+    const url=safeUrl(media.url,'frame'), still=tpSrc(media.still||media.screenshot||media.src||media.image);
     const frame=still
       ? `<div class="tp-iembed">${tpImg(still,'Interactive preview','cube')}<span class="tp-iframetag">${tpIc('cube',14)} Interactive preview</span></div>`
       : `<div class="tp-iembed"><div class="tp-ieph"><span class="pi">${tpIc('cube',40)}</span><span class="pl">${esc(media.embedLabel||'Interactive activity')}</span></div></div>`;
@@ -6971,7 +6996,7 @@ function packSourceAnalysis(s,i){
   const prov=Array.isArray(s.provenance)?s.provenance:[];
   const tasks=Array.isArray(s.tasks)?s.tasks:[];
   const srcRaw=(s.sourceUrl||'').trim();
-  const srcUrl=/^(https?:)?\/\//i.test(srcRaw)?srcRaw:'';             // optional link to the original source online (inspector Links panel); only an absolute http(s)/protocol-relative link is rendered — mirrors sourceFallback(), blocking javascript:/data: hrefs and bare relative strings. Rendered only when present → byte-identical when unset
+  const srcUrl=safeUrl(srcRaw,'frame');             // gated (CodeRabbit): mirrors sourceFallback() — blocks javascript:/data: AND protocol-relative //host; an https absolute or same-origin relative link passes through. Rendered only when present → byte-identical when unset
   const hasArt=tpHasImg(src.image)||!!src.transcript||prov.length>0||!!srcUrl;   // collapse to a single task column when there's nothing to show in the source panel (no image, transcript, provenance or link) — avoids an empty placeholder box
   const provHtml=prov.map(p=>`<div class="tp-prow"><span class="pi">${tpIc(p.icon||'doc',18)}</span><div><span class="pk">${esc(p.label||'')}</span><span class="pv">${esc(p.value||'')}</span></div></div>`).join('');
   const themeMH=(LESSON.meta&&LESSON.meta.theme)==='microhistory';

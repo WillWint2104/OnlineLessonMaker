@@ -7,6 +7,30 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Security
+- **Central URL allowlist gate — author URLs can no longer reach an iframe/href/`window.open` with a
+  dangerous scheme (C1/C2/M1).** `toEmbed()`'s non-YouTube passthrough (`return url`) previously emitted any
+  author URL verbatim into an **unsandboxed** `<iframe src>` (video slide, video hotspot, three pack video
+  renderers) and into the pack play button's `data-tp-playembed` → `iframe.src` on click (the C2 second-path,
+  where `.dataset` entity-decodes and undoes `esc()`). `esc()` closes attribute-breakout but **not** the
+  scheme, so `javascript:` / `data:text/html` / `vbscript:` / protocol-relative `//host` / arbitrary external
+  hosts got through. Added one central `safeUrl(raw, mode)` primitive applied at **every** URL sink's origin:
+  `mode:'embed'` = https + an allowlisted video host (youtube/youtu.be/nocookie/vimeo) or a direct https
+  `.mp4/.webm`; `mode:'frame'` = scheme-only (https absolute or same-origin relative) for open-ended
+  interactive embeds. Also re-gated the C2 value **after** the `.dataset` decode, at assignment time. The two
+  source-link sinks (`sourceFallback`, `packSourceAnalysis`) that previously self-gated with
+  `/^(https?:)?\/\//` — which blocked `javascript:`/`data:` but **allowed protocol-relative `//host`** — now
+  route through `safeUrl(…,'frame')` too (CodeRabbit). An
+  allowlisted URL passes through **unchanged** (so the corpus is byte-identical); a blocked URL becomes `''`
+  and the sink renders its safe placeholder. **`scripts/validate.mjs`** now mirrors the gate: it scans
+  `<iframe src>` + the `#lesson-data` `url`/`externalVideoUrl`/`sourceUrl` fields, **hard-fails** on a
+  dangerous scheme (the corpus carries none) and **warns** on a non-allowlisted embed host (the corpus
+  legitimately uses youtube + the project's own github.io). **Checked:** byte-identity **0 diffs across 1320
+  render units** (14 corpus lessons × 5 themes × Study/Present); adversarial acceptance **30/30** (every
+  malicious vector blocked at the unit, render, and real-wired-C2-button levels; legit youtube still plays;
+  legit interactives still embed); `validate` green on the corpus and correctly fails a crafted malicious
+  lesson; 0 console errors; self-contained; no CSS/token change.
+
 ### Fixed
 - **Composable page reading column was narrow (~half width) at laptop sizes.** F1 made the flat page
   `.tp-slide[data-tp-type="page"]` `position:relative` but not full-width; since `#slide` is `align-items:center`
