@@ -86,6 +86,31 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **Figure engine Stage 1a — coordinate/viewport foundation.** The first stage of the figure engine
+  (ENGINE_SPEC §1.1/§1.2/§1.6): a pure, token-styled, self-contained coordinate system. **(1) `figView`**
+  — exact reversible math↔screen mapping (+inverse for hit-testing); arbitrary reals map exactly with **no
+  snapping**; aspect `equal` (locks equal px-per-unit by expanding the shorter domain, centered) and
+  `stretch`. **(2) `figNiceStep`/`figNiceTicks`** — step always rounds to 1/2/2.5/5 ×10ⁿ (target 5 ticks;
+  distinct from the existing `gqNiceStep`); a raw norm of exactly 1.5 rounds **up** to 2 (strict `<`,
+  documented); label precision derived from the step. **(3) `figDraw`** — an SVG primitive layer
+  (line/polyline/polygon/circle/arc/text/tick), every colour via the fallback-chain theme tokens
+  (`var(--graph-grid, var(--outline-variant))` …), no inline hex, no `[data-theme]` fork. **(4) `FRAG.figure`**
+  — a minimal `figure` block that renders a coordinate PLANE (two-tier grid + mid-grey axes with tick marks
+  + plain tick labels) and plots POINTS from a list OR a table of values (arbitrary reals) as marker +
+  identifier; `grid: shown|hidden` (hidden = computed, unpainted). Functions/segments/geometry, label-aware
+  auto-fit and pill collision are LATER stages. Registered with 5 explicit themes AFTER the ScholarMath
+  mirror; additive editor touchpoints (TYPELAB/PACK_TYPELAB/BLOCK_SEED/blockForm). **Checked (painted
+  geometry):** tick chooser −3..3→1 / 0..100→20 / −1..1→0.5 / 0..7→1 / −0.2..0.2→0.1 / 0..1000→200 /
+  0..7.5→2 (the 1.5 boundary); (2.4,−1.7) maps to its exact pixel and the inverse round-trips (no snap);
+  `equal` keeps pxPerX==pxPerY (unit square square) while `stretch` fills independently; grid hidden ≡ shown
+  land at identical pixels; re-skins in ScholarMath + geolearn (fallback chain) with axes/grid/points
+  actually painting. **All seven frozen fns (incl. `gradeResponse`) byte-identical; legacy corpus 0 render
+  diffs (1320 units); self-contained; token-only; validate green; 0 console errors.** *CodeRabbit review
+  folded:* domain validation (reject non-finite / reversed / zero-width bounds → `figAutoDomain`, so
+  `figView` can't divide by zero) and higher-precision SVG-coord serialisation (`figNum`, ~0.0005 units;
+  the mapping stays exact). The 1e-12-domain tick-precision note is logged as a known non-issue (no real
+  coordinate plane reaches that scale). Re-verified: acceptance 13/13, painted 8/8, 0 render diffs, frozen
+  fns identical.
 - **Blocks Stage B — image placements.** The composable `image` block gains an additive `placement`
   field (`contained` | `beside` | `pair`) rather than a second media block: contained = centred ~78% figure
   with `figcaption`; beside = image + short text as one purpose-unit; pair = two images (fixed `a`/`b`

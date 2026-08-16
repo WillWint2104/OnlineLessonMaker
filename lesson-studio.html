@@ -2534,6 +2534,17 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-gq2-axis{stroke:var(--graph-axis,var(--on-surface));stroke-width:1.8;}
 .tp-slide .tp-gq2-lab{fill:var(--graph-axis,var(--on-surface-variant));font-family:var(--tp-body);font-size:12px;opacity:.85;}
 .tp-slide .tp-gq2-given{stroke:var(--graph-axis,var(--on-surface-variant));stroke-width:2;stroke-dasharray:5 4;opacity:.6;}
+/* Figure engine (Stage 1a) — coordinate plane. Token-only, fallback-chain colours (no inline hex, no [data-theme] fork). */
+.tp-slide .tp-fig{margin:0;}
+.tp-slide .tp-fig-svg{display:block;width:100%;height:auto;background:var(--graph-surface,var(--surface-lowest));border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);}
+.tp-slide .tp-fig-grid{stroke:var(--graph-grid,var(--outline-variant));stroke-width:1;}
+.tp-slide .tp-fig-grid-minor{stroke:var(--graph-grid,var(--outline-variant));stroke-width:.5;opacity:.4;}
+.tp-slide .tp-fig-axis{stroke:var(--graph-axis,var(--on-surface-variant));stroke-width:1.4;}
+.tp-slide .tp-fig-tick{stroke:var(--graph-axis,var(--on-surface-variant));stroke-width:1;}
+.tp-slide .tp-fig-ticklabel{fill:var(--graph-axis,var(--on-surface-variant));font-family:var(--tp-body);font-size:11px;}
+.tp-slide .tp-fig-pt{fill:var(--primary);stroke:var(--graph-surface,var(--surface-lowest));stroke-width:1.6;}
+.tp-slide .tp-fig-ptid{fill:var(--on-surface);font-family:var(--tp-body);font-size:12.5px;font-weight:600;}
+.tp-slide .tp-fig-cap{margin-top:6px;font-family:var(--tp-body);font-size:13px;color:var(--on-surface-variant);text-align:center;}
 .tp-slide .tp-gq2-student{stroke:var(--student-ink,var(--primary));stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
 .tp-slide .tp-gq2-answer{stroke:var(--ok,#1f7a54);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
 .tp-slide .tp-gq2-pt{fill:var(--student-ink,var(--primary));stroke:var(--graph-surface,#fff);stroke-width:1.5;cursor:pointer;}
@@ -3136,11 +3147,11 @@ const ICON={
   medal:'<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/><path d="M12 6.4l.85 1.7 1.9.28-1.37 1.33.32 1.88L12 10.8l-1.7.9.32-1.88L9.25 8.5l1.9-.28z" fill="currentColor" stroke="none"/></svg>',
   book:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6c-2-1.4-5-1.4-7 0v12c2-1.4 5-1.4 7 0 2-1.4 5-1.4 7 0V6c-2-1.4-5-1.4-7 0z"/><path d="M12 6v12"/></svg>',
   outcomes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>'};
-const TYPELAB={cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
+const TYPELAB={figure:"Figure",cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
 /* themes whose slides render through the dedicated JSON slide pack (renderPackSlide) */
 const PACK_THEMES=new Set(['imperium','microhistory','geolearn','mathematics','scholarmath']);   // S1 — ScholarMath is a token variant on the shared pack path (composable pages)
 /* pack slide types → nav label (these themes use `title`/`type` rather than the engine's slide fields) */
-const PACK_TYPELAB={title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",graphQuestion:"Graph question",outro:"Outro",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
+const PACK_TYPELAB={figure:"Figure",title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",graphQuestion:"Graph question",outro:"Outro",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
 /* infographic data palette: figure.color is a theme token, never a raw hex; defaults cycle */
 const IG_TOKENS=['primary','secondary','tertiary'];
 function igColor(c){ return c==='secondary'?'var(--data-2)':c==='tertiary'?'var(--data-3)':'var(--data-1)'; }
@@ -3952,6 +3963,7 @@ const BLOCK_SEED={   // lean seeds for add-block (labeledGraphic/graphQuestion r
   penResponse:{type:'penResponse',title:'Work it out',prompt:'Write your working here.'},
   knowledgeCheck:{type:'knowledgeCheck',question:'Which is correct?',options:[{text:'Option A',correct:true},{text:'Option B'}],feedback:{}},
   image:{type:'image',src:'',alt:'',interactions:[]},   // Phase C1 — composable image object (add interactivity via its inspector)
+  figure:{type:'figure',figure:'graph',domain:{xMin:-3,xMax:3,yMin:-2,yMax:4},grid:'shown',aspect:'stretch',objects:[{type:'points',from:'table',rows:[['A',2.4,-1.7],['B',-1,1.5]]}]},   // Stage 1a — coordinate plane + plotted points
   formula:{type:'formula',math:'a(b+c)=ab+ac',label:''},                                        // Paper & Board — display maths in the framed container
   workedExample:{type:'workedExample',eyebrow:'Worked example',title:'',steps:[{t:'',note:''}]}, // Paper & Board — chalkboard steps ($…$ for maths)
   mastery:{type:'mastery',text:'Two clean runs in a row and this is mastered.'},                 // Paper & Board — ∎ recommend-don't-gate line
@@ -4098,6 +4110,13 @@ function blockPracticeSetForm(i,b,sel,base){   // S2 — set header + gating con
       +(b.gate?inT('First batch (questions shown before “Keep going”)',`${base}.batch`,b.batch):''))
     +repeatGroup(i,b,sel,'items','Question','Questions',(it,j)=>scQFields(i,it||{},sel,`${base}.items.${j}`),'Add question',base);
 }
+function blockFigureForm(i,b,sel,base){ const d=b.domain||{};   // Stage 1a — lean form: domain + grid + aspect (points via block JSON)
+  return ig('graph',sel,
+    inT('x min',`${base}.domain.xMin`,d.xMin)+inT('x max',`${base}.domain.xMax`,d.xMax)
+   +inT('y min',`${base}.domain.yMin`,d.yMin)+inT('y max',`${base}.domain.yMax`,d.yMax)
+   +inSel('Grid',`${base}.grid`,b.grid||'shown',[['shown','Shown'],['hidden','Hidden']])
+   +inSel('Aspect',`${base}.aspect`,b.aspect||'stretch',[['stretch','Stretch (fill each axis)'],['equal','Equal (square units)']]));
+}
 function blockForm(i,k,b,sel){   // dispatch: reuse the page inspector case (rebased) where schemas match; lean forms where they differ
   const base=`slides.${i}.blocks.${k}`;
   if(b.type==='text') return blockTextForm(i,b,sel,base);
@@ -4111,6 +4130,7 @@ function blockForm(i,k,b,sel){   // dispatch: reuse the page inspector case (reb
   if(b.type==='skillHeader') return blockSkillHeaderForm(i,b,sel,base);   // S3 — skill-page header
   if(b.type==='banner') return blockBannerForm(i,b,sel,base);             // hero banner block
   if(b.type==='section') return blockSectionForm(i,b,sel,base);           // Stage A — purpose-unit container
+  if(b.type==='figure') return blockFigureForm(i,b,sel,base);             // Stage 1a — coordinate plane (points authored in the block JSON for now)
   return inspectorForm(i,b,sel,base);   // penResponse / graphQuestion / labeledGraphic — schemas match; base rebases every path
 }
 function blockOutline(i,s,sel){
@@ -6752,6 +6772,98 @@ FRAG.image={imperium:fragImage,microhistory:fragImage,geolearn:fragImage,mathema
 Object.keys(FRAG).forEach(t=>{ if(FRAG[t]&&FRAG[t].mathematics) FRAG[t].scholarmath=FRAG[t].mathematics; });
 /* register selfCheck for ScholarMath too (defined above with the other four themes) */
 FRAG.selfCheck.scholarmath=fragSelfCheck;
+/* ═══════════════ FIGURE ENGINE — Stage 1a: coordinate/viewport foundation (ENGINE_SPEC §1.1/§1.2/§1.6) ═══════════════
+   Pure, token-styled, self-contained. FOUNDATION ONLY — a coordinate PLANE + plotted POINTS. Functions,
+   segments, geometry, label-aware auto-fit and pill collision are LATER stages. Registered as FRAG.figure
+   AFTER the ScholarMath mirror (5 themes explicit). ZERO edits to any frozen runtime fn. */
+// §1.2 nice-step — rounds raw step to 1/2/2.5/5 ×10ⁿ. DISTINCT from gqNiceStep (graphQuestion's 1/2/5/10).
+// targetTicks=5 reproduces the spec's verified outputs (−3..3→1, 0..100→20, −1..1→0.5). Boundaries are
+// STRICT '<' so a raw norm of EXACTLY 1.5 rounds UP to 2 — deliberate, documented, consistent.
+function figNiceStep(range, target){
+  const raw=Math.abs(range)/(target||5);
+  if(!(raw>0)) return {step:1, niceNorm:1};
+  const mag=Math.pow(10, Math.floor(Math.log10(raw))), norm=raw/mag;      // norm ∈ [1,10)
+  const niceNorm = norm<1.5?1 : norm<3?2 : norm<4?2.5 : norm<7?5 : 10;    // 1.5→2, 3→2.5, 4→5, 7→10
+  return {step:niceNorm*mag, niceNorm};
+}
+function figDecimals(step){ let d=0, s=Math.abs(step); while(d<8 && Math.abs(Math.round(s)-s)>1e-9){ s*=10; d++; } return d; }
+function figNiceTicks(min, max, target){
+  const {step}=figNiceStep(max-min, target), decimals=figDecimals(step), ticks=[];
+  for(let v=Math.ceil((min-1e-9)/step)*step; v<=max+1e-9; v+=step) ticks.push(+v.toFixed(10));   // round kills float drift (0.30000000004). CodeRabbit #1 (toFixed(10)/8-dp cap collapse for a ~1e-12 domain) is a KNOWN NON-ISSUE: no real coordinate-plane domain approaches that scale, so no guard is added by design.
+  return {step, ticks, decimals};
+}
+function figFmtTick(v, d){ return (Math.abs(v)<1e-9?0:v).toFixed(d); }
+// §1.1 coordinate/viewport — exact reversible math↔screen mapping (+inverse). Arbitrary reals, NO snap.
+//   aspect 'equal' locks equal px-per-unit (expands the SHORTER domain, centered); 'stretch' fills each axis.
+function figView(domain, box, aspect){
+  const b=box||{}, W=+b.W, H=+b.H, pL=+b.padL||0, pR=+b.padR||0, pT=+b.padT||0, pB=+b.padB||0;
+  const plotW=W-pL-pR, plotH=H-pT-pB;
+  let x0=+domain.xMin, x1=+domain.xMax, y0=+domain.yMin, y1=+domain.yMax;
+  if(aspect==='equal' && (x1-x0)>0 && (y1-y0)>0){
+    const s=Math.min(plotW/(x1-x0), plotH/(y1-y0));                       // equal px/unit that fits without clipping
+    const needX=plotW/s, needY=plotH/s, cx=(x0+x1)/2, cy=(y0+y1)/2;
+    x0=cx-needX/2; x1=cx+needX/2; y0=cy-needY/2; y1=cy+needY/2;           // EXPAND the shorter domain, centered
+  }
+  const sx=x=> pL+(x-x0)/(x1-x0)*plotW, sy=y=> pT+(y1-y)/(y1-y0)*plotH;
+  const ix=px=> x0+(px-pL)/plotW*(x1-x0), iy=py=> y1-(py-pT)/plotH*(y1-y0);
+  return { sx, sy, ix, iy, pxPerX:plotW/(x1-x0), pxPerY:plotH/(y1-y0), dom:{x0,x1,y0,y1}, plotW, plotH };
+}
+// §1.6 SVG primitive layer — token-styled draw calls (colours via CSS classes → theme tokens; NO inline hex).
+function figNum(v){ return String(Math.round(v*1000)/1000); }   // CodeRabbit #2: serialise coords at ~0.0005-unit precision (was toFixed(2) ≈0.005), trailing zeros trimmed — the mapping itself stays exact (figView returns raw floats)
+const figDraw={
+  line:(x1,y1,x2,y2,cls)=>`<line x1="${figNum(x1)}" y1="${figNum(y1)}" x2="${figNum(x2)}" y2="${figNum(y2)}" class="${cls}"/>`,
+  polyline:(pts,cls)=>`<polyline points="${pts.map(p=>figNum(p[0])+','+figNum(p[1])).join(' ')}" class="${cls}" fill="none"/>`,
+  polygon:(pts,cls)=>`<polygon points="${pts.map(p=>figNum(p[0])+','+figNum(p[1])).join(' ')}" class="${cls}"/>`,
+  circle:(cx,cy,r,cls)=>`<circle cx="${figNum(cx)}" cy="${figNum(cy)}" r="${figNum(+r)}" class="${cls}"/>`,
+  arc:(cx,cy,r,a0,a1,cls)=>{ const P=a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)], q=P(a0), w=P(a1), large=Math.abs(a1-a0)>Math.PI?1:0, sweep=a1>a0?1:0; return `<path d="M${figNum(q[0])} ${figNum(q[1])} A${figNum(r)} ${figNum(r)} 0 ${large} ${sweep} ${figNum(w[0])} ${figNum(w[1])}" class="${cls}" fill="none"/>`; },
+  text:(x,y,str,cls,anchor)=>`<text x="${figNum(x)}" y="${figNum(y)}" class="${cls}"${anchor?` text-anchor="${anchor}"`:''}>${esc(str)}</text>`,
+  tick:(x,y,dx,dy,cls)=>`<line x1="${figNum(x)}" y1="${figNum(y)}" x2="${figNum(x+dx)}" y2="${figNum(y+dy)}" class="${cls}"/>`
+};
+// points from objects[]: a plain list ({id,x,y} or [id,x,y]) OR a table of values ({from:'table', rows:[[id,x,y]]}). Arbitrary reals.
+function figPoints(b){
+  const out=[];
+  (Array.isArray(b.objects)?b.objects:[]).forEach(o=>{
+    if(!o||o.type!=='points') return;
+    const rows=Array.isArray(o.rows)?o.rows:(Array.isArray(o.points)?o.points:[]);
+    rows.forEach((r,i)=>{ let id,x,y; if(Array.isArray(r)){ id=r[0]; x=+r[1]; y=+r[2]; } else { id=r.id; x=+r.x; y=+r.y; }
+      if(isFinite(x)&&isFinite(y)) out.push({ id:String(id==null?String.fromCharCode(65+i):id), x, y }); });
+  });
+  return out;
+}
+// simple bounds-from-points fallback when no explicit domain (the label-aware auto-fit is Stage 1b).
+function figAutoDomain(b){
+  const pts=figPoints(b); if(!pts.length) return {xMin:-5,xMax:5,yMin:-5,yMax:5};
+  const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+  const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys), mx=(x1-x0)*0.15||1, my=(y1-y0)*0.15||1;
+  return {xMin:x0-mx,xMax:x1+mx,yMin:y0-my,yMax:y1+my};
+}
+// the figure block — a coordinate PLANE (two-tier grid + axes with ticks + plain labels) + plotted points.
+function fragFigure(b,bk){
+  const dv=b.domain, domOK=dv && ['xMin','xMax','yMin','yMax'].every(k=>isFinite(+dv[k])) && (+dv.xMin<+dv.xMax) && (+dv.yMin<+dv.yMax);   // CodeRabbit #3: accept an explicit domain ONLY when all four bounds are finite and non-reversed/non-zero-width — else figView could divide by zero / emit NaN
+  const dom0=domOK?{xMin:+dv.xMin,xMax:+dv.xMax,yMin:+dv.yMin,yMax:+dv.yMax}:figAutoDomain(b);
+  const aspect=(b.aspect==='equal')?'equal':'stretch';
+  const box={W:520,H:360,padL:40,padR:18,padT:16,padB:30}, V=figView(dom0,box,aspect), D=V.dom;
+  const gridShown=(b.grid!=='hidden');                                     // hidden = view computed identically, gridlines simply unpainted
+  const xT=figNiceTicks(D.x0,D.x1,5), yT=figNiceTicks(D.y0,D.y1,5);
+  const axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));   // y-axis screen-x, x-axis screen-y (clamped visible)
+  let g='';
+  if(gridShown){
+    const mnx=xT.step/5, mny=yT.step/5;                                    // two-tier grid: minor at step/5, major at step
+    for(let v=Math.ceil((D.x0-1e-9)/mnx)*mnx; v<=D.x1+1e-9; v+=mnx) g+=figDraw.line(V.sx(v),V.sy(D.y0),V.sx(v),V.sy(D.y1),'tp-fig-grid-minor');
+    for(let v=Math.ceil((D.y0-1e-9)/mny)*mny; v<=D.y1+1e-9; v+=mny) g+=figDraw.line(V.sx(D.x0),V.sy(v),V.sx(D.x1),V.sy(v),'tp-fig-grid-minor');
+    xT.ticks.forEach(v=>g+=figDraw.line(V.sx(v),V.sy(D.y0),V.sx(v),V.sy(D.y1),'tp-fig-grid'));
+    yT.ticks.forEach(v=>g+=figDraw.line(V.sx(D.x0),V.sy(v),V.sx(D.x1),V.sy(v),'tp-fig-grid'));
+  }
+  const ax=figDraw.line(V.sx(D.x0),axisY,V.sx(D.x1),axisY,'tp-fig-axis')+figDraw.line(axisX,V.sy(D.y0),axisX,V.sy(D.y1),'tp-fig-axis');
+  let tk='', lb='';
+  xT.ticks.forEach(v=>{ const px=V.sx(v); tk+=figDraw.tick(px,axisY-4,0,8,'tp-fig-tick'); lb+=figDraw.text(px,axisY+16,figFmtTick(v,xT.decimals),'tp-fig-ticklabel','middle'); });
+  yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const py=V.sy(v); tk+=figDraw.tick(axisX-4,py,8,0,'tp-fig-tick'); lb+=figDraw.text(axisX-8,py+4,figFmtTick(v,yT.decimals),'tp-fig-ticklabel','end'); });
+  let pt='';
+  figPoints(b).forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y); pt+=figDraw.circle(px,py,4,'tp-fig-pt')+figDraw.text(px+8,py-7,p.id,'tp-fig-ptid'); });   // marker + identifier (simple offset; pill placement is Stage 1b)
+  const cap=b.caption?`<figcaption class="tp-fig-cap">${tpRichMath(b.caption)}</figcaption>`:'';
+  return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}"><svg class="tp-fig-svg" viewBox="0 0 ${box.W} ${box.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(b.title||'Coordinate plane')}">${g}${ax}${tk}${lb}${pt}</svg>${cap}</figure>`;
+}
+FRAG.figure={imperium:fragFigure,microhistory:fragFigure,geolearn:fragFigure,mathematics:fragFigure,scholarmath:fragFigure};
 function renderFragment(b,i,k,theme){
   const bk=(b&&b.bid)?b.bid:(i+'-'+k);   // stable bid when present (editor-created); positional fallback for bid-less JSON composites
   const fn=FRAG[b.type]&&FRAG[b.type][theme];
