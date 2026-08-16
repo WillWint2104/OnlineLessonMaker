@@ -105,7 +105,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `equal` keeps pxPerX==pxPerY (unit square square) while `stretch` fills independently; grid hidden ≡ shown
   land at identical pixels; re-skins in ScholarMath + geolearn (fallback chain) with axes/grid/points
   actually painting. **All seven frozen fns (incl. `gradeResponse`) byte-identical; legacy corpus 0 render
-  diffs (1320 units); self-contained; token-only; validate green; 0 console errors.**
+  diffs (1320 units); self-contained; token-only; validate green; 0 console errors.** *CodeRabbit review
+  folded:* domain validation (reject non-finite / reversed / zero-width bounds → `figAutoDomain`, so
+  `figView` can't divide by zero) and higher-precision SVG-coord serialisation (`figNum`, ~0.0005 units;
+  the mapping stays exact). The 1e-12-domain tick-precision note is logged as a known non-issue (no real
+  coordinate plane reaches that scale). Re-verified: acceptance 13/13, painted 8/8, 0 render diffs, frozen
+  fns identical.
 - **Blocks Stage B — image placements.** The composable `image` block gains an additive `placement`
   field (`contained` | `beside` | `pair`) rather than a second media block: contained = centred ~78% figure
   with `figcaption`; beside = image + short text as one purpose-unit; pair = two images (fixed `a`/`b`

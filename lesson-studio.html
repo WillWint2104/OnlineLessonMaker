@@ -6789,7 +6789,7 @@ function figNiceStep(range, target){
 function figDecimals(step){ let d=0, s=Math.abs(step); while(d<8 && Math.abs(Math.round(s)-s)>1e-9){ s*=10; d++; } return d; }
 function figNiceTicks(min, max, target){
   const {step}=figNiceStep(max-min, target), decimals=figDecimals(step), ticks=[];
-  for(let v=Math.ceil((min-1e-9)/step)*step; v<=max+1e-9; v+=step) ticks.push(+v.toFixed(10));   // round kills float drift (0.30000000004)
+  for(let v=Math.ceil((min-1e-9)/step)*step; v<=max+1e-9; v+=step) ticks.push(+v.toFixed(10));   // round kills float drift (0.30000000004). CodeRabbit #1 (toFixed(10)/8-dp cap collapse for a ~1e-12 domain) is a KNOWN NON-ISSUE: no real coordinate-plane domain approaches that scale, so no guard is added by design.
   return {step, ticks, decimals};
 }
 function figFmtTick(v, d){ return (Math.abs(v)<1e-9?0:v).toFixed(d); }
@@ -6809,14 +6809,15 @@ function figView(domain, box, aspect){
   return { sx, sy, ix, iy, pxPerX:plotW/(x1-x0), pxPerY:plotH/(y1-y0), dom:{x0,x1,y0,y1}, plotW, plotH };
 }
 // §1.6 SVG primitive layer — token-styled draw calls (colours via CSS classes → theme tokens; NO inline hex).
+function figNum(v){ return String(Math.round(v*1000)/1000); }   // CodeRabbit #2: serialise coords at ~0.0005-unit precision (was toFixed(2) ≈0.005), trailing zeros trimmed — the mapping itself stays exact (figView returns raw floats)
 const figDraw={
-  line:(x1,y1,x2,y2,cls)=>`<line x1="${x1.toFixed(2)}" y1="${y1.toFixed(2)}" x2="${x2.toFixed(2)}" y2="${y2.toFixed(2)}" class="${cls}"/>`,
-  polyline:(pts,cls)=>`<polyline points="${pts.map(p=>p[0].toFixed(2)+','+p[1].toFixed(2)).join(' ')}" class="${cls}" fill="none"/>`,
-  polygon:(pts,cls)=>`<polygon points="${pts.map(p=>p[0].toFixed(2)+','+p[1].toFixed(2)).join(' ')}" class="${cls}"/>`,
-  circle:(cx,cy,r,cls)=>`<circle cx="${cx.toFixed(2)}" cy="${cy.toFixed(2)}" r="${(+r).toFixed(2)}" class="${cls}"/>`,
-  arc:(cx,cy,r,a0,a1,cls)=>{ const P=a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)], q=P(a0), w=P(a1), large=Math.abs(a1-a0)>Math.PI?1:0, sweep=a1>a0?1:0; return `<path d="M${q[0].toFixed(2)} ${q[1].toFixed(2)} A${r.toFixed(2)} ${r.toFixed(2)} 0 ${large} ${sweep} ${w[0].toFixed(2)} ${w[1].toFixed(2)}" class="${cls}" fill="none"/>`; },
-  text:(x,y,str,cls,anchor)=>`<text x="${x.toFixed(2)}" y="${y.toFixed(2)}" class="${cls}"${anchor?` text-anchor="${anchor}"`:''}>${esc(str)}</text>`,
-  tick:(x,y,dx,dy,cls)=>`<line x1="${x.toFixed(2)}" y1="${y.toFixed(2)}" x2="${(x+dx).toFixed(2)}" y2="${(y+dy).toFixed(2)}" class="${cls}"/>`
+  line:(x1,y1,x2,y2,cls)=>`<line x1="${figNum(x1)}" y1="${figNum(y1)}" x2="${figNum(x2)}" y2="${figNum(y2)}" class="${cls}"/>`,
+  polyline:(pts,cls)=>`<polyline points="${pts.map(p=>figNum(p[0])+','+figNum(p[1])).join(' ')}" class="${cls}" fill="none"/>`,
+  polygon:(pts,cls)=>`<polygon points="${pts.map(p=>figNum(p[0])+','+figNum(p[1])).join(' ')}" class="${cls}"/>`,
+  circle:(cx,cy,r,cls)=>`<circle cx="${figNum(cx)}" cy="${figNum(cy)}" r="${figNum(+r)}" class="${cls}"/>`,
+  arc:(cx,cy,r,a0,a1,cls)=>{ const P=a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)], q=P(a0), w=P(a1), large=Math.abs(a1-a0)>Math.PI?1:0, sweep=a1>a0?1:0; return `<path d="M${figNum(q[0])} ${figNum(q[1])} A${figNum(r)} ${figNum(r)} 0 ${large} ${sweep} ${figNum(w[0])} ${figNum(w[1])}" class="${cls}" fill="none"/>`; },
+  text:(x,y,str,cls,anchor)=>`<text x="${figNum(x)}" y="${figNum(y)}" class="${cls}"${anchor?` text-anchor="${anchor}"`:''}>${esc(str)}</text>`,
+  tick:(x,y,dx,dy,cls)=>`<line x1="${figNum(x)}" y1="${figNum(y)}" x2="${figNum(x+dx)}" y2="${figNum(y+dy)}" class="${cls}"/>`
 };
 // points from objects[]: a plain list ({id,x,y} or [id,x,y]) OR a table of values ({from:'table', rows:[[id,x,y]]}). Arbitrary reals.
 function figPoints(b){
@@ -6838,7 +6839,8 @@ function figAutoDomain(b){
 }
 // the figure block — a coordinate PLANE (two-tier grid + axes with ticks + plain labels) + plotted points.
 function fragFigure(b,bk){
-  const dom0=(b.domain&&isFinite(+b.domain.xMin)&&isFinite(+b.domain.xMax))?{xMin:+b.domain.xMin,xMax:+b.domain.xMax,yMin:+b.domain.yMin,yMax:+b.domain.yMax}:figAutoDomain(b);
+  const dv=b.domain, domOK=dv && ['xMin','xMax','yMin','yMax'].every(k=>isFinite(+dv[k])) && (+dv.xMin<+dv.xMax) && (+dv.yMin<+dv.yMax);   // CodeRabbit #3: accept an explicit domain ONLY when all four bounds are finite and non-reversed/non-zero-width — else figView could divide by zero / emit NaN
+  const dom0=domOK?{xMin:+dv.xMin,xMax:+dv.xMax,yMin:+dv.yMin,yMax:+dv.yMax}:figAutoDomain(b);
   const aspect=(b.aspect==='equal')?'equal':'stretch';
   const box={W:520,H:360,padL:40,padR:18,padT:16,padB:30}, V=figView(dom0,box,aspect), D=V.dom;
   const gridShown=(b.grid!=='hidden');                                     // hidden = view computed identically, gridlines simply unpainted
