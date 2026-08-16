@@ -6561,6 +6561,39 @@ function gqEqEqual(fA,fB,x0,x1){                               // equal by sampl
     n++; if(Math.abs(a-b) > 1e-4 + 1e-4*Math.abs(b)) return false; }
   return n>0;
 }
+/* ═══ Grading core (M2) — the ONE place a typed answer becomes a verdict ═══
+   Extracted byte-for-byte from the graphQuestion submit handler's DECISION logic; the handler stays the
+   thin DOM caller that compiles the student input and paints the result. This is the single seam the
+   coming graph/geometry question types (Stage 2+) plug into with a new `kind`, instead of copying this
+   decision into wirePack a second time.
+     gradeResponse(kind, response, spec) → GradeResult {correct, detail}
+       kind      'graph' — the current check (equation-equivalence by sampling + point-set within tolerance)
+       response  {eval:fn|null, points:[[x,y]…]}   (compiled / read from the DOM by the caller)
+       spec      {mode:'equation'|'points'|'both', answer:{equation,points}, tolerance, misconceptions:[{equation,message}], x0, x1}
+       detail    a matched-misconception message (else '') — the caller formats the correct/generic copy
+   @param   {string} kind
+   @param   {{eval:(Function|null), points:number[][]}} response
+   @param   {{mode:string, answer:object, tolerance:number, misconceptions:object[], x0:number, x1:number}} spec
+   @returns {{correct:boolean, detail:string}} GradeResult */
+function gradeResponse(kind, response, spec){
+  if(kind!=='graph') return {correct:false, detail:''};   // seam: future geometry kinds (point-position / value-entry / set-membership) add cases here
+  const s=spec||{}, r=response||{}, mode=s.mode||'equation';
+  let ok=false, detail='';
+  if(mode==='equation'||mode==='both'){
+    const tgt=(s.answer&&s.answer.equation)?TPMath.compile(s.answer.equation):null;
+    if(tgt && !tgt.error && gqEqEqual(r.eval,tgt.eval,s.x0,s.x1)) ok=true;
+    else { const mis=Array.isArray(s.misconceptions)?s.misconceptions:[];
+      for(const mc of mis){ const mf=TPMath.compile(mc.equation||''); if(mf && !mf.error && gqEqEqual(r.eval,mf.eval,s.x0,s.x1)){ detail=mc.message||''; break; } } }
+  }
+  if(mode==='points' || (mode==='both' && ok)){
+    const ans=(s.answer&&Array.isArray(s.answer.points))?s.answer.points:[];
+    const tol=(+s.tolerance>0)?+s.tolerance:0.25;
+    const pts=Array.isArray(r.points)?r.points:[];
+    const pOk = ans.length>0 && ans.every(([ax,ay])=>pts.some(([px,py])=>Math.hypot(px-ax,py-ay)<=tol)) && pts.every(([px,py])=>ans.some(([ax,ay])=>Math.hypot(px-ax,py-ay)<=tol));
+    ok = (mode==='points')? pOk : (ok && (ans.length? pOk : true));
+  }
+  return {correct:ok, detail};
+}
 function gqPlane(s,key){                                       // key = scope for the SVG clipPath id (slide index for a page block, bk for a fragment)
   const {W,H,x0,x1,y0,y1,g}=gqParams(s);
   const wantPts=s.answerMode==='points'||s.answerMode==='both';
@@ -6855,25 +6888,17 @@ function wirePack(){
     const setFb=(html,cls)=>{ if(fb){ fb.innerHTML=html; fb.className='tp-gq2-feedback '+cls; } };
     const submit=gq.querySelector('[data-tp-gq-submit]');
     if(submit) submit.addEventListener('click',()=>{
-      let ok=false, msg='';
+      let studentEval=null;
       if(mode==='equation'||mode==='both'){
         const c=editor?editor.compile():null;
         if(!c || c.error || (editor && editor.latex().trim()==='')){ setFb('Enter an equation first.','bad'); return; }
-        const tgt=(s.answer&&s.answer.equation)?TPMath.compile(s.answer.equation):null;
-        if(tgt && !tgt.error && gqEqEqual(c.eval,tgt.eval,P.x0,P.x1)) ok=true;
-        else { const mis=Array.isArray(s.misconceptions)?s.misconceptions:[];
-          for(const mc of mis){ const mf=TPMath.compile(mc.equation||''); if(mf && !mf.error && gqEqEqual(c.eval,mf.eval,P.x0,P.x1)){ msg=mc.message||''; break; } } }
+        studentEval=c.eval;
         if(studentCurve && editor){ studentCurve.setAttribute('d',gqSample(c.eval,P.x0,P.x1,P.y0,P.y1,P.W,P.H)); studentCurve.style.display=''; }
       }
-      if(mode==='points' || (mode==='both' && ok)){
-        const ans=(s.answer&&Array.isArray(s.answer.points))?s.answer.points:[];
-        const tol=(+s.tolerance>0)?+s.tolerance:0.25;
-        const pOk = ans.length>0 && ans.every(([ax,ay])=>pts.some(([px,py])=>Math.hypot(px-ax,py-ay)<=tol)) && pts.every(([px,py])=>ans.some(([ax,ay])=>Math.hypot(px-ax,py-ay)<=tol));
-        ok = (mode==='points')? pOk : (ok && (ans.length? pOk : true));
-      }
+      const res=gradeResponse('graph',{eval:studentEval,points:pts},{mode,answer:s.answer,tolerance:s.tolerance,misconceptions:s.misconceptions,x0:P.x0,x1:P.x1});   // M2: decision now in the shared grading core
       if(answerCurve && answerCurve.getAttribute('d')) answerCurve.style.display='';
-      if(ok) setFb(tpIc('check',15)+' Correct — well done.','ok');
-      else if(msg) setFb(tpRichMath(msg),'bad');
+      if(res.correct) setFb(tpIc('check',15)+' Correct — well done.','ok');
+      else if(res.detail) setFb(tpRichMath(res.detail),'bad');
       else setFb('Not quite. Compare your curve with the model answer now shown on the plane.','bad');
     });
   });
