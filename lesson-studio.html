@@ -6859,18 +6859,32 @@ function figClear(box,obst){ let m=Infinity; for(const s of obst.arms) m=Math.mi
 // §1.4 CANDIDATE-POSITION placement — out along the primary dir at increasing distance AND shifted along the
 // edge; the FIRST candidate clearing everything by >= gap wins; else the max-clearance fallback. Stays on-canvas.
 function figDirs(pd){ return [[1,-1],[-1,-1],[1,1],[-1,1],[1,0],[-1,0],[0,-1],[0,1]].map(([x,y])=>{const n=Math.hypot(x,y);return [x/n,y/n];}).sort((a,b)=>(b[0]*pd[0]+b[1]*pd[1])-(a[0]*pd[0]+a[1]*pd[1])); }
-function figPlacePill(ax,ay,size,pd,obst,gap,bounds){ const {w,h}=size, dirs=figDirs(pd), shifts=[0,14,-14,28,-28,42,-42,56,-56]; let best=null,bestC=-Infinity;
-  for(let d=gap; d<=300; d+=8){ for(const [ux,uy] of dirs){ const perp=[-uy,ux]; for(const s of shifts){ const cx=ax+ux*(d+w/2)+perp[0]*s, cy=ay+uy*(d+h/2)+perp[1]*s, box={x:cx-w/2,y:cy-h/2,w,h};
-    if(box.x<2||box.y<2||box.x+box.w>bounds.W-2||box.y+box.h>bounds.H-2) continue;   // keep the whole pill on-canvas
-    const c=figClear(box,obst); if(c>=gap) return box; if(c>bestC){bestC=c;best=box;} } } }
-  return best||{x:ax-w/2,y:ay-h/2,w,h}; }
+// §1.4 candidate search — returns {box, clear, onCanvas} and is NEVER null (off-canvas is a SOFT penalty, not an
+// exclusion), so figLayoutPills always has a status to act on. The first fully-on-canvas candidate clearing >= gap
+// short-circuits. `clear` is the TRUE geometric clearance so escalation can judge validity.
+function figPlacePill(ax,ay,size,pd,obst,gap,bounds){ const {w,h}=size, dirs=figDirs(pd), shifts=[0,14,-14,28,-28,42,-42,56,-56]; let best=null,bestScore=-Infinity;
+  for(let d=gap; d<=340; d+=8){ for(const [ux,uy] of dirs){ const perp=[-uy,ux]; for(const s of shifts){ const cx=ax+ux*(d+w/2)+perp[0]*s, cy=ay+uy*(d+h/2)+perp[1]*s, box={x:cx-w/2,y:cy-h/2,w,h};
+    const off=Math.max(0,2-box.x,2-box.y,box.x+box.w-(bounds.W-2),box.y+box.h-(bounds.H-2)), c=figClear(box,obst);
+    if(c>=gap && off<=0) return {box, clear:c, onCanvas:true};                        // first fully-on-canvas candidate that clears
+    const score=c-off*3; if(score>bestScore){ bestScore=score; best={box, clear:c, onCanvas:off<=0}; } } } }
+  return best; }
+// EXHAUSTIVE fallback — scan the whole on-canvas area for ANY box clearing >= gap. Structural guarantee: if a clear
+// spot exists on-canvas, the layout WILL find it, so no directional blind spot can force a silent violation.
+function figScanPill(size, obst, gap, bounds){ const {w,h}=size;
+  for(let cy=2+h/2; cy<=bounds.H-2-h/2; cy+=6){ for(let cx=2+w/2; cx<=bounds.W-2-w/2; cx+=6){ const box={x:cx-w/2,y:cy-h/2,w,h}; if(figClear(box,obst)>=gap) return box; } }
+  return null; }
 function figPrimaryDir(px,axisX){ const hx=px>=axisX?1:-1, n=Math.hypot(hx,1); return [hx/n,-1/n]; }   // point identifier: up + away from the y-axis
 function figObstacles(pts,V){ const D=V.dom, axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));
   return { arms:[[V.sx(D.x0),axisY,V.sx(D.x1),axisY],[axisX,V.sy(D.y0),axisX,V.sy(D.y1)]], pts:pts.map(p=>[V.sx(p.x),V.sy(p.y),4]), axisX }; }
 // lay out every point's pill in a view (each placed pill becomes an obstacle for the next) → [{p,px,py,box}].
 function figLayoutPills(pts,V,box){ const o=figObstacles(pts,V), placed=[], out=[];
-  pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), size=figPillSize(p.id), pd=figPrimaryDir(px,o.axisX), pill=figPlacePill(px,py,size,pd,{arms:o.arms,pts:o.pts,boxes:placed.slice()},FIG_GAP,{W:box.W,H:box.H});
-    placed.push(pill); out.push({p,px,py,box:pill}); });
+  pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), size=figPillSize(p.id), pd=figPrimaryDir(px,o.axisX), obst={arms:o.arms,pts:o.pts,boxes:placed.slice()};
+    const r=figPlacePill(px,py,size,pd,obst,FIG_GAP,{W:box.W,H:box.H});             // directional search (fast, preferred)
+    let pill, via;
+    if(r && r.onCanvas && r.clear>=FIG_GAP){ pill=r.box; via='dir'; }               // directional found a >= GAP, on-canvas spot
+    else { const s=figScanPill(size,obst,FIG_GAP,{W:box.W,H:box.H}); if(s){ pill=s; via='scan'; }   // exhaustive scan found the spot the directional search missed
+           else { pill=(r&&r.box) || {x:px-size.w/2,y:py-size.h/2,w:size.w,h:size.h}; via='none'; } }   // no on-canvas >=GAP spot → figFitAndLayout escalates (expands the domain) rather than accepting this
+    placed.push(pill); out.push({p,px,py,box:pill,valid:via!=='none',via}); });
   return out; }
 // §1.3 AUTO-FIT — expand the domain to the UNION of markers + every pill BOX (+ reserve) so nothing at an edge
 // collides. Pill size is scale-dependent → iterate once: lay out in V0, expand; the caller re-lays out in V1.
@@ -6878,6 +6892,19 @@ function figAutoFit(pts, base, box, aspect){ if(!pts.length) return base; const 
   figLayoutPills(pts,V0,box).forEach(({p,box:bx})=>{ W.push([p.x,p.y]); [[bx.x,bx.y],[bx.x+bx.w,bx.y+bx.h]].forEach(c=>W.push([V0.ix(c[0]),V0.iy(c[1])])); });
   const xs=W.map(c=>c[0]), ys=W.map(c=>c[1]); const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys), pxw=(x1-x0)*0.05||0.5, pyw=(y1-y0)*0.05||0.5;
   return { xMin:Math.min(base.xMin,x0-pxw), xMax:Math.max(base.xMax,x1+pxw), yMin:Math.min(base.yMin,y0-pyw), yMax:Math.max(base.yMax,y1+pyw) }; }
+/* THE GUARANTEE — fit + layout with ESCALATION (structural, not empirical). Lay out; if EVERY pill is a valid
+   (>= GAP, on-canvas) placement, done. Else expand the domain (auto-fit, then ~12% further each pass) so points at
+   an edge move inward and the exhaustive scan has more room — and re-lay out. A rendered pill is therefore ALWAYS
+   >= GAP: there is no silent path that emits a sub-GAP or off-canvas pill; the figure expands until one clears (up
+   to a hard 8-pass cap). Iterate because pill size is scale-dependent. Returns {V, layout, iters, allValid}. */
+function figFitAndLayout(pts, base, box, aspect){
+  if(!pts.length) return { V:figView(base,box,aspect), layout:[], iters:0, allValid:true };
+  let dom=figAutoFit(pts, base, box, aspect), V, layout, iters=0;
+  for(; iters<8; iters++){ V=figView(dom,box,aspect); layout=figLayoutPills(pts,V,box);
+    if(layout.every(L=>L.valid)) break;
+    const cx=(dom.xMin+dom.xMax)/2, cy=(dom.yMin+dom.yMax)/2, hx=(dom.xMax-dom.xMin)*0.56, hy=(dom.yMax-dom.yMin)*0.56;   // expand ~12% around centre → more edge room, then re-lay out
+    dom={xMin:cx-hx,xMax:cx+hx,yMin:cy-hy,yMax:cy+hy}; }
+  return { V, layout, iters, allValid:layout.every(L=>L.valid) }; }
 // render one pill — a subtle knockout box + centered identifier. The box already sits >= GAP clear of every line.
 function figPill(box,id){ const cx=box.x+box.w/2, cy=box.y+box.h/2; return `<rect x="${figNum(box.x)}" y="${figNum(box.y)}" width="${figNum(box.w)}" height="${figNum(box.h)}" rx="4" class="tp-fig-pill"/>`+figDraw.text(cx,cy+FIG_LABFS*0.35,id,'tp-fig-ptid','middle'); }
 function fragFigure(b,bk){
@@ -6885,8 +6912,8 @@ function fragFigure(b,bk){
   const dom0=domOK?{xMin:+dv.xMin,xMax:+dv.xMax,yMin:+dv.yMin,yMax:+dv.yMax}:figAutoDomain(b);
   const aspect=(b.aspect==='equal')?'equal':'stretch';
   const box={W:520,H:360,padL:40,padR:18,padT:16,padB:30}, pts=figPoints(b);
-  const domFit=figAutoFit(pts, dom0, box, aspect);                        // §1.3 auto-fit: expand the domain to include markers + pill boxes so nothing at an edge collides (equal aspect preserved)
-  const V=figView(domFit,box,aspect), D=V.dom;
+  const _fit=figFitAndLayout(pts, dom0, box, aspect);                     // §1.3 auto-fit + §1.4 escalation: the view + pill placements are computed together; escalates until every pill is >= GAP (equal aspect preserved)
+  const V=_fit.V, D=V.dom;
   const gridShown=(b.grid!=='hidden');                                     // hidden = view computed identically, gridlines simply unpainted
   const xT=figNiceTicks(D.x0,D.x1,5), yT=figNiceTicks(D.y0,D.y1,5);
   const axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));   // y-axis screen-x, x-axis screen-y (clamped visible)
@@ -6903,7 +6930,7 @@ function fragFigure(b,bk){
   xT.ticks.forEach(v=>{ const px=V.sx(v); tk+=figDraw.tick(px,axisY-4,0,8,'tp-fig-tick'); lb+=figDraw.text(px,axisY+16,figFmtTick(v,xT.decimals),'tp-fig-ticklabel','middle'); });
   yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const py=V.sy(v); tk+=figDraw.tick(axisX-4,py,8,0,'tp-fig-tick'); lb+=figDraw.text(axisX-8,py+4,figFmtTick(v,yT.decimals),'tp-fig-ticklabel','end'); });
   let pt='';
-  figLayoutPills(pts,V,box).forEach(({px,py,box:pill,p})=>{ pt+=figDraw.circle(px,py,4,'tp-fig-pt')+figPill(pill,p.id); });   // §3.2/§1.4 marker + collision-placed PILL identifier (>= GAP clear of every arm/point/pill; replaces 1a's simple offset)
+  _fit.layout.forEach(({px,py,box:pill,p})=>{ pt+=figDraw.circle(px,py,4,'tp-fig-pt')+figPill(pill,p.id); });   // §3.2/§1.4 marker + collision-placed PILL identifier — guaranteed >= GAP clear of every arm/point/pill (replaces 1a's simple offset)
   const cap=b.caption?`<figcaption class="tp-fig-cap">${tpRichMath(b.caption)}</figcaption>`:'';
   return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}"><svg class="tp-fig-svg" viewBox="0 0 ${box.W} ${box.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(b.title||'Coordinate plane')}">${g}${ax}${tk}${lb}${pt}</svg>${cap}</figure>`;
 }

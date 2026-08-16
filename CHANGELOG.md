@@ -107,7 +107,14 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   spot takes a shifted candidate (~20px) not a fling; pills re-place clear after rescale (stretch/equal).
   **All seven frozen fns (incl. `gradeResponse`) + the `figView`/`figNiceStep`/`figNum` contracts
   byte-identical; legacy corpus 0 render diffs (1320 units); self-contained; token-only; validate green;
-  0 console errors.**
+  0 console errors.** *CodeRabbit fold — invariant made STRUCTURAL, not empirical:* `figPlacePill` returns a
+  placement STATUS and never null (off-canvas is a soft penalty); an exhaustive `figScanPill` finds any
+  clear on-canvas spot the directional search misses; and `figFitAndLayout` escalates (expands the domain,
+  re-lays out) until EVERY pill is a valid ≥ GAP placement — there is no silent path that renders a sub-GAP
+  or off-canvas pill. Re-proven: battery 0 violations; **adversarial cases that hit the old fallback (20
+  points in a tiny domain + long labels; 24-point grid + huge labels) now resolve to 0 violations via
+  7 and 5 domain-expansion iterations respectively** (allValid=true); on-axis/uniform/candidate/rescale
+  re-confirmed; frozen fns + contracts still identical; 0 render diffs.
 - **Figure engine Stage 1a — coordinate/viewport foundation.** The first stage of the figure engine
   (ENGINE_SPEC §1.1/§1.2/§1.6): a pure, token-styled, self-contained coordinate system. **(1) `figView`**
   — exact reversible math↔screen mapping (+inverse for hit-testing); arbitrary reals map exactly with **no
