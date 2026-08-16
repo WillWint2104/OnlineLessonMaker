@@ -6907,6 +6907,75 @@ function figFitAndLayout(pts, base, box, aspect){
   return { V, layout, iters, allValid:layout.every(L=>L.valid) }; }
 // render one pill — a subtle knockout box + centered identifier. The box already sits >= GAP clear of every line.
 function figPill(box,id){ const cx=box.x+box.w/2, cy=box.y+box.h/2; return `<rect x="${figNum(box.x)}" y="${figNum(box.y)}" width="${figNum(box.w)}" height="${figNum(box.h)}" rx="4" class="tp-fig-pill"/>`+figDraw.text(cx,cy+FIG_LABFS*0.35,id,'tp-fig-ptid','middle'); }
+/* ═══════════════ FIGURE ENGINE — Stage 1c: construction-graph RUNTIME + vocabulary (ENGINE_SPEC §0/§2/§4) ═══════════════
+   A figure is a CONSTRUCTION DEPENDENCY GRAPH (DAG) of named objects — NOT coordinates + placement formulas.
+   Every connection point is a first-class named DEPENDENT object computed from its parents, so placement is a
+   dependency (recomputes when a parent moves), not a driftable step. Pure RUNTIME + vocabulary — no rendering,
+   marks, or labels (that is Stage 3). ZERO edits to any frozen fn or the 1a/1b contracts.
+     figConstruct(spec) → { ok, errors, byName, order }  — spec is {objects:[{name,op,args}]} or {construction,params}. */
+function figCvec(a,b){ return {x:b.x-a.x, y:b.y-a.y}; }
+function figCunit(v){ const m=Math.hypot(v.x,v.y)||1; return {x:v.x/m, y:v.y/m}; }
+function figLen(a,b){ return Math.hypot(b.x-a.x, b.y-a.y); }
+function figAngle(P,V,Q){ let d=Math.abs(Math.atan2(P.y-V.y,P.x-V.x)-Math.atan2(Q.y-V.y,Q.x-V.x))*180/Math.PI; return d>180?360-d:d; }   // unsigned angle PVQ at V (degrees)
+function figRayRay(P,dP,Q,dQ){ const det=dP.x*(-dQ.y)-(-dQ.x)*dP.y; if(Math.abs(det)<1e-12) return {x:NaN,y:NaN}; const s=((Q.x-P.x)*(-dQ.y)-(-dQ.x)*(Q.y-P.y))/det; return {x:P.x+s*dP.x, y:P.y+s*dP.y}; }
+function figLineLine(l1,l2){ const A=l1.a,d1=figCvec(l1.a,l1.b),C=l2.a,d2=figCvec(l2.a,l2.b),den=d1.x*d2.y-d1.y*d2.x; if(Math.abs(den)<1e-12) return {kind:'point',x:NaN,y:NaN,error:'parallel'}; const t=((C.x-A.x)*d2.y-(C.y-A.y)*d2.x)/den; return {kind:'point',x:A.x+t*d1.x,y:A.y+t*d1.y}; }
+function figLineCircle(l,circ,root){ const A=l.a,d=figCvec(l.a,l.b),fx=A.x-circ.c.x,fy=A.y-circ.c.y,aa=d.x*d.x+d.y*d.y,bb=2*(fx*d.x+fy*d.y),cc=fx*fx+fy*fy-circ.r*circ.r,disc=bb*bb-4*aa*cc; if(disc<0) return {kind:'point',x:NaN,y:NaN,error:'no intersection'}; const sq=Math.sqrt(disc),t=(root?(-bb+sq):(-bb-sq))/(2*aa); return {kind:'point',x:A.x+t*d.x,y:A.y+t*d.y}; }
+function figCircleCircle(c1,c2,root){ const dx=c2.c.x-c1.c.x,dy=c2.c.y-c1.c.y,dd=Math.hypot(dx,dy); if(dd<1e-12||dd>c1.r+c2.r||dd<Math.abs(c1.r-c2.r)) return {kind:'point',x:NaN,y:NaN,error:'no intersection'}; const A=(c1.r*c1.r-c2.r*c2.r+dd*dd)/(2*dd),h=Math.sqrt(Math.max(0,c1.r*c1.r-A*A)),mx=c1.c.x+A*dx/dd,my=c1.c.y+A*dy/dd,ox=-dy/dd*h,oy=dx/dd*h; return {kind:'point',x:mx+(root?-ox:ox),y:my+(root?-oy:oy)}; }
+function figIntersect(o1,o2,root){ const isL=o=>o.kind==='line'||o.kind==='ray'||o.kind==='segment';
+  if(isL(o1)&&isL(o2)) return figLineLine(o1,o2);
+  if(isL(o1)&&o2.kind==='circle') return figLineCircle(o1,o2,root);
+  if(o1.kind==='circle'&&isL(o2)) return figLineCircle(o2,o1,root);
+  if(o1.kind==='circle'&&o2.kind==='circle') return figCircleCircle(o1,o2,root);
+  return {kind:'point',x:NaN,y:NaN,error:'unsupported intersection'}; }
+// §2 the construction VERBS — each maps evaluated parents (g(name)) → an evaluated object.
+const FIG_OPS={
+  Point:(a)=>({kind:'point',x:+a.x,y:+a.y}),
+  Midpoint:(a,g)=>{const P=g(a.P),Q=g(a.Q);return {kind:'point',x:(P.x+Q.x)/2,y:(P.y+Q.y)/2};},
+  PointOnSegment:(a,g)=>{const P=g(a.P),Q=g(a.Q),t=+a.t;return {kind:'point',x:P.x+t*(Q.x-P.x),y:P.y+t*(Q.y-P.y)};},
+  PointOnRay:(a,g)=>{const V=g(a.V),A=g(a.A),d=+a.dist,u=figCunit(figCvec(V,A));return {kind:'point',x:V.x+d*u.x,y:V.y+d*u.y};},
+  PointOnBisector:(a,g)=>{const P=g(a.P),V=g(a.V),Q=g(a.Q),d=+a.dist,u1=figCunit(figCvec(V,P)),u2=figCunit(figCvec(V,Q)),bi=figCunit({x:u1.x+u2.x,y:u1.y+u2.y});return {kind:'point',x:V.x+d*bi.x,y:V.y+d*bi.y};},
+  FootOfPerpendicular:(a,g)=>{const P=g(a.P),L=g(a.line),A=L.a,ab=figCvec(L.a,L.b),t=((P.x-A.x)*ab.x+(P.y-A.y)*ab.y)/(ab.x*ab.x+ab.y*ab.y);return {kind:'point',x:A.x+t*ab.x,y:A.y+t*ab.y};},
+  Intersection:(a,g)=>figIntersect(g(a.a),g(a.b),+a.root||0),
+  Segment:(a,g)=>({kind:'segment',a:g(a.P),b:g(a.Q)}),
+  Ray:(a,g)=>({kind:'ray',a:g(a.P),b:g(a.Q)}),
+  Line:(a,g)=>({kind:'line',a:g(a.P),b:g(a.Q)}),
+  Polygon:(a,g)=>({kind:'polygon',pts:(a.pts||[]).map(n=>g(n))}),
+  Circle:(a,g)=>{const c=g(a.center);return {kind:'circle',c,r:(a.radius!=null)?+a.radius:figLen(c,g(a.through))};},
+  Arc:(a,g)=>{const c=g(a.center),f=g(a.from),t=g(a.to);return {kind:'arc',c,r:+a.radius,a0:Math.atan2(f.y-c.y,f.x-c.x),a1:Math.atan2(t.y-c.y,t.x-c.x)};},
+  Length:(a,g)=>({kind:'value',unit:'length',value:figLen(g(a.P),g(a.Q))}),
+  AngleMeasure:(a,g)=>({kind:'value',unit:'angle',value:figAngle(g(a.P),g(a.V),g(a.Q))}),
+  InteriorAngle:(a,g)=>{const poly=g(a.poly),n=poly.pts.length,i=(+a.at)%n;return {kind:'value',unit:'angle',value:figAngle(poly.pts[(i-1+n)%n],poly.pts[i],poly.pts[(i+1)%n])};},
+};
+// §4 parameterised CONSTRUCTIONS (closed-form — NOT a general solver). Each solves to coordinates; everything derives.
+const FIG_PARAM={
+  rawCoordinates:(p)=>(p.points||[]).map(pt=>({name:String(pt.name||pt.id),op:'Point',args:{x:+pt.x,y:+pt.y}})),
+  rightTriangle:(p)=>{const [a,b]=p.legs||[3,4];return [{name:'A',op:'Point',args:{x:0,y:0}},{name:'B',op:'Point',args:{x:+a,y:0}},{name:'C',op:'Point',args:{x:0,y:+b}}];},   // right angle at A; legs AB=a, AC=b
+  triangleSAS:(p)=>{const a=+p.a,b=+p.b,ang=(+p.angle)*Math.PI/180;return [{name:'A',op:'Point',args:{x:0,y:0}},{name:'B',op:'Point',args:{x:a,y:0}},{name:'C',op:'Point',args:{x:b*Math.cos(ang),y:b*Math.sin(ang)}}];},   // AB=a, AC=b, INCLUDED angle at A
+  triangleASA:(p)=>{const angA=(+p.angleA)*Math.PI/180,c=+p.side,angB=(+p.angleB)*Math.PI/180,A={x:0,y:0},B={x:c,y:0},C=figRayRay(A,{x:Math.cos(angA),y:Math.sin(angA)},B,{x:Math.cos(Math.PI-angB),y:Math.sin(Math.PI-angB)});return [{name:'A',op:'Point',args:{x:0,y:0}},{name:'B',op:'Point',args:{x:c,y:0}},{name:'C',op:'Point',args:{x:C.x,y:C.y}}];},   // angle A, side AB=c, angle B
+  triangleSSS:(p)=>{const a=+p.a,b=+p.b,c=+p.c,Cx=(b*b+c*c-a*a)/(2*c),Cy=Math.sqrt(Math.max(0,b*b-Cx*Cx));return [{name:'A',op:'Point',args:{x:0,y:0}},{name:'B',op:'Point',args:{x:c,y:0}},{name:'C',op:'Point',args:{x:Cx,y:Cy}}];},   // a=BC, b=CA, c=AB
+  circle:(p)=>[{name:'O',op:'Point',args:{x:0,y:0}},{name:'circ',op:'Circle',args:{center:'O',radius:+p.radius}}],
+  regularPolygon:(p)=>{const n=+p.n,r=(p.radius!=null?+p.radius:1),out=[];for(let k=0;k<n;k++){const t=-Math.PI/2+2*Math.PI*k/n;out.push({name:'P'+(k+1),op:'Point',args:{x:r*Math.cos(t),y:r*Math.sin(t)}});}out.push({name:'poly',op:'Polygon',args:{pts:out.map(o=>o.name)}});return out;},
+};
+// evaluate a construction spec: expand params → validate → topo-sort (reject cycles) → evaluate in order.
+function figConstruct(spec){
+  let objs, errors=[];
+  if(spec && spec.construction){ const pf=FIG_PARAM[spec.construction]; if(!pf) return {ok:false,errors:['unknown construction: '+spec.construction],byName:{},order:[]};
+    objs=pf(spec.params||spec||{}); if(Array.isArray(spec.objects)) objs=objs.concat(spec.objects); }   // a parameterised construction may be EXTENDED with value-labels / derived objects referencing its points
+  else objs=(spec&&Array.isArray(spec.objects))?spec.objects:[];
+  const byDef={};
+  objs.forEach(o=>{ if(!o||!o.name){errors.push('object missing name');return;} if(byDef[o.name])errors.push('duplicate name: '+o.name); byDef[o.name]=o; });
+  objs.forEach(o=>{ if(o&&(o.op==='Length'||o.op==='AngleMeasure'||o.op==='InteriorAngle')&&('value' in o||('value' in (o.args||{})))) errors.push('single source of truth: value-label "'+o.name+'" may not carry a typed value — the engine computes it'); });
+  const refsOf=o=>{ const a=o.args||o,out=[],scan=v=>{ if(typeof v==='string'&&byDef[v])out.push(v); else if(Array.isArray(v))v.forEach(scan); }; ['P','Q','V','A','center','through','from','to','line','a','b','poly','pts'].forEach(k=>scan(a[k])); return out; };
+  const indeg={},adj={},order=[]; objs.forEach(o=>{indeg[o.name]=0;adj[o.name]=[];});
+  objs.forEach(o=>refsOf(o).forEach(r=>{ if(adj[r]){adj[r].push(o.name);indeg[o.name]++;} }));
+  const q=objs.filter(o=>indeg[o.name]===0).map(o=>o.name);
+  while(q.length){ const n=q.shift(); order.push(n); adj[n].forEach(m=>{ if(--indeg[m]===0)q.push(m); }); }
+  if(order.length!==objs.length){ errors.push('cyclic construction rejected: '+objs.filter(o=>indeg[o.name]>0).map(o=>o.name).join('↔')); return {ok:false,errors,byName:{},order:[]}; }
+  if(errors.length) return {ok:false,errors,byName:{},order};
+  const byName={},g=n=>byName[n];
+  for(const name of order){ const o=byDef[name],op=FIG_OPS[o.op]; if(!op){errors.push('unknown op: '+o.op+' ("'+name+'")');continue;} const ev=op(o.args||o,g); ev.name=name; byName[name]=ev; }
+  return {ok:errors.length===0,errors,byName,order};
+}
 function fragFigure(b,bk){
   const dv=b.domain, domOK=dv && ['xMin','xMax','yMin','yMax'].every(k=>isFinite(+dv[k])) && (+dv.xMin<+dv.xMax) && (+dv.yMin<+dv.yMax);   // CodeRabbit #3: accept an explicit domain ONLY when all four bounds are finite and non-reversed/non-zero-width — else figView could divide by zero / emit NaN
   const dom0=domOK?{xMin:+dv.xMin,xMax:+dv.xMax,yMin:+dv.yMin,yMax:+dv.yMax}:figAutoDomain(b);
