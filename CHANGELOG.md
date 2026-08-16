@@ -86,6 +86,28 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **Figure engine Stage 1b — auto-fit + uniform-gap pill collision.** The placement system
+  (ENGINE_SPEC §1.3/§1.4/§3.2), additive on top of Stage 1a. **(1) Pill primitive** — a label becomes a
+  box sized to its text (`figPillSize`); the BOX is the collision unit. **(2) Uniform-gap collision** —
+  `figClear` measures a candidate box's TRUE distance to every arm (box-to-segment), every point marker
+  (box-to-point − radius) and every placed pill (box-to-box); the hard rule is a single uniform constant
+  `FIG_GAP` (6 viewBox units) — every pill sits ≥ GAP clear of everything, a minimum *distance*, not mere
+  non-overlap. **(3) Candidate-position placement** (`figPlacePill`) — candidates out along the primary
+  direction at increasing distance AND shifted along the edge (0, ±14, ±28…), across 8 directions ordered
+  by the primary; the first candidate clearing everything by ≥ GAP wins, else the max-clearance fallback;
+  pills stay on-canvas. **(4) Auto-fit** (`figAutoFit`) — expands the domain to the UNION of markers +
+  every pill box (+ reserve) so nothing at an edge collides; pill size is scale-dependent so it iterates
+  once (lay out in V0, expand, re-lay out in V1); `equal` aspect preserved. **Consumer:** #140's
+  plotted-point identifiers become pills placed by this system (replacing 1a's simple offset). Side/vertex/
+  measure anchors are Stage 1c/3 — not built here. **Checked (behavioural invariant, independent geometry,
+  not one case):** across a battery (dense cluster / points-on-axes / data-extremes / near-vertical / tight
+  cluster / on-axis-extreme / spread) **zero collision violations** — every pill ≥ GAP from every arm,
+  point, and pill; on-axis extreme (C=(0,3)) → auto-fit expanded a tight domain (yMax 3 → 3.337) past the
+  point with the pill clear; min box-to-arm measured per pill (all ≥ GAP, e.g. 8.1); a colliding ideal
+  spot takes a shifted candidate (~20px) not a fling; pills re-place clear after rescale (stretch/equal).
+  **All seven frozen fns (incl. `gradeResponse`) + the `figView`/`figNiceStep`/`figNum` contracts
+  byte-identical; legacy corpus 0 render diffs (1320 units); self-contained; token-only; validate green;
+  0 console errors.**
 - **Figure engine Stage 1a — coordinate/viewport foundation.** The first stage of the figure engine
   (ENGINE_SPEC §1.1/§1.2/§1.6): a pure, token-styled, self-contained coordinate system. **(1) `figView`**
   — exact reversible math↔screen mapping (+inverse for hit-testing); arbitrary reals map exactly with **no

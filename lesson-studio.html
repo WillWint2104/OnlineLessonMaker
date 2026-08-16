@@ -2544,6 +2544,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-ticklabel{fill:var(--graph-axis,var(--on-surface-variant));font-family:var(--tp-body);font-size:11px;}
 .tp-slide .tp-fig-pt{fill:var(--primary);stroke:var(--graph-surface,var(--surface-lowest));stroke-width:1.6;}
 .tp-slide .tp-fig-ptid{fill:var(--on-surface);font-family:var(--tp-body);font-size:12.5px;font-weight:600;}
+.tp-slide .tp-fig-pill{fill:var(--graph-surface,var(--surface-lowest));stroke:var(--outline-variant);stroke-width:.5;opacity:.9;}   /* Stage 1b: subtle knockout box — a nicety; the pill already sits >= GAP clear of every line */
 .tp-slide .tp-fig-cap{margin-top:6px;font-family:var(--tp-body);font-size:13px;color:var(--on-surface-variant);text-align:center;}
 .tp-slide .tp-gq2-student{stroke:var(--student-ink,var(--primary));stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
 .tp-slide .tp-gq2-answer{stroke:var(--ok,#1f7a54);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
@@ -6838,11 +6839,54 @@ function figAutoDomain(b){
   return {xMin:x0-mx,xMax:x1+mx,yMin:y0-my,yMax:y1+my};
 }
 // the figure block — a coordinate PLANE (two-tier grid + axes with ticks + plain labels) + plotted points.
+/* ═══════════════ FIGURE ENGINE — Stage 1b: auto-fit + uniform-gap PILL collision (ENGINE_SPEC §1.3/§1.4/§3.2) ═══════════════
+   The placement SYSTEM. Its only consumer here is #140's plotted-point identifiers, which become pills
+   placed by this system (replacing 1a's simple offset). Side/vertex/measure anchors are Stage 1c/3.
+   Additive; ZERO edits to the figView/figNiceStep/figNum contracts or any frozen fn. */
+const FIG_GAP=6;                                                          // uniform MINIMUM clearance (viewBox units): every pill sits >= this from every arm, point, and other pill
+const FIG_LABFS=12.5, FIG_PADX=5, FIG_PADY=3;
+// §3.2 pill primitive — a box sized to its text; the BOX is the collision unit.
+function figPillSize(text){ return { w:String(text).length*FIG_LABFS*0.62+2*FIG_PADX, h:FIG_LABFS*1.15+2*FIG_PADY }; }
+// ── geometry: TRUE box-to-segment / box-to-point / box-to-box distances (0 on overlap/intersection) ──
+function figPtSeg(px,py,ax,ay,bx,by){ const dx=bx-ax,dy=by-ay,L2=dx*dx+dy*dy; let t=L2?((px-ax)*dx+(py-ay)*dy)/L2:0; t=t<0?0:t>1?1:t; return Math.hypot(px-(ax+t*dx),py-(ay+t*dy)); }
+function figSegInt(ax,ay,bx,by,cx,cy,dx,dy){ const d=(bx-ax)*(dy-cy)-(by-ay)*(dx-cx); if(Math.abs(d)<1e-12) return false; const t=((cx-ax)*(dy-cy)-(cy-ay)*(dx-cx))/d, u=((cx-ax)*(by-ay)-(cy-ay)*(bx-ax))/d; return t>=0&&t<=1&&u>=0&&u<=1; }
+function figSegSeg(ax,ay,bx,by,cx,cy,dx,dy){ if(figSegInt(ax,ay,bx,by,cx,cy,dx,dy)) return 0; return Math.min(figPtSeg(ax,ay,cx,cy,dx,dy),figPtSeg(bx,by,cx,cy,dx,dy),figPtSeg(cx,cy,ax,ay,bx,by),figPtSeg(dx,dy,ax,ay,bx,by)); }
+function figBoxSeg(box,ax,ay,bx,by){ const {x,y,w,h}=box, inB=(px,py)=>px>=x&&px<=x+w&&py>=y&&py<=y+h; if(inB(ax,ay)||inB(bx,by)) return 0; const E=[[x,y,x+w,y],[x+w,y,x+w,y+h],[x+w,y+h,x,y+h],[x,y+h,x,y]]; let m=Infinity; for(const e of E) m=Math.min(m,figSegSeg(ax,ay,bx,by,e[0],e[1],e[2],e[3])); return m; }
+function figBoxPt(box,px,py){ const cx=Math.max(box.x,Math.min(px,box.x+box.w)), cy=Math.max(box.y,Math.min(py,box.y+box.h)); return Math.hypot(px-cx,py-cy); }
+function figBoxBox(a,b){ const dx=Math.max(0,a.x-(b.x+b.w),b.x-(a.x+a.w)), dy=Math.max(0,a.y-(b.y+b.h),b.y-(a.y+a.h)); return Math.hypot(dx,dy); }
+// clearance of a candidate box against ALL obstacles — arms (segments), points (markers, minus radius), placed pills.
+function figClear(box,obst){ let m=Infinity; for(const s of obst.arms) m=Math.min(m,figBoxSeg(box,s[0],s[1],s[2],s[3])); for(const p of obst.pts) m=Math.min(m,figBoxPt(box,p[0],p[1])-(p[2]||0)); for(const q of obst.boxes) m=Math.min(m,figBoxBox(box,q)); return m; }
+// §1.4 CANDIDATE-POSITION placement — out along the primary dir at increasing distance AND shifted along the
+// edge; the FIRST candidate clearing everything by >= gap wins; else the max-clearance fallback. Stays on-canvas.
+function figDirs(pd){ return [[1,-1],[-1,-1],[1,1],[-1,1],[1,0],[-1,0],[0,-1],[0,1]].map(([x,y])=>{const n=Math.hypot(x,y);return [x/n,y/n];}).sort((a,b)=>(b[0]*pd[0]+b[1]*pd[1])-(a[0]*pd[0]+a[1]*pd[1])); }
+function figPlacePill(ax,ay,size,pd,obst,gap,bounds){ const {w,h}=size, dirs=figDirs(pd), shifts=[0,14,-14,28,-28,42,-42,56,-56]; let best=null,bestC=-Infinity;
+  for(let d=gap; d<=300; d+=8){ for(const [ux,uy] of dirs){ const perp=[-uy,ux]; for(const s of shifts){ const cx=ax+ux*(d+w/2)+perp[0]*s, cy=ay+uy*(d+h/2)+perp[1]*s, box={x:cx-w/2,y:cy-h/2,w,h};
+    if(box.x<2||box.y<2||box.x+box.w>bounds.W-2||box.y+box.h>bounds.H-2) continue;   // keep the whole pill on-canvas
+    const c=figClear(box,obst); if(c>=gap) return box; if(c>bestC){bestC=c;best=box;} } } }
+  return best||{x:ax-w/2,y:ay-h/2,w,h}; }
+function figPrimaryDir(px,axisX){ const hx=px>=axisX?1:-1, n=Math.hypot(hx,1); return [hx/n,-1/n]; }   // point identifier: up + away from the y-axis
+function figObstacles(pts,V){ const D=V.dom, axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));
+  return { arms:[[V.sx(D.x0),axisY,V.sx(D.x1),axisY],[axisX,V.sy(D.y0),axisX,V.sy(D.y1)]], pts:pts.map(p=>[V.sx(p.x),V.sy(p.y),4]), axisX }; }
+// lay out every point's pill in a view (each placed pill becomes an obstacle for the next) → [{p,px,py,box}].
+function figLayoutPills(pts,V,box){ const o=figObstacles(pts,V), placed=[], out=[];
+  pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), size=figPillSize(p.id), pd=figPrimaryDir(px,o.axisX), pill=figPlacePill(px,py,size,pd,{arms:o.arms,pts:o.pts,boxes:placed.slice()},FIG_GAP,{W:box.W,H:box.H});
+    placed.push(pill); out.push({p,px,py,box:pill}); });
+  return out; }
+// §1.3 AUTO-FIT — expand the domain to the UNION of markers + every pill BOX (+ reserve) so nothing at an edge
+// collides. Pill size is scale-dependent → iterate once: lay out in V0, expand; the caller re-lays out in V1.
+function figAutoFit(pts, base, box, aspect){ if(!pts.length) return base; const V0=figView(base,box,aspect), W=[];
+  figLayoutPills(pts,V0,box).forEach(({p,box:bx})=>{ W.push([p.x,p.y]); [[bx.x,bx.y],[bx.x+bx.w,bx.y+bx.h]].forEach(c=>W.push([V0.ix(c[0]),V0.iy(c[1])])); });
+  const xs=W.map(c=>c[0]), ys=W.map(c=>c[1]); const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys), pxw=(x1-x0)*0.05||0.5, pyw=(y1-y0)*0.05||0.5;
+  return { xMin:Math.min(base.xMin,x0-pxw), xMax:Math.max(base.xMax,x1+pxw), yMin:Math.min(base.yMin,y0-pyw), yMax:Math.max(base.yMax,y1+pyw) }; }
+// render one pill — a subtle knockout box + centered identifier. The box already sits >= GAP clear of every line.
+function figPill(box,id){ const cx=box.x+box.w/2, cy=box.y+box.h/2; return `<rect x="${figNum(box.x)}" y="${figNum(box.y)}" width="${figNum(box.w)}" height="${figNum(box.h)}" rx="4" class="tp-fig-pill"/>`+figDraw.text(cx,cy+FIG_LABFS*0.35,id,'tp-fig-ptid','middle'); }
 function fragFigure(b,bk){
   const dv=b.domain, domOK=dv && ['xMin','xMax','yMin','yMax'].every(k=>isFinite(+dv[k])) && (+dv.xMin<+dv.xMax) && (+dv.yMin<+dv.yMax);   // CodeRabbit #3: accept an explicit domain ONLY when all four bounds are finite and non-reversed/non-zero-width — else figView could divide by zero / emit NaN
   const dom0=domOK?{xMin:+dv.xMin,xMax:+dv.xMax,yMin:+dv.yMin,yMax:+dv.yMax}:figAutoDomain(b);
   const aspect=(b.aspect==='equal')?'equal':'stretch';
-  const box={W:520,H:360,padL:40,padR:18,padT:16,padB:30}, V=figView(dom0,box,aspect), D=V.dom;
+  const box={W:520,H:360,padL:40,padR:18,padT:16,padB:30}, pts=figPoints(b);
+  const domFit=figAutoFit(pts, dom0, box, aspect);                        // §1.3 auto-fit: expand the domain to include markers + pill boxes so nothing at an edge collides (equal aspect preserved)
+  const V=figView(domFit,box,aspect), D=V.dom;
   const gridShown=(b.grid!=='hidden');                                     // hidden = view computed identically, gridlines simply unpainted
   const xT=figNiceTicks(D.x0,D.x1,5), yT=figNiceTicks(D.y0,D.y1,5);
   const axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));   // y-axis screen-x, x-axis screen-y (clamped visible)
@@ -6859,7 +6903,7 @@ function fragFigure(b,bk){
   xT.ticks.forEach(v=>{ const px=V.sx(v); tk+=figDraw.tick(px,axisY-4,0,8,'tp-fig-tick'); lb+=figDraw.text(px,axisY+16,figFmtTick(v,xT.decimals),'tp-fig-ticklabel','middle'); });
   yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const py=V.sy(v); tk+=figDraw.tick(axisX-4,py,8,0,'tp-fig-tick'); lb+=figDraw.text(axisX-8,py+4,figFmtTick(v,yT.decimals),'tp-fig-ticklabel','end'); });
   let pt='';
-  figPoints(b).forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y); pt+=figDraw.circle(px,py,4,'tp-fig-pt')+figDraw.text(px+8,py-7,p.id,'tp-fig-ptid'); });   // marker + identifier (simple offset; pill placement is Stage 1b)
+  figLayoutPills(pts,V,box).forEach(({px,py,box:pill,p})=>{ pt+=figDraw.circle(px,py,4,'tp-fig-pt')+figPill(pill,p.id); });   // §3.2/§1.4 marker + collision-placed PILL identifier (>= GAP clear of every arm/point/pill; replaces 1a's simple offset)
   const cap=b.caption?`<figcaption class="tp-fig-cap">${tpRichMath(b.caption)}</figcaption>`:'';
   return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}"><svg class="tp-fig-svg" viewBox="0 0 ${box.W} ${box.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(b.title||'Coordinate plane')}">${g}${ax}${tk}${lb}${pt}</svg>${cap}</figure>`;
 }
