@@ -2544,7 +2544,19 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-ticklabel{fill:var(--graph-axis,var(--on-surface-variant));font-family:var(--tp-body);font-size:11px;}
 .tp-slide .tp-fig-pt{fill:var(--primary);stroke:var(--graph-surface,var(--surface-lowest));stroke-width:1.6;}
 .tp-slide .tp-fig-ptid{fill:var(--on-surface);font-family:var(--tp-body);font-size:12.5px;font-weight:600;}
-.tp-slide .tp-fig-pill{fill:var(--graph-surface,var(--surface-lowest));stroke:var(--outline-variant);stroke-width:.5;opacity:.9;}   /* Stage 1b: subtle knockout box — a nicety; the pill already sits >= GAP clear of every line */
+.tp-slide .tp-fig-pill{fill:var(--graph-surface,var(--surface-lowest));stroke:var(--outline-variant);stroke-width:.5;opacity:.9;}   /* Stage 1b knockout box — retained for Stage 3 marks; point identifiers now render plain (approved visual target) */
+/* Stage 2 — graph front-end: curves, segments, reveal-on-tap callout. Token-only, fallback chains (no theme fork). */
+.tp-slide .tp-fig-stage{position:relative;}
+.tp-slide .tp-fig-fn{stroke:var(--primary);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.tp-slide .tp-fig-seg{stroke:var(--primary);stroke-width:1.6;stroke-linecap:round;}
+.tp-slide .tp-fig-hit{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;}
+.tp-slide .tp-fig-hit:focus-visible,.tp-slide .tp-fig-hit:focus{outline:var(--focus-ring,2px solid var(--primary));outline-offset:1px;}
+.tp-slide .tp-fig-callout{position:absolute;display:flex;align-items:center;gap:8px;padding:4px 5px 4px 10px;border-radius:var(--tp-rad-btn);background:var(--graph-callout,var(--graph-axis,var(--on-surface)));color:var(--graph-surface,var(--surface));font-family:var(--tp-body);font-size:12.5px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px var(--scrim,rgba(0,0,0,.28));}
+.tp-slide .tp-fig-callout[hidden]{display:none;}   /* display:flex would otherwise beat the UA [hidden] rule and the callout would never hide */
+.tp-slide .tp-fig-coclose{font:inherit;line-height:1;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;padding:0;border:0;border-radius:50%;background:transparent;color:inherit;opacity:.75;cursor:pointer;}
+.tp-slide .tp-fig-coclose:hover{opacity:1;}
+.tp-slide .tp-fig-coclose:focus-visible,.tp-slide .tp-fig-coclose:focus{outline:var(--focus-ring,2px solid currentColor);outline-offset:1px;}
+.tp-slide .tp-fig-err{margin:6px 0 0;font-family:var(--tp-body);font-size:12.5px;line-height:1.45;color:var(--error,var(--on-surface-variant));}
 .tp-slide .tp-fig-cap{margin-top:6px;font-family:var(--tp-body);font-size:13px;color:var(--on-surface-variant);text-align:center;}
 .tp-slide .tp-gq2-student{stroke:var(--student-ink,var(--primary));stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
 .tp-slide .tp-gq2-answer{stroke:var(--ok,#1f7a54);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
@@ -6874,10 +6886,12 @@ function figScanPill(size, obst, gap, bounds){ const {w,h}=size;
   for(let cy=2+h/2; cy<=bounds.H-2-h/2; cy+=6){ for(let cx=2+w/2; cx<=bounds.W-2-w/2; cx+=6){ const box={x:cx-w/2,y:cy-h/2,w,h}; if(figClear(box,obst)>=gap) return box; } }
   return null; }
 function figPrimaryDir(px,axisX){ const hx=px>=axisX?1:-1, n=Math.hypot(hx,1); return [hx/n,-1/n]; }   // point identifier: up + away from the y-axis
-function figObstacles(pts,V){ const D=V.dom, axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));
-  return { arms:[[V.sx(D.x0),axisY,V.sx(D.x1),axisY],[axisX,V.sy(D.y0),axisX,V.sy(D.y1)]], pts:pts.map(p=>[V.sx(p.x),V.sy(p.y),4]), axisX }; }
+// extraArms (optional, Stage 2): any OTHER drawn geometry — plotted curves, segments — that a label must also
+// clear. Omitted ⇒ [] ⇒ identical behaviour, so figFitAndLayout's call site is unaffected.
+function figObstacles(pts,V,extraArms){ const D=V.dom, axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));
+  return { arms:[[V.sx(D.x0),axisY,V.sx(D.x1),axisY],[axisX,V.sy(D.y0),axisX,V.sy(D.y1)]].concat(extraArms||[]), pts:pts.map(p=>[V.sx(p.x),V.sy(p.y),4]), axisX }; }
 // lay out every point's pill in a view (each placed pill becomes an obstacle for the next) → [{p,px,py,box}].
-function figLayoutPills(pts,V,box){ const o=figObstacles(pts,V), placed=[], out=[];
+function figLayoutPills(pts,V,box,extraArms){ const o=figObstacles(pts,V,extraArms), placed=[], out=[];
   pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), size=figPillSize(p.id), pd=figPrimaryDir(px,o.axisX), obst={arms:o.arms,pts:o.pts,boxes:placed.slice()};
     const r=figPlacePill(px,py,size,pd,obst,FIG_GAP,{W:box.W,H:box.H});             // directional search (fast, preferred)
     let pill, via;
@@ -6905,8 +6919,9 @@ function figFitAndLayout(pts, base, box, aspect){
     const cx=(dom.xMin+dom.xMax)/2, cy=(dom.yMin+dom.yMax)/2, hx=(dom.xMax-dom.xMin)*0.56, hy=(dom.yMax-dom.yMin)*0.56;   // expand ~12% around centre → more edge room, then re-lay out
     dom={xMin:cx-hx,xMax:cx+hx,yMin:cy-hy,yMax:cy+hy}; }
   return { V, layout, iters, allValid:layout.every(L=>L.valid) }; }
-// render one pill — a subtle knockout box + centered identifier. The box already sits >= GAP clear of every line.
-function figPill(box,id){ const cx=box.x+box.w/2, cy=box.y+box.h/2; return `<rect x="${figNum(box.x)}" y="${figNum(box.y)}" width="${figNum(box.w)}" height="${figNum(box.h)}" rx="4" class="tp-fig-pill"/>`+figDraw.text(cx,cy+FIG_LABFS*0.35,id,'tp-fig-ptid','middle'); }
+// render one identifier at its placed box — PLAIN text, no knockout halo (approved visual target). The BOX
+// stays the collision unit (that is what earns the clearance); it is simply not painted.
+function figPill(box,id){ const cx=box.x+box.w/2, cy=box.y+box.h/2; return figDraw.text(cx,cy+FIG_LABFS*0.35,id,'tp-fig-ptid','middle'); }
 /* ═══════════════ FIGURE ENGINE — Stage 1c: construction-graph RUNTIME + vocabulary (ENGINE_SPEC §0/§2/§4) ═══════════════
    A figure is a CONSTRUCTION DEPENDENCY GRAPH (DAG) of named objects — NOT coordinates + placement formulas.
    Every connection point is a first-class named DEPENDENT object computed from its parents, so placement is a
@@ -7044,18 +7059,212 @@ function figConstruct(spec){
     ev.name=name; byName[name]=ev; }
   return {ok:errors.length===0,errors,byName,order};
 }
-function fragFigure(b,bk){
-  const dv=b.domain, domOK=dv && ['xMin','xMax','yMin','yMax'].every(k=>isFinite(+dv[k])) && (+dv.xMin<+dv.xMax) && (+dv.yMin<+dv.yMax);   // CodeRabbit #3: accept an explicit domain ONLY when all four bounds are finite and non-reversed/non-zero-width — else figView could divide by zero / emit NaN
-  const dom0=domOK?{xMin:+dv.xMin,xMax:+dv.xMax,yMin:+dv.yMin,yMax:+dv.yMax}:figAutoDomain(b);
+/* ═══════════════ FIGURE ENGINE — Stage 2: graph front-end (ENGINE_SPEC §5 shape, §6) ═══════════════
+   The first stage that renders something a student uses: functions by ADAPTIVE sampling (broken at
+   discontinuities — never a false connector across an asymptote), table-of-values points, segments between
+   named points, and reveal-on-tap coordinates riding the EXISTING Phase B rail (data-tp-focus-open ↔
+   [data-tp-overlay]) — no new interaction code, wirePack untouched. NO Expand window (2b), NO geometry
+   (Stage 3), NO freehand auto-grading (§6 — the engine renders accurately; students self-assess).
+   Authoring errors are REPORTED, never rendered as a fabricated figure. */
+// A tiny SAFE expression evaluator — recursive descent to a closure. NO eval/new Function: the app must stay
+// self-contained and an author expression is untrusted content.
+const FIG_FN1={sin:Math.sin,cos:Math.cos,tan:Math.tan,asin:Math.asin,acos:Math.acos,atan:Math.atan,
+  sinh:Math.sinh,cosh:Math.cosh,tanh:Math.tanh,sqrt:Math.sqrt,cbrt:Math.cbrt,abs:Math.abs,exp:Math.exp,
+  ln:Math.log,log:v=>Math.log(v)/Math.LN10,log10:v=>Math.log(v)/Math.LN10,floor:Math.floor,ceil:Math.ceil,round:Math.round,sign:Math.sign};
+const FIG_CONST={pi:Math.PI,e:Math.E};
+function figTok(src){ const s=String(src), t=[]; let i=0;
+  while(i<s.length){ const c=s[i];
+    if(c===' '||c==='\t'){ i++; continue; }
+    if(c>='0'&&c<='9'||c==='.'){ let j=i; while(j<s.length&&((s[j]>='0'&&s[j]<='9')||s[j]==='.'))j++; const n=+s.slice(i,j);
+      if(!isFinite(n)) return {error:'bad number "'+s.slice(i,j)+'"'}; t.push({k:'num',v:n}); i=j; continue; }
+    if(/[A-Za-z]/.test(c)){ let j=i; while(j<s.length&&/[A-Za-z0-9]/.test(s[j]))j++; t.push({k:'id',v:s.slice(i,j).toLowerCase()}); i=j; continue; }
+    if('+-*/^()'.indexOf(c)>=0){ t.push({k:c}); i++; continue; }
+    if(c==='−'){ t.push({k:'-'}); i++; continue; }                          // unicode minus
+    if(c==='×'||c==='·'){ t.push({k:'*'}); i++; continue; }
+    if(c==='÷'){ t.push({k:'/'}); i++; continue; }
+    return {error:'unexpected character "'+c+'"'};
+  }
+  return {toks:t};
+}
+// → {fn} or {error}. Grammar: expr(+ -) → term(* / implicit) → unary(-) → power(^, right-assoc) → atom.
+function figParse(src){
+  if(src==null||!String(src).trim()) return {error:'empty expression'};
+  const lx=figTok(src); if(lx.error) return {error:lx.error};
+  const T=lx.toks; let i=0, err=null, depth=0;
+  const eat=k=>{ if(T[i]&&T[i].k===k){ i++; return true; } return false; };
+  const fail=m=>{ if(!err) err=m; return ()=>NaN; };
+  const juxtNext=()=>T[i]&&(T[i].k==='num'||T[i].k==='id'||T[i].k==='(');
+  function expr(){ let n=term(); for(;;){ if(eat('+')){ const l=n,r=term(); n=x=>l(x)+r(x); } else if(eat('-')){ const l=n,r=term(); n=x=>l(x)-r(x); } else return n; } }
+  function term(){ let n=unary(); for(;;){ if(eat('*')){ const l=n,r=unary(); n=x=>l(x)*r(x); }
+      else if(eat('/')){ const l=n,r=unary(); n=x=>l(x)/r(x); }
+      else return n; } }
+  function unary(){ if(eat('-')){ const a=unary(); return x=>-a(x); } if(eat('+')) return unary(); return juxt(); }
+  // a JUXTAPOSITION chain binds tighter than * and /, so `sin 2x` is sin(2x) and `e^2x` is e^(2x) — the whole
+  // adjacent run is the argument/exponent, not just its first atom. (Consequently `1/2x` reads as 1/(2x).)
+  function juxt(){ let n=power(); while(juxtNext()){ const l=n,r=power(); n=x=>l(x)*r(x); } return n; }
+  function power(){ const b=atom(); if(eat('^')){ const e=unary(); return x=>Math.pow(b(x),e(x)); } return b; }
+  function atom(){ const t=T[i];
+    if(!t) return fail('unexpected end of expression');
+    if(t.k==='num'){ i++; return ()=>t.v; }
+    if(t.k==='('){ i++; if(++depth>120){ depth--; return fail('expression nested too deeply'); }   // bound the recursion: a pathological input must ERROR, never blow the stack
+      const n=expr(); depth--; if(!eat(')')) return fail('missing ")"'); return n; }
+    if(t.k==='id'){ i++;
+      if(t.v==='x') return x=>x;
+      if(Object.prototype.hasOwnProperty.call(FIG_CONST,t.v)){ const c=FIG_CONST[t.v]; return ()=>c; }
+      if(Object.prototype.hasOwnProperty.call(FIG_FN1,t.v)){ const f=FIG_FN1[t.v]; let a;
+        if(eat('(')){ a=expr(); if(!eat(')')) return fail('missing ")" after '+t.v); } else a=juxt();   // accepts sin(x) AND sin 2x
+        return x=>f(a(x)); }
+      return fail('unknown name "'+t.v+'"'); }
+    return fail('unexpected token'); }
+  const fn=expr();
+  if(!err && i<T.length) err='unexpected trailing input';
+  return err?{error:err}:{fn};
+}
+// §6 ADAPTIVE sampling — subdivide where the curve BENDS (screen-space sagitta) and where definedness changes,
+// then split into subpaths so a discontinuity/asymptote is a BREAK, never a connector. Points beyond a
+// one-range band are dropped (the root <svg> clips), so no absurd coordinate ever reaches a path attribute.
+function figSampleFn(fn, V, opts){
+  const D=V.dom, band=D.y1-D.y0, yLo=D.y0-band, yHi=D.y1+band;
+  const N0=(opts&&opts.n0)||24, MAXD=(opts&&opts.maxDepth)||9, TOL=(opts&&opts.tol)||0.25;
+  const at=x=>{ let y; try{ y=+fn(x); }catch(e){ y=NaN; } const ok=isFinite(y); return {x,y,px:V.sx(x),py:ok?V.sy(y):NaN,ok}; };
+  const samples=[];
+  // Subdivide ONLY where it buys something: a straight chord keeps the coarse grid, a bending one gets split.
+  const sub=(a,b,dep)=>{ const m=at((a.x+b.x)/2);
+    const edge=(a.ok!==b.ok)||(a.ok!==m.ok);                                 // a definedness TRANSITION — close in on it
+    let bend=a.ok&&b.ok&&m.ok&&Math.abs((a.py+b.py)/2-m.py)>TOL;             // sagitta in SCREEN px: how far the curve departs from the chord
+    if(!bend&&!edge&&a.ok&&b.ok&&m.ok&&dep<2)                                // RESONANCE guard: a periodic curve can meet the chord exactly at
+      for(const t of [1/3,2/3]){ const q=at(a.x+(b.x-a.x)*t);                // the midpoint and alias to a straight line — probe off-centre too
+        if(!q.ok||Math.abs(a.py+(b.py-a.py)*t-q.py)>TOL){ bend=true; break; } }
+    if(dep<MAXD&&(edge||bend)){ sub(a,m,dep+1); samples.push(m); sub(m,b,dep+1); } };
+  let prev=at(D.x0); samples.push(prev);
+  for(let k=1;k<=N0;k++){ const cur=at(D.x0+(D.x1-D.x0)*k/N0); sub(prev,cur,0); samples.push(cur); prev=cur; }
+  // A FINITE in-frame jump: subdivision bottomed out (Δx at the floor) yet Δpy stayed large — a step, not a
+  // slope (floor/ceil/round/sign). A merely steep CONTINUOUS curve never subdivides that far.
+  const minDx=(D.x1-D.x0)/(N0*Math.pow(2,MAXD)), jumps=[];
+  for(let k=1;k<samples.length;k++){ const p=samples[k-1], s=samples[k];
+    if(p.ok&&s.ok&&Math.abs(s.x-p.x)<=3*minDx&&Math.abs(s.py-p.py)>6) jumps.push(k); }
+  // …but only when they are COUNTABLE. A step function shows a handful across a visible domain; a curve that
+  // "jumps" hundreds of times (sin(200x) at this scale) is unresolvable, not discontinuous — draw it as one
+  // run rather than shredding it into hundreds of subpaths (which also defeats the arm cap below).
+  const jumpAt=new Set(jumps.length<=60?jumps:[]);
+  const paths=[]; let run=[];
+  const flush=()=>{ if(run.length>1) paths.push(run); run=[]; };
+  for(let k=0;k<samples.length;k++){ const s=samples[k];
+    if(!s.ok||s.y<yLo||s.y>yHi){ flush(); continue; }                        // undefined, or gone far off-frame → break the path here
+    const p=samples[k-1];
+    if(p&&p.ok&&((p.y>D.y1&&s.y<D.y0)||(p.y<D.y0&&s.y>D.y1))) flush();       // jumped clean across the frame → asymptote: never connect
+    else if(jumpAt.has(k)) flush();
+    run.push([s.px,s.py]); }
+  flush();
+  return {paths, samples};
+}
+/* Hard ceiling on collision arms contributed by drawn geometry. figPlacePill tests ~3k candidates against
+   EVERY arm, so this is the single knob that keeps placement cheap: a curve is smooth, so a few dozen chords
+   approximate it closely enough for clearance, while 600 arms cost half a second per figure. */
+const FIG_MAXARMS=30;
+function figCoordText(p){ return '('+figNum(p.x)+', '+figNum(p.y)+')'; }
+function figSafeId(bk,i){ return 'tpfig-'+String(bk).replace(/[^A-Za-z0-9_-]/g,'_')+'-'+i; }   // -${bk}-scoped, selector-safe
+// §1.7 reveal callouts, placed by the Stage-1b collision system (each sits >= GAP clear of arms/points/identifiers).
+/* A callout box is far larger than an identifier, so on a busy plot no spot clears the curve as well. Policy:
+   clearing the curve is BEST EFFORT (directional search only), clearing the structural furniture — axes, point
+   markers, identifiers — is GUARANTEED (directional, then exhaustive). Running the exhaustive scan against
+   every curve arm is what made a tan-x plot cost ~500ms, and a callout is opaque and only shown on tap. */
+function figLayoutCallouts(pts,V,box,pillBoxes,extraArms){
+  const o=figObstacles(pts,V,extraArms), base=figObstacles(pts,V), out=[];
+  pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), text=figCoordText(p);
+    const size=figPillSize(text); size.w+=22; size.h+=4;                     // room for the close affordance
+    const pd=figPrimaryDir(px,o.axisX), away=[pd[0],-pd[1]];                 // opposite the identifier, so a callout never covers it
+    const full={arms:o.arms, pts:o.pts, boxes:pillBoxes.slice()}, lite={arms:base.arms, pts:base.pts, boxes:pillBoxes.slice()};
+    const r=figPlacePill(px,py,size,away,full,FIG_GAP,{W:box.W,H:box.H});
+    let bx, clearsCurve=true;
+    if(r&&r.onCanvas&&r.clear>=FIG_GAP) bx=r.box;
+    else { clearsCurve=false;
+      const r2=figPlacePill(px,py,size,away,lite,FIG_GAP,{W:box.W,H:box.H});
+      bx=(r2&&r2.onCanvas&&r2.clear>=FIG_GAP)?r2.box:(figScanPill(size,lite,FIG_GAP,{W:box.W,H:box.H})||(r2&&r2.box)||{x:px,y:py,w:size.w,h:size.h}); }
+    out.push({p,px,py,text,box:bx,clearsCurve,clear:figClear(bx,lite)}); });
+  return out;
+}
+/* The painted curves/segments as collision ARMS, decimated to a bounded total. The stride is derived from the
+   TOTAL vertex count across every subpath, not per subpath: a many-asymptote curve breaks into dozens of short
+   runs, and a per-subpath cap would never bind on any of them — leaving one arm per vertex and making the
+   placement search quadratic (tan x over four asymptotes measured ~11.7s before this was made global). */
+function figPaintedArms(curves,segs,V){
+  const arms=[];
+  segs.forEach(s=>arms.push([V.sx(s.a.x),V.sy(s.a.y),V.sx(s.b.x),V.sy(s.b.y)]));
+  let tot=0; curves.forEach(c=>c.paths.forEach(sp=>{ tot+=sp.length; }));
+  const step=Math.max(1,Math.ceil(tot/FIG_MAXARMS));
+  curves.forEach(c=>c.paths.forEach(sp=>{
+    for(let i=step;i<sp.length;i+=step) arms.push([sp[i-step][0],sp[i-step][1],sp[i][0],sp[i][1]]);
+    const last=sp.length-1, prev=last-(last%step);                           // always close each subpath to its final vertex
+    if(prev<last) arms.push([sp[prev][0],sp[prev][1],sp[last][0],sp[last][1]]); }));
+  // ABSOLUTE ceiling: many short subpaths each contribute a closing arm, so the stride alone cannot bound the
+  // total. The placement search is linear in arm count per candidate, so this is what keeps rendering cheap.
+  if(arms.length>FIG_MAXARMS){ const st=Math.ceil(arms.length/FIG_MAXARMS); return arms.filter((_,i)=>i%st===0); }
+  return arms;
+}
+/* Build the whole §5 graph model — {figure:'graph', domain, objects:[{type:'function'|'points'|'segment'}], grid, aspect}.
+   Every authoring fault lands in errors[] and the offending object is SKIPPED; nothing is fabricated. */
+function figGraph(b, box){
+  const errors=[], objs=Array.isArray(b.objects)?b.objects:[];
+  const dv=b.domain, domOK=!!dv&&['xMin','xMax','yMin','yMax'].every(k=>isFinite(+dv[k]))&&(+dv.xMin<+dv.xMax)&&(+dv.yMin<+dv.yMax);
+  if(dv&&!domOK) errors.push('domain ignored — xMin/xMax/yMin/yMax must be finite with xMin<xMax and yMin<yMax');
+  if(!objs.length) errors.push('nothing to plot — objects[] is empty');
   const aspect=(b.aspect==='equal')?'equal':'stretch';
-  const box={W:520,H:360,padL:40,padR:18,padT:16,padB:30}, pts=figPoints(b);
-  const _fit=figFitAndLayout(pts, dom0, box, aspect);                     // §1.3 auto-fit + §1.4 escalation: the view + pill placements are computed together; escalates until every pill is >= GAP (equal aspect preserved)
-  const V=_fit.V, D=V.dom;
-  const gridShown=(b.grid!=='hidden');                                     // hidden = view computed identically, gridlines simply unpainted
+  // A table cell must be a NUMBER. Number(null)/Number('')/Number(false) are all 0, so an empty cell would
+  // otherwise survive figPoints' isFinite gate as an authored 0 — a fabricated point the reveal would then
+  // assert as fact. Validate here (figPoints is Stage-1a) and hand it only the rows that survive.
+  const num=v=>typeof v==='number'?isFinite(v):(typeof v==='string'&&v.trim()!==''&&isFinite(+v));
+  const clean=objs.map((o,idx)=>{ if(!o||typeof o!=='object'||o.type!=='points') return o;
+    const rows=Array.isArray(o.rows)?o.rows:(Array.isArray(o.points)?o.points:[]);
+    if(!rows.length) errors.push('points object '+(idx+1)+' has no rows');
+    const keep=rows.filter((r,ri)=>{ const arr=Array.isArray(r);
+      const id=arr?r[0]:(r&&r.id), x=arr?r[1]:(r&&r.x), y=arr?r[2]:(r&&r.y);
+      if(num(x)&&num(y)) return true;
+      errors.push('point '+(id!=null&&id!==''?'"'+id+'"':'row '+(ri+1))+' not plotted — '+(num(x)?'y':'x')+' is not a number');
+      return false; });
+    const c=Object.assign({},o,{rows:keep}); delete c.points; return c; });
+  const bClean={objects:clean};
+  objs.forEach((o,idx)=>{ const t=o&&typeof o==='object'?o.type:undefined;
+    if(t!=='function'&&t!=='points'&&t!=='segment') errors.push('object '+(idx+1)+' ignored — unknown type '+(t==null?'(missing)':'"'+t+'"')+' (expected function, points or segment)'); });
+  const dom0=domOK?{xMin:+dv.xMin,xMax:+dv.xMax,yMin:+dv.yMin,yMax:+dv.yMax}:figAutoDomain(bClean);
+  const pts=figPoints(bClean);
+  const fns=[];
+  objs.forEach((o,idx)=>{ if(!o||o.type!=='function') return;
+    const src=(o.f!=null?o.f:o.expr), r=figParse(src);
+    if(r.error){ errors.push('function '+(idx+1)+' not plotted — '+r.error); return; }
+    fns.push({src:String(src), fn:r.fn, label:o.label}); });
+  const fit=figFitAndLayout(pts, dom0, box, aspect), V=fit.V;               // §1.3/§1.4 — view and identifier placement solved together
+  if(domOK) pts.forEach(p=>{ if(p.x<dom0.xMin||p.x>dom0.xMax||p.y<dom0.yMin||p.y>dom0.yMax)
+    errors.push('point '+p.id+' '+figCoordText(p)+' lies outside the stated domain — the view was expanded to include it'); });
+  const curves=fns.map(f=>{ const s=figSampleFn(f.fn,V);
+    if(!s.paths.length) errors.push('function "'+f.src+'" is not defined (or never on-screen) anywhere in the domain — nothing plotted');
+    return {src:f.src, label:f.label, paths:s.paths, samples:s.samples}; });
+  const byId=Object.create(null); pts.forEach(p=>{ byId[p.id]=p; });
+  const segs=[];
+  objs.forEach(o=>{ if(!o||o.type!=='segment') return;
+    const bt=Array.isArray(o.between)?o.between:[o.from,o.to], an=String(bt[0]), bn=String(bt[1]);
+    const A=byId[an], B=byId[bn];
+    if(!A||!B){ errors.push('segment '+an+'–'+bn+' not drawn — unknown point "'+(!A?an:bn)+'"'); return; }
+    segs.push({a:A,b:B}); });
+  // §3.2's rule is that a label clears every ARM — and Stage 2 draws new arms. figFitAndLayout solved the view
+  // before the curves existed, so re-solve the identifiers now that they do (its bytes stay untouched).
+  // A plot with branches every few px is SATURATED: no label can clear the curve, so the candidate search runs
+  // to exhaustion against arms it can never satisfy. Fall back to the axes-only obstacle set there — same
+  // placement 1b would have made, at 1b's cost. Segments are few, so they always stay in.
+  const nSub=curves.reduce((a,c)=>a+c.paths.length,0);
+  const painted=figPaintedArms(nSub<=20?curves:[],segs,V);
+  const layout=painted.length?figLayoutPills(pts,V,box,painted):fit.layout;
+  layout.forEach(L=>{ if(!L.valid) errors.push('identifier '+L.p.id+' could not be placed clear of the plotted geometry'); });
+  const callouts=figLayoutCallouts(pts,V,box,layout.map(L=>L.box),painted);
+  return {V, dom0, domOK, aspect, pts, layout, callouts, curves, segs, painted, errors, box, iters:fit.iters, allValid:layout.every(L=>L.valid), gridShown:(b.grid!=='hidden')};
+}
+function fragFigure(b,bk){
+  const box={W:520,H:360,padL:40,padR:18,padT:16,padB:30};
+  const M=figGraph(b,box), V=M.V, D=V.dom;                                 // §5 intake → solved model (view, placements, curves, segments, callouts, errors)
   const xT=figNiceTicks(D.x0,D.x1,5), yT=figNiceTicks(D.y0,D.y1,5);
   const axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));   // y-axis screen-x, x-axis screen-y (clamped visible)
   let g='';
-  if(gridShown){
+  if(M.gridShown){
     const mnx=xT.step/5, mny=yT.step/5;                                    // two-tier grid: minor at step/5, major at step
     for(let v=Math.ceil((D.x0-1e-9)/mnx)*mnx; v<=D.x1+1e-9; v+=mnx) g+=figDraw.line(V.sx(v),V.sy(D.y0),V.sx(v),V.sy(D.y1),'tp-fig-grid-minor');
     for(let v=Math.ceil((D.y0-1e-9)/mny)*mny; v<=D.y1+1e-9; v+=mny) g+=figDraw.line(V.sx(D.x0),V.sy(v),V.sx(D.x1),V.sy(v),'tp-fig-grid-minor');
@@ -7066,10 +7275,20 @@ function fragFigure(b,bk){
   let tk='', lb='';
   xT.ticks.forEach(v=>{ const px=V.sx(v); tk+=figDraw.tick(px,axisY-4,0,8,'tp-fig-tick'); lb+=figDraw.text(px,axisY+16,figFmtTick(v,xT.decimals),'tp-fig-ticklabel','middle'); });
   yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const py=V.sy(v); tk+=figDraw.tick(axisX-4,py,8,0,'tp-fig-tick'); lb+=figDraw.text(axisX-8,py+4,figFmtTick(v,yT.decimals),'tp-fig-ticklabel','end'); });
+  let sg='';
+  M.segs.forEach(s=>{ sg+=figDraw.line(V.sx(s.a.x),V.sy(s.a.y),V.sx(s.b.x),V.sy(s.b.y),'tp-fig-seg'); });   // straight connector between two NAMED points
+  let fx='';
+  M.curves.forEach(c=>{ c.paths.forEach(pathPts=>{ fx+=figDraw.polyline(pathPts,'tp-fig-fn'); }); });        // one polyline PER SUBPATH — a break is a break
   let pt='';
-  _fit.layout.forEach(({px,py,box:pill,p})=>{ pt+=figDraw.circle(px,py,4,'tp-fig-pt')+figPill(pill,p.id); });   // §3.2/§1.4 marker + collision-placed PILL identifier — guaranteed >= GAP clear of every arm/point/pill (replaces 1a's simple offset)
+  M.layout.forEach(({px,py,box:pill,p})=>{ pt+=figDraw.circle(px,py,4,'tp-fig-pt')+figPill(pill,p.id); });   // §3.2/§1.4 marker + collision-placed identifier — guaranteed >= GAP clear of every arm/point/label
+  const pc=v=>figNum(v)+'%';                                               // viewBox → % : the svg is width:100% with a fixed viewBox ratio, so this maps exactly
+  let hits='', cos='';
+  M.callouts.forEach((c,i)=>{ const id=figSafeId(bk,i);                    // §1.7 reveal-on-tap on the EXISTING rail: data-tp-focus-open ↔ [data-tp-overlay id]
+    hits+=`<button class="tp-fig-hit" type="button" data-tp-focus-open="${esc(id)}" aria-label="Reveal coordinates of point ${esc(c.p.id)}" style="left:${pc(c.px/box.W*100)};top:${pc(c.py/box.H*100)}"></button>`;
+    cos+=`<div class="tp-fig-callout" id="${esc(id)}" data-tp-overlay role="dialog" aria-label="Coordinates of point ${esc(c.p.id)}" hidden style="left:${pc(c.box.x/box.W*100)};top:${pc(c.box.y/box.H*100)}"><span>${esc(c.p.id)} ${esc(c.text)}</span><button class="tp-fig-coclose" type="button" data-tp-focus-close aria-label="Close coordinates">${tpIc('close',12)}</button></div>`; });
+  const err=M.errors.length?`<p class="tp-fig-err">${M.errors.map(e=>esc(e)).join(' · ')}</p>`:'';
   const cap=b.caption?`<figcaption class="tp-fig-cap">${tpRichMath(b.caption)}</figcaption>`:'';
-  return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}"><svg class="tp-fig-svg" viewBox="0 0 ${box.W} ${box.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(b.title||'Coordinate plane')}">${g}${ax}${tk}${lb}${pt}</svg>${cap}</figure>`;
+  return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}" data-tp-fig-errors="${M.errors.length}"><div class="tp-fig-stage"><svg class="tp-fig-svg" viewBox="0 0 ${box.W} ${box.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(b.title||'Coordinate plane')}">${g}${ax}${tk}${lb}${sg}${fx}${pt}</svg>${hits}${cos}</div>${err}${cap}</figure>`;
 }
 FRAG.figure={imperium:fragFigure,microhistory:fragFigure,geolearn:fragFigure,mathematics:fragFigure,scholarmath:fragFigure};
 function renderFragment(b,i,k,theme){

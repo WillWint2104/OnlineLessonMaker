@@ -86,6 +86,61 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **Figure engine Stage 2 — graph engine front-end (ENGINE_SPEC §5 shape, §6).** The first stage that renders
+  something a student uses, additive on top of 1a/1b/1c. **(1) Function plotting** — author expressions compile
+  through a small **safe recursive-descent evaluator** (`figTok`/`figParse` → a closure; **no `eval`/`new Function`**,
+  so the file stays self-contained and an author string is never executed): `+ − × ÷ ^` with right-associative
+  powers, unary minus, parentheses, implicit products (`2x`, `3(x+1)`), `pi`/`e`, and the usual functions in both
+  `sin(x)` and `sin x` forms. **(2) Adaptive sampling** (`figSampleFn`) — a coarse grid subdivided *only where the
+  curve departs from its chord* (screen-space sagitta) and wherever definedness changes, so a straight line spends
+  25 samples and `sin(3x)` earns 315. **(3) Discontinuities BREAK** — each maximal run of on-frame samples becomes
+  its **own** polyline, so `1/x` renders as 2 subpaths and `tan x` over four asymptotes as 5, and no false vertical
+  connector is ever drawn across an asymptote; samples that leave a one-range band are dropped, so **no absurd or
+  `NaN` coordinate can reach a path attribute**. **(4) Table-of-values points** wired into the §5 `objects` shape,
+  each with its identifier placed by the 1b collision system. **(5) Segments** between named points. **(6)
+  Reveal-on-tap coordinates (§1.7)** riding the **existing Phase B rail** (`data-tp-focus-open` ↔ `[data-tp-overlay]`)
+  — `wirePack` is **byte-identical**; the callout is an id-paired overlay placed by the 1b system and clears the
+  **painted curve and chord**, not just the axes and markers. **(7) The declarative §5 intake**
+  (`{figure:'graph', domain, objects:[{type:'function'|'points'|'segment'}], grid, aspect}`) via `figGraph`, which
+  returns a solved model and an `errors[]` — every authoring fault is **reported and the object skipped**, never
+  fabricated. Matches the approved visual target: two-tier grid, mid-grey axes with ticks, plain tick labels,
+  accent dots with a thin ring, **plain identifiers (the 1b box still governs collision, it is simply not painted)**
+  and a dark board-colour callout. **Checked — acceptance 47/47, 0 console errors:** every curve vertex lands at
+  exactly `figView(x, f(x))` (max error **0.00e+0 px**); adaptive distribution shown (`y=x³` bins
+  `[8,8,4,4,8,9]` — edges 17 > centre 8; a parabola is *uniform by construction*, `y''` being constant); `1/x`
+  → 2 subpaths with no branch straddling `x=0`; `tan x` → 5 subpaths, 0 straddling, largest within-subpath Δpy
+  18.2px; five awkward reals at exact mapped pixels with **0 collision violations**; segment painted at the mapped
+  endpoints; the live rail opens/closes the callout through the real `wirePack()` with the APG focus contract
+  intact. **Rejection suite** (standing rule): malformed/unknown/unbalanced/illegal-character/empty expressions,
+  non-finite and reversed domains, a function undefined everywhere, a segment naming an unknown point, an empty
+  `objects[]`, and out-of-range points each yield a **clear error**; a bad object never takes the good ones down;
+  and **no `NaN`/`Infinity` reaches markup** across `1/x`, `tan x`, `ln x`, `1/(x−2)`. Painted geometry verified by
+  computed style in **ScholarMath and GeoLearn** (fallback-chain tokens — GeoLearn defines no `--graph-*`), each
+  with a real 462×282.6px curve bbox and 0 knockout rects. **7 frozen fns (incl. `gradeResponse` and `wirePack`)
+  and all 1a/1b/1c contracts byte-identical; legacy corpus 0 render diffs (1320 units); validate green;
+  self-contained; token-only.** *Spec-verification fold (standing rule — re-read §5/§6 against the code, then
+  adversarially hunt it; 10 findings, each reproduced before being accepted).* **(i) A ~11.7s render freeze**:
+  the collision-arm cap was applied *per subpath*, so a many-asymptote curve — which breaks into dozens of short
+  runs — never tripped it and contributed one arm per vertex to a search that is linear in arm count per
+  candidate. The stride is now derived from the **total** vertex count with an **absolute `FIG_MAXARMS` ceiling**,
+  and a **saturated** plot (>20 subpaths — branches every few px, where no label can clear the curve anyway)
+  falls back to the axes-only obstacle set: `tan x` over ±10 with six labelled points went **11.7s → 11ms**,
+  `tan(10x)` → 5ms. **(ii) Finite jump discontinuities** (`floor`/`ceil`/`round`/`sign`, all offered in the
+  function table) were drawn with false vertical risers — only asymptotes that cleared the whole frame broke.
+  A jump is now detected where subdivision has bottomed out yet Δpy stays large, honoured while such jumps are
+  countable (an unresolvable oscillation is not a discontinuity), so `floor x` renders 6 clean steps and
+  `abs x` still renders as one path (a corner, not a break). **(iii) `sin 2x` compiled to `sin(2)·x`** — a
+  straight line, silently — because a parenless application and an exponent each grabbed a single atom; a
+  juxtaposition level now binds the whole adjacent run (`e^2x` likewise), with precedence otherwise unchanged
+  (`2^3^2`=512, `-2^2`=−4). **(iv) A blank/`null`/`false` table cell** was coerced to `0` and plotted as a real
+  point the reveal then asserted as fact; rows are now validated as numbers (an authored genuine `0` still
+  passes). **(v)** Identifiers are placed clear of the **plotted curve**, not just the axes — §3.2's rule is
+  that a label clears every *arm*, and Stage 2 draws new ones. **(vi)** An unknown/misspelled object `type` is
+  reported instead of silently dropped. **(vii)** Grid **resonance** (a periodic curve meeting every chord at
+  its midpoint and aliasing to a straight line) is broken by off-centre probes. **(viii)** A pathologically
+  nested expression **errors instead of throwing** a `RangeError` out of the render. **Re-proven: 70/70**, with
+  the suite extended by timing budgets (it previously had none), step-function breaks, juxtaposition and
+  precedence tables, table-cell rejection, curve-clearance, unknown types, resonance and the nesting guard.
 - **Figure engine Stage 1c — construction-graph runtime + vocabulary.** The DAG evaluator behind a figure
   (ENGINE_SPEC §0/§2/§4), additive on top of Stage 1b — pure logic, **no render path touched**. **(1) DAG object
   model** — a figure is a list of named objects, each an op over earlier objects by name; `figConstruct(spec)`
