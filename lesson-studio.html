@@ -6907,6 +6907,143 @@ function figFitAndLayout(pts, base, box, aspect){
   return { V, layout, iters, allValid:layout.every(L=>L.valid) }; }
 // render one pill — a subtle knockout box + centered identifier. The box already sits >= GAP clear of every line.
 function figPill(box,id){ const cx=box.x+box.w/2, cy=box.y+box.h/2; return `<rect x="${figNum(box.x)}" y="${figNum(box.y)}" width="${figNum(box.w)}" height="${figNum(box.h)}" rx="4" class="tp-fig-pill"/>`+figDraw.text(cx,cy+FIG_LABFS*0.35,id,'tp-fig-ptid','middle'); }
+/* ═══════════════ FIGURE ENGINE — Stage 1c: construction-graph RUNTIME + vocabulary (ENGINE_SPEC §0/§2/§4) ═══════════════
+   A figure is a CONSTRUCTION DEPENDENCY GRAPH (DAG) of named objects — NOT coordinates + placement formulas.
+   Every connection point is a first-class named DEPENDENT object computed from its parents, so placement is a
+   dependency (recomputes when a parent moves), not a driftable step. Pure RUNTIME + vocabulary — no rendering,
+   marks, or labels (that is Stage 3). ZERO edits to any frozen fn or the 1a/1b contracts.
+     figConstruct(spec) → { ok, errors, byName, order }  — spec is {objects:[{name,op,args}]} or {construction,params}. */
+function figCvec(a,b){ return {x:b.x-a.x, y:b.y-a.y}; }
+function figCunit(v){ const m=Math.hypot(v.x,v.y)||1; return {x:v.x/m, y:v.y/m}; }
+function figLen(a,b){ return Math.hypot(b.x-a.x, b.y-a.y); }
+function figAngle(P,V,Q){ let d=Math.abs(Math.atan2(P.y-V.y,P.x-V.x)-Math.atan2(Q.y-V.y,Q.x-V.x))*180/Math.PI; return d>180?360-d:d; }   // unsigned angle PVQ at V (degrees)
+function figRayRay(P,dP,Q,dQ){ const det=dP.x*(-dQ.y)-(-dQ.x)*dP.y; if(Math.abs(det)<1e-12) return {x:NaN,y:NaN}; const s=((Q.x-P.x)*(-dQ.y)-(-dQ.x)*(Q.y-P.y))/det; return {x:P.x+s*dP.x, y:P.y+s*dP.y}; }
+function figLineLine(l1,l2){ const A=l1.a,d1=figCvec(l1.a,l1.b),C=l2.a,d2=figCvec(l2.a,l2.b),den=d1.x*d2.y-d1.y*d2.x; if(Math.abs(den)<1e-12) return {kind:'point',x:NaN,y:NaN,error:'parallel'}; const t=((C.x-A.x)*d2.y-(C.y-A.y)*d2.x)/den; return {kind:'point',x:A.x+t*d1.x,y:A.y+t*d1.y}; }
+function figLineCircle(l,circ,root){ const A=l.a,d=figCvec(l.a,l.b),fx=A.x-circ.c.x,fy=A.y-circ.c.y,aa=d.x*d.x+d.y*d.y,bb=2*(fx*d.x+fy*d.y),cc=fx*fx+fy*fy-circ.r*circ.r,disc=bb*bb-4*aa*cc; if(disc<0) return {kind:'point',x:NaN,y:NaN,error:'no intersection'}; const sq=Math.sqrt(disc),t=(root?(-bb+sq):(-bb-sq))/(2*aa); return {kind:'point',x:A.x+t*d.x,y:A.y+t*d.y}; }
+function figCircleCircle(c1,c2,root){ const dx=c2.c.x-c1.c.x,dy=c2.c.y-c1.c.y,dd=Math.hypot(dx,dy); if(dd<1e-12||dd>c1.r+c2.r||dd<Math.abs(c1.r-c2.r)) return {kind:'point',x:NaN,y:NaN,error:'no intersection'}; const A=(c1.r*c1.r-c2.r*c2.r+dd*dd)/(2*dd),h=Math.sqrt(Math.max(0,c1.r*c1.r-A*A)),mx=c1.c.x+A*dx/dd,my=c1.c.y+A*dy/dd,ox=-dy/dd*h,oy=dx/dd*h; return {kind:'point',x:mx+(root?-ox:ox),y:my+(root?-oy:oy)}; }
+function figWrapPi(a){ const t=Math.atan2(Math.sin(a),Math.cos(a)); return t<-Math.PI+1e-9?Math.PI:t; }   // §3.1 signed sweep, wrapped to (−180°,180°]
+function figFinite(o){ if(!o||typeof o!=='object') return false;
+  const num=v=>typeof v!=='number'||isFinite(v), flat=v=>{ if(!v||typeof v!=='object') return true; for(const k in v) if(!num(v[k])) return false; return true; };
+  for(const k in o){ const v=o[k]; if(!num(v)) return false; if(Array.isArray(v)){ for(const it of v) if(!flat(it)) return false; } else if(!flat(v)) return false; }
+  return true; }
+function figOnPart(o,P){ if(o.kind!=='ray'&&o.kind!=='segment') return true;   // a ray/segment is BOUNDED — a root outside it is not an intersection
+  const d=figCvec(o.a,o.b),L=d.x*d.x+d.y*d.y||1,t=((P.x-o.a.x)*d.x+(P.y-o.a.y)*d.y)/L; return t>=-1e-9&&(o.kind==='ray'||t<=1+1e-9); }
+function figIntersect(o1,o2,root){ const isL=o=>o.kind==='line'||o.kind==='ray'||o.kind==='segment'; let r;
+  if(isL(o1)&&isL(o2)) r=figLineLine(o1,o2);
+  else if(isL(o1)&&o2.kind==='circle') r=figLineCircle(o1,o2,root);
+  else if(o1.kind==='circle'&&isL(o2)) r=figLineCircle(o2,o1,root);
+  else if(o1.kind==='circle'&&o2.kind==='circle') r=figCircleCircle(o1,o2,root);
+  else return {kind:'point',x:NaN,y:NaN,error:'unsupported intersection'};
+  if(r.error) return r;
+  return (figOnPart(o1,r)&&figOnPart(o2,r))?r:{kind:'point',x:NaN,y:NaN,error:'no intersection'}; }
+// §2 the construction VERBS — each maps evaluated parents (g(name)) → an evaluated object.
+const FIG_OPS={
+  Point:(a)=>({kind:'point',x:+a.x,y:+a.y}),
+  Midpoint:(a,g)=>{const P=g(a.P),Q=g(a.Q);return {kind:'point',x:(P.x+Q.x)/2,y:(P.y+Q.y)/2};},
+  PointOnSegment:(a,g)=>{const P=g(a.P),Q=g(a.Q),t=+a.t;return {kind:'point',x:P.x+t*(Q.x-P.x),y:P.y+t*(Q.y-P.y)};},
+  PointOnRay:(a,g)=>{const V=g(a.V),A=g(a.A),d=+a.dist,v=figCvec(V,A),m=Math.hypot(v.x,v.y);
+    if(!(m>1e-12)) return {kind:'point',x:NaN,y:NaN,error:'PointOnRay: V and A coincide — no direction'};
+    if(!isFinite(d)) return {kind:'point',x:NaN,y:NaN,error:'PointOnRay: dist must be finite'};
+    return {kind:'point',x:V.x+d*v.x/m,y:V.y+d*v.y/m};},
+  // §3.1 SIGNED SWEEP — φ = α + δ/2, δ = wrapTo(−180,180](β−α). NOT normalize(u+w): the spec forbids it (degenerates at 180°).
+  PointOnBisector:(a,g)=>{const P=g(a.P),V=g(a.V),Q=g(a.Q),d=+a.dist;
+    if(!(figLen(V,P)>1e-12&&figLen(V,Q)>1e-12)) return {kind:'point',x:NaN,y:NaN,error:'PointOnBisector: P or Q coincides with V — no angle'};
+    if(!isFinite(d)) return {kind:'point',x:NaN,y:NaN,error:'PointOnBisector: dist must be finite'};
+    const al=Math.atan2(P.y-V.y,P.x-V.x),ph=al+figWrapPi(Math.atan2(Q.y-V.y,Q.x-V.x)-al)/2;
+    return {kind:'point',x:V.x+d*Math.cos(ph),y:V.y+d*Math.sin(ph)};},
+  FootOfPerpendicular:(a,g)=>{const P=g(a.P),L=g(a.line),A=L.a,ab=figCvec(L.a,L.b),L2=ab.x*ab.x+ab.y*ab.y;
+    if(!(L2>1e-24)) return {kind:'point',x:NaN,y:NaN,error:'FootOfPerpendicular: line has zero length'};
+    const t=((P.x-A.x)*ab.x+(P.y-A.y)*ab.y)/L2;return {kind:'point',x:A.x+t*ab.x,y:A.y+t*ab.y};},
+  Intersection:(a,g)=>figIntersect(g(a.a),g(a.b),+a.root||0),
+  Segment:(a,g)=>({kind:'segment',a:g(a.P),b:g(a.Q)}),
+  Ray:(a,g)=>({kind:'ray',a:g(a.P),b:g(a.Q)}),
+  Line:(a,g)=>({kind:'line',a:g(a.P),b:g(a.Q)}),
+  Polygon:(a,g)=>{const pts=(a.pts||[]).map(n=>g(n));return pts.length<3?{kind:'polygon',pts,error:'Polygon needs at least 3 vertices (got '+pts.length+')'}:{kind:'polygon',pts};},
+  Circle:(a,g)=>{const c=g(a.center),r=(a.radius!=null)?+a.radius:figLen(c,g(a.through));
+    return (isFinite(r)&&r>0)?{kind:'circle',c,r}:{kind:'circle',c,r:NaN,error:'Circle: radius must be finite and > 0'};},
+  Arc:(a,g)=>{const c=g(a.center),f=g(a.from),t=g(a.to),r=+a.radius;
+    if(!(isFinite(r)&&r>0)) return {kind:'arc',c,r:NaN,a0:NaN,a1:NaN,error:'Arc: radius must be finite and > 0'};
+    return {kind:'arc',c,r,a0:Math.atan2(f.y-c.y,f.x-c.x),a1:Math.atan2(t.y-c.y,t.x-c.x)};},
+  Length:(a,g)=>({kind:'value',unit:'length',value:figLen(g(a.P),g(a.Q))}),
+  AngleMeasure:(a,g)=>({kind:'value',unit:'angle',value:figAngle(g(a.P),g(a.V),g(a.Q))}),   // unsigned [0,180] — the measure of three loose points
+  // INTERIOR angle: signed against the polygon's own winding, so a reflex vertex reports 360−θ and Σ = (n−2)·180 for any simple polygon.
+  InteriorAngle:(a,g)=>{const poly=g(a.poly),pts=(poly&&poly.pts)||[],n=pts.length;
+    if(n<3) return {kind:'value',unit:'angle',value:NaN,error:'InteriorAngle: polygon needs at least 3 vertices'};
+    const i=(((+a.at)%n)+n)%n,A=pts[(i-1+n)%n],V=pts[i],C=pts[(i+1)%n];
+    let s2=0; for(let k=0;k<n;k++){const p=pts[k],q=pts[(k+1)%n];s2+=p.x*q.y-q.x*p.y;}   // shoelace ⇒ winding sense
+    const cr=(V.x-A.x)*(C.y-V.y)-(V.y-A.y)*(C.x-V.x),th=figAngle(A,V,C);
+    return {kind:'value',unit:'angle',value:(cr*s2>=0)?th:360-th};},
+};
+// §4 parameterised CONSTRUCTIONS (closed-form — NOT a general solver). Each solves to coordinates; everything derives.
+// Each returns an object ARRAY, or {error} when the givens are impossible — a contradiction is REJECTED, never solved into a fabricated figure (§4).
+const figPos=v=>isFinite(v)&&v>0;
+const FIG_PARAM={
+  rawCoordinates:(p)=>{const src=p.points||[];
+    for(let i=0;i<src.length;i++){const pt=src[i]||{}; if(!(pt.name||pt.id)) return {error:'rawCoordinates: point '+(i+1)+' has no name'};
+      if(!(isFinite(+pt.x)&&isFinite(+pt.y))) return {error:'rawCoordinates: point "'+(pt.name||pt.id)+'" has non-finite coordinates'};}
+    return src.map(pt=>({name:String(pt.name||pt.id),op:'Point',args:{x:+pt.x,y:+pt.y}}));},
+  rightTriangle:(p)=>{const L=p.legs||[3,4],a=+L[0],b=+L[1];
+    if(!(figPos(a)&&figPos(b))) return {error:'rightTriangle: legs must be finite and > 0 (got '+L.join(', ')+')'};
+    return [{name:'A',op:'Point',args:{x:0,y:0}},{name:'B',op:'Point',args:{x:a,y:0}},{name:'C',op:'Point',args:{x:0,y:b}}];},   // right angle at A; legs AB=a, AC=b
+  triangleSAS:(p)=>{const a=+p.a,b=+p.b,d=+p.angle;
+    if(!(figPos(a)&&figPos(b))) return {error:'triangleSAS: sides a,b must be finite and > 0 (got '+p.a+', '+p.b+')'};
+    if(!(isFinite(d)&&d>0&&d<180)) return {error:'triangleSAS: included angle must be in (0,180), got '+p.angle};
+    const ang=d*Math.PI/180;return [{name:'A',op:'Point',args:{x:0,y:0}},{name:'B',op:'Point',args:{x:a,y:0}},{name:'C',op:'Point',args:{x:b*Math.cos(ang),y:b*Math.sin(ang)}}];},   // AB=a, AC=b, INCLUDED angle at A
+  triangleASA:(p)=>{const dA=+p.angleA,dB=+p.angleB,c=+p.side;
+    if(!figPos(c)) return {error:'triangleASA: side must be finite and > 0 (got '+p.side+')'};
+    if(!(isFinite(dA)&&isFinite(dB)&&dA>0&&dB>0&&dA+dB<180)) return {error:'triangleASA: angles must be > 0 and sum to < 180 (got '+p.angleA+' + '+p.angleB+')'};
+    const angA=dA*Math.PI/180,angB=dB*Math.PI/180,C=figRayRay({x:0,y:0},{x:Math.cos(angA),y:Math.sin(angA)},{x:c,y:0},{x:Math.cos(Math.PI-angB),y:Math.sin(Math.PI-angB)});
+    if(!(isFinite(C.x)&&isFinite(C.y))) return {error:'triangleASA: rays do not meet for the given angles'};
+    return [{name:'A',op:'Point',args:{x:0,y:0}},{name:'B',op:'Point',args:{x:c,y:0}},{name:'C',op:'Point',args:{x:C.x,y:C.y}}];},   // angle A, side AB=c, angle B
+  triangleSSS:(p)=>{const a=+p.a,b=+p.b,c=+p.c;
+    if(!(figPos(a)&&figPos(b)&&figPos(c))) return {error:'triangleSSS: sides must be finite and > 0 (got '+p.a+', '+p.b+', '+p.c+')'};
+    if(!(a+b>c&&b+c>a&&c+a>b)) return {error:'triangleSSS: sides '+a+', '+b+', '+c+' do not satisfy the triangle inequality'};
+    const Cx=(b*b+c*c-a*a)/(2*c),Cy=Math.sqrt(Math.max(0,b*b-Cx*Cx));
+    return [{name:'A',op:'Point',args:{x:0,y:0}},{name:'B',op:'Point',args:{x:c,y:0}},{name:'C',op:'Point',args:{x:Cx,y:Cy}}];},   // a=BC, b=CA, c=AB
+  circle:(p)=>{const r=+p.radius;
+    if(!figPos(r)) return {error:'circle: radius must be finite and > 0 (got '+p.radius+')'};
+    return [{name:'O',op:'Point',args:{x:0,y:0}},{name:'circ',op:'Circle',args:{center:'O',radius:r}}];},
+  regularPolygon:(p)=>{const n=+p.n,r=(p.radius!=null?+p.radius:1),out=[];
+    if(!(Number.isInteger(n)&&n>=3&&n<=100)) return {error:'regularPolygon: n must be an integer in [3,100] (got '+p.n+')'};
+    if(!figPos(r)) return {error:'regularPolygon: radius must be finite and > 0 (got '+p.radius+')'};
+    for(let k=0;k<n;k++){const t=-Math.PI/2+2*Math.PI*k/n;out.push({name:'P'+(k+1),op:'Point',args:{x:r*Math.cos(t),y:r*Math.sin(t)}});}
+    out.push({name:'poly',op:'Polygon',args:{pts:out.map(o=>o.name)}});return out;},
+};
+// evaluate a construction spec: expand params → validate → topo-sort (reject cycles) → evaluate in order.
+const figHas=(m,k)=>Object.prototype.hasOwnProperty.call(m,k);   // own-property only: 'toString'/'constructor' are NOT ops
+const figArgs=o=>(o.args&&typeof o.args==='object')?o.args:o;
+function figConstruct(spec){
+  const errors=[]; let objs;
+  if(spec && spec.construction){ const cn=String(spec.construction);
+    if(!figHas(FIG_PARAM,cn)) return {ok:false,errors:['unknown construction: '+cn],byName:{},order:[]};
+    const built=FIG_PARAM[cn](spec.params||spec||{});
+    if(!Array.isArray(built)) return {ok:false,errors:[(built&&built.error)||('construction failed: '+cn)],byName:{},order:[]};
+    objs=built.concat(Array.isArray(spec.objects)?spec.objects:[]); }   // a parameterised construction may be EXTENDED with value-labels / derived objects referencing its points
+  else objs=(spec&&Array.isArray(spec.objects))?spec.objects:[];
+  const byDef=Object.create(null);
+  objs.forEach(o=>{ if(!o||typeof o!=='object'||!o.name){errors.push('object missing name');return;} const n=String(o.name); if(n in byDef)errors.push('duplicate name: '+n); byDef[n]=o; });
+  objs=objs.filter(o=>o&&typeof o==='object'&&o.name);   // a null/nameless entry is already an error — never let it reach the graph
+  objs.forEach(o=>{ const A=figArgs(o); if((o.op==='Length'||o.op==='AngleMeasure'||o.op==='InteriorAngle')&&('value' in o||'value' in A)) errors.push('single source of truth: value-label "'+o.name+'" may not carry a typed value — the engine computes it'); });
+  const refsOf=o=>{ const a=figArgs(o),out=[],scan=v=>{ if(typeof v==='string')out.push(v); else if(Array.isArray(v))v.forEach(scan); }; ['P','Q','V','A','center','through','from','to','line','a','b','poly','pts'].forEach(k=>scan(a[k])); return out; };
+  objs.forEach(o=>refsOf(o).forEach(r=>{ if(!(r in byDef)) errors.push('unknown parent: "'+r+'" referenced by "'+o.name+'"'); }));
+  if(errors.length) return {ok:false,errors,byName:{},order:[]};   // a malformed graph is never sorted or evaluated
+  const indeg=Object.create(null),adj=Object.create(null),order=[]; objs.forEach(o=>{indeg[String(o.name)]=0;adj[String(o.name)]=[];});
+  objs.forEach(o=>refsOf(o).forEach(r=>{ adj[r].push(String(o.name)); indeg[String(o.name)]++; }));
+  const q=objs.filter(o=>indeg[String(o.name)]===0).map(o=>String(o.name));
+  while(q.length){ const n=q.shift(); order.push(n); adj[n].forEach(m=>{ if(--indeg[m]===0)q.push(m); }); }
+  if(order.length!==objs.length){ let res=objs.map(o=>String(o.name)).filter(n=>indeg[n]>0);
+    for(;;){ const inR=new Set(res),keep=res.filter(n=>adj[n].some(m=>inR.has(m))); if(keep.length===res.length)break; res=keep; }   // peel descendants — name only the true cycle members
+    errors.push('cyclic construction rejected: '+res.join('↔')); return {ok:false,errors,byName:{},order:[]}; }
+  const byName=Object.create(null),g=n=>byName[n];
+  for(const name of order){ const o=byDef[name];
+    if(!figHas(FIG_OPS,o.op)){ errors.push('unknown op: '+o.op+' ("'+name+'")'); byName[name]={kind:'point',x:NaN,y:NaN,error:'unknown op',name}; continue; }   // still bound, so a child cannot crash
+    let ev; try{ ev=FIG_OPS[o.op](figArgs(o),g); }catch(e){ errors.push('evaluation failed for "'+name+'": '+e.message); byName[name]={kind:'point',x:NaN,y:NaN,name}; continue; }
+    if(!ev||typeof ev!=='object'){ errors.push('invalid result for "'+name+'"'); ev={kind:'point',x:NaN,y:NaN}; }
+    else if(ev.error) errors.push(ev.error+' ("'+name+'")');
+    else if(!figFinite(ev)) errors.push('non-finite result for "'+name+'"');   // backstop: no NaN ever escapes as a solved figure
+    ev.name=name; byName[name]=ev; }
+  return {ok:errors.length===0,errors,byName,order};
+}
 function fragFigure(b,bk){
   const dv=b.domain, domOK=dv && ['xMin','xMax','yMin','yMax'].every(k=>isFinite(+dv[k])) && (+dv.xMin<+dv.xMax) && (+dv.yMin<+dv.yMax);   // CodeRabbit #3: accept an explicit domain ONLY when all four bounds are finite and non-reversed/non-zero-width — else figView could divide by zero / emit NaN
   const dom0=domOK?{xMin:+dv.xMin,xMax:+dv.xMax,yMin:+dv.yMin,yMax:+dv.yMax}:figAutoDomain(b);

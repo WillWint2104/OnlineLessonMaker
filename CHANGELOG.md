@@ -86,6 +86,62 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **Figure engine Stage 1c — construction-graph runtime + vocabulary.** The DAG evaluator behind a figure
+  (ENGINE_SPEC §0/§2/§4), additive on top of Stage 1b — pure logic, **no render path touched**. **(1) DAG object
+  model** — a figure is a list of named objects, each an op over earlier objects by name; `figConstruct(spec)`
+  resolves parent references (scanning the arg keys `P/Q/V/A/center/through/from/to/line/a/b/poly/pts`),
+  Kahn topo-sorts into an evaluation `order`, and **rejects a cycle at parse** (`order.length !== objs.length` →
+  `ok:false`, no loop, no crash) as it rejects duplicate names. **(2) Construction vocabulary** (`FIG_OPS`) —
+  points (`Point`, `Midpoint`, `PointOnSegment(t)`, `PointOnRay(dist)`, `PointOnBisector(dist)`,
+  `FootOfPerpendicular`, `Intersection(root)`), carriers (`Segment`, `Ray`, `Line`, `Polygon`, `Circle`
+  by radius **or** through-point, `Arc`), and measures (`Length`, `AngleMeasure`, `InteriorAngle`) — each
+  placed exactly where its rule puts it, checked with independent geometry (`PointOnRay` collinear **and** at
+  distance; `FootOfPerpendicular` foot·direction = 0; `Intersection` on **both** parents). Line∩line,
+  line∩circle and circle∩circle solved in closed form with a `root` selector. **(3) Single source of truth
+  (§4)** — a value-label (`Length`/`AngleMeasure`/`InteriorAngle`) renders **only** the engine-computed value;
+  a typed `value` on such an object is **rejected at parse** so an author can't contradict the geometry.
+  **(4) Parameterised constructions** (`FIG_PARAM`) — `rawCoordinates`, `rightTriangle{legs}`,
+  `triangleSAS{a,b,angle}`, `triangleASA{angleA,side,angleB}`, `triangleSSS{a,b,c}`, `circle{radius}`,
+  `regularPolygon{n,radius}` expand to solved coordinates satisfying the givens, and may be **extended** with
+  extra objects (e.g. value-labels). **Consumer:** a test harness only — the geometry front-end (marks/labels
+  from this graph) is Stage 3, not built here. **Checked (behavioural, evidence not assertion): acceptance
+  20/20** — every verb exact; single-source-of-truth (`rightTriangle{legs:[6,8]}` → computed hyp 10, ∠B 53.13°;
+  a contradictory typed 35° **rejected**); topological eval `A→A2→B2→C2→B→C→D` with the chained value correct
+  and a `P↔Q` cycle **rejected**; all parameterised constructions satisfy their givens (SAS included angle,
+  ASA two angles, SSS three sides, regularPolygon(5) interior 108°); transform survival (move a free parent →
+  dependents recompute). **All seven frozen fns (incl. `gradeResponse`) + the
+  `figView`/`figNiceStep`/`figNum`/`figPlacePill`/`figScanPill`/`figFitAndLayout`/`figAutoFit` (1a/1b)
+  contracts byte-identical — proven by reconstructing `main`'s exact sha256 from the new file with the
+  inserted lines removed; legacy corpus 0 render diffs (1320 units); self-contained; token-only; validate
+  green; 0 console errors.** *Hardening fold — "reject, don't fabricate" (12 findings: 3 CodeRabbit +
+  9 from an adversarial audit that reproduced every claim before accepting it).* The runtime previously
+  had two failure modes, both of which broke its `{ok,errors,byName,order}` contract: it **fabricated**
+  (impossible givens returned `ok:true` with a figure contradicting them — the exact contradiction §4 calls
+  structurally impossible) and it **threw** (malformed input escaped as an uncaught `TypeError`). Fixed in
+  three pieces. **(a) Spec conformance** — `PointOnBisector` now uses the §3.1 **signed sweep**
+  (φ = α + δ/2, δ wrapped to (−180°,180°]); the previous `normalize(u+w)` is the construction
+  ENGINE_SPEC.md:160 explicitly forbids, and at ∠PVQ = 180° (the ubiquitous "angles on a straight line"
+  figure) it collapsed to the vertex itself. `InteriorAngle` is now **winding-aware** (shoelace sign × vertex
+  turn), so a reflex vertex reports the interior angle and Σ = (n−2)·180° for any simple polygon — it
+  previously reported 360−interior and a dart quad summed to 313°. **(b) Impossible givens rejected** —
+  triangle inequality (SSS), angle sum < 180 (ASA), included angle ∈ (0,180) (SAS), integer n ∈ [3,100]
+  (regularPolygon), positive finite radii/legs/sides, named finite coordinates (rawCoordinates); a
+  `FIG_PARAM` entry now returns `{error}` and `figConstruct` rejects, plus a **finite-value backstop** so no
+  `NaN` can escape as a solved figure. **(c) Never throw, always report** — own-property lookups for
+  `FIG_OPS`/`FIG_PARAM` and null-prototype graph maps (so `toString`/`constructor` are not ops, and an object
+  legitimately *named* `__proto__`/`toString` works); **unresolved parent names rejected at parse** (a typo'd
+  reference was invisible to the sort, then crashed on deref); null/nameless entries filtered before the
+  graph; primitive `args` coerced; an unknown `op` still binds a node so children can't crash; every verb
+  call wrapped so a throw becomes an error; ray/segment **bounds respected** in `Intersection` (a segment
+  (0,0)-(1,0) previously "met" the line x=2 at (2,0) and seeded dependents from the phantom); degenerate
+  guards (coincident ray direction, zero-length line, <3-vertex polygon); and the cycle diagnostic now peels
+  descendants to name only true participants and no longer fires a phantom cycle on a duplicate name.
+  **Re-proven: acceptance 64/64** — the 20 original correctness checks, plus a **REJECTION suite** covering
+  every one of the 12 (asserting `ok:false` *with a useful error*, never merely "didn't crash"), plus the
+  straight-angle bisector case and a no-degeneracy sweep (90°/60°/170°/179.9°), the reflex dart quad
+  (Σ=360.0000°) alongside convex regularPolygon(5) (Σ=540), and the 6 SSOT probes re-confirmed (rejection
+  total, falsy `value` caught via `in`, extension objects inspected, no smuggling via text/label/display,
+  **no false rejections**). Frozen fns and 1a/1b contracts still byte-identical; corpus still 0 render diffs.
 - **Figure engine Stage 1b — auto-fit + uniform-gap pill collision.** The placement system
   (ENGINE_SPEC §1.3/§1.4/§3.2), additive on top of Stage 1a. **(1) Pill primitive** — a label becomes a
   box sized to its text (`figPillSize`); the BOX is the collision unit. **(2) Uniform-gap collision** —
