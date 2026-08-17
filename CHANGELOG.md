@@ -111,9 +111,37 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   ASA two angles, SSS three sides, regularPolygon(5) interior 108°); transform survival (move a free parent →
   dependents recompute). **All seven frozen fns (incl. `gradeResponse`) + the
   `figView`/`figNiceStep`/`figNum`/`figPlacePill`/`figScanPill`/`figFitAndLayout`/`figAutoFit` (1a/1b)
-  contracts byte-identical — proven by reconstructing `main`'s exact sha256 from the new file with the 69
+  contracts byte-identical — proven by reconstructing `main`'s exact sha256 from the new file with the
   inserted lines removed; legacy corpus 0 render diffs (1320 units); self-contained; token-only; validate
-  green; 0 console errors.**
+  green; 0 console errors.** *Hardening fold — "reject, don't fabricate" (12 findings: 3 CodeRabbit +
+  9 from an adversarial audit that reproduced every claim before accepting it).* The runtime previously
+  had two failure modes, both of which broke its `{ok,errors,byName,order}` contract: it **fabricated**
+  (impossible givens returned `ok:true` with a figure contradicting them — the exact contradiction §4 calls
+  structurally impossible) and it **threw** (malformed input escaped as an uncaught `TypeError`). Fixed in
+  three pieces. **(a) Spec conformance** — `PointOnBisector` now uses the §3.1 **signed sweep**
+  (φ = α + δ/2, δ wrapped to (−180°,180°]); the previous `normalize(u+w)` is the construction
+  ENGINE_SPEC.md:160 explicitly forbids, and at ∠PVQ = 180° (the ubiquitous "angles on a straight line"
+  figure) it collapsed to the vertex itself. `InteriorAngle` is now **winding-aware** (shoelace sign × vertex
+  turn), so a reflex vertex reports the interior angle and Σ = (n−2)·180° for any simple polygon — it
+  previously reported 360−interior and a dart quad summed to 313°. **(b) Impossible givens rejected** —
+  triangle inequality (SSS), angle sum < 180 (ASA), included angle ∈ (0,180) (SAS), integer n ∈ [3,100]
+  (regularPolygon), positive finite radii/legs/sides, named finite coordinates (rawCoordinates); a
+  `FIG_PARAM` entry now returns `{error}` and `figConstruct` rejects, plus a **finite-value backstop** so no
+  `NaN` can escape as a solved figure. **(c) Never throw, always report** — own-property lookups for
+  `FIG_OPS`/`FIG_PARAM` and null-prototype graph maps (so `toString`/`constructor` are not ops, and an object
+  legitimately *named* `__proto__`/`toString` works); **unresolved parent names rejected at parse** (a typo'd
+  reference was invisible to the sort, then crashed on deref); null/nameless entries filtered before the
+  graph; primitive `args` coerced; an unknown `op` still binds a node so children can't crash; every verb
+  call wrapped so a throw becomes an error; ray/segment **bounds respected** in `Intersection` (a segment
+  (0,0)-(1,0) previously "met" the line x=2 at (2,0) and seeded dependents from the phantom); degenerate
+  guards (coincident ray direction, zero-length line, <3-vertex polygon); and the cycle diagnostic now peels
+  descendants to name only true participants and no longer fires a phantom cycle on a duplicate name.
+  **Re-proven: acceptance 64/64** — the 20 original correctness checks, plus a **REJECTION suite** covering
+  every one of the 12 (asserting `ok:false` *with a useful error*, never merely "didn't crash"), plus the
+  straight-angle bisector case and a no-degeneracy sweep (90°/60°/170°/179.9°), the reflex dart quad
+  (Σ=360.0000°) alongside convex regularPolygon(5) (Σ=540), and the 6 SSOT probes re-confirmed (rejection
+  total, falsy `value` caught via `in`, extension objects inspected, no smuggling via text/label/display,
+  **no false rejections**). Frozen fns and 1a/1b contracts still byte-identical; corpus still 0 render diffs.
 - **Figure engine Stage 1b — auto-fit + uniform-gap pill collision.** The placement system
   (ENGINE_SPEC §1.3/§1.4/§3.2), additive on top of Stage 1a. **(1) Pill primitive** — a label becomes a
   box sized to its text (`figPillSize`); the BOX is the collision unit. **(2) Uniform-gap collision** —
