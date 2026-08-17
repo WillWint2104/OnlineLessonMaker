@@ -7098,7 +7098,9 @@ function figParse(src){
   function term(){ let n=unary(); for(;;){ if(eat('*')){ const l=n,r=unary(); n=x=>l(x)*r(x); }
       else if(eat('/')){ const l=n,r=unary(); n=x=>l(x)/r(x); }
       else return n; } }
-  function unary(){ if(eat('-')){ const a=unary(); return x=>-a(x); } if(eat('+')) return unary(); return juxt(); }
+  const deep=()=>{ if(++depth>120){ depth--; fail('expression nested too deeply'); return true; } return false; };
+  function unary(){ if(eat('-')){ if(deep()) return ()=>NaN; const a=unary(); depth--; return x=>-a(x); }   // a long chain of minuses recurses too
+    if(eat('+')) return unary(); return juxt(); }
   // a JUXTAPOSITION chain binds tighter than * and /, so `sin 2x` is sin(2x) and `e^2x` is e^(2x) — the whole
   // adjacent run is the argument/exponent, not just its first atom. (Consequently `1/2x` reads as 1/(2x).)
   function juxt(){ let n=power(); while(juxtNext()){ const l=n,r=power(); n=x=>l(x)*r(x); } return n; }
@@ -7106,17 +7108,18 @@ function figParse(src){
   function atom(){ const t=T[i];
     if(!t) return fail('unexpected end of expression');
     if(t.k==='num'){ i++; return ()=>t.v; }
-    if(t.k==='('){ i++; if(++depth>120){ depth--; return fail('expression nested too deeply'); }   // bound the recursion: a pathological input must ERROR, never blow the stack
+    if(t.k==='('){ i++; if(deep()) return ()=>NaN;                           // bound the recursion: a pathological input must ERROR, never blow the stack
       const n=expr(); depth--; if(!eat(')')) return fail('missing ")"'); return n; }
     if(t.k==='id'){ i++;
       if(t.v==='x') return x=>x;
       if(Object.prototype.hasOwnProperty.call(FIG_CONST,t.v)){ const c=FIG_CONST[t.v]; return ()=>c; }
       if(Object.prototype.hasOwnProperty.call(FIG_FN1,t.v)){ const f=FIG_FN1[t.v]; let a;
-        if(eat('(')){ a=expr(); if(!eat(')')) return fail('missing ")" after '+t.v); } else a=juxt();   // accepts sin(x) AND sin 2x
+        if(eat('(')){ a=expr(); if(!eat(')')) return fail('missing ")" after '+t.v); }
+        else { if(deep()) return ()=>NaN; a=juxt(); depth--; }               // accepts sin(x) AND sin 2x — and `sin sin sin …` recurses, so it is bounded too
         return x=>f(a(x)); }
       return fail('unknown name "'+t.v+'"'); }
     return fail('unexpected token'); }
-  const fn=expr();
+  let fn; try{ fn=expr(); }catch(e){ return {error:'expression too complex'}; }   // backstop: NO input may throw out of the parser into the render
   if(!err && i<T.length) err='unexpected trailing input';
   return err?{error:err}:{fn};
 }

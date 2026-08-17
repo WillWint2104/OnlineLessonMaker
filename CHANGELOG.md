@@ -138,7 +138,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   that a label clears every *arm*, and Stage 2 draws new ones. **(vi)** An unknown/misspelled object `type` is
   reported instead of silently dropped. **(vii)** Grid **resonance** (a periodic curve meeting every chord at
   its midpoint and aliasing to a straight line) is broken by off-centre probes. **(viii)** A pathologically
-  nested expression **errors instead of throwing** a `RangeError` out of the render. **Re-proven: 70/70**, with
+  nested expression **errors instead of throwing** a `RangeError` out of the render. *CodeRabbit fold:* that guard counted only parentheses, so a long unary chain (`-`×20000) or a parenless `sin sin sin … x` still overflowed and escaped into the render — every recursive path is now bounded, with a try/catch backstop so no input can throw out of the parser. **Re-proven: 70/70**, with
   the suite extended by timing budgets (it previously had none), step-function breaks, juxtaposition and
   precedence tables, table-cell rejection, curve-clearance, unknown types, resonance and the nesting guard.
 - **Figure engine Stage 1c — construction-graph runtime + vocabulary.** The DAG evaluator behind a figure
