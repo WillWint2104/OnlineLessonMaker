@@ -86,6 +86,46 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **Figure engine Stage 2b — Expand / focused graph window (ENGINE_SPEC §6).** The surface where a student
+  *interrogates* a graph instead of reading it. **⤢ on the figure opens a focused window on the EXISTING Phase B
+  rail** (`data-tp-focus-open` ↔ `[data-tp-overlay]`, reusing the `.tp-overlay`/`.tp-fpanel` skin) — **`wirePack`
+  is byte-identical**; the in-panel controls ride **one delegated document listener** registered once at load,
+  the same pattern as the app's other top-level listeners, and the panel paints **lazily** on first open so an
+  unopened figure costs nothing. **(1) Zoom + pan** produce only a new MATH domain; everything re-solves through
+  `figGraph` → `figView`/`figFitAndLayout`, so points, curves, segments and identifier pills are coordinates that
+  follow the transform — nothing is transformed in pixels and there is no SVG `transform`. **(2) Increment
+  selection** offers a bounded set of tick *targets* (4/5/6/8/10), every one routed through `figNiceStep`, so a
+  raw step cannot reach an axis; the resulting step is shown. **(3) Coordinate readout** on hover in MATH
+  coordinates via the **§1.1 inverse** mapping — the reason the mapping was built reversible. **(4) Feature
+  toggles** (gridlines, minor ticks, axis names) and **(5) Reset**. The painted body is now one shared
+  `figSvgBody`, so the inline figure and the expanded view cannot drift apart. Points outside the viewport are
+  culled before solving (`figGraph`'s auto-fit only ever *expands*, and would otherwise drag a zoom back out),
+  while **segments are resolved against every authored point** so a chord whose far end is off-screen is still
+  drawn and clipped, exactly as on paper. **Checked — acceptance 53/53, 0 console errors:** across seven
+  zoom/pan states every point sits at exactly `figView(x,y)` for the current domain (**max error 0.00e+0 px**)
+  with the ≥ GAP no-collision invariant holding after every re-layout; readout round-trips math→pixel→readout at
+  **1.78e-15** and stays exact after zoom; **20 step values across 5 increments × 4 zoom depths are all nice**
+  and an off-list increment is ignored; each toggle re-renders correctly; Reset restores the default view
+  exactly. **Rejection suite:** zero-width, inverted, `NaN`, `Infinity`, below-floor and beyond-ceiling
+  viewports are each refused *with a reason*, 200 zoom-ins/outs stop at the limit with the viewport finite and
+  no `NaN` in the painted SVG, and panning off the data leaves a valid empty plane rather than throwing.
+  **Timing budget (standing rule): open 10.4 ms, zoom 2.0, pan 1.8, toggle 1.7, increment 2.1, reset 9.5,
+  readout 0.1 — all against `tan x` + 14 points, budget 150 ms.** Painted geometry verified by computed style in
+  ScholarMath and GeoLearn at three zoom levels. **7 frozen fns (incl. `wirePack`) and all 1a/1b/1c/2 contracts
+  byte-identical; legacy corpus 0 render diffs (1320 units); the inline figure's SVG body proven identical to
+  main across four specs; validate green; self-contained; token-only.** *Spec-verification fold (standing rule):*
+  **(i)** a re-render under the same block id carried the student's viewport forward wholesale, so editing a
+  figure's domain in the inspector left ⤢ painting a **stale window with every point culled** and no way to tell
+  that from an empty region — the viewport is now re-based whenever the authored view changes, while an
+  incidental re-render still preserves the zoom. **(ii)** The new focus rules wrote
+  `outline:var(--focus-ring,<shorthand>)`, but `--focus-ring` is a **colour**, so the fallback never fired and
+  the declaration set colour only, leaving `outline-style:none` — **no focus ring at all** on ⤢, the toolbar,
+  and (already on main, from Stage 2) the reveal hit-target and callout close. All four now use the shorthand
+  the rest of the file gets right and are asserted to paint `solid/3px`. **(iii)** `figSafeId` collapsed every
+  unsafe byte to `_`, so blocks `'a b'` and `'a+b'` shared one DOM id and one registry entry; the escape is now
+  injective. **(iv)** The increment `<select>` hard-coded ≈5 as selected while the axis was drawn at the
+  persisted value. **(v)** The readout was an `aria-live` region rewritten on every pointer sample (121
+  announcements from one sweep); it is no longer live.
 - **Figure engine Stage 2 — graph engine front-end (ENGINE_SPEC §5 shape, §6).** The first stage that renders
   something a student uses, additive on top of 1a/1b/1c. **(1) Function plotting** — author expressions compile
   through a small **safe recursive-descent evaluator** (`figTok`/`figParse` → a closure; **no `eval`/`new Function`**,

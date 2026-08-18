@@ -2550,13 +2550,32 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-fn{stroke:var(--primary);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
 .tp-slide .tp-fig-seg{stroke:var(--primary);stroke-width:1.6;stroke-linecap:round;}
 .tp-slide .tp-fig-hit{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;}
-.tp-slide .tp-fig-hit:focus-visible,.tp-slide .tp-fig-hit:focus{outline:var(--focus-ring,2px solid var(--primary));outline-offset:1px;}
+.tp-slide .tp-fig-hit:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}   /* --focus-ring is a COLOUR: `outline:var(--focus-ring,<shorthand>)` sets colour only and leaves outline-style:none — i.e. no ring at all */
 .tp-slide .tp-fig-callout{position:absolute;display:flex;align-items:center;gap:8px;padding:4px 5px 4px 10px;border-radius:var(--tp-rad-btn);background:var(--graph-callout,var(--graph-axis,var(--on-surface)));color:var(--graph-surface,var(--surface));font-family:var(--tp-body);font-size:12.5px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px var(--scrim,rgba(0,0,0,.28));}
 .tp-slide .tp-fig-callout[hidden]{display:none;}   /* display:flex would otherwise beat the UA [hidden] rule and the callout would never hide */
 .tp-slide .tp-fig-coclose{font:inherit;line-height:1;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;padding:0;border:0;border-radius:50%;background:transparent;color:inherit;opacity:.75;cursor:pointer;}
 .tp-slide .tp-fig-coclose:hover{opacity:1;}
-.tp-slide .tp-fig-coclose:focus-visible,.tp-slide .tp-fig-coclose:focus{outline:var(--focus-ring,2px solid currentColor);outline-offset:1px;}
+.tp-slide .tp-fig-coclose:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}
 .tp-slide .tp-fig-err{margin:6px 0 0;font-family:var(--tp-body);font-size:12.5px;line-height:1.45;color:var(--error,var(--on-surface-variant));}
+/* Stage 2b — ⤢ Expand affordance + the focused window (reuses the .tp-overlay/.tp-fpanel skin). Token-only. */
+/* §1.5 halo: the axis name sits at the axis end, exactly where a curve asymptotic to that axis runs. */
+.tp-slide .tp-fig-axname{fill:var(--graph-axis,var(--on-surface-variant));font-family:var(--tp-body);font-size:12px;font-style:italic;paint-order:stroke;stroke:var(--graph-surface,var(--surface-lowest));stroke-width:3px;stroke-linejoin:round;}
+.tp-slide .tp-fig-expand{position:absolute;top:8px;right:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;padding:0;font:inherit;font-size:15px;line-height:1;border-radius:8px;border:1px solid var(--outline-variant);background:var(--graph-surface,var(--surface-lowest));color:var(--on-surface-variant);cursor:pointer;}
+.tp-slide .tp-fig-expand:hover{border-color:var(--primary);color:var(--primary);}
+.tp-slide .tp-fig-expand:focus-visible{outline:3px solid var(--focus-ring);outline-offset:2px;}
+.tp-slide .tp-fpanel-figx{max-width:1040px;padding:18px 20px 20px;}
+.tp-slide .tp-figx-title{font-family:var(--tp-body);font-weight:700;font-size:15px;color:var(--on-surface);padding-right:48px;}
+.tp-slide .tp-figx-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 12px;font-family:var(--tp-body);font-size:12.5px;color:var(--on-surface-variant);}
+.tp-slide .tp-figx-bar button{font:inherit;min-width:30px;height:28px;padding:0 9px;border-radius:7px;border:1px solid var(--outline-variant);background:var(--surface);color:var(--on-surface);cursor:pointer;}
+.tp-slide .tp-figx-bar button:hover{border-color:var(--primary);color:var(--primary);}
+.tp-slide .tp-figx-bar button:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}
+.tp-slide .tp-figx-bar select{font:inherit;height:28px;border-radius:7px;border:1px solid var(--outline-variant);background:var(--surface);color:var(--on-surface);}
+.tp-slide .tp-figx-bar label{display:inline-flex;align-items:center;gap:5px;}
+.tp-slide .tp-figx-step{font-variant-numeric:tabular-nums;color:var(--on-surface);}
+.tp-slide .tp-figx-sep{flex:1 1 auto;}
+.tp-slide .tp-figx-stage svg{cursor:crosshair;}
+.tp-slide .tp-figx-read{margin:8px 0 0;font-family:var(--tp-body);font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;color:var(--on-surface);}
+.tp-slide .tp-figx-msg{margin:4px 0 0;min-height:1.1em;font-family:var(--tp-body);font-size:12.5px;color:var(--error,var(--on-surface-variant));}
 .tp-slide .tp-fig-cap{margin-top:6px;font-family:var(--tp-body);font-size:13px;color:var(--on-surface-variant);text-align:center;}
 .tp-slide .tp-gq2-student{stroke:var(--student-ink,var(--primary));stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
 .tp-slide .tp-gq2-answer{stroke:var(--ok,#1f7a54);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
@@ -7166,7 +7185,9 @@ function figSampleFn(fn, V, opts){
    approximate it closely enough for clearance, while 600 arms cost half a second per figure. */
 const FIG_MAXARMS=30;
 function figCoordText(p){ return '('+figNum(p.x)+', '+figNum(p.y)+')'; }
-function figSafeId(bk,i){ return 'tpfig-'+String(bk).replace(/[^A-Za-z0-9_-]/g,'_')+'-'+i; }   // -${bk}-scoped, selector-safe
+// -${bk}-scoped and selector-safe. The escape is INJECTIVE (unsafe bytes become _<code>_, and '_' escapes
+// itself): collapsing them all to '_' would let 'a b' and 'a+b' share one DOM id and one FIGX entry.
+function figSafeId(bk,i){ return 'tpfig-'+String(bk).replace(/[^A-Za-z0-9-]/g,c=>'_'+c.charCodeAt(0)+'_')+'-'+i; }
 // §1.7 reveal callouts, placed by the Stage-1b collision system (each sits >= GAP clear of arms/points/identifiers).
 /* A callout box is far larger than an identifier, so on a busy plot no spot clears the curve as well. Policy:
    clearing the curve is BEST EFFORT (directional search only), clearing the structural furniture — axes, point
@@ -7261,16 +7282,166 @@ function figGraph(b, box){
   const callouts=figLayoutCallouts(pts,V,box,layout.map(L=>L.box),painted);
   return {V, dom0, domOK, aspect, pts, layout, callouts, curves, segs, painted, errors, box, iters:fit.iters, allValid:layout.every(L=>L.valid), gridShown:(b.grid!=='hidden')};
 }
-function fragFigure(b,bk){
-  const box={W:520,H:360,padL:40,padR:18,padT:16,padB:30};
-  const M=figGraph(b,box), V=M.V, D=V.dom;                                 // §5 intake → solved model (view, placements, curves, segments, callouts, errors)
-  const xT=figNiceTicks(D.x0,D.x1,5), yT=figNiceTicks(D.y0,D.y1,5);
+/* ═══════════════ FIGURE ENGINE — Stage 2b: Expand / focused graph window (ENGINE_SPEC §6) ═══════════════
+   Where a student INTERROGATES a graph instead of just reading it: zoom, pan, axis-step choice, coordinate
+   readout via the §1.1 INVERSE mapping, feature toggles, reset. Opens on the EXISTING Phase B rail
+   (data-tp-focus-open ↔ [data-tp-overlay]) — wirePack is untouched; the in-panel controls ride ONE delegated
+   document listener registered once at load, alongside the app's other top-level listeners.
+   Everything re-renders through figGraph → figView/figFitAndLayout, so points, curves and identifiers are
+   COORDINATES that follow the transform — they cannot drift. NO geometry (Stage 3), NO input/grading (§6). */
+const FIGX=Object.create(null);
+const FIGX_BOX={W:900,H:560,padL:56,padR:26,padT:24,padB:42};
+const FIGX_MINSPAN=1e-6, FIGX_MAXSPAN=1e9, FIGX_TICKS=[4,5,6,8,10];
+function figxRegister(bk,b,D){                                             // called during render: remember the spec + the view it opened at
+  const xid=figSafeId(bk,'x'), prev=FIGX[xid], nb={xMin:D.x0,xMax:D.x1,yMin:D.y0,yMax:D.y1};
+  // Carry the student's zoom across an INCIDENTAL re-render (nav, theme swap) — but only while it still
+  // belongs to this figure. If the authored spec changed (an edited domain/points in the inspector), the old
+  // viewport describes data that no longer exists: ⤢ would paint a stale window with every point culled and
+  // no way to tell that from a legitimately empty region. Display preferences are not data, so they persist.
+  const same=!!prev&&['xMin','xMax','yMin','yMax'].every(k=>prev.base[k]===nb[k]);
+  const ps=prev&&prev.st, sg=!(b&&b.grid==='hidden');                      // the SPEC's grid setting, tracked separately from the student's toggle
+  const st=(same&&ps)?ps:{ dom:Object.assign({},nb), tt:(ps&&FIGX_TICKS.indexOf(ps.tt)>=0)?ps.tt:5,
+      grid:sg, minor:ps?ps.minor:true, names:ps?ps.names:true };
+  if(prev&&prev.sg!==sg) st.grid=sg;                                       // the author changed grid: honour it, without disturbing the zoom
+  FIGX[xid]={ b, box:FIGX_BOX, title:(b&&b.title)||'Coordinate plane', base:nb, sg, st,
+    rev:((prev&&prev.rev)||0)+1 };                                         // bumps the solve-cache signature: the spec object mutates in place on an inspector edit
+  return xid;
+}
+// A span must also be representable AT ITS OWN MAGNITUDE: far from the origin, doubles run out of resolution
+// long before the absolute floor, and a span of a few ULPs makes tick generation and sampling degenerate.
+const figxUlpSpan=(lo,hi)=>Math.max(Math.abs(lo),Math.abs(hi),1)*Number.EPSILON*8192;
+function figxClampDom(d){                                                  // a viewport is REJECTED with a reason — never silently NaN or inverted
+  const fin=v=>typeof v==='number'&&isFinite(v);
+  if(!d||!fin(d.xMin)||!fin(d.xMax)||!fin(d.yMin)||!fin(d.yMax)) return {error:'viewport rejected — every bound must be a finite number'};
+  if(!(d.xMax>d.xMin)||!(d.yMax>d.yMin)) return {error:'viewport rejected — that would invert or collapse the domain'};
+  const w=d.xMax-d.xMin, h=d.yMax-d.yMin;
+  if(w<FIGX_MINSPAN||h<FIGX_MINSPAN) return {error:'zoom limit reached — cannot magnify further'};
+  if(w<figxUlpSpan(d.xMin,d.xMax)||h<figxUlpSpan(d.yMin,d.yMax)) return {error:'zoom limit reached — this region is too small to resolve at these coordinates'};
+  if(w>FIGX_MAXSPAN||h>FIGX_MAXSPAN) return {error:'zoom limit reached — cannot widen further'};
+  return {dom:{xMin:d.xMin,xMax:d.xMax,yMin:d.yMin,yMax:d.yMax}};
+}
+/* Solve the model for the CURRENT viewport. Points outside it are culled first: figGraph's auto-fit only ever
+   EXPANDS a domain to fit its labels, so an off-screen point would otherwise drag the zoom back out. */
+function figxModel(xid){
+  const e=FIGX[xid]; if(!e) return null;
+  const st=e.st, d=st.dom;
+  // Cull against what is actually PAINTED, not what was requested: 'equal' aspect expands the shorter axis,
+  // so culling on st.dom would delete points that are plainly visible inside the plot.
+  const pv=figView(d, e.box, (e.b&&e.b.aspect==='equal')?'equal':'stretch').dom;
+  const inView=(x,y)=>isFinite(x)&&isFinite(y)&&x>=pv.x0&&x<=pv.x1&&y>=pv.y0&&y<=pv.y1;
+  const objs=[];
+  (Array.isArray(e.b.objects)?e.b.objects:[]).forEach(o=>{
+    if(o&&typeof o==='object'&&o.type==='segment') return;                 // re-resolved from the FULL point set in figxPaint: an endpoint scrolled off-screen must NOT delete the chord
+    if(!o||typeof o!=='object'||o.type!=='points'){ if(o) objs.push(o); return; }
+    const rows=Array.isArray(o.rows)?o.rows:(Array.isArray(o.points)?o.points:[]);
+    const keep=rows.filter(r=>{ const a=Array.isArray(r); return inView(+(a?r[1]:r&&r.x), +(a?r[2]:r&&r.y)); });
+    if(!keep.length) return;                                               // drop an emptied points object rather than report it as an authoring fault
+    const c=Object.assign({},o,{rows:keep}); delete c.points; objs.push(c); });
+  const M=figGraph(Object.assign({},e.b,{domain:d, grid:st.grid?'shown':'hidden', objects:objs}), e.box);
+  e.M=M; return M;
+}
+/* Segments resolved against EVERY authored point, not the culled-to-viewport set — a chord whose far end is
+   off-screen must still be drawn (the SVG viewport clips it), exactly as it would be on paper. */
+function figxSegs(e){
+  const objs=Array.isArray(e.b.objects)?e.b.objects:[], byId=Object.create(null);
+  objs.forEach(o=>{ if(!o||o.type!=='points') return;
+    const rows=Array.isArray(o.rows)?o.rows:(Array.isArray(o.points)?o.points:[]);
+    rows.forEach((r,i)=>{ const a=Array.isArray(r), id=a?r[0]:(r&&r.id), x=+(a?r[1]:r&&r.x), y=+(a?r[2]:r&&r.y);
+      if(isFinite(x)&&isFinite(y)) byId[String(id==null?String.fromCharCode(65+i):id)]={x,y}; }); });
+  const out=[];
+  objs.forEach(o=>{ if(!o||o.type!=='segment') return;
+    const bt=Array.isArray(o.between)?o.between:[o.from,o.to], A=byId[String(bt[0])], B=byId[String(bt[1])];
+    if(A&&B) out.push({a:A,b:B}); });
+  return out;
+}
+// Readout precision comes from PIXEL RESOLUTION, not the tick step: a step of 1 has 0 decimals, which would
+// round a free-moving cursor to whole units. Enough digits to tell adjacent pixels apart, trailing zeros trimmed.
+const figxDec=(span,px)=>Math.max(0,Math.min(8,Math.ceil(-Math.log10(Math.abs(span)/Math.max(1,px)))+1));
+function figxFmt(v,d){ const s=(Math.abs(v)<Math.pow(10,-d)/2?0:v).toFixed(d); return d?s.replace(/\.?0+$/,''):s; }
+function figxPanelEl(xid){ return document.querySelector('[data-figx="'+String(xid).replace(/"/g,'')+'"]'); }
+function figxMsg(xid,msg){ const p=figxPanelEl(xid); if(p){ const el=p.querySelector('[data-figx-msg]'); if(el) el.textContent=msg||''; } }
+// The two axis-name glyph boxes, as collision ARMS (their four edges), so §3.2 applies to them like any other
+// label: the identifier search routes around them instead of stacking on top. Kept in step with figSvgBody.
+function figxNameArms(V,box){
+  const D=V.dom, axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));
+  const w=13, h=16, boxes=[{x:V.sx(D.x1)-6-w, y:axisY-9-h*0.8, w, h}, {x:axisX+9, y:V.sy(D.y1)+13-h*0.8, w, h}];
+  const arms=[]; boxes.forEach(b=>arms.push([b.x,b.y,b.x+b.w,b.y],[b.x+b.w,b.y,b.x+b.w,b.y+b.h],[b.x+b.w,b.y+b.h,b.x,b.y+b.h],[b.x,b.y+b.h,b.x,b.y]));
+  return arms;
+}
+function figxPaint(xid){                                                   // re-solve + repaint; every zoom level goes through the same figView/figFitAndLayout path
+  const e=FIGX[xid], p=figxPanelEl(xid); if(!e||!p) return null;
+  const st=e.st, sig=st.dom.xMin+'|'+st.dom.xMax+'|'+st.dom.yMin+'|'+st.dom.yMax+'|'+(st.grid?1:0)+'|'+e.rev;
+  const M=(e.M&&e.sig===sig)?e.M:figxModel(xid);                            // display-only controls (minor/names/increment) repaint without re-solving
+  if(!M) return null; e.sig=sig; e.M=M;
+  const nm=st.names?figxNameArms(M.V,e.box):[];
+  const layout=nm.length?figLayoutPills(M.pts,M.V,e.box,(M.painted||[]).concat(nm)):M.layout;
+  const paint=Object.assign({},M,{segs:figxSegs(e),layout});                // chords drawn in full, then clipped by the viewport
+  const svg=p.querySelector('[data-figx-svg]'); if(svg) svg.innerHTML=figSvgBody(paint,e.box,{targetTicks:st.tt, grid:st.grid, minor:st.minor, axisNames:st.names});
+  const D=M.V.dom, xT=figNiceTicks(D.x0,D.x1,st.tt), yT=figNiceTicks(D.y0,D.y1,st.tt), sEl=p.querySelector('[data-figx-step]');
+  e.dec=[figxDec(D.x1-D.x0,M.V.plotW),figxDec(D.y1-D.y0,M.V.plotH)];        // figNum is fixed at 3 dp — far too coarse once a deep zoom is finer than that
+  if(sEl) sEl.textContent='step '+figFmtTick(xT.step,xT.decimals);          // ALWAYS a figNiceStep value — no raw step can reach the axis
+  return M;
+}
+function figxAct(xid,act){
+  const e=FIGX[xid]; if(!e) return;
+  const st=e.st, d=st.dom, cx=(d.xMin+d.xMax)/2, cy=(d.yMin+d.yMax)/2, hw=(d.xMax-d.xMin)/2, hh=(d.yMax-d.yMin)/2;
+  const P=0.3; let nd=null;
+  if(act==='zoomin')       nd={xMin:cx-hw/1.6, xMax:cx+hw/1.6, yMin:cy-hh/1.6, yMax:cy+hh/1.6};
+  else if(act==='zoomout') nd={xMin:cx-hw*1.6, xMax:cx+hw*1.6, yMin:cy-hh*1.6, yMax:cy+hh*1.6};
+  else if(act==='left')    nd={xMin:d.xMin-hw*P, xMax:d.xMax-hw*P, yMin:d.yMin, yMax:d.yMax};
+  else if(act==='right')   nd={xMin:d.xMin+hw*P, xMax:d.xMax+hw*P, yMin:d.yMin, yMax:d.yMax};
+  else if(act==='up')      nd={xMin:d.xMin, xMax:d.xMax, yMin:d.yMin+hh*P, yMax:d.yMax+hh*P};
+  else if(act==='down')    nd={xMin:d.xMin, xMax:d.xMax, yMin:d.yMin-hh*P, yMax:d.yMax-hh*P};
+  else if(act==='reset'){ st.dom=Object.assign({},e.base); figxMsg(xid,''); figxPaint(xid); return; }
+  else return;
+  const c=figxClampDom(nd);
+  if(c.error){ figxMsg(xid,c.error); return; }                             // refused, with a reason — the old view stands
+  st.dom=c.dom; figxMsg(xid,''); figxPaint(xid);
+}
+function figxReadout(xid,svg,clientX,clientY){                             // §1.1 INVERSE mapping — this is what the reversible mapping was built for
+  const e=FIGX[xid]; if(!e||!e.M) return;
+  const r=svg.getBoundingClientRect(); if(!(r.width>0&&r.height>0)) return;
+  const px=(clientX-r.left)/r.width*e.box.W, py=(clientY-r.top)/r.height*e.box.H;
+  const x=e.M.V.ix(px), y=e.M.V.iy(py); e.read={x,y,px,py};
+  const d=e.dec||[3,3], p=figxPanelEl(xid), out=p&&p.querySelector('[data-figx-read]');
+  if(out) out.textContent=(isFinite(x)&&isFinite(y))?('x = '+figxFmt(x,d[0])+'  ·  y = '+figxFmt(y,d[1])):'—';
+}
+function figxPanel(xid){
+  const e=FIGX[xid], B=e.box, t=esc(e.title);
+  const cur=(e.st&&FIGX_TICKS.indexOf(e.st.tt)>=0)?e.st.tt:5;              // read from state, as the toggles do — otherwise the control lies about the axis it labels
+  const opts=FIGX_TICKS.map(n=>`<option value="${n}"${n===cur?' selected':''}>≈${n} ticks</option>`).join('');
+  const tog=(k,lab,on)=>`<label><input type="checkbox" data-figx-tog="${k}"${on?' checked':''}> ${lab}</label>`;
+  const btn=(a,lab,txt)=>`<button type="button" data-figx-act="${a}" aria-label="${lab}" title="${lab}">${txt}</button>`;
+  return `<div class="tp-overlay tp-figx" id="${esc(xid)}" data-tp-overlay role="dialog" aria-modal="true" aria-label="${t} — expanded" hidden>`
+    +`<div class="tp-fpanel tp-fpanel-figx" data-figx="${esc(xid)}">`
+    +`<button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close expanded figure">${tpIc('close',20)}</button>`
+    +`<div class="tp-figx-title">${t}</div>`
+    +`<div class="tp-figx-bar" role="toolbar" aria-label="Figure controls">`
+      +btn('zoomin','Zoom in','+')+btn('zoomout','Zoom out','−')
+      +btn('left','Pan left','←')+btn('right','Pan right','→')+btn('up','Pan up','↑')+btn('down','Pan down','↓')
+      +`<label>Axis <select data-figx-tt aria-label="Axis increment">${opts}</select></label>`
+      +`<span class="tp-figx-step" data-figx-step></span>`
+      +tog('grid','Gridlines',e.st.grid)+tog('minor','Minor',e.st.minor)+tog('names','Axis names',e.st.names)
+      +btn('reset','Reset view','Reset')
+    +`</div>`
+    +`<div class="tp-figx-stage"><svg class="tp-fig-svg" data-figx-svg viewBox="0 0 ${B.W} ${B.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${t}"></svg></div>`
+    +`<p class="tp-figx-read" data-figx-read>Hover the plot to read coordinates</p>`   /* NOT aria-live: it is rewritten on every pointer sample, which would queue an announcement per mouse move */
+    +`<p class="tp-figx-msg" data-figx-msg role="status"></p>`
+  +`</div></div>`;
+}
+/* The painted BODY of a graph — shared by the inline figure and the Stage-2b expanded view so both paint
+   through exactly the same code. With no opt it reproduces the inline figure byte-for-byte; the expanded view
+   passes a tick target (always routed through figNiceStep) and the feature toggles. */
+function figSvgBody(M, box, opt){
+  const o=opt||{}, V=M.V, D=V.dom, tt=o.targetTicks||5;
+  const grid=(o.grid!=null)?!!o.grid:M.gridShown, minor=(o.minor!=null)?!!o.minor:true;
+  const xT=figNiceTicks(D.x0,D.x1,tt), yT=figNiceTicks(D.y0,D.y1,tt);
   const axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));   // y-axis screen-x, x-axis screen-y (clamped visible)
   let g='';
-  if(M.gridShown){
-    const mnx=xT.step/5, mny=yT.step/5;                                    // two-tier grid: minor at step/5, major at step
-    for(let v=Math.ceil((D.x0-1e-9)/mnx)*mnx; v<=D.x1+1e-9; v+=mnx) g+=figDraw.line(V.sx(v),V.sy(D.y0),V.sx(v),V.sy(D.y1),'tp-fig-grid-minor');
-    for(let v=Math.ceil((D.y0-1e-9)/mny)*mny; v<=D.y1+1e-9; v+=mny) g+=figDraw.line(V.sx(D.x0),V.sy(v),V.sx(D.x1),V.sy(v),'tp-fig-grid-minor');
+  if(grid){
+    if(minor){ const mnx=xT.step/5, mny=yT.step/5;                          // two-tier grid: minor at step/5, major at step
+      for(let v=Math.ceil((D.x0-1e-9)/mnx)*mnx; v<=D.x1+1e-9; v+=mnx) g+=figDraw.line(V.sx(v),V.sy(D.y0),V.sx(v),V.sy(D.y1),'tp-fig-grid-minor');
+      for(let v=Math.ceil((D.y0-1e-9)/mny)*mny; v<=D.y1+1e-9; v+=mny) g+=figDraw.line(V.sx(D.x0),V.sy(v),V.sx(D.x1),V.sy(v),'tp-fig-grid-minor'); }
     xT.ticks.forEach(v=>g+=figDraw.line(V.sx(v),V.sy(D.y0),V.sx(v),V.sy(D.y1),'tp-fig-grid'));
     yT.ticks.forEach(v=>g+=figDraw.line(V.sx(D.x0),V.sy(v),V.sx(D.x1),V.sy(v),'tp-fig-grid'));
   }
@@ -7284,6 +7455,13 @@ function fragFigure(b,bk){
   M.curves.forEach(c=>{ c.paths.forEach(pathPts=>{ fx+=figDraw.polyline(pathPts,'tp-fig-fn'); }); });        // one polyline PER SUBPATH — a break is a break
   let pt='';
   M.layout.forEach(({px,py,box:pill,p})=>{ pt+=figDraw.circle(px,py,4,'tp-fig-pt')+figPill(pill,p.id); });   // §3.2/§1.4 marker + collision-placed identifier — guaranteed >= GAP clear of every arm/point/label
+  const nm=o.axisNames?figDraw.text(V.sx(D.x1)-6,axisY-9,'x','tp-fig-axname','end')+figDraw.text(axisX+9,V.sy(D.y1)+13,'y','tp-fig-axname','start'):'';
+  return g+ax+tk+lb+sg+fx+pt+nm;
+}
+function fragFigure(b,bk){
+  const box={W:520,H:360,padL:40,padR:18,padT:16,padB:30};
+  const M=figGraph(b,box), V=M.V, D=V.dom;                                 // §5 intake → solved model (view, placements, curves, segments, callouts, errors)
+  const body=figSvgBody(M,box);
   const pc=v=>figNum(v)+'%';                                               // viewBox → % : the svg is width:100% with a fixed viewBox ratio, so this maps exactly
   let hits='', cos='';
   M.callouts.forEach((c,i)=>{ const id=figSafeId(bk,i);                    // §1.7 reveal-on-tap on the EXISTING rail: data-tp-focus-open ↔ [data-tp-overlay id]
@@ -7291,7 +7469,9 @@ function fragFigure(b,bk){
     cos+=`<div class="tp-fig-callout" id="${esc(id)}" data-tp-overlay role="dialog" aria-label="Coordinates of point ${esc(c.p.id)}" hidden style="left:${pc(c.box.x/box.W*100)};top:${pc(c.box.y/box.H*100)}"><span>${esc(c.p.id)} ${esc(c.text)}</span><button class="tp-fig-coclose" type="button" data-tp-focus-close aria-label="Close coordinates">${tpIc('close',12)}</button></div>`; });
   const err=M.errors.length?`<p class="tp-fig-err">${M.errors.map(e=>esc(e)).join(' · ')}</p>`:'';
   const cap=b.caption?`<figcaption class="tp-fig-cap">${tpRichMath(b.caption)}</figcaption>`:'';
-  return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}" data-tp-fig-errors="${M.errors.length}"><div class="tp-fig-stage"><svg class="tp-fig-svg" viewBox="0 0 ${box.W} ${box.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(b.title||'Coordinate plane')}">${g}${ax}${tk}${lb}${sg}${fx}${pt}</svg>${hits}${cos}</div>${err}${cap}</figure>`;
+  const xid=figxRegister(bk,b,D);                                          // Stage 2b: ⤢ opens the focused window on the SAME rail
+  const expand=`<button class="tp-fig-expand" type="button" data-tp-focus-open="${esc(xid)}" data-figx-open="${esc(xid)}" aria-haspopup="dialog" aria-label="Expand figure" title="Expand">⤢</button>`;
+  return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}" data-tp-fig-errors="${M.errors.length}"><div class="tp-fig-stage"><svg class="tp-fig-svg" viewBox="0 0 ${box.W} ${box.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(b.title||'Coordinate plane')}">${body}</svg>${hits}${cos}${expand}</div>${figxPanel(xid)}${err}${cap}</figure>`;
 }
 FRAG.figure={imperium:fragFigure,microhistory:fragFigure,geolearn:fragFigure,mathematics:fragFigure,scholarmath:fragFigure};
 function renderFragment(b,i,k,theme){
@@ -8594,6 +8774,31 @@ $('#stage').addEventListener('click',e=>{
 });
 document.addEventListener('fullscreenchange',()=>{ if(!document.fullscreenElement && document.body.classList.contains('present')) setPresent(false); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&$('#lightbox').classList.contains('show')) closeLb(); });
+/* Stage 2b — the expanded figure window's in-panel controls. ONE delegated listener registered once at load
+   (the same pattern as the listeners above); the OPEN/CLOSE itself is the Phase B rail, so wirePack is
+   untouched. The panel paints lazily on first open, so an unopened figure costs nothing. */
+const figxTarget=t=>(t&&typeof t.closest==='function')?t:null;             // a document-level listener can be handed a non-Element target
+document.addEventListener('click',e=>{
+  const t=figxTarget(e.target); if(!t) return;
+  const op=t.closest('[data-figx-open]');
+  if(op){ figxPaint(op.getAttribute('data-figx-open')); return; }           // rail reveals it; we fill it
+  const btn=t.closest('[data-figx-act]'), panel=btn&&btn.closest('[data-figx]');
+  if(panel) figxAct(panel.getAttribute('data-figx'), btn.getAttribute('data-figx-act'));
+});
+document.addEventListener('change',e=>{
+  const t=figxTarget(e.target); if(!t) return;
+  const el=t.closest('[data-figx-tt],[data-figx-tog]'), panel=el&&el.closest('[data-figx]');
+  if(!panel) return;
+  const xid=panel.getAttribute('data-figx'), en=FIGX[xid]; if(!en) return;
+  if(el.hasAttribute('data-figx-tt')){ const n=+el.value; if(FIGX_TICKS.indexOf(n)>=0) en.st.tt=n; }   // only a listed (nice) increment can be selected
+  else en.st[el.getAttribute('data-figx-tog')]=!!el.checked;
+  figxPaint(xid);
+});
+document.addEventListener('pointermove',e=>{
+  const t=figxTarget(e.target); if(!t) return;
+  const svg=t.closest('[data-figx-svg]'), panel=svg&&svg.closest('[data-figx]');
+  if(panel) figxReadout(panel.getAttribute('data-figx'), svg, e.clientX, e.clientY);
+});
 
 
 /* ---------- inspector collapse / reopen (state on <html>, survives mode switches) ---------- */
