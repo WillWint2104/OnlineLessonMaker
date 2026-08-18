@@ -7,6 +7,20 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **Focus rings restored on three keyboard-reachable controls (WCAG 2.4.7 AA).** `--focus-ring` is defined as a
+  **colour** (`var(--primary)`), so `outline:var(--focus-ring, 2px solid var(--primary))` never fires its
+  fallback: the shorthand receives a bare colour, sets `outline-color` only, and leaves `outline-style:none` —
+  no ring at all. Because these rules out-specify the correct global `.tp-slide :focus-visible` (which does use
+  the shorthand properly), they actively **removed** a ring that would otherwise have been painted. Affected:
+  `.fkc-opt` (the knowledge-check answer buttons — the highest-traffic control of the three), `.tp-gq2-submit`
+  and `.tp-int-revbtn`. All three now use `outline:3px solid var(--focus-ring)`, matching the form the rest of
+  the file already gets right; the `:focus` half of each selector is left as authored (deliberate elsewhere in
+  the file: "keyboard + programmatic + AT focus all get the ring"). **Checked:** each control rendered from its
+  real renderer and focused — **`none/0px` on main → `solid/3px` on this branch**, all three, 0 console errors.
+  CSS-value-only change (3 lines); 7 frozen fns + every figure-engine contract byte-identical; legacy corpus
+  0 render diffs; validate green.
+
 ### Security
 - **Central URL allowlist gate — author URLs can no longer reach an iframe/href/`window.open` with a
   dangerous scheme (C1/C2/M1).** `toEmbed()`'s non-YouTube passthrough (`return url`) previously emitted any
