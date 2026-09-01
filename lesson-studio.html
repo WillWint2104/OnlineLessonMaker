@@ -2449,25 +2449,30 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-sc-status.partial{background:var(--sc-amber-tint,#FBF3DD);color:var(--sc-amber,#835F00);}
 .tp-slide .tp-sc-status.notyet{background:var(--surface-container,#eceff1);color:var(--on-surface-variant);}
 /* the solution modal — a .tp-fpanel variant on the shared overlay rail; grid-surface body */
-.tp-slide .tp-fpanel.tp-sc-modal{max-width:680px;padding:30px 32px 26px;
+.tp-slide .tp-fpanel.tp-sc-modal{background-image:linear-gradient(var(--outline-variant) 1px,transparent 1px),linear-gradient(90deg,var(--outline-variant) 1px,transparent 1px);background-size:26px 26px;background-position:-1px -1px;max-width:680px;padding:30px 32px 26px;
   background-image:linear-gradient(var(--sc-grid,rgba(0,0,0,.035)) 1px,transparent 1px),linear-gradient(90deg,var(--sc-grid,rgba(0,0,0,.035)) 1px,transparent 1px);background-size:26px 26px;background-position:-1px -1px;}
-.tp-slide .tp-sc-steps{list-style:none;margin:0 0 20px;padding:0;display:flex;flex-direction:column;gap:14px;}
-.tp-slide .tp-sc-step{display:flex;gap:14px;background:var(--surface-lowest);border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);padding:16px 18px;}
+/* UI-1 — the worked solution was modal > card-per-step > grey box-per-equation: three container levels for
+   one piece of reasoning. It is now ONE surface with numbered steps separated by thin rules. The step
+   typography and the monospace working are deliberately left alone — the coherent typesetting system for
+   working/answer/chalkboard is Stage 5's, and perfecting the interim treatment here would be wasted. */
+.tp-slide .tp-sc-steps{list-style:none;margin:0 0 var(--sp-5,24px);padding:0;display:flex;flex-direction:column;}
+.tp-slide .tp-sc-step{display:flex;gap:var(--sp-3,12px);background:none;border:0;border-top:1px solid var(--outline-variant);border-radius:0;padding:var(--sp-4,16px) 0;}
+.tp-slide .tp-sc-step.first{border-top:0;padding-top:var(--sp-2,8px);}
 .tp-slide .tp-sc-stepn{flex:0 0 auto;width:30px;height:30px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-family:var(--tp-mono);font-size:14px;font-weight:700;background:var(--sc-step2-tint,var(--secondary-container));color:var(--sc-step2,var(--secondary));}
 .tp-slide .tp-sc-step.first .tp-sc-stepn{background:var(--sc-accent-tint,var(--primary-fixed));color:var(--sc-accent,var(--primary));}
 .tp-slide .tp-sc-stepbody{min-width:0;flex:1 1 auto;}
 .tp-slide .tp-sc-stepd{margin:0;font-size:var(--tp-prose-size,16px);line-height:1.55;color:var(--on-surface);}
-.tp-slide .tp-sc-work{margin-top:8px;font-family:var(--tp-mono);font-size:14px;line-height:1.7;color:var(--on-surface-variant);background:var(--surface-container-low,#f2f3f5);border-radius:6px;padding:8px 12px;overflow-x:auto;}
+.tp-slide .tp-sc-work{margin-top:var(--sp-2,8px);font-family:var(--tp-mono);font-size:14px;line-height:1.7;color:var(--on-surface-variant);background:none;border-left:2px solid var(--outline-variant);border-radius:0;padding:2px 0 2px var(--sp-3,12px);overflow-x:auto;}
 .tp-slide .tp-sc-work math{font-family:inherit;}
-.tp-slide .tp-sc-answer{border:2px solid var(--sc-accent,var(--primary));background:var(--sc-accent-tint,var(--primary-fixed));border-radius:var(--tp-rad-btn);padding:16px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;}
+.tp-slide .tp-sc-answer{border:1px solid var(--sc-accent,var(--primary));border-left:4px solid var(--sc-accent,var(--primary));background:var(--sc-accent-tint,var(--primary-fixed));border-radius:var(--tp-rad-btn);padding:var(--sp-3,12px) var(--sp-4,16px);display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-2,8px) var(--sp-4,16px);}   /* UI-1 — strong but restrained: an accent edge, not a 2px ring */
 .tp-slide .tp-sc-alabel{font-family:var(--tp-body);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sc-accent,var(--primary));}
 .tp-slide .tp-sc-aval{font-family:var(--tp-serif);font-size:22px;color:var(--on-surface);flex:1 1 auto;min-width:0;}
 .tp-slide .tp-sc-qed{margin-left:auto;font-family:var(--tp-serif);font-weight:700;color:var(--sc-accent,var(--primary));white-space:nowrap;}
 .tp-slide .tp-sc-qedt{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-left:4px;}
-.tp-slide .tp-sc-foot{margin-top:22px;padding-top:18px;border-top:1px solid var(--outline-variant);display:flex;flex-wrap:wrap;align-items:center;gap:12px;}
+.tp-slide .tp-sc-foot{margin-top:var(--sp-5,24px);padding-top:var(--sp-4,16px);border-top:1px solid var(--outline-variant);display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3,12px);}
 .tp-slide .tp-sc-footlab{font-size:14px;font-weight:600;color:var(--on-surface-variant);margin-right:auto;}
 .tp-slide .tp-sc-mark{display:inline-flex;gap:8px;flex-wrap:wrap;}
-.tp-slide .tp-sc-mbtn{font:inherit;font-size:14px;font-weight:600;padding:9px 15px;border-radius:var(--tp-rad-btn);border:1px solid var(--outline-variant);background:var(--surface-lowest);color:var(--on-surface-variant);cursor:pointer;}
+.tp-slide .tp-sc-mbtn{font:inherit;font-size:13.5px;font-weight:600;padding:var(--sp-2,8px) var(--sp-3,12px);border-radius:var(--tp-rad-btn);border:1px solid var(--outline-variant);background:var(--surface-lowest);color:var(--on-surface-variant);cursor:pointer;}
 .tp-slide .tp-sc-mbtn:hover{background:var(--surface-container-low);}
 .tp-slide .tp-sc-mbtn.notyet[aria-pressed="true"]{background:var(--surface-container);border-color:var(--on-surface-variant);color:var(--on-surface);}
 .tp-slide .tp-sc-mbtn.partial[aria-pressed="true"]{background:var(--sc-amber-tint,#FBF3DD);border-color:var(--sc-amber,#835F00);color:var(--sc-amber,#835F00);}
