@@ -1599,6 +1599,26 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
    On-screen preview overlay + an @media print block (gated on body.ws-open) that hides app
    chrome and lays the sheet out for A4. Accents pull from theme tokens; body stays ink-on-white. */
 #worksheet{display:none;position:fixed;inset:0;z-index:200;background:#e8e9e3;overflow:auto;}
+/* ═══ UI-1 — focused figure workspace. The figure temporarily BECOMES the application: the rail, the lesson
+   navigation and the app actions are all gone, leaving a very quiet context strip, an obvious Close and the
+   mathematics. Opaque and fixed at the viewport, so nothing of the lesson shell shows through. ═══ */
+#figfocus{position:fixed;inset:0;z-index:150;display:none;flex-direction:column;background:var(--canvas);}
+#figfocus[hidden]{display:none;}
+body.figfocus{overflow:hidden;}
+body.figfocus #figfocus{display:flex;}
+#figfocus .ff-bar{flex:0 0 auto;display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-2) var(--sp-4);border-bottom:1px solid var(--line);}
+#figfocus .ff-ctx{flex:1 1 auto;min-width:0;font-family:var(--display,inherit);font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* the reparented .tp-slide must flow inside the workspace, not reproduce the board's absolute fill */
+#figfocus .tp-slide{position:relative;inset:auto;flex:1 1 auto;min-height:0;overflow:visible;}
+/* no scrim and no parked band in here — the workspace IS the surface */
+#figfocus .tp-overlay.tp-figx{position:absolute;inset:0;top:0;height:auto;background:transparent;padding:var(--sp-3);}
+#figfocus .tp-fpanel.tp-fpanel-figx{max-width:none;max-height:100%;height:100%;box-shadow:none;border:1px solid var(--outline-variant);}
+#figfocus .tp-figx-title{padding-right:120px;}
+/* the panel's close becomes an obvious labelled control (no markup change — it keeps its aria-label,
+   its focus-return wiring and the shared Esc handler) */
+#figfocus .tp-fclose{width:auto;height:34px;padding:0 14px;gap:8px;border-radius:9999px;border:1px solid var(--outline-variant);background:var(--surface);font:inherit;font-size:.82rem;font-weight:600;}
+#figfocus .tp-fclose::after{content:"Close";}
+#figfocus .tp-fclose:hover{border-color:var(--accent);color:var(--accent-ink);}
 #worksheet.show{display:block;}
 .ws-bar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
   padding:11px 22px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(0,0,0,.08);}
@@ -3176,6 +3196,16 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 
 <button id="presentExit">Exit fullscreen ✕</button>
 <div id="lightbox"><button class="lb-close" id="lbClose">✕</button><div class="lb-body"></div></div>
+<!-- UI-1 — FOCUSED FIGURE WORKSPACE. A body-level root, deliberately a sibling of #lightbox/#worksheet:
+     those are the app's existing fixed overlay precedents and, unlike anything inside #stage, they sit
+     OUTSIDE the transform:scale()'d #canvas — so no position:fixed-inside-a-transform fragility. The inner
+     .tp-slide is not decoration: the pack's Material tokens are defined as `:root[data-theme] .tp-slide`,
+     so the reparented panel needs that class to keep its own theme tokens and every .tp-slide-scoped rule
+     instead of duplicating the stylesheet. -->
+<div id="figfocus" hidden aria-hidden="true">
+  <div class="ff-bar"><span class="ff-ctx" id="ffCtx"></span></div>
+  <div class="tp-slide" id="ffSlide" data-tp-type="figfocus"></div>
+</div>
 
 <div id="worksheet" aria-hidden="true">
   <div class="ws-bar">
@@ -3262,6 +3292,7 @@ const IG_ICONS={
 
 let LESSON=JSON.parse(document.getElementById('lesson-data').textContent);
 let cur=0, mode='study';
+let FIGFOCUS=null;   // UI-1 — {ov,parent,next} while a figure is reparented into the body-level workspace
 let selZone=null;   // Edit-mode inspector: selected zone id within the current slide (null = none)
 const $=s=>document.querySelector(s);
 const esc=s=>{ s=(s||''); if(typeof s!=='string') s=String(s); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); };  // coerce non-strings so a numeric/array author field never throws; falsy stays '' (unchanged)   // escapes quotes too — esc() is used inside double-quoted HTML attributes (href/src/value/data-*), so attribute-context injection is closed
@@ -3486,8 +3517,44 @@ function showPoi(t,title,info){
   poiPop.style.width=pw+'px'; let left=r.left+r.width/2-pw/2; left=Math.max(12,Math.min(left,window.innerWidth-pw-12));
   poiPop.style.left=left+'px'; poiPop.style.top=(r.bottom+10)+'px'; poiPop.classList.add('show');
 }
+/* ═══ UI-1 — focused figure workspace (ENGINE_SPEC §6). The expanded figure is MOVED out of the lesson
+   canvas into #figfocus rather than styled bigger in place: #canvas is transform:scale()'d, so anything
+   inside it is trapped in that containing block (the trap UI-0 measured). Reparenting is safe because every
+   figx control is wired by DELEGATED document-level listeners on [data-figx] attributes and figxPanelEl()
+   resolves with document.querySelector — nothing depends on the panel living inside the slide, so no control
+   is duplicated and no wiring is re-run. The node's original position is remembered and restored on close. */
+function figFocusEnter(ov){
+  const root=document.getElementById('figfocus'), host=document.getElementById('ffSlide');
+  if(!root||!host||FIGFOCUS) return false;
+  const src=ov.closest('.tp-slide');
+  FIGFOCUS={ov:ov, parent:ov.parentNode, next:ov.nextSibling};
+  host.setAttribute('data-tp-theme',(src&&src.getAttribute('data-tp-theme'))||'');
+  ov.style.top=''; ov.style.height='';                                     // drop any parked band — the workspace is the surface now
+  host.appendChild(ov);
+  const e=FIGX[ov.id], ctx=document.getElementById('ffCtx');
+  if(ctx) ctx.textContent=[(LESSON.meta&&LESSON.meta.title)||'',(e&&e.title)||''].filter(Boolean).join('  ·  ');
+  root.hidden=false; root.setAttribute('aria-hidden','false');
+  document.body.classList.add('figfocus');
+  // the lesson shell is behind an opaque layer: hide it from assistive tech too, as a modal should
+  const ab=$('.appbody'), tp=$('.top');
+  if(ab) ab.setAttribute('aria-hidden','true');
+  if(tp) tp.setAttribute('aria-hidden','true');
+  return true;
+}
+function figFocusExit(){
+  if(!FIGFOCUS) return;
+  const f=FIGFOCUS; FIGFOCUS=null;
+  if(f.parent) f.parent.insertBefore(f.ov,f.next);                         // exactly where it came from
+  const root=document.getElementById('figfocus');
+  if(root){ root.hidden=true; root.setAttribute('aria-hidden','true'); }
+  document.body.classList.remove('figfocus');
+  const ab=$('.appbody'), tp=$('.top');
+  if(ab) ab.removeAttribute('aria-hidden');
+  if(tp) tp.removeAttribute('aria-hidden');
+}
 function renderSlide(){ renderCanvas(); renderInspector(); }
 function renderCanvas(){
+  figFocusExit();                                                          // the slide is about to be replaced — never strand a reparented figure
   const realEdit=(mode==='edit'), _savedMode=mode;
   const s=LESSON.slides[cur], i=cur; let h='';
   const present=document.body.classList.contains('present');
@@ -8068,7 +8135,7 @@ function wirePackTyped(){
     const escFor=new Map(), openerFor=new Map();
     // Phase 2c-i: track the opener per overlay so focus returns to it on EVERY close path (Esc, close-button,
     // backdrop) — APG dialog contract. Previously only Esc returned focus; button/backdrop dropped it to <body>.
-    const closeOv=(ov)=>{ ov.hidden=true; const h=escFor.get(ov); if(h){ document.removeEventListener('keydown',h); escFor.delete(ov); }
+    const closeOv=(ov)=>{ ov.hidden=true; figFocusExit(); const h=escFor.get(ov); if(h){ document.removeEventListener('keydown',h); escFor.delete(ov); }
       const rp=parkFor.get(ov); if(rp){ const st=document.getElementById('stage'); if(st) st.removeEventListener('scroll',rp); window.removeEventListener('resize',rp);
         const sl=ov.closest('.tp-slide'); if(sl) sl.removeEventListener('transitionend',rp); parkFor.delete(ov); }
       const op=openerFor.get(ov); openerFor.delete(ov); if(op) op.focus(); };
@@ -8089,8 +8156,14 @@ function wirePackTyped(){
       fr.classList.remove('tp-animwait'); fr.classList.add('tp-animin');
       void fr.offsetHeight;                                                // flush, so the computed transform is `none` BEFORE we measure
       fr.style.transition=t; };
-    const openOv=(ov,opener)=>{ ov.hidden=false; settleFrag(ov); parkOv(ov); openerFor.set(ov,opener); const c=ov.querySelector('[data-tp-focus-close]'); if(c) c.focus();
+    const openOv=(ov,opener)=>{ ov.hidden=false; settleFrag(ov);
+      // A figure opens as the FOCUSED WORKSPACE (moved to the body-level root); everything else parks over
+      // the visible pane in place. Both paths share this seam, the Esc handler and the focus return below.
+      const focused=ov.classList.contains('tp-figx')&&figFocusEnter(ov);
+      if(!focused) parkOv(ov);
+      openerFor.set(ov,opener); const c=ov.querySelector('[data-tp-focus-close]'); if(c) c.focus();
       const h=(e)=>{ if(e.key==='Escape') closeOv(ov); }; escFor.set(ov,h); document.addEventListener('keydown',h);
+      if(focused) return;                                                  // the workspace is viewport-fixed: nothing to re-park
       const rp=()=>parkOv(ov); parkFor.set(ov,rp);                         // the board can still scroll/resize under an open panel — keep it over the pane
       const st=document.getElementById('stage'); if(st) st.addEventListener('scroll',rp,{passive:true});
       window.addEventListener('resize',rp);
