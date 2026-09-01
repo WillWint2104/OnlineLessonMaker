@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "title": "Overflow probe",
+    "theme": "scholarmath"
+  },
+  "slides": [
+    {
+      "type": "page",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "Spacer",
+          "flow": [
+            {
+              "kind": "para",
+              "text": "Padding paragraph 1 to push the block down the page so the modal opens from a scrolled position."
+            },
+            {
+              "kind": "para",
+              "text": "Padding paragraph 2 to push the block down the page so the modal opens from a scrolled position."
+            },
+            {
+              "kind": "para",
+              "text": "Padding paragraph 3 to push the block down the page so the modal opens from a scrolled position."
+            },
+            {
+              "kind": "para",
+              "text": "Padding paragraph 4 to push the block down the page so the modal opens from a scrolled position."
+            },
+            {
+              "kind": "para",
+              "text": "Padding paragraph 5 to push the block down the page so the modal opens from a scrolled position."
+            },
+            {
+              "kind": "para",
+              "text": "Padding paragraph 6 to push the block down the page so the modal opens from a scrolled position."
+            }
+          ]
+        },
+        {
+          "type": "selfCheck",
+          "eyebrow": "Self-check",
+          "prompt": "Expand and simplify $5(2x-3)+2(x+7)$.",
+          "hint": "Expand each bracket first.",
+          "steps": [
+            {
+              "desc": "Step 1 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
+              "work": "$= 1x + 0$"
+            },
+            {
+              "desc": "Step 2 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
+              "work": "$= 2x + 3$"
+            },
+            {
+              "desc": "Step 3 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
+              "work": "$= 3x + 6$"
+            },
+            {
+              "desc": "Step 4 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
+              "work": "$= 4x + 9$"
+            },
+            {
+              "desc": "Step 5 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
+              "work": "$= 5x + 12$"
+            },
+            {
+              "desc": "Step 6 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
+              "work": "$= 6x + 15$"
+            },
+            {
+              "desc": "Step 7 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
+              "work": "$= 7x + 18$"
+            },
+            {
+              "desc": "Step 8 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
+              "work": "$= 8x + 21$"
+            },
+            {
+              "desc": "Step 9 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
+              "work": "$= 9x + 24$"
+            }
+          ],
+          "answer": "$12x-1$"
+        }
+      ]
+    }
+  ]
+}

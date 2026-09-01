@@ -20,6 +20,46 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   real renderer and focused — **`none/0px` on main → `solid/3px` on this branch**, all three, 0 console errors.
   CSS-value-only change (3 lines); 7 frozen fns + every figure-engine contract byte-identical; legacy corpus
   0 render diffs; validate green.
+- **Focus overlays were positioned against the whole page, not the visible board — a solution modal opened
+  from a scrolled block was cut off and its first step unreachable (UI-0 audit).** A composable page is much
+  taller than the board and `#stage` is the scroll owner, so an overlay absolutely positioned against the
+  full-height slide sits at a fixed point near the top of the *document*. The existing mitigation
+  (`.tp-slide[data-tp-type="page"] .tp-fpanel{position:sticky;top:28px;max-height:600px}`) could not work —
+  the canvas is `transform:scale()`'d by `fitCanvas`, which breaks `sticky`, the same finding already
+  recorded for the practice-set mastery bar. **Measured on #144:** the panel was clipped at *every* scroll
+  offset — 82px lost below at rest, up to **246px lost above** at 1280×800 scrolled, and never fully visible
+  at any position. Replaced with `tpOverlayPark()`, called from the single `openOv` seam in `wirePackTyped`:
+  it converts `#stage`'s visible band into the overlay's local (pre-scale) px and writes it to `top`/`height`,
+  so centring resolves against the **pane** and `.tp-fpanel`'s `max-height:88%` + `overflow-y:auto` give a
+  tall panel an internal scroll instead of overflowing the board. Two traps closed: the overlay is `[hidden]`
+  (`display:none`) when the handler fires, so parking now happens *after* it is shown, and a block that has
+  not yet scrolled into view still carries the F1 entrance `transform:translateY(14px)` — a transformed
+  ancestor becomes the containing block, so `top:0` meant the top of *that block* (~1500px down) rather than
+  the slide; `settleFrag()` lands the block's entrance (transition suppressed for one frame) before measuring.
+  Scoped to `.tp-overlay`, so the figure's in-plot coordinate callouts and geolearn's `.gl-overlay` modals are
+  untouched. **Checked:** panel fully inside the pane with **0px clipped** across 12 viewport×scroll
+  combinations (1440×900 / 1280×800 / 1024×768 × scroll 0/900/1500/2100); with a 9-step solution taller than
+  any supported viewport, the panel stays in the pane and both step 1 and the answer are reachable at
+  1440×900 / 1024×768 / 834×1112 / 390×844; legacy corpus **250/250 renders byte-identical**; validate green.
+- **`⤢` made the graph SMALLER — the focused window gave the plot 0.34× the inline figure's area (UI-0
+  audit).** Two causes. (1) `.tp-fpanel-figx` is declared *before* the base `.tp-fpanel` rule and at equal
+  specificity, so `max-width:760px` won on source order and the focused panel never got even its intended
+  1040px — raised to `.tp-fpanel.tp-fpanel-figx`, the precedent `.tp-sc-modal` already uses for exactly this
+  reason. (2) The panel did not use the pane: it now takes the full parked band (`max-width:none`,
+  `max-height:100%`, tighter scrim/panel padding), is a flex column so `.tp-figx-stage` flexes into whatever
+  the toolbar and readout leave, and the coordinate readout and status message share one row instead of two.
+  **This is now a stated engine invariant** (`ENGINE_SPEC` §6 / `BUILD_SEQUENCE` Stage 2b) rather than a graph
+  CSS detail, because Geometry inherits the same focused workspace: *expanding a figure must give the plot
+  more usable area than the inline figure, never less.* **Checked:** ratio **1.08× at 1440×900, 1280×800,
+  1024×768 and 834×1112** (was 0.34× at all four); the inline figure's SVG body is **byte-identical** across
+  all four graph fixtures; legacy corpus 250/250 byte-identical; validate green. The margin is deliberately
+  slim — the *inline* figure is allowed to fill the pane, and sizing it is a visual-system decision deferred
+  to that pass, not an engine one.
+- **`fragWorkedExample` leaked raw `$…$` into its heading.** The block's `title` was escaped with `esc()`
+  while every comparable authored field goes through `tpRichMath()`, so `Expand $-2(3x-5)$` rendered with its
+  delimiters showing. Now typeset like the rest of the block. **Checked:** renders as `Expand −2(3x−5)` with
+  real MathML and no `$` in the text content; legacy corpus byte-identical (no corpus lesson authors a
+  `workedExample` title).
 
 ### Security
 - **Central URL allowlist gate — author URLs can no longer reach an iframe/href/`window.open` with a
@@ -100,6 +140,19 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **`tests/visual/` — permanent visual fixtures, with a README.** `examples/` and `lessons/` cover every
+  *legacy* slide type, but nothing committed to the repo rendered a composable `page`, the ScholarMath theme,
+  or a `figure` block: engine Stages 1a–2b (#140–#144) were each verified with ad-hoc scripts that were never
+  committed, so their rendered output could not be reproduced afterwards and had to be re-authored from
+  scratch for the UI-0 audit. Adds `composable-page-baseline.json` (every registered block type on one page,
+  re-skins to all five themes), `figure-graph-baseline.json` (clean plot · the 12-identifier/2-curve/3-chord
+  pill-collision stress case · a discontinuity at `aspect:equal` · the author-error state) and
+  `modal-overflow-baseline.json` (a solution taller than any supported viewport, guarding the parking
+  contract). The README documents how to load one, that `#stage` — not `.tp-scrollmain` — is the scroller for
+  a composable page, and the two contracts above as assertions. **`BUILD_SEQUENCE` Stage 3 now requires
+  `figure-geometry-baseline.json` in the same PR**, and the standing rule is that a stage adding a rendered
+  surface adds its fixture.
+
 - **Figure engine Stage 2b — Expand / focused graph window (ENGINE_SPEC §6).** The surface where a student
   *interrogates* a graph instead of reading it. **⤢ on the figure opens a focused window on the EXISTING Phase B
   rail** (`data-tp-focus-open` ↔ `[data-tp-overlay]`, reusing the `.tp-overlay`/`.tp-fpanel` skin) — **`wirePack`

@@ -70,6 +70,12 @@ increment/scale selection, coordinate readout on hover, gridline/feature toggles
 interaction machinery — reuse the focus-open rail.
 ACCEPTANCE: Expand opens/closes cleanly; zoom/pan/reset work; readout tracks the cursor in math coords;
 ADDITIVE clean.
+INVARIANT (added post-audit, applies to EVERY front-end that uses the focused workspace — Geometry
+inherits it): expanding a figure must give the plot MORE usable area than the inline figure, never less.
+Shipped at 0.34× (the focused panel lost to `.tp-fpanel` on source order and was capped at 760px, and its
+own chrome ate the rest); now ≥ 1.0× at 1440×900 / 1280×800 / 1024×768 / 834×1112. Assert the ratio, don't
+eyeball it. The margin is currently slim (1.08×) because the INLINE figure is allowed to fill the pane —
+sizing the inline figure is a visual-system decision, not an engine one, and is deferred to that pass.
 
 ## STAGE 3 — Geometry 2D front-end
 Branch off 1c (can land after Stage 2). Spec §3, §4, §5, §7.
@@ -81,6 +87,11 @@ ACCEPTANCE (proven in prototype — must reproduce): arcs seat on arms across ri
 right-angle; measures are computed values on the bisector; every pill ≥ GAP clear of arms/vertices/
 pills; matches the APPROVED geometry visual target; the same n-gon code renders square→pentagon→quad;
 ADDITIVE clean; validate green.
+FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` covering triangle with
+one angle arc · multiple arcs · right-angle marker · quadrilateral · irregular n-gon · vertex labels ·
+side labels · crowded labels · long labels · resized figure · the focused/expanded state. Stages 1a–2b
+shipped with NO committed fixture and their rendered output could not be reproduced afterwards — see
+`tests/visual/README.md`. A stage that adds a rendered surface adds its fixture.
 
 ## STAGE 4 — Block wiring (plug engines into the containers)
 Branch off the merged front-ends. Spec §8.
@@ -103,6 +114,13 @@ treatment in both places so demonstrations and revealed solutions look identical
 ACCEPTANCE: no monospace maths remains in worked examples or solution modals; working+why bound
 per-row; answer is the outlined box; identical treatment in exposition and modal; contrast AA;
 ADDITIVE clean; validate green.
+CARRIED IN FROM THE UI-0 AUDIT (observed, deliberately NOT fixed early): on one composable page the
+self-check solution modal renders its STEPS in monospace while the ANSWER beside them is typeset and the
+chalkboard `workedExample` above them is typeset again — three treatments of the same mathematical
+content on one screen. Stage 5's single typesetting system must cover all three; do not restyle the
+interim treatment before then. (The related `fragWorkedExample` title leak — a `title` escaped with
+`esc()` instead of `tpRichMath()`, so `$…$` reached the heading raw — was a rendering bug, not a
+typesetting decision, and was fixed separately.)
 
 ---
 
