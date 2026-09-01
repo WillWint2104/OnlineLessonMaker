@@ -60,6 +60,22 @@
   --ok:#1f9d6b; --warn:#d98324;
   --display:"Space Grotesk"; --display-spacing:-.01em;
   --radius:18px; --shadow:0 1px 2px rgba(20,22,30,.05),0 12px 32px -12px rgba(20,22,30,.18);
+  /* ═══ UI-1 — shared chrome primitives (Layer A). Additive: every slot below either aliases an existing
+     value or is unused until a component opts in, so defining them changes nothing on its own. ═══ */
+  /* Spacing scale. Deliberately small — UI-1 migrates the surfaces it touches (chrome, page shell, figure
+     shell, focused workspace), NOT every historic pixel value in the file. */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px;
+  /* Elevation vocabulary: 1 = resting edge, 2 = raised surface, 3 = detached over content. --elev-2 aliases
+     the existing --shadow so themes that retune --shadow keep driving it. */
+  --elev-1:0 1px 2px rgba(20,22,30,.05); --elev-2:var(--shadow); --elev-3:0 24px 60px -24px rgba(20,22,30,.45);
+  /* SELECTED NAVIGATION ITEM — the fix for a semantic token collision. `--sidebar-2` means "the rail, one
+     step raised" on a DARK rail, and .nitem.on used it as the selected surface. Every theme in the picker
+     now ships a LIGHT rail and reassigned --sidebar-2 to a saturated accent, so the selected item became a
+     solid slab that also took --sidebar-itemtext (dark) and --sidebar-mut with it — dark ink on a dark fill.
+     The selected state gets its own slots instead: the default keeps the raised-rail behaviour byte-for-byte,
+     and each light-rail theme overrides only the surface. The accent bar (.nitem.on::before) and the accent
+     icon chip stay, so selection never depends on the fill alone. */
+  --sidebar-sel:var(--sidebar-2); --sidebar-sel-ink:var(--sidebar-itemtext);
   /* organic leaf bullet — original SVG silhouette used as a mask so it tints with --accent (theme-aware) */
   --leaf:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5C7.4 7 6.7 14 11 21.5c.2-5.3 1.6-8.7 6-11.6C18.3 8.9 16 7.2 12 2.5Z'/%3E%3C/svg%3E");
   /* infographic data palette — primary follows the theme accent; secondary/tertiary are a
@@ -74,7 +90,7 @@
   --canvas:#F8FAFC; --surface:#f5faf8; --text:#171d1c; --muted:#3d4947; --line:#E2E8F0; --bd:#171d1c;
   --accent:#00685f; --accent-soft:#bdece2; --accent-ink:#003731;
   --sidebar:#f0f5f2; --sidebar-2:#00685f; --sidebar-text:#171d1c; --sidebar-mut:#5b6a67;
-  --sidebar-title:#171d1c; --sidebar-itemtext:#171d1c; --sidebar-hover:rgba(0,104,95,.08);
+  --sidebar-title:#171d1c; --sidebar-itemtext:#171d1c; --sidebar-hover:rgba(0,104,95,.08); --sidebar-sel:rgba(0,104,95,.14);
   --sidebar-sep:rgba(23,29,28,.10); --sidebar-icon:rgba(0,104,95,.12); --sidebar-track:rgba(23,29,28,.12);
   --hero:linear-gradient(140deg,#008378,#00685f);
   --shadow:0 1px 3px rgba(0,0,0,.06);
@@ -649,7 +665,7 @@
   --canvas:#FBF8FD; --surface:#fff7fe; --text:#1e1a20; --muted:#4b4450; --line:#e8e0e9; --bd:#1e1a20;
   --accent:#451274; --accent-soft:#f0dbff; --accent-ink:#3a1452;
   --sidebar:#faf1fa; --sidebar-2:#451274; --sidebar-text:#1e1a20; --sidebar-mut:#6e6473;
-  --sidebar-title:#1e1a20; --sidebar-itemtext:#1e1a20; --sidebar-hover:rgba(69,18,116,.08);
+  --sidebar-title:#1e1a20; --sidebar-itemtext:#1e1a20; --sidebar-hover:rgba(69,18,116,.08); --sidebar-sel:rgba(69,18,116,.13);
   --sidebar-sep:rgba(30,26,32,.10); --sidebar-icon:rgba(69,18,116,.12); --sidebar-track:rgba(30,26,32,.12);
   --hero:linear-gradient(140deg,#5d2e8c,#451274);
   --shadow:0 1px 2px rgba(69,18,116,.06),0 12px 32px -14px rgba(69,18,116,.22);
@@ -662,7 +678,7 @@
   --canvas:#F2F0E9; --surface:#fff8f7; --text:#251817; --muted:#58413f; --line:#e0bfbc; --bd:#251817;
   --accent:#840f16; --accent-soft:#f0d7d0; --accent-ink:#560109;
   --sidebar:#fff0ef; --sidebar-2:#840f16; --sidebar-text:#251817; --sidebar-mut:#58413f;
-  --sidebar-title:#251817; --sidebar-itemtext:#251817; --sidebar-hover:rgba(132,15,22,.08);
+  --sidebar-title:#251817; --sidebar-itemtext:#251817; --sidebar-hover:rgba(132,15,22,.08); --sidebar-sel:rgba(132,15,22,.13);
   --sidebar-sep:rgba(37,24,23,.10); --sidebar-icon:rgba(132,15,22,.12); --sidebar-track:rgba(37,24,23,.12);
   --hero:linear-gradient(140deg,#6f6150,#332c26);
   --shadow:4px 4px 0 0 #251817;   /* hard offset — dossier */
@@ -676,7 +692,7 @@
   --canvas:#F4F2EC; --surface:#FBFAF6; --text:#1A1C22; --muted:#57544B; --line:#DDD9CD; --bd:#1A1C22;
   --accent:#2F6B56; --accent-soft:#E0EAE3; --accent-ink:#17352B;
   --sidebar:#EEEBE2; --sidebar-2:#17352B; --sidebar-text:#1A1C22; --sidebar-mut:#57544B;
-  --sidebar-title:#1A1C22; --sidebar-itemtext:#1A1C22; --sidebar-hover:rgba(47,107,86,.08);
+  --sidebar-title:#1A1C22; --sidebar-itemtext:#1A1C22; --sidebar-hover:rgba(47,107,86,.08); --sidebar-sel:rgba(47,107,86,.14);
   --sidebar-sep:rgba(26,28,34,.10); --sidebar-icon:rgba(47,107,86,.12); --sidebar-track:rgba(26,28,34,.12);
   --hero:linear-gradient(140deg,#2F6B56,#17352B);
   --shadow:0 1px 3px rgba(26,28,34,.07);
@@ -690,7 +706,7 @@
   --canvas:#F4F6F7; --surface:#FFFFFF; --text:#1A1D21; --muted:#5E646C; --line:#E4E8EB; --bd:#1A1D21;
   --accent:#1A7A3C; --accent-soft:#E7F4EC; --accent-ink:#12592b;
   --sidebar:#EEF1F3; --sidebar-2:#1A7A3C; --sidebar-text:#1A1D21; --sidebar-mut:#5E646C;
-  --sidebar-title:#1A1D21; --sidebar-itemtext:#1A1D21; --sidebar-hover:rgba(26,122,60,.08);
+  --sidebar-title:#1A1D21; --sidebar-itemtext:#1A1D21; --sidebar-hover:rgba(26,122,60,.08); --sidebar-sel:rgba(26,122,60,.14);
   --sidebar-sep:rgba(26,29,33,.10); --sidebar-icon:rgba(26,122,60,.12); --sidebar-track:rgba(26,29,33,.12);
   --hero:linear-gradient(140deg,#1A7A3C,#16202B);
   --shadow:0 1px 3px rgba(26,29,33,.07);
