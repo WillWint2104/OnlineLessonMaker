@@ -76,6 +76,13 @@
      and each light-rail theme overrides only the surface. The accent bar (.nitem.on::before) and the accent
      icon chip stay, so selection never depends on the fill alone. */
   --sidebar-sel:var(--sidebar-2); --sidebar-sel-ink:var(--sidebar-itemtext);
+  /* Motif fallback. The per-theme iconography paints a light overlay MASKED by --motif
+     (.brand .mark::after, .cover .hero::before), enabled for every :root[data-theme]. Only three themes
+     actually define one, so on the rest the mask was invalid and the overlay painted UNMASKED — which is
+     the blank white square that sat in the brand mark on geolearn / microhistory / mathematics /
+     scholarmath in every UI-0 capture. An empty SVG masks to nothing, so a theme without a motif simply
+     shows no overlay. */
+  --motif:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E");
   /* organic leaf bullet — original SVG silhouette used as a mask so it tints with --accent (theme-aware) */
   --leaf:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5C7.4 7 6.7 14 11 21.5c.2-5.3 1.6-8.7 6-11.6C18.3 8.9 16 7.2 12 2.5Z'/%3E%3C/svg%3E");
   /* infographic data palette — primary follows the theme accent; secondary/tertiary are a
@@ -741,14 +748,16 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .nitem{display:flex;align-items:center;gap:11px;padding:10px 11px;border-radius:11px;cursor:pointer;
   color:var(--sidebar-text);transition:background .15s;margin-bottom:2px;position:relative;}
 .nitem:hover{background:var(--sidebar-hover);}
-.nitem.on{background:var(--sidebar-2);}
-.nitem.on::before{content:"";position:absolute;left:-2px;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--accent);}
+.nitem.on{background:var(--sidebar-sel);color:var(--sidebar-sel-ink);}   /* UI-1: was --sidebar-2 — see the --sidebar-sel note in :root */
+.nitem.on::before{content:"";position:absolute;left:0;top:7px;bottom:7px;width:3px;border-radius:0 3px 3px 0;background:var(--accent);}   /* the selected state never rests on fill alone: accent bar + accent icon chip are both non-colour-dependent cues */
 .nitem .ico{width:30px;height:30px;border-radius:8px;background:var(--sidebar-icon);
   display:flex;align-items:center;justify-content:center;flex:0 0 30px;color:var(--sidebar-text);}
 .nitem.on .ico{background:var(--accent);color:#fff;}
 .nitem .tx{min-width:0;}
 .nitem .tx b{display:block;font-size:.84rem;font-weight:500;color:var(--sidebar-itemtext);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nitem .tx span{font-size:.68rem;color:var(--sidebar-mut);text-transform:uppercase;letter-spacing:.06em;}
+.nitem.on .tx b{color:var(--sidebar-sel-ink);font-weight:600;}
+.nitem.on .tx span{color:var(--sidebar-mut);}
 .nitem .grip{margin-left:auto;display:none;gap:2px;}
 body.edit .nitem .grip{display:flex;}
 .nitem .grip button{color:var(--sidebar-mut);font-size:.8rem;padding:2px 4px;border-radius:5px;line-height:1;}
@@ -763,8 +772,10 @@ body.edit .nitem:active{cursor:grabbing;}
 
 /* ---------------- MAIN ---------------- */
 .main{flex:1;display:flex;flex-direction:column;height:100%;min-height:0;min-width:0;}
-.top{min-height:60px;flex:0 0 auto;background:var(--surface);border-bottom:1px solid var(--line);
-  display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:9px 18px;}   /* wrap (never overflow) when text-zoom enlarges the chrome or the window is narrow */
+/* UI-1 — the header keeps its IA (title → breadcrumb → modes/actions) and only steps back: it sits on the
+   page ground instead of a white sheet, so the lesson sheet is the brightest surface on screen. */
+.top{min-height:52px;flex:0 0 auto;background:var(--canvas);border-bottom:1px solid var(--line);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3);padding:var(--sp-2) var(--sp-4);}   /* wrap (never overflow) when text-zoom enlarges the chrome or the window is narrow */
 /* Title takes the slack and ellipsises so the action buttons (Present / ⌗ JSON / Export) are
    NEVER pushed off-screen or under the inspector. Action controls never shrink. */
 .top .ltgroup{flex:1 1 0;min-width:32px;display:flex;align-items:baseline;gap:9px;overflow:hidden;}
@@ -774,7 +785,7 @@ body.edit .nitem:active{cursor:grabbing;}
 .top .lmeta:empty{display:none;}
 .top .lmeta::before{content:"·";margin-right:9px;color:var(--line);}
 .top .themebox,.top .seg,.top .btn{flex:0 0 auto;}
-.seg{display:flex;background:var(--canvas);border:1px solid var(--line);border-radius:10px;padding:3px;}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px;}
 .seg button{font-size:.8rem;font-weight:500;padding:6px 14px;border-radius:7px;color:var(--muted);}
 .seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.06);}
 .themebox{display:none;align-items:center;gap:8px;}
@@ -791,7 +802,7 @@ body.edit .themebox{display:flex;}
 .btn{font-size:.82rem;font-weight:600;padding:8px 15px;border-radius:10px;background:var(--accent);color:#fff;
   display:inline-flex;align-items:center;gap:7px;box-shadow:0 6px 16px -8px var(--accent);}
 .btn:hover{filter:brightness(1.06);}
-.btn.ghost{background:var(--canvas);color:var(--text);border:1px solid var(--line);box-shadow:none;}
+.btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--line);box-shadow:none;}   /* UI-1: the header ground is --canvas now, so ghosts take the sheet colour to stay separable */
 
 /* Fixed-aspect 1280x720 canvas, scaled with transform to fit the stage (JS: fitCanvas).
    .stage = area between the sidebar and the window edges; .canvasfit = the scaled footprint
@@ -809,11 +820,13 @@ body.edit .themebox{display:flex;}
    inner scroll box's clip so content grows the canvas. Scoped to body.edit — Study/Present/Export untouched. */
 body.edit .canvas.scroll .tp-slide{position:relative;inset:auto;height:auto;min-height:720px;overflow:visible;}
 body.edit .canvas.scroll .tp-main,body.edit .canvas.scroll .gl-main{overflow:visible;}
-.foot{flex:0 0 auto;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 34px;border-top:1px solid var(--line);background:var(--surface);}
-.foot .nbtn{display:inline-flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
-  padding:11px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);}
-.foot .nbtn:hover{border-color:var(--accent);color:var(--accent-ink);}
-.foot .nbtn[disabled]{opacity:.4;pointer-events:none;}
+/* UI-1 — lesson navigation is a utility, not a headline: the bar was ~65px of every viewport with a
+   raised, shadowed button at each end. Slimmer, flat, and on the page ground rather than a second sheet. */
+.foot{flex:0 0 auto;display:flex;align-items:center;gap:var(--sp-3);justify-content:space-between;padding:var(--sp-2) var(--sp-5);border-top:1px solid var(--line);background:var(--canvas);}
+.foot .nbtn{display:inline-flex;align-items:center;gap:var(--sp-2);font-size:.82rem;font-weight:600;
+  padding:var(--sp-2) var(--sp-3);border-radius:var(--sp-2);background:transparent;border:1px solid transparent;color:var(--muted);box-shadow:none;}
+.foot .nbtn:hover{background:var(--surface);border-color:var(--line);color:var(--text);}
+.foot .nbtn[disabled]{opacity:.35;pointer-events:none;}   /* a one-page lesson shows two quiet ghosts, not two prominent dead buttons */
 .foot .count{font-size:.78rem;color:var(--muted);}
 
 /* ---------------- CARD ---------------- */
