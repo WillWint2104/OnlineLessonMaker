@@ -49,8 +49,17 @@ rail, the canvas fit, or the figure engine.
    figure, never less (on #144 it gave 0.34×). **Assert:** expanded plot area ÷ inline plot area > 1
    at every viewport above.
 
+3. **The focused workspace is viewport-level.** Expanding a figure moves the panel to the body-level
+   `#figfocus` root (outside the `transform:scale()`'d `#canvas`) and hides the lesson shell. **Assert:** the
+   panel is reparented into `#figfocus`, focus moves into the workspace, Esc closes it, the panel returns to
+   its original place in the slide, focus returns to the originating Expand control, and navigating while
+   focused strands nothing. Measure the focused plot area against inline at each viewport above — UI-1
+   records 1.67× / 1.56× / 1.97× / 4.41× / 3.61×.
+
 ## Geometry (Stage 3)
 
-Stage 3 adds `lessons/figure-geometry-baseline.json` covering: triangle with one angle arc ·
+Stage 3 renders into the UI-1 shared Figure Shell (head / stage / foot / caption, kind driven by
+`b.figure`) and inherits its control hierarchy — it must not introduce a geometry-specific container or a
+second dense toolbar. It adds `lessons/figure-geometry-baseline.json` covering: triangle with one angle arc ·
 multiple arcs · right-angle marker · quadrilateral · irregular n-gon · vertex labels · side labels ·
 crowded labels · long labels · resized figure · the focused/expanded state.
