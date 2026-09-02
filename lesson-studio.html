@@ -7085,8 +7085,8 @@ function figPrimaryDir(px,axisX){ const hx=px>=axisX?1:-1, n=Math.hypot(hx,1); r
 function figObstacles(pts,V,extraArms){ const D=V.dom, axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));
   return { arms:[[V.sx(D.x0),axisY,V.sx(D.x1),axisY],[axisX,V.sy(D.y0),axisX,V.sy(D.y1)]].concat(extraArms||[]), pts:pts.map(p=>[V.sx(p.x),V.sy(p.y),4]), axisX }; }
 // lay out every point's pill in a view (each placed pill becomes an obstacle for the next) → [{p,px,py,box}].
-function figLayoutPills(pts,V,box,extraArms){ const o=figObstacles(pts,V,extraArms), placed=[], out=[];
-  pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), size=figPillSize(p.id), pd=figPrimaryDir(px,o.axisX), obst={arms:o.arms,pts:o.pts,boxes:placed.slice()};
+function figLayoutPills(pts,V,box,extraArms,extraBoxes){ const o=figObstacles(pts,V,extraArms), fb=extraBoxes||[], placed=[], out=[];
+  pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), size=figPillSize(p.id), pd=figPrimaryDir(px,o.axisX), obst={arms:o.arms,pts:o.pts,boxes:fb.concat(placed)};
     const r=figPlacePill(px,py,size,pd,obst,FIG_GAP,{W:box.W,H:box.H});             // directional search (fast, preferred)
     let pill, via;
     if(r && r.onCanvas && r.clear>=FIG_GAP){ pill=r.box; via='dir'; }               // directional found a >= GAP, on-canvas spot
@@ -7368,12 +7368,12 @@ function figSafeId(bk,i){ return 'tpfig-'+String(bk).replace(/[^A-Za-z0-9-]/g,c=
    clearing the curve is BEST EFFORT (directional search only), clearing the structural furniture — axes, point
    markers, identifiers — is GUARANTEED (directional, then exhaustive). Running the exhaustive scan against
    every curve arm is what made a tan-x plot cost ~500ms, and a callout is opaque and only shown on tap. */
-function figLayoutCallouts(pts,V,box,pillBoxes,extraArms){
-  const o=figObstacles(pts,V,extraArms), base=figObstacles(pts,V), out=[];
+function figLayoutCallouts(pts,V,box,pillBoxes,extraArms,extraBoxes){
+  const o=figObstacles(pts,V,extraArms), base=figObstacles(pts,V), fb=extraBoxes||[], out=[];
   pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), text=figCoordText(p);
     const size=figPillSize(text); size.w+=22; size.h+=4;                     // room for the close affordance
     const pd=figPrimaryDir(px,o.axisX), away=[pd[0],-pd[1]];                 // opposite the identifier, so a callout never covers it
-    const full={arms:o.arms, pts:o.pts, boxes:pillBoxes.slice()}, lite={arms:base.arms, pts:base.pts, boxes:pillBoxes.slice()};
+    const full={arms:o.arms, pts:o.pts, boxes:fb.concat(pillBoxes)}, lite={arms:base.arms, pts:base.pts, boxes:fb.concat(pillBoxes)};
     const r=figPlacePill(px,py,size,away,full,FIG_GAP,{W:box.W,H:box.H});
     let bx, clearsCurve=true;
     if(r&&r.onCanvas&&r.clear>=FIG_GAP) bx=r.box;
@@ -7400,6 +7400,33 @@ function figPaintedArms(curves,segs,V){
   // total. The placement search is linear in arm count per candidate, so this is what keeps rendering cheap.
   if(arms.length>FIG_MAXARMS){ const st=Math.ceil(arms.length/FIG_MAXARMS); return arms.filter((_,i)=>i%st===0); }
   return arms;
+}
+/* STAGE 2c — AXIS FURNITURE as obstacles. §3.2 says an identifier clears every ARM, and the axis LINES were
+   already arms — but the numbers printed along them never were, so a pill could legally land on top of a tick
+   label. Ranking by displacement (figPlacePill) makes that strictly worse, because the nearest legal position
+   is very often the one tucked in against the axis: on the baseline fixtures the tightest gap to a tick label
+   went from 3.0px to 1.3px (`K`) and 22.7px to 2.1px (`V` at the origin — the case raised at the UI-1 review).
+   Ranking and this belong together: the first chooses a nearer position, the second keeps "nearer" honest by
+   making the axis numbering something a label has to clear like anything else.
+
+   Emitted as BOXES, through figClear's existing `boxes` channel (the one already carrying placed pills), NOT as
+   four edge arms each the way figxNameArms does its two. That is a cost decision, not a style one: the search is
+   linear in obstacle count per candidate and a plane carries ~12 tick labels, so edge arms would have added ~48
+   arms — past FIG_MAXARMS, the ceiling figPaintedArms exists to respect — at four figBoxSeg calls apiece, where
+   one figBoxBox is a handful of arithmetic ops. Same clearance, ~an order of magnitude less work.
+
+   Geometry mirrors figSvgBody's own emission: 11px `.tp-fig-ticklabel`, x labels anchor-middle on the baseline
+   at axisY+16, y labels anchor-end at (axisX-8, py+4), and the y=0 label is skipped there so it is not reserved
+   here either. Widths are estimated from the glyph count on the same basis as figPillSize; a tick label is
+   digits, a minus and at most one point, so the estimate is tight. `tt` is the caller's tick target —
+   figNiceTicks is the single source of tick positions, so the reserved boxes are the ones that will actually be
+   painted at that density, inline (5) or focused (whatever Options is set to). */
+function figTickBoxes(V,tt){
+  const D=V.dom, axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));
+  const xT=figNiceTicks(D.x0,D.x1,tt||5), yT=figNiceTicks(D.y0,D.y1,tt||5), FS=11, H=FS*1.15, wOf=t=>String(t).length*FS*0.6+2, boxes=[];
+  xT.ticks.forEach(v=>{ const w=wOf(figFmtTick(v,xT.decimals)); boxes.push({x:V.sx(v)-w/2, y:axisY+16-H*0.8, w, h:H}); });
+  yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const w=wOf(figFmtTick(v,yT.decimals)); boxes.push({x:axisX-8-w, y:V.sy(v)+4-H*0.8, w, h:H}); });
+  return boxes;
 }
 /* Build the whole §5 graph model — {figure:'graph', domain, objects:[{type:'function'|'points'|'segment'}], grid, aspect}.
    Every authoring fault lands in errors[] and the offending object is SKIPPED; nothing is fabricated. */
@@ -7452,9 +7479,10 @@ function figGraph(b, box){
   // placement 1b would have made, at 1b's cost. Segments are few, so they always stay in.
   const nSub=curves.reduce((a,c)=>a+c.paths.length,0);
   const painted=figPaintedArms(nSub<=20?curves:[],segs,V);
-  const layout=painted.length?figLayoutPills(pts,V,box,painted):fit.layout;
+  const furn=figTickBoxes(V,5);                                             // Stage 2c — the printed axis numbering is an obstacle too (inline density is figSvgBody's default of 5)
+  const layout=figLayoutPills(pts,V,box,painted,furn);
   layout.forEach(L=>{ if(!L.valid) errors.push('identifier '+L.p.id+' could not be placed clear of the plotted geometry'); });
-  const callouts=figLayoutCallouts(pts,V,box,layout.map(L=>L.box),painted);
+  const callouts=figLayoutCallouts(pts,V,box,layout.map(L=>L.box),painted,furn);
   return {V, dom0, domOK, aspect, pts, layout, callouts, curves, segs, painted, errors, box, iters:fit.iters, allValid:layout.every(L=>L.valid), gridShown:(b.grid!=='hidden')};
 }
 /* ═══════════════ FIGURE ENGINE — Stage 2b: Expand / focused graph window (ENGINE_SPEC §6) ═══════════════
@@ -7580,7 +7608,8 @@ function figxPaint(xid){                                                   // re
   const M=(e.M&&e.sig===sig)?e.M:figxModel(xid);                            // display-only controls (minor/names/increment) repaint without re-solving
   if(!M) return null; e.sig=sig; e.M=M;
   const nm=st.names?figxNameArms(M.V,e.box):[];
-  const layout=nm.length?figLayoutPills(M.pts,M.V,e.box,(M.painted||[]).concat(nm)):M.layout;
+  const furn=figTickBoxes(M.V,st.tt);                                       // Stage 2c — reserve the numbering AT THIS density; changing Tick density changes what a label must clear
+  const layout=figLayoutPills(M.pts,M.V,e.box,(M.painted||[]).concat(nm),furn);
   const paint=Object.assign({},M,{segs:figxSegs(e),layout});                // chords drawn in full, then clipped by the viewport
   const svg=p.querySelector('[data-figx-svg]');
   if(svg){ svg.setAttribute('viewBox','0 0 '+e.box.W+' '+e.box.H);         // viewBox matches the element box, so `meet` letterboxes nothing
