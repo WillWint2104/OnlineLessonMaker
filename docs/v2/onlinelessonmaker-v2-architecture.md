@@ -78,6 +78,15 @@ Because each slot carries its *contrast partner* (`--on-primary` is always reada
 
 **Every colour in every block references a slot. No block ever contains a hex value.** That is the rule that ends colour PRs.
 
+**Carve-out — fixed overlay slots.** The contrast-partner guarantee holds a slot's ink against *that slot's own
+surface*. It cannot hold anything against **arbitrary image content**, because the lesson author supplies the
+image. So a control that sits over unpredictable media — the image "view larger" pill, a video poster control,
+a modal scrim — takes a **fixed overlay slot (`--scrim` / `--on-scrim`)** rather than `--surface` /
+`--on-surface`, and that slot stays dark in every theme instead of following the theme surface. Themeing it
+would reintroduce exactly the invisible-control class this section exists to close (#96/#97), just against a
+pale photograph instead of a pale theme. Fixed overlay slots are the **only** exception to the theme-first
+rule above; they are still slots, so the no-raw-hex rule is unchanged.
+
 ---
 
 ## 5. Layer 2 — Asset-source (kills the Sketchfab/video-blank class)
