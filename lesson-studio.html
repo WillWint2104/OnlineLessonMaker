@@ -7439,9 +7439,18 @@ function figxRegister(bk,b,D){                                             // ca
   // They stay learner-overridable once the lesson is running; this only sets where they start.
   const sm=!(b&&(b.minorGrid===false||b.minorGrid==='hidden')), sn=!(b&&(b.axisNames===false||b.axisNames==='hidden'));
   const st=(same&&ps)?ps:{ dom:Object.assign({},nb), tt:(ps&&FIGX_TICKS.indexOf(ps.tt)>=0)?ps.tt:5,
-      grid:sg, minor:ps?ps.minor:sm, names:ps?ps.names:sn };
-  if(prev&&prev.sg!==sg) st.grid=sg;                                       // the author changed grid: honour it, without disturbing the zoom
-  FIGX[xid]={ b, box:FIGX_BOX, title:(b&&b.title)||'Coordinate plane', base:nb, sg, st,
+      grid:ps?ps.grid:sg, minor:ps?ps.minor:sm, names:ps?ps.names:sn };
+  // All three display settings behave IDENTICALLY, because SCHEMA.md documents them as one kind of thing:
+  // a learner override survives an incidental re-render, and an authored change overrides it. Each needs its
+  // spec value remembered to tell those apart — comparing against the block alone cannot distinguish "the
+  // author changed this" from "the learner did". Previously only `grid` was tracked this way, so (a) a
+  // re-render after an authored domain edit reset the learner's Gridlines while keeping their other two
+  // (CodeRabbit), and (b) toggling Minor grid or Axis labels in the inspector did nothing at all once a
+  // state existed, since `st` is reused wholesale when the domain is unchanged.
+  if(prev&&prev.sg!==sg) st.grid=sg;
+  if(prev&&prev.sm!==sm) st.minor=sm;
+  if(prev&&prev.sn!==sn) st.names=sn;
+  FIGX[xid]={ b, box:FIGX_BOX, title:(b&&b.title)||'Coordinate plane', base:nb, sg, sm, sn, st,
     rev:((prev&&prev.rev)||0)+1 };                                         // bumps the solve-cache signature: the spec object mutates in place on an inspector edit
   return xid;
 }

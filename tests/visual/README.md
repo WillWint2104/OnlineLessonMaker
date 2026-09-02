@@ -62,7 +62,10 @@ rail, the canvas fit, or the figure engine.
    `minorGrid:false` / `axisNames:false` starts with those toggles off *and* the corresponding marks absent
    from the painted SVG (`.tp-fig-grid-minor`, `.tp-fig-axname`); switching one back on from Options repaints
    it; a figure authoring neither field starts with both on. `figure-graph-baseline.json` covers both cases —
-   the discontinuity figure authors them false, slide 0 authors neither.
+   the discontinuity figure authors them false, slide 0 authors neither. All three behave **identically** on a
+   re-render: a learner override survives an incidental one (navigation, theme swap, an unrelated inspector
+   edit), and an authored *change* to that field overrides it. Assert both directions for each of the three —
+   re-writing the same authored value must leave the learner alone.
 
 ## Geometry (Stage 3)
 
