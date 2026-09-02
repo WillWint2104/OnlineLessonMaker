@@ -34,7 +34,21 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   CORRECTNESS stress case — it proves the arcs stay attached and distinct, and is deliberately far too small
   to read — and a second **~44px short arm** is added as the VISUAL QUALITY case, where three stacked arcs
   (radii 11.1 / 16.6 / 22.1) are actually distinguishable to a human. Both contracts now exist and are
-  recorded separately in `tests/visual/README.md` contract 8.
+  recorded separately in `tests/visual/README.md` contract 8. `ENGINE_SPEC.md` §3.2's **vertex** anchor also
+  still prescribed `−normalize(u+w)` with a "degenerate near 180° → use edge perpendicular" escape, which the
+  implementation has never used: that vector collapses toward zero as a vertex straightens, so it is
+  progressively unreliable approaching 180°, not merely degenerate at it. §3.2 now documents the swept-bisector
+  derivation the code actually uses — the same class of correction §3.2's candidate ordering needed in Stage 3.
+
+  **Known limitation, not introduced here:** `figPillSize` estimates text width as `chars × 0.62 × fontSize`,
+  a MEAN character width, so a string of wide capitals reserves less than it paints — `"MMMM"` paints 47.9
+  against a 42.2 box. The graph identifier class spills identically (46.1 vs 41.0), so this is a property of
+  the shared estimator rather than of the geometry roles; Stage 3b moves the vertex case from 5.1px to 5.7px
+  by going 12.5/600 → 13/700. It does not manifest anywhere in the committed fixtures — every label's ink sits
+  INSIDE its own collision box (worst spill 0.0px across 75 labels) because `FIG_PADX` absorbs the shortfall —
+  but the shortfall grows with string length while the padding is constant, so a long wide-glyph identifier
+  would eventually escape its box and the ≥ `FIG_GAP` guarantee with it. Fixing it means changing the
+  estimator the GRAPH path shares, which is outside a visual-language pass; recorded here for the maintainer.
 
 ### Fixed
 - **The Stage 3 focused-fill figure was measured against the wrong thing.** #151 reported the painted figure

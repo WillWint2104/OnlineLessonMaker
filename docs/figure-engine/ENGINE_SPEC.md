@@ -199,8 +199,13 @@ Anchor + primary direction per label type (all coordinate-derived):
   the centroid test picks the wrong side on a concave polygon and a winding-sign rule picks the wrong
   side when the vertices are listed the other way round); a bare segment has no interior, so it falls
   back to the centroid. Along = the edge direction.
-- **Vertex name:** anchor = the vertex; primary dir = EXTERNAL bisector `−normalize(u+w)` of its two
-  arms (degenerate near 180° → use edge perpendicular); along = an arm direction.
+- **Vertex name:** anchor = the vertex; primary dir = the EXTERNAL bisector, taken as `−(cos φ, sin φ)`
+  from §3.1's swept interior bisector `φ`; along = an arm direction. This said `−normalize(u+w)` with a
+  "degenerate near 180° → use edge perpendicular" escape until Stage 3b. The implementation never used it:
+  `normalize(u+w)` collapses toward the zero vector as the vertex straightens, so the direction is not
+  merely degenerate AT 180° but progressively unreliable approaching it, and the special case papered over
+  a formula that §3.1 had already replaced. Deriving it from the signed sweep is correct at every angle and
+  needs no escape — the same correction §3.2's candidate ordering needed above.
 - **Angle measure:** anchor = the point where the OUTERMOST arc meets the swept bisector (§3.1); primary
   dir = that same bisector. The pill therefore resolves to **arc → GAP → label** on one line, and the arc
   and its measure read as a single annotation (Stage 3b). It was `e·r`, a MULTIPLE of the radius, which
