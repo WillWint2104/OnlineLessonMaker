@@ -330,6 +330,47 @@ inline `$…$`.
   `--poi` (or `--redpen`) left-stroke on `--popup-surface`. Rows with only `{term, definition}` render
   exactly as before.
 
+## `figure` *(figure engine — composable page block; shared Figure Shell)*
+
+A coordinate figure rendered by the figure engine into the **shared Figure Shell** (identity / viewport /
+status / caption). `figure` selects the content type — `"graph"` today, `"geometry"` from Stage 3 — and the
+shell is the same either way, so a geometry figure differs by what it draws, not by its container.
+
+```json
+{ "type": "figure", "figure": "graph",
+  "title": "y = x squared", "caption": "$y=x^2$ with the vertex marked.", "meta": "Year 11",
+  "domain": { "xMin": -3, "xMax": 3, "yMin": -1, "yMax": 9 },
+  "grid": "shown", "minorGrid": true, "axisNames": true, "aspect": "stretch",
+  "objects": [
+    { "type": "function", "f": "x^2" },
+    { "type": "points", "from": "table", "rows": [["V",0,0],["P",2,4]] },
+    { "type": "segment", "between": ["V","P"] }
+  ] }
+```
+
+| Field | Type | Notes |
+|---|---|---|
+| `figure` | `"graph"` \| `"geometry"` | Content type. Drives the shell's kind label; `geometry` lands in Stage 3. |
+| `title` | string | Figure identity, shown in the shell head and carried into the focused workspace. Typeset (`$…$` ok). |
+| `meta` | string | Optional context shown beside the title. |
+| `caption` | string | Sits under the figure. Typeset (`$…$` ok). |
+| `domain` | `{xMin,xMax,yMin,yMax}` | The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
+| `aspect` | `"stretch"` \| `"equal"` | `equal` keeps a unit square square (default `stretch`). |
+| `objects[]` | array | `{type:'function', f}` · `{type:'points', from:'table', rows:[[id,x,y],…]}` · `{type:'segment', between:[idA,idB]}`. Unknown types are ignored with a reported error. |
+
+**Display defaults** — these three set where the figure *starts*; the learner can still change all of them
+from **Options** in the focused workspace, and their choice persists for the session:
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `grid` | `"shown"` \| `"hidden"` | `shown` | `hidden` = invisible scaffold; coordinates are still computed. |
+| `minorGrid` | boolean | `true` | The finer grid at `step/5`. `false` (or `"hidden"`) starts it off. |
+| `axisNames` | boolean | `true` | The `x` / `y` axis labels. `false` (or `"hidden"`) starts them off. |
+
+Learner-facing controls are deliberately `Zoom out · Zoom in · Pan · Reset · Options`, with the three
+display settings above behind **Options** — engine capability is not the same thing as permanent UI, and
+Stage 3 inherits that rule rather than adding a second dense toolbar.
+
 ## `outro`
 
 Lesson‑complete screen. Up to **3 stat tiles** — **omit the score entry from `stats[]` to hide that

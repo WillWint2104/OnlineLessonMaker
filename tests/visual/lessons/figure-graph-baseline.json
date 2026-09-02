@@ -204,7 +204,7 @@
           "type": "figure",
           "figure": "graph",
           "title": "y = 1/x with an asymptote at x = 0",
-          "caption": "Adaptive sampling must break, not bridge, at the discontinuity.",
+          "caption": "Adaptive sampling must break, not bridge, at the discontinuity. Authored with minorGrid and axisNames off — both still switchable from Options.",
           "domain": {
             "xMin": -4,
             "xMax": 4,
@@ -234,7 +234,9 @@
                 ]
               ]
             }
-          ]
+          ],
+          "minorGrid": false,
+          "axisNames": false
         }
       ]
     },

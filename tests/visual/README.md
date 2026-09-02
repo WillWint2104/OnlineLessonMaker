@@ -15,7 +15,7 @@ scripts that were never committed, so their rendered output could not be reprodu
 | File | Covers |
 |---|---|
 | `lessons/composable-page-baseline.json` | The composable `page` type across every registered block: `skillHeader`, `section` (prose + inline `$…$` + display equation), `figure`, `workedExample`, `selfCheck`, `practiceSet`, `mastery`. Loads on `scholarmath`; re-skins to all five themes. |
-| `lessons/figure-graph-baseline.json` | The graph engine's four representative states: a clean plot, a crowded plane (12 identifiers, 2 curves, 3 chords — the Stage-1b pill-collision stress case), a discontinuity at `aspect:equal`, and the author-error state. |
+| `lessons/figure-graph-baseline.json` | The graph engine's four representative states: a clean plot, a crowded plane (12 identifiers, 2 curves, 3 chords — the Stage-1b pill-collision stress case), a discontinuity at `aspect:equal`, and the author-error state. The discontinuity figure also authors `minorGrid:false` + `axisNames:false`, so the display *defaults* are exercised rather than assumed (see `SCHEMA.md` → `figure`); slide 0 authors neither, covering the unchanged default. |
 | `lessons/modal-overflow-baseline.json` | A solution modal taller than any supported viewport. Guards the focus-overlay parking contract below. |
 
 ## Loading one

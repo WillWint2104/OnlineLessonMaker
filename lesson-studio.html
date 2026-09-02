@@ -4271,11 +4271,16 @@ function blockPracticeSetForm(i,b,sel,base){   // S2 — set header + gating con
       +(b.gate?inT('First batch (questions shown before “Keep going”)',`${base}.batch`,b.batch):''))
     +repeatGroup(i,b,sel,'items','Question','Questions',(it,j)=>scQFields(i,it||{},sel,`${base}.items.${j}`),'Add question',base);
 }
-function blockFigureForm(i,b,sel,base){ const d=b.domain||{};   // Stage 1a — lean form: domain + grid + aspect (points via block JSON)
+function blockFigureForm(i,b,sel,base){ const d=b.domain||{};   // Stage 1a — domain + display defaults + aspect (objects via block JSON)
+  const on=v=>!(v===false||v==='hidden');                                // the two UI-1 display fields accept false OR 'hidden'
   return ig('graph',sel,
     inT('x min',`${base}.domain.xMin`,d.xMin)+inT('x max',`${base}.domain.xMax`,d.xMax)
    +inT('y min',`${base}.domain.yMin`,d.yMin)+inT('y max',`${base}.domain.yMax`,d.yMax)
    +inSel('Grid',`${base}.grid`,b.grid||'shown',[['shown','Shown'],['hidden','Hidden']])
+   /* Display DEFAULTS — where the figure starts. The learner can still change all three from Options in the
+      focused workspace, so these are starting points, not locks (see SCHEMA.md `figure`). */
+   +inSel('Minor grid',`${base}.minorGrid`,on(b.minorGrid)?'shown':'hidden',[['shown','Shown'],['hidden','Hidden']])
+   +inSel('Axis labels',`${base}.axisNames`,on(b.axisNames)?'shown':'hidden',[['shown','Shown'],['hidden','Hidden']])
    +inSel('Aspect',`${base}.aspect`,b.aspect||'stretch',[['stretch','Stretch (fill each axis)'],['equal','Equal (square units)']]));
 }
 function blockForm(i,k,b,sel){   // dispatch: reuse the page inspector case (rebased) where schemas match; lean forms where they differ
