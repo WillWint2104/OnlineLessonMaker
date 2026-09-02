@@ -5,7 +5,8 @@
   "description": "Dev tooling for Lesson Studio. The app itself is a single self-contained file (lesson-studio.html) with NO runtime dependencies — everything here is dev-only.",
   "scripts": {
     "validate": "node scripts/validate.mjs",
-    "shots": "node scripts/shots.mjs"
+    "shots": "node scripts/shots.mjs",
+    "corpus-identity": "node scripts/verify-corpus-identity.mjs"
   },
   "devDependencies": {
     "@fontsource/archivo-narrow": "^5.2.8",

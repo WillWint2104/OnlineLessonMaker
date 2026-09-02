@@ -7,7 +7,49 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **`scripts/verify-corpus-identity.mjs` — the recurring "250/250 byte-identical" claim becomes a committed,
+  reproducible check.** #146, #147 and #149 each asserted that no committed lesson changed, and each proved it
+  with a throwaway script nobody else could re-run — the exact gap the preamble of `tests/visual/README.md`
+  exists to close, and the one CodeRabbit raised against the Stage 2c harness. The script renders **every**
+  lesson in `examples/` and `lessons/`, re-skinned to all five pack themes, slide by slide through the app's own
+  `render()`, and compares `#slide.innerHTML` byte for byte against another git ref (default `origin/main`).
+  Every non-local request is aborted in both pages, so a render is a pure function of the engine and the lesson
+  JSON — the corpus' remote video posters otherwise made 1–4 units differ per run purely on timing. **Each side
+  renders its own revision's lesson JSON**, and the lesson list is unioned across the two revisions: reading the
+  working tree's lesson files for both would render the new data twice and report a genuine content edit as
+  *identical*, and a lesson added or deleted on one side would never be compared (raised by CodeRabbit). A
+  mismatch names the exact **lesson / theme / slide** and exits **1**. Render time is printed for orientation and
+  **never fails the run**: a wall-clock number off one shared runner is not a benchmark, and asserting on it
+  would only make the check flaky — that needs a real methodology first. Not wired into CI, deliberately: it
+  needs Playwright + Chromium, which only the informational `screenshots` workflow installs, and changing what
+  gates merge is a maintainer decision. **Checked:** reproduces **250/250** against `origin/main` at
+  `66779fc`; and, because a verifier that only ever passes is worthless, four deliberate perturbations were
+  injected and reverted: a global engine change caught **250/250** differing; a single-theme one caught exactly
+  **50/250**, every reported unit `theme=scholarmath`; a one-word edit to a **lesson title** caught **4/250**,
+  all slide 0 of that lesson (not five — `scholarmath` renders a legacy `title` slide as a 361-char stub that
+  omits the title, verified directly); and an **added lesson file** caught 5 new units as *absent in reference*
+  and named the file. The reported character delta matched the injected string's length each time.
+  `npm run corpus-identity`; documented in `docs/CHECKING.md`.
+
 ### Fixed
+- **The `screenshots` CI job has been green with NO artifact since #89 (2026‑07‑03) — `shots.mjs` was rendering
+  an empty lesson and writing zero PNGs.** The harness screenshotted whatever the app shipped with, and the
+  app's embedded `#lesson-data` has been `{"slides": []}` since #89: every theme logged "slide N is out of range
+  (0 slides)", the run wrote nothing, `upload-artifact` skipped the empty directory with only a warning, and the
+  job exited **0**. So for two months the PR template asked reviewers to "skim the screenshots artifact" and the
+  `screenshots` check reported success while there was nothing attached — confirmed on the runs for #147 and
+  #149, both `total_count: 0` artifacts. Three harness-only corrections, no application change: `shots.mjs` now
+  **loads a real lesson** per theme (`examples/<theme>-sample.json`, falling back to the imperium sample;
+  `LESSON=<path>` overrides); it **exits non-zero when it writes nothing**, so a silent no-op fails instead of
+  passing; and it honours `CHROMIUM_PATH` for sandboxes that ship a prebuilt browser, matching the other two
+  harnesses. Deliberately **not** changed: the `networkidle` wait — measured at ~1s offline, it was never the
+  cause, and it is what lets web fonts and model-viewer settle so the CI artifact shows real type and 3D rather
+  than fallbacks. For the same reason non-local assets are **not** blocked here, unlike in
+  `verify-corpus-identity.mjs` where determinism is the point. **Checked:** **14 screenshots written** across
+  `imperium` / `microhistory` / `geolearn` (0 before), each a fully rendered lesson slide; the zero-output guard
+  fails the run when the harness is starved. `docs/CHECKING.md` Layer 2 corrected — it also listed a theme set
+  (`neutral, egypt, rome, wellbeing, ww1`) that `shots.mjs` has not used.
 - **Identifiers drifted away from the points they name; now a label sits at the NEAREST position that clears
   everything (figure engine, Stage 2c).** §1.4's candidate search enumerates (distance `d`) × (direction) ×
   (perpendicular *shift* along the edge) and returned the **first** position clearing every obstacle by
