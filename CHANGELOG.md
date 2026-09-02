@@ -8,6 +8,22 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Fixed
+- **`validate` now re-runs when a PR is retargeted, so a merge candidate can't rely on a check computed
+  against a base branch it will never land on.** `validate` is the only required status check, but
+  `.github/workflows/validate.yml` used a bare `pull_request:` trigger, whose default types are
+  `[opened, synchronize, reopened]` — GitHub fires **`edited`** (with `changes.base`) on a retarget, and that
+  was not listed. A stacked PR therefore kept the green check it earned against its parent branch after being
+  moved onto `main`, and the result GitHub showed as gating the merge had never been computed for the
+  combination being merged. **Observed on #147:** rebased and retargeted from the UI-0 branch onto `main`, it
+  sat "clean" on checks belonging to the obsolete base until a real commit landed and fired `synchronize`.
+  Now `types: [opened, synchronize, reopened, edited]`. `edited` also fires on title/body edits, so this
+  re-runs more often than strictly necessary — deliberately, and documented in the workflow: guarding the job
+  on `github.event.changes.base` would publish a **skipped** `validate` check run on every body edit, and
+  branch protection counts a skipped required check as satisfied, so the guard would trade real evidence for a
+  no-op. The job is a checkout plus `node scripts/validate.mjs` with no dependency install, so it is cheaper to
+  always compute the answer. `screenshots.yml` is left alone: it is explicitly informational and non-gating,
+  and it does install Chromium. **Checked:** workflow config only — no application, script or lesson file
+  touched; YAML parses and the `on:`/`jobs:` shape is unchanged apart from the trigger list; `validate` green.
 - **Focus rings restored on three keyboard-reachable controls (WCAG 2.4.7 AA).** `--focus-ring` is defined as a
   **colour** (`var(--primary)`), so `outline:var(--focus-ring, 2px solid var(--primary))` never fires its
   fallback: the shorthand receives a bare colour, sets `outline-color` only, and leaves `outline-style:none` —

@@ -1,7 +1,24 @@
 name: Validate
 
+# `validate` is the ONLY required status check, so its result must always describe the
+# PR's CURRENT head and base. The default `pull_request` trigger is
+# [opened, synchronize, reopened] — it does NOT include `edited`, which is the event
+# GitHub fires when a PR is RETARGETED onto a different base branch. A stacked PR
+# retargeted after its parent merges therefore keeps the green check it earned against
+# the OLD base and can look merge-ready on a result that was never computed against the
+# branch it would actually land on. (Observed on #147.)
+#
+# `edited` also fires for title/body edits, so this re-runs more often than strictly
+# needed. That is deliberate: guarding the job on `github.event.changes.base` would post
+# a *skipped* `validate` check run on every body edit, and branch protection treats a
+# skipped required check as satisfied — replacing real evidence with a no-op. Checkout +
+# `node scripts/validate.mjs` takes seconds and no dependency install, so we always
+# compute the answer instead. `pull_request` checks out the head/base merge commit, so
+# the re-run validates the new combination.
+
 on:
   pull_request:
+    types: [opened, synchronize, reopened, edited]
   push:
     branches: [main]
 
