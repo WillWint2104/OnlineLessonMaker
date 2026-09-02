@@ -39,9 +39,10 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   | `V` gap to a tick label | 22.7 | **2.1** | **20.1** |
   | crowded plane, worst gap to a tick label | 3.0 | **1.3** | **15.4** |
 
-  **Checked:** 55/55 assertions in the new `scripts/verify-label-placement.mjs` across
+  **Checked:** 61/61 assertions in the new `scripts/verify-label-placement.mjs` across
   `figure-labels-baseline.json` (isolated · on the axes and tick values · on curves and chords · at the
-  viewport edges · long identifiers) and `figure-graph-baseline.json` — every identifier clears every axis,
+  viewport edges · long identifiers), `figure-graph-baseline.json` and the `figure` block in
+  `composable-page-baseline.json` — every identifier clears every axis,
   curve, chord, marker, other identifier and printed tick label by `>= FIG_GAP` and is fully on canvas; its
   displacement **equals the minimum over all clearing candidates**, re-derived by an unpruned reference search
   rather than compared against a tuned number; repeated solves byte-identical; the unranked `figScanPill`

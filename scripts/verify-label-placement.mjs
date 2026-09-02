@@ -19,7 +19,8 @@ import { readFileSync } from 'fs';
 // plane, plus the V-at-the-origin case raised at the UI-1 visual review).
 const BASE = process.env.BASE || 'http://localhost:8099';
 const URL = `${BASE}/lesson-studio.html`;
-const FILES = ['tests/visual/lessons/figure-labels-baseline.json', 'tests/visual/lessons/figure-graph-baseline.json'];
+const FILES = ['tests/visual/lessons/figure-labels-baseline.json', 'tests/visual/lessons/figure-graph-baseline.json',
+  'tests/visual/lessons/composable-page-baseline.json'];   // its `figure` block is free coverage — a graph inside a real page
 
 // CHROMIUM_PATH is an escape hatch for sandboxes that ship a prebuilt Chromium instead of Playwright's own
 // download; unset (CI, and a normal `npx playwright install chromium` checkout) it launches exactly as the

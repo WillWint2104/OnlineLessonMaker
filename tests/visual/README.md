@@ -87,7 +87,8 @@ rail, the canvas fit, or the figure engine.
    name (`K` 57.5px where 20.5px was legal, `V` 44.2px, `I` 31.4px). The printed axis **numbering** is an
    obstacle too, not just the axis lines: the nearest legal position is often the one tucked in against an axis,
    so without that the ranking makes tick-label collisions worse rather than better.
-   **Assert**, on `figure-labels-baseline.json` and `figure-graph-baseline.json`: every identifier clears every
+   **Assert**, on `figure-labels-baseline.json`, `figure-graph-baseline.json` and the `figure` block in
+   `composable-page-baseline.json`: every identifier clears every
    axis, curve, chord, marker, other identifier **and printed tick label** by ≥ `FIG_GAP` and sits fully on
    canvas; its displacement equals the smallest displacement over all candidates that satisfy that — re-enumerate
    the whole space with a plain reference search rather than testing against a tuned number; repeated solves of
