@@ -34,8 +34,9 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   polygon's winding and **reported instead of measured**, since drawing the reflex sweep is deferred — a wrong
   label is worse than an absent one. A fourth finding closed the arc question properly: the radius floor
   (`Math.max(9, armMin*0.5)`) was **not bounded by the arm**, so any arm under 9px got a 9px arc drawn straight
-  past both its ends — the mark detaching from the figure it annotates. The floor is now capped at `armMin*0.8`.
-  This survived the first fix because the harness asserted each radius against `room`, the engine's *own* clamp,
+  past both its ends — the mark detaching from the figure it annotates. **The floor is gone**: half the shorter
+  arm is the single rule §3.1 already stated, so a small angle simply gets a small arc, and there is no second
+  constant that can contradict it. This survived the first fix because the harness asserted each radius against `room`, the engine's *own* clamp,
   rather than against the arm the arc has to fit inside — it restated the assumption instead of testing it — and
   because the sliver triangle was sliver in data units, not on screen: its shortest arm projected to 32.4px,
   never reaching the floor. The fixture's arm is now ~6px, where the old code drew a radius **1.52× the arm**.
@@ -43,7 +44,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   edge, arc, mark, vertex and other label (worst 6.0 against a gap of 6), none off-canvas, none falling through
   to the exhaustive fallback, 0 console errors; stacked-arc radii distinct, ordered and **strictly inside the
   arm** across **33/33** arm×count combinations from 4px to 120px (9 of which drew past the arm before the fix),
-  and **13/13** arc groups in the fixture itself (worst radius/arm 0.80); the quadrilateral, pentagon and
+  and **13/13** arc groups in the fixture itself (worst radius/arm 0.50, i.e. exactly the stated ½); the quadrilateral, pentagon and
   SSS triangle interior angles sum to (n−2)·180°; the error fixture reports **four** distinct faults, including
   impossible construction givens and the zero-length arm; every figure byte-identical across three solves;
   legacy corpus **250/250 byte-identical** via the committed `verify-corpus-identity.mjs`; graph placement

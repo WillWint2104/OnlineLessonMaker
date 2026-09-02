@@ -17,7 +17,7 @@ scripts that were never committed, so their rendered output could not be reprodu
 | `lessons/composable-page-baseline.json` | The composable `page` type across every registered block: `skillHeader`, `section` (prose + inline `$…$` + display equation), `figure`, `workedExample`, `selfCheck`, `practiceSet`, `mastery`. Loads on `scholarmath`; re-skins to all five themes. |
 | `lessons/figure-graph-baseline.json` | The graph engine's four representative states: a clean plot, a crowded plane (12 identifiers, 2 curves, 3 chords — the Stage-1b pill-collision stress case), a discontinuity at `aspect:equal`, and the author-error state. The discontinuity figure also authors `minorGrid:false` + `axisNames:false`, so the display *defaults* are exercised rather than assumed (see `SCHEMA.md` → `figure`); slide 0 authors neither, covering the unchanged default. |
 | `lessons/modal-overflow-baseline.json` | A solution modal taller than any supported viewport. Guards the focus-overlay parking contract below. |
-| `lessons/figure-geometry-baseline.json` | **Stage 3 geometry**, 11 figures: right triangle with vertex/side labels and a right-angle marker · scalene triangle with single, double and triple angle arcs · **three stacked arcs on an arm only ~6px long on screen**, shorter than the arc floor · a **non-axis-aligned** right angle · quadrilateral with every interior angle · irregular heptagon · crowded pentagon carrying names, sides and angles at once · long descriptive labels · a polygon hard against a stated domain · a `triangleSSS` parameterised construction · the author-error state (impossible `triangleSSS` · unknown vertex · a `rightAngle` that is not 90° · a zero-length arm — four rejection paths). Loads on `scholarmath`. |
+| `lessons/figure-geometry-baseline.json` | **Stage 3 geometry**, 11 figures: right triangle with vertex/side labels and a right-angle marker · scalene triangle with single, double and triple angle arcs · **three stacked arcs on an arm only ~6px long on screen** · a **non-axis-aligned** right angle · quadrilateral with every interior angle · irregular heptagon · crowded pentagon carrying names, sides and angles at once · long descriptive labels · a polygon hard against a stated domain · a `triangleSSS` parameterised construction · the author-error state (impossible `triangleSSS` · unknown vertex · a `rightAngle` that is not 90° · a zero-length arm — four rejection paths). Loads on `scholarmath`. |
 | `lessons/figure-labels-baseline.json` | The label-placement system's five distinct pressures, one per slide: **isolated** identifiers (nothing competing — the control case), identifiers **on the axes and on tick values** (including `V` at the origin, the case raised at the UI-1 visual review), identifiers **on a curve and its chords**, identifiers **at the viewport corners and edges** (outward is off-canvas at every marker), and **long identifiers** in a tight domain (wide pills clear far less easily than single letters). Loads on `scholarmath`. |
 
 ## Loading one
@@ -109,23 +109,22 @@ rail, the canvas fit, or the figure engine.
    vertex names resolve to the correct vertex and side labels to the correct side; angle labels sit near their
    arc rather than at the vertex; stacked arcs at one vertex do not overlap and **every arc radius is strictly
    less than the shorter incident arm**, so no arc is drawn past the ends of the arms it spans — assert the
-   radius against the *arm*, never against the engine's own clamp, and note the arc floor is bounded by the arm
-   (the fixture carries one ~6px arm, below that floor); the right-angle square is built from the two incident
-   rays, so it is correct at an arbitrary orientation (the fixture includes one); a `rightAngle` asserted on an
-   angle that is not 90° is **reported and not drawn**; measures are computed (`label:"measure"`,
-   `text:"auto"`), never authored — interior angles of the n-gon must sum to (n−2)·180° **for a convex
-   polygon**. `figGeomAngle` returns the unsigned smaller sweep, so it cannot report a reflex interior angle:
-   `angles:"all"` detects a reflex vertex against the
-   polygon's winding and **reports it instead of printing 360−θ as though it were the interior angle**. Drawing
-   the reflex sweep is deferred (`BUILD_SEQUENCE.md`), so assert the sum on convex fixtures and assert the
-   *error* on a concave one — do not treat the sum as proven for an arbitrary n-gon.
-   Stacked arcs must stay distinct **when the arm is shorter than the base radius**, not only on generous arms:
-   clamping each index independently collapses the stack onto one radius, which a comfortable fixture never
-   reveals (the baseline carries a sliver triangle for exactly this). In the **focused** workspace at desktop
-   and portrait, the drawn figure
-   must fill the stage rather than sit in dead space: measure the SVG's painted bbox against
-   `.tp-figx-stage` — Stage 3 records **87–94% in both dimensions** at 1440×900 / 834×1112 / 390×844. The grid
-   default is hidden for geometry and must read the same inline and focused.
+   radius against the *arm*, never against the engine's own clamp — there is no minimum-radius floor, because
+   a floor not bounded by the arm draws past it (the fixture carries a ~6px arm for this); the right-angle
+   square is built from the two incident rays, so it is correct at an arbitrary orientation (the fixture
+   includes one); a `rightAngle` asserted on an angle that is not 90° is **reported and not drawn**; measures
+   are computed (`label:"measure"`, `text:"auto"`), never authored — interior angles of the n-gon must sum to
+   (n−2)·180° **for a convex polygon**. `figGeomAngle` returns the unsigned smaller sweep, so it cannot report
+   a reflex interior angle: `angles:"all"` detects a reflex vertex against the polygon's winding and **reports
+   it instead of printing 360−θ as though it were the interior angle**. Drawing the reflex sweep is deferred
+   (`BUILD_SEQUENCE.md`), so assert the sum on convex fixtures and assert the *error* on a concave one — do
+   not treat the sum as proven for an arbitrary n-gon. Stacked arcs must stay distinct **when the arm is
+   shorter than the base radius**, not only on generous arms: clamping each index independently collapses the
+   stack onto one radius, which a comfortable fixture never reveals (the baseline carries a sliver triangle
+   for exactly this). In the **focused** workspace at desktop and portrait, the drawn figure must fill the
+   stage rather than sit in dead space: measure the SVG's painted bbox against `.tp-figx-stage` — Stage 3
+   records **87–94% in both dimensions** at 1440×900 / 834×1112 / 390×844. The grid default is hidden for
+   geometry and must read the same inline and focused.
 
 ## Geometry (Stage 3)
 
