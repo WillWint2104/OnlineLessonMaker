@@ -12,7 +12,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   reading as raw engine output: vertex names, side lengths, angle measures and symbolic labels all competed at
   the same visual weight, so nothing told the eye what was structural and what was explanatory. This adds the
   **layout grammar** that was missing between the geometry and the collision search — it does not touch the
-  renderer or the placement engine. Four **annotation roles** (vertex > symbolic > measurement) as semantic
+  renderer or the placement engine. Three **annotation roles** (vertex > symbolic > measurement) as semantic
   classes on the existing tokens, never per-fixture styling, with the pill the search reserves sized from the
   role so box and ink stay in step. Marks are subordinate to what they annotate: arcs and right-angle squares
   now paint a step lighter than the polygon edges. **Angle measures are anchored to their own arc** — on the

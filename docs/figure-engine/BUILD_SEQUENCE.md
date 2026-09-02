@@ -126,8 +126,10 @@ reading the code:
 * **`figxRegister` now records geometry's TIGHT bounds** (`M.dom0`), not the solved inline view. `figView('equal')`
   expands whichever axis is short for the box it is given, so registering an already-expanded landscape domain
   and expanding it again for a portrait viewport compounded the padding twice — the crowded pentagon fell to
-  58% of stage width and 43% of its height. Starting from tight bounds lets each viewport expand once: the
-  drawn figure now fills **87–94% of the stage in both dimensions** at 1440×900, 834×1112 and 390×844.
+  58% of stage width and 43% of its height. Starting from tight bounds lets each viewport expand once.
+  SUPERSEDED BY STAGE 3b for the metric, not the mechanism: this recorded "87–94% of the stage", which
+  measured the SVG ELEMENT — always 100%×100% of whatever stage it is given, so it proved nothing. Geometry
+  now fits a BOARD to the figure and the painted ink fills **85–89% of that board** at all three viewports.
 * **The grid default is inverted for geometry** (hidden unless `grid:"shown"`) in `figxRegister` as well as in
   the model, because reading it the graph's way made the grid vanish inline and reappear on ⤢.
 

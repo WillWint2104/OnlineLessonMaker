@@ -416,7 +416,8 @@ figure can never assert a length or angle that its own coordinates contradict.
 `aspect` is not read for geometry — it is always `equal`. A stretched axis turns a right angle into something
 that is not one and an arc into an ellipse, so it is not an authoring choice here.
 
-**Annotation roles (Stage 3b).** The four kinds of label are ranked, not uniform: **vertex names** are the
+**Annotation roles (Stage 3b).** The four kinds of annotation are ranked by three roles — a side length and an
+angle measure are both *measurements* and share one — and they are not uniform: **vertex names** are the
 strongest, an authored **symbolic** name (`"θ"`) is set in maths italic, and a **computed measurement** is
 secondary. Arcs and right-angle marks are drawn lighter than the polygon edges they annotate. Nothing here
 is authorable — a role follows from what the label *is* (`label:"measure"` / `text:"auto"` produce a

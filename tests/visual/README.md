@@ -103,7 +103,8 @@ rail, the canvas fit, or the figure engine.
 
 8. **Geometry inherits the shell and the placement system; its own anchors are what Stage 3 has to prove
    (Stage 3).** Stage 2c proved the graph's point-label anchor. Geometry adds three more — vertex (external
-   bisector), side (outward normal from the centroid) and angle measure (on the swept-arc bisector at `e·r`) —
+   bisector), side (outward normal that leaves the outline, by ray cast) and angle measure (on the swept-arc
+   bisector just outside the outermost arc) —
    and none of them is exercised by the graph fixtures. **Assert**, on `figure-geometry-baseline.json`: every
    label clears every edge, arc, right-angle mark, vertex and other label by ≥ `FIG_GAP` and sits on canvas;
    vertex names resolve to the correct vertex and side labels to the correct side; angle labels sit near their
@@ -121,9 +122,11 @@ rail, the canvas fit, or the figure engine.
    not treat the sum as proven for an arbitrary n-gon. Stacked arcs must stay distinct **when the arm is
    shorter than the base radius**, not only on generous arms: clamping each index independently collapses the
    stack onto one radius, which a comfortable fixture never reveals (the baseline carries a sliver triangle
-   for exactly this). In the **focused** workspace at desktop and portrait, the drawn figure must fill the
-   stage rather than sit in dead space: measure the SVG's painted bbox against `.tp-figx-stage` — Stage 3
-   records **87–94% in both dimensions** at 1440×900 / 834×1112 / 390×844. The grid default is hidden for
+   for exactly this). In the **focused** workspace the drawn figure must fill its own BOARD rather than sit
+   in dead space. For a GRAPH the board is the whole stage (the plane is the subject). For GEOMETRY, Stage 3b
+   fits a board to the figure and centres it, so measure the painted ink against that board — **85–89%** at
+   1440×900 / 834×1112 / 390×844. Measuring geometry ink against the full stage is the superseded Stage 3
+   metric and reads as a failure the moment `aspect:'equal'` letterboxes. The grid default is hidden for
    geometry and must read the same inline and focused. **Stage 3b — annotation grammar.** Assert the ROLE
    hierarchy holds in the crowded pentagon: a vertex name is heavier than a symbolic label, which is heavier
    than a computed measurement, and arcs/right-angle marks are lighter than the polygon edges. Each angle

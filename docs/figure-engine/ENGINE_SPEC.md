@@ -168,7 +168,13 @@ Given vertex V and ray points P, Q:
 α = atan2(P.y−V.y, P.x−V.x)          # ray-1 angle
 β = atan2(Q.y−V.y, Q.x−V.x)          # ray-2 angle
 δ = wrapToPlusMinusPi(β − α)          # SIGNED sweep; |δ| = angle magnitude; robust across ±180°
-r = min(baseR, k·min(|P−V|, |Q−V|))   # arc fits inside; k ~ 0.5
+armMin = min(|P−V|, |Q−V|)            # the shorter incident arm
+room   = k·armMin                     # k ~ 0.5 — NO minimum floor: a floor not bounded by the
+                                      # arm draws past its ends (Stage 3b)
+step   = min(baseStep, room/(n+1))    # spacing shrinks so n arcs always fit
+r_i    = min(baseR + (n−1)·step, room) − (n−1−i)·step      # i = 0…n−1, outermost = r_(n−1)
+# INVARIANT: 0 < r_0 < … < r_(n−1) ≤ room < armMin. Stacked arcs are distinct at EVERY arm length,
+# and every arc is strictly inside the arms it spans. §3.2 anchors the measure to r_(n−1).
 # arc: centre V, radius r, drawn from α through α+δ
 φ = α + δ/2                           # bisector of the SWEPT arc — correct side, no degeneracy
 labelAnchor = V + (cosφ, sinφ)·(e·r)  # e = eccentricity ~1.6 (just outside the arc)
@@ -198,7 +204,12 @@ Anchor + primary direction per label type (all coordinate-derived):
   closed outline the edge belongs to, decided by an even-odd ray cast against that outline (Stage 3b —
   the centroid test picks the wrong side on a concave polygon and a winding-sign rule picks the wrong
   side when the vertices are listed the other way round); a bare segment has no interior, so it falls
-  back to the centroid. Along = the edge direction.
+  back to the centroid of the figure's points. A lone segment is the degenerate case of that fallback —
+  its centroid IS its midpoint, so the dot product is 0 and neither normal is "outward". The rule is then
+  simply the unflipped normal `(−e.y, e.x)`, taken from the edge direction A→B: fully determined, and stable
+  across re-solves. It is not orientation-INdependent — listing the endpoints the other way round puts the
+  label on the other side — but a lone segment has no interior for either choice to be wrong about, so the
+  author's ordering is the only thing that could decide it. Along = the edge direction.
 - **Vertex name:** anchor = the vertex; primary dir = the EXTERNAL bisector, taken as `−(cos φ, sin φ)`
   from §3.1's swept interior bisector `φ`; along = an arm direction. This said `−normalize(u+w)` with a
   "degenerate near 180° → use edge perpendicular" escape until Stage 3b. The implementation never used it:
@@ -221,8 +232,11 @@ Anchor + primary direction per label type (all coordinate-derived):
    the first one encountered (Stage 2c; §1.4 carries the reasoning and the branch-and-bound that keeps it
    terminating). This paragraph said "the FIRST fully-clear candidate" until Stage 3, which was the pre-2c
    rule and would have had geometry inherit exactly the defect Stage 2c removed from the graph.
-3. If none is fully clear within range (pathological), take the least-penalised (max clearance) — but
-   the search range must be wide enough that this is rare.
+3. If none is fully clear within range (pathological), the label is **not placed** — the hard rule above
+   has no exception. The least-penalised box (max clearance) is carried only so the caller can show what
+   failed; it is marked INVALID, which makes the fitter expand the domain and re-solve, and if that still
+   fails the figure reports `label "…" could not be placed clear of the figure` rather than painting an
+   uncleared label. Nothing overlapping an arm or another pill is ever accepted as a placement.
 4. Placement order: vertices first (they crowd corners), then lengths, then angle measures — later
    pills see earlier ones as obstacles.
 
@@ -260,8 +274,8 @@ A figure has ONE source of truth. Two front doors, same downstream:
 
 **Every value-label renders the COMPUTED value from the solved figure — never an authored string.**
 There is no field to type an angle/length value; you may only ask to *display* the one the engine
-computed (`label: angleB`, `label: sideBC`). This makes the drawn angle and its label the same number
-by construction; contradiction is structurally impossible.
+computed — `label:"measure"` on an `angle`, `text:"auto"` on a `sideLabel`. This makes the drawn angle and
+its label the same number by construction; contradiction is structurally impossible.
 
 Use **parameterised constructions** (closed-form, reliable), NOT a general constraint solver:
 `rightTriangle(legs)`, `triangleSAS(a,b,angle)`, `triangleASA(angle,side,angle)`, `triangleSSS(a,b,c)`,
@@ -275,21 +289,29 @@ optional extension.
 A figure is JSON: a `construction` (one of §4) + a `show` list (which marks/labels to render) +
 viewport hints. The author writes givens and *what to show/label* — never positions or values.
 
+**`SCHEMA.md` is the canonical payload** — it documents what the engine actually reads, and this section
+is the rationale for it. The shape below was this document's own sketch (`construction` as an object, a
+`show[]` array, `text:"measure"`); it is NOT what ships, and an author who wrote it from here would produce
+a lesson the engine cannot read. Corrected to the shipped vocabulary — `objects[]`, `construction` +
+`params`, `label:"measure"`, `text:"auto"`:
 ```json
 {
   "figure": "geometry",
-  "construction": { "type": "rightTriangle", "legs": [6, 8], "right": "A" },
-  "show": [
-    { "mark": "rightAngle", "at": "A" },
-    { "mark": "angle", "at": "B", "label": "measure" },
-    { "label": "side", "of": "AB", "text": "measure" },
-    { "label": "side", "of": "BC", "text": "x" },
-    { "label": "vertex", "of": ["A","B","C"] }
+  "construction": "rightTriangle",
+  "params": { "legs": [6, 8], "right": "A" },
+  "objects": [
+    { "type": "polygon", "vertices": ["A","B","C"] },
+    { "type": "rightAngle", "at": "A", "between": ["B","C"] },
+    { "type": "angle", "at": "B", "between": ["A","C"], "label": "measure" },
+    { "type": "sideLabel", "between": ["A","B"], "text": "auto" },
+    { "type": "sideLabel", "between": ["B","C"], "text": "x" }
   ],
   "grid": "hidden",           // hidden = invisible scaffold (coords still computed), or "shown"
-  "aspect": "equal"
+  "aspect": "equal"           // read for graphs; geometry is ALWAYS equal
 }
 ```
+Vertex names are not an object: they are on by default for every polygon vertex and suppressed with
+`vertexLabels: false`. `aspect` is not read for geometry.
 Context-sensitivity: only the objects in `show` render. One question shows the right-angle + `x`;
 another hides them and shows all three side measures. Same construction, different `show`.
 

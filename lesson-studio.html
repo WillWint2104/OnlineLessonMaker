@@ -2637,10 +2637,11 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    than the edges they describe. Same colour family; only weight and opacity separate them. */
 .tp-slide .tp-fig-arc{stroke:var(--primary);stroke-width:1.15;fill:none;opacity:.72;}
 .tp-slide .tp-fig-ra{stroke:var(--primary);stroke-width:1.15;fill:none;opacity:.72;}
-/* Stage 3b — the four ANNOTATION ROLES. A geometry figure says four different kinds of thing and they are
-   not equal: the vertices name the structure, a symbol stands for a quantity, and a measurement explains
-   one. Ranked vertex > symbolic > measurement, as semantic classes on the existing token system — never
-   per-fixture styling, so every authored figure inherits the same grammar. */
+/* Stage 3b — ANNOTATION ROLES. A geometry figure says four different kinds of thing and they are not equal:
+   the vertices name the structure, a symbol stands for a quantity, and a measurement — of a side or of an
+   angle — explains one. Those four kinds carry THREE roles, because a side length and an angle measure are
+   both measurements and want the same treatment. Ranked vertex > symbolic > measurement, as semantic classes
+   on the existing token system — never per-fixture styling, so every figure inherits the same grammar. */
 .tp-slide .tp-fig-gvert{fill:var(--on-surface);font-family:var(--tp-body);font-size:13px;font-weight:700;}
 .tp-slide .tp-fig-gsym{fill:var(--on-surface);font-family:var(--tp-serif,var(--tp-body));font-size:12.5px;font-style:italic;}
 .tp-slide .tp-fig-gmeas{fill:var(--on-surface-variant,var(--on-surface));font-family:var(--tp-body);font-size:11.5px;}
