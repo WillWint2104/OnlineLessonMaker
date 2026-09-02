@@ -103,7 +103,9 @@ Among the candidates that satisfy every clearance rule, placement takes the one 
 DISPLACEMENT from the owner — marker to label-box centre. The ring distance is a true lower bound on
 displacement, so the search remains a terminating branch and bound rather than a full enumeration.
 Placement stays deterministic: fixed enumeration order, strict improvement only, so ties resolve to
-the more preferred direction.
+the more preferred direction. "Never traded away" scopes to the candidates that ARE legal: when none
+is, the figure has already failed, and the fallback that picks the box to draw anyway does trade
+clearance against staying on the canvas — §3.2 step 3 states that rule.
 
 **Axis furniture is an obstacle (Stage 2c).** "Clear every arm" covers the axis LINES; it must also
 cover the numbers PRINTED along them. The reserved boxes are derived from the same nice-tick chooser
@@ -262,15 +264,20 @@ so is a worse failure than a missing one, because nothing in the picture reveals
    cell in raster order, which was invisible while it fired rarely; constraining regions makes it fire far
    more often, and then "first in raster order" put a side length in the corner of the canvas — legal, and
    370px from the edge it measured.
-3. If none is fully clear within range (pathological), the least-penalised box (max clearance) is marked
-   INVALID. That is not a placement: it makes the fitter expand the domain and re-solve, and if the figure
-   still cannot place the label after the escalation cap it reports
-   `label "…" could not be placed clear of the figure`. The label IS still drawn at that box, and that is
-   deliberate — dropping it would leave a figure that looks complete and silently is not, which is the
-   failure mode §4 exists to prevent. So the guarantee is precise: no sub-`GAP` box is ever ACCEPTED as
-   legal, and none is ever drawn without the figure saying so. (This paragraph claimed the label was not
-   drawn at all until Stage 3c; `figGeomBody` and `figLayoutPills` have always painted it, so the spec was
-   describing an engine that does not exist.)
+3. If none is fully clear within range (pathological), the least-penalised box is marked INVALID.
+   "Least-penalised" is a BLEND, not max clearance: each candidate scores
+   `clearance − 3 × (overrun past the canvas edge)`, so a box with less clearance that stays on the
+   canvas beats a clearer one hanging off it. The trade is deliberate — a label half outside the figure
+   is unreadable, whereas one a little close to an arm is merely ugly — but the fallback does NOT
+   maximise clearance, and this step said it did until the wording was corrected. Marking the box INVALID
+   is not a placement: it makes the fitter expand the domain and re-solve, and if the figure still cannot
+   place the label after the escalation cap it reports
+   `label "…" could not be placed clear of the figure`. The label IS still drawn at that box, and that
+   is deliberate — dropping it would leave a figure that looks complete and silently is not, which is
+   the failure mode §4 exists to prevent. So the guarantee is precise: no sub-`GAP` box is ever ACCEPTED
+   as legal, and none is ever drawn without the figure saying so. (This paragraph claimed the label was
+   not drawn at all until Stage 3c; `figGeomBody` and `figLayoutPills` have always painted it, so the spec
+   was describing an engine that does not exist.)
 4. Placement order: vertices first (they crowd corners), then lengths, then angle measures — later
    pills see earlier ones as obstacles.
 

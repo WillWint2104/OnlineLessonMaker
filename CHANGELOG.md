@@ -81,6 +81,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   estimator the GRAPH path shares, which is outside a visual-language pass; recorded here for the maintainer.
 
 ### Fixed
+- **ENGINE_SPEC described the no-legal-candidate fallback as "max clearance".** It is not: the fallback
+  scores `clearance − 3 × overrun past the canvas edge`, so a box with less clearance that stays on the
+  canvas beats a clearer one hanging off it — deliberate, since a label painted outside the viewBox is not
+  visible at all. `figPlacePill`'s own header has said so since #149; §3.2 step 3 had not caught up, and
+  §1.4's "clearance is never traded away" (true of the LEGAL candidates it ranks) read as covering the
+  exhausted case too. Documentation only — no behaviour change.
 - **The exhaustive placement fallback returned the first clear cell in raster order.** Stage 2c made the
   directional search take the NEAREST legal candidate but left the fallback taking whatever a top-left-first
   sweep hit first, which stayed invisible while it fired rarely. Constraining regions makes it fire far more
