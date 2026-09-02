@@ -56,6 +56,14 @@ rail, the canvas fit, or the figure engine.
    focused strands nothing. Measure the focused plot area against inline at each viewport above — UI-1
    records 1.67× / 1.56× / 1.97× / 4.41× / 3.61×.
 
+4. **Figure display settings are defaults, not locks.** `grid`, `minorGrid` and `axisNames` set where a
+   figure *starts*; the learner can still change all three from **Options** in the focused workspace, and
+   the choice persists for the session (`SCHEMA.md` → `figure`). **Assert:** a figure authoring
+   `minorGrid:false` / `axisNames:false` starts with those toggles off *and* the corresponding marks absent
+   from the painted SVG (`.tp-fig-grid-minor`, `.tp-fig-axname`); switching one back on from Options repaints
+   it; a figure authoring neither field starts with both on. `figure-graph-baseline.json` covers both cases —
+   the discontinuity figure authors them false, slide 0 authors neither.
+
 ## Geometry (Stage 3)
 
 Stage 3 renders into the UI-1 shared Figure Shell (head / stage / foot / caption, kind driven by
