@@ -142,8 +142,9 @@ ACCEPTANCE (proven in prototype — must reproduce): arcs seat on arms across ri
 right-angle; measures are computed values on the bisector; every pill ≥ GAP clear of arms/vertices/
 pills; matches the APPROVED geometry visual target; the same n-gon code renders square→pentagon→quad;
 ADDITIVE clean; validate green.
-FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` — committed, 10 figures
-across 7 pages, covering triangle with one angle arc · multiple arcs · right-angle marker (including a
+FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` — committed, 11 figures
+across 8 pages, covering triangle with one angle arc · multiple arcs · stacked arcs on an arm only ~6px long ·
+right-angle marker (including a
 NON-AXIS-ALIGNED one) · quadrilateral · irregular n-gon · vertex labels · side labels · crowded labels · long
 labels · labels at the viewport edge · a parameterised construction · the author-error state, plus the
 focused/expanded state at desktop and portrait. Stages 1a–2b

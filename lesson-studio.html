@@ -7535,9 +7535,12 @@ function figGeomAngle(V,P,Q){
    radius the moment the arm is short enough for the cap to bite, so a double or triple arc painted on top of
    itself — invisible in a fixture with generous arms, which is exactly why the fixture did not catch it
    (CodeRabbit). Spacing also shrinks to fit when the room is tight, so n arcs always resolve to n distinct
-   radii, all inside the angle and all > 0. */
+   radii, all inside the angle and all > 0. The 9px visibility floor is itself capped at 0.8·armMin: unbounded,
+   it drew a 9px arc on a 4px arm, i.e. straight past both arm ends, detaching the mark from the figure it
+   annotates (CodeRabbit). Assert a radius against the ARM, never against `room` — `room` is this function's
+   own clamp, so checking against it restates the assumption instead of testing it. */
 function figGeomArcR(armMin,i,n){
-  const room=Math.max(9, armMin*0.5), k=Math.max(1,n||1);
+  const room=Math.min(Math.max(9, armMin*0.5), armMin*0.8), k=Math.max(1,n||1);
   const step=Math.min(FIG_ARC_STEP, room/(k+1));
   return Math.min(FIG_ARC_R+(k-1)*step, room) - (k-1-i)*step;
 }
