@@ -7955,15 +7955,10 @@ function wirePackTyped(){
   // a bare data-tp-focus-open (no value) falls back to the slide's single [data-tp-overlay] (back-compat
   // for the image-zoom / source-stimulus overlays). [data-tp-focus-close], scrim-click and Esc all close
   // the containing overlay; span[role=button] opens on Enter/Space too.
-  // A composable page is TALLER than the visible board and #stage is the scroller, so an overlay that is
-  // absolutely positioned against the full-height slide sits at a fixed point near the top of the DOCUMENT:
-  // scrolled down, its panel is cut off above the pane (measured: up to 246px lost at 1280x800, and never
-  // fully visible at any scroll position). position:sticky cannot pin it — the canvas is transform:scale()'d,
-  // which breaks sticky. So PARK the overlay over the visible pane at open: convert the stage's visible band
-  // into slide-local (pre-scale) px and write it to the overlay's top/height. Centring and .tp-fpanel's
-  // max-height:88% + overflow-y:auto then resolve against the PANE, giving a tall panel an internal scroll.
-  // Scoped to .tp-overlay so the figure's in-plot coordinate callouts (absolutely placed by percentage) and
-  // geolearn's .gl-overlay modals on fixed-height legacy slides are untouched.
+  // Park the overlay over the visible pane: #stage's visible band, converted to slide-local (pre-scale) px,
+  // becomes the overlay's top/height, so centring and .tp-fpanel's max-height resolve against the PANE.
+  // (An overlay positioned against the full-height slide lands off-screen; sticky can't fix it under the
+  // scaled canvas — see CHANGELOG.) Scoped to .tp-overlay: in-plot callouts and .gl-overlay are untouched.
   const parkOv=(ov)=>{
     if(!ov.classList.contains('tp-overlay')||ov.hidden) return;            // [hidden] is display:none — nothing to measure
     const stage=document.getElementById('stage'), cv=document.getElementById('canvas');

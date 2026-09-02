@@ -44,40 +44,40 @@
           "hint": "Expand each bracket first.",
           "steps": [
             {
-              "desc": "Step 1 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
-              "work": "$= 1x + 0$"
+              "desc": "Start with the first bracket. The 5 outside multiplies every term inside it, so take those terms one at a time.",
+              "work": "$5(2x-3) \\rightarrow 5\\times 2x,\\ 5\\times(-3)$"
             },
             {
-              "desc": "Step 2 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
-              "work": "$= 2x + 3$"
+              "desc": "Multiply the 5 by the first term inside the first bracket.",
+              "work": "$5\\times 2x = 10x$"
             },
             {
-              "desc": "Step 3 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
-              "work": "$= 3x + 6$"
+              "desc": "Multiply the 5 by the second term, keeping the minus sign that belongs to the 3.",
+              "work": "$5\\times(-3) = -15$"
             },
             {
-              "desc": "Step 4 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
-              "work": "$= 4x + 9$"
+              "desc": "So the first bracket expands to the sum of those two products.",
+              "work": "$5(2x-3) = 10x-15$"
             },
             {
-              "desc": "Step 5 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
-              "work": "$= 5x + 12$"
+              "desc": "Now the second bracket. The 2 outside multiplies both terms inside it in exactly the same way.",
+              "work": "$2(x+7) \\rightarrow 2\\times x,\\ 2\\times 7$"
             },
             {
-              "desc": "Step 6 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
-              "work": "$= 6x + 15$"
+              "desc": "Multiply the 2 by the first term inside the second bracket.",
+              "work": "$2\\times x = 2x$"
             },
             {
-              "desc": "Step 7 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
-              "work": "$= 7x + 18$"
+              "desc": "Multiply the 2 by the second term inside the second bracket.",
+              "work": "$2\\times 7 = 14$"
             },
             {
-              "desc": "Step 8 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
-              "work": "$= 8x + 21$"
+              "desc": "Write both expanded brackets out in full, keeping every sign as it stands.",
+              "work": "$= 10x-15+2x+14$"
             },
             {
-              "desc": "Step 9 — a deliberately wordy explanation so the worked solution is taller than any viewport we support.",
-              "work": "$= 9x + 24$"
+              "desc": "Collect the like terms: the $x$ terms together, then the constants together.",
+              "work": "$10x+2x = 12x,\\quad -15+14 = -1$"
             }
           ],
           "answer": "$12x-1$"
