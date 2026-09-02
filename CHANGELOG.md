@@ -110,6 +110,39 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 
 ### Changed
+- **UI-1 visual-review corrections — surface width matches content role; the focused plane fills its
+  viewport.** Two systemic layout defects and one blocking narrow-mode failure, all found by the required
+  visual review of the UI-1 captures. Measured before any CSS was touched, then re-measured.
+  **(1) The focused plot was letterboxed, not responsive.** The focused box was fixed at `900×560`, so with
+  `preserveAspectRatio="xMidYMid meet"` the painted plane held a 1.607 landscape aspect whatever shape the
+  stage was. The SVG *did* fill the stage — the plane inside it did not. Measured: at **834×1112** the stage
+  was 780×947 but the grid only **707×427**, leaving **520px of blank inside the bordered plot region**; at
+  **390×844**, 304×183 in a 336×679 stage — **73% blank**. `figxBoxFor()` now measures `.tp-figx-stage` and
+  re-solves through it, so axes, grid, tick generation and the coordinate mapping all regenerate for the real
+  viewport, with gutters that scale down on a phone. Nothing is stretched: `aspect:'equal'` still preserves
+  square units, a portrait viewport simply showing more of the y-range. The solve-cache signature carries the
+  box, and a resize/rotate while focused re-solves. **After:** blank inside the stage is the axis gutter only
+  — 834×1112 **520px → 68px** (grid now 696×**864**, genuinely portrait), 390×844 **496px → 61px** (290×603),
+  1440×900 88px → 64px. Recorded as a second engine invariant, since Geometry inherits the same workspace.
+  **(2) Close overlapped the controls.** `.tp-fclose` was `position:absolute` and its rect overlapped the
+  control strip at **every** viewport, not just narrow — a real collision once the toolbar wraps on a phone.
+  Title and Close now share a header row above the controls, which wrap deliberately beneath it. Close is
+  `position:static`, **0 overlap at all four sizes**.
+  **(3) Prose sat as an island inside a full-width card.** Every block was a full-width surface while the
+  reading measure constrained only the inner wrapper, so a ~700px column sat inside a ~1128px panel with
+  **~214px dead on each side**. The rule is now that a surface's apparent width matches what it is
+  structurally meant to hold: reading surfaces shrink around the measure plus padding (`--tp-prose-max`),
+  while **workspace** surfaces — `figure`, `banner`, `image`, `labeledGraphic` — keep the full page width
+  because they use it. Line length is unchanged; only the container is. Applied systematically across every
+  prose fragment type rather than to one block: at 1440×900 all of `skillHeader`/`section`/`workedExample`/
+  `selfCheck`/`practiceSet`/`mastery` now measure **764px** with `figure` still full-width, and `section`'s
+  dead side space falls **201px → 46px**.
+  **Checked:** legacy corpus **250/250 renders byte-identical**; inline figure SVG body byte-identical 4/4;
+  38/38 UI-0 contracts (expand ratio 1.64× / 1.53× / 1.92× / 4.34× / 3.53×); 41/41 focused workspace; 5/5
+  display defaults; 9/9 display-setting persistence; `validate` green. The desktop Figure Shell, focused
+  workspace, graph treatment, chrome hierarchy, Options disclosure and worked-solution surface are
+  **unchanged** — this is a targeted correction, not a second redesign.
+
 - **UI-1 — lesson visual-system foundation.** A system-level pass before Geometry, Exercises, Video and
   Stage 5 add more visible component types, so they inherit one design instead of each inventing another.
   Five scoped commits.

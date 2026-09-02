@@ -72,10 +72,28 @@ ACCEPTANCE: Expand opens/closes cleanly; zoom/pan/reset work; readout tracks the
 ADDITIVE clean.
 INVARIANT (added post-audit, applies to EVERY front-end that uses the focused workspace — Geometry
 inherits it): expanding a figure must give the plot MORE usable area than the inline figure, never less.
+SECOND INVARIANT (UI-1 visual review): the painted plane must be GENERATED THROUGH the available viewport,
+not letterboxed inside it. The focused box was fixed at 900x560, so `preserveAspectRatio="xMidYMid meet"`
+held a 1.607 landscape plane whatever the stage's shape: at 834x1112 the stage was 780x947 but the grid only
+707x427 — 520px of blank INSIDE the bordered plot region, 73% blank at 390x844. figxBoxFor() now measures the
+stage and re-solves, so axes, grid and coordinate mapping regenerate for the real viewport. Never stretch a
+rendered SVG to fake this; `aspect:'equal'` still keeps square units (a portrait viewport shows more y-range,
+which is the correct answer). Assert the painted grid against the stage, not just the SVG element.
 Shipped at 0.34× (the focused panel lost to `.tp-fpanel` on source order and was capped at 760px, and its
 own chrome ate the rest); now ≥ 1.0× at 1440×900 / 1280×800 / 1024×768 / 834×1112. Assert the ratio, don't
 eyeball it. The margin is currently slim (1.08×) because the INLINE figure is allowed to fill the pane —
 sizing the inline figure is a visual-system decision, not an engine one, and is deferred to that pass.
+
+## PRE-STAGE-3 REQUIREMENT — crowded label placement (raised at the UI-1 visual review)
+The crowded graph fixture shows identifiers (I, K, L) sitting visibly far from their points: §3.2's "clear
+every arm by >= GAP" search pushes a pill until it satisfies the constraint, with nothing pulling it back
+toward its owner, so on a saturated plane association is lost. This PREDATES UI-1 and was deliberately NOT
+folded into that visual correction — it belongs to the Stage-1b placement system, not the shell.
+**Before Stage 3 is considered complete, crowded graph AND geometry labels must be reviewed so geometry does
+not blindly inherit this.** Decide after UI-1 whether it is a small Stage 2c correction first (e.g. add a
+distance-to-owner term to the candidate ranking, so the search prefers the nearest satisfying position rather
+than the first) or part of Stage 3's fixture-driven work. `figure-geometry-baseline.json`'s crowded-labels
+and long-labels cases are the evidence either way.
 
 ## STAGE 3 — Geometry 2D front-end
 Branch off 1c (can land after Stage 2). Spec §3, §4, §5, §7.

@@ -67,6 +67,17 @@ rail, the canvas fit, or the figure engine.
    edit), and an authored *change* to that field overrides it. Assert both directions for each of the three —
    re-writing the same authored value must leave the learner alone.
 
+5. **The painted plane fills its viewport.** The focused plot is generated through the stage's real
+   dimensions, not letterboxed at a fixed aspect. **Assert** the painted grid/axes against the *stage*, not
+   the SVG element (the SVG filled the stage while the plane inside it did not): at 1440×900 / 1024×768 /
+   834×1112 / 390×844 the blank margin inside `.tp-figx-stage` should be the axis gutter only (~50–70px),
+   never the hundreds of px that a fixed landscape aspect produced in a portrait stage. Also assert the
+   Close control does not overlap the control strip at any of those sizes.
+6. **Surface width matches content role.** Reading surfaces shrink around the readable measure plus padding
+   (`--tp-prose-max`); workspace surfaces — `figure`, `banner`, `image`, `labeledGraphic` — keep the full page
+   width. **Assert** a prose fragment's card width against its longest painted line: a ~700px measure must not
+   sit inside a ~1128px card. Check several prose fragment types, not just one.
+
 ## Geometry (Stage 3)
 
 Stage 3 renders into the UI-1 shared Figure Shell (head / stage / foot / caption, kind driven by

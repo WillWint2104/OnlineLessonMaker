@@ -120,6 +120,7 @@
   --surface-2:var(--surface-container);--accent:var(--primary-fixed);--line:var(--outline-variant);--focus-ring:var(--primary);--scrim:rgba(20,16,24,.82);--on-scrim:#fff;
   /* v2 Phase 2b width authority (Layer 3) — one measure per theme; geolearn runs wider by design */
   --tp-measure:1200px;--tp-measure-narrow:880px;--tp-measure-read:700px;
+  --tp-prose-max:calc(var(--tp-measure-read,700px) + 64px);   /* UI-1 — reading measure + a card's side padding */
   background:var(--background); font-family:var(--tp-body); color:var(--on-surface);
 }
 /* ----- GeoLearn slide shell: fixed chrome, scrolling content (locked sizing) -----
@@ -1613,7 +1614,7 @@ body.figfocus #figfocus{display:flex;}
 /* no scrim and no parked band in here — the workspace IS the surface */
 #figfocus .tp-overlay.tp-figx{position:absolute;inset:0;top:0;height:auto;background:transparent;padding:var(--sp-3);}
 #figfocus .tp-fpanel.tp-fpanel-figx{max-width:none;max-height:100%;height:100%;box-shadow:none;border:1px solid var(--outline-variant);}
-#figfocus .tp-figx-title{padding-right:120px;}
+#figfocus .tp-figx-bar{row-gap:var(--sp-2,8px);}   /* narrow: the control row wraps deliberately, below the header */
 /* the panel's close becomes an obvious labelled control (no markup change — it keeps its aria-label,
    its focus-return wiring and the shared Esc handler) */
 #figfocus .tp-fclose{width:auto;height:34px;padding:0 14px;gap:8px;border-radius:9999px;border:1px solid var(--outline-variant);background:var(--surface);font:inherit;font-size:.82rem;font-weight:600;}
@@ -2352,6 +2353,18 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    with a gap token. Fragments emit content only and inherit width from the flow. Theme via slots only. */
 .tp-slide .tp-flow{width:100%;max-width:var(--tp-measure);margin:auto;display:flex;flex-direction:column;gap:var(--tp-flow-gap,30px);padding:8px 6px 20px;}
 .tp-slide .tp-frag{width:100%;min-width:0;}
+/* ═══ UI-1 — a surface's apparent width matches what it is structurally meant to hold. Reading surfaces
+   shrink around the readable measure plus their padding; WORKSPACE surfaces (a figure, a banner, an image)
+   keep the full page width because they genuinely use it. Previously every block was a full-width card, so
+   prose sat as a ~700px island inside a ~1128px panel with ~214px dead on each side. The line length is
+   unchanged — only the container is. ═══ */
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag{max-width:var(--tp-prose-max,764px);margin-inline:auto;}
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="figure"],
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="banner"],
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="image"],
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="labeledGraphic"]{max-width:none;}
+/* the reading measure now lives on the SURFACE, so the inner wrapper no longer re-constrains it */
+.tp-slide .tp-unit-inner{max-width:none;margin:0;}
 /* ═══ v3 F1 — de-staged composable pages. .tp-slide[data-tp-type="page"] flows at its natural height and
    the STAGE (#stage) owns scroll — identically in the editor preview pane and a delivered/published lesson
    (the app shell locks window scroll: body{overflow:hidden}; #stage is the scroll owner in both contexts;
@@ -2632,7 +2645,9 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-expand:focus-visible{outline:3px solid var(--focus-ring);outline-offset:2px;}
 .tp-slide .tp-overlay.tp-figx{padding:8px;}   /* the focused window is the workspace — it spends the pane on the plot, not on scrim margin */
 .tp-slide .tp-fpanel.tp-fpanel-figx{max-width:none;max-height:100%;padding:10px 14px 8px;display:flex;flex-direction:column;overflow:hidden;}   /* ENGINE INVARIANT (§6): the focused window must give the plot MORE area than the inline figure — so it takes the full parked pane, and the stage below flexes into whatever the toolbar/readout leave */
-.tp-slide .tp-fpanel-figx .tp-figx-title{flex:0 0 auto;font-family:var(--tp-body);font-weight:700;font-size:15px;color:var(--on-surface);padding-right:48px;}
+.tp-slide .tp-figx-head{flex:0 0 auto;display:flex;align-items:center;gap:var(--sp-3,12px);}
+.tp-slide .tp-figx-head .tp-fclose{position:static;flex:0 0 auto;margin-left:auto;}   /* never over the controls */
+.tp-slide .tp-fpanel-figx .tp-figx-title{flex:1 1 auto;min-width:0;font-family:var(--tp-body);font-weight:700;font-size:15px;color:var(--on-surface);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .tp-slide .tp-figx-bar{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0 8px;font-family:var(--tp-body);font-size:12.5px;color:var(--on-surface-variant);}
 .tp-slide .tp-figx-bar button{font:inherit;min-width:30px;height:28px;padding:0 9px;border-radius:7px;border:1px solid var(--outline-variant);background:var(--surface);color:var(--on-surface);cursor:pointer;}
 .tp-slide .tp-figx-bar button:hover{border-color:var(--primary);color:var(--primary);}
@@ -3540,6 +3555,9 @@ function figFocusEnter(ov){
   if(ctx) ctx.textContent=[(LESSON.meta&&LESSON.meta.title)||'',(e&&e.title)||''].filter(Boolean).join('  ·  ');
   root.hidden=false; root.setAttribute('aria-hidden','false');
   document.body.classList.add('figfocus');
+  // the plot is generated through the stage, so a resize/rotate must re-solve it, not letterbox it
+  FIGFOCUS.rs=()=>{ const en=FIGX[ov.id]; if(en) figxPaint(ov.id); };
+  window.addEventListener('resize',FIGFOCUS.rs);
   // the lesson shell is behind an opaque layer: hide it from assistive tech too, as a modal should
   const ab=$('.appbody'), tp=$('.top');
   if(ab) ab.setAttribute('aria-hidden','true');
@@ -3549,6 +3567,7 @@ function figFocusEnter(ov){
 function figFocusExit(){
   if(!FIGFOCUS) return;
   const f=FIGFOCUS; FIGFOCUS=null;
+  if(f.rs) window.removeEventListener('resize',f.rs);
   if(f.parent) f.parent.insertBefore(f.ov,f.next);                         // exactly where it came from
   const root=document.getElementById('figfocus');
   if(root){ root.hidden=true; root.setAttribute('aria-hidden','true'); }
@@ -7424,7 +7443,24 @@ function figGraph(b, box){
    Everything re-renders through figGraph → figView/figFitAndLayout, so points, curves and identifiers are
    COORDINATES that follow the transform — they cannot drift. NO geometry (Stage 3), NO input/grading (§6). */
 const FIGX=Object.create(null);
-const FIGX_BOX={W:900,H:560,padL:56,padR:26,padT:24,padB:42};
+const FIGX_BOX={W:900,H:560,padL:56,padR:26,padT:24,padB:42};                // fallback only — figxBoxFor() measures the real stage
+/* UI-1 — the focused plot must be generated THROUGH the available viewport, not letterboxed inside it.
+   The box was fixed at 900x560, so with preserveAspectRatio="xMidYMid meet" the painted plane kept a 1.607
+   landscape aspect whatever shape the stage was: at 834x1112 the stage was 780x947 but the grid only
+   707x427, leaving 520px of blank INSIDE the bordered plot region (73% blank at 390x844). Measuring the
+   stage and re-solving through it means the axes, grid and coordinate mapping all regenerate for the real
+   viewport — no SVG is stretched, and `aspect:'equal'` still preserves square units (a portrait viewport
+   simply shows more of the y-range, which is the mathematically correct answer). */
+function figxBoxFor(xid,fallback){
+  const p=figxPanelEl(xid), st=p&&p.querySelector('.tp-figx-stage');
+  if(!st) return fallback;
+  const r=st.getBoundingClientRect();                                      // body-level in focus mode → CSS px, unscaled
+  if(!(r.width>60&&r.height>60)) return fallback;
+  const W=Math.round(r.width), H=Math.round(r.height);
+  return { W, H,                                                           // gutters scale down so a phone keeps a usable plane
+    padL:Math.max(30,Math.min(56,Math.round(W*0.09))), padR:Math.max(14,Math.min(26,Math.round(W*0.04))),
+    padT:Math.max(14,Math.min(24,Math.round(H*0.03))), padB:Math.max(24,Math.min(42,Math.round(H*0.055))) };
+}
 const FIGX_MINSPAN=1e-6, FIGX_MAXSPAN=1e9, FIGX_TICKS=[4,5,6,8,10];
 function figxRegister(bk,b,D){                                             // called during render: remember the spec + the view it opened at
   const xid=figSafeId(bk,'x'), prev=FIGX[xid], nb={xMin:D.x0,xMax:D.x1,yMin:D.y0,yMax:D.y1};
@@ -7517,13 +7553,16 @@ function figxNameArms(V,box){
 }
 function figxPaint(xid){                                                   // re-solve + repaint; every zoom level goes through the same figView/figFitAndLayout path
   const e=FIGX[xid], p=figxPanelEl(xid); if(!e||!p) return null;
-  const st=e.st, sig=st.dom.xMin+'|'+st.dom.xMax+'|'+st.dom.yMin+'|'+st.dom.yMax+'|'+(st.grid?1:0)+'|'+e.rev;
+  e.box=figxBoxFor(xid,e.box);                                             // the viewport IS the box — see figxBoxFor
+  const st=e.st, sig=st.dom.xMin+'|'+st.dom.xMax+'|'+st.dom.yMin+'|'+st.dom.yMax+'|'+(st.grid?1:0)+'|'+e.rev+'|'+e.box.W+'x'+e.box.H;
   const M=(e.M&&e.sig===sig)?e.M:figxModel(xid);                            // display-only controls (minor/names/increment) repaint without re-solving
   if(!M) return null; e.sig=sig; e.M=M;
   const nm=st.names?figxNameArms(M.V,e.box):[];
   const layout=nm.length?figLayoutPills(M.pts,M.V,e.box,(M.painted||[]).concat(nm)):M.layout;
   const paint=Object.assign({},M,{segs:figxSegs(e),layout});                // chords drawn in full, then clipped by the viewport
-  const svg=p.querySelector('[data-figx-svg]'); if(svg) svg.innerHTML=figSvgBody(paint,e.box,{targetTicks:st.tt, grid:st.grid, minor:st.minor, axisNames:st.names});
+  const svg=p.querySelector('[data-figx-svg]');
+  if(svg){ svg.setAttribute('viewBox','0 0 '+e.box.W+' '+e.box.H);         // viewBox matches the element box, so `meet` letterboxes nothing
+    svg.innerHTML=figSvgBody(paint,e.box,{targetTicks:st.tt, grid:st.grid, minor:st.minor, axisNames:st.names}); }
   const D=M.V.dom, xT=figNiceTicks(D.x0,D.x1,st.tt), yT=figNiceTicks(D.y0,D.y1,st.tt), sEl=p.querySelector('[data-figx-step]');
   e.dec=[figxDec(D.x1-D.x0,M.V.plotW),figxDec(D.y1-D.y0,M.V.plotH)];        // figNum is fixed at 3 dp — far too coarse once a deep zoom is finer than that
   if(sEl) sEl.textContent='step '+figFmtTick(xT.step,xT.decimals);          // ALWAYS a figNiceStep value — no raw step can reach the axis
@@ -7574,8 +7613,12 @@ function figxPanel(xid){
   // exposure. The pan arrows stay four real buttons (keyboard-operable) presented as one labelled cluster.
   return `<div class="tp-overlay tp-figx" id="${esc(xid)}" data-tp-overlay role="dialog" aria-modal="true" aria-label="${t} — expanded" hidden>`
     +`<div class="tp-fpanel tp-fpanel-figx" data-figx="${esc(xid)}">`
-    +`<button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close expanded figure">${tpIc('close',20)}</button>`
-    +`<div class="tp-figx-title">${t}</div>`
+    // UI-1 — title and Close share a HEADER ROW. Close was position:absolute and overlapped the control
+    // strip's rect at every viewport (a real collision once the toolbar wrapped on a phone).
+    +`<div class="tp-figx-head">`
+      +`<div class="tp-figx-title">${t}</div>`
+      +`<button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close expanded figure">${tpIc('close',20)}</button>`
+    +`</div>`
     +`<div class="tp-figx-bar" role="toolbar" aria-label="Figure controls">`
       +btn('zoomout','Zoom out','−')+btn('zoomin','Zoom in','+')
       +`<span class="tp-figx-pan" role="group" aria-label="Pan">`
