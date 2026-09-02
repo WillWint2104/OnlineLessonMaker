@@ -17,6 +17,7 @@ scripts that were never committed, so their rendered output could not be reprodu
 | `lessons/composable-page-baseline.json` | The composable `page` type across every registered block: `skillHeader`, `section` (prose + inline `$…$` + display equation), `figure`, `workedExample`, `selfCheck`, `practiceSet`, `mastery`. Loads on `scholarmath`; re-skins to all five themes. |
 | `lessons/figure-graph-baseline.json` | The graph engine's four representative states: a clean plot, a crowded plane (12 identifiers, 2 curves, 3 chords — the Stage-1b pill-collision stress case), a discontinuity at `aspect:equal`, and the author-error state. The discontinuity figure also authors `minorGrid:false` + `axisNames:false`, so the display *defaults* are exercised rather than assumed (see `SCHEMA.md` → `figure`); slide 0 authors neither, covering the unchanged default. |
 | `lessons/modal-overflow-baseline.json` | A solution modal taller than any supported viewport. Guards the focus-overlay parking contract below. |
+| `lessons/figure-geometry-baseline.json` | **Stage 3 geometry**, 10 figures: right triangle with vertex/side labels and a right-angle marker · scalene triangle with single, double and triple angle arcs · a **non-axis-aligned** right angle · quadrilateral with every interior angle · irregular heptagon · crowded pentagon carrying names, sides and angles at once · long descriptive labels · a polygon hard against a stated domain · a `triangleSSS` parameterised construction · the author-error state (unknown vertex + a `rightAngle` that is not 90°). Loads on `scholarmath`. |
 | `lessons/figure-labels-baseline.json` | The label-placement system's five distinct pressures, one per slide: **isolated** identifiers (nothing competing — the control case), identifiers **on the axes and on tick values** (including `V` at the origin, the case raised at the UI-1 visual review), identifiers **on a curve and its chords**, identifiers **at the viewport corners and edges** (outward is off-canvas at every marker), and **long identifiers** in a tight domain (wide pills clear far less easily than single letters). Loads on `scholarmath`. |
 
 ## Loading one
@@ -99,6 +100,21 @@ rail, the canvas fit, or the figure engine.
    configuration live at that moment: the focused box is a *measured* viewport rather than a constant and the
    tick target decides which numbers are reserved, so a collision or a non-nearest position can exist there and
    nowhere else. `scripts/verify-label-placement.mjs` runs all of it (785 assertions).
+
+8. **Geometry inherits the shell and the placement system; its own anchors are what Stage 3 has to prove
+   (Stage 3).** Stage 2c proved the graph's point-label anchor. Geometry adds three more — vertex (external
+   bisector), side (outward normal from the centroid) and angle measure (on the swept-arc bisector at `e·r`) —
+   and none of them is exercised by the graph fixtures. **Assert**, on `figure-geometry-baseline.json`: every
+   label clears every edge, arc, right-angle mark, vertex and other label by ≥ `FIG_GAP` and sits on canvas;
+   vertex names resolve to the correct vertex and side labels to the correct side; angle labels sit near their
+   arc rather than at the vertex; stacked arcs at one vertex do not overlap and each stays inside its own
+   angle; the right-angle square is built from the two incident rays, so it is correct at an arbitrary
+   orientation (the fixture includes one); a `rightAngle` asserted on an angle that is not 90° is **reported
+   and not drawn**; measures are computed (`label:"measure"`, `text:"auto"`), never authored — interior angles
+   of the n-gon must sum to (n−2)·180°. In the **focused** workspace at desktop and portrait, the drawn figure
+   must fill the stage rather than sit in dead space: measure the SVG's painted bbox against
+   `.tp-figx-stage` — Stage 3 records **87–94% in both dimensions** at 1440×900 / 834×1112 / 390×844. The grid
+   default is hidden for geometry and must read the same inline and focused.
 
 ## Geometry (Stage 3)
 

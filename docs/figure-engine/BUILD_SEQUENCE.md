@@ -116,7 +116,23 @@ using it that shows up as a failure rather than as a silently unranked label.
 long-labels cases must be reviewed before Stage 3 is considered complete, since vertex and side anchors are
 new candidate sources this stage did not exercise.
 
-## STAGE 3 — Geometry 2D front-end
+## STAGE 3 — Geometry 2D front-end (DONE)
+Delivered as `figGeometry` / `figGeomBody`, dispatched from `fragFigure` on `b.figure==='geometry'`. It renders
+into the UI-1 shared Figure Shell, opens in the same focused workspace on the same rail, and places every label
+through the Stage-2c pill system — there is no geometry-specific shell, toolbar or placement rule.
+
+Two seams needed correcting for geometry rather than new machinery, both found by measuring rather than by
+reading the code:
+* **`figxRegister` now records geometry's TIGHT bounds** (`M.dom0`), not the solved inline view. `figView('equal')`
+  expands whichever axis is short for the box it is given, so registering an already-expanded landscape domain
+  and expanding it again for a portrait viewport compounded the padding twice — the crowded pentagon fell to
+  58% of stage width and 43% of its height. Starting from tight bounds lets each viewport expand once: the
+  drawn figure now fills **87–94% of the stage in both dimensions** at 1440×900, 834×1112 and 390×844.
+* **The grid default is inverted for geometry** (hidden unless `grid:"shown"`) in `figxRegister` as well as in
+  the model, because reading it the graph's way made the grid vanish inline and reappear on ⤢.
+
+`aspect` is forced to `equal`: a stretched axis turns a right angle into something that is not one.
+
 Branch off 1c (can land after Stage 2). Spec §3, §4, §5, §7.
 Delivers: constructions → solved figure → drawables; angle arcs built from `PointOnRay` on the arms
 (signed sweep, α+δ/2 bisector, e·r measure); square right-angle (|δ|≈90°); length labels with units;
@@ -126,9 +142,11 @@ ACCEPTANCE (proven in prototype — must reproduce): arcs seat on arms across ri
 right-angle; measures are computed values on the bisector; every pill ≥ GAP clear of arms/vertices/
 pills; matches the APPROVED geometry visual target; the same n-gon code renders square→pentagon→quad;
 ADDITIVE clean; validate green.
-FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` covering triangle with
-one angle arc · multiple arcs · right-angle marker · quadrilateral · irregular n-gon · vertex labels ·
-side labels · crowded labels · long labels · resized figure · the focused/expanded state. Stages 1a–2b
+FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` — committed, 10 figures
+across 7 pages, covering triangle with one angle arc · multiple arcs · right-angle marker (including a
+NON-AXIS-ALIGNED one) · quadrilateral · irregular n-gon · vertex labels · side labels · crowded labels · long
+labels · labels at the viewport edge · a parameterised construction · the author-error state, plus the
+focused/expanded state at desktop and portrait. Stages 1a–2b
 shipped with NO committed fixture and their rendered output could not be reproduced afterwards — see
 `tests/visual/README.md`. A stage that adds a rendered surface adds its fixture.
 

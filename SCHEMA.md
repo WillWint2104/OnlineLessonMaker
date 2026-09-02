@@ -371,6 +371,51 @@ Learner-facing controls are deliberately `Zoom out · Zoom in · Pan · Reset ·
 display settings above behind **Options** — engine capability is not the same thing as permanent UI, and
 Stage 3 inherits that rule rather than adding a second dense toolbar.
 
+### `figure: "geometry"` *(Stage 3)*
+
+The same block and the same shell; only `objects[]` differs. Points are declared exactly as a graph declares
+them, or solved from a parameterised `construction`, and every mark and label is derived from those
+coordinates — nothing is positioned by hand.
+
+```json
+{ "type": "figure", "figure": "geometry",
+  "title": "Right triangle 3-4-5", "caption": "A right-angle marker at $A$.",
+  "objects": [
+    { "type": "points", "from": "table", "rows": [["A",0,0],["B",4,0],["C",0,3]] },
+    { "type": "polygon", "vertices": ["A","B","C"], "angles": "all", "fill": false },
+    { "type": "segment", "between": ["A","B"] },
+    { "type": "angle", "at": "B", "between": ["A","C"], "arcs": 2, "label": "measure" },
+    { "type": "rightAngle", "at": "A", "between": ["B","C"] },
+    { "type": "sideLabel", "between": ["A","B"], "text": "auto" }
+  ] }
+```
+
+| Field | Type | Notes |
+|---|---|---|
+| `construction` | string | Optional parameterised solve — `rightTriangle` · `triangleSAS` · `triangleASA` · `triangleSSS` · `regularPolygon` · `circle` · `rawCoordinates`. With `params`, it produces the named points (`A`, `B`, `C`, …) that `objects[]` then refers to. Impossible givens are **rejected with an error**, never solved into a fabricated figure. |
+| `params` | object | The givens for `construction` (e.g. `{a:7,b:8,c:9}`). |
+| `vertexLabels` | boolean | Default `true` — every polygon vertex is named. `false` suppresses them. |
+| `domain` | `{xMin,…}` | Optional. Otherwise fitted to the figure; auto-fit only ever expands so a label has room. |
+| `grid` | `"shown"` \| `"hidden"` | Default **hidden** for geometry — a construction is not a coordinate reading. |
+
+`objects[]` for geometry:
+
+| Type | Shape | Notes |
+|---|---|---|
+| `points` | `{from:"table", rows:[[id,x,y],…]}` | The same vocabulary the graph uses. Authored points override construction points of the same name. |
+| `polygon` | `{vertices:[…], angles?:"all", fill?:true}` | **Any n ≥ 3 through one renderer** — triangle, quadrilateral and irregular n-gon are the same code path. `angles:"all"` measures every interior angle. |
+| `segment` | `{between:[idA,idB]}` | A named-point connector, as in a graph. |
+| `angle` | `{at, between:[idP,idQ], arcs?:1–3, label?}` | Arc(s) seated on the actual arms at `at`. `arcs` stacks concentric arcs without overlap. `label:"measure"` **displays the computed angle**; any other string is a *name* (`"θ"`); `false` draws the arc with no label. |
+| `rightAngle` | `{at, between:[idP,idQ]}` | The square, derived from the two incident rays, so it is correct at any orientation. If the angle is not 90° the mark is **not drawn** and the discrepancy is reported. |
+| `sideLabel` | `{between:[idA,idB], text?}` | `"auto"` (or omitted) **displays the computed length**; any other string is a *name* (`"hypotenuse"`). |
+
+**Single source of truth (§4):** a measure is never authored. `label:"measure"` and `text:"auto"` display what
+the engine computed from the construction; a literal string is understood as a name, not as a value, so a
+figure can never assert a length or angle that its own coordinates contradict.
+
+`aspect` is not read for geometry — it is always `equal`. A stretched axis turns a right angle into something
+that is not one and an arc into an ellipse, so it is not an authoring choice here.
+
 ## `outro`
 
 Lesson‑complete screen. Up to **3 stat tiles** — **omit the score entry from `stats[]` to hide that

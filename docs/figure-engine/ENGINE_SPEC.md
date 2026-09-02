@@ -205,7 +205,10 @@ Anchor + primary direction per label type (all coordinate-derived):
 1. Generate candidates: out along the primary dir at increasing distance (base…base+~70, step ~6),
    EACH also shifted along the edge/arm by a few offsets (0, ±14, ±26…) toward the less-crowded end.
 2. Order near→far; test each candidate box against ALL obstacles (arms as segments, vertices/points,
-   already-placed pills). Take the FIRST fully-clear candidate.
+   already-placed pills). Take the NEAREST fully-clear candidate — smallest displacement from the anchor, not
+   the first one encountered (Stage 2c; §1.4 carries the reasoning and the branch-and-bound that keeps it
+   terminating). This paragraph said "the FIRST fully-clear candidate" until Stage 3, which was the pre-2c
+   rule and would have had geometry inherit exactly the defect Stage 2c removed from the graph.
 3. If none is fully clear within range (pathological), take the least-penalised (max clearance) — but
    the search range must be wide enough that this is rare.
 4. Placement order: vertices first (they crowd corners), then lengths, then angle measures — later

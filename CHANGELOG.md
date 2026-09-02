@@ -8,6 +8,26 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 3 — Geometry 2D front-end.** Polygons of any *n* through **one** renderer, angle arcs seated on the
+  actual arms, a right-angle square derived from the two incident rays, and vertex / side / angle labels placed
+  by the **same Stage-2c pill system** the graph uses. It renders into the UI-1 shared Figure Shell and opens in
+  the same focused workspace on the same rail: a geometry figure differs from a graph by its **content**, not by
+  a second container, toolbar or placement rule. `fragFigure` dispatches on `b.figure` and everything else —
+  shell, ⤢, errors, caption, Options — is shared. Solving reuses Stage 1c's construction DAG (`figConstruct`)
+  unchanged, so `construction: "triangleSSS"` and friends work with authored points as one vocabulary; every
+  mark is then derived in SCREEN space from the projected coordinates, so what is measured for placement is
+  exactly what is drawn. Angles use §3.1's **signed sweep** (`δ = wrap(β−α)`, bisector `α + δ/2`, label at
+  `e·r`) rather than `normalize(u+w)`, which the spec forbids for degenerating near 180°. `aspect` is forced to
+  `equal` — a stretched axis turns a right angle into something that is not one. **Single source of truth (§4)
+  holds:** `label:"measure"` and `text:"auto"` display what the engine computed; any other string is understood
+  as a *name*, so a figure can never assert a length or angle its own coordinates contradict — and a
+  `rightAngle` asserted on an angle that is not 90° is **reported and not drawn** rather than fabricated.
+  Fixture: `tests/visual/lessons/figure-geometry-baseline.json`, 10 figures across 7 pages (see
+  `tests/visual/README.md` contract 8). **Checked:** all 10 solve with every label ≥ `FIG_GAP` clear of every
+  edge, arc, mark, vertex and other label (worst 6.0 against a gap of 6), none off-canvas, none falling through
+  to the exhaustive fallback, 0 console errors; the heptagon and pentagon interior angles sum to (n−2)·180°;
+  legacy corpus **250/250 byte-identical** via the committed `verify-corpus-identity.mjs`.
+
 - **`scripts/verify-corpus-identity.mjs` — the recurring "250/250 byte-identical" claim becomes a committed,
   reproducible check.** #146, #147 and #149 each asserted that no committed lesson changed, and each proved it
   with a throwaway script nobody else could re-run — the exact gap the preamble of `tests/visual/README.md`
@@ -33,6 +53,23 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `npm run corpus-identity`; documented in `docs/CHECKING.md`.
 
 ### Fixed
+- **A geometry figure lost most of its focused viewport, and its grid changed between inline and expanded.**
+  Two seams that were right for graphs and wrong for geometry, both found by measuring rather than reading.
+  **(1)** `figxRegister` recorded the *solved inline view* as the focus domain. `figView('equal')` expands
+  whichever axis is short for the box it is given, so registering an already-expanded landscape domain and then
+  expanding it again for a portrait viewport compounded the padding twice: the crowded pentagon fell to **58%
+  of the stage width and 43% of its height** — precisely the dead drawing space UI-1's contract 5 exists to
+  prevent. Geometry now registers its **tight** bounds (`M.dom0`) so each viewport expands once, for itself;
+  the painted figure fills **87–94% of the stage in both dimensions** at 1440×900, 834×1112 and 390×844, with
+  the SVG exactly matching the stage (no letterboxing). A graph's domain is authored *data*, so it still
+  registers the solved view. **(2)** The grid default is inverted for geometry — a construction is not a
+  coordinate reading — but `figxRegister` read it the graph's way, so the grid vanished inline and reappeared
+  on ⤢. **Checked:** 0 grid lines inline *and* focused for a geometry figure authoring no `grid`.
+- **`ENGINE_SPEC.md` §3.2 still told the next stage to take the FIRST clear label position.** Stage 2c replaced
+  that with the nearest legal one in §1.4, but §3.2 — the section a geometry implementer reads — was left
+  saying "Take the FIRST fully-clear candidate". Corrected, with a pointer to §1.4; left as it was, Stage 3
+  would have inherited exactly the defect Stage 2c removed.
+
 - **The `screenshots` CI job has been green with NO artifact since #89 (2026‑07‑03) — `shots.mjs` was rendering
   an empty lesson and writing zero PNGs.** The harness screenshotted whatever the app shipped with, and the
   app's embedded `#lesson-data` has been `{"slides": []}` since #89: every theme logged "slide N is out of range

@@ -1,0 +1,124 @@
+{
+  "meta": { "theme": "scholarmath", "title": "Figure geometry — Stage 3" },
+  "slides": [
+    { "type": "page", "title": "Triangle, vertex and side labels",
+      "blocks": [
+        { "type": "section", "title": "The base case",
+          "flow": [{ "kind": "para", "text": "A 3-4-5 triangle with every vertex named, every side measured, and the right angle marked. Vertex labels, side labels and the right-angle square must all clear the arms and each other." }] },
+        { "type": "figure", "figure": "geometry", "title": "Right triangle 3-4-5",
+          "caption": "Vertex labels, computed side lengths, and a right-angle marker at $A$.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", 0, 0], ["B", 4, 0], ["C", 0, 3]] },
+            { "type": "polygon", "vertices": ["A", "B", "C"] },
+            { "type": "rightAngle", "at": "A", "between": ["B", "C"] },
+            { "type": "sideLabel", "between": ["A", "B"] },
+            { "type": "sideLabel", "between": ["A", "C"] },
+            { "type": "sideLabel", "between": ["B", "C"] }
+          ] }
+      ] },
+    { "type": "page", "title": "Angle arcs — single, multiple, and every vertex",
+      "blocks": [
+        { "type": "section", "title": "Arcs seat on the arms",
+          "flow": [{ "kind": "para", "text": "A scalene triangle with one double arc, one single arc, and a measured angle at each remaining vertex. Stacked arcs at one vertex must not overlap, and each arc must sit inside its own angle." }] },
+        { "type": "figure", "figure": "geometry", "title": "Scalene triangle with angle arcs",
+          "caption": "Angle measures are computed from the construction, never authored.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["P", -3, -1.5], ["Q", 4, -0.5], ["R", 0.5, 3.5]] },
+            { "type": "polygon", "vertices": ["P", "Q", "R"] },
+            { "type": "angle", "at": "P", "between": ["R", "Q"], "arcs": 2 },
+            { "type": "angle", "at": "Q", "between": ["P", "R"], "arcs": 1 },
+            { "type": "angle", "at": "R", "between": ["Q", "P"], "arcs": 3, "label": "θ" }
+          ] }
+      ] },
+    { "type": "page", "title": "Rotated right angle",
+      "blocks": [
+        { "type": "section", "title": "Not axis-aligned",
+          "flow": [{ "kind": "para", "text": "The same right angle, rotated off the axes. The marker is built from the two incident rays, so it must follow the rotation rather than staying square to the grid." }] },
+        { "type": "figure", "figure": "geometry", "title": "Right angle at an arbitrary orientation",
+          "caption": "The marker is derived from the rays $VP$ and $VQ$, not painted axis-aligned.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["V", 0, 0], ["P", 3.2, 2.4], ["Q", -1.8, 2.4]] },
+            { "type": "polygon", "vertices": ["V", "P", "Q"] },
+            { "type": "rightAngle", "at": "V", "between": ["P", "Q"] },
+            { "type": "sideLabel", "between": ["V", "P"] },
+            { "type": "sideLabel", "between": ["V", "Q"] }
+          ] }
+      ] },
+    { "type": "page", "title": "Quadrilateral and irregular n-gon",
+      "blocks": [
+        { "type": "section", "title": "One renderer, any n",
+          "flow": [{ "kind": "para", "text": "A quadrilateral and a seven-sided irregular polygon, both through the same polygon renderer — no per-shape branch." }] },
+        { "type": "figure", "figure": "geometry", "title": "Quadrilateral with interior angles",
+          "caption": "Four vertices, every interior angle measured.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", -3, -2], ["B", 3.5, -2.4], ["C", 4, 2], ["D", -2.5, 2.6]] },
+            { "type": "polygon", "vertices": ["A", "B", "C", "D"], "angles": "all" }
+          ] },
+        { "type": "figure", "figure": "geometry", "title": "Irregular heptagon",
+          "caption": "The same renderer at $n=7$.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", 0, 4], ["B", 3.6, 2.4], ["C", 4.2, -1.2], ["D", 1.4, -3.8], ["E", -2.2, -3.4], ["F", -4.1, -0.4], ["G", -3, 2.8]] },
+            { "type": "polygon", "vertices": ["A", "B", "C", "D", "E", "F", "G"], "fill": true }
+          ] }
+      ] },
+    { "type": "page", "title": "Crowded labels and long labels",
+      "blocks": [
+        { "type": "section", "title": "Placement under pressure",
+          "flow": [{ "kind": "para", "text": "A tight polygon carrying vertex names, every side measured and every angle measured at once — the geometry equivalent of the crowded plane. Then the same figure with long descriptive side names instead of numbers." }] },
+        { "type": "figure", "figure": "geometry", "title": "Crowded — names, sides and angles together",
+          "caption": "Stress case for the Stage-2c nearest-legal placement on geometry anchors.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", -1.6, -1.2], ["B", 1.7, -1.5], ["C", 2.1, 1.3], ["D", -0.2, 2.2], ["E", -2.2, 0.9]] },
+            { "type": "polygon", "vertices": ["A", "B", "C", "D", "E"], "angles": "all" },
+            { "type": "sideLabel", "between": ["A", "B"] },
+            { "type": "sideLabel", "between": ["B", "C"] },
+            { "type": "sideLabel", "between": ["C", "D"] },
+            { "type": "sideLabel", "between": ["D", "E"] },
+            { "type": "sideLabel", "between": ["E", "A"] }
+          ] },
+        { "type": "figure", "figure": "geometry", "title": "Long identifiers on a small triangle",
+          "caption": "Wide pills clear far less easily than a single digit.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", -2, -1.4], ["B", 2, -1.4], ["C", 0.2, 2]] },
+            { "type": "polygon", "vertices": ["A", "B", "C"] },
+            { "type": "sideLabel", "between": ["A", "B"], "text": "hypotenuse" },
+            { "type": "sideLabel", "between": ["B", "C"], "text": "opposite side" },
+            { "type": "sideLabel", "between": ["C", "A"], "text": "adjacent side" },
+            { "type": "angle", "at": "A", "between": ["C", "B"], "label": "angle of elevation" }
+          ] }
+      ] },
+    { "type": "page", "title": "Labels at the viewport edges",
+      "blocks": [
+        { "type": "section", "title": "Nowhere outward to go",
+          "flow": [{ "kind": "para", "text": "A polygon authored hard against a stated domain, so every vertex label's outward direction leaves the canvas. Auto-fit must expand rather than let a pill run off the plane." }] },
+        { "type": "figure", "figure": "geometry", "title": "Polygon at the domain edge",
+          "caption": "Edge case — an on-canvas constraint at every vertex.",
+          "domain": { "xMin": -4, "xMax": 4, "yMin": -4, "yMax": 4 },
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", -4, 4], ["B", 4, 4], ["C", 4, -4], ["D", -4, -4]] },
+            { "type": "polygon", "vertices": ["A", "B", "C", "D"] },
+            { "type": "sideLabel", "between": ["A", "B"] },
+            { "type": "sideLabel", "between": ["C", "D"] }
+          ] }
+      ] },
+    { "type": "page", "title": "Parameterised construction and an author error",
+      "blocks": [
+        { "type": "section", "title": "Constructions and rejection",
+          "flow": [{ "kind": "para", "text": "A triangle solved from three side lengths through the Stage-1c construction DAG, and an impossible one that must be reported rather than drawn." }] },
+        { "type": "figure", "figure": "geometry", "title": "triangleSSS 7-8-9",
+          "caption": "Solved from givens, not authored coordinates.",
+          "construction": "triangleSSS", "params": { "a": 7, "b": 8, "c": 9 },
+          "objects": [
+            { "type": "polygon", "vertices": ["A", "B", "C"], "angles": "all" },
+            { "type": "sideLabel", "between": ["A", "B"] }
+          ] },
+        { "type": "figure", "figure": "geometry", "title": "Author error state",
+          "caption": "An impossible triangle and a right-angle assertion that is not 90°.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", 0, 0], ["B", 4, 0], ["C", 1.2, 2.6]] },
+            { "type": "polygon", "vertices": ["A", "B", "Z"] },
+            { "type": "rightAngle", "at": "A", "between": ["B", "C"] }
+          ] }
+      ] }
+    ]
+}
