@@ -93,6 +93,24 @@ Deterministic candidate-search (standard cartographic method):
   provably terminates (far enough out is always clear).
 - Adjust the underlying *coordinate anchor* (not pixels), so it survives rescale.
 
+**Ranking (Stage 2c).** Clearance is a HARD GATE and is never traded away — but "step outward until
+clear" does not on its own say *which* clear position to take, and the candidate space is enumerated
+(distance × direction × perpendicular SHIFT along the edge), so the first clearing candidate is often
+not the nearest one. A large shift at a small distance was being accepted ahead of a small unshifted
+step further out, and on a saturated plane that loses the association between a label and the point it
+names (measured: `K` placed 57.5px from its marker where 20.5px was legal; `V` 44.2px; `I` 31.4px).
+Among the candidates that satisfy every clearance rule, placement takes the one with the smallest
+DISPLACEMENT from the owner — marker to label-box centre. The ring distance is a true lower bound on
+displacement, so the search remains a terminating branch and bound rather than a full enumeration.
+Placement stays deterministic: fixed enumeration order, strict improvement only, so ties resolve to
+the more preferred direction.
+
+**Axis furniture is an obstacle (Stage 2c).** "Clear every arm" covers the axis LINES; it must also
+cover the numbers PRINTED along them. The reserved boxes are derived from the same nice-tick chooser
+(§1.2) that emits them, at the tick density currently in effect, so changing tick density changes what
+a label has to clear. Without this, ranking by displacement makes tick-label collisions *worse* — the
+nearest legal position is very often the one tucked in against an axis.
+
 ### 1.5 Text halo (legibility)
 Every label renders with a contrasting halo so it stays legible over gridlines, arcs, shape edges.
 SVG: `paint-order: stroke; stroke: <bg>; stroke-width: 3px; stroke-linejoin: round`. Standard

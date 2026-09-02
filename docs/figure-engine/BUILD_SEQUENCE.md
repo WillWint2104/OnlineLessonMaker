@@ -84,16 +84,37 @@ own chrome ate the rest); now ≥ 1.0× at 1440×900 / 1280×800 / 1024×768 / 8
 eyeball it. The margin is currently slim (1.08×) because the INLINE figure is allowed to fill the pane —
 sizing the inline figure is a visual-system decision, not an engine one, and is deferred to that pass.
 
-## PRE-STAGE-3 REQUIREMENT — crowded label placement (raised at the UI-1 visual review)
-The crowded graph fixture shows identifiers (I, K, L) sitting visibly far from their points: §3.2's "clear
-every arm by >= GAP" search pushes a pill until it satisfies the constraint, with nothing pulling it back
-toward its owner, so on a saturated plane association is lost. This PREDATES UI-1 and was deliberately NOT
-folded into that visual correction — it belongs to the Stage-1b placement system, not the shell.
-**Before Stage 3 is considered complete, crowded graph AND geometry labels must be reviewed so geometry does
-not blindly inherit this.** Decide after UI-1 whether it is a small Stage 2c correction first (e.g. add a
-distance-to-owner term to the candidate ranking, so the search prefers the nearest satisfying position rather
-than the first) or part of Stage 3's fixture-driven work. `figure-geometry-baseline.json`'s crowded-labels
-and long-labels cases are the evidence either way.
+## STAGE 2c — label-placement quality (DONE)
+Raised at the UI-1 visual review: the crowded fixture showed identifiers (I, K, L) sitting visibly far from
+their points, because §3.2's "clear every arm by >= GAP" search pushed a pill until it satisfied the
+constraint with nothing pulling it back toward its owner. It PREDATED UI-1 and was deliberately not folded
+into that visual correction — it belongs to the Stage-1b placement system, not the shell. Taken as its own
+stage before Geometry so Stage 3 inherits a placement system worth inheriting.
+
+Two changes, both inside the shared placement algorithm; no Figure Shell change, no graph-rendering change,
+no geometry:
+1. **Rank the legal candidates by displacement from the owner** (ENGINE_SPEC §1.4). Clearance stays a hard
+   gate; this only decides which satisfying position is used. `K` 57.5px → 20.5px, `V` 44.2px → 31.5px,
+   `I` 31.4px → 20.5px; worst displacement on the crowded plane 57.5px → 32.2px.
+2. **The printed axis numbering is an obstacle**, not just the axis lines. Ranking alone makes tick
+   collisions worse (the nearest legal position is often the one against an axis): worst gap to a tick label
+   on the crowded plane went 3.0px → 1.3px with ranking alone, and to 15.4px with this. `V` at the origin —
+   the vertex case actually raised at the review — went 22.7px → 2.1px → 20.1px.
+
+Fixtures: `tests/visual/lessons/figure-labels-baseline.json` (isolated · on the axes and tick values · on
+curves and chords · at the viewport edges · long identifiers) plus the existing crowded plane. Asserted by
+`scripts/verify-label-placement.mjs` as a property — the placed displacement must equal the minimum over all
+candidates that clear, re-derived by an unpruned reference search — not against tuned numbers. Contract 7 in
+`tests/visual/README.md`.
+
+NOT changed, and deliberately: `figScanPill`, the exhaustive fallback that runs when the directional search
+finds nothing legal, is not displacement-ranked. It is the structural last resort behind the escalation
+guarantee, and it does not fire on any fixture — the harness asserts that, so if a future figure starts
+using it that shows up as a failure rather than as a silently unranked label.
+
+**Stage 3 still owes the geometry half of this:** `figure-geometry-baseline.json`'s crowded-labels and
+long-labels cases must be reviewed before Stage 3 is considered complete, since vertex and side anchors are
+new candidate sources this stage did not exercise.
 
 ## STAGE 3 — Geometry 2D front-end
 Branch off 1c (can land after Stage 2). Spec §3, §4, §5, §7.
