@@ -15,16 +15,22 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   lesson in `examples/` and `lessons/`, re-skinned to all five pack themes, slide by slide through the app's own
   `render()`, and compares `#slide.innerHTML` byte for byte against another git ref (default `origin/main`).
   Every non-local request is aborted in both pages, so a render is a pure function of the engine and the lesson
-  JSON — the corpus' remote video posters otherwise made 1–4 units differ per run purely on timing. A mismatch
-  names the exact **lesson / theme / slide** and exits **1**. Render time is printed for orientation and
+  JSON — the corpus' remote video posters otherwise made 1–4 units differ per run purely on timing. **Each side
+  renders its own revision's lesson JSON**, and the lesson list is unioned across the two revisions: reading the
+  working tree's lesson files for both would render the new data twice and report a genuine content edit as
+  *identical*, and a lesson added or deleted on one side would never be compared (raised by CodeRabbit). A
+  mismatch names the exact **lesson / theme / slide** and exits **1**. Render time is printed for orientation and
   **never fails the run**: a wall-clock number off one shared runner is not a benchmark, and asserting on it
   would only make the check flaky — that needs a real methodology first. Not wired into CI, deliberately: it
   needs Playwright + Chromium, which only the informational `screenshots` workflow installs, and changing what
   gates merge is a maintainer decision. **Checked:** reproduces **250/250** against `origin/main` at
-  `66779fc`; and, because a verifier that only ever passes is worthless, two deliberate perturbations were
-  injected and reverted — a global one caught **250/250** differing, and a single-theme one caught exactly
-  **50/250**, every reported unit `theme=scholarmath`, with the reported character delta matching the injected
-  string's length in both cases. `npm run corpus-identity`; documented in `docs/CHECKING.md`.
+  `66779fc`; and, because a verifier that only ever passes is worthless, four deliberate perturbations were
+  injected and reverted: a global engine change caught **250/250** differing; a single-theme one caught exactly
+  **50/250**, every reported unit `theme=scholarmath`; a one-word edit to a **lesson title** caught **4/250**,
+  all slide 0 of that lesson (not five — `scholarmath` renders a legacy `title` slide as a 361-char stub that
+  omits the title, verified directly); and an **added lesson file** caught 5 new units as *absent in reference*
+  and named the file. The reported character delta matched the injected string's length each time.
+  `npm run corpus-identity`; documented in `docs/CHECKING.md`.
 
 ### Fixed
 - **The `screenshots` CI job has been green with NO artifact since #89 (2026‑07‑03) — `shots.mjs` was rendering

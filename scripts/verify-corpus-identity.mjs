@@ -9,7 +9,10 @@
 // WHAT IT PROVES. Every committed lesson in examples/ and lessons/, re-skinned to each of the five
 // pack themes, rendered slide by slide through the app's OWN render() — and the resulting
 // `#slide.innerHTML` compared byte for byte between the working tree's lesson-studio.html and the
-// reference ref's. A change that is meant to leave existing lessons alone (an engine addition, a
+// reference ref's. BOTH THE ENGINE AND THE LESSON JSON come from their own revision: reading the
+// working tree's lesson files for both sides would render the new data twice and report a genuine
+// content change as identical, and the lesson list is unioned across the two revisions so a lesson
+// added or deleted on one side is compared rather than skipped. A change that is meant to leave existing lessons alone (an engine addition, a
 // new block type, a placement fix that no committed lesson exercises) must come back all-identical;
 // anything else names the exact lesson / theme / slide that moved.
 //
@@ -61,14 +64,34 @@ let refSha;
 try { refSha = git('rev-parse', '--short', REF); }
 catch { console.error(`✗ cannot resolve ref "${REF}"`); process.exit(1); }
 
-// The corpus: every committed lesson, both directories.
-const corpus = [];
+// The corpus: every committed lesson in either directory, taken from BOTH revisions and unioned.
+// Each side must render ITS OWN lesson JSON — reading the working tree's copy for both would make a
+// change to a lesson file invisible (both sides render the new data and report identical), and a
+// lesson added or deleted on one side would never be compared at all.
+const isLesson = (p) => /^(examples|lessons)\/[^/]+\.json$/.test(p);
+const wtCorpus = [];
 for (const dir of ['examples', 'lessons']) {
   const abs = path.join(root, dir);
   if (!fs.existsSync(abs)) continue;
-  for (const f of fs.readdirSync(abs).filter((n) => n.endsWith('.json')).sort()) corpus.push(`${dir}/${f}`);
+  for (const f of fs.readdirSync(abs).filter((n) => n.endsWith('.json'))) wtCorpus.push(`${dir}/${f}`);
 }
-if (!corpus.length) { console.error('✗ no lessons found in examples/ or lessons/'); process.exit(1); }
+let refCorpus = [];
+try { refCorpus = git('ls-tree', '-r', '--name-only', REF, '--', 'examples/', 'lessons/').split('\n').filter(isLesson); }
+catch { /* ref may predate either directory — an empty list is a valid answer */ }
+const corpus = [...new Set([...refCorpus, ...wtCorpus])].sort();
+if (!corpus.length) { console.error('✗ no lessons found in examples/ or lessons/ on either side'); process.exit(1); }
+const onlyRef = refCorpus.filter((f) => !wtCorpus.includes(f));
+const onlyWt = wtCorpus.filter((f) => !refCorpus.includes(f));
+
+// Each revision's lesson JSON, read once. `null` means the lesson does not exist on that side, which
+// is a difference in its own right rather than a reason to skip it.
+const lessonsAt = (readOne) => {
+  const map = Object.create(null);
+  for (const rel of corpus) { try { map[rel] = JSON.parse(readOne(rel)); } catch { map[rel] = null; } }
+  return map;
+};
+const refLessons = lessonsAt((rel) => gitRaw('show', `${REF}:${rel}`).toString('utf8'));
+const wtLessons = lessonsAt((rel) => fs.readFileSync(path.join(root, rel), 'utf8'));
 
 // Stage both builds side by side. file:// keeps this independent of any local server; the app
 // inlines its fonts as data: URIs, so the only cross-origin fetches are the ones we abort anyway.
@@ -85,8 +108,10 @@ fs.copyFileSync(path.join(root, 'lesson-studio.html'), wtFile);
 
 const browser = await chromium.launch(launchOpts);
 
-// Render the whole corpus in one build. Returns { "lesson|theme|slide": innerHTML }.
-async function renderAll(file, label) {
+// Render the whole corpus in one build, using THAT revision's lesson JSON. Returns
+// { "lesson|theme|slide": innerHTML }; a lesson absent on this side contributes no keys, so the
+// comparison below reports its units as absent rather than silently matching.
+async function renderAll(file, label, lessons) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const errs = [];
   page.on('pageerror', (e) => errs.push(String(e)));
@@ -100,7 +125,8 @@ async function renderAll(file, label) {
   const out = {};
   const started = Date.now();
   for (const rel of corpus) {
-    const lesson = JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8'));
+    const lesson = lessons[rel];
+    if (!lesson || !Array.isArray(lesson.slides)) continue;
     for (const theme of THEMES) {
       Object.assign(out, await page.evaluate(({ lesson, theme, rel }) => {
         LESSON = JSON.parse(JSON.stringify(lesson));
@@ -121,8 +147,8 @@ async function renderAll(file, label) {
   return { out, errs, ms, label };
 }
 
-const A = await renderAll(refFile, `${REF} (${refSha})`);
-const B = await renderAll(wtFile, 'working tree');
+const A = await renderAll(refFile, `${REF} (${refSha})`, refLessons);
+const B = await renderAll(wtFile, 'working tree', wtLessons);
 await browser.close();
 fs.rmSync(tmp, { recursive: true, force: true });
 
@@ -132,6 +158,8 @@ const diffs = keys.filter((k) => A.out[k] !== B.out[k]);
 const same = keys.length - diffs.length;
 
 console.log(`corpus: ${corpus.length} lesson(s) × ${THEMES.length} theme(s) = ${keys.length} render units`);
+if (onlyRef.length) console.log(`  only in ${REF}: ${onlyRef.join(', ')}`);
+if (onlyWt.length) console.log(`  only in the working tree: ${onlyWt.join(', ')}`);
 console.log(`reference: ${A.label}   ·   subject: working tree`);
 console.log(`render time: ${A.ms}ms / ${B.ms}ms (informational — not a benchmark, never fails the run)`);
 for (const r of [A, B]) if (r.errs.length) console.log(`⚠ ${r.label}: ${r.errs.length} page error(s) — ${r.errs[0].slice(0, 120)}`);
