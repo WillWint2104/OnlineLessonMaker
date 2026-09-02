@@ -8,6 +8,51 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 3c — Semantic placement constraints.** Stage 3b gave each annotation a role and a preferred anchor;
+  visual review showed the preference being discarded by the collision search whenever a clear position
+  existed on the semantically wrong side of the geometry — angle measures outside their own wedge (`46.9°`,
+  `56.9°`, `59.2°`), a side length inside the polygon it measures, a vertex name inside the shape it names.
+  The missing layer is the **allowed region**: per role, the set of positions that still MEAN the right thing.
+  `semantic role → preferred anchor → allowed region → clearance search → nearest legal → styling`. An angle
+  measure (and a symbolic name for the same angle) must stay inside the swept wedge and, for an interior
+  angle, inside the polygon; a side measure must stay in the exterior half-plane of its own edge, free to
+  slide along it but never to cross it; a vertex name must stay outside its polygon. The region is not a
+  preference the ranking can outvote — an illegal candidate is excluded before clearance is measured, and
+  excluded from the fallback too. **Stage 2c is unchanged in what it does**: it still ranks by displacement
+  and takes the nearest legal position, but now only among positions that mean the right thing. The graph
+  supplies no regions and is byte-identical. Exhausting a region is **reported, never silently escaped**: the
+  figure expands up to 8 times, and only then relaxes the region and names the label whose association it had
+  to weaken — a measure drawn outside its own angle without saying so is worse than a missing one, because
+  nothing in the picture reveals it.
+- **`scripts/verify-geometry-semantics.mjs`** — asserts semantic legality rather than clearance: angle-label
+  centre inside its wedge and its polygon, side-label centre in its edge's exterior half-plane, vertex-label
+  centre outside its polygon, across two box sizes. It **re-derives every predicate from the raw painted
+  coordinates** and never calls the engine's own `figGeomInside`/`figGeomInSector`, because this stage twice
+  shipped a check that restated the implementation instead of testing the requirement (a radius against the
+  engine's own clamp; a fill against the SVG element). Proven to fail when the constraint is removed:
+  disabling the angle region reports **11 violations**, including the three visible by eye and three that
+  were not (`angle of elevation`, `48.2°`, `58.4°`). Fixture: a **reversed-winding pair** — the same
+  quadrilateral listed A,B,C,D and D,C,B,A — places all **10 labels at identical coordinates**, so "outside"
+  is a property of the shape rather than of the authoring order.
+
+### Fixed
+- **The exhaustive placement fallback returned the first clear cell in raster order.** Stage 2c made the
+  directional search take the NEAREST legal candidate but left the fallback taking whatever a top-left-first
+  sweep hit first, which stayed invisible while it fired rarely. Constraining regions makes it fire far more
+  often, and then "first in raster order" put a side length in the corner of the canvas — legal, and 370px
+  from the edge it measured. It now ranks by distance from the anchor when one is supplied; the graph
+  supplies none and keeps first-found, so its placements are unchanged.
+- **The focused shell spoke graph language in a geometry figure** — "Hover the plot to read coordinates". A
+  geometry figure has no plot. The shell now takes its interaction copy from the figure TYPE (`FIGX_COPY`),
+  so it reads "Move the pointer over the figure to read coordinates"; the capability is identical (§1.1
+  inverse mapping), only the sentence differs, and it lives with the shell rather than in any lesson.
+- **The geometry board was centred in a full-height stage**, leaving dead bands above and below it on a tall
+  phone. It now flows after the toolbar (header → controls → board → hint). The stage keeps `flex:1 1 auto`
+  because it is what the board is MEASURED from — letting it shrink to its own content makes the board an
+  input to its own size and ratchets the figure smaller every render (measured: the phone board fell from
+  336×291 to 242×210 before this was caught). Only the alignment changes; the board is never stretched.
+
+### Added
 - **Stage 3b — Geometry visual language.** Visual review of Stage 3 found the renderer technically right and
   reading as raw engine output: vertex names, side lengths, angle measures and symbolic labels all competed at
   the same visual weight, so nothing told the eye what was structural and what was explanatory. This adds the

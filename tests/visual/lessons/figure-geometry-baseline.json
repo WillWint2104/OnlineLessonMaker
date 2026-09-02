@@ -111,6 +111,27 @@
             { "type": "angle", "at": "A", "between": ["C", "B"], "label": "angle of elevation" }
           ] }
       ] },
+    { "type": "page", "title": "Reversed winding — same figure, vertices listed the other way",
+      "blocks": [
+        { "type": "section", "title": "Winding must not decide the outside",
+          "flow": [{ "kind": "para", "text": "The same quadrilateral twice: once with its vertices listed clockwise and once anticlockwise. Every side measure must sit outside the outline and every interior angle inside it in BOTH, because \"outside\" is a property of the shape rather than of the order an author happened to type." }] },
+        { "type": "figure", "figure": "geometry", "title": "Quadrilateral — one winding",
+          "caption": "Vertices listed A, B, C, D.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", 0, 0], ["B", 3.2, 0.2], ["C", 3.4, 2.3], ["D", 0.3, 2.1]] },
+            { "type": "polygon", "vertices": ["A", "B", "C", "D"], "angles": "all" },
+            { "type": "sideLabel", "between": ["A", "B"] },
+            { "type": "sideLabel", "between": ["C", "D"] }
+          ] },
+        { "type": "figure", "figure": "geometry", "title": "Quadrilateral — reversed winding",
+          "caption": "The identical shape, listed D, C, B, A.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", 0, 0], ["B", 3.2, 0.2], ["C", 3.4, 2.3], ["D", 0.3, 2.1]] },
+            { "type": "polygon", "vertices": ["D", "C", "B", "A"], "angles": "all" },
+            { "type": "sideLabel", "between": ["A", "B"] },
+            { "type": "sideLabel", "between": ["C", "D"] }
+          ] }
+      ] },
     { "type": "page", "title": "Labels at the viewport edges",
       "blocks": [
         { "type": "section", "title": "Nowhere outward to go",

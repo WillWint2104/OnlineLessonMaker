@@ -2632,6 +2632,10 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 /* Stage 3 geometry marks — same token vocabulary as the graph (§1.6: colour via tokens, never inline hex), so
    a geometry figure reads as the same object in every theme rather than carrying its own palette. */
 .tp-slide .tp-fig-poly{stroke:var(--primary);stroke-width:1.9;stroke-linejoin:round;fill:none;}
+/* Stage 3c FILL RULE: geometry is UNFILLED by default and fills only when a figure authors `fill:true`.
+   A filled polygon is a different reading — it says "this region" rather than "this outline" — so it is a
+   deliberate choice, never a default. When it is asked for, it is the same accent the edges use at a
+   low-emphasis opacity, so a filled figure still belongs to the same drawing system as an unfilled one. */
 .tp-slide .tp-fig-polyfill{fill:var(--primary);fill-opacity:.07;}
 /* Stage 3b — marks are ANNOTATIONS on the polygon, not part of its structure, so they read a step lighter
    than the edges they describe. Same colour family; only weight and opacity separate them. */
@@ -2685,6 +2689,14 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-figx-opts select{font:inherit;height:26px;border-radius:7px;border:1px solid var(--outline-variant);background:var(--surface);color:var(--on-surface);}
 .tp-slide .tp-figx-sep{flex:1 1 auto;}
 .tp-slide .tp-fpanel-figx .tp-figx-stage{flex:1 1 auto;min-height:200px;display:flex;align-items:center;justify-content:center;}
+/* Stage 3c — a GEOMETRY board is content, so it flows after the toolbar (header → controls → board → hint)
+   instead of being centred inside a stage stretched to the whole workspace. On a tall phone that centring
+   left large dead bands above and below a board that is deliberately only as big as its figure. The board
+   is never stretched: only the space around it changes. The stage keeps `flex:1 1 auto` — it is what
+   figxGeomBoard MEASURES, and letting it shrink to its own content makes the board an input to its own
+   size, which ratchets the figure smaller on every render (measured: the phone board fell 336x291 to
+   242x210). Only the alignment changes. */
+.tp-slide .tp-fpanel-geo .tp-figx-stage{align-items:flex-start;}
 .tp-slide .tp-figx-stage svg{cursor:crosshair;width:100%;height:100%;}
 .tp-slide .tp-figx-foot{flex:0 0 auto;display:flex;align-items:baseline;gap:14px;margin:6px 0 0;}
 .tp-slide .tp-figx-read{flex:0 0 auto;margin:0;font-family:var(--tp-body);font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;color:var(--on-surface);}
@@ -7084,10 +7096,16 @@ function figDirs(pd){ return [[1,-1],[-1,-1],[1,1],[-1,1],[1,0],[-1,0],[0,-1],[0
    Placement stays DETERMINISTIC: enumeration order is fixed (d ascending, directions sorted by agreement with
    the primary direction, shifts in a fixed order) and an improvement must be STRICTLY nearer, so ties go to the
    candidate found first — the one in the more preferred direction. Same input, same figure, every time. */
-function figPlacePill(ax,ay,size,pd,obst,gap,bounds){ const {w,h}=size, dirs=figDirs(pd), shifts=[0,14,-14,28,-28,42,-42,56,-56]; let best=null,bestScore=-Infinity, hit=null, hitD=Infinity;
+/* `ok` (Stage 3c, optional) — the ALLOWED REGION for this label: a predicate on the candidate CENTRE that
+   decides whether a position is SEMANTICALLY legal, tested before clearance. Clearance says a label does not
+   collide; the region says it still means what it should. Without it the search is free to satisfy the first
+   and break the second — an angle measure pushed outside its own wedge is collision-free and wrong. Omitted
+   ⇒ every candidate is legal ⇒ byte-identical to the graph's behaviour, which has no such regions. */
+function figPlacePill(ax,ay,size,pd,obst,gap,bounds,ok){ const {w,h}=size, dirs=figDirs(pd), shifts=[0,14,-14,28,-28,42,-42,56,-56]; let best=null,bestScore=-Infinity, hit=null, hitD=Infinity;
   for(let d=gap; d<=340; d+=8){ if(hit&&hitD<=d) break;                               // no candidate from this ring out can be nearer than the one already held
     for(const [ux,uy] of dirs){ const perp=[-uy,ux]; for(const s of shifts){ const cx=ax+ux*(d+w/2)+perp[0]*s, cy=ay+uy*(d+h/2)+perp[1]*s, disp=Math.hypot(cx-ax,cy-ay);
     if(hit&&disp>=hitD) continue;                                                     // cannot win on displacement — skip it BEFORE the clearance test, which is the expensive half
+    if(ok&&!ok(cx,cy)) continue;                                                      // outside the allowed region — not a candidate at all, not even for the fallback
     const box={x:cx-w/2,y:cy-h/2,w,h};
     const off=Math.max(0,2-box.x,2-box.y,box.x+box.w-(bounds.W-2),box.y+box.h-(bounds.H-2)), c=figClear(box,obst);
     if(c>=gap && off<=0){ hitD=disp; hit={box, clear:c, onCanvas:true}; continue; }    // legal AND strictly nearer than any legal position so far (the guard above enforced that)
@@ -7095,9 +7113,20 @@ function figPlacePill(ax,ay,size,pd,obst,gap,bounds){ const {w,h}=size, dirs=fig
   return hit||best; }
 // EXHAUSTIVE fallback — scan the whole on-canvas area for ANY box clearing >= gap. Structural guarantee: if a clear
 // spot exists on-canvas, the layout WILL find it, so no directional blind spot can force a silent violation.
-function figScanPill(size, obst, gap, bounds){ const {w,h}=size;
-  for(let cy=2+h/2; cy<=bounds.H-2-h/2; cy+=6){ for(let cx=2+w/2; cx<=bounds.W-2-w/2; cx+=6){ const box={x:cx-w/2,y:cy-h/2,w,h}; if(figClear(box,obst)>=gap) return box; } }
-  return null; }
+/* `anchor` (Stage 3c, optional) — rank the scan by DISTANCE FROM THE ANCHOR instead of returning the first
+   cell in raster order. Stage 2c made the directional search take the nearest legal candidate; this fallback
+   was left returning whatever the top-left-first sweep hit first, which was invisible while it fired rarely.
+   A region-constrained search reaches it far more often — and then "first in raster order" put a side length
+   in the corner of the canvas, semantically legal and 370px from the edge it measures. Omitted ⇒ first-found
+   ⇒ byte-identical for the graph, which does not constrain regions. */
+function figScanPill(size, obst, gap, bounds, ok, anchor){ const {w,h}=size; let best=null, bestD=Infinity;
+  for(let cy=2+h/2; cy<=bounds.H-2-h/2; cy+=6){ for(let cx=2+w/2; cx<=bounds.W-2-w/2; cx+=6){
+    if(ok&&!ok(cx,cy)) continue;                                                      // the exhaustive pass is region-constrained too, or it would undo the constraint
+    if(anchor){ const d=Math.hypot(cx-anchor.x,cy-anchor.y); if(d>=bestD) continue; }
+    const box={x:cx-w/2,y:cy-h/2,w,h}; if(figClear(box,obst)<gap) continue;
+    if(!anchor) return box;
+    bestD=Math.hypot(cx-anchor.x,cy-anchor.y); best=box; } }
+  return best; }
 function figPrimaryDir(px,axisX){ const hx=px>=axisX?1:-1, n=Math.hypot(hx,1); return [hx/n,-1/n]; }   // point identifier: up + away from the y-axis
 // extraArms (optional, Stage 2): any OTHER drawn geometry — plotted curves, segments — that a label must also
 // clear. Omitted ⇒ [] ⇒ identical behaviour, so figFitAndLayout's call site is unaffected.
@@ -7589,19 +7618,41 @@ function figGeomInside(pts,x,y){ let inside=false;
   for(let i=0,j=pts.length-1;i<pts.length;j=i++){ const a=pts[i], b=pts[j];
     if(((a.y>y)!==(b.y>y)) && (x < (b.x-a.x)*(y-a.y)/((b.y-a.y)||1e-12)+a.x)) inside=!inside; }
   return inside; }
-function figGeomPlace(anchor,pd,text,obst,box,role){
+/* Stage 3c — ALLOWED REGIONS. Each is a predicate on a candidate CENTRE, in screen space.
+   A wedge: the candidate's bearing from V must lie within the SIGNED sweep the arc was drawn through, so a
+   label can move out along the bisector or swing a little within the angle, but can never cross an arm.  */
+function figGeomInSector(V,an,x,y){
+  const rel=figWrapPi(Math.atan2(y-V.y,x-V.x)-an.al), e=1e-9;
+  return an.d>=0 ? (rel>=-e && rel<=an.d+e) : (rel<=e && rel>=an.d-e);
+}
+// The exterior half-plane of one edge: the side its outward normal points to. A side measure may slide along
+// the edge and vary its distance, but crossing this line would put a length INSIDE the shape it measures.
+function figGeomOutHalf(mid,pd,x,y){ return (x-mid.x)*pd[0]+(y-mid.y)*pd[1] > 0; }
+function figGeomPlace(anchor,pd,text,obst,box,role,ok){
   const R=FIG_ROLE[role]||FIG_ROLE.measure, fs=R[1];
   const size=figPillSize(text,fs), bounds={W:box.W,H:box.H};
-  const r=figPlacePill(anchor.x,anchor.y,size,pd,obst,FIG_GAP,bounds);
+  // Search the ALLOWED REGION first. Stage 2c still ranks by displacement inside it — it decides WHERE the
+  // label fits best, never whether the position still means the right thing.
+  let r=figPlacePill(anchor.x,anchor.y,size,pd,obst,FIG_GAP,bounds,ok), relaxed=false;
   let bx, via;
   if(r&&r.onCanvas&&r.clear>=FIG_GAP){ bx=r.box; via='dir'; }
-  else { const sc=figScanPill(size,obst,FIG_GAP,bounds); if(sc){ bx=sc; via='scan'; }
-         else { bx=(r&&r.box)||{x:anchor.x-size.w/2,y:anchor.y-size.h/2,w:size.w,h:size.h}; via='none'; } }
-  return { box:bx, text, cls:R[0], fs, via, valid:via!=='none', ax:anchor.x, ay:anchor.y };
+  else { const sc=figScanPill(size,obst,FIG_GAP,bounds,ok,anchor); if(sc){ bx=sc; via='scan'; }
+         else { via='none'; bx=(r&&r.box)||{x:anchor.x-size.w/2,y:anchor.y-size.h/2,w:size.w,h:size.h}; } }
+  // Nothing legal inside the region AT THIS SIZE. The caller expands the figure and tries again; only once
+  // that is exhausted does it re-solve with `relax`, and then the figure REPORTS the label whose association
+  // it had to weaken. Silently stepping outside the region is the one thing that is never done, because a
+  // measure on the wrong side of its own geometry is not a smaller error than a missing one.
+  if(via==='none'&&ok&&obst.relax){
+    r=figPlacePill(anchor.x,anchor.y,size,pd,obst,FIG_GAP,bounds);
+    if(r&&r.onCanvas&&r.clear>=FIG_GAP){ bx=r.box; via='dir'; relaxed=true; }
+    else { const sc=figScanPill(size,obst,FIG_GAP,bounds,null,anchor); if(sc){ bx=sc; via='scan'; relaxed=true; } }
+  }
+  return { box:bx, text, cls:R[0], fs, via, relaxed, region:obst.regionName||null, sem:obst.sem||null,
+           valid:via!=='none', ax:anchor.x, ay:anchor.y };
 }
 /* Solve every mark and label for one view. Placement ORDER is vertices → sides → angles (§3.2 step 4): vertices
    crowd the corners, so they claim their space first and later pills see them as obstacles. */
-function figGeomSolve(b,V,box,P,errors){
+function figGeomSolve(b,V,box,P,errors,relax){
   const g=n=>{ const p=P.byName[String(n)]; return p?{x:V.sx(p.x),y:V.sy(p.y),id:p.id}:null; };
   const objs=Array.isArray(b.objects)?b.objects:[];
   const shapes=[], arcs=[], rights=[], want={vertex:[],side:[],angle:[]};
@@ -7621,7 +7672,7 @@ function figGeomSolve(b,V,box,P,errors){
         vs.forEach((v,i)=>{ const Pv=vs[(i-1+vs.length)%vs.length], Qv=vs[(i+1)%vs.length];
           const cr=(v.x-Pv.x)*(Qv.y-v.y)-(v.y-Pv.y)*(Qv.x-v.x);
           if(cr*s2<0){ errors.push('interior angle at '+v.id+' is reflex — a reflex sweep is not drawn yet, so no measure is shown'); return; }
-          want.angle.push({V:v,P:Pv,Q:Qv,arcs:1,label:'measure'}); }); }
+          want.angle.push({V:v,P:Pv,Q:Qv,arcs:1,label:'measure',ring:vs}); }); }
     } else if(o.type==='segment'){
       const bt=Array.isArray(o.between)?o.between:[o.from,o.to], A=named(bt[0],'segment '+(idx+1)), B=named(bt[1],'segment '+(idx+1));
       if(A&&B) shapes.push({kind:'segment',a:A,b:B});
@@ -7656,7 +7707,7 @@ function figGeomSolve(b,V,box,P,errors){
         // the opposite way, which stays correct at a near-straight vertex where normalize(u+w) collapses.
         const an=figGeomAngle(pt,prev,next);
         const pd=an?[-Math.cos(an.phi),-Math.sin(an.phi)]:[0,-1];
-        want.vertex.push({at:pt,pd,text:pt.id}); }); });
+        want.vertex.push({at:pt,pd,text:pt.id,ring:sh.pts}); }); });
   }
   const armSegs=figGeomArms(shapes);
   const vpts=[]; shapes.forEach(sh=>{ if(sh.kind==='polygon') sh.pts.forEach(p=>vpts.push([p.x,p.y,3])); else if(sh.kind==='segment'){ vpts.push([sh.a.x,sh.a.y,3]); vpts.push([sh.b.x,sh.b.y,3]); } });
@@ -7674,7 +7725,13 @@ function figGeomSolve(b,V,box,P,errors){
   const base={arms:armSegs.concat(arcArms), pts:vpts};
   const placed=[], labels=[];
   const push=(L)=>{ labels.push(L); placed.push(L.box); };
-  want.vertex.forEach(v=>push(figGeomPlace(v.at,v.pd,v.text,{arms:base.arms,pts:base.pts,boxes:placed.slice()},box,'vertex')));
+  // Stage 3c VERTEX region: outside the outline. A name that lands inside the shape reads as belonging to the
+  // interior rather than to its corner. Relaxable — at a viewport edge every exterior candidate can be
+  // off-canvas, and a reported inside placement then beats no label at all.
+  want.vertex.forEach(v=>{ const ring=v.ring;
+    const ok=(ring&&ring.length>2)?((x,y)=>!figGeomInside(ring,x,y)):null;
+    push(figGeomPlace(v.at,v.pd,v.text,{arms:base.arms,pts:base.pts,boxes:placed.slice(),relax,regionName:'outside the polygon',
+      sem:{k:'vertex',ring:ring?ring.map(q=>[q.x,q.y]):null}},box,'vertex',ok)); });
   want.side.forEach(sd=>{ const mid={x:(sd.A.x+sd.B.x)/2,y:(sd.A.y+sd.B.y)/2};
     // Stage 3b §3.2 side primary anchor = side MIDPOINT + perpendicular normal, facing OUT of the closed
     // outline this side belongs to. Probing the outline itself holds for either winding and for a concave
@@ -7685,7 +7742,11 @@ function figGeomSolve(b,V,box,P,errors){
     if(ring&&ring.length>2){ if(figGeomInside(ring, mid.x+pd[0]*4, mid.y+pd[1]*4)) pd=[-pd[0],-pd[1]]; }
     else { const cen=vpts.length?{x:vpts.reduce((s2,p)=>s2+p[0],0)/vpts.length,y:vpts.reduce((s2,p)=>s2+p[1],0)/vpts.length}:mid;
            if(pd[0]*(mid.x-cen.x)+pd[1]*(mid.y-cen.y)<0) pd=[-pd[0],-pd[1]]; }
-    push(figGeomPlace(mid,pd,sd.text,{arms:base.arms,pts:base.pts,boxes:placed.slice()},box,sd.auto?'measure':'symbol')); });
+    // Stage 3c SIDE region: the exterior half-plane of THIS edge. Sliding along the side and varying the
+    // normal distance are both fine; crossing the edge line is not.
+    const okS=(x,y)=>figGeomOutHalf(mid,pd,x,y);
+    push(figGeomPlace(mid,pd,sd.text,{arms:base.arms,pts:base.pts,boxes:placed.slice(),relax,regionName:'exterior side of its edge',
+      sem:{k:'side',a:[sd.A.x,sd.A.y],b:[sd.B.x,sd.B.y],ring:ring?ring.map(q=>[q.x,q.y]):null}},box,sd.auto?'measure':'symbol',okS)); });
   want.angle.forEach(a=>{ if(!a.an||a.label===false||a.label==null) return;
     // §4: 'measure' DISPLAYS the computed angle. Anything else is a name (θ, x), never an authored value.
     const auto=(a.label==='measure'), txt=auto?figGeomDeg(a.an.mag):String(a.label);
@@ -7694,7 +7755,14 @@ function figGeomSolve(b,V,box,P,errors){
     // read as one annotation. The old anchor was a MULTIPLE of the radius (1.62r), which pushed the number
     // deep inside the polygon on a wide angle and left the student matching numbers to corners by eye.
     const r=figGeomArcR(a.an.armMin,a.arcs-1,a.arcs), anc={x:a.V.x+Math.cos(a.an.phi)*r, y:a.V.y+Math.sin(a.an.phi)*r};
-    push(figGeomPlace(anc,[Math.cos(a.an.phi),Math.sin(a.an.phi)],txt,{arms:base.arms,pts:base.pts,boxes:placed.slice()},box,auto?'measure':'symbol')); });
+    // Stage 3c ANGLE region: inside the swept wedge — and, for an INTERIOR angle, inside the polygon too.
+    // A symbolic name (θ) labels the same angle as a numeric measure, so it uses the same geometry and
+    // differs only in styling. This is the constraint that keeps a measure with its arc when the free space
+    // happens to lie outside the shape.
+    const Vv=a.V, an=a.an, ring=a.ring;
+    const ok=(x,y)=>figGeomInSector(Vv,an,x,y) && (!(ring&&ring.length>2) || figGeomInside(ring,x,y));
+    push(figGeomPlace(anc,[Math.cos(an.phi),Math.sin(an.phi)],txt,{arms:base.arms,pts:base.pts,boxes:placed.slice(),relax,regionName:ring?'its angle, inside the polygon':'its angle',
+      sem:{k:'angle',v:[Vv.x,Vv.y],p:[a.P.x,a.P.y],q:[a.Q.x,a.Q.y],ring:ring?ring.map(z=>[z.x,z.y]):null}},box,auto?'measure':'symbol',ok)); });
   return { shapes, arcs, rights, labels, arms:base.arms, vpts };
 }
 /* §1.3 auto-fit for geometry: expand the domain to the union of the points AND every placed pill box, so a
@@ -7715,10 +7783,17 @@ function figGeometry(b, box){
   let V, S, iters=0;
   for(; iters<8; iters++){
     V=figView(dom, box, 'equal');
-    S=figGeomSolve(b, V, box, P, iters===0?errors:[]);
+    S=figGeomSolve(b, V, box, P, iters===0?errors:[], false);      // Stage 3c: region-constrained
     if(S.labels.every(L=>L.valid)) break;
     const cx=(dom.xMin+dom.xMax)/2, cy=(dom.yMin+dom.yMax)/2, hx=(dom.xMax-dom.xMin)*0.56, hy=(dom.yMax-dom.yMin)*0.56;
     dom={xMin:cx-hx,xMax:cx+hx,yMin:cy-hy,yMax:cy+hy};
+  }
+  // Stage 3c — the region is exhausted only after the figure has been given room 8 times. Relax it then,
+  // and SAY which label lost its semantic guarantee: a measure outside its own angle is ambiguous, and an
+  // author who cannot see that has no way to fix the figure.
+  if(!S.labels.every(L=>L.valid)){
+    S=figGeomSolve(b, V, box, P, [], true);
+    S.labels.forEach(L=>{ if(L.relaxed) errors.push('label "'+L.text+'" could not be placed '+(L.region||'in its allowed region')+' — it is drawn outside that region, so which part of the figure it belongs to is ambiguous'); });
   }
   S.labels.forEach(L=>{ if(!L.valid) errors.push('label "'+L.text+'" could not be placed clear of the figure'); });
   return { kind:'geometry', V, dom0:dom, aspect:'equal', P, iters,
@@ -7751,6 +7826,12 @@ function figGeomBody(M, box, opt){
    document listener registered once at load, alongside the app's other top-level listeners.
    Everything re-renders through figGraph → figView/figFitAndLayout, so points, curves and identifiers are
    COORDINATES that follow the transform — they cannot drift. NO geometry (Stage 3), NO input/grading (§6). */
+/* Stage 3c — the shell's interaction copy comes from the FIGURE TYPE. "Hover the plot" is graph language:
+   a geometry figure has no plot, and a learner reading it is looking at a construction. The readout itself
+   is the same capability (§1.1 inverse mapping) in both, so only the sentence differs — and it lives here,
+   with the shell, rather than being authored into any one lesson. */
+const FIGX_COPY={ graph:{ read:'Hover the plot to read coordinates' },
+                  geometry:{ read:'Move the pointer over the figure to read coordinates' } };
 const FIGX=Object.create(null);
 const FIGX_BOX={W:900,H:560,padL:56,padR:26,padT:24,padB:42};                // fallback only — figxBoxFor() measures the real stage
 /* UI-1 — the focused plot must be generated THROUGH the available viewport, not letterboxed inside it.
@@ -7950,7 +8031,7 @@ function figxPanel(xid){
   // Options, reached on demand. Nothing is removed — engine capability is unchanged, only its permanent
   // exposure. The pan arrows stay four real buttons (keyboard-operable) presented as one labelled cluster.
   return `<div class="tp-overlay tp-figx" id="${esc(xid)}" data-tp-overlay role="dialog" aria-modal="true" aria-label="${t} — expanded" hidden>`
-    +`<div class="tp-fpanel tp-fpanel-figx" data-figx="${esc(xid)}">`
+    +`<div class="tp-fpanel tp-fpanel-figx${e.geo?' tp-fpanel-geo':''}" data-figx="${esc(xid)}">`
     // UI-1 — title and Close share a HEADER ROW. Close was position:absolute and overlapped the control
     // strip's rect at every viewport (a real collision once the toolbar wrapped on a phone).
     +`<div class="tp-figx-head">`
@@ -7972,7 +8053,7 @@ function figxPanel(xid){
     +`</div>`
     +`<div class="tp-figx-stage"><svg class="tp-fig-svg" data-figx-svg viewBox="0 0 ${B.W} ${B.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${t}"></svg></div>`
     +`<div class="tp-figx-foot">`
-      +`<p class="tp-figx-read" data-figx-read>Hover the plot to read coordinates</p>`   /* NOT aria-live: it is rewritten on every pointer sample, which would queue an announcement per mouse move */
+      +`<p class="tp-figx-read" data-figx-read>${esc(FIGX_COPY[e.geo?'geometry':'graph'].read)}</p>`   /* NOT aria-live: it is rewritten on every pointer sample, which would queue an announcement per mouse move */
       +`<p class="tp-figx-msg" data-figx-msg role="status"></p>`
     +`</div>`
   +`</div></div>`;

@@ -170,6 +170,24 @@ ACCEPTANCE: role hierarchy legible in the crowded pentagon; each measure adjacen
 measures outside the outline; both short-arm fixtures present and asserting different things; painted ink
 85–89% of the board at all three viewports, measured against the BOARD and never the SVG element.
 
+## STAGE 3c — Semantic placement constraints  ·  DONE
+Stage 3b gave the annotations roles and preferred anchors; visual review showed the preferences being
+discarded by the collision search in favour of a clear position on the wrong side of the geometry — angle
+measures outside their own wedge, a side length inside the polygon, a vertex name inside the shape it
+names. The missing layer is the ALLOWED REGION: per role, the set of positions that still MEAN the right
+thing. Stage 2c keeps ranking; it now ranks only within that set.
+`semantic role → preferred anchor → allowed region → clearance search → nearest legal → styling`
+Also: the exhaustive fallback now ranks by distance from the anchor rather than raster order (constraining
+regions makes it fire much more often); the shell takes its interaction copy from the figure TYPE, so
+geometry no longer says "hover the plot"; the geometry board flows after the toolbar instead of being
+centred in a full-height stage; the fill rule is stated (unfilled unless authored).
+ACCEPTANCE: `scripts/verify-geometry-semantics.mjs` — every angle label inside its wedge and its polygon,
+every side label in its edge's exterior half-plane, every vertex label outside its polygon, across two box
+sizes. The checker re-derives each predicate from raw coordinates rather than calling the engine's own
+helpers, because this stage twice shipped a check that restated the implementation instead of testing it.
+FIXTURE: reversed-winding pair — the same quadrilateral listed both ways must place all 10 labels
+identically, so "outside" is a property of the shape and not of the author's typing order.
+
 ## STAGE 4 — Block wiring (plug engines into the containers)
 Branch off the merged front-ends. Spec §8.
 Delivers: register `graph` and `geometry` as figure block/part types that render via the engine inside

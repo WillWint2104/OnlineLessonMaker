@@ -279,15 +279,20 @@ YouTube embeds) — `lessons/*.html` only *warns*, by design.
   recording. **Stage 1a–1c** (view, uniform-gap pill collision, construction DAG), **Stage 2/2b** (graph
   front-end, focused workspace), **UI-1** (shared Figure Shell + viewport-level focus), **Stage 2c**
   (nearest-legal label placement, axis numbering as an obstacle), **Stage 3 — Geometry 2D front-end** and
-  **Stage 3b — Geometry visual language** are **DONE**. Geometry renders into the same shell and places
+  **Stage 3b — Geometry visual language** and **Stage 3c — Semantic placement constraints** are **DONE**. Geometry renders into the same shell and places
   labels through the same Stage-2c system; polygons of any *n* go through one renderer. Stage 3b added the
   layout grammar between the geometry and the collision search — annotation roles (vertex > symbolic >
   measurement), angle measures anchored to their own arc, side measures outside the outline by ray cast, one
   numeric style — plus the fitting split: **graph focus maximises the plane, geometry focus maximises the
-  figure**. Committed fixtures now exist for every rendered surface —
+  figure**. Stage 3c added the layer those anchors were missing: an **allowed region** per role (angle
+  measures inside their wedge and polygon, side measures in their edge's exterior half-plane, vertex names
+  outside the shape), so Stage 2c ranks only among positions that still mean the right thing, and a region it
+  cannot satisfy is reported rather than silently escaped. Committed fixtures now exist for every rendered
+  surface —
   `tests/visual/lessons/figure-{graph,labels,geometry}-baseline.json` plus `composable-page` and
   `modal-overflow` — with their contracts in `tests/visual/README.md`; `scripts/verify-label-placement.mjs`
-  and `scripts/verify-corpus-identity.mjs` make the placement and no-regression claims reproducible.
+  `scripts/verify-corpus-identity.mjs` and `scripts/verify-geometry-semantics.mjs` make the placement,
+  no-regression and semantic-legality claims reproducible.
   **Next: Stage 4 — block wiring** (plug the engines into the containers). Deferred within geometry: authored
   circles/arcs, equal-length ticks and parallel arrows, **reflex-angle drawing** (a reflex interior angle is
   currently reported, not measured), and side-label units.

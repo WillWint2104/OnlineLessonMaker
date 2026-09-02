@@ -224,6 +224,32 @@ Anchor + primary direction per label type (all coordinate-derived):
   by eye. No per-vertex offsets exist at any point in this.
 - **Plotted point (graph):** anchor = the point; primary dir = away from nearby curves/axes.
 
+**Stage 3c — the ALLOWED REGION.** A preferred anchor is a starting point, not a constraint: the search is
+free to leave it, and clearance alone cannot tell it not to. An angle measure pushed outside its own wedge
+is perfectly collision-free and simply wrong — it now names a different part of the figure. So each role
+also carries the region a candidate must stay inside, and the search never leaves it:
+
+```
+semantic role → preferred anchor → ALLOWED REGION → clearance search → nearest legal → role styling
+```
+
+| Role | Allowed region |
+|---|---|
+| Angle measure, and a symbolic name for the same angle | inside the swept wedge (never across either arm); for an INTERIOR angle, also inside the polygon |
+| Side measure | the exterior half-plane of its own edge — free to slide along the side and vary distance, never to cross it |
+| Vertex name | outside the polygon it names |
+
+The region is not a preference the ranking can outvote: an illegal candidate is not a candidate, so it is
+excluded before clearance is even measured, and excluded from the fallback too. Stage 2c is unchanged in
+what it does — it still ranks by displacement and takes the nearest legal position — but it now chooses
+only among positions that still mean the right thing. Geometry supplies regions; the graph supplies none
+and behaves exactly as before.
+
+**Exhausting a region is reported, never silently escaped.** If nothing legal exists inside it, the figure
+expands (up to the same 8 passes as §1.3) and tries again; only then is the region relaxed, and the figure
+REPORTS the label whose association it had to weaken. A measure drawn outside its own angle without saying
+so is a worse failure than a missing one, because nothing in the picture reveals it.
+
 **Placement = candidate-position search (established cartographic method, NOT single-direction march):**
 1. Generate candidates: out along the primary dir at increasing distance (base…base+~70, step ~6),
    EACH also shifted along the edge/arm by a few offsets (0, ±14, ±26…) toward the less-crowded end.
@@ -232,6 +258,10 @@ Anchor + primary direction per label type (all coordinate-derived):
    the first one encountered (Stage 2c; §1.4 carries the reasoning and the branch-and-bound that keeps it
    terminating). This paragraph said "the FIRST fully-clear candidate" until Stage 3, which was the pre-2c
    rule and would have had geometry inherit exactly the defect Stage 2c removed from the graph.
+2b. The exhaustive fallback ranks by distance from the anchor too (Stage 3c). It returned the first clear
+   cell in raster order, which was invisible while it fired rarely; constraining regions makes it fire far
+   more often, and then "first in raster order" put a side length in the corner of the canvas — legal, and
+   370px from the edge it measured.
 3. If none is fully clear within range (pathological), the label is **not placed** — the hard rule above
    has no exception. The least-penalised box (max clearance) is carried only so the caller can show what
    failed; it is marked INVALID, which makes the fitter expand the domain and re-solve, and if that still

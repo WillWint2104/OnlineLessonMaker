@@ -403,7 +403,7 @@ coordinates — nothing is positioned by hand.
 | Type | Shape | Notes |
 |---|---|---|
 | `points` | `{from:"table", rows:[[id,x,y],…]}` | The same vocabulary the graph uses. Authored points override construction points of the same name. |
-| `polygon` | `{vertices:[…], angles?:"all", fill?:true}` | **Any n ≥ 3 through one renderer** — triangle, quadrilateral and irregular n-gon are the same code path. `angles:"all"` measures every interior angle. |
+| `polygon` | `{vertices:[…], angles?:"all", fill?:true}` | **Unfilled unless `fill:true`** — a fill says *this region*, not *this outline*, so it is an authoring choice, never a default. A filled polygon uses the same accent as its edges at a low-emphasis opacity, so it still reads as the same drawing system. **Any n ≥ 3 through one renderer** — triangle, quadrilateral and irregular n-gon are the same code path. `angles:"all"` measures every interior angle. |
 | `segment` | `{between:[idA,idB]}` | A named-point connector, as in a graph. |
 | `angle` | `{at, between:[idP,idQ], arcs?:1–3, label?}` | Arc(s) seated on the actual arms at `at`. `arcs` stacks concentric arcs without overlap. `label:"measure"` **displays the computed angle**; any other string is a *name* (`"θ"`); `false` draws the arc with no label. |
 | `rightAngle` | `{at, between:[idP,idQ]}` | The square, derived from the two incident rays, so it is correct at any orientation. If the angle is not 90° the mark is **not drawn** and the discrepancy is reported. |
