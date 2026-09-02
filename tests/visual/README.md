@@ -17,6 +17,7 @@ scripts that were never committed, so their rendered output could not be reprodu
 | `lessons/composable-page-baseline.json` | The composable `page` type across every registered block: `skillHeader`, `section` (prose + inline `$…$` + display equation), `figure`, `workedExample`, `selfCheck`, `practiceSet`, `mastery`. Loads on `scholarmath`; re-skins to all five themes. |
 | `lessons/figure-graph-baseline.json` | The graph engine's four representative states: a clean plot, a crowded plane (12 identifiers, 2 curves, 3 chords — the Stage-1b pill-collision stress case), a discontinuity at `aspect:equal`, and the author-error state. The discontinuity figure also authors `minorGrid:false` + `axisNames:false`, so the display *defaults* are exercised rather than assumed (see `SCHEMA.md` → `figure`); slide 0 authors neither, covering the unchanged default. |
 | `lessons/modal-overflow-baseline.json` | A solution modal taller than any supported viewport. Guards the focus-overlay parking contract below. |
+| `lessons/figure-labels-baseline.json` | The label-placement system's five distinct pressures, one per slide: **isolated** identifiers (nothing competing — the control case), identifiers **on the axes and on tick values** (including `V` at the origin, the case raised at the UI-1 visual review), identifiers **on a curve and its chords**, identifiers **at the viewport corners and edges** (outward is off-canvas at every marker), and **long identifiers** in a tight domain (wide pills clear far less easily than single letters). Loads on `scholarmath`. |
 
 ## Loading one
 
@@ -77,6 +78,27 @@ rail, the canvas fit, or the figure engine.
    (`--tp-prose-max`); workspace surfaces — `figure`, `banner`, `image`, `labeledGraphic` — keep the full page
    width. **Assert** a prose fragment's card width against its longest painted line: a ~700px measure must not
    sit inside a ~1128px card. Check several prose fragment types, not just one.
+
+7. **A label sits at the nearest position that clears everything (Stage 2c).** Clearance is a hard gate and
+   is not negotiable; among the positions that satisfy it, placement takes the one with the smallest
+   displacement from its own marker. Before Stage 2c the search took the *first* clearing candidate, and the
+   candidate space is enumerated (distance × direction × perpendicular *shift*) — so a 56px shift at distance 6
+   was accepted ahead of an unshifted position at distance 14, and identifiers drifted away from the points they
+   name (`K` 57.5px where 20.5px was legal, `V` 44.2px, `I` 31.4px). The printed axis **numbering** is an
+   obstacle too, not just the axis lines: the nearest legal position is often the one tucked in against an axis,
+   so without that the ranking makes tick-label collisions worse rather than better.
+   **Assert**, on `figure-labels-baseline.json`, `figure-graph-baseline.json` and the `figure` block in
+   `composable-page-baseline.json`: every identifier clears every
+   axis, curve, chord, marker, other identifier **and printed tick label** by ≥ `FIG_GAP` and sits fully on
+   canvas; its displacement equals the smallest displacement over all candidates that satisfy that — re-enumerate
+   the whole space with a plain reference search rather than testing against a tuned number; repeated solves of
+   the same figure are byte-identical (placement is deterministic — ties go to the more preferred direction); and
+   the exhaustive `figScanPill` fallback, which is *not* displacement-ranked, does not fire on any fixture.
+   Re-assert **in the focused workspace at all four viewports × every one of the five `FIGX_TICKS` densities**,
+   reading the identifiers back out of the painted SVG and building the reference obstacles from the
+   configuration live at that moment: the focused box is a *measured* viewport rather than a constant and the
+   tick target decides which numbers are reserved, so a collision or a non-nearest position can exist there and
+   nowhere else. `scripts/verify-label-placement.mjs` runs all of it (785 assertions).
 
 ## Geometry (Stage 3)
 

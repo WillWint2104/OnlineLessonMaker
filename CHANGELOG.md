@@ -8,6 +8,52 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Fixed
+- **Identifiers drifted away from the points they name; now a label sits at the NEAREST position that clears
+  everything (figure engine, Stage 2c).** §1.4's candidate search enumerates (distance `d`) × (direction) ×
+  (perpendicular *shift* along the edge) and returned the **first** position clearing every obstacle by
+  `>= FIG_GAP`. Nothing pulled the label back toward its owner, and the shift dimension is not ordered by
+  displacement — so a 56px shift at `d=6` was accepted ahead of an unshifted position at `d=14`, nearly three
+  times further from its marker. On a saturated plane that is how association is lost, which is what the UI-1
+  visual review reported for `I`, `K` and `L`. Clearance is untouched and remains a **hard gate**; the change
+  only decides which of the positions already satisfying it is used. The ring index `d` is a true lower bound
+  on displacement (the offset resolves to `u*(d + w/2 or h/2) + perp*s` with `u` and `perp` orthonormal, so the
+  component along `u` is always `>= d` and the perpendicular shift can only add), so the search is a sound
+  branch and bound: it stops a ring or two past the first hit instead of enumerating ~3000 positions, and a
+  candidate that cannot win on displacement is skipped **before** the clearance test rather than after it.
+  Placement stays deterministic — fixed enumeration order and strictly-nearer improvement only, so ties go to
+  the more preferred direction. Second half: the **printed axis numbering** is now an obstacle, not just the
+  axis *lines*. Ranking alone makes that worse, because the nearest legal position is very often the one
+  tucked in against an axis. `figTickBoxes` reserves the labels the nice-tick chooser will actually paint at
+  the density in effect (so changing **Tick density** in the focused workspace re-solves placement), emitted
+  as boxes through `figClear`'s existing `boxes` channel rather than four edge arms each — ~12 tick labels
+  would otherwise have added ~48 arms, past the `FIG_MAXARMS` ceiling `figPaintedArms` exists to respect.
+  **Measured** on `tests/visual/lessons/figure-graph-baseline.json` at the inline 520×360 box, marker to
+  label-box centre / gap to the nearest tick label:
+
+  | | before | ranking only | shipped |
+  |---|---|---|---|
+  | `K` displacement | **57.5** | 20.5 | 32.2 |
+  | `I` displacement | 31.4 | 20.5 | **20.5** |
+  | `V` displacement | 44.2 | 23.5 | **31.5** |
+  | crowded plane, worst displacement | **57.5** | 21.4 | **32.2** |
+  | `V` gap to a tick label | 22.7 | **2.1** | **20.1** |
+  | crowded plane, worst gap to a tick label | 3.0 | **1.3** | **15.4** |
+
+  **Checked:** **785/785** assertions in the new `scripts/verify-label-placement.mjs` — an inline pass across
+  `figure-labels-baseline.json` (isolated · on the axes and tick values · on curves and chords · at the
+  viewport edges · long identifiers), `figure-graph-baseline.json` and the `figure` block in
+  `composable-page-baseline.json` — every identifier clears every axis,
+  curve, chord, marker, other identifier and printed tick label by `>= FIG_GAP` and is fully on canvas; its
+  displacement **equals the minimum over all clearing candidates**, re-derived by an unpruned reference search
+  rather than compared against a tuned number; repeated solves byte-identical; the unranked `figScanPill`
+  fallback never fires — plus a focused-workspace pass over **4 viewports × all five `FIGX_TICKS` densities**,
+  reading the identifiers back out of the painted SVG and building its reference obstacles from the live
+  configuration (raised by CodeRabbit: the focused box is measured, not constant, so a collision can exist there
+  and nowhere else). Legacy corpus **250/250** renders byte-identical, all 6 frozen functions
+  byte-identical, `validate` green, 0 console errors. Solve cost for the four baseline figures: 9.1ms each
+  before, 15.3ms after (85.1ms for the naive form that used edge arms and an unpruned search — the box channel
+  and the displacement prune are what make the quality affordable).
+
 - **`validate` now re-runs when a PR is retargeted, so a merge candidate can't rely on a check computed
   against a base branch it will never land on.** `validate` is the only required status check, but
   `.github/workflows/validate.yml` used a bare `pull_request:` trigger, whose default types are

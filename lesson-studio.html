@@ -7041,17 +7041,42 @@ function figBoxBox(a,b){ const dx=Math.max(0,a.x-(b.x+b.w),b.x-(a.x+a.w)), dy=Ma
 // clearance of a candidate box against ALL obstacles — arms (segments), points (markers, minus radius), placed pills.
 function figClear(box,obst){ let m=Infinity; for(const s of obst.arms) m=Math.min(m,figBoxSeg(box,s[0],s[1],s[2],s[3])); for(const p of obst.pts) m=Math.min(m,figBoxPt(box,p[0],p[1])-(p[2]||0)); for(const q of obst.boxes) m=Math.min(m,figBoxBox(box,q)); return m; }
 // §1.4 CANDIDATE-POSITION placement — out along the primary dir at increasing distance AND shifted along the
-// edge; the FIRST candidate clearing everything by >= gap wins; else the max-clearance fallback. Stays on-canvas.
+// edge; the NEAREST candidate clearing everything by >= gap wins. When NOTHING clears, the fallback maximises
+// `clear - 3*off`, i.e. clearance traded against how far the box escapes the canvas — deliberately, since a
+// label painted outside the viewBox is not visible at all; see figPlacePill. (Reading that summary as a pure
+// "max clearance" rule is what CodeRabbit flagged on #149 — the rule is the scored one, not raw clearance.)
 function figDirs(pd){ return [[1,-1],[-1,-1],[1,1],[-1,1],[1,0],[-1,0],[0,-1],[0,1]].map(([x,y])=>{const n=Math.hypot(x,y);return [x/n,y/n];}).sort((a,b)=>(b[0]*pd[0]+b[1]*pd[1])-(a[0]*pd[0]+a[1]*pd[1])); }
-// §1.4 candidate search — returns {box, clear, onCanvas} and is NEVER null (off-canvas is a SOFT penalty, not an
-// exclusion), so figLayoutPills always has a status to act on. The first fully-on-canvas candidate clearing >= gap
-// short-circuits. `clear` is the TRUE geometric clearance so escalation can judge validity.
-function figPlacePill(ax,ay,size,pd,obst,gap,bounds){ const {w,h}=size, dirs=figDirs(pd), shifts=[0,14,-14,28,-28,42,-42,56,-56]; let best=null,bestScore=-Infinity;
-  for(let d=gap; d<=340; d+=8){ for(const [ux,uy] of dirs){ const perp=[-uy,ux]; for(const s of shifts){ const cx=ax+ux*(d+w/2)+perp[0]*s, cy=ay+uy*(d+h/2)+perp[1]*s, box={x:cx-w/2,y:cy-h/2,w,h};
+/* §1.4 candidate search — returns {box, clear, onCanvas} and is NEVER null (off-canvas is a SOFT penalty, not an
+   exclusion), so figLayoutPills always has a status to act on. `clear` is the TRUE geometric clearance so
+   escalation can judge validity.
+
+   STAGE 2c — RANK THE LEGAL CANDIDATES BY DISPLACEMENT FROM THE OWNER. Clearance is a HARD gate and is
+   unchanged; this only decides which of the positions that already satisfy it is used. Until now the search
+   returned the FIRST candidate that cleared, and the enumeration is (distance d) x (direction) x (perpendicular
+   SHIFT along the edge) — so a 56px shift at d=6 was accepted ahead of an unshifted position at d=14, even
+   though it sits nearly three times further from the point it names. On a saturated plane that is how
+   association is lost: `K` was placed 57.5px from its marker where 20.5px was legal, `V` 44.2px, `I` 31.4px
+   (measured on tests/visual/lessons/figure-graph-baseline.json at the inline 520x360 box).
+
+   Candidate displacement is the marker-to-box-CENTRE distance, which is what reads as "how far the label is
+   from its point". The ring index d is a true LOWER BOUND on it: the offset resolves to u*(d + w/2 or h/2) +
+   perp*s with u,perp orthonormal, so the component along u is always >= d and the perpendicular shift can only
+   add. That makes the search a sound branch and bound — once a legal candidate is no further than the next
+   ring's lower bound, nothing later can beat it — so it still terminates a ring or two past the first hit
+   rather than enumerating all ~3000 positions.
+
+   Placement stays DETERMINISTIC: enumeration order is fixed (d ascending, directions sorted by agreement with
+   the primary direction, shifts in a fixed order) and an improvement must be STRICTLY nearer, so ties go to the
+   candidate found first — the one in the more preferred direction. Same input, same figure, every time. */
+function figPlacePill(ax,ay,size,pd,obst,gap,bounds){ const {w,h}=size, dirs=figDirs(pd), shifts=[0,14,-14,28,-28,42,-42,56,-56]; let best=null,bestScore=-Infinity, hit=null, hitD=Infinity;
+  for(let d=gap; d<=340; d+=8){ if(hit&&hitD<=d) break;                               // no candidate from this ring out can be nearer than the one already held
+    for(const [ux,uy] of dirs){ const perp=[-uy,ux]; for(const s of shifts){ const cx=ax+ux*(d+w/2)+perp[0]*s, cy=ay+uy*(d+h/2)+perp[1]*s, disp=Math.hypot(cx-ax,cy-ay);
+    if(hit&&disp>=hitD) continue;                                                     // cannot win on displacement — skip it BEFORE the clearance test, which is the expensive half
+    const box={x:cx-w/2,y:cy-h/2,w,h};
     const off=Math.max(0,2-box.x,2-box.y,box.x+box.w-(bounds.W-2),box.y+box.h-(bounds.H-2)), c=figClear(box,obst);
-    if(c>=gap && off<=0) return {box, clear:c, onCanvas:true};                        // first fully-on-canvas candidate that clears
-    const score=c-off*3; if(score>bestScore){ bestScore=score; best={box, clear:c, onCanvas:off<=0}; } } } }
-  return best; }
+    if(c>=gap && off<=0){ hitD=disp; hit={box, clear:c, onCanvas:true}; continue; }    // legal AND strictly nearer than any legal position so far (the guard above enforced that)
+    const score=c-off*3; if(score>bestScore){ bestScore=score; best={box, clear:c, onCanvas:off<=0}; } } } }   // no-legal-candidate fallback: clearance vs escaping the canvas, NOT raw clearance (see the header)
+  return hit||best; }
 // EXHAUSTIVE fallback — scan the whole on-canvas area for ANY box clearing >= gap. Structural guarantee: if a clear
 // spot exists on-canvas, the layout WILL find it, so no directional blind spot can force a silent violation.
 function figScanPill(size, obst, gap, bounds){ const {w,h}=size;
@@ -7063,8 +7088,8 @@ function figPrimaryDir(px,axisX){ const hx=px>=axisX?1:-1, n=Math.hypot(hx,1); r
 function figObstacles(pts,V,extraArms){ const D=V.dom, axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));
   return { arms:[[V.sx(D.x0),axisY,V.sx(D.x1),axisY],[axisX,V.sy(D.y0),axisX,V.sy(D.y1)]].concat(extraArms||[]), pts:pts.map(p=>[V.sx(p.x),V.sy(p.y),4]), axisX }; }
 // lay out every point's pill in a view (each placed pill becomes an obstacle for the next) → [{p,px,py,box}].
-function figLayoutPills(pts,V,box,extraArms){ const o=figObstacles(pts,V,extraArms), placed=[], out=[];
-  pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), size=figPillSize(p.id), pd=figPrimaryDir(px,o.axisX), obst={arms:o.arms,pts:o.pts,boxes:placed.slice()};
+function figLayoutPills(pts,V,box,extraArms,extraBoxes){ const o=figObstacles(pts,V,extraArms), fb=extraBoxes||[], placed=[], out=[];
+  pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), size=figPillSize(p.id), pd=figPrimaryDir(px,o.axisX), obst={arms:o.arms,pts:o.pts,boxes:fb.concat(placed)};
     const r=figPlacePill(px,py,size,pd,obst,FIG_GAP,{W:box.W,H:box.H});             // directional search (fast, preferred)
     let pill, via;
     if(r && r.onCanvas && r.clear>=FIG_GAP){ pill=r.box; via='dir'; }               // directional found a >= GAP, on-canvas spot
@@ -7346,12 +7371,12 @@ function figSafeId(bk,i){ return 'tpfig-'+String(bk).replace(/[^A-Za-z0-9-]/g,c=
    clearing the curve is BEST EFFORT (directional search only), clearing the structural furniture — axes, point
    markers, identifiers — is GUARANTEED (directional, then exhaustive). Running the exhaustive scan against
    every curve arm is what made a tan-x plot cost ~500ms, and a callout is opaque and only shown on tap. */
-function figLayoutCallouts(pts,V,box,pillBoxes,extraArms){
-  const o=figObstacles(pts,V,extraArms), base=figObstacles(pts,V), out=[];
+function figLayoutCallouts(pts,V,box,pillBoxes,extraArms,extraBoxes){
+  const o=figObstacles(pts,V,extraArms), base=figObstacles(pts,V), fb=extraBoxes||[], out=[];
   pts.forEach(p=>{ const px=V.sx(p.x), py=V.sy(p.y), text=figCoordText(p);
     const size=figPillSize(text); size.w+=22; size.h+=4;                     // room for the close affordance
     const pd=figPrimaryDir(px,o.axisX), away=[pd[0],-pd[1]];                 // opposite the identifier, so a callout never covers it
-    const full={arms:o.arms, pts:o.pts, boxes:pillBoxes.slice()}, lite={arms:base.arms, pts:base.pts, boxes:pillBoxes.slice()};
+    const full={arms:o.arms, pts:o.pts, boxes:fb.concat(pillBoxes)}, lite={arms:base.arms, pts:base.pts, boxes:fb.concat(pillBoxes)};
     const r=figPlacePill(px,py,size,away,full,FIG_GAP,{W:box.W,H:box.H});
     let bx, clearsCurve=true;
     if(r&&r.onCanvas&&r.clear>=FIG_GAP) bx=r.box;
@@ -7378,6 +7403,33 @@ function figPaintedArms(curves,segs,V){
   // total. The placement search is linear in arm count per candidate, so this is what keeps rendering cheap.
   if(arms.length>FIG_MAXARMS){ const st=Math.ceil(arms.length/FIG_MAXARMS); return arms.filter((_,i)=>i%st===0); }
   return arms;
+}
+/* STAGE 2c — AXIS FURNITURE as obstacles. §3.2 says an identifier clears every ARM, and the axis LINES were
+   already arms — but the numbers printed along them never were, so a pill could legally land on top of a tick
+   label. Ranking by displacement (figPlacePill) makes that strictly worse, because the nearest legal position
+   is very often the one tucked in against the axis: on the baseline fixtures the tightest gap to a tick label
+   went from 3.0px to 1.3px (`K`) and 22.7px to 2.1px (`V` at the origin — the case raised at the UI-1 review).
+   Ranking and this belong together: the first chooses a nearer position, the second keeps "nearer" honest by
+   making the axis numbering something a label has to clear like anything else.
+
+   Emitted as BOXES, through figClear's existing `boxes` channel (the one already carrying placed pills), NOT as
+   four edge arms each the way figxNameArms does its two. That is a cost decision, not a style one: the search is
+   linear in obstacle count per candidate and a plane carries ~12 tick labels, so edge arms would have added ~48
+   arms — past FIG_MAXARMS, the ceiling figPaintedArms exists to respect — at four figBoxSeg calls apiece, where
+   one figBoxBox is a handful of arithmetic ops. Same clearance, ~an order of magnitude less work.
+
+   Geometry mirrors figSvgBody's own emission: 11px `.tp-fig-ticklabel`, x labels anchor-middle on the baseline
+   at axisY+16, y labels anchor-end at (axisX-8, py+4), and the y=0 label is skipped there so it is not reserved
+   here either. Widths are estimated from the glyph count on the same basis as figPillSize; a tick label is
+   digits, a minus and at most one point, so the estimate is tight. `tt` is the caller's tick target —
+   figNiceTicks is the single source of tick positions, so the reserved boxes are the ones that will actually be
+   painted at that density, inline (5) or focused (whatever Options is set to). */
+function figTickBoxes(V,tt){
+  const D=V.dom, axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));
+  const xT=figNiceTicks(D.x0,D.x1,tt||5), yT=figNiceTicks(D.y0,D.y1,tt||5), FS=11, H=FS*1.15, wOf=t=>String(t).length*FS*0.6+2, boxes=[];
+  xT.ticks.forEach(v=>{ const w=wOf(figFmtTick(v,xT.decimals)); boxes.push({x:V.sx(v)-w/2, y:axisY+16-H*0.8, w, h:H}); });
+  yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const w=wOf(figFmtTick(v,yT.decimals)); boxes.push({x:axisX-8-w, y:V.sy(v)+4-H*0.8, w, h:H}); });
+  return boxes;
 }
 /* Build the whole §5 graph model — {figure:'graph', domain, objects:[{type:'function'|'points'|'segment'}], grid, aspect}.
    Every authoring fault lands in errors[] and the offending object is SKIPPED; nothing is fabricated. */
@@ -7430,9 +7482,10 @@ function figGraph(b, box){
   // placement 1b would have made, at 1b's cost. Segments are few, so they always stay in.
   const nSub=curves.reduce((a,c)=>a+c.paths.length,0);
   const painted=figPaintedArms(nSub<=20?curves:[],segs,V);
-  const layout=painted.length?figLayoutPills(pts,V,box,painted):fit.layout;
+  const furn=figTickBoxes(V,5);                                             // Stage 2c — the printed axis numbering is an obstacle too (inline density is figSvgBody's default of 5)
+  const layout=figLayoutPills(pts,V,box,painted,furn);
   layout.forEach(L=>{ if(!L.valid) errors.push('identifier '+L.p.id+' could not be placed clear of the plotted geometry'); });
-  const callouts=figLayoutCallouts(pts,V,box,layout.map(L=>L.box),painted);
+  const callouts=figLayoutCallouts(pts,V,box,layout.map(L=>L.box),painted,furn);
   return {V, dom0, domOK, aspect, pts, layout, callouts, curves, segs, painted, errors, box, iters:fit.iters, allValid:layout.every(L=>L.valid), gridShown:(b.grid!=='hidden')};
 }
 /* ═══════════════ FIGURE ENGINE — Stage 2b: Expand / focused graph window (ENGINE_SPEC §6) ═══════════════
@@ -7558,7 +7611,8 @@ function figxPaint(xid){                                                   // re
   const M=(e.M&&e.sig===sig)?e.M:figxModel(xid);                            // display-only controls (minor/names/increment) repaint without re-solving
   if(!M) return null; e.sig=sig; e.M=M;
   const nm=st.names?figxNameArms(M.V,e.box):[];
-  const layout=nm.length?figLayoutPills(M.pts,M.V,e.box,(M.painted||[]).concat(nm)):M.layout;
+  const furn=figTickBoxes(M.V,st.tt);                                       // Stage 2c — reserve the numbering AT THIS density; changing Tick density changes what a label must clear
+  const layout=figLayoutPills(M.pts,M.V,e.box,(M.painted||[]).concat(nm),furn);
   const paint=Object.assign({},M,{segs:figxSegs(e),layout});                // chords drawn in full, then clipped by the viewport
   const svg=p.querySelector('[data-figx-svg]');
   if(svg){ svg.setAttribute('viewBox','0 0 '+e.box.W+' '+e.box.H);         // viewBox matches the element box, so `meet` letterboxes nothing

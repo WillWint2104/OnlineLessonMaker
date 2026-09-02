@@ -1,0 +1,71 @@
+{
+  "meta": { "theme": "scholarmath", "title": "Figure label placement — Stage 2c" },
+  "slides": [
+    {
+      "type": "page",
+      "title": "Isolated identifiers",
+      "blocks": [
+        { "type": "section", "title": "Nothing in the way",
+          "flow": [{ "kind": "para", "text": "Three points with no curves, no chords and no neighbours. With the plane empty, every identifier should sit at the NEAREST position that clears its marker — this is the control case for the displacement ranking." }] },
+        { "type": "figure", "figure": "graph", "title": "Three isolated points",
+          "caption": "Control case — nothing competes, so nothing should be displaced.",
+          "domain": { "xMin": -6, "xMax": 6, "yMin": -6, "yMax": 6 }, "grid": "shown", "aspect": "stretch",
+          "objects": [ { "type": "points", "from": "table", "rows": [["A", -4, 4], ["B", 4, 4], ["C", 4, -4]] } ] }
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Identifiers on the axes and on tick values",
+      "blocks": [
+        { "type": "section", "title": "Competing with the numbering",
+          "flow": [{ "kind": "para", "text": "The vertex sits at the origin, where both axes and the printed tick numbers converge — the case raised at the UI-1 visual review. The rest sit exactly ON tick values along each axis, so an identifier and an axis number want the same space." }] },
+        { "type": "figure", "figure": "graph", "title": "Points on the axes",
+          "caption": "$V$ at the origin plus four points on tick values — identifiers must clear the axis numbering, not just the axis lines.",
+          "domain": { "xMin": -6, "xMax": 6, "yMin": -6, "yMax": 6 }, "grid": "shown", "aspect": "stretch",
+          "objects": [ { "type": "points", "from": "table", "rows": [["V", 0, 0], ["R", 2, 0], ["S", -4, 0], ["T", 0, 4], ["U", 0, -2]] } ] }
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Identifiers against curves and chords",
+      "blocks": [
+        { "type": "section", "title": "Points that lie on the geometry",
+          "flow": [{ "kind": "para", "text": "Every point lies ON the parabola, and three chords join them. The nearest legal position must clear the curve it sits on and the chords crossing it, so displacement and clearance are in direct tension here." }] },
+        { "type": "figure", "figure": "graph", "title": "Points on a curve, joined by chords",
+          "caption": "$y=0.5x^2-2$ with five points on the curve and three chords.",
+          "domain": { "xMin": -5, "xMax": 5, "yMin": -3, "yMax": 8 }, "grid": "shown", "aspect": "stretch",
+          "objects": [
+            { "type": "function", "f": "0.5*x^2-2" },
+            { "type": "points", "from": "table", "rows": [["P", -4, 6], ["Q", -2, 0], ["R", 0, -2], ["S", 2, 0], ["T", 4, 6]] },
+            { "type": "segment", "between": ["P", "T"] },
+            { "type": "segment", "between": ["Q", "S"] },
+            { "type": "segment", "between": ["P", "R"] }
+          ] }
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Identifiers at the viewport edges",
+      "blocks": [
+        { "type": "section", "title": "Nowhere outward to go",
+          "flow": [{ "kind": "para", "text": "Points in all four corners and mid-edge. The preferred outward direction leaves the canvas at every one of them, so the nearest LEGAL position is inward — and auto-fit must still expand the domain rather than let a pill run off the plane." }] },
+        { "type": "figure", "figure": "graph", "title": "Points at the domain corners and edges",
+          "caption": "Edge case — an on-canvas constraint at every marker.",
+          "domain": { "xMin": -5, "xMax": 5, "yMin": -5, "yMax": 5 }, "grid": "shown", "aspect": "stretch",
+          "objects": [ { "type": "points", "from": "table", "rows": [["A", -5, 5], ["B", 5, 5], ["C", -5, -5], ["D", 5, -5], ["E", 0, 5], ["F", 0, -5], ["G", -5, 0], ["H", 5, 0]] } ] }
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Long identifiers in a tight domain",
+      "blocks": [
+        { "type": "section", "title": "Wide pills, little room",
+          "flow": [{ "kind": "para", "text": "Multi-character identifiers make wide pills, and a wide pill clears far less easily than a single letter. Ranking by displacement must not quietly trade a legal position for a nearer illegal one." }] },
+        { "type": "figure", "figure": "graph", "title": "Long identifiers at close spacing",
+          "caption": "Six wide identifiers inside a small domain.",
+          "domain": { "xMin": -3, "xMax": 3, "yMin": -3, "yMax": 3 }, "grid": "shown", "aspect": "stretch",
+          "objects": [ { "type": "points", "from": "table", "rows": [["Vertex", -2, 2], ["Focus", 0, 2], ["Origin", 0, 0], ["Turning", 2, 1], ["Root_a", -2, -1], ["Root_b", 2, -2]] } ] }
+      ]
+    }
+  ]
+}
