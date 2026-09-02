@@ -194,11 +194,18 @@ The knockout fill is a nicety, not a crutch: pills do not touch lines in the fir
 single uniform constant so all pills sit the same clear distance off their edges.
 
 Anchor + primary direction per label type (all coordinate-derived):
-- **Side length:** anchor = edge midpoint; primary dir = outward normal `normalize(−edge.y, edge.x)`
-  flipped away from the polygon centroid; along = the edge direction.
+- **Side length:** anchor = edge midpoint; primary dir = the perpendicular normal that faces OUT of the
+  closed outline the edge belongs to, decided by an even-odd ray cast against that outline (Stage 3b —
+  the centroid test picks the wrong side on a concave polygon and a winding-sign rule picks the wrong
+  side when the vertices are listed the other way round); a bare segment has no interior, so it falls
+  back to the centroid. Along = the edge direction.
 - **Vertex name:** anchor = the vertex; primary dir = EXTERNAL bisector `−normalize(u+w)` of its two
   arms (degenerate near 180° → use edge perpendicular); along = an arm direction.
-- **Angle measure:** on the swept-arc bisector at `e·r` (§3.1) — small pill, same collision rule.
+- **Angle measure:** anchor = the point where the OUTERMOST arc meets the swept bisector (§3.1); primary
+  dir = that same bisector. The pill therefore resolves to **arc → GAP → label** on one line, and the arc
+  and its measure read as a single annotation (Stage 3b). It was `e·r`, a MULTIPLE of the radius, which
+  pushed the number deep into the polygon on a wide angle and left a student matching numbers to corners
+  by eye. No per-vertex offsets exist at any point in this.
 - **Plotted point (graph):** anchor = the point; primary dir = away from nearby curves/axes.
 
 **Placement = candidate-position search (established cartographic method, NOT single-direction march):**
@@ -213,6 +220,21 @@ Anchor + primary direction per label type (all coordinate-derived):
    the search range must be wide enough that this is rare.
 4. Placement order: vertices first (they crowd corners), then lengths, then angle measures — later
    pills see earlier ones as obstacles.
+
+**Stage 3b — annotation ROLES.** A geometry figure says four different kinds of thing and they are not
+equal, so each label carries a semantic role that sets both its type treatment and the pill size the
+search reserves for it (they must move together, or the box stops matching the ink):
+
+| Role | Applies to | Weight |
+|---|---|---|
+| `vertex` | vertex names | strongest — the structure is named |
+| `symbol` | authored maths names (`θ`, `x`) | maths italic, above a measurement |
+| `measure` | computed lengths and angles | secondary — explanatory, not structural |
+
+Marks are subordinate to the polygon they annotate: arcs and right-angle squares are drawn a step
+lighter than the edges. The roles are classes on the existing token system — never per-figure styling,
+so every authored diagram inherits the same grammar. Measurement text has ONE numeric style: precision
+follows magnitude, trailing zeros are dropped, and the degree sign is set with its number.
 This survives rescale because anchors + directions are coordinates; auto-fit (§1.3) must include every
 pill box in the union so the domain leaves room.
 

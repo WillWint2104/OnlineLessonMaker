@@ -8,6 +8,44 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 3b — Geometry visual language.** Visual review of Stage 3 found the renderer technically right and
+  reading as raw engine output: vertex names, side lengths, angle measures and symbolic labels all competed at
+  the same visual weight, so nothing told the eye what was structural and what was explanatory. This adds the
+  **layout grammar** that was missing between the geometry and the collision search — it does not touch the
+  renderer or the placement engine. Four **annotation roles** (vertex > symbolic > measurement) as semantic
+  classes on the existing tokens, never per-fixture styling, with the pill the search reserves sized from the
+  role so box and ink stay in step. Marks are subordinate to what they annotate: arcs and right-angle squares
+  now paint a step lighter than the polygon edges. **Angle measures are anchored to their own arc** — on the
+  swept bisector one `FIG_GAP` outside the OUTERMOST arc, so arc and number read as one annotation; the anchor
+  was a MULTIPLE of the radius (`1.62r`), which pushed the number deep into the polygon on a wide angle and
+  left a student matching numbers to corners by eye. **Side measures** keep midpoint + outward normal, but
+  "outward" is now decided by an even-odd ray cast against the outline itself, so it holds for either winding
+  and for a concave polygon, where the centroid test picks the wrong side. One **numeric style** for every
+  measurement: precision follows magnitude, trailing zeros are dropped, and `°` is set with its number, so a
+  right angle reads `90°` and a side reads `2.39` rather than the coordinate serialiser's `2.385`. The
+  pipeline is unchanged in shape — semantic object → preferred anchor → obstacles → Stage 2c nearest legal
+  position → role styling — which is what lets a JSON-authored diagram come out right without hand-tuning.
+  **Geometry focus now fits the FIGURE where graph focus fits the PLANE.** A coordinate plane is itself the
+  subject and should take the whole workspace; a polygon is not, and under `aspect:"equal"` a stage stretched
+  to the viewport can only wrap it in blank board. Geometry gets a drawing board shaped like its own domain,
+  sized to whichever workspace dimension binds and centred in what is left; the domain margin that the
+  annotations live in drops from 0.18 to 0.11 per side (the escalation loop still buys more room on a figure
+  that needs it). Nothing is scaled non-uniformly. **Fixtures:** the ~6px sliver is reclassified as a
+  CORRECTNESS stress case — it proves the arcs stay attached and distinct, and is deliberately far too small
+  to read — and a second **~44px short arm** is added as the VISUAL QUALITY case, where three stacked arcs
+  (radii 11.1 / 16.6 / 22.1) are actually distinguishable to a human. Both contracts now exist and are
+  recorded separately in `tests/visual/README.md` contract 8.
+
+### Fixed
+- **The Stage 3 focused-fill figure was measured against the wrong thing.** #151 reported the painted figure
+  at "87–94% in both dimensions"; that measured the SVG **element**, which is 100% × 100% of whatever stage it
+  is given and therefore proves nothing. Measured against the painted ink, Stage 3 was **44% × 73%** at
+  1440×900, **72% × 52%** at 834×1112 and **83% × 38%** at 390×844. This is the same failure mode as the arc
+  harness earlier in the PR — asserting against the implementation's own proxy instead of the requirement —
+  and it is now recorded in contract 8 as a rule: measure the ink against the board, never the element. With
+  the Stage 3b board the ink reaches **85% × 84%**, **85% × 83%** and **93% × 89%**.
+
+### Added
 - **Stage 3 — Geometry 2D front-end.** Polygons of any *n* through **one** renderer, angle arcs seated on the
   actual arms, a right-angle square derived from the two incident rays, and vertex / side / angle labels placed
   by the **same Stage-2c pill system** the graph uses. It renders into the UI-1 shared Figure Shell and opens in

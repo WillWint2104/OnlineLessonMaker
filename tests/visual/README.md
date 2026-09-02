@@ -17,7 +17,7 @@ scripts that were never committed, so their rendered output could not be reprodu
 | `lessons/composable-page-baseline.json` | The composable `page` type across every registered block: `skillHeader`, `section` (prose + inline `$…$` + display equation), `figure`, `workedExample`, `selfCheck`, `practiceSet`, `mastery`. Loads on `scholarmath`; re-skins to all five themes. |
 | `lessons/figure-graph-baseline.json` | The graph engine's four representative states: a clean plot, a crowded plane (12 identifiers, 2 curves, 3 chords — the Stage-1b pill-collision stress case), a discontinuity at `aspect:equal`, and the author-error state. The discontinuity figure also authors `minorGrid:false` + `axisNames:false`, so the display *defaults* are exercised rather than assumed (see `SCHEMA.md` → `figure`); slide 0 authors neither, covering the unchanged default. |
 | `lessons/modal-overflow-baseline.json` | A solution modal taller than any supported viewport. Guards the focus-overlay parking contract below. |
-| `lessons/figure-geometry-baseline.json` | **Stage 3 geometry**, 11 figures: right triangle with vertex/side labels and a right-angle marker · scalene triangle with single, double and triple angle arcs · **three stacked arcs on an arm only ~6px long on screen** · a **non-axis-aligned** right angle · quadrilateral with every interior angle · irregular heptagon · crowded pentagon carrying names, sides and angles at once · long descriptive labels · a polygon hard against a stated domain · a `triangleSSS` parameterised construction · the author-error state (impossible `triangleSSS` · unknown vertex · a `rightAngle` that is not 90° · a zero-length arm — four rejection paths). Loads on `scholarmath`. |
+| `lessons/figure-geometry-baseline.json` | **Stage 3 geometry**, 12 figures: right triangle with vertex/side labels and a right-angle marker · scalene triangle with single, double and triple angle arcs · **three stacked arcs on an arm only ~6px long on screen** (correctness stress) · **three stacked arcs on a ~44px arm** (visual quality — legible) · a **non-axis-aligned** right angle · quadrilateral with every interior angle · irregular heptagon · crowded pentagon carrying names, sides and angles at once · long descriptive labels · a polygon hard against a stated domain · a `triangleSSS` parameterised construction · the author-error state (impossible `triangleSSS` · unknown vertex · a `rightAngle` that is not 90° · a zero-length arm — four rejection paths). Loads on `scholarmath`. |
 | `lessons/figure-labels-baseline.json` | The label-placement system's five distinct pressures, one per slide: **isolated** identifiers (nothing competing — the control case), identifiers **on the axes and on tick values** (including `V` at the origin, the case raised at the UI-1 visual review), identifiers **on a curve and its chords**, identifiers **at the viewport corners and edges** (outward is off-canvas at every marker), and **long identifiers** in a tight domain (wide pills clear far less easily than single letters). Loads on `scholarmath`. |
 
 ## Loading one
@@ -124,7 +124,20 @@ rail, the canvas fit, or the figure engine.
    for exactly this). In the **focused** workspace at desktop and portrait, the drawn figure must fill the
    stage rather than sit in dead space: measure the SVG's painted bbox against `.tp-figx-stage` — Stage 3
    records **87–94% in both dimensions** at 1440×900 / 834×1112 / 390×844. The grid default is hidden for
-   geometry and must read the same inline and focused.
+   geometry and must read the same inline and focused. **Stage 3b — annotation grammar.** Assert the ROLE
+   hierarchy holds in the crowded pentagon: a vertex name is heavier than a symbolic label, which is heavier
+   than a computed measurement, and arcs/right-angle marks are lighter than the polygon edges. Each angle
+   measure sits on its own arc's bisector immediately outside the OUTERMOST arc — assert its distance from the
+   vertex is within a gap-and-a-pill of that arc radius, never a multiple of it, so arc and measure read as
+   one annotation. Each side measure sits outside the closed outline (ray-cast, so this holds for either
+   winding and for a concave polygon). Measurement text carries one numeric style: no trailing zeros, so a
+   right angle reads `90°`. The two short-arm fixtures assert DIFFERENT things and must not be conflated: the
+   ~6px arm is a CORRECTNESS stress case (arcs stay attached and distinct; it is deliberately too small to
+   read), and the ~44px arm is the VISUAL QUALITY case (three stacked arcs a human can actually distinguish at
+   normal rendered size). **Geometry focus fits the FIGURE, graph focus fits the PLANE:** the geometry board
+   takes the figure's own aspect and is centred in the workspace, so measure the painted INK against the BOARD
+   — 85–89% at 1440×900 / 834×1112 / 390×844 — and never against the SVG element, which is 100%×100% of
+   whatever it is given and therefore proves nothing.
 
 ## Geometry (Stage 3)
 

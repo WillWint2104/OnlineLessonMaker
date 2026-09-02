@@ -416,6 +416,18 @@ figure can never assert a length or angle that its own coordinates contradict.
 `aspect` is not read for geometry — it is always `equal`. A stretched axis turns a right angle into something
 that is not one and an arc into an ellipse, so it is not an authoring choice here.
 
+**Annotation roles (Stage 3b).** The four kinds of label are ranked, not uniform: **vertex names** are the
+strongest, an authored **symbolic** name (`"θ"`) is set in maths italic, and a **computed measurement** is
+secondary. Arcs and right-angle marks are drawn lighter than the polygon edges they annotate. Nothing here
+is authorable — a role follows from what the label *is* (`label:"measure"` / `text:"auto"` produce a
+measurement; any other string is a name), so a lesson cannot drift out of the house grammar.
+
+Measurements share one numeric style: precision follows magnitude (2 dp under 10, 1 dp under 100, whole
+numbers above), trailing zeros are dropped, and `°` is set with the number — so a right angle reads `90°`,
+never `90.0°`. Preferred anchors are **side midpoint + outward normal** (outside the polygon) and **angle
+measure on the arc's own bisector, one gap outside the outermost arc**; the general Stage-2c placement
+search then resolves collisions from there. Units are not supported yet.
+
 ## `outro`
 
 Lesson‑complete screen. Up to **3 stat tiles** — **omit the score entry from `stats[]` to hide that

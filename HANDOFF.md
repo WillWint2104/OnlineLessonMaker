@@ -278,9 +278,13 @@ YouTube embeds) — `lessons/*.html` only *warns*, by design.
 - **Figure engine** (`docs/figure-engine/`) — the active track, and the one this roadmap had not been
   recording. **Stage 1a–1c** (view, uniform-gap pill collision, construction DAG), **Stage 2/2b** (graph
   front-end, focused workspace), **UI-1** (shared Figure Shell + viewport-level focus), **Stage 2c**
-  (nearest-legal label placement, axis numbering as an obstacle) and **Stage 3 — Geometry 2D front-end** are
-  **DONE**. Geometry renders into the same shell and places labels through the same Stage-2c system; polygons
-  of any *n* go through one renderer. Committed fixtures now exist for every rendered surface —
+  (nearest-legal label placement, axis numbering as an obstacle), **Stage 3 — Geometry 2D front-end** and
+  **Stage 3b — Geometry visual language** are **DONE**. Geometry renders into the same shell and places
+  labels through the same Stage-2c system; polygons of any *n* go through one renderer. Stage 3b added the
+  layout grammar between the geometry and the collision search — annotation roles (vertex > symbolic >
+  measurement), angle measures anchored to their own arc, side measures outside the outline by ray cast, one
+  numeric style — plus the fitting split: **graph focus maximises the plane, geometry focus maximises the
+  figure**. Committed fixtures now exist for every rendered surface —
   `tests/visual/lessons/figure-{graph,labels,geometry}-baseline.json` plus `composable-page` and
   `modal-overflow` — with their contracts in `tests/visual/README.md`; `scripts/verify-label-placement.mjs`
   and `scripts/verify-corpus-identity.mjs` make the placement and no-regression claims reproducible.

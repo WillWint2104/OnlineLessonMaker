@@ -2631,11 +2631,19 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-seg{stroke:var(--primary);stroke-width:1.6;stroke-linecap:round;}
 /* Stage 3 geometry marks — same token vocabulary as the graph (§1.6: colour via tokens, never inline hex), so
    a geometry figure reads as the same object in every theme rather than carrying its own palette. */
-.tp-slide .tp-fig-poly{stroke:var(--primary);stroke-width:1.7;stroke-linejoin:round;fill:none;}
+.tp-slide .tp-fig-poly{stroke:var(--primary);stroke-width:1.9;stroke-linejoin:round;fill:none;}
 .tp-slide .tp-fig-polyfill{fill:var(--primary);fill-opacity:.07;}
-.tp-slide .tp-fig-arc{stroke:var(--primary);stroke-width:1.2;fill:none;opacity:.85;}
-.tp-slide .tp-fig-ra{stroke:var(--primary);stroke-width:1.2;fill:none;opacity:.85;}
-.tp-slide .tp-fig-glab{fill:var(--on-surface);font-family:var(--tp-body);font-size:12px;}
+/* Stage 3b — marks are ANNOTATIONS on the polygon, not part of its structure, so they read a step lighter
+   than the edges they describe. Same colour family; only weight and opacity separate them. */
+.tp-slide .tp-fig-arc{stroke:var(--primary);stroke-width:1.15;fill:none;opacity:.72;}
+.tp-slide .tp-fig-ra{stroke:var(--primary);stroke-width:1.15;fill:none;opacity:.72;}
+/* Stage 3b — the four ANNOTATION ROLES. A geometry figure says four different kinds of thing and they are
+   not equal: the vertices name the structure, a symbol stands for a quantity, and a measurement explains
+   one. Ranked vertex > symbolic > measurement, as semantic classes on the existing token system — never
+   per-fixture styling, so every authored figure inherits the same grammar. */
+.tp-slide .tp-fig-gvert{fill:var(--on-surface);font-family:var(--tp-body);font-size:13px;font-weight:700;}
+.tp-slide .tp-fig-gsym{fill:var(--on-surface);font-family:var(--tp-serif,var(--tp-body));font-size:12.5px;font-style:italic;}
+.tp-slide .tp-fig-gmeas{fill:var(--on-surface-variant,var(--on-surface));font-family:var(--tp-body);font-size:11.5px;}
 .tp-slide .tp-fig-hit{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;}
 .tp-slide .tp-fig-hit:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}   /* --focus-ring is a COLOUR: `outline:var(--focus-ring,<shorthand>)` sets colour only and leaves outline-style:none — i.e. no ring at all */
 .tp-slide .tp-fig-callout{position:absolute;display:flex;align-items:center;gap:8px;padding:4px 5px 4px 10px;border-radius:var(--tp-rad-btn);background:var(--graph-callout,var(--graph-axis,var(--on-surface)));color:var(--graph-surface,var(--surface));font-family:var(--tp-body);font-size:12.5px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px var(--scrim,rgba(0,0,0,.28));}
@@ -7037,7 +7045,7 @@ function figAutoDomain(b){
 const FIG_GAP=6;                                                          // uniform MINIMUM clearance (viewBox units): every pill sits >= this from every arm, point, and other pill
 const FIG_LABFS=12.5, FIG_PADX=5, FIG_PADY=3;
 // §3.2 pill primitive — a box sized to its text; the BOX is the collision unit.
-function figPillSize(text){ return { w:String(text).length*FIG_LABFS*0.62+2*FIG_PADX, h:FIG_LABFS*1.15+2*FIG_PADY }; }
+function figPillSize(text,fs){ const F=fs||FIG_LABFS; return { w:String(text).length*F*0.62+2*FIG_PADX, h:F*1.15+2*FIG_PADY }; }
 // ── geometry: TRUE box-to-segment / box-to-point / box-to-box distances (0 on overlap/intersection) ──
 function figPtSeg(px,py,ax,ay,bx,by){ const dx=bx-ax,dy=by-ay,L2=dx*dx+dy*dy; let t=L2?((px-ax)*dx+(py-ay)*dy)/L2:0; t=t<0?0:t>1?1:t; return Math.hypot(px-(ax+t*dx),py-(ay+t*dy)); }
 function figSegInt(ax,ay,bx,by,cx,cy,dx,dy){ const d=(bx-ax)*(dy-cy)-(by-ay)*(dx-cx); if(Math.abs(d)<1e-12) return false; const t=((cx-ax)*(dy-cy)-(cy-ay)*(dx-cx))/d, u=((cx-ax)*(by-ay)-(cy-ay)*(bx-ax))/d; return t>=0&&t<=1&&u>=0&&u<=1; }
@@ -7507,7 +7515,10 @@ function figGraph(b, box){
    drawn. `aspect` is forced to 'equal': a stretched axis turns a right angle into something that is not one,
    and an arc into an ellipse, so it is not an authoring choice here.
    NO block wiring (Stage 4), NO input/grading (§6). */
-const FIG_ARC_R=26, FIG_ARC_STEP=5.5, FIG_ARC_ECC=1.62, FIG_RA_SIZE=13, FIG_RIGHT_TOL=0.75;
+const FIG_ARC_R=26, FIG_ARC_STEP=5.5, FIG_RA_SIZE=13, FIG_RIGHT_TOL=0.75;
+/* Stage 3b annotation roles → [class, font-size]. The size is not decoration: the placement box is measured
+   from it, so a role's weight and the space it reserves stay in step. */
+const FIG_ROLE={ vertex:['tp-fig-gvert',13], symbol:['tp-fig-gsym',12.5], measure:['tp-fig-gmeas',11.5] };
 // Named points for a geometry block: an optional parameterised `construction` (Stage 1c's FIG_PARAM) plus any
 // authored `points` objects — the same table vocabulary the graph block already uses, so an author moving
 // between the two learns one shape of data.
@@ -7564,14 +7575,28 @@ function figGeomArms(shapes){
 /* Place one geometry label. Identical machinery to the graph's identifiers — figPlacePill (Stage 2c: NEAREST
    legal candidate, deterministic) then figScanPill as the structural fallback — differing only in the anchor
    and primary direction each label type derives from the figure (§3.2). */
-function figGeomPlace(anchor,pd,text,obst,box,cls){
-  const size=figPillSize(text), bounds={W:box.W,H:box.H};
+/* Stage 3b — ONE numeric style for every geometry measurement. Precision follows magnitude, trailing zeros
+   are dropped, and the degree sign is set with the number it belongs to. figNum stays the COORDINATE
+   serialiser (3 dp): a length a student reads off a diagram is not a path coordinate, and 3.314 is engine
+   output where 3.31 is a measurement. */
+function figGeomMeas(v){ const a=Math.abs(v), d=a>=100?0:a>=10?1:2, k=Math.pow(10,d); return String(+(Math.round(v*k)/k)); }
+function figGeomDeg(v){ return String(+(Math.round(v*10)/10))+'\u00b0'; }
+/* Even-odd ray cast. A side measurement belongs OUTSIDE its polygon, and "outside" has to be decided
+   against the outline itself: the centroid test picks the wrong normal on a concave outline, and a
+   winding-sign rule picks the wrong one when the vertices are listed the other way round. */
+function figGeomInside(pts,x,y){ let inside=false;
+  for(let i=0,j=pts.length-1;i<pts.length;j=i++){ const a=pts[i], b=pts[j];
+    if(((a.y>y)!==(b.y>y)) && (x < (b.x-a.x)*(y-a.y)/((b.y-a.y)||1e-12)+a.x)) inside=!inside; }
+  return inside; }
+function figGeomPlace(anchor,pd,text,obst,box,role){
+  const R=FIG_ROLE[role]||FIG_ROLE.measure, fs=R[1];
+  const size=figPillSize(text,fs), bounds={W:box.W,H:box.H};
   const r=figPlacePill(anchor.x,anchor.y,size,pd,obst,FIG_GAP,bounds);
   let bx, via;
   if(r&&r.onCanvas&&r.clear>=FIG_GAP){ bx=r.box; via='dir'; }
   else { const sc=figScanPill(size,obst,FIG_GAP,bounds); if(sc){ bx=sc; via='scan'; }
          else { bx=(r&&r.box)||{x:anchor.x-size.w/2,y:anchor.y-size.h/2,w:size.w,h:size.h}; via='none'; } }
-  return { box:bx, text, cls, via, valid:via!=='none', ax:anchor.x, ay:anchor.y };
+  return { box:bx, text, cls:R[0], fs, via, valid:via!=='none', ax:anchor.x, ay:anchor.y };
 }
 /* Solve every mark and label for one view. Placement ORDER is vertices → sides → angles (§3.2 step 4): vertices
    crowd the corners, so they claim their space first and later pills see them as obstacles. */
@@ -7616,7 +7641,8 @@ function figGeomSolve(b,V,box,P,errors){
       const bt=Array.isArray(o.between)?o.between:[o.from,o.to], A=named(bt[0],'sideLabel '+(idx+1)), B=named(bt[1],'sideLabel '+(idx+1));
       if(A&&B){ const ma=P.byName[String(bt[0])], mb=P.byName[String(bt[1])];
         // §4 single source of truth: 'auto' DISPLAYS the computed length; any other string is a NAME, never a value.
-        want.side.push({A,B,text:(o.text==null||o.text==='auto')?figNum(figLen(ma,mb)):String(o.text)}); } }
+        const auto=(o.text==null||o.text==='auto');
+        want.side.push({A,B,auto,text:auto?figGeomMeas(figLen(ma,mb)):String(o.text)}); } }
   });
   // Vertex names: every polygon vertex unless the block opts out. They are the plotted-point identifiers of a
   // geometry figure, so they go through the same pill system rather than inventing a second kind of label.
@@ -7647,18 +7673,27 @@ function figGeomSolve(b,V,box,P,errors){
   const base={arms:armSegs.concat(arcArms), pts:vpts};
   const placed=[], labels=[];
   const push=(L)=>{ labels.push(L); placed.push(L.box); };
-  want.vertex.forEach(v=>push(figGeomPlace(v.at,v.pd,v.text,{arms:base.arms,pts:base.pts,boxes:placed.slice()},box,'tp-fig-ptid')));
+  want.vertex.forEach(v=>push(figGeomPlace(v.at,v.pd,v.text,{arms:base.arms,pts:base.pts,boxes:placed.slice()},box,'vertex')));
   want.side.forEach(sd=>{ const mid={x:(sd.A.x+sd.B.x)/2,y:(sd.A.y+sd.B.y)/2};
-    // §3.2 side primary dir = OUTWARD normal, flipped away from the figure's centroid.
+    // Stage 3b §3.2 side primary anchor = side MIDPOINT + perpendicular normal, facing OUT of the closed
+    // outline this side belongs to. Probing the outline itself holds for either winding and for a concave
+    // polygon; a bare segment belongs to no interior, so it falls back to the figure's centroid.
     const e=figCunit(figCvec(sd.A,sd.B)); let pd=[-e.y,e.x];
-    const cen=vpts.length?{x:vpts.reduce((s2,p)=>s2+p[0],0)/vpts.length,y:vpts.reduce((s2,p)=>s2+p[1],0)/vpts.length}:mid;
-    if(pd[0]*(mid.x-cen.x)+pd[1]*(mid.y-cen.y)<0) pd=[-pd[0],-pd[1]];
-    push(figGeomPlace(mid,pd,sd.text,{arms:base.arms,pts:base.pts,boxes:placed.slice()},box,'tp-fig-glab')); });
+    const ring=shapes.reduce((f,sh)=>f||(sh.kind==='polygon'&&sh.pts.some((p,i)=>{ const q=sh.pts[(i+1)%sh.pts.length];
+      return (p.id===sd.A.id&&q.id===sd.B.id)||(p.id===sd.B.id&&q.id===sd.A.id); })?sh.pts:null), null);
+    if(ring&&ring.length>2){ if(figGeomInside(ring, mid.x+pd[0]*4, mid.y+pd[1]*4)) pd=[-pd[0],-pd[1]]; }
+    else { const cen=vpts.length?{x:vpts.reduce((s2,p)=>s2+p[0],0)/vpts.length,y:vpts.reduce((s2,p)=>s2+p[1],0)/vpts.length}:mid;
+           if(pd[0]*(mid.x-cen.x)+pd[1]*(mid.y-cen.y)<0) pd=[-pd[0],-pd[1]]; }
+    push(figGeomPlace(mid,pd,sd.text,{arms:base.arms,pts:base.pts,boxes:placed.slice()},box,sd.auto?'measure':'symbol')); });
   want.angle.forEach(a=>{ if(!a.an||a.label===false||a.label==null) return;
     // §4: 'measure' DISPLAYS the computed angle. Anything else is a name (θ, x), never an authored value.
-    const txt=(a.label==='measure')?(figNum(Math.round(a.an.mag*10)/10)+'°'):String(a.label);
-    const r=figGeomArcR(a.an.armMin,a.arcs-1,a.arcs), anc={x:a.V.x+Math.cos(a.an.phi)*r*FIG_ARC_ECC, y:a.V.y+Math.sin(a.an.phi)*r*FIG_ARC_ECC};
-    push(figGeomPlace(anc,[Math.cos(a.an.phi),Math.sin(a.an.phi)],txt,{arms:base.arms,pts:base.pts,boxes:placed.slice()},box,'tp-fig-glab')); });
+    const auto=(a.label==='measure'), txt=auto?figGeomDeg(a.an.mag):String(a.label);
+    // Stage 3b: a measure belongs to its ARC, not to the interior. Anchor ON the outermost arc along the
+    // same bisector the arc was swept about, so the pill resolves to arc → FIG_GAP → label and the two
+    // read as one annotation. The old anchor was a MULTIPLE of the radius (1.62r), which pushed the number
+    // deep inside the polygon on a wide angle and left the student matching numbers to corners by eye.
+    const r=figGeomArcR(a.an.armMin,a.arcs-1,a.arcs), anc={x:a.V.x+Math.cos(a.an.phi)*r, y:a.V.y+Math.sin(a.an.phi)*r};
+    push(figGeomPlace(anc,[Math.cos(a.an.phi),Math.sin(a.an.phi)],txt,{arms:base.arms,pts:base.pts,boxes:placed.slice()},box,auto?'measure':'symbol')); });
   return { shapes, arcs, rights, labels, arms:base.arms, vpts };
 }
 /* §1.3 auto-fit for geometry: expand the domain to the union of the points AND every placed pill box, so a
@@ -7668,7 +7703,10 @@ function figGeometry(b, box){
   const errors=[], P=figGeomPoints(b,errors);
   if(!P.order.length) errors.push('nothing to draw — a geometry figure needs points, or a construction that produces them');
   const xs=P.order.map(n=>P.byName[n].x), ys=P.order.map(n=>P.byName[n].y);
-  const pad=(a)=>{ const lo=Math.min.apply(null,a), hi=Math.max.apply(null,a), m=(hi-lo)*0.18||1; return [lo-m,hi+m]; };
+  // Stage 3b — the margin around the points is the room the ANNOTATIONS live in, so it is a starting guess,
+  // not a fixed frame: 0.18 per side left the drawn figure at 1/1.36 = 73% of its own board. 0.11 fits the
+  // figure to its board, and the escalation loop below still buys more room on the rare figure that needs it.
+  const pad=(a)=>{ const lo=Math.min.apply(null,a), hi=Math.max.apply(null,a), m=(hi-lo)*0.11||1; return [lo-m,hi+m]; };
   let dom = P.order.length ? (()=>{ const X=pad(xs), Y=pad(ys); return {xMin:X[0],xMax:X[1],yMin:Y[0],yMax:Y[1]}; })()
                            : {xMin:-5,xMax:5,yMin:-5,yMax:5};
   const dv=b&&b.domain;
@@ -7702,7 +7740,7 @@ function figGeomBody(M, box, opt){
   M.arcs.forEach(a=>{ mk+=figDraw.arc(a.V.x,a.V.y,a.r,a.al,a.al+a.d,'tp-fig-arc'); });
   M.rights.forEach(R=>{ mk+=figDraw.polyline([R.quad[1],R.quad[2],R.quad[3]],'tp-fig-ra'); });
   let vt=''; M.vpts.forEach(p=>{ vt+=figDraw.circle(p[0],p[1],3.2,'tp-fig-pt'); });
-  let lb=''; M.labels.forEach(L=>{ lb+=figDraw.text(L.box.x+L.box.w/2, L.box.y+L.box.h/2+FIG_LABFS*0.35, L.text, L.cls, 'middle'); });
+  let lb=''; M.labels.forEach(L=>{ lb+=figDraw.text(L.box.x+L.box.w/2, L.box.y+L.box.h/2+(L.fs||FIG_LABFS)*0.35, L.text, L.cls, 'middle'); });
   return g+sh+mk+vt+lb;
 }
 /* ═══════════════ FIGURE ENGINE — Stage 2b: Expand / focused graph window (ENGINE_SPEC §6) ═══════════════
@@ -7760,6 +7798,7 @@ function figxRegister(bk,b,D){                                             // ca
   if(prev&&prev.sm!==sm) st.minor=sm;
   if(prev&&prev.sn!==sn) st.names=sn;
   FIGX[xid]={ b, box:FIGX_BOX, title:(b&&b.title)||'Coordinate plane', base:nb, sg, sm, sn, st,
+    geo:!!(b&&b.figure==='geometry'),                                      // Stage 3b — decides the FITTING POLICY (figure vs plane) before the model is solved
     rev:((prev&&prev.rev)||0)+1 };                                         // bumps the solve-cache signature: the spec object mutates in place on an inspector edit
   return xid;
 }
@@ -7827,9 +7866,24 @@ function figxNameArms(V,box){
   const arms=[]; boxes.forEach(b=>arms.push([b.x,b.y,b.x+b.w,b.y],[b.x+b.w,b.y,b.x+b.w,b.y+b.h],[b.x+b.w,b.y+b.h,b.x,b.y+b.h],[b.x,b.y+b.h,b.x,b.y]));
   return arms;
 }
+/* Stage 3b — GEOMETRY focus fits the FIGURE; graph focus fits the PLANE. The distinction is the subject:
+   a coordinate plane IS the object of study, so it should take the whole workspace, but a polygon is not —
+   and under aspect:'equal' a stage stretched to the viewport can only wrap it in blank board (measured at
+   4b3af76: the drawn figure reached 73% of stage height on desktop, 38% at 390x844). So geometry gets a
+   drawing board shaped like its own domain, sized to whichever workspace dimension binds, and centred in
+   what is left. Nothing is scaled non-uniformly — the board changes, never the geometry. */
+function figxGeomBoard(stage,dom){
+  const A=(dom.xMax-dom.xMin)/(dom.yMax-dom.yMin);
+  if(!(A>0&&isFinite(A))) return stage;
+  const g=Math.max(6,Math.round(Math.min(stage.W,stage.H)*0.022));         // uniform gutter — geometry carries no axis furniture to clear
+  let pw=stage.W-2*g, ph=stage.H-2*g;
+  if(pw/ph>A) pw=ph*A; else ph=pw/A;                                       // the plot area takes the figure's own aspect, so figView('equal') expands ~nothing
+  return { W:Math.round(pw+2*g), H:Math.round(ph+2*g), padL:g, padR:g, padT:g, padB:g };
+}
 function figxPaint(xid){                                                   // re-solve + repaint; every zoom level goes through the same figView/figFitAndLayout path
   const e=FIGX[xid], p=figxPanelEl(xid); if(!e||!p) return null;
-  e.box=figxBoxFor(xid,e.box);                                             // the viewport IS the box — see figxBoxFor
+  const stage=figxBoxFor(xid,e.box);                                       // the viewport IS the box — see figxBoxFor
+  e.box=(e.geo)?figxGeomBoard(stage,e.st.dom):stage;
   const st=e.st, sig=st.dom.xMin+'|'+st.dom.xMax+'|'+st.dom.yMin+'|'+st.dom.yMax+'|'+(st.grid?1:0)+'|'+e.rev+'|'+e.box.W+'x'+e.box.H;
   const M=(e.M&&e.sig===sig)?e.M:figxModel(xid);                            // display-only controls (minor/names/increment) repaint without re-solving
   if(!M) return null; e.sig=sig; e.M=M;
@@ -7839,6 +7893,10 @@ function figxPaint(xid){                                                   // re
   const layout=geo?M.labels:figLayoutPills(M.pts,M.V,e.box,(M.painted||[]).concat(nm),furn);
   const paint=geo?M:Object.assign({},M,{segs:figxSegs(e),layout});          // chords drawn in full, then clipped by the viewport
   const svg=p.querySelector('[data-figx-svg]');
+  // The board is only real if the ELEMENT is that size: with width/height:100% the viewBox would be fitted
+  // back into the full stage by `meet` and the blank board would come straight back.
+  if(svg&&geo){ svg.style.width=e.box.W+'px'; svg.style.height=e.box.H+'px'; }
+  else if(svg){ svg.style.width=''; svg.style.height=''; }
   if(svg){ svg.setAttribute('viewBox','0 0 '+e.box.W+' '+e.box.H);         // viewBox matches the element box, so `meet` letterboxes nothing
     svg.innerHTML=geo?figGeomBody(paint,e.box,{targetTicks:st.tt, grid:st.grid})
                     :figSvgBody(paint,e.box,{targetTicks:st.tt, grid:st.grid, minor:st.minor, axisNames:st.names}); }

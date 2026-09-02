@@ -142,14 +142,31 @@ ACCEPTANCE (proven in prototype — must reproduce): arcs seat on arms across ri
 right-angle; measures are computed values on the bisector; every pill ≥ GAP clear of arms/vertices/
 pills; matches the APPROVED geometry visual target; the same n-gon code renders square→pentagon→quad;
 ADDITIVE clean; validate green.
-FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` — committed, 11 figures
-across 8 pages, covering triangle with one angle arc · multiple arcs · stacked arcs on an arm only ~6px long ·
-right-angle marker (including a
+FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` — committed, 12 figures
+across 9 pages, covering triangle with one angle arc · multiple arcs · stacked arcs on a ~6px arm (correctness
+stress) and on a ~44px arm (visual quality) · right-angle marker (including a
 NON-AXIS-ALIGNED one) · quadrilateral · irregular n-gon · vertex labels · side labels · crowded labels · long
 labels · labels at the viewport edge · a parameterised construction · the author-error state, plus the
 focused/expanded state at desktop and portrait. Stages 1a–2b
 shipped with NO committed fixture and their rendered output could not be reproduced afterwards — see
 `tests/visual/README.md`. A stage that adds a rendered surface adds its fixture.
+
+## STAGE 3b — Geometry visual language  ·  DONE
+Not a renderer change: the engine's semantic output was correct and read as raw engine output. Adds the
+LAYOUT GRAMMAR between the geometry and the collision search — annotation ROLES (vertex > symbolic >
+measurement, marks lighter than the edges they annotate), the preferred anchors those roles imply (angle
+measure on its own arc's bisector one gap outside the OUTERMOST arc; side measure at the midpoint on the
+normal that leaves the outline, by ray cast so either winding and a concave outline both work), and ONE
+numeric style for every measurement. Stage 2c still resolves every collision from those anchors — the
+pipeline is semantic object → preferred anchor → obstacles → nearest legal position → role styling, so a
+JSON-authored diagram never needs hand-tuning.
+Also splits the FITTING POLICY: graph focus maximises the PLANE (it is the subject), geometry focus
+maximises the FIGURE — a board shaped like the figure's own domain, centred in the workspace, because
+under `aspect:'equal'` a stage stretched to the viewport can only add blank board (the drawn figure had
+reached 38% of stage height at 390×844). Nothing is scaled non-uniformly.
+ACCEPTANCE: role hierarchy legible in the crowded pentagon; each measure adjacent to its own arc; side
+measures outside the outline; both short-arm fixtures present and asserting different things; painted ink
+85–89% of the board at all three viewports, measured against the BOARD and never the SVG element.
 
 ## STAGE 4 — Block wiring (plug engines into the containers)
 Branch off the merged front-ends. Spec §8.
