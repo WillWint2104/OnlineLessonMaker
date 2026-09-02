@@ -110,6 +110,85 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 
 ### Changed
+- **UI-1 visual-review corrections — surface width matches content role; the focused plane fills its
+  viewport.** Two systemic layout defects and one blocking narrow-mode failure, all found by the required
+  visual review of the UI-1 captures. Measured before any CSS was touched, then re-measured.
+  **(1) The focused plot was letterboxed, not responsive.** The focused box was fixed at `900×560`, so with
+  `preserveAspectRatio="xMidYMid meet"` the painted plane held a 1.607 landscape aspect whatever shape the
+  stage was. The SVG *did* fill the stage — the plane inside it did not. Measured: at **834×1112** the stage
+  was 780×947 but the grid only **707×427**, leaving **520px of blank inside the bordered plot region**; at
+  **390×844**, 304×183 in a 336×679 stage — **73% blank**. `figxBoxFor()` now measures `.tp-figx-stage` and
+  re-solves through it, so axes, grid, tick generation and the coordinate mapping all regenerate for the real
+  viewport, with gutters that scale down on a phone. Nothing is stretched: `aspect:'equal'` still preserves
+  square units, a portrait viewport simply showing more of the y-range. The solve-cache signature carries the
+  box, and a resize/rotate while focused re-solves. **After:** blank inside the stage is the axis gutter only
+  — 834×1112 **520px → 68px** (grid now 696×**864**, genuinely portrait), 390×844 **496px → 61px** (290×603),
+  1440×900 88px → 64px. Recorded as a second engine invariant, since Geometry inherits the same workspace.
+  **(2) Close overlapped the controls.** `.tp-fclose` was `position:absolute` and its rect overlapped the
+  control strip at **every** viewport, not just narrow — a real collision once the toolbar wraps on a phone.
+  Title and Close now share a header row above the controls, which wrap deliberately beneath it. Close is
+  `position:static`, **0 overlap at all four sizes**.
+  **(3) Prose sat as an island inside a full-width card.** Every block was a full-width surface while the
+  reading measure constrained only the inner wrapper, so a ~700px column sat inside a ~1128px panel with
+  **~214px dead on each side**. The rule is now that a surface's apparent width matches what it is
+  structurally meant to hold: reading surfaces shrink around the measure plus padding (`--tp-prose-max`),
+  while **workspace** surfaces — `figure`, `banner`, `image`, `labeledGraphic` — keep the full page width
+  because they use it. Line length is unchanged; only the container is. Applied systematically across every
+  prose fragment type rather than to one block: at 1440×900 all of `skillHeader`/`section`/`workedExample`/
+  `selfCheck`/`practiceSet`/`mastery` now measure **764px** with `figure` still full-width, and `section`'s
+  dead side space falls **201px → 46px**.
+  **Checked:** legacy corpus **250/250 renders byte-identical**; inline figure SVG body byte-identical 4/4;
+  38/38 UI-0 contracts (expand ratio 1.64× / 1.53× / 1.92× / 4.34× / 3.53×); 41/41 focused workspace; 5/5
+  display defaults; 9/9 display-setting persistence; `validate` green. The desktop Figure Shell, focused
+  workspace, graph treatment, chrome hierarchy, Options disclosure and worked-solution surface are
+  **unchanged** — this is a targeted correction, not a second redesign.
+
+- **UI-1 — lesson visual-system foundation.** A system-level pass before Geometry, Exercises, Video and
+  Stage 5 add more visible component types, so they inherit one design instead of each inventing another.
+  Five scoped commits.
+  **(1) Shared chrome primitives.** Extends Layer A (`:root` chrome) rather than adding a third token layer —
+  Layer B (the `.tp-slide` pack slots, the v2 doc's "Layer 1") already supplies surfaces, borders, radii, the
+  serif/sans/maths roles and content measure. Adds a deliberately small spacing scale (`--sp-1..6`), an
+  elevation vocabulary (`--elev-1..3`, with `--elev-2` aliasing the existing `--shadow`), and
+  `--sidebar-sel`/`--sidebar-sel-ink`. **The selected-nav slots fix a semantic token collision, not a
+  colour:** `--sidebar-2` means "the rail, one step raised" on a DARK rail, and `.nitem.on` used it as the
+  selected surface — but all five themes in the picker ship a LIGHT rail and had reassigned `--sidebar-2` to a
+  saturated accent. The selected item therefore became a solid slab that also took `--sidebar-itemtext` (dark
+  on every one of those themes) and `--sidebar-mut` with it: dark ink on a dark fill. That is why the selected
+  lesson title *and* its `PAGE` sublabel were both near-illegible in the UI-0 captures, on **every** theme
+  rather than just ScholarMath. The default dark rail keeps its behaviour byte-for-byte; each light-rail theme
+  overrides only the surface.
+  **(2) Chrome steps back.** `.nitem.on` takes the new slots, so the accent bar that was always in the CSS
+  (`.nitem.on::before`) is finally visible — selection now carries three cues (bar, accent icon chip, tint) and
+  never rests on fill alone. The bottom navigation was **~65px of every viewport** with a raised, shadowed
+  button at each end; it is now slim and flat on the page ground, and a one-page lesson shows two quiet ghosts
+  instead of two prominent dead buttons. The header keeps its information architecture and moves onto
+  `--canvas` so the lesson sheet is the brightest surface. Also fixes a latent motif bug: the per-theme
+  iconography paints an overlay masked by `--motif` for every `:root[data-theme]`, but only three themes
+  define one — elsewhere the mask was invalid and the overlay painted **unmasked**, which is the blank white
+  square that sat in the brand mark on geolearn/microhistory/mathematics/scholarmath in every UI-0 capture.
+  **(3) Shared Figure Shell + learner-control hierarchy.** The shell was literally `.tp-fig{margin:0}` — the
+  plot painted straight into the page flow with no identity, no status region, and the expand button floating
+  over the mathematics; Stage 3 would have had nothing to inherit. `fragFigure` now emits semantic regions
+  (head / stage / foot / caption) on ONE surface with one border and no nested cards, with the kind label
+  driven by `b.figure` so a geometry figure renders into the same shell and differs by content. The graph
+  rendering itself is untouched — strokes, warm ground, two-tier grid, dark axes and quiet labels all
+  unchanged (**inline SVG body byte-identical across all four graph fixtures**). The focused window exposed
+  every switch the engine has as one dense permanent row; the primary surface is now
+  `Zoom out | Zoom in | Pan | Reset | Options`, with Gridlines, Minor grid, Axis labels and Tick density behind
+  Options. Nothing is removed — engine capability is unchanged, only its permanent exposure — and the four
+  display settings take their initial value from the block via optional `minorGrid`/`axisNames` fields on the
+  existing figure schema (no new configuration system), staying learner-overridable during the lesson.
+  **(4) The focused figure becomes the application.** See Added.
+  **(5) Worked-solution surface.** Was modal → card-per-step → grey box-per-equation: three container levels
+  for one piece of reasoning. Now one surface with numbered steps separated by thin rules, a faint paper grid,
+  and an answer carrying an accent edge rather than a 2px ring. The step typography and monospace working are
+  deliberately **not** touched — the coherent typesetting system across working/answer/chalkboard is Stage 5's.
+  **Checked:** legacy corpus **250/250 renders byte-identical**; the UI-0 contracts still hold (38/38 cold);
+  41/41 focused-workspace assertions; `validate` green; 0 console errors. *Intentional visual changes* (markup
+  identical): header/footer/sidebar weight, the removal of the unmasked motif overlays, the figure shell, the
+  reduced control surface and the solution surface.
+
 - **Grading core (M2) — one `gradeResponse(kind, response, spec)` seam.** Extracted the graphQuestion
   submit handler's DECISION logic (equation-equivalence by sampling + point-set within tolerance +
   misconception matching) into a pure, DOM-free `gradeResponse('graph', {eval,points}, spec) →
@@ -140,6 +219,28 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `fragSkillHeader` unchanged; validate green; 0 console errors.
 
 ### Added
+- **Viewport-level focused figure workspace (UI-1 commit 4).** Expanding a figure now opens a workspace at the
+  viewport instead of a larger card inside the lesson board: sidebar gone, lesson navigation gone, app actions
+  gone, leaving a quiet context strip, an obvious Close and the mathematics. `#figfocus` is a **body-level
+  root**, a deliberate sibling of the app's existing `#lightbox`/`#worksheet` fixed overlays — which, unlike
+  anything inside `#stage`, sit OUTSIDE the `transform:scale()`'d `#canvas`. The expanded figure is therefore
+  **moved** there rather than styled bigger in place, with no `position:fixed`-inside-a-transform workaround of
+  the kind UI-0 measured. The reparent is safe because every figx control is wired by delegated document-level
+  listeners on `[data-figx]` attributes and `figxPanelEl()` resolves via `document.querySelector`: nothing
+  depended on the panel living inside the slide, so no control is duplicated and no wiring re-run. The node's
+  original parent and next sibling are restored on close, and `renderCanvas()` lands the figure back first so
+  navigating while focused can never strand it. The workspace root contains a `.tp-slide` because the pack's
+  Material tokens are declared as `:root[data-theme] .tp-slide` — that context is what lets the reparented
+  panel keep its theme tokens and every `.tp-slide`-scoped rule instead of duplicating the stylesheet. Close,
+  Esc and focus-return all reuse the existing rail: the panel's own `[data-tp-focus-close]` is restyled into a
+  labelled Close pill with **no markup change**, so its aria-label, the shared Esc handler and the
+  focus-return-to-opener path are untouched; the lesson shell is marked `aria-hidden` while open.
+  **Usable mathematical viewport, measured cold** (was 1.08× at every size after the UI-0 mechanical fix):
+  1440×900 **1.67×** · 1280×800 **1.56×** · 1024×768 **1.97×** · 834×1112 **4.41×** · 390×844 **3.61×**.
+  **Checked:** 41/41 across five viewports — opens from the keyboard, panel reparented, focus moves into the
+  workspace, lesson shell `aria-hidden`, Esc closes and returns the panel to the slide, focus restored to the
+  originating Expand control, `aria-hidden` removed, 0 page errors, and navigating while focused exits cleanly.
+
 - **`tests/visual/` — permanent visual fixtures, with a README.** `examples/` and `lessons/` cover every
   *legacy* slide type, but nothing committed to the repo rendered a composable `page`, the ScholarMath theme,
   or a `figure` block: engine Stages 1a–2b (#140–#144) were each verified with ad-hoc scripts that were never

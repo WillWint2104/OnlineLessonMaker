@@ -254,8 +254,15 @@ Graph figures use the same shape with a plotting `construction`:
     { "type": "points", "from": "table", "rows": [["A",2.4,-1.7],["B",-1,1.5]] },
     { "type": "segment", "between": ["A","B"] }
   ],
-  "grid": "shown", "aspect": "stretch" }
+  "grid": "shown", "aspect": "stretch",
+  "minorGrid": true,         // UI-1: display DEFAULTS — where the figure starts. The learner can still
+  "axisNames": true }        // change all three from Options in the focused workspace (persists for the session).
 ```
+`grid` / `minorGrid` / `axisNames` are the figure's display defaults, not locks: the focused workspace keeps
+them learner-overridable behind **Options**. Primary learner controls stay `Zoom out · Zoom in · Pan · Reset ·
+Options` — engine capability does not imply permanent UI exposure, and Stage 3 geometry inherits that rule
+along with the shared Figure Shell rather than introducing a second dense toolbar. Authored in `SCHEMA.md`
+under the `figure` block.
 
 ---
 

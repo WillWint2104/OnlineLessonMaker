@@ -60,6 +60,29 @@
   --ok:#1f9d6b; --warn:#d98324;
   --display:"Space Grotesk"; --display-spacing:-.01em;
   --radius:18px; --shadow:0 1px 2px rgba(20,22,30,.05),0 12px 32px -12px rgba(20,22,30,.18);
+  /* ═══ UI-1 — shared chrome primitives (Layer A). Additive: every slot below either aliases an existing
+     value or is unused until a component opts in, so defining them changes nothing on its own. ═══ */
+  /* Spacing scale. Deliberately small — UI-1 migrates the surfaces it touches (chrome, page shell, figure
+     shell, focused workspace), NOT every historic pixel value in the file. */
+  --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px;
+  /* Elevation vocabulary: 1 = resting edge, 2 = raised surface, 3 = detached over content. --elev-2 aliases
+     the existing --shadow so themes that retune --shadow keep driving it. */
+  --elev-1:0 1px 2px rgba(20,22,30,.05); --elev-2:var(--shadow); --elev-3:0 24px 60px -24px rgba(20,22,30,.45);
+  /* SELECTED NAVIGATION ITEM — the fix for a semantic token collision. `--sidebar-2` means "the rail, one
+     step raised" on a DARK rail, and .nitem.on used it as the selected surface. Every theme in the picker
+     now ships a LIGHT rail and reassigned --sidebar-2 to a saturated accent, so the selected item became a
+     solid slab that also took --sidebar-itemtext (dark) and --sidebar-mut with it — dark ink on a dark fill.
+     The selected state gets its own slots instead: the default keeps the raised-rail behaviour byte-for-byte,
+     and each light-rail theme overrides only the surface. The accent bar (.nitem.on::before) and the accent
+     icon chip stay, so selection never depends on the fill alone. */
+  --sidebar-sel:var(--sidebar-2); --sidebar-sel-ink:var(--sidebar-itemtext);
+  /* Motif fallback. The per-theme iconography paints a light overlay MASKED by --motif
+     (.brand .mark::after, .cover .hero::before), enabled for every :root[data-theme]. Only three themes
+     actually define one, so on the rest the mask was invalid and the overlay painted UNMASKED — which is
+     the blank white square that sat in the brand mark on geolearn / microhistory / mathematics /
+     scholarmath in every UI-0 capture. An empty SVG masks to nothing, so a theme without a motif simply
+     shows no overlay. */
+  --motif:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3C/svg%3E");
   /* organic leaf bullet — original SVG silhouette used as a mask so it tints with --accent (theme-aware) */
   --leaf:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.5C7.4 7 6.7 14 11 21.5c.2-5.3 1.6-8.7 6-11.6C18.3 8.9 16 7.2 12 2.5Z'/%3E%3C/svg%3E");
   /* infographic data palette — primary follows the theme accent; secondary/tertiary are a
@@ -74,7 +97,7 @@
   --canvas:#F8FAFC; --surface:#f5faf8; --text:#171d1c; --muted:#3d4947; --line:#E2E8F0; --bd:#171d1c;
   --accent:#00685f; --accent-soft:#bdece2; --accent-ink:#003731;
   --sidebar:#f0f5f2; --sidebar-2:#00685f; --sidebar-text:#171d1c; --sidebar-mut:#5b6a67;
-  --sidebar-title:#171d1c; --sidebar-itemtext:#171d1c; --sidebar-hover:rgba(0,104,95,.08);
+  --sidebar-title:#171d1c; --sidebar-itemtext:#171d1c; --sidebar-hover:rgba(0,104,95,.08); --sidebar-sel:rgba(0,104,95,.14);
   --sidebar-sep:rgba(23,29,28,.10); --sidebar-icon:rgba(0,104,95,.12); --sidebar-track:rgba(23,29,28,.12);
   --hero:linear-gradient(140deg,#008378,#00685f);
   --shadow:0 1px 3px rgba(0,0,0,.06);
@@ -97,6 +120,7 @@
   --surface-2:var(--surface-container);--accent:var(--primary-fixed);--line:var(--outline-variant);--focus-ring:var(--primary);--scrim:rgba(20,16,24,.82);--on-scrim:#fff;
   /* v2 Phase 2b width authority (Layer 3) — one measure per theme; geolearn runs wider by design */
   --tp-measure:1200px;--tp-measure-narrow:880px;--tp-measure-read:700px;
+  --tp-prose-max:calc(var(--tp-measure-read,700px) + 64px);   /* UI-1 — reading measure + a card's side padding */
   background:var(--background); font-family:var(--tp-body); color:var(--on-surface);
 }
 /* ----- GeoLearn slide shell: fixed chrome, scrolling content (locked sizing) -----
@@ -649,7 +673,7 @@
   --canvas:#FBF8FD; --surface:#fff7fe; --text:#1e1a20; --muted:#4b4450; --line:#e8e0e9; --bd:#1e1a20;
   --accent:#451274; --accent-soft:#f0dbff; --accent-ink:#3a1452;
   --sidebar:#faf1fa; --sidebar-2:#451274; --sidebar-text:#1e1a20; --sidebar-mut:#6e6473;
-  --sidebar-title:#1e1a20; --sidebar-itemtext:#1e1a20; --sidebar-hover:rgba(69,18,116,.08);
+  --sidebar-title:#1e1a20; --sidebar-itemtext:#1e1a20; --sidebar-hover:rgba(69,18,116,.08); --sidebar-sel:rgba(69,18,116,.13);
   --sidebar-sep:rgba(30,26,32,.10); --sidebar-icon:rgba(69,18,116,.12); --sidebar-track:rgba(30,26,32,.12);
   --hero:linear-gradient(140deg,#5d2e8c,#451274);
   --shadow:0 1px 2px rgba(69,18,116,.06),0 12px 32px -14px rgba(69,18,116,.22);
@@ -662,7 +686,7 @@
   --canvas:#F2F0E9; --surface:#fff8f7; --text:#251817; --muted:#58413f; --line:#e0bfbc; --bd:#251817;
   --accent:#840f16; --accent-soft:#f0d7d0; --accent-ink:#560109;
   --sidebar:#fff0ef; --sidebar-2:#840f16; --sidebar-text:#251817; --sidebar-mut:#58413f;
-  --sidebar-title:#251817; --sidebar-itemtext:#251817; --sidebar-hover:rgba(132,15,22,.08);
+  --sidebar-title:#251817; --sidebar-itemtext:#251817; --sidebar-hover:rgba(132,15,22,.08); --sidebar-sel:rgba(132,15,22,.13);
   --sidebar-sep:rgba(37,24,23,.10); --sidebar-icon:rgba(132,15,22,.12); --sidebar-track:rgba(37,24,23,.12);
   --hero:linear-gradient(140deg,#6f6150,#332c26);
   --shadow:4px 4px 0 0 #251817;   /* hard offset — dossier */
@@ -676,7 +700,7 @@
   --canvas:#F4F2EC; --surface:#FBFAF6; --text:#1A1C22; --muted:#57544B; --line:#DDD9CD; --bd:#1A1C22;
   --accent:#2F6B56; --accent-soft:#E0EAE3; --accent-ink:#17352B;
   --sidebar:#EEEBE2; --sidebar-2:#17352B; --sidebar-text:#1A1C22; --sidebar-mut:#57544B;
-  --sidebar-title:#1A1C22; --sidebar-itemtext:#1A1C22; --sidebar-hover:rgba(47,107,86,.08);
+  --sidebar-title:#1A1C22; --sidebar-itemtext:#1A1C22; --sidebar-hover:rgba(47,107,86,.08); --sidebar-sel:rgba(47,107,86,.14);
   --sidebar-sep:rgba(26,28,34,.10); --sidebar-icon:rgba(47,107,86,.12); --sidebar-track:rgba(26,28,34,.12);
   --hero:linear-gradient(140deg,#2F6B56,#17352B);
   --shadow:0 1px 3px rgba(26,28,34,.07);
@@ -690,7 +714,7 @@
   --canvas:#F4F6F7; --surface:#FFFFFF; --text:#1A1D21; --muted:#5E646C; --line:#E4E8EB; --bd:#1A1D21;
   --accent:#1A7A3C; --accent-soft:#E7F4EC; --accent-ink:#12592b;
   --sidebar:#EEF1F3; --sidebar-2:#1A7A3C; --sidebar-text:#1A1D21; --sidebar-mut:#5E646C;
-  --sidebar-title:#1A1D21; --sidebar-itemtext:#1A1D21; --sidebar-hover:rgba(26,122,60,.08);
+  --sidebar-title:#1A1D21; --sidebar-itemtext:#1A1D21; --sidebar-hover:rgba(26,122,60,.08); --sidebar-sel:rgba(26,122,60,.14);
   --sidebar-sep:rgba(26,29,33,.10); --sidebar-icon:rgba(26,122,60,.12); --sidebar-track:rgba(26,29,33,.12);
   --hero:linear-gradient(140deg,#1A7A3C,#16202B);
   --shadow:0 1px 3px rgba(26,29,33,.07);
@@ -725,14 +749,16 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 .nitem{display:flex;align-items:center;gap:11px;padding:10px 11px;border-radius:11px;cursor:pointer;
   color:var(--sidebar-text);transition:background .15s;margin-bottom:2px;position:relative;}
 .nitem:hover{background:var(--sidebar-hover);}
-.nitem.on{background:var(--sidebar-2);}
-.nitem.on::before{content:"";position:absolute;left:-2px;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--accent);}
+.nitem.on{background:var(--sidebar-sel);color:var(--sidebar-sel-ink);}   /* UI-1: was --sidebar-2 — see the --sidebar-sel note in :root */
+.nitem.on::before{content:"";position:absolute;left:0;top:7px;bottom:7px;width:3px;border-radius:0 3px 3px 0;background:var(--accent);}   /* the selected state never rests on fill alone: accent bar + accent icon chip are both non-colour-dependent cues */
 .nitem .ico{width:30px;height:30px;border-radius:8px;background:var(--sidebar-icon);
   display:flex;align-items:center;justify-content:center;flex:0 0 30px;color:var(--sidebar-text);}
 .nitem.on .ico{background:var(--accent);color:#fff;}
 .nitem .tx{min-width:0;}
 .nitem .tx b{display:block;font-size:.84rem;font-weight:500;color:var(--sidebar-itemtext);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nitem .tx span{font-size:.68rem;color:var(--sidebar-mut);text-transform:uppercase;letter-spacing:.06em;}
+.nitem.on .tx b{color:var(--sidebar-sel-ink);font-weight:600;}
+.nitem.on .tx span{color:var(--sidebar-mut);}
 .nitem .grip{margin-left:auto;display:none;gap:2px;}
 body.edit .nitem .grip{display:flex;}
 .nitem .grip button{color:var(--sidebar-mut);font-size:.8rem;padding:2px 4px;border-radius:5px;line-height:1;}
@@ -747,8 +773,10 @@ body.edit .nitem:active{cursor:grabbing;}
 
 /* ---------------- MAIN ---------------- */
 .main{flex:1;display:flex;flex-direction:column;height:100%;min-height:0;min-width:0;}
-.top{min-height:60px;flex:0 0 auto;background:var(--surface);border-bottom:1px solid var(--line);
-  display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:9px 18px;}   /* wrap (never overflow) when text-zoom enlarges the chrome or the window is narrow */
+/* UI-1 — the header keeps its IA (title → breadcrumb → modes/actions) and only steps back: it sits on the
+   page ground instead of a white sheet, so the lesson sheet is the brightest surface on screen. */
+.top{min-height:52px;flex:0 0 auto;background:var(--canvas);border-bottom:1px solid var(--line);
+  display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3);padding:var(--sp-2) var(--sp-4);}   /* wrap (never overflow) when text-zoom enlarges the chrome or the window is narrow */
 /* Title takes the slack and ellipsises so the action buttons (Present / ⌗ JSON / Export) are
    NEVER pushed off-screen or under the inspector. Action controls never shrink. */
 .top .ltgroup{flex:1 1 0;min-width:32px;display:flex;align-items:baseline;gap:9px;overflow:hidden;}
@@ -758,7 +786,7 @@ body.edit .nitem:active{cursor:grabbing;}
 .top .lmeta:empty{display:none;}
 .top .lmeta::before{content:"·";margin-right:9px;color:var(--line);}
 .top .themebox,.top .seg,.top .btn{flex:0 0 auto;}
-.seg{display:flex;background:var(--canvas);border:1px solid var(--line);border-radius:10px;padding:3px;}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:3px;}
 .seg button{font-size:.8rem;font-weight:500;padding:6px 14px;border-radius:7px;color:var(--muted);}
 .seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.06);}
 .themebox{display:none;align-items:center;gap:8px;}
@@ -775,7 +803,7 @@ body.edit .themebox{display:flex;}
 .btn{font-size:.82rem;font-weight:600;padding:8px 15px;border-radius:10px;background:var(--accent);color:#fff;
   display:inline-flex;align-items:center;gap:7px;box-shadow:0 6px 16px -8px var(--accent);}
 .btn:hover{filter:brightness(1.06);}
-.btn.ghost{background:var(--canvas);color:var(--text);border:1px solid var(--line);box-shadow:none;}
+.btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--line);box-shadow:none;}   /* UI-1: the header ground is --canvas now, so ghosts take the sheet colour to stay separable */
 
 /* Fixed-aspect 1280x720 canvas, scaled with transform to fit the stage (JS: fitCanvas).
    .stage = area between the sidebar and the window edges; .canvasfit = the scaled footprint
@@ -793,11 +821,13 @@ body.edit .themebox{display:flex;}
    inner scroll box's clip so content grows the canvas. Scoped to body.edit — Study/Present/Export untouched. */
 body.edit .canvas.scroll .tp-slide{position:relative;inset:auto;height:auto;min-height:720px;overflow:visible;}
 body.edit .canvas.scroll .tp-main,body.edit .canvas.scroll .gl-main{overflow:visible;}
-.foot{flex:0 0 auto;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 34px;border-top:1px solid var(--line);background:var(--surface);}
-.foot .nbtn{display:inline-flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
-  padding:11px 18px;border-radius:12px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);}
-.foot .nbtn:hover{border-color:var(--accent);color:var(--accent-ink);}
-.foot .nbtn[disabled]{opacity:.4;pointer-events:none;}
+/* UI-1 — lesson navigation is a utility, not a headline: the bar was ~65px of every viewport with a
+   raised, shadowed button at each end. Slimmer, flat, and on the page ground rather than a second sheet. */
+.foot{flex:0 0 auto;display:flex;align-items:center;gap:var(--sp-3);justify-content:space-between;padding:var(--sp-2) var(--sp-5);border-top:1px solid var(--line);background:var(--canvas);}
+.foot .nbtn{display:inline-flex;align-items:center;gap:var(--sp-2);font-size:.82rem;font-weight:600;
+  padding:var(--sp-2) var(--sp-3);border-radius:var(--sp-2);background:transparent;border:1px solid transparent;color:var(--muted);box-shadow:none;}
+.foot .nbtn:hover{background:var(--surface);border-color:var(--line);color:var(--text);}
+.foot .nbtn[disabled]{opacity:.35;pointer-events:none;}   /* a one-page lesson shows two quiet ghosts, not two prominent dead buttons */
 .foot .count{font-size:.78rem;color:var(--muted);}
 
 /* ---------------- CARD ---------------- */
@@ -1570,6 +1600,26 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
    On-screen preview overlay + an @media print block (gated on body.ws-open) that hides app
    chrome and lays the sheet out for A4. Accents pull from theme tokens; body stays ink-on-white. */
 #worksheet{display:none;position:fixed;inset:0;z-index:200;background:#e8e9e3;overflow:auto;}
+/* ═══ UI-1 — focused figure workspace. The figure temporarily BECOMES the application: the rail, the lesson
+   navigation and the app actions are all gone, leaving a very quiet context strip, an obvious Close and the
+   mathematics. Opaque and fixed at the viewport, so nothing of the lesson shell shows through. ═══ */
+#figfocus{position:fixed;inset:0;z-index:150;display:none;flex-direction:column;background:var(--canvas);}
+#figfocus[hidden]{display:none;}
+body.figfocus{overflow:hidden;}
+body.figfocus #figfocus{display:flex;}
+#figfocus .ff-bar{flex:0 0 auto;display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-2) var(--sp-4);border-bottom:1px solid var(--line);}
+#figfocus .ff-ctx{flex:1 1 auto;min-width:0;font-family:var(--display,inherit);font-size:.8rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* the reparented .tp-slide must flow inside the workspace, not reproduce the board's absolute fill */
+#figfocus .tp-slide{position:relative;inset:auto;flex:1 1 auto;min-height:0;overflow:visible;}
+/* no scrim and no parked band in here — the workspace IS the surface */
+#figfocus .tp-overlay.tp-figx{position:absolute;inset:0;top:0;height:auto;background:transparent;padding:var(--sp-3);}
+#figfocus .tp-fpanel.tp-fpanel-figx{max-width:none;max-height:100%;height:100%;box-shadow:none;border:1px solid var(--outline-variant);}
+#figfocus .tp-figx-bar{row-gap:var(--sp-2,8px);}   /* narrow: the control row wraps deliberately, below the header */
+/* the panel's close becomes an obvious labelled control (no markup change — it keeps its aria-label,
+   its focus-return wiring and the shared Esc handler) */
+#figfocus .tp-fclose{width:auto;height:34px;padding:0 14px;gap:8px;border-radius:9999px;border:1px solid var(--outline-variant);background:var(--surface);font:inherit;font-size:.82rem;font-weight:600;}
+#figfocus .tp-fclose::after{content:"Close";}
+#figfocus .tp-fclose:hover{border-color:var(--accent);color:var(--accent-ink);}
 #worksheet.show{display:block;}
 .ws-bar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
   padding:11px 22px;background:var(--surface);border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(0,0,0,.08);}
@@ -2303,6 +2353,18 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    with a gap token. Fragments emit content only and inherit width from the flow. Theme via slots only. */
 .tp-slide .tp-flow{width:100%;max-width:var(--tp-measure);margin:auto;display:flex;flex-direction:column;gap:var(--tp-flow-gap,30px);padding:8px 6px 20px;}
 .tp-slide .tp-frag{width:100%;min-width:0;}
+/* ═══ UI-1 — a surface's apparent width matches what it is structurally meant to hold. Reading surfaces
+   shrink around the readable measure plus their padding; WORKSPACE surfaces (a figure, a banner, an image)
+   keep the full page width because they genuinely use it. Previously every block was a full-width card, so
+   prose sat as a ~700px island inside a ~1128px panel with ~214px dead on each side. The line length is
+   unchanged — only the container is. ═══ */
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag{max-width:var(--tp-prose-max,764px);margin-inline:auto;}
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="figure"],
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="banner"],
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="image"],
+.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[data-tp-frag-type="labeledGraphic"]{max-width:none;}
+/* the reading measure now lives on the SURFACE, so the inner wrapper no longer re-constrains it */
+.tp-slide .tp-unit-inner{max-width:none;margin:0;}
 /* ═══ v3 F1 — de-staged composable pages. .tp-slide[data-tp-type="page"] flows at its natural height and
    the STAGE (#stage) owns scroll — identically in the editor preview pane and a delivered/published lesson
    (the app shell locks window scroll: body{overflow:hidden}; #stage is the scroll owner in both contexts;
@@ -2400,25 +2462,30 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-sc-status.partial{background:var(--sc-amber-tint,#FBF3DD);color:var(--sc-amber,#835F00);}
 .tp-slide .tp-sc-status.notyet{background:var(--surface-container,#eceff1);color:var(--on-surface-variant);}
 /* the solution modal — a .tp-fpanel variant on the shared overlay rail; grid-surface body */
-.tp-slide .tp-fpanel.tp-sc-modal{max-width:680px;padding:30px 32px 26px;
+.tp-slide .tp-fpanel.tp-sc-modal{background-image:linear-gradient(var(--outline-variant) 1px,transparent 1px),linear-gradient(90deg,var(--outline-variant) 1px,transparent 1px);background-size:26px 26px;background-position:-1px -1px;max-width:680px;padding:30px 32px 26px;
   background-image:linear-gradient(var(--sc-grid,rgba(0,0,0,.035)) 1px,transparent 1px),linear-gradient(90deg,var(--sc-grid,rgba(0,0,0,.035)) 1px,transparent 1px);background-size:26px 26px;background-position:-1px -1px;}
-.tp-slide .tp-sc-steps{list-style:none;margin:0 0 20px;padding:0;display:flex;flex-direction:column;gap:14px;}
-.tp-slide .tp-sc-step{display:flex;gap:14px;background:var(--surface-lowest);border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);padding:16px 18px;}
+/* UI-1 — the worked solution was modal > card-per-step > grey box-per-equation: three container levels for
+   one piece of reasoning. It is now ONE surface with numbered steps separated by thin rules. The step
+   typography and the monospace working are deliberately left alone — the coherent typesetting system for
+   working/answer/chalkboard is Stage 5's, and perfecting the interim treatment here would be wasted. */
+.tp-slide .tp-sc-steps{list-style:none;margin:0 0 var(--sp-5,24px);padding:0;display:flex;flex-direction:column;}
+.tp-slide .tp-sc-step{display:flex;gap:var(--sp-3,12px);background:none;border:0;border-top:1px solid var(--outline-variant);border-radius:0;padding:var(--sp-4,16px) 0;}
+.tp-slide .tp-sc-step.first{border-top:0;padding-top:var(--sp-2,8px);}
 .tp-slide .tp-sc-stepn{flex:0 0 auto;width:30px;height:30px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-family:var(--tp-mono);font-size:14px;font-weight:700;background:var(--sc-step2-tint,var(--secondary-container));color:var(--sc-step2,var(--secondary));}
 .tp-slide .tp-sc-step.first .tp-sc-stepn{background:var(--sc-accent-tint,var(--primary-fixed));color:var(--sc-accent,var(--primary));}
 .tp-slide .tp-sc-stepbody{min-width:0;flex:1 1 auto;}
 .tp-slide .tp-sc-stepd{margin:0;font-size:var(--tp-prose-size,16px);line-height:1.55;color:var(--on-surface);}
-.tp-slide .tp-sc-work{margin-top:8px;font-family:var(--tp-mono);font-size:14px;line-height:1.7;color:var(--on-surface-variant);background:var(--surface-container-low,#f2f3f5);border-radius:6px;padding:8px 12px;overflow-x:auto;}
+.tp-slide .tp-sc-work{margin-top:var(--sp-2,8px);font-family:var(--tp-mono);font-size:14px;line-height:1.7;color:var(--on-surface-variant);background:none;border-left:2px solid var(--outline-variant);border-radius:0;padding:2px 0 2px var(--sp-3,12px);overflow-x:auto;}
 .tp-slide .tp-sc-work math{font-family:inherit;}
-.tp-slide .tp-sc-answer{border:2px solid var(--sc-accent,var(--primary));background:var(--sc-accent-tint,var(--primary-fixed));border-radius:var(--tp-rad-btn);padding:16px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;}
+.tp-slide .tp-sc-answer{border:1px solid var(--sc-accent,var(--primary));border-left:4px solid var(--sc-accent,var(--primary));background:var(--sc-accent-tint,var(--primary-fixed));border-radius:var(--tp-rad-btn);padding:var(--sp-3,12px) var(--sp-4,16px);display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-2,8px) var(--sp-4,16px);}   /* UI-1 — strong but restrained: an accent edge, not a 2px ring */
 .tp-slide .tp-sc-alabel{font-family:var(--tp-body);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sc-accent,var(--primary));}
 .tp-slide .tp-sc-aval{font-family:var(--tp-serif);font-size:22px;color:var(--on-surface);flex:1 1 auto;min-width:0;}
 .tp-slide .tp-sc-qed{margin-left:auto;font-family:var(--tp-serif);font-weight:700;color:var(--sc-accent,var(--primary));white-space:nowrap;}
 .tp-slide .tp-sc-qedt{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-left:4px;}
-.tp-slide .tp-sc-foot{margin-top:22px;padding-top:18px;border-top:1px solid var(--outline-variant);display:flex;flex-wrap:wrap;align-items:center;gap:12px;}
+.tp-slide .tp-sc-foot{margin-top:var(--sp-5,24px);padding-top:var(--sp-4,16px);border-top:1px solid var(--outline-variant);display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3,12px);}
 .tp-slide .tp-sc-footlab{font-size:14px;font-weight:600;color:var(--on-surface-variant);margin-right:auto;}
 .tp-slide .tp-sc-mark{display:inline-flex;gap:8px;flex-wrap:wrap;}
-.tp-slide .tp-sc-mbtn{font:inherit;font-size:14px;font-weight:600;padding:9px 15px;border-radius:var(--tp-rad-btn);border:1px solid var(--outline-variant);background:var(--surface-lowest);color:var(--on-surface-variant);cursor:pointer;}
+.tp-slide .tp-sc-mbtn{font:inherit;font-size:13.5px;font-weight:600;padding:var(--sp-2,8px) var(--sp-3,12px);border-radius:var(--tp-rad-btn);border:1px solid var(--outline-variant);background:var(--surface-lowest);color:var(--on-surface-variant);cursor:pointer;}
 .tp-slide .tp-sc-mbtn:hover{background:var(--surface-container-low);}
 .tp-slide .tp-sc-mbtn.notyet[aria-pressed="true"]{background:var(--surface-container);border-color:var(--on-surface-variant);color:var(--on-surface);}
 .tp-slide .tp-sc-mbtn.partial[aria-pressed="true"]{background:var(--sc-amber-tint,#FBF3DD);border-color:var(--sc-amber,#835F00);color:var(--sc-amber,#835F00);}
@@ -2538,7 +2605,17 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-gq2-lab{fill:var(--graph-axis,var(--on-surface-variant));font-family:var(--tp-body);font-size:12px;opacity:.85;}
 .tp-slide .tp-gq2-given{stroke:var(--graph-axis,var(--on-surface-variant));stroke-width:2;stroke-dasharray:5 4;opacity:.6;}
 /* Figure engine (Stage 1a) — coordinate plane. Token-only, fallback-chain colours (no inline hex, no [data-theme] fork). */
-.tp-slide .tp-fig{margin:0;}
+/* ═══ UI-1 — the shared Figure Shell. One container for every figure type; graph and geometry differ by
+   what the viewport paints, not by bringing their own page furniture. Quiet by construction: a single
+   surface, one border, no nested cards. ═══ */
+.tp-slide .tp-fig{margin:0;background:var(--fig-surface,var(--surface-lowest));border:1px solid var(--fig-border,var(--outline-variant));border-radius:var(--tp-rad-btn);padding:var(--sp-3,12px) var(--sp-3,12px) var(--sp-2,8px);display:flex;flex-direction:column;gap:var(--sp-2,8px);}
+.tp-slide .tp-fig-head{display:flex;align-items:flex-start;gap:var(--sp-3,12px);}
+.tp-slide .tp-fig-ident{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--sp-1,4px) var(--sp-2,8px);}
+.tp-slide .tp-fig-kind{font-family:var(--tp-body);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--on-surface-variant);}
+.tp-slide .tp-fig-title{flex:1 1 100%;margin:0;font-family:var(--tp-serif);font-weight:700;font-size:15px;line-height:1.25;color:var(--on-surface);}
+.tp-slide .tp-fig-meta{font-family:var(--tp-body);font-size:12px;color:var(--on-surface-variant);}
+.tp-slide .tp-fig-foot{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--sp-2,8px) var(--sp-4,16px);}
+.tp-slide .tp-fig-hint{margin:0;font-family:var(--tp-body);font-size:12px;color:var(--on-surface-variant);}
 .tp-slide .tp-fig-svg{display:block;width:100%;height:auto;background:var(--graph-surface,var(--surface-lowest));border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);}
 .tp-slide .tp-fig-grid{stroke:var(--graph-grid,var(--outline-variant));stroke-width:1;}
 .tp-slide .tp-fig-grid-minor{stroke:var(--graph-grid,var(--outline-variant));stroke-width:.5;opacity:.4;}
@@ -2563,26 +2640,40 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 /* Stage 2b — ⤢ Expand affordance + the focused window (reuses the .tp-overlay/.tp-fpanel skin). Token-only. */
 /* §1.5 halo: the axis name sits at the axis end, exactly where a curve asymptotic to that axis runs. */
 .tp-slide .tp-fig-axname{fill:var(--graph-axis,var(--on-surface-variant));font-family:var(--tp-body);font-size:12px;font-style:italic;paint-order:stroke;stroke:var(--graph-surface,var(--surface-lowest));stroke-width:3px;stroke-linejoin:round;}
-.tp-slide .tp-fig-expand{position:absolute;top:8px;right:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;padding:0;font:inherit;font-size:15px;line-height:1;border-radius:8px;border:1px solid var(--outline-variant);background:var(--graph-surface,var(--surface-lowest));color:var(--on-surface-variant);cursor:pointer;}
+.tp-slide .tp-fig-expand{flex:0 0 auto;width:30px;height:30px;display:flex;align-items:center;justify-content:center;padding:0;font:inherit;font-size:15px;line-height:1;border-radius:8px;border:1px solid var(--outline-variant);background:var(--graph-surface,var(--surface-lowest));color:var(--on-surface-variant);cursor:pointer;}
 .tp-slide .tp-fig-expand:hover{border-color:var(--primary);color:var(--primary);}
 .tp-slide .tp-fig-expand:focus-visible{outline:3px solid var(--focus-ring);outline-offset:2px;}
 .tp-slide .tp-overlay.tp-figx{padding:8px;}   /* the focused window is the workspace — it spends the pane on the plot, not on scrim margin */
 .tp-slide .tp-fpanel.tp-fpanel-figx{max-width:none;max-height:100%;padding:10px 14px 8px;display:flex;flex-direction:column;overflow:hidden;}   /* ENGINE INVARIANT (§6): the focused window must give the plot MORE area than the inline figure — so it takes the full parked pane, and the stage below flexes into whatever the toolbar/readout leave */
-.tp-slide .tp-fpanel-figx .tp-figx-title{flex:0 0 auto;font-family:var(--tp-body);font-weight:700;font-size:15px;color:var(--on-surface);padding-right:48px;}
+.tp-slide .tp-figx-head{flex:0 0 auto;display:flex;align-items:center;gap:var(--sp-3,12px);}
+.tp-slide .tp-figx-head .tp-fclose{position:static;flex:0 0 auto;margin-left:auto;}   /* never over the controls */
+.tp-slide .tp-fpanel-figx .tp-figx-title{flex:1 1 auto;min-width:0;font-family:var(--tp-body);font-weight:700;font-size:15px;color:var(--on-surface);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .tp-slide .tp-figx-bar{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0 8px;font-family:var(--tp-body);font-size:12.5px;color:var(--on-surface-variant);}
 .tp-slide .tp-figx-bar button{font:inherit;min-width:30px;height:28px;padding:0 9px;border-radius:7px;border:1px solid var(--outline-variant);background:var(--surface);color:var(--on-surface);cursor:pointer;}
 .tp-slide .tp-figx-bar button:hover{border-color:var(--primary);color:var(--primary);}
 .tp-slide .tp-figx-bar button:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}
 .tp-slide .tp-figx-bar select{font:inherit;height:28px;border-radius:7px;border:1px solid var(--outline-variant);background:var(--surface);color:var(--on-surface);}
 .tp-slide .tp-figx-bar label{display:inline-flex;align-items:center;gap:5px;}
-.tp-slide .tp-figx-step{font-variant-numeric:tabular-nums;color:var(--on-surface);}
+.tp-slide .tp-figx-step{font-variant-numeric:tabular-nums;color:var(--on-surface-variant);}
+/* UI-1 — pan reads as ONE control made of four keyboard-operable buttons */
+.tp-slide .tp-figx-pan{display:inline-flex;gap:2px;padding:2px;border-radius:9px;background:var(--surface-container);}
+.tp-slide .tp-figx-pan button{min-width:26px;height:24px;border-color:transparent;background:transparent;}
+.tp-slide .tp-figx-pan button:hover{background:var(--surface);border-color:var(--outline-variant);}
+.tp-slide .tp-figx-optsbtn{font:inherit;font-size:12.5px;height:28px;padding:0 12px;border-radius:7px;border:1px solid var(--outline-variant);background:var(--surface);color:var(--on-surface);cursor:pointer;}
+.tp-slide .tp-figx-optsbtn:hover{border-color:var(--primary);color:var(--primary);}
+.tp-slide .tp-figx-optsbtn:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}
+.tp-slide .tp-figx-optsbtn[aria-expanded="true"]{border-color:var(--primary);color:var(--primary);background:var(--surface-container);}
+.tp-slide .tp-figx-opts{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-2,8px) var(--sp-4,16px);margin:0 0 var(--sp-2,8px);padding:var(--sp-3,12px);border:1px solid var(--outline-variant);border-radius:var(--tp-rad-btn);background:var(--surface-container);font-family:var(--tp-body);font-size:12.5px;color:var(--on-surface-variant);}
+.tp-slide .tp-figx-opts[hidden]{display:none;}
+.tp-slide .tp-figx-opts label{display:inline-flex;align-items:center;gap:6px;}
+.tp-slide .tp-figx-opts select{font:inherit;height:26px;border-radius:7px;border:1px solid var(--outline-variant);background:var(--surface);color:var(--on-surface);}
 .tp-slide .tp-figx-sep{flex:1 1 auto;}
 .tp-slide .tp-fpanel-figx .tp-figx-stage{flex:1 1 auto;min-height:200px;display:flex;align-items:center;justify-content:center;}
 .tp-slide .tp-figx-stage svg{cursor:crosshair;width:100%;height:100%;}
 .tp-slide .tp-figx-foot{flex:0 0 auto;display:flex;align-items:baseline;gap:14px;margin:6px 0 0;}
 .tp-slide .tp-figx-read{flex:0 0 auto;margin:0;font-family:var(--tp-body);font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;color:var(--on-surface);}
 .tp-slide .tp-figx-msg{flex:1 1 auto;margin:0;min-height:1.1em;font-family:var(--tp-body);font-size:12.5px;color:var(--error,var(--on-surface-variant));}
-.tp-slide .tp-fig-cap{margin-top:6px;font-family:var(--tp-body);font-size:13px;color:var(--on-surface-variant);text-align:center;}
+.tp-slide .tp-fig-cap{margin:0;font-family:var(--tp-body);font-size:12.5px;line-height:1.5;color:var(--on-surface-variant);}
 .tp-slide .tp-gq2-student{stroke:var(--student-ink,var(--primary));stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
 .tp-slide .tp-gq2-answer{stroke:var(--ok,#1f7a54);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
 .tp-slide .tp-gq2-pt{fill:var(--student-ink,var(--primary));stroke:var(--graph-surface,#fff);stroke-width:1.5;cursor:pointer;}
@@ -3125,6 +3216,16 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 
 <button id="presentExit">Exit fullscreen ✕</button>
 <div id="lightbox"><button class="lb-close" id="lbClose">✕</button><div class="lb-body"></div></div>
+<!-- UI-1 — FOCUSED FIGURE WORKSPACE. A body-level root, deliberately a sibling of #lightbox/#worksheet:
+     those are the app's existing fixed overlay precedents and, unlike anything inside #stage, they sit
+     OUTSIDE the transform:scale()'d #canvas — so no position:fixed-inside-a-transform fragility. The inner
+     .tp-slide is not decoration: the pack's Material tokens are defined as `:root[data-theme] .tp-slide`,
+     so the reparented panel needs that class to keep its own theme tokens and every .tp-slide-scoped rule
+     instead of duplicating the stylesheet. -->
+<div id="figfocus" hidden aria-hidden="true">
+  <div class="ff-bar"><span class="ff-ctx" id="ffCtx"></span></div>
+  <div class="tp-slide" id="ffSlide" data-tp-type="figfocus"></div>
+</div>
 
 <div id="worksheet" aria-hidden="true">
   <div class="ws-bar">
@@ -3211,6 +3312,7 @@ const IG_ICONS={
 
 let LESSON=JSON.parse(document.getElementById('lesson-data').textContent);
 let cur=0, mode='study';
+let FIGFOCUS=null;   // UI-1 — {ov,parent,next} while a figure is reparented into the body-level workspace
 let selZone=null;   // Edit-mode inspector: selected zone id within the current slide (null = none)
 const $=s=>document.querySelector(s);
 const esc=s=>{ s=(s||''); if(typeof s!=='string') s=String(s); return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); };  // coerce non-strings so a numeric/array author field never throws; falsy stays '' (unchanged)   // escapes quotes too — esc() is used inside double-quoted HTML attributes (href/src/value/data-*), so attribute-context injection is closed
@@ -3435,8 +3537,48 @@ function showPoi(t,title,info){
   poiPop.style.width=pw+'px'; let left=r.left+r.width/2-pw/2; left=Math.max(12,Math.min(left,window.innerWidth-pw-12));
   poiPop.style.left=left+'px'; poiPop.style.top=(r.bottom+10)+'px'; poiPop.classList.add('show');
 }
+/* ═══ UI-1 — focused figure workspace (ENGINE_SPEC §6). The expanded figure is MOVED out of the lesson
+   canvas into #figfocus rather than styled bigger in place: #canvas is transform:scale()'d, so anything
+   inside it is trapped in that containing block (the trap UI-0 measured). Reparenting is safe because every
+   figx control is wired by DELEGATED document-level listeners on [data-figx] attributes and figxPanelEl()
+   resolves with document.querySelector — nothing depends on the panel living inside the slide, so no control
+   is duplicated and no wiring is re-run. The node's original position is remembered and restored on close. */
+function figFocusEnter(ov){
+  const root=document.getElementById('figfocus'), host=document.getElementById('ffSlide');
+  if(!root||!host||FIGFOCUS) return false;
+  const src=ov.closest('.tp-slide');
+  FIGFOCUS={ov:ov, parent:ov.parentNode, next:ov.nextSibling};
+  host.setAttribute('data-tp-theme',(src&&src.getAttribute('data-tp-theme'))||'');
+  ov.style.top=''; ov.style.height='';                                     // drop any parked band — the workspace is the surface now
+  host.appendChild(ov);
+  const e=FIGX[ov.id], ctx=document.getElementById('ffCtx');
+  if(ctx) ctx.textContent=[(LESSON.meta&&LESSON.meta.title)||'',(e&&e.title)||''].filter(Boolean).join('  ·  ');
+  root.hidden=false; root.setAttribute('aria-hidden','false');
+  document.body.classList.add('figfocus');
+  // the plot is generated through the stage, so a resize/rotate must re-solve it, not letterbox it
+  FIGFOCUS.rs=()=>{ const en=FIGX[ov.id]; if(en) figxPaint(ov.id); };
+  window.addEventListener('resize',FIGFOCUS.rs);
+  // the lesson shell is behind an opaque layer: hide it from assistive tech too, as a modal should
+  const ab=$('.appbody'), tp=$('.top');
+  if(ab) ab.setAttribute('aria-hidden','true');
+  if(tp) tp.setAttribute('aria-hidden','true');
+  return true;
+}
+function figFocusExit(){
+  if(!FIGFOCUS) return;
+  const f=FIGFOCUS; FIGFOCUS=null;
+  if(f.rs) window.removeEventListener('resize',f.rs);
+  if(f.parent) f.parent.insertBefore(f.ov,f.next);                         // exactly where it came from
+  const root=document.getElementById('figfocus');
+  if(root){ root.hidden=true; root.setAttribute('aria-hidden','true'); }
+  document.body.classList.remove('figfocus');
+  const ab=$('.appbody'), tp=$('.top');
+  if(ab) ab.removeAttribute('aria-hidden');
+  if(tp) tp.removeAttribute('aria-hidden');
+}
 function renderSlide(){ renderCanvas(); renderInspector(); }
 function renderCanvas(){
+  figFocusExit();                                                          // the slide is about to be replaced — never strand a reparented figure
   const realEdit=(mode==='edit'), _savedMode=mode;
   const s=LESSON.slides[cur], i=cur; let h='';
   const present=document.body.classList.contains('present');
@@ -4148,11 +4290,16 @@ function blockPracticeSetForm(i,b,sel,base){   // S2 — set header + gating con
       +(b.gate?inT('First batch (questions shown before “Keep going”)',`${base}.batch`,b.batch):''))
     +repeatGroup(i,b,sel,'items','Question','Questions',(it,j)=>scQFields(i,it||{},sel,`${base}.items.${j}`),'Add question',base);
 }
-function blockFigureForm(i,b,sel,base){ const d=b.domain||{};   // Stage 1a — lean form: domain + grid + aspect (points via block JSON)
+function blockFigureForm(i,b,sel,base){ const d=b.domain||{};   // Stage 1a — domain + display defaults + aspect (objects via block JSON)
+  const on=v=>!(v===false||v==='hidden');                                // the two UI-1 display fields accept false OR 'hidden'
   return ig('graph',sel,
     inT('x min',`${base}.domain.xMin`,d.xMin)+inT('x max',`${base}.domain.xMax`,d.xMax)
    +inT('y min',`${base}.domain.yMin`,d.yMin)+inT('y max',`${base}.domain.yMax`,d.yMax)
    +inSel('Grid',`${base}.grid`,b.grid||'shown',[['shown','Shown'],['hidden','Hidden']])
+   /* Display DEFAULTS — where the figure starts. The learner can still change all three from Options in the
+      focused workspace, so these are starting points, not locks (see SCHEMA.md `figure`). */
+   +inSel('Minor grid',`${base}.minorGrid`,on(b.minorGrid)?'shown':'hidden',[['shown','Shown'],['hidden','Hidden']])
+   +inSel('Axis labels',`${base}.axisNames`,on(b.axisNames)?'shown':'hidden',[['shown','Shown'],['hidden','Hidden']])
    +inSel('Aspect',`${base}.aspect`,b.aspect||'stretch',[['stretch','Stretch (fill each axis)'],['equal','Equal (square units)']]));
 }
 function blockForm(i,k,b,sel){   // dispatch: reuse the page inspector case (rebased) where schemas match; lean forms where they differ
@@ -7296,7 +7443,24 @@ function figGraph(b, box){
    Everything re-renders through figGraph → figView/figFitAndLayout, so points, curves and identifiers are
    COORDINATES that follow the transform — they cannot drift. NO geometry (Stage 3), NO input/grading (§6). */
 const FIGX=Object.create(null);
-const FIGX_BOX={W:900,H:560,padL:56,padR:26,padT:24,padB:42};
+const FIGX_BOX={W:900,H:560,padL:56,padR:26,padT:24,padB:42};                // fallback only — figxBoxFor() measures the real stage
+/* UI-1 — the focused plot must be generated THROUGH the available viewport, not letterboxed inside it.
+   The box was fixed at 900x560, so with preserveAspectRatio="xMidYMid meet" the painted plane kept a 1.607
+   landscape aspect whatever shape the stage was: at 834x1112 the stage was 780x947 but the grid only
+   707x427, leaving 520px of blank INSIDE the bordered plot region (73% blank at 390x844). Measuring the
+   stage and re-solving through it means the axes, grid and coordinate mapping all regenerate for the real
+   viewport — no SVG is stretched, and `aspect:'equal'` still preserves square units (a portrait viewport
+   simply shows more of the y-range, which is the mathematically correct answer). */
+function figxBoxFor(xid,fallback){
+  const p=figxPanelEl(xid), st=p&&p.querySelector('.tp-figx-stage');
+  if(!st) return fallback;
+  const r=st.getBoundingClientRect();                                      // body-level in focus mode → CSS px, unscaled
+  if(!(r.width>60&&r.height>60)) return fallback;
+  const W=Math.round(r.width), H=Math.round(r.height);
+  return { W, H,                                                           // gutters scale down so a phone keeps a usable plane
+    padL:Math.max(30,Math.min(56,Math.round(W*0.09))), padR:Math.max(14,Math.min(26,Math.round(W*0.04))),
+    padT:Math.max(14,Math.min(24,Math.round(H*0.03))), padB:Math.max(24,Math.min(42,Math.round(H*0.055))) };
+}
 const FIGX_MINSPAN=1e-6, FIGX_MAXSPAN=1e9, FIGX_TICKS=[4,5,6,8,10];
 function figxRegister(bk,b,D){                                             // called during render: remember the spec + the view it opened at
   const xid=figSafeId(bk,'x'), prev=FIGX[xid], nb={xMin:D.x0,xMax:D.x1,yMin:D.y0,yMax:D.y1};
@@ -7306,10 +7470,23 @@ function figxRegister(bk,b,D){                                             // ca
   // no way to tell that from a legitimately empty region. Display preferences are not data, so they persist.
   const same=!!prev&&['xMin','xMax','yMin','yMax'].every(k=>prev.base[k]===nb[k]);
   const ps=prev&&prev.st, sg=!(b&&b.grid==='hidden');                      // the SPEC's grid setting, tracked separately from the student's toggle
+  // UI-1 — the other two display settings take their INITIAL value from the block, the same way `grid`
+  // already does (no new configuration system: these are optional fields on the existing figure schema).
+  // They stay learner-overridable once the lesson is running; this only sets where they start.
+  const sm=!(b&&(b.minorGrid===false||b.minorGrid==='hidden')), sn=!(b&&(b.axisNames===false||b.axisNames==='hidden'));
   const st=(same&&ps)?ps:{ dom:Object.assign({},nb), tt:(ps&&FIGX_TICKS.indexOf(ps.tt)>=0)?ps.tt:5,
-      grid:sg, minor:ps?ps.minor:true, names:ps?ps.names:true };
-  if(prev&&prev.sg!==sg) st.grid=sg;                                       // the author changed grid: honour it, without disturbing the zoom
-  FIGX[xid]={ b, box:FIGX_BOX, title:(b&&b.title)||'Coordinate plane', base:nb, sg, st,
+      grid:ps?ps.grid:sg, minor:ps?ps.minor:sm, names:ps?ps.names:sn };
+  // All three display settings behave IDENTICALLY, because SCHEMA.md documents them as one kind of thing:
+  // a learner override survives an incidental re-render, and an authored change overrides it. Each needs its
+  // spec value remembered to tell those apart — comparing against the block alone cannot distinguish "the
+  // author changed this" from "the learner did". Previously only `grid` was tracked this way, so (a) a
+  // re-render after an authored domain edit reset the learner's Gridlines while keeping their other two
+  // (CodeRabbit), and (b) toggling Minor grid or Axis labels in the inspector did nothing at all once a
+  // state existed, since `st` is reused wholesale when the domain is unchanged.
+  if(prev&&prev.sg!==sg) st.grid=sg;
+  if(prev&&prev.sm!==sm) st.minor=sm;
+  if(prev&&prev.sn!==sn) st.names=sn;
+  FIGX[xid]={ b, box:FIGX_BOX, title:(b&&b.title)||'Coordinate plane', base:nb, sg, sm, sn, st,
     rev:((prev&&prev.rev)||0)+1 };                                         // bumps the solve-cache signature: the spec object mutates in place on an inspector edit
   return xid;
 }
@@ -7376,13 +7553,16 @@ function figxNameArms(V,box){
 }
 function figxPaint(xid){                                                   // re-solve + repaint; every zoom level goes through the same figView/figFitAndLayout path
   const e=FIGX[xid], p=figxPanelEl(xid); if(!e||!p) return null;
-  const st=e.st, sig=st.dom.xMin+'|'+st.dom.xMax+'|'+st.dom.yMin+'|'+st.dom.yMax+'|'+(st.grid?1:0)+'|'+e.rev;
+  e.box=figxBoxFor(xid,e.box);                                             // the viewport IS the box — see figxBoxFor
+  const st=e.st, sig=st.dom.xMin+'|'+st.dom.xMax+'|'+st.dom.yMin+'|'+st.dom.yMax+'|'+(st.grid?1:0)+'|'+e.rev+'|'+e.box.W+'x'+e.box.H;
   const M=(e.M&&e.sig===sig)?e.M:figxModel(xid);                            // display-only controls (minor/names/increment) repaint without re-solving
   if(!M) return null; e.sig=sig; e.M=M;
   const nm=st.names?figxNameArms(M.V,e.box):[];
   const layout=nm.length?figLayoutPills(M.pts,M.V,e.box,(M.painted||[]).concat(nm)):M.layout;
   const paint=Object.assign({},M,{segs:figxSegs(e),layout});                // chords drawn in full, then clipped by the viewport
-  const svg=p.querySelector('[data-figx-svg]'); if(svg) svg.innerHTML=figSvgBody(paint,e.box,{targetTicks:st.tt, grid:st.grid, minor:st.minor, axisNames:st.names});
+  const svg=p.querySelector('[data-figx-svg]');
+  if(svg){ svg.setAttribute('viewBox','0 0 '+e.box.W+' '+e.box.H);         // viewBox matches the element box, so `meet` letterboxes nothing
+    svg.innerHTML=figSvgBody(paint,e.box,{targetTicks:st.tt, grid:st.grid, minor:st.minor, axisNames:st.names}); }
   const D=M.V.dom, xT=figNiceTicks(D.x0,D.x1,st.tt), yT=figNiceTicks(D.y0,D.y1,st.tt), sEl=p.querySelector('[data-figx-step]');
   e.dec=[figxDec(D.x1-D.x0,M.V.plotW),figxDec(D.y1-D.y0,M.V.plotH)];        // figNum is fixed at 3 dp — far too coarse once a deep zoom is finer than that
   if(sEl) sEl.textContent='step '+figFmtTick(xT.step,xT.decimals);          // ALWAYS a figNiceStep value — no raw step can reach the axis
@@ -7390,6 +7570,13 @@ function figxPaint(xid){                                                   // re
 }
 function figxAct(xid,act){
   const e=FIGX[xid]; if(!e) return;
+  if(act==='options'){                                                     // progressive disclosure — not a viewport change
+    const p=figxPanelEl(xid); if(!p) return;
+    const box=p.querySelector('[data-figx-opts]'), b=p.querySelector('.tp-figx-optsbtn');
+    if(!box) return; const open=box.hidden; box.hidden=!open;
+    if(b) b.setAttribute('aria-expanded',open?'true':'false');
+    return;
+  }
   const st=e.st, d=st.dom, cx=(d.xMin+d.xMax)/2, cy=(d.yMin+d.yMax)/2, hw=(d.xMax-d.xMin)/2, hh=(d.yMax-d.yMin)/2;
   const P=0.3; let nd=null;
   if(act==='zoomin')       nd={xMin:cx-hw/1.6, xMax:cx+hw/1.6, yMin:cy-hh/1.6, yMax:cy+hh/1.6};
@@ -7418,17 +7605,32 @@ function figxPanel(xid){
   const opts=FIGX_TICKS.map(n=>`<option value="${n}"${n===cur?' selected':''}>≈${n} ticks</option>`).join('');
   const tog=(k,lab,on)=>`<label><input type="checkbox" data-figx-tog="${k}"${on?' checked':''}> ${lab}</label>`;
   const btn=(a,lab,txt)=>`<button type="button" data-figx-act="${a}" aria-label="${lab}" title="${lab}">${txt}</button>`;
+  const oid=esc(xid)+'-opts';
+  // UI-1 — LEARNER CONTROL HIERARCHY. The bar used to expose every switch the engine has (6 nav buttons +
+  // an increment select + 3 checkboxes + Reset) as one dense permanent row competing with the mathematics.
+  // Primary surface is now Zoom out | Zoom in | Pan | Reset | Options; the four DISPLAY settings live behind
+  // Options, reached on demand. Nothing is removed — engine capability is unchanged, only its permanent
+  // exposure. The pan arrows stay four real buttons (keyboard-operable) presented as one labelled cluster.
   return `<div class="tp-overlay tp-figx" id="${esc(xid)}" data-tp-overlay role="dialog" aria-modal="true" aria-label="${t} — expanded" hidden>`
     +`<div class="tp-fpanel tp-fpanel-figx" data-figx="${esc(xid)}">`
-    +`<button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close expanded figure">${tpIc('close',20)}</button>`
-    +`<div class="tp-figx-title">${t}</div>`
+    // UI-1 — title and Close share a HEADER ROW. Close was position:absolute and overlapped the control
+    // strip's rect at every viewport (a real collision once the toolbar wrapped on a phone).
+    +`<div class="tp-figx-head">`
+      +`<div class="tp-figx-title">${t}</div>`
+      +`<button class="tp-fclose" type="button" data-tp-focus-close aria-label="Close expanded figure">${tpIc('close',20)}</button>`
+    +`</div>`
     +`<div class="tp-figx-bar" role="toolbar" aria-label="Figure controls">`
-      +btn('zoomin','Zoom in','+')+btn('zoomout','Zoom out','−')
-      +btn('left','Pan left','←')+btn('right','Pan right','→')+btn('up','Pan up','↑')+btn('down','Pan down','↓')
-      +`<label>Axis <select data-figx-tt aria-label="Axis increment">${opts}</select></label>`
-      +`<span class="tp-figx-step" data-figx-step></span>`
-      +tog('grid','Gridlines',e.st.grid)+tog('minor','Minor',e.st.minor)+tog('names','Axis names',e.st.names)
+      +btn('zoomout','Zoom out','−')+btn('zoomin','Zoom in','+')
+      +`<span class="tp-figx-pan" role="group" aria-label="Pan">`
+        +btn('left','Pan left','←')+btn('up','Pan up','↑')+btn('down','Pan down','↓')+btn('right','Pan right','→')
+      +`</span>`
       +btn('reset','Reset view','Reset')
+      +`<button class="tp-figx-optsbtn" type="button" data-figx-act="options" aria-expanded="false" aria-controls="${oid}" aria-label="Display options">Options</button>`
+    +`</div>`
+    +`<div class="tp-figx-opts" id="${oid}" data-figx-opts hidden>`
+      +tog('grid','Gridlines',e.st.grid)+tog('minor','Minor grid',e.st.minor)+tog('names','Axis labels',e.st.names)
+      +`<label>Tick density <select data-figx-tt aria-label="Tick density">${opts}</select></label>`
+      +`<span class="tp-figx-step" data-figx-step></span>`
     +`</div>`
     +`<div class="tp-figx-stage"><svg class="tp-fig-svg" data-figx-svg viewBox="0 0 ${B.W} ${B.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${t}"></svg></div>`
     +`<div class="tp-figx-foot">`
@@ -7479,7 +7681,20 @@ function fragFigure(b,bk){
   const cap=b.caption?`<figcaption class="tp-fig-cap">${tpRichMath(b.caption)}</figcaption>`:'';
   const xid=figxRegister(bk,b,D);                                          // Stage 2b: ⤢ opens the focused window on the SAME rail
   const expand=`<button class="tp-fig-expand" type="button" data-tp-focus-open="${esc(xid)}" data-figx-open="${esc(xid)}" aria-haspopup="dialog" aria-label="Expand figure" title="Expand">⤢</button>`;
-  return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}" data-tp-fig-errors="${M.errors.length}"><div class="tp-fig-stage"><svg class="tp-fig-svg" viewBox="0 0 ${box.W} ${box.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(b.title||'Coordinate plane')}">${body}</svg>${hits}${cos}${expand}</div>${figxPanel(xid)}${err}${cap}</figure>`;
+  // UI-1 — SHARED FIGURE SHELL. Before this the shell was `.tp-fig{margin:0}`: the plot painted straight into
+  // the page flow with no identity, no status region and the expand button floating over the mathematics. The
+  // regions below (head / stage / foot / caption) are the contract Stage-3 geometry renders into, so a
+  // geometry figure differs by its CONTENT, not by inventing its own container. Kept deliberately quiet — the
+  // canvas is already one of the strongest elements in the app and does not need decoration around it.
+  const kind=(b.figure==='geometry')?'geometry':'graph';
+  const head=`<div class="tp-fig-head">`
+    +`<div class="tp-fig-ident"><span class="tp-fig-kind">Figure · ${esc(kind)}</span>`
+    +`${b.title?`<h3 class="tp-fig-title">${tpRichMath(b.title)}</h3>`:''}`
+    +`${b.meta?`<span class="tp-fig-meta">${esc(b.meta)}</span>`:''}</div>`
+    +expand+`</div>`;
+  const hint=M.callouts.length?`<p class="tp-fig-hint">Select a point to read its coordinates</p>`:'';
+  const foot=(hint||err)?`<div class="tp-fig-foot">${hint}${err}</div>`:'';
+  return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}" data-tp-fig-kind="${esc(kind)}" data-tp-fig-errors="${M.errors.length}">${head}<div class="tp-fig-stage"><svg class="tp-fig-svg" viewBox="0 0 ${box.W} ${box.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(b.title||'Coordinate plane')}">${body}</svg>${hits}${cos}</div>${foot}${cap}${figxPanel(xid)}</figure>`;
 }
 FRAG.figure={imperium:fragFigure,microhistory:fragFigure,geolearn:fragFigure,mathematics:fragFigure,scholarmath:fragFigure};
 function renderFragment(b,i,k,theme){
@@ -7982,7 +8197,7 @@ function wirePackTyped(){
     const escFor=new Map(), openerFor=new Map();
     // Phase 2c-i: track the opener per overlay so focus returns to it on EVERY close path (Esc, close-button,
     // backdrop) — APG dialog contract. Previously only Esc returned focus; button/backdrop dropped it to <body>.
-    const closeOv=(ov)=>{ ov.hidden=true; const h=escFor.get(ov); if(h){ document.removeEventListener('keydown',h); escFor.delete(ov); }
+    const closeOv=(ov)=>{ ov.hidden=true; figFocusExit(); const h=escFor.get(ov); if(h){ document.removeEventListener('keydown',h); escFor.delete(ov); }
       const rp=parkFor.get(ov); if(rp){ const st=document.getElementById('stage'); if(st) st.removeEventListener('scroll',rp); window.removeEventListener('resize',rp);
         const sl=ov.closest('.tp-slide'); if(sl) sl.removeEventListener('transitionend',rp); parkFor.delete(ov); }
       const op=openerFor.get(ov); openerFor.delete(ov); if(op) op.focus(); };
@@ -8003,8 +8218,14 @@ function wirePackTyped(){
       fr.classList.remove('tp-animwait'); fr.classList.add('tp-animin');
       void fr.offsetHeight;                                                // flush, so the computed transform is `none` BEFORE we measure
       fr.style.transition=t; };
-    const openOv=(ov,opener)=>{ ov.hidden=false; settleFrag(ov); parkOv(ov); openerFor.set(ov,opener); const c=ov.querySelector('[data-tp-focus-close]'); if(c) c.focus();
+    const openOv=(ov,opener)=>{ ov.hidden=false; settleFrag(ov);
+      // A figure opens as the FOCUSED WORKSPACE (moved to the body-level root); everything else parks over
+      // the visible pane in place. Both paths share this seam, the Esc handler and the focus return below.
+      const focused=ov.classList.contains('tp-figx')&&figFocusEnter(ov);
+      if(!focused) parkOv(ov);
+      openerFor.set(ov,opener); const c=ov.querySelector('[data-tp-focus-close]'); if(c) c.focus();
       const h=(e)=>{ if(e.key==='Escape') closeOv(ov); }; escFor.set(ov,h); document.addEventListener('keydown',h);
+      if(focused) return;                                                  // the workspace is viewport-fixed: nothing to re-park
       const rp=()=>parkOv(ov); parkFor.set(ov,rp);                         // the board can still scroll/resize under an open panel — keep it over the pane
       const st=document.getElementById('stage'); if(st) st.addEventListener('scroll',rp,{passive:true});
       window.addEventListener('resize',rp);
