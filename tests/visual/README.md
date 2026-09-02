@@ -94,8 +94,11 @@ rail, the canvas fit, or the figure engine.
    the whole space with a plain reference search rather than testing against a tuned number; repeated solves of
    the same figure are byte-identical (placement is deterministic — ties go to the more preferred direction); and
    the exhaustive `figScanPill` fallback, which is *not* displacement-ranked, does not fire on any fixture.
-   Re-assert in the focused workspace at each **Tick density**, since changing density changes what a label must
-   clear. `scripts/verify-label-placement.mjs` runs all of it.
+   Re-assert **in the focused workspace at all four viewports × every one of the five `FIGX_TICKS` densities**,
+   reading the identifiers back out of the painted SVG and building the reference obstacles from the
+   configuration live at that moment: the focused box is a *measured* viewport rather than a constant and the
+   tick target decides which numbers are reserved, so a collision or a non-nearest position can exist there and
+   nowhere else. `scripts/verify-label-placement.mjs` runs all of it (785 assertions).
 
 ## Geometry (Stage 3)
 

@@ -39,15 +39,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   | `V` gap to a tick label | 22.7 | **2.1** | **20.1** |
   | crowded plane, worst gap to a tick label | 3.0 | **1.3** | **15.4** |
 
-  **Checked:** 61/61 assertions in the new `scripts/verify-label-placement.mjs` across
+  **Checked:** **785/785** assertions in the new `scripts/verify-label-placement.mjs` — an inline pass across
   `figure-labels-baseline.json` (isolated · on the axes and tick values · on curves and chords · at the
   viewport edges · long identifiers), `figure-graph-baseline.json` and the `figure` block in
   `composable-page-baseline.json` — every identifier clears every axis,
   curve, chord, marker, other identifier and printed tick label by `>= FIG_GAP` and is fully on canvas; its
   displacement **equals the minimum over all clearing candidates**, re-derived by an unpruned reference search
   rather than compared against a tuned number; repeated solves byte-identical; the unranked `figScanPill`
-  fallback never fires. 33/33 in the focused workspace at 1440×900 / 1024×768 / 390×844 across every **Tick
-  density** and after zoom and reset. Legacy corpus **250/250** renders byte-identical, all 6 frozen functions
+  fallback never fires — plus a focused-workspace pass over **4 viewports × all five `FIGX_TICKS` densities**,
+  reading the identifiers back out of the painted SVG and building its reference obstacles from the live
+  configuration (raised by CodeRabbit: the focused box is measured, not constant, so a collision can exist there
+  and nowhere else). Legacy corpus **250/250** renders byte-identical, all 6 frozen functions
   byte-identical, `validate` green, 0 console errors. Solve cost for the four baseline figures: 9.1ms each
   before, 15.3ms after (85.1ms for the naive form that used edge arms and an unpruned search — the box channel
   and the displacement prune are what make the quality affordable).
