@@ -262,11 +262,15 @@ so is a worse failure than a missing one, because nothing in the picture reveals
    cell in raster order, which was invisible while it fired rarely; constraining regions makes it fire far
    more often, and then "first in raster order" put a side length in the corner of the canvas — legal, and
    370px from the edge it measured.
-3. If none is fully clear within range (pathological), the label is **not placed** — the hard rule above
-   has no exception. The least-penalised box (max clearance) is carried only so the caller can show what
-   failed; it is marked INVALID, which makes the fitter expand the domain and re-solve, and if that still
-   fails the figure reports `label "…" could not be placed clear of the figure` rather than painting an
-   uncleared label. Nothing overlapping an arm or another pill is ever accepted as a placement.
+3. If none is fully clear within range (pathological), the least-penalised box (max clearance) is marked
+   INVALID. That is not a placement: it makes the fitter expand the domain and re-solve, and if the figure
+   still cannot place the label after the escalation cap it reports
+   `label "…" could not be placed clear of the figure`. The label IS still drawn at that box, and that is
+   deliberate — dropping it would leave a figure that looks complete and silently is not, which is the
+   failure mode §4 exists to prevent. So the guarantee is precise: no sub-`GAP` box is ever ACCEPTED as
+   legal, and none is ever drawn without the figure saying so. (This paragraph claimed the label was not
+   drawn at all until Stage 3c; `figGeomBody` and `figLayoutPills` have always painted it, so the spec was
+   describing an engine that does not exist.)
 4. Placement order: vertices first (they crowd corners), then lengths, then angle measures — later
    pills see earlier ones as obstacles.
 

@@ -111,6 +111,17 @@
             { "type": "angle", "at": "A", "between": ["C", "B"], "label": "angle of elevation" }
           ] }
       ] },
+    { "type": "page", "title": "Concave polygon — the reflex vertex is reported, not measured",
+      "blocks": [
+        { "type": "section", "title": "The case contract 8 asserts",
+          "flow": [{ "kind": "para", "text": "Contract 8 says the (n−2)·180° sum is asserted on CONVEX fixtures and the reflex-vertex ERROR on a concave one — but until now there was no concave fixture, so half of that contract was asserted against nothing. A dart has one reflex interior angle; `figGeomAngle` returns the unsigned smaller sweep and so cannot express it, and the engine must say so rather than print 360−θ as though it were the interior angle." }] },
+        { "type": "figure", "figure": "geometry", "figure_note": "concave", "title": "Dart — one reflex interior angle",
+          "caption": "The reflex vertex is reported and left unmeasured; the other three are measured normally.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", 0, 0], ["B", 2, 1.1], ["C", 4, 0], ["D", 2, 3]] },
+            { "type": "polygon", "vertices": ["A", "B", "C", "D"], "angles": "all" }
+          ] }
+      ] },
     { "type": "page", "title": "Reversed winding — same figure, vertices listed the other way",
       "blocks": [
         { "type": "section", "title": "Winding must not decide the outside",

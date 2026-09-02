@@ -144,8 +144,8 @@ ACCEPTANCE (proven in prototype — must reproduce): arcs seat on arms across ri
 right-angle; measures are computed values on the bisector; every pill ≥ GAP clear of arms/vertices/
 pills; matches the APPROVED geometry visual target; the same n-gon code renders square→pentagon→quad;
 ADDITIVE clean; validate green.
-FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` — committed, 12 figures
-across 9 pages, covering triangle with one angle arc · multiple arcs · stacked arcs on a ~6px arm (correctness
+FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` — committed, 15 figures
+across 11 pages, covering triangle with one angle arc · multiple arcs · stacked arcs on a ~6px arm (correctness
 stress) and on a ~44px arm (visual quality) · right-angle marker (including a
 NON-AXIS-ALIGNED one) · quadrilateral · irregular n-gon · vertex labels · side labels · crowded labels · long
 labels · labels at the viewport edge · a parameterised construction · the author-error state, plus the
@@ -185,8 +185,9 @@ ACCEPTANCE: `scripts/verify-geometry-semantics.mjs` — every angle label inside
 every side label in its edge's exterior half-plane, every vertex label outside its polygon, across two box
 sizes. The checker re-derives each predicate from raw coordinates rather than calling the engine's own
 helpers, because this stage twice shipped a check that restated the implementation instead of testing it.
-FIXTURE: reversed-winding pair — the same quadrilateral listed both ways must place all 10 labels
-identically, so "outside" is a property of the shape and not of the author's typing order.
+FIXTURES: a reversed-winding pair — the same quadrilateral listed both ways must place all 10 labels
+identically, so "outside" is a property of the shape and not of the author's typing order; and a concave
+dart, because contract 8 asserted the reflex-vertex error against no fixture at all until now.
 
 ## STAGE 4 — Block wiring (plug engines into the containers)
 Branch off the merged front-ends. Spec §8.

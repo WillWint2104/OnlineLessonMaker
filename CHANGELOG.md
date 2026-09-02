@@ -33,26 +33,11 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   disabling the angle region reports **11 violations**, including the three visible by eye and three that
   were not (`angle of elevation`, `48.2°`, `58.4°`). Fixture: a **reversed-winding pair** — the same
   quadrilateral listed A,B,C,D and D,C,B,A — places all **10 labels at identical coordinates**, so "outside"
-  is a property of the shape rather than of the authoring order.
+  is a property of the shape rather than of the authoring order. A **concave dart** was added alongside it:
+  contract 8 has said "assert the sum on convex fixtures and the *error* on a concave one" since Stage 3,
+  and there was no concave fixture, so half that contract was asserted against nothing. The dart's reflex
+  vertex is reported and left unmeasured while its other three angles measure normally.
 
-### Fixed
-- **The exhaustive placement fallback returned the first clear cell in raster order.** Stage 2c made the
-  directional search take the NEAREST legal candidate but left the fallback taking whatever a top-left-first
-  sweep hit first, which stayed invisible while it fired rarely. Constraining regions makes it fire far more
-  often, and then "first in raster order" put a side length in the corner of the canvas — legal, and 370px
-  from the edge it measured. It now ranks by distance from the anchor when one is supplied; the graph
-  supplies none and keeps first-found, so its placements are unchanged.
-- **The focused shell spoke graph language in a geometry figure** — "Hover the plot to read coordinates". A
-  geometry figure has no plot. The shell now takes its interaction copy from the figure TYPE (`FIGX_COPY`),
-  so it reads "Move the pointer over the figure to read coordinates"; the capability is identical (§1.1
-  inverse mapping), only the sentence differs, and it lives with the shell rather than in any lesson.
-- **The geometry board was centred in a full-height stage**, leaving dead bands above and below it on a tall
-  phone. It now flows after the toolbar (header → controls → board → hint). The stage keeps `flex:1 1 auto`
-  because it is what the board is MEASURED from — letting it shrink to its own content makes the board an
-  input to its own size and ratchets the figure smaller every render (measured: the phone board fell from
-  336×291 to 242×210 before this was caught). Only the alignment changes; the board is never stretched.
-
-### Added
 - **Stage 3b — Geometry visual language.** Visual review of Stage 3 found the renderer technically right and
   reading as raw engine output: vertex names, side lengths, angle measures and symbolic labels all competed at
   the same visual weight, so nothing told the eye what was structural and what was explanatory. This adds the
@@ -96,6 +81,22 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   estimator the GRAPH path shares, which is outside a visual-language pass; recorded here for the maintainer.
 
 ### Fixed
+- **The exhaustive placement fallback returned the first clear cell in raster order.** Stage 2c made the
+  directional search take the NEAREST legal candidate but left the fallback taking whatever a top-left-first
+  sweep hit first, which stayed invisible while it fired rarely. Constraining regions makes it fire far more
+  often, and then "first in raster order" put a side length in the corner of the canvas — legal, and 370px
+  from the edge it measured. It now ranks by distance from the anchor when one is supplied; the graph
+  supplies none and keeps first-found, so its placements are unchanged.
+- **The focused shell spoke graph language in a geometry figure** — "Hover the plot to read coordinates". A
+  geometry figure has no plot. The shell now takes its interaction copy from the figure TYPE (`FIGX_COPY`),
+  so it reads "Move the pointer over the figure to read coordinates"; the capability is identical (§1.1
+  inverse mapping), only the sentence differs, and it lives with the shell rather than in any lesson.
+- **The geometry board was centred in a full-height stage**, leaving dead bands above and below it on a tall
+  phone. It now flows after the toolbar (header → controls → board → hint). The stage keeps `flex:1 1 auto`
+  because it is what the board is MEASURED from — letting it shrink to its own content makes the board an
+  input to its own size and ratchets the figure smaller every render (measured: the phone board fell from
+  336×291 to 242×210 before this was caught). Only the alignment changes; the board is never stretched.
+
 - **The Stage 3 focused-fill figure was measured against the wrong thing.** #151 reported the painted figure
   at "87–94% in both dimensions"; that measured the SVG **element**, which is 100% × 100% of whatever stage it
   is given and therefore proves nothing. Measured against the painted ink, Stage 3 was **44% × 73%** at
