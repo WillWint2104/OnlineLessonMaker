@@ -2661,7 +2661,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-gpill{fill:var(--geo-measure-bg,transparent);stroke:var(--geo-measure-border,transparent);stroke-width:1;}
 .tp-slide .tp-fig-gsmeas{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-body);font-size:11.5px;}
 .tp-slide .tp-fig-gssym{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-serif,var(--tp-body));font-size:11.5px;font-style:italic;}
-.tp-slide .tp-fig-gunit{font-size:9.8px;opacity:.78;}
+.tp-slide .tp-fig-gunit{font-size:9.8px;opacity:.9;}   /* .78 composited to 4.24:1 on the chip fill — below AA 4.5. Size, not opacity, carries the unit's subordination. */
 .tp-slide .tp-fig-hit{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;}
 .tp-slide .tp-fig-hit:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}   /* --focus-ring is a COLOUR: `outline:var(--focus-ring,<shorthand>)` sets colour only and leaves outline-style:none — i.e. no ring at all */
 .tp-slide .tp-fig-callout{position:absolute;display:flex;align-items:center;gap:8px;padding:4px 5px 4px 10px;border-radius:var(--tp-rad-btn);background:var(--graph-callout,var(--graph-axis,var(--on-surface)));color:var(--graph-surface,var(--surface));font-family:var(--tp-body);font-size:12.5px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px var(--scrim,rgba(0,0,0,.28));}
@@ -7595,12 +7595,22 @@ const FIG_GLYPH={'0':.631,'1':.407,'2':.610,'3':.618,'4':.646,'5':.593,'6':.620,
   n:.591,o:.600,p:.612,q:.612,r:.391,s:.528,t:.327,u:.591,v:.562,w:.818,x:.546,y:.562,z:.552};
 function figGlyphW(c){ const t=FIG_GLYPH[c]; if(t!=null) return t;
   return (c>='A'&&c<='Z')?.683:.60; }   // capitals and anything unlisted: one conservative default
-function figTextW(str,fs){ let e=0; const t=String(str); for(let i=0;i<t.length;i++) e+=figGlyphW(t[i]); return e*fs; }
+/* FIG_GLYPH is measured for ONE face — the body face the numeric role paints in. Symbolic content is painted
+   in var(--tp-serif), which packs redefine: microhistory resolves it to Courier Prime, a MONOSPACE face whose
+   advances the table understates badly. Sizing symbolic content from the table made "adjacent side" overflow
+   its own rect by 3.05px per side in that pack — a regression this refinement introduced, since the flat
+   0.62em it replaced was loose enough to absorb the difference. So the measured table is used only where the
+   face is known, and unknown-face content keeps the conservative flat estimate. Exact where it is provable,
+   safe where it is not; per-face metrics would be the real fix and is not this pass. */
+const FIG_MEAS_ANYFACE=0.62;
+function figTextW(str,fs,known){ const t=String(str);
+  if(known===false) return t.length*fs*FIG_MEAS_ANYFACE;
+  let e=0; for(let i=0;i<t.length;i++) e+=figGlyphW(t[i]); return e*fs; }
 /* Sized from the COMPLETE formatted measurement — value at full size, unit at its own smaller size, plus the
    gap between them — so left and right padding come out equal whatever the content is. */
-function figMeasSize(chip,fs){ const F=fs||11.5, c=(chip&&typeof chip==='object')?chip:{value:chip,unit:null};
-  let w=figTextW(c.value,F);
-  if(c.unit) w+=FIG_MEAS_UDX+figTextW(c.unit,F*FIG_MEAS_UNIT);
+function figMeasSize(chip,fs,known){ const F=fs||11.5, c=(chip&&typeof chip==='object')?chip:{value:chip,unit:null};
+  let w=figTextW(c.value,F,known);
+  if(c.unit) w+=FIG_MEAS_UDX+figTextW(c.unit,F*FIG_MEAS_UNIT,known);   // the unit is always body-face
   return { w:w+2*FIG_MEAS_PADX, h:F*1.15+2*FIG_MEAS_PADY }; }
 // Named points for a geometry block: an optional parameterised `construction` (Stage 1c's FIG_PARAM) plus any
 // authored `points` objects — the same table vocabulary the graph block already uses, so an author moving
@@ -7685,7 +7695,7 @@ function figGeomPlace(anchor,pd,text,obst,box,role,ok,chip){
   const R=FIG_ROLE[role]||FIG_ROLE.measure, fs=R[1];
   // PROTOTYPE: when the annotation is drawn ON a surface, the reserved box IS that surface. The size is taken
   // from the complete formatted measurement (value + unit) BEFORE any search runs — never text first, chrome after.
-  const size=chip?figMeasSize(chip,fs):figPillSize(text,fs), bounds={W:box.W,H:box.H};
+  const size=chip?figMeasSize(chip,fs,role==='smeas'):figPillSize(text,fs), bounds={W:box.W,H:box.H};
   // Search the ALLOWED REGION first. Stage 2c still ranks by displacement inside it — it decides WHERE the
   // label fits best, never whether the position still means the right thing.
   let r=figPlacePill(anchor.x,anchor.y,size,pd,obst,FIG_GAP,bounds,ok), relaxed=false;
