@@ -111,7 +111,14 @@ rail, the canvas fit, or the figure engine.
    angle; the right-angle square is built from the two incident rays, so it is correct at an arbitrary
    orientation (the fixture includes one); a `rightAngle` asserted on an angle that is not 90° is **reported
    and not drawn**; measures are computed (`label:"measure"`, `text:"auto"`), never authored — interior angles
-   of the n-gon must sum to (n−2)·180°. In the **focused** workspace at desktop and portrait, the drawn figure
+   of the n-gon must sum to (n−2)·180° **for a convex polygon**. `figGeomAngle` returns the unsigned smaller
+   sweep, so it cannot report a reflex interior angle: `angles:"all"` detects a reflex vertex against the
+   polygon's winding and **reports it instead of printing 360−θ as though it were the interior angle**. Drawing
+   the reflex sweep is deferred (`BUILD_SEQUENCE.md`), so assert the sum on convex fixtures and assert the
+   *error* on a concave one — do not treat the sum as proven for an arbitrary n-gon.
+   Stacked arcs must stay distinct **when the arm is shorter than the base radius**, not only on generous arms:
+   clamping each index independently collapses the stack onto one radius, which a comfortable fixture never
+   reveals (the baseline carries a sliver triangle for exactly this). In the **focused** workspace at desktop and portrait, the drawn figure
    must fill the stage rather than sit in dead space: measure the SVG's painted bbox against
    `.tp-figx-stage` — Stage 3 records **87–94% in both dimensions** at 1440×900 / 834×1112 / 390×844. The grid
    default is hidden for geometry and must read the same inline and focused.

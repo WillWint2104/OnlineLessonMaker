@@ -275,6 +275,18 @@ YouTube embeds) — `lessons/*.html` only *warns*, by design.
 
 ## 9. Roadmap / next up
 
+- **Figure engine** (`docs/figure-engine/`) — the active track, and the one this roadmap had not been
+  recording. **Stage 1a–1c** (view, uniform-gap pill collision, construction DAG), **Stage 2/2b** (graph
+  front-end, focused workspace), **UI-1** (shared Figure Shell + viewport-level focus), **Stage 2c**
+  (nearest-legal label placement, axis numbering as an obstacle) and **Stage 3 — Geometry 2D front-end** are
+  **DONE**. Geometry renders into the same shell and places labels through the same Stage-2c system; polygons
+  of any *n* go through one renderer. Committed fixtures now exist for every rendered surface —
+  `tests/visual/lessons/figure-{graph,labels,geometry}-baseline.json` plus `composable-page` and
+  `modal-overflow` — with their contracts in `tests/visual/README.md`; `scripts/verify-label-placement.mjs`
+  and `scripts/verify-corpus-identity.mjs` make the placement and no-regression claims reproducible.
+  **Next: Stage 4 — block wiring** (plug the engines into the containers). Deferred within geometry: authored
+  circles/arcs, equal-length ticks and parallel arrows, **reflex-angle drawing** (a reflex interior angle is
+  currently reported, not measured), and side-label units.
 - ~~**Vendor fonts + model‑viewer** (firewall hardening)~~ — **DONE** (fonts base64‑inlined;
   model‑viewer + sample GLB same‑origin under `assets/vendor/`; validator hard‑fails on app
   third‑party hosts). Follow‑up: copy the vendor file into `/lessons/assets/vendor/` for any

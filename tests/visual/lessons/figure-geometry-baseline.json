@@ -30,6 +30,18 @@
             { "type": "angle", "at": "R", "between": ["Q", "P"], "arcs": 3, "label": "θ" }
           ] }
       ] },
+    { "type": "page", "title": "Stacked arcs on a short arm",
+      "blocks": [
+        { "type": "section", "title": "Where the clamp bites",
+          "flow": [{ "kind": "para", "text": "A sliver triangle whose arms are far shorter than the base arc radius, carrying three stacked arcs at the tight vertex. The radius clamp must still resolve to three distinct arcs inside the angle — clamping each independently collapses them onto one radius, which a figure with generous arms never reveals." }] },
+        { "type": "figure", "figure": "geometry", "title": "Three arcs on a very short arm",
+          "caption": "The arm is shorter than the base radius, so the stack has to shrink to fit.",
+          "objects": [
+            { "type": "points", "from": "table", "rows": [["A", 0, 0], ["B", 0.34, 0.05], ["C", 3.6, 0.9]] },
+            { "type": "polygon", "vertices": ["A", "B", "C"] },
+            { "type": "angle", "at": "B", "between": ["A", "C"], "arcs": 3 }
+          ] }
+      ] },
     { "type": "page", "title": "Rotated right angle",
       "blocks": [
         { "type": "section", "title": "Not axis-aligned",
@@ -113,11 +125,13 @@
             { "type": "sideLabel", "between": ["A", "B"] }
           ] },
         { "type": "figure", "figure": "geometry", "title": "Author error state",
-          "caption": "An impossible triangle and a right-angle assertion that is not 90°.",
+          "caption": "Impossible construction givens, an unknown vertex, a right-angle assertion that is not 90°, and a zero-length arm.",
+          "construction": "triangleSSS", "params": { "a": 1, "b": 2, "c": 4 },
           "objects": [
             { "type": "points", "from": "table", "rows": [["A", 0, 0], ["B", 4, 0], ["C", 1.2, 2.6]] },
             { "type": "polygon", "vertices": ["A", "B", "Z"] },
-            { "type": "rightAngle", "at": "A", "between": ["B", "C"] }
+            { "type": "rightAngle", "at": "A", "between": ["B", "C"] },
+            { "type": "angle", "at": "A", "between": ["A", "B"] }
           ] }
       ] }
     ]

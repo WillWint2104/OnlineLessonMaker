@@ -7530,9 +7530,17 @@ function figGeomAngle(V,P,Q){
   const d=figWrapPi(b0-a0);
   return { al:a0, d, phi:a0+d/2, mag:Math.abs(d)*180/Math.PI, armMin:Math.min(figLen(V,P),figLen(V,Q)) };
 }
-// Arc radius fits INSIDE the shorter arm (k≈0.5, §3.1) and steps outward for stacked arcs, so multiple arcs at
-// one vertex never overlap and none escapes its own angle.
-function figGeomArcR(armMin,i){ return Math.min(FIG_ARC_R+i*FIG_ARC_STEP, Math.max(9, armMin*0.5)-i*0); }
+/* Arc radius fits INSIDE the shorter arm (k≈0.5, §3.1). Stacked arcs step INWARD from the clamped outermost
+   radius rather than outward from the base: clamping each index independently collapses them onto the same
+   radius the moment the arm is short enough for the cap to bite, so a double or triple arc painted on top of
+   itself — invisible in a fixture with generous arms, which is exactly why the fixture did not catch it
+   (CodeRabbit). Spacing also shrinks to fit when the room is tight, so n arcs always resolve to n distinct
+   radii, all inside the angle and all > 0. */
+function figGeomArcR(armMin,i,n){
+  const room=Math.max(9, armMin*0.5), k=Math.max(1,n||1);
+  const step=Math.min(FIG_ARC_STEP, room/(k+1));
+  return Math.min(FIG_ARC_R+(k-1)*step, room) - (k-1-i)*step;
+}
 /* The right-angle square, derived from the two INCIDENT RAYS: V, V+u·s, V+u·s+w·s, V+w·s. That is the mark for
    the angle actually present, at whatever orientation it sits — an axis-aligned rectangle would only be correct
    for a figure that happens to be axis-aligned, which is exactly the case a fixture must not be limited to. */
@@ -7575,7 +7583,15 @@ function figGeomSolve(b,V,box,P,errors){
       if(vs.some(v=>!v)) return;
       if(vs.length<3){ errors.push('polygon '+(idx+1)+' needs at least 3 vertices (got '+vs.length+')'); return; }
       shapes.push({kind:'polygon',pts:vs,fill:o.fill===true});
-      if(o.angles==='all') vs.forEach((v,i)=>want.angle.push({V:vs[i],P:vs[(i-1+vs.length)%vs.length],Q:vs[(i+1)%vs.length],arcs:1,label:'measure'}));
+      if(o.angles==='all'){
+        // figGeomAngle returns the UNSIGNED smaller sweep, so at a reflex vertex it is 360−θ — not the interior
+        // angle. Rather than print a number that is not what it claims to be (§4), report it and skip: drawing
+        // the reflex sweep is deferred, and a wrong label is worse than an absent one.
+        let s2=0; for(let k=0;k<vs.length;k++){ const a2=vs[k], b3=vs[(k+1)%vs.length]; s2+=a2.x*b3.y-b3.x*a2.y; }
+        vs.forEach((v,i)=>{ const Pv=vs[(i-1+vs.length)%vs.length], Qv=vs[(i+1)%vs.length];
+          const cr=(v.x-Pv.x)*(Qv.y-v.y)-(v.y-Pv.y)*(Qv.x-v.x);
+          if(cr*s2<0){ errors.push('interior angle at '+v.id+' is reflex — a reflex sweep is not drawn yet, so no measure is shown'); return; }
+          want.angle.push({V:v,P:Pv,Q:Qv,arcs:1,label:'measure'}); }); }
     } else if(o.type==='segment'){
       const bt=Array.isArray(o.between)?o.between:[o.from,o.to], A=named(bt[0],'segment '+(idx+1)), B=named(bt[1],'segment '+(idx+1));
       if(A&&B) shapes.push({kind:'segment',a:A,b:B});
@@ -7587,8 +7603,11 @@ function figGeomSolve(b,V,box,P,errors){
       const bt=Array.isArray(o.between)?o.between:[o.from,o.to];
       const Vv=named(o.at,'rightAngle '+(idx+1)), A=named(bt[0],'rightAngle '+(idx+1)), B=named(bt[1],'rightAngle '+(idx+1));
       if(Vv&&A&&B){ const an=figGeomAngle(Vv,A,B);
-        if(an&&Math.abs(an.mag-90)>FIG_RIGHT_TOL) errors.push('rightAngle at '+o.at+' is '+figNum(an.mag)+'° — the mark asserts 90°, so it is not drawn');
-        else if(an) rights.push({V:Vv,P:A,Q:B,an}); }
+        // A degenerate arm used to fall through both branches — no mark and no message. Silence is the one
+        // outcome the engine never allows: an author gets a fabricated figure or an explanation, never neither.
+        if(!an) errors.push('rightAngle at '+o.at+' — an arm has zero length, so there is no angle to mark');
+        else if(Math.abs(an.mag-90)>FIG_RIGHT_TOL) errors.push('rightAngle at '+o.at+' is '+figNum(an.mag)+'° — the mark asserts 90°, so it is not drawn');
+        else rights.push({V:Vv,P:A,Q:B,an}); }
     } else if(o.type==='sideLabel'){
       const bt=Array.isArray(o.between)?o.between:[o.from,o.to], A=named(bt[0],'sideLabel '+(idx+1)), B=named(bt[1],'sideLabel '+(idx+1));
       if(A&&B){ const ma=P.byName[String(bt[0])], mb=P.byName[String(bt[1])];
@@ -7612,8 +7631,9 @@ function figGeomSolve(b,V,box,P,errors){
   const vpts=[]; shapes.forEach(sh=>{ if(sh.kind==='polygon') sh.pts.forEach(p=>vpts.push([p.x,p.y,3])); else if(sh.kind==='segment'){ vpts.push([sh.a.x,sh.a.y,3]); vpts.push([sh.b.x,sh.b.y,3]); } });
   // Arcs are geometry a label must clear too, so they enter the obstacle set as chords along the arc.
   const arcArms=[];
-  want.angle.forEach(a=>{ const an=figGeomAngle(a.V,a.P,a.Q); if(!an) return;
-    for(let i=0;i<a.arcs;i++){ const r=figGeomArcR(an.armMin,i); arcs.push({V:a.V,r,al:an.al,d:an.d});
+  want.angle.forEach(a=>{ const an=figGeomAngle(a.V,a.P,a.Q);
+    if(!an){ errors.push('angle at '+(a.V.id||'?')+' — an arm has zero length, so there is no angle to draw'); return; }
+    for(let i=0;i<a.arcs;i++){ const r=figGeomArcR(an.armMin,i,a.arcs); arcs.push({V:a.V,r,al:an.al,d:an.d});
       for(let k=0;k<6;k++){ const t0=an.al+an.d*k/6, t1=an.al+an.d*(k+1)/6;
         arcArms.push([a.V.x+r*Math.cos(t0),a.V.y+r*Math.sin(t0),a.V.x+r*Math.cos(t1),a.V.y+r*Math.sin(t1)]); } }
     a.an=an; });
@@ -7633,7 +7653,7 @@ function figGeomSolve(b,V,box,P,errors){
   want.angle.forEach(a=>{ if(!a.an||a.label===false||a.label==null) return;
     // §4: 'measure' DISPLAYS the computed angle. Anything else is a name (θ, x), never an authored value.
     const txt=(a.label==='measure')?(figNum(Math.round(a.an.mag*10)/10)+'°'):String(a.label);
-    const r=figGeomArcR(a.an.armMin,a.arcs-1), anc={x:a.V.x+Math.cos(a.an.phi)*r*FIG_ARC_ECC, y:a.V.y+Math.sin(a.an.phi)*r*FIG_ARC_ECC};
+    const r=figGeomArcR(a.an.armMin,a.arcs-1,a.arcs), anc={x:a.V.x+Math.cos(a.an.phi)*r*FIG_ARC_ECC, y:a.V.y+Math.sin(a.an.phi)*r*FIG_ARC_ECC};
     push(figGeomPlace(anc,[Math.cos(a.an.phi),Math.sin(a.an.phi)],txt,{arms:base.arms,pts:base.pts,boxes:placed.slice()},box,'tp-fig-glab')); });
   return { shapes, arcs, rights, labels, arms:base.arms, vpts };
 }

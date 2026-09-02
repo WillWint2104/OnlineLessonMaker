@@ -22,11 +22,24 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   holds:** `label:"measure"` and `text:"auto"` display what the engine computed; any other string is understood
   as a *name*, so a figure can never assert a length or angle its own coordinates contradict — and a
   `rightAngle` asserted on an angle that is not 90° is **reported and not drawn** rather than fabricated.
-  Fixture: `tests/visual/lessons/figure-geometry-baseline.json`, 10 figures across 7 pages (see
-  `tests/visual/README.md` contract 8). **Checked:** all 10 solve with every label ≥ `FIG_GAP` clear of every
+  Fixture: `tests/visual/lessons/figure-geometry-baseline.json`, **11 figures across 8 pages** (see
+  `tests/visual/README.md` contract 8). Three review findings hardened it further (CodeRabbit): **stacked arcs
+  collapsed onto one radius whenever the arm was shorter than the base radius** — each index was clamped
+  independently, so a double or triple arc painted on top of itself, invisible in a fixture with generous arms;
+  they now step *inward* from the clamped ceiling with the spacing shrinking to fit, and the baseline carries a
+  sliver triangle that exercises it. A **degenerate arm** (zero-length ray) on an `angle` or `rightAngle` was
+  dropped with no mark *and no message* — silence is the one outcome the engine never allows, so both now
+  report. And a **reflex interior angle** under `angles:"all"` would have printed 360−θ as though it were the
+  interior angle, because `figGeomAngle` returns the unsigned smaller sweep; it is now detected against the
+  polygon's winding and **reported instead of measured**, since drawing the reflex sweep is deferred — a wrong
+  label is worse than an absent one. **Checked:** all 11 solve with every label ≥ `FIG_GAP` clear of every
   edge, arc, mark, vertex and other label (worst 6.0 against a gap of 6), none off-canvas, none falling through
-  to the exhaustive fallback, 0 console errors; the heptagon and pentagon interior angles sum to (n−2)·180°;
-  legacy corpus **250/250 byte-identical** via the committed `verify-corpus-identity.mjs`.
+  to the exhaustive fallback, 0 console errors; stacked-arc radii distinct, inside the arm and ordered across
+  **18/18** arm×count combinations (three of which collapsed before the fix); the quadrilateral, pentagon and
+  SSS triangle interior angles sum to (n−2)·180°; the error fixture reports **four** distinct faults, including
+  impossible construction givens and the zero-length arm; every figure byte-identical across three solves;
+  legacy corpus **250/250 byte-identical** via the committed `verify-corpus-identity.mjs`; graph placement
+  **785/785**; six frozen functions byte-identical.
 
 - **`scripts/verify-corpus-identity.mjs` — the recurring "250/250 byte-identical" claim becomes a committed,
   reproducible check.** #146, #147 and #149 each asserted that no committed lesson changed, and each proved it
