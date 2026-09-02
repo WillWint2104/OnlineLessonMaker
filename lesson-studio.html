@@ -2312,11 +2312,14 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    geolearn's `:root[data-theme="geolearn"] .tp-slide{height:100%}`. */
 .tp-slide[data-tp-type="page"][data-tp-theme]{position:relative;inset:auto;height:auto;min-height:720px;overflow:visible;width:100%;}   /* width:100% — #slide is align-items:center, so without it a flat page shrinks to content width (reading column collapsed to ~half at laptop widths); legacy slides fill via inset:0 */
 .tp-slide[data-tp-type="page"] .tp-main{overflow:visible;}
-/* F2 — modal/zoom/tooltip overlays on a flat page: the absolute inset:0 dim now spans the whole document
-   (its positioned ancestor is the full-height page), so pin the PANEL to the visible pane (sticky against
-   #stage) instead of centring it mid-document; cap its height to the board so it never outgrows the pane. */
-.tp-slide[data-tp-type="page"] .tp-overlay{align-items:flex-start;}
-.tp-slide[data-tp-type="page"] .tp-fpanel{position:sticky;top:28px;max-height:600px;}
+/* F2 — modal/zoom/tooltip overlays on a flat page: the absolute dim spans the whole document (its positioned
+   ancestor is the full-height page), so an overlay centred in it lands off-screen. `position:sticky` could NOT
+   fix that — the canvas is transform:scale()'d (fitCanvas width-fill), which breaks sticky, the same finding
+   already recorded for the practice-set mastery bar; the panel stayed cut off at every scroll position. The
+   overlay is now PARKED to the visible pane by tpOverlayPark() at open (inline top/height in slide-local px),
+   so centring resolves against the pane and .tp-fpanel's max-height:88% + overflow-y:auto give the panel an
+   internal scroll instead of overflowing the board. */
+.tp-slide[data-tp-type="page"] .tp-overlay{align-items:center;}
 /* F1 — blocks animate in as they enter the pane (flat pages only, never while editing). JS adds
    tp-animwait only once an IntersectionObserver is live, so content defaults to visible (no-JS/reduced-
    motion safe); the entrance ends at transform:none so overlays anchored inside a frag are never trapped. */
@@ -2563,9 +2566,10 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-expand{position:absolute;top:8px;right:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;padding:0;font:inherit;font-size:15px;line-height:1;border-radius:8px;border:1px solid var(--outline-variant);background:var(--graph-surface,var(--surface-lowest));color:var(--on-surface-variant);cursor:pointer;}
 .tp-slide .tp-fig-expand:hover{border-color:var(--primary);color:var(--primary);}
 .tp-slide .tp-fig-expand:focus-visible{outline:3px solid var(--focus-ring);outline-offset:2px;}
-.tp-slide .tp-fpanel-figx{max-width:1040px;padding:18px 20px 20px;}
-.tp-slide .tp-figx-title{font-family:var(--tp-body);font-weight:700;font-size:15px;color:var(--on-surface);padding-right:48px;}
-.tp-slide .tp-figx-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 12px;font-family:var(--tp-body);font-size:12.5px;color:var(--on-surface-variant);}
+.tp-slide .tp-overlay.tp-figx{padding:8px;}   /* the focused window is the workspace — it spends the pane on the plot, not on scrim margin */
+.tp-slide .tp-fpanel.tp-fpanel-figx{max-width:none;max-height:100%;padding:10px 14px 8px;display:flex;flex-direction:column;overflow:hidden;}   /* ENGINE INVARIANT (§6): the focused window must give the plot MORE area than the inline figure — so it takes the full parked pane, and the stage below flexes into whatever the toolbar/readout leave */
+.tp-slide .tp-fpanel-figx .tp-figx-title{flex:0 0 auto;font-family:var(--tp-body);font-weight:700;font-size:15px;color:var(--on-surface);padding-right:48px;}
+.tp-slide .tp-figx-bar{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:8px 0 8px;font-family:var(--tp-body);font-size:12.5px;color:var(--on-surface-variant);}
 .tp-slide .tp-figx-bar button{font:inherit;min-width:30px;height:28px;padding:0 9px;border-radius:7px;border:1px solid var(--outline-variant);background:var(--surface);color:var(--on-surface);cursor:pointer;}
 .tp-slide .tp-figx-bar button:hover{border-color:var(--primary);color:var(--primary);}
 .tp-slide .tp-figx-bar button:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}
@@ -2573,9 +2577,11 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-figx-bar label{display:inline-flex;align-items:center;gap:5px;}
 .tp-slide .tp-figx-step{font-variant-numeric:tabular-nums;color:var(--on-surface);}
 .tp-slide .tp-figx-sep{flex:1 1 auto;}
-.tp-slide .tp-figx-stage svg{cursor:crosshair;}
-.tp-slide .tp-figx-read{margin:8px 0 0;font-family:var(--tp-body);font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;color:var(--on-surface);}
-.tp-slide .tp-figx-msg{margin:4px 0 0;min-height:1.1em;font-family:var(--tp-body);font-size:12.5px;color:var(--error,var(--on-surface-variant));}
+.tp-slide .tp-fpanel-figx .tp-figx-stage{flex:1 1 auto;min-height:200px;display:flex;align-items:center;justify-content:center;}
+.tp-slide .tp-figx-stage svg{cursor:crosshair;width:100%;height:100%;}
+.tp-slide .tp-figx-foot{flex:0 0 auto;display:flex;align-items:baseline;gap:14px;margin:6px 0 0;}
+.tp-slide .tp-figx-read{flex:0 0 auto;margin:0;font-family:var(--tp-body);font-variant-numeric:tabular-nums;font-size:13px;font-weight:600;color:var(--on-surface);}
+.tp-slide .tp-figx-msg{flex:1 1 auto;margin:0;min-height:1.1em;font-family:var(--tp-body);font-size:12.5px;color:var(--error,var(--on-surface-variant));}
 .tp-slide .tp-fig-cap{margin-top:6px;font-family:var(--tp-body);font-size:13px;color:var(--on-surface-variant);text-align:center;}
 .tp-slide .tp-gq2-student{stroke:var(--student-ink,var(--primary));stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
 .tp-slide .tp-gq2-answer{stroke:var(--ok,#1f7a54);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;}
@@ -2718,7 +2724,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-qcard2{border-left:4px solid var(--primary);border-radius:12px;padding:18px 20px;margin-bottom:14px;background:var(--surface-container-low);}
 .tp-slide .tp-scaffh{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);margin:4px 0 14px;}
 /* focus overlay (in-slide) */
-.tp-slide .tp-overlay{position:absolute;inset:0;z-index:60;background:rgba(30,26,32,.55);display:flex;align-items:center;justify-content:center;padding:26px;}
+.tp-slide .tp-overlay{position:absolute;left:0;right:0;top:0;height:100%;z-index:60;background:rgba(30,26,32,.55);display:flex;align-items:center;justify-content:center;padding:26px;}   /* top/height are overwritten by tpOverlayPark() on open — see the F2 note above */
 .tp-slide .tp-overlay[hidden]{display:none;}
 .tp-slide .tp-fpanel{background:var(--surface-lowest);max-width:760px;width:100%;max-height:88%;overflow-y:auto;padding:32px 34px;position:relative;border-radius:20px;}
 .tp-slide .tp-fclose{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:9999px;background:var(--surface-container);border:none;color:var(--on-surface);display:flex;align-items:center;justify-content:center;cursor:pointer;}
@@ -6432,7 +6438,7 @@ function fragWorkedExample(b,bk){
   const steps=Array.isArray(b.steps)?b.steps:[];
   const rows=steps.map(s=>{ const t=typeof s==='string'?s:((s&&(s.t||s.text))||''); const note=(s&&s.note)||'';
     return `<p class="tp-wx-step">${tpRichMath(t)}</p>${note?`<span class="tp-wx-note">${tpRichMath(note)}</span>`:''}`; }).join('');
-  const inner=`${b.eyebrow?`<span class="tp-wx-ey">${esc(b.eyebrow)}</span>`:''}${b.title?`<h2 class="tp-wx-h">${esc(b.title)}</h2>`:''}${rows}`;
+  const inner=`${b.eyebrow?`<span class="tp-wx-ey">${esc(b.eyebrow)}</span>`:''}${b.title?`<h2 class="tp-wx-h">${tpRichMath(b.title)}</h2>`:''}${rows}`;   // the title is authored prose like every other rich field — esc() alone leaked raw $…$ delimiters into the heading
   if(b.reveal){ const fid='wx-'+bk;
     return `<section class="tp-wx" data-tp-block><button class="tp-int-revbtn" type="button" data-tp-reveal="${esc(fid)}" aria-expanded="false" aria-controls="${esc(fid)}-model" data-tp-donelabel="${esc(b.revealDone||'Shown')}">${esc(b.revealLabel||'Show the worked example')}</button><div class="tp-wx-body" id="${esc(fid)}-model" data-tp-model>${inner}</div></section>`;
   }
@@ -7425,8 +7431,10 @@ function figxPanel(xid){
       +btn('reset','Reset view','Reset')
     +`</div>`
     +`<div class="tp-figx-stage"><svg class="tp-fig-svg" data-figx-svg viewBox="0 0 ${B.W} ${B.H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${t}"></svg></div>`
-    +`<p class="tp-figx-read" data-figx-read>Hover the plot to read coordinates</p>`   /* NOT aria-live: it is rewritten on every pointer sample, which would queue an announcement per mouse move */
-    +`<p class="tp-figx-msg" data-figx-msg role="status"></p>`
+    +`<div class="tp-figx-foot">`
+      +`<p class="tp-figx-read" data-figx-read>Hover the plot to read coordinates</p>`   /* NOT aria-live: it is rewritten on every pointer sample, which would queue an announcement per mouse move */
+      +`<p class="tp-figx-msg" data-figx-msg role="status"></p>`
+    +`</div>`
   +`</div></div>`;
 }
 /* The painted BODY of a graph — shared by the inline figure and the Stage-2b expanded view so both paint
@@ -7947,6 +7955,24 @@ function wirePackTyped(){
   // a bare data-tp-focus-open (no value) falls back to the slide's single [data-tp-overlay] (back-compat
   // for the image-zoom / source-stimulus overlays). [data-tp-focus-close], scrim-click and Esc all close
   // the containing overlay; span[role=button] opens on Enter/Space too.
+  // Park the overlay over the visible pane: #stage's visible band, converted to slide-local (pre-scale) px,
+  // becomes the overlay's top/height, so centring and .tp-fpanel's max-height resolve against the PANE.
+  // (An overlay positioned against the full-height slide lands off-screen; sticky can't fix it under the
+  // scaled canvas — see CHANGELOG.) Scoped to .tp-overlay: in-plot callouts and .gl-overlay are untouched.
+  const parkOv=(ov)=>{
+    if(!ov.classList.contains('tp-overlay')||ov.hidden) return;            // [hidden] is display:none — nothing to measure
+    const stage=document.getElementById('stage'), cv=document.getElementById('canvas');
+    if(!stage||!cv) return;
+    const sr=stage.getBoundingClientRect(); if(!(sr.height>0)) return;
+    const cr=cv.getBoundingClientRect(), ch=cv.offsetHeight;
+    const scale=(ch>0)?(cr.height/ch):1;                                   // the canvas transform:scale() factor — one authority for both axes
+    if(!(scale>0)||!isFinite(scale)) return;
+    ov.style.height=(sr.height/scale)+'px';
+    // Move by the measured DELTA: an ancestor with a transform (the F1 entrance animation) becomes the
+    // containing block, so the offset the overlay actually paints at is the only reliable reference.
+    const cur=parseFloat(getComputedStyle(ov).top)||0, r=ov.getBoundingClientRect();
+    ov.style.top=(cur+(sr.top-r.top)/scale)+'px';
+  };
   const overlays=[...root.querySelectorAll('[data-tp-overlay]')];
   const singleOverlay=overlays.length===1?overlays[0]:null;
   const unclaimed=overlays.filter(o=>!o.id);                              // id-paired overlays are claimed by their own opener
@@ -7956,9 +7982,33 @@ function wirePackTyped(){
     const escFor=new Map(), openerFor=new Map();
     // Phase 2c-i: track the opener per overlay so focus returns to it on EVERY close path (Esc, close-button,
     // backdrop) — APG dialog contract. Previously only Esc returned focus; button/backdrop dropped it to <body>.
-    const closeOv=(ov)=>{ ov.hidden=true; const h=escFor.get(ov); if(h){ document.removeEventListener('keydown',h); escFor.delete(ov); } const op=openerFor.get(ov); openerFor.delete(ov); if(op) op.focus(); };
-    const openOv=(ov,opener)=>{ ov.hidden=false; openerFor.set(ov,opener); const c=ov.querySelector('[data-tp-focus-close]'); if(c) c.focus();
-      const h=(e)=>{ if(e.key==='Escape') closeOv(ov); }; escFor.set(ov,h); document.addEventListener('keydown',h); };
+    const closeOv=(ov)=>{ ov.hidden=true; const h=escFor.get(ov); if(h){ document.removeEventListener('keydown',h); escFor.delete(ov); }
+      const rp=parkFor.get(ov); if(rp){ const st=document.getElementById('stage'); if(st) st.removeEventListener('scroll',rp); window.removeEventListener('resize',rp);
+        const sl=ov.closest('.tp-slide'); if(sl) sl.removeEventListener('transitionend',rp); parkFor.delete(ov); }
+      const op=openerFor.get(ov); openerFor.delete(ov); if(op) op.focus(); };
+    const parkFor=new Map();
+    // A block that has not yet scrolled into the pane still carries the F1 entrance transform
+    // (.tp-frag.tp-animwait{transform:translateY(14px)}), and a transformed ancestor becomes the containing
+    // block for its absolutely-positioned descendants — so the overlay's top:0 meant the top of THAT BLOCK
+    // (~1500px down the page), not the slide. Opening a block's modal means the block has arrived: land its
+    // entrance immediately, with the transition suppressed for one frame so the computed transform is `none`
+    // before we measure. Without the flush the transform is still a live matrix mid-transition and the panel
+    // jumps the block's offset when it finally settles.
+    const settleFrag=(ov)=>{ const fr=ov.closest('.tp-frag'); if(!fr) return;
+      // Not just .tp-animwait: a block part-way through its 0.55s entrance carries a LIVE transform matrix
+      // (e.g. matrix(1,0,0,1,0,0.27)) while already tagged .tp-animin, and any non-`none` transform makes the
+      // block the containing block. Settle whenever a transform is actually present.
+      if(!fr.classList.contains('tp-animwait') && getComputedStyle(fr).transform==='none') return;
+      const t=fr.style.transition; fr.style.transition='none';
+      fr.classList.remove('tp-animwait'); fr.classList.add('tp-animin');
+      void fr.offsetHeight;                                                // flush, so the computed transform is `none` BEFORE we measure
+      fr.style.transition=t; };
+    const openOv=(ov,opener)=>{ ov.hidden=false; settleFrag(ov); parkOv(ov); openerFor.set(ov,opener); const c=ov.querySelector('[data-tp-focus-close]'); if(c) c.focus();
+      const h=(e)=>{ if(e.key==='Escape') closeOv(ov); }; escFor.set(ov,h); document.addEventListener('keydown',h);
+      const rp=()=>parkOv(ov); parkFor.set(ov,rp);                         // the board can still scroll/resize under an open panel — keep it over the pane
+      const st=document.getElementById('stage'); if(st) st.addEventListener('scroll',rp,{passive:true});
+      window.addEventListener('resize',rp);
+      const sl=ov.closest('.tp-slide'); if(sl) sl.addEventListener('transitionend',rp); };   // safety net: any late transform settling re-parks
     openBtns.forEach(btn=>{
       const id=btn.getAttribute('data-tp-focus-open');
       const ov=id?(root.querySelector('#'+id)||document.getElementById(id)):bareTarget;

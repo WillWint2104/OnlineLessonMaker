@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "title": "Overflow probe",
+    "theme": "scholarmath"
+  },
+  "slides": [
+    {
+      "type": "page",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "Spacer",
+          "flow": [
+            {
+              "kind": "para",
+              "text": "Padding paragraph 1 to push the block down the page so the modal opens from a scrolled position."
+            },
+            {
+              "kind": "para",
+              "text": "Padding paragraph 2 to push the block down the page so the modal opens from a scrolled position."
+            },
+            {
+              "kind": "para",
+              "text": "Padding paragraph 3 to push the block down the page so the modal opens from a scrolled position."
+            },
+            {
+              "kind": "para",
+              "text": "Padding paragraph 4 to push the block down the page so the modal opens from a scrolled position."
+            },
+            {
+              "kind": "para",
+              "text": "Padding paragraph 5 to push the block down the page so the modal opens from a scrolled position."
+            },
+            {
+              "kind": "para",
+              "text": "Padding paragraph 6 to push the block down the page so the modal opens from a scrolled position."
+            }
+          ]
+        },
+        {
+          "type": "selfCheck",
+          "eyebrow": "Self-check",
+          "prompt": "Expand and simplify $5(2x-3)+2(x+7)$.",
+          "hint": "Expand each bracket first.",
+          "steps": [
+            {
+              "desc": "Start with the first bracket. The 5 outside multiplies every term inside it, so take those terms one at a time.",
+              "work": "$5(2x-3) \\rightarrow 5\\times 2x,\\ 5\\times(-3)$"
+            },
+            {
+              "desc": "Multiply the 5 by the first term inside the first bracket.",
+              "work": "$5\\times 2x = 10x$"
+            },
+            {
+              "desc": "Multiply the 5 by the second term, keeping the minus sign that belongs to the 3.",
+              "work": "$5\\times(-3) = -15$"
+            },
+            {
+              "desc": "So the first bracket expands to the sum of those two products.",
+              "work": "$5(2x-3) = 10x-15$"
+            },
+            {
+              "desc": "Now the second bracket. The 2 outside multiplies both terms inside it in exactly the same way.",
+              "work": "$2(x+7) \\rightarrow 2\\times x,\\ 2\\times 7$"
+            },
+            {
+              "desc": "Multiply the 2 by the first term inside the second bracket.",
+              "work": "$2\\times x = 2x$"
+            },
+            {
+              "desc": "Multiply the 2 by the second term inside the second bracket.",
+              "work": "$2\\times 7 = 14$"
+            },
+            {
+              "desc": "Write both expanded brackets out in full, keeping every sign as it stands.",
+              "work": "$= 10x-15+2x+14$"
+            },
+            {
+              "desc": "Collect the like terms: the $x$ terms together, then the constants together.",
+              "work": "$10x+2x = 12x,\\quad -15+14 = -1$"
+            }
+          ],
+          "answer": "$12x-1$"
+        }
+      ]
+    }
+  ]
+}

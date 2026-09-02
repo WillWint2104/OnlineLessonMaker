@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "title": "Expanding a single bracket",
+    "theme": "scholarmath",
+    "year": "Year 9",
+    "subject": "Mathematics",
+    "unit": "Algebra · Brackets"
+  },
+  "slides": [
+    {
+      "type": "page",
+      "title": "Expanding a single bracket",
+      "blocks": [
+        {
+          "type": "skillHeader",
+          "breadcrumb": "Algebra · Brackets",
+          "title": "Expanding a single bracket",
+          "subtitle": "Multiply every term inside the bracket by the term outside.",
+          "index": "3",
+          "total": "9",
+          "progress": "30"
+        },
+        {
+          "type": "section",
+          "title": "The distributive law",
+          "flow": [
+            {
+              "kind": "para",
+              "text": "A bracket is a shorthand for repeated addition. When a term sits outside a bracket, it multiplies **every** term inside — not just the first one. This is the distributive law, and it is the single rule behind every expansion you will meet this year."
+            },
+            {
+              "kind": "equation",
+              "math": "a(b+c)=ab+ac",
+              "ref": "1"
+            },
+            {
+              "kind": "para",
+              "text": "Read it left to right to expand; read it right to left to factorise. The sign in front of a term travels with it, so $-2(3x-5)$ becomes $-6x+10$, not $-6x-10$."
+            },
+            {
+              "kind": "subheading",
+              "text": "Where students go wrong"
+            },
+            {
+              "kind": "para",
+              "text": "The two most common errors are multiplying only the first term, and losing the sign on the second term. Both are caught by substituting a value such as $x=1$ back into the original and the expanded form."
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "figure": "graph",
+          "title": "y = 3(x+4), which is the same line as y = 3x+12",
+          "caption": "Expanding 3(x+4) to 3x+12 does not move the line — a graph is a check on your algebra.",
+          "domain": {
+            "xMin": -6,
+            "xMax": 4,
+            "yMin": -4,
+            "yMax": 16
+          },
+          "grid": "shown",
+          "aspect": "stretch",
+          "objects": [
+            {
+              "type": "function",
+              "f": "3*(x+4)",
+              "label": "y = 3(x+4)"
+            },
+            {
+              "type": "points",
+              "from": "table",
+              "rows": [
+                [
+                  "A",
+                  -4,
+                  0
+                ],
+                [
+                  "B",
+                  0,
+                  12
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "type": "workedExample",
+          "eyebrow": "Worked example",
+          "title": "Expand $-2(3x-5)$",
+          "steps": [
+            {
+              "t": "$-2 \\times 3x = -6x$",
+              "note": "Multiply the outside term by the FIRST term inside."
+            },
+            {
+              "t": "$-2 \\times (-5) = +10$",
+              "note": "Negative times negative is positive — this is the sign students lose."
+            },
+            {
+              "t": "$-2(3x-5) = -6x+10$",
+              "note": "Write the two products as a sum."
+            }
+          ]
+        },
+        {
+          "type": "selfCheck",
+          "eyebrow": "Self-check",
+          "prompt": "Expand $5(2x-3)$.",
+          "hint": "Multiply BOTH terms inside by 5, and keep the minus with the 3.",
+          "steps": [
+            {
+              "desc": "Multiply the first term inside by 5.",
+              "work": "$5 \\times 2x = 10x$"
+            },
+            {
+              "desc": "Multiply the second term inside by 5, keeping its sign.",
+              "work": "$5 \\times (-3) = -15$"
+            },
+            {
+              "desc": "Write the result as a sum.",
+              "work": "$= 10x-15$"
+            }
+          ],
+          "answer": "$10x-15$"
+        },
+        {
+          "type": "practiceSet",
+          "eyebrow": "Practice",
+          "title": "Practice set",
+          "subtitle": "Reveal each solution and mark yourself honestly.",
+          "reco": "Recommended: get every question clean before moving on.",
+          "gate": false,
+          "batch": 3,
+          "items": [
+            {
+              "type": "selfCheck",
+              "prompt": "Expand $3(x+4)$.",
+              "steps": [
+                {
+                  "desc": "Multiply each term inside by 3.",
+                  "work": "$= 3x+12$"
+                }
+              ],
+              "answer": "$3x+12$"
+            },
+            {
+              "type": "selfCheck",
+              "prompt": "Expand $-2(3x-5)$.",
+              "steps": [
+                {
+                  "desc": "Multiply BOTH terms by $-2$; mind the signs.",
+                  "work": "$= -6x+10$"
+                }
+              ],
+              "answer": "$-6x+10$"
+            },
+            {
+              "type": "selfCheck",
+              "prompt": "Expand $x(x-7)$.",
+              "steps": [
+                {
+                  "desc": "Multiply each term inside by $x$.",
+                  "work": "$= x^2-7x$"
+                }
+              ],
+              "answer": "$x^2-7x$"
+            },
+            {
+              "type": "selfCheck",
+              "prompt": "Expand $-(4x-9)$.",
+              "steps": [
+                {
+                  "desc": "A bare minus sign is $-1$ outside the bracket.",
+                  "work": "$= -4x+9$"
+                }
+              ],
+              "answer": "$-4x+9$"
+            },
+            {
+              "type": "selfCheck",
+              "prompt": "Expand $2a(3a+5b)$.",
+              "steps": [
+                {
+                  "desc": "Multiply each term inside by $2a$.",
+                  "work": "$= 6a^2+10ab$"
+                }
+              ],
+              "answer": "$6a^2+10ab$"
+            }
+          ]
+        },
+        {
+          "type": "mastery",
+          "text": "Two clean runs in a row and this skill is mastered."
+        }
+      ]
+    }
+  ]
+}

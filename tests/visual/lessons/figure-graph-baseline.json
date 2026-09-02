@@ -1,0 +1,289 @@
+{
+  "meta": {
+    "title": "Figure engine — graph states",
+    "theme": "mathematics",
+    "year": "Year 11",
+    "subject": "Mathematics",
+    "unit": "Functions & graphs"
+  },
+  "slides": [
+    {
+      "type": "page",
+      "title": "Clean graph",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "A simple parabola",
+          "flow": [
+            {
+              "kind": "para",
+              "text": "The graph below shows $y=x^2$ with two plotted points. Tap a point to reveal its coordinates, or use ⤢ to open the focused window."
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "figure": "graph",
+          "title": "y = x squared",
+          "caption": "$y=x^2$ with the vertex and one plotted ordinate.",
+          "domain": {
+            "xMin": -3,
+            "xMax": 3,
+            "yMin": -1,
+            "yMax": 9
+          },
+          "grid": "shown",
+          "aspect": "stretch",
+          "objects": [
+            {
+              "type": "function",
+              "f": "x^2"
+            },
+            {
+              "type": "points",
+              "from": "table",
+              "rows": [
+                [
+                  "V",
+                  0,
+                  0
+                ],
+                [
+                  "P",
+                  2,
+                  4
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Crowded graph",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "A crowded plane",
+          "flow": [
+            {
+              "kind": "para",
+              "text": "Twelve identifiers, two curves and three segments on one plane — the label-placement stress case."
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "figure": "graph",
+          "title": "Crowded plane — twelve identifiers, two curves, three chords",
+          "caption": "Stress case for the Stage-1b uniform-gap pill placement.",
+          "domain": {
+            "xMin": -6,
+            "xMax": 6,
+            "yMin": -5,
+            "yMax": 7
+          },
+          "grid": "shown",
+          "aspect": "stretch",
+          "objects": [
+            {
+              "type": "function",
+              "f": "0.4*x^2-3"
+            },
+            {
+              "type": "function",
+              "f": "sin(x)*2"
+            },
+            {
+              "type": "points",
+              "from": "table",
+              "rows": [
+                [
+                  "A",
+                  -5.2,
+                  4.6
+                ],
+                [
+                  "B",
+                  -4,
+                  -1.2
+                ],
+                [
+                  "C",
+                  -2.5,
+                  3.1
+                ],
+                [
+                  "D",
+                  -1.4,
+                  -3.4
+                ],
+                [
+                  "E",
+                  0,
+                  6.2
+                ],
+                [
+                  "F",
+                  0.8,
+                  -2.1
+                ],
+                [
+                  "G",
+                  1.9,
+                  4.9
+                ],
+                [
+                  "H",
+                  2.6,
+                  -4.3
+                ],
+                [
+                  "I",
+                  3.4,
+                  1.7
+                ],
+                [
+                  "J",
+                  4.1,
+                  5.5
+                ],
+                [
+                  "K",
+                  5,
+                  -0.6
+                ],
+                [
+                  "L",
+                  5.7,
+                  3.3
+                ]
+              ]
+            },
+            {
+              "type": "segment",
+              "between": [
+                "A",
+                "E"
+              ]
+            },
+            {
+              "type": "segment",
+              "between": [
+                "D",
+                "H"
+              ]
+            },
+            {
+              "type": "segment",
+              "between": [
+                "G",
+                "L"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Discontinuity + long labels",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "A break in the curve",
+          "flow": [
+            {
+              "kind": "para",
+              "text": "$y=1/x$ must break at $x=0$ rather than joining the two branches."
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "figure": "graph",
+          "title": "y = 1/x with an asymptote at x = 0",
+          "caption": "Adaptive sampling must break, not bridge, at the discontinuity.",
+          "domain": {
+            "xMin": -4,
+            "xMax": 4,
+            "yMin": -4,
+            "yMax": 4
+          },
+          "grid": "shown",
+          "aspect": "equal",
+          "objects": [
+            {
+              "type": "function",
+              "f": "1/x"
+            },
+            {
+              "type": "points",
+              "from": "table",
+              "rows": [
+                [
+                  "Pmin",
+                  -1,
+                  -1
+                ],
+                [
+                  "Qmax",
+                  1,
+                  1
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Figure with an error",
+      "blocks": [
+        {
+          "type": "figure",
+          "figure": "graph",
+          "title": "Author error state",
+          "domain": {
+            "xMin": -3,
+            "xMax": 3,
+            "yMin": -3,
+            "yMax": 3
+          },
+          "grid": "shown",
+          "objects": [
+            {
+              "type": "function",
+              "f": "x^"
+            },
+            {
+              "type": "points",
+              "from": "table",
+              "rows": [
+                [
+                  "A",
+                  1,
+                  ""
+                ],
+                [
+                  "B",
+                  9,
+                  9
+                ]
+              ]
+            },
+            {
+              "type": "segment",
+              "between": [
+                "A",
+                "Z"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
