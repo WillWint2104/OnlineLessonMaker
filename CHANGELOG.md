@@ -82,11 +82,15 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ### Fixed
 - **ENGINE_SPEC described the no-legal-candidate fallback as "max clearance".** It is not: the fallback
-  scores `clearance − 3 × overrun past the canvas edge`, so a box with less clearance that stays on the
-  canvas beats a clearer one hanging off it — deliberate, since a label painted outside the viewBox is not
-  visible at all. `figPlacePill`'s own header has said so since #149; §3.2 step 3 had not caught up, and
-  §1.4's "clearance is never traded away" (true of the LEGAL candidates it ranks) read as covering the
-  exhausted case too. Documentation only — no behaviour change.
+  scores `clear − 3 × off` — true geometric clearance against how far the box pushes past the 2px canvas
+  inset — so a box with less clearance that stays on the canvas beats a clearer one hanging off it,
+  deliberate since a label painted outside the viewBox is not visible at all. `figPlacePill`'s own header
+  has said so since #149; §3.2 step 3 had not caught up, and §1.4's "clearance is never traded away" (true
+  of the LEGAL candidates it ranks) read as covering the exhausted case too. The rewrite also fixes a
+  sequencing error it introduced: the penalised box is reached only after the exhaustive on-canvas scan
+  finds nothing (`figLayoutPills`), not straight after the directional search, and selection by strict
+  improvement keeps the fallback as deterministic as the ranking above it. Documentation only — no
+  behaviour change.
 - **The exhaustive placement fallback returned the first clear cell in raster order.** Stage 2c made the
   directional search take the NEAREST legal candidate but left the fallback taking whatever a top-left-first
   sweep hit first, which stayed invisible while it fired rarely. Constraining regions makes it fire far more

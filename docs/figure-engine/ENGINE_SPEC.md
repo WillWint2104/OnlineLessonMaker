@@ -264,14 +264,17 @@ so is a worse failure than a missing one, because nothing in the picture reveals
    cell in raster order, which was invisible while it fired rarely; constraining regions makes it fire far
    more often, and then "first in raster order" put a side length in the corner of the canvas — legal, and
    370px from the edge it measured.
-3. If none is fully clear within range (pathological), the least-penalised box is marked INVALID.
-   "Least-penalised" is a BLEND, not max clearance: each candidate scores
-   `clearance − 3 × (overrun past the canvas edge)`, so a box with less clearance that stays on the
-   canvas beats a clearer one hanging off it. The trade is deliberate — a label half outside the figure
-   is unreadable, whereas one a little close to an arm is merely ugly — but the fallback does NOT
-   maximise clearance, and this step said it did until the wording was corrected. Marking the box INVALID
-   is not a placement: it makes the fitter expand the domain and re-solve, and if the figure still cannot
-   place the label after the escalation cap it reports
+3. If none is fully clear within range (pathological), the EXHAUSTIVE on-canvas scan (2b) runs first —
+   the penalised box below is taken only when that scan finds nothing either, never as a shortcut past it.
+   That box is then marked INVALID. "Least-penalised" is a BLEND, not max clearance: each candidate scores
+   `clear − 3 × off`, where `clear` is the true geometric clearance to every obstacle and `off` is how far
+   the box pushes past the 2px canvas inset. So a box with less clearance that stays on the canvas beats a
+   clearer one hanging off it — deliberate, since a label painted outside the viewBox is not visible at
+   all — and the fallback does NOT maximise clearance, though this step said it did until the wording was
+   corrected. Selection is by STRICT improvement, so ties keep the first candidate in the fixed enumeration
+   order and the fallback is as deterministic as the ranking above it.
+   Marking the box INVALID is not a placement: it makes the fitter expand the domain and re-solve, and if
+   the figure still cannot place the label after the escalation cap it reports
    `label "…" could not be placed clear of the figure`. The label IS still drawn at that box, and that
    is deliberate — dropping it would leave a figure that looks complete and silently is not, which is
    the failure mode §4 exists to prevent. So the guarantee is precise: no sub-`GAP` box is ever ACCEPTED
