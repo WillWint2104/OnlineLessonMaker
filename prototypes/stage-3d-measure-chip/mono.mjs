@@ -1,0 +1,15 @@
+import { chromium } from '/home/user/OnlineLessonMaker/node_modules/playwright/index.mjs';
+import fs from 'node:fs';
+const L=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+const b=await chromium.launch({executablePath:'/opt/pw-browsers/chromium'});
+const p=await b.newPage({viewport:{width:1280,height:900},deviceScaleFactor:2});
+await p.goto('http://127.0.0.1:8099/lesson-studio.html',{waitUntil:'load'});
+await p.evaluate(d=>{LESSON=d;LESSON.meta=LESSON.meta||{};cur=0;TP_RUNTIME={};render();},L);
+await new Promise(r=>setTimeout(r,400));
+await p.evaluate(()=>go(1)); await new Promise(r=>setTimeout(r,350));
+await p.evaluate(()=>{document.querySelectorAll('.tp-animwait').forEach(e=>{e.classList.remove('tp-animwait');e.classList.add('tp-animin');});
+  document.documentElement.style.filter='grayscale(1)';});
+await new Promise(r=>setTimeout(r,300));
+await (await p.$('.tp-fig')).screenshot({path:process.argv[3]});
+console.log('✓ mono');
+await b.close();

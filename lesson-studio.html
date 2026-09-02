@@ -2649,6 +2649,19 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-gvert{fill:var(--on-surface);font-family:var(--tp-body);font-size:13px;font-weight:700;}
 .tp-slide .tp-fig-gsym{fill:var(--on-surface);font-family:var(--tp-serif,var(--tp-body));font-size:12.5px;font-style:italic;}
 .tp-slide .tp-fig-gmeas{fill:var(--on-surface-variant,var(--on-surface));font-family:var(--tp-body);font-size:11.5px;}
+/* PROTOTYPE (Stage 3d) — the SIDE MEASUREMENT surface. Accent-derived, never a literal green: a pack that
+   themes --primary themes the pill with it. Deliberately paler than the mockup — see the density note. */
+/* Scope is .tp-slide, NOT .tp-fig: the geometry body is painted in TWO places — the inline figure and the
+   focused workspace stage — and the focused stage is not inside .tp-fig. Every var() also carries a fallback,
+   because an undefined custom property in an SVG `fill` resolves to BLACK, not to "unstyled": the chips came
+   out as solid black rectangles with black text on them, and nothing anywhere reported a problem. */
+.tp-slide{--geo-measure-bg:color-mix(in srgb,var(--primary) 6%,var(--surface));
+          --geo-measure-ink:color-mix(in srgb,var(--primary) 72%,var(--on-surface));
+          --geo-measure-border:color-mix(in srgb,var(--primary) 14%,transparent);}
+.tp-slide .tp-fig-gpill{fill:var(--geo-measure-bg,transparent);stroke:var(--geo-measure-border,transparent);stroke-width:1;}
+.tp-slide .tp-fig-gsmeas{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-body);font-size:11.5px;}
+.tp-slide .tp-fig-gssym{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-serif,var(--tp-body));font-size:11.5px;font-style:italic;}
+.tp-slide .tp-fig-gunit{font-size:9.8px;opacity:.78;}
 .tp-slide .tp-fig-hit{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;}
 .tp-slide .tp-fig-hit:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}   /* --focus-ring is a COLOUR: `outline:var(--focus-ring,<shorthand>)` sets colour only and leaves outline-style:none — i.e. no ring at all */
 .tp-slide .tp-fig-callout{position:absolute;display:flex;align-items:center;gap:8px;padding:4px 5px 4px 10px;border-radius:var(--tp-rad-btn);background:var(--graph-callout,var(--graph-axis,var(--on-surface)));color:var(--graph-surface,var(--surface));font-family:var(--tp-body);font-size:12.5px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px var(--scrim,rgba(0,0,0,.28));}
@@ -7030,7 +7043,11 @@ const figDraw={
   circle:(cx,cy,r,cls)=>`<circle cx="${figNum(cx)}" cy="${figNum(cy)}" r="${figNum(+r)}" class="${cls}"/>`,
   arc:(cx,cy,r,a0,a1,cls)=>{ const P=a=>[cx+r*Math.cos(a),cy+r*Math.sin(a)], q=P(a0), w=P(a1), large=Math.abs(a1-a0)>Math.PI?1:0, sweep=a1>a0?1:0; return `<path d="M${figNum(q[0])} ${figNum(q[1])} A${figNum(r)} ${figNum(r)} 0 ${large} ${sweep} ${figNum(w[0])} ${figNum(w[1])}" class="${cls}" fill="none"/>`; },
   text:(x,y,str,cls,anchor)=>`<text x="${figNum(x)}" y="${figNum(y)}" class="${cls}"${anchor?` text-anchor="${anchor}"`:''}>${esc(str)}</text>`,
-  tick:(x,y,dx,dy,cls)=>`<line x1="${figNum(x)}" y1="${figNum(y)}" x2="${figNum(x+dx)}" y2="${figNum(y+dy)}" class="${cls}"/>`
+  tick:(x,y,dx,dy,cls)=>`<line x1="${figNum(x)}" y1="${figNum(y)}" x2="${figNum(x+dx)}" y2="${figNum(y+dy)}" class="${cls}"/>`,
+  rect:(x,y,w,h,r,cls)=>`<rect x="${figNum(x)}" y="${figNum(y)}" width="${figNum(w)}" height="${figNum(h)}" rx="${figNum(r)}" class="${cls}"/>`,
+  // ONE text element carrying value + unit as tspans: the unit is quieter typography INSIDE the annotation,
+  // never a second positioned object. text-anchor centres the combined content, so the chip stays one box.
+  measure:(x,y,val,unit,cls,anchor)=>`<text x="${figNum(x)}" y="${figNum(y)}" class="${cls}"${anchor?` text-anchor="${anchor}"`:''}>${esc(val)}${unit?`<tspan class="tp-fig-gunit" dx="2.5">${esc(unit)}</tspan>`:''}</text>`
 };
 // points from objects[]: a plain list ({id,x,y} or [id,x,y]) OR a table of values ({from:'table', rows:[[id,x,y]]}). Arbitrary reals.
 function figPoints(b){
@@ -7548,7 +7565,20 @@ function figGraph(b, box){
 const FIG_ARC_R=26, FIG_ARC_STEP=5.5, FIG_RA_SIZE=13, FIG_RIGHT_TOL=0.75;
 /* Stage 3b annotation roles → [class, font-size]. The size is not decoration: the placement box is measured
    from it, so a role's weight and the space it reserves stay in step. */
-const FIG_ROLE={ vertex:['tp-fig-gvert',13], symbol:['tp-fig-gsym',12.5], measure:['tp-fig-gmeas',11.5] };
+const FIG_ROLE={ vertex:['tp-fig-gvert',13], symbol:['tp-fig-gsym',12.5], measure:['tp-fig-gmeas',11.5],
+                 smeas:['tp-fig-gsmeas',11.5], ssym:['tp-fig-gssym',11.5] };   // PROTOTYPE: side-measure SURFACE — numeric and algebraic differ in content typography, not in surface
+/* PROTOTYPE — a side measurement is a CHIP, so its reserved box is the chip: value + unit + padding + border,
+   measured from the COMPLETE formatted string in one place. It is deliberately NOT figPillSize: that box's
+   5/3 padding is shared with the graph's point identifiers and reads portrait on a single digit (17.1 x 19.2
+   for "3"). This is also the one seam a better text-metrics estimator would replace — it already receives the
+   whole chip rather than a bare number, so that swap stays local. */
+const FIG_MEAS_PADX=7, FIG_MEAS_PADY=2.6;
+/* PROTOTYPE — content typography is chosen by WHAT THE VALUE IS, not by where it came from. The existing
+   rule (auto ? measure : symbol) keys off provenance, so an AUTHORED numeric quantity — "3.21", "480" — was
+   typeset as algebra: upright numerals are what a measurement wants, italic maths is what a variable wants.
+   Provenance still decides truth (§4: only 'auto' may display a computed length); it just never decided type. */
+function figMeasStyle(v){ return /^[+-]?\d+(\.\d+)?$/.test(String(v).trim())?'smeas':'ssym'; }
+function figMeasSize(text,fs){ const F=fs||11.5; return { w:String(text).length*F*0.62+2*FIG_MEAS_PADX, h:F*1.15+2*FIG_MEAS_PADY }; }
 // Named points for a geometry block: an optional parameterised `construction` (Stage 1c's FIG_PARAM) plus any
 // authored `points` objects — the same table vocabulary the graph block already uses, so an author moving
 // between the two learns one shape of data.
@@ -7628,9 +7658,11 @@ function figGeomInSector(V,an,x,y){
 // The exterior half-plane of one edge: the side its outward normal points to. A side measure may slide along
 // the edge and vary its distance, but crossing this line would put a length INSIDE the shape it measures.
 function figGeomOutHalf(mid,pd,x,y){ return (x-mid.x)*pd[0]+(y-mid.y)*pd[1] > 0; }
-function figGeomPlace(anchor,pd,text,obst,box,role,ok){
+function figGeomPlace(anchor,pd,text,obst,box,role,ok,chip){
   const R=FIG_ROLE[role]||FIG_ROLE.measure, fs=R[1];
-  const size=figPillSize(text,fs), bounds={W:box.W,H:box.H};
+  // PROTOTYPE: when the annotation is drawn ON a surface, the reserved box IS that surface. The size is taken
+  // from the complete formatted measurement (value + unit) BEFORE any search runs — never text first, chrome after.
+  const size=chip?figMeasSize(chip.text,fs):figPillSize(text,fs), bounds={W:box.W,H:box.H};
   // Search the ALLOWED REGION first. Stage 2c still ranks by displacement inside it — it decides WHERE the
   // label fits best, never whether the position still means the right thing.
   let r=figPlacePill(anchor.x,anchor.y,size,pd,obst,FIG_GAP,bounds,ok), relaxed=false;
@@ -7648,7 +7680,7 @@ function figGeomPlace(anchor,pd,text,obst,box,role,ok){
     else { const sc=figScanPill(size,obst,FIG_GAP,bounds,null,anchor); if(sc){ bx=sc; via='scan'; relaxed=true; } }
   }
   return { box:bx, text, cls:R[0], fs, via, relaxed, region:obst.regionName||null, sem:obst.sem||null,
-           valid:via!=='none', ax:anchor.x, ay:anchor.y };
+           chip:chip||null, valid:via!=='none', ax:anchor.x, ay:anchor.y };
 }
 /* Solve every mark and label for one view. Placement ORDER is vertices → sides → angles (§3.2 step 4): vertices
    crowd the corners, so they claim their space first and later pills see them as obstacles. */
@@ -7694,7 +7726,12 @@ function figGeomSolve(b,V,box,P,errors,relax){
       if(A&&B){ const ma=P.byName[String(bt[0])], mb=P.byName[String(bt[1])];
         // §4 single source of truth: 'auto' DISPLAYS the computed length; any other string is a NAME, never a value.
         const auto=(o.text==null||o.text==='auto');
-        want.side.push({A,B,auto,text:auto?figGeomMeas(figLen(ma,mb)):String(o.text)}); } }
+        // PROTOTYPE: the measurement is ONE object. `unit` is the minimal hook needed to see unit pressure —
+        // NOT a units schema (no conversion, no dimensional analysis, no per-figure default). The complete
+        // formatted string is what gets sized and what a screen reader / monochrome print sees.
+        const val=auto?figGeomMeas(figLen(ma,mb)):String(o.text);
+        const unit=(o.unit==null||o.unit==='')?null:String(o.unit);
+        want.side.push({A,B,auto,text:val+(unit?' '+unit:''),chip:{value:val,unit,text:val+(unit?' '+unit:'')}}); } }
   });
   // Vertex names: every polygon vertex unless the block opts out. They are the plotted-point identifiers of a
   // geometry figure, so they go through the same pill system rather than inventing a second kind of label.
@@ -7746,7 +7783,7 @@ function figGeomSolve(b,V,box,P,errors,relax){
     // normal distance are both fine; crossing the edge line is not.
     const okS=(x,y)=>figGeomOutHalf(mid,pd,x,y);
     push(figGeomPlace(mid,pd,sd.text,{arms:base.arms,pts:base.pts,boxes:placed.slice(),relax,regionName:'exterior side of its edge',
-      sem:{k:'side',a:[sd.A.x,sd.A.y],b:[sd.B.x,sd.B.y],ring:ring?ring.map(q=>[q.x,q.y]):null}},box,sd.auto?'measure':'symbol',okS)); });
+      sem:{k:'side',a:[sd.A.x,sd.A.y],b:[sd.B.x,sd.B.y],ring:ring?ring.map(q=>[q.x,q.y]):null}},box,figMeasStyle(sd.chip.value),okS,sd.chip)); });
   want.angle.forEach(a=>{ if(!a.an||a.label===false||a.label==null) return;
     // §4: 'measure' DISPLAYS the computed angle. Anything else is a name (θ, x), never an authored value.
     const auto=(a.label==='measure'), txt=auto?figGeomDeg(a.an.mag):String(a.label);
@@ -7816,7 +7853,12 @@ function figGeomBody(M, box, opt){
   M.arcs.forEach(a=>{ mk+=figDraw.arc(a.V.x,a.V.y,a.r,a.al,a.al+a.d,'tp-fig-arc'); });
   M.rights.forEach(R=>{ mk+=figDraw.polyline([R.quad[1],R.quad[2],R.quad[3]],'tp-fig-ra'); });
   let vt=''; M.vpts.forEach(p=>{ vt+=figDraw.circle(p[0],p[1],3.2,'tp-fig-pt'); });
-  let lb=''; M.labels.forEach(L=>{ lb+=figDraw.text(L.box.x+L.box.w/2, L.box.y+L.box.h/2+(L.fs||FIG_LABFS)*0.35, L.text, L.cls, 'middle'); });
+  // PROTOTYPE: a chip's rect IS L.box — the box the placement engine already reserved and cleared. There is no
+  // second geometry here and nothing to keep in sync: what was measured is what is painted.
+  let lb=''; M.labels.forEach(L=>{ const cx=L.box.x+L.box.w/2, cy=L.box.y+L.box.h/2+(L.fs||FIG_LABFS)*0.35;
+    if(L.chip){ lb+=figDraw.rect(L.box.x,L.box.y,L.box.w,L.box.h,4,'tp-fig-gpill')
+                  +figDraw.measure(cx,cy,L.chip.value,L.chip.unit,L.cls,'middle'); }
+    else lb+=figDraw.text(cx, cy, L.text, L.cls, 'middle'); });
   return g+sh+mk+vt+lb;
 }
 /* ═══════════════ FIGURE ENGINE — Stage 2b: Expand / focused graph window (ENGINE_SPEC §6) ═══════════════
