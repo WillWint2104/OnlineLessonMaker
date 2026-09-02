@@ -7041,17 +7041,39 @@ function figBoxBox(a,b){ const dx=Math.max(0,a.x-(b.x+b.w),b.x-(a.x+a.w)), dy=Ma
 // clearance of a candidate box against ALL obstacles — arms (segments), points (markers, minus radius), placed pills.
 function figClear(box,obst){ let m=Infinity; for(const s of obst.arms) m=Math.min(m,figBoxSeg(box,s[0],s[1],s[2],s[3])); for(const p of obst.pts) m=Math.min(m,figBoxPt(box,p[0],p[1])-(p[2]||0)); for(const q of obst.boxes) m=Math.min(m,figBoxBox(box,q)); return m; }
 // §1.4 CANDIDATE-POSITION placement — out along the primary dir at increasing distance AND shifted along the
-// edge; the FIRST candidate clearing everything by >= gap wins; else the max-clearance fallback. Stays on-canvas.
+// edge; the NEAREST candidate clearing everything by >= gap wins; else the max-clearance fallback. Stays on-canvas.
 function figDirs(pd){ return [[1,-1],[-1,-1],[1,1],[-1,1],[1,0],[-1,0],[0,-1],[0,1]].map(([x,y])=>{const n=Math.hypot(x,y);return [x/n,y/n];}).sort((a,b)=>(b[0]*pd[0]+b[1]*pd[1])-(a[0]*pd[0]+a[1]*pd[1])); }
-// §1.4 candidate search — returns {box, clear, onCanvas} and is NEVER null (off-canvas is a SOFT penalty, not an
-// exclusion), so figLayoutPills always has a status to act on. The first fully-on-canvas candidate clearing >= gap
-// short-circuits. `clear` is the TRUE geometric clearance so escalation can judge validity.
-function figPlacePill(ax,ay,size,pd,obst,gap,bounds){ const {w,h}=size, dirs=figDirs(pd), shifts=[0,14,-14,28,-28,42,-42,56,-56]; let best=null,bestScore=-Infinity;
-  for(let d=gap; d<=340; d+=8){ for(const [ux,uy] of dirs){ const perp=[-uy,ux]; for(const s of shifts){ const cx=ax+ux*(d+w/2)+perp[0]*s, cy=ay+uy*(d+h/2)+perp[1]*s, box={x:cx-w/2,y:cy-h/2,w,h};
+/* §1.4 candidate search — returns {box, clear, onCanvas} and is NEVER null (off-canvas is a SOFT penalty, not an
+   exclusion), so figLayoutPills always has a status to act on. `clear` is the TRUE geometric clearance so
+   escalation can judge validity.
+
+   STAGE 2c — RANK THE LEGAL CANDIDATES BY DISPLACEMENT FROM THE OWNER. Clearance is a HARD gate and is
+   unchanged; this only decides which of the positions that already satisfy it is used. Until now the search
+   returned the FIRST candidate that cleared, and the enumeration is (distance d) x (direction) x (perpendicular
+   SHIFT along the edge) — so a 56px shift at d=6 was accepted ahead of an unshifted position at d=14, even
+   though it sits nearly three times further from the point it names. On a saturated plane that is how
+   association is lost: `K` was placed 57.5px from its marker where 20.5px was legal, `V` 44.2px, `I` 31.4px
+   (measured on tests/visual/lessons/figure-graph-baseline.json at the inline 520x360 box).
+
+   Candidate displacement is the marker-to-box-CENTRE distance, which is what reads as "how far the label is
+   from its point". The ring index d is a true LOWER BOUND on it: the offset resolves to u*(d + w/2 or h/2) +
+   perp*s with u,perp orthonormal, so the component along u is always >= d and the perpendicular shift can only
+   add. That makes the search a sound branch and bound — once a legal candidate is no further than the next
+   ring's lower bound, nothing later can beat it — so it still terminates a ring or two past the first hit
+   rather than enumerating all ~3000 positions.
+
+   Placement stays DETERMINISTIC: enumeration order is fixed (d ascending, directions sorted by agreement with
+   the primary direction, shifts in a fixed order) and an improvement must be STRICTLY nearer, so ties go to the
+   candidate found first — the one in the more preferred direction. Same input, same figure, every time. */
+function figPlacePill(ax,ay,size,pd,obst,gap,bounds){ const {w,h}=size, dirs=figDirs(pd), shifts=[0,14,-14,28,-28,42,-42,56,-56]; let best=null,bestScore=-Infinity, hit=null, hitD=Infinity;
+  for(let d=gap; d<=340; d+=8){ if(hit&&hitD<=d) break;                               // no candidate from this ring out can be nearer than the one already held
+    for(const [ux,uy] of dirs){ const perp=[-uy,ux]; for(const s of shifts){ const cx=ax+ux*(d+w/2)+perp[0]*s, cy=ay+uy*(d+h/2)+perp[1]*s, disp=Math.hypot(cx-ax,cy-ay);
+    if(hit&&disp>=hitD) continue;                                                     // cannot win on displacement — skip it BEFORE the clearance test, which is the expensive half
+    const box={x:cx-w/2,y:cy-h/2,w,h};
     const off=Math.max(0,2-box.x,2-box.y,box.x+box.w-(bounds.W-2),box.y+box.h-(bounds.H-2)), c=figClear(box,obst);
-    if(c>=gap && off<=0) return {box, clear:c, onCanvas:true};                        // first fully-on-canvas candidate that clears
+    if(c>=gap && off<=0){ hitD=disp; hit={box, clear:c, onCanvas:true}; continue; }    // legal AND strictly nearer than any legal position so far (the guard above enforced that)
     const score=c-off*3; if(score>bestScore){ bestScore=score; best={box, clear:c, onCanvas:off<=0}; } } } }
-  return best; }
+  return hit||best; }
 // EXHAUSTIVE fallback — scan the whole on-canvas area for ANY box clearing >= gap. Structural guarantee: if a clear
 // spot exists on-canvas, the layout WILL find it, so no directional blind spot can force a silent violation.
 function figScanPill(size, obst, gap, bounds){ const {w,h}=size;
