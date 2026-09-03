@@ -3359,6 +3359,39 @@ const ICON={
 const TYPELAB={figure:"Figure",cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
 /* themes whose slides render through the dedicated JSON slide pack (renderPackSlide) */
 const PACK_THEMES=new Set(['imperium','microhistory','geolearn','mathematics','scholarmath']);   // S1 — ScholarMath is a token variant on the shared pack path (composable pages)
+/* ═══ CAPABILITY PROFILES — the application is multi-domain; a THEME is not ═══
+   The app supports every domain. An individual theme is domain-oriented and declares which capability
+   FAMILIES it is designed to present. A block declares the capability it needs; a theme declares what it
+   hosts. They are different axes, and conflating them is what let Imperium — a Roman-history theme — act as
+   the limiting case for a mathematics geometry annotation's colour.
+
+   Families are deliberately coarse, and overlap on purpose: `quantitative` (graphs, coordinates, ratios,
+   statistics) belongs in history, geography, commerce and economics as much as in mathematics, so it is
+   widely declared. `mathematics` (equations, geometry, constructions) is not. The boundary is not strict
+   because the subjects are not.
+
+   This is an AUTHORING/DESIGN contract, not a runtime permission. An undeclared pairing must still fail
+   safely — never crash, never render invisibly — which is what the Layer A token fallbacks already provide.
+   Nothing here gates rendering today; it tells the verification matrix which pairings are DESIGNED (and so
+   get full visual/contrast/accessibility assertions) and which are merely SAFE (and get the small safety
+   contract). Science, maps and timelines will slot in as further families without a theme × capability
+   explosion. */
+const CAP_FAMILY={ shared:'prose, images, tables, basic data display',
+                   quantitative:'graphs, coordinates, ratios and percentages, statistics, financial quantities',
+                   mathematics:'equations, geometry, constructions, algebraic figures',
+                   humanities:'maps, timelines, source treatment, historical and geographic diagrams' };
+const THEME_CAPS={
+  mathematics : ['shared','quantitative','mathematics'],   // Mathematics — "Paper & Board"
+  scholarmath : ['shared','quantitative','mathematics'],   // ScholarMath — self-check practice identity
+  geolearn    : ['shared','quantitative','humanities'],    // Geography
+  wellbeing   : ['shared','quantitative','humanities'],    // Geography (GE5)
+  imperium    : ['shared','humanities'],                   // Ancient History (AH12)
+  rome        : ['shared','humanities'],                   // Ancient History (AH12)
+  microhistory: ['shared','humanities'],                   // History (HT5)
+  ww1         : ['shared','humanities'],                   // History (HT5)
+};
+const BLOCK_CAP={ geometry:'mathematics', graph:'quantitative' };   // the two figure kinds that exist today
+function themeSupports(theme,cap){ const c=THEME_CAPS[theme]; return !c ? false : c.indexOf(cap)>=0; }
 /* pack slide types → nav label (these themes use `title`/`type` rather than the engine's slide fields) */
 const PACK_TYPELAB={figure:"Figure",title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",graphQuestion:"Graph question",outro:"Outro",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
 /* infographic data palette: figure.color is a theme token, never a raw hex; defaults cycle */

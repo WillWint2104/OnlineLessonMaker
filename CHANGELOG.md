@@ -116,6 +116,21 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   would eventually escape its box and the ≥ `FIG_GAP` guarantee with it. Fixing it means changing the
   estimator the GRAPH path shares, which is outside a visual-language pass; recorded here for the maintainer.
 
+### Added
+- **Capability profiles — the application is multi-domain; a theme is not.** The app has universal domain
+  capability; an individual theme declares which capability FAMILIES it presents. A block declares what it
+  needs, a theme declares what it hosts, and conflating those axes is what let Imperium — a Roman-history
+  theme — be the limiting case for the colour of a mathematics measurement annotation. `CAP_FAMILY`,
+  `THEME_CAPS`, `BLOCK_CAP` and `themeSupports()` sit beside `PACK_THEMES`; ENGINE_SPEC §3.4 states the rule.
+  Geometry is a `mathematics` capability and exactly two themes declare it (`mathematics`, `scholarmath`);
+  `quantitative` is declared far more widely, because graphs and ratios belong in geography and history too.
+  This is an authoring/design contract, NOT a runtime permission — nothing gates rendering, and an undeclared
+  pairing still degrades safely through the Layer A fallbacks. The verification matrix now distinguishes the
+  two claims it had been conflating: a DESIGNED pairing gets the full visual/contrast/accessibility contract,
+  an undeclared one gets a small safety contract (renders, draws geometry, no empty or invisible chip, the
+  surface has a fill) and no design judgement. 166 design + 168 safety assertions, and the safety half is
+  proven non-vacuous by removing the Layer A fallback chain and watching rome fail.
+
 ### Fixed
 - **The measurement surface was invisible in three packs.** `--primary` and `--on-surface` are Layer B slots
   declared by five packs; `rome`, `wellbeing` and `ww1` have no Layer B block, so those names are undefined

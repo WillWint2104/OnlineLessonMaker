@@ -21,8 +21,16 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const FIXTURE = 'tests/visual/lessons/figure-measure-surface.json';
-const PACKS = (process.env.PACKS || 'imperium,microhistory,geolearn,scholarmath,mathematics,rome,wellbeing,ww1')
+/* SUPPORTED vs MERELY SAFE. The app is multi-domain; a theme is not. Geometry is a `mathematics` capability,
+ * and only the themes whose THEME_CAPS declare that family are DESIGNED to host it — see the capability
+ * profiles in lesson-studio.html. Those get the full visual contract. Every other theme still gets a small
+ * SAFETY contract, because an undeclared pairing must fail safely rather than not be checked at all: it must
+ * render, keep its content visible, and not throw. What it must NOT do is govern the design — a Roman-history
+ * theme was previously the limiting case for a mathematics annotation's colour, which is how a design gets
+ * quietly compromised by a pairing nobody intends to ship. */
+const ALL_PACKS = (process.env.PACKS || 'imperium,microhistory,geolearn,scholarmath,mathematics,rome,wellbeing,ww1')
   .split(',').map((s) => s.trim()).filter(Boolean);
+let SUPPORTED = [], SAFE_ONLY = [];
 
 const PAD = 5.8;          // FIG_MEAS_PADX — the designed padding per side
 /* Two bounds, because the engine makes two different promises. Where the painted face is KNOWN (numeric
@@ -57,6 +65,7 @@ await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const base = `http://127.0.0.1:${server.address().port}/`;
 
 const lesson = JSON.parse(fs.readFileSync(path.join(root, FIXTURE), 'utf8'));
+const GEOMETRY_CAP = 'mathematics';   // BLOCK_CAP.geometry
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 const consoleErrors = [];
@@ -64,6 +73,12 @@ page.on('console', (m) => { if (m.type() === 'error' && !/favicon/.test(m.text()
 page.on('pageerror', (e) => consoleErrors.push(String(e)));
 await page.goto(base + 'lesson-studio.html', { waitUntil: 'networkidle' });
 await page.evaluate((d) => { LESSON = d; LESSON.meta = LESSON.meta || {}; cur = 0; TP_RUNTIME = {}; render(); }, lesson);
+
+// The split is READ FROM THE APP's own declarations, never duplicated here — a second copy would drift.
+const caps = await page.evaluate(() => (typeof THEME_CAPS === 'undefined' ? null : THEME_CAPS));
+if (!caps) { console.error('✗ THEME_CAPS is not defined — the capability profiles are missing'); process.exit(1); }
+for (const p of ALL_PACKS) ((caps[p] || []).includes(GEOMETRY_CAP) ? SUPPORTED : SAFE_ONLY).push(p);
+if (!SUPPORTED.length) { console.error('✗ no theme declares the `mathematics` capability — nothing hosts geometry'); process.exit(1); }
 
 // contrast, from the composited paint — opacity on the tspan is why computed style alone lied here before.
 const srgb = (s) => { const n = String(s).match(/[\d.]+/g).map(Number);
@@ -90,10 +105,10 @@ const EXPECT = [
   ['radius', { role: 'a prose name, upright', cls: 'tp-fig-gprose', chip: false }],
 ];
 
-let pass = 0; const fails = []; const loose = []; let worst = { ratio: 0, pack: '-', text: '-' };
+let pass = 0, safePass = 0; const fails = []; const loose = []; let worst = { ratio: 0, pack: '-', text: '-' };
 const bad = (pack, slide, what) => fails.push(`${pack} · slide ${slide} — ${what}`);
 
-for (const pack of PACKS) {
+for (const pack of SUPPORTED) {
   await page.evaluate((t) => setTheme(t), pack);
   await page.evaluate(() => document.fonts && document.fonts.ready);
   for (let i = 0; i < lesson.slides.length; i++) {
@@ -166,10 +181,48 @@ for (const pack of PACKS) {
   }
 }
 
+/* THE SAFETY CONTRACT for undeclared pairings. Deliberately small: it asks only whether an unintended
+ * combination degrades gracefully. It does NOT judge design — no padding band, no ladder, no contrast
+ * threshold — because "must remain legible if encountered" and "is a designed pairing" are different claims,
+ * and testing them identically is what gave a history theme a veto over a mathematics annotation. */
+const unsafe = [];
+for (const pack of SAFE_ONLY) {
+  await page.evaluate((t) => setTheme(t), pack);
+  for (let i = 0; i < lesson.slides.length; i++) {
+    await page.evaluate((n) => go(n), i);
+    await new Promise((r) => setTimeout(r, 200));
+    const got = await page.evaluate(() => {
+      const fig = document.querySelector('.tp-fig svg');
+      if (!fig) return { rendered: false };
+      const chips = [...document.querySelectorAll('.tp-fig rect.tp-fig-gpill')].map((rc) => {
+        const t = rc.nextElementSibling, st = getComputedStyle(t), bb = t.getBBox();
+        return { text: (t.textContent || '').trim(), ink: st.fill, bg: getComputedStyle(rc).fill,
+                 w: +rc.getAttribute('width'), h: +rc.getAttribute('height'), inkW: bb.width };
+      });
+      return { rendered: true, chips, marks: fig.querySelectorAll('polygon,line,path').length };
+    });
+    if (!got.rendered) { unsafe.push(`${pack} · slide ${i} — no figure rendered at all`); continue; }
+    if (!got.marks) { unsafe.push(`${pack} · slide ${i} — the figure drew no geometry`); continue; }
+    for (const c of got.chips) {
+      if (!c.text) unsafe.push(`${pack} · "${c.text}" — chip painted with no text`);
+      else if (!(c.w > 0 && c.h > 0)) unsafe.push(`${pack} · "${c.text}" — chip has no area`);
+      else if (!(c.inkW > 0)) unsafe.push(`${pack} · "${c.text}" — text measures zero width (invisible)`);
+      // "content doesn't disappear": ink must not resolve to the same colour it is painted on.
+      else if (String(c.ink) === String(c.bg)) unsafe.push(`${pack} · "${c.text}" — ink is identical to its fill (invisible)`);
+      // a surface that resolves to nothing is not a fallback, it is a missing annotation
+      else if (/rgba\(0, 0, 0, 0\)|transparent/.test(String(c.bg))) unsafe.push(`${pack} · "${c.text}" — the measurement surface has no fill at all`);
+      else safePass++;
+    }
+  }
+}
+
 await browser.close();
 server.close();
 
-console.log(`\nmeasurement surface — ${PACKS.length} pack(s) × ${lesson.slides.length} slide(s)`);
+console.log(`\nmeasurement surface — geometry is a \`${GEOMETRY_CAP}\` capability`);
+console.log(`  designed pairings (full contract):  ${SUPPORTED.join(', ') || '(none)'}`);
+console.log(`  undeclared (safety contract only):  ${SAFE_ONLY.join(', ') || '(none)'} — ${safePass} safety assertion(s) passed`);
+for (const u of unsafe) fails.push(u);
 console.log(`  widest known-face padding: ${worst.ratio.toFixed(2)}x designed — "${worst.text}" in ${worst.pack} (band ${PAD_MIN_RATIO}-${PAD_MAX_RATIO}x)`);
 if (loose.length) {
   console.log(`  conservatively sized beyond ${PAD_MAX_UNKNOWN}px/side (unknown face — accepted trade, ${loose.length}):`);
@@ -181,4 +234,4 @@ if (fails.length) {
   console.error(`\n✗ ${fails.length} failure(s), ${pass} assertion(s) passed`);
   process.exit(1);
 }
-console.log(`\n✓ ${pass}/${pass} assertions passed — surface assignment, containment, padding, contrast`);
+console.log(`\n✓ ${pass}/${pass} design assertions + ${safePass} safety assertions passed`);

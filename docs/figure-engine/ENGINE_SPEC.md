@@ -351,6 +351,50 @@ the stroke needs roughly L* 48, which against the pale surface computes to ~4.4:
 where no large-text exemption applies. Accessibility wins: the unit stays subordinate to its VALUE, which is
 the functional intent, and the ladder holds everywhere else.
 
+### 3.4 Capability profiles — the application is multi-domain; a THEME is not
+
+**The rule.** The application has universal domain capability. An individual theme has DECLARED capability
+coverage. A block declares the capability it needs; a theme declares which capability FAMILIES it is designed
+to present. A domain engine consumes shared primitives where they fit, but a theme is not required to provide
+a bespoke visual treatment for a capability it was never intended to host.
+
+Families are coarse and overlap deliberately — `quantitative` (graphs, coordinates, ratios, statistics,
+financial quantities) belongs in history, geography, commerce and economics as much as in mathematics, so it
+is widely declared; `mathematics` (equations, geometry, constructions) is not. The boundary is soft because
+the subjects are. What does NOT follow from that overlap is that every history theme needs geometry or every
+mathematics theme needs chemistry.
+
+Declared in `lesson-studio.html` beside `PACK_THEMES` — `CAP_FAMILY`, `THEME_CAPS`, `BLOCK_CAP`,
+`themeSupports()`. Today geometry is a `mathematics` capability and exactly two themes declare it:
+
+| theme | domain | families |
+|---|---|---|
+| `mathematics`, `scholarmath` | Mathematics | shared · quantitative · **mathematics** |
+| `geolearn`, `wellbeing` | Geography | shared · quantitative · humanities |
+| `imperium`, `rome` | Ancient History (AH12) | shared · humanities |
+| `microhistory`, `ww1` | History (HT5) | shared · humanities |
+
+**Why this is an engine concern and not bookkeeping.** Before it existed, Imperium — a Roman-history theme —
+was the limiting case for the colour of a mathematics measurement annotation, because the verification matrix
+treated all eight themes as equally binding. A design gets quietly compromised by a pairing nobody intends to
+ship. Capability profiles remove that veto without pretending the pairing cannot occur.
+
+**Two different claims, tested differently.** "Must remain legible if encountered" is not "is a designed
+pairing", and testing them identically is the mistake:
+
+- **Designed pairing** (theme declares the capability) — the full contract: visual design, contrast, semantic
+  tokens, collision behaviour, responsive behaviour, focused mode, accessibility.
+- **Undeclared pairing** — a small SAFETY contract only: the renderer does not crash, the figure renders, its
+  content does not disappear, and the neutral fallback behaves. No design judgement.
+
+This is an authoring/design contract, NOT a runtime permission: nothing here gates rendering. Safety comes
+from the Layer A token fallbacks, which is why an undeclared theme still paints a legible chip. Eventually
+authoring should discourage `Imperium + geometry construction` while allowing `Imperium + graph`; that
+validation is not built yet.
+
+Science, maps and timelines slot in as further families. Establishing this before those engines exist is the
+point — otherwise every new renderer multiplies itself by every historical theme.
+
 ## 4. Single source of truth (kills the "arc says 35° but triangle isn't" failure)
 
 A figure has ONE source of truth. Two front doors, same downstream:

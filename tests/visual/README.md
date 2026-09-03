@@ -166,7 +166,12 @@ crowded labels · long labels · resized figure · the focused/expanded state.
 
 ## `figure-measure-surface.json` — contract 9: the side-measurement surface
 
-Gated by `scripts/verify-measure-surface.mjs` (workflow `measure-surface.yml`), **8 packs × 6 slides**. This
+Gated by `scripts/verify-measure-surface.mjs` (workflow `measure-surface.yml`). The matrix is SPLIT by
+capability (ENGINE_SPEC §3.4): geometry is a `mathematics` capability, so the two themes that declare it
+(`mathematics`, `scholarmath`) get the full design contract, and the other six get a small safety contract
+only — renders, draws geometry, no empty or invisible chip, surface has a fill. The split is read from the
+app's own `THEME_CAPS`, never duplicated in the script. This exists because a Roman-history theme was
+previously the limiting case for a mathematics annotation's colour. This
 fixture exists because nothing else renders the chip: `verify-corpus-identity`'s `isLesson` regex structurally
 excludes `tests/visual/lessons/`, `verify-label-placement`'s fixtures contain no geometry, and
 `verify-geometry-semantics` asserts where a label's CENTRE sits — which a chip whose text spills out of its own
