@@ -497,7 +497,7 @@
     },
     {
       "type": "page",
-      "title": "Measurement or name",
+      "title": "Three presentation roles",
       "blocks": [
         {
           "type": "section",
@@ -505,15 +505,15 @@
           "flow": [
             {
               "kind": "para",
-              "text": "The surface asserts \"this is how long this side is\". A side's NAME is not that, so it stays a plain label. `label` overrides the classifier in both directions."
+              "text": "The surface is decided by SEMANTICS (the author’s `label`, falling back to a classifier only when unspecified). The FACE is decided by CONTENT. They are separate questions, so a measurement can be numerals or algebra and a name can be a symbol or a word without either answer leaking into the other."
             }
           ]
         },
         {
           "type": "figure",
           "figure": "geometry",
-          "title": "Prose names stay plain",
-          "caption": "\"hypotenuse\" and \"adjacent side\" are NAMES — a word, so no surface. \"x + 4\" is a quantity — value characters only, so it takes the surface. Nothing here is authored differently; only the content differs.",
+          "title": "Three faces on one figure",
+          "caption": "\"3.21 cm\" is a MEASUREMENT (surface, upright numerals). \"c\" is a SYMBOLIC name (maths face, no surface). \"adjacent side\" is a PROSE name (upright text, no surface) — a word is not a variable, and italicising it reads as a product of eight letters.",
           "objects": [
             {
               "type": "points",
@@ -558,7 +558,8 @@
                 "A",
                 "B"
               ],
-              "text": "adjacent side"
+              "text": "adjacent side",
+              "label": "name"
             },
             {
               "type": "sideLabel",
@@ -566,7 +567,8 @@
                 "A",
                 "C"
               ],
-              "text": "x + 4"
+              "text": "c",
+              "label": "name"
             },
             {
               "type": "sideLabel",
@@ -574,7 +576,9 @@
                 "B",
                 "C"
               ],
-              "text": "hypotenuse"
+              "text": "3.21",
+              "unit": "cm",
+              "label": "measure"
             }
           ]
         },
@@ -582,7 +586,7 @@
           "type": "figure",
           "figure": "geometry",
           "title": "Explicit label overrides the classifier",
-          "caption": "\"AB\" forced to a measure; \"2x\" forced to a name. \"3x + 2y + 15\" is a LONG SYMBOLIC measure: symbolic content paints in a pack-defined face, so this is the case that catches a chip sized with the wrong face’s metrics — it overflowed its own rect in microhistory before the fix, and no shorter string reproduces it.",
+          "caption": "EXPLICIT INTENT WINS, in both directions and against the classifier. \"AB\" would be classified a name and is forced to a measurement; \"2x\" would be classified a quantity and is forced to a name. \"3x + 2y + 15\" is a long SYMBOLIC measure — the only string here long enough to overflow when sized with the wrong face’s metrics. \"radius\" is unlabelled prose, so the fallback classifier resolves it.",
           "objects": [
             {
               "type": "points",
@@ -643,7 +647,7 @@
                 "C",
                 "D"
               ],
-              "text": "a"
+              "text": "radius"
             },
             {
               "type": "sideLabel",

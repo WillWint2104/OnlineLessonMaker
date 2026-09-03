@@ -400,21 +400,44 @@ coordinates — nothing is positioned by hand.
 
 ### The side-measurement surface (Stage 3d)
 
-A side measurement is painted on a quiet accent-tinted **measurement surface**; a side's *name* is not. The
-surface asserts *"this is how long this side is"*, so putting it around `"hypotenuse"` states something untrue.
-The whole annotation — value, unit, padding — is ONE object: one anchor, one collision box, sized before any
-placement search runs.
+**Two separate questions.** Whether an annotation gets the measurement surface is decided by SEMANTICS; what
+face its text is set in is decided by CONTENT. Keeping them apart is the whole design — it is why `x + 4`,
+`2r`, `3.4 km` and `√2` all behave correctly *because they are measurements*, not because a pattern happened to
+recognise their characters.
 
-| Content | Surface | Why |
+```
+author's semantic role  →  fallback classifier (only if unspecified)  →  presentation
+```
+
+**The author is the source of truth.** `label:"measure"` / `label:"name"` always wins. The classifier exists
+for content written before the field did, and cannot be authoritative: mathematics is ambiguous by nature, and
+`AB`, `a`, `r`, `2x` and `PQ` each denote a name or a quantity depending only on what the author meant. Write
+the intent for anything that matters:
+
+```json
+{ "text": "3.21", "unit": "cm", "label": "measure" }
+{ "text": "x + 4",               "label": "measure" }
+{ "text": "hypotenuse",          "label": "name"    }
+```
+
+A measurement and its unit stay ONE semantic annotation and ONE collision box — sized from the complete
+formatted string before any placement search runs, never text first and chrome after. So put the unit in
+`unit`; `"8 cm"` as a single string is reported, with the fix named.
+
+**Three presentation roles**, all using the same exterior side placement — no second positioning architecture:
+
+| Role | Example | Presentation |
 |---|---|---|
-| `"auto"` / omitted → `3`, `2.47` | measurement | computed length |
-| `"3.21"` + `unit:"cm"` | measurement | a unit is meaningless on a name |
-| `"x + 4"`, `"2x"`, `"a"`, `"2πr"`, `"√2"` | measurement | a quantity: value characters only, no word |
-| `"hypotenuse"`, `"opposite side"`, `"AB"` | name — plain label | contains a WORD (a run of 2+ letters) |
+| measurement | `3`, `3.21 cm`, `480 mm`, `x + 4`, `2πr` | soft accent-tinted **surface**; numerals upright, algebra in the maths face |
+| symbolic name | `a`, `c`, `x`, `AB`, `θ` | maths face, **no** surface |
+| prose name | `hypotenuse`, `adjacent side`, `radius`, `base` | upright body text, **no** surface |
 
-The classifier is the **default**, never the last word: `label:"measure"` and `label:"name"` override it in both
-directions. Angle measures and vertex names never take the surface, whatever they contain — angles belong to the
-interior construction, lengths to the exterior measurement layer.
+A word is not a variable: setting `hypotenuse` in the maths face reads as a product of eight letters.
+
+Angle measures and vertex names never take the surface whatever they contain — angles belong to the interior
+construction, lengths to the exterior measurement layer.
+
+When `label` is absent the fallback reads value characters as a quantity and a WORD as a name.
 
 Two things are reported rather than rendered quietly: an **empty** `text`, and a value-and-unit written as one
 string (`text:"8 cm"`), which classifies as a name — the message names the fix.

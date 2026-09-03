@@ -197,13 +197,22 @@ Value + unit are ONE annotation — one anchor, one collision box, sized from th
 before any placement search runs. The chip's rect IS the box Stage 2c reserved and cleared, so there is no
 second geometry to keep in sync.
 
-`label:"measure"` / `label:"name"` are the explicit answer; the default classifier reads a WORD (2+ letters)
-as a name and value characters as a quantity, so `x + 4`, `2πr` and `a` take the surface and `hypotenuse`
-and `AB` do not. Empty text, and a value-and-unit written as one string, are reported with the fix named.
+Two questions, kept separate: SEMANTICS decide the surface, CONTENT decides the face.
+
+    author's semantic role  ->  fallback classifier (only if unspecified)  ->  presentation
+
+`label:"measure"` / `label:"name"` always wins. The classifier is a back-compat convenience and cannot be
+authoritative — `AB`, `a`, `r`, `2x` and `PQ` each denote a name or a quantity depending only on authorial
+intent, which no string carries. Three presentation roles, one placement system: measurement → surface;
+symbolic name (`a`, `c`, `AB`, `θ`) → maths face, no surface; prose name (`hypotenuse`, `radius`) → upright
+body text, no surface, because a word is not a variable. Empty text, and a value-and-unit written as one
+string, are reported with the fix named.
 
 Gated by `scripts/verify-measure-surface.mjs` + `tests/visual/lessons/figure-measure-surface.json`
-(contract 9): 8 packs × 6 slides, 561 assertions — surface assignment, containment, a proportional padding
-band, composited-colour contrast. Proven non-vacuous by re-introducing each fixed defect and watching it fail.
+(contract 9): 8 packs × 6 slides, 665 assertions — surface assignment, the three presentation roles,
+containment, a proportional padding band, composited-colour contrast. Proven non-vacuous by re-introducing
+each fixed defect and watching it fail, including the two that matter most: rendering prose names in the
+maths face, and letting the classifier outrank explicit author intent.
 
 Deferred out of this stage, deliberately:
 - **Per-face text metrics.** `FIG_GLYPH` is calibrated for one face; packs redefine both body and serif faces.

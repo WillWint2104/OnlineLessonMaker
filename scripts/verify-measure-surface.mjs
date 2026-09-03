@@ -73,6 +73,23 @@ const lum = (c) => { const a = c.map((v) => { v /= 255; return v <= 0.03928 ? v 
 const ratio = (x, y) => { const [a, b] = [lum(x), lum(y)].sort((p, q) => q - p); return (a + 0.05) / (b + 0.05); };
 const over = (fg, bg, op) => fg.map((v, i) => v * op + bg[i] * (1 - op));
 
+/* Named expectations, so the gate states the CONTRACT rather than restating the implementation. Each entry is
+ * a real string from the fixture whose correct presentation is a decision the maintainer made, not a fact the
+ * code happens to produce. "AB" and "2x" are the load-bearing pair: both are forced by `label` AGAINST what
+ * the fallback classifier would say, so they fail the moment explicit author intent stops winning. */
+const EXPECT = [
+  ['3.21', { role: 'a measurement, numerals', cls: 'tp-fig-gsmeas', chip: true }],
+  ['480',  { role: 'a measurement, numerals', cls: 'tp-fig-gsmeas', chip: true }],
+  ['x + 4', { role: 'a measurement, maths face', cls: 'tp-fig-gssym', chip: true }],
+  ['3x + 2y + 15', { role: 'a measurement, maths face', cls: 'tp-fig-gssym', chip: true }],
+  ['AB', { role: 'a measurement — forced by label against the classifier', cls: 'tp-fig-gssym', chip: true }],
+  ['2x', { role: 'a symbolic NAME — forced by label against the classifier', cls: 'tp-fig-gsym', chip: false }],
+  ['c', { role: 'a symbolic name, maths face', cls: 'tp-fig-gsym', chip: false }],
+  ['adjacent side', { role: 'a prose name, upright', cls: 'tp-fig-gprose', chip: false }],
+  ['hypotenuse', { role: 'a prose name, upright', cls: 'tp-fig-gprose', chip: false }],
+  ['radius', { role: 'a prose name, upright', cls: 'tp-fig-gprose', chip: false }],
+];
+
 let pass = 0; const fails = []; const loose = []; let worst = { ratio: 0, pack: '-', text: '-' };
 const bad = (pack, slide, what) => fails.push(`${pack} · slide ${slide} — ${what}`);
 
@@ -105,8 +122,24 @@ for (const pack of PACKS) {
     for (const t of got.all) {
       if (/tp-fig-gvert/.test(t.cls) && surfaced.has(t.text)) bad(pack, i, `vertex name "${t.text}" carries a measurement surface`);
       if (/tp-fig-gmeas/.test(t.cls) && surfaced.has(t.text)) bad(pack, i, `angle measure "${t.text}" carries a measurement surface`);
+      // A name never takes the surface, whichever face it is set in.
+      if (/tp-fig-gprose|tp-fig-gsym\b/.test(t.cls) && surfaced.has(t.text)) bad(pack, i, `name "${t.text}" carries a measurement surface`);
     }
     pass++;
+
+    /* 2 — THE THREE PRESENTATION ROLES, asserted by OUTCOME on named content rather than by re-deriving the
+     * engine's own rule. A prose word set in the maths face reads as a product of its letters; a segment name
+     * set as body text stops looking like mathematics. Both are wrong in a way semantics checks cannot see. */
+    const face = (txt) => { const t = got.all.find((x) => x.text === txt); return t ? t.cls : null; };
+    for (const [txt, want] of EXPECT) {
+      const cls = face(txt);
+      if (cls == null) continue;                       // not on this slide
+      if (!new RegExp(want.cls).test(cls)) bad(pack, i, `"${txt}" should render as ${want.role} (${want.cls}) but is "${cls}"`);
+      else pass++;
+      const hasChip = surfaced.has(txt);
+      if (hasChip !== want.chip) bad(pack, i, `"${txt}" ${hasChip ? 'has' : 'lacks'} a measurement surface; expected ${want.chip ? 'one' : 'none'}`);
+      else pass++;
+    }
 
     for (const c of got.chips) {
       const padEach = (c.w - c.ink) / 2;

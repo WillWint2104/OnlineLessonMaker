@@ -14,17 +14,24 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   lengths get an exterior measurement layer. Value and unit are ONE annotation — one anchor, one collision box,
   sized from the complete formatted string before any placement search runs, never text first and chrome after.
   The box a chip paints IS the box Stage 2c reserved and cleared, so there is no second geometry to keep in sync.
-  `unit` typesets quieter inside that same annotation; `label:"measure"` / `label:"name"` override the default
-  classifier, which reads a WORD (a run of 2+ letters) as a name and value characters as a quantity — so
-  `x + 4`, `2πr` and `a` take the surface and `hypotenuse` and `AB` do not. An empty label and a value-and-unit
-  written as one string are reported, with the fix named, rather than rendered quietly.
+  **Two questions, kept separate:** semantics decide the surface, content decides the face — which is why
+  `x + 4`, `2r`, `3.4 km` and `√2` behave correctly *because they are measurements*, not because a pattern
+  recognised their characters. `label:"measure"` / `label:"name"` is the source of truth and always wins; the
+  content classifier is a back-compat convenience only, and cannot be authoritative, since `AB`, `a`, `r`, `2x`
+  and `PQ` each denote a name or a quantity depending solely on authorial intent. **Three presentation roles**
+  share one placement system: measurement → surface (numerals upright, algebra in the maths face); symbolic
+  name (`a`, `c`, `AB`, `θ`) → maths face, no surface; prose name (`hypotenuse`, `radius`) → upright body text,
+  no surface, because a word is not a variable and italicising `hypotenuse` reads as a product of eight
+  letters. An empty label and a value-and-unit written as one string are reported, with the fix named.
 - **`scripts/verify-measure-surface.mjs` + the `measure-surface` workflow — the gate none of the existing checks
   provided.** The chip shipped with three defects that every check called green: `verify-corpus-identity`'s
   `isLesson` regex structurally excludes `tests/visual/lessons/`, so it never renders a figure fixture at all;
   `verify-label-placement`'s fixtures contain no geometry; and `verify-geometry-semantics` asserts where a
   label's CENTRE sits, which a chip whose text overflows its own rect satisfies perfectly. The new gate renders
-  the surface in all 8 packs and asserts surface assignment, containment, a proportional padding band and
-  composited-colour contrast — 561 assertions. It is not wired as a required check: branch protection is a
+  the surface in all 8 packs and asserts surface assignment, the three presentation roles, containment, a
+  proportional padding band and composited-colour contrast — 665 assertions. Non-vacuity is proven, not
+  assumed: every fixed defect was re-introduced and the gate failed, including prose names set in the maths
+  face and the classifier outranking explicit author intent. It is not wired as a required check: branch protection is a
   maintainer decision.
 
 - **Stage 3c — Semantic placement constraints.** Stage 3b gave each annotation a role and a preferred anchor;

@@ -174,15 +174,19 @@ rect satisfies perfectly. Three real defects shipped behind those green results.
 
 What is asserted, in every pack:
 
-1. **Surface assignment.** A chip is painted around a side MEASUREMENT and nothing else. A vertex name or an
-   angle measure carrying one is a failure.
-2. **Containment.** The text never leaves the box the placement engine reserved and cleared for it. This is the
+1. **Surface assignment.** A chip is painted around a side MEASUREMENT and nothing else — a vertex name, an
+   angle measure or a side NAME carrying one is a failure.
+2. **The three presentation roles**, asserted by outcome on named strings: measurement → surface (numerals
+   upright, algebra in the maths face); symbolic name → maths face, no surface; prose name → upright body text,
+   no surface. `"AB"` and `"2x"` are the load-bearing pair: both are forced by `label` AGAINST what the
+   fallback classifier would say, so they fail the moment explicit author intent stops winning.
+3. **Containment.** The text never leaves the box the placement engine reserved and cleared for it. This is the
    assertion that catches sizing a chip with the wrong face's metrics.
-3. **Padding.** Where the painted face is known, padding stays inside a band expressed as a PROPORTION of the
+4. **Padding.** Where the painted face is known, padding stays inside a band expressed as a PROPORTION of the
    design (0.5–1.75×), not a constant tuned until today's numbers fit — packs redefine the body face, so one
    exact number was never achievable without per-face runtime metrics. The run prints the widest ratio it saw,
    so drift is visible while the gate is still green.
-4. **Contrast.** Value and unit ink both clear WCAG AA against the fill they are painted on, measured from the
+5. **Contrast.** Value and unit ink both clear WCAG AA against the fill they are painted on, measured from the
    COMPOSITED colour — the unit carries an opacity, and computed style alone hid a 4.24:1 failure.
 
 Deliberately recorded, not failed: symbolic content is sized conservatively because its face is pack-defined,

@@ -2669,6 +2669,10 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-gpill{fill:var(--geo-measure-bg,transparent);stroke:var(--geo-measure-border,transparent);stroke-width:1;}
 .tp-slide .tp-fig-gsmeas{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-body);font-size:11.5px;}
 .tp-slide .tp-fig-gssym{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-serif,var(--tp-body));font-size:11.5px;font-style:italic;}
+/* PROSE geometric name — "hypotenuse", "adjacent side", "radius". A word is not a variable: setting it in the
+   maths face italicises English, which reads as though "hypotenuse" were a product of eight variables. Upright
+   body face, one step quieter than a vertex identity. */
+.tp-slide .tp-fig-gprose{fill:var(--on-surface-variant,var(--on-surface));font-family:var(--tp-body);font-size:12px;}
 .tp-slide .tp-fig-gunit{font-size:9.8px;opacity:.9;}   /* .78 composited to 4.24:1 on the chip fill — below AA 4.5. Size, not opacity, carries the unit's subordination. */
 .tp-slide .tp-fig-hit{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;}
 .tp-slide .tp-fig-hit:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}   /* --focus-ring is a COLOUR: `outline:var(--focus-ring,<shorthand>)` sets colour only and leaves outline-style:none — i.e. no ring at all */
@@ -7574,7 +7578,7 @@ const FIG_ARC_R=26, FIG_ARC_STEP=5.5, FIG_RA_SIZE=13, FIG_RIGHT_TOL=0.75;
 /* Stage 3b annotation roles → [class, font-size]. The size is not decoration: the placement box is measured
    from it, so a role's weight and the space it reserves stay in step. */
 const FIG_ROLE={ vertex:['tp-fig-gvert',13], symbol:['tp-fig-gsym',12.5], measure:['tp-fig-gmeas',11.5],
-                 smeas:['tp-fig-gsmeas',11.5], ssym:['tp-fig-gssym',11.5] };   // PROTOTYPE: side-measure SURFACE — numeric and algebraic differ in content typography, not in surface
+                 smeas:['tp-fig-gsmeas',11.5], ssym:['tp-fig-gssym',11.5], prose:['tp-fig-gprose',12] };
 /* PROTOTYPE — a side measurement is a CHIP, so its reserved box is the chip: value + unit + padding + border,
    measured from the COMPLETE formatted string in one place. It is deliberately NOT figPillSize: that box's
    5/3 padding is shared with the graph's point identifiers and reads portrait on a single digit (17.1 x 19.2
@@ -7588,12 +7592,12 @@ const FIG_MEAS_PADX=5.8, FIG_MEAS_PADY=1.9, FIG_MEAS_R=2, FIG_MEAS_UNIT=0.852, F
    rule (auto ? measure : symbol) keys off provenance, so an AUTHORED numeric quantity — "3.21", "480" — was
    typeset as algebra: upright numerals are what a measurement wants, italic maths is what a variable wants.
    Provenance still decides truth (§4: only 'auto' may display a computed length); it just never decided type. */
-/* Stage 3d — is this authored string a QUANTITY or a NAME? A quantity is built only from value characters and
-   carries a digit, an operator, or a single-letter variable; a name contains a WORD. "x + 4", "2x" and "a" are
-   quantities; "hypotenuse", "opposite side" and "AB" are names. The distinction is not cosmetic — the surface
-   asserts "this is the length of this side", and painting it around "hypotenuse" asserts something untrue.
-   This is the DEFAULT only: `label:'measure'` / `label:'name'` overrides it, and an author who disagrees with
-   the classifier is never stuck with it. A unit implies a quantity — "cm" is meaningless on a name. */
+/* THE FALLBACK CLASSIFIER — a convenience for content written before `label` existed, and explicitly NOT the
+   semantic model. It guesses from shape: value characters with a digit, an operator or a lone variable read as
+   a quantity; a WORD reads as a name. That is right often enough to be useful and wrong often enough to never
+   be authoritative — "AB" is a segment name or its length, "a" is a label or a side, "r" is a radius or a
+   letter, and only the author knows which. Every one of those is overridden by `label`, which is checked
+   first. A unit implies a quantity: "cm" is meaningless on a name. */
 function figMeasIsValue(t){ const v=String(t).trim(); if(!v) return false;
   // Greek letters and the radical are VALUE characters — "2\u03c0r" and "\u221a2" are quantities, not prose.
   if(/[^0-9A-Za-z.,+\-\u2212\u00d7\u00f7*/^()\u00b2\u00b3\u221a\u00b7\u0391-\u03c9\s]/.test(v)) return false;
@@ -7601,7 +7605,23 @@ function figMeasIsValue(t){ const v=String(t).trim(); if(!v) return false;
   if(words) return false;
   return /[0-9]/.test(v) || /[+\-\u2212\u00d7\u00f7*/^\u221a\u00b7]/.test(v) || /^[A-Za-z\u0391-\u03c9]$/.test(v);
 }
-function figMeasStyle(v){ return /^[+-]?\d+(\.\d+)?$/.test(String(v).trim())?'smeas':'ssym'; }
+/* THE TWO QUESTIONS ARE SEPARATE, and that separation is the design:
+ *   does this annotation get the measurement SURFACE?  ->  the author's semantic role (`label`), never the string
+ *   what FACE is the text set in?                      ->  the string, always
+ * So a measurement may be numerals or algebra, and a name may be a symbol or a word, without either answer
+ * leaking into the other. figFace answers only the second question.
+ *   num   digits, no variable          "3.21", "480"          upright numerals
+ *   sym   a variable or an expression  "x + 4", "a", "AB"     maths face
+ *   prose a WORD                       "hypotenuse", "radius" upright body text
+ * A short token is symbolic even though it contains letters — "AB" and "PQ" are segment names, not English —
+ * so the word test that decides measure-vs-name is deliberately NOT reused here. */
+function figFace(t){ const v=String(t).trim();
+  // 'num' is a NUMERAL and nothing else: a radical or an operator is maths, so "\u221a2" is set in the maths
+  // face even though it carries no letter.
+  if(figMeasIsValue(v)) return /^[+-\u2212]?[0-9][0-9.,\s]*$/.test(v) ? 'num' : 'sym';
+  return /^[A-Za-z0-9\u0391-\u03c9'\u2032\u2080-\u2089]{1,3}$/.test(v) ? 'sym' : 'prose';
+}
+function figMeasStyle(v){ return figFace(v)==='num'?'smeas':'ssym'; }
 /* Per-character advances for the measure face, MEASURED (Inter at 11.5px) rather than assumed. The flat
    0.62em in figPillSize is wrong in both directions here, and painting the box is what made it visible:
    Inter's digits are not uniform ('1' is 0.407em, '4' is 0.646em) and '.' is 0.288em, so "3.21 cm" — the
@@ -7785,10 +7805,16 @@ function figGeomSolve(b,V,box,P,errors,relax){
         const raw=auto?'':String(o.text);
         if(!auto&&!raw.trim()){ errors.push('sideLabel '+(idx+1)+' — text is empty, so there is nothing to label'); return; }
         const unit=(o.unit==null||o.unit===''||o.unit===false)?null:String(o.unit);
-        // Stage 3d — MEASUREMENT or NAME. The chip means "this is how long this side is"; a side's NAME
-        // ("hypotenuse", "AB") is not that, and giving it the measurement surface says something false.
-        // `label` is the explicit answer and uses the SAME vocabulary the angle object already has
-        // ('measure' vs a name), so there is one grammar rather than two.
+        /* Stage 3d — MEASUREMENT or NAME, resolved in one fixed order:
+         *
+         *     author's semantic role   ->   fallback classifier (only if unspecified)   ->   presentation
+         *
+         * The AUTHOR is the source of truth. `label:"measure"` / `label:"name"` uses the same vocabulary the
+         * angle object already has, so there is one grammar rather than two, and it ALWAYS wins.
+         * The classifier below is a convenience for lessons written before this field existed — never the
+         * semantic contract. It cannot be: mathematics is ambiguous by nature, and "AB", "a", "r", "2x" and
+         * "PQ" each denote a name or a quantity depending only on what the author meant. A string cannot
+         * carry that, so where the author has said, nothing else is consulted. */
         const measured = o.label==='measure' ? true : o.label==='name' ? false
                        : (auto || !!unit || figMeasIsValue(raw));
         // "8 cm" written as one string is a QUANTITY an author plainly meant, but the unit belongs in `unit`
@@ -7852,7 +7878,7 @@ function figGeomSolve(b,V,box,P,errors,relax){
     // normal distance are both fine; crossing the edge line is not.
     const okS=(x,y)=>figGeomOutHalf(mid,pd,x,y);
     push(figGeomPlace(mid,pd,sd.text,{arms:base.arms,pts:base.pts,boxes:placed.slice(),relax,regionName:'exterior side of its edge',
-      sem:{k:'side',a:[sd.A.x,sd.A.y],b:[sd.B.x,sd.B.y],ring:ring?ring.map(q=>[q.x,q.y]):null}},box,sd.measured?figMeasStyle(sd.chip.value):'symbol',okS,sd.chip)); });
+      sem:{k:'side',a:[sd.A.x,sd.A.y],b:[sd.B.x,sd.B.y],ring:ring?ring.map(q=>[q.x,q.y]):null}},box,sd.measured?figMeasStyle(sd.chip.value):(figFace(sd.text)==='prose'?'prose':'symbol'),okS,sd.chip)); });
   want.angle.forEach(a=>{ if(!a.an||a.label===false||a.label==null) return;
     // §4: 'measure' DISPLAYS the computed angle. Anything else is a name (θ, x), never an authored value.
     const auto=(a.label==='measure'), txt=auto?figGeomDeg(a.an.mag):String(a.label);
