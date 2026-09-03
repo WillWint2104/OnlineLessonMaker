@@ -398,6 +398,27 @@ coordinates — nothing is positioned by hand.
 | `domain` | `{xMin,…}` | Optional. Otherwise fitted to the figure; auto-fit only ever expands so a label has room. |
 | `grid` | `"shown"` \| `"hidden"` | Default **hidden** for geometry — a construction is not a coordinate reading. |
 
+### The side-measurement surface (Stage 3d)
+
+A side measurement is painted on a quiet accent-tinted **measurement surface**; a side's *name* is not. The
+surface asserts *"this is how long this side is"*, so putting it around `"hypotenuse"` states something untrue.
+The whole annotation — value, unit, padding — is ONE object: one anchor, one collision box, sized before any
+placement search runs.
+
+| Content | Surface | Why |
+|---|---|---|
+| `"auto"` / omitted → `3`, `2.47` | measurement | computed length |
+| `"3.21"` + `unit:"cm"` | measurement | a unit is meaningless on a name |
+| `"x + 4"`, `"2x"`, `"a"`, `"2πr"`, `"√2"` | measurement | a quantity: value characters only, no word |
+| `"hypotenuse"`, `"opposite side"`, `"AB"` | name — plain label | contains a WORD (a run of 2+ letters) |
+
+The classifier is the **default**, never the last word: `label:"measure"` and `label:"name"` override it in both
+directions. Angle measures and vertex names never take the surface, whatever they contain — angles belong to the
+interior construction, lengths to the exterior measurement layer.
+
+Two things are reported rather than rendered quietly: an **empty** `text`, and a value-and-unit written as one
+string (`text:"8 cm"`), which classifies as a name — the message names the fix.
+
 `objects[]` for geometry:
 
 | Type | Shape | Notes |
@@ -407,7 +428,7 @@ coordinates — nothing is positioned by hand.
 | `segment` | `{between:[idA,idB]}` | A named-point connector, as in a graph. |
 | `angle` | `{at, between:[idP,idQ], arcs?:1–3, label?}` | Arc(s) seated on the actual arms at `at`. `arcs` stacks concentric arcs without overlap. `label:"measure"` **displays the computed angle**; any other string is a *name* (`"θ"`); `false` draws the arc with no label. |
 | `rightAngle` | `{at, between:[idP,idQ]}` | The square, derived from the two incident rays, so it is correct at any orientation. If the angle is not 90° the mark is **not drawn** and the discrepancy is reported. |
-| `sideLabel` | `{between:[idA,idB], text?}` | `"auto"` (or omitted) **displays the computed length**; any other string is a *name* (`"hypotenuse"`). |
+| `sideLabel` | `{between:[idA,idB], text?, unit?, label?}` | `"auto"` (or omitted) **displays the computed length**; the engine never vouches for an authored string. `unit` (e.g. `"cm"`) is typeset quieter *inside the same annotation* — one anchor, one collision box — so put the unit here, not inside `text`. `label` forces the SURFACE: `"measure"` or `"name"`. |
 
 **Single source of truth (§4):** a measure is never authored. `label:"measure"` and `text:"auto"` display what
 the engine computed from the construction; a literal string is understood as a name, not as a value, so a

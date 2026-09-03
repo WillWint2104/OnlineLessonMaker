@@ -2655,9 +2655,17 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    focused workspace stage — and the focused stage is not inside .tp-fig. Every var() also carries a fallback,
    because an undefined custom property in an SVG `fill` resolves to BLACK, not to "unstyled": the chips came
    out as solid black rectangles with black text on them, and nothing anywhere reported a problem. */
-.tp-slide{--geo-measure-bg:color-mix(in srgb,var(--primary) 4.5%,var(--surface));
-          --geo-measure-ink:color-mix(in srgb,var(--primary) 72%,var(--on-surface));
-          --geo-measure-border:color-mix(in srgb,var(--primary) 6%,transparent);}
+/* Layer B (--primary/--on-surface) is declared by five packs; rome, wellbeing and ww1 have no Layer B block,
+   so those slots are UNDEFINED there — which invalidates the whole color-mix() and left the chip with no fill
+   and pure-black text in ww1. The Layer A equivalents (--accent/--text/--canvas) are what those packs do
+   define, so the chain degrades to them. This is a narrow fix for the chip: the wider gap — the geometry
+   figure's strokes and label inks read --primary too, and fall back to black in the same three packs — is
+   PRE-EXISTING and not this pass to close. */
+.tp-slide{--geo-ink-src:var(--primary,var(--accent,#333));
+          --geo-surf-src:var(--surface,var(--canvas,#fff));
+          --geo-measure-bg:color-mix(in srgb,var(--geo-ink-src) 4.5%,var(--geo-surf-src));
+          --geo-measure-ink:color-mix(in srgb,var(--geo-ink-src) 72%,var(--on-surface,var(--text,#1c1c17)));
+          --geo-measure-border:color-mix(in srgb,var(--geo-ink-src) 6%,transparent);}
 .tp-slide .tp-fig-gpill{fill:var(--geo-measure-bg,transparent);stroke:var(--geo-measure-border,transparent);stroke-width:1;}
 .tp-slide .tp-fig-gsmeas{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-body);font-size:11.5px;}
 .tp-slide .tp-fig-gssym{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-serif,var(--tp-body));font-size:11.5px;font-style:italic;}
@@ -7580,6 +7588,19 @@ const FIG_MEAS_PADX=5.8, FIG_MEAS_PADY=1.9, FIG_MEAS_R=2, FIG_MEAS_UNIT=0.852, F
    rule (auto ? measure : symbol) keys off provenance, so an AUTHORED numeric quantity — "3.21", "480" — was
    typeset as algebra: upright numerals are what a measurement wants, italic maths is what a variable wants.
    Provenance still decides truth (§4: only 'auto' may display a computed length); it just never decided type. */
+/* Stage 3d — is this authored string a QUANTITY or a NAME? A quantity is built only from value characters and
+   carries a digit, an operator, or a single-letter variable; a name contains a WORD. "x + 4", "2x" and "a" are
+   quantities; "hypotenuse", "opposite side" and "AB" are names. The distinction is not cosmetic — the surface
+   asserts "this is the length of this side", and painting it around "hypotenuse" asserts something untrue.
+   This is the DEFAULT only: `label:'measure'` / `label:'name'` overrides it, and an author who disagrees with
+   the classifier is never stuck with it. A unit implies a quantity — "cm" is meaningless on a name. */
+function figMeasIsValue(t){ const v=String(t).trim(); if(!v) return false;
+  // Greek letters and the radical are VALUE characters — "2\u03c0r" and "\u221a2" are quantities, not prose.
+  if(/[^0-9A-Za-z.,+\-\u2212\u00d7\u00f7*/^()\u00b2\u00b3\u221a\u00b7\u0391-\u03c9\s]/.test(v)) return false;
+  const words=v.match(/[A-Za-z]{2,}/);                                                      // a run of 2+ letters is a WORD
+  if(words) return false;
+  return /[0-9]/.test(v) || /[+\-\u2212\u00d7\u00f7*/^\u221a\u00b7]/.test(v) || /^[A-Za-z\u0391-\u03c9]$/.test(v);
+}
 function figMeasStyle(v){ return /^[+-]?\d+(\.\d+)?$/.test(String(v).trim())?'smeas':'ssym'; }
 /* Per-character advances for the measure face, MEASURED (Inter at 11.5px) rather than assumed. The flat
    0.62em in figPillSize is wrong in both directions here, and painting the box is what made it visible:
@@ -7757,14 +7778,29 @@ function figGeomSolve(b,V,box,P,errors,relax){
     } else if(o.type==='sideLabel'){
       const bt=Array.isArray(o.between)?o.between:[o.from,o.to], A=named(bt[0],'sideLabel '+(idx+1)), B=named(bt[1],'sideLabel '+(idx+1));
       if(A&&B){ const ma=P.byName[String(bt[0])], mb=P.byName[String(bt[1])];
-        // §4 single source of truth: 'auto' DISPLAYS the computed length; any other string is a NAME, never a value.
+        // §4 single source of truth: 'auto' DISPLAYS the computed length; an authored string is never a value
+        // the engine vouches for. What CHANGED in Stage 3d is only which authored strings get the measurement
+        // SURFACE — the truth rule is untouched.
         const auto=(o.text==null||o.text==='auto');
-        // PROTOTYPE: the measurement is ONE object. `unit` is the minimal hook needed to see unit pressure —
-        // NOT a units schema (no conversion, no dimensional analysis, no per-figure default). The complete
-        // formatted string is what gets sized and what a screen reader / monochrome print sees.
-        const val=auto?figGeomMeas(figLen(ma,mb)):String(o.text);
-        const unit=(o.unit==null||o.unit==='')?null:String(o.unit);
-        want.side.push({A,B,auto,text:val+(unit?' '+unit:''),chip:{value:val,unit,text:val+(unit?' '+unit:'')}}); } }
+        const raw=auto?'':String(o.text);
+        if(!auto&&!raw.trim()){ errors.push('sideLabel '+(idx+1)+' — text is empty, so there is nothing to label'); return; }
+        const unit=(o.unit==null||o.unit===''||o.unit===false)?null:String(o.unit);
+        // Stage 3d — MEASUREMENT or NAME. The chip means "this is how long this side is"; a side's NAME
+        // ("hypotenuse", "AB") is not that, and giving it the measurement surface says something false.
+        // `label` is the explicit answer and uses the SAME vocabulary the angle object already has
+        // ('measure' vs a name), so there is one grammar rather than two.
+        const measured = o.label==='measure' ? true : o.label==='name' ? false
+                       : (auto || !!unit || figMeasIsValue(raw));
+        // "8 cm" written as one string is a QUANTITY an author plainly meant, but the unit belongs in `unit`
+        // so the two can be typeset apart and sized as one chip. Classifying it as a name is defensible and
+        // silent — and silent is the outcome this engine never allows, so say what happened and how to fix it.
+        if(!measured&&o.label==null&&/^[-+0-9.\u221a\u0391-\u03c9][^A-Za-z]*\s+[A-Za-z\u00b2\u00b3]{1,3}$/.test(raw.trim()))
+          errors.push('sideLabel '+(idx+1)+' — "'+raw+'" reads as a value and a unit written together, so it is '
+            +'labelled as a NAME. Put the unit in `unit` (e.g. text "'+raw.trim().split(/\s+/)[0]+'", unit "'
+            +raw.trim().split(/\s+/).slice(1).join(' ')+'") to get the measurement surface, or set label:"measure".');
+        const val=auto?figGeomMeas(figLen(ma,mb)):raw;
+        const text=val+(unit?' '+unit:'');
+        want.side.push({A,B,auto,measured,text,chip:measured?{value:val,unit,text}:null}); } }
   });
   // Vertex names: every polygon vertex unless the block opts out. They are the plotted-point identifiers of a
   // geometry figure, so they go through the same pill system rather than inventing a second kind of label.
@@ -7816,7 +7852,7 @@ function figGeomSolve(b,V,box,P,errors,relax){
     // normal distance are both fine; crossing the edge line is not.
     const okS=(x,y)=>figGeomOutHalf(mid,pd,x,y);
     push(figGeomPlace(mid,pd,sd.text,{arms:base.arms,pts:base.pts,boxes:placed.slice(),relax,regionName:'exterior side of its edge',
-      sem:{k:'side',a:[sd.A.x,sd.A.y],b:[sd.B.x,sd.B.y],ring:ring?ring.map(q=>[q.x,q.y]):null}},box,figMeasStyle(sd.chip.value),okS,sd.chip)); });
+      sem:{k:'side',a:[sd.A.x,sd.A.y],b:[sd.B.x,sd.B.y],ring:ring?ring.map(q=>[q.x,q.y]):null}},box,sd.measured?figMeasStyle(sd.chip.value):'symbol',okS,sd.chip)); });
   want.angle.forEach(a=>{ if(!a.an||a.label===false||a.label==null) return;
     // §4: 'measure' DISPLAYS the computed angle. Anything else is a name (θ, x), never an authored value.
     const auto=(a.label==='measure'), txt=auto?figGeomDeg(a.an.mag):String(a.label);

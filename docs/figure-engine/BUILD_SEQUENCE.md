@@ -189,6 +189,32 @@ FIXTURES: a reversed-winding pair — the same quadrilateral listed both ways mu
 identically, so "outside" is a property of the shape and not of the author's typing order; and a concave
 dart, because contract 8 asserted the reflex-vertex error against no fixture at all until now.
 
+## STAGE 3d — Measurement annotation surface  ·  DONE (own PR, after Stage 3)
+
+A side MEASUREMENT is painted on a quiet accent-tinted surface; an angle measure and a vertex name are not.
+The split is semantic: angles belong to the interior construction, lengths to an exterior measurement layer.
+Value + unit are ONE annotation — one anchor, one collision box, sized from the complete formatted string
+before any placement search runs. The chip's rect IS the box Stage 2c reserved and cleared, so there is no
+second geometry to keep in sync.
+
+`label:"measure"` / `label:"name"` are the explicit answer; the default classifier reads a WORD (2+ letters)
+as a name and value characters as a quantity, so `x + 4`, `2πr` and `a` take the surface and `hypotenuse`
+and `AB` do not. Empty text, and a value-and-unit written as one string, are reported with the fix named.
+
+Gated by `scripts/verify-measure-surface.mjs` + `tests/visual/lessons/figure-measure-surface.json`
+(contract 9): 8 packs × 6 slides, 561 assertions — surface assignment, containment, a proportional padding
+band, composited-colour contrast. Proven non-vacuous by re-introducing each fixed defect and watching it fail.
+
+Deferred out of this stage, deliberately:
+- **Per-face text metrics.** `FIG_GLYPH` is calibrated for one face; packs redefine both body and serif faces.
+  Numeric content lands inside a 0.5–1.75× padding band everywhere; symbolic content is sized conservatively
+  and therefore over-reserves on a narrow face (worst measured: `3x + 2y + 15` at 21.0px/side in mathematics).
+  The gate records every such chip rather than failing or hiding it.
+- **The Layer B gap.** `--primary`/`--on-surface` are declared by five packs; rome, wellbeing and ww1 have no
+  Layer B block, so the geometry figure's own strokes and label inks fall back to black there. PRE-EXISTING —
+  the chip tokens now degrade through Layer A, but the engine-wide fix is its own change, and it lands before
+  the WW1 design pass puts a figure on a WW1 slide.
+
 ## STAGE 4 — Block wiring (plug engines into the containers)
 Branch off the merged front-ends. Spec §8.
 Delivers: register `graph` and `geometry` as figure block/part types that render via the engine inside

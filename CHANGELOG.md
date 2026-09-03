@@ -8,6 +8,25 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 3d — the side-measurement surface.** A side measurement is now painted on a quiet accent-tinted
+  surface; an angle measure and a vertex name are not. The rule is semantic, not cosmetic: the surface asserts
+  *"this is how long this side is"*, so angles keep their plain typography inside the interior construction and
+  lengths get an exterior measurement layer. Value and unit are ONE annotation — one anchor, one collision box,
+  sized from the complete formatted string before any placement search runs, never text first and chrome after.
+  The box a chip paints IS the box Stage 2c reserved and cleared, so there is no second geometry to keep in sync.
+  `unit` typesets quieter inside that same annotation; `label:"measure"` / `label:"name"` override the default
+  classifier, which reads a WORD (a run of 2+ letters) as a name and value characters as a quantity — so
+  `x + 4`, `2πr` and `a` take the surface and `hypotenuse` and `AB` do not. An empty label and a value-and-unit
+  written as one string are reported, with the fix named, rather than rendered quietly.
+- **`scripts/verify-measure-surface.mjs` + the `measure-surface` workflow — the gate none of the existing checks
+  provided.** The chip shipped with three defects that every check called green: `verify-corpus-identity`'s
+  `isLesson` regex structurally excludes `tests/visual/lessons/`, so it never renders a figure fixture at all;
+  `verify-label-placement`'s fixtures contain no geometry; and `verify-geometry-semantics` asserts where a
+  label's CENTRE sits, which a chip whose text overflows its own rect satisfies perfectly. The new gate renders
+  the surface in all 8 packs and asserts surface assignment, containment, a proportional padding band and
+  composited-colour contrast — 561 assertions. It is not wired as a required check: branch protection is a
+  maintainer decision.
+
 - **Stage 3c — Semantic placement constraints.** Stage 3b gave each annotation a role and a preferred anchor;
   visual review showed the preference being discarded by the collision search whenever a clear position
   existed on the semantically wrong side of the geometry — angle measures outside their own wedge (`46.9°`,
@@ -81,6 +100,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   estimator the GRAPH path shares, which is outside a visual-language pass; recorded here for the maintainer.
 
 ### Fixed
+- **The measurement surface was invisible in three packs.** `--primary` and `--on-surface` are Layer B slots
+  declared by five packs; `rome`, `wellbeing` and `ww1` have no Layer B block, so those names are undefined
+  there — which invalidates the whole `color-mix()` and left the chip with no fill and pure-black text in ww1.
+  The tokens now degrade through the Layer A equivalents those packs do define. Note the wider gap this
+  exposed, which is PRE-EXISTING and not closed here: the geometry figure's own strokes and label inks read
+  `--primary` too, and fall back to black in the same three packs.
 - **ENGINE_SPEC described the no-legal-candidate fallback as "max clearance".** It is not: the fallback
   scores `clear − 3 × off` — true geometric clearance against how far the box pushes past the 2px canvas
   inset — so a box with less clearance that stays on the canvas beats a clearer one hanging off it,

@@ -162,3 +162,36 @@ Stage 3 renders into the UI-1 shared Figure Shell (head / stage / foot / caption
 second dense toolbar. It adds `lessons/figure-geometry-baseline.json` covering: triangle with one angle arc ·
 multiple arcs · right-angle marker · quadrilateral · irregular n-gon · vertex labels · side labels ·
 crowded labels · long labels · resized figure · the focused/expanded state.
+
+
+## `figure-measure-surface.json` — contract 9: the side-measurement surface
+
+Gated by `scripts/verify-measure-surface.mjs` (workflow `measure-surface.yml`), **8 packs × 6 slides**. This
+fixture exists because nothing else renders the chip: `verify-corpus-identity`'s `isLesson` regex structurally
+excludes `tests/visual/lessons/`, `verify-label-placement`'s fixtures contain no geometry, and
+`verify-geometry-semantics` asserts where a label's CENTRE sits — which a chip whose text spills out of its own
+rect satisfies perfectly. Three real defects shipped behind those green results.
+
+What is asserted, in every pack:
+
+1. **Surface assignment.** A chip is painted around a side MEASUREMENT and nothing else. A vertex name or an
+   angle measure carrying one is a failure.
+2. **Containment.** The text never leaves the box the placement engine reserved and cleared for it. This is the
+   assertion that catches sizing a chip with the wrong face's metrics.
+3. **Padding.** Where the painted face is known, padding stays inside a band expressed as a PROPORTION of the
+   design (0.5–1.75×), not a constant tuned until today's numbers fit — packs redefine the body face, so one
+   exact number was never achievable without per-face runtime metrics. The run prints the widest ratio it saw,
+   so drift is visible while the gate is still green.
+4. **Contrast.** Value and unit ink both clear WCAG AA against the fill they are painted on, measured from the
+   COMPOSITED colour — the unit carries an opacity, and computed style alone hid a 4.24:1 failure.
+
+Deliberately recorded, not failed: symbolic content is sized conservatively because its face is pack-defined,
+so a narrow face over-reserves. The run lists every such chip. Failing it would demand the per-face metrics
+this stage does not add; passing silently would let the looseness drift unseen.
+
+`"3x + 2y + 15"` is load-bearing, not decorative: it is the only string long enough to overflow when sized with
+the wrong face's metrics. Shorter symbolic content does not reproduce the defect, and a fixture without it
+passes while the bug is present — verified by re-introducing the bug and watching the gate stay green.
+
+`"12 cm²"` is a **renderer-format stress case only**. An area unit on a side is mathematically wrong and must
+never be copied into a real lesson; it is there to prove the chip typesets and sizes a superscripted unit.
