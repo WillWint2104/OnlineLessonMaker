@@ -210,8 +210,8 @@ string, are reported with the fix named.
 
 Gated by `scripts/verify-measure-surface.mjs` + `tests/visual/lessons/figure-measure-surface.json`
 (contract 9): 6 slides; the two themes that declare the `mathematics` capability get the full design
-contract (191 assertions) and the other six a safety contract only (180) — surface assignment, the three presentation roles,
-containment, a proportional padding band, composited-colour contrast. Proven non-vacuous by re-introducing
+contract (191 assertions) and the other six a safety contract only (180) — surface assignment, the three
+presentation roles, containment, a proportional padding band, composited-colour contrast. Proven non-vacuous by re-introducing
 each fixed defect and watching it fail, including the two that matter most: rendering prose names in the
 maths face, and letting the classifier outrank explicit author intent.
 
