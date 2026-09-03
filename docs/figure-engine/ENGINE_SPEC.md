@@ -415,6 +415,14 @@ from the Layer A token fallbacks, which is why an undeclared theme still paints 
 authoring should discourage `Imperium + geometry construction` while allowing `Imperium + graph`; that
 validation is not built yet.
 
+**When it is built, it is GUIDANCE, not prohibition** — and the distinction is the whole point of keeping
+this out of the renderer. Choosing a humanities theme and inserting a `mathematics.geometry` block should
+produce something closer to *"this theme is not designed for geometry — switch theme, or continue with
+fallback styling"* than a refusal. The author keeps the decision; the editor supplies the information they
+would otherwise only discover from a figure that looks subtly wrong. Runtime prohibition would be worse than
+the problem: it turns a design mismatch into a broken lesson. The capability profiles exist to make that
+message possible, which is why they are a declaration and not a gate.
+
 Science, maps and timelines slot in as further families. Establishing this before those engines exist is the
 point — otherwise every new renderer multiplies itself by every historical theme.
 
