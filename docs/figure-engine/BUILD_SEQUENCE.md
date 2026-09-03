@@ -116,7 +116,25 @@ using it that shows up as a failure rather than as a silently unranked label.
 long-labels cases must be reviewed before Stage 3 is considered complete, since vertex and side anchors are
 new candidate sources this stage did not exercise.
 
-## STAGE 3 — Geometry 2D front-end
+## STAGE 3 — Geometry 2D front-end (DONE)
+Delivered as `figGeometry` / `figGeomBody`, dispatched from `fragFigure` on `b.figure==='geometry'`. It renders
+into the UI-1 shared Figure Shell, opens in the same focused workspace on the same rail, and places every label
+through the Stage-2c pill system — there is no geometry-specific shell, toolbar or placement rule.
+
+Two seams needed correcting for geometry rather than new machinery, both found by measuring rather than by
+reading the code:
+* **`figxRegister` now records geometry's TIGHT bounds** (`M.dom0`), not the solved inline view. `figView('equal')`
+  expands whichever axis is short for the box it is given, so registering an already-expanded landscape domain
+  and expanding it again for a portrait viewport compounded the padding twice — the crowded pentagon fell to
+  58% of stage width and 43% of its height. Starting from tight bounds lets each viewport expand once.
+  SUPERSEDED BY STAGE 3b for the metric, not the mechanism: this recorded "87–94% of the stage", which
+  measured the SVG ELEMENT — always 100%×100% of whatever stage it is given, so it proved nothing. Geometry
+  now fits a BOARD to the figure and the painted ink fills **85–89% of that board** at all three viewports.
+* **The grid default is inverted for geometry** (hidden unless `grid:"shown"`) in `figxRegister` as well as in
+  the model, because reading it the graph's way made the grid vanish inline and reappear on ⤢.
+
+`aspect` is forced to `equal`: a stretched axis turns a right angle into something that is not one.
+
 Branch off 1c (can land after Stage 2). Spec §3, §4, §5, §7.
 Delivers: constructions → solved figure → drawables; angle arcs built from `PointOnRay` on the arms
 (signed sweep, α+δ/2 bisector, e·r measure); square right-angle (|δ|≈90°); length labels with units;
@@ -126,11 +144,50 @@ ACCEPTANCE (proven in prototype — must reproduce): arcs seat on arms across ri
 right-angle; measures are computed values on the bisector; every pill ≥ GAP clear of arms/vertices/
 pills; matches the APPROVED geometry visual target; the same n-gon code renders square→pentagon→quad;
 ADDITIVE clean; validate green.
-FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` covering triangle with
-one angle arc · multiple arcs · right-angle marker · quadrilateral · irregular n-gon · vertex labels ·
-side labels · crowded labels · long labels · resized figure · the focused/expanded state. Stages 1a–2b
+FIXTURE (required, same PR): `tests/visual/lessons/figure-geometry-baseline.json` — committed, 15 figures
+across 11 pages, covering triangle with one angle arc · multiple arcs · stacked arcs on a ~6px arm (correctness
+stress) and on a ~44px arm (visual quality) · right-angle marker (including a
+NON-AXIS-ALIGNED one) · quadrilateral · irregular n-gon · vertex labels · side labels · crowded labels · long
+labels · labels at the viewport edge · a parameterised construction · the author-error state, plus the
+focused/expanded state at desktop and portrait. Stages 1a–2b
 shipped with NO committed fixture and their rendered output could not be reproduced afterwards — see
 `tests/visual/README.md`. A stage that adds a rendered surface adds its fixture.
+
+## STAGE 3b — Geometry visual language  ·  DONE
+Not a renderer change: the engine's semantic output was correct and read as raw engine output. Adds the
+LAYOUT GRAMMAR between the geometry and the collision search — annotation ROLES (vertex > symbolic >
+measurement, marks lighter than the edges they annotate), the preferred anchors those roles imply (angle
+measure on its own arc's bisector one gap outside the OUTERMOST arc; side measure at the midpoint on the
+normal that leaves the outline, by ray cast so either winding and a concave outline both work), and ONE
+numeric style for every measurement. Stage 2c still resolves every collision from those anchors — the
+pipeline is semantic object → preferred anchor → obstacles → nearest legal position → role styling, so a
+JSON-authored diagram never needs hand-tuning.
+Also splits the FITTING POLICY: graph focus maximises the PLANE (it is the subject), geometry focus
+maximises the FIGURE — a board shaped like the figure's own domain, centred in the workspace, because
+under `aspect:'equal'` a stage stretched to the viewport can only add blank board (the drawn figure had
+reached 38% of stage height at 390×844). Nothing is scaled non-uniformly.
+ACCEPTANCE: role hierarchy legible in the crowded pentagon; each measure adjacent to its own arc; side
+measures outside the outline; both short-arm fixtures present and asserting different things; painted ink
+85–89% of the board at all three viewports, measured against the BOARD and never the SVG element.
+
+## STAGE 3c — Semantic placement constraints  ·  DONE
+Stage 3b gave the annotations roles and preferred anchors; visual review showed the preferences being
+discarded by the collision search in favour of a clear position on the wrong side of the geometry — angle
+measures outside their own wedge, a side length inside the polygon, a vertex name inside the shape it
+names. The missing layer is the ALLOWED REGION: per role, the set of positions that still MEAN the right
+thing. Stage 2c keeps ranking; it now ranks only within that set.
+`semantic role → preferred anchor → allowed region → clearance search → nearest legal → styling`
+Also: the exhaustive fallback now ranks by distance from the anchor rather than raster order (constraining
+regions makes it fire much more often); the shell takes its interaction copy from the figure TYPE, so
+geometry no longer says "hover the plot"; the geometry board flows after the toolbar instead of being
+centred in a full-height stage; the fill rule is stated (unfilled unless authored).
+ACCEPTANCE: `scripts/verify-geometry-semantics.mjs` — every angle label inside its wedge and its polygon,
+every side label in its edge's exterior half-plane, every vertex label outside its polygon, across two box
+sizes. The checker re-derives each predicate from raw coordinates rather than calling the engine's own
+helpers, because this stage twice shipped a check that restated the implementation instead of testing it.
+FIXTURES: a reversed-winding pair — the same quadrilateral listed both ways must place all 10 labels
+identically, so "outside" is a property of the shape and not of the author's typing order; and a concave
+dart, because contract 8 asserted the reflex-vertex error against no fixture at all until now.
 
 ## STAGE 4 — Block wiring (plug engines into the containers)
 Branch off the merged front-ends. Spec §8.

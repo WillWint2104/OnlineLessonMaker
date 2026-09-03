@@ -8,6 +8,156 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 3c — Semantic placement constraints.** Stage 3b gave each annotation a role and a preferred anchor;
+  visual review showed the preference being discarded by the collision search whenever a clear position
+  existed on the semantically wrong side of the geometry — angle measures outside their own wedge (`46.9°`,
+  `56.9°`, `59.2°`), a side length inside the polygon it measures, a vertex name inside the shape it names.
+  The missing layer is the **allowed region**: per role, the set of positions that still MEAN the right thing.
+  `semantic role → preferred anchor → allowed region → clearance search → nearest legal → styling`. An angle
+  measure (and a symbolic name for the same angle) must stay inside the swept wedge and, for an interior
+  angle, inside the polygon; a side measure must stay in the exterior half-plane of its own edge, free to
+  slide along it but never to cross it; a vertex name must stay outside its polygon. The region is not a
+  preference the ranking can outvote — an illegal candidate is excluded before clearance is measured, and
+  excluded from the fallback too. **Stage 2c is unchanged in what it does**: it still ranks by displacement
+  and takes the nearest legal position, but now only among positions that mean the right thing. The graph
+  supplies no regions and is byte-identical. Exhausting a region is **reported, never silently escaped**: the
+  figure expands up to 8 times, and only then relaxes the region and names the label whose association it had
+  to weaken — a measure drawn outside its own angle without saying so is worse than a missing one, because
+  nothing in the picture reveals it.
+- **`scripts/verify-geometry-semantics.mjs`** — asserts semantic legality rather than clearance: angle-label
+  centre inside its wedge and its polygon, side-label centre in its edge's exterior half-plane, vertex-label
+  centre outside its polygon, across two box sizes. It **re-derives every predicate from the raw painted
+  coordinates** and never calls the engine's own `figGeomInside`/`figGeomInSector`, because this stage twice
+  shipped a check that restated the implementation instead of testing the requirement (a radius against the
+  engine's own clamp; a fill against the SVG element). Proven to fail when the constraint is removed:
+  disabling the angle region reports **11 violations**, including the three visible by eye and three that
+  were not (`angle of elevation`, `48.2°`, `58.4°`). Fixture: a **reversed-winding pair** — the same
+  quadrilateral listed A,B,C,D and D,C,B,A — places all **10 labels at identical coordinates**, so "outside"
+  is a property of the shape rather than of the authoring order. A **concave dart** was added alongside it:
+  contract 8 has said "assert the sum on convex fixtures and the *error* on a concave one" since Stage 3,
+  and there was no concave fixture, so half that contract was asserted against nothing. The dart's reflex
+  vertex is reported and left unmeasured while its other three angles measure normally.
+
+- **Stage 3b — Geometry visual language.** Visual review of Stage 3 found the renderer technically right and
+  reading as raw engine output: vertex names, side lengths, angle measures and symbolic labels all competed at
+  the same visual weight, so nothing told the eye what was structural and what was explanatory. This adds the
+  **layout grammar** that was missing between the geometry and the collision search — it does not touch the
+  renderer or the placement engine. Three **annotation roles** (vertex > symbolic > measurement) as semantic
+  classes on the existing tokens, never per-fixture styling, with the pill the search reserves sized from the
+  role so box and ink stay in step. Marks are subordinate to what they annotate: arcs and right-angle squares
+  now paint a step lighter than the polygon edges. **Angle measures are anchored to their own arc** — on the
+  swept bisector one `FIG_GAP` outside the OUTERMOST arc, so arc and number read as one annotation; the anchor
+  was a MULTIPLE of the radius (`1.62r`), which pushed the number deep into the polygon on a wide angle and
+  left a student matching numbers to corners by eye. **Side measures** keep midpoint + outward normal, but
+  "outward" is now decided by an even-odd ray cast against the outline itself, so it holds for either winding
+  and for a concave polygon, where the centroid test picks the wrong side. One **numeric style** for every
+  measurement: precision follows magnitude, trailing zeros are dropped, and `°` is set with its number, so a
+  right angle reads `90°` and a side reads `2.39` rather than the coordinate serialiser's `2.385`. The
+  pipeline is unchanged in shape — semantic object → preferred anchor → obstacles → Stage 2c nearest legal
+  position → role styling — which is what lets a JSON-authored diagram come out right without hand-tuning.
+  **Geometry focus now fits the FIGURE where graph focus fits the PLANE.** A coordinate plane is itself the
+  subject and should take the whole workspace; a polygon is not, and under `aspect:"equal"` a stage stretched
+  to the viewport can only wrap it in blank board. Geometry gets a drawing board shaped like its own domain,
+  sized to whichever workspace dimension binds and centred in what is left; the domain margin that the
+  annotations live in drops from 0.18 to 0.11 per side (the escalation loop still buys more room on a figure
+  that needs it). Nothing is scaled non-uniformly. **Fixtures:** the ~6px sliver is reclassified as a
+  CORRECTNESS stress case — it proves the arcs stay attached and distinct, and is deliberately far too small
+  to read — and a second **~44px short arm** is added as the VISUAL QUALITY case, where three stacked arcs
+  (radii 11.1 / 16.6 / 22.1) are actually distinguishable to a human. Both contracts now exist and are
+  recorded separately in `tests/visual/README.md` contract 8. `ENGINE_SPEC.md` §3.2's **vertex** anchor also
+  still prescribed `−normalize(u+w)` with a "degenerate near 180° → use edge perpendicular" escape, which the
+  implementation has never used: that vector collapses toward zero as a vertex straightens, so it is
+  progressively unreliable approaching 180°, not merely degenerate at it. §3.2 now documents the swept-bisector
+  derivation the code actually uses — the same class of correction §3.2's candidate ordering needed in Stage 3.
+
+  **Known limitation, not introduced here:** `figPillSize` estimates text width as `chars × 0.62 × fontSize`,
+  a MEAN character width, so a string of wide capitals reserves less than it paints — `"MMMM"` paints 47.9
+  against a 42.2 box. The graph identifier class spills identically (46.1 vs 41.0), so this is a property of
+  the shared estimator rather than of the geometry roles; Stage 3b moves the vertex case from 5.1px to 5.7px
+  by going 12.5/600 → 13/700. It does not manifest anywhere in the committed fixtures — every label's ink sits
+  INSIDE its own collision box (worst spill 0.0px across 75 labels) because `FIG_PADX` absorbs the shortfall —
+  but the shortfall grows with string length while the padding is constant, so a long wide-glyph identifier
+  would eventually escape its box and the ≥ `FIG_GAP` guarantee with it. Fixing it means changing the
+  estimator the GRAPH path shares, which is outside a visual-language pass; recorded here for the maintainer.
+
+### Fixed
+- **ENGINE_SPEC described the no-legal-candidate fallback as "max clearance".** It is not: the fallback
+  scores `clear − 3 × off` — true geometric clearance against how far the box pushes past the 2px canvas
+  inset — so a box with less clearance that stays on the canvas beats a clearer one hanging off it,
+  deliberate since a label painted outside the viewBox is not visible at all. `figPlacePill`'s own header
+  has said so since #149; §3.2 step 3 had not caught up, and §1.4's "clearance is never traded away" (true
+  of the LEGAL candidates it ranks) read as covering the exhausted case too. The rewrite also fixes a
+  sequencing error it introduced: the penalised box is reached only after the exhaustive on-canvas scan
+  finds nothing (`figLayoutPills`), not straight after the directional search, and selection by strict
+  improvement keeps the fallback as deterministic as the ranking above it. Documentation only — no
+  behaviour change.
+- **The exhaustive placement fallback returned the first clear cell in raster order.** Stage 2c made the
+  directional search take the NEAREST legal candidate but left the fallback taking whatever a top-left-first
+  sweep hit first, which stayed invisible while it fired rarely. Constraining regions makes it fire far more
+  often, and then "first in raster order" put a side length in the corner of the canvas — legal, and 370px
+  from the edge it measured. It now ranks by distance from the anchor when one is supplied; the graph
+  supplies none and keeps first-found, so its placements are unchanged.
+- **The focused shell spoke graph language in a geometry figure** — "Hover the plot to read coordinates". A
+  geometry figure has no plot. The shell now takes its interaction copy from the figure TYPE (`FIGX_COPY`),
+  so it reads "Move the pointer over the figure to read coordinates"; the capability is identical (§1.1
+  inverse mapping), only the sentence differs, and it lives with the shell rather than in any lesson.
+- **The geometry board was centred in a full-height stage**, leaving dead bands above and below it on a tall
+  phone. It now flows after the toolbar (header → controls → board → hint). The stage keeps `flex:1 1 auto`
+  because it is what the board is MEASURED from — letting it shrink to its own content makes the board an
+  input to its own size and ratchets the figure smaller every render (measured: the phone board fell from
+  336×291 to 242×210 before this was caught). Only the alignment changes; the board is never stretched.
+
+- **The Stage 3 focused-fill figure was measured against the wrong thing.** #151 reported the painted figure
+  at "87–94% in both dimensions"; that measured the SVG **element**, which is 100% × 100% of whatever stage it
+  is given and therefore proves nothing. Measured against the painted ink, Stage 3 was **44% × 73%** at
+  1440×900, **72% × 52%** at 834×1112 and **83% × 38%** at 390×844. This is the same failure mode as the arc
+  harness earlier in the PR — asserting against the implementation's own proxy instead of the requirement —
+  and it is now recorded in contract 8 as a rule: measure the ink against the board, never the element. With
+  the Stage 3b board the ink reaches **85% × 84%**, **85% × 83%** and **93% × 89%**.
+
+### Added
+- **Stage 3 — Geometry 2D front-end.** Polygons of any *n* through **one** renderer, angle arcs seated on the
+  actual arms, a right-angle square derived from the two incident rays, and vertex / side / angle labels placed
+  by the **same Stage-2c pill system** the graph uses. It renders into the UI-1 shared Figure Shell and opens in
+  the same focused workspace on the same rail: a geometry figure differs from a graph by its **content**, not by
+  a second container, toolbar or placement rule. `fragFigure` dispatches on `b.figure` and everything else —
+  shell, ⤢, errors, caption, Options — is shared. Solving reuses Stage 1c's construction DAG (`figConstruct`)
+  unchanged, so `construction: "triangleSSS"` and friends work with authored points as one vocabulary; every
+  mark is then derived in SCREEN space from the projected coordinates, so what is measured for placement is
+  exactly what is drawn. Angles use §3.1's **signed sweep** (`δ = wrap(β−α)`, bisector `α + δ/2`, label at
+  `e·r`) rather than `normalize(u+w)`, which the spec forbids for degenerating near 180°. `aspect` is forced to
+  `equal` — a stretched axis turns a right angle into something that is not one. **Single source of truth (§4)
+  holds:** `label:"measure"` and `text:"auto"` display what the engine computed; any other string is understood
+  as a *name*, so a figure can never assert a length or angle its own coordinates contradict — and a
+  `rightAngle` asserted on an angle that is not 90° is **reported and not drawn** rather than fabricated.
+  Fixture: `tests/visual/lessons/figure-geometry-baseline.json`, **11 figures across 8 pages** (see
+  `tests/visual/README.md` contract 8). Three review findings hardened it further (CodeRabbit): **stacked arcs
+  collapsed onto one radius whenever the arm was shorter than the base radius** — each index was clamped
+  independently, so a double or triple arc painted on top of itself, invisible in a fixture with generous arms;
+  they now step *inward* from the clamped ceiling with the spacing shrinking to fit, and the baseline carries a
+  sliver triangle that exercises it. A **degenerate arm** (zero-length ray) on an `angle` or `rightAngle` was
+  dropped with no mark *and no message* — silence is the one outcome the engine never allows, so both now
+  report. And a **reflex interior angle** under `angles:"all"` would have printed 360−θ as though it were the
+  interior angle, because `figGeomAngle` returns the unsigned smaller sweep; it is now detected against the
+  polygon's winding and **reported instead of measured**, since drawing the reflex sweep is deferred — a wrong
+  label is worse than an absent one. A fourth finding closed the arc question properly: the radius floor
+  (`Math.max(9, armMin*0.5)`) was **not bounded by the arm**, so any arm under 9px got a 9px arc drawn straight
+  past both its ends — the mark detaching from the figure it annotates. **The floor is gone**: half the shorter
+  arm is the single rule §3.1 already stated, so a small angle simply gets a small arc, and there is no second
+  constant that can contradict it. This survived the first fix because the harness asserted each radius against `room`, the engine's *own* clamp,
+  rather than against the arm the arc has to fit inside — it restated the assumption instead of testing it — and
+  because the sliver triangle was sliver in data units, not on screen: its shortest arm projected to 32.4px,
+  never reaching the floor. The fixture's arm is now ~6px, where the old code drew a radius **1.52× the arm**.
+  **Checked:** all 11 solve with every label ≥ `FIG_GAP` clear of every
+  edge, arc, mark, vertex and other label (worst 6.0 against a gap of 6), none off-canvas, none falling through
+  to the exhaustive fallback, 0 console errors; stacked-arc radii distinct, ordered and **strictly inside the
+  arm** across **33/33** arm×count combinations from 4px to 120px (9 of which drew past the arm before the fix),
+  and **13/13** arc groups in the fixture itself (worst radius/arm 0.50, i.e. exactly the stated ½); the quadrilateral, pentagon and
+  SSS triangle interior angles sum to (n−2)·180°; the error fixture reports **four** distinct faults, including
+  impossible construction givens and the zero-length arm; every figure byte-identical across three solves;
+  legacy corpus **250/250 byte-identical** via the committed `verify-corpus-identity.mjs`; graph placement
+  **785/785**; six frozen functions byte-identical.
+
 - **`scripts/verify-corpus-identity.mjs` — the recurring "250/250 byte-identical" claim becomes a committed,
   reproducible check.** #146, #147 and #149 each asserted that no committed lesson changed, and each proved it
   with a throwaway script nobody else could re-run — the exact gap the preamble of `tests/visual/README.md`
@@ -33,6 +183,23 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `npm run corpus-identity`; documented in `docs/CHECKING.md`.
 
 ### Fixed
+- **A geometry figure lost most of its focused viewport, and its grid changed between inline and expanded.**
+  Two seams that were right for graphs and wrong for geometry, both found by measuring rather than reading.
+  **(1)** `figxRegister` recorded the *solved inline view* as the focus domain. `figView('equal')` expands
+  whichever axis is short for the box it is given, so registering an already-expanded landscape domain and then
+  expanding it again for a portrait viewport compounded the padding twice: the crowded pentagon fell to **58%
+  of the stage width and 43% of its height** — precisely the dead drawing space UI-1's contract 5 exists to
+  prevent. Geometry now registers its **tight** bounds (`M.dom0`) so each viewport expands once, for itself;
+  the painted figure fills **87–94% of the stage in both dimensions** at 1440×900, 834×1112 and 390×844, with
+  the SVG exactly matching the stage (no letterboxing). A graph's domain is authored *data*, so it still
+  registers the solved view. **(2)** The grid default is inverted for geometry — a construction is not a
+  coordinate reading — but `figxRegister` read it the graph's way, so the grid vanished inline and reappeared
+  on ⤢. **Checked:** 0 grid lines inline *and* focused for a geometry figure authoring no `grid`.
+- **`ENGINE_SPEC.md` §3.2 still told the next stage to take the FIRST clear label position.** Stage 2c replaced
+  that with the nearest legal one in §1.4, but §3.2 — the section a geometry implementer reads — was left
+  saying "Take the FIRST fully-clear candidate". Corrected, with a pointer to §1.4; left as it was, Stage 3
+  would have inherited exactly the defect Stage 2c removed.
+
 - **The `screenshots` CI job has been green with NO artifact since #89 (2026‑07‑03) — `shots.mjs` was rendering
   an empty lesson and writing zero PNGs.** The harness screenshotted whatever the app shipped with, and the
   app's embedded `#lesson-data` has been `{"slides": []}` since #89: every theme logged "slide N is out of range

@@ -103,7 +103,9 @@ Among the candidates that satisfy every clearance rule, placement takes the one 
 DISPLACEMENT from the owner — marker to label-box centre. The ring distance is a true lower bound on
 displacement, so the search remains a terminating branch and bound rather than a full enumeration.
 Placement stays deterministic: fixed enumeration order, strict improvement only, so ties resolve to
-the more preferred direction.
+the more preferred direction. "Never traded away" scopes to the candidates that ARE legal: when none
+is, the figure has already failed, and the fallback that picks the box to draw anyway does trade
+clearance against staying on the canvas — §3.2 step 3 states that rule.
 
 **Axis furniture is an obstacle (Stage 2c).** "Clear every arm" covers the axis LINES; it must also
 cover the numbers PRINTED along them. The reserved boxes are derived from the same nice-tick chooser
@@ -168,7 +170,13 @@ Given vertex V and ray points P, Q:
 α = atan2(P.y−V.y, P.x−V.x)          # ray-1 angle
 β = atan2(Q.y−V.y, Q.x−V.x)          # ray-2 angle
 δ = wrapToPlusMinusPi(β − α)          # SIGNED sweep; |δ| = angle magnitude; robust across ±180°
-r = min(baseR, k·min(|P−V|, |Q−V|))   # arc fits inside; k ~ 0.5
+armMin = min(|P−V|, |Q−V|)            # the shorter incident arm
+room   = k·armMin                     # k ~ 0.5 — NO minimum floor: a floor not bounded by the
+                                      # arm draws past its ends (Stage 3b)
+step   = min(baseStep, room/(n+1))    # spacing shrinks so n arcs always fit
+r_i    = min(baseR + (n−1)·step, room) − (n−1−i)·step      # i = 0…n−1, outermost = r_(n−1)
+# INVARIANT: 0 < r_0 < … < r_(n−1) ≤ room < armMin. Stacked arcs are distinct at EVERY arm length,
+# and every arc is strictly inside the arms it spans. §3.2 anchors the measure to r_(n−1).
 # arc: centre V, radius r, drawn from α through α+δ
 φ = α + δ/2                           # bisector of the SWEPT arc — correct side, no degeneracy
 labelAnchor = V + (cosφ, sinφ)·(e·r)  # e = eccentricity ~1.6 (just outside the arc)
@@ -194,22 +202,102 @@ The knockout fill is a nicety, not a crutch: pills do not touch lines in the fir
 single uniform constant so all pills sit the same clear distance off their edges.
 
 Anchor + primary direction per label type (all coordinate-derived):
-- **Side length:** anchor = edge midpoint; primary dir = outward normal `normalize(−edge.y, edge.x)`
-  flipped away from the polygon centroid; along = the edge direction.
-- **Vertex name:** anchor = the vertex; primary dir = EXTERNAL bisector `−normalize(u+w)` of its two
-  arms (degenerate near 180° → use edge perpendicular); along = an arm direction.
-- **Angle measure:** on the swept-arc bisector at `e·r` (§3.1) — small pill, same collision rule.
+- **Side length:** anchor = edge midpoint; primary dir = the perpendicular normal that faces OUT of the
+  closed outline the edge belongs to, decided by an even-odd ray cast against that outline (Stage 3b —
+  the centroid test picks the wrong side on a concave polygon and a winding-sign rule picks the wrong
+  side when the vertices are listed the other way round); a bare segment has no interior, so it falls
+  back to the centroid of the figure's points. A lone segment is the degenerate case of that fallback —
+  its centroid IS its midpoint, so the dot product is 0 and neither normal is "outward". The rule is then
+  simply the unflipped normal `(−e.y, e.x)`, taken from the edge direction A→B: fully determined, and stable
+  across re-solves. It is not orientation-INdependent — listing the endpoints the other way round puts the
+  label on the other side — but a lone segment has no interior for either choice to be wrong about, so the
+  author's ordering is the only thing that could decide it. Along = the edge direction.
+- **Vertex name:** anchor = the vertex; primary dir = the EXTERNAL bisector, taken as `−(cos φ, sin φ)`
+  from §3.1's swept interior bisector `φ`; along = an arm direction. This said `−normalize(u+w)` with a
+  "degenerate near 180° → use edge perpendicular" escape until Stage 3b. The implementation never used it:
+  `normalize(u+w)` collapses toward the zero vector as the vertex straightens, so the direction is not
+  merely degenerate AT 180° but progressively unreliable approaching it, and the special case papered over
+  a formula that §3.1 had already replaced. Deriving it from the signed sweep is correct at every angle and
+  needs no escape — the same correction §3.2's candidate ordering needed above.
+- **Angle measure:** anchor = the point where the OUTERMOST arc meets the swept bisector (§3.1); primary
+  dir = that same bisector. The pill therefore resolves to **arc → GAP → label** on one line, and the arc
+  and its measure read as a single annotation (Stage 3b). It was `e·r`, a MULTIPLE of the radius, which
+  pushed the number deep into the polygon on a wide angle and left a student matching numbers to corners
+  by eye. No per-vertex offsets exist at any point in this.
 - **Plotted point (graph):** anchor = the point; primary dir = away from nearby curves/axes.
+
+**Stage 3c — the ALLOWED REGION.** A preferred anchor is a starting point, not a constraint: the search is
+free to leave it, and clearance alone cannot tell it not to. An angle measure pushed outside its own wedge
+is perfectly collision-free and simply wrong — it now names a different part of the figure. So each role
+also carries the region a candidate must stay inside, and the search never leaves it:
+
+```
+semantic role → preferred anchor → ALLOWED REGION → clearance search → nearest legal → role styling
+```
+
+| Role | Allowed region |
+|---|---|
+| Angle measure, and a symbolic name for the same angle | inside the swept wedge (never across either arm); for an INTERIOR angle, also inside the polygon |
+| Side measure | the exterior half-plane of its own edge — free to slide along the side and vary distance, never to cross it |
+| Vertex name | outside the polygon it names |
+
+The region is not a preference the ranking can outvote: an illegal candidate is not a candidate, so it is
+excluded before clearance is even measured, and excluded from the fallback too. Stage 2c is unchanged in
+what it does — it still ranks by displacement and takes the nearest legal position — but it now chooses
+only among positions that still mean the right thing. Geometry supplies regions; the graph supplies none
+and behaves exactly as before.
+
+**Exhausting a region is reported, never silently escaped.** If nothing legal exists inside it, the figure
+expands (up to the same 8 passes as §1.3) and tries again; only then is the region relaxed, and the figure
+REPORTS the label whose association it had to weaken. A measure drawn outside its own angle without saying
+so is a worse failure than a missing one, because nothing in the picture reveals it.
 
 **Placement = candidate-position search (established cartographic method, NOT single-direction march):**
 1. Generate candidates: out along the primary dir at increasing distance (base…base+~70, step ~6),
    EACH also shifted along the edge/arm by a few offsets (0, ±14, ±26…) toward the less-crowded end.
 2. Order near→far; test each candidate box against ALL obstacles (arms as segments, vertices/points,
-   already-placed pills). Take the FIRST fully-clear candidate.
-3. If none is fully clear within range (pathological), take the least-penalised (max clearance) — but
-   the search range must be wide enough that this is rare.
+   already-placed pills). Take the NEAREST fully-clear candidate — smallest displacement from the anchor, not
+   the first one encountered (Stage 2c; §1.4 carries the reasoning and the branch-and-bound that keeps it
+   terminating). This paragraph said "the FIRST fully-clear candidate" until Stage 3, which was the pre-2c
+   rule and would have had geometry inherit exactly the defect Stage 2c removed from the graph.
+2b. The exhaustive fallback ranks by distance from the anchor too (Stage 3c). It returned the first clear
+   cell in raster order, which was invisible while it fired rarely; constraining regions makes it fire far
+   more often, and then "first in raster order" put a side length in the corner of the canvas — legal, and
+   370px from the edge it measured.
+3. If none is fully clear within range (pathological), the EXHAUSTIVE on-canvas scan (2b) runs first —
+   the penalised box below is taken only when that scan finds nothing either, never as a shortcut past it.
+   That box is then marked INVALID. "Least-penalised" is a BLEND, not max clearance: each candidate scores
+   `clear − 3 × off`, where `clear` is the true geometric clearance to every obstacle and `off` is how far
+   the box pushes past the 2px canvas inset. So a box with less clearance that stays on the canvas beats a
+   clearer one hanging off it — deliberate, since a label painted outside the viewBox is not visible at
+   all — and the fallback does NOT maximise clearance, though this step said it did until the wording was
+   corrected. Selection is by STRICT improvement, so ties keep the first candidate in the fixed enumeration
+   order and the fallback is as deterministic as the ranking above it.
+   Marking the box INVALID is not a placement: it makes the fitter expand the domain and re-solve, and if
+   the figure still cannot place the label after the escalation cap it reports
+   `label "…" could not be placed clear of the figure`. The label IS still drawn at that box, and that
+   is deliberate — dropping it would leave a figure that looks complete and silently is not, which is
+   the failure mode §4 exists to prevent. So the guarantee is precise: no sub-`GAP` box is ever ACCEPTED
+   as legal, and none is ever drawn without the figure saying so. (This paragraph claimed the label was
+   not drawn at all until Stage 3c; `figGeomBody` and `figLayoutPills` have always painted it, so the spec
+   was describing an engine that does not exist.)
 4. Placement order: vertices first (they crowd corners), then lengths, then angle measures — later
    pills see earlier ones as obstacles.
+
+**Stage 3b — annotation ROLES.** A geometry figure says four different kinds of thing and they are not
+equal, so each label carries a semantic role that sets both its type treatment and the pill size the
+search reserves for it (they must move together, or the box stops matching the ink):
+
+| Role | Applies to | Weight |
+|---|---|---|
+| `vertex` | vertex names | strongest — the structure is named |
+| `symbol` | authored maths names (`θ`, `x`) | maths italic, above a measurement |
+| `measure` | computed lengths and angles | secondary — explanatory, not structural |
+
+Marks are subordinate to the polygon they annotate: arcs and right-angle squares are drawn a step
+lighter than the edges. The roles are classes on the existing token system — never per-figure styling,
+so every authored diagram inherits the same grammar. Measurement text has ONE numeric style: precision
+follows magnitude, trailing zeros are dropped, and the degree sign is set with its number.
 This survives rescale because anchors + directions are coordinates; auto-fit (§1.3) must include every
 pill box in the union so the domain leaves room.
 
@@ -230,8 +318,8 @@ A figure has ONE source of truth. Two front doors, same downstream:
 
 **Every value-label renders the COMPUTED value from the solved figure — never an authored string.**
 There is no field to type an angle/length value; you may only ask to *display* the one the engine
-computed (`label: angleB`, `label: sideBC`). This makes the drawn angle and its label the same number
-by construction; contradiction is structurally impossible.
+computed — `label:"measure"` on an `angle`, `text:"auto"` on a `sideLabel`. This makes the drawn angle and
+its label the same number by construction; contradiction is structurally impossible.
 
 Use **parameterised constructions** (closed-form, reliable), NOT a general constraint solver:
 `rightTriangle(legs)`, `triangleSAS(a,b,angle)`, `triangleASA(angle,side,angle)`, `triangleSSS(a,b,c)`,
@@ -245,21 +333,29 @@ optional extension.
 A figure is JSON: a `construction` (one of §4) + a `show` list (which marks/labels to render) +
 viewport hints. The author writes givens and *what to show/label* — never positions or values.
 
+**`SCHEMA.md` is the canonical payload** — it documents what the engine actually reads, and this section
+is the rationale for it. The shape below was this document's own sketch (`construction` as an object, a
+`show[]` array, `text:"measure"`); it is NOT what ships, and an author who wrote it from here would produce
+a lesson the engine cannot read. Corrected to the shipped vocabulary — `objects[]`, `construction` +
+`params`, `label:"measure"`, `text:"auto"`:
 ```json
 {
   "figure": "geometry",
-  "construction": { "type": "rightTriangle", "legs": [6, 8], "right": "A" },
-  "show": [
-    { "mark": "rightAngle", "at": "A" },
-    { "mark": "angle", "at": "B", "label": "measure" },
-    { "label": "side", "of": "AB", "text": "measure" },
-    { "label": "side", "of": "BC", "text": "x" },
-    { "label": "vertex", "of": ["A","B","C"] }
+  "construction": "rightTriangle",
+  "params": { "legs": [6, 8], "right": "A" },
+  "objects": [
+    { "type": "polygon", "vertices": ["A","B","C"] },
+    { "type": "rightAngle", "at": "A", "between": ["B","C"] },
+    { "type": "angle", "at": "B", "between": ["A","C"], "label": "measure" },
+    { "type": "sideLabel", "between": ["A","B"], "text": "auto" },
+    { "type": "sideLabel", "between": ["B","C"], "text": "x" }
   ],
   "grid": "hidden",           // hidden = invisible scaffold (coords still computed), or "shown"
-  "aspect": "equal"
+  "aspect": "equal"           // read for graphs; geometry is ALWAYS equal
 }
 ```
+Vertex names are not an object: they are on by default for every polygon vertex and suppressed with
+`vertexLabels: false`. `aspect` is not read for geometry.
 Context-sensitivity: only the objects in `show` render. One question shows the right-angle + `x`;
 another hides them and shows all three side measures. Same construction, different `show`.
 
