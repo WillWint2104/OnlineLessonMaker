@@ -398,6 +398,50 @@ coordinates — nothing is positioned by hand.
 | `domain` | `{xMin,…}` | Optional. Otherwise fitted to the figure; auto-fit only ever expands so a label has room. |
 | `grid` | `"shown"` \| `"hidden"` | Default **hidden** for geometry — a construction is not a coordinate reading. |
 
+### The side-measurement surface (Stage 3d)
+
+**Two separate questions.** Whether an annotation gets the measurement surface is decided by SEMANTICS; what
+face its text is set in is decided by CONTENT. Keeping them apart is the whole design — it is why `x + 4`,
+`2r`, `3.4 km` and `√2` all behave correctly *because they are measurements*, not because a pattern happened to
+recognise their characters.
+
+```
+author's semantic role  →  fallback classifier (only if unspecified)  →  presentation
+```
+
+**The author is the source of truth.** `label:"measure"` / `label:"name"` always wins. The classifier exists
+for content written before the field did, and cannot be authoritative: mathematics is ambiguous by nature, and
+`AB`, `a`, `r`, `2x` and `PQ` each denote a name or a quantity depending only on what the author meant. Write
+the intent for anything that matters:
+
+```json
+{ "text": "3.21", "unit": "cm", "label": "measure" }
+{ "text": "x + 4",               "label": "measure" }
+{ "text": "hypotenuse",          "label": "name"    }
+```
+
+A measurement and its unit stay ONE semantic annotation and ONE collision box — sized from the complete
+formatted string before any placement search runs, never text first and chrome after. So put the unit in
+`unit`; `"8 cm"` as a single string is reported, with the fix named.
+
+**Three presentation roles**, all using the same exterior side placement — no second positioning architecture:
+
+| Role | Example | Presentation |
+|---|---|---|
+| measurement | `3`, `3.21 cm`, `480 mm`, `x + 4`, `2πr` | soft accent-tinted **surface**; numerals upright, algebra in the maths face |
+| symbolic name | `a`, `c`, `x`, `AB`, `θ` | maths face, **no** surface |
+| prose name | `hypotenuse`, `adjacent side`, `radius`, `base` | upright body text, **no** surface |
+
+A word is not a variable: setting `hypotenuse` in the maths face reads as a product of eight letters.
+
+Angle measures and vertex names never take the surface whatever they contain — angles belong to the interior
+construction, lengths to the exterior measurement layer.
+
+When `label` is absent the fallback reads value characters as a quantity and a WORD as a name.
+
+Two things are reported rather than rendered quietly: an **empty** `text`, and a value-and-unit written as one
+string (`text:"8 cm"`), which classifies as a name — the message names the fix.
+
 `objects[]` for geometry:
 
 | Type | Shape | Notes |
@@ -407,27 +451,33 @@ coordinates — nothing is positioned by hand.
 | `segment` | `{between:[idA,idB]}` | A named-point connector, as in a graph. |
 | `angle` | `{at, between:[idP,idQ], arcs?:1–3, label?}` | Arc(s) seated on the actual arms at `at`. `arcs` stacks concentric arcs without overlap. `label:"measure"` **displays the computed angle**; any other string is a *name* (`"θ"`); `false` draws the arc with no label. |
 | `rightAngle` | `{at, between:[idP,idQ]}` | The square, derived from the two incident rays, so it is correct at any orientation. If the angle is not 90° the mark is **not drawn** and the discrepancy is reported. |
-| `sideLabel` | `{between:[idA,idB], text?}` | `"auto"` (or omitted) **displays the computed length**; any other string is a *name* (`"hypotenuse"`). |
+| `sideLabel` | `{between:[idA,idB], text?, unit?, label?}` | `"auto"` (or omitted) **displays the computed length**; the engine never vouches for an authored string. `unit` (e.g. `"cm"`) is typeset quieter *inside the same annotation* — one anchor, one collision box — so put the unit here, not inside `text`. `label` forces the SURFACE: `"measure"` or `"name"`. |
 
-**Single source of truth (§4):** a measure is never authored. `label:"measure"` and `text:"auto"` display what
-the engine computed from the construction; a literal string is understood as a name, not as a value, so a
-figure can never assert a length or angle that its own coordinates contradict.
+**Single source of truth (§4):** what the ENGINE states, it computes. `text:"auto"` on a `sideLabel` and
+`label:"measure"` on an `angle` render the value solved from the construction, so a figure can never assert a
+length or angle that its own coordinates contradict. An authored string is a different thing: the engine
+displays it and never vouches for it. By default a literal reads as a *name*; `label:"measure"` on a
+`sideLabel` says the AUTHOR owns this quantity (`x + 4`, `480 mm`), so it is typeset as a measurement — but it
+stays the author’s claim, never checked against the coordinates. The guarantee above is about what the engine
+computes, not about every string that can appear beside an edge.
 
 `aspect` is not read for geometry — it is always `equal`. A stretched axis turns a right angle into something
 that is not one and an arc into an ellipse, so it is not an authoring choice here.
 
 **Annotation roles (Stage 3b).** The four kinds of annotation are ranked by three roles — a side length and an
 angle measure are both *measurements* and share one — and they are not uniform: **vertex names** are the
-strongest, an authored **symbolic** name (`"θ"`) is set in maths italic, and a **computed measurement** is
-secondary. Arcs and right-angle marks are drawn lighter than the polygon edges they annotate. Nothing here
-is authorable — a role follows from what the label *is* (`label:"measure"` / `text:"auto"` produce a
-measurement; any other string is a name), so a lesson cannot drift out of the house grammar.
+strongest, an authored **symbolic** name (`"θ"`) is set in maths italic, and a **measurement** is
+secondary. Arcs and right-angle marks are drawn lighter than the polygon edges they annotate. A role is
+declared, never styled: `label` says measurement or name (and the classifier guesses only when it is absent),
+and the house grammar supplies every visual consequence — so a lesson cannot drift out of it.
 
 Measurements share one numeric style: precision follows magnitude (2 dp under 10, 1 dp under 100, whole
 numbers above), trailing zeros are dropped, and `°` is set with the number — so a right angle reads `90°`,
 never `90.0°`. Preferred anchors are **side midpoint + outward normal** (outside the polygon) and **angle
 measure on the arc's own bisector, one gap outside the outermost arc**; the general Stage-2c placement
-search then resolves collisions from there. Units are not supported yet.
+search then resolves collisions from there. A `sideLabel` `unit` is typeset inside the same annotation and
+reserved with it (see *The side-measurement surface* above); an angle measure carries `°` and takes no other
+unit.
 
 ## `outro`
 

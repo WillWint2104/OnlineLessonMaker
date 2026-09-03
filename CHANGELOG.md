@@ -8,6 +8,43 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 3d — the side-measurement surface.** A side measurement is now painted on a quiet accent-tinted
+  surface; an angle measure and a vertex name are not. The rule is semantic, not cosmetic: the surface asserts
+  *"this is how long this side is"*, so angles keep their plain typography inside the interior construction and
+  lengths get an exterior measurement layer. Value and unit are ONE annotation — one anchor, one collision box,
+  sized from the complete formatted string before any placement search runs, never text first and chrome after.
+  The box a chip paints IS the box Stage 2c reserved and cleared, so there is no second geometry to keep in sync.
+  **Two questions, kept separate:** semantics decide the surface, content decides the face — which is why
+  `x + 4`, `2r`, `3.4 km` and `√2` behave correctly *because they are measurements*, not because a pattern
+  recognised their characters. `label:"measure"` / `label:"name"` is the source of truth and always wins; the
+  content classifier is a back-compat convenience only, and cannot be authoritative, since `AB`, `a`, `r`, `2x`
+  and `PQ` each denote a name or a quantity depending solely on authorial intent. **Three presentation roles**
+  share one placement system: measurement → surface (numerals upright, algebra in the maths face); symbolic
+  name (`a`, `c`, `AB`, `θ`) → maths face, no surface; prose name (`hypotenuse`, `radius`) → upright body text,
+  no surface, because a word is not a variable and italicising `hypotenuse` reads as a product of eight
+  letters. An empty label and a value-and-unit written as one string are reported, with the fix named.
+  The unit is subordinate to its value — 85% of its size, and the quietest ink that still clears WCAG AA in
+  every pack (measured: 5.01:1 worst case, in scholarmath; .82 also passes at 4.68:1 but 0.18 above the floor
+  is not a margin) — while remaining inside the same annotation and the same collision box.
+  §3.3 of `ENGINE_SPEC.md` records the resolution order as an invariant.
+  The measurement value is separated from the geometry stroke by LUMINANCE, not by more colour: the accent is
+  pulled 45% (was 72%) toward the page's darkest ink, so the value lands a deep forest/charcoal green ~16-18 L*
+  BELOW the stroke it annotates while its saturation *drops* (73% → 63% in scholarmath) — the opposite of
+  intensifying the fill, which would make the chip read as a control. Surface 4.5% → 6% and border 6% → 10%,
+  both still subtle. Measured across the five Layer-B packs: value-vs-stroke ΔL* 6.4 (imperium, whose accent is
+  already dark) to 18.5 (scholarmath); value contrast 9.8-13.4:1; unit 6.4-8.9:1.
+- **`scripts/verify-measure-surface.mjs` + the `measure-surface` workflow — the gate none of the existing checks
+  provided.** The chip shipped with three defects that every check called green: `verify-corpus-identity`'s
+  `isLesson` regex structurally excludes `tests/visual/lessons/`, so it never renders a figure fixture at all;
+  `verify-label-placement`'s fixtures contain no geometry; and `verify-geometry-semantics` asserts where a
+  label's CENTRE sits, which a chip whose text overflows its own rect satisfies perfectly. The new gate renders
+  the surface in all 8 packs and asserts surface assignment, the three presentation roles, containment, a
+  proportional padding band and composited-colour contrast — 191 design + 180 safety assertions. Non-vacuity
+  is proven, not assumed: every fixed defect was re-introduced and the gate failed, including prose names set
+  in the maths face, the classifier outranking explicit author intent, an EXPECT entry the fixture no longer
+  renders, and the value/unit text mismatch that had been silently skipping assertions. It is not wired as a required check: branch protection is a
+  maintainer decision.
+
 - **Stage 3c — Semantic placement constraints.** Stage 3b gave each annotation a role and a preferred anchor;
   visual review showed the preference being discarded by the collision search whenever a clear position
   existed on the semantically wrong side of the geometry — angle measures outside their own wedge (`46.9°`,
@@ -80,7 +117,34 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   would eventually escape its box and the ≥ `FIG_GAP` guarantee with it. Fixing it means changing the
   estimator the GRAPH path shares, which is outside a visual-language pass; recorded here for the maintainer.
 
+### Added
+- **Capability profiles — the application is multi-domain; a theme is not.** The app has universal domain
+  capability; an individual theme declares which capability FAMILIES it presents. A block declares what it
+  needs, a theme declares what it hosts, and conflating those axes is what let Imperium — a Roman-history
+  theme — be the limiting case for the colour of a mathematics measurement annotation. `CAP_FAMILY`,
+  `THEME_CAPS`, `BLOCK_CAP` and `themeSupports()` sit beside `PACK_THEMES`; ENGINE_SPEC §3.4 states the rule.
+  `THEME_CAPS` is the AUTHORITATIVE declaration and is not coupled to implementation: theme architecture
+  (Layer A / Layer B / whatever comes next) and theme capability coverage are independent axes that merely
+  overlap today and must be free to diverge, so callers ask `themeSupports()` and never infer support from
+  `PACK_THEMES` or from Layer B's presence. Families are coarse on purpose and not a ceiling — sub-capabilities
+  (`quantitative.graph`, `mathematics.geometry`, `science.chemistry`, `humanities.timeline`) can be added
+  later, and `BLOCK_CAP` names what a block kind *currently* needs rather than asserting one domain forever.
+  Geometry is a `mathematics` capability and exactly two themes declare it (`mathematics`, `scholarmath`);
+  `quantitative` is declared far more widely, because graphs and ratios belong in geography and history too.
+  This is an authoring/design contract, NOT a runtime permission — nothing gates rendering, and an undeclared
+  pairing still degrades safely through the Layer A fallbacks. The verification matrix now distinguishes the
+  two claims it had been conflating: a DESIGNED pairing gets the full visual/contrast/accessibility contract,
+  an undeclared one gets a small safety contract (renders, draws geometry, no empty or invisible chip, the
+  surface has a fill) and no design judgement. 191 design + 180 safety assertions, and the safety half is
+  proven non-vacuous by removing the Layer A fallback chain and watching rome fail.
+
 ### Fixed
+- **The measurement surface was invisible in three packs.** `--primary` and `--on-surface` are Layer B slots
+  declared by five packs; `rome`, `wellbeing` and `ww1` have no Layer B block, so those names are undefined
+  there — which invalidates the whole `color-mix()` and left the chip with no fill and pure-black text in ww1.
+  The tokens now degrade through the Layer A equivalents those packs do define. Note the wider gap this
+  exposed, which is PRE-EXISTING and not closed here: the geometry figure's own strokes and label inks read
+  `--primary` too, and fall back to black in the same three packs.
 - **ENGINE_SPEC described the no-legal-candidate fallback as "max clearance".** It is not: the fallback
   scores `clear − 3 × off` — true geometric clearance against how far the box pushes past the 2px canvas
   inset — so a box with less clearance that stays on the canvas beats a clearer one hanging off it,

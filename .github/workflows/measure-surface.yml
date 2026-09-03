@@ -1,0 +1,54 @@
+name: Measurement surface
+
+# Stage 3d gate for the geometry SIDE-MEASUREMENT surface.
+#
+# Why a separate workflow. `validate` is the only REQUIRED check and deliberately installs no
+# dependencies — checkout plus `node scripts/validate.mjs`, seconds, no npm, no browser. This
+# check needs Playwright and a real render in every pack, so folding it into `validate` would
+# slow the one job that gates every merge.
+#
+# It is NOT wired as a required check here: branch protection is the maintainer's call, and
+# CLAUDE.md says to ask before changing the CI/auto-merge setup. Until it is required, a red
+# result here does not block merge — read it.
+#
+# What it defends, and why that was needed: the chip shipped with three defects that every
+# existing check called green. `verify-corpus-identity`'s isLesson regex structurally excludes
+# tests/visual/lessons/, so it never renders a figure fixture; `verify-label-placement`'s
+# fixtures contain no geometry; and `verify-geometry-semantics` asserts where a label's CENTRE
+# sits, which a chip whose text overflows its own rect satisfies perfectly.
+
+# Read-only: this job renders and asserts, it never writes to the repository. `persist-credentials: false`
+# stops the checkout token being left in .git/config where any later step could reach it.
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - 'lesson-studio.html'
+      - 'tests/visual/lessons/figure-measure-surface.json'
+      - 'scripts/verify-measure-surface.mjs'
+      - '.github/workflows/measure-surface.yml'
+  push:
+    branches: [main]
+
+jobs:
+  measure-surface:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify the measurement surface in every pack
+        run: node scripts/verify-measure-surface.mjs

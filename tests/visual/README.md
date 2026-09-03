@@ -162,3 +162,46 @@ Stage 3 renders into the UI-1 shared Figure Shell (head / stage / foot / caption
 second dense toolbar. It adds `lessons/figure-geometry-baseline.json` covering: triangle with one angle arc ·
 multiple arcs · right-angle marker · quadrilateral · irregular n-gon · vertex labels · side labels ·
 crowded labels · long labels · resized figure · the focused/expanded state.
+
+
+## `figure-measure-surface.json` — contract 9: the side-measurement surface
+
+Gated by `scripts/verify-measure-surface.mjs` (workflow `measure-surface.yml`). The matrix is SPLIT by
+capability (ENGINE_SPEC §3.4): geometry is a `mathematics` capability, so the two themes that declare it
+(`mathematics`, `scholarmath`) get the full design contract, and the other six get a small safety contract
+only — renders, draws geometry, no empty or invisible chip, surface has a fill. The split is read from the
+app's own `THEME_CAPS`, never duplicated in the script. This exists because a Roman-history theme was
+previously the limiting case for a mathematics annotation's colour. This
+fixture exists because nothing else renders the chip: `verify-corpus-identity`'s `isLesson` regex structurally
+excludes `tests/visual/lessons/`, `verify-label-placement`'s fixtures contain no geometry, and
+`verify-geometry-semantics` asserts where a label's CENTRE sits — which a chip whose text spills out of its own
+rect satisfies perfectly. Three real defects shipped behind those green results.
+
+What is asserted, in every pack that declares the `mathematics` capability (the safety contract listed above
+is what the other six get):
+
+1. **Surface assignment.** A chip is painted around a side MEASUREMENT and nothing else — a vertex name, an
+   angle measure or a side NAME carrying one is a failure.
+2. **The three presentation roles**, asserted by outcome on named strings: measurement → surface (numerals
+   upright, algebra in the maths face); symbolic name → maths face, no surface; prose name → upright body text,
+   no surface. `"AB"` and `"2x"` are the load-bearing pair: both are forced by `label` AGAINST what the
+   fallback classifier would say, so they fail the moment explicit author intent stops winning.
+3. **Containment.** The text never leaves the box the placement engine reserved and cleared for it. This is the
+   assertion that catches sizing a chip with the wrong face's metrics.
+4. **Padding.** Where the painted face is known, padding stays inside a band expressed as a PROPORTION of the
+   design (0.5–1.75×), not a constant tuned until today's numbers fit — packs redefine the body face, so one
+   exact number was never achievable without per-face runtime metrics. The run prints the widest ratio it saw,
+   so drift is visible while the gate is still green.
+5. **Contrast.** Value and unit ink both clear WCAG AA against the fill they are painted on, measured from the
+   COMPOSITED colour — the unit carries an opacity, and computed style alone hid a 4.24:1 failure.
+
+Deliberately recorded, not failed: symbolic content is sized conservatively because its face is pack-defined,
+so a narrow face over-reserves. The run lists every such chip. Failing it would demand the per-face metrics
+this stage does not add; passing silently would let the looseness drift unseen.
+
+`"3x + 2y + 15"` is load-bearing, not decorative: it is the only string long enough to overflow when sized with
+the wrong face's metrics. Shorter symbolic content does not reproduce the defect, and a fixture without it
+passes while the bug is present — verified by re-introducing the bug and watching the gate stay green.
+
+`"12 cm²"` is a **renderer-format stress case only**. An area unit on a side is mathematically wrong and must
+never be copied into a real lesson; it is there to prove the chip typesets and sizes a superscripted unit.

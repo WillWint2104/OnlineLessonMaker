@@ -307,6 +307,125 @@ clear; the vertical-side length label never touches the vertical arm.
 
 ---
 
+### 3.3 The measurement surface — an INVARIANT (Stage 3d)
+
+A side MEASUREMENT is painted on a quiet accent-tinted surface; an angle measure and a side NAME are not.
+Two questions decide it, and they are separate — this is the invariant, not an implementation note:
+
+```
+     surface?   semantics  —  author's semantic role  ->  fallback classifier (only if unspecified)
+     face?      content    —  the string, always
+```
+
+**Author intent always wins.** `label:"measure"` / `label:"name"` is the source of truth and is consulted
+before anything else. The content classifier exists only for lessons written before that field did, and can
+never be promoted to the semantic model: mathematics is ambiguous by nature, and `AB`, `a`, `r`, `2x` and `PQ`
+each denote a name or a quantity depending solely on what the author meant. A string cannot carry intent, so
+the classifier is deliberately NOT made cleverer — ambiguity is what the explicit field is for.
+
+Keeping the two questions apart is what makes the system general: `x + 4`, `2r`, `3.4 km` and `√2` all behave
+correctly *because they are measurements*, not because a pattern recognised their characters.
+
+Three presentation roles, ONE placement system — the exterior-side rule of §3.2, unchanged:
+
+| Role | Face | Surface |
+|---|---|---|
+| measurement | numerals upright; algebra in the maths face | yes |
+| symbolic name (`a`, `c`, `AB`, `θ`) | maths face | no |
+| prose name (`hypotenuse`, `radius`) | upright body text | no |
+
+A word is not a variable: `hypotenuse` set in the maths face reads as a product of eight letters.
+
+A measurement and its unit are ONE semantic annotation and ONE collision box, sized from the complete
+formatted string before any placement search runs. The unit is subordinate — 85% of the value's size and the
+quietest ink that still clears WCAG AA in every pack — but never independently positioned or measured.
+
+**Separation is by LUMINANCE, not by saturation.** The value is the accent pulled most of the way toward the
+page's darkest ink, so it sits a clear step below the stroke it annotates while carrying *less* colour, not
+more. Intensifying the fill or the border instead would make the chip read as a control, which is the one
+thing the surface must never do.
+
+One honest deviation from the intended strength ladder (value → stroke → unit → surface): in the three green
+packs the unit measures DARKER than the stroke (L* 34.9-37.9 against 39.1-44.9), not lighter. Putting it above
+the stroke needs roughly L* 48, which against the pale surface computes to ~4.4:1 — under WCAG AA at 9.8px,
+where no large-text exemption applies. Accessibility wins: the unit stays subordinate to its VALUE, which is
+the functional intent, and the ladder holds everywhere else.
+
+### 3.4 Capability profiles — the application is multi-domain; a THEME is not
+
+**The rule.** The application has universal domain capability. An individual theme has DECLARED capability
+coverage. A block declares the capability it needs; a theme declares which capability FAMILIES it is designed
+to present. A domain engine consumes shared primitives where they fit, but a theme is not required to provide
+a bespoke visual treatment for a capability it was never intended to host.
+
+Families are coarse and overlap deliberately — `quantitative` (graphs, coordinates, ratios, statistics,
+financial quantities) belongs in history, geography, commerce and economics as much as in mathematics, so it
+is widely declared; `mathematics` (equations, geometry, constructions) is not. The boundary is soft because
+the subjects are. What does NOT follow from that overlap is that every history theme needs geometry or every
+mathematics theme needs chemistry.
+
+**`THEME_CAPS` is the authoritative declaration, and capability is not implementation.** The profiles sit
+beside `PACK_THEMES` for convenience only. These are independent axes that merely overlap in today's
+repository, and they must be free to diverge:
+
+```
+theme IMPLEMENTATION architecture   Layer A / Layer B / whatever token architecture comes next
+theme CAPABILITY coverage           shared / quantitative / mathematics / humanities / ...
+```
+
+A future science theme could use the newest token architecture and declare `shared + quantitative +
+mathematics + science`; a future humanities theme could use that same architecture and declare only
+`shared + quantitative + humanities`. So tests and authoring decisions ask `themeSupports()`. Never infer
+support from `PACK_THEMES`, from Layer B's presence, or from any other implementation signal — those answer
+*how a theme is built*, not *what it is designed to present*.
+
+**Coarse on purpose, and not a ceiling.** Family granularity is right for this stage; deeper hierarchy is not
+built. But a family may later gain sub-capabilities where precision earns its keep — `quantitative.graph`,
+`mathematics.geometry`, `mathematics.algebra`, `science.chemistry`, `humanities.timeline`, `humanities.map`.
+A broad declaration today must not block that refinement, so nothing treats a family name as an atom.
+Likewise `BLOCK_CAP` names the capability each block kind *currently* needs — one family each is what today's
+two figure kinds happen to require, not a claim that a block has exactly one domain forever. A scientific
+graph would reasonably carry both `quantitative` and `science` semantics.
+
+Declared in `lesson-studio.html` — `CAP_FAMILY`, `THEME_CAPS`, `BLOCK_CAP`, `themeSupports()`. Today geometry
+is a `mathematics` capability and exactly two themes declare it:
+
+| theme | domain | families |
+|---|---|---|
+| `mathematics`, `scholarmath` | Mathematics | shared · quantitative · **mathematics** |
+| `geolearn`, `wellbeing` | Geography | shared · quantitative · humanities |
+| `imperium`, `rome` | Ancient History (AH12) | shared · humanities |
+| `microhistory`, `ww1` | History (HT5) | shared · humanities |
+
+**Why this is an engine concern and not bookkeeping.** Before it existed, Imperium — a Roman-history theme —
+was the limiting case for the colour of a mathematics measurement annotation, because the verification matrix
+treated all eight themes as equally binding. A design gets quietly compromised by a pairing nobody intends to
+ship. Capability profiles remove that veto without pretending the pairing cannot occur.
+
+**Two different claims, tested differently.** "Must remain legible if encountered" is not "is a designed
+pairing", and testing them identically is the mistake:
+
+- **Designed pairing** (theme declares the capability) — the full contract: visual design, contrast, semantic
+  tokens, collision behaviour, responsive behaviour, focused mode, accessibility.
+- **Undeclared pairing** — a small SAFETY contract only: the renderer does not crash, the figure renders, its
+  content does not disappear, and the neutral fallback behaves. No design judgement.
+
+This is an authoring/design contract, NOT a runtime permission: nothing here gates rendering. Safety comes
+from the Layer A token fallbacks, which is why an undeclared theme still paints a legible chip. Eventually
+authoring should discourage `Imperium + geometry construction` while allowing `Imperium + graph`; that
+validation is not built yet.
+
+**When it is built, it is GUIDANCE, not prohibition** — and the distinction is the whole point of keeping
+this out of the renderer. Choosing a humanities theme and inserting a `mathematics.geometry` block should
+produce something closer to *"this theme is not designed for geometry — switch theme, or continue with
+fallback styling"* than a refusal. The author keeps the decision; the editor supplies the information they
+would otherwise only discover from a figure that looks subtly wrong. Runtime prohibition would be worse than
+the problem: it turns a design mismatch into a broken lesson. The capability profiles exist to make that
+message possible, which is why they are a declaration and not a gate.
+
+Science, maps and timelines slot in as further families. Establishing this before those engines exist is the
+point — otherwise every new renderer multiplies itself by every historical theme.
+
 ## 4. Single source of truth (kills the "arc says 35° but triangle isn't" failure)
 
 A figure has ONE source of truth. Two front doors, same downstream:
@@ -316,10 +435,16 @@ A figure has ONE source of truth. Two front doors, same downstream:
 - **Coordinates** (for coordinate-geometry): author gives exact points → engine computes all
   angles/lengths → draws.
 
-**Every value-label renders the COMPUTED value from the solved figure — never an authored string.**
-There is no field to type an angle/length value; you may only ask to *display* the one the engine
-computed — `label:"measure"` on an `angle`, `text:"auto"` on a `sideLabel`. This makes the drawn angle and
-its label the same number by construction; contradiction is structurally impossible.
+**Whatever the ENGINE states, the engine computed.** `label:"measure"` on an `angle` and `text:"auto"` on a
+`sideLabel` display the value solved from the construction — nothing recomputes or overrides it — so the drawn
+angle and its label are the same number by construction and contradiction is structurally impossible.
+
+The engine never *asserts* an authored string. A literal on a `sideLabel` is read as a name by default; from
+Stage 3d an author may declare one a measurement with `label:"measure"` (`"x + 4"`, `"480"` + `unit:"mm"`),
+which buys the measurement TYPESETTING and nothing else — the engine displays it, never vouches for it, and
+never checks it against the coordinates. Ownership is the whole distinction: the guarantee above covers what
+the engine computes; an authored quantity is the author’s claim, and the schema makes which one you are
+looking at explicit rather than blurring the two into one unverifiable string.
 
 Use **parameterised constructions** (closed-form, reliable), NOT a general constraint solver:
 `rightTriangle(legs)`, `triangleSAS(a,b,angle)`, `triangleASA(angle,side,angle)`, `triangleSSS(a,b,c)`,
