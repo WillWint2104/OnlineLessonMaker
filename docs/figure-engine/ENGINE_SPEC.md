@@ -340,6 +340,17 @@ A measurement and its unit are ONE semantic annotation and ONE collision box, si
 formatted string before any placement search runs. The unit is subordinate — 85% of the value's size and the
 quietest ink that still clears WCAG AA in every pack — but never independently positioned or measured.
 
+**Separation is by LUMINANCE, not by saturation.** The value is the accent pulled most of the way toward the
+page's darkest ink, so it sits a clear step below the stroke it annotates while carrying *less* colour, not
+more. Intensifying the fill or the border instead would make the chip read as a control, which is the one
+thing the surface must never do.
+
+One honest deviation from the intended strength ladder (value → stroke → unit → surface): in the three green
+packs the unit measures DARKER than the stroke (L* 34.9-37.9 against 39.1-44.9), not lighter. Putting it above
+the stroke needs roughly L* 48, which against the pale surface computes to ~4.4:1 — under WCAG AA at 9.8px,
+where no large-text exemption applies. Accessibility wins: the unit stays subordinate to its VALUE, which is
+the functional intent, and the ladder holds everywhere else.
+
 ## 4. Single source of truth (kills the "arc says 35° but triangle isn't" failure)
 
 A figure has ONE source of truth. Two front doors, same downstream:

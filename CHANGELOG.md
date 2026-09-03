@@ -27,6 +27,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   every pack (measured: 5.01:1 worst case, in scholarmath; .82 also passes at 4.68:1 but 0.18 above the floor
   is not a margin) — while remaining inside the same annotation and the same collision box.
   §3.3 of `ENGINE_SPEC.md` records the resolution order as an invariant.
+  The measurement value is separated from the geometry stroke by LUMINANCE, not by more colour: the accent is
+  pulled 45% (was 72%) toward the page's darkest ink, so the value lands a deep forest/charcoal green ~16-18 L*
+  BELOW the stroke it annotates while its saturation *drops* (73% → 63% in scholarmath) — the opposite of
+  intensifying the fill, which would make the chip read as a control. Surface 4.5% → 6% and border 6% → 10%,
+  both still subtle. Measured across the five Layer-B packs: value-vs-stroke ΔL* 6.4 (imperium, whose accent is
+  already dark) to 18.5 (scholarmath); value contrast 9.8-13.4:1; unit 6.4-8.9:1.
 - **`scripts/verify-measure-surface.mjs` + the `measure-surface` workflow — the gate none of the existing checks
   provided.** The chip shipped with three defects that every check called green: `verify-corpus-identity`'s
   `isLesson` regex structurally excludes `tests/visual/lessons/`, so it never renders a figure fixture at all;

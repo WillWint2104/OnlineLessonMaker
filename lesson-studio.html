@@ -2661,11 +2661,22 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    define, so the chain degrades to them. This is a narrow fix for the chip: the wider gap — the geometry
    figure's strokes and label inks read --primary too, and fall back to black in the same three packs — is
    PRE-EXISTING and not this pass to close. */
+/* The measurement surface is a SEMANTIC COLOUR ROLE, separated from the geometry stroke by LUMINANCE rather
+   than by more colour. --geo-ink-src is the figure's own accent; the measurement value is that accent pulled
+   most of the way toward the page's darkest ink, so it reads as a deep forest/charcoal green a clear step
+   BELOW the stroke it annotates. Note the mix goes DOWN, not up: at 72% the value was 73% saturated and only
+   ~8 L* from the stroke; at 45% it is 63% saturated and ~18 L* below it. Less green, more contrast — the
+   opposite of intensifying the fill, which would make the chip look interactive.
+       value   #1a472d  L* 26   <- darkest, strongest thing in the chip
+       stroke  #1a7a3c  L* 44      unchanged
+       unit    the value's own ink at .85 — same family, never the stroke
+       surface 6% of the accent — a pale mint, a hair more perceptible than 4.5% was
+   (scholarmath shown; every pack resolves the same way through its own accent.) */
 .tp-slide{--geo-ink-src:var(--primary,var(--accent,#333));
           --geo-surf-src:var(--surface,var(--canvas,#fff));
-          --geo-measure-bg:color-mix(in srgb,var(--geo-ink-src) 4.5%,var(--geo-surf-src));
-          --geo-measure-ink:color-mix(in srgb,var(--geo-ink-src) 72%,var(--on-surface,var(--text,#1c1c17)));
-          --geo-measure-border:color-mix(in srgb,var(--geo-ink-src) 6%,transparent);}
+          --geo-measure-bg:color-mix(in srgb,var(--geo-ink-src) 6%,var(--geo-surf-src));
+          --geo-measure-ink:color-mix(in srgb,var(--geo-ink-src) 45%,var(--on-surface,var(--text,#1c1c17)));
+          --geo-measure-border:color-mix(in srgb,var(--geo-ink-src) 10%,transparent);}
 .tp-slide .tp-fig-gpill{fill:var(--geo-measure-bg,transparent);stroke:var(--geo-measure-border,transparent);stroke-width:1;}
 .tp-slide .tp-fig-gsmeas{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-body);font-size:11.5px;}
 .tp-slide .tp-fig-gssym{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-serif,var(--tp-body));font-size:11.5px;font-style:italic;}
