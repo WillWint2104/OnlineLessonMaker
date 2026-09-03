@@ -122,6 +122,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   needs, a theme declares what it hosts, and conflating those axes is what let Imperium — a Roman-history
   theme — be the limiting case for the colour of a mathematics measurement annotation. `CAP_FAMILY`,
   `THEME_CAPS`, `BLOCK_CAP` and `themeSupports()` sit beside `PACK_THEMES`; ENGINE_SPEC §3.4 states the rule.
+  `THEME_CAPS` is the AUTHORITATIVE declaration and is not coupled to implementation: theme architecture
+  (Layer A / Layer B / whatever comes next) and theme capability coverage are independent axes that merely
+  overlap today and must be free to diverge, so callers ask `themeSupports()` and never infer support from
+  `PACK_THEMES` or from Layer B's presence. Families are coarse on purpose and not a ceiling — sub-capabilities
+  (`quantitative.graph`, `mathematics.geometry`, `science.chemistry`, `humanities.timeline`) can be added
+  later, and `BLOCK_CAP` names what a block kind *currently* needs rather than asserting one domain forever.
   Geometry is a `mathematics` capability and exactly two themes declare it (`mathematics`, `scholarmath`);
   `quantitative` is declared far more widely, because graphs and ratios belong in geography and history too.
   This is an authoring/design contract, NOT a runtime permission — nothing gates rendering, and an undeclared

@@ -364,8 +364,31 @@ is widely declared; `mathematics` (equations, geometry, constructions) is not. T
 the subjects are. What does NOT follow from that overlap is that every history theme needs geometry or every
 mathematics theme needs chemistry.
 
-Declared in `lesson-studio.html` beside `PACK_THEMES` — `CAP_FAMILY`, `THEME_CAPS`, `BLOCK_CAP`,
-`themeSupports()`. Today geometry is a `mathematics` capability and exactly two themes declare it:
+**`THEME_CAPS` is the authoritative declaration, and capability is not implementation.** The profiles sit
+beside `PACK_THEMES` for convenience only. These are independent axes that merely overlap in today's
+repository, and they must be free to diverge:
+
+```
+theme IMPLEMENTATION architecture   Layer A / Layer B / whatever token architecture comes next
+theme CAPABILITY coverage           shared / quantitative / mathematics / humanities / ...
+```
+
+A future science theme could use the newest token architecture and declare `shared + quantitative +
+mathematics + science`; a future humanities theme could use that same architecture and declare only
+`shared + quantitative + humanities`. So tests and authoring decisions ask `themeSupports()`. Never infer
+support from `PACK_THEMES`, from Layer B's presence, or from any other implementation signal — those answer
+*how a theme is built*, not *what it is designed to present*.
+
+**Coarse on purpose, and not a ceiling.** Family granularity is right for this stage; deeper hierarchy is not
+built. But a family may later gain sub-capabilities where precision earns its keep — `quantitative.graph`,
+`mathematics.geometry`, `mathematics.algebra`, `science.chemistry`, `humanities.timeline`, `humanities.map`.
+A broad declaration today must not block that refinement, so nothing treats a family name as an atom.
+Likewise `BLOCK_CAP` names the capability each block kind *currently* needs — one family each is what today's
+two figure kinds happen to require, not a claim that a block has exactly one domain forever. A scientific
+graph would reasonably carry both `quantitative` and `science` semantics.
+
+Declared in `lesson-studio.html` — `CAP_FAMILY`, `THEME_CAPS`, `BLOCK_CAP`, `themeSupports()`. Today geometry
+is a `mathematics` capability and exactly two themes declare it:
 
 | theme | domain | families |
 |---|---|---|

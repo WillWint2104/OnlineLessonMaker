@@ -3365,10 +3365,27 @@ const PACK_THEMES=new Set(['imperium','microhistory','geolearn','mathematics','s
    hosts. They are different axes, and conflating them is what let Imperium — a Roman-history theme — act as
    the limiting case for a mathematics geometry annotation's colour.
 
+   THIS SITS BESIDE `PACK_THEMES` FOR CONVENIENCE, NOT BECAUSE THE TWO ARE THE SAME THING. They are
+   independent axes that merely happen to overlap in today's repository:
+
+       theme IMPLEMENTATION architecture   Layer A / Layer B / whatever token architecture comes next
+       theme CAPABILITY coverage           shared / quantitative / mathematics / humanities / ...
+
+   A future science theme could use the newest token architecture and declare shared + quantitative +
+   mathematics + science; a future humanities theme could use that same architecture and declare only
+   shared + quantitative + humanities. So ask `themeSupports()`. NEVER infer capability from `PACK_THEMES`,
+   from Layer B's presence, or from any other implementation signal — those answer "how is this theme built",
+   not "what is it designed to present", and the two must be free to diverge.
+
    Families are deliberately coarse, and overlap on purpose: `quantitative` (graphs, coordinates, ratios,
    statistics) belongs in history, geography, commerce and economics as much as in mathematics, so it is
    widely declared. `mathematics` (equations, geometry, constructions) is not. The boundary is not strict
    because the subjects are not.
+
+   COARSE ON PURPOSE, AND NOT A CEILING. A family may later gain sub-capabilities where the precision earns
+   its keep — `quantitative.graph`, `mathematics.geometry`, `mathematics.algebra`, `science.chemistry`,
+   `humanities.timeline`, `humanities.map`. Declaring a whole family today must not prevent that refinement
+   later, so nothing should treat a family name as an atom.
 
    This is an AUTHORING/DESIGN contract, not a runtime permission. An undeclared pairing must still fail
    safely — never crash, never render invisibly — which is what the Layer A token fallbacks already provide.
@@ -3390,7 +3407,13 @@ const THEME_CAPS={
   microhistory: ['shared','humanities'],                   // History (HT5)
   ww1         : ['shared','humanities'],                   // History (HT5)
 };
-const BLOCK_CAP={ geometry:'mathematics', graph:'quantitative' };   // the two figure kinds that exist today
+/* What each block kind NEEDS. One family each is what today's two figure kinds happen to require — it is not
+   a claim that a block has exactly one domain forever. A scientific graph would reasonably carry both
+   `quantitative` and `science` semantics, so read this as "the capability this block currently needs", and
+   widen the value shape when a block genuinely needs more than one rather than forcing it into a single name. */
+const BLOCK_CAP={ geometry:'mathematics', graph:'quantitative' };
+/* The ONE authoritative question. Everything — tests, and later the authoring checks — asks this, so that
+   capability coverage stays a declaration rather than something inferred from implementation details. */
 function themeSupports(theme,cap){ const c=THEME_CAPS[theme]; return !c ? false : c.indexOf(cap)>=0; }
 /* pack slide types → nav label (these themes use `title`/`type` rather than the engine's slide fields) */
 const PACK_TYPELAB={figure:"Figure",title:"Title",outcomes:"Outcomes",text:"Text",imageText:"Image + text",infographic:"Infographic",video:"Video",knowledgeCheck:"Knowledge check",sourceAnalysis:"Source analysis",guidedResponse:"Guided response",interactive:"Interactive",labeledGraphic:"Labeled graphic",timeline:"Timeline",penResponse:"Pen response",graphQuestion:"Graph question",outro:"Outro",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
