@@ -23,6 +23,10 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   name (`a`, `c`, `AB`, `θ`) → maths face, no surface; prose name (`hypotenuse`, `radius`) → upright body text,
   no surface, because a word is not a variable and italicising `hypotenuse` reads as a product of eight
   letters. An empty label and a value-and-unit written as one string are reported, with the fix named.
+  The unit is subordinate to its value — 85% of its size, and the quietest ink that still clears WCAG AA in
+  every pack (measured: 5.01:1 worst case, in scholarmath; .82 also passes at 4.68:1 but 0.18 above the floor
+  is not a margin) — while remaining inside the same annotation and the same collision box.
+  §3.3 of `ENGINE_SPEC.md` records the resolution order as an invariant.
 - **`scripts/verify-measure-surface.mjs` + the `measure-surface` workflow — the gate none of the existing checks
   provided.** The chip shipped with three defects that every check called green: `verify-corpus-identity`'s
   `isLesson` regex structurally excludes `tests/visual/lessons/`, so it never renders a figure fixture at all;

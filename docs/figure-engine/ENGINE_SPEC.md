@@ -307,6 +307,39 @@ clear; the vertical-side length label never touches the vertical arm.
 
 ---
 
+### 3.3 The measurement surface — an INVARIANT (Stage 3d)
+
+A side MEASUREMENT is painted on a quiet accent-tinted surface; an angle measure and a side NAME are not.
+Two questions decide it, and they are separate — this is the invariant, not an implementation note:
+
+```
+     surface?   semantics  —  author's semantic role  ->  fallback classifier (only if unspecified)
+     face?      content    —  the string, always
+```
+
+**Author intent always wins.** `label:"measure"` / `label:"name"` is the source of truth and is consulted
+before anything else. The content classifier exists only for lessons written before that field did, and can
+never be promoted to the semantic model: mathematics is ambiguous by nature, and `AB`, `a`, `r`, `2x` and `PQ`
+each denote a name or a quantity depending solely on what the author meant. A string cannot carry intent, so
+the classifier is deliberately NOT made cleverer — ambiguity is what the explicit field is for.
+
+Keeping the two questions apart is what makes the system general: `x + 4`, `2r`, `3.4 km` and `√2` all behave
+correctly *because they are measurements*, not because a pattern recognised their characters.
+
+Three presentation roles, ONE placement system — the exterior-side rule of §3.2, unchanged:
+
+| Role | Face | Surface |
+|---|---|---|
+| measurement | numerals upright; algebra in the maths face | yes |
+| symbolic name (`a`, `c`, `AB`, `θ`) | maths face | no |
+| prose name (`hypotenuse`, `radius`) | upright body text | no |
+
+A word is not a variable: `hypotenuse` set in the maths face reads as a product of eight letters.
+
+A measurement and its unit are ONE semantic annotation and ONE collision box, sized from the complete
+formatted string before any placement search runs. The unit is subordinate — 85% of the value's size and the
+quietest ink that still clears WCAG AA in every pack — but never independently positioned or measured.
+
 ## 4. Single source of truth (kills the "arc says 35° but triangle isn't" failure)
 
 A figure has ONE source of truth. Two front doors, same downstream:

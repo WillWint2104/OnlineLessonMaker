@@ -2673,7 +2673,13 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    maths face italicises English, which reads as though "hypotenuse" were a product of eight variables. Upright
    body face, one step quieter than a vertex identity. */
 .tp-slide .tp-fig-gprose{fill:var(--on-surface-variant,var(--on-surface));font-family:var(--tp-body);font-size:12px;}
-.tp-slide .tp-fig-gunit{font-size:9.8px;opacity:.9;}   /* .78 composited to 4.24:1 on the chip fill — below AA 4.5. Size, not opacity, carries the unit's subordination. */
+/* The unit is SUBORDINATE to its value but never a second annotation: 9.8px is 85.2% of the 11.5px value, and
+   .85 opacity is the quietest ink that still clears WCAG AA in every pack — measured, worst case 5.01:1 in
+   scholarmath. .82 measures 4.68:1 and also passes, but 0.18 above the floor is not a margin: a pack palette
+   tweak would take it under without anything saying so. (An earlier .78 was 4.24:1 — a real AA failure. Raising
+   it to .9 to fix that is what made the unit read at nearly the value's strength; .85 restores the hierarchy
+   without giving the accessibility back.) */
+.tp-slide .tp-fig-gunit{font-size:9.8px;opacity:.85;}
 .tp-slide .tp-fig-hit{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;}
 .tp-slide .tp-fig-hit:focus-visible{outline:3px solid var(--focus-ring);outline-offset:1px;}   /* --focus-ring is a COLOUR: `outline:var(--focus-ring,<shorthand>)` sets colour only and leaves outline-style:none — i.e. no ring at all */
 .tp-slide .tp-fig-callout{position:absolute;display:flex;align-items:center;gap:8px;padding:4px 5px 4px 10px;border-radius:var(--tp-rad-btn);background:var(--graph-callout,var(--graph-axis,var(--on-surface)));color:var(--graph-surface,var(--surface));font-family:var(--tp-body);font-size:12.5px;font-weight:600;white-space:nowrap;box-shadow:0 2px 8px var(--scrim,rgba(0,0,0,.28));}
