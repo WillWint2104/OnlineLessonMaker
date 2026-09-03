@@ -177,7 +177,8 @@ excludes `tests/visual/lessons/`, `verify-label-placement`'s fixtures contain no
 `verify-geometry-semantics` asserts where a label's CENTRE sits — which a chip whose text spills out of its own
 rect satisfies perfectly. Three real defects shipped behind those green results.
 
-What is asserted, in every pack:
+What is asserted, in every pack that declares the `mathematics` capability (the safety contract listed above
+is what the other six get):
 
 1. **Surface assignment.** A chip is painted around a side MEASUREMENT and nothing else — a vertex name, an
    angle measure or a side NAME carrying one is a failure.

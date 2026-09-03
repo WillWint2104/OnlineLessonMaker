@@ -435,10 +435,16 @@ A figure has ONE source of truth. Two front doors, same downstream:
 - **Coordinates** (for coordinate-geometry): author gives exact points → engine computes all
   angles/lengths → draws.
 
-**Every value-label renders the COMPUTED value from the solved figure — never an authored string.**
-There is no field to type an angle/length value; you may only ask to *display* the one the engine
-computed — `label:"measure"` on an `angle`, `text:"auto"` on a `sideLabel`. This makes the drawn angle and
-its label the same number by construction; contradiction is structurally impossible.
+**Whatever the ENGINE states, the engine computed.** `label:"measure"` on an `angle` and `text:"auto"` on a
+`sideLabel` display the value solved from the construction — nothing recomputes or overrides it — so the drawn
+angle and its label are the same number by construction and contradiction is structurally impossible.
+
+The engine never *asserts* an authored string. A literal on a `sideLabel` is read as a name by default; from
+Stage 3d an author may declare one a measurement with `label:"measure"` (`"x + 4"`, `"480"` + `unit:"mm"`),
+which buys the measurement TYPESETTING and nothing else — the engine displays it, never vouches for it, and
+never checks it against the coordinates. Ownership is the whole distinction: the guarantee above covers what
+the engine computes; an authored quantity is the author’s claim, and the schema makes which one you are
+looking at explicit rather than blurring the two into one unverifiable string.
 
 Use **parameterised constructions** (closed-form, reliable), NOT a general constraint solver:
 `rightTriangle(legs)`, `triangleSAS(a,b,angle)`, `triangleASA(angle,side,angle)`, `triangleSSS(a,b,c)`,

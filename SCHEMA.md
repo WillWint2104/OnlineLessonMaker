@@ -453,25 +453,31 @@ string (`text:"8 cm"`), which classifies as a name — the message names the fix
 | `rightAngle` | `{at, between:[idP,idQ]}` | The square, derived from the two incident rays, so it is correct at any orientation. If the angle is not 90° the mark is **not drawn** and the discrepancy is reported. |
 | `sideLabel` | `{between:[idA,idB], text?, unit?, label?}` | `"auto"` (or omitted) **displays the computed length**; the engine never vouches for an authored string. `unit` (e.g. `"cm"`) is typeset quieter *inside the same annotation* — one anchor, one collision box — so put the unit here, not inside `text`. `label` forces the SURFACE: `"measure"` or `"name"`. |
 
-**Single source of truth (§4):** a measure is never authored. `label:"measure"` and `text:"auto"` display what
-the engine computed from the construction; a literal string is understood as a name, not as a value, so a
-figure can never assert a length or angle that its own coordinates contradict.
+**Single source of truth (§4):** what the ENGINE states, it computes. `text:"auto"` on a `sideLabel` and
+`label:"measure"` on an `angle` render the value solved from the construction, so a figure can never assert a
+length or angle that its own coordinates contradict. An authored string is a different thing: the engine
+displays it and never vouches for it. By default a literal reads as a *name*; `label:"measure"` on a
+`sideLabel` says the AUTHOR owns this quantity (`x + 4`, `480 mm`), so it is typeset as a measurement — but it
+stays the author’s claim, never checked against the coordinates. The guarantee above is about what the engine
+computes, not about every string that can appear beside an edge.
 
 `aspect` is not read for geometry — it is always `equal`. A stretched axis turns a right angle into something
 that is not one and an arc into an ellipse, so it is not an authoring choice here.
 
 **Annotation roles (Stage 3b).** The four kinds of annotation are ranked by three roles — a side length and an
 angle measure are both *measurements* and share one — and they are not uniform: **vertex names** are the
-strongest, an authored **symbolic** name (`"θ"`) is set in maths italic, and a **computed measurement** is
-secondary. Arcs and right-angle marks are drawn lighter than the polygon edges they annotate. Nothing here
-is authorable — a role follows from what the label *is* (`label:"measure"` / `text:"auto"` produce a
-measurement; any other string is a name), so a lesson cannot drift out of the house grammar.
+strongest, an authored **symbolic** name (`"θ"`) is set in maths italic, and a **measurement** is
+secondary. Arcs and right-angle marks are drawn lighter than the polygon edges they annotate. A role is
+declared, never styled: `label` says measurement or name (and the classifier guesses only when it is absent),
+and the house grammar supplies every visual consequence — so a lesson cannot drift out of it.
 
 Measurements share one numeric style: precision follows magnitude (2 dp under 10, 1 dp under 100, whole
 numbers above), trailing zeros are dropped, and `°` is set with the number — so a right angle reads `90°`,
 never `90.0°`. Preferred anchors are **side midpoint + outward normal** (outside the polygon) and **angle
 measure on the arc's own bisector, one gap outside the outermost arc**; the general Stage-2c placement
-search then resolves collisions from there. Units are not supported yet.
+search then resolves collisions from there. A `sideLabel` `unit` is typeset inside the same annotation and
+reserved with it (see *The side-measurement surface* above); an angle measure carries `°` and takes no other
+unit.
 
 ## `outro`
 
