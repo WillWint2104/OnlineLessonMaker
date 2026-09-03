@@ -2684,6 +2684,9 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    maths face italicises English, which reads as though "hypotenuse" were a product of eight variables. Upright
    body face, one step quieter than a vertex identity. */
 .tp-slide .tp-fig-gprose{fill:var(--on-surface-variant,var(--on-surface));font-family:var(--tp-body);font-size:12px;}
+/* The same word ON the measurement surface. Its own class, so the class still tells you the role: gprose is a
+   prose NAME (no surface), gsprose a prose MEASUREMENT (on one) — exactly as gmeas/gsmeas and gsym/gssym pair. */
+.tp-slide .tp-fig-gsprose{fill:var(--geo-measure-ink,var(--on-surface));font-family:var(--tp-body);font-size:11.5px;}
 /* The unit is SUBORDINATE to its value but never a second annotation: 9.8px is 85.2% of the 11.5px value, and
    .85 opacity is the quietest ink that still clears WCAG AA in every pack — measured, worst case 5.01:1 in
    scholarmath. .82 measures 4.68:1 and also passes, but 0.18 above the floor is not a margin: a pack palette
@@ -7651,7 +7654,8 @@ const FIG_ARC_R=26, FIG_ARC_STEP=5.5, FIG_RA_SIZE=13, FIG_RIGHT_TOL=0.75;
 /* Stage 3b annotation roles → [class, font-size]. The size is not decoration: the placement box is measured
    from it, so a role's weight and the space it reserves stay in step. */
 const FIG_ROLE={ vertex:['tp-fig-gvert',13], symbol:['tp-fig-gsym',12.5], measure:['tp-fig-gmeas',11.5],
-                 smeas:['tp-fig-gsmeas',11.5], ssym:['tp-fig-gssym',11.5], prose:['tp-fig-gprose',12] };
+                 smeas:['tp-fig-gsmeas',11.5], ssym:['tp-fig-gssym',11.5],
+                 prose:['tp-fig-gprose',12], sprose:['tp-fig-gsprose',11.5] };
 /* PROTOTYPE — a side measurement is a CHIP, so its reserved box is the chip: value + unit + padding + border,
    measured from the COMPLETE formatted string in one place. It is deliberately NOT figPillSize: that box's
    5/3 padding is shared with the graph's point identifiers and reads portrait on a single digit (17.1 x 19.2
@@ -7691,10 +7695,15 @@ function figMeasIsValue(t){ const v=String(t).trim(); if(!v) return false;
 function figFace(t){ const v=String(t).trim();
   // 'num' is a NUMERAL and nothing else: a radical or an operator is maths, so "\u221a2" is set in the maths
   // face even though it carries no letter.
-  if(figMeasIsValue(v)) return /^[+-\u2212]?[0-9][0-9.,\s]*$/.test(v) ? 'num' : 'sym';
+  // The hyphen is ESCAPED: unescaped, `+` to \u2212 is a RANGE spanning digits, ASCII letters and Greek, so
+  // "x4" matched and took the upright numeral face instead of the maths face.
+  if(figMeasIsValue(v)) return /^[+\-\u2212]?[0-9][0-9.,\s]*$/.test(v) ? 'num' : 'sym';
   return /^[A-Za-z0-9\u0391-\u03c9'\u2032\u2080-\u2089]{1,3}$/.test(v) ? 'sym' : 'prose';
 }
-function figMeasStyle(v){ return figFace(v)==='num'?'smeas':'ssym'; }
+/* Content decides the face even inside a chip. `{text:"hypotenuse", label:"measure"}` is legal — the author
+   says the word IS the measurement — and it must still be upright: a word is not a variable. Mapping every
+   non-numeral to the maths face italicised exactly the case SCHEMA.md names as wrong. */
+function figMeasStyle(v){ const f=figFace(v); return f==='num'?'smeas':f==='prose'?'sprose':'ssym'; }
 /* Per-character advances for the measure face, MEASURED (Inter at 11.5px) rather than assumed. The flat
    0.62em in figPillSize is wrong in both directions here, and painting the box is what made it visible:
    Inter's digits are not uniform ('1' is 0.407em, '4' is 0.646em) and '.' is 0.288em, so "3.21 cm" — the

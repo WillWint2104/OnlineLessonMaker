@@ -17,6 +17,11 @@ name: Measurement surface
 # fixtures contain no geometry; and `verify-geometry-semantics` asserts where a label's CENTRE
 # sits, which a chip whose text overflows its own rect satisfies perfectly.
 
+# Read-only: this job renders and asserts, it never writes to the repository. `persist-credentials: false`
+# stops the checkout token being left in .git/config where any later step could reach it.
+permissions:
+  contents: read
+
 on:
   pull_request:
     paths:
@@ -32,6 +37,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:

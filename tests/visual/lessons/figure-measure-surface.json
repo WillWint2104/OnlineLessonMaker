@@ -659,6 +659,69 @@
               "label": "measure"
             }
           ]
+        },
+        {
+          "type": "figure",
+          "figure": "geometry",
+          "title": "A word the author declares a measurement",
+          "caption": "`{text:\"hypotenuse\", label:\"measure\"}` is legal — the author says the word IS the measurement, so it takes the surface. It must still be UPRIGHT: content decides the face even inside a chip, and italicising a word reads as a product of its letters.",
+          "objects": [
+            {
+              "type": "points",
+              "from": "table",
+              "rows": [
+                [
+                  "A",
+                  0,
+                  0
+                ],
+                [
+                  "B",
+                  3.6,
+                  0
+                ],
+                [
+                  "C",
+                  0,
+                  2.7
+                ]
+              ]
+            },
+            {
+              "type": "polygon",
+              "vertices": [
+                "A",
+                "B",
+                "C"
+              ]
+            },
+            {
+              "type": "rightAngle",
+              "at": "A",
+              "between": [
+                "B",
+                "C"
+              ]
+            },
+            {
+              "type": "sideLabel",
+              "between": [
+                "B",
+                "C"
+              ],
+              "text": "hypotenuse",
+              "label": "measure"
+            },
+            {
+              "type": "sideLabel",
+              "between": [
+                "A",
+                "B"
+              ],
+              "text": "4",
+              "unit": "cm"
+            }
+          ]
         }
       ]
     },

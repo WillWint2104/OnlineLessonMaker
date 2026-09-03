@@ -39,9 +39,10 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `verify-label-placement`'s fixtures contain no geometry; and `verify-geometry-semantics` asserts where a
   label's CENTRE sits, which a chip whose text overflows its own rect satisfies perfectly. The new gate renders
   the surface in all 8 packs and asserts surface assignment, the three presentation roles, containment, a
-  proportional padding band and composited-colour contrast — 665 assertions. Non-vacuity is proven, not
-  assumed: every fixed defect was re-introduced and the gate failed, including prose names set in the maths
-  face and the classifier outranking explicit author intent. It is not wired as a required check: branch protection is a
+  proportional padding band and composited-colour contrast — 191 design + 180 safety assertions. Non-vacuity
+  is proven, not assumed: every fixed defect was re-introduced and the gate failed, including prose names set
+  in the maths face, the classifier outranking explicit author intent, an EXPECT entry the fixture no longer
+  renders, and the value/unit text mismatch that had been silently skipping assertions. It is not wired as a required check: branch protection is a
   maintainer decision.
 
 - **Stage 3c — Semantic placement constraints.** Stage 3b gave each annotation a role and a preferred anchor;
@@ -134,7 +135,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   pairing still degrades safely through the Layer A fallbacks. The verification matrix now distinguishes the
   two claims it had been conflating: a DESIGNED pairing gets the full visual/contrast/accessibility contract,
   an undeclared one gets a small safety contract (renders, draws geometry, no empty or invisible chip, the
-  surface has a fill) and no design judgement. 166 design + 168 safety assertions, and the safety half is
+  surface has a fill) and no design judgement. 191 design + 180 safety assertions, and the safety half is
   proven non-vacuous by removing the Layer A fallback chain and watching rome fail.
 
 ### Fixed

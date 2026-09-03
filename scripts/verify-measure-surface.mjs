@@ -100,12 +100,17 @@ const EXPECT = [
   ['AB', { role: 'a measurement — forced by label against the classifier', cls: 'tp-fig-gssym', chip: true }],
   ['2x', { role: 'a symbolic NAME — forced by label against the classifier', cls: 'tp-fig-gsym', chip: false }],
   ['c', { role: 'a symbolic name, maths face', cls: 'tp-fig-gsym', chip: false }],
+  // a WORD the author declared a measurement: it takes the surface, and is still upright
+  ['hypotenuse', { role: 'a prose measurement, upright, on the surface', cls: 'tp-fig-gsprose', chip: true }],
   ['adjacent side', { role: 'a prose name, upright', cls: 'tp-fig-gprose', chip: false }],
-  ['hypotenuse', { role: 'a prose name, upright', cls: 'tp-fig-gprose', chip: false }],
   ['radius', { role: 'a prose name, upright', cls: 'tp-fig-gprose', chip: false }],
 ];
 
 let pass = 0, safePass = 0; const fails = []; const loose = []; let worst = { ratio: 0, pack: '-', text: '-' };
+/* Every EXPECT entry must be OBSERVED somewhere in the run. Without this, a fixture rename or a content change
+ * that stops producing the string turns its assertions into silent no-ops and the run still prints a perfect
+ * score — which is exactly how the value-vs-unit mismatch above hid. */
+const seenExpect = new Set();
 const bad = (pack, slide, what) => fails.push(`${pack} · slide ${slide} — ${what}`);
 
 for (const pack of SUPPORTED) {
@@ -118,22 +123,26 @@ for (const pack of SUPPORTED) {
       const svg = document.querySelector('.tp-fig svg');
       if (!svg) return null;
       const style = (el) => getComputedStyle(el);
+      /* `val` is the VALUE alone. figDraw.measure puts value and unit in ONE <text> as sibling nodes, so
+       * textContent concatenates them — "3.21" + "cm" reads as "3.21cm". Matching expectations against the
+       * concatenation silently found nothing and skipped the assertions entirely. */
+      const valueOf = (t) => (t && t.firstChild && t.firstChild.nodeType === 3 ? t.firstChild.nodeValue : (t ? t.textContent : '')) || '';
       const chips = [...document.querySelectorAll('.tp-fig rect.tp-fig-gpill')].map((rc) => {
         const t = rc.nextElementSibling, u = t && t.querySelector('.tp-fig-gunit');
         return { w: +rc.getAttribute('width'), ink: t ? t.getBBox().width : 0, text: t ? t.textContent : '',
-                 cls: t ? t.getAttribute('class') : '', bg: style(rc).fill,
+                 val: valueOf(t), cls: t ? t.getAttribute('class') : '', bg: style(rc).fill,
                  valInk: t ? style(t).fill : '', unitInk: u ? style(u).fill : null, unitOp: u ? +style(u).opacity : null };
       });
       // every painted annotation, so "only side measures get a surface" is checked against the whole figure
-      const all = [...document.querySelectorAll('.tp-fig svg text')].map((t) => ({ cls: t.getAttribute('class') || '', text: t.textContent }));
+      const all = [...document.querySelectorAll('.tp-fig svg text')].map((t) => ({ cls: t.getAttribute('class') || '', text: t.textContent, val: valueOf(t) }));
       return { chips, all, surface: style(document.querySelector('.tp-fig')).backgroundColor };
     });
     if (!got) { bad(pack, i, 'no figure rendered'); continue; }
 
     // 1 — SURFACE ASSIGNMENT: a chip belongs to a side measure and to nothing else.
     const chipCls = new Set(got.chips.map((c) => c.cls));
-    for (const c of chipCls) if (!/tp-fig-gsmeas|tp-fig-gssym/.test(c || '')) bad(pack, i, `a chip was painted around a "${c}" label`);
-    const surfaced = new Set(got.chips.map((c) => c.text));
+    for (const c of chipCls) if (!/tp-fig-gsmeas|tp-fig-gssym|tp-fig-gsprose/.test(c || '')) bad(pack, i, `a chip was painted around a "${c}" label`);
+    const surfaced = new Set(got.chips.flatMap((c) => [c.text, c.val]));
     for (const t of got.all) {
       if (/tp-fig-gvert/.test(t.cls) && surfaced.has(t.text)) bad(pack, i, `vertex name "${t.text}" carries a measurement surface`);
       if (/tp-fig-gmeas/.test(t.cls) && surfaced.has(t.text)) bad(pack, i, `angle measure "${t.text}" carries a measurement surface`);
@@ -145,10 +154,11 @@ for (const pack of SUPPORTED) {
     /* 2 — THE THREE PRESENTATION ROLES, asserted by OUTCOME on named content rather than by re-deriving the
      * engine's own rule. A prose word set in the maths face reads as a product of its letters; a segment name
      * set as body text stops looking like mathematics. Both are wrong in a way semantics checks cannot see. */
-    const face = (txt) => { const t = got.all.find((x) => x.text === txt); return t ? t.cls : null; };
+    const face = (txt) => { const t = got.all.find((x) => x.val === txt || x.text === txt); return t ? t.cls : null; };
     for (const [txt, want] of EXPECT) {
       const cls = face(txt);
-      if (cls == null) continue;                       // not on this slide
+      if (cls == null) continue;                       // not on this slide — accounted for globally below
+      seenExpect.add(txt);
       if (!new RegExp(want.cls).test(cls)) bad(pack, i, `"${txt}" should render as ${want.role} (${want.cls}) but is "${cls}"`);
       else pass++;
       const hasChip = surfaced.has(txt);
@@ -218,6 +228,8 @@ for (const pack of SAFE_ONLY) {
 
 await browser.close();
 server.close();
+
+for (const [txt] of EXPECT) if (!seenExpect.has(txt)) fails.push(`EXPECT "${txt}" was never rendered by the fixture — the assertion never ran`);
 
 console.log(`\nmeasurement surface — geometry is a \`${GEOMETRY_CAP}\` capability`);
 console.log(`  designed pairings (full contract):  ${SUPPORTED.join(', ') || '(none)'}`);
