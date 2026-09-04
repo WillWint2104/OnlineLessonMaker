@@ -4434,7 +4434,10 @@ function blockFigureForm(i,b,sel,base){ const d=b.domain||{};   // Stage 1a — 
       focused workspace, so these are starting points, not locks (see SCHEMA.md `figure`). */
    +inSel('Minor grid',`${base}.minorGrid`,on(b.minorGrid)?'shown':'hidden',[['shown','Shown'],['hidden','Hidden']])
    +inSel('Axis labels',`${base}.axisNames`,on(b.axisNames)?'shown':'hidden',[['shown','Shown'],['hidden','Hidden']])
-   +inSel('Aspect',`${base}.aspect`,b.aspect||'stretch',[['stretch','Stretch (fill each axis)'],['equal','Equal (square units)']]));
+   +inSel('Aspect',`${base}.aspect`,b.aspect||'stretch',[['stretch','Stretch (fill each axis)'],['equal','Equal (square units)']])
+   /* C5 — how the figure sits in the lesson, not how its labels sit in the figure. Same vocabulary as the
+      image block; the omitted default is the full-width shell every existing lesson already renders. */
+   +inSel('Placement',`${base}.placement`,b.placement||'',[['','Full width (default)'],['contained','Contained figure (narrower, centred)'],['beside','Beside text (one purpose-unit)']]));
 }
 function blockForm(i,k,b,sel){   // dispatch: reuse the page inspector case (rebased) where schemas match; lean forms where they differ
   const base=`slides.${i}.blocks.${k}`;
@@ -8152,6 +8155,37 @@ function figFitBox(stageW){                                        // stageW = u
   return { W, H, padL:r(FIG_BOX0.padL,FIG_BOX0.W,24), padR:r(FIG_BOX0.padR,FIG_BOX0.W,12),
            padT:Math.max(10,Math.round(H*FIG_BOX0.padT/FIG_BOX0.H)), padB:Math.max(18,Math.round(H*FIG_BOX0.padB/FIG_BOX0.H)) };
 }
+/* ═══ STAGE 4 C5 — FIGURE PLACEMENT VOCABULARY ═════════════════════════════════════════════════════════
+   `placement` says what RELATIONSHIP the author wants between the figure block and the lesson content around
+   it. It is deliberately not a size, a column count or a breakpoint: the JSON states the intent and the
+   renderer resolves it against whatever width it actually has, which is why no viewport number appears here
+   or in a lesson file. Theme-neutral by construction — a placement is a layout capability, not a pack style;
+   themes may skin the resulting surfaces, but there is no imperium placement and no scholarmath placement.
+
+   Same vocabulary and same meanings as the `image` block's placements (Blocks Stage B), because a figure
+   beside its prose is the same authorial idea as an image beside its prose. Note the DEFAULT differs by
+   block, and that is intentional: an image with no placement is a bare `<img>`, whereas a figure is always
+   the Figure Shell, so a figure with no placement is the full-width shell — the compatibility contract for
+   every lesson written before this field existed.
+
+   `pair` is NOT offered. The image block's pair takes two `src` values in one block; a figure has no such
+   free equivalent, and inventing a two-figure container to match a word would be the wrong reason.
+
+   THIS IS BLOCK-LEVEL LAYOUT ONLY. It governs the figure relative to surrounding content, never annotations
+   relative to the figure — that is Stage 2c/3c and stays untouched. "Placement" naming a second annotation
+   system is exactly the confusion this comment exists to prevent.
+
+   An unrecognised value is REPORTED through the figure's existing author-error channel and falls back to the
+   default. It never silently becomes a new layout mode. */
+const FIG_PLACEMENTS=['contained','beside'];        // omitted / '' = full-width shell, the compatibility default
+function figPlacement(b,errors){
+  const raw=(b&&b.placement!=null)?String(b.placement).trim():'';
+  if(!raw) return '';
+  if(FIG_PLACEMENTS.indexOf(raw)>=0) return raw;
+  if(errors) errors.push('placement "'+raw+'" is not a figure placement — use '
+    +FIG_PLACEMENTS.map(x=>'"'+x+'"').join(' or ')+', or omit it for the full-width default');
+  return '';
+}
 const figPc=v=>figNum(v)+'%';                                      // viewBox -> % of the stage: the svg is width:100% at a fixed ratio, so this maps exactly at ANY box
 /* Solve + paint at a given box. The ONLY box-dependent parts of a figure, extracted so the post-mount
    re-solve runs exactly the same code as the first pass rather than a parallel implementation. */
@@ -8451,7 +8485,11 @@ function fragFigure(b,bk){
   (M.callouts||[]).forEach((c,i)=>{ const id=figSafeId(bk,i);              // §1.7 reveal-on-tap on the EXISTING rail: data-tp-focus-open ↔ [data-tp-overlay id]
     hits+=`<button class="tp-fig-hit" type="button" data-tp-focus-open="${esc(id)}" aria-label="Reveal coordinates of point ${esc(c.p.id)}" style="left:${pc(c.px/box.W*100)};top:${pc(c.py/box.H*100)}"></button>`;
     cos+=`<div class="tp-fig-callout" id="${esc(id)}" data-tp-overlay role="dialog" aria-label="Coordinates of point ${esc(c.p.id)}" hidden style="left:${pc(c.box.x/box.W*100)};top:${pc(c.box.y/box.H*100)}"><span>${esc(c.p.id)} ${esc(c.text)}</span><button class="tp-fig-coclose" type="button" data-tp-focus-close aria-label="Close coordinates">${tpIc('close',12)}</button></div>`; });
-  const err=M.errors.length?`<p class="tp-fig-err">${M.errors.map(e=>esc(e)).join(' · ')}</p>`:'';
+  /* C5 — the authored placement, validated here so a bad value is REPORTED beside the figure's own author
+     errors rather than silently selecting a layout. The resolver that acts on it is Stage 4 C6; C5 carries
+     the vocabulary and the hook only. */
+  const placeErrs=[], place=figPlacement(b,placeErrs), errAll=M.errors.concat(placeErrs);
+  const err=errAll.length?`<p class="tp-fig-err">${errAll.map(e=>esc(e)).join(' · ')}</p>`:'';
   const cap=b.caption?`<figcaption class="tp-fig-cap">${tpRichMath(b.caption)}</figcaption>`:'';
   /* Stage 2b: ⤢ opens the focused window on the SAME rail. For GEOMETRY the domain registered is the figure's
      own TIGHT bounds (M.dom0), not the inline view's. `figView('equal')` expands whichever axis is short for
@@ -8477,7 +8515,10 @@ function fragFigure(b,bk){
   const foot=(hint||err)?`<div class="tp-fig-foot">${hint}${err}</div>`:'';
   // `data-fig-fit` marks this figure for the post-mount re-solve; `data-fig-box` records the box it is CURRENTLY
   // painted at, which is what makes figInlineSolve idempotent (and what the contract-10 gate reads back).
-  return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}" data-tp-fig-kind="${esc(kind)}" data-tp-fig-errors="${M.errors.length}" data-fig-fit data-fig-box="${box.W}x${box.H}">${head}<div class="tp-fig-stage">${stage0.svg}${hits}${cos}</div>${foot}${cap}${figxPanel(xid)}</figure>`;
+  // `data-fig-placement` is emitted ONLY when a placement was authored, so a figure without the field renders
+  // byte-identically to before it existed — the compatibility contract, enforced by the C4 render baseline.
+  const placeAttr=place?` data-fig-placement="${esc(place)}"`:'';
+  return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}" data-tp-fig-kind="${esc(kind)}" data-tp-fig-errors="${errAll.length}" data-fig-fit data-fig-box="${box.W}x${box.H}"${placeAttr}>${head}<div class="tp-fig-stage">${stage0.svg}${hits}${cos}</div>${foot}${cap}${figxPanel(xid)}</figure>`;
 }
 FRAG.figure={imperium:fragFigure,microhistory:fragFigure,geolearn:fragFigure,mathematics:fragFigure,scholarmath:fragFigure};
 function renderFragment(b,i,k,theme){

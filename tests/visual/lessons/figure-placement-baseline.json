@@ -1,0 +1,274 @@
+{
+ "meta": {
+  "title": "Figure placement — authored states (Stage 4 C5)",
+  "theme": "mathematics",
+  "year": "",
+  "subject": "",
+  "unit": ""
+ },
+ "slides": [
+  {
+   "type": "page",
+   "title": "Placement omitted — the compatibility default",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "No placement field",
+     "construction": "rightTriangle",
+     "params": {
+      "legs": [
+       3,
+       4
+      ],
+      "right": "A"
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "A",
+        "B",
+        "C"
+       ]
+      },
+      {
+       "type": "rightAngle",
+       "at": "A",
+       "between": [
+        "B",
+        "C"
+       ]
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "B"
+       ],
+       "text": "auto"
+      }
+     ],
+     "caption": "No `placement` key at all. Renders exactly as it did before the field existed — this is the compatibility contract, and the C4 render baseline holds it."
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Placement explicitly empty",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "placement: \"\"",
+     "placement": "",
+     "construction": "rightTriangle",
+     "params": {
+      "legs": [
+       3,
+       4
+      ],
+      "right": "A"
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "A",
+        "B",
+        "C"
+       ]
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "B"
+       ],
+       "text": "auto"
+      }
+     ],
+     "caption": "An empty string is the same intent as omitting the field: the full-width shell. No data-fig-placement is emitted."
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Contained",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "placement: \"contained\"",
+     "placement": "contained",
+     "construction": "regularPolygon",
+     "params": {
+      "n": 5,
+      "radius": 3
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+       ],
+       "angles": "all"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "P1",
+        "P2"
+       ],
+       "text": "auto"
+      }
+     ],
+     "caption": "Author intent: a self-contained figure at a reduced measure. C5 records the intent; the resolver that realises it is C6."
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Beside text",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "graph",
+     "title": "placement: \"beside\"",
+     "placement": "beside",
+     "domain": {
+      "xMin": -3,
+      "xMax": 3,
+      "yMin": -1,
+      "yMax": 9
+     },
+     "grid": "shown",
+     "aspect": "stretch",
+     "objects": [
+      {
+       "type": "function",
+       "f": "x^2"
+      },
+      {
+       "type": "points",
+       "from": "table",
+       "rows": [
+        [
+         "V",
+         0,
+         0
+        ],
+        [
+         "P",
+         2,
+         4
+        ]
+       ]
+      }
+     ],
+     "caption": "Author intent: the figure and its prose read as one purpose-unit. The companion prose field arrives with the C6 layout that renders it."
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Author error — an unrecognised placement",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "placement: \"sidebar\"",
+     "placement": "sidebar",
+     "construction": "rightTriangle",
+     "params": {
+      "legs": [
+       3,
+       4
+      ],
+      "right": "A"
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "A",
+        "B",
+        "C"
+       ]
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "B"
+       ],
+       "text": "auto"
+      }
+     ],
+     "caption": "An unrecognised value is REPORTED beside the figure and falls back to the full-width default. It never silently becomes a new layout mode."
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Placement is orthogonal to figure internals",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "contained, with the full annotation grammar",
+     "placement": "contained",
+     "construction": "triangleSSS",
+     "params": {
+      "a": 7,
+      "b": 8,
+      "c": 9
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "A",
+        "B",
+        "C"
+       ],
+       "angles": "all"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "B"
+       ],
+       "text": "auto",
+       "unit": "cm"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "B",
+        "C"
+       ],
+       "text": "x + 4",
+       "label": "measure"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "C"
+       ],
+       "text": "hypotenuse",
+       "label": "name"
+      }
+     ],
+     "caption": "Placement governs the BLOCK relative to the lesson. Vertex names, angle measures and the measurement surface are unaffected — that is Stage 2c/3c/3d and stays untouched."
+    }
+   ]
+  }
+ ]
+}

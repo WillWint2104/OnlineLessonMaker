@@ -359,9 +359,34 @@ they read.
 | `title` | string | Figure identity, shown in the shell head and carried into the focused workspace. Typeset (`$…$` ok). |
 | `meta` | string | Optional context shown beside the title. |
 | `caption` | string | Sits under the figure. Typeset (`$…$` ok). |
+| `placement` | `""` \| `"contained"` \| `"beside"` | How the figure block sits in the lesson around it — see below. Omit for the full-width default. |
 | `domain` | `{xMin,xMax,yMin,yMax}` | **Graph kind only** — geometry solves its own bounds from the construction. The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
 | `aspect` | `"stretch"` \| `"equal"` | `equal` keeps a unit square square (default `stretch`). |
 | `objects[]` | array | **Graph kind:** `{type:'function', f}` · `{type:'points', from:'table', rows:[[id,x,y],…]}` · `{type:'segment', between:[idA,idB]}`. **Geometry kind** reads a different set (`polygon` · `angle` · `rightAngle` · `sideLabel`) — see **`figure: "geometry"`** below. Unknown types are ignored with a reported error. |
+
+**Placement** — `placement` states the RELATIONSHIP you want between the figure block and the content around
+it. It is deliberately not a size, a column count or a breakpoint: the JSON says what is wanted and the
+renderer resolves it against whatever width it actually has, so no viewport number ever appears in a lesson
+file. It is theme-neutral — a placement is a layout capability, not a pack style, and there is no
+imperium-placement or scholarmath-placement.
+
+| Value | Intent |
+|---|---|
+| omitted, or `""` | **Full-width figure shell.** The default, and the compatibility contract: a figure written before this field existed renders byte-identically. |
+| `"contained"` | A self-contained figure at a reduced measure, centred. |
+| `"beside"` | The figure and its prose read as one purpose-unit. |
+
+Same vocabulary and the same meanings as the [`image`](#image) block's placements, because a figure beside its
+prose is the same authorial idea as an image beside its prose. **The default differs by block, intentionally:**
+an image with no placement is a bare `<img>`, whereas a figure is always the Figure Shell, so a figure with no
+placement is that shell at full width. `pair` is not offered — the image block's pair takes two `src` values in
+one block, and a figure has no free equivalent.
+
+An unrecognised value is **reported** beside the figure, with the accepted values named, and falls back to the
+default. It never silently selects a layout.
+
+`placement` governs the BLOCK relative to the lesson. It has nothing to do with where labels sit inside the
+figure — that is the annotation placement system, and it is untouched by this field.
 
 **Display defaults** — these three set where the figure *starts*; the learner can still change all of them
 from **Options** in the focused workspace, and their choice persists for the session:
@@ -397,7 +422,7 @@ coordinates — nothing is positioned by hand.
 
 | Field | Type | Notes |
 |---|---|---|
-| `construction` | string | Optional parameterised solve — `rightTriangle` · `triangleSAS` · `triangleASA` · `triangleSSS` · `regularPolygon` · `circle` · `rawCoordinates`. With `params`, it produces the named points (`A`, `B`, `C`, …) that `objects[]` then refers to. Impossible givens are **rejected with an error**, never solved into a fabricated figure. |
+| `construction` | string | Optional parameterised solve — `rightTriangle` · `triangleSAS` · `triangleASA` · `triangleSSS` · `regularPolygon` · `circle` · `rawCoordinates`. With `params`, it produces named points that `objects[]` then refers to. **The names depend on the construction:** the triangle solvers and `circle` produce `A`, `B`, `C`, …, while `regularPolygon` produces `P1`…`Pn` (and takes `radius`, not `r`). Referring to a name the construction did not create is reported per object, so a wrong guess names itself rather than drawing nothing. Impossible givens are **rejected with an error**, never solved into a fabricated figure. |
 | `params` | object | The givens for `construction` (e.g. `{a:7,b:8,c:9}`). |
 | `vertexLabels` | boolean | Default `true` — every polygon vertex is named. `false` suppresses them. |
 | `domain` | `{xMin,…}` | Optional. Otherwise fitted to the figure; auto-fit only ever expands so a label has room. |
