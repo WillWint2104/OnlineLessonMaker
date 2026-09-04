@@ -8097,7 +8097,23 @@ const FIG_FIT_ASPECT=FIG_BOX0.H/FIG_BOX0.W;                        // the painte
    total. K sits mid-window: gvert 14.8, gsym 14.3, gprose 13.7, gsmeas 13.1, gunit 11.2. A future role
    declared outside [9.8, 13] px cannot satisfy the band, and that must move the BAND, not K. */
 const FIG_FIT_K=1.14;
-const FIG_MIN_HOST=340;                                            // below this a host does not get a smaller figure — the layout promotes/stacks instead (Stage 4 D4)
+/* Minimum supported inline host, BY FIGURE KIND — below it the layout promotes toward full width or stacks
+   (Stage 4 D4) rather than painting a smaller figure. Two kinds, two measured numbers, one lookup: this is a
+   figure-kind rendering constraint, not a theme fork, and not the seed of a per-kind responsive framework.
+     graph    340 — sizing proven healthy to this width across all three designed environments (geolearn
+                    included); graph annotations carry no semantic region that a narrow box can make illegal.
+     geometry 420 — a SEMANTIC floor, not an aesthetic one. Below it a dense figure has no legal candidate
+                    inside its Stage 3c region, so the engine takes its documented relaxation path and reports
+                    the weakened association. Measured on the fixtures: the dart first relaxes at a 414px host,
+                    the crowded pentagon at 344px, long identifiers at 334px; the other twelve are clean to
+                    300px. 420 clears the binding case. Stage 3c relaxation stays an emergency fallback and is
+                    deliberately NOT part of the designed geometry range.
+   Content-adaptive escalation (promote when a solve reports a relaxed label) is recorded as a possible later
+   refinement and is deliberately NOT built here: it couples semantic placement back into layout, and with a
+   ResizeObserver in play it raises promote/unpromote oscillation and determinism questions that a fixed,
+   measured floor simply does not have. */
+const FIG_MIN_HOST={ graph:340, geometry:420 };
+function figMinHost(b){ return FIG_MIN_HOST[(b&&b.figure==='geometry')?'geometry':'graph']; }
 function figFitBox(hostW){
   if(!(hostW>0)) return FIG_BOX0;
   const W=Math.max(120,Math.round(hostW/FIG_FIT_K)), H=Math.max(90,Math.round(W*FIG_FIT_ASPECT));

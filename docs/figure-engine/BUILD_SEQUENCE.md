@@ -112,16 +112,25 @@ finds nothing legal, is not displacement-ranked. It is the structural last resor
 guarantee, and it does not fire on any fixture — the harness asserts that, so if a future figure starts
 using it that shows up as a failure rather than as a silently unranked label.
 
-**Status of the geometry half (checked at Stage 4 planning, and only partly discharged).** The
-crowded-labels and long-labels cases DO exist in `figure-geometry-baseline.json` (slide 6, two figures)
-and every vertex and side anchor in them is asserted by `verify-geometry-semantics` — but that gate
-asserts REGION LEGALITY (Stage 3c), not the property this stage added. Stage 2c's actual contract —
-the placed displacement equals the minimum over all candidates that clear — is checked by
-`verify-label-placement`, whose fixture list is `figure-labels-baseline.json`,
-`figure-graph-baseline.json` and `composable-page-baseline.json`: all GRAPH figures. **No geometry
-figure is anywhere asserted for nearest-legal placement.** So the review the note asked for happened,
-and the gap it identified is still open. Extending `verify-label-placement` over the geometry fixtures
-is its own change; it is not a Stage 4 deliverable, and Stage 4 must not silently adopt it.
+**The geometry half — DISCHARGED at Stage 4.** The debt was real: `verify-geometry-semantics` asserts
+REGION LEGALITY (Stage 3c), which is not this stage's property, and `verify-label-placement`'s fixture
+list was three GRAPH files, so no geometry figure had ever been asserted for nearest-legal placement.
+Stage 4 closed it, because container-aware sizing feeds geometry a different box and moves the whole
+candidate space with the host.
+
+`verify-label-placement` now independently verifies geometry nearest-legal placement across the
+reference box, an intermediate box and the narrow Stage 4 box — 15 figures × 3 boxes, 537 annotations
+(532 directional / 5 scan / 0 unplaced), with the region predicates, the clearance maths and the
+candidate enumeration all re-derived rather than borrowed (`figPlacePill`, `figScanPill`,
+`figGeomPlace`, `figClear`, `figBoxSeg` and `figDirs` are never called). Proven non-vacuous by pushing
+every directional placement 9px off its anchor: 69 geometry assertions fail, each naming the drift.
+
+**What this does NOT claim.** It does not mean every geometry annotation is semantically placeable at
+any width. Below a density-dependent host width there is no legal candidate inside the Stage 3c
+region at all, and the engine takes its documented relaxation path and reports the weakened
+association — correct as an emergency fallback, and deliberately outside the designed range. That is a
+separate constraint, now carried by the **geometry minimum host** (`FIG_MIN_HOST.geometry = 420`
+logical px, measured) and asserted by contract 10, not by this gate.
 
 ## STAGE 3 — Geometry 2D front-end (DONE)
 Delivered as `figGeometry` / `figGeomBody`, dispatched from `fragFigure` on `b.figure==='geometry'`. It renders
