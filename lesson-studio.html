@@ -8097,7 +8097,11 @@ const FIG_FIT_ASPECT=FIG_BOX0.H/FIG_BOX0.W;                        // the painte
    total. K sits mid-window: gvert 14.8, gsym 14.3, gprose 13.7, gsmeas 13.1, gunit 11.2. A future role
    declared outside [9.8, 13] px cannot satisfy the band, and that must move the BAND, not K. */
 const FIG_FIT_K=1.14;
-/* Minimum supported inline host, BY FIGURE KIND — below it the layout promotes toward full width or stacks
+/* Minimum supported inline host, BY FIGURE KIND. The measured quantity is the `.tp-fig-stage` width — what
+   figInlineSolve reads and figFitBox consumes — NOT the block's outer width, which is larger by the shell's
+   padding and border (~26px). Whatever implements promotion must compare the same quantity; comparing the
+   outer width would promote ~26px too late and leave a band where the figure is below the floor anyway.
+   Below the floor the layout promotes toward full width or stacks
    (Stage 4 D4) rather than painting a smaller figure. Two kinds, two measured numbers, one lookup: this is a
    figure-kind rendering constraint, not a theme fork, and not the seed of a per-kind responsive framework.
      graph    340 — sizing proven healthy to this width across all three designed environments (geolearn

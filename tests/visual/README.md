@@ -205,3 +205,41 @@ passes while the bug is present — verified by re-introducing the bug and watch
 
 `"12 cm²"` is a **renderer-format stress case only**. An area unit on a side is mathematically wrong and must
 never be copied into a real lesson; it is there to prove the chip typesets and sizes a superscripted unit.
+
+
+## `verify-figure-container.mjs` — contract 10: the box the app actually paints
+
+Gated by `scripts/verify-figure-container.mjs` (workflow `figure-container.yml`, not a required check). Stage 4
+derives the figure's viewBox from its host, so the inline box stopped being a constant. Nothing already here
+tested it: `verify-label-placement` and `verify-geometry-semantics` both solve at FIXED reference boxes, and
+`verify-measure-surface`'s assertions are ratios and therefore scale-invariant — all three stay green on a
+figure painted at 4px per annotation.
+
+Everything is asserted in **logical canvas px**. `#canvas` is a fixed 1280px surface that is
+`transform:scale()`'d, so a phone shrinks the figure and the body copy identically (annotation:body is a
+constant 1.48×) — that is the canvas's business, and device px would report a different number per viewport
+and fail on a phone for a reason no figure change can fix. Sizes come from
+`computedFontSize × (stage.offsetWidth ÷ viewBoxWidth)`, and `offsetWidth` is the pre-transform layout box.
+
+What is asserted, per fixture × designed theme × host width, from the widest pane down to exactly the floor:
+
+1. **The type band.** Hard floor 11px for every annotation; primary annotations 12–15px against 16.5px body
+   copy. Subordinate units satisfy the floor only and are deliberately not raised toward the primary values —
+   Stage 3d made them quieter on purpose. The run prints the smallest and largest observed, with the class,
+   string, host and slide that produced each.
+2. **Containment.** Measurement text never leaves the rect reserved for it, at every host width.
+3. **The geometry minimum host.** At or above `FIG_MIN_HOST.geometry` no label may have taken Stage 3c's
+   relaxed path — and the floor is proven *load-bearing* by showing that dense figures DO relax below it, so a
+   green run cannot mean the floor was decoration. The floor is read from the app, never pinned here.
+4. **Mount, observer and reflow.** The observer is installed once; a re-solve at an unchanged host does no
+   work; only the `<svg>` is replaced; the callout hit-targets and dialogs keep their DOM identity and still
+   open after a re-solve (they carry `wirePackTyped`'s listeners and must never be re-emitted); two figures in
+   one host stay independent; a resize does not feed the observer back into itself; wide → narrow → wide
+   returns identical DOM, with a guard that the narrow state really differed; and a callout-count mismatch
+   bails before mutating rather than throwing.
+5. **Every expectation observed.** A class or fixture that never rendered fails rather than passing silently.
+
+Non-vacuity, demonstrated by re-introducing each defect: `FIG_FIT_K` 1.14→0.80 (36/44, annotations below the
+floor) · geometry floor 420→340 (40/44, dense figures relax inside the supported range) · callouts re-emitted
+instead of repositioned (41/44, identity and listeners lost) · idempotence guard removed (42/44, unchanged
+host repaints and the resize feeds back) · count-mismatch bail removed (43/44, throws).

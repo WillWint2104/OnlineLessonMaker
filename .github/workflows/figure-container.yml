@@ -1,0 +1,42 @@
+name: Figure container
+
+# Stage 4 gate for CONTRACT 10 — the box the app actually paints.
+#
+# Why a separate workflow, and why it is NOT a required check: same reasoning as measure-surface.yml.
+# `validate` is the only REQUIRED check and deliberately installs no dependencies; this one needs Playwright
+# and a real render at several host widths in every designed environment. Wiring it as required is branch
+# protection, which is the maintainer's call (CLAUDE.md: ask before changing the CI/auto-merge setup). Until
+# it is, a red result here does not block merge — read it.
+#
+# What it defends: the three existing figure gates all solve at FIXED boxes, or assert ratios that are
+# scale-invariant, so every one of them stays green on a figure painted at 4px per annotation. Since Stage 4
+# the inline box is derived from the host, so the painted box needs a gate of its own.
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - 'lesson-studio.html'
+      - 'scripts/verify-figure-container.mjs'
+      - 'tests/visual/lessons/figure-geometry-baseline.json'
+      - 'tests/visual/lessons/figure-measure-surface.json'
+      - 'tests/visual/lessons/figure-graph-baseline.json'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  figure-container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/verify-figure-container.mjs
