@@ -8077,7 +8077,7 @@ function figxBoxFor(xid,fallback){
 }
 /* ═══ STAGE 4 — CONTAINER-AWARE INLINE SIZING ═══════════════════════════════════════════════════════
    The inline figure was a fixed 520x360 viewBox painted at `width:100%`, so EVERY quantity inside it —
-   annotation type, FIG_GAP, stroke widths, pill padding — was multiplied by hostWidth/520. Nothing in the
+   annotation type, FIG_GAP, stroke widths, pill padding — was multiplied by stageWidth/520. Nothing in the
    figure had a size of its own. Measured on main, in LOGICAL canvas px: the same measurement label is 23.5px
    in a full-width pane (1.42x the 16.5px body copy) and 5.2px in a 260px host.
    NOT the same thing as the on-screen shrink across viewports: `#canvas` is a fixed 1280 logical px surface
@@ -8090,18 +8090,19 @@ function figxBoxFor(xid,fallback){
    they simply receive the right box, in the order container -> box -> metrics -> anchors -> regions ->
    search -> paint, so Stage 3d's "the chip's rect IS the reserved box" still holds by construction. */
 const FIG_BOX0={W:520,H:360,padL:40,padR:18,padT:16,padB:30};     // first pass (no DOM yet) and the fallback for an unmeasurable host
-const FIG_FIT_ASPECT=FIG_BOX0.H/FIG_BOX0.W;                        // the painted height is hostW*aspect either way, so a re-solve never shifts layout
+const FIG_FIT_ASPECT=FIG_BOX0.H/FIG_BOX0.W;                        // the painted height is stageW*aspect either way, so a re-solve never shifts layout
 /* K = logical px per viewBox unit. The Stage 4 band (hard floor 11, primary 12-15, ceiling ~15) and the
    Stage 3d type scale only just co-exist: the scale runs 13px (tp-fig-gvert) down to 9.798px
    (tp-fig-gunit = 11.5*FIG_MEAS_UNIT), a span of 1.327, against the band's 15/11 = 1.364 — 2.8% of slack in
    total. K sits mid-window: gvert 14.8, gsym 14.3, gprose 13.7, gsmeas 13.1, gunit 11.2. A future role
    declared outside [9.8, 13] px cannot satisfy the band, and that must move the BAND, not K. */
 const FIG_FIT_K=1.14;
-/* Minimum supported inline host, BY FIGURE KIND. The measured quantity is the `.tp-fig-stage` width — what
-   figInlineSolve reads and figFitBox consumes — NOT the block's outer width, which is larger by the shell's
-   padding and border (~26px). Whatever implements promotion must compare the same quantity; comparing the
-   outer width would promote ~26px too late and leave a band where the figure is below the floor anyway.
-   Below the floor the layout promotes toward full width or stacks
+/* Minimum supported STAGE WIDTH, BY FIGURE KIND — the usable `.tp-fig-stage` width, which is what
+   figInlineSolve measures and figFitBox consumes. Named for the thing it measures: it is NOT the block's
+   outer width, which is larger by the shell's padding and border (~26px), and reading it as one would make a
+   promotion decision ~26px too late and leave a band where the figure is below the floor anyway. (That is
+   not hypothetical — the contract-10 harness made exactly that mistake and reported a relaxed dart "at 420"
+   that was really at a 394px stage.) Below the floor the layout promotes toward full width or stacks
    (Stage 4 D4) rather than painting a smaller figure. Two kinds, two measured numbers, one lookup: this is a
    figure-kind rendering constraint, not a theme fork, and not the seed of a per-kind responsive framework.
      graph    340 — sizing proven healthy to this width across all three designed environments (geolearn
@@ -8116,11 +8117,11 @@ const FIG_FIT_K=1.14;
    refinement and is deliberately NOT built here: it couples semantic placement back into layout, and with a
    ResizeObserver in play it raises promote/unpromote oscillation and determinism questions that a fixed,
    measured floor simply does not have. */
-const FIG_MIN_HOST={ graph:340, geometry:420 };
-function figMinHost(b){ return FIG_MIN_HOST[(b&&b.figure==='geometry')?'geometry':'graph']; }
-function figFitBox(hostW){
-  if(!(hostW>0)) return FIG_BOX0;
-  const W=Math.max(120,Math.round(hostW/FIG_FIT_K)), H=Math.max(90,Math.round(W*FIG_FIT_ASPECT));
+const FIG_MIN_STAGE={ graph:340, geometry:420 };
+function figMinStageWidth(b){ return FIG_MIN_STAGE[(b&&b.figure==='geometry')?'geometry':'graph']; }
+function figFitBox(stageW){                                        // stageW = usable .tp-fig-stage width, the same quantity FIG_MIN_STAGE is expressed in
+  if(!(stageW>0)) return FIG_BOX0;
+  const W=Math.max(120,Math.round(stageW/FIG_FIT_K)), H=Math.max(90,Math.round(W*FIG_FIT_ASPECT));
   const r=(pad,base,floor)=>Math.max(floor,Math.round(W*pad/base));  // FIG_BOX0's OWN gutter proportions, not figxBoxFor's — this box paints the inline card, and keeping its proportions keeps the card looking like itself
   return { W, H, padL:r(FIG_BOX0.padL,FIG_BOX0.W,24), padR:r(FIG_BOX0.padR,FIG_BOX0.W,12),
            padT:Math.max(10,Math.round(H*FIG_BOX0.padT/FIG_BOX0.H)), padB:Math.max(18,Math.round(H*FIG_BOX0.padB/FIG_BOX0.H)) };
@@ -8140,9 +8141,9 @@ function figInlineSolve(fig){
   /* offsetWidth is the LAYOUT box — unaffected by the #canvas transform:scale(). getBoundingClientRect()
      here would return post-transform px and make every box wrong by the zoom factor, silently. figxBoxFor
      can use the rect because the focused panel is reparented to body level, outside the scaled canvas. */
-  const hostW=stage.offsetWidth;
-  if(!(hostW>0)) return false;
-  const box=figFitBox(hostW), key=box.W+'x'+box.H;
+  const stageW=stage.offsetWidth;
+  if(!(stageW>0)) return false;
+  const box=figFitBox(stageW), key=box.W+'x'+box.H;
   if(fig.dataset.figBox===key) return false;                       // idempotent: the same host width yields the same box, so a repeat pass is a no-op (and a ResizeObserver cannot feed back on itself)
   const xb=fig.querySelector('[data-figx-open]'), e=xb&&FIGX[xb.dataset.figxOpen], b=e&&e.b;
   if(!b) return false;                                             // no registered spec (export/print path) — leave the first pass alone
@@ -8411,7 +8412,7 @@ function figSvgBody(M, box, opt){
 function fragFigure(b,bk){
   /* Stage 4 — the FIRST PASS solves at FIG_BOX0. fragFigure builds a string during render(), so there is no
      DOM to measure yet; figFitAll() re-solves each mounted figure against its real host immediately after
-     renderCanvas writes #slide. The painted height is hostW*FIG_FIT_ASPECT either way, so the second pass
+     renderCanvas writes #slide. The painted height is stageW*FIG_FIT_ASPECT either way, so the second pass
      never shifts layout — it only changes the internal unit density. */
   const box=FIG_BOX0;
   // Stage 3 — the ONE place a geometry figure differs from a graph: which model solves it and which body

@@ -129,8 +129,9 @@ every directional placement 9px off its anchor: 69 geometry assertions fail, eac
 any width. Below a density-dependent host width there is no legal candidate inside the Stage 3c
 region at all, and the engine takes its documented relaxation path and reports the weakened
 association — correct as an emergency fallback, and deliberately outside the designed range. That is a
-separate constraint, now carried by the **geometry minimum host** (`FIG_MIN_HOST.geometry = 420`
-logical px, measured) and asserted by contract 10, not by this gate.
+separate constraint, now carried by the **geometry minimum stage width** (`FIG_MIN_STAGE.geometry = 420`
+logical px, measured — the usable `.tp-fig-stage` width, not the block's outer width) and asserted by
+contract 10, not by this gate.
 
 ## STAGE 3 — Geometry 2D front-end (DONE)
 Delivered as `figGeometry` / `figGeomBody`, dispatched from `fragFigure` on `b.figure==='geometry'`. It renders

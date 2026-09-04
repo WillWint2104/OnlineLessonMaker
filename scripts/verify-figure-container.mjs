@@ -21,7 +21,7 @@
 // box, never getBoundingClientRect(), which would fold the canvas zoom into every number.
 //
 // INDEPENDENCE. Every verdict is read back from the painted DOM. The one value taken from the app is
-// figMinHost(), because the floor is the CONTRACT under assertion, not a derived result - a copy pinned here
+// figMinStageWidth(), because the floor is the CONTRACT under assertion, not a derived result - a copy pinned here
 // would let the two drift apart silently.
 import http from 'node:http';
 import fs from 'node:fs';
@@ -88,7 +88,7 @@ await page.evaluate(() => {
      and border sit between the two (~26px), so setting the parent to the floor would test a stage ~26px BELOW
      it - which is how the first draft of this file reported a relaxed dart "at 420" that was really at 394.
      Set the parent, read the stage back, correct once for the chrome, and verify the target was hit. */
-  window.__host = (px) => { const figs = window.__figs();
+  window.__stage = (px) => { const figs = window.__figs();
     figs.forEach((f) => { const h = f.parentElement; h.style.width = px + 'px'; h.style.maxWidth = px + 'px'; });
     figs.forEach((f) => { const st = f.querySelector('.tp-fig-stage'), h = f.parentElement;
       const chrome = f.parentElement.offsetWidth - st.offsetWidth;
@@ -130,34 +130,34 @@ await page.evaluate(() => {
 // == A/B/C/D: band, containment and the geometry floor, per fixture x theme x host =======================
 for (const fx of FIXTURES) {
   const lesson = JSON.parse(fs.readFileSync(path.join(root, fx.file), 'utf8'));
-  const floor = await page.evaluate((k) => figMinHost({ figure: k }), fx.kind);   // the CONTRACT, from the app
-  const hosts = [1089, 700, 530, floor + 40, floor];                              // widest .. exactly the floor
+  const floor = await page.evaluate((k) => figMinStageWidth({ figure: k }), fx.kind);   // the CONTRACT, from the app
+  const stages = [1089, 700, 530, floor + 40, floor];                              // widest .. exactly the floor (all STAGE widths)
   const short = path.basename(fx.file);
   for (const theme of THEMES[fx.kind]) {
     let lo = { px: Infinity }, hi = { px: -Infinity }, texts = 0, renders = 0;
     const band = [], contain = [], relax = [];
     const slides = await page.evaluate(({ L, t }) => window.__load(L, t), { L: lesson, t: theme });
-    for (const host of hosts) {
+    for (const stageW of stages) {
       for (let i = 0; i < slides; i++) {
-        const r = await page.evaluate(({ i, host }) => { go(i); const widths = window.__host(host);
+        const r = await page.evaluate(({ i, stageW }) => { go(i); const widths = window.__stage(stageW);
           return { rows: window.__text(), bad: window.__containment(), rel: window.__relaxed(),
                    n: window.__figs().length, widths };
-        }, { i, host });
+        }, { i, stageW });
         // The stage really is at the width this row claims - otherwise every number below is about a
         // different figure than the one named, which is exactly the defect this guard was added for.
-        const offBy = r.widths.filter((w) => Math.abs(w - host) > 1.5);
-        if (offBy.length) ok(`${path.basename(fx.file)} - ${theme} - stage width honoured at ${host}`, false, `got ${offBy.join(', ')}`);
+        const offBy = r.widths.filter((w) => Math.abs(w - stageW) > 1.5);
+        if (offBy.length) ok(`${path.basename(fx.file)} - ${theme} - stage width honoured at ${stageW}`, false, `got ${offBy.join(', ')}`);
         renders += r.n; texts += r.rows.length;
         for (const t of r.rows) {
           seenClasses.add(t.cls);
-          if (t.px < lo.px) lo = { ...t, host, slide: i };
-          if (t.px > hi.px) hi = { ...t, host, slide: i };
-          if (t.px < FLOOR - 1e-6) band.push(`${t.cls} "${t.txt}" ${t.px.toFixed(2)}px < ${FLOOR} floor (host ${host}, slide ${i})`);
+          if (t.px < lo.px) lo = { ...t, stageW, slide: i };
+          if (t.px > hi.px) hi = { ...t, stageW, slide: i };
+          if (t.px < FLOOR - 1e-6) band.push(`${t.cls} "${t.txt}" ${t.px.toFixed(2)}px < ${FLOOR} floor (stage ${stageW}, slide ${i})`);
           else if (!SUBORDINATE.has(t.cls) && (t.px < PRIMARY_MIN - 1e-6 || t.px > CEIL + 1e-6))
-            band.push(`${t.cls} "${t.txt}" ${t.px.toFixed(2)}px outside ${PRIMARY_MIN}-${CEIL} (host ${host}, slide ${i})`);
+            band.push(`${t.cls} "${t.txt}" ${t.px.toFixed(2)}px outside ${PRIMARY_MIN}-${CEIL} (stage ${stageW}, slide ${i})`);
         }
-        r.bad.forEach((b) => contain.push(`"${b.txt}" spills ${b.over}px (host ${host}, slide ${i})`));
-        r.rel.forEach((t) => relax.push(`"${t}" at host ${host} (slide ${i})`));
+        r.bad.forEach((b) => contain.push(`"${b.txt}" spills ${b.over}px (stage ${stageW}, slide ${i})`));
+        r.rel.forEach((t) => relax.push(`"${t}" at stage ${stageW} (slide ${i})`));
       }
     }
     const tag = `${short} - ${theme}`;
@@ -166,8 +166,8 @@ for (const fx of FIXTURES) {
       band.length ? band.slice(0, 3).join(' | ') : `min ${lo.px.toFixed(2)} ${lo.cls} - max ${hi.px.toFixed(2)} ${hi.cls}`);
     ok(`${tag} - measurement text stays inside its own surface`, contain.length === 0, contain.slice(0, 3).join(' | '));
     if (fx.kind === 'geometry')
-      ok(`${tag} - no Stage 3c relaxed placement at or above the ${floor}px geometry floor`, relax.length === 0, relax.slice(0, 3).join(' | '));
-    note(`${tag}: smallest ${lo.px.toFixed(2)}px ${lo.cls} "${lo.txt}" @host ${lo.host} slide ${lo.slide} - largest ${hi.px.toFixed(2)}px ${hi.cls} "${hi.txt}" @host ${hi.host} slide ${hi.slide}`);
+      ok(`${tag} - no Stage 3c relaxed placement at or above the ${floor}px geometry stage floor`, relax.length === 0, relax.slice(0, 3).join(' | '));
+    note(`${tag}: smallest ${lo.px.toFixed(2)}px ${lo.cls} "${lo.txt}" @stage ${lo.stageW} slide ${lo.slide} - largest ${hi.px.toFixed(2)}px ${hi.cls} "${hi.txt}" @stage ${hi.stageW} slide ${hi.slide}`);
   }
 }
 ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClasses.size} classes: ${[...seenClasses].sort().join(' ')}`);
@@ -176,15 +176,15 @@ ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClass
    nothing. Below it, the dense fixtures MUST relax - that is the measured reason 420 exists. */
 {
   const lesson = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/figure-geometry-baseline.json'), 'utf8'));
-  const floor = await page.evaluate(() => figMinHost({ figure: 'geometry' }));
+  const floor = await page.evaluate(() => figMinStageWidth({ figure: 'geometry' }));
   const slides = await page.evaluate(({ L }) => window.__load(L, 'mathematics'), { L: lesson });
   let below = 0;
   for (let i = 0; i < slides; i++) {
-    const rel = await page.evaluate(({ i, host }) => { go(i); window.__host(host); return window.__relaxed(); }, { i, host: floor - 90 });   // stage width, per __host
+    const rel = await page.evaluate(({ i, stageW }) => { go(i); window.__stage(stageW); return window.__relaxed(); }, { i, stageW: floor - 90 });   // stage width, per __stage
     below += rel.length;
   }
-  ok(`the ${floor}px geometry floor is load-bearing (dense figures DO relax below it)`, below > 0,
-    `${below} relaxed labels at host ${floor - 90}, none at or above ${floor}`);
+  ok(`the ${floor}px geometry stage floor is load-bearing (dense figures DO relax below it)`, below > 0,
+    `${below} relaxed labels at stage ${floor - 90}, none at or above ${floor}`);
 }
 
 /* == E: MOUNT, OBSERVER AND REFLOW INVARIANTS =============================================================
@@ -196,22 +196,22 @@ ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClass
   const graph = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/figure-graph-baseline.json'), 'utf8'));
   const geo = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/figure-geometry-baseline.json'), 'utf8'));
 
-  // E1/E2 - the observer is installed once, and a re-solve at an unchanged host is a no-op.
+  // E1/E2 - the observer is installed once, and a re-solve at an unchanged stage width is a no-op.
   const idem = await page.evaluate(({ L }) => {
-    window.__load(L, 'mathematics'); window.__host(700);
+    window.__load(L, 'mathematics'); window.__stage(700);
     const before = _figRO; setupFigureObserver(); setupFigureObserver();
     const sameRO = _figRO === before;
     const c0 = window.__T.repaints; figFitAll(); figFitAll(); figFitAll();
     return { sameRO, extra: window.__T.repaints - c0, figs: window.__figs().length };
   }, { L: graph });
   ok('observer setup is idempotent across repeated calls', idem.sameRO, 'setupFigureObserver() re-entered without replacing the observer');
-  ok('a re-solve at an unchanged host does no work', idem.extra === 0, `${idem.extra} repaints from 3 extra figFitAll() passes over ${idem.figs} figures`);
+  ok('a re-solve at an unchanged stage width does no work', idem.extra === 0, `${idem.extra} repaints from 3 extra figFitAll() passes over ${idem.figs} figures`);
 
   // E3/E4 - only the <svg> is replaced; the callout nodes keep their identity and move.
   const swap = await page.evaluate(({ L }) => {
     window.__load(L, 'mathematics');
     let slide = -1, n = 0;
-    for (let i = 0; i < LESSON.slides.length; i++) { go(i); window.__host(700);
+    for (let i = 0; i < LESSON.slides.length; i++) { go(i); window.__stage(700);
       n = document.querySelectorAll('#slide .tp-fig-hit').length; if (n > 0) { slide = i; break; } }
     if (slide < 0) return { none: true };
     const stage = document.querySelector('#slide .tp-fig-stage');
@@ -219,7 +219,7 @@ ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClass
     const hits = [...stage.querySelectorAll('.tp-fig-hit')], cos = [...stage.querySelectorAll('.tp-fig-callout')];
     hits.forEach((h, j) => { h.__tag = 'hit' + j; }); cos.forEach((c, j) => { c.__tag = 'co' + j; });
     const left0 = hits.map((h) => h.style.left);
-    window.__host(460);
+    window.__stage(460);
     const hits2 = [...stage.querySelectorAll('.tp-fig-hit')], cos2 = [...stage.querySelectorAll('.tp-fig-callout')];
     return { slide, n,
       svgReplaced: stage.querySelector('.tp-fig-svg') !== svg0,
@@ -237,7 +237,7 @@ ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClass
 
   // E5 - the surviving listener still works: a click after the re-solve opens the callout.
   if (!swap.none) {
-    await page.evaluate(({ L, slide }) => { window.__load(L, 'mathematics'); go(slide); window.__host(700); window.__host(460); }, { L: graph, slide: swap.slide });
+    await page.evaluate(({ L, slide }) => { window.__load(L, 'mathematics'); go(slide); window.__stage(700); window.__stage(460); }, { L: graph, slide: swap.slide });
     const before = await page.evaluate(() => document.querySelector('#slide .tp-fig-callout').hidden);
     await page.click('#slide .tp-fig-hit');
     await page.waitForTimeout(120);
@@ -252,7 +252,7 @@ ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClass
     let slide = -1;
     for (let i = 0; i < LESSON.slides.length; i++) { go(i); if (window.__figs().length >= 2) { slide = i; break; } }
     if (slide < 0) return { none: true };
-    window.__host(700);
+    window.__stage(700);
     const ids = window.__figs().map((f) => f.querySelector('[data-figx-open]').dataset.figxOpen);
     const boxes = window.__figs().map((f) => f.dataset.figBox);
     return { slide, ids, distinct: new Set(ids).size === ids.length, registered: ids.every((i2) => !!FIGX[i2]), boxes };
@@ -266,8 +266,8 @@ ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClass
 
   // E7 - a resize settles. If the re-solve could feed its own observer this count would keep climbing.
   const loop = await page.evaluate(async ({ L }) => {
-    window.__load(L, 'mathematics'); go(0); window.__host(700);
-    window.__host(460);
+    window.__load(L, 'mathematics'); go(0); window.__stage(700);
+    window.__stage(460);
     const a = window.__T.repaints;
     await new Promise((r) => setTimeout(r, 500));
     return { grew: window.__T.repaints - a };
@@ -277,9 +277,9 @@ ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClass
   // E8 - wide -> narrow -> wide is deterministic.
   const det = await page.evaluate(({ L }) => {
     window.__load(L, 'mathematics'); go(0);
-    window.__host(700); const a = window.__sig();
-    window.__host(460); const mid = window.__sig();
-    window.__host(700); const b = window.__sig();
+    window.__stage(700); const a = window.__sig();
+    window.__stage(460); const mid = window.__sig();
+    window.__stage(700); const b = window.__sig();
     return { same: a === b, changed: a !== mid };
   }, { L: graph });
   ok('wide -> narrow -> wide returns identical figure DOM', det.same);
@@ -289,7 +289,7 @@ ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClass
   // Stage 4 deliberately builds no user-facing error path for it.
   if (!swap.none) {
     const bail = await page.evaluate(({ L, slide }) => {
-      window.__load(L, 'mathematics'); go(slide); window.__host(700);
+      window.__load(L, 'mathematics'); go(slide); window.__stage(700);
       const fig = window.__figs()[0], stage = fig.querySelector('.tp-fig-stage');
       const hit = stage.querySelector('.tp-fig-hit'); if (!hit) return { none: true };
       const vb0 = stage.querySelector('.tp-fig-svg').getAttribute('viewBox');

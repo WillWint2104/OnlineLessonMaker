@@ -221,17 +221,19 @@ constant 1.48×) — that is the canvas's business, and device px would report a
 and fail on a phone for a reason no figure change can fix. Sizes come from
 `computedFontSize × (stage.offsetWidth ÷ viewBoxWidth)`, and `offsetWidth` is the pre-transform layout box.
 
-What is asserted, per fixture × designed theme × host width, from the widest pane down to exactly the floor:
+What is asserted, per fixture × designed theme × **stage width**, from the widest pane down to exactly the
+floor:
 
 1. **The type band.** Hard floor 11px for every annotation; primary annotations 12–15px against 16.5px body
    copy. Subordinate units satisfy the floor only and are deliberately not raised toward the primary values —
    Stage 3d made them quieter on purpose. The run prints the smallest and largest observed, with the class,
-   string, host and slide that produced each.
-2. **Containment.** Measurement text never leaves the rect reserved for it, at every host width.
-3. **The geometry minimum host.** At or above `FIG_MIN_HOST.geometry` no label may have taken Stage 3c's
+   string, stage width and slide that produced each.
+2. **Containment.** Measurement text never leaves the rect reserved for it, at every stage width.
+3. **The geometry minimum stage width.** At or above `FIG_MIN_STAGE.geometry` — the usable `.tp-fig-stage`
+   width, which is what `figFitBox` consumes — no label may have taken Stage 3c's
    relaxed path — and the floor is proven *load-bearing* by showing that dense figures DO relax below it, so a
    green run cannot mean the floor was decoration. The floor is read from the app, never pinned here.
-4. **Mount, observer and reflow.** The observer is installed once; a re-solve at an unchanged host does no
+4. **Mount, observer and reflow.** The observer is installed once; a re-solve at an unchanged stage width does no
    work; only the `<svg>` is replaced; the callout hit-targets and dialogs keep their DOM identity and still
    open after a re-solve (they carry `wirePackTyped`'s listeners and must never be re-emitted); two figures in
    one host stay independent; a resize does not feed the observer back into itself; wide → narrow → wide
@@ -241,5 +243,5 @@ What is asserted, per fixture × designed theme × host width, from the widest p
 
 Non-vacuity, demonstrated by re-introducing each defect: `FIG_FIT_K` 1.14→0.80 (36/44, annotations below the
 floor) · geometry floor 420→340 (40/44, dense figures relax inside the supported range) · callouts re-emitted
-instead of repositioned (41/44, identity and listeners lost) · idempotence guard removed (42/44, unchanged
-host repaints and the resize feeds back) · count-mismatch bail removed (43/44, throws).
+instead of repositioned (41/44, identity and listeners lost) · idempotence guard removed (42/44, an unchanged
+stage width repaints and the resize feeds back) · count-mismatch bail removed (43/44, throws).
