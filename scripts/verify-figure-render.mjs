@@ -124,6 +124,13 @@ for (const fx of FIXTURES) {
             (short === 'figure-graph-baseline' && i === 0));
           if (want) {
             const name = `${short}-s${i}-${cls.name}-${stageW}px.png`;
+            /* Wait for the pack faces before capturing. The DOM digest above is unaffected by font state, so
+               the GATE was stable at 240/240 — but the pixels are not: captured mid-load the same figure
+               renders in a fallback face, and two runs of identical code produced captures 3.5KB apart. A
+               capture that silently shows the wrong typeface is worse than no capture when the whole point is
+               judging typography. */
+            await page.evaluate(() => document.fonts.ready);
+            await page.waitForTimeout(120);
             const el = await page.$('#slide .tp-fig');
             if (el) { await el.screenshot({ path: path.join(SHOTS, name) }); shots.push(name); }
           }
