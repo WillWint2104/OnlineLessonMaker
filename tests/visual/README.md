@@ -264,3 +264,29 @@ pinned, and it also catches the dart relaxing at the geometry floor) · `FIG_FIT
 geometry floor 420→340 (dense figures relax inside the supported range) · callouts re-emitted instead of
 repositioned (identity and listeners lost) · idempotence guard removed (an unchanged stage width repaints and
 the resize feeds back) · count-mismatch bail removed (throws).
+
+### Contract 10 also covers the placement resolver (Stage 4 C6)
+
+`figure-placement-baseline.json`. A placement is an INTENT: `contained` and `beside` keep their shape only
+while the figure still gets `figMinStageWidth()` of usable stage, and — for `beside` — while the prose column
+is still worth reading. Otherwise the layout relaxes (`contained` → full, `beside` → stacked).
+
+The expected mode is **predicted independently** from the measured available width, the measured shell chrome
+and the app's own minimum, using this file's own copy of the layout geometry (0.78 / 24px gutter / 260px prose
+floor). It is a prediction checked against the resolver, not a question put to it — and because the prediction
+lands exactly, it also proves the JS constants and the CSS agree, a duplication nothing else tests.
+
+Asserted: every resolved mode matches the prediction at eleven widths straddling all three measured
+transitions · a reduced layout never starves the figure below its minimum · `beside` always has rendered prose
+· a stacked figure recovers the full width · three identical sweeps across a transition do not oscillate · a
+beside↔stacked transition keeps the same figure node, the same `figSafeId` and the same `FIGX` entry · a
+settled placement is not rewritten on every pass · `beside` without prose reports and falls back · an
+unrecognised placement still falls back (C5 unchanged) · `text` outside `beside` is reported · a figure with no
+placement gains no wrapper.
+
+Non-vacuity: contained promotion disabled (61/64) · beside stacking disabled (61/64) · chrome dropped so the
+outer width is compared instead of the stage (62/64, and it catches a figure kept at stage 419 against a 420
+minimum — the exact ~26px bug the architecture exists to prevent) · resolver idempotence guard removed
+(64/65). That last one **passed** against the first draft of this suite: counting `figInlineSolve` repaints
+missed a resolver that rewrote `data-fig-layout` on every pass. A second counter was added, and it now fails
+with `3 layout writes from 3 extra figFitAll() passes`.

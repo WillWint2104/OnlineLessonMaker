@@ -95,9 +95,14 @@ const seenExpect = new Set();   // every named representative size must actually
 
 // -- in-page helpers, installed once ---------------------------------------------------------------------
 await page.evaluate(() => {
-  window.__T = { calls: 0, repaints: 0 };
+  window.__T = { calls: 0, repaints: 0, relayouts: 0 };
   const orig = figInlineSolve;
   figInlineSolve = function (f) { window.__T.calls++; const r = orig(f); if (r) window.__T.repaints++; return r; };
+  /* The RESOLVER needs its own counter. Counting repaints alone missed a removed idempotence guard entirely:
+     figResolveLayout would rewrite data-fig-layout on every pass while figInlineSolve, still idempotent on
+     data-fig-box, reported no repaint — a redundant DOM write per pass that the suite called clean. */
+  const origL = figResolveLayout;
+  figResolveLayout = function (f) { const r = origL(f); if (r) window.__T.relayouts++; return r; };
   window.__load = (L, theme) => { LESSON = JSON.parse(JSON.stringify(L)); LESSON.meta.theme = theme;
     document.documentElement.dataset.theme = theme; go(0); return LESSON.slides.length; };
   window.__figs = () => [...document.querySelectorAll('#slide .tp-fig[data-fig-fit]')];
@@ -306,6 +311,16 @@ ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClass
   }, { L: graph });
   ok('observer setup is idempotent across repeated calls', idem.sameRO, 'setupFigureObserver() re-entered without replacing the observer');
   ok('a re-solve at an unchanged stage width does no work', idem.extra === 0, `${idem.extra} repaints from 3 extra figFitAll() passes over ${idem.figs} figures`);
+  // Same idempotence, for the LAYOUT half: a settled placement must not be rewritten on every pass.
+  const idemL = await page.evaluate(({ L }) => {
+    window.__load(L, 'mathematics');
+    for (let i = 0; i < LESSON.slides.length; i++) { go(i); figFitAll(); }   // settle every placed figure once
+    go(3); figFitAll();
+    const c0 = window.__T.relayouts; figFitAll(); figFitAll(); figFitAll();
+    return { extra: window.__T.relayouts - c0 };
+  }, { L: JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/figure-placement-baseline.json'), 'utf8')) });
+  ok('a settled placement is not rewritten on every pass', idemL.extra === 0,
+    `${idemL.extra} layout writes from 3 extra figFitAll() passes at an unchanged width`);
 
   // E3/E4 - only the <svg> is replaced; the callout nodes keep their identity and move.
   const swap = await page.evaluate(({ L }) => {
@@ -407,6 +422,112 @@ ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClass
     ok('a callout-count mismatch bails before mutating', bail.threw === null && bail.ret === false && bail.vbSame && bail.boxSame && bail.stillHasSvg,
       bail.threw ? `THREW: ${bail.threw}` : `returned ${bail.ret} - viewBox unchanged ${bail.vbSame} - data-fig-box unchanged ${bail.boxSame} - svg intact ${bail.stillHasSvg}`);
   }
+}
+
+/* == C6: THE PLACEMENT RESOLVER ===========================================================================
+   A placement is an INTENT. `contained` and `beside` may only keep their shape while the figure still gets
+   figMinStageWidth() of usable stage — and, for `beside`, while the prose column is still worth reading.
+   Otherwise the layout relaxes. The expected mode is computed HERE from the measured available width, the
+   measured shell chrome and the app's own minimum, using this file's copy of the layout geometry — so it is a
+   prediction to check the resolver against, not a question put to the resolver. That the prediction lands
+   exactly also proves the JS constants and the CSS agree, which is otherwise a duplication nobody tests. */
+const L_CONTAINED = 0.78, L_GAP = 24, L_MIN_PROSE = 260;   // must match FIG_CONTAINED_FRAC / FIG_BESIDE_GAP / FIG_BESIDE_MIN_PROSE and the CSS
+const expectMode = (authored, avail, chrome, min) => {
+  if (authored === 'contained') return (avail * L_CONTAINED - chrome >= min) ? 'contained' : 'full';
+  if (authored === 'beside') { const col = (avail - L_GAP) / 2;
+    return (col - chrome >= min && col >= L_MIN_PROSE) ? 'beside' : 'stacked'; }
+  return authored;
+};
+{
+  const lesson = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/figure-placement-baseline.json'), 'utf8'));
+  await page.evaluate(({ L }) => { window.__load(L, 'mathematics');
+    window.__avail = (px) => { document.querySelectorAll('#slide .tp-frag').forEach((fr) => {
+      fr.style.width = px + 'px'; fr.style.maxWidth = px + 'px'; }); figFitAll(); };
+    window.__lay = () => { const f = document.querySelector('#slide .tp-fig'); if (!f) return null;
+      const w = f.parentElement && f.parentElement.classList.contains('tp-figl') ? f.parentElement : null;
+      const st = f.querySelector('.tp-fig-stage');
+      const xb = f.querySelector('[data-figx-open]'), e = xb && FIGX[xb.dataset.figxOpen];
+      const pr = w && w.querySelector('.tp-figl-text');
+      const er = f.querySelector('.tp-fig-err');
+      return { authored: f.dataset.figPlacement || '', mode: w ? w.dataset.figLayout : null, wrapped: !!w,
+        stage: st ? st.offsetWidth : 0, chrome: st ? f.offsetWidth - st.offsetWidth : 0,
+        min: (e && e.b) ? figMinStageWidth(e.b) : null, prose: pr ? pr.offsetWidth : null,
+        proseText: pr ? (pr.textContent || '').trim().length : 0,
+        avail: (w ? w.parentElement : f.parentElement).offsetWidth,
+        err: er ? er.textContent.trim() : '' }; };
+  }, { L: lesson });
+  const AVAIL = [1089, 916, 915, 756, 755, 700, 600, 572, 571, 480, 420];   // includes both sides of each measured transition
+  const slides = await page.evaluate(() => LESSON.slides.length);
+  const modeFails = [], starved = [], predFails = [];
+  let contained = 0, beside = 0, stacked = 0, full = 0, checked = 0;
+  for (let i = 0; i < slides; i++) for (const avail of AVAIL) {
+    const r = await page.evaluate(({ i, avail }) => { go(i); window.__avail(avail); return window.__lay(); }, { i, avail });
+    if (!r || !r.authored) continue;
+    checked++;
+    const want = expectMode(r.authored, r.avail, r.chrome, r.min);
+    if (r.mode !== want) predFails.push(`slide ${i} @${avail}: resolver said "${r.mode}", predicted "${want}" (avail ${r.avail}, chrome ${r.chrome}, min ${r.min})`);
+    // The contract that matters, independent of which mode was chosen: a REDUCED layout never starves the figure.
+    if ((r.mode === 'contained' || r.mode === 'beside') && r.stage < r.min)
+      starved.push(`slide ${i} @${avail}: kept "${r.mode}" with stage ${r.stage} < min ${r.min}`);
+    if (r.mode === 'beside' && (r.prose == null || r.proseText === 0))
+      modeFails.push(`slide ${i} @${avail}: "beside" without a rendered prose column`);
+    if (r.mode === 'stacked' && r.prose != null && r.stage < r.avail - r.chrome - 2)
+      modeFails.push(`slide ${i} @${avail}: stacked figure kept a narrow column (stage ${r.stage} of ${r.avail})`);
+    if (r.mode === 'contained') contained++; else if (r.mode === 'beside') beside++;
+    else if (r.mode === 'stacked') stacked++; else if (r.mode === 'full') full++;
+  }
+  ok('placement resolution was actually exercised', checked > 0 && contained > 0 && beside > 0 && stacked > 0 && full > 0,
+    `${checked} placed renders — contained ${contained} · beside ${beside} · stacked ${stacked} · full ${full}`);
+  ok('the resolved mode matches an independent prediction at every width', predFails.length === 0, predFails.slice(0, 3).join(' | '));
+  ok('a reduced layout never starves the figure below its minimum stage', starved.length === 0, starved.slice(0, 3).join(' | '));
+  ok('beside always has its prose, and a stacked figure recovers the width', modeFails.length === 0, modeFails.slice(0, 3).join(' | '));
+
+  // The transition is sharp and repeatable: three identical sweeps across it, both directions.
+  const sweep = await page.evaluate(() => { const seq = [];
+    for (let n = 0; n < 3; n++) for (const w of [1000, 760, 756, 754, 760, 1000]) { go(3); window.__avail(w);
+      const f = document.querySelector('#slide .tp-fig');
+      seq.push(f.parentElement.dataset.figLayout); }
+    return seq; });
+  const pass1 = sweep.slice(0, 6).join(',');
+  ok('repeated resize across the transition does not oscillate',
+    sweep.slice(6, 12).join(',') === pass1 && sweep.slice(12, 18).join(',') === pass1, pass1);
+
+  // Interaction state survives a beside <-> stacked transition: the figure element and its FIGX entry are the
+  // same objects, not torn down and rebuilt.
+  const keep = await page.evaluate(() => { go(3); window.__avail(1000);
+    const f0 = document.querySelector('#slide .tp-fig'); f0.__tag = 'keep';
+    const id0 = f0.querySelector('[data-figx-open]').dataset.figxOpen, e0 = FIGX[id0];
+    window.__avail(600); window.__avail(1000);
+    const f1 = document.querySelector('#slide .tp-fig');
+    const id1 = f1.querySelector('[data-figx-open]').dataset.figxOpen;
+    return { sameNode: f1.__tag === 'keep', sameId: id0 === id1, sameEntry: FIGX[id1] === e0 }; });
+  ok('a beside <-> stacked transition preserves the figure and its interaction state',
+    keep.sameNode && keep.sameId && keep.sameEntry, JSON.stringify(keep));
+
+  // Errors, and the C5 behaviour that must not have changed.
+  const errs2 = await page.evaluate(() => { const out = {};
+    for (let i = 0; i < LESSON.slides.length; i++) { go(i); window.__avail(1089);
+      const f = document.querySelector('#slide .tp-fig'); if (!f) continue;
+      const bl = LESSON.slides[i].blocks[0];
+      const er = f.querySelector('.tp-fig-err');
+      out[i] = { authored: bl.placement === undefined ? '(omitted)' : JSON.stringify(bl.placement),
+        hasText: !!(bl.text && String(bl.text).trim()), wrapped: f.parentElement.classList.contains('tp-figl'),
+        attr: f.getAttribute('data-fig-placement'), err: er ? er.textContent.trim() : '' }; }
+    return out; });
+  const noProse = Object.values(errs2).filter((x) => x.authored === '"beside"' && !x.hasText);
+  ok('`beside` with no prose reports once and falls back to the default figure', noProse.length > 0
+    && noProse.every((x) => !x.wrapped && x.attr === null && /needs companion prose/.test(x.err)),
+    noProse.length ? `${noProse.length} case(s), first: wrapped=${noProse[0].wrapped} attr=${noProse[0].attr}` : 'no such case in the fixture');
+  const bad = Object.values(errs2).filter((x) => x.authored === '"sidebar"');
+  ok('an unrecognised placement still reports and falls back (C5 behaviour unchanged)', bad.length > 0
+    && bad.every((x) => !x.wrapped && x.attr === null && /is not a figure placement/.test(x.err)),
+    bad.length ? `wrapped=${bad[0].wrapped} attr=${bad[0].attr}` : 'no such case in the fixture');
+  const unused = Object.values(errs2).filter((x) => x.hasText && x.authored === '"contained"');
+  ok('`text` outside `beside` is reported rather than silently dropped', unused.length > 0
+    && unused.every((x) => /only read by placement "beside"/.test(x.err)), `${unused.length} case(s)`);
+  const plain = Object.values(errs2).filter((x) => x.authored === '(omitted)');
+  ok('a figure with no placement gains no wrapper', plain.length > 0 && plain.every((x) => !x.wrapped && x.attr === null),
+    `${plain.length} case(s)`);
 }
 
 ok('no console errors / page errors', errs.length === 0, errs.slice(0, 3).join(' | '));

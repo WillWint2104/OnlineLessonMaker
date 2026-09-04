@@ -382,8 +382,24 @@ an image with no placement is a bare `<img>`, whereas a figure is always the Fig
 placement is that shell at full width. `pair` is not offered — the image block's pair takes two `src` values in
 one block, and a figure has no free equivalent.
 
+`beside` needs companion prose in **`text`** — lesson prose that participates in the layout, deliberately
+distinct from the Figure Shell's own `title` / `caption` / hint / status, none of which are repurposed for it.
+Two divergences from the image block, both deliberate: `beside` with no usable `text` is **reported** and falls
+back to the full-width figure rather than laying out an empty second column, and `text` supplied outside
+`beside` is **reported** rather than silently dropped. A figure has an author-error channel; an image does not,
+and authored content that renders nowhere should say so.
+
 An unrecognised value is **reported** beside the figure, with the accepted values named, and falls back to the
 default. It never silently selects a layout.
+
+**A placement is an intent, not a guarantee.** The renderer resolves it against the width it actually has, and
+neither `contained` nor `beside` may buy its shape by starving the figure: the result must still give at least
+the kind's minimum usable stage (graph 340, geometry 420 logical px). When it cannot, the layout relaxes —
+`contained` promotes to full width, and `beside` stacks with the figure recovering the full width. `beside`
+also stacks when the prose column would stop being worth reading. This is decided from the measured available
+width, so it is a pure function of it: deterministic, sharp, and free of viewport breakpoints. On the current
+fixtures the transitions land at 572px available for contained geometry, 756px for beside graph and 916px for
+beside geometry — measured consequences of the minimums, not authored numbers.
 
 `placement` governs the BLOCK relative to the lesson. It has nothing to do with where labels sit inside the
 figure — that is the annotation placement system, and it is untouched by this field.

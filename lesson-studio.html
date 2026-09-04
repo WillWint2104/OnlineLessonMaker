@@ -2608,6 +2608,18 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 /* ═══ UI-1 — the shared Figure Shell. One container for every figure type; graph and geometry differ by
    what the viewport paints, not by bringing their own page furniture. Quiet by construction: a single
    surface, one border, no nested cards. ═══ */
+/* ═══ STAGE 4 C6 — figure PLACEMENT layouts. The wrapper exists ONLY when a placement was authored, so an
+   ordinary figure never gains one and its rendered tree is unchanged (the C4 baseline holds that).
+   `data-fig-layout` is the RESOLVED mode, written by figResolveLayout after measuring; `data-fig-placement`
+   on the figure stays the authored intent. The geometry below is the image block's (Blocks Stage B), reused
+   deliberately — 78% contained, two equal columns, 24px gutter. These numbers are duplicated in
+   FIG_CONTAINED_FRAC / FIG_BESIDE_GAP because CSS cannot be read before it is applied; contract 10 asserts
+   the two agree by measuring the applied layout against the predicted one, so the duplication is a tested
+   invariant rather than a latent bug. */
+.tp-slide .tp-figl[data-fig-layout="contained"]{width:78%;max-width:78%;margin-left:auto;margin-right:auto;}
+.tp-slide .tp-figl[data-fig-layout="beside"]{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;}
+.tp-slide .tp-figl[data-fig-layout="stacked"]{display:grid;grid-template-columns:1fr;gap:16px;}
+.tp-slide .tp-figl-text{font-family:var(--tp-body);font-size:var(--tp-prose-size,16px);line-height:var(--tp-prose-lh,1.65);color:var(--on-surface);}
 .tp-slide .tp-fig{margin:0;background:var(--fig-surface,var(--surface-lowest));border:1px solid var(--fig-border,var(--outline-variant));border-radius:var(--tp-rad-btn);padding:var(--sp-3,12px) var(--sp-3,12px) var(--sp-2,8px);display:flex;flex-direction:column;gap:var(--sp-2,8px);}
 .tp-slide .tp-fig-head{display:flex;align-items:flex-start;gap:var(--sp-3,12px);}
 .tp-slide .tp-fig-ident{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--sp-1,4px) var(--sp-2,8px);}
@@ -8177,6 +8189,46 @@ function figFitBox(stageW){                                        // stageW = u
 
    An unrecognised value is REPORTED through the figure's existing author-error channel and falls back to the
    default. It never silently becomes a new layout mode. */
+/* ═══ STAGE 4 C6 — PLACEMENT RESOLVER ══════════════════════════════════════════════════════════════════
+   A placement is an INTENT, never a guarantee. `contained` asks for a reduced measure and `beside` asks for
+   two columns, but neither may buy its appearance by starving the figure: the resolved layout must still give
+   the figure at least figMinStageWidth() of usable `.tp-fig-stage`. When it cannot, the layout RELAXES.
+
+     contained  ->  full        the reduced measure would push the stage below the minimum
+     beside     ->  stacked     the figure column would, or the prose column stops being readable
+     full / stacked             terminal — nothing wider exists
+
+   DECIDED FROM ONE MEASUREMENT, not by trying layouts on. The available width is the column the block sits
+   in, which does not change with the figure's own layout, so the mode is a pure function of it: the same
+   available width always yields the same mode. That is what makes it deterministic and non-oscillating under
+   the ResizeObserver — applying candidate layouts and re-measuring would thrash and could hunt.
+
+   The comparison is against the STAGE width, never the outer width: `chrome` is measured from the live shell
+   (padding + border, ~26px) rather than assumed. Comparing FIG_MIN_STAGE to an outer width is the exact bug
+   this architecture exists to prevent, and contract 10 has a control for it. */
+const FIG_CONTAINED_FRAC=0.78;      // matches .tp-figl[data-fig-layout="contained"] width
+const FIG_BESIDE_GAP=24;            // matches its grid gap
+const FIG_BESIDE_MIN_PROSE=260;     // a MEASURE floor (~32ch at 16px), not a breakpoint: below it the prose column stops being worth reading and the pair should stack
+function figResolveLayout(fig){
+  const wrap=fig&&fig.parentElement;
+  if(!wrap||!wrap.classList||!wrap.classList.contains('tp-figl')) return false;   // no placement authored → no wrapper → nothing to resolve
+  const authored=fig.dataset.figPlacement||''; if(!authored) return false;
+  const xb=fig.querySelector('[data-figx-open]'), e=xb&&FIGX[xb.dataset.figxOpen], b=e&&e.b; if(!b) return false;
+  const st=fig.querySelector('.tp-fig-stage'); if(!st) return false;
+  const host=wrap.parentElement||wrap, avail=host.offsetWidth;                    // the column the BLOCK occupies — independent of the figure's own layout
+  if(!(avail>0)) return false;
+  const chrome=Math.max(0,fig.offsetWidth-st.offsetWidth), min=figMinStageWidth(b);
+  let mode=authored;
+  if(authored==='contained'){
+    if(avail*FIG_CONTAINED_FRAC-chrome<min) mode='full';
+  } else if(authored==='beside'){
+    const col=(avail-FIG_BESIDE_GAP)/2;
+    if(col-chrome<min||col<FIG_BESIDE_MIN_PROSE) mode='stacked';                  // the figure would starve, or the prose would
+  }
+  if(wrap.dataset.figLayout===mode) return false;
+  wrap.dataset.figLayout=mode;
+  return true;
+}
 const FIG_PLACEMENTS=['contained','beside'];        // omitted / '' = full-width shell, the compatibility default
 function figPlacement(b,errors){
   const raw=(b&&b.placement!=null)?String(b.placement).trim():'';
@@ -8223,7 +8275,8 @@ function figInlineSolve(fig){
 let _figRO=null, _figRAF=0;
 function figFitAll(){
   const figs=document.querySelectorAll('#slide .tp-fig[data-fig-fit]');
-  figs.forEach(f=>{ figInlineSolve(f); if(_figRO) _figRO.observe(f); });   // observe() is idempotent per element
+  // C6 — the layout decides the stage width, so it is resolved BEFORE the figure is solved at that width.
+  figs.forEach(f=>{ figResolveLayout(f); figInlineSolve(f); if(_figRO) _figRO.observe(f); });   // observe() is idempotent per element
 }
 function scheduleFigFit(){ if(_figRAF) return; _figRAF=requestAnimationFrame(()=>{ _figRAF=0; figFitAll(); }); }
 /* One observer for the life of the page. A figure's host width is in LOGICAL px on a fixed 1280px canvas, so
@@ -8488,7 +8541,26 @@ function fragFigure(b,bk){
   /* C5 — the authored placement, validated here so a bad value is REPORTED beside the figure's own author
      errors rather than silently selecting a layout. The resolver that acts on it is Stage 4 C6; C5 carries
      the vocabulary and the hook only. */
-  const placeErrs=[], place=figPlacement(b,placeErrs), errAll=M.errors.concat(placeErrs);
+  const placeErrs=[];
+  let place=figPlacement(b,placeErrs);
+  /* C6 — the companion prose. `text` is reused from the image block because a figure beside its prose is the
+     same authorial idea; it is LESSON PROSE that participates in the layout, deliberately distinct from the
+     Figure Shell's own title / caption / hint / status, none of which are repurposed for it.
+     Two divergences from the image block, both intentional:
+       · `beside` with no usable prose REPORTS and degrades to the default full-width figure, rather than
+         laying out an empty second column. A figure has an author-error channel; an image does not.
+       · `text` supplied OUTSIDE `beside` is reported rather than silently dropped, for the same reason —
+         authored content that renders nowhere should say so. */
+  const prose=(b&&b.text!=null)?String(b.text).trim():'';
+  if(place==='beside'&&!prose){
+    placeErrs.push('placement "beside" needs companion prose in `text` — without it there is nothing to sit '
+      +'beside, so the figure is shown at full width instead');
+    place='';
+  } else if(prose&&place!=='beside'){
+    placeErrs.push('`text` is only read by placement "beside" — this prose is not rendered'
+      +(place?' at placement "'+place+'"':''));
+  }
+  const errAll=M.errors.concat(placeErrs);
   const err=errAll.length?`<p class="tp-fig-err">${errAll.map(e=>esc(e)).join(' · ')}</p>`:'';
   const cap=b.caption?`<figcaption class="tp-fig-cap">${tpRichMath(b.caption)}</figcaption>`:'';
   /* Stage 2b: ⤢ opens the focused window on the SAME rail. For GEOMETRY the domain registered is the figure's
@@ -8518,7 +8590,13 @@ function fragFigure(b,bk){
   // `data-fig-placement` is emitted ONLY when a placement was authored, so a figure without the field renders
   // byte-identically to before it existed — the compatibility contract, enforced by the C4 render baseline.
   const placeAttr=place?` data-fig-placement="${esc(place)}"`:'';
-  return `<figure class="tp-fig" data-tp-fig="${esc(String(bk))}" data-tp-fig-kind="${esc(kind)}" data-tp-fig-errors="${errAll.length}" data-fig-fit data-fig-box="${box.W}x${box.H}"${placeAttr}>${head}<div class="tp-fig-stage">${stage0.svg}${hits}${cos}</div>${foot}${cap}${figxPanel(xid)}</figure>`;
+  const figHtml=`<figure class="tp-fig" data-tp-fig="${esc(String(bk))}" data-tp-fig-kind="${esc(kind)}" data-tp-fig-errors="${errAll.length}" data-fig-fit data-fig-box="${box.W}x${box.H}"${placeAttr}>${head}<div class="tp-fig-stage">${stage0.svg}${hits}${cos}</div>${foot}${cap}${figxPanel(xid)}</figure>`;
+  if(!place) return figHtml;                       // the compatibility contract: no placement → no wrapper → the tree is exactly what it was
+  /* The wrapper starts at the AUTHORED mode so the pre-resolve markup is already the intended shape (export
+     and print take this path and never run the resolver); figResolveLayout relaxes it after mount, before
+     paint, so there is no visible reflow. Prose first: at width the unit reads [ prose ][ figure ]. */
+  const proseHtml=(place==='beside'&&prose)?`<div class="tp-figl-text">${tpRichMath(prose)}</div>`:'';
+  return `<div class="tp-figl" data-fig-layout="${esc(place)}">${proseHtml}${figHtml}</div>`;
 }
 FRAG.figure={imperium:fragFigure,microhistory:fragFigure,geolearn:fragFigure,mathematics:fragFigure,scholarmath:fragFigure};
 function renderFragment(b,i,k,theme){

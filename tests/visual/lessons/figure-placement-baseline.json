@@ -1,6 +1,6 @@
 {
  "meta": {
-  "title": "Figure placement — authored states (Stage 4 C5)",
+  "title": "Figure placement — authored states and resolution (Stage 4 C5/C6)",
   "theme": "mathematics",
   "year": "",
   "subject": "",
@@ -170,7 +170,8 @@
        ]
       }
      ],
-     "caption": "Author intent: the figure and its prose read as one purpose-unit. The companion prose field arrives with the C6 layout that renders it."
+     "caption": "Author intent: figure and prose as one purpose-unit. At width this reads [ prose ][ figure ]; below the point where either column stops working, it stacks.",
+     "text": "The curve $y=x^2$ has its vertex at the origin. Reading the plotted points, each $y$ value is the square of its $x$ value — so the curve is symmetric about the $y$-axis and never dips below it. Check $P$ against that rule before moving on."
     }
    ]
   },
@@ -267,6 +268,182 @@
       }
      ],
      "caption": "Placement governs the BLOCK relative to the lesson. Vertex names, angle measures and the measurement surface are unaffected — that is Stage 2c/3c/3d and stays untouched."
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Beside — geometry with companion prose",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "Triangle beside its prose",
+     "placement": "beside",
+     "construction": "triangleSSS",
+     "params": {
+      "a": 7,
+      "b": 8,
+      "c": 9
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "A",
+        "B",
+        "C"
+       ],
+       "angles": "all"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "B"
+       ],
+       "text": "auto",
+       "unit": "cm"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "B",
+        "C"
+       ],
+       "text": "auto",
+       "unit": "cm"
+      }
+     ],
+     "text": "A triangle is fully determined by its three side lengths — there is no second triangle with these three sides that is not a copy of this one. That is why SSS is a congruence test.",
+     "caption": "Geometry carries the wider minimum stage (420), so this pair stacks earlier than the graph one does."
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Author error — beside with no companion prose",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "placement: \"beside\", no text",
+     "placement": "beside",
+     "construction": "rightTriangle",
+     "params": {
+      "legs": [
+       3,
+       4
+      ],
+      "right": "A"
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "A",
+        "B",
+        "C"
+       ]
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "B"
+       ],
+       "text": "auto"
+      }
+     ],
+     "caption": "Reported once and degraded to the normal full-width figure — never an empty second column."
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Author error — text outside beside",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "contained, with unused `text`",
+     "placement": "contained",
+     "construction": "rightTriangle",
+     "params": {
+      "legs": [
+       3,
+       4
+      ],
+      "right": "A"
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "A",
+        "B",
+        "C"
+       ]
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "B"
+       ],
+       "text": "auto"
+      }
+     ],
+     "text": "This prose has nowhere to go — only `beside` reads it.",
+     "caption": "The image block drops `text` outside beside silently. A figure reports it, because authored content that renders nowhere should say so."
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Crowded geometry, beside",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "Crowded pentagon beside prose",
+     "placement": "beside",
+     "construction": "regularPolygon",
+     "params": {
+      "n": 5,
+      "radius": 3
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+       ],
+       "angles": "all"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "P1",
+        "P2"
+       ],
+       "text": "auto"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "P2",
+        "P3"
+       ],
+       "text": "auto"
+      }
+     ],
+     "text": "Every interior angle of a regular pentagon is $108°$, and the five of them sum to $540°$. That total is $(n-2)\\times180°$ for any polygon — the pentagon is just the case $n=5$.",
+     "caption": "The density ceiling in the narrowest layout that still honours the 420px geometry minimum."
     }
    ]
   }
