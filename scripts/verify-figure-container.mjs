@@ -39,8 +39,24 @@ const MIME = { '.html': 'text/html', '.json': 'application/json', '.js': 'text/j
    primary annotations should normally land, against 16.5px body copy - an annotation must not outrank the
    prose beside it. SUBORDINATE classes satisfy the FLOOR ONLY and are deliberately not raised toward the
    primary values: Stage 3d made the unit quieter on purpose, and flattening that would undo it. */
-const FLOOR = 11, PRIMARY_MIN = 12, CEIL = 15;
+const FLOOR = 11, PRIMARY_MIN = 12;
 const SUBORDINATE = new Set(['tp-fig-gunit']);
+/* THE BOUNDED RESPONSIVE CONTRACT, restated here from the documented constants rather than read out of the
+   app. Asking figRespScale() what it returns and then asserting that it returned it would be a tautology; the
+   point is to pin the CONTRACT so a drift between these numbers and the app's is exactly what fails.
+     stage <= RESP_STAGE0 -> scale 1.00 (the approved narrow rendering is protected)
+     between              -> linear
+     stage >= RESP_STAGE1 -> scale RESP_MAX, and flat above it
+   The old flat 12-15px primary ceiling is obsolete: it was a FLOOR-stage contract, and bounded growth
+   necessarily lifts the upper bound with the ramp. The floor is unchanged and absolute. */
+const RESP_MIN = 1.00, RESP_MAX = 1.22, RESP_STAGE0 = 420, RESP_STAGE1 = 1089;
+const expectScale = (s) => RESP_MIN + (RESP_MAX - RESP_MIN) * Math.max(0, Math.min(1, (s - RESP_STAGE0) / (RESP_STAGE1 - RESP_STAGE0)));
+const CEIL_AT = (s) => 15 * expectScale(s);   // the primary ceiling rides the ramp; 15 is its value at scale 1.00
+/* Representative absolute sizes, named rather than re-derived, with a tolerance that is round-trip precision
+   and not slack in the contract. These are the numbers the maintainer approved from the A/B captures. */
+const EXPECT_PX = { 'tp-fig-gvert': { 420: 14.84, 700: 16.19, 1089: 18.08 },
+                    'tp-fig-gunit': { 420: 11.18, 700: 12.21, 1089: 13.63 } };
+const PX_TOL = 0.15;
 
 const FIXTURES = [
   { file: 'tests/visual/lessons/figure-geometry-baseline.json', kind: 'geometry' },
@@ -75,6 +91,7 @@ const note = (s) => results.push('     . ' + s);
 // Every named expectation must be OBSERVED. An assertion that never ran is not a pass - this suite has
 // shipped a green run over silently skipped checks before, so absence is tracked rather than assumed.
 const seenClasses = new Set();
+const seenExpect = new Set();   // every named representative size must actually be observed
 
 // -- in-page helpers, installed once ---------------------------------------------------------------------
 await page.evaluate(() => {
@@ -153,8 +170,11 @@ for (const fx of FIXTURES) {
           if (t.px < lo.px) lo = { ...t, stageW, slide: i };
           if (t.px > hi.px) hi = { ...t, stageW, slide: i };
           if (t.px < FLOOR - 1e-6) band.push(`${t.cls} "${t.txt}" ${t.px.toFixed(2)}px < ${FLOOR} floor (stage ${stageW}, slide ${i})`);
-          else if (!SUBORDINATE.has(t.cls) && (t.px < PRIMARY_MIN - 1e-6 || t.px > CEIL + 1e-6))
-            band.push(`${t.cls} "${t.txt}" ${t.px.toFixed(2)}px outside ${PRIMARY_MIN}-${CEIL} (stage ${stageW}, slide ${i})`);
+          else if (!SUBORDINATE.has(t.cls) && (t.px < PRIMARY_MIN - 1e-6 || t.px > CEIL_AT(stageW) + 1e-6))
+            band.push(`${t.cls} "${t.txt}" ${t.px.toFixed(2)}px outside ${PRIMARY_MIN}-${CEIL_AT(stageW).toFixed(2)} (stage ${stageW}, slide ${i})`);
+          const want = EXPECT_PX[t.cls] && EXPECT_PX[t.cls][stageW];
+          if (want != null) { seenExpect.add(`${t.cls}@${stageW}`);
+            if (Math.abs(t.px - want) > PX_TOL) band.push(`${t.cls} "${t.txt}" ${t.px.toFixed(2)}px != approved ${want} at stage ${stageW}`); }
         }
         r.bad.forEach((b) => contain.push(`"${b.txt}" spills ${b.over}px (stage ${stageW}, slide ${i})`));
         r.rel.forEach((t) => relax.push(`"${t}" at stage ${stageW} (slide ${i})`));
@@ -170,6 +190,86 @@ for (const fx of FIXTURES) {
     note(`${tag}: smallest ${lo.px.toFixed(2)}px ${lo.cls} "${lo.txt}" @stage ${lo.stageW} slide ${lo.slide} - largest ${hi.px.toFixed(2)}px ${hi.cls} "${hi.txt}" @stage ${hi.stageW} slide ${hi.slide}`);
   }
 }
+/* == THE BOUNDED RESPONSIVE RAMP ==========================================================================
+   Measured as a RATIO of rendered size to the same role's size at the ramp start, so the observed scale is
+   derived from pixels only — no production constant or helper is consulted to decide what the answer should
+   be. The expected curve comes from the contract restated at the top of this file. */
+{
+  const lesson = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/figure-geometry-baseline.json'), 'utf8'));
+  const PROBE = [340, RESP_STAGE0, 530, 700, 900, RESP_STAGE1, 1250];   // includes one BELOW the ramp and one ABOVE the ceiling
+  await page.evaluate(({ L }) => window.__load(L, 'mathematics'), { L: lesson });
+  const got = {};
+  for (const w of PROBE) {
+    const r = await page.evaluate(({ w }) => { go(0); const widths = window.__stage(w);
+      const out = {};
+      window.__figs().forEach((f) => { const svg = f.querySelector('.tp-fig-svg');
+        const k = f.querySelector('.tp-fig-stage').offsetWidth / +svg.getAttribute('viewBox').split(/\s+/)[2];
+        svg.querySelectorAll('text,tspan').forEach((t) => { const cls = t.getAttribute('class');
+          const fz = parseFloat(getComputedStyle(t).fontSize);
+          if (cls && fz && !(cls in out)) out[cls] = fz * k; }); });
+      return { out, widths }; }, { w });
+    got[w] = r;
+  }
+  const baseAt = got[RESP_STAGE0].out;
+  const scaleAt = (w) => { const a = got[w].out['tp-fig-gvert'], b = baseAt['tp-fig-gvert']; return a && b ? a / b : null; };
+  const stagesOk = PROBE.every((w) => got[w].widths.every((x) => Math.abs(x - w) <= 1.5));
+  ok('the ramp probe hit every stage width it claims', stagesOk,
+    PROBE.map((w) => `${w}->${got[w].widths.join('/')}`).join(' '));
+
+  /* figFitBox rounds the box to whole viewBox units (W = round(stage / k)), so the REALISED scale carries up to
+   ~0.5/W of quantisation — 0.17% at the narrowest box probed here. RTOL is that rounding, not slack in the
+   contract: a real ramp error is orders of magnitude larger, and the ramp assertion above still holds to 1%. */
+  const RTOL = 0.004;
+  const rows = PROBE.map((w) => ({ w, obs: scaleAt(w), exp: expectScale(w) }));
+  const bad = rows.filter((r) => r.obs == null || Math.abs(r.obs - r.exp) > 0.01);
+  ok('the responsive scale follows the contracted ramp', bad.length === 0,
+    bad.length ? bad.map((r) => `stage ${r.w}: observed ${r.obs && r.obs.toFixed(3)} vs contracted ${r.exp.toFixed(3)}`).join(' | ')
+      : rows.map((r) => `${r.w}:${r.obs.toFixed(3)}`).join(' '));
+  ok(`at and below the ramp start the scale is ${RESP_MIN.toFixed(2)}`,
+    Math.abs(scaleAt(340) - RESP_MIN) <= RTOL && Math.abs(scaleAt(RESP_STAGE0) - RESP_MIN) <= RTOL,
+    `340 -> ${scaleAt(340).toFixed(4)} · ${RESP_STAGE0} -> ${scaleAt(RESP_STAGE0).toFixed(4)} (±${RTOL} box rounding)`);
+  ok('the scale is monotonically non-decreasing across the ramp',
+    PROBE.every((w, i2) => i2 === 0 || scaleAt(w) >= scaleAt(PROBE[i2 - 1]) - RTOL),
+    PROBE.map((w) => scaleAt(w).toFixed(3)).join(' <= '));
+  ok('the scale never drops below 1.00', PROBE.every((w) => scaleAt(w) >= RESP_MIN - RTOL));
+  ok(`typography STOPS growing above the ramp end (${RESP_STAGE1}px)`,
+    Math.abs(scaleAt(1250) - scaleAt(RESP_STAGE1)) <= RTOL && Math.abs(scaleAt(1250) - RESP_MAX) <= RTOL,
+    `${RESP_STAGE1} -> ${scaleAt(RESP_STAGE1).toFixed(4)} · 1250 -> ${scaleAt(1250).toFixed(4)} · ceiling ${RESP_MAX}`);
+
+  /* The hierarchy must survive the ramp: one multiplier, so the ORDER and the Stage 3d unit:value RATIO are
+     invariants, not coincidences. If a per-role scaler ever crept in, these are what would catch it. */
+  const ORDER = ['tp-fig-gvert', 'tp-fig-gsym', 'tp-fig-gprose', 'tp-fig-gsmeas', 'tp-fig-gunit'];
+  const orderBad = [];
+  for (const w of PROBE) { const o = got[w].out;
+    const have = ORDER.filter((c) => o[c] != null);
+    for (let n = 1; n < have.length; n++) if (o[have[n]] > o[have[n - 1]] + 1e-9) orderBad.push(`stage ${w}: ${have[n]} > ${have[n - 1]}`); }
+  ok('role ordering survives the ramp at every stage width', orderBad.length === 0, orderBad.slice(0, 3).join(' | '));
+
+  /* The unit:value ratio needs a figure that HAS a unit. The geometry baseline's first slide has none, so
+     probing it there passed while dividing by undefined — a vacuous green, which is the exact failure mode
+     this suite has shipped before. Measured on the fixture that carries `8 cm`, and it FAILS if no unit is
+     ever seen rather than passing on an empty set. */
+  const surf = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/figure-measure-surface.json'), 'utf8'));
+  await page.evaluate(({ L }) => window.__load(L, 'mathematics'), { L: surf });
+  const ratios = [];
+  for (const w of PROBE) {
+    const o = await page.evaluate(({ w }) => { go(2); window.__stage(w);
+      const out = {};
+      window.__figs().forEach((f) => { const svg = f.querySelector('.tp-fig-svg');
+        const k = f.querySelector('.tp-fig-stage').offsetWidth / +svg.getAttribute('viewBox').split(/\s+/)[2];
+        svg.querySelectorAll('.tp-fig-gunit,.tp-fig-gsmeas').forEach((t) => { const c = t.getAttribute('class');
+          if (!(c in out)) out[c] = parseFloat(getComputedStyle(t).fontSize) * k; }); });
+      return out; }, { w });
+    if (o['tp-fig-gunit'] && o['tp-fig-gsmeas']) ratios.push({ w, r: o['tp-fig-gunit'] / o['tp-fig-gsmeas'] });
+  }
+  ok('the unit:value ratio was actually measurable', ratios.length === PROBE.length,
+    `${ratios.length}/${PROBE.length} stage widths produced both a unit and a value`);
+  ok('the Stage 3d unit:value ratio survives the ramp (0.852 everywhere)',
+    ratios.length > 0 && ratios.every((x) => Math.abs(x.r - 0.852) < 0.005),
+    ratios.map((x) => `${x.w}:${x.r.toFixed(4)}`).join(' '));
+}
+ok('every named representative size was observed', seenExpect.size === 6,
+  `${seenExpect.size}/6: ${[...seenExpect].sort().join(' ')}`);
 ok('every inline text class was exercised', seenClasses.size >= 10, `${seenClasses.size} classes: ${[...seenClasses].sort().join(' ')}`);
 
 /* THE FLOOR IS LOAD-BEARING. A floor that nothing ever needed would be decoration, and a green run would say

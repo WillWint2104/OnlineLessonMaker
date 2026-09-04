@@ -224,24 +224,43 @@ and fail on a phone for a reason no figure change can fix. Sizes come from
 What is asserted, per fixture × designed theme × **stage width**, from the widest pane down to exactly the
 floor:
 
-1. **The type band.** Hard floor 11px for every annotation; primary annotations 12–15px against 16.5px body
-   copy. Subordinate units satisfy the floor only and are deliberately not raised toward the primary values —
-   Stage 3d made them quieter on purpose. The run prints the smallest and largest observed, with the class,
-   string, stage width and slide that produced each.
-2. **Containment.** Measurement text never leaves the rect reserved for it, at every stage width.
-3. **The geometry minimum stage width.** At or above `FIG_MIN_STAGE.geometry` — the usable `.tp-fig-stage`
+1. **The type band, under the bounded responsive scale.** Hard floor **11px** for every annotation at every
+   stage width — absolute and unchanged. The primary window starts at 12–15px at the ramp start and its
+   ceiling **rides the ramp** (`15 × scale`): the old flat 12–15 was a floor-stage contract, and bounded
+   growth necessarily lifts the upper bound. Subordinate units satisfy the floor only and are deliberately not
+   raised toward the primary values — Stage 3d made them quieter on purpose. Named representative sizes are
+   asserted with a tolerance (vertex 14.84 / 16.19 / 18.08 and unit 11.18 / 12.21 / 13.63 at stages 420 / 700
+   / 1089), and every one must actually be observed. The run prints the smallest and largest observed, with
+   the class, string, stage width and slide that produced each.
+2. **The ramp itself**, measured as a RATIO of rendered size to the same role at the ramp start — so the
+   observed scale comes from pixels alone and no production constant or helper is consulted to decide what
+   the answer should be. The expected curve is restated from the documented contract (1.00 → 1.22 between
+   stage 420 and 1089), because asking `figRespScale()` what it returns and asserting that it returned it
+   would be a tautology; a drift between the two is precisely what fails. Probed at 340, 420, 530, 700, 900,
+   1089 and 1250 — one below the ramp and one above the ceiling: scale is 1.00 at and below the start,
+   monotonically non-decreasing, never below 1.00, and **stops growing** above the end. Tolerance is `±0.004`,
+   which is `figFitBox`'s whole-unit box rounding (`W = round(stage / k)`, ~0.5/W), not slack in the contract.
+3. **The hierarchy survives the ramp.** One multiplier moves the whole spatial system, so role ordering
+   (vertex > symbolic > prose > measurement > unit) and the Stage 3d **unit:value ratio of 0.852** are
+   invariants at every stage width, not coincidences — they are what would catch a per-role scaler creeping
+   in. The ratio is measured on the fixture that actually carries a unit and fails if none is ever seen: a
+   first draft probed a slide with no units and passed while dividing by `undefined`.
+4. **Containment.** Measurement text never leaves the rect reserved for it, at every stage width.
+5. **The geometry minimum stage width.** At or above `FIG_MIN_STAGE.geometry` — the usable `.tp-fig-stage`
    width, which is what `figFitBox` consumes — no label may have taken Stage 3c's
    relaxed path — and the floor is proven *load-bearing* by showing that dense figures DO relax below it, so a
    green run cannot mean the floor was decoration. The floor is read from the app, never pinned here.
-4. **Mount, observer and reflow.** The observer is installed once; a re-solve at an unchanged stage width does no
+6. **Mount, observer and reflow.** The observer is installed once; a re-solve at an unchanged stage width does no
    work; only the `<svg>` is replaced; the callout hit-targets and dialogs keep their DOM identity and still
    open after a re-solve (they carry `wirePackTyped`'s listeners and must never be re-emitted); two figures in
    one host stay independent; a resize does not feed the observer back into itself; wide → narrow → wide
    returns identical DOM, with a guard that the narrow state really differed; and a callout-count mismatch
    bails before mutating rather than throwing.
-5. **Every expectation observed.** A class or fixture that never rendered fails rather than passing silently.
+7. **Every expectation observed.** A class or fixture that never rendered fails rather than passing silently.
 
-Non-vacuity, demonstrated by re-introducing each defect: `FIG_FIT_K` 1.14→0.80 (36/44, annotations below the
-floor) · geometry floor 420→340 (40/44, dense figures relax inside the supported range) · callouts re-emitted
-instead of repositioned (41/44, identity and listeners lost) · idempotence guard removed (42/44, an unchanged
-stage width repaints and the resize feeds back) · count-mismatch bail removed (43/44, throws).
+Non-vacuity, demonstrated by re-introducing each defect: `FIG_RESP_SCALE_MAX` 1.22→1.30 (45/54 — the ceiling
+rises to 18.30 and a vertex breaches it at 19.26) · `FIG_RESP_STAGE0` 420→340 (44/54 — the floor stops being
+pinned, and it also catches the dart relaxing at the geometry floor) · `FIG_FIT_K_BASE` 1.14→0.80 (46/54) ·
+geometry floor 420→340 (dense figures relax inside the supported range) · callouts re-emitted instead of
+repositioned (identity and listeners lost) · idempotence guard removed (an unchanged stage width repaints and
+the resize feeds back) · count-mismatch bail removed (throws).

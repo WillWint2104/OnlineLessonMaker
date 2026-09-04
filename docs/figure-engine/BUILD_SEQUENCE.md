@@ -257,8 +257,14 @@ Delivers:
   creatable from the block palette without hand-editing JSON, which it is not today.
 - **Standalone**, **contained** and **beside-text** figure placement, reusing the `image` placement
   vocabulary (Blocks Stage B). `pair` only if the generic machinery gives it away free.
-- **Container-aware sizing**: the figure box is re-solved from the measured host before labels are
-  placed, so annotation size is a design quantity rather than a function of container width.
+- **Container-aware sizing**: the figure box is re-solved from the measured stage before labels are placed,
+  so annotation size is a design quantity rather than a function of container width — under a BOUNDED
+  RESPONSIVE scale, not a fixed one. Three regimes rather than two bad extremes: protected readability at and
+  below the geometry minimum stage (scale 1.00), a gentle linear ramp through normal desktop widths, and a
+  capped plateau from 1089px (scale 1.22) so typography stops growing. The scale multiplies the ONE conversion
+  between viewBox units and logical px, so type, gaps, stroke widths and chip padding move together and every
+  Stage 3d proportion is preserved by construction — no per-role scaling, no graph/geometry typography fork,
+  and nothing resized after placement.
 - **Expand** correct from nested and narrow hosts.
 - Non-blocking **capability guidance** on the figure-authoring path (§3.4, `themeSupports()`).
 

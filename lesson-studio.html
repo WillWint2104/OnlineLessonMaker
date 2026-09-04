@@ -8084,19 +8084,45 @@ function figxBoxFor(xid,fallback){
    that is transform:scale()'d, so a phone shrinks the figure and the body copy identically — annotation:body
    is a constant 1.48x at every viewport. That is the canvas's business, not the engine's. What IS the
    engine's business is the swing above, and Stage 4 adds narrower hosts, which makes it worse.
-   The fix is to derive the box FROM the host, so one viewBox unit is FIG_FIT_K logical px in every host and
-   the design constants become screen-space quantities again. Same shape figxBoxFor already uses for the
+   The fix is to derive the box FROM the host, so one viewBox unit is a KNOWN number of logical px — see the
+   responsive scale below — and the design constants become screen-space quantities again rather than a
+   function of container width. Same shape figxBoxFor already uses for the
    focused workspace — one mechanism, not a second responsive system. The placement algorithms are untouched;
    they simply receive the right box, in the order container -> box -> metrics -> anchors -> regions ->
    search -> paint, so Stage 3d's "the chip's rect IS the reserved box" still holds by construction. */
 const FIG_BOX0={W:520,H:360,padL:40,padR:18,padT:16,padB:30};     // first pass (no DOM yet) and the fallback for an unmeasurable host
 const FIG_FIT_ASPECT=FIG_BOX0.H/FIG_BOX0.W;                        // the painted height is stageW*aspect either way, so a re-solve never shifts layout
-/* K = logical px per viewBox unit. The Stage 4 band (hard floor 11, primary 12-15, ceiling ~15) and the
-   Stage 3d type scale only just co-exist: the scale runs 13px (tp-fig-gvert) down to 9.798px
-   (tp-fig-gunit = 11.5*FIG_MEAS_UNIT), a span of 1.327, against the band's 15/11 = 1.364 — 2.8% of slack in
-   total. K sits mid-window: gvert 14.8, gsym 14.3, gprose 13.7, gsmeas 13.1, gunit 11.2. A future role
-   declared outside [9.8, 13] px cannot satisfy the band, and that must move the BAND, not K. */
-const FIG_FIT_K=1.14;
+/* K = logical px per viewBox unit, and the ONLY conversion between the two. That is what makes it the right
+   place for the responsive rule: one multiplier moves the whole spatial system together — annotation type,
+   FIG_GAP, stroke widths, chip padding — so every Stage 3d proportion and the entire semantic hierarchy are
+   preserved BY CONSTRUCTION. There is deliberately no per-role font scaling, no graph/geometry typography
+   fork, and nothing is resized after placement: the solve runs at the box K produces, so the placement search
+   sees the final sizes.
+
+   THREE REGIMES, not two extremes. Fixed annotation size everywhere left wide figures looking like large
+   drawings with small captions (measured: a vertex name at 14.8px against a ~700px square); SVG-proportional
+   text everywhere was the original defect, tying type to container width (23.5px at full pane, 5.2px in a
+   260px host). The rule is bounded growth between them:
+     stage <= FIG_RESP_STAGE0   scale 1.00      protected readability — the approved narrow rendering
+     between                    linear ramp     gentle growth
+     stage >= FIG_RESP_STAGE1   scale MAX       capped; typography stops growing
+   FIG_RESP_STAGE0 is the GEOMETRY minimum stage, so both supported floors (graph 340, geometry 420) sit at
+   scale 1.00 exactly and the approved narrow renderings cannot move.
+
+   ONE SOURCE OF TRUTH for the scale: FIG_RESP_SCALE_MIN and _MAX are the endpoints the ramp interpolates
+   BETWEEN. The growth above 1.0 is never written down separately — no constant means 0.22 anywhere — so
+   there is no second place for the two to disagree.
+
+   Base K sits mid-window for the Stage 3d type scale at scale 1.00: that scale runs 13px (tp-fig-gvert) down
+   to 9.798px (tp-fig-gunit = 11.5*FIG_MEAS_UNIT), a span of 1.327, against the floor band's 15/11 = 1.364 —
+   2.8% of slack, so a future role declared outside [9.8, 13] px must move the BAND, not K. */
+const FIG_FIT_K_BASE=1.14;
+const FIG_RESP_SCALE_MIN=1.00, FIG_RESP_SCALE_MAX=1.22, FIG_RESP_STAGE0=420, FIG_RESP_STAGE1=1089;
+function figRespScale(stageW){
+  const t=Math.max(0,Math.min(1,(stageW-FIG_RESP_STAGE0)/(FIG_RESP_STAGE1-FIG_RESP_STAGE0)));
+  return FIG_RESP_SCALE_MIN+(FIG_RESP_SCALE_MAX-FIG_RESP_SCALE_MIN)*t;
+}
+function figFitK(stageW){ return FIG_FIT_K_BASE*figRespScale(stageW); }
 /* Minimum supported STAGE WIDTH, BY FIGURE KIND — the usable `.tp-fig-stage` width, which is what
    figInlineSolve measures and figFitBox consumes. Named for the thing it measures: it is NOT the block's
    outer width, which is larger by the shell's padding and border (~26px), and reading it as one would make a
@@ -8121,7 +8147,7 @@ const FIG_MIN_STAGE={ graph:340, geometry:420 };
 function figMinStageWidth(b){ return FIG_MIN_STAGE[(b&&b.figure==='geometry')?'geometry':'graph']; }
 function figFitBox(stageW){                                        // stageW = usable .tp-fig-stage width, the same quantity FIG_MIN_STAGE is expressed in
   if(!(stageW>0)) return FIG_BOX0;
-  const W=Math.max(120,Math.round(stageW/FIG_FIT_K)), H=Math.max(90,Math.round(W*FIG_FIT_ASPECT));
+  const W=Math.max(120,Math.round(stageW/figFitK(stageW))), H=Math.max(90,Math.round(W*FIG_FIT_ASPECT));
   const r=(pad,base,floor)=>Math.max(floor,Math.round(W*pad/base));  // FIG_BOX0's OWN gutter proportions, not figxBoxFor's — this box paints the inline card, and keeping its proportions keeps the card looking like itself
   return { W, H, padL:r(FIG_BOX0.padL,FIG_BOX0.W,24), padR:r(FIG_BOX0.padR,FIG_BOX0.W,12),
            padT:Math.max(10,Math.round(H*FIG_BOX0.padT/FIG_BOX0.H)), padB:Math.max(18,Math.round(H*FIG_BOX0.padB/FIG_BOX0.H)) };
