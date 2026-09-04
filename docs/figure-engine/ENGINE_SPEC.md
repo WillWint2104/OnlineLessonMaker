@@ -529,11 +529,41 @@ under the `figure` block.
 
 ---
 
-## 8. Container integration (already designed — engines plug in)
-The exercise/figure containers are DONE (grid cell, hint icon-chip, per-part status, Expand button,
-solution modal with annotated two-column working + three-way self-mark). A graph/geometry part is a
-container that calls the engine to render its figure. Build ENGINES FIRST; the containers already
-exist and simply invoke them.
+## 8. Container integration (what exists, and what does not)
+
+This section previously read "The exercise/figure containers are DONE (grid cell, hint icon-chip,
+per-part status, Expand button, solution modal with annotated two-column working + three-way
+self-mark)". Measured against the code at Stage 3d, half of that was untrue, and it was the sentence
+that made Stage 4 look like registration-only work. Corrected:
+
+**Exists today**
+- The shared **Figure Shell** (`fragFigure`) — head / stage / foot / caption, kind from `b.figure`.
+- The **⤢ Expand** control and the focused workspace (`figxRegister` / `figxPanel` / `figxBoxFor`,
+  reparented to the body-level `#figfocus`), on the shared `data-tp-focus-open` rail.
+- `figure` registered as a composable-page block in the five pack themes.
+- **Per-part status** and the **three-way self-mark** (Not yet / Partial / Got it) on `selfCheck`.
+
+**Does NOT exist**
+- The **exercise grid cell**. `fragPracticeSet` is a single-column stack of `fragSelfCheck`; there is
+  no `exerciseSet` block, no lettered parts, no two-column grid, no polymorphic part.
+- The **annotated two-column "Working | Why" solution container**. The `selfCheck` modal renders a
+  single-column `<ol>` of steps. The two-column treatment is **engine Stage 5's** deliverable.
+- A **hint icon-chip** — the hint is a text button.
+- Any **figure placement** other than full width. `contained | beside | pair` exist for `image` only.
+
+**Consequence for sequencing.** A figure *part inside a question* therefore depends on Blocks Stage C
+(the `exerciseSet` container), which itself depends on engine Stage 5 (the one solution treatment).
+Engine Stage 4 is scoped to what the containers that DO exist can hold — see `BUILD_SEQUENCE.md`.
+There will be ONE solution treatment, never a Stage-4 version replaced by a Stage-5 one.
+
+### 8.1 `graphQuestion` is legacy parallel functionality
+`graphQuestion` (PR3b) carries its OWN coordinate-plane renderer — its own nice-step chooser
+(`gqNiceStep`, 1/2/5/10, distinct from the engine's 1/2/2.5/5·10ⁿ), its own SVG plane, its own
+click-to-plot and function-sampling marker. It is registered in four packs plus the ScholarMath mirror
+and is live in the corpus. It is NOT part of the figure engine and Stage 4 deliberately leaves it
+untouched: migrating it would change the rendered output of existing lessons. Any migration is its own
+future stage, requiring its own compatibility and rendered-output review. Do not opportunistically
+migrate it, and do not build a third coordinate-plane renderer.
 
 ---
 
@@ -543,8 +573,11 @@ exist and simply invoke them.
 2. Construction graph runtime: object model, topological eval, the §2 vocabulary.
 3. Graph engine front-end (§6) — functions, table plotting, segments, expand view.
 4. Geometry 2D front-end (§4,§5,§7) — constructions, marks (§3), single-source-of-truth labels.
-5. Geometry isometric 3D (§7).
-6. (Later) Rotatable 3D field; sketch-answer rendering for student solutions (author-provided format).
+5. **Block wiring (§8)** — the engines rendered through the containers that exist: authorable figure
+   content, figure placements, and container-aware sizing. §8 lists what those containers are; the
+   parts that need `exerciseSet` belong to the blocks track, not here.
+6. Geometry isometric 3D (§7).
+7. (Later) Rotatable 3D field; sketch-answer rendering for student solutions (author-provided format).
 
 ## 10. Acceptance (per stage)
 - Coordinates: arbitrary reals + table plotting land exactly; tick chooser gives 1/2/2.5/5·10^n.

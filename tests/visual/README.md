@@ -38,8 +38,8 @@ Switch theme with `LESSON.meta.theme = '<theme>'; render();` · change slide wit
 
 ## Contracts these fixtures exist to hold
 
-Both were broken on `main` at #144 and are fixed; re-check them after any change to the focus
-rail, the canvas fit, or the figure engine.
+Re-check these after any change to the focus rail, the canvas fit, or the figure engine. The first
+two were broken on `main` at #144 and are fixed; the rest were added by the stages named against them.
 
 1. **Focus overlays park to the visible pane.** A composable page is taller than the board and
    `#stage` is the scroller, so an overlay positioned against the full-height slide lands off-screen

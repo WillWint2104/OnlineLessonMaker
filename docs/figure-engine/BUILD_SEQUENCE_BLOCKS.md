@@ -50,7 +50,17 @@ ACCEPTANCE: each placement renders + reflows to 1-col on mobile; missing alt-tex
 stays small (not stretched); caption sits under figure; re-skins; ADDITIVE clean; validate green.
 
 ## STAGE C — Exercise set (the question container) + solution modal + self-mark
-Branch off B (and after engine Stage 5, or fold Stage-5 solution styling in here). Design ref: exercise
+Branch off B (and after engine Stage 5, or fold Stage-5 solution styling in here).
+
+**Inherited from engine Stage 4.** Three requirements moved here because the container they need is
+built here, not there: **Expand from an exercise-grid cell**, **a figure part in an exercise set**, and
+**a figure part opening the shared solution modal**. The engine side is ready for all three — the
+Figure Shell, the Expand rail, the focused workspace and (from Stage 4) container-aware sizing and
+figure placements all exist, so a figure part is the container plus the Expand hook, exactly as item 2
+below already says. What does NOT exist is `exerciseSet` itself and the two-column solution container,
+which is why they could not be done in Stage 4. ONE solution treatment: do not ship an interim one.
+
+Design ref: exercise
 set = numbered prompt + two-column grid of compact tappable lettered parts; polymorphic parts; per-part
 status; hint icon-chip; solution as POPUP modal carrying annotated two-column working + three-way
 self-mark.

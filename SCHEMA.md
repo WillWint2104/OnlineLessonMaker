@@ -333,8 +333,13 @@ inline `$…$`.
 ## `figure` *(figure engine — composable page block; shared Figure Shell)*
 
 A coordinate figure rendered by the figure engine into the **shared Figure Shell** (identity / viewport /
-status / caption). `figure` selects the content type — `"graph"` today, `"geometry"` from Stage 3 — and the
-shell is the same either way, so a geometry figure differs by what it draws, not by its container.
+status / caption). `figure` selects the KIND — `"graph"` or `"geometry"`, both shipped — and the shell is the
+same either way, so a geometry figure differs by what it draws, not by its container.
+
+**Authoring a geometry figure:** set `figure:"geometry"` and give a `construction` + `params` instead of a
+`domain`, then list what to draw in `objects[]`. The fields are documented under **`figure: "geometry"`** below —
+the two kinds share this block, this shell and this table, and differ only in which of the two field sets
+they read.
 
 ```json
 { "type": "figure", "figure": "graph",
@@ -350,13 +355,13 @@ shell is the same either way, so a geometry figure differs by what it draws, not
 
 | Field | Type | Notes |
 |---|---|---|
-| `figure` | `"graph"` \| `"geometry"` | Content type. Drives the shell's kind label; `geometry` lands in Stage 3. |
+| `figure` | `"graph"` \| `"geometry"` | The figure KIND. Drives the shell's kind label and which field set below is read. Both ship. |
 | `title` | string | Figure identity, shown in the shell head and carried into the focused workspace. Typeset (`$…$` ok). |
 | `meta` | string | Optional context shown beside the title. |
 | `caption` | string | Sits under the figure. Typeset (`$…$` ok). |
-| `domain` | `{xMin,xMax,yMin,yMax}` | The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
+| `domain` | `{xMin,xMax,yMin,yMax}` | **Graph kind only** — geometry solves its own bounds from the construction. The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
 | `aspect` | `"stretch"` \| `"equal"` | `equal` keeps a unit square square (default `stretch`). |
-| `objects[]` | array | `{type:'function', f}` · `{type:'points', from:'table', rows:[[id,x,y],…]}` · `{type:'segment', between:[idA,idB]}`. Unknown types are ignored with a reported error. |
+| `objects[]` | array | **Graph kind:** `{type:'function', f}` · `{type:'points', from:'table', rows:[[id,x,y],…]}` · `{type:'segment', between:[idA,idB]}`. **Geometry kind** reads a different set (`polygon` · `angle` · `rightAngle` · `sideLabel`) — see **`figure: "geometry"`** below. Unknown types are ignored with a reported error. |
 
 **Display defaults** — these three set where the figure *starts*; the learner can still change all of them
 from **Options** in the focused workspace, and their choice persists for the session:
