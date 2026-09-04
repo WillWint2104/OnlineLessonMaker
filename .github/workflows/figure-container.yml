@@ -20,6 +20,8 @@ on:
     paths:
       - 'lesson-studio.html'
       - 'scripts/verify-figure-container.mjs'
+      - 'scripts/verify-figure-render.mjs'
+      - 'tests/visual/figure-render-baseline.json'
       - 'tests/visual/lessons/figure-geometry-baseline.json'
       - 'tests/visual/lessons/figure-measure-surface.json'
       - 'tests/visual/lessons/figure-graph-baseline.json'
@@ -40,3 +42,7 @@ jobs:
       - run: npm install
       - run: npx playwright install --with-deps chromium
       - run: node scripts/verify-figure-container.mjs
+      # The figure half of the frozen-runtime claim. verify-corpus-identity renders both revisions and
+      # compares #slide.innerHTML, but the committed corpus contains no figure blocks, so it never enters
+      # fragFigure. A diff here is a question, not automatically a failure — see the script's header.
+      - run: node scripts/verify-figure-render.mjs
