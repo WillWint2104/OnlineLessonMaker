@@ -8,6 +8,54 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **C6b — the learning card.** One instructional-card primitive with two homes: the `text` block, and a
+  figure's new `companion`. There is deliberately no second "figure prose card" renderer — the two callers
+  differ only in where the card is placed, and placement is the surrounding block's business. The card is
+  location-independent by construction: it draws its own surface and never depends on an ancestor, which is
+  why the existing `--frag-card-*` treatment could not be reused (its selector reaches direct children of
+  `.tp-flow` only, so it structurally cannot see a card inside `.tp-figl`).
+  **`text` extends, `section` does not.** `section` deliberately scopes its body to 16.5/1.62 — its own
+  comment says *"never the global `--tp-prose-size`, which would restyle shipped pages"* — while the
+  approved mockups use exactly that scale, which `.tp-frag-prose` already resolves. A block carrying none of
+  the new fields takes the original path; the guard is presence, like `hasPoi`.
+  **`fontStyle` is a category, never a font.** `--tp-serif`/`--tp-body` could not carry it: `--tp-serif` is
+  Courier Prime (mono) under microhistory and Inter (sans) under geolearn, `--tp-body` is a serif under
+  mathematics, and the `egypt` theme shipped in two lessons has no token block at all. Two new root-level
+  face slots resolve it instead, each paired with an optical size, because the faces do not share an
+  x-height (measured per em: EB Garamond .4063, Inter .5469 — the same px reads ~35% larger in the sans).
+  The face is applied to the card's own text classes and **never to its container**, so the 35 rules that
+  carry `font:inherit` — every button and select — cannot pick it up; mathematical notation is insulated
+  independently by the `math` element rule.
+  **`icon` is a closed allow-list, and that is a firewall boundary.** `tpIc` treats anything image-shaped as
+  an image (`tpIsImgIcon` → `<img src>`), so an authored `icon` passed straight through it would have been a
+  new third-party runtime host — and invisible to the only required CI gate, since `validate.mjs` inspects
+  URLs only under `url`/`externalVideoUrl`/`sourceUrl` and scans hosts only in `<script>`/`<link>`, never
+  `<img src>`. Membership is checked before `tpIc` is ever called; a URL, a `data:` URI, a path or an
+  unknown name is reported and drawn as nothing.
+
+### Fixed
+- **The `beside` prose floor measured the wrong box.** `FIG_BESIDE_MIN_PROSE = 260` was compared against the
+  raw grid column, so with a carded companion (measured: 64px of padding and borders) a column at the floor
+  delivered ~196px of readable text while the constant's own comment claimed "~32ch at 16px". It is now
+  `FIG_BESIDE_MIN_PROSE_CONTENT`, compared against the column minus the companion's **measured** chrome —
+  the same thing `FIG_MIN_STAGE` means for the figure. The number is unchanged; only the box it describes
+  is. **The transition points did not move** — graph leaves `beside` at 755px available, geometry at 915px,
+  identical with a carded and an uncarded companion, because the figure minimum is still the binding
+  constraint. That the constraint can bite at all is proven rather than assumed: inflating the card's chrome
+  to 324px moves the graph transition to 1191px while leaving an uncarded companion at 755px.
+- **`beside` siblings are top-aligned.** `align-items:center` → `start`: the card is never stretched to the
+  shell's height and the shell is never squashed to the card's. Long prose takes vertical space instead.
+- **A class-name collision that markup hashing could not see.** The card was first written as `.tp-card`,
+  which microhistory's own title slide has emitted since long before Stage 4. All 30 legacy render hashes
+  stayed green while that shipped card silently changed from `display:block`/`padding:0` to
+  `display:flex`/`padding:26px 30px 24px` and grew 605 → 619px. Renamed to `.tp-lcard*`, and the gate now
+  asserts from **computed style** that the prefix belongs to the learning card alone.
+- **The card chip was invisible.** Pairing `--primary-fixed` with `--on-primary-container` painted the label
+  onto its own background — every theme defines the latter as a light ink for the *dark* `--primary-container`
+  (measured 1.09:1 in mathematics). The ink is `--on-surface`, and the pair is contrast-checked in every
+  designed theme rather than eyeballed: 13.25–14.94:1.
+
+### Added
 - **Approved learning-card mockups (`docs/mockups/`).** Six individual design references for the
   instructional / companion learning-card family, plus the reproducible sources that built them. They are
   rendered rather than drawn: the palette and the `EB Garamond` faces are copied out of `lesson-studio.html`,
