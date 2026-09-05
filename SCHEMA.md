@@ -322,6 +322,27 @@ inline `$…$`.
   primitive). Compose a full **skill page** by stacking `skillHeader → text → formula → workedExample →
   practiceSet → mastery` on one composable page — the complete skill-mastery loop, authored from the
   palette.
+- **`text` as a LEARNING CARD (C6b)** — the same `text` block, plus any of `icon`, `footer`, `chip`,
+  `steps[]`, `fontStyle` or `card:true`, renders as an instructional card: a light surface with a subtle
+  outline, a thin accent rule on the leading edge, and the kicker → title → body → footer hierarchy the
+  approved mockups fix (`docs/mockups/`). Shape:
+  `{ type:'text', eyebrow?, icon?, title?, body?, steps?, chip?, footer?, fontStyle?, card? }`.
+  A block carrying **none** of those fields takes the original path and renders byte-identically — the
+  guard is presence, like `hasPoi` above, and `tests/visual/learning-card-legacy-baseline.json` pins it.
+  · `icon` is a **closed vocabulary** (`CARD_ICONS`), not a path. A URL, a `data:` URI or a file path is
+    reported and drawn as nothing — card icons come from the lesson's own set so a published lesson makes
+    no outside request. An unknown *name* is reported too, never quietly swapped for a generic glyph.
+  · `steps[]` are strings or `{text}` rows and are **numbered by position**, not by the author; `$…$` and
+    the usual `**bold**` / `==term==` / `[[note]]` markup work in every field. There is no list syntax in
+    prose — a step is a row, the same way `workedExample.steps[]` and `selfCheck.steps[]` already are.
+  · `fontStyle` is `"theme"` (default) | `"serif"` | `"sans"` — a **category**, never a font name. It moves
+    the whole authored hierarchy together (title, body, steps, chip, footer) and carries the matching
+    optical size, because the faces do not share an x-height. It never reaches mathematical notation, graph
+    or geometry annotations, measurement values, Figure Shell labels or controls: the face is applied to the
+    card's own text classes and never to its container, and `math` is pinned to its own face by an element
+    rule. An unsupported value is reported and falls back to the theme.
+  · Unsupported values are reported in a subordinate `.tp-lcard-err` line — report, fall back, never
+    silently reinterpret, the same philosophy as the figure's `.tp-fig-err`.
 - **`text` extensions** — `newthought` (string; rendered as a small-caps opening prefixed to the first
   paragraph) and per-`keyTerms`-row `kind` (`''` key term/POI · `'error'` red-pen classic error),
   `label` (tiny uppercase popup label), `num` (superscript footnote numeral — reserved for points you want
@@ -331,6 +352,23 @@ inline `$…$`.
   exactly as before.
 
 ## `figure` *(figure engine — composable page block; shared Figure Shell)*
+
+**`companion` (C6b)** — the rich prose that sits beside a figure at `placement:"beside"`. It is the SAME
+learning card the `text` block renders, so there is no figure-specific prose renderer:
+`companion:{ eyebrow?, icon?, title?, body?, steps?, chip?, footer?, fontStyle? }`, all optional, all
+behaving exactly as they do on `text`.
+
+The simple `text:"…"` companion is unchanged and still the shape every existing lesson uses. The two are
+**alternatives, never merged**: authoring both is reported and `text` wins, because that is the behaviour
+that must not move. Card fields live under `companion` rather than on the figure itself so it is never
+ambiguous whether a `title` describes the Figure Shell or the prose beside it — the shell already owns
+`title` / `caption` / `hint` / status.
+
+The pair is **top-aligned**: siblings keep their natural heights. Longer prose makes the card taller; it
+never stretches to the shell's height, and the shell is never squashed to the card's. Below the point where
+either column stops working the pair stacks — and the prose half of that decision is now measured against
+the card's **usable content width** (its column minus its measured padding and borders), not against the raw
+grid column, so the floor means what `FIG_MIN_STAGE` means for the figure.
 
 A coordinate figure rendered by the figure engine into the **shared Figure Shell** (identity / viewport /
 status / caption). `figure` selects the KIND — `"graph"` or `"geometry"`, both shipped — and the shell is the

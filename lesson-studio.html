@@ -65,6 +65,15 @@
   /* Spacing scale. Deliberately small — UI-1 migrates the surfaces it touches (chrome, page shell, figure
      shell, focused workspace), NOT every historic pixel value in the file. */
   --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px;
+  /* C6b — THE AUTHORED PROSE FACES. `fontStyle` picks a CATEGORY, never a font, and these resolve it.
+     They live on the bare :root, not in a theme block, because --tp-serif/--tp-body are neither reliable
+     categories nor universally defined: --tp-serif is Courier Prime (mono) under microhistory and Inter
+     (sans) under geolearn, --tp-body is EB Garamond (a serif) under mathematics, and the `egypt` theme
+     shipped in two lessons has no token block at all. Both faces here are already vendored. A theme may
+     override either pair; nothing breaks if none does. The SIZE is part of the slot because the faces do
+     not share an x-height (measured per em: EB Garamond .4063, Inter .5469). */
+  --tp-face-serif:'EB Garamond',Georgia,serif; --tp-face-serif-size:19px;
+  --tp-face-sans:'Inter',system-ui,sans-serif; --tp-face-sans-size:16px;
   /* Elevation vocabulary: 1 = resting edge, 2 = raised surface, 3 = detached over content. --elev-2 aliases
      the existing --shadow so themes that retune --shadow keep driving it. */
   --elev-1:0 1px 2px rgba(20,22,30,.05); --elev-2:var(--shadow); --elev-3:0 24px 60px -24px rgba(20,22,30,.45);
@@ -2394,6 +2403,52 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-frag-prose{font-family:var(--tp-body);font-size:var(--tp-prose-size,16px);line-height:var(--tp-prose-lh,1.65);color:var(--on-surface);}   /* prose slots (Paper & Board sizes Garamond up; other themes keep the 16/1.65 fallback) */
 .tp-slide .tp-frag-prose p{margin:0 0 12px;} .tp-slide .tp-frag-prose p:last-child{margin-bottom:0;}
 .tp-slide .tp-frag-na{border:1px dashed var(--outline-variant);border-radius:var(--tp-rad-btn);padding:14px 16px;color:var(--on-surface-variant);font-family:var(--tp-body);font-size:14px;}
+/* ═══ C6b — THE LEARNING CARD. One primitive, two homes: the enhanced `text` block and a figure's
+   `companion`. It is LOCATION-INDEPENDENT by construction — it draws its own surface and never depends on
+   a `.tp-flow >` or `.tp-figl` ancestor, which is exactly why the --frag-card-* selector could not be
+   reused here (that rule reaches direct children of the flow only, so it cannot see a card inside .tp-figl).
+   The surrounding block owns LAYOUT; this owns PRESENTATION. Values are slots with neutral fallbacks, so a
+   theme that declares nothing still renders a correct card. ═══ */
+.tp-slide .tp-lcard{background:var(--card-surface,var(--surface-lowest));border:1px solid var(--card-border,var(--outline-variant));
+  border-left:var(--card-accent-w,3px) solid var(--card-accent,var(--primary));border-radius:var(--tp-rad);
+  padding:var(--card-pad,26px 30px 24px);display:flex;flex-direction:column;}
+.tp-slide .tp-lcard-kicker{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--on-surface-variant);}
+.tp-slide .tp-lcard-kicker svg{flex:0 0 auto;width:15px;height:15px;color:var(--primary);}
+.tp-slide .tp-lcard-rule{height:1px;background:var(--outline-variant);margin:14px 0 16px;}
+.tp-slide .tp-lcard-title{font-weight:600;font-size:29px;line-height:1.22;color:var(--on-surface);margin:0;}
+.tp-slide .tp-lcard-body{margin:14px 0 0;}
+.tp-slide .tp-lcard-body:first-child{margin-top:0;}
+.tp-slide .tp-lcard-p{font-size:var(--tp-prose-size,16px);line-height:var(--tp-prose-lh,1.65);color:var(--on-surface);margin:0 0 12px;}
+.tp-slide .tp-lcard-p:last-child{margin-bottom:0;}
+.tp-slide .tp-lcard-steps{margin:14px 0 0;padding:0;list-style:none;counter-reset:tpcard;}
+.tp-slide .tp-lcard-steps:first-child{margin-top:0;}
+.tp-slide .tp-lcard-step{counter-increment:tpcard;position:relative;padding-left:34px;margin:0 0 11px;font-size:var(--tp-prose-size,16px);line-height:var(--tp-prose-lh,1.65);color:var(--on-surface);}
+.tp-slide .tp-lcard-step:last-child{margin-bottom:0;}
+.tp-slide .tp-lcard-step::before{content:counter(tpcard);position:absolute;left:0;top:.30em;width:22px;height:22px;border-radius:50%;border:1px solid var(--primary);color:var(--primary);font-size:12.5px;font-weight:700;line-height:20px;text-align:center;}
+.tp-slide .tp-lcard-chip{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin-top:16px;padding:5px 12px;border-radius:9999px;background:var(--chip-surface,var(--primary-fixed,var(--surface-container)));border:1px solid var(--outline-variant);font-size:13px;font-weight:600;color:var(--chip-ink,var(--on-surface));}
+/* The chip ink is --on-surface, NOT --on-primary-container. Every theme defines the latter as a LIGHT ink
+   for the DARK --primary-container, so pairing it with the light --primary-fixed painted the label onto its
+   own background — measured 1.09:1 in mathematics, i.e. invisible. --on-surface is the dark ink in every
+   theme and the pair is contrast-checked in verify-learning-card.mjs rather than assumed. */
+/* NOT flex: a flex container turns every inline child into its own item, so a help line carrying <em> or
+   <sup> would get the gap opened around it. The glyph is positioned instead and the line stays ordinary
+   inline text whatever it holds. */
+.tp-slide .tp-lcard-foot{position:relative;display:block;margin:20px 0 0;padding:14px 0 0 22px;border-top:1px solid var(--outline-variant);font-size:14px;line-height:1.45;color:var(--on-surface-variant);}
+.tp-slide .tp-lcard-foot svg{position:absolute;left:0;top:calc(14px + .30em);width:14px;height:14px;color:var(--primary);}
+.tp-slide .tp-lcard-err{margin:12px 0 0;font-size:12.5px;line-height:1.45;color:var(--error,var(--on-surface-variant));}
+/* THE AUTHORED PROSE FACE (fontStyle). The face is applied to the card's own TEXT classes and never to the
+   card container, so a control inside the card — every one of which carries `font:inherit` — cannot pick it
+   up. Mathematical notation is insulated independently: `.tp-slide math` (top of file) is an ELEMENT rule,
+   and a declared rule always beats an inherited value. Omitted fontStyle sets no attribute, so each role
+   falls back to the theme's own treatment: serif for the title, body face for everything else. */
+.tp-slide .tp-lcard-title{font-family:var(--tp-lcard-face,var(--tp-serif));}
+.tp-slide .tp-lcard-kicker,.tp-slide .tp-lcard-p,.tp-slide .tp-lcard-step,.tp-slide .tp-lcard-chip,
+.tp-slide .tp-lcard-foot,.tp-slide .tp-lcard-err{font-family:var(--tp-lcard-face,var(--tp-body));}
+.tp-slide .tp-lcard[data-tp-face="serif"]{--tp-lcard-face:var(--tp-face-serif);--tp-prose-size:var(--tp-face-serif-size);}
+.tp-slide .tp-lcard[data-tp-face="sans"]{--tp-lcard-face:var(--tp-face-sans);--tp-prose-size:var(--tp-face-sans-size);}
+/* The size travels with the face because the faces do not share an x-height: measured on the vendored
+   files, EB Garamond is 0.4063 em and Inter 0.5469 em, so the same px value reads ~35% larger in the sans.
+   One authored word therefore selects a face AND its optical size; the author never writes either. */
 /* ═══ Polish — per-block CARD treatment (SHARED, opt-in via the --frag-card-* slots; every fallback is
    transparent/none so a theme that doesn't set them is visually unchanged — no [data-theme] structural
    fork). Scoped to composable pages, applied by frag-type: the "plain content" blocks (text/formula/
@@ -2617,7 +2672,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
    the two agree by measuring the applied layout against the predicted one, so the duplication is a tested
    invariant rather than a latent bug. */
 .tp-slide .tp-figl[data-fig-layout="contained"]{width:78%;max-width:78%;margin-left:auto;margin-right:auto;}
-.tp-slide .tp-figl[data-fig-layout="beside"]{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;}
+.tp-slide .tp-figl[data-fig-layout="beside"]{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}   /* C6b: siblings keep their natural heights and align at the top — the card is never stretched to the shell, and the shell is never squashed to the card */
 .tp-slide .tp-figl[data-fig-layout="stacked"]{display:grid;grid-template-columns:1fr;gap:16px;}
 .tp-slide .tp-figl-text{font-family:var(--tp-body);font-size:var(--tp-prose-size,16px);line-height:var(--tp-prose-lh,1.65);color:var(--on-surface);}
 .tp-slide .tp-fig{margin:0;background:var(--fig-surface,var(--surface-lowest));border:1px solid var(--fig-border,var(--outline-variant));border-radius:var(--tp-rad-btn);padding:var(--sp-3,12px) var(--sp-3,12px) var(--sp-2,8px);display:flex;flex-direction:column;gap:var(--sp-2,8px);}
@@ -6627,10 +6682,94 @@ function fragPenResponse(b,bk){
    is a string or array of strings/{content|text}. keyTerms modals are bk-scoped (ktp-${bk}-k) so two text
    blocks on one page open their OWN definitions (the id-targeted data-tp-focus-open handler resolves by id).
    No keyTerms → kt === tpRichMath, so output is unchanged from the A1 lean text. */
+/* ═══════════════ C6b — THE LEARNING CARD PRIMITIVE ═══════════════
+   ONE renderer for the instructional card, consumed by the enhanced `text` block and by a figure's
+   `companion`. There is deliberately no second "figure prose card" renderer: the two callers differ only
+   in where the card is placed, and placement is the surrounding block's business.
+
+   The card is LOCATION-INDEPENDENT. It draws its own surface, so it does not need — and must not acquire —
+   an ancestor selector. That is why the existing --frag-card-* treatment could not be reused: its selector
+   is `.tp-slide[data-tp-type="page"] .tp-flow > .tp-frag[…]`, direct children of the flow only, which
+   structurally cannot reach a card sitting inside `.tp-figl`.
+
+   AUTHORED VALUES ARE MEANING, NEVER PRESENTATION. `icon` and `fontStyle` are closed vocabularies; an
+   unrecognised value is REPORTED and the card falls back, never silently reinterpreted. */
+
+/* The card icon vocabulary — a CLOSED list, and the reason it exists rather than passing the authored
+   string to tpIc(): tpIc treats anything that looks like an image path as one (tpIsImgIcon → <img src>),
+   accepting https:// and data:image/ URLs. An `icon` field wired straight through it would be a new
+   third-party runtime host — golden rule 4 — and INVISIBLE to the only required CI gate, because
+   validate.mjs inspects urls only under /^(?:url|externalVideoUrl|sourceUrl)$/ and scans third-party hosts
+   only in <script>/<link>, never <img src>. Membership is therefore checked BEFORE tpIc is ever called. */
+const CARD_ICONS=['lightbulb','key','list','question','eye','pen','chat','check','checkCircle','triangle',
+  'target','info','star','pin','compass','bookmark','book','brain','clipboard','notes','quote','clock','flag'];
+function tpCardIcon(v,errors){
+  const raw=(v==null)?'':String(v).trim();
+  if(!raw) return '';
+  if(CARD_ICONS.indexOf(raw)>=0) return raw;
+  if(errors) errors.push('icon "'+raw+'" is not a card icon — use one of '+CARD_ICONS.join(', ')
+    +'. A path or URL is never accepted here: card icons are drawn from the lesson’s own set so a published lesson makes no outside request');
+  return '';
+}
+/* fontStyle picks a CATEGORY. "theme" (or omitted) leaves each role on the theme's own treatment; the two
+   named categories bind --tp-lcard-face and its optical size in CSS. The author never names a font. */
+const CARD_FACES=['theme','serif','sans'];
+function tpCardFace(v,errors){
+  const raw=(v==null)?'':String(v).trim();
+  if(!raw||raw==='theme') return '';
+  if(CARD_FACES.indexOf(raw)>=0) return raw;
+  if(errors) errors.push('fontStyle "'+raw+'" is not a prose family — use '
+    +CARD_FACES.map(x=>'"'+x+'"').join(' or ')+', or omit it to follow the theme');
+  return '';
+}
+/* Does this block want a card? Presence-triggered, exactly like fragText's own `hasPoi` guard: a block
+   carrying none of these fields takes the original path and renders byte-identically. `card:true` is the
+   explicit opt-in for prose that wants the surface without any of the extra limbs. */
+function tpIsCard(b){
+  return !!(b&&(b.card===true||b.icon||b.footer||b.chip||b.fontStyle||(Array.isArray(b.steps)&&b.steps.length)));
+}
+/* Render one card. `rich` is the prose pipeline the CALLER owns (tpRichMath, or a key-term-aware kt), so
+   the card never decides whether key terms are live — that stays with the block, and with Present mode. */
+function tpCard(c,rich,errors){
+  const err=errors||[];
+  const icon=tpCardIcon(c.icon,err), face=tpCardFace(c.fontStyle,err);
+  const kick=(c.eyebrow!=null&&String(c.eyebrow).trim())?String(c.eyebrow).trim():'';
+  const title=(c.title!=null&&String(c.title).trim())?String(c.title).trim():'';
+  const body=Array.isArray(c.body)?c.body:((c.body!=null&&c.body!=='')?[c.body]:[]);
+  const steps=Array.isArray(c.steps)?c.steps:[];
+  const row=(x)=>typeof x==='string'?x:((x&&(x.content||x.text))||'');
+  const head=(kick||icon)
+    ? `<span class="tp-lcard-kicker">${icon?tpIc(icon,15):''}${kick?`<span>${esc(kick)}</span>`:''}</span>`
+      +(title?'<div class="tp-lcard-rule" aria-hidden="true"></div>':'')
+    : '';
+  const h=title?`<h3 class="tp-lcard-title">${rich(title)}</h3>`:'';
+  const ps=body.length?`<div class="tp-lcard-body">${body.map(x=>`<p class="tp-lcard-p">${rich(row(x))}</p>`).join('')}</div>`:'';
+  /* Step numbers are DERIVED (CSS counter over the array), never authored — the same rule fragSelfCheck
+     already follows with ${j+1}. An author cannot renumber a list into disagreeing with its own order. */
+  const st=steps.length?`<ol class="tp-lcard-steps">${steps.map(x=>`<li class="tp-lcard-step">${rich(row(x))}</li>`).join('')}</ol>`:'';
+  const chip=(c.chip!=null&&String(c.chip).trim())?`<span class="tp-lcard-chip">${esc(String(c.chip).trim())}</span>`:'';
+  const foot=(c.footer!=null&&String(c.footer).trim())?`<p class="tp-lcard-foot">${tpIc('info',14)}${rich(String(c.footer).trim())}</p>`:'';
+  /* Author errors are subordinate and developer-facing — the figure's own philosophy (report, fall back,
+     never reinterpret), rendered inside the card rather than as a learner-facing callout. */
+  const errHtml=err.length?`<p class="tp-lcard-err">${err.map(e=>esc(e)).join(' · ')}</p>`:'';
+  return `<div class="tp-lcard"${face?` data-tp-face="${esc(face)}"`:''} data-tp-lcard-errors="${err.length}">`
+    +`${head}${h}${ps}${st}${chip}${foot}${errHtml}</div>`;
+}
 function fragText(b,bk){
   const body=Array.isArray(b.body)?b.body:((b.body!=null&&b.body!=='')?[b.body]:[]);
   const head=b.title||b.heading||'';
   const present=document.body.classList.contains('present');
+  /* C6b — the CARD path. Guarded on presence exactly like `hasPoi` below: a block carrying no card field
+     never reaches this branch, so every existing `text` block renders through the original code, byte for
+     byte. The card renders its title through the prose pipeline (so `$…$` typesets, matching every other
+     block's title); the LEGACY branch keeps its esc()-only title untouched, because changing it there
+     would alter shipped output for a reason cards do not justify. */
+  if(tpIsCard(b)){
+    const {terms:cterms, live:clive, kt:ckt}=tpKeyTerms(b, present, 'tp-kt', 'ktp-'+bk+'-');
+    const cmodals=clive?cterms.map((t,k)=>tpTermModal('ktp-'+bk+'-'+k, t.term||'', t.definition||'')).join(''):'';
+    return tpCard({eyebrow:b.eyebrow, icon:b.icon, title:head, body:body, steps:b.steps,
+                   chip:b.chip, footer:b.footer, fontStyle:b.fontStyle}, ckt)+cmodals;
+  }
   /* Paper & Board (maths theme seed) — POI + newthought are an ADDITIVE branch: a keyTerm row carrying
      kind/label/num (or a block-level newthought) opts in; plain {term,definition} rows and every existing
      lesson take the original path below, byte-identical. POI buttons ride the SAME data-tp-focus-open ↔
@@ -8208,7 +8347,22 @@ function figFitBox(stageW){                                        // stageW = u
    this architecture exists to prevent, and contract 10 has a control for it. */
 const FIG_CONTAINED_FRAC=0.78;      // matches .tp-figl[data-fig-layout="contained"] width
 const FIG_BESIDE_GAP=24;            // matches its grid gap
-const FIG_BESIDE_MIN_PROSE=260;     // a MEASURE floor (~32ch at 16px), not a breakpoint: below it the prose column stops being worth reading and the pair should stack
+/* C6b — a CONTENT floor, and the name says so. The old FIG_BESIDE_MIN_PROSE was compared against the raw
+   grid column, so it measured a box the reader never reads: with a carded companion (~64px of padding and
+   borders) a column at the old 260 delivered ~196px of actual text while the constant claimed "~32ch at
+   16px". The comparison now subtracts the companion's MEASURED horizontal chrome, so this means the same
+   thing FIG_MIN_STAGE means for the figure — usable width, not outer width. It is not a retuned number:
+   260 is the same floor, now applied to the thing it was always describing. */
+const FIG_BESIDE_MIN_PROSE_CONTENT=260;
+/* Read the chrome off the painted element rather than assuming a card is there: an uncarded companion (the
+   legacy `text` string) has none, and a theme may retune the card's padding. */
+function figProseChrome(wrap){
+  const el=wrap&&wrap.querySelector('.tp-figl-text'); if(!el) return 0;
+  const inner=el.firstElementChild&&el.firstElementChild.classList.contains('tp-lcard')?el.firstElementChild:el;
+  const cs=getComputedStyle(inner);
+  const n=(v)=>{ const x=parseFloat(v); return isFinite(x)?x:0; };
+  return n(cs.paddingLeft)+n(cs.paddingRight)+n(cs.borderLeftWidth)+n(cs.borderRightWidth);
+}
 function figResolveLayout(fig){
   const wrap=fig&&fig.parentElement;
   if(!wrap||!wrap.classList||!wrap.classList.contains('tp-figl')) return false;   // no placement authored → no wrapper → nothing to resolve
@@ -8223,7 +8377,7 @@ function figResolveLayout(fig){
     if(avail*FIG_CONTAINED_FRAC-chrome<min) mode='full';
   } else if(authored==='beside'){
     const col=(avail-FIG_BESIDE_GAP)/2;
-    if(col-chrome<min||col<FIG_BESIDE_MIN_PROSE) mode='stacked';                  // the figure would starve, or the prose would
+    if(col-chrome<min||col-figProseChrome(wrap)<FIG_BESIDE_MIN_PROSE_CONTENT) mode='stacked';   // the figure would starve, or the prose would
   }
   if(wrap.dataset.figLayout===mode) return false;
   wrap.dataset.figLayout=mode;
@@ -8551,13 +8705,32 @@ function fragFigure(b,bk){
          laying out an empty second column. A figure has an author-error channel; an image does not.
        · `text` supplied OUTSIDE `beside` is reported rather than silently dropped, for the same reason —
          authored content that renders nowhere should say so. */
+  /* C6b — the RICH companion. `companion` carries the learning-card fields; the plain `text` string keeps
+     working untouched. They are alternatives, never a merge: if both are authored the ambiguity is REPORTED
+     and the simple string wins, because that is the shape every existing lesson uses and the one whose
+     behaviour must not move. Card fields live under `companion` rather than on the figure itself so it is
+     never ambiguous whether a title describes the Figure Shell or the prose beside it — the shell already
+     owns title / caption / hint / status. */
+  const comp=(b&&b.companion&&typeof b.companion==='object'&&!Array.isArray(b.companion))?b.companion:null;
+  const compErrs=[];
   const prose=(b&&b.text!=null)?String(b.text).trim():'';
-  if(place==='beside'&&!prose){
-    placeErrs.push('placement "beside" needs companion prose in `text` — without it there is nothing to sit '
-      +'beside, so the figure is shown at full width instead');
+  const compHas=!!(comp&&(comp.title||comp.body||comp.eyebrow||comp.footer||comp.chip||comp.icon
+                  ||(Array.isArray(comp.steps)&&comp.steps.length)));
+  if(comp&&prose){
+    placeErrs.push('this figure carries BOTH `text` and `companion` — they are alternative ways to write the '
+      +'same companion prose, so `text` is used and `companion` is ignored; delete one of them');
+  }
+  const useCard=!!(compHas&&!prose);
+  if(comp&&!compHas&&!prose){
+    placeErrs.push('`companion` carries no content — give it a `title`, `body`, `eyebrow`, `footer`, `chip`, '
+      +'`icon` or `steps`, or use `text` for plain prose');
+  }
+  if(place==='beside'&&!prose&&!useCard){
+    placeErrs.push('placement "beside" needs companion prose in `text` or `companion` — without it there is '
+      +'nothing to sit beside, so the figure is shown at full width instead');
     place='';
-  } else if(prose&&place!=='beside'){
-    placeErrs.push('`text` is only read by placement "beside" — this prose is not rendered'
+  } else if((prose||useCard)&&place!=='beside'){
+    placeErrs.push('companion prose is only read by placement "beside" — this content is not rendered'
       +(place?' at placement "'+place+'"':''));
   }
   const errAll=M.errors.concat(placeErrs);
@@ -8595,7 +8768,14 @@ function fragFigure(b,bk){
   /* The wrapper starts at the AUTHORED mode so the pre-resolve markup is already the intended shape (export
      and print take this path and never run the resolver); figResolveLayout relaxes it after mount, before
      paint, so there is no visible reflow. Prose first: at width the unit reads [ prose ][ figure ]. */
-  const proseHtml=(place==='beside'&&prose)?`<div class="tp-figl-text">${tpRichMath(prose)}</div>`:'';
+  /* `.tp-figl-text` is kept as the companion slot whichever shape the prose took: it is the seam Contract 10
+     queries, and the card sits INSIDE it rather than replacing it, so the layout wrapper keeps one stable
+     child and the resolver keeps one stable place to measure chrome. */
+  const proseHtml=(place!=='beside')?''
+    :(useCard?`<div class="tp-figl-text">${tpCard({eyebrow:comp.eyebrow, icon:comp.icon, title:comp.title,
+        body:comp.body, steps:comp.steps, chip:comp.chip, footer:comp.footer, fontStyle:comp.fontStyle},
+        tpRichMath, compErrs)}</div>`
+      :(prose?`<div class="tp-figl-text">${tpRichMath(prose)}</div>`:''));
   return `<div class="tp-figl" data-fig-layout="${esc(place)}">${proseHtml}${figHtml}</div>`;
 }
 FRAG.figure={imperium:fragFigure,microhistory:fragFigure,geolearn:fragFigure,mathematics:fragFigure,scholarmath:fragFigure};
@@ -8776,7 +8956,15 @@ Object.assign(PACK_ICONS,{
   refresh:'<path d="M4 12a8 8 0 108-8M4 12V7M4 12h5"/>',
   scope:'<path d="M12 4a8 8 0 018 8M12 8a4 4 0 014 4v3M12 12v5M8 12a4 4 0 014-4M6 14v2a6 6 0 0012 0"/>',
   laurel:'<path d="M12 4v3M7 5.5c-2 2-2.5 6-1 9.5M17 5.5c2 2 2.5 6 1 9.5M9 18c1 1 4.5 1 6 0M12 7l1.6 3.3 3.6.4-2.7 2.4.8 3.5L12 14.8 8.7 16.6l.8-3.5L6.8 10.7l3.6-.4z"/>',
-  vault:'<path d="M9 11V7a3 3 0 116 0v4M5 21h14M6 21v-3a3 3 0 013-3h6a3 3 0 013 3v3"/>'
+  vault:'<path d="M9 11V7a3 3 0 116 0v4M5 21h14M6 21v-3a3 3 0 013-3h6a3 3 0 013 3v3"/>',
+  /* C6b — the five glyphs the approved learning-card vocabulary needs and the registry did not have.
+     Deliberately five, not a catalogue: CARD_ICONS is a closed list and grows only with a design that
+     needs it. Drawn to the registry's own conventions (24-box, no fill, currentColor stroke). */
+  key:'<circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.8 12.2L20 3M16 7l3 3 2.5-2.5L18.5 4.5"/>',
+  eye:'<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  question:'<circle cx="12" cy="12" r="9"/><path d="M9.4 9.3a2.7 2.7 0 015.2.9c0 1.8-2.6 2.3-2.6 4M12 17.2v.01"/>',
+  triangle:'<path d="M12 4l9 16H3z"/>',
+  chat:'<path d="M4 5h16v11H8l-4 4V5z"/>'
 });
 /* in-memory, session-only runtime state for typed answers + revealed models.
    Keyed by slide index → { ans:{field:value}, shown:{field:true} }. NO localStorage.
