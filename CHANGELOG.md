@@ -8,6 +8,16 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Approved learning-card mockups (`docs/mockups/`).** Six individual design references for the
+  instructional / companion learning-card family, plus the reproducible sources that built them. They are
+  rendered rather than drawn: the palette and the `EB Garamond` faces are copied out of `lesson-studio.html`,
+  and the figures in the two paired mockups are the shipped engine's own output, extracted from a live render
+  at a stage width of 532 logical px — the true width of a `beside` column at `--tp-measure: 1140`. The
+  triangle's angles and side labels are what `figGeometry` computed, not values typed into a mockup, so a
+  mockup cannot drift from the engine without the engine changing first. `README.md` records the six locked
+  style rules the images fix. Design evidence only: no application code changes, and the `mk-*` classes in
+  `src/kit.css` are mockup scaffolding, not app classes.
+
 - **Stage 3d — the side-measurement surface.** A side measurement is now painted on a quiet accent-tinted
   surface; an angle measure and a vertex name are not. The rule is semantic, not cosmetic: the surface asserts
   *"this is how long this side is"*, so angles keep their plain typography inside the interior construction and

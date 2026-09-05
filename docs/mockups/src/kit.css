@@ -1,0 +1,72 @@
+/* ============================================================================================
+   LOCKED STYLE KIT — the approved baseline, expressed entirely in the app's own mathematics
+   slot tokens. Every mockup includes this file unchanged, so chrome is identical across assets
+   and only the CONTENT of the text card varies (rule 6: individual assets, one family).
+
+   Rule 1  two surfaces  : .mk-card (prose) and .tp-fig (figure shell) are siblings in .mk-pair.
+   Rule 2  no squashing  : the pair aligns to the START and the figure keeps its natural height;
+                           the card grows downward rather than compressing the asset.
+   Rule 3  green, subtly : var(--primary) reaches only the kicker glyph, the leading rule, the
+                           chip, the list numerals, the footer glyph and the figure's own strokes.
+                           No green fills behind text, no green buttons.
+   Rule 4  text card     : --surface-lowest on --canvas, 1px --outline-variant, --tp-rad, 26/30px
+                           padding, no elevation.
+   Rule 5  hierarchy     : kicker -> rule -> title -> body -> footer line.
+   ============================================================================================ */
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{background:var(--canvas);}
+
+.mk-canvas{background:var(--canvas);padding:44px;width:1228px;}          /* 1140 measure + 44 gutters */
+.mk-stage{width:1140px;margin:0 auto;}                                    /* --tp-measure */
+.mk-stage.mk-narrow{width:660px;}                                         /* single-surface text card */
+
+/* MEASURE FOLLOWS CONTEXT. 42ch is the right line length inside a HALF column of the pair; in a
+   single-surface card it leaves a dead gutter, so there the card's own width IS the measure and the
+   stage is sized to a comfortable one. Same rule 4 ("readable line length"), two contexts. */
+.mk-narrow .mk-body,.mk-narrow .mk-list,.mk-narrow .mk-quiet{max-width:none;}
+.mk-narrow .mk-title{max-width:26ch;}
+
+/* --- rule 1 + rule 2 : the two-surface pair --------------------------------------------------- */
+.mk-pair{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
+.mk-pair > .tp-fig{align-self:start;}                                     /* natural height — never stretched to match the card */
+
+/* --- rule 4 : the text card ------------------------------------------------------------------- */
+.mk-card{background:var(--surface-lowest);border:1px solid var(--outline-variant);
+  border-left:3px solid var(--primary);border-radius:var(--tp-rad);
+  padding:26px 30px 24px;display:flex;flex-direction:column;}
+
+/* --- rule 5 : hierarchy ----------------------------------------------------------------------- */
+.mk-kicker{display:flex;align-items:center;gap:8px;font-family:var(--tp-body);font-size:11.5px;
+  font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--on-surface-variant);}
+.mk-kicker svg{flex:0 0 auto;width:15px;height:15px;color:var(--primary);}
+.mk-rule{height:1px;background:var(--outline-variant);margin:14px 0 16px;}
+.mk-title{margin:0;font-family:var(--tp-serif);font-weight:600;font-size:29px;line-height:1.22;
+  color:var(--on-surface);letter-spacing:.002em;max-width:22ch;}
+.mk-body{margin:14px 0 0;font-family:var(--tp-body);font-size:var(--tp-prose-size);
+  line-height:var(--tp-prose-lh);color:var(--on-surface);max-width:42ch;}
+.mk-body + .mk-body{margin-top:12px;}
+/* NOT flex. A flex container turns every inline child into its own flex item, so a footer carrying
+   <em> or <sup> would get an 8px gap opened around it — which is exactly what "Test <em>x</em> = 3"
+   did. The icon is positioned instead, so the help line stays ordinary inline text whatever it holds. */
+.mk-foot{position:relative;display:block;margin:20px 0 0;padding:14px 0 0 22px;
+  border-top:1px solid var(--outline-variant);font-family:var(--tp-body);font-size:14px;
+  line-height:1.45;color:var(--on-surface-variant);}
+.mk-foot svg{position:absolute;left:0;top:calc(14px + .30em);width:14px;height:14px;color:var(--primary);}
+
+/* --- rule 3 : the permitted green details ----------------------------------------------------- */
+.mk-chip{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;margin-top:16px;
+  padding:5px 12px;border-radius:9999px;background:var(--primary-fixed);
+  border:1px solid var(--outline-variant);font-family:var(--tp-body);font-size:13px;font-weight:600;
+  letter-spacing:.01em;color:var(--tertiary);}
+.mk-list{margin:14px 0 0;padding:0;list-style:none;counter-reset:mk;max-width:42ch;}
+.mk-list li{counter-increment:mk;position:relative;padding-left:34px;margin:0 0 11px;
+  font-family:var(--tp-body);font-size:var(--tp-prose-size);line-height:var(--tp-prose-lh);
+  color:var(--on-surface);}
+.mk-list li:last-child{margin-bottom:0;}
+.mk-list li::before{content:counter(mk);position:absolute;left:0;top:.30em;width:22px;height:22px;
+  border-radius:50%;border:1px solid var(--primary);color:var(--primary);background:transparent;
+  font-family:var(--tp-body);font-size:12.5px;font-weight:700;line-height:20px;text-align:center;}
+.mk-quiet{margin:12px 0 0;font-family:var(--tp-body);font-size:16px;line-height:1.6;
+  color:var(--on-surface-variant);max-width:42ch;font-style:italic;}
