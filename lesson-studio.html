@@ -1826,6 +1826,35 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-sheet{position:relative;flex:1 1 auto;min-height:0;background:var(--mx-white);}
 .mx-sheet .mx-grid{position:absolute;inset:0;height:auto;}
 .mx-wbcanvas{position:absolute;inset:0;width:100%;height:100%;color:var(--mx-pen);touch-action:none;cursor:crosshair;}
+/* ── the typed working page ─────────────────────────────────────────────────────────────────────── */
+/* A PAGE, not a text box. The measure is capped for prose, so on a wide or expanded workbook the sheet is
+   centred on the ground with its own edge rather than trailing off into the panel. */
+.mx-typed{padding:0;background:var(--mx-rail);overflow:auto;}
+.mx-page-w{min-height:100%;padding:26px 30px 40px;outline:none;font-family:var(--mx-serif);
+  font-size:17px;line-height:1.9;color:var(--mx-ink-body);max-width:70ch;margin:0 auto;
+  box-shadow:0 0 0 1px var(--mx-line);
+  background:repeating-linear-gradient(var(--mx-white) 0 calc(1.9em - 1px),var(--mx-line-soft) calc(1.9em - 1px) 1.9em);
+  background-position:0 26px;}
+.mx-page-w:focus-visible{outline:none;}
+.mx-page-w:empty::before{content:attr(data-mx-hint);color:var(--mx-ink-3);}
+.mx-eq{display:inline-block;vertical-align:middle;padding:1px 7px;margin:0 2px;border-radius:7px;
+  background:var(--mx-green-tint);border:1px solid #DCEBE2;cursor:pointer;font-family:'LM Math',Cambria Math,serif;}
+.mx-eq:hover,.mx-eq:focus-visible{border-color:var(--mx-green);}
+.mx-eqbar[hidden]{display:none;}   /* a class rule outranks the UA [hidden]; without this the bar never closes */
+.mx-eqbar{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:flex-start;gap:10px;padding:10px 12px;
+  border-top:1px solid var(--mx-line);background:var(--mx-white);}
+/* The FIELD itself carries the box, the tabindex and the role — TPMath binds its key handling, its caret
+   and its hit-testing to the element marked `data-tp-eqfield`, so a styled wrapper around an unfocusable
+   span left the editor reachable by mouse only and unreachable by keyboard entirely. */
+.mx-eqwrap{position:relative;flex:1 1 220px;display:flex;}
+.mx-eqfield{flex:1 1 auto;min-height:38px;display:flex;align-items:center;gap:4px;padding:5px 10px;cursor:text;overflow-x:auto;
+  border:1px solid var(--mx-line);border-radius:9px;background:var(--mx-white);font-family:'LM Math',Cambria Math,serif;font-size:17px;}
+.mx-eqfield:focus{outline:none;border-color:var(--mx-green);box-shadow:0 0 0 3px var(--mx-green-pale);}
+.mx-eqribbon{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;}
+.mx-eqbar .tp-eqst{position:relative;}   /* the gallery is `top:100%` of its nearest positioned ancestor */
+.mx-eqact{flex:0 0 auto;display:flex;gap:6px;margin-left:auto;}
+.mx-tool.mx-eqok{background:var(--mx-green);color:#fff;font-weight:600;}
+.mx-wb-type .mx-sheet{min-height:280px;}
 .mx-viewsw{display:none;gap:2px;padding:3px;margin:0 0 14px;border:1px solid var(--mx-line);border-radius:10px;
   background:var(--mx-white);width:max-content;}
 .mx-viewsw button{border:0;border-radius:8px;background:transparent;color:var(--mx-ink-2);font:inherit;font-size:13.5px;
@@ -1855,7 +1884,11 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    near-black palette instead: re-pointing the slots is one declaration block rather than 75 overrides.
    (0,4,0) is deliberate — `:root[data-theme="mathematics"] .tp-slide` is (0,3,0) and sits LATER in the
    sheet, so out-ranking it needs one more class, not a later rule.) */
-.mx .mx-figure .mx-figskin.tp-slide{
+/* The typing pad borrows `.tp-slide` for exactly the same reason and is treated exactly the same way: the
+   equation editor's 30-odd scoped rules and the slot palette, without the slide LAYOUT — which, left in
+   place, took the workbook out of the workspace column and left the panel short of its region. */
+.mx .mx-figure .mx-figskin.tp-slide,
+.mx .mx-work .mx-wb.tp-slide{
   position:static;inset:auto;display:flex;flex-direction:column;overflow:visible;height:auto;min-height:0;flex:1 1 auto;
   background:transparent;color:var(--mx-ink-body);
   --background:transparent;--surface:var(--mx-white);--surface-lowest:var(--mx-white);--surface-container-low:var(--mx-white);
@@ -6978,6 +7011,7 @@ const MXI={
   eraser:'<path d="m12 4 8 8-6 6H8l-4-4z"/>', trash:'<path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/>',
   expand:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>', plus:'<path d="M12 5v14M5 12h14"/>',
   keyboard:'<rect x="3" y="6.5" width="18" height="11" rx="2"/><path d="M7 10.5h.01M11 10.5h.01M15 10.5h.01M8 14h8"/>',
+  sigma:'<path d="M17 5H7l5 7-5 7h10"/>',
   check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>', cc:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 10.5a2 2 0 1 0 0 3M17 10.5a2 2 0 1 0 0 3"/>',
   gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M4.2 7.5l1.7 1M18.1 15.5l1.7 1M4.2 16.5l1.7-1M18.1 8.5l1.7-1"/>',
   pip:'<rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="11" width="7" height="5" rx="1"/>',
@@ -7052,6 +7086,11 @@ function mxSetResponseMode(m){
   const root=$('#slide').querySelector('.mx'); if(!root) return;
   root.setAttribute('data-mx-response',m);
   root.querySelectorAll('[data-mx-resp]').forEach(b=>b.classList.toggle('on',b.dataset.mxResp===m));
+  /* The workspace changes representation; the SHEETS do not. `mode` is recorded on the response and the pad
+     is swapped for the other surface — the sheet list, the current sheet and both modalities' contents are
+     untouched, which is what makes a switch non-destructive rather than merely reversible. */
+  const pad=root.querySelector('.mx-wb[data-tp-ink]');
+  if(pad){ tpWorkbookMode(pad.dataset.tpRespPage,pad.dataset.tpRespId,m); mxWorkbookSwap(pad); }
 }
 /* WHICH REGION THE STUDENT IS LOOKING AT. Session-only, like the nav and the response mode. Desktop is
    `split`; Expand is `workbook`; a handset starts on `questions` and switches between the two rather than
@@ -7275,8 +7314,7 @@ function wireResponsive(){
       tpRespSet(page,qid,'table',{cells}); };
     t.querySelectorAll('[data-mx-cell]').forEach(inp=>inp.addEventListener('input',write));
   });
-  root.querySelectorAll('[data-mx-sheet]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,b.dataset.mxSheet)));
-  root.querySelectorAll('[data-mx-sheet-add]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,null)));
+  root.querySelectorAll('.mx-wb[data-tp-ink]').forEach(pad=>mxWireWorkbook(pad));
   mxSetView(mxView());
   mxObserve(root); mxResolveFit();
   root.querySelectorAll('[data-mx-mode]').forEach(b=>b.addEventListener('click',()=>{
@@ -7387,37 +7425,165 @@ function mxStubPage(s){
    engine already maintains, so no second source of truth for which tool is active. */
 function mxWorkbook(ws,s,i){
   const page=tpRespId(s)||('slide-'+i), rid=(ws&&ws.id)?String(ws.id).trim():'workbook';
-  const doc=tpInkDoc(page,rid), slot=doc.current;
+  const doc=tpWorkbookDoc(page,rid), slot=doc.current;
+  const typing=(mxResponseMode()==='type');
+  tpWorkbookMode(page,rid,mxResponseMode());
   const tabs=doc.pages.map((pg,k)=>`<button type="button" class="mx-ptab${pg.id===slot?' on':''}"
       data-mx-sheet="${esc(pg.id)}"${pg.id===slot?' aria-current="true"':''}>Page ${k+1}</button>`).join('');
-  return `<div class="mx-panel mx-flush mx-fill mx-wb tp-ink-pad" data-tp-ink="mxwb-${esc(page)}-${esc(rid)}-${esc(slot)}"
+  return `<div class="mx-panel mx-flush mx-fill mx-wb${typing?' mx-wb-type tp-slide':''} tp-ink-pad" data-tp-ink="mxwb-${esc(page)}-${esc(rid)}-${esc(slot)}"
       data-tp-resp-page="${esc(page)}" data-tp-resp-id="${esc(rid)}" data-tp-resp-slot="${esc(slot)}" data-tp-ink-fit>
     <div class="mx-wsbar">
-      <button type="button" class="mx-tool" data-tp-ink-tool="pen" aria-pressed="true">${mxIc('pencil',16)} Pen</button>
-      <button type="button" class="mx-tool" data-tp-ink-tool="eraser" aria-pressed="false">${mxIc('eraser',16)} Eraser</button>
-      <button type="button" class="mx-tool" data-tp-ink-clear>${mxIc('trash',16)} Clear</button>
+      ${typing
+        ? `<button type="button" class="mx-tool" data-mx-tsel="text" aria-pressed="true">${mxIc('notes',16)} Text</button>
+           <button type="button" class="mx-tool" data-mx-tsel="eq" aria-pressed="false">${mxIc('sigma',16)} Equation</button>
+           <button type="button" class="mx-tool" data-mx-tclear>${mxIc('trash',16)} Clear</button>`
+        : `<button type="button" class="mx-tool" data-tp-ink-tool="pen" aria-pressed="true">${mxIc('pencil',16)} Pen</button>
+           <button type="button" class="mx-tool" data-tp-ink-tool="eraser" aria-pressed="false">${mxIc('eraser',16)} Eraser</button>
+           <button type="button" class="mx-tool" data-tp-ink-clear>${mxIc('trash',16)} Clear</button>`}
       <div class="mx-sp"></div>
       <button type="button" class="mx-tool mx-out" data-mx-view="workbook">${mxIc('expand',15)} Expand</button></div>
-    <div class="mx-sheet"><div class="mx-grid"></div>
-      <canvas class="mx-wbcanvas" data-tp-ink-canvas width="1000" height="700"
-        aria-label="Workbook page ${esc(String(doc.pages.findIndex(pg=>pg.id===slot)+1))} — write with a pen, mouse or finger."></canvas></div>
+    ${typing
+      ? `<div class="mx-sheet mx-typed"><div class="mx-page-w" contenteditable="true" role="textbox" aria-multiline="true"
+            data-mx-typed data-mx-hint="Type your working here. Use Equation for anything you cannot type as text."
+            aria-label="Workbook page ${esc(String(doc.pages.findIndex(pg=>pg.id===slot)+1))} — type your working."></div></div>
+         <div class="mx-eqbar" data-mx-eqbar hidden>
+           <div class="mx-eqwrap"><div class="mx-eqfield" data-tp-eqfield tabindex="0" role="textbox"
+               aria-label="Equation — type it, or use the symbol and structure buttons"></div><div class="tp-eqcaret" data-tp-eqcaret></div></div>
+           <div class="mx-eqribbon"><div class="tp-eqsymwell" data-tp-eqsym></div><div class="tp-eqstructs" data-tp-eqstructs></div></div>
+           <div class="mx-eqact"><button type="button" class="mx-tool mx-out" data-mx-eqcancel>Cancel</button>
+             <button type="button" class="mx-tool mx-eqok" data-mx-eqok>Insert</button></div></div>`
+      : `<div class="mx-sheet"><div class="mx-grid"></div>
+          <canvas class="mx-wbcanvas" data-tp-ink-canvas width="1000" height="700"
+            aria-label="Workbook page ${esc(String(doc.pages.findIndex(pg=>pg.id===slot)+1))} — write with a pen, mouse or finger."></canvas></div>`}
     <div class="mx-pagetabs">${tabs}<button type="button" class="mx-ptab" data-mx-sheet-add aria-label="Add a workbook page">${mxIc('plus',14)}</button></div>
   </div>`;
 }
-/* Switching sheet replaces ONE element and re-wires it. Not a page re-render: the question column keeps
-   its scroll position, and the old canvas's listeners go with the old node rather than stacking. */
+/* THE TYPED PAGE. A working page, not a stack of answer fields: one contenteditable surface holding prose
+   and rendered equations in the order the student wrote them. What is STORED is never HTML — prose is text
+   and an equation is TPMath's own JSON tree — so the page round-trips through the response store with no
+   markup to sanitise and nothing to inject. TPMath is the app's existing maths primitive (the same one the
+   graph question uses); Type reuses it rather than owning a copy, and is not coupled to that block. */
+function mxTypedRead(host){
+  const out=[]; let buf='';
+  const flush=()=>{ if(buf){ out.push({t:'p', v:buf}); buf=''; } };
+  const walk=(node)=>{ node.childNodes.forEach(n=>{
+    if(n.nodeType===3){ buf+=n.nodeValue; return; }
+    if(n.nodeType!==1) return;
+    if(n.classList&&n.classList.contains('mx-eq')){
+      flush(); let tree=null; try{ tree=JSON.parse(n.dataset.mxTree||'null'); }catch(e){}
+      if(tree) out.push({t:'eq', v:tree}); return; }
+    if(n.tagName==='BR'){ buf+='\n'; return; }
+    const block=/^(DIV|P|LI)$/.test(n.tagName);
+    if(block&&buf) buf+='\n';
+    walk(n);
+  }); };
+  walk(host); flush();
+  return out;
+}
+/* TPMath.render() returns MARKUP, not a node, and the leaf text in it is the student's own keystrokes. It
+   is parsed into a detached document and imported as NODES rather than assigned as innerHTML, with anything
+   that is not part of a rendered expression dropped — so nothing a student can type into the equation field
+   can become live markup on the page. */
+function mxMathNode(tree){
+  let html=''; try{ html=TPMath.render(tree); }catch(e){ return null; }
+  if(!html) return null;
+  const doc=new DOMParser().parseFromString(String(html),'text/html');
+  const m=doc.querySelector('math'); if(!m) return null;
+  m.querySelectorAll('script,style,iframe,object,embed,link,meta').forEach(n=>n.remove());
+  [].slice.call(m.querySelectorAll('*')).forEach(n=>{
+    [].slice.call(n.attributes).forEach(a=>{ if(/^on/i.test(a.name)||/^(href|src|xlink:href)$/i.test(a.name)) n.removeAttribute(a.name); });
+  });
+  try{ return document.importNode(m,true); }catch(e){ return null; }
+}
+function mxEqNode(tree){
+  const sp=document.createElement('span');
+  sp.className='mx-eq'; sp.contentEditable='false'; sp.tabIndex=0;
+  sp.dataset.mxTree=JSON.stringify(tree);
+  sp.setAttribute('role','math'); sp.setAttribute('aria-label','Equation — select to edit');
+  const m=mxMathNode(tree);
+  if(m) sp.appendChild(m); else sp.textContent='(equation)';
+  return sp;
+}
+function mxTypedWrite(host,blocks){
+  host.textContent='';
+  (blocks||[]).forEach(b=>{
+    if(b.t==='eq'){ host.appendChild(mxEqNode(b.v)); return; }
+    String(b.v==null?'':b.v).split('\n').forEach((line,k)=>{
+      if(k) host.appendChild(document.createElement('br'));
+      if(line) host.appendChild(document.createTextNode(line));
+    });
+  });
+}
+/* Switching sheet — or modality — replaces ONE element and re-wires it. Not a page re-render: the question
+   column keeps its scroll position, and the old node's listeners go with it rather than stacking. */
+function mxWorkbookSwap(pad){
+  const s=LESSON.slides[cur], ws=(s&&s.workspace)||{};
+  const host=pad.parentNode; if(!host) return null;
+  pad.outerHTML=mxWorkbook(ws,s,cur);
+  const fresh=host.querySelector('[data-tp-ink]'); if(!fresh) return null;
+  wireInkPads(host); mxWireWorkbook(fresh);
+  return fresh;
+}
 function mxSheetGo(btn,slot){
   const pad=btn.closest('[data-tp-ink]'); if(!pad) return;
   const page=pad.dataset.tpRespPage, rid=pad.dataset.tpRespId;
   if(slot) tpInkSetCurrent(page,rid,slot); else tpInkAddSheet(page,rid);
-  const s=LESSON.slides[cur], ws=(s&&s.workspace)||{};
-  const host=pad.parentNode; if(!host) return;
-  pad.outerHTML=mxWorkbook(ws,s,cur);
-  const fresh=host.querySelector('[data-tp-ink]'); if(!fresh) return;
-  wireInkPads(host);
-  fresh.querySelectorAll('[data-mx-sheet]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,b.dataset.mxSheet)));
-  fresh.querySelectorAll('[data-mx-sheet-add]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,null)));
-  fresh.querySelectorAll('button[data-mx-view]').forEach(b=>b.addEventListener('click',()=>mxSetView(b.dataset.mxView)));
+  mxWorkbookSwap(pad);
+}
+let _mxEq=null;
+function mxWireWorkbook(pad){
+  if(!pad) return;
+  const page=pad.dataset.tpRespPage, rid=pad.dataset.tpRespId, slot=pad.dataset.tpRespSlot;
+  pad.querySelectorAll('[data-mx-sheet]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,b.dataset.mxSheet)));
+  pad.querySelectorAll('[data-mx-sheet-add]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,null)));
+  pad.querySelectorAll('button[data-mx-view]').forEach(b=>b.addEventListener('click',()=>mxSetView(b.dataset.mxView)));
+  const typed=pad.querySelector('[data-mx-typed]'); if(!typed) return;
+  const sheet=tpWbSheet(page,rid,slot);
+  mxTypedWrite(typed,sheet.text);
+  const save=()=>{ tpWbSheet(page,rid,slot).text=mxTypedRead(typed); };
+  typed.addEventListener('input',save);
+  typed.addEventListener('blur',save);
+  const clr=pad.querySelector('[data-mx-tclear]');
+  if(clr) clr.addEventListener('click',()=>{ typed.textContent=''; save(); typed.focus(); });
+  /* The equation bar is the app's TPMath editor, opened in place. `Insert` replaces the equation being
+     edited, or drops a new one at the caret; nothing else in the page moves. */
+  const bar=pad.querySelector('[data-mx-eqbar]');
+  const openEq=(existing)=>{
+    if(!bar) return;
+    bar.hidden=false;
+    pad.querySelectorAll('[data-mx-tsel]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mxTsel==='eq'?'true':'false'));
+    if(_mxEq&&_mxEq.destroy) try{ _mxEq.destroy(); }catch(e){}
+    /* TPMath binds keydown / mousedown / focus to the FIELD and its destroy() only unbinds the document
+       listeners, so mounting a second editor on the same node leaves the first one listening — every
+       keystroke would be inserted once per editor ever opened on this pad. A fresh node takes the old
+       bindings with it. */
+    const fld=bar.querySelector('[data-tp-eqfield]');
+    const nf=fld.cloneNode(false); nf.textContent=''; fld.replaceWith(nf);
+    let initial=null; if(existing){ try{ initial=JSON.parse(existing.dataset.mxTree||'null'); }catch(e){} }
+    _mxEq=TPMath.editor(nf, bar.querySelector('[data-tp-eqcaret]'),
+      bar.querySelector('[data-tp-eqsym]'), bar.querySelector('[data-tp-eqstructs]'), initial?{initial}:{});
+    bar.dataset.mxEditing=existing?'1':'';
+    bar._target=existing||null;
+    if(_mxEq&&_mxEq.focus) _mxEq.focus();
+  };
+  const closeEq=()=>{ if(bar){ bar.hidden=true; bar._target=null; }
+    pad.querySelectorAll('[data-mx-tsel]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mxTsel==='text'?'true':'false'));
+    if(_mxEq&&_mxEq.destroy){ try{ _mxEq.destroy(); }catch(e){} _mxEq=null; } };
+  pad.querySelectorAll('[data-mx-tsel]').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.mxTsel==='eq') openEq(null); else { closeEq(); typed.focus(); } }));
+  typed.addEventListener('click',e=>{ const eq=e.target.closest&&e.target.closest('.mx-eq'); if(eq) openEq(eq); });
+  const cancel=pad.querySelector('[data-mx-eqcancel]'); if(cancel) cancel.addEventListener('click',closeEq);
+  const okB=pad.querySelector('[data-mx-eqok]');
+  if(okB) okB.addEventListener('click',()=>{
+    if(!_mxEq) return closeEq();
+    let tree=null; try{ tree=_mxEq.tree(); }catch(e){}
+    if(tree){
+      const node=mxEqNode(tree);
+      if(bar._target&&bar._target.parentNode) bar._target.replaceWith(node);
+      else { typed.appendChild(node); typed.appendChild(document.createTextNode(' ')); }
+    }
+    closeEq(); save(); typed.focus();
+  });
 }
 registerWorkspace('grid',mxWorkbook);
 /* The representation workspace — the tabbed visual beside a notes page. The figure is a FIXTURE drawing
@@ -9764,7 +9930,7 @@ function wireInkPads(root){
     const rPage=pad.dataset.tpRespPage, rId=pad.dataset.tpRespId, rSlot=pad.dataset.tpRespSlot;
     const viaResp=!!(rPage&&rId&&rSlot);
     let strokes;
-    if(viaResp){ strokes=tpInkSheet(rPage,rId,rSlot).strokes; }
+    if(viaResp){ strokes=tpWbSheet(rPage,rId,rSlot).ink; }
     else { try{ const v=rt.ans[fid]; strokes=Array.isArray(v)?v:(typeof v==='string'&&v?JSON.parse(v):[]); }catch(e){ strokes=[]; } }
     let tool='pen', drawing=false, cur=null;
     const redraw=()=>{ const ink=getComputedStyle(canvas).color||'#1f6fb2'; ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -9787,7 +9953,7 @@ function wireInkPads(root){
     }:null;
     if(fit){ fit(); if(typeof ResizeObserver!=='undefined'){
       const ro=new ResizeObserver(()=>{ if(fit()) redraw(); }); ro.observe(canvas); } }
-    const save=()=>{ if(viaResp) tpInkSheet(rPage,rId,rSlot).strokes=strokes; else rt.ans[fid]=strokes; };
+    const save=()=>{ if(viaResp) tpWbSheet(rPage,rId,rSlot).ink=strokes; else rt.ans[fid]=strokes; };
     canvas.addEventListener('pointerdown',e=>{ e.preventDefault(); drawing=true; try{canvas.setPointerCapture(e.pointerId);}catch(_){}
       cur={e:tool==='eraser', w:tool==='eraser'?26:5, p:[pos(e)]}; strokes.push(cur); redraw(); });
     canvas.addEventListener('pointermove',e=>{ if(!drawing) return; cur.p.push(pos(e)); redraw(); });
@@ -10003,50 +10169,49 @@ function tpRespGet(pageId,responseId){
 /* A DETERMINISTIC, JSON-SERIALISABLE SNAPSHOT that shares no reference with the live store: the caller
    (lessonEnd, an adapter, a test) must not be able to mutate a student's work by holding the result.
    Keys are sorted so two runs over the same state produce byte-identical JSON. */
-/* THE WORKBOOK PAYLOAD. One response, TWO retained modalities:
-     { mode:'write',
-       ink:  { current:'w1', pages:[ {id:'w1', strokes:[…]}, … ] },
-       text: { current:'w1', pages:[ {id:'w1', text:'…'},    … ] } }
-   `responseMode` chooses which workspace is VISIBLE; it never deletes the other. A student who switches to
-   Type and back finds their ink exactly as they left it, and vice versa, because a switch writes `mode` and
-   touches nothing else. The bundle can therefore name page / modality / sheet / payload, and lessonEnd can
-   submit whatever is non-empty with its modality alongside it — none of which is a position.
-   Sheet ids are minted from a counter that only ever goes up, so adding a sheet never renumbers an existing
-   one and a stroke cannot change owner. `current` is an id, not an offset, and nothing reorders `pages`. */
-const WB_MODALITIES={write:'ink', type:'text'};
+/* THE WORKBOOK PAYLOAD. ONE sheet list, TWO modalities per sheet:
+     { mode:'write', current:'w2',
+       pages:[ {id:'w1', ink:[…strokes…], text:[…blocks…]},
+               {id:'w2', ink:[…],         text:[…]} ] }
+   The page tabs belong to the WORKBOOK, not to the input technology: a sheet added while typing is the same
+   sheet when the student switches back to writing, simply with no ink on it yet, and the current sheet stays
+   current across a switch. Two parallel lists could drift apart; one list cannot, so this is a shape that
+   removes the bug rather than a rule that forbids it.
+   `mode` is presentation state — which workspace is visible. It never decides what is kept: a switch writes
+   `mode` and touches nothing else, so ink survives a visit to Type and typed work survives a visit to Write,
+   and lessonEnd submits every non-empty modality with its name attached.
+   Sheet ids come from a counter that only ever goes up, so adding a sheet never renumbers an existing one.
+   `current` is an id, not an offset, and nothing reorders `pages`. */
+const WB_MODALITIES=['write','type'];
+function tpWbSheetNew(id){ return {id:String(id), ink:[], text:[]}; }
 function tpWorkbookDoc(pageId,respId){
   const e=tpRespGet(pageId,respId);
-  let v=(e&&e.kind==='workbook'&&e.value&&e.value.ink)?e.value:null;
-  if(!v){
-    v={mode:'write', ink:{current:'w1', pages:[{id:'w1', strokes:[]}]}, text:{current:'w1', pages:[{id:'w1', text:''}]}};
-    tpRespSet(pageId,respId,'workbook',v);
-  }
+  let v=(e&&e.kind==='workbook'&&e.value&&Array.isArray(e.value.pages))?e.value:null;
+  if(!v){ v={mode:'write', current:'w1', pages:[tpWbSheetNew('w1')]}; tpRespSet(pageId,respId,'workbook',v); }
   return v;
 }
-function tpInkDoc(pageId,respId){ return tpWorkbookDoc(pageId,respId).ink; }
-function tpTextDoc(pageId,respId){ return tpWorkbookDoc(pageId,respId).text; }
+function tpWbSheet(pageId,respId,slot){
+  const d=tpWorkbookDoc(pageId,respId);
+  for(const pg of d.pages) if(pg.id===slot) return pg;
+  const pg=tpWbSheetNew(slot); d.pages.push(pg); return pg;
+}
 /* Which modality is live is a LESSON-level fact, recorded on the response so the bundle carries it. */
 function tpWorkbookMode(pageId,respId,mode){
   const d=tpWorkbookDoc(pageId,respId);
-  if(mode&&WB_MODALITIES[mode]) d.mode=mode;
+  if(mode&&WB_MODALITIES.indexOf(mode)>=0) d.mode=mode;
   return d.mode;
 }
-function tpInkSheet(pageId,respId,slot){
-  const d=tpInkDoc(pageId,respId);
-  for(const pg of d.pages) if(pg.id===slot) return pg;
-  const pg={id:String(slot), strokes:[]}; d.pages.push(pg); return pg;
+/* Is there anything in this modality at all? lessonEnd keeps what is non-empty, whatever the mode says. */
+function tpWbHasWork(doc,modality){
+  return !!(doc&&doc.pages||[]).length&&doc.pages.some(pg=>modality==='ink'
+    ? (pg.ink&&pg.ink.length) : (pg.text&&pg.text.some(b=>b.t==='eq'||(b.v||'').trim())));
 }
-/* A sheet is added to BOTH modalities at once: the sheets are the same sheets, and only what is written on
-   them differs by mode — so a student cannot end up with a Page 3 that exists in ink but not in type. */
 function tpInkAddSheet(pageId,respId){
   const d=tpWorkbookDoc(pageId,respId);
-  let n=0; d.ink.pages.forEach(pg=>{ const m=/^w(\d+)$/.exec(pg.id); if(m) n=Math.max(n,+m[1]); });
-  const id='w'+(n+1);
-  const pg={id, strokes:[]}; d.ink.pages.push(pg); d.text.pages.push({id, text:''});
-  d.ink.current=id; d.text.current=id; return pg;
+  let n=0; d.pages.forEach(pg=>{ const m=/^w(\d+)$/.exec(pg.id); if(m) n=Math.max(n,+m[1]); });
+  const pg=tpWbSheetNew('w'+(n+1)); d.pages.push(pg); d.current=pg.id; return pg;
 }
-function tpInkSetCurrent(pageId,respId,slot){ const d=tpWorkbookDoc(pageId,respId);
-  d.ink.current=String(slot); d.text.current=String(slot); return d.ink; }
+function tpInkSetCurrent(pageId,respId,slot){ const d=tpWorkbookDoc(pageId,respId); d.current=String(slot); return d; }
 
 function tpRespBundle(){
   const out={};
@@ -10849,7 +11014,11 @@ $('#modeSeg').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;
 };
 $('#themeSel').onchange=e=>{LESSON.meta.theme=e.target.value;setTheme(e.target.value);renderNav();renderPalette();renderSlide();};
 document.addEventListener('keydown',e=>{
-  const t=e.target; if(t.matches('textarea,input,[contenteditable=true]'))return;
+  /* A component that has already handled the key owns it. The equation editor's field is a
+     `[role=textbox]` with a tabindex rather than a contenteditable, so the element test alone let an
+     ArrowRight inside a half-built equation page the lesson forward and take the equation with it. */
+  if(e.defaultPrevented) return;
+  const t=e.target; if(t.matches('textarea,input,[contenteditable=true],[role="textbox"]'))return;
   if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);
 });
 

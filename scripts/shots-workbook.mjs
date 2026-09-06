@@ -86,13 +86,12 @@ const shot = async (p, name, sel) => {
   // 10 — the mode is lesson-wide, and non-destructive
   const bundle = await p.evaluate(() => {
     const d = tpRespGet('practice-equations', 'workbook');
-    d.value.text.pages[0].text = 'y = x² so when x = 3, y = 9';
+    d.value.pages[0].text = [{ t: 'p', v: 'y = x² so when x = 3, y = 9' }];
     document.querySelector('[data-mx-resp="type"]').click();
     document.querySelector('[data-mx-resp="write"]').click();
     const b = tpRespBundle().pages['practice-equations'].workbook;
-    return { kind: b.kind, mode: b.value.mode,
-      ink: { current: b.value.ink.current, pages: b.value.ink.pages.map((x) => ({ id: x.id, strokes: x.strokes.length })) },
-      text: { current: b.value.text.current, pages: b.value.text.pages.map((x) => ({ id: x.id, chars: x.text.length })) } };
+    return { kind: b.kind, mode: b.value.mode, current: b.value.current,
+      pages: b.value.pages.map((x) => ({ id: x.id, ink: x.ink.length, text: x.text.length })) };
   });
   const q = await browser.newPage({ viewport: { width: 940, height: 700 }, deviceScaleFactor: 2 });
   await q.setContent(`<style>body{margin:0;background:#EEF1EF;font:13px/1.5 system-ui,sans-serif;color:#15181A;}
@@ -100,7 +99,7 @@ const shot = async (p, name, sel) => {
     pre{margin:0;background:#fff;border:1px solid #D6DBD8;border-radius:10px;padding:16px 18px;
       font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;} b{color:#0F7A4C;}</style>
     <div class="w"><h1>Response mode is lesson-wide, and switching it destroys nothing</h1>
-    <p>One response, one <code>mode</code>, two retained modalities with the SAME sheet ids. Captured after write → type → write.</p>
+    <p>One response, one <code>mode</code>, ONE sheet list, both modalities on every sheet. Captured after write → type → write.</p>
     <pre>${JSON.stringify(bundle, null, 2).replace(/&/g, '&amp;').replace(/</g, '&lt;')
       .replace(/"(mode|ink|text|w1|w2|workbook)"/g, '<b>"$1"</b>')}</pre></div>`);
   await q.waitForTimeout(200);

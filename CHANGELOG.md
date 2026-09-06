@@ -27,11 +27,31 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   measured once and cached, so re-running on resize is a pair of comparisons rather than a
   remove-measure-add cycle that would leave an un-compacted frame. `tests/visual/lessons/mathematics-wide-table.json`
   is the 13-column stress case.
-- **Write / Type is lesson-wide, exclusive, and non-destructive.** One response holds BOTH modalities —
-  `{mode, ink:{current,pages}, text:{current,pages}}` under kind `workbook` — with the same sheet ids in
-  each, so there is no mixed workbook where Page 1 is ink and Page 2 is typed. `responseMode` chooses which
-  workspace is visible and deletes nothing: switching write → type → write leaves both payloads byte for
-  byte, and the bundle carries the modality alongside the material. The Type workspace itself is Stage B2.
+- **Stage B2 — Type mode.** The `Type` control now does something. The workbook has ONE page list and each
+  page carries both modalities — `{mode, current, pages:[{id, ink, text}]}` under kind `workbook` — so
+  `Page 1 / Page 2 / +` is a property of the workbook, not of the input technology, and the two cannot
+  renumber apart from one another. Type replaces the workbook SURFACE and nothing else: the question column,
+  its table and its scroll position are untouched, and no answer box is attached to any question. The typed
+  surface is one working page — prose and inline equations in the order they were written — stored as text
+  and as TPMath's own JSON tree, never as markup, so it round-trips through the response store with nothing
+  to sanitise. The equation bar is the app's existing TPMath editor opened in place behind a `Text |
+  Equation` affordance; it is not coupled to `graphQuestion`, which mounts the same primitive its own way.
+  Switching modality, changing page, navigating away and back, the drawer, Expand and the narrow
+  Questions / Workbook views all leave both modalities and the page numbering exactly as they were, and
+  `responseMode` remains presentation state that never decides what is submitted.
+- **Four defects in that surface, found by looking at it rather than at the payload.** The equation bar
+  never closed (`.mx-eqbar{display:flex}` outranks the UA `[hidden]` rule, so a half-built editor sat on
+  every fresh page); the typing pad borrowed `.tp-slide` for the editor's styling and inherited its
+  `position:absolute`, which took the workbook out of the workspace column and left a 340px pad in an 830px
+  region; the equation FIELD was an unfocusable `<span>` inside a styled wrapper, so TPMath's key handling
+  and caret were unreachable by keyboard; and re-opening the bar mounted a second editor on the same node —
+  `destroy()` unbinds the document listeners but not the field's — so every keystroke was inserted once per
+  editor ever opened. Each now has a check with a control that reproduces the failure.
+- **Arrow keys belong to whatever is handling them.** The global `ArrowLeft/ArrowRight` page-turn skipped
+  `textarea, input, [contenteditable=true]`, which does not describe the equation field (a `[role=textbox]`
+  with a tabindex) — so an arrow inside a half-built equation paged the lesson forward and took the equation
+  with it. The handler now stands down on `e.defaultPrevented` and on `[role="textbox"]`. This fixed the
+  same latent bug in the graph question's editor.
 - **Stage B — the Practice workbook.** The visual shell is now the real thing, on the app's OWN stroke
   engine (`[data-tp-ink]`): pressure-variable pen, eraser, clear, grid paper. What is new is WHERE the
   strokes live. The engine gained a second storage backend, selected by attribute: a pad that names a

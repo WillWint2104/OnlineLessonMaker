@@ -64,7 +64,7 @@ const inked = (p) => p.evaluate(() => { const c = document.querySelector('.mx-wb
   const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
   let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 8) n++; return n; });
 const doc = (p) => p.evaluate(([pg, rid]) => { const e = tpRespGet(pg, rid);
-  return e ? { kind: e.kind, current: e.value.ink.current, pages: e.value.ink.pages.map((x) => ({ id: x.id, n: x.strokes.length })) } : null;
+  return e ? { kind: e.kind, current: e.value.current, pages: e.value.pages.map((x) => ({ id: x.id, n: x.ink.length })) } : null;
 }, [PAGE_ID, RESP_ID]);
 
 // ══ 1. the pen writes, and it writes through the app's own stroke engine ══════════════════════════
@@ -79,7 +79,7 @@ mark('pen');
   const after = await inked(p), d1 = await doc(p);
   ok('a drawn stroke paints ink and lands in the response store',
      before === 0 && after > 500 && d1.kind === 'workbook' && d1.pages[0].n === 2, `${after} inked pixels, ${d1.pages[0].n} strokes`);
-  const widths = await p.evaluate(([pg, rid]) => { const st = tpRespGet(pg, rid).value.ink.pages[0].strokes[0].p;
+  const widths = await p.evaluate(([pg, rid]) => { const st = tpRespGet(pg, rid).value.pages[0].ink[0].p;
     return { n: st.length, pr: [...new Set(st.map((q) => q.pr))] }; }, [PAGE_ID, RESP_ID]);
   ok('the stroke carries a pressure sample per point (constant on a mouse, variable on a pen)',
      widths.n > 3 && widths.pr.length >= 1, `${widths.n} points, pressure values ${widths.pr.join('/')}`);
@@ -118,10 +118,10 @@ mark('sheets');
   ok('and the other sheet is untouched by the visit', d2.pages[0].n === 1 && d2.pages[1].n === 2 && d2.current === 'w1');
   // CONTROL — collapse the sheets onto one shared array and show the distinction disappears.
   const ctl = await p.evaluate(([pg, rid]) => {
-    const v = tpRespGet(pg, rid).value.ink, shared = v.pages[0].strokes;
-    const was = { a: v.pages[0].strokes.length, b: v.pages[1].strokes.length };
-    v.pages.forEach((x) => { x.strokes = shared; });
-    return { was, now: { a: v.pages[0].strokes.length, b: v.pages[1].strokes.length } };
+    const v = tpRespGet(pg, rid).value, shared = v.pages[0].ink;
+    const was = { a: v.pages[0].ink.length, b: v.pages[1].ink.length };
+    v.pages.forEach((x) => { x.ink = shared; });
+    return { was, now: { a: v.pages[0].ink.length, b: v.pages[1].ink.length } };
   }, [PAGE_ID, RESP_ID]);
   ok('CONTROL: if every sheet shared one stroke array the sheets would be indistinguishable',
      ctl.was.a !== ctl.was.b && ctl.now.a === ctl.now.b,
@@ -148,7 +148,7 @@ mark('persist');
     const domLocal = document.querySelector('.mx-wbcanvas');            // the "store" a DOM-local design has
     go(0);
     return { stillInDocument: document.contains(domLocal),
-      storeStillHas: (tpRespGet('practice-equations', 'workbook').value.ink.pages[0].strokes.length) };
+      storeStillHas: (tpRespGet('practice-equations', 'workbook').value.pages[0].ink.length) };
   });
   ok('CONTROL: a DOM-local workspace would have lost the work on that same navigation',
      ctl.stillInDocument === false && ctl.storeStillHas > 0,
@@ -167,16 +167,16 @@ mark('identity');
       entry: bun.pages['practice-equations'].workbook }; });
   ok('the bundle names page → response → kind → payload',
      b.errors === 0 && b.pages.indexOf('practice-equations') >= 0 && b.entry.kind === 'workbook'
-     && Array.isArray(b.entry.value.ink.pages) && typeof b.entry.value.ink.current === 'string',
-     `${b.pages.length} page(s); workbook is kind "${b.entry.kind}" with ${b.entry.value.ink.pages.length} sheet(s)`);
+     && Array.isArray(b.entry.value.pages) && typeof b.entry.value.current === 'string',
+     `${b.pages.length} page(s); workbook is kind "${b.entry.kind}" with ${b.entry.value.pages.length} sheet(s)`);
   ok('the bundle is a deep copy — mutating it cannot reach live state', await p.evaluate(() => {
-    const bun = tpRespBundle(); bun.pages['practice-equations'].workbook.value.ink.pages.length = 0;
-    return tpRespGet('practice-equations', 'workbook').value.ink.pages.length > 0; }));
+    const bun = tpRespBundle(); bun.pages['practice-equations'].workbook.value.pages.length = 0;
+    return tpRespGet('practice-equations', 'workbook').value.pages.length > 0; }));
   // CONTROL — reorder the lesson. Authored identity must follow the page; an index would not.
   const re = await p.evaluate(() => {
-    const before = tpRespGet('practice-equations', 'workbook').value.ink.pages[0].strokes.length;
+    const before = tpRespGet('practice-equations', 'workbook').value.pages[0].ink.length;
     const moved = LESSON.slides.splice(4, 1)[0]; LESSON.slides.unshift(moved); go(0);
-    const afterId = tpRespGet('practice-equations', 'workbook').value.ink.pages[0].strokes.length;
+    const afterId = tpRespGet('practice-equations', 'workbook').value.pages[0].ink.length;
     const idxKeyed = (TP_RUNTIME[4] && TP_RUNTIME[4].ans) ? 'index slot 4 now belongs to a different page' : 'index slot 4 now belongs to a different page';
     return { before, afterId, nowAt: cur, type: LESSON.slides[0].type, idxKeyed };
   });
@@ -371,32 +371,165 @@ mark('mode');
   await draw(p, [[.15, .3], [.5, .25]]);
   await p.click('[data-mx-sheet-add]');
   await draw(p, [[.2, .7], [.7, .72]]);
-  const m = await p.evaluate(() => {
-    const d = tpRespGet('practice-equations', 'workbook');
-    d.value.text.pages[0].text = 'y = x^2 so y = 9';                    // as the Type workspace will write
-    const before = { kind: d.kind, mode: d.value.mode,
-      ink: d.value.ink.pages.map((s) => s.strokes.length), text: d.value.text.pages.map((s) => s.text.length) };
-    document.querySelector('[data-mx-resp="type"]').click();
-    const after = { shellMode: document.querySelector('.mx').dataset.mxResponse,
-      ink: d.value.ink.pages.map((s) => s.strokes.length), text: d.value.text.pages.map((s) => s.text.length) };
-    document.querySelector('[data-mx-resp="write"]').click();
-    const back = { shellMode: document.querySelector('.mx').dataset.mxResponse,
-      ink: d.value.ink.pages.map((s) => s.strokes.length), text: d.value.text.pages.map((s) => s.text.length) };
-    return { before, after, back, sheets: d.value.ink.pages.map((s) => s.id), textSheets: d.value.text.pages.map((s) => s.id) };
+  const shape = await p.evaluate(() => { const d = tpRespGet('practice-equations', 'workbook');
+    return { kind: d.kind, mode: d.value.mode, current: d.value.current,
+      keys: Object.keys(d.value.pages[0]).sort().join(','), ids: d.value.pages.map((x) => x.id) }; });
+  ok('ONE sheet list, with both modalities on each sheet — they cannot diverge',
+     shape.kind === 'workbook' && shape.keys === 'id,ink,text' && shape.ids.join('/') === 'w1/w2',
+     `sheets ${shape.ids.join(', ')} · each holds ${shape.keys}`);
+  // Back to sheet 1 — the student types on the sheet they are ON, and w2 is the one just added.
+  await p.click('[data-mx-sheet="w1"]'); await p.waitForTimeout(200);
+  // Type: real typing, and a real equation from the app's own maths primitive.
+  await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(250);
+  ok('the Type workspace replaces the workbook surface, and only that',
+     await p.evaluate(() => !!document.querySelector('[data-mx-typed]') && !document.querySelector('.mx-wbcanvas')
+       && document.querySelectorAll('.mx-content .mx-item').length === 7
+       && document.querySelectorAll('.mx-content input').length === 7),
+     'question list untouched: 7 questions, 7 table cells, no per-question boxes');
+  await p.click('[data-mx-typed]');
+  await p.keyboard.type('Substituting x = 3 into the rule:');
+  await p.keyboard.press('Enter');
+  await p.keyboard.type('so y = 9.');
+  await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(200);
+  await p.evaluate(() => { const b = [...document.querySelectorAll('.tp-eqsym')];
+    ['=', '×'].forEach((c) => { const x = b.find((y) => y.textContent === c); if (x) x.click(); }); });
+  await p.click('[data-mx-eqok]'); await p.waitForTimeout(200);
+  const typed = await p.evaluate(() => { const d = tpRespGet('practice-equations', 'workbook');
+    return { blocks: d.value.pages[0].text.map((b) => b.t), eqs: document.querySelectorAll('.mx-eq math').length,
+      prose: d.value.pages[0].text.filter((b) => b.t === 'p').map((b) => b.v).join('').includes('\n') }; });
+  ok('typed prose and an inserted equation are both stored, as text and as a TPMath tree',
+     typed.blocks.indexOf('p') >= 0 && typed.blocks.indexOf('eq') >= 0 && typed.eqs === 1 && typed.prose === true,
+     `blocks ${typed.blocks.join('+')} · ${typed.eqs} rendered <math> · line break preserved`);
+  // Page 2 gets its own typed content.
+  await p.click('[data-mx-sheet="w2"]'); await p.waitForTimeout(200);
+  const blank = await p.evaluate(() => document.querySelector('[data-mx-typed]').textContent.trim());
+  await p.click('[data-mx-typed]'); await p.keyboard.type('Second sheet working.');
+  await p.evaluate(() => document.querySelector('[data-mx-typed]').blur());
+  const both = await p.evaluate(() => tpRespGet('practice-equations', 'workbook').value.pages
+    .map((x) => ({ id: x.id, ink: x.ink.length, text: x.text.map((b) => b.t === 'p' ? b.v : '[eq]').join('') })));
+  ok('a second sheet takes its own typed content', blank === '' && /Second sheet/.test(both[1].text) && !/Second sheet/.test(both[0].text),
+     both.map((x) => `${x.id}: ink ${x.ink}, ${x.text.length} chars`).join(' · '));
+  // Write → Type → Write, across everything that could reset it.
+  const round = async () => p.evaluate(() => { const d = tpRespGet('practice-equations', 'workbook').value;
+    return { ids: d.pages.map((x) => x.id).join('/'), current: d.current,
+      ink: d.pages.map((x) => x.ink.length).join('/'), text: d.pages.map((x) => x.text.length).join('/') }; });
+  const before = await round();
+  await p.click('[data-mx-resp="write"]'); await p.waitForTimeout(200);
+  const inWrite = await round();
+  const inkBack = await inked(p);
+  await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(200);
+  const backInType = await round();
+  ok('Write → Type → Write preserves both modalities exactly, and renumbers nothing',
+     JSON.stringify(before) === JSON.stringify(inWrite) && JSON.stringify(before) === JSON.stringify(backInType)
+     && before.ids === 'w1/w2', JSON.stringify(before));
+  ok('and the ink is still painted when Write comes back', inkBack > 300, `${inkBack} inked pixels`);
+  // …and across page change, navigation, the drawer, Expand and the narrow views.
+  const survives = await p.evaluate(async () => {
+    const snap = () => JSON.stringify(tpRespGet('practice-equations', 'workbook').value.pages
+      .map((x) => [x.id, x.ink.length, x.text.length]));
+    const a = snap(); const out = {};
+    document.querySelector('[data-mx-sheet="w1"]').click(); out.sheet = snap() === a;
+    go(0); go(4); out.nav = snap() === a;
+    rpNavToggle(); rpNavToggle(); out.drawer = snap() === a;
+    mxSetView('workbook'); mxSetView('split'); out.expand = snap() === a;
+    return out;
   });
-  ok('the workbook response carries BOTH modalities under one kind',
-     m.before.kind === 'workbook' && m.before.ink.length === 2 && m.before.text.length === 2);
-  ok('the mode is lesson-wide — one selector, not one per sheet',
-     m.sheets.join(',') === m.textSheets.join(',') && m.after.shellMode === 'type' && m.back.shellMode === 'write',
-     `sheets ${m.sheets.join('/')} exist in both modalities; the selector is on the lesson bar`);
-  ok('switching to Type preserves the ink, and switching back preserves the typed work',
-     m.after.ink.join(',') === m.before.ink.join(',') && m.after.text.join(',') === m.before.text.join(',')
-     && m.back.ink.join(',') === m.before.ink.join(',') && m.back.text.join(',') === m.before.text.join(','),
-     `ink ${m.before.ink.join('/')} and text ${m.before.text.join('/')} survive write → type → write`);
+  ok('nothing is lost or renumbered by changing sheet, navigating, the drawer, or Expand',
+     survives.sheet && survives.nav && survives.drawer && survives.expand,
+     Object.entries(survives).map(([k, v]) => `${k}:${v ? 'kept' : 'LOST'}`).join(' · '));
+  // ── the Type surface itself: it has to be a page you can actually work on ──────────────────────
+  // The pad borrows `.tp-slide` for the equation editor's own styling; that class is also `position:absolute`,
+  // which took the workbook out of the workspace column and left it 340px in an 830px region.
+  const geom = await p.evaluate(() => {
+    const h = (s) => { const e = document.querySelector(s); return e ? Math.round(e.getBoundingClientRect().height) : 0; };
+    const typed = { work: h('.mx-work'), pad: h('.mx-wb'), sheet: h('.mx-sheet') };
+    document.querySelector('[data-mx-resp="write"]').click();
+    const write = { work: h('.mx-work'), pad: h('.mx-wb'), sheet: h('.mx-sheet') };
+    document.querySelector('[data-mx-resp="type"]').click();
+    return { typed, write };
+  });
+  await p.waitForTimeout(200);
+  ok('the typing page fills its region exactly as the writing page does',
+     Math.abs(geom.typed.sheet - geom.write.sheet) <= 4 && geom.typed.sheet > geom.typed.work * 0.8,
+     `type ${geom.typed.sheet}px vs write ${geom.write.sheet}px in a ${geom.typed.work}px region`);
+  const collapsed = await p.evaluate(() => {
+    const pad = document.querySelector('.mx-wb'), prev = pad.style.cssText;
+    pad.style.cssText = 'position:absolute;inset:0;display:block;height:auto;';   // the slide layout, un-neutralised
+    const h = Math.round(document.querySelector('.mx-sheet').getBoundingClientRect().height);
+    pad.style.cssText = prev; return h;
+  });
+  ok('CONTROL: leaving the borrowed slide layout in place is what collapsed it',
+     collapsed < geom.typed.sheet - 100, `${geom.typed.sheet}px neutralised, ${collapsed}px with the slide layout`);
+  // The equation bar is a mode, not furniture: it is not there until it is asked for.
+  const bar = async () => p.evaluate(() => { const b = document.querySelector('[data-mx-eqbar]');
+    return { hidden: b.hasAttribute('hidden'), shown: b.getBoundingClientRect().height > 0 }; });
+  const shut = await bar();
+  await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(200);
+  const opened = await bar();
+  await p.click('[data-mx-eqcancel]'); await p.waitForTimeout(200);
+  const shutAgain = await bar();
+  ok('the equation bar appears when asked for and goes away again',
+     !shut.shown && opened.shown && !shutAgain.shown && shut.hidden && !opened.hidden,
+     `closed ${shut.shown ? 'VISIBLE' : 'gone'} → open ${opened.shown ? 'visible' : 'GONE'} → closed ${shutAgain.shown ? 'VISIBLE' : 'gone'}`);
+  // The field is the focusable element, and TPMath's key handling reaches it.
+  const field = await p.evaluate(() => { document.querySelector('[data-mx-tsel="eq"]').click();
+    const f = document.querySelector('[data-tp-eqfield]');
+    return { tab: f.getAttribute('tabindex'), role: f.getAttribute('role'), focused: document.activeElement === f }; });
+  await p.keyboard.press('x'); await p.keyboard.press('^'); await p.keyboard.press('2'); await p.waitForTimeout(120);
+  const once = await p.evaluate(() => document.querySelector('[data-tp-eqfield]').textContent.replace(/\s/g, ''));
+  ok('the equation field takes the keyboard, and each key once',
+     field.tab === '0' && field.role === 'textbox' && field.focused && once === 'x2',
+     `tabindex ${field.tab} role ${field.role} focused ${field.focused} · typed "x^2" reads "${once}"`);
+  // Re-opening the bar mounts a second editor on the same pad; TPMath's destroy() does not unbind the field.
+  await p.click('[data-mx-eqcancel]'); await p.waitForTimeout(150);
+  await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(200);
+  await p.keyboard.press('y'); await p.keyboard.press('='); await p.keyboard.press('9'); await p.waitForTimeout(120);
+  const twice = await p.evaluate(() => document.querySelector('[data-tp-eqfield]').textContent.replace(/\s/g, ''));
+  ok('CONTROL: a second visit to the bar still inserts each key once — a stacked binding would double them',
+     twice === 'y=9', `after re-opening, "y=9" reads "${twice}"`);
+  // Arrow keys belong to whatever is handling them.
+  const arrows = await p.evaluate(() => {
+    const before = cur;
+    document.querySelector('[data-tp-eqfield]').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    const inEditor = cur;
+    document.querySelector('.mx-content').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    const outside = cur; go(before); return { before, inEditor, outside };
+  });
+  await p.waitForTimeout(250);
+  ok('an arrow key inside the equation editor does not page the lesson out from under it',
+     arrows.inEditor === arrows.before,
+     `page ${arrows.before} → ${arrows.inEditor} in the editor`);
+  ok('CONTROL: the same key outside it still moves the lesson on',
+     arrows.outside === arrows.before + 1, `page ${arrows.before} → ${arrows.outside} outside`);
+  await p.evaluate(() => { document.querySelector('[data-mx-eqcancel]').click(); }); await p.waitForTimeout(200);
+  // CONTROLS.
+  const ctl = await p.evaluate(() => {
+    const d = tpRespGet('practice-equations', 'workbook').value;
+    const destructive = (() => { const copy = JSON.parse(JSON.stringify(d));
+      copy.pages.forEach((x) => { x.text = []; });                 // what a destructive switch would do
+      return { before: d.pages.map((x) => x.text.length).join('/'), after: copy.pages.map((x) => x.text.length).join('/') }; })();
+    const diverge = (() => { const ink = d.pages.map((x) => x.id), text = d.pages.map((x) => x.id);
+      text.push('w3');                                             // separate counters, one modality adds a sheet
+      return { ink: ink.join('/'), text: text.join('/'), same: ink.join('/') === text.join('/') }; })();
+    return { destructive, diverge };
+  });
+  ok('CONTROL: a destructive switch would empty one modality', ctl.destructive.before !== ctl.destructive.after,
+     `text ${ctl.destructive.before} would become ${ctl.destructive.after}`);
+  ok('CONTROL: separate per-modality page counters would diverge; one shared list cannot',
+     ctl.diverge.same === false && (await p.evaluate(() => { const d = tpRespGet('practice-equations', 'workbook').value;
+       return Object.keys(d.pages[0]).indexOf('ink') >= 0 && Object.keys(d.pages[0]).indexOf('text') >= 0; })) === true,
+     `two counters give ${ctl.diverge.ink} vs ${ctl.diverge.text}; the real payload has one list`);
+  const domLocal = await p.evaluate(() => { const node = document.querySelector('[data-mx-typed]');
+    go(0); return { gone: !document.contains(node),
+      storeStillHas: tpRespGet('practice-equations', 'workbook').value.pages[0].text.length }; });
+  ok('CONTROL: DOM-local typed state would vanish on that navigation; the store does not',
+     domLocal.gone === true && domLocal.storeStillHas > 0,
+     `the surface left the document; the store still holds ${domLocal.storeStillHas} block(s)`);
   const bundle = await p.evaluate(() => { const b = tpRespBundle().pages['practice-equations'].workbook;
-    return { kind: b.kind, mode: b.value.mode, ink: b.value.ink.pages.length, text: b.value.text.pages.length }; });
-  ok('and the bundle carries the modality alongside the material',
-     bundle.kind === 'workbook' && bundle.mode === 'write' && bundle.ink === 2 && bundle.text === 2,
+    return { kind: b.kind, mode: b.value.mode, sheets: b.value.pages.map((x) => ({ id: x.id, ink: x.ink.length, text: x.text.length })) }; });
+  ok('the bundle keeps BOTH modalities, per sheet, with the mode alongside rather than deciding it',
+     bundle.kind === 'workbook' && bundle.sheets.length === 2
+     && bundle.sheets.some((x) => x.ink > 0) && bundle.sheets.some((x) => x.text > 0),
      JSON.stringify(bundle));
   await p.close();
 }
