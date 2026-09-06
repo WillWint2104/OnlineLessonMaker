@@ -8,6 +8,30 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage B correction — the split is decided by measured geometry, not by a device width.** The previous
+  rule was a breakpoint, and it produced a "split" whose writing surface measured **452 × 0 px** at a 900px
+  portrait tablet: below 900 the page became a block, the stretched grid row went away, and the sheet's
+  `min-height:0` had nothing to grow into. The rule is now the minimum usable geometry of both regions,
+  measured on the real page — question column ≥ 440px, workbook column ≥ 420px, sheet ≥ 340px — computed
+  from the ratio the grid will actually use, and re-resolved on every resize. So the same 1180×900 viewport
+  is `solo` with the navigation rail open and `split` once it is collapsed: the decision is the space, not
+  the device. Portrait tablets take the Questions / Workbook views, and in the Workbook view the workbook
+  gets the whole page rather than a fixed `vh` slice. The sheet now has a floor everywhere, so it cannot
+  collapse whatever the page does. A control drives the failure back: forcing the split past the minima
+  returns the sheet to 0px.
+- **A structured table is never silently clipped.** It was, at every width below desktop, and an overlay
+  scrollbar made it look like a table with fewer columns. Now: fit as authored; if it does not fit, compact
+  the cells; if a legitimately wide authored table still does not fit, the TABLE takes its own horizontal
+  scroll with a visible edge, a persistent thin scrollbar and a sticky stub column, so no row loses its
+  label and no column disappears. The question pane itself never overflows. The two intrinsic widths are
+  measured once and cached, so re-running on resize is a pair of comparisons rather than a
+  remove-measure-add cycle that would leave an un-compacted frame. `tests/visual/lessons/mathematics-wide-table.json`
+  is the 13-column stress case.
+- **Write / Type is lesson-wide, exclusive, and non-destructive.** One response holds BOTH modalities —
+  `{mode, ink:{current,pages}, text:{current,pages}}` under kind `workbook` — with the same sheet ids in
+  each, so there is no mixed workbook where Page 1 is ink and Page 2 is typed. `responseMode` chooses which
+  workspace is visible and deletes nothing: switching write → type → write leaves both payloads byte for
+  byte, and the bundle carries the modality alongside the material. The Type workspace itself is Stage B2.
 - **Stage B — the Practice workbook.** The visual shell is now the real thing, on the app's OWN stroke
   engine (`[data-tp-ink]`): pressure-variable pen, eraser, clear, grid paper. What is new is WHERE the
   strokes live. The engine gained a second storage backend, selected by attribute: a pad that names a

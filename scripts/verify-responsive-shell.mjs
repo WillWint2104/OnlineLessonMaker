@@ -295,7 +295,11 @@ mark('persistent');
 // ══ 6. narrow is a different composition, not a smaller one ═══════════════════════════════════════
 mark('narrow');
 {
-  const wide = await newPage(1280, 800); await boot(wide, PRACTICE); const W = await geom(wide);
+  // The split is resolved from usable geometry, so a "wide" case must actually BE wide: at 1280 the
+  // navigation rail leaves the two regions below their minima, and collapsing it is what buys the room.
+  const wide = await newPage(1280, 800); await boot(wide, PRACTICE);
+  await wide.evaluate(() => rpNavToggle()); await wide.waitForTimeout(350);
+  const W = await geom(wide);
   const nar = await newPage(414, 860); await boot(nar, PRACTICE); const N = await geom(nar);
   ok('wide: questions and workbook sit side by side, each clipped to its own box',
      W.content.top === W.work.top && W.work.left > W.content.left && W.content.over === 'auto' && W.work.over === 'hidden',
@@ -324,8 +328,13 @@ mark('narrow');
   ok('narrow: the open drawer sits OVER the page, with a scrim, and does not push it',
      overlay.pos === 'absolute' && overlay.scrim === 'block' && overlay.overlaps === true && overlay.contentLeft === N.content.left,
      `nav ${overlay.pos} · scrim ${overlay.scrim} · content left unchanged at ${overlay.contentLeft}`);
+  const railBack = await wide.evaluate(() => { rpNavToggle();
+    return { pos: getComputedStyle(document.querySelector('.mx-nav')).position,
+      scrim: getComputedStyle(document.querySelector('.mx-scrim')).display,
+      open: document.querySelector('.mx').classList.contains('mx-navopen') }; });
   ok('control: at 1280 the same rail takes its own column, with no scrim',
-     W.nav.pos === 'static' && W.scrimDisplay === 'none' && W.navopen === true, `nav ${W.nav.pos} · scrim ${W.scrimDisplay}`);
+     railBack.pos === 'static' && railBack.scrim === 'none' && railBack.open === true,
+     `nav ${railBack.pos} · scrim ${railBack.scrim}`);
   await wide.close(); await nar.close();
 }
 

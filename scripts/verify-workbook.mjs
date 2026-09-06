@@ -64,7 +64,7 @@ const inked = (p) => p.evaluate(() => { const c = document.querySelector('.mx-wb
   const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
   let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 8) n++; return n; });
 const doc = (p) => p.evaluate(([pg, rid]) => { const e = tpRespGet(pg, rid);
-  return e ? { kind: e.kind, current: e.value.current, pages: e.value.pages.map((x) => ({ id: x.id, n: x.strokes.length })) } : null;
+  return e ? { kind: e.kind, current: e.value.ink.current, pages: e.value.ink.pages.map((x) => ({ id: x.id, n: x.strokes.length })) } : null;
 }, [PAGE_ID, RESP_ID]);
 
 // ══ 1. the pen writes, and it writes through the app's own stroke engine ══════════════════════════
@@ -78,8 +78,8 @@ mark('pen');
   await draw(p, [[.12, .5], [.42, .56]]);
   const after = await inked(p), d1 = await doc(p);
   ok('a drawn stroke paints ink and lands in the response store',
-     before === 0 && after > 500 && d1.kind === 'ink' && d1.pages[0].n === 2, `${after} inked pixels, ${d1.pages[0].n} strokes`);
-  const widths = await p.evaluate(([pg, rid]) => { const st = tpRespGet(pg, rid).value.pages[0].strokes[0].p;
+     before === 0 && after > 500 && d1.kind === 'workbook' && d1.pages[0].n === 2, `${after} inked pixels, ${d1.pages[0].n} strokes`);
+  const widths = await p.evaluate(([pg, rid]) => { const st = tpRespGet(pg, rid).value.ink.pages[0].strokes[0].p;
     return { n: st.length, pr: [...new Set(st.map((q) => q.pr))] }; }, [PAGE_ID, RESP_ID]);
   ok('the stroke carries a pressure sample per point (constant on a mouse, variable on a pen)',
      widths.n > 3 && widths.pr.length >= 1, `${widths.n} points, pressure values ${widths.pr.join('/')}`);
@@ -118,7 +118,7 @@ mark('sheets');
   ok('and the other sheet is untouched by the visit', d2.pages[0].n === 1 && d2.pages[1].n === 2 && d2.current === 'w1');
   // CONTROL — collapse the sheets onto one shared array and show the distinction disappears.
   const ctl = await p.evaluate(([pg, rid]) => {
-    const v = tpRespGet(pg, rid).value, shared = v.pages[0].strokes;
+    const v = tpRespGet(pg, rid).value.ink, shared = v.pages[0].strokes;
     const was = { a: v.pages[0].strokes.length, b: v.pages[1].strokes.length };
     v.pages.forEach((x) => { x.strokes = shared; });
     return { was, now: { a: v.pages[0].strokes.length, b: v.pages[1].strokes.length } };
@@ -148,7 +148,7 @@ mark('persist');
     const domLocal = document.querySelector('.mx-wbcanvas');            // the "store" a DOM-local design has
     go(0);
     return { stillInDocument: document.contains(domLocal),
-      storeStillHas: (tpRespGet('practice-equations', 'workbook').value.pages[0].strokes.length) };
+      storeStillHas: (tpRespGet('practice-equations', 'workbook').value.ink.pages[0].strokes.length) };
   });
   ok('CONTROL: a DOM-local workspace would have lost the work on that same navigation',
      ctl.stillInDocument === false && ctl.storeStillHas > 0,
@@ -166,17 +166,17 @@ mark('identity');
     return { pages: Object.keys(bun.pages), errors: bun.errors.length,
       entry: bun.pages['practice-equations'].workbook }; });
   ok('the bundle names page → response → kind → payload',
-     b.errors === 0 && b.pages.indexOf('practice-equations') >= 0 && b.entry.kind === 'ink'
-     && Array.isArray(b.entry.value.pages) && typeof b.entry.value.current === 'string',
-     `${b.pages.length} page(s); workbook is kind "${b.entry.kind}" with ${b.entry.value.pages.length} sheet(s)`);
+     b.errors === 0 && b.pages.indexOf('practice-equations') >= 0 && b.entry.kind === 'workbook'
+     && Array.isArray(b.entry.value.ink.pages) && typeof b.entry.value.ink.current === 'string',
+     `${b.pages.length} page(s); workbook is kind "${b.entry.kind}" with ${b.entry.value.ink.pages.length} sheet(s)`);
   ok('the bundle is a deep copy — mutating it cannot reach live state', await p.evaluate(() => {
-    const bun = tpRespBundle(); bun.pages['practice-equations'].workbook.value.pages.length = 0;
-    return tpRespGet('practice-equations', 'workbook').value.pages.length > 0; }));
+    const bun = tpRespBundle(); bun.pages['practice-equations'].workbook.value.ink.pages.length = 0;
+    return tpRespGet('practice-equations', 'workbook').value.ink.pages.length > 0; }));
   // CONTROL — reorder the lesson. Authored identity must follow the page; an index would not.
   const re = await p.evaluate(() => {
-    const before = tpRespGet('practice-equations', 'workbook').value.pages[0].strokes.length;
+    const before = tpRespGet('practice-equations', 'workbook').value.ink.pages[0].strokes.length;
     const moved = LESSON.slides.splice(4, 1)[0]; LESSON.slides.unshift(moved); go(0);
-    const afterId = tpRespGet('practice-equations', 'workbook').value.pages[0].strokes.length;
+    const afterId = tpRespGet('practice-equations', 'workbook').value.ink.pages[0].strokes.length;
     const idxKeyed = (TP_RUNTIME[4] && TP_RUNTIME[4].ans) ? 'index slot 4 now belongs to a different page' : 'index slot 4 now belongs to a different page';
     return { before, afterId, nowAt: cur, type: LESSON.slides[0].type, idxKeyed };
   });
@@ -281,7 +281,127 @@ mark('table');
   await p.close();
 }
 
-const SECTIONS = ['pen', 'sheets', 'persist', 'identity', 'layout', 'narrow', 'table'];
+// ══ 8. the split exists only while BOTH regions are usable ════════════════════════════════════════
+// The previous rule was a device width, and it produced a split whose writing surface measured 452 x 0 px
+// at a 900px portrait tablet. The rule is now the measured minimum usable geometry of the two regions.
+mark('fit');
+{
+  const read = (p) => p.evaluate(() => {
+    const q = (s) => document.querySelector(s), box = (e) => e ? { w: e.offsetWidth, h: e.offsetHeight } : { w: 0, h: 0 };
+    return { fit: q('.mx').dataset.mxFit, view: q('.mx').dataset.mxView,
+      content: box(q('.mx-content')), work: box(q('.mx-work')), sheet: box(q('.mx-sheet')),
+      mins: { q: MX_Q_MIN, w: MX_WB_MIN_W, h: MX_WB_MIN_H } };
+  });
+  const cases = [];
+  for (const [w, h, label] of [[1536, 1024, 'desktop'], [1180, 900, 'tablet landscape'], [900, 1100, 'tablet portrait'], [834, 1112, 'iPad portrait']]) {
+    const p = await open(w, h); await p.waitForTimeout(350);
+    cases.push([label, w, h, await read(p)]); await p.close();
+  }
+  const byLabel = Object.fromEntries(cases.map((c) => [c[0], c[3]]));
+  ok('wherever the split exists, BOTH regions clear their usable minima',
+     cases.every(([, , , m]) => m.fit !== 'split' || (m.content.w >= m.mins.q && m.work.w >= m.mins.w && m.sheet.h >= m.mins.h)),
+     cases.map(([l, , , m]) => `${l}:${m.fit}${m.fit === 'split' ? ` q${m.content.w}/w${m.work.w}/h${m.sheet.h}` : ''}`).join('  '));
+  ok('a portrait tablet uses Questions / Workbook rather than a split it cannot support',
+     byLabel['tablet portrait'].fit === 'solo' && byLabel['iPad portrait'].fit === 'solo',
+     `900x1100 → ${byLabel['tablet portrait'].fit} · 834x1112 → ${byLabel['iPad portrait'].fit}`);
+  // The decision is geometry, not device: the SAME viewport splits once the rail gives its width back.
+  const p = await open(1180, 900); await p.waitForTimeout(350);
+  const withRail = await read(p);
+  await p.evaluate(() => rpNavToggle()); await p.waitForTimeout(400);
+  const noRail = await read(p);
+  ok('the same viewport changes its answer when the available width changes — it is geometry, not a device',
+     withRail.fit === 'solo' && noRail.fit === 'split' && noRail.content.w >= noRail.mins.q
+     && noRail.work.w >= noRail.mins.w && noRail.sheet.h >= noRail.mins.h,
+     `1180x900 with the rail → ${withRail.fit}; rail collapsed → ${noRail.fit} (q${noRail.content.w}/w${noRail.work.w}/h${noRail.sheet.h})`);
+  // CONTROL — force the split below the minima and the shallow workbook comes straight back.
+  const ctl = await p.evaluate(async () => {
+    const root = document.querySelector('.mx');
+    const proper = document.querySelector('.mx-sheet').offsetHeight;
+    root.setAttribute('data-mx-fit', 'split');                 // what a width-based rule would have decided
+    const st = document.createElement('style');
+    st.id = 'mx-force'; st.textContent = '.mx-wb .mx-sheet{flex:0 1 auto;min-height:0;}';
+    document.head.appendChild(st);
+    await new Promise((r) => requestAnimationFrame(r));
+    const forced = document.querySelector('.mx-sheet').offsetHeight;
+    st.remove(); return { proper, forced };
+  });
+  ok('CONTROL: forcing the split past the minima reproduces the shallow workbook this rule exists to prevent',
+     ctl.proper >= 340 && ctl.forced < 340,
+     `sheet ${ctl.proper}px with the floor, ${ctl.forced}px without it`);
+  await p.close();
+}
+
+// ══ 9. a structured table is never silently clipped ═══════════════════════════════════════════════
+mark('wide');
+{
+  const WIDE = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-wide-table.json'), 'utf8'));
+  const probe = (p) => p.evaluate(() => {
+    const wrap = document.querySelector('.mx-tblwrap'), tbl = wrap.querySelector('table'), pane = document.querySelector('.mx-content');
+    return { natural: +wrap.dataset.mxTblNat, min: +wrap.dataset.mxTblMin, avail: wrap.clientWidth,
+      compact: wrap.classList.contains('mx-tbl-compact'), scrolls: wrap.hasAttribute('data-mx-tblscroll'),
+      tbl: tbl.scrollWidth, paneOverflow: pane.scrollWidth - pane.clientWidth,
+      reachable: (() => { wrap.scrollLeft = wrap.scrollWidth; return Math.round(wrap.scrollLeft + wrap.clientWidth) >= tbl.scrollWidth - 2; })(),
+      cols: tbl.querySelectorAll('tr:first-child th[scope="col"]').length };
+  });
+  const wide = await open(1536, 1024, WIDE, 0); await wide.waitForTimeout(400);
+  const W = await probe(wide);
+  ok('a legitimately wide authored table compacts first, then takes its OWN horizontal scroll',
+     W.cols === 13 && W.compact === true && W.scrolls === true && W.tbl > W.avail,
+     `${W.cols} columns · natural ${W.natural}px, compact ${W.min}px, column ${W.avail}px`);
+  ok('every column is reachable — nothing disappears past the boundary', W.reachable === true);
+  ok('and the question pane itself never overflows sideways', W.paneOverflow <= 0, `${W.paneOverflow}px`);
+  await wide.close();
+  const ord = await open(1536, 1024); await ord.waitForTimeout(400);
+  const O = await probe(ord);
+  ok('CONTROL: the ordinary 7-column table fits with no compaction and no scroll',
+     O.cols === 7 && O.compact === false && O.scrolls === false, `natural ${O.natural}px in a ${O.avail}px column`);
+  await ord.close();
+  const ph = await open(414, 860); await ph.waitForTimeout(400);
+  const P = await probe(ph);
+  ok('on a handset the same ordinary table compacts, and scrolls only if it still does not fit',
+     P.compact === true && P.tbl <= P.avail + 1 === !P.scrolls && P.paneOverflow <= 0,
+     `natural ${P.natural}px → compact ${P.min}px in a ${P.avail}px column${P.scrolls ? ', scrolling' : ', fits'}`);
+  await ph.close();
+}
+
+// ══ 10. the response mode is lesson-wide, and switching it destroys nothing ═══════════════════════
+mark('mode');
+{
+  const p = await open();
+  await draw(p, [[.15, .3], [.5, .25]]);
+  await p.click('[data-mx-sheet-add]');
+  await draw(p, [[.2, .7], [.7, .72]]);
+  const m = await p.evaluate(() => {
+    const d = tpRespGet('practice-equations', 'workbook');
+    d.value.text.pages[0].text = 'y = x^2 so y = 9';                    // as the Type workspace will write
+    const before = { kind: d.kind, mode: d.value.mode,
+      ink: d.value.ink.pages.map((s) => s.strokes.length), text: d.value.text.pages.map((s) => s.text.length) };
+    document.querySelector('[data-mx-resp="type"]').click();
+    const after = { shellMode: document.querySelector('.mx').dataset.mxResponse,
+      ink: d.value.ink.pages.map((s) => s.strokes.length), text: d.value.text.pages.map((s) => s.text.length) };
+    document.querySelector('[data-mx-resp="write"]').click();
+    const back = { shellMode: document.querySelector('.mx').dataset.mxResponse,
+      ink: d.value.ink.pages.map((s) => s.strokes.length), text: d.value.text.pages.map((s) => s.text.length) };
+    return { before, after, back, sheets: d.value.ink.pages.map((s) => s.id), textSheets: d.value.text.pages.map((s) => s.id) };
+  });
+  ok('the workbook response carries BOTH modalities under one kind',
+     m.before.kind === 'workbook' && m.before.ink.length === 2 && m.before.text.length === 2);
+  ok('the mode is lesson-wide — one selector, not one per sheet',
+     m.sheets.join(',') === m.textSheets.join(',') && m.after.shellMode === 'type' && m.back.shellMode === 'write',
+     `sheets ${m.sheets.join('/')} exist in both modalities; the selector is on the lesson bar`);
+  ok('switching to Type preserves the ink, and switching back preserves the typed work',
+     m.after.ink.join(',') === m.before.ink.join(',') && m.after.text.join(',') === m.before.text.join(',')
+     && m.back.ink.join(',') === m.before.ink.join(',') && m.back.text.join(',') === m.before.text.join(','),
+     `ink ${m.before.ink.join('/')} and text ${m.before.text.join('/')} survive write → type → write`);
+  const bundle = await p.evaluate(() => { const b = tpRespBundle().pages['practice-equations'].workbook;
+    return { kind: b.kind, mode: b.value.mode, ink: b.value.ink.pages.length, text: b.value.text.pages.length }; });
+  ok('and the bundle carries the modality alongside the material',
+     bundle.kind === 'workbook' && bundle.mode === 'write' && bundle.ink === 2 && bundle.text === 2,
+     JSON.stringify(bundle));
+  await p.close();
+}
+
+const SECTIONS = ['pen', 'sheets', 'persist', 'identity', 'layout', 'narrow', 'table', 'fit', 'wide', 'mode'];
 const missing = SECTIONS.filter((s) => !ran.has(s));
 ok('every section ran', missing.length === 0, missing.length ? 'missing: ' + missing.join(', ') : `${SECTIONS.length} sections`);
 ok('no page error while drawing, switching or navigating', pageErrs.length === 0, pageErrs.slice(0, 3).join(' | '));

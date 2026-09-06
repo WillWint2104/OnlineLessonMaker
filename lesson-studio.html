@@ -1760,7 +1760,21 @@ body.respo .main{min-width:0;}
 .mx-part{display:flex;gap:10px;min-width:0;}
 .mx-pl{font-weight:600;color:var(--mx-ink-2);}   /* a class, NOT a bare <i>: mxM() emits <i> for italic variables */
 /* a values table: pale green stub column + head, white cells to write in */
-.mx-tblwrap{margin-top:11px;overflow-x:auto;}
+.mx-tblwrap{margin-top:11px;overflow-x:auto;max-width:100%;position:relative;}
+.mx-tblwrap.mx-tbl-compact input.mx-cell{width:34px;height:25px;font-size:14px;}
+.mx-tblwrap.mx-tbl-compact .mx-tbl th,.mx-tblwrap.mx-tbl-compact .mx-tbl td{min-width:34px;padding:4px 5px;font-size:14px;}
+/* When even the compact table is wider than its column, the overflow is SHOWN: a persistent thin scrollbar
+   and a fade at the edge the columns continue past. Overlay scrollbars are invisible until you touch them,
+   which is what made a clipped table look like a table with fewer columns. */
+.mx-tblwrap[data-mx-tblscroll]{scrollbar-width:thin;padding-bottom:6px;
+  -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 26px),transparent);
+  mask-image:linear-gradient(90deg,#000 calc(100% - 26px),transparent);}
+.mx-tblwrap[data-mx-tblscroll]::-webkit-scrollbar{height:7px;}
+.mx-tblwrap[data-mx-tblscroll]::-webkit-scrollbar-thumb{background:var(--mx-line);border-radius:4px;}
+/* …and the stub column stays put while the values scroll past it, so the row it labels never becomes
+   anonymous. Only on a scrolling table: a table that fits has nothing to stick to. */
+.mx-tblwrap[data-mx-tblscroll] .mx-tbl tr>*:first-child{position:sticky;left:0;z-index:1;
+  box-shadow:1px 0 0 var(--mx-line);}
 .mx-tbl{border-collapse:separate;border-spacing:0;font-family:var(--mx-serif);font-size:15.5px;}
 .mx-tbl th,.mx-tbl td{border:1px solid var(--mx-line);border-left:0;padding:7px 10px;text-align:center;min-width:46px;background:var(--mx-white);}
 .mx-tbl tr>*:first-child{border-left:1px solid var(--mx-line);background:var(--mx-green-tint);font-weight:600;}
@@ -1870,7 +1884,15 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 @media (max-width:1080px){ .mx-head{flex-direction:column;gap:14px;} .mx-keyidea{width:100%;} }
 /* The split is the Practice composition and a tablet keeps it — both regions stay usable, just tighter.
    Only a handset drops to one column, and there it becomes the Questions / Workbook switch below. */
+/* A panel pair (Notes, Video) stacks below the reading width, as it always did. */
 @media (max-width:760px){ .mx-split{grid-template-columns:minmax(0,1fr);} }
+/* A WORKBOOK page instead follows the RESOLVED fit, at any width: `solo` is one region at a time behind the
+   Questions / Workbook switch; `split` is the approved desktop composition. */
+.mx[data-mx-fit="solo"] .mx-split{grid-template-columns:minmax(0,1fr);}
+.mx[data-mx-fit="solo"] .mx-viewsw{display:flex;}
+.mx[data-mx-fit="solo"][data-mx-view="questions"] .mx-work{display:none;}
+.mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-content{display:none;}
+.mx[data-mx-fit="solo"] .mx-page[data-mx-surface="flush"] .mx-work{margin-top:0;}
 @media (max-width:900px){
   .mx-modes{display:none;}                                   /* application controls are secondary here */
   .mx-brand{padding-right:12px;}
@@ -1891,19 +1913,18 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
   .mx-grid,.mx-fill .mx-grid{height:min(54vh,430px);flex:0 0 auto;}
   .mx-sheet .mx-grid{position:absolute;inset:0;height:auto;}
 }
-@media (max-width:760px){
-  /* A handset gets one region at a time — Questions or Workbook — not the whole workbook buried under the
-     whole question set. Switching is a class flip plus a remembered scroll position, so neither side loses
-     its place, and neither does the drawer. */
-  .mx-viewsw{display:flex;}
-  .mx-page[data-mx-surface="flush"] .mx-work{margin-top:0;}
-  .mx[data-mx-view="questions"] .mx-work{display:none;}
-  .mx[data-mx-view="workbook"] .mx-content{display:none;}
-  /* .mx-fill is a block at this width, so the sheet is given its own height rather than inheriting one
-     from a flex row that no longer exists. */
-  .mx-wb{display:flex;flex-direction:column;}
-  .mx-wb .mx-sheet{flex:0 0 auto;height:min(62vh,480px);}
-}
+/* THE SHEET ALWAYS HAS A HEIGHT. It used to inherit one from a stretched grid row; below 900px the page
+   became a block, the row went away, and `min-height:0` left the writing surface at 452 x 0. The workbook
+   is a flex column with its own floor everywhere, so the surface cannot collapse whatever the page does. */
+.mx-wb{display:flex;flex-direction:column;}
+.mx-wb .mx-sheet{flex:1 1 auto;min-height:340px;}
+.mx[data-mx-fit="solo"] .mx-wb .mx-sheet{flex:0 0 auto;height:min(62vh,520px);}
+/* In the Workbook view the workbook gets the page: a fixed vh cap left a portrait tablet with a third of
+   its height unused, which is the same "not a serious writing surface" complaint in a milder form. */
+.mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-page{display:flex;flex-direction:column;overflow:hidden;}
+.mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-split{flex:1 1 auto;min-height:0;}
+.mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-work{min-height:0;display:flex;flex-direction:column;overflow:hidden;}
+.mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-wb .mx-sheet{flex:1 1 auto;height:auto;min-height:340px;}
 @media (max-width:640px){ .mx-crumb{display:none;} }
 @media (max-width:520px){
   .mx-top{gap:8px;padding:0 10px;height:52px;}
@@ -7038,8 +7059,57 @@ function mxSetResponseMode(m){
    so switching view keeps the question scroll position, the workbook sheet, its ink and the response mode,
    and so does opening the navigation drawer. */
 const MX_VIEWS=['split','questions','workbook'];
-const MX_SOLO='(max-width: 760px)';                 /* where one region at a time begins — NOT the drawer breakpoint */
-function mxSolo(){ return !!(window.matchMedia&&window.matchMedia(MX_SOLO).matches); }
+/* WHEN THE SPLIT IS ALLOWED TO EXIST. Not a device width — a device width says nothing about whether the
+   two regions are usable, and choosing one produced exactly the failure this replaces: at a 900px portrait
+   tablet the split "existed" with a workbook whose writing surface measured 452 x 0 px.
+   The rule is the minimum usable geometry of both regions, measured on the real page:
+
+       usable question column  >= MX_Q_MIN      a textbook column with numbered items and subparts
+       usable workbook column  >= MX_WB_MIN_W   narrower than this is a margin, not a workbook
+       usable sheet height     >= MX_WB_MIN_H   a toolbar and two rows of grid is not a workspace
+
+   Both columns are computed from the ratio the grid will actually use, so a wide viewport whose navigation
+   rail eats the difference is correctly judged too narrow — and collapsing the rail is enough to bring the
+   split back, because this re-resolves on any resize. */
+const MX_Q_MIN=440, MX_WB_MIN_W=420, MX_WB_MIN_H=340, MX_SPLIT_GUTTER=20;
+const MX_WB_CHROME=96;                              /* the workbook's own toolbar + page tabs */
+let MX_FIT=null;                                    /* 'split' | 'solo' — resolved, never assumed */
+function mxSplitFits(root){
+  const main=root&&root.querySelector('.mx-main'), page=root&&root.querySelector('.mx-page');
+  if(!main||!page) return true;
+  const cs=getComputedStyle(page);
+  const pad=(parseFloat(cs.paddingLeft)||0)+(parseFloat(cs.paddingRight)||0);
+  const padY=(parseFloat(cs.paddingTop)||0)+(parseFloat(cs.paddingBottom)||0);
+  const avail=main.clientWidth-pad-MX_SPLIT_GUTTER;
+  const head=page.querySelector('.mx-head'), sw=page.querySelector('.mx-viewsw');
+  const availH=main.clientHeight-padY-((head&&head.offsetHeight)||0)-((sw&&sw.offsetHeight)||0);
+  const r=1.15, q=avail/(1+r), w=avail-q;            /* the columns the ratio would actually produce */
+  return q>=MX_Q_MIN && w>=MX_WB_MIN_W && availH-MX_WB_CHROME>=MX_WB_MIN_H;
+}
+function mxResolveFit(){
+  const root=$('#slide').querySelector('.mx'); if(!root) return;
+  /* Only a WORKBOOK page has a split to resolve. Notes and Video are panel pairs that stack perfectly well
+     and have no writing surface to protect, so they keep the ordinary responsive behaviour and must never
+     be told there is one region to show. */
+  if(!mxWritesResponses(LESSON.slides[cur])){ root.setAttribute('data-mx-fit','n/a'); mxFitTables(root); return; }
+  const fit=mxSplitFits(root)?'split':'solo';
+  if(MX_FIT!==fit||root.getAttribute('data-mx-fit')!==fit){
+    MX_FIT=fit; root.setAttribute('data-mx-fit',fit);
+    if(fit==='solo'&&MX_VIEW==='split') MX_VIEW='questions';
+    if(fit==='split'&&MX_VIEW==='questions') MX_VIEW='split';
+    mxSetView(mxView());
+  }
+  mxFitTables(root);
+}
+let _mxRO=null,_mxRAF=0;
+function mxObserve(root){
+  if(typeof ResizeObserver==='undefined') return;
+  const main=root.querySelector('.mx-main'); if(!main) return;
+  if(!_mxRO) _mxRO=new ResizeObserver(()=>{ if(_mxRAF) return;
+    _mxRAF=requestAnimationFrame(()=>{ _mxRAF=0; mxResolveFit(); }); });
+  _mxRO.disconnect(); _mxRO.observe(main);
+}
+function mxSolo(){ return MX_FIT==='solo'; }
 let MX_VIEW=null;
 function mxView(){ if(MX_VIEW===null) MX_VIEW=mxSolo()?'questions':'split'; return MX_VIEW; }
 /* Hiding a region resets the scroll position of whatever was scrolling it — a `display:none` box comes
@@ -7057,13 +7127,40 @@ function mxSetView(v){
   MX_VIEW=v;
   const root=$('#slide').querySelector('.mx'); if(!root) return;
   root.setAttribute('data-mx-view',v);
-  mxScrollers(root).forEach(([k,el])=>{ if(MX_SCROLL[k]!=null) el.scrollTop=MX_SCROLL[k]; });
+  /* Restored twice: once now, and once after layout settles — a region that has just become scrollable
+     again cannot take a scrollTop until it has a scroll height. */
+  const put=()=>mxScrollers(root).forEach(([k,el])=>{ if(MX_SCROLL[k]!=null&&el.scrollHeight>el.clientHeight) el.scrollTop=MX_SCROLL[k]; });
+  put(); if(typeof requestAnimationFrame==='function') requestAnimationFrame(put);
   root.querySelectorAll('[data-mx-view]').forEach(b=>{
     if(b.tagName==='BUTTON'){ const on=b.dataset.mxView===v||(v==='split'&&b.dataset.mxView==='questions');
       b.classList.toggle('on',on); b.setAttribute('aria-pressed',on?'true':'false'); } });
 }
 function mxWritesResponses(s){
   const ws=s&&s.workspace; return !!(ws&&typeof ws==='object'&&ws.kind==='grid');
+}
+/* A STRUCTURED TABLE IS NEVER SILENTLY CLIPPED. Three steps, in order, measured each time: fit as authored;
+   if it does not fit, compact the cells (a moderate reduction, not a redesign); if a legitimately wide
+   authored table still does not fit, give the TABLE its own horizontal scroll with a visible edge, so the
+   columns beyond the boundary are reachable and evidently there. The question pane itself never overflows. */
+function mxFitTables(root){
+  (root||document).querySelectorAll('.mx-tblwrap').forEach(wrap=>{
+    const tbl=wrap.querySelector('table'); if(!tbl) return;
+    /* The two intrinsic widths are measured ONCE and remembered, so re-running this on every resize is a
+       pair of comparisons rather than a remove-measure-add cycle — which would otherwise leave a frame in
+       which the table is briefly un-compacted and un-scrollable, and that frame is exactly what a
+       screenshot or a gate can catch. */
+    if(!wrap.dataset.mxTblNat){
+      const wasC=wrap.classList.contains('mx-tbl-compact');
+      wrap.classList.remove('mx-tbl-compact'); wrap.dataset.mxTblNat=tbl.scrollWidth;
+      wrap.classList.add('mx-tbl-compact');    wrap.dataset.mxTblMin=tbl.scrollWidth;
+      wrap.classList.toggle('mx-tbl-compact',wasC);
+    }
+    const avail=wrap.clientWidth, nat=+wrap.dataset.mxTblNat, min=+wrap.dataset.mxTblMin;
+    const compact=nat>avail+1;
+    wrap.classList.toggle('mx-tbl-compact',compact);
+    const scrolls=(compact?min:nat)>avail+1;
+    if(scrolls) wrap.setAttribute('data-mx-tblscroll','1'); else wrap.removeAttribute('data-mx-tblscroll');
+  });
 }
 function mxNavLabel(s){ return (s&&(s.navLabel||s.title||s.heading))||TYPELAB[s&&s.type]||'Page'; }
 function mxCrumb(s){
@@ -7181,6 +7278,7 @@ function wireResponsive(){
   root.querySelectorAll('[data-mx-sheet]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,b.dataset.mxSheet)));
   root.querySelectorAll('[data-mx-sheet-add]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,null)));
   mxSetView(mxView());
+  mxObserve(root); mxResolveFit();
   root.querySelectorAll('[data-mx-mode]').forEach(b=>b.addEventListener('click',()=>{
     const m=MX_MODES.filter(x=>x.id===b.dataset.mxMode)[0]; if(!m) return;
     const t=document.querySelector(m.target); if(t) t.click();
@@ -9866,7 +9964,7 @@ function tpRT(){ return (TP_RUNTIME[cur]=TP_RUNTIME[cur]||{ans:{},shown:{}}); }
 /* The payload kinds. A response is not an opaque value: a typed answer, a stroke set, a graph construction
    and a table are different things, and a bundle that flattened them would lose the distinction the
    marking, replay and (later) collection all depend on. Closed vocabulary, reported, never coerced. */
-const RESP_KINDS=['text','ink','graph','geometry','table'];
+const RESP_KINDS=['text','ink','graph','geometry','table','workbook'];
 let TP_RESP={};                                    /* { pageId: { responseId: {kind, value} } } */
 const tpRespId=(x)=>(x&&x.id!=null)?String(x.id).trim():'';
 
@@ -9905,29 +10003,50 @@ function tpRespGet(pageId,responseId){
 /* A DETERMINISTIC, JSON-SERIALISABLE SNAPSHOT that shares no reference with the live store: the caller
    (lessonEnd, an adapter, a test) must not be able to mutate a student's work by holding the result.
    Keys are sorted so two runs over the same state produce byte-identical JSON. */
-/* THE INK PAYLOAD. A workbook is one response with several sheets, so `value` is
-     { current:'w1', pages:[ {id:'w1', strokes:[…]}, {id:'w2', strokes:[…]} ] }
-   and the bundle can name page / workbook page / kind / payload without any of them being a position.
-   Sheet ids are minted from a counter that only ever goes up: adding a sheet never renumbers an existing
-   one, so a stroke cannot change owner. Nothing here reorders `pages`, and nothing reads its index as
-   identity — `current` is an id, not an offset. */
-function tpInkDoc(pageId,respId){
+/* THE WORKBOOK PAYLOAD. One response, TWO retained modalities:
+     { mode:'write',
+       ink:  { current:'w1', pages:[ {id:'w1', strokes:[…]}, … ] },
+       text: { current:'w1', pages:[ {id:'w1', text:'…'},    … ] } }
+   `responseMode` chooses which workspace is VISIBLE; it never deletes the other. A student who switches to
+   Type and back finds their ink exactly as they left it, and vice versa, because a switch writes `mode` and
+   touches nothing else. The bundle can therefore name page / modality / sheet / payload, and lessonEnd can
+   submit whatever is non-empty with its modality alongside it — none of which is a position.
+   Sheet ids are minted from a counter that only ever goes up, so adding a sheet never renumbers an existing
+   one and a stroke cannot change owner. `current` is an id, not an offset, and nothing reorders `pages`. */
+const WB_MODALITIES={write:'ink', type:'text'};
+function tpWorkbookDoc(pageId,respId){
   const e=tpRespGet(pageId,respId);
-  let v=(e&&e.kind==='ink'&&e.value&&Array.isArray(e.value.pages))?e.value:null;
-  if(!v){ v={current:'w1', pages:[{id:'w1', strokes:[]}]}; tpRespSet(pageId,respId,'ink',v); }
+  let v=(e&&e.kind==='workbook'&&e.value&&e.value.ink)?e.value:null;
+  if(!v){
+    v={mode:'write', ink:{current:'w1', pages:[{id:'w1', strokes:[]}]}, text:{current:'w1', pages:[{id:'w1', text:''}]}};
+    tpRespSet(pageId,respId,'workbook',v);
+  }
   return v;
+}
+function tpInkDoc(pageId,respId){ return tpWorkbookDoc(pageId,respId).ink; }
+function tpTextDoc(pageId,respId){ return tpWorkbookDoc(pageId,respId).text; }
+/* Which modality is live is a LESSON-level fact, recorded on the response so the bundle carries it. */
+function tpWorkbookMode(pageId,respId,mode){
+  const d=tpWorkbookDoc(pageId,respId);
+  if(mode&&WB_MODALITIES[mode]) d.mode=mode;
+  return d.mode;
 }
 function tpInkSheet(pageId,respId,slot){
   const d=tpInkDoc(pageId,respId);
   for(const pg of d.pages) if(pg.id===slot) return pg;
   const pg={id:String(slot), strokes:[]}; d.pages.push(pg); return pg;
 }
+/* A sheet is added to BOTH modalities at once: the sheets are the same sheets, and only what is written on
+   them differs by mode — so a student cannot end up with a Page 3 that exists in ink but not in type. */
 function tpInkAddSheet(pageId,respId){
-  const d=tpInkDoc(pageId,respId);
-  let n=0; d.pages.forEach(pg=>{ const m=/^w(\d+)$/.exec(pg.id); if(m) n=Math.max(n,+m[1]); });
-  const pg={id:'w'+(n+1), strokes:[]}; d.pages.push(pg); d.current=pg.id; return pg;
+  const d=tpWorkbookDoc(pageId,respId);
+  let n=0; d.ink.pages.forEach(pg=>{ const m=/^w(\d+)$/.exec(pg.id); if(m) n=Math.max(n,+m[1]); });
+  const id='w'+(n+1);
+  const pg={id, strokes:[]}; d.ink.pages.push(pg); d.text.pages.push({id, text:''});
+  d.ink.current=id; d.text.current=id; return pg;
 }
-function tpInkSetCurrent(pageId,respId,slot){ const d=tpInkDoc(pageId,respId); d.current=String(slot); return d; }
+function tpInkSetCurrent(pageId,respId,slot){ const d=tpWorkbookDoc(pageId,respId);
+  d.ink.current=String(slot); d.text.current=String(slot); return d.ink; }
 
 function tpRespBundle(){
   const out={};
