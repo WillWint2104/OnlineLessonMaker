@@ -542,6 +542,47 @@ mark('video');
   await p.close();
 }
 
+// ══ 8e. THE MATHEMATICS FAMILY IS ISOLATED ════════════════════════════════════════════════════════
+// Mathematics page templates are Mathematics-specific product decisions, not a universal page system,
+// and the legacy pack renderers are not their visual reference. The generalist/humanities page family is
+// a later, separate design; until it exists, the only thing the Mathematics shell may share with the old
+// world is INFRASTRUCTURE — esc(), navigation, A0's response identity, and the Figure engine. This gate
+// exists so that stays true by measurement rather than by intention.
+mark('isolation');
+{
+  const p = await newPage(1440, 900);
+  const seen = { classes: new Set(), pages: 0 };
+  for (const i of [NOTES, 1, 2, 3, PRACTICE, 5, 6, 7]) {
+    await boot(p, i);
+    const cls = await p.evaluate(() => {
+      const out = new Set();
+      document.querySelectorAll('.mx, .mx *').forEach((el) => el.classList.forEach((c) => out.add(c)));
+      return [...out];
+    });
+    seen.pages++; cls.forEach((c) => seen.classes.add(c));
+  }
+  // The allow-list is enumerated, not loosened: the shell's own classes, its one state class, and the
+  // Figure engine's surface (the plane, its focus panel, and the shared overlay mechanic they open with).
+  // Anything else — a pack renderer's `gl-`/`im-`/`mh-` class, a legacy `.card`, a `.qcard` — fails here.
+  const ALLOW = [/^mx/, /^tp-fig/, /^tp-fpanel/];
+  const ALLOW_EXACT = new Set(['on', 'tp-slide', 'tp-fclose', 'tp-overlay']);
+  const foreign = [...seen.classes].filter((c) => !ALLOW_EXACT.has(c) && !ALLOW.some((r) => r.test(c)));
+  ok('no class from a legacy pack renderer appears anywhere in a Mathematics page',
+     foreign.length === 0, foreign.length ? foreign.join(', ') : `${seen.classes.size} classes across ${seen.pages} pages, all shell or Figure engine`);
+  ok('the ONE documented shared seam is the Figure engine, and it is scoped to the figure host',
+     await p.evaluate(() => { go(0);
+       const carriers = [...document.querySelectorAll('.mx .tp-slide')];
+       return carriers.length === 1 && carriers[0].classList.contains('mx-figskin'); }),
+     'one .tp-slide, and it is .mx-figskin');
+  // The generalist family, when it is designed, gets its own theme namespace. Nothing may pre-empt it.
+  const ns = await p.evaluate(() => ({ themes: Object.keys(PAGES),
+    mathsOnly: Object.keys(PAGES).length === 1 && Object.keys(PAGES)[0] === 'mathematics',
+    legacyUntouched: ['imperium', 'microhistory', 'geolearn', 'scholarmath'].every((t) => !PAGES[t]) }));
+  ok('the responsive namespace holds exactly one theme — mathematics', ns.mathsOnly, ns.themes.join(', '));
+  ok('no legacy theme has been given a responsive page family', ns.legacyUntouched);
+  await p.close();
+}
+
 // ══ 9. author text can never become markup ════════════════════════════════════════════════════════
 mark('escape');
 {
@@ -586,7 +627,7 @@ mark('legacy');
 }
 
 // ── report ────────────────────────────────────────────────────────────────────────────────────────
-const SECTIONS = ['mode', 'release', 'responsive', 'chrome', 'persistent', 'narrow', 'nav', 'workspace', 'viewport', 'passive', 'video', 'escape', 'legacy'];
+const SECTIONS = ['mode', 'release', 'responsive', 'chrome', 'persistent', 'narrow', 'nav', 'workspace', 'viewport', 'passive', 'video', 'isolation', 'escape', 'legacy'];
 const missing = SECTIONS.filter((s) => !ran.has(s));
 ok('every section ran', missing.length === 0, missing.length ? 'missing: ' + missing.join(', ') : `${SECTIONS.length} sections`);
 ok('no page error or console error while rendering', pageErrs.length === 0, pageErrs.slice(0, 3).join(' | '));

@@ -8,6 +8,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **The page-family boundary, written down and measured.** Three families, deliberately separate:
+  Mathematics (responsive, purpose-built templates), a future generalist/humanities family (its own base
+  layout language plus subject overlays, designed from scratch when Mathematics is stable), and the legacy
+  fixed-canvas renderers (untouched until a migration is commissioned). The Mathematics templates are NOT a
+  universal page system and the legacy pages are NOT a visual reference for the future one — they are kept
+  only as `legacy-canvas-control` / `legacy-video-control`. Recorded in HANDOFF.md §9, at the `PAGES`
+  registry, and in the proof-set script; enforced by a new `isolation` section in
+  `verify-responsive-shell.mjs` that walks every Mathematics page and fails on any class outside the
+  shell's own or the Figure engine's, asserts the single documented shared seam, and asserts that `PAGES`
+  holds exactly one theme. Audited: the shell's only calls out of itself are `esc()`, `go()`, `tpRespId()`
+  and `fragFigure()` — no pack renderer is referenced.
 - **The coordinate plane is a viewport, not a picture (figure engine).** Axis EXTENT and tick GENERATION
   were the same concern: `figSvgBody` drew each axis from `sx(dom.x0)` to `sx(dom.x1)`, and `figView` maps
   the domain exactly onto the plot rect — the box minus the gutters that hold the tick labels — so the axis

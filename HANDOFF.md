@@ -275,6 +275,46 @@ YouTube embeds) — `lessons/*.html` only *warns*, by design.
 
 ## 9. Roadmap / next up
 
+### Page-family architecture — the boundary, decided
+
+Three families, deliberately separate. Nothing here is a temporary staging arrangement; the split is the
+design.
+
+```
+Mathematics            responsive, purpose-built page templates (Notes, Worked Examples, Video,
+                       Interactive, Practice — Equations / Graphs / Geometry, Summary).
+                       Registered through registerPage() into PAGES['mathematics'].
+
+Generalist / Humanities   a SEPARATE future responsive page family: shared structural templates +
+                       flexible blocks, with subject/theme overlays on top
+                       (generalist base page → humanities theme → Rome / Egypt / Geography / Business).
+                       Not designed yet. Designed from scratch when Mathematics is stable.
+
+Legacy themes/pages    the existing fixed-canvas renderers (geolearn, imperium, microhistory, rome,
+                       ww1, wellbeing, egypt). UNTOUCHED until that family exists and a migration is
+                       explicitly commissioned.
+```
+
+**The Mathematics templates are not a universal page system.** Notes / Worked Examples / Practice / the
+graph workspace are Mathematics-specific product decisions. The generalist family will need different
+compositions — reading page, image + text, source analysis, document / quotation analysis, video, guided
+response, comparison, timeline / sequence, map / spatial, infographic / data, and probably investigation —
+and that is where the block system earns its keep. Do not generalise a Mathematics template to reach them.
+
+**The legacy pages are not a visual reference.** `legacy-canvas-control` and `legacy-video-control` in
+`scripts/shots-mathematics.mjs` are the shipped geolearn lesson, kept only to prove the new work does not
+regress it. They look like the older product generation, they are not the direction for the future
+humanities system, and they must not be restyled in a Mathematics branch. When the generalist family is
+designed, the old geolearn/imperium pages are evidence of CONTENT needs, never of visual direction.
+
+The isolation is measured, not intended: `scripts/verify-responsive-shell.mjs` (section `isolation`)
+walks every Mathematics page and fails if any class outside the shell's own or the Figure engine's appears
+in it, asserts the single documented shared seam (the figure host carries `.tp-slide` to reach the engine's
+scoped rules, and re-points the slot palette so no legacy theme styling leaks), and asserts that `PAGES`
+holds exactly one theme. The Mathematics shell's only calls out of itself are `esc()`, `go()`,
+`tpRespId()` and `fragFigure()` — escaping, navigation, response identity, and the Figure engine. No pack
+renderer is referenced.
+
 - **Figure engine** (`docs/figure-engine/`) — the active track, and the one this roadmap had not been
   recording. **Stage 1a–1c** (view, uniform-gap pill collision, construction DAG), **Stage 2/2b** (graph
   front-end, focused workspace), **UI-1** (shared Figure Shell + viewport-level focus), **Stage 2c**

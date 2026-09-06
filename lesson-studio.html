@@ -6856,6 +6856,16 @@ function registerBlock(type,theme,pageFn,fragFn){ (REGISTRY[type]||(REGISTRY[typ
    responsive template belongs to the theme that owns it, and the whole namespace for a theme has to be
    answerable in one lookup on every render.
 
+   THESE TEMPLATES ARE NOT A UNIVERSAL PAGE SYSTEM, and that is a decision, not a gap. Notes / Worked
+   Examples / Practice / the graph workspace are MATHEMATICS product decisions. The generalist/humanities
+   family — reading page, source analysis, document analysis, comparison, timeline, map, infographic,
+   investigation — is a separate future design with its own base layout language and subject overlays; it
+   gets its own theme namespace here, and nothing in this block is to be stretched to reach it. The legacy
+   pack renderers are not its visual reference either: they are kept only as non-regression controls. See
+   HANDOFF.md §9 "Page-family architecture", and the `isolation` section of verify-responsive-shell.mjs,
+   which fails if anything but the shell's own classes and the Figure engine's turns up in a Mathematics
+   page.
+
    NOTHING IS SHADOWED, AND THAT IS A DECISION STILL OPEN. A type registered here would win over
    REGISTRY[type][theme], and two names in the approved page vocabulary — `video` and `interactive` —
    are already registered for mathematics as canvas pages. Taking those names measurably costs

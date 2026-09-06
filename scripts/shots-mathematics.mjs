@@ -15,6 +15,11 @@
 //                   allowed to influence a Mathematics renderer. `legacy-video-control` in particular is
 //                   the OLD geolearn video page; the Mathematics video design is `mathematics-video-shell`.
 //
+// The legacy pages are ALSO not the direction for the future generalist/humanities page family. That is a
+// separate design phase, run after Mathematics is stable, with its own base layout language and subject
+// overlays; these pages will be evidence of CONTENT needs then, never of visual direction. Do not redesign
+// them in a Mathematics branch. See HANDOFF.md §9 "Page-family architecture".
+//
 // (The mechanical form of the legacy controls is verify-corpus-identity's 250 byte-identical render units.)
 import http from 'node:http';
 import fs from 'node:fs';
