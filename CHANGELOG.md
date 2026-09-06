@@ -8,6 +8,30 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **The coordinate plane is a viewport, not a picture (figure engine).** Axis EXTENT and tick GENERATION
+  were the same concern: `figSvgBody` drew each axis from `sx(dom.x0)` to `sx(dom.x1)`, and `figView` maps
+  the domain exactly onto the plot rect — so the axis stopped at the label gutter and the last labelled tick
+  was the end of the axis. `figView` now also returns `view`, the same mapping evaluated at the box edges,
+  i.e. the mathematical range the whole svg covers. The transform is untouched — `sx/sy/ix/iy/pxPerX/pxPerY/dom`
+  are byte-identical, so every measurement, label placement and geometry solve is unchanged — and axes, grid
+  and plotted curves now run to the viewport boundary while ticks and their labels are still generated from
+  the domain. A figure inside a `[data-fig-viewport]` host also takes its HEIGHT from that container instead
+  of deriving one from its width, so the plane owns the whole region and its shape follows the region's:
+  measured, a 628×636 container gives an 11.4 × 11.5-unit viewport and a 628×298 one gives 24.1 × 11.4.
+  Tick DENSITY now follows how big the plane is drawn (a constant target of 5 put 2.5-unit steps, and so
+  decimal labels, on a wide viewport), `figGraph` hands the same density to `figTickBoxes` so the printed
+  numbering and the obstacle set it contributes cannot disagree, the origin prints as `0` rather than `0.0`,
+  and a negative tick takes the minus sign (U+2212) the point identifiers beside it already used.
+  `verify-figure-render`'s baseline was re-recorded for this: 48 of 240 units moved, all graph figures, all
+  through tick density — every box size identical, nothing added or removed. `verify-label-placement`
+  (927/927) and `verify-geometry-semantics` (204/204) are unchanged.
+- **The Notes representation workspace renders the real Figure path.** It was a hand-drawn stand-in; it is
+  now `fragFigure` → `figGraph` → `figSvgBody` on an authored `figure` spec, registered in FIGX and
+  re-solved through `figInlineSolve` against its host. Graph Practice and the Interactive workspace inherit
+  the viewport behaviour rather than reinventing it.
+- **`scripts/shots-mathematics.mjs`** — the Stage A proof set, reproducible in one command, with the legacy
+  canvas control as a permanent member: a shipped geolearn lesson rendered beside the new work, whose job is
+  to look exactly as it always has.
 - **A0 — response identity, and the seam a submission will one day use.** Student answers now live in
   `TP_RESP`, keyed by an AUTHORED page `id` and an authored response `id` rather than by array position.
   `TP_RUNTIME` — keyed by `cur`, the slide index — stays exactly as it is for ephemera, because it is the

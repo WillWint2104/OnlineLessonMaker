@@ -1704,7 +1704,8 @@ body.respo .main{min-width:0;}
 .mx-page[data-mx-surface="panel"] .mx-content,.mx-page[data-mx-surface="panel"] .mx-work{display:flex;flex-direction:column;}
 .mx-page[data-mx-surface="panel"] .mx-content>*,.mx-page[data-mx-surface="panel"] .mx-work>*{flex:1 1 auto;min-height:0;}
 .mx-panel.mx-flush{display:flex;flex-direction:column;}
-.mx-panel.mx-flush>.mx-figure:not([hidden]){flex:1 1 auto;display:flex;align-items:center;justify-content:center;}   /* :not([hidden]) — a bare display:flex would un-hide the inactive tab panels */
+.mx-panel.mx-flush>.mx-figure:not([hidden]){flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;}   /* :not([hidden]) — a bare display:flex would un-hide the inactive tab panels */
+.mx-panel.mx-flush>.mx-figure[data-fig-viewport]:not([hidden]){display:block;}
 .mx-panel.mx-flush>.mx-figure>svg{max-height:100%;}
 .mx-page:focus{outline:none;}
 .mx-head{display:flex;align-items:flex-start;gap:26px;margin-bottom:20px;}
@@ -1788,6 +1789,33 @@ body.respo .main{min-width:0;}
 .mx-tab.on{background:var(--mx-green-tint);color:var(--mx-green);font-weight:600;border-bottom-color:var(--mx-green);}
 .mx-figure{padding:14px;background:var(--mx-white);}
 .mx-figure svg{display:block;width:100%;height:auto;}
+/* The plane fills the region. `.mx-figstage` is absolutely positioned so `.tp-fig-stage` gets its height
+   from THIS container and never from the svg it holds — which is what stops the measured height feeding
+   back into the box it was measured for. `.tp-slide` is on the host only to reach the figure's own 75
+   scoped rules and the mathematics slot palette; its slide LAYOUT is neutralised here. */
+/* The host carries `.tp-slide` only to REACH the figure's 75 scoped rules and the mathematics slot
+   palette. It is a VIEWPORT inside the Mathematics shell, not a slide, so it takes the shell's white /
+   near-black palette instead: re-pointing the slots is one declaration block rather than 75 overrides.
+   (0,4,0) is deliberate — `:root[data-theme="mathematics"] .tp-slide` is (0,3,0) and sits LATER in the
+   sheet, so out-ranking it needs one more class, not a later rule.) */
+.mx .mx-figure .mx-figskin.tp-slide{
+  position:static;inset:auto;display:flex;flex-direction:column;overflow:visible;height:auto;min-height:0;flex:1 1 auto;
+  background:transparent;color:var(--mx-ink-body);
+  --background:transparent;--surface:var(--mx-white);--surface-lowest:var(--mx-white);--surface-container-low:var(--mx-white);
+  --graph-surface:var(--mx-white);--graph-grid:var(--mx-grid);--graph-axis:var(--mx-ink);--student-ink:var(--mx-green);
+  --outline-variant:var(--mx-line);--outline:var(--mx-ink-3);--on-surface:var(--mx-ink-body);--on-surface-variant:var(--mx-ink-2);
+  --primary:var(--mx-green);--primary-fixed:var(--mx-green-pale);--poi:var(--mx-green);--tp-rad-btn:10px;--tp-cardsh:none;
+}
+.mx .tp-slide:not(.mx-figstage){position:static;inset:auto;display:block;overflow:visible;height:auto;min-height:0;background:transparent;}
+.mx-figure[data-fig-viewport]{position:relative;padding:10px;display:block;}
+.mx .mx-figstage{position:absolute;inset:10px;min-height:0;display:flex;flex-direction:column;}
+.mx .mx-figstage .tp-fig{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;margin:0;padding:0;border:0;background:transparent;box-shadow:none;}
+.mx .mx-figstage .tp-fig-stage{flex:1 1 auto;min-height:0;}
+.mx .mx-figstage .tp-fig-svg{width:100%;height:100%;border-color:var(--mx-line);background:var(--mx-white);border-radius:10px;}
+/* the shell's identity strip is the Mathematics tab row here — keep only the expand affordance */
+.mx .mx-figstage .tp-fig-head{padding:0 0 6px;border:0;min-height:0;justify-content:flex-end;background:transparent;}
+.mx .mx-figstage .tp-fig-ident{display:none;}
+.mx .mx-figstage .tp-fig-foot{padding:5px 0 0;border:0;background:transparent;}
 
 .mx-content,.mx-work{min-width:0;}
 /* figure text — the drawing inherits the page's own faces and ink, never its own palette */
@@ -2020,8 +2048,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   /* v2 Phase 2b width authority (Layer 3) — cards widen up to the canvas measure (was a 1024/1040/1120 spread); .tp-gr-wrap stays narrow (no 75ch prose cap in this theme) */
   --tp-measure:1140px;--tp-measure-narrow:880px;--tp-measure-read:700px;
   background:var(--desk);font-family:var(--tp-body);color:var(--on-surface);}
-:root[data-theme="mathematics"] .tp-slide,
-:root[data-theme="mathematics"] .rp{   /* A: the responsive shell is a token consumer too — same slot palette, no second source of colour */
+:root[data-theme="mathematics"] .tp-slide{
   /* Mathematics slot palette — "Paper & Board". Warm paper reading surface, blue-black ink, deep board
      green (--primary doubles as the point-of-interest green). Every value is a slot definition; elements
      are only ever coloured via var(--slot) (no literal colour applied to a styling property). EB Garamond
@@ -7092,44 +7119,21 @@ registerWorkspace('workbook',(ws)=>{
 /* The representation workspace — the tabbed visual beside a notes page. The figure is a FIXTURE drawing
    at Stage A: the real Graph and Geometry engines are wired in at Stage F, and drawing a stand-in here
    is what lets the shell be judged now without pulling those engines into this pass. */
-function mxParabola(){
-  const W=580,H=470,ML=30,MR=20,MT=18,MB=30;
-  const u=(H-MT-MB)/11, ox=ML+(W-ML-MR)/2, oy=MT+6*u;      /* y from +6 down to -5, as the approved screen */
-  const X=(x)=>ox+x*u, Y=(y)=>oy-y*u, f=(v)=>v.toFixed(1);
-  const grid=[];
-  for(let x=-6;x<=6;x++) grid.push(`<line x1="${f(X(x))}" y1="${MT}" x2="${f(X(x))}" y2="${H-MB}"/>`);
-  for(let y=-5;y<=6;y++) grid.push(`<line x1="${ML}" y1="${f(Y(y))}" x2="${W-MR}" y2="${f(Y(y))}"/>`);
-  let d='';
-  for(let x=-2.36;x<=2.361;x+=0.04) d+=(d?'L':'M')+f(X(x))+' '+f(Y(x*x));
-  const neg=(n)=>(n<0?'−':'')+Math.abs(n);
-  const ticks=[-5,-4,-3,-2,-1,1,2,3,4,5].map(x=>`<text x="${f(X(x))}" y="${f(Y(0)+18)}" text-anchor="middle">${neg(x)}</text>`).join('')
-    +[5,4,3,2,1,-1,-2,-3,-4,-5].map(y=>`<text x="${f(X(0)-10)}" y="${f(Y(y)+4.5)}" text-anchor="end">${neg(y)}</text>`).join('');
-  const pt=(x,y,lab,dx,dy,anchor)=>`<circle cx="${f(X(x))}" cy="${f(Y(y))}" r="5.5" fill="var(--mx-green)"/>`
-    +`<text class="mxg-lab" x="${f(X(x)+dx)}" y="${f(Y(y)+dy)}"${anchor?` text-anchor="${anchor}"`:''}>${lab}</text>`;
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="The graph of y equals x squared: a parabola opening upwards with its vertex at the origin, passing through minus two comma four and two comma four.">
-    <g stroke="var(--mx-grid)" stroke-width="1">${grid.join('')}</g>
-    <defs><marker id="mxa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-      <path d="M0 1 10 5 0 9z" fill="var(--mx-ink)"/></marker></defs>
-    <line x1="${ML-8}" y1="${f(Y(0))}" x2="${W-MR+8}" y2="${f(Y(0))}" stroke="var(--mx-ink)" stroke-width="1.6"
-      marker-start="url(#mxa)" marker-end="url(#mxa)"/>
-    <line x1="${f(X(0))}" y1="${H-MB}" x2="${f(X(0))}" y2="${MT-8}" stroke="var(--mx-ink)" stroke-width="1.6" marker-end="url(#mxa)"/>
-    <path d="${d}" fill="none" stroke="var(--mx-green)" stroke-width="2.4" stroke-linecap="round"/>
-    <g class="mxg-t">${ticks}
-      <text x="${W-MR+2}" y="${f(Y(0)-11)}" text-anchor="end" font-style="italic">x</text>
-      <text x="${f(X(0)+11)}" y="${MT+8}" font-style="italic">y</text></g>
-    ${pt(-2,4,'(−2, 4)',-13,5,'end')}${pt(2,4,'(2, 4)',13,5)}
-    <circle cx="${f(X(0))}" cy="${f(Y(0))}" r="5.5" fill="var(--mx-green)"/>
-    <text class="mxg-lab" x="${f(X(0)+9)}" y="${f(Y(0)+34)}">(0, 0)</text>
-    <rect x="${W-MR-104}" y="${MT+26}" width="92" height="34" rx="8" fill="var(--mx-green-pale)"/>
-    <text class="mxg-chip" x="${W-MR-58}" y="${MT+49}" text-anchor="middle"><tspan font-style="italic">y</tspan> = <tspan font-style="italic">x</tspan><tspan font-size="12" dy="-7">2</tspan></text>
-  </svg>`;
-}
-registerWorkspace('representation',(ws)=>{
+/* The representation workspace — the tabbed visual beside a notes page. The plane is the REAL Figure path
+   (`fragFigure` → figGraph → figSvgBody), not a drawing of one: it is registered in FIGX, it re-solves
+   through figInlineSolve against its host, and `data-fig-viewport` is what tells that solve to take its
+   HEIGHT from this container too. So the coordinate plane owns the whole representation region, and the
+   Graph Practice and Interactive workspaces inherit the same behaviour rather than reinventing it. */
+registerWorkspace('representation',(ws,s,i)=>{
   const tabs=(ws.tabs&&ws.tabs.length?ws.tabs:['Graph','Table','Coordinates']);
   const bar=tabs.map((t,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}" data-mx-tab="t${k}"
     aria-selected="${k?'false':'true'}">${esc(t)}</button>`).join('');
-  const panes=tabs.map((t,k)=>`<div class="mx-figure" data-mx-panel="t${k}" role="tabpanel"${k?' hidden':''}>${k===0
-    ?mxParabola():`<div class="mx-ph">The ${esc(t.toLowerCase())} view is filled in a later stage.</div>`}</div>`).join('');
+  const fig=(ws.figure&&typeof ws.figure==='object'&&!Array.isArray(ws.figure))?ws.figure:null;
+  const plane=fig
+    ? `<div class="mx-figstage"><div class="mx-figskin tp-slide">${fragFigure(fig,'mxws-'+esc(String(tpRespId(s)||i)))}</div></div>`
+    : `<div class="mx-ph">This representation workspace has no <code>figure</code> to draw.</div>`;
+  const panes=tabs.map((t,k)=>`<div class="mx-figure"${k===0?' data-fig-viewport':''} data-mx-panel="t${k}" role="tabpanel"${k?' hidden':''}>${k===0
+    ?plane:`<div class="mx-ph">The ${esc(t.toLowerCase())} view is filled in a later stage.</div>`}</div>`).join('');
   return `<div class="mx-panel mx-flush"><div class="mx-tabs" role="tablist" data-mx-tabset>${bar}</div>${panes}</div>`;
 });
 
@@ -7863,7 +7867,16 @@ function figNiceTicks(min, max, target){
   for(let v=Math.ceil((min-1e-9)/step)*step; v<=max+1e-9; v+=step) ticks.push(+v.toFixed(10));   // round kills float drift (0.30000000004). CodeRabbit #1 (toFixed(10)/8-dp cap collapse for a ~1e-12 domain) is a KNOWN NON-ISSUE: no real coordinate-plane domain approaches that scale, so no guard is added by design.
   return {step, ticks, decimals};
 }
-function figFmtTick(v, d){ return (Math.abs(v)<1e-9?0:v).toFixed(d); }
+function figFmtTick(v, d){ return Math.abs(v)<1e-9?'0':v.toFixed(d).replace('-','\u2212'); }   // the origin is 0, never "0.0"; and a negative tick takes the MINUS sign (U+2212), not a hyphen — the plotted point identifiers beside it already do
+/* HOW MANY ticks a plane wants is a property of how big it is drawn, not a constant. At a fixed target of 5
+   a wide viewport lands on 2.5-unit steps (and therefore decimal labels) where 2 would read better, and a
+   small one crowds. Density and RANGE stay separate concerns: this only chooses the target figNiceTicks
+   aims at, and figGraph hands the SAME number to figTickBoxes so the printed numbering and the obstacle
+   set it contributes can never disagree. */
+function figTickDensity(box){
+  const W=(box&&+box.W)||FIG_BOX0.W;
+  return Math.max(4, Math.min(10, Math.round(W/110)));
+}
 // §1.1 coordinate/viewport — exact reversible math↔screen mapping (+inverse). Arbitrary reals, NO snap.
 //   aspect 'equal' locks equal px-per-unit (expands the SHORTER domain, centered); 'stretch' fills each axis.
 function figView(domain, box, aspect){
@@ -7877,7 +7890,14 @@ function figView(domain, box, aspect){
   }
   const sx=x=> pL+(x-x0)/(x1-x0)*plotW, sy=y=> pT+(y1-y)/(y1-y0)*plotH;
   const ix=px=> x0+(px-pL)/plotW*(x1-x0), iy=py=> y1-(py-pT)/plotH*(y1-y0);
-  return { sx, sy, ix, iy, pxPerX:plotW/(x1-x0), pxPerY:plotH/(y1-y0), dom:{x0,x1,y0,y1}, plotW, plotH };
+  /* THE DRAWABLE VIEWPORT, in math units. `dom` is mapped onto the PLOT RECT — the box minus the gutters
+     that hold the tick labels — so drawing an axis from dom.x0 to dom.x1 stops it at the gutter and makes
+     the last labelled tick the end of the axis. `view` is the SAME mapping evaluated at the box edges: the
+     mathematical range the whole svg covers. The transform is untouched (sx/sy/ix/iy/pxPerX/pxPerY/dom are
+     byte-identical) — this only names a range that was always there, so axis EXTENT and tick GENERATION can
+     be separate concerns: the axis runs to the viewport boundary, the ticks come from the domain. */
+  const view={ x0:ix(0), x1:ix(W), y0:iy(H), y1:iy(0) };
+  return { sx, sy, ix, iy, pxPerX:plotW/(x1-x0), pxPerY:plotH/(y1-y0), dom:{x0,x1,y0,y1}, view, plotW, plotH };
 }
 // §1.6 SVG primitive layer — token-styled draw calls (colours via CSS classes → theme tokens; NO inline hex).
 function figNum(v){ return String(Math.round(v*1000)/1000); }   // CodeRabbit #2: serialise coords at ~0.0005-unit precision (was toFixed(2) ≈0.005), trailing zeros trimmed — the mapping itself stays exact (figView returns raw floats)
@@ -8231,7 +8251,7 @@ function figParse(src){
 // then split into subpaths so a discontinuity/asymptote is a BREAK, never a connector. Points beyond a
 // one-range band are dropped (the root <svg> clips), so no absurd coordinate ever reaches a path attribute.
 function figSampleFn(fn, V, opts){
-  const D=V.dom, band=D.y1-D.y0, yLo=D.y0-band, yHi=D.y1+band;
+  const D=(opts&&opts.range)||V.dom, band=D.y1-D.y0, yLo=D.y0-band, yHi=D.y1+band;   // `range`: sample across the drawable viewport, so a curve reaches the boundary like the axes do
   const N0=(opts&&opts.n0)||24, MAXD=(opts&&opts.maxDepth)||9, TOL=(opts&&opts.tol)||0.25;
   const at=x=>{ let y; try{ y=+fn(x); }catch(e){ y=NaN; } const ok=isFinite(y); return {x,y,px:V.sx(x),py:ok?V.sy(y):NaN,ok}; };
   const samples=[];
@@ -8372,7 +8392,7 @@ function figGraph(b, box){
   const fit=figFitAndLayout(pts, dom0, box, aspect), V=fit.V;               // §1.3/§1.4 — view and identifier placement solved together
   if(domOK) pts.forEach(p=>{ if(p.x<dom0.xMin||p.x>dom0.xMax||p.y<dom0.yMin||p.y>dom0.yMax)
     errors.push('point '+p.id+' '+figCoordText(p)+' lies outside the stated domain — the view was expanded to include it'); });
-  const curves=fns.map(f=>{ const s=figSampleFn(f.fn,V);
+  const curves=fns.map(f=>{ const s=figSampleFn(f.fn,V,{range:V.view||V.dom});
     if(!s.paths.length) errors.push('function "'+f.src+'" is not defined (or never on-screen) anywhere in the domain — nothing plotted');
     return {src:f.src, label:f.label, paths:s.paths, samples:s.samples}; });
   const byId=Object.create(null); pts.forEach(p=>{ byId[p.id]=p; });
@@ -8389,7 +8409,7 @@ function figGraph(b, box){
   // placement 1b would have made, at 1b's cost. Segments are few, so they always stay in.
   const nSub=curves.reduce((a,c)=>a+c.paths.length,0);
   const painted=figPaintedArms(nSub<=20?curves:[],segs,V);
-  const furn=figTickBoxes(V,5);                                             // Stage 2c — the printed axis numbering is an obstacle too (inline density is figSvgBody's default of 5)
+  const furn=figTickBoxes(V,figTickDensity(box));                          // Stage 2c — the printed axis numbering is an obstacle too, at exactly the density figSvgBody will print
   const layout=figLayoutPills(pts,V,box,painted,furn);
   layout.forEach(L=>{ if(!L.valid) errors.push('identifier '+L.p.id+' could not be placed clear of the plotted geometry'); });
   const callouts=figLayoutCallouts(pts,V,box,layout.map(L=>L.box),painted,furn);
@@ -8774,12 +8794,12 @@ function figGeometry(b, box){
 // The painted BODY of a geometry figure — shared by the inline figure and the focused window, exactly as
 // figSvgBody is for graphs, so both paint through one code path.
 function figGeomBody(M, box, opt){
-  const o=opt||{}, V=M.V, D=V.dom;
+  const o=opt||{}, V=M.V, D=V.dom, P=V.view||D;
   const grid=(o.grid!=null)?!!o.grid:M.gridShown;
   let g='';
-  if(grid){ const xT=figNiceTicks(D.x0,D.x1,o.targetTicks||5), yT=figNiceTicks(D.y0,D.y1,o.targetTicks||5);
-    xT.ticks.forEach(v=>g+=figDraw.line(V.sx(v),V.sy(D.y0),V.sx(v),V.sy(D.y1),'tp-fig-grid'));
-    yT.ticks.forEach(v=>g+=figDraw.line(V.sx(D.x0),V.sy(v),V.sx(D.x1),V.sy(v),'tp-fig-grid')); }
+  if(grid){ const tt=o.targetTicks||figTickDensity(box), xT=figNiceTicks(D.x0,D.x1,tt), yT=figNiceTicks(D.y0,D.y1,tt);
+    figLinesAt(P.x0,P.x1,xT.step).forEach(v=>g+=figDraw.line(V.sx(v),V.sy(P.y0),V.sx(v),V.sy(P.y1),'tp-fig-grid'));
+    figLinesAt(P.y0,P.y1,yT.step).forEach(v=>g+=figDraw.line(V.sx(P.x0),V.sy(v),V.sx(P.x1),V.sy(v),'tp-fig-grid')); }
   let sh='';
   M.shapes.forEach(s2=>{ if(s2.kind==='polygon') sh+=figDraw.polygon(s2.pts.map(p=>[p.x,p.y]), s2.fill?'tp-fig-poly tp-fig-polyfill':'tp-fig-poly');
                          else if(s2.kind==='segment') sh+=figDraw.line(s2.a.x,s2.a.y,s2.b.x,s2.b.y,'tp-fig-seg'); });
@@ -8897,9 +8917,17 @@ function figFitK(stageW){ return FIG_FIT_K_BASE*figRespScale(stageW); }
    measured floor simply does not have. */
 const FIG_MIN_STAGE={ graph:340, geometry:420 };
 function figMinStageWidth(b){ return FIG_MIN_STAGE[(b&&b.figure==='geometry')?'geometry':'graph']; }
-function figFitBox(stageW){                                        // stageW = usable .tp-fig-stage width, the same quantity FIG_MIN_STAGE is expressed in
+/* A figure whose container GIVES it a height is a viewport, not a picture: it takes its height from the
+   container instead of deriving one from its width. With no such height — every legacy call site — the box
+   is exactly what it was, so nothing that does not opt in can move. The clamp keeps an extreme container
+   from producing a plane too tall or too flat to read. */
+const FIG_FILL_MIN=0.42, FIG_FILL_MAX=2.0;                        // H/W bounds when a container supplies the height
+function figFitBox(stageW, stageH){                                // stageW = usable .tp-fig-stage width, the same quantity FIG_MIN_STAGE is expressed in
   if(!(stageW>0)) return FIG_BOX0;
-  const W=Math.max(120,Math.round(stageW/figFitK(stageW))), H=Math.max(90,Math.round(W*FIG_FIT_ASPECT));
+  const k=figFitK(stageW), W=Math.max(120,Math.round(stageW/k));
+  const H=(stageH>0)
+    ? Math.max(90, Math.round(Math.min(Math.max(stageH/k, W*FIG_FILL_MIN), W*FIG_FILL_MAX)))
+    : Math.max(90,Math.round(W*FIG_FIT_ASPECT));
   const r=(pad,base,floor)=>Math.max(floor,Math.round(W*pad/base));  // FIG_BOX0's OWN gutter proportions, not figxBoxFor's — this box paints the inline card, and keeping its proportions keeps the card looking like itself
   return { W, H, padL:r(FIG_BOX0.padL,FIG_BOX0.W,24), padR:r(FIG_BOX0.padR,FIG_BOX0.W,12),
            padT:Math.max(10,Math.round(H*FIG_BOX0.padT/FIG_BOX0.H)), padB:Math.max(18,Math.round(H*FIG_BOX0.padB/FIG_BOX0.H)) };
@@ -9007,7 +9035,12 @@ function figInlineSolve(fig){
      can use the rect because the focused panel is reparented to body level, outside the scaled canvas. */
   const stageW=stage.offsetWidth;
   if(!(stageW>0)) return false;
-  const box=figFitBox(stageW), key=box.W+'x'+box.H;
+  /* The height is read ONLY inside a host that declares itself a viewport. Everywhere else `.tp-fig-stage`
+     is content-sized by the svg it holds, so measuring it would feed the painted height straight back into
+     the box it was painted from. Inside [data-fig-viewport] the stage is a flex child of a definite-height
+     box, so its height is the container's and cannot depend on what is drawn in it. */
+  const stageH=(fig.closest&&fig.closest('[data-fig-viewport]'))?stage.offsetHeight:0;
+  const box=figFitBox(stageW,stageH), key=box.W+'x'+box.H;
   if(fig.dataset.figBox===key) return false;                       // idempotent: the same host width yields the same box, so a repeat pass is a no-op (and a ResizeObserver cannot feed back on itself)
   const xb=fig.querySelector('[data-figx-open]'), e=xb&&FIGX[xb.dataset.figxOpen], b=e&&e.b;
   if(!b) return false;                                             // no registered spec (export/print path) — leave the first pass alone
@@ -9248,20 +9281,31 @@ function figxPanel(xid){
 /* The painted BODY of a graph — shared by the inline figure and the Stage-2b expanded view so both paint
    through exactly the same code. With no opt it reproduces the inline figure byte-for-byte; the expanded view
    passes a tick target (always routed through figNiceStep) and the feature toggles. */
+/* Lines at a fixed step across an arbitrary range. Deliberately separate from figNiceTicks: the STEP is a
+   property of the mathematical range being labelled, the EXTENT is a property of the drawable viewport, and
+   collapsing the two is what made the last labelled tick the end of the axis. */
+function figLinesAt(lo,hi,step){
+  const out=[]; if(!(step>0)||!isFinite(lo)||!isFinite(hi)) return out;
+  const n0=Math.ceil((lo-1e-9)/step), n1=Math.floor((hi+1e-9)/step);
+  if(!isFinite(n0)||!isFinite(n1)||n1-n0>4000) return out;                  // a pathological zoom asks for a solid fill, not a grid
+  for(let n=n0;n<=n1;n++) out.push(+(n*step).toFixed(10));
+  return out;
+}
 function figSvgBody(M, box, opt){
-  const o=opt||{}, V=M.V, D=V.dom, tt=o.targetTicks||5;
+  const o=opt||{}, V=M.V, D=V.dom, P=V.view||D, tt=o.targetTicks||figTickDensity(box);
   const grid=(o.grid!=null)?!!o.grid:M.gridShown, minor=(o.minor!=null)?!!o.minor:true;
-  const xT=figNiceTicks(D.x0,D.x1,tt), yT=figNiceTicks(D.y0,D.y1,tt);
-  const axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));   // y-axis screen-x, x-axis screen-y (clamped visible)
+  const xT=figNiceTicks(D.x0,D.x1,tt), yT=figNiceTicks(D.y0,D.y1,tt);       // ticks and their labels: from the MATHEMATICAL RANGE
+  const axisX=V.sx(Math.min(Math.max(0,P.x0),P.x1)), axisY=V.sy(Math.min(Math.max(0,P.y0),P.y1));   // y-axis screen-x, x-axis screen-y (clamped into the viewport)
   let g='';
   if(grid){
     if(minor){ const mnx=xT.step/5, mny=yT.step/5;                          // two-tier grid: minor at step/5, major at step
-      for(let v=Math.ceil((D.x0-1e-9)/mnx)*mnx; v<=D.x1+1e-9; v+=mnx) g+=figDraw.line(V.sx(v),V.sy(D.y0),V.sx(v),V.sy(D.y1),'tp-fig-grid-minor');
-      for(let v=Math.ceil((D.y0-1e-9)/mny)*mny; v<=D.y1+1e-9; v+=mny) g+=figDraw.line(V.sx(D.x0),V.sy(v),V.sx(D.x1),V.sy(v),'tp-fig-grid-minor'); }
-    xT.ticks.forEach(v=>g+=figDraw.line(V.sx(v),V.sy(D.y0),V.sx(v),V.sy(D.y1),'tp-fig-grid'));
-    yT.ticks.forEach(v=>g+=figDraw.line(V.sx(D.x0),V.sy(v),V.sx(D.x1),V.sy(v),'tp-fig-grid'));
+      figLinesAt(P.x0,P.x1,mnx).forEach(v=>g+=figDraw.line(V.sx(v),V.sy(P.y0),V.sx(v),V.sy(P.y1),'tp-fig-grid-minor'));
+      figLinesAt(P.y0,P.y1,mny).forEach(v=>g+=figDraw.line(V.sx(P.x0),V.sy(v),V.sx(P.x1),V.sy(v),'tp-fig-grid-minor')); }
+    figLinesAt(P.x0,P.x1,xT.step).forEach(v=>g+=figDraw.line(V.sx(v),V.sy(P.y0),V.sx(v),V.sy(P.y1),'tp-fig-grid'));
+    figLinesAt(P.y0,P.y1,yT.step).forEach(v=>g+=figDraw.line(V.sx(P.x0),V.sy(v),V.sx(P.x1),V.sy(v),'tp-fig-grid'));
   }
-  const ax=figDraw.line(V.sx(D.x0),axisY,V.sx(D.x1),axisY,'tp-fig-axis')+figDraw.line(axisX,V.sy(D.y0),axisX,V.sy(D.y1),'tp-fig-axis');
+  // AXIS EXTENT IS THE VIEWPORT, never the last tick: the plane continues past the numbering, as a plane does.
+  const ax=figDraw.line(V.sx(P.x0),axisY,V.sx(P.x1),axisY,'tp-fig-axis')+figDraw.line(axisX,V.sy(P.y0),axisX,V.sy(P.y1),'tp-fig-axis');
   let tk='', lb='';
   xT.ticks.forEach(v=>{ const px=V.sx(v); tk+=figDraw.tick(px,axisY-4,0,8,'tp-fig-tick'); lb+=figDraw.text(px,axisY+16,figFmtTick(v,xT.decimals),'tp-fig-ticklabel','middle'); });
   yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const py=V.sy(v); tk+=figDraw.tick(axisX-4,py,8,0,'tp-fig-tick'); lb+=figDraw.text(axisX-8,py+4,figFmtTick(v,yT.decimals),'tp-fig-ticklabel','end'); });
@@ -9271,7 +9315,7 @@ function figSvgBody(M, box, opt){
   M.curves.forEach(c=>{ c.paths.forEach(pathPts=>{ fx+=figDraw.polyline(pathPts,'tp-fig-fn'); }); });        // one polyline PER SUBPATH — a break is a break
   let pt='';
   M.layout.forEach(({px,py,box:pill,p})=>{ pt+=figDraw.circle(px,py,4,'tp-fig-pt')+figPill(pill,p.id); });   // §3.2/§1.4 marker + collision-placed identifier — guaranteed >= GAP clear of every arm/point/label
-  const nm=o.axisNames?figDraw.text(V.sx(D.x1)-6,axisY-9,'x','tp-fig-axname','end')+figDraw.text(axisX+9,V.sy(D.y1)+13,'y','tp-fig-axname','start'):'';
+  const nm=o.axisNames?figDraw.text(V.sx(P.x1)-6,axisY-9,'x','tp-fig-axname','end')+figDraw.text(axisX+9,V.sy(P.y1)+13,'y','tp-fig-axname','start'):'';
   return g+ax+tk+lb+sg+fx+pt+nm;
 }
 function fragFigure(b,bk){

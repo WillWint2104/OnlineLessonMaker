@@ -407,6 +407,91 @@ mark('workspace');
   await p.close();
 }
 
+// ══ 8b. THE COORDINATE PLANE IS A VIEWPORT, NOT A PICTURE ═════════════════════════════════════════
+// Axis EXTENT and tick GENERATION are separate concerns. The control here is the old rule stated in the
+// engine's own terms: figView still maps the domain onto the plot rect, so `sx(dom.x0)`/`sx(dom.x1)` are
+// exactly where the axis used to stop. Every assertion below is that the drawn axis is STRICTLY outside
+// those, and that the ticks are still generated from the domain.
+mark('viewport');
+{
+  const read = (p) => p.evaluate(() => {
+    const fig = document.querySelector('.mx-figskin .tp-fig');
+    const stage = fig.querySelector('.tp-fig-stage'), svg = fig.querySelector('.tp-fig-svg');
+    const vb = svg.getAttribute('viewBox').split(/\s+/).map(Number), box = figFitBox(stage.offsetWidth, stage.offsetHeight);
+    const M = figGraph(LESSON.slides[0].workspace.figure, box), V = M.V;
+    const num = (el, a) => +el.getAttribute(a);
+    const axes = [...svg.querySelectorAll('.tp-fig-axis')].map(l => ({ x1: num(l, 'x1'), y1: num(l, 'y1'), x2: num(l, 'x2'), y2: num(l, 'y2') }));
+    const xAxis = axes.filter(a => Math.abs(a.y1 - a.y2) < 0.01)[0], yAxis = axes.filter(a => Math.abs(a.x1 - a.x2) < 0.01)[0];
+    const labels = [...svg.querySelectorAll('.tp-fig-ticklabel')].map(t => ({ x: num(t, 'x'), y: num(t, 'y'), t: t.textContent }));
+    const xLab = labels.filter(l => Math.abs(l.y - (xAxis ? xAxis.y1 : 0) - 16) < 3);
+    return { vb: { W: vb[2], H: vb[3] }, figBox: fig.dataset.figBox,
+      stage: { w: stage.offsetWidth, h: stage.offsetHeight }, painted: { w: svg.clientWidth, h: svg.clientHeight },
+      xAxis, yAxis, oldX: [V.sx(V.dom.x0), V.sx(V.dom.x1)], oldY: [V.sy(V.dom.y1), V.sy(V.dom.y0)],
+      dom: V.dom, view: V.view,
+      lastXLab: xLab.length ? Math.max(...xLab.map(l => l.x)) : null,
+      firstXLab: xLab.length ? Math.min(...xLab.map(l => l.x)) : null,
+      tickVals: labels.map(l => l.t), nTicks: labels.length };
+  });
+  const wide = await newPage(1536, 1024); await boot(wide, NOTES); const A = await read(wide);
+  ok('the plane is painted at the size of its container, not at a fixed internal size',
+     Math.abs(A.painted.w - A.stage.w) <= 3 && Math.abs(A.painted.h - A.stage.h) <= 3 && A.figBox === A.vb.W + 'x' + A.vb.H,
+     `svg ${A.painted.w}x${A.painted.h} inside a ${A.stage.w}x${A.stage.h} stage (1px border each side), viewBox ${A.figBox}`);
+  ok('the x-axis runs to the drawable viewport boundaries',
+     A.xAxis.x1 <= 0.5 && A.xAxis.x2 >= A.vb.W - 0.5, `x-axis ${A.xAxis.x1} → ${A.xAxis.x2} in a ${A.vb.W}-wide box`);
+  ok('the y-axis does too', A.yAxis.y1 >= A.vb.H - 0.5 && A.yAxis.y2 <= 0.5, `y-axis ${A.yAxis.y2} → ${A.yAxis.y1} in a ${A.vb.H}-tall box`);
+  ok('CONTROL: the axis is STRICTLY outside where the domain ends — the old rule would have stopped it there',
+     A.xAxis.x1 < A.oldX[0] - 1 && A.xAxis.x2 > A.oldX[1] + 1 && A.yAxis.y2 < A.oldY[0] - 1 && A.yAxis.y1 > A.oldY[1] + 1,
+     `x: axis ${A.xAxis.x1}…${A.xAxis.x2} vs domain ${Math.round(A.oldX[0])}…${Math.round(A.oldX[1])}`);
+  ok('CONTROL: the last labelled tick is not the end of the axis',
+     A.lastXLab !== null && A.lastXLab < A.xAxis.x2 - 8 && A.firstXLab > A.xAxis.x1 + 8,
+     `last x label at ${A.lastXLab}, axis ends at ${A.xAxis.x2}`);
+  ok('the ticks are generated from the mathematical range, not from the viewport',
+     A.tickVals.every(t => { const v = +String(t).replace('\u2212', '-'); return v >= A.dom.x0 - 1e-6 && v <= Math.max(A.dom.x1, A.dom.y1) + 1e-6; })
+     && A.view.x1 > A.dom.x1 && A.view.x0 < A.dom.x0,
+     `${A.nTicks} labels inside the domain; viewport ${A.view.x0.toFixed(2)}…${A.view.x1.toFixed(2)} vs domain ${A.dom.x0.toFixed(2)}…${A.dom.x1.toFixed(2)}`);
+
+  // RESIZE: a different container is a different mathematical viewport, not the same picture scaled.
+  // Same width, a much shorter window: the container's SHAPE changes, so the plane's shape must follow it.
+  const short = await newPage(1536, 640); await boot(short, NOTES); const B = await read(short);
+  const span = (v) => ({ x: v.x1 - v.x0, y: v.y1 - v.y0 });
+  const sa = span(A.view), sb = span(B.view);
+  ok('resizing the container resizes the mathematical viewport',
+     A.figBox !== B.figBox && (Math.abs(sa.x - sb.x) > 0.5 || Math.abs(sa.y - sb.y) > 0.5),
+     `${A.stage.w}x${A.stage.h} → viewport ${sa.x.toFixed(1)} x ${sa.y.toFixed(1)} units;  `
+     + `${B.stage.w}x${B.stage.h} → ${sb.x.toFixed(1)} x ${sb.y.toFixed(1)}`);
+  ok('and the axes still reach the boundaries at the new size',
+     B.xAxis.x1 <= 0.5 && B.xAxis.x2 >= B.vb.W - 0.5 && B.lastXLab < B.xAxis.x2 - 8);
+  // The claim that actually says "the plane owns the region": under equal aspect the mathematical viewport
+  // has the SHAPE of its container. A fixed-size drawing placed in a larger card cannot do this.
+  const ar = (w, h) => w / h;
+  const dA = Math.abs(ar(sa.x, sa.y) - ar(A.stage.w, A.stage.h)), dB = Math.abs(ar(sb.x, sb.y) - ar(B.stage.w, B.stage.h));
+  ok('CONTROL: the viewport takes the SHAPE of its container, at both sizes',
+     dA < 0.05 && dB < 0.05 && Math.abs(ar(sa.x, sa.y) - ar(sb.x, sb.y)) > 0.2,
+     `${ar(A.stage.w, A.stage.h).toFixed(2)} container → ${ar(sa.x, sa.y).toFixed(2)} plane · `
+     + `${ar(B.stage.w, B.stage.h).toFixed(2)} container → ${ar(sb.x, sb.y).toFixed(2)} plane`);
+
+  // A domain whose EDGES ARE TICKS is the sharpest form of the control: here the last tick and the old
+  // axis endpoint are the same point, so an axis that stops at the tick and one that stops at the domain
+  // are indistinguishable — unless the axis genuinely runs to the viewport.
+  const aligned = await wide.evaluate(() => {
+    const spec = { type: 'figure', figure: 'graph', aspect: 'stretch', grid: 'shown',
+      domain: { xMin: -4, xMax: 4, yMin: -4, yMax: 4 }, objects: [{ type: 'points', rows: [['P', 1, 1]] }] };
+    const box = { W: 600, H: 400, padL: 40, padR: 18, padT: 16, padB: 30 };
+    const M = figGraph(spec, box), V = M.V, body = figSvgBody(M, box);
+    const d = document.createElement('div'); d.innerHTML = '<svg viewBox="0 0 600 400">' + body + '</svg>';
+    const num = (el, a) => +el.getAttribute(a);
+    const ax = [...d.querySelectorAll('.tp-fig-axis')].filter(l => Math.abs(num(l, 'y1') - num(l, 'y2')) < 0.01)[0];
+    const labs = [...d.querySelectorAll('.tp-fig-ticklabel')].map(t => ({ x: num(t, 'x'), t: t.textContent }));
+    const four = labs.filter(l => l.t === '4')[0];
+    return { axX2: num(ax, 'x2'), tick4: four ? four.x : null, domEnd: V.sx(V.dom.x1), boxW: box.W };
+  });
+  ok('CONTROL: with a tick exactly on the domain edge, the axis still runs past it to the viewport',
+     aligned.tick4 !== null && Math.abs(aligned.tick4 - aligned.domEnd) < 0.5 && aligned.axX2 >= aligned.boxW - 0.5
+     && aligned.axX2 > aligned.tick4 + 10,
+     `tick "4" and the domain edge coincide at ${aligned.domEnd.toFixed(1)}; the axis ends at ${aligned.axX2}`);
+  await wide.close(); await short.close();
+}
+
 // ══ 9. author text can never become markup ════════════════════════════════════════════════════════
 mark('escape');
 {
@@ -451,7 +536,7 @@ mark('legacy');
 }
 
 // ── report ────────────────────────────────────────────────────────────────────────────────────────
-const SECTIONS = ['mode', 'release', 'responsive', 'chrome', 'persistent', 'narrow', 'nav', 'workspace', 'escape', 'legacy'];
+const SECTIONS = ['mode', 'release', 'responsive', 'chrome', 'persistent', 'narrow', 'nav', 'workspace', 'viewport', 'escape', 'legacy'];
 const missing = SECTIONS.filter((s) => !ran.has(s));
 ok('every section ran', missing.length === 0, missing.length ? 'missing: ' + missing.join(', ') : `${SECTIONS.length} sections`);
 ok('no page error or console error while rendering', pageErrs.length === 0, pageErrs.slice(0, 3).join(' | '));
