@@ -169,7 +169,8 @@
             "_x_ = 3",
             "_x_ = −4",
             "_x_ = ½"
-          ]
+          ],
+          "id": "q1"
         },
         {
           "stem": "Complete the table of values for _y_ = _x_^2.",
@@ -198,10 +199,12 @@
                 ]
               }
             ]
-          }
+          },
+          "id": "q2"
         },
         {
-          "stem": "Find the value(s) of _x_ when _y_ = 16."
+          "stem": "Find the value(s) of _x_ when _y_ = 16.",
+          "id": "q3"
         },
         {
           "stem": "Decide whether each point lies on the graph of _y_ = _x_^2. Give a reason for your answer.",
@@ -210,7 +213,8 @@
             "(−2, 4)",
             "(4, 10)",
             "(−1, 1)"
-          ]
+          ],
+          "id": "q4"
         },
         {
           "stem": "The point (_k_, 25) lies on _y_ = _x_^2.",
@@ -218,7 +222,8 @@
           "parts": [
             "Find the possible value(s) of _k_.",
             "If _k_ < 0, what is the value of _k_?"
-          ]
+          ],
+          "id": "q5"
         },
         {
           "stem": "Solve the following equations.",
@@ -227,15 +232,17 @@
             "_x_^2 = 5",
             "(2_x_ + 1)^2 = 36",
             "_x_^2 − 4 = 0"
-          ]
+          ],
+          "id": "q6"
         },
         {
-          "stem": "A rectangle has an area of 36 m^2. Its length is _x_ metres and its width is _x_ − 2 metres. Form and solve an equation to find the possible values of _x_."
+          "stem": "A rectangle has an area of 36 m^2. Its length is _x_ metres and its width is _x_ − 2 metres. Form and solve an equation to find the possible values of _x_.",
+          "id": "q7"
         }
       ],
       "workspace": {
-        "kind": "workbook",
-        "pages": 2
+        "kind": "grid",
+        "id": "workbook"
       }
     },
     {

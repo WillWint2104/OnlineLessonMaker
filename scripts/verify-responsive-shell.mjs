@@ -267,7 +267,7 @@ mark('persistent');
   await boot(p, PRACTICE);
   const g = await geom(p);
   ok('the practice page is a flush textbook column with a workspace beside it',
-     g.surface === 'flush' && g.work !== null && g.wsKind === 'workbook' && g.grid === true);
+     g.surface === 'flush' && g.work !== null && g.wsKind === 'grid' && g.grid === true);
   ok('the question column is a REAL scroller before anything is asserted about it',
      g.content.sh > g.content.ch, `${g.content.sh}/${g.content.ch}`);
   const s = await p.evaluate(() => {
@@ -300,9 +300,22 @@ mark('narrow');
   ok('wide: questions and workbook sit side by side, each clipped to its own box',
      W.content.top === W.work.top && W.work.left > W.content.left && W.content.over === 'auto' && W.work.over === 'hidden',
      `content left ${W.content.left} · workspace left ${W.work.left}`);
-  ok('narrow: they stack, questions first, as ONE document',
-     N.content.left === N.work.left && N.work.top > N.content.top && N.content.over === 'visible' && N.page.sh > N.page.ch,
-     `content top ${N.content.top} · workspace top ${N.work.top} · page ${N.page.sh}/${N.page.ch}`);
+  // CHANGED IN STAGE B, deliberately: a handset now shows ONE region at a time behind a Questions /
+  // Workbook switch, instead of burying the whole workbook under the whole question set.
+  const nv = await nar.evaluate(() => ({
+    view: document.querySelector('.mx').dataset.mxView,
+    sw: getComputedStyle(document.querySelector('.mx-viewsw')).display,
+    workShown: getComputedStyle(document.querySelector('.mx-work')).display,
+    after: (() => { document.querySelector('[data-mx-view="workbook"]').click();
+      const r = { view: document.querySelector('.mx').dataset.mxView,
+        content: getComputedStyle(document.querySelector('.mx-content')).display,
+        work: getComputedStyle(document.querySelector('.mx-work')).display };
+      document.querySelector('[data-mx-view="questions"]').click();   // leave the page as the next check expects
+      return r; })() }));
+  ok('narrow: one region at a time, behind a Questions / Workbook switch',
+     nv.view === 'questions' && nv.sw === 'flex' && nv.workShown === 'none'
+     && nv.after.view === 'workbook' && nv.after.content === 'none' && nv.after.work !== 'none',
+     `starts on ${nv.view}, switches to ${nv.after.view}`);
   ok('narrow: the navigation defaults closed', N.navopen === false);
   const overlay = await nar.evaluate(() => { rpNavToggle();
     const n = document.querySelector('.mx-nav'), c = document.querySelector('.mx-content');
@@ -564,7 +577,10 @@ mark('isolation');
   // The allow-list is enumerated, not loosened: the shell's own classes, its one state class, and the
   // Figure engine's surface (the plane, its focus panel, and the shared overlay mechanic they open with).
   // Anything else — a pack renderer's `gl-`/`im-`/`mh-` class, a legacy `.card`, a `.qcard` — fails here.
-  const ALLOW = [/^mx/, /^tp-fig/, /^tp-fpanel/];
+  // Two shared ENGINES are allowed through, and only as engines: the Figure engine (the plane, its focus
+  // panel, the overlay mechanic they open with) and the ink engine (`tp-ink-pad`, the app's own
+  // pressure-stroke system, reused rather than reimplemented for the workbook). Neither is a page renderer.
+  const ALLOW = [/^mx/, /^tp-fig/, /^tp-fpanel/, /^tp-ink/];
   const ALLOW_EXACT = new Set(['on', 'tp-slide', 'tp-fclose', 'tp-overlay']);
   const foreign = [...seen.classes].filter((c) => !ALLOW_EXACT.has(c) && !ALLOW.some((r) => r.test(c)));
   ok('no class from a legacy pack renderer appears anywhere in a Mathematics page',

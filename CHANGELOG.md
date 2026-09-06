@@ -8,6 +8,32 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage B — the Practice workbook.** The visual shell is now the real thing, on the app's OWN stroke
+  engine (`[data-tp-ink]`): pressure-variable pen, eraser, clear, grid paper. What is new is WHERE the
+  strokes live. The engine gained a second storage backend, selected by attribute: a pad that names a
+  response (`data-tp-resp-page/-id/-slot`) reads and writes the A0 store under authored identity, while a
+  pad without them keeps the index-keyed `TP_RUNTIME` slot it has always used. Nothing about capture,
+  pressure, erase, undo or redraw differs between them — only where the array lives.
+  A workbook is one response with several sheets: `{current:'w1', pages:[{id:'w1', strokes:[…]}, …]}`, so
+  the bundle names page → response → kind → payload and none of them is a position. Sheet ids come from a
+  counter that only goes up, so adding a sheet never renumbers an existing one. Switching sheet replaces one
+  element and re-wires it rather than re-rendering the page, so the question column keeps its place and the
+  old canvas's listeners go with the old node.
+  The sheet is a PLANE, like the coordinate plane: a fixed horizontal scale (1000 units across) with its
+  height taken from the region, so enlarging or narrowing the workbook shows more or less of the sheet and
+  never rescales what is already written on it.
+  `workspace.kind` is now the approved vocabulary — `grid` is implemented; `graph` and `geometry` are Stages
+  F and G. A table of values takes structured entry because the empty cells ARE the question; every other
+  question stays a prompt, with no answer box and no card. Cells are keyed by their column value, so a
+  response says "when x = −3" rather than "the first cell".
+  Responsive: the split is the Practice composition and a tablet keeps it; only a handset (≤760px) drops to
+  one region at a time behind a Questions / Workbook switch. Switching view, or opening the navigation
+  drawer, keeps the question scroll position, the sheet, its ink and the response mode — the switch is a
+  class flip plus a remembered scroll position, because hiding a region resets whatever was scrolling it.
+  No browser storage anywhere. Gate: `scripts/verify-workbook.mjs` — 31/31, every stroke drawn with real
+  pointer events through the real canvas and read back from the store or from painted pixels, including the
+  three requested controls (sheets sharing one array; a DOM-local workspace; a reordered lesson).
+  `scripts/shots-workbook.mjs` is the Stage B proof set.
 - **The page-family boundary, written down and measured.** Three families, deliberately separate:
   Mathematics (responsive, purpose-built templates), a future generalist/humanities family (its own base
   layout language plus subject overlays, designed from scratch when Mathematics is stable), and the legacy

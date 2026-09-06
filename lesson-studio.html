@@ -1762,11 +1762,13 @@ body.respo .main{min-width:0;}
 /* a values table: pale green stub column + head, white cells to write in */
 .mx-tblwrap{margin-top:11px;overflow-x:auto;}
 .mx-tbl{border-collapse:separate;border-spacing:0;font-family:var(--mx-serif);font-size:15.5px;}
-.mx-tbl th,.mx-tbl td{border:1px solid var(--mx-line);border-left:0;padding:7px 12px;text-align:center;min-width:52px;background:var(--mx-white);}
+.mx-tbl th,.mx-tbl td{border:1px solid var(--mx-line);border-left:0;padding:7px 10px;text-align:center;min-width:46px;background:var(--mx-white);}
 .mx-tbl tr>*:first-child{border-left:1px solid var(--mx-line);background:var(--mx-green-tint);font-weight:600;}
 .mx-tbl tr:not(:first-child)>*{border-top:0;}
-.mx-cell{display:block;height:26px;border:1px solid var(--mx-line);border-radius:5px;background:var(--mx-white);}
-.mx-tbl td:has(.mx-cell){padding:6px 8px;}
+input.mx-cell{display:block;width:42px;height:27px;border:1px solid var(--mx-line);border-radius:5px;background:var(--mx-white);
+  font:inherit;font-family:var(--mx-serif);font-size:15.5px;text-align:center;color:var(--mx-ink-body);padding:0 4px;}
+input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-color:var(--mx-green);}
+.mx-tbl td:has(.mx-cell){padding:5px 6px;}
 
 /* ── the workbook / representation workspace ─────────────────────────────────────────────────── */
 /* ── the video page ─────────────────────────────────────────────────────────────────────────────── */
@@ -1804,6 +1806,20 @@ body.respo .main{min-width:0;}
 .mx-grid{height:min(62vh,620px);background:var(--mx-white);
   background-image:linear-gradient(var(--mx-grid) 1px,transparent 1px),linear-gradient(90deg,var(--mx-grid) 1px,transparent 1px);
   background-size:22px 22px;}
+/* ── the workbook ───────────────────────────────────────────────────────────────────────────────── */
+.mx-tool[aria-pressed="true"]{background:var(--mx-green-pale);color:var(--mx-green);font-weight:600;}
+.mx-wb{--mx-pen:#1D4E89;}
+.mx-sheet{position:relative;flex:1 1 auto;min-height:0;background:var(--mx-white);}
+.mx-sheet .mx-grid{position:absolute;inset:0;height:auto;}
+.mx-wbcanvas{position:absolute;inset:0;width:100%;height:100%;color:var(--mx-pen);touch-action:none;cursor:crosshair;}
+.mx-viewsw{display:none;gap:2px;padding:3px;margin:0 0 14px;border:1px solid var(--mx-line);border-radius:10px;
+  background:var(--mx-white);width:max-content;}
+.mx-viewsw button{border:0;border-radius:8px;background:transparent;color:var(--mx-ink-2);font:inherit;font-size:13.5px;
+  padding:6px 16px;cursor:pointer;}
+.mx-viewsw button.on{background:var(--mx-green-pale);color:var(--mx-green);font-weight:600;}
+.mx[data-mx-view="workbook"] .mx-viewsw{display:flex;}
+.mx[data-mx-view="workbook"] .mx-content{display:none;}
+.mx[data-mx-view="workbook"] .mx-split{grid-template-columns:minmax(0,1fr);}
 .mx-pagetabs{display:flex;align-items:center;gap:6px;padding:9px 12px;border-top:1px solid var(--mx-line);background:var(--mx-white);}
 .mx-ptab{border:1px solid var(--mx-line);border-radius:9px;background:var(--mx-white);color:var(--mx-ink-2);
   font:inherit;font-size:13px;padding:6px 16px;cursor:pointer;}
@@ -1851,8 +1867,10 @@ body.respo .main{min-width:0;}
 .mx-figure .mxg-chip{font-family:var(--mx-serif);font-size:16px;fill:var(--mx-green-deep);}
 
 /* ── narrow: a different composition, not a smaller one ──────────────────────────────────────── */
-@media (max-width:1080px){ .mx-split{grid-template-columns:minmax(0,1fr);} .mx-head{flex-direction:column;gap:14px;}
-  .mx-keyidea{width:100%;} }
+@media (max-width:1080px){ .mx-head{flex-direction:column;gap:14px;} .mx-keyidea{width:100%;} }
+/* The split is the Practice composition and a tablet keeps it — both regions stay usable, just tighter.
+   Only a handset drops to one column, and there it becomes the Questions / Workbook switch below. */
+@media (max-width:760px){ .mx-split{grid-template-columns:minmax(0,1fr);} }
 @media (max-width:900px){
   .mx-modes{display:none;}                                   /* application controls are secondary here */
   .mx-brand{padding-right:12px;}
@@ -1871,6 +1889,20 @@ body.respo .main{min-width:0;}
   .mx-page[data-mx-surface="panel"] .mx-content{overflow:visible;display:block;}
   .mx-work{margin-top:18px;}
   .mx-grid,.mx-fill .mx-grid{height:min(54vh,430px);flex:0 0 auto;}
+  .mx-sheet .mx-grid{position:absolute;inset:0;height:auto;}
+}
+@media (max-width:760px){
+  /* A handset gets one region at a time — Questions or Workbook — not the whole workbook buried under the
+     whole question set. Switching is a class flip plus a remembered scroll position, so neither side loses
+     its place, and neither does the drawer. */
+  .mx-viewsw{display:flex;}
+  .mx-page[data-mx-surface="flush"] .mx-work{margin-top:0;}
+  .mx[data-mx-view="questions"] .mx-work{display:none;}
+  .mx[data-mx-view="workbook"] .mx-content{display:none;}
+  /* .mx-fill is a block at this width, so the sheet is given its own height rather than inheriting one
+     from a flex row that no longer exists. */
+  .mx-wb{display:flex;flex-direction:column;}
+  .mx-wb .mx-sheet{flex:0 0 auto;height:min(62vh,480px);}
 }
 @media (max-width:640px){ .mx-crumb{display:none;} }
 @media (max-width:520px){
@@ -7000,8 +7032,38 @@ function mxSetResponseMode(m){
   root.setAttribute('data-mx-response',m);
   root.querySelectorAll('[data-mx-resp]').forEach(b=>b.classList.toggle('on',b.dataset.mxResp===m));
 }
+/* WHICH REGION THE STUDENT IS LOOKING AT. Session-only, like the nav and the response mode. Desktop is
+   `split`; Expand is `workbook`; a handset starts on `questions` and switches between the two rather than
+   burying the workbook under the whole question set. It is a CLASS FLIP on the shell — never a re-render —
+   so switching view keeps the question scroll position, the workbook sheet, its ink and the response mode,
+   and so does opening the navigation drawer. */
+const MX_VIEWS=['split','questions','workbook'];
+const MX_SOLO='(max-width: 760px)';                 /* where one region at a time begins — NOT the drawer breakpoint */
+function mxSolo(){ return !!(window.matchMedia&&window.matchMedia(MX_SOLO).matches); }
+let MX_VIEW=null;
+function mxView(){ if(MX_VIEW===null) MX_VIEW=mxSolo()?'questions':'split'; return MX_VIEW; }
+/* Hiding a region resets the scroll position of whatever was scrolling it — a `display:none` box comes
+   back at 0 — so the switch remembers where the reader was and puts them back. Session-only, keyed by the
+   scroller's role rather than by any node, so it survives the node being hidden and shown again. */
+const MX_SCROLL={};
+function mxScrollers(root){
+  return [['page',root.querySelector('.mx-page')],['content',root.querySelector('.mx-content')],
+          ['work',root.querySelector('.mx-work')]].filter(x=>x[1]);
+}
+function mxSetView(v){
+  if(MX_VIEWS.indexOf(v)<0) return;
+  const root0=$('#slide').querySelector('.mx');
+  if(root0) mxScrollers(root0).forEach(([k,el])=>{ if(el.scrollTop>0) MX_SCROLL[k]=el.scrollTop; });
+  MX_VIEW=v;
+  const root=$('#slide').querySelector('.mx'); if(!root) return;
+  root.setAttribute('data-mx-view',v);
+  mxScrollers(root).forEach(([k,el])=>{ if(MX_SCROLL[k]!=null) el.scrollTop=MX_SCROLL[k]; });
+  root.querySelectorAll('[data-mx-view]').forEach(b=>{
+    if(b.tagName==='BUTTON'){ const on=b.dataset.mxView===v||(v==='split'&&b.dataset.mxView==='questions');
+      b.classList.toggle('on',on); b.setAttribute('aria-pressed',on?'true':'false'); } });
+}
 function mxWritesResponses(s){
-  const ws=s&&s.workspace; return !!(ws&&typeof ws==='object'&&ws.kind==='workbook');
+  const ws=s&&s.workspace; return !!(ws&&typeof ws==='object'&&ws.kind==='grid');
 }
 function mxNavLabel(s){ return (s&&(s.navLabel||s.title||s.heading))||TYPELAB[s&&s.type]||'Page'; }
 function mxCrumb(s){
@@ -7065,12 +7127,16 @@ function renderResponsivePage(entry,s,i){
   try{ body=entry.fn(s,i); }
   catch(e){ body=`<div class="mx-panel"><div class="mx-err">Render error: ${esc(String(e.message||e))}</div></div>`; }
   const ws=(s&&s.workspace&&typeof s.workspace==='object'&&!Array.isArray(s.workspace))?s.workspace:null;
-  const split=`<div class="mx-split${ws?'':' mx-1col'}"${s.splitRatio?` style="--mx-split:${esc(s.splitRatio)}"`:''}>
+  const vsw=(ws&&ws.kind==='grid')?`<div class="mx-viewsw" role="group" aria-label="Which region to show">
+      <button type="button" data-mx-view="questions">Questions</button>
+      <button type="button" data-mx-view="workbook">Workbook</button></div>`:'';
+  const split=`${vsw}<div class="mx-split${ws?'':' mx-1col'}"${s.splitRatio?` style="--mx-split:${esc(s.splitRatio)}"`:''}>
       <section class="mx-content">${body}</section>
       ${ws?`<section class="mx-work" data-rp-workspace="${esc(String(ws.kind||''))}" aria-label="Workspace">${rpWorkspace(ws,s,i)}</section>`:''}
     </div>`;
   return `<div class="mx${open?' mx-navopen':''}" data-tp-theme="${esc((LESSON.meta&&LESSON.meta.theme)||'')}"
-      data-rp-type="${esc(s.type||'')}" data-rp-layout="${esc(entry.layoutMode)}" data-mx-response="${esc(mxResponseMode())}">
+      data-rp-type="${esc(s.type||'')}" data-rp-layout="${esc(entry.layoutMode)}" data-mx-response="${esc(mxResponseMode())}"
+      data-mx-view="${esc(ws?mxView():'split')}">
     ${mxTopBar(s,i,n,open)}
     <div class="mx-body">
       ${mxRail()}
@@ -7099,6 +7165,22 @@ function wireResponsive(){
     const t=document.getElementById(b.dataset.mxGo==='prev'?'prev':'next'); if(t) t.click();
   }));
   root.querySelectorAll('[data-mx-resp]').forEach(b=>b.addEventListener('click',()=>mxSetResponseMode(b.dataset.mxResp)));
+  root.querySelectorAll('button[data-mx-view]').forEach(b=>b.addEventListener('click',()=>{
+    mxSetView(b.dataset.mxView==='questions'&&!mxSolo()?'split':b.dataset.mxView); }));
+  /* The workbook lives in the workspace region, never inside a `.tp-slide` — and wirePack(), which is
+     where the ink engine is wired for pack slides, returns early when there is no `.tp-slide` at all. So
+     the shell wires its own workspace, scoped to that region so a figure host can never be double-wired. */
+  const work=root.querySelector('.mx-work'); if(work) wireInkPads(work);
+  root.querySelectorAll('[data-mx-table]').forEach(t=>{
+    const s2=LESSON.slides[cur], page=tpRespId(s2)||('slide-'+cur), qid=t.dataset.mxTable;
+    const write=()=>{ const cells={};
+      t.querySelectorAll('[data-mx-cell]').forEach(inp=>{ const v=inp.value.trim(); if(v) cells[inp.dataset.mxCell]=v; });
+      tpRespSet(page,qid,'table',{cells}); };
+    t.querySelectorAll('[data-mx-cell]').forEach(inp=>inp.addEventListener('input',write));
+  });
+  root.querySelectorAll('[data-mx-sheet]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,b.dataset.mxSheet)));
+  root.querySelectorAll('[data-mx-sheet-add]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,null)));
+  mxSetView(mxView());
   root.querySelectorAll('[data-mx-mode]').forEach(b=>b.addEventListener('click',()=>{
     const m=MX_MODES.filter(x=>x.id===b.dataset.mxMode)[0]; if(!m) return;
     const t=document.querySelector(m.target); if(t) t.click();
@@ -7121,15 +7203,29 @@ function mxNotesPage(s){
   return `<div class="mx-panel"><h2 class="mx-panelh">${esc(s.contentTitle||'The key ideas')}</h2>${ideas
     ||'<div class="mx-ph">This notes page has no key ideas yet.</div>'}</div>`;
 }
-function mxPracticePage(s){
+/* STRUCTURED ENTRY, and only where the structure IS the task. A question is not turned into a card and
+   does not grow an answer box merely because it expects an answer — the workbook is where answers are
+   written. A table of values is the exception the brief names: the empty cells are the question. Each cell
+   is keyed by its COLUMN VALUE, not by its index, so the response says "when x = −3" rather than "the
+   first cell" and a re-ordered table cannot re-attribute an answer. */
+function mxPracticePage(s,i){
+  const page=tpRespId(s)||('slide-'+i);
   const qs=(s.questions||[]).map((q,j)=>{
     const parts=(q.parts||[]).map((pt,k)=>`<div class="mx-part"><b class="mx-pl">(${String.fromCharCode(97+k)})</b><span>${mxM(pt)}</span></div>`).join('');
     let tbl='';
     if(q.table&&Array.isArray(q.table.head)){
+      const qid=(q.id?String(q.id):'q'+(j+1));
+      const saved=(tpRespGet(page,qid)||{});
+      const cells=(saved.kind==='table'&&saved.value&&saved.value.cells)?saved.value.cells:{};
       const head=q.table.head.map(h=>`<th scope="col">${mxM(h)}</th>`).join('');
       const rows=(q.table.rows||[]).map(r=>`<tr><th scope="row">${mxM(r.label||'')}</th>`
-        +(r.cells||[]).map(c=>`<td>${c==null||c===''?'<span class="mx-cell"></span>':mxM(c)}</td>`).join('')+'</tr>').join('');
-      tbl=`<div class="mx-tblwrap"><table class="mx-tbl"><tr><th scope="row">${mxM(q.table.stub||'')}</th>${head}</tr>${rows}</table></div>`;
+        +(r.cells||[]).map((c,ci)=>{ const key=String(q.table.head[ci]==null?ci:q.table.head[ci]);
+            if(c!=null&&c!=='') return `<td>${mxM(c)}</td>`;
+            return `<td><input class="mx-cell" type="text" inputmode="text" data-mx-cell="${esc(key)}"
+              value="${esc(cells[key]==null?'':String(cells[key]))}"
+              aria-label="${esc((r.label||'value')+' when '+key)}"></td>`; }).join('')+'</tr>').join('');
+      tbl=`<div class="mx-tblwrap" data-mx-table="${esc(qid)}"><table class="mx-tbl">`
+        +`<tr><th scope="row">${mxM(q.table.stub||'')}</th>${head}</tr>${rows}</table></div>`;
     }
     return `<div class="mx-item"><span class="mx-num">${j+1}</span><div class="mx-itembd">
       <div class="mx-stem">${mxM(q.stem||'')}</div>${tbl}
@@ -7183,20 +7279,49 @@ function mxStubPage(s){
     ||'The shell for this page type is in place; its content lands in a later stage.')}</div></div>`;
 }
 
-/* The workbook. Stage A draws the surface, the tools and the page tabs so the workspace can be judged
-   as the dominant region it is meant to be; none of the controls capture ink yet (Stage B). */
-registerWorkspace('workbook',(ws)=>{
-  const tools=[['pencil','Pen',1],['eraser','Eraser',0],['trash','Clear',0]]
-    .map(t=>`<button type="button" class="mx-tool${t[2]?' on':''}">${mxIc(t[0],16)} ${t[1]}</button>`).join('');
-  const pages=Math.max(1,+(ws.pages||2));
-  const tabs=Array.from({length:pages},(x,k)=>`<button type="button" class="mx-ptab${k?'':' on'}">Page ${k+1}</button>`).join('');
-  return `<div class="mx-panel mx-flush mx-fill">
-    <div class="mx-wsbar">${tools}<div class="mx-sp"></div>
-      <button type="button" class="mx-tool mx-out">${mxIc('expand',15)} Expand</button></div>
-    <div class="mx-grid"></div>
-    <div class="mx-pagetabs">${tabs}<button type="button" class="mx-ptab" aria-label="Add a page">${mxIc('plus',14)}</button></div>
+/* THE WORKBOOK — workspace kind `grid`. The stroke engine is the app's existing [data-tp-ink] system,
+   unchanged: pressure-variable width, erase by composite operation, strokes as JSON. What is new is WHERE
+   the strokes live — the A0 response store, under the page's authored id and the workspace's authored id,
+   with one array per sheet — so a sheet keeps its own work, the work survives leaving the page, and the
+   bundle can name page / sheet / kind / payload without any of them being a position.
+   The toolbar is deliberately the approved one (Pen · Eraser · Clear · Expand); the tool buttons carry the
+   engine's own [data-tp-ink-tool] / [data-tp-ink-clear] hooks and are styled off `aria-pressed`, which the
+   engine already maintains, so no second source of truth for which tool is active. */
+function mxWorkbook(ws,s,i){
+  const page=tpRespId(s)||('slide-'+i), rid=(ws&&ws.id)?String(ws.id).trim():'workbook';
+  const doc=tpInkDoc(page,rid), slot=doc.current;
+  const tabs=doc.pages.map((pg,k)=>`<button type="button" class="mx-ptab${pg.id===slot?' on':''}"
+      data-mx-sheet="${esc(pg.id)}"${pg.id===slot?' aria-current="true"':''}>Page ${k+1}</button>`).join('');
+  return `<div class="mx-panel mx-flush mx-fill mx-wb tp-ink-pad" data-tp-ink="mxwb-${esc(page)}-${esc(rid)}-${esc(slot)}"
+      data-tp-resp-page="${esc(page)}" data-tp-resp-id="${esc(rid)}" data-tp-resp-slot="${esc(slot)}" data-tp-ink-fit>
+    <div class="mx-wsbar">
+      <button type="button" class="mx-tool" data-tp-ink-tool="pen" aria-pressed="true">${mxIc('pencil',16)} Pen</button>
+      <button type="button" class="mx-tool" data-tp-ink-tool="eraser" aria-pressed="false">${mxIc('eraser',16)} Eraser</button>
+      <button type="button" class="mx-tool" data-tp-ink-clear>${mxIc('trash',16)} Clear</button>
+      <div class="mx-sp"></div>
+      <button type="button" class="mx-tool mx-out" data-mx-view="workbook">${mxIc('expand',15)} Expand</button></div>
+    <div class="mx-sheet"><div class="mx-grid"></div>
+      <canvas class="mx-wbcanvas" data-tp-ink-canvas width="1000" height="700"
+        aria-label="Workbook page ${esc(String(doc.pages.findIndex(pg=>pg.id===slot)+1))} — write with a pen, mouse or finger."></canvas></div>
+    <div class="mx-pagetabs">${tabs}<button type="button" class="mx-ptab" data-mx-sheet-add aria-label="Add a workbook page">${mxIc('plus',14)}</button></div>
   </div>`;
-});
+}
+/* Switching sheet replaces ONE element and re-wires it. Not a page re-render: the question column keeps
+   its scroll position, and the old canvas's listeners go with the old node rather than stacking. */
+function mxSheetGo(btn,slot){
+  const pad=btn.closest('[data-tp-ink]'); if(!pad) return;
+  const page=pad.dataset.tpRespPage, rid=pad.dataset.tpRespId;
+  if(slot) tpInkSetCurrent(page,rid,slot); else tpInkAddSheet(page,rid);
+  const s=LESSON.slides[cur], ws=(s&&s.workspace)||{};
+  const host=pad.parentNode; if(!host) return;
+  pad.outerHTML=mxWorkbook(ws,s,cur);
+  const fresh=host.querySelector('[data-tp-ink]'); if(!fresh) return;
+  wireInkPads(host);
+  fresh.querySelectorAll('[data-mx-sheet]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,b.dataset.mxSheet)));
+  fresh.querySelectorAll('[data-mx-sheet-add]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,null)));
+  fresh.querySelectorAll('button[data-mx-view]').forEach(b=>b.addEventListener('click',()=>mxSetView(b.dataset.mxView)));
+}
+registerWorkspace('grid',mxWorkbook);
 /* The representation workspace — the tabbed visual beside a notes page. The figure is a FIXTURE drawing
    at Stage A: the real Graph and Geometry engines are wired in at Stage F, and drawing a stand-in here
    is what lets the shell be judged now without pulling those engines into this pass. */
@@ -9526,6 +9651,57 @@ function renderPackSlide(s,i,present){
   return `<div class="tp-slide"${tpTokenStyle(s)} data-tp-theme="${esc(theme)}" data-tp-type="${esc(s.type||'')}">${inner}</div>`;
 }
 /* knowledgeCheck interactivity (option select → feedback reveal → gate Continue). */
+/* B — extracted verbatim so the sheet switcher can re-wire ONE pad without re-rendering the page (and
+   without stacking a second set of listeners on the same canvas: the old node is replaced, so its
+   listeners go with it). wirePack calls it with the whole slide, exactly as the inline loop did. */
+function wireInkPads(root){
+  root.querySelectorAll('[data-tp-ink]').forEach(pad=>{
+    const fid=pad.dataset.tpInk, canvas=pad.querySelector('[data-tp-ink-canvas]'); if(!canvas) return;
+    const ctx=canvas.getContext('2d'); const rt=tpRT();
+    /* B — the SAME stroke engine, two storage backends. A pad that names a response
+       (data-tp-resp-page/-id/-slot) reads and writes the A0 store, keyed by authored identity, so its work
+       survives navigation and can be submitted; a pad without those attributes keeps the index-keyed
+       TP_RUNTIME slot it has always used, byte for byte. Nothing about capture, pressure, erase, undo or
+       redraw differs between them — only where the array lives. */
+    const rPage=pad.dataset.tpRespPage, rId=pad.dataset.tpRespId, rSlot=pad.dataset.tpRespSlot;
+    const viaResp=!!(rPage&&rId&&rSlot);
+    let strokes;
+    if(viaResp){ strokes=tpInkSheet(rPage,rId,rSlot).strokes; }
+    else { try{ const v=rt.ans[fid]; strokes=Array.isArray(v)?v:(typeof v==='string'&&v?JSON.parse(v):[]); }catch(e){ strokes=[]; } }
+    let tool='pen', drawing=false, cur=null;
+    const redraw=()=>{ const ink=getComputedStyle(canvas).color||'#1f6fb2'; ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle=ink; ctx.fillStyle=ink;
+      for(const st of strokes){ ctx.globalCompositeOperation=st.e?'destination-out':'source-over'; const pts=st.p||[];
+        if(pts.length===1){ ctx.beginPath(); ctx.arc(pts[0].x,pts[0].y,Math.max(1,st.w*(0.3+(pts[0].pr||.5)))/1.6,0,6.2832); ctx.fill(); continue; }
+        for(let k=1;k<pts.length;k++){ const a=pts[k-1],b=pts[k]; ctx.beginPath(); ctx.lineWidth=Math.max(1,st.w*(0.35+((a.pr+b.pr)/2))); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } }
+      ctx.globalCompositeOperation='source-over'; };
+    const pos=e=>{ const r=canvas.getBoundingClientRect(); return {x:(e.clientX-r.left)/r.width*canvas.width, y:(e.clientY-r.top)/r.height*canvas.height, pr:(e.pressure>0?e.pressure:0.5)}; };
+    /* [data-tp-ink-fit] — the sheet is a PLANE and the region is a window onto it, exactly as the coordinate
+       plane is. The backing store keeps a FIXED horizontal scale (1000 units across) and takes its height
+       from the region's own aspect, so a taller or wider region shows more or less of the sheet and never
+       rescales what is already on it: stroke coordinates are untouched by a resize, in either axis, so
+       handwriting cannot stretch. Legacy pads have no such attribute and keep their fixed 1000x560 store. */
+    const fit=pad.hasAttribute('data-tp-ink-fit')?()=>{
+      const r=canvas.getBoundingClientRect(); if(!(r.width>0&&r.height>0)) return false;
+      const h=Math.max(200,Math.round(1000*r.height/r.width));
+      if(canvas.width===1000&&canvas.height===h) return false;
+      canvas.width=1000; canvas.height=h; return true;
+    }:null;
+    if(fit){ fit(); if(typeof ResizeObserver!=='undefined'){
+      const ro=new ResizeObserver(()=>{ if(fit()) redraw(); }); ro.observe(canvas); } }
+    const save=()=>{ if(viaResp) tpInkSheet(rPage,rId,rSlot).strokes=strokes; else rt.ans[fid]=strokes; };
+    canvas.addEventListener('pointerdown',e=>{ e.preventDefault(); drawing=true; try{canvas.setPointerCapture(e.pointerId);}catch(_){}
+      cur={e:tool==='eraser', w:tool==='eraser'?26:5, p:[pos(e)]}; strokes.push(cur); redraw(); });
+    canvas.addEventListener('pointermove',e=>{ if(!drawing) return; cur.p.push(pos(e)); redraw(); });
+    const end=e=>{ if(!drawing) return; drawing=false; try{canvas.releasePointerCapture(e.pointerId);}catch(_){}; save(); };
+    canvas.addEventListener('pointerup',end); canvas.addEventListener('pointercancel',end);
+    pad.querySelectorAll('[data-tp-ink-tool]').forEach(btn=>btn.addEventListener('click',()=>{ tool=btn.dataset.tpInkTool;
+      pad.querySelectorAll('[data-tp-ink-tool]').forEach(b=>b.setAttribute('aria-pressed', b===btn?'true':'false')); }));
+    const undoB=pad.querySelector('[data-tp-ink-undo]'); if(undoB) undoB.addEventListener('click',()=>{ strokes.pop(); save(); redraw(); });
+    const clearB=pad.querySelector('[data-tp-ink-clear]'); if(clearB) clearB.addEventListener('click',()=>{ strokes.length=0; save(); redraw(); });
+    redraw();   // restore session strokes
+  });
+}
 function wirePack(){
   const slide=$('#slide'); const root=slide.querySelector('.tp-slide'); if(!root) return;
   const present=document.body.classList.contains('present');
@@ -9565,30 +9741,7 @@ function wirePack(){
   // Clear. Pointer→canvas mapping uses getBoundingClientRect so it's correct under the scaled slide
   // transform. Ink colour = the resolved var(--ink) (student-ink for maths, primary elsewhere). No-op
   // without [data-tp-ink]. Strokes redraw on re-wire so session work survives slide navigation.
-  root.querySelectorAll('[data-tp-ink]').forEach(pad=>{
-    const fid=pad.dataset.tpInk, canvas=pad.querySelector('[data-tp-ink-canvas]'); if(!canvas) return;
-    const ctx=canvas.getContext('2d'); const rt=tpRT();
-    let strokes; try{ const v=rt.ans[fid]; strokes=Array.isArray(v)?v:(typeof v==='string'&&v?JSON.parse(v):[]); }catch(e){ strokes=[]; }
-    let tool='pen', drawing=false, cur=null;
-    const redraw=()=>{ const ink=getComputedStyle(canvas).color||'#1f6fb2'; ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle=ink; ctx.fillStyle=ink;
-      for(const st of strokes){ ctx.globalCompositeOperation=st.e?'destination-out':'source-over'; const pts=st.p||[];
-        if(pts.length===1){ ctx.beginPath(); ctx.arc(pts[0].x,pts[0].y,Math.max(1,st.w*(0.3+(pts[0].pr||.5)))/1.6,0,6.2832); ctx.fill(); continue; }
-        for(let k=1;k<pts.length;k++){ const a=pts[k-1],b=pts[k]; ctx.beginPath(); ctx.lineWidth=Math.max(1,st.w*(0.35+((a.pr+b.pr)/2))); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } }
-      ctx.globalCompositeOperation='source-over'; };
-    const pos=e=>{ const r=canvas.getBoundingClientRect(); return {x:(e.clientX-r.left)/r.width*canvas.width, y:(e.clientY-r.top)/r.height*canvas.height, pr:(e.pressure>0?e.pressure:0.5)}; };
-    const save=()=>{ rt.ans[fid]=strokes; };
-    canvas.addEventListener('pointerdown',e=>{ e.preventDefault(); drawing=true; try{canvas.setPointerCapture(e.pointerId);}catch(_){}
-      cur={e:tool==='eraser', w:tool==='eraser'?26:5, p:[pos(e)]}; strokes.push(cur); redraw(); });
-    canvas.addEventListener('pointermove',e=>{ if(!drawing) return; cur.p.push(pos(e)); redraw(); });
-    const end=e=>{ if(!drawing) return; drawing=false; try{canvas.releasePointerCapture(e.pointerId);}catch(_){}; save(); };
-    canvas.addEventListener('pointerup',end); canvas.addEventListener('pointercancel',end);
-    pad.querySelectorAll('[data-tp-ink-tool]').forEach(btn=>btn.addEventListener('click',()=>{ tool=btn.dataset.tpInkTool;
-      pad.querySelectorAll('[data-tp-ink-tool]').forEach(b=>b.setAttribute('aria-pressed', b===btn?'true':'false')); }));
-    const undoB=pad.querySelector('[data-tp-ink-undo]'); if(undoB) undoB.addEventListener('click',()=>{ strokes.pop(); save(); redraw(); });
-    const clearB=pad.querySelector('[data-tp-ink-clear]'); if(clearB) clearB.addEventListener('click',()=>{ strokes=[]; save(); redraw(); });
-    redraw();   // restore session strokes
-  });
+  wireInkPads(root);
   wireGeoModals();
   // v2 Maths — graphQuestion ([data-tp-gq]): mount the equation editor, click-to-plot, and check by function
   // SAMPLING so equivalent forms pass, with misconception diagnosis. The "working" pen canvas is wired by the
@@ -9752,6 +9905,30 @@ function tpRespGet(pageId,responseId){
 /* A DETERMINISTIC, JSON-SERIALISABLE SNAPSHOT that shares no reference with the live store: the caller
    (lessonEnd, an adapter, a test) must not be able to mutate a student's work by holding the result.
    Keys are sorted so two runs over the same state produce byte-identical JSON. */
+/* THE INK PAYLOAD. A workbook is one response with several sheets, so `value` is
+     { current:'w1', pages:[ {id:'w1', strokes:[…]}, {id:'w2', strokes:[…]} ] }
+   and the bundle can name page / workbook page / kind / payload without any of them being a position.
+   Sheet ids are minted from a counter that only ever goes up: adding a sheet never renumbers an existing
+   one, so a stroke cannot change owner. Nothing here reorders `pages`, and nothing reads its index as
+   identity — `current` is an id, not an offset. */
+function tpInkDoc(pageId,respId){
+  const e=tpRespGet(pageId,respId);
+  let v=(e&&e.kind==='ink'&&e.value&&Array.isArray(e.value.pages))?e.value:null;
+  if(!v){ v={current:'w1', pages:[{id:'w1', strokes:[]}]}; tpRespSet(pageId,respId,'ink',v); }
+  return v;
+}
+function tpInkSheet(pageId,respId,slot){
+  const d=tpInkDoc(pageId,respId);
+  for(const pg of d.pages) if(pg.id===slot) return pg;
+  const pg={id:String(slot), strokes:[]}; d.pages.push(pg); return pg;
+}
+function tpInkAddSheet(pageId,respId){
+  const d=tpInkDoc(pageId,respId);
+  let n=0; d.pages.forEach(pg=>{ const m=/^w(\d+)$/.exec(pg.id); if(m) n=Math.max(n,+m[1]); });
+  const pg={id:'w'+(n+1), strokes:[]}; d.pages.push(pg); d.current=pg.id; return pg;
+}
+function tpInkSetCurrent(pageId,respId,slot){ const d=tpInkDoc(pageId,respId); d.current=String(slot); return d; }
+
 function tpRespBundle(){
   const out={};
   Object.keys(TP_RESP).sort().forEach(pid=>{
