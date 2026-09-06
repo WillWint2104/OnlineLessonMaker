@@ -19,6 +19,27 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `tpRespBundle()` returns a deterministic, key-sorted, deep-copied, JSON-serialisable snapshot — mutating
   what it hands back cannot reach live state. The submission seam ships with its only adapter, `none`,
   which collects and delivers nothing; still no storage of any kind (golden rule 2).
+- **A — the responsive page layer.** A second renderer namespace, `PAGES[theme][type]`, registered through
+  `registerPage()`. A type registered there is a whole page laid out by CSS at the real viewport size and
+  never enters the 1280x720 canvas: `body.respo` releases the scale and `fitCanvas()` returns before it
+  mutates anything, so the ResizeObserver that calls it on every stage resize cannot reach a responsive
+  page either. **`layoutMode` is registration metadata, never lesson JSON** — an author says what a page
+  means, the registration says how it is laid out; a `layoutMode` key written into a slide is inert in both
+  directions, and the gate writes one to prove it.
+  The shell owns the frame, not the templates: a header with the collapsible navigation, the page-content
+  region, and the split region every workspace kind will land in (`registerWorkspace()`; a declared kind
+  nobody renders says so in the page instead of collapsing the region). Three independent scroll owners at
+  desktop widths; at narrow widths the composition changes in kind rather than in scale — the navigation
+  becomes an overlay drawer and the split collapses to ONE scroller so a handset reads the page and its
+  workspace as a single document. Nav state is session-only, and the toggle is a class flip, so collapsing
+  the rail never re-renders the page or loses the reader's place.
+  The app's own page sidebar is hidden on a responsive page: the shell rail duplicated it at desktop
+  widths and `.side` is `display:none` below 820px, so the shell drawer is the only navigation a phone
+  had. `shell` is a deliberately throwaway scaffold page type (not in the editor palette, not part of the
+  approved page vocabulary) so the frame is real and measurable before the Mathematics templates land.
+  Legacy slide types are registered nowhere in `PAGES`, so every existing lesson keeps the canvas model —
+  `verify-responsive-shell.mjs` (52/52) pairs every width assertion with a legacy control page rendered in
+  the same lesson, which stays pinned at 1280 logical px while the responsive page really reflows.
 - **C6b — the learning card.** One instructional-card primitive with two homes: the `text` block, and a
   figure's new `companion`. There is deliberately no second "figure prose card" renderer — the two callers
   differ only in where the card is placed, and placement is the surrounding block's business. The card is

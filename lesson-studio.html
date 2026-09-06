@@ -1589,6 +1589,76 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 /* A1 — opt-in long-form scrolling layout (per-slide "layout":"scroll") */
 /* (scroll-mode layout is handled by .canvas.scroll + JS fitCanvas, above) */
 
+/* ═══════════ A — THE RESPONSIVE PAGE LAYER (Mathematics page templates) ═══════════
+   A page type registered through registerPage() declares layoutMode:'responsive'. Such a page is laid
+   out by CSS at the REAL viewport size: body.respo releases the fixed 1280x720 canvas (fitCanvas()
+   returns before it mutates anything) and the shell below owns the frame. Legacy slide types are not
+   registered in PAGES, never get body.respo, and keep the canvas + fitCanvas() model unchanged.
+   These rules sit AFTER body.present so a responsive page drops the present letterbox padding too —
+   the shell is the same frame in Study and Present; only the chrome around it differs. */
+/* The shell's rail IS the navigation for a responsive page, so the app's own page sidebar is hidden
+   rather than shown twice. That is not only tidiness: `.side` is display:none below 820px, so on a
+   phone the shell drawer is the ONLY navigation there is — one rail that works at every width beats a
+   rail that duplicates another one on a laptop and vanishes on a handset. */
+body.respo .side{display:none;}
+body.respo .stage{padding:0;display:block;overflow:hidden;scrollbar-gutter:auto;}
+body.respo .canvasfit{position:static;width:auto;height:100%;}
+body.respo .canvas{position:static;width:auto;height:100%;transform:none;border-radius:0;box-shadow:none;}
+body.respo #slide{align-items:stretch;width:auto;}
+/* The shell frame. Three scroll owners — nav, content, workspace — each clipped by a min-height:0 flex
+   ancestor so one region scrolling never scrolls another (and the window never scrolls at all). */
+.rp{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;background:var(--background,#fff);color:var(--on-surface,#1a1c22);}
+.rp-top{flex:0 0 auto;display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--outline-variant,#dcd9cd);background:var(--surface,#fff);}
+.rp-navtoggle{flex:0 0 auto;width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--outline-variant,#dcd9cd);border-radius:9px;background:transparent;cursor:pointer;color:inherit;}
+.rp-navtoggle:hover{background:var(--surface-container-low,rgba(0,0,0,.04));}
+.rp-burger{display:block;width:16px;height:2px;background:currentColor;position:relative;}
+.rp-burger::before,.rp-burger::after{content:"";position:absolute;left:0;width:16px;height:2px;background:currentColor;}
+.rp-burger::before{top:-5px;} .rp-burger::after{top:5px;}
+.rp-ident{min-width:0;display:flex;flex-direction:column;font-family:var(--tp-face-sans);line-height:1.3;}
+.rp-ident b{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rp-ident span{font-size:12px;color:var(--on-surface-variant,#57544b);}
+.rp-body{flex:1 1 auto;min-height:0;display:flex;position:relative;}
+.rp-nav{display:none;flex:0 0 264px;min-width:0;min-height:0;overflow:auto;padding:14px 10px;
+  border-right:1px solid var(--outline-variant,#dcd9cd);background:var(--surface,#fff);}
+.rp.rp-navopen .rp-nav{display:block;}
+.rp-navlist{list-style:none;margin:0;padding:0;font-family:var(--tp-face-sans);}
+.rp-navitem{display:flex;align-items:baseline;gap:10px;width:100%;text-align:left;padding:8px 10px;margin:1px 0;
+  border:0;border-radius:8px;background:transparent;color:inherit;font:inherit;font-size:13.5px;line-height:1.4;cursor:pointer;}
+.rp-navitem:hover{background:var(--surface-container-low,rgba(0,0,0,.04));}
+.rp-navitem.on{background:var(--primary-fixed,rgba(0,0,0,.08));font-weight:600;}
+.rp-navn{flex:0 0 auto;min-width:1.4em;font-variant-numeric:tabular-nums;color:var(--on-surface-variant,#57544b);}
+.rp-navt{min-width:0;overflow-wrap:anywhere;}
+.rp-scrim{display:none;}
+.rp-main{flex:1 1 auto;min-width:0;min-height:0;display:flex;}
+/* The split region. One column when the page declares no workspace; two when it does — the shell owns
+   the split, not the page template, so every workspace kind lands in the same frame. */
+.rp-split{flex:1 1 auto;min-width:0;min-height:0;display:flex;}
+.rp-content{flex:1 1 auto;min-width:0;min-height:0;overflow:auto;padding:34px 40px 56px;}
+.rp-content:focus{outline:none;}
+.rp-work{flex:0 0 clamp(320px,42%,560px);min-width:0;min-height:0;overflow:auto;padding:24px 26px 44px;
+  border-left:1px solid var(--outline-variant,#dcd9cd);background:var(--surface-container-low,rgba(0,0,0,.02));}
+/* the `shell` scaffold page — plain page-lede typography on the theme prose slots, nothing more */
+.rp-eyebrow{font-family:var(--tp-face-sans);font-size:12px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--on-surface-variant,#57544b);margin-bottom:10px;}
+.rp-h1{font-family:var(--tp-serif,var(--tp-face-serif));font-weight:600;font-size:clamp(26px,3.2vw,38px);line-height:1.18;margin:0;}
+.rp-intro{font-family:var(--tp-body,var(--tp-face-serif));font-size:var(--tp-prose-size,19px);line-height:var(--tp-prose-lh,1.7);color:var(--on-surface-variant,#57544b);max-width:62ch;margin:14px 0 0;}
+.rp-err,.rp-wsph{font-family:var(--tp-face-sans);font-size:13.5px;line-height:1.55;padding:14px 16px;border-radius:10px;
+  border:1px dashed var(--outline-variant,#dcd9cd);color:var(--on-surface-variant,#57544b);background:transparent;}
+.rp-err{border-style:solid;border-color:var(--error,#b23a34);color:var(--error,#b23a34);}
+.rp :focus-visible{outline:2px solid var(--focus-ring,var(--primary,#2f6b56));outline-offset:2px;}
+/* Narrow composition — not a smaller copy of the wide one. The nav becomes an overlay drawer over the
+   content, and the split collapses into ONE column with a SINGLE scroll owner (the split itself), so a
+   phone reads the page and its workspace as one continuous document instead of two short scroll boxes. */
+@media (max-width:900px){
+  .rp.rp-navopen .rp-nav{position:absolute;inset:0 auto 0 0;z-index:5;width:min(300px,84vw);flex:none;
+    box-shadow:0 0 0 1px var(--outline-variant,#dcd9cd),8px 0 26px rgba(0,0,0,.16);}
+  .rp.rp-navopen .rp-scrim{display:block;position:absolute;inset:0;z-index:4;background:rgba(0,0,0,.34);border:0;}
+  .rp-split{flex-direction:column;overflow:auto;}
+  .rp-content,.rp-work{flex:0 0 auto;overflow:visible;}
+  .rp-content{padding:22px 18px 24px;}
+  .rp-work{border-left:0;border-top:1px solid var(--outline-variant,#dcd9cd);padding:20px 18px 40px;}
+}
+
 /* ---- expand button + lightbox ---- */
 .expand{position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:9px;z-index:3;cursor:pointer;
   background:rgba(0,0,0,.45);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.05rem;opacity:.85;}
@@ -1784,7 +1854,8 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   /* v2 Phase 2b width authority (Layer 3) — cards widen up to the canvas measure (was a 1024/1040/1120 spread); .tp-gr-wrap stays narrow (no 75ch prose cap in this theme) */
   --tp-measure:1140px;--tp-measure-narrow:880px;--tp-measure-read:700px;
   background:var(--desk);font-family:var(--tp-body);color:var(--on-surface);}
-:root[data-theme="mathematics"] .tp-slide{
+:root[data-theme="mathematics"] .tp-slide,
+:root[data-theme="mathematics"] .rp{   /* A: the responsive shell is a token consumer too — same slot palette, no second source of colour */
   /* Mathematics slot palette — "Paper & Board". Warm paper reading surface, blue-black ink, deep board
      green (--primary doubles as the point-of-interest green). Every value is a slot definition; elements
      are only ever coloured via var(--slot) (no literal colour applied to a styling property). EB Garamond
@@ -3777,11 +3848,14 @@ function renderCanvas(){
   figFocusExit();                                                          // the slide is about to be replaced — never strand a reparented figure
   const realEdit=(mode==='edit'), _savedMode=mode;
   const s=LESSON.slides[cur], i=cur; let h='';
+  const RP_ENTRY=tpPageEntry(s);                                                          // A: null for every legacy slide → the canvas model below is untouched
+  document.body.classList.toggle('respo',!!RP_ENTRY);
   const present=document.body.classList.contains('present');
   if(!LESSON.slides.length){ $('#slide').innerHTML=glEmptyState(); $('#prev').disabled=true; $('#next').disabled=true; fitCanvas(); return; }
   if(realEdit) mode='study';   // Edit canvas renders Study-identical (no contenteditable, no inline editors, true WYSIWYG)
   try {
-  if(PACK_THEMES.has(LESSON.meta&&LESSON.meta.theme)){ h=renderPackSlide(s,i,present); }   // imperium/microhistory: dedicated JSON-rendered slide pack
+  if(RP_ENTRY){ h=renderResponsivePage(RP_ENTRY,s,i); }                                   // A: responsive page template — laid out at the real viewport, never through the canvas
+  else if(PACK_THEMES.has(LESSON.meta&&LESSON.meta.theme)){ h=renderPackSlide(s,i,present); }   // imperium/microhistory: dedicated JSON-rendered slide pack
   else if(s.type==='cover'){
     const bg=s.bg||'';
     const heroOn=!!bg&&!!s.heroBg;                                  // "behind the gradient" — image sits behind the THEME gradient (default false: behind a dark legibility veil)
@@ -4163,6 +4237,7 @@ function renderCanvas(){
 function fitCanvas(){
   const stage=$('#stage'), fit=$('#canvasFit'), canvas=$('#canvas');
   if(!stage||!canvas||!fit) return;
+  if(document.body.classList.contains('respo')){ rpReleaseCanvas(); return; }   // A: a responsive page owns its own frame — return BEFORE any mutation, so nothing here can reach it
   // Use the CONTENT area (subtract padding) so a Fit slide scaled to fill never spills past the
   // padding edge → no spurious scrollbar; and Present maximises into the true available space.
   const cs=getComputedStyle(stage);
@@ -6547,6 +6622,129 @@ function packInteractive(s){
    byte-identical. New blocks (3b: labeledGraphic) register the same way. */
 const REGISTRY={}, THEME_TYPES={}, FRAG={};   // FRAG = parallel fragment-renderer map (v3 A1); NOT boxed into REGISTRY so the legacy `REGISTRY[type][theme]` lookup + byte-identical page path are untouched
 function registerBlock(type,theme,pageFn,fragFn){ (REGISTRY[type]||(REGISTRY[type]={}))[theme]=pageFn; if(fragFn)(FRAG[type]||(FRAG[type]={}))[theme]=fragFn; (THEME_TYPES[theme]||(THEME_TYPES[theme]=[])).push(type); }   // 4th arg optional: absent → block is page-only (title/outro/etc.). THEME_TYPES preserves registration order (drives the editor palette)
+
+/* ═══════════ A — THE RESPONSIVE PAGE LAYER ═══════════
+   A SECOND renderer namespace beside REGISTRY, for the Mathematics page templates. A type registered
+   here is a whole PAGE laid out by CSS at the real viewport size; it never enters the 1280x720 canvas.
+
+   layoutMode is REGISTRATION metadata. It is never read from lesson JSON and never written into it —
+   an author says what a page MEANS (its type, its workspace), the renderer's registration says how that
+   page is laid out. Nothing is registered here for a legacy type, so every existing lesson still resolves
+   through REGISTRY and fitCanvas() exactly as before.
+
+   PAGES is keyed theme-first (PAGES[theme][type]) — the opposite of REGISTRY[type][theme] — because a
+   responsive template is a property of the theme that owns it, and the whole namespace for a theme has
+   to be answerable in one lookup (tpPageEntry) on every render.
+
+   NOTE for the stages that follow: a type registered here for a theme SHADOWS REGISTRY[type][theme] for
+   that theme. `video` and `interactive` are already registered for mathematics; registering either name
+   here would silently replace the canvas renderer. Nothing is shadowed today. */
+const PAGES={};                                     /* PAGES[theme][type] = {fn, layoutMode} */
+const LAYOUT_MODES=['canvas','responsive'];
+function registerPage(theme,type,fn,layoutMode){
+  const m=(layoutMode||'responsive');
+  if(LAYOUT_MODES.indexOf(m)<0) throw new Error('registerPage: unknown layoutMode "'+m+'"');
+  (PAGES[theme]||(PAGES[theme]={}))[type]={fn:fn, layoutMode:m};
+}
+function tpPageEntry(s){
+  if(!s||!s.type) return null;
+  const byTheme=PAGES[(LESSON&&LESSON.meta&&LESSON.meta.theme)||''];
+  const e=byTheme&&byTheme[s.type];
+  return (e&&e.layoutMode==='responsive')?e:null;   /* only the responsive path leaves the canvas */
+}
+function tpLayoutMode(s){
+  if(!s||!s.type) return 'canvas';
+  const byTheme=PAGES[(LESSON&&LESSON.meta&&LESSON.meta.theme)||''];
+  const e=byTheme&&byTheme[s.type];
+  return (e&&e.layoutMode)||'canvas';
+}
+
+/* Collapsible navigation — session-only, like TP_RUNTIME. Never persisted (golden rule 2).
+   `null` = the student has not chosen yet, so the first render resolves the default from the viewport:
+   open on a wide screen (a rail beside the page), closed on a narrow one (a drawer over it). After that
+   it is the student's choice and a resize does not overrule it. */
+const RP_NARROW='(max-width: 900px)';
+let RP_NAV=null;
+function rpNarrow(){ return !!(window.matchMedia&&window.matchMedia(RP_NARROW).matches); }
+function rpNavOpen(){ if(RP_NAV===null) RP_NAV=!rpNarrow(); return RP_NAV; }
+function rpSyncNav(){
+  const root=$('#slide').querySelector('.rp'); if(!root) return;
+  const open=rpNavOpen();
+  root.classList.toggle('rp-navopen',open);
+  const b=root.querySelector('[data-rp-navtoggle]');
+  if(b){ b.setAttribute('aria-expanded',open?'true':'false'); b.setAttribute('aria-label',open?'Hide lesson pages':'Show lesson pages'); }
+}
+function rpNavToggle(){ RP_NAV=!rpNavOpen(); rpSyncNav(); }   /* class flip only — never a re-render, so the content region keeps its scroll position */
+
+/* Workspace kinds. The SHELL owns the split region; a kind only fills it. Stages B–G register kinds
+   here (graph, geometry, workbook, …); until then a declared kind that nobody renders says so in the
+   page rather than silently collapsing the region. */
+const WORKSPACE_KINDS={};
+function registerWorkspace(kind,fn){ WORKSPACE_KINDS[kind]=fn; }
+function rpWorkspace(ws,s,i){
+  const kind=String((ws&&ws.kind)||'').trim();
+  const fn=WORKSPACE_KINDS[kind];
+  if(fn){ try{ return fn(ws,s,i); }catch(e){ return `<div class="rp-err">Workspace error: ${esc(String(e.message||e))}</div>`; } }
+  return `<div class="rp-wsph">${kind
+    ?'This page asks for a “'+esc(kind)+'” workspace, and no workspace of that kind is registered yet.'
+    :'This page declares a workspace but no <code>kind</code>, so there is nothing to put in it.'}</div>`;
+}
+
+function rpNavItems(){
+  return (LESSON.slides||[]).map((s,i)=>`<li><button type="button" class="rp-navitem${i===cur?' on':''}" data-rp-go="${i}"${i===cur?' aria-current="page"':''}><span class="rp-navn">${i+1}</span><span class="rp-navt">${esc(title(s))}</span></button></li>`).join('');
+}
+function renderResponsivePage(entry,s,i){
+  const theme=(LESSON.meta&&LESSON.meta.theme)||'';
+  const open=rpNavOpen(), n=(LESSON.slides||[]).length;
+  let body;
+  try{ body=entry.fn(s,i); }
+  catch(e){ body=`<div class="rp-err">Render error: ${esc(String(e.message||e))}</div>`; }
+  const ws=(s&&s.workspace&&typeof s.workspace==='object'&&!Array.isArray(s.workspace))?s.workspace:null;
+  const main=`<div class="rp-split${ws?' rp-2col':''}">
+      <section class="rp-content" tabindex="-1">${body}</section>
+      ${ws?`<section class="rp-work" data-rp-workspace="${esc(String(ws.kind||''))}" aria-label="Workspace">${rpWorkspace(ws,s,i)}</section>`:''}
+    </div>`;
+  return `<div class="rp${open?' rp-navopen':''}" data-tp-theme="${esc(theme)}" data-rp-type="${esc(s.type||'')}" data-rp-layout="${esc(entry.layoutMode)}">
+    <header class="rp-top">
+      <button type="button" class="rp-navtoggle" data-rp-navtoggle aria-controls="rpNav" aria-expanded="${open?'true':'false'}" aria-label="${open?'Hide lesson pages':'Show lesson pages'}"><span class="rp-burger"></span></button>
+      <div class="rp-ident"><b>${esc((LESSON.meta&&LESSON.meta.title)||'')}</b><span>Page ${i+1} of ${n}</span></div>
+    </header>
+    <div class="rp-body">
+      <nav class="rp-nav" id="rpNav" aria-label="Lesson pages"><ol class="rp-navlist">${rpNavItems()}</ol></nav>
+      <button type="button" class="rp-scrim" data-rp-navtoggle tabindex="-1" aria-hidden="true"></button>
+      <main class="rp-main">${main}</main>
+    </div>
+  </div>`;
+}
+/* Hand the canvas back. fitCanvas() sets transform/height/overflow inline; a responsive page must start
+   from none of it, and a legacy page rendered next must find the element exactly as fitCanvas left it. */
+function rpReleaseCanvas(){
+  const stage=$('#stage'), fit=$('#canvasFit'), canvas=$('#canvas');
+  if(canvas){ canvas.classList.remove('scroll'); canvas.style.transform=''; canvas.style.height=''; }
+  if(fit){ fit.style.width=''; fit.style.height=''; }
+  if(stage){ stage.style.overflow=''; stage.style.alignItems=''; stage.style.justifyContent=''; }
+}
+function wireResponsive(){
+  const root=$('#slide').querySelector('.rp'); if(!root) return;
+  root.querySelectorAll('[data-rp-navtoggle]').forEach(b=>b.addEventListener('click',e=>{ e.preventDefault(); rpNavToggle(); }));
+  root.querySelectorAll('[data-rp-go]').forEach(b=>b.addEventListener('click',()=>{
+    const n=+b.dataset.rpGo;
+    if(rpNarrow()) RP_NAV=false;                    /* a drawer over the page closes behind the choice */
+    if(n!==cur) go(n); else rpSyncNav();
+  }));
+}
+
+/* Stage A ships the shell, not the vocabulary: `shell` is a scaffold page type — a titled content region
+   plus whatever workspace the page declares — so the frame is real and measurable before the Mathematics
+   templates land on top of it. It is deliberately NOT in the editor palette (registerPage does not touch
+   THEME_TYPES) and it is not part of the approved page vocabulary. */
+function rpShellPage(s,i){
+  const eyebrow=s.eyebrow?`<div class="rp-eyebrow">${esc(s.eyebrow)}</div>`:'';
+  const intro=s.intro?`<p class="rp-intro">${esc(s.intro)}</p>`:'';
+  return `${eyebrow}<h1 class="rp-h1">${esc(s.title||s.heading||'Untitled page')}</h1>${intro}`;
+}
+registerPage('mathematics','shell',rpShellPage,'responsive');
+
 // imperium
 registerBlock('title','imperium',imTitle); registerBlock('outcomes','imperium',imOutcomes); registerBlock('imageText','imperium',imImageText); registerBlock('text','imperium',packText); registerBlock('infographic','imperium',imInfographic); registerBlock('video','imperium',imVideo); registerBlock('knowledgeCheck','imperium',imKnowledge); registerBlock('sourceAnalysis','imperium',packSourceAnalysis); registerBlock('guidedResponse','imperium',packGuidedResponse); registerBlock('interactive','imperium',packInteractive); registerBlock('outro','imperium',packOutro);
 // microhistory
@@ -8971,6 +9169,7 @@ Object.assign(PACK_ICONS,{
    Cleared on lesson (re)load — see #jsonLoad and the initial render. */
 let TP_RUNTIME={};
 function tpRT(){ return (TP_RUNTIME[cur]=TP_RUNTIME[cur]||{ans:{},shown:{}}); }
+
 /* ═══════════════ A0 — THE LESSON RESPONSE STORE ═══════════════
    Everything a student produces during a lesson session, keyed by STABLE AUTHORED IDENTITY.
 
@@ -9526,6 +9725,7 @@ function wire(){
   });
   wireInfographic();
   wirePack();
+  wireResponsive();
   wirePageFlow();   // v3 F1 — flat composable pages: block entrance animation (no-op everywhere else)
   wireSelfCheck();  // S1 — self-check three-way self-mark (additive; wirePack stays byte-identical)
   wirePracticeSet();// S2 — sticky mastery bar aggregates the self-marks (additive; reads TP_RUNTIME)
@@ -10248,8 +10448,8 @@ document.addEventListener('click',e=>{ if(e.target.closest('#insCollapse')) insC
 (function(){ try{ if(localStorage.getItem('ls-editnote')==='off') document.documentElement.classList.add('editnote-off'); }catch(e){}
   const x=$('#editnoteX'); if(x) x.onclick=()=>{ document.documentElement.classList.add('editnote-off');
     try{ localStorage.setItem('ls-editnote','off'); }catch(e){} if(typeof fitCanvas==='function') requestAnimationFrame(fitCanvas); }; })();
-tpRespReset(LESSON);   // A0 — audit authored response identity once, at load
 
+tpRespReset(LESSON);   // A0 — audit authored response identity once, at load
 render(); renderPalette();   // palette content is static (per category) — build it once, not on every render()
 </script>
 </body>
