@@ -247,7 +247,7 @@ ok('the face is never applied to the card container (so font:inherit controls ca
    `container stays ${faces.undefined.container} under every fontStyle`);
 ok('mathematical notation keeps its own face under every fontStyle',
    ['undefined', 'theme', 'serif', 'sans'].every((k) => faces[k].math === 'LM Math'),
-   'math resolves LM Math in all four');
+   'math resolves ' + JSON.stringify(['undefined','theme','serif','sans'].map(k=>faces[k].math)));
 
 /* NON-VACUITY 2. If the face were applied to the container instead of the text classes, the control guard
    above would still read "unchanged" unless it is actually sensitive. Prove it is. */

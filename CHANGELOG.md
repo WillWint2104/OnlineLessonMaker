@@ -19,27 +19,35 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   `tpRespBundle()` returns a deterministic, key-sorted, deep-copied, JSON-serialisable snapshot — mutating
   what it hands back cannot reach live state. The submission seam ships with its only adapter, `none`,
   which collects and delivers nothing; still no storage of any kind (golden rule 2).
-- **A — the responsive page layer.** A second renderer namespace, `PAGES[theme][type]`, registered through
-  `registerPage()`. A type registered there is a whole page laid out by CSS at the real viewport size and
-  never enters the 1280x720 canvas: `body.respo` releases the scale and `fitCanvas()` returns before it
-  mutates anything, so the ResizeObserver that calls it on every stage resize cannot reach a responsive
-  page either. **`layoutMode` is registration metadata, never lesson JSON** — an author says what a page
-  means, the registration says how it is laid out; a `layoutMode` key written into a slide is inert in both
-  directions, and the gate writes one to prove it.
-  The shell owns the frame, not the templates: a header with the collapsible navigation, the page-content
-  region, and the split region every workspace kind will land in (`registerWorkspace()`; a declared kind
-  nobody renders says so in the page instead of collapsing the region). Three independent scroll owners at
-  desktop widths; at narrow widths the composition changes in kind rather than in scale — the navigation
-  becomes an overlay drawer and the split collapses to ONE scroller so a handset reads the page and its
-  workspace as a single document. Nav state is session-only, and the toggle is a class flip, so collapsing
-  the rail never re-renders the page or loses the reader's place.
-  The app's own page sidebar is hidden on a responsive page: the shell rail duplicated it at desktop
-  widths and `.side` is `display:none` below 820px, so the shell drawer is the only navigation a phone
-  had. `shell` is a deliberately throwaway scaffold page type (not in the editor palette, not part of the
-  approved page vocabulary) so the frame is real and measurable before the Mathematics templates land.
-  Legacy slide types are registered nowhere in `PAGES`, so every existing lesson keeps the canvas model —
-  `verify-responsive-shell.mjs` (52/52) pairs every width assertion with a legacy control page rendered in
-  the same lesson, which stays pinned at 1280 logical px while the responsive page really reflows.
+- **A — the Mathematics page shell.** The responsive layer's first pass was rejected on sight: it made the
+  OLD application shell responsive instead of building the Mathematics product. This replaces the shell and
+  keeps the architecture. The approved mockups are now the visual source of truth, and its palette is
+  measured from them rather than invented — sampling the approved screens pixel by pixel, 60–69% of every
+  one is pure white, pale green tints sit at 1–3%, and there is no beige anywhere; the greens cluster at
+  #047C4B/#157344, kept here as ONE accent token. The darks read near-black with a blue cast; per the brief
+  this shell uses a neutral charcoal instead, so body text is not blue.
+  **The application chrome is absorbed, not stacked on top.** `.top`, `.side` and `.foot` are hidden on a
+  responsive page and the Mathematics bar carries their controls as PROXIES that click the real hidden
+  buttons — so Study/Edit/Present/Worksheet/Export and the page pager keep their existing handlers and
+  cannot drift, and there is exactly one navigation on screen instead of two. The rail names lesson
+  sections with an icon and a soft green active state, not page numbers; the number is secondary metadata
+  in the bar. The persistent bottom Back/Next bar is gone.
+  **Space belongs to the mathematics.** A page template declares its own surface at registration
+  (`panel` or `flush`): Notes is two panels that fill the frame; Practice is a textbook question column on
+  white with the workbook PERSISTENT beside it — the questions scroll, the workbook does not, which is what
+  makes it a workbook. A closed inline convention (`_x_`, `^2`) sets variables in italic and exponents as
+  exponents; it runs AFTER `esc()` and can only ever emit `<i>` and `<sup>`, so author text can never
+  become markup. The lesson-level Write/Type selector is session-only and appears only on a page that takes
+  written work.
+  Kept from the rejected pass, unchanged: A0's response identity, the submission seam, renderer-owned
+  `layoutMode` (never lesson JSON), no whole-page 1280px scaling, legacy canvas isolation, the drawer at
+  narrow widths. `verify-responsive-shell.mjs` (67/67) pairs every width assertion with a legacy control
+  page rendered in the same browser, which stays pinned at 1280 logical px while the responsive page really
+  reflows.
+  **Nothing is shadowed.** Two names in the approved page vocabulary — `video` and `interactive` — are
+  already canvas page types under `mathematics`. Taking them measurably changed 5 of `verify-corpus-identity`'s
+  250 units, so the Stage A shells for those two sit under deliberately temporary names pending that decision.
+
 - **C6b — the learning card.** One instructional-card primitive with two homes: the `text` block, and a
   figure's new `companion`. There is deliberately no second "figure prose card" renderer — the two callers
   differ only in where the card is placed, and placement is the surrounding block's business. The card is
@@ -66,6 +74,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   unknown name is reported and drawn as nothing.
 
 ### Fixed
+- **`scripts/vendor-fonts.mjs` could silently delete a hand-vendored face.** LM Math was vendored by hand
+  into the generated `VENDORED-FONTS` block, and `.tp-slide math` depends on it. Re-running the generator
+  wiped both — MathML fell back to the browser's generic `math` family — and the only thing that noticed
+  was one assertion in `verify-learning-card`. The generator now carries any hand-authored CSS above the
+  generated faces through untouched, and a re-run is byte-identical.
+
 - **The `beside` prose floor measured the wrong box.** `FIG_BESIDE_MIN_PROSE = 260` was compared against the
   raw grid column, so with a carded companion (measured: 64px of padding and borders) a column at the floor
   delivered ~196px of readable text while the constant's own comment claimed "~32ch at 16px". It is now

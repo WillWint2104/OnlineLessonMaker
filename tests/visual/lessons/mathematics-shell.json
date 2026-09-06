@@ -1,0 +1,71 @@
+{
+  "_note": "Stage A visual fixture. Enough authentic Mathematics content to judge the page shell against the approved mockups; not a real lesson and not a schema reference. Replaced by authored lessons from Stage C onwards.",
+  "meta": {
+    "title": "Non-linear relationships",
+    "theme": "mathematics",
+    "stage": "Stage 5",
+    "year": "Year 9",
+    "unit": "Non-linear relationships"
+  },
+  "slides": [
+    {
+      "type": "notes",
+      "id": "notes",
+      "navLabel": "Notes",
+      "title": "Exploring the graph of _y_ = _x_^2",
+      "lede": "A quadratic function with a U-shaped curve.",
+      "keyIdea": { "title": "Key idea", "body": "Opposite _x_-values give the same _y_-value: if _x_ = _a_, then _x_ = −_a_ gives the same _y_." },
+      "contentTitle": "The key ideas",
+      "keyIdeas": [
+        { "term": "Shape", "body": "The graph of _y_ = _x_^2 is a parabola that opens upwards." },
+        { "term": "Vertex", "body": "The vertex is at (0, 0), which is the lowest point on the graph." },
+        { "term": "Axis of symmetry", "body": "The graph is symmetrical about the _y_-axis." },
+        { "term": "_y_-values", "body": "All _y_-values are zero or positive (_y_ ≥ 0). Opposite _x_-values give the same _y_-value." }
+      ],
+      "workspace": { "kind": "representation", "tabs": ["Graph", "Table", "Coordinates"] }
+    },
+    { "type": "workedExamples", "id": "worked", "navLabel": "Worked examples",
+      "title": "Worked examples — _y_ = _x_^2", "lede": "Step-by-step solutions to help you build confidence.",
+      "stubNote": "Example tabs, the staged solution and its graphical representation land at Stage C." },
+    { "type": "videoShell", "id": "video", "navLabel": "Video",
+      "title": "How the graph of _y_ = _x_^2 is formed", "lede": "Watch how a table of values becomes a parabola.",
+      "stubNote": "The dominant video region and its compact supplementary panel land at Stage D." },
+    { "type": "interactiveShell", "id": "interactive", "navLabel": "Interactive",
+      "title": "Explore the graph of _y_ = _x_^2", "lede": "Move the point and observe how the outputs behave.",
+      "stubNote": "The interactive workspace and its schema-generated control region land at Stage E." },
+    {
+      "type": "practice",
+      "id": "practice-equations",
+      "navLabel": "Practice — Equations",
+      "navSub": "Equations",
+      "title": "Practice — Equations",
+      "splitRatio": "minmax(0,1fr) minmax(0,1.15fr)",
+      "questions": [
+        { "stem": "Use the rule _y_ = _x_^2 to find the value of _y_ when:",
+          "parts": ["_x_ = 3", "_x_ = −4", "_x_ = ½"] },
+        { "stem": "Complete the table of values for _y_ = _x_^2.",
+          "table": { "stub": "_x_", "head": ["−3", "−2", "−1", "0", "1", "2", "3"],
+            "rows": [{ "label": "_y_ = _x_^2", "cells": ["", "", "", "", "", "", ""] }] } },
+        { "stem": "Find the value(s) of _x_ when _y_ = 16." },
+        { "stem": "Decide whether each point lies on the graph of _y_ = _x_^2. Give a reason for your answer.",
+          "parts": ["(3, 9)", "(−2, 4)", "(4, 10)", "(−1, 1)"] },
+        { "stem": "The point (_k_, 25) lies on _y_ = _x_^2.", "stack": true,
+          "parts": ["Find the possible value(s) of _k_.", "If _k_ < 0, what is the value of _k_?"] },
+        { "stem": "Solve the following equations.",
+          "parts": ["_x_^2 = 9", "_x_^2 = 5", "(2_x_ + 1)^2 = 36", "_x_^2 − 4 = 0"] },
+        { "stem": "A rectangle has an area of 36 m^2. Its length is _x_ metres and its width is _x_ − 2 metres. Form and solve an equation to find the possible values of _x_." }
+      ],
+      "workspace": { "kind": "workbook", "pages": 2 }
+    },
+    { "type": "practiceGraphs", "id": "practice-graphs", "navLabel": "Practice — Graphs", "navSub": "Graphs",
+      "title": "Practice — Graphs", "lede": "Use the graph of _y_ = _x_^2.",
+      "stubNote": "The question set, the graph sketch area and the written working area land at Stage F.",
+      "workspace": { "kind": "graph" } },
+    { "type": "practiceGeometry", "id": "practice-geometry", "navLabel": "Practice — Geometry", "navSub": "Geometry",
+      "title": "Practice — Geometry",
+      "stubNote": "The construction workspace lands at Stage G." },
+    { "type": "summary", "id": "summary", "navLabel": "Summary",
+      "title": "Summary", "lede": "What you have covered in this topic.",
+      "stubNote": "The lesson end, the response bundle and the submission handoff land at Stage H." }
+  ]
+}
