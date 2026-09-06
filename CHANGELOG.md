@@ -47,6 +47,15 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   and caret were unreachable by keyboard; and re-opening the bar mounted a second editor on the same node —
   `destroy()` unbinds the document listeners but not the field's — so every keystroke was inserted once per
   editor ever opened. Each now has a check with a control that reproduces the failure.
+- **What a student pastes is what a student keeps.** The typed page stores text and equation trees, so
+  pasted markup was always discarded at the next render — the page just went on showing it until then, which
+  reads as formatting that was accepted and then thrown away. Paste and drop now arrive as plain text at the
+  point of entry (via `insertText`, so the browser's own undo still works), which also means no foreign node
+  ever enters the document: a paste carrying `<img onerror>` no longer runs it in the student's own page.
+  The control inserts the same content the way an un-intercepted paste would, and shows the markup arriving
+  and the inline handler firing.
+- **A placed equation can be re-opened from the keyboard.** It is focusable and says "select to edit", but
+  only a pointer could do it — Enter and Space now open the editor on the focused equation.
 - **Arrow keys belong to whatever is handling them.** The global `ArrowLeft/ArrowRight` page-turn skipped
   `textarea, input, [contenteditable=true]`, which does not describe the equation field (a `[role=textbox]`
   with a tabindex) — so an arrow inside a half-built equation paged the lesson forward and took the equation

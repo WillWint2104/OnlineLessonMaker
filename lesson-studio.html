@@ -7543,6 +7543,25 @@ function mxWireWorkbook(pad){
   const save=()=>{ tpWbSheet(page,rid,slot).text=mxTypedRead(typed); };
   typed.addEventListener('input',save);
   typed.addEventListener('blur',save);
+  /* PASTE AND DROP ARRIVE AS PLAIN TEXT. What is stored is text and equation trees, so pasted markup was
+     dropped at the next render anyway — the page just kept showing it until then, which reads as formatting
+     that was accepted and later thrown away. Taking the text at the point of entry makes what the student
+     sees and what is kept the same thing, and no foreign node ever enters the document. `insertText` rather
+     than a Range so the browser's own undo still works. */
+  const insertText=(txt)=>{
+    if(!txt) return;
+    let done=false; try{ done=document.execCommand('insertText',false,txt); }catch(e){}
+    if(!done){ const sel=window.getSelection();
+      if(sel&&sel.rangeCount){ const r=sel.getRangeAt(0); r.deleteContents();
+        const n=document.createTextNode(txt); r.insertNode(n); r.setStartAfter(n); r.collapse(true);
+        sel.removeAllRanges(); sel.addRange(r); }
+      else typed.appendChild(document.createTextNode(txt)); }
+    save();
+  };
+  typed.addEventListener('paste',e=>{ e.preventDefault();
+    insertText((e.clipboardData&&e.clipboardData.getData('text/plain'))||''); });
+  typed.addEventListener('drop',e=>{ e.preventDefault();
+    insertText((e.dataTransfer&&e.dataTransfer.getData('text/plain'))||''); });
   const clr=pad.querySelector('[data-mx-tclear]');
   if(clr) clr.addEventListener('click',()=>{ typed.textContent=''; save(); typed.focus(); });
   /* The equation bar is the app's TPMath editor, opened in place. `Insert` replaces the equation being
@@ -7572,6 +7591,12 @@ function mxWireWorkbook(pad){
   pad.querySelectorAll('[data-mx-tsel]').forEach(b=>b.addEventListener('click',()=>{
     if(b.dataset.mxTsel==='eq') openEq(null); else { closeEq(); typed.focus(); } }));
   typed.addEventListener('click',e=>{ const eq=e.target.closest&&e.target.closest('.mx-eq'); if(eq) openEq(eq); });
+  /* An inserted equation is focusable and says "select to edit", so it has to be editable from the keyboard
+     and not by pointer alone. */
+  typed.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'&&e.key!==' ') return;
+    const eq=e.target.closest&&e.target.closest('.mx-eq'); if(!eq) return;
+    e.preventDefault(); openEq(eq); });
   const cancel=pad.querySelector('[data-mx-eqcancel]'); if(cancel) cancel.addEventListener('click',closeEq);
   const okB=pad.querySelector('[data-mx-eqok]');
   if(okB) okB.addEventListener('click',()=>{

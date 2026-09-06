@@ -1,0 +1,20 @@
+import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
+import { chromium } from 'playwright';
+const root='/home/user/OnlineLessonMaker';
+const server=http.createServer((req,res)=>{const u=decodeURIComponent(req.url.split('?')[0]);
+  const p=path.join(root,u==='/'?'/lesson-studio.html':u);
+  if(!fs.existsSync(p)){res.writeHead(404);return res.end();}
+  res.writeHead(200,{'Content-Type':u.endsWith('.json')?'application/json':'text/html'});res.end(fs.readFileSync(p));});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));
+const port=server.address().port;
+const b=await chromium.launch({executablePath:process.env.CHROMIUM_PATH});
+const p=await b.newPage({viewport:{width:1440,height:900}});
+p.on('console',m=>console.log('CON',m.text().slice(0,200)));
+p.on('pageerror',e=>console.log('PERR',String(e).slice(0,400)));
+await p.goto(`http://127.0.0.1:${port}/lesson-studio.html`,{waitUntil:'load'});
+const L=JSON.parse(fs.readFileSync(path.join(root,'tests/visual/lessons/mathematics-shell.json'),'utf8'));
+const r=await p.evaluate(({L})=>{ try{ LESSON=JSON.parse(JSON.stringify(L)); render(); go(0); return 'ok '+LESSON.slides.length+' theme='+(LESSON.meta&&LESSON.meta.theme); }catch(e){ return 'ERR '+e.stack; } },{L});
+console.log(r);
+const r2=await p.evaluate(()=>{ const t=[]; (LESSON.slides||[]).forEach((s,i)=>t.push(i+':'+s.type)); return t.join(','); });
+console.log(r2);
+await b.close(); server.close();

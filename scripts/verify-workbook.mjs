@@ -45,7 +45,8 @@ const PAGE_ID = FIX.slides[PRACTICE].id, RESP_ID = FIX.slides[PRACTICE].workspac
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 const pageErrs = [];
 const open = async (w = 1536, h = 1024, L = FIX, slide = PRACTICE) => {
-  const p = await browser.newPage({ viewport: { width: w, height: h } });
+  const p = await browser.newPage({ viewport: { width: w, height: h },
+    permissions: ['clipboard-read', 'clipboard-write'] });   // the paste check needs a real clipboard
   p.on('pageerror', (e) => pageErrs.push(String(e)));
   await p.goto(base, { waitUntil: 'load' });
   await p.evaluate(({ L, slide }) => { LESSON = JSON.parse(JSON.stringify(L)); render(); go(slide); }, { L, slide });
@@ -487,6 +488,50 @@ mark('mode');
   const twice = await p.evaluate(() => document.querySelector('[data-tp-eqfield]').textContent.replace(/\s/g, ''));
   ok('CONTROL: a second visit to the bar still inserts each key once — a stacked binding would double them',
      twice === 'y=9', `after re-opening, "y=9" reads "${twice}"`);
+  // What a student pastes is what a student keeps. The store only ever held text, so pasted markup was
+  // discarded at the next render — the page just kept showing it until then.
+  await p.evaluate(() => { document.querySelector('[data-mx-eqcancel]').click();
+    const t = document.querySelector('[data-mx-typed]'); mxTypedWrite(t, []); t.focus(); });
+  const EVIL = '<b>bold</b> <a href="javascript:alert(1)">link</a><img src=x onerror="window.__pasteRan=1"> tail';
+  await p.evaluate(async (h) => { await navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([h], { type: 'text/html' }),
+    'text/plain': new Blob(['bold link tail'], { type: 'text/plain' }) })]); }, EVIL);
+  await p.click('[data-mx-typed]'); await p.keyboard.press('Control+V'); await p.waitForTimeout(250);
+  const pasted = await p.evaluate(() => { const t = document.querySelector('[data-mx-typed]');
+    return { rich: t.querySelectorAll('b,a,img,script').length, ran: !!window.__pasteRan,
+      shown: t.textContent.trim(),
+      stored: (tpRespGet('practice-equations', 'workbook').value.pages[0].text.map((b) => b.t === 'p' ? b.v : '[eq]').join('')).trim() }; });
+  ok('a rich paste arrives as text, and what is on the page is what is in the store',
+     pasted.rich === 0 && !pasted.ran && pasted.shown === pasted.stored && /bold link tail/.test(pasted.stored),
+     `${pasted.rich} markup nodes · shown "${pasted.shown}" · stored "${pasted.stored}"`);
+  const inserted = await p.evaluate((h) => { const t = document.querySelector('[data-mx-typed]');
+    t.focus(); document.execCommand('insertHTML', false, h);          // what an un-intercepted paste inserts
+    return t.querySelectorAll('b,a,img').length; }, EVIL);
+  await p.waitForTimeout(300);                                        // the img's onerror is asynchronous
+  const unhandled = await p.evaluate(() => { const t = document.querySelector('[data-mx-typed]');
+    const ran = !!window.__pasteRan;
+    mxTypedWrite(t, tpRespGet('practice-equations', 'workbook').value.pages[0].text);
+    window.__pasteRan = false; return ran; });
+  ok('CONTROL: the same content inserted the way an un-intercepted paste would does bring markup in',
+     inserted > 0 && unhandled === true,
+     `${inserted} markup nodes entered the page; the inline handler ${unhandled ? 'ran' : 'did NOT run'}`);
+  // An inserted equation advertises "select to edit"; a keyboard has to be able to do that.
+  const eqKey = await p.evaluate(() => {
+    const t = document.querySelector('[data-mx-typed]');
+    mxTypedWrite(t, [{ t: 'p', v: 'x ' }, { t: 'eq', v: TPMath.tree('y=x') }]);
+    const eq = t.querySelector('.mx-eq'), bar = document.querySelector('[data-mx-eqbar]');
+    const before = !bar.hasAttribute('hidden');
+    eq.focus(); const focused = document.activeElement === eq;
+    eq.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    return { before, focused, after: !bar.hasAttribute('hidden'), label: eq.getAttribute('aria-label') };
+  });
+  await p.waitForTimeout(150);
+  ok('a placed equation can be re-opened from the keyboard, not by pointer alone',
+     eqKey.focused && eqKey.before === false && eqKey.after === true,
+     `bar closed → focus the equation ("${eqKey.label}") → Enter → bar open`);
+  await p.evaluate(() => { const c = document.querySelector('[data-mx-eqcancel]'); if (c) c.click();
+    mxTypedWrite(document.querySelector('[data-mx-typed]'), tpRespGet('practice-equations', 'workbook').value.pages[0].text); });
+  await p.waitForTimeout(150);
   // Arrow keys belong to whatever is handling them.
   const arrows = await p.evaluate(() => {
     const before = cur;
