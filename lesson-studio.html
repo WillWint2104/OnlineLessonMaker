@@ -1702,7 +1702,10 @@ body.respo .main{min-width:0;}
 .mx-page[data-mx-surface="panel"] .mx-split{flex:1 1 auto;grid-auto-rows:minmax(min-content,1fr);}
 /* a stretched grid cell only helps if the panel inside it stretches too */
 .mx-page[data-mx-surface="panel"] .mx-content,.mx-page[data-mx-surface="panel"] .mx-work{display:flex;flex-direction:column;}
-.mx-page[data-mx-surface="panel"] .mx-content>*,.mx-page[data-mx-surface="panel"] .mx-work>*{flex:1 1 auto;min-height:0;}
+/* :only-child — a region holding ONE panel fills the frame (Notes); a region holding a stack of cards
+   (the video page's chapters + watch-for) keeps them content-sized and lets the column end. */
+.mx-page[data-mx-surface="panel"] .mx-content>:only-child,.mx-page[data-mx-surface="panel"] .mx-work>:only-child{flex:1 1 auto;min-height:0;}
+.mx-page[data-mx-surface="panel"] .mx-work{gap:0;}
 .mx-panel.mx-flush{display:flex;flex-direction:column;}
 .mx-panel.mx-flush>.mx-figure:not([hidden]){flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;}   /* :not([hidden]) — a bare display:flex would un-hide the inactive tab panels */
 .mx-panel.mx-flush>.mx-figure[data-fig-viewport]:not([hidden]){display:block;}
@@ -1766,6 +1769,30 @@ body.respo .main{min-width:0;}
 .mx-tbl td:has(.mx-cell){padding:6px 8px;}
 
 /* ── the workbook / representation workspace ─────────────────────────────────────────────────── */
+/* ── the video page ─────────────────────────────────────────────────────────────────────────────── */
+.mx-video{border-radius:var(--mx-rad);overflow:hidden;border:1px solid var(--mx-line);background:#12201B;}
+.mx-vframe{position:relative;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 120% at 50% 30%,#1d3a30,#101d19);}
+.mx-vstill{position:absolute;inset:auto 0 14%;text-align:center;margin:0;font-family:var(--mx-serif);
+  font-size:17px;color:rgba(255,255,255,.62);padding:0 10%;}
+.mx-vplay{width:74px;height:74px;border-radius:50%;background:var(--mx-green);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 22px rgba(0,0,0,.35);}
+.mx-vbar{display:flex;align-items:center;gap:12px;padding:9px 14px;background:#0D1815;color:rgba(255,255,255,.8);}
+.mx-vplay-s,.mx-vic{display:inline-flex;align-items:center;color:rgba(255,255,255,.72);}
+.mx-vtrack{flex:1 1 auto;height:4px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden;}
+.mx-vfill{display:block;height:100%;background:var(--mx-green);}
+.mx-vtime{font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+.mx-after{margin-top:18px;}
+.mx-afterh{display:flex;align-items:center;gap:11px;margin-bottom:6px;}
+.mx-afterc{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--mx-green);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;}
+.mx-afterh .mx-panelh{margin:0;flex:1 1 auto;font-size:19px;}
+.mx-aftert{flex:0 0 auto;}
+.mx-vat{font-size:12.5px;color:var(--mx-ink-3);font-variant-numeric:tabular-nums;}
+.mx-wf{width:auto;margin-top:16px;}
+.mx-wf ul{margin:0;padding-left:1.05em;font-family:var(--mx-serif);font-size:14.5px;line-height:1.5;color:var(--mx-ink-body);}
+.mx-wf li{margin:3px 0;}
+.mx-wf li::marker{color:var(--mx-green);}
 .mx-wsbar{display:flex;align-items:center;gap:4px;padding:9px 12px;border-bottom:1px solid var(--mx-line);background:var(--mx-white);}
 .mx-wslab{font-family:var(--mx-serif);font-size:16px;font-weight:600;color:var(--mx-green);padding:0 10px 0 4px;margin-right:4px;}
 .mx-tool{display:inline-flex;align-items:center;gap:7px;border:1px solid transparent;border-radius:9px;background:transparent;
@@ -6888,6 +6915,10 @@ const MXI={
   eraser:'<path d="m12 4 8 8-6 6H8l-4-4z"/>', trash:'<path d="M5 7h14M9 7V4h6v3M7 7l1 13h8l1-13"/>',
   expand:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>', plus:'<path d="M12 5v14M5 12h14"/>',
   keyboard:'<rect x="3" y="6.5" width="18" height="11" rx="2"/><path d="M7 10.5h.01M11 10.5h.01M15 10.5h.01M8 14h8"/>',
+  check:'<path d="m5 12.5 4.5 4.5L19 7.5"/>', cc:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 10.5a2 2 0 1 0 0 3M17 10.5a2 2 0 1 0 0 3"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M4.2 7.5l1.7 1M18.1 15.5l1.7 1M4.2 16.5l1.7-1M18.1 8.5l1.7-1"/>',
+  pip:'<rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="11" width="7" height="5" rx="1"/>',
+  full:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
 };
 const MX_NAV_ICON={notes:'notes',videoShell:'video',interactiveShell:'interactive',workedExamples:'book',
   practice:'pencil',practiceGraphs:'bars',practiceGeometry:'triangle',summary:'summary'};
@@ -7097,6 +7128,46 @@ function mxPracticePage(s){
   return `<div class="mx-col">${s.contentTitle?`<h2 class="mx-panelh">${esc(s.contentTitle)}</h2>`:''}${qs
     ||'<div class="mx-ph">This practice page has no questions yet.</div>'}</div>`;
 }
+/* THE VIDEO PAGE. The video is the dominant asset and everything else is subordinate to it — that is the
+   whole composition, so the template owns the video region and the shell's workspace slot carries the
+   supporting material. Stage A is the LAYOUT: the player is a shell (there is no asset to play yet) and
+   Stage D wires playback, chapters and the transcript. Nothing here is borrowed from the legacy `video`
+   block, which is a different design for a different theme. */
+function mxVideoPage(s){
+  const v=(s.video&&typeof s.video==='object')?s.video:{};
+  const after=(s.afterWatching&&typeof s.afterWatching==='object')?s.afterWatching:null;
+  const items=(after&&Array.isArray(after.items)?after.items:[]).map((t,j)=>
+    `<div class="mx-item"><span class="mx-num">${j+1}</span><div class="mx-itembd"><p>${mxM(t)}</p></div></div>`).join('');
+  const bar=`<div class="mx-vbar">
+      <span class="mx-vplay-s">${mxIc('video',15)}</span>
+      <span class="mx-vtrack"><span class="mx-vfill" style="width:${Math.max(0,Math.min(100,+v.progress||36))}%"></span></span>
+      <span class="mx-vtime">${esc(v.at||'0:00')} / ${esc(v.duration||'0:00')}</span>
+      ${['cc','gear','pip','full'].map(k=>`<span class="mx-vic">${mxIc(k,15)}</span>`).join('')}
+    </div>`;
+  return `<div class="mx-col">
+    <div class="mx-video" role="img" aria-label="${esc(v.alt||'Video player — '+(s.title||'lesson video'))}">
+      <div class="mx-vframe">${v.still?`<p class="mx-vstill">${mxM(v.still)}</p>`:''}
+        <span class="mx-vplay">${mxIc('video',26)}</span></div>${bar}</div>
+    ${after?`<div class="mx-panel mx-after">
+      <div class="mx-afterh"><span class="mx-afterc">${mxIc('check',15)}</span>
+        <h2 class="mx-panelh">${esc(after.title||'After watching')}</h2>
+        ${after.transcript?`<button type="button" class="mx-tool mx-out mx-aftert">${mxIc('notes',15)} ${esc(after.transcript)}</button>`:''}</div>
+      ${items}</div>`:''}
+  </div>`;
+}
+/* The supporting column beside the video: what is in it, and what to watch for. Deliberately compact — on
+   this page the space belongs to the video. */
+registerWorkspace('videoSupport',(ws)=>{
+  const ch=(Array.isArray(ws.chapters)?ws.chapters:[]).map((c,j)=>
+    `<div class="mx-item"><span class="mx-num">${j+1}</span><div class="mx-itembd">
+      <h3>${mxM(c.title||'')}</h3>${c.at?`<p class="mx-vat">${esc(c.at)}</p>`:''}</div></div>`).join('');
+  const wf=(ws.watchFor&&typeof ws.watchFor==='object')?ws.watchFor:null;
+  const bullets=(wf&&Array.isArray(wf.items)?wf.items:[]).map(t=>`<li>${mxM(t)}</li>`).join('');
+  return `${ch?`<div class="mx-panel"><h2 class="mx-panelh">${esc(ws.title||'In this video')}</h2>${ch}</div>`:''}
+    ${bullets?`<div class="mx-keyidea mx-wf"><span class="mx-kic">${mxIc('bulb',17)}</span><div>
+      <h2>${esc(wf.title||'Watch for')}</h2><ul>${bullets}</ul></div></div>`:''}
+    ${!ch&&!bullets?'<div class="mx-ph">This video page has no supporting material yet.</div>':''}`;
+});
 function mxStubPage(s){
   return `<div class="mx-panel"><div class="mx-ph">${esc(s.stubNote
     ||'The shell for this page type is in place; its content lands in a later stage.')}</div></div>`;
@@ -7146,7 +7217,7 @@ registerPage('mathematics','practiceGraphs',mxStubPage,{surface:'flush'});
 registerPage('mathematics','practiceGeometry',mxStubPage,{surface:'flush'});
 registerPage('mathematics','summary',mxStubPage);
 /* temporary names — see the open decision at the top of this block */
-registerPage('mathematics','videoShell',mxStubPage);
+registerPage('mathematics','videoShell',mxVideoPage,{surface:'panel'});
 registerPage('mathematics','interactiveShell',mxStubPage);
 
 // imperium
@@ -7867,16 +7938,12 @@ function figNiceTicks(min, max, target){
   for(let v=Math.ceil((min-1e-9)/step)*step; v<=max+1e-9; v+=step) ticks.push(+v.toFixed(10));   // round kills float drift (0.30000000004). CodeRabbit #1 (toFixed(10)/8-dp cap collapse for a ~1e-12 domain) is a KNOWN NON-ISSUE: no real coordinate-plane domain approaches that scale, so no guard is added by design.
   return {step, ticks, decimals};
 }
-function figFmtTick(v, d){ return Math.abs(v)<1e-9?'0':v.toFixed(d).replace('-','\u2212'); }   // the origin is 0, never "0.0"; and a negative tick takes the MINUS sign (U+2212), not a hyphen — the plotted point identifiers beside it already do
-/* HOW MANY ticks a plane wants is a property of how big it is drawn, not a constant. At a fixed target of 5
-   a wide viewport lands on 2.5-unit steps (and therefore decimal labels) where 2 would read better, and a
-   small one crowds. Density and RANGE stay separate concerns: this only chooses the target figNiceTicks
-   aims at, and figGraph hands the SAME number to figTickBoxes so the printed numbering and the obstacle
-   set it contributes can never disagree. */
-function figTickDensity(box){
-  const W=(box&&+box.W)||FIG_BOX0.W;
-  return Math.max(4, Math.min(10, Math.round(W/110)));
-}
+function figFmtTick(v, d){ return (Math.abs(v)<1e-9?0:v).toFixed(d); }
+/* TICK DENSITY IS DELIBERATELY A CONSTANT HERE. Making the axis continue to the viewport boundary is a
+   change to axis EXTENT; how many ticks a plane wants is a different question with its own trade-offs
+   (small/large, portrait/wide, decimal steps) and its own before/after corpus. The two are kept apart on
+   purpose: nothing in the viewport work below reads or changes this number. */
+const FIG_TARGET_TICKS=5;
 // §1.1 coordinate/viewport — exact reversible math↔screen mapping (+inverse). Arbitrary reals, NO snap.
 //   aspect 'equal' locks equal px-per-unit (expands the SHORTER domain, centered); 'stretch' fills each axis.
 function figView(domain, box, aspect){
@@ -8409,10 +8476,14 @@ function figGraph(b, box){
   // placement 1b would have made, at 1b's cost. Segments are few, so they always stay in.
   const nSub=curves.reduce((a,c)=>a+c.paths.length,0);
   const painted=figPaintedArms(nSub<=20?curves:[],segs,V);
-  const furn=figTickBoxes(V,figTickDensity(box));                          // Stage 2c — the printed axis numbering is an obstacle too, at exactly the density figSvgBody will print
+  const furn=figTickBoxes(V,FIG_TARGET_TICKS);                             // Stage 2c — the printed axis numbering is an obstacle too, at exactly the density figSvgBody prints
   const layout=figLayoutPills(pts,V,box,painted,furn);
   layout.forEach(L=>{ if(!L.valid) errors.push('identifier '+L.p.id+' could not be placed clear of the plotted geometry'); });
-  const callouts=figLayoutCallouts(pts,V,box,layout.map(L=>L.box),painted,furn);
+  /* `callouts:"hidden"` — the same vocabulary as `grid`. A figure that only ILLUSTRATES has nothing to
+     reveal on tap, and the shell's hint ("Select a point to read its coordinates") is keyed on the callout
+     count, so suppressing them here is what stops an explanatory figure inheriting interaction copy it
+     cannot honour. Absent field → callouts as before, so no existing figure moves. */
+  const callouts=(b&&b.callouts==='hidden')?[]:figLayoutCallouts(pts,V,box,layout.map(L=>L.box),painted,furn);
   return {V, dom0, domOK, aspect, pts, layout, callouts, curves, segs, painted, errors, box, iters:fit.iters, allValid:layout.every(L=>L.valid), gridShown:(b.grid!=='hidden')};
 }
 /* ═══════════════ FIGURE ENGINE — Stage 3: Geometry 2D front-end (ENGINE_SPEC §2/§3/§4/§7) ═══════════════
@@ -8797,7 +8868,7 @@ function figGeomBody(M, box, opt){
   const o=opt||{}, V=M.V, D=V.dom, P=V.view||D;
   const grid=(o.grid!=null)?!!o.grid:M.gridShown;
   let g='';
-  if(grid){ const tt=o.targetTicks||figTickDensity(box), xT=figNiceTicks(D.x0,D.x1,tt), yT=figNiceTicks(D.y0,D.y1,tt);
+  if(grid){ const tt=o.targetTicks||FIG_TARGET_TICKS, xT=figNiceTicks(D.x0,D.x1,tt), yT=figNiceTicks(D.y0,D.y1,tt);
     figLinesAt(P.x0,P.x1,xT.step).forEach(v=>g+=figDraw.line(V.sx(v),V.sy(P.y0),V.sx(v),V.sy(P.y1),'tp-fig-grid'));
     figLinesAt(P.y0,P.y1,yT.step).forEach(v=>g+=figDraw.line(V.sx(P.x0),V.sy(v),V.sx(P.x1),V.sy(v),'tp-fig-grid')); }
   let sh='';
@@ -9292,7 +9363,7 @@ function figLinesAt(lo,hi,step){
   return out;
 }
 function figSvgBody(M, box, opt){
-  const o=opt||{}, V=M.V, D=V.dom, P=V.view||D, tt=o.targetTicks||figTickDensity(box);
+  const o=opt||{}, V=M.V, D=V.dom, P=V.view||D, tt=o.targetTicks||FIG_TARGET_TICKS;
   const grid=(o.grid!=null)?!!o.grid:M.gridShown, minor=(o.minor!=null)?!!o.minor:true;
   const xT=figNiceTicks(D.x0,D.x1,tt), yT=figNiceTicks(D.y0,D.y1,tt);       // ticks and their labels: from the MATHEMATICAL RANGE
   const axisX=V.sx(Math.min(Math.max(0,P.x0),P.x1)), axisY=V.sy(Math.min(Math.max(0,P.y0),P.y1));   // y-axis screen-x, x-axis screen-y (clamped into the viewport)

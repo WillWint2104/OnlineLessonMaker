@@ -7,12 +7,15 @@
 // Not a gate — scripts/verify-responsive-shell.mjs is the gate. This exists so the acceptance set is
 // reproducible by anyone, in one command, instead of being whatever screenshots were taken that day.
 //
-// 06-legacy-canvas-control is a PERMANENT member of the set and is deliberately not part of the
-// Mathematics design: it is a shipped geolearn lesson rendered beside the new work, and its whole job is
-// to look exactly as it always has. It proves the architectural split at a glance — responsive pages take
-// the new shell, legacy pages still go through the 1280px canvas — in the form a reviewer can check
-// without running anything. Do not restyle it. (The mechanical form of the same control is
-// verify-corpus-identity's 250 byte-identical render units.)
+// TWO CATEGORIES, NEVER MIXED. Files are named for which they belong to:
+//
+//   mathematics-*   the new responsive product. These DEFINE the design.
+//   legacy-*        shipped pages rendered beside it. These exist only to prove non-regression, are
+//                   deliberately not part of the Mathematics design, and must not be restyled — nor
+//                   allowed to influence a Mathematics renderer. `legacy-video-control` in particular is
+//                   the OLD geolearn video page; the Mathematics video design is `mathematics-video-shell`.
+//
+// (The mechanical form of the legacy controls is verify-corpus-identity's 250 byte-identical render units.)
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -38,7 +41,10 @@ const base = `http://127.0.0.1:${server.address().port}/lesson-studio.html`;
 
 const FIX = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-shell.json'), 'utf8'));
 const LEGACY = JSON.parse(fs.readFileSync(path.join(root, 'lessons/closing-the-gap-geolearn.json'), 'utf8'));
-const NOTES = 0, PRACTICE = 4;
+const idx = (t) => FIX.slides.findIndex((x) => x.type === t);
+const NOTES = idx('notes'), PRACTICE = idx('practice'), VIDEO = idx('videoShell');
+const LEG_TEXT = LEGACY.slides.findIndex((x) => x.type === 'text');
+const LEG_VIDEO = LEGACY.slides.findIndex((x) => x.type === 'video');
 
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 const open = async (w, h, L, slide, after) => {
@@ -56,16 +62,20 @@ const shot = async (name, w, h, L, slide, after) => {
   console.log(name);
 };
 
-await shot('01-notes-desktop', 1536, 1024, FIX, NOTES);
-await shot('02-practice-desktop', 1536, 1024, FIX, PRACTICE);
-await shot('03-practice-tablet', 900, 1100, FIX, PRACTICE);
-await shot('04-practice-phone', 414, 860, FIX, PRACTICE);
-await shot('05-practice-phone-drawer', 414, 860, FIX, PRACTICE, 'rpNavToggle()');
-await shot('06-legacy-canvas-control', 1536, 1024, LEGACY, 3);
-await shot('07-notes-tablet', 900, 1100, FIX, NOTES);
-await shot('08-practice-nav-collapsed', 1536, 1024, FIX, PRACTICE, 'rpNavToggle()');
+// ── the new responsive Mathematics product ────────────────────────────────────────────────────────
+await shot('mathematics-notes', 1536, 1024, FIX, NOTES);
+await shot('mathematics-practice', 1536, 1024, FIX, PRACTICE);
+await shot('mathematics-video-shell', 1536, 1024, FIX, VIDEO);
+await shot('mathematics-notes-tablet', 900, 1100, FIX, NOTES);
+await shot('mathematics-practice-tablet', 900, 1100, FIX, PRACTICE);
+await shot('mathematics-practice-phone', 414, 860, FIX, PRACTICE);
+await shot('mathematics-practice-phone-drawer', 414, 860, FIX, PRACTICE, 'rpNavToggle()');
+await shot('mathematics-practice-nav-collapsed', 1536, 1024, FIX, PRACTICE, 'rpNavToggle()');
+// ── legacy controls — non-regression only, not part of the design ────────────────────────────────
+await shot('legacy-canvas-control', 1536, 1024, LEGACY, LEG_TEXT);
+await shot('legacy-video-control', 1536, 1024, LEGACY, LEG_VIDEO);
 
-/* 09 — THE RESIZE PROOF. Three container shapes, the same authored figure, with the mathematical viewport
+/* THE RESIZE PROOF. Three container shapes, the same authored figure, with the mathematical viewport
    each one produced measured out of the live model rather than described. */
 {
   const SHAPES = [[1536, 1024], [1536, 660], [1120, 1024]];
@@ -106,9 +116,49 @@ await shot('08-practice-nav-collapsed', 1536, 1024, FIX, PRACTICE, 'rpNavToggle(
   await p.waitForTimeout(250);
   const hgt = await p.evaluate(() => document.querySelector('.wrap').getBoundingClientRect().height);
   await p.setViewportSize({ width: 1500, height: Math.ceil(hgt) });
-  await p.screenshot({ path: path.join(OUT, '09-graph-viewport-resize.png') });
+  await p.screenshot({ path: path.join(OUT, 'graph-viewport-resize.png') });
   await p.close();
-  console.log('09-graph-viewport-resize');
+  console.log('graph-viewport-resize');
+}
+
+/* THE INDEX. The two categories are separated here on purpose: a reviewer should never have to work out
+   which screenshots define the Mathematics product and which exist only to prove nothing regressed. */
+{
+  const b64 = (f) => fs.readFileSync(path.join(OUT, f + '.png')).toString('base64');
+  const MX = [['mathematics-notes', 'Notes'], ['mathematics-practice', 'Practice — Equations'],
+    ['mathematics-video-shell', 'Video'], ['mathematics-practice-tablet', 'Practice · tablet'],
+    ['mathematics-practice-phone', 'Practice · phone'], ['mathematics-practice-phone-drawer', 'Practice · phone, drawer']];
+  const LG = [['legacy-canvas-control', 'Legacy canvas page — geolearn `text`'],
+    ['legacy-video-control', 'Legacy video page — geolearn `video`']];
+  const card = (c) => ([f, t]) => `<figure class="${c}"><img src="data:image/png;base64,${b64(f)}"><figcaption><b>${t}</b><code>${f}</code></figcaption></figure>`;
+  const p = await browser.newPage({ viewport: { width: 1500, height: 900 }, deviceScaleFactor: 2 });
+  await p.setContent(`<style>
+    body{margin:0;background:#EEF1EF;font:13px/1.45 system-ui,sans-serif;color:#15181A;}
+    .wrap{padding:24px;} h1{font:600 21px/1.2 system-ui;margin:0 0 20px;}
+    h2{font:600 12px/1 system-ui;letter-spacing:.09em;text-transform:uppercase;margin:0 0 4px;}
+    .lead{margin:0 0 14px;color:#6B7370;font-size:12.5px;}
+    section{margin-bottom:26px;padding:16px 16px 18px;border-radius:12px;}
+    .new{background:#fff;border:1px solid #CFE3D6;} .new h2{color:#0F7A4C;}
+    .old{background:#F6F5F1;border:1px dashed #D6D2C6;} .old h2{color:#8A5A16;}
+    .row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+    .old .row{grid-template-columns:repeat(2,1fr);}
+    figure{margin:0;} img{display:block;width:100%;max-height:300px;object-fit:contain;object-position:top;
+      border:1px solid #D6DBD8;border-radius:7px;background:#fff;}
+    figcaption{margin-top:6px;display:flex;flex-direction:column;gap:1px;}
+    code{font:11px ui-monospace,monospace;color:#7C8482;}
+  </style><div class="wrap"><h1>Stage A proof set</h1>
+  <section class="new"><h2>New responsive Mathematics product</h2>
+    <p class="lead">These define the design. Rendered from tests/visual/lessons/mathematics-shell.json.</p>
+    <div class="row">${MX.map(card('new')).join('')}</div></section>
+  <section class="old"><h2>Legacy controls — non-regression only</h2>
+    <p class="lead">These are NOT the Mathematics design and must not influence it. A shipped geolearn lesson, rendered beside the new work; their job is to look exactly as they always have.</p>
+    <div class="row">${LG.map(card('old')).join('')}</div></section></div>`);
+  await p.waitForTimeout(300);
+  const hgt = await p.evaluate(() => document.querySelector('.wrap').getBoundingClientRect().height);
+  await p.setViewportSize({ width: 1500, height: Math.ceil(hgt) });
+  await p.screenshot({ path: path.join(OUT, '00-index.png') });
+  await p.close();
+  console.log('00-index');
 }
 
 await browser.close(); server.close();

@@ -81,7 +81,8 @@
                 ]
               ]
             }
-          ]
+          ],
+          "callouts": "hidden"
         }
       }
     },
@@ -99,7 +100,52 @@
       "navLabel": "Video",
       "title": "How the graph of _y_ = _x_^2 is formed",
       "lede": "Watch how a table of values becomes a parabola.",
-      "stubNote": "The dominant video region and its compact supplementary panel land at Stage D."
+      "splitRatio": "minmax(0,1.85fr) minmax(0,1fr)",
+      "video": {
+        "duration": "7:12",
+        "at": "2:38",
+        "progress": 36,
+        "still": "A table of values beside the curve it produces.",
+        "alt": "Video: how the graph of y = x squared is formed"
+      },
+      "afterWatching": {
+        "title": "After watching",
+        "transcript": "Open transcript",
+        "items": [
+          "Try making your own table of values for _y_ = _x_^2 and plot the points.",
+          "What do you notice about the _y_-values when _x_ is positive and negative?"
+        ]
+      },
+      "workspace": {
+        "kind": "videoSupport",
+        "title": "In this video",
+        "chapters": [
+          {
+            "title": "Table of values",
+            "at": "0:00"
+          },
+          {
+            "title": "Plotting points",
+            "at": "1:45"
+          },
+          {
+            "title": "The turning point",
+            "at": "3:20"
+          },
+          {
+            "title": "Symmetry",
+            "at": "5:10"
+          }
+        ],
+        "watchFor": {
+          "title": "Watch for",
+          "items": [
+            "How the table of values connects to the graph.",
+            "Why the lowest point is at (0, 0).",
+            "How symmetry makes opposite _x_-values give the same _y_-value."
+          ]
+        }
+      }
     },
     {
       "type": "interactiveShell",

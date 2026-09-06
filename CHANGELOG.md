@@ -10,27 +10,40 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ### Added
 - **The coordinate plane is a viewport, not a picture (figure engine).** Axis EXTENT and tick GENERATION
   were the same concern: `figSvgBody` drew each axis from `sx(dom.x0)` to `sx(dom.x1)`, and `figView` maps
-  the domain exactly onto the plot rect — so the axis stopped at the label gutter and the last labelled tick
-  was the end of the axis. `figView` now also returns `view`, the same mapping evaluated at the box edges,
-  i.e. the mathematical range the whole svg covers. The transform is untouched — `sx/sy/ix/iy/pxPerX/pxPerY/dom`
-  are byte-identical, so every measurement, label placement and geometry solve is unchanged — and axes, grid
-  and plotted curves now run to the viewport boundary while ticks and their labels are still generated from
-  the domain. A figure inside a `[data-fig-viewport]` host also takes its HEIGHT from that container instead
-  of deriving one from its width, so the plane owns the whole region and its shape follows the region's:
-  measured, a 628×636 container gives an 11.4 × 11.5-unit viewport and a 628×298 one gives 24.1 × 11.4.
-  Tick DENSITY now follows how big the plane is drawn (a constant target of 5 put 2.5-unit steps, and so
-  decimal labels, on a wide viewport), `figGraph` hands the same density to `figTickBoxes` so the printed
-  numbering and the obstacle set it contributes cannot disagree, the origin prints as `0` rather than `0.0`,
-  and a negative tick takes the minus sign (U+2212) the point identifiers beside it already used.
-  `verify-figure-render`'s baseline was re-recorded for this: 48 of 240 units moved, all graph figures, all
-  through tick density — every box size identical, nothing added or removed. `verify-label-placement`
-  (927/927) and `verify-geometry-semantics` (204/204) are unchanged.
+  the domain exactly onto the plot rect — the box minus the gutters that hold the tick labels — so the axis
+  stopped at the gutter and the last labelled tick WAS the end of the axis. `figView` now also returns
+  `view`: the same mapping evaluated at the box edges, i.e. the mathematical range the whole svg covers. The
+  transform is untouched — `sx/sy/ix/iy/pxPerX/pxPerY/dom` are byte-identical, so every measurement, label
+  placement and geometry solve is unchanged — this only NAMES a range that was always there, so axes, grid
+  and plotted curves run to the viewport boundary while ticks and labels are still generated from the domain.
+  A figure inside a `[data-fig-viewport]` host also takes its HEIGHT from that container instead of deriving
+  one from its width, so the plane owns its whole region and takes its shape: measured, a 628×636 container
+  gives an 11.4 × 11.5-unit viewport, a 628×298 one gives 24.1 × 11.4 and a 401×604 one gives 11.2 × 16.9.
+  **Tick density, interval and label format are deliberately NOT touched.** `FIG_TARGET_TICKS` stays the
+  constant 5 it has always been, and nothing in the viewport work reads it. `verify-figure-render` moves 48
+  of 240 units — the graph fixture is exactly 48 units, so that is every graph unit and nothing else — and
+  across all 48 **not one recorded field changes**: box, tick count, and minimum/maximum type size are
+  identical in every one. The difference is only where the axis, grid and curve stop. Geometry (120 units)
+  and the measure surface (72) do not move at all, because a geometry figure draws no grid unless it is
+  authored `grid: "shown"`. `verify-label-placement` 927/927 and `verify-geometry-semantics` 204/204 are
+  unchanged.
+- **`callouts: "hidden"` on a figure** — the same vocabulary as `grid`. A figure that only illustrates has
+  nothing to reveal on tap, and the Figure Shell's hint ("Select a point to read its coordinates") is keyed
+  on the callout count, so an explanatory Notes figure was inheriting interaction copy it cannot honour. The
+  field is opt-in, so no existing figure moves.
 - **The Notes representation workspace renders the real Figure path.** It was a hand-drawn stand-in; it is
   now `fragFigure` → `figGraph` → `figSvgBody` on an authored `figure` spec, registered in FIGX and
   re-solved through `figInlineSolve` against its host. Graph Practice and the Interactive workspace inherit
   the viewport behaviour rather than reinventing it.
-- **`scripts/shots-mathematics.mjs`** — the Stage A proof set, reproducible in one command, with the legacy
-  canvas control as a permanent member: a shipped geolearn lesson rendered beside the new work, whose job is
+- **The Mathematics Video page.** The video is the dominant asset and everything else is subordinate to it:
+  the template owns the video region and the shell's workspace slot carries the supporting material —
+  chapters, what to watch for — with the after-watching prompts and the transcript control beneath. Stage A
+  is the layout; Stage D wires playback. Nothing is borrowed from the legacy `video` block, which is a
+  different design for a different theme and now appears in the proof set only as `legacy-video-control`.
+- **`scripts/shots-mathematics.mjs`** — the Stage A proof set, reproducible in one command, in two clearly
+  separated categories: `mathematics-*` screenshots define the design, `legacy-*` screenshots exist only to
+  prove non-regression and must not influence a Mathematics renderer. An index sheet makes the split
+  obvious at a glance.
   to look exactly as it always has.
 - **A0 — response identity, and the seam a submission will one day use.** Student answers now live in
   `TP_RESP`, keyed by an AUTHORED page `id` and an authored response `id` rather than by array position.

@@ -492,6 +492,56 @@ mark('viewport');
   await wide.close(); await short.close();
 }
 
+// ══ 8c. a passive figure carries no interaction copy ══════════════════════════════════════════════
+mark('passive');
+{
+  const p = await newPage(1440, 900);
+  await boot(p, NOTES);
+  const off = await p.evaluate(() => ({
+    hint: document.querySelectorAll('.mx-figskin .tp-fig-hint').length,
+    hits: document.querySelectorAll('.mx-figskin .tp-fig-hit').length,
+    text: (document.querySelector('.mx-work') || {}).textContent || '' }));
+  ok('an explanatory figure shows no "select a point" hint and no tap targets',
+     off.hint === 0 && off.hits === 0 && !/Select a point/i.test(off.text));
+  // CONTROL — the same figure WITHOUT `callouts:"hidden"` still produces both, so the pass above is not
+  // an accident of this figure having nothing to reveal.
+  const on = await p.evaluate(() => {
+    delete LESSON.slides[0].workspace.figure.callouts; go(0);
+    const r = { hint: document.querySelectorAll('.mx-figskin .tp-fig-hint').length,
+      hits: document.querySelectorAll('.mx-figskin .tp-fig-hit').length,
+      text: (document.querySelector('.mx-work') || {}).textContent || '' };
+    LESSON.slides[0].workspace.figure.callouts = 'hidden'; go(0); return r;
+  });
+  ok('CONTROL: without `callouts:"hidden"` the same figure DOES carry them',
+     on.hint === 1 && on.hits > 0 && /Select a point/i.test(on.text), `${on.hits} tap targets, hint present`);
+  await p.close();
+}
+
+// ══ 8d. the Mathematics video page ════════════════════════════════════════════════════════════════
+mark('video');
+{
+  const p = await newPage(1536, 1024);
+  const VIDEO = LESSON.slides.findIndex((x) => x.type === 'videoShell');
+  await boot(p, VIDEO);
+  const v = await p.evaluate(() => {
+    const q = (x) => document.querySelector(x);
+    const box = (el) => el ? { w: el.offsetWidth, h: el.offsetHeight } : null;
+    return { video: box(q('.mx-video')), content: box(q('.mx-content')), work: box(q('.mx-work')),
+      after: !!q('.mx-after'), chapters: document.querySelectorAll('.mx-work .mx-item').length,
+      watchFor: !!q('.mx-wf'), transcript: !!q('.mx-aftert'),
+      legacy: document.querySelectorAll('.mx .gl-video, .mx .tp-video, .mx .tp-slide .tp-vid, .mx .card').length,
+      title: (q('.mx-title') || {}).textContent || '' };
+  });
+  ok('the video is the dominant asset on the page',
+     v.video && v.video.w > v.work.w * 1.6 && v.video.h > v.work.h * 0.5,
+     `video ${v.video.w}x${v.video.h} against a ${v.work.w}px support column`);
+  ok('the supporting material is beside it, compact, and authored', v.chapters === 4 && v.watchFor === true);
+  ok('the after-watching prompts and the transcript control are on the page', v.after && v.transcript);
+  ok('nothing from the legacy video renderer is on this page', v.legacy === 0);
+  ok('it is a Mathematics page, in the Mathematics shell', /is formed/.test(v.title) && v.video.w > 0);
+  await p.close();
+}
+
 // ══ 9. author text can never become markup ════════════════════════════════════════════════════════
 mark('escape');
 {
@@ -536,7 +586,7 @@ mark('legacy');
 }
 
 // ── report ────────────────────────────────────────────────────────────────────────────────────────
-const SECTIONS = ['mode', 'release', 'responsive', 'chrome', 'persistent', 'narrow', 'nav', 'workspace', 'viewport', 'escape', 'legacy'];
+const SECTIONS = ['mode', 'release', 'responsive', 'chrome', 'persistent', 'narrow', 'nav', 'workspace', 'viewport', 'passive', 'video', 'escape', 'legacy'];
 const missing = SECTIONS.filter((s) => !ran.has(s));
 ok('every section ran', missing.length === 0, missing.length ? 'missing: ' + missing.join(', ') : `${SECTIONS.length} sections`);
 ok('no page error or console error while rendering', pageErrs.length === 0, pageErrs.slice(0, 3).join(' | '));
