@@ -8971,6 +8971,82 @@ Object.assign(PACK_ICONS,{
    Cleared on lesson (re)load — see #jsonLoad and the initial render. */
 let TP_RUNTIME={};
 function tpRT(){ return (TP_RUNTIME[cur]=TP_RUNTIME[cur]||{ans:{},shown:{}}); }
+/* ═══════════════ A0 — THE LESSON RESPONSE STORE ═══════════════
+   Everything a student produces during a lesson session, keyed by STABLE AUTHORED IDENTITY.
+
+   WHY NOT TP_RUNTIME. The store above is keyed by `cur`, the slide INDEX. For per-slide ephemera that was
+   harmless. For a bundle gathered at lessonEnd and handed to a submission adapter it is a correctness bug:
+   insert a page, reorder the array, or re-enter at a different point and every retained response silently
+   rebinds to whatever page now occupies that index — a student's ink arrives attributed to another
+   question. Identity therefore comes from the lesson, never from position, DOM order or block path.
+
+   TP_RUNTIME is NOT migrated. Legacy page types keep it, so their rendering and the corpus identity gate
+   are untouched; only pages that opt in by declaring an `id` participate in the bundle.
+
+   NO PERSISTENCE. In memory for the session, cleared on lesson load. No localStorage, no sessionStorage —
+   the app's state is still the file. */
+
+/* The payload kinds. A response is not an opaque value: a typed answer, a stroke set, a graph construction
+   and a table are different things, and a bundle that flattened them would lose the distinction the
+   marking, replay and (later) collection all depend on. Closed vocabulary, reported, never coerced. */
+const RESP_KINDS=['text','ink','graph','geometry','table'];
+let TP_RESP={};                                    /* { pageId: { responseId: {kind, value} } } */
+const tpRespId=(x)=>(x&&x.id!=null)?String(x.id).trim():'';
+
+/* Author identity errors, recomputed per lesson load. Duplicates are REPORTED, never suffixed: silently
+   disambiguating them would make submitted attribution depend on load order, which is precisely the class
+   of bug this store exists to remove. */
+let TP_RESP_ERRORS=[];
+function tpRespAudit(L){
+  const errs=[], pages={};
+  ((L&&L.slides)||[]).forEach((s,i)=>{
+    const pid=tpRespId(s); if(!pid) return;         /* no id → legacy page, does not participate */
+    if(pages[pid]!=null) errs.push('duplicate page id "'+pid+'" (slides '+pages[pid]+' and '+i
+      +') — response state would be shared between them, so give each page its own id');
+    else pages[pid]=i;
+    const seen={};
+    ((s.questions)||[]).forEach((q,k)=>{ const rid=tpRespId(q); if(!rid) return;
+      if(seen[rid]!=null) errs.push('duplicate response id "'+rid+'" on page "'+pid+'" (items '+seen[rid]
+        +' and '+k+') — the two answers would overwrite each other');
+      else seen[rid]=k; });
+  });
+  return errs;
+}
+function tpRespReset(L){ TP_RESP={}; TP_RESP_ERRORS=tpRespAudit(L||LESSON); }
+
+function tpRespSet(pageId,responseId,kind,value){
+  const p=String(pageId||'').trim(), r=String(responseId||'').trim();
+  if(!p||!r) return false;
+  if(RESP_KINDS.indexOf(kind)<0) return false;      /* an unknown kind is a programming error, not data */
+  (TP_RESP[p]||(TP_RESP[p]={}))[r]={kind, value};
+  return true;
+}
+function tpRespGet(pageId,responseId){
+  const e=TP_RESP[String(pageId||'').trim()]; if(!e) return null;
+  return e[String(responseId||'').trim()]||null;
+}
+/* A DETERMINISTIC, JSON-SERIALISABLE SNAPSHOT that shares no reference with the live store: the caller
+   (lessonEnd, an adapter, a test) must not be able to mutate a student's work by holding the result.
+   Keys are sorted so two runs over the same state produce byte-identical JSON. */
+function tpRespBundle(){
+  const out={};
+  Object.keys(TP_RESP).sort().forEach(pid=>{
+    const src=TP_RESP[pid], page={};
+    Object.keys(src).sort().forEach(rid=>{ const e=src[rid];
+      page[rid]={kind:e.kind, value:(e.value===undefined?null:JSON.parse(JSON.stringify(e.value)))}; });
+    out[pid]=page;
+  });
+  return {pages:out, errors:TP_RESP_ERRORS.slice()};
+}
+
+/* THE SUBMISSION SEAM. Declared by meta.submission; "none" is the only implementation and is a genuine
+   no-op — it accepts a bundle and does nothing with it. A network adapter arrives later without any page
+   renderer changing, which is the whole point of defining the interface before six page types write here. */
+const SUBMIT_ADAPTERS={ none:{ id:'none', collect(){ return {ok:true, adapter:'none', delivered:false}; } } };
+function tpSubmitAdapter(){
+  const want=((LESSON&&LESSON.meta&&LESSON.meta.submission)||'none');
+  return SUBMIT_ADAPTERS[want]||SUBMIT_ADAPTERS.none;
+}
 
 function tpLive(){ return `<div class="tp-sr-only" aria-live="polite" data-tp-live></div>`; }
 function tpFocusOverlay(eyebrow,question,stimLabel,stimText){
@@ -10094,7 +10170,7 @@ $('#jsonLoad').onclick=()=>{
     if(Array.isArray(d)) d={meta:{title:LESSON.meta.title,theme:LESSON.meta.theme},slides:d};
     if(!d.slides||!Array.isArray(d.slides)) throw new Error('Your JSON needs a "slides" array.');
     d.meta=Object.assign({title:'Lesson',theme:'indigo'}, d.meta||{});
-    LESSON=d; cur=0; TP_RUNTIME={}; modal.hidden=true; render();
+    LESSON=d; cur=0; TP_RUNTIME={}; tpRespReset(d); modal.hidden=true; render();
   }catch(err){ $('#jsonErr').textContent='⚠ '+err.message; }
 };
 $('#jsonCopy').onclick=()=>{ try{navigator.clipboard.writeText(JSON.stringify(LESSON,null,2));}catch(e){} $('#jsonCopy').textContent='Copied ✓'; setTimeout(()=>$('#jsonCopy').textContent='Copy',1200); };
@@ -10172,6 +10248,7 @@ document.addEventListener('click',e=>{ if(e.target.closest('#insCollapse')) insC
 (function(){ try{ if(localStorage.getItem('ls-editnote')==='off') document.documentElement.classList.add('editnote-off'); }catch(e){}
   const x=$('#editnoteX'); if(x) x.onclick=()=>{ document.documentElement.classList.add('editnote-off');
     try{ localStorage.setItem('ls-editnote','off'); }catch(e){} if(typeof fitCanvas==='function') requestAnimationFrame(fitCanvas); }; })();
+tpRespReset(LESSON);   // A0 — audit authored response identity once, at load
 
 render(); renderPalette();   // palette content is static (per category) — build it once, not on every render()
 </script>

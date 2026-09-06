@@ -8,6 +8,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **A0 — response identity, and the seam a submission will one day use.** Student answers now live in
+  `TP_RESP`, keyed by an AUTHORED page `id` and an authored response `id` rather than by array position.
+  `TP_RUNTIME` — keyed by `cur`, the slide index — stays exactly as it is for ephemera, because it is the
+  wrong thing for a bundle that gets submitted: reorder the pages of a lesson and a student's ink rebinds
+  to whichever page moved into that index. `verify-response-store.mjs` drives that exact reorder through
+  both stores and shows the old one reattributing the answer (22/22, both non-vacuity controls included).
+  Identity is authored and never invented: a duplicate page or response id is REPORTED at load
+  (`tpRespAudit`), never silently suffixed, because a suffix would quietly split one student's work in two.
+  `tpRespBundle()` returns a deterministic, key-sorted, deep-copied, JSON-serialisable snapshot — mutating
+  what it hands back cannot reach live state. The submission seam ships with its only adapter, `none`,
+  which collects and delivers nothing; still no storage of any kind (golden rule 2).
 - **C6b — the learning card.** One instructional-card primitive with two homes: the `text` block, and a
   figure's new `companion`. There is deliberately no second "figure prose card" renderer — the two callers
   differ only in where the card is placed, and placement is the surrounding block's business. The card is
