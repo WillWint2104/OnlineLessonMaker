@@ -54,7 +54,9 @@ const open = async (w = 1536, h = 1024, L = FIX, slide = PRACTICE) => {
 };
 /* A real stroke: pointer down, several moves, up — through the canvas the student sees. */
 const draw = async (p, pts, pressure) => {
-  const box = await (await p.$('.mx-wbcanvas')).boundingBox();
+  // Draw through the VISIBLE window, not the canvas: since the paper can be taller than the window, a
+  // fraction of the canvas rect can fall outside the viewport, where a pointer cannot go.
+  const box = await (await p.$('.mx-sheet')).boundingBox();
   const at = ([x, y]) => [box.x + x * box.width, box.y + y * box.height];
   await p.mouse.move(...at(pts[0]));
   await p.mouse.down(pressure ? { button: 'left' } : {});
@@ -323,7 +325,10 @@ mark('fit');
     // !important, not specificity: this control exists to remove the FLOOR, and it should keep doing that
     // however the floor's selector is written later. It lost silently once when the selector grew a :not().
     st.id = 'mx-force';
-    st.textContent = '.mx-wb .mx-sheet{flex:0 1 auto!important;min-height:0!important;height:auto!important;}';
+    // The paper's own min-height:100% props the window open, so removing the floor means removing both:
+    // the failure being reproduced is "the sheet has nothing to grow into", not "the sheet has no rule".
+    st.textContent = '.mx-wb .mx-sheet{flex:0 1 auto!important;min-height:0!important;height:auto!important;}'
+      + '.mx-wb .mx-paper{min-height:0!important;height:0!important;}';
     document.head.appendChild(st);
     await new Promise((r) => requestAnimationFrame(r));
     const forced = document.querySelector('.mx-sheet').offsetHeight;
@@ -693,7 +698,100 @@ mark('mode');
   await p.close();
 }
 
-const SECTIONS = ['pen', 'sheets', 'persist', 'identity', 'layout', 'narrow', 'table', 'fit', 'wide', 'mode'];
+// ══ 11. the sheet is a window; the paper scrolls inside it ═══════════════════════════════════════
+mark('paper');
+{
+  // A phone, in the Workbook view — the case where a tall sheet would most easily turn the lesson page
+  // into a document several screens long.
+  const p = await open(414, 860);
+  await p.evaluate(() => mxSetView('workbook')); await p.waitForTimeout(400);
+  const empty = await p.evaluate(() => { const sh = document.querySelector('.mx-sheet');
+    return { window: Math.round(sh.clientHeight), scrolls: sh.scrollHeight > sh.clientHeight + 1 }; });
+  await draw(p, [[.1, .15], [.85, .17]]);
+  // The state after ONE stroke near the top, before anything has pushed the paper down.
+  const one = await p.evaluate(() => ({ plane: document.querySelector('.mx-wbcanvas').height,
+    paper: Math.round(document.querySelector('[data-mx-paper]').getBoundingClientRect().height),
+    x: tpWbSheet('practice-equations', 'workbook', 'w1').ink[0].p[0].x,
+    y: tpWbSheet('practice-equations', 'workbook', 'w1').ink[0].p[0].y }));
+  for (const y of [.35, .55, .75, .92]) await draw(p, [[.1, y], [.85, y + .02]]);
+  const full = await p.evaluate(() => { const sh = document.querySelector('.mx-sheet'), pa = document.querySelector('[data-mx-paper]');
+    const c = document.querySelector('.mx-wbcanvas'), doc = document.documentElement;
+    return { window: Math.round(sh.clientHeight), paper: Math.round(pa.getBoundingClientRect().height),
+      scrolls: sh.scrollHeight > sh.clientHeight + 1, store: c.height,
+      lessonTall: doc.scrollHeight > doc.clientHeight + 1,
+      toolbar: Math.round(document.querySelector('.mx-wsbar').getBoundingClientRect().top),
+      tabs: Math.round(document.querySelector('.mx-pagetabs').getBoundingClientRect().bottom),
+      vh: window.innerHeight }; });
+  ok('working longer than the window gives the student more paper, inside the workbook',
+     !empty.scrolls && full.paper > full.window && full.scrolls,
+     `paper grew ${empty.window}px → ${full.paper}px in a ${full.window}px window`);
+  ok('and the lesson page does not become several screens tall to hold it',
+     !full.lessonTall && full.tabs <= full.vh, `page fits the screen; page tabs end at ${full.tabs} of ${full.vh}`);
+  // the toolbar and the page controls do not travel with the paper
+  const scrolled = await p.evaluate(() => { const sh = document.querySelector('.mx-sheet');
+    const t0 = Math.round(document.querySelector('.mx-wsbar').getBoundingClientRect().top);
+    const b0 = Math.round(document.querySelector('.mx-pagetabs').getBoundingClientRect().bottom);
+    sh.scrollTop = 9999;
+    return { moved: Math.round(sh.scrollTop), t0, b0,
+      t1: Math.round(document.querySelector('.mx-wsbar').getBoundingClientRect().top),
+      b1: Math.round(document.querySelector('.mx-pagetabs').getBoundingClientRect().bottom) }; });
+  await p.waitForTimeout(200);
+  ok('the paper moves and the toolbar and page tabs stay where they are',
+     scrolled.moved > 0 && scrolled.t0 === scrolled.t1 && scrolled.b0 === scrolled.b1,
+     `scrolled ${scrolled.moved}px · toolbar ${scrolled.t0}→${scrolled.t1}, tabs ${scrolled.b0}→${scrolled.b1}`);
+  // scrolling exposes plane; it does not rescale what is already written
+  const same = await p.evaluate(() => { const st = tpWbSheet('practice-equations', 'workbook', 'w1').ink[0];
+    const c = document.querySelector('.mx-wbcanvas');
+    const d = c.getContext('2d').getImageData(0, 0, c.width, Math.round(c.height * 0.25)).data;
+    let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 10) n++;
+    return { x: +st.p[0].x.toFixed(2), y: +st.p[0].y.toFixed(2), topInk: n, w: c.width }; });
+  ok('the strokes already written keep their exact coordinates and their place on the plane',
+     same.w === 1000 && same.topInk > 100,
+     `first point (${same.x}, ${same.y}) · ${same.topInk} inked pixels in the top quarter · horizontal scale still ${same.w} units`);
+  const grown = await p.evaluate(() => ({ x: tpWbSheet('practice-equations', 'workbook', 'w1').ink[0].p[0].x,
+    y: tpWbSheet('practice-equations', 'workbook', 'w1').ink[0].p[0].y,
+    plane: document.querySelector('.mx-wbcanvas').height,
+    paper: Math.round(document.querySelector('[data-mx-paper]').getBoundingClientRect().height),
+    strokes: tpWbSheet('practice-equations', 'workbook', 'w1').ink.length }));
+  ok('CONTROL: the plane grew, and the first stroke did NOT move — more paper, not smaller writing',
+     grown.plane > one.plane && grown.paper > one.paper && grown.x === one.x && grown.y === one.y,
+     `paper ${one.paper}→${grown.paper}px, plane ${one.plane}→${grown.plane} units; the first point stayed (${grown.x}, ${grown.y.toFixed(2)})`);
+  // work at the bottom survives leaving it and coming back
+  await p.evaluate(() => { document.querySelector('.mx-sheet').scrollTop = 0; }); await p.waitForTimeout(250);
+  await p.evaluate(() => { document.querySelector('.mx-sheet').scrollTop = 9999; }); await p.waitForTimeout(250);
+  const kept = await p.evaluate(() => tpWbSheet('practice-equations', 'workbook', 'w1').ink.length);
+  ok('writing near the bottom survives scrolling away and back', kept === grown.strokes,
+     `${grown.strokes} strokes before, ${kept} after`);
+  // each page keeps its own place on its own paper
+  const s1 = await p.evaluate(() => Math.round(document.querySelector('.mx-sheet').scrollTop));
+  await p.click('[data-mx-sheet-add]'); await p.waitForTimeout(350);
+  const s2 = await p.evaluate(() => Math.round(document.querySelector('.mx-sheet').scrollTop));
+  await p.click('[data-mx-sheet="w1"]'); await p.waitForTimeout(400);
+  const s3 = await p.evaluate(() => Math.round(document.querySelector('.mx-sheet').scrollTop));
+  ok('each workbook page keeps its own scroll position', s1 > 0 && s2 === 0 && s3 === s1,
+     `Page 1 at ${s1}px → Page 2 opens at ${s2}px → Page 1 returns to ${s3}px`);
+  await p.close();
+}
+{
+  // Desktop: the two regions scroll independently, and neither drags the other.
+  const p = await open(1536, 760);
+  for (const y of [.2, .5, .8, .95]) await draw(p, [[.1, y], [.85, y + .02]]);
+  const r = await p.evaluate(() => { const c = document.querySelector('.mx-content'), sh = document.querySelector('.mx-sheet');
+    const both = { q: c.scrollHeight > c.clientHeight + 1, s: sh.scrollHeight > sh.clientHeight + 1 };
+    const padTop = document.querySelector('.mx-wb').getBoundingClientRect().top;
+    c.scrollTop = 200;
+    const a = { q: Math.round(c.scrollTop), padMoved: Math.round(document.querySelector('.mx-wb').getBoundingClientRect().top - padTop),
+      sheet: Math.round(sh.scrollTop) };
+    sh.scrollTop = 150;
+    return { both, a, b: { s: Math.round(sh.scrollTop), q: Math.round(c.scrollTop) } }; });
+  ok('on desktop the question column and the workbook paper scroll independently',
+     r.both.q && r.both.s && r.a.padMoved === 0 && r.a.sheet === 0 && r.b.q === r.a.q,
+     `questions → ${r.a.q} leaves the workbook still (${r.a.padMoved}px) and its paper at ${r.a.sheet}; paper → ${r.b.s} leaves the questions at ${r.b.q}`);
+  ok('CONTROL: both regions really could have scrolled, so "independent" is not "neither moved"',
+     r.both.q && r.both.s, 'question column and sheet are both scrollable at this height');
+  await p.close();
+}
+const SECTIONS = ['pen', 'sheets', 'persist', 'identity', 'layout', 'narrow', 'table', 'fit', 'wide', 'mode', 'paper'];
 const missing = SECTIONS.filter((s) => !ran.has(s));
 ok('every section ran', missing.length === 0, missing.length ? 'missing: ' + missing.join(', ') : `${SECTIONS.length} sections`);
 ok('no page error while drawing, switching or navigating', pageErrs.length === 0, pageErrs.slice(0, 3).join(' | '));

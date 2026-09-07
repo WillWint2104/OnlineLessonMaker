@@ -300,6 +300,24 @@ If that list grows, the seam is turning into coupling — extract the editor ski
 Type‑only rule changes the Type surface and nothing else — not Practice/Write, Notes, Video, `graphQuestion`
 or either legacy Geolearn control.
 
+## 8bb. The workbook sheet — a window onto a paper
+
+`.mx-sheet` is the WINDOW and `[data-mx-paper]` is what the student writes on. The paper is at least one
+window tall and grows downward as the writing approaches its bottom; the window scrolls over it. The
+toolbar and the page tabs are siblings of the window, so they do not move when the paper does.
+
+The paper's extent is **derived, not stored**: it is `max(window, lowest ink + 45% of a window)`, recomputed
+on pointer‑up and on resize. Nothing new enters the response — the payload is still `{id, ink, text}` — and
+a sheet restored from the store gets its paper back with it.
+
+The horizontal scale is fixed at **1000 units across the paper's width**, so a taller paper means a taller
+backing store at the same scale: growing the paper exposes MORE PLANE and can never rescale a stroke that
+is already on it. This is the same principle Expand uses. Scroll position is remembered per sheet
+(session‑only, like the response mode and the region views).
+
+Anything that drives the pad with synthetic pointers must aim at `.mx-sheet`, not `.mx-wbcanvas` — the
+canvas can now be taller than the window, so a fraction of its rect may lie outside the viewport.
+
 ## 8c. The Mathematics page contracts (Stage C)
 
 **Notes** — `{ id, title, lede?, contentTitle?, keyIdea?: {title?, body}, concepts: [{id, term, body}],

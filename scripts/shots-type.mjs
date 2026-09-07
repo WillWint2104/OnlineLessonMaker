@@ -37,7 +37,9 @@ const open = async (w, h) => {
   return p;
 };
 const draw = async (p, pts) => {
-  const box = await (await p.$('.mx-wbcanvas')).boundingBox();
+  // Draw through the VISIBLE window, not the canvas: since the paper can be taller than the window, a
+  // fraction of the canvas rect can fall outside the viewport, where a pointer cannot go.
+  const box = await (await p.$('.mx-sheet')).boundingBox();
   const at = ([x, y]) => [box.x + x * box.width, box.y + y * box.height];
   await p.mouse.move(...at(pts[0])); await p.mouse.down();
   for (const q of pts.slice(1)) await p.mouse.move(...at(q), { steps: 10 });

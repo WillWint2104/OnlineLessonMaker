@@ -1826,8 +1826,15 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 /* ── the workbook ───────────────────────────────────────────────────────────────────────────────── */
 .mx-tool[aria-pressed="true"]{background:var(--mx-green-pale);color:var(--mx-green);font-weight:600;}
 .mx-wb{--mx-pen:#1D4E89;}
-.mx-sheet{position:relative;flex:1 1 auto;min-height:0;background:var(--mx-white);}
-.mx-sheet .mx-grid{position:absolute;inset:0;height:auto;}
+/* THE SHEET IS A WINDOW; THE PAPER IS WHAT THE STUDENT WRITES ON. The paper is at least one window tall
+   and grows downward as the writing approaches its bottom, and the window scrolls over it — so a long
+   piece of working does not turn the lesson page into a document several screens tall, and the toolbar and
+   the page tabs (siblings of this window, not of the paper) stay where they are while the paper moves. */
+.mx-sheet{position:relative;flex:1 1 auto;min-height:0;background:var(--mx-white);
+  overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;}
+.mx-sheet:focus-visible{outline:2px solid var(--mx-green);outline-offset:-2px;}
+.mx-paper{position:relative;width:100%;min-height:100%;height:var(--mx-paper-h,100%);}
+.mx-paper .mx-grid{position:absolute;inset:0;height:auto;}
 .mx-wbcanvas{position:absolute;inset:0;width:100%;height:100%;color:var(--mx-pen);touch-action:none;cursor:crosshair;}
 /* ── the typed working page ─────────────────────────────────────────────────────────────────────── */
 /* A PAGE, not a text box. The measure is capped for prose, so on a wide or expanded workbook the sheet is
@@ -7639,9 +7646,11 @@ function mxWorkbook(ws,s,i){
            <div class="mx-eqribbon"><div class="tp-eqsymwell" data-tp-eqsym></div><div class="tp-eqstructs" data-tp-eqstructs></div></div>
            <div class="mx-eqact"><button type="button" class="mx-tool mx-out" data-mx-eqcancel>Cancel</button>
              <button type="button" class="mx-tool mx-eqok" data-mx-eqok>Insert</button></div></div>`
-      : `<div class="mx-sheet"><div class="mx-grid"></div>
+      : `<div class="mx-sheet" data-mx-sheetscroll tabindex="0"
+            aria-label="Workbook page ${esc(String(doc.pages.findIndex(pg=>pg.id===slot)+1))} — scrollable writing surface">
+          <div class="mx-paper" data-mx-paper><div class="mx-grid"></div>
           <canvas class="mx-wbcanvas" data-tp-ink-canvas width="1000" height="700"
-            aria-label="Workbook page ${esc(String(doc.pages.findIndex(pg=>pg.id===slot)+1))} — write with a pen, mouse or finger."></canvas></div>`}
+            aria-label="Workbook page ${esc(String(doc.pages.findIndex(pg=>pg.id===slot)+1))} — write with a pen, mouse or finger."></canvas></div></div>`}
     <div class="mx-pagetabs">${tabs}<button type="button" class="mx-ptab" data-mx-sheet-add aria-label="Add a workbook page">${mxIc('plus',14)}</button></div>
   </div>`;
 }
@@ -7711,6 +7720,44 @@ function mxTypedWrite(host,blocks){
     });
   });
 }
+/* HOW MUCH PAPER THERE IS. Derived from the work itself rather than stored: the paper is one window tall
+   until the writing comes within a margin of its bottom, and from then on it keeps a margin of blank paper
+   below the lowest stroke. Nothing new goes into the response — the extent is a function of the ink, so a
+   sheet restored from the store gets its paper back with it, and the payload stays {id, ink, text}.
+   The horizontal scale never changes (1000 units across the paper's width), so growing the paper exposes
+   MORE PLANE and cannot rescale a stroke that is already on it. */
+const MX_PAPER_HEADROOM=0.45;                 /* of a window, kept clear below the lowest ink */
+function mxPaperExtend(pad){
+  if(!pad) return null;
+  const sheet=pad.querySelector('.mx-sheet'), paper=pad.querySelector('[data-mx-paper]');
+  if(!sheet||!paper) return null;
+  const frame=sheet.clientHeight, w=paper.clientWidth;
+  if(!(frame>0&&w>0)) return null;
+  const page=pad.dataset.tpRespPage, rid=pad.dataset.tpRespId, slot=pad.dataset.tpRespSlot;
+  let lowest=0;
+  if(page&&rid&&slot) (tpWbSheet(page,rid,slot).ink||[]).forEach(st=>{
+    ((st&&st.p)||[]).forEach(pt=>{ if(pt&&pt.y>lowest) lowest=pt.y; }); });
+  const px=lowest*(w/1000)+frame*MX_PAPER_HEADROOM;      /* units → px at the paper's own scale */
+  const h=Math.max(frame,Math.ceil(px));
+  paper.style.setProperty('--mx-paper-h',h+'px');
+  return {frame:frame, paper:h, scrolls:h>frame+1};
+}
+/* Where the student was looking, per SHEET. Session-only, like the response mode and the region views:
+   changing page and coming back returns to the same place on that page's paper rather than to its top. */
+const MX_WB_SCROLL={};
+function mxWbScrollKey(pad){
+  return [pad.dataset.tpRespPage,pad.dataset.tpRespId,pad.dataset.tpRespSlot].join('/');
+}
+function mxWireSheetScroll(pad){
+  const sheet=pad.querySelector('[data-mx-sheetscroll]'); if(!sheet) return;
+  const key=mxWbScrollKey(pad);
+  sheet.addEventListener('scroll',()=>{ MX_WB_SCROLL[key]=sheet.scrollTop; },{passive:true});
+  const put=()=>{ const want=MX_WB_SCROLL[key];
+    if(want!=null&&sheet.scrollHeight>sheet.clientHeight) sheet.scrollTop=want; };
+  mxPaperExtend(pad); put();
+  if(typeof requestAnimationFrame==='function') requestAnimationFrame(()=>{ mxPaperExtend(pad); put(); });
+  if(typeof ResizeObserver!=='undefined'){ const ro=new ResizeObserver(()=>mxPaperExtend(pad)); ro.observe(sheet); }
+}
 /* Switching sheet — or modality — replaces ONE element and re-wires it. Not a page re-render: the question
    column keeps its scroll position, and the old node's listeners go with it rather than stacking. */
 function mxWorkbookSwap(pad){
@@ -7739,6 +7786,7 @@ function mxWireWorkbook(pad){
   pad.querySelectorAll('[data-mx-sheet]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,b.dataset.mxSheet)));
   pad.querySelectorAll('[data-mx-sheet-add]').forEach(b=>b.addEventListener('click',()=>mxSheetGo(b,null)));
   pad.querySelectorAll('button[data-mx-view]').forEach(b=>b.addEventListener('click',()=>mxSetView(b.dataset.mxView)));
+  mxWireSheetScroll(pad);
   const typed=pad.querySelector('[data-mx-typed]'); if(!typed) return;
   const sheet=tpWbSheet(page,rid,slot);
   mxTypedWrite(typed,sheet.text);
@@ -10272,7 +10320,10 @@ function wireInkPads(root){
     }:null;
     if(fit){ fit(); if(typeof ResizeObserver!=='undefined'){
       const ro=new ResizeObserver(()=>{ if(fit()) redraw(); }); ro.observe(canvas); } }
-    const save=()=>{ if(viaResp) tpWbSheet(rPage,rId,rSlot).ink=strokes; else rt.ans[fid]=strokes; };
+    const save=()=>{ if(viaResp) tpWbSheet(rPage,rId,rSlot).ink=strokes; else rt.ans[fid]=strokes;
+      /* A finished stroke may have reached the bottom of the paper; give the student more of it. Only on
+         pointer-up, never mid-stroke, so the surface cannot move under the pen. */
+      if(viaResp&&typeof mxPaperExtend==='function') try{ mxPaperExtend(pad); }catch(e){} };
     canvas.addEventListener('pointerdown',e=>{ e.preventDefault(); drawing=true; try{canvas.setPointerCapture(e.pointerId);}catch(_){}
       cur={e:tool==='eraser', w:tool==='eraser'?26:5, p:[pos(e)]}; strokes.push(cur); redraw(); });
     canvas.addEventListener('pointermove',e=>{ if(!drawing) return; cur.p.push(pos(e)); redraw(); });

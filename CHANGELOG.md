@@ -47,6 +47,20 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   and caret were unreachable by keyboard; and re-opening the bar mounted a second editor on the same node —
   `destroy()` unbinds the document listeners but not the field's — so every keystroke was inserted once per
   editor ever opened. Each now has a check with a control that reproduces the failure.
+- **The workbook sheet is a WINDOW; the paper scrolls inside it.** The frame was the paper: `.mx-sheet`
+  was `overflow-y: visible` with `scrollHeight === clientHeight` at every width, so a learner could not
+  write past the bottom of the visible workbook. Now the window scrolls over a paper that is at least one
+  window tall and grows downward as the writing approaches its bottom — measured on a phone, 545px of
+  window and 758px of paper after five lines of working. The toolbar and the page tabs are siblings of the
+  window, not of the paper, so Pen / Eraser / Clear / Expand and `Page 1 / Page 2 / +` stay exactly where
+  they are while the paper moves (toolbar 191→191, tabs 835→835 across a 213px scroll). The lesson page
+  never becomes several screens tall to hold it — that part was already true and is now asserted.
+  The extent is DERIVED from the ink rather than stored, so the response payload stays `{id, ink, text}`
+  and a sheet restored from the store gets its paper back with it. The horizontal scale is fixed at 1000
+  units across, so growing the paper exposes more plane and cannot rescale existing writing: the control
+  shows the plane going 1434 → 1995 units while the first stroke stays at (100, 215.01). Each page keeps
+  its own scroll position, and on desktop the question column and the paper scroll independently — moving
+  one leaves the other exactly where it was. `verify-workbook` 75 → 84.
 - **The equation editor fits on a handset.** The Type workspace already worked at 414/390/360px — every
   control reachable, nothing overflowing sideways — but the ribbon stacks into a long column there, and
   capping the BAR scrolled Insert and Cancel away with it. The ribbon is capped instead, so field, symbols

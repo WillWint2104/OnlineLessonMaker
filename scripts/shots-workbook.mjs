@@ -38,7 +38,9 @@ const open = async (w, h, L = FIX, slide = PRACTICE) => {
   return p;
 };
 const draw = async (p, pts) => {
-  const box = await (await p.$('.mx-wbcanvas')).boundingBox();
+  // Draw through the VISIBLE window, not the canvas: since the paper can be taller than the window, a
+  // fraction of the canvas rect can fall outside the viewport, where a pointer cannot go.
+  const box = await (await p.$('.mx-sheet')).boundingBox();
   const at = ([x, y]) => [box.x + x * box.width, box.y + y * box.height];
   await p.mouse.move(...at(pts[0])); await p.mouse.down();
   for (const q of pts.slice(1)) await p.mouse.move(...at(q), { steps: 10 });
@@ -126,6 +128,23 @@ const shot = async (p, name, sel) => {
     h: document.querySelector('.mx-sheet').offsetHeight }));
   if (fit.fit === 'split') { for (const s of WORK_1.slice(0, 9)) await draw(p, s); await shot(p, '04-tablet-wide-split'); }
   console.log(`   (4: 1180x900 with the rail collapsed resolves to "${fit.fit}" — questions ${fit.q}px, workbook ${fit.w}px, sheet ${fit.h}px)`);
+  await p.close();
+}
+// 11 — a working longer than the window: the paper scrolls inside the workbook frame
+{
+  const p = await open(414, 860);
+  await p.evaluate(() => mxSetView('workbook'));
+  await p.waitForTimeout(400);
+  for (const y of [.12, .30, .48, .66, .84, .95]) await draw(p, [[.10, y], [.86, y + .015]]);
+  await p.waitForTimeout(250);
+  await shot(p, '11a-phone-paper-top');
+  const m = await p.evaluate(() => { const sh = document.querySelector('.mx-sheet');
+    sh.scrollTop = sh.scrollHeight;
+    return { window: Math.round(sh.clientHeight), paper: Math.round(document.querySelector('[data-mx-paper]').getBoundingClientRect().height),
+      scrolled: Math.round(sh.scrollTop), lessonTall: document.documentElement.scrollHeight > document.documentElement.clientHeight + 1 }; });
+  await p.waitForTimeout(300);
+  await shot(p, '11b-phone-paper-scrolled');
+  console.log(`   (11: ${m.paper}px of paper in a ${m.window}px window, scrolled ${m.scrolled}px; lesson page taller than the screen: ${m.lessonTall})`);
   await p.close();
 }
 // 5 · 6 — the table: fitting normally, and a wide authored one scrolling locally
