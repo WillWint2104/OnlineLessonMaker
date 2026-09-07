@@ -180,5 +180,33 @@ const state = (p) => p.evaluate(() => { const d = tpRespGet('practice-equations'
   await shot(n, '10d-narrow-type-retained');
   await n.close();
 }
+// ── 11 · 12 — the equation lands at the caret, and Insert is reachable on a short laptop ──────────
+{
+  const p = await open(1536, 1024);
+  await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(300);
+  await type(p, ['Q1(a)  Substituting ']);
+  await equation(p, ['x', '=', '3']);
+  await p.click('[data-mx-eqok]'); await p.waitForTimeout(250);
+  await p.keyboard.type(' into the rule gives ');
+  await equation(p, ['y', '=', '9']);
+  await p.click('[data-mx-eqok]'); await p.waitForTimeout(250);
+  await p.keyboard.type(', so the point is (3, 9).');
+  await p.evaluate(() => document.querySelector('[data-mx-typed]').blur()); await p.waitForTimeout(200);
+  await shot(p, '11-equations-in-the-line-they-were-written');
+  await p.close();
+  // A 13-inch laptop: the bar opens, and Insert and the page tabs stay inside the region.
+  const n = await open(1280, 760);
+  await n.click('[data-mx-resp="type"]'); await n.waitForTimeout(300);
+  await n.evaluate(() => mxSetView('workbook')); await n.waitForTimeout(350);
+  await n.click('[data-mx-typed]'); await n.keyboard.type('Q6(c)  Solving by expanding first:');
+  await n.click('[data-mx-tsel="eq"]'); await n.waitForTimeout(300);
+  await n.click('[data-tp-eqfield]');
+  for (const k of ['(', '2', 'x', '+', '1', 'ArrowRight', '^', '2', 'ArrowRight', '=', '3', '6']) {
+    await n.keyboard.press(k); await n.waitForTimeout(35);
+  }
+  await n.waitForTimeout(200);
+  await shot(n, '12-short-laptop-insert-reachable');
+  await n.close();
+}
 await browser.close(); server.close();
 console.log('\nwrote ' + path.relative(root, OUT));

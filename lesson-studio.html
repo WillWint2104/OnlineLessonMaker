@@ -1842,7 +1842,7 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-eq:hover,.mx-eq:focus-visible{border-color:var(--mx-green);}
 .mx-eqbar[hidden]{display:none;}   /* a class rule outranks the UA [hidden]; without this the bar never closes */
 .mx-eqbar{flex:0 0 auto;display:flex;flex-wrap:wrap;align-items:flex-start;gap:10px;padding:10px 12px;
-  border-top:1px solid var(--mx-line);background:var(--mx-white);}
+  border-top:1px solid var(--mx-line);background:var(--mx-white);max-height:56vh;overflow:auto;}
 /* The FIELD itself carries the box, the tabindex and the role — TPMath binds its key handling, its caret
    and its hit-testing to the element marked `data-tp-eqfield`, so a styled wrapper around an unfocusable
    span left the editor reachable by mouse only and unreachable by keyboard entirely. */
@@ -1850,6 +1850,11 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-eqfield{flex:1 1 auto;min-height:38px;display:flex;align-items:center;gap:4px;padding:5px 10px;cursor:text;overflow-x:auto;
   border:1px solid var(--mx-line);border-radius:9px;background:var(--mx-white);font-family:'LM Math',Cambria Math,serif;font-size:17px;}
 .mx-eqfield:focus{outline:none;border-color:var(--mx-green);box-shadow:0 0 0 3px var(--mx-green-pale);}
+/* The empty slots of a fraction or a radical are `mtext.ph`, styled by the pack under `.tp-eqfield`. This
+   field is `.mx-eqfield`, so inserting a fraction drew two slots that were completely invisible and the
+   student had nothing to aim at. Same treatment, Mathematics palette. */
+.mx-eqfield mtext.ph{display:inline-block;width:.5em;height:.7em;border:1.4px dotted var(--mx-ink-3);border-radius:2px;}
+.mx-eqfield mtext.ph.here{border-color:var(--mx-green);}
 .mx-eqribbon{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;}
 .mx-eqbar .tp-eqst{position:relative;}   /* the gallery is `top:100%` of its nearest positioned ancestor */
 .mx-eqact{flex:0 0 auto;display:flex;gap:6px;margin-left:auto;}
@@ -1950,14 +1955,20 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    became a block, the row went away, and `min-height:0` left the writing surface at 452 x 0. The workbook
    is a flex column with its own floor everywhere, so the surface cannot collapse whatever the page does. */
 .mx-wb{display:flex;flex-direction:column;}
-.mx-wb .mx-sheet{flex:1 1 auto;min-height:340px;}
-.mx[data-mx-fit="solo"] .mx-wb .mx-sheet{flex:0 0 auto;height:min(62vh,520px);}
+.mx-wb:not([data-mx-eq="open"]) .mx-sheet{flex:1 1 auto;min-height:340px;}
+.mx[data-mx-fit="solo"] .mx-wb:not([data-mx-eq="open"]) .mx-sheet{flex:0 0 auto;height:min(62vh,520px);}
 /* In the Workbook view the workbook gets the page: a fixed vh cap left a portrait tablet with a third of
    its height unused, which is the same "not a serious writing surface" complaint in a milder form. */
 .mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-page{display:flex;flex-direction:column;overflow:hidden;}
 .mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-split{flex:1 1 auto;min-height:0;}
 .mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-work{min-height:0;display:flex;flex-direction:column;overflow:hidden;}
-.mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-wb .mx-sheet{flex:1 1 auto;height:auto;min-height:340px;}
+.mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-wb:not([data-mx-eq="open"]) .mx-sheet{flex:1 1 auto;height:auto;min-height:340px;}
+/* WHILE THE EQUATION BAR IS OPEN the writing surface gives up its floor — every one of them. A floor is a
+   floor for WRITING, and the bar is what the student is looking at; holding 340px for the page underneath
+   pushed Insert and the page tabs below the viewport on any laptop under about 800px tall, with nothing to
+   scroll, so the control the student had to press to finish the equation could not be reached at all. */
+.mx-wb[data-mx-eq="open"]{overflow:hidden;}
+.mx-wb[data-mx-eq="open"] .mx-sheet{flex:1 1 auto;height:auto;min-height:96px;}
 @media (max-width:640px){ .mx-crumb{display:none;} }
 @media (max-width:520px){
   .mx-top{gap:8px;padding:0 10px;height:52px;}
@@ -7475,6 +7486,10 @@ function mxTypedRead(host){
     if(n.tagName==='BR'){ buf+='\n'; return; }
     const block=/^(DIV|P|LI)$/.test(n.tagName);
     if(block&&buf) buf+='\n';
+    /* A contenteditable writes an EMPTY line as a block containing one <br>. Counting the block's own
+       break and the <br> inside it made every blank line two lines the first time the page was read back
+       from the store. The block break already stands for it. */
+    if(block&&n.childNodes.length===1&&n.firstChild.tagName==='BR') return;
     walk(n);
   }); };
   walk(host); flush();
@@ -7524,11 +7539,16 @@ function mxWorkbookSwap(pad){
   wireInkPads(host); mxWireWorkbook(fresh);
   return fresh;
 }
+/* Changing sheet replaces the pad, so the button that was pressed no longer exists. Focus would land on
+   BODY and a keyboard user would lose their place in the workspace entirely; the fresh pad's equivalent
+   control takes it instead. */
 function mxSheetGo(btn,slot){
   const pad=btn.closest('[data-tp-ink]'); if(!pad) return;
   const page=pad.dataset.tpRespPage, rid=pad.dataset.tpRespId;
   if(slot) tpInkSetCurrent(page,rid,slot); else tpInkAddSheet(page,rid);
-  mxWorkbookSwap(pad);
+  const fresh=mxWorkbookSwap(pad); if(!fresh) return;
+  const want=fresh.querySelector('.mx-ptab.on')||fresh.querySelector('[data-mx-sheet-add]');
+  if(want&&want.focus) want.focus();
 }
 let _mxEq=null;
 function mxWireWorkbook(pad){
@@ -7564,6 +7584,26 @@ function mxWireWorkbook(pad){
     insertText((e.dataTransfer&&e.dataTransfer.getData('text/plain'))||''); });
   const clr=pad.querySelector('[data-mx-tclear]');
   if(clr) clr.addEventListener('click',()=>{ typed.textContent=''; save(); typed.focus(); });
+  /* WHERE THE STUDENT WAS WRITING. Opening the equation bar moves focus off the page, so by the time
+     Insert is pressed the surface has no caret of its own to insert at. The last caret INSIDE the page is
+     recorded as it moves — typing, clicking, arrowing — and that is the position Insert uses. Without it
+     an equation could only ever land after everything else on the page, and prose typed afterwards went in
+     front of it: the student's working came out in an order they did not write it in. */
+  let _caret=null;
+  const remember=()=>{ const sl=window.getSelection();
+    if(!sl||!sl.rangeCount) return;
+    const r=sl.getRangeAt(0);
+    if(typed.contains(r.commonAncestorContainer)) _caret=r.cloneRange(); };
+  ['keyup','mouseup','input','focus'].forEach(ev=>typed.addEventListener(ev,remember));
+  const placeEq=(node)=>{
+    const r=(_caret&&typed.contains(_caret.commonAncestorContainer))?_caret:null;
+    const sp=document.createTextNode(' ');
+    if(r){ r.deleteContents(); r.insertNode(node); node.parentNode.insertBefore(sp,node.nextSibling); }
+    else { typed.appendChild(node); typed.appendChild(sp); }
+    const nr=document.createRange(); nr.setStartAfter(sp); nr.collapse(true);
+    const sl=window.getSelection(); if(sl){ sl.removeAllRanges(); sl.addRange(nr); }
+    _caret=nr.cloneRange();
+  };
   /* The equation bar is the app's TPMath editor, opened in place. `Insert` replaces the equation being
      edited, or drops a new one at the caret; nothing else in the page moves. */
   const bar=pad.querySelector('[data-mx-eqbar]');
@@ -7583,11 +7623,19 @@ function mxWireWorkbook(pad){
       bar.querySelector('[data-tp-eqsym]'), bar.querySelector('[data-tp-eqstructs]'), initial?{initial}:{});
     bar.dataset.mxEditing=existing?'1':'';
     bar._target=existing||null;
+    pad.setAttribute('data-mx-eq','open');
     if(_mxEq&&_mxEq.focus) _mxEq.focus();
+    /* TPMath mounts a restored expression with the caret at index 0, so an edit is typed IN FRONT of what
+       is already there — re-opening `x²` and typing `+1` gives `+1x²`. `End` is the editor's own way of
+       going to the end of the row, so the caret is put there through its public behaviour rather than by
+       reaching into its state. */
+    if(initial) nf.dispatchEvent(new KeyboardEvent('keydown',{key:'End',bubbles:true}));
   };
-  const closeEq=()=>{ if(bar){ bar.hidden=true; bar._target=null; }
+  const closeEq=(refocus)=>{ if(bar){ bar.hidden=true; bar._target=null; }
+    pad.removeAttribute('data-mx-eq');
     pad.querySelectorAll('[data-mx-tsel]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mxTsel==='text'?'true':'false'));
-    if(_mxEq&&_mxEq.destroy){ try{ _mxEq.destroy(); }catch(e){} _mxEq=null; } };
+    if(_mxEq&&_mxEq.destroy){ try{ _mxEq.destroy(); }catch(e){} _mxEq=null; }
+    if(refocus!==false) typed.focus(); };
   pad.querySelectorAll('[data-mx-tsel]').forEach(b=>b.addEventListener('click',()=>{
     if(b.dataset.mxTsel==='eq') openEq(null); else { closeEq(); typed.focus(); } }));
   typed.addEventListener('click',e=>{ const eq=e.target.closest&&e.target.closest('.mx-eq'); if(eq) openEq(eq); });
@@ -7597,17 +7645,27 @@ function mxWireWorkbook(pad){
     if(e.key!=='Enter'&&e.key!==' ') return;
     const eq=e.target.closest&&e.target.closest('.mx-eq'); if(!eq) return;
     e.preventDefault(); openEq(eq); });
-  const cancel=pad.querySelector('[data-mx-eqcancel]'); if(cancel) cancel.addEventListener('click',closeEq);
-  const okB=pad.querySelector('[data-mx-eqok]');
-  if(okB) okB.addEventListener('click',()=>{
+  const cancel=pad.querySelector('[data-mx-eqcancel]'); if(cancel) cancel.addEventListener('click',()=>closeEq());
+  const commit=()=>{
     if(!_mxEq) return closeEq();
     let tree=null; try{ tree=_mxEq.tree(); }catch(e){}
     if(tree){
       const node=mxEqNode(tree);
       if(bar._target&&bar._target.parentNode) bar._target.replaceWith(node);
-      else { typed.appendChild(node); typed.appendChild(document.createTextNode(' ')); }
+      else placeEq(node);
     }
-    closeEq(); save(); typed.focus();
+    closeEq(); save();
+  };
+  const okB=pad.querySelector('[data-mx-eqok]');
+  if(okB) okB.addEventListener('click',commit);
+  /* A WAY OUT. TPMath takes Tab for caret motion inside the expression, which is right, but it left the
+     bar with no key that leaves it: Tab, Shift-Tab and Escape all kept focus in the field, so a keyboard
+     user who opened the editor was stuck in it. Enter commits and Escape abandons — both hand the page
+     back its focus. TPMath ignores both keys (its handler only acts on single characters), so neither is
+     taken away from the expression. */
+  if(bar) bar.addEventListener('keydown',e=>{
+    if(e.key==='Escape'){ e.preventDefault(); e.stopPropagation(); closeEq(); return; }
+    if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); e.stopPropagation(); commit(); }
   });
 }
 registerWorkspace('grid',mxWorkbook);

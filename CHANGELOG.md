@@ -47,6 +47,30 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   and caret were unreachable by keyboard; and re-opening the bar mounted a second editor on the same node —
   `destroy()` unbinds the document listeners but not the field's — so every keystroke was inserted once per
   editor ever opened. Each now has a check with a control that reproduces the failure.
+- **The equation bar became an instrument a student can use.** An adversarial review of the Type surface —
+  six independent lenses over the diff, each finding refuted by separate verifiers before it counted —
+  turned up seven defects that every state gate was green on, because all of them are about the surface
+  rather than the payload. Each is now fixed with a check and a control that drives the failure back:
+  - **An equation landed at the end of the page, never at the caret**, and prose typed afterwards went in
+    FRONT of it — so `Substituting [x = 3] into the rule gives [y = 9]` was not expressible at all, and the
+    student's working came out in an order they did not write it in. The last caret inside the page is now
+    recorded as it moves, and that is where Insert places the equation.
+  - **Re-opening a placed equation typed in front of it**: TPMath mounts a restored expression with the
+    caret at index 0, so re-opening `x²` and adding `+1` gave `+1x²`. It now opens at the end of the row.
+  - **The bar was a keyboard trap.** TPMath takes Tab for caret motion inside the expression, which is
+    right, but nothing else left the field either — a keyboard user who opened the editor was stuck in it.
+    Escape abandons, Enter commits, both hand the page back its focus.
+  - **Insert and the page tabs fell below the viewport on any laptop under about 800px tall**, with nothing
+    to scroll: the control needed to finish the equation could not be reached. The writing surface now
+    gives up its floor while the bar is open — a floor is a floor for writing, and the bar is what the
+    student is looking at.
+  - **The empty slots of a fraction were invisible.** They are `mtext.ph`, styled by the pack under
+    `.tp-eqfield`; this field is `.mx-eqfield`, so inserting a fraction drew two slots with no border and
+    the student had nothing to aim at.
+  - **A blank line came back as two.** A contenteditable writes an empty line as a block containing one
+    `<br>`; counting the block's break and the `<br>` inside it stored two newlines for one blank line.
+  - **Focus fell to BODY** after Cancel and after adding a page, both of which replace or hide their own
+    container. Cancel returns to the page; adding a page focuses the new tab.
 - **What a student pastes is what a student keeps.** The typed page stores text and equation trees, so
   pasted markup was always discarded at the next render — the page just went on showing it until then, which
   reads as formatting that was accepted and then thrown away. Paste and drop now arrive as plain text at the

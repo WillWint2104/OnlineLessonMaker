@@ -320,7 +320,10 @@ mark('fit');
     const proper = document.querySelector('.mx-sheet').offsetHeight;
     root.setAttribute('data-mx-fit', 'split');                 // what a width-based rule would have decided
     const st = document.createElement('style');
-    st.id = 'mx-force'; st.textContent = '.mx-wb .mx-sheet{flex:0 1 auto;min-height:0;}';
+    // !important, not specificity: this control exists to remove the FLOOR, and it should keep doing that
+    // however the floor's selector is written later. It lost silently once when the selector grew a :not().
+    st.id = 'mx-force';
+    st.textContent = '.mx-wb .mx-sheet{flex:0 1 auto!important;min-height:0!important;height:auto!important;}';
     document.head.appendChild(st);
     await new Promise((r) => requestAnimationFrame(r));
     const forced = document.querySelector('.mx-sheet').offsetHeight;
@@ -532,6 +535,94 @@ mark('mode');
   await p.evaluate(() => { const c = document.querySelector('[data-mx-eqcancel]'); if (c) c.click();
     mxTypedWrite(document.querySelector('[data-mx-typed]'), tpRespGet('practice-equations', 'workbook').value.pages[0].text); });
   await p.waitForTimeout(150);
+  // ── the equation bar as an instrument a student can actually use ───────────────────────────────
+  // Insert used to append to the end of the page whatever the caret was doing, and the prose typed next
+  // went in FRONT of the equation — the student's working came out in an order they did not write it in.
+  await p.evaluate(() => { const c = document.querySelector('[data-mx-eqcancel]'); if (c) c.click();
+    mxTypedWrite(document.querySelector('[data-mx-typed]'), []); });
+  await p.click('[data-mx-typed]'); await p.keyboard.type('Step one: ');
+  await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(220);
+  await p.click('[data-tp-eqfield]'); await p.keyboard.press('x'); await p.waitForTimeout(60);
+  await p.click('[data-mx-eqok]'); await p.waitForTimeout(200);
+  await p.keyboard.type('THEN'); await p.waitForTimeout(200);
+  const order = await p.evaluate(() => { const t = tpRespGet('practice-equations', 'workbook').value.pages[0].text;
+    return { kinds: t.map((b) => b.t), text: t.filter((b) => b.t === 'p').map((b) => b.v).join('|'),
+      eqAt: t.findIndex((b) => b.t === 'eq'), last: t.length - 1 }; });
+  ok('an equation lands where the caret is, and what is typed next continues after it',
+     order.eqAt >= 0 && order.eqAt !== order.last && /Step one:/.test(order.text) && /THEN/.test(order.text)
+     && order.kinds.indexOf('eq') < order.kinds.lastIndexOf('p'),
+     `blocks ${order.kinds.join('+')} — the equation is at ${order.eqAt} of ${order.last}, prose "${order.text}"`);
+  ok('CONTROL: appending to the end of the page would have put it last, with the later prose in front of it',
+     order.eqAt < order.last, `appending gives index ${order.last}; the caret gives ${order.eqAt}`);
+  // Re-opening a placed equation must continue it, not prepend to it.
+  await p.evaluate(() => { mxTypedWrite(document.querySelector('[data-mx-typed]'), []); });
+  await p.click('[data-mx-typed]');
+  await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(200);
+  await p.click('[data-tp-eqfield]'); await p.keyboard.press('1'); await p.waitForTimeout(60);
+  await p.click('[data-mx-eqok]'); await p.waitForTimeout(200);
+  await p.click('.mx-eq'); await p.waitForTimeout(300);
+  await p.keyboard.press('2'); await p.waitForTimeout(80);
+  await p.click('[data-mx-eqok]'); await p.waitForTimeout(250);
+  const reedit = await p.evaluate(() => document.querySelector('.mx-eq').textContent.replace(/\s/g, ''));
+  ok('re-opening a placed equation continues it rather than typing in front of it',
+     reedit === '12', `"1" then "2" reads "${reedit}"`);
+  ok('CONTROL: a caret left at the start would have read "21"', reedit !== '21', `it reads "${reedit}"`);
+  // A keyboard user has to be able to leave the bar. TPMath takes Tab for caret motion inside the row.
+  await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(220);
+  await p.click('[data-tp-eqfield]');
+  await p.keyboard.press('Tab'); await p.waitForTimeout(80);
+  const stuck = await p.evaluate(() => document.activeElement.dataset.tpEqfield !== undefined);
+  await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+  const out = await p.evaluate(() => ({ inTyped: document.activeElement.dataset.mxTyped !== undefined,
+    closed: document.querySelector('[data-mx-eqbar]').hasAttribute('hidden') }));
+  ok('Escape leaves the equation bar and hands the page back its focus',
+     out.closed && out.inTyped, `bar ${out.closed ? 'closed' : 'STILL OPEN'}, focus ${out.inTyped ? 'on the page' : 'ELSEWHERE'}`);
+  ok('CONTROL: Tab does not leave — it belongs to the expression, which is why Escape had to exist',
+     stuck === true, 'Tab kept focus in the field');
+  // An empty slot has to be visible or there is nothing to aim at.
+  await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(220);
+  await p.click('[data-tp-eqfield]'); await p.keyboard.press('/'); await p.waitForTimeout(200);
+  const slots = await p.evaluate(() => { const ph = document.querySelector('[data-tp-eqfield] mtext.ph');
+    if (!ph) return null; const on = getComputedStyle(ph);
+    const seen = { style: on.borderTopStyle, w: on.borderTopWidth, n: document.querySelectorAll('[data-tp-eqfield] mtext.ph').length };
+    ph.classList.remove('ph'); const off = getComputedStyle(ph).borderTopStyle; ph.classList.add('ph');
+    return { seen, off }; });
+  ok('the empty slots of a fraction are visible', slots && slots.seen.style === 'dotted' && slots.seen.n === 2,
+     slots ? `${slots.seen.n} slots, ${slots.seen.w} ${slots.seen.style}` : 'no placeholder found');
+  ok('CONTROL: without that rule the slot has no border at all and the student aims at nothing',
+     slots && slots.off === 'none', slots ? `unstyled slot: border-style ${slots.off}` : 'n/a');
+  await p.keyboard.press('Escape'); await p.waitForTimeout(200);
+  // A blank line is one blank line, on the page and after it is read back.
+  await p.evaluate(() => { mxTypedWrite(document.querySelector('[data-mx-typed]'), []); });
+  await p.click('[data-mx-typed]'); await p.keyboard.type('one');
+  await p.keyboard.press('Enter'); await p.keyboard.press('Enter'); await p.keyboard.type('two');
+  await p.waitForTimeout(200);
+  const blanks = await p.evaluate(() => { const t = document.querySelector('[data-mx-typed]');
+    const stored = tpRespGet('practice-equations', 'workbook').value.pages[0].text.map((b) => b.v).join('');
+    mxTypedWrite(t, tpRespGet('practice-equations', 'workbook').value.pages[0].text);
+    return { stored: JSON.stringify(stored), brs: t.querySelectorAll('br').length }; });
+  ok('a blank line comes back as one blank line, not two',
+     blanks.stored === JSON.stringify('one\n\ntwo') && blanks.brs === 2,
+     `stored ${blanks.stored}, re-rendered with ${blanks.brs} breaks`);
+  ok('CONTROL: counting the block break AND the <br> inside it is what made it two',
+     blanks.stored !== JSON.stringify('one\n\n\ntwo'), `it would have stored "one\\n\\n\\ntwo"`);
+  // Focus is never dropped on the floor by a control that replaces its own container.
+  await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(200);
+  await p.click('[data-mx-eqcancel]'); await p.waitForTimeout(200);
+  const f1 = await p.evaluate(() => document.activeElement.dataset.mxTyped !== undefined);
+  await p.click('[data-mx-sheet-add]'); await p.waitForTimeout(300);
+  const f2 = await p.evaluate(() => ({ inPad: !!document.activeElement.closest('[data-tp-ink]'),
+    what: document.activeElement.tagName + '.' + String(document.activeElement.className).split(' ')[0] }));
+  ok('Cancel and Add-page leave the focus somewhere a keyboard can carry on from',
+     f1 && f2.inPad, `Cancel → the page · Add page → ${f2.what}`);
+  ok('CONTROL: both replace or hide their own container, so focus would otherwise fall to BODY',
+     f2.what !== 'BODY.study', `it is ${f2.what}`);
+  // Put the fixture back: the Add-page above is a probe, not part of the state the later checks describe.
+  await p.evaluate(() => { const d = tpRespGet('practice-equations', 'workbook').value;
+    d.pages = d.pages.filter((x) => x.id === 'w1' || x.id === 'w2'); d.current = 'w1';
+    if (!d.pages[0].text.length) d.pages[0].text = [{ t: 'p', v: 'typed working on page one' }]; });
+  await p.evaluate(() => { const pad = document.querySelector('.mx-wb[data-tp-ink]'); if (pad) mxWorkbookSwap(pad); });
+  await p.waitForTimeout(250);
   // Arrow keys belong to whatever is handling them.
   const arrows = await p.evaluate(() => {
     const before = cur;
