@@ -47,6 +47,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   and caret were unreachable by keyboard; and re-opening the bar mounted a second editor on the same node —
   `destroy()` unbinds the document listeners but not the field's — so every keystroke was inserted once per
   editor ever opened. Each now has a check with a control that reproduces the failure.
+- **The Practice behavioural gates now run in CI** (`.github/workflows/practice-interaction.yml`):
+  `verify-type-interaction` and `verify-workbook`, which was not automatic before. The reason is on the
+  workflow: Stage B shipped a Type workspace whose stored payload was provably correct while the student
+  could not construct the sentence they intended, and no state gate could see it. Rendered interaction is
+  part of the Practice contract, not a local diagnostic. Not a required check — that is branch protection,
+  and the maintainer's call — on the same footing as `measure-surface` and `figure-container`.
 - **A rendered-interaction acceptance layer, and what it caught.** `scripts/verify-type-interaction.mjs`
   (46 checks) asserts what a student can DO with keyboard, pointer and focus in the rendered page — keys
   pressed, not dispatched; focus read, not assumed — because the whole point of Stage B2's failures was
