@@ -1708,6 +1708,9 @@ body.respo .main{min-width:0;}
 .mx-page[data-mx-surface="panel"] .mx-work{gap:0;}
 .mx-panel.mx-flush{display:flex;flex-direction:column;}
 .mx-panel.mx-flush>.mx-figure:not([hidden]){flex:1 1 auto;min-height:0;display:flex;align-items:center;justify-content:center;}   /* :not([hidden]) — a bare display:flex would un-hide the inactive tab panels */
+/* A figure is centred in its box; a table, a list or prose is READ, so it starts at the top and scrolls. */
+.mx-panel.mx-flush>.mx-figure[data-mx-repkind]:not([data-mx-repkind="figure"]):not([hidden]){
+  align-items:flex-start;justify-content:flex-start;overflow:auto;}
 .mx-panel.mx-flush>.mx-figure[data-fig-viewport]:not([hidden]){display:block;}
 .mx-panel.mx-flush>.mx-figure>svg{max-height:100%;}
 .mx-page:focus{outline:none;}
@@ -1860,6 +1863,39 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-eqact{flex:0 0 auto;display:flex;gap:6px;margin-left:auto;}
 .mx-tool.mx-eqok{background:var(--mx-green);color:#fff;font-weight:600;}
 .mx-wb-type .mx-sheet{min-height:280px;}
+/* ── worked examples ─────────────────────────────────────────────────────────────────────────────── */
+.mx-wex{display:flex;flex-direction:column;gap:0;}
+.mx-wexpane{padding:22px 0 8px;}
+.mx-wexbody{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:30px;align-items:start;}
+.mx-wexbody.mx-wexsolo{grid-template-columns:minmax(0,1fr);}
+.mx-wexq{margin:0 0 18px;}
+.mx-wexq h3{font-family:var(--mx-serif);font-size:20px;font-weight:600;color:var(--mx-ink);margin:0 0 7px;}
+.mx-wexqb{font-size:16px;line-height:1.62;color:var(--mx-ink-body);}
+.mx-steps{list-style:none;margin:0;padding:0;counter-reset:mxstep;}
+.mx-step{position:relative;padding:0 0 16px 34px;counter-increment:mxstep;}
+.mx-step::before{content:counter(mxstep);position:absolute;left:0;top:1px;width:23px;height:23px;border-radius:50%;
+  background:var(--mx-green-pale);color:var(--mx-green-deep);font:600 12.5px/23px var(--mx-ui);text-align:center;}
+.mx-step:not(:last-child)::after{content:"";position:absolute;left:11px;top:27px;bottom:3px;width:1px;background:var(--mx-line);}
+.mx-stept{font-size:15.5px;line-height:1.6;color:var(--mx-ink-body);}
+.mx-stepm{margin-top:6px;font-family:'LM Math',Cambria Math,serif;font-size:18px;color:var(--mx-ink);}
+.mx-stepn{margin-top:5px;font-size:13.5px;color:var(--mx-ink-2);}
+.mx-wexres{display:flex;align-items:baseline;gap:12px;margin-top:6px;padding:13px 16px;border-radius:var(--mx-rad);
+  background:var(--mx-green-tint);border:1px solid #DCEBE2;font-family:'LM Math',Cambria Math,serif;font-size:18px;color:var(--mx-ink);}
+.mx-wexrl{font-family:var(--mx-ui);font-size:11.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--mx-green);}
+/* `position` here is CONTAINMENT, not decoration. `.mx .mx-figstage` is absolutely positioned, so it needs
+   a positioned ancestor; while this column was `sticky` it happened to be one, and the moment the narrow
+   layout made it `static` the figure escaped and covered the whole page. It stays positioned at every
+   width, and the stage is pinned to it explicitly at (0,3,0) — above `.mx .mx-figstage`. */
+.mx-wexvis{position:sticky;top:0;min-width:0;}
+.mx .mx-wexvis .mx-figstage{position:relative;inset:auto;min-height:300px;display:flex;flex-direction:column;}
+.mx-wexvh{font-family:var(--mx-serif);font-size:14.5px;font-weight:600;color:var(--mx-ink-2);margin:0 0 9px;
+  padding-right:40px;}   /* clears the figure's own expand control, and keeps authored maths readable */
+.mx-wexvis .mx-figstage{position:relative;inset:auto;min-height:320px;}
+.mx-wexvis .mx-tblwrap{border:1px solid var(--mx-line);border-radius:var(--mx-rad);}
+.mx-replist{margin:0;padding:14px 18px 14px 32px;font-size:15.5px;line-height:1.85;color:var(--mx-ink-body);}
+.mx-replist li::marker{color:var(--mx-green);}
+.mx-repprose{padding:16px 18px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);}
+@media (max-width:900px){ .mx-wexbody{grid-template-columns:minmax(0,1fr);} .mx-wexvis{position:relative;top:auto;} }
 .mx-viewsw{display:none;gap:2px;padding:3px;margin:0 0 14px;border:1px solid var(--mx-line);border-radius:10px;
   background:var(--mx-white);width:max-content;}
 .mx-viewsw button{border:0;border-radius:8px;background:transparent;color:var(--mx-ink-2);font:inherit;font-size:13.5px;
@@ -1902,7 +1938,10 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
   --primary:var(--mx-green);--primary-fixed:var(--mx-green-pale);--poi:var(--mx-green);--tp-rad-btn:10px;--tp-cardsh:none;
 }
 .mx .tp-slide:not(.mx-figstage){position:static;inset:auto;display:block;overflow:visible;height:auto;min-height:0;background:transparent;}
-.mx-figure[data-fig-viewport]{position:relative;padding:10px;display:block;}
+.mx-figure[data-fig-viewport]:not([hidden]){position:relative;padding:10px;display:block;}
+/* `:not([hidden])` for the same reason as the rule above it, and it is not optional: this rule sits LATER
+   in the sheet, so a bare `display:block` re-showed the figure panel behind whichever tab was actually
+   selected. Invisible while the other panels were placeholders; obvious the moment they held content. */
 .mx .mx-figstage{position:absolute;inset:10px;min-height:0;display:flex;flex-direction:column;}
 .mx .mx-figstage .tp-fig{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;margin:0;padding:0;border:0;background:transparent;box-shadow:none;}
 .mx .mx-figstage .tp-fig-stage{flex:1 1 auto;min-height:0;}
@@ -2024,6 +2063,28 @@ body.figfocus #figfocus{display:flex;}
 .ws-bar-hint{font-size:.78rem;color:var(--muted);}
 .ws-bar #wsPrint{margin-left:auto;}
 
+/* ---- Mathematics worksheet: every representation and every example, flat ---- */
+#worksheet .ws-mx-lede{font-size:.98rem;color:#444;margin:0 0 10px;}
+#worksheet .ws-mx-concepts{margin:0 0 12px;padding-left:22px;line-height:1.6;}
+#worksheet .ws-mx-concepts li{margin:0 0 6px;}
+#worksheet .ws-mx-key{margin:0 0 14px;padding:9px 13px;border-left:3px solid #0F7A4C;background:#F1F8F4;font-size:.96rem;}
+#worksheet .ws-mx-rep{margin:14px 0 4px;break-inside:avoid;}
+#worksheet .ws-mx-reph{font-size:.74rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#5C6564;margin:0 0 6px;}
+#worksheet .ws-mx-fig{max-width:460px;margin:0 0 6px;}
+#worksheet .ws-mx-fig svg{display:block;width:100%;height:auto;}
+#worksheet .ws-mx-ex{margin:0 0 20px;break-inside:avoid;}
+#worksheet .ws-mx-exh{font-size:1.02rem;margin:0 0 5px;}
+#worksheet .ws-mx-exq{font-size:.97rem;margin:0 0 8px;}
+#worksheet .ws-mx-steps{margin:0 0 8px;padding-left:22px;line-height:1.55;}
+#worksheet .ws-mx-steps li{margin:0 0 5px;}
+#worksheet .ws-mx-math{font-family:'LM Math',Cambria Math,serif;font-size:1.02rem;margin:3px 0 0;}
+#worksheet .ws-mx-res{font-size:.97rem;margin:0 0 6px;}
+#worksheet .ws-mx-part{margin:2px 0 0 14px;font-size:.95rem;}
+#worksheet .ws-mx-stem{flex:1 1 auto;min-width:0;}   /* .ws-q-h is a flex row — the stem is ONE item, not one per <i>/<sup> */
+#worksheet .ws-mx-none{font-size:.9rem;color:#777;font-style:italic;}
+#worksheet .ws-mx-rep .mx-tbl{border-collapse:collapse;font-size:.92rem;}
+#worksheet .ws-mx-rep .mx-tbl th,#worksheet .ws-mx-rep .mx-tbl td{border:1px solid #C9CFCB;padding:4px 10px;}
+#worksheet .ws-mx-rep .mx-replist{padding:4px 0 0 20px;font-size:.95rem;line-height:1.6;}
 /* ---- GeoLearn worksheet (print-friendly) ---- */
 .wsg{font-family:'Inter',system-ui,-apple-system,sans-serif;color:#16201c;max-width:760px;margin:0 auto;line-height:1.5;}
 .wsg-head{border-bottom:2px solid #16201c;padding-bottom:14px;margin-bottom:22px;}
@@ -7000,6 +7061,9 @@ function tpLayoutMode(s){
    esc(), and the only tags it can ever emit are <i> and <sup> — an author cannot inject markup through
    it. `_x_` italicises one variable; `^2` raises one digit. This is not a maths typesetter; it is the
    minimum that makes `y = x^2` read as mathematics rather than as prose. */
+/* The plain-text reading of the same notation, for places that take TEXT rather than markup — a slide-
+   reference chip, an aria-label. Without it "_y_ = _x_^2" reaches the reader with its markers intact. */
+function mxPlain(v){ return String(v==null?'':v).replace(/_([A-Za-z])_/g,'$1').replace(/\^([0-9n])/g,'$1'); }
 function mxM(v){
   return esc(v==null?'':String(v))
     .replace(/_([A-Za-z])_/g,'<i>$1</i>')
@@ -7357,11 +7421,101 @@ function wireResponsive(){
    Stage A ships the SHELL. `notes` and `practice` are built out far enough to judge the shell against
    the approved screens; the rest render their head and say what stage fills them. No page here answers,
    marks or stores anything — that is Stage B onwards. */
+/* THE NOTES PAGE is for understanding a concept and knowing what is worth writing into a physical book.
+   It is not a digital notebook: there is no "record this" field, no "what to write down" panel and no
+   progress encouragement. The concepts are an authored LIST of any length, each with a stable id, and the
+   Key Idea is optional enrichment that occupies no space at all when it is absent. */
 function mxNotesPage(s){
-  const ideas=(s.keyIdeas||[]).map((k,j)=>`<div class="mx-item"><span class="mx-num">${j+1}</span>
-    <div class="mx-itembd"><h3>${mxM(k.term||'')}</h3><p>${mxM(k.body||'')}</p></div></div>`).join('');
-  return `<div class="mx-panel"><h2 class="mx-panelh">${esc(s.contentTitle||'The key ideas')}</h2>${ideas
-    ||'<div class="mx-ph">This notes page has no key ideas yet.</div>'}</div>`;
+  const items=(Array.isArray(s.concepts)&&s.concepts.length)?s.concepts:(Array.isArray(s.keyIdeas)?s.keyIdeas:[]);
+  const list=items.map((c,j)=>`<div class="mx-item" data-mx-concept="${esc(String((c&&c.id)||('c'+(j+1))))}">
+    <span class="mx-num">${j+1}</span>
+    <div class="mx-itembd"><h3>${mxM((c&&(c.term||c.title))||'')}</h3><p>${mxM((c&&c.body)||'')}</p></div></div>`).join('');
+  return `<div class="mx-panel"><h2 class="mx-panelh">${esc(s.contentTitle||'Key concepts')}</h2>${list
+    ||'<div class="mx-ph">This notes page has no concepts yet.</div>'}</div>`;
+}
+/* AUTHORED REPRESENTATIONS. `Graph / Table / Coordinates` is what one lesson happens to author, not a
+   vocabulary the renderer knows: a representation is `{id, label, content}` and the tabs are however many
+   the JSON supplies, labelled and ordered as it says. The panel is keyed by the AUTHORED id, so reordering
+   or relabelling changes the page without touching the renderer, and a tab's identity is never its
+   position. `content` delegates to primitives the app already has rather than inventing new ones. */
+function mxReps(ws,s){
+  const from=(Array.isArray(ws&&ws.representations)&&ws.representations.length)?ws.representations
+    :(Array.isArray(s&&s.representations)?s.representations:null);
+  if(from) return from.filter(r=>r&&typeof r==='object').map((r,k)=>({
+    id:String(r.id||('r'+(k+1))), label:String(r.label||r.id||('View '+(k+1))), content:r.content||null }));
+  /* Bridge for the pre-Stage-C shape: `tabs:[…]` + a single `figure`. */
+  const tabs=(ws&&Array.isArray(ws.tabs)&&ws.tabs.length)?ws.tabs:['Graph','Table','Coordinates'];
+  return tabs.map((t,k)=>({ id:'t'+k, label:String(t),
+    content:(k===0&&ws&&ws.figure&&typeof ws.figure==='object'&&!Array.isArray(ws.figure))?{kind:'figure',figure:ws.figure}:null }));
+}
+function mxRepTable(c){
+  const head=(Array.isArray(c.head)?c.head:[]).map(h=>`<th scope="col">${mxM(h)}</th>`).join('');
+  const rows=(Array.isArray(c.rows)?c.rows:[]).map(r=>{
+    const cells=(Array.isArray(r&&r.cells)?r.cells:(Array.isArray(r)?r.slice(1):[])).map(x=>`<td>${mxM(x)}</td>`).join('');
+    const lab=(r&&r.label!=null)?r.label:(Array.isArray(r)?r[0]:'');
+    return `<tr><th scope="row">${mxM(lab)}</th>${cells}</tr>`;
+  }).join('');
+  if(!head&&!rows) return '<div class="mx-ph">This table has no rows yet.</div>';
+  return `<div class="mx-tblwrap"><table class="mx-tbl"><tr><th scope="row">${mxM(c.stub||'')}</th>${head}</tr>${rows}</table></div>`;
+}
+function mxRepList(c){
+  const items=(Array.isArray(c.items)?c.items:[]).map(it=>{
+    if(it&&typeof it==='object') return `<li><b>${mxM(it.term||'')}</b>${it.body?' — '+mxM(it.body):''}</li>`;
+    return `<li>${mxM(it)}</li>`; }).join('');
+  return items?`<ul class="mx-replist">${items}</ul>`:'<div class="mx-ph">This list has no items yet.</div>';
+}
+function mxRepContent(rep,s,i,k){
+  const c=(rep&&rep.content&&typeof rep.content==='object'&&!Array.isArray(rep.content))?rep.content:null;
+  if(!c) return `<div class="mx-ph">The ${esc(String((rep&&rep.label)||'').toLowerCase()||'representation')} view has no content authored yet.</div>`;
+  const kind=String(c.kind||'');
+  if(kind==='figure'&&c.figure&&typeof c.figure==='object')
+    return `<div class="mx-figstage"><div class="mx-figskin tp-slide">${fragFigure(c.figure,'mxws-'+esc(String(tpRespId(s)||i))+'-'+esc(String(rep.id))) }</div></div>`;
+  if(kind==='table') return mxRepTable(c);
+  if(kind==='list') return mxRepList(c);
+  if(kind==='prose') return `<div class="mx-repprose">${mxM(c.body||'')}</div>`;
+  return `<div class="mx-ph">Unknown representation content <code>${esc(kind||'(none)')}</code>.</div>`;
+}
+/* THE WORKED EXAMPLES PAGE is a page in its own right, not a card inside Notes. It shows the WHOLE
+   solution: the steps are not compressed to keep the page above the fold, because the point of a worked
+   example is the working. The tabs are however many examples the lesson authors — "Example 1/2/3" is what
+   one fixture happens to contain, not a three-tab design — and each carries its own optional visual, so
+   the two-column body belongs to the EXAMPLE and not to the shell's workspace slot. There is no response
+   field anywhere on this page: nothing here is for the student to answer. */
+function mxWexSteps(ex){
+  const steps=Array.isArray(ex.steps)?ex.steps:[];
+  if(!steps.length) return '<div class="mx-ph">This example has no solution steps yet.</div>';
+  return `<ol class="mx-steps">${steps.map((st,k)=>{
+    const o=(st&&typeof st==='object')?st:{text:st};
+    return `<li class="mx-step" data-mx-step="${esc(String(o.id||('s'+(k+1))))}">
+      ${o.text?`<div class="mx-stept">${mxM(o.text)}</div>`:''}
+      ${o.math?`<div class="mx-stepm">${mxM(o.math)}</div>`:''}
+      ${o.note?`<div class="mx-stepn">${mxM(o.note)}</div>`:''}</li>`;
+  }).join('')}</ol>`;
+}
+function mxWexOne(ex,s,i,k,hidden){
+  const vis=(ex.visual&&typeof ex.visual==='object'&&!Array.isArray(ex.visual))
+    ? mxRepContent({id:'vis-'+(ex.id||k),label:(ex.visual.label||ex.label||'Visual'),content:ex.visual},s,i,k) : '';
+  return `<div class="mx-wexpane" data-mx-panel="${esc(String(ex.id||('ex'+(k+1))))}" role="tabpanel"
+      aria-label="${esc(String(ex.label||('Example '+(k+1))))}"${hidden?' hidden':''}>
+    <div class="mx-wexbody${vis?'':' mx-wexsolo'}">
+      <div class="mx-wexsol">
+        ${ex.question?`<div class="mx-wexq"><h3>${mxM(String(ex.label||('Example '+(k+1))))}</h3><div class="mx-wexqb">${mxM(ex.question)}</div></div>`:''}
+        ${mxWexSteps(ex)}
+        ${ex.result?`<div class="mx-wexres"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span><span>${mxM(ex.result)}</span></div>`:''}
+      </div>
+      ${vis?`<aside class="mx-wexvis" aria-label="${esc((ex.visual.label||'Visual for ')+String(ex.label||''))}">
+        ${ex.visual.label?`<h4 class="mx-wexvh">${mxM(ex.visual.label)}</h4>`:''}${vis}</aside>`:''}
+    </div></div>`;
+}
+function mxWorkedExamplesPage(s,i){
+  const exs=(Array.isArray(s.examples)?s.examples:[]).filter(x=>x&&typeof x==='object');
+  if(!exs.length) return `<div class="mx-panel"><div class="mx-ph">This page has no worked examples yet.</div></div>`;
+  const bar=exs.map((ex,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}"
+    data-mx-tab="${esc(String(ex.id||('ex'+(k+1))))}" aria-selected="${k?'false':'true'}">${mxM(String(ex.label||('Example '+(k+1))))}</button>`).join('');
+  const panes=exs.map((ex,k)=>mxWexOne(ex,s,i,k,k>0)).join('');
+  return `<div class="mx-wex">
+    <div class="mx-tabs" role="tablist" data-mx-tabset aria-label="Worked examples">${bar}</div>
+    ${panes}</div>`;
 }
 /* STRUCTURED ENTRY, and only where the structure IS the task. A question is not turned into a card and
    does not grow an answer box merely because it expects an answer — the workbook is where answers are
@@ -7749,23 +7903,26 @@ registerWorkspace('grid',mxWorkbook);
    HEIGHT from this container too. So the coordinate plane owns the whole representation region, and the
    Graph Practice and Interactive workspaces inherit the same behaviour rather than reinventing it. */
 registerWorkspace('representation',(ws,s,i)=>{
-  const tabs=(ws.tabs&&ws.tabs.length?ws.tabs:['Graph','Table','Coordinates']);
-  const bar=tabs.map((t,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}" data-mx-tab="t${k}"
-    aria-selected="${k?'false':'true'}">${esc(t)}</button>`).join('');
-  const fig=(ws.figure&&typeof ws.figure==='object'&&!Array.isArray(ws.figure))?ws.figure:null;
-  const plane=fig
-    ? `<div class="mx-figstage"><div class="mx-figskin tp-slide">${fragFigure(fig,'mxws-'+esc(String(tpRespId(s)||i)))}</div></div>`
-    : `<div class="mx-ph">This representation workspace has no <code>figure</code> to draw.</div>`;
-  const panes=tabs.map((t,k)=>`<div class="mx-figure"${k===0?' data-fig-viewport':''} data-mx-panel="t${k}" role="tabpanel"${k?' hidden':''}>${k===0
-    ?plane:`<div class="mx-ph">The ${esc(t.toLowerCase())} view is filled in a later stage.</div>`}</div>`).join('');
-  return `<div class="mx-panel mx-flush"><div class="mx-tabs" role="tablist" data-mx-tabset>${bar}</div>${panes}</div>`;
+  const reps=mxReps(ws,s);
+  if(!reps.length) return '<div class="mx-ph">This page authors no representations.</div>';
+  const bar=reps.map((r,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}" data-mx-tab="${esc(r.id)}"
+    aria-selected="${k?'false':'true'}">${mxM(r.label)}</button>`).join('');
+  const panes=reps.map((r,k)=>{
+    const isFig=!!(r.content&&r.content.kind==='figure');
+    const kind=(r.content&&r.content.kind)?String(r.content.kind):'none';
+    return `<div class="mx-figure"${isFig?' data-fig-viewport':''} data-mx-panel="${esc(r.id)}"
+      data-mx-repkind="${esc(kind)}" role="tabpanel"
+      aria-label="${esc(r.label)}"${k?' hidden':''}>${mxRepContent(r,s,i,k)}</div>`;
+  }).join('');
+  return `<div class="mx-panel mx-flush"><div class="mx-tabs" role="tablist" data-mx-tabset
+    aria-label="Representations">${bar}</div>${panes}</div>`;
 });
 
 registerPage('mathematics','notes',mxNotesPage);
 /* `flush`: the practice page is a textbook column on white with the workbook PERSISTENT beside it —
    the questions scroll, the workbook does not. `panel` pages scroll as one document instead. */
 registerPage('mathematics','practice',mxPracticePage,{surface:'flush'});
-registerPage('mathematics','workedExamples',mxStubPage);
+registerPage('mathematics','workedExamples',mxWorkedExamplesPage);
 registerPage('mathematics','practiceGraphs',mxStubPage,{surface:'flush'});
 registerPage('mathematics','practiceGeometry',mxStubPage,{surface:'flush'});
 registerPage('mathematics','summary',mxStubPage);
@@ -11492,8 +11649,80 @@ function buildWorksheetMicro(){
   });
   return out;
 }
-function openWorksheet(){ const theme=LESSON.meta&&LESSON.meta.theme, _geo=(theme==='geolearn'), _micro=(theme==='microhistory');
-  $('#wsSheet').innerHTML=(_geo?buildWorksheetGeo():_micro?buildWorksheetMicro():buildWorksheet()); const el=$('#worksheet');
+/* THE FLAT OUTPUT. A tab is a Study-mode affordance, not a filter on what the lesson contains: on paper
+   there is nowhere to click, so every authored representation and every authored example is rendered in
+   authored order, each under its own label. Exporting only the active tab would silently drop most of the
+   page. Mathematics gets its own builder rather than bending the legacy one — `notes` is a type name the
+   two families share, and the legacy branch reads a completely different shape (`blocks[].h/lines`). */
+/* ON PAPER, A FIGURE IS THE DRAWING. `fragFigure` returns the whole interactive block — `.tp-slide` (which
+   is `position:absolute`, and took the figure straight out of the worksheet's flow), an expand control and
+   a hidden focus dialog — none of which means anything in print. The SVG is lifted out and the chrome is
+   left behind, so the flat page carries the mathematics and nothing that only works with a pointer. */
+let MX_WS_FIG=0;
+function mxWsFig(c){
+  if(!c||typeof c!=='object') return '';
+  if(c.kind==='figure'&&c.figure){
+    let h=''; try{ h=fragFigure(c.figure,'mxws-print-'+(++MX_WS_FIG)); }catch(e){ h=''; }
+    if(!h) return '';
+    let svg='';
+    try{ const doc=new DOMParser().parseFromString('<div>'+h+'</div>','text/html');
+      const el=doc.querySelector('svg');
+      if(el){ el.removeAttribute('style'); el.removeAttribute('width'); el.removeAttribute('height'); svg=el.outerHTML; }
+    }catch(e){}
+    return svg?`<div class="ws-mx-fig">${svg}</div>`:''; }
+  if(c.kind==='table') return mxRepTable(c);
+  if(c.kind==='list') return mxRepList(c);
+  if(c.kind==='prose') return `<div class="ws-mx-prose">${mxM(c.body||'')}</div>`;
+  return '';
+}
+function buildWorksheetMx(){
+  const slides=(LESSON.slides||[]), total=slides.length;
+  if(!total) return `<div class="ws-empty">This lesson has no slides yet.</div>`;
+  const m=LESSON.meta||{};
+  let out=`<div class="ws-head">
+    <h1 class="ws-doc-h">${esc(m.title||'Lesson')} — Worksheet</h1>
+    ${m.unit?`<p class="ws-doc-sub">${esc([m.stage||m.year,m.unit].filter(Boolean).join(' • '))}</p>`:''}
+    <div class="ws-id"><div class="f">Name <span class="ln"></span></div><div class="f">Class <span class="ln"></span></div><div class="f">Date <span class="ln"></span></div></div>
+  </div>`;
+  slides.forEach((s,i)=>{
+    const ref=wsRef(i,total,mxPlain(title(s)));
+    const head=`<h2 class="ws-sec-h">${mxM(s.title||s.heading||('Page '+(i+1)))}</h2>`;
+    if(s.type==='notes'){
+      const items=(Array.isArray(s.concepts)&&s.concepts.length)?s.concepts:(Array.isArray(s.keyIdeas)?s.keyIdeas:[]);
+      const reps=mxReps((s.workspace&&typeof s.workspace==='object')?s.workspace:{},s);
+      out+=`<section class="ws-sec">${ref}${head}
+        ${s.lede?`<p class="ws-mx-lede">${mxM(s.lede)}</p>`:''}
+        ${items.length?`<ol class="ws-mx-concepts">${items.map(c=>`<li><b>${mxM((c&&(c.term||c.title))||'')}</b> ${mxM((c&&c.body)||'')}</li>`).join('')}</ol>`:''}
+        ${(s.keyIdea&&s.keyIdea.body)?`<div class="ws-mx-key"><b>${esc(s.keyIdea.title||'Key idea')}</b> ${mxM(s.keyIdea.body)}</div>`:''}
+        ${reps.map(r=>`<div class="ws-mx-rep"><h3 class="ws-mx-reph">${mxM(r.label)}</h3>${mxWsFig(r.content)||'<div class="ws-mx-none">(no content authored)</div>'}</div>`).join('')}
+      </section>`; return;
+    }
+    if(s.type==='workedExamples'){
+      const exs=(Array.isArray(s.examples)?s.examples:[]).filter(x=>x&&typeof x==='object');
+      out+=`<section class="ws-sec">${ref}${head}
+        ${exs.map((ex,k)=>`<div class="ws-mx-ex"><h3 class="ws-mx-exh">${mxM(String(ex.label||('Example '+(k+1))))}</h3>
+          ${ex.question?`<div class="ws-mx-exq">${mxM(ex.question)}</div>`:''}
+          ${(Array.isArray(ex.steps)&&ex.steps.length)?`<ol class="ws-mx-steps">${ex.steps.map(st=>{
+            const o=(st&&typeof st==='object')?st:{text:st};
+            return `<li>${o.text?mxM(o.text):''}${o.math?`<div class="ws-mx-math">${mxM(o.math)}</div>`:''}</li>`; }).join('')}</ol>`:''}
+          ${ex.result?`<div class="ws-mx-res"><b>${esc(ex.resultLabel||'Answer')}</b> ${mxM(ex.result)}</div>`:''}
+          ${ex.visual?`<div class="ws-mx-rep">${ex.visual.label?`<h4 class="ws-mx-reph">${mxM(ex.visual.label)}</h4>`:''}${mxWsFig(ex.visual)}</div>`:''}
+        </div>`).join('')||'<div class="ws-mx-none">(no examples authored)</div>'}
+      </section>`; return;
+    }
+    if(s.type==='practice'){
+      let qn=0;
+      const qs=(s.questions||[]).map(q=>{ qn++;
+        const parts=(q.parts||[]).map((pt,k)=>`<div class="ws-mx-part"><b>(${String.fromCharCode(97+k)})</b> ${mxM(pt)}</div>`).join('');
+        return `<div class="ws-q"><div class="ws-q-h"><span class="qn">Q${qn}</span><span class="ws-mx-stem">${mxM(q.stem||'')}</span></div>${parts}${wsLines(q.lines||4)}</div>`; }).join('');
+      out+=`<section class="ws-sec">${ref}${head}${qs||wsLines(6)}</section>`; return;
+    }
+    out+=`<section class="ws-sec">${ref}${head}${s.lede?`<p class="ws-mx-lede">${mxM(s.lede)}</p>`:''}</section>`;
+  });
+  return out;
+}
+function openWorksheet(){ const theme=LESSON.meta&&LESSON.meta.theme, _geo=(theme==='geolearn'), _micro=(theme==='microhistory'), _mx=(theme==='mathematics');
+  $('#wsSheet').innerHTML=(_geo?buildWorksheetGeo():_micro?buildWorksheetMicro():_mx?buildWorksheetMx():buildWorksheet()); const el=$('#worksheet');
   el.classList.add('show'); el.setAttribute('aria-hidden','false'); document.body.classList.add('ws-open'); el.scrollTop=0; if(_geo||_micro){ wsgPaginate(); } else { el.classList.remove('wsg-on'); } }
 function closeWorksheet(){ const el=$('#worksheet'); el.classList.remove('show'); el.setAttribute('aria-hidden','true'); document.body.classList.remove('ws-open'); }
 $('#worksheetBtn').onclick=openWorksheet;

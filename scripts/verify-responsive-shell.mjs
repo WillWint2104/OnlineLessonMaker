@@ -67,9 +67,22 @@ LESSON.slides.push({ type: 'text', title: 'Legacy control page', body: ['This pa
 const LEGACY = LESSON.slides.length - 1;
 for (let k = 0; k < 14; k++) LESSON.slides.push({ type: 'summary', id: 'f' + k, navLabel: 'Filler page ' + (k + 1) });
 
-const boot = (p, slide, L) => p.evaluate(({ L, slide }) => {
-  LESSON = JSON.parse(JSON.stringify(L)); render(); go(slide);
-}, { L: L || LESSON, slide });
+// Since Stage C the figure is authored as a representation's content, not as a property of the workspace.
+// The gate resolves it the way the renderer does rather than hard-coding either path.
+const MX_FIG_OF = `window.mxFigOf = function(s){
+  var reps = (s.workspace && s.workspace.representations) || s.representations || [];
+  for (var i = 0; i < reps.length; i++) {
+    var c = reps[i] && reps[i].content;
+    if (c && c.kind === 'figure' && c.figure) return c.figure;
+  }
+  return s.workspace && s.workspace.figure;
+};`;
+const boot = async (p, slide, L) => {
+  await p.evaluate((src) => { (0, eval)(src); }, MX_FIG_OF);
+  return p.evaluate(({ L, slide }) => {
+    LESSON = JSON.parse(JSON.stringify(L)); render(); go(slide);
+  }, { L: L || LESSON, slide });
+};
 
 const geom = (p) => p.evaluate(() => {
   const q = (s) => document.querySelector(s);
@@ -410,9 +423,12 @@ mark('workspace');
     return { labels: t.map(x => x.textContent.trim()), shownFirst, shownAfter: after.length,
       which: after[0] && after[0].dataset.mxPanel, selected: t[1].getAttribute('aria-selected') };
   });
+  // Since Stage C a panel is keyed by its AUTHORED id, not by its position, so switching to the second tab
+  // shows the panel the lesson calls "table" rather than the one that happens to be second.
   ok('the representation tabs show exactly one view at a time and switch',
      tabs.labels.join('/') === 'Graph/Table/Coordinates' && tabs.shownFirst === 1 && tabs.shownAfter === 1
-     && tabs.which === 't1' && tabs.selected === 'true', tabs.labels.join(' · '));
+     && tabs.which === 'table' && tabs.selected === 'true',
+     `${tabs.labels.join(' · ')} → showing "${tabs.which}"`);
   const err = await p.evaluate(() => {
     LESSON.slides[0].workspace = { kind: 'nosuchkind' }; go(0);
     const unknown = document.querySelector('.mx-work').textContent.trim();
@@ -440,7 +456,7 @@ mark('viewport');
     const fig = document.querySelector('.mx-figskin .tp-fig');
     const stage = fig.querySelector('.tp-fig-stage'), svg = fig.querySelector('.tp-fig-svg');
     const vb = svg.getAttribute('viewBox').split(/\s+/).map(Number), box = figFitBox(stage.offsetWidth, stage.offsetHeight);
-    const M = figGraph(LESSON.slides[0].workspace.figure, box), V = M.V;
+    const M = figGraph(mxFigOf(LESSON.slides[0]), box), V = M.V;
     const num = (el, a) => +el.getAttribute(a);
     const axes = [...svg.querySelectorAll('.tp-fig-axis')].map(l => ({ x1: num(l, 'x1'), y1: num(l, 'y1'), x2: num(l, 'x2'), y2: num(l, 'y2') }));
     const xAxis = axes.filter(a => Math.abs(a.y1 - a.y2) < 0.01)[0], yAxis = axes.filter(a => Math.abs(a.x1 - a.x2) < 0.01)[0];
@@ -528,11 +544,11 @@ mark('passive');
   // CONTROL — the same figure WITHOUT `callouts:"hidden"` still produces both, so the pass above is not
   // an accident of this figure having nothing to reveal.
   const on = await p.evaluate(() => {
-    delete LESSON.slides[0].workspace.figure.callouts; go(0);
+    delete mxFigOf(LESSON.slides[0]).callouts; go(0);
     const r = { hint: document.querySelectorAll('.mx-figskin .tp-fig-hint').length,
       hits: document.querySelectorAll('.mx-figskin .tp-fig-hit').length,
       text: (document.querySelector('.mx-work') || {}).textContent || '' };
-    LESSON.slides[0].workspace.figure.callouts = 'hidden'; go(0); return r;
+    mxFigOf(LESSON.slides[0]).callouts = 'hidden'; go(0); return r;
   });
   ok('CONTROL: without `callouts:"hidden"` the same figure DOES carry them',
      on.hint === 1 && on.hits > 0 && /Select a point/i.test(on.text), `${on.hits} tap targets, hint present`);

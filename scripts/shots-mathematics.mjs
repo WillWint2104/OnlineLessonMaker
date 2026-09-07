@@ -89,7 +89,11 @@ await shot('legacy-video-control', 1536, 1024, LEGACY, LEG_VIDEO);
     const p = await open(w, h, FIX, NOTES);
     const m = await p.evaluate(() => {
       const fig = document.querySelector('.mx-figskin .tp-fig'), stage = fig.querySelector('.tp-fig-stage');
-      const box = figFitBox(stage.offsetWidth, stage.offsetHeight), V = figGraph(LESSON.slides[0].workspace.figure, box).V;
+      // Since Stage C the figure is authored as a representation's content, not a property of the workspace.
+      const reps = (LESSON.slides[0].workspace && LESSON.slides[0].workspace.representations) || LESSON.slides[0].representations || [];
+      const authored = (reps.find((r) => r.content && r.content.kind === 'figure') || {}).content;
+      const box = figFitBox(stage.offsetWidth, stage.offsetHeight);
+      const V = figGraph((authored && authored.figure) || LESSON.slides[0].workspace.figure, box).V;
       return { stage: stage.offsetWidth + ' x ' + stage.offsetHeight, box: box.W + ' x ' + box.H,
         span: (V.view.x1 - V.view.x0).toFixed(1) + ' x ' + (V.view.y1 - V.view.y0).toFixed(1),
         dom: V.dom.x0.toFixed(1) + ' … ' + V.dom.x1.toFixed(1) };

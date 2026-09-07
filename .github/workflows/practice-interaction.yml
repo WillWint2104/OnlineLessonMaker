@@ -1,4 +1,4 @@
-name: Practice interaction
+name: Mathematics page family
 
 # The behavioural gates for the Mathematics Practice page family.
 #
@@ -29,6 +29,7 @@ on:
       - 'lesson-studio.html'
       - 'scripts/verify-type-interaction.mjs'
       - 'scripts/verify-workbook.mjs'
+      - 'scripts/verify-notes-examples.mjs'
       - 'tests/visual/lessons/mathematics-shell.json'
       - 'tests/visual/lessons/mathematics-wide-table.json'
       - 'lessons/closing-the-gap-geolearn.json'
@@ -37,7 +38,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  practice-interaction:
+  mathematics-pages:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -52,3 +53,7 @@ jobs:
       - run: node scripts/verify-type-interaction.mjs
       # The same page family's state, layout, table and Write/Type modality rules.
       - run: node scripts/verify-workbook.mjs
+      # Stage C: Notes and Worked Examples are driven by the lesson JSON, and the flat output carries all
+      # of it rather than whichever tab was open. Same reasoning — a page that renders is not a page that
+      # is data-driven, and only a control that changes the JSON can tell the two apart.
+      - run: node scripts/verify-notes-examples.mjs

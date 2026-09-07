@@ -300,6 +300,24 @@ If that list grows, the seam is turning into coupling — extract the editor ski
 Type‑only rule changes the Type surface and nothing else — not Practice/Write, Notes, Video, `graphQuestion`
 or either legacy Geolearn control.
 
+## 8c. The Mathematics page contracts (Stage C)
+
+**Notes** — `{ id, title, lede?, contentTitle?, keyIdea?: {title?, body}, concepts: [{id, term, body}],
+representations: [{id, label, content}], workspace: {kind:"representation"} }`. `concepts` is any length.
+`keyIdea` is optional enrichment and renders as a compact aside; absent, it occupies nothing.
+
+**Worked Examples** — `{ id, title, lede?, examples: [{id, label, question, steps: [{id, text?, math?,
+note?}], resultLabel?, result?, visual?}] }`. No `workspace`: the page owns its own two‑column body,
+because the visual belongs to the example rather than to the page.
+
+**Representation / visual `content`** — `{kind:"figure", figure:{…}}` (the Figure engine),
+`{kind:"table", stub?, head:[], rows:[{label, cells:[]}]}`, `{kind:"list", items:[…|{term, body}]}`,
+`{kind:"prose", body}`. Unknown kinds render a named placeholder rather than failing.
+
+Ownership is unchanged: JSON carries content and semantic capability; the page renderer owns composition;
+the theme owns the visual language; the Figure Engine owns mathematical figures. No pixel widths, placement
+or styling decisions belong in lesson JSON.
+
 ## 9. Roadmap / next up
 
 ### Page-family architecture — the boundary, decided
