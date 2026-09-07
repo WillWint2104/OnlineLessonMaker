@@ -179,6 +179,16 @@ const state = (p) => p.evaluate(() => { const d = tpRespGet('practice-equations'
   await n.click('.mx-viewsw [data-mx-view="workbook"]'); await n.waitForTimeout(250);
   await shot(n, '10d-narrow-type-retained');
   await n.close();
+  // A handset: the workbook takes the page, and the equation bar still fits on it.
+  const f = await open(414, 860);
+  await f.click('[data-mx-resp="type"]'); await f.waitForTimeout(300);
+  await f.click('.mx-viewsw [data-mx-view="workbook"]'); await f.waitForTimeout(350);
+  await type(f, ['Q1  3 + 5 x 2', '', '= 3 + 10', '= 13']);
+  await f.evaluate(() => document.querySelector('[data-mx-typed]').blur()); await f.waitForTimeout(200);
+  await shot(f, '10e-phone-type-workbook');
+  await f.click('[data-mx-tsel="eq"]'); await f.waitForTimeout(400);
+  await shot(f, '10f-phone-equation-bar');
+  await f.close();
 }
 // ── 11 · 12 — the equation lands at the caret, and Insert is reachable on a short laptop ──────────
 {

@@ -47,6 +47,13 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   and caret were unreachable by keyboard; and re-opening the bar mounted a second editor on the same node —
   `destroy()` unbinds the document listeners but not the field's — so every keystroke was inserted once per
   editor ever opened. Each now has a check with a control that reproduces the failure.
+- **The equation editor fits on a handset.** The Type workspace already worked at 414/390/360px — every
+  control reachable, nothing overflowing sideways — but the ribbon stacks into a long column there, and
+  capping the BAR scrolled Insert and Cancel away with it. The ribbon is capped instead, so field, symbols
+  and actions stay within one screen: Insert now sits 382px below the field on a 414px handset rather than
+  491px, i.e. on the screen rather than past its bottom. The proof set gains a phone Workbook/Type view and
+  a phone equation bar; `verify-type-interaction` covers 414×860 and 360×780 (52 checks, up from 46) and
+  now also asserts that no width scrolls the page sideways.
 - **Stage C — Notes and Worked Examples are real pages, driven by the lesson JSON.**
   - **Notes** takes an authored concept list of any length (`concepts[]`, each with a stable id and rich
     mathematical content), an optional short lede, an optional compact Key Idea, and `representations[]`.

@@ -293,9 +293,11 @@ mark('repeat');
 }
 // ══ 5. short laptops ═════════════════════════════════════════════════════════════════════════════
 mark('viewport');
-for (const [w, h] of [[1280, 760], [1366, 720], [1280, 680], [1024, 640]]) {
+// Laptops that are short, and handsets that are narrow — the bar has to fit on both.
+for (const [w, h] of [[1280, 760], [1366, 720], [1280, 680], [1024, 640], [414, 860], [360, 780]]) {
   const p = await open({ w, h });
   await p.evaluate(() => { if (document.querySelector('.mx').dataset.mxFit === 'solo') mxSetView('workbook'); });
+  await p.waitForTimeout(250);
   await p.waitForTimeout(400);
   await p.click('[data-mx-typed]'); await p.keyboard.type('working');
   await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(350);
@@ -310,9 +312,35 @@ for (const [w, h] of [[1280, 760], [1366, 720], [1280, 680], [1024, 640]]) {
       if (!(b.top >= -1 && b.bottom <= vh + 1)) out.push(`${nm}: ${Math.round(b.top)}..${Math.round(b.bottom)} of ${vh}`); }
     return out;
   });
+  const sideways = await p.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   ok(`with the editor open at ${w}x${h}, every control is reachable by ordinary scrolling`,
-     r.length === 0, r.length ? 'out of reach — ' + r.join(', ') : 'toolbar, page, symbols, Insert, Cancel and tabs');
+     r.length === 0 && sideways <= 0,
+     r.length ? 'out of reach — ' + r.join(', ') : `toolbar, page, symbols, Insert, Cancel and tabs · ${sideways}px sideways`);
   await p.close();
+}
+{
+  // On a handset the ribbon stacks into a column. Insert has to stay on the same screen as the field,
+  // not sixty buttons below it.
+  for (const [w, h] of [[414, 860], [360, 780]]) {
+    const p = await open({ w, h });
+    await p.evaluate(() => { const v = document.querySelector('.mx-viewsw [data-mx-view="workbook"]'); if (v) v.click(); });
+    await p.waitForTimeout(400);
+    await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(450);
+    const m = await p.evaluate(() => { const f = document.querySelector('[data-tp-eqfield]').getBoundingClientRect();
+      const okb = document.querySelector('[data-mx-eqok]').getBoundingClientRect();
+      return { span: Math.round(okb.bottom - f.top), visible: okb.bottom <= window.innerHeight + 1 }; });
+    const uncapped = await p.evaluate(async () => { const st = document.createElement('style');
+      st.textContent = '@media (max-width:640px){.mx-eqribbon{max-height:none!important;overflow:visible!important;}}';
+      document.head.appendChild(st); await new Promise((r) => requestAnimationFrame(r));
+      const f = document.querySelector('[data-tp-eqfield]').getBoundingClientRect();
+      const okb = document.querySelector('[data-mx-eqok]').getBoundingClientRect();
+      const v = Math.round(okb.bottom - f.top); st.remove(); return v; });
+    ok(`at ${w}x${h} Insert stays on the same screen as the equation field`,
+       m.visible && m.span < h, `${m.span}px below the field, in a ${h}px viewport`);
+    ok(`CONTROL: an uncapped ribbon at ${w}x${h} pushes it off the bottom instead`,
+       uncapped > m.span + 60, `${uncapped}px below the field without the cap`);
+    await p.close();
+  }
 }
 {
   const p = await open({ w: 1280, h: 760 });

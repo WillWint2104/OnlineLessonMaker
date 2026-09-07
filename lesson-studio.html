@@ -1896,6 +1896,14 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-replist li::marker{color:var(--mx-green);}
 .mx-repprose{padding:16px 18px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);}
 @media (max-width:900px){ .mx-wexbody{grid-template-columns:minmax(0,1fr);} .mx-wexvis{position:relative;top:auto;} }
+/* ON A HANDSET the ribbon stacks into a long column, and capping the BAR scrolls Insert and Cancel away
+   with it. Cap the RIBBON instead: the field, its symbols and its actions then stay within one screen,
+   and the student is not scrolling past sixty buttons to finish an equation. */
+@media (max-width:640px){
+  .mx-eqbar{max-height:none;overflow:visible;}
+  .mx-eqribbon{max-height:34vh;overflow:auto;flex:1 1 100%;}
+  .mx-eqact{flex:1 1 100%;margin-left:0;justify-content:flex-end;}
+}
 .mx-viewsw{display:none;gap:2px;padding:3px;margin:0 0 14px;border:1px solid var(--mx-line);border-radius:10px;
   background:var(--mx-white);width:max-content;}
 .mx-viewsw button{border:0;border-radius:8px;background:transparent;color:var(--mx-ink-2);font:inherit;font-size:13.5px;
