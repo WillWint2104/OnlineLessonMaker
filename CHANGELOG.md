@@ -47,8 +47,41 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   and caret were unreachable by keyboard; and re-opening the bar mounted a second editor on the same node —
   `destroy()` unbinds the document listeners but not the field's — so every keystroke was inserted once per
   editor ever opened. Each now has a check with a control that reproduces the failure.
+- **Stage C — Notes and Worked Examples are real pages, driven by the lesson JSON.**
+  - **Notes** takes an authored concept list of any length (`concepts[]`, each with a stable id and rich
+    mathematical content), an optional short lede, an optional compact Key Idea, and `representations[]`.
+    A representation is `{id, label, content}` and the tabs are however many the JSON supplies, labelled
+    and ordered as it says: `Graph / Table / Coordinates` is what this lesson happens to author, not a
+    vocabulary the renderer knows. `content` delegates to primitives the app already has — `figure` to the
+    Figure engine, plus `table`, `list` and `prose`. Panels are keyed by the AUTHORED id, so a tab's
+    identity is never its position and reordering or relabelling changes the page with no renderer change.
+    There is no "record in your notes" field, no "what to write down" panel and no mandatory Key Idea.
+  - **Worked Examples** is a page in its own right, not a card inside Notes, and it declares no workspace:
+    the visual belongs to the EXAMPLE, so the page owns its own two-column body. `examples[]` is arbitrary
+    in length; each has a stable id, a label, a problem statement, ordered solution steps (text, maths and
+    an optional note), an optional result and an optional visual. The whole solution is shown — the page
+    scrolls when the mathematics needs it — and an authored visual gets a real column rather than a
+    thumbnail. No response field anywhere on it.
+  - **The flat output carries all of it.** A tab is a Study-mode affordance, not a filter on what a lesson
+    contains, so Worksheet and print render every representation and every example in authored order under
+    its own label. Mathematics gets its own builder: `notes` is a type name the two page families share and
+    the legacy branch reads a completely different shape. On paper a figure is the DRAWING — the SVG is
+    lifted out of `fragFigure` and its app chrome left behind.
+  - The fixture is the real quadratic lesson: five concepts, three representations, and three genuinely
+    different examples (evaluate, solve for _x_, reason from symmetry), one carrying a figure.
+    `scripts/verify-notes-examples.mjs` is the gate (25 checks), with controls that change the JSON and
+    show the page following it — a fourth representation, a relabelled and reordered tab list, four
+    examples instead of three, the Key Idea removed, and the flat output holding what was behind a tab.
+- **Three defects the Stage C content exposed**, each invisible while the panels held placeholders: the
+  inactive figure panel stayed displayed behind the selected tab (`.mx-figure[data-fig-viewport]` set
+  `display:block` with no `:not([hidden])` guard, later in the sheet than the rule that has one); the
+  Worked Example figure escaped its column at narrow widths, because `position:sticky` was the only thing
+  containing an absolutely positioned stage; and in the worksheet that same stage took the figure out of
+  the page's flow entirely. A table or a list now reads from the top of its panel rather than being centred
+  in it like a figure, and a question stem no longer scatters across `.ws-q-h`'s flex row.
 - **The Practice behavioural gates now run in CI** (`.github/workflows/practice-interaction.yml`):
-  `verify-type-interaction` and `verify-workbook`, which was not automatic before. The reason is on the
+  `verify-type-interaction`, `verify-workbook` (not automatic before) and, from Stage C,
+  `verify-notes-examples`. The reason is on the
   workflow: Stage B shipped a Type workspace whose stored payload was provably correct while the student
   could not construct the sentence they intended, and no state gate could see it. Rendered interaction is
   part of the Practice contract, not a local diagnostic. Not a required check — that is branch protection,
