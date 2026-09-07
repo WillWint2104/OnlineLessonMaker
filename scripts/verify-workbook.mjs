@@ -546,6 +546,21 @@ mark('mode');
      `page ${arrows.before} → ${arrows.inEditor} in the editor`);
   ok('CONTROL: the same key outside it still moves the lesson on',
      arrows.outside === arrows.before + 1, `page ${arrows.before} → ${arrows.outside} outside`);
+  // …and the same is true of a PLACED equation: a focusable [role=math] chip inside the typed page, which
+  // the element-only test did not describe either.
+  const chip = await p.evaluate(() => {
+    const t = document.querySelector('[data-mx-typed]');
+    mxTypedWrite(t, [{ t: 'p', v: 'working ' }, { t: 'eq', v: TPMath.tree('y=x') }]);
+    const eq = t.querySelector('.mx-eq'), before = cur, out = { before, role: eq.getAttribute('role') };
+    eq.focus(); out.focused = document.activeElement === eq;
+    ['ArrowRight', 'ArrowLeft'].forEach((k) => eq.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true })));
+    out.after = cur; out.eqs = t.querySelectorAll('.mx-eq').length;
+    mxTypedWrite(t, tpRespGet('practice-equations', 'workbook').value.pages[0].text); return out;
+  });
+  await p.waitForTimeout(200);
+  ok('nor does an arrow key on a placed equation inside the typed page',
+     chip.focused && chip.after === chip.before && chip.eqs === 1,
+     `focused a [role=${chip.role}] chip · page ${chip.before} → ${chip.after} · the equation is still there`);
   await p.evaluate(() => { document.querySelector('[data-mx-eqcancel]').click(); }); await p.waitForTimeout(200);
   // CONTROLS.
   const ctl = await p.evaluate(() => {

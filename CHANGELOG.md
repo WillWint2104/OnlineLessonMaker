@@ -56,11 +56,14 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   and the inline handler firing.
 - **A placed equation can be re-opened from the keyboard.** It is focusable and says "select to edit", but
   only a pointer could do it — Enter and Space now open the editor on the focused equation.
-- **Arrow keys belong to whatever is handling them.** The global `ArrowLeft/ArrowRight` page-turn skipped
-  `textarea, input, [contenteditable=true]`, which does not describe the equation field (a `[role=textbox]`
-  with a tabindex) — so an arrow inside a half-built equation paged the lesson forward and took the equation
-  with it. The handler now stands down on `e.defaultPrevented` and on `[role="textbox"]`. This fixed the
-  same latent bug in the graph question's editor.
+- **Arrow keys belong to whatever is handling them.** The global `ArrowLeft/ArrowRight` page-turn tested the
+  target ELEMENT against `textarea, input, [contenteditable=true]`, and that test was wrong twice over: the
+  equation field is a `[role=textbox]` with a tabindex, and a placed equation is a focusable `[role=math]`
+  chip sitting inside the typed page. An arrow aimed at either paged the lesson away and took the work with
+  it. The handler now stands down on `e.defaultPrevented` and, via `closest()`, anywhere inside an editable
+  subtree — so it covers whatever is put in a writing surface next, rather than growing a list of roles. It
+  also fixed the same latent bug in the graph question's editor. (A focused equation chip is now inert under
+  the arrow keys rather than destructive; giving it caret motion belongs with the accessibility pass.)
 - **Stage B — the Practice workbook.** The visual shell is now the real thing, on the app's OWN stroke
   engine (`[data-tp-ink]`): pressure-variable pen, eraser, clear, grid paper. What is new is WHERE the
   strokes live. The engine gained a second storage backend, selected by attribute: a pad that names a

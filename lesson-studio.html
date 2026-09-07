@@ -11039,11 +11039,14 @@ $('#modeSeg').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;
 };
 $('#themeSel').onchange=e=>{LESSON.meta.theme=e.target.value;setTheme(e.target.value);renderNav();renderPalette();renderSlide();};
 document.addEventListener('keydown',e=>{
-  /* A component that has already handled the key owns it. The equation editor's field is a
-     `[role=textbox]` with a tabindex rather than a contenteditable, so the element test alone let an
-     ArrowRight inside a half-built equation page the lesson forward and take the equation with it. */
+  /* A component that has already handled the key owns it, and so does anything INSIDE a writing surface.
+     Matching the target element alone was wrong twice over: the equation editor's field is a
+     `[role=textbox]` with a tabindex rather than a contenteditable, and a placed equation is a focusable
+     `[role=math]` chip sitting inside the typed page — so an ArrowRight aimed at either paged the lesson
+     away and took the work with it. `closest` covers the whole editable subtree, whatever is put in it. */
   if(e.defaultPrevented) return;
-  const t=e.target; if(t.matches('textarea,input,[contenteditable=true],[role="textbox"]'))return;
+  const t=e.target;
+  if(t&&t.closest&&t.closest('textarea,input,[contenteditable=true],[role="textbox"]'))return;
   if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);
 });
 
