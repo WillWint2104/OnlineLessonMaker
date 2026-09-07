@@ -273,6 +273,33 @@ third‑party `<script>`/`<link>` host reappears in `lesson-studio.html`). Remai
 requests in a published lesson come only from **teacher‑added** media (pasted image/video URLs,
 YouTube embeds) — `lessons/*.html` only *warns*, by design.
 
+## 8b. The `.tp-slide` seam under the Type workspace
+
+The Mathematics Type pad carries the class `tp-slide` for one reason: to reach the pack's equation‑editor
+skin and the Material token block those rules read. It is **not** a slide, and `.tp-slide`'s own layout is
+neutralised for it by `.mx .mx-work .mx-wb.tp-slide` (the same treatment the Notes figure host gets). This
+list is what the pad actually depends on — measured, not assumed, by matching every `.tp-slide` rule in the
+sheet against the live pad:
+
+| what is borrowed | rules |
+|---|---|
+| the maths face | `.tp-slide math` |
+| the symbol well | `.tp-slide .tp-eqsymwell`, `.tp-slide .tp-eqsym` |
+| the structure row | `.tp-slide .tp-eqstructs`, `.tp-slide .tp-eqst`, `… .tp-eqico`, `… .tp-eqchev` |
+| the structure galleries | `.tp-slide .tp-eqgal`, `… .tp-eqsec`, `… .tp-eqsec:last-child`, `… .tp-eqgh`, `… .tp-eqtiles`, `… .tp-eqtiles.c3`, `… .tp-eqtiles.c2`, `… .tp-eqtile`, `… .tp-eqtile math` |
+| the caret | `.tp-slide .tp-eqcaret` |
+| the tokens those rules read | `:root[data-theme="mathematics"] .tp-slide` (`--primary`, `--surface`, `--outline-variant`, …) |
+| incidental | `.tp-slide *` (box‑sizing), `.tp-slide svg` (display:block) |
+
+Deliberately **not** borrowed: `.tp-eqfield`, `.tp-eqribbon`, `.tp-eqfieldwrap`. The Type bar owns those as
+`.mx-eqfield`, `.mx-eqribbon`, `.mx-eqwrap`, which is why the placeholder rule had to be restated for
+`.mx-eqfield` (`mtext.ph` was invisible until it was).
+
+If that list grows, the seam is turning into coupling — extract the editor skin into its own class instead.
+`scripts/verify-type-interaction.mjs` (section `isolation`) proves the reverse direction: deleting every
+Type‑only rule changes the Type surface and nothing else — not Practice/Write, Notes, Video, `graphQuestion`
+or either legacy Geolearn control.
+
 ## 9. Roadmap / next up
 
 ### Page-family architecture — the boundary, decided

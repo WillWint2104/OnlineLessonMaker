@@ -47,6 +47,40 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   and caret were unreachable by keyboard; and re-opening the bar mounted a second editor on the same node —
   `destroy()` unbinds the document listeners but not the field's — so every keystroke was inserted once per
   editor ever opened. Each now has a check with a control that reproduces the failure.
+- **A rendered-interaction acceptance layer, and what it caught.** `scripts/verify-type-interaction.mjs`
+  (46 checks) asserts what a student can DO with keyboard, pointer and focus in the rendered page — keys
+  pressed, not dispatched; focus read, not assumed — because the whole point of Stage B2's failures was
+  that a green payload gate said nothing about whether the surface could be used. It found four more:
+  - **Tab could not leave the equation editor in either direction.** TPMath binds Tab to caret motion
+    inside the row, which left a keyboard user stuck in the field. The arrow keys already move the caret,
+    so Tab is intercepted ahead of TPMath and left to do what Tab does everywhere else. The ribbon became
+    two tab stops rather than forty (roving tabindex, the standard toolbar pattern), so Tab out of the
+    field reaches Cancel and Insert in three more presses.
+  - **A caret recorded inside a placed equation destroyed it.** Clicking an equation to edit it leaves the
+    selection inside the chip; the next Insert deleted that equation's contents and nested the new one in
+    its place. A position inside a chip is now recorded as the position just after it.
+  - **`focus` overwrote the remembered caret.** Focusing a contenteditable with no selection of its own
+    puts the caret at position 0, so an equation inserted after the page had been re-focused landed at the
+    START. The caret is recorded when the student moves it and put back when the page is handed its focus.
+  - **Leaving the Workbook view dropped the focus to `BODY`** — the Expand button lives inside the region
+    the switch hides, so it went with it.
+- **Semantics the surface was not exposing.** Write / Type had no `aria-pressed` — nothing said which
+  lesson-wide mode was on; Expand lost its state whenever the pad was rebuilt; the two editor ribbons were
+  unnamed groups; and a placed equation was `role="math"`, announced as static text with no hint that it
+  could be opened, though Enter opens it. It is now a button whose name carries TPMath's own LaTeX, so it
+  says what the student wrote. Escape and Cancel return the focus to whatever opened the editor — the
+  Equation button, or the equation being edited — rather than to a plausible-looking default.
+- **The Type styles reach nothing else, and the borrowed seam is written down.** Deleting all 23 Type-only
+  rules changes the Type surface and leaves Practice/Write, Notes, Video, `graphQuestion` and both legacy
+  Geolearn controls byte-identical. `HANDOFF.md` §8b now lists exactly which `.tp-slide` rules the pad
+  depends on — the ribbon skin, the galleries, the caret, the maths face and the token block they read —
+  so the seam cannot quietly become coupling.
+- **Arrow-key ownership is a declared boundary, not a list of roles.** The page-turn stands down inside
+  anything matching `textarea, input, [contenteditable=true], [data-tp-editing]`, and the two editing
+  regions that are not native writing elements carry that marker. Measured both directions: held in the
+  typed page, the TPMath field, a symbol button, a structure button, Insert, a placed equation and a
+  question answer box; still turns the page on a workbook tab and on the lesson surface. The same boundary
+  fixed `graphQuestion`, which shares the primitive.
 - **The equation bar became an instrument a student can use.** An adversarial review of the Type surface —
   six independent lenses over the diff, each finding refuted by separate verifiers before it counted —
   turned up seven defects that every state gate was green on, because all of them are about the surface

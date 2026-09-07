@@ -7096,7 +7096,8 @@ function mxSetResponseMode(m){
   MX_RESPONSE=m;
   const root=$('#slide').querySelector('.mx'); if(!root) return;
   root.setAttribute('data-mx-response',m);
-  root.querySelectorAll('[data-mx-resp]').forEach(b=>b.classList.toggle('on',b.dataset.mxResp===m));
+  root.querySelectorAll('[data-mx-resp]').forEach(b=>{ const on=b.dataset.mxResp===m;
+    b.classList.toggle('on',on); b.setAttribute('aria-pressed',on?'true':'false'); });
   /* The workspace changes representation; the SHEETS do not. `mode` is recorded on the response and the pad
      is swapped for the other surface — the sheet list, the current sheet and both modalities' contents are
      untouched, which is what makes a switch non-destructive rather than merely reversible. */
@@ -7181,9 +7182,19 @@ function mxSetView(v){
      again cannot take a scrollTop until it has a scroll height. */
   const put=()=>mxScrollers(root).forEach(([k,el])=>{ if(MX_SCROLL[k]!=null&&el.scrollHeight>el.clientHeight) el.scrollTop=MX_SCROLL[k]; });
   put(); if(typeof requestAnimationFrame==='function') requestAnimationFrame(put);
+  const had=document.activeElement;
   root.querySelectorAll('[data-mx-view]').forEach(b=>{
     if(b.tagName==='BUTTON'){ const on=b.dataset.mxView===v||(v==='split'&&b.dataset.mxView==='questions');
       b.classList.toggle('on',on); b.setAttribute('aria-pressed',on?'true':'false'); } });
+  /* Switching view HIDES a whole region. If what had the focus went with it — Expand lives inside the
+     workbook, so leaving the Workbook view takes its own button away — the focus falls to BODY and a
+     keyboard user is put back at the start of the document. The switch that is now current takes it. */
+  if(had&&had!==document.body&&root.contains(had)&&had.offsetParent===null){
+    const seen=(sel)=>[].slice.call(root.querySelectorAll(sel)).filter(el=>el.offsetParent!==null)[0]||null;
+    const to=seen('.mx-viewsw button.on')||seen('.mx-work button, .mx-work [tabindex="0"]')
+      ||seen('.mx-content input, .mx-content button, .mx-content [tabindex="0"]');
+    if(to&&to.focus) to.focus();
+  }
 }
 function mxWritesResponses(s){
   const ws=s&&s.workspace; return !!(ws&&typeof ws==='object'&&ws.kind==='grid');
@@ -7222,8 +7233,10 @@ function mxTopBar(s,i,n,open){
   const modes=MX_MODES.map(m=>`<button type="button" class="mx-mode${m.state&&m.state()?' on':''}" data-mx-mode="${m.id}">${esc(m.label)}</button>`).join('');
   const rm=mxResponseMode();
   const resp=mxWritesResponses(s)?`<div class="mx-resp" role="group" aria-label="How to answer">
-      <button type="button" class="mx-respbtn${rm==='write'?' on':''}" data-mx-resp="write">${mxIc('pencil',15)} Write</button>
-      <button type="button" class="mx-respbtn${rm==='type'?' on':''}" data-mx-resp="type">${mxIc('keyboard',15)} Type</button>
+      <button type="button" class="mx-respbtn${rm==='write'?' on':''}" data-mx-resp="write"
+        aria-pressed="${rm==='write'?'true':'false'}">${mxIc('pencil',15)} Write</button>
+      <button type="button" class="mx-respbtn${rm==='type'?' on':''}" data-mx-resp="type"
+        aria-pressed="${rm==='type'?'true':'false'}">${mxIc('keyboard',15)} Type</button>
     </div>`:'';
   return `<header class="mx-top">
     <button type="button" class="mx-iconbtn" data-rp-navtoggle aria-controls="mxNav" aria-expanded="${open?'true':'false'}"
@@ -7452,12 +7465,13 @@ function mxWorkbook(ws,s,i){
            <button type="button" class="mx-tool" data-tp-ink-tool="eraser" aria-pressed="false">${mxIc('eraser',16)} Eraser</button>
            <button type="button" class="mx-tool" data-tp-ink-clear>${mxIc('trash',16)} Clear</button>`}
       <div class="mx-sp"></div>
-      <button type="button" class="mx-tool mx-out" data-mx-view="workbook">${mxIc('expand',15)} Expand</button></div>
+      <button type="button" class="mx-tool mx-out" data-mx-view="workbook"
+        aria-pressed="${MX_VIEW==='workbook'?'true':'false'}">${mxIc('expand',15)} Expand</button></div>
     ${typing
       ? `<div class="mx-sheet mx-typed"><div class="mx-page-w" contenteditable="true" role="textbox" aria-multiline="true"
             data-mx-typed data-mx-hint="Type your working here. Use Equation for anything you cannot type as text."
             aria-label="Workbook page ${esc(String(doc.pages.findIndex(pg=>pg.id===slot)+1))} — type your working."></div></div>
-         <div class="mx-eqbar" data-mx-eqbar hidden>
+         <div class="mx-eqbar" data-mx-eqbar data-tp-editing role="group" aria-label="Equation editor" hidden>
            <div class="mx-eqwrap"><div class="mx-eqfield" data-tp-eqfield tabindex="0" role="textbox"
                aria-label="Equation — type it, or use the symbol and structure buttons"></div><div class="tp-eqcaret" data-tp-eqcaret></div></div>
            <div class="mx-eqribbon"><div class="tp-eqsymwell" data-tp-eqsym></div><div class="tp-eqstructs" data-tp-eqstructs></div></div>
@@ -7510,11 +7524,17 @@ function mxMathNode(tree){
   });
   try{ return document.importNode(m,true); }catch(e){ return null; }
 }
+/* The chip is a control, not decoration: it takes focus, Enter and Space open the editor on it. `role=math`
+   described the content but told assistive technology nothing about that, so it was announced as static
+   text with no hint that it could be operated. It is a button whose NAME carries the expression — TPMath's
+   own LaTeX, so the name says what the student wrote — and the rendered MathML stays inside it. */
 function mxEqNode(tree){
   const sp=document.createElement('span');
   sp.className='mx-eq'; sp.contentEditable='false'; sp.tabIndex=0;
   sp.dataset.mxTree=JSON.stringify(tree);
-  sp.setAttribute('role','math'); sp.setAttribute('aria-label','Equation — select to edit');
+  let tex=''; try{ tex=String(TPMath.latex(tree)||'').trim(); }catch(e){}
+  sp.setAttribute('role','button');
+  sp.setAttribute('aria-label','Equation'+(tex?' '+tex:'')+' — select to edit');
   const m=mxMathNode(tree);
   if(m) sp.appendChild(m); else sp.textContent='(equation)';
   return sp;
@@ -7592,11 +7612,33 @@ function mxWireWorkbook(pad){
   let _caret=null;
   const remember=()=>{ const sl=window.getSelection();
     if(!sl||!sl.rangeCount) return;
-    const r=sl.getRangeAt(0);
-    if(typed.contains(r.commonAncestorContainer)) _caret=r.cloneRange(); };
-  ['keyup','mouseup','input','focus'].forEach(ev=>typed.addEventListener(ev,remember));
+    let r=sl.getRangeAt(0);
+    if(!typed.contains(r.commonAncestorContainer)) return;
+    /* A PLACED EQUATION IS NOT EDITABLE FLOW. Clicking one to edit it leaves a selection INSIDE it, and a
+       caret recorded there made the next Insert delete that equation's contents and nest the new one in
+       its place — one click on an equation, and the next equation you wrote destroyed it. A position
+       inside a chip is recorded as the position just after the chip, which is where writing resumes. */
+    const n=r.commonAncestorContainer;
+    const el=(n.nodeType===1?n:n.parentNode);
+    const chip=(el&&el.closest)?el.closest('.mx-eq'):null;
+    if(chip&&typed.contains(chip)){ r=document.createRange(); r.setStartAfter(chip); r.collapse(true); }
+    _caret=r.cloneRange(); };
+  /* NOT on `focus`: focusing a contenteditable with no selection of its own puts the caret at position 0,
+     and recording that threw away where the student actually was — an equation inserted afterwards landed
+     at the START of the page. The caret is recorded when the student moves it, and PUT BACK when the page
+     is handed its focus again. */
+  ['keyup','mouseup','input'].forEach(ev=>typed.addEventListener(ev,remember));
+  const restoreCaret=()=>{
+    typed.focus();
+    if(!_caret||!typed.contains(_caret.commonAncestorContainer)) return;
+    const sl=window.getSelection(); if(!sl) return;
+    sl.removeAllRanges(); sl.addRange(_caret.cloneRange());
+  };
   const placeEq=(node)=>{
-    const r=(_caret&&typed.contains(_caret.commonAncestorContainer))?_caret:null;
+    let r=(_caret&&typed.contains(_caret.commonAncestorContainer))?_caret:null;
+    if(r){ const n=r.commonAncestorContainer, el=(n.nodeType===1?n:n.parentNode);
+      const chip=(el&&el.closest)?el.closest('.mx-eq'):null;
+      if(chip&&typed.contains(chip)){ r=document.createRange(); r.setStartAfter(chip); r.collapse(true); } }
     const sp=document.createTextNode(' ');
     if(r){ r.deleteContents(); r.insertNode(node); node.parentNode.insertBefore(sp,node.nextSibling); }
     else { typed.appendChild(node); typed.appendChild(sp); }
@@ -7623,6 +7665,9 @@ function mxWireWorkbook(pad){
       bar.querySelector('[data-tp-eqsym]'), bar.querySelector('[data-tp-eqstructs]'), initial?{initial}:{});
     bar.dataset.mxEditing=existing?'1':'';
     bar._target=existing||null;
+    /* Whatever had the focus is what opened this — the Equation button, or the chip being edited. Cancelling
+       gives it back, so a keyboard user is returned to where they were rather than somewhere plausible. */
+    bar._opener=(document.activeElement&&document.activeElement!==document.body)?document.activeElement:null;
     pad.setAttribute('data-mx-eq','open');
     if(_mxEq&&_mxEq.focus) _mxEq.focus();
     /* TPMath mounts a restored expression with the caret at index 0, so an edit is typed IN FRONT of what
@@ -7630,14 +7675,35 @@ function mxWireWorkbook(pad){
        going to the end of the row, so the caret is put there through its public behaviour rather than by
        reaching into its state. */
     if(initial) nf.dispatchEvent(new KeyboardEvent('keydown',{key:'End',bubbles:true}));
+    /* The ribbon is a GROUP, not forty tab stops. One member is tabbable and the arrows move within it —
+       the standard toolbar pattern — so Tab out of the field reaches Cancel and Insert in two more presses
+       instead of thirty-odd. The ribbon is rebuilt on every open, so this is reapplied with it. */
+    [['.tp-eqsymwell','.tp-eqsym','Symbols'],['.tp-eqstructs','.tp-eqst','Structures']].forEach(([box,sel,label])=>{
+      const items=[].slice.call(bar.querySelectorAll(sel));
+      if(!items.length) return;
+      const group=bar.querySelector(box);
+      if(group){ group.setAttribute('role','toolbar'); group.setAttribute('aria-label',label); }
+      items.forEach((el,i)=>{ el.tabIndex=i?-1:0;
+        el.addEventListener('keydown',ev=>{
+          const d=(ev.key==='ArrowRight'||ev.key==='ArrowDown')?1:(ev.key==='ArrowLeft'||ev.key==='ArrowUp')?-1:0;
+          if(!d) return;
+          ev.preventDefault();
+          const n=items[(i+d+items.length)%items.length];
+          items.forEach(x=>{ x.tabIndex=-1; }); n.tabIndex=0; n.focus();
+        }); });
+    });
   };
-  const closeEq=(refocus)=>{ if(bar){ bar.hidden=true; bar._target=null; }
+  const closeEq=(dest)=>{
+    const opener=bar?bar._opener:null;
+    if(bar){ bar.hidden=true; bar._target=null; bar._opener=null; }
     pad.removeAttribute('data-mx-eq');
     pad.querySelectorAll('[data-mx-tsel]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.mxTsel==='text'?'true':'false'));
     if(_mxEq&&_mxEq.destroy){ try{ _mxEq.destroy(); }catch(e){} _mxEq=null; }
-    if(refocus!==false) typed.focus(); };
+    if(dest==='none') return;
+    if(dest==='opener'&&opener&&document.contains(opener)&&opener.offsetParent!==null){ opener.focus(); return; }
+    restoreCaret(); };
   pad.querySelectorAll('[data-mx-tsel]').forEach(b=>b.addEventListener('click',()=>{
-    if(b.dataset.mxTsel==='eq') openEq(null); else { closeEq(); typed.focus(); } }));
+    if(b.dataset.mxTsel==='eq') openEq(null); else closeEq('typed'); }));
   typed.addEventListener('click',e=>{ const eq=e.target.closest&&e.target.closest('.mx-eq'); if(eq) openEq(eq); });
   /* An inserted equation is focusable and says "select to edit", so it has to be editable from the keyboard
      and not by pointer alone. */
@@ -7645,16 +7711,16 @@ function mxWireWorkbook(pad){
     if(e.key!=='Enter'&&e.key!==' ') return;
     const eq=e.target.closest&&e.target.closest('.mx-eq'); if(!eq) return;
     e.preventDefault(); openEq(eq); });
-  const cancel=pad.querySelector('[data-mx-eqcancel]'); if(cancel) cancel.addEventListener('click',()=>closeEq());
+  const cancel=pad.querySelector('[data-mx-eqcancel]'); if(cancel) cancel.addEventListener('click',()=>closeEq('opener'));
   const commit=()=>{
-    if(!_mxEq) return closeEq();
+    if(!_mxEq) return closeEq('opener');
     let tree=null; try{ tree=_mxEq.tree(); }catch(e){}
     if(tree){
       const node=mxEqNode(tree);
       if(bar._target&&bar._target.parentNode) bar._target.replaceWith(node);
       else placeEq(node);
     }
-    closeEq(); save();
+    closeEq('typed'); save();
   };
   const okB=pad.querySelector('[data-mx-eqok]');
   if(okB) okB.addEventListener('click',commit);
@@ -7664,9 +7730,14 @@ function mxWireWorkbook(pad){
      back its focus. TPMath ignores both keys (its handler only acts on single characters), so neither is
      taken away from the expression. */
   if(bar) bar.addEventListener('keydown',e=>{
-    if(e.key==='Escape'){ e.preventDefault(); e.stopPropagation(); closeEq(); return; }
+    if(e.key==='Escape'){ e.preventDefault(); e.stopPropagation(); closeEq('opener'); return; }
     if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); e.stopPropagation(); commit(); }
   });
+  /* TAB BELONGS TO THE PAGE, NOT THE EXPRESSION. TPMath binds Tab to caret motion inside the row, which
+     left the bar with no key that got out of it in either direction. The arrow keys already move the caret
+     — Tab is redundant with them — so it is intercepted before TPMath's own handler sees it and left to do
+     what Tab does everywhere else. Capture on the BAR runs ahead of the listener on the field. */
+  if(bar) bar.addEventListener('keydown',e=>{ if(e.key==='Tab') e.stopPropagation(); },true);
 }
 registerWorkspace('grid',mxWorkbook);
 /* The representation workspace — the tabbed visual beside a notes page. The figure is a FIXTURE drawing
@@ -8284,7 +8355,7 @@ function gqBody(s,key,wrapClass){
   const wantEq = mode==='equation'||mode==='both';
   const wantPts = mode==='points'||mode==='both';
   const givenTxt = s.given? `<div class="tp-gq2-given-note">Given: <span class="tp-gq2-fx">y = f(x)</span> is drawn on the plane.</div>`:'';
-  const eqPanel = wantEq? `<div class="tp-gq2-eq" data-tp-eqwrap>
+  const eqPanel = wantEq? `<div class="tp-gq2-eq" data-tp-eqwrap data-tp-editing>
       <label class="tp-gq2-eqlabel">Enter your answer: <span class="tp-gq2-yeq">y =</span></label>
       <div class="tp-eqribbon"><div class="tp-eqsymwell" data-tp-eqsym></div><div class="tp-eqstructs" data-tp-eqstructs></div></div>
       <div class="tp-eqfieldwrap"><div class="tp-eqfield" data-tp-eqfield tabindex="0" role="textbox" aria-label="Type your equation answer"></div><div class="tp-eqcaret" data-tp-eqcaret></div></div>
@@ -11097,14 +11168,14 @@ $('#modeSeg').onclick=e=>{const b=e.target.closest('[data-mode]');if(!b)return;
 };
 $('#themeSel').onchange=e=>{LESSON.meta.theme=e.target.value;setTheme(e.target.value);renderNav();renderPalette();renderSlide();};
 document.addEventListener('keydown',e=>{
-  /* A component that has already handled the key owns it, and so does anything INSIDE a writing surface.
-     Matching the target element alone was wrong twice over: the equation editor's field is a
-     `[role=textbox]` with a tabindex rather than a contenteditable, and a placed equation is a focusable
-     `[role=math]` chip sitting inside the typed page — so an ArrowRight aimed at either paged the lesson
-     away and took the work with it. `closest` covers the whole editable subtree, whatever is put in it. */
+  /* A component that has already handled the key owns it, and so does anything inside an EDITING SURFACE.
+     The native writing elements name themselves; everything else declares itself with `data-tp-editing` on
+     the region — one boundary, marked where the editor is built, rather than a list of roles that grew
+     every time something new was put in a surface (the field, then the equation chip, then the symbol
+     buttons, each of which paged the lesson away and took the student's work with it). */
   if(e.defaultPrevented) return;
   const t=e.target;
-  if(t&&t.closest&&t.closest('textarea,input,[contenteditable=true],[role="textbox"]'))return;
+  if(t&&t.closest&&t.closest('textarea,input,[contenteditable=true],[data-tp-editing]'))return;
   if(e.key==='ArrowRight')go(cur+1); if(e.key==='ArrowLeft')go(cur-1);
 });
 

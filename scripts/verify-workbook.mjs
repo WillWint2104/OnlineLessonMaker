@@ -570,15 +570,21 @@ mark('mode');
   // A keyboard user has to be able to leave the bar. TPMath takes Tab for caret motion inside the row.
   await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(220);
   await p.click('[data-tp-eqfield]');
-  await p.keyboard.press('Tab'); await p.waitForTimeout(80);
-  const stuck = await p.evaluate(() => document.activeElement.dataset.tpEqfield !== undefined);
-  await p.keyboard.press('Escape'); await p.waitForTimeout(200);
-  const out = await p.evaluate(() => ({ inTyped: document.activeElement.dataset.mxTyped !== undefined,
+  await p.keyboard.press('Tab'); await p.waitForTimeout(90);
+  const left = await p.evaluate(() => document.activeElement.dataset.tpEqfield === undefined);
+  await p.click('[data-tp-eqfield]'); await p.waitForTimeout(90);
+  await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(90);
+  const stayed = await p.evaluate(() => document.activeElement.dataset.tpEqfield !== undefined);
+  await p.keyboard.press('Escape'); await p.waitForTimeout(220);
+  const out = await p.evaluate(() => ({ opener: document.activeElement.dataset.mxTsel === 'eq',
+    body: document.activeElement === document.body,
     closed: document.querySelector('[data-mx-eqbar]').hasAttribute('hidden') }));
-  ok('Escape leaves the equation bar and hands the page back its focus',
-     out.closed && out.inTyped, `bar ${out.closed ? 'closed' : 'STILL OPEN'}, focus ${out.inTyped ? 'on the page' : 'ELSEWHERE'}`);
-  ok('CONTROL: Tab does not leave — it belongs to the expression, which is why Escape had to exist',
-     stuck === true, 'Tab kept focus in the field');
+  ok('Escape closes the equation bar and returns the focus to what opened it',
+     out.closed && out.opener, `bar ${out.closed ? 'closed' : 'STILL OPEN'}, focus ${out.opener ? 'on the Equation button' : (out.body ? 'on BODY' : 'ELSEWHERE')}`);
+  ok('and Tab leaves the editor rather than being swallowed by the expression',
+     left === true, 'Tab moved the focus out of the field');
+  ok('CONTROL: the arrows still move the caret inside the expression — that is why Tab could be freed',
+     stayed === true, 'ArrowLeft kept the focus in the field');
   // An empty slot has to be visible or there is nothing to aim at.
   await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(220);
   await p.click('[data-tp-eqfield]'); await p.keyboard.press('/'); await p.waitForTimeout(200);
@@ -609,12 +615,14 @@ mark('mode');
   // Focus is never dropped on the floor by a control that replaces its own container.
   await p.click('[data-mx-tsel="eq"]'); await p.waitForTimeout(200);
   await p.click('[data-mx-eqcancel]'); await p.waitForTimeout(200);
-  const f1 = await p.evaluate(() => document.activeElement.dataset.mxTyped !== undefined);
+  const f1 = await p.evaluate(() => ({ inPad: !!(document.activeElement.closest && document.activeElement.closest('[data-tp-ink]')),
+    what: document.activeElement.dataset.mxTsel === 'eq' ? 'the Equation button'
+      : document.activeElement.dataset.mxTyped !== undefined ? 'the page' : document.activeElement.tagName }));
   await p.click('[data-mx-sheet-add]'); await p.waitForTimeout(300);
-  const f2 = await p.evaluate(() => ({ inPad: !!document.activeElement.closest('[data-tp-ink]'),
+  const f2 = await p.evaluate(() => ({ inPad: !!(document.activeElement.closest && document.activeElement.closest('[data-tp-ink]')),
     what: document.activeElement.tagName + '.' + String(document.activeElement.className).split(' ')[0] }));
   ok('Cancel and Add-page leave the focus somewhere a keyboard can carry on from',
-     f1 && f2.inPad, `Cancel → the page · Add page → ${f2.what}`);
+     f1.inPad && f2.inPad, `Cancel → ${f1.what} · Add page → ${f2.what}`);
   ok('CONTROL: both replace or hide their own container, so focus would otherwise fall to BODY',
      f2.what !== 'BODY.study', `it is ${f2.what}`);
   // Put the fixture back: the Add-page above is a probe, not part of the state the later checks describe.
