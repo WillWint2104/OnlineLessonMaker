@@ -370,11 +370,47 @@ against. What geometry still decides is only whether a chosen composition can be
 its columns fall below a readable measure, and a `visual` group reserves no companion column when the
 example authors no visual.
 
+**`compact` IS AT MOST TWO COLUMNS.** Example count is not column count — three narrow columns stop being
+worked examples and start being a question sheet. The contract is: 1 → one constrained teaching column
+(not the full width) · 2 → two columns · 3 → **2 + 1** · 4 → 2 × 2 · beyond 4 the author splits the
+material into another group rather than the page inventing a tinier grid.
+
+**THE FIGURE SLOT BELONGS TO THE COMPOSITION.** There is no one "worked-example figure size": a shared
+comparison plane and a companion beside a column are different jobs.
+
+| composition | slot |
+| --- | --- |
+| `compact` | none reserved; a visual only where explicitly authored inline at a step |
+| `visual` | substantial companion beside the reasoning; a LANDSCAPE demonstration area when stacked |
+| `comparison` | one wide, shallow plane spanning the cases it belongs to |
+| `extended` | inline at the step that earns it |
+
+The Figure Engine stays shared infrastructure. Because the view preserves equal mathematical scale, a
+wider, shallower slot EXPOSES MORE RANGE rather than distorting the plane — provided the slot declares
+itself. Two things make that work, and both are easy to lose:
+
+- **A figure part is `[data-fig-viewport]`.** The engine reads its container's height only inside one;
+  everywhere else it paints at a fixed aspect, which a wide slot then letterboxes — the drawing shrinks
+  into the middle with dead space beside it.
+- **`--fig-fill-min`** — a viewport host may state how shallow its slot may be, overriding the engine's
+  `FIG_FILL_MIN` floor (0.42) for that slot only. `comparison` declares `.22`. Absent, the engine floor
+  applies and no existing figure moves.
+
+**AUTHORED REFERENCE LINES.** `{type:'line', y:k}` is the horizontal `y = k` and `{type:'line', x:k}` the
+vertical `x = k`, with an optional `label` and `style:'solid'` (default dashed). It spans the viewport, as
+a line does, and counts as painted geometry that identifiers must clear. A relationship a lesson states in
+words often depends on a line the reader is meant to SEE: *"the line y = 16 meets the curve twice"* is a
+failed demonstration if the picture only plots the two points.
+
 ### THE SURFACE RULE
 
 Off‑white (`--mx-ground`) is the **application background**. White (`--mx-white`) is the **content
 surface** substantive material is written on. Green is a **semantic accent** — selection, markers, small
 labels, an edge, and at most a very compact Key Idea callout.
+
+This is COURSEWARE, not a dashboard. The page heading, the group tabs and ONE white teaching surface are
+the whole chrome — no rounded card floating on the ground, no card inside the card. Hierarchy comes from
+spacing, typography and fine dividers.
 
 Explanation, worked reasoning, answers, captions and relationships are content: green may IDENTIFY them
 (a label, a 3px left edge) but never CARRY them. No green writing paper. Every worked‑example composition
@@ -382,6 +418,11 @@ sits on a white surface rather than being written straight onto the ground.
 
 **Uppercasing corrupts mathematics.** A part label carrying notation keeps its own case (`.mx-parth-m` /
 `.ws-mx-reph-m`); one made of plain words gets the shell's small caps. `VALUES OF Y = X²` is not `y = x²`.
+
+**An explanatory region is authored content, not chrome.** A tab with nothing useful to say beneath its
+visual reserves nothing. Do not add a `relations` part merely because the vocabulary supports one — the
+`Graph and key points` tab dropped its coordinate list because the graph already labels those points and
+the `Table to graph` tab carries the full table.
 
 **`.mx-part` names two different things** — a Practice question's (a)/(b) sub‑part and a content part in
 the shared vocabulary. The Practice rule is scoped to `.mx-parts > .mx-part`; unscoped, its `display:flex`

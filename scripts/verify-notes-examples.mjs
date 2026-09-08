@@ -85,14 +85,14 @@ mark('composition');
      t.map((x) => `${x.id}="${x.label}"`).join(' · '));
   ok('a tab names a whole demonstration, not a representation of one',
      !t.some((x) => /^(graph|table|coordinates|points|prose|relations)$/i.test(x.label))
-     && NEX.every((e) => e.parts.length >= 3 && new Set(e.parts.map((q) => q.kind)).size >= 2),
+     && NEX.every((e) => e.parts.length >= 2 && new Set(e.parts.map((q) => q.kind)).size >= 2),
      t.map((x) => `${x.label} (${NEX.find((e) => e.id === x.id).parts.map((q) => q.kind).join('+')})`).join(' · '));
   ok('exactly one example is shown at a time', pn.filter((x) => x.shown).length === 1 && pn[0].shown,
      pn.map((x) => x.id + (x.shown ? ' (shown)' : '')).join(' · '));
   const first = await paneOf(p);
   const authoredKinds = NEX[0].parts.map((x) => x.kind);
-  ok('THE WHOLE IDEA IS IN ONE PANE — the selected example carries its own drawing, coordinates and relationship',
-     first.parts.map((x) => x.kind).join('+') === authoredKinds.join('+') && authoredKinds.length >= 3,
+  ok('THE WHOLE IDEA IS IN ONE PANE — the selected example carries every part it authors',
+     first.parts.map((x) => x.kind).join('+') === authoredKinds.join('+') && authoredKinds.length >= 2,
      `${first.id}: ${first.parts.map((x) => x.kind).join(' + ')} — no tab switch needed to reconstruct it`);
   await p.click(`[data-mx-tab="${NEX[1].id}"]`); await p.waitForTimeout(300);
   const second = await paneOf(p);
@@ -109,9 +109,13 @@ mark('composition');
     const co = [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .mx-points li`))
       .map((e) => e.textContent.trim()).join(' ');
     return { id, len: d.length, d, co }; }), NEX.map((e) => e.id));
+  const said = await p.evaluate((ids) => ids.map((id) =>
+    document.querySelector(`[data-mx-panel="${id}"] .mx-relations`).textContent.replace(/\s+/g, ' ').trim()),
+    NEX.map((e) => e.id));
   ok('CONTROL: each example is drawn and worded for itself — the panes are not one view repeated',
-     drawn.every((x) => x.len > 200) && new Set(drawn.map((x) => x.co)).size === NEX.length,
-     drawn.map((x) => `${x.id}: ${x.len}-char path, its own coordinates`).join(' · '));
+     drawn.every((x) => x.len > 200) && new Set(drawn.map((x) => x.d)).size === NEX.length
+     && new Set(said).size === NEX.length,
+     drawn.map((x, k) => `${x.id}: ${x.len}-char path, its own statement`).join(' · '));
 
   /* EVERY TAB MUST EXPLORE THE SAME MATHEMATICAL OBJECT AS THE PERSISTENT CONCEPT PANEL. The panel states
      the vertex is (0, 0), that y ≥ 0 and that the axis of symmetry is the y-axis. A tab that changed the
@@ -440,6 +444,210 @@ const read = (p) => p.evaluate((ids) => ids.map((id) => {
   await p.close();
 }
 
+// ══ authored reference lines ═══════════════════════════════════════════════════════════════════
+// A relationship a lesson STATES in words often depends on a line the reader is meant to SEE. "The line
+// y = 16 meets the curve twice" is a failed demonstration if the picture only plots the two points. This
+// is the general contract — every authored `line` object reaches the drawing — not a rule about y = 16.
+mark('reference');
+{
+  const authoredLines = (fig) => ((fig && fig.objects) || []).filter((o) => o && o.type === 'line');
+  const wanted = [];
+  const walk = (v, where) => mxPartKinds(v).length && (Array.isArray(v) ? v : v.parts || [v])
+    .forEach((q) => { if (q.kind === 'figure') authoredLines(q.figure).forEach((L) => wanted.push({ where, L })); });
+  NEX.forEach((e) => walk(e.parts, 'notes:' + e.id));
+  GROUPS.forEach((g) => { walk(g.relations || g.visual, 'group:' + g.id);
+    g.examples.forEach((e) => { walk(e.visual, e.id); e.steps.forEach((st) => walk(st.visual, e.id + ':' + st.id)); }); });
+  const p = await open({ slide: WEX });
+  const drawn = await p.evaluate((ids) => { const out = {};
+    for (const id of ids) { document.querySelector(`[data-mx-tab="${id}"]`).click();
+      out[id] = [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .tp-fig-ref`)).length; }
+    return out; }, GROUPS.map((g) => g.id));
+  const perGroup = {};
+  GROUPS.forEach((g) => { perGroup[g.id] = wanted.filter((w) => w.where.indexOf(g.id) >= 0
+    || g.examples.some((e) => w.where.indexOf(e.id) >= 0)).length; });
+  ok('every authored reference line is actually drawn — the picture shows what the words claim',
+     GROUPS.every((g) => drawn[g.id] === perGroup[g.id]) && wanted.length > 0,
+     GROUPS.map((g) => `${g.id}: ${perGroup[g.id]} authored, ${drawn[g.id]} drawn`).join(' · '));
+  const named = await p.evaluate((id) => { document.querySelector(`[data-mx-tab="${id}"]`).click();
+    const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+    return { labels: [].slice.call(pane.querySelectorAll('.tp-fig-reflab')).map((e) => e.textContent.trim()),
+      says: pane.querySelector('.mx-relations') ? pane.querySelector('.mx-relations').textContent : '' }; },
+    GROUPS[1].id);
+  ok('the line the relationship names is the line on the drawing',
+     named.labels.length > 0 && named.labels.some((l) => named.says.replace(/\s+/g, ' ').indexOf(l) >= 0),
+     `the figure is labelled ${named.labels.map((l) => `"${l}"`).join(', ')} and the relationship names it`);
+  /* NEGATIVE CONTROL: take the line out and the demonstration contract must fail — the words still claim
+     an intersection the picture no longer shows. */
+  const without = await p.evaluate((id) => {
+    const g = LESSON.slides[1].groups.find((x) => x.id === id);
+    const fig = g.examples[0].visual.parts.find((q) => q.kind === 'figure').figure;
+    fig.objects = fig.objects.filter((o) => o.type !== 'line'); go(1);
+    document.querySelector(`[data-mx-tab="${id}"]`).click();
+    return document.querySelectorAll(`[data-mx-panel="${id}"] .tp-fig-ref`).length; }, GROUPS[1].id);
+  ok('CONTROL: remove the authored line and the drawing loses it, so this check can fail',
+     drawn[GROUPS[1].id] > 0 && without === 0,
+     `${drawn[GROUPS[1].id]} drawn with it authored, ${without} without`);
+  await p.close();
+}
+// ══ composition-owned figure slots ═════════════════════════════════════════════════════════════
+// There is no one "worked-example figure size". A shared comparison plane and a companion beside a column
+// are different jobs; the slot geometry belongs to the composition, and because the view holds equal
+// mathematical scale a wider, shallower slot exposes more range rather than distorting the plane.
+mark('slots');
+{
+  const p = await open({ slide: WEX });
+  /* A hidden pane has no width, so the figure has not been solved against its real slot yet; revealing it
+     is what makes the engine re-solve. Click, LET THAT HAPPEN, then measure — reading in the same turn as
+     the click measures the unsolved default box and would pass or fail for the wrong reason. */
+  const slots = [];
+  for (const id of GROUPS.map((g) => g.id)) {
+    await p.click(`[data-mx-tab="${id}"]`); await p.waitForTimeout(450);
+    slots.push(await p.evaluate((id) => {
+    const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+    const surf = pane.querySelector('.mx-wexsurface').getBoundingClientRect();
+    const foot = pane.querySelector('.mx-wexfoot [data-mx-part="figure"]');
+    const side = pane.querySelector('.mx-wexvis [data-mx-part="figure"]');
+    /* LETTERBOXING is the failure: a viewBox of a different shape from the box it is painted into leaves the
+       drawing shrunk in the middle with dead space beside it. So the test is that the painted aspect matches
+       the viewBox aspect — not that the svg equals the slot, which it never does (the figure block carries a
+       control row above the stage). */
+    const box = (n) => { if (!n) return null; const r = n.getBoundingClientRect();
+      const svg = n.querySelector('svg'); const st = n.querySelector('.tp-fig-stage');
+      if (!svg || !st) return null;
+      const sr = svg.getBoundingClientRect(), tr = st.getBoundingClientRect();
+      const vb = (svg.getAttribute('viewBox') || '0 0 1 1').split(/\s+/).map(Number);
+      return { w: Math.round(r.width), h: Math.round(r.height),
+        paint: [Math.round(sr.width), Math.round(sr.height)],
+        fillsW: sr.width >= tr.width - 4, fillsH: sr.height >= tr.height - 4,
+        ar: (sr.width / sr.height) / (vb[2] / vb[3]) }; };   /* 1 = the paint has the viewBox's shape */
+    return { id, type: pane.dataset.mxWextype, surfW: Math.round(surf.width), foot: box(foot), side: box(side),
+      solved: (pane.querySelector('.tp-fig')||{dataset:{}}).dataset.figBox }; }, id));
+  }
+  const cmp = slots.find((x) => x.type === 'comparison');
+  ok('the comparison plane spans the comparison it belongs to, wide and shallow',
+     !!(cmp && cmp.foot) && cmp.foot.w >= cmp.surfW * 0.8 && cmp.foot.h < cmp.foot.w * 0.45,
+     cmp && cmp.foot ? `${cmp.foot.w}×${cmp.foot.h} in a ${cmp.surfW}px surface (ratio ${(cmp.foot.h / cmp.foot.w).toFixed(2)})` : 'no comparison figure');
+  /* Integer rounding of the box leaves a few per cent between the painted shape and the viewBox; a
+     LETTERBOX is the order-of-magnitude case, where a box of the wrong shape entirely is centred in the
+     slot with dead space beside it. The control below shows the difference. */
+  ok('and the drawing actually fills that slot rather than being letterboxed inside it',
+     !!(cmp && cmp.foot) && cmp.foot.fillsW && cmp.foot.fillsH
+     && Math.abs(cmp.foot.ar - 1) < 0.15 && cmp.solved !== '520x360',
+     `painted ${cmp && cmp.foot && cmp.foot.paint.join('×')} at a re-solved box of ${cmp && cmp.solved} — `
+     + `the paint is ${cmp && cmp.foot && cmp.foot.ar.toFixed(2)}× the viewBox shape (1.00 = took the slot's shape)`);
+  const boxed = await p.evaluate((id) => {
+    /* the engine's default box, which is what a slot that never re-solved would be painted from */
+    const svg = document.querySelector(`[data-mx-panel="${id}"] .mx-wexfoot svg`);
+    const r = svg.getBoundingClientRect();
+    return (r.width / r.height) / (520 / 360); }, cmp && cmp.id);
+  ok('CONTROL: the same measure catches the unsolved default box, so it can fail',
+     Math.abs(boxed - 1) > 0.15,
+     `against the engine's 520x360 default the paint would be ${boxed.toFixed(2)}× its shape — dead space either side`);
+  const vis = slots.find((x) => x.type === 'visual');
+  ok('CONTROL: a different composition gets a different slot shape from the same engine',
+     !!(vis && vis.side) && Math.abs((vis.side.h / vis.side.w) - (cmp.foot.h / cmp.foot.w)) > 0.15,
+     `visual companion ${(vis.side.h / vis.side.w).toFixed(2)} vs comparison plane ${(cmp.foot.h / cmp.foot.w).toFixed(2)}`);
+  await p.close();
+}
+{
+  // Stacked, the companion must not become the page.
+  const rows = [];
+  for (const [w, h] of [[834, 1112], [414, 896]]) {
+    const p = await open({ w, h, slide: WEX });
+    await p.click(`[data-mx-tab="${GROUPS[1].id}"]`); await p.waitForTimeout(450);
+    rows.push(await p.evaluate((id) => {
+      const n = document.querySelector(`[data-mx-panel="${id}"] .mx-wexvis [data-mx-part="figure"]`);
+      const r = n.getBoundingClientRect();
+      return { w: Math.round(r.width), h: Math.round(r.height), vh: window.innerHeight }; }, GROUPS[1].id));
+    await p.close();
+  }
+  ok('stacked, the companion is a landscape demonstration area, not a graph that swallows the page',
+     rows.every((r) => r.h < r.w && r.h <= r.vh * 0.42),
+     rows.map((r) => `${r.w}×${r.h} in a ${r.vh}px window (${Math.round(r.h / r.vh * 100)}% of it)`).join(' · '));
+}
+// ══ the non-shipping composition proofs ════════════════════════════════════════════════════════
+// compact's column contract and extended both need shapes the shipping lesson does not author. A
+// presentation type is not established because the renderer accepts its enum value.
+mark('proofs');
+{
+  const CF = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-compositions.json'), 'utf8'));
+  const CG = CF.slides[0].groups;
+  const three = CG.find((g) => g.type === 'compact');
+  const p = await open({ slide: 0, lesson: CF });
+  const lay = await p.evaluate((id) => { document.querySelector(`[data-mx-tab="${id}"]`).click();
+    const cells = [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .mx-wexcell`))
+      .map((e) => { const r = e.getBoundingClientRect(); return { l: Math.round(r.left), t: Math.round(r.top), w: Math.round(r.width) }; });
+    const rows = new Set(cells.map((c) => c.t)), cols = new Set(cells.map((c) => c.l));
+    return { cells, rows: rows.size, cols: cols.size,
+      complete: [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .mx-wexcell`))
+        .every((e) => e.querySelector('.mx-wexqb') && e.querySelector('.mx-wexres') && e.querySelectorAll('.mx-step').length) }; },
+    three.id);
+  ok('COMPACT IS AT MOST TWO COLUMNS — three examples are 2 + 1, never three narrow columns',
+     three.examples.length === 3 && lay.cols === 2 && lay.rows === 2
+     && lay.cells[2].l === lay.cells[0].l && lay.cells[2].t > lay.cells[0].t,
+     lay.cells.map((c, k) => `#${k + 1} at (${c.l}, ${c.t}) ${c.w}px`).join(' · '));
+  ok('and all three stay complete — prompt, steps and answer in every one',
+     lay.complete, `${three.examples.length} complete examples in a ${lay.cols}-column grid`);
+  const ext = CG.find((g) => g.type === 'extended');
+  const e = await p.evaluate((id) => { document.querySelector(`[data-mx-tab="${id}"]`).click();
+    const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+    const body = pane.querySelector('.mx-wexbody');
+    const inline = [].slice.call(pane.querySelectorAll('.mx-step[data-mx-stepvis]'))
+      .map((x) => ({ step: x.dataset.mxStep, h: Math.round(x.querySelector('.mx-stepvis .mx-part').getBoundingClientRect().height) }));
+    const st = pane.querySelector('.mx-stept');
+    return { cols: body.dataset.mxWexcols, aside: !!pane.querySelector('.mx-wexvis'),
+      steps: pane.querySelectorAll('.mx-step').length, inline,
+      measure: Math.round(body.getBoundingClientRect().width),
+      surf: Math.round(pane.querySelector('.mx-wexsurface').getBoundingClientRect().width),
+      answer: !!pane.querySelector('.mx-wexres') }; }, ext.id);
+  ok('EXTENDED IS A REAL COMPOSITION — one reading-width derivation, not prose in a white box',
+     e.cols === '1' && !e.aside && e.steps >= 5 && e.answer && e.measure < e.surf * 0.75,
+     `${e.steps} steps at a ${e.measure}px reading measure inside a ${e.surf}px surface, no companion column`);
+  ok('and its visual arrives inline at the step that earns it',
+     e.inline.length > 0 && e.inline.every((x) => x.h > 100),
+     e.inline.map((x) => `step ${x.step} carries a ${x.h}px figure`).join(' · '));
+  await p.close();
+}
+{
+  // The compact contract holds on a narrow screen too, and nothing is lost by stacking.
+  const CF = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-compositions.json'), 'utf8'));
+  const three = CF.slides[0].groups.find((g) => g.type === 'compact');
+  const p = await open({ w: 414, h: 896, slide: 0, lesson: CF });
+  const nar = await p.evaluate((id) => { document.querySelector(`[data-mx-tab="${id}"]`).click();
+    const cells = [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .mx-wexcell`));
+    return { cols: new Set(cells.map((e) => Math.round(e.getBoundingClientRect().left))).size,
+      n: cells.length, steps: document.querySelectorAll(`[data-mx-panel="${id}"] .mx-step`).length,
+      answers: document.querySelectorAll(`[data-mx-panel="${id}"] .mx-wexres`).length }; }, three.id);
+  ok('CONTROL: narrow, it stacks to one column and every example survives whole',
+     nar.cols === 1 && nar.n === three.examples.length
+     && nar.steps === three.examples.reduce((n, x) => n + x.steps.length, 0)
+     && nar.answers === three.examples.length,
+     `${nar.n} examples, ${nar.steps} steps, ${nar.answers} answers in ${nar.cols} column`);
+  await p.close();
+}
+{
+  // An explanatory region is AUTHORED content, not chrome every representation gets.
+  const p = await open();
+  const only = await p.evaluate(() => {
+    const panes = [].slice.call(document.querySelectorAll('.mx-expane'));
+    return panes.map((e) => ({ id: e.dataset.mxPanel, rel: e.querySelectorAll('.mx-relations').length })); });
+  const authored = NEX.map((e) => ({ id: e.id, rel: e.parts.filter((q) => q.kind === 'relations').length }));
+  ok('a relationship region appears only where one is authored — it is content, not chrome',
+     only.every((o, k) => o.rel === authored[k].rel),
+     only.map((o) => `${o.id}: ${o.rel} authored, ${o.rel} rendered`).join(' · '));
+  const stripped = await p.evaluate(() => { LESSON.slides[0].examples[0].parts =
+      LESSON.slides[0].examples[0].parts.filter((q) => q.kind !== 'relations'); go(0);
+    const e = document.querySelector('.mx-expane:not([hidden])');
+    /* an SVG polyline legitimately has a box and no text — the claim is about reserved HTML REGIONS */
+    const boxes = [].slice.call(e.querySelectorAll('*')).filter((n) => {
+      if (n.namespaceURI !== 'http://www.w3.org/1999/xhtml' || n.closest('.mx-figstage')) return false;
+      const r = n.getBoundingClientRect(); return r.width > 60 && r.height > 20 && !n.textContent.trim(); });
+    return { rel: e.querySelectorAll('.mx-relations').length, empty: boxes.length }; });
+  ok('CONTROL: remove it and no empty region is reserved in its place',
+     stripped.rel === 0 && stripped.empty === 0,
+     'no relations element, no empty box left behind');
+  await p.close();
+}
 // ══ the flat output ══════════════════════════════════════════════════════════════════════════════
 mark('flat');
 {
@@ -493,7 +701,7 @@ mark('flat');
      'renaming a group reaches the worksheet with no renderer change');
   await p.close();
 }
-const SECTIONS = ['composition', 'viability', 'surface', 'examples', 'flat'];
+const SECTIONS = ['composition', 'viability', 'surface', 'examples', 'reference', 'slots', 'proofs', 'flat'];
 ok('every section ran', SECTIONS.every((s) => sections.has(s)), `${sections.size} sections`);
 ok('no page error while rendering or switching', pageErrs.length === 0, pageErrs.slice(0, 2).join(' | ') || 'none');
 await browser.close(); server.close();

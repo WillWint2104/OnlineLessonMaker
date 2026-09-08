@@ -48,7 +48,7 @@
         {
           "id": "ex-keypoints",
           "label": "Graph and key points",
-          "caption": "The curve of _y_ = _x_^2 with the points it passes through.",
+          "caption": "The curve of _y_ = _x_^2 and where it turns.",
           "parts": [
             {
               "kind": "figure",
@@ -94,31 +94,10 @@
               }
             },
             {
-              "kind": "points",
-              "label": "Selected coordinates",
-              "items": [
-                {
-                  "term": "(−2, 4)"
-                },
-                {
-                  "term": "(−1, 1)"
-                },
-                {
-                  "term": "(0, 0)",
-                  "body": "vertex"
-                },
-                {
-                  "term": "(1, 1)"
-                },
-                {
-                  "term": "(2, 4)"
-                }
-              ]
-            },
-            {
               "kind": "relations",
               "items": [
-                "Reading up from _x_ = 2 meets the curve at _y_ = 4, and the curve turns at its lowest point (0, 0)."
+                "Reading up from _x_ = 2 meets the curve at _y_ = 4, and the same height is reached at _x_ = −2.",
+                "The curve turns at its lowest point, (0, 0)."
               ]
             }
           ]
@@ -440,6 +419,11 @@
                           "label": "y = x^2"
                         },
                         {
+                          "type": "line",
+                          "y": 16,
+                          "label": "y = 16"
+                        },
+                        {
                           "type": "points",
                           "rows": [
                             [
@@ -524,16 +508,26 @@
                 "grid": "shown",
                 "callouts": "hidden",
                 "domain": {
-                  "xMin": -5,
-                  "xMax": 5,
+                  "xMin": -6,
+                  "xMax": 6,
                   "yMin": -1,
-                  "yMax": 12
+                  "yMax": 11
                 },
                 "objects": [
                   {
                     "type": "function",
                     "f": "x^2",
                     "label": "y = x^2"
+                  },
+                  {
+                    "type": "line",
+                    "x": 0,
+                    "label": "axis of symmetry x = 0"
+                  },
+                  {
+                    "type": "line",
+                    "y": 9,
+                    "label": "y = 9"
                   },
                   {
                     "type": "points",

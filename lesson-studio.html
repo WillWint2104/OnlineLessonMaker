@@ -1926,32 +1926,50 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 /* ── worked examples ─────────────────────────────────────────────────────────────────────────────── */
 .mx-wex{display:flex;flex-direction:column;gap:0;min-height:0;}
 .mx-wexpane{padding:18px 0 8px;min-height:0;}
-/* SUBSTANTIVE CONTENT SITS ON WHITE. The group's whole composition is one content surface on the
-   application ground — not reasoning written straight onto the page background. It sizes to what it
-   holds: a compact group of two short examples is a short card, not a full-screen empty one. */
-.mx-wexsurface{background:var(--mx-white);border:1px solid var(--mx-line);border-radius:var(--mx-rad);
-  padding:22px 26px 24px;min-width:0;}
+/* SUBSTANTIVE CONTENT SITS ON WHITE — but this is COURSEWARE, not a dashboard. The tabs plus one white
+   teaching surface are the whole chrome: no rounded card floating on the ground, no card inside the card.
+   Hierarchy comes from spacing, typography and fine dividers. The surface runs to the tab strip above it
+   and is bounded by a single hairline. */
+.mx-wexsurface{background:var(--mx-white);border-top:0;border-bottom:1px solid var(--mx-line);
+  padding:26px 30px 30px;min-width:0;}
 .mx-wexlede{margin:0 0 18px;font-size:15px;line-height:1.6;color:var(--mx-ink-2);}
-/* COMPACT and COMPARISON set complete examples alongside one another. The count comes from the JSON, so
-   two examples make two columns and three make three — the page never guesses from how much text there is.
-   Each remains a whole worked example: prompt, every step, its own answer. */
-.mx-wexset{display:grid;gap:26px 34px;align-items:start;
-  grid-template-columns:repeat(var(--mx-wexcols,2),minmax(0,1fr));}
-.mx-wexset[data-mx-count="1"]{--mx-wexcols:1;max-width:78ch;}
-.mx-wexset[data-mx-count="3"]{--mx-wexcols:3;}
-.mx-wexset>.mx-wexcell+.mx-wexcell{border-left:1px solid var(--mx-line);padding-left:34px;}
-.mx-wexcell{min-width:0;}
+/* COMPACT and COMPARISON set complete examples alongside one another. THE GRID IS AT MOST TWO COLUMNS —
+   example count is not column count. Three narrow columns stop being worked examples and start being a
+   question sheet, so three examples are 2 + 1 and four are 2 x 2. Beyond four the author should split the
+   material into another group rather than have the page invent a tinier grid, so the extras keep flowing
+   down the same two columns. A single example takes ONE constrained teaching column, not the full width. */
+.mx-wexset{display:grid;gap:26px 34px;align-items:start;grid-template-columns:repeat(2,minmax(0,1fr));}
+.mx-wexset[data-mx-count="1"]{grid-template-columns:minmax(0,1fr);max-width:74ch;}
+.mx-wexset[data-mx-count="3"]>.mx-wexcell:nth-child(3){grid-column:1 / -1;max-width:calc(50% - 17px);}
+.mx-wexset>.mx-wexcell:nth-child(2n)::before{content:"";position:absolute;left:-17px;top:0;bottom:0;
+  width:1px;background:var(--mx-line);}
+.mx-wexset>.mx-wexcell:nth-child(n+3){padding-top:26px;border-top:1px solid var(--mx-line);}
+.mx-wexcell{min-width:0;position:relative;}
 .mx-wexcell .mx-wexq h3{font-size:17.5px;}
 .mx-wexcellvis{margin-top:14px;}
 .mx-wexcellvis .mx-part[data-mx-part="figure"]{position:relative;min-height:240px;}
 .mx-wexcellvis .mx-figstage{position:relative;inset:auto;min-height:240px;display:flex;flex-direction:column;}
-/* The group's own closing relationship — what the examples beside each other are FOR. A figure here is a
-   SUPPORTING diagram under a full-width surface, so it takes a bounded box rather than the 4/3 the Notes
-   exploration panel gives its subject figure; unbounded it would be a wall of grid a metre tall. */
+/* THE FIGURE SLOT BELONGS TO THE COMPOSITION, NOT TO THE FIGURE. There is no one "worked-example figure
+   size": a shared comparison plane and a companion beside a column are different jobs and want different
+   shapes. The Notes 4/3 subject-figure rule is for the Notes exploration panel and is overridden here in
+   every composition. Because the Figure Engine holds equal mathematical scale, a wider, shallower slot
+   EXPOSES MORE RANGE rather than distorting the plane — which is exactly what a comparison wants. */
 .mx-wexfoot{margin-top:22px;padding-top:20px;border-top:1px solid var(--mx-line);
   display:flex;flex-direction:column;gap:16px;}
-.mx-wexfoot .mx-part[data-mx-part="figure"]{aspect-ratio:auto;height:min(38vh,340px);
-  max-width:620px;min-height:0;flex:0 0 auto;}
+/* comparison — the shared plane spans the full comparison it belongs to, wide and shallow, so the mirrored
+   cases and the axis between them are read across the same width the two solutions occupy. */
+.mx-wexpane[data-mx-wextype="comparison"] .mx-wexfoot .mx-part[data-mx-part="figure"]{
+  --fig-fill-min:.22;                                    /* this slot really is wide and shallow */
+  aspect-ratio:auto;height:clamp(240px,30vh,330px);max-width:none;width:100%;min-height:0;flex:0 0 auto;}
+/* every other composition's closing figure is a supporting diagram, not the subject */
+.mx-wexfoot .mx-part[data-mx-part="figure"]{aspect-ratio:auto;height:min(34vh,300px);
+  max-width:560px;min-height:0;flex:0 0 auto;}
+/* visual — a companion beside the reasoning; stacked it becomes a LANDSCAPE demonstration area rather than
+   an almost-square graph that swallows the page. */
+.mx-wexvis .mx-part[data-mx-part="figure"]{aspect-ratio:auto;height:clamp(300px,42vh,420px);min-height:0;}
+/* extended — a visual appears inline at the step that earns it; nothing is reserved. */
+.mx-wexpane[data-mx-wextype="extended"] .mx-stepvis .mx-part[data-mx-part="figure"]{
+  aspect-ratio:auto;height:clamp(200px,26vh,280px);max-width:520px;min-height:0;}
 .mx-wexbody{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:30px;align-items:start;}
 /* No companion authored: the working takes a reading measure and sits in the page rather than becoming a
    narrow column stranded in a full-screen void. */
@@ -1992,11 +2010,18 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    as examples, the set stacks — one under the other, each whole — rather than becoming two slivers. */
 @media (max-width:900px){ .mx-wexbody{grid-template-columns:minmax(0,1fr);} .mx-wexvis{position:relative;top:auto;} }
 @media (max-width:1000px){
-  .mx-wexset{--mx-wexcols:1 !important;gap:0;}
-  .mx-wexset>.mx-wexcell+.mx-wexcell{border-left:0;padding-left:0;
-    margin-top:26px;padding-top:26px;border-top:1px solid var(--mx-line);}
+  .mx-wexset,.mx-wexset[data-mx-count="1"]{grid-template-columns:minmax(0,1fr);gap:0;max-width:none;}
+  .mx-wexset[data-mx-count="3"]>.mx-wexcell:nth-child(3){max-width:none;}
+  .mx-wexset>.mx-wexcell:nth-child(2n)::before{display:none;}
+  .mx-wexset>.mx-wexcell+.mx-wexcell{margin-top:26px;padding-top:26px;border-top:1px solid var(--mx-line);}
+  /* stacked, the companion is a LANDSCAPE demonstration area — wide and shallow, so it shows the
+     mathematics without becoming the page. */
+  .mx-wexvis .mx-part[data-mx-part="figure"]{height:clamp(220px,30vh,300px);}
+  .mx-wexpane[data-mx-wextype="comparison"] .mx-wexfoot .mx-part[data-mx-part="figure"]{
+    height:clamp(200px,26vh,280px);}
 }
-@media (max-width:640px){ .mx-wexsurface{padding:18px 16px 20px;} }
+@media (max-width:640px){ .mx-wexsurface{padding:18px 16px 20px;}
+  .mx-wexvis .mx-part[data-mx-part="figure"]{height:clamp(190px,26vh,240px);} }
 /* ON A HANDSET the ribbon stacks into a long column, and capping the BAR scrolls Insert and Cancel away
    with it. Cap the RIBBON instead: the field, its symbols and its actions then stay within one screen,
    and the student is not scrolling past sixty buttons to finish an equation. */
@@ -3260,6 +3285,9 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-stage{position:relative;}
 .tp-slide .tp-fig-fn{stroke:var(--primary);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
 .tp-slide .tp-fig-seg{stroke:var(--primary);stroke-width:1.6;stroke-linecap:round;}
+.tp-slide .tp-fig-ref{stroke:var(--graph-axis,var(--on-surface-variant));stroke-width:1.3;opacity:.75;}
+.tp-slide .tp-fig-ref-dash{stroke-dasharray:6 4;}
+.tp-slide .tp-fig-reflab{fill:var(--on-surface-variant);font:500 12px/1 var(--mx-ui,system-ui,sans-serif);opacity:.9;}
 /* Stage 3 geometry marks — same token vocabulary as the graph (§1.6: colour via tokens, never inline hex), so
    a geometry figure reads as the same object in every theme rather than carrying its own palette. */
 .tp-slide .tp-fig-poly{stroke:var(--primary);stroke-width:1.9;stroke-linejoin:round;fill:none;}
@@ -7628,12 +7656,16 @@ function mxPart(part,key){
   let body='';
   if(kind==='figure'&&part.figure&&typeof part.figure==='object')
     body=`<div class="mx-figstage"><div class="mx-figskin tp-slide">${fragFigure(part.figure,'mxpart-'+esc(String(key)))}</div></div>`;
+  /* A FIGURE PART IS A VIEWPORT ONTO THE PLANE. The engine reads its container's height only inside
+     [data-fig-viewport]; everywhere else it paints at a fixed aspect, which a wide, shallow composition
+     slot then letterboxes — the drawing shrinks into the middle instead of using the width. Declaring it
+     here is what lets a composition choose the SHAPE of the slot and get more mathematical range for it. */
   else if(kind==='table') body=mxPartTable(part);
   else if(kind==='points') body=mxPartPoints(part);
   else if(kind==='relations') body=mxPartRelations(part);
   else if(kind==='prose') body=`<div class="mx-repprose">${mxM(part.body||'')}</div>`;
   else body=`<div class="mx-ph">Unknown part <code>${esc(kind||'(none)')}</code>.</div>`;
-  return `<div class="mx-part" data-mx-part="${esc(kind||'none')}">${head}${body}</div>`;
+  return `<div class="mx-part" data-mx-part="${esc(kind||'none')}"${kind==='figure'?' data-fig-viewport':''}>${head}${body}</div>`;
 }
 function mxCompanion(parts,key){
   return (parts||[]).map((p,k)=>mxPart(p,key+'-'+k)).join('');
@@ -9361,9 +9393,12 @@ function figLayoutCallouts(pts,V,box,pillBoxes,extraArms,extraBoxes){
    TOTAL vertex count across every subpath, not per subpath: a many-asymptote curve breaks into dozens of short
    runs, and a per-subpath cap would never bind on any of them — leaving one arm per vertex and making the
    placement search quadratic (tan x over four asymptotes measured ~11.7s before this was made global). */
-function figPaintedArms(curves,segs,V){
+function figPaintedArms(curves,segs,V,lines,P){
+  /* a drawn reference line is geometry a label must clear, exactly as a curve or a segment is */
   const arms=[];
   segs.forEach(s=>arms.push([V.sx(s.a.x),V.sy(s.a.y),V.sx(s.b.x),V.sy(s.b.y)]));
+  if(lines&&P) lines.forEach(L=>{ if(L.axis==='y'){ const py=V.sy(L.at); arms.push([V.sx(P.x0),py,V.sx(P.x1),py]); }
+    else { const px=V.sx(L.at); arms.push([px,V.sy(P.y0),px,V.sy(P.y1)]); } });
   let tot=0; curves.forEach(c=>c.paths.forEach(sp=>{ tot+=sp.length; }));
   const step=Math.max(1,Math.ceil(tot/FIG_MAXARMS));
   curves.forEach(c=>c.paths.forEach(sp=>{
@@ -9425,7 +9460,7 @@ function figGraph(b, box){
     const c=Object.assign({},o,{rows:keep}); delete c.points; return c; });
   const bClean={objects:clean};
   objs.forEach((o,idx)=>{ const t=o&&typeof o==='object'?o.type:undefined;
-    if(t!=='function'&&t!=='points'&&t!=='segment') errors.push('object '+(idx+1)+' ignored — unknown type '+(t==null?'(missing)':'"'+t+'"')+' (expected function, points or segment)'); });
+    if(t!=='function'&&t!=='points'&&t!=='segment'&&t!=='line') errors.push('object '+(idx+1)+' ignored — unknown type '+(t==null?'(missing)':'"'+t+'"')+' (expected function, points, segment or line)'); });
   const dom0=domOK?{xMin:+dv.xMin,xMax:+dv.xMax,yMin:+dv.yMin,yMax:+dv.yMax}:figAutoDomain(bClean);
   const pts=figPoints(bClean);
   const fns=[];
@@ -9439,6 +9474,17 @@ function figGraph(b, box){
   const curves=fns.map(f=>{ const s=figSampleFn(f.fn,V,{range:V.view||V.dom});
     if(!s.paths.length) errors.push('function "'+f.src+'" is not defined (or never on-screen) anywhere in the domain — nothing plotted');
     return {src:f.src, label:f.label, paths:s.paths, samples:s.samples}; });
+  /* AUTHORED REFERENCE LINES. A relationship a lesson states in words often depends on a line the reader is
+     meant to SEE — "the line y = 16 meets the curve twice" is a failed demonstration if the picture only
+     plots the two points. This is the general vocabulary for that, not a special case: `{type:'line', y:k}`
+     is the horizontal y = k and `{type:'line', x:k}` the vertical x = k, so the same object draws a guide
+     value, an axis of symmetry or an asymptote. It spans the VIEWPORT like the axes do, because a line is
+     unbounded — it is not a segment between two points. */
+  const lines=[];
+  objs.forEach((o,idx)=>{ if(!o||o.type!=='line') return;
+    const hasY=num(o.y), hasX=num(o.x);
+    if(hasY===hasX){ errors.push('line '+(idx+1)+' not drawn — give exactly one of x or y'); return; }
+    lines.push({axis:hasY?'y':'x', at:+(hasY?o.y:o.x), label:(o.label!=null?String(o.label):''), style:o.style==='solid'?'solid':'dashed'}); });
   const byId=Object.create(null); pts.forEach(p=>{ byId[p.id]=p; });
   const segs=[];
   objs.forEach(o=>{ if(!o||o.type!=='segment') return;
@@ -9452,7 +9498,7 @@ function figGraph(b, box){
   // to exhaustion against arms it can never satisfy. Fall back to the axes-only obstacle set there — same
   // placement 1b would have made, at 1b's cost. Segments are few, so they always stay in.
   const nSub=curves.reduce((a,c)=>a+c.paths.length,0);
-  const painted=figPaintedArms(nSub<=20?curves:[],segs,V);
+  const painted=figPaintedArms(nSub<=20?curves:[],segs,V,lines,V.view||V.dom);
   const furn=figTickBoxes(V,FIG_TARGET_TICKS);                             // Stage 2c — the printed axis numbering is an obstacle too, at exactly the density figSvgBody prints
   const layout=figLayoutPills(pts,V,box,painted,furn);
   layout.forEach(L=>{ if(!L.valid) errors.push('identifier '+L.p.id+' could not be placed clear of the plotted geometry'); });
@@ -9461,7 +9507,7 @@ function figGraph(b, box){
      count, so suppressing them here is what stops an explanatory figure inheriting interaction copy it
      cannot honour. Absent field → callouts as before, so no existing figure moves. */
   const callouts=(b&&b.callouts==='hidden')?[]:figLayoutCallouts(pts,V,box,layout.map(L=>L.box),painted,furn);
-  return {V, dom0, domOK, aspect, pts, layout, callouts, curves, segs, painted, errors, box, iters:fit.iters, allValid:layout.every(L=>L.valid), gridShown:(b.grid!=='hidden')};
+  return {V, dom0, domOK, aspect, pts, layout, callouts, curves, segs, lines, painted, errors, box, iters:fit.iters, allValid:layout.every(L=>L.valid), gridShown:(b.grid!=='hidden')};
 }
 /* ═══════════════ FIGURE ENGINE — Stage 3: Geometry 2D front-end (ENGINE_SPEC §2/§3/§4/§7) ═══════════════
    The second thing a student uses, and the first that renders MARKS: polygons of any n through ONE renderer,
@@ -9970,11 +10016,17 @@ function figMinStageWidth(b){ return FIG_MIN_STAGE[(b&&b.figure==='geometry')?'g
    is exactly what it was, so nothing that does not opt in can move. The clamp keeps an extreme container
    from producing a plane too tall or too flat to read. */
 const FIG_FILL_MIN=0.42, FIG_FILL_MAX=2.0;                        // H/W bounds when a container supplies the height
-function figFitBox(stageW, stageH){                                // stageW = usable .tp-fig-stage width, the same quantity FIG_MIN_STAGE is expressed in
+/* `fillMin` — HOW SHALLOW A SLOT MAY BE, stated by the container rather than fixed in the engine. The
+   default floor suits a figure that is the subject of its panel; a page composition that wants a wide,
+   shallow plane (a comparison read across the width of the cases it belongs to) declares its own, and
+   because the view preserves equal mathematical scale the shallower box EXPOSES MORE RANGE rather than
+   distorting the plane. Absent, the engine floor applies and no existing figure moves. */
+function figFitBox(stageW, stageH, fillMin){                       // stageW = usable .tp-fig-stage width, the same quantity FIG_MIN_STAGE is expressed in
   if(!(stageW>0)) return FIG_BOX0;
   const k=figFitK(stageW), W=Math.max(120,Math.round(stageW/k));
+  const fmin=(typeof fillMin==='number'&&isFinite(fillMin)&&fillMin>0)?Math.min(fillMin,FIG_FILL_MAX):FIG_FILL_MIN;
   const H=(stageH>0)
-    ? Math.max(90, Math.round(Math.min(Math.max(stageH/k, W*FIG_FILL_MIN), W*FIG_FILL_MAX)))
+    ? Math.max(90, Math.round(Math.min(Math.max(stageH/k, W*fmin), W*FIG_FILL_MAX)))
     : Math.max(90,Math.round(W*FIG_FIT_ASPECT));
   const r=(pad,base,floor)=>Math.max(floor,Math.round(W*pad/base));  // FIG_BOX0's OWN gutter proportions, not figxBoxFor's — this box paints the inline card, and keeping its proportions keeps the card looking like itself
   return { W, H, padL:r(FIG_BOX0.padL,FIG_BOX0.W,24), padR:r(FIG_BOX0.padR,FIG_BOX0.W,12),
@@ -10087,8 +10139,11 @@ function figInlineSolve(fig){
      is content-sized by the svg it holds, so measuring it would feed the painted height straight back into
      the box it was painted from. Inside [data-fig-viewport] the stage is a flex child of a definite-height
      box, so its height is the container's and cannot depend on what is drawn in it. */
-  const stageH=(fig.closest&&fig.closest('[data-fig-viewport]'))?stage.offsetHeight:0;
-  const box=figFitBox(stageW,stageH), key=box.W+'x'+box.H;
+  const vp=fig.closest&&fig.closest('[data-fig-viewport]');
+  const stageH=vp?stage.offsetHeight:0;
+  let fmin=0;
+  if(vp){ const v=parseFloat(getComputedStyle(vp).getPropertyValue('--fig-fill-min')); if(isFinite(v)&&v>0) fmin=v; }
+  const box=figFitBox(stageW,stageH,fmin), key=box.W+'x'+box.H;
   if(fig.dataset.figBox===key) return false;                       // idempotent: the same host width yields the same box, so a repeat pass is a no-op (and a ResizeObserver cannot feed back on itself)
   const xb=fig.querySelector('[data-figx-open]'), e=xb&&FIGX[xb.dataset.figxOpen], b=e&&e.b;
   if(!b) return false;                                             // no registered spec (export/print path) — leave the first pass alone
@@ -10358,6 +10413,16 @@ function figSvgBody(M, box, opt){
   xT.ticks.forEach(v=>{ const px=V.sx(v); tk+=figDraw.tick(px,axisY-4,0,8,'tp-fig-tick'); lb+=figDraw.text(px,axisY+16,figFmtTick(v,xT.decimals),'tp-fig-ticklabel','middle'); });
   yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const py=V.sy(v); tk+=figDraw.tick(axisX-4,py,8,0,'tp-fig-tick'); lb+=figDraw.text(axisX-8,py+4,figFmtTick(v,yT.decimals),'tp-fig-ticklabel','end'); });
   let sg='';
+  /* A reference line spans the viewport, beneath the curve it is read against. Its label sits at the edge
+     the line runs to, quiet enough not to compete with the plotted identifiers. */
+  (M.lines||[]).forEach(L=>{
+    const cls='tp-fig-ref'+(L.style==='solid'?'':' tp-fig-ref-dash');
+    if(L.axis==='y'){ const py=V.sy(L.at);
+      sg+=figDraw.line(V.sx(P.x0),py,V.sx(P.x1),py,cls);
+      if(L.label) sg+=figDraw.text(V.sx(P.x1)-6,py-7,L.label,'tp-fig-reflab','end'); }
+    else { const px=V.sx(L.at);
+      sg+=figDraw.line(px,V.sy(P.y0),px,V.sy(P.y1),cls);
+      if(L.label) sg+=figDraw.text(px+6,V.sy(P.y1)+14,L.label,'tp-fig-reflab','start'); } });
   M.segs.forEach(s=>{ sg+=figDraw.line(V.sx(s.a.x),V.sy(s.a.y),V.sx(s.b.x),V.sy(s.b.y),'tp-fig-seg'); });   // straight connector between two NAMED points
   let fx='';
   M.curves.forEach(c=>{ c.paths.forEach(pathPts=>{ fx+=figDraw.polyline(pathPts,'tp-fig-fn'); }); });        // one polyline PER SUBPATH — a break is a break

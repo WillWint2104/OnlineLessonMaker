@@ -118,11 +118,39 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     is only whether the chosen composition can be READ — a set stacks when its columns fall below a
     readable measure, and a `visual` group reserves no companion when none is authored. A bare
     `examples[]` still renders, as one `extended` group.
+  - **Composition types own their figure geometry.** A generic worked-example figure rule was wrong: the
+    `comparison` plane inherited it and sat capped in the lower-left of a full-width surface with half the
+    width empty. `compact` reserves no slot, `visual` gets a companion beside the reasoning and a LANDSCAPE
+    one when stacked (it had been an almost-square graph swallowing a phone), `comparison` gets one wide
+    shallow plane spanning the cases, `extended` puts the picture inline at the step that earns it. Two
+    engine-side pieces make that possible without changing any existing figure: a figure part now declares
+    itself `[data-fig-viewport]` (the engine reads a container's height only inside one — elsewhere it
+    paints at a fixed aspect that a wide slot then letterboxes), and a viewport host may state
+    `--fig-fill-min` to override the engine's 0.42 floor on how shallow its own slot may be.
+  - **`compact` is at most two columns.** Columns-follow-count was wrong before it became entrenched:
+    1 → one constrained teaching column · 2 → two · 3 → **2 + 1** · 4 → 2 × 2 · beyond four the author
+    splits the material rather than the page inventing a tinier grid.
+  - **Authored reference lines in the Figure Engine.** `{type:'line', y:k}` / `{type:'line', x:k}`, with an
+    optional label, spanning the viewport as a line does and counting as painted geometry that identifiers
+    must clear. This fixes a real failed demonstration: the `Solving for x` example said "the line y = 16
+    meets the curve twice" while the graph drew only the two points. The vocabulary is general — the same
+    object draws the axis of symmetry in the comparison plane — and the gate asserts every authored line
+    reaches the drawing, with a control that removes one and shows the check fail.
+  - **`extended` proved, and `compact`'s column contract with it.** `tests/visual/lessons/mathematics-compositions.json`
+    is a NON-SHIPPING design fixture: a three-example compact group and a genuine six-step derivation
+    carrying a figure at the step that needs it. A presentation type is not established because the
+    renderer accepts its enum value.
+  - **Notes redundancy audit.** `Selected coordinates` is gone from `Graph and key points`: three of its
+    five points restated the labelled graph and the two it added are covered by the `Table to graph` tab.
+    An explanatory region is authored content, not chrome every representation gets.
   - **The surface rule, locked.** Off-white is the application background, white is the content surface,
     green is a semantic accent. Explanation, worked reasoning, answers, captions and relationships had
     drifted back onto pale-green paper; green may now IDENTIFY them (a small label, a 3px left edge) but
     never CARRY them. The relation boxes and the ANSWER band are white with a green edge, and every
-    worked-example composition sits on a white surface instead of being written onto the ground.
+    worked-example composition sits on a white surface instead of being written onto the ground. That
+    surface is now flat — the page heading, the group tabs and one white teaching surface are the whole
+    chrome, because a rounded card floating on the ground read as an application dashboard rather than
+    courseware.
   - **Uppercasing corrupts mathematics.** A part label set in small caps printed `VALUES OF Y = X²`, which
     is a different statement from `y = x²`. A label carrying notation now keeps its own case; a label of
     plain words still gets the small-caps treatment the rest of the shell uses.
@@ -131,7 +159,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     had been laying every part's LABEL beside its content instead of above it. Scoped to `.mx-parts`.
   - The fixture demonstrates the renderer rather than redesigning the mathematics: four concepts (no
     invented fifth), three complete demonstrations of one object, and three worked-example groups — one
-    per composition type. `scripts/verify-notes-examples.mjs` is the gate (46 checks) and
+    per composition type. `scripts/verify-notes-examples.mjs` is the gate (61 checks) and
     `scripts/shots-notes-examples.mjs` the proof set. The gate encodes the approved behaviour rather than the implementation: expected part
     counts, companion kinds, which steps carry visuals and how many tabs there are are all DERIVED from the
     lesson JSON, so re-authoring the fixture cannot quietly make the gate agree with itself. It asserts the

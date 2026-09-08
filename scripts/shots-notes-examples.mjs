@@ -30,6 +30,7 @@ const server = http.createServer((req, res) => {
 await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const base = `http://127.0.0.1:${server.address().port}/lesson-studio.html`;
 const FIX = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-shell.json'), 'utf8'));
+const CMP = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-compositions.json'), 'utf8'));
 const NOTES = FIX.slides.findIndex((s) => s.type === 'notes');
 const WEX = FIX.slides.findIndex((s) => s.type === 'workedExamples');
 
@@ -63,55 +64,50 @@ const shotWhole = async (p, name, w) => {
 };
 const EX = FIX.slides[NOTES].examples.map((e) => e.id);
 const GX = FIX.slides[WEX].groups.map((g) => g.id);
+const CX = CMP.slides[0].groups.map((g) => g.id);
+const pick = async (p, tab) => { await p.click(`[data-mx-tab="${tab}"]`); await p.waitForTimeout(700); };
 
-// 1 · 2 — Notes on the desktop, after the surface cleanup.
-{
-  const p = await open(1536, 1024, NOTES);
-  await shot(p, '1-notes-desktop-example-1');
-  await p.click(`[data-mx-tab="${EX[1]}"]`); await p.waitForTimeout(520);
-  await shot(p, '2-notes-desktop-example-2-table-to-graph');
-  await p.close();
-}
-// 3 — Notes stacked on a portrait tablet: stable knowledge first, then a complete exploration.
-{
-  const a = await open(834, 1112, NOTES); await shotWhole(a, '3-notes-portrait-tablet-stacked', 834); await a.close();
-}
-// 4 · 5 · 6 — one shot per composition type, on the desktop.
-{
-  const p = await open(1536, 1024, WEX);
-  await shot(p, '4-worked-compact-substitution-desktop');
-  await p.click(`[data-mx-tab="${GX[1]}"]`); await p.waitForTimeout(560);
-  await shot(p, '5-worked-visual-solving-for-x-desktop');
-  await p.click(`[data-mx-tab="${GX[2]}"]`); await p.waitForTimeout(560);
-  await shotWhole(p, '6-worked-comparison-symmetry-desktop', 1536);
-  await p.close();
-}
-// 7 · 8 — the compact group on a tablet, the visual group on a portrait tablet.
-{
-  const a = await open(1194, 834, WEX); await shotWhole(a, '7-worked-compact-tablet', 1194); await a.close();
-  const b = await open(834, 1112, WEX);
-  await b.click(`[data-mx-tab="${GX[1]}"]`); await b.waitForTimeout(560);
-  await shotWhole(b, '8-worked-visual-portrait-tablet', 834); await b.close();
-}
-// 9 — phone.
-{
-  const p = await open(414, 896, WEX); await shotWhole(p, '9-worked-examples-phone', 414); await p.close();
-}
+// 1 — Notes desktop, Graph and key points, after the redundancy audit.
+{ const p = await open(1536, 1024, NOTES); await shot(p, '1-notes-desktop-graph-and-key-points'); await p.close(); }
+// 2 — compact, the two shipping substitutions.
+{ const p = await open(1536, 1024, WEX); await shot(p, '2-worked-compact-two-examples'); await p.close(); }
+// 3 — compact with THREE examples: 2 + 1, from the non-shipping proof fixture.
+{ const p = await open(1536, 1024, 0, CMP); await pick(p, CX[0]);
+  await shotWhole(p, '3-worked-compact-three-examples-2plus1', 1536); await p.close(); }
+// 4 — visual, with the authored y = 16 reference line actually drawn.
+{ const p = await open(1536, 1024, WEX); await pick(p, GX[1]);
+  await shot(p, '4-worked-visual-solving-for-x-with-reference-line'); await p.close(); }
+// 5 — comparison, with the wide shared plane beneath the two cases.
+{ const p = await open(1536, 1024, WEX); await pick(p, GX[2]);
+  await shotWhole(p, '5-worked-comparison-symmetry-wide-plane', 1536); await p.close(); }
+// 6 — extended, the derivation proof.
+{ const p = await open(1536, 1024, 0, CMP); await pick(p, CX[1]);
+  await shotWhole(p, '6-worked-extended-derivation', 1536); await p.close(); }
+// 7 — visual on a portrait tablet: a landscape demonstration area, not a graph that swallows the page.
+{ const p = await open(834, 1112, WEX); await pick(p, GX[1]);
+  await shotWhole(p, '7-worked-visual-portrait-tablet', 834); await p.close(); }
+// 8 — comparison on a phone.
+{ const p = await open(414, 896, WEX); await pick(p, GX[2]);
+  await shotWhole(p, '8-worked-comparison-phone', 414); await p.close(); }
+// 9 — extended, narrow.
+{ const p = await open(414, 896, 0, CMP); await pick(p, CX[1]);
+  await shotWhole(p, '9-worked-extended-narrow', 414); await p.close(); }
 // Supplementary regression evidence, not part of the approval set.
 {
+  const a = await open(834, 1112, NOTES); await shotWhole(a, '10-supplementary-notes-tablet-stacked', 834); await a.close();
   const p = await open(1180, 1024, NOTES);
   await p.evaluate(() => openWorksheet());
   await p.waitForTimeout(700);
   const h = await p.evaluate(() => Math.min(9000, Math.ceil(document.querySelector('#wsSheet').getBoundingClientRect().height) + 40));
   await p.setViewportSize({ width: 1180, height: h });
   await p.waitForTimeout(500);
-  await shot(p, '10-supplementary-flat-worksheet-everything', '#wsSheet');
+  await shot(p, '11-supplementary-flat-worksheet-everything', '#wsSheet');
   const n = await p.evaluate(() => { const s = document.querySelector('#wsSheet');
     return { notes: s.querySelectorAll('.ws-mx-rep > h3.ws-mx-reph').length,
       groups: s.querySelectorAll('.ws-mx-grp').length,
       ex: s.querySelectorAll('.ws-mx-exh').length,
       steps: s.querySelectorAll('.ws-mx-steps > li').length }; });
-  console.log(`   (10: ${n.notes} Notes examples, ${n.groups} worked-example groups holding ${n.ex} examples, `
+  console.log(`   (11: ${n.notes} Notes examples, ${n.groups} worked-example groups holding ${n.ex} examples, `
     + `${n.steps} solution steps — all of them, none left behind a tab)`);
   await p.close();
 }
