@@ -1729,7 +1729,7 @@ body.respo .main{min-width:0;}
 .mx-keyidea p{font-family:var(--mx-serif);font-size:14.5px;line-height:1.45;color:var(--mx-ink-body);margin:0;}
 
 /* the page composition: a content region and, when the page declares one, a workspace beside it */
-.mx-split{display:grid;grid-template-columns:var(--mx-split);gap:20px;align-items:stretch;}
+.mx-split{display:grid;grid-template-columns:var(--mx-split);gap:var(--mx-split-gutter);align-items:stretch;}
 .mx-split.mx-1col{grid-template-columns:minmax(0,1fr);}
 /* `flush` pages (Practice): a textbook column on white with a PERSISTENT workspace beside it. The two
    columns are their own scrollers, so the workbook stays put while the questions scroll — which is the
@@ -2009,14 +2009,14 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    became a block, the row went away, and `min-height:0` left the writing surface at 452 x 0. The workbook
    is a flex column with its own floor everywhere, so the surface cannot collapse whatever the page does. */
 .mx-wb{display:flex;flex-direction:column;}
-.mx-wb:not([data-mx-eq="open"]) .mx-sheet{flex:1 1 auto;min-height:340px;}
+.mx-wb:not([data-mx-eq="open"]) .mx-sheet{flex:1 1 auto;min-height:var(--mx-wb-min-h);}
 .mx[data-mx-fit="solo"] .mx-wb:not([data-mx-eq="open"]) .mx-sheet{flex:0 0 auto;height:min(62vh,520px);}
 /* In the Workbook view the workbook gets the page: a fixed vh cap left a portrait tablet with a third of
    its height unused, which is the same "not a serious writing surface" complaint in a milder form. */
 .mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-page{display:flex;flex-direction:column;overflow:hidden;}
 .mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-split{flex:1 1 auto;min-height:0;}
 .mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-work{min-height:0;display:flex;flex-direction:column;overflow:hidden;}
-.mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-wb:not([data-mx-eq="open"]) .mx-sheet{flex:1 1 auto;height:auto;min-height:340px;}
+.mx[data-mx-fit="solo"][data-mx-view="workbook"] .mx-wb:not([data-mx-eq="open"]) .mx-sheet{flex:1 1 auto;height:auto;min-height:var(--mx-wb-min-h);}
 /* WHILE THE EQUATION BAR IS OPEN the writing surface gives up its floor — every one of them. A floor is a
    floor for WRITING, and the bar is what the student is looking at; holding 340px for the page underneath
    pushed Insert and the page tabs below the viewport on any laptop under about 800px tall, with nothing to
@@ -7373,7 +7373,12 @@ function renderResponsivePage(entry,s,i){
       <section class="mx-content">${body}</section>
       ${ws?`<section class="mx-work" data-rp-workspace="${esc(String(ws.kind||''))}" aria-label="Workspace">${rpWorkspace(ws,s,i)}</section>`:''}
     </div>`;
+  /* THE VIABILITY CONTRACT IS PUBLISHED, NOT RESTATED. The split decision and the CSS that has to honour it
+     read the same numbers: they are emitted here as scoped custom properties on the Practice root, so
+     `MX_WB_MIN_H` is the only place the sheet floor exists. Deliberately no `var(…, fallback)` in the
+     consuming rules — a fallback would be a second copy of the value, which is the thing being removed. */
   return `<div class="mx${open?' mx-navopen':''}" data-tp-theme="${esc((LESSON.meta&&LESSON.meta.theme)||'')}"
+      style="--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px"
       data-rp-type="${esc(s.type||'')}" data-rp-layout="${esc(entry.layoutMode)}" data-mx-response="${esc(mxResponseMode())}"
       data-mx-view="${esc(ws?mxView():'split')}">
     ${mxTopBar(s,i,n,open)}

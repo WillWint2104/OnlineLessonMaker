@@ -47,6 +47,14 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   and caret were unreachable by keyboard; and re-opening the bar mounted a second editor on the same node —
   `destroy()` unbinds the document listeners but not the field's — so every keystroke was inserted once per
   editor ever opened. Each now has a check with a control that reproduces the failure.
+- **One owner for the Practice viability contract.** `MX_WB_MIN_H = 340` also existed as a literal in two
+  CSS rules, and `MX_SPLIT_GUTTER = 20` as `gap:20px` — three copies of two numbers, and the JS constants
+  were not the source of any of them, so raising a minimum would have left the CSS silently disagreeing.
+  The contract is now published from the one place that owns it as scoped custom properties on the
+  Mathematics Practice root (`--mx-wb-min-h`, `--mx-split-gutter`) and consumed from there. Deliberately no
+  `var(…, fallback)` in the consuming rules: a fallback is a second copy of the value. Zero visual change —
+  all 126 screenshots re-rendered byte-identical, the computed sheet floor is still exactly 340px, every
+  split/solo decision at every gated width is unchanged, and the zero-height control still reproduces.
 - **The workbook sheet is a WINDOW; the paper scrolls inside it.** The frame was the paper: `.mx-sheet`
   was `overflow-y: visible` with `scrollHeight === clientHeight` at every width, so a learner could not
   write past the bottom of the visible workbook. Now the window scrolls over a paper that is at least one
