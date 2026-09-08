@@ -77,12 +77,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   a phone equation bar; `verify-type-interaction` covers 414×860 and 360×780 (52 checks, up from 46) and
   now also asserts that no width scrolls the page sideways.
 - **Stage C — Notes and Worked Examples are real pages, driven by the lesson JSON.**
-  - **A tab is an alternative complete example, not a fragment of one.** The first build partitioned a
+  - **A tab is an alternative complete demonstration of the SAME object.** The first build partitioned a
     single mathematical idea across `Graph / Table / Coordinates`, so a learner had to switch tabs to
-    reconstruct one thought and each panel held a third of an argument. Now `examples[]` on the Notes page
-    are whole alternative examples of the concept — this lesson authors _y_ = _x_², _y_ = _x_² + 2 and
-    _y_ = −_x_² — and each pane carries its own drawing, its own coordinates and its own stated
-    relationship together. Switching tabs means "show me another complete example of this concept".
+    reconstruct one thought. The correction to that over-shot: tabs became _y_ = _x_², _y_ = _x_² + 2 and
+    _y_ = −_x_², which changed the mathematical object while the persistent concept panel beside them still
+    said the vertex is (0, 0) and _y_ ≥ 0 — statements false for two of the three. The page contradicted
+    itself. The concept panel is the STABLE KNOWLEDGE and does not change with the tab; every tab must
+    explore the object it describes. This lesson now authors three complete demonstrations of _y_ = _x_²:
+    **Graph and key points** (curve + selected coordinates + what they show), **Table to graph** (a full
+    table + the same points plotted + the link between them) and **Symmetry** (curve + paired _x_-values +
+    why the _y_-axis is the axis of symmetry). Each combines several representation kinds and stands on its
+    own, so switching tabs means "show me another way to see this".
   - **One part vocabulary, shared by both pages.** An example composes `parts[]`, each `{kind, …}`:
     `figure` (delegated to the Figure engine), `table`, `points`, `relations`, `prose`. The same vocabulary
     builds a worked example's companion and a single step's own visual, so the data/rendering boundary
@@ -101,22 +106,29 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     content area at five viewports, and the control strips the rules that size the drawing to show every
     one of them failing: the tabs still render, the drawing collapses to 0px and its SVG escapes the page.
   - **Worked Examples** is a page in its own right, not a card inside Notes, and it declares no workspace:
-    the visual belongs to the EXAMPLE, so the page owns its own two-column body. Every example is
-    demonstrated — the supporting visual is part of the worked demonstration, not a decorative card added
-    to one of them — and a STEP may carry its own visual state, which renders inside that step. An example
-    that authors no visual gets one column rather than a reserved empty aside. No response field anywhere.
+    the visual belongs to the EXAMPLE, so the page owns its own two-column body. A visual exists to carry
+    the mathematics, never to satisfy a gate: a single substitution takes no companion column at all and
+    puts its one useful representation — the pair of coordinates — on the step that earns it, while the two
+    examples read off the curve get a full graph companion because that is where the answer is found. An
+    example that authors no visual gets one column rather than a reserved empty aside. No response field.
   - **The flat output carries all of it.** A tab is a Study-mode affordance, not a filter on what a lesson
     contains, so Worksheet and print render every authored example and every step, in authored order under
     its own label, including a step's own parts. Mathematics gets its own builder: `notes` is a type name
     the two page families share and the legacy branch reads a completely different shape. On paper a figure
     is the DRAWING — the SVG is lifted out of `fragFigure` and its app chrome left behind.
+  - **Uppercasing corrupts mathematics.** A part label set in small caps printed `VALUES OF Y = X²`, which
+    is a different statement from `y = x²`. A label carrying notation now keeps its own case; a label of
+    plain words still gets the small-caps treatment the rest of the shell uses.
   - The fixture demonstrates the renderer rather than redesigning the mathematics: four concepts (no
-    invented fifth), three complete alternative examples, and three genuinely different worked examples
-    (evaluate against a table of substitutions, solve for _x_ on the graph, reason from symmetry).
-    `scripts/verify-notes-examples.mjs` is the gate (36 checks) and `scripts/shots-notes-examples.mjs` the
-    eleven proofs. Controls change the JSON and show the page following it — a fourth example, a relabelled
-    and reordered tab list, an example composing different parts, an example with no visual dropping its
-    column, and the flat output holding everything that was behind a tab.
+    invented fifth), three complete demonstrations of one object, and three genuinely different worked
+    examples. `scripts/verify-notes-examples.mjs` is the gate (41 checks) and `scripts/shots-notes-examples.mjs`
+    the proof set. The gate encodes the approved behaviour rather than the implementation: expected part
+    counts, companion kinds, which steps carry visuals and how many tabs there are are all DERIVED from the
+    lesson JSON, so re-authoring the fixture cannot quietly make the gate agree with itself. Controls change
+    the JSON and show the page following it — a fourth example, a relabelled and reordered tab list, an
+    example composing different parts, a companion re-authored from a graph to a table, an example with no
+    visual dropping its column, a tab switched to _y_ = _x_² + 2 failing the same-object check, and the flat
+    output holding everything that was behind a tab.
 - **Three defects the Stage C content exposed**, each invisible while the panels held placeholders: the
   inactive figure panel stayed displayed behind the selected tab (`.mx-figure[data-fig-viewport]` set
   `display:block` with no `:not([hidden])` guard, later in the sheet than the rule that has one); the

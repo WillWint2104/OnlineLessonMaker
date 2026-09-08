@@ -320,11 +320,19 @@ canvas can now be taller than the window, so a fraction of its rect may lie outs
 
 ## 8c. The Mathematics page contracts (Stage C)
 
-**A TAB IS AN ALTERNATIVE COMPLETE EXAMPLE, NOT A FRAGMENT OF ONE.** This is the semantic rule the whole
-contract hangs on. A learner must never have to switch tabs to reconstruct one mathematical idea, so every
-pane carries its own drawing, its own coordinates and its own stated relationship. Switching tabs means
-"show me another complete example of this concept". `Graph | Table | Coordinates` was the wrong composition
-and is gone.
+**A TAB IS AN ALTERNATIVE COMPLETE DEMONSTRATION OF THE SAME OBJECT.** This is the semantic rule the whole
+contract hangs on, and it has two halves — getting only the first one produced two rejected builds.
+
+1. A learner must never have to switch tabs to reconstruct one mathematical idea, so every pane carries its
+   own drawing, its own coordinates and its own stated relationship. `Graph | Table | Coordinates` was the
+   wrong composition and is gone.
+2. **The persistent concept panel is the stable knowledge, and every tab must remain compatible with it.**
+   It does not change with the tab. If the panel says the vertex is (0, 0) and _y_ ≥ 0, a tab that plots
+   _y_ = _x_² + 2 makes the page contradict itself. Tabs are redundant demonstrations of one object, not
+   different objects sharing one explanation.
+
+So the tabs on this page are `Graph and key points` / `Table to graph` / `Symmetry` — three complete ways
+to see _y_ = _x_², each combining several part kinds.
 
 **Notes** — `{ id, title, lede?, contentTitle?, keyIdea?: {title?, body}, concepts: [{id, term, body}],
 examples: [{id, label, caption?, parts: […]}], workspace: {kind:"representation"} }`. `concepts` is any
@@ -335,6 +343,14 @@ note?, visual?}], resultLabel?, result?, visual?}] }`. No `workspace`: the page 
 body, because the visual belongs to the example rather than to the page. A STEP's `visual` is the same
 shape as an example's, so the data/rendering boundary does not assume the companion is one static graph
 unrelated to the steps.
+
+**A VISUAL EXISTS TO CARRY THE MATHEMATICS, NOT TO FILL A COLUMN.** The rule is not "every example has a
+picture" — that reserves a large blank region beside a single substitution. An example gets a companion
+column exactly when it authors one; a simple substitution uses a compact coordinate representation on the
+step that earns it, and a graph appears where the graph is how the answer is read.
+
+**Uppercasing corrupts mathematics.** A part label carrying notation keeps its own case (`.mx-parth-m` /
+`.ws-mx-reph-m`); one made of plain words gets the shell's small caps. `VALUES OF Y = X²` is not `y = x²`.
 
 **`parts` / `visual` — one vocabulary, shared by both pages.** Either a single part, an array of parts, or
 `{parts:[…]}`. A part is `{kind:"figure", label?, figure:{…}}` (the Figure engine),

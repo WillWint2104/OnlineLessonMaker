@@ -1894,6 +1894,7 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-part[data-mx-part="figure"] .mx-figstage{position:absolute;inset:0;display:flex;flex-direction:column;}
 .mx-parth{font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
   color:var(--mx-ink-3);margin:0 0 6px;}
+.mx-parth-m{text-transform:none;letter-spacing:.03em;font-size:12.5px;}
 .mx-points{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;
   font-size:14.5px;color:var(--mx-ink-body);}
 .mx-points li{white-space:nowrap;}
@@ -2135,6 +2136,7 @@ body.figfocus #figfocus{display:flex;}
 #worksheet .ws-mx-key{margin:0 0 14px;padding:9px 13px;border-left:3px solid #0F7A4C;background:#F1F8F4;font-size:.96rem;}
 #worksheet .ws-mx-rep{margin:14px 0 4px;break-inside:avoid;}
 #worksheet .ws-mx-reph{font-size:.74rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#5C6564;margin:0 0 6px;}
+#worksheet .ws-mx-reph-m{text-transform:none;letter-spacing:.03em;font-size:.82rem;}
 #worksheet .ws-mx-fig{max-width:460px;margin:0 0 6px;}
 #worksheet .ws-mx-fig svg{display:block;width:100%;height:auto;}
 #worksheet .ws-mx-ex{margin:0 0 20px;break-inside:avoid;}
@@ -7574,7 +7576,10 @@ function mxPartRelations(c){
 }
 function mxPart(part,key){
   const kind=String((part&&part.kind)||'');
-  const head=part&&part.label?`<h4 class="mx-parth">${mxM(part.label)}</h4>`:'';
+  /* UPPERCASING CORRUPTS MATHEMATICS — `y = x^2` is not `Y = X^2`. A label that carries notation keeps its
+     own case; a label that is only words still gets the small-caps treatment the rest of the shell uses. */
+  const lab=part&&part.label?mxM(part.label):'';
+  const head=lab?`<h4 class="mx-parth${/<(i|sup|sub)[ >]/.test(lab)?' mx-parth-m':''}">${lab}</h4>`:'';
   let body='';
   if(kind==='figure'&&part.figure&&typeof part.figure==='object')
     body=`<div class="mx-figstage"><div class="mx-figskin tp-slide">${fragFigure(part.figure,'mxpart-'+esc(String(key)))}</div></div>`;
@@ -11833,7 +11838,8 @@ function buildWorksheetMicro(){
    left behind, so the flat page carries the mathematics and nothing that only works with a pointer. */
 let MX_WS_FIG=0;
 function mxWsPart(part){
-  const lab=(part&&part.label)?`<h4 class="ws-mx-reph">${mxM(part.label)}</h4>`:'';
+  const L=(part&&part.label)?mxM(part.label):'';
+  const lab=L?`<h4 class="ws-mx-reph${/<(i|sup|sub)[ >]/.test(L)?' ws-mx-reph-m':''}">${L}</h4>`:'';
   const body=mxWsFig(part);
   return body?`<div class="ws-mx-part">${lab}${body}</div>`:'';
 }

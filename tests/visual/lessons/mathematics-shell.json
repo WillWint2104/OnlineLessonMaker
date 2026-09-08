@@ -1,686 +1,699 @@
 {
- "_note": "Stage A visual fixture. Enough authentic Mathematics content to judge the page shell against the approved mockups; not a real lesson and not a schema reference. Replaced by authored lessons from Stage C onwards.",
- "meta": {
-  "title": "Non-linear relationships",
-  "theme": "mathematics",
-  "stage": "Stage 5",
-  "year": "Year 9",
-  "unit": "Non-linear relationships"
- },
- "slides": [
-  {
-   "type": "notes",
-   "id": "notes",
-   "navLabel": "Notes",
-   "title": "Exploring the graph of _y_ = _x_^2",
-   "lede": "A quadratic function with a U-shaped curve.",
-   "keyIdea": {
-    "title": "Key idea",
-    "body": "Opposite _x_-values give the same _y_-value: if _x_ = _a_, then _x_ = −_a_ gives the same _y_."
-   },
-   "contentTitle": "Key concepts",
-   "workspace": {
-    "kind": "representation"
-   },
-   "concepts": [
-    {
-     "id": "shape",
-     "term": "Shape",
-     "body": "The graph of _y_ = _x_^2 is a parabola that opens upwards."
-    },
-    {
-     "id": "vertex",
-     "term": "Vertex",
-     "body": "The vertex is at (0, 0), which is the lowest point on the graph."
-    },
-    {
-     "id": "symmetry",
-     "term": "Axis of symmetry",
-     "body": "The graph is symmetrical about the _y_-axis."
-    },
-    {
-     "id": "yvalues",
-     "term": "_y_-values",
-     "body": "All _y_-values are zero or positive (_y_ ≥ 0). Opposite _x_-values give the same _y_-value."
-    }
-   ],
-   "examples": [
-    {
-     "id": "ex-basic",
-     "label": "_y_ = _x_^2",
-     "parts": [
-      {
-       "kind": "figure",
-       "figure": {
-        "type": "figure",
-        "figure": "graph",
-        "aspect": "equal",
-        "grid": "shown",
-        "callouts": "hidden",
-        "domain": {
-         "xMin": -5,
-         "xMax": 5,
-         "yMin": -5,
-         "yMax": 5
-        },
-        "objects": [
-         {
-          "type": "function",
-          "f": "x^2",
-          "label": "y = x^2"
-         },
-         {
-          "type": "points",
-          "rows": [
-           [
-            "(−2, 4)",
-            -2,
-            4
-           ],
-           [
-            "(2, 4)",
-            2,
-            4
-           ],
-           [
-            "(0, 0)",
-            0,
-            0
-           ]
-          ]
-         }
-        ]
-       }
-      },
-      {
-       "kind": "points",
-       "label": "Coordinates",
-       "items": [
-        {
-         "term": "(−2, 4)"
-        },
-        {
-         "term": "(−1, 1)"
-        },
-        {
-         "term": "(0, 0)",
-         "body": "vertex"
-        },
-        {
-         "term": "(1, 1)"
-        },
-        {
-         "term": "(2, 4)"
-        }
-       ]
-      },
-      {
-       "kind": "relations",
-       "items": [
-        "(−2, 4) and (2, 4) share a _y_-value — the axis of symmetry is _x_ = 0."
-       ]
-      }
-     ]
-    },
-    {
-     "id": "ex-shifted",
-     "label": "_y_ = _x_^2 + 2",
-     "parts": [
-      {
-       "kind": "figure",
-       "figure": {
-        "type": "figure",
-        "figure": "graph",
-        "aspect": "equal",
-        "grid": "shown",
-        "callouts": "hidden",
-        "domain": {
-         "xMin": -5,
-         "xMax": 5,
-         "yMin": -3,
-         "yMax": 7
-        },
-        "objects": [
-         {
-          "type": "function",
-          "f": "x^2+2",
-          "label": "y = x^2 + 2"
-         },
-         {
-          "type": "points",
-          "rows": [
-           [
-            "(0, 2)",
-            0,
-            2
-           ],
-           [
-            "(2, 6)",
-            2,
-            6
-           ]
-          ]
-         }
-        ]
-       }
-      },
-      {
-       "kind": "points",
-       "label": "Coordinates",
-       "items": [
-        {
-         "term": "(−2, 6)"
-        },
-        {
-         "term": "(−1, 3)"
-        },
-        {
-         "term": "(0, 2)",
-         "body": "vertex"
-        },
-        {
-         "term": "(1, 3)"
-        },
-        {
-         "term": "(2, 6)"
-        }
-       ]
-      },
-      {
-       "kind": "relations",
-       "items": [
-        "Every _y_-value is 2 more than on _y_ = _x_^2; the shape and the axis of symmetry are unchanged."
-       ]
-      }
-     ]
-    },
-    {
-     "id": "ex-reflected",
-     "label": "_y_ = −_x_^2",
-     "parts": [
-      {
-       "kind": "figure",
-       "figure": {
-        "type": "figure",
-        "figure": "graph",
-        "aspect": "equal",
-        "grid": "shown",
-        "callouts": "hidden",
-        "domain": {
-         "xMin": -5,
-         "xMax": 5,
-         "yMin": -5,
-         "yMax": 5
-        },
-        "objects": [
-         {
-          "type": "function",
-          "f": "-x^2",
-          "label": "y = -x^2"
-         },
-         {
-          "type": "points",
-          "rows": [
-           [
-            "(0, 0)",
-            0,
-            0
-           ],
-           [
-            "(2, −4)",
-            2,
-            -4
-           ]
-          ]
-         }
-        ]
-       }
-      },
-      {
-       "kind": "points",
-       "label": "Coordinates",
-       "items": [
-        {
-         "term": "(−2, −4)"
-        },
-        {
-         "term": "(−1, −1)"
-        },
-        {
-         "term": "(0, 0)",
-         "body": "vertex"
-        },
-        {
-         "term": "(1, −1)"
-        },
-        {
-         "term": "(2, −4)"
-        }
-       ]
-      },
-      {
-       "kind": "relations",
-       "items": [
-        "The parabola opens downwards and every _y_-value is zero or negative."
-       ]
-      }
-     ]
-    }
-   ]
+  "_note": "Stage A visual fixture. Enough authentic Mathematics content to judge the page shell against the approved mockups; not a real lesson and not a schema reference. Replaced by authored lessons from Stage C onwards.",
+  "meta": {
+    "title": "Non-linear relationships",
+    "theme": "mathematics",
+    "stage": "Stage 5",
+    "year": "Year 9",
+    "unit": "Non-linear relationships"
   },
-  {
-   "type": "workedExamples",
-   "id": "worked",
-   "navLabel": "Worked examples",
-   "title": "Worked examples",
-   "lede": "Three problems on _y_ = _x_^2, each worked through in full.",
-   "examples": [
+  "slides": [
     {
-     "id": "ex-evaluate",
-     "label": "Example 1",
-     "question": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = −4.",
-     "steps": [
-      {
-       "id": "s1",
-       "text": "Write the rule.",
-       "math": "_y_ = _x_^2"
+      "type": "notes",
+      "id": "notes",
+      "navLabel": "Notes",
+      "title": "Exploring the graph of _y_ = _x_^2",
+      "lede": "A quadratic function with a U-shaped curve.",
+      "keyIdea": {
+        "title": "Key idea",
+        "body": "Opposite _x_-values give the same _y_-value: if _x_ = _a_, then _x_ = −_a_ gives the same _y_."
       },
-      {
-       "id": "s2",
-       "text": "Substitute the given value. Keep the brackets — the whole of −4 is squared.",
-       "math": "_y_ = (−4)^2"
+      "contentTitle": "Key concepts",
+      "workspace": {
+        "kind": "representation"
       },
-      {
-       "id": "s3",
-       "text": "Evaluate. A negative multiplied by a negative gives a positive.",
-       "math": "_y_ = −4 × −4 = 16",
-       "visual": {
-        "kind": "points",
-        "label": "Both signs land on the same y",
-        "items": [
-         {
-          "term": "(−4, 16)"
-         },
-         {
-          "term": "(4, 16)"
-         }
-        ]
-       }
-      }
-     ],
-     "resultLabel": "Answer",
-     "result": "_y_ = 16, so (−4, 16) lies on the graph.",
-     "visual": {
-      "parts": [
-       {
-        "kind": "table",
-        "label": "Substitution",
-        "stub": "_x_",
-        "head": [
-         "−4",
-         "−2",
-         "0",
-         "2",
-         "4"
-        ],
-        "rows": [
-         {
-          "label": "_y_ = _x_^2",
-          "cells": [
-           "16",
-           "4",
-           "0",
-           "4",
-           "16"
-          ]
-         }
-        ]
-       },
-       {
-        "kind": "relations",
-        "items": [
-         "−4 and 4 give the same _y_-value, because squaring removes the sign."
-        ]
-       }
-      ]
-     }
-    },
-    {
-     "id": "ex-solve",
-     "label": "Example 2",
-     "question": "Find the value(s) of _x_ for which _y_ = 16.",
-     "steps": [
-      {
-       "id": "s1",
-       "text": "Substitute the known _y_-value into the rule.",
-       "math": "16 = _x_^2"
-      },
-      {
-       "id": "s2",
-       "text": "Take the square root of both sides. A positive number has two square roots.",
-       "math": "_x_ = ±4"
-      },
-      {
-       "id": "s3",
-       "text": "Check both against the rule.",
-       "math": "4^2 = 16 and (−4)^2 = 16"
-      },
-      {
-       "id": "s4",
-       "text": "Read it off the graph: the line _y_ = 16 crosses the parabola twice, once each side of the axis."
-      }
-     ],
-     "resultLabel": "Answer",
-     "result": "_x_ = 4 or _x_ = −4.",
-     "visual": {
-      "parts": [
-       {
-        "kind": "figure",
-        "figure": {
-         "type": "figure",
-         "figure": "graph",
-         "grid": "shown",
-         "callouts": "hidden",
-         "domain": {
-          "xMin": -6,
-          "xMax": 6,
-          "yMin": -2,
-          "yMax": 20
-         },
-         "objects": [
-          {
-           "type": "function",
-           "f": "x^2",
-           "label": "y = x^2"
-          },
-          {
-           "type": "points",
-           "rows": [
-            [
-             "(−4, 16)",
-             -4,
-             16
-            ],
-            [
-             "(4, 16)",
-             4,
-             16
-            ]
-           ]
-          }
-         ]
+      "concepts": [
+        {
+          "id": "shape",
+          "term": "Shape",
+          "body": "The graph of _y_ = _x_^2 is a parabola that opens upwards."
+        },
+        {
+          "id": "vertex",
+          "term": "Vertex",
+          "body": "The vertex is at (0, 0), which is the lowest point on the graph."
+        },
+        {
+          "id": "symmetry",
+          "term": "Axis of symmetry",
+          "body": "The graph is symmetrical about the _y_-axis."
+        },
+        {
+          "id": "yvalues",
+          "term": "_y_-values",
+          "body": "All _y_-values are zero or positive (_y_ ≥ 0). Opposite _x_-values give the same _y_-value."
         }
-       },
-       {
-        "kind": "relations",
-        "items": [
-         "The line _y_ = 16 crosses the curve twice, once each side of the axis."
-        ]
-       }
-      ]
-     }
-    },
-    {
-     "id": "ex-symmetry",
-     "label": "Example 3",
-     "question": "(3, 9) lies on _y_ = _x_^2. Use symmetry to name another point with the same _y_-value.",
-     "steps": [
-      {
-       "id": "s1",
-       "text": "The axis of symmetry is the _y_-axis, the line _x_ = 0."
-      },
-      {
-       "id": "s2",
-       "text": "Measure the horizontal distance from the axis to the point.",
-       "math": "3 − 0 = 3 units right"
-      },
-      {
-       "id": "s3",
-       "text": "Reflect that distance to the other side.",
-       "math": "0 − 3 = −3"
-      },
-      {
-       "id": "s4",
-       "text": "Confirm with the rule rather than by eye.",
-       "math": "(−3)^2 = 9"
-      }
-     ],
-     "resultLabel": "Answer",
-     "result": "(−3, 9) — the mirror image of (3, 9) in the _y_-axis.",
-     "visual": {
-      "parts": [
-       {
-        "kind": "figure",
-        "figure": {
-         "type": "figure",
-         "figure": "graph",
-         "aspect": "equal",
-         "grid": "shown",
-         "callouts": "hidden",
-         "domain": {
-          "xMin": -5,
-          "xMax": 5,
-          "yMin": -2,
-          "yMax": 12
-         },
-         "objects": [
-          {
-           "type": "function",
-           "f": "x^2",
-           "label": "y = x^2"
-          },
-          {
-           "type": "points",
-           "rows": [
-            [
-             "(−3, 9)",
-             -3,
-             9
-            ],
-            [
-             "(3, 9)",
-             3,
-             9
-            ],
-            [
-             "(0, 0)",
-             0,
-             0
-            ]
-           ]
-          }
-         ]
-        }
-       },
-       {
-        "kind": "relations",
-        "items": [
-         "The pair sits at equal distance either side of _x_ = 0."
-        ]
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "type": "videoShell",
-   "id": "video",
-   "navLabel": "Video",
-   "title": "How the graph of _y_ = _x_^2 is formed",
-   "lede": "Watch how a table of values becomes a parabola.",
-   "splitRatio": "minmax(0,1.85fr) minmax(0,1fr)",
-   "video": {
-    "duration": "7:12",
-    "at": "2:38",
-    "progress": 36,
-    "still": "A table of values beside the curve it produces.",
-    "alt": "Video: how the graph of y = x squared is formed"
-   },
-   "afterWatching": {
-    "title": "After watching",
-    "transcript": "Open transcript",
-    "items": [
-     "Try making your own table of values for _y_ = _x_^2 and plot the points.",
-     "What do you notice about the _y_-values when _x_ is positive and negative?"
-    ]
-   },
-   "workspace": {
-    "kind": "videoSupport",
-    "title": "In this video",
-    "chapters": [
-     {
-      "title": "Table of values",
-      "at": "0:00"
-     },
-     {
-      "title": "Plotting points",
-      "at": "1:45"
-     },
-     {
-      "title": "The turning point",
-      "at": "3:20"
-     },
-     {
-      "title": "Symmetry",
-      "at": "5:10"
-     }
-    ],
-    "watchFor": {
-     "title": "Watch for",
-     "items": [
-      "How the table of values connects to the graph.",
-      "Why the lowest point is at (0, 0).",
-      "How symmetry makes opposite _x_-values give the same _y_-value."
-     ]
-    }
-   }
-  },
-  {
-   "type": "interactiveShell",
-   "id": "interactive",
-   "navLabel": "Interactive",
-   "title": "Explore the graph of _y_ = _x_^2",
-   "lede": "Move the point and observe how the outputs behave.",
-   "stubNote": "The interactive workspace and its schema-generated control region land at Stage E."
-  },
-  {
-   "type": "practice",
-   "id": "practice-equations",
-   "navLabel": "Practice — Equations",
-   "navSub": "Equations",
-   "title": "Practice — Equations",
-   "splitRatio": "minmax(0,1fr) minmax(0,1.15fr)",
-   "questions": [
-    {
-     "stem": "Use the rule _y_ = _x_^2 to find the value of _y_ when:",
-     "parts": [
-      "_x_ = 3",
-      "_x_ = −4",
-      "_x_ = ½"
-     ],
-     "id": "q1"
-    },
-    {
-     "stem": "Complete the table of values for _y_ = _x_^2.",
-     "table": {
-      "stub": "_x_",
-      "head": [
-       "−3",
-       "−2",
-       "−1",
-       "0",
-       "1",
-       "2",
-       "3"
       ],
-      "rows": [
-       {
-        "label": "_y_ = _x_^2",
-        "cells": [
-         "",
-         "",
-         "",
-         "",
-         "",
-         "",
-         ""
-        ]
-       }
+      "examples": [
+        {
+          "id": "ex-keypoints",
+          "label": "Graph and key points",
+          "caption": "The curve of _y_ = _x_^2 with the points it passes through.",
+          "parts": [
+            {
+              "kind": "figure",
+              "figure": {
+                "type": "figure",
+                "figure": "graph",
+                "aspect": "equal",
+                "grid": "shown",
+                "callouts": "hidden",
+                "domain": {
+                  "xMin": -5,
+                  "xMax": 5,
+                  "yMin": -5,
+                  "yMax": 5
+                },
+                "objects": [
+                  {
+                    "type": "function",
+                    "f": "x^2",
+                    "label": "y = x^2"
+                  },
+                  {
+                    "type": "points",
+                    "rows": [
+                      [
+                        "(−2, 4)",
+                        -2,
+                        4
+                      ],
+                      [
+                        "(2, 4)",
+                        2,
+                        4
+                      ],
+                      [
+                        "(0, 0)",
+                        0,
+                        0
+                      ]
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "kind": "points",
+              "label": "Selected coordinates",
+              "items": [
+                {
+                  "term": "(−2, 4)"
+                },
+                {
+                  "term": "(−1, 1)"
+                },
+                {
+                  "term": "(0, 0)",
+                  "body": "vertex"
+                },
+                {
+                  "term": "(1, 1)"
+                },
+                {
+                  "term": "(2, 4)"
+                }
+              ]
+            },
+            {
+              "kind": "relations",
+              "items": [
+                "Reading up from _x_ = 2 meets the curve at _y_ = 4, and the curve turns at its lowest point (0, 0)."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ex-table",
+          "label": "Table to graph",
+          "caption": "The same curve built one value at a time.",
+          "parts": [
+            {
+              "kind": "table",
+              "label": "Values of _y_ = _x_^2",
+              "stub": "_x_",
+              "head": [
+                "−3",
+                "−2",
+                "−1",
+                "0",
+                "1",
+                "2",
+                "3"
+              ],
+              "rows": [
+                {
+                  "label": "_y_ = _x_^2",
+                  "cells": [
+                    "9",
+                    "4",
+                    "1",
+                    "0",
+                    "1",
+                    "4",
+                    "9"
+                  ]
+                }
+              ]
+            },
+            {
+              "kind": "figure",
+              "figure": {
+                "type": "figure",
+                "figure": "graph",
+                "aspect": "stretch",
+                "grid": "shown",
+                "callouts": "hidden",
+                "domain": {
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -1,
+                  "yMax": 10
+                },
+                "objects": [
+                  {
+                    "type": "function",
+                    "f": "x^2",
+                    "label": "y = x^2"
+                  },
+                  {
+                    "type": "points",
+                    "rows": [
+                      [
+                        "(−3, 9)",
+                        -3,
+                        9
+                      ],
+                      [
+                        "(−2, 4)",
+                        -2,
+                        4
+                      ],
+                      [
+                        "(−1, 1)",
+                        -1,
+                        1
+                      ],
+                      [
+                        "(0, 0)",
+                        0,
+                        0
+                      ],
+                      [
+                        "(1, 1)",
+                        1,
+                        1
+                      ],
+                      [
+                        "(2, 4)",
+                        2,
+                        4
+                      ],
+                      [
+                        "(3, 9)",
+                        3,
+                        9
+                      ]
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "kind": "relations",
+              "items": [
+                "Every column of the table is one point on the curve: the column _x_ = −3 is the point (−3, 9).",
+                "Joining the plotted points gives the parabola — the table and the graph are the same rule."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "ex-symmetry",
+          "label": "Symmetry",
+          "caption": "Why the curve folds onto itself along the _y_-axis.",
+          "parts": [
+            {
+              "kind": "figure",
+              "figure": {
+                "type": "figure",
+                "figure": "graph",
+                "aspect": "stretch",
+                "grid": "shown",
+                "callouts": "hidden",
+                "domain": {
+                  "xMin": -4,
+                  "xMax": 4,
+                  "yMin": -1,
+                  "yMax": 10
+                },
+                "objects": [
+                  {
+                    "type": "function",
+                    "f": "x^2",
+                    "label": "y = x^2"
+                  },
+                  {
+                    "type": "points",
+                    "rows": [
+                      [
+                        "(−3, 9)",
+                        -3,
+                        9
+                      ],
+                      [
+                        "(3, 9)",
+                        3,
+                        9
+                      ],
+                      [
+                        "(−1, 1)",
+                        -1,
+                        1
+                      ],
+                      [
+                        "(1, 1)",
+                        1,
+                        1
+                      ],
+                      [
+                        "(0, 0)",
+                        0,
+                        0
+                      ]
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "kind": "points",
+              "label": "Paired _x_-values",
+              "items": [
+                {
+                  "term": "(−1, 1) and (1, 1)",
+                  "body": "same _y_"
+                },
+                {
+                  "term": "(−2, 4) and (2, 4)",
+                  "body": "same _y_"
+                },
+                {
+                  "term": "(−3, 9) and (3, 9)",
+                  "body": "same _y_"
+                }
+              ]
+            },
+            {
+              "kind": "relations",
+              "items": [
+                "_x_ = −_a_ and _x_ = _a_ give the same _y_, because (−_a_)^2 = _a_^2.",
+                "Each pair sits at equal distance either side of the _y_-axis, so the axis of symmetry is _x_ = 0."
+              ]
+            }
+          ]
+        }
       ]
-     },
-     "id": "q2"
     },
     {
-     "stem": "Find the value(s) of _x_ when _y_ = 16.",
-     "id": "q3"
+      "type": "workedExamples",
+      "id": "worked",
+      "navLabel": "Worked examples",
+      "title": "Worked examples",
+      "lede": "Three problems on _y_ = _x_^2, each worked through in full.",
+      "examples": [
+        {
+          "id": "ex-evaluate",
+          "label": "Example 1",
+          "question": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = −4.",
+          "steps": [
+            {
+              "id": "s1",
+              "text": "Write the rule.",
+              "math": "_y_ = _x_^2"
+            },
+            {
+              "id": "s2",
+              "text": "Substitute the given value. Keep the brackets — the whole of −4 is squared.",
+              "math": "_y_ = (−4)^2"
+            },
+            {
+              "id": "s3",
+              "text": "Evaluate. A negative multiplied by a negative gives a positive.",
+              "math": "_y_ = −4 × −4 = 16",
+              "visual": {
+                "kind": "points",
+                "label": "Both signs land on the same _y_",
+                "items": [
+                  {
+                    "term": "(−4, 16)"
+                  },
+                  {
+                    "term": "(4, 16)"
+                  }
+                ]
+              }
+            }
+          ],
+          "resultLabel": "Answer",
+          "result": "_y_ = 16, so (−4, 16) lies on the graph."
+        },
+        {
+          "id": "ex-solve",
+          "label": "Example 2",
+          "question": "Find the value(s) of _x_ for which _y_ = 16.",
+          "steps": [
+            {
+              "id": "s1",
+              "text": "Substitute the known _y_-value into the rule.",
+              "math": "16 = _x_^2"
+            },
+            {
+              "id": "s2",
+              "text": "Take the square root of both sides. A positive number has two square roots.",
+              "math": "_x_ = ±4"
+            },
+            {
+              "id": "s3",
+              "text": "Check both against the rule.",
+              "math": "4^2 = 16 and (−4)^2 = 16"
+            },
+            {
+              "id": "s4",
+              "text": "Read it off the graph: the line _y_ = 16 crosses the parabola twice, once each side of the axis."
+            }
+          ],
+          "resultLabel": "Answer",
+          "result": "_x_ = 4 or _x_ = −4.",
+          "visual": {
+            "parts": [
+              {
+                "kind": "figure",
+                "figure": {
+                  "type": "figure",
+                  "figure": "graph",
+                  "grid": "shown",
+                  "callouts": "hidden",
+                  "domain": {
+                    "xMin": -6,
+                    "xMax": 6,
+                    "yMin": -2,
+                    "yMax": 20
+                  },
+                  "objects": [
+                    {
+                      "type": "function",
+                      "f": "x^2",
+                      "label": "y = x^2"
+                    },
+                    {
+                      "type": "points",
+                      "rows": [
+                        [
+                          "(−4, 16)",
+                          -4,
+                          16
+                        ],
+                        [
+                          "(4, 16)",
+                          4,
+                          16
+                        ]
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "kind": "relations",
+                "items": [
+                  "The line _y_ = 16 crosses the curve twice, once each side of the axis."
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "ex-symmetry",
+          "label": "Example 3",
+          "question": "(3, 9) lies on _y_ = _x_^2. Use symmetry to name another point with the same _y_-value.",
+          "steps": [
+            {
+              "id": "s1",
+              "text": "The axis of symmetry is the _y_-axis, the line _x_ = 0."
+            },
+            {
+              "id": "s2",
+              "text": "Measure the horizontal distance from the axis to the point.",
+              "math": "3 − 0 = 3 units right"
+            },
+            {
+              "id": "s3",
+              "text": "Reflect that distance to the other side.",
+              "math": "0 − 3 = −3"
+            },
+            {
+              "id": "s4",
+              "text": "Confirm with the rule rather than by eye.",
+              "math": "(−3)^2 = 9"
+            }
+          ],
+          "resultLabel": "Answer",
+          "result": "(−3, 9) — the mirror image of (3, 9) in the _y_-axis.",
+          "visual": {
+            "parts": [
+              {
+                "kind": "figure",
+                "figure": {
+                  "type": "figure",
+                  "figure": "graph",
+                  "aspect": "equal",
+                  "grid": "shown",
+                  "callouts": "hidden",
+                  "domain": {
+                    "xMin": -5,
+                    "xMax": 5,
+                    "yMin": -2,
+                    "yMax": 12
+                  },
+                  "objects": [
+                    {
+                      "type": "function",
+                      "f": "x^2",
+                      "label": "y = x^2"
+                    },
+                    {
+                      "type": "points",
+                      "rows": [
+                        [
+                          "(−3, 9)",
+                          -3,
+                          9
+                        ],
+                        [
+                          "(3, 9)",
+                          3,
+                          9
+                        ],
+                        [
+                          "(0, 0)",
+                          0,
+                          0
+                        ]
+                      ]
+                    }
+                  ]
+                }
+              },
+              {
+                "kind": "relations",
+                "items": [
+                  "The pair sits at equal distance either side of _x_ = 0."
+                ]
+              }
+            ]
+          }
+        }
+      ]
     },
     {
-     "stem": "Decide whether each point lies on the graph of _y_ = _x_^2. Give a reason for your answer.",
-     "parts": [
-      "(3, 9)",
-      "(−2, 4)",
-      "(4, 10)",
-      "(−1, 1)"
-     ],
-     "id": "q4"
+      "type": "videoShell",
+      "id": "video",
+      "navLabel": "Video",
+      "title": "How the graph of _y_ = _x_^2 is formed",
+      "lede": "Watch how a table of values becomes a parabola.",
+      "splitRatio": "minmax(0,1.85fr) minmax(0,1fr)",
+      "video": {
+        "duration": "7:12",
+        "at": "2:38",
+        "progress": 36,
+        "still": "A table of values beside the curve it produces.",
+        "alt": "Video: how the graph of y = x squared is formed"
+      },
+      "afterWatching": {
+        "title": "After watching",
+        "transcript": "Open transcript",
+        "items": [
+          "Try making your own table of values for _y_ = _x_^2 and plot the points.",
+          "What do you notice about the _y_-values when _x_ is positive and negative?"
+        ]
+      },
+      "workspace": {
+        "kind": "videoSupport",
+        "title": "In this video",
+        "chapters": [
+          {
+            "title": "Table of values",
+            "at": "0:00"
+          },
+          {
+            "title": "Plotting points",
+            "at": "1:45"
+          },
+          {
+            "title": "The turning point",
+            "at": "3:20"
+          },
+          {
+            "title": "Symmetry",
+            "at": "5:10"
+          }
+        ],
+        "watchFor": {
+          "title": "Watch for",
+          "items": [
+            "How the table of values connects to the graph.",
+            "Why the lowest point is at (0, 0).",
+            "How symmetry makes opposite _x_-values give the same _y_-value."
+          ]
+        }
+      }
     },
     {
-     "stem": "The point (_k_, 25) lies on _y_ = _x_^2.",
-     "stack": true,
-     "parts": [
-      "Find the possible value(s) of _k_.",
-      "If _k_ < 0, what is the value of _k_?"
-     ],
-     "id": "q5"
+      "type": "interactiveShell",
+      "id": "interactive",
+      "navLabel": "Interactive",
+      "title": "Explore the graph of _y_ = _x_^2",
+      "lede": "Move the point and observe how the outputs behave.",
+      "stubNote": "The interactive workspace and its schema-generated control region land at Stage E."
     },
     {
-     "stem": "Solve the following equations.",
-     "parts": [
-      "_x_^2 = 9",
-      "_x_^2 = 5",
-      "(2_x_ + 1)^2 = 36",
-      "_x_^2 − 4 = 0"
-     ],
-     "id": "q6"
+      "type": "practice",
+      "id": "practice-equations",
+      "navLabel": "Practice — Equations",
+      "navSub": "Equations",
+      "title": "Practice — Equations",
+      "splitRatio": "minmax(0,1fr) minmax(0,1.15fr)",
+      "questions": [
+        {
+          "stem": "Use the rule _y_ = _x_^2 to find the value of _y_ when:",
+          "parts": [
+            "_x_ = 3",
+            "_x_ = −4",
+            "_x_ = ½"
+          ],
+          "id": "q1"
+        },
+        {
+          "stem": "Complete the table of values for _y_ = _x_^2.",
+          "table": {
+            "stub": "_x_",
+            "head": [
+              "−3",
+              "−2",
+              "−1",
+              "0",
+              "1",
+              "2",
+              "3"
+            ],
+            "rows": [
+              {
+                "label": "_y_ = _x_^2",
+                "cells": [
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ]
+              }
+            ]
+          },
+          "id": "q2"
+        },
+        {
+          "stem": "Find the value(s) of _x_ when _y_ = 16.",
+          "id": "q3"
+        },
+        {
+          "stem": "Decide whether each point lies on the graph of _y_ = _x_^2. Give a reason for your answer.",
+          "parts": [
+            "(3, 9)",
+            "(−2, 4)",
+            "(4, 10)",
+            "(−1, 1)"
+          ],
+          "id": "q4"
+        },
+        {
+          "stem": "The point (_k_, 25) lies on _y_ = _x_^2.",
+          "stack": true,
+          "parts": [
+            "Find the possible value(s) of _k_.",
+            "If _k_ < 0, what is the value of _k_?"
+          ],
+          "id": "q5"
+        },
+        {
+          "stem": "Solve the following equations.",
+          "parts": [
+            "_x_^2 = 9",
+            "_x_^2 = 5",
+            "(2_x_ + 1)^2 = 36",
+            "_x_^2 − 4 = 0"
+          ],
+          "id": "q6"
+        },
+        {
+          "stem": "A rectangle has an area of 36 m^2. Its length is _x_ metres and its width is _x_ − 2 metres. Form and solve an equation to find the possible values of _x_.",
+          "id": "q7"
+        }
+      ],
+      "workspace": {
+        "kind": "grid",
+        "id": "workbook"
+      }
     },
     {
-     "stem": "A rectangle has an area of 36 m^2. Its length is _x_ metres and its width is _x_ − 2 metres. Form and solve an equation to find the possible values of _x_.",
-     "id": "q7"
+      "type": "practiceGraphs",
+      "id": "practice-graphs",
+      "navLabel": "Practice — Graphs",
+      "navSub": "Graphs",
+      "title": "Practice — Graphs",
+      "lede": "Use the graph of _y_ = _x_^2.",
+      "stubNote": "The question set, the graph sketch area and the written working area land at Stage F.",
+      "workspace": {
+        "kind": "graph"
+      }
+    },
+    {
+      "type": "practiceGeometry",
+      "id": "practice-geometry",
+      "navLabel": "Practice — Geometry",
+      "navSub": "Geometry",
+      "title": "Practice — Geometry",
+      "stubNote": "The construction workspace lands at Stage G."
+    },
+    {
+      "type": "summary",
+      "id": "summary",
+      "navLabel": "Summary",
+      "title": "Summary",
+      "lede": "What you have covered in this topic.",
+      "stubNote": "The lesson end, the response bundle and the submission handoff land at Stage H."
     }
-   ],
-   "workspace": {
-    "kind": "grid",
-    "id": "workbook"
-   }
-  },
-  {
-   "type": "practiceGraphs",
-   "id": "practice-graphs",
-   "navLabel": "Practice — Graphs",
-   "navSub": "Graphs",
-   "title": "Practice — Graphs",
-   "lede": "Use the graph of _y_ = _x_^2.",
-   "stubNote": "The question set, the graph sketch area and the written working area land at Stage F.",
-   "workspace": {
-    "kind": "graph"
-   }
-  },
-  {
-   "type": "practiceGeometry",
-   "id": "practice-geometry",
-   "navLabel": "Practice — Geometry",
-   "navSub": "Geometry",
-   "title": "Practice — Geometry",
-   "stubNote": "The construction workspace lands at Stage G."
-  },
-  {
-   "type": "summary",
-   "id": "summary",
-   "navLabel": "Summary",
-   "title": "Summary",
-   "lede": "What you have covered in this topic.",
-   "stubNote": "The lesson end, the response bundle and the submission handoff land at Stage H."
-  }
- ]
+  ]
 }
