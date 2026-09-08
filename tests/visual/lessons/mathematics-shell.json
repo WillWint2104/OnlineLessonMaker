@@ -320,199 +320,247 @@
       "id": "worked",
       "navLabel": "Worked examples",
       "title": "Worked examples",
-      "lede": "Three problems on _y_ = _x_^2, each worked through in full.",
-      "examples": [
+      "lede": "Three kinds of question on _y_ = _x_^2, each worked through in full.",
+      "groups": [
         {
-          "id": "ex-evaluate",
-          "label": "Example 1",
-          "question": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = −4.",
-          "steps": [
+          "id": "g-substitution",
+          "type": "compact",
+          "title": "Substitution",
+          "lede": "Put a value of _x_ into the rule and read off _y_. Two complete examples — the second is the one people get wrong.",
+          "examples": [
             {
-              "id": "s1",
-              "text": "Write the rule.",
-              "math": "_y_ = _x_^2"
+              "id": "ex-neg",
+              "label": "A negative value",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = −4.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Write the rule.",
+                  "math": "_y_ = _x_^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Substitute the given value. Keep the brackets — the whole of −4 is squared.",
+                  "math": "_y_ = (−4)^2"
+                },
+                {
+                  "id": "s3",
+                  "text": "Evaluate. A negative multiplied by a negative gives a positive.",
+                  "math": "_y_ = −4 × −4 = 16"
+                }
+              ],
+              "answer": "_y_ = 16, so (−4, 16) lies on the graph."
             },
             {
-              "id": "s2",
-              "text": "Substitute the given value. Keep the brackets — the whole of −4 is squared.",
-              "math": "_y_ = (−4)^2"
-            },
+              "id": "ex-frac",
+              "label": "A fraction",
+              "prompt": "Use the same rule to find _y_ when _x_ = 3/2.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Substitute. Again the whole value is squared, not just the numerator.",
+                  "math": "_y_ = (3/2)^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Square the top and the bottom.",
+                  "math": "_y_ = 9/4"
+                },
+                {
+                  "id": "s3",
+                  "text": "Squaring a value above 1 makes it larger; this one lands just above 2.",
+                  "math": "9/4 = 2.25"
+                }
+              ],
+              "answer": "_y_ = 9/4, so (3/2, 9/4) lies on the graph."
+            }
+          ],
+          "relations": [
             {
-              "id": "s3",
-              "text": "Evaluate. A negative multiplied by a negative gives a positive.",
-              "math": "_y_ = −4 × −4 = 16",
+              "kind": "relations",
+              "label": "What both show",
+              "items": [
+                "Substitution never changes the rule — it only replaces _x_. The brackets are what keep the whole value together, in a negative and in a fraction alike."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "g-solving",
+          "type": "visual",
+          "title": "Solving for _x_",
+          "lede": "Working backwards: the _y_-value is known and the _x_-values have to be found.",
+          "examples": [
+            {
+              "id": "ex-solve",
+              "label": "Find _x_ when _y_ = 16",
+              "prompt": "Find the value(s) of _x_ for which _y_ = 16.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Substitute the known _y_-value into the rule.",
+                  "math": "16 = _x_^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Take the square root of both sides. A positive number has two square roots.",
+                  "math": "_x_ = ±4"
+                },
+                {
+                  "id": "s3",
+                  "text": "Check both against the rule.",
+                  "math": "4^2 = 16 and (−4)^2 = 16"
+                },
+                {
+                  "id": "s4",
+                  "text": "Read it off the graph: the line _y_ = 16 crosses the parabola twice, once each side of the axis."
+                }
+              ],
+              "answer": "_x_ = 4 or _x_ = −4.",
               "visual": {
-                "kind": "points",
-                "label": "Both signs land on the same _y_",
-                "items": [
+                "parts": [
                   {
-                    "term": "(−4, 16)"
-                  },
-                  {
-                    "term": "(4, 16)"
+                    "kind": "figure",
+                    "figure": {
+                      "type": "figure",
+                      "figure": "graph",
+                      "aspect": "stretch",
+                      "grid": "shown",
+                      "callouts": "hidden",
+                      "domain": {
+                        "xMin": -6,
+                        "xMax": 6,
+                        "yMin": -2,
+                        "yMax": 22
+                      },
+                      "objects": [
+                        {
+                          "type": "function",
+                          "f": "x^2",
+                          "label": "y = x^2"
+                        },
+                        {
+                          "type": "points",
+                          "rows": [
+                            [
+                              "(−4, 16)",
+                              -4,
+                              16
+                            ],
+                            [
+                              "(4, 16)",
+                              4,
+                              16
+                            ]
+                          ]
+                        }
+                      ]
+                    }
                   }
                 ]
               }
             }
           ],
-          "resultLabel": "Answer",
-          "result": "_y_ = 16, so (−4, 16) lies on the graph."
+          "relations": [
+            {
+              "kind": "relations",
+              "label": "What the graph shows",
+              "items": [
+                "The horizontal line _y_ = 16 meets the curve twice, once each side of the axis — which is why the algebra produces two answers rather than one."
+              ]
+            }
+          ]
         },
         {
-          "id": "ex-solve",
-          "label": "Example 2",
-          "question": "Find the value(s) of _x_ for which _y_ = 16.",
-          "steps": [
+          "id": "g-symmetry",
+          "type": "comparison",
+          "title": "Symmetry",
+          "lede": "Two values of _x_, worked separately, arriving at the same _y_.",
+          "examples": [
             {
-              "id": "s1",
-              "text": "Substitute the known _y_-value into the rule.",
-              "math": "16 = _x_^2"
+              "id": "ex-pos",
+              "label": "Starting from _x_ = 3",
+              "prompt": "Find the point on _y_ = _x_^2 where _x_ = 3.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Substitute the positive value.",
+                  "math": "_y_ = 3^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Evaluate.",
+                  "math": "_y_ = 9"
+                }
+              ],
+              "answer": "(3, 9)"
             },
             {
-              "id": "s2",
-              "text": "Take the square root of both sides. A positive number has two square roots.",
-              "math": "_x_ = ±4"
-            },
-            {
-              "id": "s3",
-              "text": "Check both against the rule.",
-              "math": "4^2 = 16 and (−4)^2 = 16"
-            },
-            {
-              "id": "s4",
-              "text": "Read it off the graph: the line _y_ = 16 crosses the parabola twice, once each side of the axis."
+              "id": "ex-neg3",
+              "label": "Starting from _x_ = −3",
+              "prompt": "Now find the point where _x_ = −3.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Substitute the negative value.",
+                  "math": "_y_ = (−3)^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Evaluate. Squaring removes the sign.",
+                  "math": "_y_ = 9"
+                }
+              ],
+              "answer": "(−3, 9)"
             }
           ],
-          "resultLabel": "Answer",
-          "result": "_x_ = 4 or _x_ = −4.",
-          "visual": {
-            "parts": [
-              {
-                "kind": "figure",
-                "figure": {
-                  "type": "figure",
-                  "figure": "graph",
-                  "grid": "shown",
-                  "callouts": "hidden",
-                  "domain": {
-                    "xMin": -6,
-                    "xMax": 6,
-                    "yMin": -2,
-                    "yMax": 20
+          "relations": [
+            {
+              "kind": "figure",
+              "figure": {
+                "type": "figure",
+                "figure": "graph",
+                "aspect": "stretch",
+                "grid": "shown",
+                "callouts": "hidden",
+                "domain": {
+                  "xMin": -5,
+                  "xMax": 5,
+                  "yMin": -1,
+                  "yMax": 12
+                },
+                "objects": [
+                  {
+                    "type": "function",
+                    "f": "x^2",
+                    "label": "y = x^2"
                   },
-                  "objects": [
-                    {
-                      "type": "function",
-                      "f": "x^2",
-                      "label": "y = x^2"
-                    },
-                    {
-                      "type": "points",
-                      "rows": [
-                        [
-                          "(−4, 16)",
-                          -4,
-                          16
-                        ],
-                        [
-                          "(4, 16)",
-                          4,
-                          16
-                        ]
+                  {
+                    "type": "points",
+                    "rows": [
+                      [
+                        "(−3, 9)",
+                        -3,
+                        9
+                      ],
+                      [
+                        "(3, 9)",
+                        3,
+                        9
                       ]
-                    }
-                  ]
-                }
-              },
-              {
-                "kind": "relations",
-                "items": [
-                  "The line _y_ = 16 crosses the curve twice, once each side of the axis."
+                    ]
+                  }
                 ]
               }
-            ]
-          }
-        },
-        {
-          "id": "ex-symmetry",
-          "label": "Example 3",
-          "question": "(3, 9) lies on _y_ = _x_^2. Use symmetry to name another point with the same _y_-value.",
-          "steps": [
-            {
-              "id": "s1",
-              "text": "The axis of symmetry is the _y_-axis, the line _x_ = 0."
             },
             {
-              "id": "s2",
-              "text": "Measure the horizontal distance from the axis to the point.",
-              "math": "3 − 0 = 3 units right"
-            },
-            {
-              "id": "s3",
-              "text": "Reflect that distance to the other side.",
-              "math": "0 − 3 = −3"
-            },
-            {
-              "id": "s4",
-              "text": "Confirm with the rule rather than by eye.",
-              "math": "(−3)^2 = 9"
+              "kind": "relations",
+              "label": "Why the two agree",
+              "items": [
+                "The two _x_-values sit at equal distance either side of the _y_-axis, and squaring sends both to the same _y_. That is what makes _x_ = 0 the axis of symmetry."
+              ]
             }
-          ],
-          "resultLabel": "Answer",
-          "result": "(−3, 9) — the mirror image of (3, 9) in the _y_-axis.",
-          "visual": {
-            "parts": [
-              {
-                "kind": "figure",
-                "figure": {
-                  "type": "figure",
-                  "figure": "graph",
-                  "aspect": "equal",
-                  "grid": "shown",
-                  "callouts": "hidden",
-                  "domain": {
-                    "xMin": -5,
-                    "xMax": 5,
-                    "yMin": -2,
-                    "yMax": 12
-                  },
-                  "objects": [
-                    {
-                      "type": "function",
-                      "f": "x^2",
-                      "label": "y = x^2"
-                    },
-                    {
-                      "type": "points",
-                      "rows": [
-                        [
-                          "(−3, 9)",
-                          -3,
-                          9
-                        ],
-                        [
-                          "(3, 9)",
-                          3,
-                          9
-                        ],
-                        [
-                          "(0, 0)",
-                          0,
-                          0
-                        ]
-                      ]
-                    }
-                  ]
-                }
-              },
-              {
-                "kind": "relations",
-                "items": [
-                  "The pair sits at equal distance either side of _x_ = 0."
-                ]
-              }
-            ]
-          }
+          ]
         }
       ]
     },

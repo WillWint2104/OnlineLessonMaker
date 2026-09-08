@@ -1760,7 +1760,11 @@ body.respo .main{min-width:0;}
 .mx-stem{font-family:var(--mx-serif);font-size:16.5px;line-height:1.5;color:var(--mx-ink-body);padding-top:4px;}
 .mx-parts{display:flex;flex-wrap:wrap;gap:8px 34px;margin-top:9px;font-family:var(--mx-serif);font-size:16px;}
 .mx-parts.mx-stack{flex-direction:column;gap:6px;}
-.mx-part{display:flex;gap:10px;min-width:0;}
+/* SCOPED TO ITS OWN CONTAINER. `.mx-part` names two different things: a Practice question's (a)/(b)
+   sub-part, and a content part in the shared vocabulary (figure | table | points | relations | prose).
+   Unscoped, this `display:flex` reached the second and laid every part's LABEL beside its content instead
+   of above it. The two meanings keep their own layout. */
+.mx-parts>.mx-part{display:flex;gap:10px;min-width:0;}
 .mx-pl{font-weight:600;color:var(--mx-ink-2);}   /* a class, NOT a bare <i>: mxM() emits <i> for italic variables */
 /* a values table: pale green stub column + head, white cells to write in */
 .mx-tblwrap{margin-top:11px;overflow-x:auto;max-width:100%;position:relative;}
@@ -1875,7 +1879,7 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-expane{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:12px;padding:14px 16px 16px;overflow:auto;}
 .mx-panel.mx-flush>.mx-expane[hidden]{display:none;}
 .mx-excap{margin:0;font-size:14px;line-height:1.5;color:var(--mx-ink-2);}
-.mx-part{min-height:0;}
+.mx-part{min-height:0;display:block;}
 /* The figure takes a definite box from its own width rather than stretching to whatever is left, so the
    coordinates and the relationship sit directly beneath it instead of across a gap. Any slack falls at the
    BOTTOM of the panel, where it reads as margin rather than as a hole in the middle of the example. */
@@ -1900,8 +1904,13 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-points li{white-space:nowrap;}
 .mx-points b{font-family:'LM Math',Cambria Math,serif;font-size:15.5px;color:var(--mx-ink);}
 .mx-points span{color:var(--mx-ink-3);font-size:13px;}
-.mx-relations{list-style:none;margin:0;padding:11px 14px;border-radius:var(--mx-rad);
-  background:var(--mx-green-tint);border:1px solid #DCEBE2;font-size:14.5px;line-height:1.55;color:var(--mx-ink-body);}
+/* THE SURFACE RULE. Off-white is the application ground, WHITE is the surface substantive content is
+   written on, and green is a semantic ACCENT — selection, markers, small labels, an edge. Explanation,
+   reasoning, answers, captions and relationships are content, so they are never written on green paper.
+   Green identifies them; it does not carry them. */
+.mx-relations{list-style:none;margin:0;padding:10px 14px;border-radius:0 var(--mx-rad) var(--mx-rad) 0;
+  background:var(--mx-white);border:1px solid var(--mx-line);border-left:3px solid var(--mx-green);
+  font-size:14.5px;line-height:1.55;color:var(--mx-ink-body);}
 .mx-relations li+li{margin-top:5px;}
 /* Stacked: the example region cannot be a usable column here, so it takes the full width beneath the
    concepts rather than persisting as an empty box beside them. The rows size to their content — the panel
@@ -1915,8 +1924,34 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx[data-mx-fit="stack"] .mx-page{display:block;overflow:auto;}
 .mx[data-mx-fit="stack"] .mx-expane{min-height:calc(var(--mx-rep-min-h) + 90px);overflow:visible;}
 /* ── worked examples ─────────────────────────────────────────────────────────────────────────────── */
-.mx-wex{display:flex;flex-direction:column;gap:0;}
-.mx-wexpane{padding:22px 0 8px;}
+.mx-wex{display:flex;flex-direction:column;gap:0;min-height:0;}
+.mx-wexpane{padding:18px 0 8px;min-height:0;}
+/* SUBSTANTIVE CONTENT SITS ON WHITE. The group's whole composition is one content surface on the
+   application ground — not reasoning written straight onto the page background. It sizes to what it
+   holds: a compact group of two short examples is a short card, not a full-screen empty one. */
+.mx-wexsurface{background:var(--mx-white);border:1px solid var(--mx-line);border-radius:var(--mx-rad);
+  padding:22px 26px 24px;min-width:0;}
+.mx-wexlede{margin:0 0 18px;font-size:15px;line-height:1.6;color:var(--mx-ink-2);}
+/* COMPACT and COMPARISON set complete examples alongside one another. The count comes from the JSON, so
+   two examples make two columns and three make three — the page never guesses from how much text there is.
+   Each remains a whole worked example: prompt, every step, its own answer. */
+.mx-wexset{display:grid;gap:26px 34px;align-items:start;
+  grid-template-columns:repeat(var(--mx-wexcols,2),minmax(0,1fr));}
+.mx-wexset[data-mx-count="1"]{--mx-wexcols:1;max-width:78ch;}
+.mx-wexset[data-mx-count="3"]{--mx-wexcols:3;}
+.mx-wexset>.mx-wexcell+.mx-wexcell{border-left:1px solid var(--mx-line);padding-left:34px;}
+.mx-wexcell{min-width:0;}
+.mx-wexcell .mx-wexq h3{font-size:17.5px;}
+.mx-wexcellvis{margin-top:14px;}
+.mx-wexcellvis .mx-part[data-mx-part="figure"]{position:relative;min-height:240px;}
+.mx-wexcellvis .mx-figstage{position:relative;inset:auto;min-height:240px;display:flex;flex-direction:column;}
+/* The group's own closing relationship — what the examples beside each other are FOR. A figure here is a
+   SUPPORTING diagram under a full-width surface, so it takes a bounded box rather than the 4/3 the Notes
+   exploration panel gives its subject figure; unbounded it would be a wall of grid a metre tall. */
+.mx-wexfoot{margin-top:22px;padding-top:20px;border-top:1px solid var(--mx-line);
+  display:flex;flex-direction:column;gap:16px;}
+.mx-wexfoot .mx-part[data-mx-part="figure"]{aspect-ratio:auto;height:min(38vh,340px);
+  max-width:620px;min-height:0;flex:0 0 auto;}
 .mx-wexbody{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:30px;align-items:start;}
 /* No companion authored: the working takes a reading measure and sits in the page rather than becoming a
    narrow column stranded in a full-screen void. */
@@ -1936,8 +1971,9 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-stept{font-size:15.5px;line-height:1.6;color:var(--mx-ink-body);}
 .mx-stepm{margin-top:6px;font-family:'LM Math',Cambria Math,serif;font-size:18px;color:var(--mx-ink);}
 .mx-stepn{margin-top:5px;font-size:13.5px;color:var(--mx-ink-2);}
-.mx-wexres{display:flex;align-items:baseline;gap:12px;margin-top:6px;padding:13px 16px;border-radius:var(--mx-rad);
-  background:var(--mx-green-tint);border:1px solid #DCEBE2;font-family:'LM Math',Cambria Math,serif;font-size:18px;color:var(--mx-ink);}
+.mx-wexres{display:flex;align-items:baseline;gap:12px;margin-top:6px;padding:12px 16px;
+  border-radius:0 var(--mx-rad) var(--mx-rad) 0;background:var(--mx-white);border:1px solid var(--mx-line);
+  border-left:3px solid var(--mx-green);font-family:'LM Math',Cambria Math,serif;font-size:18px;color:var(--mx-ink);}
 .mx-wexrl{font-family:var(--mx-ui);font-size:11.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--mx-green);}
 /* `position` here is CONTAINMENT, not decoration. `.mx .mx-figstage` is absolutely positioned, so it needs
    a positioned ancestor; while this column was `sticky` it happened to be one, and the moment the narrow
@@ -1952,7 +1988,15 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-replist{margin:0;padding:14px 18px 14px 32px;font-size:15.5px;line-height:1.85;color:var(--mx-ink-body);}
 .mx-replist li::marker{color:var(--mx-green);}
 .mx-repprose{padding:16px 18px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);}
+/* A COLUMN THAT CANNOT BE READ IS NOT A COLUMN. Below the measure where two complete examples still read
+   as examples, the set stacks — one under the other, each whole — rather than becoming two slivers. */
 @media (max-width:900px){ .mx-wexbody{grid-template-columns:minmax(0,1fr);} .mx-wexvis{position:relative;top:auto;} }
+@media (max-width:1000px){
+  .mx-wexset{--mx-wexcols:1 !important;gap:0;}
+  .mx-wexset>.mx-wexcell+.mx-wexcell{border-left:0;padding-left:0;
+    margin-top:26px;padding-top:26px;border-top:1px solid var(--mx-line);}
+}
+@media (max-width:640px){ .mx-wexsurface{padding:18px 16px 20px;} }
 /* ON A HANDSET the ribbon stacks into a long column, and capping the BAR scrolls Insert and Cancel away
    with it. Cap the RIBBON instead: the field, its symbols and its actions then stay within one screen,
    and the student is not scrolling past sixty buttons to finish an equation. */
@@ -2154,7 +2198,8 @@ body.figfocus #figfocus{display:flex;}
 #worksheet .ws-mx-part{margin:0 0 10px;break-inside:avoid;}
 #worksheet .ws-mx-part .mx-points{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:3px 14px;font-size:.93rem;}
 #worksheet .ws-mx-part .mx-points span{color:#777;font-size:.85rem;}
-#worksheet .ws-mx-part .mx-relations{list-style:none;margin:0;padding:7px 11px;background:#F1F8F4;border-left:3px solid #0F7A4C;font-size:.93rem;}
+#worksheet .ws-mx-part .mx-relations{list-style:none;margin:0;padding:7px 11px;background:#fff;
+  border:1px solid #DCE3DF;border-left:3px solid #0F7A4C;font-size:.93rem;}
 /* ---- GeoLearn worksheet (print-friendly) ---- */
 .wsg{font-family:'Inter',system-ui,-apple-system,sans-serif;color:#16201c;max-width:760px;margin:0 auto;line-height:1.5;}
 .wsg-head{border-bottom:2px solid #16201c;padding-bottom:14px;margin-bottom:22px;}
@@ -7602,12 +7647,34 @@ function mxNotesExamples(s,ws){
     id:String(x.id||('ex'+(k+1))), label:String(x.label||x.id||('Example '+(k+1))),
     caption:x.caption||'', parts:mxParts(x) }));
 }
-/* THE WORKED EXAMPLES PAGE is a page in its own right, not a card inside Notes. It shows the WHOLE
-   solution: the steps are not compressed to keep the page above the fold, because the point of a worked
-   example is the working. The tabs are however many examples the lesson authors — "Example 1/2/3" is what
-   one fixture happens to contain, not a three-tab design — and each carries its own optional visual, so
-   the two-column body belongs to the EXAMPLE and not to the shell's workspace slot. There is no response
-   field anywhere on this page: nothing here is for the student to answer. */
+/* THE WORKED EXAMPLES PAGE — two vocabularies, deliberately separate.
+   CONTENT vocabulary: what an example is made of — prompt, steps, and the shared parts
+   (figure | table | points | relations | prose). Already established, unchanged here.
+   COMPOSITION vocabulary: how examples are ASSEMBLED on the page. A small, closed set of four
+   presentation types, AUTHORED in the JSON:
+     compact     several short complete examples together, so a three-step substitution does not
+                 occupy a page on its own
+     visual      one example where a graph, diagram or table materially contributes, as a unified
+                 composition of reasoning and representation
+     comparison  two related complete cases side by side, because the relationship IS the teaching
+     extended    one long derivation across the full reading width, visuals inline where needed
+   THE TYPE CHOOSES THE COMPOSITION; THE AMOUNT OF TEXT NEVER DOES. Nothing here measures how much
+   text an example has, or how much room is left, in order to pick a layout — that would be
+   unpredictable to author against. A tab is a GROUP with a pedagogical identity ("Substitution",
+   "Solving for x"), not "Example 1". There is no response field anywhere on this page. */
+const MX_WEX_TYPES={compact:1,visual:1,comparison:1,extended:1};
+function mxWexGroups(s){
+  const gs=(Array.isArray(s.groups)?s.groups:[]).filter(x=>x&&typeof x==='object');
+  if(gs.length) return gs.map((g,k)=>({
+    id:String(g.id||('g'+(k+1))), title:String(g.title||g.label||('Group '+(k+1))),
+    type:MX_WEX_TYPES[String(g.type||'')]?String(g.type):'extended',
+    declared:String(g.type||''), lede:g.lede||'', relations:g.relations, visual:g.visual,
+    examples:(Array.isArray(g.examples)?g.examples:[]).filter(x=>x&&typeof x==='object')}));
+  /* A page that authors a bare examples[] is one extended group — the old shape still renders. */
+  const ex=(Array.isArray(s.examples)?s.examples:[]).filter(x=>x&&typeof x==='object');
+  return ex.length?[{id:'all',title:String(s.contentTitle||'Worked examples'),type:'extended',declared:'',
+    lede:'',relations:null,visual:null,examples:ex}]:[];
+}
 function mxWexSteps(ex){
   const steps=Array.isArray(ex.steps)?ex.steps:[];
   if(!steps.length) return '<div class="mx-ph">This example has no solution steps yet.</div>';
@@ -7621,34 +7688,59 @@ function mxWexSteps(ex){
       ${sp.length?`<div class="mx-stepvis">${mxCompanion(sp,'step-'+esc(String(ex.id||'ex'))+'-'+k)}</div>`:''}</li>`;
   }).join('')}</ol>`;
 }
-function mxWexOne(ex,s,i,k,hidden){
-  /* The supporting representation is PART OF THE DEMONSTRATION, not a card attached to one example. It is
-     the same part vocabulary the Notes examples use, so an example can carry a graph, a table, a set of
-     points, a relationship — or several — and an example that genuinely needs none says so by authoring
-     none. A STEP may also carry its own part: later examples need the picture to change as the solution
-     progresses, and the data boundary must not assume one static companion for the whole example. */
+/* One complete example: its prompt, its whole working, its answer. Identical in every composition —
+   what changes between the four types is how many of these sit together and what surrounds them. */
+function mxWexSolution(ex,k){
+  return `${(ex.prompt||ex.question)?`<div class="mx-wexq"><h3>${mxM(String(ex.label||('Example '+(k+1))))}</h3>
+      <div class="mx-wexqb">${mxM(ex.prompt||ex.question)}</div></div>`
+    :`<div class="mx-wexq"><h3>${mxM(String(ex.label||('Example '+(k+1))))}</h3></div>`}
+    ${mxWexSteps(ex)}
+    ${(ex.answer||ex.result)?`<div class="mx-wexres"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span>
+      <span>${mxM(ex.answer||ex.result)}</span></div>`:''}`;
+}
+function mxWexCell(ex,s,i,key,k){
   const parts=mxParts(ex.visual);
-  const vis=parts.length?mxCompanion(parts,(tpRespId(s)||i)+'-'+(ex.id||k)):'';
-  return `<div class="mx-wexpane" data-mx-panel="${esc(String(ex.id||('ex'+(k+1))))}" role="tabpanel"
-      aria-label="${esc(String(ex.label||('Example '+(k+1))))}"${hidden?' hidden':''}>
-    <div class="mx-wexbody${vis?'':' mx-wexsolo'}" data-mx-wexcols="${vis?'2':'1'}">
-      <div class="mx-wexsol">
-        ${ex.question?`<div class="mx-wexq"><h3>${mxM(String(ex.label||('Example '+(k+1))))}</h3><div class="mx-wexqb">${mxM(ex.question)}</div></div>`:''}
-        ${mxWexSteps(ex)}
-        ${ex.result?`<div class="mx-wexres"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span><span>${mxM(ex.result)}</span></div>`:''}
-      </div>
-      ${vis?`<aside class="mx-wexvis" aria-label="${esc('Supporting representation for '+String(ex.label||''))}">${vis}</aside>`:''}
-    </div></div>`;
+  const vis=parts.length?mxCompanion(parts,key+'-'+(ex.id||k)):'';
+  return `<article class="mx-wexcell" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${vis?' data-mx-cellvis':''}>
+    <div class="mx-wexsol">${mxWexSolution(ex,k)}</div>
+    ${vis?`<div class="mx-wexcellvis">${vis}</div>`:''}</article>`;
+}
+function mxWexGroupBody(g,s,i){
+  const key=(tpRespId(s)||i)+'-'+g.id, ex=g.examples;
+  if(!ex.length) return '<div class="mx-ph">This group has no examples authored yet.</div>';
+  if(g.type==='visual'||g.type==='extended'){
+    /* ONE example is the composition. `visual` puts an authored representation beside the reasoning;
+       `extended` takes the reading width and lets a step bring its own picture inline. A companion
+       column exists only when the example authors one — never as a reserved empty region. */
+    const one=ex[0], parts=mxParts(one.visual), vis=parts.length?mxCompanion(parts,key+'-'+(one.id||0)):'';
+    return `<div class="mx-wexbody${vis?'':' mx-wexsolo'}" data-mx-wexcols="${vis?'2':'1'}">
+      <div class="mx-wexsol" data-mx-example="${esc(String(one.id||'ex1'))}">${mxWexSolution(one,0)}</div>
+      ${vis?`<aside class="mx-wexvis" aria-label="${esc('Supporting representation for '+String(one.label||''))}">${vis}</aside>`:''}
+    </div>${ex.slice(1).map((x,k)=>mxWexCell(x,s,i,key,k+1)).join('')}`;
+  }
+  /* compact and comparison both set complete examples ALONGSIDE one another; they differ in what the
+     reader is meant to do with them, which the group's own relationship line says. */
+  return `<div class="mx-wexset" data-mx-wexset="${esc(g.type)}" data-mx-count="${ex.length}">
+    ${ex.map((x,k)=>mxWexCell(x,s,i,key,k)).join('')}</div>`;
+}
+function mxWexGroup(g,s,i,hidden){
+  const foot=mxParts(g.relations||g.visual);
+  return `<section class="mx-wexpane" data-mx-panel="${esc(g.id)}" data-mx-wextype="${esc(g.type)}"
+      role="tabpanel" aria-label="${esc(g.title)}"${hidden?' hidden':''}>
+    <div class="mx-wexsurface">
+      ${g.lede?`<p class="mx-wexlede">${mxM(g.lede)}</p>`:''}
+      ${mxWexGroupBody(g,s,i)}
+      ${foot.length?`<div class="mx-wexfoot">${mxCompanion(foot,(tpRespId(s)||i)+'-'+g.id+'-foot')}</div>`:''}
+    </div></section>`;
 }
 function mxWorkedExamplesPage(s,i){
-  const exs=(Array.isArray(s.examples)?s.examples:[]).filter(x=>x&&typeof x==='object');
-  if(!exs.length) return `<div class="mx-panel"><div class="mx-ph">This page has no worked examples yet.</div></div>`;
-  const bar=exs.map((ex,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}"
-    data-mx-tab="${esc(String(ex.id||('ex'+(k+1))))}" aria-selected="${k?'false':'true'}">${mxM(String(ex.label||('Example '+(k+1))))}</button>`).join('');
-  const panes=exs.map((ex,k)=>mxWexOne(ex,s,i,k,k>0)).join('');
+  const gs=mxWexGroups(s);
+  if(!gs.length) return `<div class="mx-panel"><div class="mx-ph">This page has no worked examples yet.</div></div>`;
+  const bar=gs.map((g,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}"
+    data-mx-tab="${esc(g.id)}" aria-selected="${k?'false':'true'}">${mxM(g.title)}</button>`).join('');
   return `<div class="mx-wex">
-    <div class="mx-tabs" role="tablist" data-mx-tabset aria-label="Worked examples">${bar}</div>
-    ${panes}</div>`;
+    <div class="mx-tabs" role="tablist" data-mx-tabset aria-label="Worked example groups">${bar}</div>
+    ${gs.map((g,k)=>mxWexGroup(g,s,i,k>0)).join('')}</div>`;
 }
 /* STRUCTURED ENTRY, and only where the structure IS the task. A question is not turned into a card and
    does not grow an answer box merely because it expects an answer — the workbook is where answers are
@@ -11885,16 +11977,24 @@ function buildWorksheetMx(){
       </section>`; return;
     }
     if(s.type==='workedExamples'){
-      const exs=(Array.isArray(s.examples)?s.examples:[]).filter(x=>x&&typeof x==='object');
+      /* Groups are a COMPOSITION choice, and paper has no tabs: print every group, and inside it every
+         example, whole. The group's own closing relationship travels with it. */
+      const gs=mxWexGroups(s);
+      const one=(ex,k)=>`<div class="ws-mx-ex"><h3 class="ws-mx-exh">${mxM(String(ex.label||('Example '+(k+1))))}</h3>
+        ${(ex.prompt||ex.question)?`<div class="ws-mx-exq">${mxM(ex.prompt||ex.question)}</div>`:''}
+        ${(Array.isArray(ex.steps)&&ex.steps.length)?`<ol class="ws-mx-steps">${ex.steps.map(st=>{
+          const o=(st&&typeof st==='object')?st:{text:st};
+          return `<li>${o.text?mxM(o.text):''}${o.math?`<div class="ws-mx-math">${mxM(o.math)}</div>`:''}`
+            +`${mxParts(o.visual).map(mxWsPart).join('')}</li>`; }).join('')}</ol>`:''}
+        ${(ex.answer||ex.result)?`<div class="ws-mx-res"><b>${esc(ex.resultLabel||'Answer')}</b> ${mxM(ex.answer||ex.result)}</div>`:''}
+        ${mxParts(ex.visual).length?`<div class="ws-mx-rep">${mxParts(ex.visual).map(mxWsPart).join('')}</div>`:''}
+      </div>`;
       out+=`<section class="ws-sec">${ref}${head}
-        ${exs.map((ex,k)=>`<div class="ws-mx-ex"><h3 class="ws-mx-exh">${mxM(String(ex.label||('Example '+(k+1))))}</h3>
-          ${ex.question?`<div class="ws-mx-exq">${mxM(ex.question)}</div>`:''}
-          ${(Array.isArray(ex.steps)&&ex.steps.length)?`<ol class="ws-mx-steps">${ex.steps.map(st=>{
-            const o=(st&&typeof st==='object')?st:{text:st};
-            return `<li>${o.text?mxM(o.text):''}${o.math?`<div class="ws-mx-math">${mxM(o.math)}</div>`:''}`
-              +`${mxParts(o.visual).map(mxWsPart).join('')}</li>`; }).join('')}</ol>`:''}
-          ${ex.result?`<div class="ws-mx-res"><b>${esc(ex.resultLabel||'Answer')}</b> ${mxM(ex.result)}</div>`:''}
-          ${mxParts(ex.visual).length?`<div class="ws-mx-rep">${mxParts(ex.visual).map(mxWsPart).join('')}</div>`:''}
+        ${gs.map(g=>`<div class="ws-mx-grp" data-ws-wextype="${esc(g.type)}">
+          <h3 class="ws-mx-reph ws-mx-reph-m">${mxM(g.title)}</h3>
+          ${g.lede?`<p class="ws-mx-lede">${mxM(g.lede)}</p>`:''}
+          ${g.examples.map(one).join('')||'<div class="ws-mx-none">(no examples authored)</div>'}
+          ${mxParts(g.relations||g.visual).map(mxWsPart).join('')}
         </div>`).join('')||'<div class="ws-mx-none">(no examples authored)</div>'}
       </section>`; return;
     }

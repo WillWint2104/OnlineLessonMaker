@@ -338,19 +338,54 @@ to see _y_ = _x_², each combining several part kinds.
 examples: [{id, label, caption?, parts: […]}], workspace: {kind:"representation"} }`. `concepts` is any
 length. `keyIdea` is optional enrichment and renders as a compact aside; absent, it occupies nothing.
 
-**Worked Examples** — `{ id, title, lede?, examples: [{id, label, question, steps: [{id, text?, math?,
-note?, visual?}], resultLabel?, result?, visual?}] }`. No `workspace`: the page owns its own two‑column
-body, because the visual belongs to the example rather than to the page. A STEP's `visual` is the same
-shape as an example's, so the data/rendering boundary does not assume the companion is one static graph
-unrelated to the steps.
+### TWO VOCABULARIES, DELIBERATELY SEPARATE
 
-**A VISUAL EXISTS TO CARRY THE MATHEMATICS, NOT TO FILL A COLUMN.** The rule is not "every example has a
-picture" — that reserves a large blank region beside a single substitution. An example gets a companion
-column exactly when it authors one; a simple substitution uses a compact coordinate representation on the
-step that earns it, and a graph appears where the graph is how the answer is read.
+**Content vocabulary** — what an example is made of: `prompt`, `steps[]`, and the shared parts
+(`figure | table | points | relations | prose`). **Composition vocabulary** — how examples are ASSEMBLED
+on a page: a small, closed set of presentation types, AUTHORED in the JSON.
+
+Keeping these apart is what stopped Worked Examples oscillating between "one tiny example stretched across
+a page" and "everything gets a graph".
+
+**Worked Examples** — `{ id, title, lede?, groups: [{id, title, type, lede?, examples: [...], relations?}] }`.
+A tab is a GROUP with a pedagogical identity (`Substitution`, `Solving for x`), never `Example 1`. A group
+holds one or more complete examples and an optional closing relationship. No `workspace`: the page owns its
+own compositions. An example is `{id, label, prompt, steps: [{id, text?, math?, note?, visual?}],
+resultLabel?, answer?, visual?}`; a STEP's `visual` is the same shape as an example's, so the boundary does
+not assume one static companion for the whole example. A bare `examples[]` still renders, as one `extended`
+group.
+
+**`type` — the four compositions.** Unknown values fall back to `extended`.
+
+| type | composition |
+| --- | --- |
+| `compact` | several short complete examples set alongside one another — a three‑step substitution never occupies a page alone |
+| `visual` | one example whose graph, diagram or table materially contributes, as a unified composition of reasoning and representation |
+| `comparison` | two related complete cases together, because the relationship between them is the teaching point |
+| `extended` | one long derivation across the reading width, visuals inline at the step that needs them |
+
+**THE TYPE CHOOSES THE COMPOSITION; THE AMOUNT OF TEXT NEVER DOES.** Nothing measures how much text an
+example has, or how much room is left, in order to pick a layout — that would be unpredictable to author
+against. What geometry still decides is only whether a chosen composition can be READ: a set stacks when
+its columns fall below a readable measure, and a `visual` group reserves no companion column when the
+example authors no visual.
+
+### THE SURFACE RULE
+
+Off‑white (`--mx-ground`) is the **application background**. White (`--mx-white`) is the **content
+surface** substantive material is written on. Green is a **semantic accent** — selection, markers, small
+labels, an edge, and at most a very compact Key Idea callout.
+
+Explanation, worked reasoning, answers, captions and relationships are content: green may IDENTIFY them
+(a label, a 3px left edge) but never CARRY them. No green writing paper. Every worked‑example composition
+sits on a white surface rather than being written straight onto the ground.
 
 **Uppercasing corrupts mathematics.** A part label carrying notation keeps its own case (`.mx-parth-m` /
 `.ws-mx-reph-m`); one made of plain words gets the shell's small caps. `VALUES OF Y = X²` is not `y = x²`.
+
+**`.mx-part` names two different things** — a Practice question's (a)/(b) sub‑part and a content part in
+the shared vocabulary. The Practice rule is scoped to `.mx-parts > .mx-part`; unscoped, its `display:flex`
+reached the second and laid every part's label BESIDE its content instead of above it.
 
 **`parts` / `visual` — one vocabulary, shared by both pages.** Either a single part, an array of parts, or
 `{parts:[…]}`. A part is `{kind:"figure", label?, figure:{…}}` (the Figure engine),

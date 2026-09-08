@@ -62,42 +62,43 @@ const shotWhole = async (p, name, w) => {
   await shot(p, name);
 };
 const EX = FIX.slides[NOTES].examples.map((e) => e.id);
-const WX = FIX.slides[WEX].examples.map((e) => e.id);
+const GX = FIX.slides[WEX].groups.map((g) => g.id);
 
-// 1 · 2 — Notes on the desktop: one whole demonstration, then another of the SAME object.
+// 1 · 2 — Notes on the desktop, after the surface cleanup.
 {
   const p = await open(1536, 1024, NOTES);
-  await shot(p, '1-notes-desktop-example-1-graph-and-key-points');
+  await shot(p, '1-notes-desktop-example-1');
   await p.click(`[data-mx-tab="${EX[1]}"]`); await p.waitForTimeout(520);
   await shot(p, '2-notes-desktop-example-2-table-to-graph');
   await p.close();
 }
-// 3 · 4 — Notes stacked: the whole example must be reachable, not a tab strip over an empty box.
+// 3 — Notes stacked on a portrait tablet: stable knowledge first, then a complete exploration.
 {
   const a = await open(834, 1112, NOTES); await shotWhole(a, '3-notes-portrait-tablet-stacked', 834); await a.close();
-  const b = await open(414, 896, NOTES);  await shotWhole(b, '4-notes-phone', 414); await b.close();
 }
-// 5 · 6 · 7 — the three worked examples. The first is a single substitution and takes no companion
-// column at all; the other two are graph-supported because the graph is where the answer is read.
+// 4 · 5 · 6 — one shot per composition type, on the desktop.
 {
   const p = await open(1536, 1024, WEX);
-  await shot(p, '5-worked-example-1-simple-substitution');
-  await p.click(`[data-mx-tab="${WX[1]}"]`); await p.waitForTimeout(520);
-  await shot(p, '6-worked-example-2-graph-supported');
-  await p.click(`[data-mx-tab="${WX[2]}"]`); await p.waitForTimeout(520);
-  await shot(p, '7-worked-example-3-symmetry');
+  await shot(p, '4-worked-compact-substitution-desktop');
+  await p.click(`[data-mx-tab="${GX[1]}"]`); await p.waitForTimeout(560);
+  await shot(p, '5-worked-visual-solving-for-x-desktop');
+  await p.click(`[data-mx-tab="${GX[2]}"]`); await p.waitForTimeout(560);
+  await shotWhole(p, '6-worked-comparison-symmetry-desktop', 1536);
   await p.close();
 }
-// 8 — Worked Examples stacked.
+// 7 · 8 — the compact group on a tablet, the visual group on a portrait tablet.
 {
-  const a = await open(834, 1112, WEX);
-  await a.click(`[data-mx-tab="${WX[1]}"]`); await a.waitForTimeout(520);
-  await shotWhole(a, '8-worked-examples-portrait-tablet', 834); await a.close();
+  const a = await open(1194, 834, WEX); await shotWhole(a, '7-worked-compact-tablet', 1194); await a.close();
+  const b = await open(834, 1112, WEX);
+  await b.click(`[data-mx-tab="${GX[1]}"]`); await b.waitForTimeout(560);
+  await shotWhole(b, '8-worked-visual-portrait-tablet', 834); await b.close();
 }
-// Supplementary, kept as regression evidence rather than part of the approval set:
-// the landscape tablet, and the flat output carrying every authored example.
+// 9 — phone.
 {
-  const a = await open(1194, 834, NOTES); await shot(a, '9-supplementary-notes-tablet-landscape'); await a.close();
+  const p = await open(414, 896, WEX); await shotWhole(p, '9-worked-examples-phone', 414); await p.close();
+}
+// Supplementary regression evidence, not part of the approval set.
+{
   const p = await open(1180, 1024, NOTES);
   await p.evaluate(() => openWorksheet());
   await p.waitForTimeout(700);
@@ -106,10 +107,12 @@ const WX = FIX.slides[WEX].examples.map((e) => e.id);
   await p.waitForTimeout(500);
   await shot(p, '10-supplementary-flat-worksheet-everything', '#wsSheet');
   const n = await p.evaluate(() => { const s = document.querySelector('#wsSheet');
-    return { exs: s.querySelectorAll('h3.ws-mx-reph').length, wex: s.querySelectorAll('.ws-mx-exh').length,
-      steps: s.querySelectorAll('.ws-mx-steps > li').length, figs: s.querySelectorAll('.ws-mx-fig').length }; });
-  console.log(`   (10: ${n.exs} Notes examples, ${n.wex} worked examples, ${n.steps} solution steps, `
-    + `${n.figs} drawings — all of them, none left behind a tab)`);
+    return { notes: s.querySelectorAll('.ws-mx-rep > h3.ws-mx-reph').length,
+      groups: s.querySelectorAll('.ws-mx-grp').length,
+      ex: s.querySelectorAll('.ws-mx-exh').length,
+      steps: s.querySelectorAll('.ws-mx-steps > li').length }; });
+  console.log(`   (10: ${n.notes} Notes examples, ${n.groups} worked-example groups holding ${n.ex} examples, `
+    + `${n.steps} solution steps — all of them, none left behind a tab)`);
   await p.close();
 }
 await browser.close(); server.close();

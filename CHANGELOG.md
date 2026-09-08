@@ -105,30 +105,44 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     part is given its own bounded box on the documented `.tp-slide` seam. The gate measures the rendered
     content area at five viewports, and the control strips the rules that size the drawing to show every
     one of them failing: the tabs still render, the drawing collapses to 0px and its SVG escapes the page.
-  - **Worked Examples** is a page in its own right, not a card inside Notes, and it declares no workspace:
-    the visual belongs to the EXAMPLE, so the page owns its own two-column body. A visual exists to carry
-    the mathematics, never to satisfy a gate: a single substitution takes no companion column at all and
-    puts its one useful representation — the pair of coordinates — on the step that earns it, while the two
-    examples read off the curve get a full graph companion because that is where the answer is found. An
-    example that authors no visual gets one column rather than a reserved empty aside. No response field.
-  - **The flat output carries all of it.** A tab is a Study-mode affordance, not a filter on what a lesson
-    contains, so Worksheet and print render every authored example and every step, in authored order under
-    its own label, including a step's own parts. Mathematics gets its own builder: `notes` is a type name
-    the two page families share and the legacy branch reads a completely different shape. On paper a figure
-    is the DRAWING — the SVG is lifted out of `fragFigure` and its app chrome left behind.
+  - **Worked Examples — two vocabularies, deliberately separate.** CONTENT vocabulary is what an example
+    is made of (`prompt`, `steps[]`, and the shared parts). COMPOSITION vocabulary is how examples are
+    ASSEMBLED, and it is now a small closed set of presentation types AUTHORED in the JSON:
+    `compact | visual | comparison | extended`. Modelling the page as one page-sized layout per
+    `Example 1 / Example 2 / Example 3` did not generalise — a three-step substitution occupied perhaps a
+    third of the useful area while a graph-supported example happened to fill it, so the abstraction only
+    looked right when the example happened to need a large visual. A tab is now a GROUP with a pedagogical
+    identity — `Substitution`, `Solving for x`, `Symmetry` — holding one or more complete examples and an
+    optional closing relationship. THE TYPE CHOOSES THE COMPOSITION; THE AMOUNT OF TEXT NEVER DOES:
+    nothing measures how much text an example has in order to pick a layout. What geometry still decides
+    is only whether the chosen composition can be READ — a set stacks when its columns fall below a
+    readable measure, and a `visual` group reserves no companion when none is authored. A bare
+    `examples[]` still renders, as one `extended` group.
+  - **The surface rule, locked.** Off-white is the application background, white is the content surface,
+    green is a semantic accent. Explanation, worked reasoning, answers, captions and relationships had
+    drifted back onto pale-green paper; green may now IDENTIFY them (a small label, a 3px left edge) but
+    never CARRY them. The relation boxes and the ANSWER band are white with a green edge, and every
+    worked-example composition sits on a white surface instead of being written onto the ground.
   - **Uppercasing corrupts mathematics.** A part label set in small caps printed `VALUES OF Y = X²`, which
     is a different statement from `y = x²`. A label carrying notation now keeps its own case; a label of
     plain words still gets the small-caps treatment the rest of the shell uses.
+  - **`.mx-part` named two different things** — a Practice question's (a)/(b) sub-part and a content part
+    in the shared vocabulary. The Practice rule's `display:flex` was unscoped, so it reached the second and
+    had been laying every part's LABEL beside its content instead of above it. Scoped to `.mx-parts`.
   - The fixture demonstrates the renderer rather than redesigning the mathematics: four concepts (no
-    invented fifth), three complete demonstrations of one object, and three genuinely different worked
-    examples. `scripts/verify-notes-examples.mjs` is the gate (41 checks) and `scripts/shots-notes-examples.mjs`
-    the proof set. The gate encodes the approved behaviour rather than the implementation: expected part
+    invented fifth), three complete demonstrations of one object, and three worked-example groups — one
+    per composition type. `scripts/verify-notes-examples.mjs` is the gate (46 checks) and
+    `scripts/shots-notes-examples.mjs` the proof set. The gate encodes the approved behaviour rather than the implementation: expected part
     counts, companion kinds, which steps carry visuals and how many tabs there are are all DERIVED from the
-    lesson JSON, so re-authoring the fixture cannot quietly make the gate agree with itself. Controls change
-    the JSON and show the page following it — a fourth example, a relabelled and reordered tab list, an
-    example composing different parts, a companion re-authored from a graph to a table, an example with no
-    visual dropping its column, a tab switched to _y_ = _x_² + 2 failing the same-object check, and the flat
-    output holding everything that was behind a tab.
+    lesson JSON, so re-authoring the fixture cannot quietly make the gate agree with itself. It asserts the
+    product rules rather than this fixture's shape: no explanation, answer or caption on a green surface;
+    every group one white surface; every authored example complete inside its group; a set giving each
+    example a column and stacking when it cannot; a visual group reserving nothing when no visual is
+    authored. Controls change the JSON and show the page following it — a fourth example, a relabelled and
+    reordered tab list, a companion re-authored from a graph to a table, a tab switched to _y_ = _x_² + 2
+    failing the same-object check, an answer painted green again being caught, and — the one this stage
+    turns on — cycling one group through all four types, which changes the composition every time while the
+    examples, steps and answers survive unchanged.
 - **Three defects the Stage C content exposed**, each invisible while the panels held placeholders: the
   inactive figure panel stayed displayed behind the selected tab (`.mx-figure[data-fig-viewport]` set
   `display:block` with no `:not([hidden])` guard, later in the sheet than the rule that has one); the

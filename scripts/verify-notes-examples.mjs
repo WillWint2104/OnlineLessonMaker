@@ -277,94 +277,147 @@ const VIEWS = [[1536, 1024, 'split'], [1280, 900, 'split'], [1024, 768, 'stack']
      s.sideBySide && s.tops <= 4, 'the example column starts where the concepts card ends, at the same top');
   await q.close();
 }
-// ══ Worked examples ══════════════════════════════════════════════════════════════════════════════
+// ══ the surface rule ════════════════════════════════════════════════════════════════════════════
+// Off-white is the application GROUND, white is the SURFACE substantive content is written on, and green
+// is a semantic ACCENT — selection, markers, small labels, an edge. Explanation, reasoning, answers,
+// captions and relationships are content: green may identify them, never carry them.
+mark('surface');
+{
+  const GREENISH = `(function(el){
+    for (var n = el; n && n.nodeType === 1; n = n.parentElement) {
+      var c = getComputedStyle(n).backgroundColor;
+      var m = /rgba?\\((\\d+), ?(\\d+), ?(\\d+)(?:, ?([\\d.]+))?\\)/.exec(c);
+      if (!m) continue;
+      if (m[4] !== undefined && parseFloat(m[4]) === 0) continue;
+      var r = +m[1], g = +m[2], b = +m[3];
+      return { rgb: [r, g, b], green: g > r + 3 && g > b + 1, on: n.className || n.tagName };
+    }
+    return { rgb: null, green: false, on: 'none' };
+  })`;
+  for (const [slide, what] of [[NOTES, 'Notes'], [WEX, 'Worked examples']]) {
+    const p = await open({ slide });
+    const bad = await p.evaluate((src) => {
+      const bgOf = eval('(' + src + ')');
+      /* everything that CARRIES teaching text, as opposed to labelling it */
+      const sel = '.mx-relations li, .mx-wexres > span:last-child, .mx-stept, .mx-stepm, .mx-wexqb,'
+        + ' .mx-excap, .mx-wexlede, .mx-repprose, .mx-itemb, .mx-replist li';
+      return [].slice.call(document.querySelectorAll(sel))
+        .filter((e) => e.textContent.trim() && e.offsetParent !== null)
+        .map((e) => ({ cls: e.className || e.tagName, bg: bgOf(e) }))
+        .filter((x) => x.bg.green)
+        .map((x) => `${x.cls} on rgb(${x.bg.rgb.join(',')}) via ${x.bg.on}`); }, GREENISH);
+    ok(`${what}: no explanation, answer or caption is written on a green surface`,
+       bad.length === 0, bad.length ? bad.slice(0, 3).join(' · ') : 'every one of them sits on white');
+    await p.close();
+  }
+}
+{
+  // CONTROL: the check can see a green writing surface — put one back and it fires.
+  const p = await open({ slide: WEX });
+  const fired = await p.evaluate(() => {
+    const e = document.querySelector('.mx-wexres');
+    e.style.background = '#F1F8F4';
+    const c = getComputedStyle(e).backgroundColor;
+    const m = /rgba?\((\d+), ?(\d+), ?(\d+)/.exec(c);
+    return +m[2] > +m[1] + 3 && +m[2] > +m[3] + 1; });
+  ok('CONTROL: painting an answer green again is detected, so the rule is measured and not assumed',
+     fired, 'the green-tint test fires on rgb(241,248,244)');
+  await p.close();
+}
+// ══ Worked examples — composition is AUTHORED, never measured ═══════════════════════════════════
 mark('examples');
+const GROUPS = FIX.slides[WEX].groups;
+/* Measured on the pane that is ON SCREEN. A hidden pane reports grid-template-columns as the SPECIFIED
+   value ("repeat(2, minmax(0px, 1fr))"), which is not a column count — so each tab is selected and the
+   columns are counted from where the cells actually land. */
+const read = (p) => p.evaluate((ids) => ids.map((id) => {
+  document.querySelector(`[data-mx-tab="${id}"]`).click();
+  const e = document.querySelector(`[data-mx-panel="${id}"]`);
+  const lanes = (sel) => { const n = [].slice.call(e.querySelectorAll(sel));
+    return n.length ? new Set(n.map((x) => Math.round(x.getBoundingClientRect().left))).size : 0; };
+  return { id, type: e.dataset.mxWextype, surface: !!e.querySelector('.mx-wexsurface'),
+    examples: [].slice.call(e.querySelectorAll('[data-mx-example]')).map((x) => ({
+      id: x.dataset.mxExample, steps: x.querySelectorAll('.mx-step').length,
+      prompt: !!x.querySelector('.mx-wexqb'), answer: !!x.querySelector('.mx-wexres') })),
+    setCols: e.querySelector('.mx-wexset') ? lanes('.mx-wexset > .mx-wexcell') : 0,
+    bodyCols: e.querySelector('.mx-wexbody') ? lanes('.mx-wexbody > .mx-wexsol, .mx-wexbody > .mx-wexvis') : 0,
+    aside: !!e.querySelector('.mx-wexvis'), foot: !!e.querySelector('.mx-wexfoot') }; }),
+  FIX.slides[WEX].groups.map((g) => g.id));
 {
   const p = await open({ slide: WEX });
-  const t = await tabs(p);
-  ok('the example tabs are the authored examples, by authored id',
-     t.map((x) => x.id).join('/') === WEXS.map((e) => e.id).join('/'),
-     t.map((x) => `${x.id}="${x.label}"`).join(' · '));
-  const counts = await p.evaluate(() => [].slice.call(document.querySelectorAll('[data-mx-panel]'))
-    .map((e) => ({ id: e.dataset.mxPanel, steps: e.querySelectorAll('.mx-step').length,
-      cols: e.querySelector('.mx-wexbody') ? e.querySelector('.mx-wexbody').dataset.mxWexcols : '0',
-      visKinds: [].slice.call(e.querySelectorAll('.mx-wexvis .mx-part')).map((x) => x.dataset.mxPart),
-      stepVis: [].slice.call(e.querySelectorAll('.mx-step[data-mx-stepvis]')).map((x) => x.dataset.mxStep),
-      result: !!e.querySelector('.mx-wexres') })));
-  ok('every example shows its whole solution and its answer',
-     counts.every((c) => c.steps >= 3 && c.result) && counts.map((c) => c.steps).join('/') === WEXS.map((e) => e.steps.length).join('/'),
-     counts.map((c) => `${c.id}: ${c.steps} steps + answer`).join(' · '));
-  /* A VISUAL EXISTS TO CARRY THE MATHEMATICS, NOT TO SATISFY A GATE. The rule is not "every example has a
-     picture" — that would reserve a large blank region beside a single substitution. The rule is that an
-     example gets a companion column exactly when it authors one, and that a column it gets is filled. */
-  const authored = WEXS.map((e) => mxPartKinds(e.visual));
-  ok('an example gets a companion column exactly when it authors one — no blank region is ever reserved',
-     counts.every((c, k) => c.cols === (authored[k].length ? '2' : '1') && c.visKinds.join('+') === authored[k].join('+')),
-     counts.map((c, k) => `${c.id}: ${authored[k].length ? c.visKinds.join(' + ') : 'no companion, one column'}`).join(' · '));
-  const filled = await p.evaluate((ids) => ids.map((id) => {
-    document.querySelector(`[data-mx-tab="${id}"]`).click();
-    const v = document.querySelector(`[data-mx-panel="${id}"] .mx-wexvis`);
-    if (!v) return { id, none: true };
-    const r = v.getBoundingClientRect();
-    const parts = [].slice.call(v.querySelectorAll('.mx-part'))
-      .map((x) => { const q = x.getBoundingClientRect(); return { k: x.dataset.mxPart, w: Math.round(q.width), h: Math.round(q.height) }; });
-    return { id, w: Math.round(r.width), parts }; }), WEXS.map((e) => e.id));
-  ok('a companion column that exists is filled — the empty-region rule applies here too',
-     filled.every((f) => f.none || (f.w >= 200 && f.parts.length && f.parts.every((q) => q.w >= 120 && q.h >= 16))),
-     filled.map((f) => f.none ? `${f.id}: no column` : `${f.id}: ${f.parts.map((q) => `${q.k} ${q.w}×${q.h}`).join(', ')}`).join(' · '));
-  const reauthored = await p.evaluate((k) => {
-    const id = LESSON.slides[1].examples[k].id;
-    LESSON.slides[1].examples[k].visual = { parts: [{ kind: 'table', label: 'Values', stub: '_x_',
-      head: ['−4', '0', '4'], rows: [{ label: '_y_', cells: ['16', '0', '16'] }] }] }; go(1);
-    document.querySelector(`[data-mx-tab="${id}"]`).click();
-    const v = document.querySelector(`[data-mx-panel="${id}"] .mx-wexvis`);
-    return { kinds: [].slice.call(v.querySelectorAll('.mx-part')).map((x) => x.dataset.mxPart),
-      table: !!v.querySelector('table'), svg: !!v.querySelector('svg') }; },
-    WEXS.findIndex((e) => mxPartKinds(e.visual).indexOf('figure') >= 0));
-  ok('CONTROL: the renderer assumes nothing about which kind a companion is — re-author it and the page follows',
-     reauthored.kinds.join('+') === 'table' && reauthored.table && !reauthored.svg,
-     'the graph companion becomes a table with no renderer change');
-  /* A visual may belong to the whole example OR to the step that earns it. Which steps those are comes from
-     the JSON, not from this file: the gate asserts the page follows the authoring, measured on screen. */
-  const authoredSteps = WEXS.map((e) => e.steps.filter((st) => mxPartKinds(st.visual).length).map((st) => st.id));
-  const stepVis = await p.evaluate((ids) => ids.map((id) => {
-    document.querySelector(`[data-mx-tab="${id}"]`).click();
-    return [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .mx-step[data-mx-stepvis]`))
-      .map((e) => ({ step: e.dataset.mxStep,
-        h: Math.round(e.querySelector('.mx-stepvis .mx-part').getBoundingClientRect().height),
-        inside: e.querySelector('.mx-stepvis').getBoundingClientRect().bottom <= e.getBoundingClientRect().bottom + 2 })); }),
-    WEXS.map((e) => e.id));
-  ok('a STEP may carry its own visual state, and it renders inside that step',
-     stepVis.every((v, k) => v.map((x) => x.step).join(',') === authoredSteps[k].join(',')
-       && v.every((x) => x.h > 12 && x.inside)),
-     stepVis.map((v, k) => `${WEXS[k].id}: ${v.length ? v.map((x) => `step ${x.step} (${x.h}px, inside the step)`).join(', ') : 'no step visual'}`).join(' · '));
+  const t = await tabs(p), g = await read(p);
+  ok('a tab is a worked-example GROUP with a pedagogical identity, not "Example 1"',
+     t.map((x) => x.id).join('/') === GROUPS.map((x) => x.id).join('/')
+     && !t.some((x) => /^example \d+$/i.test(x.label)),
+     t.map((x) => x.label).join(' · '));
+  ok('the composition each group renders is the TYPE it authors, from the closed vocabulary',
+     g.map((x) => x.type).join('/') === GROUPS.map((x) => x.type).join('/')
+     && g.every((x) => ['compact', 'visual', 'comparison', 'extended'].indexOf(x.type) >= 0),
+     g.map((x) => `${x.id} → ${x.type}`).join(' · '));
+  ok('EVERY authored example stays complete inside its group — prompt, whole working, its own answer',
+     g.every((x, k) => x.examples.length === GROUPS[k].examples.length
+       && x.examples.every((e, j) => e.prompt && e.answer && e.steps === GROUPS[k].examples[j].steps.length)),
+     g.map((x) => `${x.id}: ${x.examples.map((e) => `${e.id} (${e.steps} steps + answer)`).join(', ')}`).join(' · '));
+  ok('every group is one white content surface, not reasoning written onto the application ground',
+     g.every((x) => x.surface),
+     await p.evaluate(() => { const s = document.querySelector('.mx-wexsurface');
+       return 'the surface is ' + getComputedStyle(s).backgroundColor; }));
+  ok('a group that sets examples alongside one another gives each of them a column',
+     g.filter((x) => x.type === 'compact' || x.type === 'comparison')
+      .every((x) => x.setCols === x.examples.length && x.examples.length > 1),
+     g.filter((x) => x.setCols).map((x) => `${x.type} ${x.id}: ${x.examples.length} examples in ${x.setCols} columns`).join(' · '));
+  ok('a visual group puts the representation beside the reasoning, and reserves nothing when none is authored',
+     g.filter((x) => x.type === 'visual' || x.type === 'extended')
+      .every((x) => { const authored = mxPartKinds(GROUPS.find((q) => q.id === x.id).examples[0].visual).length;
+        return authored ? (x.aside && x.bodyCols === 2) : (!x.aside && x.bodyCols === 1); }),
+     g.filter((x) => x.type === 'visual' || x.type === 'extended')
+      .map((x) => `${x.id}: ${x.aside ? 'companion beside the working' : 'one column, no empty aside'}`).join(' · '));
   await p.close();
 }
 {
+  /* THE TYPE CHOOSES THE COMPOSITION; THE AMOUNT OF TEXT NEVER DOES. Same example data, different declared
+     type — the arrangement must follow the declaration and the examples must survive it unchanged. */
   const p = await open({ slide: WEX });
-  const sizes = (await p.evaluate((ids) => ids.map((id) => {
-    document.querySelector(`[data-mx-tab="${id}"]`).click();
-    const v = document.querySelector(`[data-mx-panel="${id}"] .mx-wexvis`);
-    if (!v) return null;                                     /* this example authors no companion */
-    const n = v.querySelector('svg') || v.querySelector('table');
-    const r = n.getBoundingClientRect(); const b = v.getBoundingClientRect();
-    return { id, tag: n.tagName.toLowerCase(), w: Math.round(r.width), h: Math.round(r.height),
-      inside: r.right <= b.right + 2 && r.bottom <= b.bottom + 2 }; }), WEXS.map((e) => e.id))).filter(Boolean);
-  ok('a companion that is there is big enough to be read and stays inside its column',
-     sizes.length > 0 && sizes.every((s) => s.w >= 240 && s.h >= (s.tag === 'svg' ? 200 : 60) && s.inside),
-     sizes.map((s) => `${s.id}: ${s.tag} ${s.w}×${s.h}`).join(' · '));
-  const withVis = WEXS.findIndex((e) => mxPartKinds(e.visual).length);
-  const solo = await p.evaluate((k) => { delete LESSON.slides[1].examples[k].visual; go(1);
-    const id = LESSON.slides[1].examples[k].id;
-    const e = document.querySelector(`[data-mx-panel="${id}"]`);
-    document.querySelector(`[data-mx-tab="${id}"]`).click();
-    const b = e.querySelector('.mx-wexbody');
-    return { cols: b.dataset.mxWexcols, aside: !!e.querySelector('.mx-wexvis'),
-      steps: e.querySelectorAll('.mx-step').length }; }, withVis);
-  ok('CONTROL: an example that authors no visual gets one column, with no empty aside reserved',
-     solo.cols === '1' && !solo.aside && solo.steps === WEXS[withVis].steps.length,
-     'the column is dropped, not left blank — so the two-column examples earned theirs');
+  const seen = await p.evaluate((id) => {
+    const out = {};
+    for (const t of ['compact', 'comparison', 'visual', 'extended']) {
+      const g = LESSON.slides[1].groups.find((x) => x.id === id);
+      g.type = t; go(1);
+      const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+      const set = pane.querySelector('.mx-wexset'), body = pane.querySelector('.mx-wexbody');
+      out[t] = { type: pane.dataset.mxWextype, set: !!set, body: !!body,
+        examples: [].slice.call(pane.querySelectorAll('[data-mx-example]')).map((x) => x.dataset.mxExample),
+        steps: pane.querySelectorAll('.mx-step').length,
+        answers: pane.querySelectorAll('.mx-wexres').length };
+    }
+    return out; }, GROUPS[0].id);
+  const kinds = Object.keys(seen);
+  ok('CONTROL: changing the declared type changes the composition',
+     seen.compact.set && seen.comparison.set && !seen.visual.set && !seen.extended.set
+     && seen.visual.body && seen.extended.body && kinds.every((t) => seen[t].type === t),
+     kinds.map((t) => `${t} → ${seen[t].set ? 'set of examples' : 'single composition'}`).join(' · '));
+  ok('CONTROL: and does NOT change the example data model — the same examples, steps and answers survive',
+     kinds.every((t) => seen[t].steps === seen.compact.steps && seen[t].answers === seen.compact.answers)
+     && kinds.every((t) => seen[t].examples.join(',') === seen.compact.examples.join(',')),
+     `${seen.compact.examples.join(', ')} — ${seen.compact.steps} steps and ${seen.compact.answers} answers under every type`);
   await p.close();
+}
+{
+  // A column that cannot be read is not a column: the set stacks rather than becoming slivers.
+  const rows = [];
+  for (const [w, h] of [[1536, 1024], [1194, 834], [834, 1112], [414, 896]]) {
+    const p = await open({ w, h, slide: WEX });
+    rows.push(await p.evaluate(() => {
+      const set = document.querySelector('.mx-wexset');
+      const cells = [].slice.call(set.querySelectorAll('.mx-wexcell'));
+      const cs = getComputedStyle(set).gridTemplateColumns.split(' ').filter(Boolean);
+      return { cols: cs.length, w: Math.round(cells[0].getBoundingClientRect().width),
+        stacked: Math.abs(cells[0].getBoundingClientRect().top - cells[1].getBoundingClientRect().top) > 20 }; }));
+    await p.close();
+  }
+  ok('a compact group stacks when its columns can no longer be a readable measure',
+     rows.every((r) => r.cols === 1 ? r.stacked : (!r.stacked && r.w >= 380)),
+     rows.map((r, k) => `${[1536, 1194, 834, 414][k]}px: ${r.cols} column${r.cols > 1 ? 's' : ''} of ${r.w}px`).join(' · '));
 }
 {
   const p = await open({ slide: WEX });
@@ -374,67 +427,73 @@ mark('examples');
      'no text inputs, no response-store pads, no answer cells');
   ok('it is a page in its own right, not a card inside another page',
      await p.evaluate(() => !document.querySelector('.mx-work') && !!document.querySelector('.mx-wex')),
-     'no workspace slot; the page owns its own two-column body');
+     'no workspace slot; the page owns its own compositions');
+  ok('a step may still carry its own visual, and an unknown type falls back rather than failing',
+     await p.evaluate(() => { const g = LESSON.slides[1].groups[0];
+       g.type = 'nosuchtype';
+       g.examples[0].steps[0].visual = { kind: 'points', items: [{ term: '(1, 1)' }] };
+       go(1);
+       const pane = document.querySelector(`[data-mx-panel="${g.id}"]`);
+       const sv = pane.querySelector('.mx-step[data-mx-stepvis] .mx-stepvis .mx-part');
+       return pane.dataset.mxWextype === 'extended' && !!sv && sv.getBoundingClientRect().height > 12; }),
+     'an unrecognised type renders as extended; the step visual is unaffected');
   await p.close();
 }
-{
-  const alt = JSON.parse(JSON.stringify(FIX));
-  alt.slides[WEX].examples = alt.slides[WEX].examples.slice(0, 2).concat([
-    { id: 'ex-extra', label: 'Extra practice', question: 'One more.', steps: [{ id: 's1', text: 'Only step.' }] },
-    { id: 'ex-more', label: 'Challenge', question: 'And another.', steps: [{ id: 's1', text: 'Only step.' }] }]);
-  const p = await open({ slide: WEX, lesson: alt });
-  const t = await tabs(p);
-  ok('CONTROL: "Example 1/2/3" is not a three-tab design — four authored examples give four tabs',
-     t.length === 4 && t[2].label === 'Extra practice' && t[3].id === 'ex-more',
-     t.map((x) => x.label).join(' · '));
-  await p.close();
-}
+
 // ══ the flat output ══════════════════════════════════════════════════════════════════════════════
 mark('flat');
 {
   const p = await open();
   const flat = await p.evaluate(() => { openWorksheet(); const h = document.querySelector('#wsSheet');
     return { text: h.textContent.replace(/\s+/g, ' '),
-      exHeads: [].slice.call(h.querySelectorAll('h3.ws-mx-reph')).map((x) => x.textContent.trim()),
-      wexHeads: [].slice.call(h.querySelectorAll('.ws-mx-exh')).map((x) => x.textContent.trim()),
+      notesEx: [].slice.call(h.querySelectorAll('.ws-mx-rep > h3.ws-mx-reph')).map((x) => x.textContent.trim()),
+      groups: [].slice.call(h.querySelectorAll('.ws-mx-grp')).map((g) => ({
+        type: g.dataset.wsWextype,
+        examples: [].slice.call(g.querySelectorAll('.ws-mx-exh')).map((x) => x.textContent.trim()),
+        steps: g.querySelectorAll('.ws-mx-steps > li').length,
+        answers: g.querySelectorAll('.ws-mx-res').length })),
       concepts: h.querySelectorAll('.ws-mx-concepts li').length,
-      steps: h.querySelectorAll('.ws-mx-steps > li').length,   /* > li: a step's own coordinate list is not a step */
       figs: h.querySelectorAll('.ws-mx-fig').length,
-      tables: h.querySelectorAll('.ws-mx-rep table').length,
+      tables: h.querySelectorAll('.ws-mx-rep table, .ws-mx-part table').length,
       points: h.querySelectorAll('.ws-mx-part .mx-points').length,
       relations: h.querySelectorAll('.ws-mx-part .mx-relations').length }; });
-  const nLabels = NEX.map((e) => e.label.replace(/[_^]/g, ''));
-  ok('EVERY authored example is in the flat output, not whichever tab happened to be open',
-     flat.exHeads.length === NEX.length && flat.wexHeads.length === WEXS.length,
-     `${flat.exHeads.length} Notes examples · ${flat.wexHeads.length} worked examples`);
+  ok('every authored group reaches the flat page, whatever composition it uses on screen',
+     flat.groups.length === GROUPS.length && flat.groups.every((g, k) => g.type === GROUPS[k].type),
+     flat.groups.map((g) => `${g.type} (${g.examples.length} examples)`).join(' · '));
+  ok('and every example inside every group arrives whole — a tab is not a filter on what a lesson contains',
+     flat.groups.every((g, k) => g.examples.length === GROUPS[k].examples.length
+       && g.steps === GROUPS[k].examples.reduce((n, e) => n + e.steps.length, 0)
+       && g.answers === GROUPS[k].examples.filter((e) => e.answer || e.result).length),
+     flat.groups.map((g, k) => `${GROUPS[k].id}: ${g.steps} steps, ${g.answers} answers`).join(' · '));
+  ok('every Notes example is there too',
+     flat.notesEx.length === NEX.length, `${flat.notesEx.length} of ${NEX.length}`);
   /* Counted from the JSON, not written down here: every part the lesson authors anywhere — in a Notes
-     example, in a worked example's companion, or on a single step — has to reach the page. */
+     example, in a group's closing relationship, in a worked example's companion, or on a single step. */
   const want = { figure: 0, table: 0, points: 0, relations: 0, prose: 0 };
   const tally = (v) => mxPartKinds(v).forEach((k) => { want[k] = (want[k] || 0) + 1; });
   NEX.forEach((e) => tally(e.parts));
-  WEXS.forEach((e) => { tally(e.visual); e.steps.forEach((st) => tally(st.visual)); });
-  ok('and each one arrives whole — every part the lesson authors anywhere reaches the flat page',
+  GROUPS.forEach((g) => { tally(g.relations || g.visual);
+    g.examples.forEach((e) => { tally(e.visual); e.steps.forEach((st) => tally(st.visual)); }); });
+  ok('every part the lesson authors anywhere reaches the flat page',
      flat.figs === want.figure && flat.tables === want.table
      && flat.points === want.points && flat.relations === want.relations,
      `authored ${want.figure} drawings / ${want.table} table / ${want.points} coordinate lists / ${want.relations} relationships — `
      + `printed ${flat.figs} / ${flat.tables} / ${flat.points} / ${flat.relations}`);
-  ok('every worked example brings its whole solution',
-     flat.steps === WEXS.reduce((n, e) => n + e.steps.length, 0),
-     `${flat.steps} solution steps in total`);
   ok('and the concepts and the Key Idea travel with them',
      flat.concepts === FIX.slides[NOTES].concepts.length && /Key idea/i.test(flat.text),
      `${flat.concepts} concepts, Key Idea present`);
-  const hidden = nLabels.slice(1).concat(WEXS.slice(1).map((e) => e.label));
+  const hidden = NEX.slice(1).map((e) => e.label.replace(/[_^]/g, ''))
+    .concat(GROUPS.slice(1).map((g) => g.title.replace(/[_^]/g, '')));
   ok('CONTROL: printing only the open tab would have dropped most of the page',
      hidden.every((l) => flat.text.indexOf(l) >= 0),
      `${hidden.length} sections were behind a tab and all are present`);
-  ok('CONTROL: the flat output is built from the JSON, so a re-labelled example travels into print too',
-     await p.evaluate(() => { LESSON.slides[0].examples[1].label = 'The shifted parabola';
-       openWorksheet(); return /The shifted parabola/.test(document.querySelector('#wsSheet').textContent); }),
-     'renaming an example reaches the worksheet with no renderer change');
+  ok('CONTROL: the flat output is built from the JSON, so a re-titled group travels into print too',
+     await p.evaluate(() => { LESSON.slides[1].groups[0].title = 'Putting values in';
+       openWorksheet(); return /Putting values in/.test(document.querySelector('#wsSheet').textContent); }),
+     'renaming a group reaches the worksheet with no renderer change');
   await p.close();
 }
-const SECTIONS = ['composition', 'viability', 'examples', 'flat'];
+const SECTIONS = ['composition', 'viability', 'surface', 'examples', 'flat'];
 ok('every section ran', SECTIONS.every((s) => sections.has(s)), `${sections.size} sections`);
 ok('no page error while rendering or switching', pageErrs.length === 0, pageErrs.slice(0, 2).join(' | ') || 'none');
 await browser.close(); server.close();
