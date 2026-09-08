@@ -372,18 +372,64 @@ example authors no visual.
 
 **`compact` IS AT MOST TWO COLUMNS.** Example count is not column count — three narrow columns stop being
 worked examples and start being a question sheet. The contract is: 1 → one constrained teaching column
-(not the full width) · 2 → two columns · 3 → **2 + 1** · 4 → 2 × 2 · beyond 4 the author splits the
-material into another group rather than the page inventing a tinier grid.
+(not the full width) · 2 → two columns · 3 → **2 + 1, the third CENTRED below at the same measure** (not
+stretched across both, and not stranded in the lower-left looking like a fourth failed to render) ·
+4 → 2 × 2 · beyond 4 the author splits the material into another group.
 
-**THE FIGURE SLOT BELONGS TO THE COMPOSITION.** There is no one "worked-example figure size": a shared
-comparison plane and a companion beside a column are different jobs.
+**EVERY EXAMPLE STANDS ALONE.** A compact example may not depend on having read its neighbour first — no
+"use the same rule…"; each states its own question.
+
+### ONE ANATOMY, EVERY COMPOSITION
+
+A worked example is the same four things whether it sits in a compact pair or a full-page derivation:
+**QUESTION** (the authentic prompt) · **WORKED SOLUTION** (the steps) · **ANSWER** · optionally **VISUAL
+EXPLANATION / CONNECTION**. Told apart by quiet typography and space, never another layer of coloured
+cards. A group holding ONE example suppresses that example's own name — the tab already titles it, and
+printing "Find x when y = 16" above "Find the value(s) of x for which y = 16" is duplicated prompt
+hierarchy. The optional fourth section is named ONCE: by the group's `footLabel`, else by the parts'
+authored labels — never a heading above a heading.
+
+**Fractions are fractions, not slashes.** `mxM` sets `3/2` built-up, and `(3/2)^2` inside brackets that
+grow to its height. Digits only, three a side, so ordinary prose and a year range are never touched.
+
+### THE PAGE NEVER RESHAPES THE MATHEMATICS
+
+This is the boundary the whole figure system hangs on: **the Figure Engine determines mathematical
+geometry; the page composition determines where that geometry can live.** A composition may resize AROUND
+a coordinate plane; a plane may never deform to satisfy a composition.
+
+- **Scale policy.** A Mathematics Cartesian plot defaults to an equal-unit scale (`mxFigPolicy` forces
+  `aspect:'equal'`). `scaleMode:"authored"` opts a figure out and keeps whatever `aspect` it states, so a
+  deliberately unequal chart stays possible later. The policy is the PAGE FAMILY's — legacy themes never
+  pass through it, so their renders stay byte-identical.
+- **The slot takes its shape from the plane**, not the reverse: `mxFigRatio` derives the slot's aspect from
+  the authored domain (clamped to 0.62–2.0 so a degenerate domain cannot make an absurd box) and publishes
+  it as `--mx-plot-ar`. Re-author the mathematics and the slot re-shapes; nothing else does.
+- **A portrait plane is stacked, never squeezed.** A demonstration reaching *y* = 16 over *x* = ±6 simply
+  IS tall; set beside the reasoning it towers over it. The composition puts it beneath and the page gets
+  longer. **"Fits this viewport" is not a quality measure** — a 1.5-screen worked example is fine, a
+  distorted plane is not. Nothing in the page family may cap a plane's height.
+- **Measure the rendered transform, not the container.** A container and a viewBox can agree while the
+  plane inside them is distorted. The gate reads px-per-unit per axis off the painted svg (engine units ×
+  that axis's paint scale) and its control opts a plane out and shows the ratio go to ~2.1.
+
+**GRAPH VIABILITY IS TWO SEPARATE TESTS.** *Scale integrity* — the authored x:y relationship survives.
+*Pedagogical legibility* — `MX_PLOT_MIN_W` / `MX_PLOT_MIN_H` / `MX_PLOT_W`, one owner, published as scoped
+custom properties: a plane can be perfectly undistorted and still be too small to read. Fail either and the
+composition stacks and gives the plane the width. Same lesson as the workbook: a region existing is not a
+region being usable.
+
+**THE FIGURE SLOT BELONGS TO THE COMPOSITION.** Where the plane sits and how wide it may be — never what
+shape it is forced into.
 
 | composition | slot |
 | --- | --- |
-| `compact` | none reserved; a visual only where explicitly authored inline at a step |
-| `visual` | substantial companion beside the reasoning; a LANDSCAPE demonstration area when stacked |
-| `comparison` | one wide, shallow plane spanning the cases it belongs to |
-| `extended` | inline at the step that earns it |
+| `compact` | 1–4 short examples of one question type; no reserved region, a visual only where authored inline at a step |
+| `visual` | one example whose representation matters; companion beside the reasoning, or beneath it at the plane's own proportions when the plane is portrait |
+| `comparison` | 2–4 cases compared; a shared plane may follow them, centred, at its authored proportions |
+| `extended` | one derivation at reading measure, centred; visuals BREAK OUT wider at the step that earns them, then the reading flow resumes |
+
+None of those names says anything about graph dimensions, and that is deliberate.
 
 The Figure Engine stays shared infrastructure. Because the view preserves equal mathematical scale, a
 wider, shallower slot EXPOSES MORE RANGE rather than distorting the plane — provided the slot declares

@@ -65,36 +65,56 @@ const shotWhole = async (p, name, w) => {
 const EX = FIX.slides[NOTES].examples.map((e) => e.id);
 const GX = FIX.slides[WEX].groups.map((g) => g.id);
 const CX = CMP.slides[0].groups.map((g) => g.id);
-const pick = async (p, tab) => { await p.click(`[data-mx-tab="${tab}"]`); await p.waitForTimeout(700); };
+const pick = async (p, tab) => { await p.click(`[data-mx-tab="${tab}"]`); await p.waitForTimeout(750); };
+/* THE RENDERED TRANSFORM, per axis: engine units per math unit times the paint scale of that axis. */
+const scales = (p) => p.evaluate(() => {
+  const out = [];
+  document.querySelectorAll('.mx-part[data-mx-part="figure"] .tp-fig').forEach((fig) => {
+    const svg = fig.querySelector('.tp-fig-svg');
+    if (!svg || !fig.offsetWidth) return;
+    const vb = svg.getAttribute('viewBox').split(/\s+/).map(Number), r = svg.getBoundingClientRect();
+    const kx = r.width / vb[2], ky = r.height / vb[3];
+    const labs = [].slice.call(svg.querySelectorAll('.tp-fig-ticklabel'));
+    const val = (t) => parseFloat(t.textContent.replace('\u2212', '-'));
+    const grab = (anchor, attr) => labs.filter((t) => t.getAttribute('text-anchor') === anchor)
+      .map((t) => ({ v: val(t), px: +t.getAttribute(attr) })).filter((o) => isFinite(o.v));
+    const per = (a) => { if (a.length < 2) return null; a.sort((m, n) => m.v - n.v);
+      const d = a[a.length - 1].v - a[0].v; return d ? Math.abs((a[a.length - 1].px - a[0].px) / d) : null; };
+    const ux = per(grab('middle', 'x')), uy = per(grab('end', 'y'));
+    if (ux == null || uy == null) return;
+    out.push({ x: +(ux * kx).toFixed(2), y: +(uy * ky).toFixed(2), ratio: +((ux * kx) / (uy * ky)).toFixed(3),
+      plot: Math.round(r.width) + '×' + Math.round(r.height) });
+  });
+  return out; });
+const report = async (p, name) => { const sc = await scales(p);
+  sc.forEach((o) => console.log(`      ${name}: authored 1:1 → rendered ${o.ratio}:1 `
+    + `(x ${o.x}px/unit, y ${o.y}px/unit) in a ${o.plot} plot`
+    + (Math.abs(o.ratio - 1) <= 0.05 ? '  ✓' : '  ✗ DISTORTED'))); };
 
-// 1 — Notes desktop, Graph and key points, after the redundancy audit.
-{ const p = await open(1536, 1024, NOTES); await shot(p, '1-notes-desktop-graph-and-key-points'); await p.close(); }
-// 2 — compact, the two shipping substitutions.
-{ const p = await open(1536, 1024, WEX); await shot(p, '2-worked-compact-two-examples'); await p.close(); }
-// 3 — compact with THREE examples: 2 + 1, from the non-shipping proof fixture.
+// 1 · 2 — Notes.
+{ const p = await open(1536, 1024, NOTES); await shotWhole(p, '1-notes-desktop', 1536); await report(p, '1'); await p.close(); }
+{ const p = await open(834, 1112, NOTES); await shotWhole(p, '2-notes-tablet', 834); await report(p, '2'); await p.close(); }
+// 3 · 4 — compact: the anatomy, then the 2 + 1 contract.
+{ const p = await open(1536, 1024, WEX); await shotWhole(p, '3-compact-two-examples-question-solution-answer', 1536); await p.close(); }
 { const p = await open(1536, 1024, 0, CMP); await pick(p, CX[0]);
-  await shotWhole(p, '3-worked-compact-three-examples-2plus1', 1536); await p.close(); }
-// 4 — visual, with the authored y = 16 reference line actually drawn.
+  await shotWhole(p, '4-compact-three-examples-centred-2plus1', 1536); await p.close(); }
+// 5 · 6 — visual: natural graph geometry, then the tablet where it stacks and the page grows.
 { const p = await open(1536, 1024, WEX); await pick(p, GX[1]);
-  await shot(p, '4-worked-visual-solving-for-x-with-reference-line'); await p.close(); }
-// 5 — comparison, with the wide shared plane beneath the two cases.
-{ const p = await open(1536, 1024, WEX); await pick(p, GX[2]);
-  await shotWhole(p, '5-worked-comparison-symmetry-wide-plane', 1536); await p.close(); }
-// 6 — extended, the derivation proof.
-{ const p = await open(1536, 1024, 0, CMP); await pick(p, CX[1]);
-  await shotWhole(p, '6-worked-extended-derivation', 1536); await p.close(); }
-// 7 — visual on a portrait tablet: a landscape demonstration area, not a graph that swallows the page.
+  await shotWhole(p, '5-visual-solving-for-x-desktop', 1536); await report(p, '5'); await p.close(); }
 { const p = await open(834, 1112, WEX); await pick(p, GX[1]);
-  await shotWhole(p, '7-worked-visual-portrait-tablet', 834); await p.close(); }
-// 8 — comparison on a phone.
+  await shotWhole(p, '6-visual-solving-for-x-tablet-scrolls', 834); await report(p, '6'); await p.close(); }
+// 7 · 8 — comparison: the natural shared plane, and the phone.
+{ const p = await open(1536, 1024, WEX); await pick(p, GX[2]);
+  await shotWhole(p, '7-comparison-symmetry-desktop', 1536); await report(p, '7'); await p.close(); }
 { const p = await open(414, 896, WEX); await pick(p, GX[2]);
-  await shotWhole(p, '8-worked-comparison-phone', 414); await p.close(); }
-// 9 — extended, narrow.
+  await shotWhole(p, '8-comparison-symmetry-phone', 414); await report(p, '8'); await p.close(); }
+// 9 · 10 — extended: reading flow → visual breakout → reading flow.
+{ const p = await open(1536, 1024, 0, CMP); await pick(p, CX[1]);
+  await shotWhole(p, '9-extended-derivation-desktop', 1536); await report(p, '9'); await p.close(); }
 { const p = await open(414, 896, 0, CMP); await pick(p, CX[1]);
-  await shotWhole(p, '9-worked-extended-narrow', 414); await p.close(); }
+  await shotWhole(p, '10-extended-derivation-narrow', 414); await report(p, '10'); await p.close(); }
 // Supplementary regression evidence, not part of the approval set.
 {
-  const a = await open(834, 1112, NOTES); await shotWhole(a, '10-supplementary-notes-tablet-stacked', 834); await a.close();
   const p = await open(1180, 1024, NOTES);
   await p.evaluate(() => openWorksheet());
   await p.waitForTimeout(700);
@@ -102,13 +122,6 @@ const pick = async (p, tab) => { await p.click(`[data-mx-tab="${tab}"]`); await 
   await p.setViewportSize({ width: 1180, height: h });
   await p.waitForTimeout(500);
   await shot(p, '11-supplementary-flat-worksheet-everything', '#wsSheet');
-  const n = await p.evaluate(() => { const s = document.querySelector('#wsSheet');
-    return { notes: s.querySelectorAll('.ws-mx-rep > h3.ws-mx-reph').length,
-      groups: s.querySelectorAll('.ws-mx-grp').length,
-      ex: s.querySelectorAll('.ws-mx-exh').length,
-      steps: s.querySelectorAll('.ws-mx-steps > li').length }; });
-  console.log(`   (11: ${n.notes} Notes examples, ${n.groups} worked-example groups holding ${n.ex} examples, `
-    + `${n.steps} solution steps — all of them, none left behind a tab)`);
   await p.close();
 }
 await browser.close(); server.close();

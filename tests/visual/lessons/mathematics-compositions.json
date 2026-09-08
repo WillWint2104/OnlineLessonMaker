@@ -18,12 +18,12 @@
           "id": "g-compact3",
           "type": "compact",
           "title": "Compact — three examples",
-          "lede": "Three short complete examples. The contract is 2 + 1, never three narrow columns.",
+          "lede": "Compare squaring a whole number, a negative and a decimal.",
           "examples": [
             {
               "id": "c1",
               "label": "Square a whole number",
-              "prompt": "Find _y_ when _x_ = 5.",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = 5.",
               "steps": [
                 {
                   "id": "s1",
@@ -41,7 +41,7 @@
             {
               "id": "c2",
               "label": "Square a negative",
-              "prompt": "Find _y_ when _x_ = −5.",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = −5.",
               "steps": [
                 {
                   "id": "s1",
@@ -51,7 +51,7 @@
                 {
                   "id": "s2",
                   "text": "Evaluate. The sign is removed by squaring.",
-                  "math": "_y_ = 25"
+                  "math": "_y_ = (−5)(−5) = 25"
                 }
               ],
               "answer": "_y_ = 25"
@@ -59,7 +59,7 @@
             {
               "id": "c3",
               "label": "Square a decimal",
-              "prompt": "Find _y_ when _x_ = 0.4.",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = 0.4.",
               "steps": [
                 {
                   "id": "s1",

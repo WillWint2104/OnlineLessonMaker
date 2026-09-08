@@ -1699,7 +1699,10 @@ body.respo .main{min-width:0;}
 .mx-page{flex:1 1 auto;min-width:0;min-height:0;overflow:auto;padding:24px 28px 44px;
   display:flex;flex-direction:column;}
 .mx-head{flex:0 0 auto;}
-.mx-page[data-mx-surface="panel"] .mx-split{flex:1 1 auto;grid-auto-rows:minmax(min-content,1fr);}
+/* The two columns hold different things and have no reason to be the same height: stretching the concepts
+   card to match a much taller exploration panel just prints empty card. Each hugs its own content. */
+.mx-page[data-mx-surface="panel"] .mx-split{flex:1 1 auto;grid-auto-rows:minmax(min-content,1fr);
+  align-items:start;}
 /* a stretched grid cell only helps if the panel inside it stretches too */
 .mx-page[data-mx-surface="panel"] .mx-content,.mx-page[data-mx-surface="panel"] .mx-work{display:flex;flex-direction:column;}
 /* :only-child — a region holding ONE panel fills the frame (Notes); a region holding a stack of cards
@@ -1721,7 +1724,10 @@ body.respo .main{min-width:0;}
   letter-spacing:-.012em;color:var(--mx-ink);margin:0;}
 .mx sup{font-size:.62em;line-height:0;vertical-align:.52em;}   /* the exponent is an exponent at 44px too */
 .mx-lede{font-family:var(--mx-serif);font-size:17.5px;line-height:1.45;color:var(--mx-ink-2);margin:8px 0 0;max-width:56ch;}
-.mx-keyidea{flex:0 0 auto;width:min(380px,38%);background:var(--mx-green-tint);border:1px solid #DCEBE2;
+/* The last text-on-green surface in the family, and the surface rule applies to it too: white body, a
+   green leading edge and a green mark. Green identifies the callout; it does not carry its words. */
+.mx-keyidea{flex:0 0 auto;width:min(380px,38%);background:var(--mx-white);border:1px solid var(--mx-line);
+  border-left:3px solid var(--mx-green);
   border-radius:var(--mx-rad);padding:14px 16px;display:flex;gap:11px;}
 .mx-keyidea .mx-kic{flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--mx-green-pale);
   color:var(--mx-green);display:inline-flex;align-items:center;justify-content:center;}
@@ -1883,7 +1889,8 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 /* The figure takes a definite box from its own width rather than stretching to whatever is left, so the
    coordinates and the relationship sit directly beneath it instead of across a gap. Any slack falls at the
    BOTTOM of the panel, where it reads as margin rather than as a hole in the middle of the example. */
-.mx-part[data-mx-part="figure"]{flex:0 0 auto;position:relative;aspect-ratio:4/3;min-height:var(--mx-rep-min-h);}
+.mx-part[data-mx-part="figure"]{flex:0 0 auto;position:relative;aspect-ratio:var(--mx-plot-ar,4/3);
+  min-height:var(--mx-rep-min-h);}
 /* Stacked, the example has the page's width; an aspect box would then be taller than the screen, so the
    figure takes a bounded share of the viewport and the coordinates stay visible with it. */
 .mx[data-mx-fit="stack"] .mx-part[data-mx-part="figure"]{aspect-ratio:auto;height:min(46vh,520px);}
@@ -1899,6 +1906,19 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-parth{font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
   color:var(--mx-ink-3);margin:0 0 6px;}
 .mx-parth-m{text-transform:none;letter-spacing:.03em;font-size:12.5px;}
+/* Built-up fraction. `vertical-align:middle` puts the element's own midpoint — which is the fraction BAR —
+   on the parent's mathematical axis, which is where a fraction bar belongs. (An inline-flex aligns from
+   its first line's baseline instead, which hangs the whole stack below the line of text.) */
+.mx-frac{display:inline-block;vertical-align:middle;text-align:center;
+  margin:0 .14em;line-height:1.15;font-size:.82em;}
+.mx-frac>span{display:block;padding:0 .3em;}
+.mx-frac>span:first-child{border-bottom:1px solid currentColor;padding-bottom:.05em;}
+.mx-frac>span:last-child{padding-top:.05em;}
+.mx-pfrac{display:inline-block;vertical-align:middle;white-space:nowrap;}
+.mx-pfrac::before{content:"(";}
+.mx-pfrac::after{content:")";}
+.mx-pfrac::before,.mx-pfrac::after{display:inline-block;vertical-align:middle;
+  font-size:1.9em;line-height:.9;font-weight:300;opacity:.8;}
 .mx-points{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;
   font-size:14.5px;color:var(--mx-ink-body);}
 .mx-points li{white-space:nowrap;}
@@ -1940,12 +1960,16 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    down the same two columns. A single example takes ONE constrained teaching column, not the full width. */
 .mx-wexset{display:grid;gap:26px 34px;align-items:start;grid-template-columns:repeat(2,minmax(0,1fr));}
 .mx-wexset[data-mx-count="1"]{grid-template-columns:minmax(0,1fr);max-width:74ch;}
-.mx-wexset[data-mx-count="3"]>.mx-wexcell:nth-child(3){grid-column:1 / -1;max-width:calc(50% - 17px);}
-.mx-wexset>.mx-wexcell:nth-child(2n)::before{content:"";position:absolute;left:-17px;top:0;bottom:0;
+/* Three examples are two above and one CENTRED below at the same measure — not stretched across both
+   columns, and not stranded in the lower-left looking like a fourth example failed to render. */
+.mx-wexset[data-mx-count="3"]>.mx-wexcell:nth-child(3){grid-column:1 / -1;
+  width:calc(50% - 17px);margin:0 auto;}
+.mx-wexset>.mx-wexcell:nth-child(2)::before,
+.mx-wexset>.mx-wexcell:nth-child(4)::before{content:"";position:absolute;left:-17px;top:0;bottom:0;
   width:1px;background:var(--mx-line);}
 .mx-wexset>.mx-wexcell:nth-child(n+3){padding-top:26px;border-top:1px solid var(--mx-line);}
 .mx-wexcell{min-width:0;position:relative;}
-.mx-wexcell .mx-wexq h3{font-size:17.5px;}
+
 .mx-wexcellvis{margin-top:14px;}
 .mx-wexcellvis .mx-part[data-mx-part="figure"]{position:relative;min-height:240px;}
 .mx-wexcellvis .mx-figstage{position:relative;inset:auto;min-height:240px;display:flex;flex-direction:column;}
@@ -1956,31 +1980,55 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    EXPOSES MORE RANGE rather than distorting the plane — which is exactly what a comparison wants. */
 .mx-wexfoot{margin-top:22px;padding-top:20px;border-top:1px solid var(--mx-line);
   display:flex;flex-direction:column;gap:16px;}
-/* comparison — the shared plane spans the full comparison it belongs to, wide and shallow, so the mirrored
-   cases and the axis between them are read across the same width the two solutions occupy. */
-.mx-wexpane[data-mx-wextype="comparison"] .mx-wexfoot .mx-part[data-mx-part="figure"]{
-  --fig-fill-min:.22;                                    /* this slot really is wide and shallow */
-  aspect-ratio:auto;height:clamp(240px,30vh,330px);max-width:none;width:100%;min-height:0;flex:0 0 auto;}
-/* every other composition's closing figure is a supporting diagram, not the subject */
-.mx-wexfoot .mx-part[data-mx-part="figure"]{aspect-ratio:auto;height:min(34vh,300px);
-  max-width:560px;min-height:0;flex:0 0 auto;}
-/* visual — a companion beside the reasoning; stacked it becomes a LANDSCAPE demonstration area rather than
-   an almost-square graph that swallows the page. */
-.mx-wexvis .mx-part[data-mx-part="figure"]{aspect-ratio:auto;height:clamp(300px,42vh,420px);min-height:0;}
-/* extended — a visual appears inline at the step that earns it; nothing is reserved. */
+/* A SLOT IS A PLACE FOR A PLANE, NOT A SHAPE IMPOSED ON ONE. Every worked-example slot is a NATURAL box —
+   near 4:3 — so an equal-scale plane sits in it without the view having to reveal an absurd x-range to fill
+   a strip. The earlier `--fig-fill-min:.22` override is gone: it solved letterboxing by giving the
+   composition permission to flatten the mathematics, which is the wrong direction. Height, stacking and
+   scrolling are how a composition adapts; the plane's proportions are not. */
+.mx-wexfoot .mx-part[data-mx-part="figure"]{aspect-ratio:var(--mx-plot-ar,4/3);height:auto;
+  width:min(100%,var(--mx-plot-w));min-height:var(--mx-plot-min-h);flex:0 0 auto;margin:0 auto;}
+.mx-wexvis .mx-part[data-mx-part="figure"]{aspect-ratio:var(--mx-plot-ar,4/3);height:auto;min-height:var(--mx-plot-min-h);}
+.mx-wexcellvis .mx-part[data-mx-part="figure"]{aspect-ratio:var(--mx-plot-ar,4/3);height:auto;min-height:var(--mx-plot-min-h);}
+/* extended — the figure BREAKS OUT of the reading measure at the step that earns it, then the reading
+   flow resumes. Wider than the prose, never wider than a plane wants to be. */
+.mx-wexpane[data-mx-wextype="extended"] .mx-stepvis{margin-left:-6px;}
 .mx-wexpane[data-mx-wextype="extended"] .mx-stepvis .mx-part[data-mx-part="figure"]{
-  aspect-ratio:auto;height:clamp(200px,26vh,280px);max-width:520px;min-height:0;}
-.mx-wexbody{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:30px;align-items:start;}
+  aspect-ratio:var(--mx-plot-ar,4/3);height:auto;width:min(100%,var(--mx-plot-w));min-height:var(--mx-plot-min-h);margin:0 auto;}
+/* The companion column must be able to hold a LEGIBLE plane, not merely exist. `min(...)` on the second
+   track would shrink it; the grid is only declared two-column while the second track can still clear the
+   legibility floor, and below that the composition stacks and the plane takes the full width. */
+.mx-wexbody{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(var(--mx-plot-min-w),1fr);
+  gap:30px;align-items:start;}
+/* the plane is taller than it is wide: it goes beneath the reasoning, centred, at its own proportions */
+.mx-wexbody.mx-wexstack{grid-template-columns:minmax(0,1fr);gap:26px;}
+.mx-wexbody.mx-wexstack .mx-wexsol{max-width:78ch;}
+.mx-wexbody.mx-wexstack .mx-wexvis{position:relative;top:auto;}
+.mx-wexbody.mx-wexstack .mx-wexvis .mx-part[data-mx-part="figure"]{
+  width:min(100%,var(--mx-plot-w));margin:0 auto;}
+@media (max-width:1180px){
+  .mx-wexbody{grid-template-columns:minmax(0,1fr);}
+  .mx-wexvis{position:relative;top:auto;}
+  .mx-wexvis .mx-part[data-mx-part="figure"]{width:min(100%,var(--mx-plot-w));margin:0 auto;}
+}
 /* No companion authored: the working takes a reading measure and sits in the page rather than becoming a
    narrow column stranded in a full-screen void. */
-.mx-wexbody.mx-wexsolo{grid-template-columns:minmax(0,1fr);max-width:78ch;}
+/* READING FLOW → VISUAL BREAKOUT → READING FLOW. The derivation is a single centred column at reading
+   measure; the figure at the step that earns it breaks out wider, then the prose resumes. Left-aligned in
+   a full-width surface it read as content dropped into the wrong-sized page. */
+.mx-wexbody.mx-wexsolo{grid-template-columns:minmax(0,1fr);max-width:78ch;margin:0 auto;}
+.mx-wexpane[data-mx-wextype="extended"] .mx-wexfoot,
+.mx-wexpane[data-mx-wextype="extended"] .mx-wexlede{max-width:78ch;margin-left:auto;margin-right:auto;}
 .mx-wexvis .mx-part[data-mx-part="figure"]{position:relative;min-height:300px;}
 .mx-wexvis .mx-part[data-mx-part="figure"] .mx-figstage{position:absolute;inset:0;}
 .mx-stepvis{margin-top:10px;padding:10px 0 2px;border-top:1px dashed var(--mx-line);}
 .mx-stepvis .mx-part[data-mx-part="figure"]{position:relative;min-height:220px;}
-.mx-wexq{margin:0 0 18px;}
-.mx-wexq h3{font-family:var(--mx-serif);font-size:20px;font-weight:600;color:var(--mx-ink);margin:0 0 7px;}
+.mx-wexh{font-family:var(--mx-serif);font-size:20px;font-weight:600;color:var(--mx-ink);margin:0 0 16px;}
+.mx-wexcell .mx-wexh{font-size:17.5px;}
+.mx-wexsec{margin:0 0 18px;}
+.mx-wexlab{font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--mx-ink-3);margin:0 0 7px;}
 .mx-wexqb{font-size:16px;line-height:1.62;color:var(--mx-ink-body);}
+.mx-wexfoot .mx-wexlab{margin-bottom:12px;}
 .mx-steps{list-style:none;margin:0;padding:0;counter-reset:mxstep;}
 .mx-step{position:relative;padding:0 0 16px 34px;counter-increment:mxstep;}
 .mx-step::before{content:counter(mxstep);position:absolute;left:0;top:1px;width:23px;height:23px;border-radius:50%;
@@ -2008,20 +2056,17 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-repprose{padding:16px 18px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);}
 /* A COLUMN THAT CANNOT BE READ IS NOT A COLUMN. Below the measure where two complete examples still read
    as examples, the set stacks — one under the other, each whole — rather than becoming two slivers. */
-@media (max-width:900px){ .mx-wexbody{grid-template-columns:minmax(0,1fr);} .mx-wexvis{position:relative;top:auto;} }
+
 @media (max-width:1000px){
   .mx-wexset,.mx-wexset[data-mx-count="1"]{grid-template-columns:minmax(0,1fr);gap:0;max-width:none;}
-  .mx-wexset[data-mx-count="3"]>.mx-wexcell:nth-child(3){max-width:none;}
+  .mx-wexset[data-mx-count="3"]>.mx-wexcell:nth-child(3){width:auto;margin:0;}
   .mx-wexset>.mx-wexcell:nth-child(2n)::before{display:none;}
   .mx-wexset>.mx-wexcell+.mx-wexcell{margin-top:26px;padding-top:26px;border-top:1px solid var(--mx-line);}
-  /* stacked, the companion is a LANDSCAPE demonstration area — wide and shallow, so it shows the
-     mathematics without becoming the page. */
-  .mx-wexvis .mx-part[data-mx-part="figure"]{height:clamp(220px,30vh,300px);}
-  .mx-wexpane[data-mx-wextype="comparison"] .mx-wexfoot .mx-part[data-mx-part="figure"]{
-    height:clamp(200px,26vh,280px);}
+  /* NOTHING HERE CAPS A PLANE'S HEIGHT. Rules that clamped the stacked companion to a "landscape
+     demonstration area" used to live at this breakpoint; they were the composition reshaping the
+     mathematics, and they defeated the plane's own aspect. A narrow screen makes the page LONGER. */
 }
-@media (max-width:640px){ .mx-wexsurface{padding:18px 16px 20px;}
-  .mx-wexvis .mx-part[data-mx-part="figure"]{height:clamp(190px,26vh,240px);} }
+@media (max-width:640px){ .mx-wexsurface{padding:18px 16px 20px;} }
 /* ON A HANDSET the ribbon stacks into a long column, and capping the BAR scrolls Insert and Cancel away
    with it. Cap the RIBBON instead: the field, its symbols and its actions then stay within one screen,
    and the student is not scrolling past sixty buttons to finish an equation. */
@@ -7207,8 +7252,18 @@ function tpLayoutMode(s){
 /* The plain-text reading of the same notation, for places that take TEXT rather than markup — a slide-
    reference chip, an aria-label. Without it "_y_ = _x_^2" reaches the reader with its markers intact. */
 function mxPlain(v){ return String(v==null?'':v).replace(/_([A-Za-z])_/g,'$1').replace(/\^([0-9n])/g,'$1'); }
+/* A FRACTION IS A FRACTION, NOT A SLASH. `3/2` set inline reads as a division to type, but in courseware
+   it is a value, and `(3/2)^2` in particular is only clear when the whole fraction is visibly inside the
+   brackets. Digits only — deliberately narrow, so ordinary prose ("and/or", a date) is never touched — and
+   the parenthesised form first, so its brackets can grow to the built-up height. Three digits a side keeps
+   a year range ("1914/1918") out of it. */
 function mxM(v){
   return esc(v==null?'':String(v))
+    .replace(/\((\d+)\/(\d+)\)/g,'<span class="mx-pfrac">$&</span>')
+    .replace(/<span class="mx-pfrac">\((\d+)\/(\d+)\)<\/span>/g,
+      '<span class="mx-pfrac"><span class="mx-frac"><span>$1</span><span>$2</span></span></span>')
+    .replace(/(^|[\s(=+\u2212-])(\d{1,3}(?:\^\d)?)\/(\d{1,3}(?:\^\d)?)(?![\d\/])/g,
+      '$1<span class="mx-frac"><span>$2</span><span>$3</span></span>')
     .replace(/_([A-Za-z])_/g,'<i>$1</i>')
     .replace(/\^([0-9n])/g,'<sup>$1</sup>');
 }
@@ -7337,6 +7392,14 @@ const MX_Q_MIN=440, MX_WB_MIN_W=420, MX_WB_MIN_H=340, MX_SPLIT_GUTTER=20;
    stacks instead, concepts above and the example below, at full width. */
 const MX_REP_MIN_W=380, MX_REP_MIN_H=330;
 const MX_WB_CHROME=96;                              /* the workbook's own toolbar + page tabs */
+/* GRAPH VIABILITY IS TWO SEPARATE TESTS, and passing one is not passing the other.
+   SCALE INTEGRITY — the authored x:y relationship survives (mxFigPolicy, above). A plane can be perfectly
+   undistorted and still be useless.
+   PEDAGOGICAL LEGIBILITY — the plotted region is big enough to read: ticks legible, labelled points far
+   enough apart to tell apart. Below this a plane is a picture of a graph, not a graph, and the composition
+   must give it the whole width beneath the solution instead of a column beside it. Same lesson as the
+   workbook: A REGION EXISTING IS NOT A REGION BEING USABLE. One owner; the CSS reads these, never a copy. */
+const MX_PLOT_MIN_W=340, MX_PLOT_MIN_H=255, MX_PLOT_W=560;
 let MX_FIT=null;                                    /* 'split' | 'solo' — resolved, never assumed */
 function mxSplitFits(root){
   const main=root&&root.querySelector('.mx-main'), page=root&&root.querySelector('.mx-page');
@@ -7647,6 +7710,36 @@ function mxPartRelations(c){
   const items=(Array.isArray(c.items)?c.items:[]).map(it=>`<li>${mxM(it&&it.body!=null?it.body:it)}</li>`).join('');
   return items?`<ul class="mx-relations">${items}</ul>`:'';
 }
+/* THE PAGE NEVER RESHAPES THE MATHEMATICS. A coordinate plane has an authored scale relationship between
+   its axes — normally 1:1 — and responsive layout may reveal more domain, grow taller, stack or scroll,
+   but it may never stretch one axis independently of the other. Measured before this rule existed, the
+   same symmetry plane rendered at 4.65:1 on a desktop and 1.95:1 on a phone: one x-unit was 85px wide and
+   18px tall, so the parabola was a different curve on every screen.
+   The POLICY is the page family's, not the engine's: `scaleMode:"authored"` opts a figure out and keeps
+   whatever `aspect` it states, which is how a deliberately unequal chart stays possible. Legacy themes are
+   untouched — they never come through here, so their renders stay byte-identical. */
+function mxFigPolicy(fig){
+  if(!fig||typeof fig!=='object'||fig.figure!=='graph') return fig;
+  if(String(fig.scaleMode||'')==='authored') return fig;
+  if(fig.aspect==='equal') return fig;
+  const out=Object.assign({},fig); out.aspect='equal'; return out;
+}
+/* THE COMPOSITION RESIZES AROUND THE PLANE, NOT THE OTHER WAY ROUND. Under an equal scale the authored
+   domain fixes the plane's proportions: a symmetry demonstration reaching y = 9 over x = ±4 simply IS a
+   tallish frame, and forcing it into a 4:3 slot makes the engine reveal x out to ±12 to compensate — the
+   mathematics stays honest and the picture becomes useless. So the slot takes its aspect from the domain.
+   Clamped, because a degenerate authored domain must not be able to produce an absurd box. */
+function mxFigRatio(fig){
+  const f=mxFigPolicy(fig);
+  if(!f||f.figure!=='graph'||f.aspect!=='equal') return 0;
+  const d=f.domain; if(!d) return 0;
+  const w=+d.xMax-+d.xMin, h=+d.yMax-+d.yMin;
+  return (w>0&&h>0)?Math.max(0.62,Math.min(2.0,w/h)):0;
+}
+function mxFigAspect(fig){
+  const r=mxFigRatio(fig);
+  return r?('--mx-plot-ar:'+r.toFixed(3)):'';   /* the CSS rules read this; no inline aspect-ratio to fight */
+}
 function mxPart(part,key){
   const kind=String((part&&part.kind)||'');
   /* UPPERCASING CORRUPTS MATHEMATICS — `y = x^2` is not `Y = X^2`. A label that carries notation keeps its
@@ -7655,7 +7748,7 @@ function mxPart(part,key){
   const head=lab?`<h4 class="mx-parth${/<(i|sup|sub)[ >]/.test(lab)?' mx-parth-m':''}">${lab}</h4>`:'';
   let body='';
   if(kind==='figure'&&part.figure&&typeof part.figure==='object')
-    body=`<div class="mx-figstage"><div class="mx-figskin tp-slide">${fragFigure(part.figure,'mxpart-'+esc(String(key)))}</div></div>`;
+    body=`<div class="mx-figstage"><div class="mx-figskin tp-slide">${fragFigure(mxFigPolicy(part.figure),'mxpart-'+esc(String(key)))}</div></div>`;
   /* A FIGURE PART IS A VIEWPORT ONTO THE PLANE. The engine reads its container's height only inside
      [data-fig-viewport]; everywhere else it paints at a fixed aspect, which a wide, shallow composition
      slot then letterboxes — the drawing shrinks into the middle instead of using the width. Declaring it
@@ -7665,7 +7758,8 @@ function mxPart(part,key){
   else if(kind==='relations') body=mxPartRelations(part);
   else if(kind==='prose') body=`<div class="mx-repprose">${mxM(part.body||'')}</div>`;
   else body=`<div class="mx-ph">Unknown part <code>${esc(kind||'(none)')}</code>.</div>`;
-  return `<div class="mx-part" data-mx-part="${esc(kind||'none')}"${kind==='figure'?' data-fig-viewport':''}>${head}${body}</div>`;
+  const shape=(kind==='figure'&&part.figure)?mxFigAspect(part.figure):'';
+  return `<div class="mx-part" data-mx-part="${esc(kind||'none')}"${kind==='figure'?' data-fig-viewport':''}${shape?` style="${shape}"`:''}>${head}${body}</div>`;
 }
 function mxCompanion(parts,key){
   return (parts||[]).map((p,k)=>mxPart(p,key+'-'+k)).join('');
@@ -7700,7 +7794,7 @@ function mxWexGroups(s){
   if(gs.length) return gs.map((g,k)=>({
     id:String(g.id||('g'+(k+1))), title:String(g.title||g.label||('Group '+(k+1))),
     type:MX_WEX_TYPES[String(g.type||'')]?String(g.type):'extended',
-    declared:String(g.type||''), lede:g.lede||'', relations:g.relations, visual:g.visual,
+    declared:String(g.type||''), lede:g.lede||'', footLabel:g.footLabel||'', relations:g.relations, visual:g.visual,
     examples:(Array.isArray(g.examples)?g.examples:[]).filter(x=>x&&typeof x==='object')}));
   /* A page that authors a bare examples[] is one extended group — the old shape still renders. */
   const ex=(Array.isArray(s.examples)?s.examples:[]).filter(x=>x&&typeof x==='object');
@@ -7720,21 +7814,27 @@ function mxWexSteps(ex){
       ${sp.length?`<div class="mx-stepvis">${mxCompanion(sp,'step-'+esc(String(ex.id||'ex'))+'-'+k)}</div>`:''}</li>`;
   }).join('')}</ol>`;
 }
-/* One complete example: its prompt, its whole working, its answer. Identical in every composition —
-   what changes between the four types is how many of these sit together and what surrounds them. */
-function mxWexSolution(ex,k){
-  return `${(ex.prompt||ex.question)?`<div class="mx-wexq"><h3>${mxM(String(ex.label||('Example '+(k+1))))}</h3>
-      <div class="mx-wexqb">${mxM(ex.prompt||ex.question)}</div></div>`
-    :`<div class="mx-wexq"><h3>${mxM(String(ex.label||('Example '+(k+1))))}</h3></div>`}
-    ${mxWexSteps(ex)}
-    ${(ex.answer||ex.result)?`<div class="mx-wexres"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span>
-      <span>${mxM(ex.answer||ex.result)}</span></div>`:''}`;
+/* ONE ANATOMY, EVERY COMPOSITION. A worked example is the same four things whether it sits in a compact
+   pair or a full-page derivation: the QUESTION a student might actually be given, the WORKED SOLUTION, the
+   ANSWER, and — optionally, and only where it adds understanding — a visual explanation. The sections are
+   told apart by quiet typography and space, not by another layer of coloured cards.
+   `named` is false where the example's own name would only repeat the group's: a group holding ONE example
+   is already titled by its tab, and printing "Find x when y = 16" above "Find the value(s) of x for which
+   y = 16" is the duplicated prompt hierarchy this replaces. */
+function mxWexSolution(ex,k,named){
+  const q=ex.prompt||ex.question, a=ex.answer||ex.result;
+  return `${named!==false?`<h3 class="mx-wexh">${mxM(String(ex.label||('Example '+(k+1))))}</h3>`:''}
+    ${q?`<section class="mx-wexsec"><h4 class="mx-wexlab">Question</h4>
+      <div class="mx-wexqb">${mxM(q)}</div></section>`:''}
+    <section class="mx-wexsec"><h4 class="mx-wexlab">Worked solution</h4>${mxWexSteps(ex)}</section>
+    ${a?`<div class="mx-wexres"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span>
+      <span>${mxM(a)}</span></div>`:''}`;
 }
 function mxWexCell(ex,s,i,key,k){
   const parts=mxParts(ex.visual);
   const vis=parts.length?mxCompanion(parts,key+'-'+(ex.id||k)):'';
   return `<article class="mx-wexcell" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${vis?' data-mx-cellvis':''}>
-    <div class="mx-wexsol">${mxWexSolution(ex,k)}</div>
+    <div class="mx-wexsol">${mxWexSolution(ex,k,true)}</div>
     ${vis?`<div class="mx-wexcellvis">${vis}</div>`:''}</article>`;
 }
 function mxWexGroupBody(g,s,i){
@@ -7745,8 +7845,14 @@ function mxWexGroupBody(g,s,i){
        `extended` takes the reading width and lets a step bring its own picture inline. A companion
        column exists only when the example authors one — never as a reserved empty region. */
     const one=ex[0], parts=mxParts(one.visual), vis=parts.length?mxCompanion(parts,key+'-'+(one.id||0)):'';
-    return `<div class="mx-wexbody${vis?'':' mx-wexsolo'}" data-mx-wexcols="${vis?'2':'1'}">
-      <div class="mx-wexsol" data-mx-example="${esc(String(one.id||'ex1'))}">${mxWexSolution(one,0)}</div>
+    /* A PORTRAIT PLANE DOES NOT BELONG IN A SIDE COLUMN. Under an equal scale, a demonstration that has to
+       reach y = 16 over x = ±6 is simply a tall picture; set beside the reasoning it towers over it, and
+       squeezing it would be the page reshaping the mathematics again. So the composition stacks it beneath
+       and lets the page get longer — vertical space is the right fallback, not compression. */
+    const shape=parts.filter(q=>q&&q.kind==='figure').map(q=>mxFigRatio(q.figure)).filter(Boolean);
+    const portrait=shape.length&&shape.every(r=>r<0.85);
+    return `<div class="mx-wexbody${vis?'':' mx-wexsolo'}${portrait?' mx-wexstack':''}" data-mx-wexcols="${vis&&!portrait?'2':'1'}"${portrait?' data-mx-plotshape="portrait"':''}>
+      <div class="mx-wexsol" data-mx-example="${esc(String(one.id||'ex1'))}">${mxWexSolution(one,0,ex.length>1)}</div>
       ${vis?`<aside class="mx-wexvis" aria-label="${esc('Supporting representation for '+String(one.label||''))}">${vis}</aside>`:''}
     </div>${ex.slice(1).map((x,k)=>mxWexCell(x,s,i,key,k+1)).join('')}`;
   }
@@ -7762,7 +7868,14 @@ function mxWexGroup(g,s,i,hidden){
     <div class="mx-wexsurface">
       ${g.lede?`<p class="mx-wexlede">${mxM(g.lede)}</p>`:''}
       ${mxWexGroupBody(g,s,i)}
-      ${foot.length?`<div class="mx-wexfoot">${mxCompanion(foot,(tpRespId(s)||i)+'-'+g.id+'-foot')}</div>`:''}
+      ${foot.length?(()=>{
+        /* NEVER A HEADING ABOVE A HEADING. The optional fourth section is named once: by the group's own
+           `footLabel` if it states one, otherwise by the parts' authored labels, which already say what the
+           region is ("What the graph shows", "Why the two agree"). */
+        const named=foot.every(q=>q&&q.label);
+        const lab=g.footLabel?esc(g.footLabel):(named?'':(foot.some(q=>q.kind==='figure')?'Visual explanation':'Connection'));
+        return `<section class="mx-wexfoot">${lab?`<h4 class="mx-wexlab">${lab}</h4>`:''}
+          ${mxCompanion(foot,(tpRespId(s)||i)+'-'+g.id+'-foot')}</section>`;})():''}
     </div></section>`;
 }
 function mxWorkedExamplesPage(s,i){
@@ -7770,7 +7883,7 @@ function mxWorkedExamplesPage(s,i){
   if(!gs.length) return `<div class="mx-panel"><div class="mx-ph">This page has no worked examples yet.</div></div>`;
   const bar=gs.map((g,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}"
     data-mx-tab="${esc(g.id)}" aria-selected="${k?'false':'true'}">${mxM(g.title)}</button>`).join('');
-  return `<div class="mx-wex">
+  return `<div class="mx-wex" style="--mx-plot-min-w:${MX_PLOT_MIN_W}px;--mx-plot-min-h:${MX_PLOT_MIN_H}px;--mx-plot-w:${MX_PLOT_W}px">
     <div class="mx-tabs" role="tablist" data-mx-tabset aria-label="Worked example groups">${bar}</div>
     ${gs.map((g,k)=>mxWexGroup(g,s,i,k>0)).join('')}</div>`;
 }
@@ -12003,7 +12116,7 @@ function mxWsPart(part){
 function mxWsFig(c){
   if(!c||typeof c!=='object') return '';
   if(c.kind==='figure'&&c.figure){
-    let h=''; try{ h=fragFigure(c.figure,'mxws-print-'+(++MX_WS_FIG)); }catch(e){ h=''; }
+    let h=''; try{ h=fragFigure(mxFigPolicy(c.figure),'mxws-print-'+(++MX_WS_FIG)); }catch(e){ h=''; }
     if(!h) return '';
     let svg='';
     try{ const doc=new DOMParser().parseFromString('<div>'+h+'</div>','text/html');

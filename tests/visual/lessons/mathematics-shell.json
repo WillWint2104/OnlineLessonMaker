@@ -16,7 +16,7 @@
       "lede": "A quadratic function with a U-shaped curve.",
       "keyIdea": {
         "title": "Key idea",
-        "body": "Opposite _x_-values give the same _y_-value: if _x_ = _a_, then _x_ = −_a_ gives the same _y_."
+        "body": "The table, the graph and the symmetry are three ways of seeing one relationship — each is the same rule read differently."
       },
       "contentTitle": "Key concepts",
       "workspace": {
@@ -305,7 +305,7 @@
           "id": "g-substitution",
           "type": "compact",
           "title": "Substitution",
-          "lede": "Put a value of _x_ into the rule and read off _y_. Two complete examples — the second is the one people get wrong.",
+          "lede": "Compare substitution with a negative value and with a fractional value.",
           "examples": [
             {
               "id": "ex-neg",
@@ -325,7 +325,7 @@
                 {
                   "id": "s3",
                   "text": "Evaluate. A negative multiplied by a negative gives a positive.",
-                  "math": "_y_ = −4 × −4 = 16"
+                  "math": "_y_ = (−4)(−4) = 16"
                 }
               ],
               "answer": "_y_ = 16, so (−4, 16) lies on the graph."
@@ -333,17 +333,17 @@
             {
               "id": "ex-frac",
               "label": "A fraction",
-              "prompt": "Use the same rule to find _y_ when _x_ = 3/2.",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = 3/2.",
               "steps": [
                 {
                   "id": "s1",
-                  "text": "Substitute. Again the whole value is squared, not just the numerator.",
+                  "text": "Substitute. The whole fraction is squared, not just the numerator.",
                   "math": "_y_ = (3/2)^2"
                 },
                 {
                   "id": "s2",
                   "text": "Square the top and the bottom.",
-                  "math": "_y_ = 9/4"
+                  "math": "_y_ = 3^2/2^2 = 9/4"
                 },
                 {
                   "id": "s3",
@@ -410,7 +410,7 @@
                         "xMin": -6,
                         "xMax": 6,
                         "yMin": -2,
-                        "yMax": 22
+                        "yMax": 20
                       },
                       "objects": [
                         {
@@ -508,8 +508,8 @@
                 "grid": "shown",
                 "callouts": "hidden",
                 "domain": {
-                  "xMin": -6,
-                  "xMax": 6,
+                  "xMin": -5,
+                  "xMax": 5,
                   "yMin": -1,
                   "yMax": 11
                 },

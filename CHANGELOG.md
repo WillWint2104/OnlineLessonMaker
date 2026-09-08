@@ -118,18 +118,38 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     is only whether the chosen composition can be READ — a set stacks when its columns fall below a
     readable measure, and a `visual` group reserves no companion when none is authored. A bare
     `examples[]` still renders, as one `extended` group.
-  - **Composition types own their figure geometry.** A generic worked-example figure rule was wrong: the
-    `comparison` plane inherited it and sat capped in the lower-left of a full-width surface with half the
-    width empty. `compact` reserves no slot, `visual` gets a companion beside the reasoning and a LANDSCAPE
-    one when stacked (it had been an almost-square graph swallowing a phone), `comparison` gets one wide
-    shallow plane spanning the cases, `extended` puts the picture inline at the step that earns it. Two
-    engine-side pieces make that possible without changing any existing figure: a figure part now declares
-    itself `[data-fig-viewport]` (the engine reads a container's height only inside one — elsewhere it
-    paints at a fixed aspect that a wide slot then letterboxes), and a viewport host may state
-    `--fig-fill-min` to override the engine's 0.42 floor on how shallow its own slot may be.
+  - **THE PAGE NEVER RESHAPES THE MATHEMATICS.** The boundary the whole figure system now hangs on: the
+    Figure Engine determines mathematical geometry, the page composition determines where that geometry can
+    live. Measured before the rule existed, the same symmetry plane rendered at **4.65:1** on a desktop and
+    **1.95:1** on a phone — one _x_-unit 85px wide and 18px tall — because the composition was allowed to
+    dictate the plane's shape. A Mathematics Cartesian plot now defaults to an equal-unit scale
+    (`scaleMode:"authored"` opts out and keeps whatever `aspect` it states, so a deliberately unequal chart
+    stays possible), and the SLOT takes its aspect FROM the authored domain rather than the reverse. Every
+    plane now measures 1.00 ± 0.05 at every viewport. The `--fig-fill-min:.22` override from the previous
+    pass is gone: it solved letterboxing by giving the composition permission to flatten the mathematics,
+    which was the wrong direction, and so are the rules that clamped a stacked companion to a "landscape
+    demonstration area". A portrait plane is stacked beneath the reasoning at its own proportions and the
+    page gets longer — "fits this viewport" is not a quality measure.
+  - **Graph viability is two separate tests.** Scale integrity, and pedagogical legibility
+    (`MX_PLOT_MIN_W` / `MX_PLOT_MIN_H` / `MX_PLOT_W`, one owner, published as scoped custom properties). A
+    plane can be perfectly undistorted and still be too small to read; failing either makes the composition
+    stack and give the plane the width. The gate measures the RENDERED transform — px per unit per axis off
+    the painted svg — because a container and a viewBox can agree while the plane inside them is distorted,
+    and its adversarial control opts a plane out and shows the ratio go to 2.12.
+  - **Authored reference lines** (from the previous pass) now also draw the axis of symmetry and `y = 9` in
+    the comparison plane.
+  - **One anatomy, every composition.** QUESTION / WORKED SOLUTION / ANSWER, and optionally VISUAL
+    EXPLANATION — quiet typography and space, not another layer of coloured cards. A group holding one
+    example suppresses that example's own name, because the tab already titles it: `Solving for x` was
+    printing "Working backwards…", "Find x when y = 16" and "Find the value(s) of x for which y = 16" one
+    under another. The optional fourth section is named once, never a heading above a heading.
+  - **Fractions are fractions.** `mxM` sets `3/2` built-up over a rule and `(3/2)^2` inside brackets that
+    grow to its height, on the mathematical axis. Digits only, three a side, so prose and year ranges are
+    untouched.
   - **`compact` is at most two columns.** Columns-follow-count was wrong before it became entrenched:
-    1 → one constrained teaching column · 2 → two · 3 → **2 + 1** · 4 → 2 × 2 · beyond four the author
-    splits the material rather than the page inventing a tinier grid.
+    1 → one constrained teaching column · 2 → two · 3 → **2 + 1 with the third centred below at the same
+    measure** · 4 → 2 × 2 · beyond four the author splits the material. Every compact example also stands
+    alone now — "use the same rule…" made the second depend on having read the first.
   - **Authored reference lines in the Figure Engine.** `{type:'line', y:k}` / `{type:'line', x:k}`, with an
     optional label, spanning the viewport as a line does and counting as painted geometry that identifiers
     must clear. This fixes a real failed demonstration: the `Solving for x` example said "the line y = 16
@@ -140,6 +160,10 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     is a NON-SHIPPING design fixture: a three-example compact group and a genuine six-step derivation
     carrying a figure at the step that needs it. A presentation type is not established because the
     renderer accepts its enum value.
+  - **Notes, two clean-ups only** (architecture frozen): the Key Idea was restating the fourth concept, so
+    it now synthesises across the three tabs instead; it was also the last text-on-green writing surface in
+    the family and is now white with a green edge; and the concepts card hugs its content rather than being
+    stretched to match a much taller exploration panel.
   - **Notes redundancy audit.** `Selected coordinates` is gone from `Graph and key points`: three of its
     five points restated the labelled graph and the two it added are covered by the `Table to graph` tab.
     An explanatory region is authored content, not chrome every representation gets.
@@ -159,7 +183,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     had been laying every part's LABEL beside its content instead of above it. Scoped to `.mx-parts`.
   - The fixture demonstrates the renderer rather than redesigning the mathematics: four concepts (no
     invented fifth), three complete demonstrations of one object, and three worked-example groups — one
-    per composition type. `scripts/verify-notes-examples.mjs` is the gate (61 checks) and
+    per composition type. `scripts/verify-notes-examples.mjs` is the gate (65 checks) and
     `scripts/shots-notes-examples.mjs` the proof set. The gate encodes the approved behaviour rather than the implementation: expected part
     counts, companion kinds, which steps carry visuals and how many tabs there are are all DERIVED from the
     lesson JSON, so re-authoring the fixture cannot quietly make the gate agree with itself. It asserts the

@@ -37,6 +37,11 @@ const NOTES = FIX.slides.findIndex((s) => s.type === 'notes');
 const WEX = FIX.slides.findIndex((s) => s.type === 'workedExamples');
 const NEX = FIX.slides[NOTES].examples;
 const WEXS = FIX.slides[WEX].examples;
+/* the authored plane ratio the renderer derives its slot from — clamped exactly as mxFigRatio clamps it */
+const authoredRatio = (fig) => { if (!fig || fig.figure !== 'graph' || String(fig.scaleMode || '') === 'authored') return 0;
+  const d = fig.domain; if (!d) return 0;
+  const w = +d.xMax - +d.xMin, h = +d.yMax - +d.yMin;
+  return (w > 0 && h > 0) ? Math.max(0.62, Math.min(2.0, w / h)) : 0; };
 const mxPartKinds = (v) => (!v || typeof v !== 'object') ? []
   : (Array.isArray(v) ? v : Array.isArray(v.parts) ? v.parts : v.kind ? [v] : []).map((q) => q.kind);
 
@@ -370,12 +375,20 @@ const read = (p) => p.evaluate((ids) => ids.map((id) => {
      g.filter((x) => x.type === 'compact' || x.type === 'comparison')
       .every((x) => x.setCols === x.examples.length && x.examples.length > 1),
      g.filter((x) => x.setCols).map((x) => `${x.type} ${x.id}: ${x.examples.length} examples in ${x.setCols} columns`).join(' · '));
-  ok('a visual group puts the representation beside the reasoning, and reserves nothing when none is authored',
+  /* PLACEMENT FOLLOWS THE PLANE'S SHAPE. A companion is authored or it is not; when it is, a landscape
+     plane sits beside the reasoning and a PORTRAIT one goes beneath it — set in a side column a tall plane
+     towers over the working, and squeezing it would be the page reshaping the mathematics again. */
+  ok('a visual group reserves nothing when no companion is authored, and places one by its shape',
      g.filter((x) => x.type === 'visual' || x.type === 'extended')
-      .every((x) => { const authored = mxPartKinds(GROUPS.find((q) => q.id === x.id).examples[0].visual).length;
-        return authored ? (x.aside && x.bodyCols === 2) : (!x.aside && x.bodyCols === 1); }),
+      .every((x) => { const ex0 = GROUPS.find((q) => q.id === x.id).examples[0];
+        const authored = mxPartKinds(ex0.visual).length;
+        if (!authored) return !x.aside && x.bodyCols === 1;
+        const figs = (Array.isArray(ex0.visual) ? ex0.visual : ex0.visual.parts || [ex0.visual])
+          .filter((q) => q.kind === 'figure').map((q) => authoredRatio(q.figure)).filter(Boolean);
+        const portrait = figs.length && figs.every((r) => r < 0.85);
+        return x.aside && x.bodyCols === (portrait ? 1 : 2); }),
      g.filter((x) => x.type === 'visual' || x.type === 'extended')
-      .map((x) => `${x.id}: ${x.aside ? 'companion beside the working' : 'one column, no empty aside'}`).join(' · '));
+      .map((x) => `${x.id}: ${x.aside ? (x.bodyCols === 1 ? 'portrait plane, stacked beneath' : 'landscape plane, beside') : 'no companion, one column'}`).join(' · '));
   await p.close();
 }
 {
@@ -489,6 +502,113 @@ mark('reference');
      `${drawn[GROUPS[1].id]} drawn with it authored, ${without} without`);
   await p.close();
 }
+// ══ the coordinate-plane contract ══════════════════════════════════════════════════════════════
+// THE PAGE NEVER RESHAPES THE MATHEMATICS. A plane has an authored scale relationship between its axes —
+// normally 1:1 — and responsive layout may reveal more domain, grow taller, stack or scroll, but never
+// stretch one axis independently. Measured on the RENDERED transform (engine units per math unit times the
+// paint scale of that axis), not on the container or the viewBox aspect, which can agree while the plane
+// inside them is distorted.
+mark('scale');
+const readScales = (p) => p.evaluate(() => {
+  const out = [];
+  document.querySelectorAll('.mx-part[data-mx-part="figure"] .tp-fig').forEach((fig) => {
+    const svg = fig.querySelector('.tp-fig-svg');
+    if (!svg || !fig.offsetWidth) return;
+    const vb = svg.getAttribute('viewBox').split(/\s+/).map(Number);
+    const r = svg.getBoundingClientRect();
+    const kx = r.width / vb[2], ky = r.height / vb[3];
+    const labs = [].slice.call(svg.querySelectorAll('.tp-fig-ticklabel'));
+    const val = (t) => parseFloat(t.textContent.replace('\u2212', '-'));
+    const xs = labs.filter((t) => t.getAttribute('text-anchor') === 'middle')
+      .map((t) => ({ v: val(t), px: +t.getAttribute('x') })).filter((o) => isFinite(o.v));
+    const ys = labs.filter((t) => t.getAttribute('text-anchor') === 'end')
+      .map((t) => ({ v: val(t), px: +t.getAttribute('y') })).filter((o) => isFinite(o.v));
+    const per = (a) => { if (a.length < 2) return null; a.sort((m, n) => m.v - n.v);
+      const d = a[a.length - 1].v - a[0].v; return d ? Math.abs((a[a.length - 1].px - a[0].px) / d) : null; };
+    const ux = per(xs), uy = per(ys);
+    if (ux == null || uy == null) return;
+    out.push({ x: +(ux * kx).toFixed(3), y: +(uy * ky).toFixed(3), ratio: +((ux * kx) / (uy * ky)).toFixed(3),
+      plot: [Math.round(r.width), Math.round(r.height)] });
+  });
+  return out;
+});
+{
+  const seen = [];
+  for (const [w, h, slide, tab, name] of [
+    [1536, 1024, NOTES, null, 'notes desktop'],
+    [1536, 1024, WEX, GROUPS[1].id, 'visual desktop'],
+    [1536, 1024, WEX, GROUPS[2].id, 'comparison desktop'],
+    [1194, 834, WEX, GROUPS[1].id, 'visual tablet'],
+    [834, 1112, WEX, GROUPS[2].id, 'comparison portrait'],
+    [414, 896, WEX, GROUPS[2].id, 'comparison phone']]) {
+    const p = await open({ w, h, slide });
+    if (tab) { await p.click(`[data-mx-tab="${tab}"]`); await p.waitForTimeout(600); }
+    (await readScales(p)).forEach((s) => seen.push(Object.assign({ name, w }, s)));
+    await p.close();
+  }
+  ok('EVERY COORDINATE PLANE HOLDS ITS AUTHORED 1:1 SCALE, at every width',
+     seen.length >= 6 && seen.every((s) => Math.abs(s.ratio - 1) <= 0.05),
+     seen.map((s) => `${s.name}: ${s.ratio} (x ${s.x}px/unit, y ${s.y}px/unit)`).join(' · '));
+  ok('and the same plane is the same shape on a phone as on a desktop',
+     (() => { const c = seen.filter((s) => /comparison/.test(s.name));
+       return c.length >= 2 && Math.max(...c.map((s) => s.ratio)) - Math.min(...c.map((s) => s.ratio)) <= 0.05; })(),
+     seen.filter((s) => /comparison/.test(s.name)).map((s) => `${s.w}px → ${s.ratio}`).join(' · '));
+}
+{
+  /* ADVERSARIAL CONTROL: distort one axis and the measure must catch it. This is the defect the rule
+     exists for — before it, the same symmetry plane rendered 4.65:1 on a desktop and 1.95:1 on a phone. */
+  const p = await open({ slide: WEX });
+  await p.click(`[data-mx-tab="${GROUPS[2].id}"]`); await p.waitForTimeout(500);
+  const before = (await readScales(p))[0];
+  await p.evaluate((id) => { const g = LESSON.slides[1].groups.find((x) => x.id === id);
+    const f = g.relations.find((q) => q.kind === 'figure').figure;
+    f.scaleMode = 'authored'; f.aspect = 'stretch'; go(1);
+    document.querySelector(`[data-mx-tab="${id}"]`).click(); }, GROUPS[2].id);
+  await p.waitForTimeout(700);
+  const after = (await readScales(p))[0];
+  ok('CONTROL: opt a plane out of the policy and the same measure catches the distortion',
+     !!before && !!after && Math.abs(before.ratio - 1) <= 0.05 && Math.abs(after.ratio - 1) > 0.2,
+     `${before && before.ratio} under the policy, ${after && after.ratio} with scaleMode "authored" + stretch`);
+  await p.close();
+}
+{
+  // Legibility is a SEPARATE test: an undistorted plane can still be too small to read.
+  const rows = [];
+  for (const [w, h, name] of [[1536, 1024, 'desktop'], [1194, 834, 'tablet'], [834, 1112, 'portrait'], [414, 896, 'phone']]) {
+    const p = await open({ w, h, slide: WEX });
+    await p.click(`[data-mx-tab="${GROUPS[1].id}"]`); await p.waitForTimeout(600);
+    rows.push(await p.evaluate((name) => {
+      const fig = document.querySelector('.mx-wexvis .tp-fig') || document.querySelector('.mx-part[data-mx-part="figure"] .tp-fig');
+      const svg = fig.querySelector('.tp-fig-svg'), r = svg.getBoundingClientRect();
+      const cs = getComputedStyle(document.querySelector('.mx-wex'));
+      const t = svg.querySelector('.tp-fig-ticklabel');
+      const stacked = !!document.querySelector('.mx-wexbody')
+        && getComputedStyle(document.querySelector('.mx-wexbody')).gridTemplateColumns.split(' ').filter(Boolean).length === 1;
+      return { name, w: Math.round(r.width), h: Math.round(r.height), stacked,
+        minW: parseInt(cs.getPropertyValue('--mx-plot-min-w'), 10),
+        minH: parseInt(cs.getPropertyValue('--mx-plot-min-h'), 10),
+        tick: t ? Math.round(parseFloat(getComputedStyle(t).fontSize) * (r.width / +svg.getAttribute('viewBox').split(/\s+/)[2]) * 10) / 10 : 0 }; }, name));
+    await p.close();
+  }
+  ok('a plotted region is never below the legibility floor — it stacks and takes the width instead',
+     rows.every((r) => r.w >= r.minW - 2 && r.h >= r.minH - 2 && r.tick >= 9),
+     rows.map((r) => `${r.name}: ${r.w}×${r.h}${r.stacked ? ' stacked' : ' beside'}, ticks ${r.tick}px`).join(' · '));
+  /* The discriminator is the PLANE, not the window: re-author the same example's domain landscape and the
+     same composition puts it beside the reasoning instead of beneath. */
+  const p2 = await open({ slide: WEX });
+  const swap = await p2.evaluate((id) => {
+    const g = LESSON.slides[1].groups.find((x) => x.id === id);
+    const f = g.examples[0].visual.parts.find((q) => q.kind === 'figure').figure;
+    const before = document.querySelector('.mx-wexbody');
+    f.domain = { xMin: -20, xMax: 20, yMin: -2, yMax: 20 }; go(1);
+    document.querySelector(`[data-mx-tab="${id}"]`).click();
+    const after = document.querySelector(`[data-mx-panel="${id}"] .mx-wexbody`);
+    return { cols: after.dataset.mxWexcols, stacked: after.classList.contains('mx-wexstack') }; }, GROUPS[1].id);
+  await p2.close();
+  ok('CONTROL: re-author the same plane landscape and the same composition places it beside the reasoning',
+     rows.every((r) => r.stacked) && swap.cols === '2' && !swap.stacked,
+     `portrait at every width → stacked; the same example with a 40×22 domain → ${swap.cols} columns, beside`);
+}
 // ══ composition-owned figure slots ═════════════════════════════════════════════════════════════
 // There is no one "worked-example figure size". A shared comparison plane and a companion beside a column
 // are different jobs; the slot geometry belongs to the composition, and because the view holds equal
@@ -511,22 +631,34 @@ mark('slots');
        drawing shrunk in the middle with dead space beside it. So the test is that the painted aspect matches
        the viewBox aspect — not that the svg equals the slot, which it never does (the figure block carries a
        control row above the stage). */
+    const surfMid = Math.round(surf.left + surf.width / 2);
     const box = (n) => { if (!n) return null; const r = n.getBoundingClientRect();
       const svg = n.querySelector('svg'); const st = n.querySelector('.tp-fig-stage');
       if (!svg || !st) return null;
       const sr = svg.getBoundingClientRect(), tr = st.getBoundingClientRect();
       const vb = (svg.getAttribute('viewBox') || '0 0 1 1').split(/\s+/).map(Number);
-      return { w: Math.round(r.width), h: Math.round(r.height),
+      return { w: Math.round(r.width), h: Math.round(r.height), mid: Math.round(r.left + r.width / 2),
         paint: [Math.round(sr.width), Math.round(sr.height)],
         fillsW: sr.width >= tr.width - 4, fillsH: sr.height >= tr.height - 4,
         ar: (sr.width / sr.height) / (vb[2] / vb[3]) }; };   /* 1 = the paint has the viewBox's shape */
-    return { id, type: pane.dataset.mxWextype, surfW: Math.round(surf.width), foot: box(foot), side: box(side),
+    return { id, type: pane.dataset.mxWextype, surfW: Math.round(surf.width), surfMid, foot: box(foot), side: box(side),
       solved: (pane.querySelector('.tp-fig')||{dataset:{}}).dataset.figBox }; }, id));
   }
   const cmp = slots.find((x) => x.type === 'comparison');
-  ok('the comparison plane spans the comparison it belongs to, wide and shallow',
-     !!(cmp && cmp.foot) && cmp.foot.w >= cmp.surfW * 0.8 && cmp.foot.h < cmp.foot.w * 0.45,
-     cmp && cmp.foot ? `${cmp.foot.w}×${cmp.foot.h} in a ${cmp.surfW}px surface (ratio ${(cmp.foot.h / cmp.foot.w).toFixed(2)})` : 'no comparison figure');
+  /* A SLOT IS A PLACE FOR A PLANE, NOT A SHAPE IMPOSED ON ONE. The earlier version of this asserted the
+     comparison plane was "wide and shallow" — that was the composition dictating the mathematics, and the
+     rendered plane went to 4.65:1. What the slot owes the plane now is a NATURAL box, placed under the
+     cases it belongs to; the scale section proves the plane inside it is undistorted. */
+  /* THE SLOT TAKES ITS SHAPE FROM THE PLANE. Not a band this file chooses — the box must match the ratio
+     the AUTHORED domain implies, so re-authoring the mathematics re-shapes the slot and nothing else does. */
+  const cmpFig = (GROUPS.find((q) => q.id === (cmp && cmp.id)).relations || [])
+    .filter((q) => q.kind === 'figure').map((q) => authoredRatio(q.figure))[0];
+  ok('the comparison plane gets the box its authored domain implies, centred beneath the cases',
+     !!(cmp && cmp.foot) && !!cmpFig
+     && Math.abs((cmp.foot.w / cmp.foot.h) - cmpFig) / cmpFig < 0.06
+     && Math.abs(cmp.foot.mid - cmp.surfMid) <= 4,
+     cmp && cmp.foot ? `${cmp.foot.w}×${cmp.foot.h} → ${(cmp.foot.w / cmp.foot.h).toFixed(3)} against an authored `
+       + `${cmpFig.toFixed(3)}, centred in a ${cmp.surfW}px surface` : 'no comparison figure');
   /* Integer rounding of the box leaves a few per cent between the painted shape and the viewBox; a
      LETTERBOX is the order-of-magnitude case, where a box of the wrong shape entirely is centred in the
      slot with dead space beside it. The control below shows the difference. */
@@ -535,18 +667,21 @@ mark('slots');
      && Math.abs(cmp.foot.ar - 1) < 0.15 && cmp.solved !== '520x360',
      `painted ${cmp && cmp.foot && cmp.foot.paint.join('×')} at a re-solved box of ${cmp && cmp.solved} — `
      + `the paint is ${cmp && cmp.foot && cmp.foot.ar.toFixed(2)}× the viewBox shape (1.00 = took the slot's shape)`);
-  const boxed = await p.evaluate((id) => {
-    /* the engine's default box, which is what a slot that never re-solved would be painted from */
-    const svg = document.querySelector(`[data-mx-panel="${id}"] .mx-wexfoot svg`);
-    const r = svg.getBoundingClientRect();
-    return (r.width / r.height) / (520 / 360); }, cmp && cmp.id);
-  ok('CONTROL: the same measure catches the unsolved default box, so it can fail',
-     Math.abs(boxed - 1) > 0.15,
-     `against the engine's 520x360 default the paint would be ${boxed.toFixed(2)}× its shape — dead space either side`);
+  /* The letterbox control that used to sit here compared the paint against the engine's 520x360 default.
+     It cannot discriminate any more, and that is the point: every slot is now a natural box, so the default
+     and the solved box are nearly the same shape and there is nothing left for a letterbox to be. The
+     claim it was protecting — that the plane is not deformed — is now carried by the `scale` section
+     above, which measures the rendered transform and has an adversarial control that distorts an axis. */
   const vis = slots.find((x) => x.type === 'visual');
-  ok('CONTROL: a different composition gets a different slot shape from the same engine',
-     !!(vis && vis.side) && Math.abs((vis.side.h / vis.side.w) - (cmp.foot.h / cmp.foot.w)) > 0.15,
-     `visual companion ${(vis.side.h / vis.side.w).toFixed(2)} vs comparison plane ${(cmp.foot.h / cmp.foot.w).toFixed(2)}`);
+  const visFig = (() => { const v = GROUPS.find((q) => q.id === (vis && vis.id)).examples[0].visual;
+    return (Array.isArray(v) ? v : (v && v.parts) || [v]).filter((q) => q && q.kind === 'figure')
+      .map((q) => authoredRatio(q.figure))[0]; })();
+  ok('CONTROL: a different composition, a different authored plane, and each slot follows its own',
+     !!(vis && vis.side) && !!visFig
+     && Math.abs((vis.side.w / vis.side.h) - visFig) / visFig < 0.06
+     && Math.abs(visFig - cmpFig) > 0.05,
+     `visual ${(vis.side.w / vis.side.h).toFixed(3)} against an authored ${visFig.toFixed(3)}; `
+     + `comparison ${(cmp.foot.w / cmp.foot.h).toFixed(3)} against ${cmpFig.toFixed(3)} — different planes, different slots`);
   await p.close();
 }
 {
@@ -561,9 +696,17 @@ mark('slots');
       return { w: Math.round(r.width), h: Math.round(r.height), vh: window.innerHeight }; }, GROUPS[1].id));
     await p.close();
   }
-  ok('stacked, the companion is a landscape demonstration area, not a graph that swallows the page',
-     rows.every((r) => r.h < r.w && r.h <= r.vh * 0.42),
-     rows.map((r) => `${r.w}×${r.h} in a ${r.vh}px window (${Math.round(r.h / r.vh * 100)}% of it)`).join(' · '));
+  /* The earlier version of this required the stacked companion to be LANDSCAPE and under 42% of the
+     window. That was the page compressing the plane to fit a screen, and "fits this viewport" is not a
+     quality measure — a taller page is the correct fallback. What is required is that the plane keeps the
+     proportions its authored domain implies, whatever the window does. */
+  const want = (() => { const v = GROUPS[1].examples[0].visual;
+    return (Array.isArray(v) ? v : (v && v.parts) || [v]).filter((q) => q && q.kind === 'figure')
+      .map((q) => authoredRatio(q.figure))[0]; })();
+  ok('stacked, the plane keeps its authored proportions and the page simply gets longer',
+     rows.every((r) => Math.abs((r.w / r.h) - want) / want < 0.06),
+     rows.map((r) => `${r.w}×${r.h} → ${(r.w / r.h).toFixed(3)} against an authored ${want.toFixed(3)} `
+       + `(${Math.round(r.h / r.vh * 100)}% of a ${r.vh}px window)`).join(' · '));
 }
 // ══ the non-shipping composition proofs ════════════════════════════════════════════════════════
 // compact's column contract and extended both need shapes the shipping lesson does not author. A
@@ -578,14 +721,19 @@ mark('proofs');
     const cells = [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .mx-wexcell`))
       .map((e) => { const r = e.getBoundingClientRect(); return { l: Math.round(r.left), t: Math.round(r.top), w: Math.round(r.width) }; });
     const rows = new Set(cells.map((c) => c.t)), cols = new Set(cells.map((c) => c.l));
-    return { cells, rows: rows.size, cols: cols.size,
+    const set = document.querySelector(`[data-mx-panel="${id}"] .mx-wexset`).getBoundingClientRect();
+    return { cells, rows: rows.size, cols: cols.size, mid: Math.round(set.left + set.width / 2),
       complete: [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .mx-wexcell`))
         .every((e) => e.querySelector('.mx-wexqb') && e.querySelector('.mx-wexres') && e.querySelectorAll('.mx-step').length) }; },
     three.id);
-  ok('COMPACT IS AT MOST TWO COLUMNS — three examples are 2 + 1, never three narrow columns',
-     three.examples.length === 3 && lay.cols === 2 && lay.rows === 2
-     && lay.cells[2].l === lay.cells[0].l && lay.cells[2].t > lay.cells[0].t,
-     lay.cells.map((c, k) => `#${k + 1} at (${c.l}, ${c.t}) ${c.w}px`).join(' · '));
+  ok('COMPACT IS AT MOST TWO COLUMNS — three are 2 + 1, the third CENTRED below at the same measure',
+     three.examples.length === 3 && lay.rows === 2
+     && lay.cells[2].t > lay.cells[0].t
+     && Math.abs(lay.cells[2].w - lay.cells[0].w) <= 4
+     && Math.abs((lay.cells[2].l + lay.cells[2].w / 2) - lay.mid) <= 6
+     && lay.cells[2].l > lay.cells[0].l,
+     lay.cells.map((c, k) => `#${k + 1} at (${c.l}, ${c.t}) ${c.w}px`).join(' · ')
+     + ` — row 2 centred on ${lay.mid}`);
   ok('and all three stay complete — prompt, steps and answer in every one',
      lay.complete, `${three.examples.length} complete examples in a ${lay.cols}-column grid`);
   const ext = CG.find((g) => g.type === 'extended');
@@ -701,7 +849,7 @@ mark('flat');
      'renaming a group reaches the worksheet with no renderer change');
   await p.close();
 }
-const SECTIONS = ['composition', 'viability', 'surface', 'examples', 'reference', 'slots', 'proofs', 'flat'];
+const SECTIONS = ['composition', 'viability', 'surface', 'examples', 'reference', 'scale', 'slots', 'proofs', 'flat'];
 ok('every section ran', SECTIONS.every((s) => sections.has(s)), `${sections.size} sections`);
 ok('no page error while rendering or switching', pageErrs.length === 0, pageErrs.slice(0, 2).join(' | ') || 'none');
 await browser.close(); server.close();
