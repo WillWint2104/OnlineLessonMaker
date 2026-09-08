@@ -26,144 +26,245 @@
     {
      "id": "shape",
      "term": "Shape",
-     "body": "The graph of _y_ = _x_^2 is a parabola. It opens upwards, because squaring any number gives a result that is zero or positive."
+     "body": "The graph of _y_ = _x_^2 is a parabola that opens upwards."
     },
     {
      "id": "vertex",
      "term": "Vertex",
-     "body": "The vertex is at (0, 0). It is the minimum point: no value of _x_ gives a _y_-value below zero."
+     "body": "The vertex is at (0, 0), which is the lowest point on the graph."
     },
     {
      "id": "symmetry",
      "term": "Axis of symmetry",
-     "body": "The curve is symmetrical about the _y_-axis, the line _x_ = 0. Each side is a mirror image of the other."
+     "body": "The graph is symmetrical about the _y_-axis."
     },
     {
      "id": "yvalues",
      "term": "_y_-values",
-     "body": "Every _y_-value satisfies _y_ ≥ 0, and opposite _x_-values give the same _y_-value: (−3)^2 and 3^2 are both 9."
-    },
-    {
-     "id": "steepness",
-     "term": "Steepness",
-     "body": "The curve is flat near the vertex and rises more steeply as _x_ moves away from 0, because the gap between consecutive squares grows."
+     "body": "All _y_-values are zero or positive (_y_ ≥ 0). Opposite _x_-values give the same _y_-value."
     }
    ],
-   "representations": [
+   "examples": [
     {
-     "id": "graph",
-     "label": "Graph",
-     "content": {
-      "kind": "figure",
-      "figure": {
-       "type": "figure",
-       "figure": "graph",
-       "aspect": "equal",
-       "grid": "shown",
-       "domain": {
-        "xMin": -5,
-        "xMax": 5,
-        "yMin": -5,
-        "yMax": 5
-       },
-       "objects": [
-        {
-         "type": "function",
-         "f": "x^2",
-         "label": "y = x^2"
+     "id": "ex-basic",
+     "label": "_y_ = _x_^2",
+     "parts": [
+      {
+       "kind": "figure",
+       "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "equal",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+         "xMin": -5,
+         "xMax": 5,
+         "yMin": -5,
+         "yMax": 5
         },
-        {
-         "type": "points",
-         "rows": [
-          [
-           "(−2, 4)",
-           -2,
-           4
-          ],
-          [
-           "(2, 4)",
-           2,
-           4
-          ],
-          [
-           "(0, 0)",
-           0,
-           0
+        "objects": [
+         {
+          "type": "function",
+          "f": "x^2",
+          "label": "y = x^2"
+         },
+         {
+          "type": "points",
+          "rows": [
+           [
+            "(−2, 4)",
+            -2,
+            4
+           ],
+           [
+            "(2, 4)",
+            2,
+            4
+           ],
+           [
+            "(0, 0)",
+            0,
+            0
+           ]
           ]
-         ]
-        }
-       ],
-       "callouts": "hidden"
-      }
-     }
-    },
-    {
-     "id": "table",
-     "label": "Table",
-     "content": {
-      "kind": "table",
-      "stub": "_x_",
-      "head": [
-       "−3",
-       "−2",
-       "−1",
-       "0",
-       "1",
-       "2",
-       "3"
-      ],
-      "rows": [
-       {
-        "label": "_y_ = _x_^2",
-        "cells": [
-         "9",
-         "4",
-         "1",
-         "0",
-         "1",
-         "4",
-         "9"
+         }
         ]
        }
-      ]
-     }
+      },
+      {
+       "kind": "points",
+       "label": "Coordinates",
+       "items": [
+        {
+         "term": "(−2, 4)"
+        },
+        {
+         "term": "(−1, 1)"
+        },
+        {
+         "term": "(0, 0)",
+         "body": "vertex"
+        },
+        {
+         "term": "(1, 1)"
+        },
+        {
+         "term": "(2, 4)"
+        }
+       ]
+      },
+      {
+       "kind": "relations",
+       "items": [
+        "(−2, 4) and (2, 4) share a _y_-value — the axis of symmetry is _x_ = 0."
+       ]
+      }
+     ]
     },
     {
-     "id": "coordinates",
-     "label": "Coordinates",
-     "content": {
-      "kind": "list",
-      "items": [
-       {
-        "term": "(−3, 9)",
-        "body": "three left of the axis, nine up"
-       },
-       {
-        "term": "(−2, 4)",
-        "body": "paired with (2, 4)"
-       },
-       {
-        "term": "(−1, 1)",
-        "body": "paired with (1, 1)"
-       },
-       {
-        "term": "(0, 0)",
-        "body": "the vertex"
-       },
-       {
-        "term": "(1, 1)",
-        "body": "paired with (−1, 1)"
-       },
-       {
-        "term": "(2, 4)",
-        "body": "paired with (−2, 4)"
-       },
-       {
-        "term": "(3, 9)",
-        "body": "three right of the axis, nine up"
+     "id": "ex-shifted",
+     "label": "_y_ = _x_^2 + 2",
+     "parts": [
+      {
+       "kind": "figure",
+       "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "equal",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+         "xMin": -5,
+         "xMax": 5,
+         "yMin": -3,
+         "yMax": 7
+        },
+        "objects": [
+         {
+          "type": "function",
+          "f": "x^2+2",
+          "label": "y = x^2 + 2"
+         },
+         {
+          "type": "points",
+          "rows": [
+           [
+            "(0, 2)",
+            0,
+            2
+           ],
+           [
+            "(2, 6)",
+            2,
+            6
+           ]
+          ]
+         }
+        ]
        }
-      ]
-     }
+      },
+      {
+       "kind": "points",
+       "label": "Coordinates",
+       "items": [
+        {
+         "term": "(−2, 6)"
+        },
+        {
+         "term": "(−1, 3)"
+        },
+        {
+         "term": "(0, 2)",
+         "body": "vertex"
+        },
+        {
+         "term": "(1, 3)"
+        },
+        {
+         "term": "(2, 6)"
+        }
+       ]
+      },
+      {
+       "kind": "relations",
+       "items": [
+        "Every _y_-value is 2 more than on _y_ = _x_^2; the shape and the axis of symmetry are unchanged."
+       ]
+      }
+     ]
+    },
+    {
+     "id": "ex-reflected",
+     "label": "_y_ = −_x_^2",
+     "parts": [
+      {
+       "kind": "figure",
+       "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "equal",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+         "xMin": -5,
+         "xMax": 5,
+         "yMin": -5,
+         "yMax": 5
+        },
+        "objects": [
+         {
+          "type": "function",
+          "f": "-x^2",
+          "label": "y = -x^2"
+         },
+         {
+          "type": "points",
+          "rows": [
+           [
+            "(0, 0)",
+            0,
+            0
+           ],
+           [
+            "(2, −4)",
+            2,
+            -4
+           ]
+          ]
+         }
+        ]
+       }
+      },
+      {
+       "kind": "points",
+       "label": "Coordinates",
+       "items": [
+        {
+         "term": "(−2, −4)"
+        },
+        {
+         "term": "(−1, −1)"
+        },
+        {
+         "term": "(0, 0)",
+         "body": "vertex"
+        },
+        {
+         "term": "(1, −1)"
+        },
+        {
+         "term": "(2, −4)"
+        }
+       ]
+      },
+      {
+       "kind": "relations",
+       "items": [
+        "The parabola opens downwards and every _y_-value is zero or negative."
+       ]
+      }
+     ]
     }
    ]
   },
@@ -186,17 +287,63 @@
       },
       {
        "id": "s2",
-       "text": "Substitute the given value of _x_. Keep the brackets — the whole of −4 is squared, not just the 4.",
+       "text": "Substitute the given value. Keep the brackets — the whole of −4 is squared.",
        "math": "_y_ = (−4)^2"
       },
       {
        "id": "s3",
        "text": "Evaluate. A negative multiplied by a negative gives a positive.",
-       "math": "_y_ = −4 × −4 = 16"
+       "math": "_y_ = −4 × −4 = 16",
+       "visual": {
+        "kind": "points",
+        "label": "Both signs land on the same y",
+        "items": [
+         {
+          "term": "(−4, 16)"
+         },
+         {
+          "term": "(4, 16)"
+         }
+        ]
+       }
       }
      ],
      "resultLabel": "Answer",
-     "result": "_y_ = 16, so (−4, 16) lies on the graph."
+     "result": "_y_ = 16, so (−4, 16) lies on the graph.",
+     "visual": {
+      "parts": [
+       {
+        "kind": "table",
+        "label": "Substitution",
+        "stub": "_x_",
+        "head": [
+         "−4",
+         "−2",
+         "0",
+         "2",
+         "4"
+        ],
+        "rows": [
+         {
+          "label": "_y_ = _x_^2",
+          "cells": [
+           "16",
+           "4",
+           "0",
+           "4",
+           "16"
+          ]
+         }
+        ]
+       },
+       {
+        "kind": "relations",
+        "items": [
+         "−4 and 4 give the same _y_-value, because squaring removes the sign."
+        ]
+       }
+      ]
+     }
     },
     {
      "id": "ex-solve",
@@ -210,7 +357,7 @@
       },
       {
        "id": "s2",
-       "text": "Take the square root of both sides. A positive number has two square roots, so both signs must be kept.",
+       "text": "Take the square root of both sides. A positive number has two square roots.",
        "math": "_x_ = ±4"
       },
       {
@@ -220,83 +367,139 @@
       },
       {
        "id": "s4",
-       "text": "Read the answer off the graph as a check: the horizontal line _y_ = 16 crosses the parabola twice, once on each side of the axis of symmetry.",
-       "note": "This is why a quadratic equation usually has two solutions rather than one."
+       "text": "Read it off the graph: the line _y_ = 16 crosses the parabola twice, once each side of the axis."
       }
      ],
      "resultLabel": "Answer",
      "result": "_x_ = 4 or _x_ = −4.",
      "visual": {
-      "kind": "figure",
-      "label": "Where _y_ = 16 meets the curve",
-      "figure": {
-       "type": "figure",
-       "figure": "graph",
-       "grid": "shown",
-       "domain": {
-        "xMin": -6,
-        "xMax": 6,
-        "yMin": -2,
-        "yMax": 20
-       },
-       "callouts": "hidden",
-       "objects": [
-        {
-         "type": "function",
-         "f": "x^2",
-         "label": "y = x^2"
-        },
-        {
-         "type": "points",
-         "rows": [
-          [
-           "(−4, 16)",
-           -4,
-           16
-          ],
-          [
-           "(4, 16)",
-           4,
-           16
-          ]
+      "parts": [
+       {
+        "kind": "figure",
+        "figure": {
+         "type": "figure",
+         "figure": "graph",
+         "grid": "shown",
+         "callouts": "hidden",
+         "domain": {
+          "xMin": -6,
+          "xMax": 6,
+          "yMin": -2,
+          "yMax": 20
+         },
+         "objects": [
+          {
+           "type": "function",
+           "f": "x^2",
+           "label": "y = x^2"
+          },
+          {
+           "type": "points",
+           "rows": [
+            [
+             "(−4, 16)",
+             -4,
+             16
+            ],
+            [
+             "(4, 16)",
+             4,
+             16
+            ]
+           ]
+          }
          ]
         }
-       ]
-      }
+       },
+       {
+        "kind": "relations",
+        "items": [
+         "The line _y_ = 16 crosses the curve twice, once each side of the axis."
+        ]
+       }
+      ]
      }
     },
     {
      "id": "ex-symmetry",
      "label": "Example 3",
-     "question": "The point (3, 9) lies on the graph of _y_ = _x_^2. Use symmetry to name another point with the same _y_-value, and explain why it must be there.",
+     "question": "(3, 9) lies on _y_ = _x_^2. Use symmetry to name another point with the same _y_-value.",
      "steps": [
       {
        "id": "s1",
-       "text": "Identify the axis of symmetry. For _y_ = _x_^2 it is the _y_-axis, the line _x_ = 0."
+       "text": "The axis of symmetry is the _y_-axis, the line _x_ = 0."
       },
       {
        "id": "s2",
-       "text": "Measure the horizontal distance from the axis to the given point.",
-       "math": "3 − 0 = 3 units to the right"
+       "text": "Measure the horizontal distance from the axis to the point.",
+       "math": "3 − 0 = 3 units right"
       },
       {
        "id": "s3",
-       "text": "Reflect that distance to the other side of the axis.",
+       "text": "Reflect that distance to the other side.",
        "math": "0 − 3 = −3"
       },
       {
        "id": "s4",
        "text": "Confirm with the rule rather than by eye.",
-       "math": "(−3)^2 = 9, the same _y_-value"
-      },
-      {
-       "id": "s5",
-       "text": "State the reason: squaring removes the sign, so _x_ and −_x_ always give the same _y_.",
-       "note": "Every point on the curve except the vertex has exactly one partner."
+       "math": "(−3)^2 = 9"
       }
      ],
      "resultLabel": "Answer",
-     "result": "(−3, 9). It is the mirror image of (3, 9) in the _y_-axis."
+     "result": "(−3, 9) — the mirror image of (3, 9) in the _y_-axis.",
+     "visual": {
+      "parts": [
+       {
+        "kind": "figure",
+        "figure": {
+         "type": "figure",
+         "figure": "graph",
+         "aspect": "equal",
+         "grid": "shown",
+         "callouts": "hidden",
+         "domain": {
+          "xMin": -5,
+          "xMax": 5,
+          "yMin": -2,
+          "yMax": 12
+         },
+         "objects": [
+          {
+           "type": "function",
+           "f": "x^2",
+           "label": "y = x^2"
+          },
+          {
+           "type": "points",
+           "rows": [
+            [
+             "(−3, 9)",
+             -3,
+             9
+            ],
+            [
+             "(3, 9)",
+             3,
+             9
+            ],
+            [
+             "(0, 0)",
+             0,
+             0
+            ]
+           ]
+          }
+         ]
+        }
+       },
+       {
+        "kind": "relations",
+        "items": [
+         "The pair sits at equal distance either side of _x_ = 0."
+        ]
+       }
+      ]
+     }
     }
    ]
   },

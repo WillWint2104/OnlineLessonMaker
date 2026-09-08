@@ -77,30 +77,46 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   a phone equation bar; `verify-type-interaction` covers 414×860 and 360×780 (52 checks, up from 46) and
   now also asserts that no width scrolls the page sideways.
 - **Stage C — Notes and Worked Examples are real pages, driven by the lesson JSON.**
+  - **A tab is an alternative complete example, not a fragment of one.** The first build partitioned a
+    single mathematical idea across `Graph / Table / Coordinates`, so a learner had to switch tabs to
+    reconstruct one thought and each panel held a third of an argument. Now `examples[]` on the Notes page
+    are whole alternative examples of the concept — this lesson authors _y_ = _x_², _y_ = _x_² + 2 and
+    _y_ = −_x_² — and each pane carries its own drawing, its own coordinates and its own stated
+    relationship together. Switching tabs means "show me another complete example of this concept".
+  - **One part vocabulary, shared by both pages.** An example composes `parts[]`, each `{kind, …}`:
+    `figure` (delegated to the Figure engine), `table`, `points`, `relations`, `prose`. The same vocabulary
+    builds a worked example's companion and a single step's own visual, so the data/rendering boundary
+    never assumes the companion is one static graph unrelated to the steps. Panes are keyed by the AUTHORED
+    id, so a tab's identity is never its position: reordering, relabelling or adding changes the page with
+    no renderer change.
   - **Notes** takes an authored concept list of any length (`concepts[]`, each with a stable id and rich
-    mathematical content), an optional short lede, an optional compact Key Idea, and `representations[]`.
-    A representation is `{id, label, content}` and the tabs are however many the JSON supplies, labelled
-    and ordered as it says: `Graph / Table / Coordinates` is what this lesson happens to author, not a
-    vocabulary the renderer knows. `content` delegates to primitives the app already has — `figure` to the
-    Figure engine, plus `table`, `list` and `prose`. Panels are keyed by the AUTHORED id, so a tab's
-    identity is never its position and reordering or relabelling changes the page with no renderer change.
+    mathematical content), an optional short lede, an optional compact Key Idea, and the examples above.
     There is no "record in your notes" field, no "what to write down" panel and no mandatory Key Idea.
+  - **A region that exists but holds nothing is a failure**, exactly as a zero-height workbook was. At a
+    portrait tablet the example panel had become a tab strip over an empty box — the region was technically
+    present and the learning asset was gone. The Practice viability contract now owns the example region
+    too (`MX_REP_MIN_W` / `MX_REP_MIN_H`, published as scoped custom properties so no value has a second
+    copy), a portrait viewport stacks by construction rather than being judged on width, and the figure
+    part is given its own bounded box on the documented `.tp-slide` seam. The gate measures the rendered
+    content area at five viewports, and the control strips the rules that size the drawing to show every
+    one of them failing: the tabs still render, the drawing collapses to 0px and its SVG escapes the page.
   - **Worked Examples** is a page in its own right, not a card inside Notes, and it declares no workspace:
-    the visual belongs to the EXAMPLE, so the page owns its own two-column body. `examples[]` is arbitrary
-    in length; each has a stable id, a label, a problem statement, ordered solution steps (text, maths and
-    an optional note), an optional result and an optional visual. The whole solution is shown — the page
-    scrolls when the mathematics needs it — and an authored visual gets a real column rather than a
-    thumbnail. No response field anywhere on it.
+    the visual belongs to the EXAMPLE, so the page owns its own two-column body. Every example is
+    demonstrated — the supporting visual is part of the worked demonstration, not a decorative card added
+    to one of them — and a STEP may carry its own visual state, which renders inside that step. An example
+    that authors no visual gets one column rather than a reserved empty aside. No response field anywhere.
   - **The flat output carries all of it.** A tab is a Study-mode affordance, not a filter on what a lesson
-    contains, so Worksheet and print render every representation and every example in authored order under
-    its own label. Mathematics gets its own builder: `notes` is a type name the two page families share and
-    the legacy branch reads a completely different shape. On paper a figure is the DRAWING — the SVG is
-    lifted out of `fragFigure` and its app chrome left behind.
-  - The fixture is the real quadratic lesson: five concepts, three representations, and three genuinely
-    different examples (evaluate, solve for _x_, reason from symmetry), one carrying a figure.
-    `scripts/verify-notes-examples.mjs` is the gate (25 checks), with controls that change the JSON and
-    show the page following it — a fourth representation, a relabelled and reordered tab list, four
-    examples instead of three, the Key Idea removed, and the flat output holding what was behind a tab.
+    contains, so Worksheet and print render every authored example and every step, in authored order under
+    its own label, including a step's own parts. Mathematics gets its own builder: `notes` is a type name
+    the two page families share and the legacy branch reads a completely different shape. On paper a figure
+    is the DRAWING — the SVG is lifted out of `fragFigure` and its app chrome left behind.
+  - The fixture demonstrates the renderer rather than redesigning the mathematics: four concepts (no
+    invented fifth), three complete alternative examples, and three genuinely different worked examples
+    (evaluate against a table of substitutions, solve for _x_ on the graph, reason from symmetry).
+    `scripts/verify-notes-examples.mjs` is the gate (36 checks) and `scripts/shots-notes-examples.mjs` the
+    eleven proofs. Controls change the JSON and show the page following it — a fourth example, a relabelled
+    and reordered tab list, an example composing different parts, an example with no visual dropping its
+    column, and the flat output holding everything that was behind a tab.
 - **Three defects the Stage C content exposed**, each invisible while the panels held placeholders: the
   inactive figure panel stayed displayed behind the selected tab (`.mx-figure[data-fig-viewport]` set
   `display:block` with no `:not([hidden])` guard, later in the sheet than the rule that has one); the

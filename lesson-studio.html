@@ -1870,11 +1870,60 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-eqact{flex:0 0 auto;display:flex;gap:6px;margin-left:auto;}
 .mx-tool.mx-eqok{background:var(--mx-green);color:#fff;font-weight:600;}
 .mx-wb-type .mx-sheet{min-height:280px;}
+/* ── an example panel: the whole example, together ──────────────────────────────────────────────── */
+.mx-expanel{min-height:0;}
+.mx-expane{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:12px;padding:14px 16px 16px;overflow:auto;}
+.mx-panel.mx-flush>.mx-expane[hidden]{display:none;}
+.mx-excap{margin:0;font-size:14px;line-height:1.5;color:var(--mx-ink-2);}
+.mx-part{min-height:0;}
+/* The figure takes a definite box from its own width rather than stretching to whatever is left, so the
+   coordinates and the relationship sit directly beneath it instead of across a gap. Any slack falls at the
+   BOTTOM of the panel, where it reads as margin rather than as a hole in the middle of the example. */
+.mx-part[data-mx-part="figure"]{flex:0 0 auto;position:relative;aspect-ratio:4/3;min-height:var(--mx-rep-min-h);}
+/* Stacked, the example has the page's width; an aspect box would then be taller than the screen, so the
+   figure takes a bounded share of the viewport and the coordinates stay visible with it. */
+.mx[data-mx-fit="stack"] .mx-part[data-mx-part="figure"]{aspect-ratio:auto;height:min(46vh,520px);}
+/* The plane fills its box in BOTH axes — the box is a window onto the figure, and an unbounded stage let
+   the svg take its intrinsic height and push the coordinates that belong to it off the panel. Each link in
+   the chain from the box to the svg has to be allowed to shrink, or `height:100%` resolves against
+   something taller than the window. (0,4,0) so it out-ranks the Stage A figure-host rules. */
+.mx .mx-part[data-mx-part="figure"] .mx-figskin{flex:1 1 auto;min-height:0;}
+.mx .mx-part[data-mx-part="figure"] .tp-fig{flex:1 1 auto;min-height:0;}
+.mx .mx-part[data-mx-part="figure"] .tp-fig-stage{flex:1 1 auto;min-height:0;}
+.mx .mx-part[data-mx-part="figure"] .tp-fig-svg{width:100%;height:100%;}
+.mx-part[data-mx-part="figure"] .mx-figstage{position:absolute;inset:0;display:flex;flex-direction:column;}
+.mx-parth{font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--mx-ink-3);margin:0 0 6px;}
+.mx-points{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;
+  font-size:14.5px;color:var(--mx-ink-body);}
+.mx-points li{white-space:nowrap;}
+.mx-points b{font-family:'LM Math',Cambria Math,serif;font-size:15.5px;color:var(--mx-ink);}
+.mx-points span{color:var(--mx-ink-3);font-size:13px;}
+.mx-relations{list-style:none;margin:0;padding:11px 14px;border-radius:var(--mx-rad);
+  background:var(--mx-green-tint);border:1px solid #DCEBE2;font-size:14.5px;line-height:1.55;color:var(--mx-ink-body);}
+.mx-relations li+li{margin-top:5px;}
+/* Stacked: the example region cannot be a usable column here, so it takes the full width beneath the
+   concepts rather than persisting as an empty box beside them. The rows size to their content — the panel
+   surface stretches its regions to fill a SPLIT, and carrying that into a stack put a screen of empty card
+   between the concepts and the example. */
+.mx[data-mx-fit="stack"] .mx-split{grid-template-columns:minmax(0,1fr);grid-auto-rows:min-content;align-items:start;}
+.mx[data-mx-fit="stack"] .mx-page[data-mx-surface="panel"] .mx-split{flex:0 0 auto;grid-auto-rows:min-content;}
+.mx[data-mx-fit="stack"] .mx-page[data-mx-surface="panel"] .mx-content,
+.mx[data-mx-fit="stack"] .mx-page[data-mx-surface="panel"] .mx-work{display:block;}
+.mx[data-mx-fit="stack"] .mx-page[data-mx-surface="panel"] .mx-content>:only-child{flex:0 0 auto;}
+.mx[data-mx-fit="stack"] .mx-page{display:block;overflow:auto;}
+.mx[data-mx-fit="stack"] .mx-expane{min-height:calc(var(--mx-rep-min-h) + 90px);overflow:visible;}
 /* ── worked examples ─────────────────────────────────────────────────────────────────────────────── */
 .mx-wex{display:flex;flex-direction:column;gap:0;}
 .mx-wexpane{padding:22px 0 8px;}
 .mx-wexbody{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:30px;align-items:start;}
-.mx-wexbody.mx-wexsolo{grid-template-columns:minmax(0,1fr);}
+/* No companion authored: the working takes a reading measure and sits in the page rather than becoming a
+   narrow column stranded in a full-screen void. */
+.mx-wexbody.mx-wexsolo{grid-template-columns:minmax(0,1fr);max-width:78ch;}
+.mx-wexvis .mx-part[data-mx-part="figure"]{position:relative;min-height:300px;}
+.mx-wexvis .mx-part[data-mx-part="figure"] .mx-figstage{position:absolute;inset:0;}
+.mx-stepvis{margin-top:10px;padding:10px 0 2px;border-top:1px dashed var(--mx-line);}
+.mx-stepvis .mx-part[data-mx-part="figure"]{position:relative;min-height:220px;}
 .mx-wexq{margin:0 0 18px;}
 .mx-wexq h3{font-family:var(--mx-serif);font-size:20px;font-weight:600;color:var(--mx-ink);margin:0 0 7px;}
 .mx-wexqb{font-size:16px;line-height:1.62;color:var(--mx-ink-body);}
@@ -1893,7 +1942,7 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    a positioned ancestor; while this column was `sticky` it happened to be one, and the moment the narrow
    layout made it `static` the figure escaped and covered the whole page. It stays positioned at every
    width, and the stage is pinned to it explicitly at (0,3,0) — above `.mx .mx-figstage`. */
-.mx-wexvis{position:sticky;top:0;min-width:0;}
+.mx-wexvis{position:sticky;top:0;min-width:0;display:flex;flex-direction:column;gap:12px;}
 .mx .mx-wexvis .mx-figstage{position:relative;inset:auto;min-height:300px;display:flex;flex-direction:column;}
 .mx-wexvh{font-family:var(--mx-serif);font-size:14.5px;font-weight:600;color:var(--mx-ink-2);margin:0 0 9px;
   padding-right:40px;}   /* clears the figure's own expand control, and keeps authored maths readable */
@@ -1944,6 +1993,7 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    equation editor's 30-odd scoped rules and the slot palette, without the slide LAYOUT — which, left in
    place, took the workbook out of the workspace column and left the panel short of its region. */
 .mx .mx-figure .mx-figskin.tp-slide,
+.mx .mx-part[data-mx-part="figure"] .mx-figskin.tp-slide,
 .mx .mx-work .mx-wb.tp-slide{
   position:static;inset:auto;display:flex;flex-direction:column;overflow:visible;height:auto;min-height:0;flex:1 1 auto;
   background:transparent;color:var(--mx-ink-body);
@@ -2099,7 +2149,10 @@ body.figfocus #figfocus{display:flex;}
 #worksheet .ws-mx-none{font-size:.9rem;color:#777;font-style:italic;}
 #worksheet .ws-mx-rep .mx-tbl{border-collapse:collapse;font-size:.92rem;}
 #worksheet .ws-mx-rep .mx-tbl th,#worksheet .ws-mx-rep .mx-tbl td{border:1px solid #C9CFCB;padding:4px 10px;}
-#worksheet .ws-mx-rep .mx-replist{padding:4px 0 0 20px;font-size:.95rem;line-height:1.6;}
+#worksheet .ws-mx-part{margin:0 0 10px;break-inside:avoid;}
+#worksheet .ws-mx-part .mx-points{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:3px 14px;font-size:.93rem;}
+#worksheet .ws-mx-part .mx-points span{color:#777;font-size:.85rem;}
+#worksheet .ws-mx-part .mx-relations{list-style:none;margin:0;padding:7px 11px;background:#F1F8F4;border-left:3px solid #0F7A4C;font-size:.93rem;}
 /* ---- GeoLearn worksheet (print-friendly) ---- */
 .wsg{font-family:'Inter',system-ui,-apple-system,sans-serif;color:#16201c;max-width:760px;margin:0 auto;line-height:1.5;}
 .wsg-head{border-bottom:2px solid #16201c;padding-bottom:14px;margin-bottom:22px;}
@@ -7202,6 +7255,12 @@ const MX_VIEWS=['split','questions','workbook'];
    rail eats the difference is correctly judged too narrow — and collapsing the rail is enough to bring the
    split back, because this re-resolves on any resize. */
 const MX_Q_MIN=440, MX_WB_MIN_W=420, MX_WB_MIN_H=340, MX_SPLIT_GUTTER=20;
+/* A REPRESENTATION REGION THAT EXISTS BUT HOLDS NOTHING IS A FAILURE, exactly as a zero-height workbook
+   was. The first Notes build kept two columns at tablet widths and let the example region shrink until
+   only its tab strip was left — the learning asset gone, the container still there. These are the smallest
+   dimensions in which a figure with its coordinates beneath it can actually be read; below them the page
+   stacks instead, concepts above and the example below, at full width. */
+const MX_REP_MIN_W=380, MX_REP_MIN_H=330;
 const MX_WB_CHROME=96;                              /* the workbook's own toolbar + page tabs */
 let MX_FIT=null;                                    /* 'split' | 'solo' — resolved, never assumed */
 function mxSplitFits(root){
@@ -7216,11 +7275,38 @@ function mxSplitFits(root){
   const r=1.15, q=avail/(1+r), w=avail-q;            /* the columns the ratio would actually produce */
   return q>=MX_Q_MIN && w>=MX_WB_MIN_W && availH-MX_WB_CHROME>=MX_WB_MIN_H;
 }
+/* Does the example region have room to BE an example? Measured on the real page, like the workbook rule. */
+function mxRepFits(root){
+  const main=root&&root.querySelector('.mx-main'), page=root&&root.querySelector('.mx-page');
+  if(!main||!page) return true;
+  const cs=getComputedStyle(page);
+  const pad=(parseFloat(cs.paddingLeft)||0)+(parseFloat(cs.paddingRight)||0);
+  const padY=(parseFloat(cs.paddingTop)||0)+(parseFloat(cs.paddingBottom)||0);
+  const avail=main.clientWidth-pad-MX_SPLIT_GUTTER;
+  const head=page.querySelector('.mx-head');
+  const availH=main.clientHeight-padY-((head&&head.offsetHeight)||0);
+  const r=1.15, rep=avail-avail/(1+r);              /* the right column the grid will actually produce */
+  /* Width alone cannot separate these cases: a portrait tablet gives the example column MORE width than a
+     narrow laptop does, because the navigation rail is already gone. On a portrait page the honest
+     composition is concepts above and the example below at full width — 868px of example rather than 463px
+     of it — so portrait stacks by construction and landscape is judged on the column it would produce. */
+  const landscape=main.clientWidth>=main.clientHeight;
+  return landscape && rep>=MX_REP_MIN_W && availH>=MX_REP_MIN_H;
+}
+function mxHasRepresentation(s){
+  const ws=s&&s.workspace; return !!(ws&&typeof ws==='object'&&ws.kind==='representation');
+}
 function mxResolveFit(){
   const root=$('#slide').querySelector('.mx'); if(!root) return;
-  /* Only a WORKBOOK page has a split to resolve. Notes and Video are panel pairs that stack perfectly well
-     and have no writing surface to protect, so they keep the ordinary responsive behaviour and must never
-     be told there is one region to show. */
+  /* A representation page has a composition to resolve too: side by side while the example region can hold
+     an example, stacked at full width when it cannot. Keeping two columns while one of them empties out is
+     not responsive adaptation — it is losing the asset the page exists to show. */
+  if(mxHasRepresentation(LESSON.slides[cur])){
+    root.setAttribute('data-mx-fit',mxRepFits(root)?'split':'stack');
+    mxFitTables(root); return;
+  }
+  /* Only a WORKBOOK page has a split to resolve. Video is a panel pair that stacks perfectly well and has
+     no writing surface to protect, so it keeps the ordinary responsive behaviour. */
   if(!mxWritesResponses(LESSON.slides[cur])){ root.setAttribute('data-mx-fit','n/a'); mxFitTables(root); return; }
   const fit=mxSplitFits(root)?'split':'solo';
   if(MX_FIT!==fit||root.getAttribute('data-mx-fit')!==fit){
@@ -7378,7 +7464,7 @@ function renderResponsivePage(entry,s,i){
      `MX_WB_MIN_H` is the only place the sheet floor exists. Deliberately no `var(…, fallback)` in the
      consuming rules — a fallback would be a second copy of the value, which is the thing being removed. */
   return `<div class="mx${open?' mx-navopen':''}" data-tp-theme="${esc((LESSON.meta&&LESSON.meta.theme)||'')}"
-      style="--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px"
+      style="--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px;--mx-rep-min-h:${MX_REP_MIN_H}px"
       data-rp-type="${esc(s.type||'')}" data-rp-layout="${esc(entry.layoutMode)}" data-mx-response="${esc(mxResponseMode())}"
       data-mx-view="${esc(ws?mxView():'split')}">
     ${mxTopBar(s,i,n,open)}
@@ -7453,22 +7539,20 @@ function mxNotesPage(s){
   return `<div class="mx-panel"><h2 class="mx-panelh">${esc(s.contentTitle||'Key concepts')}</h2>${list
     ||'<div class="mx-ph">This notes page has no concepts yet.</div>'}</div>`;
 }
-/* AUTHORED REPRESENTATIONS. `Graph / Table / Coordinates` is what one lesson happens to author, not a
-   vocabulary the renderer knows: a representation is `{id, label, content}` and the tabs are however many
-   the JSON supplies, labelled and ordered as it says. The panel is keyed by the AUTHORED id, so reordering
-   or relabelling changes the page without touching the renderer, and a tab's identity is never its
-   position. `content` delegates to primitives the app already has rather than inventing new ones. */
-function mxReps(ws,s){
-  const from=(Array.isArray(ws&&ws.representations)&&ws.representations.length)?ws.representations
-    :(Array.isArray(s&&s.representations)?s.representations:null);
-  if(from) return from.filter(r=>r&&typeof r==='object').map((r,k)=>({
-    id:String(r.id||('r'+(k+1))), label:String(r.label||r.id||('View '+(k+1))), content:r.content||null }));
-  /* Bridge for the pre-Stage-C shape: `tabs:[…]` + a single `figure`. */
-  const tabs=(ws&&Array.isArray(ws.tabs)&&ws.tabs.length)?ws.tabs:['Graph','Table','Coordinates'];
-  return tabs.map((t,k)=>({ id:'t'+k, label:String(t),
-    content:(k===0&&ws&&ws.figure&&typeof ws.figure==='object'&&!Array.isArray(ws.figure))?{kind:'figure',figure:ws.figure}:null }));
+/* A COMPANION IS MADE OF PARTS, AND A TAB IS A WHOLE EXAMPLE. The first cut of this page put the graph,
+   the coordinates and the table behind three tabs, so a student had to switch tabs to reconstruct ONE
+   idea from fragments. That is not what the tabs are for. A tab is an alternative COMPLETE example of the
+   concept — "show me another one of these" — and the example it selects carries everything needed to read
+   it: the figure, the coordinates that belong to that figure, the relationship worth noticing. The parts
+   are a single vocabulary shared with the worked examples' supporting representation, because they are
+   the same thing in a different frame. */
+function mxParts(x){
+  if(!x||typeof x!=='object') return [];
+  if(Array.isArray(x)) return x.filter(p=>p&&typeof p==='object');
+  if(Array.isArray(x.parts)) return x.parts.filter(p=>p&&typeof p==='object');
+  return x.kind?[x]:[];
 }
-function mxRepTable(c){
+function mxPartTable(c){
   const head=(Array.isArray(c.head)?c.head:[]).map(h=>`<th scope="col">${mxM(h)}</th>`).join('');
   const rows=(Array.isArray(c.rows)?c.rows:[]).map(r=>{
     const cells=(Array.isArray(r&&r.cells)?r.cells:(Array.isArray(r)?r.slice(1):[])).map(x=>`<td>${mxM(x)}</td>`).join('');
@@ -7478,22 +7562,40 @@ function mxRepTable(c){
   if(!head&&!rows) return '<div class="mx-ph">This table has no rows yet.</div>';
   return `<div class="mx-tblwrap"><table class="mx-tbl"><tr><th scope="row">${mxM(c.stub||'')}</th>${head}</tr>${rows}</table></div>`;
 }
-function mxRepList(c){
+function mxPartPoints(c){
   const items=(Array.isArray(c.items)?c.items:[]).map(it=>{
-    if(it&&typeof it==='object') return `<li><b>${mxM(it.term||'')}</b>${it.body?' — '+mxM(it.body):''}</li>`;
+    if(it&&typeof it==='object') return `<li><b>${mxM(it.term||'')}</b>${it.body?` <span>${mxM(it.body)}</span>`:''}</li>`;
     return `<li>${mxM(it)}</li>`; }).join('');
-  return items?`<ul class="mx-replist">${items}</ul>`:'<div class="mx-ph">This list has no items yet.</div>';
+  return items?`<ul class="mx-points">${items}</ul>`:'<div class="mx-ph">No points authored.</div>';
 }
-function mxRepContent(rep,s,i,k){
-  const c=(rep&&rep.content&&typeof rep.content==='object'&&!Array.isArray(rep.content))?rep.content:null;
-  if(!c) return `<div class="mx-ph">The ${esc(String((rep&&rep.label)||'').toLowerCase()||'representation')} view has no content authored yet.</div>`;
-  const kind=String(c.kind||'');
-  if(kind==='figure'&&c.figure&&typeof c.figure==='object')
-    return `<div class="mx-figstage"><div class="mx-figskin tp-slide">${fragFigure(c.figure,'mxws-'+esc(String(tpRespId(s)||i))+'-'+esc(String(rep.id))) }</div></div>`;
-  if(kind==='table') return mxRepTable(c);
-  if(kind==='list') return mxRepList(c);
-  if(kind==='prose') return `<div class="mx-repprose">${mxM(c.body||'')}</div>`;
-  return `<div class="mx-ph">Unknown representation content <code>${esc(kind||'(none)')}</code>.</div>`;
+function mxPartRelations(c){
+  const items=(Array.isArray(c.items)?c.items:[]).map(it=>`<li>${mxM(it&&it.body!=null?it.body:it)}</li>`).join('');
+  return items?`<ul class="mx-relations">${items}</ul>`:'';
+}
+function mxPart(part,key){
+  const kind=String((part&&part.kind)||'');
+  const head=part&&part.label?`<h4 class="mx-parth">${mxM(part.label)}</h4>`:'';
+  let body='';
+  if(kind==='figure'&&part.figure&&typeof part.figure==='object')
+    body=`<div class="mx-figstage"><div class="mx-figskin tp-slide">${fragFigure(part.figure,'mxpart-'+esc(String(key)))}</div></div>`;
+  else if(kind==='table') body=mxPartTable(part);
+  else if(kind==='points') body=mxPartPoints(part);
+  else if(kind==='relations') body=mxPartRelations(part);
+  else if(kind==='prose') body=`<div class="mx-repprose">${mxM(part.body||'')}</div>`;
+  else body=`<div class="mx-ph">Unknown part <code>${esc(kind||'(none)')}</code>.</div>`;
+  return `<div class="mx-part" data-mx-part="${esc(kind||'none')}">${head}${body}</div>`;
+}
+function mxCompanion(parts,key){
+  return (parts||[]).map((p,k)=>mxPart(p,key+'-'+k)).join('');
+}
+/* The Notes examples. `examples[]` is the one structure — the same field name the worked-example page
+   uses — so there are not two parallel ideas of "an example" in the JSON. */
+function mxNotesExamples(s,ws){
+  const from=(Array.isArray(ws&&ws.examples)&&ws.examples.length)?ws.examples
+    :(Array.isArray(s&&s.examples)?s.examples:[]);
+  return from.filter(x=>x&&typeof x==='object').map((x,k)=>({
+    id:String(x.id||('ex'+(k+1))), label:String(x.label||x.id||('Example '+(k+1))),
+    caption:x.caption||'', parts:mxParts(x) }));
 }
 /* THE WORKED EXAMPLES PAGE is a page in its own right, not a card inside Notes. It shows the WHOLE
    solution: the steps are not compressed to keep the page above the fold, because the point of a worked
@@ -7506,25 +7608,31 @@ function mxWexSteps(ex){
   if(!steps.length) return '<div class="mx-ph">This example has no solution steps yet.</div>';
   return `<ol class="mx-steps">${steps.map((st,k)=>{
     const o=(st&&typeof st==='object')?st:{text:st};
-    return `<li class="mx-step" data-mx-step="${esc(String(o.id||('s'+(k+1))))}">
+    const sp=mxParts(o.visual);
+    return `<li class="mx-step" data-mx-step="${esc(String(o.id||('s'+(k+1))))}"${sp.length?' data-mx-stepvis':''}>
       ${o.text?`<div class="mx-stept">${mxM(o.text)}</div>`:''}
       ${o.math?`<div class="mx-stepm">${mxM(o.math)}</div>`:''}
-      ${o.note?`<div class="mx-stepn">${mxM(o.note)}</div>`:''}</li>`;
+      ${o.note?`<div class="mx-stepn">${mxM(o.note)}</div>`:''}
+      ${sp.length?`<div class="mx-stepvis">${mxCompanion(sp,'step-'+esc(String(ex.id||'ex'))+'-'+k)}</div>`:''}</li>`;
   }).join('')}</ol>`;
 }
 function mxWexOne(ex,s,i,k,hidden){
-  const vis=(ex.visual&&typeof ex.visual==='object'&&!Array.isArray(ex.visual))
-    ? mxRepContent({id:'vis-'+(ex.id||k),label:(ex.visual.label||ex.label||'Visual'),content:ex.visual},s,i,k) : '';
+  /* The supporting representation is PART OF THE DEMONSTRATION, not a card attached to one example. It is
+     the same part vocabulary the Notes examples use, so an example can carry a graph, a table, a set of
+     points, a relationship — or several — and an example that genuinely needs none says so by authoring
+     none. A STEP may also carry its own part: later examples need the picture to change as the solution
+     progresses, and the data boundary must not assume one static companion for the whole example. */
+  const parts=mxParts(ex.visual);
+  const vis=parts.length?mxCompanion(parts,(tpRespId(s)||i)+'-'+(ex.id||k)):'';
   return `<div class="mx-wexpane" data-mx-panel="${esc(String(ex.id||('ex'+(k+1))))}" role="tabpanel"
       aria-label="${esc(String(ex.label||('Example '+(k+1))))}"${hidden?' hidden':''}>
-    <div class="mx-wexbody${vis?'':' mx-wexsolo'}">
+    <div class="mx-wexbody${vis?'':' mx-wexsolo'}" data-mx-wexcols="${vis?'2':'1'}">
       <div class="mx-wexsol">
         ${ex.question?`<div class="mx-wexq"><h3>${mxM(String(ex.label||('Example '+(k+1))))}</h3><div class="mx-wexqb">${mxM(ex.question)}</div></div>`:''}
         ${mxWexSteps(ex)}
         ${ex.result?`<div class="mx-wexres"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span><span>${mxM(ex.result)}</span></div>`:''}
       </div>
-      ${vis?`<aside class="mx-wexvis" aria-label="${esc((ex.visual.label||'Visual for ')+String(ex.label||''))}">
-        ${ex.visual.label?`<h4 class="mx-wexvh">${mxM(ex.visual.label)}</h4>`:''}${vis}</aside>`:''}
+      ${vis?`<aside class="mx-wexvis" aria-label="${esc('Supporting representation for '+String(ex.label||''))}">${vis}</aside>`:''}
     </div></div>`;
 }
 function mxWorkedExamplesPage(s,i){
@@ -7964,19 +8072,20 @@ registerWorkspace('grid',mxWorkbook);
    HEIGHT from this container too. So the coordinate plane owns the whole representation region, and the
    Graph Practice and Interactive workspaces inherit the same behaviour rather than reinventing it. */
 registerWorkspace('representation',(ws,s,i)=>{
-  const reps=mxReps(ws,s);
-  if(!reps.length) return '<div class="mx-ph">This page authors no representations.</div>';
-  const bar=reps.map((r,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}" data-mx-tab="${esc(r.id)}"
+  const exs=mxNotesExamples(s,ws);
+  if(!exs.length) return '<div class="mx-ph">This page authors no examples.</div>';
+  const bar=exs.map((r,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}" data-mx-tab="${esc(r.id)}"
     aria-selected="${k?'false':'true'}">${mxM(r.label)}</button>`).join('');
-  const panes=reps.map((r,k)=>{
-    const isFig=!!(r.content&&r.content.kind==='figure');
-    const kind=(r.content&&r.content.kind)?String(r.content.kind):'none';
-    return `<div class="mx-figure"${isFig?' data-fig-viewport':''} data-mx-panel="${esc(r.id)}"
-      data-mx-repkind="${esc(kind)}" role="tabpanel"
-      aria-label="${esc(r.label)}"${k?' hidden':''}>${mxRepContent(r,s,i,k)}</div>`;
+  const panes=exs.map((r,k)=>{
+    const hasFig=r.parts.some(p=>p&&p.kind==='figure');
+    return `<div class="mx-expane"${hasFig?' data-fig-viewport':''} data-mx-panel="${esc(r.id)}" role="tabpanel"
+      aria-label="${esc(r.label)}"${k?' hidden':''}>
+      ${r.caption?`<p class="mx-excap">${mxM(r.caption)}</p>`:''}
+      ${mxCompanion(r.parts,(tpRespId(s)||i)+'-'+r.id)||'<div class="mx-ph">This example has no parts authored yet.</div>'}
+    </div>`;
   }).join('');
-  return `<div class="mx-panel mx-flush"><div class="mx-tabs" role="tablist" data-mx-tabset
-    aria-label="Representations">${bar}</div>${panes}</div>`;
+  return `<div class="mx-panel mx-flush mx-expanel"><div class="mx-tabs" role="tablist" data-mx-tabset
+    aria-label="Examples of this concept">${bar}</div>${panes}</div>`;
 });
 
 registerPage('mathematics','notes',mxNotesPage);
@@ -11723,6 +11832,11 @@ function buildWorksheetMicro(){
    a hidden focus dialog — none of which means anything in print. The SVG is lifted out and the chrome is
    left behind, so the flat page carries the mathematics and nothing that only works with a pointer. */
 let MX_WS_FIG=0;
+function mxWsPart(part){
+  const lab=(part&&part.label)?`<h4 class="ws-mx-reph">${mxM(part.label)}</h4>`:'';
+  const body=mxWsFig(part);
+  return body?`<div class="ws-mx-part">${lab}${body}</div>`:'';
+}
 function mxWsFig(c){
   if(!c||typeof c!=='object') return '';
   if(c.kind==='figure'&&c.figure){
@@ -11734,8 +11848,9 @@ function mxWsFig(c){
       if(el){ el.removeAttribute('style'); el.removeAttribute('width'); el.removeAttribute('height'); svg=el.outerHTML; }
     }catch(e){}
     return svg?`<div class="ws-mx-fig">${svg}</div>`:''; }
-  if(c.kind==='table') return mxRepTable(c);
-  if(c.kind==='list') return mxRepList(c);
+  if(c.kind==='table') return mxPartTable(c);
+  if(c.kind==='points') return mxPartPoints(c);
+  if(c.kind==='relations') return mxPartRelations(c);
   if(c.kind==='prose') return `<div class="ws-mx-prose">${mxM(c.body||'')}</div>`;
   return '';
 }
@@ -11753,12 +11868,14 @@ function buildWorksheetMx(){
     const head=`<h2 class="ws-sec-h">${mxM(s.title||s.heading||('Page '+(i+1)))}</h2>`;
     if(s.type==='notes'){
       const items=(Array.isArray(s.concepts)&&s.concepts.length)?s.concepts:(Array.isArray(s.keyIdeas)?s.keyIdeas:[]);
-      const reps=mxReps((s.workspace&&typeof s.workspace==='object')?s.workspace:{},s);
+      const exs=mxNotesExamples(s,(s.workspace&&typeof s.workspace==='object')?s.workspace:{});
       out+=`<section class="ws-sec">${ref}${head}
         ${s.lede?`<p class="ws-mx-lede">${mxM(s.lede)}</p>`:''}
         ${items.length?`<ol class="ws-mx-concepts">${items.map(c=>`<li><b>${mxM((c&&(c.term||c.title))||'')}</b> ${mxM((c&&c.body)||'')}</li>`).join('')}</ol>`:''}
         ${(s.keyIdea&&s.keyIdea.body)?`<div class="ws-mx-key"><b>${esc(s.keyIdea.title||'Key idea')}</b> ${mxM(s.keyIdea.body)}</div>`:''}
-        ${reps.map(r=>`<div class="ws-mx-rep"><h3 class="ws-mx-reph">${mxM(r.label)}</h3>${mxWsFig(r.content)||'<div class="ws-mx-none">(no content authored)</div>'}</div>`).join('')}
+        ${exs.map(r=>`<div class="ws-mx-rep"><h3 class="ws-mx-reph">${mxM(r.label)}</h3>
+          ${r.caption?`<p class="ws-mx-lede">${mxM(r.caption)}</p>`:''}
+          ${r.parts.map(mxWsPart).join('')||'<div class="ws-mx-none">(no parts authored)</div>'}</div>`).join('')}
       </section>`; return;
     }
     if(s.type==='workedExamples'){
@@ -11768,9 +11885,10 @@ function buildWorksheetMx(){
           ${ex.question?`<div class="ws-mx-exq">${mxM(ex.question)}</div>`:''}
           ${(Array.isArray(ex.steps)&&ex.steps.length)?`<ol class="ws-mx-steps">${ex.steps.map(st=>{
             const o=(st&&typeof st==='object')?st:{text:st};
-            return `<li>${o.text?mxM(o.text):''}${o.math?`<div class="ws-mx-math">${mxM(o.math)}</div>`:''}</li>`; }).join('')}</ol>`:''}
+            return `<li>${o.text?mxM(o.text):''}${o.math?`<div class="ws-mx-math">${mxM(o.math)}</div>`:''}`
+              +`${mxParts(o.visual).map(mxWsPart).join('')}</li>`; }).join('')}</ol>`:''}
           ${ex.result?`<div class="ws-mx-res"><b>${esc(ex.resultLabel||'Answer')}</b> ${mxM(ex.result)}</div>`:''}
-          ${ex.visual?`<div class="ws-mx-rep">${ex.visual.label?`<h4 class="ws-mx-reph">${mxM(ex.visual.label)}</h4>`:''}${mxWsFig(ex.visual)}</div>`:''}
+          ${mxParts(ex.visual).length?`<div class="ws-mx-rep">${mxParts(ex.visual).map(mxWsPart).join('')}</div>`:''}
         </div>`).join('')||'<div class="ws-mx-none">(no examples authored)</div>'}
       </section>`; return;
     }

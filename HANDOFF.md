@@ -320,17 +320,33 @@ canvas can now be taller than the window, so a fraction of its rect may lie outs
 
 ## 8c. The Mathematics page contracts (Stage C)
 
+**A TAB IS AN ALTERNATIVE COMPLETE EXAMPLE, NOT A FRAGMENT OF ONE.** This is the semantic rule the whole
+contract hangs on. A learner must never have to switch tabs to reconstruct one mathematical idea, so every
+pane carries its own drawing, its own coordinates and its own stated relationship. Switching tabs means
+"show me another complete example of this concept". `Graph | Table | Coordinates` was the wrong composition
+and is gone.
+
 **Notes** — `{ id, title, lede?, contentTitle?, keyIdea?: {title?, body}, concepts: [{id, term, body}],
-representations: [{id, label, content}], workspace: {kind:"representation"} }`. `concepts` is any length.
-`keyIdea` is optional enrichment and renders as a compact aside; absent, it occupies nothing.
+examples: [{id, label, caption?, parts: […]}], workspace: {kind:"representation"} }`. `concepts` is any
+length. `keyIdea` is optional enrichment and renders as a compact aside; absent, it occupies nothing.
 
 **Worked Examples** — `{ id, title, lede?, examples: [{id, label, question, steps: [{id, text?, math?,
-note?}], resultLabel?, result?, visual?}] }`. No `workspace`: the page owns its own two‑column body,
-because the visual belongs to the example rather than to the page.
+note?, visual?}], resultLabel?, result?, visual?}] }`. No `workspace`: the page owns its own two‑column
+body, because the visual belongs to the example rather than to the page. A STEP's `visual` is the same
+shape as an example's, so the data/rendering boundary does not assume the companion is one static graph
+unrelated to the steps.
 
-**Representation / visual `content`** — `{kind:"figure", figure:{…}}` (the Figure engine),
-`{kind:"table", stub?, head:[], rows:[{label, cells:[]}]}`, `{kind:"list", items:[…|{term, body}]}`,
-`{kind:"prose", body}`. Unknown kinds render a named placeholder rather than failing.
+**`parts` / `visual` — one vocabulary, shared by both pages.** Either a single part, an array of parts, or
+`{parts:[…]}`. A part is `{kind:"figure", label?, figure:{…}}` (the Figure engine),
+`{kind:"table", label?, stub?, head:[], rows:[{label, cells:[]}]}`,
+`{kind:"points", label?, items:[…|{term, body}]}`, `{kind:"relations", label?, items:[…]}`,
+`{kind:"prose", label?, body}`. Unknown kinds render a named placeholder rather than failing.
+
+**A REGION THAT EXISTS BUT HOLDS NOTHING IS A FAILURE**, exactly as a zero‑height workbook was. The example
+region is under the same viability contract as Practice (`MX_REP_MIN_W` / `MX_REP_MIN_H`, §8b), a portrait
+viewport stacks by construction rather than being judged on width, and the figure part is given its own
+bounded box on the documented `.tp-slide` seam. `verify-notes-examples.mjs` measures the rendered content
+area at five viewports; its control strips the rules that size the drawing and every viewport then fails.
 
 Ownership is unchanged: JSON carries content and semantic capability; the page renderer owns composition;
 the theme owns the visual language; the Figure Engine owns mathematical figures. No pixel widths, placement

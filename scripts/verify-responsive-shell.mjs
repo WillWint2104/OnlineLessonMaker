@@ -67,13 +67,15 @@ LESSON.slides.push({ type: 'text', title: 'Legacy control page', body: ['This pa
 const LEGACY = LESSON.slides.length - 1;
 for (let k = 0; k < 14; k++) LESSON.slides.push({ type: 'summary', id: 'f' + k, navLabel: 'Filler page ' + (k + 1) });
 
-// Since Stage C the figure is authored as a representation's content, not as a property of the workspace.
-// The gate resolves it the way the renderer does rather than hard-coding either path.
+// Since Stage C the figure is authored as a PART of one of the page's examples, not as a property of the
+// workspace. The gate resolves it the way the renderer does rather than hard-coding either path.
 const MX_FIG_OF = `window.mxFigOf = function(s){
-  var reps = (s.workspace && s.workspace.representations) || s.representations || [];
-  for (var i = 0; i < reps.length; i++) {
-    var c = reps[i] && reps[i].content;
-    if (c && c.kind === 'figure' && c.figure) return c.figure;
+  var exs = (s.workspace && s.workspace.examples) || s.examples || [];
+  for (var i = 0; i < exs.length; i++) {
+    var parts = (exs[i] && exs[i].parts) || [];
+    for (var j = 0; j < parts.length; j++) {
+      if (parts[j] && parts[j].kind === 'figure' && parts[j].figure) return parts[j].figure;
+    }
   }
   return s.workspace && s.workspace.figure;
 };`;
@@ -423,11 +425,12 @@ mark('workspace');
     return { labels: t.map(x => x.textContent.trim()), shownFirst, shownAfter: after.length,
       which: after[0] && after[0].dataset.mxPanel, selected: t[1].getAttribute('aria-selected') };
   });
-  // Since Stage C a panel is keyed by its AUTHORED id, not by its position, so switching to the second tab
-  // shows the panel the lesson calls "table" rather than the one that happens to be second.
-  ok('the representation tabs show exactly one view at a time and switch',
-     tabs.labels.join('/') === 'Graph/Table/Coordinates' && tabs.shownFirst === 1 && tabs.shownAfter === 1
-     && tabs.which === 'table' && tabs.selected === 'true',
+  // Since Stage C a tab is a WHOLE alternative example, keyed by its authored id rather than by its position,
+  // so switching to the second tab shows the example the lesson calls "ex-shifted", not merely the second panel.
+  const exIds = (FIX.slides[0].examples || []).map((e) => e.id);
+  ok('the example tabs show exactly one whole example at a time and switch',
+     tabs.labels.length === exIds.length && tabs.shownFirst === 1 && tabs.shownAfter === 1
+     && tabs.which === exIds[1] && tabs.selected === 'true',
      `${tabs.labels.join(' · ')} → showing "${tabs.which}"`);
   const err = await p.evaluate(() => {
     LESSON.slides[0].workspace = { kind: 'nosuchkind' }; go(0);
@@ -489,8 +492,15 @@ mark('viewport');
      `${A.nTicks} labels inside the domain; viewport ${A.view.x0.toFixed(2)}…${A.view.x1.toFixed(2)} vs domain ${A.dom.x0.toFixed(2)}…${A.dom.x1.toFixed(2)}`);
 
   // RESIZE: a different container is a different mathematical viewport, not the same picture scaled.
-  // Same width, a much shorter window: the container's SHAPE changes, so the plane's shape must follow it.
-  const short = await newPage(1536, 640); await boot(short, NOTES); const B = await read(short);
+  // The container's SHAPE is what must drive it, so the shape is what this changes. (A shorter WINDOW no
+  // longer does: since Stage C the example's figure part is authored at a fixed 4/3 so every alternative
+  // example is drawn on the same footing, which makes the window height the wrong lever — it would have
+  // measured the same container twice and passed for the wrong reason.)
+  const short = await newPage(1536, 640); await boot(short, NOTES);
+  await short.evaluate(() => { const el = document.querySelector('.mx-expane:not([hidden]) [data-mx-part="figure"]');
+    el.style.aspectRatio = 'auto'; el.style.height = '260px'; window.dispatchEvent(new Event('resize')); });
+  await short.waitForTimeout(400);
+  const B = await read(short);
   const span = (v) => ({ x: v.x1 - v.x0, y: v.y1 - v.y0 });
   const sa = span(A.view), sb = span(B.view);
   ok('resizing the container resizes the mathematical viewport',
@@ -610,11 +620,16 @@ mark('isolation');
   const foreign = [...seen.classes].filter((c) => !ALLOW_EXACT.has(c) && !ALLOW.some((r) => r.test(c)));
   ok('no class from a legacy pack renderer appears anywhere in a Mathematics page',
      foreign.length === 0, foreign.length ? foreign.join(', ') : `${seen.classes.size} classes across ${seen.pages} pages, all shell or Figure engine`);
+  // Every carrier of the borrowed slide class must be a figure host and nothing else. The COUNT is not the
+  // claim (the Notes page now authors an alternative example per tab, each with its own drawing); the claim
+  // is that the seam appears once per authored figure and nowhere else.
+  const seam = await p.evaluate(() => { go(0);
+    const carriers = [...document.querySelectorAll('.mx .tp-slide')];
+    const figs = document.querySelectorAll('.mx [data-mx-part="figure"] .tp-fig, .mx .mx-figure .tp-fig').length;
+    return { n: carriers.length, figs, allSkins: carriers.every((c) => c.classList.contains('mx-figskin')) }; });
   ok('the ONE documented shared seam is the Figure engine, and it is scoped to the figure host',
-     await p.evaluate(() => { go(0);
-       const carriers = [...document.querySelectorAll('.mx .tp-slide')];
-       return carriers.length === 1 && carriers[0].classList.contains('mx-figskin'); }),
-     'one .tp-slide, and it is .mx-figskin');
+     seam.allSkins && seam.n === seam.figs && seam.n > 0,
+     `${seam.n} .tp-slide carriers for ${seam.figs} authored figures, and every one of them is .mx-figskin`);
   // The generalist family, when it is designed, gets its own theme namespace. Nothing may pre-empt it.
   const ns = await p.evaluate(() => ({ themes: Object.keys(PAGES),
     mathsOnly: Object.keys(PAGES).length === 1 && Object.keys(PAGES)[0] === 'mathematics',
