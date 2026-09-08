@@ -1953,6 +1953,48 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-wexsurface{background:var(--mx-white);border-top:0;border-bottom:1px solid var(--mx-line);
   padding:26px 30px 30px;min-width:0;}
 .mx-wexlede{margin:0 0 18px;font-size:15px;line-height:1.6;color:var(--mx-ink-2);}
+/* LOCAL STATE NAVIGATION — a segmented control inside the teaching surface, quieter than the group tabs
+   above it so the hierarchy reads group → stage, not two competing tab strips. */
+.mx-states{display:inline-flex;gap:2px;margin:0 0 20px;padding:3px;border:1px solid var(--mx-line);
+  border-radius:10px;background:var(--mx-ground);}
+.mx-stbtn{appearance:none;border:0;background:none;cursor:pointer;display:inline-flex;align-items:center;
+  gap:8px;padding:7px 14px;border-radius:7px;font:500 13.5px/1 var(--mx-ui);color:var(--mx-ink-2);}
+.mx-stbtn:hover{color:var(--mx-ink);}
+.mx-stbtn.on{background:var(--mx-white);color:var(--mx-green-deep);font-weight:600;
+  box-shadow:0 1px 2px rgba(16,32,24,.06);}
+.mx-stn{font-size:11.5px;font-weight:700;letter-spacing:.04em;color:var(--mx-ink-3);}
+.mx-stbtn.on .mx-stn{color:var(--mx-green);}
+.mx-stpane[hidden]{display:none;}          /* a hidden state reserves no layout space */
+.mx-stpane{min-width:0;}
+/* A single authored example is a reading composition, not a grid with an empty half beside it. */
+.mx-wexset.mx-wexone{grid-template-columns:minmax(0,1fr);max-width:74ch;margin:0 auto;}
+/* `standard` and `staged` read at a measure and sit centred rather than pinned to the left of an empty
+   canvas; a companion, where one is authored, still gets its column. */
+.mx-wexpane[data-mx-wextype="standard"] .mx-wexbody.mx-wexsolo,
+.mx-wexpane[data-mx-wextype="staged"] .mx-wexbody.mx-wexsolo{max-width:74ch;margin:0 auto;}
+.mx-wexpane[data-mx-wextype="standard"] .mx-wexfoot,
+.mx-wexpane[data-mx-wextype="staged"] .mx-stpane>.mx-wexfoot{max-width:74ch;margin-left:auto;margin-right:auto;}
+/* the lede shares the reading measure it introduces — otherwise it hangs left of the column it belongs to */
+.mx-wexpane[data-mx-wextype="standard"] .mx-wexlede,
+.mx-wexpane[data-mx-wextype="staged"] .mx-wexlede,
+.mx-wexpane[data-mx-wextype="staged"] .mx-stpane>.mx-wexlede{max-width:74ch;margin-left:auto;margin-right:auto;}
+.mx-wexpane[data-mx-wextype="staged"] .mx-states{display:flex;width:min(74ch,100%);margin-left:auto;margin-right:auto;}
+/* A STAGED VISUAL STATE IS THE REPRESENTATION'S OWN SURFACE, so the plane is sized by the room the state
+   actually has — its HEIGHT — and its width follows from the authored aspect. That is a smaller box of the
+   SAME SHAPE, never a different shape: a tall plane becomes a narrower one, not a flattened one. Sizing it
+   by width instead made a 1:2 plane 1182px tall and put its own conclusion a screen below it. */
+.mx-wexpane[data-mx-wextype="staged"] .mx-stpane>.mx-wexfoot .mx-part[data-mx-part="figure"],
+.mx-wexpane[data-mx-wextype="comparison"] .mx-stpane>.mx-wexfoot .mx-part[data-mx-part="figure"]{
+  /* WIDTH is the binding constraint so the aspect can never be clipped by `max-width`: the height the
+     state can spare is converted into the width that shape implies, and whichever is smaller wins.
+     Setting height directly and capping width instead flattened the plane on a phone (0.558 vs 0.620). */
+  width:min(100%,calc(min(70vh,780px) * var(--mx-plot-ar,1.333)));
+  height:auto;margin:0 auto;}
+/* The plane and the statement it supports are ONE region: bound them to a common measure so the graph
+   sits with its conclusion rather than alone in the middle of an otherwise empty card. */
+.mx-wexpane[data-mx-wextype="staged"] .mx-stpane>.mx-wexfoot,
+.mx-wexpane[data-mx-wextype="comparison"] .mx-stpane>.mx-wexfoot{
+  max-width:min(100%,76ch);margin-left:auto;margin-right:auto;}
 /* COMPACT and COMPARISON set complete examples alongside one another. THE GRID IS AT MOST TWO COLUMNS —
    example count is not column count. Three narrow columns stop being worked examples and start being a
    question sheet, so three examples are 2 + 1 and four are 2 x 2. Beyond four the author should split the
@@ -7658,6 +7700,17 @@ function wireResponsive(){
     bar.querySelectorAll('[data-mx-tab]').forEach(x=>{ x.classList.toggle('on',x===b); x.setAttribute('aria-selected',x===b?'true':'false'); });
     const host=bar.parentNode;
     host.querySelectorAll('[data-mx-panel]').forEach(pn=>{ pn.hidden=(pn.dataset.mxPanel!==b.dataset.mxTab); });
+    if(typeof scheduleFigFit==='function') scheduleFigFit();     // a revealed pane's figures have a real box only now
+  }));
+  /* LOCAL STATES inside one worked example. The same mechanic as the tab bar, scoped to its own group, so
+     a staged example's states cannot move another group's panes — and a figure that has just come out of
+     `hidden` is re-solved, because until this moment its stage measured zero. */
+  root.querySelectorAll('[data-mx-stateset]').forEach(bar=>bar.addEventListener('click',e=>{
+    const b=e.target.closest('[data-mx-state]'); if(!b) return;
+    bar.querySelectorAll('[data-mx-state]').forEach(x=>{ x.classList.toggle('on',x===b); x.setAttribute('aria-selected',x===b?'true':'false'); });
+    const host=bar.parentNode;
+    host.querySelectorAll('[data-mx-statepanel]').forEach(pn=>{ pn.hidden=(pn.dataset.mxStatepanel!==b.dataset.mxState); });
+    if(typeof scheduleFigFit==='function') scheduleFigFit();
   }));
 }
 
@@ -7788,23 +7841,49 @@ function mxNotesExamples(s,ws){
    text an example has, or how much room is left, in order to pick a layout — that would be
    unpredictable to author against. A tab is a GROUP with a pedagogical identity ("Substitution",
    "Solving for x"), not "Example 1". There is no response field anywhere on this page. */
-const MX_WEX_TYPES={compact:1,visual:1,comparison:1,extended:1};
+const MX_WEX_TYPES={compact:1,standard:1,comparison:1,staged:1,extended:1};
+const MX_WEX_ALIAS={visual:'standard'};                 /* `visual` was the earlier name for `standard` */
+const MX_WEX_SECTIONS={question:1,steps:1,answer:1,visual:1,relations:1};
+/* LOCAL STATES. Algebra and a substantial representation each deserve the whole surface: a learner should
+   not scroll past a full-height graph to reach the conclusion of the working, and the graph must not be
+   shrunk so the two can share a screen. A state is a PRESENTATION partition of one example's content — the
+   content vocabulary is untouched, so the same authored example renders through any contract.
+   `show` names the semantic regions a state carries; `steps:[from,to]` (1-based, inclusive) splits a long
+   derivation. Staging is available to any contract; `staged` is simply the name for when it IS the
+   composition, and a `staged` group that authors no states gets the obvious two. */
+function mxWexStates(g){
+  const raw=(Array.isArray(g.states)?g.states:[]).filter(x=>x&&typeof x==='object');
+  const norm=(st,k)=>({ id:String(st.id||('s'+(k+1))), label:String(st.label||('Step '+(k+1))),
+    lede:st.lede||'',
+    show:(Array.isArray(st.show)?st.show:Object.keys(MX_WEX_SECTIONS)).filter(x=>MX_WEX_SECTIONS[x]),
+    steps:(Array.isArray(st.steps)&&st.steps.length===2)?[+st.steps[0],+st.steps[1]]:null });
+  if(raw.length) return raw.map(norm);
+  if(g.type!=='staged') return [];
+  const hasVis=mxParts((g.examples[0]||{}).visual).length||mxParts(g.relations||g.visual).length;
+  return hasVis?[norm({id:'solution',label:'Worked solution',show:['question','steps','answer']},0),
+                 norm({id:'visual',label:'Visual explanation',show:['visual','relations']},1)]:[];
+}
 function mxWexGroups(s){
   const gs=(Array.isArray(s.groups)?s.groups:[]).filter(x=>x&&typeof x==='object');
   if(gs.length) return gs.map((g,k)=>({
     id:String(g.id||('g'+(k+1))), title:String(g.title||g.label||('Group '+(k+1))),
-    type:MX_WEX_TYPES[String(g.type||'')]?String(g.type):'extended',
+    type:(MX_WEX_TYPES[String(g.type||'')]?String(g.type):(MX_WEX_ALIAS[String(g.type||'')]||'extended')),
     declared:String(g.type||''), lede:g.lede||'', footLabel:g.footLabel||'', relations:g.relations, visual:g.visual,
+    states:Array.isArray(g.states)?g.states:null,
     examples:(Array.isArray(g.examples)?g.examples:[]).filter(x=>x&&typeof x==='object')}));
   /* A page that authors a bare examples[] is one extended group — the old shape still renders. */
   const ex=(Array.isArray(s.examples)?s.examples:[]).filter(x=>x&&typeof x==='object');
   return ex.length?[{id:'all',title:String(s.contentTitle||'Worked examples'),type:'extended',declared:'',
-    lede:'',relations:null,visual:null,examples:ex}]:[];
+    lede:'',relations:null,visual:null,states:null,examples:ex}]:[];
 }
-function mxWexSteps(ex){
-  const steps=Array.isArray(ex.steps)?ex.steps:[];
+function mxWexSteps(ex,range){
+  let steps=Array.isArray(ex.steps)?ex.steps:[];
+  /* A state may carry a RANGE of the derivation; the numbering keeps counting from where it left off, so
+     the learner reads one continuous argument across the states rather than three that all start at 1. */
+  const from=range?Math.max(1,range[0]):1;
+  if(range) steps=steps.slice(from-1,range[1]);
   if(!steps.length) return '<div class="mx-ph">This example has no solution steps yet.</div>';
-  return `<ol class="mx-steps">${steps.map((st,k)=>{
+  return `<ol class="mx-steps"${from>1?` start="${from}" style="counter-reset:mxstep ${from-1}"`:''}>${steps.map((st,k)=>{
     const o=(st&&typeof st==='object')?st:{text:st};
     const sp=mxParts(o.visual);
     return `<li class="mx-step" data-mx-step="${esc(String(o.id||('s'+(k+1))))}"${sp.length?' data-mx-stepvis':''}>
@@ -7821,30 +7900,35 @@ function mxWexSteps(ex){
    `named` is false where the example's own name would only repeat the group's: a group holding ONE example
    is already titled by its tab, and printing "Find x when y = 16" above "Find the value(s) of x for which
    y = 16" is the duplicated prompt hierarchy this replaces. */
-function mxWexSolution(ex,k,named){
+function mxWexSolution(ex,k,named,state){
   const q=ex.prompt||ex.question, a=ex.answer||ex.result;
+  const show=x=>!state||state.show.indexOf(x)>=0;
   return `${named!==false?`<h3 class="mx-wexh">${mxM(String(ex.label||('Example '+(k+1))))}</h3>`:''}
-    ${q?`<section class="mx-wexsec"><h4 class="mx-wexlab">Question</h4>
+    ${(q&&show('question'))?`<section class="mx-wexsec" data-mx-sec="question"><h4 class="mx-wexlab">Question</h4>
       <div class="mx-wexqb">${mxM(q)}</div></section>`:''}
-    <section class="mx-wexsec"><h4 class="mx-wexlab">Worked solution</h4>${mxWexSteps(ex)}</section>
-    ${a?`<div class="mx-wexres"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span>
+    ${show('steps')?`<section class="mx-wexsec" data-mx-sec="steps"><h4 class="mx-wexlab">Worked solution</h4>${mxWexSteps(ex,state&&state.steps)}</section>`:''}
+    ${(a&&show('answer'))?`<div class="mx-wexres" data-mx-sec="answer"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span>
       <span>${mxM(a)}</span></div>`:''}`;
 }
-function mxWexCell(ex,s,i,key,k){
-  const parts=mxParts(ex.visual);
+function mxWexCell(ex,s,i,key,k,state){
+  const parts=(state&&state.show.indexOf('visual')<0)?[]:mxParts(ex.visual);
   const vis=parts.length?mxCompanion(parts,key+'-'+(ex.id||k)):'';
   return `<article class="mx-wexcell" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${vis?' data-mx-cellvis':''}>
-    <div class="mx-wexsol">${mxWexSolution(ex,k,true)}</div>
+    <div class="mx-wexsol">${mxWexSolution(ex,k,true,state)}</div>
     ${vis?`<div class="mx-wexcellvis">${vis}</div>`:''}</article>`;
 }
-function mxWexGroupBody(g,s,i){
+function mxWexGroupBody(g,s,i,state){
   const key=(tpRespId(s)||i)+'-'+g.id, ex=g.examples;
   if(!ex.length) return '<div class="mx-ph">This group has no examples authored yet.</div>';
-  if(g.type==='visual'||g.type==='extended'){
+  if(state&&state.show.indexOf('steps')<0&&state.show.indexOf('question')<0&&state.show.indexOf('answer')<0)
+    return '';                                        /* a visual-only state carries no worked solution */
+  if(g.type==='standard'||g.type==='staged'||g.type==='extended'){
     /* ONE example is the composition. `visual` puts an authored representation beside the reasoning;
        `extended` takes the reading width and lets a step bring its own picture inline. A companion
        column exists only when the example authors one — never as a reserved empty region. */
-    const one=ex[0], parts=mxParts(one.visual), vis=parts.length?mxCompanion(parts,key+'-'+(one.id||0)):'';
+    /* In a STAGED group the representation belongs to its own state, so it is never also a companion. */
+    const one=ex[0], parts=(g.type==='staged')?[]:mxParts(one.visual);
+    const vis=parts.length?mxCompanion(parts,key+'-'+(one.id||0)):'';
     /* A PORTRAIT PLANE DOES NOT BELONG IN A SIDE COLUMN. Under an equal scale, a demonstration that has to
        reach y = 16 over x = ±6 is simply a tall picture; set beside the reasoning it towers over it, and
        squeezing it would be the page reshaping the mathematics again. So the composition stacks it beneath
@@ -7852,16 +7936,52 @@ function mxWexGroupBody(g,s,i){
     const shape=parts.filter(q=>q&&q.kind==='figure').map(q=>mxFigRatio(q.figure)).filter(Boolean);
     const portrait=shape.length&&shape.every(r=>r<0.85);
     return `<div class="mx-wexbody${vis?'':' mx-wexsolo'}${portrait?' mx-wexstack':''}" data-mx-wexcols="${vis&&!portrait?'2':'1'}"${portrait?' data-mx-plotshape="portrait"':''}>
-      <div class="mx-wexsol" data-mx-example="${esc(String(one.id||'ex1'))}">${mxWexSolution(one,0,ex.length>1)}</div>
+      <div class="mx-wexsol" data-mx-example="${esc(String(one.id||'ex1'))}">${mxWexSolution(one,0,ex.length>1,state)}</div>
       ${vis?`<aside class="mx-wexvis" aria-label="${esc('Supporting representation for '+String(one.label||''))}">${vis}</aside>`:''}
-    </div>${ex.slice(1).map((x,k)=>mxWexCell(x,s,i,key,k+1)).join('')}`;
+    </div>${ex.slice(1).map((x,k)=>mxWexCell(x,s,i,key,k+1,state)).join('')}`;
   }
   /* compact and comparison both set complete examples ALONGSIDE one another; they differ in what the
      reader is meant to do with them, which the group's own relationship line says. */
-  return `<div class="mx-wexset" data-mx-wexset="${esc(g.type)}" data-mx-count="${ex.length}">
-    ${ex.map((x,k)=>mxWexCell(x,s,i,key,k)).join('')}</div>`;
+  /* ONE EXAMPLE IS NOT A ONE-COLUMN GRID. A single authored example collapses to a centred reading
+     composition rather than keeping the ghost of a two-column shell with an empty half beside it. */
+  return `<div class="mx-wexset${ex.length===1?' mx-wexone':''}" data-mx-wexset="${esc(g.type)}" data-mx-count="${ex.length}">
+    ${ex.map((x,k)=>mxWexCell(x,s,i,key,k,state)).join('')}</div>`;
+}
+function mxWexFootRender(g,s,i,foot,state){
+  if(!foot.length) return '';
+  const named=foot.every(q=>q&&q.label);
+  const lab=g.footLabel?esc(g.footLabel):(named?'':(foot.some(q=>q.kind==='figure')?'Visual explanation':'Connection'));
+  return `<section class="mx-wexfoot">${lab?`<h4 class="mx-wexlab">${lab}</h4>`:''}
+    ${mxCompanion(foot,(tpRespId(s)||i)+'-'+g.id+'-'+((state&&state.id)||'foot'))}</section>`;
+}
+function mxWexFoot(g,s,i,state){
+  if(state&&state.show.indexOf('relations')<0&&state.show.indexOf('visual')<0) return '';
+  let foot=mxParts(g.relations||g.visual);
+  if(state&&state.show.indexOf('visual')<0) foot=foot.filter(q=>q.kind!=='figure');
+  if(state&&state.show.indexOf('relations')<0) foot=foot.filter(q=>q.kind==='figure');
+  return mxWexFootRender(g,s,i,foot,state);
 }
 function mxWexGroup(g,s,i,hidden){
+  const states=mxWexStates(g);
+  if(states.length>1){
+    /* LOCAL NAVIGATION INSIDE THE EXAMPLE — not another lesson page and not another top-level tab. The
+       inactive state is `hidden`, so it reserves no layout space; its figures are solved when it is
+       revealed, which is what the engine's viewport observer exists for. */
+    const bar=states.map((st,k)=>`<button type="button" role="tab" class="mx-stbtn${k?'':' on'}"
+      data-mx-state="${esc(st.id)}" aria-selected="${k?'false':'true'}"><span class="mx-stn">${k+1}/${states.length}</span>${mxM(st.label)}</button>`).join('');
+    /* The group's lede introduces the group, so it belongs to the state the reader lands on; a state that
+       states its own carries that instead. Never both, one under the other, saying the same thing. */
+    const panes=states.map((st,k)=>`<div class="mx-stpane" data-mx-statepanel="${esc(st.id)}"
+        role="tabpanel" aria-label="${esc(st.label)}"${k?' hidden':''}>
+      ${(st.lede||(k===0&&g.lede))?`<p class="mx-wexlede">${mxM(st.lede||g.lede)}</p>`:''}
+      ${mxWexGroupBody(g,s,i,st)}
+      ${mxWexFoot(g,s,i,st)}</div>`).join('');
+    return `<section class="mx-wexpane" data-mx-panel="${esc(g.id)}" data-mx-wextype="${esc(g.type)}"
+        data-mx-staged="${states.length}" role="tabpanel" aria-label="${esc(g.title)}"${hidden?' hidden':''}>
+      <div class="mx-wexsurface">
+        <div class="mx-states" role="tablist" data-mx-stateset aria-label="${esc(g.title)} stages">${bar}</div>
+        ${panes}</div></section>`;
+  }
   const foot=mxParts(g.relations||g.visual);
   return `<section class="mx-wexpane" data-mx-panel="${esc(g.id)}" data-mx-wextype="${esc(g.type)}"
       role="tabpanel" aria-label="${esc(g.title)}"${hidden?' hidden':''}>

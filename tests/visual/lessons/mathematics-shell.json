@@ -366,7 +366,7 @@
         },
         {
           "id": "g-solving",
-          "type": "visual",
+          "type": "staged",
           "title": "Solving for _x_",
           "lede": "Working backwards: the _y_-value is known and the _x_-values have to be found.",
           "examples": [
@@ -392,65 +392,81 @@
                 },
                 {
                   "id": "s4",
-                  "text": "Read it off the graph: the line _y_ = 16 crosses the parabola twice, once each side of the axis."
+                  "text": "The graph check on the next stage shows why there are two answers."
                 }
               ],
-              "answer": "_x_ = 4 or _x_ = −4.",
-              "visual": {
-                "parts": [
-                  {
-                    "kind": "figure",
-                    "figure": {
-                      "type": "figure",
-                      "figure": "graph",
-                      "aspect": "stretch",
-                      "grid": "shown",
-                      "callouts": "hidden",
-                      "domain": {
-                        "xMin": -6,
-                        "xMax": 6,
-                        "yMin": -2,
-                        "yMax": 20
-                      },
-                      "objects": [
-                        {
-                          "type": "function",
-                          "f": "x^2",
-                          "label": "y = x^2"
-                        },
-                        {
-                          "type": "line",
-                          "y": 16,
-                          "label": "y = 16"
-                        },
-                        {
-                          "type": "points",
-                          "rows": [
-                            [
-                              "(−4, 16)",
-                              -4,
-                              16
-                            ],
-                            [
-                              "(4, 16)",
-                              4,
-                              16
-                            ]
-                          ]
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
+              "answer": "_x_ = 4 or _x_ = −4."
             }
           ],
           "relations": [
+            {
+              "kind": "figure",
+              "figure": {
+                "type": "figure",
+                "figure": "graph",
+                "aspect": "stretch",
+                "grid": "shown",
+                "callouts": "hidden",
+                "domain": {
+                  "xMin": -6,
+                  "xMax": 6,
+                  "yMin": -2,
+                  "yMax": 20
+                },
+                "objects": [
+                  {
+                    "type": "function",
+                    "f": "x^2",
+                    "label": "y = x^2"
+                  },
+                  {
+                    "type": "line",
+                    "y": 16,
+                    "label": "y = 16"
+                  },
+                  {
+                    "type": "points",
+                    "rows": [
+                      [
+                        "(−4, 16)",
+                        -4,
+                        16
+                      ],
+                      [
+                        "(4, 16)",
+                        4,
+                        16
+                      ]
+                    ]
+                  }
+                ]
+              }
+            },
             {
               "kind": "relations",
               "label": "What the graph shows",
               "items": [
                 "The horizontal line _y_ = 16 meets the curve twice, once each side of the axis — which is why the algebra produces two answers rather than one."
+              ]
+            }
+          ],
+          "states": [
+            {
+              "id": "solution",
+              "label": "Worked solution",
+              "show": [
+                "question",
+                "steps",
+                "answer"
+              ]
+            },
+            {
+              "id": "graph",
+              "label": "Graph check",
+              "lede": "The same question read off the curve.",
+              "show": [
+                "visual",
+                "relations"
               ]
             }
           ]
@@ -482,7 +498,7 @@
             {
               "id": "ex-neg3",
               "label": "Starting from _x_ = −3",
-              "prompt": "Now find the point where _x_ = −3.",
+              "prompt": "Find the point on _y_ = _x_^2 where _x_ = −3.",
               "steps": [
                 {
                   "id": "s1",
@@ -552,6 +568,26 @@
               "label": "Why the two agree",
               "items": [
                 "The two _x_-values sit at equal distance either side of the _y_-axis, and squaring sends both to the same _y_. That is what makes _x_ = 0 the axis of symmetry."
+              ]
+            }
+          ],
+          "states": [
+            {
+              "id": "workings",
+              "label": "Workings",
+              "show": [
+                "question",
+                "steps",
+                "answer"
+              ]
+            },
+            {
+              "id": "visual",
+              "label": "Visual explanation",
+              "lede": "Seeing both worked examples together on one graph.",
+              "show": [
+                "visual",
+                "relations"
               ]
             }
           ]

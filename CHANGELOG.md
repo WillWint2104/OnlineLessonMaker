@@ -118,6 +118,19 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     is only whether the chosen composition can be READ — a set stacks when its columns fall below a
     readable measure, and a `visual` group reserves no companion when none is authored. A bare
     `examples[]` still renders, as one `extended` group.
+  - **`staged` — local states, and the rule that resolves the oscillation.** Working and a substantial
+    representation each deserve the whole surface: a learner should not scroll past a full-height plane to
+    reach the conclusion of the algebra, and the plane must not shrink so the two can share a screen. A
+    group may author `states[]`, each naming the semantic regions it carries (`show`) and optionally a step
+    range; the numbering keeps counting so one argument reads across the states. Staging is available to
+    any contract — `staged` is the name for when it IS the composition. **A plane too tall to embed belongs
+    in a state, not squeezed and not left as an 800px portrait object halfway down an ordinary page.** The
+    author chooses that; the page never infers it from height. A hidden state reserves no layout space, and
+    a figure revealed with its state is re-solved — until then its stage measured zero.
+  - **`visual` → `standard`,** and the vocabulary is now `compact | standard | comparison | staged |
+    extended`. `visual` still resolves. `standard` is one ordinary example at a centred reading measure
+    rather than half an empty canvas; one authored example in a `compact` set collapses to a reading column
+    instead of keeping the ghost of a two-column shell.
   - **THE PAGE NEVER RESHAPES THE MATHEMATICS.** The boundary the whole figure system now hangs on: the
     Figure Engine determines mathematical geometry, the page composition determines where that geometry can
     live. Measured before the rule existed, the same symmetry plane rendered at **4.65:1** on a desktop and
@@ -183,7 +196,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     had been laying every part's LABEL beside its content instead of above it. Scoped to `.mx-parts`.
   - The fixture demonstrates the renderer rather than redesigning the mathematics: four concepts (no
     invented fifth), three complete demonstrations of one object, and three worked-example groups — one
-    per composition type. `scripts/verify-notes-examples.mjs` is the gate (65 checks) and
+    per composition type. `scripts/verify-notes-examples.mjs` is the gate (75 checks) and
     `scripts/shots-notes-examples.mjs` the proof set. The gate encodes the approved behaviour rather than the implementation: expected part
     counts, companion kinds, which steps carry visuals and how many tabs there are are all DERIVED from the
     lesson JSON, so re-authoring the fixture cannot quietly make the gate agree with itself. It asserts the

@@ -424,12 +424,30 @@ shape it is forced into.
 
 | composition | slot |
 | --- | --- |
-| `compact` | 1–4 short examples of one question type; no reserved region, a visual only where authored inline at a step |
-| `visual` | one example whose representation matters; companion beside the reasoning, or beneath it at the plane's own proportions when the plane is portrait |
-| `comparison` | 2–4 cases compared; a shared plane may follow them, centred, at its authored proportions |
-| `extended` | one derivation at reading measure, centred; visuals BREAK OUT wider at the step that earns them, then the reading flow resumes |
+| `compact` | 1–4 short examples of one skill; no reserved region. 1 → one centred reading column · 2 → two · 3 → 2 + 1 centred · 4 → 2 × 2 · beyond 4 the author splits |
+| `standard` | one ordinary example needing no major representation; a centred reading measure, not half an empty canvas. A companion, where authored, sits beside the reasoning — or beneath it when the plane is portrait |
+| `comparison` | 2–4 cases whose relationship IS the teaching point, side by side; a shared plane may follow, often as its own state |
+| `staged` | working and a substantial representation each get the whole surface, as authored LOCAL STATES (`1/2 Worked solution`, `2/2 Graph check`) |
+| `extended` | a long derivation, read in authored stages rather than one expanding document |
 
-None of those names says anything about graph dimensions, and that is deliberate.
+None of those names says anything about graph dimensions, and that is deliberate. `visual` is the earlier
+name for `standard` and still resolves.
+
+### LOCAL STATES
+
+`states: [{id, label, lede?, show:[…], steps?:[from,to]}]` on a group. `show` names the semantic regions a
+state carries (`question | steps | answer | visual | relations`); `steps` is a 1-based inclusive range, and
+the numbering keeps counting so the reader follows one continuous argument across the states. Staging is
+available to ANY contract; `staged` is simply the name for when it *is* the composition, and a `staged`
+group that authors no states gets the obvious two.
+
+A state is a PRESENTATION partition — the content vocabulary is untouched, so the same authored example
+renders whole through any contract. A hidden state reserves no layout space, and a figure revealed with its
+state is re-solved (until then its stage measured zero).
+
+**THE MISSING RULE THAT CAUSED MOST OF THE OSCILLATION:** a plane too tall to embed belongs in a STAGED
+STATE, not squeezed, not flattened, and not left as an 800px portrait object halfway down an ordinary page.
+The author chooses that; the page never infers it from height.
 
 The Figure Engine stays shared infrastructure. Because the view preserves equal mathematical scale, a
 wider, shallower slot EXPOSES MORE RANGE rather than distorting the plane — provided the slot declares

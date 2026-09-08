@@ -86,10 +86,50 @@
           ]
         },
         {
+          "id": "g-standard",
+          "type": "standard",
+          "title": "Standard — one example",
+          "lede": "An ordinary worked example that needs no major representation.",
+          "examples": [
+            {
+              "id": "st1",
+              "label": "Is the point on the curve?",
+              "prompt": "Decide whether (5, 24) lies on _y_ = _x_^2, and justify your answer.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "A point lies on the curve when its coordinates satisfy the rule. Substitute the _x_-value.",
+                  "math": "_y_ = 5^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Evaluate.",
+                  "math": "_y_ = 25"
+                },
+                {
+                  "id": "s3",
+                  "text": "Compare with the _y_-value the point claims.",
+                  "math": "25 ≠ 24"
+                }
+              ],
+              "answer": "No — (5, 25) lies on the curve, so (5, 24) sits just below it."
+            }
+          ],
+          "relations": [
+            {
+              "kind": "relations",
+              "label": "What this shows",
+              "items": [
+                "Testing a point is one substitution: the rule decides, not the picture."
+              ]
+            }
+          ]
+        },
+        {
           "id": "g-extended",
           "type": "extended",
           "title": "Extended — a full derivation",
-          "lede": "One derivation across the reading width, with the picture introduced at the step that needs it.",
+          "lede": "One derivation, read in three stages.",
           "examples": [
             {
               "id": "e1",
@@ -184,6 +224,45 @@
               "label": "Why two roots",
               "items": [
                 "Moving the curve down by 4 pushes part of it below the axis; the curve must cross the axis on the way down and again on the way up."
+              ]
+            }
+          ],
+          "states": [
+            {
+              "id": "algebra",
+              "label": "Algebra",
+              "show": [
+                "question",
+                "steps"
+              ],
+              "steps": [
+                1,
+                4
+              ]
+            },
+            {
+              "id": "check",
+              "label": "Visual check",
+              "lede": "What the roots look like on the curve.",
+              "show": [
+                "steps"
+              ],
+              "steps": [
+                5,
+                5
+              ]
+            },
+            {
+              "id": "conclusion",
+              "label": "Conclusion",
+              "show": [
+                "steps",
+                "answer",
+                "relations"
+              ],
+              "steps": [
+                6,
+                6
               ]
             }
           ]
