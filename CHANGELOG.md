@@ -199,7 +199,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     the state read as half empty. The plane and the explanation are now one grid cell each. And the
     comparison region printed **"WHY THE TWO AGREE" twice** — the group's `footLabel` over a part already
     carrying that name. A region may be titled above parts that name themselves, but never with a name one
-    of them already says. And on a handset the connection's label sat **flush on the ANSWER band** above it,
+    of them already says. And on a handset, the connection's label sat **flush on the ANSWER band** above it,
     because the only thing that had ever separated them was a tall plane in between. All three now have
     gates, each with the failure driven back.
   - **Notes, two clean-ups only** (architecture frozen): the Key Idea was restating the fourth concept, so
