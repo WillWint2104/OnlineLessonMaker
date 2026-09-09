@@ -199,7 +199,9 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     the state read as half empty. The plane and the explanation are now one grid cell each. And the
     comparison region printed **"WHY THE TWO AGREE" twice** — the group's `footLabel` over a part already
     carrying that name. A region may be titled above parts that name themselves, but never with a name one
-    of them already says. Both now have gates, each with the failure driven back.
+    of them already says. And on a handset the connection's label sat **flush on the ANSWER band** above it,
+    because the only thing that had ever separated them was a tall plane in between. All three now have
+    gates, each with the failure driven back.
   - **Notes, two clean-ups only** (architecture frozen): the Key Idea was restating the fourth concept, so
     it now synthesises across the three tabs instead; it was also the last text-on-green writing surface in
     the family and is now white with a green edge; and the concepts card hugs its content rather than being
@@ -223,7 +225,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     had been laying every part's LABEL beside its content instead of above it. Scoped to `.mx-parts`.
   - The fixture demonstrates the renderer rather than redesigning the mathematics: four concepts (no
     invented fifth), three complete demonstrations of one object, and three worked-example groups — one
-    per composition type. `scripts/verify-notes-examples.mjs` is the gate (77 checks) and
+    per composition type. `scripts/verify-notes-examples.mjs` is the gate (78 checks) and
     `scripts/shots-notes-examples.mjs` the proof set. The gate encodes the approved behaviour rather than the implementation: expected part
     counts, companion kinds, which steps carry visuals and how many tabs there are are all DERIVED from the
     lesson JSON, so re-authoring the fixture cannot quietly make the gate agree with itself. It asserts the

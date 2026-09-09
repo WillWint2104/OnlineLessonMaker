@@ -810,6 +810,31 @@ mark('slots');
      `staged ${(other.foot.w / other.foot.h).toFixed(3)} against an authored ${otherFig.toFixed(3)}; `
      + `comparison ${(cmp.mid.w / cmp.mid.h).toFixed(3)} against ${cmpFig.toFixed(3)}`);
   await p.close();
+  /* AND IT IS SEPARATED FROM WHAT IT FOLLOWS. On a handset the connection's label sat flush on the ANSWER
+     band above it, because the only thing that had ever separated them was a tall plane in between. */
+  const sep = [];
+  for (const [w, h] of [[1536, 1024], [414, 896]]) {
+    const q = await open({ w, h, slide: WEX });
+    for (const id of GROUPS.map((x) => x.id)) {
+      await reveal(q, id);
+      sep.push(...await q.evaluate(({ id, w }) => {
+        const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+        const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
+        const foot = live.querySelector('.mx-wexfoot');
+        if (!foot) return [];
+        /* siblings of the FOOT — `live` is the pane in the unstaged case, whose only child is the surface
+           the foot itself sits inside, and a parent always "ends below" its own child. */
+        const above = [].slice.call(foot.parentElement.children).filter((n) => n !== foot
+          && n.getBoundingClientRect().height > 0 && n.getBoundingClientRect().top < foot.getBoundingClientRect().top);
+        if (!above.length) return [];
+        const low = Math.max.apply(null, above.map((n) => n.getBoundingClientRect().bottom));
+        return [{ id, w, gap: Math.round(foot.getBoundingClientRect().top - low) }]; }, { id, w }));
+    }
+    await q.close();
+  }
+  ok('a connection region is separated from the working it follows, at every width',
+     sep.length > 0 && sep.every((r) => r.gap >= 16),
+     sep.map((r) => `${r.id} at ${r.w}px: ${r.gap}px`).join(' · '));
   /* NEVER A HEADING ABOVE A HEADING SAYING THE SAME THING. A region may be titled above parts that name
      themselves, but the title must not repeat one of those names — the fixture authored a `footLabel` of
      "Why the two agree" over a part labelled the same, and the page printed it twice. */
