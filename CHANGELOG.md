@@ -236,6 +236,63 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     of them already says. And on a handset, the connection's label sat **flush on the ANSWER band** above it,
     because the only thing that had ever separated them was a tall plane in between. All three now have
     gates, each with the failure driven back.
+  - **THE PRIMITIVE — one named-region rectangle for every worked example (sixth correction).** The page
+    was aligning pieces of content; it now aligns SEMANTIC REGIONS, and the browser lays out named
+    rectangles that the prose and mathematics merely flow inside: `TITLE` spanning the whole example, then
+    `QUESTION | WORKED SOLUTION` with `ANSWER` as the final band of the working. One function (`mxWexEx`)
+    emits it and one CSS grid with named areas lays it out — `standard` is one instance, `sequence` is N
+    identical instances stacked (the shipping two-example Substitution page and the design fixture's three
+    render the same two examples at the same geometry), a staged state, an extended derivation and each
+    case of a collapsed comparison are the same instance again. **The regions are aligned, never the amount
+    of content in them:** both take the row's full height, so a one-line question beside a three-step
+    solution is a short question in a visibly defined rectangle — tinted (`--mx-ask-tint`, neutral, a shade
+    neither the surface nor the ground is; the surface rule's own green test was the first to reject a
+    greener one) and running to the surface's edge, with one quiet rule between it and the working and the
+    two labels beginning on one line beneath the title. The example title no longer belongs to the ask side.
+    The ANSWER lost its floating card: a rule above it, the label run in, the value flowing as text so a
+    wrapped answer returns to the region's inset — the mobile drift the maintainer named (a two-line answer
+    once continued 72px in; it now returns to 32px). Everything sits on one inset; nothing is centred, and
+    the gate now measures every block and every plane against its region's inset at 1536, 1000 and 414px.
+    - **the floors are read back from what the page published.** `mxRowSplits`, `mxBridgeFits` and the new
+      `mxFootPairs` read the custom properties `.mx-wex` publishes rather than the constants, so the
+      stylesheet and the decision cannot disagree and the gate's raised-floor control genuinely moves the
+      decision (under a grid it would otherwise have shown as overflow, which is now asserted too). Split
+      while the surface holds 300 + 16 + (22 + 1) + 420 = 759px; three zones while it holds
+      2 × (300 + 22) + 340 + 2 × 22 + 2 = 1030px; GRAPH | INTERPRETATION above 340 + 22 + 1 + 300 = 663px.
+      The proof script no longer assumes the shell's width — it finds the viability viewport by measuring
+      the surface (1414px with the rail open) and shoots one pixel either side.
+    - **`comparison` is three explicit zones, `CASE A | VISUAL EXPLANATION | CASE B`** — zone labels on
+      one line, each zone the row's full height so its edges are the rules beside it whatever the cases'
+      heights (proved with case B given five more steps than the plane is tall for; the control that stops
+      the zones stretching leaves the rule short and is caught), each case the primitive in its stacked
+      form with its question band reaching the zone's rule, the plane owning the middle at its natural size
+      and never grown to fill it (at 1920px the zone is wider than the plane and the plane stays 560px).
+      Measured at 1536px: 364 | 485 | 364, rules 548px tall, plane 439×483 at 35.04 / 35.07 px per unit
+      (0.999). Below the floors the staged transformation is unchanged: `1 Workings` is two instances of
+      the ordinary primitive, `2 Visual explanation` owns the graph and the synthesis.
+    - **the staged graph check is `GRAPH | INTERPRETATION` as explicit sibling regions** with one top edge
+      and one rule between them the full height of the plane, the plane at its natural 446×720 (26.83 /
+      26.81 px per unit, 1.001) and the interpretation held to its 620px reading measure; a region whose
+      first part already names itself is named by that part (the collapsed Symmetry visual state prints
+      GRAPH, then "Why the two agree", never "Interpretation" over it). Stacked graph-first below the floors.
+      Controls: centring the pair separates the labels; raising the plane's floor stacks the pair at 1536px.
+    - **the same primitive, proved as such, not as two implementations that look alike.** The gate authors
+      one example identically as the whole of a `standard` group and as a member of a `sequence`, and
+      compares, element by element, the anatomy, the STYLESHEET RULES THAT REACH EACH ELEMENT and the
+      geometry — a look-alike lives in the stylesheet, keyed on the composition, where geometry cannot see
+      it; the control injects exactly such a same-value rule, shows the geometry unchanged and the
+      provenance check fail. And every instance on the page — every group, every state — is shown to come
+      through the one function (a spy marks its output; a control that hands one group a static copy of its
+      own markup is caught).
+    - **one contract changed on purpose:** a companion plane inside an example's working now follows the
+      same natural-size rule as the staged plane (bounded on its longer side, `MX_PLOT_H`), so a portrait
+      companion is drawn at the reviewed 446×720 rather than a quarter larger at 560 wide; the assertion
+      that once required "the same width" for both shapes now requires the same bound. And a companion now
+      sits BEFORE the answer, so the answer still closes the region (the render order had put it after).
+    - **`verify-notes-examples` 82 → 108** (a `primitive` section, every clause with a control), the
+      proof set is the maintainer's nine — standard desktop/mobile, sequence × 2 / × 3 / mobile, Symmetry
+      wide / narrow workings / narrow visual, graph check — plus the two transition widths, and the design
+      fixture was updated first so sequence × 2 and × 3 author the same examples.
   - **Notes, two clean-ups only** (architecture frozen): the Key Idea was restating the fourth concept, so
     it now synthesises across the three tabs instead; it was also the last text-on-green writing surface in
     the family and is now white with a green edge; and the concepts card hugs its content rather than being

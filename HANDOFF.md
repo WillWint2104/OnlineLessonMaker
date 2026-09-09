@@ -375,30 +375,54 @@ how should they share the available width?" — the reusable textbook pattern be
 left and mathematical reasoning on the right, the same principle Notes already uses for
 concepts | representation.
 
-**THE ROW IS THE UNIT.** One row is one whole example: the ASK (its title and QUESTION) on the left, the
-WORKING (WORKED SOLUTION and ANSWER) on the right. `sequence` is a stack of these rows — full width, one
-lane, identical geometry at every count — so no example is a conclusion because of where it sits. The
-`compact` rule this replaces (1 → a centred column · 2 → two · 3 → 2 + 1 centred · 4 → 2 × 2) let the
-page's arithmetic decide which example looked like the conclusion. `compact` still resolves, to `sequence`.
+**THE PRIMITIVE IS THE UNIT — ONE WORKED EXAMPLE IS ONE NAMED-REGION RECTANGLE.** The browser lays out
+named rectangular regions and the prose and mathematics merely flow inside them:
 
-**THE FLOORS DECIDE, NOT A BREAKPOINT.** `MX_ASK_MIN` (300px, about 37 characters) is the ask column's
-reading floor, published with the other viability constants as a scoped custom property. The row holds
-35/65 while both sides clear their floor, pins the ask at its floor below that, and wraps to ask-above-
-working below THAT — all from the floors, with no media query restating them. The `comparison` bridge is a
-grid and cannot wrap, so it collapses at the width its own floors imply (300 + 340 + 300 + two 28px gaps =
-996px of row).
+```
+TITLE spanning the whole example
+QUESTION | WORKED SOLUTION
+         | ANSWER — the final band of the working
+```
+
+`mxWexEx()` is the one function that emits it (`article.mx-wexex` → `[data-mx-region="title"]`,
+`[data-mx-region="question"]`, `[data-mx-region="working"]` holding the steps and
+`[data-mx-region="answer"]`), and it is a CSS grid with named areas — `"title title" "ask work"` split,
+`"title" "ask" "work"` stacked. **THE REGIONS ARE ALIGNED, NEVER THE AMOUNT OF CONTENT IN THEM.** Both
+regions take the row's full height, so a one-line question beside a five-step solution is a short question
+in a visibly defined rectangle — the question region is tinted (`--mx-ask-tint`, a shade neither the
+surface nor the ground is) and runs to the surface's edge, one quiet rule stands between it and the working,
+and the QUESTION and WORKED SOLUTION labels begin on the same line beneath the title. The ANSWER is the
+final band of the working — a rule above it, the label run in, the value flowing as text so a wrapped answer
+returns to the region's own inset — never a floating card. Everything sits on one left inset; nothing is
+centred. `standard` is one instance of this primitive; `sequence` is N identical instances stacked with
+a rule between them and the synthesis after the whole sequence; a staged state, an extended derivation and
+each case of a collapsed comparison are the same instance again. There is no second function and no second
+stylesheet for a "row", and nothing reads the count. The `compact` rule this replaced (1 → a centred
+column · 2 → two · 3 → 2 + 1 centred · 4 → 2 × 2) let the page's arithmetic decide which example looked
+like the conclusion. `compact` still resolves, to `sequence`.
+
+**THE FLOORS DECIDE, NOT A BREAKPOINT — AND THEY ARE READ BACK FROM WHAT THE PAGE PUBLISHED.** The
+constants (`MX_ASK_MIN` 300px — about 37 characters — `MX_WB_MIN_W` 420, `MX_PLOT_MIN_W` 340, and the
+channels `MX_ASK_PAD` 16 / `MX_WORK_PAD` 22 / `MX_ZONE_PAD` 22) are written once onto `.mx-wex` as custom
+properties, and `mxRowSplits`, `mxBridgeFits` and `mxFootPairs` read those properties rather than the
+constants, so the stylesheet and the decision cannot disagree and a gate that raises a floor on the live
+page moves the decision with it. The primitive splits while the surface holds 300 + 16 + (22 + 1) + 420 = 759px
+(36/64 above that, both floors judged on the regions' content boxes), and stacks below it; the comparison is three zones
+while it holds 2 × (300 + 22) + 340 + 2 × 22 + 2 = 1030px; GRAPH | INTERPRETATION coexist above
+340 + 22 + 1 + 300 = 663px. Each decision is published as one attribute on the root (`data-mx-rows`,
+`data-mx-bridge`, `data-mx-foot`) that the stylesheet keys off; no media query restates a number.
 
 **EVERY EXAMPLE STANDS ALONE.** An example in a sequence may not depend on having read its neighbour
 first — no "use the same rule…"; each states its own question.
 
 ### ONE ANATOMY, EVERY COMPOSITION
 
-A worked example is the same four things whether it sits in a sequence row or a full-page derivation:
+A worked example is the same four things whether it sits in a sequence or a full-page derivation:
 **QUESTION** (the authentic prompt) · **WORKED SOLUTION** (the steps) · **ANSWER** · optionally **VISUAL
-EXPLANATION / CONNECTION**. Told apart by quiet typography and space, never another layer of coloured
-cards. A group holding ONE example suppresses that example's own name — the tab already titles it, and
-printing "Find x when y = 16" above "Find the value(s) of x for which y = 16" is duplicated prompt
-hierarchy. The optional fourth section is named ONCE: by the group's `footLabel` where that
+EXPLANATION / CONNECTION**. Told apart by regions, quiet typography and space, never another layer of
+coloured cards. The example's title spans the whole rectangle above the two regions; the tab names the
+skill (`Solving for x`), the title names the example (`Find x when y = 16`), and the QUESTION is the
+prompt a student would actually be given — three different things, each printed once. The optional fourth section is named ONCE: by the group's `footLabel` where that
 adds a name the parts do not already carry, else by the parts' authored labels — never a heading above a
 heading saying the same thing.
 
@@ -438,10 +462,10 @@ shape it is forced into.
 
 | composition | slot |
 | --- | --- |
-| `sequence` | parallel examples of one skill as full-width rows; no reserved region — a companion, where authored, sits in that row's working column |
-| `standard` | one example, ask left and working right. A companion, where authored, sits in the working's column at its own proportions — never centred, never re-placed by its shape |
-| `comparison` | two cases whose relationship IS the teaching point, with the bridging plane BETWEEN them (A \| plane \| B) while all three clear their floor; below that it becomes a STAGED relationship, never a reordered one |
-| `staged` | working and a substantial representation each get the whole surface, as authored LOCAL STATES (`1 Worked solution`, `2 Graph check`). The plane takes the width its shape needs and the explanation takes the complementary width beside it |
+| `sequence` | N instances of the primitive, full width; no reserved region — a companion, where authored, sits inside that example's working region before its answer |
+| `standard` | one instance of the primitive. A companion, where authored, sits inside the working region at its own proportions — never centred, never re-placed by its shape — and the answer still closes the region |
+| `comparison` | three explicit zones, `CASE A \| VISUAL EXPLANATION \| CASE B`: zone labels on one line, each zone the row's full height so its edges are the rules beside it whatever the cases' heights, each case the primitive in its stacked form with its question band reaching the zone's rule, the plane owning the middle at its natural size (never grown to fill it). Below its floors it becomes a STAGED relationship, never a reordered one |
+| `staged` | working and a substantial representation each get the whole surface, as authored LOCAL STATES (`1 Worked solution`, `2 Graph check`). The graph state is `GRAPH \| INTERPRETATION` — two sibling regions with one top edge and one rule between them, the plane at its natural size and the interpretation at a reading measure; below their floors they stack, graph first |
 | `extended` | a long derivation in the working column, read in authored stages rather than one expanding document |
 
 None of those names says anything about graph dimensions, and that is deliberate. `visual` and `compact`
@@ -452,11 +476,13 @@ read at once. When the surface can no longer give two cases and a plane their fl
 not collapse into `A → plane → B`: that puts the picture, and the second answer with it, in front of the
 reader before they have worked the second case, which changes the PEDAGOGY rather than the layout. It
 becomes two states instead — `1 Workings` (both cases complete, in order) then `2 Visual explanation`.
-The decision is `mxBridgeFits`, measuring the real surface against 2 × `MX_ASK_MIN` + `MX_PLOT_MIN_W` +
-two gaps, in the same pass and the same idiom as `mxRepFits`. It is deliberately NOT a viewport query: at
-a 1200px viewport with the navigation rail collapsed the surface has 1084px, so a breakpoint stages a
-composition that fits. Same reasoning for the ask/working divider — `mxRowSplits` measures whether the row
-is actually side by side, because a stylesheet cannot see that a flex line has wrapped.
+The decision is `mxBridgeFits`, measuring the real surface against the three zones' own floors (two cases
+at their reading floor with the channel beside their rule, the plane at its legibility floor with a channel
+each side, two rules — 1030px), in the same pass and the same idiom as `mxRepFits`. It is deliberately NOT
+a viewport query: at a 1200px viewport with the navigation rail collapsed the surface has 1084px, so a
+breakpoint stages a composition that fits. Same reasoning for the primitive's own form — `mxRowSplits`
+decides split or stacked from the floors and publishes it, and the grid's named areas follow that
+attribute; a stylesheet never restates the numbers.
 
 **A PLANE'S NATURAL SIZE IS BOUNDED ON ITS LONGER SIDE** (`MX_PLOT_H`), not on its width. `MX_PLOT_W` is
 the natural width of a LANDSCAPE plane; giving a portrait plane that same width draws it a quarter larger

@@ -7,9 +7,11 @@
 // their labels and their order, the concept list, the examples and their steps are what the JSON says.
 // scripts/verify-notes-examples.mjs is the gate; this is the picture of what it asserts.
 //
-// A tab is an ALTERNATIVE COMPLETE EXAMPLE. Shots 01 and 02 are the proof of that: each shows one whole
-// mathematical idea — its drawing, its coordinates and its stated relationship together — so switching
-// tabs means "show me another example of this concept", never "fetch the missing half of this one".
+// THE PRIMITIVE IS THE PROOF. One worked example is one named-region rectangle — TITLE spanning, QUESTION |
+// WORKED SOLUTION on one line, ANSWER the final band of the working — and `standard` is one instance of it,
+// `sequence` is N. Shots 1–5 show that same rectangle at one, two and three examples, split and stacked;
+// 6–8 the comparison as three zones and, below its floors, as two stages; 9 the graph check as two sibling
+// regions. Nothing is posed and nothing is centred.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -95,60 +97,65 @@ const report = async (p, name, why) => {
     + `(authored 1:1) in a ${o.plot} plot` + (Math.abs(o.ratio - 1) <= 0.05 ? '  ✓' : '  ✗ DISTORTED')));
 };
 
-/* THE VIABILITY WIDTH, read from the app rather than assumed: the surface width at which a comparison
-   stops being three readable columns. The transition proofs are taken immediately either side of it. */
+/* THE VIABILITY WIDTH IS FOUND, NOT ASSUMED. The floors are read from the properties the app publishes and
+   the surface is MEASURED at each candidate viewport — the shell's own width is never a constant here —
+   so the transition proofs are taken one pixel of surface either side of where the composition changes. */
 const floors = await (async () => {
   const p = await open(1536, 1000, WEX);
   const f = await p.evaluate(() => { const cs = getComputedStyle(document.querySelector('.mx-wex'));
     const n = (k) => parseInt(cs.getPropertyValue(k), 10);
-    return { ask: n('--mx-ask-min'), plot: n('--mx-plot-min-w') }; });
+    return { ask: n('--mx-ask-min'), plot: n('--mx-plot-min-w'), zone: n('--mx-zone-pad') }; });
   await p.close(); return f;
 })();
-const NEED = floors.ask * 2 + floors.plot + 56;            /* two cases, a plane, two 28px gaps */
-const CHROME = 384;                                        /* what the shell takes from the viewport */
-console.log(`comparison viability: ${NEED}px of surface (${floors.ask}+${floors.plot}+${floors.ask}+56)` +
-  ` → about ${NEED + CHROME}px of viewport with the rail open\n`);
+const NEED = 2 * (floors.ask + floors.zone) + floors.plot + 2 * floors.zone + 2;
+const innerAt = async (w) => { const p = await open(w, 1100, WEX); await pick(p, GX[2]);
+  const inner = await p.evaluate(() => { const s = document.querySelector('[data-mx-panel]:not([hidden]) .mx-wexsurface');
+    const cs = getComputedStyle(s); return Math.round(s.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)); });
+  await p.close(); return inner; };
+let lo = 1000, hi = 1700;                                   /* the viewport whose surface is exactly NEED */
+while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (await innerAt(mid) >= NEED) hi = mid; else lo = mid; }
+const VIABLE = hi;
+console.log(`comparison viability: ${NEED}px of surface (2 × (${floors.ask} + ${floors.zone}) + ${floors.plot} + 2 × ${floors.zone} + 2)`
+  + ` → measured at a ${VIABLE}px viewport with the rail open (${await innerAt(VIABLE)}px inner; ${await innerAt(VIABLE - 1)}px one pixel narrower)\n`);
 
-// 1 — sequence, desktop.
-{ const p = await open(1536, 1024, WEX); await pick(p, GX[0]);
-  await shotWhole(p, '1-sequence-1536', 1536);
-  await report(p, '1 Sequence 1536px', 'parallel examples as full-width rows of equal status; one hairline divides ask from working'); await p.close(); }
-// 2 — standard, desktop.
+// THE NINE PROOFS THE MAINTAINER NAMED, then the two transition widths.
+// 1 · 2 — standard: one instance of the primitive, split and stacked.
 { const p = await open(1536, 1024, 0, CMP); await pick(p, CX[1]);
-  await shotWhole(p, '2-standard-1536', 1536);
-  await report(p, '2 Standard 1536px', 'the ask on the left, the whole working on the right, both top-aligned'); await p.close(); }
-// 3 · 4 — staged: the algebra, then the graph check with its interpretation beside it.
-{ const p = await open(1536, 1024, WEX); await pick(p, GX[1]);
-  await shotWhole(p, '3-staged-working-1536', 1536);
-  await report(p, '3 Staged 1/2 Working 1536px', 'the algebra reaches its answer without scrolling past a full-height plane');
-  await stage(p, 'graph'); await shotWhole(p, '4-staged-graph-check-1536', 1536);
-  await report(p, '4 Staged 2/2 Graph check 1536px', 'plane | interpretation: algebraic result, graphical evidence, why they agree'); await p.close(); }
-// 5 — comparison, simultaneous.
-{ const p = await open(1536, 1024, WEX); await pick(p, GX[2]);
-  await shotWhole(p, '5-comparison-simultaneous-1536', 1536);
-  await report(p, '5 Symmetry 1536px', 'case A | the plane that bridges them | case B, all three read at once'); await p.close(); }
-// 6 · 7 — the same two flat compositions on a handset.
-{ const p = await open(414, 896, WEX); await pick(p, GX[0]);
-  await shotWhole(p, '6-sequence-414', 414);
-  await report(p, '6 Sequence 414px', 'each row stacks internally — question above its working — before the next example begins'); await p.close(); }
+  await shotWhole(p, '1-standard-1536', 1536);
+  await report(p, '1 Standard 1536px', 'TITLE spanning · QUESTION | WORKED SOLUTION on one line · ANSWER the final band of the working'); await p.close(); }
 { const p = await open(414, 896, 0, CMP); await pick(p, CX[1]);
-  await shotWhole(p, '7-standard-414', 414);
-  await report(p, '7 Standard 414px', 'question → worked solution → answer; no divider, because there is no boundary to draw'); await p.close(); }
-// 8 · 9 — the collapsed comparison: both workings first, the object that explains them second.
+  await shotWhole(p, '2-standard-414', 414);
+  await report(p, '2 Standard 414px', 'the same regions in the same order — title, question, worked solution, answer — no rule, one inset'); await p.close(); }
+// 3 · 4 · 5 — sequence: N instances of the same primitive, at 2, at 3, and stacked.
+{ const p = await open(1536, 1024, WEX); await pick(p, GX[0]);
+  await shotWhole(p, '3-sequence-2-1536', 1536);
+  await report(p, '3 Sequence × 2 1536px (the shipping Substitution page)', 'two identical instances, full width, a rule between them, the synthesis after both'); await p.close(); }
+{ const p = await open(1536, 1024, 0, CMP); await pick(p, CX[0]);
+  await shotWhole(p, '4-sequence-3-1536', 1536);
+  await report(p, '4 Sequence × 3 1536px', 'the same two examples plus a third — identical geometry at every count, no 2 + 1, nothing centred'); await p.close(); }
+{ const p = await open(414, 896, WEX); await pick(p, GX[0]);
+  await shotWhole(p, '5-sequence-414', 414);
+  await report(p, '5 Sequence 414px', 'each instance stacks internally before the next begins; the relationship follows the whole sequence'); await p.close(); }
+// 6 · 7 · 8 — comparison: three zones while viable, staged when not.
+{ const p = await open(1536, 1024, WEX); await pick(p, GX[2]);
+  await shotWhole(p, '6-comparison-wide-1536', 1536);
+  await report(p, '6 Symmetry 1536px', 'CASE A | VISUAL EXPLANATION | CASE B — three zones on one line, rules the full height, the plane at natural scale'); await p.close(); }
 { const p = await open(414, 896, WEX); await pick(p, GX[2]);
-  await shotWhole(p, '8-comparison-workings-414', 414);
-  await report(p, '8 Symmetry 1/2 Workings 414px', 'both cases complete and in order — the picture is NOT between them');
-  await stage(p, 'visual'); await shotWhole(p, '9-comparison-visual-414', 414);
-  await report(p, '9 Symmetry 2/2 Visual explanation 414px', 'the undistorted plane and the authored relationship, after both workings'); await p.close(); }
-// 10 · 11 — immediately either side of viability, at a FIXED shell, so only the composition changes.
-{ const w = NEED + CHROME + 1;
-  const p = await open(w, 1100, WEX); await pick(p, GX[2]);
-  await shotWhole(p, '10-comparison-just-above-viability', w);
-  await report(p, `10 Symmetry at ${w}px — just ABOVE viability`, 'one pixel of surface more than the three columns need: still simultaneous'); await p.close(); }
-{ const w = NEED + CHROME - 1;
-  const p = await open(w, 1100, WEX); await pick(p, GX[2]);
-  await shotWhole(p, '11-comparison-just-below-viability', w);
-  await report(p, `11 Symmetry at ${w}px — just BELOW viability`, 'one pixel less: the composition becomes a staged relationship, not a squeezed bridge'); await p.close(); }
+  await shotWhole(p, '7-comparison-workings-414', 414);
+  await report(p, '7 Symmetry 1/2 Workings 414px', 'two instances of the normal primitive, both complete — the picture is NOT between them');
+  await stage(p, 'visual'); await shotWhole(p, '8-comparison-visual-414', 414);
+  await report(p, '8 Symmetry 2/2 Visual explanation 414px', 'GRAPH, then the authored relationship — after both workings'); await p.close(); }
+// 9 — the staged graph check: GRAPH | INTERPRETATION.
+{ const p = await open(1536, 1024, WEX); await pick(p, GX[1]);
+  await stage(p, 'graph'); await shotWhole(p, '9-graph-check-1536', 1536);
+  await report(p, '9 Graph check 1536px', 'GRAPH | INTERPRETATION as sibling regions with one top edge and one rule; the plane at its natural size and equal scale'); await p.close(); }
+// 10 · 11 — one pixel of surface either side of viability, so only the composition changes.
+{ const p = await open(VIABLE, 1100, WEX); await pick(p, GX[2]);
+  await shotWhole(p, '10-comparison-just-above-viability', VIABLE);
+  await report(p, `10 Symmetry at ${VIABLE}px — just ABOVE viability`, 'the surface is exactly what three zones need: still simultaneous'); await p.close(); }
+{ const p = await open(VIABLE - 1, 1100, WEX); await pick(p, GX[2]);
+  await shotWhole(p, '11-comparison-just-below-viability', VIABLE - 1);
+  await report(p, `11 Symmetry at ${VIABLE - 1}px — just BELOW viability`, 'one pixel less: a staged relationship, not a squeezed bridge'); await p.close(); }
 
 await browser.close(); server.close();
 console.log('\nwrote ' + path.relative(root, OUT));
