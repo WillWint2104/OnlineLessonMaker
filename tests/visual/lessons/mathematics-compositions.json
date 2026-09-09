@@ -18,47 +18,57 @@
           "id": "g-sequence3",
           "type": "sequence",
           "title": "Sequence — three examples",
-          "lede": "Compare squaring a whole number, a negative and a decimal.",
+          "lede": "Compare substitution with a negative value, a fraction and a decimal.",
           "examples": [
             {
-              "id": "c1",
-              "label": "Square a whole number",
-              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = 5.",
+              "id": "ex-neg",
+              "label": "A negative value",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = −4.",
               "steps": [
                 {
                   "id": "s1",
-                  "text": "Substitute.",
-                  "math": "_y_ = 5^2"
+                  "text": "Write the rule.",
+                  "math": "_y_ = _x_^2"
                 },
                 {
                   "id": "s2",
-                  "text": "Evaluate.",
-                  "math": "_y_ = 25"
+                  "text": "Substitute the given value. Keep the brackets — the whole of −4 is squared.",
+                  "math": "_y_ = (−4)^2"
+                },
+                {
+                  "id": "s3",
+                  "text": "Evaluate. A negative multiplied by a negative gives a positive.",
+                  "math": "_y_ = (−4)(−4) = 16"
                 }
               ],
-              "answer": "_y_ = 25"
+              "answer": "_y_ = 16, so (−4, 16) lies on the graph."
             },
             {
-              "id": "c2",
-              "label": "Square a negative",
-              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = −5.",
+              "id": "ex-frac",
+              "label": "A fraction",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = 3/2.",
               "steps": [
                 {
                   "id": "s1",
-                  "text": "Substitute, keeping the brackets.",
-                  "math": "_y_ = (−5)^2"
+                  "text": "Substitute. The whole fraction is squared, not just the numerator.",
+                  "math": "_y_ = (3/2)^2"
                 },
                 {
                   "id": "s2",
-                  "text": "Evaluate. The sign is removed by squaring.",
-                  "math": "_y_ = (−5)(−5) = 25"
+                  "text": "Square the top and the bottom.",
+                  "math": "_y_ = 3^2/2^2 = 9/4"
+                },
+                {
+                  "id": "s3",
+                  "text": "Squaring a value above 1 makes it larger; this one lands just above 2.",
+                  "math": "9/4 = 2.25"
                 }
               ],
-              "answer": "_y_ = 25"
+              "answer": "_y_ = 9/4, so (3/2, 9/4) lies on the graph."
             },
             {
-              "id": "c3",
-              "label": "Square a decimal",
+              "id": "ex-dec",
+              "label": "A decimal",
               "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = 0.4.",
               "steps": [
                 {
@@ -68,11 +78,11 @@
                 },
                 {
                   "id": "s2",
-                  "text": "Evaluate. A value below 1 gets smaller, not larger.",
-                  "math": "_y_ = 0.16"
+                  "text": "Evaluate. A value between 0 and 1 gets smaller when it is squared, not larger.",
+                  "math": "_y_ = 0.4 × 0.4 = 0.16"
                 }
               ],
-              "answer": "_y_ = 0.16"
+              "answer": "_y_ = 0.16, so (0.4, 0.16) lies on the graph."
             }
           ],
           "relations": [
@@ -80,7 +90,7 @@
               "kind": "relations",
               "label": "What the three show",
               "items": [
-                "Squaring enlarges a value above 1, removes the sign of a negative, and shrinks a value between 0 and 1."
+                "Substitution never changes the rule — it only replaces _x_. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a decimal below 1 gets smaller."
               ]
             }
           ]
