@@ -230,16 +230,19 @@ for (const fx of FIXTURES) {
   ok('the responsive scale follows the contracted ramp', bad.length === 0,
     bad.length ? bad.map((r) => `stage ${r.w}: observed ${r.obs && r.obs.toFixed(3)} vs contracted ${r.exp.toFixed(3)}`).join(' | ')
       : rows.map((r) => `${r.w}:${r.obs.toFixed(3)}`).join(' '));
+  /* `scaleAt` returns null where the probe found nothing to measure, and a harness whose whole job is to
+     REPORT drift must not die formatting its own failure message. The assertions are unchanged. */
+  const at = (v, d = 4) => (v == null ? 'not measured' : v.toFixed(d));
   ok(`at and below the ramp start the scale is ${RESP_MIN.toFixed(2)}`,
     Math.abs(scaleAt(340) - RESP_MIN) <= RTOL && Math.abs(scaleAt(RESP_STAGE0) - RESP_MIN) <= RTOL,
-    `340 -> ${scaleAt(340).toFixed(4)} · ${RESP_STAGE0} -> ${scaleAt(RESP_STAGE0).toFixed(4)} (±${RTOL} box rounding)`);
+    `340 -> ${at(scaleAt(340))} · ${RESP_STAGE0} -> ${at(scaleAt(RESP_STAGE0))} (±${RTOL} box rounding)`);
   ok('the scale is monotonically non-decreasing across the ramp',
     PROBE.every((w, i2) => i2 === 0 || scaleAt(w) >= scaleAt(PROBE[i2 - 1]) - RTOL),
-    PROBE.map((w) => scaleAt(w).toFixed(3)).join(' <= '));
+    PROBE.map((w) => at(scaleAt(w), 3)).join(' <= '));
   ok('the scale never drops below 1.00', PROBE.every((w) => scaleAt(w) >= RESP_MIN - RTOL));
   ok(`typography STOPS growing above the ramp end (${RESP_STAGE1}px)`,
     Math.abs(scaleAt(1250) - scaleAt(RESP_STAGE1)) <= RTOL && Math.abs(scaleAt(1250) - RESP_MAX) <= RTOL,
-    `${RESP_STAGE1} -> ${scaleAt(RESP_STAGE1).toFixed(4)} · 1250 -> ${scaleAt(1250).toFixed(4)} · ceiling ${RESP_MAX}`);
+    `${RESP_STAGE1} -> ${at(scaleAt(RESP_STAGE1))} · 1250 -> ${at(scaleAt(1250))} · ceiling ${RESP_MAX}`);
 
   /* The hierarchy must survive the ramp: one multiplier, so the ORDER and the Stage 3d unit:value RATIO are
      invariants, not coincidences. If a per-role scaler ever crept in, these are what would catch it. */

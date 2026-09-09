@@ -94,8 +94,8 @@ mark('caret');
      `the last block is prose (${t[t.length - 1].t}), not an equation`);
   // authored order survives leaving the page and coming back
   const before = JSON.stringify(t);
-  await p.evaluate(() => { go(0); }); await p.waitForTimeout(300);
-  await p.evaluate(() => { go(4); }); await p.waitForTimeout(450);
+  await p.evaluate((i) => { go(i); }, NOTES); await p.waitForTimeout(300);
+  await p.evaluate((i) => { go(i); }, PRACTICE); await p.waitForTimeout(450);
   const after = JSON.stringify(await blocks(p));
   const shown = await p.evaluate(() => { const el = document.querySelector('[data-mx-typed]');
     return { text: el.textContent.replace(/\s+/g, ' ').trim(), chips: el.querySelectorAll('.mx-eq').length,

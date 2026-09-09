@@ -400,8 +400,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 - **`scripts/shots-mathematics.mjs`** — the Stage A proof set, reproducible in one command, in two clearly
   separated categories: `mathematics-*` screenshots define the design, `legacy-*` screenshots exist only to
   prove non-regression and must not influence a Mathematics renderer. An index sheet makes the split
-  obvious at a glance.
-  to look exactly as it always has.
+  obvious at a glance, and the legacy screenshots continue to look exactly as they always have.
 - **A0 — response identity, and the seam a submission will one day use.** Student answers now live in
   `TP_RESP`, keyed by an AUTHORED page `id` and an authored response `id` rather than by array position.
   `TP_RUNTIME` — keyed by `cur`, the slide index — stays exactly as it is for ephemera, because it is the

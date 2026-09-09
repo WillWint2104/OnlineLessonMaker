@@ -59,7 +59,18 @@ let carried = '';
     const firstGenerated = m[1].search(new RegExp('@font-face\\{font-family:\'(?:'
       + FONTS.map(([f]) => f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')\''));
     if (firstGenerated > 0) carried = m[1].slice(0, firstGenerated);
-    else if (firstGenerated < 0 && m[1].trim()) carried = m[1];
+    else if (firstGenerated < 0 && m[1].trim()) {
+      /* The carry-forward exists to stop a SILENT DELETION of hand-vendored CSS. Carrying a block whose
+         generated faces this regex failed to recognise would be the opposite failure, just as silent:
+         the whole block is kept AND the freshly generated faces are appended after it, so the vendored
+         payload doubles on every run. Refuse instead — the regex is coupled to an exact serialisation
+         (`@font-face{font-family:'X'`, no space, single quotes), so a rename in FONTS or a change to how
+         the generator writes that prefix lands here. */
+      console.error('vendor-fonts: the existing block is not empty but contains no @font-face this script\n'
+        + '  recognises as its own. Either a family was renamed in FONTS, or the generated format changed.\n'
+        + '  Refusing to write: carrying the block forward would append the new faces to a stale copy.');
+      process.exit(1);
+    }
   }
 }
 if (carried) console.log(`carrying ${(carried.length / 1024).toFixed(0)} KB of hand-vendored CSS through untouched`);

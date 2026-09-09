@@ -40,6 +40,9 @@ const base = `http://127.0.0.1:${server.address().port}/lesson-studio.html`;
 
 const FIX = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-shell.json'), 'utf8'));
 const PRACTICE = FIX.slides.findIndex((s) => s.type === 'practice');
+/* The page navigated AWAY to, so "navigating away and back" is a real journey between two authored pages
+   rather than a literal index that only agrees with the fixture while its slides keep this order. */
+const NOTES = FIX.slides.findIndex((s) => s.type === 'notes');
 const PAGE_ID = FIX.slides[PRACTICE].id, RESP_ID = FIX.slides[PRACTICE].workspace.id;
 
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
@@ -115,7 +118,7 @@ mark('sheets');
     const c = document.querySelector('.mx-wbcanvas');
     const px = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
     let n = 0; for (let i = 3; i < px.length; i += 4) if (px[i] > 8) n++;
-    return { inked: n, current: tpRespGet('__x', '__y') ? 0 : 0, slot: document.querySelector('[data-tp-ink]').dataset.tpRespSlot }; });
+    return { inked: n, slot: document.querySelector('[data-tp-ink]').dataset.tpRespSlot }; });
   ok('going back to a sheet redraws THAT sheet', back.slot === 'w1' && back.inked > 300, `${back.inked} inked pixels on w1`);
   const d2 = await doc(p);
   ok('and the other sheet is untouched by the visit', d2.pages[0].n === 1 && d2.pages[1].n === 2 && d2.current === 'w1');
@@ -138,11 +141,11 @@ mark('persist');
   const p = await open();
   await draw(p, [[.15, .3], [.5, .25], [.7, .4]]);
   const beforeNav = await inked(p);
-  const survived = await p.evaluate(() => { go(0); const gone = !document.querySelector('.mx-wbcanvas'); go(4);
+  const survived = await p.evaluate(({ away, back }) => { go(away); const gone = !document.querySelector('.mx-wbcanvas'); go(back);
     const c = document.querySelector('.mx-wbcanvas');
     const px = c.getContext('2d').getImageData(0, 0, c.width, c.height).data;
     let n = 0; for (let i = 3; i < px.length; i += 4) if (px[i] > 8) n++;
-    return { gone, inked: n }; });
+    return { gone, inked: n }; }, { away: NOTES, back: PRACTICE });
   ok('the canvas really is destroyed by navigating away', survived.gone === true);
   ok('and the work comes back when the page does', beforeNav > 500 && survived.inked > 500,
      `${beforeNav} → ${survived.inked} inked pixels`);
@@ -176,17 +179,23 @@ mark('identity');
     const bun = tpRespBundle(); bun.pages['practice-equations'].workbook.value.pages.length = 0;
     return tpRespGet('practice-equations', 'workbook').value.pages.length > 0; }));
   // CONTROL — reorder the lesson. Authored identity must follow the page; an index would not.
-  const re = await p.evaluate(() => {
+  const re = await p.evaluate((at) => {
     const before = tpRespGet('practice-equations', 'workbook').value.pages[0].ink.length;
-    const moved = LESSON.slides.splice(4, 1)[0]; LESSON.slides.unshift(moved); go(0);
+    const wasAtIndex = LESSON.slides[at].id;
+    const moved = LESSON.slides.splice(at, 1)[0]; LESSON.slides.unshift(moved); go(0);
     const afterId = tpRespGet('practice-equations', 'workbook').value.pages[0].ink.length;
-    const idxKeyed = (TP_RUNTIME[4] && TP_RUNTIME[4].ans) ? 'index slot 4 now belongs to a different page' : 'index slot 4 now belongs to a different page';
-    return { before, afterId, nowAt: cur, type: LESSON.slides[0].type, idxKeyed };
-  });
+    /* What the index NOW names. This has to read the lesson, not restate the claim: an earlier version
+       returned the same sentence from both arms of a ternary, so the assertion below could not fail. */
+    return { before, afterId, nowAt: cur, type: LESSON.slides[0].type,
+      wasAtIndex, nowAtIndex: (LESSON.slides[at] || {}).id || '(nothing)' };
+  }, PRACTICE);
   ok('a reordered lesson keeps the workbook with ITS page',
      re.before > 0 && re.afterId === re.before && re.type === 'practice',
-     `practice moved from index 4 to index 0; ${re.afterId} strokes still under "practice-equations"`);
-  ok('CONTROL: the same reorder changes what index 4 refers to', re.idxKeyed.length > 0, re.idxKeyed);
+     `practice moved from index ${PRACTICE} to index 0; ${re.afterId} strokes still under "practice-equations"`);
+  ok(`CONTROL: the same reorder changes what index ${PRACTICE} refers to`,
+     re.wasAtIndex === 'practice-equations' && re.nowAtIndex !== re.wasAtIndex,
+     `index ${PRACTICE} was "${re.wasAtIndex}", is now "${re.nowAtIndex}" — keying on it would have `
+     + 'attributed these strokes to a different page');
   await p.close();
 }
 
@@ -278,8 +287,9 @@ mark('table');
   ok('a typed cell is stored under the question id, keyed by column value',
      stored && stored.kind === 'table' && stored.value.cells['−2'] === '4' && stored.value.cells['3'] === '9',
      JSON.stringify(stored.value.cells));
-  const round = await p.evaluate(() => { go(0); go(4);
-    return [...document.querySelectorAll('[data-mx-cell]')].map((i) => i.dataset.mxCell + '=' + i.value).filter((s) => !s.endsWith('=')); });
+  const round = await p.evaluate(({ away, back }) => { go(away); go(back);
+    return [...document.querySelectorAll('[data-mx-cell]')].map((i) => i.dataset.mxCell + '=' + i.value).filter((s) => !s.endsWith('=')); },
+    { away: NOTES, back: PRACTICE });
   ok('and it is still there after leaving the page and coming back', round.join(' ') === '−2=4 3=9', round.join(' '));
   await p.close();
 }
@@ -433,16 +443,16 @@ mark('mode');
      && before.ids === 'w1/w2', JSON.stringify(before));
   ok('and the ink is still painted when Write comes back', inkBack > 300, `${inkBack} inked pixels`);
   // …and across page change, navigation, the drawer, Expand and the narrow views.
-  const survives = await p.evaluate(async () => {
+  const survives = await p.evaluate(async ({ away, back }) => {
     const snap = () => JSON.stringify(tpRespGet('practice-equations', 'workbook').value.pages
       .map((x) => [x.id, x.ink.length, x.text.length]));
     const a = snap(); const out = {};
     document.querySelector('[data-mx-sheet="w1"]').click(); out.sheet = snap() === a;
-    go(0); go(4); out.nav = snap() === a;
+    go(away); go(back); out.nav = snap() === a;
     rpNavToggle(); rpNavToggle(); out.drawer = snap() === a;
     mxSetView('workbook'); mxSetView('split'); out.expand = snap() === a;
     return out;
-  });
+  }, { away: NOTES, back: PRACTICE });
   ok('nothing is lost or renumbered by changing sheet, navigating, the drawer, or Expand',
      survives.sheet && survives.nav && survives.drawer && survives.expand,
      Object.entries(survives).map(([k, v]) => `${k}:${v ? 'kept' : 'LOST'}`).join(' · '));

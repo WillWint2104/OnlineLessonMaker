@@ -542,6 +542,8 @@ that made Stage 4 look like registration-only work. Corrected:
   reparented to the body-level `#figfocus`), on the shared `data-tp-focus-open` rail.
 - `figure` registered as a composable-page block in the five pack themes.
 - **Per-part status** and the **three-way self-mark** (Not yet / Partial / Got it) on `selfCheck`.
+- **Figure `placement`** — `contained` and `beside`, with companion prose in `text` or the rich `companion`
+  card, resolved against the width actually available rather than a breakpoint (see `SCHEMA.md`).
 
 **Does NOT exist**
 - The **exercise grid cell**. `fragPracticeSet` is a single-column stack of `fragSelfCheck`; there is
@@ -549,7 +551,8 @@ that made Stage 4 look like registration-only work. Corrected:
 - The **annotated two-column "Working | Why" solution container**. The `selfCheck` modal renders a
   single-column `<ol>` of steps. The two-column treatment is **engine Stage 5's** deliverable.
 - A **hint icon-chip** — the hint is a text button.
-- Any **figure placement** other than full width. `contained | beside | pair` exist for `image` only.
+- **`pair` for a figure.** The image block's `pair` takes two `src` values in one block and a figure has no
+  free equivalent, so it stays image-only. (`contained` and `beside` DO exist for figures — see above.)
 
 **Consequence for sequencing.** A figure *part inside a question* therefore depends on Blocks Stage C
 (the `exerciseSet` container), which itself depends on engine Stage 5 (the one solution treatment).

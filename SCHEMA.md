@@ -400,7 +400,8 @@ they read.
 | `placement` | `""` \| `"contained"` \| `"beside"` | How the figure block sits in the lesson around it — see below. Omit for the full-width default. |
 | `domain` | `{xMin,xMax,yMin,yMax}` | **Graph kind only** — geometry solves its own bounds from the construction. The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
 | `aspect` | `"stretch"` \| `"equal"` | `equal` keeps a unit square square (default `stretch`). |
-| `objects[]` | array | **Graph kind:** `{type:'function', f}` · `{type:'points', from:'table', rows:[[id,x,y],…]}` · `{type:'segment', between:[idA,idB]}`. **Geometry kind** reads a different set (`polygon` · `angle` · `rightAngle` · `sideLabel`) — see **`figure: "geometry"`** below. Unknown types are ignored with a reported error. |
+| `callouts` | `"hidden"` | Same vocabulary as `grid`. A figure that only ILLUSTRATES has nothing to reveal on tap, and the shell's hint is keyed on the callout count. Absent → callouts as before, so no existing figure moves. |
+| `objects[]` | array | **Graph kind:** `{type:'function', f, label?}` · `{type:'points', rows:[[id,x,y],…]}` (`from:'table'` is optional and documentary — the rows are read either way) · `{type:'segment', between:[idA,idB]}` · `{type:'line', y:k}` or `{type:'line', x:k}` — a **reference line** spanning the viewport, with an optional `label` and `style:"dashed"` (default) \| `"solid"`; give exactly one of `x` or `y` or the line is skipped with a reported error. **Geometry kind** reads a different set (`polygon` · `angle` · `rightAngle` · `sideLabel`) — see **`figure: "geometry"`** below. Unknown types are ignored with a reported error. |
 
 **Placement** — `placement` states the RELATIONSHIP you want between the figure block and the content around
 it. It is deliberately not a size, a column count or a breakpoint: the JSON says what is wanted and the
@@ -420,11 +421,13 @@ an image with no placement is a bare `<img>`, whereas a figure is always the Fig
 placement is that shell at full width. `pair` is not offered — the image block's pair takes two `src` values in
 one block, and a figure has no free equivalent.
 
-`beside` needs companion prose in **`text`** — lesson prose that participates in the layout, deliberately
-distinct from the Figure Shell's own `title` / `caption` / hint / status, none of which are repurposed for it.
-Two divergences from the image block, both deliberate: `beside` with no usable `text` is **reported** and falls
-back to the full-width figure rather than laying out an empty second column, and `text` supplied outside
-`beside` is **reported** rather than silently dropped. A figure has an author-error channel; an image does not,
+`beside` needs companion prose — either the plain **`text`** string or the rich **`companion`** card (C6b
+above); they are alternatives, and authoring both is **reported** with `text` winning. Either way it is lesson
+prose that participates in the layout, deliberately distinct from the Figure Shell's own `title` / `caption` /
+hint / status, none of which are repurposed for it. Two divergences from the image block, both deliberate:
+`beside` with neither a usable `text` nor a usable `companion` is **reported** and falls back to the full-width
+figure rather than laying out an empty second column, and companion prose supplied outside `beside` is
+**reported** rather than silently dropped. A figure has an author-error channel; an image does not,
 and authored content that renders nowhere should say so.
 
 An unrecognised value is **reported** beside the figure, with the accepted values named, and falls back to the

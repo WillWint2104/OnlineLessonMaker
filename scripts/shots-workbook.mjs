@@ -40,7 +40,9 @@ const open = async (w, h, L = FIX, slide = PRACTICE) => {
 const draw = async (p, pts) => {
   // Draw through the VISIBLE window, not the canvas: since the paper can be taller than the window, a
   // fraction of the canvas rect can fall outside the viewport, where a pointer cannot go.
-  const box = await (await p.$('.mx-sheet')).boundingBox();
+  const sheet = await p.$('.mx-sheet');
+  if (!sheet) throw new Error('draw(): no .mx-sheet on the page — the writing surface did not render');
+  const box = await sheet.boundingBox();
   const at = ([x, y]) => [box.x + x * box.width, box.y + y * box.height];
   await p.mouse.move(...at(pts[0])); await p.mouse.down();
   for (const q of pts.slice(1)) await p.mouse.move(...at(q), { steps: 10 });
@@ -62,7 +64,10 @@ const WORK_2 = [
   [[.08, .58], [.36, .58]], [[.08, .68], [.50, .68]],
 ];
 const shot = async (p, name, sel) => {
+  /* A selector that has drifted must name itself. Without this the null handle only fails later, as a
+     property error on `null`, which says nothing about which shot could not be taken. */
   const t = sel ? await p.$(sel) : p;
+  if (sel && !t) throw new Error(`shot("${name}"): nothing matched ${sel}`);
   await (t.screenshot ? t : p).screenshot({ path: path.join(OUT, name + '.png') });
   console.log(name);
 };

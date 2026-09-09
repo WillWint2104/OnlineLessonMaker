@@ -167,8 +167,8 @@ mark('composition');
   const authored = FIX.slides[NOTES].concepts.map((c) => c.id);
   ok('the concept list is exactly what the lesson authors — nothing invented to fill the layout',
      concepts.join(',') === authored.join(','), `${concepts.length} concepts: ${concepts.join(', ')}`);
-  const grown = await p.evaluate(() => { LESSON.slides[0].concepts.push({ id: 'extra', term: 'Extra', body: 'Added by the control.' });
-    go(0); return [].slice.call(document.querySelectorAll('[data-mx-concept]')).map((e) => e.dataset.mxConcept); });
+  const grown = await p.evaluate((n) => { LESSON.slides[n].concepts.push({ id: 'extra', term: 'Extra', body: 'Added by the control.' });
+    go(n); return [].slice.call(document.querySelectorAll('[data-mx-concept]')).map((e) => e.dataset.mxConcept); }, NOTES);
   ok('CONTROL: the count follows the JSON, so the four are four because the lesson says so',
      grown.length === authored.length + 1 && grown[grown.length - 1] === 'extra',
      `${authored.length} authored → ${authored.length} rendered; a fifth is added → ${grown.length}`);
@@ -188,10 +188,10 @@ mark('composition');
      'no "record in your notes" field, no "what to write down" panel');
   const withKI = await p.evaluate(() => { const a = document.querySelector('.mx-keyidea');
     return { present: !!a, w: a ? Math.round(a.getBoundingClientRect().width) : 0 }; });
-  const without = await p.evaluate(() => { delete LESSON.slides[0].keyIdea; go(0);
+  const without = await p.evaluate((n) => { delete LESSON.slides[n].keyIdea; go(n);
     const boxes = [].slice.call(document.querySelectorAll('.mx-head *')).filter((e) => {
       const r = e.getBoundingClientRect(); return r.width > 40 && r.height > 20 && !e.textContent.trim(); });
-    return { present: !!document.querySelector('.mx-keyidea'), emptyBoxes: boxes.length, title: !!document.querySelector('.mx-title') }; });
+    return { present: !!document.querySelector('.mx-keyidea'), emptyBoxes: boxes.length, title: !!document.querySelector('.mx-title') }; }, NOTES);
   ok('the Key Idea is optional, and removing it leaves no reserved hole',
      withKI.present && !without.present && without.emptyBoxes === 0 && without.title,
      `absent: no element, ${without.emptyBoxes} empty boxes, heading intact`);
@@ -250,11 +250,11 @@ const VIEWS = [[1536, 1024, 'split'], [1280, 900, 'split'], [1024, 768, 'stack']
   const broke = [];
   for (const [w, h] of VIEWS) {
     const p = await open({ w, h });
-    const n = await p.evaluate(() => { let n = 0;
+    const n = await p.evaluate((n0) => { let n = 0;
       for (const ss of document.styleSheets) { let rs; try { rs = ss.cssRules; } catch (e) { continue; }
         for (let i = rs.length - 1; i >= 0; i--) {
           const r = rs[i]; if (r.selectorText && /\[data-mx-part="figure"\]/.test(r.selectorText)) { ss.deleteRule(i); n++; } } }
-      go(0); return n; });
+      go(n0); return n; }, NOTES);
     await p.waitForTimeout(400);
     const pane = await paneOf(p);
     const fig = pane.parts.find((x) => x.kind === 'figure');
@@ -422,11 +422,11 @@ const read = (p) => p.evaluate((ids) => ids.map((id) => {
   const CYCLE = GROUPS.find((x) => x.examples.length === 2
     && mxPartKinds(x.relations || x.visual).indexOf('figure') >= 0);
   if (!CYCLE) throw new Error('no two-example group authors a figure to bridge with');
-  const seen = await p.evaluate((id) => {
+  const seen = await p.evaluate(({ id, w }) => {
     const out = {};
     for (const t of ['sequence', 'comparison', 'staged', 'standard', 'extended']) {
-      const g = LESSON.slides[1].groups.find((x) => x.id === id);
-      g.type = t; go(1);
+      const g = LESSON.slides[w].groups.find((x) => x.id === id);
+      g.type = t; go(w);
       const pane = document.querySelector(`[data-mx-panel="${id}"]`);
       const set = pane.querySelector('.mx-wexset'), body = pane.querySelector('.mx-wexbody');
       out[t] = { type: pane.dataset.mxWextype, set: !!pane.querySelector('.mx-wexseq'),
@@ -436,7 +436,7 @@ const read = (p) => p.evaluate((ids) => ids.map((id) => {
         steps: pane.querySelectorAll('.mx-step').length,
         answers: pane.querySelectorAll('.mx-wexres').length };
     }
-    return out; }, CYCLE.id);
+    return out; }, { id: CYCLE.id, w: WEX });
   const kinds = Object.keys(seen);
   /* The vocabulary's observable differences are what this asserts, not a row count: `comparison` builds
      the A | plane | B bridge, `staged` paginates into local states, and the flat contracts render rows.
@@ -513,13 +513,13 @@ const read = (p) => p.evaluate((ids) => ids.map((id) => {
      await p.evaluate(() => !document.querySelector('.mx-work') && !!document.querySelector('.mx-wex')),
      'no workspace slot; the page owns its own compositions');
   ok('a step may still carry its own visual, and an unknown type falls back rather than failing',
-     await p.evaluate(() => { const g = LESSON.slides[1].groups[0];
+     await p.evaluate((w) => { const g = LESSON.slides[w].groups[0];
        g.type = 'nosuchtype';
        g.examples[0].steps[0].visual = { kind: 'points', items: [{ term: '(1, 1)' }] };
-       go(1);
+       go(w);
        const pane = document.querySelector(`[data-mx-panel="${g.id}"]`);
        const sv = pane.querySelector('.mx-step[data-mx-stepvis] .mx-stepvis .mx-part');
-       return pane.dataset.mxWextype === 'extended' && !!sv && sv.getBoundingClientRect().height > 12; }),
+       return pane.dataset.mxWextype === 'extended' && !!sv && sv.getBoundingClientRect().height > 12; }, WEX),
      'an unrecognised type renders as extended; the step visual is unaffected');
   await p.close();
 }
@@ -567,18 +567,18 @@ mark('reference');
      an intersection the picture no longer shows. */
   /* the plane may live on the example or on the group's own relationship region, depending on the
      contract; the control finds it wherever the lesson authored it rather than assuming a shape */
-  const without = await p.evaluate((id) => {
-    const g = LESSON.slides[1].groups.find((x) => x.id === id);
+  const without = await p.evaluate(({ id, w }) => {
+    const g = LESSON.slides[w].groups.find((x) => x.id === id);
     const pools = [g.relations, g.visual].concat(g.examples.map((e) => e.visual));
     pools.forEach((v) => { if (!v) return;
       (Array.isArray(v) ? v : v.parts || [v]).forEach((q) => {
         if (q && q.kind === 'figure' && q.figure.objects)
           q.figure.objects = q.figure.objects.filter((o) => o.type !== 'line'); }); });
-    go(1);
+    go(w);
     document.querySelector(`[data-mx-tab="${id}"]`).click();
     const st = document.querySelector(`[data-mx-panel="${id}"] [data-mx-state]:last-child`);
     if (st) st.click();
-    return document.querySelectorAll(`[data-mx-panel="${id}"] .tp-fig-ref`).length; }, GROUPS[1].id);
+    return document.querySelectorAll(`[data-mx-panel="${id}"] .tp-fig-ref`).length; }, { id: GROUPS[1].id, w: WEX });
   ok('CONTROL: remove the authored line and the drawing loses it, so this check can fail',
      drawn[GROUPS[1].id] > 0 && without === 0,
      `${drawn[GROUPS[1].id]} drawn with it authored, ${without} without`);
@@ -657,9 +657,9 @@ const readScales = (p) => p.evaluate(() => {
   const p = await open({ slide: WEX });
   await reveal(p, GROUPS[2].id);
   const before = (await readScales(p))[0];
-  await p.evaluate((id) => { const g = LESSON.slides[1].groups.find((x) => x.id === id);
+  await p.evaluate(({ id, w }) => { const g = LESSON.slides[w].groups.find((x) => x.id === id);
     const f = g.relations.find((q) => q.kind === 'figure').figure;
-    f.scaleMode = 'authored'; f.aspect = 'stretch'; go(1); }, GROUPS[2].id);
+    f.scaleMode = 'authored'; f.aspect = 'stretch'; go(w); }, { id: GROUPS[2].id, w: WEX });
   await reveal(p, GROUPS[2].id);
   const after = (await readScales(p))[0];
   ok('CONTROL: opt a plane out of the policy and the same measure catches the distortion',
@@ -766,6 +766,10 @@ mark('slots');
       solved: (pane.querySelector('.tp-fig')||{dataset:{}}).dataset.figBox }; }, id));
   }
   const cmp = slots.find((x) => x.type === 'comparison');
+  /* A missing comparison group must FAIL this section, not throw out of it: a harness that dies on the way
+     to its own assertion reports nothing at all, which is the one outcome a gate may never have. */
+  if (!cmp) ok('a comparison group exists to measure the bridge against', false,
+    `no group of type "comparison" among ${GROUPS.map((g) => g.type).join(' / ')}`);
   /* A SLOT IS A PLACE FOR A PLANE, NOT A SHAPE IMPOSED ON ONE. The earlier version of this asserted the
      comparison plane was "wide and shallow" — that was the composition dictating the mathematics, and the
      rendered plane went to 4.65:1. What the slot owes the plane now is a NATURAL box, in the place it
@@ -775,14 +779,15 @@ mark('slots');
      AND IT SITS BETWEEN THE CASES IT BRIDGES. A plane that explains why A and B agree is not an appendix
      under them: `comparison` is A | plane | B, all three reading at once, so the bridge is measured to be
      BETWEEN the two cases and level with them, not centred under a stack of them. */
-  const cmpFig = (GROUPS.find((q) => q.id === (cmp && cmp.id)).relations || [])
-    .filter((q) => q.kind === 'figure').map((q) => authoredRatio(q.figure))[0];
+  const cmpFig = cmp ? ((GROUPS.find((q) => q.id === cmp.id) || {}).relations || [])
+    .filter((q) => q.kind === 'figure').map((q) => authoredRatio(q.figure))[0] : 0;
   ok('the comparison plane gets the box its authored domain implies, and bridges the two cases',
      !!(cmp && cmp.mid) && !!cmpFig && cmp.cases.length === 2
      && Math.abs((cmp.mid.w / cmp.mid.h) - cmpFig) / cmpFig < 0.06
      && cmp.mid.mid > cmp.cases[0].r && cmp.mid.mid < cmp.cases[1].l
      && Math.abs(cmp.cases[0].t - cmp.cases[1].t) <= 2,
-     cmp && cmp.mid ? `${cmp.mid.w}×${cmp.mid.h} → ${(cmp.mid.w / cmp.mid.h).toFixed(3)} against an authored `
+     cmp && cmp.mid && cmpFig && cmp.cases.length === 2
+       ? `${cmp.mid.w}×${cmp.mid.h} → ${(cmp.mid.w / cmp.mid.h).toFixed(3)} against an authored `
        + `${cmpFig.toFixed(3)}, between cases that end at ${cmp.cases[0].r}px and start at ${cmp.cases[1].l}px`
        : 'no comparison figure');
   /* Integer rounding of the box leaves a few per cent between the painted shape and the viewBox; a
@@ -801,14 +806,16 @@ mark('slots');
      The control below is that two different authored domains give two different slots — a bridge column
      and a staged state's region — through the same engine and with no per-composition figure sizes. */
   const other = slots.find((x) => x.type === 'staged' && x.foot);
-  const otherFig = other ? (GROUPS.find((q) => q.id === other.id).relations || [])
+  const otherFig = other ? ((GROUPS.find((q) => q.id === other.id) || {}).relations || [])
     .filter((q) => q.kind === 'figure').map((q) => authoredRatio(q.figure))[0] : 0;
   ok('CONTROL: a different authored plane gets a different slot, through the same engine',
      !!(other && other.foot) && !!otherFig && !!(cmp && cmp.mid)
      && Math.abs((other.foot.w / other.foot.h) - otherFig) / otherFig < 0.08
      && Math.abs(otherFig - cmpFig) > 0.05,
-     `staged ${(other.foot.w / other.foot.h).toFixed(3)} against an authored ${otherFig.toFixed(3)}; `
-     + `comparison ${(cmp.mid.w / cmp.mid.h).toFixed(3)} against ${cmpFig.toFixed(3)}`);
+     `staged ${other && other.foot ? (other.foot.w / other.foot.h).toFixed(3) : 'not measured'} against an `
+     + `authored ${otherFig ? otherFig.toFixed(3) : 'n/a'}; comparison `
+     + `${cmp && cmp.mid ? (cmp.mid.w / cmp.mid.h).toFixed(3) : 'not measured'} against `
+     + `${cmpFig ? cmpFig.toFixed(3) : 'n/a'}`);
   await p.close();
   /* AND IT IS SEPARATED FROM WHAT IT FOLLOWS. On a handset the connection's label sat flush on the ANSWER
      band above it, because the only thing that had ever separated them was a tall plane in between. */
@@ -1016,14 +1023,14 @@ mark('proofs');
   ok('a relationship region appears only where one is authored — it is content, not chrome',
      only.every((o, k) => o.rel === authored[k].rel),
      only.map((o) => `${o.id}: ${o.rel} authored, ${o.rel} rendered`).join(' · '));
-  const stripped = await p.evaluate(() => { LESSON.slides[0].examples[0].parts =
-      LESSON.slides[0].examples[0].parts.filter((q) => q.kind !== 'relations'); go(0);
+  const stripped = await p.evaluate((n) => { LESSON.slides[n].examples[0].parts =
+      LESSON.slides[n].examples[0].parts.filter((q) => q.kind !== 'relations'); go(n);
     const e = document.querySelector('.mx-expane:not([hidden])');
     /* an SVG polyline legitimately has a box and no text — the claim is about reserved HTML REGIONS */
     const boxes = [].slice.call(e.querySelectorAll('*')).filter((n) => {
       if (n.namespaceURI !== 'http://www.w3.org/1999/xhtml' || n.closest('.mx-figstage')) return false;
       const r = n.getBoundingClientRect(); return r.width > 60 && r.height > 20 && !n.textContent.trim(); });
-    return { rel: e.querySelectorAll('.mx-relations').length, empty: boxes.length }; });
+    return { rel: e.querySelectorAll('.mx-relations').length, empty: boxes.length }; }, NOTES);
   ok('CONTROL: remove it and no empty region is reserved in its place',
      stripped.rel === 0 && stripped.empty === 0,
      'no relations element, no empty box left behind');
@@ -1085,15 +1092,15 @@ mark('states');
   /* CONTROL: the same example authored WITHOUT states renders every section on one surface — so the
      partition is the composition's doing and changes nothing about the content. */
   const p = await open({ slide: WEX });
-  const flat = await p.evaluate((id) => {
-    const g = LESSON.slides[1].groups.find((x) => x.id === id);
-    delete g.states; g.type = 'standard'; go(1);
+  const flat = await p.evaluate(({ id, w }) => {
+    const g = LESSON.slides[w].groups.find((x) => x.id === id);
+    delete g.states; g.type = 'standard'; go(w);
     document.querySelector(`[data-mx-tab="${id}"]`).click();
     const pane = document.querySelector(`[data-mx-panel="${id}"]`);
     return { states: pane.querySelectorAll('[data-mx-state]').length,
       q: pane.querySelectorAll('[data-mx-sec="question"]').length,
       steps: pane.querySelectorAll('.mx-step').length,
-      a: pane.querySelectorAll('[data-mx-sec="answer"]').length }; }, GROUPS[1].id);
+      a: pane.querySelectorAll('[data-mx-sec="answer"]').length }; }, { id: GROUPS[1].id, w: WEX });
   const want = GROUPS[1].examples.reduce((n, e) => n + e.steps.length, 0);
   ok('CONTROL: drop the states and the same example renders whole on one surface',
      flat.states === 0 && flat.steps === want && flat.q === 1 && flat.a === 1,
@@ -1190,8 +1197,8 @@ mark('flat');
      hidden.every((l) => flat.text.indexOf(l) >= 0),
      `${hidden.length} sections were behind a tab and all are present`);
   ok('CONTROL: the flat output is built from the JSON, so a re-titled group travels into print too',
-     await p.evaluate(() => { LESSON.slides[1].groups[0].title = 'Putting values in';
-       openWorksheet(); return /Putting values in/.test(document.querySelector('#wsSheet').textContent); }),
+     await p.evaluate((w) => { LESSON.slides[w].groups[0].title = 'Putting values in';
+       openWorksheet(); return /Putting values in/.test(document.querySelector('#wsSheet').textContent); }, WEX),
      'renaming a group reaches the worksheet with no renderer change');
   await p.close();
 }
