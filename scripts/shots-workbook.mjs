@@ -42,7 +42,10 @@ const draw = async (p, pts) => {
   // fraction of the canvas rect can fall outside the viewport, where a pointer cannot go.
   const sheet = await p.$('.mx-sheet');
   if (!sheet) throw new Error('draw(): no .mx-sheet on the page — the writing surface did not render');
+  /* the handle existing is not the box existing: an element that is display:none, detached or zero-sized
+     returns a null box, and every stroke below would then be drawn at NaN */
   const box = await sheet.boundingBox();
+  if (!box) throw new Error('draw(): .mx-sheet has no bounding box — it is present but not rendered');
   const at = ([x, y]) => [box.x + x * box.width, box.y + y * box.height];
   await p.mouse.move(...at(pts[0])); await p.mouse.down();
   for (const q of pts.slice(1)) await p.mouse.move(...at(q), { steps: 10 });
