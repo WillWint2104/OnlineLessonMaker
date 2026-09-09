@@ -98,24 +98,24 @@ const report = async (p, name, why) => {
 // 1 — Notes desktop.
 { const p = await open(1536, 1024, NOTES); await shotWhole(p, '1-notes-desktop', 1536);
   await report(p, '1 Notes desktop', 'concepts beside one exploration surface; the plane is the subject of its panel'); await p.close(); }
-// 2 — compact, three examples (2 + 1).
+// 2 — sequence, three examples as parallel rows.
 { const p = await open(1536, 1024, 0, CMP); await pick(p, CX[0]);
-  await shotWhole(p, '2-compact-three-examples', 1536);
-  await report(p, '2 Compact ×3', 'three short examples of one skill: 2 + 1, the third centred, no reserved visual region'); await p.close(); }
+  await shotWhole(p, '2-sequence-three-examples', 1536);
+  await report(p, '2 Sequence ×3', 'three examples of one skill as full-width rows of equal status — ask left, working right'); await p.close(); }
 // 3 — standard, one example.
 { const p = await open(1536, 1024, 0, CMP); await pick(p, CX[1]);
   await shotWhole(p, '3-standard-single-example', 1536);
-  await report(p, '3 Standard', 'one ordinary example needing no major representation: a centred reading measure, not half an empty canvas'); await p.close(); }
+  await report(p, '3 Standard', 'one example, question on the left and the whole working on the right — nothing centred, nothing reserved'); await p.close(); }
 // 4 · 5 — staged: algebra, then the graph its own surface.
 { const p = await open(1536, 1024, WEX); await pick(p, GX[1]);
   await shotWhole(p, '4-staged-worked-solution', 1536);
   await report(p, '4 Staged 1/2', 'the algebra reaches its answer without scrolling past a full-height plane');
   await stage(p, 'graph'); await shotWhole(p, '5-staged-graph-check', 1536);
-  await report(p, '5 Staged 2/2', 'an equal-scale plane too tall to embed gets its own state instead of being flattened'); await p.close(); }
+  await report(p, '5 Staged 2/2', 'the plane takes the width its shape needs and the explanation takes the rest — never a narrow figure centred in an empty page'); await p.close(); }
 // 6 — comparison, desktop.
 { const p = await open(1536, 1024, WEX); await pick(p, GX[2]);
   await shotWhole(p, '6-comparison-desktop', 1536);
-  await report(p, '6 Comparison', 'two cases whose relationship is the teaching point, side by side'); await p.close(); }
+  await report(p, '6 Comparison', 'case A | the plane that bridges them | case B — all three reading at once'); await p.close(); }
 // 7 — extended, first state.
 { const p = await open(1536, 1024, 0, CMP); await pick(p, CX[2]);
   await shotWhole(p, '7-extended-first-state', 1536);
@@ -128,9 +128,9 @@ const report = async (p, name, why) => {
 { const p = await open(414, 896, WEX); await pick(p, GX[1]); await stage(p, 'graph');
   await shotWhole(p, '9-staged-graph-check-phone', 414);
   await report(p, '9 Staged 2/2 phone', 'a smaller box of the same shape — never a different shape'); await p.close(); }
-// 10 — the tablet width where the compact set changes structure.
+// 10 — the width at which the row's own floors change its structure.
 { const p = await open(980, 1200, 0, CMP); await pick(p, CX[0]);
-  await shotWhole(p, '10-compact-tablet-structure-change', 980);
-  await report(p, '10 Compact at 980px', 'below the measure where two examples still read as examples, the set stacks'); await p.close(); }
+  await shotWhole(p, '10-sequence-tablet-structure-change', 980);
+  await report(p, '10 Sequence at 980px', 'below the width where the ask is still a measure, each row stacks: question above its working'); await p.close(); }
 await browser.close(); server.close();
 console.log('\nwrote ' + path.relative(root, OUT));

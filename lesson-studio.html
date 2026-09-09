@@ -1966,62 +1966,71 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-stbtn.on .mx-stn{color:var(--mx-green);}
 .mx-stpane[hidden]{display:none;}          /* a hidden state reserves no layout space */
 .mx-stpane{min-width:0;}
-/* A single authored example is a reading composition, not a grid with an empty half beside it. */
-.mx-wexset.mx-wexone{grid-template-columns:minmax(0,1fr);max-width:74ch;margin:0 auto;}
-/* `standard` and `staged` read at a measure and sit centred rather than pinned to the left of an empty
-   canvas; a companion, where one is authored, still gets its column. */
-.mx-wexpane[data-mx-wextype="standard"] .mx-wexbody.mx-wexsolo,
-.mx-wexpane[data-mx-wextype="staged"] .mx-wexbody.mx-wexsolo{max-width:74ch;margin:0 auto;}
-.mx-wexpane[data-mx-wextype="standard"] .mx-wexfoot,
-.mx-wexpane[data-mx-wextype="staged"] .mx-stpane>.mx-wexfoot{max-width:74ch;margin-left:auto;margin-right:auto;}
-/* the lede shares the reading measure it introduces — otherwise it hangs left of the column it belongs to */
-.mx-wexpane[data-mx-wextype="standard"] .mx-wexlede,
-.mx-wexpane[data-mx-wextype="staged"] .mx-wexlede,
-.mx-wexpane[data-mx-wextype="staged"] .mx-stpane>.mx-wexlede{max-width:74ch;margin-left:auto;margin-right:auto;}
-.mx-wexpane[data-mx-wextype="staged"] .mx-states{display:flex;width:min(74ch,100%);margin-left:auto;margin-right:auto;}
-/* A STAGED VISUAL STATE IS THE REPRESENTATION'S OWN SURFACE, so the plane is sized by the room the state
-   actually has — its HEIGHT — and its width follows from the authored aspect. That is a smaller box of the
-   SAME SHAPE, never a different shape: a tall plane becomes a narrower one, not a flattened one. Sizing it
-   by width instead made a 1:2 plane 1182px tall and put its own conclusion a screen below it. */
-.mx-wexpane[data-mx-wextype="staged"] .mx-stpane>.mx-wexfoot .mx-part[data-mx-part="figure"],
-.mx-wexpane[data-mx-wextype="comparison"] .mx-stpane>.mx-wexfoot .mx-part[data-mx-part="figure"]{
-  /* WIDTH is the binding constraint so the aspect can never be clipped by `max-width`: the height the
-     state can spare is converted into the width that shape implies, and whichever is smaller wins.
-     Setting height directly and capping width instead flattened the plane on a phone (0.558 vs 0.620). */
-  width:min(100%,calc(min(70vh,780px) * var(--mx-plot-ar,1.333)));
-  height:auto;margin:0 auto;}
-/* The plane and the statement it supports are ONE region: bound them to a common measure so the graph
-   sits with its conclusion rather than alone in the middle of an otherwise empty card. */
-.mx-wexpane[data-mx-wextype="staged"] .mx-stpane>.mx-wexfoot,
-.mx-wexpane[data-mx-wextype="comparison"] .mx-stpane>.mx-wexfoot{
-  max-width:min(100%,76ch);margin-left:auto;margin-right:auto;}
-/* COMPACT and COMPARISON set complete examples alongside one another. THE GRID IS AT MOST TWO COLUMNS —
-   example count is not column count. Three narrow columns stop being worked examples and start being a
-   question sheet, so three examples are 2 + 1 and four are 2 x 2. Beyond four the author should split the
-   material into another group rather than have the page invent a tinier grid, so the extras keep flowing
-   down the same two columns. A single example takes ONE constrained teaching column, not the full width. */
-.mx-wexset{display:grid;gap:26px 34px;align-items:start;grid-template-columns:repeat(2,minmax(0,1fr));}
-.mx-wexset[data-mx-count="1"]{grid-template-columns:minmax(0,1fr);max-width:74ch;}
-/* Three examples are two above and one CENTRED below at the same measure — not stretched across both
-   columns, and not stranded in the lower-left looking like a fourth example failed to render. */
-.mx-wexset[data-mx-count="3"]>.mx-wexcell:nth-child(3){grid-column:1 / -1;
-  width:calc(50% - 17px);margin:0 auto;}
-.mx-wexset>.mx-wexcell:nth-child(2)::before,
-.mx-wexset>.mx-wexcell:nth-child(4)::before{content:"";position:absolute;left:-17px;top:0;bottom:0;
-  width:1px;background:var(--mx-line);}
-.mx-wexset>.mx-wexcell:nth-child(n+3){padding-top:26px;border-top:1px solid var(--mx-line);}
-.mx-wexcell{min-width:0;position:relative;}
+/* A NARROW PLANE IS NOT CENTRED IN AN EMPTY PAGE. A tall equal-scale plane cannot become wider, so the
+   width beside it carries the explanation that belongs with it — what the algebra gave, where it meets the
+   curve, why they agree. The plane keeps its natural size and the composition is left-aligned to the page
+   grid; the figure stays internally centred in its own viewport, which is a different thing.
+   WIDTH is the binding constraint so the aspect is never clipped by `max-width`: the height the state can
+   spare becomes the width that shape implies, and whichever is smaller wins. Setting height directly and
+   capping width instead flattened the plane on a phone (0.558 against an authored 0.620). */
+/* The figure column is sized from the PLANE, not shrink-wrapped: an `auto` track and a width of `100%`
+   are circular, and the plane collapsed to 158px. The height the state can spare becomes the width that
+   shape implies; the rest of the row is the explanation that belongs beside it. */
+.mx-stpane>.mx-wexfoot{display:grid;gap:32px;align-items:start;
+  grid-template-columns:min(52%,calc(min(66vh,720px) * var(--mx-plot-ar,1.333))) minmax(0,1fr);}
+.mx-stpane>.mx-wexfoot>.mx-wexlab{grid-column:1 / -1;}
+/* the plane holds its column; everything else stacks in the width beside it, as ONE cell — not as loose
+   parts auto-placing back underneath the graph */
+.mx-stpane>.mx-wexfoot>.mx-part[data-mx-part="figure"]{grid-column:1;width:100%;height:auto;margin:0;}
+.mx-wexfootside{grid-column:2;min-width:0;display:flex;flex-direction:column;gap:18px;}
+.mx-stpane>.mx-wexfoot .mx-part[data-mx-part="relations"],
+.mx-stpane>.mx-wexfoot .mx-part[data-mx-part="points"],
+.mx-stpane>.mx-wexfoot .mx-part[data-mx-part="prose"],
+.mx-stpane>.mx-wexfoot .mx-part[data-mx-part="table"]{align-self:start;}
+@media (max-width:900px){ .mx-stpane>.mx-wexfoot{grid-template-columns:minmax(0,1fr);gap:18px;}
+  .mx-stpane>.mx-wexfoot>.mx-part[data-mx-part="figure"]{grid-column:1;}
+  .mx-wexfootside{grid-column:1;} }
 
-.mx-wexcellvis{margin-top:14px;}
-.mx-wexcellvis .mx-part[data-mx-part="figure"]{position:relative;min-height:240px;}
-.mx-wexcellvis .mx-figstage{position:relative;inset:auto;min-height:240px;display:flex;flex-direction:column;}
-/* THE FIGURE SLOT BELONGS TO THE COMPOSITION, NOT TO THE FIGURE. There is no one "worked-example figure
-   size": a shared comparison plane and a companion beside a column are different jobs and want different
-   shapes. The Notes 4/3 subject-figure rule is for the Notes exploration panel and is overridden here in
-   every composition. Because the Figure Engine holds equal mathematical scale, a wider, shallower slot
-   EXPOSES MORE RANGE rather than distorting the plane — which is exactly what a comparison wants. */
-.mx-wexfoot{margin-top:22px;padding-top:20px;border-top:1px solid var(--mx-line);
-  display:flex;flex-direction:column;gap:16px;}
+/* THE WORKSPACE IS SHARED, NOT CENTRED. Instructional content is never centred in the page: a composition
+   asks what the meaningful pieces of an example are and how they should divide the width. The reusable
+   textbook pattern is problem/context on the left, mathematical reasoning on the right — the same principle
+   the Notes page already uses for concepts | representation.
+   ONE ROW IS ONE WHOLE EXAMPLE. A sequence of parallel examples is a stack of these rows, so every example
+   has identical status; a 2 + 1 grid made the third look like a conclusion because of where it sat. */
+.mx-wexseq{display:flex;flex-direction:column;}
+/* THE ROW HOLDS ITS PROPORTIONS ONLY WHILE BOTH SIDES ARE A MEASURE. Flex, not grid, so the floors do the
+   deciding: 35/65 while both clear them, then the ask pinned at its floor with the working taking the
+   remainder, then a wrap to ask-above-working. No breakpoint restates the numbers. */
+.mx-wexrow{display:flex;flex-wrap:wrap;gap:12px 40px;align-items:flex-start;padding:22px 0;}
+.mx-wexrow+.mx-wexrow{border-top:1px solid var(--mx-line);}
+.mx-wexseq>.mx-wexrow:first-child{padding-top:4px;}
+.mx-wexask{flex:35 1 0;min-width:min(100%,var(--mx-ask-min,300px));}
+.mx-wexwork{flex:65 1 0;min-width:min(100%,var(--mx-work-min,420px));}
+.mx-wexask .mx-wexsec:last-child{margin-bottom:0;}
+.mx-wexwork .mx-wexsec{margin-bottom:14px;}
+/* COMPARISON — case A | the plane that bridges them | case B, communicating simultaneously. */
+/* Three columns of content need the room for three: each case gets the same reading floor as an ask, and
+   the plane the plot floor. 300 + 340 + 300 + two 28px gaps = 996px of row, which is the width below which
+   the bridge is a structural fallback rather than a squeeze — the cases stack and the plane goes with them. */
+.mx-wexbridge{display:grid;gap:28px;align-items:start;
+  grid-template-columns:minmax(var(--mx-ask-min,300px),30fr) minmax(var(--mx-plot-min-w),40fr) minmax(var(--mx-ask-min,300px),30fr);}
+.mx-wexbridge>.mx-wexrow{display:block;padding:0;border:0;}
+.mx-wexbridge>.mx-wexrow .mx-wexask{margin-bottom:14px;}
+.mx-wexmid{min-width:0;}
+.mx-wexmid .mx-part[data-mx-part="figure"]{width:100%;margin:0;}
+/* the companion of a single example sits under its working, in the working's column, not centred */
+.mx-wexaside{margin-top:18px;}
+.mx-wexaside .mx-part[data-mx-part="figure"],
+.mx-wexcellvis .mx-part[data-mx-part="figure"]{width:min(100%,var(--mx-plot-w));margin:0;}
+/* A COLUMN THAT CANNOT BE READ IS NOT A COLUMN. The ROW needs no rule here — its floors wrap it on their
+   own. The BRIDGE cannot wrap (a grid track overflows instead), so this is the width its own floors imply:
+   996px of row inside a shell that takes ~384px of the viewport. Below it the three become one sequence,
+   each piece whole rather than three slivers. NOTHING HERE CAPS A PLANE'S HEIGHT: narrow makes it LONGER. */
+@media (max-width:1380px){
+  .mx-wexbridge{grid-template-columns:minmax(0,1fr);}
+  .mx-wexbridge>.mx-wexrow+.mx-wexmid,.mx-wexbridge>.mx-wexmid{order:0;}
+}
+@media (max-width:1080px){ .mx-wexask{margin-bottom:14px;} }
 /* A SLOT IS A PLACE FOR A PLANE, NOT A SHAPE IMPOSED ON ONE. Every worked-example slot is a NATURAL box —
    near 4:3 — so an equal-scale plane sits in it without the view having to reveal an absurd x-range to fill
    a strip. The earlier `--fig-fill-min:.22` override is gone: it solved letterboxing by giving the
@@ -2029,43 +2038,15 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    scrolling are how a composition adapts; the plane's proportions are not. */
 .mx-wexfoot .mx-part[data-mx-part="figure"]{aspect-ratio:var(--mx-plot-ar,4/3);height:auto;
   width:min(100%,var(--mx-plot-w));min-height:var(--mx-plot-min-h);flex:0 0 auto;margin:0 auto;}
-.mx-wexvis .mx-part[data-mx-part="figure"]{aspect-ratio:var(--mx-plot-ar,4/3);height:auto;min-height:var(--mx-plot-min-h);}
 .mx-wexcellvis .mx-part[data-mx-part="figure"]{aspect-ratio:var(--mx-plot-ar,4/3);height:auto;min-height:var(--mx-plot-min-h);}
 /* extended — the figure BREAKS OUT of the reading measure at the step that earns it, then the reading
    flow resumes. Wider than the prose, never wider than a plane wants to be. */
 .mx-wexpane[data-mx-wextype="extended"] .mx-stepvis{margin-left:-6px;}
 .mx-wexpane[data-mx-wextype="extended"] .mx-stepvis .mx-part[data-mx-part="figure"]{
   aspect-ratio:var(--mx-plot-ar,4/3);height:auto;width:min(100%,var(--mx-plot-w));min-height:var(--mx-plot-min-h);margin:0 auto;}
-/* The companion column must be able to hold a LEGIBLE plane, not merely exist. `min(...)` on the second
-   track would shrink it; the grid is only declared two-column while the second track can still clear the
-   legibility floor, and below that the composition stacks and the plane takes the full width. */
-.mx-wexbody{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(var(--mx-plot-min-w),1fr);
-  gap:30px;align-items:start;}
-/* the plane is taller than it is wide: it goes beneath the reasoning, centred, at its own proportions */
-.mx-wexbody.mx-wexstack{grid-template-columns:minmax(0,1fr);gap:26px;}
-.mx-wexbody.mx-wexstack .mx-wexsol{max-width:78ch;}
-.mx-wexbody.mx-wexstack .mx-wexvis{position:relative;top:auto;}
-.mx-wexbody.mx-wexstack .mx-wexvis .mx-part[data-mx-part="figure"]{
-  width:min(100%,var(--mx-plot-w));margin:0 auto;}
-@media (max-width:1180px){
-  .mx-wexbody{grid-template-columns:minmax(0,1fr);}
-  .mx-wexvis{position:relative;top:auto;}
-  .mx-wexvis .mx-part[data-mx-part="figure"]{width:min(100%,var(--mx-plot-w));margin:0 auto;}
-}
-/* No companion authored: the working takes a reading measure and sits in the page rather than becoming a
-   narrow column stranded in a full-screen void. */
-/* READING FLOW → VISUAL BREAKOUT → READING FLOW. The derivation is a single centred column at reading
-   measure; the figure at the step that earns it breaks out wider, then the prose resumes. Left-aligned in
-   a full-width surface it read as content dropped into the wrong-sized page. */
-.mx-wexbody.mx-wexsolo{grid-template-columns:minmax(0,1fr);max-width:78ch;margin:0 auto;}
-.mx-wexpane[data-mx-wextype="extended"] .mx-wexfoot,
-.mx-wexpane[data-mx-wextype="extended"] .mx-wexlede{max-width:78ch;margin-left:auto;margin-right:auto;}
-.mx-wexvis .mx-part[data-mx-part="figure"]{position:relative;min-height:300px;}
-.mx-wexvis .mx-part[data-mx-part="figure"] .mx-figstage{position:absolute;inset:0;}
 .mx-stepvis{margin-top:10px;padding:10px 0 2px;border-top:1px dashed var(--mx-line);}
 .mx-stepvis .mx-part[data-mx-part="figure"]{position:relative;min-height:220px;}
 .mx-wexh{font-family:var(--mx-serif);font-size:20px;font-weight:600;color:var(--mx-ink);margin:0 0 16px;}
-.mx-wexcell .mx-wexh{font-size:17.5px;}
 .mx-wexsec{margin:0 0 18px;}
 .mx-wexlab{font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
   color:var(--mx-ink-3);margin:0 0 7px;}
@@ -2083,31 +2064,9 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
   border-radius:0 var(--mx-rad) var(--mx-rad) 0;background:var(--mx-white);border:1px solid var(--mx-line);
   border-left:3px solid var(--mx-green);font-family:'LM Math',Cambria Math,serif;font-size:18px;color:var(--mx-ink);}
 .mx-wexrl{font-family:var(--mx-ui);font-size:11.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--mx-green);}
-/* `position` here is CONTAINMENT, not decoration. `.mx .mx-figstage` is absolutely positioned, so it needs
-   a positioned ancestor; while this column was `sticky` it happened to be one, and the moment the narrow
-   layout made it `static` the figure escaped and covered the whole page. It stays positioned at every
-   width, and the stage is pinned to it explicitly at (0,3,0) — above `.mx .mx-figstage`. */
-.mx-wexvis{position:sticky;top:0;min-width:0;display:flex;flex-direction:column;gap:12px;}
-.mx .mx-wexvis .mx-figstage{position:relative;inset:auto;min-height:300px;display:flex;flex-direction:column;}
-.mx-wexvh{font-family:var(--mx-serif);font-size:14.5px;font-weight:600;color:var(--mx-ink-2);margin:0 0 9px;
-  padding-right:40px;}   /* clears the figure's own expand control, and keeps authored maths readable */
-.mx-wexvis .mx-figstage{position:relative;inset:auto;min-height:320px;}
-.mx-wexvis .mx-tblwrap{border:1px solid var(--mx-line);border-radius:var(--mx-rad);}
 .mx-replist{margin:0;padding:14px 18px 14px 32px;font-size:15.5px;line-height:1.85;color:var(--mx-ink-body);}
 .mx-replist li::marker{color:var(--mx-green);}
 .mx-repprose{padding:16px 18px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);}
-/* A COLUMN THAT CANNOT BE READ IS NOT A COLUMN. Below the measure where two complete examples still read
-   as examples, the set stacks — one under the other, each whole — rather than becoming two slivers. */
-
-@media (max-width:1000px){
-  .mx-wexset,.mx-wexset[data-mx-count="1"]{grid-template-columns:minmax(0,1fr);gap:0;max-width:none;}
-  .mx-wexset[data-mx-count="3"]>.mx-wexcell:nth-child(3){width:auto;margin:0;}
-  .mx-wexset>.mx-wexcell:nth-child(2n)::before{display:none;}
-  .mx-wexset>.mx-wexcell+.mx-wexcell{margin-top:26px;padding-top:26px;border-top:1px solid var(--mx-line);}
-  /* NOTHING HERE CAPS A PLANE'S HEIGHT. Rules that clamped the stacked companion to a "landscape
-     demonstration area" used to live at this breakpoint; they were the composition reshaping the
-     mathematics, and they defeated the plane's own aspect. A narrow screen makes the page LONGER. */
-}
 @media (max-width:640px){ .mx-wexsurface{padding:18px 16px 20px;} }
 /* ON A HANDSET the ribbon stacks into a long column, and capping the BAR scrolls Insert and Cancel away
    with it. Cap the RIBBON instead: the field, its symbols and its actions then stay within one screen,
@@ -7442,6 +7401,11 @@ const MX_WB_CHROME=96;                              /* the workbook's own toolba
    must give it the whole width beneath the solution instead of a column beside it. Same lesson as the
    workbook: A REGION EXISTING IS NOT A REGION BEING USABLE. One owner; the CSS reads these, never a copy. */
 const MX_PLOT_MIN_W=340, MX_PLOT_MIN_H=255, MX_PLOT_W=560;
+/* THE ASK COLUMN'S READING FLOOR. A worked example divides its row into the ask and the working; below
+   roughly 37 characters a question column is a shape, not a measure. The row's grid holds the 35/65
+   proportion only while both sides clear their floor — under that the ask keeps this width and the working
+   takes the remainder, and under THAT they stack. One owner: no breakpoint restates it. */
+const MX_ASK_MIN=300;
 let MX_FIT=null;                                    /* 'split' | 'solo' — resolved, never assumed */
 function mxSplitFits(root){
   const main=root&&root.querySelector('.mx-main'), page=root&&root.querySelector('.mx-page');
@@ -7841,8 +7805,10 @@ function mxNotesExamples(s,ws){
    text an example has, or how much room is left, in order to pick a layout — that would be
    unpredictable to author against. A tab is a GROUP with a pedagogical identity ("Substitution",
    "Solving for x"), not "Example 1". There is no response field anywhere on this page. */
-const MX_WEX_TYPES={compact:1,standard:1,comparison:1,staged:1,extended:1};
-const MX_WEX_ALIAS={visual:'standard'};                 /* `visual` was the earlier name for `standard` */
+const MX_WEX_TYPES={standard:1,sequence:1,comparison:1,staged:1,extended:1};
+/* `compact` said how DENSE something should look; `sequence` says what relationship its content has —
+   several parallel examples of one skill — which is the thing a composition is allowed to know. */
+const MX_WEX_ALIAS={visual:'standard',compact:'sequence'};
 const MX_WEX_SECTIONS={question:1,steps:1,answer:1,visual:1,relations:1};
 /* LOCAL STATES. Algebra and a substantial representation each deserve the whole surface: a learner should
    not scroll past a full-height graph to reach the conclusion of the working, and the graph must not be
@@ -7900,59 +7866,96 @@ function mxWexSteps(ex,range){
    `named` is false where the example's own name would only repeat the group's: a group holding ONE example
    is already titled by its tab, and printing "Find x when y = 16" above "Find the value(s) of x for which
    y = 16" is the duplicated prompt hierarchy this replaces. */
-function mxWexSolution(ex,k,named,state){
-  const q=ex.prompt||ex.question, a=ex.answer||ex.result;
+/* THE ANATOMY IS THE SAME FOUR THINGS EVERYWHERE; only which SIDE of the workspace they take changes.
+   Splitting the ask from the working is what lets a composition put problem/context on the left and the
+   mathematical reasoning on the right — the reusable textbook pattern — instead of centring the lot. */
+function mxWexAsk(ex,k,named,state){
+  const q=ex.prompt||ex.question;
   const show=x=>!state||state.show.indexOf(x)>=0;
   return `${named!==false?`<h3 class="mx-wexh">${mxM(String(ex.label||('Example '+(k+1))))}</h3>`:''}
     ${(q&&show('question'))?`<section class="mx-wexsec" data-mx-sec="question"><h4 class="mx-wexlab">Question</h4>
-      <div class="mx-wexqb">${mxM(q)}</div></section>`:''}
-    ${show('steps')?`<section class="mx-wexsec" data-mx-sec="steps"><h4 class="mx-wexlab">Worked solution</h4>${mxWexSteps(ex,state&&state.steps)}</section>`:''}
+      <div class="mx-wexqb">${mxM(q)}</div></section>`:''}`;
+}
+function mxWexWork(ex,state){
+  const a=ex.answer||ex.result;
+  const show=x=>!state||state.show.indexOf(x)>=0;
+  return `${show('steps')?`<section class="mx-wexsec" data-mx-sec="steps"><h4 class="mx-wexlab">Worked solution</h4>${mxWexSteps(ex,state&&state.steps)}</section>`:''}
     ${(a&&show('answer'))?`<div class="mx-wexres" data-mx-sec="answer"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span>
       <span>${mxM(a)}</span></div>`:''}`;
 }
-function mxWexCell(ex,s,i,key,k,state){
-  const parts=(state&&state.show.indexOf('visual')<0)?[]:mxParts(ex.visual);
-  const vis=parts.length?mxCompanion(parts,key+'-'+(ex.id||k)):'';
-  return `<article class="mx-wexcell" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${vis?' data-mx-cellvis':''}>
-    <div class="mx-wexsol">${mxWexSolution(ex,k,true,state)}</div>
-    ${vis?`<div class="mx-wexcellvis">${vis}</div>`:''}</article>`;
+function mxWexSolution(ex,k,named,state){ return mxWexAsk(ex,k,named,state)+mxWexWork(ex,state); }
+/* ONE ROW = ONE WHOLE EXAMPLE, ask on the left and working on the right. Every example in a sequence has
+   exactly the same status: no example is a conclusion or a special case because of where it sits. */
+function mxWexRow(ex,k,state,extra){
+  return `<article class="mx-wexrow" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}">
+    <div class="mx-wexask">${mxWexAsk(ex,k,true,state)}</div>
+    <div class="mx-wexwork">${mxWexWork(ex,state)}${extra||''}</div></article>`;
+}
+/* A PART IS DRAWN ONCE. When `comparison` lifts the plane into the middle column it IS the bridge between
+   the two cases, so the connection region below must not draw the same plane a second time — one decision,
+   read by the body that places it and by the foot that must then leave it out. */
+function mxWexBridge(g,state){
+  if(g.type!=='comparison'||g.examples.length!==2||state) return [];
+  return mxParts(g.relations||g.visual).filter(q=>q&&q.kind==='figure');
 }
 function mxWexGroupBody(g,s,i,state){
   const key=(tpRespId(s)||i)+'-'+g.id, ex=g.examples;
   if(!ex.length) return '<div class="mx-ph">This group has no examples authored yet.</div>';
   if(state&&state.show.indexOf('steps')<0&&state.show.indexOf('question')<0&&state.show.indexOf('answer')<0)
     return '';                                        /* a visual-only state carries no worked solution */
-  if(g.type==='standard'||g.type==='staged'||g.type==='extended'){
-    /* ONE example is the composition. `visual` puts an authored representation beside the reasoning;
-       `extended` takes the reading width and lets a step bring its own picture inline. A companion
-       column exists only when the example authors one — never as a reserved empty region. */
-    /* In a STAGED group the representation belongs to its own state, so it is never also a companion. */
-    const one=ex[0], parts=(g.type==='staged')?[]:mxParts(one.visual);
-    const vis=parts.length?mxCompanion(parts,key+'-'+(one.id||0)):'';
-    /* A PORTRAIT PLANE DOES NOT BELONG IN A SIDE COLUMN. Under an equal scale, a demonstration that has to
-       reach y = 16 over x = ±6 is simply a tall picture; set beside the reasoning it towers over it, and
-       squeezing it would be the page reshaping the mathematics again. So the composition stacks it beneath
-       and lets the page get longer — vertical space is the right fallback, not compression. */
-    const shape=parts.filter(q=>q&&q.kind==='figure').map(q=>mxFigRatio(q.figure)).filter(Boolean);
-    const portrait=shape.length&&shape.every(r=>r<0.85);
-    return `<div class="mx-wexbody${vis?'':' mx-wexsolo'}${portrait?' mx-wexstack':''}" data-mx-wexcols="${vis&&!portrait?'2':'1'}"${portrait?' data-mx-plotshape="portrait"':''}>
-      <div class="mx-wexsol" data-mx-example="${esc(String(one.id||'ex1'))}">${mxWexSolution(one,0,ex.length>1,state)}</div>
-      ${vis?`<aside class="mx-wexvis" aria-label="${esc('Supporting representation for '+String(one.label||''))}">${vis}</aside>`:''}
-    </div>${ex.slice(1).map((x,k)=>mxWexCell(x,s,i,key,k+1,state)).join('')}`;
+  const cellVis=(x,k)=>{ const parts=(state&&state.show.indexOf('visual')<0)?[]:mxParts(x.visual);
+    return parts.length?`<div class="mx-wexcellvis">${mxCompanion(parts,key+'-'+(x.id||k))}</div>`:''; };
+  /* COMPARISON — A | representation | B, so all three communicate at once: the plane is the BRIDGE between
+     the two cases, not something appended after them. It only earns the middle column while that column can
+     still hold a legible plane; below that the group falls back to its authored states (or stacks), which
+     is the composition changing structurally rather than the plane being squeezed. */
+  {
+    const bridge=mxWexBridge(g,state);
+    if(bridge.length) return `<div class="mx-wexbridge" data-mx-wexcols="3">
+      ${mxWexRow(ex[0],0,state)}
+      <div class="mx-wexmid">${mxCompanion(bridge,key+'-bridge')}</div>
+      ${mxWexRow(ex[1],1,state)}</div>`;
   }
-  /* compact and comparison both set complete examples ALONGSIDE one another; they differ in what the
-     reader is meant to do with them, which the group's own relationship line says. */
-  /* ONE EXAMPLE IS NOT A ONE-COLUMN GRID. A single authored example collapses to a centred reading
-     composition rather than keeping the ghost of a two-column shell with an empty half beside it. */
-  return `<div class="mx-wexset${ex.length===1?' mx-wexone':''}" data-mx-wexset="${esc(g.type)}" data-mx-count="${ex.length}">
-    ${ex.map((x,k)=>mxWexCell(x,s,i,key,k,state)).join('')}</div>`;
+  /* STANDARD / STAGED / EXTENDED — one example, ask left and working right. */
+  if(g.type==='standard'||g.type==='staged'||g.type==='extended'){
+    const one=ex[0];
+    const parts=(g.type==='staged')?[]:mxParts(one.visual);
+    const vis=parts.length?`<aside class="mx-wexaside">${mxCompanion(parts,key+'-'+(one.id||0))}</aside>`:'';
+    return `<div class="mx-wexseq" data-mx-wexcols="2">
+      ${mxWexRow(one,0,state,vis)}
+      ${ex.slice(1).map((x,k)=>mxWexRow(x,k+1,state,cellVis(x,k+1))).join('')}</div>`;
+  }
+  /* SEQUENCE — parallel examples as full-width rows. No grid, no centring, no 2 + 1. */
+  return `<div class="mx-wexseq" data-mx-wexset="${esc(g.type)}" data-mx-count="${ex.length}" data-mx-wexcols="2">
+    ${ex.map((x,k)=>mxWexRow(x,k,state,cellVis(x,k))).join('')}</div>`;
 }
+/* NEVER A HEADING ABOVE A HEADING. The optional fourth region is named once: by the group's own
+   `footLabel` if it states one, otherwise by the parts' authored labels, which already say what the region
+   is ("What the graph shows", "Why the two agree"). */
 function mxWexFootRender(g,s,i,foot,state){
   if(!foot.length) return '';
   const named=foot.every(q=>q&&q.label);
-  const lab=g.footLabel?esc(g.footLabel):(named?'':(foot.some(q=>q.kind==='figure')?'Visual explanation':'Connection'));
-  return `<section class="mx-wexfoot">${lab?`<h4 class="mx-wexlab">${lab}</h4>`:''}
-    ${mxCompanion(foot,(tpRespId(s)||i)+'-'+g.id+'-'+((state&&state.id)||'foot'))}</section>`;
+  /* …and NEVER THE SAME NAME TWICE. A group may title its region above parts that carry their own names —
+     "Visual explanation" over "Where the line meets the curve" — but when the title repeats what a part
+     already says, the region has been named once and printing it again is the heading-above-heading. */
+  const flat=q=>String((q&&q.label)||'').replace(/\s+/g,' ').trim().toLowerCase();
+  const dup=g.footLabel&&foot.some(q=>flat(q)===flat({label:g.footLabel}));
+  const lab=(g.footLabel&&!dup)?esc(g.footLabel)
+    :(named?'':(foot.some(q=>q.kind==='figure')?'Visual explanation':'Connection'));
+  /* The GRID needs the plane's aspect to size the figure column, and a custom property set on the figure
+     part cannot be read by its parent. Publishing it on the region too is what lets the height the state
+     can spare decide the column width — otherwise the track fell back to 4:3 and the plane ran 966px tall. */
+  const ar=foot.filter(q=>q&&q.kind==='figure').map(q=>mxFigRatio(q.figure)).filter(Boolean)[0];
+  const key=(tpRespId(s)||i)+'-'+g.id+'-'+((state&&state.id)||'foot');
+  /* TWO PIECES, TWO COLUMNS. The plane and the explanation beside it are ONE grid cell each: the earlier
+     version let the explanation's parts auto-place and pinned the figure across `span 30` rows, so the
+     region carried thirty row gaps — 960px of nothing under a 676px plane. */
+  const plane=foot.filter(q=>q&&q.kind==='figure'), rest=foot.filter(q=>!q||q.kind!=='figure');
+  const body=(plane.length&&rest.length)
+    ?`${mxCompanion(plane,key)}<div class="mx-wexfootside">${mxCompanion(rest,key+'-r')}</div>`
+    :mxCompanion(foot,key);
+  return `<section class="mx-wexfoot"${ar?` style="--mx-plot-ar:${ar.toFixed(3)}"`:''}>${lab?`<h4 class="mx-wexlab">${lab}</h4>`:''}
+    ${body}</section>`;
 }
 function mxWexFoot(g,s,i,state){
   if(state&&state.show.indexOf('relations')<0&&state.show.indexOf('visual')<0) return '';
@@ -7968,7 +7971,7 @@ function mxWexGroup(g,s,i,hidden){
        inactive state is `hidden`, so it reserves no layout space; its figures are solved when it is
        revealed, which is what the engine's viewport observer exists for. */
     const bar=states.map((st,k)=>`<button type="button" role="tab" class="mx-stbtn${k?'':' on'}"
-      data-mx-state="${esc(st.id)}" aria-selected="${k?'false':'true'}"><span class="mx-stn">${k+1}/${states.length}</span>${mxM(st.label)}</button>`).join('');
+      data-mx-state="${esc(st.id)}" aria-selected="${k?'false':'true'}"><span class="mx-stn">${k+1}</span>${mxM(st.label)}</button>`).join('');
     /* The group's lede introduces the group, so it belongs to the state the reader lands on; a state that
        states its own carries that instead. Never both, one under the other, saying the same thing. */
     const panes=states.map((st,k)=>`<div class="mx-stpane" data-mx-statepanel="${esc(st.id)}"
@@ -7982,20 +7985,13 @@ function mxWexGroup(g,s,i,hidden){
         <div class="mx-states" role="tablist" data-mx-stateset aria-label="${esc(g.title)} stages">${bar}</div>
         ${panes}</div></section>`;
   }
-  const foot=mxParts(g.relations||g.visual);
+  const bridge=mxWexBridge(g,null), foot=mxParts(g.relations||g.visual).filter(q=>bridge.indexOf(q)<0);
   return `<section class="mx-wexpane" data-mx-panel="${esc(g.id)}" data-mx-wextype="${esc(g.type)}"
       role="tabpanel" aria-label="${esc(g.title)}"${hidden?' hidden':''}>
     <div class="mx-wexsurface">
       ${g.lede?`<p class="mx-wexlede">${mxM(g.lede)}</p>`:''}
       ${mxWexGroupBody(g,s,i)}
-      ${foot.length?(()=>{
-        /* NEVER A HEADING ABOVE A HEADING. The optional fourth section is named once: by the group's own
-           `footLabel` if it states one, otherwise by the parts' authored labels, which already say what the
-           region is ("What the graph shows", "Why the two agree"). */
-        const named=foot.every(q=>q&&q.label);
-        const lab=g.footLabel?esc(g.footLabel):(named?'':(foot.some(q=>q.kind==='figure')?'Visual explanation':'Connection'));
-        return `<section class="mx-wexfoot">${lab?`<h4 class="mx-wexlab">${lab}</h4>`:''}
-          ${mxCompanion(foot,(tpRespId(s)||i)+'-'+g.id+'-foot')}</section>`;})():''}
+      ${mxWexFootRender(g,s,i,foot)}
     </div></section>`;
 }
 function mxWorkedExamplesPage(s,i){
@@ -8003,7 +7999,7 @@ function mxWorkedExamplesPage(s,i){
   if(!gs.length) return `<div class="mx-panel"><div class="mx-ph">This page has no worked examples yet.</div></div>`;
   const bar=gs.map((g,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}"
     data-mx-tab="${esc(g.id)}" aria-selected="${k?'false':'true'}">${mxM(g.title)}</button>`).join('');
-  return `<div class="mx-wex" style="--mx-plot-min-w:${MX_PLOT_MIN_W}px;--mx-plot-min-h:${MX_PLOT_MIN_H}px;--mx-plot-w:${MX_PLOT_W}px">
+  return `<div class="mx-wex" style="--mx-plot-min-w:${MX_PLOT_MIN_W}px;--mx-plot-min-h:${MX_PLOT_MIN_H}px;--mx-plot-w:${MX_PLOT_W}px;--mx-ask-min:${MX_ASK_MIN}px;--mx-work-min:${MX_WB_MIN_W}px">
     <div class="mx-tabs" role="tablist" data-mx-tabset aria-label="Worked example groups">${bar}</div>
     ${gs.map((g,k)=>mxWexGroup(g,s,i,k>0)).join('')}</div>`;
 }

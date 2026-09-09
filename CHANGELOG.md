@@ -127,10 +127,10 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     in a state, not squeezed and not left as an 800px portrait object halfway down an ordinary page.** The
     author chooses that; the page never infers it from height. A hidden state reserves no layout space, and
     a figure revealed with its state is re-solved — until then its stage measured zero.
-  - **`visual` → `standard`,** and the vocabulary is now `compact | standard | comparison | staged |
-    extended`. `visual` still resolves. `standard` is one ordinary example at a centred reading measure
-    rather than half an empty canvas; one authored example in a `compact` set collapses to a reading column
-    instead of keeping the ghost of a two-column shell.
+  - **`visual` → `standard`, `compact` → `sequence`,** and the vocabulary is now `standard | sequence |
+    comparison | staged | extended`. Both old names still resolve. `compact` said how DENSE something
+    should look; `sequence` says what RELATIONSHIP its content has — several parallel examples of one
+    skill — which is the only kind of thing a composition is allowed to know.
   - **THE PAGE NEVER RESHAPES THE MATHEMATICS.** The boundary the whole figure system now hangs on: the
     Figure Engine determines mathematical geometry, the page composition determines where that geometry can
     live. Measured before the rule existed, the same symmetry plane rendered at **4.65:1** on a desktop and
@@ -159,20 +159,47 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   - **Fractions are fractions.** `mxM` sets `3/2` built-up over a rule and `(3/2)^2` inside brackets that
     grow to its height, on the mathematical axis. Digits only, three a side, so prose and year ranges are
     untouched.
-  - **`compact` is at most two columns.** Columns-follow-count was wrong before it became entrenched:
-    1 → one constrained teaching column · 2 → two · 3 → **2 + 1 with the third centred below at the same
-    measure** · 4 → 2 × 2 · beyond four the author splits the material. Every compact example also stands
-    alone now — "use the same rule…" made the second depend on having read the first.
+  - **THE WORKSPACE IS SHARED, NOT CENTRED — instructional content is never centred in the page.** The
+    columns-follow-count rule this replaces gave 1, 2, 3 and 4 examples four different shapes (a centred
+    column, two columns, a centred 2 + 1 remainder, a 2 × 2 block), so the page's arithmetic decided which
+    example looked like a conclusion. The question a composition now asks is not "how do I centre this
+    example?" but "what are its meaningful pieces, and how should they share the width":
+    - **the ROW is the unit.** One row is one whole example — the ask (title + QUESTION) on the left, the
+      working (WORKED SOLUTION + ANSWER) on the right. A `sequence` is a stack of these rows: full width,
+      one lane, identical geometry at any count, so no example is a conclusion because of where it sits.
+    - **`standard`** is that same row for a single example: question left, the whole working right. Its
+      companion, when one is authored, sits in the working's own column at its authored proportions — a
+      portrait plane makes the page longer (330px → 903px at the same 560px width), it is never re-placed
+      or squeezed.
+    - **`comparison`** is A | the plane that bridges them | B, all three reading at once, replacing a
+      plane appended beneath the two cases it explains.
+    - **a graph-bearing `staged` state** gives the plane the width its shape needs and the complementary
+      width to the explanation beside it, rather than centring a narrow portrait figure in an empty page.
+    - **the floors decide, not a breakpoint.** `MX_ASK_MIN` (300px, ~37 characters) joins the viability
+      constants and is published as a scoped custom property; the row holds 35/65 while both sides clear
+      their floor, then pins the ask at its floor, then wraps to ask-above-working — all from the floors
+      themselves, with no media query restating the numbers. The bridge, which cannot wrap, collapses at
+      the width its own floors imply (300 + 340 + 300 + two gaps = 996px of row). Measured: three columns
+      down to 1381px at exactly 300 | 341 | 300, one column at 1380px, never an overflow.
+    - **local paging is just the states.** `1 Worked solution | 2 Graph check` is the whole control — no
+      Back/Next, no duplicated `1/2` beside it.
+    Every example also stands alone — "use the same rule…" made the second depend on having read the first.
   - **Authored reference lines in the Figure Engine.** `{type:'line', y:k}` / `{type:'line', x:k}`, with an
     optional label, spanning the viewport as a line does and counting as painted geometry that identifiers
     must clear. This fixes a real failed demonstration: the `Solving for x` example said "the line y = 16
     meets the curve twice" while the graph drew only the two points. The vocabulary is general — the same
     object draws the axis of symmetry in the comparison plane — and the gate asserts every authored line
     reaches the drawing, with a control that removes one and shows the check fail.
-  - **`extended` proved, and `compact`'s column contract with it.** `tests/visual/lessons/mathematics-compositions.json`
-    is a NON-SHIPPING design fixture: a three-example compact group and a genuine six-step derivation
-    carrying a figure at the step that needs it. A presentation type is not established because the
-    renderer accepts its enum value.
+  - **`extended` proved, and `sequence`'s row contract with it.** `tests/visual/lessons/mathematics-compositions.json`
+    is a NON-SHIPPING design fixture: a three-example sequence group, a single-example `standard` group and
+    a genuine six-step derivation carrying a figure at the step that needs it. A presentation type is not
+    established because the renderer accepts its enum value.
+  - **Two defects the new composition exposed, both measured.** The staged region pinned its plane across
+    `grid-row: 2 / span 30`, which bought thirty row gaps: a 676px plane sat above **383px of nothing**, and
+    the state read as half empty. The plane and the explanation are now one grid cell each. And the
+    comparison region printed **"WHY THE TWO AGREE" twice** — the group's `footLabel` over a part already
+    carrying that name. A region may be titled above parts that name themselves, but never with a name one
+    of them already says. Both now have gates, each with the failure driven back.
   - **Notes, two clean-ups only** (architecture frozen): the Key Idea was restating the fourth concept, so
     it now synthesises across the three tabs instead; it was also the last text-on-green writing surface in
     the family and is now white with a green edge; and the concepts card hugs its content rather than being
@@ -196,18 +223,20 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     had been laying every part's LABEL beside its content instead of above it. Scoped to `.mx-parts`.
   - The fixture demonstrates the renderer rather than redesigning the mathematics: four concepts (no
     invented fifth), three complete demonstrations of one object, and three worked-example groups — one
-    per composition type. `scripts/verify-notes-examples.mjs` is the gate (75 checks) and
+    per composition type. `scripts/verify-notes-examples.mjs` is the gate (77 checks) and
     `scripts/shots-notes-examples.mjs` the proof set. The gate encodes the approved behaviour rather than the implementation: expected part
     counts, companion kinds, which steps carry visuals and how many tabs there are are all DERIVED from the
     lesson JSON, so re-authoring the fixture cannot quietly make the gate agree with itself. It asserts the
     product rules rather than this fixture's shape: no explanation, answer or caption on a green surface;
-    every group one white surface; every authored example complete inside its group; a set giving each
-    example a column and stacking when it cannot; a visual group reserving nothing when no visual is
-    authored. Controls change the JSON and show the page following it — a fourth example, a relabelled and
-    reordered tab list, a companion re-authored from a graph to a table, a tab switched to _y_ = _x_² + 2
-    failing the same-object check, an answer painted green again being caught, and — the one this stage
-    turns on — cycling one group through all four types, which changes the composition every time while the
-    examples, steps and answers survive unchanged.
+    every group one white surface; every authored example complete inside its group; rows of equal status
+    that split only while both sides are a readable measure and stack otherwise; a region as tall as what it
+    holds; a region named once; nothing reserved where nothing is authored. Where a floor decides a layout
+    the gate reads that floor back off the app's own custom properties, so it cannot pass by agreeing with a
+    number copied into the test. Controls change the JSON and show the page following it — a fourth example,
+    a relabelled and reordered tab list, a companion re-authored from a graph to a table, a tab switched to
+    _y_ = _x_² + 2 failing the same-object check, an answer painted green again being caught, raising the ask
+    floor to collapse a row that was splitting comfortably, and cycling one group through all five types,
+    which changes the composition every time while the examples, steps and answers survive unchanged.
 - **Three defects the Stage C content exposed**, each invisible while the panels held placeholders: the
   inactive figure panel stayed displayed behind the selected tab (`.mx-figure[data-fig-viewport]` set
   `display:block` with no `:not([hidden])` guard, later in the sheet than the rule that has one); the

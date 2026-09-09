@@ -355,39 +355,52 @@ resultLabel?, answer?, visual?}`; a STEP's `visual` is the same shape as an exam
 not assume one static companion for the whole example. A bare `examples[]` still renders, as one `extended`
 group.
 
-**`type` — the four compositions.** Unknown values fall back to `extended`.
+**`type` — the five compositions.** Unknown values fall back to `extended`.
 
 | type | composition |
 | --- | --- |
-| `compact` | several short complete examples set alongside one another — a three‑step substitution never occupies a page alone |
-| `visual` | one example whose graph, diagram or table materially contributes, as a unified composition of reasoning and representation |
-| `comparison` | two related complete cases together, because the relationship between them is the teaching point |
-| `extended` | one long derivation across the reading width, visuals inline at the step that needs them |
+| `standard` | one example: the question on the left, the whole working on the right |
+| `sequence` | several parallel complete examples of ONE skill, as full-width rows of equal status |
+| `comparison` | two related complete cases, with the representation that bridges them BETWEEN them |
+| `staged` | working and a substantial representation each get the whole surface, as authored local states |
+| `extended` | one long derivation, visuals inline at the step that needs them |
 
 **THE TYPE CHOOSES THE COMPOSITION; THE AMOUNT OF TEXT NEVER DOES.** Nothing measures how much text an
 example has, or how much room is left, in order to pick a layout — that would be unpredictable to author
-against. What geometry still decides is only whether a chosen composition can be READ: a set stacks when
-its columns fall below a readable measure, and a `visual` group reserves no companion column when the
-example authors no visual.
+against. What geometry still decides is only whether a chosen composition can be READ.
 
-**`compact` IS AT MOST TWO COLUMNS.** Example count is not column count — three narrow columns stop being
-worked examples and start being a question sheet. The contract is: 1 → one constrained teaching column
-(not the full width) · 2 → two columns · 3 → **2 + 1, the third CENTRED below at the same measure** (not
-stretched across both, and not stranded in the lower-left looking like a fourth failed to render) ·
-4 → 2 × 2 · beyond 4 the author splits the material into another group.
+**THE WORKSPACE IS SHARED, NOT CENTRED.** Instructional content is never centred inside the page. The
+question a composition asks is not "how do I centre this example?" but "what are its meaningful pieces, and
+how should they share the available width?" — the reusable textbook pattern being problem/context on the
+left and mathematical reasoning on the right, the same principle Notes already uses for
+concepts | representation.
 
-**EVERY EXAMPLE STANDS ALONE.** A compact example may not depend on having read its neighbour first — no
-"use the same rule…"; each states its own question.
+**THE ROW IS THE UNIT.** One row is one whole example: the ASK (its title and QUESTION) on the left, the
+WORKING (WORKED SOLUTION and ANSWER) on the right. `sequence` is a stack of these rows — full width, one
+lane, identical geometry at every count — so no example is a conclusion because of where it sits. The
+`compact` rule this replaces (1 → a centred column · 2 → two · 3 → 2 + 1 centred · 4 → 2 × 2) let the
+page's arithmetic decide which example looked like the conclusion. `compact` still resolves, to `sequence`.
+
+**THE FLOORS DECIDE, NOT A BREAKPOINT.** `MX_ASK_MIN` (300px, about 37 characters) is the ask column's
+reading floor, published with the other viability constants as a scoped custom property. The row holds
+35/65 while both sides clear their floor, pins the ask at its floor below that, and wraps to ask-above-
+working below THAT — all from the floors, with no media query restating them. The `comparison` bridge is a
+grid and cannot wrap, so it collapses at the width its own floors imply (300 + 340 + 300 + two 28px gaps =
+996px of row).
+
+**EVERY EXAMPLE STANDS ALONE.** An example in a sequence may not depend on having read its neighbour
+first — no "use the same rule…"; each states its own question.
 
 ### ONE ANATOMY, EVERY COMPOSITION
 
-A worked example is the same four things whether it sits in a compact pair or a full-page derivation:
+A worked example is the same four things whether it sits in a sequence row or a full-page derivation:
 **QUESTION** (the authentic prompt) · **WORKED SOLUTION** (the steps) · **ANSWER** · optionally **VISUAL
 EXPLANATION / CONNECTION**. Told apart by quiet typography and space, never another layer of coloured
 cards. A group holding ONE example suppresses that example's own name — the tab already titles it, and
 printing "Find x when y = 16" above "Find the value(s) of x for which y = 16" is duplicated prompt
-hierarchy. The optional fourth section is named ONCE: by the group's `footLabel`, else by the parts'
-authored labels — never a heading above a heading.
+hierarchy. The optional fourth section is named ONCE: by the group's `footLabel` where that
+adds a name the parts do not already carry, else by the parts' authored labels — never a heading above a
+heading saying the same thing.
 
 **Fractions are fractions, not slashes.** `mxM` sets `3/2` built-up, and `(3/2)^2` inside brackets that
 grow to its height. Digits only, three a side, so ordinary prose and a year range are never touched.
@@ -405,9 +418,10 @@ a coordinate plane; a plane may never deform to satisfy a composition.
 - **The slot takes its shape from the plane**, not the reverse: `mxFigRatio` derives the slot's aspect from
   the authored domain (clamped to 0.62–2.0 so a degenerate domain cannot make an absurd box) and publishes
   it as `--mx-plot-ar`. Re-author the mathematics and the slot re-shapes; nothing else does.
-- **A portrait plane is stacked, never squeezed.** A demonstration reaching *y* = 16 over *x* = ±6 simply
-  IS tall; set beside the reasoning it towers over it. The composition puts it beneath and the page gets
-  longer. **"Fits this viewport" is not a quality measure** — a 1.5-screen worked example is fine, a
+- **A portrait plane takes HEIGHT, not a different placement.** A demonstration reaching *y* = 16 over
+  *x* = ±6 simply IS tall. A companion stays in the working's own column at its authored proportions and
+  the page gets longer (measured: 330px → 903px at the same 560px width); a plane too tall to embed at all
+  belongs in its own state, where it takes the width its shape needs and the explanation takes the rest. **"Fits this viewport" is not a quality measure** — a 1.5-screen worked example is fine, a
   distorted plane is not. Nothing in the page family may cap a plane's height.
 - **Measure the rendered transform, not the container.** A container and a viewBox can agree while the
   plane inside them is distorted. The gate reads px-per-unit per axis off the painted svg (engine units ×
@@ -424,14 +438,19 @@ shape it is forced into.
 
 | composition | slot |
 | --- | --- |
-| `compact` | 1–4 short examples of one skill; no reserved region. 1 → one centred reading column · 2 → two · 3 → 2 + 1 centred · 4 → 2 × 2 · beyond 4 the author splits |
-| `standard` | one ordinary example needing no major representation; a centred reading measure, not half an empty canvas. A companion, where authored, sits beside the reasoning — or beneath it when the plane is portrait |
-| `comparison` | 2–4 cases whose relationship IS the teaching point, side by side; a shared plane may follow, often as its own state |
-| `staged` | working and a substantial representation each get the whole surface, as authored LOCAL STATES (`1/2 Worked solution`, `2/2 Graph check`) |
-| `extended` | a long derivation, read in authored stages rather than one expanding document |
+| `sequence` | parallel examples of one skill as full-width rows; no reserved region — a companion, where authored, sits in that row's working column |
+| `standard` | one example, ask left and working right. A companion, where authored, sits in the working's column at its own proportions — never centred, never re-placed by its shape |
+| `comparison` | two cases whose relationship IS the teaching point, with the bridging plane BETWEEN them (A \| plane \| B) while all three clear their floor; below that the three stack |
+| `staged` | working and a substantial representation each get the whole surface, as authored LOCAL STATES (`1 Worked solution`, `2 Graph check`). The plane takes the width its shape needs and the explanation takes the complementary width beside it |
+| `extended` | a long derivation in the working column, read in authored stages rather than one expanding document |
 
-None of those names says anything about graph dimensions, and that is deliberate. `visual` is the earlier
-name for `standard` and still resolves.
+None of those names says anything about graph dimensions, and that is deliberate. `visual` and `compact`
+are the earlier names for `standard` and `sequence` and still resolve.
+
+**A REGION IS AS TALL AS WHAT IT HOLDS.** No composition may reserve space below its own content. (The
+staged region once pinned its plane across `grid-row: 2 / span 30` and so carried thirty row gaps: 383px of
+nothing under a 676px plane.) And a region is NAMED ONCE — a group may title a region above parts that
+name themselves, but never with a name one of those parts already says.
 
 ### LOCAL STATES
 

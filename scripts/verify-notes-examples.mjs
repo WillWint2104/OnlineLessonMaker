@@ -361,7 +361,7 @@ const read = (p) => p.evaluate((ids) => ids.map((id) => {
      t.map((x) => x.label).join(' · '));
   ok('the composition each group renders is the TYPE it authors, from the closed vocabulary',
      g.map((x) => x.type).join('/') === GROUPS.map((x) => x.type).join('/')
-     && g.every((x) => ['compact', 'standard', 'comparison', 'staged', 'extended'].indexOf(x.type) >= 0),
+     && g.every((x) => ['sequence', 'standard', 'comparison', 'staged', 'extended'].indexOf(x.type) >= 0),
      g.map((x) => `${x.id} → ${x.type}`).join(' · '));
   ok('EVERY authored example stays complete inside its group — prompt, whole working, its own answer',
      g.every((x, k) => x.examples.length === GROUPS[k].examples.length
@@ -371,70 +371,137 @@ const read = (p) => p.evaluate((ids) => ids.map((id) => {
      g.every((x) => x.surface),
      await p.evaluate(() => { const s = document.querySelector('.mx-wexsurface');
        return 'the surface is ' + getComputedStyle(s).backgroundColor; }));
-  ok('a group that sets examples alongside one another gives each of them a column',
-     g.filter((x) => x.type === 'compact' || x.type === 'comparison')
-      .every((x) => x.setCols === x.examples.length && x.examples.length > 1),
-     g.filter((x) => x.setCols).map((x) => `${x.type} ${x.id}: ${x.examples.length} examples in ${x.setCols} columns`).join(' · '));
-  /* PLACEMENT FOLLOWS THE PLANE'S SHAPE. A companion is authored or it is not; when it is, a landscape
-     plane sits beside the reasoning and a PORTRAIT one goes beneath it — set in a side column a tall plane
-     towers over the working, and squeezing it would be the page reshaping the mathematics again. */
-  ok('a visual group reserves nothing when no companion is authored, and places one by its shape',
-     g.filter((x) => x.type === 'visual' || x.type === 'extended')
-      .every((x) => { const ex0 = GROUPS.find((q) => q.id === x.id).examples[0];
-        const authored = mxPartKinds(ex0.visual).length;
-        if (!authored) return !x.aside && x.bodyCols === 1;
-        const figs = (Array.isArray(ex0.visual) ? ex0.visual : ex0.visual.parts || [ex0.visual])
-          .filter((q) => q.kind === 'figure').map((q) => authoredRatio(q.figure)).filter(Boolean);
-        const portrait = figs.length && figs.every((r) => r < 0.85);
-        return x.aside && x.bodyCols === (portrait ? 1 : 2); }),
-     g.filter((x) => x.type === 'visual' || x.type === 'extended')
-      .map((x) => `${x.id}: ${x.aside ? (x.bodyCols === 1 ? 'portrait plane, stacked beneath' : 'landscape plane, beside') : 'no companion, one column'}`).join(' · '));
+  /* INSTRUCTIONAL CONTENT IS NEVER CENTRED, AND A SEQUENCE IS ROWS. Every example in a sequence has the
+     same status — no example is a conclusion because of where it sits — and each row divides the width
+     into the ask and the working rather than the page centring the lot. */
+  const rows = await p.evaluate((ids) => ids.map((id) => {
+    document.querySelector(`[data-mx-tab="${id}"]`).click();
+    const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+    const rs = [].slice.call(pane.querySelectorAll('.mx-wexrow'));
+    const surf = pane.querySelector('.mx-wexsurface').getBoundingClientRect();
+    return { id, n: rs.length,
+      lanes: new Set(rs.map((r) => Math.round(r.getBoundingClientRect().left))).size,
+      full: rs.every((r) => r.getBoundingClientRect().width >= surf.width - 70),
+      split: rs.every((r) => { const a = r.querySelector('.mx-wexask'), w = r.querySelector('.mx-wexwork');
+        return a && w && Math.round(w.getBoundingClientRect().left) > Math.round(a.getBoundingClientRect().left); }),
+      askW: rs.length ? Math.round(rs[0].querySelector('.mx-wexask').getBoundingClientRect().width) : 0,
+      workW: rs.length ? Math.round(rs[0].querySelector('.mx-wexwork').getBoundingClientRect().width) : 0 }; }),
+    GROUPS.filter((x) => x.type === 'sequence').map((x) => x.id));
+  ok('a SEQUENCE is full-width rows of equal status — ask on the left, working on the right',
+     rows.length > 0 && rows.every((r) => r.n === GROUPS.find((x) => x.id === r.id).examples.length
+       && r.lanes === 1 && r.full && r.split && r.workW > r.askW),
+     rows.map((r) => `${r.id}: ${r.n} rows in one lane, ask ${r.askW}px / working ${r.workW}px`).join(' · '));
+  /* A REGION THAT EXISTS BUT HOLDS NOTHING IS A FAILURE. A companion belongs to an example that authors
+     one; where none is authored no slot, no aside and no empty box may be reserved for it. (What happens
+     when one IS authored is the injected control in the `scale` section — no fixture authors one, so
+     asserting it here would report on an empty set and pass for saying nothing.) */
+  const spare = await p.evaluate((ids) => ids.map((id) => {
+    document.querySelector(`[data-mx-tab="${id}"]`).click();
+    const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+    /* ON THE STATE THAT IS ON SCREEN. A hidden state pane reports a zero box for everything inside it, so
+       scanning the whole group would call every region of every unseen state "empty". */
+    const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
+    const empties = [].slice.call(live.querySelectorAll('.mx-wexaside, .mx-wexcellvis, .mx-wexmid, .mx-wexfoot'))
+      .filter((e) => !e.querySelector('.mx-part') || e.getBoundingClientRect().height < 12);
+    return { id, asides: live.querySelectorAll('.mx-wexaside, .mx-wexcellvis').length, empties: empties.length };
+  }), GROUPS.map((x) => x.id));
+  ok('no companion is authored on these examples, and none is reserved — no region is drawn empty',
+     spare.every((r) => r.empties === 0
+       && r.asides === GROUPS.find((x) => x.id === r.id).examples
+         .filter((e) => mxPartKinds(e.visual).length).length),
+     spare.map((r) => `${r.id}: ${r.asides} companion${r.asides === 1 ? '' : 's'}, ${r.empties} empty regions`).join(' · '));
   await p.close();
 }
 {
   /* THE TYPE CHOOSES THE COMPOSITION; THE AMOUNT OF TEXT NEVER DOES. Same example data, different declared
      type — the arrangement must follow the declaration and the examples must survive it unchanged. */
   const p = await open({ slide: WEX });
+  /* Cycle a group that authors a plane BESIDE its examples. `comparison` is A | plane | B, so a group whose
+     connection is text-only can never show that composition — it correctly falls through to rows, and a
+     control built on it would report the product broken for authoring the control could not exercise. */
+  const CYCLE = GROUPS.find((x) => x.examples.length === 2
+    && mxPartKinds(x.relations || x.visual).indexOf('figure') >= 0);
+  if (!CYCLE) throw new Error('no two-example group authors a figure to bridge with');
   const seen = await p.evaluate((id) => {
     const out = {};
-    for (const t of ['compact', 'comparison', 'standard', 'extended']) {
+    for (const t of ['sequence', 'comparison', 'staged', 'standard', 'extended']) {
       const g = LESSON.slides[1].groups.find((x) => x.id === id);
       g.type = t; go(1);
       const pane = document.querySelector(`[data-mx-panel="${id}"]`);
       const set = pane.querySelector('.mx-wexset'), body = pane.querySelector('.mx-wexbody');
-      out[t] = { type: pane.dataset.mxWextype, set: !!set, body: !!body,
+      out[t] = { type: pane.dataset.mxWextype, set: !!pane.querySelector('.mx-wexseq'),
+        bridge: !!pane.querySelector('.mx-wexbridge'), rows: pane.querySelectorAll('.mx-wexrow').length,
+        states: pane.querySelectorAll('[data-mx-state]').length,
         examples: [].slice.call(pane.querySelectorAll('[data-mx-example]')).map((x) => x.dataset.mxExample),
         steps: pane.querySelectorAll('.mx-step').length,
         answers: pane.querySelectorAll('.mx-wexres').length };
     }
-    return out; }, GROUPS[0].id);
+    return out; }, CYCLE.id);
   const kinds = Object.keys(seen);
+  /* The vocabulary's observable differences are what this asserts, not a row count: `comparison` builds
+     the A | plane | B bridge, `staged` paginates into local states, and the flat contracts render rows.
+     Two examples under `standard` render as two rows rather than one being dropped — the renderer is
+     honest about what was authored, so row count cannot separate `standard` from `sequence`, and asserting
+     that it does would be inventing a difference the product does not have. */
   ok('CONTROL: changing the declared type changes the composition',
-     seen.compact.set && seen.comparison.set && !seen.standard.set && !seen.extended.set
-     && seen.standard.body && seen.extended.body && kinds.every((t) => seen[t].type === t),
-     kinds.map((t) => `${t} → ${seen[t].set ? 'set of examples' : 'single composition'}`).join(' · '));
+     seen.comparison.bridge && !seen.sequence.bridge && !seen.standard.bridge
+     && seen.staged.states > 1 && seen.sequence.states === 0
+     && seen.sequence.rows === CYCLE.examples.length && seen.extended.rows === CYCLE.examples.length
+     && kinds.every((t) => seen[t].type === t),
+     CYCLE.id + ': ' + kinds.map((t) => `${t} → ${seen[t].bridge ? 'A | plane | B'
+       : seen[t].states > 1 ? seen[t].states + ' local states' : seen[t].rows + ' rows'}`).join(' · '));
   ok('CONTROL: and does NOT change the example data model — the same examples, steps and answers survive',
-     kinds.every((t) => seen[t].steps === seen.compact.steps && seen[t].answers === seen.compact.answers)
-     && kinds.every((t) => seen[t].examples.join(',') === seen.compact.examples.join(',')),
-     `${seen.compact.examples.join(', ')} — ${seen.compact.steps} steps and ${seen.compact.answers} answers under every type`);
+     kinds.every((t) => seen[t].steps === seen.sequence.steps && seen[t].answers === seen.sequence.answers)
+     && kinds.every((t) => seen[t].examples.join(',') === seen.sequence.examples.join(',')),
+     `${seen.sequence.examples.join(', ')} — ${seen.sequence.steps} steps and ${seen.sequence.answers} answers under every type`);
   await p.close();
 }
 {
-  // A column that cannot be read is not a column: the set stacks rather than becoming slivers.
+  /* A COLUMN THAT CANNOT BE READ IS NOT A COLUMN. A row divides the width into the ask and the working
+     while both can still be a measure; below that the two stack — each part whole, never two slivers.
+     The claim is about the ask/working split inside a row, which is what every composition now shares. */
+  const sizes = [[1536, 1024], [1194, 834], [834, 1112], [414, 896]];
   const rows = [];
-  for (const [w, h] of [[1536, 1024], [1194, 834], [834, 1112], [414, 896]]) {
+  for (const [w, h] of sizes) {
     const p = await open({ w, h, slide: WEX });
-    rows.push(await p.evaluate(() => {
-      const set = document.querySelector('.mx-wexset');
-      const cells = [].slice.call(set.querySelectorAll('.mx-wexcell'));
-      const cs = getComputedStyle(set).gridTemplateColumns.split(' ').filter(Boolean);
-      return { cols: cs.length, w: Math.round(cells[0].getBoundingClientRect().width),
-        stacked: Math.abs(cells[0].getBoundingClientRect().top - cells[1].getBoundingClientRect().top) > 20 }; }));
+    rows.push(await p.evaluate((id) => {
+      document.querySelector(`[data-mx-tab="${id}"]`).click();
+      const r = document.querySelector(`[data-mx-panel="${id}"] .mx-wexrow`);
+      const a = r.querySelector('.mx-wexask').getBoundingClientRect();
+      const k = r.querySelector('.mx-wexwork').getBoundingClientRect();
+      const cs = getComputedStyle(document.querySelector('.mx-wex'));
+      return { side: Math.round(k.left) > Math.round(a.left), askW: Math.round(a.width),
+        workW: Math.round(k.width), stacked: Math.round(k.top) > Math.round(a.bottom) - 2,
+        askMin: parseInt(cs.getPropertyValue('--mx-ask-min'), 10),
+        workMin: parseInt(cs.getPropertyValue('--mx-work-min'), 10) };
+    }, GROUPS.find((x) => x.type === 'sequence').id));
     await p.close();
   }
-  ok('a compact group stacks when its columns can no longer be a readable measure',
-     rows.every((r) => r.cols === 1 ? r.stacked : (!r.stacked && r.w >= 380)),
-     rows.map((r, k) => `${[1536, 1194, 834, 414][k]}px: ${r.cols} column${r.cols > 1 ? 's' : ''} of ${r.w}px`).join(' · '));
+  /* The floors are the APP's — read back from the custom properties it publishes — so this cannot pass by
+     agreeing with a number copied into the test. */
+  ok('a row splits into ask and working only while both can be a readable measure, and otherwise stacks',
+     rows.every((r) => r.side ? (!r.stacked && r.askW >= r.askMin - 1 && r.workW >= r.workMin - 1)
+       : (r.stacked && r.askW === r.workW)),
+     rows.map((r, k) => `${sizes[k][0]}px: ${r.side ? `ask ${r.askW}px | working ${r.workW}px` : `stacked at ${r.askW}px`}`).join(' · '));
+  /* And the FLOOR is what decides it, not the viewport: at a width that splits comfortably, raising the ask's
+     floor past what the row can give both sides must collapse the same row. */
+  const pw = await open({ slide: WEX });
+  const forced = await pw.evaluate((id) => {
+    const wex = document.querySelector('.mx-wex');
+    const row = () => { document.querySelector(`[data-mx-tab="${id}"]`).click();
+      const r = document.querySelector(`[data-mx-panel="${id}"] .mx-wexrow`);
+      const a = r.querySelector('.mx-wexask').getBoundingClientRect();
+      const w = r.querySelector('.mx-wexwork').getBoundingClientRect();
+      return { askW: Math.round(a.width), side: Math.round(w.left) > Math.round(a.left) }; };
+    const before = row();
+    wex.style.setProperty('--mx-ask-min', '900px');
+    const after = row();
+    return { before, after }; }, GROUPS.find((x) => x.type === 'sequence').id);
+  await pw.close();
+  ok('CONTROL: the FLOOR decides the split — raise it and the same row at the same width collapses',
+     forced.before.side && !forced.after.side,
+     `1536px: ask ${forced.before.askW}px beside the working at a 300px floor, `
+     + `${forced.after.askW}px above it at a 900px floor`);
 }
 {
   const p = await open({ slide: WEX });
@@ -625,29 +692,39 @@ const readScales = (p) => p.evaluate(() => {
   ok('a plotted region is never below the legibility floor, at any width',
      rows.every((r) => r.w >= r.minW - 2 && r.h >= r.minH - 2 && r.tick >= 9),
      rows.map((r) => `${r.name}: ${r.w}×${r.h}, ticks ${r.tick}px (floor ${rows[0].minW}×${rows[0].minH})`).join(' · '));
-  /* PLACEMENT FOLLOWS THE PLANE'S SHAPE, in the contract that still places a companion. `standard` is that
-     contract: give its example a landscape plane and it sits beside the reasoning; give it a portrait one
-     and the composition stacks rather than squeezing it. (A `staged` group has no companion at all — its
-     representation has its own state, which is the answer to a plane too tall to embed.) */
+  /* A COMPANION BELONGS TO ITS EXAMPLE, and the plane's shape decides how much ROOM it takes — never how
+     the page re-places it. `standard` is the contract that carries one: the plane sits in the working's
+     own column, at its authored proportions, and a portrait plane makes the page LONGER at the same width
+     rather than being squeezed, or exiled to a centred column of its own. */
   const CF2 = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-compositions.json'), 'utf8'));
   const stdId = CF2.slides[0].groups.find((g) => g.type === 'standard').id;
   const place = async (dom) => {
     const p = await open({ slide: 0, lesson: CF2 });
-    const r = await p.evaluate(({ id, dom }) => {
+    await p.evaluate(({ id, dom }) => {
       const g = LESSON.slides[0].groups.find((x) => x.id === id);
       g.examples[0].visual = { parts: [{ kind: 'figure', figure: { type: 'figure', figure: 'graph',
         grid: 'shown', callouts: 'hidden', domain: dom,
         objects: [{ type: 'function', f: 'x^2', label: 'y = x^2' }] } }] };
-      go(0); document.querySelector(`[data-mx-tab="${id}"]`).click();
-      const b = document.querySelector(`[data-mx-panel="${id}"] .mx-wexbody`);
-      return { cols: b.dataset.mxWexcols, stacked: b.classList.contains('mx-wexstack') }; }, { id: stdId, dom });
-    await p.close(); return r;
+      go(0); document.querySelector(`[data-mx-tab="${id}"]`).click(); }, { id: stdId, dom });
+    await p.waitForTimeout(600);
+    const r = await p.evaluate((id) => {
+      const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+      const row = pane.querySelector('.mx-wexrow'), work = pane.querySelector('.mx-wexwork');
+      const aside = pane.querySelector('.mx-wexaside');
+      const fig = aside && aside.querySelector('.mx-part[data-mx-part="figure"]');
+      const b = (e) => e.getBoundingClientRect();
+      return { inWorking: !!(work && aside && work.contains(aside)),
+        centred: !!fig && Math.round(b(fig).left) > Math.round(b(work).left) + 2,
+        rowH: Math.round(b(row).height), figW: Math.round(b(fig).width), figH: Math.round(b(fig).height) }; }, stdId);
+    const sc = (await readScales(p))[0];
+    await p.close(); return Object.assign(r, { ratio: sc && sc.ratio });
   };
   const wide = await place({ xMin: -20, xMax: 20, yMin: -2, yMax: 20 });
   const tall = await place({ xMin: -6, xMax: 6, yMin: -2, yMax: 20 });
-  ok('CONTROL: the plane\'s shape decides placement — landscape beside, portrait stacked',
-     wide.cols === '2' && !wide.stacked && tall.cols === '1' && tall.stacked,
-     `a 40×22 domain → ${wide.cols} columns beside; a 12×22 domain → ${tall.cols} column, stacked`);
+  ok('CONTROL: a portrait companion takes HEIGHT, not a different placement and not a flattened plane',
+     [wide, tall].every((r) => r.inWorking && !r.centred && Math.abs(r.ratio - 1) < 0.03)
+     && tall.figW === wide.figW && tall.figH > wide.figH * 1.5 && tall.rowH > wide.rowH * 1.5,
+     `40×22 → ${wide.figW}×${wide.figH} (scale ${wide.ratio}) · 12×22 → ${tall.figW}×${tall.figH} (scale ${tall.ratio}) — same width in the working column, row ${wide.rowH}px → ${tall.rowH}px`);
 }
 // ══ composition-owned figure slots ═════════════════════════════════════════════════════════════
 // There is no one "worked-example figure size". A shared comparison plane and a companion beside a column
@@ -667,7 +744,10 @@ mark('slots');
     const surf = pane.querySelector('.mx-wexsurface').getBoundingClientRect();
     const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
     const foot = live.querySelector('.mx-wexfoot [data-mx-part="figure"]');
-    const side = live.querySelector('.mx-wexvis [data-mx-part="figure"]');
+    const mid = live.querySelector('.mx-wexmid [data-mx-part="figure"]');
+    const cases = [].slice.call(live.querySelectorAll('.mx-wexbridge>.mx-wexrow'))
+      .map((n) => { const r = n.getBoundingClientRect();
+        return { l: Math.round(r.left), r: Math.round(r.right), t: Math.round(r.top) }; });
     /* LETTERBOXING is the failure: a viewBox of a different shape from the box it is painted into leaves the
        drawing shrunk in the middle with dead space beside it. So the test is that the painted aspect matches
        the viewBox aspect — not that the svg equals the slot, which it never does (the figure block carries a
@@ -682,51 +762,121 @@ mark('slots');
         paint: [Math.round(sr.width), Math.round(sr.height)],
         fillsW: sr.width >= tr.width - 4, fillsH: sr.height >= tr.height - 4,
         ar: (sr.width / sr.height) / (vb[2] / vb[3]) }; };   /* 1 = the paint has the viewBox's shape */
-    return { id, type: pane.dataset.mxWextype, surfW: Math.round(surf.width), surfMid, foot: box(foot), side: box(side),
+    return { id, type: pane.dataset.mxWextype, surfW: Math.round(surf.width), surfMid, foot: box(foot), mid: box(mid), cases,
       solved: (pane.querySelector('.tp-fig')||{dataset:{}}).dataset.figBox }; }, id));
   }
   const cmp = slots.find((x) => x.type === 'comparison');
   /* A SLOT IS A PLACE FOR A PLANE, NOT A SHAPE IMPOSED ON ONE. The earlier version of this asserted the
      comparison plane was "wide and shallow" — that was the composition dictating the mathematics, and the
-     rendered plane went to 4.65:1. What the slot owes the plane now is a NATURAL box, placed under the
-     cases it belongs to; the scale section proves the plane inside it is undistorted. */
-  /* THE SLOT TAKES ITS SHAPE FROM THE PLANE. Not a band this file chooses — the box must match the ratio
-     the AUTHORED domain implies, so re-authoring the mathematics re-shapes the slot and nothing else does. */
+     rendered plane went to 4.65:1. What the slot owes the plane now is a NATURAL box, in the place it
+     belongs to; the scale section proves the plane inside it is undistorted.
+     THE SLOT TAKES ITS SHAPE FROM THE PLANE. Not a band this file chooses — the box must match the ratio
+     the AUTHORED domain implies, so re-authoring the mathematics re-shapes the slot and nothing else does.
+     AND IT SITS BETWEEN THE CASES IT BRIDGES. A plane that explains why A and B agree is not an appendix
+     under them: `comparison` is A | plane | B, all three reading at once, so the bridge is measured to be
+     BETWEEN the two cases and level with them, not centred under a stack of them. */
   const cmpFig = (GROUPS.find((q) => q.id === (cmp && cmp.id)).relations || [])
     .filter((q) => q.kind === 'figure').map((q) => authoredRatio(q.figure))[0];
-  ok('the comparison plane gets the box its authored domain implies, centred beneath the cases',
-     !!(cmp && cmp.foot) && !!cmpFig
-     && Math.abs((cmp.foot.w / cmp.foot.h) - cmpFig) / cmpFig < 0.06
-     && Math.abs(cmp.foot.mid - cmp.surfMid) <= 4,
-     cmp && cmp.foot ? `${cmp.foot.w}×${cmp.foot.h} → ${(cmp.foot.w / cmp.foot.h).toFixed(3)} against an authored `
-       + `${cmpFig.toFixed(3)}, centred in a ${cmp.surfW}px surface` : 'no comparison figure');
+  ok('the comparison plane gets the box its authored domain implies, and bridges the two cases',
+     !!(cmp && cmp.mid) && !!cmpFig && cmp.cases.length === 2
+     && Math.abs((cmp.mid.w / cmp.mid.h) - cmpFig) / cmpFig < 0.06
+     && cmp.mid.mid > cmp.cases[0].r && cmp.mid.mid < cmp.cases[1].l
+     && Math.abs(cmp.cases[0].t - cmp.cases[1].t) <= 2,
+     cmp && cmp.mid ? `${cmp.mid.w}×${cmp.mid.h} → ${(cmp.mid.w / cmp.mid.h).toFixed(3)} against an authored `
+       + `${cmpFig.toFixed(3)}, between cases that end at ${cmp.cases[0].r}px and start at ${cmp.cases[1].l}px`
+       : 'no comparison figure');
   /* Integer rounding of the box leaves a few per cent between the painted shape and the viewBox; a
      LETTERBOX is the order-of-magnitude case, where a box of the wrong shape entirely is centred in the
-     slot with dead space beside it. The control below shows the difference. */
+     slot with dead space beside it. */
   ok('and the drawing actually fills that slot rather than being letterboxed inside it',
-     !!(cmp && cmp.foot) && cmp.foot.fillsW && cmp.foot.fillsH
-     && Math.abs(cmp.foot.ar - 1) < 0.15 && cmp.solved !== '520x360',
-     `painted ${cmp && cmp.foot && cmp.foot.paint.join('×')} at a re-solved box of ${cmp && cmp.solved} — `
-     + `the paint is ${cmp && cmp.foot && cmp.foot.ar.toFixed(2)}× the viewBox shape (1.00 = took the slot's shape)`);
+     !!(cmp && cmp.mid) && cmp.mid.fillsW && cmp.mid.fillsH
+     && Math.abs(cmp.mid.ar - 1) < 0.15 && cmp.solved !== '520x360',
+     `painted ${cmp && cmp.mid && cmp.mid.paint.join('×')} at a re-solved box of ${cmp && cmp.solved} — `
+     + `the paint is ${cmp && cmp.mid && cmp.mid.ar.toFixed(2)}× the viewBox shape (1.00 = took the slot's shape)`);
   /* The letterbox control that used to sit here compared the paint against the engine's 520x360 default.
      It cannot discriminate any more, and that is the point: every slot is now a natural box, so the default
      and the solved box are nearly the same shape and there is nothing left for a letterbox to be. The
      claim it was protecting — that the plane is not deformed — is now carried by the `scale` section
-     above, which measures the rendered transform and has an adversarial control that distorts an axis. */
-  /* The earlier control here compared the comparison plane against a `visual` companion's slot. `staged`
-     replaced that group and has no companion at all — its representation owns a state — so the claim is
-     now made where it still applies: a slot follows the authored domain, and two different domains give
-     two different slots through the same engine. */
+     above, which measures the rendered transform and has an adversarial control that distorts an axis.
+     The control below is that two different authored domains give two different slots — a bridge column
+     and a staged state's region — through the same engine and with no per-composition figure sizes. */
   const other = slots.find((x) => x.type === 'staged' && x.foot);
   const otherFig = other ? (GROUPS.find((q) => q.id === other.id).relations || [])
     .filter((q) => q.kind === 'figure').map((q) => authoredRatio(q.figure))[0] : 0;
   ok('CONTROL: a different authored plane gets a different slot, through the same engine',
-     !!(other && other.foot) && !!otherFig
+     !!(other && other.foot) && !!otherFig && !!(cmp && cmp.mid)
      && Math.abs((other.foot.w / other.foot.h) - otherFig) / otherFig < 0.08
      && Math.abs(otherFig - cmpFig) > 0.05,
      `staged ${(other.foot.w / other.foot.h).toFixed(3)} against an authored ${otherFig.toFixed(3)}; `
-     + `comparison ${(cmp.foot.w / cmp.foot.h).toFixed(3)} against ${cmpFig.toFixed(3)}`);
+     + `comparison ${(cmp.mid.w / cmp.mid.h).toFixed(3)} against ${cmpFig.toFixed(3)}`);
   await p.close();
+  /* NEVER A HEADING ABOVE A HEADING SAYING THE SAME THING. A region may be titled above parts that name
+     themselves, but the title must not repeat one of those names — the fixture authored a `footLabel` of
+     "Why the two agree" over a part labelled the same, and the page printed it twice. */
+  const hp = await open({ slide: WEX });
+  const dups = [];
+  for (const id of GROUPS.map((x) => x.id)) {
+    await reveal(hp, id);
+    dups.push(...await hp.evaluate((id) => {
+      const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+      const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
+      const norm = (t) => t.replace(/\s+/g, ' ').trim().toLowerCase();
+      return [].slice.call(live.querySelectorAll('.mx-wexfoot')).map((r) => {
+        const own = [].slice.call(r.children).filter((n) => n.classList.contains('mx-wexlab')).map((n) => norm(n.textContent));
+        const inner = [].slice.call(r.querySelectorAll('.mx-part [class*="parth"], .mx-part .mx-wexlab, .mx-parth'))
+          .map((n) => norm(n.textContent));
+        return { id, repeated: own.filter((t) => inner.indexOf(t) >= 0) }; }); }, id));
+  }
+  await hp.close();
+  ok('no region repeats a heading its own content already carries',
+     dups.length > 0 && dups.every((d) => d.repeated.length === 0),
+     dups.map((d) => `${d.id}: ${d.repeated.length ? '"' + d.repeated.join('", "') + '" twice' : 'named once'}`).join(' · '));
+  /* A REGION IS AS TALL AS WHAT IT HOLDS. A grid that pinned the plane across `span 30` rows carried
+     thirty row gaps, so a 676px plane sat above 383px of nothing and the state read as half-empty. The
+     claim is general: no explanatory region may end materially below its own tallest child. */
+  const tp = await open({ slide: WEX });
+  for (const id of GROUPS.map((x) => x.id)) await reveal(tp, id);
+  const tails = await tp.evaluate((ids) => ids.map((id) => {
+    document.querySelector(`[data-mx-tab="${id}"]`).click();
+    const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+    const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
+    return [].slice.call(live.querySelectorAll('.mx-wexfoot, .mx-wexbridge')).map((r) => {
+      const kids = [].slice.call(r.children).filter((n) => n.getBoundingClientRect().height > 0);
+      const low = Math.max.apply(null, kids.map((n) => n.getBoundingClientRect().bottom));
+      return { id, slack: Math.round(r.getBoundingClientRect().bottom - low) }; }); }).flat(),
+    GROUPS.map((x) => x.id));
+  await tp.close();
+  ok('a region is as tall as what it holds — no reserved space below its own content',
+     tails.length > 0 && tails.every((t) => t.slack <= 8),
+     tails.map((t) => `${t.id}: ${t.slack}px below its last piece`).join(' · '));
+  /* AND THE BRIDGE IS THREE COLUMNS ONLY WHILE ALL THREE CLEAR THEIR FLOOR. Three cases squeezed to slivers
+     would be the composition asserting itself over what can be read; the alternative is not a narrower
+     bridge but a different structure. The floors are read from the app, so this cannot pass by agreeing
+     with numbers copied here. */
+  const br = [];
+  for (const w of [1920, 1536, 1440, 1381, 1380, 834]) {
+    const q = await open({ w, h: 1100, slide: WEX });
+    await reveal(q, cmp.id);
+    br.push(await q.evaluate(({ id, w }) => {
+      const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+      const b = pane.querySelector('.mx-wexbridge');
+      const cs = getComputedStyle(document.querySelector('.mx-wex'));
+      const cols = getComputedStyle(b).gridTemplateColumns.split(' ').filter(Boolean).length;
+      const cases = [].slice.call(b.querySelectorAll(':scope>.mx-wexrow'))
+        .map((e) => Math.round(e.getBoundingClientRect().width));
+      const surf = pane.querySelector('.mx-wexsurface').getBoundingClientRect();
+      const rb = b.getBoundingClientRect();
+      return { w, cols, cases, mid: Math.round(b.querySelector('.mx-wexmid').getBoundingClientRect().width),
+        over: Math.round(rb.width) > Math.round(surf.width),
+        askMin: parseInt(cs.getPropertyValue('--mx-ask-min'), 10),
+        plotMin: parseInt(cs.getPropertyValue('--mx-plot-min-w'), 10) }; }, { id: cmp.id, w }));
+    await q.close();
+  }
+  ok('the bridge is three columns only while all three clear their floor, and never overflows',
+     br.every((r) => !r.over && (r.cols === 3
+       ? r.cases.every((c) => c >= r.askMin - 1) && r.mid >= r.plotMin - 1
+       : r.cases.every((c) => c === r.mid))),
+     br.map((r) => `${r.w}px: ${r.cols === 3 ? `${r.cases[0]} | ${r.mid} | ${r.cases[1]}` : `one column of ${r.mid}px`}`).join(' · '));
 }
 {
   /* NARROW, THE PLANE KEEPS ITS PROPORTIONS. The claim used to be made about a stacked companion; the
@@ -751,70 +901,84 @@ mark('slots');
        + `against an authored ${want.toFixed(3)}`).join(' · '));
 }
 // ══ the non-shipping composition proofs ════════════════════════════════════════════════════════
-// compact's column contract and extended both need shapes the shipping lesson does not author. A
+// sequence's parallel-row contract and extended both need shapes the shipping lesson does not author. A
 // presentation type is not established because the renderer accepts its enum value.
 mark('proofs');
 {
   const CF = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-compositions.json'), 'utf8'));
   const CG = CF.slides[0].groups;
-  const three = CG.find((g) => g.type === 'compact');
+  const three = CG.find((g) => g.type === 'sequence');
   const p = await open({ slide: 0, lesson: CF });
   const lay = await p.evaluate((id) => { document.querySelector(`[data-mx-tab="${id}"]`).click();
-    const cells = [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .mx-wexcell`))
-      .map((e) => { const r = e.getBoundingClientRect(); return { l: Math.round(r.left), t: Math.round(r.top), w: Math.round(r.width) }; });
-    const rows = new Set(cells.map((c) => c.t)), cols = new Set(cells.map((c) => c.l));
-    const set = document.querySelector(`[data-mx-panel="${id}"] .mx-wexset`).getBoundingClientRect();
-    return { cells, rows: rows.size, cols: cols.size, mid: Math.round(set.left + set.width / 2),
-      complete: [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .mx-wexcell`))
+    const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+    const rows = [].slice.call(pane.querySelectorAll('.mx-wexrow'))
+      .map((e) => { const r = e.getBoundingClientRect();
+        const a = e.querySelector('.mx-wexask').getBoundingClientRect();
+        const w = e.querySelector('.mx-wexwork').getBoundingClientRect();
+        return { l: Math.round(r.left), t: Math.round(r.top), w: Math.round(r.width),
+          askW: Math.round(a.width), workW: Math.round(w.width), side: Math.round(w.left) > Math.round(a.left) }; });
+    const surf = pane.querySelector('.mx-wexsurface').getBoundingClientRect();
+    return { rows, surfW: Math.round(surf.width), surfL: Math.round(surf.left),
+      complete: [].slice.call(pane.querySelectorAll('.mx-wexrow'))
         .every((e) => e.querySelector('.mx-wexqb') && e.querySelector('.mx-wexres') && e.querySelectorAll('.mx-step').length) }; },
     three.id);
-  ok('COMPACT IS AT MOST TWO COLUMNS — three are 2 + 1, the third CENTRED below at the same measure',
-     three.examples.length === 3 && lay.rows === 2
-     && lay.cells[2].t > lay.cells[0].t
-     && Math.abs(lay.cells[2].w - lay.cells[0].w) <= 4
-     && Math.abs((lay.cells[2].l + lay.cells[2].w / 2) - lay.mid) <= 6
-     && lay.cells[2].l > lay.cells[0].l,
-     lay.cells.map((c, k) => `#${k + 1} at (${c.l}, ${c.t}) ${c.w}px`).join(' · ')
-     + ` — row 2 centred on ${lay.mid}`);
+  /* THREE EXAMPLES OF ONE SKILL ARE THREE PARALLEL ROWS. The rule this replaces made the third example a
+     centred 2 + 1 remainder — a composition that told the reader the last one was a conclusion when the
+     mathematics said it was a sibling. Equal status is measurable: one lane, one width, one split. */
+  ok('A SEQUENCE IS PARALLEL ROWS OF EQUAL STATUS — no example is a conclusion because of where it sits',
+     three.examples.length === 3 && lay.rows.length === 3
+     && new Set(lay.rows.map((r) => r.l)).size === 1
+     && new Set(lay.rows.map((r) => r.w)).size === 1
+     && new Set(lay.rows.map((r) => r.askW)).size === 1
+     && lay.rows.every((r) => r.side && r.workW > r.askW)
+     && lay.rows[0].w >= lay.surfW - 70,
+     lay.rows.map((r, k) => `#${k + 1} at (${r.l}, ${r.t}) ${r.askW}|${r.workW}`).join(' · ')
+     + ` in a ${lay.surfW}px surface`);
   ok('and all three stay complete — prompt, steps and answer in every one',
-     lay.complete, `${three.examples.length} complete examples in a ${lay.cols}-column grid`);
+     lay.complete, `${three.examples.length} complete examples in ${lay.rows.length} full-width rows`);
   const ext = CG.find((g) => g.type === 'extended');
   await reveal(p, ext.id);
   const e = await p.evaluate((id) => {
     const pane = document.querySelector(`[data-mx-panel="${id}"]`);
     const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
-    const body = live.querySelector('.mx-wexbody');
+    const work = live.querySelector('.mx-wexwork');
     const inline = [].slice.call(live.querySelectorAll('.mx-step[data-mx-stepvis]'))
       .map((x) => ({ step: x.dataset.mxStep, h: Math.round(x.querySelector('.mx-stepvis .mx-part').getBoundingClientRect().height) }));
-    const st = pane.querySelector('.mx-stept');
-    return { cols: body.dataset.mxWexcols, aside: !!live.querySelector('.mx-wexvis'),
+    return { rows: live.querySelectorAll('.mx-wexrow').length, aside: !!live.querySelector('.mx-wexaside'),
       steps: pane.querySelectorAll('.mx-step').length, inline,
-      measure: Math.round(body.getBoundingClientRect().width),
+      measure: Math.round(work.getBoundingClientRect().width),
       surf: Math.round(pane.querySelector('.mx-wexsurface').getBoundingClientRect().width),
       answer: !!pane.querySelector('.mx-wexres') }; }, ext.id);
-  ok('EXTENDED IS A REAL COMPOSITION — a reading-width derivation, not prose in a white box',
-     e.cols === '1' && !e.aside && e.steps >= 5 && e.measure < e.surf * 0.75,
-     `${e.steps} steps at a ${e.measure}px reading measure inside a ${e.surf}px surface, no companion column`);
+  /* EXTENDED IS ONE LONG DERIVATION, so it is one row: the ask states the problem on the left and the whole
+     chain of reasoning runs down the working column at a reading measure — not prose spanning the surface,
+     and not a companion column reserved beside it for a figure the example never authored. */
+  ok('EXTENDED IS A REAL COMPOSITION — a reading-width derivation, not prose across the whole surface',
+     e.rows === 1 && !e.aside && e.steps >= 5 && e.measure < e.surf * 0.75,
+     `${e.steps} steps at a ${e.measure}px working measure inside a ${e.surf}px surface, no companion column`);
   ok('and its visual arrives inline at the step that earns it',
      e.inline.length > 0 && e.inline.every((x) => x.h > 100),
      e.inline.map((x) => `step ${x.step} carries a ${x.h}px figure`).join(' · '));
   await p.close();
 }
 {
-  // The compact contract holds on a narrow screen too, and nothing is lost by stacking.
+  // The sequence contract holds on a narrow screen too, and nothing is lost by stacking the split.
   const CF = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-compositions.json'), 'utf8'));
-  const three = CF.slides[0].groups.find((g) => g.type === 'compact');
+  const three = CF.slides[0].groups.find((g) => g.type === 'sequence');
   const p = await open({ w: 414, h: 896, slide: 0, lesson: CF });
   const nar = await p.evaluate((id) => { document.querySelector(`[data-mx-tab="${id}"]`).click();
-    const cells = [].slice.call(document.querySelectorAll(`[data-mx-panel="${id}"] .mx-wexcell`));
-    return { cols: new Set(cells.map((e) => Math.round(e.getBoundingClientRect().left))).size,
-      n: cells.length, steps: document.querySelectorAll(`[data-mx-panel="${id}"] .mx-step`).length,
-      answers: document.querySelectorAll(`[data-mx-panel="${id}"] .mx-wexres`).length }; }, three.id);
-  ok('CONTROL: narrow, it stacks to one column and every example survives whole',
-     nar.cols === 1 && nar.n === three.examples.length
+    const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+    const rows = [].slice.call(pane.querySelectorAll('.mx-wexrow'));
+    return { lanes: new Set(rows.map((e) => Math.round(e.getBoundingClientRect().left))).size,
+      n: rows.length,
+      stacked: rows.every((e) => Math.round(e.querySelector('.mx-wexwork').getBoundingClientRect().top)
+        > Math.round(e.querySelector('.mx-wexask').getBoundingClientRect().bottom) - 2),
+      steps: pane.querySelectorAll('.mx-step').length,
+      answers: pane.querySelectorAll('.mx-wexres').length }; }, three.id);
+  ok('CONTROL: narrow, the split stacks and every example survives whole',
+     nar.lanes === 1 && nar.stacked && nar.n === three.examples.length
      && nar.steps === three.examples.reduce((n, x) => n + x.steps.length, 0)
      && nar.answers === three.examples.length,
-     `${nar.n} examples, ${nar.steps} steps, ${nar.answers} answers in ${nar.cols} column`);
+     `${nar.n} examples, ${nar.steps} steps, ${nar.answers} answers — ask above working in ${nar.lanes} lane`);
   await p.close();
 }
 {
@@ -912,9 +1076,12 @@ mark('states');
   await p.close();
 }
 {
-  // The compact column contract at 1, 2, 3 and 4 — authored, not inferred.
+  /* THE COUNT NEVER CHANGES THE GEOMETRY. The rule this replaces gave 1, 2, 3 and 4 examples four different
+     shapes — a centred column, two columns, a centred 2 + 1 remainder, a 2 × 2 block — so the page's
+     arithmetic, not the mathematics, decided which example looked like a conclusion. A sequence is N rows
+     of one skill at any N: same lane, same width, same ask/working split, every example whole. */
   const CF = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-compositions.json'), 'utf8'));
-  const base = CF.slides[0].groups.find((g) => g.type === 'compact');
+  const base = CF.slides[0].groups.find((g) => g.type === 'sequence');
   const rows = [];
   for (const n of [1, 2, 3, 4]) {
     const alt = JSON.parse(JSON.stringify(CF));
@@ -924,28 +1091,30 @@ mark('states');
     const p = await open({ slide: 0, lesson: alt });
     await p.click(`[data-mx-tab="${g.id}"]`); await p.waitForTimeout(400);
     rows.push(await p.evaluate(({ id, n }) => {
-      const set = document.querySelector(`[data-mx-panel="${id}"] .mx-wexset`);
-      const cells = [].slice.call(set.querySelectorAll('.mx-wexcell'))
-        .map((e) => { const r = e.getBoundingClientRect(); return { l: Math.round(r.left), t: Math.round(r.top), w: Math.round(r.width) }; });
-      const sr = set.getBoundingClientRect();
-      const lanes = new Set(cells.map((c) => c.l)).size, rowsN = new Set(cells.map((c) => c.t)).size;
-      const lastCentred = Math.abs((cells[n - 1].l + cells[n - 1].w / 2) - (sr.left + sr.width / 2)) <= 6;
-      return { n, lanes, rows: rowsN, w: cells[0].w, setW: Math.round(sr.width), lastCentred,
-        complete: cells.length === n }; }, { id: g.id, n }));
+      const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+      const cells = [].slice.call(pane.querySelectorAll('.mx-wexrow'))
+        .map((e) => { const r = e.getBoundingClientRect();
+          const a = e.querySelector('.mx-wexask').getBoundingClientRect();
+          const w = e.querySelector('.mx-wexwork').getBoundingClientRect();
+          return { l: Math.round(r.left), t: Math.round(r.top), w: Math.round(r.width),
+            askW: Math.round(a.width), side: Math.round(w.left) > Math.round(a.left) }; });
+      const sr = pane.querySelector('.mx-wexsurface').getBoundingClientRect();
+      return { n, lanes: new Set(cells.map((c) => c.l)).size, rows: new Set(cells.map((c) => c.t)).size,
+        w: cells[0].w, askW: cells[0].askW, setW: Math.round(sr.width),
+        uniformW: new Set(cells.map((c) => c.w)).size === 1,
+        uniformAsk: new Set(cells.map((c) => c.askW)).size === 1,
+        side: cells.every((c) => c.side), complete: cells.length === n }; }, { id: g.id, n }));
     await p.close();
   }
   const by = (n) => rows.find((r) => r.n === n);
-  ok('COMPACT 1 — one constrained reading column, centred, not a one-column grid in a wide shell',
-     by(1).lanes === 1 && by(1).rows === 1 && by(1).lastCentred && by(1).w <= by(1).setW + 4,
-     `${by(1).w}px in a ${by(1).setW}px set, centred`);
-  ok('COMPACT 2 — two columns', by(2).lanes === 2 && by(2).rows === 1, `${by(2).lanes} lanes, ${by(2).rows} row`);
-  ok('COMPACT 3 — 2 + 1, the third centred beneath at the same measure',
-     by(3).rows === 2 && by(3).lastCentred && by(3).complete,
-     `${by(3).rows} rows, third centred on the set`);
-  ok('COMPACT 4 — 2 × 2, never a third column',
-     by(4).lanes === 2 && by(4).rows === 2 && by(4).complete,
-     `${by(4).lanes} lanes, ${by(4).rows} rows`);
-  ok('CONTROL: every count keeps every example whole — the grid never drops one',
+  ok('A SEQUENCE OF N IS N ROWS — one lane at every count, never a grid the count reshapes',
+     rows.every((r) => r.lanes === 1 && r.rows === r.n && r.uniformW && r.uniformAsk && r.side),
+     rows.map((r) => `${r.n} → ${r.rows} row${r.rows === 1 ? '' : 's'} in ${r.lanes} lane`).join(' · '));
+  ok('and every count gives the SAME row geometry — the last example is never a remainder',
+     new Set(rows.map((r) => r.w)).size === 1 && new Set(rows.map((r) => r.askW)).size === 1
+     && by(1).w >= by(1).setW - 70,
+     `${by(1).w}px rows split ${by(1).askW}px | ${by(1).w - by(1).askW}px at 1, 2, 3 and 4 examples`);
+  ok('CONTROL: every count keeps every example whole — the composition never drops one',
      rows.every((r) => r.complete), rows.map((r) => `${r.n}→${r.n}`).join(' · '));
 }
 // ══ the flat output ══════════════════════════════════════════════════════════════════════════════

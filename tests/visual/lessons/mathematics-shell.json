@@ -303,7 +303,7 @@
       "groups": [
         {
           "id": "g-substitution",
-          "type": "compact",
+          "type": "sequence",
           "title": "Substitution",
           "lede": "Compare substitution with a negative value and with a fractional value.",
           "examples": [
@@ -443,10 +443,25 @@
               }
             },
             {
-              "kind": "relations",
-              "label": "What the graph shows",
+              "kind": "points",
+              "label": "Where the line meets the curve",
               "items": [
-                "The horizontal line _y_ = 16 meets the curve twice, once each side of the axis — which is why the algebra produces two answers rather than one."
+                {
+                  "term": "(−4, 16)",
+                  "body": "left of the axis"
+                },
+                {
+                  "term": "(4, 16)",
+                  "body": "right of the axis"
+                }
+              ]
+            },
+            {
+              "kind": "relations",
+              "label": "Why it agrees",
+              "items": [
+                "The algebra gave _x_ = 4 and _x_ = −4; the line _y_ = 16 meets the curve at exactly those two _x_-values.",
+                "The curve is symmetric about _x_ = 0, so any horizontal line above the vertex must cross it twice."
               ]
             }
           ],
@@ -571,26 +586,7 @@
               ]
             }
           ],
-          "states": [
-            {
-              "id": "workings",
-              "label": "Workings",
-              "show": [
-                "question",
-                "steps",
-                "answer"
-              ]
-            },
-            {
-              "id": "visual",
-              "label": "Visual explanation",
-              "lede": "Seeing both worked examples together on one graph.",
-              "show": [
-                "visual",
-                "relations"
-              ]
-            }
-          ]
+          "footLabel": "Why the two agree"
         }
       ]
     },
