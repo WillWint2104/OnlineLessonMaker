@@ -1976,20 +1976,31 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 /* The figure column is sized from the PLANE, not shrink-wrapped: an `auto` track and a width of `100%`
    are circular, and the plane collapsed to 158px. The height the state can spare becomes the width that
    shape implies; the rest of the row is the explanation that belongs beside it. */
-.mx-stpane>.mx-wexfoot{display:grid;gap:32px;align-items:start;
-  grid-template-columns:min(52%,calc(min(66vh,720px) * var(--mx-plot-ar,1.333))) minmax(0,1fr);}
-.mx-stpane>.mx-wexfoot>.mx-wexlab{grid-column:1 / -1;}
-/* the plane holds its column; everything else stacks in the width beside it, as ONE cell — not as loose
-   parts auto-placing back underneath the graph */
-.mx-stpane>.mx-wexfoot>.mx-part[data-mx-part="figure"]{grid-column:1;width:100%;height:auto;margin:0;}
-.mx-wexfootside{grid-column:2;min-width:0;display:flex;flex-direction:column;gap:18px;}
+/* PLANE | INTERPRETATION — a two-part workspace, decided by the same floors the row uses and wrapped by
+   flex rather than by a breakpoint. The track this replaces was min(52%, min(66vh,720px) * aspect): it
+   made the plane's WIDTH depend on the window's HEIGHT, and by doing so it capped the plane's height at
+   720px — the one thing the page family may never do. The plane now takes its own natural width and its
+   height follows its authored aspect; a tall plane makes the page LONGER and it scrolls.
+   The interpretation is held to a READING MEASURE. Its old column was 1058px wide holding 149px of
+   content at a 1920px viewport, which is what made a mathematically correct plane look stranded: the
+   emptiness was beside it, not in it. Trailing space stays trailing — it is not a column to fill. */
+.mx-stpane>.mx-wexfoot{display:flex;flex-wrap:wrap;gap:26px 32px;align-items:flex-start;justify-content:flex-start;}
+.mx-stpane>.mx-wexfoot>.mx-wexlab{flex:1 0 100%;}
+/* Both parts are asked for their FLOOR and grown to their natural size, because flex decides wrapping on
+   the hypothetical size — ask for the preferred width and the pair wraps while it would still have fitted.
+   "Cannot coexist" is therefore judged at plane-floor + interpretation-floor, and above that the plane
+   grows only as far as its own natural width: it is never expanded to consume the page. */
+.mx-stpane>.mx-wexfoot>.mx-part[data-mx-part="figure"]{flex:1 1 var(--mx-plot-min-w);
+  max-width:min(var(--mx-plot-w),calc(var(--mx-plot-h,720px) * var(--mx-plot-ar,1.333)),100%);
+  min-width:min(100%,var(--mx-plot-min-w));height:auto;margin:0;}
+.mx-wexfootside{flex:1 1 var(--mx-ask-min,300px);min-width:min(100%,var(--mx-ask-min,300px));
+  max-width:var(--mx-interp-max,620px);display:flex;flex-direction:column;gap:18px;}
 .mx-stpane>.mx-wexfoot .mx-part[data-mx-part="relations"],
 .mx-stpane>.mx-wexfoot .mx-part[data-mx-part="points"],
 .mx-stpane>.mx-wexfoot .mx-part[data-mx-part="prose"],
 .mx-stpane>.mx-wexfoot .mx-part[data-mx-part="table"]{align-self:start;}
-@media (max-width:900px){ .mx-stpane>.mx-wexfoot{grid-template-columns:minmax(0,1fr);gap:18px;}
-  .mx-stpane>.mx-wexfoot>.mx-part[data-mx-part="figure"]{grid-column:1;}
-  .mx-wexfootside{grid-column:1;} }
+/* the algebraic result the picture is checked against, at the head of the interpretation */
+.mx-wexfootside>.mx-wexres[data-mx-lead]{margin-top:0;}
 
 /* THE WORKSPACE IS SHARED, NOT CENTRED. Instructional content is never centred in the page: a composition
    asks what the meaningful pieces of an example are and how they should divide the width. The reusable
@@ -2001,13 +2012,24 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 /* THE ROW HOLDS ITS PROPORTIONS ONLY WHILE BOTH SIDES ARE A MEASURE. Flex, not grid, so the floors do the
    deciding: 35/65 while both clear them, then the ask pinned at its floor with the working taking the
    remainder, then a wrap to ask-above-working. No breakpoint restates the numbers. */
-.mx-wexrow{display:flex;flex-wrap:wrap;gap:12px 40px;align-items:flex-start;padding:22px 0;}
+.mx-wexrow{display:flex;flex-wrap:wrap;gap:12px var(--mx-row-gutter,40px);align-items:flex-start;padding:22px 0;}
 .mx-wexrow+.mx-wexrow{border-top:1px solid var(--mx-line);}
 .mx-wexseq>.mx-wexrow:first-child{padding-top:4px;}
-.mx-wexask{flex:35 1 0;min-width:min(100%,var(--mx-ask-min,300px));}
-.mx-wexwork{flex:65 1 0;min-width:min(100%,var(--mx-work-min,420px));}
+.mx-wexask{flex:36 1 0;min-width:min(100%,var(--mx-ask-min,300px));}
+.mx-wexwork{flex:64 1 0;min-width:min(100%,var(--mx-work-min,420px));}
 .mx-wexask .mx-wexsec:last-child{margin-bottom:0;}
 .mx-wexwork .mx-wexsec{margin-bottom:14px;}
+/* WHAT AM I BEING ASKED versus HOW IS IT SOLVED. Both sides are white content surface — the ask is not a
+   card and gets no fill, border box, radius or shadow — so the only thing distinguishing them is one
+   hairline in the gutter and a heading that says which side is which. The rule is drawn ONLY while the two
+   are actually side by side (mxRowSplits measured it); once the row has wrapped there is no boundary to
+   draw, and a vertical line down the left of a full-width block reads as an accent bar instead. */
+[data-mx-rows="split"] .mx-wexask{border-right:1px solid var(--mx-line-soft);
+  padding-right:calc(var(--mx-row-gutter,40px) / 2);margin-right:calc(var(--mx-row-gutter,40px) / -2);}
+/* the ask names the task, the working names the method — same family, the ask a shade more prominent so
+   the eye lands on the question first */
+.mx-wexask>.mx-wexsec>.mx-wexlab{color:var(--mx-ink-2);letter-spacing:.13em;}
+.mx-wexwork>.mx-wexsec>.mx-wexlab{color:var(--mx-ink-3);}
 /* COMPARISON — case A | the plane that bridges them | case B, communicating simultaneously. */
 /* Three columns of content need the room for three: each case gets the same reading floor as an ask, and
    the plane the plot floor. 300 + 340 + 300 + two 28px gaps = 996px of row, which is the width below which
@@ -2022,14 +2044,12 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-wexaside{margin-top:18px;}
 .mx-wexaside .mx-part[data-mx-part="figure"],
 .mx-wexcellvis .mx-part[data-mx-part="figure"]{width:min(100%,var(--mx-plot-w));margin:0;}
-/* A COLUMN THAT CANNOT BE READ IS NOT A COLUMN. The ROW needs no rule here — its floors wrap it on their
-   own. The BRIDGE cannot wrap (a grid track overflows instead), so this is the width its own floors imply:
-   996px of row inside a shell that takes ~384px of the viewport. Below it the three become one sequence,
-   each piece whole rather than three slivers. NOTHING HERE CAPS A PLANE'S HEIGHT: narrow makes it LONGER. */
-@media (max-width:1380px){
-  .mx-wexbridge{grid-template-columns:minmax(0,1fr);}
-  .mx-wexbridge>.mx-wexrow+.mx-wexmid,.mx-wexbridge>.mx-wexmid{order:0;}
-}
+/* A COLUMN THAT CANNOT BE READ IS NOT A COLUMN — and the BRIDGE has no CSS fallback at all any more.
+   A grid track cannot wrap, so the old rule collapsed the three columns into one at a viewport
+   breakpoint, which left the plane sitting between case A and case B: the picture answered the second
+   case before the reader had worked it. The composition now changes STRUCTURE instead, decided by
+   mxBridgeFits against the composition's own floors — so this stylesheet never needs to know a width.
+   NOTHING HERE CAPS A PLANE'S HEIGHT: a narrow page makes the plane LONGER, never shallower. */
 @media (max-width:1080px){ .mx-wexask{margin-bottom:14px;} }
 /* A SLOT IS A PLACE FOR A PLANE, NOT A SHAPE IMPOSED ON ONE. Every worked-example slot is a NATURAL box —
    near 4:3 — so an equal-scale plane sits in it without the view having to reveal an absurd x-range to fill
@@ -7409,6 +7429,17 @@ const MX_PLOT_MIN_W=340, MX_PLOT_MIN_H=255, MX_PLOT_W=560;
    proportion only while both sides clear their floor — under that the ask keeps this width and the working
    takes the remainder, and under THAT they stack. One owner: no breakpoint restates it. */
 const MX_ASK_MIN=300;
+/* THE INTERPRETATION'S READING MEASURE. An explanation beside a plane is prose, and prose past roughly
+   70 characters stops being readable however much room the page has. This is a ceiling, not a width to
+   fill: whatever the page has spare beyond it stays trailing space rather than stretching the column. */
+const MX_INTERP_MAX=620;
+/* A PLANE'S NATURAL SIZE, not a cap on its shape. MX_PLOT_W is the natural width of a landscape plane; a
+   PORTRAIT plane given that same width is drawn a quarter larger than the one that was reviewed, purely
+   because the constant names the wrong dimension for it. Bounding the LONGER side instead sizes both
+   shapes the same way, and it is isotropic: the aspect is untouched, so this is choosing how big to draw
+   the object, never what shape to draw it. (The rule it replaces bounded the height at min(66vh,720px),
+   which made the plane's width depend on the window's height.) */
+const MX_PLOT_H=720;
 let MX_FIT=null;                                    /* 'split' | 'solo' — resolved, never assumed */
 function mxSplitFits(root){
   const main=root&&root.querySelector('.mx-main'), page=root&&root.querySelector('.mx-page');
@@ -7443,8 +7474,49 @@ function mxRepFits(root){
 function mxHasRepresentation(s){
   const ws=s&&s.workspace; return !!(ws&&typeof ws==='object'&&ws.kind==='representation');
 }
+/* A COMPARISON IS SIMULTANEOUS OR IT IS STAGED — never squeezed, and never merely reordered. The bridge
+   says "these two cases agree, and here is the object that shows why", which only communicates while all
+   three are read at once. Below that it must not degrade into A → plane → B: that puts the answer on the
+   screen before the reader has worked the second case, which changes the pedagogy rather than the layout.
+   The decision is the COMPOSITION'S OWN FLOORS measured on the real page, exactly as mxRepFits decides the
+   Notes page. A viewport breakpoint gets this wrong in a case that actually happens: at a 1200px viewport
+   with the navigation rail collapsed the surface has 1084px — comfortably past the 996px the three columns
+   need — and `@media (max-width:1380px)` would still stage a composition that fits. */
+const MX_BRIDGE_GUTTER=28;
+function mxBridgeFits(root){
+  const live=root&&root.querySelector('.mx-wexpane:not([hidden]) .mx-wexsurface');
+  const host=live||(root&&root.querySelector('.mx-wexsurface'));
+  if(!host) return true;
+  const cs=getComputedStyle(host);
+  const inner=host.clientWidth-(parseFloat(cs.paddingLeft)||0)-(parseFloat(cs.paddingRight)||0);
+  return inner>=MX_ASK_MIN*2+MX_PLOT_MIN_W+MX_BRIDGE_GUTTER*2;
+}
+let MX_BRIDGE=null;                                 /* 'wide' | 'staged' — resolved, never assumed */
+/* THE ASK/WORKING BOUNDARY IS DRAWN ONLY WHERE THERE IS A BOUNDARY. The row divides itself by its own
+   floors, so a vertical rule between the two is right beside them and wrong once they have stacked — and
+   a stylesheet cannot see that a flex line has wrapped. Rather than restate 300 + 40 + 420 as a CSS
+   breakpoint (the mistake the bridge just stopped making), the same constants are measured here and the
+   answer is published as one attribute the stylesheet keys off. */
+const MX_ROW_GUTTER=40;
+function mxRowSplits(root){
+  const live=root&&root.querySelector('.mx-wexpane:not([hidden]) .mx-wexsurface');
+  const host=live||(root&&root.querySelector('.mx-wexsurface'));
+  if(!host) return true;
+  const cs=getComputedStyle(host);
+  const inner=host.clientWidth-(parseFloat(cs.paddingLeft)||0)-(parseFloat(cs.paddingRight)||0);
+  return inner>=MX_ASK_MIN+MX_ROW_GUTTER+MX_WB_MIN_W;
+}
 function mxResolveFit(){
   const root=$('#slide').querySelector('.mx'); if(!root) return;
+  /* The worked-example page resolves its own composition first: a comparison that no longer fits three
+     readable columns becomes a staged relationship, which is a DIFFERENT STRUCTURE, so the page is
+     rebuilt rather than restyled. Guarded on the transition, so the observer cannot feed back on itself. */
+  if(root.querySelector('.mx-wex')){
+    const b=mxBridgeFits(root)?'wide':'staged';
+    if(MX_BRIDGE!==b){ MX_BRIDGE=b; root.setAttribute('data-mx-bridge',b); renderSlide(); return; }
+    root.setAttribute('data-mx-bridge',b);
+    root.setAttribute('data-mx-rows',mxRowSplits(root)?'split':'stacked');
+  }
   /* A representation page has a composition to resolve too: side by side while the example region can hold
      an example, stacked at full width when it cannot. Keeping two columns while one of them empties out is
      not responsive adaptation — it is losing the asset the page exists to show. */
@@ -7827,6 +7899,11 @@ function mxWexStates(g){
     show:(Array.isArray(st.show)?st.show:Object.keys(MX_WEX_SECTIONS)).filter(x=>MX_WEX_SECTIONS[x]),
     steps:(Array.isArray(st.steps)&&st.steps.length===2)?[+st.steps[0],+st.steps[1]]:null });
   if(raw.length) return raw.map(norm);
+  /* A COLLAPSED COMPARISON READS AS TWO STAGES. State 1 is both cases worked in full — question, steps and
+     answer for A, then the same for B — so the second working is never pre-empted by the picture. State 2
+     is the object that bridges them, with the authored relationship beside it. */
+  if(mxWexStaged(g)) return [norm({id:'workings',label:'Workings',show:['question','steps','answer']},0),
+                             norm({id:'visual',label:'Visual explanation',show:['visual','relations']},1)];
   if(g.type!=='staged') return [];
   const hasVis=mxParts((g.examples[0]||{}).visual).length||mxParts(g.relations||g.visual).length;
   return hasVis?[norm({id:'solution',label:'Worked solution',show:['question','steps','answer']},0),
@@ -7899,13 +7976,22 @@ function mxWexRow(ex,k,state,extra){
    read by the body that places it and by the foot that must then leave it out. */
 function mxWexBridge(g,state){
   if(g.type!=='comparison'||g.examples.length!==2||state) return [];
+  if(MX_BRIDGE==='staged') return [];               /* not viable → the group stages instead (mxWexStates) */
   return mxParts(g.relations||g.visual).filter(q=>q&&q.kind==='figure');
+}
+/* …and when it is not viable the same group IS a staged relationship: both workings first, complete, then
+   the object that explains them. The two states are synthesised from the comparison itself, so a group
+   that authors its own states[] keeps them. */
+function mxWexStaged(g){
+  return g.type==='comparison'&&g.examples.length===2&&MX_BRIDGE==='staged'
+    &&!(Array.isArray(g.states)&&g.states.length)
+    &&mxParts(g.relations||g.visual).some(q=>q&&q.kind==='figure');
 }
 function mxWexGroupBody(g,s,i,state){
   const key=(tpRespId(s)||i)+'-'+g.id, ex=g.examples;
   if(!ex.length) return '<div class="mx-ph">This group has no examples authored yet.</div>';
-  if(state&&state.show.indexOf('steps')<0&&state.show.indexOf('question')<0&&state.show.indexOf('answer')<0)
-    return '';                                        /* a visual-only state carries no worked solution */
+  if(state&&state.show.indexOf('steps')<0&&state.show.indexOf('question')<0)
+    return '';    /* a visual state carries no worked solution; its answer leads the interpretation */
   const cellVis=(x,k)=>{ const parts=(state&&state.show.indexOf('visual')<0)?[]:mxParts(x.visual);
     return parts.length?`<div class="mx-wexcellvis">${mxCompanion(parts,key+'-'+(x.id||k))}</div>`:''; };
   /* COMPARISON — A | representation | B, so all three communicate at once: the plane is the BRIDGE between
@@ -7919,6 +8005,10 @@ function mxWexGroupBody(g,s,i,state){
       <div class="mx-wexmid">${mxCompanion(bridge,key+'-bridge')}</div>
       ${mxWexRow(ex[1],1,state)}</div>`;
   }
+  /* A collapsed comparison's `workings` state is the two cases in sequence — each complete before the
+     next begins — which is the sequence row model, not a special case. */
+  if(g.type==='comparison') return `<div class="mx-wexseq" data-mx-wexcols="2">
+    ${ex.map((x,k)=>mxWexRow(x,k,state,cellVis(x,k))).join('')}</div>`;
   /* STANDARD / STAGED / EXTENDED — one example, ask left and working right. */
   if(g.type==='standard'||g.type==='staged'||g.type==='extended'){
     const one=ex[0];
@@ -7935,6 +8025,17 @@ function mxWexGroupBody(g,s,i,state){
 /* NEVER A HEADING ABOVE A HEADING. The optional fourth region is named once: by the group's own
    `footLabel` if it states one, otherwise by the parts' authored labels, which already say what the region
    is ("What the graph shows", "Why the two agree"). */
+/* THE ANSWER FOLLOWS THE REASONING IT BELONGS TO. In a state that carries the WORKING, the answer is
+   where the working ends. In a state that carries the VISUAL instead, the same answer is the algebraic
+   result the picture is being checked against — so it leads the interpretation rather than floating above
+   the plane as an orphan row. That is a composition placing a semantic region it already has; no content
+   is invented, and the answer is still authored once, on the example. */
+function mxWexLead(g,state){
+  if(!state||state.show.indexOf('answer')<0||state.show.indexOf('steps')>=0) return '';
+  const ex=(g.examples||[])[0]; const a=ex&&(ex.answer||ex.result); if(!a) return '';
+  return `<div class="mx-wexres" data-mx-sec="answer" data-mx-lead><span class="mx-wexrl">${esc(ex.resultLabel||'Algebraic result')}</span>
+    <span>${mxM(a)}</span></div>`;
+}
 function mxWexFootRender(g,s,i,foot,state){
   if(!foot.length) return '';
   const named=foot.every(q=>q&&q.label);
@@ -7954,8 +8055,9 @@ function mxWexFootRender(g,s,i,foot,state){
      version let the explanation's parts auto-place and pinned the figure across `span 30` rows, so the
      region carried thirty row gaps — 960px of nothing under a 676px plane. */
   const plane=foot.filter(q=>q&&q.kind==='figure'), rest=foot.filter(q=>!q||q.kind!=='figure');
-  const body=(plane.length&&rest.length)
-    ?`${mxCompanion(plane,key)}<div class="mx-wexfootside">${mxCompanion(rest,key+'-r')}</div>`
+  const lead=mxWexLead(g,state);
+  const body=(plane.length&&(rest.length||lead))
+    ?`${mxCompanion(plane,key)}<div class="mx-wexfootside">${lead}${mxCompanion(rest,key+'-r')}</div>`
     :mxCompanion(foot,key);
   return `<section class="mx-wexfoot"${ar?` style="--mx-plot-ar:${ar.toFixed(3)}"`:''}>${lab?`<h4 class="mx-wexlab">${lab}</h4>`:''}
     ${body}</section>`;
@@ -8002,7 +8104,7 @@ function mxWorkedExamplesPage(s,i){
   if(!gs.length) return `<div class="mx-panel"><div class="mx-ph">This page has no worked examples yet.</div></div>`;
   const bar=gs.map((g,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}"
     data-mx-tab="${esc(g.id)}" aria-selected="${k?'false':'true'}">${mxM(g.title)}</button>`).join('');
-  return `<div class="mx-wex" style="--mx-plot-min-w:${MX_PLOT_MIN_W}px;--mx-plot-min-h:${MX_PLOT_MIN_H}px;--mx-plot-w:${MX_PLOT_W}px;--mx-ask-min:${MX_ASK_MIN}px;--mx-work-min:${MX_WB_MIN_W}px">
+  return `<div class="mx-wex" style="--mx-plot-min-w:${MX_PLOT_MIN_W}px;--mx-plot-min-h:${MX_PLOT_MIN_H}px;--mx-plot-w:${MX_PLOT_W}px;--mx-ask-min:${MX_ASK_MIN}px;--mx-work-min:${MX_WB_MIN_W}px;--mx-interp-max:${MX_INTERP_MAX}px;--mx-plot-h:${MX_PLOT_H}px;--mx-row-gutter:${MX_ROW_GUTTER}px">
     <div class="mx-tabs" role="tablist" data-mx-tabset aria-label="Worked example groups">${bar}</div>
     ${gs.map((g,k)=>mxWexGroup(g,s,i,k>0)).join('')}</div>`;
 }

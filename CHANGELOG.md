@@ -190,6 +190,40 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     meets the curve twice" while the graph drew only the two points. The vocabulary is general — the same
     object draws the axis of symmetry in the comparison plane — and the gate asserts every authored line
     reaches the drawing, with a control that removes one and shows the check fail.
+  - **A COMPARISON IS SIMULTANEOUS OR IT IS STAGED — never squeezed, and never merely reordered.** The
+    bridge said "these two cases agree, and here is the object that shows why", which only communicates
+    while all three are read at once; below that a `@media (max-width:1380px)` rule collapsed the grid to
+    one column and left the plane sitting BETWEEN case A and case B. That put the picture — and with it the
+    second answer — in front of the reader before they had worked the second case. A change of pedagogy
+    dressed as a change of layout. A comparison that no longer clears its own floors is now a different
+    STRUCTURE: two states, `1 Workings` (both cases complete, in order) then `2 Visual explanation` (the
+    undistorted plane and the authored relationship). The gate the maintainer asked for measures the order
+    a reader actually meets things in — every answer band and every drawn plane, top to bottom, on the
+    state they land on — and its control puts a plane back into the workings state to prove it fires.
+  - **And the transition is MEASURED, not a breakpoint**, following `mxRepFits`: `mxBridgeFits` compares
+    the real surface against the composition's own floors (300 + 340 + 300 + two 28px gaps = 996px). The
+    viewport query it replaces was wrong in a case that actually happens — at a **1200px viewport with the
+    navigation rail collapsed the surface has 1084px**, comfortably past what the three columns need, and
+    the breakpoint staged a composition that fitted. That is now the control: widen the surface without
+    touching the viewport and the bridge must come back. A media query cannot pass it.
+  - **The staged graph check is a real two-part workspace: `plane | interpretation`.** The plane was
+    mathematically correct and looked stranded, because the emptiness was BESIDE it — a 1058px-wide
+    interpretation column holding 149px of content at 1920px. The interpretation now holds a reading
+    measure (`MX_INTERP_MAX`, 620px) and leads with the algebraic result the picture is checked against,
+    followed by the graphical evidence and why they agree. Nothing is invented: the answer is the example's
+    own, placed there because the state DECLARES `answer`, and the control undeclares it to show the lead
+    leave with it. Both parts grow from their floors and top-align; below plane-floor + interpretation-floor
+    they stack. The track this replaces was `min(52%, min(66vh,720px) × aspect)`, which made the plane's
+    width depend on the window's HEIGHT and capped its height at 720px. The plane's natural SIZE is now
+    bounded on its longer side (`MX_PLOT_H`), which is isotropic — it chooses how big to draw the object,
+    never what shape — and it reproduces the reviewed 446×720 without any viewport in the arithmetic.
+  - **The ask/working boundary, drawn once for every row composition.** `standard` and `sequence` are the
+    same row, so they get the same mechanism: one hairline in the gutter and a heading hierarchy that says
+    which side is which. Neither side becomes a card — no fill, radius or shadow, both stay white content
+    surface. The rule is drawn only while the two are actually side by side: a stylesheet cannot see that a
+    flex line has wrapped, so rather than restate 300 + 40 + 420 as a breakpoint (the mistake the bridge
+    had just stopped making) `mxRowSplits` measures it and publishes one attribute. Measured 421 | 711 at
+    1536px with the hairline present, and full width with no divider once stacked.
   - **`extended` proved, and `sequence`'s row contract with it.** `tests/visual/lessons/mathematics-compositions.json`
     is a NON-SHIPPING design fixture: a three-example sequence group, a single-example `standard` group and
     a genuine six-step derivation carrying a figure at the step that needs it. A presentation type is not
@@ -225,7 +259,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     had been laying every part's LABEL beside its content instead of above it. Scoped to `.mx-parts`.
   - The fixture demonstrates the renderer rather than redesigning the mathematics: four concepts (no
     invented fifth), three complete demonstrations of one object, and three worked-example groups — one
-    per composition type. `scripts/verify-notes-examples.mjs` is the gate (78 checks) and
+    per composition type. `scripts/verify-notes-examples.mjs` is the gate (82 checks) and
     `scripts/shots-notes-examples.mjs` the proof set. The gate encodes the approved behaviour rather than the implementation: expected part
     counts, companion kinds, which steps carry visuals and how many tabs there are are all DERIVED from the
     lesson JSON, so re-authoring the fixture cannot quietly make the gate agree with itself. It asserts the

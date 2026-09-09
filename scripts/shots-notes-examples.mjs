@@ -95,42 +95,60 @@ const report = async (p, name, why) => {
     + `(authored 1:1) in a ${o.plot} plot` + (Math.abs(o.ratio - 1) <= 0.05 ? '  ✓' : '  ✗ DISTORTED')));
 };
 
-// 1 — Notes desktop.
-{ const p = await open(1536, 1024, NOTES); await shotWhole(p, '1-notes-desktop', 1536);
-  await report(p, '1 Notes desktop', 'concepts beside one exploration surface; the plane is the subject of its panel'); await p.close(); }
-// 2 — sequence, three examples as parallel rows.
-{ const p = await open(1536, 1024, 0, CMP); await pick(p, CX[0]);
-  await shotWhole(p, '2-sequence-three-examples', 1536);
-  await report(p, '2 Sequence ×3', 'three examples of one skill as full-width rows of equal status — ask left, working right'); await p.close(); }
-// 3 — standard, one example.
+/* THE VIABILITY WIDTH, read from the app rather than assumed: the surface width at which a comparison
+   stops being three readable columns. The transition proofs are taken immediately either side of it. */
+const floors = await (async () => {
+  const p = await open(1536, 1000, WEX);
+  const f = await p.evaluate(() => { const cs = getComputedStyle(document.querySelector('.mx-wex'));
+    const n = (k) => parseInt(cs.getPropertyValue(k), 10);
+    return { ask: n('--mx-ask-min'), plot: n('--mx-plot-min-w') }; });
+  await p.close(); return f;
+})();
+const NEED = floors.ask * 2 + floors.plot + 56;            /* two cases, a plane, two 28px gaps */
+const CHROME = 384;                                        /* what the shell takes from the viewport */
+console.log(`comparison viability: ${NEED}px of surface (${floors.ask}+${floors.plot}+${floors.ask}+56)` +
+  ` → about ${NEED + CHROME}px of viewport with the rail open\n`);
+
+// 1 — sequence, desktop.
+{ const p = await open(1536, 1024, WEX); await pick(p, GX[0]);
+  await shotWhole(p, '1-sequence-1536', 1536);
+  await report(p, '1 Sequence 1536px', 'parallel examples as full-width rows of equal status; one hairline divides ask from working'); await p.close(); }
+// 2 — standard, desktop.
 { const p = await open(1536, 1024, 0, CMP); await pick(p, CX[1]);
-  await shotWhole(p, '3-standard-single-example', 1536);
-  await report(p, '3 Standard', 'one example, question on the left and the whole working on the right — nothing centred, nothing reserved'); await p.close(); }
-// 4 · 5 — staged: algebra, then the graph its own surface.
+  await shotWhole(p, '2-standard-1536', 1536);
+  await report(p, '2 Standard 1536px', 'the ask on the left, the whole working on the right, both top-aligned'); await p.close(); }
+// 3 · 4 — staged: the algebra, then the graph check with its interpretation beside it.
 { const p = await open(1536, 1024, WEX); await pick(p, GX[1]);
-  await shotWhole(p, '4-staged-worked-solution', 1536);
-  await report(p, '4 Staged 1/2', 'the algebra reaches its answer without scrolling past a full-height plane');
-  await stage(p, 'graph'); await shotWhole(p, '5-staged-graph-check', 1536);
-  await report(p, '5 Staged 2/2', 'the plane takes the width its shape needs and the explanation takes the rest — never a narrow figure centred in an empty page'); await p.close(); }
-// 6 — comparison, desktop.
+  await shotWhole(p, '3-staged-working-1536', 1536);
+  await report(p, '3 Staged 1/2 Working 1536px', 'the algebra reaches its answer without scrolling past a full-height plane');
+  await stage(p, 'graph'); await shotWhole(p, '4-staged-graph-check-1536', 1536);
+  await report(p, '4 Staged 2/2 Graph check 1536px', 'plane | interpretation: algebraic result, graphical evidence, why they agree'); await p.close(); }
+// 5 — comparison, simultaneous.
 { const p = await open(1536, 1024, WEX); await pick(p, GX[2]);
-  await shotWhole(p, '6-comparison-desktop', 1536);
-  await report(p, '6 Comparison', 'case A | the plane that bridges them | case B — all three reading at once'); await p.close(); }
-// 7 — extended, first state.
-{ const p = await open(1536, 1024, 0, CMP); await pick(p, CX[2]);
-  await shotWhole(p, '7-extended-first-state', 1536);
-  await report(p, '7 Extended 1/3', 'a long derivation read in authored stages rather than one expanding document'); await p.close(); }
-// 8 — comparison, phone.
+  await shotWhole(p, '5-comparison-simultaneous-1536', 1536);
+  await report(p, '5 Symmetry 1536px', 'case A | the plane that bridges them | case B, all three read at once'); await p.close(); }
+// 6 · 7 — the same two flat compositions on a handset.
+{ const p = await open(414, 896, WEX); await pick(p, GX[0]);
+  await shotWhole(p, '6-sequence-414', 414);
+  await report(p, '6 Sequence 414px', 'each row stacks internally — question above its working — before the next example begins'); await p.close(); }
+{ const p = await open(414, 896, 0, CMP); await pick(p, CX[1]);
+  await shotWhole(p, '7-standard-414', 414);
+  await report(p, '7 Standard 414px', 'question → worked solution → answer; no divider, because there is no boundary to draw'); await p.close(); }
+// 8 · 9 — the collapsed comparison: both workings first, the object that explains them second.
 { const p = await open(414, 896, WEX); await pick(p, GX[2]);
-  await shotWhole(p, '8-comparison-phone', 414);
-  await report(p, '8 Comparison phone', 'the cases stack; local state navigation survives'); await p.close(); }
-// 9 — staged visual state, phone.
-{ const p = await open(414, 896, WEX); await pick(p, GX[1]); await stage(p, 'graph');
-  await shotWhole(p, '9-staged-graph-check-phone', 414);
-  await report(p, '9 Staged 2/2 phone', 'a smaller box of the same shape — never a different shape'); await p.close(); }
-// 10 — the width at which the row's own floors change its structure.
-{ const p = await open(980, 1200, 0, CMP); await pick(p, CX[0]);
-  await shotWhole(p, '10-sequence-tablet-structure-change', 980);
-  await report(p, '10 Sequence at 980px', 'below the width where the ask is still a measure, each row stacks: question above its working'); await p.close(); }
+  await shotWhole(p, '8-comparison-workings-414', 414);
+  await report(p, '8 Symmetry 1/2 Workings 414px', 'both cases complete and in order — the picture is NOT between them');
+  await stage(p, 'visual'); await shotWhole(p, '9-comparison-visual-414', 414);
+  await report(p, '9 Symmetry 2/2 Visual explanation 414px', 'the undistorted plane and the authored relationship, after both workings'); await p.close(); }
+// 10 · 11 — immediately either side of viability, at a FIXED shell, so only the composition changes.
+{ const w = NEED + CHROME + 1;
+  const p = await open(w, 1100, WEX); await pick(p, GX[2]);
+  await shotWhole(p, '10-comparison-just-above-viability', w);
+  await report(p, `10 Symmetry at ${w}px — just ABOVE viability`, 'one pixel of surface more than the three columns need: still simultaneous'); await p.close(); }
+{ const w = NEED + CHROME - 1;
+  const p = await open(w, 1100, WEX); await pick(p, GX[2]);
+  await shotWhole(p, '11-comparison-just-below-viability', w);
+  await report(p, `11 Symmetry at ${w}px — just BELOW viability`, 'one pixel less: the composition becomes a staged relationship, not a squeezed bridge'); await p.close(); }
+
 await browser.close(); server.close();
 console.log('\nwrote ' + path.relative(root, OUT));

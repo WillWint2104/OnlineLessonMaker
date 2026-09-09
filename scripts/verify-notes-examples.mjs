@@ -881,34 +881,85 @@ mark('slots');
   ok('a region is as tall as what it holds — no reserved space below its own content',
      tails.length > 0 && tails.every((t) => t.slack <= 8),
      tails.map((t) => `${t.id}: ${t.slack}px below its last piece`).join(' · '));
-  /* AND THE BRIDGE IS THREE COLUMNS ONLY WHILE ALL THREE CLEAR THEIR FLOOR. Three cases squeezed to slivers
-     would be the composition asserting itself over what can be read; the alternative is not a narrower
-     bridge but a different structure. The floors are read from the app, so this cannot pass by agreeing
-     with numbers copied here. */
+  /* A COMPARISON IS SIMULTANEOUS OR IT IS STAGED — never squeezed, and never merely reordered. While its
+     own floors are met it is A | plane | B, all three read at once. When they are not, it is a different
+     STRUCTURE: two states, both workings first and the object that explains them second. The floors are
+     read from the app's own published custom properties, so this cannot pass by agreeing with a number
+     copied into this file. */
   const br = [];
-  for (const w of [1920, 1536, 1440, 1381, 1380, 834]) {
+  for (const w of [1920, 1536, 1440, 1381, 1380, 1300, 1194, 834, 414]) {
     const q = await open({ w, h: 1100, slide: WEX });
     await reveal(q, cmp.id);
     br.push(await q.evaluate(({ id, w }) => {
       const pane = document.querySelector(`[data-mx-panel="${id}"]`);
-      const b = pane.querySelector('.mx-wexbridge');
       const cs = getComputedStyle(document.querySelector('.mx-wex'));
-      const cols = getComputedStyle(b).gridTemplateColumns.split(' ').filter(Boolean).length;
-      const cases = [].slice.call(b.querySelectorAll(':scope>.mx-wexrow'))
-        .map((e) => Math.round(e.getBoundingClientRect().width));
-      const surf = pane.querySelector('.mx-wexsurface').getBoundingClientRect();
-      const rb = b.getBoundingClientRect();
-      return { w, cols, cases, mid: Math.round(b.querySelector('.mx-wexmid').getBoundingClientRect().width),
-        over: Math.round(rb.width) > Math.round(surf.width),
-        askMin: parseInt(cs.getPropertyValue('--mx-ask-min'), 10),
-        plotMin: parseInt(cs.getPropertyValue('--mx-plot-min-w'), 10) }; }, { id: cmp.id, w }));
+      const surf = pane.querySelector('.mx-wexsurface'), scs = getComputedStyle(surf);
+      const inner = Math.round(surf.clientWidth - (parseFloat(scs.paddingLeft) || 0) - (parseFloat(scs.paddingRight) || 0));
+      const askMin = parseInt(cs.getPropertyValue('--mx-ask-min'), 10);
+      const plotMin = parseInt(cs.getPropertyValue('--mx-plot-min-w'), 10);
+      const b = pane.querySelector('.mx-wexbridge');
+      const stateBtns = [].slice.call(pane.querySelectorAll('[data-mx-state]'));
+      const states = stateBtns.map((x) => x.textContent.replace(/\s+/g, ' ').trim());
+      /* THE ORDER A READER ACTUALLY MEETS THINGS IN — measured on the state they LAND ON, which is the
+         first one. `reveal` selects the last state to force a figure to solve, so measuring whatever is
+         on screen would read the visual state and report the picture the claim is about. */
+      if (stateBtns.length) stateBtns[0].click();
+      const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
+      const order = [].slice.call(live.querySelectorAll('.mx-wexres, .mx-part[data-mx-part="figure"]'))
+        .filter((e) => e.getBoundingClientRect().height > 4)
+        .map((e) => ({ k: e.classList.contains('mx-wexres') ? 'answer' : 'plane', t: e.getBoundingClientRect().top }))
+        .sort((x, y) => x.t - y.t).map((x) => x.k);
+      return { w, inner, askMin, plotMin, mode: b ? 'bridge' : 'staged', states, order,
+        cols: b ? getComputedStyle(b).gridTemplateColumns.split(' ').filter(Boolean).length : 0,
+        cases: b ? [].slice.call(b.querySelectorAll(':scope>.mx-wexrow')).map((e) => Math.round(e.getBoundingClientRect().width)) : [],
+        mid: b ? Math.round(b.querySelector('.mx-wexmid').getBoundingClientRect().width) : 0,
+        over: b ? Math.round(b.getBoundingClientRect().width) > Math.round(surf.getBoundingClientRect().width) : false }; },
+      { id: cmp.id, w }));
     await q.close();
   }
-  ok('the bridge is three columns only while all three clear their floor, and never overflows',
-     br.every((r) => !r.over && (r.cols === 3
-       ? r.cases.every((c) => c >= r.askMin - 1) && r.mid >= r.plotMin - 1
-       : r.cases.every((c) => c === r.mid))),
-     br.map((r) => `${r.w}px: ${r.cols === 3 ? `${r.cases[0]} | ${r.mid} | ${r.cases[1]}` : `one column of ${r.mid}px`}`).join(' · '));
+  const needs = (r) => r.askMin * 2 + r.plotMin + 56;
+  ok('a comparison is a simultaneous bridge exactly while its own floors are met, and never overflows',
+     br.every((r) => !r.over && (r.inner >= needs(r) ? r.mode === 'bridge' : r.mode === 'staged'))
+     && br.some((r) => r.mode === 'bridge') && br.some((r) => r.mode === 'staged'),
+     br.map((r) => `${r.w}px (${r.inner} inner, needs ${needs(r)}): ${r.mode === 'bridge'
+       ? `${r.cases[0]} | ${r.mid} | ${r.cases[1]}` : 'staged'}`).join(' · '));
+  ok('while it is a bridge, no case and no plane is squeezed below its floor',
+     br.filter((r) => r.mode === 'bridge').every((r) => r.cols === 3
+       && r.cases.every((c) => c >= r.askMin - 1) && r.mid >= r.plotMin - 1),
+     br.filter((r) => r.mode === 'bridge').map((r) => `${r.w}px: ${r.cases.join(' | ')} with a ${r.mid}px plane`).join(' · '));
+  /* THE ONE THE MAINTAINER NAMED. A collapsed comparison must not put the picture between the two cases:
+     that answers the second working before the reader has done it, which is a change of pedagogy, not of
+     layout. Measured as the order a reader meets things in, not as DOM order. */
+  const collapsed = br.filter((r) => r.mode === 'staged');
+  ok('COLLAPSED, THE VISUAL CANNOT APPEAR BETWEEN THE TWO CASES — both workings complete first',
+     collapsed.length > 0
+     && collapsed.every((r) => r.order.length >= 2 && r.order.every((k) => k === 'answer'))
+     && collapsed.every((r) => r.states.length === 2),
+     collapsed.map((r) => `${r.w}px: ${r.states.join(' | ')} → ${r.order.join(' → ')}`).join(' · '));
+  /* CONTROL: the decision is the COMPOSITION'S floors, not the viewport. Collapsing the navigation rail
+     below the width where the old breakpoint gave up widens the surface past the bridge's floors, and the
+     bridge must come back. A media query cannot pass this — the viewport never changed. */
+  const rail = [];
+  for (const w of [1300, 1200]) {
+    const q = await open({ w, h: 1000, slide: WEX });
+    await reveal(q, cmp.id);
+    const before = await q.evaluate((id) => ({
+      inner: Math.round(document.querySelector(`[data-mx-panel="${id}"] .mx-wexsurface`).clientWidth),
+      mode: document.querySelector(`[data-mx-panel="${id}"] .mx-wexbridge`) ? 'bridge' : 'staged' }), cmp.id);
+    await q.evaluate(() => rpNavToggle());
+    await q.waitForTimeout(700);
+    await q.evaluate((id) => { const t = document.querySelector(`[data-mx-tab="${id}"]`); if (t) t.click(); }, cmp.id);
+    await q.waitForTimeout(400);
+    const after = await q.evaluate((id) => ({
+      inner: Math.round(document.querySelector(`[data-mx-panel="${id}"] .mx-wexsurface`).clientWidth),
+      mode: document.querySelector(`[data-mx-panel="${id}"] .mx-wexbridge`) ? 'bridge' : 'staged' }), cmp.id);
+    rail.push({ w, before, after });
+    await q.close();
+  }
+  ok('CONTROL: the composition decides, not the viewport — widen the surface at a fixed viewport and the bridge returns',
+     rail.every((r) => r.before.mode === 'staged' && r.after.mode === 'bridge'),
+     rail.map((r) => `${r.w}px viewport: rail open ${r.before.inner}px → ${r.before.mode}, `
+       + `rail collapsed ${r.after.inner}px → ${r.after.mode}`).join(' · '));
 }
 {
   /* NARROW, THE PLANE KEEPS ITS PROPORTIONS. The claim used to be made about a stacked companion; the
@@ -1078,11 +1129,42 @@ mark('states');
        return x.per.reduce((n, s) => n + s.steps, 0) === want; }),
      seen.map((x) => `${x.g.id}: ${x.per.map((s) => s.steps).join(' + ')} = `
        + x.g.examples.reduce((n, e) => n + e.steps.length, 0) + ' authored steps').join(' · '));
-  ok('the question and the answer each appear once across the states, not in every one',
-     seen.every((x) => x.per.reduce((n, s) => n + s.q, 0) === x.g.examples.filter((e) => e.prompt || e.question).length
-       && x.per.reduce((n, s) => n + s.a, 0) === x.g.examples.filter((e) => e.answer || e.result).length),
-     seen.map((x) => `${x.g.id}: ${x.per.reduce((n, s) => n + s.q, 0)} question(s), `
-       + `${x.per.reduce((n, s) => n + s.a, 0)} answer(s)`).join(' · '));
+  /* THE PARTITION IS DECLARED, NOT INCIDENTAL. A section appears in exactly the states whose `show`
+     names it — no more and no less. The answer legitimately appears twice in a staged graph check: once
+     where the working ends, once as the algebraic result the picture is checked against. That is the
+     state declaring `answer`, not the renderer duplicating anything, so the contract counts the
+     DECLARATIONS rather than assuming one appearance per example. */
+  const declared = (g, sec) => (g.states || []).filter((st) => (st.show || []).indexOf(sec) >= 0).length;
+  ok('a section appears in exactly the states that declare it — never in every one by accident',
+     seen.every((x) => {
+       const ex = x.g.examples.filter((e) => e.prompt || e.question).length;
+       const an = x.g.examples.filter((e) => e.answer || e.result).length;
+       return x.per.reduce((n, s) => n + s.q, 0) === ex * declared(x.g, 'question')
+         && x.per.reduce((n, s) => n + s.a, 0) === an * declared(x.g, 'answer'); }),
+     seen.map((x) => `${x.g.id}: ${x.per.reduce((n, s) => n + s.q, 0)} question(s) in `
+       + `${declared(x.g, 'question')} declaring state(s), ${x.per.reduce((n, s) => n + s.a, 0)} answer(s) in `
+       + `${declared(x.g, 'answer')}`).join(' · '));
+  /* CONTROL: the count follows the DECLARATION. Drop `answer` from the state that carries the visual and
+     the algebraic result must leave the interpretation with it — otherwise the check above is counting a
+     constant rather than reading the lesson. */
+  {
+    const q = await open({ slide: WEX });
+    const drop = await q.evaluate(({ id, w }) => {
+      const g = LESSON.slides[w].groups.find((x) => x.id === id);
+      const st = (g.states || []).filter((s) => s.show.indexOf('visual') >= 0)[0];
+      const before = st.show.slice();
+      st.show = st.show.filter((s) => s !== 'answer'); go(w);
+      document.querySelector(`[data-mx-tab="${id}"]`).click();
+      const pane = document.querySelector(`[data-mx-panel="${id}"]`);
+      const last = pane.querySelector('[data-mx-state]:last-child'); if (last) last.click();
+      const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0];
+      return { before: before.join('+'), leads: live.querySelectorAll('[data-mx-lead]').length };
+    }, { id: staged[0].id, w: WEX });
+    await q.close();
+    ok('CONTROL: undeclare the answer and it leaves the interpretation, so the count is read not assumed',
+       drop.leads === 0, `with show "${drop.before}" the interpretation leads with the algebraic result; `
+       + 'without it, 0 lead blocks');
+  }
   ok('A FIGURE REVEALED WITH ITS STATE IS RE-SOLVED — until then its stage measured zero',
      seen.every((x) => x.per.every((s) => s.figBox.every((w) => w >= 200))),
      seen.map((x) => `${x.g.id}: ${x.per.filter((s) => s.fig).map((s) => `${s.id} ${s.figBox.join('/')}px`).join(', ') || 'no figure state'}`).join(' · '));

@@ -440,12 +440,29 @@ shape it is forced into.
 | --- | --- |
 | `sequence` | parallel examples of one skill as full-width rows; no reserved region — a companion, where authored, sits in that row's working column |
 | `standard` | one example, ask left and working right. A companion, where authored, sits in the working's column at its own proportions — never centred, never re-placed by its shape |
-| `comparison` | two cases whose relationship IS the teaching point, with the bridging plane BETWEEN them (A \| plane \| B) while all three clear their floor; below that the three stack |
+| `comparison` | two cases whose relationship IS the teaching point, with the bridging plane BETWEEN them (A \| plane \| B) while all three clear their floor; below that it becomes a STAGED relationship, never a reordered one |
 | `staged` | working and a substantial representation each get the whole surface, as authored LOCAL STATES (`1 Worked solution`, `2 Graph check`). The plane takes the width its shape needs and the explanation takes the complementary width beside it |
 | `extended` | a long derivation in the working column, read in authored stages rather than one expanding document |
 
 None of those names says anything about graph dimensions, and that is deliberate. `visual` and `compact`
 are the earlier names for `standard` and `sequence` and still resolve.
+
+**A COMPARISON IS SIMULTANEOUS OR IT IS STAGED.** The bridge only communicates while all three parts are
+read at once. When the surface can no longer give two cases and a plane their floors, the composition does
+not collapse into `A → plane → B`: that puts the picture, and the second answer with it, in front of the
+reader before they have worked the second case, which changes the PEDAGOGY rather than the layout. It
+becomes two states instead — `1 Workings` (both cases complete, in order) then `2 Visual explanation`.
+The decision is `mxBridgeFits`, measuring the real surface against 2 × `MX_ASK_MIN` + `MX_PLOT_MIN_W` +
+two gaps, in the same pass and the same idiom as `mxRepFits`. It is deliberately NOT a viewport query: at
+a 1200px viewport with the navigation rail collapsed the surface has 1084px, so a breakpoint stages a
+composition that fits. Same reasoning for the ask/working divider — `mxRowSplits` measures whether the row
+is actually side by side, because a stylesheet cannot see that a flex line has wrapped.
+
+**A PLANE'S NATURAL SIZE IS BOUNDED ON ITS LONGER SIDE** (`MX_PLOT_H`), not on its width. `MX_PLOT_W` is
+the natural width of a LANDSCAPE plane; giving a portrait plane that same width draws it a quarter larger
+than the one that was reviewed, purely because the constant names the wrong dimension for it. Bounding the
+longer side is isotropic — it chooses how big to draw the object, never what shape — and it removes the
+`min(66vh, 720px)` rule that made a plane's width depend on the window's height.
 
 **A REGION IS AS TALL AS WHAT IT HOLDS.** No composition may reserve space below its own content. (The
 staged region once pinned its plane across `grid-row: 2 / span 30` and so carried thirty row gaps: 383px of
