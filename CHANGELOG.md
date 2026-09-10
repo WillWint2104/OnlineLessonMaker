@@ -8,6 +8,46 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **The composition contract gains a resolver: fitting horizontally is not the same as being viable**
+  (`docs/mockups/compositions/`, no app change). The previous pack decided every arrangement with one
+  test, `min + gap + min ≤ available`, which establishes that two tracks can physically exist and says
+  nothing about whether the result is a composition. A candidate now passes **four independent gates** —
+  width, figure fidelity, vertical occupancy, dead-space ownership — or it stacks, which is a safe
+  fallback rather than a failure. In this pack 22 of 30 arrangements are rejected. The container
+  queries are gone: a query can ask how wide the container is, not whether the shorter track fills the
+  row, so the resolver lays a candidate out, measures it, and assigns the verdict and the track boxes.
+  - **Figures are sized first, from their own layout signature.** The resolver never asks how much
+    width is left for the graph. Each plane carries `minimumReadableScale · preferredScale ·
+    maximumUsefulScale`, in px per authored unit rather than in box dimensions — a correction the
+    engine forced twice. Defining the boxes as "the largest box that still paints square units" made
+    every plane answer 720 × 720, because the engine holds square units at almost any box by showing
+    more of the plane; modelling the box as `span × scale + a fixed gutter` then missed by up to 3%,
+    because the gutter is not fixed and which axis binds changes with the box. Measuring instead of
+    modelling — paint, read px-per-unit off the tick labels, correct both dimensions — converges in
+    three or four paints.
+  - **The floor and the bound are different things and can fail to overlap.** The legibility floor is a
+    property of the mathematics (the plot must clear 340 × 255); the 720px bound is a property of the
+    page. **Three of the five planes in the pack cannot satisfy both**, and the pack reports it rather
+    than hiding it: those planes have one legal scale, and the resolver is told so instead of
+    discovering it by painting something distorted.
+  - **The occupancy gate, with the data to set it by.** `shorter track ÷ row height`, floor 0.55, and
+    every measurement is printed. The consequence is large and deliberate: an ordinary worked example —
+    one-line question, three-step solution — measures 22% and stacks at every width, so
+    `instructionSplit` becomes the exception rather than the rule. The seven-step adversarial case
+    measures 11%.
+  - **Dead space became an invariant rather than a rejection**, because as a rejection it made the
+    resolver worse: it stacked a pair to avoid 94px of trailing space and produced 766px instead. What
+    is forbidden is unowned width *between* tracks or *inside* one; space past the last track is page
+    margin. The related fix is ownership, not arrangement — a **stacked figure region is now shrunk to
+    its plane**, which moves no pixel of the image and moves 766px of space from the composition to the
+    page margin.
+  - **A track is never given width its region cannot use.** Allocation clamps each track to
+    `[min, max]` and redistributes, so 1152px resolves to **512 + 608** rather than 392 + 728.
+  - **A repeat's children share one verdict and the strictest decides**, so a gate can never leave row
+    2 stacked between two split siblings.
+  - New adversarial pairs where only the content differs: a balanced `standard` that splits (77%)
+    against the same primitive at the same width that stacks (22%), and a dense interpretation that
+    keeps its rail (69%) against a sparse one that does not (14%).
 - **The composition contract — a zone-contract pack for the Mathematics worked examples**
   (`docs/mockups/compositions/`, no app change). The previous pack described five arrangements; a
   renderer given five pictures has to guess the rule that produced them, so this one states the rule.

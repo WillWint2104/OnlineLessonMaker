@@ -1,0 +1,684 @@
+[
+  {
+    "image": "01-standard-balanced-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "avail": 1152,
+    "state": "split",
+    "reject": null,
+    "note": "",
+    "cols": [
+      512,
+      608
+    ],
+    "occ": 0.767,
+    "heights": [
+      207,
+      270
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "01-standard-balanced-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "avail": 382,
+    "state": "stack",
+    "reject": "width",
+    "note": "the minimums sum to 768px in 382px",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": null,
+    "trailing": null,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "02-standard-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 22% of a 270px row",
+    "cols": [
+      512,
+      608
+    ],
+    "occ": 0.215,
+    "heights": [
+      58,
+      270
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "02-standard-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "avail": 382,
+    "state": "stack",
+    "reject": "width",
+    "note": "the minimums sum to 768px in 382px",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": null,
+    "trailing": null,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "03-sequence-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 22% of a 270px row",
+    "cols": [
+      512,
+      608
+    ],
+    "occ": 0.215,
+    "heights": [
+      58,
+      270
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "03-sequence-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 22% of a 270px row",
+    "cols": [
+      512,
+      608
+    ],
+    "occ": 0.215,
+    "heights": [
+      58,
+      270
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "03-sequence-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 29% of a 202px row",
+    "cols": [
+      512,
+      608
+    ],
+    "occ": 0.287,
+    "heights": [
+      58,
+      202
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "03-sequence-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "avail": 382,
+    "state": "stack",
+    "reject": "width",
+    "note": "the minimums sum to 768px in 382px",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": null,
+    "trailing": null,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "03-sequence-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "avail": 382,
+    "state": "stack",
+    "reject": "width",
+    "note": "the minimums sum to 768px in 382px",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": null,
+    "trailing": null,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "03-sequence-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "avail": 382,
+    "state": "stack",
+    "reject": "width",
+    "note": "the minimums sum to 768px in 382px",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": null,
+    "trailing": null,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "04-pairedvisual-desktop",
+    "surface": 1152,
+    "kind": "repeat",
+    "avail": 1152,
+    "state": "split",
+    "reject": null,
+    "note": "",
+    "cols": [
+      544,
+      544
+    ],
+    "occ": 1,
+    "heights": [
+      315,
+      315
+    ],
+    "fig": null,
+    "trailing": 32,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "04-pairedvisual-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "avail": 1152,
+    "state": "split",
+    "reject": null,
+    "note": "",
+    "cols": [
+      488,
+      632
+    ],
+    "occ": 0.658,
+    "heights": [
+      647,
+      426
+    ],
+    "fig": {
+      "key": "symmetry",
+      "scale": 43.775,
+      "w": 488,
+      "h": 625,
+      "x": 44.5,
+      "y": 44.48,
+      "ratio": 1
+    },
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "04-pairedvisual-middle",
+    "surface": 700,
+    "kind": "repeat",
+    "avail": 700,
+    "state": "split",
+    "reject": null,
+    "note": "",
+    "cols": [
+      334,
+      334
+    ],
+    "occ": 1,
+    "heights": [
+      315,
+      315
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "04-pairedvisual-middle",
+    "surface": 700,
+    "kind": "visualInterpretation",
+    "avail": 700,
+    "state": "stack",
+    "reject": "fidelity",
+    "note": "the plane needs 373px to stay at its 34.0 px/unit floor, and only 284px is free beside a 384px rail",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": {
+      "key": "symmetry",
+      "w": 488,
+      "h": 625,
+      "scale": 43.775,
+      "x": 44.5,
+      "y": 44.48,
+      "ratio": 1
+    },
+    "trailing": null,
+    "stackedTrailing": 212,
+    "inherited": false
+  },
+  {
+    "image": "04-pairedvisual-narrow",
+    "surface": 382,
+    "kind": "repeat",
+    "avail": 382,
+    "state": "stack",
+    "reject": "width",
+    "note": "the minimums sum to 608px in 382px",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": null,
+    "trailing": null,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "04-pairedvisual-narrow",
+    "surface": 382,
+    "kind": "visualInterpretation",
+    "avail": 382,
+    "state": "stack",
+    "reject": "fidelity",
+    "note": "the plane needs 373px to stay at its 34.0 px/unit floor, and only -34px is free beside a 384px rail",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": {
+      "key": "symmetry",
+      "w": 382,
+      "h": 489,
+      "scale": 34.266,
+      "x": 34.05,
+      "y": 34.07,
+      "ratio": 0.999
+    },
+    "trailing": null,
+    "stackedTrailing": 0,
+    "inherited": false
+  },
+  {
+    "image": "05-visualcheck-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 22% of a 270px row",
+    "cols": [
+      512,
+      608
+    ],
+    "occ": 0.215,
+    "heights": [
+      58,
+      270
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "05-visualcheck-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "avail": 1152,
+    "state": "split",
+    "reject": null,
+    "note": "",
+    "cols": [
+      386,
+      640
+    ],
+    "occ": 0.577,
+    "heights": [
+      738,
+      426
+    ],
+    "fig": {
+      "key": "graphcheck",
+      "scale": 28,
+      "w": 386,
+      "h": 716,
+      "x": 28.04,
+      "y": 28.09,
+      "ratio": 0.998
+    },
+    "trailing": 94,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "05-visualcheck-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "avail": 382,
+    "state": "stack",
+    "reject": "width",
+    "note": "the minimums sum to 768px in 382px",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": null,
+    "trailing": null,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "05-visualcheck-narrow",
+    "surface": 382,
+    "kind": "visualInterpretation",
+    "avail": 382,
+    "state": "stack",
+    "reject": "fidelity",
+    "note": "the plane needs 386px to stay at its 28.0 px/unit floor, and only -34px is free beside a 384px rail",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": {
+      "key": "graphcheck",
+      "w": 386,
+      "h": 716,
+      "scale": 28,
+      "x": 28.04,
+      "y": 28.09,
+      "ratio": 0.998
+    },
+    "trailing": null,
+    "stackedTrailing": -4,
+    "inherited": false
+  },
+  {
+    "image": "06-extended-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 22% of a 270px row",
+    "cols": [
+      512,
+      608
+    ],
+    "occ": 0.215,
+    "heights": [
+      58,
+      270
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "06-extended-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 40% of a 646px row",
+    "cols": [
+      424,
+      640
+    ],
+    "occ": 0.401,
+    "heights": [
+      646,
+      259
+    ],
+    "fig": {
+      "key": "roots",
+      "w": 424,
+      "h": 624,
+      "scale": 37.4,
+      "x": 38.11,
+      "y": 38.08,
+      "ratio": 1.001
+    },
+    "trailing": 56,
+    "stackedTrailing": 728,
+    "inherited": false
+  },
+  {
+    "image": "07-adv-long-question-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "avail": 1152,
+    "state": "split",
+    "reject": null,
+    "note": "",
+    "cols": [
+      512,
+      608
+    ],
+    "occ": 0.867,
+    "heights": [
+      233,
+      202
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "08-adv-long-solution-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 11% of a 546px row",
+    "cols": [
+      512,
+      608
+    ],
+    "occ": 0.106,
+    "heights": [
+      58,
+      546
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "09-adv-wide-equation-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 19% of a 301px row",
+    "cols": [
+      512,
+      608
+    ],
+    "occ": 0.193,
+    "heights": [
+      58,
+      301
+    ],
+    "fig": null,
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "10-adv-dense-interpretation-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "avail": 1152,
+    "state": "split",
+    "reject": null,
+    "note": "",
+    "cols": [
+      386,
+      640
+    ],
+    "occ": 0.686,
+    "heights": [
+      738,
+      506
+    ],
+    "fig": {
+      "key": "graphcheck",
+      "scale": 28,
+      "w": 386,
+      "h": 716,
+      "x": 28.04,
+      "y": 28.09,
+      "ratio": 0.998
+    },
+    "trailing": 94,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "11-adv-sparse-interpretation-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 14% of a 738px row",
+    "cols": [
+      386,
+      640
+    ],
+    "occ": 0.14,
+    "heights": [
+      738,
+      103
+    ],
+    "fig": {
+      "key": "graphcheck",
+      "w": 386,
+      "h": 716,
+      "scale": 28,
+      "x": 28.04,
+      "y": 28.09,
+      "ratio": 0.998
+    },
+    "trailing": 94,
+    "stackedTrailing": 766,
+    "inherited": false
+  },
+  {
+    "image": "12-adv-portrait-graph-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "avail": 1152,
+    "state": "stack",
+    "reject": "occupancy",
+    "note": "the shorter track fills 28% of a 727px row",
+    "cols": [
+      332,
+      640
+    ],
+    "occ": 0.283,
+    "heights": [
+      727,
+      206
+    ],
+    "fig": {
+      "key": "portrait",
+      "w": 332,
+      "h": 705,
+      "scale": 35.5,
+      "x": 35.24,
+      "y": 35.2,
+      "ratio": 1.001
+    },
+    "trailing": 148,
+    "stackedTrailing": 820,
+    "inherited": false
+  },
+  {
+    "image": "13-adv-landscape-graph-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "avail": 1152,
+    "state": "split",
+    "reject": null,
+    "note": "",
+    "cols": [
+      717,
+      403
+    ],
+    "occ": 0.63,
+    "heights": [
+      368,
+      232
+    ],
+    "fig": {
+      "key": "landscape",
+      "scale": 28,
+      "w": 717,
+      "h": 346,
+      "x": 27.97,
+      "y": 27.91,
+      "ratio": 1.002
+    },
+    "trailing": 0,
+    "stackedTrailing": null,
+    "inherited": false
+  },
+  {
+    "image": "13-adv-landscape-graph-middle",
+    "surface": 700,
+    "kind": "visualInterpretation",
+    "avail": 700,
+    "state": "stack",
+    "reject": "fidelity",
+    "note": "the plane needs 717px to stay at its 28.0 px/unit floor, and only 284px is free beside a 384px rail",
+    "cols": null,
+    "occ": null,
+    "heights": null,
+    "fig": {
+      "key": "landscape",
+      "w": 717,
+      "h": 346,
+      "scale": 28,
+      "x": 27.97,
+      "y": 27.91,
+      "ratio": 1.002
+    },
+    "trailing": null,
+    "stackedTrailing": -17,
+    "inherited": false
+  }
+]

@@ -1,228 +1,202 @@
 # The composition contract — Mathematics worked examples
 
-**This pack is a layout grammar, not a set of screens.** Its predecessor described five attractive
-arrangements; that is what made it unimplementable, because a renderer given five pictures has to
-guess the rule that produced them. What follows is the rule.
+**Fitting horizontally is not the same as being viable.** That is the whole of this revision. The
+previous pack established the topology — four primitives, region contracts, no typed widths — and
+then decided every arrangement with one test, `min + gap + min ≤ available`. That test establishes
+that two tracks can physically exist. It says nothing about whether the result is a composition.
 
-Three claims here are checked by `node scripts/mockups-compositions.mjs`, which renders every image
-in Chromium from the app's own material, and fails rather than producing an image that disagrees:
+A candidate must now pass **four independent conditions**, and `node scripts/mockups-compositions.mjs`
+enforces them by laying the candidate out, measuring it, and writing the verdict onto the image:
 
-1. **No width in this pack is typed.** Every track width is computed from the region contracts in
-   `src/contracts.json`, and every responsive threshold is generated as the sum `min + gap + min`.
-   After rendering, the realised widths are measured back out of the browser and compared against an
-   independent computation of the same contract. A `-spec` image prints the contract *and* the width
-   it produced.
-2. **One fragment serves every surface.** A composition is authored once and rendered at each
-   reference width; its responsive state is chosen by a container query. The build then asserts the
-   semantic payload is character-identical across those renders. (That control exists because the
-   previous pack's narrow Sequence proof silently carried two examples where its desktop twin carried
-   three. Separate files per breakpoint made that possible; one file makes it impossible.)
-3. **Every plane is the shipped engine's output**, mounted in the app's own
-   `.mx-part[data-mx-part="figure"] › .mx-figstage › .mx-figskin.tp-slide` chain, and **its size is
-   searched for, not chosen** — scored on the painted result, px per authored *x*-unit against px per
-   authored *y*-unit.
+| Gate | Question |
+| --- | --- |
+| **width** | can every region meet its minimum useful width? |
+| **fidelity** | can every intrinsic asset keep the size it actually needs? |
+| **occupancy** | does the shorter track fill enough of the row to be a track rather than a fragment? |
+| **dead space** | does every substantial piece of inline space belong to a semantic region? |
+
+**Stack is the safe fallback, not a failure.** There can be 1152px of width and this particular
+content pair still not belong side by side. In this pack, 22 of 30 arrangements are rejected.
+
+There are no container queries left in the kit, and their absence is the point. A query can ask how
+wide the container is. It cannot ask whether the shorter track fills the row — that is knowable only
+after a candidate has been laid out. So the resolver lays it out, measures, and assigns.
 
 ---
 
-## 1. What chooses what
+## 1. Figures are sized first
+
+The inversion you asked for. The resolver never asks *how much width is left for the graph*. It asks
+what box this graph needs and builds a composition from what remains. **A figure track is never
+`1fr`, never `auto`, and never the space that happens to be free.**
+
+Every plane has a **layout signature**, a property of the plane rather than of any surface:
 
 ```
-JSON semantics   →  the composition FAMILY        (authored, never inferred)
-available space  →  its RESPONSIVE STATE          (measured against region minimums)
-content size     →  the page's HEIGHT, and whether a state is FEASIBLE
-                    (never which composition is used)
+minimumReadableScale   the plot area just clears the engine's floor, 340 × 255
+preferredScale         85% of the maximum
+maximumUsefulScale     the whole box, gutters included, just reaches the 720px bound
 ```
 
-Content is allowed to make a state impossible. It is never allowed to select a different family.
-An over-wide equation does not promote an example to another composition; it reports that it cannot
-be set at this width, and the split it is in either survives or falls back.
+The signature is in **scale — px per authored unit — not in box dimensions**, and that correction came
+from the engine after two attempts produced confident nonsense:
 
-## 2. Four primitives
+1. Defining the boxes as *the largest box that still paints square units* made every plane answer
+   720 × 720. The engine holds square units at almost any box by **showing more of the plane**;
+   squareness is a floor it already guarantees, not a size.
+2. Modelling the box as `authoredSpan × scale + a fixed gutter` failed differently — the gutter is not
+   fixed, and which axis binds changes with the box, so the model missed by up to 3%.
 
-Everything below is assembled from these. `src/kit.css` contains **no rule keyed on a composition
-name** — that is the structural form of "the compositions are not independent designs".
+What works is to stop modelling the engine and measure it: guess a box, paint it, read px-per-unit off
+the rendered tick labels, correct both dimensions by the ratio of asked to painted. It converges in
+three or four paints and needs no theory about gutters at all.
 
-| Primitive | Regions | Purpose |
-| --- | --- | --- |
-| **instructionSplit** | prompt │ solution | an ordinary worked example |
-| **repeat** | a child, `down` or `across` | several examples (down) or several cases (across) |
-| **visualInterpretation** | figure │ interpretation | a figure and the text that reads it |
-| **stack** | regions in semantic order | the terminal state; never fails |
+**The floor is a property of the mathematics** (the plot must clear 340 × 255) and **the bound is a
+property of the page** (the whole box may not exceed 720). They are different things, and for an
+extreme aspect they can fail to overlap:
 
-`repeat` is where the 2 + 1 problem dies for good. Its CSS is a column of identical children, or
-`grid-auto-flow: column` with one shared track contract — **the count is written nowhere**, so there
-is no arrangement for a count to select. Two examples are two rows; ten are ten.
+| Plane | min readable | preferred | max useful | |
+| --- | --- | --- | --- | --- |
+| symmetry 10 × 12 | 373 × 486 @34.0 | 488 × 625 @43.8 | 565 × 718 @51.5 | |
+| graph check 12 × 22 | 386 × 716 @28.0 | — | — | **floor unreachable**: the plot needs 28.3 px/unit to clear 340 × 255; the bound is reached at 28.0 |
+| roots 10 × 14 | 380 × 561 @34.0 | 424 × 624 @37.4 | 490 × 716 @44.0 | |
+| portrait 6 × 16 | 332 × 705 @35.5 | — | — | **floor unreachable**: needs 56.7, bound reached at 35.5 |
+| landscape 24 × 8 | 717 × 346 @28.0 | — | — | **floor unreachable**: needs 31.9, bound reached at 28.0 |
 
-## 3. The compositions are assemblies
+**Three of five planes cannot satisfy both.** That is a Figure Engine decision, not a layout one, and
+the pack reports it rather than hiding it: those planes have exactly one legal scale, and the resolver
+is told so instead of discovering it by painting something distorted. If `MX_PLOT_H = 720` is the
+binding constraint, raising it for tall domains is the lever.
 
-| Composition | Assembly |
-| --- | --- |
-| `standard` | `instructionSplit(prompt, solution)` + synthesis |
-| `sequence` | `repeat(down, standard)` + synthesis |
-| `pairedVisual` | `repeat(across, case)` + `visualInterpretation(visual, interpretation)` |
-| `visualCheck` | state 1 `instructionSplit` · state 2 `visualInterpretation` |
-| `extended` | states; each state takes the primitive its own content needs |
-
-**`pairedVisual`'s lower half is the substantive change.** A shared visual "at full width" left an
-arbitrary empty region beside a plane that was narrower than the row, and the renderer had no answer
-to what that region was for. It is now the interpretation rail, and *why the two agree* belongs to
-it rather than being a footer underneath. The two-row middle state the previous pack drew by hand is
-gone as a designed thing — image `06` shows it emerging from the grammar at a width nobody chose.
-
-**Renames.** `comparison` → `pairedVisual`, `staged` → `visualCheck`. Old names must keep resolving,
-as `visual` and `compact` already do. `compact` is gone for good: it named a size.
-
-## 4. Region contracts
-
-Design-system tokens. **Authors never type these**; lesson JSON describes meaning only.
-
-| Region | Minimum | Growth weight | Reading measure |
-| --- | --- | --- | --- |
-| prompt | 18rem (288px) | 0.7 | 34rem (544px) |
-| solution | 28rem (448px) | 1.3 | 38rem (608px) |
-| case | 18rem (288px) | 1 | 34rem (544px) |
-| figure | engine-derived, floor 340 × 255px | — content-sized | — |
-| interpretation | 24rem (384px) | 1 | 40rem (640px) |
-| synthesis | 18rem (288px) | spans | 40rem (640px) |
-| answer | inherited from its solution | — | — |
-
-Gap between any two tracks: **2rem (32px)**.
-
-Two invariants that are easy to lose and are checked on every image:
-
-- **A track is a position, not a box.** No fill, no border, no stretching to a sibling's height.
-  When the solution is tall the prompt track simply ends where its content ends.
-- **The measure caps the prose, never the track.** Surplus width a region does not need stays
-  unused. `interpretation` realises at 780px in image `14` and its prose still sets at 640px.
-
-### The split is arithmetic
+## 2. The occupancy gate, and the data to set it by
 
 ```
-avail = contentRegion − gap
-distribute avail by growth weight
-any track below its minimum freezes at its minimum; redistribute the remainder
+occupancy = the shorter track's content height ÷ the row's height
 ```
 
-That is exactly what CSS `minmax(min, Nfr)` does natively, so no measurement pass is needed. At the
-1152px desktop reference it resolves to **392 / 728 — 35.0% / 65.0%**. *35 / 65 is a result.* At the
-768px floor it resolves to 288 / 448, both tracks on their minimums. Images `16` and `17` are the
-same file at 768px and 767px.
+The pack uses **0.55**, the middle of the range you suggested. Every measurement it produced:
 
-### Thresholds are sums, never breakpoints
+| Image | Primitive | Heights | Occupancy | Verdict |
+| --- | --- | --- | --- | --- |
+| 01 standard-balanced | instructionSplit | 207 / 270 | **77%** | split |
+| 02 standard | instructionSplit | 58 / 270 | 22% | stack |
+| 03 sequence (×3) | instructionSplit | 58 / 270, 58 / 270, 58 / 202 | 22, 22, 29% | stack |
+| 04 pairedVisual cases | repeat(across) | 315 / 315 | **100%** | split |
+| 04 pairedVisual visual | visualInterpretation | 647 / 426 | **66%** | split |
+| 05 visualCheck state 1 | instructionSplit | 58 / 270 | 22% | stack |
+| 05 visualCheck state 2 | visualInterpretation | 738 / 426 | **58%** | split |
+| 06 extended state 1 | instructionSplit | 58 / 270 | 22% | stack |
+| 06 extended state 2 | visualInterpretation | 646 / 259 | 40% | stack |
+| 07 long question | instructionSplit | 233 / 202 | **87%** | split |
+| 08 long solution | instructionSplit | 58 / 546 | 11% | stack |
+| 09 over-wide maths | instructionSplit | 58 / 301 | 19% | stack |
+| 10 dense interpretation | visualInterpretation | 738 / 506 | **69%** | split |
+| 11 sparse interpretation | visualInterpretation | 738 / 103 | 14% | stack |
+| 12 portrait plane | visualInterpretation | 727 / 206 | 28% | stack |
+| 13 landscape plane | visualInterpretation | 368 / 232 | **63%** | split |
 
-| State change | Sum |
-| --- | --- |
-| instructionSplit → stack | 288 + 32 + 448 = **768px** |
-| repeat(across) → repeat(down) | 288 + 32 + 288 = **608px** |
-| visualInterpretation → stack | plane's own legible minimum + 32 + 384 (**756px** for an ordinary aspect) |
+**The consequence is large and you should see it before ruling.** At 0.55, an ordinary worked example
+— a one-line question beside a three-step solution — measures 22% and stacks *at every width*. The
+shipped Substitution examples all stack. `instructionSplit` becomes the exception rather than the
+rule, reached only by a question with real content in it (77%) or a question longer than its solution
+(87%). Your seven-step case measures 11% and stacks, exactly as you predicted.
 
-A container query cannot read a custom property. That is a useful constraint: the build must compute
-each sum and write it out, so no threshold can be typed by hand.
+If that is too strict the lever is one number. At 0.30 the ordinary example splits again and the
+seven-step case still stacks; at 0.25 the wide-equation case (19%) comes back too. Nothing else in the
+resolver changes.
 
-## 5. The figure is engine-derived, literally
+## 3. Dead space — where I diverged, and why
 
-A plane's box is **searched for and scored on the painted result**, not computed and hoped for.
-Measured on the shipped engine: a 24 × 8 domain in the 720 × 255 box its own aspect asks for renders
-at *x/y* = **1.79**, because the engine reserves a fixed pixel gutter for axis labels which a shallow
-box is mostly made of. The same domain at 720 × 488 renders at 1.001. No closed-form box aspect
-predicts that. So the build bisects the slack axis until the plane is square, and fails outright if
-no box between the floor and the bound can be.
+Your rule: *every substantial region of horizontal space created by a composition must belong to a
+semantic region.* I implemented it as a rejection first, and it made the resolver strictly worse:
 
-The consequence is the point: **446 × 720 was never a contract, only one realised size.** The same
-authored domain in this pack:
+> A 386px plane on a 1152px surface leaves 94px past the interpretation rail once the rail is at its
+> 640px maximum. Rejecting that stacked the pair — and **produced 766px of trailing space instead of
+> 94px.** The gate rejected a small hole by creating a large one.
 
-| Plane | desktop 1152 | middle 700 | narrow 382 |
-| --- | --- | --- | --- |
-| symmetry (10 × 12) | 600 × 720 | 600 × 720 | 382 × 458 |
-| graph check (12 × 22) | 393 × 720 | 393 × 720 | 382 × 700 |
-| roots (10 × 14) | 514 × 720 | 514 × 720 | 382 × 535 |
-| portrait (6 × 16) | 340 × 720 | 340 × 720 | 340 × 720 |
-| landscape (24 × 8) | 720 × 488 | 700 × 488 | 382 × 255 |
+So dead space is now an **invariant, not a rejection**, and it is scoped to what the composition
+actually creates:
 
-Every one renders at 1.000 ± 0.006 px per unit on both axes. Where a box is clamped into the legal
-range the engine keeps the units square by showing slightly more of the plane — which is correct, and
-is why the width floor and the height bound can both hold at once.
+- **forbidden**: unowned width *between* two tracks, or *inside* a track — a 736px figure track around
+  a 600px plane. Checked on every image, in both states.
+- **page margin**: space past the last track. It is reported, never failed.
 
-**The figure track is `min-content` — exactly the plane's width.** `auto` looks equivalent and is
-not: it takes the region's *max-content* width, so anything else in the region — a long caption, a
-review annotation — silently widens the track past the plane. Reproduced while building this pack: a
-600px plane in a 736px track, 136px belonging to nothing. Different in cause from the previous pack's
-full-width shared visual, identical in effect, and a one-keyword bug either way. So the build measures
-**the plane against its track**, on the annotated render as well as the plain one — the first version
-of that check looked only at the plain render and did not fire.
+And the fix for your image-06 objection is ownership rather than arrangement: **a stacked figure
+region is now shrunk to its plane.** A full-width figure region around a 386px plane claims 766px it
+can never use — the same defect as the 736px track, only harder to see because nothing sits beside it.
+Shrinking the region does not move a pixel of the rendered image; it moves the ownership of that space
+from the composition to the page margin, which is what the rule is about.
 
-## 6. The resolver should be boring
+## 4. The resolver
 
-1. Identify the composition from the JSON. Never infer it from content.
-2. Ask every region for its minimum, growth weight, reading measure, and — if visual — its intrinsic
-   aspect and minimum legible scale.
-3. Try the widest state.
-4. If every region clears its minimum, use it, distributing by growth weight.
-5. Otherwise try the next state.
-6. Otherwise stack.
-7. Content may increase height without limit.
-8. **Never** reach a state by distorting a figure, narrowing prose below its minimum, centring orphan
-   content, changing geometry with item count, or stretching an empty rail for balance.
+1. Read the semantic composition from the JSON. Never infer it from content.
+2. Determine the legal primitive arrangements.
+3. Obtain a layout signature for every region — minimum, preferred, maximum, rendered height; for a
+   figure, its three scales. **Derived at layout time from rendered content, never authored.**
+4. Build candidates, sizing intrinsic assets first and giving text the remainder.
+5. Reject on width, fidelity, reading measure, occupancy, dead-space ownership, overflow, ordering.
+6. Score survivors on closeness to preferred size, compactness, balanced occupancy, alignment.
+7. Choose deterministically.
+8. Otherwise stack.
 
-## 7. The JSON says meaning
+Text allocation is steps 4–5 in one operation: distribute the row by growth weight, clamp each track
+to `[min, max]`, redistribute the surplus to tracks still below their maximum. **A track is never
+given width its region cannot use.** At 1152px that resolves to **512 + 608**, not the previous
+392 + 728 — the solution track stops at its 608px reading maximum and the surplus goes to the prompt,
+because 728px of solution track could never hold 728px of solution.
+
+A repeat's children **share one verdict and the strictest decides**. Otherwise a gate that rejects
+row 2 alone produces exactly the ragged, content-sensitive layout the primitive exists to prevent.
+
+## 5. The JSON stays semantic
 
 ```json
-{ "type": "workedExamples", "composition": "sequence",
-  "items": [ { "title": "…", "question": {}, "solution": {}, "answer": {} } ],
-  "synthesis": {} }
+{ "type": "workedExample", "relationship": "single",
+  "prompt": {}, "solution": {}, "synthesis": {} }
 
-{ "type": "workedExamples", "composition": "pairedVisual",
-  "cases": [ { "label": "Case A", "question": {}, "solution": {}, "answer": {} } ],
-  "visual": {}, "interpretation": {} }
+{ "type": "workedExample", "relationship": "paired",
+  "cases": [], "sharedVisual": {}, "interpretation": {} }
 
-{ "type": "workedExample", "composition": "visualCheck",
-  "question": {}, "solution": {}, "answer": {}, "visual": {}, "interpretation": {} }
+{ "type": "workedExample", "relationship": "visualCheck", "states": [] }
 ```
 
-No widths, no `size: "medium"`, no `desktopColumns`. `synthesis` and `interpretation` are **one
-region with one styling contract and two placements** — beside a shared visual it is the rail; with
-no visual to belong to it spans the content region after the composition. The JSON key names the
-placement. `WHAT THIS SHOWS`, `WHY THE TWO AGREE` and `WHY IT AGREES` were three footer inventions
-for one thing.
+No `size: "large"`, no `solutionLength`, no `graphWidth`, no `desktopColumns`. Everything the resolver
+needs — preferred measure, minimum width, rendered height, step count, widest math run, the figure's
+three scales — is **derived from the rendered content**, so it tracks fonts, theme, viewport and
+content without a lesson ever being rewritten.
 
-## 8. Adversarial proofs
+`synthesis` and `interpretation` remain one region with one styling contract and two placements; the
+JSON key names the placement.
 
-More useful now than another shipping screenshot: these are the shapes that decide whether this is a
-grammar or a set of preferences.
+## 6. Open rulings
 
-| | Proves |
-| --- | --- |
-| `11` long question | the prompt is the taller track; nothing is stretched to match |
-| `12` long solution | the shape that produced the original defect |
-| `13` over-wide mathematics | an unsettable line scrolls locally; it does not take width from the question, shrink the type, or change the composition |
-| `14` portrait plane | the width floor and the height bound hold at once, and the page grows |
-| `15` / `15b` landscape plane | rule 8: the same file above and below `720 + 32 + 384`; the split is abandoned rather than the plane squeezed |
+1. **The occupancy threshold.** 0.55 as shipped, with §2's table as the evidence. This is the one that
+   changes the character of the page family.
+2. **Whether a figure may shrink to preserve a split.** Your worked example stacked at 900px with the
+   figure holding its 612px preferred box. The pack instead lets a plane reduce *within*
+   `[minimumReadable .. preferred]` before the split is abandoned, which your own caveat permits
+   ("unless 484 is independently within the figure's acceptable range"). Under the pack's rule your
+   900px case splits at 484 + 32 + 384. One comparison in the resolver either way.
+3. **`MX_PLOT_H = 720` versus the legibility floor.** Three of five planes here cannot satisfy both.
+4. **The interpretation maximum.** 40rem (640px) as shipped; you suggested 45–55rem; the app ships
+   620px.
 
-## 9. Open questions for the maintainer
-
-1. **The interpretation measure.** You suggested 45–55rem. The app ships `MX_INTERP_MAX = 620px`
-   (38.75rem). The pack uses **40rem (640px)**, the nearest round value to what ships. Say the word
-   and it becomes 48rem.
-2. **The `case` minimum.** Set equal to `prompt` (18rem), so `repeat(across)` over two cases falls
-   back at 608px. A case holds a whole worked example, so a larger minimum is arguable.
-3. **`extended` is under-specified.** "Each state takes the primitive its content needs" is right but
-   does not say who decides. Authored per state, or derived from which regions the state carries?
-
-## 10. Files
+## 7. Files
 
 | | |
 | --- | --- |
-| `01`–`02` | `standard` · desktop (spec), narrow |
-| `03`–`04` | `sequence` · desktop (spec), narrow — the same three examples in both |
-| `05`–`07` | `pairedVisual` · desktop (spec), the emergent middle state, narrow |
-| `08`–`09` | `visualCheck` · desktop (spec), narrow |
-| `10` | `extended` · three states, three primitives |
-| `11`–`15b` | the adversarial proofs |
-| `16`–`17` | the threshold, at 768px and 767px |
+| `01` / `02` | the same primitive at the same width, split and stacked — content geometry deciding |
+| `03` | `sequence`, one verdict across the repeat |
+| `04` | `pairedVisual` at three widths |
+| `05` | `visualCheck` — two states, two primitives |
+| `06` | `extended` — three states, three primitives |
+| `07`–`09` | long question · long solution · over-wide mathematics |
+| `10` / `11` | dense and sparse interpretation: same plane, same width, different verdict |
+| `12` / `13` | portrait and landscape planes |
+| `resolver-report.json` | every candidate, its measurements, its verdict and the gate that decided it |
 
-`src/contracts.json` is the specification — region contracts, primitives, assemblies, the resolver,
-the reference surfaces. `src/figures.json` holds **authored domains only**, deliberately with no
-width or height in it. `src/kit.css` is a mockup stylesheet: its `mk-*` names exist to state the
-grammar for review, and the app must implement it through its own semantic names and must not import
-this file. `src/*.part` are the example bodies the `standard` and `sequence` fragments **share**, so
-"sequence is repeat(standard)" is true of the source and not only of the picture.
+`src/contracts.json` is the specification. `src/figures.json` holds **authored domains only** — no
+width or height anywhere in it. `src/kit.css` is a mockup stylesheet whose `mk-*` names exist to state
+the grammar for review; the app must implement it through its own semantic names. `src/*.part` are the
+example bodies `standard` and `sequence` **share**, so "sequence is repeat(standard)" is true of the
+source and not only of the picture.

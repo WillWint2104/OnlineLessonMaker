@@ -12,10 +12,10 @@
    of those four. None of them has a layout of its own, and this file contains no rule keyed on a
    composition name.
 
-   NOTHING HERE IS A TYPED WIDTH. Every dimension is `var(--mk-…)`, generated from contracts.json
-   by scripts/mockups-compositions.mjs; the responsive thresholds are generated too, because a
-   container query cannot read a custom property — which is useful, since it forces the build to
-   compute `min + gap + min` and write the sum, rather than letting anyone type a breakpoint.
+   NOTHING HERE IS A TYPED WIDTH, AND NOTHING HERE IS A BREAKPOINT. Every dimension is
+   `var(--mk-…)` generated from contracts.json, and every track box is assigned at layout time by the
+   resolver in scripts/mockups-compositions.mjs, after it has measured a candidate arrangement
+   against the width, fidelity, occupancy and dead-space gates.
 
    These `mk-*` names are MOCKUP names. The app must implement this grammar through its own
    semantic names and must not import this file.
@@ -35,44 +35,52 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
    against. Every width in this pack is resolved inside it; none is resolved against a viewport. */
 .mk-surface{width:calc(var(--mk-surface-w) + 2 * var(--mk-pad));padding:26px var(--mk-pad) 30px;
   background:var(--mx-white);border-bottom:1px solid var(--mx-line);
-  container-type:inline-size;container-name:surface;}
+  position:relative;}
 .mk-narrow .mk-surface{padding:18px var(--mk-pad) 20px;}
 .mk-lede{margin:0 0 20px;font-size:15px;line-height:1.6;color:var(--mx-ink-2);}
 
-/* ── PRIMITIVE 1 · instructionSplit ────────────────────────────────────────────────────────────
-   Two tracks. Each declares minmax(minimum, growth-weight-fr), so the browser performs the whole
-   resolver step 4 natively: it distributes the content region by weight, freezes any track that
-   would fall below its minimum, and redistributes. The realised widths are a RESULT — no
-   percentage appears anywhere in this rule. */
-[data-mk="instructionSplit"]{display:grid;align-items:start;column-gap:0;
-  grid-template-columns:minmax(var(--mk-prompt-min),var(--mk-prompt-grow)) var(--mk-gap)
-                        minmax(var(--mk-solution-min),var(--mk-solution-grow));
+/* ── THE STATES ARE ASSIGNED, NOT QUERIED ──────────────────────────────────────────────────────
+   Container queries are gone from this kit, and their absence is the point of this revision. A
+   query can ask how wide the container is; it cannot ask whether the shorter track fills enough of
+   the row, or whether the space beside a plane belongs to anything. Those are the conditions that
+   decide whether a side-by-side arrangement is any good, and they are only knowable after a
+   candidate has been laid out. So the resolver lays the candidate out, measures it, and writes
+   `data-mk-state` and the track boxes back onto the element. Two passes, deterministic, and the
+   app's own page already has this shape (`mxWexPlace` → `renderSlide` → `mxWexRestore`).
+
+   ── PRIMITIVE 1 · instructionSplit ──────────────────────────────────────────────────────────── */
+[data-mk="instructionSplit"]{display:grid;align-items:start;column-gap:0;}
+[data-mk="instructionSplit"][data-mk-state="split"]{
   grid-template-areas:"title title title" "prompt rule solution";}
+[data-mk="instructionSplit"][data-mk-state="stack"]{
+  grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "prompt" "solution";
+  row-gap:var(--mk-stackgap);}
+[data-mk="instructionSplit"][data-mk-state="stack"] > [data-mk-region="title"]{margin-bottom:0;}
+[data-mk="instructionSplit"][data-mk-state="stack"] > .mk-rule{display:none;}
 [data-mk="instructionSplit"] > [data-mk-region="title"]{grid-area:title;}
 [data-mk="instructionSplit"] > [data-mk-region="prompt"]{grid-area:prompt;min-width:0;}
 [data-mk="instructionSplit"] > .mk-rule{grid-area:rule;}
 [data-mk="instructionSplit"] > [data-mk-region="solution"]{grid-area:solution;min-width:0;}
 
 /* ── PRIMITIVE 2 · repeat ──────────────────────────────────────────────────────────────────────
-   THE COUNT IS NOWHERE IN THIS RULE. `down` is a column of identical children; `across` uses
-   auto-flow columns so the number of children is never written down, only their shared track
-   contract. That is the structural reason a 2 + 1 arrangement cannot be expressed here. */
+   THE COUNT IS NOWHERE IN THIS RULE, and neither is any child's identity: `across` uses auto-flow
+   columns over one shared track contract. A repeat's children also share one verdict — the strictest
+   decides — so a gate can never leave row 2 stacked between two split siblings. */
 [data-mk="repeat"][data-mk-axis="down"]{display:flex;flex-direction:column;}
-[data-mk="repeat"][data-mk-axis="across"]{display:grid;grid-auto-flow:column;
-  grid-auto-columns:minmax(var(--mk-case-min),1fr);column-gap:var(--mk-gap);align-items:start;}
+[data-mk="repeat"][data-mk-axis="across"][data-mk-state="split"]{display:grid;align-items:start;}
+[data-mk="repeat"][data-mk-axis="across"][data-mk-state="stack"]{display:flex;flex-direction:column;
+  gap:var(--mk-stackgap);}
 .mk-div{height:1px;background:var(--mx-line);margin:var(--mk-rowgap) 0;}
 
 /* ── PRIMITIVE 3 · visualInterpretation ────────────────────────────────────────────────────────
-   The figure track is `min-content` — EXACTLY the plane's width, never the space that happens to
-   be free. (`auto` looks equivalent and is not: it grows to fill, which is how a 600px plane ends up
-   sitting in a 736px track with 136px of unexplained emptiness beside it. That gap was the original
-   complaint about this composition, and it is a one-keyword bug, so the build now measures the plane
-   itself against its track rather than trusting the track.) The interpretation rail takes the remainder — which is why
-   there is no unclaimed space beside the plane. No divider: the gap and the two region labels are
-   the boundary. */
-[data-mk="visualInterpretation"]{display:grid;align-items:start;column-gap:var(--mk-gap);
-  grid-template-columns:min-content minmax(var(--mk-interp-min),1fr);
-  grid-template-areas:"figure interpretation";}
+   The figure track is assigned its box by the resolver, from the figure's own layout signature,
+   BEFORE the rail is allocated. It is never `auto`, never `1fr`, and never the space that happens to
+   be free. No divider: the gap and the two region labels are the boundary. */
+[data-mk="visualInterpretation"]{display:grid;align-items:start;}
+[data-mk="visualInterpretation"][data-mk-state="split"]{
+  grid-template-areas:"figure interpretation";column-gap:var(--mk-gap);}
+[data-mk="visualInterpretation"][data-mk-state="stack"]{grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"figure" "interpretation";row-gap:var(--mk-stackgap);}
 [data-mk="visualInterpretation"] > [data-mk-region="figure"]{grid-area:figure;}
 [data-mk="visualInterpretation"] > [data-mk-region="interpretation"]{grid-area:interpretation;min-width:0;}
 
@@ -98,9 +106,9 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
 .mk-lab{margin:0 0 8px;font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.12em;
   text-transform:uppercase;color:var(--mx-ink-2);}
 [data-mk-region="prompt"] p:not(.mk-lab){margin:0 0 10px;font-size:16px;line-height:1.62;
-  color:var(--mx-ink-body);max-width:var(--mk-prompt-measure);}
+  color:var(--mx-ink-body);max-width:var(--mk-prompt-max);}
 [data-mk-region="solution"] .mk-st{font-size:15.5px;line-height:1.6;color:var(--mx-ink-body);
-  max-width:var(--mk-solution-measure);}
+  max-width:var(--mk-solution-max);}
 
 .mk-steps{list-style:none;margin:0;padding:0;counter-reset:mkstep;}
 .mk-step{position:relative;padding:0 0 16px 34px;counter-increment:mkstep;}
@@ -130,9 +138,9 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
 [data-mk-region="synthesis"]{margin-top:28px;}
 [data-mk-region="synthesis"] .mk-lab,[data-mk-region="interpretation"] .mk-lab{color:var(--mx-ink-3);}
 [data-mk-region="synthesis"] p{margin:0 0 10px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);
-  max-width:var(--mk-synthesis-measure);}
+  max-width:var(--mk-synthesis-max);}
 [data-mk-region="interpretation"] p{margin:0 0 12px;font-size:15.5px;line-height:1.7;
-  color:var(--mx-ink-body);max-width:var(--mk-interp-measure);}
+  color:var(--mx-ink-body);max-width:var(--mk-interp-max);}
 [data-mk-region="interpretation"] p:last-child{margin-bottom:0;}
 .mk-said{font-family:'LM Math',Cambria Math,serif;font-size:17px;color:var(--mx-ink);}
 
@@ -159,3 +167,11 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
 [data-mk-spec] .mk-note{display:block;}
 .mk-note b{display:block;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
   color:var(--mx-ink-3);margin-bottom:3px;}
+
+/* THE VERDICT, ON THE IMAGE. A reference pack that shows an arrangement without saying why the
+   resolver chose it is back to being a screenshot. */
+.mk-verdict{margin:10px 0 0;font:500 11px/1.55 var(--mx-ui);color:var(--mx-ink-2);
+  border-left:2px solid var(--mx-line);padding:6px 0 6px 10px;}
+.mk-verdict b{font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:10px;
+  color:var(--mx-ink-3);margin-right:8px;}
+.mk-verdict[data-mk-reject]{border-left-color:var(--mx-green);color:var(--mx-green-deep);}
