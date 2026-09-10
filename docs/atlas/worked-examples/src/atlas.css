@@ -1,0 +1,153 @@
+/* ==============================================================================================
+   THE WORKED-EXAMPLE ATLAS — six templates, each with rigid horizontal structure.
+
+   Every rule here is keyed on `data-tpl`, and that is the point. A template's identity is authored;
+   nothing in this stylesheet can change one template into another, because there is no rule that
+   selects a template — only rules that render one. The responsive states are prescribed
+   transformations of a named template, written as ordinary media-style rules on a state attribute
+   the build sets from the surface width alone.
+
+   HORIZONTAL IS RIGID. VERTICAL IS FLUID. Nothing has a target height; the page scrolls.
+
+   These `at-*` names are ATLAS names. The app must implement this through its own semantic names.
+   ============================================================================================== */
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--mx-ground);height:auto;}
+body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
+
+.at-page{width:calc(var(--at-surface) + 2 * var(--at-pad) + 60px);padding:30px;background:var(--mx-ground);height:auto;}
+.at-narrow .at-page{width:calc(var(--at-surface) + 24px);padding:12px;}
+.at-cap{margin:0 0 6px;font-family:var(--mx-ui);font-size:12.5px;line-height:1.5;color:var(--mx-ink-2);max-width:76ch;}
+.at-tpl{display:block;font:700 10.5px/1 var(--mx-ui);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mx-green);margin-bottom:5px;}
+.at-note{margin:10px 0 16px;font:400 11.5px/1.6 var(--mx-ui);color:var(--mx-ink-3);
+  border-left:2px solid var(--mx-line);padding-left:10px;max-width:80ch;}
+
+/* THE TEACHING SURFACE. Height is auto everywhere; the page grows and scrolls. */
+.at-surface{width:calc(var(--at-surface) + 2 * var(--at-pad));padding:28px var(--at-pad) 34px;
+  background:var(--mx-white);border-bottom:1px solid var(--mx-line);height:auto;}
+.at-narrow .at-surface{padding:18px var(--at-pad) 22px;}
+.at-intro{margin:0 0 22px;font-size:15px;line-height:1.6;color:var(--mx-ink-2);max-width:var(--at-m-flow);}
+
+/* ── SHARED SLOT TYPOGRAPHY ──────────────────────────────────────────────────────────────────── */
+[data-slot="title"]{margin:0 0 16px;font-family:var(--mx-serif);font-size:20px;font-weight:600;color:var(--mx-ink);}
+.at-lab{margin:0 0 8px;font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--mx-ink-2);}
+[data-slot="question"] p{margin:0 0 10px;font-size:16px;line-height:1.62;color:var(--mx-ink-body);}
+[data-slot="question"] p:last-child{margin-bottom:0;}
+.at-steps{list-style:none;margin:0;padding:0;counter-reset:atstep;}
+.at-step{position:relative;padding:0 0 16px 34px;counter-increment:atstep;}
+.at-step::before{content:counter(atstep);position:absolute;left:0;top:1px;width:23px;height:23px;
+  border-radius:50%;background:var(--mx-green-pale);color:var(--mx-green-deep);
+  font:600 12.5px/23px var(--mx-ui);text-align:center;}
+.at-step:not(:last-child)::after{content:"";position:absolute;left:11px;top:27px;bottom:3px;width:1px;
+  background:var(--mx-line);}
+.at-st{font-size:15.5px;line-height:1.6;color:var(--mx-ink-body);}
+.at-sm{margin-top:6px;font-family:'LM Math',Cambria Math,serif;font-size:18px;color:var(--mx-ink);}
+/* A LINE OF MATHEMATICS IS NOT PROSE. When one is wider than its measure it scrolls locally; it
+   never widens its region, shrinks the type, or changes the template. */
+.at-scroll{overflow-x:auto;padding-bottom:6px;}
+.at-scroll > .at-sm{white-space:nowrap;}
+[data-slot="answer"]{margin-top:2px;padding-top:12px;border-top:1px solid var(--mx-line);
+  font-family:'LM Math',Cambria Math,serif;font-size:18px;line-height:1.5;color:var(--mx-ink);}
+[data-slot="answer"] b{display:inline;margin-right:14px;font-family:var(--mx-ui);font-size:11.5px;
+  font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--mx-green);}
+[data-slot="synthesis"]{margin-top:30px;}
+[data-slot="synthesis"] .at-lab{color:var(--mx-ink-3);}
+[data-slot="synthesis"] p{margin:0 0 10px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);
+  max-width:var(--at-m-synthesis);}
+[data-slot="interpretation"] p{margin:0 0 12px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);
+  max-width:var(--at-m-interp);}
+[data-slot="interpretation"] p:last-child{margin-bottom:0;}
+[data-slot="interpretation"] .at-lab{color:var(--mx-ink-3);}
+.at-said{font-family:'LM Math',Cambria Math,serif;font-size:17px;color:var(--mx-ink);}
+.at-hr{height:1px;background:var(--mx-line);border:0;margin:16px 0 20px;}
+
+/* ── 1 · single.flow ──────────────────────────────────────────────────────────────────────────
+   The default. One column at a controlled measure; the rule closes the task; the reasoning runs
+   beneath and the page grows. THERE IS NO RESPONSIVE STATE — only the measure ceasing to clamp. */
+[data-tpl="single.flow"]{display:block;}
+[data-tpl="single.flow"] [data-slot="question"],
+[data-tpl="single.flow"] [data-slot="steps"],
+[data-tpl="single.flow"] [data-slot="answer"]{max-width:var(--at-m-flow);}
+[data-tpl="single.flow"] .at-st{max-width:var(--at-m-solution);}
+
+/* ── 2 · single.split ─────────────────────────────────────────────────────────────────────────
+   Two rigid tracks, in fixed proportion with an explicit ceiling on each. Chosen by the AUTHOR
+   because the prompt carries substantial information — never inferred from how tall it happens to
+   be. The narrow state is one prescribed transformation. */
+[data-tpl="single.split"][data-state="wide"]{display:grid;align-items:start;column-gap:0;
+  grid-template-columns:minmax(0,calc(var(--at-split-prompt) * 1%)) var(--at-gap) minmax(0,1fr);
+  grid-template-areas:"title title title" "question rule solution";}
+[data-tpl="single.split"][data-state="wide"] > [data-slot="title"]{grid-area:title;}
+[data-tpl="single.split"][data-state="wide"] > [data-slot="question"]{grid-area:question;
+  max-width:var(--at-split-prompt-max);}
+[data-tpl="single.split"][data-state="wide"] > .at-rule{grid-area:rule;justify-self:center;
+  width:1px;align-self:stretch;background:var(--mx-line);}
+[data-tpl="single.split"][data-state="wide"] > [data-slot="solution"]{grid-area:solution;min-width:0;
+  max-width:var(--at-split-solution-max);}
+[data-tpl="single.split"][data-state="narrow"]{display:block;}
+[data-tpl="single.split"][data-state="narrow"] > .at-rule{display:block;height:1px;width:auto;
+  justify-self:stretch;background:var(--mx-line);margin:16px 0 20px;}
+
+/* ── 3 · sequence.flow ────────────────────────────────────────────────────────────────────────
+   repeat(single.flow). The count is nowhere in this rule. */
+[data-tpl="sequence.flow"]{display:block;}
+[data-tpl="sequence.flow"] > [data-slot="examples"] > * + *{margin-top:0;}
+.at-div{height:1px;background:var(--mx-line);margin:32px 0;}
+
+/* ── 4 · comparison.paired ────────────────────────────────────────────────────────────────────
+   N equal case columns. Paired because the author said so; their heights are not consulted. */
+[data-tpl="comparison.paired"] [data-slot="cases"][data-state="wide"],
+[data-tpl="comparison.sharedVisual"] [data-slot="cases"][data-state="wide"]{
+  display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);
+  column-gap:var(--at-gap);align-items:start;}
+[data-tpl="comparison.paired"] [data-slot="cases"][data-state="narrow"],
+[data-tpl="comparison.sharedVisual"] [data-slot="cases"][data-state="narrow"]{
+  display:block;}
+[data-slot="cases"][data-state="narrow"] > [data-slot="case"] + [data-slot="case"]{margin-top:28px;}
+[data-slot="case"] > * + *{margin-top:14px;}
+[data-slot="case"] .at-st{max-width:var(--at-m-case);}
+
+/* ── 5 · comparison.sharedVisual ──────────────────────────────────────────────────────────────
+   Two approved subdesigns, chosen by the FIGURE'S media-geometry class — a property of the authored
+   figure, never of the surrounding prose.
+     side  portrait / balanced  →  SHARED VISUAL | INTERPRETATION
+     down  landscape / wide     →  the visual at full width, the interpretation beneath */
+.at-shared{margin-top:34px;}
+.at-shared[data-sub="side"][data-state="wide"]{display:grid;align-items:start;
+  column-gap:var(--at-gap);grid-template-columns:max-content minmax(0,1fr);}
+.at-shared[data-sub="down"],
+.at-shared[data-state="narrow"]{display:block;}
+.at-shared[data-sub="down"] [data-slot="interpretation"],
+.at-shared[data-state="narrow"] [data-slot="interpretation"]{margin-top:24px;}
+/* A FIGURE REGION IS EXACTLY ITS PLANE, in every subdesign and every state. A full-width region
+   around a narrower plane claims space it can never use — the same defect whether something sits
+   beside it or not. */
+[data-slot="figure"]{min-width:0;width:fit-content;max-width:100%;}
+
+/* ── 6 · visualCheck ──────────────────────────────────────────────────────────────────────────
+   Two authored views of one example. State 2's subdesign is the figure's class, as above. */
+.at-states{display:flex;gap:8px;margin:0 0 24px;}
+.at-state{font:700 11px/1 var(--mx-ui);letter-spacing:.1em;text-transform:uppercase;
+  padding:9px 13px;border:1px solid var(--mx-line);border-radius:3px;color:var(--mx-ink-3);
+  background:var(--mx-white);}
+.at-state[data-on]{color:var(--mx-green);border-color:var(--mx-green);}
+.at-stateh{margin:0 0 16px;font:700 11px/1 var(--mx-ui);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--mx-ink-3);}
+.at-block + .at-block{margin-top:38px;padding-top:32px;border-top:1px solid var(--mx-line);}
+/* State 1 IS the single.flow anatomy, measure included — the spec says so, and without the measure
+   the over-wide-mathematics proof is inert because nothing is narrow enough to overflow. */
+[data-tpl="visualCheck"] [data-slot="question"],
+[data-tpl="visualCheck"] [data-slot="steps"],
+[data-tpl="visualCheck"] [data-slot="answer"]{max-width:var(--at-m-flow);}
+[data-tpl="visualCheck"] .at-st{max-width:var(--at-m-solution);}
+[data-tpl="visualCheck"] .at-check [data-slot="interpretation"]{max-width:none;}
+
+.at-check[data-sub="side"][data-state="wide"]{display:grid;align-items:start;
+  column-gap:var(--at-gap);grid-template-columns:max-content minmax(0,1fr);}
+.at-check[data-sub="down"],
+.at-check[data-state="narrow"]{display:block;}
+.at-check[data-sub="down"] [data-slot="interpretation"],
+.at-check[data-state="narrow"] [data-slot="interpretation"]{margin-top:24px;}

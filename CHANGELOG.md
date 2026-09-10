@@ -8,6 +8,38 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **The worked-example atlas: six designed templates instead of a resolver**
+  (`docs/atlas/worked-examples/`, no app change). The composition resolver tried to discover good
+  design from measurements, and that experiment is over. Generalisability now comes from choosing the
+  right template, not from letting the browser invent a composition. The resolver pack is retained at
+  `docs/mockups/compositions/` marked **research evidence only**; its layout-selection logic must not
+  be ported into the app, and `lesson-studio.html` has been untouched since `41d40a8` throughout, so
+  nothing needs unwinding.
+  - **Six templates**, each with rigid horizontal structure and prescribed responsive states:
+    `single.flow` (the default — most worked examples are a one-line question and a solution that is
+    the lesson), `single.split`, `sequence.flow`, `comparison.paired`, `comparison.sharedVisual` and
+    `visualCheck`. A template is **named in the JSON and never inferred**: the build asserts `data-tpl`
+    is identical at every width and for every adversarial payload. A payload may make a page taller;
+    it may never change which template the page is.
+  - **Media geometry is the one permitted automatic classification.** A figure is `portrait ·
+    balanced · landscape · wide`, from its authored domain, and a template maps that class to an
+    approved subdesign — a wide figure gets the whole content region with its interpretation beneath.
+    That is a designed composition, not a failure state. The surrounding prose never determines a
+    figure's width.
+  - **Height is not a constraint.** `height:auto`, the page scrolls, and page heights across the
+    atlas run from 900px to 2816px without any of it being treated as a problem.
+  - **Controlled measures** so a stacked example does not stretch prose across the canvas: flow and
+    solution 760px, interpretation and synthesis 720px, case 520px. Unused page width is reading
+    margin. These are design-system values and never appear in lesson JSON.
+  - **Six controls, five of which caught something.** A figure rendering as the literal text
+    `undefined` (the painted HTML was dropped when assembling the figure record, so the planes in the
+    `side` subdesign were text); a region with no plane in it at all, which the width check had been
+    skipping; a narrow figure at x/y = 1.021 because a pre-painted box was being squashed rather than
+    a new one solved; a full-width region around a narrower plane; and an **inert adversarial proof**
+    — the over-wide-mathematics payload could not overflow because `visualCheck` state 1 was not using
+    the `single.flow` measure. Both halves were fixed: the template now carries the measure, and the
+    payload is a genuine four-bracket expansion, verified algebraically, rather than a line that
+    merely looked long.
 - **The composition resolver stops fitting rectangles: a Study page scrolls**
   (`docs/mockups/compositions/`, no app change). The previous resolver was solving a problem the page
   does not have — fitting a composition into the visible rectangle — and three rounds of gate-tuning

@@ -1,3 +1,12 @@
+> **SUPERSEDED — RESEARCH EVIDENCE ONLY.**
+> This pack is the composition-resolver experiment: a system that tried to discover a good
+> composition from measurements. It produced useful evidence about figures, overflow, residue and
+> payload identity, and it is kept for that. It is **not** the design, and **its layout-selection
+> logic must not be ported into the app.**
+>
+> The approved direction is a finite library of deliberately designed templates:
+> **`docs/atlas/worked-examples/`**.
+
 # The composition contract — Mathematics worked examples
 
 **A Study page is vertically scrollable, so height is not a scarce resource.** The resolver does not

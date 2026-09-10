@@ -1,0 +1,15 @@
+  <h3 data-slot="title">A negative value</h3>
+  <div data-slot="question">
+    <p class="at-lab">Question</p>
+    <p>Use the rule <i>y</i> = <i>x</i><sup>2</sup> to find <i>y</i> when <i>x</i> = &minus;4.</p>
+  </div>
+  <hr class="at-hr">
+  <div data-slot="steps">
+    <p class="at-lab">Worked solution</p>
+    <ol class="at-steps">
+      <li class="at-step"><div class="at-st">Write the rule.</div><div class="at-sm"><i>y</i> = <i>x</i><sup>2</sup></div></li>
+      <li class="at-step"><div class="at-st">Substitute the given value. Keep the brackets &mdash; the whole of &minus;4 is squared.</div><div class="at-sm"><i>y</i> = (&minus;4)<sup>2</sup></div></li>
+      <li class="at-step"><div class="at-st">Evaluate. A negative multiplied by a negative gives a positive.</div><div class="at-sm"><i>y</i> = (&minus;4)(&minus;4) = 16</div></li>
+    </ol>
+  </div>
+  <div data-slot="answer"><b>Answer</b><i>y</i> = 16, so (&minus;4, 16) lies on the graph.</div>

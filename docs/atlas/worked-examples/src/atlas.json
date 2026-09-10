@@ -1,0 +1,121 @@
+{
+  "_": "THE WORKED-EXAMPLE ATLAS. A finite library of deliberately designed composition templates, each with rigid horizontal structure and a small number of prescribed responsive states. Generalisability comes from CHOOSING THE RIGHT TEMPLATE, not from letting the browser invent a composition. This replaces the composition resolver, which is retained as research evidence only (docs/mockups/compositions/) and whose layout-selection logic must not be ported into the app.",
+
+  "hierarchy": [
+    "1  page family          Worked examples                                     author / lesson generator",
+    "2  pedagogical pattern  single · sequence · comparison · visual check        author / lesson generator",
+    "3  composition template one of the six below, named in the JSON             explicit",
+    "4  content slots        prompt, steps, answer, visual, interpretation, …    JSON content",
+    "5  responsive state     wide / narrow                                       the template",
+    "_  THE GOVERNING RULE: layer 5 may rearrange a template. It may never choose a different template."
+  ],
+
+  "invariants": {
+    "identity": "A template's identity is authored and never inferred. No measurement — occupancy, relative height, remaining width, preferred figure scale — may turn one template into another. The atlas build asserts that `data-tpl` is character-identical at every width and for every adversarial payload.",
+    "height": "Ordinary Study pages are `height:auto` and may grow without limit. The page scrolls. Nothing is shrunk, compressed or recomposed to avoid vertical scrolling, and page height is not an optimisation target.",
+    "horizontalRigid": "Horizontal relationships are rigid and belong to the template. Vertical dimensions are fluid and belong to the content.",
+    "measure": "Every prose region has a controlled measure, so a stacked example does not expand text across the whole canvas. Unused page width is reading margin and is correct.",
+    "figures": "A figure is sized from its own mathematical and legibility requirements. Surrounding prose never determines a figure's width. The only automatic classification permitted is MEDIA GEOMETRY — portrait · balanced · landscape · wide — which is a design input a template maps to an approved subdesign."
+  },
+
+  "measures": {
+    "flow": 760,
+    "solution": 760,
+    "interpretation": 720,
+    "case": 520,
+    "synthesis": 720,
+    "splitPromptPct": 40,
+    "splitSolutionPct": 60,
+    "splitPromptMax": 480,
+    "splitSolutionMax": 700,
+    "gap": 32,
+    "_": "These are design-system values. They never appear in lesson JSON."
+  },
+
+  "figureClasses": {
+    "_": "Media geometry, from the authored domain's aspect (height ÷ width at equal unit scale). A class is a DESIGN INPUT, not a size.",
+    "portrait": "ratio > 1.3",
+    "balanced": "0.75 – 1.3",
+    "landscape": "0.4 – 0.75",
+    "wide": "< 0.4",
+    "widePreferredWidth": 900
+  },
+
+  "templates": {
+    "single.flow": {
+      "pattern": "one worked example, short task",
+      "default": true,
+      "slots": ["title", "question", "steps", "answer", "synthesis"],
+      "wide": "one column at the flow measure: title · QUESTION · rule · WORKED SOLUTION · ANSWER · synthesis",
+      "narrow": "identical — only the measure stops clamping. THERE IS NO STATE CHANGE.",
+      "note": "The overwhelmingly common shape, and the default. A seven-step solution simply becomes taller."
+    },
+    "single.split": {
+      "pattern": "one worked example whose prompt carries substantial information",
+      "slots": ["title", "question", "steps", "answer", "synthesis"],
+      "wide": "SCENARIO / QUESTION | rule | WORKED SOLUTION · ANSWER",
+      "narrow": "title · question · solution · answer · synthesis",
+      "switchAt": 760,
+      "note": "Authored, never inferred. A short prompt in this template stays split — that is the author's decision, and the atlas proves it with an adversarial payload."
+    },
+    "sequence.flow": {
+      "pattern": "several examples of one skill",
+      "slots": ["intro", "examples[]", "synthesis"],
+      "wide": "repeat(single.flow), a hairline between, synthesis after the whole sequence",
+      "narrow": "identical",
+      "note": "The count is irrelevant: two, three, five or ten items are the same repeated child."
+    },
+    "comparison.paired": {
+      "pattern": "two cases whose relationship matters",
+      "slots": ["intro", "cases[]", "synthesis"],
+      "wide": "CASE A | CASE B, then WHY THEY AGREE at the synthesis measure",
+      "narrow": "case A · case B · why they agree",
+      "switchAt": 680,
+      "note": "Paired because the author said it is a comparison, not because the two happen to be the same height."
+    },
+    "comparison.sharedVisual": {
+      "pattern": "two cases and the object that explains them",
+      "slots": ["intro", "cases[]", "visual", "interpretation", "synthesis"],
+      "subdesigns": {
+        "side": "cases row, then SHARED VISUAL | INTERPRETATION — for a portrait or balanced figure",
+        "down": "cases row, then the visual at full width, then WHY THE TWO AGREE beneath — for a landscape or wide figure"
+      },
+      "chosenBy": "the figure's media-geometry class, which is a property of the authored figure",
+      "narrow": "case A · case B · visual · interpretation",
+      "switchAt": 680
+    },
+    "visualCheck": {
+      "pattern": "workings, then the same question read off the figure",
+      "slots": ["title", "states[Workings, Graph check]"],
+      "states": {
+        "1 Workings": "single.flow anatomy",
+        "2 Graph check": "GRAPH | INTERPRETATION for a portrait or balanced figure; the graph at full width with the interpretation beneath for a landscape or wide figure"
+      },
+      "narrow": "both states stacked",
+      "switchAt": 720,
+      "note": "Two authored views of one example."
+    }
+  },
+
+  "keptFromTheResolverResearch": [
+    "figure intrinsic and legibility information — the measured ladder of sizes a plane can be drawn at",
+    "minimum readable dimensions",
+    "equal-unit safeguards — px per authored x-unit against px per y-unit, read off the painted SVG",
+    "overflow detection — an unsettable line scrolls locally",
+    "tests for unowned space inside an allocated region",
+    "stale-state / residue tests",
+    "same-payload responsive tests"
+  ],
+  "discardedAsLayoutAuthority": [
+    "universal occupancy thresholds",
+    "track growth weights",
+    "height matching between siblings",
+    "optimisation or scoring across candidate arrangements",
+    "automatic switching between unrelated compositions",
+    "attempts to use all available space",
+    "the assumption that a page ought to avoid vertical scrolling"
+  ],
+
+  "surfaces": { "desktop": 1152, "narrow": 382 },
+  "surfacePad": { "desktop": 30, "narrow": 16 }
+}
