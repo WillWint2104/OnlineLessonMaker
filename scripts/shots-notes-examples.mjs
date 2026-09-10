@@ -3,8 +3,10 @@
 //
 //   node scripts/shots-notes-examples.mjs [outDir]
 //
-// Every page here is drawn from tests/visual/lessons/mathematics-shell.json. Nothing is posed: the tabs,
-// their labels and their order, the concept list, the examples and their steps are what the JSON says.
+// Shots 3 and 5–11 are the shipping lesson (tests/visual/lessons/mathematics-shell.json); 1, 2 and 4 are
+// the design fixture (mathematics-compositions.json — the standard group and a three-example sequence the
+// shipping lesson does not author). Nothing is posed: the tabs, their labels and their order, the examples
+// and their steps are what the JSON says.
 // scripts/verify-notes-examples.mjs is the gate; this is the picture of what it asserts.
 //
 // THE PRIMITIVE IS THE PROOF. One worked example is one named-region rectangle — TITLE spanning, QUESTION |
@@ -92,7 +94,7 @@ const scales = (p) => p.evaluate(() => {
 const report = async (p, name, why) => {
   console.log(`      ${name} — ${why}`);
   const sc = await scales(p);
-  if (!sc.length) { console.log('        (no coordinate plane in this composition)'); return; }
+  if (!sc.length) { console.log('        (no coordinate plane on screen in this state)'); return; }
   sc.forEach((o) => console.log(`        px/x-unit ${o.x} · px/y-unit ${o.y} · ratio ${o.ratio} `
     + `(authored 1:1) in a ${o.plot} plot` + (Math.abs(o.ratio - 1) <= 0.05 ? '  ✓' : '  ✗ DISTORTED')));
 };

@@ -250,8 +250,9 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     greener one) and running to the surface's edge, with one quiet rule between it and the working and the
     two labels beginning on one line beneath the title. The example title no longer belongs to the ask side.
     The ANSWER lost its floating card: a rule above it, the label run in, the value flowing as text so a
-    wrapped answer returns to the region's inset — the mobile drift the maintainer named (a two-line answer
-    once continued 72px in; it now returns to 32px). Everything sits on one inset; nothing is centred, and
+    wrapped answer returns to the region's inset — the mobile drift the maintainer named (measured on the
+    design fixture at 414px: the wrapped lines of the answer once sat at 121px against a 32px inset; they
+    now return to 32px, and the control that restores the card shows them leave it again). Everything sits on one inset; nothing is centred, and
     the gate now measures every block and every plane against its region's inset at 1536, 1000 and 414px.
     - **the floors are read back from what the page published.** `mxRowSplits`, `mxBridgeFits` and the new
       `mxFootPairs` read the custom properties `.mx-wex` publishes rather than the constants, so the
@@ -289,7 +290,33 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
       companion is drawn at the reviewed 446×720 rather than a quarter larger at 560 wide; the assertion
       that once required "the same width" for both shapes now requires the same bound. And a companion now
       sits BEFORE the answer, so the answer still closes the region (the render order had put it after).
-    - **`verify-notes-examples` 82 → 108** (a `primitive` section, every clause with a control), the
+    - **after the review of the pushed primitive — one product defect and eight look-alikes the gate let
+      through, all closed.** Dragging a window through the comparison's floor rebuilt the page from the JSON
+      and landed the reader on the first tab at the top of the page (pre-existing, but this stage makes the
+      transition the intended behaviour): the rebuild now keeps the reader's tab, each group's state and the
+      scroll positions, through one `mxShowTab` / `mxShowState` used by the click handlers and the restore
+      alike, gated by driving a page through the floor and back. The gate then had to be made to catch what
+      a look-alike could get away with: a rule keyed on a group id (the shipping Substitution page was never
+      in the same-primitive comparison — it is now, every row of it, on both lessons, at 1536 and 414); a
+      same-value rule hidden in `@supports` or another `@media` (every grouping rule is walked and the
+      COMPUTED STYLE is compared as well as the selectors); an inline style written after `mxWexEx` returns
+      (no instance may carry one); a position-keyed rule for rows 2..N (every instance on every page must
+      have one geometry signature — title gap, insets, rule, tint); an implementation that stacks while the
+      floors are met (the split is now asserted in both directions at widths either side of 759px); a
+      120px channel beside the rule (the channels must equal the published pads and total under the 40px
+      gutter that was rejected); a primitive that lost its region names (the regions are found by name);
+      a synthesis confined to the working column (full width is asserted, title edge to working edge). The
+      first row of a sequence had 4px of top padding where the others had 22 — a position-keyed geometry —
+      so the sequence's own margin closes the gap to the lede instead. Natural size is ONE rule everywhere
+      now: the bridge plane and the extended derivation's step visual take the same longer-side bound as the
+      companion and the staged foot, and at 1920px the bridge plane sits exactly at its bound. Two visual
+      loose ends: QUESTION and WORKED SOLUTION — peers on one line — were set in two label styles and now
+      share one; and a 36px strip holding only the ⤢ button stood between GRAPH and its plane, so inside a
+      region the affordance sits on the region's label line and the plane and the algebraic result begin
+      the same 12px under their labels. HANDOFF §8c now states the companion bound it contradicted and
+      records how "the same inset as the mathematics above it" was read (the step-number column, as the
+      sketch draws it), for the maintainer to overrule in a line.
+    - **`verify-notes-examples` 82 → 116** (a `primitive` section, every clause with a control), the
       proof set is the maintainer's nine — standard desktop/mobile, sequence × 2 / × 3 / mobile, Symmetry
       wide / narrow workings / narrow visual, graph check — plus the two transition widths, and the design
       fixture was updated first so sequence × 2 and × 3 author the same examples.

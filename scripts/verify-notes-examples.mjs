@@ -461,7 +461,7 @@ const read = (p) => p.evaluate((ids) => ids.map((id) => {
      slivers. The form is READ FROM GEOMETRY (side by side: the working begins where the question ends and
      the two overlap vertically; stacked: the working begins below it), the floors are judged on the
      regions' CONTENT boxes — a tinted box is wider than the measure it holds — and nothing may overflow. */
-  const sizes = [[1536, 1024], [1194, 834], [834, 1112], [414, 896]];
+  const sizes = [[1536, 1024], [1194, 834], [1146, 834], [1140, 834], [834, 1112], [414, 896]];
   const rows = [];
   for (const [w, h] of sizes) {
     const p = await open({ w, h, slide: WEX });
@@ -470,25 +470,29 @@ const read = (p) => p.evaluate((ids) => ids.map((id) => {
       const r = document.querySelector(`[data-mx-panel="${id}"] .mx-wexex`);
       const ask = r.querySelector('.mx-wexask'), work = r.querySelector('.mx-wexwork');
       const a = ask.getBoundingClientRect(), k = work.getBoundingClientRect();
-      const cs = getComputedStyle(document.querySelector('.mx-wex'));
+      const cs = getComputedStyle(document.querySelector('.mx-wex')), n = (key) => parseInt(cs.getPropertyValue(key), 10);
       const content = (e) => { const s = getComputedStyle(e); return e.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight); };
-      const surf = r.closest('.mx-wexsurface').getBoundingClientRect();
+      const surfEl = r.closest('.mx-wexsurface'), surf = surfEl.getBoundingClientRect(), scs = getComputedStyle(surfEl);
       return { side: Math.round(k.left) >= Math.round(a.right) - 1 && k.top < a.bottom && a.top < k.bottom,
         stacked: Math.round(k.top) >= Math.round(a.bottom) - 2,
         askW: Math.round(content(ask)), workW: Math.round(content(work)),
+        inner: Math.round(surfEl.clientWidth - parseFloat(scs.paddingLeft) - parseFloat(scs.paddingRight)),
         over: Math.round(k.right) > Math.round(surf.right) + 1 || r.scrollWidth > r.clientWidth + 1,
-        askMin: parseInt(cs.getPropertyValue('--mx-ask-min'), 10),
-        workMin: parseInt(cs.getPropertyValue('--mx-work-min'), 10) };
+        askMin: n('--mx-ask-min'), askPad: n('--mx-ask-pad'), workPad: n('--mx-work-pad'), workMin: n('--mx-work-min') };
     }, GROUPS.find((x) => x.type === 'sequence').id));
     await p.close();
   }
   /* The floors are the APP's — read back from the custom properties it publishes — so this cannot pass by
      agreeing with a number copied into the test. */
-  ok('a row splits into ask and working only while both can be a readable measure, and otherwise stacks',
-     rows.every((r) => !r.over && (r.side !== r.stacked)
+  /* THE FLOOR DECIDES IN BOTH DIRECTIONS: while the surface holds the question's floor, its channel, the
+     rule, the working's channel and the working's floor the row is split — and an implementation that
+     stacks while they are met fails as surely as one that splits when they are not. */
+  const needs = (r) => r.askMin + r.askPad + r.workPad + 1 + r.workMin;
+  ok('a row splits into ask and working exactly while both can be a readable measure, and otherwise stacks',
+     rows.every((r) => !r.over && (r.side !== r.stacked) && (r.inner >= needs(r) ? r.side : r.stacked)
        && (r.side ? (r.askW >= r.askMin - 1 && r.workW >= r.workMin - 1) : (r.askW === r.workW)))
      && rows.some((r) => r.side) && rows.some((r) => r.stacked),
-     rows.map((r, k) => `${sizes[k][0]}px: ${r.side ? `ask ${r.askW}px | working ${r.workW}px` : `stacked at ${r.askW}px`}`).join(' · '));
+     rows.map((r, k) => `${sizes[k][0]}px (${r.inner} inner, needs ${needs(r)}): ${r.side ? `ask ${r.askW}px | working ${r.workW}px` : `stacked at ${r.askW}px`}`).join(' · '));
   /* And the FLOOR is what decides it, not the viewport: at a width that splits comfortably, raising the ask's
      floor past what the row can give both sides must STACK the same row — and a grid that could not wrap
      would show the failure as overflow instead, so overflow is asserted too. The floor is raised on the
@@ -930,7 +934,7 @@ mark('slots');
      read from the app's own published custom properties, so this cannot pass by agreeing with a number
      copied into this file. */
   const br = [];
-  for (const w of [1920, 1536, 1440, 1381, 1380, 1300, 1194, 834, 414]) {
+  for (const w of [1920, 1536, 1440, 1414, 1413, 1381, 1300, 1194, 834, 414]) {
     const q = await open({ w, h: 1100, slide: WEX });
     await reveal(q, cmp.id);
     br.push(await q.evaluate(({ id, w }) => {
@@ -1035,15 +1039,16 @@ mark('slots');
 // ANSWER as the final band of the working — and THE REGIONS ARE ALIGNED, NEVER THE AMOUNT OF CONTENT IN
 // THEM. `standard` is one instance of it and `sequence` is N; the claim below is that they are the SAME
 // primitive, not two implementations that look alike, and each clause carries a control that a look-alike
-// would fail.
+// would fail. The regions are found BY NAME: an instance that lost its names is not the primitive.
 mark('primitive');
 const CFP = JSON.parse(fs.readFileSync(path.join(root, 'tests/visual/lessons/mathematics-compositions.json'), 'utf8'));
-/* everything the primitive is made of, measured relative to its own rectangle */
+/* everything the primitive is made of, measured relative to its own rectangle, on the pane that is on screen */
 const anatomy = (p) => p.evaluate(() => {
   const pane = [].slice.call(document.querySelectorAll('[data-mx-panel]')).find((e) => !e.hidden);
   const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
   const surf = pane.querySelector('.mx-wexsurface'), sr = surf.getBoundingClientRect(), scs = getComputedStyle(surf);
   const ground = getComputedStyle(document.querySelector('.mx')).backgroundColor;
+  const wcs = getComputedStyle(document.querySelector('.mx-wex')), prop = (k) => parseInt(wcs.getPropertyValue(k), 10);
   const R = (e) => e && e.getBoundingClientRect();
   const inset = (e) => { const s = getComputedStyle(e); return R(e).left + parseFloat(s.borderLeftWidth) + parseFloat(s.paddingLeft); };
   /* the left edge of each LINE of a value: its glyph boxes clustered by vertical overlap, so a built-up
@@ -1054,24 +1059,31 @@ const anatomy = (p) => p.evaluate(() => {
       if (c && r.top < c.bottom - 2) { c.left = Math.min(c.left, r.left); c.bottom = Math.max(c.bottom, r.bottom); }
       else out.push({ left: r.left, bottom: r.bottom }); });
     return out.map((c) => Math.round(c.left)); };
+  const foot = live.querySelector('.mx-wexfoot');
   return { rows: document.querySelector('.mx').dataset.mxRows, foot: document.querySelector('.mx').dataset.mxFoot,
     surfL: Math.round(sr.left), surfR: Math.round(sr.right), surfBg: scs.backgroundColor, ground,
     surfPad: parseFloat(scs.paddingLeft),
+    pads: { ask: prop('--mx-ask-pad'), work: prop('--mx-work-pad'), interp: prop('--mx-interp-max'), workMin: prop('--mx-work-min') },
+    footBox: foot ? { l: Math.round(R(foot).left), r: Math.round(R(foot).right), t: Math.round(R(foot).top) } : null,
     ex: [].slice.call(live.querySelectorAll('.mx-wexex')).map((ex) => {
-      const ttl = ex.querySelector('.mx-wexh'), ask = ex.querySelector('.mx-wexask'), work = ex.querySelector('.mx-wexwork');
-      const al = ask && ask.querySelector('.mx-wexlab'), wl = work.querySelector('.mx-wexlab');
-      const steps = work.querySelector('.mx-steps'), res = work.querySelector('.mx-wexres');
-      const rl = res && res.querySelector('.mx-wexrl'), rv = res && res.querySelector('.mx-wexrv');
-      const acs = ask && getComputedStyle(ask), wcs = getComputedStyle(work), rcs = res && getComputedStyle(res);
+      const ttl = ex.querySelector('[data-mx-region="title"]'), ask = ex.querySelector('[data-mx-region="question"]'), work = ex.querySelector('[data-mx-region="working"]');
       const x = R(ex);
-      return { id: ex.dataset.mxExample, form: ex.dataset.mxForm || '', inSurface: surf.contains(ex),
-        box: { l: Math.round(x.left), w: Math.round(x.width) },
-        title: ttl ? { l: Math.round(R(ttl).left), r: Math.round(R(ttl).right), b: Math.round(R(ttl).bottom), align: getComputedStyle(ttl).textAlign } : null,
+      if (!ttl || !work) return { id: ex.dataset.mxExample, form: ex.dataset.mxForm || '', unnamed: true, box: { l: Math.round(x.left), w: Math.round(x.width) } };
+      const al = ask && ask.querySelector('.mx-wexlab'), qb = ask && ask.querySelector('.mx-wexqb'), wl = work.querySelector('.mx-wexlab');
+      const steps = work.querySelector('.mx-steps'), res = work.querySelector('[data-mx-region="answer"]');
+      const rl = res && res.querySelector('.mx-wexrl'), rv = res && res.querySelector('.mx-wexrv');
+      const acs = ask && getComputedStyle(ask), wcs2 = getComputedStyle(work), rcs = res && getComputedStyle(res);
+      const nodes = [ex, ttl, ask, al, qb, work, work.querySelector('.mx-wexsec'), wl, steps, res, rl, rv].filter(Boolean);
+      return { id: ex.dataset.mxExample, form: ex.dataset.mxForm || '', inSurface: surf.contains(ex), unnamed: false,
+        inline: nodes.filter((n) => n.getAttribute('style') != null).length,
+        box: { l: Math.round(x.left), w: Math.round(x.width), t: Math.round(x.top) },
+        title: { l: Math.round(R(ttl).left), r: Math.round(R(ttl).right), b: Math.round(R(ttl).bottom), align: getComputedStyle(ttl).textAlign },
         ask: ask ? { l: Math.round(R(ask).left), r: Math.round(R(ask).right), t: Math.round(R(ask).top), b: Math.round(R(ask).bottom),
           inset: Math.round(inset(ask)), bg: acs.backgroundColor, br: acs.borderRightWidth, radius: acs.borderRadius,
+          qbR: qb ? Math.round(R(qb).right) : null,
           labT: al ? Math.round(R(al).top) : null, labL: al ? Math.round(R(al).left) : null } : null,
         work: { l: Math.round(R(work).left), r: Math.round(R(work).right), t: Math.round(R(work).top), b: Math.round(R(work).bottom),
-          inset: Math.round(inset(work)), bl: wcs.borderLeftWidth, labT: wl ? Math.round(R(wl).top) : null, labL: wl ? Math.round(R(wl).left) : null,
+          inset: Math.round(inset(work)), bl: wcs2.borderLeftWidth, labT: wl ? Math.round(R(wl).top) : null, labL: wl ? Math.round(R(wl).left) : null,
           stepsL: steps ? Math.round(R(steps).left) : null,
           lastBottom: Math.max.apply(null, [].slice.call(work.children).filter((c) => c !== res).map((c) => R(c).bottom).concat([0])) },
         res: res ? { l: Math.round(R(res).left), r: Math.round(R(res).right), t: Math.round(R(res).top), b: Math.round(R(res).bottom),
@@ -1079,8 +1091,11 @@ const anatomy = (p) => p.evaluate(() => {
           radius: rcs.borderRadius, bg: rcs.backgroundColor, bt: rcs.borderTopWidth, bl: rcs.borderLeftWidth, br: rcs.borderRightWidth, bb: rcs.borderBottomWidth,
           align: rcs.textAlign } : null }; }) }; });
 const fmt = (n) => (n == null ? '—' : n);
+const named = (list) => list.filter((e) => !e.unnamed);
 {
-  /* THE SPLIT FORM, on every example of the shipping sequence and of the design fixture's standard. */
+  /* THE SPLIT FORM, on every example of the shipping sequence and of the design fixture's standard and
+     sequence — every instance on every page, so a bespoke composition keyed on one group or one row cannot
+     hide from the comparison. */
   const split = [];
   for (const [lesson, slide, tab] of [[FIX, WEX, GROUPS.find((g) => g.type === 'sequence').id],
                                       [CFP, 0, CFP.slides[0].groups.find((g) => g.type === 'standard').id],
@@ -1090,39 +1105,73 @@ const fmt = (n) => (n == null ? '—' : n);
     const a = await anatomy(p); a.ex.forEach((e) => split.push(Object.assign({ tab }, e, { surf: a })));
     await p.close();
   }
+  const S = named(split);
+  ok('every instance on the page names its regions — title, question, working, answer — and carries no inline style',
+     split.length >= 6 && split.every((e) => !e.unnamed && e.inline === 0),
+     `${split.length} instances, ${split.filter((e) => e.unnamed).length} unnamed, ${split.reduce((n, e) => n + (e.inline || 0), 0)} inline styles`);
   const spans = (e) => e.title && e.ask && Math.abs(e.title.l - e.ask.inset) <= 1 && Math.abs(e.title.r - e.work.r) <= 1
     && e.title.b <= e.ask.t && e.title.b <= e.work.t;
   ok('THE TITLE SPANS THE WHOLE EXAMPLE, above both regions',
-     split.length >= 5 && split.every(spans),
-     split.map((e) => `${e.id}: title ${e.title.l}→${e.title.r} over regions at ${e.ask ? e.ask.inset : '—'}→${e.work.r}`).join(' · '));
+     S.length >= 6 && S.every(spans),
+     S.map((e) => `${e.id}: title ${e.title.l}→${e.title.r} over regions at ${e.ask ? e.ask.inset : '—'}→${e.work.r}`).join(' · '));
   ok('QUESTION and WORKED SOLUTION begin on the same line beneath it',
-     split.every((e) => e.ask && e.ask.labT != null && e.work.labT != null && Math.abs(e.ask.labT - e.work.labT) <= 1),
-     split.map((e) => `${e.id}: ${fmt(e.ask && e.ask.labT)} / ${fmt(e.work.labT)}`).join(' · '));
+     S.length >= 6 && S.every((e) => e.ask && e.ask.labT != null && e.work.labT != null && Math.abs(e.ask.labT - e.work.labT) <= 1),
+     S.map((e) => `${e.id}: ${fmt(e.ask && e.ask.labT)} / ${fmt(e.work.labT)}`).join(' · '));
   /* Both regions are rectangles the row's full height, in one surface, with exactly one quiet rule where
      they meet and the question's tint — a shade neither the surface nor the ground is — reaching that rule
-     on one side and the surface's edge on the other; no radius, no gutter beyond the rule's own channels. */
+     on one side and the surface's edge on the other; no radius. The channels either side of the rule are
+     the published pads — the maintainer's "no wide gutter" — and together they stay under the 40px gutter
+     that was rejected. */
   const rect = (e) => e.ask && e.ask.t === e.work.t && e.ask.b === e.work.b && Math.abs(e.ask.r - e.work.l) <= 1
     && e.work.bl === '1px' && e.ask.br === '0px' && e.ask.radius === '0px'
     && e.ask.bg !== e.surf.surfBg && e.ask.bg !== e.surf.ground && e.inSurface
     && Math.abs(e.ask.l - e.surf.surfL) <= 1 && Math.abs(e.work.r - (e.surf.surfR - e.surf.surfPad)) <= 1;
+  const chan = (e) => ({ q: e.ask && e.ask.qbR != null ? e.work.l - e.ask.qbR : null, w: e.work.inset - e.work.l - 1 });
   ok('PROBLEM and WORKING are explicit rectangles inside one surface — the row\'s full height each, one rule between them, the tint reaching it',
-     split.every(rect),
-     split.map((e) => `${e.id}: ${e.ask.t}→${e.ask.b} both, rule at ${e.work.l}, question text to rule ${e.work.inset - (e.ask.r - (e.work.inset - e.work.l - 1))}px`).join(' · ').slice(0, 400));
+     S.length >= 6 && S.every(rect),
+     S.map((e) => `${e.id}: ${e.ask.t}→${e.ask.b} both, rule at ${e.work.l}`).join(' · '));
+  ok('no wide gutter: the channels either side of the rule are the published pads, and together less than the 40px that was rejected',
+     S.length >= 6 && S.every((e) => { const c = chan(e); return c.q != null && Math.abs(c.q - e.surf.pads.ask) <= 1 && c.w === e.surf.pads.work && c.q + 1 + c.w < 40; }),
+     S.slice(0, 3).map((e) => { const c = chan(e); return `${e.id}: question text → rule ${c.q}px (pad ${e.surf.pads.ask}), rule → working text ${c.w}px (pad ${e.surf.pads.work})`; }).join(' · '));
   ok('ANSWER is the final band of the working, at the same inset as the solution above it — no box, no fill, no radius',
-     split.every((e) => e.res && e.res.labL === e.work.inset && e.work.stepsL === e.work.inset && e.work.labL === e.work.inset
+     S.length >= 6 && S.every((e) => e.res && e.res.labL === e.work.inset && e.work.stepsL === e.work.inset && e.work.labL === e.work.inset
        && e.res.l === e.work.inset && Math.abs(e.res.r - e.work.r) <= 1 && e.res.t >= e.work.lastBottom - 1
        && e.res.radius === '0px' && /rgba\(0, 0, 0, 0\)|transparent/.test(e.res.bg)
        && e.res.bt === '1px' && e.res.bl === '0px' && e.res.br === '0px' && e.res.bb === '0px'),
-     split.map((e) => `${e.id}: label at ${fmt(e.res && e.res.labL)} = steps at ${fmt(e.work.stepsL)}, rule-top ${fmt(e.res && e.res.bt)}, radius ${fmt(e.res && e.res.radius)}`).join(' · '));
-  /* CONTROL: put the old card back and the band contract must fail — its label moves 19px in. */
-  const pc = await open({ slide: WEX });
+     S.map((e) => `${e.id}: label at ${fmt(e.res && e.res.labL)} = steps at ${fmt(e.work.stepsL)}, rule-top ${fmt(e.res && e.res.bt)}, radius ${fmt(e.res && e.res.radius)}`).join(' · '));
+  /* IDENTICAL GEOMETRY ACROSS EVERY INSTANCE ON EVERY PAGE — the same title-to-region gap, the same insets,
+     the same tint, whether the instance is the whole of a standard group, the first row of a sequence or its
+     third, on the shipping lesson or the design fixture. A rule keyed on a group id or on a row's position
+     is exactly what this sees. */
+  const sig = (e) => [e.ask.t - e.title.b, e.ask.inset - e.box.l, e.work.inset - e.box.l, e.work.l - e.box.l, e.res ? e.res.labL - e.box.l : '-', e.ask.bg, e.ask.labT - e.ask.t, e.box.w].join('/');
+  ok('every instance has the same geometry — title gap, insets, rule, tint — on the shipping page and the design fixture, first row and last',
+     S.length >= 6 && new Set(S.map(sig)).size === 1,
+     `${S.length} instances over ${new Set(S.map((e) => e.tab)).size} groups: ${new Set(S.map(sig)).size} distinct geometry signature(s) — ${sig(S[0])}`);
+  /* THE SYNTHESIS FOLLOWS THE WHOLE EXAMPLE OR SEQUENCE as a full-width region — the title's left edge to
+     the working's right edge, below the last instance — never confined to either region. */
+  const foots = split.filter((e) => e.surf.footBox).map((e) => ({ id: e.tab, f: e.surf.footBox, t: e.title, w: e.work, bottom: Math.max.apply(null, named(split.filter((x) => x.tab === e.tab)).map((x) => x.work.b)) }));
+  const seenFoot = {}; foots.forEach((f) => { seenFoot[f.id] = f; });
+  const F = Object.keys(seenFoot).map((k) => seenFoot[k]);
+  ok('the synthesis follows the whole sequence as a full-width region — title edge to working edge, below the last instance',
+     F.length >= 3 && F.every((f) => Math.abs(f.f.l - f.t.l) <= 1 && Math.abs(f.f.r - f.w.r) <= 1 && f.f.t >= f.bottom),
+     F.map((f) => `${f.id}: ${f.f.l}→${f.f.r} against ${f.t.l}→${f.w.r}, ${f.f.t - f.bottom}px below the last instance`).join(' · '));
+  /* CONTROLS: put the old card back and the band contract fails — its label moves in and, on a phone, its
+     wrapped lines no longer return to the inset; confine the synthesis to the working and the full-width
+     claim fails. */
+  const pc = await open({ w: 414, h: 896, slide: WEX });
   await pc.addStyleTag({ content: '.mx-wexres{padding:12px 16px;border:1px solid #E5E9E6;border-left:3px solid #0F7A4C;border-radius:0 13px 13px 0;background:#fff}' });
   await pc.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await pc.waitForTimeout(300);
   const card = (await anatomy(pc)).ex[0];
   await pc.close();
-  ok('CONTROL: the old floating card fails the band contract — the label is no longer at the solution\'s inset',
-     !!card.res && (card.res.labL !== card.work.inset || card.res.radius !== '0px'),
-     `with the card restored the label sits at ${card.res && card.res.labL} against an inset of ${card.work.inset}, radius ${card.res && card.res.radius}`);
+  ok('CONTROL: the old floating card fails the band contract — the label leaves the inset and the wrapped value no longer returns to it',
+     !!card.res && (card.res.labL !== card.work.inset || card.res.radius !== '0px') && card.res.lines.length > 1 && card.res.lines[1] !== card.res.l,
+     `with the card restored the label sits at ${card.res && card.res.labL} against an inset of ${card.work.inset}, radius ${card.res && card.res.radius}, wrapped line at ${card.res && card.res.lines[1]} against ${card.res && card.res.l}`);
+  const pf = await open({ slide: WEX });
+  await pf.addStyleTag({ content: '.mx-wexfoot{margin-left:36% !important}' });
+  await pf.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await pf.waitForTimeout(300);
+  const fa = await anatomy(pf); await pf.close();
+  ok('CONTROL: a synthesis confined to the working column fails the full-width claim',
+     !!fa.footBox && Math.abs(fa.footBox.l - fa.ex[0].title.l) > 1, `foot at ${fa.footBox && fa.footBox.l} against a title at ${fa.ex[0].title.l}`);
 }
 {
   /* THE STACKED FORM — the same regions in the same order, TITLE → QUESTION → WORKED SOLUTION → ANSWER,
@@ -1135,16 +1184,17 @@ const fmt = (n) => (n == null ? '—' : n);
     const a = await anatomy(p); a.ex.forEach((e) => stacked.push(Object.assign({ tab }, e, { surf: a })));
     await p.close();
   }
+  const T = named(stacked);
   const ordered = (e) => e.ask && e.title.b <= e.ask.t && e.ask.b <= e.work.t && e.res && e.res.t >= e.work.lastBottom - 1;
   const oneInset = (e) => e.ask && new Set([e.title.l, e.ask.labL, e.work.labL, e.res.labL, e.work.stepsL]).size === 1;
   ok('STACKED, the same regions keep their order — title, question, worked solution, answer — with no rule and one inset',
-     stacked.length >= 3 && stacked.every((e) => ordered(e) && oneInset(e) && e.work.bl === '0px' && e.ask.br === '0px'
+     T.length >= 3 && T.length === stacked.length && T.every((e) => ordered(e) && oneInset(e) && e.work.bl === '0px' && e.ask.br === '0px'
        && Math.abs(e.ask.l - e.surf.surfL) <= 1 && Math.abs(e.ask.r - e.surf.surfR) <= 1),
-     stacked.map((e) => `${e.id}: ${e.title.b} → ${e.ask.t}…${e.ask.b} → ${e.work.t} → ${e.res.t}, inset ${e.title.l}`).join(' · '));
+     T.map((e) => `${e.id}: ${e.title.b} → ${e.ask.t}…${e.ask.b} → ${e.work.t} → ${e.res.t}, inset ${e.title.l}`).join(' · '));
   ok('and a wrapped answer returns to the inset — the value never hangs toward the centre',
-     stacked.some((e) => e.res.lines.length > 1)
-     && stacked.every((e) => e.res.lines.slice(1).every((l) => Math.abs(l - e.res.l) <= 1) && e.res.align === 'start'),
-     stacked.map((e) => `${e.id}: ${e.res.lines.length} line(s) at ${e.res.lines.join('/')}`).join(' · '));
+     T.length >= 3 && T.some((e) => e.res.lines.length > 1)
+     && T.every((e) => e.res.lines.slice(1).every((l) => Math.abs(l - e.res.l) <= 1) && e.res.align === 'start'),
+     T.map((e) => `${e.id}: ${e.res.lines.length} line(s) at ${e.res.lines.join('/')}`).join(' · '));
   /* CONTROL: an injected rule and a re-ordered grid are both seen. Specificity above the stylesheet's own,
      and the perturbation read back before anything is asserted on it. */
   const pc = await open({ w: 414, h: 896, slide: WEX });
@@ -1159,71 +1209,122 @@ const fmt = (n) => (n == null ? '—' : n);
 }
 {
   /* THE SAME PRIMITIVE, NOT TWO THAT LOOK ALIKE. One example, authored identically as the whole of a
-     `standard` group and as a member of a `sequence`. Three things must agree: the anatomy (the element
-     tree with its region names), the RULES THAT REACH EACH ELEMENT (a second implementation lives in the
-     stylesheet, keyed on the composition, and geometry alone cannot see it), and the geometry. And every
-     instance on the page must come through the one function. */
-  const alt = JSON.parse(JSON.stringify(CFP));
-  const seq = alt.slides[0].groups.find((g) => g.type === 'sequence'), std = alt.slides[0].groups.find((g) => g.type === 'standard');
+     `standard` group and into EVERY row of a `sequence`, on the design fixture and the shipping lesson.
+     Four things must agree for every row against the standard instance: the anatomy (the element tree
+     with its region names), the STYLESHEET RULES THAT REACH EACH ELEMENT — every grouping rule walked
+     (@media, @supports, @layer, @container), because a second implementation lives in the stylesheet,
+     keyed on the composition, where geometry cannot see it — the COMPUTED STYLE over the properties a
+     layout is made of (which a rule under a grouping the walk missed, or an inline style, would change),
+     and the geometry. Measured at a desktop width and on a phone. And every instance on the page must come
+     through the one function. */
   const shared = JSON.parse(JSON.stringify(GROUPS.find((g) => g.type === 'sequence').examples[0]));
-  std.examples = [JSON.parse(JSON.stringify(shared))]; seq.examples[0] = JSON.parse(JSON.stringify(shared));
-  const probe = (p) => p.evaluate(({ stdId, seqId, exId }) => {
-    const nodes = (gid) => { document.querySelector(`[data-mx-tab="${gid}"]`).click();
-      const ex = document.querySelector(`[data-mx-panel="${gid}"] [data-mx-example="${exId}"]`);
-      return ['', '.mx-wexh', '.mx-wexask', '.mx-wexask>.mx-wexlab', '.mx-wexqb', '.mx-wexwork', '.mx-wexsec', '.mx-wexsec>.mx-wexlab', '.mx-steps', '.mx-wexres', '.mx-wexrl', '.mx-wexrv']
-        .map((sel) => ({ sel: sel || '(article)', el: sel ? ex.querySelector(sel) : ex, ex })); };
+  const PROPS = ['display', 'grid-template-areas', 'grid-template-columns', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
+    'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width',
+    'border-top-color', 'border-left-color', 'border-radius', 'background-color', 'color', 'font-size', 'font-weight', 'font-family', 'letter-spacing',
+    'line-height', 'text-align', 'max-width', 'align-items'];
+  const probe = (p) => p.evaluate(({ stdId, seqId, exId, PROPS }) => {
+    const SELS = ['', '[data-mx-region="title"]', '[data-mx-region="question"]', '[data-mx-region="question"]>.mx-wexlab', '.mx-wexqb', '[data-mx-region="working"]',
+      '.mx-wexsec', '.mx-wexsec>.mx-wexlab', '.mx-steps', '[data-mx-region="answer"]', '.mx-wexrl', '.mx-wexrv'];
     const rules = []; [].slice.call(document.styleSheets).forEach((sh) => { let rs; try { rs = sh.cssRules; } catch (e) { return; }
       const walk = (list) => [].slice.call(list).forEach((r) => { if (r.selectorText) rules.push(r.selectorText);
-        else if (r.media && matchMedia(r.media.mediaText).matches && r.cssRules) walk(r.cssRules); }); walk(rs); });
+        else if (r.cssRules && (!r.media || matchMedia(r.media.mediaText).matches)) walk(r.cssRules); }); walk(rs); });
     const matched = (el) => rules.filter((t) => { try { return el.matches(t); } catch (e) { return false; } });
-    const sig = (el) => el.tagName + '.' + [].slice.call(el.classList).sort().join('.') + (el.dataset.mxRegion ? '[' + el.dataset.mxRegion + ']' : '');
+    const sig = (el) => el.tagName + '.' + [].slice.call(el.classList).sort().join('.') + '[' + (el.dataset.mxRegion || '') + ']';
     const geo = (el, ex) => { const r = el.getBoundingClientRect(), x = ex.getBoundingClientRect();
       return [Math.round(r.left - x.left), Math.round(r.top - x.top), Math.round(r.width), Math.round(r.height)].join(','); };
-    const read = (gid) => nodes(gid).map((n) => n.el ? { sel: n.sel, sig: sig(n.el), rules: matched(n.el).join(' | '), geo: geo(n.el, n.ex) } : { sel: n.sel, missing: true });
-    return { std: read(stdId), seq: read(seqId), suspect: rules.filter((t) => /data-mx-wextype|data-mx-count|:nth-|:only-child/.test(t) && /mx-wex(ex|h|ask|work|res|qb|lab|sec)/.test(t)) };
-  }, { stdId: std.id, seqId: seq.id, exId: shared.id });
-  const p = await open({ slide: 0, lesson: alt });
-  const same = await probe(p);
-  const diff = (k) => same.std.map((a, i) => [a, same.seq[i]]).filter(([a, b]) => a.missing || b.missing || a[k] !== b[k]).map(([a]) => a.sel);
-  ok('THE SAME PRIMITIVE UNDER standard AND sequence — the same anatomy, reached by the same stylesheet rules, at the same geometry',
-     same.std.length === 12 && !same.std.some((n) => n.missing) && diff('sig').length === 0 && diff('rules').length === 0 && diff('geo').length === 0
-     && same.suspect.length === 0,
-     `12 elements compared: ${diff('sig').length} anatomy, ${diff('rules').length} rule-set and ${diff('geo').length} geometry differences; `
-     + `${same.suspect.length} composition-keyed rule(s) reach the primitive`);
-  /* CONTROL: a second implementation with the SAME VALUES — geometry stays identical, and the rule
-     provenance is what catches it. */
-  await p.addStyleTag({ content: '[data-mx-wextype="sequence"] .mx-wexex{padding:22px 30px 26px}' });
-  const twin = await probe(p);
-  const tdiff = (k) => twin.std.map((a, i) => [a, twin.seq[i]]).filter(([a, b]) => a[k] !== b[k]).map(([a]) => a.sel);
-  ok('CONTROL: a look-alike stylesheet keyed on the composition leaves the geometry identical and is caught by the rules that reach the element',
-     tdiff('geo').length === 0 && tdiff('rules').length > 0 && twin.suspect.length > 0,
-     `same-value rule injected: ${tdiff('geo').length} geometry differences, ${tdiff('rules').length} element(s) now reached by different rules (${tdiff('rules').join(', ')})`);
-  /* ONE CODE PATH: every instance on the page — every group, every state, hidden or not — is emitted by
-     mxWexEx. The function is wrapped to mark what it emits, the page re-rendered, and the marks counted. */
-  const spy = await p.evaluate(() => {
-    const orig = mxWexEx; let n = 0;
-    mxWexEx = function () { n++; return orig.apply(this, arguments).replace('<article class="mx-wexex"', '<article data-mx-spy class="mx-wexex"'); };
-    go(0);
-    const all = document.querySelectorAll('.mx-wex [data-mx-example]').length, marked = document.querySelectorAll('.mx-wex [data-mx-spy]').length;
-    mxWexEx = orig; go(0);                              /* and the page is rendered clean again */
-    return { calls: n, all, marked }; });
-  const authored = alt.slides[0].groups.reduce((t, g) => t + g.examples.length * Math.max(1, (g.states || []).filter((st) => (st.show || []).some((s) => s === 'question' || s === 'steps')).length), 0);
-  ok('and every instance on the page comes through the one function — no group builds its own',
-     spy.all > 0 && spy.marked === spy.all && spy.calls === spy.all && spy.all === authored,
-     `${spy.marked} of ${spy.all} instances marked by ${spy.calls} calls (${authored} authored across groups and states)`);
-  /* CONTROL: hand one group a static copy of its own markup and the count no longer agrees. */
-  const forged = await p.evaluate((stdId) => {
+    const comp = (el) => { const cs = getComputedStyle(el); return PROPS.map((k) => cs.getPropertyValue(k)).join('|'); };
+    const readOne = (ex) => SELS.map((sel) => { const el = sel ? ex.querySelector(sel) : ex;
+      return el ? { sel: sel || '(article)', sig: sig(el), rules: matched(el).join(' | '), comp: comp(el), geo: geo(el, ex), inline: el.getAttribute('style') != null } : { sel: sel || '(article)', missing: true }; });
+    const readGroup = (gid) => { document.querySelector(`[data-mx-tab="${gid}"]`).click();
+      return [].slice.call(document.querySelectorAll(`[data-mx-panel="${gid}"] .mx-wexex`)).map(readOne); };
+    /* anything keyed on WHICH composition, WHICH group or WHICH row an element is in, reaching the primitive */
+    const keyed = /data-mx-wextype|data-mx-count|data-mx-panel|data-mx-staged|aria-label|:nth-|:only-child|:first-child|:last-child|:not\((?!\[data-mx-form)/;
+    return { std: readGroup(stdId)[0], seq: readGroup(seqId),
+      suspect: rules.filter((t) => keyed.test(t) && /mx-wex(ex|h|ask|work|res|qb|lab|sec|rl|rv)|mx-steps/.test(t)) };
+  }, { stdId: 'STD', seqId: 'SEQ', exId: shared.id, PROPS });
+  const lessons = [];
+  { const alt = JSON.parse(JSON.stringify(CFP)); const seq = alt.slides[0].groups.find((g) => g.type === 'sequence'), std = alt.slides[0].groups.find((g) => g.type === 'standard');
+    std.examples = [JSON.parse(JSON.stringify(shared))]; seq.examples = seq.examples.map((x, k) => Object.assign(JSON.parse(JSON.stringify(shared)), { id: shared.id + '-' + k }));
+    lessons.push({ name: 'design fixture', lesson: alt, slide: 0, std: std.id, seq: seq.id }); }
+  { const alt = JSON.parse(JSON.stringify(FIX)); const seq = alt.slides[WEX].groups.find((g) => g.type === 'sequence');
+    const std = { id: 'g-std-probe', type: 'standard', title: 'Probe', examples: [JSON.parse(JSON.stringify(shared))] };
+    alt.slides[WEX].groups.push(std); seq.examples = seq.examples.map((x, k) => Object.assign(JSON.parse(JSON.stringify(shared)), { id: shared.id + '-' + k }));
+    lessons.push({ name: 'shipping lesson', lesson: alt, slide: WEX, std: std.id, seq: seq.id }); }
+  const diffs = (a, b, k) => a.map((n, i) => [n, b[i]]).filter(([x, y]) => !y || x.missing || y.missing || x[k] !== y[k]).map(([x]) => x.sel);
+  const runs = [];
+  for (const L of lessons) for (const [w, h] of [[1536, 1024], [414, 896]]) {
+    const p = await open({ w, h, slide: L.slide, lesson: L.lesson });
+    const r = await p.evaluate(({ src, stdId, seqId, exId, PROPS }) => eval('(' + src + ')')({ stdId, seqId, exId, PROPS }),
+      { src: probe.toString().replace(/^\(p\) => p\.evaluate\(/, '').replace(/, \{ stdId: 'STD'.*$/s, ''), stdId: L.std, seqId: L.seq, exId: shared.id, PROPS });
+    runs.push({ name: `${L.name} @${w}`, w, r, page: p });
+  }
+  const bad = [];
+  runs.forEach((run) => run.r.seq.forEach((row, k) => { const d = { rules: diffs(run.r.std, row, 'rules'), comp: diffs(run.r.std, row, 'comp'), sig: diffs(run.r.std, row, 'sig') };
+    const geoRow = (run.w === 1536 && k === 0) ? diffs(run.r.std, row, 'geo') : [];
+    const inl = row.filter((n) => n.inline).length + run.r.std.filter((n) => n.inline).length;
+    if (d.rules.length || d.comp.length || d.sig.length || geoRow.length || inl || run.r.std.length !== 12 || run.r.std.some((n) => n.missing)) bad.push(`${run.name} row ${k + 1}: ${d.sig.length} anatomy, ${d.rules.length} rule-set, ${d.comp.length} computed-style, ${geoRow.length} geometry differences, ${inl} inline`); }));
+  const suspects = runs.reduce((t, run) => t + run.r.suspect.length, 0);
+  ok('THE SAME PRIMITIVE UNDER standard AND sequence — every row, both lessons, desktop and phone: the same anatomy, reached by the same rules, the same computed style, the same geometry',
+     runs.length === 4 && runs.every((run) => run.r.seq.length >= 2) && bad.length === 0 && suspects === 0,
+     bad.length ? bad.join(' · ') : `${runs.reduce((t, run) => t + run.r.seq.length, 0)} rows compared against the standard instance over ${runs.length} renders; ${suspects} composition-, group- or position-keyed rule(s) reach the primitive${suspects ? ': ' + runs[0].r.suspect.join(' ; ') : ''}`);
+  /* CONTROLS: a second implementation with the SAME VALUES keyed on the composition, hidden inside a
+     grouping rule, and one applied as an inline style after the fact — geometry stays identical, and the
+     rule provenance and the computed style are what catch them. */
+  const c1 = runs[0].page;
+  await c1.addStyleTag({ content: '@supports (display:grid){[data-mx-wextype="sequence"] .mx-wexex{padding:22px var(--mx-surface-pad) 26px}}' });
+  const twin = await c1.evaluate(({ src, stdId, seqId, exId, PROPS }) => eval('(' + src + ')')({ stdId, seqId, exId, PROPS }),
+    { src: probe.toString().replace(/^\(p\) => p\.evaluate\(/, '').replace(/, \{ stdId: 'STD'.*$/s, ''), stdId: lessons[0].std, seqId: lessons[0].seq, exId: shared.id, PROPS });
+  const tg = diffs(twin.std, twin.seq[0], 'geo'), tr = diffs(twin.std, twin.seq[0], 'rules');
+  ok('CONTROL: a look-alike keyed on the composition, hidden in an @supports block, leaves the geometry identical and is caught by the rules that reach the element',
+     tg.length === 0 && tr.length > 0 && twin.suspect.length > 0,
+     `same-value rule injected inside @supports: ${tg.length} geometry differences, ${tr.length} element(s) reached by different rules, ${twin.suspect.length} composition-keyed rule(s) seen`);
+  const inl = await c1.evaluate(({ seqId, PROPS, src }) => { document.querySelectorAll(`[data-mx-panel="${seqId}"] .mx-wexex`).forEach((ex) => ex.setAttribute('style', 'padding:22px var(--mx-surface-pad) 26px'));
+    return eval('(' + src + ')')({ stdId: 'x', seqId, exId: 'x', PROPS }); },
+    { seqId: lessons[0].seq, PROPS, src: probe.toString().replace(/^\(p\) => p\.evaluate\(/, '').replace(/, \{ stdId: 'STD'.*$/s, '').replace('document.querySelector(`[data-mx-tab="${gid}"]`).click();', '') });
+  ok('CONTROL: the same values applied as an inline style are caught — the primitive carries no inline style',
+     inl.seq.length > 0 && inl.seq.every((row) => row[0].inline), `${inl.seq.filter((row) => row[0].inline).length} of ${inl.seq.length} instances now carry a style attribute`);
+  for (const run of runs) await run.page.close();
+  /* ONE CODE PATH: every instance on the page — every group, every state, hidden or not, on both lessons
+     and in both bridge forms — is emitted by mxWexEx. The function is wrapped to mark what it emits, the
+     page re-rendered, and the marks counted against what the lesson authors. */
+  const spied = [];
+  for (const [name, lesson, slide, w] of [['design fixture', CFP, 0, 1536], ['shipping lesson, bridge wide', FIX, WEX, 1536], ['shipping lesson, bridge staged', FIX, WEX, 414]]) {
+    const p = await open({ w, h: 900, slide, lesson });
+    const spy = await p.evaluate((s) => {
+      const orig = mxWexEx; let n = 0;
+      mxWexEx = function () { n++; return orig.apply(this, arguments).replace('<article class="mx-wexex"', '<article data-mx-spy class="mx-wexex"'); };
+      go(s);
+      const all = document.querySelectorAll('.mx-wex [data-mx-example]').length, marked = document.querySelectorAll('.mx-wex [data-mx-spy]').length;
+      const bridge = document.querySelector('.mx').dataset.mxBridge;
+      mxWexEx = orig; go(s);
+      return { calls: n, all, marked, bridge }; }, slide);
+    /* what the lesson authors: one instance per example per state that carries the working (a wide
+       comparison has no states; a staged one has two, of which only the workings carries the cases) */
+    const authored = lesson.slides[slide].groups.reduce((t, g) => { const states = (g.states || []).length ? g.states
+      : (g.type === 'comparison' && spy.bridge === 'staged' && g.examples.length === 2) ? [{ show: ['question', 'steps', 'answer'] }, { show: ['visual', 'relations'] }]
+      : (g.type === 'staged') ? [{ show: ['question', 'steps', 'answer'] }, { show: ['visual', 'relations'] }] : [];
+      const carrying = states.length ? states.filter((st) => (st.show || []).some((x) => x === 'question' || x === 'steps')).length : 1;
+      return t + g.examples.length * carrying; }, 0);
+    spied.push(Object.assign({ name, authored }, spy));
+    await p.close();
+  }
+  ok('and every instance on the page comes through the one function — every group, every state, both lessons, both bridge forms',
+     spied.every((s) => s.all > 0 && s.marked === s.all && s.calls === s.all && s.all === s.authored),
+     spied.map((s) => `${s.name}: ${s.marked} of ${s.all} marked by ${s.calls} calls (${s.authored} authored)`).join(' · '));
+  /* CONTROL: hand the shipping comparison a static copy of its own markup and the count no longer agrees. */
+  const pf = await open({ slide: WEX });
+  const forged = await pf.evaluate(({ id, s }) => {
     const origBody = mxWexGroupBody, origEx = mxWexEx; let n = 0;
-    const copy = document.querySelector(`[data-mx-panel="${stdId}"] .mx-wexseq`).outerHTML;
-    mxWexGroupBody = function (g) { return g.id === stdId ? copy : origBody.apply(this, arguments); };
+    const copy = document.querySelector(`[data-mx-panel="${id}"] .mx-wexsurface > .mx-wexbridge, [data-mx-panel="${id}"] .mx-wexsurface > .mx-wexseq`).outerHTML;
+    mxWexGroupBody = function (g) { return g.id === id ? copy : origBody.apply(this, arguments); };
     mxWexEx = function () { n++; return origEx.apply(this, arguments).replace('<article class="mx-wexex"', '<article data-mx-spy class="mx-wexex"'); };
-    go(0);
+    go(s);
     const all = document.querySelectorAll('.mx-wex [data-mx-example]').length, marked = document.querySelectorAll('.mx-wex [data-mx-spy]').length;
-    mxWexGroupBody = origBody; mxWexEx = origEx; go(0);
-    return { all, marked }; }, std.id);
+    mxWexGroupBody = origBody; mxWexEx = origEx; go(s);
+    return { all, marked }; }, { id: GROUPS.find((g) => g.type === 'comparison').id, s: WEX });
+  await pf.close();
   ok('CONTROL: a group that pastes its own markup is caught — the marks no longer cover the page',
-     forged.all > forged.marked, `${forged.marked} of ${forged.all} marked once one group forges its example`);
-  await p.close();
+     forged.all > forged.marked, `${forged.marked} of ${forged.all} marked once the comparison forges its cases`);
 }
 {
   /* NOTHING IS CENTRED, ANYWHERE. Every text block starts at its region's inset and every figure part
@@ -1271,7 +1372,8 @@ const fmt = (n) => (n == null ? '—' : n);
   /* COMPARISON — THREE ZONES: labels on one line, each zone the row's full height so its edges are the
      rules beside it EVEN WHEN THE CASES DIFFER IN HEIGHT (case B is given five more steps than the plane
      is tall for), each case one primitive in its stacked form, the plane at its natural size in the middle
-     and left-aligned — never grown to consume the zone, never squeezed. */
+     and left-aligned — never grown to consume the zone, never squeezed. NATURAL SIZE IS ONE RULE: the
+     longer side bounded, the aspect untouched — the same bound the staged foot and a companion obey. */
   const zones = async (p) => p.evaluate((id) => {
     document.querySelector(`[data-mx-tab="${id}"]`).click();
     const pane = document.querySelector(`[data-mx-panel="${id}"]`), b = pane.querySelector('.mx-wexbridge');
@@ -1288,8 +1390,11 @@ const fmt = (n) => (n == null ? '—' : n);
         bl: s.borderLeftWidth, br: s.borderRightWidth, exN: z.querySelectorAll('.mx-wexex').length,
         stackedForm: !!(ask && work) && Math.round(R(work).top) >= Math.round(R(ask).bottom) - 2,
         askToRule: ask ? (z.dataset.mxZone === 'a' ? Math.round(R(z).right - R(ask).right) : Math.round(R(ask).left - R(z).left)) : null,
-        figW: fig ? Math.round(R(fig).width) : null, figOff: fig ? Math.round(R(fig).left - (R(z).left + parseFloat(s.borderLeftWidth) + parseFloat(s.paddingLeft))) : null }; });
-    return { h: Math.round(R(b).height), zones: zs, plotW: parseInt(cs.getPropertyValue('--mx-plot-w'), 10) }; }, GROUPS.find((g) => g.type === 'comparison').id);
+        figW: fig ? Math.round(R(fig).width) : null, figH: fig ? Math.round(R(fig).height) : null,
+        ar: fig ? parseFloat(getComputedStyle(fig).getPropertyValue('--mx-plot-ar')) : null,
+        figOff: fig ? Math.round(R(fig).left - (R(z).left + parseFloat(s.borderLeftWidth) + parseFloat(s.paddingLeft))) : null }; });
+    return { h: Math.round(R(b).height), zones: zs, plotW: parseInt(cs.getPropertyValue('--mx-plot-w'), 10), plotH: parseInt(cs.getPropertyValue('--mx-plot-h'), 10) }; }, GROUPS.find((g) => g.type === 'comparison').id);
+  const natural = (z) => Math.min(z.plotW, Math.round(z.plotH * z.zones[1].ar));
   const tallB = JSON.parse(JSON.stringify(FIX));
   const cg = tallB.slides[WEX].groups.find((g) => g.type === 'comparison');
   for (let i = 0; i < 5; i++) cg.examples[1].steps.push({ id: 'extra' + i, text: 'Check the value once more, the long way round.', math: '_y_ = (−3)(−3) = 9' });
@@ -1306,9 +1411,9 @@ const fmt = (n) => (n == null ? '—' : n);
   ok('each case is ONE primitive in its stacked form, its question band reaching the zone\'s rule',
      !!z && [zA, zB].every((q) => q.exN === 1 && q.stackedForm && q.askToRule === 0),
      z ? `case A: ${zA.exN} instance, band ${zA.askToRule}px from the rule · case B: ${zB.exN} instance, band ${zB.askToRule}px from the rule` : 'no bridge');
-  ok('the plane owns the middle at its natural size — left-aligned, never grown past its natural width, undistorted',
-     !!z && zV.figW != null && zV.figW <= z.plotW + 1 && zV.figOff === 0 && !!sc && Math.abs(sc.ratio - 1) <= 0.05,
-     z ? `plane ${zV.figW}px wide (natural ${z.plotW}px), ${zV.figOff}px from the zone's edge, scale ${sc && sc.ratio}` : 'no bridge');
+  ok('the plane owns the middle at its natural size — left-aligned, never grown past its longer-side bound, undistorted',
+     !!z && zV.figW != null && zV.figW <= natural(z) + 1 && zV.figH <= z.plotH + 1 && zV.figOff === 0 && !!sc && Math.abs(sc.ratio - 1) <= 0.05,
+     z ? `plane ${zV.figW}×${zV.figH} (natural ≤ ${natural(z)} wide, ≤ ${z.plotH} tall), ${zV.figOff}px from the zone's edge, scale ${sc && sc.ratio}` : 'no bridge');
   /* CONTROL: stop the zones stretching and the rules end with the plane, above the taller case. */
   const pc = await open({ slide: WEX, lesson: tallB });
   await pc.addStyleTag({ content: '.mx-wexbridge{align-items:start !important}' });
@@ -1316,16 +1421,18 @@ const fmt = (n) => (n == null ? '—' : n);
   await pc.close();
   ok('CONTROL: zones that stop stretching leave the rule shorter than the taller case, and the measure sees it',
      !!zc && zc.zones[1].h < zc.zones[2].content, zc ? `rule ${zc.zones[1].h}px against a ${zc.zones[2].content}px case` : 'no bridge');
-  /* and at 1920 the plane still does not grow to fill the wider zone */
+  /* and at 1920 the zone is wider than the plane needs: the plane is PINNED at its bound, neither grown to
+     fill the zone nor left smaller than its natural size */
   const pw = await open({ w: 1920, h: 1100, slide: WEX });
   const zw = await zones(pw);
   await pw.close();
-  ok('at 1920px the middle zone is wider than the plane needs, and the plane stays its natural size',
-     !!zw && zw.zones[1].figW <= zw.plotW + 1, zw ? `${zw.zones[1].figW}px of a ${zw.zones[1].h}px-tall zone, natural ${zw.plotW}px` : 'no bridge');
+  ok('at 1920px the middle zone is wider than the plane needs, and the plane sits exactly at its natural size',
+     !!zw && Math.abs(zw.zones[1].figW - natural(zw)) <= 1, zw ? `${zw.zones[1].figW}px in a ${zw.zones[1].h}px-tall zone, natural ${natural(zw)}px` : 'no bridge');
 }
 {
   /* GRAPH | INTERPRETATION — two sibling regions with one top edge and one rule between them, decided by
-     the composition's floors; stacked graph-first below them. */
+     the composition's floors; stacked graph-first below them. The two regions' first blocks sit the same
+     distance under their labels — nothing loose between a label and its content. */
   const pair = (p) => p.evaluate((id) => {
     document.querySelector(`[data-mx-tab="${id}"]`).click();
     const pane = document.querySelector(`[data-mx-panel="${id}"]`);
@@ -1335,22 +1442,27 @@ const fmt = (n) => (n == null ? '—' : n);
     const R = (e) => e.getBoundingClientRect();
     const cs = getComputedStyle(document.querySelector('.mx-wex'));
     const g = foot.querySelector('[data-mx-region="graph"]'), i = foot.querySelector('[data-mx-region="interpretation"]');
-    const fig = g.querySelector('.mx-part[data-mx-part="figure"]'), lead = i.querySelector('.mx-wexres[data-mx-lead]');
+    const fig = g.querySelector('.mx-part[data-mx-part="figure"]'), svg = g.querySelector('.tp-fig-svg'), lead = i.querySelector('.mx-wexres[data-mx-lead]');
     const lab = (z) => z.querySelector(':scope>.mx-wexlab, :scope>.mx-part>.mx-parth');
+    const first = [].slice.call(i.children).filter((c) => !c.classList.contains('mx-wexlab'))[0];
     return { foot: document.querySelector('.mx').dataset.mxFoot,
-      g: { t: Math.round(R(g).top), b: Math.round(R(g).bottom), l: Math.round(R(g).left), w: Math.round(R(g).width), h: Math.round(R(g).height), labT: Math.round(R(lab(g)).top) },
-      i: { t: Math.round(R(i).top), b: Math.round(R(i).bottom), l: Math.round(R(i).left), w: Math.round(R(i).width), h: Math.round(R(i).height), labT: Math.round(R(lab(i)).top), bl: getComputedStyle(i).borderLeftWidth },
+      g: { t: Math.round(R(g).top), b: Math.round(R(g).bottom), l: Math.round(R(g).left), w: Math.round(R(g).width), h: Math.round(R(g).height), labT: Math.round(R(lab(g)).top), labB: Math.round(R(lab(g)).bottom) },
+      i: { t: Math.round(R(i).top), b: Math.round(R(i).bottom), l: Math.round(R(i).left), w: Math.round(R(i).width), h: Math.round(R(i).height), labT: Math.round(R(lab(i)).top), labB: Math.round(R(lab(i)).bottom), bl: getComputedStyle(i).borderLeftWidth,
+        firstT: first ? Math.round(R(first).top) : null },
+      svgT: svg ? Math.round(R(svg).top) : null,
       figW: Math.round(R(fig).width), figH: Math.round(R(fig).height), ar: parseFloat(getComputedStyle(fig).getPropertyValue('--mx-plot-ar')),
       leadRule: lead ? getComputedStyle(lead).borderTopWidth : null,
       plotW: parseInt(cs.getPropertyValue('--mx-plot-w'), 10), plotH: parseInt(cs.getPropertyValue('--mx-plot-h'), 10),
       interpMax: parseInt(cs.getPropertyValue('--mx-interp-max'), 10) }; }, GROUPS.find((g) => g.type === 'staged').id);
-  await new Promise((r) => setTimeout(r, 0));
   const pd = await open({ slide: WEX }); await reveal(pd, GROUPS.find((g) => g.type === 'staged').id);
   const d = await pair(pd); await pd.close();
   ok('GRAPH and INTERPRETATION are sibling regions with one top edge, one rule the full height between them, the plane at its natural size and the interpretation at a reading measure',
      !!d && d.foot === 'pair' && d.g.t === d.i.t && d.g.labT === d.i.labT && d.i.l >= d.g.l + d.g.w - 1 && d.i.bl === '1px' && d.i.h === d.g.h
      && d.figW <= d.plotW + 1 && d.figW <= Math.round(d.plotH * d.ar) + 1 && d.i.w <= d.interpMax + 1 && d.leadRule === '0px',
      d ? `tops ${d.g.t}/${d.i.t}, labels ${d.g.labT}/${d.i.labT}, rule ${d.i.bl} over ${d.i.h}px beside a ${d.g.h}px graph region; plane ${d.figW}×${d.figH} (natural ≤ ${Math.round(d.plotH * d.ar)}), interpretation ${d.i.w}px (≤ ${d.interpMax})` : 'no pair');
+  ok('and the plane and the algebraic result each begin the same distance under their labels — nothing loose between a label and its content',
+     !!d && d.svgT != null && d.i.firstT != null && Math.abs((d.svgT - d.g.labB) - (d.i.firstT - d.i.labB)) <= 1 && d.svgT - d.g.labB <= 16,
+     d ? `plane ${d.svgT - d.g.labB}px under GRAPH, result ${d.i.firstT - d.i.labB}px under INTERPRETATION` : 'no pair');
   const pp = await open({ w: 414, h: 896, slide: WEX }); await reveal(pp, GROUPS.find((g) => g.type === 'staged').id);
   const m = await pair(pp); await pp.close();
   ok('below their floors the two stack, graph first, with no rule',
@@ -1372,8 +1484,9 @@ const fmt = (n) => (n == null ? '—' : n);
      !!f && f.foot === 'stack' && f.i.t >= f.g.b - 1 && f.i.bl === '0px', f ? `data-mx-foot="${f.foot}", interpretation from ${f.i.t} under a graph ending at ${f.g.b}` : 'no pair');
 }
 {
-  /* A STATE WITH NO QUESTION keeps the working at a reading measure, left-aligned; author the question
-     back into that state and the split returns. */
+  /* A STATE WITH NO QUESTION keeps the working at a reading measure — between the working's floor and the
+     interpretation's measure, both read from the page — left-aligned; author the question back into that
+     state and the split returns. */
   const ext = CFP.slides[0].groups.find((g) => g.type === 'extended');
   const st = ext.states.find((s) => s.show.indexOf('question') < 0);   /* the derivation's middle stage */
   const solo = async (lesson) => { const p = await open({ slide: 0, lesson });
@@ -1383,14 +1496,49 @@ const fmt = (n) => (n == null ? '—' : n);
   const a = await solo(CFP);
   const e = a.ex[0];
   ok('a state that carries no question has no ask region; its working keeps a reading measure at the inset, never the whole surface',
-     !!e && e.form === 'solo' && !e.ask && e.work.r - e.work.l <= 621 && Math.abs(e.work.l - (a.surfL + a.surfPad)) <= 1,
-     e ? `${e.id} ${e.form}: working ${e.work.r - e.work.l}px wide at ${e.work.l} (surface inset ${a.surfL + a.surfPad})` : 'no example');
+     !!e && !e.unnamed && e.form === 'solo' && !e.ask && e.work.r - e.work.l <= a.pads.interp + 1 && e.work.r - e.work.l >= a.pads.workMin - 1
+       && Math.abs(e.work.l - (a.surfL + a.surfPad)) <= 1,
+     e && !e.unnamed ? `${e.id} ${e.form}: working ${e.work.r - e.work.l}px wide at ${e.work.l} (floor ${a.pads.workMin}, measure ${a.pads.interp}, surface inset ${a.surfL + a.surfPad})` : 'no example');
   const withQ = JSON.parse(JSON.stringify(CFP));
   withQ.slides[0].groups.find((g) => g.id === ext.id).states.find((s) => s.id === st.id).show.push('question');
   const b = (await solo(withQ)).ex[0];
   ok('CONTROL: author the question into that state and the two-region form returns',
-     !!b && b.form === '' && !!b.ask && b.ask.t === b.work.t && b.work.bl === '1px',
-     b ? `${b.id}: question ${b.ask ? 'present' : 'absent'}, regions at ${b.ask && b.ask.t}/${b.work.t}, rule ${b.work.bl}` : 'no example');
+     !!b && !b.unnamed && b.form === '' && !!b.ask && b.ask.t === b.work.t && b.work.bl === '1px',
+     b && !b.unnamed ? `${b.id}: question ${b.ask ? 'present' : 'absent'}, regions at ${b.ask && b.ask.t}/${b.work.t}, rule ${b.work.bl}` : 'no example');
+}
+{
+  /* A STRUCTURAL TRANSITION REBUILDS THE PAGE, NOT THE READER'S PLACE. Dragging a window through the
+     comparison's floor turns the bridge into two states and back; the reader stays on the tab they were
+     reading, in the state they had chosen, where they had scrolled to. The floor is found by measuring,
+     as the proof script finds it. */
+  const cmpId = GROUPS.find((g) => g.type === 'comparison').id;
+  const p = await open({ w: 1600, h: 700, slide: WEX });
+  await p.click(`[data-mx-tab="${cmpId}"]`); await p.waitForTimeout(300);
+  const need = await p.evaluate(() => { const cs = getComputedStyle(document.querySelector('.mx-wex')); const n = (k) => parseInt(cs.getPropertyValue(k), 10);
+    return 2 * (n('--mx-ask-min') + n('--mx-zone-pad')) + n('--mx-plot-min-w') + 2 * n('--mx-zone-pad') + 2; });
+  const innerAt = async (w) => { await p.setViewportSize({ width: w, height: 700 }); await p.waitForTimeout(500);
+    return p.evaluate(() => { const s = document.querySelector('[data-mx-panel]:not([hidden]) .mx-wexsurface'); const cs = getComputedStyle(s);
+      return Math.round(s.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)); }); };
+  let lo = 1000, hi = 1700; while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (await innerAt(mid) >= need) hi = mid; else lo = mid; }
+  const read = () => p.evaluate((id) => ({ bridge: document.querySelector('.mx').dataset.mxBridge, tab: document.querySelector('[data-mx-tab].on').dataset.mxTab,
+    state: (document.querySelector(`[data-mx-panel="${id}"] [data-mx-state].on`) || { dataset: {} }).dataset.mxState,
+    live: [].slice.call(document.querySelectorAll('[data-mx-panel]')).filter((e) => !e.hidden).map((e) => e.dataset.mxPanel).join(','),
+    top: document.querySelector('.mx-page').scrollTop, max: document.querySelector('.mx-page').scrollHeight - document.querySelector('.mx-page').clientHeight }), cmpId);
+  await innerAt(hi); const wide = await read();
+  await innerAt(hi - 1); await p.waitForTimeout(400);
+  await p.click(`[data-mx-panel="${cmpId}"] [data-mx-state="visual"]`); await p.waitForTimeout(500);
+  await p.evaluate(() => { document.querySelector('.mx-page').scrollTop = 200; }); await p.waitForTimeout(100);
+  const staged = await read();
+  await innerAt(hi); await p.waitForTimeout(600); const back = await read();
+  await innerAt(hi - 1); await p.waitForTimeout(600); const again = await read();
+  await p.close();
+  ok('a structural transition keeps the reader\'s tab, state and scroll — through the comparison floor and back',
+     wide.bridge === 'wide' && staged.bridge === 'staged' && staged.state === 'visual' && staged.top > 0
+     && back.bridge === 'wide' && back.tab === cmpId && back.live === cmpId && back.top === Math.min(staged.top, back.max)
+     /* a wide comparison has no states, so the second collapse legitimately lands on the FIRST state — both
+        workings before the picture — while the tab is still the reader's */
+     && again.bridge === 'staged' && again.tab === cmpId && again.state === 'workings',
+     `${hi}px: ${wide.bridge} on ${wide.tab} → ${hi - 1}px: ${staged.bridge}, state ${staged.state}, scrolled ${staged.top} → ${hi}px: ${back.bridge} on ${back.tab} (live ${back.live}) at ${back.top} → ${hi - 1}px: ${again.bridge} on ${again.tab}, state ${again.state}`);
 }
 // ══ the non-shipping composition proofs ════════════════════════════════════════════════════════
 // sequence's parallel-row contract and extended both need shapes the shipping lesson does not author. A

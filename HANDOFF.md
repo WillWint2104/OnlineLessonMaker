@@ -393,7 +393,10 @@ in a visibly defined rectangle — the question region is tinted (`--mx-ask-tint
 surface nor the ground is) and runs to the surface's edge, one quiet rule stands between it and the working,
 and the QUESTION and WORKED SOLUTION labels begin on the same line beneath the title. The ANSWER is the
 final band of the working — a rule above it, the label run in, the value flowing as text so a wrapped answer
-returns to the region's own inset — never a floating card. Everything sits on one left inset; nothing is
+returns to the region's own inset — never a floating card. The band and its label sit at the working's
+inset — the step-number column, as the maintainer's sketch draws it (`──── / ANSWER   y = 16`) — and the
+value runs in after the label; the step mathematics itself is 34px further in. (If the mathematics column
+was meant, the label must move above the value — a 34px gutter cannot hold ANSWER.) Everything sits on one left inset; nothing is
 centred. `standard` is one instance of this primitive; `sequence` is N identical instances stacked with
 a rule between them and the synthesis after the whole sequence; a staged state, an extended derivation and
 each case of a collapsed comparison are the same instance again. There is no second function and no second
@@ -443,10 +446,16 @@ a coordinate plane; a plane may never deform to satisfy a composition.
   the authored domain (clamped to 0.62–2.0 so a degenerate domain cannot make an absurd box) and publishes
   it as `--mx-plot-ar`. Re-author the mathematics and the slot re-shapes; nothing else does.
 - **A portrait plane takes HEIGHT, not a different placement.** A demonstration reaching *y* = 16 over
-  *x* = ±6 simply IS tall. A companion stays in the working's own column at its authored proportions and
-  the page gets longer (measured: 330px → 903px at the same 560px width); a plane too tall to embed at all
-  belongs in its own state, where it takes the width its shape needs and the explanation takes the rest. **"Fits this viewport" is not a quality measure** — a 1.5-screen worked example is fine, a
-  distorted plane is not. Nothing in the page family may cap a plane's height.
+  *x* = ±6 simply IS tall. A companion stays inside the working region at its authored proportions and
+  the page gets longer; a plane too tall to embed at all belongs in its own state, where it takes the
+  width its shape needs and the explanation takes the rest. **"Fits this viewport" is not a quality
+  measure** — a 1.5-screen worked example is fine, a distorted plane is not. Nothing in the page family
+  may shrink a plane below its longer-side bound or alter its aspect.
+  **AWAITING MAINTAINER RULING (correction 6):** every plane on this page — companion, bridge, staged foot,
+  extended step — now has ONE natural size, bounded on its longer side by `MX_PLOT_H` (720px) with the
+  aspect untouched: a portrait companion is drawn at 446 × 720 and a landscape one at 560 × 308 (measured),
+  where the companion alone was previously allowed 560 wide and 903 tall. The assertion that once required
+  "the same width" for both shapes now requires the same bound; the CHANGELOG entry flags the change.
 - **Measure the rendered transform, not the container.** A container and a viewBox can agree while the
   plane inside them is distorted. The gate reads px-per-unit per axis off the painted svg (engine units ×
   that axis's paint scale) and its control opts a plane out and shows the ratio go to ~2.1.

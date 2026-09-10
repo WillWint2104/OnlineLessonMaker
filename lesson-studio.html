@@ -1978,8 +1978,12 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-wexseq{display:flex;flex-direction:column;margin:0 calc(-1 * var(--mx-surface-pad));}
 .mx-wexex{display:grid;grid-template-columns:100%;grid-template-areas:"title" "ask" "work";
   align-items:stretch;padding:22px var(--mx-surface-pad) 26px;min-width:0;}
-.mx-wexex+.mx-wexex{border-top:1px solid var(--mx-line);}
-.mx-wexseq>.mx-wexex:first-child{padding-top:4px;}
+/* THE RULE BETWEEN INSTANCES BELONGS TO THE SEQUENCE, not to any instance: it is the sequence's own
+   element between two of them, so no rule that reaches one instance is keyed on its position */
+.mx-wexdiv{border-top:1px solid var(--mx-line);margin:0;}
+/* every instance has the same padding — the first is not a special case; what closes the gap to the lede
+   or the state bar above is the sequence's own margin */
+.mx-wexlede+.mx-wexseq,.mx-wexsurface>.mx-wexseq:first-child,.mx-stpane>.mx-wexseq:first-child{margin-top:-18px;}
 .mx-wexex>.mx-wexh{grid-area:title;margin:0 0 14px;}
 /* THE QUESTION REGION IS A TINTED RECTANGLE that runs to the surface's edge: its bleed IS the surface
    padding, read from the same property, so the tint, the rule between examples and the surface edge are one
@@ -1988,10 +1992,10 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    white surface rather than merging into the ground beside it. Flat: no radius, no border, no shadow. */
 .mx-wexask{grid-area:ask;background:var(--mx-ask-tint);print-color-adjust:exact;-webkit-print-color-adjust:exact;
   margin:0 calc(-1 * var(--mx-surface-pad));padding:16px var(--mx-surface-pad) 18px;min-width:0;}
-.mx-wexask>.mx-wexlab{color:var(--mx-ink-2);letter-spacing:.13em;}
+.mx-wexask>.mx-wexlab{color:var(--mx-ink-2);}
 .mx-wexwork{grid-area:work;padding:16px 0 0;min-width:0;}
 .mx-wexwork>.mx-wexsec{margin:0;}
-.mx-wexwork>.mx-wexsec>.mx-wexlab{color:var(--mx-ink-3);}
+.mx-wexwork>.mx-wexsec>.mx-wexlab{color:var(--mx-ink-2);}   /* peers on one line, one style */
 /* a state with no question has no ask region; the working keeps a reading measure rather than spanning
    the surface, left-aligned like everything else */
 .mx-wexex[data-mx-form="solo"]{grid-template-areas:"title" "work";}
@@ -2039,7 +2043,7 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-wexbridge>.mx-wexzone[data-mx-zone="b"] .mx-wexask{margin:0 calc(-1 * var(--mx-surface-pad)) 0 calc(-1 * var(--mx-zone-pad,22px));
   padding:16px var(--mx-surface-pad) 18px var(--mx-zone-pad,22px);}
 .mx-wexmid{min-width:0;}
-.mx-wexmid .mx-part[data-mx-part="figure"]{width:min(100%,var(--mx-plot-w));margin:0;}
+.mx-wexmid .mx-part[data-mx-part="figure"]{width:min(100%,var(--mx-plot-w),calc(var(--mx-plot-h,720px) * var(--mx-plot-ar,1.333)));margin:0;}
 /* GRAPH | INTERPRETATION — two sibling regions with one top edge and one rule between them, decided by
    mxFootPairs and published as data-mx-foot. The plane takes its own natural width and its height follows
    its authored aspect — a tall plane makes the page LONGER and it scrolls; the interpretation is held to a
@@ -2049,7 +2053,12 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-wexfoot>.mx-wexlab{margin-bottom:12px;}
 .mx-wexpair{display:flex;flex-direction:column;align-items:stretch;}
 .mx-wexpair>.mx-wexzone{display:flex;flex-direction:column;gap:0;min-width:0;}
-.mx-wexpair>.mx-wexzone[data-mx-region="interpretation"]{gap:16px;margin-top:22px;max-width:var(--mx-interp-max,620px);}
+.mx-wexpair>.mx-wexzone[data-mx-region="interpretation"]{margin-top:22px;max-width:var(--mx-interp-max,620px);}
+/* the two regions' first blocks sit the same distance under their labels — the plane under GRAPH, the
+   algebraic result under INTERPRETATION — and the interpretation's pieces are spaced from each other, not
+   from the label */
+.mx-wexpair>.mx-wexzone[data-mx-region="interpretation"]>*+*{margin-top:16px;}
+.mx-wexpair>.mx-wexzone[data-mx-region="interpretation"]>.mx-wexzl+*{margin-top:0;}
 .mx-wexpair>.mx-wexzone>.mx-wexzl{margin-bottom:12px;}
 .mx-wexpair .mx-wexres[data-mx-lead]{border-top:0;padding-top:0;}
 .mx-wexpair>.mx-wexzone>.mx-part:first-child>.mx-parth{margin-top:0;}
@@ -2062,7 +2071,7 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    flow resumes. Wider than the prose, never wider than a plane wants to be, and left-aligned like all else. */
 .mx-wexpane[data-mx-wextype="extended"] .mx-stepvis{margin-left:-6px;}
 .mx-wexpane[data-mx-wextype="extended"] .mx-stepvis .mx-part[data-mx-part="figure"]{
-  aspect-ratio:var(--mx-plot-ar,4/3);height:auto;width:min(100%,var(--mx-plot-w));min-height:var(--mx-plot-min-h);margin:0;}
+  aspect-ratio:var(--mx-plot-ar,4/3);height:auto;width:min(100%,var(--mx-plot-w),calc(var(--mx-plot-h,720px) * var(--mx-plot-ar,1.333)));min-height:var(--mx-plot-min-h);margin:0;}
 .mx-stepvis{margin-top:10px;padding:10px 0 2px;border-top:1px dashed var(--mx-line);}
 .mx-stepvis .mx-part[data-mx-part="figure"]{position:relative;min-height:220px;}
 .mx-wexh{font-family:var(--mx-serif);font-size:20px;font-weight:600;color:var(--mx-ink);margin:0 0 16px;}
@@ -2144,6 +2153,14 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 /* the shell's identity strip is the Mathematics tab row here — keep only the expand affordance */
 .mx .mx-figstage .tp-fig-head{padding:0 0 6px;border:0;min-height:0;justify-content:flex-end;background:transparent;}
 .mx .mx-figstage .tp-fig-ident{display:none;}
+/* inside a named region the plane is the region's first block: the expand affordance sits on the
+   region's LABEL LINE (GRAPH … ⤢), not in a strip between the label and the plane and not on the plane
+   where it would cover an authored label — so the plane's top edge is where the interpretation's first
+   block is, and nothing loose stands between a region's label and its content. The stage is inset 10px
+   inside the part and the label sits 26px above the part, so the head is lifted by both. */
+.mx-wexpair .mx-figstage .tp-fig-head,.mx-wexmid .mx-figstage .tp-fig-head{
+  position:absolute;top:-36px;right:-10px;z-index:2;padding:0;}
+.mx-wexpair .mx-part[data-mx-part="figure"],.mx-wexmid .mx-part[data-mx-part="figure"]{overflow:visible;}
 .mx .mx-figstage .tp-fig-foot{padding:5px 0 0;border:0;background:transparent;}
 
 .mx-content,.mx-work{min-width:0;}
@@ -7525,7 +7542,11 @@ function mxResolveFit(){
      rebuilt rather than restyled. Guarded on the transition, so the observer cannot feed back on itself. */
   if(root.querySelector('.mx-wex')){
     const b=mxBridgeFits(root)?'wide':'staged';
-    if(MX_BRIDGE!==b){ MX_BRIDGE=b; root.setAttribute('data-mx-bridge',b); renderSlide(); return; }
+    /* THE REBUILD IS THE PAGE'S, NOT THE READER'S. Rebuilding from the JSON lands on the first tab and the
+       first state at the top of the page; a reader dragging a window through the floor while reading the
+       Symmetry visual must not be put back on Substitution. Their tab, each group's state and the scroll
+       positions are taken before and put back after. */
+    if(MX_BRIDGE!==b){ const keep=mxWexPlace(root); MX_BRIDGE=b; root.setAttribute('data-mx-bridge',b); renderSlide(); mxWexRestore(keep); return; }
     root.setAttribute('data-mx-bridge',b);
     root.setAttribute('data-mx-rows',mxRowSplits(root)?'split':'stacked');
     root.setAttribute('data-mx-foot',mxFootPairs(root)?'pair':'stack');
@@ -7748,22 +7769,42 @@ function wireResponsive(){
     const t=document.querySelector(m.target); if(t) t.click();
   }));
   root.querySelectorAll('[data-mx-tabset]').forEach(bar=>bar.addEventListener('click',e=>{
-    const b=e.target.closest('[data-mx-tab]'); if(!b) return;
-    bar.querySelectorAll('[data-mx-tab]').forEach(x=>{ x.classList.toggle('on',x===b); x.setAttribute('aria-selected',x===b?'true':'false'); });
-    const host=bar.parentNode;
-    host.querySelectorAll('[data-mx-panel]').forEach(pn=>{ pn.hidden=(pn.dataset.mxPanel!==b.dataset.mxTab); });
-    if(typeof scheduleFigFit==='function') scheduleFigFit();     // a revealed pane's figures have a real box only now
+    const b=e.target.closest('[data-mx-tab]'); if(b) mxShowTab(b);
   }));
   /* LOCAL STATES inside one worked example. The same mechanic as the tab bar, scoped to its own group, so
-     a staged example's states cannot move another group's panes — and a figure that has just come out of
-     `hidden` is re-solved, because until this moment its stage measured zero. */
+     a staged example's states cannot move another group's panes. */
   root.querySelectorAll('[data-mx-stateset]').forEach(bar=>bar.addEventListener('click',e=>{
-    const b=e.target.closest('[data-mx-state]'); if(!b) return;
-    bar.querySelectorAll('[data-mx-state]').forEach(x=>{ x.classList.toggle('on',x===b); x.setAttribute('aria-selected',x===b?'true':'false'); });
-    const host=bar.parentNode;
-    host.querySelectorAll('[data-mx-statepanel]').forEach(pn=>{ pn.hidden=(pn.dataset.mxStatepanel!==b.dataset.mxState); });
-    if(typeof scheduleFigFit==='function') scheduleFigFit();
+    const b=e.target.closest('[data-mx-state]'); if(b) mxShowState(b);
   }));
+}
+/* ONE IMPLEMENTATION of showing a tab or a state — the click handlers and the place-restore after a
+   rebuild use the same one. A figure that has just come out of `hidden` is re-solved, because until this
+   moment its stage measured zero. */
+function mxShowTab(b){
+  const bar=b.closest('[data-mx-tabset]'); if(!bar) return;
+  bar.querySelectorAll('[data-mx-tab]').forEach(x=>{ x.classList.toggle('on',x===b); x.setAttribute('aria-selected',x===b?'true':'false'); });
+  bar.parentNode.querySelectorAll('[data-mx-panel]').forEach(pn=>{ pn.hidden=(pn.dataset.mxPanel!==b.dataset.mxTab); });
+  if(typeof scheduleFigFit==='function') scheduleFigFit();
+}
+function mxShowState(b){
+  const bar=b.closest('[data-mx-stateset]'); if(!bar) return;
+  bar.querySelectorAll('[data-mx-state]').forEach(x=>{ x.classList.toggle('on',x===b); x.setAttribute('aria-selected',x===b?'true':'false'); });
+  bar.parentNode.querySelectorAll('[data-mx-statepanel]').forEach(pn=>{ pn.hidden=(pn.dataset.mxStatepanel!==b.dataset.mxState); });
+  if(typeof scheduleFigFit==='function') scheduleFigFit();
+}
+/* the reader's place on the worked-examples page: the open tab, each group's open state, and where each
+   scroller was — taken before a structural rebuild and put back after it */
+function mxWexPlace(root){
+  const tab=root.querySelector('[data-mx-tab].on'), states={};
+  root.querySelectorAll('[data-mx-panel]').forEach(pn=>{ const st=pn.querySelector('[data-mx-state].on'); if(st) states[pn.dataset.mxPanel]=st.dataset.mxState; });
+  return { tab:tab?tab.dataset.mxTab:null, states, scroll:mxScrollers(root).map(x=>[x[0],x[1].scrollTop]) };
+}
+function mxWexRestore(keep){
+  const root=$('#slide').querySelector('.mx'); if(!root||!keep) return;
+  const q=v=>(window.CSS&&CSS.escape)?CSS.escape(v):String(v).replace(/["\\]/g,'\\$&');
+  if(keep.tab){ const b=root.querySelector(`[data-mx-tab="${q(keep.tab)}"]`); if(b) mxShowTab(b); }
+  Object.keys(keep.states).forEach(id=>{ const b=root.querySelector(`[data-mx-panel="${q(id)}"] [data-mx-state="${q(keep.states[id])}"]`); if(b) mxShowState(b); });
+  const sc=mxScrollers(root); keep.scroll.forEach(([k,top])=>{ const x=sc.find(y=>y[0]===k); if(x) x[1].scrollTop=top; });
 }
 
 /* ── the Mathematics page templates ──────────────────────────────────────────────────────────────
@@ -8021,7 +8062,7 @@ function mxWexGroupBody(g,s,i,state){
       <div class="mx-wexzone" data-mx-zone="b"><h4 class="mx-wexlab mx-wexzl">Case B</h4>${mxWexEx(ex[1],1,state,vis(ex[1],1))}</div></div>`;
   /* EVERY OTHER COMPOSITION IS THE PRIMITIVE, STACKED — one instance for standard, staged and extended, N
      for a sequence, both cases for a collapsed comparison's workings. No grid, no centring, no 2 + 1. */
-  return `<div class="mx-wexseq">${ex.map((x,k)=>mxWexEx(x,k,state,vis(x,k))).join('')}</div>`;
+  return `<div class="mx-wexseq">${ex.map((x,k)=>mxWexEx(x,k,state,vis(x,k))).join('<div class="mx-wexdiv" role="presentation"></div>')}</div>`;
 }
 /* NEVER A HEADING ABOVE A HEADING. The optional fourth region is named once: by the group's own
    `footLabel` if it states one, otherwise by the parts' authored labels, which already say what the region
