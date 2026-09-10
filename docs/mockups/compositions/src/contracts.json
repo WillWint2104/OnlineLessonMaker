@@ -1,87 +1,110 @@
 {
-  "_": "THE ZONE CONTRACT. Nothing in this pack types a track width, a percentage or a breakpoint. Every box in every image is ASSIGNED BY THE RESOLVER from the contracts below and then measured back; a render that disagreed with its own contract fails the build. Widths are necessary but not sufficient: a candidate arrangement must also pass intrinsic-asset fidelity, vertical occupancy and dead-space ownership before it is used.",
+  "_": "THE COMPOSITION CONTRACT. A Study page is vertically scrollable, so height is not a scarce resource and the resolver does not try to fit a composition into the visible rectangle. Layout selection is WIDTH-DRIVEN. Height grows and the page scrolls.",
 
-  "base": { "rem": 16, "_note": "The app sets no root font-size, so 1rem = 16px. Text minimums and maxima are in rem because they are reading measures, not device measures." },
+  "order": [
+    "1  content semantics       — the composition family, authored, never inferred",
+    "2  intrinsic demands       — what each region and each figure actually needs, measured at layout time",
+    "3  choose the composition  — a NAMED state from that family's ladder",
+    "4  allocate width          — to the chosen state, computed from scratch",
+    "5  let height grow         — height:auto, no target page height",
+    "6  scroll",
+    "_  The order this replaces was: take the available rectangle, divide it, shrink things to fit, and reject when the two sides do not occupy similar heights. That is fitting rectangles, not composing a lesson."
+  ],
 
-  "gap": { "rem": 2, "_note": "One gap between any two tracks, in every primitive. Also the dead-space tolerance." },
+  "base": { "rem": 16 },
+  "gap": { "rem": 2 },
+
+  "origins": {
+    "_": "PERMANENT HORIZONTAL ORIGINS. Every region lands on a named origin; nothing is positioned because it happens to be narrower than the space around it, and nothing is ever centred. The build measures each region's left edge and fails if it is not on its declared origin.",
+    "page": "the page's own left edge",
+    "content": "the teaching surface's left inset — where a title, a question, a figure, a synthesis and a stacked solution all begin",
+    "secondaryTrack": "the second track of a two-track state — where a split solution or an interpretation rail begins",
+    "figure": "the same as `content`: a plane is left-aligned in its region in every state",
+    "readingEnd": "origin + the region's reading measure. A ceiling, not a width to fill",
+    "map": {
+      "instructionSplit": { "title": "content", "prompt": "content", "solution": "secondaryTrack", "answer": "secondaryTrack", "synthesis": "content" },
+      "instructionFlow":  { "title": "content", "prompt": "content", "solution": "content", "answer": "content", "synthesis": "content" },
+      "visualInterpretation:side":  { "figure": "content", "interpretation": "secondaryTrack" },
+      "visualInterpretation:stack": { "figure": "content", "interpretation": "content" },
+      "repeat:across": { "case": "content then secondaryTrack" },
+      "repeat:down":   { "case": "content" }
+    }
+  },
+
+  "whitespace": {
+    "_": "NOT EVERY UNUSED PIXEL IS A DEFECT. Treating them alike is what made the last resolver stack a pair to avoid 94px and thereby create 766px.",
+    "readingMargin": "DESIRABLE. A 608px prose column on a 1152px page does not become 1152px wide.",
+    "structural": "DESIRABLE. Space below the shorter side of a legitimate two-track row is hierarchy, not a hole.",
+    "unowned": "DEFECTIVE. A 720px region containing a 390px plane because the region inherited an allocation.",
+    "invariant": "No child is stretched, distorted or arbitrarily positioned to consume unused space. Unused page width may remain as page margin. Unused width INSIDE a composition region must arise from an explicit region measure or an alignment rule."
+  },
 
   "regions": {
-    "prompt": { "min": 18, "max": 34, "grow": 0.7,
-      "role": "the question. A compact reading rail.",
-      "note": "A TRACK IS A POSITION. No fill, no border, no stretching to the sibling's height." },
-    "solution": { "min": 28, "max": 38, "grow": 1.3,
-      "role": "the numbered reasoning and the answer that closes it.",
-      "note": "`max` is a hard allocation ceiling, not only a prose cap. A track is never given width its region cannot use — see deadSpace." },
-    "case": { "min": 18, "max": 34, "grow": 1,
-      "role": "one complete case in a comparison — its own question, reasoning and answer, stacked.",
-      "note": "Equal grow: repeated children are identical by construction, so a comparison cannot develop a favoured side." },
-    "interpretation": { "min": 24, "max": 40, "grow": 1,
-      "role": "what the figure shows and why it agrees with the working.",
-      "note": "MAINTAINER RULING WANTED: you suggested a 45-55rem maximum; the app ships MX_INTERP_MAX = 620px (38.75rem). The pack uses 40rem." },
-    "synthesis": { "min": 18, "max": 40, "grow": 1,
-      "role": "the same semantic region as `interpretation`, in its other placement.",
-      "note": "ONE REGION, ONE STYLING CONTRACT, TWO PLACEMENTS. Beside a shared visual it is the interpretation rail; with no visual to belong to it spans the content region after the composition. The JSON key names the placement." },
-    "answer": { "min": null, "max": null, "grow": null,
-      "role": "the closing band of the solution it belongs to.",
-      "note": "INHERITED GEOMETRY. No width of its own; begins at its owning solution's content origin and flows as text." }
+    "prompt":         { "min": 18, "max": 34, "grow": 0.7, "origin": "content" },
+    "solution":       { "min": 28, "max": 38, "grow": 1.3, "origin": "secondaryTrack" },
+    "case":           { "min": 18, "max": 34, "grow": 1,   "origin": "content" },
+    "interpretation": { "min": 24, "max": 40, "grow": 1,   "origin": "secondaryTrack" },
+    "synthesis":      { "min": 18, "max": 40, "grow": 1,   "origin": "content" },
+    "answer":         { "min": null, "max": null, "grow": null, "origin": "inherited from its solution" }
   },
 
   "figure": {
-    "_": "A FIGURE IS SIZED FIRST, FROM ITS OWN CONTRACT, AND THE TEXT RECEIVES THE REMAINDER. The resolver never asks how much width is left over for the graph; it asks what box this graph needs and then builds a composition from what remains. A figure track is never `1fr`.",
-    "engineFloor": { "w": 340, "h": 255, "_note": "MX_PLOT_MIN_W / MX_PLOT_MIN_H — the engine's own floor, below which minimumReadableBox may never fall." },
-    "maxUsefulLongSide": 720,
+    "_": "A FIGURE IS MEASURED BEFORE ANY TEXT TRACK IS ALLOCATED. Leftover width is never a figure size. The signature is in SCALE — px per authored unit — because what makes a plane legible is a scale, not a box.",
+    "engineFloor": { "w": 340, "h": 255 },
+    "boxBound": 720,
     "preferredFraction": 0.85,
-    "_signature": "For every plane the build derives a FigureLayoutSignature by asking the engine, not by computing an aspect: minimumReadableBox (the smallest box in which the engine still paints one x-unit and one y-unit the same length, floored at engineFloor), preferredBox (preferredFraction of the largest square-scale box), maximumUsefulBox (the largest box whose longer side reaches maxUsefulLongSide while scale stays equal), plus the painted px-per-unit at each. equalScaleRequired is true for a Cartesian plane unless the lesson authors scaleMode:'authored'.",
-    "_ruling": "MAINTAINER RULING WANTED: your worked example stacked at 900px because the figure held its 612px preferred box. The pack instead lets a figure shrink WITHIN [minimumReadable .. preferred] before abandoning the split, which your own caveat permits (\"unless 484 is independently within the figure's acceptable range\"). Under the pack's rule your 900px case splits at 484 + 32 + 384. Say which you want; it is one comparison in the resolver."
-  },
-
-  "gates": {
-    "_": "A candidate arrangement must pass ALL of these. They are hard feasibility conditions, not aesthetic scores — otherwise the resolver goes on choosing arrangements that are legal and obviously bad.",
-    "width": "every region meets its minimum useful width",
-    "fidelity": "every intrinsic asset (plane, table, equation) keeps the size it actually requires; a figure is never squeezed to preserve a split",
-    "occupancy": { "min": 0.55,
-      "_note": "occupancy = a track's content height / the row's height. The SHORTER track must reach this fraction. A one-line question beside a seven-step solution occupies ~17% of its row and is rejected at any width. MAINTAINER RULING WANTED: you suggested testing 50-60%; the pack uses 0.55 and prints every measured occupancy so the threshold can be argued from data." },
-    "deadSpace": { "toleranceGaps": 1,
-      "_note": "Every substantial region of horizontal space a composition creates must belong to a semantic region. A track is therefore never allocated more width than its region can use: distribute by growth weight, clamp each track to [min, max], and redistribute the surplus to tracks still below their maximum. Only when every region is at its maximum does leftover width appear, and then it is a trailing page margin — never a hole between or inside regions. Unowned inline space above one gap fails the candidate." },
-    "overflow": "content that cannot be set at the assigned width (a wide equation, a wide table) is handled locally — its own scroll — and never changes the sibling track, the type size or the composition",
-    "ordering": "the semantic order of regions is identical in every state"
+    "ladder": [
+      "1  preferred scale + gap + interpretation.min fits            -> side, at the preferred scale",
+      "2  else, if shrinkPolicy allows: the largest scale in [minimum .. preferred] that still leaves interpretation.min -> side",
+      "3  else                                                       -> stack, and RECOMPUTE the figure against the whole content region"
+    ],
+    "shrinkPolicy": "allow",
+    "_shrinkNote": "MAINTAINER RULING STILL OPEN, but now it is a named policy rather than a buried comparison. `allow` lets a plane reduce within its own legal range before the side state is abandoned; `hold` makes it keep its preferred scale and stack instead."
   },
 
   "primitives": {
-    "instructionSplit": { "tracks": ["prompt", "solution"], "purpose": "an ordinary worked example", "fallback": "stack" },
-    "repeat": { "child": "any composition", "axis": "down | across",
-      "purpose": "several instances of one child",
-      "note": "ITEM COUNT HAS NO EFFECT ON GEOMETRY, and neither does item VARIATION: a repeat's children share ONE verdict and the strictest child decides it. Otherwise a gate that rejects row 2 alone would produce exactly the ragged, count-sensitive layout the primitive exists to prevent.",
-      "fallback": "across becomes down; down's children all stack together" },
-    "visualInterpretation": { "tracks": ["figure", "interpretation"],
-      "purpose": "a figure and the text that reads it, as siblings with one top edge",
-      "note": "The figure is assigned its box FIRST, from its own signature. The interpretation rail takes the remainder, capped at its maximum.",
-      "fallback": "stack" },
-    "stack": { "purpose": "the regions in semantic order, one inset, no divider, nothing centred",
-      "note": "THE SAFE FALLBACK, NOT A FAILURE. A layout engine should be willing to say: there is plenty of width, and this particular content pair still does not belong side by side." }
+    "instructionSplit": {
+      "regions": ["prompt", "solution"],
+      "purpose": "a balanced worked example: a question with real content beside a solution with real content",
+      "balance": { "test": "promptSubstance", "min": 0.55 },
+      "next": "instructionFlow"
+    },
+    "instructionFlow": {
+      "regions": ["prompt", "solution"],
+      "purpose": "A LEGITIMATE PRESENTATION TYPE, NOT A FALLBACK. A short task, a rule, then the reasoning at a controlled reading width, growing downwards. Most worked examples are this shape: the question is one line and the solution is the lesson.",
+      "next": null
+    },
+    "repeat": {
+      "child": "any composition", "axis": "across | down",
+      "balance": null,
+      "_": "Judged on each complete item's minimum width, never on height. Children share one verdict.",
+      "next": "repeat:down"
+    },
+    "visualInterpretation": {
+      "regions": ["figure", "interpretation"],
+      "balance": null,
+      "_": "NO HEIGHT TEST. A 700px plane beside a 180px explanation is a good relationship: the plane is the object being explained and the prose does not have to fill its height. The previous global occupancy gate was semantically wrong here and rejected exactly that.",
+      "next": "visualInterpretation:stack"
+    },
+    "stack": { "purpose": "regions in semantic order on the content origin", "next": null }
   },
 
-  "compositions": {
-    "standard":     { "relationship": "single",      "assembly": "instructionSplit(prompt, solution) + synthesis" },
-    "sequence":     { "relationship": "sequence",    "assembly": "repeat(down, standard) + synthesis" },
-    "pairedVisual": { "relationship": "paired",      "assembly": "repeat(across, case) + visualInterpretation(visual, interpretation)" },
-    "visualCheck":  { "relationship": "visualCheck", "assembly": "state 1: instructionSplit · state 2: visualInterpretation" },
-    "extended":     { "relationship": "derivation",  "assembly": "states; each state takes the primitive its own content needs" }
+  "ladders": {
+    "_": "EXPLICIT STATE TRANSITIONS. There is no generic fallback that keeps reallocating width until something fits — that is where unpredictability came from. Each rejected candidate DISCARDS ALL OF ITS COMPUTED DIMENSIONS and the next state is measured from scratch.",
+    "standard":     ["instructionSplit", "instructionFlow"],
+    "sequence":     ["repeat:down of standard"],
+    "pairedVisual": ["repeat:across -> repeat:down", "visualInterpretation:side -> visualInterpretation:stack"],
+    "visualCheck":  ["state 1: instructionSplit -> instructionFlow", "state 2: visualInterpretation:side -> visualInterpretation:stack"],
+    "extended":     ["per state, from the ladder its own content needs"]
   },
 
-  "resolver": [
-    "1  Read the semantic composition from the JSON. Never infer it from content.",
-    "2  Determine the legal primitive arrangements for that composition.",
-    "3  Obtain a layout signature for every region — minimum, preferred, maximum, rendered height; for a figure, its minimumReadable / preferred / maximumUseful boxes. Derived at layout time from rendered content, never authored.",
-    "4  Build candidate arrangements, sizing intrinsic assets FIRST and giving text the remainder.",
-    "5  Reject any candidate violating region minimum width, figure fidelity, reading measure, vertical occupancy, dead-space ownership, overflow handling or semantic ordering.",
-    "6  Score the survivors on closeness to preferred size, compactness, balanced occupancy and alignment continuity.",
-    "7  Choose deterministically.",
-    "8  If none survives, stack."
-  ],
+  "height": {
+    "_": "HEIGHT DOES NOT PARTICIPATE IN LAYOUT SELECTION, with exactly one exception.",
+    "policy": "height:auto; the page scrolls; there is no target page height in Study mode",
+    "exception": "instructionSplit's promptSubstance test — the shorter track's content height as a fraction of the row. It is the one signal that a question is not a track, and it SELECTS A DIFFERENT PRIMITIVE (instructionFlow) rather than rejecting the content.",
+    "viewportBound": "Focus mode and the workbook workspace are viewport-bound and are out of scope here."
+  },
 
-  "surfaces": { "desktop": 1152, "middle": 700, "narrow": 382,
-    "_note": "CONTENT REGION widths, not viewport widths. 1152 is a 1536px viewport with the navigation rail open; 382 is a 414px handset; 700 is chosen for being a width nobody designed for." },
-
+  "surfaces": { "desktop": 1152, "middle": 700, "narrow": 382 },
   "surfacePad": { "desktop": 30, "narrow": 16 }
 }

@@ -1,26 +1,31 @@
 #!/usr/bin/env node
-// THE ZONE-CONTRACT PACK — the layout grammar of the Mathematics worked-example compositions, and
-// the resolver that decides when each arrangement is actually viable.
+// THE COMPOSITION PACK — the layout grammar of the Mathematics worked examples, and the resolver
+// that chooses between its named states.
 //
 //   node scripts/mockups-compositions.mjs [outDir]
 //
-// The governing correction this revision implements: FITTING HORIZONTALLY IS NOT THE SAME AS BEING
-// VIABLE. A candidate arrangement must pass four independent conditions —
+// THE GOVERNING CORRECTION: a Study page is vertically scrollable, so height is not a scarce
+// resource and the resolver does not try to fit a composition into the visible rectangle. The order
+// is content semantics -> intrinsic demands -> choose a named state -> allocate width -> let height
+// grow -> scroll. It is NOT: take the available rectangle, divide it, shrink things to fit, and
+// reject when the two sides do not occupy similar heights.
 //
-//   width       every region meets its minimum useful width
-//   fidelity    every intrinsic asset keeps the size it actually needs; a figure is sized FIRST,
-//               from its own layout signature, and the text receives the remainder
-//   occupancy   the shorter track fills enough of the row to be a track rather than a fragment
-//   dead space  every substantial piece of inline space belongs to a semantic region
+// Four consequences, each of which removed a defect rather than tuned one:
 //
-// — and only a candidate that passes all four is used. Otherwise the resolver stacks, which is a
-// safe fallback and not a failure: there can be plenty of width and this content pair still not
-// belong side by side.
-//
-// That is why there are no container queries left in the kit. A query can ask how wide the container
-// is. It cannot ask whether the shorter track fills the row, or whether the space beside a plane
-// belongs to anything — those are knowable only after a candidate has been laid out. So this build
-// lays the candidate out, measures it, and writes the verdict and the track boxes back.
+//   · EVERY STATE IS A FRESH LAYOUT. A rejected candidate discards all of its computed dimensions
+//     and the next state is measured from scratch. The previous build did not do this: a
+//     visualInterpretation that failed its test and stacked kept the track allocation from the side
+//     candidate it had already rejected — visible in its own report as state "stack" carrying
+//     cols [332, 640].
+//   · HEIGHT DOES NOT SELECT A LAYOUT, with one named exception. The global occupancy gate is gone;
+//     it was semantically wrong for figures, where a 700px plane beside a 180px explanation is a
+//     good relationship. What remains is `promptSubstance` on instructionSplit alone, and it
+//     SELECTS A DIFFERENT PRIMITIVE rather than rejecting the content.
+//   · A THIRD INSTRUCTIONAL SHAPE. `instructionFlow` — a short task, a rule, then the reasoning at
+//     its own reading measure — is a legitimate presentation type, not a fallback. Most worked
+//     examples are that shape.
+//   · FIGURES ARE MEASURED FIRST, and offer the composition a LADDER of scales they can legally be
+//     drawn at. The composition picks from what the figure offers; leftover width is never a size.
 //
 // The app is not changed by this script and does not read anything under docs/mockups/.
 import http from 'node:http';
@@ -39,8 +44,10 @@ const FIGS = JSON.parse(fs.readFileSync(path.join(SRC, 'figures.json'), 'utf8'))
 const KIT = fs.readFileSync(path.join(SRC, 'kit.css'), 'utf8');
 
 const REM = C.base.rem, px = (r) => Math.round(r * REM), R = C.regions, GAP = px(C.gap.rem);
-const FLOOR = C.figure.engineFloor, BOUND = C.figure.maxUsefulLongSide;
-const OCC = C.gates.occupancy.min, DEAD = C.gates.deadSpace.toleranceGaps * GAP;
+const FLOOR = C.figure.engineFloor, BOUND = C.figure.boxBound;
+const SUBSTANCE = C.primitives.instructionSplit.balance.min;
+const SHRINK = C.figure.shrinkPolicy === 'allow';
+const LADDER_N = 14;
 
 /* ── the server and the app's own stylesheet, read from the CSSOM ─────────────────────────────── */
 const MIME = { '.html': 'text/html', '.json': 'application/json', '.woff2': 'font/woff2', '.png': 'image/png', '.svg': 'image/svg+xml' };
@@ -169,37 +176,45 @@ async function largestScaleWithin(key, fig, lo, hi) {
 async function signature(key, f) {
   const fig = f.figure, d = fig.domain;
   const xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
-  /* THE FLOOR IS A PROPERTY OF THE MATHEMATICS: the plot area must clear MX_PLOT_MIN_W × MIN_H.
-     THE BOUND IS A PROPERTY OF THE PAGE: the whole box may not exceed it. They are different things
-     and for an extreme aspect they can fail to overlap — which is a Figure Engine decision, not a
-     layout one, so the pack reports it rather than hiding it. */
+  /* The floor is a property of the MATHEMATICS: the plot must clear MX_PLOT_MIN_W x MIN_H.
+     The bound is a property of the PAGE: the whole box may not exceed it. For an extreme aspect they
+     can fail to overlap — a Figure Engine fact, reported rather than hidden. */
   const sMinWanted = Math.max(FLOOR.w / xs, FLOOR.h / ys);
   const top = await largestScaleWithin(key, fig, 4, 260);
   if (!top) throw new Error(`${key}: no box inside the ${BOUND}px bound paints this domain at equal scale`);
   const floorUnreachable = top.s < sMinWanted - 0.01;
   const sMax = top.s, sMin = floorUnreachable ? top.s : sMinWanted;
   const sPref = Math.max(sMin, C.figure.preferredFraction * sMax);
-  const need = async (s, label) => {
+
+  /* THE LADDER — the sizes this plane can legally be drawn at, each one measured. The composition
+     picks an entry from what the figure offers; it never computes a figure size from the width it
+     has left over. Ascending, so "the largest that fits" is a scan. */
+  const ladder = [];
+  for (let i = 0; i < LADDER_N; i++) {
+    const s = sMin + (sMax - sMin) * (i / (LADDER_N - 1));
     const b = await boxForScale(key, fig, s);
-    if (!b) throw new Error(`${key}: the engine cannot paint ${s.toFixed(1)} px per unit`);
-    return { ...b, label };
-  };
-  const minReadable = await need(sMin, 'minimumReadable');
-  const preferred = await need(sPref, 'preferred');
-  const maxUseful = { ...top.box, label: 'maximumUseful' };
-  const sig = { minReadable, preferred, maxUseful, sMin, sPref, sMax, xs, ys,
-    equalScaleRequired: true, floorUnreachable, wantedFloorScale: +sMinWanted.toFixed(1),
-    oneLegalScale: sMax - sMin < 0.5 };
-  console.log(`  ${key.padEnd(11)} min ${minReadable.w}×${minReadable.h} @${sMin.toFixed(1)}  `
-    + `pref ${preferred.w}×${preferred.h} @${sPref.toFixed(1)}  max ${maxUseful.w}×${maxUseful.h} @${sMax.toFixed(1)} px/unit`
+    if (b && (!ladder.length || b.w > ladder[ladder.length - 1].w)) ladder.push({ s: +s.toFixed(2), w: b.w, h: b.h });
+  }
+  if (!ladder.length) throw new Error(`${key}: the engine offers no legal box`);
+  const nearest = (s) => ladder.reduce((a, e) => Math.abs(e.s - s) < Math.abs(a.s - s) ? e : a, ladder[0]);
+  const sig = { sMin, sPref, sMax, ladder, floorUnreachable, wantedFloorScale: +sMinWanted.toFixed(1),
+    minReadable: nearest(sMin), preferred: nearest(sPref), maxUseful: nearest(sMax),
+    oneLegalScale: sMax - sMin < 0.5, equalScaleRequired: true };
+  console.log(`  ${key.padEnd(11)} min ${sig.minReadable.w}×${sig.minReadable.h} @${sMin.toFixed(1)}  `
+    + `pref ${sig.preferred.w}×${sig.preferred.h} @${sPref.toFixed(1)}  max ${sig.maxUseful.w}×${sig.maxUseful.h} @${sMax.toFixed(1)}  `
+    + `· ${ladder.length} legal size${ladder.length > 1 ? 's' : ''}`
     + (floorUnreachable ? `  [FLOOR UNREACHABLE — the plot needs ${sMinWanted.toFixed(1)} px/unit to clear `
-        + `${FLOOR.w}×${FLOOR.h}, and the ${BOUND}px bound is reached at ${sMax.toFixed(1)}]`
-       : sig.oneLegalScale ? '  [ONE legal scale]' : ''));
+        + `${FLOOR.w}×${FLOOR.h}, and the ${BOUND}px box bound is reached at ${sMax.toFixed(1)}]` : ''));
   return sig;
 }
-console.log('\nfigure layout signatures (asked of the engine, not computed from an aspect)');
+
+console.log('\nfigure layout signatures — each plane offers the sizes it can legally be drawn at');
 const SIG = {};
 for (const [key, f] of Object.entries(FIGS)) { if (key.startsWith('_')) continue; SIG[key] = await signature(key, f); }
+/* figPage stays open: phase 2 repaints each plane at the box the resolver assigned it, and that must
+   be a real paint rather than a cache lookup. Closing it here made the phase-2 squareness check
+   vacuous for any box the signature phase had not already tried — and hid a control failure behind a
+   "Target page has been closed" crash. */
 
 /* ══ THE PAGE ══════════════════════════════════════════════════════════════════════════════════ */
 const tokens = (surface, pad) => `:root{
@@ -207,24 +222,31 @@ const tokens = (surface, pad) => `:root{
   --mk-rowgap:34px; --mk-stackgap:22px;
   --mk-prompt-max:${px(R.prompt.max)}px; --mk-solution-max:${px(R.solution.max)}px;
   --mk-interp-max:${px(R.interpretation.max)}px; --mk-synthesis-max:${px(R.synthesis.max)}px;
+  --mk-prompt-flow-max:${px(R.prompt.max)}px;
 }`;
 const band = (r) => `min ${R[r].min}rem (${px(R[r].min)}px) · max ${R[r].max}rem (${px(R[r].max)}px) · growth ${R[r].grow}`;
 const DIM = {
-  prompt: `PROMPT TRACK · ${band('prompt')}. A position, not a box: no fill, no border, no stretching.`,
-  solution: `SOLUTION TRACK · ${band('solution')}. The maximum is an allocation ceiling, not only a prose cap — a track is never given width its region cannot use.`,
-  case: `CASE · ${band('case')}. Repeated children share one track contract and one verdict.`,
-  figure: `FIGURE · sized FIRST, from its own layout signature, before any text is allocated. Never 1fr, never the space that happens to be free.`,
-  interpretation: `INTERPRETATION RAIL · ${band('interpretation')}. Takes the remainder beside the plane, capped at its maximum.`,
-  gates: `A CANDIDATE MUST PASS · width · figure fidelity · vertical occupancy ≥ ${Math.round(OCC * 100)}% · no unowned space between or inside tracks. Otherwise it stacks — a safe fallback, not a failure.`,
-  occupancy: `OCCUPANCY = the shorter track's content height ÷ the row's height. Below ${Math.round(OCC * 100)}% the short region is a fragment beside a wall, not a track.`,
-  deadSpace: `DEAD SPACE · no unowned width between two tracks or inside one. Space past the last track is page margin, and is reported rather than failed — stacking to avoid it makes it larger, not smaller.`,
-  repeatCount: `Three examples here; the geometry is identical at two, four or ten. The count appears nowhere in the layout — and a repeat's children share ONE verdict, so a gate can never leave row 2 stacked between two split siblings.`,
-  repeatAcross: `repeat(across) over the cases: one shared track contract, so two cases are two columns and the arrangement is not designed per count.`,
-  asmStandard: C.compositions.standard.assembly,
-  asmSequence: C.compositions.sequence.assembly,
-  asmPaired: C.compositions.pairedVisual.assembly,
-  asmVisualCheck: C.compositions.visualCheck.assembly,
-  asmExtended: C.compositions.extended.assembly,
+  prompt: `PROMPT · ${band('prompt')} · origin: ${R.prompt.origin}. A position, not a box.`,
+  solution: `SOLUTION · ${band('solution')} · origin: ${R.solution.origin}. The maximum is an allocation ceiling: a track is never given width its region cannot use.`,
+  case: `CASE · ${band('case')}. Judged on each complete item's minimum width, never on height.`,
+  figure: `FIGURE · measured BEFORE any text track, and offered to the composition as a ladder of legal scales. Leftover width is never a figure size.`,
+  interpretation: `INTERPRETATION · ${band('interpretation')}. Takes the remainder beside the plane, capped at its maximum. NO height test: a tall plane beside a short explanation is a good relationship.`,
+  order: `content semantics → intrinsic demands → choose a NAMED state → allocate width → height:auto → the page scrolls. There is no target page height in Study mode.`,
+  fresh: `EVERY STATE IS A FRESH LAYOUT. A refused candidate discards all of its computed dimensions; the next state is measured from scratch.`,
+  substance: `PROMPT SUBSTANCE · the question's content height as a fraction of the row. The ONE place height enters layout selection, and it chooses instructionFlow rather than rejecting the content. Floor ${Math.round(SUBSTANCE * 100)}%.`,
+  flow: `instructionFlow is a presentation type, not a fallback: a short task, a rule, then the reasoning at its own reading measure while the page grows downwards.`,
+  whitespace: `WHITESPACE · reading margin and structural space are desirable; only unowned width INSIDE an allocated region is a defect.`,
+  origins: `ORIGINS · content and secondary-track are permanent. Every region lands on a named origin; nothing is centred because it happens to be narrower than the space around it.`,
+  asmStandard: 'instructionSplit | instructionFlow, then synthesis',
+  asmSequence: 'repeat(down) over the standard ladder, then synthesis',
+  asmPaired: 'repeat(across|down) over the cases, then visualInterpretation(side|stack)',
+  asmVisualCheck: 'state 1: instructionSplit | instructionFlow · state 2: visualInterpretation(side|stack)',
+  asmExtended: 'states; each takes the ladder its own content needs',
+  repeatCount: `The count appears nowhere in the layout, and a repeat's children share one verdict.`,
+  repeatAcross: `repeat(across) over the cases: one shared track contract, judged on minimum width.`,
+  gates: `A NAMED STATE IS CHOSEN BY WIDTH. Height grows and the page scrolls.`,
+  occupancy: `No height test here. The plane is the object being explained; the prose need not fill its height.`,
+  deadSpace: `Unused page width may remain as page margin. Only unowned width inside a region is a defect.`,
 };
 const readFrag = (f) => fs.readFileSync(path.join(SRC, f + '.html'), 'utf8')
   .replace(/\{\{PART:([a-z0-9_-]+)\}\}/gi, (m, p) => fs.readFileSync(path.join(SRC, p + '.part'), 'utf8'))
@@ -240,11 +262,31 @@ ${KIT}
 <div class="mk-surface"${opts.spec ? ' data-mk-spec' : ''}>${body}</div>
 </div></body></html>`;
 
-/* ══ THE RESOLVER, IN THE PAGE ═════════════════════════════════════════════════════════════════ */
+/* ══ THE RESOLVER, IN THE PAGE ════════════════════════════════════════════════════════════════
+   Width-driven. Each family has an explicit ladder of NAMED states; a state is tried, and if it is
+   refused the element is reset completely — attribute, grid template, gaps, figure box — before the
+   next state is computed. There is no generic fallback that keeps reallocating width until
+   something fits, and no state inherits a number from a state that was rejected. */
 const RESOLVER = `(cfg) => {
-  const { regions:R, sig:SIG, GAP, OCC, DEAD } = cfg;
+  const { regions:R, sig:SIG, GAP, SUBSTANCE, SHRINK } = cfg;
   const log = [];
-  const alloc = (regs, avail) => {                 /* weighted, clamped to [min,max], redistributed */
+  const kids = (el, n) => [].slice.call(el.children).filter((c) => c.getAttribute('data-mk-region') === n);
+  const H = (el) => Math.round(el.getBoundingClientRect().height);
+  const Wd = (el) => Math.round(el.getBoundingClientRect().width);
+  const Lf = (el) => Math.round(el.getBoundingClientRect().left);
+
+  /* A CANDIDATE LEAVES NO RESIDUE. Everything the previous attempt wrote is removed before the next
+     one is measured — including the figure's box, which is the residue that survived last time. */
+  const reset = (el) => {
+    el.removeAttribute('data-mk-state');
+    el.style.gridTemplateColumns = ''; el.style.columnGap = ''; el.style.width = '';
+    kids(el, 'figure').forEach((h) => { h.style.width = '';
+      const box = h.querySelector('[data-mk-figure-box]');
+      if (box) { box.style.width = ''; box.style.height = ''; } });
+    void el.offsetWidth;
+  };
+
+  const alloc = (regs, avail) => {
     const fixed = regs.map(() => null);
     for (let pass = 0; pass < regs.length + 2; pass++) {
       const free = avail - fixed.reduce((s, v) => s + (v || 0), 0);
@@ -257,137 +299,142 @@ const RESOLVER = `(cfg) => {
         else if (w < regs[i].min) { fixed[i] = regs[i].min; clamped = true; } }
       if (!clamped) { for (const i of idx) fixed[i] = free * regs[i].grow / gsum; break; }
     }
-    return fixed.map((v) => v || 0);
+    return fixed.map((v) => Math.round(v || 0));
   };
-  const kids = (el, name) => [].slice.call(el.children).filter((c) => c.getAttribute('data-mk-region') === name);
-  const H = (el) => Math.round(el.getBoundingClientRect().height);
+
+  /* THE FIGURE OFFERS; THE COMPOSITION CHOOSES. Never the other way round. */
+  const offer = (sg, maxW) => {
+    let best = null;
+    for (const e of sg.ladder) if (e.w <= maxW && e.s <= sg.sPref + 0.01) best = e;
+    return best;
+  };
+  const atPreferred = (sg) => sg.ladder.reduce((a, e) =>
+    Math.abs(e.s - sg.sPref) < Math.abs(a.s - sg.sPref) ? e : a, sg.ladder[0]);
+
+  const putFigure = (el, box) => {
+    const host = kids(el, 'figure')[0];
+    host.style.width = box.w + 'px';
+    const b = host.querySelector('[data-mk-figure-box]');
+    b.style.width = box.w + 'px'; b.style.height = box.h + 'px';
+  };
 
   const els = [].slice.call(document.querySelectorAll('[data-mk="instructionSplit"],'
     + '[data-mk="repeat"][data-mk-axis="across"],[data-mk="visualInterpretation"]'));
 
-  /* ── 4 · build the candidate. Intrinsic assets are sized first. ───────────────────────────── */
-  const cand = [];
   for (const el of els) {
     const kind = el.getAttribute('data-mk');
-    const avail = el.clientWidth, inner = avail - GAP;
-    const rec = { el, kind, avail, reject: null, note: '' };
+    const rec = { kind, tried: [] };
+
     if (kind === 'visualInterpretation') {
-      const host = kids(el, 'figure')[0];
-      const key = host.getAttribute('data-mk-figure'), sg = SIG[key];
-      /* FIGURE FIRST, AND IN SCALE. The plane takes its preferred px-per-unit, reduced only within
-         [minimumReadable .. preferred], never below its floor, and never merely to preserve a split. */
-      const room = inner - R.interpretation.min;
-      /* the widest scale this room can hold, read off the plane's own preferred box */
-      const perPx = sg.preferred.w / sg.sPref;              /* px of box per px-per-unit of scale */
-      const roomScale = room / perPx;
-      const sc = Math.min(sg.sPref, Math.max(sg.sMin, Math.min(roomScale, sg.sMax)));
-      if (roomScale < sg.sMin - 0.01) {
-        rec.reject = 'fidelity';
-        rec.note = 'the plane needs ' + Math.round(sg.minReadable.w) + 'px to stay at its '
-          + sg.sMin.toFixed(1) + ' px/unit floor, and only ' + Math.round(room) + 'px is free beside a '
-          + R.interpretation.min + 'px rail';
-      } else {
-        rec.fig = { key, scale: +sc.toFixed(3),
-          w: Math.round(sg.preferred.w * sc / sg.sPref), h: Math.round(sg.preferred.h * sc / sg.sPref) };
-        const rail = Math.min(inner - rec.fig.w, R.interpretation.max);
-        rec.cols = [rec.fig.w, rail];
-        /* DEAD SPACE, AS AN INVARIANT RATHER THAN A REJECTION — see the note below. What is forbidden
-           is unowned space BETWEEN the tracks or INSIDE one; space past the last track is page margin.
-           Rejecting trailing space here made the resolver strictly worse: it stacked a 386px plane to
-           avoid 94px of trailing space and thereby produced 766px of it. */
-        rec.trailing = Math.round(inner - rec.fig.w - rail);
+      const key = kids(el, 'figure')[0].getAttribute('data-mk-figure');
+      const sg = SIG[key];
+      reset(el);
+      const avail = el.clientWidth, inner = avail - GAP;
+      const pref = atPreferred(sg);
+      let box = null, why = '';
+      if (pref.w + GAP + R.interpretation.min <= avail) { box = pref; why = 'at its preferred scale'; }
+      else if (SHRINK) {
+        const cand = offer(sg, inner - R.interpretation.min);
+        if (cand) { box = cand; why = 'reduced to ' + cand.s + ' px/unit, still inside its legal range'; }
       }
-    } else {
-      const regs = kind === 'repeat' ? kids(el, 'case').map(() => R.case) : [R.prompt, R.solution];
-      const n = regs.length, innerN = avail - GAP * (n - 1);
-      const w = alloc(regs, innerN);
+      if (box) {
+        rec.tried.push({ state: 'side', ok: true, note: 'the plane ' + why });
+        el.setAttribute('data-mk-state', 'side');
+        putFigure(el, box);
+        const rail = Math.min(inner - box.w, R.interpretation.max);
+        el.style.gridTemplateColumns = box.w + 'px ' + rail + 'px';
+        el.style.columnGap = GAP + 'px';
+        rec.state = 'side'; rec.cols = [box.w, rail]; rec.fig = { key, ...box };
+        rec.margin = Math.round(inner - box.w - rail);
+      } else {
+        rec.tried.push({ state: 'side', ok: false,
+          note: 'the plane needs ' + pref.w + 'px at its preferred scale'
+            + (SHRINK ? ' and its smallest legal size is ' + sg.ladder[0].w + 'px' : ' and shrinkPolicy is hold')
+            + ', which leaves under ' + R.interpretation.min + 'px for the rail in ' + avail + 'px' });
+        /* FRESH LAYOUT: nothing from the side candidate survives. The plane is re-measured against
+           the WHOLE content region, not against what the rejected rail left behind. */
+        reset(el);
+        const box2 = offer(sg, el.clientWidth) || sg.ladder[0];
+        el.setAttribute('data-mk-state', 'stack');
+        putFigure(el, box2);
+        rec.state = 'stack'; rec.cols = null; rec.fig = { key, ...box2 };
+        rec.tried.push({ state: 'stack', ok: true,
+          note: 're-measured from scratch against the full ' + el.clientWidth + 'px region' });
+        rec.margin = Math.round(el.clientWidth - box2.w);
+      }
+
+    } else if (kind === 'repeat') {
+      reset(el);
+      const n = kids(el, 'case').length, avail = el.clientWidth, inner = avail - GAP * (n - 1);
+      const w = alloc(kids(el, 'case').map(() => R.case), inner);
       const sum = w.reduce((s, v) => s + v, 0);
-      if (sum > innerN + 0.5) { rec.reject = 'width';
-        rec.note = 'the minimums sum to ' + Math.round(sum + GAP * (n - 1)) + 'px in ' + avail + 'px'; }
-      else { rec.cols = w.map((v) => Math.round(v)); rec.trailing = Math.round(innerN - sum); }
-    }
-    cand.push(rec);
-  }
-
-  /* apply every surviving candidate, then measure it */
-  for (const rec of cand) {
-    rec.el.setAttribute('data-mk-state', rec.reject ? 'stack' : 'split');
-    if (!rec.reject) {
-      if (rec.fig) { const h = kids(rec.el, 'figure')[0].querySelector('[data-mk-figure-box]');
-        h.style.width = rec.fig.w + 'px'; h.style.height = rec.fig.h + 'px'; }
-      if (rec.kind === 'instructionSplit') {
-        /* the hairline is a real column of the split, not a gap */
-        rec.el.style.gridTemplateColumns = rec.cols[0] + 'px ' + GAP + 'px ' + rec.cols[1] + 'px';
-        rec.el.style.columnGap = '0px';
+      if (sum <= inner + 0.5) {
+        el.setAttribute('data-mk-state', 'across');
+        el.style.gridTemplateColumns = w.map((v) => v + 'px').join(' ');
+        el.style.columnGap = GAP + 'px';
+        rec.state = 'across'; rec.cols = w; rec.margin = Math.round(inner - sum);
+        rec.tried.push({ state: 'across', ok: true, note: n + ' cases at ' + w[0] + 'px each' });
       } else {
-        rec.el.style.gridTemplateColumns = rec.cols.map((c) => c + 'px').join(' ');
-        rec.el.style.columnGap = GAP + 'px';
+        rec.tried.push({ state: 'across', ok: false,
+          note: n + ' cases need ' + Math.round(sum + GAP * (n - 1)) + 'px and the region is ' + avail + 'px' });
+        reset(el);
+        el.setAttribute('data-mk-state', 'down');
+        rec.state = 'down'; rec.cols = null; rec.margin = 0;
+        rec.tried.push({ state: 'down', ok: true, note: 'each case takes the whole region in turn' });
       }
-    }
-  }
-  document.body.getBoundingClientRect();
 
-  /* ── 5 · the occupancy gate, measured on the laid-out candidate ───────────────────────────── */
-  for (const rec of cand) {
-    if (rec.reject) continue;
-    const names = rec.kind === 'visualInterpretation' ? ['figure', 'interpretation']
-      : rec.kind === 'repeat' ? ['case'] : ['prompt', 'solution'];
-    const hs = [].concat.apply([], names.map((n) => kids(rec.el, n).map(H)));
-    const row = Math.max.apply(null, hs), low = Math.min.apply(null, hs);
-    rec.occ = row ? +(low / row).toFixed(3) : 1;
-    rec.heights = hs;
-    if (rec.occ < OCC) { rec.reject = 'occupancy';
-      rec.note = 'the shorter track fills ' + Math.round(rec.occ * 100) + '% of a ' + row + 'px row'; }
-  }
-
-  /* a repeat's children share ONE verdict — the strictest decides */
-  for (const rec of cand) {
-    if (rec.kind !== 'instructionSplit') continue;
-    const grp = rec.el.closest('[data-mk="repeat"][data-mk-axis="down"]');
-    if (!grp) continue;
-    rec.group = true;
-    const sibs = cand.filter((o) => o.kind === 'instructionSplit'
-      && o.el.closest('[data-mk="repeat"][data-mk-axis="down"]') === grp);
-    const bad = sibs.find((o) => o.reject);
-    if (bad) for (const o of sibs) if (!o.reject) {
-      o.reject = bad.reject; o.inherited = true;
-      o.note = 'a sibling row in this repeat failed the ' + bad.reject + ' gate (' + bad.note + '), and a repeat\\'s children share one verdict';
-    }
-  }
-
-  /* ── 6-8 · apply the verdicts ─────────────────────────────────────────────────────────────── */
-  for (const rec of cand) {
-    if (!rec.reject) continue;
-    rec.el.setAttribute('data-mk-state', 'stack');
-    rec.el.style.gridTemplateColumns = '';
-    rec.el.style.columnGap = '';
-    if (rec.fig || rec.kind === 'visualInterpretation') {
-      const host = kids(rec.el, 'figure')[0];
-      if (host) { const key = host.getAttribute('data-mk-figure'), sg = SIG[key];
-        /* stacked, the plane still takes its own preferred scale, and may use the whole region up to
-           its maximum useful scale — beyond which a wider box is only blank plane */
-        const perPx = sg.preferred.w / sg.sPref;
-        const sc = Math.min(sg.sPref, Math.max(sg.sMin, Math.min(rec.avail / perPx, sg.sMax)));
-        const w = Math.round(sg.preferred.w * sc / sg.sPref), h = Math.round(sg.preferred.h * sc / sg.sPref);
-        const b = host.querySelector('[data-mk-figure-box]');
-        b.style.width = w + 'px'; b.style.height = h + 'px';
-        /* THE REGION IS THE PLANE, STACKED AS WELL AS SPLIT. A full-width figure region around a
-           386px plane claims 766px it can never use, which is the same defect as a 736px track
-           around a 600px plane — only harder to see because nothing sits beside it. Shrinking the
-           region to its content does not move a pixel of the image; it moves the ownership of the
-           space from the composition to the page margin, which is what the rule is actually about. */
-        host.style.width = w + 'px';
-        rec.fig = { key, w, h, scale: +sc.toFixed(3) };
-        rec.stackedTrailing = Math.round(rec.avail - w);
+    } else {
+      /* instructionSplit -> instructionFlow. The ONE place height enters layout selection, and it
+         chooses a different presentation rather than rejecting the content. */
+      reset(el);
+      const avail = el.clientWidth, inner = avail - GAP;
+      const w = alloc([R.prompt, R.solution], inner);
+      const fits = w[0] + w[1] <= inner + 0.5;
+      let chose = null;
+      if (fits) {
+        el.setAttribute('data-mk-state', 'split');
+        el.style.gridTemplateColumns = w[0] + 'px ' + GAP + 'px ' + w[1] + 'px';
+        el.style.columnGap = '0px';
+        void el.offsetWidth;
+        const ph = H(kids(el, 'prompt')[0]), sh = H(kids(el, 'solution')[0]);
+        const row = Math.max(ph, sh);
+        rec.substance = row ? +(ph / row).toFixed(3) : 1;
+        rec.heights = [ph, sh];
+        if (rec.substance >= SUBSTANCE) {
+          chose = 'split'; rec.cols = w; rec.margin = Math.round(inner - w[0] - w[1]);
+          rec.tried.push({ state: 'split', ok: true,
+            note: 'the question fills ' + Math.round(rec.substance * 100) + '% of the row — it is a track' });
+        } else {
+          rec.tried.push({ state: 'split', ok: false,
+            note: 'the question fills ' + Math.round(rec.substance * 100) + '% of the row; below '
+              + Math.round(SUBSTANCE * 100) + '% it is a task, not a track' });
+        }
+      } else {
+        rec.tried.push({ state: 'split', ok: false,
+          note: 'the two tracks need ' + Math.round(w[0] + GAP + w[1]) + 'px and the region is ' + avail + 'px' });
       }
+      if (!chose) {
+        reset(el);
+        el.setAttribute('data-mk-state', 'flow');
+        chose = 'flow'; rec.cols = null; rec.margin = 0;
+        rec.tried.push({ state: 'flow', ok: true,
+          note: 'the task leads, a rule closes it, the reasoning runs beneath at its own measure' });
+      }
+      rec.state = chose;
     }
-  }
-  document.body.getBoundingClientRect();
 
-  for (const rec of cand) log.push({ kind: rec.kind, avail: rec.avail, state: rec.reject ? 'stack' : 'split',
-    reject: rec.reject, note: rec.note, cols: rec.cols || null, occ: rec.occ == null ? null : rec.occ,
-    heights: rec.heights || null, fig: rec.fig || null, trailing: rec.trailing == null ? null : rec.trailing,
-    stackedTrailing: rec.stackedTrailing == null ? null : rec.stackedTrailing, inherited: !!rec.inherited });
+    /* ALIGNMENT ORIGINS — measured, not assumed. */
+    const surface = document.querySelector('.mk-surface');
+    const content = Lf(surface) + parseFloat(getComputedStyle(surface).paddingLeft);
+    rec.origins = { content: Math.round(content),
+      secondary: rec.cols && rec.cols.length === 2
+        ? Math.round(content + rec.cols[0] + GAP) : null };
+    rec.regionLeft = {};
+    for (const n of ['prompt', 'solution', 'figure', 'interpretation', 'case', 'title'])
+      kids(el, n).forEach((c, i) => { rec.regionLeft[n + (i ? i : '')] = Lf(c); });
+    rec.avail = el.clientWidth;
+    log.push(rec);
+  }
   return log;
 }`;
 
@@ -409,7 +456,9 @@ const shot = async (name, fragName, surfaceName, opts) => {
 
   const p = await browser.newPage({ viewport: { width: surface + 2 * pad + 120, height: 900 }, deviceScaleFactor: 2 });
   const errs = []; p.on('pageerror', (e) => errs.push(String(e)));
-  await p.setContent(page(body, surface, pad, opts), { waitUntil: 'load' });
+  const doc = page(body, surface, pad, opts);
+  if (process.env.MK_DUMP) fs.writeFileSync('/tmp/' + name + '.debug.html', doc);
+  await p.setContent(doc, { waitUntil: 'load' });
   await p.waitForTimeout(360);
 
   /* PHASE 1 — layout. Figures are empty boxes of exactly the size the resolver assigns, so occupancy
@@ -419,7 +468,7 @@ const shot = async (name, fragName, surfaceName, opts) => {
       solution: { min: px(R.solution.min), max: px(R.solution.max), grow: R.solution.grow },
       case: { min: px(R.case.min), max: px(R.case.max), grow: R.case.grow },
       interpretation: { min: px(R.interpretation.min), max: px(R.interpretation.max), grow: R.interpretation.grow } },
-    sig: SIG, GAP, OCC, DEAD })})`);
+    sig: SIG, GAP, SUBSTANCE, SHRINK })})`);
 
   /* PHASE 2 — paint. Each plane is solved by the engine at exactly the box the resolver gave it. */
   for (const rec of log) {
@@ -436,23 +485,25 @@ const shot = async (name, fragName, surfaceName, opts) => {
     }, { key: rec.fig.key, html: r.html, w: rec.fig.w, h: rec.fig.h });
   }
 
-  /* the verdict, written onto the page */
-  await p.evaluate(({ log, OCC, DEAD }) => {
+  /* THE VERDICT, AND THE LADDER IT WALKED, written onto the page. A reference image that shows an
+     arrangement without saying which states were tried and why each was refused is a screenshot. */
+  await p.evaluate(({ log, SUBSTANCE }) => {
     const els = [].slice.call(document.querySelectorAll('[data-mk="instructionSplit"],'
       + '[data-mk="repeat"][data-mk-axis="across"],[data-mk="visualInterpretation"]'));
     els.forEach((el, i) => {
       const r = log[i]; if (!r) return;
-      const d = document.createElement('p');
+      const d = document.createElement('div');
       d.className = 'mk-verdict';
-      if (r.reject) d.setAttribute('data-mk-reject', r.reject);
-      const occ = r.occ == null ? '' : ` · occupancy ${Math.round(r.occ * 100)}% (floor ${Math.round(OCC * 100)}%)`;
-      const cols = r.cols ? ` · tracks ${r.cols.join(' + ')}` : '';
-      const fig = r.fig ? ` · plane ${r.fig.w}×${r.fig.h}` : '';
-      d.innerHTML = '<b>' + (r.reject ? 'stack' : 'split') + '</b>' + r.kind + ' in ' + r.avail + 'px'
-        + cols + fig + occ + (r.reject ? ' — REJECTED by the ' + r.reject + ' gate: ' + r.note : ' — all four gates pass');
+      const bits = r.tried.map((t) => (t.ok ? '✓ ' : '✗ ') + t.state + ' — ' + t.note).join('<br>');
+      const cols = r.cols ? ' · tracks ' + r.cols.join(' + ') : '';
+      const fig = r.fig ? ' · plane ' + r.fig.w + '×' + r.fig.h + ' @' + r.fig.s + ' px/unit' : '';
+      const sub = r.substance == null ? '' : ' · question fills ' + Math.round(r.substance * 100)
+        + '% of the row (floor ' + Math.round(SUBSTANCE * 100) + '%)';
+      d.innerHTML = '<b>' + r.state + '</b>' + r.kind + ' in ' + r.avail + 'px' + cols + fig + sub
+        + '<span class="mk-ladder">' + bits + '</span>';
       el.insertAdjacentElement('afterend', d);
     });
-  }, { log, OCC, DEAD });
+  }, { log, SUBSTANCE });
 
   const measured = await p.evaluate(() => {
     const seen = [];
@@ -470,7 +521,12 @@ const shot = async (name, fragName, surfaceName, opts) => {
       const plane = kid('figure').map((c) => { const q = c.querySelector('[data-mx-part="figure"]');
         return q ? Math.round(q.getBoundingClientRect().width) : null; });
       const tops = (r) => kid(r).map((c) => Math.round(c.getBoundingClientRect().top));
-      return { kind: el.getAttribute('data-mk'), state: el.getAttribute('data-mk-state'),
+      const rl = [].slice.call(el.children).filter((c) => c.classList.contains('mk-rule'))[0];
+      const rule = rl ? { w: Math.round(rl.getBoundingClientRect().width),
+        h: Math.round(rl.getBoundingClientRect().height),
+        shown: getComputedStyle(rl).display !== 'none' } : null;
+      return { kind: el.getAttribute('data-mk'), state: el.getAttribute('data-mk-state'), rule,
+        inlineCols: el.style.gridTemplateColumns || '', inlineGap: el.style.columnGap || '',
         w: Math.round(el.getBoundingClientRect().width),
         prompt: kid('prompt').map(box), solution: kid('solution').map(box),
         figure: kid('figure').map(box), interpretation: kid('interpretation').map(box),
@@ -495,33 +551,79 @@ const shot = async (name, fragName, surfaceName, opts) => {
 
 /* ── the controls the pack is only trustworthy because of ─────────────────────────────────────── */
 function verify(name, log, measured, surface) {
+  for (const r of log) {
+    /* CONTROL · EVERY REGION IS ON ITS DECLARED ORIGIN. Nothing is centred, and nothing drifts
+       because it happens to be narrower than the space around it. */
+    const map = C.origins.map[r.kind === 'visualInterpretation' ? 'visualInterpretation:' + r.state
+      : r.kind === 'repeat' ? 'repeat:' + r.state
+      : r.state === 'flow' ? 'instructionFlow' : 'instructionSplit'] || {};
+    for (const [region, want] of Object.entries(map)) {
+      const got = r.regionLeft[region];
+      if (got == null) continue;
+      const origin = want === 'content' ? r.origins.content
+        : want === 'secondaryTrack' ? r.origins.secondary : null;
+      if (origin == null) continue;
+      if (Math.abs(got - origin) > 1)
+        throw new Error(`${name}: ${r.kind}/${r.state} put ${region} at ${got}px, `
+          + `not on the ${want} origin at ${origin}px`);
+    }
+    /* CONTROL · NO RESIDUE. A state that was refused may leave nothing behind: a stacked
+       visualInterpretation must carry no track allocation at all. */
+    if (r.kind === 'visualInterpretation' && r.state === 'stack' && r.cols)
+      throw new Error(`${name}: a stacked visualInterpretation still carries a track allocation `
+        + `(${r.cols.join(', ')}) from the side candidate it rejected`);
+    if (r.kind === 'repeat' && r.state === 'down' && r.cols)
+      throw new Error(`${name}: a stacked repeat still carries the across allocation`);
+    if (r.state === 'flow' && r.cols)
+      throw new Error(`${name}: an instructionFlow still carries the split allocation`);
+    /* CONTROL · THE FIGURE WAS OFFERED, NOT LEFT OVER. Its box must be an entry on its own ladder. */
+    if (r.fig) {
+      const sg = SIG[r.fig.key];
+      if (!sg.ladder.some((e) => e.w === r.fig.w && e.h === r.fig.h))
+        throw new Error(`${name}: the plane is ${r.fig.w}×${r.fig.h}, which is not one of the sizes `
+          + `${r.fig.key} offers — a figure size computed from leftover width`);
+      if (r.fig.s > sg.sPref + 0.01)
+        throw new Error(`${name}: the plane was drawn past its preferred scale`);
+    }
+    /* CONTROL · WHITESPACE IS CLASSIFIED. Between the tracks, nothing unowned; past the last track,
+       page margin, which is allowed and reported. */
+    if (r.cols) {
+      const used = r.cols.reduce((a, v) => a + v, 0) + GAP * (r.cols.length - 1);
+      if (Math.abs(r.avail - used - (r.margin || 0)) > 1.5)
+        throw new Error(`${name}: ${r.avail}px available, ${used}px in tracks and gaps, `
+          + `${r.margin}px reported margin — the row does not account for itself`);
+    }
+  }
   for (const row of measured.rows) {
-    if (row.state === 'split' && row.topsA.length && row.topsB.length
+    if (row.state === 'side' && row.plane[0] != null && row.figure[0] - row.plane[0] > 1)
+      throw new Error(`${name}: the figure region is ${row.figure[0]}px around a ${row.plane[0]}px plane`);
+    if (row.state === 'stack' && row.plane[0] != null && row.figure[0] - row.plane[0] > 1)
+      throw new Error(`${name}: the stacked figure region is ${row.figure[0]}px around a `
+        + `${row.plane[0]}px plane — a region claiming width it cannot use`);
+    if (row.state === 'side' && row.topsA.length && row.topsB.length
         && Math.abs(row.topsA[0] - row.topsB[0]) > 1)
-      throw new Error(`${name}: the two tracks of a split ${row.kind} do not share a top edge`);
-    if (row.kind === 'visualInterpretation' && row.plane[0] != null && row.figure[0] - row.plane[0] > 1)
-      throw new Error(`${name}: the figure region is ${row.figure[0]}px around a ${row.plane[0]}px plane `
-        + `in the ${row.state} state — ${row.figure[0] - row.plane[0]}px inside a region that cannot use it`);
-    if (row.state === 'split' && row.case.length > 1 && new Set(row.case).size !== 1)
+      throw new Error(`${name}: the two tracks of a side-by-side ${row.kind} do not share a top edge`);
+    /* CONTROL · NO RESIDUE, READ OFF THE DOM. A state with no tracks must carry no track
+       allocation. Checking the resolver's own record was not enough: the record simply never set
+       the field, so a leak in the DOM would have gone straight past. */
+    if (['stack', 'flow', 'down'].includes(row.state) && row.inlineCols)
+      throw new Error(`${name}: the ${row.kind} in the ${row.state} state still carries `
+        + `grid-template-columns: ${row.inlineCols} from a candidate it rejected`);
+
+    /* CONTROL · THE RULE IS THE STATE'S OWN MARK. In a split it is a hairline in the gutter; in a
+       flow it closes the task across the region. A state whose rule silently vanished would still
+       screenshot plausibly, which is exactly the class of defect this pack keeps finding. */
+    if (row.state === 'flow' && row.rule) {
+      if (!row.rule.shown) throw new Error(`${name}: an instructionFlow has no rule under its task`);
+      if (row.rule.w < row.w * 0.9)
+        throw new Error(`${name}: the flow rule is ${row.rule.w}px across a ${row.w}px region`);
+      if (row.rule.h !== 1) throw new Error(`${name}: the flow rule is ${row.rule.h}px tall, not a hairline`);
+    }
+    if (row.state === 'split' && row.rule && (!row.rule.shown || row.rule.w !== 1))
+      throw new Error(`${name}: a split's rule is ${row.rule.shown ? row.rule.w + 'px wide' : 'hidden'}, not a hairline in the gutter`);
+    if (row.state === 'across' && row.case.length > 1 && new Set(row.case).size !== 1)
       throw new Error(`${name}: repeated cases are not identical widths — ${row.case.join(', ')}`);
   }
-  for (const r of log) {
-    if (r.state === 'split') {
-      if (r.occ != null && r.occ < OCC) throw new Error(`${name}: a split survived at ${Math.round(r.occ * 100)}% occupancy, under the ${Math.round(OCC * 100)}% floor`);
-      /* nothing unowned BETWEEN the tracks: the assigned columns plus the gaps must reach the last
-         track's right edge exactly. Trailing space past it is page margin and is reported, not failed. */
-      const cols = r.cols || [];
-      const used = cols.reduce((s, v) => s + v, 0) + GAP * (cols.length - 1);
-      if (cols.length && r.trailing != null && Math.abs(r.avail - used - r.trailing) > 1.5)
-        throw new Error(`${name}: a split's tracks and gaps do not account for its width — `
-          + `${r.avail}px available, ${Math.round(used)}px in tracks and gaps, ${r.trailing}px trailing`);
-    }
-    if (r.fig && r.fig.ratio != null && Math.abs(r.fig.ratio - 1) > SQUARE)
-      throw new Error(`${name}: a plane painted at ${r.fig.ratio}`);
-  }
-  /* the states must be reachable from the same content at every surface */
-  const prior = payloads[name.replace(/-(desktop|middle|narrow|wide)$/, '')];
-  return prior;
 }
 
 console.log('\nresolving and rendering');
@@ -541,22 +643,24 @@ for (const m of PACK) {
       throw new Error(`${nm}: the region sequence differs from ${payloads[key].name}`);
     if (!payloads[key]) payloads[key] = { name: nm, payload: measured.payload, regions: measured.regions };
     for (const r of log) REPORT.push({ image: nm, surface, ...r });
-    const line = log.map((r) => `${r.kind}:${r.state}${r.reject ? '(' + r.reject + ')' : ''}${r.occ != null ? ' ' + Math.round(r.occ * 100) + '%' : ''}`).join('  ');
+    const line = log.map((r) => `${r.kind}:${r.state}${r.substance != null ? ' ' + Math.round(r.substance * 100) + '%' : ''}`).join('  ');
     console.log(`  ${nm.padEnd(36)} ${String(surface).padStart(4)}px  ${line}`);
   }
 }
 
+await figPage.close();
 await browser.close(); server.close();
 
-console.log('\nEVERY OCCUPANCY THE PACK MEASURED — the data the threshold should be argued from');
-console.log('  ' + 'image'.padEnd(36) + 'primitive'.padEnd(22) + 'heights'.padEnd(18) + 'occupancy   verdict');
-for (const r of REPORT.filter((x) => x.occ != null))
-  console.log('  ' + r.image.padEnd(36) + r.kind.padEnd(22)
-    + (r.heights || []).join(' / ').padEnd(18) + String(Math.round(r.occ * 100) + '%').padStart(6)
-    + '      ' + r.state + (r.reject ? ' (' + r.reject + ')' : ''));
-const rej = REPORT.filter((r) => r.reject);
-console.log(`\n  ${REPORT.length} arrangements resolved · ${rej.length} rejected — `
-  + Object.entries(rej.reduce((a, r) => (a[r.reject] = (a[r.reject] || 0) + 1, a), {}))
-      .map(([k, v]) => `${k} ${v}`).join(', '));
+console.log('\nTHE LADDER EACH COMPOSITION WALKED');
+console.log('  ' + 'image'.padEnd(38) + 'primitive'.padEnd(22) + 'state'.padEnd(8) + 'why');
+for (const r of REPORT)
+  for (const t of r.tried)
+    console.log('  ' + (t === r.tried[0] ? r.image : '').padEnd(38)
+      + (t === r.tried[0] ? r.kind : '').padEnd(22) + (t.ok ? '✓ ' : '✗ ') + t.state.padEnd(6) + t.note);
+const flows = REPORT.filter((r) => r.state === 'flow').length;
+const stacks = REPORT.filter((r) => r.state === 'stack' || r.state === 'down').length;
+console.log(`\n  ${REPORT.length} compositions · ${REPORT.filter((r) => r.state === 'split' || r.state === 'side' || r.state === 'across').length} two-track`
+  + ` · ${flows} instructionFlow · ${stacks} stacked`);
+console.log('  every plane drawn at a size its own ladder offers; no height test outside promptSubstance');
 fs.writeFileSync(path.join(OUT, 'resolver-report.json'), JSON.stringify(REPORT, null, 2));
 console.log('\nwrote ' + path.relative(root, OUT));

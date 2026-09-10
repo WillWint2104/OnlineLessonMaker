@@ -8,6 +8,42 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **The composition resolver stops fitting rectangles: a Study page scrolls**
+  (`docs/mockups/compositions/`, no app change). The previous resolver was solving a problem the page
+  does not have — fitting a composition into the visible rectangle — and three rounds of gate-tuning
+  were downstream of that. The order is now `content semantics → intrinsic demands → a NAMED state →
+  allocate width → height:auto → scroll`, and there is no target page height in Study mode.
+  - **Every state is a fresh layout.** A refused candidate discards all of its computed dimensions.
+    The previous build did not, and said so in its own report: image 12 recorded `state: "stack"`
+    while still carrying `cols: [332, 640]` from the side candidate it had rejected, so a stacked
+    plane was sized against what a rejected rail left behind.
+  - **Height no longer selects a layout**, with one named exception. The global occupancy gate is
+    gone: it was semantically wrong for figures, where a 700px plane beside a 180px explanation is a
+    good relationship — it rejected exactly that at "14% occupancy" and produced a page with *more*
+    empty width than the one it refused. What remains is `promptSubstance` on `instructionSplit`
+    alone, and it selects a different primitive rather than rejecting content.
+  - **`instructionFlow`** — a short task, a rule, then the reasoning at its own reading measure while
+    the page grows. A presentation type, not a fallback: 14 of the 30 compositions in the pack are
+    this shape, including every ordinary Substitution example and the seven-step derivation. Split-
+    or-stack was too crude a vocabulary for mathematics.
+  - **Figures offer, compositions choose.** Each plane reports a ladder of the sizes it can legally
+    be drawn at, in px per authored unit, measured before any text track is allocated. The build
+    fails if a rendered plane is not at one of the sizes its own ladder offers, so leftover width can
+    no longer become a figure size.
+  - **Permanent alignment origins**, measured on every image. This caught the one real bug found
+    while building: an inherited `justify-self: center` on the rule element, which Chrome honours in
+    *block* layout — the flow state's full-width hairline was being shrink-to-fit-and-centred to
+    **0px**. A missing hairline looks exactly like spacing, so it screenshots plausibly.
+  - **Whitespace is classified** rather than counted: reading margin and structural space are
+    desirable; only unowned width *inside* an allocated region is a defect.
+  - **Three of the four controls did not fire on first attempt, and each was fixed rather than
+    accepted.** The residue check was reading the resolver's own record — which simply never set the
+    field — instead of the DOM. Two regression patches had silently failed to apply because their
+    target text had changed, so the regressions are now asserted before the run. And the figure-ladder
+    control was masked by a latent bug in the build itself: the figure page was being closed after the
+    signature phase, so phase 2's "repaint and check the plane is square" was only ever a cache
+    lookup, and a box the signature phase had not already tried crashed the run instead of failing the
+    control. The page now lives to the end and phase 2 genuinely repaints.
 - **The composition contract gains a resolver: fitting horizontally is not the same as being viable**
   (`docs/mockups/compositions/`, no app change). The previous pack decided every arrangement with one
   test, `min + gap + min ≤ available`, which establishes that two tracks can physically exist and says

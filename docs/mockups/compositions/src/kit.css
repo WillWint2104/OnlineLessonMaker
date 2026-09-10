@@ -39,53 +39,62 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
 .mk-narrow .mk-surface{padding:18px var(--mk-pad) 20px;}
 .mk-lede{margin:0 0 20px;font-size:15px;line-height:1.6;color:var(--mx-ink-2);}
 
-/* ── THE STATES ARE ASSIGNED, NOT QUERIED ──────────────────────────────────────────────────────
-   Container queries are gone from this kit, and their absence is the point of this revision. A
-   query can ask how wide the container is; it cannot ask whether the shorter track fills enough of
-   the row, or whether the space beside a plane belongs to anything. Those are the conditions that
-   decide whether a side-by-side arrangement is any good, and they are only knowable after a
-   candidate has been laid out. So the resolver lays the candidate out, measures it, and writes
-   `data-mk-state` and the track boxes back onto the element. Two passes, deterministic, and the
-   app's own page already has this shape (`mxWexPlace` → `renderSlide` → `mxWexRestore`).
+/* ── THE STATES ARE NAMED, AND EACH IS A FRESH LAYOUT ──────────────────────────────────────────
+   The resolver writes `data-mk-state` and the track boxes. There are no container queries: a query
+   can ask how wide the container is, not whether a question has enough substance to be a track.
 
-   ── PRIMITIVE 1 · instructionSplit ──────────────────────────────────────────────────────────── */
-[data-mk="instructionSplit"]{display:grid;align-items:start;column-gap:0;}
-[data-mk="instructionSplit"][data-mk-state="split"]{
+   Every state below is reachable ONLY through its family's ladder, and a rejected candidate leaves
+   no dimensional residue — the resolver clears the element completely before measuring the next
+   state. (The previous build did not: a visualInterpretation that failed and stacked kept the track
+   allocation from the side candidate it had already rejected.)
+
+   ── instructionSplit · a balanced example ──────────────────────────────────────────────────── */
+[data-mk="instructionSplit"][data-mk-state="split"]{display:grid;align-items:start;column-gap:0;
   grid-template-areas:"title title title" "prompt rule solution";}
-[data-mk="instructionSplit"][data-mk-state="stack"]{
-  grid-template-columns:minmax(0,1fr);grid-template-areas:"title" "prompt" "solution";
-  row-gap:var(--mk-stackgap);}
-[data-mk="instructionSplit"][data-mk-state="stack"] > [data-mk-region="title"]{margin-bottom:0;}
-[data-mk="instructionSplit"][data-mk-state="stack"] > .mk-rule{display:none;}
-[data-mk="instructionSplit"] > [data-mk-region="title"]{grid-area:title;}
-[data-mk="instructionSplit"] > [data-mk-region="prompt"]{grid-area:prompt;min-width:0;}
-[data-mk="instructionSplit"] > .mk-rule{grid-area:rule;}
-[data-mk="instructionSplit"] > [data-mk-region="solution"]{grid-area:solution;min-width:0;}
+[data-mk="instructionSplit"][data-mk-state="split"] > [data-mk-region="title"]{grid-area:title;}
+[data-mk="instructionSplit"][data-mk-state="split"] > [data-mk-region="prompt"]{grid-area:prompt;min-width:0;}
+[data-mk="instructionSplit"][data-mk-state="split"] > .mk-rule{grid-area:rule;
+  justify-self:center;align-self:stretch;width:1px;}   /* centred IN ITS GUTTER COLUMN, which is the gutter's own geometry */
+[data-mk="instructionSplit"][data-mk-state="split"] > [data-mk-region="solution"]{grid-area:solution;min-width:0;}
 
-/* ── PRIMITIVE 2 · repeat ──────────────────────────────────────────────────────────────────────
-   THE COUNT IS NOWHERE IN THIS RULE, and neither is any child's identity: `across` uses auto-flow
-   columns over one shared track contract. A repeat's children also share one verdict — the strictest
-   decides — so a gate can never leave row 2 stacked between two split siblings. */
+/* ── instructionFlow · a short task, then the reasoning ────────────────────────────────────────
+   NOT A FALLBACK. Most worked examples are this shape — the question is one line and the solution
+   is the lesson — and forcing them through split-or-stack was what produced both the giant empty
+   question box and, later, the enormous full-width column. The task leads, a rule closes it, and
+   the reasoning runs beneath at its own reading measure while the page grows downwards. Every
+   region sits on the CONTENT ORIGIN. */
+[data-mk="instructionSplit"][data-mk-state="flow"],
+[data-mk="instructionFlow"]{display:block;}
+[data-mk-state="flow"] > .mk-rule{display:block;justify-self:stretch;align-self:auto;
+  width:auto;height:1px;margin:16px 0 20px;}
+[data-mk-state="flow"] > [data-mk-region="prompt"]{max-width:var(--mk-prompt-flow-max);}
+[data-mk-state="flow"] > [data-mk-region="solution"]{max-width:var(--mk-solution-max);}
+[data-mk-state="flow"] > [data-mk-region="title"]{margin-bottom:14px;}
+
+/* ── repeat ────────────────────────────────────────────────────────────────────────────────────
+   The count is nowhere in this rule and neither is any child's identity. Judged on each complete
+   item's minimum width, never on height. */
 [data-mk="repeat"][data-mk-axis="down"]{display:flex;flex-direction:column;}
-[data-mk="repeat"][data-mk-axis="across"][data-mk-state="split"]{display:grid;align-items:start;}
-[data-mk="repeat"][data-mk-axis="across"][data-mk-state="stack"]{display:flex;flex-direction:column;
+[data-mk="repeat"][data-mk-axis="across"][data-mk-state="across"]{display:grid;align-items:start;}
+[data-mk="repeat"][data-mk-axis="across"][data-mk-state="down"]{display:flex;flex-direction:column;
   gap:var(--mk-stackgap);}
 .mk-div{height:1px;background:var(--mx-line);margin:var(--mk-rowgap) 0;}
 
-/* ── PRIMITIVE 3 · visualInterpretation ────────────────────────────────────────────────────────
-   The figure track is assigned its box by the resolver, from the figure's own layout signature,
-   BEFORE the rail is allocated. It is never `auto`, never `1fr`, and never the space that happens to
-   be free. No divider: the gap and the two region labels are the boundary. */
-[data-mk="visualInterpretation"]{display:grid;align-items:start;}
-[data-mk="visualInterpretation"][data-mk-state="split"]{
-  grid-template-areas:"figure interpretation";column-gap:var(--mk-gap);}
-[data-mk="visualInterpretation"][data-mk-state="stack"]{grid-template-columns:minmax(0,1fr);
-  grid-template-areas:"figure" "interpretation";row-gap:var(--mk-stackgap);}
-[data-mk="visualInterpretation"] > [data-mk-region="figure"]{grid-area:figure;}
-[data-mk="visualInterpretation"] > [data-mk-region="interpretation"]{grid-area:interpretation;min-width:0;}
+/* ── visualInterpretation ──────────────────────────────────────────────────────────────────────
+   NO HEIGHT TEST. A 700px plane beside a 180px explanation is a good relationship: the plane is the
+   object being explained and the prose does not have to fill its height. The figure track is the
+   plane's own measured box, decided before the rail is allocated; leftover width is never a figure
+   size. When the side state is refused the plane is RE-MEASURED against the whole content region. */
+[data-mk="visualInterpretation"][data-mk-state="side"]{display:grid;align-items:start;
+  column-gap:var(--mk-gap);grid-template-areas:"figure interpretation";}
+[data-mk="visualInterpretation"][data-mk-state="stack"]{display:block;}
+[data-mk="visualInterpretation"][data-mk-state="stack"] > [data-mk-region="interpretation"]{
+  margin-top:var(--mk-stackgap);max-width:var(--mk-interp-max);}
+[data-mk="visualInterpretation"][data-mk-state="side"] > [data-mk-region="figure"]{grid-area:figure;}
+[data-mk="visualInterpretation"][data-mk-state="side"] > [data-mk-region="interpretation"]{
+  grid-area:interpretation;min-width:0;}
 
-/* ── PRIMITIVE 4 · stack ───────────────────────────────────────────────────────────────────────
-   The terminal state: regions in semantic order, one inset, no divider, nothing centred. */
+/* ── stack · regions in semantic order on the content origin ──────────────────────────────────── */
 [data-mk="stack"]{display:flex;flex-direction:column;align-items:stretch;}
 [data-mk="stack"] > * + *{margin-top:var(--mk-stackgap);}
 [data-mk="stack"] > .mk-rule{display:none;}
@@ -96,7 +105,14 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
 
 /* ── the hairline between two tracks ───────────────────────────────────────────────────────────
    An element of the SPLIT, never of a track and never keyed on a track's position. */
-.mk-rule{justify-self:center;width:1px;align-self:stretch;background:var(--mx-line);}
+/* THE RULE CARRIES NO ALIGNMENT OF ITS OWN. Each state says where its rule goes.
+   (It used to carry `justify-self:center`, and Chrome honours justify-self in BLOCK layout: the
+   flow state's full-width hairline was being shrink-to-fit-and-centred to 0px. An inherited centring
+   instruction, which is the exact thing the origins contract forbids — and invisible in a
+   screenshot, because a missing hairline looks like spacing.) */
+.mk-rule{background:var(--mx-line);}
+/* HEIGHT IS NOT A CONSTRAINT. The page scrolls; nothing here has a target height. */
+html,body,.mk-page,.mk-surface{height:auto;}
 
 /* ── REGIONS ───────────────────────────────────────────────────────────────────────────────────
    Each region carries its contract: its reading measure caps the PROSE, never the track, so
@@ -174,4 +190,4 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
   border-left:2px solid var(--mx-line);padding:6px 0 6px 10px;}
 .mk-verdict b{font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:10px;
   color:var(--mx-ink-3);margin-right:8px;}
-.mk-verdict[data-mk-reject]{border-left-color:var(--mx-green);color:var(--mx-green-deep);}
+.mk-ladder{display:block;margin-top:6px;font-size:10.5px;line-height:1.6;color:var(--mx-ink-3);}
