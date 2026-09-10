@@ -8,6 +8,63 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Disclosure and scrolling as first-class design tools** (`docs/atlas/worked-examples/`, no app
+  change). The six-template atlas defined composition but not how content is *revealed and
+  navigated*, so tabs and scrolling kept looking like emergency responses to a layout that did not
+  fit. They are now their own axes, and the atlas is restructured around **four independent ones**:
+  composition (the spatial relationship of what is visible **now**), disclosure (whether several
+  things are visible at once), scroll policy, and the figure's own media geometry.
+  - **The hard rule.** *Tabs are authored pedagogical structure. They may never be introduced or
+    removed because of viewport size, content height, occupancy, or any layout heuristic.* "This got
+    tall, so I'll hide half of it in tabs" is resolver behaviour wearing a different hat. The build
+    reads the whole tab structure back out of the DOM — nesting depth, group name, every label in
+    order, every panel in order, visible or not — and compares it **character for character** to the
+    signature authored in `src/pack.json`, at every width and in every tab state.
+  - **Revised vocabulary.** COMPOSITIONS (`single.flow`, `single.split`, `comparison.paired`,
+    `comparison.sharedVisual`, `visual.interpretation`) · COLLECTIONS (`collection.repeat` — what
+    `sequence.flow` was; `collection.tabs`) · PRESENTATIONS (`presentation.tabs` — what `visualCheck`
+    was; `presentation.stepper`, named only) · SCROLL (`page`, `local-y`, `local-x`,
+    `persistent-pane`). Three tab patterns: example, representation, subtopic.
+  - **Scrolling means three different things.** Page scroll is normal and desirable — image 17 is
+    2331–2987px tall and that is the outcome, not a failure. Local-y is a **workspace** behaviour,
+    permitted only inside a persistent pane; teaching prose in a bounded scroller is refused by the
+    build. Local-x is a last resort for indivisible material — a table of values, an un-breakable
+    expansion.
+  - **One authentic Worked Examples page** (image 20): subtopic tabs Substitution · Solving for *x* ·
+    Symmetry, an approved composition inside each, and representation tabs Workings · Visual
+    explanation inside Symmetry. 54 renders across 20 reference designs.
+  - `ATLAS_ONLY=13,18 node scripts/atlas-worked-examples.mjs` renders a subset, and measures only the
+    figures that subset needs — for iterating, and for driving each control to fail on purpose.
+
+### Fixed
+- **The figure search was not deterministic, and produced a wrong plane.** The landscape figure's
+  narrow box came back **169 × 156** against a 382px cap on one run and **382 × 216** on the next,
+  from identical code. Two causes, both now closed: the first paint of a box did not agree with the
+  second (x/y = 1.045 then 1.005 on an immediate repeat — and since paints are memoised, whichever
+  came first was what the entire search ran on), so the engine is now fitted twice and read settled;
+  and the narrow box was being searched over *scale* when the narrow surface does not choose a scale
+  at all — it gives the figure its full width, and the figure's aspect decides the height. It is now
+  solved as a height at a fixed width. A collapsed search is also a hard error: a 169px plane paints
+  perfectly square and screenshots as a graph, so only the width told the truth.
+- **A repeated example had no measure at all.** `sequence.flow` styled the wrapper and nothing else,
+  so prose inside it ran the full 1152px canvas. The old control — "a region that declares a maximum
+  must honour it" — was vacuous exactly where no maximum was declared. The control is now *every
+  visible paragraph of prose renders within the flow measure*, and the repeated child is literally a
+  `single.flow`, measures included.
+- **The atlas pages were being clipped by the app's own body rule.** `lesson-studio.html` sets
+  `overflow:hidden` on the body because the app is a slide surface; the atlas lifts that stylesheet
+  whole. A lesson page is not a slide — it scrolls. The frame is now explicitly unclipped and every
+  render asserts nothing in it bounds or clips the page.
+- **`overflow-x:auto` with `overflow-y:visible` is not a state CSS has** — the spec coerces the
+  visible one to `auto`. Reading computed style alone reported a vertical scroller wherever a wide
+  equation sat, and a horizontal one wherever the workbook pane was. Both directions are now
+  distinguished, and each still asserts it is not *also* clipping the other axis.
+- **A scrolling region that shows no scrollbar reads as truncated.** Measured: in headless Chromium
+  `scrollbar-width:thin` and the `::-webkit-scrollbar` rules paint nothing at all, and
+  `scrollbar-gutter:stable` reserves 9px and leaves it blank. Every scrolling region now carries a
+  fade at the edge its content continues past, which in these screenshots is the entire affordance.
+
+### Added
 - **The worked-example atlas: six designed templates instead of a resolver**
   (`docs/atlas/worked-examples/`, no app change). The composition resolver tried to discover good
   design from measurements, and that experiment is over. Generalisability now comes from choosing the

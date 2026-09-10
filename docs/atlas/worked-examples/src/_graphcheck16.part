@@ -1,0 +1,12 @@
+  <div data-slot="figure">
+    <p class="at-lab">Graph</p>
+    {{FIG:graphcheck}}
+  </div>
+  <div data-slot="interpretation">
+    <p class="at-lab">Why it agrees</p>
+    <p>Solving <i>x</i><sup>2</sup> = 16 asks where the curve <i>y</i> = <i>x</i><sup>2</sup> reaches a height of 16.</p>
+    <p class="at-said"><i>x</i> = &plusmn;4</p>
+    <p>Draw the horizontal line <i>y</i> = 16. It crosses the curve twice, at <i>x</i> = &minus;4 and <i>x</i> = 4 &mdash; the two values the algebra produced.</p>
+    <p>The crossings sit at equal distances either side of the <i>y</i>-axis: the graph saying the same thing as the &plusmn; in the working.</p>
+    <p>The height of the line decides how many solutions there are. Above the vertex it crosses twice; through the vertex it touches once; below it never meets the curve at all, which is why <i>x</i><sup>2</sup> = &minus;16 has no real solution.</p>
+  </div>

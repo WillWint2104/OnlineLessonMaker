@@ -1,9 +1,9 @@
 <p class="at-intro">Six examples of very unequal length, in one sequence.</p>
-<article data-tpl="sequence.flow">
+<article data-tpl="collection.repeat">
 <div data-slot="examples">
-  <div data-slot="example">{{PART:_ex-negative}}</div>
+  <div data-slot="example" data-tpl="single.flow">{{PART:_ex-negative}}</div>
   <div class="at-div"></div>
-  <div data-slot="example">
+  <div data-slot="example" data-tpl="single.flow">
     <h3 data-slot="title">A whole number</h3>
     <div data-slot="question"><p class="at-lab">Question</p><p>Find <i>y</i> when <i>x</i> = 5.</p></div>
     <hr class="at-hr">
@@ -12,9 +12,9 @@
     <div data-slot="answer"><b>Answer</b><i>y</i> = 25</div>
   </div>
   <div class="at-div"></div>
-  <div data-slot="example">{{PART:_ex-fraction}}</div>
+  <div data-slot="example" data-tpl="single.flow">{{PART:_ex-fraction}}</div>
   <div class="at-div"></div>
-  <div data-slot="example">
+  <div data-slot="example" data-tpl="single.flow">
     <h3 data-slot="title">Zero</h3>
     <div data-slot="question"><p class="at-lab">Question</p><p>Find <i>y</i> when <i>x</i> = 0.</p></div>
     <hr class="at-hr">
@@ -23,9 +23,9 @@
     <div data-slot="answer"><b>Answer</b><i>y</i> = 0 &mdash; the vertex.</div>
   </div>
   <div class="at-div"></div>
-  <div data-slot="example">{{PART:_ex-decimal}}</div>
+  <div data-slot="example" data-tpl="single.flow">{{PART:_ex-decimal}}</div>
   <div class="at-div"></div>
-  <div data-slot="example">
+  <div data-slot="example" data-tpl="single.flow">
     <h3 data-slot="title">A surd</h3>
     <div data-slot="question"><p class="at-lab">Question</p><p>Find <i>y</i> when <i>x</i> = &radic;7.</p></div>
     <hr class="at-hr">
