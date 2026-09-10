@@ -1,0 +1,72 @@
+{
+  "_": "The planes the pack shows, each with the SLOT the mockup gives it. The build mounts these in the app's own figure engine at exactly this box and copies the painted result, so the reference image contains the shipped renderer's output rather than a picture of a graph. Every domain here is authored in the shipping lesson (tests/visual/lessons/mathematics-shell.json).",
+
+  "symmetry-wide": {
+    "w": 429, "h": 515,
+    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -5, "xMax": 5, "yMin": -1, "yMax": 11 },
+      "objects": [
+        { "type": "function", "f": "x^2", "label": "y = x^2" },
+        { "type": "line", "x": 0, "label": "axis of symmetry x = 0" },
+        { "type": "line", "y": 9, "label": "y = 9" },
+        { "type": "points", "rows": [["(−3, 9)", -3, 9], ["(3, 9)", 3, 9]] }
+      ] }
+  },
+
+  "symmetry-mid": {
+    "w": 600, "h": 720,
+    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -5, "xMax": 5, "yMin": -1, "yMax": 11 },
+      "objects": [
+        { "type": "function", "f": "x^2", "label": "y = x^2" },
+        { "type": "line", "x": 0, "label": "axis of symmetry x = 0" },
+        { "type": "line", "y": 9, "label": "y = 9" },
+        { "type": "points", "rows": [["(−3, 9)", -3, 9], ["(3, 9)", 3, 9]] }
+      ] }
+  },
+
+  "symmetry-narrow": {
+    "w": 350, "h": 420,
+    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -5, "xMax": 5, "yMin": -1, "yMax": 11 },
+      "objects": [
+        { "type": "function", "f": "x^2", "label": "y = x^2" },
+        { "type": "line", "x": 0, "label": "axis of symmetry x = 0" },
+        { "type": "line", "y": 9, "label": "y = 9" },
+        { "type": "points", "rows": [["(−3, 9)", -3, 9], ["(3, 9)", 3, 9]] }
+      ] }
+  },
+
+  "graphcheck": {
+    "w": 446, "h": 720,
+    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -6, "xMax": 6, "yMin": -2, "yMax": 20 },
+      "objects": [
+        { "type": "function", "f": "x^2", "label": "y = x^2" },
+        { "type": "line", "y": 16, "label": "y = 16" },
+        { "type": "points", "rows": [["(−4, 16)", -4, 16], ["(4, 16)", 4, 16]] }
+      ] }
+  },
+
+  "graphcheck-narrow": {
+    "w": 350, "h": 565,
+    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -6, "xMax": 6, "yMin": -2, "yMax": 20 },
+      "objects": [
+        { "type": "function", "f": "x^2", "label": "y = x^2" },
+        { "type": "line", "y": 16, "label": "y = 16" },
+        { "type": "points", "rows": [["(−4, 16)", -4, 16], ["(4, 16)", 4, 16]] }
+      ] }
+  },
+
+  "roots": {
+    "w": 520, "h": 420,
+    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -5, "xMax": 5, "yMin": -6, "yMax": 8 },
+      "objects": [
+        { "type": "function", "f": "x^2-4", "label": "y = x^2 - 4" },
+        { "type": "line", "y": 0, "label": "y = 0" },
+        { "type": "points", "rows": [["(−2, 0)", -2, 0], ["(2, 0)", 2, 0], ["(0, −4)", 0, -4]] }
+      ] }
+  }
+}
