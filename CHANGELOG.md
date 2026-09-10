@@ -8,6 +8,40 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **The composition contract — a zone-contract pack for the Mathematics worked examples**
+  (`docs/mockups/compositions/`, no app change). The previous pack described five arrangements; a
+  renderer given five pictures has to guess the rule that produced them, so this one states the rule.
+  The whole worked-example system reduces to **four primitives** — `instructionSplit` (prompt │
+  solution), `repeat` (a child, down or across), `visualInterpretation` (figure │ interpretation) and
+  `stack` — and the named compositions become assemblies of them. `src/kit.css` contains no rule keyed
+  on a composition name, and `repeat`'s CSS never writes down a count, so a 2 + 1 arrangement is not
+  expressible rather than merely discouraged.
+  - **No width in the pack is typed.** Track widths are computed from region contracts (a minimum, a
+    growth weight, a reading measure) and every threshold is generated as the sum `min + gap + min`.
+    The 1152px desktop reference resolves to **392 / 728 — 35.0% / 65.0%**, as a result. Images `16`
+    and `17` are the same file at 768px and 767px, the computed floor and one pixel below it.
+  - **`pairedVisual`'s lower half is redesigned.** A shared visual "at full width" left an arbitrary
+    region beside a plane narrower than the row, with no answer to what that region was for. It is now
+    the interpretation rail, and the hand-drawn two-row middle state is gone as a designed thing —
+    image `06` shows it emerging from the grammar at a width nobody chose.
+  - **A plane's size is searched for and scored on the painted result**, not computed and hoped for.
+    Measured on the shipped engine: a 24 × 8 domain in the 720 × 255 box its own aspect asks for
+    renders at x/y = **1.79**, because the engine reserves a fixed label gutter that a shallow box is
+    mostly made of; the same domain at 720 × 488 renders at 1.001. `figures.json` now holds authored
+    domains with no width or height in it, and the same domain is deliberately a different size in
+    different states — `446 × 720` was never a contract, only one realised size.
+  - **Five adversarial proofs** (long question, long solution, over-wide mathematics, portrait plane,
+    landscape plane) replace decorative screenshots. The landscape pair renders one file above and
+    below `720 + 32 + 384` and shows the split abandoned rather than the plane squeezed.
+  - **The controls were driven back before they were trusted.** Four regressions were injected and
+    each is caught: a typed growth weight, a composition that hides a child at one width, a figure
+    track sized to the space rather than to the plane, and an annotation that reshapes the page it
+    annotates. The payload control had to be rewritten to walk *rendered* text — `textContent`
+    includes a `display:none` subtree, so the first version of it compared equal to a page that had
+    quietly dropped an example.
+  - Fixes a defect in the previous pack the maintainer found: its narrow `sequence` proof carried two
+    examples and a shortened synthesis where its desktop twin carried three. One fragment now serves
+    every surface, so a layout proof cannot carry different content at different widths.
 - **Stage B correction — the split is decided by measured geometry, not by a device width.** The previous
   rule was a breakpoint, and it produced a "split" whose writing surface measured **452 × 0 px** at a 900px
   portrait tablet: below 900 the page became a block, the stretched grid row went away, and the sheet's

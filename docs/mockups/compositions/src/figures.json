@@ -1,72 +1,48 @@
 {
-  "_": "The planes the pack shows, each with the SLOT the mockup gives it. The build mounts these in the app's own figure engine at exactly this box and copies the painted result, so the reference image contains the shipped renderer's output rather than a picture of a graph. Every domain here is authored in the shipping lesson (tests/visual/lessons/mathematics-shell.json).",
+  "_": "AUTHORED DOMAINS ONLY. There is deliberately no width or height in this file: a plane's realised size is computed by the resolver from its intrinsic aspect, the legibility floor and the space the composition can actually give it, and the same plane is therefore a DIFFERENT SIZE in different states. That is the point of the change: 446 x 720 was never a contract, only one realised size.",
 
-  "symmetry-wide": {
-    "w": 429, "h": 515,
+  "symmetry": { "role": "the shared visual of a pairedVisual",
     "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
       "domain": { "xMin": -5, "xMax": 5, "yMin": -1, "yMax": 11 },
       "objects": [
         { "type": "function", "f": "x^2", "label": "y = x^2" },
-        { "type": "line", "x": 0, "label": "axis of symmetry x = 0" },
         { "type": "line", "y": 9, "label": "y = 9" },
         { "type": "points", "rows": [["(−3, 9)", -3, 9], ["(3, 9)", 3, 9]] }
-      ] }
-  },
+      ] } },
 
-  "symmetry-mid": {
-    "w": 600, "h": 720,
-    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
-      "domain": { "xMin": -5, "xMax": 5, "yMin": -1, "yMax": 11 },
-      "objects": [
-        { "type": "function", "f": "x^2", "label": "y = x^2" },
-        { "type": "line", "x": 0, "label": "axis of symmetry x = 0" },
-        { "type": "line", "y": 9, "label": "y = 9" },
-        { "type": "points", "rows": [["(−3, 9)", -3, 9], ["(3, 9)", 3, 9]] }
-      ] }
-  },
-
-  "symmetry-narrow": {
-    "w": 350, "h": 420,
-    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
-      "domain": { "xMin": -5, "xMax": 5, "yMin": -1, "yMax": 11 },
-      "objects": [
-        { "type": "function", "f": "x^2", "label": "y = x^2" },
-        { "type": "line", "x": 0, "label": "axis of symmetry x = 0" },
-        { "type": "line", "y": 9, "label": "y = 9" },
-        { "type": "points", "rows": [["(−3, 9)", -3, 9], ["(3, 9)", 3, 9]] }
-      ] }
-  },
-
-  "graphcheck": {
-    "w": 446, "h": 720,
+  "graphcheck": { "role": "state 2 of a visualCheck",
     "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
       "domain": { "xMin": -6, "xMax": 6, "yMin": -2, "yMax": 20 },
       "objects": [
         { "type": "function", "f": "x^2", "label": "y = x^2" },
         { "type": "line", "y": 16, "label": "y = 16" },
         { "type": "points", "rows": [["(−4, 16)", -4, 16], ["(4, 16)", 4, 16]] }
-      ] }
-  },
+      ] } },
 
-  "graphcheck-narrow": {
-    "w": 350, "h": 565,
-    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
-      "domain": { "xMin": -6, "xMax": 6, "yMin": -2, "yMax": 20 },
-      "objects": [
-        { "type": "function", "f": "x^2", "label": "y = x^2" },
-        { "type": "line", "y": 16, "label": "y = 16" },
-        { "type": "points", "rows": [["(−4, 16)", -4, 16], ["(4, 16)", 4, 16]] }
-      ] }
-  },
-
-  "roots": {
-    "w": 520, "h": 420,
+  "roots": { "role": "state 2 of an extended derivation",
     "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
       "domain": { "xMin": -5, "xMax": 5, "yMin": -6, "yMax": 8 },
       "objects": [
         { "type": "function", "f": "x^2-4", "label": "y = x^2 - 4" },
         { "type": "line", "y": 0, "label": "y = 0" },
         { "type": "points", "rows": [["(−2, 0)", -2, 0], ["(2, 0)", 2, 0], ["(0, −4)", 0, -4]] }
-      ] }
-  }
+      ] } },
+
+  "portrait": { "role": "ADVERSARIAL — an aspect far taller than the longer-side bound allows",
+    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -3, "xMax": 3, "yMin": -1, "yMax": 15 },
+      "objects": [
+        { "type": "function", "f": "x^2", "label": "y = x^2" },
+        { "type": "line", "y": 9, "label": "y = 9" },
+        { "type": "points", "rows": [["(−3, 9)", -3, 9], ["(3, 9)", 3, 9]] }
+      ] } },
+
+  "landscape": { "role": "ADVERSARIAL — an aspect so wide its legible minimum breaks the two-track state",
+    "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -12, "xMax": 12, "yMin": -2, "yMax": 6 },
+      "objects": [
+        { "type": "function", "f": "x^2/12", "label": "y = x^2 / 12" },
+        { "type": "line", "y": 3, "label": "y = 3" },
+        { "type": "points", "rows": [["(−6, 3)", -6, 3], ["(6, 3)", 6, 3]] }
+      ] } }
 }

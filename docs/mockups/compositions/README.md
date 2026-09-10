@@ -1,190 +1,228 @@
 # The composition contract — Mathematics worked examples
 
-The reference pack for the five worked-example compositions, and the specification the renderer must
-implement. **These images are the approved design; this file is its API.** Where a sentence here and a
-pixel in the app disagree, the app is wrong.
+**This pack is a layout grammar, not a set of screens.** Its predecessor described five attractive
+arrangements; that is what made it unimplementable, because a renderer given five pictures has to
+guess the rule that produced them. What follows is the rule.
 
-They are not drawings. `node scripts/mockups-compositions.mjs` renders them in Chromium from the app's
-own material:
+Three claims here are checked by `node scripts/mockups-compositions.mjs`, which renders every image
+in Chromium from the app's own material, and fails rather than producing an image that disagrees:
 
-- **the whole of `lesson-studio.html`'s stylesheet** is loaded and read back out of the CSSOM — tokens,
-  vendored faces, theme mapping and the Figure Engine's `.tp-fig*` rules — so no colour, weight, radius
-  or typeface in the pack was invented. (Slicing `<style>…</style>` out of the file's text does not
-  work: its own comments mention the tag, the blocks mis-pair, and rules go missing while the images
-  still look plausible. The first build of this pack lost every grid, axis and curve stroke that way.)
-- **every plane is the shipped engine's output**, mounted in the app's own
-  `.mx-part[data-mx-part="figure"] › .mx-figstage › .mx-figskin.tp-slide` chain — the selector that hands
-  `--mx-grid`, `--mx-ink` and `--mx-line` to the engine — and solved against the exact slot the mockup
-  gives it. The build prints each plane's rendered px-per-unit; every one in this pack is 1.000 ± 0.002.
-- **every dimension printed on a `-spec` image is the value that drives the layout**, substituted from
-  `src/spec.json`, so a reference image and its measurements cannot drift apart.
+1. **No width in this pack is typed.** Every track width is computed from the region contracts in
+   `src/contracts.json`, and every responsive threshold is generated as the sum `min + gap + min`.
+   After rendering, the realised widths are measured back out of the browser and compared against an
+   independent computation of the same contract. A `-spec` image prints the contract *and* the width
+   it produced.
+2. **One fragment serves every surface.** A composition is authored once and rendered at each
+   reference width; its responsive state is chosen by a container query. The build then asserts the
+   semantic payload is character-identical across those renders. (That control exists because the
+   previous pack's narrow Sequence proof silently carried two examples where its desktop twin carried
+   three. Separate files per breakpoint made that possible; one file makes it impossible.)
+3. **Every plane is the shipped engine's output**, mounted in the app's own
+   `.mx-part[data-mx-part="figure"] › .mx-figstage › .mx-figskin.tp-slide` chain, and **its size is
+   searched for, not chosen** — scored on the painted result, px per authored *x*-unit against px per
+   authored *y*-unit.
 
 ---
 
 ## 1. What chooses what
 
 ```
-JSON semantics        →  the composition FAMILY          (authored, never inferred)
-available space       →  that family's RESPONSIVE STATE  (measured, never a breakpoint)
-content size          →  the page's HEIGHT               (never a different composition)
+JSON semantics   →  the composition FAMILY        (authored, never inferred)
+available space  →  its RESPONSIVE STATE          (measured against region minimums)
+content size     →  the page's HEIGHT, and whether a state is FEASIBLE
+                    (never which composition is used)
 ```
 
-A worked-example group authors:
+Content is allowed to make a state impossible. It is never allowed to select a different family.
+An over-wide equation does not promote an example to another composition; it reports that it cannot
+be set at this width, and the split it is in either survives or falls back.
+
+## 2. Four primitives
+
+Everything below is assembled from these. `src/kit.css` contains **no rule keyed on a composition
+name** — that is the structural form of "the compositions are not independent designs".
+
+| Primitive | Regions | Purpose |
+| --- | --- | --- |
+| **instructionSplit** | prompt │ solution | an ordinary worked example |
+| **repeat** | a child, `down` or `across` | several examples (down) or several cases (across) |
+| **visualInterpretation** | figure │ interpretation | a figure and the text that reads it |
+| **stack** | regions in semantic order | the terminal state; never fails |
+
+`repeat` is where the 2 + 1 problem dies for good. Its CSS is a column of identical children, or
+`grid-auto-flow: column` with one shared track contract — **the count is written nowhere**, so there
+is no arrangement for a count to select. Two examples are two rows; ten are ten.
+
+## 3. The compositions are assemblies
+
+| Composition | Assembly |
+| --- | --- |
+| `standard` | `instructionSplit(prompt, solution)` + synthesis |
+| `sequence` | `repeat(down, standard)` + synthesis |
+| `pairedVisual` | `repeat(across, case)` + `visualInterpretation(visual, interpretation)` |
+| `visualCheck` | state 1 `instructionSplit` · state 2 `visualInterpretation` |
+| `extended` | states; each state takes the primitive its own content needs |
+
+**`pairedVisual`'s lower half is the substantive change.** A shared visual "at full width" left an
+arbitrary empty region beside a plane that was narrower than the row, and the renderer had no answer
+to what that region was for. It is now the interpretation rail, and *why the two agree* belongs to
+it rather than being a footer underneath. The two-row middle state the previous pack drew by hand is
+gone as a designed thing — image `06` shows it emerging from the grammar at a width nobody chose.
+
+**Renames.** `comparison` → `pairedVisual`, `staged` → `visualCheck`. Old names must keep resolving,
+as `visual` and `compact` already do. `compact` is gone for good: it named a size.
+
+## 4. Region contracts
+
+Design-system tokens. **Authors never type these**; lesson JSON describes meaning only.
+
+| Region | Minimum | Growth weight | Reading measure |
+| --- | --- | --- | --- |
+| prompt | 18rem (288px) | 0.7 | 34rem (544px) |
+| solution | 28rem (448px) | 1.3 | 38rem (608px) |
+| case | 18rem (288px) | 1 | 34rem (544px) |
+| figure | engine-derived, floor 340 × 255px | — content-sized | — |
+| interpretation | 24rem (384px) | 1 | 40rem (640px) |
+| synthesis | 18rem (288px) | spans | 40rem (640px) |
+| answer | inherited from its solution | — | — |
+
+Gap between any two tracks: **2rem (32px)**.
+
+Two invariants that are easy to lose and are checked on every image:
+
+- **A track is a position, not a box.** No fill, no border, no stretching to a sibling's height.
+  When the solution is tall the prompt track simply ends where its content ends.
+- **The measure caps the prose, never the track.** Surplus width a region does not need stays
+  unused. `interpretation` realises at 780px in image `14` and its prose still sets at 640px.
+
+### The split is arithmetic
+
+```
+avail = contentRegion − gap
+distribute avail by growth weight
+any track below its minimum freezes at its minimum; redistribute the remainder
+```
+
+That is exactly what CSS `minmax(min, Nfr)` does natively, so no measurement pass is needed. At the
+1152px desktop reference it resolves to **392 / 728 — 35.0% / 65.0%**. *35 / 65 is a result.* At the
+768px floor it resolves to 288 / 448, both tracks on their minimums. Images `16` and `17` are the
+same file at 768px and 767px.
+
+### Thresholds are sums, never breakpoints
+
+| State change | Sum |
+| --- | --- |
+| instructionSplit → stack | 288 + 32 + 448 = **768px** |
+| repeat(across) → repeat(down) | 288 + 32 + 288 = **608px** |
+| visualInterpretation → stack | plane's own legible minimum + 32 + 384 (**756px** for an ordinary aspect) |
+
+A container query cannot read a custom property. That is a useful constraint: the build must compute
+each sum and write it out, so no threshold can be typed by hand.
+
+## 5. The figure is engine-derived, literally
+
+A plane's box is **searched for and scored on the painted result**, not computed and hoped for.
+Measured on the shipped engine: a 24 × 8 domain in the 720 × 255 box its own aspect asks for renders
+at *x/y* = **1.79**, because the engine reserves a fixed pixel gutter for axis labels which a shallow
+box is mostly made of. The same domain at 720 × 488 renders at 1.001. No closed-form box aspect
+predicts that. So the build bisects the slack axis until the plane is square, and fails outright if
+no box between the floor and the bound can be.
+
+The consequence is the point: **446 × 720 was never a contract, only one realised size.** The same
+authored domain in this pack:
+
+| Plane | desktop 1152 | middle 700 | narrow 382 |
+| --- | --- | --- | --- |
+| symmetry (10 × 12) | 600 × 720 | 600 × 720 | 382 × 458 |
+| graph check (12 × 22) | 393 × 720 | 393 × 720 | 382 × 700 |
+| roots (10 × 14) | 514 × 720 | 514 × 720 | 382 × 535 |
+| portrait (6 × 16) | 340 × 720 | 340 × 720 | 340 × 720 |
+| landscape (24 × 8) | 720 × 488 | 700 × 488 | 382 × 255 |
+
+Every one renders at 1.000 ± 0.006 px per unit on both axes. Where a box is clamped into the legal
+range the engine keeps the units square by showing slightly more of the plane — which is correct, and
+is why the width floor and the height bound can both hold at once.
+
+**The figure track is `min-content` — exactly the plane's width.** `auto` looks equivalent and is
+not: it takes the region's *max-content* width, so anything else in the region — a long caption, a
+review annotation — silently widens the track past the plane. Reproduced while building this pack: a
+600px plane in a 736px track, 136px belonging to nothing. Different in cause from the previous pack's
+full-width shared visual, identical in effect, and a one-keyword bug either way. So the build measures
+**the plane against its track**, on the annotated render as well as the plain one — the first version
+of that check looked only at the plain render and did not fire.
+
+## 6. The resolver should be boring
+
+1. Identify the composition from the JSON. Never infer it from content.
+2. Ask every region for its minimum, growth weight, reading measure, and — if visual — its intrinsic
+   aspect and minimum legible scale.
+3. Try the widest state.
+4. If every region clears its minimum, use it, distributing by growth weight.
+5. Otherwise try the next state.
+6. Otherwise stack.
+7. Content may increase height without limit.
+8. **Never** reach a state by distorting a figure, narrowing prose below its minimum, centring orphan
+   content, changing geometry with item count, or stretching an empty rail for balance.
+
+## 7. The JSON says meaning
 
 ```json
-{ "presentation": "workedExample", "composition": "standard" }
+{ "type": "workedExamples", "composition": "sequence",
+  "items": [ { "title": "…", "question": {}, "solution": {}, "answer": {} } ],
+  "synthesis": {} }
+
+{ "type": "workedExamples", "composition": "pairedVisual",
+  "cases": [ { "label": "Case A", "question": {}, "solution": {}, "answer": {} } ],
+  "visual": {}, "interpretation": {} }
+
+{ "type": "workedExample", "composition": "visualCheck",
+  "question": {}, "solution": {}, "answer": {}, "visual": {}, "interpretation": {} }
 ```
 
-`composition` ∈ `standard · sequence · pairedVisual · visualCheck · extended`. Unknown values fall back
-to `extended`. **Nothing measures how much text an example has in order to choose a layout** — with one
-declared exception, stated under `pairedVisual`, which is a responsive-state decision and is called out
-there so it can be argued with rather than discovered.
+No widths, no `size: "medium"`, no `desktopColumns`. `synthesis` and `interpretation` are **one
+region with one styling contract and two placements** — beside a shared visual it is the rail; with
+no visual to belong to it spans the content region after the composition. The JSON key names the
+placement. `WHAT THIS SHOWS`, `WHY THE TWO AGREE` and `WHY IT AGREES` were three footer inventions
+for one thing.
 
-**Renames from the shipped vocabulary.** `comparison` → **`pairedVisual`**, `staged` → **`visualCheck`**.
-The old names must keep resolving (as `visual` and `compact` already do) so authored lessons do not break.
-`compact` is gone for good: it named a size, and naming a size is what produced the layouts this pack
-replaces.
+## 8. Adversarial proofs
 
-## 2. The invariants that hold in every family
+More useful now than another shipping screenshot: these are the shapes that decide whether this is a
+grammar or a set of preferences.
 
-| Invariant | Value / rule |
+| | Proves |
 | --- | --- |
-| **Content region** | the white teaching surface inside its padding. Every width below is measured there, never against the viewport. Desktop reference 1152px (a 1536px viewport, rail open); narrow reference 382px (a 414px handset) |
-| **Surface padding** | 30px desktop · 16px narrow |
-| **Column gap** | 40px between any two tracks |
-| **Minimum viable text track** | 300px. Below it a track is a shape, not a measure |
-| **Minimum viable solution track** | 420px |
-| **Maximum reading measure** | 620px for explanatory prose. This is a ceiling, not a width to fill: what the page has spare stays spare |
-| **Figure minimum useful size** | 340 × 255px |
-| **Figure natural size** | bounded on its **longer** side at 720px, aspect untouched |
-| **Figure scale policy** | one authored *x*-unit and one authored *y*-unit render at the same length. A composition may allocate width, stack, paginate or scroll; it may never distort, squash or inflate the plane |
-| **Alignment** | every track top-aligns. Nothing is centred — not a track, not a plane, not an answer |
-| **A track is a position, not a box** | the prompt track locates the question. No fill, no border, no stretching to match its sibling's height. When the solution is tall the prompt track simply ends where its content ends |
-| **Answer** | the closing band of the solution track, at the solution's own content origin — a rule above it, the label run in, the value flowing as text. Never a card, never centred, never indented past the steps |
-| **Naming** | the example title spans the row; QUESTION and WORKED SOLUTION label their tracks; ANSWER closes the solution; the synthesis is named once, and never with a name a part it contains already carries |
+| `11` long question | the prompt is the taller track; nothing is stretched to match |
+| `12` long solution | the shape that produced the original defect |
+| `13` over-wide mathematics | an unsettable line scrolls locally; it does not take width from the question, shrink the type, or change the composition |
+| `14` portrait plane | the width floor and the height bound hold at once, and the page grows |
+| `15` / `15b` landscape plane | rule 8: the same file above and below `720 + 32 + 384`; the split is abandoned rather than the plane squeezed |
 
-## 3. The five families
+## 9. Open questions for the maintainer
 
-### `standard` — one example · `01`, `02`
+1. **The interpretation measure.** You suggested 45–55rem. The app ships `MX_INTERP_MAX = 620px`
+   (38.75rem). The pack uses **40rem (640px)**, the nearest round value to what ships. Say the word
+   and it becomes 48rem.
+2. **The `case` minimum.** Set equal to `prompt` (18rem), so `repeat(across)` over two cases falls
+   back at 608px. A case holds a whole worked example, so a larger minimum is arguable.
+3. **`extended` is under-specified.** "Each state takes the primitive its content needs" is right but
+   does not say who decides. Authored per state, or derived from which regions the state carries?
 
-```
-TITLE  (spans the content region)
-QUESTION  |  WORKED SOLUTION
-          |  ANSWER
-WHAT THIS SHOWS   (full content region)
-```
+## 10. Files
 
 | | |
 | --- | --- |
-| Prompt track | **36%** of the content region (34–38% is the acceptable band), floor 300px |
-| Solution track | the remainder, floor 420px |
-| Divider | one hairline centred in the 40px gap, as tall as the row's content |
-| Labels | QUESTION and WORKED SOLUTION begin on the same line beneath the title |
-| Responsive switch | stack when the content region < 300 + 40 + 420 = **760px** |
-| Stacked order | title → question → worked solution → answer → synthesis, one inset, no divider |
+| `01`–`02` | `standard` · desktop (spec), narrow |
+| `03`–`04` | `sequence` · desktop (spec), narrow — the same three examples in both |
+| `05`–`07` | `pairedVisual` · desktop (spec), the emergent middle state, narrow |
+| `08`–`09` | `visualCheck` · desktop (spec), narrow |
+| `10` | `extended` · three states, three primitives |
+| `11`–`15b` | the adversarial proofs |
+| `16`–`17` | the threshold, at 768px and 767px |
 
-### `sequence` — N examples of one skill · `03`, `04`
-
-N instances of the `standard` row, identical at every N, a hairline between them, the synthesis after
-the whole sequence at the full content region. **There is no count-specific geometry**: two examples are
-two rows, four are four. No 2 + 1, no centred remainder, no fixture-specific widths. The hairline between
-instances belongs to the sequence, not to an example — nothing that reaches an instance may be keyed on
-its position.
-
-### `pairedVisual` — two cases and the object that explains them · `05`, `06`, `07`
-
-```
-CASE A            |  SHARED VISUAL  |  CASE B          ← wide
-WHY THE TWO AGREE                                       (full content region)
-```
-
-Three columns are legal **only** while all of these hold:
-
-1. each case rail ≥ 300px;
-2. the shared visual ≥ 340 × 255px;
-3. the plane renders its authored geometry at equal scale in that column — no distortion, ever;
-4. **neither case runs past the shared visual.**
-
-(1)–(3) are space. (4) is the one place where content length selects a responsive state, and it is
-deliberate: three columns say "read these three at once", which stops being true when a case runs on
-past the object it is being compared through. It is stated as a measurable rule — case height ≤ figure
-height — rather than "the cases are short", so it can be gated. **Raise it if you would rather the third
-column simply never appear below a fixed width.**
-
-When any condition fails the family changes **responsive state**; it never squeezes the plane:
-
-```
-CASE A  |  CASE B          ← two-row state: both cases complete, side by side
-SHARED VISUAL             ← full content region, the plane larger than it was
-WHY THE TWO AGREE
-```
-
-and narrow: case A → case B → shared visual → why the two agree. **The picture never appears between
-the two cases in any state** — that puts the answer on the screen before the reader has worked the
-second case, which changes the pedagogy rather than the layout.
-
-### `visualCheck` — workings, then the same question read off the curve · `08`, `09`, `10`
-
-Two authored local states.
-
-```
-1 Workings          the standard row, unchanged
-2 Graph check       GRAPH  |  INTERPRETATION
-```
-
-| | |
-| --- | --- |
-| Graph region | the plane at its natural size, left aligned in its region. Never centred in the page, never grown to fill it |
-| Interpretation rail | the algebraic result, the graphical evidence, the connection — capped at the 620px reading measure, top-aligned with the graph |
-| Divider | **none.** A full-height rule beside a 720px plane makes the pair a box; the gap and the two region labels are the boundary |
-| Responsive switch | stack graph → interpretation when the content region < 340 + 40 + 300 = **680px** |
-
-### `extended` — a derivation in local states · `11`
-
-Not "the ordinary example, made very tall". The reasoning is paginated into authored states —
-`1 Algebra · 2 Visual check · 3 Conclusion` — **and each state gets the composition its own content
-needs**: the algebra is a `standard` row, the visual check is a `visualCheck` pair, the conclusion is the
-answer with its relationship. That is how a long derivation with a graph halfway through stops becoming
-one malformed general-purpose block.
-
-## 4. What this pack changes about the shipped page
-
-Everything below is currently wrong in `lesson-studio.html` at `41d40a8` and is what the next
-implementation pass is for. **No app code was changed to produce this pack.**
-
-1. **The tinted question region goes.** The prompt track is a position: no fill, and no stretching to
-   the solution's height. The empty space below a short question needs no explanation — it is the space
-   below a short question.
-2. **`comparison` → `pairedVisual`, `staged` → `visualCheck`**; old names keep resolving.
-3. **`pairedVisual` gains its two-row state.** Today the collapse goes straight from three columns to
-   two local states; the two-row state (both cases side by side, the shared visual full width beneath)
-   is the missing middle.
-4. **`extended` gets per-state compositions** rather than one long row.
-5. **The graph pair loses its divider** and its rail top-aligns to the plane rather than stretching.
-
-## 5. Files
-
-| File | What it fixes |
-| --- | --- |
-| `01-standard-desktop.png` · `-spec` | the two-track row; tracks that are positions |
-| `02-standard-narrow.png` | the stacked order, one inset, nothing centred |
-| `03-sequence-desktop.png` · `-spec` | N identical rows; the death of 2 + 1 |
-| `04-sequence-narrow.png` | each row completes before the next begins |
-| `05-pairedvisual-wide.png` · `-spec` | three zones and a real shared plane |
-| `06-pairedvisual-two-row.png` | the missing middle state |
-| `07-pairedvisual-narrow.png` | the narrow order |
-| `08-visualcheck-workings.png` | state 1 is just the standard row |
-| `09-visualcheck-graph.png` · `-spec` | graph region and interpretation rail, one top edge, no divider |
-| `10-visualcheck-narrow.png` | graph → interpretation, proportions kept |
-| `11-extended-states.png` | a derivation is states, not height |
-
-`src/` is the reproducible source: `spec.json` (the dimensions, used twice — as layout and as
-annotation), `figures.json` (the planes and the slots they are solved in), `kit.css` (the mockup
-stylesheet) and one HTML fragment per image. **`kit.css` is a mockup stylesheet.** Its `mk-*` classes
-exist to state the contract for review; the app must implement this geometry through its own semantic
-names, and must not import this file.
-
-Rendered px-per-unit for every plane in the pack, authored 1:1 — paired-visual wide 33.49 / 33.47
-(1.001) · paired-visual two-row 47.91 / 47.90 (1.000) · paired-visual narrow 26.61 / 26.59 (1.001) ·
-graph check 26.15 / 26.16 (1.000) · graph check narrow 20.18 / 20.18 (1.000) · extended roots 22.80 /
-22.84 (0.998).
+`src/contracts.json` is the specification — region contracts, primitives, assemblies, the resolver,
+the reference surfaces. `src/figures.json` holds **authored domains only**, deliberately with no
+width or height in it. `src/kit.css` is a mockup stylesheet: its `mk-*` names exist to state the
+grammar for review, and the app must implement it through its own semantic names and must not import
+this file. `src/*.part` are the example bodies the `standard` and `sequence` fragments **share**, so
+"sequence is repeat(standard)" is true of the source and not only of the picture.

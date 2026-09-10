@@ -1,0 +1,50 @@
+<p class="mk-lede">Where does <i>y</i> = <i>x</i><sup>2</sup> &minus; 4 cross the <i>x</i>-axis, and why there?</p>
+<div class="mk-states"><span class="mk-state" data-on>1 Algebra</span><span class="mk-state" data-on>2 Visual check</span><span class="mk-state" data-on>3 Conclusion</span></div>
+
+<div class="mk-stateblock">
+<p class="mk-stateh">State 1 &mdash; Algebra</p>
+<article data-mk="instructionSplit">
+  <h3 data-mk-region="title">Finding the roots</h3>
+  <div data-mk-region="prompt">
+    <p class="mk-lab">Question</p>
+    <p>Find the values of <i>x</i> for which <i>y</i> = <i>x</i><sup>2</sup> &minus; 4 is zero.</p>
+  </div>
+  <div class="mk-rule"></div>
+  <div data-mk-region="solution">
+    <p class="mk-lab">Worked solution</p>
+    <ol class="mk-steps">
+      <li class="mk-step"><div class="mk-st">A crossing of the <i>x</i>-axis is a point where <i>y</i> = 0.</div><div class="mk-sm"><i>x</i><sup>2</sup> &minus; 4 = 0</div></li>
+      <li class="mk-step"><div class="mk-st">Rearrange.</div><div class="mk-sm"><i>x</i><sup>2</sup> = 4</div></li>
+      <li class="mk-step"><div class="mk-st">Take the root of both sides, carrying both signs.</div><div class="mk-sm"><i>x</i> = &plusmn;2</div></li>
+    </ol>
+    <div data-mk-region="answer"><b>Answer</b><i>x</i> = &minus;2 and <i>x</i> = 2</div>
+  </div>
+</article>
+</div>
+
+<div class="mk-stateblock">
+<p class="mk-stateh">State 2 &mdash; Visual check</p>
+<div data-mk="visualInterpretation">
+  <div data-mk-region="figure">
+    <p class="mk-lab">Graph</p>
+    {{FIG:roots}}
+  </div>
+  <div data-mk-region="interpretation">
+    <p class="mk-lab">Why it agrees</p>
+    <p>The whole curve <i>y</i> = <i>x</i><sup>2</sup> has been moved down by 4, so the vertex now sits at (0, &minus;4) instead of the origin.</p>
+    <p>That drop is what creates the two crossings: the curve dips below the axis and must come back up through it on each side. The crossings are at <i>x</i> = &minus;2 and <i>x</i> = 2, matching the algebra.</p>
+  </div>
+</div>
+</div>
+
+<div class="mk-stateblock">
+<p class="mk-stateh">State 3 &mdash; Conclusion</p>
+<div data-mk="stack">
+  <section data-mk-region="synthesis">
+    <p class="mk-lab">What this shows</p>
+    <p>Subtracting a constant lowers the whole parabola. Whether it crosses the <i>x</i>-axis twice, once or not at all is decided by how far the vertex sits below or above the axis &mdash; so the number of solutions to <i>x</i><sup>2</sup> &minus; <i>c</i> = 0 is a question about the vertex, not about the algebra.</p>
+  </section>
+</div>
+</div>
+<div class="mk-note"><b>Assembly</b>{{DIM:asmExtended}}</div>
+<div class="mk-note"><b>Why states</b>A derivation is paginated, not stretched. Each state carries the primitive its own content needs, so a long argument with a graph in the middle never becomes one malformed general-purpose block.</div>
