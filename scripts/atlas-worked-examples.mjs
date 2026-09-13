@@ -3,12 +3,21 @@
 //
 //   node scripts/atlas-worked-examples.mjs [outDir]
 //
-// FOUR INDEPENDENT AXES, and the build's job is to keep them independent:
+// THE ONE RULE: THE AUTHOR CHOOSES THE INSTRUCTIONAL STRUCTURE. THE RENDERER CHOOSES ONLY THE
+// PRESCRIBED RESPONSIVE STATE AND MEDIA SUBDESIGN BELONGING TO THAT STRUCTURE.
 //
-//   COMPOSITION   the spatial relationship of what is visible NOW      authored
-//   DISCLOSURE    whether several things are visible at once           authored
-//   SCROLL        page · local-y (workspace only) · local-x            authored
-//   STATE         a template's own prescribed wide/narrow arrangement  the surface width, alone
+// FOUR FROZEN AXES, and the build's job is to keep them independent:
+//
+//   COMPOSITION      what is visible together, and where                  authored
+//   COLLECTION       if there are several related things, which are shown authored
+//   SCROLL           which surface is allowed to move (y and x, separately) authored
+//   MEDIA GEOMETRY   which approved subdesign the media shape permits     the figure's own geometry
+//
+// The responsive state is not a fifth axis: it is the prescribed wide/narrow arrangement OF a
+// composition, from the surface width alone, and it can never select a different composition.
+//
+// Nothing decides anything from: the number of words · the height of anything · occupancy ·
+// whitespace · the number of solution steps · how tall the page turned out.
 //
 // THERE IS NO RESOLVER HERE. Nothing measures content in order to choose a composition — no
 // occupancy, no growth weights, no height matching, no scoring across candidates, no attempt to fill
@@ -16,7 +25,10 @@
 // resolver that did all of those things is retained as research evidence at docs/mockups/compositions/
 // and its layout-selection logic must not be ported into the app.
 //
-// AND NOTHING HERE CREATES OR REMOVES A TAB. Tabs are authored pedagogical structure. `data-active`
+// AND NOTHING HERE CREATES OR REMOVES A TAB. Tabs are authored pedagogical structure, in two
+// semantically distinct kinds — collection.tabs (SEVERAL SIBLING ITEMS; SELECT ONE) and views.tabs
+// (ONE OBJECT, SEEN SEVERAL WAYS). The kind is encoded, not merely styled, and the affordance is
+// keyed on the kind rather than on nesting depth. `data-active`
 // is stamped from the selection in pack.json; the tab bar is rendered in full at every width. The
 // build asserts the tab structure — count, labels, panels, nesting — is character-identical to the
 // signature authored in pack.json, at every width and in every tab state. "This got tall, so I will
@@ -55,12 +67,15 @@ const SELECTED = ONLY ? PACK.filter((e) => ONLY.has(e.n)) : PACK;
 if (ONLY && !SELECTED.length) throw new Error('ATLAS_ONLY matched no entry');
 const M = A.measures, FLOOR = { w: 340, h: 255 }, BOUND = 720;
 
-/* THE RESPONSIVE STATE COMES FROM ONE NUMBER: the surface width, against a switch point the template
-   itself declares. Every named thing in the taxonomy contributes its own; nothing else is consulted. */
+/* THE RESPONSIVE STATE COMES FROM ONE NUMBER: the surface width, against a switch point the
+   composition itself declares. Keyed by the AUTHORED name, because that is what `data-tpl` carries;
+   the resolved name (visual.side / visual.down) is what media geometry produces from it. */
 const SWITCH = {};
-for (const group of [A.compositions, A.collections, A.presentations, A.scroll])
-  for (const [k, v] of Object.entries(group))
-    if (v && typeof v === 'object' && v.switchAt) SWITCH[k] = v.switchAt;
+for (const [resolved, v] of Object.entries(A.compositions)) {
+  if (resolved === '_' || !v || typeof v !== 'object') continue;
+  if (typeof v.switchAt === 'number') SWITCH[v.authored] = v.switchAt;
+}
+SWITCH['scroll.pane'] = A.scroll.y.pane.switchAt;
 
 const MIME = { '.html': 'text/html', '.json': 'application/json', '.woff2': 'font/woff2', '.png': 'image/png', '.svg': 'image/svg+xml' };
 const server = http.createServer((req, res) => {
@@ -194,10 +209,12 @@ async function largestWithin(key, fig, lo, hi, cap) {
   return best;
 }
 const classOf = (ratio) => ratio > 1.3 ? 'portrait' : ratio >= 0.75 ? 'balanced' : ratio >= 0.4 ? 'landscape' : 'wide';
-const SUBDESIGN = A.figureClasses.mapsTo;
+const RESOLVED = new Set(Object.keys(A.compositions).filter((k) => k !== '_'));
+const SUBDESIGN = A.mediaGeometry.resolves.visual;
 
-console.log('\nfigures — intrinsic legible size and media-geometry class');
+console.log('\nfigures — intrinsic legible size, media-geometry class, and one box per surface');
 const FIG = {};
+const SURFACE_NAMES = Object.keys(A.surfaces);
 /* expand the {{PART:…}} includes before looking for figures — a fragment can reach a plane only
    through a shared body, and scanning the outer file alone reported "no figure graphcheck" */
 const expand = (f) => fs.readFileSync(path.join(SRC, f + '.html'), 'utf8')
@@ -212,32 +229,39 @@ for (const [key, f] of Object.entries(FIGS)) {
   const floor = Math.max(FLOOR.w / xs, FLOOR.h / ys);
   const sPref = Math.max(Math.min(floor, top.s), 0.85 * top.s);
   const pref = (await boxForScale(key, f.figure, sPref)) || top.box;
-  /* the width a `down` subdesign gives a wide figure: its own preferred width grown to the atlas's
-     wide-figure width, but only ever at a scale the engine paints square */
-  const wideTop = await largestWithin(key, f.figure, 4, 260, A.figureClasses.widePreferredWidth);
-  const narrowTop = await boxForWidth(key, f.figure, A.surfaces.narrow);
-  FIG[key] = { cls, sub, pref: { w: pref.w, h: pref.h, s: +sPref.toFixed(1), x: pref.x, y: pref.y,
-      ratio: pref.ratio, html: pref.html },
-    wide: wideTop ? { w: wideTop.box.w, h: wideTop.box.h, s: +wideTop.s.toFixed(1), html: wideTop.box.html,
-      x: wideTop.box.x, y: wideTop.box.y, ratio: wideTop.box.ratio } : null,
-    narrow: narrowTop ? { w: narrowTop.box.w, h: narrowTop.box.h, s: +narrowTop.s.toFixed(1),
-      html: narrowTop.box.html, ratio: narrowTop.box.ratio } : null,
-    html: pref.html };
-  /* CONTROL · A BOX SOLVED FOR A WIDTH MUST USE IT. largestForWidth promises the largest scale that
-     fits the cap; a box that comes back far below the cap means the search FAILED and quietly
-     returned a small early candidate. Nothing else catches that — a 169px plane in a 169px region
-     still paints at ratio 1.000 and screenshots as a graph. */
-  if (!narrowTop) throw new Error(`${key}: no box at all fits the ${A.surfaces.narrow}px narrow surface`);
-  if (narrowTop.box.w < 0.9 * A.surfaces.narrow)
-    throw new Error(`${key}: the narrow box solved to ${narrowTop.box.w}x${narrowTop.box.h} against a `
-      + `${A.surfaces.narrow}px cap — the search collapsed rather than converged`);
-  if (!square(narrowTop.box))
-    throw new Error(`${key}: no height at ${A.surfaces.narrow}px paints this domain at equal unit scale `
-      + `(best ${narrowTop.box.w}x${narrowTop.box.h} at ${narrowTop.box.ratio})`);
-  console.log(`  ${key.padEnd(11)} ${String(ys / xs).slice(0, 4).padEnd(5)} aspect → ${cls.padEnd(9)} → ${sub.padEnd(5)} `
+
+  /* ONE BOX PER SURFACE. A `down` figure is given the atlas's wide-figure width or the surface,
+     whichever is smaller; a `side` figure is given its own preferred width or the surface,
+     whichever is smaller. A box is never scaled after painting — each is solved at the width it
+     will actually occupy. */
+  const box = {};
+  for (const sName of SURFACE_NAMES) {
+    const avail = A.surfaces[sName];
+    const target = sub === 'down' ? Math.min(A.mediaGeometry.widePreferredWidth, avail)
+                                  : Math.min(pref.w, avail);
+    if (target === pref.w) { box[sName] = pref; continue; }
+    const b = await boxForWidth(key, f.figure, target);
+    if (!b) throw new Error(`${key}: no box at all fits the ${target}px ${sName} target`);
+    if (b.box.w < 0.9 * target)
+      throw new Error(`${key}: the ${sName} box solved to ${b.box.w}x${b.box.h} against a ${target}px `
+        + `target — the search collapsed rather than converged`);
+    if (!square(b.box))
+      throw new Error(`${key}: no height at ${target}px paints this domain at equal unit scale `
+        + `(best ${b.box.w}x${b.box.h} at ${b.box.ratio})`);
+    box[sName] = b.box;
+  }
+
+  /* THE DERIVED SWITCH POINT, and the only one in the atlas. It is prescribed, not searched: two
+     numbers, the authored figure's own preferred width and one design-system constant. It never
+     looks at the prose, the step count or the height of anything. `down` has no switch point at
+     all — its arrangement is the same at every width and only the plane's box changes. */
+  const switchAt = sub === 'side' ? pref.w + M.gap + M.minInterpretation : null;
+
+  FIG[key] = { cls, sub, resolved: 'visual.' + sub, switchAt, pref, box, html: pref.html };
+  console.log(`  ${key.padEnd(11)} ${String(ys / xs).slice(0, 4).padEnd(5)} aspect → ${cls.padEnd(9)} → visual.${sub.padEnd(5)} `
     + `· preferred ${pref.w}×${pref.h} @${sPref.toFixed(1)} px/unit (${pref.ratio})`
-    + (FIG[key].wide ? ` · wide ${wideTop.box.w}×${wideTop.box.h}` : '')
-    + (FIG[key].narrow ? ` · narrow ${narrowTop.box.w}×${narrowTop.box.h}` : ''));
+    + (switchAt ? ` · side above ${switchAt}px` : ' · no state change')
+    + ' · boxes ' + SURFACE_NAMES.map((n) => `${n[0]}${box[n].w}×${box[n].h}`).join(' '));
 }
 
 /* ══ RENDER ════════════════════════════════════════════════════════════════════════════════════ */
@@ -256,10 +280,26 @@ const skin = (w, h, html) => `<div class="mx-part" data-mx-part="figure" data-fi
   + `style="position:relative;width:${w}px;height:${h}px"><div class="mx-figstage">`
   + `<div class="mx-figskin tp-slide">${html}</div></div></div>`;
 
-const payloads = {}, identity = {}, REPORT = [];
+const payloads = {}, identity = {}, AFFORD = {}, REPORT = [];
+/* names that appear as data-tpl but are not compositions — a collection, a views group, or the
+   persistent-pane template are structures, not arrangements of visible content */
+const NON_COMPOSITION = new Set([...Object.keys(A.collections), 'scroll.pane'].filter((k) => k !== '_'));
+
+/* CONTROL · THE JSON DESCRIBES INTENT, NOT LAYOUT ARITHMETIC. Run once, over the authored files
+   themselves, because the principle is about what an author is allowed to write — not about what
+   the page happens to render. A lesson says WHAT IT IS; it never tells CSS how to improvise. */
+const ARITHMETIC = '\\b(leftWidth|rightWidth|colWidth|occupancy|preferSplit|maxDeadSpace'
+  + '|growthWeight|trackWeight|minReadableBox|preferredBox|maximumUsefulBox|deadSpace'
+  + '|fitScore|candidateScore)\\b';
+for (const f of ['pack.json', 'figures.json', ...fs.readdirSync(SRC).filter((n) => /\.(html|part)$/.test(n))]) {
+  const t = fs.readFileSync(path.join(SRC, f), 'utf8');
+  const hit = new RegExp(ARITHMETIC).exec(t);
+  if (hit) throw new Error(`${f} carries the layout-arithmetic key "${hit[1]}" — authored files say what `
+    + `the lesson IS, never how CSS should improvise`);
+}
 
 const shot = async (name, entry, state, surfaceName) => {
-  const surface = A.surfaces[surfaceName], pad = surfaceName === 'narrow' ? A.surfacePad.narrow : A.surfacePad.desktop;
+  const surface = A.surfaces[surfaceName], pad = A.surfacePad[surfaceName];
   let body = readFrag(entry.frag);
 
   /* THE FIGURE'S SUBDESIGN IS ITS OWN MEDIA GEOMETRY, not the prose around it. */
@@ -271,22 +311,25 @@ const shot = async (name, entry, state, surfaceName) => {
     /* Which box: the narrow surface gets a box SOLVED for it; a wide-class figure in its `down`
        subdesign gets the atlas's wide width; otherwise the plane's own preferred legible size.
        A box is never scaled after painting. */
-    const box = surfaceName === 'narrow' ? (f.narrow || f.pref) : (f.sub === 'down' && f.wide) ? f.wide : f.pref;
+    const box = f.box[surfaceName];
     if (box.w > surface + 1) throw new Error(`${name}: ${key} needs ${box.w}px in a ${surface}px region`);
     return skin(box.w, box.h, box.html);
   });
   for (const key of used)
     body = body.split(`data-fig="${key}"`).join(`data-fig="${key}" data-fig-class="${FIG[key].cls}" data-sub="${FIG[key].sub}"`);
+  /* the derived switch point travels by figure key, because it is the FIGURE'S property */
+  const figSwitch = {};
+  for (const key of used) figSwitch[key] = FIG[key].switchAt;
 
   const doc = `<!doctype html><html data-theme="mathematics"><head><meta charset="utf-8"><style>
 ${APP_CSS}
 </style><style>
 ${tokens(surface, pad)}
 ${CSS_KIT}
-</style></head><body class="mx${surfaceName === 'narrow' ? ' at-narrow' : ''}"><div class="at-page">
-<div class="at-cap"><span class="at-tpl">${entry.demo} · ${surfaceName}${state.k ? ' · tab: ' + state.k : ''}</span>${entry.c}</div>
+</style></head><body class="mx${surfaceName === 'desktop' ? '' : ' at-' + surfaceName}"><div class="at-page">
+<div class="at-cap"><span class="at-tpl">${entry.demo} · ${surfaceName} ${surface}px${state.k ? ' · tab: ' + state.k : ''}</span>${entry.c}</div>
 <div class="at-surface">${body}</div>
-<div class="at-note">${entry.demo} — authored, never inferred. Responsive state from the ${surface}px surface alone; the disclosure is the author's and is identical at every width. Height is auto; the page scrolls.</div>
+<div class="at-note">${entry.demo} — the author chose this structure; the renderer chose only the prescribed responsive state (from the ${surface}px surface alone) and the media subdesign. The disclosure is the author's and is identical at every width. Height is auto; the page scrolls.</div>
 </div></body></html>`;
 
   const p = await browser.newPage({ viewport: { width: surface + 2 * pad + 120, height: 900 }, deviceScaleFactor: 2 });
@@ -298,11 +341,21 @@ ${CSS_KIT}
          point. Every other input — height, occupancy, how much fits — is absent by construction.
      2 · THE AUTHORED TAB SELECTION from pack.json. The bar is rendered whole; this only says which
          panel is open. Nothing here can add, remove or reorder a tab. */
-  const stamped = await p.evaluate(({ SWITCH, surface, sel }) => {
+  const stamped = await p.evaluate(({ SWITCH, figSwitch, surface, sel }) => {
     const surf = document.querySelector('.at-surface');
     for (const el of surf.querySelectorAll('[data-tpl]')) {
-      const at = SWITCH[el.getAttribute('data-tpl')];
+      /* a figure-bearing composition uses the switch point derived from ITS figure; everything
+         else uses the constant its composition declares. Both are prescribed. */
+      const fig = el.getAttribute('data-fig');
+      const at = fig && figSwitch[fig] != null ? figSwitch[fig] : SWITCH[el.getAttribute('data-tpl')];
       el.setAttribute('data-state', at && surface < at ? 'narrow' : 'wide');
+    }
+    /* comparison.sharedVisual resolves .side / .down from ITS SHARED FIGURE — the one the visual
+       inside it carries. Copying the suffix up is the resolution step the grammar names; it is not
+       a measurement, and the base composition is untouched either way. */
+    for (const el of surf.querySelectorAll('[data-tpl="comparison.sharedVisual"]')) {
+      const v = el.querySelector('[data-tpl="visual"][data-sub]');
+      if (v) el.setAttribute('data-sub', v.getAttribute('data-sub'));
     }
     for (const el of surf.querySelectorAll('[data-slot="cases"]')) {
       const owner = el.parentElement.closest('[data-state]');
@@ -324,7 +377,7 @@ ${CSS_KIT}
       }
     }
     return { groups: groups.length, missing, extraSel: Object.keys(sel).filter((k) => !groups.some((g) => g.getAttribute('data-tabs') === k)) };
-  }, { SWITCH, surface, sel: state.tabs || {} });
+  }, { SWITCH, figSwitch, surface, sel: state.tabs || {} });
   if (stamped.missing.length) throw new Error(`${name}: tab group(s) ${stamped.missing.join(', ')} were never given an authored selection`);
   if (stamped.extraSel.length) throw new Error(`${name}: pack.json selects tab group(s) ${stamped.extraSel.join(', ')} that this page does not have`);
   await p.waitForTimeout(420);
@@ -348,8 +401,21 @@ ${CSS_KIT}
       const labels = [].slice.call(t.querySelectorAll(':scope > .at-tabbar > .at-tab'))
         .map((b) => b.textContent.replace(/\s+/g, ' ').trim());
       const panels = [].slice.call(t.querySelectorAll(':scope > .at-panel')).map((b) => b.getAttribute('data-panel'));
-      return `${depth}:${t.getAttribute('data-tabs')}[${labels.join('|')}]{${panels.join('|')}}`;
+      return `${depth}:${t.getAttribute('data-tabs-kind')}:${t.getAttribute('data-tabs')}`
+        + `[${labels.join('|')}]{${panels.join('|')}}`;
     }).join(' ; ');
+    /* THE AFFORDANCE IS KEYED ON THE KIND, NOT ON DEPTH. Read back what each group actually paints,
+       so "the distinction is encoded, not merely styled" is a property of the page. */
+    const affordance = [].slice.call(surf.querySelectorAll('[data-tabs]')).map((t) => {
+      let depth = 0;
+      for (let q = t.parentElement; q && q !== surf; q = q.parentElement) if (q.hasAttribute('data-tabs')) depth++;
+      const bar = t.querySelector(':scope > .at-tabbar');
+      const on = t.querySelector(':scope > .at-tabbar > .at-tab[data-on]');
+      const cb = getComputedStyle(bar), co = on ? getComputedStyle(on) : null;
+      return { kind: t.getAttribute('data-tabs-kind'), depth,
+        sig: co ? [cb.borderBottomWidth, cb.borderTopWidth, cb.borderRadius,
+                   co.backgroundColor, co.borderBottomWidth, co.borderRadius].join('/') : 'no-current-tab' };
+    });
     const panels = [].slice.call(surf.querySelectorAll('[data-panel]'))
       .map((q) => ({ id: q.getAttribute('data-panel'), chars: q.textContent.replace(/\s+/g, ' ').trim().length,
         shown: q.hasAttribute('data-shown') }));
@@ -391,15 +457,15 @@ ${CSS_KIT}
          visible one to auto. So every local-x region also computes overflow-y:auto, and reading the
          computed value alone would report a vertical scroller wherever a wide equation sits. It is
          still checked — below, as "a local-x region must not ALSO clip vertically". */
-      const declared = el.getAttribute('data-scroll');
-      if (/^(auto|scroll)$/.test(cs.overflowY) && declared !== 'local-x') scrollers.y.push({
-        tag: el.tagName.toLowerCase(), declared,
-        inPane: !!el.closest('[data-tpl="scroll.persistent-pane"]'),
+      const dx = el.getAttribute('data-scroll-x'), dy = el.getAttribute('data-scroll-y');
+      if (/^(auto|scroll)$/.test(cs.overflowY) && dx !== 'local') scrollers.y.push({
+        tag: el.tagName.toLowerCase(), declared: dy,
+        inPane: !!el.closest('[data-tpl="scroll.pane"]'),
         live: el.scrollHeight > el.clientHeight + 1,
         xLive: el.scrollWidth > el.clientWidth + 1,
         prose: [].slice.call(el.querySelectorAll('[data-slot]')).map((n) => n.getAttribute('data-slot')) });
       /* and the same coercion in the other direction — a local-y pane computes overflow-x:auto */
-      if (/^(auto|scroll)$/.test(cs.overflowX) && declared !== 'local-y') scrollers.x.push({ declared,
+      if (/^(auto|scroll)$/.test(cs.overflowX) && dy !== 'pane') scrollers.x.push({ declared: dx,
         what: el.textContent.replace(/\s+/g, ' ').trim().slice(0, 40),
         w: Math.round(el.getBoundingClientRect().width), sw: el.scrollWidth,
         yLive: el.scrollHeight > el.clientHeight + 1,
@@ -410,7 +476,7 @@ ${CSS_KIT}
     const wide = [].slice.call(surf.querySelectorAll('p, .at-st, [data-slot="answer"]'))
       /* a LABEL is not prose — it is a two-word caption belonging to its region, and it is as wide as
          the region it labels (a 896px `down` figure included). Mathematics is not prose either. */
-      .filter((n) => vis(n) && !n.closest('[data-scroll="local-x"]')
+      .filter((n) => vis(n) && !n.closest('[data-scroll-x="local"]')
         && !n.classList.contains('at-sm') && !n.classList.contains('at-lab'))
       .map((n) => ({ w: Math.round(n.getBoundingClientRect().width), t: n.textContent.slice(0, 46) }))
       .filter((n) => n.w > flow + 1);
@@ -419,13 +485,15 @@ ${CSS_KIT}
       const el = document.querySelector(s), cs = getComputedStyle(el);
       return { s, maxHeight: cs.maxHeight, overflowY: cs.overflowY, height: cs.height };
     });
-    const inline = [].slice.call(surf.querySelectorAll('[data-tpl],[data-slot],[data-tabs],[data-scroll],[class^="at-"]'))
+    const inline = [].slice.call(surf.querySelectorAll('[data-tpl],[data-slot],[data-tabs],[data-scroll-x],[data-scroll-y],[class^="at-"]'))
       .filter((e) => e.style.width || e.style.gridTemplateColumns || e.style.height || e.style.maxHeight)
       .filter((e) => !e.hasAttribute('data-fig-viewport'))
       .map((e) => e.tagName + '.' + e.className + ':' + e.getAttribute('style'));
-    return { payload: seen.join(' '), tabSig, panels, bars, figs, scrollers, wide, frame, inline,
+    return { payload: seen.join(' '), tabSig, affordance, panels, bars, figs, scrollers, wide, frame, inline,
       tpls: [].slice.call(surf.querySelectorAll('[data-tpl]')).map((n) => n.getAttribute('data-tpl')),
-      subs: [].slice.call(surf.querySelectorAll('[data-tpl="visual.interpretation"]')).map((n) => n.getAttribute('data-sub')),
+      resolved: [].slice.call(surf.querySelectorAll('[data-tpl]')).map((n) => {
+        const t = n.getAttribute('data-tpl'), sb = n.getAttribute('data-sub');
+        return sb ? t + '.' + sb : t; }),
       states: [].slice.call(surf.querySelectorAll('[data-tpl]')).map((n) => n.getAttribute('data-state')),
       docH: Math.round(document.documentElement.scrollHeight),
       docW: Math.round(document.documentElement.scrollWidth),
@@ -450,6 +518,16 @@ function verify(name, entry, state, r) {
   const got = m.tpls.join(', ');
   if (got !== entry.tpls.join(', '))
     throw new Error(`${name}: the page is [${got}] but pack.json authored [${entry.tpls.join(', ')}]`);
+  /* CONTROL · MEDIA GEOMETRY RESOLVES WITHIN THE FROZEN VOCABULARY. A subdesign may change the
+     suffix; it may never produce a name the grammar does not contain, and it may never change the
+     base composition. comparison.sharedVisual with a wide figure is still comparison.sharedVisual. */
+  for (let i = 0; i < m.resolved.length; i++) {
+    const r = m.resolved[i];
+    if (!RESOLVED.has(r) && !RESOLVED.has(m.tpls[i]) && !NON_COMPOSITION.has(m.tpls[i]))
+      throw new Error(`${name}: ${r} is not a name in the frozen vocabulary`);
+    if (!r.startsWith(m.tpls[i]))
+      throw new Error(`${name}: ${m.tpls[i]} resolved to ${r} — a subdesign changed the composition`);
+  }
   /* CONTROL · THE HARD RULE. The authored tab structure — count, labels, panels, nesting — read back
      out of the DOM and compared to the signature in pack.json, character for character, at every
      width and in every tab state. This is what stands between disclosure and resolver behaviour. */
@@ -467,6 +545,19 @@ function verify(name, entry, state, r) {
      an empty box. */
   for (const q of m.panels)
     if (q.chars < 40) throw new Error(`${name}: panel ${q.id} holds ${q.chars} characters — a tab must hide content, not omit it`);
+  /* CONTROL · THE TWO TAB KINDS ARE ENCODED, NOT MERELY STYLED. collection.tabs means SEVERAL
+     SIBLING ITEMS; views.tabs means ONE OBJECT SEEN SEVERAL WAYS. A group's affordance must be the
+     one its KIND declares, identically at every nesting depth — keying it on depth (as an earlier
+     pass did) renders a top-level views.tabs as an item selector and lies about what the tabs mean. */
+  for (const g of m.affordance) {
+    if (!g.kind) throw new Error(`${name}: a tab group declares no kind`);
+    if (g.sig === 'no-current-tab') throw new Error(`${name}: the ${g.kind} group paints no current tab`);
+    if (!AFFORD[g.kind]) AFFORD[g.kind] = { name, sig: g.sig, depth: g.depth };
+    else if (AFFORD[g.kind].sig !== g.sig)
+      throw new Error(`${name}: a ${g.kind} group at depth ${g.depth} paints a different affordance `
+        + `from the one at depth ${AFFORD[g.kind].depth} in ${AFFORD[g.kind].name} — the kind is being `
+        + `styled by position rather than by meaning`);
+  }
   /* CONTROL · NO INLINE GEOMETRY outside the figure viewport. Nothing here is resolved at runtime. */
   if (m.inline.length)
     throw new Error(`${name}: inline geometry on ${m.inline.length} element(s) — ${m.inline[0]}`);
@@ -494,24 +585,26 @@ function verify(name, entry, state, r) {
   /* CONTROL · LOCAL-Y IS A WORKSPACE BEHAVIOUR AND NOTHING ELSE. */
   const BANNED = ['question', 'steps', 'solution', 'answer', 'synthesis', 'interpretation'];
   for (const s of m.scrollers.y) {
-    if (s.declared !== 'local-y')
-      throw new Error(`${name}: a <${s.tag}> scrolls vertically without being declared a local-y pane`);
+    if (s.declared !== 'pane')
+      throw new Error(`${name}: a <${s.tag}> scrolls vertically without declaring scroll.y = pane`);
     if (!s.inPane)
-      throw new Error(`${name}: a local-y pane sits outside a persistent-pane workspace`);
+      throw new Error(`${name}: a scroll.y = pane region sits outside a persistent-pane template`);
     if (!s.live)
-      throw new Error(`${name}: a local-y pane does not actually overflow — the proof is inert`);
-    if (s.xLive) throw new Error(`${name}: a local-y pane is clipping HORIZONTALLY as well — the coerced `
-      + `overflow-x has become a real one`);
+      throw new Error(`${name}: the pane does not actually overflow — the proof is inert`);
+    if (s.xLive) throw new Error(`${name}: a scroll.y = pane region is clipping HORIZONTALLY as well — `
+      + `the coerced overflow-x has become a real one`);
     const bad = s.prose.filter((x) => BANNED.includes(x));
     if (bad.length)
-      throw new Error(`${name}: ${bad.join(', ')} sits inside a local-y pane — teaching prose is never bounded to control height`);
+      throw new Error(`${name}: ${bad.join(', ')} sits inside a scroll.y = pane region — teaching prose `
+        + `is never bounded to control height, and the pane is not a way to make a lesson look shorter`);
   }
-  const wantY = !!entry.localY && !narrow;
+  const wantY = !!entry.paneY && !narrow;
   if (wantY && !m.scrollers.y.length) throw new Error(`${name}: the persistent pane does not scroll — the proof is inert`);
-  if (!wantY && m.scrollers.y.length) throw new Error(`${name}: ${m.scrollers.y.length} local-y pane(s) on a page that authored none`);
+  if (!wantY && m.scrollers.y.length)
+    throw new Error(`${name}: ${m.scrollers.y.length} vertically scrolling region(s) on a page that authored scroll.y = page`);
   /* CONTROL · LOCAL-X IS LOCAL, AND THE PROOF IS LIVE. */
   for (const s of m.scrollers.x) {
-    if (s.declared !== 'local-x') throw new Error(`${name}: a region scrolls horizontally without being declared local-x`);
+    if (s.declared !== 'local') throw new Error(`${name}: a region scrolls horizontally without declaring scroll.x = local`);
     if (s.sw <= s.w + 1) throw new Error(`${name}: an over-wide region did not overflow — the proof is `
       + `inert. ${s.sw}px of content in ${s.w}px: “${s.what}…”`);
     if (s.w > s.parent + 1) throw new Error(`${name}: an over-wide region widened the region it is in`);
@@ -528,8 +621,8 @@ function verify(name, entry, state, r) {
 console.log('\nrendering the atlas');
 for (const entry of SELECTED) {
   for (const state of (entry.states || [{ k: '', tabs: {} }])) {
-    for (const surfaceName of ['desktop', 'narrow']) {
-      const name = `${entry.n}-${entry.demo.replace(/\./g, '-')}${entry.adv ? '-adv' : ''}`
+    for (const surfaceName of (entry.surfaces || ['desktop', 'narrow'])) {
+      const name = `${entry.n}-${entry.demo.replace(/[.=]/g, '-')}${entry.adv ? '-adv' : ''}`
         + `${state.k ? '-' + state.k : ''}-${surfaceName}`;
       const r = await shot(name, entry, state, surfaceName);
       const m = verify(name, entry, state, r);
@@ -554,12 +647,14 @@ for (const entry of SELECTED) {
         throw new Error(`${name}: the compositions changed between tab states (vs ${identity[fk].name})`);
       if (!identity[fk]) identity[fk] = { name, tabSig: m.tabSig, tpls: m.tpls.join(', ') };
 
-      REPORT.push({ image: name, demo: entry.demo, adv: !!entry.adv, surface: r.surface, tab: state.k || null,
-        compositions: m.tpls, states: m.states, subdesigns: m.subs, tabStructure: m.tabSig || null,
-        pageHeight: m.docH, localY: m.scrollers.y.length, localX: m.scrollers.x.length,
-        figures: r.used.map((k) => `${k}:${FIG[k].cls}→${FIG[k].sub}`) });
-      console.log(`  ${name.padEnd(46)} ${String(r.surface).padStart(4)}px  page ${String(m.docH).padStart(5)}px`
-        + `  y${m.scrollers.y.length} x${m.scrollers.x.length}  ${r.used.map((k) => FIG[k].cls + '→' + FIG[k].sub).join(' ')}`);
+      REPORT.push({ image: name, demo: entry.demo, frag: entry.frag, adv: !!entry.adv, surface: r.surface,
+        surfaceName: r.surfaceName, tab: state.k || null,
+        authored: m.tpls, resolved: m.resolved, states: m.states, tabStructure: m.tabSig || null,
+        pageHeight: m.docH, scrollYPane: m.scrollers.y.length, scrollXLocal: m.scrollers.x.length,
+        figures: r.used.map((k) => `${k}:${FIG[k].cls}→${FIG[k].resolved}`) });
+      console.log(`  ${name.padEnd(50)} ${String(r.surface).padStart(4)}px  page ${String(m.docH).padStart(5)}px`
+        + `  y${m.scrollers.y.length} x${m.scrollers.x.length}  `
+        + `${[...new Set(m.resolved)].filter((t) => t.includes('.')).join(' ')}`);
     }
   }
 }
@@ -571,9 +666,17 @@ for (const d of [...new Set(SELECTED.map((e) => e.demo))]) {
   const rows = REPORT.filter((r) => r.demo === d);
   const h = rows.map((r) => r.pageHeight);
   const sig = [...new Set(rows.map((r) => r.tabStructure || '—'))];
+  /* group the drift check by FRAGMENT, not by demo: a normal and an adversarial payload share a
+     demo name and legitimately hold different numbers of children. Comparing across them reported a
+     DRIFT that was not one — a summary line that cries wolf is worse than no summary line. */
+  const comp = [...new Set(rows.map((r) => r.frag))].map((f) =>
+    [...new Set(rows.filter((r) => r.frag === f).map((r) => r.authored.join(',')))].length);
   console.log(`  ${d.padEnd(24)} ${String(rows.length).padStart(2)} renders · page ${Math.min(...h)}–${Math.max(...h)}px`
-    + ` (never a constraint) · tabs ${sig.length === 1 ? 'identical' : 'DRIFTED'}`);
+    + ` (never a constraint) · compositions ${comp.every((c) => c === 1) ? 'identical' : 'DRIFTED'}`
+    + ` · tabs ${sig.length === 1 ? 'identical' : 'DRIFTED'}`);
 }
+console.log('\nTHE TWO TAB KINDS — one affordance each, at every depth');
+for (const [k, v] of Object.entries(AFFORD)) console.log(`  ${k.padEnd(11)} ${v.sig}`);
 if (ONLY) console.log('\nATLAS_ONLY — partial run, images for other designs are stale');
 else fs.writeFileSync(path.join(OUT, 'atlas-report.json'), JSON.stringify(REPORT, null, 2));
 console.log('\nwrote ' + path.relative(root, OUT) + ` — ${REPORT.length} renders, ${SELECTED.length} reference designs`);

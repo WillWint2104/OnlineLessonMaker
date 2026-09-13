@@ -1,988 +1,1827 @@
 [
   {
-    "image": "01-single-flow-desktop",
-    "demo": "single.flow",
+    "image": "01-page-workedExamples-substitution-desktop",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
     "adv": false,
     "surface": 1152,
-    "tab": null,
-    "compositions": [
-      "single.flow"
+    "surfaceName": "desktop",
+    "tab": "substitution",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
     ],
     "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
       "wide"
     ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 900,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 1854,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
   },
   {
-    "image": "01-single-flow-narrow",
-    "demo": "single.flow",
+    "image": "01-page-workedExamples-substitution-tablet",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
+    "adv": false,
+    "surface": 834,
+    "surfaceName": "tablet",
+    "tab": "substitution",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "narrow"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 1820,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "01-page-workedExamples-substitution-narrow",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
     "adv": false,
     "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "substitution",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "narrow",
+      "narrow"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 2191,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "01-page-workedExamples-solving-desktop",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "solving",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 1030,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "01-page-workedExamples-solving-tablet",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
+    "adv": false,
+    "surface": 834,
+    "surfaceName": "tablet",
+    "tab": "solving",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "narrow"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 996,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "01-page-workedExamples-solving-narrow",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "solving",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "narrow",
+      "narrow"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 1177,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "01-page-workedExamples-symmetry-workings-desktop",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "symmetry-workings",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 1010,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "01-page-workedExamples-symmetry-workings-tablet",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
+    "adv": false,
+    "surface": 834,
+    "surfaceName": "tablet",
+    "tab": "symmetry-workings",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "narrow"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 976,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "01-page-workedExamples-symmetry-workings-narrow",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "symmetry-workings",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "narrow",
+      "narrow"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 1477,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "01-page-workedExamples-symmetry-visual-desktop",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "symmetry-visual",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 1194,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "01-page-workedExamples-symmetry-visual-tablet",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
+    "adv": false,
+    "surface": 834,
+    "surfaceName": "tablet",
+    "tab": "symmetry-visual",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "narrow"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 1443,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "01-page-workedExamples-symmetry-visual-narrow",
+    "demo": "page.workedExamples",
+    "frag": "page.workedExamples",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "symmetry-visual",
+    "authored": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "narrow",
+      "narrow"
+    ],
+    "tabStructure": "0:collection:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:views:representation[Workings|Visual explanation]{workings|visual}",
+    "pageHeight": 1509,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "02-single-flow-desktop",
+    "demo": "single.flow",
+    "frag": "single.flow",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
     "tab": null,
-    "compositions": [
+    "authored": [
+      "single.flow"
+    ],
+    "resolved": [
       "single.flow"
     ],
     "states": [
       "wide"
     ],
-    "subdesigns": [],
     "tabStructure": null,
     "pageHeight": 900,
-    "localY": 0,
-    "localX": 0,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
     "figures": []
   },
   {
-    "image": "02-single-flow-adv-desktop",
+    "image": "02-single-flow-narrow",
     "demo": "single.flow",
-    "adv": true,
-    "surface": 1152,
+    "frag": "single.flow",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
     "tab": null,
-    "compositions": [
+    "authored": [
+      "single.flow"
+    ],
+    "resolved": [
       "single.flow"
     ],
     "states": [
       "wide"
     ],
-    "subdesigns": [],
+    "tabStructure": null,
+    "pageHeight": 900,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "03-single-flow-adv-desktop",
+    "demo": "single.flow",
+    "frag": "single.flow.adv",
+    "adv": true,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": null,
+    "authored": [
+      "single.flow"
+    ],
+    "resolved": [
+      "single.flow"
+    ],
+    "states": [
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1062,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "03-single-flow-adv-narrow",
+    "demo": "single.flow",
+    "frag": "single.flow.adv",
+    "adv": true,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": null,
+    "authored": [
+      "single.flow"
+    ],
+    "resolved": [
+      "single.flow"
+    ],
+    "states": [
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1117,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "04-single-split-desktop",
+    "demo": "single.split",
+    "frag": "single.split",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": null,
+    "authored": [
+      "single.split"
+    ],
+    "resolved": [
+      "single.split"
+    ],
+    "states": [
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 900,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "04-single-split-narrow",
+    "demo": "single.split",
+    "frag": "single.split",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": null,
+    "authored": [
+      "single.split"
+    ],
+    "resolved": [
+      "single.split"
+    ],
+    "states": [
+      "narrow"
+    ],
+    "tabStructure": null,
+    "pageHeight": 996,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "05-single-split-adv-desktop",
+    "demo": "single.split",
+    "frag": "single.split.adv",
+    "adv": true,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": null,
+    "authored": [
+      "single.split"
+    ],
+    "resolved": [
+      "single.split"
+    ],
+    "states": [
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 900,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "05-single-split-adv-narrow",
+    "demo": "single.split",
+    "frag": "single.split.adv",
+    "adv": true,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": null,
+    "authored": [
+      "single.split"
+    ],
+    "resolved": [
+      "single.split"
+    ],
+    "states": [
+      "narrow"
+    ],
+    "tabStructure": null,
+    "pageHeight": 900,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "06-comparison-paired-desktop",
+    "demo": "comparison.paired",
+    "frag": "comparison.paired",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": null,
+    "authored": [
+      "comparison.paired"
+    ],
+    "resolved": [
+      "comparison.paired"
+    ],
+    "states": [
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 900,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "06-comparison-paired-narrow",
+    "demo": "comparison.paired",
+    "frag": "comparison.paired",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": null,
+    "authored": [
+      "comparison.paired"
+    ],
+    "resolved": [
+      "comparison.paired"
+    ],
+    "states": [
+      "narrow"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1075,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "07-comparison-paired-adv-desktop",
+    "demo": "comparison.paired",
+    "frag": "comparison.paired.adv",
+    "adv": true,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": null,
+    "authored": [
+      "comparison.paired"
+    ],
+    "resolved": [
+      "comparison.paired"
+    ],
+    "states": [
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 959,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "07-comparison-paired-adv-narrow",
+    "demo": "comparison.paired",
+    "frag": "comparison.paired.adv",
+    "adv": true,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": null,
+    "authored": [
+      "comparison.paired"
+    ],
+    "resolved": [
+      "comparison.paired"
+    ],
+    "states": [
+      "narrow"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1307,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "08-visual-desktop",
+    "demo": "visual",
+    "frag": "visual",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": null,
+    "authored": [
+      "visual"
+    ],
+    "resolved": [
+      "visual.side"
+    ],
+    "states": [
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 999,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "roots:portrait→visual.side"
+    ]
+  },
+  {
+    "image": "08-visual-tablet",
+    "demo": "visual",
+    "frag": "visual",
+    "adv": false,
+    "surface": 834,
+    "surfaceName": "tablet",
+    "tab": null,
+    "authored": [
+      "visual"
+    ],
+    "resolved": [
+      "visual.side"
+    ],
+    "states": [
+      "narrow"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1286,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "roots:portrait→visual.side"
+    ]
+  },
+  {
+    "image": "08-visual-narrow",
+    "demo": "visual",
+    "frag": "visual",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": null,
+    "authored": [
+      "visual"
+    ],
+    "resolved": [
+      "visual.side"
+    ],
+    "states": [
+      "narrow"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1391,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "roots:portrait→visual.side"
+    ]
+  },
+  {
+    "image": "09-visual-adv-desktop",
+    "demo": "visual",
+    "frag": "visual.adv",
+    "adv": true,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": null,
+    "authored": [
+      "visual"
+    ],
+    "resolved": [
+      "visual.down"
+    ],
+    "states": [
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1105,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "09-visual-adv-tablet",
+    "demo": "visual",
+    "frag": "visual.adv",
+    "adv": true,
+    "surface": 834,
+    "surfaceName": "tablet",
+    "tab": null,
+    "authored": [
+      "visual"
+    ],
+    "resolved": [
+      "visual.down"
+    ],
+    "states": [
+      "wide"
+    ],
     "tabStructure": null,
     "pageHeight": 1043,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "02-single-flow-adv-narrow",
-    "demo": "single.flow",
-    "adv": true,
-    "surface": 382,
-    "tab": null,
-    "compositions": [
-      "single.flow"
-    ],
-    "states": [
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 1099,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "03-single-split-desktop",
-    "demo": "single.split",
-    "adv": false,
-    "surface": 1152,
-    "tab": null,
-    "compositions": [
-      "single.split"
-    ],
-    "states": [
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 900,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "03-single-split-narrow",
-    "demo": "single.split",
-    "adv": false,
-    "surface": 382,
-    "tab": null,
-    "compositions": [
-      "single.split"
-    ],
-    "states": [
-      "narrow"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 977,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "04-single-split-adv-desktop",
-    "demo": "single.split",
-    "adv": true,
-    "surface": 1152,
-    "tab": null,
-    "compositions": [
-      "single.split"
-    ],
-    "states": [
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 900,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "04-single-split-adv-narrow",
-    "demo": "single.split",
-    "adv": true,
-    "surface": 382,
-    "tab": null,
-    "compositions": [
-      "single.split"
-    ],
-    "states": [
-      "narrow"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 900,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "05-collection-repeat-desktop",
-    "demo": "collection.repeat",
-    "adv": false,
-    "surface": 1152,
-    "tab": null,
-    "compositions": [
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 1657,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "05-collection-repeat-narrow",
-    "demo": "collection.repeat",
-    "adv": false,
-    "surface": 382,
-    "tab": null,
-    "compositions": [
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 1890,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "06-collection-repeat-adv-desktop",
-    "demo": "collection.repeat",
-    "adv": true,
-    "surface": 1152,
-    "tab": null,
-    "compositions": [
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 2651,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "06-collection-repeat-adv-narrow",
-    "demo": "collection.repeat",
-    "adv": true,
-    "surface": 382,
-    "tab": null,
-    "compositions": [
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 2835,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "07-comparison-paired-desktop",
-    "demo": "comparison.paired",
-    "adv": false,
-    "surface": 1152,
-    "tab": null,
-    "compositions": [
-      "comparison.paired"
-    ],
-    "states": [
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 900,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "07-comparison-paired-narrow",
-    "demo": "comparison.paired",
-    "adv": false,
-    "surface": 382,
-    "tab": null,
-    "compositions": [
-      "comparison.paired"
-    ],
-    "states": [
-      "narrow"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 1056,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "08-comparison-paired-adv-desktop",
-    "demo": "comparison.paired",
-    "adv": true,
-    "surface": 1152,
-    "tab": null,
-    "compositions": [
-      "comparison.paired"
-    ],
-    "states": [
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 941,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "08-comparison-paired-adv-narrow",
-    "demo": "comparison.paired",
-    "adv": true,
-    "surface": 382,
-    "tab": null,
-    "compositions": [
-      "comparison.paired"
-    ],
-    "states": [
-      "narrow"
-    ],
-    "subdesigns": [],
-    "tabStructure": null,
-    "pageHeight": 1289,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "09-comparison-sharedVisual-desktop",
-    "demo": "comparison.sharedVisual",
-    "adv": false,
-    "surface": 1152,
-    "tab": null,
-    "compositions": [
-      "comparison.sharedVisual",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": null,
-    "pageHeight": 1305,
-    "localY": 0,
-    "localX": 0,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
     "figures": [
-      "symmetry:balanced→side"
+      "landscape:wide→visual.down"
     ]
   },
   {
-    "image": "09-comparison-sharedVisual-narrow",
+    "image": "09-visual-adv-narrow",
+    "demo": "visual",
+    "frag": "visual.adv",
+    "adv": true,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": null,
+    "authored": [
+      "visual"
+    ],
+    "resolved": [
+      "visual.down"
+    ],
+    "states": [
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1004,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "10-comparison-sharedVisual-desktop",
     "demo": "comparison.sharedVisual",
+    "frag": "comparison.sharedVisual",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": null,
+    "authored": [
+      "comparison.sharedVisual",
+      "visual"
+    ],
+    "resolved": [
+      "comparison.sharedVisual.side",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1324,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "symmetry:balanced→visual.side"
+    ]
+  },
+  {
+    "image": "10-comparison-sharedVisual-narrow",
+    "demo": "comparison.sharedVisual",
+    "frag": "comparison.sharedVisual",
     "adv": false,
     "surface": 382,
+    "surfaceName": "narrow",
     "tab": null,
-    "compositions": [
+    "authored": [
       "comparison.sharedVisual",
-      "visual.interpretation"
+      "visual"
+    ],
+    "resolved": [
+      "comparison.sharedVisual.side",
+      "visual.side"
     ],
     "states": [
       "narrow",
       "narrow"
     ],
-    "subdesigns": [
-      "side"
-    ],
     "tabStructure": null,
-    "pageHeight": 1886,
-    "localY": 0,
-    "localX": 0,
+    "pageHeight": 1923,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
     "figures": [
-      "symmetry:balanced→side"
+      "symmetry:balanced→visual.side"
     ]
   },
   {
-    "image": "10-comparison-sharedVisual-adv-desktop",
+    "image": "11-comparison-sharedVisual-adv-desktop",
     "demo": "comparison.sharedVisual",
+    "frag": "comparison.sharedVisual.adv",
     "adv": true,
     "surface": 1152,
+    "surfaceName": "desktop",
     "tab": null,
-    "compositions": [
+    "authored": [
       "comparison.sharedVisual",
-      "visual.interpretation"
+      "visual"
+    ],
+    "resolved": [
+      "comparison.sharedVisual.down",
+      "visual.down"
     ],
     "states": [
       "wide",
       "wide"
     ],
-    "subdesigns": [
-      "down"
+    "tabStructure": null,
+    "pageHeight": 1269,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "11-comparison-sharedVisual-adv-narrow",
+    "demo": "comparison.sharedVisual",
+    "frag": "comparison.sharedVisual.adv",
+    "adv": true,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": null,
+    "authored": [
+      "comparison.sharedVisual",
+      "visual"
+    ],
+    "resolved": [
+      "comparison.sharedVisual.down",
+      "visual.down"
+    ],
+    "states": [
+      "narrow",
+      "wide"
     ],
     "tabStructure": null,
+    "pageHeight": 1444,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "12-collection-repeat-desktop",
+    "demo": "collection.repeat",
+    "frag": "collection.repeat",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": null,
+    "authored": [
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1675,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "12-collection-repeat-narrow",
+    "demo": "collection.repeat",
+    "frag": "collection.repeat",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": null,
+    "authored": [
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 1909,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "13-collection-repeat-adv-desktop",
+    "demo": "collection.repeat",
+    "frag": "collection.repeat.adv",
+    "adv": true,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": null,
+    "authored": [
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 2670,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "13-collection-repeat-adv-narrow",
+    "demo": "collection.repeat",
+    "frag": "collection.repeat.adv",
+    "adv": true,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": null,
+    "authored": [
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": null,
+    "pageHeight": 2834,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "14-collection-tabs-negative-desktop",
+    "demo": "collection.tabs",
+    "frag": "collection.tabs",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "negative",
+    "authored": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
+    "pageHeight": 976,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "14-collection-tabs-negative-narrow",
+    "demo": "collection.tabs",
+    "frag": "collection.tabs",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "negative",
+    "authored": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
+    "pageHeight": 1150,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "14-collection-tabs-fraction-desktop",
+    "demo": "collection.tabs",
+    "frag": "collection.tabs",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "fraction",
+    "authored": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
+    "pageHeight": 976,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "14-collection-tabs-fraction-narrow",
+    "demo": "collection.tabs",
+    "frag": "collection.tabs",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "fraction",
+    "authored": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
+    "pageHeight": 1177,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "14-collection-tabs-decimal-desktop",
+    "demo": "collection.tabs",
+    "frag": "collection.tabs",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "decimal",
+    "authored": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
+    "pageHeight": 907,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "14-collection-tabs-decimal-narrow",
+    "demo": "collection.tabs",
+    "frag": "collection.tabs",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "decimal",
+    "authored": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
+    "pageHeight": 1084,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "15-collection-tabs-adv-fraction-desktop",
+    "demo": "collection.tabs",
+    "frag": "collection.tabs.adv",
+    "adv": true,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "fraction",
+    "authored": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
+    "pageHeight": 1283,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "15-collection-tabs-adv-fraction-narrow",
+    "demo": "collection.tabs",
+    "frag": "collection.tabs.adv",
+    "adv": true,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "fraction",
+    "authored": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "single.flow",
+      "single.flow",
+      "single.flow"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:collection:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
+    "pageHeight": 1465,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": []
+  },
+  {
+    "image": "16-views-tabs-workings-desktop",
+    "demo": "views.tabs",
+    "frag": "views.tabs",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "workings",
+    "authored": [
+      "views.tabs",
+      "single.flow",
+      "visual"
+    ],
+    "resolved": [
+      "views.tabs",
+      "single.flow",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:views:representation[1 Workings|2 Graph check]{workings|graph}",
+    "pageHeight": 900,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "graphcheck:portrait→visual.side"
+    ]
+  },
+  {
+    "image": "16-views-tabs-workings-narrow",
+    "demo": "views.tabs",
+    "frag": "views.tabs",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "workings",
+    "authored": [
+      "views.tabs",
+      "single.flow",
+      "visual"
+    ],
+    "resolved": [
+      "views.tabs",
+      "single.flow",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "narrow"
+    ],
+    "tabStructure": "0:views:representation[1 Workings|2 Graph check]{workings|graph}",
+    "pageHeight": 900,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "graphcheck:portrait→visual.side"
+    ]
+  },
+  {
+    "image": "16-views-tabs-graph-desktop",
+    "demo": "views.tabs",
+    "frag": "views.tabs",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "graph",
+    "authored": [
+      "views.tabs",
+      "single.flow",
+      "visual"
+    ],
+    "resolved": [
+      "views.tabs",
+      "single.flow",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:views:representation[1 Workings|2 Graph check]{workings|graph}",
+    "pageHeight": 1123,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "graphcheck:portrait→visual.side"
+    ]
+  },
+  {
+    "image": "16-views-tabs-graph-narrow",
+    "demo": "views.tabs",
+    "frag": "views.tabs",
+    "adv": false,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "graph",
+    "authored": [
+      "views.tabs",
+      "single.flow",
+      "visual"
+    ],
+    "resolved": [
+      "views.tabs",
+      "single.flow",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "narrow"
+    ],
+    "tabStructure": "0:views:representation[1 Workings|2 Graph check]{workings|graph}",
+    "pageHeight": 1469,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "graphcheck:portrait→visual.side"
+    ]
+  },
+  {
+    "image": "17-views-tabs-adv-workings-desktop",
+    "demo": "views.tabs",
+    "frag": "views.tabs.adv",
+    "adv": true,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "workings",
+    "authored": [
+      "views.tabs",
+      "single.flow",
+      "visual"
+    ],
+    "resolved": [
+      "views.tabs",
+      "single.flow",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:views:representation[1 Workings|2 Graph check]{workings|graph}",
+    "pageHeight": 904,
+    "scrollYPane": 0,
+    "scrollXLocal": 1,
+    "figures": [
+      "roots:portrait→visual.side"
+    ]
+  },
+  {
+    "image": "17-views-tabs-adv-workings-narrow",
+    "demo": "views.tabs",
+    "frag": "views.tabs.adv",
+    "adv": true,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "workings",
+    "authored": [
+      "views.tabs",
+      "single.flow",
+      "visual"
+    ],
+    "resolved": [
+      "views.tabs",
+      "single.flow",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "narrow"
+    ],
+    "tabStructure": "0:views:representation[1 Workings|2 Graph check]{workings|graph}",
+    "pageHeight": 995,
+    "scrollYPane": 0,
+    "scrollXLocal": 1,
+    "figures": [
+      "roots:portrait→visual.side"
+    ]
+  },
+  {
+    "image": "17-views-tabs-adv-graph-desktop",
+    "demo": "views.tabs",
+    "frag": "views.tabs.adv",
+    "adv": true,
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "tab": "graph",
+    "authored": [
+      "views.tabs",
+      "single.flow",
+      "visual"
+    ],
+    "resolved": [
+      "views.tabs",
+      "single.flow",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "wide"
+    ],
+    "tabStructure": "0:views:representation[1 Workings|2 Graph check]{workings|graph}",
+    "pageHeight": 1012,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
+    "figures": [
+      "roots:portrait→visual.side"
+    ]
+  },
+  {
+    "image": "17-views-tabs-adv-graph-narrow",
+    "demo": "views.tabs",
+    "frag": "views.tabs.adv",
+    "adv": true,
+    "surface": 382,
+    "surfaceName": "narrow",
+    "tab": "graph",
+    "authored": [
+      "views.tabs",
+      "single.flow",
+      "visual"
+    ],
+    "resolved": [
+      "views.tabs",
+      "single.flow",
+      "visual.side"
+    ],
+    "states": [
+      "wide",
+      "wide",
+      "narrow"
+    ],
+    "tabStructure": "0:views:representation[1 Workings|2 Graph check]{workings|graph}",
     "pageHeight": 1251,
-    "localY": 0,
-    "localX": 0,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
     "figures": [
-      "landscape:wide→down"
+      "roots:portrait→visual.side"
     ]
   },
   {
-    "image": "10-comparison-sharedVisual-adv-narrow",
-    "demo": "comparison.sharedVisual",
-    "adv": true,
-    "surface": 382,
+    "image": "18-scroll-y-page-desktop",
+    "demo": "scroll.y=page",
+    "frag": "scroll.page",
+    "adv": false,
+    "surface": 1152,
+    "surfaceName": "desktop",
     "tab": null,
-    "compositions": [
-      "comparison.sharedVisual",
-      "visual.interpretation"
+    "authored": [
+      "single.flow",
+      "visual",
+      "single.flow"
+    ],
+    "resolved": [
+      "single.flow",
+      "visual.side",
+      "single.flow"
     ],
     "states": [
-      "narrow",
-      "narrow"
-    ],
-    "subdesigns": [
-      "down"
+      "wide",
+      "wide",
+      "wide"
     ],
     "tabStructure": null,
-    "pageHeight": 1370,
-    "localY": 0,
-    "localX": 0,
+    "pageHeight": 2350,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
     "figures": [
-      "landscape:wide→down"
+      "graphcheck:portrait→visual.side"
     ]
   },
   {
-    "image": "11-visual-interpretation-desktop",
-    "demo": "visual.interpretation",
+    "image": "18-scroll-y-page-narrow",
+    "demo": "scroll.y=page",
+    "frag": "scroll.page",
     "adv": false,
-    "surface": 1152,
+    "surface": 382,
+    "surfaceName": "narrow",
     "tab": null,
-    "compositions": [
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": null,
-    "pageHeight": 962,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "roots:portrait→side"
-    ]
-  },
-  {
-    "image": "11-visual-interpretation-narrow",
-    "demo": "visual.interpretation",
-    "adv": false,
-    "surface": 382,
-    "tab": null,
-    "compositions": [
-      "visual.interpretation"
-    ],
-    "states": [
-      "narrow"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": null,
-    "pageHeight": 1335,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "roots:portrait→side"
-    ]
-  },
-  {
-    "image": "12-visual-interpretation-adv-desktop",
-    "demo": "visual.interpretation",
-    "adv": true,
-    "surface": 1152,
-    "tab": null,
-    "compositions": [
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide"
-    ],
-    "subdesigns": [
-      "down"
-    ],
-    "tabStructure": null,
-    "pageHeight": 1088,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "landscape:wide→down"
-    ]
-  },
-  {
-    "image": "12-visual-interpretation-adv-narrow",
-    "demo": "visual.interpretation",
-    "adv": true,
-    "surface": 382,
-    "tab": null,
-    "compositions": [
-      "visual.interpretation"
-    ],
-    "states": [
-      "narrow"
-    ],
-    "subdesigns": [
-      "down"
-    ],
-    "tabStructure": null,
-    "pageHeight": 967,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "landscape:wide→down"
-    ]
-  },
-  {
-    "image": "13-collection-tabs-negative-desktop",
-    "demo": "collection.tabs",
-    "adv": false,
-    "surface": 1152,
-    "tab": "negative",
-    "compositions": [
-      "collection.tabs",
+    "authored": [
       "single.flow",
-      "single.flow",
+      "visual",
       "single.flow"
     ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": "0:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
-    "pageHeight": 957,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "13-collection-tabs-negative-narrow",
-    "demo": "collection.tabs",
-    "adv": false,
-    "surface": 382,
-    "tab": "negative",
-    "compositions": [
-      "collection.tabs",
+    "resolved": [
       "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": "0:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
-    "pageHeight": 1113,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "13-collection-tabs-fraction-desktop",
-    "demo": "collection.tabs",
-    "adv": false,
-    "surface": 1152,
-    "tab": "fraction",
-    "compositions": [
-      "collection.tabs",
-      "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": "0:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
-    "pageHeight": 957,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "13-collection-tabs-fraction-narrow",
-    "demo": "collection.tabs",
-    "adv": false,
-    "surface": 382,
-    "tab": "fraction",
-    "compositions": [
-      "collection.tabs",
-      "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": "0:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
-    "pageHeight": 1140,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "13-collection-tabs-decimal-desktop",
-    "demo": "collection.tabs",
-    "adv": false,
-    "surface": 1152,
-    "tab": "decimal",
-    "compositions": [
-      "collection.tabs",
-      "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": "0:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
-    "pageHeight": 900,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "13-collection-tabs-decimal-narrow",
-    "demo": "collection.tabs",
-    "adv": false,
-    "surface": 382,
-    "tab": "decimal",
-    "compositions": [
-      "collection.tabs",
-      "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": "0:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
-    "pageHeight": 1046,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "14-collection-tabs-adv-fraction-desktop",
-    "demo": "collection.tabs",
-    "adv": true,
-    "surface": 1152,
-    "tab": "fraction",
-    "compositions": [
-      "collection.tabs",
-      "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": "0:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
-    "pageHeight": 1265,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "14-collection-tabs-adv-fraction-narrow",
-    "demo": "collection.tabs",
-    "adv": true,
-    "surface": 382,
-    "tab": "fraction",
-    "compositions": [
-      "collection.tabs",
-      "single.flow",
-      "single.flow",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [],
-    "tabStructure": "0:example[Negative value|Fraction|Decimal]{negative|fraction|decimal}",
-    "pageHeight": 1446,
-    "localY": 0,
-    "localX": 0,
-    "figures": []
-  },
-  {
-    "image": "15-presentation-tabs-workings-desktop",
-    "demo": "presentation.tabs",
-    "adv": false,
-    "surface": 1152,
-    "tab": "workings",
-    "compositions": [
-      "presentation.tabs",
-      "single.flow",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:representation[1 Workings|2 Graph check]{workings|graph}",
-    "pageHeight": 900,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "graphcheck:portrait→side"
-    ]
-  },
-  {
-    "image": "15-presentation-tabs-workings-narrow",
-    "demo": "presentation.tabs",
-    "adv": false,
-    "surface": 382,
-    "tab": "workings",
-    "compositions": [
-      "presentation.tabs",
-      "single.flow",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "narrow"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:representation[1 Workings|2 Graph check]{workings|graph}",
-    "pageHeight": 900,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "graphcheck:portrait→side"
-    ]
-  },
-  {
-    "image": "15-presentation-tabs-graph-desktop",
-    "demo": "presentation.tabs",
-    "adv": false,
-    "surface": 1152,
-    "tab": "graph",
-    "compositions": [
-      "presentation.tabs",
-      "single.flow",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:representation[1 Workings|2 Graph check]{workings|graph}",
-    "pageHeight": 1091,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "graphcheck:portrait→side"
-    ]
-  },
-  {
-    "image": "15-presentation-tabs-graph-narrow",
-    "demo": "presentation.tabs",
-    "adv": false,
-    "surface": 382,
-    "tab": "graph",
-    "compositions": [
-      "presentation.tabs",
-      "single.flow",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "narrow"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:representation[1 Workings|2 Graph check]{workings|graph}",
-    "pageHeight": 1437,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "graphcheck:portrait→side"
-    ]
-  },
-  {
-    "image": "16-presentation-tabs-adv-workings-desktop",
-    "demo": "presentation.tabs",
-    "adv": true,
-    "surface": 1152,
-    "tab": "workings",
-    "compositions": [
-      "presentation.tabs",
-      "single.flow",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:representation[1 Workings|2 Graph check]{workings|graph}",
-    "pageHeight": 900,
-    "localY": 0,
-    "localX": 1,
-    "figures": [
-      "roots:portrait→side"
-    ]
-  },
-  {
-    "image": "16-presentation-tabs-adv-workings-narrow",
-    "demo": "presentation.tabs",
-    "adv": true,
-    "surface": 382,
-    "tab": "workings",
-    "compositions": [
-      "presentation.tabs",
-      "single.flow",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "narrow"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:representation[1 Workings|2 Graph check]{workings|graph}",
-    "pageHeight": 981,
-    "localY": 0,
-    "localX": 1,
-    "figures": [
-      "roots:portrait→side"
-    ]
-  },
-  {
-    "image": "16-presentation-tabs-adv-graph-desktop",
-    "demo": "presentation.tabs",
-    "adv": true,
-    "surface": 1152,
-    "tab": "graph",
-    "compositions": [
-      "presentation.tabs",
-      "single.flow",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:representation[1 Workings|2 Graph check]{workings|graph}",
-    "pageHeight": 999,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "roots:portrait→side"
-    ]
-  },
-  {
-    "image": "16-presentation-tabs-adv-graph-narrow",
-    "demo": "presentation.tabs",
-    "adv": true,
-    "surface": 382,
-    "tab": "graph",
-    "compositions": [
-      "presentation.tabs",
-      "single.flow",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "narrow"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:representation[1 Workings|2 Graph check]{workings|graph}",
-    "pageHeight": 1237,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "roots:portrait→side"
-    ]
-  },
-  {
-    "image": "17-scroll-page-desktop",
-    "demo": "scroll.page",
-    "adv": false,
-    "surface": 1152,
-    "tab": null,
-    "compositions": [
-      "single.flow",
-      "visual.interpretation",
-      "single.flow"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": null,
-    "pageHeight": 2331,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "graphcheck:portrait→side"
-    ]
-  },
-  {
-    "image": "17-scroll-page-narrow",
-    "demo": "scroll.page",
-    "adv": false,
-    "surface": 382,
-    "tab": null,
-    "compositions": [
-      "single.flow",
-      "visual.interpretation",
+      "visual.side",
       "single.flow"
     ],
     "states": [
@@ -990,403 +1829,104 @@
       "narrow",
       "wide"
     ],
-    "subdesigns": [
-      "side"
-    ],
     "tabStructure": null,
-    "pageHeight": 2987,
-    "localY": 0,
-    "localX": 0,
+    "pageHeight": 3005,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
     "figures": [
-      "graphcheck:portrait→side"
+      "graphcheck:portrait→visual.side"
     ]
   },
   {
-    "image": "18-scroll-persistent-pane-desktop",
-    "demo": "scroll.persistent-pane",
+    "image": "19-scroll-y-pane-desktop",
+    "demo": "scroll.y=pane",
+    "frag": "scroll.pane",
     "adv": false,
     "surface": 1152,
+    "surfaceName": "desktop",
     "tab": null,
-    "compositions": [
-      "scroll.persistent-pane"
+    "authored": [
+      "scroll.pane"
+    ],
+    "resolved": [
+      "scroll.pane"
     ],
     "states": [
       "wide"
     ],
-    "subdesigns": [],
     "tabStructure": null,
     "pageHeight": 900,
-    "localY": 1,
-    "localX": 0,
+    "scrollYPane": 1,
+    "scrollXLocal": 0,
     "figures": []
   },
   {
-    "image": "18-scroll-persistent-pane-narrow",
-    "demo": "scroll.persistent-pane",
+    "image": "19-scroll-y-pane-narrow",
+    "demo": "scroll.y=pane",
+    "frag": "scroll.pane",
     "adv": false,
     "surface": 382,
+    "surfaceName": "narrow",
     "tab": null,
-    "compositions": [
-      "scroll.persistent-pane"
+    "authored": [
+      "scroll.pane"
+    ],
+    "resolved": [
+      "scroll.pane"
     ],
     "states": [
       "narrow"
     ],
-    "subdesigns": [],
     "tabStructure": null,
     "pageHeight": 1247,
-    "localY": 0,
-    "localX": 0,
+    "scrollYPane": 0,
+    "scrollXLocal": 0,
     "figures": []
   },
   {
-    "image": "19-scroll-local-x-desktop",
-    "demo": "scroll.local-x",
+    "image": "20-scroll-x-local-desktop",
+    "demo": "scroll.x=local",
+    "frag": "scroll.overflow-x",
     "adv": false,
     "surface": 1152,
+    "surfaceName": "desktop",
     "tab": null,
-    "compositions": [
+    "authored": [
+      "single.flow"
+    ],
+    "resolved": [
       "single.flow"
     ],
     "states": [
       "wide"
     ],
-    "subdesigns": [],
     "tabStructure": null,
-    "pageHeight": 968,
-    "localY": 0,
-    "localX": 2,
+    "pageHeight": 987,
+    "scrollYPane": 0,
+    "scrollXLocal": 2,
     "figures": []
   },
   {
-    "image": "19-scroll-local-x-narrow",
-    "demo": "scroll.local-x",
+    "image": "20-scroll-x-local-narrow",
+    "demo": "scroll.x=local",
+    "frag": "scroll.overflow-x",
     "adv": false,
     "surface": 382,
+    "surfaceName": "narrow",
     "tab": null,
-    "compositions": [
+    "authored": [
+      "single.flow"
+    ],
+    "resolved": [
       "single.flow"
     ],
     "states": [
       "wide"
     ],
-    "subdesigns": [],
     "tabStructure": null,
-    "pageHeight": 1151,
-    "localY": 0,
-    "localX": 2,
+    "pageHeight": 1169,
+    "scrollYPane": 0,
+    "scrollXLocal": 2,
     "figures": []
-  },
-  {
-    "image": "20-page-workedExamples-substitution-desktop",
-    "demo": "page.workedExamples",
-    "adv": false,
-    "surface": 1152,
-    "tab": "substitution",
-    "compositions": [
-      "collection.tabs",
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "presentation.tabs",
-      "comparison.paired",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:representation[Workings|Visual explanation]{workings|visual}",
-    "pageHeight": 1817,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "symmetry:balanced→side"
-    ]
-  },
-  {
-    "image": "20-page-workedExamples-substitution-narrow",
-    "demo": "page.workedExamples",
-    "adv": false,
-    "surface": 382,
-    "tab": "substitution",
-    "compositions": [
-      "collection.tabs",
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "presentation.tabs",
-      "comparison.paired",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "narrow",
-      "narrow"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:representation[Workings|Visual explanation]{workings|visual}",
-    "pageHeight": 2106,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "symmetry:balanced→side"
-    ]
-  },
-  {
-    "image": "20-page-workedExamples-solving-desktop",
-    "demo": "page.workedExamples",
-    "adv": false,
-    "surface": 1152,
-    "tab": "solving",
-    "compositions": [
-      "collection.tabs",
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "presentation.tabs",
-      "comparison.paired",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:representation[Workings|Visual explanation]{workings|visual}",
-    "pageHeight": 993,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "symmetry:balanced→side"
-    ]
-  },
-  {
-    "image": "20-page-workedExamples-solving-narrow",
-    "demo": "page.workedExamples",
-    "adv": false,
-    "surface": 382,
-    "tab": "solving",
-    "compositions": [
-      "collection.tabs",
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "presentation.tabs",
-      "comparison.paired",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "narrow",
-      "narrow"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:representation[Workings|Visual explanation]{workings|visual}",
-    "pageHeight": 1103,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "symmetry:balanced→side"
-    ]
-  },
-  {
-    "image": "20-page-workedExamples-symmetry-workings-desktop",
-    "demo": "page.workedExamples",
-    "adv": false,
-    "surface": 1152,
-    "tab": "symmetry-workings",
-    "compositions": [
-      "collection.tabs",
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "presentation.tabs",
-      "comparison.paired",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:representation[Workings|Visual explanation]{workings|visual}",
-    "pageHeight": 966,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "symmetry:balanced→side"
-    ]
-  },
-  {
-    "image": "20-page-workedExamples-symmetry-workings-narrow",
-    "demo": "page.workedExamples",
-    "adv": false,
-    "surface": 382,
-    "tab": "symmetry-workings",
-    "compositions": [
-      "collection.tabs",
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "presentation.tabs",
-      "comparison.paired",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "narrow",
-      "narrow"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:representation[Workings|Visual explanation]{workings|visual}",
-    "pageHeight": 1396,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "symmetry:balanced→side"
-    ]
-  },
-  {
-    "image": "20-page-workedExamples-symmetry-visual-desktop",
-    "demo": "page.workedExamples",
-    "adv": false,
-    "surface": 1152,
-    "tab": "symmetry-visual",
-    "compositions": [
-      "collection.tabs",
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "presentation.tabs",
-      "comparison.paired",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:representation[Workings|Visual explanation]{workings|visual}",
-    "pageHeight": 1151,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "symmetry:balanced→side"
-    ]
-  },
-  {
-    "image": "20-page-workedExamples-symmetry-visual-narrow",
-    "demo": "page.workedExamples",
-    "adv": false,
-    "surface": 382,
-    "tab": "symmetry-visual",
-    "compositions": [
-      "collection.tabs",
-      "collection.repeat",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "single.flow",
-      "presentation.tabs",
-      "comparison.paired",
-      "visual.interpretation"
-    ],
-    "states": [
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "wide",
-      "narrow",
-      "narrow"
-    ],
-    "subdesigns": [
-      "side"
-    ],
-    "tabStructure": "0:topic[Substitution|Solving for x|Symmetry]{substitution|solving|symmetry} ; 1:representation[Workings|Visual explanation]{workings|visual}",
-    "pageHeight": 1428,
-    "localY": 0,
-    "localX": 0,
-    "figures": [
-      "symmetry:balanced→side"
-    ]
   }
 ]

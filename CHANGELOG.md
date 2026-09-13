@@ -8,6 +8,57 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **The grammar is frozen: four axes, and one authentic page as the proof**
+  (`docs/atlas/worked-examples/`, no app change). One rule governs everything: **the author chooses
+  the instructional structure; the renderer chooses only the prescribed responsive state and media
+  subdesign belonging to that structure.**
+  - **`presentation.tabs` → `views.tabs`,** and the distinction is now encoded rather than styled.
+    `collection.tabs` means *several SIBLING ITEMS; select one* (Negative · Fraction · Decimal);
+    `views.tabs` means *ONE object, seen in several REPRESENTATIONS* (Workings · Graph check). The
+    affordance is keyed on `data-tabs-kind`, so a views group reads as a view switch at any nesting
+    depth — an earlier pass keyed it on depth, which would render a top-level `views.tabs` as an item
+    selector and lie about what the tabs mean.
+  - **`visualCheck` is gone** and has no rendering logic anywhere. It was always
+    `views.tabs{ Workings → single.flow, Graph check → visual }`. A future `[ Method 1 ] [ Method 2 ]`
+    is `views.tabs{ single.flow, single.flow }` — not a new template.
+  - **Compositions**: `single.flow` (default), `single.split`, `comparison.paired`, `visual.side`,
+    `visual.down`, `comparison.sharedVisual.side`, `comparison.sharedVisual.down`. The author writes
+    the base name; media geometry resolves the suffix and may never change the base. Images 10 and 11
+    are the proof: the same authored `comparison.sharedVisual` with a balanced figure and with a wide
+    one, resolving `.side` and `.down` — **both still `comparison.sharedVisual`**.
+  - **Scroll is two contracts, not one enum** — `scroll.y` (`page` | `pane`) and `scroll.x`
+    (`local-when-needed`), because a long equation is not the same design decision as an
+    independently scrolling workspace.
+  - **One authentic Worked Examples page** (image `01`), at desktop 1152 · tablet 834 · phone 382,
+    built from nothing but this vocabulary: subtopic `collection.tabs` → `collection.repeat` /
+    `single.flow` / `views.tabs` → `comparison.paired` and `visual.side`, under page scroll. 60
+    renders across 20 reference designs; the page is the deliverable and the rest is the dictionary.
+  - **`practice.paper` · `practice.workbook` · `practice.graphWorkbook` · `practice.geometryWorkbook`**
+    are named as a deliberately separate family, so nobody bends a teaching composition into a
+    workbook. `views.stepper` likewise. None is built.
+  - **Two new controls.** The tab affordance must be the one its *kind* declares, identically at every
+    depth. And no authored file may carry a layout-arithmetic key (`leftWidth`, `occupancy`,
+    `preferSplit`, `maxDeadSpace`, …) — the JSON principle made a property of the source rather than a
+    paragraph in a document. Fifteen controls now, every one driven to fail on purpose.
+
+### Changed
+- **One derived switch point, offered as a proposal.** Every switch point is a constant belonging to
+  its composition except `visual.side`, which is `figure.preferredWidth + gap + minInterpretation`
+  (420px) — 940px for the symmetry plane, 876 for roots, 838 for the graph check. Measured: at the
+  834px tablet a fixed 720 leaves a 488px plane beside a **314px** reading column, narrower than the
+  atlas's own 520px case measure. The derived point stacks instead. It is still prescribed — two
+  numbers, the authored figure's own width and one design-system constant, and it never looks at the
+  prose, the step count or the height of anything — but it is the one place the rule was extended
+  rather than followed, so it is flagged for the maintainer rather than assumed.
+- A tablet surface (834px) joins desktop and phone for the authentic page and for `visual`.
+
+### Fixed
+- **The build summary cried wolf.** It grouped the composition-drift check by *demo* rather than by
+  *fragment*, so a normal and an adversarial payload — which legitimately hold different numbers of
+  children — reported `compositions DRIFTED` when nothing had drifted. A summary line that cries wolf
+  is worse than no summary line.
+
+### Added
 - **Disclosure and scrolling as first-class design tools** (`docs/atlas/worked-examples/`, no app
   change). The six-template atlas defined composition but not how content is *revealed and
   navigated*, so tabs and scrolling kept looking like emergency responses to a layout that did not

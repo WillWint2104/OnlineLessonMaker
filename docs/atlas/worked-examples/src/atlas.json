@@ -1,117 +1,216 @@
 {
-  "_": "THE WORKED-EXAMPLE ATLAS. Four INDEPENDENT design axes. Composition describes the spatial relationship of content that is CURRENTLY VISIBLE; it does not decide whether several pieces of content are visible at the same time. That is disclosure, and it is a separate authored decision. Scroll behaviour is a third. This is a non-shipping reference atlas; the implementation is frozen.",
-  "axes": [
-    "content type       example · explanation · comparison · visual · practice          author",
-    "composition        the spatial relationship of what is visible now                 authored",
-    "disclosure         continuous · tabs · staged views                                authored",
-    "media subdesign    portrait / balanced / landscape / wide figure treatment         figure's own geometry",
-    "responsive state   the template's prescribed wide/narrow arrangement               surface width",
-    "scroll policy      page · local-y · local-x · persistent-pane                      authored"
+  "_": "THE WORKED-EXAMPLE GRAMMAR. FOUR FROZEN AXES. The author chooses the instructional structure. The renderer chooses ONLY the prescribed responsive state and the media subdesign belonging to that structure. Nothing else is inferred, ever. This is a non-shipping reference atlas; lesson-studio.html is frozen.",
+  "theOneRule": "THE AUTHOR CHOOSES THE INSTRUCTIONAL STRUCTURE. THE RENDERER CHOOSES ONLY THE PRESCRIBED RESPONSIVE STATE AND MEDIA SUBDESIGN BELONGING TO THAT STRUCTURE.",
+  "whatNeverDecidesAnything": [
+    "the number of words",
+    "the height of anything",
+    "occupancy",
+    "whitespace",
+    "the number of solution steps",
+    "how tall the page turned out",
+    "— and the renderer never invents a tab, never moves content between tabs, and never treats a tall screen as a failure"
   ],
-  "theHardRule": "TABS ARE AUTHORED PEDAGOGICAL STRUCTURE. They may never be introduced or removed because of viewport size, content height, occupancy, or any layout heuristic. `This got tall, so I will hide half of it in tabs` is resolver behaviour and is forbidden. The build asserts that the tab structure — count, labels, nesting — is character-identical at every width.",
+  "axes": {
+    "composition": {
+      "question": "What is visible together, and where?",
+      "decidedBy": "author"
+    },
+    "collection": {
+      "question": "If there are several related things, which are visible at once?",
+      "decidedBy": "author"
+    },
+    "scroll": {
+      "question": "Which surface is allowed to move?",
+      "decidedBy": "author"
+    },
+    "mediaGeometry": {
+      "question": "Which approved subdesign does the media shape permit?",
+      "decidedBy": "the figure's own geometry"
+    },
+    "_state": "The responsive state is not a fifth axis. It is the prescribed wide/narrow arrangement OF a composition, from the surface width alone, and it can never select a different composition."
+  },
   "compositions": {
-    "_": "The spatial relationship of currently visible content. Rigid horizontally, fluid vertically.",
+    "_": "The spatial relationship of currently visible content. Rigid horizontally, fluid vertically. The author writes the base name; media geometry resolves the suffix where one exists.",
     "single.flow": {
+      "authored": "single.flow",
       "wide": "one column at the flow measure: title · QUESTION · rule · WORKED SOLUTION · ANSWER",
       "narrow": "identical — no state change",
       "default": true
     },
     "single.split": {
+      "authored": "single.split",
       "wide": "SCENARIO │ WORKED SOLUTION",
       "narrow": "stacked",
       "switchAt": 760
     },
     "comparison.paired": {
+      "authored": "comparison.paired",
       "wide": "CASE A │ CASE B",
       "narrow": "stacked",
       "switchAt": 680
     },
-    "comparison.sharedVisual": {
-      "wide": "cases across, then the visual and its interpretation",
+    "visual.side": {
+      "authored": "visual",
+      "resolvedBy": "media geometry — portrait or balanced",
+      "wide": "FIGURE │ INTERPRETATION",
+      "narrow": "stacked",
+      "switchAt": "derived — see switchPoints"
+    },
+    "visual.down": {
+      "authored": "visual",
+      "resolvedBy": "media geometry — landscape or wide",
+      "wide": "the figure across the measure, interpretation beneath",
+      "narrow": "the same arrangement at a smaller plane — no state change"
+    },
+    "comparison.sharedVisual.side": {
+      "authored": "comparison.sharedVisual",
+      "resolvedBy": "the shared figure's media geometry",
+      "wide": "CASE A │ CASE B, then FIGURE │ INTERPRETATION",
       "narrow": "stacked",
       "switchAt": 680
     },
-    "visual.interpretation": {
-      "authoredAs": "visual.interpretation — the author names the composition; the FIGURE'S media-geometry class resolves the suffix. This is the one automatic classification the atlas permits, and it is a property of the figure, never of the prose beside it.",
-      "resolvesTo": [
-        "visual.interpretation.side",
-        "visual.interpretation.down"
-      ],
-      "subdesigns": {
-        "side": "FIGURE │ INTERPRETATION — portrait or balanced figure",
-        "down": "the figure at the atlas's wide width, interpretation beneath — landscape or wide figure"
-      },
+    "comparison.sharedVisual.down": {
+      "authored": "comparison.sharedVisual",
+      "resolvedBy": "the shared figure's media geometry",
+      "wide": "CASE A │ CASE B, then the figure across the measure with its interpretation beneath",
       "narrow": "stacked",
-      "switchAt": 720
+      "switchAt": 680
     }
   },
   "collections": {
-    "_": "Several instances of one kind of thing. A collection is not a composition: it says how many are visible, not how one is arranged.",
+    "_": "Several RELATED things, and which of them are visible at once. A collection is not a composition: it says how many are visible, not how one is arranged. Its child is any composition.",
     "collection.repeat": {
-      "purpose": "every item visible, one after another — when seeing the sequence together is the point",
-      "child": "any composition",
-      "note": "This is what `sequence.flow` was. The count is nowhere in the geometry."
+      "means": "These are several sibling items; show them all, one after another.",
+      "use": "when seeing the sequence together is the point"
     },
     "collection.tabs": {
-      "purpose": "one item visible at a time — when showing all of them would make a long repetitive page",
-      "child": "any composition",
-      "pattern": "example tabs",
-      "note": "Often preferable to collection.repeat on a Notes or Worked Examples page. Both remain available; the author chooses."
-    }
-  },
-  "presentations": {
-    "_": "Staged alternative views of ONE idea. Not a collection of different things — the same thing, seen another way.",
-    "presentation.tabs": {
-      "purpose": "authored alternative representations, e.g. 1 Workings · 2 Graph check",
-      "pattern": "representation tabs",
-      "note": "This is what `visualCheck` was. It is not responsive behaviour; it is a pedagogical relationship — solve it one way, then inspect the same idea visually."
+      "means": "These are several SIBLING ITEMS; select one.",
+      "example": "Worked examples — [ Negative ] [ Fraction ] [ Decimal ] — three different examples",
+      "use": "when showing every item at full length makes a page nobody reads to the end"
     },
-    "presentation.stepper": {
-      "purpose": "an ordered walk through stages of one derivation",
-      "status": "named for completeness; not exercised in this pass"
+    "views.tabs": {
+      "means": "This is ONE instructional object seen in multiple REPRESENTATIONS.",
+      "example": "Solving x² = 16 — [ Workings ] [ Graph check ] — one object, two views",
+      "use": "solve it one way, then inspect the same idea another way",
+      "wasCalled": "presentation.tabs, and before that visualCheck",
+      "note": "visualCheck is NOT a composition and has no rendering logic of its own. It is views.tabs{ Workings → single.flow, Graph check → visual.side|.down }. The same is true of a future [ Method 1 ] [ Method 2 ], which is views.tabs{ single.flow, single.flow } — not a new template."
+    },
+    "views.stepper": {
+      "means": "one object walked through ordered stages",
+      "status": "named for completeness; not exercised"
     }
   },
-  "tabPatterns": {
-    "exampleTabs": "several examples of the same skill — Negative value · Fraction · Decimal",
-    "representationTabs": "the same idea seen another way — 1 Workings · 2 Graph check",
-    "subtopicTabs": "different subtopics, each free to contain a different approved composition — Substitution · Solving for x · Symmetry"
-  },
+  "whyTheTwoTabKindsAreDistinct": "collection.tabs and views.tabs look alike and mean importantly different things — SIBLINGS versus REPRESENTATIONS OF ONE THING. The distinction is encoded (`data-tabs-kind`), not merely styled: the affordance is keyed on the kind, so a views.tabs reads as a view switch wherever it appears and a collection.tabs reads as an item selector wherever it appears, at any nesting depth. The build asserts that.",
   "scroll": {
-    "_": "Three genuinely different things, which the program must not confuse.",
-    "scroll.page": {
-      "meaning": "normal and desirable. Notes, examples, derivations and explanations are as tall as they need to be.",
-      "rule": "Ordinary teaching content ALWAYS uses page scroll. It is never compressed to fit a viewport."
+    "_": "Two separate contracts, because a long equation is not the same design decision as an independently scrolling workspace. One enum cannot describe both.",
+    "y": {
+      "page": {
+        "means": "the document may get arbitrarily tall",
+        "default": true,
+        "rule": "Virtually all Notes, Worked Examples, Videos and ordinary teaching pages. Never compressed to fit a viewport."
+      },
+      "pane": {
+        "means": "an explicit template feature — one pane moves while another stays",
+        "use": "the Workbook shape: QUESTION SET (local scroll) │ WORKBOOK (persistent)",
+        "rule": "NOT available as a renderer trick for making ordinary lesson content shorter. Teaching prose never sits in one.",
+        "switchAt": 760
+      }
     },
-    "scroll.local-y": {
-      "meaning": "deliberately designed workspace behaviour",
-      "rule": "PERMITTED ONLY inside a persistent-pane workspace. Ordinary prose and worked solutions must never sit in a local vertical scroll container — that makes the lesson a dashboard rather than courseware.",
-      "permittedIn": [
-        "scroll.persistent-pane"
-      ]
+    "x": {
+      "local-when-needed": {
+        "means": "indivisible material overflows inside its own region",
+        "use": "a long equation, a table of values, perhaps code",
+        "rule": "It never widens its region, shrinks the type, or changes the composition. The page itself never scrolls sideways."
+      }
     },
-    "scroll.local-x": {
-      "meaning": "a local escape hatch for indivisible material",
-      "rule": "A very long equation or table scrolls horizontally rather than shrinking typography or destroying its composition."
-    },
-    "scroll.persistent-pane": {
-      "meaning": "one pane scrolls while another stays visible — the Practice workbook shape",
-      "rule": "The only context in which local-y is legitimate.",
-      "switchAt": 760,
-      "narrow": "the bound is given up entirely and the page scrolls — a bounded scroller inside a phone-width page is two scrollbars fighting"
+    "authoredAs": {
+      "scroll": {
+        "y": "page",
+        "x": "local-when-needed"
+      }
     }
+  },
+  "mediaGeometry": {
+    "_": "EXTREMELY DUMB ON PURPOSE. From the authored domain's aspect at equal unit scale. It answers exactly one question — which approved subdesign does this composition use — and it may never answer `maybe this should be a different composition`.",
+    "classes": {
+      "portrait": "ratio > 1.3",
+      "balanced": "0.75 – 1.3",
+      "landscape": "0.4 – 0.75",
+      "wide": "< 0.4"
+    },
+    "resolves": {
+      "visual": {
+        "portrait": "side",
+        "balanced": "side",
+        "landscape": "down",
+        "wide": "down"
+      },
+      "comparison.sharedVisual": {
+        "portrait": "side",
+        "balanced": "side",
+        "landscape": "down",
+        "wide": "down"
+      }
+    },
+    "proof": "comparison.sharedVisual with a balanced figure resolves .side; with a wide figure it resolves .down. BOTH REMAIN comparison.sharedVisual. That is exactly the level of automatic behaviour wanted — a subdesign change with no semantic composition change.",
+    "widePreferredWidth": 900
+  },
+  "switchPoints": {
+    "_": "A switch point is PRESCRIBED, never searched. Most are a constant belonging to the composition. One is derived — and derived only from the authored figure's own preferred width and one design-system constant. It never looks at the prose, the step count or the height.",
+    "visual.side": "figure.preferredWidth + gap + minInterpretation",
+    "why": "A fixed number cannot serve a figure system whose planes are 386–717px wide. At a 834px tablet a fixed 720 leaves a 488px plane beside a 314px reading column — narrower than the atlas's own 520px case measure. The derived point stacks instead, which is the right design and is still prescribed.",
+    "visual.down": "none — the arrangement is the same at every width; only the plane's box changes"
   },
   "assembly": {
-    "_": "How the axes compose. The Symmetry topic in the reference page is:",
-    "example": [
-      "page",
-      "└── collection.tabs (subtopic)",
-      "    └── Symmetry",
-      "        └── presentation.tabs (representation)",
-      "            ├── Workings            → comparison.paired",
-      "            └── Visual explanation  → visual.interpretation.down"
+    "_": "A realistic Mathematics page. Every line of it is authored; nothing here is a measurement.",
+    "tree": [
+      "PAGE",
+      "│",
+      "├── collection.tabs",
+      "│   ├── \"Substitution\"      → collection.repeat → single.flow × 3",
+      "│   ├── \"Solving for x\"     → single.flow",
+      "│   └── \"Symmetry\"          → views.tabs",
+      "│                                 ├── Workings           → comparison.paired",
+      "│                                 └── Visual explanation → visual.side | visual.down  (media geometry)",
+      "└── scroll.y = page"
+    ]
+  },
+  "jsonPrinciple": {
+    "_": "THE JSON DESCRIBES INTENT, NOT LAYOUT ARITHMETIC.",
+    "good": [
+      {
+        "composition": "comparison.sharedVisual",
+        "cases": "[…]",
+        "visual": "{…}",
+        "interpretation": "{…}"
+      },
+      {
+        "collection": {
+          "mode": "tabs",
+          "items": "[…]"
+        }
+      },
+      {
+        "views": {
+          "mode": "tabs",
+          "items": "[…]"
+        }
+      }
     ],
-    "note": "Far more generalisable than inventing a bespoke layout per page.",
-    "divergence": "The tree above names visual.interpretation.down for the Symmetry topic's Visual explanation. The atlas renders it .side, because the figure that matches those two cases (y = x^2 with the line y = 9) is BALANCED, and the subdesign is the figure's to decide. Hard-coding .down in an authored tree would be exactly the confusion the axis separation exists to prevent. visual.interpretation.down is exercised at images 10 and 12, where the figure really is wide."
+    "bad": {
+      "leftWidth": 42,
+      "occupancy": 0.55,
+      "preferSplit": true,
+      "maxDeadSpace": 96
+    },
+    "test": "The first set says what the lesson IS. The second tells CSS how to improvise. The build refuses the second: no authored file may carry a layout-arithmetic key."
+  },
+  "later": {
+    "_": "The assessment/workspace family gets its own rigid compositions rather than bending the teaching ones. Named here so nobody reaches for a teaching composition to build a workbook.",
+    "practice.paper": "named only",
+    "practice.workbook": "named only",
+    "practice.graphWorkbook": "named only",
+    "practice.geometryWorkbook": "named only"
   },
   "measures": {
     "flow": 760,
@@ -119,41 +218,31 @@
     "interpretation": 720,
     "case": 520,
     "synthesis": 720,
+    "minInterpretation": 420,
     "splitPromptPct": 40,
     "splitSolutionPct": 60,
     "splitPromptMax": 480,
     "splitSolutionMax": 700,
     "gap": 32,
+    "paneH": 460,
     "paneMinH": 360,
-    "_": "Design-system values. They never appear in lesson JSON. paneH/paneMinH bound the ONE pane the atlas permits to scroll locally; in the app that height comes from the workspace viewport, never from how long the lesson is.",
-    "paneH": 460
-  },
-  "figureClasses": {
-    "_": "Media geometry, from the authored domain's aspect at equal unit scale. A DESIGN INPUT, never a size.",
-    "portrait": "ratio > 1.3",
-    "balanced": "0.75 – 1.3",
-    "landscape": "0.4 – 0.75",
-    "wide": "< 0.4",
-    "widePreferredWidth": 900,
-    "mapsTo": {
-      "portrait": "side",
-      "balanced": "side",
-      "landscape": "down",
-      "wide": "down"
-    }
+    "_": "Design-system values. THEY NEVER APPEAR IN LESSON JSON. minInterpretation is the narrowest column the atlas will set reading prose in, and it is the one constant the derived switch point uses."
   },
   "invariants": {
-    "identity": "A composition, a collection and a presentation are all authored and never inferred. The build asserts `data-tpl` and the full tab structure are identical at every width and for every adversarial payload.",
-    "height": "height:auto. The page scrolls. Nothing is shrunk, compressed or recomposed to avoid it, and page height is never an optimisation target.",
-    "measure": "Every prose region has a controlled measure. Unused page width is reading margin and is correct.",
+    "identity": "Composition, collection and views are authored and never inferred. The build asserts the ordered list of compositions on a page, and the full tab structure, are identical at every width and in every tab state.",
+    "tabs": "Tab structure — count, labels, panels, nesting, kind — is character-identical at every width. A tab is never created or removed by a viewport.",
+    "height": "height:auto. The page scrolls. Page height is never an optimisation target and a tall page is not a failure.",
+    "measure": "Every paragraph of prose renders within the flow measure. Unused page width is reading margin.",
     "figures": "A figure is sized from its own requirements. Surrounding prose never determines its width."
   },
   "surfaces": {
     "desktop": 1152,
+    "tablet": 834,
     "narrow": 382
   },
   "surfacePad": {
     "desktop": 30,
+    "tablet": 24,
     "narrow": 16
   }
 }
