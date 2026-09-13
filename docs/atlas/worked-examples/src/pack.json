@@ -28,14 +28,14 @@
 
   { "n": "08", "demo": "visual", "frag": "visual", "tpls": ["visual"],
     "surfaces": ["desktop", "tablet", "narrow"],
-    "c": "visual.side — a portrait figure and the reading of it. The tablet render is the one to look at: the switch point is derived from the plane's own width, so it stacks rather than setting prose in a 314px column." },
+    "c": "visual.side — a BALANCED plane, no taller than it is wide, which is the one shape a side-by-side composition suits. The tablet render is the one to look at: the switch point is derived from the plane's own width, so it stacks rather than setting prose in a narrow column." },
   { "n": "09", "demo": "visual", "frag": "visual.adv", "adv": true, "tpls": ["visual"],
     "surfaces": ["desktop", "tablet", "narrow"],
-    "c": "ADVERSARIAL — a wide figure resolves visual.down. Same authored composition, the other approved subdesign; no state change at any width." },
+    "c": "ADVERSARIAL — a wide figure resolves visual.down. Same authored composition, the other approved subdesign; no state change at any width. Portrait planes resolve here too, after the first lesson showed a tall plane beside a reading column leaves an empty rail." },
 
   { "n": "10", "demo": "comparison.sharedVisual", "frag": "comparison.sharedVisual",
     "tpls": ["comparison.sharedVisual", "visual"],
-    "c": "The cases across, then ONE visual belonging to both. A balanced figure resolves comparison.sharedVisual.side." },
+    "c": "The cases across, then ONE visual belonging to both. A balanced plane resolves comparison.sharedVisual.side." },
   { "n": "11", "demo": "comparison.sharedVisual", "frag": "comparison.sharedVisual.adv", "adv": true,
     "tpls": ["comparison.sharedVisual", "visual"],
     "c": "ADVERSARIAL — a wide figure resolves comparison.sharedVisual.down. BOTH REMAIN comparison.sharedVisual: a subdesign change with no semantic change." },

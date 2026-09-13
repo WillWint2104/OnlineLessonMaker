@@ -14,8 +14,12 @@
 // that leave here are the figure's own.
 export const SQUARE = 0.006, TOL = 0.02, FLOOR = { w: 340, h: 255 }, BOUND = 720;
 export const square = (r) => r.ratio != null && Math.abs(r.ratio - 1) <= SQUARE;
-export const classOf = (ratio) => ratio > 1.3 ? 'portrait' : ratio >= 0.75 ? 'balanced'
-  : ratio >= 0.4 ? 'landscape' : 'wide';
+/* THE BANDS COME FROM THE GRAMMAR, NOT FROM HERE. They were hardcoded in this module while
+   atlas.json declared them in prose, so retuning the grammar changed nothing and the two quietly
+   disagreed. One owner: the numbers live in `mediaGeometry.bands` and this reads them. */
+export const classOf = (ratio, bands) => ratio > bands.portraitAbove ? 'portrait'
+  : ratio >= bands.balancedAbove ? 'balanced'
+  : ratio >= bands.landscapeAbove ? 'landscape' : 'wide';
 
 export async function openFigurePage(browser, base) {
   const page = await browser.newPage({ viewport: { width: 1700, height: 1800 }, deviceScaleFactor: 2 });
@@ -145,18 +149,25 @@ export async function measureFigures({ figPage, A, FIGS, keys, log }) {
   for (const [key, f] of Object.entries(FIGS)) {
     if (key.startsWith('_') || (keys && !keys.has(key))) continue;
     const d = f.figure.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
-    const cls = classOf(ys / xs), sub = SUB[cls];
+    const cls = classOf(ys / xs, A.mediaGeometry.bands), sub = SUB[cls];
     const top = await largestWithin(key, f.figure, 4, 260, BOUND);
     if (!top) throw new Error(`${key}: no box inside the ${BOUND}px bound paints this domain at equal scale`);
     const floor = Math.max(FLOOR.w / xs, FLOOR.h / ys);
     const sPref = Math.max(Math.min(floor, top.s), 0.85 * top.s);
     const pref = (await boxForScale(key, f.figure, sPref)) || top.box;
 
+    /* A PLANE IS NEVER GROWN PAST ITS LEGIBLE PREFERRED SIZE. The `down` box rule grew a figure to
+       the atlas's wide-figure width, which is right for a plane that is wider than it is tall — a
+       717px landscape plane reads better at 896px — and wrong for every other shape. When the
+       retune moved `portrait` into `down`, that rule met a tall plane for the first time and blew
+       the 488x625 symmetry graph up to 900x1120, which is worse than the void it was meant to
+       remove. The growth now applies only to planes that are wider than they are tall. */
+    const growable = cls === 'landscape' || cls === 'wide';
     const box = {};
     for (const sName of SURFACES) {
       const avail = A.surfaces[sName];
-      const target = sub === 'down' ? Math.min(A.mediaGeometry.widePreferredWidth, avail)
-                                    : Math.min(pref.w, avail);
+      const target = sub === 'down' && growable ? Math.min(A.mediaGeometry.widePreferredWidth, avail)
+                                                : Math.min(pref.w, avail);
       if (target === pref.w) { box[sName] = pref; continue; }
       const b = await boxForWidth(key, f.figure, target);
       if (!b) throw new Error(`${key}: no box at all fits the ${target}px ${sName} target`);

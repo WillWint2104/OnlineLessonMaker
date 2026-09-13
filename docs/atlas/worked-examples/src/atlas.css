@@ -142,7 +142,20 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
    Keying this on depth (as an earlier pass did) would render a top-level views.tabs as an item
    selector and lie about what the tabs mean. */
 .at-tabs{display:block;}
-.at-tabbar{display:flex;flex-wrap:wrap;}
+/* THE STRIP IS ONE ROW AND IT SCROLLS. It never wraps: four tabs falling onto a second line reads as
+   an accident, and the alternatives — a dropdown, or shrinking the type until everything fits — both
+   trade a clear control for a worse one. Horizontal scrolling is already in the vocabulary, so the
+   strip uses it, and a partly visible neighbour at the edge is the affordance. The active tab is
+   scrolled fully into view when it is selected.
+
+   `data-scroll-x="tabstrip"` declares the contract that permits this. It is deliberately NOT
+   `local`: authored indivisible material fades at its edge, and a fade over a tab would dim the
+   control the reader is trying to use. */
+.at-tabbar{display:flex;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;}
+[data-scroll-x="tabstrip"]{scrollbar-width:thin;scrollbar-color:var(--mx-line-2,#c9cfcb) transparent;}
+[data-scroll-x="tabstrip"]::-webkit-scrollbar{height:7px;}
+[data-scroll-x="tabstrip"]::-webkit-scrollbar-thumb{background:var(--mx-line-2,#c9cfcb);border-radius:4px;}
+.at-tab{flex:0 0 auto;white-space:nowrap;}
 .at-tab{appearance:none;font-family:var(--mx-ui);text-align:left;color:var(--mx-ink-3);}
 .at-panel{display:none;}
 .at-panel[data-shown]{display:block;}
@@ -155,7 +168,7 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
   border-bottom-color:var(--mx-green);}
 
 [data-tabs-kind="views"] > .at-tabbar{gap:0;margin:0 0 22px;border:1px solid var(--mx-line);
-  border-radius:7px;overflow:hidden;width:fit-content;max-width:100%;background:var(--mx-ground);}
+  border-radius:7px;width:fit-content;max-width:100%;background:var(--mx-ground);}
 [data-tabs-kind="views"] > .at-tabbar > .at-tab{background:none;border:0;
   border-right:1px solid var(--mx-line);padding:9px 16px 10px;font-size:12.5px;font-weight:600;
   line-height:1.3;letter-spacing:.01em;}

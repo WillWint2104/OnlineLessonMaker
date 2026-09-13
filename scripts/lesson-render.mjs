@@ -146,7 +146,7 @@ function composition(node, figs) {
    and the groups cannot drift apart. */
 function tabBar(groupName, kind, items, figs) {
   return `<div class="at-tabs" data-tabs="${esc(groupName)}" data-tabs-kind="${kind}">`
-    + `<div class="at-tabbar" role="tablist">`
+    + `<div class="at-tabbar" role="tablist" data-scroll-x="tabstrip">`
     + items.map((i) => `<button class="at-tab" type="button" role="tab" data-tab="${esc(slug(i.label))}">${t(i.label)}</button>`).join('')
     + `</div>`
     + items.map((i) => `<div class="at-panel" role="tabpanel" data-panel="${esc(slug(i.label))}">`
@@ -314,6 +314,16 @@ ${body}</div>
       for (const q of g.querySelectorAll(':scope > .at-panel')) {
         if (q.getAttribute('data-panel') === active) q.setAttribute('data-shown', ''); else q.removeAttribute('data-shown');
       }
+      /* SELECTING A TAB BRINGS IT FULLY INTO VIEW. The strip is one scrolling row, so the current
+         item must not be half off the end. Set outright rather than animated — a render must be
+         reproducible, and a smooth scroll is a race. */
+      const bar = g.querySelector(':scope > .at-tabbar');
+      const on = bar && bar.querySelector('.at-tab[data-on]');
+      if (on && bar.scrollWidth > bar.clientWidth) {
+        const l = on.offsetLeft, r = l + on.offsetWidth;
+        if (l < bar.scrollLeft) bar.scrollLeft = l;
+        else if (r > bar.scrollLeft + bar.clientWidth) bar.scrollLeft = r - bar.clientWidth;
+      }
     }
     return missing;
   };
@@ -356,7 +366,12 @@ ${body}</div>
       let d = 0; for (let q = x.parentElement; q && q !== surf; q = q.parentElement) if (q.hasAttribute('data-tabs')) d++;
       const bar = x.querySelector(':scope > .at-tabbar'), on = x.querySelector(':scope > .at-tabbar > .at-tab[data-on]');
       const cb = getComputedStyle(bar), co = on ? getComputedStyle(on) : null;
-      return { kind: x.getAttribute('data-tabs-kind'), depth: d,
+      const tabs = [].slice.call(bar.querySelectorAll('.at-tab'));
+      const rows = new Set(tabs.map((b) => b.offsetTop)).size;
+      const br = bar.getBoundingClientRect(), orc = on ? on.getBoundingClientRect() : null;
+      return { rows, scrolls: bar.scrollWidth > bar.clientWidth + 1,
+        activeWhole: !orc || (orc.left >= br.left - 1 && orc.right <= br.right + 1),
+        kind: x.getAttribute('data-tabs-kind'), depth: d,
         sig: co ? [cb.borderBottomWidth, cb.borderTopWidth, cb.borderRadius, co.backgroundColor, co.borderBottomWidth, co.borderRadius].join('/') : 'none' };
     });
     const figs = [].slice.call(surf.querySelectorAll('[data-slot="figure"]')).filter(vis).map((r) => {
@@ -380,7 +395,9 @@ ${body}</div>
     for (const el of surf.querySelectorAll('*')) {
       if (!vis(el)) continue;
       const cs = getComputedStyle(el), dx = el.getAttribute('data-scroll-x'), dy = el.getAttribute('data-scroll-y');
-      if (/^(auto|scroll)$/.test(cs.overflowY) && dx !== 'local') scrollers.y.push({ declared: dy });
+      /* the tab strip's overflow-x:auto coerces overflow-y to auto too, exactly as a local-x region
+         does — neither is a vertical scroller */
+      if (/^(auto|scroll)$/.test(cs.overflowY) && dx !== 'local' && dx !== 'tabstrip') scrollers.y.push({ declared: dy });
       if (/^(auto|scroll)$/.test(cs.overflowX) && dy !== 'pane') scrollers.x.push({ declared: dx,
         w: Math.round(el.getBoundingClientRect().width), sw: el.scrollWidth,
         parent: Math.round(el.parentElement.getBoundingClientRect().width) });
@@ -441,6 +458,13 @@ function verify(name, state, r) {
   if (m.tabSig !== SIG) throw new Error(`${name}: the tab structure is\n    ${m.tabSig}\n  but the lesson declares\n    ${SIG}`);
   for (const g of m.affordance) {
     if (g.sig === 'none') throw new Error(`${name}: the ${g.kind} group paints no current tab`);
+    /* CONTROL · THE STRIP IS ONE ROW, AND THE CURRENT ITEM IS WHOLE. Four tabs falling onto a
+       second line reads as an accident; a current tab half off the end is worse. */
+    if (g.rows !== 1)
+      throw new Error(`${name}: the ${g.kind} tab strip wrapped onto ${g.rows} rows — it must stay one `
+        + `row and scroll, never wrap`);
+    if (!g.activeWhole)
+      throw new Error(`${name}: the current tab in the ${g.kind} strip is not fully in view`);
     if (!AFFORD[g.kind]) AFFORD[g.kind] = { name, sig: g.sig, depth: g.depth };
     else if (AFFORD[g.kind].sig !== g.sig)
       throw new Error(`${name}: a ${g.kind} group at depth ${g.depth} paints a different affordance from `
@@ -476,8 +500,12 @@ function verify(name, state, r) {
      system making the lesson fit rather than the other way round. So each region is checked for
      being local and well-behaved here, and the run as a whole must exercise the permission at least
      once (asserted after every render) so it cannot be vacuous. */
+  /* CONTROL · ONLY A PERMITTED CONTRACT MAY SCROLL SIDEWAYS. Two exist: `local` for authored
+     indivisible material, and `tabstrip` for the one-row tab strip. Anything else is a defect. */
   for (const s of m.scrollers.x) {
-    if (s.declared !== 'local') throw new Error(`${name}: a region scrolls horizontally without declaring scroll.x = local`);
+    if (s.declared !== 'local' && s.declared !== 'tabstrip')
+      throw new Error(`${name}: a region scrolls horizontally without a contract that permits it`);
+    if (s.declared === 'tabstrip') continue;
     if (s.w > s.parent + 1) throw new Error(`${name}: an over-wide region widened the region it is in`);
     if (s.sw > s.w + 1) LIVE_X.push(`${name} (${s.sw}px in ${s.w}px)`);
   }

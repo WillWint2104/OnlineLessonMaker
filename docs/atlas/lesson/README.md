@@ -100,33 +100,65 @@ Nothing else was missing. The four axes expressed the whole lesson.
   the width of the window, not the climb. `y = x²/12` reaches 6 at *x* ≈ 8.49; `y = x²` reaches it at
   *x* ≈ 2.45. Corrected, and checked by evaluation rather than by eye.
 
-## 4b. One thing for you to rule on
+## 4b. Ruled, and applied
 
-`visual.side` at desktop leaves **388px of trailing space** beside the plane — measured, not
-estimated:
+The 388px empty rail is gone. The ruling was: a near-square or tall graph takes `visual.down`, decided
+by media geometry alone, and a taller page is preferable to an awkward side composition.
+
+**Tightening the `balanced` band alone could not deliver that.** At 1.20 the plane simply moved out of
+`balanced` and into `portrait` — which also resolved `side`. Measured before changing anything:
 
 ```
-lesson-symmetry-visual-explanation-desktop     figure 647px   reading 259px   trailing 388px
+figure       aspect   old class → sub    new class → sub
+symmetry      1.20    balanced  → side   portrait  → down
+graphcheck    1.83    portrait  → side   portrait  → down
+roots         1.40    portrait  → side   portrait  → down
+landscape     0.33    wide      → down   wide      → down
 ```
 
-The figure column is the plane's own legible size; the reading is four paragraphs. Nothing is wrong
-by the rules — that is trailing space at the foot of one column, which the dead-space rule classifies
-as reading margin, not unowned space between tracks. But you said you would judge whether the page
-looks finished, and 388px is visible.
+So `portrait` resolves `down` as well, and `balanced` is now `0.75 – 1.0`: **`side` is reserved for
+the one shape it suits — a plane no taller than it is wide.** The decision is still pure media
+geometry; nothing about paragraph length, sentence count, occupancy or measured dead space enters it.
 
-**I have not acted on it, and the build does not read the number back.** Measuring it in order to
-resize either column is the resolver. The prescribed options, all yours:
+Two consequences worth your eye:
 
-1. **Leave it.** The figure is the subject of that view; the reading accompanies it.
-2. **Tighten the `balanced` band in media geometry.** This plane is 1.20 — near the portrait edge of
-   `0.75–1.3`. A narrower band would resolve it to `visual.down`, where the plane runs across the
-   measure and the reading sits beneath it at full width. That is a media-geometry decision using
-   only the figure's own aspect, but it is threshold tuning, which I will not do unasked.
-3. **Give `visual.side` a prescribed second slot** below the reading — the tab's synthesis, say — so
-   the column has authored content rather than margin. That changes the composition, so it is a
-   grammar change and needs your word.
+- **Every figure in the corpus became `down`,** which would have left `visual.side`, its derived
+  switch point and both its controls unexercised — a contract nothing tests. One balanced plane
+  (`squareish`, 0.86, *y* = *x*² with the line *y* = 9) was added to the **atlas** figure set to keep
+  them live. The lesson was not changed to suit it.
+- **`down` used to grow a plane to the atlas's wide-figure width.** That is right for a plane wider
+  than it is tall — a 717px landscape plane reads better at 896px — and wrong for every other shape.
+  When `portrait` moved into `down`, that rule met a tall plane for the first time and blew the
+  488 × 625 symmetry graph up to **900 × 1120**, which is worse than the void it replaced. The growth
+  now applies only to planes wider than they are tall. A plane is never grown past its legible size.
 
-## 5. What the build checks
+## 4c. The tab strip
+
+`collection.tabs` at 382px used to wrap, leaving *A flatter parabola* alone on a second row. The strip
+is now **one row that scrolls locally in x and never wraps**, at every width, and selecting a tab
+scrolls it fully into view. No dropdown, no smaller type. The partly visible neighbour at the edge is
+the affordance — a fade would dim the control the reader is reaching for.
+
+`data-scroll-x="tabstrip"` declares the contract that permits this. It is deliberately not `local`:
+authored indivisible material fades at its edge, and a tab must not.
+
+Three controls, each driven to fail on purpose: the strip must be one row; the current tab must be
+fully in view; and **only a declared contract may scroll sideways** — `local` for indivisible
+material, `tabstrip` for the strip, and nothing else.
+
+## 4d. What whitespace means
+
+This replaces every occupancy percentage the resolver ever used:
+
+| | |
+| --- | --- |
+| Free width **outside** a composition | legitimate reading margin. *Use all the available desktop width* is **not** a goal |
+| Unexplained empty area **inside** a semantic track or rail | not automatically acceptable — fixed by choosing a different prescribed subdesign, never by measuring the content |
+| A tall page | completely acceptable; height is unconstrained and the page scrolls |
+| Local horizontal scrolling | only for components whose contract permits it |
+| Changing composition because a paragraph is short | **forbidden** |
+
+## 5. What the build checks## 5. What the build checks
 
 Everything the atlas checks, plus the three above. In particular:
 
@@ -139,6 +171,12 @@ Everything the atlas checks, plus the three above. In particular:
 | **One affordance per tab kind, at every depth** | `collection` is an item selector, `views` a view switch |
 | **`scroll.x = local-when-needed` is a permission** | each region must be local and well-behaved; the run as a whole must need it at least once, or the contract is untested. The table of values fits at 1152 and overflows at 382 — both correct |
 | **Equal-unit scale, region = plane, prose measure, height unconstrained, no inline geometry** | as the atlas |
+
+## 5b. Accepted as golden
+
+Ruled after the first lesson and to be built upon rather than revisited: **`single.flow`,
+`single.split`, `collection.repeat`, `scroll.y = page`, and the narrow repeated-example anatomy** —
+together with the hierarchy *subtopic tabs → explanation → example → example → synthesis*.
 
 ## 6. Status
 

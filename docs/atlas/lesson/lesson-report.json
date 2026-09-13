@@ -26,7 +26,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -44,9 +43,9 @@
       "visual:wide"
     ],
     "pageHeight": 1906,
-    "scrollX": 1,
+    "scrollX": 2,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -77,7 +76,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -91,13 +89,13 @@
       "single.split:wide",
       "views.tabs:wide",
       "comparison.paired:wide",
-      "visual:narrow",
+      "visual:wide",
       "visual:wide"
     ],
     "pageHeight": 1872,
-    "scrollX": 1,
+    "scrollX": 2,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -128,7 +126,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -142,13 +139,13 @@
       "single.split:narrow",
       "views.tabs:wide",
       "comparison.paired:narrow",
-      "visual:narrow",
+      "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 2275,
-    "scrollX": 1,
+    "pageHeight": 2236,
+    "scrollX": 2,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -179,7 +176,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -197,9 +193,9 @@
       "visual:wide"
     ],
     "pageHeight": 1503,
-    "scrollX": 0,
+    "scrollX": 1,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -230,7 +226,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -244,13 +239,13 @@
       "single.split:wide",
       "views.tabs:wide",
       "comparison.paired:wide",
-      "visual:narrow",
+      "visual:wide",
       "visual:wide"
     ],
     "pageHeight": 1469,
-    "scrollX": 0,
+    "scrollX": 1,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -281,7 +276,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -295,13 +289,13 @@
       "single.split:narrow",
       "views.tabs:wide",
       "comparison.paired:narrow",
-      "visual:narrow",
+      "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1915,
-    "scrollX": 0,
+    "pageHeight": 1876,
+    "scrollX": 1,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -332,7 +326,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -350,9 +343,9 @@
       "visual:wide"
     ],
     "pageHeight": 954,
-    "scrollX": 0,
+    "scrollX": 2,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -383,7 +376,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -397,13 +389,13 @@
       "single.split:wide",
       "views.tabs:wide",
       "comparison.paired:wide",
-      "visual:narrow",
+      "visual:wide",
       "visual:wide"
     ],
     "pageHeight": 920,
-    "scrollX": 0,
+    "scrollX": 2,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -434,7 +426,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -448,13 +439,13 @@
       "single.split:narrow",
       "views.tabs:wide",
       "comparison.paired:narrow",
-      "visual:narrow",
+      "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1387,
-    "scrollX": 0,
+    "pageHeight": 1348,
+    "scrollX": 2,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -463,12 +454,7 @@
     "state": "symmetry-visual-explanation",
     "surface": 1152,
     "surfaceName": "desktop",
-    "sideBalance": [
-      {
-        "figure": 647,
-        "reading": 259
-      }
-    ],
+    "sideBalance": [],
     "compositions": [
       "collection.tabs",
       "collection.repeat",
@@ -490,7 +476,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -507,10 +492,10 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1139,
-    "scrollX": 0,
+    "pageHeight": 1421,
+    "scrollX": 2,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -541,7 +526,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -555,13 +539,13 @@
       "single.split:wide",
       "views.tabs:wide",
       "comparison.paired:wide",
-      "visual:narrow",
+      "visual:wide",
       "visual:wide"
     ],
     "pageHeight": 1387,
-    "scrollX": 0,
+    "scrollX": 2,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -592,7 +576,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -606,13 +589,13 @@
       "single.split:narrow",
       "views.tabs:wide",
       "comparison.paired:narrow",
-      "visual:narrow",
+      "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1419,
-    "scrollX": 0,
+    "pageHeight": 1380,
+    "scrollX": 2,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -643,7 +626,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -661,9 +643,9 @@
       "visual:wide"
     ],
     "pageHeight": 1223,
-    "scrollX": 0,
+    "scrollX": 1,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -694,7 +676,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -708,13 +689,13 @@
       "single.split:wide",
       "views.tabs:wide",
       "comparison.paired:wide",
-      "visual:narrow",
+      "visual:wide",
       "visual:wide"
     ],
     "pageHeight": 1161,
-    "scrollX": 0,
+    "scrollX": 1,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   },
@@ -745,7 +726,6 @@
       "single.split",
       "views.tabs",
       "comparison.paired",
-      "visual.side",
       "visual.down"
     ],
     "states": [
@@ -759,13 +739,13 @@
       "single.split:narrow",
       "views.tabs:wide",
       "comparison.paired:narrow",
-      "visual:narrow",
+      "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1190,
-    "scrollX": 0,
+    "pageHeight": 1151,
+    "scrollX": 1,
     "figures": [
-      "symmetry:balanced→visual.side",
+      "symmetry:portrait→visual.down",
       "landscape:wide→visual.down"
     ]
   }

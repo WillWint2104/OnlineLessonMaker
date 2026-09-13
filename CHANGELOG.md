@@ -7,6 +7,43 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **Narrowly scoped visual corrections after the first lesson passed its structural test**
+  (`docs/atlas/`, no app change). The maintainer accepted `single.flow`, `single.split`,
+  `collection.repeat`, `scroll.y = page` and the narrow repeated-example anatomy as golden, and asked
+  for four fixes. No new composition vocabulary and no new general-purpose layout logic.
+  - **The tab strip is one row that scrolls, and never wraps.** At 382px `collection.tabs` used to
+    wrap, leaving a tab alone on a second line. It now scrolls locally in x at every width, and
+    selecting a tab brings it fully into view — no dropdown, no smaller type. The partly visible
+    neighbour at the edge is the affordance; a fade would dim the control the reader is reaching for.
+    `data-scroll-x="tabstrip"` declares the contract, deliberately distinct from `local`.
+  - **`visual.side` is reserved for a plane no taller than it is wide.** The 388px empty rail is
+    gone. Tightening the `balanced` band alone could not deliver the ruling — at 1.20 the plane
+    simply moved into `portrait`, which also resolved `side` — so `portrait` resolves `down` too and
+    `balanced` is now 0.75–1.0. Still pure media geometry: nothing about paragraph length, sentence
+    count, occupancy or measured dead space enters it.
+  - **What whitespace means**, replacing every occupancy percentage: free width *outside* a
+    composition is reading margin and filling it is not a goal; unexplained empty area *inside* a
+    semantic track is not automatically acceptable and is fixed by choosing a different prescribed
+    subdesign; a tall page is fine; local horizontal scrolling only where a contract permits it;
+    changing composition because a paragraph is short is forbidden.
+  - Three new controls, each driven to fail on purpose: the strip must be one row; the current tab
+    must be fully in view; and only a declared contract (`local` or `tabstrip`) may scroll sideways.
+
+### Fixed
+- **The class bands had two owners and the grammar was the one being ignored.** `atlas.json` declared
+  them in prose while `scripts/lib/figure-geometry.mjs` hardcoded `1.3 / 0.75 / 0.4`, so retuning the
+  grammar changed nothing at all. The numbers now live in `mediaGeometry.bands` and the module reads
+  them. The atlas build was still carrying its own second copy of the whole figure search as well;
+  it now uses the shared contract.
+- **`down` inflated a tall plane.** Growing a figure to the atlas's wide-figure width is right for a
+  plane wider than it is tall — a 717px landscape plane reads better at 896px — and wrong for every
+  other shape. When `portrait` moved into `down` that rule met a tall plane for the first time and
+  blew the 488 × 625 symmetry graph up to **900 × 1120**, worse than the void it replaced. The growth
+  now applies only to planes wider than they are tall; a plane is never grown past its legible size.
+- **The tab strip's `overflow-x:auto` coerces `overflow-y` to `auto`**, exactly as a local-x region
+  does, so it was being reported as a vertical scroller on a `scroll.y = page` lesson.
+
 ### Added
 - **The first real lesson — the lesson is now the test of the system** (`docs/atlas/lesson/`, no app
   change). `quadratics.lesson.json` is a complete NSW Stage 5 lesson, *The parabola y = x²*, authored

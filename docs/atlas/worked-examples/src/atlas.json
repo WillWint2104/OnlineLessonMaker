@@ -86,7 +86,8 @@
     "collection.tabs": {
       "means": "These are several SIBLING ITEMS; select one.",
       "example": "Worked examples — [ Negative ] [ Fraction ] [ Decimal ] — three different examples",
-      "use": "when showing every item at full length makes a page nobody reads to the end"
+      "use": "when showing every item at full length makes a page nobody reads to the end",
+      "narrow": "ONE HORIZONTAL ROW, ALWAYS. The strip never wraps: it scrolls locally in x, and the active tab is brought fully into view. Never a dropdown, never smaller type. A partly visible neighbour at the edge is the affordance."
     },
     "views.tabs": {
       "means": "This is ONE instructional object seen in multiple REPRESENTATIONS.",
@@ -131,29 +132,36 @@
     }
   },
   "mediaGeometry": {
-    "_": "EXTREMELY DUMB ON PURPOSE. From the authored domain's aspect at equal unit scale. It answers exactly one question — which approved subdesign does this composition use — and it may never answer `maybe this should be a different composition`.",
+    "_": "EXTREMELY DUMB ON PURPOSE. From the authored domain's aspect at equal unit scale. It answers exactly one question — which approved subdesign does this composition use — and it may never answer `maybe this should be a different composition`. RETUNED after the first lesson: see `whySideIsRare`.",
     "classes": {
-      "portrait": "ratio > 1.3",
-      "balanced": "0.75 – 1.3",
+      "portrait": "ratio > 1.0   — taller than it is wide",
+      "balanced": "0.75 – 1.0    — as wide as it is tall, or wider",
       "landscape": "0.4 – 0.75",
       "wide": "< 0.4"
     },
+    "bands": {
+      "portraitAbove": 1.0,
+      "balancedAbove": 0.75,
+      "landscapeAbove": 0.4
+    },
+    "_bands": "THE NUMBERS THE CODE READS. `classes` above is the prose; these are the thresholds, and scripts/lib/figure-geometry.mjs reads them from here. They were hardcoded in that module while this file declared them, so retuning the grammar silently changed nothing — the grammar and the code were two owners of one decision.",
     "resolves": {
       "visual": {
-        "portrait": "side",
+        "portrait": "down",
         "balanced": "side",
         "landscape": "down",
         "wide": "down"
       },
       "comparison.sharedVisual": {
-        "portrait": "side",
+        "portrait": "down",
         "balanced": "side",
         "landscape": "down",
         "wide": "down"
       }
     },
-    "proof": "comparison.sharedVisual with a balanced figure resolves .side; with a wide figure it resolves .down. BOTH REMAIN comparison.sharedVisual. That is exactly the level of automatic behaviour wanted — a subdesign change with no semantic composition change.",
-    "widePreferredWidth": 900
+    "proof": "comparison.sharedVisual with a balanced figure resolves .side; with a portrait, landscape or wide figure it resolves .down. BOTH REMAIN comparison.sharedVisual — a subdesign change with no semantic change.",
+    "widePreferredWidth": 900,
+    "whySideIsRare": "THE FIRST LESSON SETTLED THIS. `visual.side` puts a plane beside a reading column, and a plane that is TALLER THAN IT IS WIDE guarantees the column ends far above the plane's foot — measured at 388px of empty rail on the lesson's Symmetry view (figure 647px, reading 259px). The maintainer ruled that a near-square or tall graph takes `down`, and that a taller page is explicitly preferable to an awkward side composition. Tightening the `balanced` band alone could not deliver that: at 1.20 the plane simply moved from `balanced` into `portrait`, which also resolved `side`. So `portrait` resolves `down` as well, and `side` is now reserved for the one shape it actually suits — a plane no taller than it is wide. THE DECISION IS STILL PURE MEDIA GEOMETRY: the authored domain's aspect, and nothing about paragraph length, sentence count, occupancy or measured dead space."
   },
   "switchPoints": {
     "_": "A switch point is PRESCRIBED, never searched. Most are a constant belonging to the composition. One is derived — and derived only from the authored figure's own preferred width and one design-system constant. It never looks at the prose, the step count or the height.",
@@ -244,5 +252,24 @@
     "desktop": 30,
     "tablet": 24,
     "narrow": 16
+  },
+  "whitespace": {
+    "_": "WHAT WHITESPACE MEANS. This replaces every occupancy percentage the resolver ever used.",
+    "readingMargin": "Free width OUTSIDE a composition is legitimate reading margin. `Use all the available desktop width` is NOT a goal — the first worked example reads better because its solution has a controlled measure.",
+    "suspect": "Unexplained empty area INSIDE a semantic track or rail is not automatically acceptable: a column that visually promises content and holds none is a design defect, and it is fixed by choosing a different prescribed subdesign — never by measuring the content.",
+    "height": "A tall page is completely acceptable. Height is unconstrained and the page scrolls.",
+    "overflow": "Local horizontal scrolling is allowed ONLY for components whose contract permits it — authored indivisible material (`scroll.x = local`) and the tab strip (`tabstrip`).",
+    "forbidden": "Changing composition because one paragraph happens to be shorter is forbidden."
+  },
+  "accepted": {
+    "_": "Ruled golden by the maintainer after the first lesson, and to be built upon rather than revisited.",
+    "structures": [
+      "single.flow",
+      "single.split",
+      "collection.repeat",
+      "scroll.y = page",
+      "the narrow repeated-example anatomy"
+    ],
+    "hierarchy": "subtopic tabs → explanation → example → example → synthesis"
   }
 }

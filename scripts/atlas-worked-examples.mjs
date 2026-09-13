@@ -49,6 +49,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import { openFigurePage, measureFigures } from './lib/figure-geometry.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.join(root, 'docs/atlas/worked-examples/src');
@@ -77,6 +78,8 @@ for (const [resolved, v] of Object.entries(A.compositions)) {
 }
 SWITCH['scroll.pane'] = A.scroll.y.pane.switchAt;
 
+const RESOLVED = new Set(Object.keys(A.compositions).filter((k) => k !== '_'));
+
 const MIME = { '.html': 'text/html', '.json': 'application/json', '.woff2': 'font/woff2', '.png': 'image/png', '.svg': 'image/svg+xml' };
 const server = http.createServer((req, res) => {
   const u = decodeURIComponent(req.url.split('?')[0]);
@@ -104,165 +107,18 @@ for (const [re, what] of [[/\.tp-slide \.tp-fig-grid/, 'the figure grid rule'], 
   if (!re.test(APP_CSS)) throw new Error('the lifted stylesheet is missing ' + what);
 console.log(`lifted ${Math.round(APP_CSS.length / 1024)}KB of the app's own stylesheet`);
 
-/* ══ FIGURES · intrinsic legibility and media geometry ═════════════════════════════════════════ */
-const figPage = await browser.newPage({ viewport: { width: 1700, height: 1800 }, deviceScaleFactor: 2 });
-await figPage.goto(base, { waitUntil: 'load' });
-/* WAIT FOR THE FACES. A tick label's width is a font metric, and the engine's axis gutters are
-   sized from it — so a plane painted before the vendored faces arrive is measured against fallback
-   metrics. That made the search non-deterministic between runs: the landscape figure's narrow box
-   came back 382x216 once and 169x156 the next time, from identical code. */
-await figPage.evaluate(() => document.fonts.ready);
-const cache = new Map();
-const paint = async (key, fig, w, h) => {
-  const ck = `${key}|${w}|${h}`;
-  if (cache.has(ck)) return cache.get(ck);
-  const r = await figPage.evaluate(async ({ key, fig, w, h }) => {
-    const host = document.createElement('div');
-    host.className = 'mx';
-    host.style.cssText = `position:absolute;left:-4000px;top:0;width:${w}px;`;
-    host.innerHTML = `<div class="mx-part" data-mx-part="figure" data-fig-viewport
-      style="position:relative;width:${w}px;height:${h}px;"><div class="mx-figstage"><div
-      class="mx-figskin tp-slide"></div></div></div>`;
-    document.querySelector('#slide').appendChild(host);
-    host.querySelector('.mx-figskin').innerHTML = fragFigure(mxFigPolicy(fig), 'at-' + key);
-    /* SETTLE, THEN MEASURE. The first fit of a box does not agree with the second: painting the
-       landscape plane at 382x216 measured x/y = 1.045 and then 1.005 on an immediate repeat of the
-       identical box. Since `paint` memoises, whichever value came first was the one the whole search
-       ran on. Fit twice and read the settled figure. */
-    figFitAll();
-    await document.fonts.ready;
-    await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
-    figFitAll();
-    await new Promise((res) => requestAnimationFrame(() => requestAnimationFrame(res)));
-    const el = host.querySelector('.tp-fig'), svg = el.querySelector('.tp-fig-svg');
-    const vb = (svg.getAttribute('viewBox') || '0 0 1 1').split(/\s+/).map(Number);
-    const rect = svg.getBoundingClientRect();
-    const labs = [].slice.call(svg.querySelectorAll('.tp-fig-ticklabel'));
-    const val = (t) => parseFloat(t.textContent.replace('−', '-'));
-    const per = (a, at) => { const q = labs.filter((t) => t.getAttribute('text-anchor') === a)
-        .map((t) => ({ v: val(t), px: +t.getAttribute(at) })).filter((o) => isFinite(o.v));
-      if (q.length < 2) return null; q.sort((m, n) => m.v - n.v);
-      const d = q[q.length - 1].v - q[0].v; return d ? Math.abs((q[q.length - 1].px - q[0].px) / d) : null; };
-    const ux = per('middle', 'x'), uy = per('end', 'y');
-    const x = ux == null ? null : +(ux * rect.width / vb[2]).toFixed(2);
-    const y = uy == null ? null : +(uy * rect.height / vb[3]).toFixed(2);
-    const html = el.outerHTML;
-    host.remove();
-    return { html, x, y, ratio: (x && y) ? +(x / y).toFixed(3) : null };
-  }, { key, fig, w, h });
-  cache.set(ck, r);
-  return r;
-};
-const SQUARE = 0.006, TOL = 0.02;
-const square = (r) => r.ratio != null && Math.abs(r.ratio - 1) <= SQUARE;
-/* a box that paints the authored domain at a given px-per-unit, found by measuring rather than
-   modelling — the engine's label gutters are not a constant and which axis binds changes with the box */
-async function boxForScale(key, fig, s) {
-  const d = fig.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
-  let w = Math.round(xs * s + 50), h = Math.round(ys * s + 100);
-  for (let i = 0; i < 6; i++) {
-    if (w < 60 || h < 60 || w > 4000 || h > 4000) return null;
-    const r = await paint(key, fig, w, h);
-    if (r.x == null || r.y == null) return null;
-    if (Math.abs(r.x - s) / s <= TOL && Math.abs(r.y - s) / s <= TOL && square(r)) return { w, h, ...r };
-    const nw = Math.max(60, Math.round(w * Math.min(2, Math.max(0.5, s / r.x))));
-    const nh = Math.max(60, Math.round(h * Math.min(2, Math.max(0.5, s / r.y))));
-    if (nw === w && nh === h) return null;
-    w = nw; h = nh;
-  }
-  return null;
-}
-/* THE NARROW SURFACE DOES NOT CHOOSE A SCALE — it gives the figure its full width, and the figure's
-   own aspect then decides the height. So this solves for HEIGHT at a fixed width, scanning outward
-   from the aspect-implied height until the engine paints one authored x-unit and one authored y-unit
-   at the same length.
-
-   It replaces a binary search over scale, which was searching the wrong variable. `boxForScale`
-   accepts a candidate only if the painted scale matches AND the plane is square; for the landscape
-   plane at ~382px wide the painted ratio sits at 1.005–1.007, straddling the 0.006 tolerance, so
-   acceptance flipped on sub-pixel noise and the search collapsed to a 169px plane — which still
-   paints perfectly square and still screenshots as a graph. Scanning height finds 382x241 at 1.005.
-   (A box is never scaled after painting: reusing a pre-painted box at a smaller size distorts it,
-   because the engine's label gutters are a near-constant number of px.) */
-async function boxForWidth(key, fig, w) {
-  const d = fig.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
-  const h0 = Math.round((ys / xs) * (w - 50) + 100);
-  let best = null;
-  for (let off = 0; off <= 80; off += 2) {
-    for (const h of (off === 0 ? [h0] : [h0 + off, h0 - off])) {
-      if (h < 80) continue;
-      const r = await paint(key, fig, w, h);
-      if (r.x == null || r.y == null) continue;
-      const err = Math.abs(r.ratio - 1);
-      if (!best || err < best.err) best = { err, box: { w, h, ...r } };
-      if (square(r)) return { s: r.x, box: { w, h, ...r } };
-    }
-  }
-  return best ? { s: best.box.x, box: best.box, err: best.err } : null;
-}
-async function largestWithin(key, fig, lo, hi, cap) {
-  let best = null;
-  for (let i = 0; i < 9 && hi - lo > 0.25; i++) {
-    const mid = (lo + hi) / 2, b = await boxForScale(key, fig, mid);
-    if (b && Math.max(b.w, b.h) <= cap) { best = { s: mid, box: b }; lo = mid; } else hi = mid;
-  }
-  return best;
-}
-const classOf = (ratio) => ratio > 1.3 ? 'portrait' : ratio >= 0.75 ? 'balanced' : ratio >= 0.4 ? 'landscape' : 'wide';
-const RESOLVED = new Set(Object.keys(A.compositions).filter((k) => k !== '_'));
-const SUBDESIGN = A.mediaGeometry.resolves.visual;
-
-console.log('\nfigures — intrinsic legible size, media-geometry class, and one box per surface');
-const FIG = {};
-const SURFACE_NAMES = Object.keys(A.surfaces);
+/* ══ FIGURES · the media-geometry contract, from its ONE OWNER ════════════════════════════════
+   This used to be a second copy of the search, living beside the one in scripts/lib. They agreed
+   until they did not: the class bands were hardcoded here while atlas.json declared them, so
+   retuning the grammar silently changed nothing. */
+const figPage = await openFigurePage(browser, base);
 /* expand the {{PART:…}} includes before looking for figures — a fragment can reach a plane only
    through a shared body, and scanning the outer file alone reported "no figure graphcheck" */
 const expand = (f) => fs.readFileSync(path.join(SRC, f + '.html'), 'utf8')
   .replace(/\{\{PART:([a-z0-9_-]+)\}\}/gi, (m, q) => fs.readFileSync(path.join(SRC, q + '.part'), 'utf8'));
 const NEEDED = new Set(SELECTED.flatMap((e) => [...expand(e.frag).matchAll(/\{\{FIG:([a-z0-9-]+)\}\}/gi)].map((m) => m[1])));
-for (const [key, f] of Object.entries(FIGS)) {
-  if (key.startsWith('_') || (ONLY && !NEEDED.has(key))) continue;
-  const d = f.figure.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
-  const cls = classOf(ys / xs), sub = SUBDESIGN[cls];
-  const top = await largestWithin(key, f.figure, 4, 260, BOUND);
-  if (!top) throw new Error(`${key}: no box inside the ${BOUND}px bound paints this domain at equal scale`);
-  const floor = Math.max(FLOOR.w / xs, FLOOR.h / ys);
-  const sPref = Math.max(Math.min(floor, top.s), 0.85 * top.s);
-  const pref = (await boxForScale(key, f.figure, sPref)) || top.box;
-
-  /* ONE BOX PER SURFACE. A `down` figure is given the atlas's wide-figure width or the surface,
-     whichever is smaller; a `side` figure is given its own preferred width or the surface,
-     whichever is smaller. A box is never scaled after painting — each is solved at the width it
-     will actually occupy. */
-  const box = {};
-  for (const sName of SURFACE_NAMES) {
-    const avail = A.surfaces[sName];
-    const target = sub === 'down' ? Math.min(A.mediaGeometry.widePreferredWidth, avail)
-                                  : Math.min(pref.w, avail);
-    if (target === pref.w) { box[sName] = pref; continue; }
-    const b = await boxForWidth(key, f.figure, target);
-    if (!b) throw new Error(`${key}: no box at all fits the ${target}px ${sName} target`);
-    if (b.box.w < 0.9 * target)
-      throw new Error(`${key}: the ${sName} box solved to ${b.box.w}x${b.box.h} against a ${target}px `
-        + `target — the search collapsed rather than converged`);
-    if (!square(b.box))
-      throw new Error(`${key}: no height at ${target}px paints this domain at equal unit scale `
-        + `(best ${b.box.w}x${b.box.h} at ${b.box.ratio})`);
-    box[sName] = b.box;
-  }
-
-  /* THE DERIVED SWITCH POINT, and the only one in the atlas. It is prescribed, not searched: two
-     numbers, the authored figure's own preferred width and one design-system constant. It never
-     looks at the prose, the step count or the height of anything. `down` has no switch point at
-     all — its arrangement is the same at every width and only the plane's box changes. */
-  const switchAt = sub === 'side' ? pref.w + M.gap + M.minInterpretation : null;
-
-  FIG[key] = { cls, sub, resolved: 'visual.' + sub, switchAt, pref, box, html: pref.html };
-  console.log(`  ${key.padEnd(11)} ${String(ys / xs).slice(0, 4).padEnd(5)} aspect → ${cls.padEnd(9)} → visual.${sub.padEnd(5)} `
-    + `· preferred ${pref.w}×${pref.h} @${sPref.toFixed(1)} px/unit (${pref.ratio})`
-    + (switchAt ? ` · side above ${switchAt}px` : ' · no state change')
-    + ' · boxes ' + SURFACE_NAMES.map((n) => `${n[0]}${box[n].w}×${box[n].h}`).join(' '));
-}
+console.log('\nfigures — intrinsic legible size, media-geometry class, and one box per surface');
+const FIG = await measureFigures({ figPage, A, FIGS, keys: ONLY ? NEEDED : null, log: console.log });
 
 /* ══ RENDER ════════════════════════════════════════════════════════════════════════════════════ */
 const tokens = (surface, pad) => `:root{
@@ -375,6 +231,16 @@ ${CSS_KIT}
       for (const q of g.querySelectorAll(':scope > .at-panel')) {
         if (q.getAttribute('data-panel') === active) q.setAttribute('data-shown', ''); else q.removeAttribute('data-shown');
       }
+      /* SELECTING A TAB BRINGS IT FULLY INTO VIEW. The strip is one scrolling row, so the current
+         item must not be half off the end. Set outright rather than animated — a render must be
+         reproducible, and a smooth scroll is a race. */
+      const bar = g.querySelector(':scope > .at-tabbar');
+      const on = bar && bar.querySelector('.at-tab[data-on]');
+      if (on && bar.scrollWidth > bar.clientWidth) {
+        const l = on.offsetLeft, r = l + on.offsetWidth;
+        if (l < bar.scrollLeft) bar.scrollLeft = l;
+        else if (r > bar.scrollLeft + bar.clientWidth) bar.scrollLeft = r - bar.clientWidth;
+      }
     }
     return { groups: groups.length, missing, extraSel: Object.keys(sel).filter((k) => !groups.some((g) => g.getAttribute('data-tabs') === k)) };
   }, { SWITCH, figSwitch, surface, sel: state.tabs || {} });
@@ -412,7 +278,12 @@ ${CSS_KIT}
       const bar = t.querySelector(':scope > .at-tabbar');
       const on = t.querySelector(':scope > .at-tabbar > .at-tab[data-on]');
       const cb = getComputedStyle(bar), co = on ? getComputedStyle(on) : null;
-      return { kind: t.getAttribute('data-tabs-kind'), depth,
+      const tabs = [].slice.call(bar.querySelectorAll('.at-tab'));
+      const rows = new Set(tabs.map((b) => b.offsetTop)).size;
+      const br = bar.getBoundingClientRect(), orc = on ? on.getBoundingClientRect() : null;
+      return { rows, scrolls: bar.scrollWidth > bar.clientWidth + 1,
+        activeWhole: !orc || (orc.left >= br.left - 1 && orc.right <= br.right + 1),
+        kind: t.getAttribute('data-tabs-kind'), depth,
         sig: co ? [cb.borderBottomWidth, cb.borderTopWidth, cb.borderRadius,
                    co.backgroundColor, co.borderBottomWidth, co.borderRadius].join('/') : 'no-current-tab' };
     });
@@ -458,7 +329,9 @@ ${CSS_KIT}
          computed value alone would report a vertical scroller wherever a wide equation sits. It is
          still checked — below, as "a local-x region must not ALSO clip vertically". */
       const dx = el.getAttribute('data-scroll-x'), dy = el.getAttribute('data-scroll-y');
-      if (/^(auto|scroll)$/.test(cs.overflowY) && dx !== 'local') scrollers.y.push({
+      /* the tab strip's overflow-x:auto coerces overflow-y to auto too, exactly as a local-x region
+         does — neither is a vertical scroller */
+      if (/^(auto|scroll)$/.test(cs.overflowY) && dx !== 'local' && dx !== 'tabstrip') scrollers.y.push({
         tag: el.tagName.toLowerCase(), declared: dy,
         inPane: !!el.closest('[data-tpl="scroll.pane"]'),
         live: el.scrollHeight > el.clientHeight + 1,
@@ -557,6 +430,13 @@ function verify(name, entry, state, r) {
   for (const g of m.affordance) {
     if (!g.kind) throw new Error(`${name}: a tab group declares no kind`);
     if (g.sig === 'no-current-tab') throw new Error(`${name}: the ${g.kind} group paints no current tab`);
+    /* CONTROL · THE STRIP IS ONE ROW, AND THE CURRENT ITEM IS WHOLE. Four tabs falling onto a
+       second line reads as an accident; a current tab half off the end is worse. */
+    if (g.rows !== 1)
+      throw new Error(`${name}: the ${g.kind} tab strip wrapped onto ${g.rows} rows — it must stay one `
+        + `row and scroll, never wrap`);
+    if (!g.activeWhole)
+      throw new Error(`${name}: the current tab in the ${g.kind} strip is not fully in view`);
     if (!AFFORD[g.kind]) AFFORD[g.kind] = { name, sig: g.sig, depth: g.depth };
     else if (AFFORD[g.kind].sig !== g.sig)
       throw new Error(`${name}: a ${g.kind} group at depth ${g.depth} paints a different affordance `
@@ -613,8 +493,12 @@ function verify(name, entry, state, r) {
   if (!wantY && m.scrollers.y.length)
     throw new Error(`${name}: ${m.scrollers.y.length} vertically scrolling region(s) on a page that authored scroll.y = page`);
   /* CONTROL · LOCAL-X IS LOCAL, AND THE PROOF IS LIVE. */
+  /* CONTROL · ONLY A PERMITTED CONTRACT MAY SCROLL SIDEWAYS. Two exist: `local` for authored
+     indivisible material, and `tabstrip` for the one-row tab strip. Anything else is a defect. */
   for (const s of m.scrollers.x) {
-    if (s.declared !== 'local') throw new Error(`${name}: a region scrolls horizontally without declaring scroll.x = local`);
+    if (s.declared !== 'local' && s.declared !== 'tabstrip')
+      throw new Error(`${name}: a region scrolls horizontally without a contract that permits it`);
+    if (s.declared === 'tabstrip') continue;
     if (s.sw <= s.w + 1) throw new Error(`${name}: an over-wide region did not overflow — the proof is `
       + `inert. ${s.sw}px of content in ${s.w}px: “${s.what}…”`);
     if (s.w > s.parent + 1) throw new Error(`${name}: an over-wide region widened the region it is in`);

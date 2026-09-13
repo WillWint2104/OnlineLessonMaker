@@ -26,16 +26,16 @@ PAGE  ·  Worked examples — quadratics
 │   ├── "Solving for x"   → single.flow
 │   └── "Symmetry"        → views.tabs           ← one object, seen two ways
 │                              ├── Workings           → comparison.paired
-│                              └── Visual explanation → visual.side   ← media geometry
+│                              └── Visual explanation → visual.down   ← media geometry
 └── scroll.y = page
 ```
 
 | | desktop 1152 | tablet 834 | phone 382 |
 | --- | --- | --- | --- |
-| Substitution | 1854px | 1820px | 2191px |
-| Solving for *x* | 1030px | 996px | 1177px |
-| Symmetry · Workings | 1010px | 976px | 1477px |
-| Symmetry · Visual explanation | 1194px | 1443px | 1509px |
+| Substitution | 1854px | 1820px | 2154px |
+| Solving for *x* | 1030px | 996px | 1140px |
+| Symmetry · Workings | 1010px | 976px | 1440px |
+| Symmetry · Visual explanation | 1477px | 1443px | 1472px |
 
 Every one of those heights is an outcome, never a target.
 
@@ -64,8 +64,8 @@ composition, from the surface width alone, and it can never select a different c
 | **`single.flow`** · the default | one column at a 760px measure | **no state change** | seven steps → taller, same composition |
 | **`single.split`** | SCENARIO │ WORKED SOLUTION | stacked below 760px | a one-line prompt → **still a split** |
 | **`comparison.paired`** | CASE A │ CASE B, then why they agree | stacked below 680px | cases of very unequal height |
-| **`visual.side`** | FIGURE │ INTERPRETATION | stacked — see §5 | — |
-| **`visual.down`** | the figure across the measure, interpretation beneath | **no state change** | a wide figure resolves here |
+| **`visual.side`** | FIGURE │ INTERPRETATION — a plane no taller than it is wide | stacked — see §5 | — |
+| **`visual.down`** | the figure across the measure, interpretation beneath | **no state change** | portrait, landscape and wide planes all resolve here |
 | **`comparison.sharedVisual.side`** | the cases across, then FIGURE │ INTERPRETATION | stacked below 680px | — |
 | **`comparison.sharedVisual.down`** | the cases across, then the figure across the measure | stacked below 680px | a wide figure resolves here |
 
@@ -117,21 +117,59 @@ template.
 It answers exactly one question — *which approved subdesign does this composition use* — and may never
 answer *maybe this should be a different composition*.
 
-| Figure | aspect | class | resolves | preferred | desktop | tablet | phone |
-| --- | --- | --- | --- | --- | --- | --- | --- |
-| symmetry 10 × 12 | 1.20 | balanced | `.side` | 488 × 625 | 488 × 625 | 488 × 625 | 382 × 498 |
-| graph check 12 × 22 | 1.83 | portrait | `.side` | 386 × 716 | 386 × 716 | 386 × 716 | 382 × 709 |
-| roots 10 × 14 | 1.40 | portrait | `.side` | 424 × 624 | 424 × 624 | 424 × 624 | 382 × 565 |
-| landscape 24 × 8 | 0.33 | **wide** | `.down` | 717 × 346 | 900 × 421 | 834 × 393 | 382 × 211 |
+**Retuned after the first lesson.** `visual.side` puts a plane beside a reading column, and a plane
+taller than it is wide guarantees the column ends far above the plane's foot — measured at 388px of
+empty rail. `side` is now reserved for the one shape it suits:
 
-Images `10` and `11` are the proof that matters: **the same authored `comparison.sharedVisual`, with a
-balanced figure and with a wide one, resolving `.side` and `.down`. Both remain
-`comparison.sharedVisual`.** A subdesign change with no semantic composition change — exactly the level
-of automatic behaviour wanted. The build asserts a resolved name never leaves the frozen vocabulary
-and never changes its base.
+| class | aspect | resolves |
+| --- | --- | --- |
+| `portrait` | > 1.0 — taller than wide | **`down`** |
+| `balanced` | 0.75 – 1.0 — no taller than wide | **`side`** |
+| `landscape` | 0.4 – 0.75 | `down` |
+| `wide` | < 0.4 | `down` |
 
-One box per surface, each *solved* at the width it will occupy — never a larger box scaled down. One
-x-unit and one y-unit render the same length in all 60 images.
+Tightening `balanced` alone could not deliver that: at 1.20 the plane simply moved into `portrait`,
+which also resolved `side`. The thresholds live in `atlas.json` under `mediaGeometry.bands`, and
+`scripts/lib/figure-geometry.mjs` reads them from there — they used to be hardcoded in that module
+while this grammar declared them in prose, so retuning the grammar silently changed nothing.
+
+| Figure | aspect | class | resolves | preferred |
+| --- | --- | --- | --- | --- |
+| squareish 14 × 12 | 0.86 | balanced | **`side`** | 615 × 585 |
+| symmetry 10 × 12 | 1.20 | portrait | `down` | 488 × 625 |
+| roots 10 × 14 | 1.40 | portrait | `down` | 424 × 624 |
+| graph check 12 × 22 | 1.83 | portrait | `down` | 386 × 716 |
+| landscape 24 × 8 | 0.33 | **wide** | `down` | 717 × 346 → 900 × 421 |
+
+`squareish` exists because after the retune every other figure resolved `down`, which would have left
+`visual.side`, its switch point and both its controls unexercised — a contract nothing tests.
+
+**A plane is never grown past its legible preferred size.** `down` grows a figure to the atlas's
+wide-figure width only when it is wider than it is tall; that rule met a tall plane for the first
+time after the retune and inflated a 488 × 625 graph to 900 × 1120 before it was fixed.
+
+Images `10` and `11` remain the proof that matters: the same authored `comparison.sharedVisual`, with
+a balanced figure and with a wide one, resolving `.side` and `.down`. **Both remain
+`comparison.sharedVisual`.**
+
+### What whitespace means
+
+Replacing every occupancy percentage the resolver ever used:
+
+| | |
+| --- | --- |
+| Free width **outside** a composition | legitimate reading margin. *Use all the available width* is **not** a goal |
+| Unexplained empty area **inside** a semantic track | not automatically acceptable — fixed by choosing a different prescribed subdesign, never by measuring content |
+| A tall page | completely acceptable |
+| Local horizontal scrolling | only for components whose contract permits it: `local` (indivisible material) and `tabstrip` |
+| Changing composition because a paragraph is short | **forbidden** |
+
+### The tab strip
+
+`collection.tabs` is **one row that scrolls locally in x and never wraps**, at every width, with the
+current tab scrolled fully into view. Not a dropdown, not smaller type. The partly visible neighbour
+at the edge is the affordance — a fade would dim the control the reader is reaching for.
+
 
 ## 4. The JSON principle
 
@@ -153,7 +191,7 @@ The first says what the lesson **is**; the second tells CSS how to improvise. Th
 authored file and refuses the second — not the rendered page, the *source*, because the principle is
 about what an author is allowed to write.
 
-## 5. One derived switch point — and it is a proposal
+## 5. One derived switch point — approved
 
 Every switch point in the atlas is a constant belonging to its composition, **except one**.
 `visual.side` switches at
@@ -173,8 +211,11 @@ design-system constant. It never looks at the prose, the step count or the heigh
 `visual.down` has no switch point at all — the arrangement is identical at every width and only the
 plane's box changes.
 
-**This is the one place I extended the rule rather than following it, so it needs your yes or no.**
-The alternative is a fixed number and a 314px column on tablet.
+**Approved**, as a responsive viability calculation and nothing more: it may use only the figure's
+media-geometry preferred width and fixed design-system tokens, never prose length, rendered height,
+step count, occupancy or dead space. Crossing it changes the prescribed responsive state only, never
+the authored composition. Two controls in the lesson build hold that shut — content perturbation and
+no-residue.
 
 ## 6. Later, and deliberately separate
 
