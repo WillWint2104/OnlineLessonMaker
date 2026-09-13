@@ -1,0 +1,173 @@
+{
+  "_": "A COMPLETE MATHEMATICS LESSON, authored in the frozen grammar and nothing else. Every node names a composition, a collection or a views group; no node carries a width, a height, a weight or any other layout arithmetic. Inline notation: *x* is a variable, ^2 a superscript, − a minus sign. NSW Stage 5.",
+
+  "lesson": "Quadratic relationships",
+  "subject": "Mathematics",
+  "stage": "NSW Stage 5",
+  "page": {
+    "title": "The parabola *y* = *x*^2",
+    "lede": "Four ways into the same curve: putting numbers in, taking them back out, the mirror down its middle, and what happens when the rule is divided through.",
+    "scroll": { "y": "page", "x": "local-when-needed" },
+
+    "collection": {
+      "mode": "tabs",
+      "items": [
+
+        { "label": "Substitution",
+          "lede": "Three values of *x*, chosen because each one goes wrong in a different way.",
+          "body": {
+            "collection": {
+              "mode": "repeat",
+              "items": [
+                { "composition": "single.flow",
+                  "title": "A negative value",
+                  "question": ["Use the rule *y* = *x*^2 to find *y* when *x* = −4."],
+                  "steps": [
+                    { "say": "Write the rule.", "math": "*y* = *x*^2" },
+                    { "say": "Substitute the given value. Keep the brackets — the whole of −4 is squared, not just the 4.", "math": "*y* = (−4)^2" },
+                    { "say": "Evaluate. A negative multiplied by a negative gives a positive.", "math": "*y* = (−4)(−4) = 16" }
+                  ],
+                  "answer": "*y* = 16, so (−4, 16) lies on the curve." },
+
+                { "composition": "single.flow",
+                  "title": "A fraction",
+                  "question": ["Find *y* when *x* = −2/3."],
+                  "steps": [
+                    { "say": "Substitute, keeping the brackets so the sign and the whole fraction are squared together.", "math": "*y* = (−2/3)^2" },
+                    { "say": "Squaring a fraction squares the numerator and the denominator separately.", "math": "*y* = (−2)^2 / 3^2" },
+                    { "say": "Evaluate both.", "math": "*y* = 4/9" }
+                  ],
+                  "answer": "*y* = 4/9, which is less than 1 — the point sits below (−1, 1)." },
+
+                { "composition": "single.flow",
+                  "title": "A decimal, and a table",
+                  "question": ["Find *y* when *x* = 0.2, then tabulate *y* for whole values of *x* from −5 to 5."],
+                  "steps": [
+                    { "say": "Square it. A value between −1 and 1 always gets smaller, not larger.", "math": "*y* = 0.2 × 0.2 = 0.04" },
+                    { "say": "The same substitution, done once for each whole value. The table is one row of paired readings, so it is never wrapped onto two lines — it scrolls sideways instead.",
+                      "table": { "head": ["*x*", "−5", "−4", "−3", "−2", "−1", "0", "1", "2", "3", "4", "5"],
+                                 "rows": [["*y* = *x*^2", "25", "16", "9", "4", "1", "0", "1", "4", "9", "16", "25"]] } }
+                  ],
+                  "answer": "*y* = 0.04, and the table reads the same forwards and backwards." }
+              ]
+            }
+          },
+          "synthesis": {
+            "label": "What the three show",
+            "paragraphs": [
+              "Substitution never changes the rule — it only replaces *x*. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a decimal below 1 gets smaller rather than larger.",
+              "The table row reading the same in both directions is the first sign of the mirror that the Symmetry tab is about."
+            ]
+          } },
+
+        { "label": "Solving for *x*",
+          "lede": "Going the other way. Two examples: the bare equation, then the same algebra inside a situation.",
+          "body": {
+            "collection": {
+              "mode": "repeat",
+              "items": [
+                { "composition": "single.flow",
+                  "title": "Solving *x*^2 = 16",
+                  "question": ["Solve *x*^2 = 16."],
+                  "steps": [
+                    { "say": "Ask which numbers square to 16.", "math": "*x*^2 = 16" },
+                    { "say": "Take the square root of both sides. Squaring destroys the sign, so undoing it has to return both numbers that could have produced 16.", "math": "*x* = ±4" },
+                    { "say": "Check each one back in the original equation.", "math": ["4^2 = 16", "(−4)^2 = 16"] }
+                  ],
+                  "answer": "*x* = 4 or *x* = −4." },
+
+                { "composition": "single.split",
+                  "title": "The same algebra, inside a situation",
+                  "scenario": [
+                    "A stone is dropped from a bridge. The distance it has fallen, in metres, is modelled by *d* = 5*t*^2, where *t* is the time in seconds since it was released.",
+                    "The bridge deck is 45 metres above the water, and the model is only trusted while the stone is still falling.",
+                    "Find how long the stone takes to reach the water."
+                  ],
+                  "steps": [
+                    { "say": "Write the rule and substitute the distance you want.", "math": "45 = 5*t*^2" },
+                    { "say": "Divide both sides by 5 to leave the square on its own.", "math": "*t*^2 = 9" },
+                    { "say": "Take the square root. The algebra offers both signs.", "math": "*t* = ±3" },
+                    { "say": "Reject the negative root. It solves the equation but not the question — the stone was not falling three seconds before it was dropped.", "math": "*t* = 3" }
+                  ],
+                  "answer": "3 seconds." }
+              ]
+            }
+          },
+          "synthesis": {
+            "label": "What the two show",
+            "paragraphs": [
+              "The ± is not a convention bolted onto the square root. It is the record of a fact about squaring: two different numbers can arrive at the same square, so undoing a square has to return both of them.",
+              "A situation can rule one of them out, and saying why is part of the answer. The algebra does not know the stone was dropped."
+            ]
+          } },
+
+        { "label": "Symmetry",
+          "lede": "One idea, two authored representations. Solve it, then look at the same fact on the curve.",
+          "body": {
+            "views": {
+              "mode": "tabs",
+              "items": [
+                { "label": "Workings",
+                  "body": {
+                    "composition": "comparison.paired",
+                    "cases": [
+                      { "label": "Case A",
+                        "question": ["Find *y* when *x* = −3."],
+                        "steps": [
+                          { "say": "Substitute, keeping the brackets.", "math": "*y* = (−3)^2" },
+                          { "say": "Evaluate.", "math": "*y* = 9" }
+                        ],
+                        "answer": "(−3, 9)" },
+                      { "label": "Case B",
+                        "question": ["Find *y* when *x* = 3."],
+                        "steps": [
+                          { "say": "Substitute.", "math": "*y* = 3^2" },
+                          { "say": "Evaluate.", "math": "*y* = 9" }
+                        ],
+                        "answer": "(3, 9)" }
+                    ],
+                    "synthesis": {
+                      "label": "Why they agree",
+                      "paragraphs": [
+                        "Squaring destroys the sign, so *x* and −*x* always give the same *y*. The two cases are a mirror pair rather than two unrelated results."
+                      ]
+                    } } },
+
+                { "label": "Visual explanation",
+                  "body": {
+                    "composition": "visual",
+                    "figure": "symmetry",
+                    "label": "Graph",
+                    "reading": {
+                      "label": "The same fact, on the curve",
+                      "paragraphs": [
+                        "The horizontal line *y* = 9 meets *y* = *x*^2 at exactly the two points the cases found.",
+                        { "math": "(−3, 9)  and  (3, 9)" },
+                        "They sit at equal distances either side of the *y*-axis. That mirror is what “squaring destroys the sign” looks like when it is drawn.",
+                        "Any line above the vertex meets the curve twice, once on each side. At the vertex the two crossings have met, which is the single solution of *x*^2 = 0. Below it the line misses the curve entirely — the same fact as “no real number squares to give a negative”."
+                      ]
+                    } } }
+              ]
+            }
+          } },
+
+        { "label": "A flatter parabola",
+          "lede": "The same shape, divided through by 12 — and a window wide enough to see what that did.",
+          "body": {
+            "composition": "visual",
+            "figure": "landscape",
+            "label": "Graph",
+            "reading": {
+              "label": "Reading the curve",
+              "paragraphs": [
+                "Dividing by 12 does not change the shape into something else. It stretches it sideways: this curve needs about 8.5 units of *x* to climb the 6 units of *y* that *y* = *x*^2 covers in about 2.5.",
+                { "math": "*y* = *x*^2 / 12" },
+                "The line *y* = 3 still meets it twice, at *x* = −6 and *x* = 6, and those crossings are still mirror images about the *y*-axis. Flattening changes the scale, never the symmetry.",
+                "Read a value the same way as before: go up from *x*, across to *y*. At *x* = 6 the height is 36 ÷ 12 = 3, which is the crossing the line marks.",
+                "A window this wide is why the figure is drawn across the page rather than beside this reading. The shape of the mathematics decided that, not the length of this paragraph."
+              ]
+            } } }
+      ]
+    }
+  }
+}

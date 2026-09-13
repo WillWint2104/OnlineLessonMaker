@@ -481,6 +481,11 @@ ${CSS_KIT}
       .map((n) => ({ w: Math.round(n.getBoundingClientRect().width), t: n.textContent.slice(0, 46) }))
       .filter((n) => n.w > flow + 1);
 
+    /* THE FRAME MUST HOLD THE SURFACE. A page whose frame is narrower than the surface inside it
+       clips the right-hand edge of every line, and the document never scrolls sideways while it
+       happens — so the document-level control is blind to it. Measured here instead. */
+    const pg = document.querySelector('.at-page');
+    const clip = { sw: pg.scrollWidth, cw: pg.clientWidth };
     const frame = ['html', 'body', '.at-page', '.at-surface'].map((s) => {
       const el = document.querySelector(s), cs = getComputedStyle(el);
       return { s, maxHeight: cs.maxHeight, overflowY: cs.overflowY, height: cs.height };
@@ -489,7 +494,7 @@ ${CSS_KIT}
       .filter((e) => e.style.width || e.style.gridTemplateColumns || e.style.height || e.style.maxHeight)
       .filter((e) => !e.hasAttribute('data-fig-viewport'))
       .map((e) => e.tagName + '.' + e.className + ':' + e.getAttribute('style'));
-    return { payload: seen.join(' '), tabSig, affordance, panels, bars, figs, scrollers, wide, frame, inline,
+    return { clip, payload: seen.join(' '), tabSig, affordance, panels, bars, figs, scrollers, wide, frame, inline,
       tpls: [].slice.call(surf.querySelectorAll('[data-tpl]')).map((n) => n.getAttribute('data-tpl')),
       resolved: [].slice.call(surf.querySelectorAll('[data-tpl]')).map((n) => {
         const t = n.getAttribute('data-tpl'), sb = n.getAttribute('data-sub');
@@ -577,6 +582,11 @@ function verify(name, entry, state, r) {
   /* CONTROL · THE PAGE NEVER SCROLLS SIDEWAYS. Local-x is local or it is a defect. */
   if (m.docW > m.docCW + 1)
     throw new Error(`${name}: the page itself scrolls sideways — ${m.docW}px of content in ${m.docCW}px`);
+  /* CONTROL · THE FRAME HOLDS THE SURFACE. Overflow inside the page clips text without ever making
+     the document scroll, so it needs its own measurement. */
+  if (m.clip.sw > m.clip.cw + 1)
+    throw new Error(`${name}: the page frame is ${m.clip.cw}px around ${m.clip.sw}px of surface — `
+      + `the right-hand edge of every line is being clipped`);
   /* CONTROL · HEIGHT IS NOT A CONSTRAINT. Nothing in the frame bounds or clips the page. */
   for (const f of m.frame) {
     if (f.maxHeight !== 'none') throw new Error(`${name}: ${f.s} declares max-height ${f.maxHeight}`);

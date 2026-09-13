@@ -29,8 +29,14 @@ html,body{margin:0;padding:0;background:var(--mx-ground);height:auto;overflow:vi
 body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
 
 .at-page{width:calc(var(--at-surface) + 2 * var(--at-pad) + 60px);padding:30px;background:var(--mx-ground);height:auto;}
-.at-narrow .at-page{width:calc(var(--at-surface) + 24px);padding:12px;}
-.at-tablet .at-page{width:calc(var(--at-surface) + 40px);padding:20px;}
+/* THE FRAME MUST HOLD THE SURFACE. `.at-surface` is `--at-surface + 2 × --at-pad` wide, so the page
+   around it needs that plus its own padding. These two overrides counted the surface without its
+   padding, which made the frame 32px (narrow) and 48px (tablet) too small — the surface overflowed
+   it and the right-hand edge of every line was clipped. The document itself never scrolled
+   sideways, so the control watching the document could not see it; only looking at a phone render
+   did. There is now a control on the frame as well. */
+.at-narrow .at-page{width:calc(var(--at-surface) + 2 * var(--at-pad) + 24px);padding:12px;}
+.at-tablet .at-page{width:calc(var(--at-surface) + 2 * var(--at-pad) + 40px);padding:20px;}
 .at-cap{margin:0 0 6px;font-family:var(--mx-ui);font-size:12.5px;line-height:1.5;color:var(--mx-ink-2);max-width:76ch;}
 .at-tpl{display:block;font:700 10.5px/1 var(--mx-ui);letter-spacing:.14em;text-transform:uppercase;
   color:var(--mx-green);margin-bottom:5px;}
@@ -59,6 +65,12 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
   background:var(--mx-line);}
 .at-st{font-size:15.5px;line-height:1.6;color:var(--mx-ink-body);}
 .at-sm{margin-top:6px;font-family:'LM Math',Cambria Math,serif;font-size:18px;color:var(--mx-ink);}
+/* SEVERAL STATEMENTS ON ONE LINE. A check step naturally holds two independent statements —
+   "4² = 16" and "(−4)² = 16" — and HTML collapses the run of spaces an author would put between
+   them, so they render as one broken statement. They are separate statements and are set as such.
+   They wrap rather than overflow, because each is complete on its own. */
+.at-sm .at-stmt{display:inline-block;}
+.at-sm .at-stmt + .at-stmt{margin-left:2.4em;}
 [data-slot="answer"]{margin-top:2px;padding-top:12px;border-top:1px solid var(--mx-line);
   font-family:'LM Math',Cambria Math,serif;font-size:18px;line-height:1.5;color:var(--mx-ink);}
 [data-slot="answer"] b{display:inline;margin-right:14px;font-family:var(--mx-ui);font-size:11.5px;

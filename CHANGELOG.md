@@ -8,6 +8,51 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **The first real lesson — the lesson is now the test of the system** (`docs/atlas/lesson/`, no app
+  change). `quadratics.lesson.json` is a complete NSW Stage 5 lesson, *The parabola y = x²*, authored
+  in the frozen grammar and nothing else; `scripts/lesson-render.mjs` walks the JSON and emits the
+  frozen vocabulary at desktop 1152 / tablet 834 / phone 382, in all five tab and view states. No
+  fragment, no fixture, no hand-written markup. 15 renders.
+  - **Four subtopics, each choosing its own composition**: Substitution (`collection.repeat` → 3 ×
+    `single.flow`, the third ending in a table of values), Solving for *x* (`collection.repeat` →
+    `single.flow`, `single.split` — the bare equation then the same algebra inside a situation),
+    Symmetry (`views.tabs` → `comparison.paired` · `visual.side`) and A flatter parabola
+    (`visual.down`). `comparison.sharedVisual` was not needed and is not used.
+  - **An unknown node stops the run and names the gap.** Every node must name a composition,
+    collection mode or views mode the grammar contains; nothing is widened to make a lesson fit.
+  - **The derived switch point is now held shut by two controls.** *Content perturbation*: every
+    paragraph tripled and every step doubled, asserting not one prescribed state moves at any width —
+    if prose length, step count or rendered height had leaked into the rule, it moves. *No residue*:
+    one page instance driven narrow and back must restore the wide arrangement exactly, which a pure
+    width comparison does and a stateful one does not.
+  - **`scroll.x = local-when-needed` is a permission, not a promise.** Each region must be local and
+    well-behaved; the run as a whole must need it at least once. The lesson's table of values fits at
+    1152 and overflows at 382 — both correct. Demanding overflow at every width would have meant
+    padding the table until the control passed.
+  - `scripts/lib/figure-geometry.mjs` gives the media-geometry contract **one owner**, so the atlas
+    and the lesson cannot disagree about a figure's preferred width — which is an input to the switch
+    point, and two copies of it would be two grammars.
+  - Reported and deliberately not acted on: `visual.side` leaves **388px of trailing space** beside
+    the plane at desktop (figure 647px, reading 259px). Measuring that in order to resize either
+    column is the resolver; three prescribed options are put to the maintainer instead.
+
+### Fixed
+- **The page frame did not hold the surface, and the right edge of every line was clipped.**
+  `.at-surface` is `surface + 2 × pad` wide; the narrow and tablet frame overrides counted the
+  surface without its padding, leaving the frame 32px (phone) and 48px (tablet) too small. The
+  document never scrolled sideways while it happened, so the control watching the document was blind
+  — only looking at a phone render showed it. Fixed, and a control on the frame added: it fails on
+  the old CSS with `the page frame is 874px around 902px of surface`.
+- **A step could hold one mathematical statement, and a check step holds two.** "Check each one back
+  in the original equation" is `4² = 16` and `(−4)² = 16`; written as one string with spaces between
+  them HTML collapses the run and they render as a single broken statement. A `math` value may now be
+  a string **or a list of statements**. This is content vocabulary — it adds nothing to composition,
+  collection, scroll or media geometry — and it is the only capability the first lesson exposed.
+- **A wrong number in the lesson text**: "24 units of *x* to climb 6 units of *y*" — 24 is the width
+  of the window, not the climb. `y = x²/12` reaches 6 at *x* ≈ 8.49 against ≈ 2.45 for `y = x²`.
+  Corrected, and checked by evaluation.
+
+### Added
 - **The grammar is frozen: four axes, and one authentic page as the proof**
   (`docs/atlas/worked-examples/`, no app change). One rule governs everything: **the author chooses
   the instructional structure; the renderer chooses only the prescribed responsive state and media
