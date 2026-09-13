@@ -1,0 +1,207 @@
+{
+ "meta": {
+  "title": "Mockup figures",
+  "theme": "mathematics",
+  "year": "",
+  "subject": "",
+  "unit": ""
+ },
+ "slides": [
+  {
+   "type": "page",
+   "title": "Contained",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "A regular pentagon",
+     "placement": "contained",
+     "construction": "regularPolygon",
+     "params": {
+      "n": 5,
+      "radius": 3
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+       ],
+       "angles": "all"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "P1",
+        "P2"
+       ],
+       "text": "auto"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Beside text",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "graph",
+     "title": "The curve y = x\u00b2",
+     "placement": "beside",
+     "domain": {
+      "xMin": -3,
+      "xMax": 3,
+      "yMin": -1,
+      "yMax": 9
+     },
+     "grid": "shown",
+     "aspect": "stretch",
+     "objects": [
+      {
+       "type": "function",
+       "f": "x^2"
+      },
+      {
+       "type": "points",
+       "from": "table",
+       "rows": [
+        [
+         "V",
+         0,
+         0
+        ],
+        [
+         "P",
+         2,
+         4
+        ]
+       ]
+      }
+     ],
+     "caption": "Two points are marked: the vertex V and the point P at (2, 4).",
+     "text": "The curve $y=x^2$ has its vertex at the origin. Reading the plotted points, each $y$ value is the square of its $x$ value \u2014 so the curve is symmetric about the $y$-axis and never dips below it. Check $P$ against that rule before moving on."
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Placement is orthogonal to figure internals",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "Naming and measuring the sides",
+     "placement": "contained",
+     "construction": "triangleSSS",
+     "params": {
+      "a": 7,
+      "b": 8,
+      "c": 9
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "A",
+        "B",
+        "C"
+       ],
+       "angles": "all"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "B"
+       ],
+       "text": "auto",
+       "unit": "cm"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "B",
+        "C"
+       ],
+       "text": "x + 4",
+       "label": "measure"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "C"
+       ],
+       "text": "hypotenuse",
+       "label": "name"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "page",
+   "title": "Beside \u2014 geometry with companion prose",
+   "blocks": [
+    {
+     "type": "figure",
+     "figure": "geometry",
+     "title": "Triangle ABC, built from three sides",
+     "placement": "beside",
+     "construction": "triangleSSS",
+     "params": {
+      "a": 7,
+      "b": 8,
+      "c": 9
+     },
+     "objects": [
+      {
+       "type": "polygon",
+       "vertices": [
+        "A",
+        "B",
+        "C"
+       ],
+       "angles": "all"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "A",
+        "B"
+       ],
+       "text": "auto",
+       "unit": "cm"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "B",
+        "C"
+       ],
+       "text": "auto",
+       "unit": "cm"
+      },
+      {
+       "type": "sideLabel",
+       "between": [
+        "C",
+        "A"
+       ],
+       "text": "auto",
+       "unit": "cm"
+      }
+     ],
+     "text": "A triangle is fully determined by its three side lengths \u2014 there is no second triangle with these three sides that is not a copy of this one. That is why SSS is a congruence test.",
+     "caption": "Each side length is fixed; the angles follow from them."
+    }
+   ]
+  }
+ ]
+}

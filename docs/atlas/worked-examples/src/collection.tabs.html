@@ -1,0 +1,24 @@
+<p class="at-intro">The same three examples, disclosed one at a time. The author chose tabs over a sequence because a Worked Examples page carrying every example at full length is a page nobody reads to the end &mdash; not because anything measured too tall.</p>
+<article data-tpl="collection.tabs">
+<div class="at-tabs" data-tabs="example" data-tabs-kind="collection">
+  <div class="at-tabbar" role="tablist">
+    <button class="at-tab" type="button" role="tab" data-tab="negative">Negative value</button>
+    <button class="at-tab" type="button" role="tab" data-tab="fraction">Fraction</button>
+    <button class="at-tab" type="button" role="tab" data-tab="decimal">Decimal</button>
+  </div>
+  <div class="at-panel" role="tabpanel" data-panel="negative"><div data-tpl="single.flow">
+{{PART:_ex-negative}}
+  </div></div>
+  <div class="at-panel" role="tabpanel" data-panel="fraction"><div data-tpl="single.flow">
+{{PART:_ex-fraction}}
+  </div></div>
+  <div class="at-panel" role="tabpanel" data-panel="decimal"><div data-tpl="single.flow">
+{{PART:_ex-decimal}}
+  </div></div>
+</div>
+<section data-slot="synthesis">
+  <p class="at-lab">What the three show</p>
+  <p>Substitution never changes the rule &mdash; it only replaces <i>x</i>. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a decimal below 1 gets smaller rather than larger.</p>
+  <p>The synthesis stays visible whichever example is open, because it is about all three.</p>
+</section>
+</article>

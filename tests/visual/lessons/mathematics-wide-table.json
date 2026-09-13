@@ -1,0 +1,72 @@
+{
+  "_note": "Stage B stress fixture: a legitimately wide authored table, used to prove a structured table is never silently clipped. Not part of the approved Practice content.",
+  "meta": {
+    "title": "Non-linear relationships",
+    "theme": "mathematics",
+    "stage": "Stage 5",
+    "year": "Year 9",
+    "unit": "Non-linear relationships"
+  },
+  "slides": [
+    {
+      "type": "practice",
+      "id": "wide-table",
+      "navLabel": "Practice — Wide table",
+      "navSub": "Stress case",
+      "title": "Practice — Equations",
+      "splitRatio": "minmax(0,1fr) minmax(0,1.15fr)",
+      "questions": [
+        {
+          "id": "w1",
+          "stem": "Complete the table of values for _y_ = _x_^2 across the full domain.",
+          "table": {
+            "stub": "_x_",
+            "head": [
+              "−6",
+              "−5",
+              "−4",
+              "−3",
+              "−2",
+              "−1",
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "rows": [
+              {
+                "label": "_y_ = _x_^2",
+                "cells": [
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "w2",
+          "stem": "Which values of _x_ give the same _y_-value? Explain why."
+        }
+      ],
+      "workspace": {
+        "kind": "grid",
+        "id": "workbook"
+      }
+    }
+  ]
+}

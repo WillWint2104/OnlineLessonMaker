@@ -322,6 +322,27 @@ inline `$…$`.
   primitive). Compose a full **skill page** by stacking `skillHeader → text → formula → workedExample →
   practiceSet → mastery` on one composable page — the complete skill-mastery loop, authored from the
   palette.
+- **`text` as a LEARNING CARD (C6b)** — the same `text` block, plus any of `icon`, `footer`, `chip`,
+  `steps[]`, `fontStyle` or `card:true`, renders as an instructional card: a light surface with a subtle
+  outline, a thin accent rule on the leading edge, and the kicker → title → body → footer hierarchy the
+  approved mockups fix (`docs/mockups/`). Shape:
+  `{ type:'text', eyebrow?, icon?, title?, body?, steps?, chip?, footer?, fontStyle?, card? }`.
+  A block carrying **none** of those fields takes the original path and renders byte-identically — the
+  guard is presence, like `hasPoi` above, and `tests/visual/learning-card-legacy-baseline.json` pins it.
+  · `icon` is a **closed vocabulary** (`CARD_ICONS`), not a path. A URL, a `data:` URI or a file path is
+    reported and drawn as nothing — card icons come from the lesson's own set so a published lesson makes
+    no outside request. An unknown *name* is reported too, never quietly swapped for a generic glyph.
+  · `steps[]` are strings or `{text}` rows and are **numbered by position**, not by the author; `$…$` and
+    the usual `**bold**` / `==term==` / `[[note]]` markup work in every field. There is no list syntax in
+    prose — a step is a row, the same way `workedExample.steps[]` and `selfCheck.steps[]` already are.
+  · `fontStyle` is `"theme"` (default) | `"serif"` | `"sans"` — a **category**, never a font name. It moves
+    the whole authored hierarchy together (title, body, steps, chip, footer) and carries the matching
+    optical size, because the faces do not share an x-height. It never reaches mathematical notation, graph
+    or geometry annotations, measurement values, Figure Shell labels or controls: the face is applied to the
+    card's own text classes and never to its container, and `math` is pinned to its own face by an element
+    rule. An unsupported value is reported and falls back to the theme.
+  · Unsupported values are reported in a subordinate `.tp-lcard-err` line — report, fall back, never
+    silently reinterpret, the same philosophy as the figure's `.tp-fig-err`.
 - **`text` extensions** — `newthought` (string; rendered as a small-caps opening prefixed to the first
   paragraph) and per-`keyTerms`-row `kind` (`''` key term/POI · `'error'` red-pen classic error),
   `label` (tiny uppercase popup label), `num` (superscript footnote numeral — reserved for points you want
@@ -332,9 +353,31 @@ inline `$…$`.
 
 ## `figure` *(figure engine — composable page block; shared Figure Shell)*
 
+**`companion` (C6b)** — the rich prose that sits beside a figure at `placement:"beside"`. It is the SAME
+learning card the `text` block renders, so there is no figure-specific prose renderer:
+`companion:{ eyebrow?, icon?, title?, body?, steps?, chip?, footer?, fontStyle? }`, all optional, all
+behaving exactly as they do on `text`.
+
+The simple `text:"…"` companion is unchanged and still the shape every existing lesson uses. The two are
+**alternatives, never merged**: authoring both is reported and `text` wins, because that is the behaviour
+that must not move. Card fields live under `companion` rather than on the figure itself so it is never
+ambiguous whether a `title` describes the Figure Shell or the prose beside it — the shell already owns
+`title` / `caption` / `hint` / status.
+
+The pair is **top-aligned**: siblings keep their natural heights. Longer prose makes the card taller; it
+never stretches to the shell's height, and the shell is never squashed to the card's. Below the point where
+either column stops working the pair stacks — and the prose half of that decision is now measured against
+the card's **usable content width** (its column minus its measured padding and borders), not against the raw
+grid column, so the floor means what `FIG_MIN_STAGE` means for the figure.
+
 A coordinate figure rendered by the figure engine into the **shared Figure Shell** (identity / viewport /
-status / caption). `figure` selects the content type — `"graph"` today, `"geometry"` from Stage 3 — and the
-shell is the same either way, so a geometry figure differs by what it draws, not by its container.
+status / caption). `figure` selects the KIND — `"graph"` or `"geometry"`, both shipped — and the shell is the
+same either way, so a geometry figure differs by what it draws, not by its container.
+
+**Authoring a geometry figure:** set `figure:"geometry"` and give a `construction` + `params` instead of a
+`domain`, then list what to draw in `objects[]`. The fields are documented under **`figure: "geometry"`** below —
+the two kinds share this block, this shell and this table, and differ only in which of the two field sets
+they read.
 
 ```json
 { "type": "figure", "figure": "graph",
@@ -350,13 +393,57 @@ shell is the same either way, so a geometry figure differs by what it draws, not
 
 | Field | Type | Notes |
 |---|---|---|
-| `figure` | `"graph"` \| `"geometry"` | Content type. Drives the shell's kind label; `geometry` lands in Stage 3. |
+| `figure` | `"graph"` \| `"geometry"` | The figure KIND. Drives the shell's kind label and which field set below is read. Both ship. |
 | `title` | string | Figure identity, shown in the shell head and carried into the focused workspace. Typeset (`$…$` ok). |
 | `meta` | string | Optional context shown beside the title. |
 | `caption` | string | Sits under the figure. Typeset (`$…$` ok). |
-| `domain` | `{xMin,xMax,yMin,yMax}` | The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
+| `placement` | `""` \| `"contained"` \| `"beside"` | How the figure block sits in the lesson around it — see below. Omit for the full-width default. |
+| `domain` | `{xMin,xMax,yMin,yMax}` | **Graph kind only** — geometry solves its own bounds from the construction. The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
 | `aspect` | `"stretch"` \| `"equal"` | `equal` keeps a unit square square (default `stretch`). |
-| `objects[]` | array | `{type:'function', f}` · `{type:'points', from:'table', rows:[[id,x,y],…]}` · `{type:'segment', between:[idA,idB]}`. Unknown types are ignored with a reported error. |
+| `callouts` | `"hidden"` | Same vocabulary as `grid`. A figure that only ILLUSTRATES has nothing to reveal on tap, and the shell's hint is keyed on the callout count. Absent → callouts as before, so no existing figure moves. |
+| `objects[]` | array | **Graph kind:** `{type:'function', f, label?}` · `{type:'points', rows:[[id,x,y],…]}` (`from:'table'` is optional and documentary — the rows are read either way) · `{type:'segment', between:[idA,idB]}` · `{type:'line', y:k}` or `{type:'line', x:k}` — a **reference line** spanning the viewport, with an optional `label` and `style:"dashed"` (default) \| `"solid"`; give exactly one of `x` or `y` or the line is skipped with a reported error. **Geometry kind** reads a different set (`polygon` · `angle` · `rightAngle` · `sideLabel`) — see **`figure: "geometry"`** below. Unknown types are ignored with a reported error. |
+
+**Placement** — `placement` states the RELATIONSHIP you want between the figure block and the content around
+it. It is deliberately not a size, a column count or a breakpoint: the JSON says what is wanted and the
+renderer resolves it against whatever width it actually has, so no viewport number ever appears in a lesson
+file. It is theme-neutral — a placement is a layout capability, not a pack style, and there is no
+imperium-placement or scholarmath-placement.
+
+| Value | Intent |
+|---|---|
+| omitted, or `""` | **Full-width figure shell.** The default, and the compatibility contract: a figure written before this field existed renders byte-identically. |
+| `"contained"` | A self-contained figure at a reduced measure, centred. |
+| `"beside"` | The figure and its prose read as one purpose-unit. |
+
+Same vocabulary and the same meanings as the [`image`](#image) block's placements, because a figure beside its
+prose is the same authorial idea as an image beside its prose. **The default differs by block, intentionally:**
+an image with no placement is a bare `<img>`, whereas a figure is always the Figure Shell, so a figure with no
+placement is that shell at full width. `pair` is not offered — the image block's pair takes two `src` values in
+one block, and a figure has no free equivalent.
+
+`beside` needs companion prose — either the plain **`text`** string or the rich **`companion`** card (C6b
+above); they are alternatives, and authoring both is **reported** with `text` winning. Either way it is lesson
+prose that participates in the layout, deliberately distinct from the Figure Shell's own `title` / `caption` /
+hint / status, none of which are repurposed for it. Two divergences from the image block, both deliberate:
+`beside` with neither a usable `text` nor a usable `companion` is **reported** and falls back to the full-width
+figure rather than laying out an empty second column, and companion prose supplied outside `beside` is
+**reported** rather than silently dropped. A figure has an author-error channel; an image does not,
+and authored content that renders nowhere should say so.
+
+An unrecognised value is **reported** beside the figure, with the accepted values named, and falls back to the
+default. It never silently selects a layout.
+
+**A placement is an intent, not a guarantee.** The renderer resolves it against the width it actually has, and
+neither `contained` nor `beside` may buy its shape by starving the figure: the result must still give at least
+the kind's minimum usable stage (graph 340, geometry 420 logical px). When it cannot, the layout relaxes —
+`contained` promotes to full width, and `beside` stacks with the figure recovering the full width. `beside`
+also stacks when the prose column would stop being worth reading. This is decided from the measured available
+width, so it is a pure function of it: deterministic, sharp, and free of viewport breakpoints. On the current
+fixtures the transitions land at 572px available for contained geometry, 756px for beside graph and 916px for
+beside geometry — measured consequences of the minimums, not authored numbers.
+
+`placement` governs the BLOCK relative to the lesson. It has nothing to do with where labels sit inside the
+figure — that is the annotation placement system, and it is untouched by this field.
 
 **Display defaults** — these three set where the figure *starts*; the learner can still change all of them
 from **Options** in the focused workspace, and their choice persists for the session:
@@ -392,7 +479,7 @@ coordinates — nothing is positioned by hand.
 
 | Field | Type | Notes |
 |---|---|---|
-| `construction` | string | Optional parameterised solve — `rightTriangle` · `triangleSAS` · `triangleASA` · `triangleSSS` · `regularPolygon` · `circle` · `rawCoordinates`. With `params`, it produces the named points (`A`, `B`, `C`, …) that `objects[]` then refers to. Impossible givens are **rejected with an error**, never solved into a fabricated figure. |
+| `construction` | string | Optional parameterised solve — `rightTriangle` · `triangleSAS` · `triangleASA` · `triangleSSS` · `regularPolygon` · `circle` · `rawCoordinates`. With `params`, it produces named points that `objects[]` then refers to. **The names depend on the construction:** the triangle solvers and `circle` produce `A`, `B`, `C`, …, while `regularPolygon` produces `P1`…`Pn` (and takes `radius`, not `r`). Referring to a name the construction did not create is reported per object, so a wrong guess names itself rather than drawing nothing. Impossible givens are **rejected with an error**, never solved into a fabricated figure. |
 | `params` | object | The givens for `construction` (e.g. `{a:7,b:8,c:9}`). |
 | `vertexLabels` | boolean | Default `true` — every polygon vertex is named. `false` suppresses them. |
 | `domain` | `{xMin,…}` | Optional. Otherwise fitted to the figure; auto-fit only ever expands so a label has room. |

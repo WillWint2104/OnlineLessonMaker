@@ -1,0 +1,1015 @@
+[
+  {
+    "image": "01-standard-balanced-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": true,
+        "note": "the question fills 77% of the row — it is a track"
+      }
+    ],
+    "substance": 0.767,
+    "heights": [
+      207,
+      270
+    ],
+    "cols": [
+      512,
+      608
+    ],
+    "margin": 0,
+    "state": "split",
+    "origins": {
+      "content": 60,
+      "secondary": 604
+    },
+    "regionLeft": {
+      "prompt": 60,
+      "solution": 604,
+      "title": 60
+    },
+    "avail": 1152
+  },
+  {
+    "image": "01-standard-balanced-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the two tracks need 768px and the region is 382px"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 28,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 28,
+      "solution": 28,
+      "title": 28
+    },
+    "avail": 382
+  },
+  {
+    "image": "02-standard-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the question fills 22% of the row; below 55% it is a task, not a track"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "substance": 0.215,
+    "heights": [
+      58,
+      270
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 60,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 60,
+      "solution": 60,
+      "title": 60
+    },
+    "avail": 1152
+  },
+  {
+    "image": "02-standard-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the two tracks need 768px and the region is 382px"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 28,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 28,
+      "solution": 28,
+      "title": 28
+    },
+    "avail": 382
+  },
+  {
+    "image": "03-sequence-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the question fills 22% of the row; below 55% it is a task, not a track"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "substance": 0.215,
+    "heights": [
+      58,
+      270
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 60,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 60,
+      "solution": 60,
+      "title": 60
+    },
+    "avail": 1152
+  },
+  {
+    "image": "03-sequence-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the question fills 22% of the row; below 55% it is a task, not a track"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "substance": 0.215,
+    "heights": [
+      58,
+      270
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 60,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 60,
+      "solution": 60,
+      "title": 60
+    },
+    "avail": 1152
+  },
+  {
+    "image": "03-sequence-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the question fills 29% of the row; below 55% it is a task, not a track"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "substance": 0.287,
+    "heights": [
+      58,
+      202
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 60,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 60,
+      "solution": 60,
+      "title": 60
+    },
+    "avail": 1152
+  },
+  {
+    "image": "03-sequence-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the two tracks need 768px and the region is 382px"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 28,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 28,
+      "solution": 28,
+      "title": 28
+    },
+    "avail": 382
+  },
+  {
+    "image": "03-sequence-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the two tracks need 768px and the region is 382px"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 28,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 28,
+      "solution": 28,
+      "title": 28
+    },
+    "avail": 382
+  },
+  {
+    "image": "03-sequence-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the two tracks need 768px and the region is 382px"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 28,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 28,
+      "solution": 28,
+      "title": 28
+    },
+    "avail": 382
+  },
+  {
+    "image": "04-pairedvisual-desktop",
+    "surface": 1152,
+    "kind": "repeat",
+    "tried": [
+      {
+        "state": "across",
+        "ok": true,
+        "note": "2 cases at 544px each"
+      }
+    ],
+    "state": "across",
+    "cols": [
+      544,
+      544
+    ],
+    "margin": 32,
+    "origins": {
+      "content": 60,
+      "secondary": 636
+    },
+    "regionLeft": {
+      "case": 60,
+      "case1": 636
+    },
+    "avail": 1152
+  },
+  {
+    "image": "04-pairedvisual-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": true,
+        "note": "the plane at its preferred scale"
+      }
+    ],
+    "state": "side",
+    "cols": [
+      484,
+      636
+    ],
+    "fig": {
+      "key": "symmetry",
+      "s": 43.42,
+      "w": 484,
+      "h": 621,
+      "x": 44.24,
+      "y": 44.24,
+      "ratio": 1
+    },
+    "margin": 0,
+    "origins": {
+      "content": 60,
+      "secondary": 576
+    },
+    "regionLeft": {
+      "figure": 60,
+      "interpretation": 576
+    },
+    "avail": 1152
+  },
+  {
+    "image": "04-pairedvisual-middle",
+    "surface": 700,
+    "kind": "repeat",
+    "tried": [
+      {
+        "state": "across",
+        "ok": true,
+        "note": "2 cases at 334px each"
+      }
+    ],
+    "state": "across",
+    "cols": [
+      334,
+      334
+    ],
+    "margin": 0,
+    "origins": {
+      "content": 60,
+      "secondary": 426
+    },
+    "regionLeft": {
+      "case": 60,
+      "case1": 426
+    },
+    "avail": 700
+  },
+  {
+    "image": "04-pairedvisual-middle",
+    "surface": 700,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": false,
+        "note": "the plane needs 484px at its preferred scale and its smallest legal size is 373px, which leaves under 384px for the rail in 700px"
+      },
+      {
+        "state": "stack",
+        "ok": true,
+        "note": "re-measured from scratch against the full 700px region"
+      }
+    ],
+    "state": "stack",
+    "cols": null,
+    "fig": {
+      "key": "symmetry",
+      "s": 43.42,
+      "w": 484,
+      "h": 621,
+      "x": 44.24,
+      "y": 44.24,
+      "ratio": 1
+    },
+    "margin": 216,
+    "origins": {
+      "content": 60,
+      "secondary": null
+    },
+    "regionLeft": {
+      "figure": 60,
+      "interpretation": 60
+    },
+    "avail": 700
+  },
+  {
+    "image": "04-pairedvisual-narrow",
+    "surface": 382,
+    "kind": "repeat",
+    "tried": [
+      {
+        "state": "across",
+        "ok": false,
+        "note": "2 cases need 608px and the region is 382px"
+      },
+      {
+        "state": "down",
+        "ok": true,
+        "note": "each case takes the whole region in turn"
+      }
+    ],
+    "state": "down",
+    "cols": null,
+    "margin": 0,
+    "origins": {
+      "content": 28,
+      "secondary": null
+    },
+    "regionLeft": {
+      "case": 28,
+      "case1": 28
+    },
+    "avail": 382
+  },
+  {
+    "image": "04-pairedvisual-narrow",
+    "surface": 382,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": false,
+        "note": "the plane needs 484px at its preferred scale and its smallest legal size is 373px, which leaves under 384px for the rail in 382px"
+      },
+      {
+        "state": "stack",
+        "ok": true,
+        "note": "re-measured from scratch against the full 382px region"
+      }
+    ],
+    "state": "stack",
+    "cols": null,
+    "fig": {
+      "key": "symmetry",
+      "s": 34,
+      "w": 373,
+      "h": 486,
+      "x": 33.96,
+      "y": 33.92,
+      "ratio": 1.001
+    },
+    "margin": 9,
+    "origins": {
+      "content": 28,
+      "secondary": null
+    },
+    "regionLeft": {
+      "figure": 28,
+      "interpretation": 28
+    },
+    "avail": 382
+  },
+  {
+    "image": "05-visualcheck-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the question fills 22% of the row; below 55% it is a task, not a track"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "substance": 0.215,
+    "heights": [
+      58,
+      270
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 60,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 60,
+      "solution": 60,
+      "title": 60
+    },
+    "avail": 1152
+  },
+  {
+    "image": "05-visualcheck-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": true,
+        "note": "the plane at its preferred scale"
+      }
+    ],
+    "state": "side",
+    "cols": [
+      386,
+      640
+    ],
+    "fig": {
+      "key": "graphcheck",
+      "s": 28,
+      "w": 386,
+      "h": 716,
+      "x": 28.04,
+      "y": 28.09,
+      "ratio": 0.998
+    },
+    "margin": 94,
+    "origins": {
+      "content": 60,
+      "secondary": 478
+    },
+    "regionLeft": {
+      "figure": 60,
+      "interpretation": 478
+    },
+    "avail": 1152
+  },
+  {
+    "image": "05-visualcheck-narrow",
+    "surface": 382,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the two tracks need 768px and the region is 382px"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 28,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 28,
+      "solution": 28,
+      "title": 28
+    },
+    "avail": 382
+  },
+  {
+    "image": "05-visualcheck-narrow",
+    "surface": 382,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": false,
+        "note": "the plane needs 386px at its preferred scale and its smallest legal size is 386px, which leaves under 384px for the rail in 382px"
+      },
+      {
+        "state": "stack",
+        "ok": true,
+        "note": "re-measured from scratch against the full 382px region"
+      }
+    ],
+    "state": "stack",
+    "cols": null,
+    "fig": {
+      "key": "graphcheck",
+      "s": 28,
+      "w": 386,
+      "h": 716,
+      "x": 28.04,
+      "y": 28.09,
+      "ratio": 0.998
+    },
+    "margin": -4,
+    "origins": {
+      "content": 28,
+      "secondary": null
+    },
+    "regionLeft": {
+      "figure": 28,
+      "interpretation": 28
+    },
+    "avail": 382
+  },
+  {
+    "image": "06-extended-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the question fills 22% of the row; below 55% it is a task, not a track"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "substance": 0.215,
+    "heights": [
+      58,
+      270
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 60,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 60,
+      "solution": 60,
+      "title": 60
+    },
+    "avail": 1152
+  },
+  {
+    "image": "06-extended-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": true,
+        "note": "the plane at its preferred scale"
+      }
+    ],
+    "state": "side",
+    "cols": [
+      421,
+      640
+    ],
+    "fig": {
+      "key": "roots",
+      "s": 37.08,
+      "w": 421,
+      "h": 619,
+      "x": 37.79,
+      "y": 37.79,
+      "ratio": 1
+    },
+    "margin": 59,
+    "origins": {
+      "content": 60,
+      "secondary": 513
+    },
+    "regionLeft": {
+      "figure": 60,
+      "interpretation": 513
+    },
+    "avail": 1152
+  },
+  {
+    "image": "07-adv-long-question-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": true,
+        "note": "the question fills 100% of the row — it is a track"
+      }
+    ],
+    "substance": 1,
+    "heights": [
+      233,
+      202
+    ],
+    "cols": [
+      512,
+      608
+    ],
+    "margin": 0,
+    "state": "split",
+    "origins": {
+      "content": 60,
+      "secondary": 604
+    },
+    "regionLeft": {
+      "prompt": 60,
+      "solution": 604,
+      "title": 60
+    },
+    "avail": 1152
+  },
+  {
+    "image": "08-adv-long-solution-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the question fills 11% of the row; below 55% it is a task, not a track"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "substance": 0.106,
+    "heights": [
+      58,
+      546
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 60,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 60,
+      "solution": 60,
+      "title": 60
+    },
+    "avail": 1152
+  },
+  {
+    "image": "09-adv-wide-equation-desktop",
+    "surface": 1152,
+    "kind": "instructionSplit",
+    "tried": [
+      {
+        "state": "split",
+        "ok": false,
+        "note": "the question fills 19% of the row; below 55% it is a task, not a track"
+      },
+      {
+        "state": "flow",
+        "ok": true,
+        "note": "the task leads, a rule closes it, the reasoning runs beneath at its own measure"
+      }
+    ],
+    "substance": 0.193,
+    "heights": [
+      58,
+      301
+    ],
+    "cols": null,
+    "margin": 0,
+    "state": "flow",
+    "origins": {
+      "content": 60,
+      "secondary": null
+    },
+    "regionLeft": {
+      "prompt": 60,
+      "solution": 60,
+      "title": 60
+    },
+    "avail": 1152
+  },
+  {
+    "image": "10-adv-dense-interpretation-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": true,
+        "note": "the plane at its preferred scale"
+      }
+    ],
+    "state": "side",
+    "cols": [
+      386,
+      640
+    ],
+    "fig": {
+      "key": "graphcheck",
+      "s": 28,
+      "w": 386,
+      "h": 716,
+      "x": 28.04,
+      "y": 28.09,
+      "ratio": 0.998
+    },
+    "margin": 94,
+    "origins": {
+      "content": 60,
+      "secondary": 478
+    },
+    "regionLeft": {
+      "figure": 60,
+      "interpretation": 478
+    },
+    "avail": 1152
+  },
+  {
+    "image": "11-adv-sparse-interpretation-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": true,
+        "note": "the plane at its preferred scale"
+      }
+    ],
+    "state": "side",
+    "cols": [
+      386,
+      640
+    ],
+    "fig": {
+      "key": "graphcheck",
+      "s": 28,
+      "w": 386,
+      "h": 716,
+      "x": 28.04,
+      "y": 28.09,
+      "ratio": 0.998
+    },
+    "margin": 94,
+    "origins": {
+      "content": 60,
+      "secondary": 478
+    },
+    "regionLeft": {
+      "figure": 60,
+      "interpretation": 478
+    },
+    "avail": 1152
+  },
+  {
+    "image": "12-adv-portrait-graph-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": true,
+        "note": "the plane at its preferred scale"
+      }
+    ],
+    "state": "side",
+    "cols": [
+      332,
+      640
+    ],
+    "fig": {
+      "key": "portrait",
+      "s": 35.5,
+      "w": 332,
+      "h": 705,
+      "x": 35.24,
+      "y": 35.2,
+      "ratio": 1.001
+    },
+    "margin": 148,
+    "origins": {
+      "content": 60,
+      "secondary": 424
+    },
+    "regionLeft": {
+      "figure": 60,
+      "interpretation": 424
+    },
+    "avail": 1152
+  },
+  {
+    "image": "13-adv-landscape-graph-desktop",
+    "surface": 1152,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": true,
+        "note": "the plane at its preferred scale"
+      }
+    ],
+    "state": "side",
+    "cols": [
+      717,
+      403
+    ],
+    "fig": {
+      "key": "landscape",
+      "s": 28,
+      "w": 717,
+      "h": 346,
+      "x": 27.97,
+      "y": 27.91,
+      "ratio": 1.002
+    },
+    "margin": 0,
+    "origins": {
+      "content": 60,
+      "secondary": 809
+    },
+    "regionLeft": {
+      "figure": 60,
+      "interpretation": 809
+    },
+    "avail": 1152
+  },
+  {
+    "image": "13-adv-landscape-graph-middle",
+    "surface": 700,
+    "kind": "visualInterpretation",
+    "tried": [
+      {
+        "state": "side",
+        "ok": false,
+        "note": "the plane needs 717px at its preferred scale and its smallest legal size is 717px, which leaves under 384px for the rail in 700px"
+      },
+      {
+        "state": "stack",
+        "ok": true,
+        "note": "re-measured from scratch against the full 700px region"
+      }
+    ],
+    "state": "stack",
+    "cols": null,
+    "fig": {
+      "key": "landscape",
+      "s": 28,
+      "w": 717,
+      "h": 346,
+      "x": 27.97,
+      "y": 27.91,
+      "ratio": 1.002
+    },
+    "margin": -17,
+    "origins": {
+      "content": 60,
+      "secondary": null
+    },
+    "regionLeft": {
+      "figure": 60,
+      "interpretation": 60
+    },
+    "avail": 700
+  }
+]

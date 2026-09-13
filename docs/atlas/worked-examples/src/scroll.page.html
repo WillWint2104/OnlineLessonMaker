@@ -1,0 +1,36 @@
+<p class="at-intro">NORMAL PAGE SCROLLING. Nothing on this page is bounded, hidden behind a tab, or compressed. It is as tall as its material, and that is the desired outcome rather than a failure to fit.</p>
+<article data-tpl="single.flow">
+<h3 data-slot="title">Why <i>x</i><sup>2</sup> = 16 has two answers</h3>
+{{PART:_solve16}}
+<section data-slot="synthesis">
+  <p class="at-lab">What this shows</p>
+  <p>The &plusmn; is not a convention bolted onto the square root. It is the record of a fact about squaring: two different numbers can arrive at the same square, so undoing a square has to return both of them.</p>
+  <p>A student who has only ever seen &radic;16 = 4 will reliably lose one solution in every quadratic they meet for the next two years. The cost of explaining it properly here is a taller page, which costs nothing.</p>
+</section>
+</article>
+<div data-tpl="visual" data-fig="graphcheck">
+{{PART:_graphcheck16}}
+</div>
+<article data-tpl="single.flow">
+<h3 data-slot="title">The same question asked backwards</h3>
+<div data-slot="question">
+  <p class="at-lab">Question</p>
+  <p>For which values of <i>k</i> does <i>x</i><sup>2</sup> = <i>k</i> have two solutions, one solution, or none?</p>
+</div>
+<hr class="at-hr">
+<div data-slot="steps">
+  <p class="at-lab">Worked solution</p>
+  <ol class="at-steps">
+    <li class="at-step"><div class="at-st">Read the question as a horizontal line at height <i>k</i> meeting the curve <i>y</i> = <i>x</i><sup>2</sup>.</div><div class="at-sm"><i>y</i> = <i>k</i></div></li>
+    <li class="at-step"><div class="at-st">Above the vertex the line cuts both arms of the curve.</div><div class="at-sm"><i>k</i> &gt; 0 &nbsp; &rarr; &nbsp; two solutions</div></li>
+    <li class="at-step"><div class="at-st">Through the vertex the two crossings have met.</div><div class="at-sm"><i>k</i> = 0 &nbsp; &rarr; &nbsp; one solution, <i>x</i> = 0</div></li>
+    <li class="at-step"><div class="at-st">Below the vertex the line misses the curve entirely, because nothing squares to a negative.</div><div class="at-sm"><i>k</i> &lt; 0 &nbsp; &rarr; &nbsp; no real solution</div></li>
+  </ol>
+</div>
+<div data-slot="answer"><b>Answer</b>Two if <i>k</i> &gt; 0, one if <i>k</i> = 0, none if <i>k</i> &lt; 0.</div>
+<section data-slot="synthesis">
+  <p class="at-lab">What this shows</p>
+  <p>The number of solutions is a question about height, and the graph answers it at a glance. This is the same fact as the discriminant, three years early and without the formula.</p>
+  <p>This page runs to several screens. It is not a dashboard and it is not a slide: a student scrolls it the way they scroll everything else, and nothing has been hidden from them to keep it short.</p>
+</section>
+</article>

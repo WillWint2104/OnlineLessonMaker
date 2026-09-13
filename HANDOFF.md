@@ -273,7 +273,353 @@ third‑party `<script>`/`<link>` host reappears in `lesson-studio.html`). Remai
 requests in a published lesson come only from **teacher‑added** media (pasted image/video URLs,
 YouTube embeds) — `lessons/*.html` only *warns*, by design.
 
+## 8b. The `.tp-slide` seam under the Type workspace
+
+The Mathematics Type pad carries the class `tp-slide` for one reason: to reach the pack's equation‑editor
+skin and the Material token block those rules read. It is **not** a slide, and `.tp-slide`'s own layout is
+neutralised for it by `.mx .mx-work .mx-wb.tp-slide` (the same treatment the Notes figure host gets). This
+list is what the pad actually depends on — measured, not assumed, by matching every `.tp-slide` rule in the
+sheet against the live pad:
+
+| what is borrowed | rules |
+|---|---|
+| the maths face | `.tp-slide math` |
+| the symbol well | `.tp-slide .tp-eqsymwell`, `.tp-slide .tp-eqsym` |
+| the structure row | `.tp-slide .tp-eqstructs`, `.tp-slide .tp-eqst`, `… .tp-eqico`, `… .tp-eqchev` |
+| the structure galleries | `.tp-slide .tp-eqgal`, `… .tp-eqsec`, `… .tp-eqsec:last-child`, `… .tp-eqgh`, `… .tp-eqtiles`, `… .tp-eqtiles.c3`, `… .tp-eqtiles.c2`, `… .tp-eqtile`, `… .tp-eqtile math` |
+| the caret | `.tp-slide .tp-eqcaret` |
+| the tokens those rules read | `:root[data-theme="mathematics"] .tp-slide` (`--primary`, `--surface`, `--outline-variant`, …) |
+| incidental | `.tp-slide *` (box‑sizing), `.tp-slide svg` (display:block) |
+
+Deliberately **not** borrowed: `.tp-eqfield`, `.tp-eqribbon`, `.tp-eqfieldwrap`. The Type bar owns those as
+`.mx-eqfield`, `.mx-eqribbon`, `.mx-eqwrap`, which is why the placeholder rule had to be restated for
+`.mx-eqfield` (`mtext.ph` was invisible until it was).
+
+If that list grows, the seam is turning into coupling — extract the editor skin into its own class instead.
+`scripts/verify-type-interaction.mjs` (section `isolation`) proves the reverse direction: deleting every
+Type‑only rule changes the Type surface and nothing else — not Practice/Write, Notes, Video, `graphQuestion`
+or either legacy Geolearn control.
+
+## 8bb. The workbook sheet — a window onto a paper
+
+`.mx-sheet` is the WINDOW and `[data-mx-paper]` is what the student writes on. The paper is at least one
+window tall and grows downward as the writing approaches its bottom; the window scrolls over it. The
+toolbar and the page tabs are siblings of the window, so they do not move when the paper does.
+
+The paper's extent is **derived, not stored**: it is `max(window, lowest ink + 45% of a window)`, recomputed
+on pointer‑up and on resize. Nothing new enters the response — the payload is still `{id, ink, text}` — and
+a sheet restored from the store gets its paper back with it.
+
+The horizontal scale is fixed at **1000 units across the paper's width**, so a taller paper means a taller
+backing store at the same scale: growing the paper exposes MORE PLANE and can never rescale a stroke that
+is already on it. This is the same principle Expand uses. Scroll position is remembered per sheet
+(session‑only, like the response mode and the region views).
+
+Anything that drives the pad with synthetic pointers must aim at `.mx-sheet`, not `.mx-wbcanvas` — the
+canvas can now be taller than the window, so a fraction of its rect may lie outside the viewport.
+
+## 8c. The Mathematics page contracts (Stage C)
+
+**A TAB IS AN ALTERNATIVE COMPLETE DEMONSTRATION OF THE SAME OBJECT.** This is the semantic rule the whole
+contract hangs on, and it has two halves — getting only the first one produced two rejected builds.
+
+1. A learner must never have to switch tabs to reconstruct one mathematical idea, so every pane carries its
+   own drawing, its own coordinates and its own stated relationship. `Graph | Table | Coordinates` was the
+   wrong composition and is gone.
+2. **The persistent concept panel is the stable knowledge, and every tab must remain compatible with it.**
+   It does not change with the tab. If the panel says the vertex is (0, 0) and _y_ ≥ 0, a tab that plots
+   _y_ = _x_² + 2 makes the page contradict itself. Tabs are redundant demonstrations of one object, not
+   different objects sharing one explanation.
+
+So the tabs on this page are `Graph and key points` / `Table to graph` / `Symmetry` — three complete ways
+to see _y_ = _x_², each combining several part kinds.
+
+**Notes** — `{ id, title, lede?, contentTitle?, keyIdea?: {title?, body}, concepts: [{id, term, body}],
+examples: [{id, label, caption?, parts: […]}], workspace: {kind:"representation"} }`. `concepts` is any
+length. `keyIdea` is optional enrichment and renders as a compact aside; absent, it occupies nothing.
+
+### TWO VOCABULARIES, DELIBERATELY SEPARATE
+
+**Content vocabulary** — what an example is made of: `prompt`, `steps[]`, and the shared parts
+(`figure | table | points | relations | prose`). **Composition vocabulary** — how examples are ASSEMBLED
+on a page: a small, closed set of presentation types, AUTHORED in the JSON.
+
+Keeping these apart is what stopped Worked Examples oscillating between "one tiny example stretched across
+a page" and "everything gets a graph".
+
+**Worked Examples** — `{ id, title, lede?, groups: [{id, title, type, lede?, examples: [...], relations?}] }`.
+A tab is a GROUP with a pedagogical identity (`Substitution`, `Solving for x`), never `Example 1`. A group
+holds one or more complete examples and an optional closing relationship. No `workspace`: the page owns its
+own compositions. An example is `{id, label, prompt, steps: [{id, text?, math?, note?, visual?}],
+resultLabel?, answer?, visual?}`; a STEP's `visual` is the same shape as an example's, so the boundary does
+not assume one static companion for the whole example. A bare `examples[]` still renders, as one `extended`
+group.
+
+**`type` — the five compositions.** Unknown values fall back to `extended`.
+
+| type | composition |
+| --- | --- |
+| `standard` | one example: the question on the left, the whole working on the right |
+| `sequence` | several parallel complete examples of ONE skill, as full-width rows of equal status |
+| `comparison` | two related complete cases, with the representation that bridges them BETWEEN them |
+| `staged` | working and a substantial representation each get the whole surface, as authored local states |
+| `extended` | one long derivation, visuals inline at the step that needs them |
+
+**THE TYPE CHOOSES THE COMPOSITION; THE AMOUNT OF TEXT NEVER DOES.** Nothing measures how much text an
+example has, or how much room is left, in order to pick a layout — that would be unpredictable to author
+against. What geometry still decides is only whether a chosen composition can be READ.
+
+**THE WORKSPACE IS SHARED, NOT CENTRED.** Instructional content is never centred inside the page. The
+question a composition asks is not "how do I centre this example?" but "what are its meaningful pieces, and
+how should they share the available width?" — the reusable textbook pattern being problem/context on the
+left and mathematical reasoning on the right, the same principle Notes already uses for
+concepts | representation.
+
+**THE PRIMITIVE IS THE UNIT — ONE WORKED EXAMPLE IS ONE NAMED-REGION RECTANGLE.** The browser lays out
+named rectangular regions and the prose and mathematics merely flow inside them:
+
+```
+TITLE spanning the whole example
+QUESTION | WORKED SOLUTION
+         | ANSWER — the final band of the working
+```
+
+`mxWexEx()` is the one function that emits it (`article.mx-wexex` → `[data-mx-region="title"]`,
+`[data-mx-region="question"]`, `[data-mx-region="working"]` holding the steps and
+`[data-mx-region="answer"]`), and it is a CSS grid with named areas — `"title title" "ask work"` split,
+`"title" "ask" "work"` stacked. **THE REGIONS ARE ALIGNED, NEVER THE AMOUNT OF CONTENT IN THEM.** Both
+regions take the row's full height, so a one-line question beside a five-step solution is a short question
+in a visibly defined rectangle — the question region is tinted (`--mx-ask-tint`, a shade neither the
+surface nor the ground is) and runs to the surface's edge, one quiet rule stands between it and the working,
+and the QUESTION and WORKED SOLUTION labels begin on the same line beneath the title. The ANSWER is the
+final band of the working — a rule above it, the label run in, the value flowing as text so a wrapped answer
+returns to the region's own inset — never a floating card. The band and its label sit at the working's
+inset — the step-number column, as the maintainer's sketch draws it (`──── / ANSWER   y = 16`) — and the
+value runs in after the label; the step mathematics itself is 34px further in. (If the mathematics column
+was meant, the label must move above the value — a 34px gutter cannot hold ANSWER.) Everything sits on one left inset; nothing is
+centred. `standard` is one instance of this primitive; `sequence` is N identical instances stacked with
+a rule between them and the synthesis after the whole sequence; a staged state, an extended derivation and
+each case of a collapsed comparison are the same instance again. There is no second function and no second
+stylesheet for a "row", and nothing reads the count. The `compact` rule this replaced (1 → a centred
+column · 2 → two · 3 → 2 + 1 centred · 4 → 2 × 2) let the page's arithmetic decide which example looked
+like the conclusion. `compact` still resolves, to `sequence`.
+
+**THE FLOORS DECIDE, NOT A BREAKPOINT — AND THEY ARE READ BACK FROM WHAT THE PAGE PUBLISHED.** The
+constants (`MX_ASK_MIN` 300px — about 37 characters — `MX_WB_MIN_W` 420, `MX_PLOT_MIN_W` 340, and the
+channels `MX_ASK_PAD` 16 / `MX_WORK_PAD` 22 / `MX_ZONE_PAD` 22) are written once onto `.mx-wex` as custom
+properties, and `mxRowSplits`, `mxBridgeFits` and `mxFootPairs` read those properties rather than the
+constants, so the stylesheet and the decision cannot disagree and a gate that raises a floor on the live
+page moves the decision with it. The primitive splits while the surface holds 300 + 16 + (22 + 1) + 420 = 759px
+(36/64 above that, both floors judged on the regions' content boxes), and stacks below it; the comparison is three zones
+while it holds 2 × (300 + 22) + 340 + 2 × 22 + 2 = 1030px; GRAPH | INTERPRETATION coexist above
+340 + 22 + 1 + 300 = 663px. Each decision is published as one attribute on the root (`data-mx-rows`,
+`data-mx-bridge`, `data-mx-foot`) that the stylesheet keys off; no media query restates a number.
+
+**EVERY EXAMPLE STANDS ALONE.** An example in a sequence may not depend on having read its neighbour
+first — no "use the same rule…"; each states its own question.
+
+### ONE ANATOMY, EVERY COMPOSITION
+
+A worked example is the same four things whether it sits in a sequence or a full-page derivation:
+**QUESTION** (the authentic prompt) · **WORKED SOLUTION** (the steps) · **ANSWER** · optionally **VISUAL
+EXPLANATION / CONNECTION**. Told apart by regions, quiet typography and space, never another layer of
+coloured cards. The example's title spans the whole rectangle above the two regions; the tab names the
+skill (`Solving for x`), the title names the example (`Find x when y = 16`), and the QUESTION is the
+prompt a student would actually be given — three different things, each printed once. The optional fourth section is named ONCE: by the group's `footLabel` where that
+adds a name the parts do not already carry, else by the parts' authored labels — never a heading above a
+heading saying the same thing.
+
+**Fractions are fractions, not slashes.** `mxM` sets `3/2` built-up, and `(3/2)^2` inside brackets that
+grow to its height. Digits only, three a side, so ordinary prose and a year range are never touched.
+
+### THE PAGE NEVER RESHAPES THE MATHEMATICS
+
+This is the boundary the whole figure system hangs on: **the Figure Engine determines mathematical
+geometry; the page composition determines where that geometry can live.** A composition may resize AROUND
+a coordinate plane; a plane may never deform to satisfy a composition.
+
+- **Scale policy.** A Mathematics Cartesian plot defaults to an equal-unit scale (`mxFigPolicy` forces
+  `aspect:'equal'`). `scaleMode:"authored"` opts a figure out and keeps whatever `aspect` it states, so a
+  deliberately unequal chart stays possible later. The policy is the PAGE FAMILY's — legacy themes never
+  pass through it, so their renders stay byte-identical.
+- **The slot takes its shape from the plane**, not the reverse: `mxFigRatio` derives the slot's aspect from
+  the authored domain (clamped to 0.62–2.0 so a degenerate domain cannot make an absurd box) and publishes
+  it as `--mx-plot-ar`. Re-author the mathematics and the slot re-shapes; nothing else does.
+- **A portrait plane takes HEIGHT, not a different placement.** A demonstration reaching *y* = 16 over
+  *x* = ±6 simply IS tall. A companion stays inside the working region at its authored proportions and
+  the page gets longer; a plane too tall to embed at all belongs in its own state, where it takes the
+  width its shape needs and the explanation takes the rest. **"Fits this viewport" is not a quality
+  measure** — a 1.5-screen worked example is fine, a distorted plane is not. Nothing in the page family
+  may shrink a plane below its longer-side bound or alter its aspect.
+  **AWAITING MAINTAINER RULING (correction 6):** every plane on this page — companion, bridge, staged foot,
+  extended step — now has ONE natural size, bounded on its longer side by `MX_PLOT_H` (720px) with the
+  aspect untouched: a portrait companion is drawn at 446 × 720 and a landscape one at 560 × 308 (measured),
+  where the companion alone was previously allowed 560 wide and 903 tall. The assertion that once required
+  "the same width" for both shapes now requires the same bound; the CHANGELOG entry flags the change.
+- **Measure the rendered transform, not the container.** A container and a viewBox can agree while the
+  plane inside them is distorted. The gate reads px-per-unit per axis off the painted svg (engine units ×
+  that axis's paint scale) and its control opts a plane out and shows the ratio go to ~2.1.
+
+**GRAPH VIABILITY IS TWO SEPARATE TESTS.** *Scale integrity* — the authored x:y relationship survives.
+*Pedagogical legibility* — `MX_PLOT_MIN_W` / `MX_PLOT_MIN_H` / `MX_PLOT_W`, one owner, published as scoped
+custom properties: a plane can be perfectly undistorted and still be too small to read. Fail either and the
+composition stacks and gives the plane the width. Same lesson as the workbook: a region existing is not a
+region being usable.
+
+**THE FIGURE SLOT BELONGS TO THE COMPOSITION.** Where the plane sits and how wide it may be — never what
+shape it is forced into.
+
+| composition | slot |
+| --- | --- |
+| `sequence` | N instances of the primitive, full width; no reserved region — a companion, where authored, sits inside that example's working region before its answer |
+| `standard` | one instance of the primitive. A companion, where authored, sits inside the working region at its own proportions — never centred, never re-placed by its shape — and the answer still closes the region |
+| `comparison` | three explicit zones, `CASE A \| VISUAL EXPLANATION \| CASE B`: zone labels on one line, each zone the row's full height so its edges are the rules beside it whatever the cases' heights, each case the primitive in its stacked form with its question band reaching the zone's rule, the plane owning the middle at its natural size (never grown to fill it). Below its floors it becomes a STAGED relationship, never a reordered one |
+| `staged` | working and a substantial representation each get the whole surface, as authored LOCAL STATES (`1 Worked solution`, `2 Graph check`). The graph state is `GRAPH \| INTERPRETATION` — two sibling regions with one top edge and one rule between them, the plane at its natural size and the interpretation at a reading measure; below their floors they stack, graph first |
+| `extended` | a long derivation in the working column, read in authored stages rather than one expanding document |
+
+None of those names says anything about graph dimensions, and that is deliberate. `visual` and `compact`
+are the earlier names for `standard` and `sequence` and still resolve.
+
+**A COMPARISON IS SIMULTANEOUS OR IT IS STAGED.** The bridge only communicates while all three parts are
+read at once. When the surface can no longer give two cases and a plane their floors, the composition does
+not collapse into `A → plane → B`: that puts the picture, and the second answer with it, in front of the
+reader before they have worked the second case, which changes the PEDAGOGY rather than the layout. It
+becomes two states instead — `1 Workings` (both cases complete, in order) then `2 Visual explanation`.
+The decision is `mxBridgeFits`, measuring the real surface against the three zones' own floors (two cases
+at their reading floor with the channel beside their rule, the plane at its legibility floor with a channel
+each side, two rules — 1030px), in the same pass and the same idiom as `mxRepFits`. It is deliberately NOT
+a viewport query: at a 1200px viewport with the navigation rail collapsed the surface has 1084px, so a
+breakpoint stages a composition that fits. Same reasoning for the primitive's own form — `mxRowSplits`
+decides split or stacked from the floors and publishes it, and the grid's named areas follow that
+attribute; a stylesheet never restates the numbers.
+
+**A PLANE'S NATURAL SIZE IS BOUNDED ON ITS LONGER SIDE** (`MX_PLOT_H`), not on its width. `MX_PLOT_W` is
+the natural width of a LANDSCAPE plane; giving a portrait plane that same width draws it a quarter larger
+than the one that was reviewed, purely because the constant names the wrong dimension for it. Bounding the
+longer side is isotropic — it chooses how big to draw the object, never what shape — and it removes the
+`min(66vh, 720px)` rule that made a plane's width depend on the window's height.
+
+**A REGION IS AS TALL AS WHAT IT HOLDS.** No composition may reserve space below its own content. (The
+staged region once pinned its plane across `grid-row: 2 / span 30` and so carried thirty row gaps: 383px of
+nothing under a 676px plane.) And a region is NAMED ONCE — a group may title a region above parts that
+name themselves, but never with a name one of those parts already says.
+
+### LOCAL STATES
+
+`states: [{id, label, lede?, show:[…], steps?:[from,to]}]` on a group. `show` names the semantic regions a
+state carries (`question | steps | answer | visual | relations`); `steps` is a 1-based inclusive range, and
+the numbering keeps counting so the reader follows one continuous argument across the states. Staging is
+available to ANY contract; `staged` is simply the name for when it *is* the composition, and a `staged`
+group that authors no states gets the obvious two.
+
+A state is a PRESENTATION partition — the content vocabulary is untouched, so the same authored example
+renders whole through any contract. A hidden state reserves no layout space, and a figure revealed with its
+state is re-solved (until then its stage measured zero).
+
+**THE MISSING RULE THAT CAUSED MOST OF THE OSCILLATION:** a plane too tall to embed belongs in a STAGED
+STATE, not squeezed, not flattened, and not left as an 800px portrait object halfway down an ordinary page.
+The author chooses that; the page never infers it from height.
+
+The Figure Engine stays shared infrastructure. Because the view preserves equal mathematical scale, a
+wider, shallower slot EXPOSES MORE RANGE rather than distorting the plane — provided the slot declares
+itself. Two things make that work, and both are easy to lose:
+
+- **A figure part is `[data-fig-viewport]`.** The engine reads its container's height only inside one;
+  everywhere else it paints at a fixed aspect, which a wide slot then letterboxes — the drawing shrinks
+  into the middle with dead space beside it.
+- **`--fig-fill-min`** — a viewport host may state how shallow its slot may be, overriding the engine's
+  `FIG_FILL_MIN` floor (0.42) for that slot only. `comparison` declares `.22`. Absent, the engine floor
+  applies and no existing figure moves.
+
+**AUTHORED REFERENCE LINES.** `{type:'line', y:k}` is the horizontal `y = k` and `{type:'line', x:k}` the
+vertical `x = k`, with an optional `label` and `style:'solid'` (default dashed). It spans the viewport, as
+a line does, and counts as painted geometry that identifiers must clear. A relationship a lesson states in
+words often depends on a line the reader is meant to SEE: *"the line y = 16 meets the curve twice"* is a
+failed demonstration if the picture only plots the two points.
+
+### THE SURFACE RULE
+
+Off‑white (`--mx-ground`) is the **application background**. White (`--mx-white`) is the **content
+surface** substantive material is written on. Green is a **semantic accent** — selection, markers, small
+labels, an edge, and at most a very compact Key Idea callout.
+
+This is COURSEWARE, not a dashboard. The page heading, the group tabs and ONE white teaching surface are
+the whole chrome — no rounded card floating on the ground, no card inside the card. Hierarchy comes from
+spacing, typography and fine dividers.
+
+Explanation, worked reasoning, answers, captions and relationships are content: green may IDENTIFY them
+(a label, a 3px left edge) but never CARRY them. No green writing paper. Every worked‑example composition
+sits on a white surface rather than being written straight onto the ground.
+
+**Uppercasing corrupts mathematics.** A part label carrying notation keeps its own case (`.mx-parth-m` /
+`.ws-mx-reph-m`); one made of plain words gets the shell's small caps. `VALUES OF Y = X²` is not `y = x²`.
+
+**An explanatory region is authored content, not chrome.** A tab with nothing useful to say beneath its
+visual reserves nothing. Do not add a `relations` part merely because the vocabulary supports one — the
+`Graph and key points` tab dropped its coordinate list because the graph already labels those points and
+the `Table to graph` tab carries the full table.
+
+**`.mx-part` names two different things** — a Practice question's (a)/(b) sub‑part and a content part in
+the shared vocabulary. The Practice rule is scoped to `.mx-parts > .mx-part`; unscoped, its `display:flex`
+reached the second and laid every part's label BESIDE its content instead of above it.
+
+**`parts` / `visual` — one vocabulary, shared by both pages.** Either a single part, an array of parts, or
+`{parts:[…]}`. A part is `{kind:"figure", label?, figure:{…}}` (the Figure engine),
+`{kind:"table", label?, stub?, head:[], rows:[{label, cells:[]}]}`,
+`{kind:"points", label?, items:[…|{term, body}]}`, `{kind:"relations", label?, items:[…]}`,
+`{kind:"prose", label?, body}`. Unknown kinds render a named placeholder rather than failing.
+
+**A REGION THAT EXISTS BUT HOLDS NOTHING IS A FAILURE**, exactly as a zero‑height workbook was. The example
+region is under the same viability contract as Practice (`MX_REP_MIN_W` / `MX_REP_MIN_H`, §8b), a portrait
+viewport stacks by construction rather than being judged on width, and the figure part is given its own
+bounded box on the documented `.tp-slide` seam. `verify-notes-examples.mjs` measures the rendered content
+area at five viewports; its control strips the rules that size the drawing and every viewport then fails.
+
+Ownership is unchanged: JSON carries content and semantic capability; the page renderer owns composition;
+the theme owns the visual language; the Figure Engine owns mathematical figures. No pixel widths, placement
+or styling decisions belong in lesson JSON.
+
 ## 9. Roadmap / next up
+
+### Page-family architecture — the boundary, decided
+
+Three families, deliberately separate. Nothing here is a temporary staging arrangement; the split is the
+design.
+
+```
+Mathematics            responsive, purpose-built page templates (Notes, Worked Examples, Video,
+                       Interactive, Practice — Equations / Graphs / Geometry, Summary).
+                       Registered through registerPage() into PAGES['mathematics'].
+
+Generalist / Humanities   a SEPARATE future responsive page family: shared structural templates +
+                       flexible blocks, with subject/theme overlays on top
+                       (generalist base page → humanities theme → Rome / Egypt / Geography / Business).
+                       Not designed yet. Designed from scratch when Mathematics is stable.
+
+Legacy themes/pages    the existing fixed-canvas renderers (geolearn, imperium, microhistory, rome,
+                       ww1, wellbeing, egypt). UNTOUCHED until that family exists and a migration is
+                       explicitly commissioned.
+```
+
+**The Mathematics templates are not a universal page system.** Notes / Worked Examples / Practice / the
+graph workspace are Mathematics-specific product decisions. The generalist family will need different
+compositions — reading page, image + text, source analysis, document / quotation analysis, video, guided
+response, comparison, timeline / sequence, map / spatial, infographic / data, and probably investigation —
+and that is where the block system earns its keep. Do not generalise a Mathematics template to reach them.
+
+**The legacy pages are not a visual reference.** `legacy-canvas-control` and `legacy-video-control` in
+`scripts/shots-mathematics.mjs` are the shipped geolearn lesson, kept only to prove the new work does not
+regress it. They look like the older product generation, they are not the direction for the future
+humanities system, and they must not be restyled in a Mathematics branch. When the generalist family is
+designed, the old geolearn/imperium pages are evidence of CONTENT needs, never of visual direction.
+
+The isolation is measured, not intended: `scripts/verify-responsive-shell.mjs` (section `isolation`)
+walks every Mathematics page and fails if any class outside the shell's own or the Figure engine's appears
+in it, asserts the single documented shared seam (the figure host carries `.tp-slide` to reach the engine's
+scoped rules, and re-points the slot palette so no legacy theme styling leaks), and asserts that `PAGES`
+holds exactly one theme. The Mathematics shell's only calls out of itself are `esc()`, `go()`,
+`tpRespId()` and `fragFigure()` — escaping, navigation, response identity, and the Figure engine. No pack
+renderer is referenced.
 
 - **Figure engine** (`docs/figure-engine/`) — the active track, and the one this roadmap had not been
   recording. **Stage 1a–1c** (view, uniform-gap pill collision, construction DAG), **Stage 2/2b** (graph

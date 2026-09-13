@@ -48,7 +48,7 @@ const ok = (n, c, extra = '') => { results.push(`${c ? '✓' : '✗'} ${n}${extr
 for (const file of FILES) {
   const lesson = JSON.parse(readFileSync(file, 'utf8'));
   const report = await page.evaluate((L) => {
-    const box = { W: 520, H: 360, padL: 40, padR: 18, padT: 16, padB: 30 };   // fragFigure's inline box
+    const box = { W: 520, H: 360, padL: 40, padR: 18, padT: 16, padB: 30 };   // FIG_BOX0 — fragFigure's FIRST-PASS box. Since Stage 4 the painted inline box is re-solved from the host (figFitBox), so this is a fixed REFERENCE box for the solver property, not the box the app ends up painting. Contract 10 owns the painted one.
     const SHIFTS = [0, 14, -14, 28, -28, 42, -42, 56, -56];                   // must mirror figPlacePill's own list
     // Reference search: every candidate, no pruning, no early exit — the nearest that clears by >= gap.
     const nearestLegal = (ax, ay, size, pd, obst, gap, bounds) => {
@@ -210,6 +210,162 @@ for (const [vw, vh] of VIEWPORTS) {
   ok(`${vw}×${vh} — no console errors in the focused workspace`, ferrs.length === 0, ferrs.slice(0, 2).join(' | '));
   await fp.close();
 }
+
+/* ══ STAGE 2c FOR GEOMETRY — added at Stage 4 ══════════════════════════════════════════════════════════
+   Stage 2c's note said Stage 3 owed a review of the geometry crowded/long cases. Checked at Stage 4 planning:
+   the fixtures exist and verify-geometry-semantics asserts every anchor in them — but that gate owns SEMANTIC
+   LEGALITY (is this position still in its allowed region?), which is a different question from the property
+   this file owns (among the positions that are legal, did the search take the NEAREST, or did it drift?).
+   No geometry figure was asserted for nearest-legal anywhere. Stage 4 makes that a live dependency rather than
+   historical debt, because container-aware sizing deliberately feeds geometry a different box, so the whole
+   candidate space moves with the host.
+
+   INDEPENDENCE. Everything that decides the verdict is re-derived here: the region predicates from raw
+   coordinates, box/segment clearance from scratch, and the candidate space enumerated with NO pruning and no
+   early exit. figPlacePill, figScanPill, figGeomPlace, figClear, figBoxSeg and figDirs are never called.
+   What IS taken from the model is the figure and the schedule — M.arms / M.vpts (the drawn geometry), each
+   label's anchor and reserved size, and the order labels were placed in. Those are the INPUTS to the property;
+   asserting them is Stage 3's job and verify-geometry-semantics's. The question here is: given this figure and
+   this order, is the chosen position the nearest legal one?
+
+   The candidate space is well defined without knowing the engine's primary direction: figDirs returns a FIXED
+   set of eight directions and only SORTS it by agreement with pd, so the SET of candidates is pd-independent
+   and only tie-breaking is not. The reference enumerates all eight.
+
+   The property is two-sided, which is what stops it being vacuous when the directional search finds nothing:
+     · the directional space admits a legal candidate  ⇒ the label must be placed AT that minimum displacement
+     · it admits none                                  ⇒ the label must NOT have been placed directionally
+   so a figure whose labels all fall through to the exhaustive scan cannot pass by having nothing to check. */
+const GEO_FILES = ['tests/visual/lessons/figure-geometry-baseline.json',
+                   'tests/visual/lessons/figure-measure-surface.json'];   // the crowded/long/dense cases the Stage 2c note named, plus Stage 3d's density ceiling
+/* Three boxes across the range Stage 4 now feeds geometry. The two narrow ones are taken from figFitBox itself
+   so they are the boxes the app really paints at those hosts — the box is an INPUT to the property, not the
+   thing under test, and pinning copies of it here would rot the moment figFitBox changed. */
+const GEO_HOSTS = [null, 530, 340];                                       // null → FIG_BOX0, the reference box
+const geoLessons = Object.fromEntries(GEO_FILES.map((f) => [f, JSON.parse(readFileSync(f, 'utf8'))]));
+const geoOut = await page.evaluate(({ files, hosts, lessons }) => {
+  // ── region predicates, re-derived from raw geometry (same derivations as verify-geometry-semantics) ──
+  const inPoly = (ring, x, y) => { let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const [ax, ay] = ring[i], [bx, by] = ring[j];
+      if (((ay > y) !== (by > y)) && (x < (bx - ax) * (y - ay) / ((by - ay) || 1e-12) + ax)) inside = !inside; }
+    return inside; };
+  const wrapPi = (a) => { const t = Math.atan2(Math.sin(a), Math.cos(a)); return t < -Math.PI + 1e-9 ? Math.PI : t; };
+  const inWedge = (v, p, q, x, y) => { const al = Math.atan2(p[1] - v[1], p[0] - v[0]), be = Math.atan2(q[1] - v[1], q[0] - v[0]);
+    const d = wrapPi(be - al), rel = wrapPi(Math.atan2(y - v[1], x - v[0]) - al), e = 1e-7;
+    return d >= 0 ? (rel >= -e && rel <= d + e) : (rel <= e && rel >= d - e); };
+  const outHalf = (a, b, ring, x, y) => { const mx = (a[0] + b[0]) / 2, my = (a[1] + b[1]) / 2;
+    const ex = b[0] - a[0], ey = b[1] - a[1], m = Math.hypot(ex, ey) || 1; let nx = -ey / m, ny = ex / m;
+    if (ring && inPoly(ring, mx + nx * 4, my + ny * 4)) { nx = -nx; ny = -ny; }
+    return (x - mx) * nx + (y - my) * ny > 0; };
+  const regionFor = (S) => {
+    if (!S) return null;
+    if (S.k === 'angle') return (x, y) => inWedge(S.v, S.p, S.q, x, y) && (!S.ring || inPoly(S.ring, x, y));
+    if (S.k === 'side')  return (x, y) => outHalf(S.a, S.b, S.ring, x, y);
+    if (S.k === 'vertex') return (x, y) => !(S.ring && inPoly(S.ring, x, y));
+    return null; };
+  // ── clearance, re-implemented (never figClear/figBoxSeg) ──
+  const segSeg = (ax, ay, bx, by, cx, cy, dx, dy) => {
+    const d1x = bx - ax, d1y = by - ay, d2x = dx - cx, d2y = dy - cy, den = d1x * d2y - d1y * d2x;
+    if (Math.abs(den) > 1e-12) { const t = ((cx - ax) * d2y - (cy - ay) * d2x) / den, u = ((cx - ax) * d1y - (cy - ay) * d1x) / den;
+      if (t >= 0 && t <= 1 && u >= 0 && u <= 1) return 0; }
+    const ptSeg = (px, py, x1, y1, x2, y2) => { const vx = x2 - x1, vy = y2 - y1, L = vx * vx + vy * vy;
+      const t = L ? Math.max(0, Math.min(1, ((px - x1) * vx + (py - y1) * vy) / L)) : 0;
+      return Math.hypot(px - (x1 + t * vx), py - (y1 + t * vy)); };
+    return Math.min(ptSeg(ax, ay, cx, cy, dx, dy), ptSeg(bx, by, cx, cy, dx, dy), ptSeg(cx, cy, ax, ay, bx, by), ptSeg(dx, dy, ax, ay, bx, by)); };
+  const boxSeg = (b, ax, ay, bx2, by2) => { const inB = (px, py) => px >= b.x && px <= b.x + b.w && py >= b.y && py <= b.y + b.h;
+    if (inB(ax, ay) || inB(bx2, by2)) return 0;
+    const E = [[b.x, b.y, b.x + b.w, b.y], [b.x + b.w, b.y, b.x + b.w, b.y + b.h], [b.x + b.w, b.y + b.h, b.x, b.y + b.h], [b.x, b.y + b.h, b.x, b.y]];
+    let m = Infinity; for (const e of E) m = Math.min(m, segSeg(ax, ay, bx2, by2, e[0], e[1], e[2], e[3])); return m; };
+  const boxPt = (b, px, py) => { const cx = Math.max(b.x, Math.min(px, b.x + b.w)), cy = Math.max(b.y, Math.min(py, b.y + b.h)); return Math.hypot(px - cx, py - cy); };
+  const boxBox = (a, b) => { const dx = Math.max(0, a.x - (b.x + b.w), b.x - (a.x + a.w)), dy = Math.max(0, a.y - (b.y + b.h), b.y - (a.y + a.h)); return Math.hypot(dx, dy); };
+  const clearOf = (box, arms, pts, boxes) => { let m = Infinity;
+    for (const s of arms) m = Math.min(m, boxSeg(box, s[0], s[1], s[2], s[3]));
+    for (const p of pts) m = Math.min(m, boxPt(box, p[0], p[1]) - (p[2] || 0));
+    for (const q of boxes) m = Math.min(m, boxBox(box, q));
+    return m; };
+  // ── the candidate space, enumerated with NO pruning and no early exit ──
+  const GAP = 6;
+  const DIRS = [[1, -1], [-1, -1], [1, 1], [-1, 1], [1, 0], [-1, 0], [0, -1], [0, 1]].map(([x, y]) => { const n = Math.hypot(x, y); return [x / n, y / n]; });
+  const SHIFTS = [0, 14, -14, 28, -28, 42, -42, 56, -56];
+  const refNearest = (ax, ay, w, h, arms, pts, boxes, ok, W, H) => { let best = Infinity;
+    for (let d = GAP; d <= 340; d += 8) for (const [ux, uy] of DIRS) { const px = -uy, py = ux;
+      for (const s of SHIFTS) { const cx = ax + ux * (d + w / 2) + px * s, cy = ay + uy * (d + h / 2) + py * s;
+        if (ok && !ok(cx, cy)) continue;
+        const box = { x: cx - w / 2, y: cy - h / 2, w, h };
+        if (Math.max(0, 2 - box.x, 2 - box.y, box.x + box.w - (W - 2), box.y + box.h - (H - 2)) > 0) continue;
+        if (clearOf(box, arms, pts, boxes) < GAP) continue;
+        const disp = Math.hypot(cx - ax, cy - ay); if (disp < best) best = disp; } }
+    return best; };
+
+  const out = [];
+  for (const f of files) {
+    const lesson = lessons[f];
+    for (const host of hosts) {
+      const box = host == null ? FIG_BOX0 : figFitBox(host);
+      lesson.slides.forEach((sl, si) => (sl.blocks || []).forEach((bl) => {
+        if (bl.type !== 'figure' || bl.figure !== 'geometry') return;
+        const M = figGeometry(bl, box), labels = M.labels || [];
+        const rows = [];
+        labels.forEach((L, i) => {
+          const S = L.sem; if (!S) return;
+          const okFn = regionFor(S); if (!okFn) return;
+          const prev = labels.slice(0, i).map((x) => x.box);
+          const w = L.box.w, h = L.box.h, cx = L.box.x + w / 2, cy = L.box.y + h / 2;
+          const off = Math.max(0, 2 - L.box.x, 2 - L.box.y, L.box.x + w - (box.W - 2), L.box.y + h - (box.H - 2));
+          /* A RELAXED label is one the engine could not place inside its region at all: Stage 3c's documented
+             last resort re-runs the search with `ok` dropped and REPORTS the weakened association. So the
+             reference has to model the same two phases — measuring a relaxed label against the
+             region-constrained space would score the engine on a search it did not run. */
+          const rel = !!L.relaxed;
+          rows.push({ text: L.text, k: S.k, via: L.via, relaxed: rel,
+            disp: Math.hypot(cx - L.ax, cy - L.ay),
+            clear: clearOf(L.box, M.arms, M.vpts, prev),
+            inRegion: okFn(cx, cy), onCanvas: off <= 0,
+            nearest: refNearest(L.ax, L.ay, w, h, M.arms, M.vpts, prev, rel ? null : okFn, box.W, box.H) });
+        });
+        out.push({ file: f, fig: bl.title || ('slide ' + si), box: box.W + 'x' + box.H, host, rows,
+          errs: (M.errors || []).length });
+      }));
+    }
+  }
+  return out;
+}, { files: GEO_FILES, hosts: GEO_HOSTS, lessons: geoLessons });
+
+const GEPS = 1e-6;                                                        // solver values compared directly — this is float noise, not a tolerance on the contract
+let geoRows = 0, geoDir = 0, geoScan = 0, geoNone = 0, geoWorstDisp = 0;
+for (const g of geoOut) {
+  const t = `geometry · ${g.fig} · ${g.box}${g.host ? ` (host ${g.host})` : ' (reference)'}`;
+  /* Vacuity guard. A figure with no semantic labels checks nothing — but the author-error fixture is SUPPOSED
+     to produce none, and the model says so by reporting errors. Absent labels AND no reported error is the
+     silent case worth failing on. */
+  if (!g.rows.length) { ok(`${t} — has annotations to check`, g.errs > 0,
+    g.errs > 0 ? `no labels, and the figure reports ${g.errs} author error(s) — expected` : 'no labels and no reported error — the assertions below would not have run'); continue; }
+  geoRows += g.rows.length;
+  for (const r of g.rows) { if (r.via === 'dir') geoDir++; else if (r.via === 'scan') geoScan++; else geoNone++;
+    if (r.via !== 'none' && r.disp > geoWorstDisp) geoWorstDisp = r.disp; }
+  // 1. LEGALITY, by this file's own reckoning — a placed label clears everything and is in its own region.
+  const placed = g.rows.filter((r) => r.via !== 'none');
+  const relaxed = placed.filter((r) => r.relaxed);
+  // Clearance and canvas hold for EVERY placed label. The region holds for every label the engine did not
+  // report as relaxed — a relaxed one is outside its region BY CONSTRUCTION and says so.
+  const illegal = placed.filter((r) => !(r.clear >= 6 - GEPS && r.onCanvas && (r.relaxed || r.inRegion)));
+  ok(`${t} — every placed label is legal (clearance + region + on canvas)`, illegal.length === 0,
+    illegal.length ? illegal.map((r) => `"${r.text}" clear ${r.clear.toFixed(2)} region ${r.inRegion} canvas ${r.onCanvas}`).join(' · ')
+      : `${g.rows.length} labels · worst clearance ${Math.min(...placed.map((r) => r.clear)).toFixed(2)}`
+        + (relaxed.length ? ` · ${relaxed.length} RELAXED (engine reported): ${relaxed.map((r) => `"${r.text}"`).join(' ')}` : ''));
+  // 2. NEAREST LEGAL — the Stage 2c property, two-sided so it cannot pass by having nothing to check.
+  const drifted = g.rows.filter((r) => r.via === 'dir' && isFinite(r.nearest) && r.disp > r.nearest + GEPS);
+  const missed = g.rows.filter((r) => r.via === 'dir' && !isFinite(r.nearest));
+  const skipped = g.rows.filter((r) => r.via !== 'dir' && !r.relaxed && isFinite(r.nearest));
+  ok(`${t} — nearest legal position`, drifted.length === 0 && missed.length === 0 && skipped.length === 0,
+    (drifted.length || missed.length || skipped.length)
+      ? [...drifted.map((r) => `"${r.text}" drifted ${r.disp.toFixed(1)} vs ${r.nearest.toFixed(1)}`),
+         ...missed.map((r) => `"${r.text}" placed directionally where the reference finds nothing legal`),
+         ...skipped.map((r) => `"${r.text}" fell to ${r.via} while a legal candidate existed at ${r.nearest.toFixed(1)}`)].join(' · ')
+      : `${g.rows.filter((r) => r.via === 'dir').length} directional · max displacement ${Math.max(0, ...g.rows.filter((r) => r.via === 'dir').map((r) => r.disp)).toFixed(1)}`);
+}
+ok('geometry — the nearest-legal assertions actually ran', geoRows > 0 && geoDir > 0,
+  `${geoRows} annotations · ${geoDir} directional / ${geoScan} scan / ${geoNone} unplaced · worst displacement ${geoWorstDisp.toFixed(1)}`);
 
 ok('no console errors / page errors', errs.length === 0, errs.slice(0, 3).join(' | '));
 console.log(results.join('\n'));

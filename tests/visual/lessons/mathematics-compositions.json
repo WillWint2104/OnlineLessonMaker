@@ -1,0 +1,283 @@
+{
+  "meta": {
+    "title": "Composition proofs",
+    "theme": "mathematics",
+    "unit": "Presentation types",
+    "stage": "Design fixture",
+    "year": "—"
+  },
+  "slides": [
+    {
+      "type": "workedExamples",
+      "id": "wex-compositions",
+      "navLabel": "Compositions",
+      "title": "Composition proofs",
+      "lede": "A non-shipping fixture: one group per composition contract that the shipping lesson does not exercise.",
+      "groups": [
+        {
+          "id": "g-sequence3",
+          "type": "sequence",
+          "title": "Sequence — three examples",
+          "lede": "Compare substitution with a negative value, a fraction and a decimal.",
+          "examples": [
+            {
+              "id": "ex-neg",
+              "label": "A negative value",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = −4.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Write the rule.",
+                  "math": "_y_ = _x_^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Substitute the given value. Keep the brackets — the whole of −4 is squared.",
+                  "math": "_y_ = (−4)^2"
+                },
+                {
+                  "id": "s3",
+                  "text": "Evaluate. A negative multiplied by a negative gives a positive.",
+                  "math": "_y_ = (−4)(−4) = 16"
+                }
+              ],
+              "answer": "_y_ = 16, so (−4, 16) lies on the graph."
+            },
+            {
+              "id": "ex-frac",
+              "label": "A fraction",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = 3/2.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Substitute. The whole fraction is squared, not just the numerator.",
+                  "math": "_y_ = (3/2)^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Square the top and the bottom.",
+                  "math": "_y_ = 3^2/2^2 = 9/4"
+                },
+                {
+                  "id": "s3",
+                  "text": "Squaring a value above 1 makes it larger; this one lands just above 2.",
+                  "math": "9/4 = 2.25"
+                }
+              ],
+              "answer": "_y_ = 9/4, so (3/2, 9/4) lies on the graph."
+            },
+            {
+              "id": "ex-dec",
+              "label": "A decimal",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = 0.4.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Substitute.",
+                  "math": "_y_ = 0.4^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Evaluate. A value between 0 and 1 gets smaller when it is squared, not larger.",
+                  "math": "_y_ = 0.4 × 0.4 = 0.16"
+                }
+              ],
+              "answer": "_y_ = 0.16, so (0.4, 0.16) lies on the graph."
+            }
+          ],
+          "relations": [
+            {
+              "kind": "relations",
+              "label": "What the three show",
+              "items": [
+                "Substitution never changes the rule — it only replaces _x_. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a decimal below 1 gets smaller."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "g-standard",
+          "type": "standard",
+          "title": "Standard — one example",
+          "lede": "An ordinary worked example that needs no major representation.",
+          "examples": [
+            {
+              "id": "st1",
+              "label": "Is the point on the curve?",
+              "prompt": "Decide whether (5, 24) lies on _y_ = _x_^2, and justify your answer.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "A point lies on the curve when its coordinates satisfy the rule. Substitute the _x_-value.",
+                  "math": "_y_ = 5^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Evaluate.",
+                  "math": "_y_ = 25"
+                },
+                {
+                  "id": "s3",
+                  "text": "Compare with the _y_-value the point claims.",
+                  "math": "25 ≠ 24"
+                }
+              ],
+              "answer": "No — (5, 25) lies on the curve, so (5, 24) sits just below it."
+            }
+          ],
+          "relations": [
+            {
+              "kind": "relations",
+              "label": "What this shows",
+              "items": [
+                "Testing a point is one substitution: the rule decides, not the picture."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "g-extended",
+          "type": "extended",
+          "title": "Extended — a full derivation",
+          "lede": "One derivation, read in three stages.",
+          "examples": [
+            {
+              "id": "e1",
+              "label": "Where does _y_ = _x_^2 − 4 cross the _x_-axis?",
+              "prompt": "Find the _x_-intercepts of _y_ = _x_^2 − 4, and explain why there are two of them.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "An _x_-intercept is a point where the curve meets the _x_-axis, so its _y_-value is zero. Set the rule equal to zero.",
+                  "math": "_x_^2 − 4 = 0"
+                },
+                {
+                  "id": "s2",
+                  "text": "Move the constant to the other side.",
+                  "math": "_x_^2 = 4"
+                },
+                {
+                  "id": "s3",
+                  "text": "Take the square root of both sides. A positive number has two square roots, so both signs must be kept.",
+                  "math": "_x_ = ±2"
+                },
+                {
+                  "id": "s4",
+                  "text": "Check each against the original rule rather than trusting the algebra.",
+                  "math": "2^2 − 4 = 0  and  (−2)^2 − 4 = 0"
+                },
+                {
+                  "id": "s5",
+                  "text": "Now look at what that means on the graph. The curve has been moved down by 4, so it drops below the axis between the two roots.",
+                  "math": "_y_ = _x_^2 − 4",
+                  "visual": {
+                    "kind": "figure",
+                    "figure": {
+                      "type": "figure",
+                      "figure": "graph",
+                      "aspect": "stretch",
+                      "grid": "shown",
+                      "callouts": "hidden",
+                      "domain": {
+                        "xMin": -5,
+                        "xMax": 5,
+                        "yMin": -6,
+                        "yMax": 8
+                      },
+                      "objects": [
+                        {
+                          "type": "function",
+                          "f": "x^2-4",
+                          "label": "y = x^2 - 4"
+                        },
+                        {
+                          "type": "line",
+                          "y": 0,
+                          "label": "y = 0"
+                        },
+                        {
+                          "type": "points",
+                          "rows": [
+                            [
+                              "(−2, 0)",
+                              -2,
+                              0
+                            ],
+                            [
+                              "(2, 0)",
+                              2,
+                              0
+                            ],
+                            [
+                              "(0, −4)",
+                              0,
+                              -4
+                            ]
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "s6",
+                  "text": "The two roots sit at equal distance either side of the vertex, which is what the symmetry of the curve requires.",
+                  "math": "−2 and 2 are both 2 units from _x_ = 0"
+                }
+              ],
+              "answer": "_x_ = 2 and _x_ = −2 — the curve crosses the _x_-axis twice."
+            }
+          ],
+          "relations": [
+            {
+              "kind": "relations",
+              "label": "Why two roots",
+              "items": [
+                "Moving the curve down by 4 pushes part of it below the axis; the curve must cross the axis on the way down and again on the way up."
+              ]
+            }
+          ],
+          "states": [
+            {
+              "id": "algebra",
+              "label": "Algebra",
+              "show": [
+                "question",
+                "steps"
+              ],
+              "steps": [
+                1,
+                4
+              ]
+            },
+            {
+              "id": "check",
+              "label": "Visual check",
+              "lede": "What the roots look like on the curve.",
+              "show": [
+                "steps"
+              ],
+              "steps": [
+                5,
+                5
+              ]
+            },
+            {
+              "id": "conclusion",
+              "label": "Conclusion",
+              "show": [
+                "steps",
+                "answer",
+                "relations"
+              ],
+              "steps": [
+                6,
+                6
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

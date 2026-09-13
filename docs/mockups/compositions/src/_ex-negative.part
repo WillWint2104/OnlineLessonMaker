@@ -1,0 +1,17 @@
+  <h3 data-mk-region="title">A negative value</h3>
+  <div data-mk-region="prompt">
+    <p class="mk-lab">Question</p>
+    <p>Use the rule <i>y</i> = <i>x</i><sup>2</sup> to find <i>y</i> when <i>x</i> = &minus;4.</p>
+    <div class="mk-dim" data-mk-measure="prompt">{{DIM:prompt}}</div>
+  </div>
+  <div class="mk-rule"></div>
+  <div data-mk-region="solution">
+    <p class="mk-lab">Worked solution</p>
+    <ol class="mk-steps">
+      <li class="mk-step"><div class="mk-st">Write the rule.</div><div class="mk-sm"><i>y</i> = <i>x</i><sup>2</sup></div></li>
+      <li class="mk-step"><div class="mk-st">Substitute the given value. Keep the brackets &mdash; the whole of &minus;4 is squared.</div><div class="mk-sm"><i>y</i> = (&minus;4)<sup>2</sup></div></li>
+      <li class="mk-step"><div class="mk-st">Evaluate. A negative multiplied by a negative gives a positive.</div><div class="mk-sm"><i>y</i> = (&minus;4)(&minus;4) = 16</div></li>
+    </ol>
+    <div data-mk-region="answer"><b>Answer</b><i>y</i> = 16, so (&minus;4, 16) lies on the graph.</div>
+    <div class="mk-dim" data-mk-measure="solution">{{DIM:solution}}</div>
+  </div>

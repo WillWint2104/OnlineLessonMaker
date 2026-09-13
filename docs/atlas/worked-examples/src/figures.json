@@ -1,0 +1,23 @@
+{
+  "_": "AUTHORED DOMAINS ONLY. A figure's media-geometry class is derived from the authored domain's aspect at equal unit scale — portrait, balanced, landscape or wide — and is a DESIGN INPUT the template maps to an approved subdesign. It is never a size, and the surrounding prose never determines a figure's width.",
+  "symmetry": { "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -5, "xMax": 5, "yMin": -1, "yMax": 11 },
+      "objects": [ { "type": "function", "f": "x^2", "label": "y = x^2" },
+        { "type": "line", "y": 9, "label": "y = 9" },
+        { "type": "points", "rows": [["(−3, 9)", -3, 9], ["(3, 9)", 3, 9]] } ] } },
+  "graphcheck": { "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -6, "xMax": 6, "yMin": -2, "yMax": 20 },
+      "objects": [ { "type": "function", "f": "x^2", "label": "y = x^2" },
+        { "type": "line", "y": 16, "label": "y = 16" },
+        { "type": "points", "rows": [["(−4, 16)", -4, 16], ["(4, 16)", 4, 16]] } ] } },
+  "roots": { "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -5, "xMax": 5, "yMin": -6, "yMax": 8 },
+      "objects": [ { "type": "function", "f": "x^2-4", "label": "y = x^2 - 4" },
+        { "type": "line", "y": 0, "label": "y = 0" },
+        { "type": "points", "rows": [["(−2, 0)", -2, 0], ["(2, 0)", 2, 0], ["(0, −4)", 0, -4]] } ] } },
+  "landscape": { "figure": { "type": "figure", "figure": "graph", "aspect": "stretch", "grid": "shown", "callouts": "hidden",
+      "domain": { "xMin": -12, "xMax": 12, "yMin": -2, "yMax": 6 },
+      "objects": [ { "type": "function", "f": "x^2/12", "label": "y = x^2 / 12" },
+        { "type": "line", "y": 3, "label": "y = 3" },
+        { "type": "points", "rows": [["(−6, 3)", -6, 3], ["(6, 3)", 6, 3]] } ] } }
+}

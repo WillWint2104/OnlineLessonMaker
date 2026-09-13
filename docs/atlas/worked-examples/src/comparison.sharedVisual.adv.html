@@ -1,0 +1,31 @@
+<p class="at-intro">The same template with a wide figure. The figure's shape selects the approved <b>down</b> subdesign; it does not change the template.</p>
+<article data-tpl="comparison.sharedVisual">
+<div data-slot="cases">
+  <section data-slot="case">
+    <h4 data-slot="title">Case A</h4>
+    <div data-slot="question"><p class="at-lab">Question</p><p>Find <i>y</i> when <i>x</i> = &minus;6.</p></div>
+    <div data-slot="steps"><p class="at-lab">Worked solution</p>
+      <ol class="at-steps"><li class="at-step"><div class="at-st">Substitute into <i>y</i> = <i>x</i><sup>2</sup> &divide; 12.</div><div class="at-sm"><i>y</i> = 36 &divide; 12 = 3</div></li></ol></div>
+    <div data-slot="answer"><b>Answer</b>(&minus;6, 3)</div>
+  </section>
+  <section data-slot="case">
+    <h4 data-slot="title">Case B</h4>
+    <div data-slot="question"><p class="at-lab">Question</p><p>Find <i>y</i> when <i>x</i> = 6.</p></div>
+    <div data-slot="steps"><p class="at-lab">Worked solution</p>
+      <ol class="at-steps"><li class="at-step"><div class="at-st">Substitute.</div><div class="at-sm"><i>y</i> = 36 &divide; 12 = 3</div></li></ol></div>
+    <div data-slot="answer"><b>Answer</b>(6, 3)</div>
+  </section>
+</div>
+<div data-tpl="visual" data-fig="landscape">
+  <div data-slot="figure">
+    <p class="at-lab">Shared visual</p>
+    {{FIG:landscape}}
+  </div>
+  <div data-slot="interpretation">
+    <p class="at-lab">Why the two agree</p>
+    <p>Dividing by 12 flattens the curve without moving its axis of symmetry, so the mirror pair survives: <i>x</i> and &minus;<i>x</i> still reach the same height.</p>
+    <p class="at-said"><i>y</i> = <i>x</i><sup>2</sup> &divide; 12</p>
+    <p>A shallow curve over a wide domain needs width to be read, so this figure takes the whole content region and the explanation sits beneath it. That is a designed subdesign, not a failure state.</p>
+  </div>
+</div>
+</article>

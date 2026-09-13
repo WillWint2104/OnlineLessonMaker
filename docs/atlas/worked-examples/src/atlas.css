@@ -1,0 +1,273 @@
+/* ==============================================================================================
+   THE WORKED-EXAMPLE ATLAS — a finite library of designed presentations.
+
+   FOUR INDEPENDENT AXES, and nothing here may confuse them:
+
+     COMPOSITION   the spatial relationship of what is visible NOW
+     DISCLOSURE    whether several things are visible at once — continuous, tabs, staged
+     SCROLL        page · local-y (workspace only) · local-x (indivisible material)
+     STATE         a template's own prescribed wide/narrow arrangement
+
+   Every layout rule is keyed on `data-tpl`, and that is the point. A template's identity is
+   authored; nothing in this stylesheet can turn one template into another, because there is no
+   rule that SELECTS a template — only rules that render one.
+
+   TABS ARE AUTHORED PEDAGOGICAL STRUCTURE. There is deliberately no rule anywhere below that
+   creates, removes, collapses or introduces a tab at any width. `data-active` is stamped from the
+   authored selection, never from a measurement. HORIZONTAL IS RIGID; VERTICAL IS FLUID; nothing
+   has a target height and the page scrolls.
+
+   These `at-*` names are ATLAS names. The app must implement this through its own semantic names.
+   ============================================================================================== */
+
+*{box-sizing:border-box;}
+/* The app's own stylesheet — lifted whole, so the atlas is rendered in the real tokens — sets
+   `overflow:hidden` on the body, because the app is a slide surface. A LESSON PAGE IS NOT A SLIDE:
+   it scrolls. This line is the atlas disagreeing with the app on purpose, and the frame control
+   below asserts it every render. */
+html,body{margin:0;padding:0;background:var(--mx-ground);height:auto;overflow:visible;}
+body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
+
+.at-page{width:calc(var(--at-surface) + 2 * var(--at-pad) + 60px);padding:30px;background:var(--mx-ground);height:auto;}
+/* THE FRAME MUST HOLD THE SURFACE. `.at-surface` is `--at-surface + 2 × --at-pad` wide, so the page
+   around it needs that plus its own padding. These two overrides counted the surface without its
+   padding, which made the frame 32px (narrow) and 48px (tablet) too small — the surface overflowed
+   it and the right-hand edge of every line was clipped. The document itself never scrolled
+   sideways, so the control watching the document could not see it; only looking at a phone render
+   did. There is now a control on the frame as well. */
+.at-narrow .at-page{width:calc(var(--at-surface) + 2 * var(--at-pad) + 24px);padding:12px;}
+.at-tablet .at-page{width:calc(var(--at-surface) + 2 * var(--at-pad) + 40px);padding:20px;}
+.at-cap{margin:0 0 6px;font-family:var(--mx-ui);font-size:12.5px;line-height:1.5;color:var(--mx-ink-2);max-width:76ch;}
+.at-tpl{display:block;font:700 10.5px/1 var(--mx-ui);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mx-green);margin-bottom:5px;}
+.at-note{margin:10px 0 16px;font:400 11.5px/1.6 var(--mx-ui);color:var(--mx-ink-3);
+  border-left:2px solid var(--mx-line);padding-left:10px;max-width:80ch;}
+
+/* THE TEACHING SURFACE. Height is auto everywhere; the page grows and scrolls. */
+.at-surface{width:calc(var(--at-surface) + 2 * var(--at-pad));padding:28px var(--at-pad) 34px;
+  background:var(--mx-white);border-bottom:1px solid var(--mx-line);height:auto;}
+.at-narrow .at-surface{padding:18px var(--at-pad) 22px;}
+.at-tablet .at-surface{padding:22px var(--at-pad) 26px;}
+.at-intro{margin:0 0 22px;font-size:15px;line-height:1.6;color:var(--mx-ink-2);max-width:var(--at-m-flow);}
+
+/* ── SHARED SLOT TYPOGRAPHY ──────────────────────────────────────────────────────────────────── */
+[data-slot="title"]{margin:0 0 16px;font-family:var(--mx-serif);font-size:20px;font-weight:600;color:var(--mx-ink);}
+.at-lab{margin:0 0 8px;font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--mx-ink-2);}
+[data-slot="question"] p{margin:0 0 10px;font-size:16px;line-height:1.62;color:var(--mx-ink-body);}
+[data-slot="question"] p:last-child{margin-bottom:0;}
+.at-steps{list-style:none;margin:0;padding:0;counter-reset:atstep;}
+.at-step{position:relative;padding:0 0 16px 34px;counter-increment:atstep;}
+.at-step::before{content:counter(atstep);position:absolute;left:0;top:1px;width:23px;height:23px;
+  border-radius:50%;background:var(--mx-green-pale);color:var(--mx-green-deep);
+  font:600 12.5px/23px var(--mx-ui);text-align:center;}
+.at-step:not(:last-child)::after{content:"";position:absolute;left:11px;top:27px;bottom:3px;width:1px;
+  background:var(--mx-line);}
+.at-st{font-size:15.5px;line-height:1.6;color:var(--mx-ink-body);}
+.at-sm{margin-top:6px;font-family:'LM Math',Cambria Math,serif;font-size:18px;color:var(--mx-ink);}
+/* SEVERAL STATEMENTS ON ONE LINE. A check step naturally holds two independent statements —
+   "4² = 16" and "(−4)² = 16" — and HTML collapses the run of spaces an author would put between
+   them, so they render as one broken statement. They are separate statements and are set as such.
+   They wrap rather than overflow, because each is complete on its own. */
+.at-sm .at-stmt{display:inline-block;}
+.at-sm .at-stmt + .at-stmt{margin-left:2.4em;}
+[data-slot="answer"]{margin-top:2px;padding-top:12px;border-top:1px solid var(--mx-line);
+  font-family:'LM Math',Cambria Math,serif;font-size:18px;line-height:1.5;color:var(--mx-ink);}
+[data-slot="answer"] b{display:inline;margin-right:14px;font-family:var(--mx-ui);font-size:11.5px;
+  font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--mx-green);}
+[data-slot="synthesis"]{margin-top:30px;}
+[data-slot="synthesis"] .at-lab{color:var(--mx-ink-3);}
+[data-slot="synthesis"] p{margin:0 0 10px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);
+  max-width:var(--at-m-synthesis);}
+[data-slot="interpretation"] p{margin:0 0 12px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);
+  max-width:var(--at-m-interp);}
+[data-slot="interpretation"] p:last-child{margin-bottom:0;}
+[data-slot="interpretation"] .at-lab{color:var(--mx-ink-3);}
+.at-said{font-family:'LM Math',Cambria Math,serif;font-size:17px;color:var(--mx-ink);}
+.at-hr{height:1px;background:var(--mx-line);border:0;margin:16px 0 20px;}
+
+/* ══ SCROLL · THREE DIFFERENT THINGS ═══════════════════════════════════════════════════════════
+   1 · PAGE. The default and the desirable one. Notes, examples, derivations and explanations are
+       as tall as they need to be. There is no rule below that bounds a teaching page's height,
+       and that absence is the design.
+   2 · scroll.y = pane. Legitimate ONLY inside a persistent-pane workspace, where one pane stays put
+       while the other moves. Ordinary prose and worked solutions never go in one.
+   3 · LOCAL-X. A local escape hatch for indivisible material — a line of mathematics or a table
+       that cannot be broken. It never widens its region, shrinks the type, or changes the
+       template. ── A LINE OF MATHEMATICS IS NOT PROSE. */
+[data-scroll-x="local"]{overflow-x:auto;max-width:100%;padding-bottom:6px;}
+[data-scroll-x="local"] > .at-sm{white-space:nowrap;}
+/* THE AFFORDANCE IS PART OF THE DESIGN. A region that scrolls and shows no scrollbar does not read
+   as scrollable — it reads as TRUNCATED, which is worse than either honest outcome. So a scrolling
+   region says so twice:
+     · a permanent thin scrollbar, for a real browser;
+     · a fade at the edge the content continues past, because a scrollbar is not always painted.
+       (Measured: in headless Chromium `scrollbar-width:thin` and the ::-webkit-scrollbar rules paint
+       nothing at all, and `scrollbar-gutter:stable` reserves 9px and leaves it blank — so in every
+       screenshot in this atlas the fade is the entire affordance.) */
+[data-scroll-x="local"],[data-scroll-y="pane"]{scrollbar-width:thin;
+  scrollbar-color:var(--mx-line-2,#c9cfcb) transparent;}
+[data-scroll-x="local"]::-webkit-scrollbar,[data-scroll-y="pane"]::-webkit-scrollbar{width:9px;height:9px;}
+[data-scroll-x="local"]::-webkit-scrollbar-track,[data-scroll-y="pane"]::-webkit-scrollbar-track{
+  background:var(--mx-ground);border-radius:5px;}
+[data-scroll-x="local"]::-webkit-scrollbar-thumb,[data-scroll-y="pane"]::-webkit-scrollbar-thumb{
+  background:var(--mx-line-2,#c9cfcb);border-radius:5px;}
+[data-scroll-x="local"]{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 56px),transparent 100%);
+  mask-image:linear-gradient(to right,#000 calc(100% - 56px),transparent 100%);}
+.at-tbl{border-collapse:collapse;margin:0;font:400 13px/1.45 var(--mx-ui);color:var(--mx-ink-body);
+  white-space:nowrap;}
+.at-tbl th,.at-tbl td{border:1px solid var(--mx-line);padding:7px 13px;text-align:right;}
+.at-tbl th{font-weight:700;color:var(--mx-ink-2);background:var(--mx-ground);}
+/* the label column stays put while the readings scroll past it — without it a table of values
+   loses the one thing that makes a column mean anything */
+.at-tbl th:first-child,.at-tbl td:first-child{text-align:left;font-weight:600;color:var(--mx-ink);
+  position:sticky;left:0;background:var(--mx-white);}
+.at-tbl th:first-child{background:var(--mx-ground);}
+
+/* ══ DISCLOSURE · TABS ═════════════════════════════════════════════════════════════════════════
+   The bar is always present, at every width, with every label. `data-shown` and `data-on` are
+   stamped from the AUTHORED selection. Nothing here reads a height, an occupancy or a viewport.
+
+   TWO KINDS, AND THE AFFORDANCE IS KEYED ON THE KIND — never on nesting depth, because the
+   difference is semantic and travels with the group wherever it sits:
+
+     collection.tabs   `data-tabs-kind="collection"`   SEVERAL SIBLING ITEMS; SELECT ONE.
+                       An item selector: an underlined bar, the current item underscored.
+                       [ Negative ] [ Fraction ] [ Decimal ] — three different examples.
+
+     views.tabs        `data-tabs-kind="views"`        ONE OBJECT, SEEN SEVERAL WAYS.
+                       A view switch: a segmented control, the current view filled.
+                       [ Workings ] [ Graph check ] — one object, two representations.
+
+   Keying this on depth (as an earlier pass did) would render a top-level views.tabs as an item
+   selector and lie about what the tabs mean. */
+.at-tabs{display:block;}
+.at-tabbar{display:flex;flex-wrap:wrap;}
+.at-tab{appearance:none;font-family:var(--mx-ui);text-align:left;color:var(--mx-ink-3);}
+.at-panel{display:none;}
+.at-panel[data-shown]{display:block;}
+
+[data-tabs-kind="collection"] > .at-tabbar{gap:0 4px;margin:0 0 24px;
+  border-bottom:1px solid var(--mx-line);}
+[data-tabs-kind="collection"] > .at-tabbar > .at-tab{background:none;border:0;margin-bottom:-1px;
+  border-bottom:2px solid transparent;padding:10px 14px 11px;font-size:13.5px;font-weight:600;line-height:1.25;}
+[data-tabs-kind="collection"] > .at-tabbar > .at-tab[data-on]{color:var(--mx-green-deep);
+  border-bottom-color:var(--mx-green);}
+
+[data-tabs-kind="views"] > .at-tabbar{gap:0;margin:0 0 22px;border:1px solid var(--mx-line);
+  border-radius:7px;overflow:hidden;width:fit-content;max-width:100%;background:var(--mx-ground);}
+[data-tabs-kind="views"] > .at-tabbar > .at-tab{background:none;border:0;
+  border-right:1px solid var(--mx-line);padding:9px 16px 10px;font-size:12.5px;font-weight:600;
+  line-height:1.3;letter-spacing:.01em;}
+[data-tabs-kind="views"] > .at-tabbar > .at-tab:last-child{border-right:0;}
+[data-tabs-kind="views"] > .at-tabbar > .at-tab[data-on]{background:var(--mx-green-pale);
+  color:var(--mx-green-deep);}
+.at-tabnote{margin:-14px 0 22px;font:400 12.5px/1.6 var(--mx-ui);color:var(--mx-ink-3);max-width:var(--at-m-flow);}
+
+/* ── 1 · single.flow ──────────────────────────────────────────────────────────────────────────
+   The default. One column at a controlled measure; the rule closes the task; the reasoning runs
+   beneath and the page grows. THERE IS NO RESPONSIVE STATE — only the measure ceasing to clamp. */
+[data-tpl="single.flow"]{display:block;}
+[data-tpl="single.flow"] [data-slot="question"],
+[data-tpl="single.flow"] [data-slot="steps"],
+[data-tpl="single.flow"] [data-slot="answer"]{max-width:var(--at-m-flow);}
+[data-tpl="single.flow"] .at-st{max-width:var(--at-m-solution);}
+
+/* ── 2 · single.split ─────────────────────────────────────────────────────────────────────────
+   Two rigid tracks, in fixed proportion with an explicit ceiling on each. Chosen by the AUTHOR
+   because the prompt carries substantial information — never inferred from how tall it happens to
+   be. The narrow state is one prescribed transformation. */
+[data-tpl="single.split"][data-state="wide"]{display:grid;align-items:start;column-gap:0;
+  grid-template-columns:minmax(0,calc(var(--at-split-prompt) * 1%)) var(--at-gap) minmax(0,1fr);
+  grid-template-areas:"title title title" "question rule solution";}
+[data-tpl="single.split"][data-state="wide"] > [data-slot="title"]{grid-area:title;}
+[data-tpl="single.split"][data-state="wide"] > [data-slot="question"]{grid-area:question;
+  max-width:var(--at-split-prompt-max);}
+[data-tpl="single.split"][data-state="wide"] > .at-rule{grid-area:rule;justify-self:center;
+  width:1px;align-self:stretch;background:var(--mx-line);}
+[data-tpl="single.split"][data-state="wide"] > [data-slot="solution"]{grid-area:solution;min-width:0;
+  max-width:var(--at-split-solution-max);}
+[data-tpl="single.split"][data-state="narrow"]{display:block;}
+[data-tpl="single.split"][data-state="narrow"] > .at-rule{display:block;height:1px;width:auto;
+  justify-self:stretch;background:var(--mx-line);margin:16px 0 20px;}
+
+/* ── 3 · comparison.paired ────────────────────────────────────────────────────────────────────
+   N equal case columns. Paired because the author said so; their heights are not consulted. */
+[data-slot="cases"][data-state="wide"]{display:grid;grid-auto-flow:column;
+  grid-auto-columns:minmax(0,1fr);column-gap:var(--at-gap);align-items:start;}
+[data-slot="cases"][data-state="narrow"]{display:block;}
+[data-slot="cases"][data-state="narrow"] > [data-slot="case"] + [data-slot="case"]{margin-top:28px;}
+[data-slot="case"] > * + *{margin-top:14px;}
+[data-slot="case"] .at-st{max-width:var(--at-m-case);}
+
+/* ── 4 · visual  (visual.side | visual.down) ────────────────────────────────────────────────────────────────
+   A figure and the reading of it. TWO APPROVED SUBDESIGNS, chosen by the FIGURE'S OWN media-
+   geometry class — a property of the authored figure, never of the surrounding prose, and the one
+   automatic classification the atlas permits:
+       side  portrait / balanced  →  FIGURE │ INTERPRETATION
+       down  landscape / wide     →  the figure at the atlas's wide width, interpretation beneath
+   The author writes `visual`; the media class resolves the suffix. */
+[data-tpl="visual"][data-sub="side"][data-state="wide"]{display:grid;align-items:start;
+  column-gap:var(--at-gap);grid-template-columns:max-content minmax(0,1fr);
+  grid-template-areas:"title title" "figure interpretation";}
+[data-tpl="visual"][data-sub="side"][data-state="wide"] > [data-slot="title"]{grid-area:title;}
+[data-tpl="visual"][data-sub="side"][data-state="wide"] > [data-slot="figure"]{grid-area:figure;}
+[data-tpl="visual"][data-sub="side"][data-state="wide"] > [data-slot="interpretation"]{grid-area:interpretation;}
+[data-tpl="visual"][data-sub="down"],
+[data-tpl="visual"][data-state="narrow"]{display:block;}
+[data-tpl="visual"][data-sub="down"] > [data-slot="interpretation"],
+[data-tpl="visual"][data-state="narrow"] > [data-slot="interpretation"]{margin-top:24px;}
+/* A FIGURE REGION IS EXACTLY ITS PLANE, in every subdesign and every state. A full-width region
+   around a narrower plane claims space it can never use — the same defect whether something sits
+   beside it or not. */
+[data-slot="figure"]{min-width:0;width:fit-content;max-width:100%;}
+
+/* ── 5 · comparison.sharedVisual ──────────────────────────────────────────────────────────────
+   The cases across, then ONE visual belonging to both of them. Its subdesign is the shared
+   figure’s, so comparison.sharedVisual resolves .side or .down WITHOUT ceasing to be
+   comparison.sharedVisual. */
+[data-tpl="comparison.sharedVisual"] > [data-tpl="visual"]{margin-top:34px;}
+
+/* ── 6 · collection.repeat ────────────────────────────────────────────────────────────────────
+   Every item visible, one after another. repeat(child). The count is nowhere in this rule, and
+   neither is any child's height. */
+[data-tpl="collection.repeat"]{display:block;}
+[data-tpl="collection.repeat"] > [data-slot="examples"] > * + *{margin-top:0;}
+.at-div{height:1px;background:var(--mx-line);margin:32px 0;}
+
+/* ── 7 · collection.tabs · views.tabs ──────────────────────────────────────────────────
+   The same two things a collection and a presentation always were, disclosed one at a time rather
+   than all at once. THE CHOICE BETWEEN repeat AND tabs IS THE AUTHOR'S; it is not a consequence of
+   how tall the page turned out. All the tab machinery lives in the DISCLOSURE block above — there
+   is nothing template-specific to add, which is the whole argument for separating the axes. */
+[data-tpl="collection.tabs"],[data-tpl="views.tabs"]{display:block;}
+
+/* ── 8 · scroll.y = pane ───────────────────────────────────────────────────────────────
+   THE ONLY PLACE LOCAL-Y IS LEGITIMATE. Stimulus stays; the worklist moves against it. The pane's
+   height is a workspace decision (in the app, derived from the viewport) — never a way to make a
+   long lesson look short. The narrow state gives the bound up entirely and returns to page scroll,
+   because a bounded scroller inside a phone-width page is two scrollbars fighting. */
+[data-tpl="scroll.pane"][data-state="wide"]{display:grid;align-items:start;
+  column-gap:var(--at-gap);grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-areas:"title title" "stimulus worklist";}
+[data-tpl="scroll.pane"][data-state="wide"] > [data-slot="title"]{grid-area:title;}
+[data-tpl="scroll.pane"][data-state="wide"] > [data-slot="stimulus"]{grid-area:stimulus;}
+[data-tpl="scroll.pane"][data-state="wide"] > [data-slot="worklist"]{grid-area:worklist;
+  height:var(--at-pane-h);min-height:var(--at-pane-min-h);overflow-y:auto;padding-right:16px;
+  -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - 46px),transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 calc(100% - 46px),transparent 100%);}
+[data-tpl="scroll.pane"][data-state="narrow"]{display:block;}
+/* the narrow state gives the bound up entirely — and with it the fade, which would otherwise dim
+   the last question on a page that is not scrolling at all */
+[data-tpl="scroll.pane"][data-state="narrow"] > [data-slot="worklist"]{height:auto;
+  overflow:visible;padding-right:0;margin-top:26px;-webkit-mask-image:none;mask-image:none;}
+[data-slot="stimulus"] p{margin:0 0 11px;font-size:15px;line-height:1.65;color:var(--mx-ink-body);}
+[data-slot="worklist"] ol{list-style:none;margin:0;padding:0;counter-reset:attask;}
+[data-slot="task"]{position:relative;padding:0 0 18px 32px;counter-increment:attask;}
+[data-slot="task"]::before{content:"Q" counter(attask);position:absolute;left:0;top:2px;
+  font:700 11px/1.4 var(--mx-ui);color:var(--mx-ink-3);}
+[data-slot="task"] .at-st{font-size:15px;}
+
+/* ── 9 · the page heading, above everything a page discloses ─────────────────────────────────── */
+.at-h2{margin:0 0 6px;font-family:var(--mx-serif);font-size:26px;font-weight:600;color:var(--mx-ink);}
+.at-sub{margin:0 0 26px;font-size:14.5px;line-height:1.6;color:var(--mx-ink-3);max-width:var(--at-m-flow);}

@@ -1,0 +1,55 @@
+name: Corpus identity
+
+# THE LEGACY-ISOLATION GATE, wired in because the architecture now depends on it.
+#
+# Three page families are deliberately separate (HANDOFF.md §9): the responsive Mathematics templates, a
+# future generalist/humanities family, and the legacy fixed-canvas renderers, which stay untouched until a
+# migration is commissioned. `verify-corpus-identity` is what makes "untouched" a measurement rather than an
+# intention: it renders every committed lesson in examples/ and lessons/, re-skinned to each pack theme,
+# through the app's own render() at BOTH revisions, and compares `#slide.innerHTML` byte for byte. It has
+# already caught one real regression in this branch — a responsive page type shadowing a canvas one moved 5
+# of its 250 units — and it caught it only because someone ran it by hand. That is the dependency this
+# workflow removes.
+#
+# Not a REQUIRED check, for the same reason as figure-container.yml and measure-surface.yml: `validate` is
+# the only required check and deliberately installs no dependencies, while this one needs Playwright and a
+# real render of the whole corpus at two revisions. Promoting it to required is branch protection, which is
+# a repository setting and the maintainer's call (CLAUDE.md: ask before changing the CI/auto-merge setup).
+# Until then a red result here does not block merge — read it.
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - 'lesson-studio.html'
+      - 'examples/**'
+      - 'lessons/**'
+      - 'scripts/verify-corpus-identity.mjs'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  corpus-identity:
+    runs-on: ubuntu-latest
+    steps:
+      # fetch-depth: 0 — the gate renders the corpus at TWO revisions, so it needs the base commit's
+      # lesson-studio.html and lesson JSON, not just the merge head.
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      # Compare against what this PR would actually land on, not against whatever `origin/main` happens to
+      # be locally. On a push to main the previous commit is the right reference.
+      - name: Corpus identity vs the base revision
+        run: |
+          REF="${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || 'HEAD~1' }}"
+          echo "comparing against $REF"
+          node scripts/verify-corpus-identity.mjs --ref "$REF"

@@ -1,0 +1,85 @@
+<h2 class="at-h2">Worked examples &mdash; quadratics</h2>
+<p class="at-sub">Three subtopics, each free to use a different approved composition. The Symmetry subtopic carries two authored representations of one idea. Nothing on this page is chosen by a measurement.</p>
+<article data-tpl="collection.tabs">
+<div class="at-tabs" data-tabs="topic" data-tabs-kind="collection">
+  <div class="at-tabbar" role="tablist">
+    <button class="at-tab" type="button" role="tab" data-tab="substitution">Substitution</button>
+    <button class="at-tab" type="button" role="tab" data-tab="solving">Solving for <i>x</i></button>
+    <button class="at-tab" type="button" role="tab" data-tab="symmetry">Symmetry</button>
+  </div>
+
+  <div class="at-panel" role="tabpanel" data-panel="substitution">
+    <p class="at-tabnote">Three examples of one skill, all visible together, because seeing the sequence is the point.</p>
+    <div data-tpl="collection.repeat">
+      <div data-slot="examples">
+        <div data-slot="example" data-tpl="single.flow">
+{{PART:_ex-negative}}
+        </div>
+        <div class="at-div"></div>
+        <div data-slot="example" data-tpl="single.flow">
+{{PART:_ex-fraction}}
+        </div>
+        <div class="at-div"></div>
+        <div data-slot="example" data-tpl="single.flow">
+{{PART:_ex-decimal}}
+        </div>
+      </div>
+      <section data-slot="synthesis">
+        <p class="at-lab">What the three show</p>
+        <p>Substitution never changes the rule &mdash; it only replaces <i>x</i>. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a decimal below 1 gets smaller rather than larger.</p>
+      </section>
+    </div>
+  </div>
+
+  <div class="at-panel" role="tabpanel" data-panel="solving">
+    <p class="at-tabnote">One task at a controlled measure. The default composition, and the right one here.</p>
+    <div data-tpl="single.flow">
+      <h3 data-slot="title">Solving <i>x</i><sup>2</sup> = 16</h3>
+{{PART:_solve16}}
+      <section data-slot="synthesis">
+        <p class="at-lab">What this shows</p>
+        <p>Undoing a square has to return both numbers that could have produced it. Losing the negative root here is the mistake that costs a solution in every quadratic afterwards.</p>
+      </section>
+    </div>
+  </div>
+
+  <div class="at-panel" role="tabpanel" data-panel="symmetry">
+    <p class="at-tabnote">One idea, two authored representations. Solve it, then look at the same fact on the curve.</p>
+    <div data-tpl="views.tabs">
+      <div class="at-tabs" data-tabs="representation" data-tabs-kind="views">
+        <div class="at-tabbar" role="tablist">
+          <button class="at-tab" type="button" role="tab" data-tab="workings">Workings</button>
+          <button class="at-tab" type="button" role="tab" data-tab="visual">Visual explanation</button>
+        </div>
+        <div class="at-panel" role="tabpanel" data-panel="workings">
+          <div data-tpl="comparison.paired">
+            <div data-slot="cases">
+              <section data-slot="case">{{PART:_case-a}}</section>
+              <section data-slot="case">{{PART:_case-b}}</section>
+            </div>
+            <section data-slot="synthesis">
+              <p class="at-lab">Why they agree</p>
+              <p>Squaring destroys the sign, so <i>x</i> and &minus;<i>x</i> always give the same <i>y</i>. The two cases are a mirror pair rather than two unrelated results.</p>
+            </section>
+          </div>
+        </div>
+        <div class="at-panel" role="tabpanel" data-panel="visual">
+          <div data-tpl="visual" data-fig="symmetry">
+            <div data-slot="figure">
+              <p class="at-lab">Graph</p>
+              {{FIG:symmetry}}
+            </div>
+            <div data-slot="interpretation">
+              <p class="at-lab">The same fact, on the curve</p>
+              <p>The horizontal line <i>y</i> = 9 meets <i>y</i> = <i>x</i><sup>2</sup> at exactly the two points the cases found.</p>
+              <p class="at-said">(&minus;3, 9) &nbsp; and &nbsp; (3, 9)</p>
+              <p>They sit at equal distances either side of the <i>y</i>-axis. That mirror is what &ldquo;squaring destroys the sign&rdquo; looks like when it is drawn.</p>
+              <p>Any line above the vertex meets the curve twice, once on each side. At the vertex the two crossings have met, which is the single solution of <i>x</i><sup>2</sup> = 0. Below it the line misses the curve entirely &mdash; the same fact as &ldquo;no real number squares to give a negative&rdquo;.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</article>

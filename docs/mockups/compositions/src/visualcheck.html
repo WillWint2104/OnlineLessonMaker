@@ -1,0 +1,47 @@
+<p class="mk-lede">Solve <i>x</i><sup>2</sup> = 16, then read the same question off the curve.</p>
+<div class="mk-states"><span class="mk-state" data-on>1 Workings</span><span class="mk-state" data-on>2 Graph check</span></div>
+
+<div class="mk-stateblock">
+<p class="mk-stateh">State 1 &mdash; Workings</p>
+<article data-mk="instructionSplit">
+  <h3 data-mk-region="title">Solving by inspection</h3>
+  <div data-mk-region="prompt">
+    <p class="mk-lab">Question</p>
+    <p>Solve <i>x</i><sup>2</sup> = 16.</p>
+    <div class="mk-dim" data-mk-measure="prompt">{{DIM:prompt}}</div>
+  </div>
+  <div class="mk-rule"></div>
+  <div data-mk-region="solution">
+    <p class="mk-lab">Worked solution</p>
+    <ol class="mk-steps">
+      <li class="mk-step"><div class="mk-st">Ask which numbers square to 16.</div><div class="mk-sm"><i>x</i><sup>2</sup> = 16</div></li>
+      <li class="mk-step"><div class="mk-st">Take the square root of both sides. Squaring destroys the sign, so the root must carry both.</div><div class="mk-sm"><i>x</i> = &plusmn;4</div></li>
+      <li class="mk-step"><div class="mk-st">Check each one back in the original equation.</div><div class="mk-sm">4<sup>2</sup> = 16 &nbsp;&nbsp; (&minus;4)<sup>2</sup> = 16</div></li>
+    </ol>
+    <div data-mk-region="answer"><b>Answer</b><i>x</i> = 4 or <i>x</i> = &minus;4</div>
+  </div>
+</article>
+</div>
+
+<div class="mk-stateblock">
+<p class="mk-stateh">State 2 &mdash; Graph check</p>
+<div data-mk="visualInterpretation">
+  <div data-mk-region="figure" data-mk-figure="graphcheck">
+    <p class="mk-lab">Graph</p>
+    {{FIG:graphcheck}}
+    <div class="mk-dim" data-mk-measure="figure">{{DIM:figure}}</div>
+  </div>
+  <div data-mk-region="interpretation">
+    <p class="mk-lab">Why it agrees</p>
+    <p>Solving <i>x</i><sup>2</sup> = 16 asks where the curve <i>y</i> = <i>x</i><sup>2</sup> reaches a height of 16.</p>
+    <p class="mk-said"><i>x</i> = &plusmn;4</p>
+    <p>Draw the horizontal line <i>y</i> = 16. It crosses the curve twice, at <i>x</i> = &minus;4 and <i>x</i> = 4 &mdash; the two values the algebra produced.</p>
+    <p>The two crossings sit at equal distances either side of the <i>y</i>-axis. That is the graph saying the same thing as the &plusmn; in the working: squaring destroys the sign, so the solutions are a mirror pair rather than two unrelated numbers.</p>
+    <p>The height of the line is what decides how many solutions there are. Above the vertex it crosses twice. Through the vertex it touches once, which is the case <i>x</i><sup>2</sup> = 0. Below the vertex it never meets the curve at all &mdash; which is what a negative right-hand side would mean, and why <i>x</i><sup>2</sup> = &minus;16 has no real solution.</p>
+    <p>Reading the question both ways is the point of the check: the algebra gives the values, and the graph says why there are exactly that many of them.</p>
+    <div class="mk-dim" data-mk-measure="interpretation">{{DIM:interpretation}}</div>
+  </div>
+</div>
+</div>
+<div class="mk-note"><b>Assembly</b>{{DIM:asmVisualCheck}}</div>
+<div class="mk-note"><b>Responsive states</b>{{DIM:gates}} {{DIM:occupancy}}</div>

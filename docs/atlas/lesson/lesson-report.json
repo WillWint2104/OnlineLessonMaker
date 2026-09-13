@@ -1,0 +1,772 @@
+[
+  {
+    "image": "lesson-substitution-desktop",
+    "state": "substitution",
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1906,
+    "scrollX": 1,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-substitution-tablet",
+    "state": "substitution",
+    "surface": 834,
+    "surfaceName": "tablet",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:narrow",
+      "visual:wide"
+    ],
+    "pageHeight": 1872,
+    "scrollX": 1,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-substitution-narrow",
+    "state": "substitution",
+    "surface": 382,
+    "surfaceName": "narrow",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:narrow",
+      "views.tabs:wide",
+      "comparison.paired:narrow",
+      "visual:narrow",
+      "visual:wide"
+    ],
+    "pageHeight": 2275,
+    "scrollX": 1,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-solving-for-x-desktop",
+    "state": "solving-for-x",
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1503,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-solving-for-x-tablet",
+    "state": "solving-for-x",
+    "surface": 834,
+    "surfaceName": "tablet",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:narrow",
+      "visual:wide"
+    ],
+    "pageHeight": 1469,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-solving-for-x-narrow",
+    "state": "solving-for-x",
+    "surface": 382,
+    "surfaceName": "narrow",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:narrow",
+      "views.tabs:wide",
+      "comparison.paired:narrow",
+      "visual:narrow",
+      "visual:wide"
+    ],
+    "pageHeight": 1915,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-workings-desktop",
+    "state": "symmetry-workings",
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 954,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-workings-tablet",
+    "state": "symmetry-workings",
+    "surface": 834,
+    "surfaceName": "tablet",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:narrow",
+      "visual:wide"
+    ],
+    "pageHeight": 920,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-workings-narrow",
+    "state": "symmetry-workings",
+    "surface": 382,
+    "surfaceName": "narrow",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:narrow",
+      "views.tabs:wide",
+      "comparison.paired:narrow",
+      "visual:narrow",
+      "visual:wide"
+    ],
+    "pageHeight": 1387,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-visual-explanation-desktop",
+    "state": "symmetry-visual-explanation",
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "sideBalance": [
+      {
+        "figure": 647,
+        "reading": 259
+      }
+    ],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1139,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-visual-explanation-tablet",
+    "state": "symmetry-visual-explanation",
+    "surface": 834,
+    "surfaceName": "tablet",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:narrow",
+      "visual:wide"
+    ],
+    "pageHeight": 1387,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-visual-explanation-narrow",
+    "state": "symmetry-visual-explanation",
+    "surface": 382,
+    "surfaceName": "narrow",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:narrow",
+      "views.tabs:wide",
+      "comparison.paired:narrow",
+      "visual:narrow",
+      "visual:wide"
+    ],
+    "pageHeight": 1419,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-a-flatter-parabola-desktop",
+    "state": "a-flatter-parabola",
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1223,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-a-flatter-parabola-tablet",
+    "state": "a-flatter-parabola",
+    "surface": 834,
+    "surfaceName": "tablet",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:narrow",
+      "visual:wide"
+    ],
+    "pageHeight": 1161,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  },
+  {
+    "image": "lesson-a-flatter-parabola-narrow",
+    "state": "a-flatter-parabola",
+    "surface": 382,
+    "surfaceName": "narrow",
+    "sideBalance": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.side",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:narrow",
+      "views.tabs:wide",
+      "comparison.paired:narrow",
+      "visual:narrow",
+      "visual:wide"
+    ],
+    "pageHeight": 1190,
+    "scrollX": 0,
+    "figures": [
+      "symmetry:balanced→visual.side",
+      "landscape:wide→visual.down"
+    ]
+  }
+]

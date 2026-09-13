@@ -1,0 +1,19 @@
+<article data-tpl="views.tabs">
+<h3 data-slot="title">Solving <i>x</i><sup>2</sup> = 16</h3>
+<div class="at-tabs" data-tabs="representation" data-tabs-kind="views">
+  <div class="at-tabbar" role="tablist">
+    <button class="at-tab" type="button" role="tab" data-tab="workings">1 Workings</button>
+    <button class="at-tab" type="button" role="tab" data-tab="graph">2 Graph check</button>
+  </div>
+  <div class="at-panel" role="tabpanel" data-panel="workings">
+    <div data-tpl="single.flow">
+{{PART:_solve16}}
+    </div>
+  </div>
+  <div class="at-panel" role="tabpanel" data-panel="graph">
+    <div data-tpl="visual" data-fig="graphcheck">
+{{PART:_graphcheck16}}
+    </div>
+  </div>
+</div>
+</article>
