@@ -36,6 +36,21 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   - **Fifteen controls, each driven to fail on purpose**, including three that are new in kind: slot
     edges must land on grid lines; a slot must be the width its pattern gave it (driven to fail with a
     real resolver that measures rendered prose); and adversarial content must move nothing but height.
+  - **When two slots may share a row** — the rule both removals produced: a row may pair two slots only
+    when they are *the same kind* at identical width (a comparison) or when at least one has a
+    *designed height* (a pad, an instrument, a card). Two unbounded materials in one row is sound only
+    for the lengths the author happened to write.
+  - **Cut from eight patterns to seven by its own cross-pattern review.** `notes.basic` +
+    `notes.examples-tabs` → `notes` (they differed by one slot and the second was keyed on a
+    *disclosure mode*, which is authored inside a slot). `practice.graph-workbook` folded into
+    `practice.workbook` (it forked on grid-versus-lined paper, a property of the block).
+    `interactive.primary`'s `workspace` renamed `instrument` — one slot name was carrying two slot
+    types. The `scroll.x` contract was stated for a `data` slot and implemented on the table block;
+    the block was right. And **`worked.single` was added**, because the catalogue could not lay out
+    two of its own lesson's four subtopics.
+  - **Named and not closed**: the lesson's top level is a `collection.tabs` over four subtopics and its
+    *Symmetry* subtopic is a `views.tabs` over two *different patterns*. That is a **shell** above the
+    pattern layer, and it needs its own pass.
   - `mediaSize` is recorded as the useful **failed intermediate** it was: it proved semantic importance
     and media geometry are separate concerns, which is why this catalogue has a slot layer. The old
     atlas is marked superseded rather than deleted.

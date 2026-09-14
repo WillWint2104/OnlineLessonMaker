@@ -104,58 +104,84 @@ dashboards and galleries; wrong for instruction, which has a pedagogical reading
 alignment infrastructure, never an auto-placement algorithm. Gone with it: occupancy thresholds, the
 dead-space resolver, semantic media pixel sizes, and any comparison of content heights.
 
-## 6. The catalogue — eight patterns
+## 6. The catalogue — seven patterns
 
-Ten pages, three surfaces each, plus adversarial and alternate-media renders: **48 renders**.
+Twelve pages, three surfaces each, plus adversarial and alternate-media renders: **58 renders**.
 Every page is filled from the real quadratics lesson — a pattern that only works on prose written
 to fit it proves nothing.
 
 | Pattern | For | Slots | Scroll |
 | --- | --- | --- | --- |
-| **`notes.basic`** | Prose-led teaching notes with no primary visual | `intro`, `reading`, `support`, `synthesis` | page |
-| **`notes.examples-tabs`** | A concept explained once, then several EQUIVALENT worked examples the learner selects between | `intro`, `support`, `examples`, `synthesis` | page |
-| **`visual.explanation`** | One primary visual and the reading of it, where the READING carries the teaching. The plane never crosses the reading measure; a page where the plane itself is the point is `media.full` | `media`, `interpretation`, `support` | page |
+| **`notes`** | Teaching notes: an explanation, optionally a rule set apart, optionally a set of equivalent worked examples | `intro`, `support`, `reading`, `examples`, `synthesis` | page |
+| **`worked.single`** | ONE worked example: a question or a modelling scenario, the solution, the answer | `intro`, `scenario`, `worked`, `support`, `synthesis` | page |
+| **`visual.explanation`** | One primary visual and the reading of it, where the READING carries the teaching | `media`, `interpretation`, `support` | page |
 | **`visual.compare`** | Two cases worked side by side, with one visual that belongs to both | `intro`, `caseA`, `caseB`, `media`, `interpretation`, `synthesis` | page |
-| **`media.full`** | A single media object IS the page | `media`, `interpretation`, `support` | page |
-| **`interactive.primary`** | A manipulable object is the page: an opening brief, the workspace, and prompts directing what to try | `intro`, `workspace`, `prompts`, `synthesis` | page |
-| **`practice.workbook`** | A question set beside a persistent writing pad | `intro`, `questions`, `workspace` | pane |
-| **`practice.graph-workbook`** | A question set beside a GRAPHING workspace | `intro`, `questions`, `workspace`, `reference` | pane |
+| **`media.full`** | A single media object IS the page — a wide graph, a diagram, a recorded explanation — with its reading beneath | `media`, `interpretation`, `support` | page |
+| **`interactive.primary`** | A manipulable object is the page: an opening brief, the instrument, and prompts directing what to try | `intro`, `instrument`, `prompts`, `synthesis` | page |
+| **`practice.workbook`** | A question set beside a workspace the learner acts on — lined paper or grid paper — with the stimulus staying while the worklist moves | `intro`, `reference`, `questions`, `workspace` | pane |
 
-Desktop column spans, which is what a pattern actually *is*:
+It began as eight and was cut to seven by its own cross-pattern review (§6c).
 
-| Pattern | subdesign | arrangement |
-| --- | --- | --- |
-| `notes.basic` | `measure` | intro **8** · reading **8** · support **6** · synthesis **8** |
-| `notes.examples-tabs` | `measure` | intro **8** + support **4** · examples **8** · synthesis **8** |
-| `visual.explanation` | `stacked` | media **8** · interpretation **8** · support **6** |
-| `visual.compare` | `paired` | intro **8** · caseA **6** + caseB **6** · media **8** · interpretation **8** · synthesis **8** |
-| `visual.compare` | `paired-wide` *(landscape/wide)* | … · media **12** · interpretation **8** |
-| `media.full` | `full` *(landscape/wide)* | media **12** · interpretation **8** · support **6** |
-| `media.full` | `inset` *(portrait/balanced)* | media **8** · interpretation **8** · support **6** |
-| `interactive.primary` | `beside` | intro **8** · workspace **8** + prompts **4** · synthesis **8** |
-| `practice.workbook` | `beside` | intro **8** · questions **5** + workspace **7** |
-| `practice.graph-workbook` | `beside` | intro **8** · (reference **4** / questions **4**) + workspace **8** *spanning both rows* |
+### 6a. When two slots may share a row
 
-### What the renders decided, that the design did not
+Two side-by-side subdesigns were designed, rendered, measured and **removed**: `visual.side` (a plane
+beside its reading — ~600px of empty column with a one-sentence reading) and `worked.single`'s
+`beside` (a scenario beside its solution — 247px). Both are the same defect, and the general rule is
+worth more than either:
 
-**`visual.side` was designed, rendered, measured and REMOVED.** Seven columns of plane beside five of
-reading fills the surface exactly and looks right when the reading runs to four paragraphs; with a
-one-sentence reading it left roughly 600px of empty column — the same rail this project has now
-rejected three times, rebuilt in a new system. *A composition whose soundness depends on how much
-prose the author happened to write is content-dependent, and content is exactly what may never decide
-a composition.* So every visual pattern here stacks its media and its reading, and the aspect class
-chooses only **how wide** the plane is — never an arrangement.
+> A row may pair two slots only when they are **the same kind**, deliberately given identical width —
+> a comparison, where unequal heights read as *one case was shorter* — or when **at least one slot has
+> a designed height**: a plotting pad, an instrument, a card. Two **unbounded** materials in one row
+> is sound only for the lengths the author happened to write, and how much prose an author wrote is
+> content, which may never decide a composition.
 
-That leaves `visual.explanation` and `media.full` distinguished **structurally** rather than by
-degree: this pattern's plane never crosses the reading measure; that one's always does. Choosing
-between them is the author's decision about what the page is *for*. Pages 04 and 06 make the same
-figure the subject of both, to show the difference.
+What pairs, therefore: `caseA | caseB` · `questions | workspace` · `instrument | prompts` ·
+`intro | support`. Nothing else. Every visual pattern stacks its media and its reading; every worked
+example stacks its scenario and its solution. A taller page is the deliberate outcome.
 
-**Two holes were found by looking, and then by a control.** A reference plane placed one row *below*
-a question list left a 600px dead column whenever the plotting surface beside it was tall; the fix is
-a **row span** in the pattern, not a measurement. The control that now catches it distinguishes an
-ordinary leftover under the shorter of two paired cases (137px, accepted) from a hole (600px, 734px).
-Its threshold is a *build-time* discriminator; nothing at render time reads it.
+That left `visual.explanation` and `media.full` distinguished **structurally**: this pattern's plane
+never crosses the reading measure, that one's always does. Choosing between them is the author's
+decision about what the page is *for* — pages 04 and 06 make the same figure the subject of both.
+
+### 6b. Two holes, one found by looking and one by a control
+
+A reference plane placed a row *below* a question list left a 600px dead column whenever the plotting
+surface beside it was tall. The fix is a **row span** in the pattern, not a measurement. The control
+that now catches it distinguishes an ordinary leftover under the shorter of two paired cases (137px,
+accepted) from a hole (600px, 734px, 247px). Its threshold is a *build-time* discriminator; nothing
+at render time reads it.
+
+### 6c. What the cross-pattern review changed
+
+Eight independently designed versions of this catalogue were reviewed against each other. Most of
+what it found was in *those* drafts — nineteen slot names for nine things, fifteen arrangement words
+for six — but five findings landed on what had been built, and four were acted on:
+
+| Finding | Acted on |
+| --- | --- |
+| **`workspace` was one slot name carrying two slot types** — the interactive's object and the practice pad | renamed to `instrument`, which is the word the pattern's own prose already used |
+| **The `scroll.x` contract said one thing and the code did another** — the grammar gave it to a `data` *slot*, the renderer attached it to the table *block* | the block is right and the sentence was wrong: a table of values belongs to the explanation it is part of, so the contract travels with the material |
+| **`notes.basic` and `notes.examples-tabs` differed by one slot**, and the second was keyed on a *disclosure mode* | merged into `notes`. Whether examples are shown together or behind tabs is authored **inside** the slot; a pattern keyed on an author axis is not a pattern |
+| **`practice.graph-workbook` forked on grid-versus-lined paper**, which is a property of the `handwrittenResponse` block | folded into `practice.workbook` with an optional `reference`. A pattern that forks on a block property has collapsed the two vocabularies |
+| **No pattern served a *single* worked example** — `visual.compare` needs a pair, `notes` needs a set — so two of the lesson's four subtopics could not be laid out | added `worked.single`, with an optional `scenario` for a modelling question. Pages 11 and 12 are the lesson's *Solving for x* |
+
+One divergence, deliberately: the review asked for a declared `.noX` subdesign, with full areas rows
+at every surface, for every `optional-collapse` slot. This catalogue instead **drops any row whose
+every token is `.` or an absent optional slot** — mechanical, deterministic, and it reads only *which
+slots the author filled*, never what is in them. Seven patterns × three surfaces × up to four optional
+slots is a combinatorial table nobody would keep correct; one rule with a control is better.
+
+### 6d. What the catalogue still does not cover
+
+The review's sharpest finding is one this pass did **not** close: the catalogue lays out *pages*, and
+the lesson is not a stack of pages. Its top level is a `collection.tabs` over four subtopics, and its
+*Symmetry* subtopic is a `views.tabs` whose two panels are **different patterns** — a paired
+comparison and a figure with its reading. Neither the subtopic strip nor the views switch has an
+owner here.
+
+That is a **shell** above the pattern layer, not an eighth pattern, and it deserves its own pass:
+one pattern per panel, the two tab kinds encoded rather than styled, and the strip's phone behaviour
+(one row, never wrapping, the current tab scrolled fully into view) carried with it.
 
 ## 7. What the build checks
 
@@ -186,6 +212,8 @@ A **proposal**, and research. `lesson-studio.html` is untouched and byte-identic
 the catalogue — and the CSS for every arrangement is *generated* from that file, so a design and its
 layout cannot drift the way a grammar in prose once drifted from thresholds in a script.
 
-Still open, and for the maintainer: `optional-reserved` is declared but no pattern here needed it;
-an authored figure `label` has nowhere to go except the caption; and a `readout` slot for an
-interactive's current values, and an `answerCheck` for a workbook, are both missing.
+Still open, and for the maintainer: **the shell layer** (§6d) is the one thing between this catalogue
+and rendering the whole quadratics lesson end to end. Smaller: `optional-reserved` is declared and no
+pattern needed it; an authored figure `label` has nowhere to go except the caption; a `readout` slot
+for an interactive's current values and an `answers` slot for a workbook are both missing; and
+`video` remains a block type, a slot type and a page type that nothing in the corpus exercises.

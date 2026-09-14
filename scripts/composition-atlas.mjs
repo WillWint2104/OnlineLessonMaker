@@ -203,7 +203,9 @@ const workedExample = (n, opts = {}) => {
   const q = n.question || n.scenario;
   return `<article class="cp-wex">`
     + (n.title && !opts.noTitle ? `<h3 class="cp-wex-title">${t(n.title)}</h3>` : '')
-    + `<div class="cp-q"><p class="cp-lab">${esc(n.scenario ? 'Scenario' : 'Question')}</p>${q.map(para).join('')}</div>`
+    /* `noPrompt` is for a pattern that gives the scenario a SLOT OF ITS OWN — repeating it in the
+       question box would put the same prose on the page twice */
+    + (opts.noPrompt ? '' : `<div class="cp-q"><p class="cp-lab">${esc(n.scenario ? 'Scenario' : 'Question')}</p>${q.map(para).join('')}</div>`)
     + `<p class="cp-lab">Worked solution</p><ol class="cp-steps">`
     + n.steps.map((s) => `<li class="cp-step"><div class="cp-st">${t(s.say)}</div>`
         + (s.math != null ? `<div class="cp-sm">${mathOf(s.math)}</div>` : '')

@@ -1,71 +1,71 @@
 [
   {
-    "image": "01-notes-basic-desktop",
-    "pattern": "notes.basic",
+    "image": "01-notes-desktop",
+    "pattern": "notes",
     "subdesign": "measure",
     "surface": "desktop",
     "aspect": null,
-    "pageHeight": 1352,
+    "pageHeight": 1206,
     "slots": [
       "intro:760",
+      "support:368",
       "reading:760",
-      "support:564",
       "synthesis:760"
     ],
     "cols": [
       "intro:8col",
+      "support:4col",
       "reading:8col",
-      "support:6col",
       "synthesis:8col"
     ]
   },
   {
-    "image": "01-notes-basic-tablet",
-    "pattern": "notes.basic",
+    "image": "01-notes-tablet",
+    "pattern": "notes",
     "subdesign": "measure",
     "surface": "tablet",
     "aspect": null,
     "pageHeight": 1138,
     "slots": [
       "intro:727.25",
-      "reading:727.25",
       "support:513.75",
+      "reading:727.25",
       "synthesis:727.25"
     ],
     "cols": [
       "intro:7col",
-      "reading:7col",
       "support:5col",
+      "reading:7col",
       "synthesis:7col"
     ]
   },
   {
-    "image": "01-notes-basic-phone",
-    "pattern": "notes.basic",
+    "image": "01-notes-phone",
+    "pattern": "notes",
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": null,
-    "pageHeight": 1395,
+    "pageHeight": 1413,
     "slots": [
       "intro:382",
-      "reading:382",
       "support:382",
+      "reading:382",
       "synthesis:382"
     ],
     "cols": [
       "intro:4col",
-      "reading:4col",
       "support:4col",
+      "reading:4col",
       "synthesis:4col"
     ]
   },
   {
-    "image": "02-notes-examples-tabs-desktop",
-    "pattern": "notes.examples-tabs",
+    "image": "02-notes-desktop",
+    "pattern": "notes",
     "subdesign": "measure",
     "surface": "desktop",
     "aspect": null,
-    "pageHeight": 1261,
+    "pageHeight": 1279,
     "slots": [
       "intro:760",
       "support:368",
@@ -80,12 +80,12 @@
     ]
   },
   {
-    "image": "02-notes-examples-tabs-tablet",
-    "pattern": "notes.examples-tabs",
-    "subdesign": "stacked",
+    "image": "02-notes-tablet",
+    "pattern": "notes",
+    "subdesign": "measure",
     "surface": "tablet",
     "aspect": null,
-    "pageHeight": 1167,
+    "pageHeight": 1186,
     "slots": [
       "intro:727.25",
       "support:513.75",
@@ -100,12 +100,12 @@
     ]
   },
   {
-    "image": "02-notes-examples-tabs-phone",
-    "pattern": "notes.examples-tabs",
+    "image": "02-notes-phone",
+    "pattern": "notes",
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": null,
-    "pageHeight": 1343,
+    "pageHeight": 1351,
     "slots": [
       "intro:382",
       "support:382",
@@ -356,13 +356,13 @@
     "pageHeight": 1231,
     "slots": [
       "intro:760",
-      "workspace:760",
+      "instrument:760",
       "prompts:368",
       "synthesis:760"
     ],
     "cols": [
       "intro:8col",
-      "workspace:8col",
+      "instrument:8col",
       "prompts:4col",
       "synthesis:8col"
     ]
@@ -376,13 +376,13 @@
     "pageHeight": 1242,
     "slots": [
       "intro:727.25",
-      "workspace:834",
+      "instrument:834",
       "prompts:727.25",
       "synthesis:727.25"
     ],
     "cols": [
       "intro:7col",
-      "workspace:8col",
+      "instrument:8col",
       "prompts:7col",
       "synthesis:7col"
     ]
@@ -396,13 +396,13 @@
     "pageHeight": 1326,
     "slots": [
       "intro:382",
-      "workspace:382",
+      "instrument:382",
       "prompts:382",
       "synthesis:382"
     ],
     "cols": [
       "intro:4col",
-      "workspace:4col",
+      "instrument:4col",
       "prompts:4col",
       "synthesis:4col"
     ]
@@ -413,7 +413,7 @@
     "subdesign": "beside",
     "surface": "desktop",
     "aspect": null,
-    "pageHeight": 1129,
+    "pageHeight": 1342,
     "slots": [
       "intro:760",
       "questions:466",
@@ -431,7 +431,7 @@
     "subdesign": "beside",
     "surface": "tablet",
     "aspect": null,
-    "pageHeight": 962,
+    "pageHeight": 1139,
     "slots": [
       "intro:727.25",
       "questions:407",
@@ -462,63 +462,63 @@
     ]
   },
   {
-    "image": "09-practice-graph-workbook-desktop",
-    "pattern": "practice.graph-workbook",
+    "image": "09-practice-workbook-desktop",
+    "pattern": "practice.workbook",
     "subdesign": "beside",
     "surface": "desktop",
     "aspect": "balanced",
-    "pageHeight": 1363,
+    "pageHeight": 1417,
     "slots": [
       "intro:760",
-      "questions:368",
-      "workspace:760",
-      "reference:368"
+      "reference:466",
+      "questions:466",
+      "workspace:662"
     ],
     "cols": [
       "intro:8col",
-      "questions:4col",
-      "workspace:8col",
-      "reference:4col"
+      "reference:5col",
+      "questions:5col",
+      "workspace:7col"
     ]
   },
   {
-    "image": "09-practice-graph-workbook-tablet",
-    "pattern": "practice.graph-workbook",
+    "image": "09-practice-workbook-tablet",
+    "pattern": "practice.workbook",
     "subdesign": "beside",
     "surface": "tablet",
     "aspect": "balanced",
-    "pageHeight": 1152,
+    "pageHeight": 1190,
     "slots": [
       "intro:727.25",
-      "questions:300.25",
-      "workspace:513.75",
-      "reference:300.25"
+      "reference:407",
+      "questions:407",
+      "workspace:407"
     ],
     "cols": [
       "intro:7col",
-      "questions:3col",
-      "workspace:5col",
-      "reference:3col"
+      "reference:4col",
+      "questions:4col",
+      "workspace:4col"
     ]
   },
   {
-    "image": "09-practice-graph-workbook-phone",
-    "pattern": "practice.graph-workbook",
+    "image": "09-practice-workbook-phone",
+    "pattern": "practice.workbook",
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "balanced",
-    "pageHeight": 1662,
+    "pageHeight": 1671,
     "slots": [
       "intro:382",
+      "reference:382",
       "questions:382",
-      "workspace:382",
-      "reference:382"
+      "workspace:382"
     ],
     "cols": [
       "intro:4col",
+      "reference:4col",
       "questions:4col",
-      "workspace:4col",
-      "reference:4col"
+      "workspace:4col"
     ]
   },
   {
@@ -573,6 +573,126 @@
       "media:4col",
       "interpretation:4col",
       "support:4col"
+    ]
+  },
+  {
+    "image": "11-worked-single-desktop",
+    "pattern": "worked.single",
+    "subdesign": "measure",
+    "surface": "desktop",
+    "aspect": null,
+    "pageHeight": 1441,
+    "slots": [
+      "intro:760",
+      "worked:760",
+      "support:564",
+      "synthesis:760"
+    ],
+    "cols": [
+      "intro:8col",
+      "worked:8col",
+      "support:6col",
+      "synthesis:8col"
+    ]
+  },
+  {
+    "image": "11-worked-single-tablet",
+    "pattern": "worked.single",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "aspect": null,
+    "pageHeight": 1202,
+    "slots": [
+      "intro:727.25",
+      "worked:727.25",
+      "support:513.75",
+      "synthesis:727.25"
+    ],
+    "cols": [
+      "intro:7col",
+      "worked:7col",
+      "support:5col",
+      "synthesis:7col"
+    ]
+  },
+  {
+    "image": "11-worked-single-phone",
+    "pattern": "worked.single",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": null,
+    "pageHeight": 1317,
+    "slots": [
+      "intro:382",
+      "worked:382",
+      "support:382",
+      "synthesis:382"
+    ],
+    "cols": [
+      "intro:4col",
+      "worked:4col",
+      "support:4col",
+      "synthesis:4col"
+    ]
+  },
+  {
+    "image": "12-worked-single-desktop",
+    "pattern": "worked.single",
+    "subdesign": "measure",
+    "surface": "desktop",
+    "aspect": null,
+    "pageHeight": 1462,
+    "slots": [
+      "scenario:760",
+      "worked:760",
+      "support:564",
+      "synthesis:760"
+    ],
+    "cols": [
+      "scenario:8col",
+      "worked:8col",
+      "support:6col",
+      "synthesis:8col"
+    ]
+  },
+  {
+    "image": "12-worked-single-tablet",
+    "pattern": "worked.single",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "aspect": null,
+    "pageHeight": 1248,
+    "slots": [
+      "scenario:727.25",
+      "worked:727.25",
+      "support:513.75",
+      "synthesis:727.25"
+    ],
+    "cols": [
+      "scenario:7col",
+      "worked:7col",
+      "support:5col",
+      "synthesis:7col"
+    ]
+  },
+  {
+    "image": "12-worked-single-phone",
+    "pattern": "worked.single",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": null,
+    "pageHeight": 1391,
+    "slots": [
+      "scenario:382",
+      "worked:382",
+      "support:382",
+      "synthesis:382"
+    ],
+    "cols": [
+      "scenario:4col",
+      "worked:4col",
+      "support:4col",
+      "synthesis:4col"
     ]
   }
 ]

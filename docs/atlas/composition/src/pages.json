@@ -1,10 +1,10 @@
 [
   {
     "n": "01",
-    "pattern": "notes.basic",
+    "pattern": "notes",
     "title": "Substituting into *y* = *x*^2",
     "lede": "Before anything is solved, the rule has to be read: put a number in, take a number out.",
-    "c": "THE DEFAULT PAGE. One column at the measure; the four unused desktop columns are reading margin, not an empty track.",
+    "c": "THE DEFAULT PAGE, with no examples: that row collapses. One column at the measure; the four unused desktop columns are reading margin, not an empty track.",
     "slots": {
       "intro": [
         {
@@ -167,10 +167,10 @@
   },
   {
     "n": "02",
-    "pattern": "notes.examples-tabs",
+    "pattern": "notes",
     "title": "Three substitutions, one move",
     "lede": "A negative, a fraction and a decimal. The same instruction each time.",
-    "c": "EQUIVALENT SIBLING ITEMS — the one situation GOV.UK's guidance says tabs suit. The renderer never created these tabs and cannot remove them.",
+    "c": "THE SAME PATTERN WITH ITS EXAMPLES SLOT FILLED, and the disclosure authored INSIDE the slot. Equivalent sibling items are the one situation GOV.UK's guidance says tabs suit; the renderer never created these tabs and cannot remove them.",
     "tabs": {
       "examples": "a-negative-value"
     },
@@ -508,7 +508,26 @@
           ]
         }
       ],
-      "workspace": [
+      "prompts": [
+        {
+          "block": "prose",
+          "heading": "Try this",
+          "paragraphs": [
+            "Set *a* to 1 and read the *x*-window. How far does the curve now travel to climb the same height?",
+            "Drag the line below the vertex. How many crossings are there, and what does that say about *x*^2 = *k* for negative *k*?",
+            "Find a value of *a* where the crossings sit exactly on the grid lines."
+          ]
+        }
+      ],
+      "synthesis": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Whatever *a* you chose, the two crossings stayed the same distance either side of the *y*-axis. The stretch is a change of scale; the mirror is a property of squaring."
+          ]
+        }
+      ],
+      "instrument": [
         {
           "block": "interactive",
           "figure": "landscape",
@@ -529,25 +548,6 @@
               "at": 75,
               "value": "±12"
             }
-          ]
-        }
-      ],
-      "prompts": [
-        {
-          "block": "prose",
-          "heading": "Try this",
-          "paragraphs": [
-            "Set *a* to 1 and read the *x*-window. How far does the curve now travel to climb the same height?",
-            "Drag the line below the vertex. How many crossings are there, and what does that say about *x*^2 = *k* for negative *k*?",
-            "Find a value of *a* where the crossings sit exactly on the grid lines."
-          ]
-        }
-      ],
-      "synthesis": [
-        {
-          "block": "prose",
-          "paragraphs": [
-            "Whatever *a* you chose, the two crossings stayed the same distance either side of the *y*-axis. The stretch is a change of scale; the mirror is a property of squaring."
           ]
         }
       ]
@@ -704,10 +704,10 @@
   },
   {
     "n": "09",
-    "pattern": "practice.graph-workbook",
+    "pattern": "practice.workbook",
     "title": "Plot it yourself",
     "lede": "Grid paper, and a plane to plot against.",
-    "c": "THE SQUARES ARE SQUARE, because the mathematics the learner is about to draw is. Four columns of instruction against eight of plotting surface.",
+    "c": "THE SAME PATTERN AS PAGE 08, with its optional reference plane and grid paper instead of lined. Grid versus lined is a property of the BLOCK; a pattern that forked on it would have collapsed the two vocabularies.",
     "slots": {
       "intro": [
         {
@@ -809,6 +809,109 @@
           "block": "prose",
           "paragraphs": [
             "Still two crossings."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "n": "11",
+    "pattern": "worked.single",
+    "title": "Solving *x*^2 = 16",
+    "lede": "One worked example, and the move it instances.",
+    "c": "THE GAP THE REVIEW FOUND. The catalogue had no home for a SINGLE worked example — `visual.compare` needs a pair and `notes` needs a set — so two of the four subtopics of its own lesson could not be laid out. With no scenario the beside row collapses and the solution returns to the measure.",
+    "slots": {
+      "intro": [
+        {
+          "block": "prose",
+          "ref": "solving-for-x",
+          "paragraphs": [
+            "Substitution ran the rule forwards. This runs it backwards: the output is known and the input is not."
+          ]
+        }
+      ],
+      "worked": [
+        {
+          "block": "workedExample",
+          "ref": "solving-for-x/0"
+        }
+      ],
+      "support": [
+        {
+          "block": "keyIdea",
+          "label": "Both signs, every time",
+          "paragraphs": [
+            "Taking a square root offers two answers. Writing only the positive one is the single most common way to lose half a solution."
+          ]
+        }
+      ],
+      "synthesis": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "The algebra hands back both roots because squaring destroyed the sign on the way in. Whether both are kept is a question about the situation, not about the algebra."
+          ]
+        }
+      ]
+    },
+    "adversarial": {
+      "worked": [
+        {
+          "block": "workedExample",
+          "ref": "substitution/2"
+        }
+      ]
+    }
+  },
+  {
+    "n": "12",
+    "pattern": "worked.single",
+    "title": "The same algebra, inside a situation",
+    "lede": "A stone, a bridge, and a root the question rejects.",
+    "c": "THE SCENARIO IN ITS OWN SLOT, above the algebra that models it. Five columns of situation beside seven of solution was designed, rendered and measured — with a one-line scenario it left 247px of empty column. Both sides of that row were unbounded prose, and such a row is sound only for the lengths the author happened to write.",
+    "slots": {
+      "scenario": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "A stone is dropped from a bridge. The distance it has fallen, in metres, is modelled by *d* = 5*t*^2, where *t* is the time in seconds since it was released.",
+            "The bridge deck is 45 metres above the water, and the model is only trusted while the stone is still falling.",
+            "Find how long the stone takes to reach the water."
+          ]
+        }
+      ],
+      "worked": [
+        {
+          "block": "workedExample",
+          "ref": "solving-for-x/1",
+          "noTitle": true,
+          "noPrompt": true
+        }
+      ],
+      "support": [
+        {
+          "block": "keyIdea",
+          "label": "When a root is rejected",
+          "paragraphs": [
+            "A negative root can solve the equation and still not answer the question. Rejecting it is a statement about the situation — here, that the stone was not falling before it was dropped — and it belongs in the working, not in the reader's head."
+          ]
+        }
+      ],
+      "synthesis": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Same three lines of algebra as the page before. What the situation adds is the last step: deciding which of the two answers the world allows."
+          ]
+        }
+      ]
+    },
+    "adversarial": {
+      "scenario": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "A stone is dropped from a 45-metre bridge."
           ]
         }
       ]

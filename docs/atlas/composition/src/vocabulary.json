@@ -9,14 +9,20 @@
     "BLOCKS OCCUPY SLOTS",
     "MEDIA FITS ITS SLOT"
   ],
-  "notThis": ["measure everything", "compare dimensions", "infer arrangement", "resize things", "hope the page looks balanced"],
+  "notThis": [
+    "measure everything",
+    "compare dimensions",
+    "infer arrangement",
+    "resize things",
+    "hope the page looks balanced"
+  ],
   "slotTypes": {
     "reading": "continuous prose the learner reads. Bound by the reading measure, always.",
     "worked": "a worked solution — ordered steps with their mathematics.",
     "media": "a figure, image or diagram. The slot gives a width; the media renders faithfully inside it.",
     "interactive": "a manipulable object with controls.",
     "workspace": "a surface the learner acts ON — a writing pad, grid paper.",
-    "data": "a table. May take local horizontal scroll; nothing else may.",
+    "data": "a table given a track of its own. A table inside an explanation stays in the reading slot; this type is for a page whose data IS the content.",
     "examples": "a collection of sibling worked examples, shown together or behind tabs.",
     "questions": "a question set. The one slot type that may own a local vertical scroll.",
     "support": "a key rule, definition or aside. Subordinate to a reading slot, never a substitute for one."
@@ -34,16 +40,41 @@
     "keyIdea": "a rule or definition stated once, set apart"
   },
   "blockFitsSlot": {
-    "prose": ["reading", "support"],
-    "workedExample": ["worked", "examples"],
-    "graph": ["media"],
-    "image": ["media"],
-    "video": ["media"],
-    "interactive": ["interactive", "workspace"],
-    "table": ["data", "worked", "reading"],
-    "questionSet": ["questions"],
-    "handwrittenResponse": ["workspace"],
-    "keyIdea": ["support"],
+    "prose": [
+      "reading",
+      "support"
+    ],
+    "workedExample": [
+      "worked",
+      "examples"
+    ],
+    "graph": [
+      "media"
+    ],
+    "image": [
+      "media"
+    ],
+    "video": [
+      "media"
+    ],
+    "interactive": [
+      "interactive",
+      "workspace"
+    ],
+    "table": [
+      "data",
+      "worked",
+      "reading"
+    ],
+    "questionSet": [
+      "questions"
+    ],
+    "handwrittenResponse": [
+      "workspace"
+    ],
+    "keyIdea": [
+      "support"
+    ],
     "_": "The build refuses a block placed in a slot this table does not permit. It is the compatibility check that replaces asking a block how large it wants to be."
   },
   "occupancy": {
@@ -55,35 +86,79 @@
   "mediaInASlot": {
     "rule": "A GRAPH NO LONGER OWNS A SIZE. It receives a media slot and answers only: inside this width, at equal unit scale, this is the faithful rendering I can provide. Its height follows from the authored domain and the page grows.",
     "whenItCannot": "If the media's ASPECT CLASS means it cannot work in one subdesign, the pattern declares an approved alternative — chosen from the surface and the aspect class alone. It never negotiates width with neighbouring prose.",
-    "aspectClasses": { "portrait": "> 1.0", "balanced": "0.75 – 1.0", "landscape": "0.4 – 0.75", "wide": "< 0.4" },
+    "aspectClasses": {
+      "portrait": "> 1.0",
+      "balanced": "0.75 – 1.0",
+      "landscape": "0.4 – 0.75",
+      "wide": "< 0.4"
+    },
     "supersedes": "`mediaSize` (compact | standard | large | workspace) was a useful FAILED intermediate: it proved that semantic importance and media geometry are separate concerns, which is why this layer exists. It is not the permanent mechanism — the slot is."
   },
   "disclosure": {
-    "inline": { "means": "everything visible, in order", "default": true },
+    "inline": {
+      "means": "everything visible, in order",
+      "default": true
+    },
     "collection.tabs": {
       "means": "several SIBLING items; select one",
       "appropriateWhen": "the items are equivalent (three worked examples), the learner does not need to see them simultaneously, and quick switching is valuable",
-      "neverFor": ["a sequential explanation", "items that must be compared with each other"]
+      "neverFor": [
+        "a sequential explanation",
+        "items that must be compared with each other"
+      ]
     },
     "views.tabs": {
       "means": "ONE object seen in multiple REPRESENTATIONS",
       "appropriateWhen": "algebra | graph — the same fact, examined two ways",
-      "neverFor": ["a sequential explanation", "items that must be compared with each other"]
+      "neverFor": [
+        "a sequential explanation",
+        "items that must be compared with each other"
+      ]
     },
-    "details": { "means": "an aside the learner may open", "appropriateWhen": "genuinely supplementary material" },
-    "scroll.x": { "means": "indivisible material overflows inside its own region", "appropriateWhen": "a wide table of values", "neverFor": ["prose", "a worked solution"] },
-    "expand": { "means": "one object opened to the full surface", "appropriateWhen": "a figure worth inspecting closely" },
+    "details": {
+      "means": "an aside the learner may open",
+      "appropriateWhen": "genuinely supplementary material"
+    },
+    "scroll.x": {
+      "means": "indivisible material overflows inside its own region",
+      "carriedBy": "THE TABLE BLOCK, not a slot type. A table of values belongs to the explanation it is part of, so it appears inside a `reading` or `worked` slot far more often than in a `data` one — and the contract has to travel with the material, not with the track it happens to be in. The grammar previously said only a `data` SLOT could scroll sideways while the implementation attached it to the block; one of the two was wrong and it was the sentence.",
+      "appropriateWhen": "a wide table of values",
+      "neverFor": [
+        "prose",
+        "a worked solution",
+        "a figure"
+      ]
+    },
+    "expand": {
+      "means": "one object opened to the full surface",
+      "appropriateWhen": "a figure worth inspecting closely"
+    },
     "_": "TABS ARE A DISCLOSURE PATTERN, NOT A SPACE-SAVING HACK. A layout may never reach for a tab because something did not fit, and the renderer may never create or remove one. Keyboard behaviour follows the W3C APG tabs pattern.",
     "_evidence": "GOV.UK tabs guidance (clearly labelled related sections, no need to see all at once, never for sequential or comparative content) and Mayer's segmenting principle (learner-paced segments beat one continuous presentation for complex material)."
   },
   "scrollOwnership": {
-    "page": { "means": "the document may get arbitrarily tall", "default": true, "rule": "Virtually every teaching page. Never compressed to fit a viewport." },
-    "pane": { "means": "an explicit TEMPLATE FEATURE — one pane moves while another stays", "use": "the workbook shape only", "rule": "Never a renderer trick for making teaching content shorter. Teaching prose never sits in one." }
+    "page": {
+      "means": "the document may get arbitrarily tall",
+      "default": true,
+      "rule": "Virtually every teaching page. Never compressed to fit a viewport."
+    },
+    "pane": {
+      "means": "an explicit TEMPLATE FEATURE — one pane moves while another stays",
+      "use": "the workbook shape only",
+      "rule": "Never a renderer trick for making teaching content shorter. Teaching prose never sits in one."
+    }
   },
   "spatialContiguity": {
     "rule": "A BLOCK THAT EXPLAINS A VISUAL BELONGS TO THE SAME PATTERN AS THAT VISUAL — beside it, or immediately beneath it.",
     "_evidence": "Mayer's spatial-contiguity principle: learners do better when corresponding words and pictures are near each other, because the search for the relationship is itself extraneous load.",
     "consequence": "It is a pattern-design rule, not a runtime one. Nothing measures anything to satisfy it."
+  },
+  "pairingRule": {
+    "_": "WHEN TWO SLOTS MAY SHARE A ROW. Derived from two side-by-side subdesigns that were designed, rendered, measured and removed — `visual.side` (a plane beside its reading) and `worked.single`'s `beside` (a scenario beside its solution).",
+    "rule": "A row may pair two slots only when they are THE SAME KIND, deliberately given identical width — a comparison, where unequal heights read as 'one case was shorter' — or when AT LEAST ONE SLOT HAS A DESIGNED HEIGHT: a plotting pad, an instrument, a card.",
+    "forbidden": "Two UNBOUNDED materials in one row. Such a row is sound only for the lengths the author happened to write, and how much prose an author wrote is content — which may never decide a composition. Both removals were exactly this.",
+    "pairsInTheCatalogue": "caseA | caseB (same kind, identical width) · questions | workspace (the paper has a designed height) · instrument | prompts (the instrument does) · intro | support (a card). Nothing else pairs.",
+    "consequence": "Every visual pattern stacks its media and its reading, and every worked example stacks its scenario and its solution. A taller page is the deliberate outcome."
   },
   "rejected": {
     "bento": "Automatic 'find aesthetically balanced cells for six blocks' placement. Attractive for dashboards and galleries; wrong for instruction, which has a pedagogical reading order. A grid is our alignment infrastructure, never an auto-placement algorithm.",
