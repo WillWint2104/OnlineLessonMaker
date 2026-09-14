@@ -66,7 +66,7 @@ const CSS_KIT = fs.readFileSync(path.join(SRC, 'atlas.css'), 'utf8');
 const ONLY = process.env.ATLAS_ONLY ? new Set(process.env.ATLAS_ONLY.split(',')) : null;
 const SELECTED = ONLY ? PACK.filter((e) => ONLY.has(e.n)) : PACK;
 if (ONLY && !SELECTED.length) throw new Error('ATLAS_ONLY matched no entry');
-const M = A.measures, FLOOR = { w: 340, h: 255 }, BOUND = 720;
+const M = A.measures;
 
 /* THE RESPONSIVE STATE COMES FROM ONE NUMBER: the surface width, against a switch point the
    composition itself declares. Keyed by the AUTHORED name, because that is what `data-tpl` carries;
@@ -116,9 +116,37 @@ const figPage = await openFigurePage(browser, base);
    through a shared body, and scanning the outer file alone reported "no figure graphcheck" */
 const expand = (f) => fs.readFileSync(path.join(SRC, f + '.html'), 'utf8')
   .replace(/\{\{PART:([a-z0-9_-]+)\}\}/gi, (m, q) => fs.readFileSync(path.join(SRC, q + '.part'), 'utf8'));
-const NEEDED = new Set(SELECTED.flatMap((e) => [...expand(e.frag).matchAll(/\{\{FIG:([a-z0-9-]+)\}\}/gi)].map((m) => m[1])));
-console.log('\nfigures — intrinsic legible size, media-geometry class, and one box per surface');
-const FIG = await measureFigures({ figPage, A, FIGS, keys: ONLY ? NEEDED : null, log: console.log });
+/* A REQUEST IS A FIGURE AT AN AUTHORED SIZE. The size is part of the placeholder because it is the
+   author's decision, exactly like the figure itself — `{{FIG:symmetry@standard}}`. */
+const ALL = new Set(PACK.flatMap((e) => [...expand(e.frag).matchAll(/\{\{FIG:([a-z0-9-]+@[a-z]+)\}\}/gi)].map((m) => m[1])));
+const NEEDED = new Set(SELECTED.flatMap((e) => [...expand(e.frag).matchAll(/\{\{FIG:([a-z0-9-]+@[a-z]+)\}\}/gi)].map((m) => m[1])));
+console.log('\nfigures — authored media size, media-geometry class, and one realised box per surface');
+const FIG = await measureFigures({ figPage, A, FIGS, want: ONLY ? NEEDED : ALL, log: console.log });
+
+/* CONTROL · THE SIZE CLASS MOVES THE PLANE, AND NOTHING ELSE. Two sizes of one figure must keep the
+   same geometry class and the same subdesign, and must actually paint at a different px-per-unit —
+   a bounded wrapper around an unchanged plane would satisfy every other measurement on the page. */
+{
+  const byFig = {};
+  for (const [req, f] of Object.entries(FIG)) (byFig[f.key] ||= []).push(f);
+  let proved = 0;
+  for (const [key, list] of Object.entries(byFig)) {
+    if (list.length < 2) continue;
+    for (const f of list.slice(1)) {
+      if (f.cls !== list[0].cls || f.sub !== list[0].sub)
+        throw new Error(`${key}: mediaSize changed the geometry class or subdesign `
+          + `(${list[0].size} → ${list[0].cls}/${list[0].sub}, ${f.size} → ${f.cls}/${f.sub}) — `
+          + `size and shape are separate axes`);
+      if (f.pref.w === list[0].pref.w || f.pref.x === list[0].pref.x)
+        throw new Error(`${key}: ${f.size} and ${list[0].size} realise the same plane `
+          + `(${f.pref.w}px at ${f.pref.x} px/unit) — the size class did nothing`);
+      proved++;
+    }
+  }
+  if (!ONLY && !proved) throw new Error('no figure was authored at two sizes, so nothing proves that '
+    + 'mediaSize changes the plane rather than a wrapper around it');
+  if (proved) console.log(`  control · ${proved} size pair(s): same class, same subdesign, a genuinely different plane`);
+}
 
 /* ══ RENDER ════════════════════════════════════════════════════════════════════════════════════ */
 const tokens = (surface, pad) => `:root{
@@ -160,19 +188,19 @@ const shot = async (name, entry, state, surfaceName) => {
 
   /* THE FIGURE'S SUBDESIGN IS ITS OWN MEDIA GEOMETRY, not the prose around it. */
   const used = [];
-  body = body.replace(/\{\{FIG:([a-z0-9-]+)\}\}/gi, (m, key) => {
+  body = body.replace(/\{\{FIG:([a-z0-9-]+@[a-z]+)\}\}/gi, (m, key) => {
     const f = FIG[key];
     if (!f) throw new Error(`${name}: no figure ${key}`);
     used.push(key);
-    /* Which box: the narrow surface gets a box SOLVED for it; a wide-class figure in its `down`
-       subdesign gets the atlas's wide width; otherwise the plane's own preferred legible size.
-       A box is never scaled after painting. */
+    /* Which box: the one the AUTHORED SIZE CLASS realises on this surface — the widest width in its
+       band whose measured box clears its height ceiling. A box is never scaled after painting. */
     const box = f.box[surfaceName];
     if (box.w > surface + 1) throw new Error(`${name}: ${key} needs ${box.w}px in a ${surface}px region`);
     return skin(box.w, box.h, box.html);
   });
   for (const key of used)
-    body = body.split(`data-fig="${key}"`).join(`data-fig="${key}" data-fig-class="${FIG[key].cls}" data-sub="${FIG[key].sub}"`);
+    body = body.split(`data-fig="${key}"`).join(`data-fig="${key}" data-fig-class="${FIG[key].cls}" `
+      + `data-media-size="${FIG[key].size}" data-sub="${FIG[key].sub}"`);
   /* the derived switch point travels by figure key, because it is the FIGURE'S property */
   const figSwitch = {};
   for (const key of used) figSwitch[key] = FIG[key].switchAt;
@@ -314,8 +342,11 @@ ${CSS_KIT}
         const ux = per('middle', 'x'), uy = per('end', 'y');
         if (ux && uy) ratio = +((ux * rect.width / vb[2]) / (uy * rect.height / vb[3])).toFixed(3);
       }
+      const own = r.closest('[data-tpl]');
       return { region: Math.round(r.getBoundingClientRect().width), ratio,
-        plane: q ? Math.round(q.getBoundingClientRect().width) : null };
+        plane: q ? Math.round(q.getBoundingClientRect().width) : null,
+        planeH: q ? Math.round(q.getBoundingClientRect().height) : null,
+        size: own && own.getAttribute('data-media-size'), fig: own && own.getAttribute('data-fig') };
     });
 
     /* SCROLL, read from computed style rather than from the attribute — the attribute is a claim and
@@ -452,6 +483,16 @@ function verify(name, entry, state, r) {
   for (const f of m.figs) {
     if (f.plane == null) throw new Error(`${name}: a figure region contains no painted plane`);
     if (f.region - f.plane > 1) throw new Error(`${name}: a figure region is ${f.region}px around a ${f.plane}px plane`);
+    /* CONTROL · A BOUNDED WRAPPER IS NOT A SIZE. The PAINTED PLANE itself has to occupy the width the
+       authored size class prescribes for this surface. */
+    if (!f.size) throw new Error(`${name}: a figure is painted with no authored mediaSize`);
+    {
+      const bd = A.mediaSize.classes[f.size].bounds[r.surfaceName], av = r.surface;
+      const lo = Math.min(bd.min, av), hi = Math.min(bd.max, av);
+      if (f.plane < lo - 1 || f.plane > hi + 1)
+        throw new Error(`${name}: ${f.fig} painted ${f.plane}px wide — outside the ${f.size} band `
+          + `${lo}-${hi}px for a ${av}px surface`);
+    }
     if (f.ratio != null && Math.abs(f.ratio - 1) > 0.01)
       throw new Error(`${name}: a plane painted at ${f.ratio} — one x-unit and one y-unit are not the same length`);
   }

@@ -8,6 +8,40 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **The missing layer: `mediaSize`** (`docs/atlas/`, `scripts/lib/figure-geometry.mjs`, no app change).
+  The maintainer rejected image 1 a second time, and correctly: `visual.down` and an undistorted plane
+  had fixed the *shape*, and the symmetry graph was still **488×625 on a 1152px desktop page** —
+  mathematically perfect, instructionally a thumbnail. The defect was architectural. The contract
+  published a `preferredWidth` and the renderer treated it as the final instructional display size;
+  it never was. It is the largest box that still paints the authored domain at equal unit scale within
+  a legibility bound, which for a tall plane is a small box.
+  - **The chain is five steps, not four**: media type → **mediaSize (authored)** → geometry class →
+    approved subdesign → prescribed responsive state. Geometry can say what shape a plane must keep;
+    it can never say how much importance the plane deserves. A supporting number-line, an ordinary
+    worked-example graph and a major explanatory graph can share one aspect ratio.
+  - **Four frozen size classes** — `compact` (supporting) · `standard` (ordinary instructional) ·
+    `large` (primary explanatory) · `workspace` (reserved for the practice family). Each prescribes a
+    **width band and a height ceiling per surface**; the figure is realised at the widest width in the
+    band whose *measured* box clears the ceiling, geometry and equal unit scale untouched — the width
+    comes down, the plane is never squashed. Authored as `"mediaSize"` on the composition node, and
+    **required**: a default would be the renderer deciding how important the author's figure is.
+  - **Symmetry, desktop: 488×625 → 683×860**, the maintainer's ruling (`standard`, not `compact`) and
+    their expected 600–700px band, arrived at from the frozen numbers rather than picked. A flatter
+    parabola is authored `large`: 900×385 → 1000×463.
+  - **The `growable` special case is gone.** It grew only planes wider than they are tall, to one
+    hardcoded `widePreferredWidth: 900`, because there was nowhere to say how large a figure should be.
+    Every class is now realised the same way.
+  - **`compact` is a reserved word**: it means a media size and nothing else — no composition,
+    subdesign or responsive state in this grammar may be called `compact`.
+  - **Reference design 21, the size ladder**: one tall plane and one wide plane, each at all three
+    sizes. Down a ladder the geometry class, the subdesign and the composition are identical and only
+    the physical footprint moves. For the tall plane the height ceiling settles the width; for the wide
+    plane the band edge does.
+  - **Six controls, each driven to fail on purpose**: an omitted size; an invented size name; a
+    band-sized box around an unchanged narrow plane (*a bounded wrapper is not a size*); a realisation
+    outside its band; two size classes that realise the same plane; a size class that changes the
+    geometry class. The content-perturbation control now also compares every realised plane.
+  - `lesson-studio.html` is unchanged and byte-identical since `41d40a8`.
 - **Narrowly scoped visual corrections after the first lesson passed its structural test**
   (`docs/atlas/`, no app change). The maintainer accepted `single.flow`, `single.split`,
   `collection.repeat`, `scroll.y = page` and the narrow repeated-example anatomy as golden, and asked

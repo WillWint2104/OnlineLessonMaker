@@ -45,16 +45,23 @@ The number of words · the height of anything · occupancy · whitespace · the 
 how tall the page turned out. The renderer never invents a tab, never moves content between tabs, and
 never treats a tall screen as a failure. **Those were the things that destroyed the earlier approach.**
 
-## 3. The four frozen axes
+## 3. The frozen axes
 
 | Axis | Question it answers | Decided by |
 | --- | --- | --- |
 | **Composition** | What is visible together, and where? | **author** |
 | **Collection / disclosure** | If there are several related things, which are visible at once? | **author** |
 | **Scroll** | Which surface is allowed to move? | **author** |
-| **Media geometry** | Which approved subdesign does the media shape permit? | the figure's own geometry |
+| **Media size** | How much visual importance should this media receive? | **author** |
+| **Media geometry** | Which approved subdesign does the media *shape* permit? | the figure's own geometry |
 
-The responsive state is **not** a fifth axis. It is the prescribed wide/narrow arrangement *of* a
+The chain runs in that order and each step may answer only its own question:
+
+```
+media type → mediaSize (authored) → geometry class → approved subdesign → responsive state
+```
+
+The responsive state is **not** an axis. It is the prescribed wide/narrow arrangement *of* a
 composition, from the surface width alone, and it can never select a different composition.
 
 ### Compositions
@@ -111,6 +118,56 @@ separate fields:
 The build refuses teaching prose (`question · steps · solution · answer · synthesis · interpretation`)
 inside a `scroll.y = pane` region, and refuses any vertical scroller outside a persistent-pane
 template.
+
+### Media size — the layer that was missing
+
+Geometry can say what shape a plane must keep. It can never say **how large that plane deserves to
+be**. A tiny supporting number-line, an ordinary worked-example graph, a major explanatory graph and
+an interactive workspace can all have exactly the same aspect ratio.
+
+For a long time the contract published a `preferredWidth` and the renderer treated it as the final
+instructional display size. It never was: it is the largest box that still paints the authored domain
+at equal unit scale within a legibility bound, which for a tall plane is a small box. That is how a
+**488×625 symmetry graph** ended up on a **1152px** desktop page — undistorted, legible, and a
+thumbnail.
+
+`mediaSize` is authored on the composition node and is **required** — a default would be the renderer
+deciding how important the author's figure is.
+
+| class | means | desktop band | ceiling |
+| --- | --- | --- | --- |
+| `compact` | a **supporting** visual — it accompanies material the reader is there for anyway | 300–420 | 560 |
+| `standard` | an **ordinary instructional** visual — the reader is meant to stop and look at it | 600–760 | 860 |
+| `large` | a **primary explanatory** visual — the page exists in order to show it | 760–1000 | 1040 |
+| `workspace` | a **working surface** someone acts on; reserved for the practice family | 820–1100 | 1040 |
+
+The class prescribes a **width band and a height ceiling per surface**. The figure is realised at the
+widest width in the band whose *measured* box clears the ceiling — the width comes down, the plane is
+never squashed, the mathematics never moves. If even the band minimum overruns the ceiling the
+minimum wins and the build says so: the authored size outranks the ceiling.
+
+**Reference design 21 is the proof.** One tall plane and one wide plane, each at all three sizes:
+
+| figure | aspect | `compact` | `standard` | `large` | what binds |
+| --- | --- | --- | --- | --- | --- |
+| `symmetry` | 1.20 | 420×544 | **683×860** | 833×1040 | the **height ceiling** |
+| `landscape` | 0.33 | 420×223 | 760×363 | 1000×463 | the **width band** |
+
+Down each ladder the geometry class, the subdesign and the composition are identical and only the
+physical footprint moves — and the two ladders are the same three authored decisions landing in very
+different places, which is exactly why size cannot be read off geometry.
+
+This also **removed a special case**: the old contract grew only planes wider than they are tall, to
+one hardcoded `widePreferredWidth: 900`, because there was nowhere to say how large a figure should
+be. Every class is now realised the same way.
+
+`compact` is a **reserved word**. It means a media size and nothing else: no composition, subdesign or
+responsive state in this grammar may be called `compact`, because one word cannot mean both physical
+importance and spatial arrangement.
+
+A `large` figure can essentially never take `visual.side` — the derived switch point is figure + gap +
+420px of reading, and a large figure already consumes the surface. That is the layering working: a
+figure that shares a row with a reading column **is** a supporting figure, so it is authored `compact`.
 
 ### Media geometry stays extremely dumb
 
@@ -226,7 +283,7 @@ for the same reason. None is built.
 
 ## 7. What the build checks
 
-Fifteen controls. Each is here because it caught something, and each has been driven to fail on
+Twenty-one controls. Each is here because it caught something, and each has been driven to fail on
 purpose — the regression script lives in this commit's history, not in the repo.
 
 | Control | What it caught |
@@ -246,10 +303,17 @@ purpose — the regression script lives in this commit's history, not in the rep
 | **The page never scrolls sideways** | local overflow is local or it is a defect |
 | **A figure region contains a painted plane, and is exactly it** | a region holding the literal text `undefined`; a full-width region around a narrower plane |
 | **Same payload, same slots, at every width and tab state** | a proof that shows different material at two widths proves nothing about either |
+| **The tab strip is one row, and the current tab is whole** | four tabs falling onto a second line reads as an accident; a current tab half off the end is worse |
+| **Only a declared contract may scroll sideways** | `local` for authored indivisible material and `tabstrip` for the strip — anything else is a defect |
+| **The figure carries an authored `mediaSize`** | a figure with no authored size, and an invented size name; both refused rather than defaulted |
+| **A bounded wrapper is not a size** | a band-sized box around an unchanged narrow plane satisfies every measurement of the *region* and fails this one |
+| **A realisation lies inside its authored band** | a size class whose numbers stopped being the ones that reach the page |
+| **Two size classes realise genuinely different planes** | `compact` and `standard` given identical bounds: the class would have been decoration |
+| **A size class never changes the geometry class or the subdesign** | size and shape are separate axes, and a size that reclassifies a shape has collapsed them |
 
 ## 8. Status
 
-These 60 images are a **proposal**. `lesson-studio.html` is frozen and nothing is built until the
+These 63 images are a **proposal**. `lesson-studio.html` is frozen and nothing is built until the
 grammar is approved. `src/atlas.json` is the grammar; `src/atlas.css` states the designs;
 `src/*.html` are the payloads; `src/pack.json` authors the composition list and tab signature of every
 page; `atlas-report.json` records every render.

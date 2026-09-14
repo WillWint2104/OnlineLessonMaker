@@ -158,7 +158,46 @@ This replaces every occupancy percentage the resolver ever used:
 | Local horizontal scrolling | only for components whose contract permits it |
 | Changing composition because a paragraph is short | **forbidden** |
 
-## 5. What the build checks## 5. What the build checks
+## 4e. The missing layer — `mediaSize`
+
+The maintainer rejected image 1 a second time, and correctly. `visual.down` and an undistorted plane
+had fixed the figure's **shape**; the symmetry graph was still **488×625 on a 1152px desktop page**.
+The sentence *"a plane must never grow past its legible preferred size"* assumed the preferred size
+was already a good instructional display size, and it never was — it is the largest box that still
+paints the authored domain at equal unit scale within a legibility bound, which for a tall plane is a
+small box.
+
+So the chain gains a step, between the media and its geometry:
+
+```
+media type → mediaSize (authored) → geometry class → approved subdesign → responsive state
+```
+
+`mediaSize` is a **semantic** classification, authored and required: `compact` (supporting) ·
+`standard` (ordinary instructional) · `large` (primary explanatory) · `workspace` (reserved for the
+practice family). Each prescribes a width band and a height ceiling per surface; the figure is
+realised at the widest width in its band whose *measured* box clears the ceiling, with the
+mathematics and equal unit scale untouched. It is never inferred from whitespace, paragraph length,
+occupancy, step count, available height — or from the figure's own aspect ratio.
+
+The lesson authors two figures, and now says how important each is:
+
+| figure | authored | geometry | desktop | tablet | narrow |
+| --- | --- | --- | --- | --- | --- |
+| Symmetry | `standard` — the maintainer's ruling | portrait → `down` | 488×625 → **683×860** | 488×625 → 616×779 | 382×498 |
+| A flatter parabola | `large` — the subtopic *is* this graph | wide → `down` | 900×385 → **1000×463** | 900×385 → 800×378 | 382×211 |
+
+683px was not chosen. It is what the frozen `standard` band and ceiling produce for a 1.2-aspect
+plane, and it lands inside the 600–700px the maintainer expected. For the symmetry graph the
+**height ceiling** is what settles the width; for the flatter parabola the **width band** is.
+
+One consequence the build reports rather than hides: a figure whose domain is far taller than it is
+wide can overrun its class's ceiling even at the band minimum. `graphcheck` (aspect 1.83) realises
+**600×1108** at `standard`, and the run prints `CEILING YIELDED TO THE BAND MINIMUM`. The authored
+size outranks the ceiling — the alternative is shrinking below the size the author asked for, which
+is the defect this whole layer exists to remove.
+
+## 5. What the build checks
 
 Everything the atlas checks, plus the three above. In particular:
 
@@ -170,6 +209,9 @@ Everything the atlas checks, plus the three above. In particular:
 | **Tab structure identical at every width** | count, labels, panels, nesting, kind |
 | **One affordance per tab kind, at every depth** | `collection` is an item selector, `views` a view switch |
 | **`scroll.x = local-when-needed` is a permission** | each region must be local and well-behaved; the run as a whole must need it at least once, or the contract is untested. The table of values fits at 1152 and overflows at 382 — both correct |
+| **Every figure carries an authored `mediaSize`** | omitted or invented, both stop the run and name the four frozen classes — a default would be the renderer deciding how important the author's figure is |
+| **A bounded wrapper is not a size** | the *painted plane* must itself occupy the width its authored class prescribes for that surface |
+| **Content cannot move a realised plane** | the perturbation control tripled the prose and doubled the steps, and now compares every plane's realised width and height as well as every prescribed state |
 | **Equal-unit scale, region = plane, prose measure, height unconstrained, no inline geometry** | as the atlas |
 
 ## 5b. Accepted as golden
@@ -177,6 +219,10 @@ Everything the atlas checks, plus the three above. In particular:
 Ruled after the first lesson and to be built upon rather than revisited: **`single.flow`,
 `single.split`, `collection.repeat`, `scroll.y = page`, and the narrow repeated-example anatomy** —
 together with the hierarchy *subtopic tabs → explanation → example → example → synthesis*.
+
+The four-axis grammar, the vocabulary and the derived `visual.side` switch point are frozen.
+`mediaSize` is an addition **beside** them, not a reopening of any of them: no composition, no
+collection mode, no switch point and no threshold changed in this pass.
 
 ## 6. Status
 

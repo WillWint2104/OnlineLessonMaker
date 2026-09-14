@@ -82,5 +82,9 @@
     "c": "SCROLL · y = pane. An explicit template feature, not a renderer trick: the stimulus stays while the worklist moves. The narrow state gives the bound up and returns to page scroll." },
   { "n": "20", "demo": "scroll.x=local", "frag": "scroll.overflow-x",
     "tpls": ["single.flow"], "localX": [""],
-    "c": "SCROLL · x = local-when-needed. A table of values and an un-breakable expansion. Each overflows inside its own region; the page never scrolls sideways." }
+    "c": "SCROLL · x = local-when-needed. A table of values and an un-breakable expansion. Each overflows inside its own region; the page never scrolls sideways." },
+  { "n": "21", "demo": "mediaSize", "frag": "mediaSize",
+    "surfaces": ["desktop", "tablet", "narrow"],
+    "tpls": ["visual", "visual", "visual", "visual", "visual", "visual"],
+    "c": "THE SIZE LADDER. One tall plane and one wide plane, each at compact / standard / large. The authored size class is the ONLY thing that differs down a ladder: the geometry class, the resolved subdesign and the composition are identical, and every plane still paints at equal unit scale. For the tall plane the size class\u2019s HEIGHT CEILING settles the width; for the wide plane the WIDTH BAND does. Geometry decides the shape; the author decides the importance." }
 ]

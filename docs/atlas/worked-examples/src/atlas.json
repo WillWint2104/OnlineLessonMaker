@@ -11,6 +11,7 @@
     "— and the renderer never invents a tab, never moves content between tabs, and never treats a tall screen as a failure"
   ],
   "axes": {
+    "_chain": "media type → SEMANTIC MEDIA SIZE → geometry class → approved media subdesign → prescribed responsive state. Each step answers one question and may never answer the next one's.",
     "composition": {
       "question": "What is visible together, and where?",
       "decidedBy": "author"
@@ -23,8 +24,12 @@
       "question": "Which surface is allowed to move?",
       "decidedBy": "author"
     },
+    "mediaSize": {
+      "question": "How much visual importance should this media receive?",
+      "decidedBy": "author"
+    },
     "mediaGeometry": {
-      "question": "Which approved subdesign does the media shape permit?",
+      "question": "Which approved subdesign does the media SHAPE permit, and what shape must it preserve?",
       "decidedBy": "the figure's own geometry"
     },
     "_state": "The responsive state is not a fifth axis. It is the prescribed wide/narrow arrangement OF a composition, from the surface width alone, and it can never select a different composition."
@@ -132,7 +137,7 @@
     }
   },
   "mediaGeometry": {
-    "_": "EXTREMELY DUMB ON PURPOSE. From the authored domain's aspect at equal unit scale. It answers exactly one question — which approved subdesign does this composition use — and it may never answer `maybe this should be a different composition`. RETUNED after the first lesson: see `whySideIsRare`.",
+    "_": "EXTREMELY DUMB ON PURPOSE, AND NOW NARROWER STILL. From the authored domain's aspect at equal unit scale it answers exactly one question — which approved subdesign does this composition use — and it may never answer `maybe this should be a different composition` NOR `how large should this be`. Size is `mediaSize`, authored; geometry only says what shape that size must become.",
     "classes": {
       "portrait": "ratio > 1.0   — taller than it is wide",
       "balanced": "0.75 – 1.0    — as wide as it is tall, or wider",
@@ -160,8 +165,8 @@
       }
     },
     "proof": "comparison.sharedVisual with a balanced figure resolves .side; with a portrait, landscape or wide figure it resolves .down. BOTH REMAIN comparison.sharedVisual — a subdesign change with no semantic change.",
-    "widePreferredWidth": 900,
-    "whySideIsRare": "THE FIRST LESSON SETTLED THIS. `visual.side` puts a plane beside a reading column, and a plane that is TALLER THAN IT IS WIDE guarantees the column ends far above the plane's foot — measured at 388px of empty rail on the lesson's Symmetry view (figure 647px, reading 259px). The maintainer ruled that a near-square or tall graph takes `down`, and that a taller page is explicitly preferable to an awkward side composition. Tightening the `balanced` band alone could not deliver that: at 1.20 the plane simply moved from `balanced` into `portrait`, which also resolved `side`. So `portrait` resolves `down` as well, and `side` is now reserved for the one shape it actually suits — a plane no taller than it is wide. THE DECISION IS STILL PURE MEDIA GEOMETRY: the authored domain's aspect, and nothing about paragraph length, sentence count, occupancy or measured dead space."
+    "whySideIsRare": "THE FIRST LESSON SETTLED THIS. `visual.side` puts a plane beside a reading column, and a plane that is TALLER THAN IT IS WIDE guarantees the column ends far above the plane's foot — measured at 388px of empty rail on the lesson's Symmetry view (figure 647px, reading 259px). The maintainer ruled that a near-square or tall graph takes `down`, and that a taller page is explicitly preferable to an awkward side composition. Tightening the `balanced` band alone could not deliver that: at 1.20 the plane simply moved from `balanced` into `portrait`, which also resolved `side`. So `portrait` resolves `down` as well, and `side` is now reserved for the one shape it actually suits — a plane no taller than it is wide. THE DECISION IS STILL PURE MEDIA GEOMETRY: the authored domain's aspect, and nothing about paragraph length, sentence count, occupancy or measured dead space.",
+    "whySizeLeftHere": "The contract used to publish a `preferredWidth` and treat it as the final instructional display size. It was never that: it is the largest box that still paints the authored domain at equal unit scale within a legibility bound, which for a tall plane is a small box. On the first lesson that shipped a 488×625 symmetry graph onto a 1152px desktop page — mathematically perfect, instructionally a thumbnail. The preferred size is now an INPUT to the size class, not a substitute for one."
   },
   "switchPoints": {
     "_": "A switch point is PRESCRIBED, never searched. Most are a constant belonging to the composition. One is derived — and derived only from the authored figure's own preferred width and one design-system constant. It never looks at the prose, the step count or the height.",
@@ -271,5 +276,109 @@
       "the narrow repeated-example anatomy"
     ],
     "hierarchy": "subtopic tabs → explanation → example → example → synthesis"
+  },
+  "mediaSize": {
+    "_": "HOW PHYSICALLY IMPORTANT IS THIS MEDIA? A SEMANTIC CLASSIFICATION, AUTHORED, NEVER INFERRED. It is the layer that was missing: geometry can say what shape a plane must keep, and it can never say how large that plane deserves to be. A tiny supporting number-line, an ordinary worked-example graph, a major explanatory graph and an interactive workspace can all share one aspect ratio.",
+    "authoredAs": "\"mediaSize\": \"compact\" | \"standard\" | \"large\" | \"workspace\" — on the composition node that carries the figure. REQUIRED: there is no default, because a default would be the renderer deciding how important the author's figure is.",
+    "neverInferredFrom": [
+      "whitespace",
+      "paragraph length",
+      "occupancy",
+      "step count",
+      "available height",
+      "how tall the page turned out",
+      "the figure's own aspect ratio"
+    ],
+    "classes": {
+      "compact": {
+        "means": "a SUPPORTING visual — it accompanies material the reader is there for anyway",
+        "use": "the plane in a `visual.side` row; a small check beside a reading column",
+        "bounds": {
+          "desktop": {
+            "min": 300,
+            "max": 420,
+            "maxHeight": 560
+          },
+          "tablet": {
+            "min": 300,
+            "max": 420,
+            "maxHeight": 560
+          },
+          "narrow": {
+            "min": 300,
+            "max": 382,
+            "maxHeight": 620
+          }
+        }
+      },
+      "standard": {
+        "means": "an ORDINARY INSTRUCTIONAL visual — the reader is meant to stop and look at it",
+        "use": "the default working size for a taught graph. Most figures in most lessons.",
+        "bounds": {
+          "desktop": {
+            "min": 600,
+            "max": 760,
+            "maxHeight": 860
+          },
+          "tablet": {
+            "min": 520,
+            "max": 760,
+            "maxHeight": 780
+          },
+          "narrow": {
+            "min": 300,
+            "max": 382,
+            "maxHeight": 620
+          }
+        }
+      },
+      "large": {
+        "means": "a PRIMARY EXPLANATORY visual — the page exists in order to show it",
+        "use": "the one graph a whole subtopic is about",
+        "bounds": {
+          "desktop": {
+            "min": 760,
+            "max": 1000,
+            "maxHeight": 1040
+          },
+          "tablet": {
+            "min": 600,
+            "max": 800,
+            "maxHeight": 900
+          },
+          "narrow": {
+            "min": 300,
+            "max": 382,
+            "maxHeight": 620
+          }
+        }
+      },
+      "workspace": {
+        "means": "a WORKING SURFACE someone acts on rather than reads",
+        "status": "named and bounded for completeness; it belongs to the practice family under `later` and no teaching composition authors it yet",
+        "bounds": {
+          "desktop": {
+            "min": 820,
+            "max": 1100,
+            "maxHeight": 1040
+          },
+          "tablet": {
+            "min": 600,
+            "max": 810,
+            "maxHeight": 900
+          },
+          "narrow": {
+            "min": 300,
+            "max": 382,
+            "maxHeight": 620
+          }
+        }
+      }
+    },
+    "howBoundsAreRealised": "The size class prescribes a WIDTH BAND and a HEIGHT CEILING per surface. The figure is realised at the widest width in the band whose MEASURED box clears the ceiling, with its mathematical geometry and equal unit scale untouched — the width comes down, the plane is never squashed. If even the band minimum exceeds the ceiling the minimum wins and the build says so: legibility outranks the ceiling.",
+    "whyAHeightCeiling": "Because a width band alone cannot stop a tall plane. Giving a 1.2-aspect graph the full standard width produced a 760×952 plane; the ceiling brings it to 683×860. THIS IS THE RULE THAT REPLACED THE `growable` HACK — the old contract grew only planes wider than they are tall, to one hardcoded wide-figure width, because there was nowhere to say how big a figure should be. Now every class is realised the same way and the special case is gone.",
+    "whatTheCeilingIsNot": "It is a frozen design token, exactly like `minInterpretation`. It is never read from the page, the prose, the surrounding content or the rendered height of anything.",
+    "interactionWithSide": "A `large` figure can essentially never take `visual.side`, because the derived switch point is figure + gap + 420px of reading and a large figure already consumes the surface. That is the layering working, not a defect: a figure that shares a row with a reading column IS a supporting figure, so it is authored `compact`.",
+    "reservedWord": "`compact` NOW MEANS A MEDIA SIZE AND NOTHING ELSE. No composition, subdesign or responsive state in this grammar may be called `compact` — not `visual.down.compact`, not anything else — because one word cannot mean both physical importance and spatial arrangement. (The shipping app carries an unrelated legacy alias `compact` → `sequence` in its own frozen page vocabulary; this atlas never uses that name for a composition.)"
   }
 }

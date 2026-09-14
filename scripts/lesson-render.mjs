@@ -16,6 +16,14 @@
 // THE ONE RULE: the author chooses the instructional structure; the renderer chooses only the
 // prescribed responsive state and the media subdesign belonging to that structure.
 //
+// A FIGURE IS AUTHORED AT A SEMANTIC SIZE, and the chain is five steps, not four:
+//
+//     media type -> mediaSize (authored) -> geometry class -> approved subdesign -> responsive state
+//
+// `mediaSize` says how much instructional importance the figure deserves; geometry says what shape
+// that importance must keep. Neither may answer the other's question, and the size is REQUIRED — a
+// default would be the renderer deciding how important the author's figure is.
+//
 // The derived `visual.side` switch point is a RESPONSIVE VIABILITY CALCULATION and nothing else:
 //
 //     side is viable when   availableWidth ≥ figurePreferredWidth + gap + minInterpretationWidth
@@ -55,6 +63,7 @@ const COLLECTION_MODES = new Set(Object.keys(A.collections)
   .filter((k) => k.startsWith('collection.')).map((k) => k.slice('collection.'.length)));
 const VIEWS_MODES = new Set(Object.keys(A.collections)
   .filter((k) => k.startsWith('views.')).map((k) => k.slice('views.'.length)));
+const SIZES = Object.keys(A.mediaSize.classes);
 
 class MissingCapability extends Error {
   constructor(what, asked, available) {
@@ -129,11 +138,15 @@ function composition(node, figs) {
         + steps(k.steps, 'Worked solution') + answer(k.answer) + `</section>`).join('')
       + `</div>` + synthesis(node.synthesis) + `</article>`;
   if (c === 'visual') {
-    const f = figs[node.figure];
-    if (!f) throw new MissingCapability('a figure', node.figure, Object.keys(figs));
-    return `<div data-tpl="visual" data-fig="${esc(node.figure)}">`
+    if (!node.mediaSize) throw new MissingCapability('a mediaSize for the figure ' + node.figure,
+      '(none authored)', SIZES);
+    if (!SIZES.includes(node.mediaSize)) throw new MissingCapability('a mediaSize', node.mediaSize, SIZES);
+    const req = `${node.figure}@${node.mediaSize}`;
+    const f = figs[req];
+    if (!f) throw new MissingCapability('a figure', node.figure, [...new Set(Object.values(figs).map((x) => x.key))]);
+    return `<div data-tpl="visual" data-fig="${esc(req)}">`
       + (node.title ? `<h3 data-slot="title">${t(node.title)}</h3>` : '')
-      + `<div data-slot="figure"><p class="at-lab">${esc(node.label || 'Graph')}</p>{{FIG:${node.figure}}}</div>`
+      + `<div data-slot="figure"><p class="at-lab">${esc(node.label || 'Graph')}</p>{{FIG:${req}}}</div>`
       + `<div data-slot="interpretation"><p class="at-lab">${esc(node.reading.label)}</p>`
       + node.reading.paragraphs.map(para).join('') + `</div></div>`;
   }
@@ -235,10 +248,12 @@ const APP_CSS = await (async () => {
 if (!/\.mx-figskin\.tp-slide/.test(APP_CSS)) throw new Error('the lifted stylesheet is missing the figure token mapping');
 
 const figPage = await openFigurePage(browser, base);
-const wantFigs = new Set(JSON.stringify(LESSON).match(/"figure":\s*"([a-z0-9-]+)"/g)
-  ?.map((s) => s.split('"')[3]) || []);
-console.log('\nmedia geometry — the figures this lesson authors');
-const FIG = await measureFigures({ figPage, A, FIGS, keys: wantFigs, log: console.log });
+/* a REQUEST is a figure at an authored size, because the same plane at two sizes is two figures as
+   far as the media contract is concerned — and one of them is not the other scaled in a wrapper */
+const wantFigs = new Set([...JSON.stringify(LESSON)
+  .matchAll(/"figure":\s*"([a-z0-9-]+)",\s*"mediaSize":\s*"([a-z]+)"/g)].map((m) => `${m[1]}@${m[2]}`));
+console.log('\nmedia size and media geometry — the figures this lesson authors');
+const FIG = await measureFigures({ figPage, A, FIGS, want: wantFigs, log: console.log });
 
 const tokens = (surface, pad) => `:root{
   --at-surface:${surface}px; --at-pad:${pad}px; --at-gap:${M.gap}px;
@@ -262,14 +277,15 @@ async function shot(name, state, surfaceName, opts = {}) {
   const surface = A.surfaces[surfaceName], pad = A.surfacePad[surfaceName];
   let body = opts.body || BODY;
   const used = [];
-  body = body.replace(/\{\{FIG:([a-z0-9-]+)\}\}/gi, (m, key) => {
+  body = body.replace(/\{\{FIG:([a-z0-9-]+@[a-z]+)\}\}/gi, (m, key) => {
     const f = FIG[key]; used.push(key);
     const box = f.box[surfaceName];
     if (box.w > surface + 1) throw new Error(`${name}: ${key} needs ${box.w}px in a ${surface}px region`);
     return skin(box.w, box.h, box.html);
   });
   for (const key of used)
-    body = body.split(`data-fig="${key}"`).join(`data-fig="${key}" data-fig-class="${FIG[key].cls}" data-sub="${FIG[key].sub}"`);
+    body = body.split(`data-fig="${key}"`).join(`data-fig="${key}" data-fig-class="${FIG[key].cls}" `
+      + `data-media-size="${FIG[key].size}" data-sub="${FIG[key].sub}"`);
   const figSwitch = {};
   for (const key of used) figSwitch[key] = FIG[key].switchAt;
 
@@ -389,7 +405,12 @@ ${body}</div>
         const ux = per('middle', 'x'), uy = per('end', 'y');
         if (ux && uy) ratio = +((ux * rect.width / vb[2]) / (uy * rect.height / vb[3])).toFixed(3);
       }
-      return { region: Math.round(r.getBoundingClientRect().width), ratio, plane: q ? Math.round(q.getBoundingClientRect().width) : null };
+      const own = r.closest('[data-tpl]');
+      return { region: Math.round(r.getBoundingClientRect().width), ratio,
+        plane: q ? Math.round(q.getBoundingClientRect().width) : null,
+        planeH: q ? Math.round(q.getBoundingClientRect().height) : null,
+        size: own && own.getAttribute('data-media-size'), cls: own && own.getAttribute('data-fig-class'),
+        fig: own && own.getAttribute('data-fig') };
     });
     const scrollers = { y: [], x: [] };
     for (const el of surf.querySelectorAll('*')) {
@@ -478,7 +499,16 @@ function verify(name, state, r) {
   if (m.inline.length) throw new Error(`${name}: inline geometry on ${m.inline[0]}`);
   for (const f of m.figs) {
     if (f.plane == null) throw new Error(`${name}: a figure region contains no painted plane`);
+    /* CONTROL · A BOUNDED WRAPPER IS NOT A SIZE. The PAINTED PLANE must itself occupy the width the
+       authored size class prescribes — a band-sized box around an unchanged narrow plane would pass
+       any measurement of the region and fail this one. */
     if (f.region - f.plane > 1) throw new Error(`${name}: a figure region is ${f.region}px around a ${f.plane}px plane`);
+    if (!f.size) throw new Error(`${name}: a figure is painted with no authored mediaSize`);
+    const bd = A.mediaSize.classes[f.size].bounds[r.surfaceName], av = r.surface;
+    const lo = Math.min(bd.min, av), hi = Math.min(bd.max, av);
+    if (f.plane < lo - 1 || f.plane > hi + 1)
+      throw new Error(`${name}: ${f.fig} painted ${f.plane}px wide — outside the ${f.size} band `
+        + `${lo}-${hi}px for a ${av}px surface`);
     if (f.ratio != null && Math.abs(f.ratio - 1) > 0.01)
       throw new Error(`${name}: a plane painted at ${f.ratio} — one x-unit and one y-unit are not the same length`);
   }
@@ -534,28 +564,31 @@ for (const state of STATES) {
     if (SIG == null) SIG = r.m.tabSig;
     const m = verify(name, state, r);
     REPORT.push({ image: name, state: state.key, surface: r.surface, surfaceName: r.surfaceName,
-      sideBalance: m.sideBalance,
+      sideBalance: m.sideBalance, figs: m.figs,
       compositions: m.tpls, resolved: [...new Set(m.resolved)], states: m.states,
-      pageHeight: m.docH, scrollX: m.scrollers.x.length, figures: r.used.map((k) => `${k}:${FIG[k].cls}→${FIG[k].resolved}`) });
+      pageHeight: m.docH, scrollX: m.scrollers.x.length, figures: r.used.map((k) => `${k}:${FIG[k].cls}→${FIG[k].resolved}@${FIG[k].box[r.surfaceName].w}×${FIG[k].box[r.surfaceName].h}`) });
     console.log(`  ${name.padEnd(46)} ${String(r.surface).padStart(4)}px  page ${String(m.docH).padStart(5)}px`
-      + `  ${[...new Set(m.resolved)].filter((x) => x.includes('.')).join(' ')}`);
+      + `  ${[...new Set(m.resolved)].filter((x) => x.includes('.')).join(' ')}`
+      + (m.figs.length ? '  · ' + m.figs.map((f) => `${f.fig} ${f.plane}×${f.planeH}`).join(' ') : ''));
   }
 }
 
 /* CONTROL · THE SWITCH POINT USES ONLY PERMITTED INPUTS. Triple the prose and double the steps —
    every content measurement the rule is forbidden to consult — and assert every prescribed state is
    character-identical. If prose length, step count or rendered height had leaked in, this moves. */
-console.log('\ncontrol · content perturbation must not move a single prescribed state');
+console.log('\ncontrol · content perturbation must not move a prescribed state OR a realised plane');
 const swollen = BODY
   .replace(/<p>([^<][\s\S]*?)<\/p>/g, (mm, inner) => `<p>${inner}</p><p>${inner}</p><p>${inner}</p>`)
   .replace(/<li class="at-step">([\s\S]*?)<\/li>/g, (mm, inner) => `<li class="at-step">${inner}</li><li class="at-step">${inner}</li>`);
 for (const state of STATES) {
   for (const surfaceName of Object.keys(A.surfaces)) {
-    const plain = REPORT.find((x) => x.state === state.key && x.surfaceName === surfaceName).states.join('|');
+    const ref = REPORT.find((x) => x.state === state.key && x.surfaceName === surfaceName);
+    const sig = (x) => x.states.join('|') + ' // ' + x.figs.map((f) => `${f.fig}:${f.plane}x${f.planeH}`).join(',');
+    const plain = sig({ states: ref.states, figs: ref.figs });
     const r = await shot('perturb', state, surfaceName, { body: swollen, noShot: true });
-    const got = r.m.states.join('|');
+    const got = sig(r.m);
     if (got !== plain)
-      throw new Error(`content perturbation moved a prescribed state at ${surfaceName} / ${state.key}\n`
+      throw new Error(`content perturbation moved a prescribed state or a realised plane at ${surfaceName} / ${state.key}\n`
         + `  plain    ${plain}\n  swollen  ${got}`);
   }
   console.log(`  ${state.key.padEnd(34)} unchanged at every width`);

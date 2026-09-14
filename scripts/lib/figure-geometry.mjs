@@ -1,18 +1,28 @@
-// FIGURE GEOMETRY — the media-geometry contract, with ONE owner.
+// FIGURE GEOMETRY — the media-size and media-geometry contracts, with ONE owner.
 //
-// Extracted so the atlas and the lesson renderer cannot drift: a figure's preferred width is an
-// input to the frozen `visual.side` switch point, and two copies of that number is two grammars.
+// Extracted so the atlas and the lesson renderer cannot drift: a figure's realised width is an input
+// to the frozen `visual.side` switch point, and two copies of that number is two grammars.
 //
-// What this measures, and what it refuses to:
+// FIVE STEPS, AND EACH ANSWERS EXACTLY ONE QUESTION:
 //
-//   · a plane's INTRINSIC LEGIBLE SIZE, searched by asking the shipped Figure Engine to paint and
-//     scoring the painted result — px per authored x-unit against px per authored y-unit;
-//   · its MEDIA GEOMETRY CLASS (portrait · balanced · landscape · wide) from the authored domain;
-//   · one box per surface, each SOLVED at the width it will occupy.
+//     media type → SEMANTIC MEDIA SIZE → geometry class → approved subdesign → responsive state
 //
-// It never reads prose, step counts, rendered heights, occupancy or dead space. The only numbers
-// that leave here are the figure's own.
-export const SQUARE = 0.006, TOL = 0.02, FLOOR = { w: 340, h: 255 }, BOUND = 720;
+// This module owns the middle three. What it measures:
+//
+//   · a plane's MEDIA GEOMETRY CLASS (portrait · balanced · landscape · wide) from the authored domain;
+//   · its REALISED BOX per surface — the widest width in the AUTHORED size class's band whose measured
+//     box clears that class's height ceiling, at equal unit scale, with the mathematics untouched;
+//   · the derived `visual.side` switch point, from the realised width alone.
+//
+// IT DOES NOT DECIDE HOW LARGE A FIGURE SHOULD BE. That is `mediaSize`, authored, and it arrives here
+// as a name. Geometry can say what shape a plane must keep; it can never say how much importance the
+// plane deserves — a supporting number-line and a major explanatory graph can share an aspect ratio.
+// Treating the old `preferredWidth` as the final display size is exactly how a 488x625 symmetry graph
+// ended up on a 1152px desktop page: mathematically perfect, instructionally a thumbnail.
+//
+// It never reads prose, step counts, rendered heights, occupancy or dead space. The only numbers that
+// leave here are the figure's own and the frozen tokens in atlas.json.
+export const SQUARE = 0.006, TOL = 0.02;
 export const square = (r) => r.ratio != null && Math.abs(r.ratio - 1) <= SQUARE;
 /* THE BANDS COME FROM THE GRAMMAR, NOT FROM HERE. They were hardcoded in this module while
    atlas.json declared them in prose, so retuning the grammar changed nothing and the two quietly
@@ -74,29 +84,12 @@ export function makePainter(figPage) {
   };
 }
 
-/* a box that paints the authored domain at a given px-per-unit, found by measuring rather than
-   modelling — the engine's label gutters are not a constant, and which axis binds changes with
-   the box */
+/* THE BOX IS MEASURED, NEVER MODELLED — the engine's label gutters are not a constant, and which axis
+   binds changes with the box. A SURFACE DOES NOT CHOOSE A SCALE: it offers a width, and the figure's
+   own aspect decides the height. So this solves for HEIGHT at a fixed width. It replaced a binary
+   search over scale, which was searching the wrong variable and collapsed to a 169px plane that still
+   painted perfectly square. */
 export function makeSolvers(paint) {
-  async function boxForScale(key, fig, s) {
-    const d = fig.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
-    let w = Math.round(xs * s + 50), h = Math.round(ys * s + 100);
-    for (let i = 0; i < 6; i++) {
-      if (w < 60 || h < 60 || w > 4000 || h > 4000) return null;
-      const r = await paint(key, fig, w, h);
-      if (r.x == null || r.y == null) return null;
-      if (Math.abs(r.x - s) / s <= TOL && Math.abs(r.y - s) / s <= TOL && square(r)) return { w, h, ...r };
-      const nw = Math.max(60, Math.round(w * Math.min(2, Math.max(0.5, s / r.x))));
-      const nh = Math.max(60, Math.round(h * Math.min(2, Math.max(0.5, s / r.y))));
-      if (nw === w && nh === h) return null;
-      w = nw; h = nh;
-    }
-    return null;
-  }
-  /* A SURFACE DOES NOT CHOOSE A SCALE — it offers a width, and the figure's own aspect decides the
-     height. So this solves for HEIGHT at a fixed width. It replaced a binary search over scale,
-     which was searching the wrong variable and collapsed to a 169px plane that still painted
-     perfectly square. */
   async function boxForWidth(key, fig, w) {
     const d = fig.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
     const h0 = Math.round((ys / xs) * (w - 50) + 100);
@@ -113,78 +106,109 @@ export function makeSolvers(paint) {
     }
     return best ? { s: best.box.x, box: best.box, err: best.err } : null;
   }
-  async function largestWithin(key, fig, lo, hi, cap) {
-    let best = null;
-    for (let i = 0; i < 9 && hi - lo > 0.25; i++) {
-      const mid = (lo + hi) / 2, b = await boxForScale(key, fig, mid);
-      if (b && Math.max(b.w, b.h) <= cap) { best = { s: mid, box: b }; lo = mid; } else hi = mid;
-    }
-    return best;
-  }
-  return { boxForScale, boxForWidth, largestWithin };
+  return { boxForWidth };
 }
 
-/* THE MEDIA-GEOMETRY CONTRACT for one set of figures: class, subdesign, preferred box, one box per
+/* A REQUEST IS A FIGURE AT AN AUTHORED SIZE — `symmetry@standard`. The size is never optional and
+   never defaulted: a default would be the renderer deciding how important the author's figure is. */
+export const parseRequest = (req, sizes) => {
+  const [key, size] = String(req).split('@');
+  if (!size) throw new Error(`the figure "${key}" was asked for with no mediaSize — one of `
+    + `${sizes.join(', ')} must be authored, because a default would be the renderer deciding how `
+    + `important the figure is`);
+  if (!sizes.includes(size)) throw new Error(`"${key}" asks for mediaSize "${size}" — the frozen `
+    + `vocabulary is ${sizes.join(', ')}`);
+  return { key, size };
+};
+
+/* THE SIZE CLASS PRESCRIBES A WIDTH BAND AND A HEIGHT CEILING; THE GEOMETRY DECIDES WHAT SHAPE THAT
+   BECOMES. Realised by measurement: take the widest width the band allows, and if the measured box
+   is taller than the class's ceiling, bring the WIDTH down — never squash the plane — until it is
+   not. The plane's mathematics and equal unit scale are untouched throughout.
+
+   The affine step is only how the next width to MEASURE is chosen; every number that survives is a
+   measured one. Nothing here can read prose, height of surrounding content, occupancy or step count:
+   the inputs are the authored domain, the authored size class and the surface. */
+async function realise(key, fig, bounds, avail, boxForWidth, label) {
+  const maxW = Math.min(bounds.max, avail), minW = Math.min(bounds.min, avail), H = bounds.maxHeight;
+  const solve = async (w) => {
+    const b = await boxForWidth(key, fig, w);
+    if (!b) throw new Error(`${label}: no box at all fits a ${w}px width`);
+    if (b.box.w < 0.9 * w)
+      throw new Error(`${label}: the box solved to ${b.box.w}x${b.box.h} against a ${w}px target — `
+        + `the search collapsed rather than converged`);
+    if (!square(b.box))
+      throw new Error(`${label}: no height at ${w}px paints this domain at equal unit scale `
+        + `(best ${b.box.w}x${b.box.h} at ${b.box.ratio})`);
+    return b.box;
+  };
+  const top = await solve(maxW);
+  if (top.h <= H) return { box: top, bound: 'width', yielded: false };
+  if (maxW <= minW) return { box: top, bound: 'height', yielded: true };
+  const bot = await solve(minW);
+  /* LEGIBILITY OUTRANKS THE CEILING. A plane so tall that even the band minimum overruns is still
+     drawn at the minimum — it is never shrunk below the size class the author chose — and the build
+     says so rather than silently producing a figure nobody asked for. */
+  if (bot.h > H) return { box: bot, bound: 'height', yielded: true };
+  const slope = (top.h - bot.h) / (maxW - minW);
+  let w = Math.max(minW, Math.min(maxW, Math.floor(minW + (H - bot.h) / slope)));
+  let box = await solve(w);
+  for (let i = 0; i < 12 && box.h > H && w > minW; i++) { w = Math.max(minW, w - 4); box = await solve(w); }
+  if (box.h > H) return { box: bot, bound: 'height', yielded: true };
+  return { box, bound: 'height', yielded: false };
+}
+
+/* THE CONTRACT for one set of requests: geometry class, approved subdesign, the realised box per
    surface, and the derived `visual.side` switch point.
 
    THE SWITCH POINT IS A RESPONSIVE VIABILITY CALCULATION, NOT A LAYOUT CHOICE. It asks only:
    can the prescribed side-by-side subdesign physically satisfy its two minimum regions?
 
-       side is viable when   availableWidth ≥ figurePreferredWidth + gap + minInterpretationWidth
+       side is viable when   availableWidth >= figureRealisedWidth + gap + minInterpretationWidth
 
-   `figurePreferredWidth` comes only from this contract; `gap` and `minInterpretation` are fixed
-   design-system tokens. Prose length, rendered height, step count, occupancy and dead space are
-   not inputs and are not available here. Crossing the threshold changes the prescribed responsive
-   state only — the authored composition is untouched — and because it is a pure width comparison,
-   resizing back across it restores the side state exactly, carrying nothing from the state before.
+   `figureRealisedWidth` is the figure at its authored size class, unconstrained by any surface —
+   one number per request, from this contract only; `gap` and `minInterpretation` are fixed
+   design-system tokens. Prose length, rendered height, step count, occupancy and dead space are not
+   inputs and are not available here. Crossing the threshold changes the prescribed responsive state
+   only — the authored composition is untouched — and because it is a pure width comparison, resizing
+   back across it restores the side state exactly, carrying nothing from the state before.
 
    `visual.down` has no switch point at all: media already assigned the down subdesign stays down,
    however wide the monitor. */
-export async function measureFigures({ figPage, A, FIGS, keys, log }) {
+export async function measureFigures({ figPage, A, FIGS, want, log }) {
   const paint = makePainter(figPage);
-  const { boxForScale, boxForWidth, largestWithin } = makeSolvers(paint);
+  const { boxForWidth } = makeSolvers(paint);
   const M = A.measures, SUB = A.mediaGeometry.resolves.visual;
+  const SIZES = Object.keys(A.mediaSize.classes);
   const SURFACES = Object.keys(A.surfaces);
   const FIG = {};
-  for (const [key, f] of Object.entries(FIGS)) {
-    if (key.startsWith('_') || (keys && !keys.has(key))) continue;
+  for (const req of want) {
+    if (FIG[req]) continue;
+    const { key, size } = parseRequest(req, SIZES);
+    const f = FIGS[key];
+    if (!f) throw new Error(`no figure "${key}" — the set is ${Object.keys(FIGS).filter((k) => k[0] !== '_').join(', ')}`);
     const d = f.figure.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
     const cls = classOf(ys / xs, A.mediaGeometry.bands), sub = SUB[cls];
-    const top = await largestWithin(key, f.figure, 4, 260, BOUND);
-    if (!top) throw new Error(`${key}: no box inside the ${BOUND}px bound paints this domain at equal scale`);
-    const floor = Math.max(FLOOR.w / xs, FLOOR.h / ys);
-    const sPref = Math.max(Math.min(floor, top.s), 0.85 * top.s);
-    const pref = (await boxForScale(key, f.figure, sPref)) || top.box;
+    const bounds = A.mediaSize.classes[size].bounds;
 
-    /* A PLANE IS NEVER GROWN PAST ITS LEGIBLE PREFERRED SIZE. The `down` box rule grew a figure to
-       the atlas's wide-figure width, which is right for a plane that is wider than it is tall — a
-       717px landscape plane reads better at 896px — and wrong for every other shape. When the
-       retune moved `portrait` into `down`, that rule met a tall plane for the first time and blew
-       the 488x625 symmetry graph up to 900x1120, which is worse than the void it was meant to
-       remove. The growth now applies only to planes that are wider than they are tall. */
-    const growable = cls === 'landscape' || cls === 'wide';
-    const box = {};
+    /* THE FIGURE AT ITS AUTHORED IMPORTANCE, unconstrained by any one surface. This is what the
+       switch point is derived from, and it is the desktop band because that is where the size class
+       is fully expressible. */
+    const want0 = await realise(key, f.figure, bounds.desktop, Infinity, boxForWidth, `${req} desktop`);
+    const pref = want0.box;
+    const box = {}, bound = {}, yielded = [];
     for (const sName of SURFACES) {
-      const avail = A.surfaces[sName];
-      const target = sub === 'down' && growable ? Math.min(A.mediaGeometry.widePreferredWidth, avail)
-                                                : Math.min(pref.w, avail);
-      if (target === pref.w) { box[sName] = pref; continue; }
-      const b = await boxForWidth(key, f.figure, target);
-      if (!b) throw new Error(`${key}: no box at all fits the ${target}px ${sName} target`);
-      if (b.box.w < 0.9 * target)
-        throw new Error(`${key}: the ${sName} box solved to ${b.box.w}x${b.box.h} against a ${target}px `
-          + `target — the search collapsed rather than converged`);
-      if (!square(b.box))
-        throw new Error(`${key}: no height at ${target}px paints this domain at equal unit scale `
-          + `(best ${b.box.w}x${b.box.h} at ${b.box.ratio})`);
-      box[sName] = b.box;
+      const r = await realise(key, f.figure, bounds[sName], A.surfaces[sName], boxForWidth, `${req} ${sName}`);
+      box[sName] = r.box; bound[sName] = r.bound;
+      if (r.yielded) yielded.push(sName);
     }
     const switchAt = sub === 'side' ? pref.w + M.gap + M.minInterpretation : null;
-    FIG[key] = { cls, sub, resolved: 'visual.' + sub, switchAt, pref, box, html: pref.html };
-    if (log) log(`  ${key.padEnd(11)} ${String(ys / xs).slice(0, 4).padEnd(5)} aspect → ${cls.padEnd(9)} `
-      + `→ visual.${sub.padEnd(5)} · preferred ${pref.w}×${pref.h} @${sPref.toFixed(1)} px/unit (${pref.ratio})`
-      + (switchAt ? ` · side viable at ≥${switchAt}px` : ' · no switch point')
-      + ' · boxes ' + SURFACES.map((n) => `${n[0]}${box[n].w}×${box[n].h}`).join(' '));
+    FIG[req] = { key, size, cls, sub, resolved: 'visual.' + sub, switchAt, pref, box, bound, yielded, html: pref.html };
+    if (log) log(`  ${req.padEnd(20)} ${String(ys / xs).slice(0, 4).padEnd(5)} aspect -> ${cls.padEnd(9)}`
+      + ` -> visual.${sub.padEnd(5)} · ${size} realises ${pref.w}x${pref.h} (${pref.ratio}, ${bound.desktop}-bound)`
+      + (switchAt ? ` · side viable at >=${switchAt}px` : ' · no switch point')
+      + ' · boxes ' + SURFACES.map((n) => `${n[0]}${box[n].w}x${box[n].h}`).join(' ')
+      + (yielded.length ? `  [CEILING YIELDED TO THE BAND MINIMUM at ${yielded.join(', ')}]` : ''));
   }
   return FIG;
 }
