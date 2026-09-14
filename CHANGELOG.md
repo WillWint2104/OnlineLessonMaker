@@ -8,6 +8,38 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **The Composition Atlas** (`docs/atlas/composition/`, `scripts/composition-atlas.mjs`, no app change).
+  The maintainer stopped the renderer work and redirected to the page-composition problem itself: a
+  small catalogue of page patterns on a shared master grid, with typed slots into which lesson blocks
+  are placed, rather than a resolver that keeps asking *how big should this be?*
+  - **Grid ≠ layout.** A 12 / 8 / 4-column master grid at 1152 / 834 / 382px gives alignment lines and
+    decides nothing. One number arrived on its own: eight desktop columns is `8 × 74 + 7 × 24` =
+    **exactly 760px**, the reading measure the previous atlas had reached from typography alone — so
+    the measure is a grid position, and the build refuses a pattern that sets prose wider.
+  - **Two vocabularies.** A **block** says what something *is*; a **slot** says what may live *there*.
+    Collapsing them is how a graph came to own a size. A graph now receives a slot and answers only
+    *inside this width, at equal unit scale, this is the faithful rendering I can provide*.
+  - **Eight patterns, 48 renders**, every page filled from the real quadratics lesson: `notes.basic`,
+    `notes.examples-tabs`, `visual.explanation`, `visual.compare`, `media.full`, `interactive.primary`,
+    `practice.workbook`, `practice.graph-workbook`. Each records grid areas, allowed blocks per slot,
+    occupancy, reading measure, media behaviour, disclosure, scroll ownership and three surfaces —
+    and the CSS for every arrangement is **generated from that record**, so design and layout have one
+    owner.
+  - **`visual.side` was designed, rendered, measured and REMOVED.** It fills the surface exactly and
+    reads well beside four paragraphs; beside one sentence it left ~600px of empty column — the rail,
+    for the third time. A composition whose soundness depends on how much prose the author happened to
+    write is content-dependent, and content may never decide a composition. Every visual pattern now
+    stacks, and the aspect class chooses only a **width**.
+  - **Occupancy policies**: `required` · `optional-collapse` (the row is *dropped*, because an
+    unoccupied named track keeps its row-gap — 40px of nothing is residue under another name) ·
+    `optional-reserved` (declared, and honestly unused).
+  - **Fifteen controls, each driven to fail on purpose**, including three that are new in kind: slot
+    edges must land on grid lines; a slot must be the width its pattern gave it (driven to fail with a
+    real resolver that measures rendered prose); and adversarial content must move nothing but height.
+  - `mediaSize` is recorded as the useful **failed intermediate** it was: it proved semantic importance
+    and media geometry are separate concerns, which is why this catalogue has a slot layer. The old
+    atlas is marked superseded rather than deleted.
+  - `lesson-studio.html` is unchanged and byte-identical since `41d40a8`.
 - **The missing layer: `mediaSize`** (`docs/atlas/`, `scripts/lib/figure-geometry.mjs`, no app change).
   The maintainer rejected image 1 a second time, and correctly: `visual.down` and an undistorted plane
   had fixed the *shape*, and the symmetry graph was still **488×625 on a 1152px desktop page** —

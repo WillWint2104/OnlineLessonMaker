@@ -311,7 +311,26 @@ purpose — the regression script lives in this commit's history, not in the rep
 | **Two size classes realise genuinely different planes** | `compact` and `standard` given identical bounds: the class would have been decoration |
 | **A size class never changes the geometry class or the subdesign** | size and shape are separate axes, and a size that reclassifies a shape has collapsed them |
 
-## 8. Status
+## 8. Superseded, and by what
+
+**The page-composition problem was being solved at the wrong layer.** This atlas asks a composition
+how large its media should be; the maintainer has ruled that the question belongs to a *slot on a
+master grid*, given by a *page pattern* chosen before any content exists. The successor is
+`docs/atlas/composition/` — a 12/8/4-column master grid, typed slots, and a catalogue of golden page
+patterns whose arrangements are designed first and encoded second.
+
+What survives from here, and is built on rather than revisited: the two tab kinds and the evidence
+that they must be *encoded* rather than styled · scroll as two separate contracts · equal-unit media
+geometry and the aspect classes · the reading measure · height is never a constraint · and the
+discipline that every control must be driven to fail on purpose.
+
+What does not: `mediaSize` (`compact | standard | large | workspace`) was a useful **failed
+intermediate**. It proved that semantic importance and media geometry are separate concerns — which
+is exactly why the successor has a slot layer — but the slot, not an authored size class, is the
+permanent mechanism. The derived `visual.side` switch point goes with it: a pattern now declares its
+approved subdesigns outright instead of deriving a threshold.
+
+## 9. Status
 
 These 63 images are a **proposal**. `lesson-studio.html` is frozen and nothing is built until the
 grammar is approved. `src/atlas.json` is the grammar; `src/atlas.css` states the designs;

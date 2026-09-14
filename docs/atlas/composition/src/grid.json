@@ -1,0 +1,33 @@
+{
+  "_": "THE MASTER GRID. It gives common alignment lines. IT DOES NOT DECIDE THE COMPOSITION. Composition is a PAGE PATTERN choosing named slots; the grid only says where their edges may fall. This is the distinction the previous three attempts kept losing: every time the grid was given a little more responsibility it ended up designing the page from measurements.",
+  "notLayout": "A grid that is allowed to answer 'should these two things sit beside each other?' or 'how big should this be?' is a resolver. This one answers only 'where may an edge fall?'.",
+  "surfaces": {
+    "desktop": { "width": 1152, "columns": 12, "gutter": 24, "pad": 30 },
+    "tablet":  { "width":  834, "columns":  8, "gutter": 20, "pad": 24 },
+    "phone":   { "width":  382, "columns":  4, "gutter": 16, "pad": 16 }
+  },
+  "why12": "Not because 12 is magical, but because it divides cleanly into the compositions courseware actually needs: 12 · 8+4 · 7+5 · 6+6 · 4+4+4 · 3+6+3. Eight columns reduce to 6+2 · 5+3 · 4+4; four columns to 2+2 and, in practice, to one stacked column.",
+  "columns": {
+    "desktop": [74, 172, 270, 368, 466, 564, 662, 760, 858, 956, 1054, 1152],
+    "tablet": [86.75, 193.5, 300.25, 407, 513.75, 620.5, 727.25, 834],
+    "phone": [83.5, 183, 282.5, 382],
+    "_": "span(n) in px, 1-indexed. The CSS uses repeat(N, minmax(0,1fr)) so these are what the grid produces, not what it is told; they are published because a pattern is designed against them."
+  },
+  "vertical": {
+    "rule": "AUTO. Rows grow with their content. THE PAGE SCROLLS.",
+    "never": "The page is never fitted to the viewport height, and a tall page is never a failed layout. Height is not an optimisation target and is not an input to any decision.",
+    "unit": 8,
+    "scale": [8, 16, 24, 32, 40, 48, 64, 80, 96],
+    "_": "One spatial unit and repeated multiples, so gutters, padding and vertical rhythm stay coherent."
+  },
+  "readingMeasure": {
+    "px": 760,
+    "maxSpan": { "desktop": 8, "tablet": 7, "phone": 4 },
+    "_": "PROSE IS NEVER SET WIDER THAN 760px. On this grid that is EXACTLY eight desktop columns — the 12-column grid at 1152 with 24px gutters lands on the measure the previous atlas had already arrived at from typography alone. A slot that may hold prose may not exceed the spans above, and the build refuses a pattern that breaks it."
+  },
+  "whitespace": {
+    "readingMargin": "Free width OUTSIDE a pattern's slots is reading margin and is legitimate.",
+    "residue": "Free width INSIDE a named slot, left over because the arithmetic worked out that way, is LAYOUT RESIDUE and is a defect. It is fixed by choosing a different approved subdesign, never by measuring the content.",
+    "designed": "Emptiness that is part of the composition is declared by a slot with occupancy `optional-reserved`, and has to be justified."
+  }
+}

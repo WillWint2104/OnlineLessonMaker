@@ -1,0 +1,578 @@
+[
+  {
+    "image": "01-notes-basic-desktop",
+    "pattern": "notes.basic",
+    "subdesign": "measure",
+    "surface": "desktop",
+    "aspect": null,
+    "pageHeight": 1352,
+    "slots": [
+      "intro:760",
+      "reading:760",
+      "support:564",
+      "synthesis:760"
+    ],
+    "cols": [
+      "intro:8col",
+      "reading:8col",
+      "support:6col",
+      "synthesis:8col"
+    ]
+  },
+  {
+    "image": "01-notes-basic-tablet",
+    "pattern": "notes.basic",
+    "subdesign": "measure",
+    "surface": "tablet",
+    "aspect": null,
+    "pageHeight": 1138,
+    "slots": [
+      "intro:727.25",
+      "reading:727.25",
+      "support:513.75",
+      "synthesis:727.25"
+    ],
+    "cols": [
+      "intro:7col",
+      "reading:7col",
+      "support:5col",
+      "synthesis:7col"
+    ]
+  },
+  {
+    "image": "01-notes-basic-phone",
+    "pattern": "notes.basic",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": null,
+    "pageHeight": 1395,
+    "slots": [
+      "intro:382",
+      "reading:382",
+      "support:382",
+      "synthesis:382"
+    ],
+    "cols": [
+      "intro:4col",
+      "reading:4col",
+      "support:4col",
+      "synthesis:4col"
+    ]
+  },
+  {
+    "image": "02-notes-examples-tabs-desktop",
+    "pattern": "notes.examples-tabs",
+    "subdesign": "measure",
+    "surface": "desktop",
+    "aspect": null,
+    "pageHeight": 1261,
+    "slots": [
+      "intro:760",
+      "support:368",
+      "examples:760",
+      "synthesis:760"
+    ],
+    "cols": [
+      "intro:8col",
+      "support:4col",
+      "examples:8col",
+      "synthesis:8col"
+    ]
+  },
+  {
+    "image": "02-notes-examples-tabs-tablet",
+    "pattern": "notes.examples-tabs",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "aspect": null,
+    "pageHeight": 1167,
+    "slots": [
+      "intro:727.25",
+      "support:513.75",
+      "examples:727.25",
+      "synthesis:727.25"
+    ],
+    "cols": [
+      "intro:7col",
+      "support:5col",
+      "examples:7col",
+      "synthesis:7col"
+    ]
+  },
+  {
+    "image": "02-notes-examples-tabs-phone",
+    "pattern": "notes.examples-tabs",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": null,
+    "pageHeight": 1343,
+    "slots": [
+      "intro:382",
+      "support:382",
+      "examples:382",
+      "synthesis:382"
+    ],
+    "cols": [
+      "intro:4col",
+      "support:4col",
+      "examples:4col",
+      "synthesis:4col"
+    ]
+  },
+  {
+    "image": "03-visual-explanation-desktop",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "desktop",
+    "aspect": "portrait",
+    "pageHeight": 1957,
+    "slots": [
+      "media:760",
+      "interpretation:760",
+      "support:564"
+    ],
+    "cols": [
+      "media:8col",
+      "interpretation:8col",
+      "support:6col"
+    ]
+  },
+  {
+    "image": "03-visual-explanation-tablet",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "aspect": "portrait",
+    "pageHeight": 1868,
+    "slots": [
+      "media:834",
+      "interpretation:727.25",
+      "support:513.75"
+    ],
+    "cols": [
+      "media:8col",
+      "interpretation:7col",
+      "support:5col"
+    ]
+  },
+  {
+    "image": "03-visual-explanation-phone",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": "portrait",
+    "pageHeight": 1443,
+    "slots": [
+      "media:382",
+      "interpretation:382",
+      "support:382"
+    ],
+    "cols": [
+      "media:4col",
+      "interpretation:4col",
+      "support:4col"
+    ]
+  },
+  {
+    "image": "04-visual-explanation-desktop",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "desktop",
+    "aspect": "wide",
+    "pageHeight": 1148,
+    "slots": [
+      "media:760",
+      "interpretation:760"
+    ],
+    "cols": [
+      "media:8col",
+      "interpretation:8col"
+    ]
+  },
+  {
+    "image": "04-visual-explanation-tablet",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "aspect": "wide",
+    "pageHeight": 1012,
+    "slots": [
+      "media:834",
+      "interpretation:727.25"
+    ],
+    "cols": [
+      "media:8col",
+      "interpretation:7col"
+    ]
+  },
+  {
+    "image": "04-visual-explanation-phone",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": "wide",
+    "pageHeight": 947,
+    "slots": [
+      "media:382",
+      "interpretation:382"
+    ],
+    "cols": [
+      "media:4col",
+      "interpretation:4col"
+    ]
+  },
+  {
+    "image": "05-visual-compare-desktop",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "desktop",
+    "aspect": "portrait",
+    "pageHeight": 2236,
+    "slots": [
+      "intro:760",
+      "caseA:564",
+      "caseB:564",
+      "media:760",
+      "interpretation:760",
+      "synthesis:760"
+    ],
+    "cols": [
+      "intro:8col",
+      "caseA:6col",
+      "caseB:6col",
+      "media:8col",
+      "interpretation:8col",
+      "synthesis:8col"
+    ]
+  },
+  {
+    "image": "05-visual-compare-tablet",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "tablet",
+    "aspect": "portrait",
+    "pageHeight": 1948,
+    "slots": [
+      "intro:727.25",
+      "caseA:407",
+      "caseB:407",
+      "media:727.25",
+      "interpretation:727.25",
+      "synthesis:727.25"
+    ],
+    "cols": [
+      "intro:7col",
+      "caseA:4col",
+      "caseB:4col",
+      "media:7col",
+      "interpretation:7col",
+      "synthesis:7col"
+    ]
+  },
+  {
+    "image": "05-visual-compare-phone",
+    "pattern": "visual.compare",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": "portrait",
+    "pageHeight": 1939,
+    "slots": [
+      "intro:382",
+      "caseA:382",
+      "caseB:382",
+      "media:382",
+      "interpretation:382",
+      "synthesis:382"
+    ],
+    "cols": [
+      "intro:4col",
+      "caseA:4col",
+      "caseB:4col",
+      "media:4col",
+      "interpretation:4col",
+      "synthesis:4col"
+    ]
+  },
+  {
+    "image": "06-media-full-desktop",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "desktop",
+    "aspect": "wide",
+    "pageHeight": 1424,
+    "slots": [
+      "media:1152",
+      "interpretation:760",
+      "support:564"
+    ],
+    "cols": [
+      "media:12col",
+      "interpretation:8col",
+      "support:6col"
+    ]
+  },
+  {
+    "image": "06-media-full-tablet",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "tablet",
+    "aspect": "wide",
+    "pageHeight": 1113,
+    "slots": [
+      "media:834",
+      "interpretation:727.25",
+      "support:513.75"
+    ],
+    "cols": [
+      "media:8col",
+      "interpretation:7col",
+      "support:5col"
+    ]
+  },
+  {
+    "image": "06-media-full-phone",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "phone",
+    "aspect": "wide",
+    "pageHeight": 1046,
+    "slots": [
+      "media:382",
+      "interpretation:382",
+      "support:382"
+    ],
+    "cols": [
+      "media:4col",
+      "interpretation:4col",
+      "support:4col"
+    ]
+  },
+  {
+    "image": "07-interactive-primary-desktop",
+    "pattern": "interactive.primary",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "aspect": "wide",
+    "pageHeight": 1231,
+    "slots": [
+      "intro:760",
+      "workspace:760",
+      "prompts:368",
+      "synthesis:760"
+    ],
+    "cols": [
+      "intro:8col",
+      "workspace:8col",
+      "prompts:4col",
+      "synthesis:8col"
+    ]
+  },
+  {
+    "image": "07-interactive-primary-tablet",
+    "pattern": "interactive.primary",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "aspect": "wide",
+    "pageHeight": 1242,
+    "slots": [
+      "intro:727.25",
+      "workspace:834",
+      "prompts:727.25",
+      "synthesis:727.25"
+    ],
+    "cols": [
+      "intro:7col",
+      "workspace:8col",
+      "prompts:7col",
+      "synthesis:7col"
+    ]
+  },
+  {
+    "image": "07-interactive-primary-phone",
+    "pattern": "interactive.primary",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": "wide",
+    "pageHeight": 1326,
+    "slots": [
+      "intro:382",
+      "workspace:382",
+      "prompts:382",
+      "synthesis:382"
+    ],
+    "cols": [
+      "intro:4col",
+      "workspace:4col",
+      "prompts:4col",
+      "synthesis:4col"
+    ]
+  },
+  {
+    "image": "08-practice-workbook-desktop",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "aspect": null,
+    "pageHeight": 1129,
+    "slots": [
+      "intro:760",
+      "questions:466",
+      "workspace:662"
+    ],
+    "cols": [
+      "intro:8col",
+      "questions:5col",
+      "workspace:7col"
+    ]
+  },
+  {
+    "image": "08-practice-workbook-tablet",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "tablet",
+    "aspect": null,
+    "pageHeight": 962,
+    "slots": [
+      "intro:727.25",
+      "questions:407",
+      "workspace:407"
+    ],
+    "cols": [
+      "intro:7col",
+      "questions:4col",
+      "workspace:4col"
+    ]
+  },
+  {
+    "image": "08-practice-workbook-phone",
+    "pattern": "practice.workbook",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": null,
+    "pageHeight": 1323,
+    "slots": [
+      "intro:382",
+      "questions:382",
+      "workspace:382"
+    ],
+    "cols": [
+      "intro:4col",
+      "questions:4col",
+      "workspace:4col"
+    ]
+  },
+  {
+    "image": "09-practice-graph-workbook-desktop",
+    "pattern": "practice.graph-workbook",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "aspect": "balanced",
+    "pageHeight": 1363,
+    "slots": [
+      "intro:760",
+      "questions:368",
+      "workspace:760",
+      "reference:368"
+    ],
+    "cols": [
+      "intro:8col",
+      "questions:4col",
+      "workspace:8col",
+      "reference:4col"
+    ]
+  },
+  {
+    "image": "09-practice-graph-workbook-tablet",
+    "pattern": "practice.graph-workbook",
+    "subdesign": "beside",
+    "surface": "tablet",
+    "aspect": "balanced",
+    "pageHeight": 1152,
+    "slots": [
+      "intro:727.25",
+      "questions:300.25",
+      "workspace:513.75",
+      "reference:300.25"
+    ],
+    "cols": [
+      "intro:7col",
+      "questions:3col",
+      "workspace:5col",
+      "reference:3col"
+    ]
+  },
+  {
+    "image": "09-practice-graph-workbook-phone",
+    "pattern": "practice.graph-workbook",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": "balanced",
+    "pageHeight": 1662,
+    "slots": [
+      "intro:382",
+      "questions:382",
+      "workspace:382",
+      "reference:382"
+    ],
+    "cols": [
+      "intro:4col",
+      "questions:4col",
+      "workspace:4col",
+      "reference:4col"
+    ]
+  },
+  {
+    "image": "10-visual-explanation-desktop",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "desktop",
+    "aspect": "balanced",
+    "pageHeight": 1697,
+    "slots": [
+      "media:760",
+      "interpretation:760",
+      "support:564"
+    ],
+    "cols": [
+      "media:8col",
+      "interpretation:8col",
+      "support:6col"
+    ]
+  },
+  {
+    "image": "10-visual-explanation-tablet",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "aspect": "balanced",
+    "pageHeight": 1557,
+    "slots": [
+      "media:834",
+      "interpretation:727.25",
+      "support:513.75"
+    ],
+    "cols": [
+      "media:8col",
+      "interpretation:7col",
+      "support:5col"
+    ]
+  },
+  {
+    "image": "10-visual-explanation-phone",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": "balanced",
+    "pageHeight": 1362,
+    "slots": [
+      "media:382",
+      "interpretation:382",
+      "support:382"
+    ],
+    "cols": [
+      "media:4col",
+      "interpretation:4col",
+      "support:4col"
+    ]
+  }
+]
