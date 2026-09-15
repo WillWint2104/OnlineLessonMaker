@@ -1,0 +1,234 @@
+{
+  "_": "THE DISCRETE SPAN VOCABULARY — A PROPOSAL, awaiting the maintainer. Nothing here is wired into docs/atlas/composition/src yet; 24667ce remains the checkpoint.",
+  "theProblem": "The catalogue has patterns, but the slots inside them are still continuous: a subdesign writes its own grid-areas rows by hand, so a region can be any width and the columns beside it can belong to nobody. That is how `paired` came to leave 474px of unowned page, and how a 3:4 photograph came to be painted 1152x1536 — both technically valid, both obviously wrong.",
+  "theFix": "A ROW IS A NAMED SPLIT, AND AREAS ARE GENERATED FROM IT. A subdesign no longer writes column strings; it names a split from this vocabulary and says which region holds which slot. Every column of every row then belongs to something by construction, and a footprint that is not in this table cannot be expressed at all.",
+  "notAResolver": "None of this measures anything. A split is chosen from the surface and the media's geometry class — both categorical — and the set of splits a pattern may use is authored, not computed. The program is not deciding whether a page looks balanced; it is choosing among a handful of arrangements a human already decided are balanced.",
+  "regionRoles": {
+    "_": "What a region of a split may be. There is no fourth option, which is what makes an unnamed column impossible rather than merely discouraged.",
+    "slot": "a named slot of the pattern.",
+    "reading-margin": "free columns BESIDE A PROSE SLOT, because prose is bound by the reading measure and the page is wider. Legal only in a split whose other region holds prose.",
+    "containment": "the free columns either side of a CENTRED split. The split declares them, so they are part of the composition. Legal only in a centred split, and always symmetric."
+  },
+  "surfaces": {
+    "desktop": {
+      "columns": 12,
+      "proseMax": 8,
+      "splits": {
+        "4/8": {
+          "regions": [
+            [
+              1,
+              4
+            ],
+            [
+              5,
+              12
+            ]
+          ],
+          "kind": "pair",
+          "note": "a narrow leading region and a dominant one"
+        },
+        "5/7": {
+          "regions": [
+            [
+              1,
+              5
+            ],
+            [
+              6,
+              12
+            ]
+          ],
+          "kind": "pair",
+          "note": "the shape practice.workbook already uses: a reference column beside a workspace"
+        },
+        "6/6": {
+          "regions": [
+            [
+              1,
+              6
+            ],
+            [
+              7,
+              12
+            ]
+          ],
+          "kind": "pair",
+          "note": "TWO EQUAL CASES. Identical width IS the argument; this is the only split where equality is the point"
+        },
+        "8/4": {
+          "regions": [
+            [
+              1,
+              8
+            ],
+            [
+              9,
+              12
+            ]
+          ],
+          "kind": "pair",
+          "note": "a dominant leading region and a narrow one"
+        },
+        "centred-6": {
+          "regions": [
+            [
+              4,
+              9
+            ]
+          ],
+          "kind": "centred",
+          "containment": [
+            [
+              1,
+              3
+            ],
+            [
+              10,
+              12
+            ]
+          ]
+        },
+        "centred-8": {
+          "regions": [
+            [
+              3,
+              10
+            ]
+          ],
+          "kind": "centred",
+          "containment": [
+            [
+              1,
+              2
+            ],
+            [
+              11,
+              12
+            ]
+          ]
+        },
+        "full-12": {
+          "regions": [
+            [
+              1,
+              12
+            ]
+          ],
+          "kind": "full"
+        }
+      }
+    },
+    "tablet": {
+      "columns": 8,
+      "proseMax": 7,
+      "_": "SEPARATELY APPROVED, not the desktop design squeezed. Eight columns is a different vocabulary, and a control refuses a tablet row whose split is merely the desktop split scaled.",
+      "splits": {
+        "3/5": {
+          "regions": [
+            [
+              1,
+              3
+            ],
+            [
+              4,
+              8
+            ]
+          ],
+          "kind": "pair"
+        },
+        "4/4": {
+          "regions": [
+            [
+              1,
+              4
+            ],
+            [
+              5,
+              8
+            ]
+          ],
+          "kind": "pair",
+          "note": "two equal cases at tablet"
+        },
+        "5/3": {
+          "regions": [
+            [
+              1,
+              5
+            ],
+            [
+              6,
+              8
+            ]
+          ],
+          "kind": "pair"
+        },
+        "7/1": {
+          "regions": [
+            [
+              1,
+              7
+            ],
+            [
+              8,
+              8
+            ]
+          ],
+          "kind": "pair",
+          "note": "THE TABLET PROSE ROW. Seven columns is 727px, the most this surface can give prose without passing the 760px measure; the eighth is its reading margin. `full-8` is 834px and may hold media, never prose."
+        },
+        "centred-6": {
+          "regions": [
+            [
+              2,
+              7
+            ]
+          ],
+          "kind": "centred",
+          "containment": [
+            [
+              1,
+              1
+            ],
+            [
+              8,
+              8
+            ]
+          ]
+        },
+        "full-8": {
+          "regions": [
+            [
+              1,
+              8
+            ]
+          ],
+          "kind": "full"
+        }
+      }
+    },
+    "phone": {
+      "columns": 4,
+      "proseMax": 4,
+      "_": "At 382px there is no pairing to keep and no containment worth declaring. One split, and everything stacks.",
+      "splits": {
+        "full-4": {
+          "regions": [
+            [
+              1,
+              4
+            ]
+          ],
+          "kind": "full"
+        }
+      }
+    }
+  },
+  "pairingRule": {
+    "_": "WHEN A `pair` SPLIT IS LEGITIMATE. Re-derived from the measurements in the slot-fit atlas, which put numbers on what the earlier rule had only asserted.",
+    "rule": "A pair split is legitimate when BOTH regions have a height the author did not write: two cases of the same kind at identical width, or a region whose height is designed (a workspace's paper, an instrument's frame) beside one that is not.",
+    "forbidden": "AN OBJECT BESIDE PROSE. The object's height is derived and the prose's is written, so the gap between them is a property of the sentence the author happened to type. Measured on identical filler: visual.explanation/side-6 left +474px and interactive.primary/beside +472px. practice.workbook/beside is sound at +139px to -263px, because its neighbour is a workspace with a designed height.",
+    "consequence": "`visual.explanation` and `interactive.primary` stop pairing and become CENTRED SPINES. `visual.compare` keeps 6/6, because two equal cases is exactly what that split is for. `practice.workbook` keeps 5/7."
+  }
+}

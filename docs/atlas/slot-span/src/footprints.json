@@ -1,0 +1,817 @@
+{
+  "_": "WHAT EACH PATTERN MAY DO WITH ITS COLUMNS — A PROPOSAL, awaiting the maintainer. The pattern owns the legal footprints; the media's geometry class chooses among them. Nothing measures anything: both inputs are categorical, and the answer to \"why six columns and not eight or twelve?\" is a row of this table, by name.",
+  "theChain": "media type → media geometry class → approved footprint → fit mode → painted media. Each arrow is a lookup, never a calculation. A pattern cannot invent a footprint, and a geometry class cannot ask for one the pattern does not list.",
+  "rowModel": "A subdesign is a list of ROWS, and a row is a NAMED SPLIT from spans.json plus which region holds which slot. Nothing writes column strings by hand any more, so `reading-margin` and `containment` are declared rather than left over. The row marked `media: true` is the only one whose split varies, and it varies only with the geometry class.",
+  "patterns": {
+    "notes": {
+      "mediaSlot": "illustration",
+      "slotFit": "contain",
+      "intent": "Teaching notes. The illustration supports the reading; it is not the subject of the page.",
+      "rows": {
+        "desktop": [
+          {
+            "split": "8/4",
+            "regions": [
+              "intro",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "reading",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "centred-6",
+            "regions": [
+              "illustration"
+            ],
+            "media": true
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "examples",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "synthesis",
+              "reading-margin"
+            ]
+          }
+        ],
+        "tablet": [
+          {
+            "split": "7/1",
+            "regions": [
+              "intro",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "reading",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "centred-6",
+            "regions": [
+              "illustration"
+            ],
+            "media": true
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "examples",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "synthesis",
+              "reading-margin"
+            ]
+          }
+        ],
+        "phone": [
+          {
+            "split": "full-4",
+            "regions": [
+              "intro"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "reading"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "illustration"
+            ],
+            "media": true
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "examples"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "synthesis"
+            ]
+          }
+        ]
+      },
+      "footprints": {
+        "desktop": {
+          "portrait": "centred-6",
+          "balanced": "centred-6",
+          "landscape": "centred-6",
+          "wide": "centred-8"
+        },
+        "tablet": {
+          "portrait": "centred-6",
+          "balanced": "centred-6",
+          "landscape": "centred-6",
+          "wide": "full-8"
+        },
+        "phone": {
+          "portrait": "full-4",
+          "balanced": "full-4",
+          "landscape": "full-4",
+          "wide": "full-4"
+        }
+      },
+      "why": "A supporting illustration never takes more of the grid than the reading it supports. Six centred columns at every desktop shape, widening to eight only for a wide object, which is short enough that the extra reach costs no height.",
+      "edge": "left-edge"
+    },
+    "worked.single": {
+      "mediaSlot": null,
+      "intent": "One worked example. No media slot; included so the split vocabulary covers the whole catalogue and the prose rows declare their margins.",
+      "rows": {
+        "desktop": [
+          {
+            "split": "8/4",
+            "regions": [
+              "intro",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "scenario",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "worked",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "support",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "synthesis",
+              "reading-margin"
+            ]
+          }
+        ],
+        "tablet": [
+          {
+            "split": "7/1",
+            "regions": [
+              "intro",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "scenario",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "worked",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "support",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "synthesis",
+              "reading-margin"
+            ]
+          }
+        ],
+        "phone": [
+          {
+            "split": "full-4",
+            "regions": [
+              "intro"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "scenario"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "worked"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "support"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "synthesis"
+            ]
+          }
+        ]
+      },
+      "footprints": {},
+      "why": "No media. Every prose row is eight columns with its four-column reading margin declared beside it.",
+      "edge": "left-edge"
+    },
+    "visual.explanation": {
+      "mediaSlot": "media",
+      "slotFit": "fill",
+      "intent": "One primary visual and the reading of it, where the READING carries the teaching.",
+      "rows": {
+        "desktop": [
+          {
+            "split": "centred-8",
+            "regions": [
+              "media"
+            ],
+            "media": true
+          },
+          {
+            "split": "centred-8",
+            "regions": [
+              "interpretation"
+            ]
+          },
+          {
+            "split": "centred-8",
+            "regions": [
+              "support"
+            ]
+          }
+        ],
+        "tablet": [
+          {
+            "split": "full-8",
+            "regions": [
+              "media"
+            ],
+            "media": true
+          },
+          {
+            "split": "centred-6",
+            "regions": [
+              "interpretation"
+            ]
+          },
+          {
+            "split": "centred-6",
+            "regions": [
+              "support"
+            ]
+          }
+        ],
+        "phone": [
+          {
+            "split": "full-4",
+            "regions": [
+              "media"
+            ],
+            "media": true
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "interpretation"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "support"
+            ]
+          }
+        ]
+      },
+      "footprints": {
+        "desktop": {
+          "portrait": "centred-6",
+          "balanced": "centred-8",
+          "landscape": "centred-8",
+          "wide": "full-12"
+        },
+        "tablet": {
+          "portrait": "centred-6",
+          "balanced": "full-8",
+          "landscape": "full-8",
+          "wide": "full-8"
+        },
+        "phone": {
+          "portrait": "full-4",
+          "balanced": "full-4",
+          "landscape": "full-4",
+          "wide": "full-4"
+        }
+      },
+      "why": "A CENTRED SPINE, and no pairing at all. The object and the reading share one centre line, so the taller the object the FEWER columns it takes: a portrait plane at six columns is 752px, where twelve would be 1536px. Only a wide object — short by construction — earns the whole grid.",
+      "removed": {
+        "side-6 (6/6)": "media beside its reading. Measured +474px of the object standing past the prose on identical filler. Replaced by the spine.",
+        "side-7 (7/5)": "removed at 24667ce for the same defect at +256px."
+      },
+      "edge": "spine"
+    },
+    "visual.compare": {
+      "mediaSlot": "media",
+      "slotFit": "fill",
+      "intent": "Two cases worked side by side, with one visual that belongs to both.",
+      "rows": {
+        "desktop": [
+          {
+            "split": "8/4",
+            "regions": [
+              "intro",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "6/6",
+            "regions": [
+              "caseA",
+              "caseB"
+            ]
+          },
+          {
+            "split": "centred-8",
+            "regions": [
+              "media"
+            ],
+            "media": true
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "interpretation",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "synthesis",
+              "reading-margin"
+            ]
+          }
+        ],
+        "tablet": [
+          {
+            "split": "7/1",
+            "regions": [
+              "intro",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "4/4",
+            "regions": [
+              "caseA",
+              "caseB"
+            ]
+          },
+          {
+            "split": "full-8",
+            "regions": [
+              "media"
+            ],
+            "media": true
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "interpretation",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "synthesis",
+              "reading-margin"
+            ]
+          }
+        ],
+        "phone": [
+          {
+            "split": "full-4",
+            "regions": [
+              "intro"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "caseA"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "caseB"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "media"
+            ],
+            "media": true
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "interpretation"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "synthesis"
+            ]
+          }
+        ]
+      },
+      "footprints": {
+        "desktop": {
+          "portrait": "centred-6",
+          "balanced": "centred-8",
+          "landscape": "full-12",
+          "wide": "full-12"
+        },
+        "tablet": {
+          "portrait": "centred-6",
+          "balanced": "full-8",
+          "landscape": "full-8",
+          "wide": "full-8"
+        },
+        "phone": {
+          "portrait": "full-4",
+          "balanced": "full-4",
+          "landscape": "full-4",
+          "wide": "full-4"
+        }
+      },
+      "why": "6/6 for the cases, because two equal cases at identical width IS the argument — the one split where equality is the point, and the one pair in this catalogue that is not an object beside prose. The shared visual sits CENTRED ON THE SEAM between them, narrowing as it gets taller: a 3:4 photograph at six columns is 752px, where the twelve it used to take made it 1536px.",
+      "fixed": "The shared visual was full-12 for every geometry class, which is how a portrait object came to be painted 1152x1536.",
+      "edge": "left-edge"
+    },
+    "media.full": {
+      "mediaSlot": "media",
+      "slotFit": "fill",
+      "intent": "A single media object IS the page, with its reading beneath. The one pattern whose object may cross the reading measure.",
+      "rows": {
+        "desktop": [
+          {
+            "split": "full-12",
+            "regions": [
+              "media"
+            ],
+            "media": true
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "interpretation",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "8/4",
+            "regions": [
+              "support",
+              "reading-margin"
+            ]
+          }
+        ],
+        "tablet": [
+          {
+            "split": "full-8",
+            "regions": [
+              "media"
+            ],
+            "media": true
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "interpretation",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "7/1",
+            "regions": [
+              "support",
+              "reading-margin"
+            ]
+          }
+        ],
+        "phone": [
+          {
+            "split": "full-4",
+            "regions": [
+              "media"
+            ],
+            "media": true
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "interpretation"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "support"
+            ]
+          }
+        ]
+      },
+      "footprints": {
+        "desktop": {
+          "portrait": "centred-6",
+          "balanced": "centred-8",
+          "landscape": "full-12",
+          "wide": "full-12"
+        },
+        "tablet": {
+          "portrait": "centred-6",
+          "balanced": "full-8",
+          "landscape": "full-8",
+          "wide": "full-8"
+        },
+        "phone": {
+          "portrait": "full-4",
+          "balanced": "full-4",
+          "landscape": "full-4",
+          "wide": "full-4"
+        }
+      },
+      "why": "The object is the page, so it takes the widest footprint its shape can carry without becoming a column of pixels: the whole grid when it is landscape or wider, eight centred when it is balanced, six when it is portrait. Being the subject of the page is not a licence to be 1536px tall.",
+      "edge": "left-edge"
+    },
+    "interactive.primary": {
+      "mediaSlot": "instrument",
+      "slotFit": "fill",
+      "intent": "A manipulable object is the page: an opening brief, the instrument, and prompts directing what to try.",
+      "rows": {
+        "desktop": [
+          {
+            "split": "centred-8",
+            "regions": [
+              "intro"
+            ]
+          },
+          {
+            "split": "centred-8",
+            "regions": [
+              "instrument"
+            ],
+            "media": true
+          },
+          {
+            "split": "centred-8",
+            "regions": [
+              "prompts"
+            ]
+          },
+          {
+            "split": "centred-8",
+            "regions": [
+              "synthesis"
+            ]
+          }
+        ],
+        "tablet": [
+          {
+            "split": "centred-6",
+            "regions": [
+              "intro"
+            ]
+          },
+          {
+            "split": "full-8",
+            "regions": [
+              "instrument"
+            ],
+            "media": true
+          },
+          {
+            "split": "centred-6",
+            "regions": [
+              "prompts"
+            ]
+          },
+          {
+            "split": "centred-6",
+            "regions": [
+              "synthesis"
+            ]
+          }
+        ],
+        "phone": [
+          {
+            "split": "full-4",
+            "regions": [
+              "intro"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "instrument"
+            ],
+            "media": true
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "prompts"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "synthesis"
+            ]
+          }
+        ]
+      },
+      "footprints": {
+        "desktop": {
+          "portrait": "centred-6",
+          "balanced": "centred-8",
+          "landscape": "centred-8",
+          "wide": "full-12"
+        },
+        "tablet": {
+          "portrait": "centred-6",
+          "balanced": "full-8",
+          "landscape": "full-8",
+          "wide": "full-8"
+        },
+        "phone": {
+          "portrait": "full-4",
+          "balanced": "full-4",
+          "landscape": "full-4",
+          "wide": "full-4"
+        }
+      },
+      "why": "A spine, like visual.explanation. The instrument's frame has a designed height but the prompts beside it did not, so the old 8/4 row left +472px of the instrument standing past them. The prompts now sit beneath, on the same centre line.",
+      "removed": {
+        "beside (8/4)": "the instrument beside its prompts. Measured +472px on identical filler."
+      },
+      "edge": "spine"
+    },
+    "practice.workbook": {
+      "mediaSlot": "reference",
+      "slotFit": "fill",
+      "intent": "A question set beside a workspace the learner acts on, with the stimulus staying while the worklist moves.",
+      "rows": {
+        "desktop": [
+          {
+            "split": "8/4",
+            "regions": [
+              "intro",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "5/7",
+            "regions": [
+              "reference",
+              "workspace"
+            ],
+            "media": true,
+            "spansRows": true
+          },
+          {
+            "split": "5/7",
+            "regions": [
+              "questions",
+              "workspace"
+            ]
+          }
+        ],
+        "tablet": [
+          {
+            "split": "7/1",
+            "regions": [
+              "intro",
+              "reading-margin"
+            ]
+          },
+          {
+            "split": "4/4",
+            "regions": [
+              "reference",
+              "workspace"
+            ],
+            "media": true,
+            "spansRows": true
+          },
+          {
+            "split": "4/4",
+            "regions": [
+              "questions",
+              "workspace"
+            ]
+          }
+        ],
+        "phone": [
+          {
+            "split": "full-4",
+            "regions": [
+              "intro"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "reference"
+            ],
+            "media": true
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "questions"
+            ]
+          },
+          {
+            "split": "full-4",
+            "regions": [
+              "workspace"
+            ]
+          }
+        ]
+      },
+      "footprints": {
+        "desktop": {
+          "portrait": "5/7",
+          "balanced": "5/7",
+          "landscape": "5/7",
+          "wide": "5/7"
+        },
+        "tablet": {
+          "portrait": "4/4",
+          "balanced": "4/4",
+          "landscape": "4/4",
+          "wide": "4/4"
+        },
+        "phone": {
+          "portrait": "full-4",
+          "balanced": "full-4",
+          "landscape": "full-4",
+          "wide": "full-4"
+        }
+      },
+      "why": "THE ONE PATTERN THAT KEEPS ITS PAIR, and the only one whose neighbour has a designed height: the workspace's paper is 512px whatever anyone writes. Measured gaps run +139px to -263px across every fixture, against +474px for the pairs that were removed. The reference footprint does not vary with geometry because the workspace, not the object, owns the column.",
+      "edge": "left-edge"
+    }
+  },
+  "notInTheCatalogue": {
+    "worked.paired": "ASKED FOR AND DOES NOT EXIST. The catalogue has `worked.single` and `visual.compare`; there is no `worked.paired`. If two worked examples side by side is wanted as its own pattern it would be a 6/6 of two `worked` slots — the same legitimate pairing as visual.compare's cases — but it is not designed, so this atlas cannot render it. It needs a decision, not a guess."
+  },
+  "edgeRule": "A PATTERN HAS ONE LEFT EDGE OR ONE CENTRE LINE, NEVER BOTH. Found by looking at the first boards: interactive.primary put its intro at 8/4 (starting at column 1) and its instrument at centred-8 (starting at column 3), so the page had two left edges and neither looked deliberate. Each pattern now declares `edge`: a `left-edge` pattern starts every prose row at column 1 and may still CENTRE ITS MEDIA, because a centred object on a left-aligned page reads as a deliberate stage; a `spine` pattern centres everything on one line. A control refuses a pattern that mixes them.",
+  "unreachable": "APPROVED AND UNREACHABLE, named rather than quietly removed. Nine rows of these tables are for geometry classes no fixture can supply to that pattern's slot: `notes.illustration` admits only images and there is no WIDE image; `interactive.primary.instrument` admits only interactives and there is neither a PORTRAIT nor a WIDE one. Leaving the rows in means the table is complete if such an object is ever authored; the atlas prints the list on every run so the gap is visible rather than implied. It is a gap in the fixture set, not a renderer ignoring its table, and control 6 is scoped to the classes a run actually rendered so it does not confuse the two."
+}
