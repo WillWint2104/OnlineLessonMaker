@@ -33,13 +33,27 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     within one (surface, aspect class), the smallest approved span that clears the media's minimum
     legible width. `validate()` now requires *at least* one approved subdesign per (surface, aspect) and
     refuses two that share a span — which is what makes that sentence deterministic rather than hopeful.
-  - **The media reports capability, never footprint.** `capability()` measures each figure's minimum
-    legible width by binary search over painted width, because the engine does not degrade the way a
-    model of it would: it never collides tick labels (it drops them), never shrinks type (11px at every
-    width from 200 to 1152px), and its labelled-tick count is *not monotonic* in width. Symmetry 209px ·
-    graphcheck 193px · roots 209px · landscape 233px · squareish 225px · markedWide 306px. **Every
-    figure clears the smallest approved desktop span (4 cols = 368px), so promotion is inert at
-    desktop** — the honest finding that the defect was a pattern and alignment problem, not legibility.
+  - **The media reports capability, never footprint.** It is asked one question, about widths it did not
+    choose — *of these approved spans, which can you render faithfully?* — and answers with a subset of a
+    set someone else supplied. Nothing in the reply can be mistaken for a display size.
+  - **Legible at a width is three categorical predicates, and the first version asked only one of them.**
+    No collision; **fidelity** (every painted tick inside the *authored* domain — under equal unit scale
+    the engine expands the shorter domain and derives ticks from the *expanded* range, so at a 209px box
+    `symmetry` prints a y tick at 12 for an authored yMax of 11 and `landscape` prints x = −15 for an
+    authored −12); and **stability** (the tick set the same figure prints at full width, which catches
+    −7.5, −5.0, −2.5 … for an authored ±7). Overlap alone never bound: the real crossings are
+    symmetry 225 · squareish 249 · landscape 266 · graphcheck 209 · roots 233px, all set by fidelity.
+  - **It judges the solved box, not a guessed one.** An earlier version painted at a seed height
+    `round(aspect×(w−50)+100)`, and the verdict moved with the seed — `symmetry` in a 382px slot is clean
+    at h=498, prints x = ±6 at h=398 and decimals at h=698 — making the answer a property of the
+    measuring instrument. It now asks the renderer's own box solver for the box the page actually gets.
+  - **The monotonicity assumption broke, and asking each span removes it.** `roots` is clean at 264px,
+    collides at 296 and 328, and is clean again at 360: an illegible *band*, which no single crossing
+    width describes. A diagnostic still reports the number for a human and says when it is unsafe.
+  - **Promotion never fires on real content, and that is proved by driving it**: a 2-column (172px) state
+    approved for the balanced class is skipped for `side-6`, and a pattern whose only approved state is
+    that one fails the build rather than painting an unfaithful plane. That second case found a defect in
+    the first implementation — a single candidate was returned without ever being asked.
   - **The Slot Inspector, drawn as well as enforced.** Beside every render with media,
     `<name>-inspect.png` overlays the slot, the painted media and any unclaimed width (hatched where it
     actually is), with a panel reporting pattern / subdesign / master grid / media slot / painted media /
@@ -50,6 +64,11 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     `visual.compare/paired` (8 of 12 columns with four unnamed to the right — the shared plane now spans
     what the pair spans), `media.full/inset` (the same defect, *named after it* — now `centred`), and the
     tablet forms of both. `practice.workbook/beside` declared a 7-column media span for a 5-column slot.
+  - **The occupancy signal lost its threshold.** It compared a painted content dimension to a tuned 0.6 —
+    the shape of the resolver this architecture refuses, inside the gate and dormant only because the
+    corpus has no contained media. It now prints the number for every contained object and compares it to
+    nothing. Relatedly the build now says, on every run, that the whole `contain` branch is designed and
+    **unexercised**, rather than letting a green result imply otherwise.
   - **Six new controls, each driven to fail on purpose**: slot fit (a `fill` media at 441px in a 760px
     slot, which prints the whole inspector); every media slot declares a fit; `mediaSpan` equals the
     columns its areas give; `approvedMediaSpans` matches its subdesigns; media alone in a row is centred

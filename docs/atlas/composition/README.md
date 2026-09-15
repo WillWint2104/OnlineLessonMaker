@@ -240,12 +240,24 @@ reading margin.
 | **pattern whitespace** | yes | space inside an explicitly bounded media stage — a portrait diagram centred in a `contain` slot |
 | **slot residue** | **no** | a `fill` slot whose media is narrower than it, or a `contain` media that is neither centred nor deliberately start-aligned. *The renders we have been unhappy with are mostly this.* |
 
+Every media slot in this catalogue is `fill`, because every media block in the corpus is a plane —
+so the **`contain` branch is designed and unexercised**, and the build says so on every run rather
+than letting a green result imply otherwise. One open question belongs to it: `contain` gives a
+maximum, an alignment and a stage, and does not say *who chooses the painted width*. For a raster
+that is its intrinsic pixels; for anything else it would be the renderer, which is media geometry
+deciding width — the direction `fill` exists to forbid. Worth ruling on before the first contained
+image is authored.
+
 Every media slot now declares a **fit**. `fill` means the media consumes the slot width — the slot
 gives the width and the media takes it, never the other way round. `contain` means the media may be
 smaller but must be **deliberately placed**, which means centred unless the slot declares a reason to
 be start-aligned. Both checks are categorical: there is no threshold, no occupancy percentage, and
 nothing the inspector computes ever reaches layout. *This is not a resolver* — "if occupancy < 55%,
-stack" is what made the system lose the design in the first place.
+stack" is what made the system lose the design in the first place. It does report the occupancy of
+every contained object, and deliberately **without a threshold**: the first version compared a
+painted content dimension to a tuned 0.6, which is the shape of the very resolver this refuses,
+sitting inside the gate and dormant only because the corpus has no contained media. It now prints
+the number and compares it to nothing.
 
 Horizontal footprint is discrete and vertical is auto: the slot decides the width, the geometry
 decides the height, and **there is no height ceiling**. A 6-column slot that makes a tall graph 950px
@@ -270,25 +282,53 @@ noticed: `visual.compare/paired` (8 of 12 columns, four unnamed to the right), `
 `practice.workbook/beside` declared a 7-column media span for a 5-column slot.
 
 **Span promotion** is the only automation, and it selects from arrangements that already exist:
-within one (surface, aspect class), take the smallest approved span that clears the media's minimum
-legible width. Not "choose the prettiest arrangement based on content measurements". The media
-reports **capability, never footprint** — it may say what it *needs*, never what it would *like*.
+within one (surface, aspect class), take the smallest approved span the media says it can render
+faithfully. Not "choose the prettiest arrangement based on content measurements".
 
-| Figure | Aspect | Minimum legible width |
-| --- | --- | --- |
-| symmetry | 1.20 | 209px |
-| roots | — | 209px |
-| graphcheck | — | 193px |
-| squareish | 0.857 | 225px |
-| landscape | 0.333 | 233px |
-| markedWide (6 labelled points, built to be demanding) | — | 306px |
+The media reports **capability, never footprint**. It is asked one question, about widths it did not
+choose — *of these approved spans, which can you render faithfully?* — and the answer is a subset of
+a set someone else supplied. There is no number in the reply that a caller could mistake for a
+display size: "I would like to be 488px wide" is not expressible, which is how tiny media ended up
+on large pages in the first place.
 
-Measured by binary search over painted width, because the engine does not degrade the way a model of
-it would: it never collides tick labels (it drops them), never shrinks type (11px at every width from
-200 to 1152px), and its labelled-tick count is **not monotonic** in width. Only authored object
-labels collide. The honest finding: every figure clears the smallest approved desktop span
-(4 columns = 368px), so **promotion is inert at desktop** for everything this engine can draw. The
-defect we were looking at was a pattern and alignment problem, not a legibility one.
+**Legible at a width is three categorical things at once**, and the first version of this asked only
+the first and was wrong for three figures out of four:
+
+1. **No collision** — no two painted texts overlap.
+2. **Fidelity** — every painted tick lies inside the *authored* domain on its own axis. Under equal
+   unit scale the engine expands the shorter domain to fill the plot rect and derives its ticks from
+   the **expanded** range, so a narrow plane prints a scale the author never wrote: at a 209px box
+   `symmetry` prints a y tick at 12 for an authored yMax of 11, and `landscape` prints x = −15 for an
+   authored −12. A plane showing a domain the author did not write is not legible, however cleanly it
+   is set.
+3. **Stability** — the painted tick set is the one the same figure prints at full width. This catches
+   fabricated precision *inside* the domain: −7.5, −5.0, −2.5 … for an authored ±7.
+
+**It judges the solved box, not a guessed one** — the sharpest correction here. An earlier version
+painted at a seed height `round(aspect×(w−50)+100)` and judged that, and the verdict moved with the
+seed: `symmetry` in a 382px slot is clean at h=498, prints x = ±6 for an authored ±5 at h=398, and
+prints decimals at h=698. That made the answer a property of the *measuring instrument*. It now asks
+the renderer's own box solver for the box the page would actually get, and judges those pixels.
+
+**And there is no monotonicity assumption left to break** — there was one, and it broke. `roots` is
+clean at 264px, collides at 296 and 328, and is clean again at 360: an illegible **band**, not a
+threshold, which no single crossing width describes. Asking each approved span directly needs no such
+assumption. A diagnostic still reports the crossing number for a human reading a build log, and says
+when it is unsafe; nothing decides anything with it.
+
+| Figure | Aspect | Renders faithfully at the catalogue's approved spans (382–1152px) | Diagnostic crossing |
+| --- | --- | --- | --- |
+| symmetry | 1.20 | every one | 225px |
+| squareish | 0.857 | every one | 249px |
+| landscape | 0.333 | every one | 266px |
+| graphcheck | 1.833 | every one | 209px |
+| roots | 1.40 | every one | 233px, **unsafe** — illegible band at 296–328px |
+
+The honest finding: **promotion never fires on real content.** It is proved by driving it rather than
+asserted — a 2-column (172px) state approved for the balanced class *is* skipped for `side-6`, and a
+pattern whose only approved state is that one **fails the build** rather than painting an unfaithful
+plane. A single candidate is still asked: an earlier version returned it unexamined, so one
+arrangement could paint a figure at a width it cannot render and nothing would say so.
 
 ## 7. What the build checks
 

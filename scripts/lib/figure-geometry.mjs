@@ -78,18 +78,26 @@ export function makePainter(figPage) {
       /* EVERY PAINTED TEXT, so a caller can ask whether any two of them overlap. The engine drops
          tick labels rather than colliding them, so the only thing that ever collides is the labels
          the AUTHOR wrote — which is exactly what legibility means here. */
+      const isTick = new Set(labs);
       const texts = [].slice.call(svg.querySelectorAll('text')).map((t) => {
         const bb = t.getBBox();
-        return { x: bb.x, y: bb.y, w: bb.width, h: bb.height };
+        return { x: bb.x, y: bb.y, w: bb.width, h: bb.height, tick: isTick.has(t) };
       });
-      let overlaps = 0;
+      let overlaps = 0, tickOverlaps = 0;
       for (let i = 0; i < texts.length; i++) for (let j = i + 1; j < texts.length; j++) {
         const a2 = texts[i], b2 = texts[j];
-        if (a2.x < b2.x + b2.w && b2.x < a2.x + a2.w && a2.y < b2.y + b2.h && b2.y < a2.y + a2.h) overlaps++;
+        if (a2.x < b2.x + b2.w && b2.x < a2.x + a2.w && a2.y < b2.y + b2.h && b2.y < a2.y + a2.h) {
+          overlaps++; if (a2.tick && b2.tick) tickOverlaps++;
+        }
       }
+      /* THE PAINTED TICK SET, as values and as text. Under equal unit scale the engine expands the
+         shorter domain to fill the plot rect and then derives its ticks FROM THE EXPANDED RANGE, so
+         a narrow plane can print a scale the author never wrote. Overlap alone cannot see that. */
+      const ticks = labs.map((t) => ({ v: val(t), s: t.textContent.trim(),
+        axis: t.getAttribute('text-anchor') === 'middle' ? 'x' : 'y' })).filter((t) => isFinite(t.v));
       const html = el.outerHTML;
       host.remove();
-      return { html, x, y, texts: texts.length, overlaps, ratio: (x && y) ? +(x / y).toFixed(3) : null };
+      return { html, x, y, texts: texts.length, overlaps, tickOverlaps, ticks, ratio: (x && y) ? +(x / y).toFixed(3) : null };
     }, { key, fig, w, h });
     cache.set(ck, r);
     return r;
@@ -142,23 +150,97 @@ export function makeSolvers(paint) {
        point and line labels the figure was written with.
 
    So legibility, for this engine, is exactly: the labels the author wrote are all readable. */
-export async function capability(paint, key, fig) {
-  const d = fig.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
-  const aspect = ys / xs;
-  const h = (w) => Math.max(80, Math.round(aspect * (w - 50) + 100));
-  const clean = async (w) => {
-    const r = await paint(key, fig, w, h(w));
-    return r.overlaps === 0;
-  };
-  let lo = 120, hi = 1152;
-  if (!(await clean(hi))) return { aspect: +aspect.toFixed(3), minLegibleWidth: null, illegible: true };
-  while (hi - lo > 8) {
-    const mid = Math.round((lo + hi) / 2);
-    if (await clean(mid)) hi = mid; else lo = mid;
-  }
-  return { aspect: +aspect.toFixed(3), minLegibleWidth: hi, illegible: false,
-    equalUnitScale: true, focusAvailable: true };
+/* WHAT THE MEDIA MAY SAY ABOUT ITSELF — CAPABILITY, NEVER FOOTPRINT.
+
+   It is asked one question, about widths it did not choose: OF THESE APPROVED SPANS, WHICH CAN YOU
+   RENDER FAITHFULLY? The answer is a subset of a set someone else supplied. There is no crossing
+   number in the return value a caller could mistake for a display size — "I would like to be 488px
+   wide" is not expressible here, which is how tiny media ended up on large pages.
+
+   IT JUDGES THE SOLVED BOX, NOT A GUESSED ONE. An earlier version painted at a seed height
+   `round(aspect*(w-50)+100)` and judged that. The seed is the HARNESS's guess at gutters, and the
+   verdict moved with it: `symmetry` at a 382px slot is clean at h=498, prints x = ±6 for an
+   authored ±5 at h=398, and prints decimals at h=698. That made the answer a property of the
+   measuring instrument rather than of the media. It now asks `boxForWidth` for the box the RENDERER
+   would actually use at that slot width and judges that — the same solve, the same memoised paint,
+   the same pixels the page gets.
+
+   LEGIBLE AT A SLOT WIDTH means three categorical things at once. The first version asked only the
+   first and was wrong for three figures out of four:
+
+   1 NO COLLISION — no two painted texts overlap.
+   2 FIDELITY — every painted tick value lies inside the AUTHORED domain on its own axis. Under
+     equal unit scale the engine expands the shorter domain to fill the plot rect and derives its
+     ticks from the EXPANDED range, so a narrow plane can print a scale the author never wrote. A
+     plane showing a domain the author did not write is not legible, however cleanly it is set.
+   3 STABILITY — the painted tick set is the one the same figure prints at full width. This catches
+     fabricated precision inside the domain — −7.5, −5.0, −2.5 … for an authored ±7, one decimal
+     place more than the scale has.
+
+   ASKING EACH APPROVED SPAN IS ALSO WHY THERE IS NO MONOTONICITY ASSUMPTION LEFT TO BREAK. There was
+   one, and it broke: `roots` is clean at 264px, collides at 296 and 328, and is clean again at 360 —
+   an illegible BAND, not a threshold, so no single crossing width describes it and a binary search
+   for one returns whichever edge it lands on. `diagnose()` still finds that number, for a human
+   reading a build log, and says when it is unsafe; nothing in the system decides anything with it. */
+const EPS = 1e-9;
+function makeJudge(fig, boxForWidth, key) {
+  const d = fig.domain, aspect = (d.yMax - d.yMin) / (d.xMax - d.xMin);
+  const sig = (r) => r.ticks.map((t) => `${t.axis}${t.s}`).join(' ');
+  const inAuthored = (t) => t.axis === 'x'
+    ? (t.v >= d.xMin - EPS && t.v <= d.xMax + EPS)
+    : (t.v >= d.yMin - EPS && t.v <= d.yMax + EPS);
+  return { aspect, sig,
+    async box(w) { const b = await boxForWidth(key, fig, Math.round(w)); return b && b.box; },
+    async why(w, refSig) {
+      const r = await this.box(w);
+      if (!r) return { ok: false, because: ['no box fits this slot width at all'] };
+      if (!square(r)) return { ok: false, because: [`no height in this slot paints the domain at equal unit scale (best ${r.w}×${r.h} at ${r.ratio})`] };
+      const outside = r.ticks.filter((t) => !inAuthored(t));
+      const drifted = refSig != null && sig(r) !== refSig;
+      return { ok: r.overlaps === 0 && !outside.length && !drifted, h: r.h,
+        because: [r.overlaps ? `${r.overlaps} text overlap(s)${r.tickOverlaps ? ` (${r.tickOverlaps} between tick labels)` : ''}` : null,
+          outside.length ? `tick(s) outside the authored domain: ${outside.map((t) => `${t.axis}=${t.s}`).join(', ')}` : null,
+          drifted ? 'a different tick set from the same figure at full width' : null].filter(Boolean) };
+    } };
 }
+
+export async function capability(boxForWidth, key, fig, widths = []) {
+  const REF = 1152;
+  const J = makeJudge(fig, boxForWidth, key);
+  const refBox = await J.box(REF);
+  const refSig = refBox ? J.sig(refBox) : null;
+  const full = await J.why(REF, refSig);
+  const legible = {};
+  for (const w of [...new Set(widths)].sort((a, b) => a - b)) legible[w] = await J.why(w, refSig);
+  return { aspect: +J.aspect.toFixed(3), equalUnitScale: true, focusAvailable: true,
+    illegible: !full.ok, legible };
+}
+
+/* FOR A HUMAN READING A BUILD LOG, and for nothing else. It reports the narrowest width a binary
+   search reaches AND whether that search was sound for this figure; a caller that used the number
+   to size anything would be reintroducing the defect this module exists to remove. */
+export async function diagnose(boxForWidth, key, fig) {
+  const REF = 1152;
+  const J = makeJudge(fig, boxForWidth, key);
+  const refBox = await J.box(REF);
+  const refSig = refBox ? J.sig(refBox) : null;
+  const clean = async (w) => (await J.why(w, refSig)).ok;
+  if (!(await clean(REF))) return { crossing: null, nonMonotonic: null, because: [] };
+  let lo = 120, hi = REF;
+  while (hi - lo > 8) { const mid = Math.round((lo + hi) / 2); if (await clean(mid)) hi = mid; else lo = mid; }
+  let nonMonotonic = null;
+  for (let i = 1; i <= 10 && !nonMonotonic; i++) {
+    const w = Math.min(REF, hi + Math.round(i * (REF - hi) / 10));
+    if (!(await clean(w))) nonMonotonic = `legible at ${hi}px and not at ${w}px`;
+  }
+  for (let i = 1; i <= 5 && !nonMonotonic; i++) {
+    const w = Math.max(120, hi - 8 * i);
+    if (await clean(w)) nonMonotonic = `illegible at ${hi - 8}px and legible at ${w}px`;
+  }
+  return { crossing: hi, nonMonotonic, because: (await J.why(Math.max(120, hi - 8), refSig)).because };
+}
+
+
 
 /* A REQUEST IS A FIGURE AT AN AUTHORED SIZE — `symmetry@standard`. The size is never optional and
    never defaulted: a default would be the renderer deciding how important the author's figure is. */

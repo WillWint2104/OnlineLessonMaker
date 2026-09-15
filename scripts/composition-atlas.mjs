@@ -29,7 +29,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { openFigurePage, makePainter, makeSolvers, square, classOf, capability } from './lib/figure-geometry.mjs';
+import { openFigurePage, makePainter, makeSolvers, square, classOf, capability, diagnose } from './lib/figure-geometry.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.join(root, 'docs/atlas/composition/src');
@@ -232,16 +232,24 @@ const ASPECTS = ['portrait', 'balanced', 'landscape', 'wide', 'none'];
    Not "choose the prettiest arrangement based on content measurements". The only input is a number
    the media reported about ITSELF. If no approved span clears it, the widest is taken and the build
    reports it rather than silently shrinking the plane. */
-const pick = (p, surface, aspect, need, surfaceW) => {
+const pick = (p, surface, aspect, canRender) => {
   const m = p.subdesigns.filter((d) => d.surface === surface && (!d.aspects || d.aspects.includes(aspect)));
   if (!m.length) throw new PatternError(`${p.id}: no approved subdesign matches ${surface}/${aspect}`);
-  if (m.length === 1) return { d: m[0], promoted: false };
   const by = m.slice().sort((a, b) => (a.mediaSpan || 0) - (b.mediaSpan || 0));
-  if (!need) return { d: by[0], promoted: false };
+  /* A SINGLE CANDIDATE IS STILL ASKED. An earlier version returned it unexamined, so a pattern with
+     one approved arrangement could paint a figure at a width that figure cannot render faithfully
+     and nothing would say so — found by driving the "no approved span works" case and watching it
+     pass. Having one answer is not the same as that answer being right. */
+  if (!canRender) return { d: by[0], promoted: false };
   const px = (sd) => spanPx(surface, sd.mediaSpan);
-  const ok = by.find((sd) => px(sd) >= need);
-  if (!ok) return { d: by[by.length - 1], promoted: true, unmet: need, got: px(by[by.length - 1]) };
-  return { d: ok, promoted: ok !== by[0], need, at: px(ok), skipped: by.slice(0, by.indexOf(ok)).map((x) => `${x.id}(${px(x)}px)`) };
+  const ok = by.find((sd) => canRender(px(sd)));
+  /* NO APPROVED SPAN WORKS. The pattern is out of designed answers, and the honest thing is to say
+     so rather than pick the widest and hope — rule 6 (a full-width state or a focus workspace) is a
+     DESIGN decision for the maintainer, not one the renderer may make on its own. */
+  if (!ok) throw new PatternError(`${p.id}: no approved ${surface} span for a ${aspect} media can render this `
+    + `figure faithfully (tried ${by.map((x) => `${x.id} ${px(x)}px`).join(', ')})`);
+  return { d: ok, promoted: ok !== by[0], at: px(ok),
+    skipped: by.slice(0, by.indexOf(ok)).map((x) => `${x.id}(${px(x)}px)`) };
 };
 
 /* ── the areas CSS, generated from patterns.json so the JSON is their ONE OWNER ────────────────── */
@@ -420,16 +428,18 @@ function buildInstance(inst, page, surface, opts = {}) {
     const d = FIGS[key].figure.domain;
     return classOf((d.yMax - d.yMin) / (d.xMax - d.xMin), BANDS);
   };
-  /* THE ONLY THING THE MEDIA IS ALLOWED TO SAY: what it NEEDS, never what it would like. */
-  const needOf = (key) => (CAP[key] && CAP[key].minLegibleWidth) || 0;
+  /* THE ONLY QUESTION THE MEDIA IS EVER ASKED: can you render faithfully at THIS width? It answers
+     yes or no about a width it did not choose, and has no way to express a width it would prefer. */
+  const rendersAt = (key, w) => !CAP[key] || !CAP[key].legible[w] || CAP[key].legible[w].ok;
   /* THE MEDIA'S ASPECT CLASS IS THE ONLY THING BESIDES THE SURFACE THAT MAY SELECT A SUBDESIGN. */
   let aspect = null;
   const flat = (c) => !c ? [] : Array.isArray(c) ? c : c.items.flatMap((i) => i.blocks);
   for (const s of p.slots) for (const b of flat(content[s.name])) if (b.figure && !aspect) aspect = aspectOf(b.figure);
   if (!aspect) aspect = 'none';
-  let need = 0;
-  for (const sl of p.slots) for (const b of flat(content[sl.name])) if (b.figure) need = Math.max(need, needOf(b.figure));
-  const chosen = pick(p, surface, aspect, need);
+  const figures = [];
+  for (const sl of p.slots) for (const b of flat(content[sl.name])) if (b.figure) figures.push(b.figure);
+  const canRender = figures.length ? (w) => figures.every((f) => rendersAt(f, w)) : null;
+  const chosen = pick(p, surface, aspect, canRender);
   const d0 = chosen.d;
   const filled = (c) => c && (Array.isArray(c) ? c.length > 0 : true);
   const absent = new Set(p.slots.filter((s) => s.occupancy === 'optional-collapse' && !filled(content[s.name])).map((s) => s.name));
@@ -461,7 +471,7 @@ function buildInstance(inst, page, surface, opts = {}) {
   const figW = {};
   for (const [k, name] of Object.entries(figSlot)) figW[k] = widths[name];
   const without = [...absent].join(' ');
-  return { pattern: p, subdesign: d, aspect, absent, spans, widths, figW, need, chosen,
+  return { pattern: p, subdesign: d, aspect, absent, spans, widths, figW, figures, chosen,
     body: (i) => `<div data-pattern="${esc(p.id)}" data-subdesign="${esc(d.id)}" data-inst="${i}"`
       + (without ? ` data-without="${esc(without)}"` : '') + `>\n${parts.join('\n')}\n</div>` };
 }
@@ -577,12 +587,26 @@ const CAP = {};
     if (n.figure && typeof n.figure === 'string') want.add(n.figure);
     Object.values(n).forEach(scan); };
   scan(PAGES);
-  console.log('\nmedia capability — what each figure reports about ITSELF, measured by painting');
+  /* EVERY WIDTH A MEDIA SLOT IN THIS CATALOGUE CAN EVER BE. The question put to a figure is always
+     "can you render faithfully at one of THESE?", never "how wide would you like to be?" */
+  const SPANS = [...new Set(Object.entries(PATTERNS).flatMap(([id, p2]) => id.startsWith('_') ? []
+    : p2.subdesigns.filter((d) => d.mediaSpan).map((d) => spanPx(d.surface, d.mediaSpan))))].sort((a, b) => a - b);
+  console.log('\nmedia capability — of the catalogue\u2019s approved spans, which each figure can render faithfully');
+  console.log(`  approved media spans: ${SPANS.join('px · ')}px`);
   for (const k of [...want].sort()) {
     if (!FIGS[k]) throw new Error(`no figure "${k}"`);
-    CAP[k] = await capability(paint, k, FIGS[k].figure);
-    console.log(`  ${k.padEnd(12)} aspect ${String(CAP[k].aspect).padStart(6)} · minimum legible width `
-      + `${String(CAP[k].minLegibleWidth).padStart(4)}px · equal unit scale required · focus available`);
+    CAP[k] = await capability(boxForWidth, k, FIGS[k].figure, SPANS);
+    if (CAP[k].illegible) throw new Error(`${k}: this figure is not legible even at 1152px`);
+    const no = SPANS.filter((w) => !CAP[k].legible[w].ok);
+    console.log(`  ${k.padEnd(12)} aspect ${String(CAP[k].aspect).padStart(6)} · equal unit scale required · focus available`);
+    console.log(`  ${''.padEnd(12)} ${no.length ? `CANNOT render at ${no.map((w) => `${w}px (${CAP[k].legible[w].because[0]})`).join('; ')}`
+      : 'renders faithfully at every approved span in this catalogue'}`);
+    /* THE DIAGNOSTIC, FOR A HUMAN READING THIS LOG. Nothing decides anything with it — and it says
+       so itself when the search that produced it was not sound for this figure. */
+    const dg = await diagnose(boxForWidth, k, FIGS[k].figure);
+    console.log(`  ${''.padEnd(12)} diagnostic: a binary search crosses at ${dg.crossing}px`
+      + (dg.nonMonotonic ? ` — UNSAFE, ${dg.nonMonotonic}, so no single width describes this figure`
+        : `; just below it, ${dg.because.join(' · ')}`));
   }
 }
 /* THE SLOT GIVES THE WIDTH AND THE MEDIA ANSWERS. One solve per (figure, slot width); memoised,
@@ -872,10 +896,16 @@ function slotFit(x, surface, p) {
         `approve a narrower span for this aspect class (approved at ${surface}: ${spans})`,
       ];
     }
-    /* A SIGNAL, NOT A RESOLVER. It changes nothing; it says what a human should rule on. */
-    if (o.ok && x.paintedW < x.slotW * 0.6)
-      o.notes.push(`occupies ${Math.round(100 * x.paintedW / x.slotW)}% of its slot — if that is the usual case here, `
-        + 'the evidence says the PATTERN wants a smaller span, not that the media should grow');
+    /* A MEASUREMENT FOR A HUMAN, AND DELIBERATELY WITHOUT A THRESHOLD. The maintainer's ask was
+       real — "if something continually occupies only half a `contain` slot, that is evidence the
+       pattern should use a smaller span" — but the first version of this line read a painted
+       content dimension against a tuned 0.6, which is the shape of the resolver this architecture
+       exists to refuse, sitting inside the gate and dormant only because the corpus has no
+       contained media yet. So it reports the number for EVERY contained object and compares it to
+       nothing. A human reads the run and rules; no constant here can ever start deciding. */
+    if (o.ok) o.notes.push(`occupies ${Math.round(100 * x.paintedW / x.slotW)}% of its slot`
+      + ' — reported, not judged: a contained object that is consistently small is evidence the PATTERN'
+      + ' wants a smaller span, and that is a design ruling, not a measurement');
   } else {
     o.ok = false; o.verdict = `a media slot with no declared fit (\`${x.fit}\`)`;
     o.actions = ['declare `fit: fill` or `fit: contain` on the slot in patterns.json'];
@@ -1281,6 +1311,16 @@ for (const [k, v] of Object.entries(AFFORD)) console.log(`  ${k.padEnd(11)} ${v.
    it and what it actually did with it. A contract nothing ever exercised would not be one, so the
    build refuses a run in which no media slot was measured at all. */
 if (!LIVE.fit.length) throw new Error('no media slot was inspected on any render, so the slot-fit contract is untested');
+/* HALF THE CONTRACT HAS NO INSTANCE, AND SAYING SO IS BETTER THAN A GREEN RUN THAT IMPLIES IT DOES.
+   Every media slot in this catalogue is `fill`, because every media block in the corpus is a plane.
+   The `contain` branch — its centring rule, its alignment reason, its occupancy report — is designed
+   and UNEXERCISED, and it stays that way until there is a contained image to put in a slot. */
+{
+  const fits = new Set(Object.values(PATTERNS).flatMap((p2) => (p2.slots || []).filter((x) => x.fit).map((x) => x.fit)));
+  for (const f of ['fill', 'contain']) if (!fits.has(f))
+    console.log(`note      · no slot in this catalogue declares \`fit: ${f}\`. That half of the contract is\n`
+      + '            designed and unexercised, and the corpus has nothing to exercise it with yet.');
+}
 console.log(`\nTHE SLOT INSPECTOR — ${LIVE.fit.length} media slot(s) painted, every one inhabiting its slot`);
 for (const line of [...new Set(LIVE.fit)].sort()) console.log(`  ${line}`);
 if (LIVE.signal.length) {

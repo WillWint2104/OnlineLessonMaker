@@ -203,37 +203,24 @@
       "8 · The build FAILS if a media slot contains anonymous horizontal residue."
     ],
     "whatTheMediaMayReport": {
-      "_": "CAPABILITY, NEVER FOOTPRINT. A graph may say what it NEEDS. It may never say what it would LIKE — 'I would like to be 488px wide' is how tiny media ended up on large pages.",
-      "mayReport": [
-        "the authored domain's aspect",
-        "its minimum legible width",
-        "that it requires equal unit scale",
-        "whether its labels collide",
-        "whether a focus/expand affordance exists"
-      ],
+      "_": "CAPABILITY, NEVER FOOTPRINT. The media is asked ONE question, about widths it did not choose: of these approved spans, which can you render faithfully? The answer is a subset of a set someone else supplied. There is no number in it a caller could mistake for a display size — 'I would like to be 488px wide' is not expressible, which is how tiny media ended up on large pages.",
+      "legibleAtAWidth": {
+        "_": "THREE CATEGORICAL PREDICATES, ALL OF WHICH MUST HOLD. The first version of this asked only the first and was wrong for three figures out of four.",
+        "1 collision": "no two painted texts overlap.",
+        "2 fidelity": "every painted tick value lies inside the AUTHORED domain on its own axis. Under equal unit scale the engine EXPANDS the shorter domain to fill the plot rect and derives its ticks from the expanded range, so a narrow plane prints a scale the author never wrote: at a 209px box `symmetry` prints a y tick at 12 for an authored yMax of 11, and `landscape` prints x = −15 for an authored −12. A plane showing a domain the author did not write is not legible, however cleanly it is set.",
+        "3 stability": "the painted tick set is the one the same figure prints at full width. This catches fabricated precision INSIDE the domain: −7.5, −5.0, −2.5 … for an authored ±7, one decimal place more than the scale has."
+      },
+      "itJudgesTheSolvedBox": "NOT A GUESSED ONE, and this was the sharpest correction. An earlier version painted at a seed height round(aspect×(w−50)+100) and judged that — and the verdict moved with the seed: `symmetry` in a 382px slot is clean at h=498, prints x = ±6 for an authored ±5 at h=398, and prints decimals at h=698. That made the answer a property of the measuring instrument rather than of the media. It now asks the renderer's own box solver for the box the page would actually get at that slot width, and judges those pixels.",
+      "noMonotonicityAssumption": "There was one and it BROKE. `roots` is clean at 264px, collides at 296 and 328, and is clean again at 360 — an illegible BAND, not a threshold. No single crossing width describes it, and a binary search returns whichever edge it lands on. Asking each approved span directly needs no such assumption. A diagnostic still reports the crossing number for a human reading a build log, and says when it is unsafe; nothing in the system decides anything with it.",
       "mayNotReport": [
         "a preferred width",
         "a preferred height",
-        "anything about the page it is on"
+        "anything about the page it is on",
+        "a crossing width dressed as a requirement"
       ],
-      "minimumLegibleWidth": "THE NARROWEST PAINTED WIDTH AT WHICH NO TWO OF THE TEXTS THE FIGURE PAINTS OVERLAP — measured by painting and looking, not modelled. Measured because the engine's behaviour had to be discovered: it NEVER collides tick labels (it drops them), it never shrinks type (11px at every width from 200 to 1152), and its labelled-tick count is not monotonic in width — so 'retains its full labelling' was tried as a definition and discarded after measuring it. The only thing that ever collides is the AUTHORED objects' own labels, which is exactly what legibility means here.",
-      "measured": {
-        "symmetry": "209px",
-        "graphcheck": "193px",
-        "roots": "209px",
-        "landscape": "233px",
-        "squareish": "225px",
-        "markedWide (six labelled points, built to be demanding)": "306px"
-      },
-      "theFinding": "EVERY FIGURE THIS ENGINE CAN DRAW CLEARS THE SMALLEST APPROVED DESKTOP SPAN (4 columns = 368px). Span promotion is therefore implemented, deterministic and correct — and INERT at desktop. It binds only on a phone at 2 or 3 columns (183px, 283px). Saying so matters: the defect the maintainer is pointing at is NOT a legibility problem the media could have reported. It is the pattern's choice of span and alignment, which is what `fit` and the approved-span tables fix."
+      "theFinding": "Every figure in this corpus renders faithfully at EVERY approved span in the catalogue — the smallest is 382px and the diagnostics cross at 225–266px. So promotion never fires on real content, and the defect that started this was a pattern and alignment problem, not a legibility one. It is proved by driving it: a 2-column (172px) state approved for the balanced class is skipped, and a pattern whose ONLY approved state is that one fails the build rather than painting an unfaithful plane."
     },
-    "promotion": {
-      "rule": "CHOOSE THE SMALLEST APPROVED SPAN THAT SATISFIES THE MEDIA'S HARD CAPABILITY REQUIREMENTS.",
-      "notTheRule": "Choose the prettiest arrangement based on content measurements.",
-      "why": "It is not inventing a layout. It is selecting from layouts already designed and already approved — and the only input is a number the media reported about itself.",
-      "determinism": "The approved subdesigns for a (surface, aspect class) are ordered by media span ascending; the first whose span clears the minimum legible width is taken. Ties cannot occur because two subdesigns of one pattern may not share a span at one surface, and the build refuses a pattern where they do.",
-      "noFit": "If no approved span clears it, the pattern's widest approved span is taken and the build REPORTS it rather than silently shrinking the plane."
-    }
+    "promotion": "Within one (surface, aspect class) the approved subdesigns are ordered by media span ASCENDING and the first the media says it can render faithfully is taken. Ties cannot occur because two subdesigns of one pattern may not share a span at one surface, and the build refuses a pattern where they do. A SINGLE candidate is still asked — an earlier version returned it unexamined, so a pattern with one arrangement could paint a figure at a width that figure cannot render and nothing would say so. If no approved span works the build FAILS: rule 6's full-width state or focus workspace is a design decision for a human, not one the renderer may make."
   },
   "whitespace": {
     "_": "THREE KINDS, AND THE SYSTEM COULD NOT TELL THEM APART. It called all three reading margin.",
@@ -273,7 +260,7 @@
       "VERDICT — or DIAGNOSIS and LEGAL ACTIONS on failure"
     ],
     "drawn": "Over the render it measured: the slot dashed, the painted media outlined, and any unclaimed width hatched where it actually is — blue where the slot declared it (a centred `contain`), red where nobody did. Written beside every render that has media, as `<name>-inspect.png`.",
-    "notAResolver": "NOTHING IT COMPUTES REACHES LAYOUT. There is no threshold at which it changes a span and no 'if occupancy < 55%, stack' — that is what made the system lose the design. Every verdict is categorical: the media consumes the slot, or it is contained and deliberately placed, or the build fails. The one non-categorical thing it does is PRINT A SIGNAL — 'this contained object occupies 41% of its slot' — which a human rules on by changing the pattern.",
+    "notAResolver": "NOTHING IT COMPUTES REACHES LAYOUT. There is no threshold at which it changes a span and no 'if occupancy < 55%, stack' — that is what made the system lose the design. Every verdict is categorical. It DOES report the occupancy of every contained object, and deliberately WITHOUT a threshold: the first version compared a painted content dimension to a tuned 0.6, which is the shape of the resolver this architecture refuses, sitting inside the gate and dormant only because the corpus has no contained media yet. It now prints the number and compares it to nothing. A human reads the run and rules.",
     "whichSlots": "Slot types that hold an object with a footprint: `media` and `interactive`. Prose is bound by the reading measure instead; a workspace is a surface the learner acts on, not an object placed in one.",
     "catalogueTime": [
       "every media slot declares a fit",
@@ -282,6 +269,7 @@
       "`approvedMediaSpans` matches the spans the subdesigns actually approve",
       "a row whose only named slot is media is CENTRED OR FULL — never inset against one edge"
     ],
-    "caughtOnItsFirstRun": "Three arrangements in the catalogue were stranded media and nobody had noticed: `visual.compare/paired` (8 of 12, four unnamed to the right), `media.full/inset` (the same, and named after the defect), and the tablet forms of both. `practice.workbook/beside` declared a 7-column media span for a 5-column slot."
+    "caughtOnItsFirstRun": "Three arrangements in the catalogue were stranded media and nobody had noticed: `visual.compare/paired` (8 of 12, four unnamed to the right), `media.full/inset` (the same, and named after the defect), and the tablet forms of both. `practice.workbook/beside` declared a 7-column media span for a 5-column slot.",
+    "unexercised": "EVERY media slot in this catalogue is `fill`, because every media block in the corpus is a plane. The `contain` branch — its centring rule, its alignment reason, its occupancy report — is designed and UNEXERCISED, and the build says so on every run rather than letting a green result imply otherwise. One open question belongs to it: `contain` gives a maximum, an alignment and a stage, and does not say WHO CHOOSES THE PAINTED WIDTH. For a raster that is its intrinsic pixels; for anything else it would be the renderer, which is media-geometry deciding width — the direction `fill` exists to forbid. The maintainer should rule before the first contained image is authored."
   }
 }
