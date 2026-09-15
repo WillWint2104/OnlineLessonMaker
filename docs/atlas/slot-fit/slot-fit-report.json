@@ -1,0 +1,7484 @@
+[
+  {
+    "name": "graph-portrait__visual-explanation__desktop",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "visual.explanation",
+    "subdesign": "down-8",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "center",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 952,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "down-8(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "down-8 · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 760 × 952px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "65.87px per x-unit · 65.94px per y-unit · ratio 0.999 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__visual-explanation__tablet",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 1041,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 834 × 1041px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "72.52px per x-unit · 72.51px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__visual-explanation__phone",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 498,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 382 × 498px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "32.97px per x-unit · 32.99px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__visual-compare__desktop",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 1422,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 1152 × 1422px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "100.17px per x-unit · 100.12px per y-unit · ratio 1.001 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__visual-compare__tablet",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 1041,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 834 × 1041px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "72.52px per x-unit · 72.51px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__visual-compare__phone",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "visual.compare",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 498,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 382 × 498px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "32.97px per x-unit · 32.99px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__media-full__desktop",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "media.full",
+    "subdesign": "centred",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "center",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 952,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "centred(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "centred · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 760 × 952px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "65.87px per x-unit · 65.94px per y-unit · ratio 0.999 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__media-full__tablet",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 1041,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 834 × 1041px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "72.52px per x-unit · 72.51px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__media-full__phone",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 498,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 382 × 498px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "32.97px per x-unit · 32.99px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__practice-workbook__desktop",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 5,
+    "slotPx": 466,
+    "paintedW": 466,
+    "paintedH": 599,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 629,
+      "besideH": 512,
+      "gap": 117
+    },
+    "tried": [
+      "beside(466px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–5 of 12 · slotSpan 5 = 466px · realised 466px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 466 × 599px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "40.38px per x-unit · 40.37px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__practice-workbook__tablet",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "tablet",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 407,
+    "paintedW": 407,
+    "paintedH": 528,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 558,
+      "besideH": 512,
+      "gap": 46
+    },
+    "tried": [
+      "beside(407px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 407 × 528px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "35.25px per x-unit · 35.21px per y-unit · ratio 1.001 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-portrait__practice-workbook__phone",
+    "fixture": "graph.portrait",
+    "family": "graph",
+    "klass": "portrait",
+    "pattern": "practice.workbook",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 498,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.portrait · 382 × 498px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "32.97px per x-unit · 32.99px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__visual-explanation__desktop",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "visual.explanation",
+    "subdesign": "side-6",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 6,
+    "slotPx": 564,
+    "paintedW": 564,
+    "paintedH": 541,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": {
+      "beside": "interpretation",
+      "objectH": 571,
+      "besideH": 120,
+      "gap": 451
+    },
+    "tried": [
+      "side-6(564px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "side-6 · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–6 of 12 · slotSpan 6 = 564px · realised 564px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 564 × 541px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "35.85px per x-unit · 35.84px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__visual-explanation__tablet",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 772,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 834 × 772px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "52.88px per x-unit · 52.89px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__visual-explanation__phone",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 385,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 382 × 385px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "24.19px per x-unit · 24.2px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__visual-compare__desktop",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 1045,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 1152 × 1045px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "72.81px per x-unit · 72.76px per y-unit · ratio 1.001 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__visual-compare__tablet",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 772,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 834 × 772px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "52.88px per x-unit · 52.89px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__visual-compare__phone",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "visual.compare",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 385,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 382 × 385px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "24.19px per x-unit · 24.2px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__media-full__desktop",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "media.full",
+    "subdesign": "centred",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "center",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 709,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "centred(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "centred · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 760 × 709px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "48.22px per x-unit · 48.22px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__media-full__tablet",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 772,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 834 × 772px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "52.88px per x-unit · 52.89px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__media-full__phone",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 385,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 382 × 385px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "24.19px per x-unit · 24.2px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__practice-workbook__desktop",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 5,
+    "slotPx": 466,
+    "paintedW": 466,
+    "paintedH": 457,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 487,
+      "besideH": 512,
+      "gap": -25
+    },
+    "tried": [
+      "beside(466px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–5 of 12 · slotSpan 5 = 466px · realised 466px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 466 × 457px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "29.57px per x-unit · 29.58px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__practice-workbook__tablet",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "tablet",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 407,
+    "paintedW": 407,
+    "paintedH": 406,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 436,
+      "besideH": 512,
+      "gap": -76
+    },
+    "tried": [
+      "beside(407px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 407 × 406px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "25.9px per x-unit · 25.86px per y-unit · ratio 1.001 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-balanced__practice-workbook__phone",
+    "fixture": "graph.balanced",
+    "family": "graph",
+    "klass": "balanced",
+    "pattern": "practice.workbook",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 385,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.balanced · 382 × 385px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "24.19px per x-unit · 24.2px per y-unit · ratio 1 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__visual-explanation__desktop",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "visual.explanation",
+    "subdesign": "down-12",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 527,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "down-12(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "down-12 · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 1152 × 527px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "42.61px per x-unit · 42.52px per y-unit · ratio 1.002 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__visual-explanation__tablet",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 393,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 834 × 393px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "30.86px per x-unit · 30.82px per y-unit · ratio 1.001 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__visual-explanation__phone",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 211,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 382 × 211px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "14.11px per x-unit · 14.16px per y-unit · ratio 0.996 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__visual-compare__desktop",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 527,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 1152 × 527px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "42.61px per x-unit · 42.52px per y-unit · ratio 1.002 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__visual-compare__tablet",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 393,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 834 × 393px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "30.86px per x-unit · 30.82px per y-unit · ratio 1.001 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__visual-compare__phone",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "visual.compare",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 211,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 382 × 211px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "14.11px per x-unit · 14.16px per y-unit · ratio 0.996 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__media-full__desktop",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 527,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 1152 × 527px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "42.61px per x-unit · 42.52px per y-unit · ratio 1.002 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__media-full__tablet",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 393,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 834 × 393px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "30.86px per x-unit · 30.82px per y-unit · ratio 1.001 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__media-full__phone",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 211,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 382 × 211px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "14.11px per x-unit · 14.16px per y-unit · ratio 0.996 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__practice-workbook__desktop",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 5,
+    "slotPx": 466,
+    "paintedW": 466,
+    "paintedH": 239,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 269,
+      "besideH": 512,
+      "gap": -243
+    },
+    "tried": [
+      "beside(466px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–5 of 12 · slotSpan 5 = 466px · realised 466px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 466 × 239px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "17.25px per x-unit · 17.23px per y-unit · ratio 1.001 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__practice-workbook__tablet",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "tablet",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 407,
+    "paintedW": 407,
+    "paintedH": 219,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 249,
+      "besideH": 512,
+      "gap": -263
+    },
+    "tried": [
+      "beside(407px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 407 × 219px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "15.11px per x-unit · 15.08px per y-unit · ratio 1.002 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "graph-wide__practice-workbook__phone",
+    "fixture": "graph.wide",
+    "family": "graph",
+    "klass": "wide",
+    "pattern": "practice.workbook",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 211,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "graph · graph.wide · 382 × 211px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "14.11px per x-unit · 14.16px per y-unit · ratio 0.996 ✓ equal unit scale"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__notes__desktop",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "notes",
+    "subdesign": "measure",
+    "surface": "desktop",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "center",
+    "mediaAnchor": "center",
+    "slotSpan": 6,
+    "slotPx": 564,
+    "paintedW": 420,
+    "paintedH": 560,
+    "unclaimed": 144,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "measure(564px): ok"
+    ],
+    "verdict": "contained and center — 72px and 72px, and the slot owns both",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "measure · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 4–9 of 12 · slotSpan 6 = 564px · realised 564px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 420 × 560px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "144px ✓ owned by the slot (72px / 72px, center)"
+      ],
+      [
+        "VERDICT",
+        "contained and center — 72px and 72px, and the slot owns both"
+      ],
+      [
+        "SIGNAL",
+        "occupies 74% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__notes__tablet",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "notes",
+    "subdesign": "measure",
+    "surface": "tablet",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "center",
+    "mediaAnchor": "center",
+    "slotSpan": 6,
+    "slotPx": 620.5,
+    "paintedW": 420,
+    "paintedH": 560,
+    "unclaimed": 200.5,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "measure(620.5px): ok"
+    ],
+    "verdict": "contained and center — 100.25px and 100.25px, and the slot owns both",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "measure · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 2–7 of 8 · slotSpan 6 = 620.5px · realised 620.5px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 420 × 560px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "200.5px ✓ owned by the slot (100.25px / 100.25px, center)"
+      ],
+      [
+        "VERDICT",
+        "contained and center — 100.25px and 100.25px, and the slot owns both"
+      ],
+      [
+        "SIGNAL",
+        "occupies 68% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__notes__phone",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "notes",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "full",
+    "mediaAnchor": "center",
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 509.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "contained, and at this width it reaches both edges",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 382 × 509.3px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "contained, and at this width it reaches both edges"
+      ],
+      [
+        "SIGNAL",
+        "occupies 100% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__visual-explanation__desktop",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "visual.explanation",
+    "subdesign": "down-8",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "center",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 1013.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "down-8(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "down-8 · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 760 × 1013.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__visual-explanation__tablet",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 1112,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 834 × 1112px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__visual-explanation__phone",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 509.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 382 × 509.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__visual-compare__desktop",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 1536,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 1152 × 1536px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__visual-compare__tablet",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 1112,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 834 × 1112px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__visual-compare__phone",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "visual.compare",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 509.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 382 × 509.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__media-full__desktop",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "media.full",
+    "subdesign": "centred",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "center",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 1013.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "centred(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "centred · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 760 × 1013.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__media-full__tablet",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 1112,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 834 × 1112px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__media-full__phone",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 509.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 382 × 509.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__practice-workbook__desktop",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 5,
+    "slotPx": 466,
+    "paintedW": 466,
+    "paintedH": 621.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 651,
+      "besideH": 512,
+      "gap": 139
+    },
+    "tried": [
+      "beside(466px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–5 of 12 · slotSpan 5 = 466px · realised 466px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 466 × 621.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__practice-workbook__tablet",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "tablet",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 407,
+    "paintedW": 407,
+    "paintedH": 542.66,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 573,
+      "besideH": 512,
+      "gap": 61
+    },
+    "tried": [
+      "beside(407px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 407 × 542.7px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-portrait__practice-workbook__phone",
+    "fixture": "image.portrait",
+    "family": "image",
+    "klass": "portrait",
+    "pattern": "practice.workbook",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 509.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.portrait · 382 × 509.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__notes__desktop",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "notes",
+    "subdesign": "measure",
+    "surface": "desktop",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "center",
+    "mediaAnchor": "center",
+    "slotSpan": 6,
+    "slotPx": 564,
+    "paintedW": 460,
+    "paintedH": 460,
+    "unclaimed": 104,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "measure(564px): ok"
+    ],
+    "verdict": "contained and center — 52px and 52px, and the slot owns both",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "measure · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 4–9 of 12 · slotSpan 6 = 564px · realised 564px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 460 × 460px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "104px ✓ owned by the slot (52px / 52px, center)"
+      ],
+      [
+        "VERDICT",
+        "contained and center — 52px and 52px, and the slot owns both"
+      ],
+      [
+        "SIGNAL",
+        "occupies 82% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__notes__tablet",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "notes",
+    "subdesign": "measure",
+    "surface": "tablet",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "center",
+    "mediaAnchor": "center",
+    "slotSpan": 6,
+    "slotPx": 620.5,
+    "paintedW": 460,
+    "paintedH": 460,
+    "unclaimed": 160.5,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "measure(620.5px): ok"
+    ],
+    "verdict": "contained and center — 80.25px and 80.25px, and the slot owns both",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "measure · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 2–7 of 8 · slotSpan 6 = 620.5px · realised 620.5px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 460 × 460px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "160.5px ✓ owned by the slot (80.25px / 80.25px, center)"
+      ],
+      [
+        "VERDICT",
+        "contained and center — 80.25px and 80.25px, and the slot owns both"
+      ],
+      [
+        "SIGNAL",
+        "occupies 74% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__notes__phone",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "notes",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "full",
+    "mediaAnchor": "center",
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 382,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "contained, and at this width it reaches both edges",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 382 × 382px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "contained, and at this width it reaches both edges"
+      ],
+      [
+        "SIGNAL",
+        "occupies 100% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__visual-explanation__desktop",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "visual.explanation",
+    "subdesign": "side-6",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 6,
+    "slotPx": 564,
+    "paintedW": 564,
+    "paintedH": 564,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "interpretation",
+      "objectH": 594,
+      "besideH": 120,
+      "gap": 474
+    },
+    "tried": [
+      "side-6(564px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "side-6 · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–6 of 12 · slotSpan 6 = 564px · realised 564px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 564 × 564px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__visual-explanation__tablet",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 834,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 834 × 834px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__visual-explanation__phone",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 382,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 382 × 382px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__visual-compare__desktop",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 1152,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 1152 × 1152px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__visual-compare__tablet",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 834,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 834 × 834px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__visual-compare__phone",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "visual.compare",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 382,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 382 × 382px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__media-full__desktop",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "media.full",
+    "subdesign": "centred",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "center",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 760,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "centred(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "centred · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 760 × 760px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__media-full__tablet",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 834,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 834 × 834px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__media-full__phone",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 382,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 382 × 382px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__practice-workbook__desktop",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 5,
+    "slotPx": 466,
+    "paintedW": 466,
+    "paintedH": 466,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 496,
+      "besideH": 512,
+      "gap": -16
+    },
+    "tried": [
+      "beside(466px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–5 of 12 · slotSpan 5 = 466px · realised 466px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 466 × 466px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__practice-workbook__tablet",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "tablet",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 407,
+    "paintedW": 407,
+    "paintedH": 407,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 437,
+      "besideH": 512,
+      "gap": -75
+    },
+    "tried": [
+      "beside(407px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 407 × 407px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-square__practice-workbook__phone",
+    "fixture": "image.square",
+    "family": "image",
+    "klass": "balanced",
+    "pattern": "practice.workbook",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 382,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.square · 382 × 382px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1 · painted 1 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__notes__desktop",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "notes",
+    "subdesign": "measure",
+    "surface": "desktop",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "center",
+    "mediaAnchor": "center",
+    "slotSpan": 6,
+    "slotPx": 564,
+    "paintedW": 564,
+    "paintedH": 317.25,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "measure(564px): ok"
+    ],
+    "verdict": "contained, and at this width it reaches both edges",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "measure · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 4–9 of 12 · slotSpan 6 = 564px · realised 564px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 564 × 317.3px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "contained, and at this width it reaches both edges"
+      ],
+      [
+        "SIGNAL",
+        "occupies 100% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__notes__tablet",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "notes",
+    "subdesign": "measure",
+    "surface": "tablet",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "center",
+    "mediaAnchor": "center",
+    "slotSpan": 6,
+    "slotPx": 620.5,
+    "paintedW": 620.5,
+    "paintedH": 349.03,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "measure(620.5px): ok"
+    ],
+    "verdict": "contained, and at this width it reaches both edges",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "measure · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 2–7 of 8 · slotSpan 6 = 620.5px · realised 620.5px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 620.5 × 349px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "contained, and at this width it reaches both edges"
+      ],
+      [
+        "SIGNAL",
+        "occupies 100% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__notes__phone",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "notes",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "full",
+    "mediaAnchor": "center",
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 214.88,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "contained, and at this width it reaches both edges",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 382 × 214.9px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "contained, and at this width it reaches both edges"
+      ],
+      [
+        "SIGNAL",
+        "occupies 100% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__visual-explanation__desktop",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "visual.explanation",
+    "subdesign": "down-8",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "center",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 427.5,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "down-8(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "down-8 · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 760 × 427.5px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__visual-explanation__tablet",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 469.13,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 834 × 469.1px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__visual-explanation__phone",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 214.88,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 382 × 214.9px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__visual-compare__desktop",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 648,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 1152 × 648px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__visual-compare__tablet",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 469.13,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 834 × 469.1px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__visual-compare__phone",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "visual.compare",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 214.88,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 382 × 214.9px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__media-full__desktop",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 648,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 1152 × 648px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__media-full__tablet",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 469.13,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 834 × 469.1px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__media-full__phone",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 214.88,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 382 × 214.9px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__practice-workbook__desktop",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 5,
+    "slotPx": 466,
+    "paintedW": 466,
+    "paintedH": 262.13,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 292,
+      "besideH": 512,
+      "gap": -220
+    },
+    "tried": [
+      "beside(466px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–5 of 12 · slotSpan 5 = 466px · realised 466px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 466 × 262.1px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__practice-workbook__tablet",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "tablet",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 407,
+    "paintedW": 407,
+    "paintedH": 228.94,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 259,
+      "besideH": 512,
+      "gap": -253
+    },
+    "tried": [
+      "beside(407px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 407 × 228.9px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "image-landscape__practice-workbook__phone",
+    "fixture": "image.landscape",
+    "family": "image",
+    "klass": "landscape",
+    "pattern": "practice.workbook",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 214.88,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "image · image.landscape · 382 × 214.9px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "video-landscape__visual-explanation__desktop",
+    "fixture": "video.landscape",
+    "family": "video",
+    "klass": "landscape",
+    "pattern": "visual.explanation",
+    "subdesign": "down-8",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "center",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 427.5,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "down-8(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "down-8 · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "video · video.landscape · 760 × 427.5px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "video-landscape__visual-explanation__tablet",
+    "fixture": "video.landscape",
+    "family": "video",
+    "klass": "landscape",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 469.13,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "video · video.landscape · 834 × 469.1px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "video-landscape__visual-explanation__phone",
+    "fixture": "video.landscape",
+    "family": "video",
+    "klass": "landscape",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 214.88,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "video · video.landscape · 382 × 214.9px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "video-landscape__media-full__desktop",
+    "fixture": "video.landscape",
+    "family": "video",
+    "klass": "landscape",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 648,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "video · video.landscape · 1152 × 648px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "video-landscape__media-full__tablet",
+    "fixture": "video.landscape",
+    "family": "video",
+    "klass": "landscape",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 469.13,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "video · video.landscape · 834 × 469.1px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "video-landscape__media-full__phone",
+    "fixture": "video.landscape",
+    "family": "video",
+    "klass": "landscape",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 214.88,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "video · video.landscape · 382 × 214.9px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 0.5625 · painted 0.5625 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "interactive-balanced__interactive-primary__desktop",
+    "fixture": "interactive.balanced",
+    "family": "interactive",
+    "klass": "balanced",
+    "pattern": "interactive.primary",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "slot": "instrument",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 570,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": {
+      "beside": "prompts",
+      "objectH": 619,
+      "besideH": 147,
+      "gap": 472
+    },
+    "tried": [
+      "beside(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "interactive.primary"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "instrument · columns 1–8 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "interactive · interactive.balanced · 760 × 570px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "painted aspect 0.75 · nothing intrinsic to compare"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "interactive-balanced__interactive-primary__tablet",
+    "fixture": "interactive.balanced",
+    "family": "interactive",
+    "klass": "balanced",
+    "pattern": "interactive.primary",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "slot": "instrument",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 625.5,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "interactive.primary"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "instrument · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "interactive · interactive.balanced · 834 × 625.5px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "painted aspect 0.75 · nothing intrinsic to compare"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "interactive-balanced__interactive-primary__phone",
+    "fixture": "interactive.balanced",
+    "family": "interactive",
+    "klass": "balanced",
+    "pattern": "interactive.primary",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "instrument",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 286.5,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "interactive.primary"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "instrument · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "interactive · interactive.balanced · 382 × 286.5px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "painted aspect 0.75 · nothing intrinsic to compare"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "interactive-landscape__interactive-primary__desktop",
+    "fixture": "interactive.landscape",
+    "family": "interactive",
+    "klass": "landscape",
+    "pattern": "interactive.primary",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "slot": "instrument",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 427.5,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "prompts",
+      "objectH": 477,
+      "besideH": 147,
+      "gap": 330
+    },
+    "tried": [
+      "beside(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "interactive.primary"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "instrument · columns 1–8 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "interactive · interactive.landscape · 760 × 427.5px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "painted aspect 0.5625 · nothing intrinsic to compare"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "interactive-landscape__interactive-primary__tablet",
+    "fixture": "interactive.landscape",
+    "family": "interactive",
+    "klass": "landscape",
+    "pattern": "interactive.primary",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "slot": "instrument",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 469.13,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "interactive.primary"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "instrument · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "interactive · interactive.landscape · 834 × 469.1px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "painted aspect 0.5625 · nothing intrinsic to compare"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "interactive-landscape__interactive-primary__phone",
+    "fixture": "interactive.landscape",
+    "family": "interactive",
+    "klass": "landscape",
+    "pattern": "interactive.primary",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "instrument",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 214.88,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "interactive.primary"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "instrument · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "interactive · interactive.landscape · 382 × 214.9px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "painted aspect 0.5625 · nothing intrinsic to compare"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__notes__desktop",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "notes",
+    "subdesign": "measure",
+    "surface": "desktop",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "center",
+    "mediaAnchor": "center",
+    "slotSpan": 6,
+    "slotPx": 564,
+    "paintedW": 380,
+    "paintedH": 506.66,
+    "unclaimed": 184,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "measure(564px): ok"
+    ],
+    "verdict": "contained and center — 92px and 92px, and the slot owns both",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "measure · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 4–9 of 12 · slotSpan 6 = 564px · realised 564px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 380 × 506.7px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "184px ✓ owned by the slot (92px / 92px, center)"
+      ],
+      [
+        "VERDICT",
+        "contained and center — 92px and 92px, and the slot owns both"
+      ],
+      [
+        "SIGNAL",
+        "occupies 67% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__notes__tablet",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "notes",
+    "subdesign": "measure",
+    "surface": "tablet",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "center",
+    "mediaAnchor": "center",
+    "slotSpan": 6,
+    "slotPx": 620.5,
+    "paintedW": 380,
+    "paintedH": 506.66,
+    "unclaimed": 240.5,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "measure(620.5px): ok"
+    ],
+    "verdict": "contained and center — 120.25px and 120.25px, and the slot owns both",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "measure · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 2–7 of 8 · slotSpan 6 = 620.5px · realised 620.5px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 380 × 506.7px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "240.5px ✓ owned by the slot (120.25px / 120.25px, center)"
+      ],
+      [
+        "VERDICT",
+        "contained and center — 120.25px and 120.25px, and the slot owns both"
+      ],
+      [
+        "SIGNAL",
+        "occupies 61% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__notes__phone",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "notes",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "illustration",
+    "slotFit": "contain",
+    "slotAnchor": "full",
+    "mediaAnchor": "center",
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 380,
+    "paintedH": 506.66,
+    "unclaimed": 2,
+    "ok": true,
+    "golden": true,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "contained and center — 1px and 1px, and the slot owns both",
+    "lines": [
+      [
+        "PATTERN",
+        "notes"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "illustration · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 380 × 506.7px"
+      ],
+      [
+        "SLOT FIT",
+        "contain — The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid · object center in the slot (resolved by the renderer)"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "2px ✓ owned by the slot (1px / 1px, center)"
+      ],
+      [
+        "VERDICT",
+        "contained and center — 1px and 1px, and the slot owns both"
+      ],
+      [
+        "SIGNAL",
+        "occupies 99% of its slot — reported, not judged"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__visual-explanation__desktop",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "visual.explanation",
+    "subdesign": "down-8",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "center",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 1013.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "down-8(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "down-8 · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 760 × 1013.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__visual-explanation__tablet",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 1112,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 834 × 1112px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__visual-explanation__phone",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 509.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.explanation"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 382 × 509.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__visual-compare__desktop",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 12,
+    "slotPx": 1152,
+    "paintedW": 1152,
+    "paintedH": 1536,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(1152px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–12 of 12 · slotSpan 12 = 1152px · realised 1152px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 1152 × 1536px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__visual-compare__tablet",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 1112,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "paired(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "paired · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 834 × 1112px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__visual-compare__phone",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "visual.compare",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 509.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "visual.compare"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 382 × 509.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__media-full__desktop",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "media.full",
+    "subdesign": "centred",
+    "surface": "desktop",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "center",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 760,
+    "paintedW": 760,
+    "paintedH": 1013.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "centred(760px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "centred · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 760 × 1013.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot center in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__media-full__tablet",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "tablet",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 8,
+    "slotPx": 834,
+    "paintedW": 834,
+    "paintedH": 1112,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(834px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–8 of 8 · slotSpan 8 = 834px · realised 834px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 834 × 1112px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__media-full__phone",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "media.full",
+    "subdesign": "full",
+    "surface": "phone",
+    "slot": "media",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 509.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "full(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "media.full"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "full · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "media · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 382 × 509.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__practice-workbook__desktop",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "desktop",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 5,
+    "slotPx": 466,
+    "paintedW": 466,
+    "paintedH": 621.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 651,
+      "besideH": 512,
+      "gap": 139
+    },
+    "tried": [
+      "beside(466px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for desktop"
+      ],
+      [
+        "MASTER GRID",
+        "desktop · 12 col · 1152px · column 74.00px · gutter 24px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–5 of 12 · slotSpan 5 = 466px · realised 466px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 466 × 621.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__practice-workbook__tablet",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "practice.workbook",
+    "subdesign": "beside",
+    "surface": "tablet",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "paired",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 407,
+    "paintedW": 407,
+    "paintedH": 542.66,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": {
+      "beside": "workspace",
+      "objectH": 573,
+      "besideH": 512,
+      "gap": 61
+    },
+    "tried": [
+      "beside(407px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "beside · approved for tablet"
+      ],
+      [
+        "MASTER GRID",
+        "tablet · 8 col · 834px · column 86.75px · gutter 20px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 407 × 542.7px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot paired in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  },
+  {
+    "name": "diagram-portrait__practice-workbook__phone",
+    "fixture": "diagram.portrait",
+    "family": "diagram",
+    "klass": "portrait",
+    "pattern": "practice.workbook",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "slot": "reference",
+    "slotFit": "fill",
+    "slotAnchor": "full",
+    "mediaAnchor": null,
+    "slotSpan": 4,
+    "slotPx": 382,
+    "paintedW": 382,
+    "paintedH": 509.33,
+    "unclaimed": 0,
+    "ok": true,
+    "golden": false,
+    "promoted": false,
+    "pairGap": null,
+    "tried": [
+      "stacked(382px): ok"
+    ],
+    "verdict": "the object consumes the slot width",
+    "lines": [
+      [
+        "PATTERN",
+        "practice.workbook"
+      ],
+      [
+        "APPROVED SUBDESIGN",
+        "stacked · approved for phone"
+      ],
+      [
+        "MASTER GRID",
+        "phone · 4 col · 382px · column 83.50px · gutter 16px"
+      ],
+      [
+        "MEDIA SLOT",
+        "reference · columns 1–4 of 4 · slotSpan 4 = 382px · realised 382px"
+      ],
+      [
+        "PAINTED MEDIA",
+        "diagram · diagram.portrait · 382 × 509.3px"
+      ],
+      [
+        "SLOT FIT",
+        "fill — THE OBJECT MUST CONSUME THE SLOT WIDTH."
+      ],
+      [
+        "ANCHOR",
+        "slot full in the grid"
+      ],
+      [
+        "SHAPE PRESERVED",
+        "intrinsic 1.3333 · painted 1.3333 ✓ undistorted"
+      ],
+      [
+        "UNCLAIMED INTERNAL WIDTH",
+        "0px ✓ none"
+      ],
+      [
+        "VERDICT",
+        "the object consumes the slot width"
+      ]
+    ]
+  }
+]

@@ -171,26 +171,33 @@
   "mediaFit": {
     "_": "WHAT IT MEANS FOR MEDIA TO INHABIT A SLOT WELL. The catalogue solved 'what pattern is this?'. It did not solve this, and the visible result was a 760px graph left-aligned on a 1152px page with 392px beside it that had no role. Every media slot now declares a FIT and an ALIGNMENT.",
     "fill": {
-      "means": "THE MEDIA MUST CONSUME THE SLOT WIDTH.",
-      "forAGraph": "slot width -> graph width; the authored domain and the equal-unit rule -> graph height. NEVER graph width -> a height cap -> a squeezed width. There is no height cap.",
+      "means": "THE OBJECT MUST CONSUME THE SLOT WIDTH.",
+      "check": [
+        "painted width == slot width, within 1.5px",
+        "no unclaimed internal width"
+      ],
+      "forAGraph": "slot width → graph width; the authored domain and the equal-unit rule → graph height. NEVER graph width → a height cap → a squeezed width. There is no height cap.",
       "blocks": [
         "graph",
         "video",
         "interactive",
         "image (a major diagram or large instructional image)"
-      ],
-      "align": "stretch — there is nothing to align, because the media is the slot's width",
-      "check": "painted media width == slot width, within 1.5px. Categorical."
+      ]
     },
     "contain": {
-      "means": "The media MAY be smaller than the slot, but must be DELIBERATELY POSITIONED.",
+      "means": "The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED.",
+      "check": [
+        "painted width == min(authored presentation width, slot width)",
+        "the object sits where its declared mediaAnchor says, within 1.5px",
+        "the anchor was RESOLVED BY A RENDERER RULE, not left to CSS",
+        "the unused width belongs explicitly to the contain slot"
+      ],
+      "default": "center",
       "blocks": [
         "image (a portrait photo, a small diagram, an illustrative or supporting figure)"
       ],
-      "align": "centre. START ALIGNMENT REQUIRES AN EXPLICIT DESIGN REASON, declared on the slot; without one, a contained object against the left edge is the defect this contract exists to name.",
-      "maximum": "the slot width. A contained object never exceeds it.",
-      "check": "painted media <= slot width AND centred within it, within 1.5px. Categorical.",
-      "smell": "If a contained object continually occupies only half its slot, that is evidence THE PATTERN SHOULD USE A SMALLER SPAN — not that the object should grow. The atlas reports it; a human rules."
+      "whereItLives": "`notes.illustration` is the catalogue's one contain slot. It was added in this phase because the contract had a `contain` half that nothing exercised, and a branch no object has ever been through is not a contract.",
+      "smell": "A contained object that is consistently small is evidence THE PATTERN SHOULD USE A SMALLER SPAN — not that the object should grow. The atlas prints the percentage and compares it to nothing; a human rules."
     },
     "theGraphRules": [
       "1 · Graphs default to fit:fill, never intrinsic left alignment.",
@@ -223,26 +230,25 @@
     "promotion": "Within one (surface, aspect class) the approved subdesigns are ordered by media span ASCENDING and the first the media says it can render faithfully is taken. Ties cannot occur because two subdesigns of one pattern may not share a span at one surface, and the build refuses a pattern where they do. A SINGLE candidate is still asked — an earlier version returned it unexamined, so a pattern with one arrangement could paint a figure at a width that figure cannot render and nothing would say so. If no approved span works the build FAILS: rule 6's full-width state or focus workspace is a design decision for a human, not one the renderer may make."
   },
   "whitespace": {
-    "_": "THREE KINDS, AND THE SYSTEM COULD NOT TELL THEM APART. It called all three reading margin.",
+    "_": "THREE KINDS, AND OWNERSHIP IS WHAT SEPARATES THEM. The catalogue once had one word for all three.",
     "readingMargin": {
       "legal": true,
-      "is": "Free columns beside a PROSE slot, because prose is bound by the reading measure and the page is wider.",
-      "test": "The slot's type is `reading`, `support`, `worked`, `examples` or `questions`, and its span is the largest its pattern approves for prose at this surface."
+      "owner": "the page",
+      "is": "Deliberate unused page width beside a PROSE slot, because prose is bound by the reading measure and the page is wider."
     },
     "patternWhitespace": {
       "legal": true,
-      "is": "Space inside an explicitly bounded media stage — a portrait diagram centred in a `contain` slot.",
-      "test": "The slot declares `fit: contain`, and the media is centred within it."
+      "owner": "the subdesign",
+      "is": "Empty grid columns the subdesign PRESCRIBED. A centred 8-column slot on a 12-column grid, written 2 + 8 + 2, is valid: those outer columns have a declared role."
     },
     "slotResidue": {
       "legal": false,
-      "is": "An 8-column media slot, a 4-column graph stuck against the left, and the remaining columns with no role. THE EXAMPLES WE HAVE BEEN UNHAPPY WITH ARE MOSTLY THIS.",
-      "test": "A `fill` slot whose painted media is narrower than it; or a `contain` slot whose media is not centred and which declares no reason to be start-aligned. Either fails the build.",
-      "theHarderCase": "An 8-column media slot on a 12-column page, filled edge to edge, with 392px beside it. There is no residue INSIDE the slot and the media fits perfectly — and the page still reads as a graph stranded to the left. That is not a fit failure; it is the PATTERN having approved a span that leaves unnamed columns beside media. Free columns beside PROSE are reading margin; free columns beside MEDIA are not, because media has no measure to be bound by. The fix is in the approved-span table — a media span that is either the full grid or a centred block — never a measurement at render time."
+      "owner": "nobody — which is the defect",
+      "is": "Unused width INSIDE a media slot. Illegal under `fill`, always. Legal under `contain` only because the slot explicitly owns it and the object has an approved anchor.",
+      "theOldSituation": "An 8-column graph sitting on the left of a larger unnamed region now FAILS, in the catalogue, before anything is rendered."
     },
-    "height": "A tall page is completely acceptable. Height is unconstrained and the page scrolls. If a 6-column slot makes a tall graph 950px high, that is the right outcome.",
-    "overflow": "Local horizontal scrolling is allowed ONLY for components whose contract permits it — authored indivisible material (a table) and the tab strip.",
-    "forbidden": "Changing composition because one paragraph happens to be shorter."
+    "height": "A tall page is completely acceptable. Height is unconstrained and the page scrolls.",
+    "whatTheContractCannotSee": "A `paired` row puts an object beside prose, and the prose can run out first. The slot contract is satisfied — nothing horizontal is unclaimed — and the page can still read badly. The slot-fit atlas MEASURES that gap and prints it, and compares it to nothing, because prose length is content and content may never decide a composition. It is evidence for a human, not a rule."
   },
   "slotInspector": {
     "_": "THE ANSWER TO 'IS THE MEDIA ACTUALLY INHABITING ITS SLOT WELL?' — a different question from 'what pattern is this?', and until now only the second had one. It turns what we were judging from screenshots into a contract.",
@@ -271,5 +277,20 @@
     ],
     "caughtOnItsFirstRun": "Three arrangements in the catalogue were stranded media and nobody had noticed: `visual.compare/paired` (8 of 12, four unnamed to the right), `media.full/inset` (the same, and named after the defect), and the tablet forms of both. `practice.workbook/beside` declared a 7-column media span for a 5-column slot.",
     "unexercised": "EVERY media slot in this catalogue is `fill`, because every media block in the corpus is a plane. The `contain` branch — its centring rule, its alignment reason, its occupancy report — is designed and UNEXERCISED, and the build says so on every run rather than letting a green result imply otherwise. One open question belongs to it: `contain` gives a maximum, an alignment and a stage, and does not say WHO CHOOSES THE PAINTED WIDTH. For a raster that is its intrinsic pixels; for anything else it would be the renderer, which is media-geometry deciding width — the direction `fill` exists to forbid. The maintainer should rule before the first contained image is authored."
+  },
+  "slotContract": {
+    "_": "WHAT EVERY MEDIA SLOT PRESCRIBES. The chain runs one way and only one way: the pattern chooses an approved subdesign → the subdesign's slot determines the footprint → the media proves it can inhabit that footprint → the inspector verifies what was actually painted. The slot and the media stay separate concepts throughout. A graph being mathematically undistorted is not enough for the layout to pass.",
+    "slotSpan": "How many columns of the master grid the slot occupies, declared per subdesign. It is the whole horizontal footprint: discrete, chosen from the pattern's approved set, never negotiated.",
+    "slotFit": "`fill` or `contain`, declared on the slot. See mediaFit.",
+    "slotAnchor": {
+      "_": "WHERE THE SLOT SITS IN ITS ROW, declared per subdesign and held against the areas by a control. The vocabulary is deliberately tiny, and `start`/`end` exist only for an approved subdesign with a genuine reason for asymmetry — a generic stacked media object must never quietly default to left.",
+      "center": "equal free columns either side. Those columns are PATTERN WHITESPACE: the subdesign prescribed them, so 2 + 8 + 2 on a twelve-column grid is a composition, not a stranding.",
+      "start": "hard against the left with free columns after it. REQUIRES a declared `anchorReason`; without one this is the stranded-media defect the whole contract exists to name.",
+      "end": "hard against the right with free columns before it. Same requirement.",
+      "paired": "the row holds another named slot beside it. Nothing is unclaimed horizontally.",
+      "full": "the slot spans the grid."
+    },
+    "mediaAnchor": "Where the OBJECT sits inside a `contain` slot: center (the default a contained object should have), or start/end with a declared `anchorReason`. Under `fill` there is nothing to anchor, because the object is the slot's width. The renderer marks a slot `data-anchor-resolved` only when one of its own anchor rules positioned the object, so the inspector can tell a deliberate placement from a CSS default that happens to look identical in a screenshot.",
+    "presentationWidth": "THE AUTHORED PRESENTATION WIDTH of an object, in CSS px. Under `contain` the painted width is min(presentationWidth, slotWidth). RAW RASTER PIXEL DIMENSIONS ARE NEVER A PRESENTATION SIZE: a 900×1200 photograph is not a request to be painted 900px wide."
   }
 }

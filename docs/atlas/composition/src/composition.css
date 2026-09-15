@@ -53,10 +53,28 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
 /* ── MEDIA FIT · what it means for media to inhabit a slot ────────────────────────────────────
    `fill` — the media IS the slot's width, and the authored domain decides the height.
    `contain` — the media may be narrower, and is CENTRED. Start alignment needs a declared reason. */
-[data-fit="fill"] > .cp-figure,[data-fit="fill"] > .cp-figure > [data-mx-part="figure"]{width:100%;}
+/* THE SLOT GIVES THE WIDTH AND THE OBJECT TAKES IT. Height is never set here: it follows from the
+   object's own shape, which is what keeps a plane's unit scale equal and a raster unstretched. */
+[data-fit="fill"] > .cp-figure,[data-fit="fill"] > .cp-figure > [data-mx-part="figure"],
+[data-fit="fill"] .cp-media{width:100%;}
+[data-fit="fill"] .cp-media > img,[data-fit="fill"] .cp-media > video{width:100%;height:auto;display:block;}
+/* A CONTAINED OBJECT IS PLACED BY ITS DECLARED ANCHOR, NEVER BY WHATEVER BLOCK LAYOUT DID. The
+   renderer sets data-anchor-resolved only when one of these rules is what positioned it, so the
+   inspector can tell a deliberate placement from a CSS default that happens to look the same. */
 [data-fit="contain"]{display:block;}
-[data-fit="contain"][data-align="center"] > .cp-figure{margin-inline:auto;width:fit-content;}
-[data-fit="contain"][data-align="start"] > .cp-figure{margin-inline:0;width:fit-content;}
+[data-fit="contain"] > .cp-figure{width:100%;}
+[data-fit="contain"] .cp-media > img,[data-fit="contain"] .cp-media > video{width:100%;height:auto;display:block;}
+/* THE ANCHOR IS PUT ON THE OBJECT'S OWN BOX, not on the figure around it. The first version styled
+   the figure, and a later `[data-slot-type="media"] > .cp-figure{width:100%}` of equal specificity
+   won, so a `center` object sat hard against the left edge with its unclaimed width all on the
+   right. It looked deliberate and was not, which is exactly the defect the anchor control names. */
+[data-fit="contain"][data-media-anchor="center"] .cp-media{margin-inline:auto;}
+[data-fit="contain"][data-media-anchor="start"] .cp-media{margin-inline:0 auto;}
+[data-fit="contain"][data-media-anchor="end"] .cp-media{margin-inline:auto 0;}
+/* the media object itself: a block that takes a width and derives its height */
+.cp-media{display:block;max-width:100%;}
+.cp-media > img,.cp-media > video{max-width:100%;border-radius:2px;background:#e9eceb;}
+.cp-media > svg{display:block;width:100%;height:auto;}
 
 /* ── SLOT TYPES · the obligations that come with the KIND of slot, not with the pattern ───────── */
 [data-slot-type="reading"],[data-slot-type="support"]{max-width:var(--cp-measure);}
