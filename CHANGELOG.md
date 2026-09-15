@@ -8,6 +8,52 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **Approved page compositions, and the row contract — the Composition Proof Atlas**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue). A **proposal**, built to be looked at. Discrete slot spans made every
+  slot's width nameable and still did not make a **page**: a pattern remained a collection of
+  *independently* legal slots. The shipped lesson is the proof — in
+  `lesson-symmetry-visual-explanation-desktop.png` the graph is painted **683px wide at x = 60** in a row
+  that runs to x = 1212, leaving **469px of an active row with no semantic owner**, at a width the grid
+  does not name (its neighbours are 662px and 760px). The width came from an authored `mediaSize` token,
+  decided in isolation from the composition.
+  - **A pattern now resolves to a NAMED COMPOSITION BLUEPRINT, not to a set of spans.** A blueprint fixes
+    the whole page: which rows exist, which columns each region takes, whether regions share a row or
+    follow one another, how each row behaves vertically, and the named step between one semantic region
+    and the next. The chain is `lesson intent → pattern → approved blueprint → slots and rows → media
+    geometry selects among the approved blueprints → content fills it`, and every arrow is a lookup from
+    a categorical input.
+  - **The most important rule: no active row may contain unexplained columns.** A row holding one
+    six-column media slot may not take columns 1–6 and call 7–12 margin — it must be centred in the row,
+    accompanied by another semantic region, widened to an approved footprint, or moved into a different
+    row composition. **Free columns beside media are never a reading margin**, because media has no
+    reading measure to be bound by.
+  - **The row contract, which is the axis the span layer did not have.** `hug` (the row is exactly as tall
+    as its contents) · `paired` (two siblings share a row on a **declared alignment origin**, with a
+    declared **`imbalanceMax`** and a **`pairReason`**) · `workspace` (a height that is designed rather
+    than derived). A pair that has not said how far its children may end apart is refused before anything
+    renders.
+  - **Rhythm is declared, not accumulated.** The gap between two semantic regions is a named step —
+    `tight 16 · normal 32 · section 56` — rendered as a real grid row of exactly that height. That is the
+    entire difference between `worked.single/flow` and `worked.single/split`: identical widths, different
+    rhythm.
+  - **`worked.paired` now exists.** It was asked for three corrections ago and had never been designed:
+    `intro-8 / worked-6-6 / synthesis-8`, the pair declaring 180px.
+  - **`media-5 + explanation-7` was judged and does not pass.** Offered as an example composition; every
+    column in its row is owned and it still fails, because the object and the reading beside it end
+    **535.5px apart** against the 160px it declared for itself. Kept as `withdrawn` with the measurement.
+  - **Eight hard failures and five table-level refusals, each driven to failure in the same run.** H1
+    declared-vs-rendered ownership · H2 the unexplained remainder · H3 a hug row taller than its children ·
+    H4 the pairing contract · H5 a starved `fill` · H6 an anchorless `contain` · H7 prose choosing the
+    page · H8 a blueprint outside the approved set.
+  - **Seven permanent counterexample boards**, the first two reproducing the shipped defect rather than
+    describing it. `counterexample__unowned-half-row` is the canonical must-never-happen-again.
+  - **The paired workings page was measured and does not reproduce as a layout defect**: the cases row is
+    333px, both children are 333px, `align-items: start`, and the gap to the synthesis is 30px. The air is
+    30px of region gap plus ~27px of the answer block's own bottom padding — a rhythm defect, not a
+    row-height one. Every board now prints **declared step against perceived gap**, and the open question
+    (should a region be required to hug its own ink?) is reported rather than taken.
+
 - **The slot contract completed, and the Slot Fit Atlas** (`docs/atlas/media/`, `docs/atlas/slot-fit/`,
   `scripts/slot-fit-atlas.mjs`, `scripts/make-media-fixtures.mjs`, `scripts/lib/slots.mjs`, no app change).
   The previous entry gave media slots a **fit**. This one gives them the other two thirds of a contract

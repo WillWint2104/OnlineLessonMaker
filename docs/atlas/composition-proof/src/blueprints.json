@@ -1,0 +1,1350 @@
+{
+  "_": "APPROVED PAGE COMPOSITIONS — A PROPOSAL, awaiting the maintainer. Nothing here is wired into the shipping catalogue in docs/atlas/composition/src/, into the lesson, or into lesson-studio.html.",
+  "theProblem": "Discrete slot spans were not enough. A pattern was still a collection of INDEPENDENTLY legal slots, so a six-column object could be legal at the left of a twelve-column row with nothing in the other six, and nothing in the system had an opinion about vertical structure at all. Measured on the shipped lesson: the portrait visual.explanation page paints its graph 683px wide at the left of a 1152px row, leaving 469px that no region owns — and 683px is not any span the grid names.",
+  "theFix": "A PATTERN RESOLVES TO A NAMED COMPOSITION BLUEPRINT, not to a set of spans. A blueprint fixes the whole page: which rows exist, which columns each region takes, whether regions share a row or follow one another, how each row behaves vertically, and the named step between one semantic region and the next. A slot cannot independently decide \"six columns, left\".",
+  "theChain": "lesson intent → pattern → approved composition blueprint → slots and rows → media geometry selects among the approved blueprints → content fills it. Never: content → measurements → slot sizes → hope the result looks balanced.",
+  "theMostImportantRule": "NO ACTIVE ROW MAY CONTAIN UNEXPLAINED COLUMNS. A row holding one six-column media slot may not take columns 1-6 and call 7-12 margin. It must be centred within the row, accompanied by another semantic region, given a wider approved footprint, or moved into a different row composition. Reading margin is legal AROUND a coherent composition; it is not a licence for an unfinished half-row, and free columns beside MEDIA are never a margin, because media has no reading measure to be bound by.",
+  "notAResolver": "Nothing here measures prose, counts steps or computes an occupancy fraction. A blueprint is chosen from categorical inputs — the surface, the media geometry class, or an authored form — and the set a pattern may choose from is written down. The program is not deciding whether a page looks balanced; it is choosing among a handful of pages a human already decided are finished.",
+  "rhythm": {
+    "_": "THE SECOND AXIS. The gap between two semantic regions is a NAMED STEP declared by the blueprint at that boundary, drawn from the 8px scale in grid.json. It is not the sum of whatever paddings the two regions happen to carry.",
+    "steps": {
+      "tight": 16,
+      "normal": 32,
+      "section": 56
+    },
+    "rule": "Every row but the last declares `gapAfter`. A conclusion takes `section`; regions within one movement take `normal`; parts of one region take `tight`."
+  },
+  "rowModes": {
+    "_": "THE ROW CONTRACT. Width was never the whole story: the same 6/6 can be a finished comparison or a pair of columns with a cliff of white between them, and only the vertical rule tells them apart.",
+    "hug": "The row is exactly as tall as its contents. No child stretches to match unrelated material. Ordinary worked examples, explanations and readings are all hug rows.",
+    "paired": "Two sibling regions deliberately share a row and top-align on a declared origin. A paired row must name `align`, an `imbalanceMax` in px, and a `pairReason`. The atlas measures how far the two children actually end apart and fails the blueprint if it exceeds what the blueprint declared.",
+    "workspace": "A deliberately substantial area — an interactive, a workbook page, a drawing surface — whose height is designed rather than derived. Only a workspace row may be materially taller than its prose."
+  },
+  "regionRoles": {
+    "slot": "a named slot of the pattern.",
+    "reading-margin": "free columns BESIDE A PROSE SLOT, because prose is bound by the reading measure and the page is wider. Never beside media. Never wider than the surface allows.",
+    "containment": "the free columns either side of a CENTRED split, declared by the split and always symmetric."
+  },
+  "marginMax": {
+    "desktop": 4,
+    "tablet": 1,
+    "phone": 0
+  },
+  "patterns": {
+    "visual.explanation": {
+      "intent": "One primary visual and the reading of it, where the READING carries the teaching.",
+      "mediaSlot": "media",
+      "slotFit": "fill",
+      "edge": "spine",
+      "selectBy": "mediaGeometry",
+      "blueprints": {
+        "spine-narrow": {
+          "title": "media-centred-6 / reading-centred-6",
+          "why": "A TALL OBJECT AND A NARROW SPINE. The object and its reading take the same six columns, so the page has one width and one centre line. Six columns is 564px: a 1.2 plane is 717px tall there and would be 1382px at twelve. The reading narrows WITH the object rather than standing wider than it — a 564px object over a 760px reading is two widths pretending to be a composition.",
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "split": "centred-6",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "centred-6",
+                "regions": [
+                  "interpretation"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "centred-6",
+                "regions": [
+                  "support"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "split": "centred-6",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "centred-6",
+                "regions": [
+                  "interpretation"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "centred-6",
+                "regions": [
+                  "support"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        },
+        "spine-reading": {
+          "title": "media-centred-8 / reading-centred-8",
+          "why": "THE MEASURE, CENTRED. Object and reading both take the reading measure exactly — eight desktop columns is 760px — so the composition is one column of page with nothing beside it to explain.",
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "split": "centred-8",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "centred-8",
+                "regions": [
+                  "interpretation"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "centred-8",
+                "regions": [
+                  "support"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "split": "full-8",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "centred-6",
+                "regions": [
+                  "interpretation"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "centred-6",
+                "regions": [
+                  "support"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        },
+        "stage-full": {
+          "title": "media-full-12 / reading-centred-8",
+          "why": "A STAGE. Only an object that is short by construction earns the whole grid; the reading stays at the measure beneath it, on the same centre line, so the widening reads as deliberate staging rather than as the object having escaped.",
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "split": "full-12",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "centred-8",
+                "regions": [
+                  "interpretation"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "centred-8",
+                "regions": [
+                  "support"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "split": "full-8",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "centred-6",
+                "regions": [
+                  "interpretation"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "centred-6",
+                "regions": [
+                  "support"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        },
+        "stack": {
+          "title": "everything full-4",
+          "why": "THE PHONE REFERENCE. Stacking removes every choice the desktop composition has to make, which is why the narrow render of the defective page was already correct. It is kept as the proof that the information was never the problem.",
+          "rows": {
+            "phone": [
+              {
+                "id": "media",
+                "split": "full-4",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "full-4",
+                "regions": [
+                  "interpretation"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "full-4",
+                "regions": [
+                  "support"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "portrait": "spine-narrow",
+          "balanced": "spine-reading",
+          "landscape": "spine-reading",
+          "wide": "stage-full"
+        },
+        "tablet": {
+          "portrait": "spine-narrow",
+          "balanced": "spine-reading",
+          "landscape": "spine-reading",
+          "wide": "stage-full"
+        },
+        "phone": {
+          "portrait": "stack",
+          "balanced": "stack",
+          "landscape": "stack",
+          "wide": "stack"
+        }
+      },
+      "withdrawn": {
+        "side-study": {
+          "title": "media-5 + explanation-7",
+          "why": "OFFERED AS AN EXAMPLE AND JUDGED HERE. A five-column object beside a seven-column reading is a `paired` row, so it has to declare how far its two children may end apart. It is rendered in the atlas against a declared imbalanceMax and the measurement is printed beside it.",
+          "rows": {
+            "desktop": [
+              {
+                "id": "study",
+                "split": "5/7",
+                "regions": [
+                  "media",
+                  "interpretation"
+                ],
+                "mode": "paired",
+                "align": "top",
+                "imbalanceMax": 160,
+                "pairReason": "an object beside the reading of it",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "8/4",
+                "regions": [
+                  "support",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "visual.compare": {
+      "intent": "Two cases worked side by side, with an optional visual that belongs to both.",
+      "mediaSlot": "media",
+      "slotFit": "fill",
+      "edge": "left-edge",
+      "selectBy": "mediaGeometry",
+      "blueprints": {
+        "compare-plain": {
+          "title": "compare-6-6 / synthesis-8",
+          "why": "NO SHARED VISUAL. The cases are the argument, so they take identical width — 6/6 is the one split in this catalogue where equality IS the point. The synthesis is separated by a SECTION step rather than the ordinary one, because a conclusion that follows at the same interval as a paragraph does not read as a conclusion.",
+          "noMedia": true,
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "split": "8/4",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "split": "6/6",
+                "regions": [
+                  "caseA",
+                  "caseB"
+                ],
+                "mode": "paired",
+                "align": "top",
+                "imbalanceMax": 180,
+                "pairReason": "two cases of the same kind, at identical width",
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "8/4",
+                "regions": [
+                  "interpretation",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "split": "8/4",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "split": "7/1",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "split": "4/4",
+                "regions": [
+                  "caseA",
+                  "caseB"
+                ],
+                "mode": "paired",
+                "align": "top",
+                "imbalanceMax": 200,
+                "pairReason": "two cases of the same kind, at identical width",
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "7/1",
+                "regions": [
+                  "interpretation",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "split": "7/1",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "split": "full-4",
+                "regions": [
+                  "intro"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "caseA",
+                "split": "full-4",
+                "regions": [
+                  "caseA"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "caseB",
+                "split": "full-4",
+                "regions": [
+                  "caseB"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "full-4",
+                "regions": [
+                  "interpretation"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "split": "full-4",
+                "regions": [
+                  "synthesis"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        },
+        "compare-shared-centred": {
+          "title": "compare-6-6 / media-centred-8 / synthesis-8",
+          "why": "A SHARED VISUAL ON THE SEAM. It is centred on the line between the two cases, so it reads as belonging to both rather than to whichever case it happens to sit under. It narrows as it heightens: the old catalogue gave this slot full-12 for every shape, which is how a 3:4 photograph came to be painted 1152x1536.",
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "split": "8/4",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "split": "6/6",
+                "regions": [
+                  "caseA",
+                  "caseB"
+                ],
+                "mode": "paired",
+                "align": "top",
+                "imbalanceMax": 180,
+                "pairReason": "two cases of the same kind, at identical width",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "split": "centred-8",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "8/4",
+                "regions": [
+                  "interpretation",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "split": "8/4",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "split": "7/1",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "split": "4/4",
+                "regions": [
+                  "caseA",
+                  "caseB"
+                ],
+                "mode": "paired",
+                "align": "top",
+                "imbalanceMax": 200,
+                "pairReason": "two cases of the same kind, at identical width",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "split": "centred-6",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "7/1",
+                "regions": [
+                  "interpretation",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "split": "7/1",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        },
+        "compare-shared-full": {
+          "title": "compare-6-6 / media-full-12 / synthesis-8",
+          "why": "The same composition with a SHORT object, which may take the whole grid without becoming a column of pixels.",
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "split": "8/4",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "split": "6/6",
+                "regions": [
+                  "caseA",
+                  "caseB"
+                ],
+                "mode": "paired",
+                "align": "top",
+                "imbalanceMax": 180,
+                "pairReason": "two cases of the same kind, at identical width",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "split": "full-12",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "8/4",
+                "regions": [
+                  "interpretation",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "split": "8/4",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "split": "7/1",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "split": "4/4",
+                "regions": [
+                  "caseA",
+                  "caseB"
+                ],
+                "mode": "paired",
+                "align": "top",
+                "imbalanceMax": 200,
+                "pairReason": "two cases of the same kind, at identical width",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "split": "full-8",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "7/1",
+                "regions": [
+                  "interpretation",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "split": "7/1",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        },
+        "stack": {
+          "title": "everything full-4",
+          "why": "The phone reference.",
+          "rows": {
+            "phone": [
+              {
+                "id": "intro",
+                "split": "full-4",
+                "regions": [
+                  "intro"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "caseA",
+                "split": "full-4",
+                "regions": [
+                  "caseA"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "caseB",
+                "split": "full-4",
+                "regions": [
+                  "caseB"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "split": "full-4",
+                "regions": [
+                  "media"
+                ],
+                "mode": "hug",
+                "media": true,
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "split": "full-4",
+                "regions": [
+                  "interpretation"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "split": "full-4",
+                "regions": [
+                  "synthesis"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "none": "compare-plain",
+          "portrait": "compare-shared-centred",
+          "balanced": "compare-shared-centred",
+          "landscape": "compare-shared-full",
+          "wide": "compare-shared-full"
+        },
+        "tablet": {
+          "none": "compare-plain",
+          "portrait": "compare-shared-centred",
+          "balanced": "compare-shared-centred",
+          "landscape": "compare-shared-full",
+          "wide": "compare-shared-full"
+        },
+        "phone": {
+          "none": "compare-plain",
+          "portrait": "stack",
+          "balanced": "stack",
+          "landscape": "stack",
+          "wide": "stack"
+        }
+      }
+    },
+    "worked.single": {
+      "intent": "One worked example. No media slot; the two blueprints differ only in vertical rhythm, which is the point.",
+      "mediaSlot": null,
+      "edge": "left-edge",
+      "selectBy": "authored",
+      "authoredKey": "form",
+      "blueprints": {
+        "flow": {
+          "title": "single.flow — one measure, one rhythm",
+          "why": "EVERY REGION AT THE MEASURE, evenly spaced. The example is read straight through, so nothing is separated more than anything else until the synthesis.",
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "split": "8/4",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "split": "8/4",
+                "regions": [
+                  "scenario",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "worked",
+                "split": "8/4",
+                "regions": [
+                  "worked",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "8/4",
+                "regions": [
+                  "support",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "split": "8/4",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "split": "7/1",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "split": "7/1",
+                "regions": [
+                  "scenario",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "worked",
+                "split": "7/1",
+                "regions": [
+                  "worked",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "7/1",
+                "regions": [
+                  "support",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "split": "7/1",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "split": "full-4",
+                "regions": [
+                  "intro"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "split": "full-4",
+                "regions": [
+                  "scenario"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "worked",
+                "split": "full-4",
+                "regions": [
+                  "worked"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "full-4",
+                "regions": [
+                  "support"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "split": "full-4",
+                "regions": [
+                  "synthesis"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        },
+        "split": {
+          "title": "single.split — the scenario cut from the solution",
+          "why": "THE SAME WIDTHS, A DIFFERENT RHYTHM. A situation and the algebra that answers it are two movements, so the boundary between them takes a SECTION step and a rule. This is the whole difference between the two blueprints, and it is a vertical decision — which is the axis the span layer did not have.",
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "split": "8/4",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "split": "8/4",
+                "regions": [
+                  "scenario",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section",
+                "ruleAfter": true
+              },
+              {
+                "id": "worked",
+                "split": "8/4",
+                "regions": [
+                  "worked",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "8/4",
+                "regions": [
+                  "support",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "split": "8/4",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "split": "7/1",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "split": "7/1",
+                "regions": [
+                  "scenario",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section",
+                "ruleAfter": true
+              },
+              {
+                "id": "worked",
+                "split": "7/1",
+                "regions": [
+                  "worked",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "7/1",
+                "regions": [
+                  "support",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "split": "7/1",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "split": "full-4",
+                "regions": [
+                  "intro"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "split": "full-4",
+                "regions": [
+                  "scenario"
+                ],
+                "mode": "hug",
+                "gapAfter": "section",
+                "ruleAfter": true
+              },
+              {
+                "id": "worked",
+                "split": "full-4",
+                "regions": [
+                  "worked"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "split": "full-4",
+                "regions": [
+                  "support"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "split": "full-4",
+                "regions": [
+                  "synthesis"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "flow": "flow",
+          "split": "split"
+        },
+        "tablet": {
+          "flow": "flow",
+          "split": "split"
+        },
+        "phone": {
+          "flow": "flow",
+          "split": "split"
+        }
+      }
+    },
+    "worked.paired": {
+      "intent": "Two worked examples of the same kind, side by side, and what they show together.",
+      "proposedPattern": true,
+      "slots": [
+        {
+          "name": "intro",
+          "slotType": "reading",
+          "occupancy": "optional-collapse",
+          "allowedBlocks": [
+            "prose"
+          ]
+        },
+        {
+          "name": "workedA",
+          "slotType": "worked",
+          "occupancy": "required",
+          "allowedBlocks": [
+            "workedExample",
+            "table"
+          ]
+        },
+        {
+          "name": "workedB",
+          "slotType": "worked",
+          "occupancy": "required",
+          "allowedBlocks": [
+            "workedExample",
+            "table"
+          ]
+        },
+        {
+          "name": "synthesis",
+          "slotType": "reading",
+          "occupancy": "required",
+          "allowedBlocks": [
+            "prose"
+          ]
+        }
+      ],
+      "mediaSlot": null,
+      "edge": "left-edge",
+      "selectBy": "surface",
+      "blueprints": {
+        "cases-6-6": {
+          "title": "intro-8 / worked-6-6 / synthesis-8",
+          "why": "THE PAIR THIS CATALOGUE WAS MISSING. Two worked examples are the same legitimate pairing as visual.compare's two cases: both children have a height the author did not write directly, and identical width is the argument. It is a `paired` row, so it declares how far its two children may end apart and the atlas measures it.",
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "split": "8/4",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "split": "6/6",
+                "regions": [
+                  "workedA",
+                  "workedB"
+                ],
+                "mode": "paired",
+                "align": "top",
+                "imbalanceMax": 180,
+                "pairReason": "two worked examples of the same kind",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "split": "8/4",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "split": "7/1",
+                "regions": [
+                  "intro",
+                  "reading-margin"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "split": "4/4",
+                "regions": [
+                  "workedA",
+                  "workedB"
+                ],
+                "mode": "paired",
+                "align": "top",
+                "imbalanceMax": 200,
+                "pairReason": "two worked examples of the same kind",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "split": "7/1",
+                "regions": [
+                  "synthesis",
+                  "reading-margin"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        },
+        "cases-stacked": {
+          "title": "everything full-4",
+          "why": "Below the pairing surface the two examples stack, and the argument is carried by the synthesis rather than by alignment.",
+          "rows": {
+            "phone": [
+              {
+                "id": "intro",
+                "split": "full-4",
+                "regions": [
+                  "intro"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "workedA",
+                "split": "full-4",
+                "regions": [
+                  "workedA"
+                ],
+                "mode": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "workedB",
+                "split": "full-4",
+                "regions": [
+                  "workedB"
+                ],
+                "mode": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "split": "full-4",
+                "regions": [
+                  "synthesis"
+                ],
+                "mode": "hug"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "any": "cases-6-6"
+        },
+        "tablet": {
+          "any": "cases-6-6"
+        },
+        "phone": {
+          "any": "cases-stacked"
+        }
+      }
+    }
+  },
+  "sequences": {
+    "solving-for-x": {
+      "_": "THE TWO-PATTERN SEQUENCE THE LESSON ALREADY USES, rendered as one page so the boundary between two blueprints can be judged rather than assumed.",
+      "pattern": "worked.single",
+      "steps": [
+        {
+          "blueprint": "flow",
+          "title": "Solving x² = 16"
+        },
+        {
+          "blueprint": "split",
+          "title": "The same algebra, inside a situation"
+        }
+      ],
+      "between": "section",
+      "why": "Two worked examples in sequence share one left edge and one measure; only the rhythm inside them differs. The boundary between the two is a SECTION step, the same one that precedes a synthesis."
+    }
+  },
+  "counterexamples": {
+    "_": "PERMANENT REGRESSION PROOFS. Each is an arrangement the atlas renders and asserts FAILS. The first is the shipped page the maintainer called the canonical must-never-happen-again.",
+    "shipped-visual-explanation": {
+      "control": "H2",
+      "measured": "docs/atlas/lesson/lesson-symmetry-visual-explanation-desktop.png — the graph is painted 683px wide at x=60 in a 1152px row that ends at x=1212. 469px of an active row has no semantic owner, and 683px is not any span the desktop grid names (the neighbours are 662 and 760).",
+      "cause": "the figure took its width from an authored `mediaSize` token, in isolation from the composition."
+    },
+    "stretched-hug-row": {
+      "control": "H3",
+      "measured": "injected: a hug row given a min-height 200px past its tallest child."
+    },
+    "starved-fill": {
+      "control": "H5",
+      "measured": "injected: a `fill` object painted at 60% of its slot."
+    },
+    "unbalanced-pair": {
+      "control": "H4",
+      "measured": "visual.explanation/side-study — an object beside prose, rendered against its own declared imbalanceMax."
+    },
+    "margin-beside-media": {
+      "control": "H1",
+      "measured": "injected: a media row declaring a reading margin."
+    },
+    "prose-chose-the-page": {
+      "control": "H7",
+      "measured": "injected: a selector keyed to payload length."
+    },
+    "unapproved-blueprint": {
+      "control": "H8",
+      "measured": "injected: a blueprint id outside the pattern's approved set."
+    },
+    "anchorless-contain": {
+      "control": "H6",
+      "measured": "injected: a `contain` object with its anchor removed."
+    }
+  },
+  "notDone": {
+    "the paired workings page": "MEASURED AND IT DOES NOT REPRODUCE AS A LAYOUT DEFECT. On the shipped page the cases row is 333px tall and both children are 333px tall — `align-items:start`, zero stretch — and the gap to the synthesis is 30px. The air the eye reads is 30px of region gap plus ~27px of the answer block's own bottom padding plus the synthesis label's leading: three separately owned spacings that nothing designs as one. That is a RHYTHM defect, not a row-height defect, which is why `rhythm.steps` exists and why the atlas prints declared step against perceived gap on every boundary."
+  }
+}
