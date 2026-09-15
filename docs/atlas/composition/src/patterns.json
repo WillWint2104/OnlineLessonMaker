@@ -375,9 +375,10 @@
         "surface": "desktop",
         "aspects": [
           "portrait",
-          "balanced"
+          "balanced",
+          "none"
         ],
-        "selectedWhen": "desktop AND a shared plane no wider than about its own height",
+        "selectedWhen": "desktop AND a shared plane no wider than about its own height — OR NO SHARED PLANE AT ALL, which is a state this pattern genuinely has: the lesson's Symmetry workings is a comparison with nothing shared beneath it",
         "areas": [
           "intro intro intro intro intro intro intro intro . . . .",
           "caseA caseA caseA caseA caseA caseA caseB caseB caseB caseB caseB caseB",

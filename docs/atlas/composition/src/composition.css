@@ -159,6 +159,16 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
 .cp-figure{display:block;margin:0;}  /* a UA/app `figure` margin left the plane 12px wider than its slot, which the frame control caught on a phone */
 .cp-figcap{margin:10px 0 0;font:400 13px/1.55 var(--mx-ui);color:var(--mx-ink-3);max-width:var(--cp-measure);}
 
+/* ══ THE SHELL · what holds patterns, and is not one ════════════════════════════════════════════
+   It owns the title, the strips and which panel is open. It declares no slot, no grid area and no
+   media rule — the moment it acquires one it has become a pattern and the layering has collapsed. */
+.cp-shell{display:block;}
+/* two patterns in one panel are one subtopic's material in reading order — a rule says so */
+.cp-panel > [data-pattern] + [data-pattern],
+.cp-panel > [data-pattern] + .cp-shell{margin-top:48px;padding-top:44px;border-top:1px solid var(--mx-line);}
+.cp-panel > .cp-shell{margin-top:8px;}
+.cp-shell > .cp-tabbar{scroll-padding-inline:8px;}
+
 /* ── DISCLOSURE · tabs. Authored structure, never a space-saving response ─────────────────────── */
 .cp-tabs{min-width:0;}
 .cp-tabbar{display:flex;flex-wrap:nowrap;overflow-x:auto;overscroll-behavior-x:contain;

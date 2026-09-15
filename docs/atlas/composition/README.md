@@ -106,7 +106,7 @@ dead-space resolver, semantic media pixel sizes, and any comparison of content h
 
 ## 6. The catalogue — seven patterns
 
-Twelve pages, three surfaces each, plus adversarial and alternate-media renders: **58 renders**.
+Thirteen pages, three surfaces each — the last of them the whole lesson in fifteen states — plus adversarial and alternate-media renders: **74 renders**.
 Every page is filled from the real quadratics lesson — a pattern that only works on prose written
 to fit it proves nothing.
 
@@ -171,7 +171,7 @@ every token is `.` or an absent optional slot** — mechanical, deterministic, a
 slots the author filled*, never what is in them. Seven patterns × three surfaces × up to four optional
 slots is a combinatorial table nobody would keep correct; one rule with a control is better.
 
-### 6d. What the catalogue still does not cover
+### 6d. The gap this pass then closed
 
 The review's sharpest finding is one this pass did **not** close: the catalogue lays out *pages*, and
 the lesson is not a stack of pages. Its top level is a `collection.tabs` over four subtopics, and its
@@ -179,9 +179,36 @@ the lesson is not a stack of pages. Its top level is a `collection.tabs` over fo
 comparison and a figure with its reading. Neither the subtopic strip nor the views switch has an
 owner here.
 
-That is a **shell** above the pattern layer, not an eighth pattern, and it deserves its own pass:
-one pattern per panel, the two tab kinds encoded rather than styled, and the strip's phone behaviour
-(one row, never wrapping, the current tab scrolled fully into view) carried with it.
+That is a **shell** above the pattern layer, not an eighth pattern. §6e is that pass.
+
+### 6e. The shell layer — what holds patterns, and is not one
+
+The catalogue lays out pages; the lesson is not a stack of pages. Its top level is a strip over four
+subtopics, and its *Symmetry* subtopic is one idea seen as two representations whose panels are
+**different patterns**. Neither had an owner, and five pattern records assumed a page title that no
+pattern declared.
+
+A **shell** owns the title, the strips, and which panel is open. It declares **no slot, no grid area
+and no media rule** — the moment it acquires one it has become a pattern and the layering has
+collapsed.
+
+| | |
+| --- | --- |
+| `shell.subtopics` | several **sibling** parts of a lesson; select one. A panel holds **one or more patterns in reading order** — a subtopic is often several pages' worth of material |
+| `shell.views` | **one** object seen in multiple **representations**. One pattern per panel, and *different* patterns are the normal case — which is exactly what makes this a shell rather than a pattern with a state |
+
+Nesting runs `subtopics → views → patterns`. Subtopics inside subtopics is forbidden: two levels of
+sibling selection is a table of contents pretending to be a page.
+
+**Page 20 is the whole quadratics lesson through the catalogue** — 15 renders, one per leaf state per
+surface. Substitution is `notes`; *Solving for x* is two `worked.single` patterns in one panel, ruled
+apart; *Symmetry* is a views shell over `visual.compare` and `visual.explanation`; *A flatter
+parabola* is `visual.explanation`.
+
+Building it found one thing the pattern layer had not: **`visual.compare` had no approved subdesign
+for having no shared visual at all**, because both its desktop subdesigns declared an aspect class
+and a page with no media has none. `none` is now an aspect class like any other, and a pattern whose
+media is `optional-collapse` must declare a subdesign for it — the build refuses one that does not.
 
 ## 7. What the build checks
 
@@ -204,6 +231,10 @@ Every control below has been driven to fail on purpose.
 | **Scroll ownership** | teaching prose put in a local vertical scroller |
 | **A declared pane genuinely overflows somewhere** | a bound that is a claim rather than a tested contract |
 | **The frame holds the surface** | a UA `figure` margin left every plane 12px wider than its slot — invisible until a phone render, and the error now names the overhanging element |
+| **The authored tab structure is identical at every width and state** | a phone that drops the fourth subtopic — the invariant the whole disclosure axis exists to protect |
+| **A closed panel contributes nothing** | every panel painted at once: a strip that hides nothing is a decoration |
+| **A shell introduces no scroll of its own** | a shell bounding a panel's height — hiding half a subtopic behind a scrollbar is the space-saving move this architecture refuses |
+| **The two tab kinds are distinguishable** | a nested views strip styled as an item selector. The per-depth control could not catch it — `views` occurs only at depth 1 here, so nothing disagreed with it — and this one does |
 
 ## 8. Status
 
@@ -212,8 +243,7 @@ A **proposal**, and research. `lesson-studio.html` is untouched and byte-identic
 the catalogue — and the CSS for every arrangement is *generated* from that file, so a design and its
 layout cannot drift the way a grammar in prose once drifted from thresholds in a script.
 
-Still open, and for the maintainer: **the shell layer** (§6d) is the one thing between this catalogue
-and rendering the whole quadratics lesson end to end. Smaller: `optional-reserved` is declared and no
+Still open, and for the maintainer: `optional-reserved` is declared and no
 pattern needed it; an authored figure `label` has nowhere to go except the caption; a `readout` slot
 for an interactive's current values and an `answers` slot for a workbook are both missing; and
 `video` remains a block type, a slot type and a page type that nothing in the corpus exercises.

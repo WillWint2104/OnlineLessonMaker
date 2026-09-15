@@ -48,9 +48,21 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     types. The `scroll.x` contract was stated for a `data` slot and implemented on the table block;
     the block was right. And **`worked.single` was added**, because the catalogue could not lay out
     two of its own lesson's four subtopics.
-  - **Named and not closed**: the lesson's top level is a `collection.tabs` over four subtopics and its
-    *Symmetry* subtopic is a `views.tabs` over two *different patterns*. That is a **shell** above the
-    pattern layer, and it needs its own pass.
+  - **The shell layer**, which the pattern pass named and did not close. A **shell** owns the page
+    title, the tab strips and which panel is open, and declares **no slot, no grid area and no media
+    rule** — the moment it acquires one it has become a pattern. `shell.subtopics` holds one or more
+    patterns per panel in reading order; `shell.views` holds one pattern per panel and *different*
+    patterns are the normal case, which is what makes it a shell rather than a pattern with a state.
+    Nesting runs subtopics → views → patterns; subtopics inside subtopics is forbidden.
+  - **Page 20 is the whole quadratics lesson through the catalogue** — 15 renders, one per leaf state
+    per surface — and building it found what the pattern layer had not: **`visual.compare` had no
+    approved subdesign for having no shared visual at all**. `none` is now an aspect class like any
+    other, and a pattern whose media is `optional-collapse` must declare a subdesign for it.
+  - **Four more controls, each driven to fail**: the authored tab structure is identical at every
+    width and state; a closed panel contributes nothing; a shell introduces no scroll of its own; and
+    the two tab kinds are **distinguishable** — the per-depth affordance control could not catch a
+    nested views strip styled as an item selector, because `views` occurs only at depth 1, and this
+    one does.
   - `mediaSize` is recorded as the useful **failed intermediate** it was: it proved semantic importance
     and media geometry are separate concerns, which is why this catalogue has a slot layer. The old
     atlas is marked superseded rather than deleted.

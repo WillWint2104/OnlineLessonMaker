@@ -916,5 +916,255 @@
         }
       ]
     }
+  },
+  {
+    "n": "20",
+    "shell": "subtopics",
+    "title": "The parabola *y* = *x*^2",
+    "lede": "Four ways into the same curve: putting numbers in, taking them back out, the mirror down its middle, and what happens when the rule is divided through.",
+    "c": "THE WHOLE LESSON, THROUGH THE CATALOGUE. A subtopics shell over four parts; the Symmetry part is a VIEWS shell whose two panels are DIFFERENT PATTERNS. The shell owns the title and the strips and nothing else — no slots, no grid, no media rule.",
+    "items": [
+      {
+        "label": "Substitution",
+        "lede": "Three values of *x*, chosen because each one goes wrong in a different way.",
+        "body": [
+          {
+            "pattern": "notes",
+            "slots": {
+              "intro": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "A rule like *y* = *x*^2 is a set of instructions with one input. Give it a value of *x*, do what it says, and it hands back a value of *y*. The three examples below do the same thing to three kinds of number."
+                  ]
+                }
+              ],
+              "support": [
+                {
+                  "block": "keyIdea",
+                  "label": "The move",
+                  "paragraphs": [
+                    "Substitute, then square. The kind of number never changes the instruction."
+                  ]
+                }
+              ],
+              "examples": [
+                {
+                  "block": "workedExample",
+                  "ref": "substitution/0"
+                },
+                {
+                  "block": "workedExample",
+                  "ref": "substitution/1"
+                },
+                {
+                  "block": "workedExample",
+                  "ref": "substitution/2"
+                }
+              ],
+              "synthesis": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "Substitution never changes the rule — it only replaces *x*. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a decimal below 1 gets smaller rather than larger.",
+                    "Read the table row backwards and a second fact appears: every output except zero is reached twice."
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Solving for *x*",
+        "lede": "Going the other way. Two examples: the bare equation, then the same algebra inside a situation.",
+        "body": [
+          {
+            "pattern": "worked.single",
+            "slots": {
+              "intro": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "Substitution ran the rule forwards. This runs it backwards: the output is known and the input is not."
+                  ]
+                }
+              ],
+              "worked": [
+                {
+                  "block": "workedExample",
+                  "ref": "solving-for-x/0"
+                }
+              ],
+              "support": [
+                {
+                  "block": "keyIdea",
+                  "label": "Both signs, every time",
+                  "paragraphs": [
+                    "Taking a square root offers two answers. Writing only the positive one is the single most common way to lose half a solution."
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "pattern": "worked.single",
+            "slots": {
+              "scenario": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "A stone is dropped from a bridge. The distance it has fallen, in metres, is modelled by *d* = 5*t*^2, where *t* is the time in seconds since it was released.",
+                    "The bridge deck is 45 metres above the water, and the model is only trusted while the stone is still falling.",
+                    "Find how long the stone takes to reach the water."
+                  ]
+                }
+              ],
+              "worked": [
+                {
+                  "block": "workedExample",
+                  "ref": "solving-for-x/1",
+                  "noTitle": true,
+                  "noPrompt": true
+                }
+              ],
+              "support": [
+                {
+                  "block": "keyIdea",
+                  "label": "When a root is rejected",
+                  "paragraphs": [
+                    "A negative root can solve the equation and still not answer the question. Rejecting it is a statement about the situation, and it belongs in the working."
+                  ]
+                }
+              ],
+              "synthesis": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "The ± is not a convention bolted onto the square root. It is the record of a fact about squaring: two different numbers can arrive at the same square, so undoing a square has to return both of them.",
+                    "A situation can rule one of them out, and saying why is part of the answer."
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Symmetry",
+        "lede": "One idea, two authored representations. Solve it, then look at the same fact on the curve.",
+        "body": {
+          "shell": "views",
+          "items": [
+            {
+              "label": "Workings",
+              "body": [
+                {
+                  "pattern": "visual.compare",
+                  "slots": {
+                    "intro": [
+                      {
+                        "block": "prose",
+                        "paragraphs": [
+                          "Two values of *x* give the same output. Worked separately they look like two different problems."
+                        ]
+                      }
+                    ],
+                    "caseA": [
+                      {
+                        "block": "workedExample",
+                        "ref": "symmetry/workings#0"
+                      }
+                    ],
+                    "caseB": [
+                      {
+                        "block": "workedExample",
+                        "ref": "symmetry/workings#1"
+                      }
+                    ],
+                    "synthesis": [
+                      {
+                        "block": "prose",
+                        "paragraphs": [
+                          "Whenever a square equals a positive number there are two answers, and they are reflections of each other in the *y*-axis."
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "label": "Visual explanation",
+              "body": [
+                {
+                  "pattern": "visual.explanation",
+                  "slots": {
+                    "media": [
+                      {
+                        "block": "graph",
+                        "figure": "symmetry",
+                        "caption": "*y* = *x*^2 with the line *y* = 9, meeting it at (−3, 9) and (3, 9)."
+                      }
+                    ],
+                    "interpretation": [
+                      {
+                        "block": "prose",
+                        "paragraphs": [
+                          "The horizontal line *y* = 9 meets *y* = *x*^2 at exactly the two points the arithmetic found.",
+                          {
+                            "math": "(−3, 9) and (3, 9)"
+                          },
+                          "They sit at equal distances either side of the *y*-axis. That mirror is what “squaring destroys the sign” looks like when it is drawn."
+                        ]
+                      }
+                    ],
+                    "support": [
+                      {
+                        "block": "keyIdea",
+                        "label": "What the picture adds",
+                        "paragraphs": [
+                          "The number of solutions of *x*^2 = *k* is the number of times a horizontal line crosses the curve. Two, one, or none — and you can see which before solving anything."
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "label": "A flatter parabola",
+        "lede": "The same shape, divided through by 12 — and a window wide enough to see what that did.",
+        "body": [
+          {
+            "pattern": "visual.explanation",
+            "slots": {
+              "media": [
+                {
+                  "block": "graph",
+                  "figure": "landscape",
+                  "caption": "*y* = *x*^2 / 12 with the line *y* = 3, meeting it at (−6, 3) and (6, 3)."
+                }
+              ],
+              "interpretation": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "Dividing by 12 does not change the shape into something else. It stretches it sideways: this curve needs about 8.5 units of *x* to climb the 6 units of *y* that *y* = *x*^2 covers in about 2.5.",
+                    {
+                      "math": "*y* = *x*^2 / 12"
+                    },
+                    "The line *y* = 3 still meets it twice, at *x* = −6 and *x* = 6, and those crossings are still mirror images about the *y*-axis."
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
   }
 ]

@@ -1,698 +1,563 @@
 [
   {
     "image": "01-notes-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "notes",
     "subdesign": "measure",
     "surface": "desktop",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1206,
-    "slots": [
-      "intro:760",
-      "support:368",
-      "reading:760",
-      "synthesis:760"
-    ],
-    "cols": [
-      "intro:8col",
-      "support:4col",
-      "reading:8col",
-      "synthesis:8col"
-    ]
+    "sig": "notes/measure{intro:760|support:368|reading:760|synthesis:760}"
   },
   {
     "image": "01-notes-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "notes",
     "subdesign": "measure",
     "surface": "tablet",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1138,
-    "slots": [
-      "intro:727.25",
-      "support:513.75",
-      "reading:727.25",
-      "synthesis:727.25"
-    ],
-    "cols": [
-      "intro:7col",
-      "support:5col",
-      "reading:7col",
-      "synthesis:7col"
-    ]
+    "sig": "notes/measure{intro:727.25|support:513.75|reading:727.25|synthesis:727.25}"
   },
   {
     "image": "01-notes-phone",
+    "shell": null,
+    "state": null,
     "pattern": "notes",
     "subdesign": "stacked",
     "surface": "phone",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1413,
-    "slots": [
-      "intro:382",
-      "support:382",
-      "reading:382",
-      "synthesis:382"
-    ],
-    "cols": [
-      "intro:4col",
-      "support:4col",
-      "reading:4col",
-      "synthesis:4col"
-    ]
+    "sig": "notes/stacked{intro:382|support:382|reading:382|synthesis:382}"
   },
   {
     "image": "02-notes-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "notes",
     "subdesign": "measure",
     "surface": "desktop",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1279,
-    "slots": [
-      "intro:760",
-      "support:368",
-      "examples:760",
-      "synthesis:760"
-    ],
-    "cols": [
-      "intro:8col",
-      "support:4col",
-      "examples:8col",
-      "synthesis:8col"
-    ]
+    "sig": "notes/measure{intro:760|support:368|examples:760|synthesis:760}"
   },
   {
     "image": "02-notes-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "notes",
     "subdesign": "measure",
     "surface": "tablet",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1186,
-    "slots": [
-      "intro:727.25",
-      "support:513.75",
-      "examples:727.25",
-      "synthesis:727.25"
-    ],
-    "cols": [
-      "intro:7col",
-      "support:5col",
-      "examples:7col",
-      "synthesis:7col"
-    ]
+    "sig": "notes/measure{intro:727.25|support:513.75|examples:727.25|synthesis:727.25}"
   },
   {
     "image": "02-notes-phone",
+    "shell": null,
+    "state": null,
     "pattern": "notes",
     "subdesign": "stacked",
     "surface": "phone",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1351,
-    "slots": [
-      "intro:382",
-      "support:382",
-      "examples:382",
-      "synthesis:382"
-    ],
-    "cols": [
-      "intro:4col",
-      "support:4col",
-      "examples:4col",
-      "synthesis:4col"
-    ]
+    "sig": "notes/stacked{intro:382|support:382|examples:382|synthesis:382}"
   },
   {
     "image": "03-visual-explanation-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "desktop",
     "aspect": "portrait",
     "pageHeight": 1957,
-    "slots": [
-      "media:760",
-      "interpretation:760",
-      "support:564"
-    ],
-    "cols": [
-      "media:8col",
-      "interpretation:8col",
-      "support:6col"
-    ]
+    "sig": "visual.explanation/stacked{media:760|interpretation:760|support:564}"
   },
   {
     "image": "03-visual-explanation-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "tablet",
     "aspect": "portrait",
     "pageHeight": 1868,
-    "slots": [
-      "media:834",
-      "interpretation:727.25",
-      "support:513.75"
-    ],
-    "cols": [
-      "media:8col",
-      "interpretation:7col",
-      "support:5col"
-    ]
+    "sig": "visual.explanation/stacked{media:834|interpretation:727.25|support:513.75}"
   },
   {
     "image": "03-visual-explanation-phone",
+    "shell": null,
+    "state": null,
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "portrait",
-    "pageHeight": 1443,
-    "slots": [
-      "media:382",
-      "interpretation:382",
-      "support:382"
-    ],
-    "cols": [
-      "media:4col",
-      "interpretation:4col",
-      "support:4col"
-    ]
+    "pageHeight": 1436,
+    "sig": "visual.explanation/stacked{media:382|interpretation:382|support:382}"
   },
   {
     "image": "04-visual-explanation-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "desktop",
     "aspect": "wide",
     "pageHeight": 1148,
-    "slots": [
-      "media:760",
-      "interpretation:760"
-    ],
-    "cols": [
-      "media:8col",
-      "interpretation:8col"
-    ]
+    "sig": "visual.explanation/stacked{media:760|interpretation:760}"
   },
   {
     "image": "04-visual-explanation-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "tablet",
     "aspect": "wide",
     "pageHeight": 1012,
-    "slots": [
-      "media:834",
-      "interpretation:727.25"
-    ],
-    "cols": [
-      "media:8col",
-      "interpretation:7col"
-    ]
+    "sig": "visual.explanation/stacked{media:834|interpretation:727.25}"
   },
   {
     "image": "04-visual-explanation-phone",
+    "shell": null,
+    "state": null,
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "wide",
-    "pageHeight": 947,
-    "slots": [
-      "media:382",
-      "interpretation:382"
-    ],
-    "cols": [
-      "media:4col",
-      "interpretation:4col"
-    ]
+    "pageHeight": 939,
+    "sig": "visual.explanation/stacked{media:382|interpretation:382}"
   },
   {
     "image": "05-visual-compare-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "visual.compare",
     "subdesign": "paired",
     "surface": "desktop",
     "aspect": "portrait",
     "pageHeight": 2236,
-    "slots": [
-      "intro:760",
-      "caseA:564",
-      "caseB:564",
-      "media:760",
-      "interpretation:760",
-      "synthesis:760"
-    ],
-    "cols": [
-      "intro:8col",
-      "caseA:6col",
-      "caseB:6col",
-      "media:8col",
-      "interpretation:8col",
-      "synthesis:8col"
-    ]
+    "sig": "visual.compare/paired{intro:760|caseA:564|caseB:564|media:760|interpretation:760|synthesis:760}"
   },
   {
     "image": "05-visual-compare-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "visual.compare",
     "subdesign": "paired",
     "surface": "tablet",
     "aspect": "portrait",
     "pageHeight": 1948,
-    "slots": [
-      "intro:727.25",
-      "caseA:407",
-      "caseB:407",
-      "media:727.25",
-      "interpretation:727.25",
-      "synthesis:727.25"
-    ],
-    "cols": [
-      "intro:7col",
-      "caseA:4col",
-      "caseB:4col",
-      "media:7col",
-      "interpretation:7col",
-      "synthesis:7col"
-    ]
+    "sig": "visual.compare/paired{intro:727.25|caseA:407|caseB:407|media:727.25|interpretation:727.25|synthesis:727.25}"
   },
   {
     "image": "05-visual-compare-phone",
+    "shell": null,
+    "state": null,
     "pattern": "visual.compare",
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "portrait",
-    "pageHeight": 1939,
-    "slots": [
-      "intro:382",
-      "caseA:382",
-      "caseB:382",
-      "media:382",
-      "interpretation:382",
-      "synthesis:382"
-    ],
-    "cols": [
-      "intro:4col",
-      "caseA:4col",
-      "caseB:4col",
-      "media:4col",
-      "interpretation:4col",
-      "synthesis:4col"
-    ]
+    "pageHeight": 1931,
+    "sig": "visual.compare/stacked{intro:382|caseA:382|caseB:382|media:382|interpretation:382|synthesis:382}"
   },
   {
     "image": "06-media-full-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "media.full",
     "subdesign": "full",
     "surface": "desktop",
     "aspect": "wide",
     "pageHeight": 1424,
-    "slots": [
-      "media:1152",
-      "interpretation:760",
-      "support:564"
-    ],
-    "cols": [
-      "media:12col",
-      "interpretation:8col",
-      "support:6col"
-    ]
+    "sig": "media.full/full{media:1152|interpretation:760|support:564}"
   },
   {
     "image": "06-media-full-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "media.full",
     "subdesign": "full",
     "surface": "tablet",
     "aspect": "wide",
     "pageHeight": 1113,
-    "slots": [
-      "media:834",
-      "interpretation:727.25",
-      "support:513.75"
-    ],
-    "cols": [
-      "media:8col",
-      "interpretation:7col",
-      "support:5col"
-    ]
+    "sig": "media.full/full{media:834|interpretation:727.25|support:513.75}"
   },
   {
     "image": "06-media-full-phone",
+    "shell": null,
+    "state": null,
     "pattern": "media.full",
     "subdesign": "full",
     "surface": "phone",
     "aspect": "wide",
-    "pageHeight": 1046,
-    "slots": [
-      "media:382",
-      "interpretation:382",
-      "support:382"
-    ],
-    "cols": [
-      "media:4col",
-      "interpretation:4col",
-      "support:4col"
-    ]
+    "pageHeight": 1028,
+    "sig": "media.full/full{media:382|interpretation:382|support:382}"
   },
   {
     "image": "07-interactive-primary-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "interactive.primary",
     "subdesign": "beside",
     "surface": "desktop",
     "aspect": "wide",
     "pageHeight": 1231,
-    "slots": [
-      "intro:760",
-      "instrument:760",
-      "prompts:368",
-      "synthesis:760"
-    ],
-    "cols": [
-      "intro:8col",
-      "instrument:8col",
-      "prompts:4col",
-      "synthesis:8col"
-    ]
+    "sig": "interactive.primary/beside{intro:760|instrument:760|prompts:368|synthesis:760}"
   },
   {
     "image": "07-interactive-primary-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "interactive.primary",
     "subdesign": "stacked",
     "surface": "tablet",
     "aspect": "wide",
     "pageHeight": 1242,
-    "slots": [
-      "intro:727.25",
-      "instrument:834",
-      "prompts:727.25",
-      "synthesis:727.25"
-    ],
-    "cols": [
-      "intro:7col",
-      "instrument:8col",
-      "prompts:7col",
-      "synthesis:7col"
-    ]
+    "sig": "interactive.primary/stacked{intro:727.25|instrument:834|prompts:727.25|synthesis:727.25}"
   },
   {
     "image": "07-interactive-primary-phone",
+    "shell": null,
+    "state": null,
     "pattern": "interactive.primary",
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "wide",
-    "pageHeight": 1326,
-    "slots": [
-      "intro:382",
-      "instrument:382",
-      "prompts:382",
-      "synthesis:382"
-    ],
-    "cols": [
-      "intro:4col",
-      "instrument:4col",
-      "prompts:4col",
-      "synthesis:4col"
-    ]
+    "pageHeight": 1307,
+    "sig": "interactive.primary/stacked{intro:382|instrument:382|prompts:382|synthesis:382}"
   },
   {
     "image": "08-practice-workbook-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "practice.workbook",
     "subdesign": "beside",
     "surface": "desktop",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1342,
-    "slots": [
-      "intro:760",
-      "questions:466",
-      "workspace:662"
-    ],
-    "cols": [
-      "intro:8col",
-      "questions:5col",
-      "workspace:7col"
-    ]
+    "sig": "practice.workbook/beside{intro:760|questions:466|workspace:662}"
   },
   {
     "image": "08-practice-workbook-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "practice.workbook",
     "subdesign": "beside",
     "surface": "tablet",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1139,
-    "slots": [
-      "intro:727.25",
-      "questions:407",
-      "workspace:407"
-    ],
-    "cols": [
-      "intro:7col",
-      "questions:4col",
-      "workspace:4col"
-    ]
+    "sig": "practice.workbook/beside{intro:727.25|questions:407|workspace:407}"
   },
   {
     "image": "08-practice-workbook-phone",
+    "shell": null,
+    "state": null,
     "pattern": "practice.workbook",
     "subdesign": "stacked",
     "surface": "phone",
-    "aspect": null,
-    "pageHeight": 1323,
-    "slots": [
-      "intro:382",
-      "questions:382",
-      "workspace:382"
-    ],
-    "cols": [
-      "intro:4col",
-      "questions:4col",
-      "workspace:4col"
-    ]
+    "aspect": "none",
+    "pageHeight": 1333,
+    "sig": "practice.workbook/stacked{intro:382|questions:382|workspace:382}"
   },
   {
     "image": "09-practice-workbook-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "practice.workbook",
     "subdesign": "beside",
     "surface": "desktop",
     "aspect": "balanced",
     "pageHeight": 1417,
-    "slots": [
-      "intro:760",
-      "reference:466",
-      "questions:466",
-      "workspace:662"
-    ],
-    "cols": [
-      "intro:8col",
-      "reference:5col",
-      "questions:5col",
-      "workspace:7col"
-    ]
+    "sig": "practice.workbook/beside{intro:760|reference:466|questions:466|workspace:662}"
   },
   {
     "image": "09-practice-workbook-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "practice.workbook",
     "subdesign": "beside",
     "surface": "tablet",
     "aspect": "balanced",
     "pageHeight": 1190,
-    "slots": [
-      "intro:727.25",
-      "reference:407",
-      "questions:407",
-      "workspace:407"
-    ],
-    "cols": [
-      "intro:7col",
-      "reference:4col",
-      "questions:4col",
-      "workspace:4col"
-    ]
+    "sig": "practice.workbook/beside{intro:727.25|reference:407|questions:407|workspace:407}"
   },
   {
     "image": "09-practice-workbook-phone",
+    "shell": null,
+    "state": null,
     "pattern": "practice.workbook",
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "balanced",
-    "pageHeight": 1671,
-    "slots": [
-      "intro:382",
-      "reference:382",
-      "questions:382",
-      "workspace:382"
-    ],
-    "cols": [
-      "intro:4col",
-      "reference:4col",
-      "questions:4col",
-      "workspace:4col"
-    ]
+    "pageHeight": 1663,
+    "sig": "practice.workbook/stacked{intro:382|reference:382|questions:382|workspace:382}"
   },
   {
     "image": "10-visual-explanation-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "desktop",
     "aspect": "balanced",
     "pageHeight": 1697,
-    "slots": [
-      "media:760",
-      "interpretation:760",
-      "support:564"
-    ],
-    "cols": [
-      "media:8col",
-      "interpretation:8col",
-      "support:6col"
-    ]
+    "sig": "visual.explanation/stacked{media:760|interpretation:760|support:564}"
   },
   {
     "image": "10-visual-explanation-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "tablet",
     "aspect": "balanced",
     "pageHeight": 1557,
-    "slots": [
-      "media:834",
-      "interpretation:727.25",
-      "support:513.75"
-    ],
-    "cols": [
-      "media:8col",
-      "interpretation:7col",
-      "support:5col"
-    ]
+    "sig": "visual.explanation/stacked{media:834|interpretation:727.25|support:513.75}"
   },
   {
     "image": "10-visual-explanation-phone",
+    "shell": null,
+    "state": null,
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "balanced",
-    "pageHeight": 1362,
-    "slots": [
-      "media:382",
-      "interpretation:382",
-      "support:382"
-    ],
-    "cols": [
-      "media:4col",
-      "interpretation:4col",
-      "support:4col"
-    ]
+    "pageHeight": 1354,
+    "sig": "visual.explanation/stacked{media:382|interpretation:382|support:382}"
   },
   {
     "image": "11-worked-single-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "worked.single",
     "subdesign": "measure",
     "surface": "desktop",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1441,
-    "slots": [
-      "intro:760",
-      "worked:760",
-      "support:564",
-      "synthesis:760"
-    ],
-    "cols": [
-      "intro:8col",
-      "worked:8col",
-      "support:6col",
-      "synthesis:8col"
-    ]
+    "sig": "worked.single/measure{intro:760|worked:760|support:564|synthesis:760}"
   },
   {
     "image": "11-worked-single-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "worked.single",
     "subdesign": "stacked",
     "surface": "tablet",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1202,
-    "slots": [
-      "intro:727.25",
-      "worked:727.25",
-      "support:513.75",
-      "synthesis:727.25"
-    ],
-    "cols": [
-      "intro:7col",
-      "worked:7col",
-      "support:5col",
-      "synthesis:7col"
-    ]
+    "sig": "worked.single/stacked{intro:727.25|worked:727.25|support:513.75|synthesis:727.25}"
   },
   {
     "image": "11-worked-single-phone",
+    "shell": null,
+    "state": null,
     "pattern": "worked.single",
     "subdesign": "stacked",
     "surface": "phone",
-    "aspect": null,
-    "pageHeight": 1317,
-    "slots": [
-      "intro:382",
-      "worked:382",
-      "support:382",
-      "synthesis:382"
-    ],
-    "cols": [
-      "intro:4col",
-      "worked:4col",
-      "support:4col",
-      "synthesis:4col"
-    ]
+    "aspect": "none",
+    "pageHeight": 1327,
+    "sig": "worked.single/stacked{intro:382|worked:382|support:382|synthesis:382}"
   },
   {
     "image": "12-worked-single-desktop",
+    "shell": null,
+    "state": null,
     "pattern": "worked.single",
     "subdesign": "measure",
     "surface": "desktop",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1462,
-    "slots": [
-      "scenario:760",
-      "worked:760",
-      "support:564",
-      "synthesis:760"
-    ],
-    "cols": [
-      "scenario:8col",
-      "worked:8col",
-      "support:6col",
-      "synthesis:8col"
-    ]
+    "sig": "worked.single/measure{scenario:760|worked:760|support:564|synthesis:760}"
   },
   {
     "image": "12-worked-single-tablet",
+    "shell": null,
+    "state": null,
     "pattern": "worked.single",
     "subdesign": "stacked",
     "surface": "tablet",
-    "aspect": null,
+    "aspect": "none",
     "pageHeight": 1248,
-    "slots": [
-      "scenario:727.25",
-      "worked:727.25",
-      "support:513.75",
-      "synthesis:727.25"
-    ],
-    "cols": [
-      "scenario:7col",
-      "worked:7col",
-      "support:5col",
-      "synthesis:7col"
-    ]
+    "sig": "worked.single/stacked{scenario:727.25|worked:727.25|support:513.75|synthesis:727.25}"
   },
   {
     "image": "12-worked-single-phone",
+    "shell": null,
+    "state": null,
     "pattern": "worked.single",
     "subdesign": "stacked",
     "surface": "phone",
-    "aspect": null,
-    "pageHeight": 1391,
-    "slots": [
-      "scenario:382",
-      "worked:382",
-      "support:382",
-      "synthesis:382"
-    ],
-    "cols": [
-      "scenario:4col",
-      "worked:4col",
-      "support:4col",
-      "synthesis:4col"
-    ]
+    "aspect": "none",
+    "pageHeight": 1402,
+    "sig": "worked.single/stacked{scenario:382|worked:382|support:382|synthesis:382}"
+  },
+  {
+    "image": "20-shell-subtopics-substitution-desktop",
+    "shell": "subtopics",
+    "state": "substitution",
+    "pattern": "notes",
+    "subdesign": "measure",
+    "surface": "desktop",
+    "aspect": "none",
+    "pageHeight": 2209,
+    "sig": "notes/measure{intro:760|support:368|examples:760|synthesis:760}"
+  },
+  {
+    "image": "20-shell-subtopics-substitution-tablet",
+    "shell": "subtopics",
+    "state": "substitution",
+    "pattern": "notes",
+    "subdesign": "measure",
+    "surface": "tablet",
+    "aspect": "none",
+    "pageHeight": 2241,
+    "sig": "notes/measure{intro:727.25|support:513.75|examples:727.25|synthesis:727.25}"
+  },
+  {
+    "image": "20-shell-subtopics-substitution-phone",
+    "shell": "subtopics",
+    "state": "substitution",
+    "pattern": "notes",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": "none",
+    "pageHeight": 2651,
+    "sig": "notes/stacked{intro:382|support:382|examples:382|synthesis:382}"
+  },
+  {
+    "image": "20-shell-subtopics-solving-for-x-desktop",
+    "shell": "subtopics",
+    "state": "solving-for-x",
+    "pattern": "worked.single + worked.single",
+    "subdesign": "measure + measure",
+    "surface": "desktop",
+    "aspect": "none",
+    "pageHeight": 2209,
+    "sig": "worked.single/measure{intro:760|worked:760|support:564} + worked.single/measure{scenario:760|worked:760|support:564|synthesis:760}"
+  },
+  {
+    "image": "20-shell-subtopics-solving-for-x-tablet",
+    "shell": "subtopics",
+    "state": "solving-for-x",
+    "pattern": "worked.single + worked.single",
+    "subdesign": "stacked + stacked",
+    "surface": "tablet",
+    "aspect": "none",
+    "pageHeight": 2173,
+    "sig": "worked.single/stacked{intro:727.25|worked:727.25|support:513.75} + worked.single/stacked{scenario:727.25|worked:727.25|support:513.75|synthesis:727.25}"
+  },
+  {
+    "image": "20-shell-subtopics-solving-for-x-phone",
+    "shell": "subtopics",
+    "state": "solving-for-x",
+    "pattern": "worked.single + worked.single",
+    "subdesign": "stacked + stacked",
+    "surface": "phone",
+    "aspect": "none",
+    "pageHeight": 2452,
+    "sig": "worked.single/stacked{intro:382|worked:382|support:382} + worked.single/stacked{scenario:382|worked:382|support:382|synthesis:382}"
+  },
+  {
+    "image": "20-shell-subtopics-symmetry-workings-desktop",
+    "shell": "subtopics",
+    "state": "symmetry-workings",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "desktop",
+    "aspect": "none",
+    "pageHeight": 1160,
+    "sig": "visual.compare/paired{intro:760|caseA:564|caseB:564|synthesis:760}"
+  },
+  {
+    "image": "20-shell-subtopics-symmetry-workings-tablet",
+    "shell": "subtopics",
+    "state": "symmetry-workings",
+    "pattern": "visual.compare",
+    "subdesign": "paired",
+    "surface": "tablet",
+    "aspect": "none",
+    "pageHeight": 1125,
+    "sig": "visual.compare/paired{intro:727.25|caseA:407|caseB:407|synthesis:727.25}"
+  },
+  {
+    "image": "20-shell-subtopics-symmetry-workings-phone",
+    "shell": "subtopics",
+    "state": "symmetry-workings",
+    "pattern": "visual.compare",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": "none",
+    "pageHeight": 1597,
+    "sig": "visual.compare/stacked{intro:382|caseA:382|caseB:382|synthesis:382}"
+  },
+  {
+    "image": "20-shell-subtopics-symmetry-visual-explanation-desktop",
+    "shell": "subtopics",
+    "state": "symmetry-visual-explanation",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "desktop",
+    "aspect": "none",
+    "pageHeight": 1935,
+    "sig": "visual.explanation/stacked{media:760|interpretation:760|support:564}"
+  },
+  {
+    "image": "20-shell-subtopics-symmetry-visual-explanation-tablet",
+    "shell": "subtopics",
+    "state": "symmetry-visual-explanation",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "aspect": "none",
+    "pageHeight": 2013,
+    "sig": "visual.explanation/stacked{media:834|interpretation:727.25|support:513.75}"
+  },
+  {
+    "image": "20-shell-subtopics-symmetry-visual-explanation-phone",
+    "shell": "subtopics",
+    "state": "symmetry-visual-explanation",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": "none",
+    "pageHeight": 1576,
+    "sig": "visual.explanation/stacked{media:382|interpretation:382|support:382}"
+  },
+  {
+    "image": "20-shell-subtopics-a-flatter-parabola-desktop",
+    "shell": "subtopics",
+    "state": "a-flatter-parabola",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "desktop",
+    "aspect": "none",
+    "pageHeight": 1132,
+    "sig": "visual.explanation/stacked{media:760|interpretation:760}"
+  },
+  {
+    "image": "20-shell-subtopics-a-flatter-parabola-tablet",
+    "shell": "subtopics",
+    "state": "a-flatter-parabola",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "tablet",
+    "aspect": "none",
+    "pageHeight": 1126,
+    "sig": "visual.explanation/stacked{media:834|interpretation:727.25}"
+  },
+  {
+    "image": "20-shell-subtopics-a-flatter-parabola-phone",
+    "shell": "subtopics",
+    "state": "a-flatter-parabola",
+    "pattern": "visual.explanation",
+    "subdesign": "stacked",
+    "surface": "phone",
+    "aspect": "none",
+    "pageHeight": 1058,
+    "sig": "visual.explanation/stacked{media:382|interpretation:382}"
   }
 ]
