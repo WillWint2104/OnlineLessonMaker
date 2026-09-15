@@ -50,6 +50,14 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
 .cp-phone [data-pattern]{row-gap:32px;}
 [data-slot]{min-width:0;}
 
+/* ── MEDIA FIT · what it means for media to inhabit a slot ────────────────────────────────────
+   `fill` — the media IS the slot's width, and the authored domain decides the height.
+   `contain` — the media may be narrower, and is CENTRED. Start alignment needs a declared reason. */
+[data-fit="fill"] > .cp-figure,[data-fit="fill"] > .cp-figure > [data-mx-part="figure"]{width:100%;}
+[data-fit="contain"]{display:block;}
+[data-fit="contain"][data-align="center"] > .cp-figure{margin-inline:auto;width:fit-content;}
+[data-fit="contain"][data-align="start"] > .cp-figure{margin-inline:0;width:fit-content;}
+
 /* ── SLOT TYPES · the obligations that come with the KIND of slot, not with the pattern ───────── */
 [data-slot-type="reading"],[data-slot-type="support"]{max-width:var(--cp-measure);}
 [data-slot-type="media"]{min-width:0;}

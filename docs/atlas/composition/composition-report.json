@@ -70,11 +70,11 @@
     "shell": null,
     "state": null,
     "pattern": "visual.explanation",
-    "subdesign": "stacked",
+    "subdesign": "down-8",
     "surface": "desktop",
     "aspect": "portrait",
-    "pageHeight": 1957,
-    "sig": "visual.explanation/stacked{media:760|interpretation:760|support:564}"
+    "pageHeight": 1995,
+    "sig": "visual.explanation/down-8{media:760|interpretation:760|support:564}"
   },
   {
     "image": "03-visual-explanation-tablet",
@@ -84,7 +84,7 @@
     "subdesign": "stacked",
     "surface": "tablet",
     "aspect": "portrait",
-    "pageHeight": 1868,
+    "pageHeight": 1906,
     "sig": "visual.explanation/stacked{media:834|interpretation:727.25|support:513.75}"
   },
   {
@@ -95,7 +95,7 @@
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "portrait",
-    "pageHeight": 1436,
+    "pageHeight": 1473,
     "sig": "visual.explanation/stacked{media:382|interpretation:382|support:382}"
   },
   {
@@ -103,11 +103,11 @@
     "shell": null,
     "state": null,
     "pattern": "visual.explanation",
-    "subdesign": "stacked",
+    "subdesign": "down-12",
     "surface": "desktop",
     "aspect": "wide",
-    "pageHeight": 1148,
-    "sig": "visual.explanation/stacked{media:760|interpretation:760}"
+    "pageHeight": 1331,
+    "sig": "visual.explanation/down-12{media:1152|interpretation:760}"
   },
   {
     "image": "04-visual-explanation-tablet",
@@ -117,7 +117,7 @@
     "subdesign": "stacked",
     "surface": "tablet",
     "aspect": "wide",
-    "pageHeight": 1012,
+    "pageHeight": 1030,
     "sig": "visual.explanation/stacked{media:834|interpretation:727.25}"
   },
   {
@@ -128,7 +128,7 @@
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "wide",
-    "pageHeight": 939,
+    "pageHeight": 977,
     "sig": "visual.explanation/stacked{media:382|interpretation:382}"
   },
   {
@@ -139,8 +139,8 @@
     "subdesign": "paired",
     "surface": "desktop",
     "aspect": "portrait",
-    "pageHeight": 2236,
-    "sig": "visual.compare/paired{intro:760|caseA:564|caseB:564|media:760|interpretation:760|synthesis:760}"
+    "pageHeight": 2706,
+    "sig": "visual.compare/paired{intro:760|caseA:564|caseB:564|media:1152|interpretation:760|synthesis:760}"
   },
   {
     "image": "05-visual-compare-tablet",
@@ -150,8 +150,8 @@
     "subdesign": "paired",
     "surface": "tablet",
     "aspect": "portrait",
-    "pageHeight": 1948,
-    "sig": "visual.compare/paired{intro:727.25|caseA:407|caseB:407|media:727.25|interpretation:727.25|synthesis:727.25}"
+    "pageHeight": 2077,
+    "sig": "visual.compare/paired{intro:727.25|caseA:407|caseB:407|media:834|interpretation:727.25|synthesis:727.25}"
   },
   {
     "image": "05-visual-compare-phone",
@@ -172,7 +172,7 @@
     "subdesign": "full",
     "surface": "desktop",
     "aspect": "wide",
-    "pageHeight": 1424,
+    "pageHeight": 1449,
     "sig": "media.full/full{media:1152|interpretation:760|support:564}"
   },
   {
@@ -301,11 +301,11 @@
     "shell": null,
     "state": null,
     "pattern": "visual.explanation",
-    "subdesign": "stacked",
+    "subdesign": "side-6",
     "surface": "desktop",
     "aspect": "balanced",
-    "pageHeight": 1697,
-    "sig": "visual.explanation/stacked{media:760|interpretation:760|support:564}"
+    "pageHeight": 1348,
+    "sig": "visual.explanation/side-6{media:564|interpretation:564|support:564}"
   },
   {
     "image": "10-visual-explanation-tablet",
@@ -315,7 +315,7 @@
     "subdesign": "stacked",
     "surface": "tablet",
     "aspect": "balanced",
-    "pageHeight": 1557,
+    "pageHeight": 1613,
     "sig": "visual.explanation/stacked{media:834|interpretation:727.25|support:513.75}"
   },
   {
@@ -326,7 +326,7 @@
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "balanced",
-    "pageHeight": 1354,
+    "pageHeight": 1410,
     "sig": "visual.explanation/stacked{media:382|interpretation:382|support:382}"
   },
   {
@@ -499,11 +499,11 @@
     "shell": "subtopics",
     "state": "symmetry-visual-explanation",
     "pattern": "visual.explanation",
-    "subdesign": "stacked",
+    "subdesign": "down-8",
     "surface": "desktop",
     "aspect": "none",
     "pageHeight": 1935,
-    "sig": "visual.explanation/stacked{media:760|interpretation:760|support:564}"
+    "sig": "visual.explanation/down-8{media:760|interpretation:760|support:564}"
   },
   {
     "image": "20-shell-subtopics-symmetry-visual-explanation-tablet",
@@ -532,11 +532,11 @@
     "shell": "subtopics",
     "state": "a-flatter-parabola",
     "pattern": "visual.explanation",
-    "subdesign": "stacked",
+    "subdesign": "down-12",
     "surface": "desktop",
     "aspect": "none",
-    "pageHeight": 1132,
-    "sig": "visual.explanation/stacked{media:760|interpretation:760}"
+    "pageHeight": 1296,
+    "sig": "visual.explanation/down-12{media:1152|interpretation:760}"
   },
   {
     "image": "20-shell-subtopics-a-flatter-parabola-tablet",

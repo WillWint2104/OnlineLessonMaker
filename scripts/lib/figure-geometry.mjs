@@ -75,9 +75,21 @@ export function makePainter(figPage) {
       const ux = per('middle', 'x'), uy = per('end', 'y');
       const x = ux == null ? null : +(ux * rect.width / vb[2]).toFixed(2);
       const y = uy == null ? null : +(uy * rect.height / vb[3]).toFixed(2);
+      /* EVERY PAINTED TEXT, so a caller can ask whether any two of them overlap. The engine drops
+         tick labels rather than colliding them, so the only thing that ever collides is the labels
+         the AUTHOR wrote — which is exactly what legibility means here. */
+      const texts = [].slice.call(svg.querySelectorAll('text')).map((t) => {
+        const bb = t.getBBox();
+        return { x: bb.x, y: bb.y, w: bb.width, h: bb.height };
+      });
+      let overlaps = 0;
+      for (let i = 0; i < texts.length; i++) for (let j = i + 1; j < texts.length; j++) {
+        const a2 = texts[i], b2 = texts[j];
+        if (a2.x < b2.x + b2.w && b2.x < a2.x + a2.w && a2.y < b2.y + b2.h && b2.y < a2.y + a2.h) overlaps++;
+      }
       const html = el.outerHTML;
       host.remove();
-      return { html, x, y, ratio: (x && y) ? +(x / y).toFixed(3) : null };
+      return { html, x, y, texts: texts.length, overlaps, ratio: (x && y) ? +(x / y).toFixed(3) : null };
     }, { key, fig, w, h });
     cache.set(ck, r);
     return r;
@@ -107,6 +119,45 @@ export function makeSolvers(paint) {
     return best ? { s: best.box.x, box: best.box, err: best.err } : null;
   }
   return { boxForWidth };
+}
+
+/* ══ WHAT THE MEDIA MAY REPORT ═════════════════════════════════════════════════════════════════
+   CAPABILITY, NEVER FOOTPRINT. A graph may say what it NEEDS; it may never say what it would LIKE.
+   "I would like to be 488px wide" is how tiny media ended up on large pages, so nothing here returns
+   a preferred size. The exchange the architecture wants is:
+
+       pattern: "I am giving you a 7-column media slot."
+       graph:   "At that width I need 814px of height to show this domain faithfully."
+       page:    "Fine. I scroll."
+
+   MINIMUM LEGIBLE WIDTH is the narrowest painted width at which NO TWO OF THE TEXTS THE FIGURE
+   PAINTS OVERLAP. It is measured by painting and looking, not modelled — and it is measured because
+   the engine's own behaviour had to be discovered rather than assumed:
+
+     · it NEVER collides tick labels; below a certain width it DROPS them instead;
+     · it never shrinks type — 11px at every width from 200px to 1152px;
+     · the labelled-tick count is not monotonic in width, so "retains its full labelling" is not a
+       usable definition and was discarded after measuring it;
+     · what does collide, and the only thing that does, is the AUTHORED objects' own labels — the
+       point and line labels the figure was written with.
+
+   So legibility, for this engine, is exactly: the labels the author wrote are all readable. */
+export async function capability(paint, key, fig) {
+  const d = fig.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
+  const aspect = ys / xs;
+  const h = (w) => Math.max(80, Math.round(aspect * (w - 50) + 100));
+  const clean = async (w) => {
+    const r = await paint(key, fig, w, h(w));
+    return r.overlaps === 0;
+  };
+  let lo = 120, hi = 1152;
+  if (!(await clean(hi))) return { aspect: +aspect.toFixed(3), minLegibleWidth: null, illegible: true };
+  while (hi - lo > 8) {
+    const mid = Math.round((lo + hi) / 2);
+    if (await clean(mid)) hi = mid; else lo = mid;
+  }
+  return { aspect: +aspect.toFixed(3), minLegibleWidth: hi, illegible: false,
+    equalUnitScale: true, focusAvailable: true };
 }
 
 /* A REQUEST IS A FIGURE AT AN AUTHORED SIZE — `symmetry@standard`. The size is never optional and

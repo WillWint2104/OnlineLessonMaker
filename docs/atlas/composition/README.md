@@ -139,6 +139,21 @@ What pairs, therefore: `caseA | caseB` · `questions | workspace` · `instrument
 `intro | support`. Nothing else. Every visual pattern stacks its media and its reading; every worked
 example stacks its scenario and its solution. A taller page is the deliberate outcome.
 
+**And then `side-6` and `side-7` put a plane beside its reading again.** That is not an exception to
+the rule; it is the rule's second clause, reached because *what a media slot is* changed underneath
+it. `forbidden` names two **unbounded** materials in one row — material whose height depends on how
+much someone happened to write. Under the slot-fit contract a media slot is no longer one of those:
+its width is the slot's, and its height is a deterministic function of that width and the authored
+domain, invariant to content — which the adversarial control proves on every render. A *derived*
+height is a designed height. What the rule still forbids is prose beside prose, and that is still
+nowhere in the catalogue.
+
+What survives from the removal is the specific finding: a plane much **taller** than the prose beside
+it leaves a hole under the prose. So `side-6` is approved for the `balanced` class only and `side-7`
+for `landscape` only; a `portrait` plane has no side-by-side subdesign at any surface, and the
+column-residue control measures the hole rather than trusting the class. Page 10 carries the
+adversarial payload that exercises the pairing with content it was not written for.
+
 That left `visual.explanation` and `media.full` distinguished **structurally**: this pattern's plane
 never crosses the reading measure, that one's always does. Choosing between them is the author's
 decision about what the page is *for* — pages 04 and 06 make the same figure the subject of both.
@@ -210,6 +225,71 @@ for having no shared visual at all**, because both its desktop subdesigns declar
 and a page with no media has none. `none` is now an aspect class like any other, and a pattern whose
 media is `optional-collapse` must declare a subdesign for it — the build refuses one that does not.
 
+### 6f. The slot inspector — is the media actually *inhabiting* its slot?
+
+"What pattern is this?" and "is the media inhabiting its slot well?" are different questions, and
+only the first had an answer. The observable failure was a 760px graph left-aligned on a 1152px page
+with 392px beside it that had no role — and nothing in the system could tell that 392px apart from a
+reading margin.
+
+**There are three kinds of whitespace**, and the catalogue had one word for all three:
+
+| | Legal | What it is |
+| --- | --- | --- |
+| **reading margin** | yes | free columns beside a **prose** slot, because prose is bound by the measure and the page is wider |
+| **pattern whitespace** | yes | space inside an explicitly bounded media stage — a portrait diagram centred in a `contain` slot |
+| **slot residue** | **no** | a `fill` slot whose media is narrower than it, or a `contain` media that is neither centred nor deliberately start-aligned. *The renders we have been unhappy with are mostly this.* |
+
+Every media slot now declares a **fit**. `fill` means the media consumes the slot width — the slot
+gives the width and the media takes it, never the other way round. `contain` means the media may be
+smaller but must be **deliberately placed**, which means centred unless the slot declares a reason to
+be start-aligned. Both checks are categorical: there is no threshold, no occupancy percentage, and
+nothing the inspector computes ever reaches layout. *This is not a resolver* — "if occupancy < 55%,
+stack" is what made the system lose the design in the first place.
+
+Horizontal footprint is discrete and vertical is auto: the slot decides the width, the geometry
+decides the height, and **there is no height ceiling**. A 6-column slot that makes a tall graph 950px
+high is the right outcome; the page scrolls. The alternative — a height cap squeezing a primary graph
+to 340px wide against the left edge of a 1100px page — is the failure mode this replaces.
+
+**The inspector is drawn, not just enforced.** Beside every render with media, `<name>-inspect.png`
+overlays the slot (dashed), the painted media (outlined) and any unclaimed width (hatched, where it
+actually is), with a panel reporting pattern, subdesign, master grid, media slot, painted media, fit,
+alignment, aspect-scale and unclaimed internal width — and on failure the diagnosis and the **legal
+actions**. One function produces the control's verdict and the overlay's text, so the picture and the
+build can never say different things.
+
+The *contract* is enforced on every render at every surface; only the *picture* is selective —
+desktop by default, because that is the only surface where a slot can be wider than its media (every
+approved tablet and phone media span is the whole surface). `CP_INSPECT=all` draws them all, which is
+what the slot-fit atlas will want; `CP_NO_INSPECT=1` draws none.
+
+It found three stranded arrangements in the catalogue on its first run, none of which anyone had
+noticed: `visual.compare/paired` (8 of 12 columns, four unnamed to the right), `media.full/inset`
+(the same defect, and named after it — now `centred`), and the tablet forms of both.
+`practice.workbook/beside` declared a 7-column media span for a 5-column slot.
+
+**Span promotion** is the only automation, and it selects from arrangements that already exist:
+within one (surface, aspect class), take the smallest approved span that clears the media's minimum
+legible width. Not "choose the prettiest arrangement based on content measurements". The media
+reports **capability, never footprint** — it may say what it *needs*, never what it would *like*.
+
+| Figure | Aspect | Minimum legible width |
+| --- | --- | --- |
+| symmetry | 1.20 | 209px |
+| roots | — | 209px |
+| graphcheck | — | 193px |
+| squareish | 0.857 | 225px |
+| landscape | 0.333 | 233px |
+| markedWide (6 labelled points, built to be demanding) | — | 306px |
+
+Measured by binary search over painted width, because the engine does not degrade the way a model of
+it would: it never collides tick labels (it drops them), never shrinks type (11px at every width from
+200 to 1152px), and its labelled-tick count is **not monotonic** in width. Only authored object
+labels collide. The honest finding: every figure clears the smallest approved desktop span
+(4 columns = 368px), so **promotion is inert at desktop** for everything this engine can draw. The
+defect we were looking at was a pattern and alignment problem, not a legibility one.
+
 ## 7. What the build checks
 
 Every control below has been driven to fail on purpose.
@@ -220,12 +300,17 @@ Every control below has been driven to fail on purpose.
 | **The reading measure is a grid position** | a prose slot given 10 of 12 columns |
 | **Slot edges land on grid lines** | a 9px nudge on one slot — the claim "we use a 12-column grid" is a sentence until every painted edge is within 1.5px of a column boundary |
 | **A slot is the width its pattern gave it** | a resolver that measures rendered prose and narrows the column — it fires on the adversarial render, which is where such a rule would first bite |
-| **Media fills its slot** | a plane painted at 62% of its slot: wrapped, not sized |
+| **Slot fit** | a `fill` media painted 441px inside a 760px slot — the failure prints the whole inspector: slot, span, painted size, unclaimed width, diagnosis and legal actions |
+| **Every media slot declares a fit** | a media slot with no answer to what inhabiting it means |
+| **`mediaSpan` is the span the areas give** | `practice.workbook/beside` declaring 7 columns for a 5-column slot |
+| **`approvedMediaSpans` matches the subdesigns** | a documentation table drifting from the one owner |
+| **Media alone in a row is centred or full** | 8 of 12 columns hard against the left edge, with four unnamed beside them — caught in the catalogue, before anything renders |
+| **A media slot was actually inspected** | a contract nothing exercised |
 | **Blocks fit their slots** | a `keyIdea` placed in a `reading` slot — caught on the very first run, in my own catalogue |
 | **No layout residue** | a painted track that holds nothing |
 | **No column residue** | a slot that starts hundreds of pixels below the one above it in the same columns |
 | **Adversarial content moves nothing but height** | the same subdesign, the same slots, the same widths under a hostile payload |
-| **A different media aspect takes the approved alternative** | a portrait plane in `media.full` must take `inset`, not a 1400px-tall figure |
+| **A different media aspect takes the approved alternative** | a portrait plane in `media.full` must take `centred`, not a 1400px-tall figure |
 | **Disclosure is legal** | a sequential explanation put behind tabs in a pattern that forbids them |
 | **Tabs are a W3C APG tablist** | `aria-controls` removed from every tab; a missing roving tabindex |
 | **Scroll ownership** | teaching prose put in a local vertical scroller |
@@ -247,3 +332,12 @@ Still open, and for the maintainer: `optional-reserved` is declared and no
 pattern needed it; an authored figure `label` has nowhere to go except the caption; a `readout` slot
 for an interactive's current values and an `answers` slot for a workbook are both missing; and
 `video` remains a block type, a slot type and a page type that nothing in the corpus exercises.
+
+**The next piece is a slot-fit atlas**, and the build now names its brief: it prints which approved
+subdesigns were never rendered — designed and therefore untested. Today that is
+`visual.explanation/side-7` (desktop, landscape), because the lesson has no landscape figure in that
+pattern. Closing it means putting a portrait, a square and a wide graph, plus an image, a video and
+an interactive, through every legal span of `visual.explanation`, `visual.compare` and
+`practice.graph` with the inspector overlaid, and approving the combinations that genuinely look
+finished. The media for three of those six does not exist locally yet, and no third-party host may
+serve it.

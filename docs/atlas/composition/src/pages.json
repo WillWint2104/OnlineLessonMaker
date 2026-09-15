@@ -302,7 +302,7 @@
     "pattern": "visual.explanation",
     "title": "The mirror down the middle",
     "lede": "Where *y* = *x*^2 reaches a height of 9, and why it does so twice.",
-    "c": "A PORTRAIT PLANE. The pattern takes its `stacked` subdesign — not because anything was measured, but because the plane is taller than it is wide.",
+    "c": "A PORTRAIT PLANE, which takes `down-8` — eight columns CENTRED on the twelve. Not eight hard against the left with four unnamed beside them: free columns beside prose are the reading measure doing its job, free columns beside media are nothing. 760px wide and 952px tall, and the page scrolls.",
     "slots": {
       "media": [
         {
@@ -353,7 +353,7 @@
     "pattern": "visual.explanation",
     "title": "A flatter parabola",
     "lede": "The same shape, divided through by 12 — and a window wide enough to see what that did.",
-    "c": "THE SAME FIGURE AS PAGE 06, IN A DIFFERENT PATTERN. Here the reading teaches and the plane stays at the measure; on page 06 the plane is the page and crosses it. That is an authorial choice about what the page is for, not a shape the renderer noticed. This page also omits its optional support slot: the row is DROPPED, not left as an empty 40px band.",
+    "c": "THE SAME FIGURE AS PAGE 06, IN A DIFFERENT PATTERN. Here the reading teaches and the plane still takes the whole grid — `down-12`, because a plane three times wider than it is tall gains real reach from the width and the reading returns to the measure beneath it. On page 06 the plane IS the page. That is an authorial choice about what the page is for, not a shape the renderer noticed. This page also omits its optional support slot: the row is DROPPED, not left as an empty 40px band.",
     "slots": {
       "media": [
         {
@@ -464,19 +464,19 @@
           "block": "keyIdea",
           "label": "When a page is one object",
           "paragraphs": [
-            "Give a wide plane the whole grid only when its shape earns it. A plane taller than it is wide takes this pattern's inset subdesign instead — the pattern declines rather than negotiating."
+            "Give a wide plane the whole grid only when its shape earns it. A plane taller than it is wide takes this pattern's centred subdesign instead — eight of the twelve columns, centred, rather than a negotiated width."
           ]
         }
       ]
     },
     "alternate": {
-      "expect": "inset",
+      "expect": "centred",
       "slots": {
         "media": [
           {
             "block": "graph",
             "figure": "symmetry",
-            "caption": "A portrait plane in the same pattern — the inset subdesign, not a 1400px-tall figure."
+            "caption": "A portrait plane in the same pattern — the centred subdesign, not a 1400px-tall figure."
           }
         ]
       }
@@ -772,7 +772,7 @@
     "pattern": "visual.explanation",
     "title": "Where the curve reaches 9",
     "lede": "A plane no taller than it is wide, at the same eight columns as a tall one.",
-    "c": "A BALANCED PLANE, at the same eight columns as a tall one. The side-by-side arrangement this pattern once had was designed, rendered, measured and removed — see the record.",
+    "c": "A BALANCED PLANE, which takes `side-6` — six columns of plane beside six of reading. The pattern's side-by-side row was once removed for leaving 734px of nothing under a reading column beside a PORTRAIT plane; it returns only for the balanced class, at a width the pattern approves, and this page carries the adversarial payload that proves the pairing survives content it was not written for.",
     "slots": {
       "media": [
         {

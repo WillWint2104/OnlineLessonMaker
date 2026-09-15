@@ -8,6 +8,63 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **Slot fit: a discrete span system, a validator, and a Slot Inspector** (`docs/atlas/composition/`,
+  `scripts/composition-atlas.mjs`, `scripts/lib/figure-geometry.mjs`, no app change). The catalogue had
+  answered *what pattern is this?* and never *is the media actually inhabiting its slot?* — the visible
+  result being a 760px graph hard against the left edge of a 1152px page with 392px beside it that had
+  no role, and nothing in the system able to tell that 392px from a reading margin.
+  - **Three kinds of whitespace, named separately for the first time**: *reading margin* (free columns
+    beside prose, legal), *pattern whitespace* (space inside a bounded media stage, legal) and **slot
+    residue** (a `fill` slot whose media is narrower than it, or a `contain` media neither centred nor
+    deliberately start-aligned — illegal). The renders we had been unhappy with were mostly the third.
+  - **Every media slot declares a `fit`.** `fill` = the media consumes the slot width; `contain` = it
+    may be smaller but must be deliberately placed, which means centred unless the slot declares a
+    reason. Both checks categorical: no threshold, no occupancy percentage, and **nothing the inspector
+    computes ever reaches layout**. This is deliberately *not* a resolver — "if occupancy < 55%, stack"
+    is what made the system lose the design.
+  - **The slot decides the width; the geometry decides the height; there is no height ceiling.** A
+    6-column slot that makes a tall graph 950px high is the right outcome and the page scrolls — a much
+    better failure mode than a 340px-wide graph stranded on a 1100px page.
+  - **Four approved desktop subdesigns for `visual.explanation`**, as the maintainer specified:
+    `side-6` (6 | 6, balanced), `side-7` (7 | 5, landscape), `down-8` (media **centred** across 8, with
+    the reading on the same centred spine) and `down-12` (the full grid). The renderer selects; it does
+    not invent a width.
+  - **Span promotion is the only automation, and it selects from arrangements that already exist**:
+    within one (surface, aspect class), the smallest approved span that clears the media's minimum
+    legible width. `validate()` now requires *at least* one approved subdesign per (surface, aspect) and
+    refuses two that share a span — which is what makes that sentence deterministic rather than hopeful.
+  - **The media reports capability, never footprint.** `capability()` measures each figure's minimum
+    legible width by binary search over painted width, because the engine does not degrade the way a
+    model of it would: it never collides tick labels (it drops them), never shrinks type (11px at every
+    width from 200 to 1152px), and its labelled-tick count is *not monotonic* in width. Symmetry 209px ·
+    graphcheck 193px · roots 209px · landscape 233px · squareish 225px · markedWide 306px. **Every
+    figure clears the smallest approved desktop span (4 cols = 368px), so promotion is inert at
+    desktop** — the honest finding that the defect was a pattern and alignment problem, not legibility.
+  - **The Slot Inspector, drawn as well as enforced.** Beside every render with media,
+    `<name>-inspect.png` overlays the slot, the painted media and any unclaimed width (hatched where it
+    actually is), with a panel reporting pattern / subdesign / master grid / media slot / painted media /
+    fit / alignment / aspect-scale / unclaimed internal width — and on failure the diagnosis and the
+    **legal actions**. One function produces both the control's verdict and the overlay's text, so the
+    picture and the build cannot disagree.
+  - **It found three stranded arrangements on its first run**, none previously noticed:
+    `visual.compare/paired` (8 of 12 columns with four unnamed to the right — the shared plane now spans
+    what the pair spans), `media.full/inset` (the same defect, *named after it* — now `centred`), and the
+    tablet forms of both. `practice.workbook/beside` declared a 7-column media span for a 5-column slot.
+  - **Six new controls, each driven to fail on purpose**: slot fit (a `fill` media at 441px in a 760px
+    slot, which prints the whole inspector); every media slot declares a fit; `mediaSpan` equals the
+    columns its areas give; `approvedMediaSpans` matches its subdesigns; media alone in a row is centred
+    or full (caught in the catalogue, before rendering); and a media slot was actually inspected. The
+    promotion control was driven to fail four ways — shared span, missing span, two arrangements for the
+    no-media class, and an aspect class with none.
+  - **The pairing rule is reconciled with `side-6`/`side-7`, explicitly.** Side-by-side was removed for
+    pairing two *unbounded* materials. A media slot is no longer one: its height is a deterministic
+    function of the slot width and the authored domain, invariant to content — a *derived* height is a
+    designed height. What survives is the specific finding, so `side-6` is approved for `balanced` only,
+    `side-7` for `landscape` only, and a portrait plane still has no side-by-side subdesign anywhere.
+  - **The build now names what it has not tested**: approved subdesigns no render exercises. Today that
+    is `visual.explanation/side-7` — which is the brief for the slot-fit atlas the maintainer asked for
+    next.
+
 - **The Composition Atlas** (`docs/atlas/composition/`, `scripts/composition-atlas.mjs`, no app change).
   The maintainer stopped the renderer work and redirected to the page-composition problem itself: a
   small catalogue of page patterns on a shared master grid, with typed slots into which lesson blocks

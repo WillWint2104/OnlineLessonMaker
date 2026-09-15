@@ -29,7 +29,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { openFigurePage, makePainter, makeSolvers, square, classOf } from './lib/figure-geometry.mjs';
+import { openFigurePage, makePainter, makeSolvers, square, classOf, capability } from './lib/figure-geometry.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.join(root, 'docs/atlas/composition/src');
@@ -55,6 +55,7 @@ const SURFACES = Object.keys(GRID.surfaces);
 const ONLY = process.env.CP_ONLY ? new Set(process.env.CP_ONLY.split(',')) : null;
 
 /* ── the grid, as arithmetic ──────────────────────────────────────────────────────────────────── */
+const spanPx = (s, n) => +span(s, n).toFixed(2);
 const colW = (s) => (GRID.surfaces[s].width - (GRID.surfaces[s].columns - 1) * GRID.surfaces[s].gutter) / GRID.surfaces[s].columns;
 const span = (s, n) => n * colW(s) + (n - 1) * GRID.surfaces[s].gutter;
 /* the x of every grid line, so a control can prove slot edges actually land on them */
@@ -66,6 +67,15 @@ const lines = (s) => {
   }
   return out;
 };
+
+/* WHICH SLOT TYPES HOLD AN OBJECT WITH A FOOTPRINT. A graph, a video, a diagram and a manipulable
+   instrument all receive a width from their slot and must inhabit it; prose is bound by the reading
+   measure instead, and a workspace is a surface the learner acts on, not an object placed in one. */
+const MEDIA_SLOTS = new Set(['media', 'interactive']);
+/* the spans a pattern actually approves at a surface, DERIVED FROM THE SUBDESIGNS. The table in
+   patterns.json is documentation of this, and validate() holds the two to each other. */
+const approvedSpans = (p, surface) => [...new Set(p.subdesigns
+  .filter((d) => d.surface === surface && d.mediaSpan).map((d) => d.mediaSpan))].sort((a, b) => a - b);
 
 /* ── the pattern catalogue, validated before anything is rendered ─────────────────────────────── */
 class PatternError extends Error { constructor(m) { super(m); this.name = 'PatternError'; } }
@@ -122,16 +132,84 @@ function validate() {
             + `${d.surface} grid's ${n} columns — the reading measure allows ${max} (${Math.round(span(d.surface, max))}px)`);
       }
     }
-    /* EXACTLY ONE APPROVED SUBDESIGN MUST MATCH ANY (surface, aspect class) — and `none` is one of
-       the classes. A pattern whose media is optional-collapse has a real authored state with no
-       media at all: the lesson's Symmetry workings is a comparison with no shared visual, and
-       visual.compare had no arrangement for it until this control was extended to ask. */
+    /* CONTROL · EVERY MEDIA SLOT DECLARES A FIT. "Is the media inhabiting its slot well?" has no
+       answer at all for a slot that never said what inhabiting it means. */
+    for (const sl of p.slots) {
+      if (!MEDIA_SLOTS.has(sl.slotType)) continue;
+      if (!['fill', 'contain'].includes(sl.fit))
+        throw new PatternError(`${id}.${sl.name}: a media slot must declare fit \`fill\` or \`contain\` (it declares ${sl.fit || 'nothing'})`);
+      if (sl.fit === 'contain' && sl.align === 'start' && !sl.alignReason)
+        throw new PatternError(`${id}.${sl.name}: start alignment in a \`contain\` slot requires an explicit design reason `
+          + `on the slot — without one, an object against the left edge is the defect this contract names`);
+    }
+    /* CONTROL · THE DECLARED SPAN IS THE SPAN THE AREAS ACTUALLY GIVE. `mediaSpan` is what promotion
+       orders by and what the inspector prints; if it can disagree with the grid areas beside it,
+       both are reading a number the page never had. (It caught practice.workbook/beside declaring
+       seven columns for a five-column reference slot.) */
+    for (const d of p.subdesigns) {
+      const ms = p.slots.find((x) => MEDIA_SLOTS.has(x.slotType));
+      const sp = areaSpans(d.areas)[ms ? ms.name : ''];
+      if (!ms || !sp) { 
+        if (d.mediaSpan) throw new PatternError(`${id}/${d.id}: declares mediaSpan ${d.mediaSpan} and lays out no media slot`);
+        continue;
+      }
+      if (d.mediaSpan !== sp.cols)
+        throw new PatternError(`${id}/${d.id}: declares mediaSpan ${d.mediaSpan} and gives "${ms.name}" ${sp.cols} columns`);
+    }
+    /* CONTROL · THE APPROVED-SPAN TABLE IS DOCUMENTATION, AND DOCUMENTATION DRIFTS. The subdesigns
+       are the one owner; a hand-written table that disagrees with them is worse than none. */
+    if (p.approvedMediaSpans) for (const sf of SURFACES) {
+      const got = approvedSpans(p, sf).join(','), said = (p.approvedMediaSpans[sf] || []).join(',');
+      if (got !== said)
+        throw new PatternError(`${id}: approvedMediaSpans says ${sf} = [${said}] and the approved subdesigns give [${got}]`);
+    }
+    /* CONTROL · FREE COLUMNS BESIDE MEDIA ARE NOT READING MARGIN. Free columns beside PROSE are the
+       measure doing its job; free columns beside MEDIA are nothing, because media has no measure to
+       be bound by. A row whose only named slot is media must therefore be centred or full — the
+       left-inset 8-of-12 arrangement that started all this fails here, in the catalogue, before
+       anything is rendered. */
+    for (const d of p.subdesigns) for (const sl of p.slots) {
+      if (!MEDIA_SLOTS.has(sl.slotType)) continue;
+      for (const row of d.areas) {
+        const tk = row.trim().split(/\s+/);
+        if (!tk.includes(sl.name)) continue;
+        if (tk.some((x) => x !== '.' && x !== sl.name)) continue;      // another slot owns the gap
+        const l = tk.indexOf(sl.name), r = tk.length - 1 - tk.lastIndexOf(sl.name);
+        if (l !== r)
+          throw new PatternError(`${id}/${d.id}: "${sl.name}" is the only slot in its row and sits ${l} column(s) from `
+            + `the left and ${r} from the right — media with unnamed columns on one side is stranded, not inset. `
+            + `Centre it or span the grid.`);
+      }
+    }
+    /* EVERY (surface, aspect class) NEEDS AN APPROVED SUBDESIGN — and `none` is one of the classes.
+       A pattern whose media is optional-collapse has a real authored state with no media at all: the
+       lesson's Symmetry workings is a comparison with no shared visual, and visual.compare had no
+       arrangement for it until this control was extended to ask.
+       WHERE SEVERAL MATCH, THEY ARE SPAN-PROMOTION CANDIDATES, and the choice between them has to be
+       decidable without looking at the content: `pick()` orders them by media span ascending and
+       takes the first that clears the media's minimum legible width. So two candidates may not share
+       a span, and a candidate without a declared span cannot be ordered at all. Where there is no
+       media — no media slot, or the `none` class — there is nothing to promote and nothing to order,
+       so exactly one arrangement must be approved. This control is what makes the determinism
+       claim in vocabulary.json true rather than hopeful. */
     const needsMedia = p.slots.some((x) => x.slotType === 'media' && x.occupancy === 'required');
+    const hasMedia = p.slots.some((x) => x.slotType === 'media');
     for (const s of SURFACES) for (const a of ASPECTS) {
       if (a === 'none' && needsMedia) continue;
       const m = p.subdesigns.filter((d) => d.surface === s && (!d.aspects || d.aspects.includes(a)));
-      if (m.length !== 1)
-        throw new PatternError(`${id}: ${m.length} approved subdesigns match ${s}/${a} — exactly one must`);
+      if (!m.length)
+        throw new PatternError(`${id}: no approved subdesign matches ${s}/${a} — that is a state this pattern can be asked for`);
+      if (m.length === 1) continue;
+      if (!hasMedia || a === 'none')
+        throw new PatternError(`${id}: ${m.length} approved subdesigns match ${s}/${a} — there is no media here to promote, `
+          + `so exactly one must (${m.map((d) => d.id).join(', ')})`);
+      const spans = m.map((d) => d.mediaSpan);
+      if (spans.some((x) => !x))
+        throw new PatternError(`${id}: ${m.map((d) => d.id).join(', ')} all match ${s}/${a}, so they are promotion candidates — `
+          + `each needs a mediaSpan to be ordered by (${m.map((d) => `${d.id}:${d.mediaSpan || '—'}`).join(', ')})`);
+      if (new Set(spans).size !== spans.length)
+        throw new PatternError(`${id}: ${m.map((d) => d.id).join(', ')} match ${s}/${a} and share a media span `
+          + `(${spans.join(', ')}) — promotion could not choose between them`);
     }
   }
 }
@@ -149,10 +227,21 @@ function collapseRows(areas, absent) {
 /* the subdesign is chosen from the SURFACE and the MEDIA ASPECT CLASS. There is no third input.
    `none` is an aspect class: a page with no media is a state a pattern must have designed. */
 const ASPECTS = ['portrait', 'balanced', 'landscape', 'wide', 'none'];
-const pick = (p, surface, aspect) => {
+/* SPAN PROMOTION — the only automation in the system, and it selects from layouts already designed:
+   CHOOSE THE SMALLEST APPROVED SPAN THAT SATISFIES THE MEDIA'S HARD CAPABILITY REQUIREMENTS.
+   Not "choose the prettiest arrangement based on content measurements". The only input is a number
+   the media reported about ITSELF. If no approved span clears it, the widest is taken and the build
+   reports it rather than silently shrinking the plane. */
+const pick = (p, surface, aspect, need, surfaceW) => {
   const m = p.subdesigns.filter((d) => d.surface === surface && (!d.aspects || d.aspects.includes(aspect)));
-  if (m.length !== 1) throw new PatternError(`${p.id}: ${m.length} subdesigns match ${surface}/${aspect}`);
-  return m[0];
+  if (!m.length) throw new PatternError(`${p.id}: no approved subdesign matches ${surface}/${aspect}`);
+  if (m.length === 1) return { d: m[0], promoted: false };
+  const by = m.slice().sort((a, b) => (a.mediaSpan || 0) - (b.mediaSpan || 0));
+  if (!need) return { d: by[0], promoted: false };
+  const px = (sd) => spanPx(surface, sd.mediaSpan);
+  const ok = by.find((sd) => px(sd) >= need);
+  if (!ok) return { d: by[by.length - 1], promoted: true, unmet: need, got: px(by[by.length - 1]) };
+  return { d: ok, promoted: ok !== by[0], need, at: px(ok), skipped: by.slice(0, by.indexOf(ok)).map((x) => `${x.id}(${px(x)}px)`) };
 };
 
 /* ── the areas CSS, generated from patterns.json so the JSON is their ONE OWNER ────────────────── */
@@ -307,7 +396,14 @@ function slotMarkup(pattern, s, content, ctx) {
     inner = content.map((b) => block(check(b), ctx)).join('');
   }
   const scrollY = s.scroll === 'pane' && !ctx.noPane ? ' data-scroll-y="pane"' : '';
-  return `<div data-slot="${esc(s.name)}" data-slot-type="${esc(s.slotType)}" data-occupancy="${esc(s.occupancy)}"${scrollY}>`
+  const fit = s.fit ? ` data-fit="${esc(s.fit)}" data-align="${esc(s.align || (s.fit === 'contain' ? 'center' : 'stretch'))}"` : '';
+  /* THE SLOT CARRIES ITS OWN COLUMNS. The inspector must read what the pattern granted, not
+     re-derive it from the painted width — a slot painted at the wrong width would then agree
+     with itself and the inspector would report a hole it could not see. */
+  const a = ctx.area;
+  const cols = a ? ` data-cols="${a.c0 + 1}\u2013${a.c1 + 1}" data-span="${a.cols}"` : '';
+  const med = MEDIA_SLOTS.has(s.slotType) ? ' data-media-slot' : '';
+  return `<div data-slot="${esc(s.name)}" data-slot-type="${esc(s.slotType)}" data-occupancy="${esc(s.occupancy)}"${scrollY}${fit}${cols}${med}>`
     + (s.label ? `<p class="cp-lab">${esc(s.label)}</p>` : '') + inner + `</div>`;
 }
 
@@ -324,12 +420,17 @@ function buildInstance(inst, page, surface, opts = {}) {
     const d = FIGS[key].figure.domain;
     return classOf((d.yMax - d.yMin) / (d.xMax - d.xMin), BANDS);
   };
+  /* THE ONLY THING THE MEDIA IS ALLOWED TO SAY: what it NEEDS, never what it would like. */
+  const needOf = (key) => (CAP[key] && CAP[key].minLegibleWidth) || 0;
   /* THE MEDIA'S ASPECT CLASS IS THE ONLY THING BESIDES THE SURFACE THAT MAY SELECT A SUBDESIGN. */
   let aspect = null;
   const flat = (c) => !c ? [] : Array.isArray(c) ? c : c.items.flatMap((i) => i.blocks);
   for (const s of p.slots) for (const b of flat(content[s.name])) if (b.figure && !aspect) aspect = aspectOf(b.figure);
   if (!aspect) aspect = 'none';
-  const d0 = pick(p, surface, aspect);
+  let need = 0;
+  for (const sl of p.slots) for (const b of flat(content[sl.name])) if (b.figure) need = Math.max(need, needOf(b.figure));
+  const chosen = pick(p, surface, aspect, need);
+  const d0 = chosen.d;
   const filled = (c) => c && (Array.isArray(c) ? c.length > 0 : true);
   const absent = new Set(p.slots.filter((s) => s.occupancy === 'optional-collapse' && !filled(content[s.name])).map((s) => s.name));
   const d = absent.size ? { ...d0, areas: collapseRows(d0.areas, absent) } : d0;
@@ -338,7 +439,7 @@ function buildInstance(inst, page, surface, opts = {}) {
   const parts = [], present = [];
   for (const s of p.slots) {
     const before = FIGREQ.length;
-    const m = slotMarkup(p, s, content[s.name], { surface, noPane: !!d.noPane });
+    const m = slotMarkup(p, s, content[s.name], { surface, noPane: !!d.noPane, area: spans[s.name] });
     for (const k of FIGREQ.slice(before)) figSlot[k] = s.name;
     if (m == null) {
       if (s.occupancy === 'required') throw new PatternError(`${p.id}: required slot "${s.name}" has no blocks on page ${page.n}`);
@@ -360,7 +461,7 @@ function buildInstance(inst, page, surface, opts = {}) {
   const figW = {};
   for (const [k, name] of Object.entries(figSlot)) figW[k] = widths[name];
   const without = [...absent].join(' ');
-  return { pattern: p, subdesign: d, aspect, absent, spans, widths, figW,
+  return { pattern: p, subdesign: d, aspect, absent, spans, widths, figW, need, chosen,
     body: (i) => `<div data-pattern="${esc(p.id)}" data-subdesign="${esc(d.id)}" data-inst="${i}"`
       + (without ? ` data-without="${esc(without)}"` : '') + `>\n${parts.join('\n')}\n</div>` };
 }
@@ -467,6 +568,23 @@ console.log(`catalogue · ${Object.keys(PATTERNS).filter((k) => !k.startsWith('_
 const figPage = await openFigurePage(browser, base);
 const paint = makePainter(figPage);
 const { boxForWidth } = makeSolvers(paint);
+/* WHAT EACH FIGURE REPORTS ABOUT ITSELF, measured once, before any layout decision exists. */
+const CAP = {};
+{
+  const want = new Set();
+  const scan = (n) => { if (!n || typeof n !== 'object') return;
+    if (Array.isArray(n)) return n.forEach(scan);
+    if (n.figure && typeof n.figure === 'string') want.add(n.figure);
+    Object.values(n).forEach(scan); };
+  scan(PAGES);
+  console.log('\nmedia capability — what each figure reports about ITSELF, measured by painting');
+  for (const k of [...want].sort()) {
+    if (!FIGS[k]) throw new Error(`no figure "${k}"`);
+    CAP[k] = await capability(paint, k, FIGS[k].figure);
+    console.log(`  ${k.padEnd(12)} aspect ${String(CAP[k].aspect).padStart(6)} · minimum legible width `
+      + `${String(CAP[k].minLegibleWidth).padStart(4)}px · equal unit scale required · focus available`);
+  }
+}
 /* THE SLOT GIVES THE WIDTH AND THE MEDIA ANSWERS. One solve per (figure, slot width); memoised,
    because the same figure in the same slot on two pages is the same question. */
 const BOX = new Map();
@@ -577,7 +695,9 @@ ${body}
         offGrid: slots.filter((x) => x.visible && !(near(x.left) && near(x.right)))
           .map((x) => `${x.name} ${x.left}→${x.right}`) };
     });
-    const figs = [].slice.call(document.querySelectorAll('.tp-fig-svg')).filter(vis).map((svg) => {
+    /* PX PER DOMAIN UNIT ON EACH AXIS, read off the painted tick labels. The media declares whether
+       it REQUIRES equal unit scale; this is how both the control and the inspector see what it got. */
+    const unitScale = (svg) => {
       const vb = (svg.getAttribute('viewBox') || '0 0 1 1').split(/\s+/).map(Number);
       const rect = svg.getBoundingClientRect();
       const labs = [].slice.call(svg.querySelectorAll('.tp-fig-ticklabel'));
@@ -587,7 +707,35 @@ ${body}
         if (z.length < 2) return null; z.sort((i, j) => i.v - j.v);
         const dd = z[z.length - 1].v - z[0].v; return dd ? Math.abs((z[z.length - 1].px - z[0].px) / dd) : null; };
       const ux = per('middle', 'x'), uy = per('end', 'y');
-      return { ratio: (ux && uy) ? +((ux * rect.width / vb[2]) / (uy * rect.height / vb[3])).toFixed(3) : null };
+      if (!ux || !uy) return null;
+      const x = ux * rect.width / vb[2], y = uy * rect.height / vb[3];
+      return { x: +x.toFixed(2), y: +y.toFixed(2), ratio: +(x / y).toFixed(3) };
+    };
+    const figs = [].slice.call(document.querySelectorAll('.tp-fig-svg')).filter(vis)
+      .map((svg) => ({ ratio: (unitScale(svg) || { ratio: null }).ratio }));
+    /* THE SLOT INSPECTOR, MEASURED. Every media slot on the page: what the pattern granted it, what
+       the browser actually painted in it, and how much width inside it nobody claimed. The numbers
+       are gathered here and JUDGED IN NODE, so what the build refuses and what the overlay draws
+       cannot drift apart. */
+    const media = [].slice.call(document.querySelectorAll('[data-media-slot]')).filter(vis).map((el) => {
+      const r = el.getBoundingClientRect(), own = el.closest('[data-pattern]');
+      const kids = [].slice.call(el.children).filter((c) => vis(c) && !c.classList.contains('cp-lab'));
+      const plane = el.querySelector('[data-mx-part="figure"]');
+      /* what is PAINTED, not what is declared: the plane when there is one, otherwise the widest
+         thing the slot actually put on screen */
+      const paint = plane || kids.reduce((a, c) =>
+        !a || c.getBoundingClientRect().width > a.getBoundingClientRect().width ? c : a, null);
+      const pr = paint ? paint.getBoundingClientRect() : null;
+      const svg = el.querySelector('.tp-fig-svg');
+      return { pattern: own && own.getAttribute('data-pattern'), subdesign: own && own.getAttribute('data-subdesign'),
+        inst: own ? +own.getAttribute('data-inst') : 0, name: el.getAttribute('data-slot'),
+        cols: el.getAttribute('data-cols'), span: +el.getAttribute('data-span'),
+        fit: el.getAttribute('data-fit'), align: el.getAttribute('data-align'),
+        kind: plane ? 'plane' : paint ? paint.tagName.toLowerCase() : 'nothing',
+        slotW: +r.width.toFixed(2), slotH: Math.round(r.height),
+        paintedW: pr ? +pr.width.toFixed(2) : null, paintedH: pr ? Math.round(pr.height) : null,
+        freeL: pr ? +(pr.left - r.left).toFixed(2) : null, freeR: pr ? +(r.right - pr.right).toFixed(2) : null,
+        scale: svg ? unitScale(svg) : null };
     });
     const wide = [].slice.call(document.querySelectorAll('.cp-prose p, .cp-st, .cp-key p, .cp-qitem p, .cp-lede, .cp-tabnote, .cp-figcap'))
       .filter((n) => vis(n) && !n.closest('[data-scroll-x="local"]'))
@@ -644,7 +792,7 @@ ${body}
       const panels = [].slice.call(x.querySelectorAll(':scope > .cp-panel')).map((b) => b.getAttribute('data-panel'));
       return `${d}:${x.getAttribute('data-tabs-kind')}:${x.getAttribute('data-tabs')}[${labels.join('|')}]{${panels.join('|')}}`;
     }).join(' ; ');
-    return { grids, figs, wide, scrollers, tabs, frame, over, tabSig,
+    return { grids, figs, media, wide, scrollers, tabs, frame, over, tabSig,
       clip: { sw: pg.scrollWidth, cw: pg.clientWidth },
       docH: Math.round(document.documentElement.scrollHeight),
       docW: Math.round(document.documentElement.scrollWidth),
@@ -657,14 +805,190 @@ ${body}
     await p.setViewportSize({ width: g.width + 2 * g.pad + 120, height: Math.ceil(bb.height) + 8 });
     await p.waitForTimeout(140);
     await (await p.$('.cp-page')).screenshot({ path: path.join(OUT, name + '.png') });
+    /* THE SLOT INSPECTOR, DRAWN. The same numbers the control judges, over the render they came
+       from: the slot the pattern granted, the media actually painted inside it, and any width in
+       between that nobody claimed. The judgement is made in node and passed in — the overlay never
+       measures anything itself, so the picture cannot say one thing while the build says another. */
+    if (!NO_INSPECT && m.media.length && (INSPECT_ALL || surface === 'desktop')) {
+      const cards = m.media.map((x) => {
+        const pat = PATTERNS[x.pattern];
+        const fit = slotFit(x, surface, pat);
+        return { slot: x.name, inst: x.inst, ok: fit.ok, free: [x.freeL, x.freeR],
+          lines: inspectorLines(x, surface, pat, fit) };
+      });
+      await p.evaluate(drawInspector, cards);
+      const bb2 = await (await p.$('.cp-page')).boundingBox();
+      await p.setViewportSize({ width: g.width + 2 * g.pad + 120, height: Math.ceil(bb2.height) + 8 });
+      await p.waitForTimeout(120);
+      await (await p.$('.cp-page')).screenshot({ path: path.join(OUT, name + '-inspect.png') });
+    }
   }
   if (errs.length) throw new Error(`${name}: ${errs[0]}`);
   await p.close();
   return { m, built, surface, g };
 }
 
+/* ── THE SLOT INSPECTOR ────────────────────────────────────────────────────────
+   "What pattern is this?" and "is the media actually inhabiting its slot well?" are different
+   questions, and only the first had an answer. ONE function answers the second, and BOTH the
+   control that fails the build and the overlay you look at read it — so what the build refuses and
+   what the picture says can never drift apart.
+
+   IT IS NOT AN OCCUPANCY RESOLVER. Nothing it computes reaches layout, and there is no threshold at
+   which it changes a span. Every verdict is categorical: `fill` means the media consumes the slot
+   width, `contain` means it may be smaller but must be deliberately placed, and anything else
+   inside a media slot is SLOT RESIDUE — the third kind of whitespace, the illegal one. */
+const TOLPX = 1.5;
+
+function slotFit(x, surface, p) {
+  const o = { ok: true, verdict: '', actions: [], notes: [] };
+  if (x.paintedW == null) {
+    o.ok = false; o.verdict = 'the slot is painted and holds nothing';
+    o.actions = ['fill it, or give the pattern an approved subdesign without it'];
+    return o;
+  }
+  o.unclaimed = +(x.slotW - x.paintedW).toFixed(2);
+  const spans = approvedSpans(p, surface).map((n) => `${n} = ${spanPx(surface, n)}px`).join(' · ') || 'none declared';
+  if (x.fit === 'fill') {
+    if (o.unclaimed > TOLPX) {
+      o.ok = false;
+      o.verdict = `a \`fill\` media painted ${x.paintedW}px inside a ${x.slotW}px slot`;
+      o.actions = [
+        'paint the media at the slot width — under `fit: fill` the slot gives the width and the media takes it',
+        `approve a narrower span for this aspect class (approved at ${surface}: ${spans})`,
+        'declare the slot `fit: contain` and centre it, if being smaller than the slot is a design decision',
+      ];
+    } else o.verdict = 'the media consumes the slot width';
+  } else if (x.fit === 'contain') {
+    if (o.unclaimed <= TOLPX) o.verdict = 'contained, and it happens to reach both edges';
+    else if (x.align === 'center' && Math.abs(x.freeL - x.freeR) <= TOLPX) o.verdict = `contained and centred — ${x.freeL}px either side`;
+    else if (x.align === 'start' && x.freeL <= TOLPX) o.verdict = `contained at the start — ${x.freeR}px after it`;
+    else {
+      o.ok = false;
+      o.verdict = `a \`contain\` media declared \`${x.align}\` sits ${x.freeL}px from the slot's left edge and ${x.freeR}px from its right`;
+      o.actions = [
+        'centre it — a contained object that is neither centred nor deliberately start-aligned is stranded',
+        'give the slot an explicit design reason to be start-aligned, declared on the slot',
+        `approve a narrower span for this aspect class (approved at ${surface}: ${spans})`,
+      ];
+    }
+    /* A SIGNAL, NOT A RESOLVER. It changes nothing; it says what a human should rule on. */
+    if (o.ok && x.paintedW < x.slotW * 0.6)
+      o.notes.push(`occupies ${Math.round(100 * x.paintedW / x.slotW)}% of its slot — if that is the usual case here, `
+        + 'the evidence says the PATTERN wants a smaller span, not that the media should grow');
+  } else {
+    o.ok = false; o.verdict = `a media slot with no declared fit (\`${x.fit}\`)`;
+    o.actions = ['declare `fit: fill` or `fit: contain` on the slot in patterns.json'];
+  }
+  return o;
+}
+
+/* THE CONTRACT IS ENFORCED ON EVERY RENDER; only the PICTURE is selective. Desktop by default,
+   because that is where a slot can be wider than its media — at tablet and phone every approved
+   media span is the whole surface, so the overlay there would be 26 more megabytes of "it fills".
+   CP_INSPECT=all draws every surface (what the slot-fit atlas will want); CP_NO_INSPECT=1 draws none. */
+const NO_INSPECT = !!process.env.CP_NO_INSPECT;
+const INSPECT_ALL = process.env.CP_INSPECT === 'all';
+
+/* runs IN THE PAGE. It receives finished text and draws; it computes no verdict of its own. */
+function drawInspector(cards) {
+  const page = document.querySelector('.cp-page');
+  page.setAttribute('data-inspect', '');
+  const st = document.createElement('style');
+  st.textContent = `
+    .cp-page[data-inspect]{position:relative;}
+    .ins-layer{position:absolute;inset:0;pointer-events:none;z-index:50;}
+    .ins-slot{position:absolute;outline:2px dashed #2563eb;outline-offset:0;background:rgba(37,99,235,.045);}
+    .ins-paint{position:absolute;outline:2px solid #059669;}
+    .ins-paint[data-bad]{outline-color:#dc2626;}
+    .ins-res{position:absolute;background:repeating-linear-gradient(45deg,rgba(220,38,38,.30) 0 6px,rgba(220,38,38,.06) 6px 12px);
+      outline:1px solid rgba(220,38,38,.55);}
+    .ins-res[data-legal]{background:repeating-linear-gradient(45deg,rgba(37,99,235,.16) 0 6px,rgba(37,99,235,.03) 6px 12px);
+      outline-color:rgba(37,99,235,.45);}
+    .ins-tag{position:absolute;font:600 10px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.04em;
+      background:#2563eb;color:#fff;padding:1px 6px;border-radius:0 0 3px 0;}
+    .ins-tag[data-bad]{background:#dc2626;}
+    .ins-panel{margin:18px 0 0;border:2px solid #111;background:#fff;}
+    .ins-card{border-top:1px solid #d4d4d4;padding:10px 14px;font:12px/1.65 ui-monospace,Menlo,monospace;}
+    .ins-card:first-child{border-top:0;}
+    .ins-card b{display:inline-block;width:206px;vertical-align:top;color:#525252;font-weight:600;}
+    .ins-card i{font-style:normal;color:#111;}
+    .ins-h{background:#111;color:#fff;padding:6px 14px;font:600 11px/1.6 ui-monospace,Menlo,monospace;letter-spacing:.08em;}
+    .ins-card[data-bad] b{color:#dc2626;}`;
+  document.head.appendChild(st);
+
+  const layer = document.createElement('div');
+  layer.className = 'ins-layer';
+  page.appendChild(layer);
+  const pr = page.getBoundingClientRect();
+  const box = (cls, r, extra) => {
+    const el = document.createElement('div');
+    el.className = cls;
+    el.style.left = (r.left - pr.left) + 'px'; el.style.top = (r.top - pr.top) + 'px';
+    el.style.width = r.width + 'px'; el.style.height = r.height + 'px';
+    if (extra) for (const k in extra) el.setAttribute(k, extra[k]);
+    layer.appendChild(el); return el;
+  };
+  const slots = [].slice.call(document.querySelectorAll('[data-media-slot]'));
+  cards.forEach((c) => {
+    const el = slots.filter((q) => {
+      const own = q.closest('[data-pattern]');
+      return q.getAttribute('data-slot') === c.slot && (own ? +own.getAttribute('data-inst') : 0) === c.inst;
+    })[0];
+    if (!el || !el.getClientRects().length) return;
+    const sr = el.getBoundingClientRect();
+    box('ins-slot', sr);
+    const plane = el.querySelector('[data-mx-part="figure"]')
+      || [].slice.call(el.children).filter((x) => !x.classList.contains('cp-lab'))[0];
+    if (plane) {
+      const q = plane.getBoundingClientRect();
+      box('ins-paint', q, c.ok ? null : { 'data-bad': '' });
+      /* the unclaimed width, drawn where it actually is. Hatched blue where the slot declared it
+         (a centred `contain`), hatched red where nobody did. */
+      const legal = c.ok ? { 'data-legal': '' } : null;
+      if (q.left - sr.left > 1.5) box('ins-res', { left: sr.left, top: q.top, width: q.left - sr.left, height: q.height }, legal);
+      if (sr.right - q.right > 1.5) box('ins-res', { left: q.right, top: q.top, width: sr.right - q.right, height: q.height }, legal);
+    }
+    const tag = document.createElement('div');
+    tag.className = 'ins-tag'; tag.textContent = c.slot.toUpperCase() + ' SLOT';
+    if (!c.ok) tag.setAttribute('data-bad', '');
+    tag.style.left = (sr.left - pr.left) + 'px'; tag.style.top = (sr.top - pr.top) + 'px';
+    layer.appendChild(tag);
+  });
+
+  const panel = document.createElement('div');
+  panel.className = 'ins-panel';
+  panel.innerHTML = '<div class="ins-h">SLOT INSPECTOR</div>' + cards.map((c) =>
+    `<div class="ins-card"${c.ok ? '' : ' data-bad'}>` + c.lines.map(([k, v]) =>
+      `<div><b>${k}</b><i>${String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</i></div>`).join('') + '</div>').join('');
+  page.appendChild(panel);
+}
+
+/* what the overlay prints, and what a failure prints — the same lines from the same numbers */
+function inspectorLines(x, surface, p, fit) {
+  const g = GRID.surfaces[surface];
+  const L = [
+    ['PATTERN', x.pattern],
+    ['SUBDESIGN', `${x.subdesign} · approved for ${surface}`],
+    ['MASTER GRID', `${surface} · ${g.columns} col · ${g.width}px · column ${colW(surface).toFixed(2)}px · gutter ${g.gutter}px`],
+    ['MEDIA SLOT', `${x.name} · columns ${x.cols} of ${g.columns} · span ${x.span} = ${spanPx(surface, x.span)}px · painted ${x.slotW}px`],
+    ['PAINTED MEDIA', x.paintedW == null ? 'nothing' : `${x.kind} · ${x.paintedW} × ${x.paintedH}px`],
+    ['FIT', `${x.fit} — ${VOCAB.mediaFit[x.fit] ? VOCAB.mediaFit[x.fit].means : 'undeclared'}`],
+    ['ALIGNMENT', x.align || '—'],
+    ['ASPECT-SCALE', x.scale ? `${x.scale.x}px per x-unit · ${x.scale.y}px per y-unit · ratio ${x.scale.ratio}`
+      + (Math.abs(x.scale.ratio - 1) <= 0.01 ? ' ✓ equal' : ' ✗ NOT EQUAL') : 'not a plane'],
+    ['UNCLAIMED INTERNAL WIDTH', `${fit.unclaimed == null ? '—' : fit.unclaimed + 'px'}`
+      + (fit.ok ? ' ✓' : ' ✗ SLOT RESIDUE')],
+  ];
+  if (!fit.ok) L.push(['DIAGNOSIS', fit.verdict]);
+  else L.push(['VERDICT', fit.verdict]);
+  for (const n of fit.notes) L.push(['SIGNAL', n]);
+  if (!fit.ok) fit.actions.forEach((a, i2) => L.push([i2 ? '' : 'LEGAL ACTIONS', '· ' + a]));
+  return L;
+}
+
 /* ── the controls ─────────────────────────────────────────────────────────────────────────────── */
-const LIVE = { localX: [], pane: [], reserved: [], collapse: [] };
+const LIVE = { localX: [], pane: [], reserved: [], collapse: [], fit: [], signal: [], rendered: new Set() };
 /* WHAT A RENDER IS, for reporting and for the adversarial comparison: every visible pattern, its
    subdesign, and every slot's width. A shell page has several; a plain page has one. */
 const sig = (m) => m.grids.map((G) => `${G.pattern}/${G.subdesign}{`
@@ -689,6 +1013,7 @@ function verify(name, page, r) {
     if (!b) throw new Error(`${name}: a painted pattern has no instance record`);
     const p = b.pattern;
     const where = m.grids.length > 1 ? ` [${p.id}]` : '';
+    LIVE.rendered.add(`${G.pattern}/${G.subdesign}`);
 
     /* CONTROL · THE SLOT EDGES LAND ON GRID LINES. This is the whole claim of a master grid, and it
        is the one thing nobody had ever measured: "we use a 12-column grid" is a sentence until every
@@ -735,6 +1060,19 @@ function verify(name, page, r) {
             + `Span the tall neighbour across both rows instead.`);
         break;
       }
+    }
+
+    /* CONTROL · THE SLOT INSPECTOR, ENFORCED. Rule 8 of the graph rules: the build fails if a media
+       slot contains anonymous horizontal residue. This is the control that turns "does this look
+       finished?" from a judgement made over screenshots into a contract — and when it fails it
+       prints the whole inspector, because a number without its slot, its span and its legal actions
+       is the kind of right-and-useless message that cost an hour last time. */
+    for (const x of m.media.filter((q) => q.inst === G.inst)) {
+      const fit = slotFit(x, surface, p);
+      const lines2 = inspectorLines(x, surface, p, fit).map(([k, v]) => `    ${k.padEnd(24)} ${v}`).join('\n');
+      if (!fit.ok) throw new Error(`${name}${where}: SLOT FIT\n${lines2}`);
+      LIVE.fit.push(`${x.pattern}/${x.subdesign} ${x.name} ${x.span}col=${x.slotW}px ${x.fit} → ${x.paintedW}px`);
+      for (const n of fit.notes) LIVE.signal.push(`${name}${where}: ${x.name} ${n}`);
     }
 
     /* CONTROL · NO LAYOUT RESIDUE. A named track that is painted and holds nothing is a defect
@@ -939,6 +1277,30 @@ if (AFFORD.collection.sig === AFFORD.views.sig)
     + `and a view switch are different claims about the content and must look different`);
 console.log('\nTHE TWO TAB KINDS — one affordance each, at every depth, and distinguishable');
 for (const [k, v] of Object.entries(AFFORD)) console.log(`  ${k.padEnd(11)} ${v.sig}`);
+/* THE SLOT INSPECTOR, ACROSS THE ATLAS. Every media slot that was painted, what the pattern granted
+   it and what it actually did with it. A contract nothing ever exercised would not be one, so the
+   build refuses a run in which no media slot was measured at all. */
+if (!LIVE.fit.length) throw new Error('no media slot was inspected on any render, so the slot-fit contract is untested');
+console.log(`\nTHE SLOT INSPECTOR — ${LIVE.fit.length} media slot(s) painted, every one inhabiting its slot`);
+for (const line of [...new Set(LIVE.fit)].sort()) console.log(`  ${line}`);
+if (LIVE.signal.length) {
+  console.log('\n  SIGNALS (nothing acted on them — they are for a human to rule on)');
+  for (const line of [...new Set(LIVE.signal)]) console.log(`    ${line}`);
+}
+
+/* WHAT IS APPROVED AND NEVER RENDERED. An approved subdesign nothing exercises has been designed and
+   not tested, and the honest thing is to say which ones rather than let the green run imply
+   coverage. Named, not failed: the corpus is a real lesson, and it does not owe us one figure of
+   every aspect class. This list IS the brief for the slot-fit atlas. */
+{
+  const gap = [];
+  for (const [id, p2] of Object.entries(PATTERNS)) {
+    if (id.startsWith('_')) continue;
+    for (const d of p2.subdesigns) if (!LIVE.rendered.has(`${id}/${d.id}`)) gap.push(`${id}/${d.id} (${d.surface}${d.aspects ? ' · ' + d.aspects.join(', ') : ''})`);
+  }
+  if (gap.length) console.log(`\napproved and never rendered — designed, not tested:\n  ${gap.join('\n  ')}`);
+}
+
 console.log('\nTHE CATALOGUE, AS RENDERED');
 for (const id of Object.keys(PATTERNS).filter((k) => !k.startsWith('_'))) {
   const rs = REPORT.filter((r) => r.pattern === id);
