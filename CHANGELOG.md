@@ -8,6 +8,37 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **A semantic figure surface, prototyped and NOT enabled** (`docs/atlas/composition-proof/`,
+  `scripts/composition-proof-atlas.mjs`, no app change, nothing wired into the shipping catalogue).
+  `figureSurface.enabled: false` — both candidate treatments are rendered for comparison and neither is
+  frozen. The grid, the solo ladder, the spine and the paired/workspace rules are untouched: the
+  structural model is doing useful work and this pass is about making it VISUALLY LEGIBLE.
+  - **The problem.** Both successful pages are structurally correct and neither says clearly enough that
+    the graph, its caption and its graph-local controls are ONE VISUAL OBJECT, separate from the prose
+    that interprets it. The separation existed in the blueprint and not in the courseware.
+  - **THREE BOUNDARIES, KEPT APART**: the REGION the blueprint assigned, the SURFACE that groups the
+    media payload, and the PLOT itself. The overlay draws all three as three boxes and adds a sixth
+    space to the legend — INTERNAL FIGURE-SURFACE SPACE, which is valid precisely because it is inside
+    an object the composition already owns, and is not the same thing as an unowned column in an
+    active row.
+  - **H12** a surface may not reach past its region · **H13** plot, caption and media-local controls are
+    all inside it · **H14** the plane is painted at the size it was SOLVED for and its units stay equal ·
+    **H15** turning the surface on changes no blueprint, spine, cardinality, rung or split. Each driven
+    to failure.
+  - **H14 caught a real defect on its first run.** The first build solved the plane for the REGION width
+    and let the surface clamp it — 62.57px per x-unit against 65.94 per y-unit. A border had distorted
+    the mathematics. The plane is now solved for the width it actually has, region minus a DECLARED
+    chrome; and H14 was re-written to ask whether the plane is painted at the size it was solved for,
+    because comparing two renders' aspect ratios was mis-calibrated at 1.8% against a legitimate
+    re-rounding of the axis-label chrome.
+  - **The A/B answer, measured: A.** Treatment B shrink-wraps the plate to 564px — exactly the width of
+    the six-column reading spine below it — so it RE-CREATES AT THE OBJECT LEVEL the under-realisation
+    H11 exists to reject at the row level, and it forces the slot to `contain`. Under A the surface takes
+    the region, the plane keeps its geometry, and 38px of internal surface space is the only residue.
+  - **Every rejection survives a border**: the half-row still fails H2 with a surface around its graph,
+    and `side-study` still fails H4 at 535.5px. `practice.workbook` keeps its designed 5/7 relationship
+    and `worked.paired` gets no surface at all.
+
 - **The solo span ladder, and composition fitness as a second validation layer**
   (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
   into the shipping catalogue). A **proposal**. The previous pass solved OWNERSHIP and in doing so

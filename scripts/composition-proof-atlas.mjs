@@ -357,20 +357,56 @@ function slotBody(pid, name, adversarial) {
   return `<div class="cp-prose">${para.map((x) => `<p>${t(x)}</p>`).join('')}</div>`;
 }
 
-function mediaMarkup(fx, fit) {
-  const cap = fx.caption ? `<figcaption class="cp-figcap">${t(fx.caption)}</figcaption>` : '';
-  if (fx.kind === 'graph') return `<figure class="cp-figure">{{FIG:${fx.figure}}}${cap}</figure>`;
-  if (fx.kind === 'interactive')
-    return `<div class="cp-media" data-media-object style="aspect-ratio:${1 / fx.aspect};background:`
-      + `linear-gradient(#eef1f0,#dfe6e3);border:1px solid #cfd8d4;border-radius:3px"></div>`;
+/* ── THE FIGURE SURFACE — A PRESENTATION PRIMITIVE, APPLIED AFTER LAYOUT ─────────────────────────
+   It groups the media, its caption and its media-local controls into ONE VISUAL OBJECT and decides
+   nothing else. It never chooses a width, never claims a column, and never turns a bad pair into a
+   good one. Three boundaries stay separate: the REGION the blueprint assigned, the SURFACE, and the
+   PLOT inside it. `data-media-object` moves onto the surface when it is on, because under `fill` the
+   thing that must consume the region is the surface — the plane keeps its own solved geometry, and
+   what is left over inside the surface is intentional internal space, not unowned page. */
+function figureSurface(inner, cap, treatment, label) {
+  return `<div class="fs-surface" data-figure-surface data-fs="${esc(treatment)}" data-media-object>`
+    + `<div class="fs-head"><span class="fs-lab">${esc(label || 'Figure')}</span></div>`
+    + `<div class="fs-plot" data-fs-plot>${inner}</div>`
+    + (cap ? `<figcaption class="fs-cap" data-fs-cap>${cap}</figcaption>` : '') + `</div>`;
+}
+
+function mediaMarkup(fx, fit, fs) {
+  const capText = fx.caption ? t(fx.caption) : '';
+  const cap = capText ? `<figcaption class="cp-figcap">${capText}</figcaption>` : '';
+  const LAB = { graph: 'Graph', image: 'Figure', diagram: 'Diagram', video: 'Clip', interactive: 'Instrument' }[fx.kind] || 'Figure';
+  if (fx.kind === 'graph') {
+    if (fs && fs !== 'off') return figureSurface(`{{FIG:${fx.figure}}}`, capText, fs, LAB);
+    return `<figure class="cp-figure">{{FIG:${fx.figure}}}${cap}</figure>`;
+  }
+  if (fx.kind === 'interactive') {
+    const frame = `<div class="cp-media"${fs && fs !== 'off' ? '' : ' data-media-object'} style="aspect-ratio:${1 / fx.aspect};`
+      + `background:linear-gradient(#eef1f0,#dfe6e3);border:1px solid #cfd8d4;border-radius:3px"></div>`;
+    return fs && fs !== 'off' ? figureSurface(frame, capText, fs, LAB) : frame;
+  }
   const inner = fx.kind === 'video'
-    ? `<video data-media-object src="${dataURI(fx.src)}" poster="${dataURI(fx.poster)}" width="${fx.raster[0]}" `
-      + `height="${fx.raster[1]}" controls muted playsinline preload="metadata"></video>`
-    : `<img data-media-object src="${dataURI(fx.src)}" width="${fx.raster[0]}" height="${fx.raster[1]}" `
-      + `alt="${esc(fx.alt || '')}" decoding="sync">`;
+    ? `<video${fs && fs !== 'off' ? '' : ' data-media-object'} src="${dataURI(fx.src)}" poster="${dataURI(fx.poster)}" `
+      + `width="${fx.raster[0]}" height="${fx.raster[1]}" controls muted playsinline preload="metadata"></video>`
+    : `<img${fs && fs !== 'off' ? '' : ' data-media-object'} src="${dataURI(fx.src)}" width="${fx.raster[0]}" `
+      + `height="${fx.raster[1]}" alt="${esc(fx.alt || '')}" decoding="sync">`;
+  if (fs && fs !== 'off') return figureSurface(`<span class="cp-media">${inner}</span>`, capText, fs, LAB);
   const cw = fit === 'contain' ? ` style="width:min(${fx.presentationWidth}px,100%)"` : '';
   return `<figure class="cp-figure"><span class="cp-media"${cw}>${inner}</span>${cap}</figure>`;
 }
+
+const FIGURE_SURFACE_CSS = `
+/* a textbook plate, not a dashboard card: one hairline, a small radius, no shadow */
+.fs-surface{box-sizing:border-box;border:1px solid var(--mx-line,#e2e6e4);border-radius:4px;
+  background:#fcfdfc;padding:18px 18px 14px;}
+.fs-surface[data-fs="A"]{width:100%;}
+.fs-surface[data-fs="B"]{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto;}
+.fs-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px;min-height:14px;}
+.fs-lab{font:700 11px/1 var(--mx-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--mx-ink-2);}
+.fs-plot{display:flex;justify-content:center;}
+.fs-plot > *{max-width:100%;}
+.fs-cap{margin:12px 0 0;font-size:13.5px;line-height:1.5;color:var(--mx-ink-2);}
+.fs-surface .tp-fig-expand{z-index:2;}
+`;
 
 /* ── MEASURED IN THE PAGE ────────────────────────────────────────────────────────────────────────
    Self-contained, no closure: it is serialised into the browser. It reports geometry and nothing
@@ -447,6 +483,42 @@ function measureComposition() {
   return { host: { w: +hr.width.toFixed(2), h: +hr.height.toFixed(2) }, cols, rows, gaps };
 }
 
+/* ── THE FIGURE SURFACE, MEASURED ───────────────────────────────────────────────────────────────
+   Three boxes, reported separately and never merged: the REGION, the SURFACE and the PLOT. Plus
+   where the caption and the media-local controls actually live, because "one visual object" is a
+   containment claim and containment is checkable. */
+function measureFigureSurface() {
+  const host = document.querySelector('[data-cp-host]');
+  if (!host) return null;
+  const hr = host.getBoundingClientRect();
+  const rel = (e) => { const r = e.getBoundingClientRect();
+    return { x: +(r.left - hr.left).toFixed(2), y: +(r.top - hr.top).toFixed(2),
+      w: +r.width.toFixed(2), h: +r.height.toFixed(2) }; };
+  const region = host.querySelector('[data-media-slot]');
+  if (!region) return null;
+  const surf = region.querySelector('[data-figure-surface]');
+  const plot = region.querySelector('[data-fig-viewport]') || region.querySelector('[data-fs-plot] > *')
+    || region.querySelector('img,video,.cp-media');
+  const cap = region.querySelector('[data-fs-cap]') || region.querySelector('figcaption');
+  const ctls = [].slice.call(region.querySelectorAll('.tp-fig-expand,.cp-controls,[data-figx-open]'));
+  const svg = region.querySelector('.tp-fig-svg');
+  const inside = (a, b) => !!(a && b && b.contains(a));
+  return {
+    region: rel(region),
+    surface: surf ? rel(surf) : null,
+    treatment: surf ? surf.getAttribute('data-fs') : 'off',
+    plot: plot ? rel(plot) : null,
+    caption: cap ? rel(cap) : null,
+    controls: ctls.map(rel),
+    /* CONTAINMENT, ASKED OF THE DOM RATHER THAN ASSUMED FROM THE MARKUP WE MEANT TO WRITE */
+    plotInSurface: inside(plot, surf), captionInSurface: inside(cap, surf),
+    controlsInSurface: ctls.length ? ctls.every((c) => inside(c, surf)) : null,
+    controlCount: ctls.length,
+    surfaceInRegion: inside(surf, region),
+    planeBox: svg ? rel(svg) : null,
+  };
+}
+
 /* ── THE PROOF OVERLAY, DRAWN FROM FINISHED RECTANGLES ───────────────────────────────────────────
    It receives rectangles and labels already computed in Node. It decides nothing. */
 function drawProof(payload) {
@@ -474,6 +546,31 @@ function drawProof(payload) {
     d.style.cssText = `left:0;width:${payload.host.w}px;top:${g.y}px;height:${g.h}px`;
     d.innerHTML = `<span class="pf-tag pf-tag-gap">${g.step} · ${g.declared}px</span>`;
     lay.appendChild(d);
+  }
+  /* THE THREE BOUNDARIES, DRAWN AS THREE BOXES. Collapsing them into one is exactly what a border
+     must never be allowed to do. */
+  if (payload.fs && payload.fs.surface) {
+    const S = payload.fs.surface;
+    const sd = document.createElement('div'); sd.className = 'pf-surface';
+    sd.style.cssText = `left:${S.x}px;width:${S.w}px;top:${S.y}px;height:${S.h}px`;
+    sd.innerHTML = `<span class="pf-tag pf-tag-surface">2 · figure surface · ${payload.fs.treatment} · ${Math.round(S.w)}px</span>`;
+    lay.appendChild(sd);
+    if (payload.fs.plot) {
+      const P = payload.fs.plot;
+      const pd = document.createElement('div'); pd.className = 'pf-plot';
+      pd.style.cssText = `left:${P.x}px;width:${P.w}px;top:${P.y}px;height:${P.h}px`;
+      pd.innerHTML = `<span class="pf-tag pf-tag-plot">3 · plot · ${Math.round(P.w)}×${Math.round(P.h)}px</span>`;
+      lay.appendChild(pd);
+      if (S.w - P.w > 2) {
+        for (const side of [[S.x, P.x - S.x], [P.x + P.w, S.x + S.w - (P.x + P.w)]]) {
+          if (side[1] <= 2) continue;
+          const id = document.createElement('div'); id.className = 'pf-internal';
+          id.style.cssText = `left:${side[0]}px;width:${side[1]}px;top:${P.y}px;height:${P.h}px`;
+          id.innerHTML = `<span class="pf-tag pf-tag-internal">6 · internal</span>`;
+          lay.appendChild(id);
+        }
+      }
+    }
   }
   for (const r of payload.rows) {
     const d = document.createElement('div'); d.className = 'pf-row';
@@ -710,7 +807,7 @@ function pageMarkup(pid, surface, L, fx, opts) {
         + `data-span="${b - a + 1}" data-slot-anchor="${esc(row.mode === 'solo' ? `solo/${row.rung}` : row.split)}" `
         + `data-fixture="${esc(fx.id)}" data-media-kind="${esc(fx.kind)}"`
         + (fit === 'contain' && !opts.dropAnchor ? ` data-media-anchor="center" data-anchor-resolved` : '')
-        + `>${mediaMarkup(fx, fit)}</div>`);
+        + `>${mediaMarkup(fx, fit, opts.fs)}</div>`);
     } else {
       parts.push(`<div data-slot="${esc(s.name)}" data-slot-type="${esc(s.slotType)}" `
         + `data-occupancy="${esc(s.occupancy)}">${slotBody(pid, s.name, opts.adversarial)}</div>`);
@@ -812,6 +909,7 @@ const PROOF_CSS = `
 .pf-legend .k3{background:rgba(60,140,100,.35);outline:1px solid rgba(31,92,64,.6);}
 .pf-legend .k4{background:repeating-linear-gradient(45deg,rgba(200,0,0,.6) 0 4px,rgba(200,0,0,.2) 4px 8px);outline:1px solid #c00;}
 .pf-legend .k5{background:#fff;outline:2px solid #1f5c40;}
+.pf-legend .k6{background:repeating-linear-gradient(45deg,rgba(180,120,40,.6) 0 4px,rgba(180,120,40,.15) 4px 8px);outline:1px dotted rgba(140,90,20,.8);}
 .cp-spine{position:absolute;top:0;bottom:0;border-left:1px solid rgba(180,60,40,.55);border-right:1px solid rgba(180,60,40,.55);
   background:rgba(180,60,40,.03);}
 .cp-grid-host > [data-gap][data-rule]{position:relative;}
@@ -920,15 +1018,24 @@ async function board(pid, surface, bid, o = {}) {
   const sd = `${pid.replace(/\W/g, '')}-${surface}-${bid.replace(/\W/g, '')}-${klass || 'x'}${o.tag ? '-' + o.tag : ''}`;
   const name = o.name || `${pid.replace(/\./g, '-')}__${surface}__${bid}${klass && klass !== 'none' ? '__' + klass : ''}`;
 
+  const fsMode = o.fs || 'off';
+  let solvedBox = null;
   let plain = pageMarkup(pid, surface, L, fx, { sd, hostAttr: 'data-cp-host', adversarial: o.adversarial,
-    forceFit: o.forceFit, dropAnchor: o.dropAnchor });
+    forceFit: o.forceFit, dropAnchor: o.dropAnchor, fs: fsMode });
   let proof = plain.replace('data-cp-host', 'data-pf-board').replace(/ data-media-slot(?=[ >])/, ' data-media-slot-proof');
 
   /* the figure is painted at the slot the blueprint gave it, and at nothing else */
   if (fx && fx.kind === 'graph') {
     const row = L.rows.find((r) => r.named.includes(P.mediaSlot));
     const n = row.owner.filter((x) => x === P.mediaSlot).length;
-    const box = await boxFor(fx.figure, o.paintAt || spanPx(surface, n));
+    /* THE PLANE IS SOLVED FOR THE WIDTH IT ACTUALLY HAS. With a surface on, that is the region minus
+       the surface's declared chrome — never the region width clamped afterwards, which squeezes the
+       mathematics. Under treatment B the plane is solved at the row's other approved rung and the
+       surface wraps THAT. */
+    const CH = fsMode === 'off' ? 0 : 2 * (BP.figureSurface.chromePx.pad + BP.figureSurface.chromePx.border);
+    const base = o.fsPlotRung ? spanPx(surface, ladderCols(surface, o.fsPlotRung, L.spine.span)) : spanPx(surface, n);
+    const box = await boxFor(fx.figure, o.paintAt || (base - CH));
+    solvedBox = `${Math.round(box.w)}x${Math.round(box.h)}`;
     const html = skin(box.w, box.h, box.html);
     plain = plain.split(`{{FIG:${fx.figure}}}`).join(html);
     proof = proof.split(`{{FIG:${fx.figure}}}`).join(html);
@@ -941,6 +1048,7 @@ ${APP_CSS}
 --cp-gut:${g.gutter}px;--cp-measure:${GRID.readingMeasure.px}px;--cp-pad-h:${surface === 'phone' ? 360 : 480}px;--cp-pane-h:460px;}
 ${CSS_KIT}
 ${PROOF_CSS}
+${FIGURE_SURFACE_CSS}
 ${REGION_HUG_CSS}
 ${gridCSS(sd, surface, L, pid)}
 ${o.injectCSS || ''}
@@ -957,7 +1065,8 @@ ${o.injectCSS || ''}
 <span><b class="k2"></b>2 · blueprint rhythm — a named step</span>
 <span><b class="k3"></b>3 · region (block owns what is inside it)</span>
 <span><b class="k4"></b>4 · unclaimed composition space — inside an active row, invalid</span>
-<span><b class="k5"></b>5 · pair imbalance — measured on the row label</span></div>${proof}
+<span><b class="k5"></b>5 · pair imbalance — measured on the row label</span>
+<span><b class="k6"></b>6 · internal figure-surface space — inside an OWNED media surface, valid</span></div>${proof}
 </div></body></html>`;
 
   const pg = await browser.newPage({ viewport: { width: g.width + 2 * g.pad, height: 900 }, deviceScaleFactor: 1 });
@@ -969,6 +1078,12 @@ ${o.injectCSS || ''}
     await document.fonts.ready;
   });
   await pg.waitForTimeout(180);
+  /* a named DOM mutation, for the counterexamples that CSS cannot express */
+  if (o.injectDOM === 'moveCaptionOut') await pg.evaluate(() => {
+    const region = document.querySelector('[data-cp-host] [data-media-slot]');
+    const cap = region && region.querySelector('[data-fs-cap]');
+    if (cap) region.appendChild(cap);
+  });
   if (errs.length) throw new BlueprintError(`${name}: ${errs[0]}`);
 
   const m = await pg.evaluate(measureComposition);
@@ -998,7 +1113,43 @@ ${o.injectCSS || ''}
     if (!fit.ok) J.fails.push([x.fit === 'contain' ? 'H6' : 'H5', `${pid}/${bid}/${surface}: ${fit.verdict}`]);
   }
 
-  await pg.evaluate(drawProof, { host: m.host, cols: m.cols, gaps: m.gaps, rows: J.boards, spine: J.spine });
+  /* ── THE FIGURE SURFACE, JUDGED ───────────────────────────────────────────────────────────────*/
+  const FS = await pg.evaluate(measureFigureSurface);
+  let fsLines = [];
+  if (FS && FS.surface) {
+    const R = FS.region, S2 = FS.surface;
+    /* H12 · A SURFACE CANNOT CLAIM LAYOUT OWNERSHIP. Its outer box stays completely inside the region
+       the blueprint assigned. A border is presentation; it never reaches a column nobody owns. */
+    const over = { l: +(R.x - S2.x).toFixed(2), r: +((S2.x + S2.w) - (R.x + R.w)).toFixed(2),
+      t: +(R.y - S2.y).toFixed(2), b: +((S2.y + S2.h) - (R.y + R.h)).toFixed(2) };
+    const escaped = Object.entries(over).filter(([, v]) => v > TOLPX);
+    if (escaped.length || !FS.surfaceInRegion)
+      J.fails.push(['H12', `${pid}/${bid}/${surface}: the figure surface reaches past its media region `
+        + `(${escaped.map(([k, v]) => `${k} +${v}px`).join(', ') || 'not a descendant of it'}). A surface is `
+        + `presentation of an already valid region; it does not own neighbouring grid columns`]);
+    /* H13 · MEDIA PAYLOAD CONTAINMENT. "One visual object" is a containment claim, so it is checked. */
+    const missing = [];
+    if (!FS.plotInSurface) missing.push('the plot');
+    if (FS.caption && !FS.captionInSurface) missing.push('the caption');
+    if (FS.controlsInSurface === false) missing.push(`${FS.controlCount} media-local control(s)`);
+    if (missing.length)
+      J.fails.push(['H13', `${pid}/${bid}/${surface}: ${missing.join(', ')} sit outside the figure surface — `
+        + `the figure, its caption and its media-local controls are ONE object or the surface is decoration`]);
+    const inner = FS.plot ? +(S2.w - FS.plot.w).toFixed(2) : null;
+    fsLines = [
+      ['FIGURE SURFACE', `treatment ${FS.treatment} · ${Math.round(S2.w)}×${Math.round(S2.h)}px at x=${Math.round(S2.x)}`],
+      ['1 REGION BOUNDARY', `${Math.round(R.w)}px at x=${Math.round(R.x)} — the columns the blueprint assigned`],
+      ['2 SURFACE BOUNDARY', `${Math.round(S2.w)}px — inside the region by ${over.l}px / ${over.r}px`
+        + (escaped.length ? ' ✗' : ' ✓')],
+      ['3 PLOT BOUNDARY', FS.plot ? `${Math.round(FS.plot.w)}×${Math.round(FS.plot.h)}px — the mathematics, untouched` : '—'],
+      ['6 INTERNAL SURFACE SPACE', inner == null ? '—' : `${inner}px inside an OWNED surface — intentional, valid, `
+        + `and not the same thing as an unowned column in an active row`],
+      ['PAYLOAD', `plot ${FS.plotInSurface ? '✓' : '✗'} · caption ${FS.caption ? (FS.captionInSurface ? '✓' : '✗') : '—'} `
+        + `· ${FS.controlCount} local control(s) ${FS.controlsInSurface === null ? '—' : FS.controlsInSurface ? '✓' : '✗'}`],
+    ];
+  }
+
+  await pg.evaluate(drawProof, { host: m.host, cols: m.cols, gaps: m.gaps, rows: J.boards, spine: J.spine, fs: FS });
 
   /* the verdict panel, printed from the same numbers */
   const V = [
@@ -1023,6 +1174,7 @@ ${o.injectCSS || ''}
       .map((f) => `${b.id} col ${f.from}–${f.to} = ${f.w}px`)).join(' · ') || 'none'],
   ];
   if (mediaLines) for (const l of mediaLines.slice(3, 9)) V.push(l);
+  for (const l of fsLines) V.push(l);
   V.push(['EVERY WHITE HAS AN OWNER', J.whitespaceOwned && mediaOk ? 'YES' : 'NO']);
   for (const n of J.notes) V.push(['SIGNAL', n]);
   for (const [c, f] of J.fails) V.push([c + ' ✗', f]);
@@ -1049,7 +1201,16 @@ ${o.injectCSS || ''}
       h: b.h, air: b.air, imbalance: b.imbalance })),
     resolve: Object.fromEntries(Object.entries(resolve).map(([k, v]) => [k, v.should])),
     rhythm: J.rhythm, slotWidths: J.boards.flatMap((b) => b.kids.map((k) => `${k.name}=${Math.round(k.w)}`)),
-    whitespaceOwned: J.whitespaceOwned, mediaOk, mediaVerdict, fails: J.fails };
+    whitespaceOwned: J.whitespaceOwned, mediaOk, mediaVerdict, fails: J.fails,
+    fs: fsMode,
+    /* WHAT MUST NOT MOVE WHEN THE SURFACE IS TURNED ON (H15) and WHAT MUST NOT CHANGE ABOUT THE
+       MATHEMATICS (H14). Recorded per render so the two can be compared across fs modes. */
+    structure: `${bid}|${L.spine.align}${L.spine.span}|` + L.rows.map((r) =>
+      `${r.id}:${r.mode}:${r.rung || r.split}:${r.cols || ''}:${r.vertical}`).join(','),
+    plotBox: FS && FS.plot ? `${Math.round(FS.plot.w)}x${Math.round(FS.plot.h)}` : null,
+    solvedBox,
+    unitScale: mm.length && mm[0].scale ? `${mm[0].scale.x}/${mm[0].scale.y}` : null,
+    surfaceBox: FS && FS.surface ? `${Math.round(FS.surface.w)}x${Math.round(FS.surface.h)}` : null };
   REPORT.push(rec);
   if (!o.quiet) console.log(`  ${name.padEnd(56)} ${J.fails.length ? `${J.fails.length} FAIL` : 'ok  '} `
     + `${J.boards.map((b) => `${b.mode[0]}${Math.round(b.h)}`).join(' ')}`);
@@ -1057,35 +1218,74 @@ ${o.injectCSS || ''}
 }
 
 /* ── THE RUN ─────────────────────────────────────────────────────────────────────────────────────
-   The proofs this pass had to show, and nothing else. Two layers are being demonstrated together:
-   STRUCTURAL VALIDITY (does every part of an active row have an owner?) and COMPOSITION FITNESS
-   (is the approved blueprint using the surface it was given?). */
+   ONE QUESTION THIS PASS: does a semantic figure surface give the successful blueprints the visual
+   separation they are missing, while leaving every structural rejection intact? Nothing about the
+   grid, the ladder, the spine or the pairing rules changes. */
+/* THE STRUCTURAL PROOFS FROM THE PREVIOUS PASS, KEPT LIVE. They are re-rendered every run rather
+   than left behind as stale files, so one command reproduces the whole directory. */
 const SCOPE = [
   { pid: 'visual.explanation', surface: 'desktop', bid: 'spine-narrow', key: 'portrait', klass: 'portrait',
-    name: '1__portrait-media-solo-expanded',
-    note: 'GOLDEN · one region, realised at `expanded`' },
+    name: '1__portrait-media-solo-expanded' },
   { pid: 'worked.single', surface: 'desktop', bid: 'flow', key: 'flow', klass: null,
-    name: '2__prose-alone-stays-at-the-measure',
-    note: 'every row solo PROSE — the ladder stops at the measure' },
+    name: '2__prose-alone-stays-at-the-measure' },
   { pid: 'visual.explanation', surface: 'desktop', bid: 'stage-full', key: 'wide', klass: 'wide',
-    name: '3__wide-media-solo-full',
-    note: 'one region, realised at `full`' },
+    name: '3__wide-media-solo-full' },
   { pid: 'worked.paired', surface: 'desktop', bid: 'cases-6-6', key: 'any', klass: null,
-    name: '4__worked-paired-unchanged', note: 'GOLDEN · unchanged — no solo row to reclaim' },
+    name: '4__worked-paired-unchanged' },
   { pid: 'practice.workbook', surface: 'desktop', bid: 'workbook-5-7', key: 'any', klass: 'portrait',
-    name: '5__practice-workbook-unchanged', note: 'unchanged — designed 5/7 relationships, not solo rows' },
+    name: '5__practice-workbook-unchanged' },
 ].filter((x) => (!ONLY || ONLY.has(x.pid)) && (!SURF || SURF.has(x.surface)));
-
-console.log(`\nproofs — ${SCOPE.length} composition(s) in scope`);
+console.log(`\nstructural proofs — ${SCOPE.length} composition(s), surface off`);
 for (const x of SCOPE) await board(x.pid, x.surface, x.bid, { klass: x.klass, selectKey: x.key, name: x.name });
-
-console.log('\nadversarial — the same compositions with twice the prose');
 for (const x of SCOPE)
   await board(x.pid, x.surface, x.bid, { klass: x.klass, selectKey: x.key, adversarial: true, noShot: true,
     quiet: true, tag: 'adv', name: x.name + '__adv' });
 
+const FSCASES = [
+  { tag: 'A1', pid: 'visual.explanation', bid: 'spine-narrow', key: 'portrait', klass: 'portrait', fs: 'A',
+    name: 'A1__portrait-expanded__surface-A__plot-centred',
+    why: 'TREATMENT A. The surface takes the media region — the eight columns the solo ladder realised — and the '
+      + 'plane keeps its own solved geometry, centred inside it. The width left over is INTERNAL FIGURE-SURFACE '
+      + 'SPACE: it is inside an object the composition already owns, which is the whole difference from an '
+      + 'unowned column in an active row.' },
+  { tag: 'A2', pid: 'visual.explanation', bid: 'spine-narrow', key: 'portrait', klass: 'portrait', fs: 'B',
+    forceFit: 'contain', fsPlotRung: 'spine',
+    name: 'A2__portrait-expanded__surface-B__shrink-wrapped',
+    why: 'TREATMENT B. The surface shrink-wraps the plane and the media region owns the space either side of it. '
+      + 'Note what this costs: the region no longer reads as deliberately occupied, and the slot has to become '
+      + '`contain` with a declared anchor, because under `fill` a surface narrower than its region is exactly the '
+      + 'defect the contract exists to catch.' },
+  { tag: 'B1', pid: 'visual.explanation', bid: 'stage-full', key: 'wide', klass: 'wide', fs: 'A',
+    name: 'B1__wide-full__surface-A__plot-centred', why: 'TREATMENT A on the full-row stage.' },
+  { tag: 'B2', pid: 'visual.explanation', bid: 'stage-full', key: 'wide', klass: 'wide', fs: 'B',
+    forceFit: 'contain', fsPlotRung: 'wide', name: 'B2__wide-full__surface-B__shrink-wrapped', why: 'TREATMENT B on the full-row stage.' },
+  { tag: 'E', pid: 'practice.workbook', bid: 'workbook-5-7', key: 'any', klass: 'portrait', fs: 'A',
+    name: 'E__practice-workbook__surface-A',
+    why: 'STRUCTURAL BEHAVIOUR UNCHANGED. The reference is a media region inside a designed 5/7 workspace '
+      + 'relationship; the surface groups it and the ladder still does not touch the row.' },
+  { tag: 'F', pid: 'worked.paired', bid: 'cases-6-6', key: 'any', klass: null, fs: 'off',
+    name: 'F__worked-paired__no-surface',
+    why: 'NO FIGURE SURFACE. Two related TEXTUAL regions already read correctly. This is a media/visual '
+      + 'semantic boundary, not a general "put everything in cards" direction.' },
+];
+console.log(`\nfigure-surface proofs — ${FSCASES.length} board(s)`);
+for (const x of FSCASES)
+  await board(x.pid, 'desktop', x.bid, { klass: x.klass, selectKey: x.key, fs: x.fs, forceFit: x.forceFit,
+    fsPlotRung: x.fsPlotRung, name: x.name, why: x.why, tag: x.tag });
+
+/* the baselines the invariance controls compare against: the same pages with the surface OFF */
+console.log('\nbaselines — the same pages with the surface off');
+for (const x of FSCASES.filter((q) => q.fs !== 'off'))
+  await board(x.pid, 'desktop', x.bid, { klass: x.klass, selectKey: x.key, fs: 'off', name: x.name + '__off',
+    noShot: true, quiet: true, tag: x.tag + 'off' });
+
+/* the adversarial payload still has to move nothing */
+for (const x of FSCASES)
+  await board(x.pid, 'desktop', x.bid, { klass: x.klass, selectKey: x.key, fs: x.fs, forceFit: x.forceFit,
+    fsPlotRung: x.fsPlotRung, adversarial: true, noShot: true, quiet: true, name: x.name + '__adv', tag: x.tag + 'adv' });
+
 /* ── THE COUNTEREXAMPLES ─────────────────────────────────────────────────────────────────────────*/
-console.log('\ncounterexamples — each must fail, and fail for the stated reason');
+console.log('\ncounterexamples — a border must not make any of these valid');
 const drives = [];
 const drive = (id, control, rec) => {
   const got = rec.fails.map(([c]) => c);
@@ -1093,17 +1293,32 @@ const drive = (id, control, rec) => {
   console.log(`  ${got.includes(control) ? '✓' : '✗ DID NOT FIRE'}  ${id.padEnd(30)} ${control} — ${got.join(',') || 'nothing fired'}`);
 };
 
-/* NEW · H11 — THE PAIRED PROOF. The same blueprint, the same region, held back one rung. Structurally
-   perfect, and under-realised. This is the board that was previously shipped as correct. */
+/* C · THE HALF-ROW, WITH THE SURFACE ON. A border does not buy a column. */
+drive('half-row-with-a-surface', 'H2', await board('visual.explanation', 'desktop', 'spine-narrow',
+  { klass: 'portrait', counterexample: true, tag: 'C', fs: 'A', name: 'C__half-row-with-a-surface__still-fails-H2',
+    allowOrphans: true,
+    rows: [{ id: 'media', horizontal: { mode: 'paired', split: '6/6', regions: ['media', null], origin: 'top',
+        imbalanceMax: 9999, pairReason: 'the counterexample' }, vertical: 'hug', media: true, gapAfter: 'section' },
+      { id: 'interpretation', horizontal: { mode: 'solo', spans: ['spine'], preferred: 'spine' }, vertical: 'hug', region: 'interpretation', gapAfter: 'normal' },
+      { id: 'support', horizontal: { mode: 'solo', spans: ['spine'], preferred: 'spine' }, vertical: 'hug', region: 'support' }],
+    why: 'THE SAME HALF-ROW, NOW WITH A FIGURE SURFACE AROUND THE GRAPH. It still fails, and it must: the '
+      + 'surface is presentation of an already valid region and it does not own neighbouring grid columns. '
+      + 'Columns 7–12 of an ACTIVE ROW are declared by nothing, and a border cannot buy them.' }));
+
+/* D · THE 5/7 PAIR, WITH THE SURFACE ON. A container does not fix a relationship. */
+drive('side-study-with-a-surface', 'H4', await board('visual.explanation', 'desktop', 'side-study',
+  { klass: 'portrait', counterexample: true, tag: 'D', fs: 'A', name: 'D__side-study-with-a-surface__still-fails-H4',
+    why: 'THE SAME 5/7 PAIR, NOW WITH A FIGURE SURFACE. It still fails at ~535px of termination difference. A '
+      + 'media container does not fix that relationship, and the surface must not be used to conceal it: the '
+      + 'graph is not widened, the prose is not stretched, and H4 still speaks.' }));
+
+/* THE STRUCTURAL COUNTEREXAMPLES, KEPT LIVE AND WITHOUT A SURFACE — so C and D above can be read
+   against them. */
 drive('under-realised-solo-span', 'H11', await board('visual.explanation', 'desktop', 'spine-narrow',
   { klass: 'portrait', counterexample: true, tag: 'ce11', name: '6__counterexample__under-realised-solo-span',
     forceSpan: { media: 'spine' },
-    why: 'STRUCTURALLY PERFECT AND UNDER-REALISED. Every column has an owner, the axis is one centre line, '
-      + 'every step measures itself — and the only substantive object on the page is holding at six columns '
-      + 'when the blueprint prefers eight and eight is feasible. Valid whitespace is not the same as good use '
-      + 'of space. This is the page the previous pass shipped as correct.' }));
-
-/* RETAINED · H2 — the canonical must-never-happen-again. */
+    why: 'STRUCTURALLY PERFECT AND UNDER-REALISED. Every column has an owner and the only substantive object '
+      + 'is holding at six columns when the blueprint prefers eight and eight is feasible.' }));
 drive('unowned-half-row', 'H2', await board('visual.explanation', 'desktop', 'spine-narrow',
   { klass: 'portrait', counterexample: true, tag: 'ce2', name: '7__counterexample__unowned-half-row',
     allowOrphans: true,
@@ -1111,39 +1326,20 @@ drive('unowned-half-row', 'H2', await board('visual.explanation', 'desktop', 'sp
         imbalanceMax: 9999, pairReason: 'the counterexample' }, vertical: 'hug', media: true, gapAfter: 'section' },
       { id: 'interpretation', horizontal: { mode: 'solo', spans: ['spine'], preferred: 'spine' }, vertical: 'hug', region: 'interpretation', gapAfter: 'normal' },
       { id: 'support', horizontal: { mode: 'solo', spans: ['spine'], preferred: 'spine' }, vertical: 'hug', region: 'support' }],
-    why: 'THE CANONICAL MUST-NEVER-HAPPEN-AGAIN, AND THE REASON H11 IS A SECOND LAYER RATHER THAN A WIDER '
-      + 'LADDER. Six columns occupied at the left of a twelve-column ACTIVE ROW, the other six declared by '
-      + 'nothing. Widening the object would not make this page legal; the defect is ownership, not fitness.' }));
-
-/* RETAINED · H4 — the row owns all twelve columns and the page is still wrong. */
+    why: 'THE CANONICAL MUST-NEVER-HAPPEN-AGAIN, without a surface. Compare board C.' }));
 drive('side-study-imbalance', 'H4', await board('visual.explanation', 'desktop', 'side-study',
   { klass: 'portrait', counterexample: true, tag: 'ce6', name: '8__counterexample__side-study-imbalance',
-    why: 'STILL FAILS, AND A WIDER GRAPH WOULD NOT HAVE SAVED IT. Every column of this row is owned and the '
-      + 'two paired objects still terminate ~535px apart. Ownership, fitness and termination are three '
-      + 'different questions; this one fails the third.' }));
+    why: 'Every column owned and the siblings still terminate ~535px apart, without a surface. Compare board D.' }));
 
-/* DRIVES · not photographed; each exists so a control is known to be able to fail. */
-drive('prose-past-the-measure', 'validate-runtime', { fails: (() => {
-  try {
-    layout('worked.single', 'desktop', 'flow', { realised: { intro: 'full' } });
-    return [];
-  } catch (e) { return [['validate-runtime', e.message]]; }
-})() });
-drive('stretched-hug-row', 'H3', await board('visual.explanation', 'desktop', 'spine-narrow',
-  { klass: 'portrait', counterexample: true, tag: 'ce4', noShot: true, quiet: true, name: 'drive__stretched-hug-row',
-    injectCSS: `[data-sd*="ce4"] > [data-rowprobe="interpretation"]{height:420px!important;}` }));
-drive('padding-at-the-exterior', 'H10', await board('worked.paired', 'desktop', 'cases-6-6',
-  { counterexample: true, tag: 'ce8', noShot: true, quiet: true, name: 'drive__padding-at-the-exterior',
-    injectCSS: `[data-sd*="ce8"] > [data-slot="intro"]{padding-bottom:28px;}` }));
-drive('no-alignment-origin', 'H4', await board('worked.paired', 'desktop', 'cases-6-6',
-  { counterexample: true, tag: 'ce5', noShot: true, quiet: true, name: 'drive__no-alignment-origin',
-    injectCSS: `[data-sd*="ce5"] > [data-slot="workedB"]{margin-top:64px;}` }));
-drive('anchorless-contain', 'H6', await board('visual.explanation', 'desktop', 'spine-reading',
-  { klass: 'balanced', counterexample: true, tag: 'ce7', noShot: true, quiet: true,
-    name: 'drive__anchorless-contain', forceFit: 'contain', dropAnchor: true }));
-drive('two-axes', 'H1', await board('visual.explanation', 'desktop', 'spine-narrow',
-  { klass: 'portrait', counterexample: true, tag: 'ce9', noShot: true, quiet: true, name: 'drive__two-axes',
-    injectCSS: `[data-sd*="ce9"] > [data-slot="support"]{margin-left:-120px;}` }));
+/* DRIVES · each new control, shown able to fail. */
+drive('surface-claims-a-column', 'H12', await board('visual.explanation', 'desktop', 'spine-narrow',
+  { klass: 'portrait', counterexample: true, tag: 'ce12', fs: 'A', noShot: true, quiet: true,
+    name: 'drive__surface-claims-a-column',
+    injectCSS: `[data-sd*="ce12"] [data-figure-surface]{width:calc(100% + 180px)!important;}` }));
+drive('caption-outside-the-surface', 'H13', await board('visual.explanation', 'desktop', 'spine-narrow',
+  { klass: 'portrait', counterexample: true, tag: 'ce13', fs: 'A', noShot: true, quiet: true,
+    name: 'drive__caption-outside-the-surface',
+    injectDOM: 'moveCaptionOut' }));
 
 /* ── THE CONTROLS ────────────────────────────────────────────────────────────────────────────────
    Written as pure functions of the records so each can be run twice: once on the atlas, where it
@@ -1185,6 +1381,65 @@ const H8 = (recs) => recs.filter((r) => !r.sequence).flatMap((r) => {
 const fails = [];
 const check = (cond, msg) => { if (!cond) fails.push(msg); };
 
+/* ── H14 · PLOT GEOMETRY PRESERVED · H15 · LAYOUT INVARIANCE ─────────────────────────────────────
+   Written as pure functions of the records so each can be run twice: once on the atlas, where it
+   must stay silent, and once on a doctored set, where it must speak. Turning a presentation
+   primitive on may change NOTHING about the mathematics or the composition. */
+const fsKey = (r) => `${r.pattern}|${r.blueprint}|${r.klass}|${r.adversarial ? 'adv' : 'plain'}`;
+const H14 = (recs) => {
+  /* WHAT MUST NOT CHANGE IS THE MATHEMATICS, NOT THE PIXEL SIZE. A plane given less room solves
+     smaller at the same equal unit scale and the same domain, exactly as it does at any other width.
+     What is forbidden is a plane STRETCHED OR SQUEEZED to fit its container: unequal units, or an
+     aspect that no longer matches the authored domain. */
+  const off = new Map(recs.filter((r) => r.fs === 'off').map((r) => [fsKey(r), r]));
+  const out = [], notes = [];
+  let compared = 0;
+  const ratio = (u) => { if (!u) return null; const [x, y] = u.split('/').map(Number); return +(x / y).toFixed(4); };
+  const box = (b) => { if (!b) return null; const [w, h] = b.split('x').map(Number); return { w, h, a: +(h / w).toFixed(4) }; };
+  for (const r of recs.filter((x) => x.fs && x.fs !== 'off')) {
+    const b = off.get(fsKey(r)); if (!b) continue;
+    if (!r.unitScale || !b.unitScale) continue;
+    compared++;
+    const ru = ratio(r.unitScale), bu = ratio(b.unitScale);
+    if (Math.abs(ru - 1) > 0.01)
+      out.push(`${fsKey(r)} [${r.fs}]: with the surface on the plane is painted at ${r.unitScale} px per unit — `
+        + `one x-unit and one y-unit are not the same length. A surface may not squeeze the mathematics to fit itself`);
+    if (Math.abs(bu - 1) > 0.01)
+      out.push(`${fsKey(r)}: the baseline plane is already distorted at ${b.unitScale} px per unit`);
+    /* THE PLANE IS PAINTED AT THE SIZE IT WAS SOLVED FOR. This is the direct statement of "the
+       surface did not squeeze it", and it catches the defect without comparing two roundings to each
+       other: a plane solved at 760 and then clamped to 722 by a container fails here, a plane SOLVED
+       at 722 does not. The solver re-rounds the box chrome at a different width, so comparing the two
+       renders' aspects to each other was the wrong test and was mis-calibrated at 1.8%. */
+    for (const q of [r, b]) {
+      if (!q.plotBox || !q.solvedBox) continue;
+      const pb = box(q.plotBox), sb = box(q.solvedBox);
+      if (Math.abs(pb.w - sb.w) > TOLPX || Math.abs(pb.h - sb.h) > TOLPX)
+        out.push(`${fsKey(r)} [${q.fs}]: the plane was solved ${q.solvedBox} and is painted ${q.plotBox} — `
+          + `something clamped the mathematics after it was solved`);
+    }
+    const rb = box(r.plotBox), bb = box(b.plotBox);
+    if (rb && bb && rb.w !== bb.w)
+      notes.push(`${fsKey(r)} [${r.fs}]: the plane is ${bb.w}px without the surface and ${rb.w}px inside it `
+        + `— ${bb.w - rb.w}px is the surface's own chrome, solved for rather than clamped`);
+  }
+  return { out, compared, notes };
+};
+const H15 = (recs) => {
+  const off = new Map(recs.filter((r) => r.fs === 'off').map((r) => [fsKey(r), r]));
+  const out = [];
+  let compared = 0;
+  for (const r of recs.filter((x) => x.fs && x.fs !== 'off')) {
+    const b = off.get(fsKey(r)); if (!b) continue;
+    compared++;
+    if (r.structure !== b.structure)
+      out.push(`${fsKey(r)} [${r.fs}]: turning the surface on changed the composition — `
+        + `${b.structure} → ${r.structure}. Blueprint, spine, cardinality, rung and split are decided before `
+        + `the surface exists and the surface may not reach back`);
+  }
+  return { out, compared };
+};
+
 /* H1–H6 are judged per board; here they are simply required to have stayed silent on every approved
    composition, and to have spoken on every counterexample. */
 for (const r of REAL) for (const [c, f] of r.fails) fails.push(`${c} · ${f}`);
@@ -1200,6 +1455,26 @@ for (const r of REAL) for (const [c, f] of r.fails) fails.push(`${c} · ${f}`);
   const dr = H7(doctored);
   drives.push({ id: 'prose-chose-the-page', control: 'H7', hit: dr.out.length > 0, got: dr.out.slice(0, 1) });
   console.log(`  ${dr.out.length ? '✓' : '✗ DID NOT FIRE'}  prose-chose-the-page        H7`);
+}
+{
+  const h14 = H14(REAL);
+  for (const f of h14.out) fails.push(`H14 · ${f}`);
+  check(h14.compared > 0, 'H14 · no surface/no-surface pair was compared, so the geometry control is untested');
+  console.log(`control H14 · equal unit scale and the authored domain held across ${h14.compared} surface/no-surface pair(s)`);
+  for (const n of [...new Set(h14.notes)]) console.log(`    · ${n}`);
+  const base14 = REAL.find((r) => r.fs === 'off' && r.unitScale);
+  const d14 = H14([base14, { ...base14, fs: 'A', unitScale: '50/70' }]);
+  drives.push({ id: 'surface-stretched-the-plane', control: 'H14', hit: d14.out.length > 0, got: d14.out.slice(0, 1) });
+  console.log(`  ${d14.out.length ? '✓' : '✗ DID NOT FIRE'}  surface-stretched-the-plane   H14`);
+
+  const h15 = H15(REAL);
+  for (const f of h15.out) fails.push(`H15 · ${f}`);
+  check(h15.compared > 0, 'H15 · no surface/no-surface pair was compared, so the invariance control is untested');
+  console.log(`control H15 · the composition was identical across ${h15.compared} surface/no-surface pair(s)`);
+  const base15 = REAL.find((r) => r.fs === 'off');
+  const d15 = H15([base15, { ...base15, fs: 'A', structure: 'something-else' }]);
+  drives.push({ id: 'surface-moved-the-layout', control: 'H15', hit: d15.out.length > 0, got: d15.out.slice(0, 1) });
+  console.log(`  ${d15.out.length ? '✓' : '✗ DID NOT FIRE'}  surface-moved-the-layout      H15`);
 }
 {
   const h8 = H8(REAL);

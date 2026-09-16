@@ -118,6 +118,57 @@
     "visual.explanation/spine-narrow",
     "worked.paired/cases-6-6"
   ],
+  "figureSurface": {
+    "_": "A SEMANTIC PRESENTATION PRIMITIVE OWNED BY THE MEDIA REGION, PROPOSED AND NOT ENABLED. It is applied AFTER layout has resolved and it decides nothing about width or composition. Both treatments below are rendered for comparison; neither is frozen.",
+    "enabled": false,
+    "proposed": true,
+    "theProblem": "Both successful pages are structurally correct and neither says clearly enough that the graph, its caption and its graph-local controls are ONE VISUAL OBJECT, separate from the prose that interprets it. The separation exists in the blueprint and is not obvious in the courseware.",
+    "whereItSits": "blueprint/grid → row cardinality → solo rung / paired / workspace → realised media geometry → figureSurface { figure · local controls · caption }. It is the LAST step and it is presentation only.",
+    "isNot": [
+      "a resolver",
+      "an occupancy mechanism",
+      "a new grid owner",
+      "a way to fill dead space",
+      "permission to stretch a media object",
+      "permission to convert a bad pair into a good one"
+    ],
+    "threeBoundaries": {
+      "_": "KEPT SEPARATE ON PURPOSE. Collapsing them into one box is how a border would start deciding composition.",
+      "1 region": "the grid columns the blueprint assigned. Decides where the object may exist.",
+      "2 surface": "visually groups the media, its caption and its media-local controls.",
+      "3 plot": "the mathematical coordinate plane itself, which the surface never touches."
+    },
+    "internalSpace": "Width left over INSIDE an owned figure surface is intentional internal space and is valid. It is not the old defect: empty grid columns in an ACTIVE ROW are unowned composition space and stay invalid. That is the whole difference, and the atlas classifies them separately.",
+    "chromePx": {
+      "pad": 18,
+      "border": 1,
+      "_": "DECLARED, BECAUSE THE PLANE IS SOLVED FOR THE WIDTH AVAILABLE INSIDE THE SURFACE. The first build solved it for the REGION width and then let the surface clamp it, which squeezed the plane to 62.57px per x-unit against 65.94 per y-unit. H14 caught it on the first run. A surface never stretches or squeezes the mathematics to fit itself; the mathematics is solved for the room it actually has."
+    },
+    "chrome": {
+      "border": "1px neutral",
+      "radius": "4px",
+      "surface": "white on a very slightly neutral page",
+      "padding": "18px 18px 14px",
+      "shadow": "none",
+      "_": "A textbook figure or an interactive plate, not a dashboard card. The plotting area stays clean."
+    },
+    "treatments": {
+      "A": {
+        "title": "centred plot inside a full-width figure surface",
+        "surface": "the media region width",
+        "plot": "its own solved width, centred",
+        "fit": "fill — the SURFACE consumes the region and the plane keeps its geometry inside it"
+      },
+      "B": {
+        "title": "surface shrink-wrapped to the mathematical plane",
+        "surface": "the plane width plus chrome",
+        "plot": "solved at the row's NEXT RUNG DOWN",
+        "fit": "contain — the surface is the object and the region owns the space either side of it",
+        "_": "A surface that hugs a plane solved for the region width is just treatment A, so B is only a real alternative when the plane keeps a NARROWER correct geometry: it is solved at the other rung the row approves, and the surface wraps that."
+      }
+    },
+    "expectation": "A is expected to read better, because the media region then reads as deliberately occupied while the plane keeps its correct geometry. MEASURED AND RENDERED BOTH BEFORE FREEZING."
+  },
   "patterns": {
     "visual.explanation": {
       "intent": "One primary visual and the reading of it, where the READING carries the teaching.",
