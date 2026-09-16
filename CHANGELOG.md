@@ -8,6 +8,30 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **`media.full` expressed as composition blueprints, and a defect found in the shipping catalogue**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change). Two
+  blueprints on a **left-edge spine** — `plate-wide` (`wide` 10, portrait and balanced) and
+  `plate-full` (`full` 12, landscape, wide and panoramic) — with the reading inset to the measure
+  beneath on the same left edge. The left-edge axis is what distinguishes the pattern from
+  `visual.explanation` compositionally rather than only semantically.
+  - A pattern now declares **`admits: {roles, classes}`** and `validate` checks the select table
+    against it in both directions. `media.full` admits one role and refuses `tall` outright: the
+    pattern is defined by the plane crossing the reading measure, and a tall plane cannot cross it
+    without becoming enormous, so a tall object authored here is an authoring error whose fix is a
+    different pattern. A missing select cell is no longer ambiguous between a declared refusal and a
+    forgotten one.
+  - **Defect reported:** `media.full/centred` in the shipping catalogue sets the media across columns
+    3–10 (centred) over a reading across 1–8 (left edge) — two alignment origins on one surface. Each
+    row is fine alone; the pair is not. It is **recorded rather than rendered**, because a blueprint
+    declares one spine per surface and no rung on a centred axis resolves to 1–8, so the composition
+    is inexpressible under the contract. A first attempt to render it as `paired` rows with a null
+    sibling fired H2 and H4 — both artefacts of that encoding, not evidence about the design — and was
+    removed. A counterexample that fails for the wrong reason proves nothing.
+  - A media span family is again allowed more than one rung, and says why: with the ROW pinned to one
+    rung there is nothing for an aspect ratio to climb, so the family is the union of what approved
+    blueprints use for that class and role **across patterns**. `media.landscape.primary` holds `wide`
+    and `full` because `visual.explanation` gives a landscape primary ten columns and `media.full`
+    gives it twelve, and both are approved compositions of their own pattern.
 - **The `tall → portrait` boundary moved from 0.60 to 0.70, and geometry calibration stopped**
   (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change). At 0.60 an
   object could become *slightly less tall* and be promoted from the eight-column tall composition to

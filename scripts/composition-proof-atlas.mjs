@@ -133,9 +133,33 @@ const soloCols = (surface, align, cols) => {
 function validateBlueprints() {
   const STEPS = BP.rhythm.steps;
   for (const [pid, P] of Object.entries(BP.patterns)) {
+    /* WHAT A PATTERN ADMITS, CHECKED AGAINST WHAT IT SELECTS. A select table with a hole in it is
+       ambiguous between "this pattern refuses that combination" and "somebody forgot a cell", and the
+       two want opposite responses. A pattern that declares `admits` must select exactly what it
+       declares — every admitted pair present, nothing else — so a refusal is a sentence someone wrote
+       and a gap is a failure. `media.full` uses this to refuse `tall` outright: its defining property
+       is the plane crossing the reading measure, and a tall plane cannot cross it without becoming
+       enormous, so the correct fix for the author is a different PATTERN, not a narrower rung. */
+    if (P.admits) {
+      const want = new Set(P.admits.roles.flatMap((r) => P.admits.classes.map((k) => `${r}/${k}`)));
+      for (const [surface, tbl] of Object.entries(P.select)) {
+        const got = new Set(selectEntries(tbl).map(([k]) => k));
+        for (const k of want) if (!got.has(k)) throw new BlueprintError(`${pid}/${surface}: admits `
+          + `\`${k}\` and selects no blueprint for it — an admitted combination with no composition is a `
+          + `CATALOGUE GAP, not a terminal state`);
+        for (const k of got) if (!want.has(k)) throw new BlueprintError(`${pid}/${surface}: selects a `
+          + `blueprint for \`${k}\`, which it does not admit (${[...want].join(', ')}) — a pattern says what `
+          + `it accepts once, and the table may not quietly widen it`);
+      }
+    }
     const names = new Set(slotsOf(pid).map((s) => s.name));
     const all = { ...P.blueprints, ...(P.candidates || {}), ...(P.withdrawn || {}) };
     for (const [bid, B] of Object.entries(all)) {
+      /* A WITHDRAWN ENTRY MAY BE A RECORD RATHER THAN A DESIGN. `media.full/centred-two-origins` has no
+         rows because it CANNOT have them: the shipping subdesign it describes needs two alignment
+         origins on one surface, and a blueprint declares one spine. Writing rows for it would mean
+         faking the composition, and a counterexample that fails for the wrong reason proves nothing. */
+      if (!B.rows) continue;
       if (P.mediaSlot && Object.values(B.rows).some((rr) => rr.some((r) => r.media)) && !B.role)
         throw new BlueprintError(`${pid}/${bid}: carries media and declares no \`role\`. A presentation role `
           + `is AUTHORED — supporting, explanatory, primary or workspace — and a blueprint that does not say `
@@ -1381,6 +1405,11 @@ const SCOPE = [
     klass: 'portrait', name: 'S2__same-blueprint__tablet' },
   { pid: 'visual.explanation', surface: 'phone', bid: 'spine-narrow', key: 'explanatory/portrait',
     klass: 'portrait', name: 'S3__same-blueprint__phone' },
+  /* media.full — THE OBJECT IS THE PAGE. One left edge; the media breaks out to the right of it. */
+  { pid: 'media.full', surface: 'desktop', bid: 'plate-wide', key: 'primary/portrait',
+    klass: 'portrait', name: 'M1__media-full-PORTRAIT__wide-10col' },
+  { pid: 'media.full', surface: 'desktop', bid: 'plate-full', key: 'primary/wide',
+    klass: 'wide', name: 'M2__media-full-WIDE__full-12col' },
   { pid: 'worked.single', surface: 'desktop', bid: 'flow', key: 'flow', klass: null,
     name: '2__prose-alone-stays-at-the-measure' },
   { pid: 'worked.paired', surface: 'desktop', bid: 'cases-6-6', key: 'any', klass: null,
@@ -1419,8 +1448,8 @@ for (const fx of CAL_FIXTURES) {
       throw new BlueprintError(`${fx.id}: declared ${fx.wh}:1 sits either side of the ${fx.boundary} boundary `
         + `and should classify as \`${fx.expect}\`, but the declared bands put it in \`${fx.klass}\``);
     const bid = BP.patterns['visual.explanation'].select.desktop[role][fx.klass];
-    if (!bid) throw new BlueprintError(`select has no ${role}/${fx.klass} entry — every role must remain valid `
-      + `for every geometry, and a missing cell is a catalogue gap, not a terminal state`);
+    if (!bid) throw new BlueprintError(`visual.explanation selects nothing for ${role}/${fx.klass}, and it `
+      + `admits every role for every geometry — a missing cell is a catalogue gap, not a terminal state`);
     await board('visual.explanation', 'desktop', bid,
       { klass: fx.klass, selectKey: `${role}/${fx.klass}`, fs: 'A', fixture: fx, calibration: fx,
         tag: `cal${fx.shape}${role}`.replace(/\W/g, ''), noShot: !!fx.probe, quiet: !!fx.probe,

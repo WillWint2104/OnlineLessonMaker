@@ -392,6 +392,56 @@ principal object** — 956px of figure against a 760px reading — not by consum
 width stays where the geometry benefits from width: wide planes, timelines, wide diagrams,
 interactives, workspaces.
 
+## `media.full` — the object is the page
+
+The one pattern whose plane **crosses the reading measure**. In `visual.explanation` the reading
+teaches and the object illustrates; here the object teaches and the reading comments. Expressed with
+a **left-edge spine**, which is what distinguishes it compositionally rather than only semantically:
+one axis, and the media breaks out to the right of it.
+
+| class | blueprint | rung | media | reading |
+| --- | --- | --- | --- | --- |
+| `portrait` · `balanced` | `plate-wide` | `wide` 10 | 956 | 760, same left edge |
+| `landscape` · `wide` · `panoramic` | `plate-full` | `full` 12 | 1152 | 760, same left edge |
+
+The three wider classes converge here **by design** — they were separated in `visual.explanation`,
+and in the pattern whose whole point is full bleed there is nothing left to separate.
+
+### What a pattern *admits*
+
+`media.full` accepts **one role**. A supporting object on a page built around it is a contradiction,
+not a variant. It also **refuses `tall` outright**: the pattern is defined by the plane crossing the
+measure, and a tall plane cannot cross it without becoming enormous (1152 × 2359 at twelve columns),
+so the only rung it could take is the measure itself — at which point the pattern *is*
+`visual.explanation` with extra steps. A tall object authored into `media.full` is an authoring error
+with a correct fix: `visual.explanation` at `primary`, which has `stage-tall` for exactly this.
+
+So a pattern now declares `admits: {roles, classes}`, and `validate` checks the select table against
+it in both directions — every admitted pair must have a composition, and the table may not quietly
+widen beyond what was declared. **A missing cell is no longer ambiguous** between "this pattern
+refuses that combination" and "somebody forgot one"; the two want opposite responses.
+
+### A defect in the shipping catalogue
+
+`media.full/centred` (in `docs/atlas/composition/src/patterns.json`) sets the media across columns
+**3–10** — centred on the twelve-column grid — over an interpretation across **1–8** and a support
+across **1–6**, both anchored to the **left edge**. That is two alignment origins on one surface.
+
+Each row is fine alone: a solo row on a left-edge spine leaves *page margin* to its right, which is
+valid space #1, and nothing structural is wrong with either. What is wrong is the pair — the object
+centred on the page, the reading anchored left, the eye given two axes and neither winning. Exactly
+what the spine primitive was introduced to name, found in the shipping catalogue rather than invented
+for the atlas.
+
+**It is recorded, not rendered, and that is the finding.** A blueprint declares one spine per surface
+and `soloCols` resolves a rung against it, so on a centred axis an eight-column row is columns 3–10
+and *no rung resolves to 1–8*. The composition is **inexpressible** under the contract. A first
+attempt did render it, by writing the prose rows as `paired` with a null sibling to force them left —
+that fired H2 and H4, and both were artefacts of the encoding rather than evidence about the design.
+A counterexample that fails for the wrong reason proves nothing, so it was removed.
+
+Nothing here is wired into the shipping catalogue, so nothing is fixed by this pass. It is reported.
+
 ## The figure surface (treatment A)
 
 ```
