@@ -219,15 +219,17 @@
       "Geometry PARTICIPATES in blueprint selection — `presentationRole × geometryClass → named blueprint`, never `aspect ratio → calculated width`.",
       "`primary` cannot mean \"largest possible box\"; full-width portrait is rejected.",
       "supporting / explanatory / primary are genuinely different presentation INTENTS.",
-      "The geometry vocabulary is SIX CLASSES with declared boundaries — tall / portrait / balanced / landscape / wide / panoramic, read as width:height and half-open upward.",
+      "The geometry vocabulary is SIX CLASSES with declared boundaries — tall < 0.70 / portrait < 0.90 / balanced < 1.20 / landscape < 1.75 / wide < 2.50 / panoramic, read as width:height, half-open upward. FROZEN. Geometry calibration stops here.",
       "The mapping is `presentationRole × geometryClass × surface → ONE named blueprint`, and that blueprint names ONE rung. The exact ratio decides nothing after the class is chosen.",
       "A media solo row may declare exactly one rung. A second rung is a ladder a ratio can climb at realisation time, which is the resolver this pass removed.",
       "`primary` is not `wider`. For a tall object primacy comes from page structure — its own stage, a section step either side, the reading beneath and narrower — not from span.",
-      "ACCEPTANCE IS CATEGORICAL: within one class, one surface and one role, every probe selects the same named blueprint and the same rung, or the boundary or the blueprint is wrong."
+      "ACCEPTANCE IS CATEGORICAL: within one class, one surface and one role, every probe selects the same named blueprint and the same rung, or the boundary or the blueprint is wrong.",
+      "THE INVARIANT, in full: within one pattern family, `role × geometry class × surface → one named blueprint → one declared rung`. A NEIGHBOURING CLASS IS ALLOWED TO CONVERGE on the same blueprint. What is forbidden is the exact aspect ratio subsequently changing the rung.",
+      "GEOMETRY CALIBRATION IS FINISHED. No further width or height is tuned unless a REAL AUTHORED PAGE produces a categorical failure under this contract."
     ],
     "convergences": {
       "_": "RECORDED, NOT DISGUISED, AND NOT PAPERED OVER WITH AN INVENTED WIDTH. Where two classes or two roles currently resolve to the same design, the catalogue says so. Each is a gap to be filled with a genuine structural distinction later, or to be accepted as a real convergence.",
-      "portrait ≡ balanced": "the same blueprint at all three roles. Both names are kept because a near-square object is doing a different job from a portrait one, but no approved blueprint yet expresses that difference.",
+      "portrait ≡ balanced": "ACCEPTED, NOT A DEFECT, AND DELIBERATELY NOT MERGED. `visual.explanation` treats them identically at all three roles. That one composition family does not distinguish square-ish media from upright media does not make them globally the same thing, and they may diverge in another family later. Keeping the semantic distinction costs almost nothing; manufacturing different widths to justify the two labels would be worse.",
       "wide ≡ panoramic": "separated only at `explanatory`, where `panoramic` takes the full grid and `wide` stays at ten. At `supporting` and `primary` they converge.",
       "panoramic explanatory ≡ panoramic primary": "both take the full grid, because there is no rung above `full`. At the top of the ladder the role can no longer be expressed as span, so it must be expressed as page structure or accepted as a convergence.",
       "landscape ≡ portrait at explanatory and primary": "separated only at `supporting`, where landscape takes six columns and portrait four."
@@ -237,11 +239,12 @@
     "_": "SIX CLASSES, AND THE BOUNDARIES ARE DECLARED. The four-class vocabulary was ruled too coarse: it let the EXACT ASPECT RATIO keep making layout decisions after the class had supposedly been chosen. Two members of `portrait` — 0.45 and 0.75 — came out of one blueprint at two different desktop rungs, which is a small resolver hiding inside the blueprint system.",
     "bands": {
       "_": "Read as WIDTH:HEIGHT, which is how a designer talks about a shape, and half-open upward: a shape at exactly 0.90 is `balanced`, not `portrait`. `tall` is deliberately open below; nothing in the catalogue is proven for a shape narrower than the probed floor and the atlas says so.",
+      "_movedTo070": "THE tall → portrait BOUNDARY WAS 0.60 AND IS NOW 0.70. At 0.60 an object could become slightly LESS tall geometrically and be promoted from the eight-column tall composition to the ten-column portrait one, ending up substantially TALLER on the page: a 0.63 shape came out 956x1570 — 1.74 desktop viewports — against 760x1371 for a 0.57 shape one class down. A categorical edge case producing a worse result the moment you cross it is the exact failure the classes exist to prevent. 0.67 / 0.70 / 0.73 were probed around the new line.",
       "tall": {
-        "below": 0.6
+        "below": 0.7
       },
       "portrait": {
-        "from": 0.6,
+        "from": 0.7,
         "below": 0.9
       },
       "balanced": {

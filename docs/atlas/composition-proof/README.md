@@ -182,15 +182,28 @@ rung**; a vertical value doing horizontal work; a pair with no tolerance; a work
 | **Caption** | owned by the **surface**, never the plot |
 | **Boundaries** | region · surface · plot · caption, independently inspectable |
 | **Role** | authored, never inferred |
-| **Vocabulary** | six classes with declared boundaries — `tall · portrait · balanced · landscape · wide · panoramic`, read as width:height, half-open upward |
+| **Vocabulary** | six classes, boundaries **frozen** — `tall` < 0.70 · `portrait` < 0.90 · `balanced` < 1.20 · `landscape` < 1.75 · `wide` < 2.50 · `panoramic`, read as width:height, half-open upward |
 | **Selection** | `presentationRole × geometryClass × surface → ONE named blueprint`, which names **one** rung |
 | **One rung** | a media row may declare exactly one. A second rung is a ladder a ratio can climb at realisation time |
 | **`primary`** | is not `wider`. For a tall object primacy comes from page structure, not span |
 | **Acceptance** | **categorical**: within one class, one surface, one role — one blueprint, one rung |
+| **Convergence** | a *neighbouring* class may converge on the same blueprint. What is forbidden is the exact ratio changing the rung afterwards |
 | **Responsive identity** | the rungs may change; the blueprint may not |
 | **Plot chrome** | cannot change the composition |
 | **Internal surface whitespace** | valid *owned* space, categorically unlike an unowned column |
 | **Treatment B** | rejected, kept as a counterexample |
+
+The invariant, in full:
+
+```
+within one pattern family:
+  role × geometry class × surface
+    → one named blueprint
+      → one declared rung
+```
+
+**Geometry calibration is finished.** No further width or height is tuned unless a *real authored
+page* produces a categorical failure under this contract.
 
 The **shipping** grammar has not moved. `docs/atlas/worked-examples/src/atlas.json` still declares the
 four-class `mediaGeometry.bands` that the `visual.side` switch point and the `figure-container` gate
@@ -201,11 +214,14 @@ belongs with the blueprint system rather than ahead of it.
 
 Identical content — the same function, the same line, the same two points — with nothing varying but
 the authored **domain**, so the only difference between two renders is the shape of the plane. Six
-canonical shapes (photographed, `G__*`) and ten boundary probes (measured, not photographed, `B__*`),
-each at three roles: **48 renders**. It chooses no widths and measures no prose.
+canonical shapes (photographed, `G__*`) and thirteen boundary probes (measured, not photographed,
+`B__*`), each at three roles: **57 renders**. It chooses no widths and measures no prose.
 
 Realised height and its share of a 900px desktop viewport are recorded as **diagnostic evidence
 only**. Nothing reads them back.
+
+**It is finished.** The vocabulary, the boundaries and the mapping are frozen. Nothing below is
+re-tuned unless a *real authored page* produces a categorical failure under the contract.
 
 ### The correction that came first
 
@@ -234,22 +250,65 @@ A 0.45:1 object at 760px is 1572px tall. The composition must say so; a failed s
 
 | class | w:h | supporting | explanatory | primary |
 | --- | --- | --- | --- | --- |
-| `tall` | < 0.60 | `spine-supporting` `inset` 4 | `spine-tall` `narrow` 6 | `stage-tall` `expanded` 8 |
-| `portrait` | 0.60 – 0.90 | `spine-supporting` `inset` 4 | `spine-narrow` `expanded` 8 | `stage-primary` `wide` 10 |
+| `tall` | < 0.70 | `spine-supporting` `inset` 4 | `spine-tall` `narrow` 6 | `stage-tall` `expanded` 8 |
+| `portrait` | 0.70 – 0.90 | `spine-supporting` `inset` 4 | `spine-narrow` `expanded` 8 | `stage-primary` `wide` 10 |
 | `balanced` | 0.90 – 1.20 | `spine-supporting` `inset` 4 | `spine-narrow` `expanded` 8 | `stage-primary` `wide` 10 |
 | `landscape` | 1.20 – 1.75 | `spine-supporting-wide` `narrow` 6 | `spine-narrow` `expanded` 8 | `stage-primary` `wide` 10 |
 | `wide` | 1.75 – 2.50 | `spine-supporting-wide` `narrow` 6 | `stage-wide` `wide` 10 | `stage-full` `full` 12 |
 | `panoramic` | ≥ 2.50 | `spine-supporting-wide` `narrow` 6 | `stage-panorama` `full` 12 | `stage-full` `full` 12 |
 
+### The `tall → portrait` line moved from 0.60 to 0.70
+
+The first freeze put it at 0.60 and the probes showed why that was wrong: an object could become
+**slightly less tall** and be promoted from the eight-column tall composition to the ten-column
+portrait one, ending up **substantially taller on the page**. A 0.63 shape came out at 956 × 1570 —
+**1.74 desktop viewports** — against 760 × 1371 for a 0.57 shape one class down. A categorical
+boundary that makes the result worse the moment you cross it is the exact failure the classes exist
+to prevent.
+
+0.67 / 0.70 / 0.73 were probed around the new line. The transition is monotone and unremarkable:
+
+| w:h | class | explanatory | primary |
+| --- | --- | --- | --- |
+| 0.63 | `tall` | 564 × 969 · 1.08 | 760 × **1259** · **1.40** |
+| 0.67 | `tall` | 564 × 923 · 1.02 | 760 × 1195 · 1.33 |
+| **0.70** | `portrait` | 760 × 1152 · 1.28 | 956 × **1432** · **1.59** |
+| 0.73 | `portrait` | 760 × 1113 · 1.24 | 956 × 1381 · 1.53 |
+| 0.75 | `portrait` | 760 × 1088 · 1.21 | 956 × 1349 · 1.50 |
+
+The shape that moved the line, 0.63 at `primary`, goes from **1570px (1.74 vp)** to **1259px
+(1.40 vp)** — 311px shorter, and on the composition it visually belongs to. The worst case anywhere
+on the portrait side falls from 1.74 to **1.59**.
+
+**The step itself does not go away, and should not be claimed to.** Any categorical line between an
+8-column and a 10-column composition puts a step in the realised height of upright media — cross it,
+the object gets wider, and a plane that preserves its geometry gets taller with it. Moving the line
+changes *where* the step falls and how tall the worst case on the far side is; it cannot remove it.
+Measured either side of every declared boundary:
+
+| boundary | supporting | explanatory | primary |
+| --- | --- | --- | --- |
+| **0.70** 0.67 vs 0.70 | 631 → 613 (−18) | 923 → 1152 (**+229**, +0.26 vp) | 1195 → 1432 (**+237**, +0.26 vp) |
+| **0.90** 0.87 vs 0.93 | 535 → 514 (−21) | 964 → 915 (−49) | 1190 → 1125 (−65) |
+| **1.20** 1.17 vs 1.23 | 452 → 600 (**+148**, +0.17 vp) | 766 → 738 (−28) | 934 → 898 (−36) |
+| **1.75** 1.72 vs 1.78 | 490 → 480 (−10) | 583 → 680 (+97) | 697 → 790 (+93) |
+| **2.50** 2.45 vs 2.55 | 407 → 400 (−7) | 546 → 609 (+63) | 626 → 609 (−17) |
+
+Diagnostic only — nothing reads these back, and no composition is selected from them.
+
 ### What the probes found
 
-Realised media box and share of a 900px viewport, boundary pairs adjacent:
+Nineteen shapes (six canonical, photographed as `G__*`; thirteen boundary probes, measured as
+`B__*`) × three roles = **57 renders**. Realised media box and share of a 900px desktop viewport:
 
 | w:h | class | supporting | explanatory | primary |
 | --- | --- | --- | --- | --- |
 | 0.45 | `tall` | 368 × 819 · 0.91 | 564 × 1213 · 1.35 | 760 × 1582 · 1.76 |
-| **0.57** | `tall` | 368 × 704 · 0.78 | 564 × 1048 · 1.16 | 760 × 1371 · 1.52 |
-| **0.63** | `portrait` | 368 × 657 · 0.73 | 760 × 1259 · 1.40 | 956 × 1570 · 1.74 |
+| 0.57 | `tall` | 368 × 704 · 0.78 | 564 × 1048 · 1.16 | 760 × 1371 · 1.52 |
+| 0.63 | `tall` | 368 × 657 · 0.73 | 564 × 969 · 1.08 | 760 × 1259 · 1.40 |
+| **0.67** | `tall` | 368 × 631 · 0.70 | 564 × 923 · 1.02 | 760 × 1195 · 1.33 |
+| **0.70** | `portrait` | 368 × 613 · 0.68 | 760 × 1152 · 1.28 | 956 × 1432 · 1.59 |
+| **0.73** | `portrait` | 368 × 594 · 0.66 | 760 × 1113 · 1.24 | 956 × 1381 · 1.53 |
 | 0.75 | `portrait` | 368 × 565 · 0.63 | 760 × 1088 · 1.21 | 956 × 1349 · 1.50 |
 | **0.87** | `portrait` | 368 × 535 · 0.59 | 760 × 964 · 1.07 | 956 × 1190 · 1.32 |
 | **0.93** | `balanced` | 368 × 514 · 0.57 | 760 × 915 · 1.02 | 956 × 1125 · 1.25 |
@@ -265,34 +324,17 @@ Realised media box and share of a 900px viewport, boundary pairs adjacent:
 | 3.00 | `panoramic` | 564 × 378 · 0.42 | 1152 × 601 · 0.67 | 1152 × 601 · 0.67 |
 
 **Acceptance holds.** Every class, on every surface, at every role, resolved to one named blueprint
-and one rung across all of its members. H19 compared 18 class/role/surface groups; H20 checked 48
-renders. No fallback fired anywhere, because there is nowhere left to fall back to.
+and one rung across all of its members. No fallback fired anywhere, because there is nowhere left to
+fall back to.
 
-**Four of the five boundaries are load-bearing. One is not.**
+`portrait` and `balanced` select the same blueprint at all three roles here, and **that is accepted,
+not a defect.** One composition family failing to distinguish square-ish media from upright media
+does not make them globally the same thing, and they may diverge in another family later. The
+semantic distinction costs almost nothing; manufacturing different widths to justify the two labels
+would be worse. Recorded in `frozen.convergences`.
 
-| boundary | what changes across it |
-| --- | --- |
-| **0.60** `tall`→`portrait` | explanatory 564 → 760, primary 760 → 956. Supporting unchanged |
-| **0.90** `portrait`→`balanced` | **nothing**. Same blueprint and same rung at all three roles |
-| **1.20** `balanced`→`landscape` | supporting 368 → 564. Explanatory and primary unchanged |
-| **1.75** `landscape`→`wide` | explanatory 760 → 956, primary 956 → 1152. Supporting unchanged |
-| **2.50** `wide`→`panoramic` | explanatory 956 → 1152. Supporting and primary unchanged |
-
-Two things follow, and both are for the maintainer rather than for this pass:
-
-1. **`portrait` and `balanced` are currently the same class under two names.** The names are kept
-   because a near-square object is genuinely doing a different job, but no approved blueprint yet
-   expresses that difference. Recorded in `frozen.convergences`, not papered over with an invented
-   width.
-2. **The 0.60 boundary may be in the wrong place.** A 0.63 object — just on the `portrait` side — is
-   **956 × 1570 = 1.74 viewports** at `primary`, *taller* than a 0.57 object on the `tall` side at
-   **760 × 1371 = 1.52**. The boundary does real work, but it lets a shape that is still visibly tall
-   into the portrait composition. Moving it up towards 0.70 would be a boundary change, not a new
-   class, and the harness can test it in one run.
-
-Also recorded: at the top of the ladder the role stops being expressible as span. `panoramic` at
-`explanatory` and at `primary` both take `full` 12 because there is no rung above `full` — so the
-role has to become page structure there, or be accepted as a convergence.
+At the top of the ladder the role stops being expressible as span: `panoramic` at `explanatory` and
+at `primary` both take `full` 12, because there is no rung above `full`.
 
 ### `primary` is not `wider`
 
@@ -400,13 +442,11 @@ solved. **H17** compares the pair; its drive is a surface sized by its content i
 
 ## Still open
 
-- **The 0.90 boundary does nothing yet.** `portrait` and `balanced` select the same blueprint and the
-  same rung at all three roles. Either a `balanced` composition that genuinely differs, or an honest
-  merge.
-- **The 0.60 boundary may be too low.** A 0.63 object at `primary` is 1.74 viewports tall, against
-  1.52 for a 0.57 object on the `tall` side. A boundary move, not a new class.
+- **`portrait` ≡ `balanced` in this family.** Accepted and deliberately not merged — see above. A
+  later composition family may distinguish them; nothing is manufactured to make it happen now.
 - **The role stops being expressible as span at `full`.** `panoramic` explanatory and primary
-  converge because there is no rung above twelve columns.
+  converge because there is no rung above twelve columns. Expressing the role there means page
+  structure, as `stage-tall` does at the other end, or accepting the convergence.
 - **The six-class vocabulary is the blueprint system's only.** The shipping grammar still has four,
   and the migration is not attempted here.
 - **`tall` is open below.** Nothing is proven for a shape narrower than the 0.45 floor that was

@@ -65,7 +65,11 @@ const GBANDS = BP.geometryVocabulary.bands;
 const classify = (aspect) => {
   const wh = 1 / aspect;
   for (const [name, b] of Object.entries(GBANDS)) {
-    if (name === '_') continue;
+    /* every `_`-prefixed key is prose, not a band. Skipping only `_` was enough until a second note
+       was added beside it, at which point `_tallMovedTo070` matched everything — it has neither a
+       `from` nor a `below`, so both half-open tests passed — and every shape in the atlas classified
+       as a comment. */
+    if (name.startsWith('_')) continue;
     if ((b.from == null || wh >= b.from) && (b.below == null || wh < b.below)) return name;
   }
   throw new BlueprintError(`no geometry class covers ${wh.toFixed(4)}:1 — the declared bands have a hole in them`);
@@ -353,6 +357,9 @@ const FIXTURES = Object.entries(MEDIA.fixtures).map(([id, f]) => {
   const aspect = f.kind === 'graph'
     ? (() => { const d = FIGS[f.figure].figure.domain; return (d.yMax - d.yMin) / (d.xMax - d.xMin); })()
     : f.aspect;
+  /* CLASSIFY FROM THE RAW RATIO, NOT THE DISPLAY-ROUNDED ONE. The 4-decimal rounding is for reading;
+     letting it decide a half-open band put the 0.70 boundary probe one ten-thousandth on the wrong
+     side of its own line and classified it `tall`. */
   return { id, ...f, aspect: +aspect.toFixed(4), klass: classify(aspect), block: BLOCK_OF[f.kind] };
 });
 const dataURI = (name) => {
@@ -361,11 +368,12 @@ const dataURI = (name) => {
 };
 const CAL_FIXTURES = Object.entries(CAL.shapes).map(([id, sh]) => {
   const d = sh.figure.domain;
-  const aspect = +((d.yMax - d.yMin) / (d.xMax - d.xMin)).toFixed(4);
+  const exact = (d.yMax - d.yMin) / (d.xMax - d.xMin);
+  const aspect = +exact.toFixed(4);
   return { id: `cal.${id}`, shape: id, wh: sh.wh, note: sh.note, kind: 'graph', family: 'graph', figure: id,
     probe: !!sh.probe, expect: sh.expect || null, boundary: sh.boundary || null,
     label: 'Graph', caption: `The same content at ${sh.wh}:1 — ${sh.note}.`,
-    aspect, klass: classify(aspect), block: 'graph' };
+    aspect, klass: classify(exact), block: 'graph' };
 });
 
 function pickFixture(pid, klass) {
@@ -1424,7 +1432,7 @@ for (const fx of CAL_FIXTURES) {
 {
   const cal = REPORT.filter((r) => r.calibration && !r.adversarial && r.surface === 'desktop');
   console.log('\nacceptance — within one class, one surface, one role: one blueprint, one rung');
-  for (const klass of Object.keys(GBANDS).filter((k) => k !== '_')) {
+  for (const klass of Object.keys(GBANDS).filter((k) => !k.startsWith('_'))) {
     const mine = cal.filter((r) => r.calibration.klass === klass);
     if (!mine.length) { console.log(`  ${klass.padEnd(10)} — no probe landed in this class`); continue; }
     const members = [...new Set(mine.map((r) => `${r.calibration.wh}`))].sort((a, b) => a - b);
@@ -1436,6 +1444,34 @@ for (const fx of CAL_FIXTURES) {
     });
     console.log(`  ${klass.padEnd(10)} ${members.length} member(s) ${members.join(', ')}`);
     for (const c of cells) console.log(`    ${c}`);
+  }
+
+  /* ── THE BOUNDARY STEP, AS EVIDENCE ───────────────────────────────────────────────────────────
+     A categorical boundary between an 8-column and a 10-column composition necessarily puts a STEP
+     in the realised height of upright media: cross it and the object gets wider, and a plane that
+     preserves its geometry gets taller with it. The step cannot be designed away, and nothing here
+     reads it back. What it IS good for is telling whether a boundary is in a sensible PLACE — a step
+     that lands where the object still reads as tall is the 0.60 defect, and the whole reason the
+     line moved to 0.70. Reported as the two nearest members either side of each declared boundary. */
+  console.log('\nboundary steps — realised media height either side of each declared line (evidence only)');
+  const bands = Object.entries(GBANDS).filter(([k]) => !k.startsWith('_'));
+  for (const [klass, b] of bands) {
+    if (b.from == null) continue;
+    const below = cal.filter((r) => r.calibration.wh < b.from).sort((x, y) => y.calibration.wh - x.calibration.wh);
+    const above = cal.filter((r) => r.calibration.wh >= b.from);
+    const lo = below[0] && below[0].calibration.wh, hi = above.length
+      ? Math.min(...above.map((r) => r.calibration.wh)) : null;
+    if (lo == null || hi == null) continue;
+    const line = ROLES.map((role) => {
+      const a = cal.find((r) => r.calibration.wh === lo && r.role === role);
+      const c = cal.find((r) => r.calibration.wh === hi && r.role === role);
+      if (!a || !c) return `${role[0].toUpperCase()}: —`;
+      const d = c.surfaceH - a.surfaceH;
+      return `${role[0].toUpperCase()}: ${a.surfaceH}→${c.surfaceH}px (${d >= 0 ? '+' : ''}${d}, `
+        + `${(c.viewportShare - a.viewportShare).toFixed(2)} vp)`;
+    });
+    console.log(`  ${String(b.from).padEnd(5)} → ${klass.padEnd(10)} ${lo} vs ${hi}`);
+    for (const l of line) console.log(`    ${l}`);
   }
 }
 

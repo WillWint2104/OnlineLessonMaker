@@ -1,6 +1,6 @@
 {
   "_": "THE GEOMETRY CALIBRATION SET. Identical content — the same function, the same line, the same two points — with nothing varying but the authored DOMAIN, so the only difference between two renders is the shape of the plane. These exist to establish which named rigid blueprints are aesthetically valid for which geometry classes. They are not a resolver: nothing here measures prose, occupancy or available whitespace, and no width is calculated from an aspect ratio.",
-  "theRuling": "THE VOCABULARY IS SIX CLASSES. The calibration set answered the question it was built to ask and the classes were split. What remains here is the evidence: six canonical shapes, kept verbatim as golden references, and ten boundary probes placed immediately either side of the five declared boundaries. A probe exists to answer one categorical question — does an object a hair across the line genuinely want the neighbouring named blueprint — and never to find an ideal width.",
+  "theRuling": "THE VOCABULARY IS SIX CLASSES AND THE BOUNDARIES ARE FROZEN. The calibration set answered the question it was built to ask, the classes were split, and one boundary was then moved: `tall → portrait` went from 0.60 to 0.70 because at 0.60 an object could become slightly less tall and be promoted to a composition that made it substantially taller. What remains here is the evidence: six canonical shapes, kept verbatim as golden references, and thirteen boundary probes. A probe answers one categorical question — does an object a hair across the line genuinely want the neighbouring named blueprint — and never finds an ideal width. GEOMETRY CALIBRATION STOPS HERE.",
   "acceptance": "WITHIN ONE GEOMETRY CLASS, ON ONE SURFACE, AT ONE PRESENTATION ROLE, EVERY PROBE MUST SELECT THE SAME NAMED BLUEPRINT AND THE SAME RUNG. If it cannot, the class boundary is wrong or the blueprint is wrong — the answer is never a fallback calculation. H19 is the categorical proof and H20 forbids the fallback.",
   "wh": "Each shape is named by its WIDTH:HEIGHT, which is how a designer talks about it. The `aspect` the engine uses is the reciprocal, height/width, which is how classOf() bands it.",
   "diagnosticOnly": "The realised height and its proportion of a 900px desktop viewport are recorded as EVIDENCE ONLY. Nothing reads them, and H19 proves the class — not the shape and not the height — is what selects the blueprint.",
@@ -273,9 +273,9 @@
     "probe-0p57": {
       "wh": 0.57,
       "probe": true,
-      "boundary": 0.6,
+      "boundary": 0.7,
       "expect": "tall",
-      "note": "a boundary probe just below 0.6 — must select the approved `tall` blueprint",
+      "note": "a boundary probe just below 0.7 — must select the approved `tall` blueprint",
       "figure": {
         "type": "figure",
         "figure": "graph",
@@ -320,9 +320,9 @@
     "probe-0p63": {
       "wh": 0.63,
       "probe": true,
-      "boundary": 0.6,
-      "expect": "portrait",
-      "note": "a boundary probe just above 0.6 — must select the approved `portrait` blueprint",
+      "boundary": 0.7,
+      "expect": "tall",
+      "note": "a boundary probe just below 0.7 — must select the approved `tall` blueprint",
       "figure": {
         "type": "figure",
         "figure": "graph",
@@ -710,6 +710,147 @@
           "xMax": 15.3,
           "yMin": -3,
           "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-0p67": {
+      "wh": 0.67,
+      "probe": true,
+      "boundary": 0.7,
+      "expect": "tall",
+      "note": "a boundary probe just below 0.7 — must select the approved `tall` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -4.5,
+          "xMax": 4.5,
+          "yMin": -2,
+          "yMax": 11.433
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-0p7": {
+      "wh": 0.7,
+      "probe": true,
+      "boundary": 0.7,
+      "expect": "portrait",
+      "note": "a boundary probe exactly on 0.7 — must select the approved `portrait` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -4.5,
+          "xMax": 4.5,
+          "yMin": -2,
+          "yMax": 10.857
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-0p73": {
+      "wh": 0.73,
+      "probe": true,
+      "boundary": 0.7,
+      "expect": "portrait",
+      "note": "a boundary probe just above 0.7 — must select the approved `portrait` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -4.5,
+          "xMax": 4.5,
+          "yMin": -2,
+          "yMax": 10.329
         },
         "objects": [
           {

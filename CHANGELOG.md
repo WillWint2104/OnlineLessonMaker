@@ -8,6 +8,32 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **The `tall → portrait` boundary moved from 0.60 to 0.70, and geometry calibration stopped**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change). At 0.60 an
+  object could become *slightly less tall* and be promoted from the eight-column tall composition to
+  the ten-column portrait one, ending up substantially TALLER: a 0.63 shape came out 956 × 1570 —
+  1.74 desktop viewports — against 760 × 1371 for a 0.57 shape one class down. A categorical boundary
+  that makes the result worse the moment you cross it is the failure the classes exist to prevent.
+  - Probed at 0.67 / 0.70 / 0.73. The transition is monotone: 0.67 `tall` 760 × 1195, 0.70 `portrait`
+    956 × 1432, 0.73 `portrait` 956 × 1381. The shape that moved the line, 0.63 at `primary`, goes
+    from 1570px (1.74 vp) to 1259px (1.40 vp); the worst case on the portrait side falls from 1.74 to
+    1.59 viewports.
+  - The step itself is not claimed to be gone. Any categorical line between an 8- and a 10-column
+    composition puts a step in the realised height of upright media. A new diagnostic reports the step
+    either side of every declared boundary as evidence; nothing reads it back.
+  - `portrait ≡ balanced` is recorded as an **accepted convergence**, not a defect and not merged. One
+    composition family failing to distinguish square-ish from upright media does not make them
+    globally the same thing, and no width is manufactured to justify the two labels.
+  - The invariant is recorded in full: within one pattern family, `role × geometry class × surface →
+    one named blueprint → one declared rung`. A neighbouring class MAY converge on the same blueprint;
+    what is forbidden is the exact ratio subsequently changing the rung.
+  - Two classifier defects fixed. `classify()` skipped only the `_` doc key, so a second prose key
+    beside it matched every shape — it has neither a `from` nor a `below`, so both half-open tests
+    passed and every object in the atlas classified as a comment. And it classified from the
+    4-decimal DISPLAY-rounded ratio, which put the 0.70 boundary probe one ten-thousandth on the wrong
+    side of its own line; it now classifies from the raw ratio.
+  - **Geometry calibration is finished.** The vocabulary, the boundaries and the mapping are frozen;
+    no width or height is re-tuned unless a real authored page produces a categorical failure.
 - **The geometry vocabulary split into six classes, and the role × geometry mappings frozen**
   (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, `scripts/lib/slots.mjs`,
   `scripts/lib/figure-geometry.mjs`; no app change, nothing wired into the shipping catalogue).
