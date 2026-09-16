@@ -23,6 +23,7 @@
     "_": "THE APPROVED SPAN POSITIONS FOR A ROW HOLDING ONE REGION. Design-system positions, not measurements: no 683px, no 717px, no 58% occupancy. `spine` resolves to the blueprint's own spine span.",
     "desktop": {
       "inset": 4,
+      "narrow": 6,
       "spine": null,
       "expanded": 8,
       "wide": 10,
@@ -30,6 +31,7 @@
     },
     "tablet": {
       "inset": 4,
+      "narrow": 6,
       "spine": null,
       "expanded": 8,
       "wide": 8,
@@ -37,6 +39,7 @@
     },
     "phone": {
       "inset": 4,
+      "narrow": 4,
       "spine": null,
       "expanded": 4,
       "wide": 4,
@@ -63,6 +66,7 @@
       "expanded"
     ],
     "_roles": "A MEDIA REGION'S FAMILY IS KEYED BY ITS GEOMETRY AND ITS AUTHORED PRESENTATION ROLE. The role is not a size and it is not inferred: it says what the object is FOR, and each role approves a different handful of rungs. A supporting graph and a primary graph are different blueprints, not the same blueprint with a size calculation.",
+    "_noFullForPortrait": "PRIMARY DOES NOT MEAN MAXIMUM HORIZONTAL SPAN. A portrait plane preserves its geometry, so twelve columns makes it extraordinarily tall — 1152x1469 measured. Scrolling makes that legal; it does not make it a good default. `full` is therefore NOT in any portrait family, which makes a full-width primary portrait inexpressible rather than merely discouraged. Full width stays available where the geometry benefits from width.",
     "media.portrait.supporting": [
       "inset"
     ],
@@ -70,8 +74,8 @@
       "expanded"
     ],
     "media.portrait.primary": [
-      "wide",
-      "full"
+      "expanded",
+      "wide"
     ],
     "media.balanced.supporting": [
       "inset"
@@ -81,48 +85,45 @@
       "wide"
     ],
     "media.balanced.primary": [
-      "wide",
-      "full"
+      "wide"
     ],
     "media.landscape.supporting": [
-      "spine"
+      "narrow"
     ],
     "media.landscape.explanatory": [
-      "wide",
-      "full"
+      "wide"
     ],
     "media.landscape.primary": [
+      "wide",
       "full"
     ],
     "media.wide.supporting": [
-      "spine"
+      "narrow"
     ],
     "media.wide.explanatory": [
-      "wide",
-      "full"
+      "wide"
     ],
     "media.wide.primary": [
+      "wide",
       "full"
     ],
     "media.portrait": [
       "inset",
       "expanded",
-      "wide",
-      "full"
+      "wide"
     ],
     "media.balanced": [
       "inset",
       "expanded",
-      "wide",
-      "full"
+      "wide"
     ],
     "media.landscape": [
-      "spine",
+      "narrow",
       "wide",
       "full"
     ],
     "media.wide": [
-      "spine",
+      "narrow",
       "wide",
       "full"
     ],
@@ -177,6 +178,25 @@
       "surface = the complete visual object occupying that geometry",
       "plot realisation = how the graph uses the surface while preserving scale and labels",
       "presentation role = what the object is FOR, authored"
+    ]
+  },
+  "frozen": {
+    "_": "FROZEN BY THE MAINTAINER. These are settled; later passes build on them rather than revisit them.",
+    "items": [
+      "Treatment A — the figure surface takes the media region and the plot is solved inside it.",
+      "Figure-surface OWNERSHIP: blueprint region → figure surface → plot → caption.",
+      "The caption is owned by the SURFACE, not the plot.",
+      "The four boundaries stay independently inspectable.",
+      "The presentation role is AUTHORED and never inferred.",
+      "Responsive blueprint identity is invariant: the rungs may change, the blueprint may not.",
+      "Plot chrome cannot change the composition.",
+      "Internal figure-surface whitespace is valid OWNED space, categorically unlike an unowned column.",
+      "Treatment B remains a rejected counterexample.",
+      "supporting portrait → `spine-supporting` / centred `inset` 4.",
+      "explanatory portrait → `spine-narrow` / centred `expanded` 8."
+    ],
+    "notFrozen": [
+      "`primary/portrait`. The full-grid version is kept as a candidate and compared; the approved direction is `stage-primary-portrait` at ten centred columns, pending approval of the two ladders."
     ]
   },
   "golden": [
@@ -543,10 +563,445 @@
             ]
           }
         },
-        "stage-primary": {
+        "stage-primary-portrait": {
           "role": "primary",
-          "title": "the primary visual — the page exists to explain this object",
-          "why": "A PRIMARY VISUAL MAY BE VERY LARGE AND VERY TALL, because the page exists substantially to explain it and the page scrolls. That is an AUTHORED decision: the renderer never infers pedagogical importance from available space. The object takes the whole grid and the reading stays at the measure beneath it.",
+          "title": "the primary PORTRAIT visual — centred `wide`, ten columns",
+          "why": "PRIMARY IS NOT MAXIMUM. A portrait plane preserves its geometry, so the full grid made it 1152x1469 — legal, because the page scrolls, and not a good default. Ten centred columns is 956px of object against a 760px reading: unmistakably the principal thing on the page, dominating through vertical presence and surrounding whitespace rather than by consuming every column. `full` is not in the portrait family at all, so the twelve-column version cannot be written down.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "expanded",
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "expanded"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "spine-supporting-wide": {
+          "role": "supporting",
+          "title": "a supporting WIDE visual — centred `narrow`, six columns",
+          "why": "THE SAME ROLE, A DIFFERENT GEOMETRY, A DIFFERENT BLUEPRINT. A wide plane at four columns would be a sliver, so supporting wide media takes six — visibly narrower than the 760px reading it supports, which is what makes it read as subordinate.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "stage-wide": {
+          "role": "explanatory",
+          "title": "the explanatory WIDE visual — centred `wide`, ten columns",
+          "why": "A wide plane is short by construction, so ten columns costs 437px of height and reads as the object the page is discussing without becoming the whole page.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "stage-full": {
+          "role": "primary",
+          "title": "the primary WIDE visual — the full grid",
+          "why": "FULL WIDTH WHERE THE GEOMETRY BENEFITS FROM WIDTH. A wide plane, a timeline, a wide diagram, an interactive or a workspace can take every column and stay a sensible height — a wide plane at twelve columns is 1152x527. This is the one family where the whole grid is the right answer, which is exactly why it must not be the generic meaning of `primary`. A PRIMARY VISUAL MAY BE VERY LARGE; it is an AUTHORED decision, and the renderer never infers pedagogical importance from available space.",
           "spine": {
             "desktop": {
               "align": "centre",
@@ -834,23 +1289,80 @@
               }
             ]
           }
+        }
+      },
+      "select": {
+        "desktop": {
+          "supporting": {
+            "portrait": "spine-supporting",
+            "balanced": "spine-supporting",
+            "landscape": "spine-supporting-wide",
+            "wide": "spine-supporting-wide"
+          },
+          "explanatory": {
+            "portrait": "spine-narrow",
+            "balanced": "spine-reading",
+            "landscape": "stage-wide",
+            "wide": "stage-wide"
+          },
+          "primary": {
+            "portrait": "stage-primary-portrait",
+            "balanced": "stage-primary-portrait",
+            "landscape": "stage-full",
+            "wide": "stage-full"
+          }
         },
-        "stage-full": {
-          "role": "explanatory",
-          "title": "centred spine 8 · media solo at `full`",
-          "why": "The explanatory case for an object that is short by construction, so the whole grid costs no height worth saving.",
+        "tablet": {
+          "supporting": {
+            "portrait": "spine-supporting",
+            "balanced": "spine-supporting",
+            "landscape": "spine-supporting-wide",
+            "wide": "spine-supporting-wide"
+          },
+          "explanatory": {
+            "portrait": "spine-narrow",
+            "balanced": "spine-reading",
+            "landscape": "stage-wide",
+            "wide": "stage-wide"
+          },
+          "primary": {
+            "portrait": "stage-primary-portrait",
+            "balanced": "stage-primary-portrait",
+            "landscape": "stage-full",
+            "wide": "stage-full"
+          }
+        },
+        "phone": {
+          "supporting": {
+            "portrait": "spine-supporting",
+            "balanced": "spine-supporting",
+            "landscape": "spine-supporting-wide",
+            "wide": "spine-supporting-wide"
+          },
+          "explanatory": {
+            "portrait": "spine-narrow",
+            "balanced": "spine-reading",
+            "landscape": "stage-wide",
+            "wide": "stage-wide"
+          },
+          "primary": {
+            "portrait": "stage-primary-portrait",
+            "balanced": "stage-primary-portrait",
+            "landscape": "stage-full",
+            "wide": "stage-full"
+          }
+        }
+      },
+      "candidates": {
+        "stage-primary-full12": {
+          "role": "primary",
+          "notFrozen": true,
+          "title": "the primary portrait at the full grid — NOT FROZEN, kept for comparison",
+          "why": "THE VERSION THIS PASS DECLINED TO FREEZE. Nothing is mathematically wrong with it and the page scrolls, but a portrait plane preserves its geometry, so twelve columns makes it 1152x1469. It proves that pedagogical importance must not automatically mean maximum horizontal span, which is why `full` was removed from the portrait span family and `primary/portrait` now selects `stage-primary-portrait` at ten centred columns. Rendered beside it for comparison, and reachable only as a candidate — `select` cannot name it.",
           "spine": {
             "desktop": {
               "align": "centre",
               "span": 8
-            },
-            "tablet": {
-              "align": "centre",
-              "span": 6
-            },
-            "phone": {
-              "align": "left-edge",
-              "span": 4
             }
           },
           "rows": {
@@ -895,152 +1407,7 @@
                 "vertical": "hug",
                 "region": "support"
               }
-            ],
-            "tablet": [
-              {
-                "id": "media",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine",
-                    "full"
-                  ],
-                  "preferred": "full"
-                },
-                "vertical": "hug",
-                "region": "media",
-                "gapAfter": "section",
-                "media": true
-              },
-              {
-                "id": "interpretation",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "interpretation",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "support",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "support"
-              }
-            ],
-            "phone": [
-              {
-                "id": "media",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "media",
-                "gapAfter": "section",
-                "media": true
-              },
-              {
-                "id": "interpretation",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "interpretation",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "support",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "support"
-              }
             ]
-          }
-        }
-      },
-      "select": {
-        "desktop": {
-          "supporting": {
-            "portrait": "spine-supporting",
-            "balanced": "spine-supporting",
-            "landscape": "spine-supporting",
-            "wide": "spine-supporting"
-          },
-          "explanatory": {
-            "portrait": "spine-narrow",
-            "balanced": "spine-reading",
-            "landscape": "spine-reading",
-            "wide": "stage-full"
-          },
-          "primary": {
-            "portrait": "stage-primary",
-            "balanced": "stage-primary",
-            "landscape": "stage-full",
-            "wide": "stage-full"
-          }
-        },
-        "tablet": {
-          "supporting": {
-            "portrait": "spine-supporting",
-            "balanced": "spine-supporting",
-            "landscape": "spine-supporting",
-            "wide": "spine-supporting"
-          },
-          "explanatory": {
-            "portrait": "spine-narrow",
-            "balanced": "spine-reading",
-            "landscape": "spine-reading",
-            "wide": "stage-full"
-          },
-          "primary": {
-            "portrait": "stage-primary",
-            "balanced": "stage-primary",
-            "landscape": "stage-full",
-            "wide": "stage-full"
-          }
-        },
-        "phone": {
-          "supporting": {
-            "portrait": "spine-supporting",
-            "balanced": "spine-supporting",
-            "landscape": "spine-supporting",
-            "wide": "spine-supporting"
-          },
-          "explanatory": {
-            "portrait": "spine-narrow",
-            "balanced": "spine-reading",
-            "landscape": "spine-reading",
-            "wide": "stage-full"
-          },
-          "primary": {
-            "portrait": "stage-primary",
-            "balanced": "stage-primary",
-            "landscape": "stage-full",
-            "wide": "stage-full"
           }
         }
       },

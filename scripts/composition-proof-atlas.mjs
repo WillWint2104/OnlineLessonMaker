@@ -75,7 +75,7 @@ const isProse = (pid, name) => PROSE_TYPES.has(slotType(pid, name));
 /* ── THE SOLO SPAN LADDER ────────────────────────────────────────────────────────────────────────
    Design-system positions, not measurements. `spine` resolves to the blueprint's own spine span, so
    a solo row can say "the spine, or one rung wider" without repeating a number. */
-const RUNGS = ['inset', 'spine', 'expanded', 'wide', 'full'];
+const RUNGS = ['inset', 'narrow', 'spine', 'expanded', 'wide', 'full'];
 const ladderCols = (surface, rung, spineSpan) => {
   const L = BP.soloLadder[surface];
   if (!(rung in L)) throw new BlueprintError(`${surface}: no ladder rung \`${rung}\` (${Object.keys(L).filter((k) => k !== '_').join(', ')})`);
@@ -107,7 +107,7 @@ function validateBlueprints() {
   const STEPS = BP.rhythm.steps;
   for (const [pid, P] of Object.entries(BP.patterns)) {
     const names = new Set(slotsOf(pid).map((s) => s.name));
-    const all = { ...P.blueprints, ...(P.withdrawn || {}) };
+    const all = { ...P.blueprints, ...(P.candidates || {}), ...(P.withdrawn || {}) };
     for (const [bid, B] of Object.entries(all)) {
       if (P.mediaSlot && Object.values(B.rows).some((rr) => rr.some((r) => r.media)) && !B.role)
         throw new BlueprintError(`${pid}/${bid}: carries media and declares no \`role\`. A presentation role `
@@ -227,7 +227,8 @@ function validateBlueprints() {
    prefers — is a SEPARATE question, asked afterwards by H11. */
 function layout(pid, surface, bid, opts = {}) {
   const P = BP.patterns[pid];
-  const B = P.blueprints[bid] || (P.withdrawn || {})[bid] || (opts.rows ? { rows: {}, spine: opts.spine } : null);
+  const B = P.blueprints[bid] || (P.candidates || {})[bid] || (P.withdrawn || {})[bid]
+    || (opts.rows ? { rows: {}, spine: opts.spine } : null);
   if (!B) throw new BlueprintError(`${pid}: no blueprint \`${bid}\` — approved: ${Object.keys(P.blueprints).join(', ')}`);
   const rows = opts.rows || B.rows[surface];
   const sp = (opts.spine && opts.spine[surface]) || (B.spine && B.spine[surface]);
@@ -991,11 +992,13 @@ const REPORT = [];
    rungs the blueprint approved, the rung it prefers — plus one mathematical question for media: does
    an equal-unit box exist at that width. Nothing here reads a content length, a rendered height, an
    area or a percentage. */
-async function feasible(pid, surface, row, rung, spineSpan, fx, klass, role) {
+async function feasible(pid, surface, row, rung, spineSpan, fx, klass, role, candidate) {
   const S = SPANS.surfaces[surface];
   const fam = familyFor(pid, row.region, klass, role);
   const cols = ladderCols(surface, rung, spineSpan);
-  if (rung !== 'spine' && !fam.includes(rung))
+  /* A CANDIDATE IS OUTSIDE THE APPROVED VOCABULARY BY DEFINITION — that is what makes it a candidate
+     rather than a blueprint. It still has to be geometrically and typographically legal. */
+  if (rung !== 'spine' && !fam.includes(rung) && !candidate)
     return { ok: false, cols, why: `\`${rung}\` is outside the span family for a ${role ? role + ' ' : ''}${slotType(pid, row.region)} region (${fam.join(', ')})` };
   if (cols > S.columns) return { ok: false, cols, why: `${cols} columns on a ${S.columns}-column surface` };
   if (isProse(pid, row.region) && cols > S.proseMax)
@@ -1009,13 +1012,13 @@ async function feasible(pid, surface, row, rung, spineSpan, fx, klass, role) {
   return { ok: true, cols, why: `${cols} columns is approved for a ${slotType(pid, row.region)} region` };
 }
 
-async function resolveSolos(pid, surface, rows, spineSpan, fx, klass, role) {
+async function resolveSolos(pid, surface, rows, spineSpan, fx, klass, role, candidate) {
   const out = {};
   for (const r of rows) {
     const H = r.horizontal;
     if (H.mode !== 'solo') continue;
     const feas = {};
-    for (const rung of H.spans) feas[rung] = await feasible(pid, surface, r, rung, spineSpan, fx, klass, role);
+    for (const rung of H.spans) feas[rung] = await feasible(pid, surface, r, rung, spineSpan, fx, klass, role, candidate);
     const byWidth = H.spans.slice().sort((a, b) => ladderCols(surface, a, spineSpan) - ladderCols(surface, b, spineSpan));
     const ok = byWidth.filter((x) => feas[x].ok);
     const should = feas[H.preferred] && feas[H.preferred].ok ? H.preferred : (ok[ok.length - 1] || byWidth[0]);
@@ -1034,11 +1037,11 @@ async function board(pid, surface, bid, o = {}) {
   const g = GRID.surfaces[surface];
   const klass = o.klass || null;
   const fx = P.mediaSlot ? (o.fixture || (klass && klass !== 'none' ? pickFixture(pid, klass) : null)) : null;
-  const B0 = P.blueprints[bid] || (P.withdrawn || {})[bid];
+  const B0 = P.blueprints[bid] || (P.candidates || {})[bid] || (P.withdrawn || {})[bid];
   const rows0 = o.rows || (B0 && B0.rows[surface]);
   const spineSpan = ((o.spine && o.spine[surface]) || (B0 && B0.spine && B0.spine[surface]) || {}).span;
   const bpRole = (B0 && B0.role) || null;
-  const resolve = await resolveSolos(pid, surface, rows0, spineSpan, fx, klass, bpRole);
+  const resolve = await resolveSolos(pid, surface, rows0, spineSpan, fx, klass, bpRole, !!o.candidate);
   /* the realised rung IS the resolved one, unless a counterexample deliberately holds it back */
   const realised = Object.fromEntries(Object.entries(resolve).map(([k, v]) => [k, v.should]));
   for (const [k, v] of Object.entries(o.forceSpan || {})) realised[k] = v;
@@ -1250,7 +1253,7 @@ ${o.injectCSS || ''}
     resolve: Object.fromEntries(Object.entries(resolve).map(([k, v]) => [k, v.should])),
     rhythm: J.rhythm, slotWidths: J.boards.flatMap((b) => b.kids.map((k) => `${k.name}=${Math.round(k.w)}`)),
     whitespaceOwned: J.whitespaceOwned, mediaOk, mediaVerdict, fails: J.fails,
-    fs: fsMode, role: bpRole, chrome: !!o.chrome,
+    fs: fsMode, role: bpRole, chrome: !!o.chrome, candidate: !!o.candidate,
     /* WHAT MUST NOT CHANGE ACROSS SURFACES (H18): the authored blueprint, its role, and the rows it
        holds — their ids, their cardinality and their modes. The RUNGS may differ; that is what a
        responsive form IS. */
@@ -1275,12 +1278,21 @@ ${o.injectCSS || ''}
    also proves that the SAME portrait graph takes three different approved compositions depending on
    an AUTHORED presentation role, and that the renderer never infers that role from space. */
 const SCOPE = [
+  /* THE PORTRAIT LADDER — one geometry, three authored roles, three named blueprints. */
   { pid: 'visual.explanation', surface: 'desktop', bid: 'spine-supporting', key: 'supporting/portrait',
     klass: 'portrait', name: 'R1__portrait-SUPPORTING__inset-4col' },
   { pid: 'visual.explanation', surface: 'desktop', bid: 'spine-narrow', key: 'explanatory/portrait',
     klass: 'portrait', name: 'R2__portrait-EXPLANATORY__expanded-8col' },
-  { pid: 'visual.explanation', surface: 'desktop', bid: 'stage-primary', key: 'primary/portrait',
-    klass: 'portrait', name: 'R3__portrait-PRIMARY__full-12col' },
+  { pid: 'visual.explanation', surface: 'desktop', bid: 'stage-primary-portrait', key: 'primary/portrait',
+    klass: 'portrait', name: 'R3__portrait-PRIMARY__centred-wide-10col' },
+  /* THE WIDE LADDER — the same three roles, a different geometry, different spans. */
+  { pid: 'visual.explanation', surface: 'desktop', bid: 'spine-supporting-wide', key: 'supporting/wide',
+    klass: 'wide', name: 'W1__wide-SUPPORTING__narrow-6col' },
+  { pid: 'visual.explanation', surface: 'desktop', bid: 'stage-wide', key: 'explanatory/wide',
+    klass: 'wide', name: 'W2__wide-EXPLANATORY__wide-10col' },
+  { pid: 'visual.explanation', surface: 'desktop', bid: 'stage-full', key: 'primary/wide',
+    klass: 'wide', name: 'W3__wide-PRIMARY__full-12col' },
+  /* the responsive forms of one authored blueprint */
   { pid: 'visual.explanation', surface: 'tablet', bid: 'spine-narrow', key: 'explanatory/portrait',
     klass: 'portrait', name: 'S2__same-blueprint__tablet' },
   { pid: 'visual.explanation', surface: 'phone', bid: 'spine-narrow', key: 'explanatory/portrait',
@@ -1307,6 +1319,18 @@ console.log('\nadversarial — the same compositions with twice the prose');
 for (const x of SCOPE)
   await board(x.pid, x.surface, x.bid, { klass: x.klass, selectKey: x.key, fs: 'A', adversarial: true,
     noShot: true, quiet: true, tag: 'adv', name: x.name + '__adv' });
+
+/* ── THE COMPARISON THE FREEZE TURNS ON ──────────────────────────────────────────────────────────*/
+console.log('\nthe primary-portrait comparison — ten centred columns against the full grid');
+await board('visual.explanation', 'desktop', 'stage-primary-full12',
+  { klass: 'portrait', fs: 'A', candidate: true, tag: 'c12',
+    name: 'R3b__portrait-PRIMARY__full-12col__CANDIDATE-NOT-FROZEN',
+    why: 'THE VERSION THIS PASS DECLINED TO FREEZE, rendered beside R3 for comparison. Nothing is '
+      + 'mathematically wrong with it and the page scrolls — and a portrait plane preserves its geometry, '
+      + 'so twelve columns makes it 1152×1469. Pedagogical importance must not automatically mean maximum '
+      + 'horizontal span, so `full` has been removed from the portrait span family: this composition is now '
+      + 'a CANDIDATE that `select` cannot name, and the approved primary portrait is R3 at ten centred '
+      + 'columns.' });
 
 /* ── PLOT CHROME CANNOT MOVE THE SURFACE OR THE SPAN ─────────────────────────────────────────────*/
 console.log('\nchrome invariance — bigger axis labels, same surface, same span');
@@ -1379,7 +1403,7 @@ await board('visual.explanation', 'desktop', 'spine-narrow',
    Written as pure functions of the records so each can be run twice: once on the atlas, where it
    must stay silent, and once on a doctored set, where it must speak. A control that has never been
    seen to fail is a comment. */
-const REAL = REPORT.filter((r) => !r.counterexample);
+const REAL = REPORT.filter((r) => !r.counterexample && !r.candidate);
 
 /* H7 · PROSE LENGTH MOVES NOTHING. */
 const H7 = (recs) => {
@@ -1402,6 +1426,9 @@ const H7 = (recs) => {
 const H8 = (recs) => recs.filter((r) => !r.sequence).flatMap((r) => {
   const P = BP.patterns[r.pattern];
   const approved = Object.keys(P.blueprints);
+  /* A CANDIDATE IS RENDERED FOR COMPARISON AND IS UNREACHABLE FROM `select` BY CONSTRUCTION. That is
+     the whole point of the bucket: it can be looked at and cannot be chosen. */
+  if ((P.candidates || {})[r.blueprint]) return [];
   const want = P.select[r.surface] && Object.fromEntries(selectEntries(P.select[r.surface]))[r.selectKey];
   const o = [];
   if (!approved.includes(r.blueprint))

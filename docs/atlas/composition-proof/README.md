@@ -164,27 +164,78 @@ unapproved blueprint; an unnamed rhythm step.
   chrome, so the support region rendered with the board's legend styles. Found by looking at the
   picture, not by a control.
 
-## The figure surface — adopted (treatment A)
+## Frozen
 
-`figureSurface.enabled: true`, `treatment: "A"`. **The concept is adopted; the exact dimensions are
-not frozen.** What treatment A proved is the ownership model, not that 760px is the right width for
-a graph:
+| | |
+| --- | --- |
+| **Treatment A** | the figure surface takes the media region; the plot is solved inside it |
+| **Ownership** | `blueprint region → figure surface → plot → caption` |
+| **Caption** | owned by the **surface**, never the plot |
+| **Boundaries** | region · surface · plot · caption, independently inspectable |
+| **Role** | authored, never inferred |
+| **Responsive identity** | the rungs may change; the blueprint may not |
+| **Plot chrome** | cannot change the composition |
+| **Internal surface whitespace** | valid *owned* space, categorically unlike an unowned column |
+| **Treatment B** | rejected, kept as a counterexample |
+| **supporting portrait** | `spine-supporting` · centred `inset` 4 |
+| **explanatory portrait** | `spine-narrow` · centred `expanded` 8 |
+
+**Not frozen:** `primary/portrait`. See the comparison below.
+
+## `presentationRole × mediaGeometry → approved named blueprint`
+
+Not `role → rung`. **The role says how prominent the object should be; the geometry says which
+composition can express that prominence well.** Neither alone picks a width, and no rung is reached
+for generically.
+
+### The portrait ladder
+
+| role | blueprint | rung | surface | plot | units |
+| --- | --- | --- | --- | --- | --- |
+| supporting | `spine-supporting` | `inset` 4 | 368 × 528 | 330 × 436 | 28.55 / 28.49 |
+| explanatory | `spine-narrow` | `expanded` 8 | 760 × 998 | 722 × 906 | 62.67 / 62.65 |
+| **primary** | `stage-primary-portrait` | `wide` 10 | **956 × 1234** | 918 × 1142 | 79.82 / 79.79 |
+| *candidate, not frozen* | `stage-primary-full12` | `full` 12 | *1152 × 1469* | 1114 × 1377 | 96.77 / 96.82 |
+
+### The wide ladder — the same roles, a different geometry
+
+| role | blueprint | rung | surface | plot | units |
+| --- | --- | --- | --- | --- | --- |
+| supporting | `spine-supporting-wide` | `narrow` 6 | 564 × 355 | 526 × 263 | 19.51 / 19.40 |
+| explanatory | `stage-wide` | `wide` 10 | 956 × 521 | 918 × 429 | 33.99 / 33.92 |
+| primary | `stage-full` | `full` 12 | 1152 × 601 | 1114 × 509 | 41.20 / 41.02 |
+
+The same three roles produce **368 / 760 / 956** for a portrait plane and **564 / 956 / 1152** for a
+wide one. That is the point: the role is the same, the composition is not.
+
+### Primary does not mean maximum
+
+`R3b` is the full-grid primary portrait, kept as a **candidate** and rendered beside `R3` for
+comparison. Nothing is mathematically wrong with it and the page scrolls — and because a portrait
+plane preserves its geometry, twelve columns makes it **1152 × 1469**.
+
+So **`full` is no longer in any portrait span family.** A full-width primary portrait is not
+discouraged; it is *inexpressible* — `select` cannot name it, and a blueprint that tries to approve
+that rung for portrait media is refused before anything renders. It survives only in the `candidates`
+bucket, which is validated and renderable and unreachable from `select`.
+
+A primary portrait dominates through **vertical presence, surrounding whitespace and being the
+principal object** — 956px of figure against a 760px reading — not by consuming every column. Full
+width stays where the geometry benefits from width: wide planes, timelines, wide diagrams,
+interactives, workspaces.
+
+## The figure surface (treatment A)
 
 ```
 blueprint → media region → figure surface → plot
 ```
 
 The blueprint owns the region. The surface consumes the region. The plot is solved *inside* the
-surface, preserving the mathematics.
+surface, preserving the mathematics. Treatment B is rejected (`X__treatment-B__REJECTED`):
+shrink-wrapping puts the plate at 564px, exactly the width of the six-column reading spine below it,
+so the composition says eight columns while the eye still sees six.
 
-**Treatment B is rejected and kept as a counterexample** (`X__treatment-B__REJECTED`). Shrink-wrapping
-the surface to the plot puts the plate at **564px — exactly the width of the six-column reading spine
-below it** — so the composition says eight columns while the eye still sees six. That is the
-disconnect the whole architecture exists to remove, and it is the same under-realisation H11 rejects
-at the row level. B also forces the slot to `contain`, because under `fill` a surface narrower than
-its region is the defect the contract was built to catch.
-
-### Four boundaries, independently inspectable
+### Four boundaries
 
 | | boundary | what it is |
 | --- | --- | --- |
@@ -193,70 +244,25 @@ its region is the defect the contract was built to catch.
 | **3** | **plot** | the mathematical drawing |
 | **4** | **caption** | describes the whole media object — **owned by the surface** |
 
-A surface may contain intentional internal whitespace. That whitespace is owned by the media object
-and is categorically different from unused grid columns in the composition — the legend's sixth
-entry.
+Internal whitespace inside a surface is owned by the media object and is categorically different from
+unused grid columns — the legend's sixth entry.
 
-### The caption belongs to the surface
+The caption: the plot is the mathematical drawing; the caption describes the **complete media
+object**. The engine may supply the content; the surface renders and owns it, any `tp-fig-cap` emitted
+inside a plot is lifted out, and **H16** fails a caption found there. That is what generalises to
+images, diagrams, videos and interactives — `surface header · media payload · local controls ·
+caption`.
 
-The plot is the mathematical drawing; the caption describes the **complete media object**. The graph
-engine may supply the content, and the surface renders and owns it. Any `tp-fig-cap` the engine emits
-inside the plot is lifted out and rendered on the surface, and **H16** fails a caption found inside
-the plot. This is what generalises to images, diagrams, videos and interactives, which then all share
-one contract:
+### Responsive forms, and chrome
 
-```
-surface header · media payload · local controls · caption
-```
+`spine-narrow` at desktop / tablet / phone realises `expanded` 8 → `expanded` 8 → `spine` 4. The rungs
+differ; **H18** requires the blueprint, its role and its rows to be identical.
 
-## Slot width and plot size are different decisions
+`P__plot-chrome-cannot-move-the-surface` renders `spine-narrow` with axis labels at 21px bold. The
+span is still eight columns, the surface still 760 × 998, the plot still the 722 × 906 that was
+solved. **H17** compares the pair; its drive is a surface sized by its content instead of its region.
 
-The separation the catalogue now keeps explicit:
-
-- **blueprint span** — how much page geometry the media owns;
-- **surface** — the complete visual object occupying that geometry;
-- **plot realisation** — how the graph uses the surface while preserving scale and labels;
-- **presentation role** — what the object is *for*.
-
-**The role is authored and never inferred.** The renderer may choose between the responsive forms of
-an authored blueprint; it may not read available space, prose length or occupancy and conclude that a
-visual is important.
-
-### The same portrait graph, three approved compositions
-
-Three *different named blueprints*, not one blueprint with a size calculation:
-
-| role | blueprint | rung | surface | plot | unit scale |
-| --- | --- | --- | --- | --- | --- |
-| **supporting** | `spine-supporting` | `inset` 4 col | 368 × 528 | 330 × 436 | 28.55 / 28.49 |
-| **explanatory** | `spine-narrow` | `expanded` 8 col | 760 × 998 | 722 × 906 | 62.67 / 62.65 |
-| **primary** | `stage-primary` | `full` 12 col | 1152 × 1469 | 1114 × 1377 | 96.77 / 96.82 |
-
-A primary visual is *allowed* to be 1469px tall, because the page exists substantially to explain it
-and the page scrolls. A small supporting graph uses a **different approved blueprint**, not a tiny
-graph inside the eight-column one. The span family is keyed by geometry **and role**:
-`media.portrait.supporting → [inset]`, `.explanatory → [expanded]`, `.primary → [wide, full]`.
-
-### The same blueprint across surfaces
-
-| | blueprint | role | rung | surface | plot |
-| --- | --- | --- | --- | --- | --- |
-| desktop | `spine-narrow` | explanatory | `expanded` 8 | 760 × 998 | 722 × 906 |
-| tablet | `spine-narrow` | explanatory | `expanded` 8 | 834 × 1087 | 796 × 995 |
-| phone | `spine-narrow` | explanatory | `spine` 4 | 382 × 545 | 344 × 453 |
-
-The rungs differ — that is what a responsive form *is*. **H18** requires the blueprint, its role and
-its rows (ids, cardinality, modes) to be identical across all three.
-
-### Plot chrome cannot reach the composition
-
-`P__plot-chrome-cannot-move-the-surface` renders `spine-narrow` with the plot's own axis labels at
-21px bold instead of the authored size. The blueprint span is still eight columns, the surface is
-still **760 × 998**, and the plot is still the **722 × 906** that was solved. **H17** compares the two
-renders; its drive is a surface sized by its content instead of by its region, which is exactly how
-chrome would otherwise reach the grid.
-
-## Deliberately not done## Deliberately not done
+## Deliberately not done## Deliberately not done## Deliberately not done
 
 - **No sweep.** `visual.compare` and the remaining `visual.explanation` blueprints are migrated to
   the solo/paired schema so the build stays whole; they are not re-rendered or re-approved.

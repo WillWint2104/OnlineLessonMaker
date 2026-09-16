@@ -8,6 +8,27 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **`presentationRole × mediaGeometry → approved named blueprint`, and the surface contract frozen**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue).
+  - **FROZEN**: treatment A · figure-surface ownership (`blueprint region → figure surface → plot →
+    caption`) · the caption owned by the surface · the four boundaries independently inspectable · the
+    presentation role authored and never inferred · responsive blueprint identity invariant · plot chrome
+    cannot change the composition · internal surface whitespace is valid OWNED space · treatment B
+    rejected · supporting portrait at centred `inset` 4 · explanatory portrait at centred `expanded` 8.
+  - **PRIMARY DOES NOT MEAN MAXIMUM HORIZONTAL SPAN.** The full-grid primary portrait measured
+    1152×1469: legal, because the page scrolls, and not a good default. `full` has been removed from
+    every portrait span family, so a full-width primary portrait is not discouraged but INEXPRESSIBLE —
+    `select` cannot name it and a blueprint approving that rung for portrait media is refused before
+    anything renders. It survives in a new `candidates` bucket, which is validated and renderable and
+    unreachable from `select`, and is rendered beside the approved version for comparison.
+  - **The mapping is now role × geometry → NAMED BLUEPRINT**, not role → rung. The portrait ladder is
+    368 / 760 / **956**; the wide ladder is 564 / 956 / **1152**. The same three roles, different
+    geometry, different compositions — which is the whole argument for keeping both explicit.
+  - New blueprints: `stage-primary-portrait` (centred `wide` 10), `spine-supporting-wide` (centred
+    `narrow` 6) and `stage-wide` (centred `wide` 10); a `narrow` = 6 rung joins the ladder; `stage-full`
+    becomes the primary WIDE composition, where the whole grid is the right answer.
+
 - **The figure surface adopted, and presentation role separated from slot width**
   (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
   into the shipping catalogue). `figureSurface.enabled: true`, treatment A. **The concept is adopted; the
