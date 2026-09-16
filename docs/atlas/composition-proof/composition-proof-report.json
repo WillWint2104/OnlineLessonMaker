@@ -12,7 +12,7 @@
       "rows": [
         {
           "id": "media",
-          "split": "centred-6",
+          "split": "spine centre 6",
           "mode": "hug",
           "h": 747.14,
           "air": 0,
@@ -20,7 +20,7 @@
         },
         {
           "id": "interpretation",
-          "split": "centred-6",
+          "split": "spine centre 6",
           "mode": "hug",
           "h": 93.64,
           "air": 0,
@@ -28,9 +28,9 @@
         },
         {
           "id": "support",
-          "split": "centred-6",
+          "split": "spine centre 6",
           "mode": "hug",
-          "h": 89.59,
+          "h": 49.89,
           "air": 0,
           "imbalance": null
         }
@@ -48,7 +48,7 @@
           "step": "normal",
           "declared": 32,
           "rendered": 32,
-          "perceived": 48
+          "perceived": 32
         }
       ],
       "slotWidths": [
@@ -59,1212 +59,6 @@
       "whitespaceOwned": true,
       "mediaOk": true,
       "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "desktop",
-      "blueprint": "spine-reading",
-      "klass": "balanced",
-      "name": "visual-explanation__desktop__spine-reading__balanced",
-      "selectKey": "balanced",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "media",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 739.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 48
-        }
-      ],
-      "slotWidths": [
-        "media=760",
-        "interpretation=760",
-        "support=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "desktop",
-      "blueprint": "stage-full",
-      "klass": "wide",
-      "name": "visual-explanation__desktop__stage-full__wide",
-      "selectKey": "wide",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "media",
-          "split": "full-12",
-          "mode": "hug",
-          "h": 557.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 48
-        }
-      ],
-      "slotWidths": [
-        "media=1152",
-        "interpretation=760",
-        "support=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "tablet",
-      "blueprint": "spine-narrow",
-      "klass": "portrait",
-      "name": "visual-explanation__tablet__spine-narrow__portrait",
-      "selectKey": "portrait",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "media",
-          "split": "centred-6",
-          "mode": "hug",
-          "h": 815.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "centred-6",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "centred-6",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 48
-        }
-      ],
-      "slotWidths": [
-        "media=621",
-        "interpretation=621",
-        "support=621"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "tablet",
-      "blueprint": "spine-reading",
-      "klass": "balanced",
-      "name": "visual-explanation__tablet__spine-reading__balanced",
-      "selectKey": "balanced",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "media",
-          "split": "full-8",
-          "mode": "hug",
-          "h": 802.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "centred-6",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "centred-6",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 48
-        }
-      ],
-      "slotWidths": [
-        "media=834",
-        "interpretation=621",
-        "support=621"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "tablet",
-      "blueprint": "stage-full",
-      "klass": "wide",
-      "name": "visual-explanation__tablet__stage-full__wide",
-      "selectKey": "wide",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "media",
-          "split": "full-8",
-          "mode": "hug",
-          "h": 423.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "centred-6",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "centred-6",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 48
-        }
-      ],
-      "slotWidths": [
-        "media=834",
-        "interpretation=621",
-        "support=621"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "phone",
-      "blueprint": "stack",
-      "klass": "portrait",
-      "name": "visual-explanation__phone__stack__portrait",
-      "selectKey": "portrait",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "media",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 528.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 120.19,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 48
-        }
-      ],
-      "slotWidths": [
-        "media=382",
-        "interpretation=382",
-        "support=382"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.compare",
-      "surface": "desktop",
-      "blueprint": "compare-plain",
-      "klass": "none",
-      "name": "visual-compare__desktop__compare-plain",
-      "selectKey": "none",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "cases",
-          "split": "6/6",
-          "mode": "paired",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": 0
-        },
-        {
-          "id": "interpretation",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 114.64,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "cases",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 59.55
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 53
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "caseA=564",
-        "caseB=564",
-        "interpretation=760",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": null,
-      "fails": []
-    },
-    {
-      "pattern": "visual.compare",
-      "surface": "desktop",
-      "blueprint": "compare-shared-centred",
-      "klass": "portrait",
-      "name": "visual-compare__desktop__compare-shared-centred__portrait",
-      "selectKey": "portrait",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "cases",
-          "split": "6/6",
-          "mode": "paired",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": 0
-        },
-        {
-          "id": "media",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 982.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 114.64,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "cases",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": -726.97
-        },
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 53
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "caseA=564",
-        "caseB=564",
-        "media=760",
-        "interpretation=760",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.compare",
-      "surface": "desktop",
-      "blueprint": "compare-shared-full",
-      "klass": "landscape",
-      "name": "visual-compare__desktop__compare-shared-full__landscape",
-      "selectKey": "landscape",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "cases",
-          "split": "6/6",
-          "mode": "paired",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": 0
-        },
-        {
-          "id": "media",
-          "split": "full-12",
-          "mode": "hug",
-          "h": 678.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 114.64,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "cases",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 59.55
-        },
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 53
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "caseA=564",
-        "caseB=564",
-        "media=1152",
-        "interpretation=760",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.compare",
-      "surface": "phone",
-      "blueprint": "compare-plain",
-      "klass": "none",
-      "name": "visual-compare__phone__compare-plain",
-      "selectKey": "none",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 120.19,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "caseA",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "caseB",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 120.19,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 141.19,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "caseA",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 35.55
-        },
-        {
-          "after": "caseB",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 59.55
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 53
-        }
-      ],
-      "slotWidths": [
-        "intro=382",
-        "caseA=382",
-        "caseB=382",
-        "interpretation=382",
-        "synthesis=382"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": null,
-      "fails": []
-    },
-    {
-      "pattern": "visual.compare",
-      "surface": "phone",
-      "blueprint": "stack",
-      "klass": "portrait",
-      "name": "visual-compare__phone__stack__portrait",
-      "selectKey": "portrait",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 120.19,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "caseA",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "caseB",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "media",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 528.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 120.19,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 141.19,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "caseA",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 35.55
-        },
-        {
-          "after": "caseB",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": -317.17
-        },
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 53
-        }
-      ],
-      "slotWidths": [
-        "intro=382",
-        "caseA=382",
-        "caseB=382",
-        "media=382",
-        "interpretation=382",
-        "synthesis=382"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "worked.single",
-      "surface": "desktop",
-      "blueprint": "flow",
-      "klass": "none",
-      "name": "worked-single__desktop__flow",
-      "selectKey": "flow",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "scenario",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "worked",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 114.64,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 32
-        },
-        {
-          "after": "scenario",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 32
-        },
-        {
-          "after": "worked",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 51.55
-        },
-        {
-          "after": "support",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 93
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "scenario=760",
-        "worked=760",
-        "support=760",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": null,
-      "fails": []
-    },
-    {
-      "pattern": "worked.single",
-      "surface": "desktop",
-      "blueprint": "split",
-      "klass": "none",
-      "name": "worked-single__desktop__split",
-      "selectKey": "split",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "scenario",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "worked",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 114.64,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 32
-        },
-        {
-          "after": "scenario",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "worked",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 51.55
-        },
-        {
-          "after": "support",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 93
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "scenario=760",
-        "worked=760",
-        "support=760",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": null,
-      "fails": []
-    },
-    {
-      "pattern": "worked.single",
-      "surface": "phone",
-      "blueprint": "flow",
-      "klass": "none",
-      "name": "worked-single__phone__flow",
-      "selectKey": "flow",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 120.19,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "scenario",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 120.19,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "worked",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 141.19,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 32
-        },
-        {
-          "after": "scenario",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 32
-        },
-        {
-          "after": "worked",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 51.55
-        },
-        {
-          "after": "support",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 93
-        }
-      ],
-      "slotWidths": [
-        "intro=382",
-        "scenario=382",
-        "worked=382",
-        "support=382",
-        "synthesis=382"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": null,
-      "fails": []
-    },
-    {
-      "pattern": "worked.single",
-      "surface": "phone",
-      "blueprint": "split",
-      "klass": "none",
-      "name": "worked-single__phone__split",
-      "selectKey": "split",
-      "adversarial": false,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 120.19,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "scenario",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 120.19,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "worked",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 141.19,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 32
-        },
-        {
-          "after": "scenario",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "worked",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 51.55
-        },
-        {
-          "after": "support",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 93
-        }
-      ],
-      "slotWidths": [
-        "intro=382",
-        "scenario=382",
-        "worked=382",
-        "support=382",
-        "synthesis=382"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": null,
       "fails": []
     },
     {
@@ -1279,7 +73,7 @@
       "rows": [
         {
           "id": "intro",
-          "split": "8/4",
+          "split": "spine left-edge 8",
           "mode": "hug",
           "h": 93.64,
           "air": 0,
@@ -1295,7 +89,7 @@
         },
         {
           "id": "synthesis",
-          "split": "8/4",
+          "split": "spine left-edge 8",
           "mode": "hug",
           "h": 114.64,
           "air": 0,
@@ -1315,7 +109,7 @@
           "step": "section",
           "declared": 56,
           "rendered": 56,
-          "perceived": 80.55
+          "perceived": 56
         }
       ],
       "slotWidths": [
@@ -1330,44 +124,36 @@
       "fails": []
     },
     {
-      "pattern": "worked.paired",
-      "surface": "phone",
-      "blueprint": "cases-stacked",
-      "klass": "none",
-      "name": "worked-paired__phone__cases-stacked",
+      "pattern": "practice.workbook",
+      "surface": "desktop",
+      "blueprint": "workbook-5-7",
+      "klass": "portrait",
+      "name": "practice-workbook__desktop__workbook-5-7__portrait",
       "selectKey": "any",
       "adversarial": false,
       "counterexample": false,
       "rows": [
         {
           "id": "intro",
-          "split": "full-4",
+          "split": "spine left-edge 8",
           "mode": "hug",
-          "h": 120.19,
+          "h": 93.64,
           "air": 0,
           "imbalance": null
         },
         {
-          "id": "workedA",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 313.25,
+          "id": "reference",
+          "split": "5/7",
+          "mode": "workspace",
+          "h": 629.14,
           "air": 0,
-          "imbalance": null
+          "imbalance": 117.14
         },
         {
-          "id": "workedB",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 313.25,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "full-4",
-          "mode": "hug",
-          "h": 141.19,
+          "id": "questions",
+          "split": "5/7",
+          "mode": "workspace",
+          "h": 159.05,
           "air": 0,
           "imbalance": null
         }
@@ -1375,35 +161,29 @@
       "rhythm": [
         {
           "after": "intro",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "workedA",
           "step": "normal",
           "declared": 32,
           "rendered": 32,
-          "perceived": 35.55
+          "perceived": 32
         },
         {
-          "after": "workedB",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 80.55
+          "after": "reference",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
         }
       ],
       "slotWidths": [
-        "intro=382",
-        "workedA=382",
-        "workedB=382",
-        "synthesis=382"
+        "intro=760",
+        "reference=466",
+        "workspace=662",
+        "questions=466",
+        "workspace=662"
       ],
       "whitespaceOwned": true,
       "mediaOk": true,
-      "mediaVerdict": null,
+      "mediaVerdict": "the object consumes the slot width",
       "fails": []
     },
     {
@@ -1418,7 +198,7 @@
       "rows": [
         {
           "id": "media",
-          "split": "centred-6",
+          "split": "spine centre 6",
           "mode": "hug",
           "h": 747.14,
           "air": 0,
@@ -1426,7 +206,7 @@
         },
         {
           "id": "interpretation",
-          "split": "centred-6",
+          "split": "spine centre 6",
           "mode": "hug",
           "h": 201.28,
           "air": 0,
@@ -1434,9 +214,9 @@
         },
         {
           "id": "support",
-          "split": "centred-6",
+          "split": "spine centre 6",
           "mode": "hug",
-          "h": 89.59,
+          "h": 49.89,
           "air": 0,
           "imbalance": null
         }
@@ -1454,7 +234,7 @@
           "step": "normal",
           "declared": 32,
           "rendered": 32,
-          "perceived": 48
+          "perceived": 32
         }
       ],
       "slotWidths": [
@@ -1465,580 +245,6 @@
       "whitespaceOwned": true,
       "mediaOk": true,
       "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "desktop",
-      "blueprint": "spine-reading",
-      "klass": "balanced",
-      "name": "visual-explanation__desktop__spine-reading__balanced",
-      "selectKey": "balanced",
-      "adversarial": true,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "media",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 739.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 48
-        }
-      ],
-      "slotWidths": [
-        "media=760",
-        "interpretation=760",
-        "support=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "desktop",
-      "blueprint": "stage-full",
-      "klass": "wide",
-      "name": "visual-explanation__desktop__stage-full__wide",
-      "selectKey": "wide",
-      "adversarial": true,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "media",
-          "split": "full-12",
-          "mode": "hug",
-          "h": 557.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 48
-        }
-      ],
-      "slotWidths": [
-        "media=1152",
-        "interpretation=760",
-        "support=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.compare",
-      "surface": "desktop",
-      "blueprint": "compare-plain",
-      "klass": "none",
-      "name": "visual-compare__desktop__compare-plain",
-      "selectKey": "none",
-      "adversarial": true,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "cases",
-          "split": "6/6",
-          "mode": "paired",
-          "h": 394.28,
-          "air": 0,
-          "imbalance": 0
-        },
-        {
-          "id": "interpretation",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 222.28,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "cases",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 59.54
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 53
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "caseA=564",
-        "caseB=564",
-        "interpretation=760",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": null,
-      "fails": []
-    },
-    {
-      "pattern": "visual.compare",
-      "surface": "desktop",
-      "blueprint": "compare-shared-centred",
-      "klass": "portrait",
-      "name": "visual-compare__desktop__compare-shared-centred__portrait",
-      "selectKey": "portrait",
-      "adversarial": true,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "cases",
-          "split": "6/6",
-          "mode": "paired",
-          "h": 394.28,
-          "air": 0,
-          "imbalance": 0
-        },
-        {
-          "id": "media",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 982.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 222.28,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "cases",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": -726.98
-        },
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 53
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "caseA=564",
-        "caseB=564",
-        "media=760",
-        "interpretation=760",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "visual.compare",
-      "surface": "desktop",
-      "blueprint": "compare-shared-full",
-      "klass": "landscape",
-      "name": "visual-compare__desktop__compare-shared-full__landscape",
-      "selectKey": "landscape",
-      "adversarial": true,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "cases",
-          "split": "6/6",
-          "mode": "paired",
-          "h": 394.28,
-          "air": 0,
-          "imbalance": 0
-        },
-        {
-          "id": "media",
-          "split": "full-12",
-          "mode": "hug",
-          "h": 678.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 222.28,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "cases",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 59.54
-        },
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 53
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "caseA=564",
-        "caseB=564",
-        "media=1152",
-        "interpretation=760",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": []
-    },
-    {
-      "pattern": "worked.single",
-      "surface": "desktop",
-      "blueprint": "flow",
-      "klass": "none",
-      "name": "worked-single__desktop__flow",
-      "selectKey": "flow",
-      "adversarial": true,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "scenario",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "worked",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 394.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 222.28,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 32
-        },
-        {
-          "after": "scenario",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 32
-        },
-        {
-          "after": "worked",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 51.54
-        },
-        {
-          "after": "support",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 93
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "scenario=760",
-        "worked=760",
-        "support=760",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": null,
-      "fails": []
-    },
-    {
-      "pattern": "worked.single",
-      "surface": "desktop",
-      "blueprint": "split",
-      "klass": "none",
-      "name": "worked-single__desktop__split",
-      "selectKey": "split",
-      "adversarial": true,
-      "counterexample": false,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "scenario",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 201.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "worked",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 394.28,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 222.28,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 32
-        },
-        {
-          "after": "scenario",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "worked",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 51.54
-        },
-        {
-          "after": "support",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 93
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "scenario=760",
-        "worked=760",
-        "support=760",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": null,
       "fails": []
     },
     {
@@ -2053,7 +259,7 @@
       "rows": [
         {
           "id": "intro",
-          "split": "8/4",
+          "split": "spine left-edge 8",
           "mode": "hug",
           "h": 201.28,
           "air": 0,
@@ -2069,7 +275,7 @@
         },
         {
           "id": "synthesis",
-          "split": "8/4",
+          "split": "spine left-edge 8",
           "mode": "hug",
           "h": 222.28,
           "air": 0,
@@ -2089,7 +295,7 @@
           "step": "section",
           "declared": 56,
           "rendered": 56,
-          "perceived": 80.54
+          "perceived": 56
         }
       ],
       "slotWidths": [
@@ -2104,86 +310,67 @@
       "fails": []
     },
     {
-      "pattern": "worked.single",
+      "pattern": "practice.workbook",
       "surface": "desktop",
-      "blueprint": "sequence:solving-for-x",
-      "klass": "none",
-      "name": "sequence__solving-for-x",
-      "adversarial": false,
-      "counterexample": false,
-      "sequence": true,
-      "rows": [],
-      "rhythm": [],
-      "slotWidths": [],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "fails": []
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "desktop",
-      "blueprint": "stage-full",
+      "blueprint": "workbook-5-7",
       "klass": "portrait",
-      "name": "counterexample__shipped-683px-graph",
-      "selectKey": null,
-      "adversarial": false,
-      "counterexample": true,
+      "name": "practice-workbook__desktop__workbook-5-7__portrait",
+      "selectKey": "any",
+      "adversarial": true,
+      "counterexample": false,
       "rows": [
         {
-          "id": "media",
-          "split": "full-12",
+          "id": "intro",
+          "split": "spine left-edge 8",
           "mode": "hug",
-          "h": 890.14,
+          "h": 201.28,
           "air": 0,
           "imbalance": null
         },
         {
-          "id": "interpretation",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 93.64,
+          "id": "reference",
+          "split": "5/7",
+          "mode": "workspace",
+          "h": 629.14,
           "air": 0,
-          "imbalance": null
+          "imbalance": 117.14
         },
         {
-          "id": "support",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 89.59,
+          "id": "questions",
+          "split": "5/7",
+          "mode": "workspace",
+          "h": 273.08,
           "air": 0,
           "imbalance": null
         }
       ],
       "rhythm": [
         {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
+          "after": "intro",
           "step": "normal",
           "declared": 32,
           "rendered": 32,
-          "perceived": 48
+          "perceived": 32
+        },
+        {
+          "after": "reference",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
         }
       ],
       "slotWidths": [
-        "media=1152",
-        "interpretation=760",
-        "support=760"
+        "intro=760",
+        "reference=466",
+        "workspace=662",
+        "questions=466",
+        "workspace=662"
       ],
       "whitespaceOwned": true,
-      "mediaOk": false,
-      "mediaVerdict": "a `fill` object painted 683px inside a 1152px slot",
-      "fails": [
-        [
-          "H5",
-          "visual.explanation/stage-full/desktop: a `fill` object painted 683px inside a 1152px slot"
-        ]
-      ]
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": []
     },
     {
       "pattern": "visual.explanation",
@@ -2205,7 +392,7 @@
         },
         {
           "id": "interpretation",
-          "split": "centred-8",
+          "split": "spine centre 6",
           "mode": "hug",
           "h": 93.64,
           "air": 0,
@@ -2213,9 +400,9 @@
         },
         {
           "id": "support",
-          "split": "centred-8",
+          "split": "spine centre 6",
           "mode": "hug",
-          "h": 89.59,
+          "h": 49.89,
           "air": 0,
           "imbalance": null
         }
@@ -2233,13 +420,13 @@
           "step": "normal",
           "declared": 32,
           "rendered": 32,
-          "perceived": 48
+          "perceived": 32
         }
       ],
       "slotWidths": [
         "media=564",
-        "interpretation=760",
-        "support=760"
+        "interpretation=564",
+        "support=564"
       ],
       "whitespaceOwned": false,
       "mediaOk": true,
@@ -2247,210 +434,7 @@
       "fails": [
         [
           "H2",
-          "visual.explanation/spine-narrow/desktop row `media`: columns 7–12 (564px) are rendered empty and nothing declares them. A row holding `media` may not leave part of itself unexplained — centre it in the row, give it a companion region, widen it to an approved footprint, or move it into a different row composition"
-        ]
-      ]
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "desktop",
-      "blueprint": "spine-narrow",
-      "klass": "portrait",
-      "name": "counterexample__margin-beside-media",
-      "selectKey": null,
-      "adversarial": false,
-      "counterexample": true,
-      "rows": [
-        {
-          "id": "media",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 982.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 48
-        }
-      ],
-      "slotWidths": [
-        "media=760",
-        "interpretation=760",
-        "support=760"
-      ],
-      "whitespaceOwned": false,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": [
-        [
-          "H2",
-          "visual.explanation/spine-narrow/desktop row `media`: columns 9–12 are declared `reading-margin` beside media — free columns beside media are never a margin"
-        ]
-      ]
-    },
-    {
-      "pattern": "visual.explanation",
-      "surface": "desktop",
-      "blueprint": "spine-reading",
-      "klass": "balanced",
-      "name": "counterexample__stretched-hug-row",
-      "selectKey": null,
-      "adversarial": false,
-      "counterexample": true,
-      "rows": [
-        {
-          "id": "media",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 739.14,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "interpretation",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 420,
-          "air": 326.36,
-          "imbalance": null
-        },
-        {
-          "id": "support",
-          "split": "centred-8",
-          "mode": "hug",
-          "h": 89.59,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "media",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "interpretation",
-          "step": "normal",
-          "declared": 32,
-          "rendered": 32,
-          "perceived": 374.36
-        }
-      ],
-      "slotWidths": [
-        "media=760",
-        "interpretation=760",
-        "support=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": "the object consumes the slot width",
-      "fails": [
-        [
-          "H3",
-          "visual.explanation/spine-reading/desktop row `interpretation`: the row is 420px and its tallest child is 93.64px — 326.36px of the row is taller than anything in it. A `hug` row takes its height from its contents; only a declared `workspace` may be substantial on its own"
-        ]
-      ]
-    },
-    {
-      "pattern": "worked.paired",
-      "surface": "desktop",
-      "blueprint": "cases-6-6",
-      "klass": "none",
-      "name": "counterexample__no-alignment-origin",
-      "selectKey": null,
-      "adversarial": false,
-      "counterexample": true,
-      "rows": [
-        {
-          "id": "intro",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 93.64,
-          "air": 0,
-          "imbalance": null
-        },
-        {
-          "id": "cases",
-          "split": "6/6",
-          "mode": "paired",
-          "h": 377.25,
-          "air": 64,
-          "imbalance": 0
-        },
-        {
-          "id": "synthesis",
-          "split": "8/4",
-          "mode": "hug",
-          "h": 114.64,
-          "air": 0,
-          "imbalance": null
-        }
-      ],
-      "rhythm": [
-        {
-          "after": "intro",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 56
-        },
-        {
-          "after": "cases",
-          "step": "section",
-          "declared": 56,
-          "rendered": 56,
-          "perceived": 80.55
-        }
-      ],
-      "slotWidths": [
-        "intro=760",
-        "workedA=564",
-        "workedB=564",
-        "synthesis=760"
-      ],
-      "whitespaceOwned": true,
-      "mediaOk": true,
-      "mediaVerdict": null,
-      "fails": [
-        [
-          "H3",
-          "worked.paired/cases-6-6/desktop row `cases`: the row is 377.25px and its tallest child is 313.25px — 64px of the row is taller than anything in it. A `paired` row takes its height from its contents; only a declared `workspace` may be substantial on its own"
-        ],
-        [
-          "H4",
-          "worked.paired/cases-6-6/desktop row `cases`: the siblings start at y=149.64 and y=213.64 — a pair declared `align: top` has one alignment origin"
+          "visual.explanation/spine-narrow/desktop row `media`: columns 7–12 (564px) are rendered empty inside an ACTIVE ROW and nothing declares them. A row holding `media` may not leave part of itself unexplained — centre it on a declared spine, give it a companion region, widen it to an approved footprint, or move it into a different row composition"
         ]
       ]
     },
@@ -2474,9 +458,9 @@
         },
         {
           "id": "support",
-          "split": "8/4",
+          "split": "spine left-edge 8",
           "mode": "hug",
-          "h": 89.59,
+          "h": 49.89,
           "air": 0,
           "imbalance": null
         }
@@ -2487,7 +471,7 @@
           "step": "normal",
           "declared": 32,
           "rendered": 32,
-          "perceived": 48
+          "perceived": 32
         }
       ],
       "slotWidths": [
@@ -2501,31 +485,31 @@
       "fails": [
         [
           "H4",
-          "visual.explanation/side-study/desktop row `study`: the siblings end 535.5px apart and the blueprint declares at most 160px (an object beside the reading of it). Either the pairing is not a pairing, or the blueprint has not admitted how far apart it lets them end"
+          "visual.explanation/side-study/desktop row `study`: the siblings terminate 535.5px apart and the blueprint declares at most 160px (an object beside the reading of it). All twelve columns can be owned and the relationship still be visually invalid"
         ]
       ]
     },
     {
       "pattern": "visual.explanation",
       "surface": "desktop",
-      "blueprint": "spine-reading",
-      "klass": "balanced",
-      "name": "counterexample__anchorless-contain",
+      "blueprint": "stage-full",
+      "klass": "portrait",
+      "name": "drive__starved-fill",
       "selectKey": null,
       "adversarial": false,
       "counterexample": true,
       "rows": [
         {
           "id": "media",
-          "split": "centred-8",
+          "split": "full-12",
           "mode": "hug",
-          "h": 739.14,
+          "h": 890.14,
           "air": 0,
           "imbalance": null
         },
         {
           "id": "interpretation",
-          "split": "centred-8",
+          "split": "spine centre 8",
           "mode": "hug",
           "h": 93.64,
           "air": 0,
@@ -2533,9 +517,9 @@
         },
         {
           "id": "support",
-          "split": "centred-8",
+          "split": "spine centre 8",
           "mode": "hug",
-          "h": 89.59,
+          "h": 49.89,
           "air": 0,
           "imbalance": null
         }
@@ -2553,7 +537,285 @@
           "step": "normal",
           "declared": 32,
           "rendered": 32,
-          "perceived": 48
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=1152",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": false,
+      "mediaVerdict": "a `fill` object painted 683px inside a 1152px slot",
+      "fails": [
+        [
+          "H5",
+          "visual.explanation/stage-full/desktop: a `fill` object painted 683px inside a 1152px slot"
+        ]
+      ]
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-narrow",
+      "klass": "portrait",
+      "name": "drive__stretched-hug-row",
+      "selectKey": null,
+      "adversarial": false,
+      "counterexample": true,
+      "rows": [
+        {
+          "id": "media",
+          "split": "spine centre 6",
+          "mode": "hug",
+          "h": 747.14,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "spine centre 6",
+          "mode": "hug",
+          "h": 420,
+          "air": 326.36,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "spine centre 6",
+          "mode": "hug",
+          "h": 49.89,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 358.36
+        }
+      ],
+      "slotWidths": [
+        "media=564",
+        "interpretation=564",
+        "support=564"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [
+        [
+          "H3",
+          "visual.explanation/spine-narrow/desktop row `interpretation`: the row is 420px and its tallest child is 93.64px — 326.36px of the row is taller than anything in it"
+        ],
+        [
+          "H10",
+          "visual.explanation/spine-narrow/desktop: the step after `interpretation` is declared `normal` (32px) and reads as 358.36px — 326.4px of it belongs to a region's own exterior padding, which is a second page rhythm nobody declared"
+        ]
+      ]
+    },
+    {
+      "pattern": "worked.paired",
+      "surface": "desktop",
+      "blueprint": "cases-6-6",
+      "klass": "none",
+      "name": "drive__padding-at-the-exterior",
+      "selectKey": null,
+      "adversarial": false,
+      "counterexample": true,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "spine left-edge 8",
+          "mode": "hug",
+          "h": 121.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "cases",
+          "split": "6/6",
+          "mode": "paired",
+          "h": 313.25,
+          "air": 0,
+          "imbalance": 0
+        },
+        {
+          "id": "synthesis",
+          "split": "spine left-edge 8",
+          "mode": "hug",
+          "h": 114.64,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 84
+        },
+        {
+          "after": "cases",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=760",
+        "workedA=564",
+        "workedB=564",
+        "synthesis=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": null,
+      "fails": [
+        [
+          "H10",
+          "worked.paired/cases-6-6/desktop row `intro`: region `intro` carries 0px above its topmost ink (p) and 28px below its lowest (p) at its exterior boundary. A region hugs its ink or its visible surface; the space between regions belongs to the blueprint alone"
+        ],
+        [
+          "H10",
+          "worked.paired/cases-6-6/desktop: the step after `intro` is declared `section` (56px) and reads as 84px — 28px of it belongs to a region's own exterior padding, which is a second page rhythm nobody declared"
+        ]
+      ]
+    },
+    {
+      "pattern": "worked.paired",
+      "surface": "desktop",
+      "blueprint": "cases-6-6",
+      "klass": "none",
+      "name": "drive__no-alignment-origin",
+      "selectKey": null,
+      "adversarial": false,
+      "counterexample": true,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "spine left-edge 8",
+          "mode": "hug",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "cases",
+          "split": "6/6",
+          "mode": "paired",
+          "h": 377.25,
+          "air": 64,
+          "imbalance": 0
+        },
+        {
+          "id": "synthesis",
+          "split": "spine left-edge 8",
+          "mode": "hug",
+          "h": 114.64,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "cases",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=760",
+        "workedA=564",
+        "workedB=564",
+        "synthesis=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": null,
+      "fails": [
+        [
+          "H3",
+          "worked.paired/cases-6-6/desktop row `cases`: the row is 377.25px and its tallest child is 313.25px — 64px of the row is taller than anything in it"
+        ],
+        [
+          "H4",
+          "worked.paired/cases-6-6/desktop row `cases`: the siblings start at y=149.64 and y=213.64 — two regions sharing a row share ONE alignment origin"
+        ]
+      ]
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-reading",
+      "klass": "balanced",
+      "name": "drive__anchorless-contain",
+      "selectKey": null,
+      "adversarial": false,
+      "counterexample": true,
+      "rows": [
+        {
+          "id": "media",
+          "split": "spine centre 8",
+          "mode": "hug",
+          "h": 739.14,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "spine centre 8",
+          "mode": "hug",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "spine centre 8",
+          "mode": "hug",
+          "h": 49.89,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
         }
       ],
       "slotWidths": [
@@ -2574,40 +836,46 @@
   ],
   "drives": [
     {
-      "id": "shipped-683px-graph",
-      "control": "H5",
-      "hit": true,
-      "got": [
-        "H5"
-      ],
-      "why": "a fill object must consume its slot"
-    },
-    {
       "id": "unowned-half-row",
       "control": "H2",
       "hit": true,
       "got": [
         "H2"
-      ],
-      "why": "an active row may not contain unexplained columns"
+      ]
     },
     {
-      "id": "margin-beside-media",
-      "control": "H2",
+      "id": "side-study-imbalance",
+      "control": "H4",
       "hit": true,
       "got": [
-        "H2"
-      ],
-      "why": "a reading margin is only ever beside prose"
+        "H4"
+      ]
+    },
+    {
+      "id": "shipped-683px-graph",
+      "control": "H5",
+      "hit": true,
+      "got": [
+        "H5"
+      ]
     },
     {
       "id": "stretched-hug-row",
       "control": "H3",
       "hit": true,
       "got": [
-        "H3"
-      ],
-      "why": "a hug row takes its height from its contents"
+        "H3",
+        "H10"
+      ]
+    },
+    {
+      "id": "padding-at-the-exterior",
+      "control": "H10",
+      "hit": true,
+      "got": [
+        "H10",
+        "H10"
+      ]
     },
     {
       "id": "no-alignment-origin",
@@ -2616,17 +884,7 @@
       "got": [
         "H3",
         "H4"
-      ],
-      "why": "paired siblings share one alignment origin"
-    },
-    {
-      "id": "side-study-imbalance",
-      "control": "H4",
-      "hit": true,
-      "got": [
-        "H4"
-      ],
-      "why": "an object beside prose has a gap the author wrote, not a design"
+      ]
     },
     {
       "id": "anchorless-contain",
@@ -2634,8 +892,7 @@
       "hit": true,
       "got": [
         "H6"
-      ],
-      "why": "a contain object is placed by a declared anchor"
+      ]
     },
     {
       "id": "prose-chose-the-page",
@@ -2654,11 +911,27 @@
       ]
     },
     {
-      "id": "margin-declared-in-table",
+      "id": "spineless-blueprint",
       "control": "validate",
       "hit": true,
       "got": [
-        "visual.explanation/spine-narrow/desktop: row `media` declares `reading-margin` beside medi"
+        "visual.explanation/spine-narrow: declares no spine. A blueprint has ONE alignment axis per"
+      ]
+    },
+    {
+      "id": "asymmetric-centred-spine",
+      "control": "validate",
+      "hit": true,
+      "got": [
+        "visual.explanation/spine-narrow/desktop: a centred spine of 7 on 12 columns cannot be symm"
+      ]
+    },
+    {
+      "id": "spine-row-with-a-split",
+      "control": "validate",
+      "hit": true,
+      "got": [
+        "worked.paired/cases-6-6/desktop: row `intro` is on the spine and also names a split — a sp"
       ]
     },
     {
@@ -2667,6 +940,14 @@
       "hit": true,
       "got": [
         "worked.paired/cases-6-6/desktop: row `cases` is `paired` and declares no `imbalanceMax` — "
+      ]
+    },
+    {
+      "id": "workspace-without-a-designed-region",
+      "control": "validate",
+      "hit": true,
+      "got": [
+        "practice.workbook/workbook-5-7/desktop: row `reference` names `reference` as its workspace"
       ]
     },
     {
@@ -2682,7 +963,7 @@
       "control": "validate",
       "hit": true,
       "got": [
-        "worked.single/flow/desktop: row `intro` sets \"intro\" across 12 columns and desktop allows "
+        "worked.paired/cases-6-6/desktop: the spine is 10 columns and row `intro` sets prose on it;"
       ]
     },
     {
@@ -2690,7 +971,7 @@
       "control": "validate",
       "hit": true,
       "got": [
-        "worked.single/flow/desktop: row `intro` declares gapAfter `a-bit`, which is not a named rh"
+        "worked.paired/cases-6-6/desktop: row `intro` declares gapAfter `a-bit`, which is not a nam"
       ]
     }
   ]

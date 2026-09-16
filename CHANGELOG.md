@@ -8,6 +8,45 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **The alignment spine, the five-space taxonomy, and two frozen blueprints**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue). A **proposal**, tightened rather than broadened: the previous entry
+  proved blueprints were the right unit; this one makes the distinctions that pass exposed into actual
+  structure, and renders only what it freezes.
+  - **PAGE MARGIN, BLUEPRINT RHYTHM, INTERNAL BLOCK SPACE, UNCLAIMED COMPOSITION SPACE AND PAIR
+    IMBALANCE ARE FIVE DIFFERENT THINGS.** They are kept apart in the schema, in the judge, in the
+    overlay and in the verdict panel, and there is no generic whitespace rule, occupancy fraction or
+    dead-space percentage anywhere.
+  - **The spine is a first-class primitive and the one owner of the alignment relationship.** A
+    blueprint declares one spine per surface — an axis (`centre` / `left-edge`) and a span — and a row
+    is either ON the spine (holding one region, occupying it exactly, with the grid outside it as valid
+    PAGE MARGIN) or ON the grid (an ACTIVE ROW, every column owned). A centred six-column spine and a
+    six-column region at the left of a twelve-column active row occupy the same columns and are not the
+    same thing; the primitive exists so the renderer cannot confuse them.
+  - **The ownership boundary is frozen, and rhythm is no longer contaminated.** The block owns
+    typography, the space between its steps and the padding a VISIBLE surface needs; the blueprint owns
+    placement, spans, alignment, pairing and ALL spacing between semantic regions. A region hugs its own
+    ink or surface at its exterior boundary (H10). **Every declared step now measures as itself** —
+    `worked.paired`'s declared 56px read as 80.5px before this pass and reads as 56px now.
+  - **Two blueprints frozen as golden**: `visual.explanation/spine-narrow` (one centred axis of six
+    columns carrying object, reading and key idea) and `worked.paired/cases-6-6` (a left-edge spine of
+    eight with a 6/6 pair that declares its origin, its width and a 180px termination tolerance —
+    measured 0px apart).
+  - **Two counterexamples retained as permanent regression proofs**: `unowned-half-row` (H2 — the
+    canonical must-never-happen-again, the same six columns as the golden and not the same composition)
+    and `side-study-imbalance` (H4 — a row that owns all twelve columns and still terminates 535.5px
+    apart, proving complete column ownership is necessary and NOT sufficient).
+  - **`practice.workbook` as the stress test.** The first genuinely workspace-shaped page, expressed
+    with the same four ideas and no resolver. One extension earned it: a rhythm step may declare
+    `gapWithin`, so a region spanning several rows is not cut by the rhythm beside it. It surfaces a
+    real open question — the workspace's DESIGNED height and the reference stack's DERIVED height
+    terminate 117px apart, which a `workspace` row is exempt from by definition.
+  - **Nine controls and eight table-level refusals, each driven to failure in the same run.** One drive
+    was found unable to fire — it injected padding on a region that paints its own top edge — and was
+    fixed as a bad test rather than accepted.
+  - **No sweep.** The other blueprints are migrated to the spine schema so the build stays whole and are
+    not re-rendered or re-approved; their boards are not in the directory.
+
 - **Approved page compositions, and the row contract — the Composition Proof Atlas**
   (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
   into the shipping catalogue). A **proposal**, built to be looked at. Discrete slot spans made every
