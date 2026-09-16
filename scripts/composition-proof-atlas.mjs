@@ -62,6 +62,7 @@ const CAL = JSON.parse(fs.readFileSync(path.join(BP_SRC, 'calibration.json'), 'u
    THE BANDS ARE WIDTH:HEIGHT and half-open upward — `from` inclusive, `below` exclusive — so a shape
    at exactly 0.90 is `balanced` and never `portrait`. The engine's `aspect` is the reciprocal. */
 const GBANDS = BP.geometryVocabulary.bands;
+const CLASSES = Object.keys(GBANDS).filter((k) => !k.startsWith('_'));
 const classify = (aspect) => {
   const wh = 1 / aspect;
   for (const [name, b] of Object.entries(GBANDS)) {
@@ -75,7 +76,6 @@ const classify = (aspect) => {
   throw new BlueprintError(`no geometry class covers ${wh.toFixed(4)}:1 — the declared bands have a hole in them`);
 };
 
-const CLASSES = ['portrait', 'balanced', 'landscape', 'wide'];
 const ONLY = process.env.CP_ONLY ? new Set(process.env.CP_ONLY.split(',')) : null;
 const SURF = process.env.CP_SURFACE ? new Set(process.env.CP_SURFACE.split(',')) : null;
 const PROSE_TYPES = new Set(['reading', 'support', 'worked', 'examples', 'questions']);
@@ -110,8 +110,13 @@ const familyFor = (pid, region, klass, role) => {
   if (region === P.mediaSlot) {
     if (slotType(pid, region) === 'interactive') return BP.soloFamilies.interactive;
     if (klass && role && BP.soloFamilies[`media.${klass}.${role}`]) return BP.soloFamilies[`media.${klass}.${role}`];
-    return klass ? BP.soloFamilies[`media.${klass}`] : [...new Set(['portrait', 'balanced', 'landscape', 'wide']
-      .flatMap((k) => BP.soloFamilies[`media.${k}`]))];
+    /* THE UNION COMES FROM THE DECLARED BANDS, NOT FROM A LIST WRITTEN HERE. This was a hard-coded
+       four-name array and survived the vocabulary split by luck: `tall` and `panoramic` approve no
+       rung that the other four do not also approve, so the union happened to come out the same. A
+       literal that silently disagrees with the vocabulary is the same defect as the `_`-prefixed key
+       and the display-rounded ratio, and it is the one place validate reaches when no class is known. */
+    return klass ? BP.soloFamilies[`media.${klass}`] : [...new Set(CLASSES
+      .flatMap((k) => BP.soloFamilies[`media.${k}`] || []))];
   }
   return BP.soloFamilies[slotType(pid, region)] || BP.soloFamilies.reading;
 };
@@ -1432,7 +1437,7 @@ for (const fx of CAL_FIXTURES) {
 {
   const cal = REPORT.filter((r) => r.calibration && !r.adversarial && r.surface === 'desktop');
   console.log('\nacceptance — within one class, one surface, one role: one blueprint, one rung');
-  for (const klass of Object.keys(GBANDS).filter((k) => !k.startsWith('_'))) {
+  for (const klass of CLASSES) {
     const mine = cal.filter((r) => r.calibration.klass === klass);
     if (!mine.length) { console.log(`  ${klass.padEnd(10)} — no probe landed in this class`); continue; }
     const members = [...new Set(mine.map((r) => `${r.calibration.wh}`))].sort((a, b) => a - b);
