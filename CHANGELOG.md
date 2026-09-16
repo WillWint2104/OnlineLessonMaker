@@ -8,6 +8,29 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **The geometry calibration atlas, and the span mappings demoted to candidates**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue). The surface architecture and the role × geometry PRINCIPLE stay frozen;
+  the exact span mappings do not, because they had been validated against one portrait shape and one
+  wide shape.
+  - **Six shapes, three roles, identical content.** `docs/atlas/composition-proof/src/calibration.json`
+    varies nothing but the authored DOMAIN — 0.45 / 0.75 / 1.04 / 1.5 / 2.0 / 3.0 width:height — so the
+    only difference between two renders is the shape of the plane. It chooses no widths and measures no
+    prose: the class and the role are both categorical.
+  - **`primary/portrait` has NO composition for a 0.45:1 shape.** Neither approved rung, `expanded` 8
+    nor `wide` 10, can carry a 2.22 h/w plane at equal unit scale. The atlas reports that instead of
+    crashing or inventing a width, and it is the sharpest evidence the vocabulary is too coarse.
+  - **One class, one blueprint, two rungs.** At `explanatory`, the 0.45 shape falls back to `spine` 564
+    while the 0.75 shape takes `expanded` 760 — forced by feasibility, not by measurement. **H19** now
+    separates that FINDING from the FAILURE it would be if every preferred rung were feasible.
+  - `landscape` holds 1.5:1 and 2:1 and treats them identically (901px vs 724px at primary); `balanced`
+    does not separate explanatory from primary at all. Heights recorded as diagnostic evidence only:
+    portrait/primary is 1.5 desktop viewports, tall/explanatory 1.35 at the NARROW rung.
+  - **H19 · the geometry class selects, not the shape and not the height** — driven to failure.
+  - Two false positives the new fixtures exposed in my own controls: H15 and H17 keyed their
+    surface/no-surface and chrome/no-chrome pairs without the FIXTURE, so two different objects sharing
+    a pattern, blueprint, class and viewport were compared against each other. Both keys now include it.
+
 - **`presentationRole × mediaGeometry → approved named blueprint`, and the surface contract frozen**
   (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
   into the shipping catalogue).

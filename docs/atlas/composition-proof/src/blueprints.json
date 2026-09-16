@@ -192,12 +192,33 @@
       "Plot chrome cannot change the composition.",
       "Internal figure-surface whitespace is valid OWNED space, categorically unlike an unowned column.",
       "Treatment B remains a rejected counterexample.",
-      "supporting portrait → `spine-supporting` / centred `inset` 4.",
-      "explanatory portrait → `spine-narrow` / centred `expanded` 8."
+      "Geometry PARTICIPATES in blueprint selection — `presentationRole × geometryClass → named blueprint`, never `aspect ratio → calculated width`.",
+      "`primary` cannot mean \"largest possible box\"; full-width portrait is rejected.",
+      "supporting / explanatory / primary are genuinely different presentation INTENTS."
     ],
-    "notFrozen": [
-      "`primary/portrait`. The full-grid version is kept as a candidate and compared; the approved direction is `stage-primary-portrait` at ten centred columns, pending approval of the two ladders."
-    ]
+    "notFrozen": {
+      "_": "THE EXACT ROLE × GEOMETRY SPAN MAPPINGS ARE NOT FROZEN. They were validated against ONE portrait shape and one wide shape, and a class can hold shapes that behave nothing alike. The ladders below are CANDIDATE MAPPINGS.",
+      "portrait 4 / 8 / 10": "candidate. Proved on a single 1.25 h/w plane. The calibration atlas shows the class also contains a 2.22 h/w shape which cannot be carried at either primary rung at all.",
+      "wide 6 / 10 / 12": "candidate, and the stronger of the two — it reads as three genuinely different levels of importance. Still unproved across the range the label covers: a 1.5:1 and a 3:1 are not equivalent merely because both are wider than tall."
+    }
+  },
+  "geometryVocabulary": {
+    "_": "THE OPEN QUESTION THE CALIBRATION ATLAS EXISTS TO ANSWER. Is the current vocabulary precise enough, or are `portrait` and `landscape` still too coarse?",
+    "current": {
+      "portrait": "h/w > 1.0",
+      "balanced": "0.75 – 1.0",
+      "landscape": "0.4 – 0.75",
+      "wide": "< 0.4"
+    },
+    "proposedIfTooCoarse": [
+      "tall",
+      "portrait",
+      "balanced",
+      "wide",
+      "panoramic"
+    ],
+    "theRule": "Whatever the vocabulary becomes, the mapping stays `presentationRole × geometryClass → approved named blueprint`. An aspect ratio never calculates a width; it only lands in a class, and the class and the role together name a design someone already approved.",
+    "heightIsEvidence": "The realised height and its share of a 900px desktop viewport are recorded on every calibration render as DIAGNOSTIC EVIDENCE. Nothing reads them back. H19 is the proof: two shapes in one class and one role must get one blueprint, whatever their heights."
   },
   "golden": [
     "visual.explanation/spine-narrow",

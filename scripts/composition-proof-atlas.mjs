@@ -51,6 +51,8 @@ const SPANS = JSON.parse(fs.readFileSync(path.join(SPAN_SRC, 'spans.json'), 'utf
 const BP = JSON.parse(fs.readFileSync(path.join(BP_SRC, 'blueprints.json'), 'utf8'));
 const MEDIA = JSON.parse(fs.readFileSync(path.join(MEDIA_DIR, 'media.json'), 'utf8'));
 const FIGS = JSON.parse(fs.readFileSync(path.join(root, 'docs/atlas/worked-examples/src/figures.json'), 'utf8'));
+/* THE GEOMETRY CALIBRATION SET — identical content, nothing varying but the authored domain. */
+const CAL = JSON.parse(fs.readFileSync(path.join(BP_SRC, 'calibration.json'), 'utf8'));
 const BANDS = JSON.parse(fs.readFileSync(path.join(root, 'docs/atlas/worked-examples/src/atlas.json'), 'utf8')).mediaGeometry.bands;
 
 const CLASSES = ['portrait', 'balanced', 'landscape', 'wide'];
@@ -327,6 +329,14 @@ const dataURI = (name) => {
   const mime = { '.png': 'image/png', '.svg': 'image/svg+xml', '.webm': 'video/webm' }[path.extname(name)];
   return `data:${mime};base64,${fs.readFileSync(path.join(MEDIA_DIR, name)).toString('base64')}`;
 };
+const CAL_FIXTURES = Object.entries(CAL.shapes).map(([id, sh]) => {
+  const d = sh.figure.domain;
+  const aspect = +((d.yMax - d.yMin) / (d.xMax - d.xMin)).toFixed(4);
+  return { id: `cal.${id}`, shape: id, wh: sh.wh, note: sh.note, kind: 'graph', family: 'graph', figure: id,
+    label: 'Graph', caption: `The same content at ${sh.wh}:1 — ${sh.note}.`,
+    aspect, klass: classOf(aspect, BANDS), block: 'graph' };
+});
+
 function pickFixture(pid, klass) {
   const P = BP.patterns[pid];
   if (!P.mediaSlot) return null;
@@ -970,7 +980,8 @@ const BOX = new Map();
 async function boxFor(key, w) {
   const ck = `${key}|${Math.round(w)}`;
   if (BOX.has(ck)) return BOX.get(ck);
-  const b = await boxForWidth(key, FIGS[key].figure, Math.round(w));
+  const spec = (FIGS[key] || CAL.shapes[key]).figure;
+  const b = await boxForWidth(key, spec, Math.round(w));
   if (!b || !square(b.box)) throw new BlueprintError(`${key}: no equal-unit box fits a ${w}px slot`);
   BOX.set(ck, b.box); return b.box;
 }
@@ -1022,7 +1033,11 @@ async function resolveSolos(pid, surface, rows, spineSpan, fx, klass, role, cand
     const byWidth = H.spans.slice().sort((a, b) => ladderCols(surface, a, spineSpan) - ladderCols(surface, b, spineSpan));
     const ok = byWidth.filter((x) => feas[x].ok);
     const should = feas[H.preferred] && feas[H.preferred].ok ? H.preferred : (ok[ok.length - 1] || byWidth[0]);
-    out[r.id] = { should, feasible: feas,
+    /* NO APPROVED RUNG IS FEASIBLE. That is a real answer and not an error: it says this blueprint has
+       no composition for this object, which is exactly the kind of thing the calibration atlas exists
+       to surface. It is reported, not crashed on and not papered over with a computed width. */
+    out[r.id] = { should, noneFeasible: !ok.length,
+      preferredFeasible: !!(feas[H.preferred] && feas[H.preferred].ok), feasible: feas,
       why: feas[H.preferred] && feas[H.preferred].ok
         ? `The preferred rung is feasible — ${feas[H.preferred].why}.`
         : `The preferred rung \`${H.preferred}\` is not feasible (${feas[H.preferred] ? feas[H.preferred].why : 'unknown'}), `
@@ -1042,12 +1057,26 @@ async function board(pid, surface, bid, o = {}) {
   const spineSpan = ((o.spine && o.spine[surface]) || (B0 && B0.spine && B0.spine[surface]) || {}).span;
   const bpRole = (B0 && B0.role) || null;
   const resolve = await resolveSolos(pid, surface, rows0, spineSpan, fx, klass, bpRole, !!o.candidate);
+  const sd = `${pid.replace(/\W/g, '')}-${surface}-${bid.replace(/\W/g, '')}-${klass || 'x'}${o.tag ? '-' + o.tag : ''}`;
+  const name = o.name || `${pid.replace(/\./g, '-')}__${surface}__${bid}${klass && klass !== 'none' ? '__' + klass : ''}`;
+  const dead = Object.entries(resolve).find(([, v]) => v.noneFeasible);
+  if (dead) {
+    const [rid, v] = dead;
+    const rec = { pattern: pid, surface, blueprint: bid, klass: klass || 'none', name, selectKey: o.selectKey || null,
+      infeasible: true, role: bpRole, calibration: o.calibration ? { shape: o.calibration.shape, wh: o.calibration.wh,
+        aspect: o.calibration.aspect, klass: o.calibration.klass } : null,
+      adversarial: !!o.adversarial, counterexample: !!o.counterexample, candidate: !!o.candidate,
+      fixture: fx ? fx.id : null, rows: [], fails: [],
+      why: `row \`${rid}\`: none of the approved rungs (${Object.entries(v.feasible)
+        .map(([g, f]) => `${g}=${f.cols}col ${f.why}`).join(' · ')}) can carry this object` };
+    REPORT.push(rec);
+    console.log(`  ${name.padEnd(56)} NO APPROVED RUNG — ${Object.entries(v.feasible).map(([g, f]) => `${g}:${f.ok ? 'ok' : 'no'}`).join(' ')}`);
+    return rec;
+  }
   /* the realised rung IS the resolved one, unless a counterexample deliberately holds it back */
   const realised = Object.fromEntries(Object.entries(resolve).map(([k, v]) => [k, v.should]));
   for (const [k, v] of Object.entries(o.forceSpan || {})) realised[k] = v;
   const L = layout(pid, surface, bid, { rows: o.rows, allowOrphans: o.allowOrphans, spine: o.spine, realised });
-  const sd = `${pid.replace(/\W/g, '')}-${surface}-${bid.replace(/\W/g, '')}-${klass || 'x'}${o.tag ? '-' + o.tag : ''}`;
-  const name = o.name || `${pid.replace(/\./g, '-')}__${surface}__${bid}${klass && klass !== 'none' ? '__' + klass : ''}`;
 
   const fsMode = o.fs || 'off';
   let solvedBox = null, figHtml = null, engineCaption = '';
@@ -1251,9 +1280,19 @@ ${o.injectCSS || ''}
     rows: J.boards.map((b) => ({ id: b.id, split: b.split, mode: b.mode, vertical: b.vertical, rung: b.rung,
       h: b.h, air: b.air, imbalance: b.imbalance })),
     resolve: Object.fromEntries(Object.entries(resolve).map(([k, v]) => [k, v.should])),
+    /* did the blueprint get the rung it prefers, or did the object force a fallback? H19 needs the
+       difference: a fallback is the CLASS being too coarse; a divergence without one is tuning. */
+    preferredFeasible: (() => { const mr = L.rows.find((r) => r.media);
+      return mr && resolve[mr.id] ? resolve[mr.id].preferredFeasible : null; })(),
     rhythm: J.rhythm, slotWidths: J.boards.flatMap((b) => b.kids.map((k) => `${k.name}=${Math.round(k.w)}`)),
     whitespaceOwned: J.whitespaceOwned, mediaOk, mediaVerdict, fails: J.fails,
-    fs: fsMode, role: bpRole, chrome: !!o.chrome, candidate: !!o.candidate,
+    fs: fsMode, role: bpRole, chrome: !!o.chrome, candidate: !!o.candidate, fixture: fx ? fx.id : null,
+    /* DIAGNOSTIC EVIDENCE ONLY. Recorded so a 1500px object can be SEEN to be structurally legal and
+       still worth arguing about. Nothing in this file reads these back, and H19 is the proof. */
+    calibration: o.calibration ? { shape: o.calibration.shape, wh: o.calibration.wh, aspect: o.calibration.aspect,
+      klass: o.calibration.klass } : null,
+    surfaceH: FS && FS.surface ? Math.round(FS.surface.h) : null,
+    viewportShare: FS && FS.surface ? +(FS.surface.h / CAL.diagnosticViewport).toFixed(2) : null,
     /* WHAT MUST NOT CHANGE ACROSS SURFACES (H18): the authored blueprint, its role, and the rows it
        holds — their ids, their cardinality and their modes. The RUNGS may differ; that is what a
        responsive form IS. */
@@ -1319,6 +1358,27 @@ console.log('\nadversarial — the same compositions with twice the prose');
 for (const x of SCOPE)
   await board(x.pid, x.surface, x.bid, { klass: x.klass, selectKey: x.key, fs: 'A', adversarial: true,
     noShot: true, quiet: true, tag: 'adv', name: x.name + '__adv' });
+
+/* ── THE GEOMETRY CALIBRATION ATLAS ──────────────────────────────────────────────────────────────
+   IDENTICAL CONTENT, ONLY THE SHAPE VARIES. Its purpose is to establish which named rigid blueprints
+   are aesthetically valid for which geometry CLASSES — not to choose a width from an aspect ratio,
+   which would be the resolver wearing a new hat. Each render's height and its share of a 900px
+   desktop viewport are recorded as EVIDENCE ONLY; H19 proves the class selects, not the shape. */
+console.log('\ngeometry calibration — one content, six shapes, three roles');
+const ROLES = ['supporting', 'explanatory', 'primary'];
+for (const fx of CAL_FIXTURES) {
+  for (const role of ROLES) {
+    const bid = BP.patterns['visual.explanation'].select.desktop[role][fx.klass];
+    await board('visual.explanation', 'desktop', bid,
+      { klass: fx.klass, selectKey: `${role}/${fx.klass}`, fs: 'A', fixture: fx, calibration: fx,
+        tag: `cal${fx.shape}${role}`.replace(/\W/g, ''),
+        name: `G__${role}__${fx.shape}__wh-${String(fx.wh).replace('.', 'p')}`,
+        why: `CALIBRATION. The same content at ${fx.wh}:1 (aspect ${fx.aspect}, class “${fx.klass}”) in the `
+          + `“${role}” role, which selects “${bid}”. ${fx.note[0].toUpperCase() + fx.note.slice(1)}. `
+          + `Nothing here measured anything: the class and the role are both categorical, and the height below `
+          + `is recorded as evidence, never read.` });
+  }
+}
 
 /* ── THE COMPARISON THE FREEZE TURNS ON ──────────────────────────────────────────────────────────*/
 console.log('\nthe primary-portrait comparison — ten centred columns against the full grid');
@@ -1449,7 +1509,7 @@ const check = (cond, msg) => { if (!cond) fails.push(msg); };
 /* THE SURFACE IS PART OF THE KEY. Without it the phone baseline was compared against the desktop
    render and H15 reported a composition change that was really a different viewport — a false
    positive the run caught on its first pass. */
-const fsKey = (r) => `${r.pattern}|${r.blueprint}|${r.klass}|${r.surface}|${r.adversarial ? 'adv' : 'plain'}`;
+const fsKey = (r) => `${r.pattern}|${r.blueprint}|${r.klass}|${r.fixture || '-'}|${r.surface}|${r.adversarial ? 'adv' : 'plain'}`;
 const H14 = (recs) => {
   /* WHAT MUST NOT CHANGE IS THE MATHEMATICS, NOT THE PIXEL SIZE. A plane given less room solves
      smaller at the same equal unit scale and the same domain, exactly as it does at any other width.
@@ -1491,11 +1551,11 @@ const H14 = (recs) => {
 };
 /* ── H17 · PLOT CHROME CANNOT REACH THE COMPOSITION · H18 · RESPONSIVE STRUCTURAL IDENTITY ───────*/
 const H17 = (recs) => {
-  const base = new Map(recs.filter((r) => !r.chrome).map((r) => [`${r.pattern}|${r.blueprint}|${r.klass}|${r.surface}|${r.fs}`, r]));
+  const base = new Map(recs.filter((r) => !r.chrome).map((r) => [`${r.pattern}|${r.blueprint}|${r.klass}|${r.fixture || '-'}|${r.surface}|${r.fs}`, r]));
   const out = [];
   let compared = 0;
   for (const r of recs.filter((x) => x.chrome)) {
-    const b = base.get(`${r.pattern}|${r.blueprint}|${r.klass}|${r.surface}|${r.fs}`);
+    const b = base.get(`${r.pattern}|${r.blueprint}|${r.klass}|${r.fixture || '-'}|${r.surface}|${r.fs}`);
     if (!b) continue;
     compared++;
     if (r.surfaceBox !== b.surfaceBox)
@@ -1529,6 +1589,45 @@ const H18 = (recs) => {
         + `blueprint this is, what it is for, or which regions it holds`);
   }
   return { out, compared };
+};
+/* ── H19 · THE GEOMETRY CLASS SELECTS, NOT THE SHAPE AND NOT THE HEIGHT ──────────────────────────
+   Two fixtures in the same class and the same role must realise the same blueprint and the same rung,
+   however differently they are shaped and however tall they come out. This is the control that keeps
+   the calibration atlas from becoming a resolver: the moment a width is tuned to a fixture, or a
+   height is allowed to argue, it fires. */
+const H19 = (recs) => {
+  const by = new Map();
+  for (const r of recs.filter((x) => x.calibration && !x.adversarial && !x.infeasible)) {
+    const k = `${r.role}|${r.calibration.klass}|${r.surface}`;
+    if (!by.has(k)) by.set(k, []);
+    by.get(k).push(r);
+  }
+  const out = [], notes = [];
+  let compared = 0;
+  for (const [k, list] of by) {
+    if (list.length < 2) continue;
+    compared++;
+    const bids = new Set(list.map((r) => r.blueprint));
+    const rungs = new Set(list.map((r) => r.rows[0] && r.rows[0].rung));
+    const shown = list.map((r) => `${r.calibration.shape} (${r.calibration.wh}:1) → ${r.blueprint}/${r.rows[0].rung}`).join(', ');
+    if (bids.size > 1)
+      out.push(`${k}: ${shown} — two shapes in one class were given two different blueprints. The CLASS selects`);
+    else if (rungs.size > 1 && list.every((r) => r.preferredFeasible))
+      out.push(`${k}: ${shown} — two shapes in one class landed on different rungs with every preferred rung `
+        + `FEASIBLE. Nothing forced that, so something was tuned to the fixture`);
+    else if (rungs.size > 1)
+      /* A FINDING, NOT A FAILURE. The blueprint is the same and the rung differs only because the
+         object could not be carried at the preferred one. That is the class being too coarse, which is
+         the question this atlas was built to answer — not a renderer measuring anything. */
+      notes.push(`${k}: ${shown} — one class, one blueprint, DIFFERENT RUNGS, because the preferred rung `
+        + `could not carry the taller shape. The class is too coarse to name a single composition`);
+    /* THE EVIDENCE THE CLASS IS TOO COARSE: one class, one blueprint, two very different heights. */
+    const hs = list.map((r) => r.surfaceH).filter(Boolean);
+    if (hs.length > 1 && Math.max(...hs) - Math.min(...hs) > 300)
+      notes.push(`${k}: ${list.map((r) => `${r.calibration.shape} (${r.calibration.wh}:1) ${r.surfaceH}px`).join(' vs ')} `
+        + `— one class, one blueprint, ${Math.max(...hs) - Math.min(...hs)}px apart. The class is doing less work than its name suggests`);
+  }
+  return { out, compared, notes };
 };
 const H15 = (recs) => {
   const off = new Map(recs.filter((r) => r.fs === 'off').map((r) => [fsKey(r), r]));
@@ -1589,6 +1688,16 @@ for (const r of REAL) for (const [c, f] of r.fails) fails.push(`${c} · ${f}`);
   const d18 = H18([b18, { ...b18, surface: 'phone', identity: b18.identity + ',extra:solo:hug:1' }]);
   drives.push({ id: 'identity-changed-on-phone', control: 'H18', hit: d18.out.length > 0, got: d18.out.slice(0, 1) });
   console.log(`  ${d18.out.length ? '✓' : '✗ DID NOT FIRE'}  identity-changed-on-phone     H18`);
+
+  const h19 = H19(REAL);
+  for (const f of h19.out) fails.push(`H19 · ${f}`);
+  check(h19.compared > 0, 'H19 · no two calibration shapes shared a class, so the class-selects control is untested');
+  console.log(`control H19 · the geometry CLASS selected across ${h19.compared} class(es) holding more than one shape`);
+  for (const n of h19.notes) console.log(`    ! ${n}`);
+  const b19 = REAL.find((r) => r.calibration);
+  const d19 = H19([b19, { ...b19, calibration: { ...b19.calibration }, blueprint: 'something-else' }]);
+  drives.push({ id: 'shape-chose-the-composition', control: 'H19', hit: d19.out.length > 0, got: d19.out.slice(0, 1) });
+  console.log(`  ${d19.out.length ? '✓' : '✗ DID NOT FIRE'}  shape-chose-the-composition   H19`);
 
   const h15 = H15(REAL);
   for (const f of h15.out) fails.push(`H15 · ${f}`);
@@ -1665,6 +1774,31 @@ if (fails.length) {
 } else console.log('every control passed, and every counterexample failed');
 
 /* the table the maintainer reads: why is this page this shape? */
+{
+  const cal = REAL.filter((r) => r.calibration && !r.adversarial);
+  const deadCal = cal.filter((r) => r.infeasible);
+  if (cal.length) {
+    console.log('\nGEOMETRY CALIBRATION — presentationRole × geometryClass → named blueprint');
+    console.log('  shape          w:h    aspect  class      role         blueprint                 rung      surface      height/900');
+    for (const r of cal.sort((a, b) => b.calibration.aspect - a.calibration.aspect || ROLES.indexOf(a.role) - ROLES.indexOf(b.role))) {
+      if (r.infeasible) { console.log(`  ${r.calibration.shape.padEnd(14)} ${String(r.calibration.wh).padEnd(6)} `
+        + `${String(r.calibration.aspect).padEnd(7)} ${r.calibration.klass.padEnd(10)} ${String(r.role).padEnd(12)} `
+        + `${r.blueprint.padEnd(25)} NO APPROVED RUNG IS FEASIBLE`); continue; }
+      console.log(`  ${r.calibration.shape.padEnd(14)} ${String(r.calibration.wh).padEnd(6)} `
+        + `${String(r.calibration.aspect).padEnd(7)} ${r.calibration.klass.padEnd(10)} ${String(r.role).padEnd(12)} `
+        + `${r.blueprint.padEnd(25)} ${String(r.rows[0].rung).padEnd(9)} ${String(r.surfaceBox).padEnd(12)} ${r.viewportShare}`);
+    }
+    const byClass = {};
+    for (const r of cal) (byClass[r.calibration.klass] ||= new Set()).add(`${r.calibration.shape} (${r.calibration.wh}:1)`);
+    if (deadCal.length) {
+      console.log('\n  NO APPROVED COMPOSITION — the sharpest evidence the vocabulary is too coarse:');
+      for (const r of deadCal) console.log(`    ${r.role}/${r.calibration.klass} · ${r.calibration.shape} `
+        + `(${r.calibration.wh}:1) → ${r.blueprint}: ${r.why}`);
+    }
+    console.log('\n  THE VOCABULARY QUESTION — which shapes share a class, and therefore a blueprint:');
+    for (const [k, v] of Object.entries(byClass)) console.log(`    ${k.padEnd(10)} ${[...v].join(' · ')}`);
+  }
+}
 console.log('\nAPPROVED COMPOSITIONS, AS RENDERED');
 for (const r of REAL.filter((x) => !x.adversarial && !x.sequence)) {
   console.log(`  ${r.pattern.padEnd(20)} ${r.surface.padEnd(8)} ${String(r.selectKey || '—').padEnd(10)} `

@@ -1,0 +1,273 @@
+{
+  "_": "THE GEOMETRY CALIBRATION SET. Identical content — the same function, the same line, the same two points — with nothing varying but the authored DOMAIN, so the only difference between two renders is the shape of the plane. These exist to establish which named rigid blueprints are aesthetically valid for which geometry classes. They are not a resolver: nothing here measures prose, occupancy or available whitespace, and no width is calculated from an aspect ratio.",
+  "theQuestion": "Is the geometry vocabulary (portrait / balanced / landscape / wide) precise enough, or are `portrait` and `wide` still too coarse and in need of stable sub-classes — tall / portrait / balanced / wide / panoramic?",
+  "wh": "Each shape is named by its WIDTH:HEIGHT, which is how a designer talks about it. The `aspect` the engine uses is the reciprocal, height/width, which is how classOf() bands it.",
+  "diagnosticOnly": "The realised height and its proportion of a 900px desktop viewport are recorded as EVIDENCE ONLY. Nothing reads them, and H19 proves the class — not the shape and not the height — is what selects the blueprint.",
+  "diagnosticViewport": 900,
+  "shapes": {
+    "tall": {
+      "wh": 0.45,
+      "note": "a very tall diagram — the shape that must not inherit a portrait graph’s blueprint by accident",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -4.5,
+          "xMax": 4.5,
+          "yMin": -2,
+          "yMax": 18
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "portrait": {
+      "wh": 0.75,
+      "note": "an ordinary portrait plane",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -6,
+          "xMax": 6,
+          "yMin": -2,
+          "yMax": 14
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "near-square": {
+      "wh": 1.04,
+      "note": "nearly square — the boundary between portrait and balanced",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -12.5,
+          "xMax": 12.5,
+          "yMin": -6,
+          "yMax": 18
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "moderate-wide": {
+      "wh": 1.5,
+      "note": "moderately wider than tall",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -9,
+          "xMax": 9,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "wide": {
+      "wh": 2,
+      "note": "twice as wide as tall",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -12,
+          "xMax": 12,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "panoramic": {
+      "wh": 3,
+      "note": "three times as wide as tall — the shape that must not inherit a 2:1 blueprint by accident",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -18,
+          "xMax": 18,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

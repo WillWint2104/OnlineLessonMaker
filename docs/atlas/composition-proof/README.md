@@ -148,6 +148,7 @@ contract.
 | **H16** | the caption is rendered inside the plot rather than on the surface |
 | **H17** | the plot's own chrome moves the figure surface or changes the composition |
 | **H18** | the same authored blueprint has a different structural identity on another surface |
+| **H19** | two shapes in one geometry class and one role get different blueprints, or different rungs with every preferred rung feasible |
 
 Ten more are refused at the table before anything renders: a blueprint with no spine; a rung whose
 page margin cannot be symmetric on a centred axis; a rung outside the region's span family; prose
@@ -173,16 +174,70 @@ unapproved blueprint; an unnamed rhythm step.
 | **Caption** | owned by the **surface**, never the plot |
 | **Boundaries** | region · surface · plot · caption, independently inspectable |
 | **Role** | authored, never inferred |
+| **Geometry** | *participates* in selection: `role × geometryClass → named blueprint`, never `aspect → width` |
+| **`primary`** | cannot mean "largest possible box"; full-width portrait is rejected |
 | **Responsive identity** | the rungs may change; the blueprint may not |
 | **Plot chrome** | cannot change the composition |
 | **Internal surface whitespace** | valid *owned* space, categorically unlike an unowned column |
 | **Treatment B** | rejected, kept as a counterexample |
-| **supporting portrait** | `spine-supporting` · centred `inset` 4 |
-| **explanatory portrait** | `spine-narrow` · centred `expanded` 8 |
 
-**Not frozen:** `primary/portrait`. See the comparison below.
+**Not frozen — the exact span mappings.** Both ladders are **candidates**. They were validated
+against one portrait shape and one wide shape, and a class can hold shapes that behave nothing alike.
 
-## `presentationRole × mediaGeometry → approved named blueprint`
+## The geometry calibration atlas
+
+Identical content — the same function, the same line, the same two points — with nothing varying but
+the authored **domain**, so the only difference between two renders is the shape of the plane. Six
+shapes × three roles. Its purpose is to establish which named rigid blueprints are valid for which
+geometry *classes*; it chooses no widths and measures no prose.
+
+Realised height and its share of a 900px desktop viewport are recorded as **diagnostic evidence
+only**. **H19** is the proof that nothing reads them: two shapes in one class and one role must get
+one blueprint, whatever their heights.
+
+| shape | w:h | h/w | class | supporting | explanatory | primary |
+| --- | --- | --- | --- | --- | --- | --- |
+| tall | 0.45 | 2.222 | portrait | `inset` 368 × **819** | `spine` 564 × **1213** | **no approved rung is feasible** |
+| portrait | 0.75 | 1.333 | portrait | `inset` 368 × 565 | `expanded` 760 × 1088 | `wide` 956 × **1349** |
+| near-square | 1.04 | 0.960 | balanced | `inset` 368 × 482 | `wide` 956 × 1025 | `wide` 956 × 1025 |
+| moderate-wide | 1.5 | 0.667 | landscape | `narrow` 564 × 509 | `wide` 956 × 771 | `full` 1152 × 901 |
+| wide | 2.0 | 0.500 | landscape | `narrow` 564 × 430 | `wide` 956 × 626 | `full` 1152 × 724 |
+| panoramic | 3.0 | 0.333 | wide | `narrow` 564 × 378 | `wide` 956 × 521 | `full` 1152 × 601 |
+
+### What it found
+
+1. **`primary/portrait` has no composition for a 0.45:1 shape at all.** Neither approved rung —
+   `expanded` 8 nor `wide` 10 — can carry a 2.22 h/w plane at equal unit scale. The atlas reports
+   that rather than crashing or inventing a width, and it is the sharpest evidence that `portrait` is
+   too coarse.
+2. **One class, one blueprint, two different rungs.** At `explanatory`, `tall` falls back to `spine`
+   (564px) while `portrait` takes `expanded` (760px) — not because anything was measured, but because
+   the preferred rung could not carry the taller shape. H19 reports this as a **finding**, not a
+   failure: the blueprint is the same and the divergence is forced, which is precisely the class being
+   too coarse.
+3. **`landscape` holds 1.5:1 and 2:1 and treats them identically** — same blueprint, same rung, 901px
+   against 724px at `primary`. Much less alarming than the portrait split, but the same shape of
+   problem.
+4. **`balanced` does not separate explanatory from primary**: both land on `wide` 956 × 1025. That row
+   of the mapping table is not doing any work.
+5. Heights worth seeing: `portrait/primary` is **1.5 desktop viewports**, and `tall/explanatory` is
+   **1.35** even at the *narrow* 564px rung.
+
+### The vocabulary question
+
+| class | shapes it currently holds |
+| --- | --- |
+| `portrait` | tall (0.45:1) **and** portrait (0.75:1) |
+| `balanced` | near-square (1.04:1) |
+| `landscape` | moderate-wide (1.5:1) **and** wide (2:1) |
+| `wide` | panoramic (3:1) |
+
+Two classes each hold two shapes that do not behave alike. The proposed refinement, if it is taken,
+is `tall · portrait · balanced · wide · panoramic` — and whatever the vocabulary becomes, the mapping
+stays `presentationRole × geometryClass → approved named blueprint`. An aspect ratio never calculates
+a width; it lands in a class, and the class and the role together name a design someone approved.
+
+## `presentationRole × mediaGeometry → approved named blueprint`## `presentationRole × mediaGeometry → approved named blueprint`
 
 Not `role → rung`. **The role says how prominent the object should be; the geometry says which
 composition can express that prominence well.** Neither alone picks a width, and no rung is reached

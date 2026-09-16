@@ -46,6 +46,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -75,6 +76,10 @@
       "role": "supporting",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 528,
+      "viewportShare": 0.59,
       "identity": "spine-supporting|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "330x436",
@@ -128,6 +133,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -157,6 +163,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 998,
+      "viewportShare": 1.11,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "722x906",
@@ -210,6 +220,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -239,6 +250,10 @@
       "role": "primary",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 1234,
+      "viewportShare": 1.37,
       "identity": "stage-primary-portrait|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "stage-primary-portrait|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "918x1142",
@@ -292,6 +307,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -321,6 +337,10 @@
       "role": "supporting",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.wide",
+      "calibration": null,
+      "surfaceH": 355,
+      "viewportShare": 0.39,
       "identity": "spine-supporting-wide|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-supporting-wide|centre8|media:solo:narrow:6:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "526x263",
@@ -374,6 +394,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -403,6 +424,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.wide",
+      "calibration": null,
+      "surfaceH": 521,
+      "viewportShare": 0.58,
       "identity": "stage-wide|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "stage-wide|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "918x429",
@@ -456,6 +481,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -485,6 +511,10 @@
       "role": "primary",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.wide",
+      "calibration": null,
+      "surfaceH": 601,
+      "viewportShare": 0.67,
       "identity": "stage-full|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "stage-full|centre8|media:solo:full:12:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "1114x509",
@@ -538,6 +568,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -567,6 +598,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 1087,
+      "viewportShare": 1.21,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "796x995",
@@ -620,6 +655,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -649,6 +685,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 545,
+      "viewportShare": 0.61,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|left-edge4|media:solo:spine:4:hug,interpretation:solo:spine:4:hug,support:solo:spine:4:hug",
       "plotBox": "344x453",
@@ -724,6 +764,7 @@
         "support": "spine",
         "synthesis": "spine"
       },
+      "preferredFeasible": null,
       "rhythm": [
         {
           "after": "intro",
@@ -769,6 +810,10 @@
       "role": null,
       "chrome": false,
       "candidate": false,
+      "fixture": null,
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "flow|null|intro:solo:hug:1,scenario:solo:hug:1,worked:solo:hug:1,support:solo:hug:1,synthesis:solo:hug:1",
       "structure": "flow|left-edge8|intro:solo:spine:8:hug,scenario:solo:spine:8:hug,worked:solo:spine:8:hug,support:solo:spine:8:hug,synthesis:solo:spine:8:hug",
       "plotBox": null,
@@ -821,6 +866,7 @@
         "intro": "spine",
         "synthesis": "spine"
       },
+      "preferredFeasible": null,
       "rhythm": [
         {
           "after": "intro",
@@ -851,6 +897,10 @@
       "role": null,
       "chrome": false,
       "candidate": false,
+      "fixture": null,
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "cases-6-6|null|intro:solo:hug:1,cases:paired:hug:2,synthesis:solo:hug:1",
       "structure": "cases-6-6|left-edge8|intro:solo:spine:8:hug,cases:paired:6/6::hug,synthesis:solo:spine:8:hug",
       "plotBox": null,
@@ -902,6 +952,7 @@
       "resolve": {
         "intro": "spine"
       },
+      "preferredFeasible": null,
       "rhythm": [
         {
           "after": "intro",
@@ -933,6 +984,10 @@
       "role": "workspace",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 646,
+      "viewportShare": 0.72,
       "identity": "workbook-5-7|workspace|intro:solo:hug:1,reference:workspace:designed:2,questions:workspace:designed:2",
       "structure": "workbook-5-7|left-edge8|intro:solo:spine:8:hug,reference:workspace:5/7::designed,questions:workspace:5/7::designed",
       "plotBox": "428x554",
@@ -986,6 +1041,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1015,6 +1071,10 @@
       "role": "supporting",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "spine-supporting|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "368x482",
@@ -1068,6 +1128,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1097,6 +1158,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "760x952",
@@ -1150,6 +1215,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1179,6 +1245,10 @@
       "role": "primary",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "stage-primary-portrait|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "stage-primary-portrait|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "956x1187",
@@ -1232,6 +1302,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1261,6 +1332,10 @@
       "role": "supporting",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.wide",
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "spine-supporting-wide|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-supporting-wide|centre8|media:solo:narrow:6:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "564x279",
@@ -1314,6 +1389,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1343,6 +1419,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.wide",
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "stage-wide|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "stage-wide|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "956x444",
@@ -1396,6 +1476,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1425,6 +1506,10 @@
       "role": "primary",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.wide",
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "stage-full|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "stage-full|centre8|media:solo:full:12:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "1152x527",
@@ -1478,6 +1563,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1507,6 +1593,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "834x1041",
@@ -1560,6 +1650,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1589,6 +1680,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|left-edge4|media:solo:spine:4:hug,interpretation:solo:spine:4:hug,support:solo:spine:4:hug",
       "plotBox": "382x498",
@@ -1640,6 +1735,7 @@
       "resolve": {
         "intro": "spine"
       },
+      "preferredFeasible": null,
       "rhythm": [
         {
           "after": "intro",
@@ -1671,6 +1767,10 @@
       "role": "workspace",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "workbook-5-7|workspace|intro:solo:hug:1,reference:workspace:designed:2,questions:workspace:designed:2",
       "structure": "workbook-5-7|left-edge8|intro:solo:spine:8:hug,reference:workspace:5/7::designed,questions:workspace:5/7::designed",
       "plotBox": "466x599",
@@ -1724,6 +1824,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1753,6 +1854,10 @@
       "role": "supporting",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 528,
+      "viewportShare": 0.59,
       "identity": "spine-supporting|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "330x436",
@@ -1806,6 +1911,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1835,6 +1941,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 998,
+      "viewportShare": 1.11,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "722x906",
@@ -1888,6 +1998,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1917,6 +2028,10 @@
       "role": "primary",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 1234,
+      "viewportShare": 1.37,
       "identity": "stage-primary-portrait|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "stage-primary-portrait|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "918x1142",
@@ -1970,6 +2085,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -1999,6 +2115,10 @@
       "role": "supporting",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.wide",
+      "calibration": null,
+      "surfaceH": 355,
+      "viewportShare": 0.39,
       "identity": "spine-supporting-wide|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-supporting-wide|centre8|media:solo:narrow:6:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "526x263",
@@ -2052,6 +2172,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -2081,6 +2202,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.wide",
+      "calibration": null,
+      "surfaceH": 521,
+      "viewportShare": 0.58,
       "identity": "stage-wide|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "stage-wide|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "918x429",
@@ -2134,6 +2259,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -2163,6 +2289,10 @@
       "role": "primary",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.wide",
+      "calibration": null,
+      "surfaceH": 601,
+      "viewportShare": 0.67,
       "identity": "stage-full|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "stage-full|centre8|media:solo:full:12:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "1114x509",
@@ -2216,6 +2346,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -2245,6 +2376,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 1087,
+      "viewportShare": 1.21,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "796x995",
@@ -2298,6 +2433,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -2327,6 +2463,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 545,
+      "viewportShare": 0.61,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|left-edge4|media:solo:spine:4:hug,interpretation:solo:spine:4:hug,support:solo:spine:4:hug",
       "plotBox": "344x453",
@@ -2402,6 +2542,7 @@
         "support": "spine",
         "synthesis": "spine"
       },
+      "preferredFeasible": null,
       "rhythm": [
         {
           "after": "intro",
@@ -2447,6 +2588,10 @@
       "role": null,
       "chrome": false,
       "candidate": false,
+      "fixture": null,
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "flow|null|intro:solo:hug:1,scenario:solo:hug:1,worked:solo:hug:1,support:solo:hug:1,synthesis:solo:hug:1",
       "structure": "flow|left-edge8|intro:solo:spine:8:hug,scenario:solo:spine:8:hug,worked:solo:spine:8:hug,support:solo:spine:8:hug,synthesis:solo:spine:8:hug",
       "plotBox": null,
@@ -2499,6 +2644,7 @@
         "intro": "spine",
         "synthesis": "spine"
       },
+      "preferredFeasible": null,
       "rhythm": [
         {
           "after": "intro",
@@ -2529,6 +2675,10 @@
       "role": null,
       "chrome": false,
       "candidate": false,
+      "fixture": null,
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
       "identity": "cases-6-6|null|intro:solo:hug:1,cases:paired:hug:2,synthesis:solo:hug:1",
       "structure": "cases-6-6|left-edge8|intro:solo:spine:8:hug,cases:paired:6/6::hug,synthesis:solo:spine:8:hug",
       "plotBox": null,
@@ -2580,6 +2730,7 @@
       "resolve": {
         "intro": "spine"
       },
+      "preferredFeasible": null,
       "rhythm": [
         {
           "after": "intro",
@@ -2611,12 +2762,1603 @@
       "role": "workspace",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 646,
+      "viewportShare": 0.72,
       "identity": "workbook-5-7|workspace|intro:solo:hug:1,reference:workspace:designed:2,questions:workspace:designed:2",
       "structure": "workbook-5-7|left-edge8|intro:solo:spine:8:hug,reference:workspace:5/7::designed,questions:workspace:5/7::designed",
       "plotBox": "428x554",
       "solvedBox": "428x554",
       "unitScale": "37.1/37.07",
       "surfaceBox": "466x646"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-supporting",
+      "klass": "portrait",
+      "name": "G__supporting__tall__wh-0p45",
+      "selectKey": "supporting/portrait",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo inset 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "inset",
+          "h": 818.5,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "inset",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=368",
+        "interpretation=564",
+        "support=564"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "supporting",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.tall",
+      "calibration": {
+        "shape": "tall",
+        "wh": 0.45,
+        "aspect": 2.2222,
+        "klass": "portrait"
+      },
+      "surfaceH": 819,
+      "viewportShare": 0.91,
+      "identity": "spine-supporting|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
+      "plotBox": "330x706",
+      "solvedBox": "330x706",
+      "unitScale": "28.78/28.86",
+      "surfaceBox": "368x819"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-narrow",
+      "klass": "portrait",
+      "name": "G__explanatory__tall__wh-0p45",
+      "selectKey": "explanatory/portrait",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 1212.5,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "spine",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": false,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=564",
+        "interpretation=564",
+        "support=564"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "explanatory",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.tall",
+      "calibration": {
+        "shape": "tall",
+        "wh": 0.45,
+        "aspect": 2.2222,
+        "klass": "portrait"
+      },
+      "surfaceH": 1213,
+      "viewportShare": 1.35,
+      "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "spine-narrow|centre6|media:solo:spine:6:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
+      "plotBox": "526x1100",
+      "solvedBox": "526x1100",
+      "unitScale": "45.88/46.05",
+      "surfaceBox": "564x1213"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "stage-primary-portrait",
+      "klass": "portrait",
+      "name": "G__primary__tall__wh-0p45",
+      "selectKey": "primary/portrait",
+      "infeasible": true,
+      "role": "primary",
+      "calibration": {
+        "shape": "tall",
+        "wh": 0.45,
+        "aspect": 2.2222,
+        "klass": "portrait"
+      },
+      "adversarial": false,
+      "counterexample": false,
+      "candidate": false,
+      "fixture": "cal.tall",
+      "rows": [],
+      "fails": [],
+      "why": "row `media`: none of the approved rungs (expanded=8col no equal-unit box fits 760px · wide=10col no equal-unit box fits 956px) can carry this object"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-supporting",
+      "klass": "portrait",
+      "name": "G__supporting__portrait__wh-0p75",
+      "selectKey": "supporting/portrait",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo inset 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "inset",
+          "h": 565.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "inset",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=368",
+        "interpretation=564",
+        "support=564"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "supporting",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.portrait",
+      "calibration": {
+        "shape": "portrait",
+        "wh": 0.75,
+        "aspect": 1.3333,
+        "klass": "portrait"
+      },
+      "surfaceH": 565,
+      "viewportShare": 0.63,
+      "identity": "spine-supporting|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
+      "plotBox": "330x473",
+      "solvedBox": "330x473",
+      "unitScale": "23.41/23.39",
+      "surfaceBox": "368x565"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-narrow",
+      "klass": "portrait",
+      "name": "G__explanatory__portrait__wh-0p75",
+      "selectKey": "explanatory/portrait",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo expanded 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "expanded",
+          "h": 1088.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "expanded",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=760",
+        "interpretation=564",
+        "support=564"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "explanatory",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.portrait",
+      "calibration": {
+        "shape": "portrait",
+        "wh": 0.75,
+        "aspect": 1.3333,
+        "klass": "portrait"
+      },
+      "surfaceH": 1088,
+      "viewportShare": 1.21,
+      "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
+      "plotBox": "722x996",
+      "solvedBox": "722x996",
+      "unitScale": "51.94/51.91",
+      "surfaceBox": "760x1088"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "stage-primary-portrait",
+      "klass": "portrait",
+      "name": "G__primary__portrait__wh-0p75",
+      "selectKey": "primary/portrait",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo wide 10 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "wide",
+          "h": 1349.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "wide",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=956",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "primary",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.portrait",
+      "calibration": {
+        "shape": "portrait",
+        "wh": 0.75,
+        "aspect": 1.3333,
+        "klass": "portrait"
+      },
+      "surfaceH": 1349,
+      "viewportShare": 1.5,
+      "identity": "stage-primary-portrait|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "stage-primary-portrait|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "918x1257",
+      "solvedBox": "918x1257",
+      "unitScale": "66.08/66.11",
+      "surfaceBox": "956x1349"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-supporting",
+      "klass": "balanced",
+      "name": "G__supporting__near-square__wh-1p04",
+      "selectKey": "supporting/balanced",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo inset 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "inset",
+          "h": 481.5,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "inset",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=368",
+        "interpretation=564",
+        "support=564"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "supporting",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.near-square",
+      "calibration": {
+        "shape": "near-square",
+        "wh": 1.04,
+        "aspect": 0.96,
+        "klass": "balanced"
+      },
+      "surfaceH": 482,
+      "viewportShare": 0.54,
+      "identity": "spine-supporting|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
+      "plotBox": "330x369",
+      "solvedBox": "330x369",
+      "unitScale": "11.56/11.54",
+      "surfaceBox": "368x482"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-reading",
+      "klass": "balanced",
+      "name": "G__explanatory__near-square__wh-1p04",
+      "selectKey": "explanatory/balanced",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo wide 10 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "wide",
+          "h": 1025.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "wide",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=956",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "explanatory",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.near-square",
+      "calibration": {
+        "shape": "near-square",
+        "wh": 1.04,
+        "aspect": 0.96,
+        "klass": "balanced"
+      },
+      "surfaceH": 1025,
+      "viewportShare": 1.14,
+      "identity": "spine-reading|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "spine-reading|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "918x933",
+      "solvedBox": "918x933",
+      "unitScale": "32.28/32.29",
+      "surfaceBox": "956x1025"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "stage-primary-portrait",
+      "klass": "balanced",
+      "name": "G__primary__near-square__wh-1p04",
+      "selectKey": "primary/balanced",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo wide 10 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "wide",
+          "h": 1025.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "wide",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=956",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "primary",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.near-square",
+      "calibration": {
+        "shape": "near-square",
+        "wh": 1.04,
+        "aspect": 0.96,
+        "klass": "balanced"
+      },
+      "surfaceH": 1025,
+      "viewportShare": 1.14,
+      "identity": "stage-primary-portrait|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "stage-primary-portrait|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "918x933",
+      "solvedBox": "918x933",
+      "unitScale": "32.28/32.29",
+      "surfaceBox": "956x1025"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-supporting-wide",
+      "klass": "landscape",
+      "name": "G__supporting__moderate-wide__wh-1p5",
+      "selectKey": "supporting/landscape",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo narrow 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "narrow",
+          "h": 509.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "narrow",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=564",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "supporting",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.moderate-wide",
+      "calibration": {
+        "shape": "moderate-wide",
+        "wh": 1.5,
+        "aspect": 0.6667,
+        "klass": "landscape"
+      },
+      "surfaceH": 509,
+      "viewportShare": 0.57,
+      "identity": "spine-supporting-wide|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "spine-supporting-wide|centre8|media:solo:narrow:6:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "526x417",
+      "solvedBox": "526x417",
+      "unitScale": "26.01/26.03",
+      "surfaceBox": "564x509"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "stage-wide",
+      "klass": "landscape",
+      "name": "G__explanatory__moderate-wide__wh-1p5",
+      "selectKey": "explanatory/landscape",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo wide 10 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "wide",
+          "h": 771.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "wide",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=956",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "explanatory",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.moderate-wide",
+      "calibration": {
+        "shape": "moderate-wide",
+        "wh": 1.5,
+        "aspect": 0.6667,
+        "klass": "landscape"
+      },
+      "surfaceH": 771,
+      "viewportShare": 0.86,
+      "identity": "stage-wide|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "stage-wide|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "918x679",
+      "solvedBox": "918x679",
+      "unitScale": "45.33/45.3",
+      "surfaceBox": "956x771"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "stage-full",
+      "klass": "landscape",
+      "name": "G__primary__moderate-wide__wh-1p5",
+      "selectKey": "primary/landscape",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo full 12 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "full",
+          "h": 901.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "full",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=1152",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "primary",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.moderate-wide",
+      "calibration": {
+        "shape": "moderate-wide",
+        "wh": 1.5,
+        "aspect": 0.6667,
+        "klass": "landscape"
+      },
+      "surfaceH": 901,
+      "viewportShare": 1,
+      "identity": "stage-full|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "stage-full|centre8|media:solo:full:12:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "1114x809",
+      "solvedBox": "1114x809",
+      "unitScale": "54.94/54.94",
+      "surfaceBox": "1152x901"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-supporting-wide",
+      "klass": "landscape",
+      "name": "G__supporting__wide__wh-2",
+      "selectKey": "supporting/landscape",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo narrow 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "narrow",
+          "h": 430.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "narrow",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=564",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "supporting",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.wide",
+      "calibration": {
+        "shape": "wide",
+        "wh": 2,
+        "aspect": 0.5,
+        "klass": "landscape"
+      },
+      "surfaceH": 430,
+      "viewportShare": 0.48,
+      "identity": "spine-supporting-wide|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "spine-supporting-wide|centre8|media:solo:narrow:6:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "526x338",
+      "solvedBox": "526x338",
+      "unitScale": "19.51/19.53",
+      "surfaceBox": "564x430"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "stage-wide",
+      "klass": "landscape",
+      "name": "G__explanatory__wide__wh-2",
+      "selectKey": "explanatory/landscape",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo wide 10 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "wide",
+          "h": 626.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "wide",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=956",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "explanatory",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.wide",
+      "calibration": {
+        "shape": "wide",
+        "wh": 2,
+        "aspect": 0.5,
+        "klass": "landscape"
+      },
+      "surfaceH": 626,
+      "viewportShare": 0.7,
+      "identity": "stage-wide|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "stage-wide|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "918x534",
+      "solvedBox": "918x534",
+      "unitScale": "33.99/34.03",
+      "surfaceBox": "956x626"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "stage-full",
+      "klass": "landscape",
+      "name": "G__primary__wide__wh-2",
+      "selectKey": "primary/landscape",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo full 12 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "full",
+          "h": 724.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "full",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=1152",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "primary",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.wide",
+      "calibration": {
+        "shape": "wide",
+        "wh": 2,
+        "aspect": 0.5,
+        "klass": "landscape"
+      },
+      "surfaceH": 724,
+      "viewportShare": 0.8,
+      "identity": "stage-full|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "stage-full|centre8|media:solo:full:12:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "1114x632",
+      "solvedBox": "1114x632",
+      "unitScale": "41.2/41.19",
+      "surfaceBox": "1152x724"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "spine-supporting-wide",
+      "klass": "wide",
+      "name": "G__supporting__panoramic__wh-3",
+      "selectKey": "supporting/wide",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo narrow 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "narrow",
+          "h": 377.5,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "narrow",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=564",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "supporting",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.panoramic",
+      "calibration": {
+        "shape": "panoramic",
+        "wh": 3,
+        "aspect": 0.3333,
+        "klass": "wide"
+      },
+      "surfaceH": 378,
+      "viewportShare": 0.42,
+      "identity": "spine-supporting-wide|supporting|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "spine-supporting-wide|centre8|media:solo:narrow:6:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "526x265",
+      "solvedBox": "526x265",
+      "unitScale": "13.01/13.04",
+      "surfaceBox": "564x378"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "stage-wide",
+      "klass": "wide",
+      "name": "G__explanatory__panoramic__wh-3",
+      "selectKey": "explanatory/wide",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo wide 10 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "wide",
+          "h": 521.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "wide",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=956",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "explanatory",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.panoramic",
+      "calibration": {
+        "shape": "panoramic",
+        "wh": 3,
+        "aspect": 0.3333,
+        "klass": "wide"
+      },
+      "surfaceH": 521,
+      "viewportShare": 0.58,
+      "identity": "stage-wide|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "stage-wide|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "918x429",
+      "solvedBox": "918x429",
+      "unitScale": "22.66/22.61",
+      "surfaceBox": "956x521"
+    },
+    {
+      "pattern": "visual.explanation",
+      "surface": "desktop",
+      "blueprint": "stage-full",
+      "klass": "wide",
+      "name": "G__primary__panoramic__wh-3",
+      "selectKey": "primary/wide",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo full 12 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "full",
+          "h": 601.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "full",
+        "interpretation": "spine",
+        "support": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=1152",
+        "interpretation=760",
+        "support=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "primary",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "cal.panoramic",
+      "calibration": {
+        "shape": "panoramic",
+        "wh": 3,
+        "aspect": 0.3333,
+        "klass": "wide"
+      },
+      "surfaceH": 601,
+      "viewportShare": 0.67,
+      "identity": "stage-full|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "stage-full|centre8|media:solo:full:12:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
+      "plotBox": "1114x509",
+      "solvedBox": "1114x509",
+      "unitScale": "27.47/27.34",
+      "surfaceBox": "1152x601"
     },
     {
       "pattern": "visual.explanation",
@@ -2664,6 +4406,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -2693,6 +4436,10 @@
       "role": "primary",
       "chrome": false,
       "candidate": true,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 1469,
+      "viewportShare": 1.63,
       "identity": "stage-primary-full12|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "stage-primary-full12|centre8|media:solo:full:12:hug,interpretation:solo:spine:8:hug,support:solo:spine:8:hug",
       "plotBox": "1114x1377",
@@ -2746,6 +4493,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -2775,6 +4523,10 @@
       "role": "explanatory",
       "chrome": true,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 998,
+      "viewportShare": 1.11,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "722x906",
@@ -2828,6 +4580,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -2857,6 +4610,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 763,
+      "viewportShare": 0.85,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "526x671",
@@ -2910,6 +4667,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -2944,6 +4702,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 763,
+      "viewportShare": 0.85,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:spine:6:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "526x671",
@@ -2996,6 +4758,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": null,
       "rhythm": [
         {
           "after": "media",
@@ -3034,6 +4797,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 763,
+      "viewportShare": 0.85,
       "identity": "spine-narrow|explanatory|media:paired:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:paired:6/6::hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "526x671",
@@ -3075,6 +4842,7 @@
       "resolve": {
         "support": "spine"
       },
+      "preferredFeasible": null,
       "rhythm": [
         {
           "after": "study",
@@ -3102,6 +4870,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 646,
+      "viewportShare": 0.72,
       "identity": "side-study|explanatory|study:paired:hug:2,support:solo:hug:1",
       "structure": "side-study|left-edge8|study:paired:5/7::hug,support:solo:spine:8:hug",
       "plotBox": "428x554",
@@ -3155,6 +4927,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -3189,6 +4962,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 966,
+      "viewportShare": 1.07,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "722x906",
@@ -3242,6 +5019,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -3280,6 +5058,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 998,
+      "viewportShare": 1.11,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "722x906",
@@ -3333,6 +5115,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -3367,6 +5150,10 @@
       "role": "explanatory",
       "chrome": false,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 966,
+      "viewportShare": 1.07,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "722x906",
@@ -3420,6 +5207,7 @@
         "interpretation": "spine",
         "support": "spine"
       },
+      "preferredFeasible": true,
       "rhythm": [
         {
           "after": "media",
@@ -3449,6 +5237,10 @@
       "role": "explanatory",
       "chrome": true,
       "candidate": false,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 998,
+      "viewportShare": 1.11,
       "identity": "spine-narrow|explanatory|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
       "plotBox": "722x906",
@@ -3521,7 +5313,7 @@
       "control": "H14",
       "hit": true,
       "got": [
-        "visual.explanation|spine-supporting|portrait|desktop|plain [A]: with the surface on the plane is painted at 50/70 px per unit — one x-unit and one y-unit are not the same length. A surface may not squeeze the mathematics to fit itself"
+        "visual.explanation|spine-supporting|portrait|graph.portrait|desktop|plain [A]: with the surface on the plane is painted at 50/70 px per unit — one x-unit and one y-unit are not the same length. A surface may not squeeze the mathematics to fit itself"
       ]
     },
     {
@@ -3541,11 +5333,19 @@
       ]
     },
     {
+      "id": "shape-chose-the-composition",
+      "control": "H19",
+      "hit": true,
+      "got": [
+        "supporting|portrait|desktop: tall (0.45:1) → spine-supporting/inset, tall (0.45:1) → something-else/inset — two shapes in one class were given two different blueprints. The CLASS selects"
+      ]
+    },
+    {
       "id": "surface-moved-the-layout",
       "control": "H15",
       "hit": true,
       "got": [
-        "visual.explanation|spine-supporting|portrait|desktop|plain [A]: turning the surface on changed the composition — spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug → something-else. Blueprint, spine, cardinality, rung and split are decided before the surface exists and the surface may not reach back"
+        "visual.explanation|spine-supporting|portrait|graph.portrait|desktop|plain [A]: turning the surface on changed the composition — spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug → something-else. Blueprint, spine, cardinality, rung and split are decided before the surface exists and the surface may not reach back"
       ]
     },
     {
