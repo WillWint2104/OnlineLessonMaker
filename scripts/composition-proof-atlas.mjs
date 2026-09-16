@@ -1427,6 +1427,15 @@ const SCOPE = [
     klass: 'panoramic', name: 'C3__compare__PANORAMIC-shared-visual__full-12col' },
   { pid: 'worked.single', surface: 'desktop', bid: 'flow', key: 'flow', klass: null,
     name: '2__prose-alone-stays-at-the-measure' },
+  /* worked.single, beyond the prose proof: its second authored variant, and the same blueprint on all
+     three surfaces so H18 has a MEDIA-LESS pattern to check responsive identity against — until now it
+     had exactly one multi-surface blueprint to compare, and that one carries a figure. */
+  { pid: 'worked.single', surface: 'desktop', bid: 'split', key: 'split', klass: null,
+    name: 'K1__worked-single-SPLIT__a-rule-and-a-section-step' },
+  { pid: 'worked.single', surface: 'tablet', bid: 'flow', key: 'flow', klass: null,
+    name: 'K2__worked-single-flow__tablet' },
+  { pid: 'worked.single', surface: 'phone', bid: 'flow', key: 'flow', klass: null,
+    name: 'K3__worked-single-flow__phone' },
   { pid: 'worked.paired', surface: 'desktop', bid: 'cases-6-6', key: 'any', klass: null,
     name: '4__worked-paired-unchanged' },
   { pid: 'practice.workbook', surface: 'desktop', bid: 'workbook-5-7', key: 'any', klass: 'portrait',

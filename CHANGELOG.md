@@ -8,6 +8,18 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **`worked.single` completed, and the catalogue's seven patterns are all expressed**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change). Its second
+  authored variant `split` is rendered, and `flow` is rendered on all three surfaces — so **H18 now has
+  a media-less blueprint to check responsive identity against**, where it previously had exactly one
+  multi-surface blueprint to compare and that one carries a figure. It now compares two.
+- **`admits` is a media-pattern declaration, and the media-less patterns say so.** `worked.single` and
+  `worked.paired` declare none, which is not an oversight: `admits` names the presentation roles and
+  geometry classes a pattern accepts, and both only exist where there is an object to have a role and a
+  shape. Its job is to give `validate` a second declaration to cross-check the select table against, so
+  a hole and a refusal stop looking alike. In a media-less pattern the table is keyed by an authored
+  variant name and there is no second source — a missing variant is simply one nobody wrote, so there
+  is nothing for a hole to be a hole in.
 - **`visual.compare` re-expressed and re-rendered** (`docs/atlas/composition-proof/`,
   `scripts/composition-proof-atlas.mjs`; no app change). It had been schema-migrated twice — to
   solo/paired and to the six-class vocabulary — without anybody looking at it, and a migration is not

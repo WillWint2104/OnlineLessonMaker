@@ -4281,6 +4281,7 @@
       }
     },
     "worked.single": {
+      "noAdmits": "A MEDIA-LESS PATTERN DECLARES NO `admits`, AND THAT IS NOT AN OVERSIGHT. `admits` names the presentation ROLES and geometry CLASSES a pattern accepts, and both only exist where there is an object to have a role and a shape. Its job is to make a hole in the select table distinguishable from a refusal, by giving validate a SECOND declaration to cross-check the table against. Here the table is keyed by an authored variant name and there is no second source — a missing variant is simply a variant nobody wrote, so there is nothing for a hole to be a hole IN.",
       "intent": "One worked example. Every row is solo PROSE, which is what makes it the proof that the solo ladder is not \"one region, therefore wider\".",
       "mediaSlot": null,
       "selectBy": "authored",
@@ -4752,6 +4753,7 @@
       }
     },
     "worked.paired": {
+      "noAdmits": "A MEDIA-LESS PATTERN DECLARES NO `admits`, AND THAT IS NOT AN OVERSIGHT. `admits` names the presentation ROLES and geometry CLASSES a pattern accepts, and both only exist where there is an object to have a role and a shape. Its job is to make a hole in the select table distinguishable from a refusal, by giving validate a SECOND declaration to cross-check the table against. Here the table is keyed by an authored variant name and there is no second source — a missing variant is simply a variant nobody wrote, so there is nothing for a hole to be a hole IN.",
       "intent": "Two worked examples of the same kind, side by side, and what they show together.",
       "proposedPattern": true,
       "slots": [

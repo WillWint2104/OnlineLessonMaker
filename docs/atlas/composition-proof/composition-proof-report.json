@@ -1834,6 +1834,411 @@
       "surfaceBox": null
     },
     {
+      "pattern": "worked.single",
+      "surface": "desktop",
+      "blueprint": "split",
+      "klass": "none",
+      "name": "K1__worked-single-SPLIT__a-rule-and-a-section-step",
+      "selectKey": "split",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "scenario",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "worked",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 313.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 114.64,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "scenario": "spine",
+        "worked": "spine",
+        "support": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": null,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "scenario",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "worked",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "support",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=760",
+        "scenario=760",
+        "worked=760",
+        "support=760",
+        "synthesis=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": null,
+      "fails": [],
+      "fs": "A",
+      "role": null,
+      "chrome": false,
+      "candidate": false,
+      "fixture": null,
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
+      "identity": "split|null|intro:solo:hug:1,scenario:solo:hug:1,worked:solo:hug:1,support:solo:hug:1,synthesis:solo:hug:1",
+      "structure": "split|left-edge8|intro:solo:spine:8:hug,scenario:solo:spine:8:hug,worked:solo:spine:8:hug,support:solo:spine:8:hug,synthesis:solo:spine:8:hug",
+      "plotBox": null,
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": null
+    },
+    {
+      "pattern": "worked.single",
+      "surface": "tablet",
+      "blueprint": "flow",
+      "klass": "none",
+      "name": "K2__worked-single-flow__tablet",
+      "selectKey": "flow",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "scenario",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "worked",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 313.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 114.64,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "scenario": "spine",
+        "worked": "spine",
+        "support": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": null,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "scenario",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "worked",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "support",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=727",
+        "scenario=727",
+        "worked=727",
+        "support=727",
+        "synthesis=727"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": null,
+      "fails": [],
+      "fs": "A",
+      "role": null,
+      "chrome": false,
+      "candidate": false,
+      "fixture": null,
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
+      "identity": "flow|null|intro:solo:hug:1,scenario:solo:hug:1,worked:solo:hug:1,support:solo:hug:1,synthesis:solo:hug:1",
+      "structure": "flow|left-edge7|intro:solo:spine:7:hug,scenario:solo:spine:7:hug,worked:solo:spine:7:hug,support:solo:spine:7:hug,synthesis:solo:spine:7:hug",
+      "plotBox": null,
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": null
+    },
+    {
+      "pattern": "worked.single",
+      "surface": "phone",
+      "blueprint": "flow",
+      "klass": "none",
+      "name": "K3__worked-single-flow__phone",
+      "selectKey": "flow",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 120.19,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "scenario",
+          "split": "solo spine 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 120.19,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "worked",
+          "split": "solo spine 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 313.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 141.19,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "scenario": "spine",
+        "worked": "spine",
+        "support": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": null,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "scenario",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "worked",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "support",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=382",
+        "scenario=382",
+        "worked=382",
+        "support=382",
+        "synthesis=382"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": null,
+      "fails": [],
+      "fs": "A",
+      "role": null,
+      "chrome": false,
+      "candidate": false,
+      "fixture": null,
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
+      "identity": "flow|null|intro:solo:hug:1,scenario:solo:hug:1,worked:solo:hug:1,support:solo:hug:1,synthesis:solo:hug:1",
+      "structure": "flow|left-edge4|intro:solo:spine:4:hug,scenario:solo:spine:4:hug,worked:solo:spine:4:hug,support:solo:spine:4:hug,synthesis:solo:spine:4:hug",
+      "plotBox": null,
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": null
+    },
+    {
       "pattern": "worked.paired",
       "surface": "desktop",
       "blueprint": "cases-6-6",
@@ -4684,6 +5089,411 @@
       "viewportShare": null,
       "identity": "flow|null|intro:solo:hug:1,scenario:solo:hug:1,worked:solo:hug:1,support:solo:hug:1,synthesis:solo:hug:1",
       "structure": "flow|left-edge8|intro:solo:spine:8:hug,scenario:solo:spine:8:hug,worked:solo:spine:8:hug,support:solo:spine:8:hug,synthesis:solo:spine:8:hug",
+      "plotBox": null,
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": null
+    },
+    {
+      "pattern": "worked.single",
+      "surface": "desktop",
+      "blueprint": "split",
+      "klass": "none",
+      "name": "K1__worked-single-SPLIT__a-rule-and-a-section-step__adv",
+      "selectKey": "split",
+      "adversarial": true,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 201.28,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "scenario",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 201.28,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "worked",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 394.28,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 222.28,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "scenario": "spine",
+        "worked": "spine",
+        "support": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": null,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "scenario",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "worked",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "support",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=760",
+        "scenario=760",
+        "worked=760",
+        "support=760",
+        "synthesis=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": null,
+      "fails": [],
+      "fs": "A",
+      "role": null,
+      "chrome": false,
+      "candidate": false,
+      "fixture": null,
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
+      "identity": "split|null|intro:solo:hug:1,scenario:solo:hug:1,worked:solo:hug:1,support:solo:hug:1,synthesis:solo:hug:1",
+      "structure": "split|left-edge8|intro:solo:spine:8:hug,scenario:solo:spine:8:hug,worked:solo:spine:8:hug,support:solo:spine:8:hug,synthesis:solo:spine:8:hug",
+      "plotBox": null,
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": null
+    },
+    {
+      "pattern": "worked.single",
+      "surface": "tablet",
+      "blueprint": "flow",
+      "klass": "none",
+      "name": "K2__worked-single-flow__tablet__adv",
+      "selectKey": "flow",
+      "adversarial": true,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 201.28,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "scenario",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 201.28,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "worked",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 394.28,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 222.28,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "scenario": "spine",
+        "worked": "spine",
+        "support": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": null,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "scenario",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "worked",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "support",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=727",
+        "scenario=727",
+        "worked=727",
+        "support=727",
+        "synthesis=727"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": null,
+      "fails": [],
+      "fs": "A",
+      "role": null,
+      "chrome": false,
+      "candidate": false,
+      "fixture": null,
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
+      "identity": "flow|null|intro:solo:hug:1,scenario:solo:hug:1,worked:solo:hug:1,support:solo:hug:1,synthesis:solo:hug:1",
+      "structure": "flow|left-edge7|intro:solo:spine:7:hug,scenario:solo:spine:7:hug,worked:solo:spine:7:hug,support:solo:spine:7:hug,synthesis:solo:spine:7:hug",
+      "plotBox": null,
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": null
+    },
+    {
+      "pattern": "worked.single",
+      "surface": "phone",
+      "blueprint": "flow",
+      "klass": "none",
+      "name": "K3__worked-single-flow__phone__adv",
+      "selectKey": "flow",
+      "adversarial": true,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 254.38,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "scenario",
+          "split": "solo spine 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 254.38,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "worked",
+          "split": "solo spine 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 394.28,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 275.38,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "scenario": "spine",
+        "worked": "spine",
+        "support": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": null,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "scenario",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "worked",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "support",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=382",
+        "scenario=382",
+        "worked=382",
+        "support=382",
+        "synthesis=382"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": null,
+      "fails": [],
+      "fs": "A",
+      "role": null,
+      "chrome": false,
+      "candidate": false,
+      "fixture": null,
+      "calibration": null,
+      "surfaceH": null,
+      "viewportShare": null,
+      "identity": "flow|null|intro:solo:hug:1,scenario:solo:hug:1,worked:solo:hug:1,support:solo:hug:1,synthesis:solo:hug:1",
+      "structure": "flow|left-edge4|intro:solo:spine:4:hug,scenario:solo:spine:4:hug,worked:solo:spine:4:hug,support:solo:spine:4:hug,synthesis:solo:spine:4:hug",
       "plotBox": null,
       "solvedBox": null,
       "unitScale": null,

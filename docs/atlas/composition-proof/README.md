@@ -588,6 +588,39 @@ reported a tick.
 | `select-outside-what-the-pattern-admits` | a select table widening past what the pattern declared |
 | `admitted-pair-with-no-composition` | an admitted pair with no blueprint — a catalogue gap |
 
+## `worked.single` — and what `admits` does not cover
+
+The simplest pattern in the catalogue: no media slot, every row solo prose on a left-edge spine, the
+support row narrower than the rest. Both authored variants are now rendered — `flow`, and `split`,
+which is the same widths with a section step and a rule — and `flow` is rendered on all three
+surfaces, so **H18 now has a media-less blueprint to check responsive identity against**. Until now it
+had exactly one multi-surface blueprint to compare, and that one carries a figure.
+
+### `admits` is a media-pattern declaration
+
+`worked.single` and `worked.paired` declare **no `admits`**, and that is not an oversight.
+
+`admits` names the presentation **roles** and geometry **classes** a pattern accepts, and both only
+exist where there is an object to have a role and a shape. Its job is to make a hole in the select
+table distinguishable from a refusal — by giving `validate` a *second* declaration to cross-check the
+table against. In a media-less pattern the table is keyed by an authored variant name and there is no
+second source: a missing variant is simply a variant nobody wrote, so there is nothing for a hole to
+be a hole *in*.
+
+## Catalogue coverage
+
+All seven shipping patterns are now expressed and rendered.
+
+| pattern | blueprints | admits |
+| --- | --- | --- |
+| `notes` | `notes-inset` · `notes-aside` | `supporting` × all six classes |
+| `visual.explanation` | 9, incl. the goldens | all three roles × all six classes |
+| `media.full` | `plate-wide` · `plate-full` | `primary` × five (refuses `tall`, with a reason) |
+| `interactive.primary` | `instrument-spine` | `primary` × two (fixture gap, not a refusal) |
+| `visual.compare` | 5, incl. `none` | `explanatory` × six + `none` |
+| `worked.single` | `flow` · `split` | — media-less |
+| `worked.paired` | `cases-6-6` (golden) · stacked | — media-less |
+
 ## The figure surface (treatment A)
 
 ```
