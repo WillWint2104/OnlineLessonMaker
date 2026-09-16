@@ -442,6 +442,58 @@ A counterexample that fails for the wrong reason proves nothing, so it was remov
 
 Nothing here is wired into the shipping catalogue, so nothing is fixed by this pass. It is reported.
 
+## `interactive.primary` — a manipulable object is the page
+
+The shipping `beside` subdesign pairs the instrument (8 columns) with the prompts (4). The slot-span
+atlas measured that pair at **+472px** on identical filler and ruled it out; the approved answer is a
+**centred spine with the prompts beneath the instrument**, which has no hole at any prose length.
+
+| | |
+| --- | --- |
+| `instrument-spine` | intro · instrument at `wide` 10 · prompts · synthesis, all on one centred axis |
+| measured here | instrument row 781px; no imbalance, because there is no pair |
+
+### The cited number, re-measured
+
+A number from another atlas is a claim until this one reproduces it. Rendered here, the 8/4 pair
+fails **H4** at **487.02px** against its declared 160px tolerance — the defect reproduces, but the
+magnitude is **not** the cited 472px. The two atlases use different filler prose and this one puts a
+figure surface around the instrument, so the exact figure is a property of the harness. What
+transfers is the shape of the failure: an object whose height is *derived* beside prose whose height
+is *written*, and no width fixes it, because the gap is a property of the sentence the author
+happened to type. Same finding as `visual.explanation/side-6` at +474px — the pairing rule arriving a
+second time.
+
+### A fixture gap is not a refusal
+
+`interactive.primary` admits one role — the pattern is named for it — and **only `landscape` and
+`wide`**. That looks like `media.full` refusing `tall`, and it is a different thing, so the catalogue
+says which is which:
+
+- `media.full` refuses `tall` **for a reason anyone can check**: the pattern is defined by the plane
+  crossing the reading measure, and a tall plane cannot cross it without becoming enormous.
+- `interactive.primary` has **no argument at all**. The permanent fixture set contains exactly two
+  instruments, at 1.33:1 and 1.78:1, which land in `landscape` and `wide`. A tall, portrait, balanced
+  or panoramic instrument has never been rendered, so the catalogue declines to claim a composition
+  for one. **The fix is a fixture, not a ruling.**
+
+### Open question, not decided here
+
+**Does the `interactive` slot type join the role × geometry contract?** It does not today, and the
+bypass is one line: `familyFor` short-circuits on `slotType === 'interactive'` and returns a flat
+`soloFamilies.interactive`, so an instrument never consults `media.<class>.<role>` and the frozen
+mapping does not reach it.
+
+- *For:* an instrument with a fixed aspect behaves exactly like a plane — geometry constrains which
+  compositions work, which is the premise of the freeze.
+- *Against:* an instrument carries **controls**, and a control has a minimum usable size that has
+  nothing to do with aspect ratio. A contract keyed only on shape could approve a composition that is
+  geometrically fine and unusable.
+
+Routing a slot type into the frozen contract changes the contract's *reach*, not a catalogue entry,
+and the freeze was deliberate. This pattern is expressed with the existing `interactive` family and
+one declared rung, which renders and proves either way.
+
 ## The figure surface (treatment A)
 
 ```

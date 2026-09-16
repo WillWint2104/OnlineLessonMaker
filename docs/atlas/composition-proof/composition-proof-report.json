@@ -931,6 +931,120 @@
       "surfaceBox": "1152x719"
     },
     {
+      "pattern": "interactive.primary",
+      "surface": "desktop",
+      "blueprint": "instrument-spine",
+      "klass": "landscape",
+      "name": "I1__instrument-on-a-spine__prompts-beneath",
+      "selectKey": "primary/landscape",
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "instrument",
+          "split": "solo wide 10 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "wide",
+          "declared": "wide",
+          "media": true,
+          "h": 780.75,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "prompts",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 114.64,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "instrument": "wide",
+        "prompts": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "instrument",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "prompts",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=760",
+        "instrument=956",
+        "prompts=760",
+        "synthesis=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "primary",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "interactive.balanced",
+      "calibration": null,
+      "surfaceH": 781,
+      "viewportShare": 0.87,
+      "identity": "instrument-spine|primary|intro:solo:hug:1,instrument:solo:hug:1,prompts:solo:hug:1,synthesis:solo:hug:1",
+      "structure": "instrument-spine|centre8|intro:solo:spine:8:hug,instrument:solo:wide:10:hug,prompts:solo:spine:8:hug,synthesis:solo:spine:8:hug",
+      "plotBox": "918x689",
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": "956x781"
+    },
+    {
       "pattern": "worked.single",
       "surface": "desktop",
       "blueprint": "flow",
@@ -3017,6 +3131,120 @@
       "solvedBox": null,
       "unitScale": null,
       "surfaceBox": "1152x719"
+    },
+    {
+      "pattern": "interactive.primary",
+      "surface": "desktop",
+      "blueprint": "instrument-spine",
+      "klass": "landscape",
+      "name": "I1__instrument-on-a-spine__prompts-beneath__adv",
+      "selectKey": "primary/landscape",
+      "adversarial": true,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 201.28,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "instrument",
+          "split": "solo wide 10 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "wide",
+          "declared": "wide",
+          "media": true,
+          "h": 780.75,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "prompts",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 201.28,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 222.28,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "instrument": "wide",
+        "prompts": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "instrument",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "prompts",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=760",
+        "instrument=956",
+        "prompts=760",
+        "synthesis=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "primary",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "interactive.balanced",
+      "calibration": null,
+      "surfaceH": 781,
+      "viewportShare": 0.87,
+      "identity": "instrument-spine|primary|intro:solo:hug:1,instrument:solo:hug:1,prompts:solo:hug:1,synthesis:solo:hug:1",
+      "structure": "instrument-spine|centre8|intro:solo:spine:8:hug,instrument:solo:wide:10:hug,prompts:solo:spine:8:hug,synthesis:solo:spine:8:hug",
+      "plotBox": "918x689",
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": "956x781"
     },
     {
       "pattern": "worked.single",
@@ -9479,6 +9707,104 @@
       "solvedBox": "428x554",
       "unitScale": "37.1/37.07",
       "surfaceBox": "466x646"
+    },
+    {
+      "pattern": "interactive.primary",
+      "surface": "desktop",
+      "blueprint": "beside-8-4",
+      "klass": "landscape",
+      "name": "I2__counterexample__instrument-beside-prompts",
+      "selectKey": null,
+      "adversarial": false,
+      "counterexample": true,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "instrument",
+          "split": "8/4",
+          "mode": "paired",
+          "vertical": "hug",
+          "rung": null,
+          "declared": null,
+          "media": true,
+          "h": 633.75,
+          "air": 0,
+          "imbalance": 487.02
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 114.64,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": null,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "instrument",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=760",
+        "instrument=760",
+        "prompts=368",
+        "synthesis=760"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [
+        [
+          "H4",
+          "interactive.primary/beside-8-4/desktop row `instrument`: the siblings terminate 487.02px apart and the blueprint declares at most 160px (an instrument beside the prompts directing it). All twelve columns can be owned and the relationship still be visually invalid"
+        ]
+      ],
+      "fs": "A",
+      "role": "primary",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "interactive.balanced",
+      "calibration": null,
+      "surfaceH": 634,
+      "viewportShare": 0.7,
+      "identity": "beside-8-4|primary|intro:solo:hug:1,instrument:paired:hug:2,synthesis:solo:hug:1",
+      "structure": "beside-8-4|centre8|intro:solo:spine:8:hug,instrument:paired:8/4::hug,synthesis:solo:spine:8:hug",
+      "plotBox": "722x542",
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": "760x634"
     },
     {
       "pattern": "visual.explanation",

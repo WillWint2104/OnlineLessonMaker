@@ -8,6 +8,24 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **`interactive.primary` expressed as a composition blueprint** (`docs/atlas/composition-proof/`,
+  `scripts/composition-proof-atlas.mjs`; no app change). `instrument-spine`: intro, the instrument at
+  `wide` 10, the prompts and the synthesis, all on one centred axis. This is the arrangement the
+  slot-span atlas already ruled in when it measured the shipping 8/4 `beside` pair at +472px.
+  - **The cited number re-measured, and it does not match.** Rendered here the 8/4 pair fails H4 at
+    **487.02px** against its declared 160px tolerance. The defect reproduces; the magnitude does not.
+    The two atlases use different filler prose and this one puts a figure surface around the
+    instrument, so the exact figure is a property of the harness. What transfers is the shape of the
+    failure — an object whose height is derived beside prose whose height is written.
+  - **A fixture gap is recorded as a fixture gap, not a refusal.** `interactive.primary` admits only
+    `landscape` and `wide` because the permanent fixture set holds exactly two instruments, at 1.33:1
+    and 1.78:1. Unlike `media.full` refusing `tall` — which has a reason anyone can check — there is no
+    argument here at all, and the catalogue says so. The fix is a fixture, not a ruling.
+  - **Open question, not decided:** whether the `interactive` slot type joins the role × geometry
+    contract. `familyFor` short-circuits on `slotType === 'interactive'`, so an instrument never
+    consults `media.<class>.<role>` and the frozen mapping does not reach it. Routing a slot type into
+    the contract changes its reach rather than adding a catalogue entry, and the freeze was
+    deliberate.
 - **`media.full` expressed as composition blueprints, and a defect found in the shipping catalogue**
   (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change). Two
   blueprints on a **left-edge spine** — `plate-wide` (`wide` 10, portrait and balanced) and

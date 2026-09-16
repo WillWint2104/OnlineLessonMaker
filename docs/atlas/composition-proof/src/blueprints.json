@@ -2195,6 +2195,296 @@
         }
       }
     },
+    "interactive.primary": {
+      "intent": "A manipulable object is the page: an opening brief, the instrument, and prompts directing what to try.",
+      "mediaSlot": "instrument",
+      "slotFit": "fill",
+      "selectBy": [
+        "presentationRole",
+        "mediaGeometry"
+      ],
+      "admits": {
+        "roles": [
+          "primary"
+        ],
+        "classes": [
+          "landscape",
+          "wide"
+        ],
+        "one role": "THE PATTERN IS NAMED FOR IT. An instrument the page is not built around belongs in a different pattern, so `supporting` and `explanatory` are not variants here.",
+        "the other four classes are a FIXTURE GAP, not a refusal": "DIFFERENT FROM `media.full` REFUSING `tall`, AND THE TWO MUST NOT BE CONFLATED. `media.full` refuses `tall` for a reason anyone can check: the pattern is defined by crossing the reading measure and a tall plane cannot. Here there is no argument at all — the permanent fixture set contains exactly two instruments, at 1.33:1 and 1.78:1, which land in `landscape` and `wide`. A tall, portrait, balanced or panoramic instrument has never been rendered, so the catalogue declines to claim a composition for one. The fix is a fixture, not a ruling."
+      },
+      "blueprints": {
+        "instrument-spine": {
+          "role": "primary",
+          "title": "the instrument on a centred spine, the prompts BENEATH it",
+          "why": "THE SHIPPING 8/4 PAIR WAS MEASURED AND REMOVED, and this is what replaced it. Pairing the instrument with prompts put an object whose height is DERIVED beside prose whose height is WRITTEN: measured on identical filler the instrument stood +472px past the prompts, and no width fixes that, because the gap is a property of the sentence the author happened to type. The prompts now sit beneath the instrument on the same centre line, which has no hole at any prose length. Same finding as `visual.explanation/side-6` at +474px; the pairing rule arriving a second time.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "instrument",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "instrument",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "prompts",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "prompts",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "instrument",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "instrument",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "prompts",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "prompts",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "instrument",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "instrument",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "prompts",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "prompts",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "primary": {
+            "landscape": "instrument-spine",
+            "wide": "instrument-spine"
+          }
+        },
+        "tablet": {
+          "primary": {
+            "landscape": "instrument-spine",
+            "wide": "instrument-spine"
+          }
+        },
+        "phone": {
+          "primary": {
+            "landscape": "instrument-spine",
+            "wide": "instrument-spine"
+          }
+        }
+      },
+      "withdrawn": {
+        "beside-8-4": {
+          "role": "primary",
+          "title": "the shipping `beside` subdesign — instrument 8 PAIRED with prompts 4",
+          "why": "WITHDRAWN, MEASURED, AND KEPT AS EVIDENCE. An object whose height is DERIVED beside prose whose height is WRITTEN: the slot-span atlas measured the instrument standing +472px past the prompts on identical filler, alongside +474px for `visual.explanation/side-6`. No width fixes it, because the gap is a property of the sentence the author happened to type. Rendered here so THIS atlas measures it too rather than citing a number from another one.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "instrument",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "8/4",
+                  "regions": [
+                    "instrument",
+                    "prompts"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 160,
+                  "pairReason": "an instrument beside the prompts directing it"
+                },
+                "vertical": "hug",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
+      "openQuestion": {
+        "_": "DOES THE `interactive` SLOT TYPE JOIN THE ROLE x GEOMETRY CONTRACT? It does not today, and the bypass is one line: `familyFor` short-circuits on `slotType === interactive` and returns a flat `soloFamilies.interactive`, so an instrument never consults `media.<class>.<role>` and the frozen mapping does not reach it.",
+        "forIt": "An instrument with a fixed aspect behaves exactly like a plane — geometry constrains which compositions work, which is the whole premise of the freeze.",
+        "againstIt": "An instrument carries CONTROLS, and a control has a minimum usable size that has nothing to do with aspect ratio. A contract keyed only on shape could approve a composition that is geometrically fine and unusable.",
+        "status": "NOT DECIDED HERE. Routing a slot type into the frozen contract is a change to the contract's reach, not a catalogue entry, and the maintainer froze it deliberately. This pattern is expressed with the existing `interactive` family and one declared rung, which is enough to render and prove it either way."
+      }
+    },
     "visual.compare": {
       "intent": "Two cases worked side by side, with an optional visual that belongs to both.",
       "mediaSlot": "media",

@@ -1410,6 +1410,9 @@ const SCOPE = [
     klass: 'portrait', name: 'M1__media-full-PORTRAIT__wide-10col' },
   { pid: 'media.full', surface: 'desktop', bid: 'plate-full', key: 'primary/wide',
     klass: 'wide', name: 'M2__media-full-WIDE__full-12col' },
+  /* interactive.primary — the 8/4 pair measured at +472px, replaced by a spine with the prompts beneath */
+  { pid: 'interactive.primary', surface: 'desktop', bid: 'instrument-spine', key: 'primary/landscape',
+    klass: 'landscape', name: 'I1__instrument-on-a-spine__prompts-beneath' },
   { pid: 'worked.single', surface: 'desktop', bid: 'flow', key: 'flow', klass: null,
     name: '2__prose-alone-stays-at-the-measure' },
   { pid: 'worked.paired', surface: 'desktop', bid: 'cases-6-6', key: 'any', klass: null,
@@ -1568,6 +1571,17 @@ drive('side-study-imbalance', 'H4', await board('visual.explanation', 'desktop',
   { klass: 'portrait', selectKey: 'explanatory/portrait', counterexample: true, tag: 'ce6', fs: 'A',
     name: '8__counterexample__side-study-imbalance',
     why: 'Every column owned, a surface around the graph, and the siblings still terminate ~535px apart.' }));
+
+/* THE SHIPPING `interactive.primary/beside` PAIR, MEASURED HERE RATHER THAN CITED. The slot-span
+   atlas recorded +472px between the instrument and the prompts beside it; a number from another atlas
+   is a claim until this one reproduces it. */
+console.log('\nthe interactive.primary pair — an instrument beside prose');
+await board('interactive.primary', 'desktop', 'beside-8-4',
+  { klass: 'landscape', fs: 'A', counterexample: true, tag: 'ipce',
+    name: 'I2__counterexample__instrument-beside-prompts',
+    why: 'THE SHIPPING 8/4 PAIR. The instrument\'s height is derived from its geometry; the prompts\' '
+      + 'height is however much prose was written. The blueprint declares a 160px termination tolerance '
+      + 'and the row is measured against it.' });
 
 /* DRIVES · each control shown able to fail. */
 drive('caption-inside-the-plot', 'H16', await board('visual.explanation', 'desktop', 'spine-narrow',
