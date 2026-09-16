@@ -72,6 +72,30 @@ const slotsOf = (pid) => (CAT[pid] && CAT[pid].slots) || BP.patterns[pid].slots
 const slotType = (pid, name) => { const s = slotsOf(pid).find((x) => x.name === name); return s ? s.slotType : null; };
 const isProse = (pid, name) => PROSE_TYPES.has(slotType(pid, name));
 
+/* ── THE SOLO SPAN LADDER ────────────────────────────────────────────────────────────────────────
+   Design-system positions, not measurements. `spine` resolves to the blueprint's own spine span, so
+   a solo row can say "the spine, or one rung wider" without repeating a number. */
+const RUNGS = ['spine', 'expanded', 'wide', 'full'];
+const ladderCols = (surface, rung, spineSpan) => {
+  const L = BP.soloLadder[surface];
+  if (!(rung in L)) throw new BlueprintError(`${surface}: no ladder rung \`${rung}\` (${Object.keys(L).filter((k) => k !== '_').join(', ')})`);
+  return L[rung] == null ? spineSpan : L[rung];
+};
+const familyFor = (pid, region, klass) => {
+  const P = BP.patterns[pid];
+  if (region === P.mediaSlot) {
+    if (slotType(pid, region) === 'interactive') return BP.soloFamilies.interactive;
+    return klass ? BP.soloFamilies[`media.${klass}`] : [...new Set(['portrait', 'balanced', 'landscape', 'wide']
+      .flatMap((k) => BP.soloFamilies[`media.${k}`]))];
+  }
+  return BP.soloFamilies[slotType(pid, region)] || BP.soloFamilies.reading;
+};
+const soloCols = (surface, align, cols) => {
+  const n = SPANS.surfaces[surface].columns;
+  const from = align === 'centre' ? (n - cols) / 2 + 1 : 1;
+  return { from, to: from + cols - 1 };
+};
+
 /* ── THE BLUEPRINTS, VALIDATED BEFORE ANYTHING RENDERS ──────────────────────────────────────────*/
 function validateBlueprints() {
   const STEPS = BP.rhythm.steps;
@@ -88,64 +112,82 @@ function validateBlueprints() {
         if (!sp) throw new BlueprintError(`${pid}/${bid}/${surface}: rows for ${surface} and no spine for it`);
         if (!['centre', 'left-edge'].includes(sp.align))
           throw new BlueprintError(`${pid}/${bid}/${surface}: spine align \`${sp.align}\` is neither centre nor left-edge`);
-        if (!(sp.span >= 1 && sp.span <= S.columns))
-          throw new BlueprintError(`${pid}/${bid}/${surface}: spine span ${sp.span} is off a ${S.columns}-column grid`);
         if (sp.align === 'centre' && (S.columns - sp.span) % 2)
           throw new BlueprintError(`${pid}/${bid}/${surface}: a centred spine of ${sp.span} on ${S.columns} columns `
             + `cannot be symmetric — page margin is only page margin when it is even either side of the axis`);
         rows.forEach((r, i) => {
-          if (!['spine', 'grid'].includes(r.align))
-            throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` is aligned \`${r.align}\` — a row `
-              + `is on the spine or on the grid, and there is no third option`);
-          const named = r.align === 'spine' ? [r.region] : r.regions.filter(Boolean);
+          const H = r.horizontal;
+          if (!H || !['solo', 'paired', 'workspace'].includes(H.mode))
+            throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` declares horizontal mode `
+              + `\`${H && H.mode}\` — a row is solo, paired or workspace`);
+          if (!['hug', 'designed'].includes(r.vertical))
+            throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` declares vertical \`${r.vertical}\` `
+              + `— HORIZONTAL RELATIONSHIP AND VERTICAL BEHAVIOUR ARE SEPARATE; vertical is hug or designed`);
+          const named = H.mode === 'solo' ? [r.region] : H.regions.filter(Boolean);
           for (const who of named)
             if (!names.has(who)) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` names `
               + `\`${who}\`, which is not a slot of ${pid} (${[...names].join(', ')})`);
-          if (r.align === 'spine') {
-            if (r.split || r.regions) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` is on the `
-              + `spine and also names a split — a spine row IS the spine`);
-            /* PROSE NEVER EXCEEDS THE READING MEASURE, asked of the spine that carries it. */
-            if (isProse(pid, r.region) && sp.span > S.proseMax)
-              throw new BlueprintError(`${pid}/${bid}/${surface}: the spine is ${sp.span} columns and row `
-                + `\`${r.id}\` sets prose on it; ${surface} allows ${S.proseMax}`);
+          if (H.mode === 'solo') {
+            /* THE LADDER, AND WHAT MAY STAND ON IT. */
+            if (!Array.isArray(H.spans) || !H.spans.length)
+              throw new BlueprintError(`${pid}/${bid}/${surface}: solo row \`${r.id}\` approves no spans — a solo `
+                + `row takes a rung from a declared ladder, never a calculated width`);
+            if (!H.spans.includes(H.preferred))
+              throw new BlueprintError(`${pid}/${bid}/${surface}: solo row \`${r.id}\` prefers \`${H.preferred}\`, `
+                + `which is not among its approved spans (${H.spans.join(', ')})`);
+            const fam = familyFor(pid, r.region, null);
+            for (const rung of H.spans) {
+              if (!RUNGS.includes(rung)) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` names `
+                + `rung \`${rung}\`, which is not on the ladder (${RUNGS.join(', ')})`);
+              if (rung !== 'spine' && !fam.includes(rung))
+                throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` approves \`${rung}\` for a `
+                  + `\`${slotType(pid, r.region)}\` region, whose span family is ${fam.join(', ')} — WHAT A REGION `
+                  + `IS constrains which rungs are legal for it; being alone in a row is not a reason to widen it`);
+              const cols = ladderCols(surface, rung, sp.span);
+              if (cols > S.columns) throw new BlueprintError(`${pid}/${bid}/${surface}: rung \`${rung}\` is ${cols} `
+                + `columns on a ${S.columns}-column surface`);
+              if (sp.align === 'centre' && (S.columns - cols) % 2)
+                throw new BlueprintError(`${pid}/${bid}/${surface}: rung \`${rung}\` is ${cols} columns and the axis `
+                  + `is centred, so its page margin cannot be symmetric`);
+              if (isProse(pid, r.region) && cols > S.proseMax)
+                throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` approves \`${rung}\` = ${cols} `
+                  + `columns for prose and ${surface} caps prose at ${S.proseMax} — THE READING MEASURE IS NOT A `
+                  + `RUNG ANYONE MAY CLIMB PAST`);
+            }
           } else {
-            const split = S.splits[r.split];
+            const split = S.splits[H.split];
             if (!split) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` names split `
-              + `\`${r.split}\`, which ${surface} does not approve (${Object.keys(S.splits).join(', ')})`);
-            if (split.regions.length !== r.regions.length)
-              throw new BlueprintError(`${pid}/${bid}/${surface}: split ${r.split} has ${split.regions.length} `
-                + `region(s) and row \`${r.id}\` names ${r.regions.length}`);
+              + `\`${H.split}\`, which ${surface} does not approve (${Object.keys(S.splits).join(', ')})`);
+            if (split.regions.length !== H.regions.length)
+              throw new BlueprintError(`${pid}/${bid}/${surface}: split ${H.split} has ${split.regions.length} `
+                + `region(s) and row \`${r.id}\` names ${H.regions.length}`);
             split.regions.forEach((range, k) => {
-              const who = r.regions[k], n = range[1] - range[0] + 1;
+              const who = H.regions[k], n = range[1] - range[0] + 1;
               if (isProse(pid, who) && n > S.proseMax)
                 throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` sets "${who}" across ${n} `
                   + `columns and ${surface} allows ${S.proseMax} for prose`);
             });
           }
-          if (!['hug', 'paired', 'workspace'].includes(r.mode))
-            throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` has mode \`${r.mode}\``);
-          /* A PAIRED ROW MUST SAY HOW FAR ITS CHILDREN MAY TERMINATE APART. Column ownership is
-             necessary and not sufficient; `side-study` owns all twelve and is still wrong. */
-          if (r.mode === 'paired') {
+          if (H.mode === 'paired') {
             if (named.length !== 2) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` is `
               + `\`paired\` and names ${named.length} slot(s) — a pair is exactly two siblings`);
-            if (r.origin !== 'top') throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` is `
+            if (H.origin !== 'top') throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` is `
               + `\`paired\` and declares no alignment origin`);
-            if (!(r.imbalanceMax > 0)) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` is `
+            if (!(H.imbalanceMax > 0)) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` is `
               + `\`paired\` and declares no \`imbalanceMax\` — a pair that has not said how far its children `
               + `may terminate apart has not been designed`);
-            if (!r.pairReason) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` gives no \`pairReason\``);
+            if (!H.pairReason) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` gives no \`pairReason\``);
           }
-          /* A WORKSPACE ROW MUST NAME THE REGION WHOSE HEIGHT IS DESIGNED. Without that, `workspace`
-             is just an excuse for a tall row. */
-          if (r.mode === 'workspace') {
-            if (!r.workspaceSlot || !named.includes(r.workspaceSlot))
+          if (H.mode === 'workspace') {
+            if (!H.workspaceSlot || !named.includes(H.workspaceSlot))
               throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` is \`workspace\` and does not `
                 + `name a \`workspaceSlot\` among ${named.join(', ')}`);
-            if (slotType(pid, r.workspaceSlot) !== 'workspace')
-              throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` names \`${r.workspaceSlot}\` as `
-                + `its workspace and that slot is a \`${slotType(pid, r.workspaceSlot)}\` — only a region with a `
-                + `DESIGNED height may make a row a workspace`);
+            if (slotType(pid, H.workspaceSlot) !== 'workspace')
+              throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` names \`${H.workspaceSlot}\` as `
+                + `its workspace and that slot is a \`${slotType(pid, H.workspaceSlot)}\``);
+            if (r.vertical !== 'designed')
+              throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` is a workspace row and declares `
+                + `vertical \`${r.vertical}\` — a workspace is exactly a row whose height was DESIGNED`);
           }
           const last = i === rows.length - 1;
           if (!last && !STEPS[r.gapAfter]) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` `
@@ -168,15 +210,8 @@ function validateBlueprints() {
 }
 
 /* ── ONE LAYOUT, GENERATED ───────────────────────────────────────────────────────────────────────
-   The single place a grid-template-areas string is produced, and the single place the five spaces are
-   assigned. A gap between two semantic regions is its own grid row of a NAMED height, so the rhythm
-   is a declared object in the page rather than the sum of whatever paddings the regions carry. */
-const spineCols = (surface, sp) => {
-  const n = SPANS.surfaces[surface].columns;
-  const from = sp.align === 'centre' ? (n - sp.span) / 2 + 1 : 1;
-  return { from, to: from + sp.span - 1 };
-};
-
+   Structural validity only. Fitness — whether the rung the row landed on is the one the blueprint
+   prefers — is a SEPARATE question, asked afterwards by H11. */
 function layout(pid, surface, bid, opts = {}) {
   const P = BP.patterns[pid];
   const B = P.blueprints[bid] || (P.withdrawn || {})[bid] || (opts.rows ? { rows: {}, spine: opts.spine } : null);
@@ -185,25 +220,37 @@ function layout(pid, surface, bid, opts = {}) {
   const sp = (opts.spine && opts.spine[surface]) || (B.spine && B.spine[surface]);
   if (!sp) throw new BlueprintError(`${pid}/${bid}: no spine for ${surface}`);
   const S = SPANS.surfaces[surface];
-  const SPC = spineCols(surface, sp);
   const areas = [], out = [], gaps = [];
   rows.forEach((r, i) => {
+    const H = r.horizontal;
     const cells = new Array(S.columns).fill(null), owner = new Array(S.columns).fill(null);
-    let kind, named;
-    if (r.align === 'spine') {
+    let kind, named, rung = null, cols = null, at = null;
+    if (H.mode === 'solo') {
       named = [r.region];
-      kind = 'spine';
+      kind = 'solo';
+      rung = (opts.realised && opts.realised[r.id]) || H.preferred;
+      cols = ladderCols(surface, rung, sp.span);
+      /* THE MEASURE AND THE AXIS BIND AT REALISATION TOO, not only when a blueprint is written down.
+         Found by a drive that did not fire: validate refuses a blueprint that DECLARES prose past the
+         measure, and nothing stopped a realised rung from putting it there. */
+      if (isProse(pid, r.region) && cols > S.proseMax)
+        throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` realised rung \`${rung}\` = ${cols} `
+          + `columns for prose, and ${surface} caps prose at ${S.proseMax}`);
+      if (sp.align === 'centre' && (S.columns - cols) % 2)
+        throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` realised rung \`${rung}\` = ${cols} `
+          + `columns on a centred axis, so its page margin cannot be symmetric`);
+      at = soloCols(surface, sp.align, cols);
       for (let c = 1; c <= S.columns; c++) {
-        const on = c >= SPC.from && c <= SPC.to;
+        const on = c >= at.from && c <= at.to;
         cells[c - 1] = on ? r.region : '.';
         owner[c - 1] = on ? r.region : 'page-margin';
       }
     } else {
-      const split = S.splits[r.split];
-      named = r.regions.filter(Boolean);
+      const split = S.splits[H.split];
+      named = H.regions.filter(Boolean);
       kind = split.kind;
       split.regions.forEach((range, k) => {
-        const who = r.regions[k];
+        const who = H.regions[k];
         for (let c = range[0]; c <= range[1]; c++) {
           /* a region declared `null` claims nothing. Only a counterexample may write one, and the
              point of letting it be written at all is that H2 has something real to catch. */
@@ -219,22 +266,27 @@ function layout(pid, surface, bid, opts = {}) {
         + `\`${r.id}\` leaves column(s) ${orphan.join(', ')} belonging to nothing`);
     }
     areas.push(cells.join(' '));
-    out.push({ ...r, named, owner, kind, track: areas.length, spine: SPC, spineAlign: sp.align });
+    out.push({ ...r, mode: H.mode, split: H.mode === 'solo' ? null : H.split, named, owner, kind,
+      rung, cols, at, track: areas.length, spineAlign: sp.align, spineSpan: sp.span });
     if (r.gapAfter) {
       const px = BP.rhythm.steps[r.gapAfter];
-      /* A GAP MAY LIVE INSIDE ONE REGION, so a region that spans several rows is not cut by the
-         rhythm beside it. That is what lets a workspace stand past a stack of two regions. */
       const next = rows[i + 1];
-      const nextOwner = next ? (next.align === 'spine'
-        ? new Array(S.columns).fill(null).map((_, c) => (c + 1 >= SPC.from && c + 1 <= SPC.to) ? next.region : 'page-margin')
-        : (() => { const o = new Array(S.columns).fill(null);
-            S.splits[next.split].regions.forEach((rg, k) => { for (let c = rg[0]; c <= rg[1]; c++) o[c - 1] = next.regions[k]; });
-            (S.splits[next.split].containment || []).forEach((rg) => { for (let c = rg[0]; c <= rg[1]; c++) o[c - 1] = 'containment'; });
-            return o; })()) : null;
+      const nextOwner = next ? (() => {
+        const o = new Array(S.columns).fill(null);
+        const NH = next.horizontal;
+        if (NH.mode === 'solo') {
+          const nc = ladderCols(surface, (opts.realised && opts.realised[next.id]) || NH.preferred, sp.span);
+          const na = soloCols(surface, sp.align, nc);
+          for (let c = 1; c <= S.columns; c++) o[c - 1] = (c >= na.from && c <= na.to) ? next.region : 'page-margin';
+        } else {
+          S.splits[NH.split].regions.forEach((rg, k) => { for (let c = rg[0]; c <= rg[1]; c++) o[c - 1] = NH.regions[k]; });
+          (S.splits[NH.split].containment || []).forEach((rg) => { for (let c = rg[0]; c <= rg[1]; c++) o[c - 1] = 'containment'; });
+        }
+        return o;
+      })() : null;
       const cells2 = owner.map((o, c) => {
         if (r.gapWithin) {
           if (o === r.gapWithin) return `gap${i}`;
-          /* a region present on BOTH sides of the gap continues through it */
           if (nextOwner && nextOwner[c] === o && o && o !== 'page-margin' && o !== 'containment') return o;
           return '.';
         }
@@ -246,7 +298,7 @@ function layout(pid, surface, bid, opts = {}) {
         within: r.gapWithin || null, ruleW: spanPx(surface, gcols.length), track: areas.length });
     }
   });
-  return { areas, rows: out, gaps, blueprint: B, bid, spine: { ...sp, ...SPC } };
+  return { areas, rows: out, gaps, blueprint: B, bid, spine: { ...sp } };
 }
 
 /* ── fixtures ────────────────────────────────────────────────────────────────────────────────────*/
@@ -291,7 +343,9 @@ const workedBody = (label, long) => `<div class="cp-prose"><h3>${esc(label)}</h3
 function slotBody(pid, name, adversarial) {
   const ty = slotType(pid, name);
   const para = adversarial ? LONG : F.para;
-  if (ty === 'support') return `<aside class="pf-legend"><p class="cp-lab">Key idea</p><p>${t(F.key)}</p></aside>`;
+  /* `.cp-key` IS THE KIT'S key-idea card, not board chrome. A blanket namespace rename caught it once
+     and the support region rendered with the board's legend styles; found by looking at the picture. */
+  if (ty === 'support') return `<aside class="cp-key"><p class="cp-lab">Key idea</p><p>${t(F.key)}</p></aside>`;
   if (ty === 'worked') return workedBody(name.replace(/^(case|worked)/, (m) => m === 'case' ? 'Case ' : 'Example '), adversarial);
   if (ty === 'workspace') return `<div class="cp-pad"><div class="cp-pad-head"><p class="cp-lab">Your working</p></div>`
     + `<div class="cp-gridpaper"></div></div>`;
@@ -454,7 +508,7 @@ function drawProof(payload) {
      5 pair imbalance           all width owned and the pair still terminates too far apart      — H4   */
 const CENTRE_TOL = 0.5;
 const HUG_TOL = 2;
-function judge(pid, surface, L, m) {
+function judge(pid, surface, L, m, resolve = {}) {
   const S = SPANS.surfaces[surface];
   const fails = [], notes = [], boards = [];
   const byId = new Map(L.rows.map((r) => [r.id, r]));
@@ -483,7 +537,8 @@ function judge(pid, surface, L, m) {
       if (shouldBeEmpty ? got !== null : got !== declared)
         fails.push(['H1', `${pid}/${L.bid}/${surface} row \`${mr.id}\`: column ${c + 1} is declared `
           + `\`${declared || 'nothing'}\` and is rendered ${got ? `inside \`${got}\`` : 'empty'}`
-          + (R.align === 'spine' ? ` — a spine row occupies the spine (columns ${R.spine.from}–${R.spine.to}) exactly` : '')]);
+          + (R.mode === 'solo' ? ` — a solo row occupies its realised rung \`${R.rung}\` `
+            + `(columns ${R.at.from}–${R.at.to}) exactly` : '')]);
     }
     /* THE FIVE SPACES, ASSIGNED. */
     const free = runs.filter((r) => !r.who).map((f) => {
@@ -543,19 +598,19 @@ function judge(pid, surface, L, m) {
           fails.push(['H4', `${pid}/${L.bid}/${surface} row \`${mr.id}\`: the siblings start at y=${a.y} and `
             + `y=${b.y} — two regions sharing a row share ONE alignment origin`]);
         imbalance = +Math.abs(a.h - b.h).toFixed(2);
-        if (R.mode === 'paired' && imbalance > R.imbalanceMax)
+        if (R.mode === 'paired' && imbalance > R.horizontal.imbalanceMax)
           fails.push(['H4', `${pid}/${L.bid}/${surface} row \`${mr.id}\`: the siblings terminate ${imbalance}px `
-            + `apart and the blueprint declares at most ${R.imbalanceMax}px (${R.pairReason}). All twelve columns `
-            + `can be owned and the relationship still be visually invalid`]);
+            + `apart and the blueprint declares at most ${R.horizontal.imbalanceMax}px (${R.horizontal.pairReason}). `
+            + `All twelve columns can be owned and the relationship still be visually invalid`]);
       } else if (R.mode === 'paired') {
         fails.push(['H4', `${pid}/${L.bid}/${surface} row \`${mr.id}\`: a paired row rendered ${mr.kids.length} sibling(s)`]);
       }
     }
-    boards.push({ id: mr.id, mode: R.mode, align: R.align,
-      split: R.align === 'spine' ? `spine ${R.spineAlign} ${R.spine.to - R.spine.from + 1}` : R.split,
+    boards.push({ id: mr.id, mode: R.mode, vertical: R.vertical, rung: R.rung,
+      split: R.mode === 'solo' ? `solo ${R.rung} ${R.cols} col` : R.split,
       y: mr.y, h: mr.h, air, imbalance,
-      label: `${mr.id} · ${R.align === 'spine' ? `on the spine` : R.split} · ${R.mode}`
-        + `${R.mode === 'paired' ? ` (≤${R.imbalanceMax}px)` : ''} · ${Math.round(mr.h)}px`
+      label: `${mr.id} · ${R.mode === 'solo' ? `solo · ${R.rung} · ${R.cols} col` : `${R.mode} · ${R.split}`}`
+        + `${R.mode === 'paired' ? ` (≤${R.horizontal.imbalanceMax}px)` : ''} · ${R.vertical} · ${Math.round(mr.h)}px`
         + (air > TOLPX ? ` · +${air}px AIR` : '') + (imbalance != null ? ` · ${imbalance}px apart` : ''),
       kids: mr.kids.map((k, n) => {
         const run = runs.find((r) => r.who === k.name);
@@ -596,18 +651,44 @@ function judge(pid, surface, L, m) {
         + `(${r.declared}px) and reads as ${r.perceived}px — ${+(r.perceived - r.declared).toFixed(1)}px of it `
         + `belongs to a region's own exterior padding, which is a second page rhythm nobody declared`]);
   }
-  /* THE SPINE IS THE PAGE'S ONE ALIGNMENT RELATIONSHIP, and every spine row is on it. */
-  const spineRows = m.rows.filter((r) => byId.get(r.id).align === 'spine');
-  const origins = new Set(spineRows.flatMap((r) => r.kids.map((k) => Math.round(k.x))));
-  const widths = new Set(spineRows.flatMap((r) => r.kids.map((k) => Math.round(k.w))));
-  if (origins.size > 1 || widths.size > 1)
-    fails.push(['H1', `${pid}/${L.bid}/${surface}: the spine rows sit at x = ${[...origins].join(', ')} and `
-      + `widths ${[...widths].join(', ')} — a spine is ONE axis and ONE width`]);
+  /* THE SPINE IS AN AXIS, NOT A WIDTH. Every solo row sits on it whatever rung it takes, so the
+     control asks about the AXIS — the centre line, or the left edge — and never about the width.
+     That is precisely what lets a solo row climb the ladder without leaving the composition. */
+  const soloRows = m.rows.filter((r) => byId.get(r.id).mode === 'solo');
+  const axis = new Set(soloRows.flatMap((r) => r.kids.map((k) =>
+    Math.round(L.spine.align === 'centre' ? k.x + k.w / 2 : k.x))));
+  if (axis.size > 1)
+    fails.push(['H1', `${pid}/${L.bid}/${surface}: the solo rows sit on ${axis.size} different axes `
+      + `(${[...axis].join(', ')}px) — a blueprint has ONE ${L.spine.align === 'centre' ? 'centre line' : 'left edge'}`]);
 
-  return { fails, notes, boards, rhythm,
-    spine: { align: L.spine.align, span: L.spine.span, from: L.spine.from, to: L.spine.to,
-      x: spineRows.length && spineRows[0].kids.length ? spineRows[0].kids[0].x : null,
-      w: spineRows.length && spineRows[0].kids.length ? spineRows[0].kids[0].w : null },
+  /* ── H11 · SOLO SPAN — THE FITNESS LAYER ──────────────────────────────────────────────────────
+     Everything above asks whether the composition is STRUCTURALLY VALID: does every part of an
+     active row have an owner? This asks something else: is the approved blueprint actually using
+     the surface it was given? A one-region row that stays on a narrower approved rung while its
+     preferred rung is feasible is legal and timid, and legal is not the same as well used.
+     It is NOT occupancy: nothing here measures a fraction, a dead-space area or a content length. */
+  for (const mr of m.rows) {
+    const R = byId.get(mr.id);
+    if (R.mode !== 'solo') continue;
+    const want = resolve[mr.id];
+    if (!want) continue;
+    if (R.rung !== want.should)
+      fails.push(['H11', `${pid}/${L.bid}/${surface} row \`${mr.id}\`: one region, approved spans `
+        + `${R.horizontal.spans.map((x) => `${x}=${ladderCols(surface, x, L.spine.span)}`).join(', ')}, `
+        + `preferred \`${R.horizontal.preferred}\` — realised \`${R.rung}\` (${R.cols} col, `
+        + `${Math.round(mr.kids[0] ? mr.kids[0].w : 0)}px) where \`${want.should}\` was available. `
+        + `${want.why} The row is structurally owned and UNDER-REALISED: a smaller span being legal is not a `
+        + `reason to stay on it.`]);
+  }
+
+  /* THE BAND DRAWN ON THE BOARD IS THE AXIS AT ITS OWN SPAN — not whatever rung the widest solo row
+     realised. Seeing the spine and a wider solo row at once is the point of the picture. */
+  const sc = soloCols(surface, L.spine.align, L.spine.span);
+  const colAt = (n) => m.cols[n - 1];
+  return { fails, notes, boards, rhythm, resolve,
+    spine: { align: L.spine.align, span: L.spine.span, from: sc.from, to: sc.to,
+      x: colAt(sc.from) ? colAt(sc.from).x : null,
+      w: colAt(sc.from) && colAt(sc.to) ? +(colAt(sc.to).x + colAt(sc.to).w - colAt(sc.from).x).toFixed(2) : null },
     whitespaceOwned: !fails.some(([c]) => c === 'H1' || c === 'H2') };
 }
 
@@ -626,7 +707,7 @@ function pageMarkup(pid, surface, L, fx, opts) {
       const fit = opts.forceFit || P.slotFit;
       parts.push(`<div data-slot="${esc(s.name)}" data-slot-type="${esc(s.slotType)}" data-media-slot `
         + `data-occupancy="${esc(s.occupancy)}" data-fit="${esc(fit)}" data-cols="${a + 1}–${b + 1}" `
-        + `data-span="${b - a + 1}" data-slot-anchor="${esc(row.align === 'spine' ? 'spine' : row.split)}" `
+        + `data-span="${b - a + 1}" data-slot-anchor="${esc(row.mode === 'solo' ? `solo/${row.rung}` : row.split)}" `
         + `data-fixture="${esc(fx.id)}" data-media-kind="${esc(fx.kind)}"`
         + (fit === 'contain' && !opts.dropAnchor ? ` data-media-anchor="center" data-anchor-resolved` : '')
         + `>${mediaMarkup(fx, fit)}</div>`);
@@ -637,7 +718,7 @@ function pageMarkup(pid, surface, L, fx, opts) {
   }
   for (const r of L.rows)
     parts.push(`<i data-rowprobe="${esc(r.id)}" data-mode="${esc(r.mode)}" `
-      + `data-split="${esc(r.align === 'spine' ? 'spine' : r.split)}" data-regions="${esc(r.named.join(','))}"></i>`);
+      + `data-split="${esc(r.mode === 'solo' ? `solo/${r.rung}` : r.split)}" data-regions="${esc(r.named.join(','))}"></i>`);
   for (const g of L.gaps)
     parts.push(`<i data-gap="${esc(g.after)}" data-step="${esc(g.step)}" data-px="${g.px}"`
       + (g.rule ? ` data-rule style="--rule-w:${g.ruleW}px"` : '') + `></i>`);
@@ -690,7 +771,7 @@ const PROOF_CSS = `
 .pf-rulebar i{font-style:normal;color:#6b7c74;font-weight:400;}
 .pf-capt{margin:0;padding:9px 22px;background:#1f2a26;color:#b8cfc4;font:600 11px/1.5 ui-monospace,Menlo,monospace;letter-spacing:.08em;}
 .pf-page{background:#fff;box-shadow:none;border-radius:0;}
-.pf-layer{position:absolute;inset:0;pointer-events:none;z-index:5;}
+.pf-layer{position:absolute;inset:0;pointer-events:none;z-index:5;overflow:hidden;}
 .pf-layer>div{position:absolute;box-sizing:border-box;}
 .pf-colrule{background:rgba(20,60,120,.045);border-left:1px solid rgba(20,60,120,.14);border-right:1px solid rgba(20,60,120,.14);}
 .pf-row{border-top:2px solid #111;border-bottom:2px dashed rgba(17,17,17,.45);}
@@ -712,7 +793,8 @@ const PROOF_CSS = `
 .pf-tag-row{background:#111;color:#fff;left:auto;right:3px;}
 .pf-tag-slot{background:rgba(255,255,255,.9);color:#17492f;outline:1px solid rgba(31,92,64,.4);}
 .pf-tag-gap{background:#1f5c40;color:#fff;left:auto;right:3px;top:50%;transform:translateY(-50%);}
-.pf-tag-free{background:#fff;color:#444;outline:1px solid rgba(0,0,0,.25);writing-mode:vertical-rl;top:4px;}
+.pf-tag-free{background:#fff;color:#444;outline:1px solid rgba(0,0,0,.25);writing-mode:vertical-rl;top:4px;
+  max-height:calc(100% - 8px);overflow:hidden;}
 .pf-free[data-role="unowned"] .pf-tag-free{background:#c00;color:#fff;outline:0;}
 .pf-verdict{background:#fff;border-top:2px solid #111;padding:10px 22px 14px;font:11px/1.65 ui-monospace,Menlo,monospace;}
 .pf-verdict div{display:flex;gap:10px;}
@@ -779,13 +861,62 @@ for (const [pid, P] of Object.entries(BP.patterns))
 
 const REPORT = [];
 
+/* ── FITNESS, RESOLVED BEFORE ANYTHING IS DRAWN ──────────────────────────────────────────────────
+   Which rung a solo row SHOULD land on. The inputs are categorical — the region's span family, the
+   rungs the blueprint approved, the rung it prefers — plus one mathematical question for media: does
+   an equal-unit box exist at that width. Nothing here reads a content length, a rendered height, an
+   area or a percentage. */
+async function feasible(pid, surface, row, rung, spineSpan, fx, klass) {
+  const S = SPANS.surfaces[surface];
+  const fam = familyFor(pid, row.region, klass);
+  const cols = ladderCols(surface, rung, spineSpan);
+  if (rung !== 'spine' && !fam.includes(rung))
+    return { ok: false, cols, why: `\`${rung}\` is outside the span family for a ${slotType(pid, row.region)} region (${fam.join(', ')})` };
+  if (cols > S.columns) return { ok: false, cols, why: `${cols} columns on a ${S.columns}-column surface` };
+  if (isProse(pid, row.region) && cols > S.proseMax)
+    return { ok: false, cols, why: `${cols} columns is past the ${S.proseMax}-column reading measure` };
+  if (row.media && fx && fx.kind === 'graph') {
+    try {
+      const box = await boxFor(fx.figure, spanPx(surface, cols));
+      return { ok: true, cols, why: `the plane solves to ${Math.round(box.w)}×${Math.round(box.h)}px at equal unit scale` };
+    } catch (e) { return { ok: false, cols, why: `no equal-unit box fits ${spanPx(surface, cols)}px` }; }
+  }
+  return { ok: true, cols, why: `${cols} columns is approved for a ${slotType(pid, row.region)} region` };
+}
+
+async function resolveSolos(pid, surface, rows, spineSpan, fx, klass) {
+  const out = {};
+  for (const r of rows) {
+    const H = r.horizontal;
+    if (H.mode !== 'solo') continue;
+    const feas = {};
+    for (const rung of H.spans) feas[rung] = await feasible(pid, surface, r, rung, spineSpan, fx, klass);
+    const byWidth = H.spans.slice().sort((a, b) => ladderCols(surface, a, spineSpan) - ladderCols(surface, b, spineSpan));
+    const ok = byWidth.filter((x) => feas[x].ok);
+    const should = feas[H.preferred] && feas[H.preferred].ok ? H.preferred : (ok[ok.length - 1] || byWidth[0]);
+    out[r.id] = { should, feasible: feas,
+      why: feas[H.preferred] && feas[H.preferred].ok
+        ? `The preferred rung is feasible — ${feas[H.preferred].why}.`
+        : `The preferred rung \`${H.preferred}\` is not feasible (${feas[H.preferred] ? feas[H.preferred].why : 'unknown'}), `
+          + `so the widest feasible approved rung is \`${should}\`.` };
+  }
+  return out;
+}
+
 /* ── ONE BOARD ───────────────────────────────────────────────────────────────────────────────────*/
 async function board(pid, surface, bid, o = {}) {
   const P = BP.patterns[pid];
   const g = GRID.surfaces[surface];
   const klass = o.klass || null;
   const fx = P.mediaSlot ? (o.fixture || (klass && klass !== 'none' ? pickFixture(pid, klass) : null)) : null;
-  const L = layout(pid, surface, bid, { rows: o.rows, allowOrphans: o.allowOrphans, spine: o.spine });
+  const B0 = P.blueprints[bid] || (P.withdrawn || {})[bid];
+  const rows0 = o.rows || (B0 && B0.rows[surface]);
+  const spineSpan = ((o.spine && o.spine[surface]) || (B0 && B0.spine && B0.spine[surface]) || {}).span;
+  const resolve = await resolveSolos(pid, surface, rows0, spineSpan, fx, klass);
+  /* the realised rung IS the resolved one, unless a counterexample deliberately holds it back */
+  const realised = Object.fromEntries(Object.entries(resolve).map(([k, v]) => [k, v.should]));
+  for (const [k, v] of Object.entries(o.forceSpan || {})) realised[k] = v;
+  const L = layout(pid, surface, bid, { rows: o.rows, allowOrphans: o.allowOrphans, spine: o.spine, realised });
   const sd = `${pid.replace(/\W/g, '')}-${surface}-${bid.replace(/\W/g, '')}-${klass || 'x'}${o.tag ? '-' + o.tag : ''}`;
   const name = o.name || `${pid.replace(/\./g, '-')}__${surface}__${bid}${klass && klass !== 'none' ? '__' + klass : ''}`;
 
@@ -818,8 +949,9 @@ ${o.injectCSS || ''}
     + `${g.width}px · ${g.columns} col${klass && klass !== 'none' ? ` · ${esc(klass)} media` : ''}`
     + (o.adversarial ? ' · ADVERSARIAL PAYLOAD' : '') + (o.counterexample ? ` · COUNTEREXAMPLE — MUST FAIL` : '') + `</div>
 <div class="pf-why">${t(o.why || L.blueprint.why || '')}</div>
-<div class="pf-rulebar">${esc(L.blueprint.title || bid)} <i>· ${L.rows.map((r) => `${r.id}:${r.split}/${r.mode}`).join(' · ')}</i></p>
-</div><div class="pf-capt">THE PAGE</div>${plain}
+<div class="pf-rulebar">${esc(L.blueprint.title || bid)} <i>· ${L.rows.map((r) =>
+      `${r.id}:${r.mode === 'solo' ? `${r.rung}(${r.cols}col)` : `${r.mode} ${r.split}`}/${r.vertical}`).join(' · ')}</i></div>
+<div class="pf-capt">THE PAGE</div>${plain}
 <div class="pf-capt">THE SAME PAGE, WITH EVERY REGION AND EVERY PIECE OF WHITE CLASSIFIED</div>
 <div class="pf-legend"><span><b class="k1"></b>1 · page margin — outside the spine, valid, no owner needed</span>
 <span><b class="k2"></b>2 · blueprint rhythm — a named step</span>
@@ -840,7 +972,7 @@ ${o.injectCSS || ''}
   if (errs.length) throw new BlueprintError(`${name}: ${errs[0]}`);
 
   const m = await pg.evaluate(measureComposition);
-  const J = judge(pid, surface, L, m);
+  const J = judge(pid, surface, L, m, resolve);
 
   /* the media verdict comes from the ONE owner the other two atlases use */
   let mediaLines = null, mediaOk = true, mediaVerdict = null;
@@ -852,11 +984,12 @@ ${o.injectCSS || ''}
          name the alternatives instead of asserting there are none */
       pattern: { subdesigns: Object.values(P.blueprints).flatMap((b) => Object.entries(b.rows)
         .flatMap(([s2, rr]) => rr.flatMap((r) => {
-          if (r.align === 'spine') return r.region === P.mediaSlot && b.spine[s2]
-            ? [{ surface: s2, slotSpan: b.spine[s2].span }] : [];
-          const k = (r.regions || []).indexOf(P.mediaSlot);
+          const H = r.horizontal;
+          if (H.mode === 'solo') return r.region === P.mediaSlot && b.spine[s2]
+            ? H.spans.map((g) => ({ surface: s2, slotSpan: ladderCols(s2, g, b.spine[s2].span) })) : [];
+          const k = (H.regions || []).indexOf(P.mediaSlot);
           if (k < 0) return [];
-          const rg = SPANS.surfaces[s2].splits[r.split].regions[k];
+          const rg = SPANS.surfaces[s2].splits[H.split].regions[k];
           return [{ surface: s2, slotSpan: rg[1] - rg[0] + 1 }];
         }))) } };
     const fit = slotFit(x, ctx);
@@ -873,7 +1006,11 @@ ${o.injectCSS || ''}
     ['SELECTED BY', P.selectBy + (klass && klass !== 'none' ? ` · media geometry \`${klass}\`` : '')],
     ['SPINE', `${J.spine.align} · ${J.spine.span} col · columns ${J.spine.from}–${J.spine.to}`
       + (J.spine.w != null ? ` · realised ${Math.round(J.spine.w)}px at x=${Math.round(J.spine.x)}` : '')],
-    ['ROWS', J.boards.map((b) => `${b.id} ${b.split}/${b.mode} ${Math.round(b.h)}px`).join(' · ')],
+    ['ROWS', J.boards.map((b) => `${b.id} ${b.mode}${b.rung ? '/' + b.rung : '/' + b.split} ${b.vertical} ${Math.round(b.h)}px`).join(' · ')],
+    ['SOLO LADDER', L.rows.filter((r) => r.mode === 'solo').map((r) =>
+      `${r.id}: [${r.horizontal.spans.map((g) => `${g}=${ladderCols(surface, g, L.spine.span)}`).join(' ')}]`
+      + ` prefer ${r.horizontal.preferred} → ${r.rung} (${r.cols} col)`
+      + (resolve[r.id] && resolve[r.id].should === r.rung ? ' ✓' : ' ✗')).join('  ·  ') || 'none'],
     ['RHYTHM · declared', J.rhythm.map((r) => `${r.after}→${r.step} ${r.declared}px`).join(' · ') || '—'],
     ['RHYTHM · measured', J.rhythm.map((r) => `${r.after} ${r.perceived == null ? '—' : r.perceived + 'px'}`
       + (r.perceived != null && Math.abs(r.perceived - r.declared) <= 3 ? ' ✓' : ' ✗')).join(' · ') || '—'],
@@ -908,7 +1045,9 @@ ${o.injectCSS || ''}
 
   const rec = { pattern: pid, surface, blueprint: bid, klass: klass || 'none', name, selectKey: o.selectKey || null,
     adversarial: !!o.adversarial, counterexample: !!o.counterexample,
-    rows: J.boards.map((b) => ({ id: b.id, split: b.split, mode: b.mode, h: b.h, air: b.air, imbalance: b.imbalance })),
+    rows: J.boards.map((b) => ({ id: b.id, split: b.split, mode: b.mode, vertical: b.vertical, rung: b.rung,
+      h: b.h, air: b.air, imbalance: b.imbalance })),
+    resolve: Object.fromEntries(Object.entries(resolve).map(([k, v]) => [k, v.should])),
     rhythm: J.rhythm, slotWidths: J.boards.flatMap((b) => b.kids.map((k) => `${k.name}=${Math.round(k.w)}`)),
     whitespaceOwned: J.whitespaceOwned, mediaOk, mediaVerdict, fails: J.fails };
   REPORT.push(rec);
@@ -918,71 +1057,83 @@ ${o.injectCSS || ''}
 }
 
 /* ── THE RUN ─────────────────────────────────────────────────────────────────────────────────────
-   DELIBERATELY NARROW. Two frozen blueprints, the two retained counterexamples, and one first-pass
-   stress test. No sweep across the rest of the catalogue: the other blueprints are migrated to the
-   spine schema so the build stays whole, and are not re-rendered or re-approved in this pass. */
+   The proofs this pass had to show, and nothing else. Two layers are being demonstrated together:
+   STRUCTURAL VALIDITY (does every part of an active row have an owner?) and COMPOSITION FITNESS
+   (is the approved blueprint using the surface it was given?). */
 const SCOPE = [
   { pid: 'visual.explanation', surface: 'desktop', bid: 'spine-narrow', key: 'portrait', klass: 'portrait',
-    note: 'GOLDEN' },
-  { pid: 'worked.paired', surface: 'desktop', bid: 'cases-6-6', key: 'any', klass: null, note: 'GOLDEN' },
+    name: '1__portrait-media-solo-expanded',
+    note: 'GOLDEN · one region, realised at `expanded`' },
+  { pid: 'worked.single', surface: 'desktop', bid: 'flow', key: 'flow', klass: null,
+    name: '2__prose-alone-stays-at-the-measure',
+    note: 'every row solo PROSE — the ladder stops at the measure' },
+  { pid: 'visual.explanation', surface: 'desktop', bid: 'stage-full', key: 'wide', klass: 'wide',
+    name: '3__wide-media-solo-full',
+    note: 'one region, realised at `full`' },
+  { pid: 'worked.paired', surface: 'desktop', bid: 'cases-6-6', key: 'any', klass: null,
+    name: '4__worked-paired-unchanged', note: 'GOLDEN · unchanged — no solo row to reclaim' },
   { pid: 'practice.workbook', surface: 'desktop', bid: 'workbook-5-7', key: 'any', klass: 'portrait',
-    note: 'FIRST PASS — the workspace-shaped stress test' },
+    name: '5__practice-workbook-unchanged', note: 'unchanged — designed 5/7 relationships, not solo rows' },
 ].filter((x) => (!ONLY || ONLY.has(x.pid)) && (!SURF || SURF.has(x.surface)));
 
-console.log(`\nboards — ${SCOPE.length} composition(s) in scope`);
-for (const x of SCOPE) await board(x.pid, x.surface, x.bid, { klass: x.klass, selectKey: x.key });
+console.log(`\nproofs — ${SCOPE.length} composition(s) in scope`);
+for (const x of SCOPE) await board(x.pid, x.surface, x.bid, { klass: x.klass, selectKey: x.key, name: x.name });
 
 console.log('\nadversarial — the same compositions with twice the prose');
 for (const x of SCOPE)
   await board(x.pid, x.surface, x.bid, { klass: x.klass, selectKey: x.key, adversarial: true, noShot: true,
-    quiet: true, tag: 'adv' });
+    quiet: true, tag: 'adv', name: x.name + '__adv' });
 
-/* ── THE COUNTEREXAMPLES ─────────────────────────────────────────────────────────────────────────
-   Arrangements the atlas renders and REQUIRES to fail. The first two are retained as permanent
-   regression proofs and are photographed; the rest are drives, run to prove each control can fail. */
+/* ── THE COUNTEREXAMPLES ─────────────────────────────────────────────────────────────────────────*/
 console.log('\ncounterexamples — each must fail, and fail for the stated reason');
 const drives = [];
 const drive = (id, control, rec) => {
   const got = rec.fails.map(([c]) => c);
   drives.push({ id, control, hit: got.includes(control), got });
-  console.log(`  ${got.includes(control) ? '✓' : '✗ DID NOT FIRE'}  ${id.padEnd(26)} ${control} — ${got.join(',') || 'nothing fired'}`);
+  console.log(`  ${got.includes(control) ? '✓' : '✗ DID NOT FIRE'}  ${id.padEnd(30)} ${control} — ${got.join(',') || 'nothing fired'}`);
 };
 
-/* RETAINED · H2 — the canonical must-never-happen-again. Six columns occupied at the LEFT of a
-   twelve-column active row: the same six columns as `spine-narrow`, and not the same thing. */
+/* NEW · H11 — THE PAIRED PROOF. The same blueprint, the same region, held back one rung. Structurally
+   perfect, and under-realised. This is the board that was previously shipped as correct. */
+drive('under-realised-solo-span', 'H11', await board('visual.explanation', 'desktop', 'spine-narrow',
+  { klass: 'portrait', counterexample: true, tag: 'ce11', name: '6__counterexample__under-realised-solo-span',
+    forceSpan: { media: 'spine' },
+    why: 'STRUCTURALLY PERFECT AND UNDER-REALISED. Every column has an owner, the axis is one centre line, '
+      + 'every step measures itself — and the only substantive object on the page is holding at six columns '
+      + 'when the blueprint prefers eight and eight is feasible. Valid whitespace is not the same as good use '
+      + 'of space. This is the page the previous pass shipped as correct.' }));
+
+/* RETAINED · H2 — the canonical must-never-happen-again. */
 drive('unowned-half-row', 'H2', await board('visual.explanation', 'desktop', 'spine-narrow',
-  { klass: 'portrait', counterexample: true, tag: 'ce2', name: 'counterexample__unowned-half-row',
+  { klass: 'portrait', counterexample: true, tag: 'ce2', name: '7__counterexample__unowned-half-row',
     allowOrphans: true,
-    rows: [{ id: 'media', align: 'grid', split: '6/6', regions: ['media', null], mode: 'hug', media: true, gapAfter: 'section' },
-      { id: 'interpretation', align: 'spine', region: 'interpretation', mode: 'hug', gapAfter: 'normal' },
-      { id: 'support', align: 'spine', region: 'support', mode: 'hug' }],
-    why: 'THE CANONICAL MUST-NEVER-HAPPEN-AGAIN. A six-column object at the left of a twelve-column ACTIVE '
-      + 'ROW, with the other six declared by nothing. It occupies exactly the columns `spine-narrow` occupies '
-      + 'and it is not the same composition: a centred spine puts its margin OUTSIDE the active content and '
-      + 'is valid; this leaves half of an active row unexplained and is not. The shipped page measured 683px '
-      + 'of graph at x=60 in a row ending at x=1212 — 469px owned by nothing.' }));
+    rows: [{ id: 'media', horizontal: { mode: 'paired', split: '6/6', regions: ['media', null], origin: 'top',
+        imbalanceMax: 9999, pairReason: 'the counterexample' }, vertical: 'hug', media: true, gapAfter: 'section' },
+      { id: 'interpretation', horizontal: { mode: 'solo', spans: ['spine'], preferred: 'spine' }, vertical: 'hug', region: 'interpretation', gapAfter: 'normal' },
+      { id: 'support', horizontal: { mode: 'solo', spans: ['spine'], preferred: 'spine' }, vertical: 'hug', region: 'support' }],
+    why: 'THE CANONICAL MUST-NEVER-HAPPEN-AGAIN, AND THE REASON H11 IS A SECOND LAYER RATHER THAN A WIDER '
+      + 'LADDER. Six columns occupied at the left of a twelve-column ACTIVE ROW, the other six declared by '
+      + 'nothing. Widening the object would not make this page legal; the defect is ownership, not fitness.' }));
 
 /* RETAINED · H4 — the row owns all twelve columns and the page is still wrong. */
 drive('side-study-imbalance', 'H4', await board('visual.explanation', 'desktop', 'side-study',
-  { klass: 'portrait', counterexample: true, tag: 'ce6', name: 'counterexample__side-study-imbalance',
-    why: 'COMPLETE COLUMN OWNERSHIP IS NECESSARY AND NOT SUFFICIENT. Every column of this row is owned — it '
-      + 'is a proper pair, not a half-row — and the object and the reading beside it still terminate ~535px '
-      + 'apart against the 160px the blueprint declared for itself. That is why pair termination is a '
-      + 'SEPARATE contract from column ownership. For tall explanatory media the approved answer is '
-      + '`spine-narrow`, not a more elaborate side-by-side arithmetic.' }));
+  { klass: 'portrait', counterexample: true, tag: 'ce6', name: '8__counterexample__side-study-imbalance',
+    why: 'STILL FAILS, AND A WIDER GRAPH WOULD NOT HAVE SAVED IT. Every column of this row is owned and the '
+      + 'two paired objects still terminate ~535px apart. Ownership, fitness and termination are three '
+      + 'different questions; this one fails the third.' }));
 
 /* DRIVES · not photographed; each exists so a control is known to be able to fail. */
-drive('shipped-683px-graph', 'H5', await board('visual.explanation', 'desktop', 'stage-full',
-  { klass: 'portrait', fixture: FIXTURES.find((f) => f.klass === 'portrait' && f.block === 'graph'),
-    paintAt: 683, counterexample: true, tag: 'ce1', noShot: true, quiet: true, name: 'drive__starved-fill' }));
+drive('prose-past-the-measure', 'validate-runtime', { fails: (() => {
+  try {
+    layout('worked.single', 'desktop', 'flow', { realised: { intro: 'full' } });
+    return [];
+  } catch (e) { return [['validate-runtime', e.message]]; }
+})() });
 drive('stretched-hug-row', 'H3', await board('visual.explanation', 'desktop', 'spine-narrow',
   { klass: 'portrait', counterexample: true, tag: 'ce4', noShot: true, quiet: true, name: 'drive__stretched-hug-row',
     injectCSS: `[data-sd*="ce4"] > [data-rowprobe="interpretation"]{height:420px!important;}` }));
 drive('padding-at-the-exterior', 'H10', await board('worked.paired', 'desktop', 'cases-6-6',
   { counterexample: true, tag: 'ce8', noShot: true, quiet: true, name: 'drive__padding-at-the-exterior',
-    /* ON A REGION THAT PAINTS NO SURFACE OF ITS OWN. The first version injected padding on
-       `synthesis`, which draws a rule along its own top edge — so its ink IS its box there and the
-       control could not fire. That was a bad test, not a bad control. */
     injectCSS: `[data-sd*="ce8"] > [data-slot="intro"]{padding-bottom:28px;}` }));
 drive('no-alignment-origin', 'H4', await board('worked.paired', 'desktop', 'cases-6-6',
   { counterexample: true, tag: 'ce5', noShot: true, quiet: true, name: 'drive__no-alignment-origin',
@@ -990,6 +1141,9 @@ drive('no-alignment-origin', 'H4', await board('worked.paired', 'desktop', 'case
 drive('anchorless-contain', 'H6', await board('visual.explanation', 'desktop', 'spine-reading',
   { klass: 'balanced', counterexample: true, tag: 'ce7', noShot: true, quiet: true,
     name: 'drive__anchorless-contain', forceFit: 'contain', dropAnchor: true }));
+drive('two-axes', 'H1', await board('visual.explanation', 'desktop', 'spine-narrow',
+  { klass: 'portrait', counterexample: true, tag: 'ce9', noShot: true, quiet: true, name: 'drive__two-axes',
+    injectCSS: `[data-sd*="ce9"] > [data-slot="support"]{margin-left:-120px;}` }));
 
 /* ── THE CONTROLS ────────────────────────────────────────────────────────────────────────────────
    Written as pure functions of the records so each can be run twice: once on the atlas, where it
@@ -1060,33 +1214,39 @@ for (const r of REAL) for (const [c, f] of r.fails) fails.push(`${c} · ${f}`);
 /* THE TABLE-LEVEL GUARDS, driven the same way: a blueprint that tries to say these things is refused
    before anything renders. */
 const refuses = (what, mutate) => {
-  const snapshot = JSON.parse(JSON.stringify(BP.patterns));
+  const snapshot = JSON.parse(JSON.stringify({ patterns: BP.patterns, soloLadder: BP.soloLadder, soloFamilies: BP.soloFamilies }));
   let threw = null;
   try { mutate(); validateBlueprints(); } catch (e) { threw = e.message; }
-  BP.patterns = snapshot;
+  BP.patterns = snapshot.patterns; BP.soloLadder = snapshot.soloLadder; BP.soloFamilies = snapshot.soloFamilies;
   validateBlueprints();
   drives.push({ id: what, control: 'validate', hit: !!threw, got: threw ? [threw.slice(0, 90)] : [] });
   console.log(`  ${threw ? '✓' : '✗ DID NOT FIRE'}  ${what.padEnd(26)} validate — ${threw ? threw.slice(0, 80) : 'accepted it'}`);
 };
 console.log('\ntable-level refusals — a blueprint that tries to say this cannot be written down');
 refuses('spineless-blueprint', () => { delete BP.patterns['visual.explanation'].blueprints['spine-narrow'].spine; });
-refuses('asymmetric-centred-spine', () => {
-  BP.patterns['visual.explanation'].blueprints['spine-narrow'].spine.desktop = { align: 'centre', span: 7 };
+refuses('asymmetric-centred-rung', () => {
+  BP.soloLadder.desktop.expanded = 7;
 });
-refuses('spine-row-with-a-split', () => {
-  const r = BP.patterns['worked.paired'].blueprints['cases-6-6'].rows.desktop[0];
-  r.split = '8/4'; r.regions = ['intro', 'x'];
+refuses('rung-outside-the-family', () => {
+  BP.patterns['worked.single'].blueprints.flow.rows.desktop[0].horizontal.spans = ['spine', 'full'];
+});
+refuses('prose-past-the-measure', () => {
+  BP.soloFamilies.reading = ['spine', 'expanded', 'full'];
+  BP.patterns['worked.single'].blueprints.flow.rows.desktop[0].horizontal.spans = ['spine', 'full'];
+});
+refuses('preferred-not-approved', () => {
+  BP.patterns['visual.explanation'].blueprints['spine-narrow'].rows.desktop[0].horizontal.preferred = 'wide';
+});
+refuses('horizontal-doing-vertical-work', () => {
+  BP.patterns['worked.paired'].blueprints['cases-6-6'].rows.desktop[1].vertical = 'paired';
 });
 refuses('pair-without-tolerance', () => {
-  delete BP.patterns['worked.paired'].blueprints['cases-6-6'].rows.desktop[1].imbalanceMax;
+  delete BP.patterns['worked.paired'].blueprints['cases-6-6'].rows.desktop[1].horizontal.imbalanceMax;
 });
-refuses('workspace-without-a-designed-region', () => {
-  BP.patterns['practice.workbook'].blueprints['workbook-5-7'].rows.desktop[1].workspaceSlot = 'reference';
+refuses('workspace-without-a-designed-height', () => {
+  BP.patterns['practice.workbook'].blueprints['workbook-5-7'].rows.desktop[1].vertical = 'hug';
 });
 refuses('select-outside-the-set', () => { BP.patterns['visual.compare'].select.desktop.portrait = 'something-else'; });
-refuses('prose-past-the-measure', () => {
-  BP.patterns['worked.paired'].blueprints['cases-6-6'].spine.desktop = { align: 'left-edge', span: 10 };
-});
 refuses('unnamed-rhythm-step', () => {
   BP.patterns['worked.paired'].blueprints['cases-6-6'].rows.desktop[0].gapAfter = 'a-bit';
 });

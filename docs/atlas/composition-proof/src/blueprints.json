@@ -1,38 +1,110 @@
 {
   "_": "APPROVED PAGE COMPOSITIONS — A PROPOSAL, awaiting the maintainer. Nothing here is wired into the shipping catalogue in docs/atlas/composition/src/, into the lesson, or into lesson-studio.html.",
-  "theChain": "lesson intent → pattern → approved composition blueprint → spine, regions and rows → media geometry selects among the approved blueprints → content fills it. Never: content → measurements → slot sizes → hope the result looks balanced.",
+  "theChain": "blueprint → row relationship → named span → media realisation → rhythm. Structural validity (does every part of the active composition have an owner?) and composition fitness (is the approved blueprint making appropriate use of the surface?) are TWO LAYERS, asked in that order.",
+  "theTwoAxes": {
+    "_": "HORIZONTAL RELATIONSHIP AND VERTICAL BEHAVIOUR ARE SEPARATE DECLARATIONS. `hug`, `paired` and `workspace` were doing double duty as both, which is why a page could be structurally perfect and still timid.",
+    "horizontal": {
+      "solo": "ONE semantic region. It takes a span from an approved LADDER, never a calculated width.",
+      "paired": "TWO sibling regions in a declared split, on one origin, with a termination tolerance.",
+      "workspace": "a split in which one region has a designed height."
+    },
+    "vertical": {
+      "hug": "the row is exactly as tall as the regions that begin in it.",
+      "designed": "a region in the row has a height that was decided rather than derived."
+    }
+  },
   "theSpine": {
-    "_": "THE ALIGNMENT PRIMITIVE, AND THE ONE OWNER OF THE ALIGNMENT RELATIONSHIP. A blueprint declares ONE spine per surface — an axis and a span. A row is then either on the spine or on the grid, and there is no third option.",
-    "align: centre": "the spine is centred on the master grid, so the free columns either side are symmetric.",
-    "align: left-edge": "the spine begins at column 1, so the free columns are all on the trailing side.",
-    "row align: spine": "the row holds ONE named region and occupies the spine EXACTLY. The grid outside the spine is PAGE MARGIN: it is outside the active content spine, it needs no semantic owner, and it is valid. A row whose region is narrower than the spine is not a spine row.",
-    "row align: grid": "the row names a split of the master grid and is an ACTIVE ROW. Every one of its columns must be owned by a region or declared as the symmetric containment of a centred split.",
-    "whyItIsNotSixColumns": "A centred six-column spine and a six-column region at the left of a twelve-column active row occupy the same number of columns and are not the same thing. The first declares the page's axis and puts its margin outside the composition; the second leaves half of an active row unexplained. The spine primitive exists so the renderer cannot confuse them."
+    "_": "THE PAGE'S ONE ALIGNMENT AXIS — an axis and a default span. Every solo row is aligned to it; a solo row may take a WIDER approved rung and stay on the same axis, which is why the spine is an axis rather than a width.",
+    "align: centre": "symmetric page margin either side. A centred rung whose complement is odd is refused.",
+    "align: left-edge": "the rung begins at column 1 and the page margin is all on the trailing side.",
+    "whyItIsNotSixColumns": "A centred six-column spine and a six-column region at the left of a twelve-column active row occupy the same columns and are not the same thing. The first declares the axis and puts its margin outside the composition; the second leaves half of an active row unexplained."
+  },
+  "soloLadder": {
+    "_": "THE APPROVED SPAN POSITIONS FOR A ROW HOLDING ONE REGION. Design-system positions, not measurements: no 683px, no 717px, no 58% occupancy. `spine` resolves to the blueprint's own spine span.",
+    "desktop": {
+      "spine": null,
+      "expanded": 8,
+      "wide": 10,
+      "full": 12
+    },
+    "tablet": {
+      "spine": null,
+      "expanded": 8,
+      "wide": 8,
+      "full": 8
+    },
+    "phone": {
+      "spine": null,
+      "expanded": 4,
+      "wide": 4,
+      "full": 4
+    },
+    "heightIsNotAFailure": "The page scrolls. A wider rung that makes the page taller is not a cost to be avoided; usable width is not sacrificed to keep a page short."
+  },
+  "soloFamilies": {
+    "_": "WHAT A REGION IS CONSTRAINS WHICH RUNGS ARE LEGAL FOR IT — but the family never invents a composition. The blueprint still chooses from within it, and `spine` is always available as the fallback rung. Prose is additionally capped at the reading measure.",
+    "reading": [
+      "spine",
+      "expanded"
+    ],
+    "support": [
+      "spine",
+      "expanded"
+    ],
+    "worked": [
+      "spine",
+      "expanded"
+    ],
+    "questions": [
+      "spine",
+      "expanded"
+    ],
+    "media.portrait": [
+      "expanded"
+    ],
+    "media.balanced": [
+      "expanded",
+      "wide"
+    ],
+    "media.landscape": [
+      "wide",
+      "full"
+    ],
+    "media.wide": [
+      "wide",
+      "full"
+    ],
+    "interactive": [
+      "wide",
+      "full"
+    ],
+    "workspace": [
+      "full"
+    ]
   },
   "whitespace": {
-    "_": "THE FIVE SPACES, KEPT SEPARATE ON PURPOSE. They are not one thing and must never be solved by one generic whitespace rule, an occupancy fraction or a dead-space percentage.",
-    "1 · page margin": "the grid outside the blueprint spine, and the symmetric containment of a centred grid row. Intentionally empty, valid, and it needs no semantic owner.",
-    "2 · blueprint rhythm": "the named step between two semantic regions — tight / normal / section. Owned by the blueprint, rendered as a real grid row of exactly that height.",
-    "3 · internal block space": "typography, the space between steps and equations, and the padding a visible surface needs. Owned by the BLOCK. It may never reach the exterior boundary of a semantic region, because that would silently add a second page-level rhythm value.",
-    "4 · unclaimed composition space": "free width inside an ACTIVE ROW that no region owns. Always invalid. H2.",
-    "5 · pair imbalance": "two regions that own all their width and still terminate too far apart. All width can be owned and the relationship still be visually invalid. H4, a SEPARATE contract from H2."
+    "_": "THE FIVE SPACES, KEPT SEPARATE. Structural validity only. Fitness is a separate question, asked by H11 after these are satisfied.",
+    "1 · page margin": "the grid outside the row's realised span, and the symmetric containment of a centred split. Intentionally empty, valid, no semantic owner needed. VALID IS NOT THE SAME AS WELL USED.",
+    "2 · blueprint rhythm": "the named step between two semantic regions.",
+    "3 · internal block space": "owned by the block; may never reach a region's exterior.",
+    "4 · unclaimed composition space": "free width inside a paired or workspace row. Always invalid. H2.",
+    "5 · pair imbalance": "all width owned and the pair still terminates too far apart. H4."
   },
   "ownership": {
-    "_": "FROZEN. The boundary that stops rhythm being contaminated.",
     "block": [
       "typography",
       "spacing inside the component",
-      "spacing between steps, equations and the like",
+      "spacing between steps and equations",
       "padding required by a VISIBLE surface"
     ],
     "blueprint": [
       "region placement",
-      "columns and spans",
-      "alignment and spines",
+      "the spine and its axis",
+      "the solo span ladder and the preferred rung",
       "pairing",
       "ALL spacing between semantic regions"
     ],
-    "rule": "A semantic region HUGS its meaningful ink or visible surface at its exterior boundary. Invisible component margin and padding must not add another page-level rhythm value. Measured by H10: a declared 56px section step must measure ~56px between the two regions."
+    "rule": "A semantic region HUGS its meaningful ink or visible surface at its exterior boundary (H10)."
   },
   "rhythm": {
     "steps": {
@@ -40,12 +112,7 @@
       "normal": 32,
       "section": 56
     },
-    "rule": "Every row but the last declares `gapAfter`. A gap may declare `gapWithin` to sit inside one region's columns, so a region that spans several rows is not cut by the rhythm beside it."
-  },
-  "rowModes": {
-    "hug": "the row is exactly as tall as its contents; nothing stretches to match unrelated material.",
-    "paired": "two siblings deliberately share a row on a declared `origin`, with a declared `imbalanceMax` and a `pairReason`. The atlas measures how far they actually terminate apart.",
-    "workspace": "a row containing a region whose height is DESIGNED rather than derived — an interactive, a workbook page, a drawing surface. The one mode exempt from the pair-termination contract, and it must name the slot whose height is designed."
+    "rule": "Every row but the last declares `gapAfter`; a gap may declare `gapWithin` to sit inside one region's columns."
   },
   "golden": [
     "visual.explanation/spine-narrow",
@@ -60,8 +127,8 @@
       "blueprints": {
         "spine-narrow": {
           "golden": true,
-          "title": "a centred narrow spine — media / interpretation / support all on one axis",
-          "why": "FROZEN. The defining property is not \"six columns\" — it is a SHARED ALIGNMENT SPINE. The object, its reading and the key idea all sit on one centred axis of six columns, so the page has one width and one centre line. The white either side is PAGE MARGIN: it lies outside the active content spine, it is symmetric about the declared axis, and it needs no semantic owner. That is the whole difference from a six-column object at the left of a twelve-column active row, which is a defect.",
+          "title": "centred spine 6 · media solo at `expanded` · reading back on the spine",
+          "why": "FROZEN, AND CORRECTED. The page still has ONE centred axis and the reading still sits on the six-column spine. What changed is that the media row is now a SOLO row with its own approved span ladder: it may take the spine (6) or `expanded` (8), and it PREFERS `expanded`. Being the only substantive object in its row is a reason to use more of the surface, not a licence to invent a width — 8 is a named position in the ladder, and the resulting extra height is legal because the page scrolls. The graph keeps equal unit scale at either rung.",
           "spine": {
             "desktop": {
               "align": "centre",
@@ -76,54 +143,92 @@
             "desktop": [
               {
                 "id": "media",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "expanded"
+                },
+                "vertical": "hug",
                 "region": "media",
-                "mode": "hug",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
-                "region": "support",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
               }
             ],
             "tablet": [
               {
                 "id": "media",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "expanded"
+                },
+                "vertical": "hug",
                 "region": "media",
-                "mode": "hug",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
-                "region": "support",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
               }
             ]
           }
         },
         "spine-reading": {
-          "title": "a centred spine at the reading measure",
-          "why": "The same spine, widened to the measure — eight desktop columns is exactly 760px.",
+          "title": "centred spine 8 · media solo at `wide`",
+          "why": "A balanced object is short enough to reach ten columns without becoming a wall; the reading returns to the measure beneath it.",
           "spine": {
             "desktop": {
               "align": "centre",
@@ -138,57 +243,92 @@
             "desktop": [
               {
                 "id": "media",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "expanded",
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
                 "region": "media",
-                "mode": "hug",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
-                "region": "support",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
               }
             ],
             "tablet": [
               {
                 "id": "media",
-                "align": "grid",
-                "split": "full-8",
-                "regions": [
-                  "media"
-                ],
-                "mode": "hug",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
-                "region": "support",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
               }
             ]
           }
         },
         "stage-full": {
-          "title": "a full-grid stage over a centred spine",
-          "why": "Only an object that is short by construction earns the whole grid. The media row is a GRID row — every one of its twelve columns is active and owned — and the reading returns to the spine beneath it.",
+          "title": "centred spine 8 · media solo at `full`",
+          "why": "A WIDE OBJECT ALONE IN ITS ROW TAKES THE GRID. It is short by construction, so the whole twelve columns cost no height worth saving, and the reading stays at the measure beneath it on the same axis.",
           "spine": {
             "desktop": {
               "align": "centre",
@@ -203,60 +343,92 @@
             "desktop": [
               {
                 "id": "media",
-                "align": "grid",
-                "split": "full-12",
-                "regions": [
-                  "media"
-                ],
-                "mode": "hug",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide",
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
-                "region": "support",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
               }
             ],
             "tablet": [
               {
                 "id": "media",
-                "align": "grid",
-                "split": "full-8",
-                "regions": [
-                  "media"
-                ],
-                "mode": "hug",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
-                "region": "support",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
               }
             ]
           }
         },
         "stack": {
           "title": "the phone stack",
-          "why": "Stacking removes every choice the desktop composition has to make, which is why the narrow render of the defective page was already correct.",
+          "why": "One column. The ladder collapses to a single rung and every row is the surface.",
           "spine": {
             "phone": {
               "align": "left-edge",
@@ -267,24 +439,42 @@
             "phone": [
               {
                 "id": "media",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "media",
-                "mode": "hug",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
-                "region": "support",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
               }
             ]
           }
@@ -313,7 +503,7 @@
       "withdrawn": {
         "side-study": {
           "title": "media-5 + explanation-7",
-          "why": "WITHDRAWN, AND KEPT AS EVIDENCE. Its row owns all twelve columns and the page still looks wrong: the object and the reading beside it end ~535px apart against the 160px it declared. Complete column ownership is NECESSARY BUT NOT SUFFICIENT, which is why pair termination (H4) is a separate contract from column ownership (H2). For tall explanatory media the approved answer is `spine-narrow`, not a more elaborate side-by-side arithmetic.",
+          "why": "WITHDRAWN, AND KEPT AS EVIDENCE. Its row owns all twelve columns and the page still looks wrong: the object and the reading beside it terminate ~535px apart against the 160px it declared. A wider graph would not fix that, because the defect is the termination, not the width. Complete column ownership is NECESSARY AND NOT SUFFICIENT, and neither is a generous span.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -324,23 +514,31 @@
             "desktop": [
               {
                 "id": "study",
-                "align": "grid",
-                "split": "5/7",
-                "regions": [
-                  "media",
-                  "interpretation"
-                ],
-                "mode": "paired",
-                "gapAfter": "normal",
-                "origin": "top",
-                "imbalanceMax": 160,
-                "pairReason": "an object beside the reading of it"
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "5/7",
+                  "regions": [
+                    "media",
+                    "interpretation"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 160,
+                  "pairReason": "an object beside the reading of it"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
-                "region": "support",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
               }
             ]
           }
@@ -352,10 +550,10 @@
       "mediaSlot": "media",
       "slotFit": "fill",
       "selectBy": "mediaGeometry",
-      "notReapproved": "migrated to the spine schema so the build stays whole; NOT re-rendered or re-approved in this pass, by instruction.",
+      "notReapproved": "migrated to the solo/paired schema so the build stays whole; NOT re-rendered or re-approved.",
       "blueprints": {
         "compare-plain": {
-          "title": "compare-6-6 / synthesis on the spine",
+          "title": "cases 6/6, no shared visual",
           "why": "No shared visual.",
           "noMedia": true,
           "spine": {
@@ -376,115 +574,188 @@
             "desktop": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "cases",
-                "align": "grid",
-                "split": "6/6",
-                "regions": [
-                  "caseA",
-                  "caseB"
-                ],
-                "mode": "paired",
-                "gapAfter": "section",
-                "origin": "top",
-                "imbalanceMax": 180,
-                "pairReason": "two cases of the same kind, at identical width"
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ],
             "tablet": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "cases",
-                "align": "grid",
-                "split": "4/4",
-                "regions": [
-                  "caseA",
-                  "caseB"
-                ],
-                "mode": "paired",
-                "gapAfter": "section",
-                "origin": "top",
-                "imbalanceMax": 200,
-                "pairReason": "two cases of the same kind, at identical width"
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ],
             "phone": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "caseA",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "caseA",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "caseB",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "caseB",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ]
           }
         },
         "compare-shared-centred": {
-          "title": "compare-6-6 / media centred-8 / synthesis",
+          "title": "cases 6/6 · media solo at `expanded`",
           "why": "A shared visual on the seam.",
           "spine": {
             "desktop": {
@@ -500,101 +771,152 @@
             "desktop": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "cases",
-                "align": "grid",
-                "split": "6/6",
-                "regions": [
-                  "caseA",
-                  "caseB"
-                ],
-                "mode": "paired",
-                "gapAfter": "section",
-                "origin": "top",
-                "imbalanceMax": 180,
-                "pairReason": "two cases of the same kind, at identical width"
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
               },
               {
                 "id": "media",
-                "align": "grid",
-                "split": "centred-8",
-                "regions": [
-                  "media"
-                ],
-                "mode": "hug",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "expanded"
+                },
+                "vertical": "hug",
+                "region": "media",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ],
             "tablet": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "cases",
-                "align": "grid",
-                "split": "4/4",
-                "regions": [
-                  "caseA",
-                  "caseB"
-                ],
-                "mode": "paired",
-                "gapAfter": "section",
-                "origin": "top",
-                "imbalanceMax": 200,
-                "pairReason": "two cases of the same kind, at identical width"
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
               },
               {
                 "id": "media",
-                "align": "grid",
-                "split": "centred-6",
-                "regions": [
-                  "media"
-                ],
-                "mode": "hug",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ]
           }
         },
         "compare-shared-full": {
-          "title": "compare-6-6 / media full-12 / synthesis",
+          "title": "cases 6/6 · media solo at `full`",
           "why": "The same, with a short object.",
           "spine": {
             "desktop": {
@@ -610,95 +932,146 @@
             "desktop": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "cases",
-                "align": "grid",
-                "split": "6/6",
-                "regions": [
-                  "caseA",
-                  "caseB"
-                ],
-                "mode": "paired",
-                "gapAfter": "section",
-                "origin": "top",
-                "imbalanceMax": 180,
-                "pairReason": "two cases of the same kind, at identical width"
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
               },
               {
                 "id": "media",
-                "align": "grid",
-                "split": "full-12",
-                "regions": [
-                  "media"
-                ],
-                "mode": "hug",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide",
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ],
             "tablet": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "cases",
-                "align": "grid",
-                "split": "4/4",
-                "regions": [
-                  "caseA",
-                  "caseB"
-                ],
-                "mode": "paired",
-                "gapAfter": "section",
-                "origin": "top",
-                "imbalanceMax": 200,
-                "pairReason": "two cases of the same kind, at identical width"
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
               },
               {
                 "id": "media",
-                "align": "grid",
-                "split": "full-8",
-                "regions": [
-                  "media"
-                ],
-                "mode": "hug",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ]
           }
@@ -716,45 +1089,81 @@
             "phone": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "caseA",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "caseA",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "caseB",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "caseB",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "media",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "media",
-                "mode": "hug",
                 "gapAfter": "section",
                 "media": true
               },
               {
                 "id": "interpretation",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "interpretation",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ]
           }
@@ -785,15 +1194,14 @@
       }
     },
     "worked.single": {
-      "intent": "One worked example. The two blueprints differ only in vertical rhythm, which is the point.",
+      "intent": "One worked example. Every row is solo PROSE, which is what makes it the proof that the solo ladder is not \"one region, therefore wider\".",
       "mediaSlot": null,
       "selectBy": "authored",
       "authoredKey": "form",
-      "notReapproved": "migrated to the spine schema; not re-rendered in this pass, by instruction.",
       "blueprints": {
         "flow": {
-          "title": "single.flow — one spine, one rhythm",
-          "why": "Read straight through; nothing separated more than anything else until the synthesis.",
+          "title": "single.flow — every row solo prose at the measure",
+          "why": "PROSE ALONE STAYS AT THE MEASURE. Every row here holds exactly one region and none of them may reach for the grid: the reading measure is 760px and eight desktop columns is exactly that, so the ladder stops. A region being alone in its row is not a reason to widen it — the reason is what the region IS, and the span family for prose ends at the measure.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -812,116 +1220,211 @@
             "desktop": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "scenario",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "scenario",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "worked",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "worked",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "support",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ],
             "tablet": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "scenario",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "scenario",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "worked",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "worked",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "support",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ],
             "phone": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "scenario",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "scenario",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "worked",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "worked",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "support",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ]
           }
         },
         "split": {
-          "title": "single.split — the scenario cut from the solution",
-          "why": "The same spine, a different rhythm: a section step and a rule where the situation ends and the algebra begins.",
+          "title": "single.split — the same widths, a section step and a rule",
+          "why": "The same spine and the same spans; only the rhythm differs.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -940,112 +1443,207 @@
             "desktop": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "scenario",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "scenario",
-                "mode": "hug",
                 "gapAfter": "section",
                 "ruleAfter": true
               },
               {
                 "id": "worked",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "worked",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "support",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ],
             "tablet": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "scenario",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "scenario",
-                "mode": "hug",
                 "gapAfter": "section",
                 "ruleAfter": true
               },
               {
                 "id": "worked",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "worked",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "support",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ],
             "phone": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "scenario",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "scenario",
-                "mode": "hug",
                 "gapAfter": "section",
                 "ruleAfter": true
               },
               {
                 "id": "worked",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "worked",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "support",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "support",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ]
           }
@@ -1110,8 +1708,9 @@
       "blueprints": {
         "cases-6-6": {
           "golden": true,
-          "title": "intro on the spine / worked 6-6 / synthesis on the spine",
-          "why": "FROZEN. The prose sits on a left-edge spine of eight columns; the pair is a GRID row that owns all twelve. The pairing has an actual visual argument because the blueprint declares all three of its structural relationships — one alignment origin, identical width, and a termination tolerance — rather than deriving any of them from how much was written. The step into the synthesis is a declared `section`, and it MEASURES as one, because a region hugs its own ink or surface at its exterior boundary.",
+          "unchangedBy": "the solo-span layer — there is no solo row to reclaim space in",
+          "title": "intro solo · worked 6/6 paired · synthesis solo",
+          "why": "FROZEN AND UNCHANGED. The solo ladder does not touch this page: its one substantive row holds TWO regions that already own all twelve columns, so there is no solo space to reclaim. The prose rows are solo and stay at the measure. This is the proof that the new contract is scoped to cardinality 1 and does not simply make things bigger.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -1126,66 +1725,96 @@
             "desktop": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "cases",
-                "align": "grid",
-                "split": "6/6",
-                "regions": [
-                  "workedA",
-                  "workedB"
-                ],
-                "mode": "paired",
-                "gapAfter": "section",
-                "origin": "top",
-                "imbalanceMax": 180,
-                "pairReason": "two worked examples of the same kind"
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "workedA",
+                    "workedB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two worked examples of the same kind"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ],
             "tablet": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "cases",
-                "align": "grid",
-                "split": "4/4",
-                "regions": [
-                  "workedA",
-                  "workedB"
-                ],
-                "mode": "paired",
-                "gapAfter": "section",
-                "origin": "top",
-                "imbalanceMax": 200,
-                "pairReason": "two worked examples of the same kind"
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "workedA",
+                    "workedB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two worked examples of the same kind"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ]
           }
         },
         "cases-stacked": {
           "title": "the phone stack",
-          "why": "Below the pairing surface the argument is carried by the synthesis rather than by alignment.",
+          "why": "Below the pairing surface the argument is carried by the synthesis.",
           "spine": {
             "phone": {
               "align": "left-edge",
@@ -1196,30 +1825,54 @@
             "phone": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "workedA",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "workedA",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "workedB",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "workedB",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "synthesis",
-                "align": "spine",
-                "region": "synthesis",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
               }
             ]
           }
@@ -1238,15 +1891,15 @@
       }
     },
     "practice.workbook": {
-      "intent": "A question set beside a workspace the learner acts on, with the stimulus staying while the worklist moves. The first genuinely workspace-shaped page, built to test whether the same four ideas — spine, regions, paired/workspace rows and named rhythm — reach it without a resolver.",
+      "intent": "A question set beside a workspace the learner acts on.",
       "mediaSlot": "reference",
       "slotFit": "fill",
       "selectBy": "surface",
-      "firstPass": true,
       "blueprints": {
         "workbook-5-7": {
-          "title": "intro on the spine / reference-5 over questions-5, workspace-7 spanning both",
-          "why": "FIRST PASS. The workspace is a `workspace` row: its height is DESIGNED, not derived, which is the one case where a row may be far taller than the region beside it without that being a pairing failure. The reference and the worklist stack in the left five columns while the workspace holds the right seven across both — and the step between them is a rhythm gap DECLARED WITHIN the left region, so the blueprint still owns the spacing between two semantic regions even when a third region spans past them. Nothing here measures anything: the reference takes five columns because the workspace, not the object, owns the page.",
+          "unchangedBy": "the solo-span layer — its central rows are designed 5/7 relationships, not solo rows",
+          "title": "intro solo · reference-5 over questions-5 · workspace-7 spanning both",
+          "why": "UNCHANGED. Its central working rows each hold TWO meaningful semantic regions in a designed 5/7 relationship, so the solo ladder does not apply to them and the reference is not widened. Only the intro is solo, and it stays at the measure. The workspace row is `vertical: designed` — its height is a design decision, not a derivation — which is now stated separately from its horizontal mode.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -1261,76 +1914,97 @@
             "desktop": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "reference",
-                "align": "grid",
-                "split": "5/7",
-                "regions": [
-                  "reference",
-                  "workspace"
-                ],
-                "mode": "workspace",
+                "horizontal": {
+                  "mode": "workspace",
+                  "split": "5/7",
+                  "regions": [
+                    "reference",
+                    "workspace"
+                  ],
+                  "workspaceSlot": "workspace"
+                },
+                "vertical": "designed",
                 "gapAfter": "normal",
                 "media": true,
-                "gapWithin": "reference",
-                "workspaceSlot": "workspace"
+                "gapWithin": "reference"
               },
               {
                 "id": "questions",
-                "align": "grid",
-                "split": "5/7",
-                "regions": [
-                  "questions",
-                  "workspace"
-                ],
-                "mode": "workspace",
-                "workspaceSlot": "workspace"
+                "horizontal": {
+                  "mode": "workspace",
+                  "split": "5/7",
+                  "regions": [
+                    "questions",
+                    "workspace"
+                  ],
+                  "workspaceSlot": "workspace"
+                },
+                "vertical": "designed"
               }
             ],
             "tablet": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "reference",
-                "align": "grid",
-                "split": "4/4",
-                "regions": [
-                  "reference",
-                  "workspace"
-                ],
-                "mode": "workspace",
+                "horizontal": {
+                  "mode": "workspace",
+                  "split": "4/4",
+                  "regions": [
+                    "reference",
+                    "workspace"
+                  ],
+                  "workspaceSlot": "workspace"
+                },
+                "vertical": "designed",
                 "gapAfter": "normal",
                 "media": true,
-                "gapWithin": "reference",
-                "workspaceSlot": "workspace"
+                "gapWithin": "reference"
               },
               {
                 "id": "questions",
-                "align": "grid",
-                "split": "4/4",
-                "regions": [
-                  "questions",
-                  "workspace"
-                ],
-                "mode": "workspace",
-                "workspaceSlot": "workspace"
+                "horizontal": {
+                  "mode": "workspace",
+                  "split": "4/4",
+                  "regions": [
+                    "questions",
+                    "workspace"
+                  ],
+                  "workspaceSlot": "workspace"
+                },
+                "vertical": "designed"
               }
             ]
           }
         },
         "workbook-stacked": {
           "title": "the phone stack",
-          "why": "The workspace follows the worklist rather than standing beside it.",
+          "why": "The workspace follows the worklist.",
           "spine": {
             "phone": {
               "align": "left-edge",
@@ -1341,31 +2015,55 @@
             "phone": [
               {
                 "id": "intro",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "intro",
-                "mode": "hug",
                 "gapAfter": "normal"
               },
               {
                 "id": "reference",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "reference",
-                "mode": "hug",
                 "gapAfter": "normal",
                 "media": true
               },
               {
                 "id": "questions",
-                "align": "spine",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
                 "region": "questions",
-                "mode": "hug",
                 "gapAfter": "section"
               },
               {
                 "id": "workspace",
-                "align": "spine",
-                "region": "workspace",
-                "mode": "hug"
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "designed",
+                "region": "workspace"
               }
             ]
           }
@@ -1384,17 +2082,13 @@
       }
     }
   },
-  "counterexamples": {
-    "_": "PERMANENT REGRESSION PROOFS, RETAINED. Each is an arrangement the atlas renders and asserts FAILS.",
-    "unowned-half-row": {
-      "control": "H2",
-      "why": "THE CANONICAL MUST-NEVER-HAPPEN-AGAIN. Columns 1–6 of a twelve-column ACTIVE ROW occupied, 7–12 declared by nothing. Occupies the same six columns as `spine-narrow` and is not the same thing.",
-      "measured": "the shipped page paints its graph 683px wide at x=60 in a row ending at x=1212 — 469px unowned, at a width the grid does not name."
-    },
-    "side-study-imbalance": {
-      "control": "H4",
-      "why": "THE ROW OWNS ALL TWELVE COLUMNS AND STILL LOOKS WRONG. Complete column ownership is necessary and not sufficient.",
-      "measured": "the siblings terminate ~535px apart against a declared 160px."
-    }
+  "proofs": {
+    "_": "WHAT THIS PASS HAD TO SHOW, AND WHERE.",
+    "portrait graph, alone": "spine-narrow realises `expanded` (8 col). The same row forced to `spine` (6 col) is structurally perfect and FAILS H11.",
+    "prose, alone": "worked.single/flow — every row solo prose, every one capped at the measure, none reaching for the grid.",
+    "wide figure, alone": "stage-full realises `full` (12 col).",
+    "worked.paired": "unchanged — no solo row to reclaim.",
+    "practice.workbook": "unchanged — its working rows are designed 5/7 relationships.",
+    "side-study": "still fails H4, and a wider graph would not have saved it."
   }
 }

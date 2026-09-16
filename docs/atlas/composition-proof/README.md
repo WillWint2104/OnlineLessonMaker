@@ -1,192 +1,173 @@
-# The Composition Proof Atlas — spines, the five spaces, and two frozen blueprints
+# The Composition Proof Atlas — ownership, then fitness
 
 **Nothing here is wired into anything.** `docs/atlas/composition/src/` is untouched, the lesson is
-untouched, `lesson-studio.html` has been byte-identical since `41d40a8`. This is a prototype of one
-architectural layer, deliberately narrow.
+untouched, `lesson-studio.html` has been byte-identical since `41d40a8`. A prototype, deliberately
+narrow: it renders only what it proves.
 
 ```
 node scripts/composition-proof-atlas.mjs
 CP_ONLY=worked.paired CP_SURFACE=desktop   # a slice
 ```
 
-## The finding this pass is built on
+## Two layers, asked in order
 
-Five kinds of emptiness had been collapsed into one idea, and they are not the same thing. They are
-now kept apart everywhere — in the schema, in the judge, in the overlay, and in the verdict panel —
-and there is no generic whitespace rule, no occupancy fraction and no dead-space percentage anywhere.
+```
+STRUCTURAL VALIDITY   Does every part of the active composition have an owner?
+        ↓
+COMPOSITION FITNESS   Is the approved blueprint actually using the surface it was given?
+```
 
-| | space | verdict |
-| --- | --- | --- |
-| **1** | **page margin** — the grid outside the blueprint's spine, and the symmetric containment of a centred grid row | **valid, intentionally empty, needs no semantic owner** |
-| **2** | **blueprint rhythm** — the named step between two semantic regions (`tight 16` · `normal 32` · `section 56`) | valid; a real grid row of exactly that height |
-| **3** | **internal block space** — typography, the space between steps, the padding a *visible* surface needs | owned by the block; **may never reach a region's exterior** (H10) |
-| **4** | **unclaimed composition space** — free width inside an **active row** | **always invalid** (H2) |
-| **5** | **pair imbalance** — all width owned and the pair still terminates too far apart | **separate contract** (H4) |
+The previous pass built the first. It produced a page that was *legally composed and unnecessarily
+timid*: a 564px portrait graph alone in its row on a six-column spine, with six columns of perfectly
+valid page margin either side. Valid whitespace is not the same as good use of space.
 
-## The spine — the alignment primitive
+**Neither layer is occupancy.** Nothing in this atlas measures a fraction, an area, a dead-space
+percentage or a content length. Fitness is decided by named positions on a ladder.
 
-A blueprint declares **one spine per surface**: an axis (`centre` or `left-edge`) and a span. A row
-is then one of exactly two things.
+## The separation
 
-- **a spine row** — holds one named region and occupies the spine **exactly**. The grid outside the
-  spine is **page margin** (space 1): valid, and it needs no owner.
-- **a grid row** — names a split of the master grid and is an **active row**. Every one of its
-  columns must be owned by a region, or be the symmetric containment of a centred split.
+`hug`, `paired` and `workspace` were doing double duty as horizontal *and* vertical concepts. They
+are now two declarations:
 
-> A centred six-column spine and a six-column region at the left of a twelve-column active row occupy
-> the same six columns and are **not the same thing**. The first declares the page's axis and puts its
-> margin outside the composition; the second leaves half of an active row unexplained.
+```
+horizontal = solo | paired | workspace          vertical = hug | designed
+```
 
-The spine primitive exists so the renderer cannot confuse them, and so there is **one explicit owner
-of the alignment relationship** rather than an edge property inferred per row. A control refuses a
-blueprint with no spine, a centred spine that cannot be symmetric, and a spine row that also names a
-split.
+```
+row ownership → row cardinality / relationship → approved horizontal span
+              → object realisation → vertical rhythm
+```
 
-## The ownership boundary — frozen
+## The solo span ladder
 
-| the **block** owns | the **blueprint** owns |
+A row holding **one** semantic region is a **solo** row. It takes a rung from an approved ladder —
+never a calculated width.
+
+| rung | desktop | tablet | phone |
+| --- | --- | --- | --- |
+| `spine` | the blueprint's own spine span | ″ | ″ |
+| `expanded` | 8 | 8 | 4 |
+| `wide` | 10 | 8 | 4 |
+| `full` | 12 | 8 | 4 |
+
+A solo row declares which rungs it approves and which it **prefers**:
+
+```jsonc
+{ "id": "media",
+  "horizontal": { "mode": "solo", "spans": ["spine", "expanded"], "preferred": "expanded" },
+  "vertical": "hug", "region": "media", "gapAfter": "section" }
+```
+
+The spine is an **axis**, not a width — so a solo row may climb to a wider rung and still sit on the
+page's one centre line or one left edge. A control asks about the axis and never about the width.
+
+**Increased height is not a failure.** The page scrolls; usable width is not sacrificed to keep a
+page short.
+
+## What a region *is* constrains which rungs are legal
+
+The family never invents a composition — the blueprint still chooses from within it, and `spine` is
+always available as the fallback rung.
+
+| region | approved rungs |
 | --- | --- |
-| typography | region placement |
-| spacing inside the component | columns and spans |
-| spacing between steps, equations and the like | alignment and spines |
-| padding required by a **visible** surface | pairing |
-| | **all** spacing between semantic regions |
+| `reading` · `support` · `worked` · `questions` | `spine` · `expanded`, **capped at the reading measure** |
+| media, portrait | `expanded` |
+| media, balanced | `expanded` · `wide` |
+| media, landscape / wide | `wide` · `full` |
+| interactive | `wide` · `full` |
+| workspace | `full` |
 
-A semantic region **hugs its meaningful ink or visible surface at its exterior boundary**. Invisible
-component margin and padding may not silently add a second page-level rhythm value. This is enforced
-by **H10**, measured from the rendered DOM, and the atlas prints declared against measured on every
-boundary of every board.
+So a paragraph does **not** expand to twelve columns merely because it is alone: at desktop the
+measure is 760px and eight columns is exactly that, so the ladder stops. At tablet `expanded` is 8
+and the measure is 7, so prose has one rung and no ladder at all — and a blueprint that tries to
+declare otherwise is refused before anything renders.
 
-**Result.** Every declared step now measures as itself:
+## H11 · SOLO SPAN — the fitness contract
 
-```
-visual.explanation/spine-narrow   media→section  56px declared · 56px measured ✓
-                                  interpretation→normal 32 · 32 ✓
-worked.paired/cases-6-6           intro→section  56 · 56 ✓      cases→section 56 · 56 ✓
-practice.workbook/workbook-5-7    intro→normal   32 · 32 ✓      reference→normal 32 · 32 ✓
-```
+> A row containing one semantic region must realise one of the blueprint's approved solo spans. If
+> the preferred span is feasible, it must not remain at a smaller span merely because that smaller
+> span is legal.
 
-Before this pass, `worked.paired`'s declared 56px read as **80.5px**.
-
-Two findings came out of enforcing it, and both are reported rather than patched over:
-
-- `composition.css` draws a **separator on `[data-slot="synthesis"]`** (`border-top` + 20px padding).
-  Under the frozen table that is a *visible surface*, so the region's ink starts at the rule and the
-  step measures 56px to it — correct. But a rule drawn **between two semantic regions** is blueprint
-  furniture living in block CSS, and it should migrate when this layer is adopted.
-- the H10 drive first injected padding on `synthesis`, which paints its own top edge, so the control
-  **could not fire**. That was a bad test, not a bad control; it now injects on a region that paints
-  no surface of its own.
-
-## The two frozen blueprints
-
-### `visual.explanation / spine-narrow` — GOLDEN
+Feasibility is categorical plus one mathematical question: the rung is in the region's family, it
+fits the surface, its page margin is symmetric on a centred axis, prose stays inside the measure,
+and — for a plane — an equal-unit box solves at that width. Nothing else.
 
 ```
-spine: centre, 6 columns
-  media           → on the spine
-  section (56px)
-  interpretation  → on the spine
-  normal (32px)
-  support         → on the spine
+media row · desktop · cardinality 1
+approved spans  spine=6, expanded=8
+preferred       expanded
+realised        spine (6 col, 564px)     REJECT H11 — structurally owned, UNDER-REALISED
 ```
 
-One axis, one width. The reading narrows **with** the object rather than standing wider than it. The
-white either side is page margin — outside the active content spine, symmetric about the declared
-axis, and valid.
+## The proofs
 
-### `worked.paired / cases-6-6` — GOLDEN
+| board | shows |
+| --- | --- |
+| **1** `portrait-media-solo-expanded` | **GOLDEN, corrected.** The graph realises `expanded` — 8 columns, 760px — while the reading returns to the six-column spine. One centre line, page margin 1–3 and 10–12, every step measuring itself, equal unit scale preserved (0.999). |
+| **2** `prose-alone-stays-at-the-measure` | Five solo prose rows, every one at `spine` = 8 = the measure, none reaching for the grid. |
+| **3** `wide-media-solo-full` | A wide object alone realises `full` — twelve columns — because its family says so and it is short by construction. |
+| **4** `worked-paired-unchanged` | **GOLDEN, unchanged.** Its one substantive row holds *two* regions that already own all twelve columns, so there is no solo space to reclaim. Siblings 0px apart, both `section` steps measure 56px. |
+| **5** `practice-workbook-unchanged` | **Unchanged.** Its working rows are designed 5/7 relationships — two meaningful regions — so the ladder does not touch them and the reference is not widened. |
+| **6** `counterexample__under-realised-solo-span` | **FAILS H11.** The same blueprint held back one rung. Every column owned, one axis, every step exact — and timid. *This is the page the previous pass shipped as correct.* |
+| **7** `counterexample__unowned-half-row` | **FAILS H2.** Six columns at the left of a twelve-column active row, the other six declared by nothing. Widening the object would not make this legal: the defect is ownership, not fitness. |
+| **8** `counterexample__side-study-imbalance` | **FAILS H4.** Every column owned, and the two paired objects still terminate 535.5px apart. A wider graph would not have saved it. |
 
-```
-spine: left-edge, 8 columns
-  intro      → on the spine          (page margin: columns 9–12)
-  section (56px)
-  cases      → grid 6/6, paired, origin top, imbalanceMax 180px
-  section (56px)
-  synthesis  → on the spine          (page margin: columns 9–12)
-```
-
-Measured: siblings **0px apart**, both rows hug exactly, both section steps measure 56px. The pairing
-has a visual argument because the blueprint **declares** all three of its structural relationships —
-one alignment origin, identical width, a termination tolerance — rather than deriving any of them
-from how much was written.
-
-## The two retained counterexamples
-
-| board | control | why it is kept |
-| --- | --- | --- |
-| `counterexample__unowned-half-row` | **H2** | the canonical must-never-happen-again: six columns occupied at the left of a twelve-column active row, the other six declared by nothing. **The same six columns as `spine-narrow`, and not the same composition.** The shipped page measured 683px of graph at x = 60 in a row ending at x = 1212 — 469px owned by nothing, at a width the grid does not name. |
-| `counterexample__side-study-imbalance` | **H4** | `media-5 + explanation-7`. Its row **owns all twelve columns** and the page is still wrong: the siblings terminate **535.5px** apart against the 160px it declared. Complete column ownership is **necessary and not sufficient**, which is why pair termination is a separate contract. |
-
-`side-study` stays `withdrawn` in the catalogue with its measurement. For tall explanatory media the
-approved answer is `spine-narrow`, not a more elaborate side-by-side arithmetic — and no other split
-is tried until this case passes.
-
-## The stress test — `practice.workbook / workbook-5-7`, first pass
-
-The genuinely different, workspace-shaped page, expressed with the same four ideas and nothing new:
-
-```
-spine: left-edge, 8 columns
-  intro      → on the spine
-  normal (32px)
-  reference  → grid 5/7 [reference | workspace]   workspace row, workspaceSlot: workspace
-  normal (32px)  ← declared WITHIN `reference`, so the workspace is not cut by it
-  questions  → grid 5/7 [questions | workspace]   workspace row
-```
-
-It fits. No resolver, no new primitive, and one genuine extension: a rhythm step may declare
-`gapWithin`, so **a region that spans several rows is not cut by the rhythm beside it** and the
-blueprint still owns the spacing between the two regions that the gap actually separates. Every
-column is owned, every row hugs, both steps measure 32px.
-
-**What it surfaces, and what it is for.** The workspace's height is **designed** (480px from a design
-token) and the reference-plus-questions stack's height is **derived** — so the two columns terminate
-**117px** apart. A `workspace` row is exempt from the termination contract by definition, so this is
-legal, and it is the same kind of cliff H4 exists to catch elsewhere. The open question:
-
-> Should a `workspace` row also declare a termination tolerance, and should the workspace's designed
-> height come from the blueprint rather than from a CSS token?
-
-Reported, not decided, and not patched by measuring anything.
+Boards 4, 5, 7 and 8 are the proof that the new contract is **scoped to cardinality 1** and does not
+simply make things bigger.
 
 ## Reading a board
 
 Each board shows the page twice — as it renders, and with **every region and every piece of white
-classified** under the five spaces, with a legend. The overlay draws: the 12-column master grid; the
-**spine**, as a single band across the whole page; each row outlined with its split, mode and height;
-each region tinted and labelled with its columns; the rhythm steps as bands labelled by name and px;
-page margin hatched in grey; and anything unclaimed hatched in **red**. The verdict panel prints the
-spine, the rows, **declared rhythm against measured rhythm**, vertical air, pair termination, the
-page-margin and unclaimed column runs, the media contract, and `EVERY WHITE HAS AN OWNER: YES / NO`.
+classified** under the five spaces, with a legend. The overlay draws the 12-column grid, the **spine
+band** at its own span (so a wider solo row can be seen sitting on the same axis), each row outlined
+with its mode, rung and height, each region tinted, the rhythm steps as labelled bands, page margin
+hatched grey and anything unclaimed hatched **red**. The verdict panel prints the spine, the rows,
+the **solo ladder with the realised rung and a ✓/✗ against the resolution**, declared rhythm against
+measured rhythm, vertical air, pair termination, the page-margin and unclaimed runs, and the media
+contract.
 
 ## The controls
 
 | | fails when |
 | --- | --- |
-| **H1** | a column's rendered owner is not the declared one; a spine row does not occupy the spine exactly; the spine rows do not share one axis and one width |
-| **H2** | free width inside an **active row** that nothing declares, or a containment that is not symmetric |
+| **H1** | a column's rendered owner is not the declared one; a solo row does not occupy its realised rung exactly; the solo rows sit on more than one axis |
+| **H2** | free width inside a paired or workspace row that nothing declares, or a containment that is not symmetric |
 | **H3** | a row is taller than the regions that begin in it, or a rhythm step renders at a height it did not declare |
 | **H4** | siblings sharing a row do not share one origin, or a pair terminates further apart than declared |
 | **H5** | a `fill` object is painted narrower than its slot |
 | **H6** | a `contain` object has no resolved anchor |
-| **H7** | doubling the payload changes the blueprint or moves a column |
+| **H7** | doubling the payload changes the blueprint, the rung or a column |
 | **H8** | a render uses a blueprint outside the pattern's finite approved set |
 | **H10** | a region carries space past its own ink or visible surface, or a declared step does not measure as itself |
+| **H11** | a one-region row stays on a smaller approved rung while its preferred rung is feasible |
 
-Eight more are refused at the table before anything renders: a blueprint with no spine; a centred
-spine that cannot be symmetric; a spine row that also names a split; a pair with no tolerance; a
-`workspace` row whose named workspace is not a workspace-typed region; a selection naming an
-unapproved blueprint; prose on a spine past the reading measure; a rhythm step that is not one of the
-named ones.
+Ten more are refused at the table before anything renders: a blueprint with no spine; a rung whose
+page margin cannot be symmetric on a centred axis; a rung outside the region's span family; prose
+past the measure; a preferred rung that is not approved; a vertical value doing horizontal work; a
+pair with no tolerance; a workspace row that is not `vertical: designed`; a selection naming an
+unapproved blueprint; an unnamed rhythm step.
 
-**Every one is driven to failure on purpose in the same run.** A control that has never been seen to
-fail is a comment.
+**Every one is driven to failure on purpose in the same run.** Two findings came out of that:
 
-## Deliberately not done in this pass
+- the measure and the axis bound only when a blueprint was *written down*, not when a rung was
+  *realised* — so a forced rung could have put prose past the measure. Found by a drive that did not
+  fire; `layout` now binds both at realisation too.
+- a blanket namespace rename caught `.cp-key`, which is the kit's key-idea card and not board
+  chrome, so the support region rendered with the board's legend styles. Found by looking at the
+  picture, not by a control.
 
-- **No sweep.** `visual.compare`, `worked.single` and the other `visual.explanation` blueprints are
-  migrated to the spine schema so the build stays whole; they are **not re-rendered or re-approved**,
-  and their boards are not in this directory.
+## Deliberately not done
+
+- **No sweep.** `visual.compare` and the remaining `visual.explanation` blueprints are migrated to
+  the solo/paired schema so the build stays whole; they are not re-rendered or re-approved.
 - No other pair split is tried — not 4/8, not 5/7, not 6/6 — until the portrait case passes.
 - Nothing is wired into the product, into CI, or into the lesson. No maths content is authored.
+
+## Still open
+
+The workspace's height is **designed** (a 480px token) and the reference-plus-questions stack's is
+**derived**, so the two columns of `practice.workbook` terminate **117px** apart. A `workspace` row
+is exempt from the termination contract by definition, so this is legal — and it is the same cliff
+H4 exists to catch elsewhere. Should a `workspace` row declare a tolerance too, and should its
+designed height come from the blueprint rather than a CSS token?

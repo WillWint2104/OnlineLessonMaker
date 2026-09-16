@@ -8,6 +8,42 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **The solo span ladder, and composition fitness as a second validation layer**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue). A **proposal**. The previous pass solved OWNERSHIP and in doing so
+  exposed the next missing rule: a structurally valid composition can still be aesthetically
+  under-filled. `spine-narrow` was legally composed and unnecessarily timid — a 564px portrait graph
+  alone in its row, with six columns of perfectly valid page margin either side.
+  - **STRUCTURAL VALIDITY AND COMPOSITION FITNESS ARE TWO LAYERS, ASKED IN THAT ORDER.** Does every
+    part of the active composition have an owner? Then: is the approved blueprint actually using the
+    surface it was given? Neither is occupancy — nothing here measures a fraction, an area, a
+    dead-space percentage or a content length.
+  - **Horizontal relationship and vertical behaviour are now separate declarations.** `horizontal =
+    solo | paired | workspace` · `vertical = hug | designed`. `hug`/`paired`/`workspace` had been doing
+    double duty as both, which is exactly how a page could be structurally perfect and still timid.
+  - **A row holding ONE region is a `solo` row and takes a rung from an approved LADDER** —
+    `spine` (the blueprint's own span) · `expanded` 8 · `wide` 10 · `full` 12 at desktop — declaring
+    which rungs it approves and which it PREFERS. The spine is an AXIS, not a width, so a solo row may
+    climb to a wider rung and still sit on the page's one centre line. Increased height is not a
+    failure: the page scrolls.
+  - **What a region IS constrains which rungs are legal for it.** Prose is capped at the reading
+    measure, so a paragraph does not expand to twelve columns merely because it is alone; portrait
+    media gets `expanded`, balanced `expanded`/`wide`, landscape and wide `wide`/`full`. The family
+    never invents a composition — the blueprint still chooses from within it.
+  - **H11 · SOLO SPAN.** A one-region row fails if it remains at a smaller approved rung while its
+    preferred rung is feasible. Feasibility is categorical plus one mathematical question: does an
+    equal-unit box solve at that width.
+  - **Eight proof boards**: the corrected `spine-narrow` (media at `expanded`, 8 col, 760px, equal unit
+    scale 0.999); prose alone staying at the measure; a wide figure alone at `full`; `worked.paired`
+    and `practice.workbook` UNCHANGED — the proof that the contract is scoped to cardinality 1 and does
+    not simply make things bigger; and three counterexamples — the under-realised solo span (H11, the
+    page the previous pass shipped as correct), the unowned half-row (H2) and `side-study` (H4).
+  - **Ten controls and ten table-level refusals, each driven to failure.** Two findings from that: the
+    reading measure and the centred axis bound only when a blueprint was WRITTEN DOWN and not when a
+    rung was REALISED (found by a drive that did not fire; `layout` now binds both); and a blanket
+    namespace rename had caught `.cp-key`, the kit's key-idea card, so the support region rendered with
+    the board's legend styles (found by looking at the picture).
+
 - **The alignment spine, the five-space taxonomy, and two frozen blueprints**
   (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
   into the shipping catalogue). A **proposal**, tightened rather than broadened: the previous entry
