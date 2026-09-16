@@ -110,18 +110,43 @@ export function makePainter(figPage) {
    search over scale, which was searching the wrong variable and collapsed to a 169px plane that still
    painted perfectly square. */
 export function makeSolvers(paint) {
+  /* THE SEED IS A GUESS AT THE ENGINE'S GUTTERS, AND ITS ERROR IS AMPLIFIED BY THE ASPECT RATIO.
+     `h0` assumes 50px of horizontal chrome and 100px of vertical; a real box differing by Δgx and Δgy
+     lands (ys/xs)·Δgx + Δgy away from it. At 1:1 that is small and a ±80 window always caught it. At
+     20:9 it is not: the `tall` calibration plane needed offset 98 at 722px, 148 at 956px and 190 at
+     1152px, so the window silently missed every wide span and the atlas read that as "no equal-unit
+     box exists" — a property of the instrument reported as a property of the design. It is what made
+     `primary` look impossible for a tall object.
+
+     The fix is one re-seed, and it is deliberately ADDITIVE: the ±80 scan from `h0` runs first and
+     unchanged, so every box that already solved returns the same first square hit it always did. Only
+     when that scan comes back empty is the best-effort measurement used to re-aim — the painted box
+     reports px-per-unit on each axis, so the height the plane is short by is exactly ys·(x − y) — and
+     a second ±80 scan runs around the corrected seed. Still a search over painted boxes; still no
+     modelled gutter. */
   async function boxForWidth(key, fig, w) {
     const d = fig.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
-    const h0 = Math.round((ys / xs) * (w - 50) + 100);
     let best = null;
-    for (let off = 0; off <= 80; off += 2) {
-      for (const h of (off === 0 ? [h0] : [h0 + off, h0 - off])) {
-        if (h < 80) continue;
-        const r = await paint(key, fig, w, h);
-        if (r.x == null || r.y == null) continue;
-        const err = Math.abs(r.ratio - 1);
-        if (!best || err < best.err) best = { err, box: { w, h, ...r } };
-        if (square(r)) return { s: r.x, box: { w, h, ...r } };
+    async function scan(seed) {
+      for (let off = 0; off <= 80; off += 2) {
+        for (const h of (off === 0 ? [seed] : [seed + off, seed - off])) {
+          if (h < 80) continue;
+          const r = await paint(key, fig, w, h);
+          if (r.x == null || r.y == null) continue;
+          const err = Math.abs(r.ratio - 1);
+          if (!best || err < best.err) best = { err, box: { w, h, ...r } };
+          if (square(r)) return { s: r.x, box: { w, h, ...r } };
+        }
+      }
+      return null;
+    }
+    const first = await scan(Math.round((ys / xs) * (w - 50) + 100));
+    if (first) return first;
+    if (best) {
+      const aim = Math.round(best.box.h + ys * (best.box.x - best.box.y));
+      if (aim >= 80 && Math.abs(aim - best.box.h) > 2) {
+        const second = await scan(aim);
+        if (second) return second;
       }
     }
     return best ? { s: best.box.x, box: best.box, err: best.err } : null;

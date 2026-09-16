@@ -86,6 +86,17 @@ export function measureMedia() {
     let natural = null;
     if (img && img.naturalWidth) natural = img.naturalHeight / img.naturalWidth;
     else if (vid && vid.videoWidth) natural = vid.videoHeight / vid.videoWidth;
+    /* THE INTRINSIC-SHAPE QUESTION IS ASKED OF THE OBJECT, NOT OF WHATEVER WRAPS IT. Under `fill`
+       the thing that must consume the region is the outermost painted object — the figure surface,
+       when one is on — so `paintedW` is measured there and the width controls are right to use it.
+       Its HEIGHT, though, includes the surface's own declared chrome and its caption, so comparing
+       that box's ratio against a raster's intrinsic ratio reports a stretch that is not happening.
+       Found when the six-class vocabulary first sent an IMAGE through a surface-enabled blueprint:
+       a 1.778:1 image inside a 564px surface measured 0.688 against an intrinsic 0.5625 and three
+       blueprints failed H5 for chrome they were supposed to own. So the raster's own box is reported
+       separately and the stretch test uses it. */
+    const inner = img || vid;
+    const ir = inner ? inner.getBoundingClientRect() : null;
     const cs = obj ? getComputedStyle(obj) : null;
     return {
       pattern: own && own.getAttribute('data-pattern'),
@@ -106,6 +117,7 @@ export function measureMedia() {
       freeR: pr ? +(r.right - pr.right).toFixed(2) : null,
       objectFit: cs ? cs.objectFit : null,
       natural: natural == null ? null : +natural.toFixed(4),
+      naturalW: ir ? +ir.width.toFixed(2) : null, naturalH: ir ? +ir.height.toFixed(2) : null,
       scale: svg ? unitScale(svg) : null,
     };
   });
@@ -139,10 +151,13 @@ export function slotFit(x, ctx) {
     `the plane is painted at ${x.scale.x}px per x-unit and ${x.scale.y}px per y-unit — one x-unit and one `
     + `y-unit are not the same length, so the mathematics is distorted`,
     ['let the height follow from the domain; there is no height ceiling and the page scrolls']);
-  if (x.natural != null && x.paintedW > 0) {
-    const painted = x.paintedH / x.paintedW;
+  /* the raster's OWN box where one was reported, else the painted object — see measureMedia */
+  const nw = x.naturalW != null ? x.naturalW : x.paintedW, nh = x.naturalH != null ? x.naturalH : x.paintedH;
+  if (x.natural != null && nw > 0) {
+    const painted = nh / nw;
     if (Math.abs(painted - x.natural) / x.natural > TOLASPECT) return fail(
-      `the object's intrinsic shape is ${x.natural} and it is painted at ${+painted.toFixed(4)} — stretched to fit`,
+      `the object's intrinsic shape is ${x.natural} and it is painted at ${+painted.toFixed(4)} `
+      + `(${nw}x${nh}) — stretched to fit`,
       ['give the object width and let its height follow', 'never set both width and height on a raster or a clip']);
   }
 

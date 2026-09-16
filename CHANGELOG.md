@@ -8,6 +8,48 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **The geometry vocabulary split into six classes, and the role × geometry mappings frozen**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, `scripts/lib/slots.mjs`,
+  `scripts/lib/figure-geometry.mjs`; no app change, nothing wired into the shipping catalogue).
+  `tall · portrait · balanced · landscape · wide · panoramic`, declared as width:height and half-open
+  upward, with ten boundary probes placed immediately either side of the five boundaries. Selection is
+  now `presentationRole × geometryClass × surface → ONE named blueprint`, and that blueprint names ONE
+  rung: a media row may declare exactly one, so the exact aspect ratio has nothing left to decide once
+  its class is chosen. Acceptance is categorical — within one class, one surface, one role, every probe
+  selects the same blueprint and the same rung.
+  - **A correction first.** The previous pass's headline finding — `primary/portrait` has no approved
+    composition for a 0.45:1 shape — was not true. `boxForWidth` seeds its height search from a guess
+    at the engine's gutters and scanned a fixed ±80px around it; the seed's error is amplified by the
+    aspect ratio, so the tall plane needed offset 98 at 722px, 148 at 956px and 190 at 1152px and every
+    wide span silently missed. The atlas reported a property of the instrument as a property of the
+    design. The solver now re-seeds once from what it measured and scans again; the change is additive,
+    so every box that already solved returns the same first hit. `corpus-identity` 250/250
+    byte-identical, `figure-render` 240/240, `figure-container` 65/65, `measure-surface` 191+180,
+    `label-placement` 927/927 — all unmoved.
+  - New blueprints: `spine-tall` (explanatory tall, `narrow` 6), `stage-tall` (**primary tall**,
+    `expanded` 8) and `stage-panorama` (explanatory panoramic, `full` 12). `stage-primary-portrait` is
+    renamed `stage-primary` — it serves `portrait`, `balanced` and `landscape`, and the old name read
+    as a promise the catalogue does not make. `spine-reading` is withdrawn.
+  - **`primary` is not `wider`.** `stage-tall` gives a tall object eight columns, not ten or twelve,
+    and buys its primacy structurally: where `spine-tall` puts the object INSIDE the reading column
+    (media 6, spine 6), `stage-tall` breaks it out past the reading on both sides (media 8, spine 6).
+  - New controls. **H20** refuses an approved rung that cannot carry a member of its own class, and a
+    realised rung that is not the declared one — the fallback the old ladder allowed. **H19** is now
+    categorical: its "one blueprint, two rungs" escape hatch existed only because a media row could
+    approve two rungs, and it is gone. An eleventh table-level refusal rejects a multi-rung media row.
+  - **What the probes found.** Four of the five boundaries are load-bearing; **0.90 is not** —
+    `portrait` and `balanced` select the same blueprint and the same rung at all three roles. Recorded
+    in `frozen.convergences` rather than papered over with an invented width. And **0.60 may be too
+    low**: a 0.63 object at `primary` is 956 × 1570 = 1.74 desktop viewports, *taller* than a 0.57
+    object on the `tall` side at 760 × 1371 = 1.52.
+  - Realised height and its share of a 900px viewport stay diagnostic evidence; nothing reads them.
+  - Two measurement defects fixed. `measureMedia` compared the FIGURE SURFACE's box against a raster's
+    intrinsic ratio, so an image inside a surface read as stretched when it was not — found when the
+    new vocabulary first sent an image through a surface-enabled blueprint and three blueprints failed
+    H5 for chrome they own. And H20's second drive rewrote a rung to `inset` on a record that already
+    declared `inset`, a no-op that read as a control that could not fail.
+  - The SHIPPING grammar has not moved: `atlas.json` still declares four classes and `classOf()` still
+    reads them. Adopting six there is a migration that belongs with the blueprint system.
 - **The geometry calibration atlas, and the span mappings demoted to candidates**
   (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
   into the shipping catalogue). The surface architecture and the role × geometry PRINCIPLE stay frozen;

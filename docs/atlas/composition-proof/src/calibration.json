@@ -1,6 +1,7 @@
 {
   "_": "THE GEOMETRY CALIBRATION SET. Identical content — the same function, the same line, the same two points — with nothing varying but the authored DOMAIN, so the only difference between two renders is the shape of the plane. These exist to establish which named rigid blueprints are aesthetically valid for which geometry classes. They are not a resolver: nothing here measures prose, occupancy or available whitespace, and no width is calculated from an aspect ratio.",
-  "theQuestion": "Is the geometry vocabulary (portrait / balanced / landscape / wide) precise enough, or are `portrait` and `wide` still too coarse and in need of stable sub-classes — tall / portrait / balanced / wide / panoramic?",
+  "theRuling": "THE VOCABULARY IS SIX CLASSES. The calibration set answered the question it was built to ask and the classes were split. What remains here is the evidence: six canonical shapes, kept verbatim as golden references, and ten boundary probes placed immediately either side of the five declared boundaries. A probe exists to answer one categorical question — does an object a hair across the line genuinely want the neighbouring named blueprint — and never to find an ideal width.",
+  "acceptance": "WITHIN ONE GEOMETRY CLASS, ON ONE SURFACE, AT ONE PRESENTATION ROLE, EVERY PROBE MUST SELECT THE SAME NAMED BLUEPRINT AND THE SAME RUNG. If it cannot, the class boundary is wrong or the blueprint is wrong — the answer is never a fallback calculation. H19 is the categorical proof and H20 forbids the fallback.",
   "wh": "Each shape is named by its WIDTH:HEIGHT, which is how a designer talks about it. The `aspect` the engine uses is the reciprocal, height/width, which is how classOf() bands it.",
   "diagnosticOnly": "The realised height and its proportion of a 900px desktop viewport are recorded as EVIDENCE ONLY. Nothing reads them, and H19 proves the class — not the shape and not the height — is what selects the blueprint.",
   "diagnosticViewport": 900,
@@ -237,6 +238,476 @@
         "domain": {
           "xMin": -18,
           "xMax": 18,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-0p57": {
+      "wh": 0.57,
+      "probe": true,
+      "boundary": 0.6,
+      "expect": "tall",
+      "note": "a boundary probe just below 0.6 — must select the approved `tall` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -4.5,
+          "xMax": 4.5,
+          "yMin": -2,
+          "yMax": 13.789
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-0p63": {
+      "wh": 0.63,
+      "probe": true,
+      "boundary": 0.6,
+      "expect": "portrait",
+      "note": "a boundary probe just above 0.6 — must select the approved `portrait` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -4.5,
+          "xMax": 4.5,
+          "yMin": -2,
+          "yMax": 12.286
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-0p87": {
+      "wh": 0.87,
+      "probe": true,
+      "boundary": 0.9,
+      "expect": "portrait",
+      "note": "a boundary probe just below 0.9 — must select the approved `portrait` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -5.22,
+          "xMax": 5.22,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-0p93": {
+      "wh": 0.93,
+      "probe": true,
+      "boundary": 0.9,
+      "expect": "balanced",
+      "note": "a boundary probe just above 0.9 — must select the approved `balanced` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -5.58,
+          "xMax": 5.58,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-1p17": {
+      "wh": 1.17,
+      "probe": true,
+      "boundary": 1.2,
+      "expect": "balanced",
+      "note": "a boundary probe just below 1.2 — must select the approved `balanced` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -7.02,
+          "xMax": 7.02,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-1p23": {
+      "wh": 1.23,
+      "probe": true,
+      "boundary": 1.2,
+      "expect": "landscape",
+      "note": "a boundary probe just above 1.2 — must select the approved `landscape` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -7.38,
+          "xMax": 7.38,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-1p72": {
+      "wh": 1.72,
+      "probe": true,
+      "boundary": 1.75,
+      "expect": "landscape",
+      "note": "a boundary probe just below 1.75 — must select the approved `landscape` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -10.32,
+          "xMax": 10.32,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-1p78": {
+      "wh": 1.78,
+      "probe": true,
+      "boundary": 1.75,
+      "expect": "wide",
+      "note": "a boundary probe just above 1.75 — must select the approved `wide` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -10.68,
+          "xMax": 10.68,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-2p45": {
+      "wh": 2.45,
+      "probe": true,
+      "boundary": 2.5,
+      "expect": "wide",
+      "note": "a boundary probe just below 2.5 — must select the approved `wide` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -14.7,
+          "xMax": 14.7,
+          "yMin": -3,
+          "yMax": 9
+        },
+        "objects": [
+          {
+            "type": "function",
+            "f": "x^2",
+            "label": "y = x^2"
+          },
+          {
+            "type": "line",
+            "y": 9,
+            "label": "y = 9"
+          },
+          {
+            "type": "points",
+            "rows": [
+              [
+                "(−3, 9)",
+                -3,
+                9
+              ],
+              [
+                "(3, 9)",
+                3,
+                9
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "probe-2p55": {
+      "wh": 2.55,
+      "probe": true,
+      "boundary": 2.5,
+      "expect": "panoramic",
+      "note": "a boundary probe just above 2.5 — must select the approved `panoramic` blueprint",
+      "figure": {
+        "type": "figure",
+        "figure": "graph",
+        "aspect": "stretch",
+        "grid": "shown",
+        "callouts": "hidden",
+        "domain": {
+          "xMin": -15.3,
+          "xMax": 15.3,
           "yMin": -3,
           "yMax": 9
         },

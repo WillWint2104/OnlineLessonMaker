@@ -33,7 +33,7 @@ import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { openFigurePage, makePainter, makeSolvers, square, classOf } from './lib/figure-geometry.mjs';
+import { openFigurePage, makePainter, makeSolvers, square } from './lib/figure-geometry.mjs';
 import { TOLPX, measureMedia, slotFit, inspectorLines } from './lib/slots.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -53,7 +53,23 @@ const MEDIA = JSON.parse(fs.readFileSync(path.join(MEDIA_DIR, 'media.json'), 'ut
 const FIGS = JSON.parse(fs.readFileSync(path.join(root, 'docs/atlas/worked-examples/src/figures.json'), 'utf8'));
 /* THE GEOMETRY CALIBRATION SET — identical content, nothing varying but the authored domain. */
 const CAL = JSON.parse(fs.readFileSync(path.join(BP_SRC, 'calibration.json'), 'utf8'));
-const BANDS = JSON.parse(fs.readFileSync(path.join(root, 'docs/atlas/worked-examples/src/atlas.json'), 'utf8')).mediaGeometry.bands;
+/* SIX CLASSES, AND THE COMPOSITION CATALOGUE DECLARES ITS OWN. `classOf()` in figure-geometry.mjs
+   still reads the SHIPPING four-class grammar from atlas.json — the `visual.side` switch point and
+   the figure-container gate are built on it and must not move — so this file no longer imports it.
+   This vocabulary is the blueprint system's, it is declared in blueprints.json, and adopting it in the
+   shipping grammar is a migration that belongs with the blueprint system rather than ahead of it.
+
+   THE BANDS ARE WIDTH:HEIGHT and half-open upward — `from` inclusive, `below` exclusive — so a shape
+   at exactly 0.90 is `balanced` and never `portrait`. The engine's `aspect` is the reciprocal. */
+const GBANDS = BP.geometryVocabulary.bands;
+const classify = (aspect) => {
+  const wh = 1 / aspect;
+  for (const [name, b] of Object.entries(GBANDS)) {
+    if (name === '_') continue;
+    if ((b.from == null || wh >= b.from) && (b.below == null || wh < b.below)) return name;
+  }
+  throw new BlueprintError(`no geometry class covers ${wh.toFixed(4)}:1 — the declared bands have a hole in them`);
+};
 
 const CLASSES = ['portrait', 'balanced', 'landscape', 'wide'];
 const ONLY = process.env.CP_ONLY ? new Set(process.env.CP_ONLY.split(',')) : null;
@@ -150,6 +166,17 @@ function validateBlueprints() {
             if (!H.spans.includes(H.preferred))
               throw new BlueprintError(`${pid}/${bid}/${surface}: solo row \`${r.id}\` prefers \`${H.preferred}\`, `
                 + `which is not among its approved spans (${H.spans.join(', ')})`);
+            /* ONE CLASS, ONE ROLE, ONE SURFACE — ONE RUNG. A media row with two rungs on it is a ladder
+               the EXACT ASPECT RATIO can climb at realisation time, and that is precisely the hidden
+               resolver the calibration set found: two members of `portrait`, 0.45 and 0.75, came out of
+               one blueprint at `spine` and at `expanded`. The catalogue now refuses to write that down.
+               Prose rows keep their ladder — a reading column narrowing on a small surface is the
+               blueprint's own responsive declaration, not a shape escaping its class. */
+            if (r.media && H.spans.length !== 1)
+              throw new BlueprintError(`${pid}/${bid}/${surface}: media row \`${r.id}\` approves `
+                + `${H.spans.length} rungs (${H.spans.join(', ')}) — A MEDIA ROW DECLARES EXACTLY ONE. A second `
+                + `rung is a fallback the object's own ratio can take, which is the resolver this catalogue `
+                + `exists to remove: role × geometry class × surface names ONE blueprint and ONE rung.`);
             const fam = familyFor(pid, r.region, null, B.role);
             for (const rung of H.spans) {
               if (!RUNGS.includes(rung)) throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` names `
@@ -283,7 +310,10 @@ function layout(pid, surface, bid, opts = {}) {
     }
     areas.push(cells.join(' '));
     out.push({ ...r, mode: H.mode, split: H.mode === 'solo' ? null : H.split, named, owner, kind,
-      rung, cols, at, track: areas.length, spineAlign: sp.align, spineSpan: sp.span });
+      /* `declared` is what the BLUEPRINT wrote down; `rung` is what was realised. They are carried
+         separately so H20 can see the difference rather than infer it. */
+      rung, declared: H.mode === 'solo' ? H.preferred : null,
+      cols, at, track: areas.length, spineAlign: sp.align, spineSpan: sp.span });
     if (r.gapAfter) {
       const px = BP.rhythm.steps[r.gapAfter];
       const next = rows[i + 1];
@@ -323,7 +353,7 @@ const FIXTURES = Object.entries(MEDIA.fixtures).map(([id, f]) => {
   const aspect = f.kind === 'graph'
     ? (() => { const d = FIGS[f.figure].figure.domain; return (d.yMax - d.yMin) / (d.xMax - d.xMin); })()
     : f.aspect;
-  return { id, ...f, aspect: +aspect.toFixed(4), klass: classOf(aspect, BANDS), block: BLOCK_OF[f.kind] };
+  return { id, ...f, aspect: +aspect.toFixed(4), klass: classify(aspect), block: BLOCK_OF[f.kind] };
 });
 const dataURI = (name) => {
   const mime = { '.png': 'image/png', '.svg': 'image/svg+xml', '.webm': 'video/webm' }[path.extname(name)];
@@ -333,8 +363,9 @@ const CAL_FIXTURES = Object.entries(CAL.shapes).map(([id, sh]) => {
   const d = sh.figure.domain;
   const aspect = +((d.yMax - d.yMin) / (d.xMax - d.xMin)).toFixed(4);
   return { id: `cal.${id}`, shape: id, wh: sh.wh, note: sh.note, kind: 'graph', family: 'graph', figure: id,
+    probe: !!sh.probe, expect: sh.expect || null, boundary: sh.boundary || null,
     label: 'Graph', caption: `The same content at ${sh.wh}:1 — ${sh.note}.`,
-    aspect, klass: classOf(aspect, BANDS), block: 'graph' };
+    aspect, klass: classify(aspect), block: 'graph' };
 });
 
 function pickFixture(pid, klass) {
@@ -741,7 +772,8 @@ function judge(pid, surface, L, m, resolve = {}) {
         fails.push(['H4', `${pid}/${L.bid}/${surface} row \`${mr.id}\`: a paired row rendered ${mr.kids.length} sibling(s)`]);
       }
     }
-    boards.push({ id: mr.id, mode: R.mode, vertical: R.vertical, rung: R.rung,
+    boards.push({ id: mr.id, mode: R.mode, vertical: R.vertical, rung: R.rung, declared: R.declared,
+      media: !!R.media,
       split: R.mode === 'solo' ? `solo ${R.rung} ${R.cols} col` : R.split,
       y: mr.y, h: mr.h, air, imbalance,
       label: `${mr.id} · ${R.mode === 'solo' ? `solo · ${R.rung} · ${R.cols} col` : `${R.mode} · ${R.split}`}`
@@ -1278,7 +1310,7 @@ ${o.injectCSS || ''}
   const rec = { pattern: pid, surface, blueprint: bid, klass: klass || 'none', name, selectKey: o.selectKey || null,
     adversarial: !!o.adversarial, counterexample: !!o.counterexample,
     rows: J.boards.map((b) => ({ id: b.id, split: b.split, mode: b.mode, vertical: b.vertical, rung: b.rung,
-      h: b.h, air: b.air, imbalance: b.imbalance })),
+      declared: b.declared, media: b.media, h: b.h, air: b.air, imbalance: b.imbalance })),
     resolve: Object.fromEntries(Object.entries(resolve).map(([k, v]) => [k, v.should])),
     /* did the blueprint get the rung it prefers, or did the object force a fallback? H19 needs the
        difference: a fallback is the CLASS being too coarse; a divergence without one is tuning. */
@@ -1322,7 +1354,7 @@ const SCOPE = [
     klass: 'portrait', name: 'R1__portrait-SUPPORTING__inset-4col' },
   { pid: 'visual.explanation', surface: 'desktop', bid: 'spine-narrow', key: 'explanatory/portrait',
     klass: 'portrait', name: 'R2__portrait-EXPLANATORY__expanded-8col' },
-  { pid: 'visual.explanation', surface: 'desktop', bid: 'stage-primary-portrait', key: 'primary/portrait',
+  { pid: 'visual.explanation', surface: 'desktop', bid: 'stage-primary', key: 'primary/portrait',
     klass: 'portrait', name: 'R3__portrait-PRIMARY__centred-wide-10col' },
   /* THE WIDE LADDER — the same three roles, a different geometry, different spans. */
   { pid: 'visual.explanation', surface: 'desktop', bid: 'spine-supporting-wide', key: 'supporting/wide',
@@ -1364,19 +1396,46 @@ for (const x of SCOPE)
    are aesthetically valid for which geometry CLASSES — not to choose a width from an aspect ratio,
    which would be the resolver wearing a new hat. Each render's height and its share of a 900px
    desktop viewport are recorded as EVIDENCE ONLY; H19 proves the class selects, not the shape. */
-console.log('\ngeometry calibration — one content, six shapes, three roles');
+console.log('\ngeometry calibration — one content, six canonical shapes and ten boundary probes, three roles');
 const ROLES = ['supporting', 'explanatory', 'primary'];
 for (const fx of CAL_FIXTURES) {
   for (const role of ROLES) {
+    /* A PROBE LANDING IN THE WRONG CLASS IS A FAILURE OF THE BANDS, and it must be caught here rather
+       than quietly proving whatever class it happened to fall into. */
+    if (fx.expect && fx.klass !== fx.expect)
+      throw new BlueprintError(`${fx.id}: declared ${fx.wh}:1 sits either side of the ${fx.boundary} boundary `
+        + `and should classify as \`${fx.expect}\`, but the declared bands put it in \`${fx.klass}\``);
     const bid = BP.patterns['visual.explanation'].select.desktop[role][fx.klass];
+    if (!bid) throw new BlueprintError(`select has no ${role}/${fx.klass} entry — every role must remain valid `
+      + `for every geometry, and a missing cell is a catalogue gap, not a terminal state`);
     await board('visual.explanation', 'desktop', bid,
       { klass: fx.klass, selectKey: `${role}/${fx.klass}`, fs: 'A', fixture: fx, calibration: fx,
-        tag: `cal${fx.shape}${role}`.replace(/\W/g, ''),
-        name: `G__${role}__${fx.shape}__wh-${String(fx.wh).replace('.', 'p')}`,
+        tag: `cal${fx.shape}${role}`.replace(/\W/g, ''), noShot: !!fx.probe, quiet: !!fx.probe,
+        name: `${fx.probe ? 'B' : 'G'}__${role}__${fx.shape}__wh-${String(fx.wh).replace('.', 'p')}`,
         why: `CALIBRATION. The same content at ${fx.wh}:1 (aspect ${fx.aspect}, class “${fx.klass}”) in the `
           + `“${role}” role, which selects “${bid}”. ${fx.note[0].toUpperCase() + fx.note.slice(1)}. `
           + `Nothing here measured anything: the class and the role are both categorical, and the height below `
           + `is recorded as evidence, never read.` });
+  }
+}
+/* THE ACCEPTANCE TABLE — one row per class, and what every member of it resolved to. If a class ever
+   shows two entries in its blueprint or rung column, H19 has already failed the run; this is what the
+   maintainer reads to see WHICH member disagreed. */
+{
+  const cal = REPORT.filter((r) => r.calibration && !r.adversarial && r.surface === 'desktop');
+  console.log('\nacceptance — within one class, one surface, one role: one blueprint, one rung');
+  for (const klass of Object.keys(GBANDS).filter((k) => k !== '_')) {
+    const mine = cal.filter((r) => r.calibration.klass === klass);
+    if (!mine.length) { console.log(`  ${klass.padEnd(10)} — no probe landed in this class`); continue; }
+    const members = [...new Set(mine.map((r) => `${r.calibration.wh}`))].sort((a, b) => a - b);
+    const cells = ROLES.map((role) => {
+      const l = mine.filter((r) => r.role === role);
+      const bids = [...new Set(l.map((r) => r.blueprint))];
+      const rungs = [...new Set(l.map((r) => r.infeasible ? 'NO-RUNG' : (r.rows.find((x) => x.media) || {}).rung))];
+      return `${role[0].toUpperCase()}: ${bids.join('/')} ${rungs.join('/')}${bids.length > 1 || rungs.length > 1 ? '  ← DISAGREES' : ''}`;
+    });
+    console.log(`  ${klass.padEnd(10)} ${members.length} member(s) ${members.join(', ')}`);
+    for (const c of cells) console.log(`    ${c}`);
   }
 }
 
@@ -1591,13 +1650,20 @@ const H18 = (recs) => {
   return { out, compared };
 };
 /* ── H19 · THE GEOMETRY CLASS SELECTS, NOT THE SHAPE AND NOT THE HEIGHT ──────────────────────────
-   Two fixtures in the same class and the same role must realise the same blueprint and the same rung,
-   however differently they are shaped and however tall they come out. This is the control that keeps
-   the calibration atlas from becoming a resolver: the moment a width is tuned to a fixture, or a
-   height is allowed to argue, it fires. */
+   THE ACCEPTANCE CRITERION, AND IT IS CATEGORICAL. Within one geometry class, on one surface, at one
+   presentation role, every probe must select the SAME NAMED BLUEPRINT AND THE SAME RUNG — however
+   differently the objects are shaped and however tall they come out. If it cannot, the class boundary
+   is wrong or the blueprint is wrong; the answer is never a fallback calculation.
+
+   IT USED TO HAVE AN ESCAPE HATCH. While a media row could approve two rungs, one blueprint landing
+   on two different rungs was reported as a FINDING — the class is too coarse — rather than a failure,
+   because the shape had not been tuned to, it had merely failed to fit the preferred rung. That escape
+   hatch is gone: a media row now declares exactly one rung, H20 refuses an approved rung that cannot
+   carry a member of its own class, and so a rung difference inside a class can only mean the catalogue
+   is inconsistent. It fails. */
 const H19 = (recs) => {
   const by = new Map();
-  for (const r of recs.filter((x) => x.calibration && !x.adversarial && !x.infeasible)) {
+  for (const r of recs.filter((x) => x.calibration && !x.adversarial)) {
     const k = `${r.role}|${r.calibration.klass}|${r.surface}`;
     if (!by.has(k)) by.set(k, []);
     by.get(k).push(r);
@@ -1608,26 +1674,53 @@ const H19 = (recs) => {
     if (list.length < 2) continue;
     compared++;
     const bids = new Set(list.map((r) => r.blueprint));
-    const rungs = new Set(list.map((r) => r.rows[0] && r.rows[0].rung));
-    const shown = list.map((r) => `${r.calibration.shape} (${r.calibration.wh}:1) → ${r.blueprint}/${r.rows[0].rung}`).join(', ');
+    const rungs = new Set(list.map((r) => r.infeasible ? 'NONE' : (r.rows[0] && r.rows[0].rung)));
+    const shown = list.map((r) => `${r.calibration.shape} (${r.calibration.wh}:1) → ${r.blueprint}/`
+      + `${r.infeasible ? 'NO-RUNG' : r.rows[0].rung}`).join(', ');
     if (bids.size > 1)
       out.push(`${k}: ${shown} — two shapes in one class were given two different blueprints. The CLASS selects`);
-    else if (rungs.size > 1 && list.every((r) => r.preferredFeasible))
-      out.push(`${k}: ${shown} — two shapes in one class landed on different rungs with every preferred rung `
-        + `FEASIBLE. Nothing forced that, so something was tuned to the fixture`);
     else if (rungs.size > 1)
-      /* A FINDING, NOT A FAILURE. The blueprint is the same and the rung differs only because the
-         object could not be carried at the preferred one. That is the class being too coarse, which is
-         the question this atlas was built to answer — not a renderer measuring anything. */
-      notes.push(`${k}: ${shown} — one class, one blueprint, DIFFERENT RUNGS, because the preferred rung `
-        + `could not carry the taller shape. The class is too coarse to name a single composition`);
-    /* THE EVIDENCE THE CLASS IS TOO COARSE: one class, one blueprint, two very different heights. */
+      out.push(`${k}: ${shown} — one class, one blueprint, DIFFERENT RUNGS. Within a class the exact ratio `
+        + `decides nothing, so either the boundary is in the wrong place or this blueprint cannot serve the `
+        + `whole class. Move one or replace the other; do not add a fallback`);
+    /* DIAGNOSTIC ONLY, AND DELIBERATELY NOT A FAILURE. One class, one blueprint, two very different
+       heights is worth knowing and is not wrong: the class captured the shape difference ahead of time
+       and the height is what that decision cost. Nothing reads it back. */
     const hs = list.map((r) => r.surfaceH).filter(Boolean);
     if (hs.length > 1 && Math.max(...hs) - Math.min(...hs) > 300)
       notes.push(`${k}: ${list.map((r) => `${r.calibration.shape} (${r.calibration.wh}:1) ${r.surfaceH}px`).join(' vs ')} `
-        + `— one class, one blueprint, ${Math.max(...hs) - Math.min(...hs)}px apart. The class is doing less work than its name suggests`);
+        + `— ${Math.max(...hs) - Math.min(...hs)}px apart inside one approved composition`);
   }
   return { out, compared, notes };
+};
+/* ── H20 · AN APPROVED BLUEPRINT MUST CARRY ITS WHOLE CLASS ──────────────────────────────────────
+   THE CONTROL THAT FORBIDS THE FALLBACK. H19 asks whether two members of a class agree; H20 asks
+   whether the single approved rung can carry each of them at all. Before this pass the answer to "it
+   cannot" was to quietly step down the ladder, which is how the exact aspect ratio kept choosing
+   compositions after its class had supposedly chosen one. There is now nowhere to step: a media row
+   declares one rung, and if that rung cannot carry a member of its own class the CLASS BOUNDARY or the
+   BLUEPRINT is wrong and this fails until one of them is changed.
+
+   It also catches the milder version — a realised rung that is not the declared one, whatever produced
+   it — because that is the same defect arriving by a different route. */
+const H20 = (recs) => {
+  const out = [];
+  let checked = 0;
+  for (const r of recs.filter((x) => x.calibration && !x.adversarial && !x.candidate && !x.counterexample)) {
+    checked++;
+    if (r.infeasible) {
+      out.push(`${r.name}: \`${r.blueprint}\` is the approved composition for ${r.role}/${r.klass} and its `
+        + `single approved rung cannot carry ${r.calibration.shape} (${r.calibration.wh}:1), which IS a member `
+        + `of that class — ${r.why}. Move the class boundary or replace the blueprint; a fallback rung is not `
+        + `an answer`);
+      continue;
+    }
+    const row = r.rows.find((x) => x.media) || r.rows[0];
+    if (row && row.declared && row.rung !== row.declared)
+      out.push(`${r.name}: \`${r.blueprint}\` declares \`${row.declared}\` for ${r.role}/${r.klass} and `
+        + `realised \`${row.rung}\` — the object's own ratio moved the composition after the class had chosen it`);
+  }
+  return { out, checked };
 };
 const H15 = (recs) => {
   const off = new Map(recs.filter((r) => r.fs === 'off').map((r) => [fsKey(r), r]));
@@ -1699,6 +1792,23 @@ for (const r of REAL) for (const [c, f] of r.fails) fails.push(`${c} · ${f}`);
   drives.push({ id: 'shape-chose-the-composition', control: 'H19', hit: d19.out.length > 0, got: d19.out.slice(0, 1) });
   console.log(`  ${d19.out.length ? '✓' : '✗ DID NOT FIRE'}  shape-chose-the-composition   H19`);
 
+  const h20 = H20(REAL);
+  for (const f of h20.out) fails.push(`H20 · ${f}`);
+  check(h20.checked > 0, 'H20 · no calibration render was checked, so the no-fallback control is untested');
+  console.log(`control H20 · every approved blueprint carried its whole class across ${h20.checked} calibration render(s)`);
+  /* TWO DRIVES, BECAUSE H20 REFUSES TWO DIFFERENT SHAPES OF THE SAME DEFECT: a class member the
+     approved rung cannot carry at all, and a realised rung that is not the declared one. */
+  const d20a = H20([{ ...b19, infeasible: true, why: 'a driven refusal' }]);
+  drives.push({ id: 'approved-rung-cannot-carry-its-class', control: 'H20', hit: d20a.out.length > 0, got: d20a.out.slice(0, 1) });
+  console.log(`  ${d20a.out.length ? '✓' : '✗ DID NOT FIRE'}  approved-rung-cannot-carry    H20`);
+  /* the driven rung has to be one the record does not already declare, or the drive proves nothing —
+     `b19` is the first calibration record, which is `supporting/tall` at `inset`, and driving it TO
+     `inset` was a no-op that read as a control that could not fail. */
+  const d20b = H20([{ ...b19, rows: b19.rows.map((r) => r.media
+    ? { ...r, rung: r.declared === 'full' ? 'inset' : 'full' } : r) }]);
+  drives.push({ id: 'realised-rung-is-not-the-declared-one', control: 'H20', hit: d20b.out.length > 0, got: d20b.out.slice(0, 1) });
+  console.log(`  ${d20b.out.length ? '✓' : '✗ DID NOT FIRE'}  realised-is-not-declared      H20`);
+
   const h15 = H15(REAL);
   for (const f of h15.out) fails.push(`H15 · ${f}`);
   check(h15.compared > 0, 'H15 · no surface/no-surface pair was compared, so the invariance control is untested');
@@ -1754,6 +1864,12 @@ refuses('workspace-without-a-designed-height', () => {
   BP.patterns['practice.workbook'].blueprints['workbook-5-7'].rows.desktop[1].vertical = 'hug';
 });
 refuses('select-outside-the-set', () => { BP.patterns['visual.compare'].select.desktop.portrait = 'something-else'; });
+refuses('media-row-with-two-rungs', () => {
+  /* THE REFUSAL THAT REMOVES THE RESOLVER. A media row that approves a second rung is a ladder the
+     object's own ratio can climb after its class has already chosen a composition. */
+  const r = BP.patterns['visual.explanation'].blueprints['spine-narrow'].rows.desktop.find((x) => x.media);
+  r.horizontal.spans = ['spine', 'expanded'];
+});
 refuses('unnamed-rhythm-step', () => {
   BP.patterns['worked.paired'].blueprints['cases-6-6'].rows.desktop[0].gapAfter = 'a-bit';
 });
