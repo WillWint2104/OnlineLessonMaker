@@ -1413,6 +1413,11 @@ const SCOPE = [
   /* interactive.primary — the 8/4 pair measured at +472px, replaced by a spine with the prompts beneath */
   { pid: 'interactive.primary', surface: 'desktop', bid: 'instrument-spine', key: 'primary/landscape',
     klass: 'landscape', name: 'I1__instrument-on-a-spine__prompts-beneath' },
+  /* notes — the default page. One left edge for all of it, including the illustration. */
+  { pid: 'notes', surface: 'desktop', bid: 'notes-inset', key: 'supporting/portrait',
+    klass: 'portrait', name: 'N1__notes-UPRIGHT-illustration__inset-4col' },
+  { pid: 'notes', surface: 'desktop', bid: 'notes-aside', key: 'supporting/wide',
+    klass: 'wide', name: 'N2__notes-WIDE-illustration__narrow-6col' },
   { pid: 'worked.single', surface: 'desktop', bid: 'flow', key: 'flow', klass: null,
     name: '2__prose-alone-stays-at-the-measure' },
   { pid: 'worked.paired', surface: 'desktop', bid: 'cases-6-6', key: 'any', klass: null,

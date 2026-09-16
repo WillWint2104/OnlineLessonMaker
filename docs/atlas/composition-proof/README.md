@@ -494,6 +494,58 @@ Routing a slot type into the frozen contract changes the contract's *reach*, not
 and the freeze was deliberate. This pattern is expressed with the existing `interactive` family and
 one declared rung, which renders and proves either way.
 
+## `notes` — the default page of a lesson
+
+One left edge for all of it, the illustration included.
+
+| | |
+| --- | --- |
+| `notes-inset` | `tall` · `portrait` · `balanced` — illustration at `inset` 4 |
+| `notes-aside` | `landscape` · `wide` · `panoramic` — illustration at `narrow` 6 |
+
+Rows: the brief pairs with the key ideas beside it (8/4 desktop, 5/3 tablet, **stacked on phone**,
+which approves no split at all), then the reading, the illustration, the examples and the synthesis,
+every prose region on the measure.
+
+### Prose beside prose pairs; an object beside prose does not
+
+This pattern is the converse case for the pairing rule, and it is worth the numbers:
+
+| pair | heights | plain | twice the prose |
+| --- | --- | --- | --- |
+| `notes/brief` — intro \| key ideas | both **written** | 4.05px | **111.69px** (tolerance 180) |
+| `interactive.primary/beside` — instrument \| prompts | **derived** \| written | — | **487.02px** (tolerance 160) |
+
+The objection was never "pairs are bad". It is specifically that an object whose height is *derived
+from its geometry* beside prose whose height is *however much someone wrote* has a gap that no width
+can fix. Two written heights move together, and `notes` shows them doing it.
+
+### The same shipping defect, a second time
+
+`notes/measure` runs intro 1–8 beside support 9–12, reading 1–8, **illustration 4–9**, examples 1–8,
+synthesis 1–8. Every prose region is anchored to the left edge and the illustration alone is
+**centred** on the twelve-column grid. Two alignment origins, again.
+
+`media.full/centred` does exactly this with its media. **Two patterns in the shipping catalogue
+independently centre their object over left-anchored prose**, which suggests a habit rather than a
+decision. Both are recorded rather than rendered, for the same reason: a blueprint declares one spine
+per surface, no rung on a left-edge axis resolves to columns 4–9, and faking it makes H2 fire for the
+encoding instead of the design.
+
+The fix is `notes-inset` — the illustration at `inset` 4 on the same left edge as the reading.
+
+### Admitting a class you have not rendered
+
+`notes` admits all six geometry classes while rendering three, and that is a **different kind of gap**
+from `interactive.primary`'s:
+
+- `interactive.primary` has **no frozen mapping for an instrument at all**, so admitting an unrendered
+  class would claim a composition nobody has designed.
+- `notes` uses `supporting`, and the frozen table already says what `supporting × class` gets for
+  every class. Selecting it is an *application* of a decision already made, not a new claim. What is
+  missing is a **picture**: the permanent image fixtures are 0.75:1, 1.0:1 and 1.78:1, so tall,
+  landscape and panoramic illustrations are **unrendered rather than unclaimed**.
+
 ## The figure surface (treatment A)
 
 ```

@@ -339,6 +339,560 @@
     "ruling": "A. Measured and rendered both; B rejected for the reason recorded against it."
   },
   "patterns": {
+    "notes": {
+      "intent": "Teaching notes: an explanation, optionally a rule set apart, optionally a set of equivalent worked examples. The default page of a lesson.",
+      "mediaSlot": "illustration",
+      "slotFit": "contain",
+      "selectBy": [
+        "presentationRole",
+        "mediaGeometry"
+      ],
+      "admits": {
+        "roles": [
+          "supporting"
+        ],
+        "classes": [
+          "tall",
+          "portrait",
+          "balanced",
+          "landscape",
+          "wide",
+          "panoramic"
+        ],
+        "one role": "AN ILLUSTRATION IN A PAGE OF NOTES IS SUPPORTING BY CONSTRUCTION. The slot is `optional-collapse` — the page is complete without it — and a page whose object is explanatory or primary is `visual.explanation` or `media.full`, which is what those patterns are for.",
+        "all six classes, though only three are RENDERED": "AND THAT IS A DIFFERENT KIND OF GAP FROM `interactive.primary`'s. There, no frozen mapping exists for an instrument at all, so admitting an unrendered class would be claiming a composition nobody has designed. Here the frozen table already says what `supporting × class` gets for every class, so selecting it is an APPLICATION of a decision already made, not a new claim. What is missing is a PICTURE: the permanent image fixtures are 0.75:1, 1.0:1 and 1.78:1, which land in `portrait`, `balanced` and `wide`, so tall, landscape and panoramic illustrations are unrendered rather than unclaimed."
+      },
+      "blueprints": {
+        "notes-inset": {
+          "role": "supporting",
+          "title": "notes with an upright illustration — `inset` 4 on the reading's own left edge",
+          "why": "THE DEFAULT PAGE, AND ONE AXIS FOR ALL OF IT. The brief pairs with the key ideas beside it, the reading and the examples return to the measure, and the illustration takes the `inset` rung that `supporting` approves for an upright object — on the SAME LEFT EDGE as everything else. The shipping subdesign centres it instead, which is the defect recorded below.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "brief",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "8/4",
+                  "regions": [
+                    "intro",
+                    "support"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "an explanation beside the key ideas it establishes — two PROSE regions, both written"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "inset"
+                  ],
+                  "preferred": "inset"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "brief",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "5/3",
+                  "regions": [
+                    "intro",
+                    "support"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "an explanation beside the key ideas it establishes — two PROSE regions, both written"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "inset"
+                  ],
+                  "preferred": "inset"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "notes-aside": {
+          "role": "supporting",
+          "title": "notes with a wider illustration — `narrow` 6, same left edge",
+          "why": "THE SAME PAGE FOR AN OBJECT THAT IS WIDER THAN IT IS TALL. Four columns would make a landscape or panoramic illustration a sliver, so `supporting` approves six for those classes — still visibly narrower than the 760px reading it supports, which is what keeps it subordinate.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "brief",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "8/4",
+                  "regions": [
+                    "intro",
+                    "support"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "an explanation beside the key ideas it establishes — two PROSE regions, both written"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "brief",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "5/3",
+                  "regions": [
+                    "intro",
+                    "support"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "an explanation beside the key ideas it establishes — two PROSE regions, both written"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "supporting": {
+            "tall": "notes-inset",
+            "portrait": "notes-inset",
+            "balanced": "notes-inset",
+            "landscape": "notes-aside",
+            "wide": "notes-aside",
+            "panoramic": "notes-aside"
+          }
+        },
+        "tablet": {
+          "supporting": {
+            "tall": "notes-inset",
+            "portrait": "notes-inset",
+            "balanced": "notes-inset",
+            "landscape": "notes-aside",
+            "wide": "notes-aside",
+            "panoramic": "notes-aside"
+          }
+        },
+        "phone": {
+          "supporting": {
+            "tall": "notes-inset",
+            "portrait": "notes-inset",
+            "balanced": "notes-inset",
+            "landscape": "notes-aside",
+            "wide": "notes-aside",
+            "panoramic": "notes-aside"
+          }
+        }
+      },
+      "withdrawn": {
+        "measure-centred-illustration": {
+          "_": "THE SHIPPING `notes/measure` SUBDESIGN, AND IT IS THE SECOND INSTANCE OF THE SAME DEFECT. Its areas run intro 1–8 beside support 9–12, reading 1–8, ILLUSTRATION 4–9, examples 1–8, synthesis 1–8. Every prose region is anchored to the left edge and the illustration alone is CENTRED on the twelve-column grid, so the page has two alignment origins.",
+          "sameAs": "`media.full/centred` does exactly this with its media. Two patterns in the shipping catalogue independently centre their object over left-anchored prose, which suggests it was a habit rather than a decision.",
+          "whyItIsNotRendered": "Same reason as `media.full/centred`: a blueprint declares ONE spine per surface, and no rung on a left-edge axis resolves to columns 4–9. The composition is INEXPRESSIBLE under the contract, which is the finding. Faking it — by writing the row as a pair with a null sibling — makes H2 fire for the encoding rather than the design, and a counterexample that fails for the wrong reason proves nothing.",
+          "theFix": "`notes-inset`: the illustration at `inset` 4 on the same left edge as the reading."
+        }
+      }
+    },
     "visual.explanation": {
       "intent": "One primary visual and the reading of it, where the READING carries the teaching.",
       "mediaSlot": "media",

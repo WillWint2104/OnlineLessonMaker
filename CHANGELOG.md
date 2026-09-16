@@ -8,6 +8,27 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **`notes` expressed as composition blueprints, and the shipping two-origin defect found a second
+  time** (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change).
+  `notes-inset` (illustration at `inset` 4, for tall/portrait/balanced) and `notes-aside` (`narrow` 6,
+  for landscape/wide/panoramic), both on a left-edge spine with every prose region on the measure. The
+  brief pairs with the key ideas on desktop and tablet and **stacks on phone**, which approves no
+  split at all.
+  - **Prose beside prose pairs; an object beside prose does not.** `notes/brief` measures 4.05px apart
+    plain and 111.69px at twice the prose, against a declared 180px tolerance — where
+    `interactive.primary/beside` measures 487.02px against 160px. The pairing rule's objection was
+    never "pairs are bad": it is that a height *derived from geometry* beside a height *someone wrote*
+    has a gap no width can fix. Two written heights move together, and this is the demonstration.
+  - **`notes/measure` centres its illustration (columns 4–9) over left-anchored prose (1–8)** — the
+    same two-origin defect as `media.full/centred`, in a second pattern. Two patterns in the shipping
+    catalogue independently centre their object over left-anchored prose, which suggests a habit
+    rather than a decision. Recorded rather than rendered, for the same reason as before.
+  - **Admitting a class you have not rendered, distinguished from claiming one.** `notes` admits all
+    six classes while rendering three, and says why that differs from `interactive.primary`: there no
+    frozen mapping for an instrument exists, so an unrendered class would be an unclaimed composition;
+    here the frozen table already says what `supporting × class` gets, so selection is an application
+    of a decision already made and what is missing is a picture. The image fixtures are 0.75:1, 1.0:1
+    and 1.78:1, so tall, landscape and panoramic illustrations are unrendered, not unclaimed.
 - **`interactive.primary` expressed as a composition blueprint** (`docs/atlas/composition-proof/`,
   `scripts/composition-proof-atlas.mjs`; no app change). `instrument-spine`: intro, the instrument at
   `wide` 10, the prompts and the synthesis, all on one centred axis. This is the arrangement the
