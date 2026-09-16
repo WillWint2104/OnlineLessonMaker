@@ -145,6 +145,9 @@ contract.
 | **H13** | the plot, the caption or a media-local control sits outside the figure surface |
 | **H14** | the plane is painted at a size other than the one it was solved for, or its units stop being equal |
 | **H15** | turning the surface on changes the blueprint, spine, cardinality, rung or split |
+| **H16** | the caption is rendered inside the plot rather than on the surface |
+| **H17** | the plot's own chrome moves the figure surface or changes the composition |
+| **H18** | the same authored blueprint has a different structural identity on another surface |
 
 Ten more are refused at the table before anything renders: a blueprint with no spine; a rung whose
 page margin cannot be symmetric on a centred axis; a rung outside the region's span family; prose
@@ -161,85 +164,99 @@ unapproved blueprint; an unnamed rhythm step.
   chrome, so the support region rendered with the board's legend styles. Found by looking at the
   picture, not by a control.
 
-## The figure surface — proposed, not enabled
+## The figure surface — adopted (treatment A)
 
-`figureSurface.enabled: false`. Both treatments are rendered for comparison and **neither is frozen**.
-
-Both successful pages were structurally correct and neither said clearly enough that the graph, its
-caption and its graph-local controls are **one visual object**, separate from the prose that
-interprets it. The separation existed in the blueprint and not in the courseware.
-
-The surface is a **presentation primitive owned by the media region, applied after layout has
-resolved**:
+`figureSurface.enabled: true`, `treatment: "A"`. **The concept is adopted; the exact dimensions are
+not frozen.** What treatment A proved is the ownership model, not that 760px is the right width for
+a graph:
 
 ```
-blueprint/grid → row cardinality → solo rung / paired / workspace → realised media geometry
-              → figureSurface { figure · local controls · caption }
+blueprint → media region → figure surface → plot
 ```
 
-It is not a resolver, not an occupancy mechanism, not a new grid owner, not a way to fill dead
-space, not permission to stretch a media object, and not permission to convert a bad pair into a
-good one. Four controls hold it to that.
+The blueprint owns the region. The surface consumes the region. The plot is solved *inside* the
+surface, preserving the mathematics.
 
-### Three boundaries, kept apart
+**Treatment B is rejected and kept as a counterexample** (`X__treatment-B__REJECTED`). Shrink-wrapping
+the surface to the plot puts the plate at **564px — exactly the width of the six-column reading spine
+below it** — so the composition says eight columns while the eye still sees six. That is the
+disconnect the whole architecture exists to remove, and it is the same under-realisation H11 rejects
+at the row level. B also forces the slot to `contain`, because under `fill` a surface narrower than
+its region is the defect the contract was built to catch.
 
-| | boundary | what it decides |
+### Four boundaries, independently inspectable
+
+| | boundary | what it is |
 | --- | --- | --- |
-| **1** | **region** | the grid columns the blueprint assigned — where the object may exist |
-| **2** | **surface** | visually groups the media, its caption and its media-local controls |
-| **3** | **plot** | the mathematical coordinate plane, which the surface never touches |
+| **1** | **region** | the grid columns the blueprint assigned |
+| **2** | **surface** | the complete visual object occupying that geometry |
+| **3** | **plot** | the mathematical drawing |
+| **4** | **caption** | describes the whole media object — **owned by the surface** |
 
-The overlay draws all three as three separate boxes, and adds a **sixth** space to the legend:
+A surface may contain intentional internal whitespace. That whitespace is owned by the media object
+and is categorically different from unused grid columns in the composition — the legend's sixth
+entry.
 
-> **6 · internal figure-surface space** — width left over *inside* an owned surface. Intentional and
-> valid. It is not the old defect: empty grid columns in an **active row** are unowned composition
-> space and stay invalid.
+### The caption belongs to the surface
 
-### The A/B question, measured
+The plot is the mathematical drawing; the caption describes the **complete media object**. The graph
+engine may supply the content, and the surface renders and owns it. Any `tp-fig-cap` the engine emits
+inside the plot is lifted out and rendered on the surface, and **H16** fails a caption found inside
+the plot. This is what generalises to images, diagrams, videos and interactives, which then all share
+one contract:
 
-| | surface | plane | solved | units | region |
+```
+surface header · media payload · local controls · caption
+```
+
+## Slot width and plot size are different decisions
+
+The separation the catalogue now keeps explicit:
+
+- **blueprint span** — how much page geometry the media owns;
+- **surface** — the complete visual object occupying that geometry;
+- **plot realisation** — how the graph uses the surface while preserving scale and labels;
+- **presentation role** — what the object is *for*.
+
+**The role is authored and never inferred.** The renderer may choose between the responsive forms of
+an authored blueprint; it may not read available space, prose length or occupancy and conclude that a
+visual is important.
+
+### The same portrait graph, three approved compositions
+
+Three *different named blueprints*, not one blueprint with a size calculation:
+
+| role | blueprint | rung | surface | plot | unit scale |
 | --- | --- | --- | --- | --- | --- |
-| **A** portrait, expanded | 760 × 998 | 722 × 906 | 722 × 906 | 62.67 / 62.65 | 760 (0px unclaimed) |
-| **B** portrait, expanded | 564 × 763 | 526 × 671 | 526 × 671 | 45.50 / 45.56 | 760 (196px slot residue) |
-| **A** wide, full | 1152 × 601 | 1114 × 509 | 1114 × 509 | 41.20 / 41.02 | 1152 (0px) |
-| **B** wide, full | 956 × 521 | 918 × 429 | 918 × 429 | 33.99 / 33.92 | 1152 (196px) |
+| **supporting** | `spine-supporting` | `inset` 4 col | 368 × 528 | 330 × 436 | 28.55 / 28.49 |
+| **explanatory** | `spine-narrow` | `expanded` 8 col | 760 × 998 | 722 × 906 | 62.67 / 62.65 |
+| **primary** | `stage-primary` | `full` 12 col | 1152 × 1469 | 1114 × 1377 | 96.77 / 96.82 |
 
-**A is the better treatment, and the reason is structural rather than a preference.** Under B the
-plate ends up 564px — *exactly the width of the six-column reading spine below it* — so the page
-reads as the six-column page again. **B re-creates, at the object level, the under-realisation that
-H11 exists to reject at the row level:** the row still realises `expanded`, H11 still passes, and
-the eye still sees six columns. B also forces the slot to `contain`, because under `fill` a surface
-narrower than its region is the defect the contract was built to catch.
+A primary visual is *allowed* to be 1469px tall, because the page exists substantially to explain it
+and the page scrolls. A small supporting graph uses a **different approved blueprint**, not a tiny
+graph inside the eight-column one. The span family is keyed by geometry **and role**:
+`media.portrait.supporting → [inset]`, `.explanatory → [expanded]`, `.primary → [wide, full]`.
 
-Under A the region reads as deliberately occupied, the plane keeps its own correct geometry, and the
-38px left over is internal surface space inside an object the composition already owns.
+### The same blueprint across surfaces
 
-### What H14 caught on the first run
+| | blueprint | role | rung | surface | plot |
+| --- | --- | --- | --- | --- | --- |
+| desktop | `spine-narrow` | explanatory | `expanded` 8 | 760 × 998 | 722 × 906 |
+| tablet | `spine-narrow` | explanatory | `expanded` 8 | 834 × 1087 | 796 × 995 |
+| phone | `spine-narrow` | explanatory | `spine` 4 | 382 × 545 | 344 × 453 |
 
-The first build solved the plane for the **region** width and let the surface clamp it afterwards —
-760px of plane squeezed into 722px of container, painting **62.57px per x-unit against 65.94 per
-y-unit**. The mathematics was distorted by a border. H14 caught it immediately.
+The rungs differ — that is what a responsive form *is*. **H18** requires the blueprint, its role and
+its rows (ids, cardinality, modes) to be identical across all three.
 
-The fix is the principle: **the plane is solved for the width it actually has**, region minus the
-surface's declared chrome. The chrome is now a declared number in `blueprints.json` rather than a
-CSS coincidence, and H14 asks the direct question — is the plane painted at the size it was solved
-for? — rather than comparing two renders' aspect ratios to each other. That first version was
-mis-calibrated: a re-solved plane re-rounds its axis-label chrome, so the two aspects differed by
-1.8% for entirely legitimate reasons.
+### Plot chrome cannot reach the composition
 
-### The rejections all survive a border
+`P__plot-chrome-cannot-move-the-surface` renders `spine-narrow` with the plot's own axis labels at
+21px bold instead of the authored size. The blueprint span is still eight columns, the surface is
+still **760 × 998**, and the plot is still the **722 × 906** that was solved. **H17** compares the two
+renders; its drive is a surface sized by its content instead of by its region, which is exactly how
+chrome would otherwise reach the grid.
 
-| board | still fails |
-| --- | --- |
-| **C** `half-row-with-a-surface` | **H2** — columns 7–12 of an active row are declared by nothing, and a border cannot buy them |
-| **D** `side-study-with-a-surface` | **H4** — the siblings still terminate 535.5px apart; a container does not fix a relationship |
-
-**E** `practice.workbook` keeps its designed 5/7 workspace relationship — the surface groups the
-reference and the ladder still does not touch the row. **F** `worked.paired` gets **no** surface:
-two related *textual* regions already read correctly, and this is a media boundary, not a
-put-everything-in-cards direction.
-
-## Deliberately not done
+## Deliberately not done## Deliberately not done
 
 - **No sweep.** `visual.compare` and the remaining `visual.explanation` blueprints are migrated to
   the solo/paired schema so the build stays whole; they are not re-rendered or re-approved.

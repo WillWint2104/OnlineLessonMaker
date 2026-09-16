@@ -8,6 +8,39 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **The figure surface adopted, and presentation role separated from slot width**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue). `figureSurface.enabled: true`, treatment A. **The concept is adopted; the
+  exact dimensions are not.** What A proved is the ownership model — `blueprint → media region → figure
+  surface → plot` — not that 760px is the right width for a graph.
+  - **Treatment B is rejected and kept as a counterexample.** Shrink-wrapping the surface to the plot
+    puts the plate at 564px, exactly the width of the six-column reading spine beneath it, so the
+    composition says eight columns while the eye still sees six — the same under-realisation H11 rejects
+    at the row level.
+  - **SLOT WIDTH AND PLOT SIZE ARE DIFFERENT DECISIONS.** The catalogue now keeps four things separate:
+    blueprint span (how much geometry the media owns) · surface (the complete visual object) · plot
+    realisation (how the graph uses it while preserving scale) · **presentation role** (what the object is
+    FOR). The role is AUTHORED and never inferred: the renderer may pick between the responsive forms of
+    an authored blueprint, never read available space and conclude that a visual is important.
+  - **The same portrait graph now takes three different named blueprints**, not one blueprint with a size
+    calculation: `spine-supporting` at the new `inset` rung (368×528 surface), `spine-narrow` at
+    `expanded` (760×998) and `stage-primary` at `full` (1152×1469, and allowed to be that tall because the
+    page exists to explain it). The span family is keyed by geometry AND role.
+  - **The caption belongs to the figure surface, not the plot.** The engine may supply the content; the
+    surface renders and owns it, and any `tp-fig-cap` emitted inside the plot is lifted out. That is what
+    generalises to images, diagrams, videos and interactives — surface header · media payload · local
+    controls · caption. **H16** fails a caption found inside the plot.
+  - **H17** the plot's own chrome may not move the surface or the span — proved by rendering the same
+    blueprint with 21px bold axis labels and measuring an identical 760×998 surface and 722×906 plot.
+    **H18** the same authored blueprint keeps its blueprint, role and rows across desktop, tablet and
+    phone; only the rungs differ.
+  - The overlay now draws **four** boundaries — region, surface, plot, caption — each independently
+    inspectable, alongside the six space classifications.
+  - Two of my own regressions caught by the run: a blanket namespace rename had turned the overlay's
+    `data-cp-proof` selector into `data-pf-board` while the markup emitted the original, and the
+    surface/no-surface invariance key omitted the viewport, so a phone baseline was being compared
+    against a desktop render.
+
 - **A semantic figure surface, prototyped and NOT enabled** (`docs/atlas/composition-proof/`,
   `scripts/composition-proof-atlas.mjs`, no app change, nothing wired into the shipping catalogue).
   `figureSurface.enabled: false` — both candidate treatments are rendered for comparison and neither is

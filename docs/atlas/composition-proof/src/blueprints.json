@@ -22,18 +22,21 @@
   "soloLadder": {
     "_": "THE APPROVED SPAN POSITIONS FOR A ROW HOLDING ONE REGION. Design-system positions, not measurements: no 683px, no 717px, no 58% occupancy. `spine` resolves to the blueprint's own spine span.",
     "desktop": {
+      "inset": 4,
       "spine": null,
       "expanded": 8,
       "wide": 10,
       "full": 12
     },
     "tablet": {
+      "inset": 4,
       "spine": null,
       "expanded": 8,
       "wide": 8,
       "full": 8
     },
     "phone": {
+      "inset": 4,
       "spine": null,
       "expanded": 4,
       "wide": 4,
@@ -59,18 +62,67 @@
       "spine",
       "expanded"
     ],
-    "media.portrait": [
+    "_roles": "A MEDIA REGION'S FAMILY IS KEYED BY ITS GEOMETRY AND ITS AUTHORED PRESENTATION ROLE. The role is not a size and it is not inferred: it says what the object is FOR, and each role approves a different handful of rungs. A supporting graph and a primary graph are different blueprints, not the same blueprint with a size calculation.",
+    "media.portrait.supporting": [
+      "inset"
+    ],
+    "media.portrait.explanatory": [
       "expanded"
     ],
-    "media.balanced": [
+    "media.portrait.primary": [
+      "wide",
+      "full"
+    ],
+    "media.balanced.supporting": [
+      "inset"
+    ],
+    "media.balanced.explanatory": [
       "expanded",
       "wide"
     ],
+    "media.balanced.primary": [
+      "wide",
+      "full"
+    ],
+    "media.landscape.supporting": [
+      "spine"
+    ],
+    "media.landscape.explanatory": [
+      "wide",
+      "full"
+    ],
+    "media.landscape.primary": [
+      "full"
+    ],
+    "media.wide.supporting": [
+      "spine"
+    ],
+    "media.wide.explanatory": [
+      "wide",
+      "full"
+    ],
+    "media.wide.primary": [
+      "full"
+    ],
+    "media.portrait": [
+      "inset",
+      "expanded",
+      "wide",
+      "full"
+    ],
+    "media.balanced": [
+      "inset",
+      "expanded",
+      "wide",
+      "full"
+    ],
     "media.landscape": [
+      "spine",
       "wide",
       "full"
     ],
     "media.wide": [
+      "spine",
       "wide",
       "full"
     ],
@@ -114,14 +166,32 @@
     },
     "rule": "Every row but the last declares `gapAfter`; a gap may declare `gapWithin` to sit inside one region's columns."
   },
+  "presentationRoles": {
+    "_": "AUTHORED, NEVER INFERRED. The renderer may choose between the responsive forms of an authored blueprint; it may never read available space, prose length or occupancy and conclude that a visual is important. Pedagogical weight is a thing an author says.",
+    "supporting": "a visual that supports a reading it does not carry. Deliberately small, centred on the same axis as the reading.",
+    "explanatory": "the ordinary case: the object and the reading of it share the page, and the reading carries the teaching.",
+    "primary": "the page exists substantially to explain this object. It may be very large and very tall, because the page scrolls and height is not itself a defect.",
+    "workspace": "a surface the learner acts on. Its height is designed, not derived.",
+    "theSeparation": [
+      "blueprint span = how much page geometry the media owns",
+      "surface = the complete visual object occupying that geometry",
+      "plot realisation = how the graph uses the surface while preserving scale and labels",
+      "presentation role = what the object is FOR, authored"
+    ]
+  },
   "golden": [
     "visual.explanation/spine-narrow",
     "worked.paired/cases-6-6"
   ],
   "figureSurface": {
     "_": "A SEMANTIC PRESENTATION PRIMITIVE OWNED BY THE MEDIA REGION, PROPOSED AND NOT ENABLED. It is applied AFTER layout has resolved and it decides nothing about width or composition. Both treatments below are rendered for comparison; neither is frozen.",
-    "enabled": false,
-    "proposed": true,
+    "enabled": true,
+    "treatment": "A",
+    "adopted": "THE CONCEPT IS ADOPTED; THE EXACT DIMENSIONS ARE NOT FROZEN. What treatment A proved is the ownership model — blueprint → media region → figure surface → plot — not that 760px is the right width for a graph. The width comes from the blueprint span, which comes from the authored presentation role and the media geometry.",
+    "caption": {
+      "owner": "surface",
+      "_": "THE CAPTION BELONGS TO THE FIGURE SURFACE, NOT TO THE PLOT. The plot is the mathematical drawing; the caption describes the COMPLETE MEDIA OBJECT. The graph engine may supply the content, and the surface renders and owns it. This is what generalises to images, diagrams, videos and interactives, which then all share: surface header · media payload · local controls · caption."
+    },
     "theProblem": "Both successful pages are structurally correct and neither says clearly enough that the graph, its caption and its graph-local controls are ONE VISUAL OBJECT, separate from the prose that interprets it. The separation exists in the blueprint and is not obvious in the courseware.",
     "whereItSits": "blueprint/grid → row cardinality → solo rung / paired / workspace → realised media geometry → figureSurface { figure · local controls · caption }. It is the LAST step and it is presentation only.",
     "isNot": [
@@ -160,6 +230,8 @@
         "fit": "fill — the SURFACE consumes the region and the plane keeps its geometry inside it"
       },
       "B": {
+        "rejected": true,
+        "rejectedBecause": "It recreates the old six-column visual footprint inside a nominally wider composition: the plate lands at 564px, exactly the width of the six-column reading spine below it, so the composition says eight columns while the eye still sees six. Kept as a counterexample.",
         "title": "surface shrink-wrapped to the mathematical plane",
         "surface": "the plane width plus chrome",
         "plot": "solved at the row's NEXT RUNG DOWN",
@@ -167,19 +239,168 @@
         "_": "A surface that hugs a plane solved for the region width is just treatment A, so B is only a real alternative when the plane keeps a NARROWER correct geometry: it is solved at the other rung the row approves, and the surface wraps that."
       }
     },
-    "expectation": "A is expected to read better, because the media region then reads as deliberately occupied while the plane keeps its correct geometry. MEASURED AND RENDERED BOTH BEFORE FREEZING."
+    "ruling": "A. Measured and rendered both; B rejected for the reason recorded against it."
   },
   "patterns": {
     "visual.explanation": {
       "intent": "One primary visual and the reading of it, where the READING carries the teaching.",
       "mediaSlot": "media",
       "slotFit": "fill",
-      "selectBy": "mediaGeometry",
+      "selectBy": [
+        "presentationRole",
+        "mediaGeometry"
+      ],
       "blueprints": {
+        "spine-supporting": {
+          "role": "supporting",
+          "title": "a supporting visual — centred `inset`, the reading beside nothing and beneath it",
+          "why": "A SUPPORTING VISUAL IS A DIFFERENT BLUEPRINT, NOT A SMALLER CALCULATION. The object takes the `inset` rung — four columns — centred on the same axis as the reading it supports, so the page still has one centre line and the object still reads as deliberately placed. Nothing measured chose four columns: the author said this visual is supporting, and supporting portrait media approves exactly one rung.",
+          "role_": "supporting",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 6
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "inset"
+                  ],
+                  "preferred": "inset"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "inset"
+                  ],
+                  "preferred": "inset"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
         "spine-narrow": {
           "golden": true,
-          "title": "centred spine 6 · media solo at `expanded` · reading back on the spine",
-          "why": "FROZEN, AND CORRECTED. The page still has ONE centred axis and the reading still sits on the six-column spine. What changed is that the media row is now a SOLO row with its own approved span ladder: it may take the spine (6) or `expanded` (8), and it PREFERS `expanded`. Being the only substantive object in its row is a reason to use more of the surface, not a licence to invent a width — 8 is a named position in the ladder, and the resulting extra height is legal because the page scrolls. The graph keeps equal unit scale at either rung.",
+          "role": "explanatory",
+          "title": "the standard explanatory visual — centred spine 6, media solo at `expanded`",
+          "why": "THE ORDINARY EXPLANATORY CASE. The object takes eight columns — the `expanded` rung — and the reading returns to the six-column spine beneath it. One centre line, page margin either side, and the plane solved for the room inside the surface. This is what treatment A proved; what it proved is the OWNERSHIP MODEL, not that 760px is the right width for a graph.",
           "spine": {
             "desktop": {
               "align": "centre",
@@ -188,6 +409,10 @@
             "tablet": {
               "align": "centre",
               "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
             }
           },
           "rows": {
@@ -274,75 +499,16 @@
                 "vertical": "hug",
                 "region": "support"
               }
-            ]
-          }
-        },
-        "spine-reading": {
-          "title": "centred spine 8 · media solo at `wide`",
-          "why": "A balanced object is short enough to reach ten columns without becoming a wall; the reading returns to the measure beneath it.",
-          "spine": {
-            "desktop": {
-              "align": "centre",
-              "span": 8
-            },
-            "tablet": {
-              "align": "centre",
-              "span": 6
-            }
-          },
-          "rows": {
-            "desktop": [
-              {
-                "id": "media",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "expanded",
-                    "wide"
-                  ],
-                  "preferred": "wide"
-                },
-                "vertical": "hug",
-                "region": "media",
-                "gapAfter": "section",
-                "media": true
-              },
-              {
-                "id": "interpretation",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "interpretation",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "support",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "support"
-              }
             ],
-            "tablet": [
+            "phone": [
               {
                 "id": "media",
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine",
-                    "full"
+                    "spine"
                   ],
-                  "preferred": "full"
+                  "preferred": "spine"
                 },
                 "vertical": "hug",
                 "region": "media",
@@ -377,9 +543,10 @@
             ]
           }
         },
-        "stage-full": {
-          "title": "centred spine 8 · media solo at `full`",
-          "why": "A WIDE OBJECT ALONE IN ITS ROW TAKES THE GRID. It is short by construction, so the whole twelve columns cost no height worth saving, and the reading stays at the measure beneath it on the same axis.",
+        "stage-primary": {
+          "role": "primary",
+          "title": "the primary visual — the page exists to explain this object",
+          "why": "A PRIMARY VISUAL MAY BE VERY LARGE AND VERY TALL, because the page exists substantially to explain it and the page scrolls. That is an AUTHORED decision: the renderer never infers pedagogical importance from available space. The object takes the whole grid and the reading stays at the measure beneath it.",
           "spine": {
             "desktop": {
               "align": "centre",
@@ -388,6 +555,10 @@
             "tablet": {
               "align": "centre",
               "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
             }
           },
           "rows": {
@@ -474,19 +645,299 @@
                 "vertical": "hug",
                 "region": "support"
               }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
             ]
           }
         },
-        "stack": {
-          "title": "the phone stack",
-          "why": "One column. The ladder collapses to a single rung and every row is the surface.",
+        "spine-reading": {
+          "role": "explanatory",
+          "title": "centred spine 8 · media solo at `wide`",
+          "why": "The explanatory case for a balanced object, which is short enough to reach ten columns.",
           "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
             "phone": {
               "align": "left-edge",
               "span": 4
             }
           },
           "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "expanded",
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "stage-full": {
+          "role": "explanatory",
+          "title": "centred spine 8 · media solo at `full`",
+          "why": "The explanatory case for an object that is short by construction, so the whole grid costs no height worth saving.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide",
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
             "phone": [
               {
                 "id": "media",
@@ -533,28 +984,71 @@
       },
       "select": {
         "desktop": {
-          "portrait": "spine-narrow",
-          "balanced": "spine-reading",
-          "landscape": "spine-reading",
-          "wide": "stage-full"
+          "supporting": {
+            "portrait": "spine-supporting",
+            "balanced": "spine-supporting",
+            "landscape": "spine-supporting",
+            "wide": "spine-supporting"
+          },
+          "explanatory": {
+            "portrait": "spine-narrow",
+            "balanced": "spine-reading",
+            "landscape": "spine-reading",
+            "wide": "stage-full"
+          },
+          "primary": {
+            "portrait": "stage-primary",
+            "balanced": "stage-primary",
+            "landscape": "stage-full",
+            "wide": "stage-full"
+          }
         },
         "tablet": {
-          "portrait": "spine-narrow",
-          "balanced": "spine-reading",
-          "landscape": "spine-reading",
-          "wide": "stage-full"
+          "supporting": {
+            "portrait": "spine-supporting",
+            "balanced": "spine-supporting",
+            "landscape": "spine-supporting",
+            "wide": "spine-supporting"
+          },
+          "explanatory": {
+            "portrait": "spine-narrow",
+            "balanced": "spine-reading",
+            "landscape": "spine-reading",
+            "wide": "stage-full"
+          },
+          "primary": {
+            "portrait": "stage-primary",
+            "balanced": "stage-primary",
+            "landscape": "stage-full",
+            "wide": "stage-full"
+          }
         },
         "phone": {
-          "portrait": "stack",
-          "balanced": "stack",
-          "landscape": "stack",
-          "wide": "stack"
+          "supporting": {
+            "portrait": "spine-supporting",
+            "balanced": "spine-supporting",
+            "landscape": "spine-supporting",
+            "wide": "spine-supporting"
+          },
+          "explanatory": {
+            "portrait": "spine-narrow",
+            "balanced": "spine-reading",
+            "landscape": "spine-reading",
+            "wide": "stage-full"
+          },
+          "primary": {
+            "portrait": "stage-primary",
+            "balanced": "stage-primary",
+            "landscape": "stage-full",
+            "wide": "stage-full"
+          }
         }
       },
       "withdrawn": {
         "side-study": {
+          "role": "explanatory",
           "title": "media-5 + explanation-7",
-          "why": "WITHDRAWN, AND KEPT AS EVIDENCE. Its row owns all twelve columns and the page still looks wrong: the object and the reading beside it terminate ~535px apart against the 160px it declared. A wider graph would not fix that, because the defect is the termination, not the width. Complete column ownership is NECESSARY AND NOT SUFFICIENT, and neither is a generous span.",
+          "why": "WITHDRAWN, AND KEPT AS EVIDENCE. Its row owns all twelve columns and the page still looks wrong: the object and the reading beside it terminate ~535px apart against the 160px it declared. A wider graph would not fix that, and neither would a border.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -806,6 +1300,7 @@
           }
         },
         "compare-shared-centred": {
+          "role": "explanatory",
           "title": "cases 6/6 · media solo at `expanded`",
           "why": "A shared visual on the seam.",
           "spine": {
@@ -967,6 +1462,7 @@
           }
         },
         "compare-shared-full": {
+          "role": "explanatory",
           "title": "cases 6/6 · media solo at `full`",
           "why": "The same, with a short object.",
           "spine": {
@@ -1128,6 +1624,7 @@
           }
         },
         "stack": {
+          "role": "explanatory",
           "title": "the phone stack",
           "why": "The phone reference.",
           "spine": {
@@ -1948,6 +2445,7 @@
       "selectBy": "surface",
       "blueprints": {
         "workbook-5-7": {
+          "role": "workspace",
           "unchangedBy": "the solo-span layer — its central rows are designed 5/7 relationships, not solo rows",
           "title": "intro solo · reference-5 over questions-5 · workspace-7 spanning both",
           "why": "UNCHANGED. Its central working rows each hold TWO meaningful semantic regions in a designed 5/7 relationship, so the solo ladder does not apply to them and the reference is not widened. Only the intro is solo, and it stays at the measure. The workspace row is `vertical: designed` — its height is a design decision, not a derivation — which is now stated separately from its horizontal mode.",
@@ -2054,6 +2552,7 @@
           }
         },
         "workbook-stacked": {
+          "role": "workspace",
           "title": "the phone stack",
           "why": "The workspace follows the worklist.",
           "spine": {
