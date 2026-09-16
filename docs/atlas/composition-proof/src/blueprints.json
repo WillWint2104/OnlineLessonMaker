@@ -3043,13 +3043,32 @@
       "intent": "Two cases worked side by side, with an optional visual that belongs to both.",
       "mediaSlot": "media",
       "slotFit": "fill",
-      "selectBy": "mediaGeometry",
-      "notReapproved": "migrated to the solo/paired schema so the build stays whole; NOT re-rendered or re-approved.",
+      "selectBy": [
+        "presentationRole",
+        "mediaGeometry"
+      ],
+      "reapproved": "RE-EXPRESSED AND RE-RENDERED. It was schema-migrated twice — once to solo/paired and once to the six-class vocabulary — without anybody looking at it, and a migration is not an approval. It now selects by `presentationRole × geometryClass × surface` like every other media pattern, its phone form lives INSIDE each blueprint instead of in a separate one, and it is rendered.",
+      "admits": {
+        "roles": [
+          "explanatory"
+        ],
+        "classes": [
+          "none",
+          "tall",
+          "portrait",
+          "balanced",
+          "landscape",
+          "wide",
+          "panoramic"
+        ],
+        "one role": "A SHARED VISUAL BELONGS TO BOTH CASES; THE CASES ARE THE PAGE. That is the definition of `explanatory` — the object carries the explanation and the reading is the page's spine. A `primary` object would make this `media.full`, and a `supporting` one would not be worth the row.",
+        "none is a real authored state, not a hole": "`none` means the author wrote two cases and NO shared visual, which the shipping pattern already supports and which is the common case. It is listed as an admitted class so the select table is complete rather than silently short one entry — the whole point of `admits` is that a gap and a refusal stop looking alike."
+      },
       "blueprints": {
         "compare-plain": {
-          "title": "cases 6/6, no shared visual",
-          "why": "No shared visual.",
           "noMedia": true,
+          "title": "two cases, no shared visual",
+          "why": "THE COMMON CASE. Intro, the two cases at identical width, then the reading of them. Nothing is centred and nothing reaches for the grid: every prose region sits on the same left edge as the cases row begins on, and the 6/6 split owns all twelve columns between them.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -3248,10 +3267,10 @@
             ]
           }
         },
-        "compare-shared-centred": {
+        "compare-tall": {
           "role": "explanatory",
-          "title": "cases 6/6 · media solo at `expanded`",
-          "why": "A shared visual on the seam.",
+          "title": "two cases and a TALL shared visual — `narrow` 6",
+          "why": "A tall shared visual takes the rung `explanatory` approves for its class. Six columns, on the same left edge, beneath the cases it belongs to.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -3260,6 +3279,254 @@
             "tablet": {
               "align": "left-edge",
               "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "caseA",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseA",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "caseB",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseB",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "compare-measure": {
+          "role": "explanatory",
+          "title": "two cases and an UPRIGHT shared visual — `expanded` 8",
+          "why": "Portrait, balanced and landscape shared visuals take eight columns — the reading measure, and the spine this pattern is built on, so the object and the prose share both edges.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
             }
           },
           "rows": {
@@ -3405,13 +3672,93 @@
                 "vertical": "hug",
                 "region": "synthesis"
               }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "caseA",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseA",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "caseB",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseB",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
             ]
           }
         },
-        "compare-shared-full": {
+        "compare-wide": {
           "role": "explanatory",
-          "title": "cases 6/6 · media solo at `full`",
-          "why": "The same, with a short object.",
+          "title": "two cases and a WIDE shared visual — `wide` 10",
+          "why": "A wide plane is short by construction, so ten columns costs little height and lets the object belong visibly to both cases rather than to the column beneath one of them.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -3420,6 +3767,254 @@
             "tablet": {
               "align": "left-edge",
               "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "caseA",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseA",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "caseB",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseB",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "compare-panorama": {
+          "role": "explanatory",
+          "title": "two cases and a PANORAMIC shared visual — the full grid",
+          "why": "Past 2.5:1 width is nearly free, and a panorama read at ten columns is a band with margins rather than a panorama.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
             }
           },
           "rows": {
@@ -3565,20 +4160,7 @@
                 "vertical": "hug",
                 "region": "synthesis"
               }
-            ]
-          }
-        },
-        "stack": {
-          "role": "explanatory",
-          "title": "the phone stack",
-          "why": "The phone reference.",
-          "spine": {
-            "phone": {
-              "align": "left-edge",
-              "span": 4
-            }
-          },
-          "rows": {
+            ],
             "phone": [
               {
                 "id": "intro",
@@ -3664,31 +4246,37 @@
       },
       "select": {
         "desktop": {
-          "none": "compare-plain",
-          "tall": "compare-shared-centred",
-          "portrait": "compare-shared-centred",
-          "balanced": "compare-shared-centred",
-          "landscape": "compare-shared-full",
-          "wide": "compare-shared-full",
-          "panoramic": "compare-shared-full"
+          "explanatory": {
+            "none": "compare-plain",
+            "tall": "compare-tall",
+            "portrait": "compare-measure",
+            "balanced": "compare-measure",
+            "landscape": "compare-measure",
+            "wide": "compare-wide",
+            "panoramic": "compare-panorama"
+          }
         },
         "tablet": {
-          "none": "compare-plain",
-          "tall": "compare-shared-centred",
-          "portrait": "compare-shared-centred",
-          "balanced": "compare-shared-centred",
-          "landscape": "compare-shared-full",
-          "wide": "compare-shared-full",
-          "panoramic": "compare-shared-full"
+          "explanatory": {
+            "none": "compare-plain",
+            "tall": "compare-tall",
+            "portrait": "compare-measure",
+            "balanced": "compare-measure",
+            "landscape": "compare-measure",
+            "wide": "compare-wide",
+            "panoramic": "compare-panorama"
+          }
         },
         "phone": {
-          "none": "compare-plain",
-          "tall": "stack",
-          "portrait": "stack",
-          "balanced": "stack",
-          "landscape": "stack",
-          "wide": "stack",
-          "panoramic": "stack"
+          "explanatory": {
+            "none": "compare-plain",
+            "tall": "compare-tall",
+            "portrait": "compare-measure",
+            "balanced": "compare-measure",
+            "landscape": "compare-measure",
+            "wide": "compare-wide",
+            "panoramic": "compare-panorama"
+          }
         }
       }
     },

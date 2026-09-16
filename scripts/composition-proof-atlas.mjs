@@ -1418,6 +1418,13 @@ const SCOPE = [
     klass: 'portrait', name: 'N1__notes-UPRIGHT-illustration__inset-4col' },
   { pid: 'notes', surface: 'desktop', bid: 'notes-aside', key: 'supporting/wide',
     klass: 'wide', name: 'N2__notes-WIDE-illustration__narrow-6col' },
+  /* visual.compare — re-expressed and RE-RENDERED. Two schema migrations without anyone looking at it. */
+  { pid: 'visual.compare', surface: 'desktop', bid: 'compare-plain', key: 'explanatory/none',
+    klass: 'none', name: 'C1__compare-two-cases__no-shared-visual' },
+  { pid: 'visual.compare', surface: 'desktop', bid: 'compare-measure', key: 'explanatory/portrait',
+    klass: 'portrait', name: 'C2__compare__UPRIGHT-shared-visual__expanded-8col' },
+  { pid: 'visual.compare', surface: 'desktop', bid: 'compare-panorama', key: 'explanatory/panoramic',
+    klass: 'panoramic', name: 'C3__compare__PANORAMIC-shared-visual__full-12col' },
   { pid: 'worked.single', surface: 'desktop', bid: 'flow', key: 'flow', klass: null,
     name: '2__prose-alone-stays-at-the-measure' },
   { pid: 'worked.paired', surface: 'desktop', bid: 'cases-6-6', key: 'any', klass: null,
@@ -1952,7 +1959,20 @@ refuses('pair-without-tolerance', () => {
 refuses('workspace-without-a-designed-height', () => {
   BP.patterns['practice.workbook'].blueprints['workbook-5-7'].rows.desktop[1].vertical = 'hug';
 });
-refuses('select-outside-the-set', () => { BP.patterns['visual.compare'].select.desktop.portrait = 'something-else'; });
+/* TWO REFUSALS, TWO DRIVES. `visual.compare` used to select by class alone, so writing
+   `select.desktop.portrait` reached the unapproved-blueprint check. Re-expressed by role × class it
+   reaches the `admits` check FIRST — the pair `portrait` is not one the pattern admits — and the
+   original refusal quietly stopped being tested. A drive that fires the wrong control is a control
+   that can no longer fail. */
+refuses('select-outside-the-set', () => {
+  BP.patterns['visual.compare'].select.desktop.explanatory.portrait = 'something-else';
+});
+refuses('select-outside-what-the-pattern-admits', () => {
+  BP.patterns['visual.compare'].select.desktop.explanatory.somethingElse = 'compare-plain';
+});
+refuses('admitted-pair-with-no-composition', () => {
+  delete BP.patterns['visual.compare'].select.desktop.explanatory.panoramic;
+});
 refuses('media-row-with-two-rungs', () => {
   /* THE REFUSAL THAT REMOVES THE RESOLVER. A media row that approves a second rung is a ladder the
      object's own ratio can climb after its class has already chosen a composition. */

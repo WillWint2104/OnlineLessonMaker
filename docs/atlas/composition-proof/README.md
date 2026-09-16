@@ -546,6 +546,48 @@ from `interactive.primary`'s:
   missing is a **picture**: the permanent image fixtures are 0.75:1, 1.0:1 and 1.78:1, so tall,
   landscape and panoramic illustrations are **unrendered rather than unclaimed**.
 
+## `visual.compare` — two cases, and optionally a visual belonging to both
+
+**Re-expressed and re-rendered.** It had been schema-migrated twice — once to solo/paired, once to
+the six-class vocabulary — without anybody looking at it, and *a migration is not an approval*.
+
+| class | blueprint | media rung |
+| --- | --- | --- |
+| `none` | `compare-plain` | — (the common case: two cases, no shared visual) |
+| `tall` | `compare-tall` | `narrow` 6 |
+| `portrait` · `balanced` · `landscape` | `compare-measure` | `expanded` 8 |
+| `wide` | `compare-wide` | `wide` 10 |
+| `panoramic` | `compare-panorama` | `full` 12 |
+
+All on a left-edge spine: intro, the two cases at identical width (6/6 desktop, 4/4 tablet, stacked
+on phone), the shared visual, the reading, the synthesis. The role is `explanatory` — the cases are
+the page and the object carries the explanation of both. A `primary` object would make this
+`media.full`; a `supporting` one would not be worth the row.
+
+The **phone form now lives inside each blueprint** rather than in a separate `stack` blueprint, which
+is what H18 (responsive structural identity) is for — a separate blueprint per surface is simply not
+compared.
+
+`none` is listed as an **admitted class**, not left out. It means the author wrote two cases and no
+shared visual, which is a real authored state and the common one. Listing it keeps the select table
+complete, and the whole point of `admits` is that a gap and a refusal stop looking alike.
+
+### A drive that started firing the wrong control
+
+`visual.compare` used to select by class alone, so the `select-outside-the-set` drive wrote
+`select.desktop.portrait = 'something-else'` and reached the unapproved-blueprint refusal. Re-expressed
+by role × class, that same mutation now reaches the **`admits` check first** — `portrait` is not a
+pair the pattern admits — and the original refusal quietly stopped being tested while the drive still
+reported a tick.
+
+**A drive that fires the wrong control is a control that can no longer fail.** There are now three:
+
+| drive | refusal it proves |
+| --- | --- |
+| `select-outside-the-set` | an admitted pair selecting a blueprint that is not approved |
+| `select-outside-what-the-pattern-admits` | a select table widening past what the pattern declared |
+| `admitted-pair-with-no-composition` | an admitted pair with no blueprint — a catalogue gap |
+
 ## The figure surface (treatment A)
 
 ```

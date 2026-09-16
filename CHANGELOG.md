@@ -8,6 +8,23 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **`visual.compare` re-expressed and re-rendered** (`docs/atlas/composition-proof/`,
+  `scripts/composition-proof-atlas.mjs`; no app change). It had been schema-migrated twice — to
+  solo/paired and to the six-class vocabulary — without anybody looking at it, and a migration is not
+  an approval. Five blueprints on a left-edge spine, selecting by `presentationRole × geometryClass ×
+  surface` like every other media pattern: `compare-plain` (no shared visual), `compare-tall`
+  (`narrow` 6), `compare-measure` (`expanded` 8), `compare-wide` (`wide` 10), `compare-panorama`
+  (`full` 12). The phone form now lives **inside each blueprint** instead of in a separate `stack`
+  blueprint, which is what H18 is for — a separate blueprint per surface is simply never compared.
+  `none` is an admitted class, not an omission: two cases and no shared visual is a real authored
+  state and the common one.
+- **A drive that had started firing the wrong control.** `select-outside-the-set` wrote
+  `select.desktop.portrait = 'something-else'`, which reached the unapproved-blueprint refusal while
+  `visual.compare` selected by class alone. Re-expressed by role × class, the same mutation reaches the
+  new `admits` check first, and the original refusal quietly stopped being tested while the drive still
+  reported a tick. A drive that fires the wrong control is a control that can no longer fail. There are
+  now three: an admitted pair selecting an unapproved blueprint; a table widening past what the pattern
+  admits; and an admitted pair with no composition at all.
 - **`notes` expressed as composition blueprints, and the shipping two-origin defect found a second
   time** (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change).
   `notes-inset` (illustration at `inset` 4, for tall/portrait/balanced) and `notes-aside` (`narrow` 6,
