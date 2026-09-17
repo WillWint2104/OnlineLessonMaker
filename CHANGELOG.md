@@ -7,7 +7,1640 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **Two alignment systems, not one axis per page** (`docs/atlas/composition-proof/`,
+  `scripts/composition-proof-atlas.mjs`; no app change). Step 1 drove "everything shares the left
+  edge" to its conclusion and the renders showed it was the wrong rule: a 10-column plate and a
+  4-column illustration both hard against the reading's left edge, each leaving an obvious rail of
+  nothing down the right. Symmetry was not the error and neither was the left edge — treating the whole
+  PAGE as if it could have only one axis was. A row now declares which system it belongs to:
+  - `reading` — start-aligned to the reading spine. Prose, worked solutions, comparison text, support.
+  - `stage` — a media stage, centred on the page grid, for a standalone explanatory or primary media
+    row. Its WIDTH still comes only from the approved role × geometry blueprint; the stage decides
+    where the object sits, never how wide it is.
+  - `within-reading` — supporting media centred inside the reading spine's own span, so it stays
+    subordinate to the prose without being page-centred (a stage it has not earned) or shoved against
+    the page edge (stranded).
+  - **So two left edges are not automatically a defect.** A centred stage above start-aligned
+    commentary is two named regions doing different jobs. Competing axes are invalid only *inside* one
+    system, where siblings are meant to align.
+  - **H1 was asking the wrong question** — whether every solo row on the page shared one axis. It now
+    groups the solo rows by system and asks the same question of each group. Its axis branch had no
+    drive, which regrouping could have quietly killed; one was added that shifts a single reading
+    row's painted left edge, and it fires.
+  - Prototypes rendered as candidates: `media.full/plate-wide-stage` (the same `wide` 10, centred) and
+    `notes/notes-within-reading` (`inset` 4 at columns 3–6), with `notes/notes-page-centred-6` beside
+    them for comparison. Both revisions pass; the page-centred 6 still fails **H6** independently — a
+    `contain` object painted 564px where its authored presentation width is 420px.
+  - **The portrait stage span, compared at 8 / 9 / 10** (`X4a`, `X4b`, `X1`, and the side-by-side
+    `X5`). Centring the stage removed the horizontal imbalance and exposed a second effect: a portrait
+    plane preserves its geometry, so span buys HEIGHT. Measured on the same fixture, same prose, same
+    role, same desktop surface — 8 col **760×998** (1.11 viewports) · 9 col **858×1116** (1.24) · 10 col
+    **956×1234** (1.37). The three clean pages are rebuilt side by side at one scale, because which of
+    several legal pages reads as finished courseware is a question about the pages, not the rule.
+  - **Nine columns cannot be a centred stage, and the refusal predates the question.** On a
+    twelve-column grid (12 − 9) is odd, so a nine-column row has no symmetric page margin — it lands a
+    half column (49px) off the grid on both sides. `layout` refuses it where the two alignment systems
+    were written. It is rendered anyway, off the grid and labelled, because "what does 858px look like"
+    deserves an answer; it fails **H1** and **H2** for exactly the right reason — the row declares ten
+    columns and paints nine, leaving columns 2 and 11 declared and empty. Adopting it would be a
+    decision to change the grid, not to pick a rung.
+- **Two adoption decisions ruled.** A solo `support` row takes `narrow` (6 columns) on desktop — at the
+  spine's eight it read as a second body section rather than the aside it is; tablet and phone recover
+  to the reading width, because six of seven is not subordination but crowding. Applied as a transform
+  so the rule is written once and cannot drift across patterns. And `notes` **stacks on tablet**: the
+  5/3 pair was legal and unpleasant, and "the grid permits it" is not a reason to squeeze prose beside
+  a callout.
+
+### Fixed
+- **The two shipping-catalogue defects: `media.full/centred` and `notes/measure`** (`docs/atlas/
+  composition/src/patterns.json`, `scripts/composition-atlas.mjs`, `scripts/lib/slots.mjs`; no app
+  change — `lesson-studio.html` does not reference the catalogue). Both centred their object over
+  prose anchored to the left edge, giving the page two competing alignment axes. Replaced with the
+  approved blueprint behaviour: `media.full/centred` takes `wide` 10 on the reading's own left edge
+  (760 centred → **956 at `start`**, the `plate-wide` composition) and `notes/measure` takes `inset` 4
+  (564 centred → **368 at `start`**, `notes-inset`), desktop and tablet.
+  - **They were not a habit. They were enforced.** A correction to what the earlier report said twice.
+    The control forbidding them is explicit: *"A row whose only named slot is media must therefore be
+    centred or full — the left-inset 8-of-12 arrangement that started all this fails here."* Symmetry
+    was the only way the catalogue could express "these columns are deliberate", so centring was the
+    only legal answer.
+  - **The control was stricter than the contract it enforces.** `vocabulary.json` has always defined
+    `slotAnchor: start` as "hard against the left with free columns after it. REQUIRES a declared
+    `anchorReason`" — an edge anchor with a stated reason is permitted. The control allowed only
+    `center` and `full`, so `start`/`end` were unreachable. It now admits an unequal row that declares
+    an `anchorReason`, which is the exception the vocabulary already wrote down.
+  - **A transposed pair of branches, dead until now.** With `start`/`end` unreachable, no subdesign in
+    the catalogue had ever anchored a slot to an edge — and `anchorFromAreas` returned `end` for a slot
+    hard against the LEFT and `start` for one hard against the right. The comments beside the two
+    returns described the geometry correctly and then named it backwards. The first subdesign to use
+    `start` was rejected for "declaring `start` where its areas give `end`". A branch no fixture
+    reaches is a branch nobody has read.
+  - The narrowed control is now **subsumed**: every pattern has exactly one media-type slot, so the
+    `slotAnchor` control reaches an unequal row first and demands the same reason. It is kept as a
+    per-row backstop (`anchorFromAreas` judges only the first row holding the slot) and because it is
+    where the founding defect is named — not as an independent gate, which it no longer is. Recorded
+    rather than left looking like one.
+  - Only **two** composition boards moved (`06-media-full-desktop-alternate` and its inspector), which
+    confirms the anchor-name fix disturbed no existing `center`/`full`/`paired` subdesign.
+
+### Changed
+- **`worked.single` completed, and the catalogue's seven patterns are all expressed**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change). Its second
+  authored variant `split` is rendered, and `flow` is rendered on all three surfaces — so **H18 now has
+  a media-less blueprint to check responsive identity against**, where it previously had exactly one
+  multi-surface blueprint to compare and that one carries a figure. It now compares two.
+- **`admits` is a media-pattern declaration, and the media-less patterns say so.** `worked.single` and
+  `worked.paired` declare none, which is not an oversight: `admits` names the presentation roles and
+  geometry classes a pattern accepts, and both only exist where there is an object to have a role and a
+  shape. Its job is to give `validate` a second declaration to cross-check the select table against, so
+  a hole and a refusal stop looking alike. In a media-less pattern the table is keyed by an authored
+  variant name and there is no second source — a missing variant is simply one nobody wrote, so there
+  is nothing for a hole to be a hole in.
+- **`visual.compare` re-expressed and re-rendered** (`docs/atlas/composition-proof/`,
+  `scripts/composition-proof-atlas.mjs`; no app change). It had been schema-migrated twice — to
+  solo/paired and to the six-class vocabulary — without anybody looking at it, and a migration is not
+  an approval. Five blueprints on a left-edge spine, selecting by `presentationRole × geometryClass ×
+  surface` like every other media pattern: `compare-plain` (no shared visual), `compare-tall`
+  (`narrow` 6), `compare-measure` (`expanded` 8), `compare-wide` (`wide` 10), `compare-panorama`
+  (`full` 12). The phone form now lives **inside each blueprint** instead of in a separate `stack`
+  blueprint, which is what H18 is for — a separate blueprint per surface is simply never compared.
+  `none` is an admitted class, not an omission: two cases and no shared visual is a real authored
+  state and the common one.
+- **A drive that had started firing the wrong control.** `select-outside-the-set` wrote
+  `select.desktop.portrait = 'something-else'`, which reached the unapproved-blueprint refusal while
+  `visual.compare` selected by class alone. Re-expressed by role × class, the same mutation reaches the
+  new `admits` check first, and the original refusal quietly stopped being tested while the drive still
+  reported a tick. A drive that fires the wrong control is a control that can no longer fail. There are
+  now three: an admitted pair selecting an unapproved blueprint; a table widening past what the pattern
+  admits; and an admitted pair with no composition at all.
+- **`notes` expressed as composition blueprints, and the shipping two-origin defect found a second
+  time** (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change).
+  `notes-inset` (illustration at `inset` 4, for tall/portrait/balanced) and `notes-aside` (`narrow` 6,
+  for landscape/wide/panoramic), both on a left-edge spine with every prose region on the measure. The
+  brief pairs with the key ideas on desktop and tablet and **stacks on phone**, which approves no
+  split at all.
+  - **Prose beside prose pairs; an object beside prose does not.** `notes/brief` measures 4.05px apart
+    plain and 111.69px at twice the prose, against a declared 180px tolerance — where
+    `interactive.primary/beside` measures 487.02px against 160px. The pairing rule's objection was
+    never "pairs are bad": it is that a height *derived from geometry* beside a height *someone wrote*
+    has a gap no width can fix. Two written heights move together, and this is the demonstration.
+  - **`notes/measure` centres its illustration (columns 4–9) over left-anchored prose (1–8)** — the
+    same two-origin defect as `media.full/centred`, in a second pattern. Two patterns in the shipping
+    catalogue independently centre their object over left-anchored prose, which suggests a habit
+    rather than a decision. Recorded rather than rendered, for the same reason as before.
+  - **Admitting a class you have not rendered, distinguished from claiming one.** `notes` admits all
+    six classes while rendering three, and says why that differs from `interactive.primary`: there no
+    frozen mapping for an instrument exists, so an unrendered class would be an unclaimed composition;
+    here the frozen table already says what `supporting × class` gets, so selection is an application
+    of a decision already made and what is missing is a picture. The image fixtures are 0.75:1, 1.0:1
+    and 1.78:1, so tall, landscape and panoramic illustrations are unrendered, not unclaimed.
+- **`interactive.primary` expressed as a composition blueprint** (`docs/atlas/composition-proof/`,
+  `scripts/composition-proof-atlas.mjs`; no app change). `instrument-spine`: intro, the instrument at
+  `wide` 10, the prompts and the synthesis, all on one centred axis. This is the arrangement the
+  slot-span atlas already ruled in when it measured the shipping 8/4 `beside` pair at +472px.
+  - **The cited number re-measured, and it does not match.** Rendered here the 8/4 pair fails H4 at
+    **487.02px** against its declared 160px tolerance. The defect reproduces; the magnitude does not.
+    The two atlases use different filler prose and this one puts a figure surface around the
+    instrument, so the exact figure is a property of the harness. What transfers is the shape of the
+    failure — an object whose height is derived beside prose whose height is written.
+  - **A fixture gap is recorded as a fixture gap, not a refusal.** `interactive.primary` admits only
+    `landscape` and `wide` because the permanent fixture set holds exactly two instruments, at 1.33:1
+    and 1.78:1. Unlike `media.full` refusing `tall` — which has a reason anyone can check — there is no
+    argument here at all, and the catalogue says so. The fix is a fixture, not a ruling.
+  - **Open question, not decided:** whether the `interactive` slot type joins the role × geometry
+    contract. `familyFor` short-circuits on `slotType === 'interactive'`, so an instrument never
+    consults `media.<class>.<role>` and the frozen mapping does not reach it. Routing a slot type into
+    the contract changes its reach rather than adding a catalogue entry, and the freeze was
+    deliberate.
+- **`media.full` expressed as composition blueprints, and a defect found in the shipping catalogue**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change). Two
+  blueprints on a **left-edge spine** — `plate-wide` (`wide` 10, portrait and balanced) and
+  `plate-full` (`full` 12, landscape, wide and panoramic) — with the reading inset to the measure
+  beneath on the same left edge. The left-edge axis is what distinguishes the pattern from
+  `visual.explanation` compositionally rather than only semantically.
+  - A pattern now declares **`admits: {roles, classes}`** and `validate` checks the select table
+    against it in both directions. `media.full` admits one role and refuses `tall` outright: the
+    pattern is defined by the plane crossing the reading measure, and a tall plane cannot cross it
+    without becoming enormous, so a tall object authored here is an authoring error whose fix is a
+    different pattern. A missing select cell is no longer ambiguous between a declared refusal and a
+    forgotten one.
+  - **Defect reported:** `media.full/centred` in the shipping catalogue sets the media across columns
+    3–10 (centred) over a reading across 1–8 (left edge) — two alignment origins on one surface. Each
+    row is fine alone; the pair is not. It is **recorded rather than rendered**, because a blueprint
+    declares one spine per surface and no rung on a centred axis resolves to 1–8, so the composition
+    is inexpressible under the contract. A first attempt to render it as `paired` rows with a null
+    sibling fired H2 and H4 — both artefacts of that encoding, not evidence about the design — and was
+    removed. A counterexample that fails for the wrong reason proves nothing.
+  - A media span family is again allowed more than one rung, and says why: with the ROW pinned to one
+    rung there is nothing for an aspect ratio to climb, so the family is the union of what approved
+    blueprints use for that class and role **across patterns**. `media.landscape.primary` holds `wide`
+    and `full` because `visual.explanation` gives a landscape primary ten columns and `media.full`
+    gives it twelve, and both are approved compositions of their own pattern.
+- **The `tall → portrait` boundary moved from 0.60 to 0.70, and geometry calibration stopped**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change). At 0.60 an
+  object could become *slightly less tall* and be promoted from the eight-column tall composition to
+  the ten-column portrait one, ending up substantially TALLER: a 0.63 shape came out 956 × 1570 —
+  1.74 desktop viewports — against 760 × 1371 for a 0.57 shape one class down. A categorical boundary
+  that makes the result worse the moment you cross it is the failure the classes exist to prevent.
+  - Probed at 0.67 / 0.70 / 0.73. The transition is monotone: 0.67 `tall` 760 × 1195, 0.70 `portrait`
+    956 × 1432, 0.73 `portrait` 956 × 1381. The shape that moved the line, 0.63 at `primary`, goes
+    from 1570px (1.74 vp) to 1259px (1.40 vp); the worst case on the portrait side falls from 1.74 to
+    1.59 viewports.
+  - The step itself is not claimed to be gone. Any categorical line between an 8- and a 10-column
+    composition puts a step in the realised height of upright media. A new diagnostic reports the step
+    either side of every declared boundary as evidence; nothing reads it back.
+  - `portrait ≡ balanced` is recorded as an **accepted convergence**, not a defect and not merged. One
+    composition family failing to distinguish square-ish from upright media does not make them
+    globally the same thing, and no width is manufactured to justify the two labels.
+  - The invariant is recorded in full: within one pattern family, `role × geometry class × surface →
+    one named blueprint → one declared rung`. A neighbouring class MAY converge on the same blueprint;
+    what is forbidden is the exact ratio subsequently changing the rung.
+  - Two classifier defects fixed. `classify()` skipped only the `_` doc key, so a second prose key
+    beside it matched every shape — it has neither a `from` nor a `below`, so both half-open tests
+    passed and every object in the atlas classified as a comment. And it classified from the
+    4-decimal DISPLAY-rounded ratio, which put the 0.70 boundary probe one ten-thousandth on the wrong
+    side of its own line; it now classifies from the raw ratio.
+  - **Geometry calibration is finished.** The vocabulary, the boundaries and the mapping are frozen;
+    no width or height is re-tuned unless a real authored page produces a categorical failure.
+- **The geometry vocabulary split into six classes, and the role × geometry mappings frozen**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, `scripts/lib/slots.mjs`,
+  `scripts/lib/figure-geometry.mjs`; no app change, nothing wired into the shipping catalogue).
+  `tall · portrait · balanced · landscape · wide · panoramic`, declared as width:height and half-open
+  upward, with ten boundary probes placed immediately either side of the five boundaries. Selection is
+  now `presentationRole × geometryClass × surface → ONE named blueprint`, and that blueprint names ONE
+  rung: a media row may declare exactly one, so the exact aspect ratio has nothing left to decide once
+  its class is chosen. Acceptance is categorical — within one class, one surface, one role, every probe
+  selects the same blueprint and the same rung.
+  - **A correction first.** The previous pass's headline finding — `primary/portrait` has no approved
+    composition for a 0.45:1 shape — was not true. `boxForWidth` seeds its height search from a guess
+    at the engine's gutters and scanned a fixed ±80px around it; the seed's error is amplified by the
+    aspect ratio, so the tall plane needed offset 98 at 722px, 148 at 956px and 190 at 1152px and every
+    wide span silently missed. The atlas reported a property of the instrument as a property of the
+    design. The solver now re-seeds once from what it measured and scans again; the change is additive,
+    so every box that already solved returns the same first hit. `corpus-identity` 250/250
+    byte-identical, `figure-render` 240/240, `figure-container` 65/65, `measure-surface` 191+180,
+    `label-placement` 927/927 — all unmoved.
+  - New blueprints: `spine-tall` (explanatory tall, `narrow` 6), `stage-tall` (**primary tall**,
+    `expanded` 8) and `stage-panorama` (explanatory panoramic, `full` 12). `stage-primary-portrait` is
+    renamed `stage-primary` — it serves `portrait`, `balanced` and `landscape`, and the old name read
+    as a promise the catalogue does not make. `spine-reading` is withdrawn.
+  - **`primary` is not `wider`.** `stage-tall` gives a tall object eight columns, not ten or twelve,
+    and buys its primacy structurally: where `spine-tall` puts the object INSIDE the reading column
+    (media 6, spine 6), `stage-tall` breaks it out past the reading on both sides (media 8, spine 6).
+  - New controls. **H20** refuses an approved rung that cannot carry a member of its own class, and a
+    realised rung that is not the declared one — the fallback the old ladder allowed. **H19** is now
+    categorical: its "one blueprint, two rungs" escape hatch existed only because a media row could
+    approve two rungs, and it is gone. An eleventh table-level refusal rejects a multi-rung media row.
+  - **What the probes found.** Four of the five boundaries are load-bearing; **0.90 is not** —
+    `portrait` and `balanced` select the same blueprint and the same rung at all three roles. Recorded
+    in `frozen.convergences` rather than papered over with an invented width. And **0.60 may be too
+    low**: a 0.63 object at `primary` is 956 × 1570 = 1.74 desktop viewports, *taller* than a 0.57
+    object on the `tall` side at 760 × 1371 = 1.52.
+  - Realised height and its share of a 900px viewport stay diagnostic evidence; nothing reads them.
+  - Two measurement defects fixed. `measureMedia` compared the FIGURE SURFACE's box against a raster's
+    intrinsic ratio, so an image inside a surface read as stretched when it was not — found when the
+    new vocabulary first sent an image through a surface-enabled blueprint and three blueprints failed
+    H5 for chrome they own. And H20's second drive rewrote a rung to `inset` on a record that already
+    declared `inset`, a no-op that read as a control that could not fail.
+  - The SHIPPING grammar has not moved: `atlas.json` still declares four classes and `classOf()` still
+    reads them. Adopting six there is a migration that belongs with the blueprint system.
+- **The geometry calibration atlas, and the span mappings demoted to candidates**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue). The surface architecture and the role × geometry PRINCIPLE stay frozen;
+  the exact span mappings do not, because they had been validated against one portrait shape and one
+  wide shape.
+  - **Six shapes, three roles, identical content.** `docs/atlas/composition-proof/src/calibration.json`
+    varies nothing but the authored DOMAIN — 0.45 / 0.75 / 1.04 / 1.5 / 2.0 / 3.0 width:height — so the
+    only difference between two renders is the shape of the plane. It chooses no widths and measures no
+    prose: the class and the role are both categorical.
+  - **`primary/portrait` has NO composition for a 0.45:1 shape.** Neither approved rung, `expanded` 8
+    nor `wide` 10, can carry a 2.22 h/w plane at equal unit scale. The atlas reports that instead of
+    crashing or inventing a width, and it is the sharpest evidence the vocabulary is too coarse.
+  - **One class, one blueprint, two rungs.** At `explanatory`, the 0.45 shape falls back to `spine` 564
+    while the 0.75 shape takes `expanded` 760 — forced by feasibility, not by measurement. **H19** now
+    separates that FINDING from the FAILURE it would be if every preferred rung were feasible.
+  - `landscape` holds 1.5:1 and 2:1 and treats them identically (901px vs 724px at primary); `balanced`
+    does not separate explanatory from primary at all. Heights recorded as diagnostic evidence only:
+    portrait/primary is 1.5 desktop viewports, tall/explanatory 1.35 at the NARROW rung.
+  - **H19 · the geometry class selects, not the shape and not the height** — driven to failure.
+  - Two false positives the new fixtures exposed in my own controls: H15 and H17 keyed their
+    surface/no-surface and chrome/no-chrome pairs without the FIXTURE, so two different objects sharing
+    a pattern, blueprint, class and viewport were compared against each other. Both keys now include it.
+
+- **`presentationRole × mediaGeometry → approved named blueprint`, and the surface contract frozen**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue).
+  - **FROZEN**: treatment A · figure-surface ownership (`blueprint region → figure surface → plot →
+    caption`) · the caption owned by the surface · the four boundaries independently inspectable · the
+    presentation role authored and never inferred · responsive blueprint identity invariant · plot chrome
+    cannot change the composition · internal surface whitespace is valid OWNED space · treatment B
+    rejected · supporting portrait at centred `inset` 4 · explanatory portrait at centred `expanded` 8.
+  - **PRIMARY DOES NOT MEAN MAXIMUM HORIZONTAL SPAN.** The full-grid primary portrait measured
+    1152×1469: legal, because the page scrolls, and not a good default. `full` has been removed from
+    every portrait span family, so a full-width primary portrait is not discouraged but INEXPRESSIBLE —
+    `select` cannot name it and a blueprint approving that rung for portrait media is refused before
+    anything renders. It survives in a new `candidates` bucket, which is validated and renderable and
+    unreachable from `select`, and is rendered beside the approved version for comparison.
+  - **The mapping is now role × geometry → NAMED BLUEPRINT**, not role → rung. The portrait ladder is
+    368 / 760 / **956**; the wide ladder is 564 / 956 / **1152**. The same three roles, different
+    geometry, different compositions — which is the whole argument for keeping both explicit.
+  - New blueprints: `stage-primary-portrait` (centred `wide` 10), `spine-supporting-wide` (centred
+    `narrow` 6) and `stage-wide` (centred `wide` 10); a `narrow` = 6 rung joins the ladder; `stage-full`
+    becomes the primary WIDE composition, where the whole grid is the right answer.
+
+- **The figure surface adopted, and presentation role separated from slot width**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue). `figureSurface.enabled: true`, treatment A. **The concept is adopted; the
+  exact dimensions are not.** What A proved is the ownership model — `blueprint → media region → figure
+  surface → plot` — not that 760px is the right width for a graph.
+  - **Treatment B is rejected and kept as a counterexample.** Shrink-wrapping the surface to the plot
+    puts the plate at 564px, exactly the width of the six-column reading spine beneath it, so the
+    composition says eight columns while the eye still sees six — the same under-realisation H11 rejects
+    at the row level.
+  - **SLOT WIDTH AND PLOT SIZE ARE DIFFERENT DECISIONS.** The catalogue now keeps four things separate:
+    blueprint span (how much geometry the media owns) · surface (the complete visual object) · plot
+    realisation (how the graph uses it while preserving scale) · **presentation role** (what the object is
+    FOR). The role is AUTHORED and never inferred: the renderer may pick between the responsive forms of
+    an authored blueprint, never read available space and conclude that a visual is important.
+  - **The same portrait graph now takes three different named blueprints**, not one blueprint with a size
+    calculation: `spine-supporting` at the new `inset` rung (368×528 surface), `spine-narrow` at
+    `expanded` (760×998) and `stage-primary` at `full` (1152×1469, and allowed to be that tall because the
+    page exists to explain it). The span family is keyed by geometry AND role.
+  - **The caption belongs to the figure surface, not the plot.** The engine may supply the content; the
+    surface renders and owns it, and any `tp-fig-cap` emitted inside the plot is lifted out. That is what
+    generalises to images, diagrams, videos and interactives — surface header · media payload · local
+    controls · caption. **H16** fails a caption found inside the plot.
+  - **H17** the plot's own chrome may not move the surface or the span — proved by rendering the same
+    blueprint with 21px bold axis labels and measuring an identical 760×998 surface and 722×906 plot.
+    **H18** the same authored blueprint keeps its blueprint, role and rows across desktop, tablet and
+    phone; only the rungs differ.
+  - The overlay now draws **four** boundaries — region, surface, plot, caption — each independently
+    inspectable, alongside the six space classifications.
+  - Two of my own regressions caught by the run: a blanket namespace rename had turned the overlay's
+    `data-cp-proof` selector into `data-pf-board` while the markup emitted the original, and the
+    surface/no-surface invariance key omitted the viewport, so a phone baseline was being compared
+    against a desktop render.
+
+- **A semantic figure surface, prototyped and NOT enabled** (`docs/atlas/composition-proof/`,
+  `scripts/composition-proof-atlas.mjs`, no app change, nothing wired into the shipping catalogue).
+  `figureSurface.enabled: false` — both candidate treatments are rendered for comparison and neither is
+  frozen. The grid, the solo ladder, the spine and the paired/workspace rules are untouched: the
+  structural model is doing useful work and this pass is about making it VISUALLY LEGIBLE.
+  - **The problem.** Both successful pages are structurally correct and neither says clearly enough that
+    the graph, its caption and its graph-local controls are ONE VISUAL OBJECT, separate from the prose
+    that interprets it. The separation existed in the blueprint and not in the courseware.
+  - **THREE BOUNDARIES, KEPT APART**: the REGION the blueprint assigned, the SURFACE that groups the
+    media payload, and the PLOT itself. The overlay draws all three as three boxes and adds a sixth
+    space to the legend — INTERNAL FIGURE-SURFACE SPACE, which is valid precisely because it is inside
+    an object the composition already owns, and is not the same thing as an unowned column in an
+    active row.
+  - **H12** a surface may not reach past its region · **H13** plot, caption and media-local controls are
+    all inside it · **H14** the plane is painted at the size it was SOLVED for and its units stay equal ·
+    **H15** turning the surface on changes no blueprint, spine, cardinality, rung or split. Each driven
+    to failure.
+  - **H14 caught a real defect on its first run.** The first build solved the plane for the REGION width
+    and let the surface clamp it — 62.57px per x-unit against 65.94 per y-unit. A border had distorted
+    the mathematics. The plane is now solved for the width it actually has, region minus a DECLARED
+    chrome; and H14 was re-written to ask whether the plane is painted at the size it was solved for,
+    because comparing two renders' aspect ratios was mis-calibrated at 1.8% against a legitimate
+    re-rounding of the axis-label chrome.
+  - **The A/B answer, measured: A.** Treatment B shrink-wraps the plate to 564px — exactly the width of
+    the six-column reading spine below it — so it RE-CREATES AT THE OBJECT LEVEL the under-realisation
+    H11 exists to reject at the row level, and it forces the slot to `contain`. Under A the surface takes
+    the region, the plane keeps its geometry, and 38px of internal surface space is the only residue.
+  - **Every rejection survives a border**: the half-row still fails H2 with a surface around its graph,
+    and `side-study` still fails H4 at 535.5px. `practice.workbook` keeps its designed 5/7 relationship
+    and `worked.paired` gets no surface at all.
+
+- **The solo span ladder, and composition fitness as a second validation layer**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue). A **proposal**. The previous pass solved OWNERSHIP and in doing so
+  exposed the next missing rule: a structurally valid composition can still be aesthetically
+  under-filled. `spine-narrow` was legally composed and unnecessarily timid — a 564px portrait graph
+  alone in its row, with six columns of perfectly valid page margin either side.
+  - **STRUCTURAL VALIDITY AND COMPOSITION FITNESS ARE TWO LAYERS, ASKED IN THAT ORDER.** Does every
+    part of the active composition have an owner? Then: is the approved blueprint actually using the
+    surface it was given? Neither is occupancy — nothing here measures a fraction, an area, a
+    dead-space percentage or a content length.
+  - **Horizontal relationship and vertical behaviour are now separate declarations.** `horizontal =
+    solo | paired | workspace` · `vertical = hug | designed`. `hug`/`paired`/`workspace` had been doing
+    double duty as both, which is exactly how a page could be structurally perfect and still timid.
+  - **A row holding ONE region is a `solo` row and takes a rung from an approved LADDER** —
+    `spine` (the blueprint's own span) · `expanded` 8 · `wide` 10 · `full` 12 at desktop — declaring
+    which rungs it approves and which it PREFERS. The spine is an AXIS, not a width, so a solo row may
+    climb to a wider rung and still sit on the page's one centre line. Increased height is not a
+    failure: the page scrolls.
+  - **What a region IS constrains which rungs are legal for it.** Prose is capped at the reading
+    measure, so a paragraph does not expand to twelve columns merely because it is alone; portrait
+    media gets `expanded`, balanced `expanded`/`wide`, landscape and wide `wide`/`full`. The family
+    never invents a composition — the blueprint still chooses from within it.
+  - **H11 · SOLO SPAN.** A one-region row fails if it remains at a smaller approved rung while its
+    preferred rung is feasible. Feasibility is categorical plus one mathematical question: does an
+    equal-unit box solve at that width.
+  - **Eight proof boards**: the corrected `spine-narrow` (media at `expanded`, 8 col, 760px, equal unit
+    scale 0.999); prose alone staying at the measure; a wide figure alone at `full`; `worked.paired`
+    and `practice.workbook` UNCHANGED — the proof that the contract is scoped to cardinality 1 and does
+    not simply make things bigger; and three counterexamples — the under-realised solo span (H11, the
+    page the previous pass shipped as correct), the unowned half-row (H2) and `side-study` (H4).
+  - **Ten controls and ten table-level refusals, each driven to failure.** Two findings from that: the
+    reading measure and the centred axis bound only when a blueprint was WRITTEN DOWN and not when a
+    rung was REALISED (found by a drive that did not fire; `layout` now binds both); and a blanket
+    namespace rename had caught `.cp-key`, the kit's key-idea card, so the support region rendered with
+    the board's legend styles (found by looking at the picture).
+
+- **The alignment spine, the five-space taxonomy, and two frozen blueprints**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue). A **proposal**, tightened rather than broadened: the previous entry
+  proved blueprints were the right unit; this one makes the distinctions that pass exposed into actual
+  structure, and renders only what it freezes.
+  - **PAGE MARGIN, BLUEPRINT RHYTHM, INTERNAL BLOCK SPACE, UNCLAIMED COMPOSITION SPACE AND PAIR
+    IMBALANCE ARE FIVE DIFFERENT THINGS.** They are kept apart in the schema, in the judge, in the
+    overlay and in the verdict panel, and there is no generic whitespace rule, occupancy fraction or
+    dead-space percentage anywhere.
+  - **The spine is a first-class primitive and the one owner of the alignment relationship.** A
+    blueprint declares one spine per surface — an axis (`centre` / `left-edge`) and a span — and a row
+    is either ON the spine (holding one region, occupying it exactly, with the grid outside it as valid
+    PAGE MARGIN) or ON the grid (an ACTIVE ROW, every column owned). A centred six-column spine and a
+    six-column region at the left of a twelve-column active row occupy the same columns and are not the
+    same thing; the primitive exists so the renderer cannot confuse them.
+  - **The ownership boundary is frozen, and rhythm is no longer contaminated.** The block owns
+    typography, the space between its steps and the padding a VISIBLE surface needs; the blueprint owns
+    placement, spans, alignment, pairing and ALL spacing between semantic regions. A region hugs its own
+    ink or surface at its exterior boundary (H10). **Every declared step now measures as itself** —
+    `worked.paired`'s declared 56px read as 80.5px before this pass and reads as 56px now.
+  - **Two blueprints frozen as golden**: `visual.explanation/spine-narrow` (one centred axis of six
+    columns carrying object, reading and key idea) and `worked.paired/cases-6-6` (a left-edge spine of
+    eight with a 6/6 pair that declares its origin, its width and a 180px termination tolerance —
+    measured 0px apart).
+  - **Two counterexamples retained as permanent regression proofs**: `unowned-half-row` (H2 — the
+    canonical must-never-happen-again, the same six columns as the golden and not the same composition)
+    and `side-study-imbalance` (H4 — a row that owns all twelve columns and still terminates 535.5px
+    apart, proving complete column ownership is necessary and NOT sufficient).
+  - **`practice.workbook` as the stress test.** The first genuinely workspace-shaped page, expressed
+    with the same four ideas and no resolver. One extension earned it: a rhythm step may declare
+    `gapWithin`, so a region spanning several rows is not cut by the rhythm beside it. It surfaces a
+    real open question — the workspace's DESIGNED height and the reference stack's DERIVED height
+    terminate 117px apart, which a `workspace` row is exempt from by definition.
+  - **Nine controls and eight table-level refusals, each driven to failure in the same run.** One drive
+    was found unable to fire — it injected padding on a region that paints its own top edge — and was
+    fixed as a bad test rather than accepted.
+  - **No sweep.** The other blueprints are migrated to the spine schema so the build stays whole and are
+    not re-rendered or re-approved; their boards are not in the directory.
+
+- **Approved page compositions, and the row contract — the Composition Proof Atlas**
+  (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`, no app change, nothing wired
+  into the shipping catalogue). A **proposal**, built to be looked at. Discrete slot spans made every
+  slot's width nameable and still did not make a **page**: a pattern remained a collection of
+  *independently* legal slots. The shipped lesson is the proof — in
+  `lesson-symmetry-visual-explanation-desktop.png` the graph is painted **683px wide at x = 60** in a row
+  that runs to x = 1212, leaving **469px of an active row with no semantic owner**, at a width the grid
+  does not name (its neighbours are 662px and 760px). The width came from an authored `mediaSize` token,
+  decided in isolation from the composition.
+  - **A pattern now resolves to a NAMED COMPOSITION BLUEPRINT, not to a set of spans.** A blueprint fixes
+    the whole page: which rows exist, which columns each region takes, whether regions share a row or
+    follow one another, how each row behaves vertically, and the named step between one semantic region
+    and the next. The chain is `lesson intent → pattern → approved blueprint → slots and rows → media
+    geometry selects among the approved blueprints → content fills it`, and every arrow is a lookup from
+    a categorical input.
+  - **The most important rule: no active row may contain unexplained columns.** A row holding one
+    six-column media slot may not take columns 1–6 and call 7–12 margin — it must be centred in the row,
+    accompanied by another semantic region, widened to an approved footprint, or moved into a different
+    row composition. **Free columns beside media are never a reading margin**, because media has no
+    reading measure to be bound by.
+  - **The row contract, which is the axis the span layer did not have.** `hug` (the row is exactly as tall
+    as its contents) · `paired` (two siblings share a row on a **declared alignment origin**, with a
+    declared **`imbalanceMax`** and a **`pairReason`**) · `workspace` (a height that is designed rather
+    than derived). A pair that has not said how far its children may end apart is refused before anything
+    renders.
+  - **Rhythm is declared, not accumulated.** The gap between two semantic regions is a named step —
+    `tight 16 · normal 32 · section 56` — rendered as a real grid row of exactly that height. That is the
+    entire difference between `worked.single/flow` and `worked.single/split`: identical widths, different
+    rhythm.
+  - **`worked.paired` now exists.** It was asked for three corrections ago and had never been designed:
+    `intro-8 / worked-6-6 / synthesis-8`, the pair declaring 180px.
+  - **`media-5 + explanation-7` was judged and does not pass.** Offered as an example composition; every
+    column in its row is owned and it still fails, because the object and the reading beside it end
+    **535.5px apart** against the 160px it declared for itself. Kept as `withdrawn` with the measurement.
+  - **Eight hard failures and five table-level refusals, each driven to failure in the same run.** H1
+    declared-vs-rendered ownership · H2 the unexplained remainder · H3 a hug row taller than its children ·
+    H4 the pairing contract · H5 a starved `fill` · H6 an anchorless `contain` · H7 prose choosing the
+    page · H8 a blueprint outside the approved set.
+  - **Seven permanent counterexample boards**, the first two reproducing the shipped defect rather than
+    describing it. `counterexample__unowned-half-row` is the canonical must-never-happen-again.
+  - **The paired workings page was measured and does not reproduce as a layout defect**: the cases row is
+    333px, both children are 333px, `align-items: start`, and the gap to the synthesis is 30px. The air is
+    30px of region gap plus ~27px of the answer block's own bottom padding — a rhythm defect, not a
+    row-height one. Every board now prints **declared step against perceived gap**, and the open question
+    (should a region be required to hug its own ink?) is reported rather than taken.
+
+- **The slot contract completed, and the Slot Fit Atlas** (`docs/atlas/media/`, `docs/atlas/slot-fit/`,
+  `scripts/slot-fit-atlas.mjs`, `scripts/make-media-fixtures.mjs`, `scripts/lib/slots.mjs`, no app change).
+  The previous entry gave media slots a **fit**. This one gives them the other two thirds of a contract
+  and then goes looking for objects that break it.
+  - **Every media slot prescribes `slotSpan`, `slotFit` and `slotAnchor`.** The anchor vocabulary is
+    deliberately tiny — `center` · `start` · `end` · `paired` · `full` — the subdesign declares it, and a
+    control derives it independently from the areas so the prose and the grid cannot drift apart.
+    **`start`/`end` require a declared `anchorReason`**: a generic stacked media object may never quietly
+    default to left alignment.
+  - **Whitespace is separated by OWNERSHIP, which is what makes it enforceable.** Reading margin belongs to
+    the page, pattern whitespace to the subdesign, and **slot residue to nobody** — illegal under `fill`,
+    legal under `contain` only because the slot explicitly owns it and the object has an approved anchor.
+    An 8-column graph on the left of a larger unnamed region now fails in the catalogue, before rendering;
+    a centred 8-column slot written `2 + 8 + 2` passes, because those outer columns were prescribed.
+  - **`contain` finally has somewhere to live.** Every slot in the catalogue was `fill`, so half the contract
+    had never been through an object. `notes` gained one `illustration` slot: contained, centred, capped at
+    the object's **authored presentation width** — never at raw raster pixels, because a 900×1200 photograph
+    is not a request to be painted 900px wide.
+  - **Ten permanent media fixtures**, generated by `scripts/make-media-fixtures.mjs` and committed as
+    regression assets: three planes (portrait, balanced, wide), three rasters (3:4, 1:1, 16:9), a **real
+    4-second 16:9 WebM** drawn on a canvas and captured with `MediaRecorder` (there is no ffmpeg here, and a
+    clip fetched from anywhere would not be a regression asset), two instruments (4:3, 16:9) and a portrait
+    diagram. Nothing is downloaded and no third-party host serves any of it.
+  - **`scripts/slot-fit-atlas.mjs` — 108 legal combinations, every one judged**, every fixture through every
+    approved slot it may occupy at all three surfaces, with identical filler prose so the object is the only
+    variable. **28 golden proofs** carry the inspector overlay, chosen before anything is measured so the
+    choice cannot be a function of the result. Every one of the 22 approved media-bearing subdesigns has at
+    least one successful proof, and both fit modes and all five media families are exercised.
+  - **One owner for the inspector.** `scripts/lib/slots.mjs` now holds the measurement, the verdict, the
+    printed lines and the overlay, and **both** atlases import it — so a verdict cannot differ between them,
+    and the picture cannot differ from the control. The measurement reads the rendered DOM, never the
+    renderer's bookkeeping, which is what lets a control catch the two disagreeing.
+  - **Nine controls, each driven to fail on purpose.** Two of them fired on real defects the first time they
+    ran, before any injection: a contained object declared `center` was painted **hard against the left edge**
+    (the anchor rules styled the figure, and a later rule of equal specificity won), and a 380px object
+    centred in a 382px slot was read as `start` because the check asked "is it against an edge?" before "is
+    it even?".
+  - **`visual.explanation/side-7` was designed, proven to hold an object, measured and REMOVED.** Given the
+    landscape fixtures it had never had, it holds them perfectly — the fit contract passes and nothing
+    horizontal is unclaimed — and the page is still wrong: the object stands **256px taller than the prose
+    beside it**, against the 240px this project calibrated as a hole on four earlier observed cases.
+    Landscape objects now fall through to `down-8`, 760px centred on the twelve, which has no hole at any
+    prose length.
+  - **What the contract cannot see, measured and printed rather than hidden.** A `paired` row puts an object
+    beside prose and the prose can run out first; nothing horizontal is unclaimed and the page still reads
+    badly. The atlas reports that gap and **compares it to nothing**, because prose length is content and
+    content may never decide a composition. On the same fixtures `side-6` measures **+474px** and
+    `interactive.primary/beside` **+472px** — the pairing rule's original finding arriving a second time, and
+    a larger ruling than one arrangement, so it is reported for the maintainer rather than acted on.
+    `practice.workbook/beside` is unaffected: its neighbour is a workspace with a designed height.
+
+- **Slot fit: a discrete span system, a validator, and a Slot Inspector** (`docs/atlas/composition/`,
+  `scripts/composition-atlas.mjs`, `scripts/lib/figure-geometry.mjs`, no app change). The catalogue had
+  answered *what pattern is this?* and never *is the media actually inhabiting its slot?* — the visible
+  result being a 760px graph hard against the left edge of a 1152px page with 392px beside it that had
+  no role, and nothing in the system able to tell that 392px from a reading margin.
+  - **Three kinds of whitespace, named separately for the first time**: *reading margin* (free columns
+    beside prose, legal), *pattern whitespace* (space inside a bounded media stage, legal) and **slot
+    residue** (a `fill` slot whose media is narrower than it, or a `contain` media neither centred nor
+    deliberately start-aligned — illegal). The renders we had been unhappy with were mostly the third.
+  - **Every media slot declares a `fit`.** `fill` = the media consumes the slot width; `contain` = it
+    may be smaller but must be deliberately placed, which means centred unless the slot declares a
+    reason. Both checks categorical: no threshold, no occupancy percentage, and **nothing the inspector
+    computes ever reaches layout**. This is deliberately *not* a resolver — "if occupancy < 55%, stack"
+    is what made the system lose the design.
+  - **The slot decides the width; the geometry decides the height; there is no height ceiling.** A
+    6-column slot that makes a tall graph 950px high is the right outcome and the page scrolls — a much
+    better failure mode than a 340px-wide graph stranded on a 1100px page.
+  - **Four approved desktop subdesigns for `visual.explanation`**, as the maintainer specified:
+    `side-6` (6 | 6, balanced), `side-7` (7 | 5, landscape), `down-8` (media **centred** across 8, with
+    the reading on the same centred spine) and `down-12` (the full grid). The renderer selects; it does
+    not invent a width.
+  - **Span promotion is the only automation, and it selects from arrangements that already exist**:
+    within one (surface, aspect class), the smallest approved span that clears the media's minimum
+    legible width. `validate()` now requires *at least* one approved subdesign per (surface, aspect) and
+    refuses two that share a span — which is what makes that sentence deterministic rather than hopeful.
+  - **The media reports capability, never footprint.** It is asked one question, about widths it did not
+    choose — *of these approved spans, which can you render faithfully?* — and answers with a subset of a
+    set someone else supplied. Nothing in the reply can be mistaken for a display size.
+  - **Legible at a width is three categorical predicates, and the first version asked only one of them.**
+    No collision; **fidelity** (every painted tick inside the *authored* domain — under equal unit scale
+    the engine expands the shorter domain and derives ticks from the *expanded* range, so at a 209px box
+    `symmetry` prints a y tick at 12 for an authored yMax of 11 and `landscape` prints x = −15 for an
+    authored −12); and **stability** (the tick set the same figure prints at full width, which catches
+    −7.5, −5.0, −2.5 … for an authored ±7). Overlap alone never bound: the real crossings are
+    symmetry 225 · squareish 249 · landscape 266 · graphcheck 209 · roots 233px, all set by fidelity.
+  - **It judges the solved box, not a guessed one.** An earlier version painted at a seed height
+    `round(aspect×(w−50)+100)`, and the verdict moved with the seed — `symmetry` in a 382px slot is clean
+    at h=498, prints x = ±6 at h=398 and decimals at h=698 — making the answer a property of the
+    measuring instrument. It now asks the renderer's own box solver for the box the page actually gets.
+  - **The monotonicity assumption broke, and asking each span removes it.** `roots` is clean at 264px,
+    collides at 296 and 328, and is clean again at 360: an illegible *band*, which no single crossing
+    width describes. A diagnostic still reports the number for a human and says when it is unsafe.
+  - **Promotion never fires on real content, and that is proved by driving it**: a 2-column (172px) state
+    approved for the balanced class is skipped for `side-6`, and a pattern whose only approved state is
+    that one fails the build rather than painting an unfaithful plane. That second case found a defect in
+    the first implementation — a single candidate was returned without ever being asked.
+  - **The Slot Inspector, drawn as well as enforced.** Beside every render with media,
+    `<name>-inspect.png` overlays the slot, the painted media and any unclaimed width (hatched where it
+    actually is), with a panel reporting pattern / subdesign / master grid / media slot / painted media /
+    fit / alignment / aspect-scale / unclaimed internal width — and on failure the diagnosis and the
+    **legal actions**. One function produces both the control's verdict and the overlay's text, so the
+    picture and the build cannot disagree.
+  - **It found three stranded arrangements on its first run**, none previously noticed:
+    `visual.compare/paired` (8 of 12 columns with four unnamed to the right — the shared plane now spans
+    what the pair spans), `media.full/inset` (the same defect, *named after it* — now `centred`), and the
+    tablet forms of both. `practice.workbook/beside` declared a 7-column media span for a 5-column slot.
+  - **The occupancy signal lost its threshold.** It compared a painted content dimension to a tuned 0.6 —
+    the shape of the resolver this architecture refuses, inside the gate and dormant only because the
+    corpus has no contained media. It now prints the number for every contained object and compares it to
+    nothing. Relatedly the build now says, on every run, that the whole `contain` branch is designed and
+    **unexercised**, rather than letting a green result imply otherwise.
+  - **Six new controls, each driven to fail on purpose**: slot fit (a `fill` media at 441px in a 760px
+    slot, which prints the whole inspector); every media slot declares a fit; `mediaSpan` equals the
+    columns its areas give; `approvedMediaSpans` matches its subdesigns; media alone in a row is centred
+    or full (caught in the catalogue, before rendering); and a media slot was actually inspected. The
+    promotion control was driven to fail four ways — shared span, missing span, two arrangements for the
+    no-media class, and an aspect class with none.
+  - **The pairing rule is reconciled with `side-6`/`side-7`, explicitly.** Side-by-side was removed for
+    pairing two *unbounded* materials. A media slot is no longer one: its height is a deterministic
+    function of the slot width and the authored domain, invariant to content — a *derived* height is a
+    designed height. What survives is the specific finding, so `side-6` is approved for `balanced` only,
+    `side-7` for `landscape` only, and a portrait plane still has no side-by-side subdesign anywhere.
+  - **The build now names what it has not tested**: approved subdesigns no render exercises. Today that
+    is `visual.explanation/side-7` — which is the brief for the slot-fit atlas the maintainer asked for
+    next.
+
+- **The Composition Atlas** (`docs/atlas/composition/`, `scripts/composition-atlas.mjs`, no app change).
+  The maintainer stopped the renderer work and redirected to the page-composition problem itself: a
+  small catalogue of page patterns on a shared master grid, with typed slots into which lesson blocks
+  are placed, rather than a resolver that keeps asking *how big should this be?*
+  - **Grid ≠ layout.** A 12 / 8 / 4-column master grid at 1152 / 834 / 382px gives alignment lines and
+    decides nothing. One number arrived on its own: eight desktop columns is `8 × 74 + 7 × 24` =
+    **exactly 760px**, the reading measure the previous atlas had reached from typography alone — so
+    the measure is a grid position, and the build refuses a pattern that sets prose wider.
+  - **Two vocabularies.** A **block** says what something *is*; a **slot** says what may live *there*.
+    Collapsing them is how a graph came to own a size. A graph now receives a slot and answers only
+    *inside this width, at equal unit scale, this is the faithful rendering I can provide*.
+  - **Eight patterns, 48 renders**, every page filled from the real quadratics lesson: `notes.basic`,
+    `notes.examples-tabs`, `visual.explanation`, `visual.compare`, `media.full`, `interactive.primary`,
+    `practice.workbook`, `practice.graph-workbook`. Each records grid areas, allowed blocks per slot,
+    occupancy, reading measure, media behaviour, disclosure, scroll ownership and three surfaces —
+    and the CSS for every arrangement is **generated from that record**, so design and layout have one
+    owner.
+  - **`visual.side` was designed, rendered, measured and REMOVED.** It fills the surface exactly and
+    reads well beside four paragraphs; beside one sentence it left ~600px of empty column — the rail,
+    for the third time. A composition whose soundness depends on how much prose the author happened to
+    write is content-dependent, and content may never decide a composition. Every visual pattern now
+    stacks, and the aspect class chooses only a **width**.
+  - **Occupancy policies**: `required` · `optional-collapse` (the row is *dropped*, because an
+    unoccupied named track keeps its row-gap — 40px of nothing is residue under another name) ·
+    `optional-reserved` (declared, and honestly unused).
+  - **Fifteen controls, each driven to fail on purpose**, including three that are new in kind: slot
+    edges must land on grid lines; a slot must be the width its pattern gave it (driven to fail with a
+    real resolver that measures rendered prose); and adversarial content must move nothing but height.
+  - **When two slots may share a row** — the rule both removals produced: a row may pair two slots only
+    when they are *the same kind* at identical width (a comparison) or when at least one has a
+    *designed height* (a pad, an instrument, a card). Two unbounded materials in one row is sound only
+    for the lengths the author happened to write.
+  - **Cut from eight patterns to seven by its own cross-pattern review.** `notes.basic` +
+    `notes.examples-tabs` → `notes` (they differed by one slot and the second was keyed on a
+    *disclosure mode*, which is authored inside a slot). `practice.graph-workbook` folded into
+    `practice.workbook` (it forked on grid-versus-lined paper, a property of the block).
+    `interactive.primary`'s `workspace` renamed `instrument` — one slot name was carrying two slot
+    types. The `scroll.x` contract was stated for a `data` slot and implemented on the table block;
+    the block was right. And **`worked.single` was added**, because the catalogue could not lay out
+    two of its own lesson's four subtopics.
+  - **The shell layer**, which the pattern pass named and did not close. A **shell** owns the page
+    title, the tab strips and which panel is open, and declares **no slot, no grid area and no media
+    rule** — the moment it acquires one it has become a pattern. `shell.subtopics` holds one or more
+    patterns per panel in reading order; `shell.views` holds one pattern per panel and *different*
+    patterns are the normal case, which is what makes it a shell rather than a pattern with a state.
+    Nesting runs subtopics → views → patterns; subtopics inside subtopics is forbidden.
+  - **Page 20 is the whole quadratics lesson through the catalogue** — 15 renders, one per leaf state
+    per surface — and building it found what the pattern layer had not: **`visual.compare` had no
+    approved subdesign for having no shared visual at all**. `none` is now an aspect class like any
+    other, and a pattern whose media is `optional-collapse` must declare a subdesign for it.
+  - **Four more controls, each driven to fail**: the authored tab structure is identical at every
+    width and state; a closed panel contributes nothing; a shell introduces no scroll of its own; and
+    the two tab kinds are **distinguishable** — the per-depth affordance control could not catch a
+    nested views strip styled as an item selector, because `views` occurs only at depth 1, and this
+    one does.
+  - `mediaSize` is recorded as the useful **failed intermediate** it was: it proved semantic importance
+    and media geometry are separate concerns, which is why this catalogue has a slot layer. The old
+    atlas is marked superseded rather than deleted.
+  - `lesson-studio.html` is unchanged and byte-identical since `41d40a8`.
+- **The missing layer: `mediaSize`** (`docs/atlas/`, `scripts/lib/figure-geometry.mjs`, no app change).
+  The maintainer rejected image 1 a second time, and correctly: `visual.down` and an undistorted plane
+  had fixed the *shape*, and the symmetry graph was still **488×625 on a 1152px desktop page** —
+  mathematically perfect, instructionally a thumbnail. The defect was architectural. The contract
+  published a `preferredWidth` and the renderer treated it as the final instructional display size;
+  it never was. It is the largest box that still paints the authored domain at equal unit scale within
+  a legibility bound, which for a tall plane is a small box.
+  - **The chain is five steps, not four**: media type → **mediaSize (authored)** → geometry class →
+    approved subdesign → prescribed responsive state. Geometry can say what shape a plane must keep;
+    it can never say how much importance the plane deserves. A supporting number-line, an ordinary
+    worked-example graph and a major explanatory graph can share one aspect ratio.
+  - **Four frozen size classes** — `compact` (supporting) · `standard` (ordinary instructional) ·
+    `large` (primary explanatory) · `workspace` (reserved for the practice family). Each prescribes a
+    **width band and a height ceiling per surface**; the figure is realised at the widest width in the
+    band whose *measured* box clears the ceiling, geometry and equal unit scale untouched — the width
+    comes down, the plane is never squashed. Authored as `"mediaSize"` on the composition node, and
+    **required**: a default would be the renderer deciding how important the author's figure is.
+  - **Symmetry, desktop: 488×625 → 683×860**, the maintainer's ruling (`standard`, not `compact`) and
+    their expected 600–700px band, arrived at from the frozen numbers rather than picked. A flatter
+    parabola is authored `large`: 900×385 → 1000×463.
+  - **The `growable` special case is gone.** It grew only planes wider than they are tall, to one
+    hardcoded `widePreferredWidth: 900`, because there was nowhere to say how large a figure should be.
+    Every class is now realised the same way.
+  - **`compact` is a reserved word**: it means a media size and nothing else — no composition,
+    subdesign or responsive state in this grammar may be called `compact`.
+  - **Reference design 21, the size ladder**: one tall plane and one wide plane, each at all three
+    sizes. Down a ladder the geometry class, the subdesign and the composition are identical and only
+    the physical footprint moves. For the tall plane the height ceiling settles the width; for the wide
+    plane the band edge does.
+  - **Six controls, each driven to fail on purpose**: an omitted size; an invented size name; a
+    band-sized box around an unchanged narrow plane (*a bounded wrapper is not a size*); a realisation
+    outside its band; two size classes that realise the same plane; a size class that changes the
+    geometry class. The content-perturbation control now also compares every realised plane.
+  - `lesson-studio.html` is unchanged and byte-identical since `41d40a8`.
+- **Narrowly scoped visual corrections after the first lesson passed its structural test**
+  (`docs/atlas/`, no app change). The maintainer accepted `single.flow`, `single.split`,
+  `collection.repeat`, `scroll.y = page` and the narrow repeated-example anatomy as golden, and asked
+  for four fixes. No new composition vocabulary and no new general-purpose layout logic.
+  - **The tab strip is one row that scrolls, and never wraps.** At 382px `collection.tabs` used to
+    wrap, leaving a tab alone on a second line. It now scrolls locally in x at every width, and
+    selecting a tab brings it fully into view — no dropdown, no smaller type. The partly visible
+    neighbour at the edge is the affordance; a fade would dim the control the reader is reaching for.
+    `data-scroll-x="tabstrip"` declares the contract, deliberately distinct from `local`.
+  - **`visual.side` is reserved for a plane no taller than it is wide.** The 388px empty rail is
+    gone. Tightening the `balanced` band alone could not deliver the ruling — at 1.20 the plane
+    simply moved into `portrait`, which also resolved `side` — so `portrait` resolves `down` too and
+    `balanced` is now 0.75–1.0. Still pure media geometry: nothing about paragraph length, sentence
+    count, occupancy or measured dead space enters it.
+  - **What whitespace means**, replacing every occupancy percentage: free width *outside* a
+    composition is reading margin and filling it is not a goal; unexplained empty area *inside* a
+    semantic track is not automatically acceptable and is fixed by choosing a different prescribed
+    subdesign; a tall page is fine; local horizontal scrolling only where a contract permits it;
+    changing composition because a paragraph is short is forbidden.
+  - Three new controls, each driven to fail on purpose: the strip must be one row; the current tab
+    must be fully in view; and only a declared contract (`local` or `tabstrip`) may scroll sideways.
+
+### Fixed
+- **The class bands had two owners and the grammar was the one being ignored.** `atlas.json` declared
+  them in prose while `scripts/lib/figure-geometry.mjs` hardcoded `1.3 / 0.75 / 0.4`, so retuning the
+  grammar changed nothing at all. The numbers now live in `mediaGeometry.bands` and the module reads
+  them. The atlas build was still carrying its own second copy of the whole figure search as well;
+  it now uses the shared contract.
+- **`down` inflated a tall plane.** Growing a figure to the atlas's wide-figure width is right for a
+  plane wider than it is tall — a 717px landscape plane reads better at 896px — and wrong for every
+  other shape. When `portrait` moved into `down` that rule met a tall plane for the first time and
+  blew the 488 × 625 symmetry graph up to **900 × 1120**, worse than the void it replaced. The growth
+  now applies only to planes wider than they are tall; a plane is never grown past its legible size.
+- **The tab strip's `overflow-x:auto` coerces `overflow-y` to `auto`**, exactly as a local-x region
+  does, so it was being reported as a vertical scroller on a `scroll.y = page` lesson.
+
 ### Added
+- **The first real lesson — the lesson is now the test of the system** (`docs/atlas/lesson/`, no app
+  change). `quadratics.lesson.json` is a complete NSW Stage 5 lesson, *The parabola y = x²*, authored
+  in the frozen grammar and nothing else; `scripts/lesson-render.mjs` walks the JSON and emits the
+  frozen vocabulary at desktop 1152 / tablet 834 / phone 382, in all five tab and view states. No
+  fragment, no fixture, no hand-written markup. 15 renders.
+  - **Four subtopics, each choosing its own composition**: Substitution (`collection.repeat` → 3 ×
+    `single.flow`, the third ending in a table of values), Solving for *x* (`collection.repeat` →
+    `single.flow`, `single.split` — the bare equation then the same algebra inside a situation),
+    Symmetry (`views.tabs` → `comparison.paired` · `visual.side`) and A flatter parabola
+    (`visual.down`). `comparison.sharedVisual` was not needed and is not used.
+  - **An unknown node stops the run and names the gap.** Every node must name a composition,
+    collection mode or views mode the grammar contains; nothing is widened to make a lesson fit.
+  - **The derived switch point is now held shut by two controls.** *Content perturbation*: every
+    paragraph tripled and every step doubled, asserting not one prescribed state moves at any width —
+    if prose length, step count or rendered height had leaked into the rule, it moves. *No residue*:
+    one page instance driven narrow and back must restore the wide arrangement exactly, which a pure
+    width comparison does and a stateful one does not.
+  - **`scroll.x = local-when-needed` is a permission, not a promise.** Each region must be local and
+    well-behaved; the run as a whole must need it at least once. The lesson's table of values fits at
+    1152 and overflows at 382 — both correct. Demanding overflow at every width would have meant
+    padding the table until the control passed.
+  - `scripts/lib/figure-geometry.mjs` gives the media-geometry contract **one owner**, so the atlas
+    and the lesson cannot disagree about a figure's preferred width — which is an input to the switch
+    point, and two copies of it would be two grammars.
+  - Reported and deliberately not acted on: `visual.side` leaves **388px of trailing space** beside
+    the plane at desktop (figure 647px, reading 259px). Measuring that in order to resize either
+    column is the resolver; three prescribed options are put to the maintainer instead.
+
+### Fixed
+- **The page frame did not hold the surface, and the right edge of every line was clipped.**
+  `.at-surface` is `surface + 2 × pad` wide; the narrow and tablet frame overrides counted the
+  surface without its padding, leaving the frame 32px (phone) and 48px (tablet) too small. The
+  document never scrolled sideways while it happened, so the control watching the document was blind
+  — only looking at a phone render showed it. Fixed, and a control on the frame added: it fails on
+  the old CSS with `the page frame is 874px around 902px of surface`.
+- **A step could hold one mathematical statement, and a check step holds two.** "Check each one back
+  in the original equation" is `4² = 16` and `(−4)² = 16`; written as one string with spaces between
+  them HTML collapses the run and they render as a single broken statement. A `math` value may now be
+  a string **or a list of statements**. This is content vocabulary — it adds nothing to composition,
+  collection, scroll or media geometry — and it is the only capability the first lesson exposed.
+- **A wrong number in the lesson text**: "24 units of *x* to climb 6 units of *y*" — 24 is the width
+  of the window, not the climb. `y = x²/12` reaches 6 at *x* ≈ 8.49 against ≈ 2.45 for `y = x²`.
+  Corrected, and checked by evaluation.
+
+### Added
+- **The grammar is frozen: four axes, and one authentic page as the proof**
+  (`docs/atlas/worked-examples/`, no app change). One rule governs everything: **the author chooses
+  the instructional structure; the renderer chooses only the prescribed responsive state and media
+  subdesign belonging to that structure.**
+  - **`presentation.tabs` → `views.tabs`,** and the distinction is now encoded rather than styled.
+    `collection.tabs` means *several SIBLING ITEMS; select one* (Negative · Fraction · Decimal);
+    `views.tabs` means *ONE object, seen in several REPRESENTATIONS* (Workings · Graph check). The
+    affordance is keyed on `data-tabs-kind`, so a views group reads as a view switch at any nesting
+    depth — an earlier pass keyed it on depth, which would render a top-level `views.tabs` as an item
+    selector and lie about what the tabs mean.
+  - **`visualCheck` is gone** and has no rendering logic anywhere. It was always
+    `views.tabs{ Workings → single.flow, Graph check → visual }`. A future `[ Method 1 ] [ Method 2 ]`
+    is `views.tabs{ single.flow, single.flow }` — not a new template.
+  - **Compositions**: `single.flow` (default), `single.split`, `comparison.paired`, `visual.side`,
+    `visual.down`, `comparison.sharedVisual.side`, `comparison.sharedVisual.down`. The author writes
+    the base name; media geometry resolves the suffix and may never change the base. Images 10 and 11
+    are the proof: the same authored `comparison.sharedVisual` with a balanced figure and with a wide
+    one, resolving `.side` and `.down` — **both still `comparison.sharedVisual`**.
+  - **Scroll is two contracts, not one enum** — `scroll.y` (`page` | `pane`) and `scroll.x`
+    (`local-when-needed`), because a long equation is not the same design decision as an
+    independently scrolling workspace.
+  - **One authentic Worked Examples page** (image `01`), at desktop 1152 · tablet 834 · phone 382,
+    built from nothing but this vocabulary: subtopic `collection.tabs` → `collection.repeat` /
+    `single.flow` / `views.tabs` → `comparison.paired` and `visual.side`, under page scroll. 60
+    renders across 20 reference designs; the page is the deliverable and the rest is the dictionary.
+  - **`practice.paper` · `practice.workbook` · `practice.graphWorkbook` · `practice.geometryWorkbook`**
+    are named as a deliberately separate family, so nobody bends a teaching composition into a
+    workbook. `views.stepper` likewise. None is built.
+  - **Two new controls.** The tab affordance must be the one its *kind* declares, identically at every
+    depth. And no authored file may carry a layout-arithmetic key (`leftWidth`, `occupancy`,
+    `preferSplit`, `maxDeadSpace`, …) — the JSON principle made a property of the source rather than a
+    paragraph in a document. Fifteen controls now, every one driven to fail on purpose.
+
+### Changed
+- **One derived switch point, offered as a proposal.** Every switch point is a constant belonging to
+  its composition except `visual.side`, which is `figure.preferredWidth + gap + minInterpretation`
+  (420px) — 940px for the symmetry plane, 876 for roots, 838 for the graph check. Measured: at the
+  834px tablet a fixed 720 leaves a 488px plane beside a **314px** reading column, narrower than the
+  atlas's own 520px case measure. The derived point stacks instead. It is still prescribed — two
+  numbers, the authored figure's own width and one design-system constant, and it never looks at the
+  prose, the step count or the height of anything — but it is the one place the rule was extended
+  rather than followed, so it is flagged for the maintainer rather than assumed.
+- A tablet surface (834px) joins desktop and phone for the authentic page and for `visual`.
+
+### Fixed
+- **The build summary cried wolf.** It grouped the composition-drift check by *demo* rather than by
+  *fragment*, so a normal and an adversarial payload — which legitimately hold different numbers of
+  children — reported `compositions DRIFTED` when nothing had drifted. A summary line that cries wolf
+  is worse than no summary line.
+
+### Added
+- **Disclosure and scrolling as first-class design tools** (`docs/atlas/worked-examples/`, no app
+  change). The six-template atlas defined composition but not how content is *revealed and
+  navigated*, so tabs and scrolling kept looking like emergency responses to a layout that did not
+  fit. They are now their own axes, and the atlas is restructured around **four independent ones**:
+  composition (the spatial relationship of what is visible **now**), disclosure (whether several
+  things are visible at once), scroll policy, and the figure's own media geometry.
+  - **The hard rule.** *Tabs are authored pedagogical structure. They may never be introduced or
+    removed because of viewport size, content height, occupancy, or any layout heuristic.* "This got
+    tall, so I'll hide half of it in tabs" is resolver behaviour wearing a different hat. The build
+    reads the whole tab structure back out of the DOM — nesting depth, group name, every label in
+    order, every panel in order, visible or not — and compares it **character for character** to the
+    signature authored in `src/pack.json`, at every width and in every tab state.
+  - **Revised vocabulary.** COMPOSITIONS (`single.flow`, `single.split`, `comparison.paired`,
+    `comparison.sharedVisual`, `visual.interpretation`) · COLLECTIONS (`collection.repeat` — what
+    `sequence.flow` was; `collection.tabs`) · PRESENTATIONS (`presentation.tabs` — what `visualCheck`
+    was; `presentation.stepper`, named only) · SCROLL (`page`, `local-y`, `local-x`,
+    `persistent-pane`). Three tab patterns: example, representation, subtopic.
+  - **Scrolling means three different things.** Page scroll is normal and desirable — image 17 is
+    2331–2987px tall and that is the outcome, not a failure. Local-y is a **workspace** behaviour,
+    permitted only inside a persistent pane; teaching prose in a bounded scroller is refused by the
+    build. Local-x is a last resort for indivisible material — a table of values, an un-breakable
+    expansion.
+  - **One authentic Worked Examples page** (image 20): subtopic tabs Substitution · Solving for *x* ·
+    Symmetry, an approved composition inside each, and representation tabs Workings · Visual
+    explanation inside Symmetry. 54 renders across 20 reference designs.
+  - `ATLAS_ONLY=13,18 node scripts/atlas-worked-examples.mjs` renders a subset, and measures only the
+    figures that subset needs — for iterating, and for driving each control to fail on purpose.
+
+### Fixed
+- **The figure search was not deterministic, and produced a wrong plane.** The landscape figure's
+  narrow box came back **169 × 156** against a 382px cap on one run and **382 × 216** on the next,
+  from identical code. Two causes, both now closed: the first paint of a box did not agree with the
+  second (x/y = 1.045 then 1.005 on an immediate repeat — and since paints are memoised, whichever
+  came first was what the entire search ran on), so the engine is now fitted twice and read settled;
+  and the narrow box was being searched over *scale* when the narrow surface does not choose a scale
+  at all — it gives the figure its full width, and the figure's aspect decides the height. It is now
+  solved as a height at a fixed width. A collapsed search is also a hard error: a 169px plane paints
+  perfectly square and screenshots as a graph, so only the width told the truth.
+- **A repeated example had no measure at all.** `sequence.flow` styled the wrapper and nothing else,
+  so prose inside it ran the full 1152px canvas. The old control — "a region that declares a maximum
+  must honour it" — was vacuous exactly where no maximum was declared. The control is now *every
+  visible paragraph of prose renders within the flow measure*, and the repeated child is literally a
+  `single.flow`, measures included.
+- **The atlas pages were being clipped by the app's own body rule.** `lesson-studio.html` sets
+  `overflow:hidden` on the body because the app is a slide surface; the atlas lifts that stylesheet
+  whole. A lesson page is not a slide — it scrolls. The frame is now explicitly unclipped and every
+  render asserts nothing in it bounds or clips the page.
+- **`overflow-x:auto` with `overflow-y:visible` is not a state CSS has** — the spec coerces the
+  visible one to `auto`. Reading computed style alone reported a vertical scroller wherever a wide
+  equation sat, and a horizontal one wherever the workbook pane was. Both directions are now
+  distinguished, and each still asserts it is not *also* clipping the other axis.
+- **A scrolling region that shows no scrollbar reads as truncated.** Measured: in headless Chromium
+  `scrollbar-width:thin` and the `::-webkit-scrollbar` rules paint nothing at all, and
+  `scrollbar-gutter:stable` reserves 9px and leaves it blank. Every scrolling region now carries a
+  fade at the edge its content continues past, which in these screenshots is the entire affordance.
+
+### Added
+- **The worked-example atlas: six designed templates instead of a resolver**
+  (`docs/atlas/worked-examples/`, no app change). The composition resolver tried to discover good
+  design from measurements, and that experiment is over. Generalisability now comes from choosing the
+  right template, not from letting the browser invent a composition. The resolver pack is retained at
+  `docs/mockups/compositions/` marked **research evidence only**; its layout-selection logic must not
+  be ported into the app, and `lesson-studio.html` has been untouched since `41d40a8` throughout, so
+  nothing needs unwinding.
+  - **Six templates**, each with rigid horizontal structure and prescribed responsive states:
+    `single.flow` (the default — most worked examples are a one-line question and a solution that is
+    the lesson), `single.split`, `sequence.flow`, `comparison.paired`, `comparison.sharedVisual` and
+    `visualCheck`. A template is **named in the JSON and never inferred**: the build asserts `data-tpl`
+    is identical at every width and for every adversarial payload. A payload may make a page taller;
+    it may never change which template the page is.
+  - **Media geometry is the one permitted automatic classification.** A figure is `portrait ·
+    balanced · landscape · wide`, from its authored domain, and a template maps that class to an
+    approved subdesign — a wide figure gets the whole content region with its interpretation beneath.
+    That is a designed composition, not a failure state. The surrounding prose never determines a
+    figure's width.
+  - **Height is not a constraint.** `height:auto`, the page scrolls, and page heights across the
+    atlas run from 900px to 2816px without any of it being treated as a problem.
+  - **Controlled measures** so a stacked example does not stretch prose across the canvas: flow and
+    solution 760px, interpretation and synthesis 720px, case 520px. Unused page width is reading
+    margin. These are design-system values and never appear in lesson JSON.
+  - **Six controls, five of which caught something.** A figure rendering as the literal text
+    `undefined` (the painted HTML was dropped when assembling the figure record, so the planes in the
+    `side` subdesign were text); a region with no plane in it at all, which the width check had been
+    skipping; a narrow figure at x/y = 1.021 because a pre-painted box was being squashed rather than
+    a new one solved; a full-width region around a narrower plane; and an **inert adversarial proof**
+    — the over-wide-mathematics payload could not overflow because `visualCheck` state 1 was not using
+    the `single.flow` measure. Both halves were fixed: the template now carries the measure, and the
+    payload is a genuine four-bracket expansion, verified algebraically, rather than a line that
+    merely looked long.
+- **The composition resolver stops fitting rectangles: a Study page scrolls**
+  (`docs/mockups/compositions/`, no app change). The previous resolver was solving a problem the page
+  does not have — fitting a composition into the visible rectangle — and three rounds of gate-tuning
+  were downstream of that. The order is now `content semantics → intrinsic demands → a NAMED state →
+  allocate width → height:auto → scroll`, and there is no target page height in Study mode.
+  - **Every state is a fresh layout.** A refused candidate discards all of its computed dimensions.
+    The previous build did not, and said so in its own report: image 12 recorded `state: "stack"`
+    while still carrying `cols: [332, 640]` from the side candidate it had rejected, so a stacked
+    plane was sized against what a rejected rail left behind.
+  - **Height no longer selects a layout**, with one named exception. The global occupancy gate is
+    gone: it was semantically wrong for figures, where a 700px plane beside a 180px explanation is a
+    good relationship — it rejected exactly that at "14% occupancy" and produced a page with *more*
+    empty width than the one it refused. What remains is `promptSubstance` on `instructionSplit`
+    alone, and it selects a different primitive rather than rejecting content.
+  - **`instructionFlow`** — a short task, a rule, then the reasoning at its own reading measure while
+    the page grows. A presentation type, not a fallback: 14 of the 30 compositions in the pack are
+    this shape, including every ordinary Substitution example and the seven-step derivation. Split-
+    or-stack was too crude a vocabulary for mathematics.
+  - **Figures offer, compositions choose.** Each plane reports a ladder of the sizes it can legally
+    be drawn at, in px per authored unit, measured before any text track is allocated. The build
+    fails if a rendered plane is not at one of the sizes its own ladder offers, so leftover width can
+    no longer become a figure size.
+  - **Permanent alignment origins**, measured on every image. This caught the one real bug found
+    while building: an inherited `justify-self: center` on the rule element, which Chrome honours in
+    *block* layout — the flow state's full-width hairline was being shrink-to-fit-and-centred to
+    **0px**. A missing hairline looks exactly like spacing, so it screenshots plausibly.
+  - **Whitespace is classified** rather than counted: reading margin and structural space are
+    desirable; only unowned width *inside* an allocated region is a defect.
+  - **Three of the four controls did not fire on first attempt, and each was fixed rather than
+    accepted.** The residue check was reading the resolver's own record — which simply never set the
+    field — instead of the DOM. Two regression patches had silently failed to apply because their
+    target text had changed, so the regressions are now asserted before the run. And the figure-ladder
+    control was masked by a latent bug in the build itself: the figure page was being closed after the
+    signature phase, so phase 2's "repaint and check the plane is square" was only ever a cache
+    lookup, and a box the signature phase had not already tried crashed the run instead of failing the
+    control. The page now lives to the end and phase 2 genuinely repaints.
+- **The composition contract gains a resolver: fitting horizontally is not the same as being viable**
+  (`docs/mockups/compositions/`, no app change). The previous pack decided every arrangement with one
+  test, `min + gap + min ≤ available`, which establishes that two tracks can physically exist and says
+  nothing about whether the result is a composition. A candidate now passes **four independent gates** —
+  width, figure fidelity, vertical occupancy, dead-space ownership — or it stacks, which is a safe
+  fallback rather than a failure. In this pack 22 of 30 arrangements are rejected. The container
+  queries are gone: a query can ask how wide the container is, not whether the shorter track fills the
+  row, so the resolver lays a candidate out, measures it, and assigns the verdict and the track boxes.
+  - **Figures are sized first, from their own layout signature.** The resolver never asks how much
+    width is left for the graph. Each plane carries `minimumReadableScale · preferredScale ·
+    maximumUsefulScale`, in px per authored unit rather than in box dimensions — a correction the
+    engine forced twice. Defining the boxes as "the largest box that still paints square units" made
+    every plane answer 720 × 720, because the engine holds square units at almost any box by showing
+    more of the plane; modelling the box as `span × scale + a fixed gutter` then missed by up to 3%,
+    because the gutter is not fixed and which axis binds changes with the box. Measuring instead of
+    modelling — paint, read px-per-unit off the tick labels, correct both dimensions — converges in
+    three or four paints.
+  - **The floor and the bound are different things and can fail to overlap.** The legibility floor is a
+    property of the mathematics (the plot must clear 340 × 255); the 720px bound is a property of the
+    page. **Three of the five planes in the pack cannot satisfy both**, and the pack reports it rather
+    than hiding it: those planes have one legal scale, and the resolver is told so instead of
+    discovering it by painting something distorted.
+  - **The occupancy gate, with the data to set it by.** `shorter track ÷ row height`, floor 0.55, and
+    every measurement is printed. The consequence is large and deliberate: an ordinary worked example —
+    one-line question, three-step solution — measures 22% and stacks at every width, so
+    `instructionSplit` becomes the exception rather than the rule. The seven-step adversarial case
+    measures 11%.
+  - **Dead space became an invariant rather than a rejection**, because as a rejection it made the
+    resolver worse: it stacked a pair to avoid 94px of trailing space and produced 766px instead. What
+    is forbidden is unowned width *between* tracks or *inside* one; space past the last track is page
+    margin. The related fix is ownership, not arrangement — a **stacked figure region is now shrunk to
+    its plane**, which moves no pixel of the image and moves 766px of space from the composition to the
+    page margin.
+  - **A track is never given width its region cannot use.** Allocation clamps each track to
+    `[min, max]` and redistributes, so 1152px resolves to **512 + 608** rather than 392 + 728.
+  - **A repeat's children share one verdict and the strictest decides**, so a gate can never leave row
+    2 stacked between two split siblings.
+  - New adversarial pairs where only the content differs: a balanced `standard` that splits (77%)
+    against the same primitive at the same width that stacks (22%), and a dense interpretation that
+    keeps its rail (69%) against a sparse one that does not (14%).
+- **The composition contract — a zone-contract pack for the Mathematics worked examples**
+  (`docs/mockups/compositions/`, no app change). The previous pack described five arrangements; a
+  renderer given five pictures has to guess the rule that produced them, so this one states the rule.
+  The whole worked-example system reduces to **four primitives** — `instructionSplit` (prompt │
+  solution), `repeat` (a child, down or across), `visualInterpretation` (figure │ interpretation) and
+  `stack` — and the named compositions become assemblies of them. `src/kit.css` contains no rule keyed
+  on a composition name, and `repeat`'s CSS never writes down a count, so a 2 + 1 arrangement is not
+  expressible rather than merely discouraged.
+  - **No width in the pack is typed.** Track widths are computed from region contracts (a minimum, a
+    growth weight, a reading measure) and every threshold is generated as the sum `min + gap + min`.
+    The 1152px desktop reference resolves to **392 / 728 — 35.0% / 65.0%**, as a result. Images `16`
+    and `17` are the same file at 768px and 767px, the computed floor and one pixel below it.
+  - **`pairedVisual`'s lower half is redesigned.** A shared visual "at full width" left an arbitrary
+    region beside a plane narrower than the row, with no answer to what that region was for. It is now
+    the interpretation rail, and the hand-drawn two-row middle state is gone as a designed thing —
+    image `06` shows it emerging from the grammar at a width nobody chose.
+  - **A plane's size is searched for and scored on the painted result**, not computed and hoped for.
+    Measured on the shipped engine: a 24 × 8 domain in the 720 × 255 box its own aspect asks for
+    renders at x/y = **1.79**, because the engine reserves a fixed label gutter that a shallow box is
+    mostly made of; the same domain at 720 × 488 renders at 1.001. `figures.json` now holds authored
+    domains with no width or height in it, and the same domain is deliberately a different size in
+    different states — `446 × 720` was never a contract, only one realised size.
+  - **Five adversarial proofs** (long question, long solution, over-wide mathematics, portrait plane,
+    landscape plane) replace decorative screenshots. The landscape pair renders one file above and
+    below `720 + 32 + 384` and shows the split abandoned rather than the plane squeezed.
+  - **The controls were driven back before they were trusted.** Four regressions were injected and
+    each is caught: a typed growth weight, a composition that hides a child at one width, a figure
+    track sized to the space rather than to the plane, and an annotation that reshapes the page it
+    annotates. The payload control had to be rewritten to walk *rendered* text — `textContent`
+    includes a `display:none` subtree, so the first version of it compared equal to a page that had
+    quietly dropped an example.
+  - Fixes a defect in the previous pack the maintainer found: its narrow `sequence` proof carried two
+    examples and a shortened synthesis where its desktop twin carried three. One fragment now serves
+    every surface, so a layout proof cannot carry different content at different widths.
+- **Stage B correction — the split is decided by measured geometry, not by a device width.** The previous
+  rule was a breakpoint, and it produced a "split" whose writing surface measured **452 × 0 px** at a 900px
+  portrait tablet: below 900 the page became a block, the stretched grid row went away, and the sheet's
+  `min-height:0` had nothing to grow into. The rule is now the minimum usable geometry of both regions,
+  measured on the real page — question column ≥ 440px, workbook column ≥ 420px, sheet ≥ 340px — computed
+  from the ratio the grid will actually use, and re-resolved on every resize. So the same 1180×900 viewport
+  is `solo` with the navigation rail open and `split` once it is collapsed: the decision is the space, not
+  the device. Portrait tablets take the Questions / Workbook views, and in the Workbook view the workbook
+  gets the whole page rather than a fixed `vh` slice. The sheet now has a floor everywhere, so it cannot
+  collapse whatever the page does. A control drives the failure back: forcing the split past the minima
+  returns the sheet to 0px.
+- **A structured table is never silently clipped.** It was, at every width below desktop, and an overlay
+  scrollbar made it look like a table with fewer columns. Now: fit as authored; if it does not fit, compact
+  the cells; if a legitimately wide authored table still does not fit, the TABLE takes its own horizontal
+  scroll with a visible edge, a persistent thin scrollbar and a sticky stub column, so no row loses its
+  label and no column disappears. The question pane itself never overflows. The two intrinsic widths are
+  measured once and cached, so re-running on resize is a pair of comparisons rather than a
+  remove-measure-add cycle that would leave an un-compacted frame. `tests/visual/lessons/mathematics-wide-table.json`
+  is the 13-column stress case.
+- **Stage B2 — Type mode.** The `Type` control now does something. The workbook has ONE page list and each
+  page carries both modalities — `{mode, current, pages:[{id, ink, text}]}` under kind `workbook` — so
+  `Page 1 / Page 2 / +` is a property of the workbook, not of the input technology, and the two cannot
+  renumber apart from one another. Type replaces the workbook SURFACE and nothing else: the question column,
+  its table and its scroll position are untouched, and no answer box is attached to any question. The typed
+  surface is one working page — prose and inline equations in the order they were written — stored as text
+  and as TPMath's own JSON tree, never as markup, so it round-trips through the response store with nothing
+  to sanitise. The equation bar is the app's existing TPMath editor opened in place behind a `Text |
+  Equation` affordance; it is not coupled to `graphQuestion`, which mounts the same primitive its own way.
+  Switching modality, changing page, navigating away and back, the drawer, Expand and the narrow
+  Questions / Workbook views all leave both modalities and the page numbering exactly as they were, and
+  `responseMode` remains presentation state that never decides what is submitted.
+- **Four defects in that surface, found by looking at it rather than at the payload.** The equation bar
+  never closed (`.mx-eqbar{display:flex}` outranks the UA `[hidden]` rule, so a half-built editor sat on
+  every fresh page); the typing pad borrowed `.tp-slide` for the editor's styling and inherited its
+  `position:absolute`, which took the workbook out of the workspace column and left a 340px pad in an 830px
+  region; the equation FIELD was an unfocusable `<span>` inside a styled wrapper, so TPMath's key handling
+  and caret were unreachable by keyboard; and re-opening the bar mounted a second editor on the same node —
+  `destroy()` unbinds the document listeners but not the field's — so every keystroke was inserted once per
+  editor ever opened. Each now has a check with a control that reproduces the failure.
+- **One owner for the Practice viability contract.** `MX_WB_MIN_H = 340` also existed as a literal in two
+  CSS rules, and `MX_SPLIT_GUTTER = 20` as `gap:20px` — three copies of two numbers, and the JS constants
+  were not the source of any of them, so raising a minimum would have left the CSS silently disagreeing.
+  The contract is now published from the one place that owns it as scoped custom properties on the
+  Mathematics Practice root (`--mx-wb-min-h`, `--mx-split-gutter`) and consumed from there. Deliberately no
+  `var(…, fallback)` in the consuming rules: a fallback is a second copy of the value. Zero visual change —
+  all 126 screenshots re-rendered byte-identical, the computed sheet floor is still exactly 340px, every
+  split/solo decision at every gated width is unchanged, and the zero-height control still reproduces.
+- **The workbook sheet is a WINDOW; the paper scrolls inside it.** The frame was the paper: `.mx-sheet`
+  was `overflow-y: visible` with `scrollHeight === clientHeight` at every width, so a learner could not
+  write past the bottom of the visible workbook. Now the window scrolls over a paper that is at least one
+  window tall and grows downward as the writing approaches its bottom — measured on a phone, 545px of
+  window and 758px of paper after five lines of working. The toolbar and the page tabs are siblings of the
+  window, not of the paper, so Pen / Eraser / Clear / Expand and `Page 1 / Page 2 / +` stay exactly where
+  they are while the paper moves (toolbar 191→191, tabs 835→835 across a 213px scroll). The lesson page
+  never becomes several screens tall to hold it — that part was already true and is now asserted.
+  The extent is DERIVED from the ink rather than stored, so the response payload stays `{id, ink, text}`
+  and a sheet restored from the store gets its paper back with it. The horizontal scale is fixed at 1000
+  units across, so growing the paper exposes more plane and cannot rescale existing writing: the control
+  shows the plane going 1434 → 1995 units while the first stroke stays at (100, 215.01). Each page keeps
+  its own scroll position, and on desktop the question column and the paper scroll independently — moving
+  one leaves the other exactly where it was. `verify-workbook` 75 → 84.
+- **The equation editor fits on a handset.** The Type workspace already worked at 414/390/360px — every
+  control reachable, nothing overflowing sideways — but the ribbon stacks into a long column there, and
+  capping the BAR scrolled Insert and Cancel away with it. The ribbon is capped instead, so field, symbols
+  and actions stay within one screen: Insert now sits 382px below the field on a 414px handset rather than
+  491px, i.e. on the screen rather than past its bottom. The proof set gains a phone Workbook/Type view and
+  a phone equation bar; `verify-type-interaction` covers 414×860 and 360×780 (52 checks, up from 46) and
+  now also asserts that no width scrolls the page sideways.
+- **Stage C — Notes and Worked Examples are real pages, driven by the lesson JSON.**
+  - **A tab is an alternative complete demonstration of the SAME object.** The first build partitioned a
+    single mathematical idea across `Graph / Table / Coordinates`, so a learner had to switch tabs to
+    reconstruct one thought. The correction to that over-shot: tabs became _y_ = _x_², _y_ = _x_² + 2 and
+    _y_ = −_x_², which changed the mathematical object while the persistent concept panel beside them still
+    said the vertex is (0, 0) and _y_ ≥ 0 — statements false for two of the three. The page contradicted
+    itself. The concept panel is the STABLE KNOWLEDGE and does not change with the tab; every tab must
+    explore the object it describes. This lesson now authors three complete demonstrations of _y_ = _x_²:
+    **Graph and key points** (curve + selected coordinates + what they show), **Table to graph** (a full
+    table + the same points plotted + the link between them) and **Symmetry** (curve + paired _x_-values +
+    why the _y_-axis is the axis of symmetry). Each combines several representation kinds and stands on its
+    own, so switching tabs means "show me another way to see this".
+  - **One part vocabulary, shared by both pages.** An example composes `parts[]`, each `{kind, …}`:
+    `figure` (delegated to the Figure engine), `table`, `points`, `relations`, `prose`. The same vocabulary
+    builds a worked example's companion and a single step's own visual, so the data/rendering boundary
+    never assumes the companion is one static graph unrelated to the steps. Panes are keyed by the AUTHORED
+    id, so a tab's identity is never its position: reordering, relabelling or adding changes the page with
+    no renderer change.
+  - **Notes** takes an authored concept list of any length (`concepts[]`, each with a stable id and rich
+    mathematical content), an optional short lede, an optional compact Key Idea, and the examples above.
+    There is no "record in your notes" field, no "what to write down" panel and no mandatory Key Idea.
+  - **A region that exists but holds nothing is a failure**, exactly as a zero-height workbook was. At a
+    portrait tablet the example panel had become a tab strip over an empty box — the region was technically
+    present and the learning asset was gone. The Practice viability contract now owns the example region
+    too (`MX_REP_MIN_W` / `MX_REP_MIN_H`, published as scoped custom properties so no value has a second
+    copy), a portrait viewport stacks by construction rather than being judged on width, and the figure
+    part is given its own bounded box on the documented `.tp-slide` seam. The gate measures the rendered
+    content area at five viewports, and the control strips the rules that size the drawing to show every
+    one of them failing: the tabs still render, the drawing collapses to 0px and its SVG escapes the page.
+  - **Worked Examples — two vocabularies, deliberately separate.** CONTENT vocabulary is what an example
+    is made of (`prompt`, `steps[]`, and the shared parts). COMPOSITION vocabulary is how examples are
+    ASSEMBLED, and it is now a small closed set of presentation types AUTHORED in the JSON:
+    `compact | visual | comparison | extended`. Modelling the page as one page-sized layout per
+    `Example 1 / Example 2 / Example 3` did not generalise — a three-step substitution occupied perhaps a
+    third of the useful area while a graph-supported example happened to fill it, so the abstraction only
+    looked right when the example happened to need a large visual. A tab is now a GROUP with a pedagogical
+    identity — `Substitution`, `Solving for x`, `Symmetry` — holding one or more complete examples and an
+    optional closing relationship. THE TYPE CHOOSES THE COMPOSITION; THE AMOUNT OF TEXT NEVER DOES:
+    nothing measures how much text an example has in order to pick a layout. What geometry still decides
+    is only whether the chosen composition can be READ — a set stacks when its columns fall below a
+    readable measure, and a `visual` group reserves no companion when none is authored. A bare
+    `examples[]` still renders, as one `extended` group.
+  - **`staged` — local states, and the rule that resolves the oscillation.** Working and a substantial
+    representation each deserve the whole surface: a learner should not scroll past a full-height plane to
+    reach the conclusion of the algebra, and the plane must not shrink so the two can share a screen. A
+    group may author `states[]`, each naming the semantic regions it carries (`show`) and optionally a step
+    range; the numbering keeps counting so one argument reads across the states. Staging is available to
+    any contract — `staged` is the name for when it IS the composition. **A plane too tall to embed belongs
+    in a state, not squeezed and not left as an 800px portrait object halfway down an ordinary page.** The
+    author chooses that; the page never infers it from height. A hidden state reserves no layout space, and
+    a figure revealed with its state is re-solved — until then its stage measured zero.
+  - **`visual` → `standard`, `compact` → `sequence`,** and the vocabulary is now `standard | sequence |
+    comparison | staged | extended`. Both old names still resolve. `compact` said how DENSE something
+    should look; `sequence` says what RELATIONSHIP its content has — several parallel examples of one
+    skill — which is the only kind of thing a composition is allowed to know.
+  - **THE PAGE NEVER RESHAPES THE MATHEMATICS.** The boundary the whole figure system now hangs on: the
+    Figure Engine determines mathematical geometry, the page composition determines where that geometry can
+    live. Measured before the rule existed, the same symmetry plane rendered at **4.65:1** on a desktop and
+    **1.95:1** on a phone — one _x_-unit 85px wide and 18px tall — because the composition was allowed to
+    dictate the plane's shape. A Mathematics Cartesian plot now defaults to an equal-unit scale
+    (`scaleMode:"authored"` opts out and keeps whatever `aspect` it states, so a deliberately unequal chart
+    stays possible), and the SLOT takes its aspect FROM the authored domain rather than the reverse. Every
+    plane now measures 1.00 ± 0.05 at every viewport. The `--fig-fill-min:.22` override from the previous
+    pass is gone: it solved letterboxing by giving the composition permission to flatten the mathematics,
+    which was the wrong direction, and so are the rules that clamped a stacked companion to a "landscape
+    demonstration area". A portrait plane is stacked beneath the reasoning at its own proportions and the
+    page gets longer — "fits this viewport" is not a quality measure.
+  - **Graph viability is two separate tests.** Scale integrity, and pedagogical legibility
+    (`MX_PLOT_MIN_W` / `MX_PLOT_MIN_H` / `MX_PLOT_W`, one owner, published as scoped custom properties). A
+    plane can be perfectly undistorted and still be too small to read; failing either makes the composition
+    stack and give the plane the width. The gate measures the RENDERED transform — px per unit per axis off
+    the painted svg — because a container and a viewBox can agree while the plane inside them is distorted,
+    and its adversarial control opts a plane out and shows the ratio go to 2.12.
+  - **Authored reference lines** (from the previous pass) now also draw the axis of symmetry and `y = 9` in
+    the comparison plane.
+  - **One anatomy, every composition.** QUESTION / WORKED SOLUTION / ANSWER, and optionally VISUAL
+    EXPLANATION — quiet typography and space, not another layer of coloured cards. A group holding one
+    example suppresses that example's own name, because the tab already titles it: `Solving for x` was
+    printing "Working backwards…", "Find x when y = 16" and "Find the value(s) of x for which y = 16" one
+    under another. The optional fourth section is named once, never a heading above a heading.
+  - **Fractions are fractions.** `mxM` sets `3/2` built-up over a rule and `(3/2)^2` inside brackets that
+    grow to its height, on the mathematical axis. Digits only, three a side, so prose and year ranges are
+    untouched.
+  - **THE WORKSPACE IS SHARED, NOT CENTRED — instructional content is never centred in the page.** The
+    columns-follow-count rule this replaces gave 1, 2, 3 and 4 examples four different shapes (a centred
+    column, two columns, a centred 2 + 1 remainder, a 2 × 2 block), so the page's arithmetic decided which
+    example looked like a conclusion. The question a composition now asks is not "how do I centre this
+    example?" but "what are its meaningful pieces, and how should they share the width":
+    - **the ROW is the unit.** One row is one whole example — the ask (title + QUESTION) on the left, the
+      working (WORKED SOLUTION + ANSWER) on the right. A `sequence` is a stack of these rows: full width,
+      one lane, identical geometry at any count, so no example is a conclusion because of where it sits.
+    - **`standard`** is that same row for a single example: question left, the whole working right. Its
+      companion, when one is authored, sits in the working's own column at its authored proportions — a
+      portrait plane makes the page longer (330px → 903px at the same 560px width), it is never re-placed
+      or squeezed.
+    - **`comparison`** is A | the plane that bridges them | B, all three reading at once, replacing a
+      plane appended beneath the two cases it explains.
+    - **a graph-bearing `staged` state** gives the plane the width its shape needs and the complementary
+      width to the explanation beside it, rather than centring a narrow portrait figure in an empty page.
+    - **the floors decide, not a breakpoint.** `MX_ASK_MIN` (300px, ~37 characters) joins the viability
+      constants and is published as a scoped custom property; the row holds 35/65 while both sides clear
+      their floor, then pins the ask at its floor, then wraps to ask-above-working — all from the floors
+      themselves, with no media query restating the numbers. The bridge, which cannot wrap, collapses at
+      the width its own floors imply (300 + 340 + 300 + two gaps = 996px of row). Measured: three columns
+      down to 1381px at exactly 300 | 341 | 300, one column at 1380px, never an overflow.
+    - **local paging is just the states.** `1 Worked solution | 2 Graph check` is the whole control — no
+      Back/Next, no duplicated `1/2` beside it.
+    Every example also stands alone — "use the same rule…" made the second depend on having read the first.
+  - **Authored reference lines in the Figure Engine.** `{type:'line', y:k}` / `{type:'line', x:k}`, with an
+    optional label, spanning the viewport as a line does and counting as painted geometry that identifiers
+    must clear. This fixes a real failed demonstration: the `Solving for x` example said "the line y = 16
+    meets the curve twice" while the graph drew only the two points. The vocabulary is general — the same
+    object draws the axis of symmetry in the comparison plane — and the gate asserts every authored line
+    reaches the drawing, with a control that removes one and shows the check fail.
+  - **A COMPARISON IS SIMULTANEOUS OR IT IS STAGED — never squeezed, and never merely reordered.** The
+    bridge said "these two cases agree, and here is the object that shows why", which only communicates
+    while all three are read at once; below that a `@media (max-width:1380px)` rule collapsed the grid to
+    one column and left the plane sitting BETWEEN case A and case B. That put the picture — and with it the
+    second answer — in front of the reader before they had worked the second case. A change of pedagogy
+    dressed as a change of layout. A comparison that no longer clears its own floors is now a different
+    STRUCTURE: two states, `1 Workings` (both cases complete, in order) then `2 Visual explanation` (the
+    undistorted plane and the authored relationship). The gate the maintainer asked for measures the order
+    a reader actually meets things in — every answer band and every drawn plane, top to bottom, on the
+    state they land on — and its control puts a plane back into the workings state to prove it fires.
+  - **And the transition is MEASURED, not a breakpoint**, following `mxRepFits`: `mxBridgeFits` compares
+    the real surface against the composition's own floors (300 + 340 + 300 + two 28px gaps = 996px). The
+    viewport query it replaces was wrong in a case that actually happens — at a **1200px viewport with the
+    navigation rail collapsed the surface has 1084px**, comfortably past what the three columns need, and
+    the breakpoint staged a composition that fitted. That is now the control: widen the surface without
+    touching the viewport and the bridge must come back. A media query cannot pass it.
+  - **The staged graph check is a real two-part workspace: `plane | interpretation`.** The plane was
+    mathematically correct and looked stranded, because the emptiness was BESIDE it — a 1058px-wide
+    interpretation column holding 149px of content at 1920px. The interpretation now holds a reading
+    measure (`MX_INTERP_MAX`, 620px) and leads with the algebraic result the picture is checked against,
+    followed by the graphical evidence and why they agree. Nothing is invented: the answer is the example's
+    own, placed there because the state DECLARES `answer`, and the control undeclares it to show the lead
+    leave with it. Both parts grow from their floors and top-align; below plane-floor + interpretation-floor
+    they stack. The track this replaces was `min(52%, min(66vh,720px) × aspect)`, which made the plane's
+    width depend on the window's HEIGHT and capped its height at 720px. The plane's natural SIZE is now
+    bounded on its longer side (`MX_PLOT_H`), which is isotropic — it chooses how big to draw the object,
+    never what shape — and it reproduces the reviewed 446×720 without any viewport in the arithmetic.
+  - **The ask/working boundary, drawn once for every row composition.** `standard` and `sequence` are the
+    same row, so they get the same mechanism: one hairline in the gutter and a heading hierarchy that says
+    which side is which. Neither side becomes a card — no fill, radius or shadow, both stay white content
+    surface. The rule is drawn only while the two are actually side by side: a stylesheet cannot see that a
+    flex line has wrapped, so rather than restate 300 + 40 + 420 as a breakpoint (the mistake the bridge
+    had just stopped making) `mxRowSplits` measures it and publishes one attribute. Measured 421 | 711 at
+    1536px with the hairline present, and full width with no divider once stacked.
+  - **`extended` proved, and `sequence`'s row contract with it.** `tests/visual/lessons/mathematics-compositions.json`
+    is a NON-SHIPPING design fixture: a three-example sequence group, a single-example `standard` group and
+    a genuine six-step derivation carrying a figure at the step that needs it. A presentation type is not
+    established because the renderer accepts its enum value.
+  - **Two defects the new composition exposed, both measured.** The staged region pinned its plane across
+    `grid-row: 2 / span 30`, which bought thirty row gaps: a 676px plane sat above **383px of nothing**, and
+    the state read as half empty. The plane and the explanation are now one grid cell each. And the
+    comparison region printed **"WHY THE TWO AGREE" twice** — the group's `footLabel` over a part already
+    carrying that name. A region may be titled above parts that name themselves, but never with a name one
+    of them already says. And on a handset, the connection's label sat **flush on the ANSWER band** above it,
+    because the only thing that had ever separated them was a tall plane in between. All three now have
+    gates, each with the failure driven back.
+  - **THE PRIMITIVE — one named-region rectangle for every worked example (sixth correction).** The page
+    was aligning pieces of content; it now aligns SEMANTIC REGIONS, and the browser lays out named
+    rectangles that the prose and mathematics merely flow inside: `TITLE` spanning the whole example, then
+    `QUESTION | WORKED SOLUTION` with `ANSWER` as the final band of the working. One function (`mxWexEx`)
+    emits it and one CSS grid with named areas lays it out — `standard` is one instance, `sequence` is N
+    identical instances stacked (the shipping two-example Substitution page and the design fixture's three
+    render the same two examples at the same geometry), a staged state, an extended derivation and each
+    case of a collapsed comparison are the same instance again. **The regions are aligned, never the amount
+    of content in them:** both take the row's full height, so a one-line question beside a three-step
+    solution is a short question in a visibly defined rectangle — tinted (`--mx-ask-tint`, neutral, a shade
+    neither the surface nor the ground is; the surface rule's own green test was the first to reject a
+    greener one) and running to the surface's edge, with one quiet rule between it and the working and the
+    two labels beginning on one line beneath the title. The example title no longer belongs to the ask side.
+    The ANSWER lost its floating card: a rule above it, the label run in, the value flowing as text so a
+    wrapped answer returns to the region's inset — the mobile drift the maintainer named (measured on the
+    design fixture at 414px: the wrapped lines of the answer once sat at 121px against a 32px inset; they
+    now return to 32px, and the control that restores the card shows them leave it again). Everything sits on one inset; nothing is centred, and
+    the gate now measures every block and every plane against its region's inset at 1536, 1000 and 414px.
+    - **the floors are read back from what the page published.** `mxRowSplits`, `mxBridgeFits` and the new
+      `mxFootPairs` read the custom properties `.mx-wex` publishes rather than the constants, so the
+      stylesheet and the decision cannot disagree and the gate's raised-floor control genuinely moves the
+      decision (under a grid it would otherwise have shown as overflow, which is now asserted too). Split
+      while the surface holds 300 + 16 + (22 + 1) + 420 = 759px; three zones while it holds
+      2 × (300 + 22) + 340 + 2 × 22 + 2 = 1030px; GRAPH | INTERPRETATION above 340 + 22 + 1 + 300 = 663px.
+      The proof script no longer assumes the shell's width — it finds the viability viewport by measuring
+      the surface (1414px with the rail open) and shoots one pixel either side.
+    - **`comparison` is three explicit zones, `CASE A | VISUAL EXPLANATION | CASE B`** — zone labels on
+      one line, each zone the row's full height so its edges are the rules beside it whatever the cases'
+      heights (proved with case B given five more steps than the plane is tall for; the control that stops
+      the zones stretching leaves the rule short and is caught), each case the primitive in its stacked
+      form with its question band reaching the zone's rule, the plane owning the middle at its natural size
+      and never grown to fill it (at 1920px the zone is wider than the plane and the plane stays 560px).
+      Measured at 1536px: 364 | 485 | 364, rules 548px tall, plane 439×483 at 35.04 / 35.07 px per unit
+      (0.999). Below the floors the staged transformation is unchanged: `1 Workings` is two instances of
+      the ordinary primitive, `2 Visual explanation` owns the graph and the synthesis.
+    - **the staged graph check is `GRAPH | INTERPRETATION` as explicit sibling regions** with one top edge
+      and one rule between them the full height of the plane, the plane at its natural 446×720 (26.83 /
+      26.81 px per unit, 1.001) and the interpretation held to its 620px reading measure; a region whose
+      first part already names itself is named by that part (the collapsed Symmetry visual state prints
+      GRAPH, then "Why the two agree", never "Interpretation" over it). Stacked graph-first below the floors.
+      Controls: centring the pair separates the labels; raising the plane's floor stacks the pair at 1536px.
+    - **the same primitive, proved as such, not as two implementations that look alike.** The gate authors
+      one example identically as the whole of a `standard` group and as a member of a `sequence`, and
+      compares, element by element, the anatomy, the STYLESHEET RULES THAT REACH EACH ELEMENT and the
+      geometry — a look-alike lives in the stylesheet, keyed on the composition, where geometry cannot see
+      it; the control injects exactly such a same-value rule, shows the geometry unchanged and the
+      provenance check fail. And every instance on the page — every group, every state — is shown to come
+      through the one function (a spy marks its output; a control that hands one group a static copy of its
+      own markup is caught).
+    - **one contract changed on purpose:** a companion plane inside an example's working now follows the
+      same natural-size rule as the staged plane (bounded on its longer side, `MX_PLOT_H`), so a portrait
+      companion is drawn at the reviewed 446×720 rather than a quarter larger at 560 wide; the assertion
+      that once required "the same width" for both shapes now requires the same bound. And a companion now
+      sits BEFORE the answer, so the answer still closes the region (the render order had put it after).
+    - **after the review of the pushed primitive — one product defect and eight look-alikes the gate let
+      through, all closed.** Dragging a window through the comparison's floor rebuilt the page from the JSON
+      and landed the reader on the first tab at the top of the page (pre-existing, but this stage makes the
+      transition the intended behaviour): the rebuild now keeps the reader's tab, each group's state and the
+      scroll positions, through one `mxShowTab` / `mxShowState` used by the click handlers and the restore
+      alike, gated by driving a page through the floor and back. The gate then had to be made to catch what
+      a look-alike could get away with: a rule keyed on a group id (the shipping Substitution page was never
+      in the same-primitive comparison — it is now, every row of it, on both lessons, at 1536 and 414); a
+      same-value rule hidden in `@supports` or another `@media` (every grouping rule is walked and the
+      COMPUTED STYLE is compared as well as the selectors); an inline style written after `mxWexEx` returns
+      (no instance may carry one); a position-keyed rule for rows 2..N (every instance on every page must
+      have one geometry signature — title gap, insets, rule, tint); an implementation that stacks while the
+      floors are met (the split is now asserted in both directions at widths either side of 759px); a
+      120px channel beside the rule (the channels must equal the published pads and total under the 40px
+      gutter that was rejected); a primitive that lost its region names (the regions are found by name);
+      a synthesis confined to the working column (full width is asserted, title edge to working edge). The
+      first row of a sequence had 4px of top padding where the others had 22 — a position-keyed geometry —
+      so the sequence's own margin closes the gap to the lede instead. Natural size is ONE rule everywhere
+      now: the bridge plane and the extended derivation's step visual take the same longer-side bound as the
+      companion and the staged foot, and at 1920px the bridge plane sits exactly at its bound. Two visual
+      loose ends: QUESTION and WORKED SOLUTION — peers on one line — were set in two label styles and now
+      share one; and a 36px strip holding only the ⤢ button stood between GRAPH and its plane, so inside a
+      region the affordance sits on the region's label line and the plane and the algebraic result begin
+      the same 12px under their labels. HANDOFF §8c now states the companion bound it contradicted and
+      records how "the same inset as the mathematics above it" was read (the step-number column, as the
+      sketch draws it), for the maintainer to overrule in a line.
+    - **`verify-notes-examples` 82 → 116** (a `primitive` section, every clause with a control), the
+      proof set is the maintainer's nine — standard desktop/mobile, sequence × 2 / × 3 / mobile, Symmetry
+      wide / narrow workings / narrow visual, graph check — plus the two transition widths, and the design
+      fixture was updated first so sequence × 2 and × 3 author the same examples.
+  - **Notes, two clean-ups only** (architecture frozen): the Key Idea was restating the fourth concept, so
+    it now synthesises across the three tabs instead; it was also the last text-on-green writing surface in
+    the family and is now white with a green edge; and the concepts card hugs its content rather than being
+    stretched to match a much taller exploration panel.
+  - **Notes redundancy audit.** `Selected coordinates` is gone from `Graph and key points`: three of its
+    five points restated the labelled graph and the two it added are covered by the `Table to graph` tab.
+    An explanatory region is authored content, not chrome every representation gets.
+  - **The surface rule, locked.** Off-white is the application background, white is the content surface,
+    green is a semantic accent. Explanation, worked reasoning, answers, captions and relationships had
+    drifted back onto pale-green paper; green may now IDENTIFY them (a small label, a 3px left edge) but
+    never CARRY them. The relation boxes and the ANSWER band are white with a green edge, and every
+    worked-example composition sits on a white surface instead of being written onto the ground. That
+    surface is now flat — the page heading, the group tabs and one white teaching surface are the whole
+    chrome, because a rounded card floating on the ground read as an application dashboard rather than
+    courseware.
+  - **Uppercasing corrupts mathematics.** A part label set in small caps printed `VALUES OF Y = X²`, which
+    is a different statement from `y = x²`. A label carrying notation now keeps its own case; a label of
+    plain words still gets the small-caps treatment the rest of the shell uses.
+  - **`.mx-part` named two different things** — a Practice question's (a)/(b) sub-part and a content part
+    in the shared vocabulary. The Practice rule's `display:flex` was unscoped, so it reached the second and
+    had been laying every part's LABEL beside its content instead of above it. Scoped to `.mx-parts`.
+  - The fixture demonstrates the renderer rather than redesigning the mathematics: four concepts (no
+    invented fifth), three complete demonstrations of one object, and three worked-example groups — one
+    per composition type. `scripts/verify-notes-examples.mjs` is the gate (82 checks) and
+    `scripts/shots-notes-examples.mjs` the proof set. The gate encodes the approved behaviour rather than the implementation: expected part
+    counts, companion kinds, which steps carry visuals and how many tabs there are are all DERIVED from the
+    lesson JSON, so re-authoring the fixture cannot quietly make the gate agree with itself. It asserts the
+    product rules rather than this fixture's shape: no explanation, answer or caption on a green surface;
+    every group one white surface; every authored example complete inside its group; rows of equal status
+    that split only while both sides are a readable measure and stack otherwise; a region as tall as what it
+    holds; a region named once; nothing reserved where nothing is authored. Where a floor decides a layout
+    the gate reads that floor back off the app's own custom properties, so it cannot pass by agreeing with a
+    number copied into the test. Controls change the JSON and show the page following it — a fourth example,
+    a relabelled and reordered tab list, a companion re-authored from a graph to a table, a tab switched to
+    _y_ = _x_² + 2 failing the same-object check, an answer painted green again being caught, raising the ask
+    floor to collapse a row that was splitting comfortably, and cycling one group through all five types,
+    which changes the composition every time while the examples, steps and answers survive unchanged.
+- **Three defects the Stage C content exposed**, each invisible while the panels held placeholders: the
+  inactive figure panel stayed displayed behind the selected tab (`.mx-figure[data-fig-viewport]` set
+  `display:block` with no `:not([hidden])` guard, later in the sheet than the rule that has one); the
+  Worked Example figure escaped its column at narrow widths, because `position:sticky` was the only thing
+  containing an absolutely positioned stage; and in the worksheet that same stage took the figure out of
+  the page's flow entirely. A table or a list now reads from the top of its panel rather than being centred
+  in it like a figure, and a question stem no longer scatters across `.ws-q-h`'s flex row.
+- **The Practice behavioural gates now run in CI** (`.github/workflows/practice-interaction.yml`):
+  `verify-type-interaction`, `verify-workbook` (not automatic before) and, from Stage C,
+  `verify-notes-examples`. The reason is on the
+  workflow: Stage B shipped a Type workspace whose stored payload was provably correct while the student
+  could not construct the sentence they intended, and no state gate could see it. Rendered interaction is
+  part of the Practice contract, not a local diagnostic. Not a required check — that is branch protection,
+  and the maintainer's call — on the same footing as `measure-surface` and `figure-container`.
+- **A rendered-interaction acceptance layer, and what it caught.** `scripts/verify-type-interaction.mjs`
+  (46 checks) asserts what a student can DO with keyboard, pointer and focus in the rendered page — keys
+  pressed, not dispatched; focus read, not assumed — because the whole point of Stage B2's failures was
+  that a green payload gate said nothing about whether the surface could be used. It found four more:
+  - **Tab could not leave the equation editor in either direction.** TPMath binds Tab to caret motion
+    inside the row, which left a keyboard user stuck in the field. The arrow keys already move the caret,
+    so Tab is intercepted ahead of TPMath and left to do what Tab does everywhere else. The ribbon became
+    two tab stops rather than forty (roving tabindex, the standard toolbar pattern), so Tab out of the
+    field reaches Cancel and Insert in three more presses.
+  - **A caret recorded inside a placed equation destroyed it.** Clicking an equation to edit it leaves the
+    selection inside the chip; the next Insert deleted that equation's contents and nested the new one in
+    its place. A position inside a chip is now recorded as the position just after it.
+  - **`focus` overwrote the remembered caret.** Focusing a contenteditable with no selection of its own
+    puts the caret at position 0, so an equation inserted after the page had been re-focused landed at the
+    START. The caret is recorded when the student moves it and put back when the page is handed its focus.
+  - **Leaving the Workbook view dropped the focus to `BODY`** — the Expand button lives inside the region
+    the switch hides, so it went with it.
+- **Semantics the surface was not exposing.** Write / Type had no `aria-pressed` — nothing said which
+  lesson-wide mode was on; Expand lost its state whenever the pad was rebuilt; the two editor ribbons were
+  unnamed groups; and a placed equation was `role="math"`, announced as static text with no hint that it
+  could be opened, though Enter opens it. It is now a button whose name carries TPMath's own LaTeX, so it
+  says what the student wrote. Escape and Cancel return the focus to whatever opened the editor — the
+  Equation button, or the equation being edited — rather than to a plausible-looking default.
+- **The Type styles reach nothing else, and the borrowed seam is written down.** Deleting all 23 Type-only
+  rules changes the Type surface and leaves Practice/Write, Notes, Video, `graphQuestion` and both legacy
+  Geolearn controls byte-identical. `HANDOFF.md` §8b now lists exactly which `.tp-slide` rules the pad
+  depends on — the ribbon skin, the galleries, the caret, the maths face and the token block they read —
+  so the seam cannot quietly become coupling.
+- **Arrow-key ownership is a declared boundary, not a list of roles.** The page-turn stands down inside
+  anything matching `textarea, input, [contenteditable=true], [data-tp-editing]`, and the two editing
+  regions that are not native writing elements carry that marker. Measured both directions: held in the
+  typed page, the TPMath field, a symbol button, a structure button, Insert, a placed equation and a
+  question answer box; still turns the page on a workbook tab and on the lesson surface. The same boundary
+  fixed `graphQuestion`, which shares the primitive.
+- **The equation bar became an instrument a student can use.** An adversarial review of the Type surface —
+  six independent lenses over the diff, each finding refuted by separate verifiers before it counted —
+  turned up seven defects that every state gate was green on, because all of them are about the surface
+  rather than the payload. Each is now fixed with a check and a control that drives the failure back:
+  - **An equation landed at the end of the page, never at the caret**, and prose typed afterwards went in
+    FRONT of it — so `Substituting [x = 3] into the rule gives [y = 9]` was not expressible at all, and the
+    student's working came out in an order they did not write it in. The last caret inside the page is now
+    recorded as it moves, and that is where Insert places the equation.
+  - **Re-opening a placed equation typed in front of it**: TPMath mounts a restored expression with the
+    caret at index 0, so re-opening `x²` and adding `+1` gave `+1x²`. It now opens at the end of the row.
+  - **The bar was a keyboard trap.** TPMath takes Tab for caret motion inside the expression, which is
+    right, but nothing else left the field either — a keyboard user who opened the editor was stuck in it.
+    Escape abandons, Enter commits, both hand the page back its focus.
+  - **Insert and the page tabs fell below the viewport on any laptop under about 800px tall**, with nothing
+    to scroll: the control needed to finish the equation could not be reached. The writing surface now
+    gives up its floor while the bar is open — a floor is a floor for writing, and the bar is what the
+    student is looking at.
+  - **The empty slots of a fraction were invisible.** They are `mtext.ph`, styled by the pack under
+    `.tp-eqfield`; this field is `.mx-eqfield`, so inserting a fraction drew two slots with no border and
+    the student had nothing to aim at.
+  - **A blank line came back as two.** A contenteditable writes an empty line as a block containing one
+    `<br>`; counting the block's break and the `<br>` inside it stored two newlines for one blank line.
+  - **Focus fell to BODY** after Cancel and after adding a page, both of which replace or hide their own
+    container. Cancel returns to the page; adding a page focuses the new tab.
+- **What a student pastes is what a student keeps.** The typed page stores text and equation trees, so
+  pasted markup was always discarded at the next render — the page just went on showing it until then, which
+  reads as formatting that was accepted and then thrown away. Paste and drop now arrive as plain text at the
+  point of entry (via `insertText`, so the browser's own undo still works), which also means no foreign node
+  ever enters the document: a paste carrying `<img onerror>` no longer runs it in the student's own page.
+  The control inserts the same content the way an un-intercepted paste would, and shows the markup arriving
+  and the inline handler firing.
+- **A placed equation can be re-opened from the keyboard.** It is focusable and says "select to edit", but
+  only a pointer could do it — Enter and Space now open the editor on the focused equation.
+- **Arrow keys belong to whatever is handling them.** The global `ArrowLeft/ArrowRight` page-turn tested the
+  target ELEMENT against `textarea, input, [contenteditable=true]`, and that test was wrong twice over: the
+  equation field is a `[role=textbox]` with a tabindex, and a placed equation is a focusable `[role=math]`
+  chip sitting inside the typed page. An arrow aimed at either paged the lesson away and took the work with
+  it. The handler now stands down on `e.defaultPrevented` and, via `closest()`, anywhere inside an editable
+  subtree — so it covers whatever is put in a writing surface next, rather than growing a list of roles. It
+  also fixed the same latent bug in the graph question's editor. (A focused equation chip is now inert under
+  the arrow keys rather than destructive; giving it caret motion belongs with the accessibility pass.)
+- **Stage B — the Practice workbook.** The visual shell is now the real thing, on the app's OWN stroke
+  engine (`[data-tp-ink]`): pressure-variable pen, eraser, clear, grid paper. What is new is WHERE the
+  strokes live. The engine gained a second storage backend, selected by attribute: a pad that names a
+  response (`data-tp-resp-page/-id/-slot`) reads and writes the A0 store under authored identity, while a
+  pad without them keeps the index-keyed `TP_RUNTIME` slot it has always used. Nothing about capture,
+  pressure, erase, undo or redraw differs between them — only where the array lives.
+  A workbook is one response with several sheets: `{current:'w1', pages:[{id:'w1', strokes:[…]}, …]}`, so
+  the bundle names page → response → kind → payload and none of them is a position. Sheet ids come from a
+  counter that only goes up, so adding a sheet never renumbers an existing one. Switching sheet replaces one
+  element and re-wires it rather than re-rendering the page, so the question column keeps its place and the
+  old canvas's listeners go with the old node.
+  The sheet is a PLANE, like the coordinate plane: a fixed horizontal scale (1000 units across) with its
+  height taken from the region, so enlarging or narrowing the workbook shows more or less of the sheet and
+  never rescales what is already written on it.
+  `workspace.kind` is now the approved vocabulary — `grid` is implemented; `graph` and `geometry` are Stages
+  F and G. A table of values takes structured entry because the empty cells ARE the question; every other
+  question stays a prompt, with no answer box and no card. Cells are keyed by their column value, so a
+  response says "when x = −3" rather than "the first cell".
+  Responsive: the split is the Practice composition and a tablet keeps it; only a handset (≤760px) drops to
+  one region at a time behind a Questions / Workbook switch. Switching view, or opening the navigation
+  drawer, keeps the question scroll position, the sheet, its ink and the response mode — the switch is a
+  class flip plus a remembered scroll position, because hiding a region resets whatever was scrolling it.
+  No browser storage anywhere. Gate: `scripts/verify-workbook.mjs` — 31/31, every stroke drawn with real
+  pointer events through the real canvas and read back from the store or from painted pixels, including the
+  three requested controls (sheets sharing one array; a DOM-local workspace; a reordered lesson).
+  `scripts/shots-workbook.mjs` is the Stage B proof set.
+- **The page-family boundary, written down and measured.** Three families, deliberately separate:
+  Mathematics (responsive, purpose-built templates), a future generalist/humanities family (its own base
+  layout language plus subject overlays, designed from scratch when Mathematics is stable), and the legacy
+  fixed-canvas renderers (untouched until a migration is commissioned). The Mathematics templates are NOT a
+  universal page system and the legacy pages are NOT a visual reference for the future one — they are kept
+  only as `legacy-canvas-control` / `legacy-video-control`. Recorded in HANDOFF.md §9, at the `PAGES`
+  registry, and in the proof-set script; enforced by a new `isolation` section in
+  `verify-responsive-shell.mjs` that walks every Mathematics page and fails on any class outside the
+  shell's own or the Figure engine's, asserts the single documented shared seam, and asserts that `PAGES`
+  holds exactly one theme. Audited: the shell's only calls out of itself are `esc()`, `go()`, `tpRespId()`
+  and `fragFigure()` — no pack renderer is referenced.
+- **The coordinate plane is a viewport, not a picture (figure engine).** Axis EXTENT and tick GENERATION
+  were the same concern: `figSvgBody` drew each axis from `sx(dom.x0)` to `sx(dom.x1)`, and `figView` maps
+  the domain exactly onto the plot rect — the box minus the gutters that hold the tick labels — so the axis
+  stopped at the gutter and the last labelled tick WAS the end of the axis. `figView` now also returns
+  `view`: the same mapping evaluated at the box edges, i.e. the mathematical range the whole svg covers. The
+  transform is untouched — `sx/sy/ix/iy/pxPerX/pxPerY/dom` are byte-identical, so every measurement, label
+  placement and geometry solve is unchanged — this only NAMES a range that was always there, so axes, grid
+  and plotted curves run to the viewport boundary while ticks and labels are still generated from the domain.
+  A figure inside a `[data-fig-viewport]` host also takes its HEIGHT from that container instead of deriving
+  one from its width, so the plane owns its whole region and takes its shape: measured, a 628×636 container
+  gives an 11.4 × 11.5-unit viewport, a 628×298 one gives 24.1 × 11.4 and a 401×604 one gives 11.2 × 16.9.
+  **Tick density, interval and label format are deliberately NOT touched.** `FIG_TARGET_TICKS` stays the
+  constant 5 it has always been, and nothing in the viewport work reads it. `verify-figure-render` moves 48
+  of 240 units — the graph fixture is exactly 48 units, so that is every graph unit and nothing else — and
+  across all 48 **not one recorded field changes**: box, tick count, and minimum/maximum type size are
+  identical in every one. The difference is only where the axis, grid and curve stop. Geometry (120 units)
+  and the measure surface (72) do not move at all, because a geometry figure draws no grid unless it is
+  authored `grid: "shown"`. `verify-label-placement` 927/927 and `verify-geometry-semantics` 204/204 are
+  unchanged.
+- **`callouts: "hidden"` on a figure** — the same vocabulary as `grid`. A figure that only illustrates has
+  nothing to reveal on tap, and the Figure Shell's hint ("Select a point to read its coordinates") is keyed
+  on the callout count, so an explanatory Notes figure was inheriting interaction copy it cannot honour. The
+  field is opt-in, so no existing figure moves.
+- **The Notes representation workspace renders the real Figure path.** It was a hand-drawn stand-in; it is
+  now `fragFigure` → `figGraph` → `figSvgBody` on an authored `figure` spec, registered in FIGX and
+  re-solved through `figInlineSolve` against its host. Graph Practice and the Interactive workspace inherit
+  the viewport behaviour rather than reinventing it.
+- **The Mathematics Video page.** The video is the dominant asset and everything else is subordinate to it:
+  the template owns the video region and the shell's workspace slot carries the supporting material —
+  chapters, what to watch for — with the after-watching prompts and the transcript control beneath. Stage A
+  is the layout; Stage D wires playback. Nothing is borrowed from the legacy `video` block, which is a
+  different design for a different theme and now appears in the proof set only as `legacy-video-control`.
+- **`scripts/shots-mathematics.mjs`** — the Stage A proof set, reproducible in one command, in two clearly
+  separated categories: `mathematics-*` screenshots define the design, `legacy-*` screenshots exist only to
+  prove non-regression and must not influence a Mathematics renderer. An index sheet makes the split
+  obvious at a glance, and the legacy screenshots continue to look exactly as they always have.
+- **A0 — response identity, and the seam a submission will one day use.** Student answers now live in
+  `TP_RESP`, keyed by an AUTHORED page `id` and an authored response `id` rather than by array position.
+  `TP_RUNTIME` — keyed by `cur`, the slide index — stays exactly as it is for ephemera, because it is the
+  wrong thing for a bundle that gets submitted: reorder the pages of a lesson and a student's ink rebinds
+  to whichever page moved into that index. `verify-response-store.mjs` drives that exact reorder through
+  both stores and shows the old one reattributing the answer (22/22, both non-vacuity controls included).
+  Identity is authored and never invented: a duplicate page or response id is REPORTED at load
+  (`tpRespAudit`), never silently suffixed, because a suffix would quietly split one student's work in two.
+  `tpRespBundle()` returns a deterministic, key-sorted, deep-copied, JSON-serialisable snapshot — mutating
+  what it hands back cannot reach live state. The submission seam ships with its only adapter, `none`,
+  which collects and delivers nothing; still no storage of any kind (golden rule 2).
+- **A — the Mathematics page shell.** The responsive layer's first pass was rejected on sight: it made the
+  OLD application shell responsive instead of building the Mathematics product. This replaces the shell and
+  keeps the architecture. The approved mockups are now the visual source of truth, and its palette is
+  measured from them rather than invented — sampling the approved screens pixel by pixel, 60–69% of every
+  one is pure white, pale green tints sit at 1–3%, and there is no beige anywhere; the greens cluster at
+  #047C4B/#157344, kept here as ONE accent token. The darks read near-black with a blue cast; per the brief
+  this shell uses a neutral charcoal instead, so body text is not blue.
+  **The application chrome is absorbed, not stacked on top.** `.top`, `.side` and `.foot` are hidden on a
+  responsive page and the Mathematics bar carries their controls as PROXIES that click the real hidden
+  buttons — so Study/Edit/Present/Worksheet/Export and the page pager keep their existing handlers and
+  cannot drift, and there is exactly one navigation on screen instead of two. The rail names lesson
+  sections with an icon and a soft green active state, not page numbers; the number is secondary metadata
+  in the bar. The persistent bottom Back/Next bar is gone.
+  **Space belongs to the mathematics.** A page template declares its own surface at registration
+  (`panel` or `flush`): Notes is two panels that fill the frame; Practice is a textbook question column on
+  white with the workbook PERSISTENT beside it — the questions scroll, the workbook does not, which is what
+  makes it a workbook. A closed inline convention (`_x_`, `^2`) sets variables in italic and exponents as
+  exponents; it runs AFTER `esc()` and can only ever emit `<i>` and `<sup>`, so author text can never
+  become markup. The lesson-level Write/Type selector is session-only and appears only on a page that takes
+  written work.
+  Kept from the rejected pass, unchanged: A0's response identity, the submission seam, renderer-owned
+  `layoutMode` (never lesson JSON), no whole-page 1280px scaling, legacy canvas isolation, the drawer at
+  narrow widths. `verify-responsive-shell.mjs` (67/67) pairs every width assertion with a legacy control
+  page rendered in the same browser, which stays pinned at 1280 logical px while the responsive page really
+  reflows.
+  **Nothing is shadowed.** Two names in the approved page vocabulary — `video` and `interactive` — are
+  already canvas page types under `mathematics`. Taking them measurably changed 5 of `verify-corpus-identity`'s
+  250 units, so the Stage A shells for those two sit under deliberately temporary names pending that decision.
+
+- **C6b — the learning card.** One instructional-card primitive with two homes: the `text` block, and a
+  figure's new `companion`. There is deliberately no second "figure prose card" renderer — the two callers
+  differ only in where the card is placed, and placement is the surrounding block's business. The card is
+  location-independent by construction: it draws its own surface and never depends on an ancestor, which is
+  why the existing `--frag-card-*` treatment could not be reused (its selector reaches direct children of
+  `.tp-flow` only, so it structurally cannot see a card inside `.tp-figl`).
+  **`text` extends, `section` does not.** `section` deliberately scopes its body to 16.5/1.62 — its own
+  comment says *"never the global `--tp-prose-size`, which would restyle shipped pages"* — while the
+  approved mockups use exactly that scale, which `.tp-frag-prose` already resolves. A block carrying none of
+  the new fields takes the original path; the guard is presence, like `hasPoi`.
+  **`fontStyle` is a category, never a font.** `--tp-serif`/`--tp-body` could not carry it: `--tp-serif` is
+  Courier Prime (mono) under microhistory and Inter (sans) under geolearn, `--tp-body` is a serif under
+  mathematics, and the `egypt` theme shipped in two lessons has no token block at all. Two new root-level
+  face slots resolve it instead, each paired with an optical size, because the faces do not share an
+  x-height (measured per em: EB Garamond .4063, Inter .5469 — the same px reads ~35% larger in the sans).
+  The face is applied to the card's own text classes and **never to its container**, so the 35 rules that
+  carry `font:inherit` — every button and select — cannot pick it up; mathematical notation is insulated
+  independently by the `math` element rule.
+  **`icon` is a closed allow-list, and that is a firewall boundary.** `tpIc` treats anything image-shaped as
+  an image (`tpIsImgIcon` → `<img src>`), so an authored `icon` passed straight through it would have been a
+  new third-party runtime host — and invisible to the only required CI gate, since `validate.mjs` inspects
+  URLs only under `url`/`externalVideoUrl`/`sourceUrl` and scans hosts only in `<script>`/`<link>`, never
+  `<img src>`. Membership is checked before `tpIc` is ever called; a URL, a `data:` URI, a path or an
+  unknown name is reported and drawn as nothing.
+
+### Fixed
+- **`scripts/vendor-fonts.mjs` could silently delete a hand-vendored face.** LM Math was vendored by hand
+  into the generated `VENDORED-FONTS` block, and `.tp-slide math` depends on it. Re-running the generator
+  wiped both — MathML fell back to the browser's generic `math` family — and the only thing that noticed
+  was one assertion in `verify-learning-card`. The generator now carries any hand-authored CSS above the
+  generated faces through untouched, and a re-run is byte-identical.
+
+- **The `beside` prose floor measured the wrong box.** `FIG_BESIDE_MIN_PROSE = 260` was compared against the
+  raw grid column, so with a carded companion (measured: 64px of padding and borders) a column at the floor
+  delivered ~196px of readable text while the constant's own comment claimed "~32ch at 16px". It is now
+  `FIG_BESIDE_MIN_PROSE_CONTENT`, compared against the column minus the companion's **measured** chrome —
+  the same thing `FIG_MIN_STAGE` means for the figure. The number is unchanged; only the box it describes
+  is. **The transition points did not move** — graph leaves `beside` at 755px available, geometry at 915px,
+  identical with a carded and an uncarded companion, because the figure minimum is still the binding
+  constraint. That the constraint can bite at all is proven rather than assumed: inflating the card's chrome
+  to 324px moves the graph transition to 1191px while leaving an uncarded companion at 755px.
+- **`beside` siblings are top-aligned.** `align-items:center` → `start`: the card is never stretched to the
+  shell's height and the shell is never squashed to the card's. Long prose takes vertical space instead.
+- **A class-name collision that markup hashing could not see.** The card was first written as `.tp-card`,
+  which microhistory's own title slide has emitted since long before Stage 4. All 30 legacy render hashes
+  stayed green while that shipped card silently changed from `display:block`/`padding:0` to
+  `display:flex`/`padding:26px 30px 24px` and grew 605 → 619px. Renamed to `.tp-lcard*`, and the gate now
+  asserts from **computed style** that the prefix belongs to the learning card alone.
+- **The card chip was invisible.** Pairing `--primary-fixed` with `--on-primary-container` painted the label
+  onto its own background — every theme defines the latter as a light ink for the *dark* `--primary-container`
+  (measured 1.09:1 in mathematics). The ink is `--on-surface`, and the pair is contrast-checked in every
+  designed theme rather than eyeballed: 13.25–14.94:1.
+
+### Added
+- **Approved learning-card mockups (`docs/mockups/`).** Six individual design references for the
+  instructional / companion learning-card family, plus the reproducible sources that built them. They are
+  rendered rather than drawn: the palette and the `EB Garamond` faces are copied out of `lesson-studio.html`,
+  and the figures in the two paired mockups are the shipped engine's own output, extracted from a live render
+  at a stage width of 532 logical px — the true width of a `beside` column at `--tp-measure: 1140`. The
+  triangle's angles and side labels are what `figGeometry` computed, not values typed into a mockup, so a
+  mockup cannot drift from the engine without the engine changing first. `README.md` records the six locked
+  style rules the images fix. Design evidence only: no application code changes, and the `mk-*` classes in
+  `src/kit.css` are mockup scaffolding, not app classes.
+
 - **Stage 3d — the side-measurement surface.** A side measurement is now painted on a quiet accent-tinted
   surface; an angle measure and a vertex name are not. The rule is semantic, not cosmetic: the surface asserts
   *"this is how long this side is"*, so angles keep their plain typography inside the interior construction and

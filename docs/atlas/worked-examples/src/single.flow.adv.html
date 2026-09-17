@@ -1,0 +1,25 @@
+<article data-tpl="single.flow">
+  <h3 data-slot="title">Completing the square</h3>
+  <div data-slot="question">
+    <p class="at-lab">Question</p>
+    <p>Solve <i>x</i><sup>2</sup> + 6<i>x</i> &minus; 7 = 0.</p>
+  </div>
+  <hr class="at-hr">
+  <div data-slot="steps">
+    <p class="at-lab">Worked solution</p>
+    <ol class="at-steps">
+      <li class="at-step"><div class="at-st">Start from the equation as given.</div><div class="at-sm"><i>x</i><sup>2</sup> + 6<i>x</i> &minus; 7 = 0</div></li>
+      <li class="at-step"><div class="at-st">Move the constant to the right so the left side is only the terms in <i>x</i>.</div><div class="at-sm"><i>x</i><sup>2</sup> + 6<i>x</i> = 7</div></li>
+      <li class="at-step"><div class="at-st">Halve the coefficient of <i>x</i> and square it. That is the number which completes the square.</div><div class="at-sm">(6 &divide; 2)<sup>2</sup> = 9</div></li>
+      <li class="at-step"><div class="at-st">Add it to both sides so the equation still balances.</div><div class="at-sm"><i>x</i><sup>2</sup> + 6<i>x</i> + 9 = 16</div></li>
+      <li class="at-step"><div class="at-st">The left side is now a perfect square.</div><div class="at-sm">(<i>x</i> + 3)<sup>2</sup> = 16</div></li>
+      <li class="at-step"><div class="at-st">Take the root of both sides, carrying both signs.</div><div class="at-sm"><i>x</i> + 3 = &plusmn;4</div></li>
+      <li class="at-step"><div class="at-st">Solve each case separately.</div><div class="at-sm"><i>x</i> = 1 &nbsp;&nbsp;or&nbsp;&nbsp; <i>x</i> = &minus;7</div></li>
+    </ol>
+  </div>
+  <div data-slot="answer"><b>Answer</b><i>x</i> = 1 or <i>x</i> = &minus;7</div>
+<section data-slot="synthesis">
+  <p class="at-lab">What this shows</p>
+  <p>Completing the square rewrites the equation so that <i>x</i> appears once instead of twice. Everything after that is undoing operations in order.</p>
+</section>
+</article>

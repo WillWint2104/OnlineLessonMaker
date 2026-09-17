@@ -1,0 +1,22 @@
+<p class="mk-lede"><b>Adversarial proof &mdash; a long question against a short solution.</b> The prompt track is the taller of the two. Neither track is a box, so the solution simply ends where its reasoning ends and the row is as tall as the question needs.</p>
+<article data-mk="instructionSplit">
+  <h3 data-mk-region="title">Reading a value from a described situation</h3>
+  <div data-mk-region="prompt">
+    <p class="mk-lab">Question</p>
+    <p>A ball is thrown straight up from the edge of a balcony. Its height above the ground, in metres, is modelled by <i>h</i> = 20 + 15<i>t</i> &minus; 5<i>t</i><sup>2</sup>, where <i>t</i> is the time in seconds after it leaves the hand.</p>
+    <p>The balcony rail is 20 metres above the ground, and the model is only trusted while the ball is above the ground.</p>
+    <p>Find the height of the ball two seconds after it is thrown, and state whether it is above or below the rail at that moment.</p>
+    <div class="mk-dim" data-mk-measure="prompt">{{DIM:prompt}}</div>
+  </div>
+  <div class="mk-rule"></div>
+  <div data-mk-region="solution">
+    <p class="mk-lab">Worked solution</p>
+    <ol class="mk-steps">
+      <li class="mk-step"><div class="mk-st">Substitute <i>t</i> = 2.</div><div class="mk-sm"><i>h</i> = 20 + 15(2) &minus; 5(2)<sup>2</sup></div></li>
+      <li class="mk-step"><div class="mk-st">Evaluate.</div><div class="mk-sm"><i>h</i> = 20 + 30 &minus; 20 = 30</div></li>
+    </ol>
+    <div data-mk-region="answer"><b>Answer</b>30 m &mdash; 10 m above the rail.</div>
+    <div class="mk-dim" data-mk-measure="solution">{{DIM:solution}}</div>
+  </div>
+</article>
+<div class="mk-note"><b>What this proves</b>A track is a position, not a box. The solution track does not grow a fill, a border or a matching height to balance the question beside it &mdash; the unused space below the answer is simply the space below a short answer.</div>

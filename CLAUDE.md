@@ -61,3 +61,10 @@ no new third‑party host (or it's vendored) · `esc()` on every new interpolati
 ## Ask the maintainer before
 Adding a build step · changing the single‑file architecture · adding persistence/backend ·
 any large refactor · changing the deploy/CI/auto‑merge setup.
+
+## Subagents are report‑only
+A subagent spawned to review, search or investigate MUST NOT commit, push, or otherwise modify the
+branch. It may read, run the gates, drive a browser, reproduce a defect and propose a patch — and it
+returns that as a report. Only the session working directly with the maintainer commits. (Recorded
+after a Stage B2 review agent authored, committed and pushed `9495d4d` on its own initiative. The fix
+was correct and was kept; the process was not.)

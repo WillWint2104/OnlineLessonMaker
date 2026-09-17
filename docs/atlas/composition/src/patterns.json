@@ -1,0 +1,870 @@
+{
+  "_": "THE CATALOGUE. Each pattern is an instructional situation with named slots and a small set of APPROVED SUBDESIGNS. A subdesign is selected by the SURFACE and — only where a pattern declares `aspects` — the media's own aspect class. There is no third input, and no rule anywhere may consult content. `areas` is grid-template-areas verbatim: the CSS is generated from this file, so the design and the layout cannot drift apart the way a grammar in prose once drifted from thresholds in a script. REVISED after a cross-pattern consistency review: `notes.basic` and `notes.examples-tabs` merged into `notes` (they differed by one slot, and the second was keyed on a DISCLOSURE MODE, which is an author axis decided inside a slot — a pattern keyed on an author axis is not a pattern); `practice.graph-workbook` folded into `practice.workbook` (identical slots plus `reference`; grid paper versus lined paper is a property of the handwrittenResponse BLOCK, and a pattern that forks on a block property has collapsed the two vocabularies); `interactive.primary`'s `workspace` renamed `instrument`, because one slot NAME was carrying two different slot TYPES; and `worked.single` added, because the catalogue could not lay out two of its own lesson's four subtopics.",
+  "notes": {
+    "id": "notes",
+    "intent": "Teaching notes: an explanation, optionally a rule set apart, optionally a set of equivalent worked examples. The default page of a lesson.",
+    "pageTypes": [
+      "notes"
+    ],
+    "slots": [
+      {
+        "name": "intro",
+        "slotType": "reading",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "What this page is about, before any detail."
+      },
+      {
+        "name": "support",
+        "slotType": "support",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "keyIdea",
+          "prose"
+        ],
+        "rationale": "A rule stated once and set apart. Beside the intro on desktop, where the two are read together; four columns, so it reads as subordinate without breaking the measure."
+      },
+      {
+        "name": "reading",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose",
+          "table"
+        ],
+        "rationale": "The explanation itself, where the page has one. A table of values belongs to the explanation rather than to a track of its own."
+      },
+      {
+        "name": "illustration",
+        "slotType": "media",
+        "occupancy": "optional-collapse",
+        "slotFit": "contain",
+        "mediaAnchor": "center",
+        "allowedBlocks": [
+          "image"
+        ],
+        "label": "Illustration",
+        "rationale": "A supporting picture or labelled diagram under the reading. THE ONE CONTAIN SLOT: it is bounded on purpose, so the object is painted at its authored presentation width and the space either side belongs to the slot, not to nobody."
+      },
+      {
+        "name": "examples",
+        "slotType": "examples",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "workedExample"
+        ],
+        "rationale": "Equivalent sibling examples — the same move on different numbers. WHETHER THEY ARE SHOWN TOGETHER OR BEHIND TABS IS AUTHORED INSIDE THIS SLOT and is not what makes a pattern: the previous catalogue had a whole second pattern whose only distinguishing feature was the tabstrip."
+      },
+      {
+        "name": "synthesis",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "What the page adds up to."
+      }
+    ],
+    "subdesigns": [
+      {
+        "id": "measure",
+        "surface": "desktop",
+        "selectedWhen": "the desktop surface",
+        "areas": [
+          "intro intro intro intro intro intro intro intro support support support support",
+          "reading reading reading reading reading reading reading reading . . . .",
+          "illustration illustration illustration illustration . . . . . . . .",
+          "examples examples examples examples examples examples examples examples . . . .",
+          "synthesis synthesis synthesis synthesis synthesis synthesis synthesis synthesis . . . ."
+        ],
+        "notes": "The intro takes exactly the measure and the aside the remaining four columns, so the top row fills the surface edge to edge with no leftover. Everything below is one column at the measure; the four unused columns are READING MARGIN — nothing is named there, so nothing can promise content and hold none.",
+        "slotSpan": 4,
+        "slotAnchor": "start",
+        "anchorReason": "THE PAGE HAS ONE ALIGNMENT ORIGIN — the same defect as `media.full/centred`, in a second pattern. The illustration was CENTRED across columns 4-9 while the intro, reading, examples and synthesis all began at column 1. Two patterns centring their object over left-anchored prose reads as a habit rather than a decision. The illustration now takes the `inset` rung on the reading’s own left edge, which is the approved `notes-inset` composition from the Composition Blueprint catalogue."
+      },
+      {
+        "id": "measure",
+        "surface": "tablet",
+        "selectedWhen": "the tablet surface",
+        "areas": [
+          "intro intro intro intro intro intro intro .",
+          "support support support support support . . .",
+          "reading reading reading reading reading reading reading .",
+          "illustration illustration illustration illustration . . . .",
+          "examples examples examples examples examples examples examples .",
+          "synthesis synthesis synthesis synthesis synthesis synthesis synthesis ."
+        ],
+        "notes": "Five tablet columns beside seven would set the intro at 514px — a 52-character measure. The aside drops below instead.",
+        "slotSpan": 4,
+        "slotAnchor": "start",
+        "anchorReason": "THE PAGE HAS ONE ALIGNMENT ORIGIN — the same defect as `media.full/centred`, in a second pattern. The illustration was CENTRED across columns 4-9 while the intro, reading, examples and synthesis all began at column 1. Two patterns centring their object over left-anchored prose reads as a habit rather than a decision. The illustration now takes the `inset` rung on the reading’s own left edge, which is the approved `notes-inset` composition from the Composition Blueprint catalogue."
+      },
+      {
+        "id": "stacked",
+        "surface": "phone",
+        "selectedWhen": "the phone surface",
+        "areas": [
+          "intro intro intro intro",
+          "support support support support",
+          "reading reading reading reading",
+          "illustration illustration illustration illustration",
+          "examples examples examples examples",
+          "synthesis synthesis synthesis synthesis"
+        ],
+        "notes": "The aside takes the full width because there is none left to subordinate it with; the tint and the accent edge carry that job alone. A tab strip stays one horizontal row and scrolls locally — never wrapping, never a dropdown.",
+        "slotSpan": 4,
+        "slotAnchor": "full"
+      }
+    ],
+    "readingMeasure": "Every slot here is measure-bound: 8 desktop / 7 tablet / 4 phone columns.",
+    "mediaSlotBehaviour": "None. A page that needs a primary visual is `visual.explanation` or `media.full`.",
+    "disclosureAllowed": [
+      "inline",
+      "collection.tabs",
+      "scroll.x"
+    ],
+    "disclosureForbidden": [
+      "views.tabs"
+    ],
+    "scrollOwnership": "page",
+    "adversarialContent": "A 160-word paragraph and a nineteen-column table in the reading slot; a five-tab strip with six-word labels on a 382px phone.",
+    "residueRisk": "A support RAIL beside the whole page would be residue whenever the aside is short. There is no rail: support shares one row with the intro, and both hold content."
+  },
+  "worked.single": {
+    "id": "worked.single",
+    "intent": "ONE worked example: a question or a modelling scenario, the solution, the answer. The catalogue had no home for this at all — `visual.compare` needs a PAIR and `notes` needs a SET — so two of the four subtopics of its own lesson could not be laid out.",
+    "pageTypes": [
+      "notes"
+    ],
+    "slots": [
+      {
+        "name": "intro",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "What kind of problem this is, before the problem."
+      },
+      {
+        "name": "scenario",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "The situation a modelling question sits inside — the bridge, the stone, the rule that came from somewhere. Present it BESIDE the solution on desktop so the reader can look back at the situation while following the algebra; absent, and the page is a plain worked example."
+      },
+      {
+        "name": "worked",
+        "slotType": "worked",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "workedExample",
+          "table"
+        ],
+        "rationale": "The solution itself. THE ONLY REQUIRED SLOT: without it there is no worked example."
+      },
+      {
+        "name": "support",
+        "slotType": "support",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "keyIdea"
+        ],
+        "rationale": "The move the example instances, stated once so it survives the arithmetic."
+      },
+      {
+        "name": "synthesis",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "What this one example establishes."
+      }
+    ],
+    "subdesigns": [
+      {
+        "id": "measure",
+        "surface": "desktop",
+        "selectedWhen": "the desktop surface",
+        "areas": [
+          "intro intro intro intro intro intro intro intro . . . .",
+          "scenario scenario scenario scenario scenario scenario scenario scenario . . . .",
+          "worked worked worked worked worked worked worked worked . . . .",
+          "support support support support support support . . . . . .",
+          "synthesis synthesis synthesis synthesis synthesis synthesis synthesis synthesis . . . ."
+        ],
+        "notes": "The scenario sits ABOVE the solution, not beside it. Five columns of situation beside seven of algebra was designed, rendered and measured: with a one-line scenario it left 247px of empty column above the key idea. BOTH SIDES OF THAT ROW ARE UNBOUNDED PROSE, and a row that pairs two unbounded materials is sound only for the lengths the author happened to write — see `pairingRule` in vocabulary.json. Above is the weaker contiguity and the robust one."
+      },
+      {
+        "id": "stacked",
+        "surface": "tablet",
+        "selectedWhen": "the tablet surface",
+        "areas": [
+          "intro intro intro intro intro intro intro .",
+          "scenario scenario scenario scenario scenario scenario scenario .",
+          "worked worked worked worked worked worked worked .",
+          "support support support support support . . .",
+          "synthesis synthesis synthesis synthesis synthesis synthesis synthesis ."
+        ],
+        "notes": "Three tablet columns of scenario beside five of solution would set the situation at 300px. It goes above instead, which keeps it before the algebra rather than beside it — the weaker of the two contiguities, and the only one 834px affords."
+      },
+      {
+        "id": "stacked",
+        "surface": "phone",
+        "selectedWhen": "the phone surface",
+        "areas": [
+          "intro intro intro intro",
+          "scenario scenario scenario scenario",
+          "worked worked worked worked",
+          "support support support support",
+          "synthesis synthesis synthesis synthesis"
+        ],
+        "notes": ""
+      }
+    ],
+    "readingMeasure": "Every slot is measure-bound: 8 desktop / 7 tablet / 4 phone columns.",
+    "mediaSlotBehaviour": "None. A worked example whose point is a graph is `visual.explanation`.",
+    "disclosureAllowed": [
+      "inline",
+      "scroll.x"
+    ],
+    "disclosureForbidden": [
+      "collection.tabs",
+      "views.tabs"
+    ],
+    "scrollOwnership": "page",
+    "adversarialContent": "A one-line scenario against a seven-step solution, and the reverse — the two columns must keep their widths.",
+    "residueRisk": "A SIDE-BY-SIDE SCENARIO WAS DESIGNED, RENDERED, MEASURED AND REMOVED, for the same reason `visual.side` was: a row pairing two unbounded materials holds only for the lengths the author happened to write. What remains is one column at the measure, where a short scenario simply makes a shorter page."
+  },
+  "visual.explanation": {
+    "id": "visual.explanation",
+    "intent": "One primary visual and the reading of it, where the READING carries the teaching. A page whose plane itself is the point is `media.full`.",
+    "pageTypes": [
+      "notes"
+    ],
+    "slots": [
+      {
+        "name": "media",
+        "slotType": "media",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "graph",
+          "image",
+          "video"
+        ],
+        "rationale": "THE SLOT GIVES THE WIDTH. The plane renders faithfully inside it at equal unit scale and its height follows from the authored domain. FIT: fill — the slot width IS the media's width and the authored domain decides the height. There is no height cap and the page scrolls.",
+        "slotFit": "fill"
+      },
+      {
+        "name": "interpretation",
+        "slotType": "reading",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "The reading OF the visual. Mayer's spatial-contiguity principle is why it is in this pattern at all rather than further down a generic page."
+      },
+      {
+        "name": "support",
+        "slotType": "support",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "keyIdea"
+        ],
+        "rationale": "What the visual establishes, stated once."
+      }
+    ],
+    "subdesigns": [
+      {
+        "id": "side-6",
+        "surface": "desktop",
+        "aspects": [
+          "balanced"
+        ],
+        "selectedWhen": "desktop AND a plane about as wide as it is tall",
+        "areas": [
+          "media media media media media media interpretation interpretation interpretation interpretation interpretation interpretation",
+          "support support support support support support . . . . . ."
+        ],
+        "notes": "Six and six. The key idea sits UNDER THE FIGURE rather than under the reading: under the reading it enclosed a hole between two pieces of one column whenever the reading was short.",
+        "slotSpan": 6,
+        "slotAnchor": "paired"
+      },
+      {
+        "id": "down-8",
+        "surface": "desktop",
+        "aspects": [
+          "portrait",
+          "balanced",
+          "landscape"
+        ],
+        "selectedWhen": "desktop AND a plane taller than it is wide",
+        "areas": [
+          ". . media media media media media media media media . .",
+          ". . interpretation interpretation interpretation interpretation interpretation interpretation interpretation interpretation . .",
+          ". . . support support support support support support . . ."
+        ],
+        "notes": "A CENTRED SPINE, and the only one in the catalogue. Eight columns of media with two free on each side, the reading beneath at the same eight, the key idea centred at six. Left-inset, the same 760px plane sat against the left edge of a 1152px page with 392px beside it that had no role — free columns beside PROSE are reading margin, free columns beside MEDIA are not, because media has no measure to be bound by. Centring is how an 8-column media block stops being stranded.",
+        "slotSpan": 8,
+        "slotAnchor": "center"
+      },
+      {
+        "id": "down-12",
+        "surface": "desktop",
+        "aspects": [
+          "wide",
+          "portrait",
+          "balanced",
+          "landscape"
+        ],
+        "selectedWhen": "desktop AND a plane much wider than it is tall",
+        "areas": [
+          "media media media media media media media media media media media media",
+          "interpretation interpretation interpretation interpretation interpretation interpretation interpretation interpretation . . . .",
+          "support support support support support support . . . . . ."
+        ],
+        "notes": "The full grid. A plane three times wider than it is tall gains real reach from the width; the reading returns to the measure beneath, so the two deliberately do not share a right edge.",
+        "slotSpan": 12,
+        "slotAnchor": "full"
+      },
+      {
+        "id": "stacked",
+        "surface": "tablet",
+        "selectedWhen": "the tablet surface",
+        "areas": [
+          "media media media media media media media media",
+          "interpretation interpretation interpretation interpretation interpretation interpretation interpretation .",
+          "support support support support support . . ."
+        ],
+        "notes": "At 834px the plane takes the full eight columns whatever its shape; there is not enough width left to make a distinction worth making.",
+        "slotSpan": 8,
+        "slotAnchor": "full"
+      },
+      {
+        "id": "stacked",
+        "surface": "phone",
+        "selectedWhen": "the phone surface",
+        "areas": [
+          "media media media media",
+          "interpretation interpretation interpretation interpretation",
+          "support support support support"
+        ],
+        "notes": "",
+        "slotSpan": 4,
+        "slotAnchor": "full"
+      }
+    ],
+    "readingMeasure": "interpretation is 466px in `side` and 760px in `stacked` — both inside the measure, and both a grid position rather than a chosen number.",
+    "mediaSlotBehaviour": "THE SLOT DECIDES THE WIDTH; THE AUTHORED DOMAIN DECIDES THE HEIGHT. Four approved desktop spans — 6, 7, 8 and 12 columns — and the renderer may not invent a fifth. The aspect class selects the family and span promotion selects among spans that clear the media's minimum legible width. There is no height ceiling: if a six-column slot makes a tall plane 950px high, the page scrolls.",
+    "disclosureAllowed": [
+      "inline",
+      "expand"
+    ],
+    "disclosureForbidden": [
+      "collection.tabs",
+      "views.tabs"
+    ],
+    "scrollOwnership": "page",
+    "adversarialContent": "A four-sentence interpretation against a nine-paragraph one, at both aspects — the prescribed subdesign and every slot width must be identical.",
+    "residueRisk": "A SIDE-BY-SIDE SUBDESIGN WAS DESIGNED, RENDERED, MEASURED AND REMOVED. Seven columns of plane beside five of reading fills the surface exactly and looks right when the reading runs to four paragraphs; with a one-sentence reading it left roughly 600px of empty column — the same rail this project has now rejected three times. A composition whose soundness depends on HOW MUCH PROSE THE AUTHOR HAPPENED TO WRITE is content-dependent, and content is exactly what may never decide a composition. So every visual pattern in this catalogue stacks its media and its reading, and the aspect class chooses only how wide the plane is.",
+    "approvedProseSpans": {
+      "desktop": [
+        5,
+        6,
+        8
+      ],
+      "tablet": [
+        7
+      ],
+      "phone": [
+        4
+      ]
+    },
+    "promotionOrder": "Within one (surface, aspect class) the approved subdesigns are ordered by slot span ascending and the FIRST the object says it can inhabit is taken. balanced: 6 -> 8 -> 12 · landscape: 8 -> 12 · portrait: 8 -> 12 · wide: 12.",
+    "approvedSlotSpans": {
+      "desktop": [
+        6,
+        8,
+        12
+      ],
+      "tablet": [
+        8
+      ],
+      "phone": [
+        4
+      ]
+    },
+    "removed": {
+      "side-7": "DESIGNED, PROVEN TO HOLD AN OBJECT, MEASURED AND REMOVED — seven columns of media beside five of reading. It was approved before anything landscape existed to put in it. Given one (a 16:9 photograph and a 16:9 clip, both 662×372 at this span) it holds the object perfectly: the fit contract passes, nothing horizontal is unclaimed. And the page is still wrong. With the atlas's fixed filler the object stands 256px taller than the prose beside it, against the 240px this project calibrated as a hole on four earlier observed cases. Landscape objects now fall through to `down-8`: 760px centred on the twelve with the reading beneath it at the same eight, which has no hole at any prose length. THE GENERAL FINDING IS LARGER THAN THIS ONE ARRANGEMENT and is the maintainer's to rule on: `side-6` measures +474px and `interactive.primary/beside` +472px on the same fixtures. Pairing media with PROSE is sound only for the lengths an author happened to write, which is the pairing rule's original finding arriving a second time. `practice.workbook/beside` is not affected: its neighbour is a workspace with a designed height, and its gaps run +139px to −263px."
+    }
+  },
+  "visual.compare": {
+    "id": "visual.compare",
+    "intent": "Two cases worked side by side, with one visual that belongs to both.",
+    "pageTypes": [
+      "notes"
+    ],
+    "slots": [
+      {
+        "name": "intro",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "What is being compared, and why."
+      },
+      {
+        "name": "caseA",
+        "slotType": "worked",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "workedExample",
+          "table"
+        ],
+        "rationale": "COMPARISON IS THE POINT, so neither case may ever be behind a tab."
+      },
+      {
+        "name": "caseB",
+        "slotType": "worked",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "workedExample",
+          "table"
+        ],
+        "rationale": "The second case, at identical width — equal treatment is the argument the composition makes."
+      },
+      {
+        "name": "media",
+        "slotType": "media",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "graph",
+          "image"
+        ],
+        "rationale": "One visual belonging to both cases. Directly beneath them, adjacent to both. FIT: fill — the slot width IS the media's width and the authored domain decides the height. There is no height cap and the page scrolls.",
+        "slotFit": "fill"
+      },
+      {
+        "name": "interpretation",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "The reading of the shared visual."
+      },
+      {
+        "name": "synthesis",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "What the comparison establishes."
+      }
+    ],
+    "subdesigns": [
+      {
+        "id": "paired",
+        "surface": "desktop",
+        "aspects": [
+          "portrait",
+          "balanced",
+          "landscape",
+          "wide",
+          "none"
+        ],
+        "selectedWhen": "desktop — with any shared plane, OR NO SHARED PLANE AT ALL, which is a state this pattern genuinely has: the lesson's Symmetry workings is a comparison with nothing shared beneath it",
+        "areas": [
+          "intro intro intro intro intro intro intro intro . . . .",
+          "caseA caseA caseA caseA caseA caseA caseB caseB caseB caseB caseB caseB",
+          "media media media media media media media media media media media media",
+          "interpretation interpretation interpretation interpretation interpretation interpretation interpretation interpretation . . . .",
+          "synthesis synthesis synthesis synthesis synthesis synthesis synthesis synthesis . . . ."
+        ],
+        "notes": "The cases keep their pairing and the shared plane spans exactly what the pair spans — a visual that belongs to both cases has the same reach as both cases, and the reading returns to the measure beneath it. TWO ARRANGEMENTS WERE REJECTED TO GET HERE. Six columns of plane beside six of reading was rejected by measurement: a 717px portrait plane left 734px of nothing under the reading column — a plane no wider than it is tall cannot share a row with prose, in any composition. Then eight columns of the twelve, left-inset, with four unnamed beside it: free columns beside PROSE are the reading measure doing its job, free columns beside MEDIA are nothing, because media has no measure to be bound by. Height follows from the domain and the page scrolls — a portrait plane here is tall, and that is the accepted cost of not stranding it.",
+        "slotSpan": 12,
+        "slotAnchor": "full"
+      },
+      {
+        "id": "paired",
+        "surface": "tablet",
+        "selectedWhen": "the tablet surface",
+        "areas": [
+          "intro intro intro intro intro intro intro .",
+          "caseA caseA caseA caseA caseB caseB caseB caseB",
+          "media media media media media media media media",
+          "interpretation interpretation interpretation interpretation interpretation interpretation interpretation .",
+          "synthesis synthesis synthesis synthesis synthesis synthesis synthesis ."
+        ],
+        "notes": "The cases STAY paired at 407px each — a comparison that stacks is no longer a comparison. The shared plane stacks beneath, as it does on desktop.",
+        "slotSpan": 8,
+        "slotAnchor": "full"
+      },
+      {
+        "id": "stacked",
+        "surface": "phone",
+        "selectedWhen": "the phone surface",
+        "areas": [
+          "intro intro intro intro",
+          "caseA caseA caseA caseA",
+          "caseB caseB caseB caseB",
+          "media media media media",
+          "interpretation interpretation interpretation interpretation",
+          "synthesis synthesis synthesis synthesis"
+        ],
+        "notes": "At 382px there is no pairing to keep. The cases stay adjacent and in order, which is the most of the comparison a handset can carry.",
+        "slotSpan": 4,
+        "slotAnchor": "full"
+      }
+    ],
+    "readingMeasure": "Cases at 564px (desktop) and 407px (tablet); prose slots at the measure.",
+    "mediaSlotBehaviour": "As visual.explanation. The shared plane's aspect selects between the two desktop subdesigns.",
+    "disclosureAllowed": [
+      "inline",
+      "scroll.x"
+    ],
+    "disclosureForbidden": [
+      "collection.tabs",
+      "views.tabs"
+    ],
+    "scrollOwnership": "page",
+    "adversarialContent": "Case A with two steps against Case B with seven — the two slots must stay identical in width and the row must not reflow.",
+    "residueRisk": "Unequal case heights leave the shorter case's column open beneath it. That is a ROW's leftover, not a named track promising content; the slot's own box ends with its content. The shared plane never spans only part of a case, which would claim it belongs to one of them."
+  },
+  "media.full": {
+    "id": "media.full",
+    "intent": "A single media object IS the page — a wide graph, a diagram, a recorded explanation — with its reading beneath. THE ONE PATTERN WHOSE PLANE CROSSES THE READING MEASURE, which is what distinguishes it from visual.explanation: there the reading teaches, here the object does.",
+    "pageTypes": [
+      "notes",
+      "video"
+    ],
+    "slots": [
+      {
+        "name": "media",
+        "slotType": "media",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "graph",
+          "image",
+          "video"
+        ],
+        "rationale": "The reason the page exists. It is the one slot in the catalogue permitted to cross the reading measure, because it carries no prose. FIT: fill — the slot width IS the media's width and the authored domain decides the height. There is no height cap and the page scrolls.",
+        "slotFit": "fill"
+      },
+      {
+        "name": "interpretation",
+        "slotType": "reading",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "The reading of it, immediately beneath — inset to the measure, so the media's edges and the prose's edges are deliberately different."
+      },
+      {
+        "name": "support",
+        "slotType": "support",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "keyIdea"
+        ],
+        "rationale": "What the object establishes."
+      }
+    ],
+    "subdesigns": [
+      {
+        "id": "full",
+        "surface": "desktop",
+        "aspects": [
+          "landscape",
+          "wide"
+        ],
+        "selectedWhen": "desktop AND a plane wider than it is tall",
+        "areas": [
+          "media media media media media media media media media media media media",
+          "interpretation interpretation interpretation interpretation interpretation interpretation interpretation interpretation . . . .",
+          "support support support support support support . . . . . ."
+        ],
+        "notes": "Twelve columns — 1152px — because a plane three times wider than it is tall gains real explanatory reach from the width and loses nothing to it. The prose beneath stays at the measure, and the difference between the two left edges is deliberate: the media is the object, the prose is the commentary.",
+        "slotSpan": 12,
+        "slotAnchor": "full"
+      },
+      {
+        "id": "centred",
+        "surface": "desktop",
+        "aspects": [
+          "portrait",
+          "balanced"
+        ],
+        "selectedWhen": "desktop AND a plane not wider than it is tall",
+        "areas": [
+          "media media media media media media media media media media . .",
+          "interpretation interpretation interpretation interpretation interpretation interpretation interpretation interpretation . . . .",
+          "support support support support support support . . . . . ."
+        ],
+        "notes": "An upright plane still crosses the reading measure, but not by every column: ten columns is 956px of object against a 760px reading, unmistakably the page without the height that twelve would buy (a portrait plane at the full grid measures 1152x1469). Same left edge as the prose, a shorter break-out. RENAMED IN INTENT, NOT IN NAME: `centred` is now anchored `start`; the id is left alone so the page fixture that selects it keeps working, and the catalogue adoption pass renames it.",
+        "slotSpan": 10,
+        "slotAnchor": "start",
+        "anchorReason": "THE PAGE HAS ONE ALIGNMENT ORIGIN. This subdesign used to CENTRE its object over prose anchored to the left edge, which gave the page two competing axes: every prose row began at column 1 and the object alone began at column 3. Each row was legal on its own — a solo row leaves page margin beside it — and the pair of them was not, which is exactly what the alignment spine exists to name. The object now starts on the SAME LEFT EDGE as the reading and breaks out to the right of it, which is the approved `plate-wide` composition from the Composition Blueprint catalogue."
+      },
+      {
+        "id": "full",
+        "surface": "tablet",
+        "aspects": [
+          "portrait",
+          "balanced",
+          "landscape",
+          "wide"
+        ],
+        "selectedWhen": "tablet AND a plane wider than it is tall",
+        "areas": [
+          "media media media media media media media media",
+          "interpretation interpretation interpretation interpretation interpretation interpretation interpretation .",
+          "support support support support support . . ."
+        ],
+        "notes": "At 834px the eight columns ARE the surface, so the desktop pattern's two states collapse into one: there is no narrower approved state to promote to and nothing beside the plane to leave unnamed.",
+        "slotSpan": 8,
+        "slotAnchor": "full"
+      },
+      {
+        "id": "full",
+        "surface": "phone",
+        "selectedWhen": "the phone surface",
+        "areas": [
+          "media media media media",
+          "interpretation interpretation interpretation interpretation",
+          "support support support support"
+        ],
+        "notes": "At 382px every arrangement is the same arrangement.",
+        "slotSpan": 4,
+        "slotAnchor": "full"
+      }
+    ],
+    "readingMeasure": "The media is exempt because it holds no prose. Everything else is measure-bound.",
+    "mediaSlotBehaviour": "The full subdesign hands the media the entire grid. That is the only place in the catalogue where a slot crosses the measure, and it is why the pattern declares aspect classes rather than accepting any figure.",
+    "disclosureAllowed": [
+      "inline",
+      "expand"
+    ],
+    "disclosureForbidden": [
+      "collection.tabs",
+      "views.tabs"
+    ],
+    "scrollOwnership": "page",
+    "adversarialContent": "The same page with a portrait plane instead of a wide one — the pattern must take its inset subdesign rather than producing a 1400px-tall figure.",
+    "residueRisk": "A 12-column media row leaves nothing beside it, so there is no track to be empty. The risk is the opposite one — a plane too tall for the width — and the aspect classes are what answer it."
+  },
+  "interactive.primary": {
+    "id": "interactive.primary",
+    "intent": "A manipulable object is the page: an opening brief, the instrument, and prompts directing what to try.",
+    "pageTypes": [
+      "interactive"
+    ],
+    "slots": [
+      {
+        "name": "intro",
+        "slotType": "reading",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "What the object is and what changing it does. Read once, before touching anything."
+      },
+      {
+        "name": "instrument",
+        "slotType": "interactive",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "interactive"
+        ],
+        "rationale": "The object and its controls as ONE slot: a control detached from what it controls is the spatial-contiguity failure in its purest form. NAMED `instrument`, not `workspace`: the practice patterns use `workspace` for the surface a learner writes ON, and one slot name carrying two slot types is the collision that attacks the two-vocabulary distinction directly.",
+        "slotFit": "fill"
+      },
+      {
+        "name": "prompts",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "What to try. Beside the instrument on desktop so the learner reads and acts without leaving either."
+      },
+      {
+        "name": "synthesis",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "What the exploration was for."
+      }
+    ],
+    "subdesigns": [
+      {
+        "id": "beside",
+        "surface": "desktop",
+        "selectedWhen": "the desktop surface",
+        "areas": [
+          "intro intro intro intro intro intro intro intro . . . .",
+          "instrument instrument instrument instrument instrument instrument instrument instrument prompts prompts prompts prompts",
+          "synthesis synthesis synthesis synthesis synthesis synthesis synthesis synthesis . . . ."
+        ],
+        "notes": "The prompts sit beside the instrument, not beneath it: a learner who has to scroll away from the object to read what to try has been given two tasks instead of one.",
+        "slotSpan": 8,
+        "slotAnchor": "paired"
+      },
+      {
+        "id": "stacked",
+        "surface": "tablet",
+        "selectedWhen": "the tablet surface",
+        "areas": [
+          "intro intro intro intro intro intro intro .",
+          "instrument instrument instrument instrument instrument instrument instrument instrument",
+          "prompts prompts prompts prompts prompts prompts prompts .",
+          "synthesis synthesis synthesis synthesis synthesis synthesis synthesis ."
+        ],
+        "notes": "The instrument takes the full eight columns and the prompts drop beneath it — 300px of prompts beside it would be a column of two-word lines.",
+        "slotSpan": 8,
+        "slotAnchor": "full"
+      },
+      {
+        "id": "stacked",
+        "surface": "phone",
+        "selectedWhen": "the phone surface",
+        "areas": [
+          "intro intro intro intro",
+          "instrument instrument instrument instrument",
+          "prompts prompts prompts prompts",
+          "synthesis synthesis synthesis synthesis"
+        ],
+        "notes": "",
+        "slotSpan": 4,
+        "slotAnchor": "full"
+      }
+    ],
+    "readingMeasure": "intro, prompts and synthesis are measure-bound. The instrument is not: it holds no prose.",
+    "mediaSlotBehaviour": "The plane inside the instrument takes the instrument slot's width, exactly as a media slot. The controls sit under it at the same width so the two read as one instrument.",
+    "disclosureAllowed": [
+      "inline",
+      "expand"
+    ],
+    "disclosureForbidden": [
+      "collection.tabs",
+      "views.tabs"
+    ],
+    "scrollOwnership": "page",
+    "adversarialContent": "Eleven prompts against two — the instrument must not change width, and the prompts column must not push the object narrower.",
+    "residueRisk": "A tall instrument beside a short prompt list leaves the prompt column open beneath. The prompts slot ends with its content; nothing paints an empty track."
+  },
+  "practice.workbook": {
+    "id": "practice.workbook",
+    "intent": "A question set beside a workspace the learner acts on — lined paper or grid paper — with the stimulus staying while the worklist moves.",
+    "pageTypes": [
+      "practice"
+    ],
+    "slots": [
+      {
+        "name": "intro",
+        "slotType": "reading",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "prose"
+        ],
+        "rationale": "What this set is for, and the convention to work to."
+      },
+      {
+        "name": "reference",
+        "slotType": "media",
+        "occupancy": "optional-collapse",
+        "allowedBlocks": [
+          "graph",
+          "image"
+        ],
+        "rationale": "A worked plane to plot against, when the task is to reproduce or extend one. Above the questions in the same column, so the workspace beside them spans both rows — putting it in a row BELOW left a 600px dead column whenever the plotting surface was tall. FIT: fill — the slot width IS the media's width and the authored domain decides the height. There is no height cap and the page scrolls.",
+        "slotFit": "fill"
+      },
+      {
+        "name": "questions",
+        "slotType": "questions",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "questionSet"
+        ],
+        "scroll": "pane",
+        "rationale": "THE ONE SLOT IN THE CATALOGUE THAT OWNS A LOCAL VERTICAL SCROLL, and only because the workspace beside it must stay put. A template feature, never a way of making teaching content shorter."
+      },
+      {
+        "name": "workspace",
+        "slotType": "workspace",
+        "occupancy": "required",
+        "allowedBlocks": [
+          "handwrittenResponse"
+        ],
+        "rationale": "Where the learner writes or plots. THE SHEET IS A WINDOW AND THE PAPER SCROLLS INSIDE IT — more paper never means smaller writing. LINED VERSUS GRID PAPER IS A PROPERTY OF THE BLOCK, not of this slot and not of the pattern: the catalogue previously forked into two patterns over it, which is a pattern forking on a block property.",
+        "fit": "fill",
+        "align": "stretch"
+      }
+    ],
+    "subdesigns": [
+      {
+        "id": "beside",
+        "surface": "desktop",
+        "selectedWhen": "the desktop surface",
+        "areas": [
+          "intro intro intro intro intro intro intro intro . . . .",
+          "reference reference reference reference reference workspace workspace workspace workspace workspace workspace workspace",
+          "questions questions questions questions questions workspace workspace workspace workspace workspace workspace workspace"
+        ],
+        "notes": "FIVE AND SEVEN. The questions are short and the writing is not, so the workspace takes the larger share — the reverse of what a resolver balancing areas would produce. It SPANS BOTH ROWS so the reference plane and the question list stack in one column beside it. With no reference the first row collapses and the pairing is unchanged.",
+        "slotSpan": 5,
+        "slotAnchor": "paired"
+      },
+      {
+        "id": "beside",
+        "surface": "tablet",
+        "selectedWhen": "the tablet surface",
+        "areas": [
+          "intro intro intro intro intro intro intro .",
+          "reference reference reference reference workspace workspace workspace workspace",
+          "questions questions questions questions workspace workspace workspace workspace"
+        ],
+        "notes": "Four and four. The pane survives here because the pairing is the template.",
+        "slotSpan": 4,
+        "slotAnchor": "paired"
+      },
+      {
+        "id": "stacked",
+        "surface": "phone",
+        "selectedWhen": "the phone surface",
+        "noPane": true,
+        "areas": [
+          "intro intro intro intro",
+          "reference reference reference reference",
+          "questions questions questions questions",
+          "workspace workspace workspace workspace"
+        ],
+        "notes": "THE PANE GIVES UP ITS BOUND. At 382px a pane inside a page is two scrolls fighting, so the questions return to page scroll and the workspace follows them down. The reference comes before the instructions that refer to it.",
+        "slotSpan": 4,
+        "slotAnchor": "full"
+      }
+    ],
+    "readingMeasure": "questions at 466px (desktop) and 407px (tablet) — inside the measure at both.",
+    "mediaSlotBehaviour": "The optional reference plane takes the question column's width and renders at equal unit scale, so the plane the learner reads and the paper they draw on carry the same geometry. Grid paper's squares are square for the same reason.",
+    "disclosureAllowed": [
+      "inline"
+    ],
+    "disclosureForbidden": [
+      "collection.tabs",
+      "views.tabs"
+    ],
+    "scrollOwnership": "pane",
+    "adversarialContent": "Twenty-two questions against one — the workspace must not move, shrink or change its rule spacing, and the question pane must not widen.",
+    "residueRisk": "A short question list in a bounded pane leaves the pane's bottom empty. That is why the pane is `max-height` and not `height`: it collapses to its content and the emptiness never appears."
+  }
+}

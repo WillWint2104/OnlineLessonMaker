@@ -1,0 +1,8 @@
+    <h4 data-slot="title">Case B</h4>
+    <div data-slot="question"><p class="at-lab">Question</p><p>Find <i>y</i> when <i>x</i> = 3.</p></div>
+    <div data-slot="steps"><p class="at-lab">Worked solution</p>
+      <ol class="at-steps">
+        <li class="at-step"><div class="at-st">Substitute.</div><div class="at-sm"><i>y</i> = 3<sup>2</sup></div></li>
+        <li class="at-step"><div class="at-st">Evaluate.</div><div class="at-sm"><i>y</i> = 9</div></li>
+      </ol></div>
+    <div data-slot="answer"><b>Answer</b>(3, 9)</div>

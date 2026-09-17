@@ -38,8 +38,8 @@ Switch theme with `LESSON.meta.theme = '<theme>'; render();` · change slide wit
 
 ## Contracts these fixtures exist to hold
 
-Both were broken on `main` at #144 and are fixed; re-check them after any change to the focus
-rail, the canvas fit, or the figure engine.
+Re-check these after any change to the focus rail, the canvas fit, or the figure engine. The first
+two were broken on `main` at #144 and are fixed; the rest were added by the stages named against them.
 
 1. **Focus overlays park to the visible pane.** A composable page is taller than the board and
    `#stage` is the scroller, so an overlay positioned against the full-height slide lands off-screen
@@ -205,3 +205,88 @@ passes while the bug is present — verified by re-introducing the bug and watch
 
 `"12 cm²"` is a **renderer-format stress case only**. An area unit on a side is mathematically wrong and must
 never be copied into a real lesson; it is there to prove the chip typesets and sizes a superscripted unit.
+
+
+## `verify-figure-container.mjs` — contract 10: the box the app actually paints
+
+Gated by `scripts/verify-figure-container.mjs` (workflow `figure-container.yml`, not a required check). Stage 4
+derives the figure's viewBox from its host, so the inline box stopped being a constant. Nothing already here
+tested it: `verify-label-placement` and `verify-geometry-semantics` both solve at FIXED reference boxes, and
+`verify-measure-surface`'s assertions are ratios and therefore scale-invariant — all three stay green on a
+figure painted at 4px per annotation.
+
+Everything is asserted in **logical canvas px**. `#canvas` is a fixed 1280px surface that is
+`transform:scale()`'d, so a phone shrinks the figure and the body copy identically (annotation:body is a
+constant 1.48×) — that is the canvas's business, and device px would report a different number per viewport
+and fail on a phone for a reason no figure change can fix. Sizes come from
+`computedFontSize × (stage.offsetWidth ÷ viewBoxWidth)`, and `offsetWidth` is the pre-transform layout box.
+
+What is asserted, per fixture × designed theme × **stage width**, from the widest pane down to exactly the
+floor:
+
+1. **The type band, under the bounded responsive scale.** Hard floor **11px** for every annotation at every
+   stage width — absolute and unchanged. The primary window starts at 12–15px at the ramp start and its
+   ceiling **rides the ramp** (`15 × scale`): the old flat 12–15 was a floor-stage contract, and bounded
+   growth necessarily lifts the upper bound. Subordinate units satisfy the floor only and are deliberately not
+   raised toward the primary values — Stage 3d made them quieter on purpose. Named representative sizes are
+   asserted with a tolerance (vertex 14.84 / 16.19 / 18.08 and unit 11.18 / 12.21 / 13.63 at stages 420 / 700
+   / 1089), and every one must actually be observed. The run prints the smallest and largest observed, with
+   the class, string, stage width and slide that produced each.
+2. **The ramp itself**, measured as a RATIO of rendered size to the same role at the ramp start — so the
+   observed scale comes from pixels alone and no production constant or helper is consulted to decide what
+   the answer should be. The expected curve is restated from the documented contract (1.00 → 1.22 between
+   stage 420 and 1089), because asking `figRespScale()` what it returns and asserting that it returned it
+   would be a tautology; a drift between the two is precisely what fails. Probed at 340, 420, 530, 700, 900,
+   1089 and 1250 — one below the ramp and one above the ceiling: scale is 1.00 at and below the start,
+   monotonically non-decreasing, never below 1.00, and **stops growing** above the end. Tolerance is `±0.004`,
+   which is `figFitBox`'s whole-unit box rounding (`W = round(stage / k)`, ~0.5/W), not slack in the contract.
+3. **The hierarchy survives the ramp.** One multiplier moves the whole spatial system, so role ordering
+   (vertex > symbolic > prose > measurement > unit) and the Stage 3d **unit:value ratio of 0.852** are
+   invariants at every stage width, not coincidences — they are what would catch a per-role scaler creeping
+   in. The ratio is measured on the fixture that actually carries a unit and fails if none is ever seen: a
+   first draft probed a slide with no units and passed while dividing by `undefined`.
+4. **Containment.** Measurement text never leaves the rect reserved for it, at every stage width.
+5. **The geometry minimum stage width.** At or above `FIG_MIN_STAGE.geometry` — the usable `.tp-fig-stage`
+   width, which is what `figFitBox` consumes — no label may have taken Stage 3c's
+   relaxed path — and the floor is proven *load-bearing* by showing that dense figures DO relax below it, so a
+   green run cannot mean the floor was decoration. The floor is read from the app, never pinned here.
+6. **Mount, observer and reflow.** The observer is installed once; a re-solve at an unchanged stage width does no
+   work; only the `<svg>` is replaced; the callout hit-targets and dialogs keep their DOM identity and still
+   open after a re-solve (they carry `wirePackTyped`'s listeners and must never be re-emitted); two figures in
+   one host stay independent; a resize does not feed the observer back into itself; wide → narrow → wide
+   returns identical DOM, with a guard that the narrow state really differed; and a callout-count mismatch
+   bails before mutating rather than throwing.
+7. **Every expectation observed.** A class or fixture that never rendered fails rather than passing silently.
+
+Non-vacuity, demonstrated by re-introducing each defect: `FIG_RESP_SCALE_MAX` 1.22→1.30 (45/54 — the ceiling
+rises to 18.30 and a vertex breaches it at 19.26) · `FIG_RESP_STAGE0` 420→340 (44/54 — the floor stops being
+pinned, and it also catches the dart relaxing at the geometry floor) · `FIG_FIT_K_BASE` 1.14→0.80 (46/54) ·
+geometry floor 420→340 (dense figures relax inside the supported range) · callouts re-emitted instead of
+repositioned (identity and listeners lost) · idempotence guard removed (an unchanged stage width repaints and
+the resize feeds back) · count-mismatch bail removed (throws).
+
+### Contract 10 also covers the placement resolver (Stage 4 C6)
+
+`figure-placement-baseline.json`. A placement is an INTENT: `contained` and `beside` keep their shape only
+while the figure still gets `figMinStageWidth()` of usable stage, and — for `beside` — while the prose column
+is still worth reading. Otherwise the layout relaxes (`contained` → full, `beside` → stacked).
+
+The expected mode is **predicted independently** from the measured available width, the measured shell chrome
+and the app's own minimum, using this file's own copy of the layout geometry (0.78 / 24px gutter / 260px prose
+floor). It is a prediction checked against the resolver, not a question put to it — and because the prediction
+lands exactly, it also proves the JS constants and the CSS agree, a duplication nothing else tests.
+
+Asserted: every resolved mode matches the prediction at eleven widths straddling all three measured
+transitions · a reduced layout never starves the figure below its minimum · `beside` always has rendered prose
+· a stacked figure recovers the full width · three identical sweeps across a transition do not oscillate · a
+beside↔stacked transition keeps the same figure node, the same `figSafeId` and the same `FIGX` entry · a
+settled placement is not rewritten on every pass · `beside` without prose reports and falls back · an
+unrecognised placement still falls back (C5 unchanged) · `text` outside `beside` is reported · a figure with no
+placement gains no wrapper.
+
+Non-vacuity: contained promotion disabled (61/64) · beside stacking disabled (61/64) · chrome dropped so the
+outer width is compared instead of the stage (62/64, and it catches a figure kept at stage 419 against a 420
+minimum — the exact ~26px bug the architecture exists to prevent) · resolver idempotence guard removed
+(64/65). That last one **passed** against the first draft of this suite: counting `figInlineSolve` repaints
+missed a resolver that rewrote `data-fig-layout` on every pass. A second counter was added, and it now fails
+with `3 layout writes from 3 extra figFitAll() passes`.

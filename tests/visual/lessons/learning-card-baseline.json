@@ -1,0 +1,86 @@
+{
+ "meta": { "title": "C6b — the learning card", "theme": "mathematics" },
+ "slides": [
+  { "type": "page", "title": "Thinking prompt", "blocks": [
+    { "type": "text", "eyebrow": "Thinking prompt", "icon": "lightbulb",
+      "title": "Is a number always smaller than its own square?",
+      "body": ["Square 6 and you get 36. Square −6 and you get 36 as well — the minus sign disappears, and both numbers land at the same height on the curve $y=x^2$. Now try one half. Now try 1. Does squaring really push every number further out?"],
+      "footer": "Test three numbers before you decide — one large, one between 0 and 1, one negative." } ] },
+
+  { "type": "page", "title": "Key idea", "blocks": [
+    { "type": "text", "eyebrow": "Key idea", "icon": "key",
+      "title": "Three side lengths build one triangle, and only one",
+      "body": ["So once you have matched all three sides of one triangle to the three sides of another, you are finished measuring. Every angle already agrees.",
+               "It does not claim the two triangles sit the same way up — one may be turned or flipped over. Same shape and size, not the same position."],
+      "chip": "SSS congruence test" } ] },
+
+  { "type": "page", "title": "Worked explanation", "blocks": [
+    { "type": "text", "eyebrow": "Worked explanation", "icon": "list",
+      "title": "Find every point on $y=x^2$ at a height of 9",
+      "body": ["On this curve the height of a point is its $y$ value, and every point has coordinates $(x,x^2)$."],
+      "steps": ["Set the height equal to 9, which gives the equation $x^2=9$.",
+                "Solve it: $x=3$ or $x=-3$, because $-3$ times $-3$ is also 9.",
+                "Those two values are the same distance either side of the $y$-axis, so the curve reaches height 9 twice.",
+                "The curve therefore passes through $(3,9)$ and $(-3,9)$."],
+      "footer": "Check each answer by substituting back." } ] },
+
+  { "type": "page", "title": "Check your understanding", "blocks": [
+    { "type": "text", "eyebrow": "Check your understanding", "icon": "question",
+      "title": "How would you convince someone that the parabola is symmetric?",
+      "body": ["Look back at your table of values for $y=x^2$. Pick a pair of points the same distance either side of the $y$-axis, say what their coordinates have in common, and explain why that makes the two halves of the curve congruent."],
+      "footer": "Answer in a full sentence that gives a reason — a number on its own is not an explanation." } ] },
+
+  { "type": "page", "title": "Geometry with a companion card", "blocks": [
+    { "type": "figure", "figure": "geometry", "title": "Triangle ABC, built from three sides",
+      "placement": "beside", "construction": "triangleSSS", "params": { "a": 7, "b": 8, "c": 9 },
+      "objects": [ { "type": "polygon", "vertices": ["A","B","C"], "angles": "all" },
+                   { "type": "sideLabel", "between": ["A","B"], "text": "auto", "unit": "cm" },
+                   { "type": "sideLabel", "between": ["B","C"], "text": "auto", "unit": "cm" },
+                   { "type": "sideLabel", "between": ["C","A"], "text": "auto", "unit": "cm" } ],
+      "caption": "Each side length is fixed; the angles follow from them.",
+      "companion": { "eyebrow": "Triangle construction", "icon": "triangle",
+        "title": "Three sides are enough to fix a triangle",
+        "body": ["Nobody chose the angles here. They were settled the moment the three lengths were. Read the three measures marked at $A$, $B$ and $C$: each one is a consequence, not a decision."],
+        "footer": "Build it yourself with ruler and compasses, then check your angles against these." } } ] },
+
+  { "type": "page", "title": "Graph with a companion card", "blocks": [
+    { "type": "figure", "figure": "graph", "title": "The curve y = x²", "placement": "beside",
+      "domain": { "xMin": -3, "xMax": 3, "yMin": -1, "yMax": 9 }, "grid": "shown", "aspect": "stretch",
+      "objects": [ { "type": "function", "f": "x^2" },
+                   { "type": "points", "from": "table", "rows": [ ["V",0,0], ["P",2,4] ] } ],
+      "caption": "Two points are marked: the vertex V and the point P at (2, 4).",
+      "companion": { "eyebrow": "Reading the graph", "icon": "eye",
+        "title": "Reading a rule off the curve",
+        "body": ["Begin at $V$, the turning point at the bottom of the curve. Fold the page down the vertical axis and the two arms land on each other.",
+                 "Now follow the right arm out to $P$. Read its coordinates off the grid, square the $x$ you read, and see whether $y=x^2$ gives back the height."],
+        "footer": "Where does P's mirror sit on the left arm?" } } ] },
+
+  { "type": "page", "title": "The same card, sans", "blocks": [
+    { "type": "text", "eyebrow": "Key idea", "icon": "key", "fontStyle": "sans",
+      "title": "Three side lengths build one triangle, and only one",
+      "body": ["So once you have matched all three sides of one triangle to the three sides of another, you are finished measuring. Every angle already agrees.",
+               "It does not claim the two triangles sit the same way up — one may be turned or flipped over. Same shape and size, not the same position."],
+      "chip": "SSS congruence test" } ] },
+
+  { "type": "page", "title": "Legacy — a text block with no card field", "blocks": [
+    { "type": "text", "eyebrow": "Legacy", "title": "This block renders through the original path",
+      "body": ["No card field is authored here, so fragText takes the branch it always took and emits the same markup it always emitted."] } ] },
+
+  { "type": "page", "title": "Legacy — a figure with the simple text companion", "blocks": [
+    { "type": "figure", "figure": "graph", "title": "The curve y = x²", "placement": "beside",
+      "domain": { "xMin": -3, "xMax": 3, "yMin": -1, "yMax": 9 }, "grid": "shown", "aspect": "stretch",
+      "objects": [ { "type": "function", "f": "x^2" } ],
+      "text": "The plain `text` companion is unchanged: no card, no chrome, the same single prose div it has always emitted." } ] },
+
+  { "type": "page", "title": "Reported — both companion shapes authored", "blocks": [
+    { "type": "figure", "figure": "graph", "title": "Ambiguous companion", "placement": "beside",
+      "domain": { "xMin": -3, "xMax": 3, "yMin": -1, "yMax": 9 }, "grid": "shown",
+      "objects": [ { "type": "function", "f": "x^2" } ],
+      "text": "Plain prose wins.",
+      "companion": { "title": "This card is ignored", "body": ["and the ambiguity is reported."] } } ] },
+
+  { "type": "page", "title": "Reported — unsupported enums", "blocks": [
+    { "type": "text", "icon": "https://cdn.example.com/icon.png", "fontStyle": "Helvetica",
+      "title": "Both values are reported", "body": ["Neither is silently reinterpreted, and the icon never reaches tpIc."] } ] }
+ ]
+}

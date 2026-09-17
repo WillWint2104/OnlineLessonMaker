@@ -1,0 +1,59 @@
+name: Mathematics page family
+
+# The behavioural gates for the Mathematics Practice page family.
+#
+# Why this workflow exists at all: Stage B shipped a Type workspace whose response payload was provably
+# correct — verify-response-store, verify-workbook and verify-corpus-identity were all green — while the
+# student could not construct the sentence they intended. An equation went to the end of the page whatever
+# the caret was doing, Insert sat below the fold on a 13-inch laptop, and the equation editor could not be
+# left by keyboard. None of those are visible to a gate that inspects stored state. So the rendered
+# interaction is part of the Practice contract, not a local diagnostic, and it runs here.
+#
+# verify-type-interaction presses keys and reads focus in a real browser: caret placement, keyboard entry
+# and exit, arrow-key ownership, repeated editor use, short-laptop reachability, ARIA naming and state, and
+# the isolation of the Type-only CSS. verify-workbook is its companion — the same page family's state,
+# layout and modality rules — and runs alongside it.
+#
+# NOT a required check, on the same reasoning as measure-surface.yml and figure-container.yml: `validate`
+# is the only required check and deliberately installs no dependencies, while these need Playwright and a
+# real render at several viewports. Making one required is branch protection, which is the maintainer's
+# call (CLAUDE.md: ask before changing the CI/auto-merge setup). Until then, a red result here does not
+# block merge — read it.
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - 'lesson-studio.html'
+      - 'scripts/verify-type-interaction.mjs'
+      - 'scripts/verify-workbook.mjs'
+      - 'scripts/verify-notes-examples.mjs'
+      - 'tests/visual/lessons/mathematics-shell.json'
+      - 'tests/visual/lessons/mathematics-wide-table.json'
+      - 'lessons/closing-the-gap-geolearn.json'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  mathematics-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      # What a student can DO with keyboard, pointer and focus in the rendered page.
+      - run: node scripts/verify-type-interaction.mjs
+      # The same page family's state, layout, table and Write/Type modality rules.
+      - run: node scripts/verify-workbook.mjs
+      # Stage C: Notes and Worked Examples are driven by the lesson JSON, and the flat output carries all
+      # of it rather than whichever tab was open. Same reasoning — a page that renders is not a page that
+      # is data-driven, and only a control that changes the JSON can tell the two apart.
+      - run: node scripts/verify-notes-examples.mjs

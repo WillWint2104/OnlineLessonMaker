@@ -1,0 +1,827 @@
+[
+  {
+    "image": "lesson-substitution-desktop",
+    "state": "substitution",
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "sideBalance": [],
+    "figs": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1906,
+    "scrollX": 2,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@683×860",
+      "landscape@large:wide→visual.down@1000×463"
+    ]
+  },
+  {
+    "image": "lesson-substitution-tablet",
+    "state": "substitution",
+    "surface": 834,
+    "surfaceName": "tablet",
+    "sideBalance": [],
+    "figs": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1872,
+    "scrollX": 2,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@616×779",
+      "landscape@large:wide→visual.down@800×378"
+    ]
+  },
+  {
+    "image": "lesson-substitution-narrow",
+    "state": "substitution",
+    "surface": 382,
+    "surfaceName": "narrow",
+    "sideBalance": [],
+    "figs": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:narrow",
+      "views.tabs:wide",
+      "comparison.paired:narrow",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 2236,
+    "scrollX": 2,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@382×498",
+      "landscape@large:wide→visual.down@382×211"
+    ]
+  },
+  {
+    "image": "lesson-solving-for-x-desktop",
+    "state": "solving-for-x",
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "sideBalance": [],
+    "figs": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1503,
+    "scrollX": 1,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@683×860",
+      "landscape@large:wide→visual.down@1000×463"
+    ]
+  },
+  {
+    "image": "lesson-solving-for-x-tablet",
+    "state": "solving-for-x",
+    "surface": 834,
+    "surfaceName": "tablet",
+    "sideBalance": [],
+    "figs": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1469,
+    "scrollX": 1,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@616×779",
+      "landscape@large:wide→visual.down@800×378"
+    ]
+  },
+  {
+    "image": "lesson-solving-for-x-narrow",
+    "state": "solving-for-x",
+    "surface": 382,
+    "surfaceName": "narrow",
+    "sideBalance": [],
+    "figs": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:narrow",
+      "views.tabs:wide",
+      "comparison.paired:narrow",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1876,
+    "scrollX": 1,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@382×498",
+      "landscape@large:wide→visual.down@382×211"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-workings-desktop",
+    "state": "symmetry-workings",
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "sideBalance": [],
+    "figs": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 954,
+    "scrollX": 2,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@683×860",
+      "landscape@large:wide→visual.down@1000×463"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-workings-tablet",
+    "state": "symmetry-workings",
+    "surface": 834,
+    "surfaceName": "tablet",
+    "sideBalance": [],
+    "figs": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 920,
+    "scrollX": 2,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@616×779",
+      "landscape@large:wide→visual.down@800×378"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-workings-narrow",
+    "state": "symmetry-workings",
+    "surface": 382,
+    "surfaceName": "narrow",
+    "sideBalance": [],
+    "figs": [],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:narrow",
+      "views.tabs:wide",
+      "comparison.paired:narrow",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1348,
+    "scrollX": 2,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@382×498",
+      "landscape@large:wide→visual.down@382×211"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-visual-explanation-desktop",
+    "state": "symmetry-visual-explanation",
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "sideBalance": [],
+    "figs": [
+      {
+        "region": 683,
+        "ratio": 1.001,
+        "plane": 683,
+        "planeH": 860,
+        "size": "standard",
+        "cls": "portrait",
+        "fig": "symmetry@standard"
+      }
+    ],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1656,
+    "scrollX": 2,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@683×860",
+      "landscape@large:wide→visual.down@1000×463"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-visual-explanation-tablet",
+    "state": "symmetry-visual-explanation",
+    "surface": 834,
+    "surfaceName": "tablet",
+    "sideBalance": [],
+    "figs": [
+      {
+        "region": 616,
+        "ratio": 1,
+        "plane": 616,
+        "planeH": 779,
+        "size": "standard",
+        "cls": "portrait",
+        "fig": "symmetry@standard"
+      }
+    ],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1541,
+    "scrollX": 2,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@616×779",
+      "landscape@large:wide→visual.down@800×378"
+    ]
+  },
+  {
+    "image": "lesson-symmetry-visual-explanation-narrow",
+    "state": "symmetry-visual-explanation",
+    "surface": 382,
+    "surfaceName": "narrow",
+    "sideBalance": [],
+    "figs": [
+      {
+        "region": 382,
+        "ratio": 1,
+        "plane": 382,
+        "planeH": 498,
+        "size": "standard",
+        "cls": "portrait",
+        "fig": "symmetry@standard"
+      }
+    ],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:narrow",
+      "views.tabs:wide",
+      "comparison.paired:narrow",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1380,
+    "scrollX": 2,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@382×498",
+      "landscape@large:wide→visual.down@382×211"
+    ]
+  },
+  {
+    "image": "lesson-a-flatter-parabola-desktop",
+    "state": "a-flatter-parabola",
+    "surface": 1152,
+    "surfaceName": "desktop",
+    "sideBalance": [],
+    "figs": [
+      {
+        "region": 1000,
+        "ratio": 1.003,
+        "plane": 1000,
+        "planeH": 463,
+        "size": "large",
+        "cls": "wide",
+        "fig": "landscape@large"
+      }
+    ],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1265,
+    "scrollX": 1,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@683×860",
+      "landscape@large:wide→visual.down@1000×463"
+    ]
+  },
+  {
+    "image": "lesson-a-flatter-parabola-tablet",
+    "state": "a-flatter-parabola",
+    "surface": 834,
+    "surfaceName": "tablet",
+    "sideBalance": [],
+    "figs": [
+      {
+        "region": 800,
+        "ratio": 1.005,
+        "plane": 800,
+        "planeH": 378,
+        "size": "large",
+        "cls": "wide",
+        "fig": "landscape@large"
+      }
+    ],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:wide",
+      "views.tabs:wide",
+      "comparison.paired:wide",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1146,
+    "scrollX": 1,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@616×779",
+      "landscape@large:wide→visual.down@800×378"
+    ]
+  },
+  {
+    "image": "lesson-a-flatter-parabola-narrow",
+    "state": "a-flatter-parabola",
+    "surface": 382,
+    "surfaceName": "narrow",
+    "sideBalance": [],
+    "figs": [
+      {
+        "region": 382,
+        "ratio": 0.996,
+        "plane": 382,
+        "planeH": 211,
+        "size": "large",
+        "cls": "wide",
+        "fig": "landscape@large"
+      }
+    ],
+    "compositions": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.flow",
+      "single.flow",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual",
+      "visual"
+    ],
+    "resolved": [
+      "collection.tabs",
+      "collection.repeat",
+      "single.flow",
+      "single.split",
+      "views.tabs",
+      "comparison.paired",
+      "visual.down"
+    ],
+    "states": [
+      "collection.tabs:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "single.flow:wide",
+      "collection.repeat:wide",
+      "single.flow:wide",
+      "single.split:narrow",
+      "views.tabs:wide",
+      "comparison.paired:narrow",
+      "visual:wide",
+      "visual:wide"
+    ],
+    "pageHeight": 1151,
+    "scrollX": 1,
+    "figures": [
+      "symmetry@standard:portrait→visual.down@382×498",
+      "landscape@large:wide→visual.down@382×211"
+    ]
+  }
+]
