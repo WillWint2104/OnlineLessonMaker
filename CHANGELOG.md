@@ -7,6 +7,38 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **The two shipping-catalogue defects: `media.full/centred` and `notes/measure`** (`docs/atlas/
+  composition/src/patterns.json`, `scripts/composition-atlas.mjs`, `scripts/lib/slots.mjs`; no app
+  change — `lesson-studio.html` does not reference the catalogue). Both centred their object over
+  prose anchored to the left edge, giving the page two competing alignment axes. Replaced with the
+  approved blueprint behaviour: `media.full/centred` takes `wide` 10 on the reading's own left edge
+  (760 centred → **956 at `start`**, the `plate-wide` composition) and `notes/measure` takes `inset` 4
+  (564 centred → **368 at `start`**, `notes-inset`), desktop and tablet.
+  - **They were not a habit. They were enforced.** A correction to what the earlier report said twice.
+    The control forbidding them is explicit: *"A row whose only named slot is media must therefore be
+    centred or full — the left-inset 8-of-12 arrangement that started all this fails here."* Symmetry
+    was the only way the catalogue could express "these columns are deliberate", so centring was the
+    only legal answer.
+  - **The control was stricter than the contract it enforces.** `vocabulary.json` has always defined
+    `slotAnchor: start` as "hard against the left with free columns after it. REQUIRES a declared
+    `anchorReason`" — an edge anchor with a stated reason is permitted. The control allowed only
+    `center` and `full`, so `start`/`end` were unreachable. It now admits an unequal row that declares
+    an `anchorReason`, which is the exception the vocabulary already wrote down.
+  - **A transposed pair of branches, dead until now.** With `start`/`end` unreachable, no subdesign in
+    the catalogue had ever anchored a slot to an edge — and `anchorFromAreas` returned `end` for a slot
+    hard against the LEFT and `start` for one hard against the right. The comments beside the two
+    returns described the geometry correctly and then named it backwards. The first subdesign to use
+    `start` was rejected for "declaring `start` where its areas give `end`". A branch no fixture
+    reaches is a branch nobody has read.
+  - The narrowed control is now **subsumed**: every pattern has exactly one media-type slot, so the
+    `slotAnchor` control reaches an unequal row first and demands the same reason. It is kept as a
+    per-row backstop (`anchorFromAreas` judges only the first row holding the slot) and because it is
+    where the founding defect is named — not as an independent gate, which it no longer is. Recorded
+    rather than left looking like one.
+  - Only **two** composition boards moved (`06-media-full-desktop-alternate` and its inspector), which
+    confirms the anchor-name fix disturbed no existing `center`/`full`/`paired` subdesign.
+
 ### Changed
 - **`worked.single` completed, and the catalogue's seven patterns are all expressed**
   (`docs/atlas/composition-proof/`, `scripts/composition-proof-atlas.mjs`; no app change). Its second

@@ -75,13 +75,14 @@
         "areas": [
           "intro intro intro intro intro intro intro intro support support support support",
           "reading reading reading reading reading reading reading reading . . . .",
-          ". . . illustration illustration illustration illustration illustration illustration . . .",
+          "illustration illustration illustration illustration . . . . . . . .",
           "examples examples examples examples examples examples examples examples . . . .",
           "synthesis synthesis synthesis synthesis synthesis synthesis synthesis synthesis . . . ."
         ],
         "notes": "The intro takes exactly the measure and the aside the remaining four columns, so the top row fills the surface edge to edge with no leftover. Everything below is one column at the measure; the four unused columns are READING MARGIN — nothing is named there, so nothing can promise content and hold none.",
-        "slotSpan": 6,
-        "slotAnchor": "center"
+        "slotSpan": 4,
+        "slotAnchor": "start",
+        "anchorReason": "THE PAGE HAS ONE ALIGNMENT ORIGIN — the same defect as `media.full/centred`, in a second pattern. The illustration was CENTRED across columns 4-9 while the intro, reading, examples and synthesis all began at column 1. Two patterns centring their object over left-anchored prose reads as a habit rather than a decision. The illustration now takes the `inset` rung on the reading’s own left edge, which is the approved `notes-inset` composition from the Composition Blueprint catalogue."
       },
       {
         "id": "measure",
@@ -91,13 +92,14 @@
           "intro intro intro intro intro intro intro .",
           "support support support support support . . .",
           "reading reading reading reading reading reading reading .",
-          ". illustration illustration illustration illustration illustration illustration .",
+          "illustration illustration illustration illustration . . . .",
           "examples examples examples examples examples examples examples .",
           "synthesis synthesis synthesis synthesis synthesis synthesis synthesis ."
         ],
         "notes": "Five tablet columns beside seven would set the intro at 514px — a 52-character measure. The aside drops below instead.",
-        "slotSpan": 6,
-        "slotAnchor": "center"
+        "slotSpan": 4,
+        "slotAnchor": "start",
+        "anchorReason": "THE PAGE HAS ONE ALIGNMENT ORIGIN — the same defect as `media.full/centred`, in a second pattern. The illustration was CENTRED across columns 4-9 while the intro, reading, examples and synthesis all began at column 1. Two patterns centring their object over left-anchored prose reads as a habit rather than a decision. The illustration now takes the `inset` rung on the reading’s own left edge, which is the approved `notes-inset` composition from the Composition Blueprint catalogue."
       },
       {
         "id": "stacked",
@@ -602,13 +604,14 @@
         ],
         "selectedWhen": "desktop AND a plane not wider than it is tall",
         "areas": [
-          ". . media media media media media media media media . .",
+          "media media media media media media media media media media . .",
           "interpretation interpretation interpretation interpretation interpretation interpretation interpretation interpretation . . . .",
           "support support support support support support . . . . . ."
         ],
-        "notes": "THE PATTERN'S APPROVED ALTERNATIVE, not a resize. Twelve columns of a 1.2-aspect plane is over 1400px tall; the pattern declares eight as its second full state rather than letting anything negotiate a width. CENTRED, not inset: eight columns hard against the left edge leaves 392px on the right that has no role, which is the residue this contract exists to name. Centring is how an eight-column media block stops being stranded.",
-        "slotSpan": 8,
-        "slotAnchor": "center"
+        "notes": "An upright plane still crosses the reading measure, but not by every column: ten columns is 956px of object against a 760px reading, unmistakably the page without the height that twelve would buy (a portrait plane at the full grid measures 1152x1469). Same left edge as the prose, a shorter break-out. RENAMED IN INTENT, NOT IN NAME: `centred` is now anchored `start`; the id is left alone so the page fixture that selects it keeps working, and the catalogue adoption pass renames it.",
+        "slotSpan": 10,
+        "slotAnchor": "start",
+        "anchorReason": "THE PAGE HAS ONE ALIGNMENT ORIGIN. This subdesign used to CENTRE its object over prose anchored to the left edge, which gave the page two competing axes: every prose row began at column 1 and the object alone began at column 3. Each row was legal on its own — a solo row leaves page margin beside it — and the pair of them was not, which is exactly what the alignment spine exists to name. The object now starts on the SAME LEFT EDGE as the reading and breaks out to the right of it, which is the approved `plate-wide` composition from the Composition Blueprint catalogue."
       },
       {
         "id": "full",

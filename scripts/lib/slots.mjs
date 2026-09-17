@@ -36,8 +36,16 @@ export function anchorFromAreas(areas, name) {
     const trail = tk.length - 1 - tk.lastIndexOf(name);
     if (!lead && !trail) return 'full';
     if (lead === trail) return 'center';
-    if (!lead) return 'end';          /* free columns AFTER it */
-    if (!trail) return 'start';       /* free columns BEFORE it */
+    /* THE VOCABULARY NAMES THE EDGE THE SLOT IS AGAINST, NOT THE SIDE THE SPACE IS ON. `start` is
+       "hard against the left with free columns after it"; `end` is the mirror. These two returns were
+       TRANSPOSED — the comments beside them described the geometry correctly and then named it
+       backwards. Nothing caught it because no subdesign in the catalogue had ever anchored a slot to
+       an edge: every media subdesign was `center`, `full` or `paired`, so both branches were dead. The
+       first subdesign to use `start` (media.full, fixing its two-origin defect) was rejected for
+       declaring `start` where "its areas give `end`". A branch no fixture reaches is a branch nobody
+       has read. */
+    if (!lead) return 'start';        /* nothing before it — hard against the LEFT */
+    if (!trail) return 'end';         /* nothing after it — hard against the RIGHT */
     return 'asymmetric';              /* dots on both sides, unequal — no anchor describes this */
   }
   return null;

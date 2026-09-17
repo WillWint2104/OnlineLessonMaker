@@ -356,6 +356,15 @@ So the old situation — an 8-column graph on the left of a larger unnamed regio
 catalogue, before anything renders. A centred 8-column slot written `2 + 8 + 2` passes, because those
 outer columns were prescribed.
 
+> **Amended.** Symmetry was the *only* way the catalogue could say "these columns are deliberate", so
+> the control admitted nothing else — and that made `start` and `end` unreachable, even though
+> `vocabulary.json` has always defined them and required an `anchorReason`. Two patterns centred their
+> object over left-anchored prose because they were **made to**, giving those pages two competing
+> alignment axes. An edge anchor with a declared reason is now permitted, which is what the vocabulary
+> always said. The stronger form of "deliberate" — a shared alignment **spine**, checkable rather than
+> merely asserted — arrives with the Composition Blueprint adoption, and this control should be
+> tightened to require it then.
+
 **`contain` finally has somewhere to live.** Every media slot in the catalogue was `fill`, so half the
 contract had never been through an object. `notes` gained one `illustration` slot: contained, centred,
 capped at the object's **authored presentation width** — never at the raster's own pixels, because a

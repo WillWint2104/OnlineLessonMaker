@@ -177,11 +177,39 @@ function validate() {
       if (got !== said)
         throw new PatternError(`${id}: approvedSlotSpans says ${sf} = [${said}] and the approved subdesigns give [${got}]`);
     }
-    /* CONTROL · FREE COLUMNS BESIDE MEDIA ARE NOT READING MARGIN. Free columns beside PROSE are the
-       measure doing its job; free columns beside MEDIA are nothing, because media has no measure to
-       be bound by. A row whose only named slot is media must therefore be centred or full — the
-       left-inset 8-of-12 arrangement that started all this fails here, in the catalogue, before
-       anything is rendered. */
+    /* CONTROL · FREE COLUMNS BESIDE MEDIA ARE NOT READING MARGIN — UNLESS THE SUBDESIGN SAYS WHY.
+       Free columns beside PROSE are the measure doing its job; free columns beside MEDIA are nothing,
+       because media has no measure to be bound by. So a row whose only named slot is media is
+       stranded — the left-inset 8-of-12 arrangement that started all this fails here, in the
+       catalogue, before anything is rendered.
+
+       IT USED TO ADMIT NO EXCEPTION, AND THAT WAS STRICTER THAN THE CONTRACT IT ENFORCES.
+       `vocabulary.json` has always said `start` is "hard against the left with free columns after it.
+       REQUIRES a declared `anchorReason`; without one this is the stranded-media defect" — an edge
+       anchor WITH a stated reason is a composition the vocabulary permits. This control allowed only
+       `center` and `full`, so `start` and `end` were unreachable: no subdesign in the catalogue ever
+       used them, and `anchorFromAreas` had its two edge branches TRANSPOSED for however long, with
+       nothing to catch it.
+
+       That is also why two patterns centred their object over left-anchored prose. It was not a
+       habit. It was ENFORCED, by this control, for a reason that is sound as far as it goes: symmetry
+       was the only way the catalogue could express "these columns are deliberate". The Composition
+       Blueprint layer gives a second way — an alignment SPINE, where the free columns are the page
+       margin of an axis the object shares with the reading — and a centred object over a left-anchored
+       reading is precisely what that layer rejects.
+
+       So the exception is exactly the one the vocabulary already wrote down: an unequal row is
+       refused unless the subdesign declares WHY. That is a weaker guard than the spine itself — a
+       reason is prose and a spine is checkable — and the spine arrives with the catalogue adoption
+       pass, at which point this should be tightened to require it.
+
+       AND WITH THE EXCEPTION ADDED, THIS LOOP NO LONGER FIRES FIRST. Every pattern in the catalogue
+       has exactly one media-type slot, and the slotAnchor control above derives that slot's anchor and
+       demands the same reason — so it reaches an unequal row before this does, and its message is the
+       one a reader sees. What is left here is a PER-ROW backstop: `anchorFromAreas` returns on the
+       first row holding the slot, so a subdesign that placed its media in two rows with different
+       geometry would be judged on the first alone. Kept for that, and because it is where the defect
+       that started all this is named — not kept as an independent gate, which it no longer is. */
     for (const d of p.subdesigns) for (const sl of p.slots) {
       if (!MEDIA_SLOTS.has(sl.slotType)) continue;
       for (const row of d.areas) {
@@ -189,10 +217,10 @@ function validate() {
         if (!tk.includes(sl.name)) continue;
         if (tk.some((x) => x !== '.' && x !== sl.name)) continue;      // another slot owns the gap
         const l = tk.indexOf(sl.name), r = tk.length - 1 - tk.lastIndexOf(sl.name);
-        if (l !== r)
+        if (l !== r && !d.anchorReason)
           throw new PatternError(`${id}/${d.id}: "${sl.name}" is the only slot in its row and sits ${l} column(s) from `
             + `the left and ${r} from the right — media with unnamed columns on one side is stranded, not inset. `
-            + `Centre it or span the grid.`);
+            + `Centre it, span the grid, or declare an \`anchorReason\` saying what those columns are.`);
       }
     }
     /* EVERY (surface, aspect class) NEEDS AN APPROVED SUBDESIGN — and `none` is one of the classes.

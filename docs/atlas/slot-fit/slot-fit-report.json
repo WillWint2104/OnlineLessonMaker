@@ -417,19 +417,19 @@
     "surface": "desktop",
     "slot": "media",
     "slotFit": "fill",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": null,
-    "slotSpan": 8,
-    "slotPx": 760,
-    "paintedW": 760,
-    "paintedH": 952,
+    "slotSpan": 10,
+    "slotPx": 956,
+    "paintedW": 956,
+    "paintedH": 1187,
     "unclaimed": 0,
     "ok": true,
     "golden": true,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "centred(760px): ok"
+      "centred(956px): ok"
     ],
     "verdict": "the object consumes the slot width",
     "lines": [
@@ -447,11 +447,11 @@
       ],
       [
         "MEDIA SLOT",
-        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+        "media · columns 1–10 of 12 · slotSpan 10 = 956px · realised 956px"
       ],
       [
         "PAINTED MEDIA",
-        "graph · graph.portrait · 760 × 952px"
+        "graph · graph.portrait · 956 × 1187px"
       ],
       [
         "SLOT FIT",
@@ -459,11 +459,11 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid"
+        "slot start in the grid"
       ],
       [
         "SHAPE PRESERVED",
-        "65.87px per x-unit · 65.94px per y-unit · ratio 0.999 ✓ equal unit scale"
+        "83.02px per x-unit · 83.06px per y-unit · ratio 0.999 ✓ equal unit scale"
       ],
       [
         "UNCLAIMED INTERNAL WIDTH",
@@ -1248,19 +1248,19 @@
     "surface": "desktop",
     "slot": "media",
     "slotFit": "fill",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": null,
-    "slotSpan": 8,
-    "slotPx": 760,
-    "paintedW": 760,
-    "paintedH": 709,
+    "slotSpan": 10,
+    "slotPx": 956,
+    "paintedW": 956,
+    "paintedH": 877,
     "unclaimed": 0,
     "ok": true,
     "golden": false,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "centred(760px): ok"
+      "centred(956px): ok"
     ],
     "verdict": "the object consumes the slot width",
     "lines": [
@@ -1278,11 +1278,11 @@
       ],
       [
         "MEDIA SLOT",
-        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+        "media · columns 1–10 of 12 · slotSpan 10 = 956px · realised 956px"
       ],
       [
         "PAINTED MEDIA",
-        "graph · graph.balanced · 760 × 709px"
+        "graph · graph.balanced · 956 × 877px"
       ],
       [
         "SLOT FIT",
@@ -1290,11 +1290,11 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid"
+        "slot start in the grid"
       ],
       [
         "SHAPE PRESERVED",
-        "48.22px per x-unit · 48.22px per y-unit · ratio 1 ✓ equal unit scale"
+        "60.45px per x-unit · 60.47px per y-unit · ratio 1 ✓ equal unit scale"
       ],
       [
         "UNCLAIMED INTERNAL WIDTH",
@@ -2492,21 +2492,21 @@
     "surface": "desktop",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": "center",
-    "slotSpan": 6,
-    "slotPx": 564,
-    "paintedW": 420,
-    "paintedH": 560,
-    "unclaimed": 144,
+    "slotSpan": 4,
+    "slotPx": 368,
+    "paintedW": 368,
+    "paintedH": 490.66,
+    "unclaimed": 0,
     "ok": true,
     "golden": true,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "measure(564px): ok"
+      "measure(368px): ok"
     ],
-    "verdict": "contained and center — 72px and 72px, and the slot owns both",
+    "verdict": "contained, and at this width it reaches both edges",
     "lines": [
       [
         "PATTERN",
@@ -2522,11 +2522,11 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 4–9 of 12 · slotSpan 6 = 564px · realised 564px"
+        "illustration · columns 1–4 of 12 · slotSpan 4 = 368px · realised 368px"
       ],
       [
         "PAINTED MEDIA",
-        "image · image.portrait · 420 × 560px"
+        "image · image.portrait · 368 × 490.7px"
       ],
       [
         "SLOT FIT",
@@ -2534,7 +2534,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid · object center in the slot (resolved by the renderer)"
+        "slot start in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -2542,15 +2542,15 @@
       ],
       [
         "UNCLAIMED INTERNAL WIDTH",
-        "144px ✓ owned by the slot (72px / 72px, center)"
+        "0px ✓ none"
       ],
       [
         "VERDICT",
-        "contained and center — 72px and 72px, and the slot owns both"
+        "contained, and at this width it reaches both edges"
       ],
       [
         "SIGNAL",
-        "occupies 74% of its slot — reported, not judged"
+        "occupies 100% of its slot — reported, not judged"
       ]
     ]
   },
@@ -2564,21 +2564,21 @@
     "surface": "tablet",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": "center",
-    "slotSpan": 6,
-    "slotPx": 620.5,
-    "paintedW": 420,
-    "paintedH": 560,
-    "unclaimed": 200.5,
+    "slotSpan": 4,
+    "slotPx": 407,
+    "paintedW": 407,
+    "paintedH": 542.66,
+    "unclaimed": 0,
     "ok": true,
     "golden": true,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "measure(620.5px): ok"
+      "measure(407px): ok"
     ],
-    "verdict": "contained and center — 100.25px and 100.25px, and the slot owns both",
+    "verdict": "contained, and at this width it reaches both edges",
     "lines": [
       [
         "PATTERN",
@@ -2594,11 +2594,11 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 2–7 of 8 · slotSpan 6 = 620.5px · realised 620.5px"
+        "illustration · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
       ],
       [
         "PAINTED MEDIA",
-        "image · image.portrait · 420 × 560px"
+        "image · image.portrait · 407 × 542.7px"
       ],
       [
         "SLOT FIT",
@@ -2606,7 +2606,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid · object center in the slot (resolved by the renderer)"
+        "slot start in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -2614,15 +2614,15 @@
       ],
       [
         "UNCLAIMED INTERNAL WIDTH",
-        "200.5px ✓ owned by the slot (100.25px / 100.25px, center)"
+        "0px ✓ none"
       ],
       [
         "VERDICT",
-        "contained and center — 100.25px and 100.25px, and the slot owns both"
+        "contained, and at this width it reaches both edges"
       ],
       [
         "SIGNAL",
-        "occupies 68% of its slot — reported, not judged"
+        "occupies 100% of its slot — reported, not judged"
       ]
     ]
   },
@@ -3116,19 +3116,19 @@
     "surface": "desktop",
     "slot": "media",
     "slotFit": "fill",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": null,
-    "slotSpan": 8,
-    "slotPx": 760,
-    "paintedW": 760,
-    "paintedH": 1013.33,
+    "slotSpan": 10,
+    "slotPx": 956,
+    "paintedW": 956,
+    "paintedH": 1274.66,
     "unclaimed": 0,
     "ok": true,
     "golden": false,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "centred(760px): ok"
+      "centred(956px): ok"
     ],
     "verdict": "the object consumes the slot width",
     "lines": [
@@ -3146,11 +3146,11 @@
       ],
       [
         "MEDIA SLOT",
-        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+        "media · columns 1–10 of 12 · slotSpan 10 = 956px · realised 956px"
       ],
       [
         "PAINTED MEDIA",
-        "image · image.portrait · 760 × 1013.3px"
+        "image · image.portrait · 956 × 1274.7px"
       ],
       [
         "SLOT FIT",
@@ -3158,7 +3158,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid"
+        "slot start in the grid"
       ],
       [
         "SHAPE PRESERVED",
@@ -3534,21 +3534,21 @@
     "surface": "desktop",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": "center",
-    "slotSpan": 6,
-    "slotPx": 564,
-    "paintedW": 460,
-    "paintedH": 460,
-    "unclaimed": 104,
+    "slotSpan": 4,
+    "slotPx": 368,
+    "paintedW": 368,
+    "paintedH": 368,
+    "unclaimed": 0,
     "ok": true,
     "golden": false,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "measure(564px): ok"
+      "measure(368px): ok"
     ],
-    "verdict": "contained and center — 52px and 52px, and the slot owns both",
+    "verdict": "contained, and at this width it reaches both edges",
     "lines": [
       [
         "PATTERN",
@@ -3564,11 +3564,11 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 4–9 of 12 · slotSpan 6 = 564px · realised 564px"
+        "illustration · columns 1–4 of 12 · slotSpan 4 = 368px · realised 368px"
       ],
       [
         "PAINTED MEDIA",
-        "image · image.square · 460 × 460px"
+        "image · image.square · 368 × 368px"
       ],
       [
         "SLOT FIT",
@@ -3576,7 +3576,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid · object center in the slot (resolved by the renderer)"
+        "slot start in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -3584,15 +3584,15 @@
       ],
       [
         "UNCLAIMED INTERNAL WIDTH",
-        "104px ✓ owned by the slot (52px / 52px, center)"
+        "0px ✓ none"
       ],
       [
         "VERDICT",
-        "contained and center — 52px and 52px, and the slot owns both"
+        "contained, and at this width it reaches both edges"
       ],
       [
         "SIGNAL",
-        "occupies 82% of its slot — reported, not judged"
+        "occupies 100% of its slot — reported, not judged"
       ]
     ]
   },
@@ -3606,21 +3606,21 @@
     "surface": "tablet",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": "center",
-    "slotSpan": 6,
-    "slotPx": 620.5,
-    "paintedW": 460,
-    "paintedH": 460,
-    "unclaimed": 160.5,
+    "slotSpan": 4,
+    "slotPx": 407,
+    "paintedW": 407,
+    "paintedH": 407,
+    "unclaimed": 0,
     "ok": true,
     "golden": false,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "measure(620.5px): ok"
+      "measure(407px): ok"
     ],
-    "verdict": "contained and center — 80.25px and 80.25px, and the slot owns both",
+    "verdict": "contained, and at this width it reaches both edges",
     "lines": [
       [
         "PATTERN",
@@ -3636,11 +3636,11 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 2–7 of 8 · slotSpan 6 = 620.5px · realised 620.5px"
+        "illustration · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
       ],
       [
         "PAINTED MEDIA",
-        "image · image.square · 460 × 460px"
+        "image · image.square · 407 × 407px"
       ],
       [
         "SLOT FIT",
@@ -3648,7 +3648,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid · object center in the slot (resolved by the renderer)"
+        "slot start in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -3656,15 +3656,15 @@
       ],
       [
         "UNCLAIMED INTERNAL WIDTH",
-        "160.5px ✓ owned by the slot (80.25px / 80.25px, center)"
+        "0px ✓ none"
       ],
       [
         "VERDICT",
-        "contained and center — 80.25px and 80.25px, and the slot owns both"
+        "contained, and at this width it reaches both edges"
       ],
       [
         "SIGNAL",
-        "occupies 74% of its slot — reported, not judged"
+        "occupies 100% of its slot — reported, not judged"
       ]
     ]
   },
@@ -4163,19 +4163,19 @@
     "surface": "desktop",
     "slot": "media",
     "slotFit": "fill",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": null,
-    "slotSpan": 8,
-    "slotPx": 760,
-    "paintedW": 760,
-    "paintedH": 760,
+    "slotSpan": 10,
+    "slotPx": 956,
+    "paintedW": 956,
+    "paintedH": 956,
     "unclaimed": 0,
     "ok": true,
     "golden": false,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "centred(760px): ok"
+      "centred(956px): ok"
     ],
     "verdict": "the object consumes the slot width",
     "lines": [
@@ -4193,11 +4193,11 @@
       ],
       [
         "MEDIA SLOT",
-        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+        "media · columns 1–10 of 12 · slotSpan 10 = 956px · realised 956px"
       ],
       [
         "PAINTED MEDIA",
-        "image · image.square · 760 × 760px"
+        "image · image.square · 956 × 956px"
       ],
       [
         "SLOT FIT",
@@ -4205,7 +4205,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid"
+        "slot start in the grid"
       ],
       [
         "SHAPE PRESERVED",
@@ -4581,19 +4581,19 @@
     "surface": "desktop",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": "center",
-    "slotSpan": 6,
-    "slotPx": 564,
-    "paintedW": 564,
-    "paintedH": 317.25,
+    "slotSpan": 4,
+    "slotPx": 368,
+    "paintedW": 368,
+    "paintedH": 207,
     "unclaimed": 0,
     "ok": true,
     "golden": false,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "measure(564px): ok"
+      "measure(368px): ok"
     ],
     "verdict": "contained, and at this width it reaches both edges",
     "lines": [
@@ -4611,11 +4611,11 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 4–9 of 12 · slotSpan 6 = 564px · realised 564px"
+        "illustration · columns 1–4 of 12 · slotSpan 4 = 368px · realised 368px"
       ],
       [
         "PAINTED MEDIA",
-        "image · image.landscape · 564 × 317.3px"
+        "image · image.landscape · 368 × 207px"
       ],
       [
         "SLOT FIT",
@@ -4623,7 +4623,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid · object center in the slot (resolved by the renderer)"
+        "slot start in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -4653,19 +4653,19 @@
     "surface": "tablet",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": "center",
-    "slotSpan": 6,
-    "slotPx": 620.5,
-    "paintedW": 620.5,
-    "paintedH": 349.03,
+    "slotSpan": 4,
+    "slotPx": 407,
+    "paintedW": 407,
+    "paintedH": 228.94,
     "unclaimed": 0,
     "ok": true,
     "golden": false,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "measure(620.5px): ok"
+      "measure(407px): ok"
     ],
     "verdict": "contained, and at this width it reaches both edges",
     "lines": [
@@ -4683,11 +4683,11 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 2–7 of 8 · slotSpan 6 = 620.5px · realised 620.5px"
+        "illustration · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
       ],
       [
         "PAINTED MEDIA",
-        "image · image.landscape · 620.5 × 349px"
+        "image · image.landscape · 407 × 228.9px"
       ],
       [
         "SLOT FIT",
@@ -4695,7 +4695,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid · object center in the slot (resolved by the renderer)"
+        "slot start in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -6449,21 +6449,21 @@
     "surface": "desktop",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": "center",
-    "slotSpan": 6,
-    "slotPx": 564,
-    "paintedW": 380,
-    "paintedH": 506.66,
-    "unclaimed": 184,
+    "slotSpan": 4,
+    "slotPx": 368,
+    "paintedW": 368,
+    "paintedH": 490.66,
+    "unclaimed": 0,
     "ok": true,
     "golden": true,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "measure(564px): ok"
+      "measure(368px): ok"
     ],
-    "verdict": "contained and center — 92px and 92px, and the slot owns both",
+    "verdict": "contained, and at this width it reaches both edges",
     "lines": [
       [
         "PATTERN",
@@ -6479,11 +6479,11 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 4–9 of 12 · slotSpan 6 = 564px · realised 564px"
+        "illustration · columns 1–4 of 12 · slotSpan 4 = 368px · realised 368px"
       ],
       [
         "PAINTED MEDIA",
-        "diagram · diagram.portrait · 380 × 506.7px"
+        "diagram · diagram.portrait · 368 × 490.7px"
       ],
       [
         "SLOT FIT",
@@ -6491,7 +6491,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid · object center in the slot (resolved by the renderer)"
+        "slot start in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -6499,15 +6499,15 @@
       ],
       [
         "UNCLAIMED INTERNAL WIDTH",
-        "184px ✓ owned by the slot (92px / 92px, center)"
+        "0px ✓ none"
       ],
       [
         "VERDICT",
-        "contained and center — 92px and 92px, and the slot owns both"
+        "contained, and at this width it reaches both edges"
       ],
       [
         "SIGNAL",
-        "occupies 67% of its slot — reported, not judged"
+        "occupies 100% of its slot — reported, not judged"
       ]
     ]
   },
@@ -6521,21 +6521,21 @@
     "surface": "tablet",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": "center",
-    "slotSpan": 6,
-    "slotPx": 620.5,
+    "slotSpan": 4,
+    "slotPx": 407,
     "paintedW": 380,
     "paintedH": 506.66,
-    "unclaimed": 240.5,
+    "unclaimed": 27,
     "ok": true,
     "golden": true,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "measure(620.5px): ok"
+      "measure(407px): ok"
     ],
-    "verdict": "contained and center — 120.25px and 120.25px, and the slot owns both",
+    "verdict": "contained and center — 13.5px and 13.5px, and the slot owns both",
     "lines": [
       [
         "PATTERN",
@@ -6551,7 +6551,7 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 2–7 of 8 · slotSpan 6 = 620.5px · realised 620.5px"
+        "illustration · columns 1–4 of 8 · slotSpan 4 = 407px · realised 407px"
       ],
       [
         "PAINTED MEDIA",
@@ -6563,7 +6563,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid · object center in the slot (resolved by the renderer)"
+        "slot start in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -6571,15 +6571,15 @@
       ],
       [
         "UNCLAIMED INTERNAL WIDTH",
-        "240.5px ✓ owned by the slot (120.25px / 120.25px, center)"
+        "27px ✓ owned by the slot (13.5px / 13.5px, center)"
       ],
       [
         "VERDICT",
-        "contained and center — 120.25px and 120.25px, and the slot owns both"
+        "contained and center — 13.5px and 13.5px, and the slot owns both"
       ],
       [
         "SIGNAL",
-        "occupies 61% of its slot — reported, not judged"
+        "occupies 93% of its slot — reported, not judged"
       ]
     ]
   },
@@ -7073,19 +7073,19 @@
     "surface": "desktop",
     "slot": "media",
     "slotFit": "fill",
-    "slotAnchor": "center",
+    "slotAnchor": "start",
     "mediaAnchor": null,
-    "slotSpan": 8,
-    "slotPx": 760,
-    "paintedW": 760,
-    "paintedH": 1013.33,
+    "slotSpan": 10,
+    "slotPx": 956,
+    "paintedW": 956,
+    "paintedH": 1274.66,
     "unclaimed": 0,
     "ok": true,
     "golden": false,
     "promoted": false,
     "pairGap": null,
     "tried": [
-      "centred(760px): ok"
+      "centred(956px): ok"
     ],
     "verdict": "the object consumes the slot width",
     "lines": [
@@ -7103,11 +7103,11 @@
       ],
       [
         "MEDIA SLOT",
-        "media · columns 3–10 of 12 · slotSpan 8 = 760px · realised 760px"
+        "media · columns 1–10 of 12 · slotSpan 10 = 956px · realised 956px"
       ],
       [
         "PAINTED MEDIA",
-        "diagram · diagram.portrait · 760 × 1013.3px"
+        "diagram · diagram.portrait · 956 × 1274.7px"
       ],
       [
         "SLOT FIT",
@@ -7115,7 +7115,7 @@
       ],
       [
         "ANCHOR",
-        "slot center in the grid"
+        "slot start in the grid"
       ],
       [
         "SHAPE PRESERVED",
