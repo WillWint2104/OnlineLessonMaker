@@ -2934,6 +2934,62 @@
         }
       },
       "candidates": {
+        "plate-expanded-stage": {
+          "role": "primary",
+          "notFrozen": true,
+          "title": "THE UPRIGHT PLATE AT `expanded` 8 — the narrow end of the span comparison",
+          "why": "THE SAME CENTRED STAGE, TWO RUNGS NARROWER. Ten columns fixed the horizontal imbalance and exposed a second effect: a portrait plane preserves its geometry, so span buys height, and the object began to dominate the page vertically. This is the narrow end of the comparison — 760px, which is also exactly the reading measure, so the stage and the prose beneath it are the SAME WIDTH on two different axes. Rendered to be judged as a finished page, not to be resolved by a rule: `expanded` is outside the frozen `media.portrait.primary` family (`wide`), so `select` cannot name it and it is reachable only as a candidate.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "expanded"
+                  ],
+                  "preferred": "expanded"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true,
+                "origin": "stage"
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
         "plate-wide-stage": {
           "role": "primary",
           "notFrozen": true,

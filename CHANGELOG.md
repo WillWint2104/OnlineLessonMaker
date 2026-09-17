@@ -32,6 +32,19 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     `notes/notes-within-reading` (`inset` 4 at columns 3–6), with `notes/notes-page-centred-6` beside
     them for comparison. Both revisions pass; the page-centred 6 still fails **H6** independently — a
     `contain` object painted 564px where its authored presentation width is 420px.
+  - **The portrait stage span, compared at 8 / 9 / 10** (`X4a`, `X4b`, `X1`, and the side-by-side
+    `X5`). Centring the stage removed the horizontal imbalance and exposed a second effect: a portrait
+    plane preserves its geometry, so span buys HEIGHT. Measured on the same fixture, same prose, same
+    role, same desktop surface — 8 col **760×998** (1.11 viewports) · 9 col **858×1116** (1.24) · 10 col
+    **956×1234** (1.37). The three clean pages are rebuilt side by side at one scale, because which of
+    several legal pages reads as finished courseware is a question about the pages, not the rule.
+  - **Nine columns cannot be a centred stage, and the refusal predates the question.** On a
+    twelve-column grid (12 − 9) is odd, so a nine-column row has no symmetric page margin — it lands a
+    half column (49px) off the grid on both sides. `layout` refuses it where the two alignment systems
+    were written. It is rendered anyway, off the grid and labelled, because "what does 858px look like"
+    deserves an answer; it fails **H1** and **H2** for exactly the right reason — the row declares ten
+    columns and paints nine, leaving columns 2 and 11 declared and empty. Adopting it would be a
+    decision to change the grid, not to pick a rung.
 - **Two adoption decisions ruled.** A solo `support` row takes `narrow` (6 columns) on desktop — at the
   spine's eight it read as a second body section rather than the aside it is; tablet and phone recover
   to the reading width, because six of seven is not subordination but crowding. Applied as a transform

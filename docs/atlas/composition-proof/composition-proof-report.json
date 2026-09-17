@@ -11927,6 +11927,205 @@
     {
       "pattern": "media.full",
       "surface": "desktop",
+      "blueprint": "plate-expanded-stage",
+      "klass": "portrait",
+      "name": "X4a__media-full__expanded-8__CENTRED-STAGE",
+      "selectKey": null,
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo expanded 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "expanded",
+          "declared": "expanded",
+          "media": true,
+          "h": 998.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo narrow 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "narrow",
+          "declared": "narrow",
+          "media": false,
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "expanded",
+        "interpretation": "spine",
+        "support": "narrow"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=760",
+        "interpretation=760",
+        "support=564"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [],
+      "fs": "A",
+      "role": "primary",
+      "chrome": false,
+      "candidate": true,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 998,
+      "viewportShare": 1.11,
+      "identity": "plate-expanded-stage|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "plate-expanded-stage|left-edge8|media:solo:expanded:8:hug,interpretation:solo:spine:8:hug,support:solo:narrow:6:hug",
+      "plotBox": "722x906",
+      "solvedBox": "722x906",
+      "unitScale": "62.67/62.65",
+      "surfaceBox": "760x998"
+    },
+    {
+      "pattern": "media.full",
+      "surface": "desktop",
+      "blueprint": "plate-wide-stage",
+      "klass": "portrait",
+      "name": "X4b__media-full__NINE-COLUMNS__OFF-THE-GRID",
+      "selectKey": null,
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "media",
+          "split": "solo wide 10 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "wide",
+          "declared": "wide",
+          "media": true,
+          "h": 1116.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "interpretation",
+          "split": "solo spine 8 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo narrow 6 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "narrow",
+          "declared": "narrow",
+          "media": false,
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "media": "wide",
+        "interpretation": "spine",
+        "support": "narrow"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "media",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        },
+        {
+          "after": "interpretation",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        }
+      ],
+      "slotWidths": [
+        "media=858",
+        "interpretation=760",
+        "support=564"
+      ],
+      "whitespaceOwned": false,
+      "mediaOk": true,
+      "mediaVerdict": "the object consumes the slot width",
+      "fails": [
+        [
+          "H1",
+          "media.full/plate-wide-stage/desktop row `media`: column 2 is declared `media` and is rendered empty — a solo row occupies its realised rung `wide` (columns 2–11) exactly"
+        ],
+        [
+          "H1",
+          "media.full/plate-wide-stage/desktop row `media`: column 11 is declared `media` and is rendered empty — a solo row occupies its realised rung `wide` (columns 2–11) exactly"
+        ],
+        [
+          "H2",
+          "media.full/plate-wide-stage/desktop row `media`: columns 11–12 (172px) are rendered empty inside an ACTIVE ROW and nothing declares them. A row holding `media` may not leave part of itself unexplained — centre it on a declared spine, give it a companion region, widen it to an approved footprint, or move it into a different row composition"
+        ]
+      ],
+      "fs": "A",
+      "role": "primary",
+      "chrome": false,
+      "candidate": true,
+      "fixture": "graph.portrait",
+      "calibration": null,
+      "surfaceH": 1116,
+      "viewportShare": 1.24,
+      "identity": "plate-wide-stage|primary|media:solo:hug:1,interpretation:solo:hug:1,support:solo:hug:1",
+      "structure": "plate-wide-stage|left-edge8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:narrow:6:hug",
+      "plotBox": "820x1024",
+      "solvedBox": "820x1024",
+      "unitScale": "71.23/71.24",
+      "surfaceBox": "858x1116"
+    },
+    {
+      "pattern": "media.full",
+      "surface": "desktop",
       "blueprint": "plate-wide-stage",
       "klass": "portrait",
       "name": "X1__media-full__wide-10__CENTRED-STAGE",

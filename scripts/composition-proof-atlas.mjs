@@ -1126,6 +1126,10 @@ for (const [pid, P] of Object.entries(BP.patterns))
     + (P.withdrawn ? `   [judged: ${Object.keys(P.withdrawn).join(', ')}]` : ''));
 
 const REPORT = [];
+/* PAGES COLLECTED FOR A SIDE-BY-SIDE COMPARISON. A board proves the contract; a strip answers the
+   different question of which approved span reads as finished courseware, and that one can only be
+   judged with the alternatives at the same scale in one picture rather than described. */
+const STRIP = [];
 
 /* ── FITNESS, RESOLVED BEFORE ANYTHING IS DRAWN ──────────────────────────────────────────────────
    Which rung a solo row SHOULD land on. The inputs are categorical — the region's span family, the
@@ -1234,6 +1238,8 @@ async function board(pid, surface, bid, o = {}) {
     plain = plain.split(`{{FIG:${fx.figure}}}`).join(figHtml);
     proof = proof.split(`{{FIG:${fx.figure}}}`).join(figHtml);
   }
+  if (o.collect) STRIP.push({ group: o.collect, label: o.collectLabel || name, surface,
+    width: g.width + 2 * g.pad, css: `${gridCSS(sd, surface, L, pid)}\n${o.injectCSS || ''}`, html: plain });
 
   const doc = `<!doctype html><html data-theme="mathematics"><head><meta charset="utf-8"><style>
 ${APP_CSS}
@@ -1438,6 +1444,61 @@ ${o.injectCSS || ''}
   if (!o.quiet) console.log(`  ${name.padEnd(56)} ${J.fails.length ? `${J.fails.length} FAIL` : 'ok  '} `
     + `${J.boards.map((b) => `${b.mode[0]}${Math.round(b.h)}`).join(' ')}`);
   return rec;
+}
+
+/* ── THE SPAN COMPARISON ─────────────────────────────────────────────────────────────────────────
+   A BOARD ANSWERS "IS THIS LEGAL". THIS ANSWERS "WHICH OF THE LEGAL ONES IS THE PAGE WE WANT" — and
+   that question cannot be settled from three separate tall images. The clean pages are rebuilt side
+   by side at the same scale with identical content, so the only difference the eye is offered is the
+   span of the media row. No control runs here and none should: nothing is being proved, the boards
+   already did that. This is the picture the choice is made from. */
+async function strip(group, name, title) {
+  const items = STRIP.filter((x) => x.group === group);
+  if (!items.length) throw new BlueprintError(`strip \`${group}\`: nothing was collected under that group`);
+  const surface = items[0].surface;
+  if (items.some((x) => x.surface !== surface))
+    throw new BlueprintError(`strip \`${group}\`: mixes surfaces (${[...new Set(items.map((x) => x.surface))].join(', ')}) — `
+      + `a comparison whose viewport moves between columns compares two things at once`);
+  const g = GRID.surfaces[surface];
+  const doc = `<!doctype html><html data-theme="mathematics"><head><meta charset="utf-8"><style>
+${APP_CSS}
+</style><style>
+:root{--cp-surface:${g.width}px;--cp-pad:${g.pad}px;--cp-pad-y:24px;--cp-frame:0px;--cp-cols:${g.columns};
+--cp-gut:${g.gutter}px;--cp-measure:${GRID.readingMeasure.px}px;--cp-pad-h:${surface === 'phone' ? 360 : 480}px;--cp-pane-h:460px;}
+${CSS_KIT}
+${PROOF_CSS}
+${FIGURE_SURFACE_CSS}
+${REGION_HUG_CSS}
+${items.map((x) => x.css).join('\n')}
+.cp-strip{display:flex;align-items:flex-start;}
+.cp-strip > section{flex:0 0 auto;border-left:1px solid #d8d8d4;}
+.cp-strip > section:first-child{border-left:0;}
+</style></head><body class="mx cp-${surface}"><div class="pf-board" style="width:${items.reduce((a2, x) => a2 + x.width, 0) + items.length - 1}px">
+<div class="pf-head">${esc(title)}</div>
+<div class="cp-strip">${items.map((x) => `<section style="width:${x.width}px">`
+    + `<div class="pf-capt">${esc(x.label)}</div>${x.html}</section>`).join('')}</div>
+</div></body></html>`;
+
+  const pg = await browser.newPage({ viewport: { width: 1400, height: 900 }, deviceScaleFactor: 1 });
+  const errs = []; pg.on('pageerror', (e) => errs.push(String(e)));
+  await pg.setContent(doc, { waitUntil: 'load' });
+  await pg.evaluate(async () => {
+    await Promise.all([].slice.call(document.images).map((i) => i.complete ? null : new Promise((r) => { i.onload = i.onerror = r; })));
+    await document.fonts.ready;
+  });
+  await pg.waitForTimeout(200);
+  if (errs.length) throw new BlueprintError(`${name}: ${errs[0]}`);
+  const bb = await (await pg.$('.pf-board')).boundingBox();
+  await pg.setViewportSize({ width: Math.ceil(bb.width), height: Math.min(28000, Math.ceil(bb.height) + 8) });
+  await pg.waitForTimeout(150);
+  /* THE PAINTED WIDTHS, READ BACK OFF THE STRIP. The label on each column claims a span; if the
+     picture the choice is made from disagrees with the label, the choice is made from a lie. */
+  const got = await pg.evaluate(() => [].slice.call(document.querySelectorAll('.cp-strip [data-media-slot]'))
+    .map((el) => Math.round(el.getBoundingClientRect().width)));
+  await (await pg.$('.pf-board')).screenshot({ path: path.join(OUT, name + '.png') });
+  await pg.close();
+  console.log(`  ${name.padEnd(56)} media widths ${got.join(' · ')}px`);
+  return got;
 }
 
 /* ── THE RUN ─────────────────────────────────────────────────────────────────────────────────────
@@ -1671,8 +1732,41 @@ await board('interactive.primary', 'desktop', 'beside-8-4',
    system — with the previous page-centred arrangement rendered beside the notes one so the three can
    be judged against each other rather than described. */
 console.log('\nthe axis correction — reading spine vs media stage');
+/* ── THE PORTRAIT STAGE SPAN, COMPARED AT 8 / 9 / 10 ─────────────────────────────────────────────
+   Centring the stage fixed the horizontal imbalance and exposed a second effect: a portrait plane
+   preserves its geometry, so span buys HEIGHT. At ten columns the object is balanced across the page
+   and tall enough to dominate it, which is a different defect from the one that was just removed and
+   must not be traded for it. The three spans are rendered with identical content — same fixture, same
+   prose, same role, same surface — and then rebuilt side by side, because which of three legal pages
+   reads as finished courseware is a question about the pages, not about the rule.
+
+   NINE COLUMNS CANNOT BE A CENTRED STAGE, AND THAT IS NOT A LIMITATION OF THIS SCRIPT. `layout`
+   refuses it outright: on a twelve-column grid (12 − 9) is odd, so a nine-column row has no symmetric
+   page margin — it sits a half column (49px) off the grid on both sides. The refusal was written when
+   the two alignment systems were, not for this comparison. It is rendered anyway, off the grid and
+   labelled as such, because "what does 858px look like" is a fair question and the answer is worth
+   having; what it is not is a rung. Choosing it would be a decision to change the GRID. */
+await board('media.full', 'desktop', 'plate-expanded-stage',
+  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax8', collect: 'stage-span',
+    collectLabel: 'CANDIDATE · expanded 8 · 760px — exactly the reading measure, on the other axis',
+    name: 'X4a__media-full__expanded-8__CENTRED-STAGE',
+    why: 'THE NARROW END. Eight columns centred — 760px, which is also exactly the width of the '
+      + 'reading spine beneath it. The object is as short as the comparison gets and the two axes are '
+      + 'at their most visible, because the stage and the prose are the same width in different places.' });
 await board('media.full', 'desktop', 'plate-wide-stage',
-  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax1',
+  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax9', collect: 'stage-span', paintAt: 820,
+    collectLabel: 'NOT A RUNG · 9 columns · 858px — a half column off the grid on both sides',
+    name: 'X4b__media-full__NINE-COLUMNS__OFF-THE-GRID',
+    injectCSS: '[data-sd*="ax9"] > [data-slot="media"]{width:858px!important;margin-left:49px!important;}',
+    why: 'THE MIDDLE OF THE COMPARISON, AND IT IS NOT A LEGAL COMPOSITION. Nine columns is 858px, which '
+      + 'centres on the page at 147px — a half column off every grid line. The blueprint underneath is '
+      + 'still the ten-column stage; the media row has been narrowed by injected CSS and the plane '
+      + 'solved to the narrower box, so the graph is at true equal-unit scale rather than squashed. The '
+      + 'slot-fit control is EXPECTED to speak here: the painted object no longer fills the ten columns '
+      + 'the row declares. That is the point — this span cannot be declared.' });
+await board('media.full', 'desktop', 'plate-wide-stage',
+  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax1', collect: 'stage-span',
+    collectLabel: 'APPROVED · wide 10 · 956px — what role × geometry gives a primary portrait',
     name: 'X1__media-full__wide-10__CENTRED-STAGE',
     why: 'THE REVISION. Ten columns — the same width the approved blueprint gives — on a centred media '
       + 'stage rather than against the reading\'s left edge. The reading returns to its own left edge '
@@ -1689,6 +1783,11 @@ await board('notes', 'desktop', 'notes-page-centred-6',
     why: 'WHAT THE CATALOGUE DID BEFORE STEP 1, for comparison: six columns centred on the PAGE (4-9) '
       + 'over prose anchored at column 1. Outside the approved span family for supporting portrait '
       + 'media, so `select` cannot name it — reachable only as a candidate.' });
+
+/* the three legal-or-not portrait stages, side by side at the same scale */
+await strip('stage-span', 'X5__PORTRAIT-STAGE-SPAN__8-vs-9-vs-10',
+  'THE PORTRAIT MEDIA STAGE AT THREE SPANS — same fixture, same prose, same role, same desktop surface; '
+  + 'only the span of the media row differs');
 
 /* DRIVES · each control shown able to fail. */
 /* H1's AXIS BRANCH, WHICH REGROUPING COULD HAVE KILLED. Grouping the solo rows by alignment system
