@@ -1,0 +1,110 @@
+THE ADOPTION SCAN — every shipping subdesign against the blueprint layer
+
+── notes
+     measure   desktop  rows match `notes-inset`
+     measure   tablet   DIFFERS
+         shipping  intro:1-7 | support:1-5 | reading:1-7 | illustration:1-4 | examples:1-7 | synthesis:1-7
+         notes-inset            intro:1-5 support:6-8 | reading:1-7 | illustration:1-4 | examples:1-7 | synthesis:1-7
+         notes-aside            intro:1-5 support:6-8 | reading:1-7 | illustration:1-6 | examples:1-7 | synthesis:1-7
+     stacked   phone    rows match `notes-inset`
+── worked.single
+     measure   desktop  DIFFERS
+         shipping  intro:1-8 | scenario:1-8 | worked:1-8 | support:1-6 | synthesis:1-8
+         flow                   intro:1-8 | scenario:1-8 | worked:1-8 | support:1-8 | synthesis:1-8
+         split                  intro:1-8 | scenario:1-8 | worked:1-8 | support:1-8 | synthesis:1-8
+     stacked   tablet   DIFFERS
+         shipping  intro:1-7 | scenario:1-7 | worked:1-7 | support:1-5 | synthesis:1-7
+         flow                   intro:1-7 | scenario:1-7 | worked:1-7 | support:1-7 | synthesis:1-7
+         split                  intro:1-7 | scenario:1-7 | worked:1-7 | support:1-7 | synthesis:1-7
+     stacked   phone    rows match `flow`
+── visual.explanation
+     side-6    desktop  DIFFERS
+         shipping  media:1-6 interpretation:7-12 | support:1-6
+         spine-supporting       media:5-8 | interpretation:4-9 | support:4-9
+         spine-narrow           media:3-10 | interpretation:4-9 | support:4-9
+         stage-primary          media:2-11 | interpretation:3-10 | support:3-10
+         spine-supporting-wide  media:4-9 | interpretation:3-10 | support:3-10
+         stage-wide             media:2-11 | interpretation:3-10 | support:3-10
+         stage-full             media:1-12 | interpretation:3-10 | support:3-10
+         spine-tall             media:4-9 | interpretation:4-9 | support:4-9
+         stage-tall             media:3-10 | interpretation:4-9 | support:4-9
+         stage-panorama         media:1-12 | interpretation:3-10 | support:3-10
+     down-8    desktop  DIFFERS
+         shipping  media:3-10 | interpretation:3-10 | support:4-9
+         spine-supporting       media:5-8 | interpretation:4-9 | support:4-9
+         spine-narrow           media:3-10 | interpretation:4-9 | support:4-9
+         stage-primary          media:2-11 | interpretation:3-10 | support:3-10
+         spine-supporting-wide  media:4-9 | interpretation:3-10 | support:3-10
+         stage-wide             media:2-11 | interpretation:3-10 | support:3-10
+         stage-full             media:1-12 | interpretation:3-10 | support:3-10
+         spine-tall             media:4-9 | interpretation:4-9 | support:4-9
+         stage-tall             media:3-10 | interpretation:4-9 | support:4-9
+         stage-panorama         media:1-12 | interpretation:3-10 | support:3-10
+     down-12   desktop  DIFFERS
+         shipping  media:1-12 | interpretation:1-8 | support:1-6
+         spine-supporting       media:5-8 | interpretation:4-9 | support:4-9
+         spine-narrow           media:3-10 | interpretation:4-9 | support:4-9
+         stage-primary          media:2-11 | interpretation:3-10 | support:3-10
+         spine-supporting-wide  media:4-9 | interpretation:3-10 | support:3-10
+         stage-wide             media:2-11 | interpretation:3-10 | support:3-10
+         stage-full             media:1-12 | interpretation:3-10 | support:3-10
+         spine-tall             media:4-9 | interpretation:4-9 | support:4-9
+         stage-tall             media:3-10 | interpretation:4-9 | support:4-9
+         stage-panorama         media:1-12 | interpretation:3-10 | support:3-10
+     stacked   tablet   DIFFERS
+         shipping  media:1-8 | interpretation:1-7 | support:1-5
+         spine-supporting       media:3-6 | interpretation:2-7 | support:2-7
+         spine-narrow           media:1-8 | interpretation:2-7 | support:2-7
+         stage-primary          media:1-8 | interpretation:2-7 | support:2-7
+         spine-supporting-wide  media:2-7 | interpretation:2-7 | support:2-7
+         stage-wide             media:1-8 | interpretation:2-7 | support:2-7
+         stage-full             media:1-8 | interpretation:2-7 | support:2-7
+         spine-tall             media:2-7 | interpretation:2-7 | support:2-7
+         stage-tall             media:1-8 | interpretation:2-7 | support:2-7
+         stage-panorama         media:1-8 | interpretation:2-7 | support:2-7
+     stacked   phone    rows match `spine-supporting`
+── visual.compare
+     paired    desktop  rows match `compare-panorama`
+     paired    tablet   rows match `compare-tall`
+     stacked   phone    rows match `compare-tall`
+── media.full
+     full      desktop  DIFFERS
+         shipping  media:1-12 | interpretation:1-8 | support:1-6
+         plate-full             media:1-12 | interpretation:1-8 | support:1-8
+         plate-wide             media:1-10 | interpretation:1-8 | support:1-8
+     centred   desktop  DIFFERS
+         shipping  media:1-10 | interpretation:1-8 | support:1-6
+         plate-full             media:1-12 | interpretation:1-8 | support:1-8
+         plate-wide             media:1-10 | interpretation:1-8 | support:1-8
+     full      tablet   DIFFERS
+         shipping  media:1-8 | interpretation:1-7 | support:1-5
+         plate-full             media:1-8 | interpretation:1-7 | support:1-7
+         plate-wide             media:1-8 | interpretation:1-7 | support:1-7
+     full      phone    rows match `plate-full`
+── interactive.primary
+     beside    desktop  DIFFERS
+         shipping  intro:1-8 | instrument:1-8 prompts:9-12 | synthesis:1-8
+         instrument-spine       intro:3-10 | instrument:2-11 | prompts:3-10 | synthesis:3-10
+     stacked   tablet   DIFFERS
+         shipping  intro:1-7 | instrument:1-8 | prompts:1-7 | synthesis:1-7
+         instrument-spine       intro:2-7 | instrument:1-8 | prompts:2-7 | synthesis:2-7
+     stacked   phone    rows match `instrument-spine`
+── practice.workbook
+     beside    desktop  rows match `workbook-5-7`
+     beside    tablet   rows match `workbook-5-7`
+     stacked   phone    rows match `workbook-stacked`
+
+12 subdesign(s) match a blueprint's rows · 12 differ
+
+THE SELECTION CHANGE, which no row comparison can show
+  The shipping catalogue selects by (surface, aspect class). The blueprint layer selects by
+  (presentationRole, geometryClass, surface). NO SHIPPING PAGE DECLARES A presentationRole,
+  so adoption is not catalogue-only: every page carrying media has to author one. Pages that
+  carry media:
+    page 03  visual.explanation   slot "media"  admits supporting/explanatory/primary  → MUST BE AUTHORED
+    page 04  visual.explanation   slot "media"  admits supporting/explanatory/primary  → MUST BE AUTHORED
+    page 05  visual.compare       slot "media"  admits explanatory  → forced, no authoring needed
+    page 06  media.full           slot "media"  admits primary  → forced, no authoring needed
+    page 07  interactive.primary  slot "instrument"  admits primary  → forced, no authoring needed
+    page 09  practice.workbook    slot "reference"  admits (no admits declared)  → MUST BE AUTHORED
+    page 10  visual.explanation   slot "media"  admits supporting/explanatory/primary  → MUST BE AUTHORED
