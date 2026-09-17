@@ -55,6 +55,7 @@
     ],
     "support": [
       "spine",
+      "narrow",
       "expanded"
     ],
     "worked": [
@@ -159,7 +160,8 @@
     ],
     "workspace": [
       "full"
-    ]
+    ],
+    "_supportIsSubordinate": "A SOLO `support` ROW TAKES `narrow` ON DESKTOP. It is secondary content; at the spine's full eight columns it reads as another body section rather than as the aside it is. `narrow` is in the family for exactly this and for nothing else. Tablet and phone return to the spine, because six of seven columns is not subordination, it is crowding."
   },
   "whitespace": {
     "_": "THE FIVE SPACES, KEPT SEPARATE. Structural validity only. Fitness is a separate question, asked by H11 after these are satisfied.",
@@ -457,19 +459,29 @@
             ],
             "tablet": [
               {
-                "id": "brief",
+                "id": "intro",
                 "horizontal": {
-                  "mode": "paired",
-                  "split": "5/3",
-                  "regions": [
-                    "intro",
-                    "support"
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
                   ],
-                  "origin": "top",
-                  "imbalanceMax": 200,
-                  "pairReason": "an explanation beside the key ideas it establishes — two PROSE regions, both written"
+                  "preferred": "spine"
                 },
                 "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
                 "gapAfter": "normal"
               },
               {
@@ -701,19 +713,29 @@
             ],
             "tablet": [
               {
-                "id": "brief",
+                "id": "intro",
                 "horizontal": {
-                  "mode": "paired",
-                  "split": "5/3",
-                  "regions": [
-                    "intro",
-                    "support"
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
                   ],
-                  "origin": "top",
-                  "imbalanceMax": 200,
-                  "pairReason": "an explanation beside the key ideas it establishes — two PROSE regions, both written"
+                  "preferred": "spine"
                 },
                 "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
                 "gapAfter": "normal"
               },
               {
@@ -884,6 +906,178 @@
           }
         }
       },
+      "candidates": {
+        "notes-within-reading": {
+          "role": "supporting",
+          "notFrozen": true,
+          "title": "THE REVISED SUPPORTING ILLUSTRATION — `inset` 4 centred WITHIN the reading spine",
+          "why": "SUBORDINATE WITHOUT BEING STRANDED. Four columns hard against the page's left edge lined up with the prose and looked abandoned, with half the page doing nothing beside it. Four columns centred on the PAGE would claim a media stage a supporting object has not earned. Centred inside the eight-column reading spine is neither: the object sits in the middle of the text it supports, columns 3-6, visibly smaller than the reading and visibly placed on purpose.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "brief",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "8/4",
+                  "regions": [
+                    "intro",
+                    "support"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "an explanation beside the key ideas it establishes"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "inset"
+                  ],
+                  "preferred": "inset"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true,
+                "origin": "within-reading"
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "notes-page-centred-6": {
+          "role": "supporting",
+          "notFrozen": true,
+          "title": "THE PREVIOUS ARRANGEMENT — `narrow` 6 centred on the PAGE, for comparison",
+          "why": "WHAT THE CATALOGUE DID BEFORE STEP 1, RENDERED BESIDE THE REVISION SO THE TWO CAN BE JUDGED AGAINST EACH OTHER. Six columns centred on the twelve-column page: columns 4-9, which is a MEDIA STAGE, over prose anchored at column 1. It is outside the approved span family for supporting portrait media (which approves `inset` alone), so it is reachable only as a candidate and `select` cannot name it.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "brief",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "8/4",
+                  "regions": [
+                    "intro",
+                    "support"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "an explanation beside the key ideas it establishes"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true,
+                "origin": "stage"
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
       "withdrawn": {
         "measure-centred-illustration": {
           "_": "THE SHIPPING `notes/measure` SUBDESIGN, AND IT IS THE SECOND INSTANCE OF THE SAME DEFECT. Its areas run intro 1–8 beside support 9–12, reading 1–8, ILLUSTRATION 4–9, examples 1–8, synthesis 1–8. Every prose region is anchored to the left edge and the illustration alone is CENTRED on the twelve-column grid, so the page has two alignment origins.",
@@ -970,9 +1164,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -1115,9 +1309,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -1259,9 +1453,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -1403,9 +1597,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -1547,9 +1741,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -1691,9 +1885,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -1835,9 +2029,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -1979,9 +2173,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -2123,9 +2317,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -2342,9 +2536,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -2387,9 +2581,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -2473,9 +2667,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -2617,9 +2811,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support"
@@ -2736,6 +2930,64 @@
             "landscape": "plate-full",
             "wide": "plate-full",
             "panoramic": "plate-full"
+          }
+        }
+      },
+      "candidates": {
+        "plate-wide-stage": {
+          "role": "primary",
+          "notFrozen": true,
+          "title": "THE REVISED UPRIGHT PLATE — `wide` 10 on a centred MEDIA STAGE",
+          "why": "THE SAME TEN COLUMNS, CENTRED INSTEAD OF START-ALIGNED. Anchoring the plate to the reading's left edge was structurally legal and visibly worse: it put an obvious rail of nothing down the right of the page and made a standalone object look accidentally unfinished rather than staged. The width is unchanged and still comes only from role x geometry — the stage decides where the object sits, never how wide it is. The reading returns to its own left edge beneath, which is not a mixed axis: a centred stage followed by start-aligned commentary is two named regions doing different jobs.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true,
+                "origin": "stage"
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
           }
         }
       },
@@ -4353,10 +4605,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine",
-                    "expanded"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support",
@@ -4577,10 +4828,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "spine",
-                    "expanded"
+                    "narrow"
                   ],
-                  "preferred": "spine"
+                  "preferred": "narrow"
                 },
                 "vertical": "hug",
                 "region": "support",

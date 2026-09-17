@@ -7,6 +7,38 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **Two alignment systems, not one axis per page** (`docs/atlas/composition-proof/`,
+  `scripts/composition-proof-atlas.mjs`; no app change). Step 1 drove "everything shares the left
+  edge" to its conclusion and the renders showed it was the wrong rule: a 10-column plate and a
+  4-column illustration both hard against the reading's left edge, each leaving an obvious rail of
+  nothing down the right. Symmetry was not the error and neither was the left edge — treating the whole
+  PAGE as if it could have only one axis was. A row now declares which system it belongs to:
+  - `reading` — start-aligned to the reading spine. Prose, worked solutions, comparison text, support.
+  - `stage` — a media stage, centred on the page grid, for a standalone explanatory or primary media
+    row. Its WIDTH still comes only from the approved role × geometry blueprint; the stage decides
+    where the object sits, never how wide it is.
+  - `within-reading` — supporting media centred inside the reading spine's own span, so it stays
+    subordinate to the prose without being page-centred (a stage it has not earned) or shoved against
+    the page edge (stranded).
+  - **So two left edges are not automatically a defect.** A centred stage above start-aligned
+    commentary is two named regions doing different jobs. Competing axes are invalid only *inside* one
+    system, where siblings are meant to align.
+  - **H1 was asking the wrong question** — whether every solo row on the page shared one axis. It now
+    groups the solo rows by system and asks the same question of each group. Its axis branch had no
+    drive, which regrouping could have quietly killed; one was added that shifts a single reading
+    row's painted left edge, and it fires.
+  - Prototypes rendered as candidates: `media.full/plate-wide-stage` (the same `wide` 10, centred) and
+    `notes/notes-within-reading` (`inset` 4 at columns 3–6), with `notes/notes-page-centred-6` beside
+    them for comparison. Both revisions pass; the page-centred 6 still fails **H6** independently — a
+    `contain` object painted 564px where its authored presentation width is 420px.
+- **Two adoption decisions ruled.** A solo `support` row takes `narrow` (6 columns) on desktop — at the
+  spine's eight it read as a second body section rather than the aside it is; tablet and phone recover
+  to the reading width, because six of seven is not subordination but crowding. Applied as a transform
+  so the rule is written once and cannot drift across patterns. And `notes` **stacks on tablet**: the
+  5/3 pair was legal and unpleasant, and "the grid permits it" is not a reason to squeeze prose beside
+  a callout.
+
 ### Fixed
 - **The two shipping-catalogue defects: `media.full/centred` and `notes/measure`** (`docs/atlas/
   composition/src/patterns.json`, `scripts/composition-atlas.mjs`, `scripts/lib/slots.mjs`; no app

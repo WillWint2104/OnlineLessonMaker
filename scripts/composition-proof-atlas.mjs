@@ -123,9 +123,38 @@ const familyFor = (pid, region, klass, role) => {
 /* a select table is either {key: blueprint} or, for media patterns, {role: {class: blueprint}} */
 const selectEntries = (tbl) => Object.entries(tbl).flatMap(([k, v]) => typeof v === 'string'
   ? [[k, v]] : Object.entries(v).map(([k2, v2]) => [`${k}/${k2}`, v2]));
-const soloCols = (surface, align, cols) => {
+/* ── TWO ALIGNMENT SYSTEMS, NOT ONE AXIS PER PAGE ────────────────────────────────────────────────
+   The spine primitive started as ONE axis per surface, and driving that to its conclusion produced
+   pages that were structurally legal and visibly worse: a 10-column plate and a 4-column illustration
+   both hard against the left edge, each leaving an obvious rail of nothing down the right. Symmetry
+   was not the error and neither was the left edge — treating the whole PAGE as if it could only have
+   one axis was.
+
+   A row therefore declares WHICH SYSTEM IT BELONGS TO, and the two have different jobs:
+
+     reading        start-aligned to the reading spine. Prose, worked solutions, comparison text,
+                    support. The measure binds it and the spine gives it its left edge.
+     stage          a MEDIA STAGE, centred on the page grid. A standalone explanatory or primary
+                    media row whose whole purpose is to show the object. Its WIDTH still comes only
+                    from the approved role x geometry blueprint — the stage decides where it sits,
+                    never how wide it is.
+     within-reading SUPPORTING media belonging to reading content: centred inside the reading spine's
+                    own span, so it stays subordinate to the prose without being page-centred (which
+                    reads as a stage it has not earned) or shoved against the page's left edge (which
+                    reads as stranded).
+
+   SO TWO LEFT EDGES ARE NOT AUTOMATICALLY A DEFECT. A centred stage followed by start-aligned
+   commentary is two named regions doing different jobs, and it is coherent. Competing axes are
+   invalid only INSIDE one compositional group, where sibling regions are meant to align with each
+   other — which is what `media.full/centred` and `notes/measure` got wrong, and what the first
+   attempt at fixing them got wrong in the other direction. */
+const ORIGINS = ['reading', 'stage', 'within-reading'];
+const originOf = (r, sp) => r.origin || (sp.align === 'centre' ? 'stage' : 'reading');
+const soloCols = (surface, origin, cols, spineSpan) => {
   const n = SPANS.surfaces[surface].columns;
-  const from = align === 'centre' ? (n - cols) / 2 + 1 : 1;
+  const from = origin === 'stage' ? (n - cols) / 2 + 1
+    : origin === 'within-reading' ? (spineSpan - cols) / 2 + 1
+      : 1;
   return { from, to: from + cols - 1 };
 };
 
@@ -312,10 +341,21 @@ function layout(pid, surface, bid, opts = {}) {
       if (isProse(pid, r.region) && cols > S.proseMax)
         throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` realised rung \`${rung}\` = ${cols} `
           + `columns for prose, and ${surface} caps prose at ${S.proseMax}`);
-      if (sp.align === 'centre' && (S.columns - cols) % 2)
+      const og = originOf(r, sp);
+      if (!ORIGINS.includes(og))
+        throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` declares origin \`${og}\` — a row `
+          + `belongs to the reading spine, a media stage, or is centred within the reading (${ORIGINS.join(', ')})`);
+      if (og === 'stage' && (S.columns - cols) % 2)
         throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` realised rung \`${rung}\` = ${cols} `
-          + `columns on a centred axis, so its page margin cannot be symmetric`);
-      at = soloCols(surface, sp.align, cols);
+          + `columns on a media STAGE, so its page margin cannot be symmetric`);
+      if (og === 'within-reading' && (sp.span - cols) % 2)
+        throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` realised rung \`${rung}\` = ${cols} `
+          + `columns centred WITHIN a ${sp.span}-column reading spine, which cannot be symmetric. A supporting `
+          + `object centred in the reading needs the same parity as the spine it sits in.`);
+      if (og === 'within-reading' && cols > sp.span)
+        throw new BlueprintError(`${pid}/${bid}/${surface}: row \`${r.id}\` is ${cols} columns and claims to sit `
+          + `WITHIN a ${sp.span}-column reading spine — an object wider than the reading is not inside it`);
+      at = soloCols(surface, og, cols, sp.span);
       for (let c = 1; c <= S.columns; c++) {
         const on = c >= at.from && c <= at.to;
         cells[c - 1] = on ? r.region : '.';
@@ -355,7 +395,7 @@ function layout(pid, surface, bid, opts = {}) {
         const NH = next.horizontal;
         if (NH.mode === 'solo') {
           const nc = ladderCols(surface, (opts.realised && opts.realised[next.id]) || NH.preferred, sp.span);
-          const na = soloCols(surface, sp.align, nc);
+          const na = soloCols(surface, originOf(next, sp), nc, sp.span);
           for (let c = 1; c <= S.columns; c++) o[c - 1] = (c >= na.from && c <= na.to) ? next.region : 'page-margin';
         } else {
           S.splits[NH.split].regions.forEach((rg, k) => { for (let c = rg[0]; c <= rg[1]; c++) o[c - 1] = NH.regions[k]; });
@@ -857,13 +897,33 @@ function judge(pid, surface, L, m, resolve = {}) {
   }
   /* THE SPINE IS AN AXIS, NOT A WIDTH. Every solo row sits on it whatever rung it takes, so the
      control asks about the AXIS — the centre line, or the left edge — and never about the width.
-     That is precisely what lets a solo row climb the ladder without leaving the composition. */
+     That is precisely what lets a solo row climb the ladder without leaving the composition.
+
+     IT USED TO ASK THE WRONG QUESTION: whether every solo row on the PAGE shared one axis. Driving
+     that to its conclusion produced pages that passed and looked worse — a plate and an illustration
+     both jammed against the reading's left edge, each with an obvious rail of nothing down the right.
+     A page is allowed more than one alignment system. What it is not allowed is DISAGREEMENT INSIDE
+     ONE, so the control now groups the solo rows by the system each belongs to — reading spine, media
+     stage, or centred within the reading — and asks the same question of each group separately. A
+     centred stage above start-aligned commentary is two regions doing different jobs; two reading
+     rows that fail to share a left edge is still the defect this was built to name. */
   const soloRows = m.rows.filter((r) => byId.get(r.id).mode === 'solo');
-  const axis = new Set(soloRows.flatMap((r) => r.kids.map((k) =>
-    Math.round(L.spine.align === 'centre' ? k.x + k.w / 2 : k.x))));
-  if (axis.size > 1)
-    fails.push(['H1', `${pid}/${L.bid}/${surface}: the solo rows sit on ${axis.size} different axes `
-      + `(${[...axis].join(', ')}px) — a blueprint has ONE ${L.spine.align === 'centre' ? 'centre line' : 'left edge'}`]);
+  const groups = new Map();
+  for (const r of soloRows) {
+    const row = byId.get(r.id);
+    const og = row.origin || (L.spine.align === 'centre' ? 'stage' : 'reading');
+    if (!groups.has(og)) groups.set(og, []);
+    groups.get(og).push(r);
+  }
+  for (const [og, rows] of groups) {
+    /* a STAGE is centred, so its axis is the centre line; the other two are left edges */
+    const axis = new Set(rows.flatMap((r) => r.kids.map((k) =>
+      Math.round(og === 'stage' ? k.x + k.w / 2 : k.x))));
+    if (axis.size > 1)
+      fails.push(['H1', `${pid}/${L.bid}/${surface}: the \`${og}\` rows sit on ${axis.size} different axes `
+        + `(${[...axis].join(', ')}px) — regions belonging to ONE alignment system share `
+        + `${og === 'stage' ? 'one centre line' : 'one left edge'}`]);
+  }
 
   /* ── H11 · SOLO SPAN — THE FITNESS LAYER ──────────────────────────────────────────────────────
      Everything above asks whether the composition is STRUCTURALLY VALID: does every part of an
@@ -887,7 +947,7 @@ function judge(pid, surface, L, m, resolve = {}) {
 
   /* THE BAND DRAWN ON THE BOARD IS THE AXIS AT ITS OWN SPAN — not whatever rung the widest solo row
      realised. Seeing the spine and a wider solo row at once is the point of the picture. */
-  const sc = soloCols(surface, L.spine.align, L.spine.span);
+  const sc = soloCols(surface, L.spine.align === 'centre' ? 'stage' : 'reading', L.spine.span, L.spine.span);
   const colAt = (n) => m.cols[n - 1];
   return { fails, notes, boards, rhythm, resolve,
     spine: { align: L.spine.align, span: L.spine.span, from: sc.from, to: sc.to,
@@ -1604,7 +1664,41 @@ await board('interactive.primary', 'desktop', 'beside-8-4',
       + 'height is however much prose was written. The blueprint declares a 160px termination tolerance '
       + 'and the row is measured against it.' });
 
+/* ── THE AXIS CORRECTION, PROTOTYPED ─────────────────────────────────────────────────────────────
+   Step 1 drove "one axis per page" to its conclusion and the renders showed it was the wrong rule:
+   a 10-column plate and a 4-column illustration both hard against the left edge, each leaving an
+   obvious rail of nothing down the right. These are the revisions — same widths, different alignment
+   system — with the previous page-centred arrangement rendered beside the notes one so the three can
+   be judged against each other rather than described. */
+console.log('\nthe axis correction — reading spine vs media stage');
+await board('media.full', 'desktop', 'plate-wide-stage',
+  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax1',
+    name: 'X1__media-full__wide-10__CENTRED-STAGE',
+    why: 'THE REVISION. Ten columns — the same width the approved blueprint gives — on a centred media '
+      + 'stage rather than against the reading\'s left edge. The reading returns to its own left edge '
+      + 'beneath it, which is two named regions doing different jobs, not a mixed axis.' });
+await board('notes', 'desktop', 'notes-within-reading',
+  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax2',
+    name: 'X2__notes__inset-4__WITHIN-THE-READING-SPINE',
+    why: 'THE REVISION. Four columns centred inside the eight-column reading spine — columns 3-6 — so a '
+      + 'supporting object is subordinate to the prose without being stranded against the page edge or '
+      + 'claiming a stage it has not earned.' });
+await board('notes', 'desktop', 'notes-page-centred-6',
+  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax3',
+    name: 'X3__notes__narrow-6__PAGE-CENTRED__for-comparison',
+    why: 'WHAT THE CATALOGUE DID BEFORE STEP 1, for comparison: six columns centred on the PAGE (4-9) '
+      + 'over prose anchored at column 1. Outside the approved span family for supporting portrait '
+      + 'media, so `select` cannot name it — reachable only as a candidate.' });
+
 /* DRIVES · each control shown able to fail. */
+/* H1's AXIS BRANCH, WHICH REGROUPING COULD HAVE KILLED. Grouping the solo rows by alignment system
+   is what lets a centred stage sit above start-aligned commentary — and if it were done carelessly it
+   would also excuse the defect the control exists for: two rows of the SAME system failing to share
+   an edge. The drive shifts one reading row's painted left edge and nothing else. */
+drive('two-reading-rows-off-one-edge', 'H1', await board('notes', 'desktop', 'notes-within-reading',
+  { klass: 'portrait', fs: 'A', candidate: true, counterexample: true, tag: 'ax4', noShot: true, quiet: true,
+    name: 'drive__two-reading-rows-off-one-edge',
+    injectCSS: `[data-sd*="ax4"] [data-slot="synthesis"]{margin-left:40px!important;}` }));
 drive('caption-inside-the-plot', 'H16', await board('visual.explanation', 'desktop', 'spine-narrow',
   { klass: 'portrait', selectKey: 'explanatory/portrait', counterexample: true, tag: 'ce16', fs: 'A',
     noShot: true, quiet: true, name: 'drive__caption-inside-the-plot', injectDOM: 'moveCaptionIntoPlot' }));
