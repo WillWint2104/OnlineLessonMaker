@@ -13473,7 +13473,7 @@
       ],
       "whitespaceOwned": true,
       "mediaOk": true,
-      "mediaVerdict": "contained and center — 98px and 98px, and the slot owns both",
+      "mediaVerdict": "contained, and at this width it reaches both edges",
       "fails": [],
       "fs": "B",
       "role": "explanatory",
@@ -15949,6 +15949,358 @@
       "solvedBox": null,
       "unitScale": null,
       "surfaceBox": "382x286"
+    },
+    {
+      "pattern": "notes",
+      "surface": "tablet",
+      "blueprint": "notes-inset",
+      "klass": "portrait",
+      "name": "T1__notes-inset__tablet__AS-IT-SHIPS",
+      "selectKey": null,
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "reading",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "illustration",
+          "split": "solo inset 4 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "inset",
+          "declared": "inset",
+          "media": true,
+          "h": 584.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "examples",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 114.64,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "support": "spine",
+        "reading": "spine",
+        "illustration": "inset",
+        "examples": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "support",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "reading",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "illustration",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "examples",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=727",
+        "support=727",
+        "reading=727",
+        "illustration=407",
+        "examples=727",
+        "synthesis=727"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "contained, and at this width it reaches both edges",
+      "fails": [],
+      "fs": "A",
+      "role": "supporting",
+      "chrome": false,
+      "candidate": false,
+      "fixture": "image.portrait",
+      "calibration": null,
+      "legibility": {
+        "caption": 13.5,
+        "tick": null,
+        "ticks": 0,
+        "label": null,
+        "labels": 0,
+        "svgScale": 1,
+        "tickDeclared": null,
+        "labelDeclared": null,
+        "captionDeclared": 13.5
+      },
+      "sideways": 0,
+      "surfaceH": 584,
+      "viewportShare": 0.65,
+      "identity": "notes-inset|supporting|examples,illustration,intro,reading,support,synthesis",
+      "verticals": {
+        "intro": "hug",
+        "support": "hug",
+        "reading": "hug",
+        "illustration": "hug",
+        "examples": "hug",
+        "synthesis": "hug"
+      },
+      "structure": "notes-inset|left-edge7|intro:solo:spine:7:hug,support:solo:spine:7:hug,reading:solo:spine:7:hug,illustration:solo:inset:4:hug,examples:solo:spine:7:hug,synthesis:solo:spine:7:hug",
+      "plotBox": "369x492",
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": "407x584"
+    },
+    {
+      "pattern": "notes",
+      "surface": "tablet",
+      "blueprint": "notes-inset-tablet-region",
+      "klass": "portrait",
+      "name": "T2__notes-inset__tablet__REGION-SPANS-THE-MEASURE",
+      "selectKey": null,
+      "adversarial": false,
+      "counterexample": false,
+      "rows": [
+        {
+          "id": "intro",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "support",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 89.59,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "reading",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "illustration",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": true,
+          "h": 652.25,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "examples",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 93.64,
+          "air": 0,
+          "imbalance": null
+        },
+        {
+          "id": "synthesis",
+          "split": "solo spine 7 col",
+          "mode": "solo",
+          "vertical": "hug",
+          "rung": "spine",
+          "declared": "spine",
+          "media": false,
+          "h": 114.64,
+          "air": 0,
+          "imbalance": null
+        }
+      ],
+      "resolve": {
+        "intro": "spine",
+        "support": "spine",
+        "reading": "spine",
+        "illustration": "spine",
+        "examples": "spine",
+        "synthesis": "spine"
+      },
+      "preferredFeasible": true,
+      "rhythm": [
+        {
+          "after": "intro",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "support",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "reading",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "illustration",
+          "step": "normal",
+          "declared": 32,
+          "rendered": 32,
+          "perceived": 32
+        },
+        {
+          "after": "examples",
+          "step": "section",
+          "declared": 56,
+          "rendered": 56,
+          "perceived": 56
+        }
+      ],
+      "slotWidths": [
+        "intro=727",
+        "support=727",
+        "reading=727",
+        "illustration=727",
+        "examples=727",
+        "synthesis=727"
+      ],
+      "whitespaceOwned": true,
+      "mediaOk": true,
+      "mediaVerdict": "contained and center — 153.63px and 153.63px, and the slot owns both",
+      "fails": [],
+      "fs": "A",
+      "role": "supporting",
+      "chrome": false,
+      "candidate": true,
+      "fixture": "image.portrait",
+      "calibration": null,
+      "legibility": {
+        "caption": 13.5,
+        "tick": null,
+        "ticks": 0,
+        "label": null,
+        "labels": 0,
+        "svgScale": 1,
+        "tickDeclared": null,
+        "labelDeclared": null,
+        "captionDeclared": 13.5
+      },
+      "sideways": 0,
+      "surfaceH": 652,
+      "viewportShare": 0.72,
+      "identity": "notes-inset-tablet-region|supporting|examples,illustration,intro,reading,support,synthesis",
+      "verticals": {
+        "intro": "hug",
+        "support": "hug",
+        "reading": "hug",
+        "illustration": "hug",
+        "examples": "hug",
+        "synthesis": "hug"
+      },
+      "structure": "notes-inset-tablet-region|left-edge7|intro:solo:spine:7:hug,support:solo:spine:7:hug,reading:solo:spine:7:hug,illustration:solo:spine:7:hug,examples:solo:spine:7:hug,synthesis:solo:spine:7:hug",
+      "plotBox": "420x560",
+      "solvedBox": null,
+      "unitScale": null,
+      "surfaceBox": "727x652"
     },
     {
       "pattern": "notes",

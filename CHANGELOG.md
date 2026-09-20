@@ -88,7 +88,31 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     **0.7px**. That is a coincidence, not a margin. The fix belongs in the engine: reserve
     `tp-fig-reflab` alongside the tick boxes.
 
+- **The tablet supporting illustration, prototyped** (`notes/notes-inset-tablet-region`, rendered beside
+  the current arrangement as `T__TABLET-SUPPORTING-ILLUSTRATION__current-vs-proposed`). A four-column
+  illustration cannot be centred inside a seven-column measure on whole columns, so today it keeps the
+  reading's left edge and leaves a rail down its right. The proposal is not a half-column: the **row**
+  takes the whole reading measure and the **object** is centred inside it, which `contain` plus
+  `mediaAnchor: center` already specify. The image keeps its authored dimensions and aspect, the reading
+  spine is untouched, the caption still belongs to the surface, and no geometry class or
+  content-dependent calculation is introduced. It also paints the object *larger* — 420px against 369px
+  today, because today's cap is the four-column region minus the surface's own chrome.
+
 ### Fixed
+- **`contain` was not capping the object when a figure surface was present.** The presentation-width cap
+  was applied only on the surface-off path; with the surface on, the object went in uncapped and
+  stretched. It never showed, because in every composition rendered so far the media region was
+  *narrower* than the authored width, so `min(authored, slot)` picked the slot either way and the two
+  paths agreed by accident. The first region wider than the object painted 727px where the contract says
+  420px, and H6 said so.
+- **What a figure surface means for slot-fit, answered.** The surface carried `data-media-object` always,
+  so the measurement found the *surface* and never looked inside. Right under `fill`; wrong under
+  `contain`, which is defined on the object's own width. Moving the marker inward made eleven passing
+  boards fail at once — correctly, because they were then judged against the region while being laid out
+  inside the surface's plot, and the difference is the surface's own chrome. The model is now explicit:
+  **region → surface → plot → object**, the plot is what a contained object is judged against, and the
+  region remains the comparand for "has it escaped the grid". A surface may give an object less room
+  than its region, never more.
 - **A correction: "instructional type does not scale with the figure" was wrong.** It was true of the
   stylesheet and false of the page, and the control I added to check it measured the wrong quantity.
   The plot is an SVG with a viewBox painted into a box the composition chose, so every `font-size`

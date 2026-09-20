@@ -122,6 +122,8 @@ export function measureMedia() {
     const obj = el.querySelector('[data-media-object]') || el.querySelector('[data-mx-part="figure"]')
       || kids.reduce((a, c) => !a || c.getBoundingClientRect().width > a.getBoundingClientRect().width ? c : a, null);
     const pr = obj ? obj.getBoundingClientRect() : null;
+    const plotEl = el.querySelector('[data-fs-plot]');
+    const hold = plotEl ? plotEl.getBoundingClientRect() : null;
     const svg = el.querySelector('.tp-fig-svg');
     const img = el.querySelector('img'), vid = el.querySelector('video');
     /* the object's INTRINSIC shape, so a stretch can be caught rather than assumed away */
@@ -154,6 +156,16 @@ export function measureMedia() {
       kind: el.getAttribute('data-media-kind')
         || (svg ? 'plane' : img ? 'image' : vid ? 'video' : obj ? obj.tagName.toLowerCase() : 'nothing'),
       slotW: +r.width.toFixed(2), slotH: Math.round(r.height),
+      /* THE BOX THE OBJECT IS ACTUALLY HELD IN. Region -> surface -> plot -> object: when a figure
+         surface is present the object is laid out inside the surface's PLOT, not against the region,
+         and the difference is the surface's own chrome — internal figure-surface space, which the
+         whitespace taxonomy already calls valid. Judging a contained object against the region instead
+         reports that chrome as unclaimed width, which is how eleven passing boards failed at once the
+         first time the object was measured directly. The region stays the comparand for "has it
+         escaped the grid"; the plot is the comparand for how it sits inside. */
+      holdW: hold ? +hold.width.toFixed(2) : null,
+      holdFreeL: pr && hold ? +(pr.left - hold.left).toFixed(2) : null,
+      holdFreeR: pr && hold ? +(hold.right - pr.right).toFixed(2) : null,
       paintedW: pr ? +pr.width.toFixed(2) : null, paintedH: pr ? +pr.height.toFixed(2) : null,
       freeL: pr ? +(pr.left - r.left).toFixed(2) : null,
       freeR: pr ? +(r.right - pr.right).toFixed(2) : null,
@@ -177,13 +189,20 @@ export function slotFit(x, ctx) {
 
   if (x.paintedW == null) return fail('the slot is painted and holds nothing',
     ['fill it, or give the pattern an approved subdesign without it']);
-  o.unclaimed = +(x.slotW - x.paintedW).toFixed(2);
+  /* the box the object is held in — the surface's plot where there is one, else the slot itself */
+  const HW = x.holdW != null ? x.holdW : x.slotW;
+  const FL = x.holdFreeL != null ? x.holdFreeL : x.freeL;
+  const FR = x.holdFreeR != null ? x.holdFreeR : x.freeR;
+  o.unclaimed = +(HW - x.paintedW).toFixed(2);
+  /* CONTROL · ESCAPING THE GRID IS STILL JUDGED AGAINST THE REGION, not against the plot: a surface
+     may give an object less room than its region, never more. */
+  const escaped = +(x.slotW - x.paintedW).toFixed(2);
 
   /* CONTROL · THE OBJECT MAY NOT EXCEED ITS SLOT, under either fit. An object wider than the track
      that was reserved for it has escaped the grid, and the grid is the only thing holding the page
      together. */
-  if (o.unclaimed < -TOLPX) return fail(
-    `the object is painted ${x.paintedW}px inside a ${x.slotW}px slot — ${Math.abs(o.unclaimed)}px WIDER than its slot`,
+  if (escaped < -TOLPX) return fail(
+    `the object is painted ${x.paintedW}px inside a ${x.slotW}px slot — ${Math.abs(escaped)}px WIDER than its slot`,
     ['paint it at the slot width', `use an approved span that fits it (approved at ${surface}: ${spans})`]);
 
   /* CONTROL · THE OBJECT MAY NOT BE DISTORTED TO SATISFY A SLOT. A plane answers with equal unit
@@ -215,10 +234,11 @@ export function slotFit(x, ctx) {
     /* CONTROL · A CONTAINED OBJECT IS PAINTED AT ITS AUTHORED PRESENTATION WIDTH, CAPPED BY THE
        SLOT. Never at the raster's own pixel width: a 900x1200 photograph is not a request. */
     if (fixture && fixture.presentationWidth) {
-      const want = Math.min(fixture.presentationWidth, x.slotW);
+      const want = Math.min(fixture.presentationWidth, HW);
       if (Math.abs(x.paintedW - want) > TOLPX) return fail(
         `a \`contain\` object painted ${x.paintedW}px where its authored presentation width capped by the `
-        + `slot is ${want}px (authored ${fixture.presentationWidth}px, slot ${x.slotW}px)`,
+        + `${x.holdW != null ? 'figure surface' : 'slot'} is ${want}px (authored ${fixture.presentationWidth}px, `
+        + `held in ${HW}px)`,
         ['paint it at min(authored presentation width, slot width)',
          'change the authored presentation width if the object should be bigger',
          'raw raster pixel dimensions are never a presentation size']);
@@ -234,12 +254,12 @@ export function slotFit(x, ctx) {
     /* SYMMETRY IS ASKED FIRST. The first version asked "is it against the left edge?" before "is it
        even?", so a 380px object centred in a 382px slot — 1px either side — was read as `start` and
        failed. Evenness is what centring means; how much room there happens to be is not. */
-    const gap = Math.abs(x.freeL - x.freeR);
+    const gap = Math.abs(FL - FR);
     const placed = o.unclaimed <= TOLPX || gap <= TOLPX ? 'center'
-      : x.freeL <= TOLPX ? 'start' : x.freeR <= TOLPX ? 'end' : 'nowhere';
+      : FL <= TOLPX ? 'start' : FR <= TOLPX ? 'end' : 'nowhere';
     if (placed !== x.mediaAnchor && !(o.unclaimed <= TOLPX)) return fail(
-      `a \`contain\` object declared \`${x.mediaAnchor}\` is painted ${x.freeL}px from its slot's left edge `
-      + `and ${x.freeR}px from its right, which reads as \`${placed}\``,
+      `a \`contain\` object declared \`${x.mediaAnchor}\` is painted ${FL}px from the left edge of what holds `
+      + `it and ${FR}px from its right, which reads as \`${placed}\``,
       [`place it as \`${x.mediaAnchor}\` declares, or declare the anchor it actually has`]);
     o.verdict = o.unclaimed <= TOLPX
       ? 'contained, and at this width it reaches both edges'

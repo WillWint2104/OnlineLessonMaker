@@ -496,8 +496,14 @@ function slotBody(pid, name, adversarial) {
    PLOT inside it. `data-media-object` moves onto the surface when it is on, because under `fill` the
    thing that must consume the region is the surface — the plane keeps its own solved geometry, and
    what is left over inside the surface is intentional internal space, not unowned page. */
-function figureSurface(inner, cap, treatment, label) {
-  return `<div class="fs-surface" data-figure-surface data-fs="${esc(treatment)}" data-media-object>`
+/* WHO CARRIES `data-media-object` WHEN THERE IS A SURFACE. The surface used to carry it always, so
+   `measureMedia` found the SURFACE first and never looked inside — which is right under `fill` (the
+   object fills the surface's plot, the surface fills the region, and judging the object against the
+   region directly would fail every surfaced board by the width of its own chrome) and wrong under
+   `CONTAIN`, where the contract is about the OBJECT's authored presentation width. The marker
+   therefore moves inward for `contain` and stays on the surface for `fill`. */
+function figureSurface(inner, cap, treatment, label, fit) {
+  return `<div class="fs-surface" data-figure-surface data-fs="${esc(treatment)}"${fit === 'contain' ? '' : ' data-media-object'}>`
     + `<div class="fs-head"><span class="fs-lab">${esc(label || 'Figure')}</span></div>`
     + `<div class="fs-plot" data-fs-plot>${inner}</div>`
     + (cap ? `<figcaption class="fs-cap" data-fs-cap>${cap}</figcaption>` : '') + `</div>`;
@@ -508,21 +514,38 @@ function mediaMarkup(fx, fit, fs, captionOverride) {
   const cap = capText ? `<figcaption class="cp-figcap">${capText}</figcaption>` : '';
   const LAB = { graph: 'Graph', image: 'Figure', diagram: 'Diagram', video: 'Clip', interactive: 'Instrument' }[fx.kind] || 'Figure';
   if (fx.kind === 'graph') {
-    if (fs && fs !== 'off') return figureSurface(`{{FIG:${fx.figure}}}`, capText, fs, LAB);
+    if (fs && fs !== 'off') return figureSurface(`{{FIG:${fx.figure}}}`, capText, fs, LAB, fit);
     return `<figure class="cp-figure">{{FIG:${fx.figure}}}${cap}</figure>`;
   }
   if (fx.kind === 'interactive') {
     const frame = `<div class="cp-media"${fs && fs !== 'off' ? '' : ' data-media-object'} style="aspect-ratio:${1 / fx.aspect};`
       + `background:linear-gradient(#eef1f0,#dfe6e3);border:1px solid #cfd8d4;border-radius:3px"></div>`;
-    return fs && fs !== 'off' ? figureSurface(frame, capText, fs, LAB) : frame;
+    return fs && fs !== 'off' ? figureSurface(frame, capText, fs, LAB, fit) : frame;
   }
+  /* WHO IS "THE OBJECT" WHEN THERE IS A FIGURE SURFACE. With the surface on, the marker used to be
+     dropped, so `measureMedia` fell through to "the widest thing the slot put on screen" — which is the
+     SURFACE. Under `fill` that is the right comparand: the object fills the surface's plot, the surface
+     fills the region, and judging the object against the region directly would fail every surfaced
+     board by the width of its own chrome. Under `CONTAIN` it is the wrong one, because `contain` is
+     defined in terms of the OBJECT's authored presentation width, not the region's. So the marker goes
+     on for `contain` and stays off for `fill`, and this is deliberately narrower than the general
+     question of what a surface means for slot-fit, which nothing here settles. */
+  const mark = fs && fs !== 'off' && fit !== 'contain' ? '' : ' data-media-object';
   const inner = fx.kind === 'video'
-    ? `<video${fs && fs !== 'off' ? '' : ' data-media-object'} src="${dataURI(fx.src)}" poster="${dataURI(fx.poster)}" `
+    ? `<video${mark} src="${dataURI(fx.src)}" poster="${dataURI(fx.poster)}" `
       + `width="${fx.raster[0]}" height="${fx.raster[1]}" controls muted playsinline preload="metadata"></video>`
-    : `<img${fs && fs !== 'off' ? '' : ' data-media-object'} src="${dataURI(fx.src)}" width="${fx.raster[0]}" `
+    : `<img${mark} src="${dataURI(fx.src)}" width="${fx.raster[0]}" `
       + `height="${fx.raster[1]}" alt="${esc(fx.alt || '')}" decoding="sync">`;
-  if (fs && fs !== 'off') return figureSurface(`<span class="cp-media">${inner}</span>`, capText, fs, LAB);
+  /* `CONTAIN` MEANS THE AUTHORED PRESENTATION WIDTH, ON BOTH PATHS. This cap used to be applied only
+     when the figure surface was OFF: with the surface on, the object went in uncapped and stretched to
+     the surface. It never showed, because in every composition rendered so far the media region was
+     NARROWER than the authored width, so `min(authored, slot)` picked the slot either way and the two
+     paths agreed by accident. The first region wider than the object — the tablet illustration
+     spanning the reading measure — painted 727px where the contract says 420px, and H6 said so.
+     `.fs-plot` already centres what it holds, so the object lands centred inside its own region and
+     the space either side belongs to that region rather than to nobody. */
   const cw = fit === 'contain' ? ` style="width:min(${fx.presentationWidth}px,100%)"` : '';
+  if (fs && fs !== 'off') return figureSurface(`<span class="cp-media"${cw}>${inner}</span>`, capText, fs, LAB, fit);
   return `<figure class="cp-figure"><span class="cp-media"${cw}>${inner}</span>${cap}</figure>`;
 }
 
@@ -1896,6 +1919,27 @@ for (const v of VERIFY) {
     `${v.label} — ${v.pid}/${v.bid} at desktop 1152, tablet 834 and phone 382. Same authored content; `
     + `only the surface differs.`, 'surface', SURFACES);
 }
+
+/* ── THE TABLET SUPPORTING ILLUSTRATION, TWO WAYS ────────────────────────────────────────────────
+   Approved at desktop and phone; the TABLET arrangement is the open question. A four-column
+   illustration cannot be centred inside a seven-column measure on whole columns, so today it keeps the
+   reading's left edge and leaves an obvious rail down its right — a milder version of the defect the
+   alignment ruling exists to remove. The proposal is not a half-column: the ROW takes the whole reading
+   measure and the OBJECT is centred inside it, which `contain` plus `mediaAnchor: center` already do.
+   Rendered beside the current one, because which of two legal arrangements looks right is a question
+   about the pages. */
+console.log('\nthe tablet supporting illustration — the current arrangement and the proposal');
+await board('notes', 'tablet', 'notes-inset',
+  { klass: 'portrait', fs: 'A', tag: 't1', collect: 'TAB', noShot: true,
+    collectLabel: 'SHIPS TODAY · illustration row = inset 4, on the reading\'s left edge',
+    name: 'T1__notes-inset__tablet__AS-IT-SHIPS' });
+await board('notes', 'tablet', 'notes-inset-tablet-region',
+  { klass: 'portrait', fs: 'A', candidate: true, tag: 't2', collect: 'TAB', noShot: true,
+    collectLabel: 'PROPOSED · illustration row = the whole reading measure, object centred inside it',
+    name: 'T2__notes-inset__tablet__REGION-SPANS-THE-MEASURE' });
+await strip('TAB', 'T__TABLET-SUPPORTING-ILLUSTRATION__current-vs-proposed',
+  'THE TABLET SUPPORTING ILLUSTRATION — same object, same reading spine, same caption owner; only what '
+  + 'the illustration ROW spans differs', 'span');
 
 /* DRIVES · each control shown able to fail. */
 /* H1's AXIS BRANCH, WHICH REGROUPING COULD HAVE KILLED. Grouping the solo rows by alignment system

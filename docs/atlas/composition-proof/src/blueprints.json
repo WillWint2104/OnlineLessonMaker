@@ -919,6 +919,264 @@
           }
         }
       },
+      "candidates": {
+        "notes-inset-tablet-region": {
+          "role": "supporting",
+          "notFrozen": true,
+          "title": "THE TABLET ILLUSTRATION IN A REGION SPANNING THE READING MEASURE, object centred inside it",
+          "why": "THE PARITY ANSWER WAS CORRECT AND UNSATISFYING. A four-column illustration cannot be centred inside a SEVEN-column measure on whole columns, so it stayed on the reading's left edge with a rail of nothing down its right — which is a milder version of the defect the whole alignment ruling exists to remove. The grid's parity should not get to decide where the illustration looks like it belongs. So the ROW takes the whole reading measure and the OBJECT is centred inside it: `notes` is a `contain` pattern, so the object paints at its authored presentation width and `mediaAnchor: center` places it, which is machinery the contract already has rather than anything new. The space either side is then INSIDE AN OWNED MEDIA REGION — valid space number six in the whitespace taxonomy — instead of unclaimed neighbouring columns. The image keeps its approved dimensions and aspect, the reading spine is untouched, the caption still belongs to the surface, and no half-column, geometry class or content-dependent calculation is introduced. DESKTOP AND PHONE ARE UNCHANGED: desktop centres within the reading on whole columns already, and on the phone the illustration IS the measure.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "brief",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "8/4",
+                  "regions": [
+                    "intro",
+                    "support"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "an explanation beside the key ideas it establishes — two PROSE regions, both written"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "inset"
+                  ],
+                  "preferred": "inset"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true,
+                "origin": "within-reading"
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
       "withdrawn": {
         "page-centred-6": {
           "_": "THE PRE-STEP-1 ARRANGEMENT: six columns centred on the twelve-column PAGE (4-9) over prose anchored at column 1. Rendered beside the revision so the two could be judged against each other rather than described.",
