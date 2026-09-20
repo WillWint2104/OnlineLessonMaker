@@ -1130,6 +1130,10 @@ const REPORT = [];
    different question of which approved span reads as finished courseware, and that one can only be
    judged with the alternatives at the same scale in one picture rather than described. */
 const STRIP = [];
+/* EVERY PICTURE THIS RUN PUTS ON DISK, so the ones it does NOT can be named. A PNG no board and no
+   strip regenerates is a claim about the current design that nothing checks — which is how the five
+   prototype renders outlived the decision they were made for. */
+const PRODUCED = new Set();
 
 /* ── FITNESS, RESOLVED BEFORE ANYTHING IS DRAWN ──────────────────────────────────────────────────
    Which rung a solo row SHOULD land on. The inputs are categorical — the region's span family, the
@@ -1238,7 +1242,7 @@ async function board(pid, surface, bid, o = {}) {
     plain = plain.split(`{{FIG:${fx.figure}}}`).join(figHtml);
     proof = proof.split(`{{FIG:${fx.figure}}}`).join(figHtml);
   }
-  if (o.collect) STRIP.push({ group: o.collect, label: o.collectLabel || name, surface,
+  if (o.collect) STRIP.push({ group: o.collect, label: o.collectLabel || name, surface, bid,
     width: g.width + 2 * g.pad, css: `${gridCSS(sd, surface, L, pid)}\n${o.injectCSS || ''}`, html: plain });
 
   const doc = `<!doctype html><html data-theme="mathematics"><head><meta charset="utf-8"><style>
@@ -1294,6 +1298,56 @@ ${o.injectCSS || ''}
 
   const m = await pg.evaluate(measureComposition);
   const J = judge(pid, surface, L, m, resolve);
+
+  /* ── H21 · NOTHING LEAVES THE SURFACE, NOTHING IS CUT OFF ──────────────────────────────────────
+     Named by the responsive ruling: a narrower surface must not introduce clipping or sideways
+     scrolling. Both are measured rather than looked for, because at phone width the thing that
+     overflows is usually a caption or a tick label a screenshot makes look deliberate. A page that
+     scrolls DOWN is fine and always was — height is not a failure. A page that scrolls SIDEWAYS is
+     a composition that does not fit the surface it declares. */
+  const OF = await pg.evaluate(() => {
+    const host = document.querySelector('[data-cp-host]');
+    const hb = host.getBoundingClientRect();
+    const out = { sideways: Math.round(host.scrollWidth - host.clientWidth), past: [], clipped: [] };
+    for (const el of host.querySelectorAll('*')) {
+      const b = el.getBoundingClientRect();
+      if (!b.width) continue;
+      const over = +(b.right - hb.right).toFixed(2), under = +(hb.left - b.left).toFixed(2);
+      if (over > 0.5 || under > 0.5)
+        out.past.push(`${el.getAttribute('data-slot') || el.tagName.toLowerCase()}${over > 0.5 ? ` +${over}px right` : ''}${under > 0.5 ? ` +${under}px left` : ''}`);
+      /* an element whose own overflow rule is hiding content it holds */
+      const cs = getComputedStyle(el);
+      if ((cs.overflowX === 'hidden' || cs.overflowX === 'clip') && el.scrollWidth - el.clientWidth > 1)
+        out.clipped.push(`${el.getAttribute('data-slot') || el.tagName.toLowerCase()} hides ${el.scrollWidth - el.clientWidth}px`);
+    }
+    return out;
+  });
+  if (OF.sideways > 1)
+    J.fails.push(['H21', `${pid}/${bid}/${surface}: the page scrolls SIDEWAYS by ${OF.sideways}px — a `
+      + `composition that does not fit the surface it declares`]);
+  for (const x of [...new Set(OF.past)].slice(0, 4))
+    J.fails.push(['H21', `${pid}/${bid}/${surface}: \`${x}\` is painted outside the composition's own box`]);
+  for (const x of [...new Set(OF.clipped)].slice(0, 4))
+    J.fails.push(['H21', `${pid}/${bid}/${surface}: ${x} of its own content — content cut off is not a layout`]);
+
+  /* ── LEGIBILITY, MEASURED AND REPORTED ─────────────────────────────────────────────────────────
+     Raised on the X2 render: the caption and the numbers inside the plot were very small. Acceptable
+     for a decorative photograph, not for a mathematical diagram a student has to read. The sizes are
+     READ BACK here rather than asserted, because a floor nobody has measured against is a guess. */
+  const LEG = await pg.evaluate(() => {
+    const px = (el) => Math.round(parseFloat(getComputedStyle(el).fontSize) * 10) / 10;
+    const host = document.querySelector('[data-cp-host]');
+    const cap = host.querySelector('[data-fs-cap]') || host.querySelector('figcaption');
+    const ticks = [].slice.call(host.querySelectorAll('.tp-fig-ticklabel'));
+    /* THE CLASS NAMES ARE THE ENGINE'S, CHECKED AGAINST IT. A first version asked for `.tp-fig-label`,
+       which the engine has never emitted, and the readout came back `null` — which reads as "this
+       render has no labels" rather than "nobody looked". A measurement that cannot find its subject
+       must say so, so the count is reported beside the size. */
+    const labels = [].slice.call(host.querySelectorAll('.tp-fig-callout, .tp-fig-reflab, .tp-fig-gsym, .tp-fig-gprose'));
+    const min = (a) => a.length ? Math.min.apply(null, a.map(px)) : null;
+    return { caption: cap ? px(cap) : null, tick: min(ticks), ticks: ticks.length,
+      label: min(labels), labels: labels.length };
+  });
 
   /* the media verdict comes from the ONE owner the other two atlases use */
   let mediaLines = null, mediaOk = true, mediaVerdict = null;
@@ -1407,6 +1461,7 @@ ${o.injectCSS || ''}
     await pg.setViewportSize({ width: Math.ceil(bb.width), height: Math.min(28000, Math.ceil(bb.height) + 8) });
     await pg.waitForTimeout(120);
     await (await pg.$('.pf-board')).screenshot({ path: path.join(OUT, name + '.png') });
+    PRODUCED.add(name);
   }
   await pg.close();
 
@@ -1426,12 +1481,23 @@ ${o.injectCSS || ''}
        still worth arguing about. Nothing in this file reads these back, and H19 is the proof. */
     calibration: o.calibration ? { shape: o.calibration.shape, wh: o.calibration.wh, aspect: o.calibration.aspect,
       klass: o.calibration.klass } : null,
+    legibility: LEG, sideways: OF.sideways,
     surfaceH: FS && FS.surface ? Math.round(FS.surface.h) : null,
     viewportShare: FS && FS.surface ? +(FS.surface.h / CAL.diagnosticViewport).toFixed(2) : null,
     /* WHAT MUST NOT CHANGE ACROSS SURFACES (H18): the authored blueprint, its role, and the rows it
        holds — their ids, their cardinality and their modes. The RUNGS may differ; that is what a
        responsive form IS. */
-    identity: `${bid}|${bpRole}|` + L.rows.map((r) => `${r.id}:${r.mode}:${r.vertical}:${r.named.length}`).join(','),
+    /* IDENTITY IS WHAT THE CONTRACT SAYS IT IS: the blueprint, what it is for, and WHICH REGIONS IT
+       HOLDS. It used to be the row partitioning — ids, modes and cardinality — which is stricter than
+       the sentence H18 prints beside its own failure, and stricter than the responsive contract: a
+       form may change how a row is COMPOSED. `notes` stacks its 8/4 brief into two solo rows at
+       tablet and phone because neither surface approves that split, which is a recomposition and not
+       a change of identity. It went unseen because `notes` had only ever been rendered at desktop —
+       the same shape of defect as the transposed anchors: a branch no fixture reached. What a
+       responsive form still may not do is lose a region, or change how a surviving row sizes itself,
+       and both are checked. */
+    identity: `${bid}|${bpRole}|` + [...new Set(L.rows.flatMap((r) => r.named))].sort().join(','),
+    verticals: Object.fromEntries(L.rows.map((r) => [r.id, r.vertical])),
     /* WHAT MUST NOT MOVE WHEN THE SURFACE IS TURNED ON (H15) and WHAT MUST NOT CHANGE ABOUT THE
        MATHEMATICS (H14). Recorded per render so the two can be compared across fs modes. */
     structure: `${bid}|${L.spine.align}${L.spine.span}|` + L.rows.map((r) =>
@@ -1452,19 +1518,54 @@ ${o.injectCSS || ''}
    by side at the same scale with identical content, so the only difference the eye is offered is the
    span of the media row. No control runs here and none should: nothing is being proved, the boards
    already did that. This is the picture the choice is made from. */
-async function strip(group, name, title) {
+async function strip(group, name, title, kind = 'span', expect = null) {
   const items = STRIP.filter((x) => x.group === group);
   if (!items.length) throw new BlueprintError(`strip \`${group}\`: nothing was collected under that group`);
-  const surface = items[0].surface;
-  if (items.some((x) => x.surface !== surface))
-    throw new BlueprintError(`strip \`${group}\`: mixes surfaces (${[...new Set(items.map((x) => x.surface))].join(', ')}) — `
+  /* WHAT A STRIP COMPARES IS DECLARED, AND THE WRONG COMBINATION IS REFUSED EITHER WAY. A comparison
+     with two variables in it compares nothing, and the two kinds fail in opposite directions:
+
+       span     one surface, the span differs. Two surfaces in one strip would mean the columns were
+                not the same page at different widths but different pages at different widths.
+       surface  one composition, the surface differs — which is the whole point, so here it is a
+                REPEATED surface that is the defect, along with a blueprint that changed between
+                columns. A responsive form is one authored blueprint seen at several widths; if the
+                blueprint moves too, the picture is not showing what it claims to.
+
+     The first version of this refused mixed surfaces unconditionally and caught the responsive strip
+     on its first run. That was the control doing its job against a rule that had since grown a second
+     case — not a reason to delete it. */
+  const surfaces = items.map((x) => x.surface);
+  if (kind === 'span' && new Set(surfaces).size !== 1)
+    throw new BlueprintError(`strip \`${group}\` compares SPANS and mixes surfaces (${[...new Set(surfaces)].join(', ')}) — `
       + `a comparison whose viewport moves between columns compares two things at once`);
-  const g = GRID.surfaces[surface];
+  if (kind === 'surface') {
+    /* EVERY SURFACE ASKED FOR IS PRESENT. A board that finds no approved rung reports and returns
+       BEFORE it collects, so a composition that cannot be rendered at tablet would otherwise produce
+       a quiet two-column strip that reads as a complete responsive check. Found exactly that way:
+       `stage-primary` and `plate-wide` had no tablet form, and the strip said nothing. */
+    const missing = (expect || []).filter((sf) => !surfaces.includes(sf));
+    if (missing.length)
+      throw new BlueprintError(`strip \`${group}\` compares SURFACES and ${missing.join(', ')} never `
+        + `collected — a composition that cannot be rendered at a surface is not a composition that `
+        + `passed the responsive check, and a short strip must not read as a complete one`);
+    if (new Set(surfaces).size !== surfaces.length)
+      throw new BlueprintError(`strip \`${group}\` compares SURFACES and repeats one (${surfaces.join(', ')}) — `
+        + `two columns at the same width are not a responsive comparison`);
+    const bids = [...new Set(items.map((x) => x.bid))];
+    if (bids.length !== 1)
+      throw new BlueprintError(`strip \`${group}\` compares SURFACES and the blueprint changed between columns `
+        + `(${bids.join(', ')}) — a responsive form is ONE authored blueprint at several widths`);
+  }
+  /* each column carries its OWN surface: the kit is parameterised by inherited custom properties and
+     by a `cp-<surface>` class on an ancestor, so a column can be a whole viewport of its own. */
+  const vars = (sf) => { const g = GRID.surfaces[sf];
+    return `--cp-surface:${g.width}px;--cp-pad:${g.pad}px;--cp-pad-y:24px;--cp-frame:0px;--cp-cols:${g.columns};`
+      + `--cp-gut:${g.gutter}px;--cp-measure:${GRID.readingMeasure.px}px;`
+      + `--cp-pad-h:${sf === 'phone' ? 360 : 480}px;--cp-pane-h:460px;`; };
   const doc = `<!doctype html><html data-theme="mathematics"><head><meta charset="utf-8"><style>
 ${APP_CSS}
 </style><style>
-:root{--cp-surface:${g.width}px;--cp-pad:${g.pad}px;--cp-pad-y:24px;--cp-frame:0px;--cp-cols:${g.columns};
---cp-gut:${g.gutter}px;--cp-measure:${GRID.readingMeasure.px}px;--cp-pad-h:${surface === 'phone' ? 360 : 480}px;--cp-pane-h:460px;}
+:root{${vars(items[0].surface)}}
 ${CSS_KIT}
 ${PROOF_CSS}
 ${FIGURE_SURFACE_CSS}
@@ -1473,9 +1574,9 @@ ${items.map((x) => x.css).join('\n')}
 .cp-strip{display:flex;align-items:flex-start;}
 .cp-strip > section{flex:0 0 auto;border-left:1px solid #d8d8d4;}
 .cp-strip > section:first-child{border-left:0;}
-</style></head><body class="mx cp-${surface}"><div class="pf-board" style="width:${items.reduce((a2, x) => a2 + x.width, 0) + items.length - 1}px">
+</style></head><body class="mx"><div class="pf-board" style="width:${items.reduce((a2, x) => a2 + x.width, 0) + items.length - 1}px">
 <div class="pf-head">${esc(title)}</div>
-<div class="cp-strip">${items.map((x) => `<section style="width:${x.width}px">`
+<div class="cp-strip">${items.map((x) => `<section class="cp-${esc(x.surface)}" style="width:${x.width}px;${vars(x.surface)}">`
     + `<div class="pf-capt">${esc(x.label)}</div>${x.html}</section>`).join('')}</div>
 </div></body></html>`;
 
@@ -1491,13 +1592,26 @@ ${items.map((x) => x.css).join('\n')}
   const bb = await (await pg.$('.pf-board')).boundingBox();
   await pg.setViewportSize({ width: Math.ceil(bb.width), height: Math.min(28000, Math.ceil(bb.height) + 8) });
   await pg.waitForTimeout(150);
-  /* THE PAINTED WIDTHS, READ BACK OFF THE STRIP. The label on each column claims a span; if the
-     picture the choice is made from disagrees with the label, the choice is made from a lie. */
-  const got = await pg.evaluate(() => [].slice.call(document.querySelectorAll('.cp-strip [data-media-slot]'))
-    .map((el) => Math.round(el.getBoundingClientRect().width)));
+  /* THE PAINTED WIDTHS, READ BACK OFF THE STRIP. Each column's label claims something; if the picture
+     the decision is made from disagrees with the label, the decision is made from a lie. The columns
+     are rebuilt markup, so this also catches a column that silently failed to lay out. */
+  const got = await pg.evaluate(() => [].slice.call(document.querySelectorAll('.cp-strip > section')).map((sec) => {
+    const el = sec.querySelector('[data-media-slot]');
+    return el ? Math.round(el.getBoundingClientRect().width) : null;
+  }));
+  if (got.length !== items.length || got.some((x) => x == null))
+    throw new BlueprintError(`strip \`${group}\`: ${items.length} column(s) collected and the rebuilt strip `
+      + `painted media in ${got.filter((x) => x != null).length} — a column that did not lay out is not a comparison`);
+  const perCol = await pg.evaluate(() => [].slice.call(document.querySelectorAll('.cp-strip > section'))
+    .map((sec) => { const h = sec.querySelector('[data-cp-host]');
+      return h ? Math.round(h.scrollWidth - h.clientWidth) : 0; }));
+  const bad = perCol.map((v, i) => v > 1 ? `${items[i].label} +${v}px` : null).filter(Boolean);
+  if (bad.length)
+    throw new BlueprintError(`strip \`${group}\`: ${bad.join(', ')} scrolls sideways inside its own column`);
   await (await pg.$('.pf-board')).screenshot({ path: path.join(OUT, name + '.png') });
+  PRODUCED.add(name);
   await pg.close();
-  console.log(`  ${name.padEnd(56)} media widths ${got.join(' · ')}px`);
+  console.log(`  ${name.padEnd(56)} media ${items.map((x, i) => `${x.label}=${got[i]}`).join(' · ')}px`);
   return got;
 }
 
@@ -1725,77 +1839,55 @@ await board('interactive.primary', 'desktop', 'beside-8-4',
       + 'height is however much prose was written. The blueprint declares a 160px termination tolerance '
       + 'and the row is measured against it.' });
 
-/* ── THE AXIS CORRECTION, PROTOTYPED ─────────────────────────────────────────────────────────────
-   Step 1 drove "one axis per page" to its conclusion and the renders showed it was the wrong rule:
-   a 10-column plate and a 4-column illustration both hard against the left edge, each leaving an
-   obvious rail of nothing down the right. These are the revisions — same widths, different alignment
-   system — with the previous page-centred arrangement rendered beside the notes one so the three can
-   be judged against each other rather than described. */
-console.log('\nthe axis correction — reading spine vs media stage');
-/* ── THE PORTRAIT STAGE SPAN, COMPARED AT 8 / 9 / 10 ─────────────────────────────────────────────
-   Centring the stage fixed the horizontal imbalance and exposed a second effect: a portrait plane
-   preserves its geometry, so span buys HEIGHT. At ten columns the object is balanced across the page
-   and tall enough to dominate it, which is a different defect from the one that was just removed and
-   must not be traded for it. The three spans are rendered with identical content — same fixture, same
-   prose, same role, same surface — and then rebuilt side by side, because which of three legal pages
-   reads as finished courseware is a question about the pages, not about the rule.
+/* ── THE APPROVED COMPOSITIONS, VERIFIED AT EVERY SURFACE ───────────────────────────────────────
+   The prototypes are decided. Ruled, after the eight/nine/ten comparison:
 
-   NINE COLUMNS CANNOT BE A CENTRED STAGE, AND THAT IS NOT A LIMITATION OF THIS SCRIPT. `layout`
-   refuses it outright: on a twelve-column grid (12 − 9) is odd, so a nine-column row has no symmetric
-   page margin — it sits a half column (49px) off the grid on both sides. The refusal was written when
-   the two alignment systems were, not for this comparison. It is rendered anyway, off the grid and
-   labelled as such, because "what does 858px look like" is a fair question and the answer is worth
-   having; what it is not is a rung. Choosing it would be a decision to change the GRID. */
-await board('media.full', 'desktop', 'plate-expanded-stage',
-  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax8', collect: 'stage-span',
-    collectLabel: 'CANDIDATE · expanded 8 · 760px — exactly the reading measure, on the other axis',
-    name: 'X4a__media-full__expanded-8__CENTRED-STAGE',
-    why: 'THE NARROW END. Eight columns centred — 760px, which is also exactly the width of the '
-      + 'reading spine beneath it. The object is as short as the comparison gets and the two axes are '
-      + 'at their most visible, because the stage and the prose are the same width in different places.' });
-await board('media.full', 'desktop', 'plate-wide-stage',
-  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax9', collect: 'stage-span', paintAt: 820,
-    collectLabel: 'NOT A RUNG · 9 columns · 858px — a half column off the grid on both sides',
-    name: 'X4b__media-full__NINE-COLUMNS__OFF-THE-GRID',
-    injectCSS: '[data-sd*="ax9"] > [data-slot="media"]{width:858px!important;margin-left:49px!important;}',
-    why: 'THE MIDDLE OF THE COMPARISON, AND IT IS NOT A LEGAL COMPOSITION. Nine columns is 858px, which '
-      + 'centres on the page at 147px — a half column off every grid line. The blueprint underneath is '
-      + 'still the ten-column stage; the media row has been narrowed by injected CSS and the plane '
-      + 'solved to the narrower box, so the graph is at true equal-unit scale rather than squashed. The '
-      + 'slot-fit control is EXPECTED to speak here: the painted object no longer fills the ten columns '
-      + 'the row declares. That is the point — this span cannot be declared.' });
-await board('media.full', 'desktop', 'plate-wide-stage',
-  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax1', collect: 'stage-span',
-    collectLabel: 'APPROVED · wide 10 · 956px — what role × geometry gives a primary portrait',
-    name: 'X1__media-full__wide-10__CENTRED-STAGE',
-    why: 'THE REVISION. Ten columns — the same width the approved blueprint gives — on a centred media '
-      + 'stage rather than against the reading\'s left edge. The reading returns to its own left edge '
-      + 'beneath it, which is two named regions doing different jobs, not a mixed axis.' });
-await board('notes', 'desktop', 'notes-within-reading',
-  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax2',
-    name: 'X2__notes__inset-4__WITHIN-THE-READING-SPINE',
-    why: 'THE REVISION. Four columns centred inside the eight-column reading spine — columns 3-6 — so a '
-      + 'supporting object is subordinate to the prose without being stranded against the page edge or '
-      + 'claiming a stage it has not earned.' });
-await board('notes', 'desktop', 'notes-page-centred-6',
-  { klass: 'portrait', fs: 'A', candidate: true, tag: 'ax3',
-    name: 'X3__notes__narrow-6__PAGE-CENTRED__for-comparison',
-    why: 'WHAT THE CATALOGUE DID BEFORE STEP 1, for comparison: six columns centred on the PAGE (4-9) '
-      + 'over prose anchored at column 1. Outside the approved span family for supporting portrait '
-      + 'media, so `select` cannot name it — reachable only as a candidate.' });
+     · BOTH portrait stage spans are approved, for DIFFERENT PRESENTATION ROLES. Eight columns is the
+       explanatory portrait and ten is the primary one — and neither is new: `spine-narrow` already
+       rendered 760x998 and `stage-primary` already rendered 956x1234. Nothing was unfrozen. What the
+       comparison produced was a rule AGAINST promoting every portrait graph to the wider rung.
+     · NO nine-column rung. It cannot be centred on a twelve-column grid at all.
+     · The supporting illustration is centred WITHIN the reading spine. Adopted into `notes-inset`
+       (and `notes-aside`, for the same reason).
+     · The standalone primary plate sits on a centred media STAGE. Adopted into `media.full/plate-wide`.
 
-/* the three legal-or-not portrait stages, side by side at the same scale */
-await strip('stage-span', 'X5__PORTRAIT-STAGE-SPAN__8-vs-9-vs-10',
-  'THE PORTRAIT MEDIA STAGE AT THREE SPANS — same fixture, same prose, same role, same desktop surface; '
-  + 'only the span of the media row differs');
+   What is left is the check the ruling made a condition of adoption: the approved compositions at
+   TABLET and PHONE. Captions and labels readable, positions deliberate, and no clipping, no stray
+   horizontal scrolling and no unclaimed slot space. Each composition is rendered at all three
+   surfaces and then rebuilt side by side, because a responsive form is judged across its surfaces or
+   it is not judged at all. */
+console.log('\nthe approved compositions, verified at every surface');
+const SURFACES = ['desktop', 'tablet', 'phone'];
+const VERIFY = [
+  { pid: 'visual.explanation', bid: 'spine-narrow', key: 'explanatory/portrait', klass: 'portrait',
+    id: 'V1', label: 'EXPLANATORY PORTRAIT', tag: 'v1' },
+  { pid: 'visual.explanation', bid: 'stage-primary', key: 'primary/portrait', klass: 'portrait',
+    id: 'V2', label: 'PRIMARY PORTRAIT', tag: 'v2' },
+  { pid: 'media.full', bid: 'plate-wide', key: 'primary/portrait', klass: 'portrait',
+    id: 'V3', label: 'THE UPRIGHT PLATE', tag: 'v3' },
+  { pid: 'notes', bid: 'notes-inset', key: null, klass: 'portrait',
+    id: 'V4', label: 'SUPPORTING ILLUSTRATION', tag: 'v4' },
+  { pid: 'notes', bid: 'notes-aside', key: null, klass: 'wide',
+    id: 'V5', label: 'SUPPORTING ILLUSTRATION, WIDER OBJECT', tag: 'v5' },
+];
+for (const v of VERIFY) {
+  for (const surface of SURFACES) {
+    await board(v.pid, surface, v.bid, { klass: v.klass, selectKey: v.key || undefined, fs: 'A',
+      tag: `${v.tag}${surface[0]}`, collect: v.id, collectLabel: surface, noShot: true,
+      name: `${v.id}__${v.bid}__${surface}` });
+  }
+  await strip(v.id, `${v.id}__${v.bid}__RESPONSIVE`,
+    `${v.label} — ${v.pid}/${v.bid} at desktop 1152, tablet 834 and phone 382. Same authored content; `
+    + `only the surface differs.`, 'surface', SURFACES);
+}
 
 /* DRIVES · each control shown able to fail. */
 /* H1's AXIS BRANCH, WHICH REGROUPING COULD HAVE KILLED. Grouping the solo rows by alignment system
    is what lets a centred stage sit above start-aligned commentary — and if it were done carelessly it
    would also excuse the defect the control exists for: two rows of the SAME system failing to share
    an edge. The drive shifts one reading row's painted left edge and nothing else. */
-drive('two-reading-rows-off-one-edge', 'H1', await board('notes', 'desktop', 'notes-within-reading',
-  { klass: 'portrait', fs: 'A', candidate: true, counterexample: true, tag: 'ax4', noShot: true, quiet: true,
+drive('two-reading-rows-off-one-edge', 'H1', await board('notes', 'desktop', 'notes-inset',
+  { klass: 'portrait', fs: 'A', counterexample: true, tag: 'ax4', noShot: true, quiet: true,
     name: 'drive__two-reading-rows-off-one-edge',
     injectCSS: `[data-sd*="ax4"] [data-slot="synthesis"]{margin-left:40px!important;}` }));
 drive('caption-inside-the-plot', 'H16', await board('visual.explanation', 'desktop', 'spine-narrow',
@@ -1942,8 +2034,19 @@ const H18 = (recs) => {
     const ids = new Set(list.map((r) => r.identity));
     if (ids.size > 1)
       out.push(`${k}: the authored structural identity differs across ${[...surfaces].join('/')} — `
-        + `${[...ids].join('  VS  ')}. A responsive form may change the RUNGS; it may not change which `
-        + `blueprint this is, what it is for, or which regions it holds`);
+        + `${[...ids].join('  VS  ')}. A responsive form may change the RUNGS and it may RECOMPOSE a row; `
+        + `it may not change which blueprint this is, what it is for, or which regions it holds`);
+    /* AND A ROW THAT SURVIVES KEEPS HOW IT SIZES ITSELF. Recomposition is permitted; a `hug` row
+       quietly becoming a `designed` one on a narrower surface is not, because that is the row's
+       contract with its content rather than its arrangement on the grid. */
+    const verts = new Map();
+    for (const r of list) for (const [id, v] of Object.entries(r.verticals || {})) {
+      if (!verts.has(id)) verts.set(id, new Set());
+      verts.get(id).add(v);
+    }
+    for (const [id, vs] of verts) if (vs.size > 1)
+      out.push(`${k}: row \`${id}\` sizes itself differently across ${[...surfaces].join('/')} `
+        + `(${[...vs].join(' vs ')}) — a responsive form may recompose a row, not redefine it`);
   }
   return { out, compared };
 };
@@ -2076,9 +2179,15 @@ for (const r of REAL) for (const [c, f] of r.fails) fails.push(`${c} · ${f}`);
   check(h18.compared > 0, 'H18 · no blueprint was rendered on more than one surface, so the identity control is untested');
   console.log(`control H18 · structural identity held across ${h18.compared} multi-surface blueprint(s)`);
   const b18 = REAL.find((r) => r.identity && r.surface === 'desktop' && !r.counterexample);
-  const d18 = H18([b18, { ...b18, surface: 'phone', identity: b18.identity + ',extra:solo:hug:1' }]);
+  /* TWO DRIVES, because H18 now refuses two different things: a region that did not survive the
+     narrower surface, and a surviving row that changed how it sizes itself. */
+  const d18 = H18([b18, { ...b18, surface: 'phone', identity: b18.identity.replace(/,[^,]+$/, '') }]);
   drives.push({ id: 'identity-changed-on-phone', control: 'H18', hit: d18.out.length > 0, got: d18.out.slice(0, 1) });
   console.log(`  ${d18.out.length ? '✓' : '✗ DID NOT FIRE'}  identity-changed-on-phone     H18`);
+  const d18b = H18([b18, { ...b18, surface: 'phone',
+    verticals: Object.fromEntries(Object.entries(b18.verticals || {}).map(([k2], i) => [k2, i ? 'hug' : 'designed'])) }]);
+  drives.push({ id: 'a-row-redefined-on-phone', control: 'H18', hit: d18b.out.length > 0, got: d18b.out.slice(0, 1) });
+  console.log(`  ${d18b.out.length ? '✓' : '✗ DID NOT FIRE'}  a-row-redefined-on-phone      H18`);
 
   const h19 = H19(REAL);
   for (const f of h19.out) fails.push(`H19 · ${f}`);
@@ -2115,6 +2224,33 @@ for (const r of REAL) for (const [c, f] of r.fails) fails.push(`${c} · ${f}`);
   const d15 = H15([base15, { ...base15, fs: 'A', structure: 'something-else' }]);
   drives.push({ id: 'surface-moved-the-layout', control: 'H15', hit: d15.out.length > 0, got: d15.out.slice(0, 1) });
   console.log(`  ${d15.out.length ? '✓' : '✗ DID NOT FIRE'}  surface-moved-the-layout      H15`);
+}
+{
+  /* H22 · INSTRUCTIONAL TYPE DOES NOT SHRINK. The floor is declared in the catalogue, not here, and
+     it records what the engine produces today rather than claiming that value is large enough. What
+     the control is actually for is the regression: a future change that scales figure type with the
+     figure would make a phone graph unreadable, and it would look fine in a screenshot. */
+  const FLOOR = BP.legibility;
+  const H22 = (recs) => recs.filter((r) => r.legibility).flatMap((r) => {
+    const L = r.legibility, o = [];
+    if (L.caption != null && L.caption < FLOOR.captionMinPx)
+      o.push(`${r.name}: the caption is ${L.caption}px against a ${FLOOR.captionMinPx}px floor`);
+    for (const [what, v] of [['tick label', L.tick], ['reference label', L.label]])
+      if (v != null && v < FLOOR.inFigureMinPx)
+        o.push(`${r.name}: the smallest ${what} is ${v}px against a ${FLOOR.inFigureMinPx}px floor — `
+          + `text a student has to read may not get smaller because the object did`);
+    return o;
+  });
+  for (const f of H22(REAL)) fails.push(`H22 · ${f}`);
+  const seen22 = REAL.filter((r) => r.legibility && r.legibility.caption != null);
+  check(seen22.length > 0, 'H22 · no render reported a caption size, so the legibility control is untested');
+  const sizes = [...new Set(seen22.map((r) => `${r.legibility.caption}/${r.legibility.tick}/${r.legibility.label}`))];
+  console.log(`control H22 · instructional type held its size across ${seen22.length} render(s) `
+    + `— caption/tick/label ${sizes.join(' · ')}`);
+  const b22 = seen22[0];
+  const d22 = H22([{ ...b22, legibility: { ...b22.legibility, caption: 8, tick: 7 } }]);
+  drives.push({ id: 'type-shrank-with-the-figure', control: 'H22', hit: d22.length > 0, got: d22.slice(0, 1) });
+  console.log(`  ${d22.length ? '✓' : '✗ DID NOT FIRE'}  type-shrank-with-the-figure   H22`);
 }
 {
   const h8 = H8(REAL);
@@ -2193,6 +2329,23 @@ for (const d of drives)
 await browser.close(); server.close();
 fs.writeFileSync(path.join(OUT, 'composition-proof-report.json'),
   JSON.stringify({ records: REPORT, drives }, null, 2));
+
+/* H23 · NOTHING STALE IS LEFT ON DISK. The atlas is read as a set of pictures of the current design,
+   so a PNG this run did not produce is a picture of a design that no longer exists — and it looks
+   exactly like a current one. Found the hard way: five prototype renders survived the ruling that
+   retired them and would have been read as live. */
+{
+  const onDisk = fs.readdirSync(OUT).filter((f) => f.endsWith('.png')).map((f) => f.slice(0, -4));
+  const stale = onDisk.filter((f) => !PRODUCED.has(f));
+  for (const f of stale)
+    fails.push(`H23 · ${f}.png is on disk and no board or strip in this run produced it — a picture `
+      + `nothing regenerates is a claim about the design that nothing checks`);
+  console.log(`control H23 · ${onDisk.length} picture(s) on disk, ${stale.length ? `${stale.length} of them STALE` : 'all of them produced by this run'}`);
+  const d23 = ['a-render-that-no-longer-has-a-board'].filter((f) => !PRODUCED.has(f));
+  drives.push({ id: 'a-stale-picture-on-disk', control: 'H23', hit: d23.length > 0, got: d23 });
+  console.log(`  ${d23.length ? '✓' : '✗ DID NOT FIRE'}  a-stale-picture-on-disk       H23`);
+}
+
 
 console.log('');
 if (fails.length) {

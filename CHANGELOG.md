@@ -52,7 +52,46 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   5/3 pair was legal and unpleasant, and "the grid permits it" is not a reason to squeeze prose beside
   a callout.
 
+- **The portrait-stage ruling, applied** (`docs/atlas/composition-proof/`,
+  `scripts/composition-proof-atlas.mjs`; no app change). Both spans are approved, for **different
+  presentation roles**: the explanatory portrait keeps a centred eight-column stage, the primary
+  portrait a centred ten-column one. Neither is new — `visual.explanation/spine-narrow` already
+  rendered 760×998 and `stage-primary` already rendered 956×1234, both already on a centred stage — so
+  nothing was unfrozen. What the 8/9/10 comparison produced was a rule *against* promoting every
+  portrait graph to the wider rung, and two withdrawal records saying why the alternatives lost.
+  - **No nine-column rung.** It cannot be centred on a twelve-column grid at all: (12 − 9) is odd, so
+    it lands a half column off the grid on both sides.
+  - **The supporting illustration is centred within the reading spine**, adopted into `notes-inset`
+    from the prototype — and into `notes-aside` for the same reason, because the ruling is about what a
+    supporting illustration *is*, not about one rung. Whether a row can be centred is now **derived**
+    from the parity of the spine rather than written out per surface.
+  - **The standalone primary plate sits on a centred media stage**, adopted into `media.full/plate-wide`.
+- **The responsive check the ruling made a condition of adoption.** All five approved compositions
+  rendered at desktop 1152, tablet 834 and phone 382, then rebuilt side by side (`V1`–`V5`). No
+  sideways scrolling anywhere (measured 0px on all fifteen), no clipping, no unclaimed slot space.
+  **Instructional type does not scale with the figure**: the caption is 13.5px, tick labels 11px and
+  the reference label 12px at *every* surface and every media width.
+
 ### Fixed
+- **Three defects the responsive pass exposed, all of them dormant because nothing had rendered these
+  compositions at more than one surface.**
+  - **`stage-primary` and `plate-wide` had no tablet form at all.** Both declared a tablet media rung
+    (`expanded`, `full`) outside the frozen family for a primary object (`wide`), so both reported NO
+    APPROVED RUNG. At tablet the ladder collapses — `expanded`, `wide` and `full` are all 8 columns —
+    so this is a rung *name* disagreeing with the family, and the painted result is unchanged.
+  - **A short responsive strip read as a complete one.** A board that finds no approved rung returns
+    before it collects, so the two broken tablet forms produced quiet two-column strips that looked
+    like passing responsive checks. A surface strip now names the surfaces it was asked for.
+  - **H18 was stricter than the contract it prints.** Its message says a responsive form "may not
+    change which regions it holds"; the string it compared encoded row *partitioning*, so `notes`
+    stacking its 8/4 brief at tablet and phone — a documented, intended recomposition — failed it.
+    Identity is now the blueprint, its role and the regions it holds, plus a new clause: a row that
+    survives keeps how it sizes itself. Two drives, both firing.
+- **A stale picture is now a control failure (H23).** Five prototype renders outlived the ruling that
+  retired them and would have been read as pictures of the current design. Any PNG in the atlas
+  directory that the run did not produce now fails. It caught its own six on the first run — including,
+  embarrassingly, after two bugs of mine: the check ran *after* the failure report was printed, and its
+  console line asserted "all produced" without looking.
 - **The two shipping-catalogue defects: `media.full/centred` and `notes/measure`** (`docs/atlas/
   composition/src/patterns.json`, `scripts/composition-atlas.mjs`, `scripts/lib/slots.mjs`; no app
   change — `lesson-studio.html` does not reference the catalogue). Both centred their object over

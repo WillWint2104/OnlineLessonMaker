@@ -19,6 +19,15 @@
     "align: left-edge": "the rung begins at column 1 and the page margin is all on the trailing side.",
     "whyItIsNotSixColumns": "A centred six-column spine and a six-column region at the left of a twelve-column active row occupy the same columns and are not the same thing. The first declares the axis and puts its margin outside the composition; the second leaves half of an active row unexplained."
   },
+  "legibility": {
+    "_": "THE SMALLEST TYPE A STUDENT IS ASKED TO READ, AND IT MUST NOT GET SMALLER ON A NARROWER SURFACE. Raised against the supporting-illustration render, where the caption and the small text inside the object looked very small — acceptable for a decorative photograph, not for a mathematical diagram somebody has to examine.",
+    "theMeasurement": "THE TYPE DOES NOT SCALE WITH THE FIGURE. Measured across all three surfaces and every approved composition: the caption is 13.5px whether the object beside it is 368px or 956px wide, the tick labels are 11px and the reference label is 12px, and none of the three moves between desktop, tablet and phone. So what makes a caption look small beside a four-column illustration is its size RELATIVE to the object, not the composition shrinking it.",
+    "twoDifferentPROBLEMS": "AND ONLY ONE OF THEM IS TYPE. A graph is drawn by the figure engine, so its labels are real text with a computed size that can be held to a floor. An IMAGE illustration carries its small text as PIXELS inside the raster, where no floor can reach it — the `notes` renders report zero labels for exactly that reason. The second problem is an authoring and asset question, not a composition one.",
+    "captionMinPx": 13,
+    "inFigureMinPx": 11,
+    "theFloorRECORDSTodaysValue": "IT DOES NOT CLAIM TODAY'S VALUE IS BIG ENOUGH. The floor is set at what the engine currently produces so that any future change which shrinks instructional type on a narrower surface is caught the first time it renders. Whether 11px is large enough for a phone is a judgement for the maintainer, and it is not settled by this number being written down.",
+    "theEnlargedView": "ALREADY EXISTS. The figure engine renders a `tp-fig-expand` control on the surface and `verify-label-placement` drives it, so \"offer an enlarged view when necessary\" is a capability the product already has rather than one this pass has to add."
+  },
   "soloLadder": {
     "_": "THE APPROVED SPAN POSITIONS FOR A ROW HOLDING ONE REGION. Design-system positions, not measurements: no 683px, no 717px, no 58% occupancy. `spine` resolves to the blueprint's own spine span.",
     "desktop": {
@@ -367,8 +376,8 @@
       "blueprints": {
         "notes-inset": {
           "role": "supporting",
-          "title": "notes with an upright illustration — `inset` 4 on the reading's own left edge",
-          "why": "THE DEFAULT PAGE, AND ONE AXIS FOR ALL OF IT. The brief pairs with the key ideas beside it, the reading and the examples return to the measure, and the illustration takes the `inset` rung that `supporting` approves for an upright object — on the SAME LEFT EDGE as everything else. The shipping subdesign centres it instead, which is the defect recorded below.",
+          "title": "notes with an upright illustration — `inset` 4 centred WITHIN the reading spine",
+          "why": "THE DEFAULT PAGE. The brief pairs with the key ideas beside it, the reading and the examples return to the measure, and the illustration takes the `inset` rung that `supporting` approves for an upright object — centred INSIDE the eight-column reading it supports, columns 3-6. Subordinate to the prose without being stranded against the page edge or claiming a page-level media stage it has not earned. APPROVED FROM THE PROTOTYPE after the two alignment systems were ruled. The shipping subdesign centres it on the PAGE instead, which is the defect recorded below.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -427,7 +436,8 @@
                 "vertical": "hug",
                 "region": "illustration",
                 "gapAfter": "normal",
-                "media": true
+                "media": true,
+                "origin": "within-reading"
               },
               {
                 "id": "examples",
@@ -621,8 +631,8 @@
         },
         "notes-aside": {
           "role": "supporting",
-          "title": "notes with a wider illustration — `narrow` 6, same left edge",
-          "why": "THE SAME PAGE FOR AN OBJECT THAT IS WIDER THAN IT IS TALL. Four columns would make a landscape or panoramic illustration a sliver, so `supporting` approves six for those classes — still visibly narrower than the 760px reading it supports, which is what keeps it subordinate.",
+          "title": "notes with a wider illustration — `narrow` 6, centred within the reading spine",
+          "why": "THE SAME PAGE FOR AN OBJECT THAT IS WIDER THAN IT IS TALL. Four columns would make a landscape or panoramic illustration a sliver, so `supporting` approves six for those classes — still visibly narrower than the 760px reading it supports, which is what keeps it subordinate. It is centred within the reading for the same reason `notes-inset` is, and it CHANGED HERE TOO rather than being left behind: the ruling is about what a supporting illustration IS, not about one rung. Rendered alongside so the wider case is examined rather than assumed.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -681,7 +691,8 @@
                 "vertical": "hug",
                 "region": "illustration",
                 "gapAfter": "normal",
-                "media": true
+                "media": true,
+                "origin": "within-reading"
               },
               {
                 "id": "examples",
@@ -906,179 +917,12 @@
           }
         }
       },
-      "candidates": {
-        "notes-within-reading": {
-          "role": "supporting",
-          "notFrozen": true,
-          "title": "THE REVISED SUPPORTING ILLUSTRATION — `inset` 4 centred WITHIN the reading spine",
-          "why": "SUBORDINATE WITHOUT BEING STRANDED. Four columns hard against the page's left edge lined up with the prose and looked abandoned, with half the page doing nothing beside it. Four columns centred on the PAGE would claim a media stage a supporting object has not earned. Centred inside the eight-column reading spine is neither: the object sits in the middle of the text it supports, columns 3-6, visibly smaller than the reading and visibly placed on purpose.",
-          "spine": {
-            "desktop": {
-              "align": "left-edge",
-              "span": 8
-            }
-          },
-          "rows": {
-            "desktop": [
-              {
-                "id": "brief",
-                "horizontal": {
-                  "mode": "paired",
-                  "split": "8/4",
-                  "regions": [
-                    "intro",
-                    "support"
-                  ],
-                  "origin": "top",
-                  "imbalanceMax": 180,
-                  "pairReason": "an explanation beside the key ideas it establishes"
-                },
-                "vertical": "hug",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "reading",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "reading",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "illustration",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "inset"
-                  ],
-                  "preferred": "inset"
-                },
-                "vertical": "hug",
-                "region": "illustration",
-                "gapAfter": "normal",
-                "media": true,
-                "origin": "within-reading"
-              },
-              {
-                "id": "examples",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "examples",
-                "gapAfter": "section"
-              },
-              {
-                "id": "synthesis",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "synthesis"
-              }
-            ]
-          }
-        },
-        "notes-page-centred-6": {
-          "role": "supporting",
-          "notFrozen": true,
-          "title": "THE PREVIOUS ARRANGEMENT — `narrow` 6 centred on the PAGE, for comparison",
-          "why": "WHAT THE CATALOGUE DID BEFORE STEP 1, RENDERED BESIDE THE REVISION SO THE TWO CAN BE JUDGED AGAINST EACH OTHER. Six columns centred on the twelve-column page: columns 4-9, which is a MEDIA STAGE, over prose anchored at column 1. It is outside the approved span family for supporting portrait media (which approves `inset` alone), so it is reachable only as a candidate and `select` cannot name it.",
-          "spine": {
-            "desktop": {
-              "align": "left-edge",
-              "span": 8
-            }
-          },
-          "rows": {
-            "desktop": [
-              {
-                "id": "brief",
-                "horizontal": {
-                  "mode": "paired",
-                  "split": "8/4",
-                  "regions": [
-                    "intro",
-                    "support"
-                  ],
-                  "origin": "top",
-                  "imbalanceMax": 180,
-                  "pairReason": "an explanation beside the key ideas it establishes"
-                },
-                "vertical": "hug",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "reading",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "reading",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "illustration",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "narrow"
-                  ],
-                  "preferred": "narrow"
-                },
-                "vertical": "hug",
-                "region": "illustration",
-                "gapAfter": "normal",
-                "media": true,
-                "origin": "stage"
-              },
-              {
-                "id": "examples",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "examples",
-                "gapAfter": "section"
-              },
-              {
-                "id": "synthesis",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "synthesis"
-              }
-            ]
-          }
-        }
-      },
       "withdrawn": {
+        "page-centred-6": {
+          "_": "THE PRE-STEP-1 ARRANGEMENT: six columns centred on the twelve-column PAGE (4-9) over prose anchored at column 1. Rendered beside the revision so the two could be judged against each other rather than described.",
+          "whyItIsRefused": "TWO REASONS, AND THE SECOND IS INDEPENDENT OF THE ARGUMENT. It claims a page-level MEDIA STAGE that a supporting object has not earned — the illustration is subordinate to the prose and a stage says the opposite. It is also outside the approved span family for supporting portrait media, which approves `inset` alone, so `select` could never name it. And it fails H6 on its own terms: a `contain` object painted 564px wide where its authored presentation width is 420px.",
+          "theFix": "`notes-inset`, which now centres the illustration WITHIN the eight-column reading spine (columns 3-6) — subordinate without being stranded. Approved from the prototype."
+        },
         "measure-centred-illustration": {
           "_": "THE SHIPPING `notes/measure` SUBDESIGN, AND IT IS THE SECOND INSTANCE OF THE SAME DEFECT. Its areas run intro 1–8 beside support 9–12, reading 1–8, ILLUSTRATION 4–9, examples 1–8, synthesis 1–8. Every prose region is anchored to the left edge and the illustration alone is CENTRED on the twelve-column grid, so the page has two alignment origins.",
           "sameAs": "`media.full/centred` does exactly this with its media. Two patterns in the shipping catalogue independently centre their object over left-anchored prose, which suggests it was a habit rather than a decision.",
@@ -1467,9 +1311,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "expanded"
+                    "wide"
                   ],
-                  "preferred": "expanded"
+                  "preferred": "wide"
                 },
                 "vertical": "hug",
                 "region": "media",
@@ -2761,8 +2605,8 @@
         },
         "plate-wide": {
           "role": "primary",
-          "title": "the upright plate — media at `wide`, still crossing the measure",
-          "why": "A PORTRAIT OR NEAR-SQUARE OBJECT STILL CROSSES THE MEASURE, but not by every column: ten columns is 956px against a 760px reading, so the plane is unmistakably the page without the height that twelve would buy — 1152x1469 measured for a portrait plane. Same left edge, same one axis, a shorter break-out.",
+          "title": "the upright plate — media at `wide` on a centred MEDIA STAGE, still crossing the measure",
+          "why": "A PORTRAIT OR NEAR-SQUARE OBJECT STILL CROSSES THE MEASURE, but not by every column: ten columns is 956px against a 760px reading, so the plane is unmistakably the page without the height that twelve would buy. It sits on a CENTRED MEDIA STAGE and the reading returns to its own left edge beneath — two named regions doing different jobs, not a mixed axis. Anchoring the plate to the reading's left edge instead was structurally legal and visibly worse: it left an obvious rail of nothing down the right and made a standalone object look unfinished rather than staged. APPROVED FROM THE PROTOTYPE. The width is unchanged and still comes only from role × geometry — the stage decides where the object sits, never how wide it is. Measured 956x1234 for the portrait plane, 1.37 diagnostic viewports: prominence bought with height, which is the right trade when the object IS the page and the wrong one when it merely illustrates the prose. That is why `visual.explanation` keeps a narrower explanatory portrait rather than promoting it here.",
           "spine": {
             "desktop": {
               "align": "left-edge",
@@ -2791,7 +2635,8 @@
                 "vertical": "hug",
                 "region": "media",
                 "gapAfter": "section",
-                "media": true
+                "media": true,
+                "origin": "stage"
               },
               {
                 "id": "interpretation",
@@ -2825,9 +2670,9 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "full"
+                    "wide"
                   ],
-                  "preferred": "full"
+                  "preferred": "wide"
                 },
                 "vertical": "hug",
                 "region": "media",
@@ -2933,121 +2778,18 @@
           }
         }
       },
-      "candidates": {
-        "plate-expanded-stage": {
-          "role": "primary",
-          "notFrozen": true,
-          "title": "THE UPRIGHT PLATE AT `expanded` 8 — the narrow end of the span comparison",
-          "why": "THE SAME CENTRED STAGE, TWO RUNGS NARROWER. Ten columns fixed the horizontal imbalance and exposed a second effect: a portrait plane preserves its geometry, so span buys height, and the object began to dominate the page vertically. This is the narrow end of the comparison — 760px, which is also exactly the reading measure, so the stage and the prose beneath it are the SAME WIDTH on two different axes. Rendered to be judged as a finished page, not to be resolved by a rule: `expanded` is outside the frozen `media.portrait.primary` family (`wide`), so `select` cannot name it and it is reachable only as a candidate.",
-          "spine": {
-            "desktop": {
-              "align": "left-edge",
-              "span": 8
-            }
-          },
-          "rows": {
-            "desktop": [
-              {
-                "id": "media",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "expanded"
-                  ],
-                  "preferred": "expanded"
-                },
-                "vertical": "hug",
-                "region": "media",
-                "gapAfter": "section",
-                "media": true,
-                "origin": "stage"
-              },
-              {
-                "id": "interpretation",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "interpretation",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "support",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "narrow"
-                  ],
-                  "preferred": "narrow"
-                },
-                "vertical": "hug",
-                "region": "support"
-              }
-            ]
-          }
-        },
-        "plate-wide-stage": {
-          "role": "primary",
-          "notFrozen": true,
-          "title": "THE REVISED UPRIGHT PLATE — `wide` 10 on a centred MEDIA STAGE",
-          "why": "THE SAME TEN COLUMNS, CENTRED INSTEAD OF START-ALIGNED. Anchoring the plate to the reading's left edge was structurally legal and visibly worse: it put an obvious rail of nothing down the right of the page and made a standalone object look accidentally unfinished rather than staged. The width is unchanged and still comes only from role x geometry — the stage decides where the object sits, never how wide it is. The reading returns to its own left edge beneath, which is not a mixed axis: a centred stage followed by start-aligned commentary is two named regions doing different jobs.",
-          "spine": {
-            "desktop": {
-              "align": "left-edge",
-              "span": 8
-            }
-          },
-          "rows": {
-            "desktop": [
-              {
-                "id": "media",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "wide"
-                  ],
-                  "preferred": "wide"
-                },
-                "vertical": "hug",
-                "region": "media",
-                "gapAfter": "section",
-                "media": true,
-                "origin": "stage"
-              },
-              {
-                "id": "interpretation",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "interpretation",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "support",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "narrow"
-                  ],
-                  "preferred": "narrow"
-                },
-                "vertical": "hug",
-                "region": "support"
-              }
-            ]
-          }
-        }
-      },
       "withdrawn": {
+        "expanded-8-primary-stage": {
+          "_": "THE NARROW END OF THE PORTRAIT-STAGE COMPARISON, RENDERED AND THEN DECLINED. Eight columns on a centred stage, 760x998 for the portrait plane against 956x1234 at ten — 1.11 diagnostic viewports instead of 1.37.",
+          "whyItWasRendered": "Centring the stage removed the horizontal imbalance and exposed a second effect: a portrait plane preserves its geometry, so span buys HEIGHT, and at ten columns the object had become tall enough to dominate the page. Eight, nine and ten were rendered side by side with identical content so the choice could be made from the pages rather than from a rule.",
+          "theRuling": "BOTH SPANS ARE APPROVED — for DIFFERENT PRESENTATION ROLES, in different patterns. Ten columns stays the primary portrait, here and in `visual.explanation/stage-primary`, because prominence is the point when the object IS the page and the vertical footprint is the price of it. Eight columns is the EXPLANATORY portrait, and it already exists: `visual.explanation/spine-narrow` renders at exactly 760x998. So there is nothing for this blueprint to be. `media.full` admits `primary` alone — its defining property is the plane crossing the reading measure — and an eight-column primary would contradict the ruling it came from. It is withdrawn rather than kept as a candidate nobody can select.",
+          "theRealFinding": "THE TWO APPROVED COMPOSITIONS ALREADY EXISTED AND NEITHER MOVED. The comparison did not produce a new blueprint; it produced a reason to keep both of the ones already frozen, and a rule against promoting every portrait graph to the wider one."
+        },
+        "nine-column-stage": {
+          "_": "NINE COLUMNS, 858px, RENDERED OFF THE GRID AND REFUSED. The middle of the same comparison.",
+          "whyItCannotExist": "A centred stage needs a symmetric page margin, and on a twelve-column grid (12 - 9) is odd — so a nine-column row lands a HALF COLUMN (49px) off the grid on both sides. `layout` already refused it, in the same code that defined the two alignment systems; the refusal was not written for this question. The render exists only because \"what does 858px look like\" deserved an answer, and it fails H1 and H2 for exactly the right reason: the row declares ten columns and paints nine, leaving columns 2 and 11 declared and empty.",
+          "theRuling": "NO NINE-COLUMN RUNG. Eight and ten already serve distinct instructional purposes and nothing in the renders argued for a third. Adopting nine would have been a decision to change the GRID, not to pick a rung."
+        },
         "centred-two-origins": {
           "_": "THE SHIPPING `media.full/centred` SUBDESIGN, AND IT CANNOT BE WRITTEN DOWN HERE AT ALL. Its areas put the media across columns 3–10 — centred on the twelve-column grid — and the interpretation across 1–8 and the support across 1–6, anchored to the LEFT EDGE. That is two alignment origins on one surface.",
           "whyItIsNotRendered": "IT IS RECORDED RATHER THAN DRAWN, BECAUSE DRAWING IT WOULD HAVE TO CHEAT. A blueprint declares ONE spine per surface and `soloCols` resolves a rung against it: on a centred axis an eight-column row is columns 3–10, and there is no rung on a centred axis that resolves to 1–8. So the composition is INEXPRESSIBLE under the contract — which is the finding. A first attempt did render it, by writing the prose rows as `paired` with a null sibling to force them left; that fired H2 and H4, and both were artefacts of the encoding rather than evidence about the design. A counterexample that fails for the wrong reason proves nothing, so it was removed.",
