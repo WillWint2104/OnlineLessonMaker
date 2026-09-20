@@ -642,6 +642,22 @@ renderer is referenced.
   **Next: Stage 4 — block wiring** (plug the engines into the containers). Deferred within geometry: authored
   circles/arcs, equal-length ticks and parallel arrows, **reflex-angle drawing** (a reflex interior angle is
   currently reported, not measured), and side-label units.
+- **Composition — the slot gives the width, and `mediaSize` is retired.** The lesson renderer
+  (`scripts/lesson-render.mjs`) used to size figures from an authored `mediaSize` band and painted the
+  quadratics graphs at 683px and 1000px, widths the 12-column master grid does not have. A `visual`
+  node now authors a `presentationRole`, and **role × geometry class × surface** selects one approved
+  subdesign out of `docs/atlas/composition/src/patterns.json`, whose `slotSpan` is arithmetic on the
+  grid. The catalogue (`scripts/composition-atlas.mjs`) and the lesson renderer read one table and
+  give the same answer; `scripts/lesson-sheet.mjs` puts both halves on one sheet per surface so the
+  agreement is visible. `mediaSize` survives only in `scripts/atlas-worked-examples.mjs`, which is the
+  older atlas and does not feed the lesson.
+  **The one named gap:** the `notes` pattern's supporting-illustration composition (region = the
+  reading measure, the compact card centred inside it) is approved and proven in the Composition Proof
+  Atlas, but no real page uses it, because the shipping renderer has no `image` block — `block()` sends
+  every media block through the graph solver, and the `contain` branch is designed and unexercised
+  (`scripts/composition-atlas.mjs`, the coverage note). Wiring it needs a decision the slot contract
+  does not yet carry: **how wide a contained object is**, given that the region's span is the measure
+  and the object's is not. That is the maintainer's call, not the renderer's.
 - ~~**Vendor fonts + model‑viewer** (firewall hardening)~~ — **DONE** (fonts base64‑inlined;
   model‑viewer + sample GLB same‑origin under `assets/vendor/`; validator hard‑fails on app
   third‑party hosts). Follow‑up: copy the vendor file into `/lessons/assets/vendor/` for any

@@ -308,7 +308,8 @@
         {
           "block": "graph",
           "figure": "symmetry",
-          "caption": "*y* = *x*^2 with the line *y* = 9, meeting it at (−3, 9) and (3, 9)."
+          "caption": "*y* = *x*^2 with the line *y* = 9, meeting it at (−3, 9) and (3, 9).",
+          "presentationRole": "explanatory"
         }
       ],
       "interpretation": [
@@ -359,7 +360,8 @@
         {
           "block": "graph",
           "figure": "landscape",
-          "caption": "*y* = *x*^2 / 12 with the line *y* = 3, meeting it at (−6, 3) and (6, 3)."
+          "caption": "*y* = *x*^2 / 12 with the line *y* = 3, meeting it at (−6, 3) and (6, 3).",
+          "presentationRole": "explanatory"
         }
       ],
       "interpretation": [
@@ -407,7 +409,8 @@
         {
           "block": "graph",
           "figure": "symmetry",
-          "caption": "One plane belonging to both cases."
+          "caption": "One plane belonging to both cases.",
+          "presentationRole": "explanatory"
         }
       ],
       "interpretation": [
@@ -447,7 +450,8 @@
         {
           "block": "graph",
           "figure": "landscape",
-          "caption": "*y* = *x*^2 / 12 across the full grid — twelve columns, 1152px."
+          "caption": "*y* = *x*^2 / 12 across the full grid — twelve columns, 1152px.",
+          "presentationRole": "primary"
         }
       ],
       "interpretation": [
@@ -476,7 +480,8 @@
           {
             "block": "graph",
             "figure": "symmetry",
-            "caption": "A portrait plane in the same pattern — the centred subdesign, not a 1400px-tall figure."
+            "caption": "A portrait plane in the same pattern — the centred subdesign, not a 1400px-tall figure.",
+            "presentationRole": "primary"
           }
         ]
       }
@@ -548,7 +553,8 @@
               "at": 75,
               "value": "±12"
             }
-          ]
+          ],
+          "presentationRole": "primary"
         }
       ]
     },
@@ -750,7 +756,8 @@
         {
           "block": "graph",
           "figure": "squareish",
-          "caption": "The plane you are reproducing."
+          "caption": "The plane you are reproducing.",
+          "presentationRole": "supporting"
         }
       ]
     },
@@ -778,7 +785,8 @@
         {
           "block": "graph",
           "figure": "squareish",
-          "caption": "*y* = *x*^2 over a wider window, with the line *y* = 9."
+          "caption": "*y* = *x*^2 over a wider window, with the line *y* = 9.",
+          "presentationRole": "explanatory"
         }
       ],
       "interpretation": [
@@ -1104,7 +1112,8 @@
                       {
                         "block": "graph",
                         "figure": "symmetry",
-                        "caption": "*y* = *x*^2 with the line *y* = 9, meeting it at (−3, 9) and (3, 9)."
+                        "caption": "*y* = *x*^2 with the line *y* = 9, meeting it at (−3, 9) and (3, 9).",
+                        "presentationRole": "explanatory"
                       }
                     ],
                     "interpretation": [
@@ -1146,7 +1155,8 @@
                 {
                   "block": "graph",
                   "figure": "landscape",
-                  "caption": "*y* = *x*^2 / 12 with the line *y* = 3, meeting it at (−6, 3) and (6, 3)."
+                  "caption": "*y* = *x*^2 / 12 with the line *y* = 3, meeting it at (−6, 3) and (6, 3).",
+                  "presentationRole": "explanatory"
                 }
               ],
               "interpretation": [

@@ -16,24 +16,26 @@
 // THE ONE RULE: the author chooses the instructional structure; the renderer chooses only the
 // prescribed responsive state and the media subdesign belonging to that structure.
 //
-// A FIGURE IS AUTHORED AT A SEMANTIC SIZE, and the chain is five steps, not four:
+// A FIGURE IS AUTHORED AS A PRESENTATION ROLE, AND THE SLOT GIVES IT ITS WIDTH:
 //
-//     media type -> mediaSize (authored) -> geometry class -> approved subdesign -> responsive state
+//     media type -> presentationRole (authored) -> geometry class -> approved subdesign -> slot width
 //
-// `mediaSize` says how much instructional importance the figure deserves; geometry says what shape
-// that importance must keep. Neither may answer the other's question, and the size is REQUIRED — a
-// default would be the renderer deciding how important the author's figure is.
+// `presentationRole` says what the object is FOR — explanatory, primary, supporting; geometry says
+// what shape the plane must keep. Neither may answer the other's question, and the role is REQUIRED:
+// a default would be the renderer deciding what the author's figure is for.
 //
-// The derived `visual.side` switch point is a RESPONSIVE VIABILITY CALCULATION and nothing else:
+// THE WIDTH IS NOT THE FIGURE'S TO CHOOSE. Role × geometry class × surface selects one approved
+// subdesign out of docs/atlas/composition/src/patterns.json, that subdesign declares a `slotSpan`,
+// and the span is arithmetic on the master grid. The plane is then asked one question and one only:
+// inside THIS width, at equal unit scale, what is the faithful rendering? Its height follows and the
+// page grows. This replaced an authored `mediaSize` band, under which this lesson's two graphs
+// painted at 683px and 1000px — widths the master grid does not have, because a band is a range and
+// a grid is a ladder. The catalogue and this renderer now read one table.
 //
-//     side is viable when   availableWidth ≥ figurePreferredWidth + gap + minInterpretationWidth
-//
-// `figurePreferredWidth` comes only from the media-geometry contract (scripts/lib/figure-geometry.mjs,
-// one owner); `gap` and `minInterpretation` are fixed design-system tokens. Prose length, rendered
-// height, step count, occupancy and dead space are not inputs — and a control proves it by tripling
-// the prose and doubling the steps and asserting every prescribed state is unchanged. Because the
-// comparison is pure width, a second control drives a page narrow and back and asserts the wide
-// state is identical to a fresh one, carrying no residue.
+// Prose length, rendered height, step count, occupancy and dead space are not inputs — and a control
+// proves it by tripling the prose and doubling the steps and asserting every prescribed state AND
+// every realised plane is unchanged. A second control drives a page narrow and back and asserts the
+// wide state is identical to a fresh one, carrying no residue.
 //
 // The app is not changed by this script and does not read anything under docs/atlas/.
 import http from 'node:http';
@@ -41,7 +43,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
-import { openFigurePage, measureFigures } from './lib/figure-geometry.mjs';
+import { openFigurePage, makePainter, makeSolvers, square, classOf } from './lib/figure-geometry.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.join(root, 'docs/atlas/worked-examples/src');
@@ -56,6 +58,35 @@ const LESSON_FILE = path.join(LESSON_DIR, 'quadratics.lesson.json');
 const LESSON = JSON.parse(fs.readFileSync(LESSON_FILE, 'utf8'));
 const M = A.measures;
 
+/* ── THE MASTER GRID AND THE APPROVED SUBDESIGNS, read rather than repeated ───────────────────────
+   A media slot's width is arithmetic on the grid, and which slot a figure gets is the catalogue's
+   answer, not this script's. Both files are read here so that the lesson and the composition atlas
+   cannot arrive at two different widths for one figure. */
+const COMP_SRC = path.join(root, 'docs/atlas/composition/src');
+const GRID = JSON.parse(fs.readFileSync(path.join(COMP_SRC, 'grid.json'), 'utf8'));
+const PATTERNS = JSON.parse(fs.readFileSync(path.join(COMP_SRC, 'patterns.json'), 'utf8'));
+const colW = (s) => (GRID.surfaces[s].width - (GRID.surfaces[s].columns - 1) * GRID.surfaces[s].gutter) / GRID.surfaces[s].columns;
+const span = (s, n) => n * colW(s) + (n - 1) * GRID.surfaces[s].gutter;
+/* the atlas calls the handset surface `narrow` and the grid calls it `phone`; one mapping, here */
+const GRID_SURFACE = { desktop: 'desktop', tablet: 'tablet', narrow: 'phone' };
+/* CONTROL · THE TWO FILES DESCRIBE THE SAME SURFACES. The lesson renderer sets `--at-surface` from
+   atlas.json and takes slot widths from grid.json; if those two ever disagreed about how wide a
+   surface is, every span computed here would be arithmetic on a page that does not exist. */
+for (const [sName, gName] of Object.entries(GRID_SURFACE)) {
+  if (!GRID.surfaces[gName]) throw new Error(`the master grid has no "${gName}" surface`);
+  if (GRID.surfaces[gName].width !== A.surfaces[sName])
+    throw new Error(`the grid's ${gName} surface is ${GRID.surfaces[gName].width}px and the atlas's `
+      + `${sName} surface is ${A.surfaces[sName]}px — a slot span would be arithmetic on the wrong page`);
+}
+/* THE ONE PATTERN A `visual` NODE IS: a primary visual and the reading of it. */
+const VISUAL = PATTERNS['visual.explanation'];
+if (!VISUAL) throw new Error('the composition catalogue has no `visual.explanation` pattern');
+const ROLES = [...new Set(VISUAL.subdesigns.flatMap((d) => d.roles || []))];
+/* A SUBDESIGN'S ARRANGEMENT IS READ OFF ITS OWN AREAS, never named a second time here: media and
+   the reading on one row is `side`, on separate rows it is `down`. Naming it twice is how a
+   catalogue and a renderer come to disagree about a page they both claim to describe. */
+const arrangementOf = (d) => d.areas.some((r) => /\bmedia\b/.test(r) && /\binterpretation\b/.test(r)) ? 'side' : 'down';
+
 /* ── THE FROZEN VOCABULARY, read out of the grammar rather than repeated here ─────────────────── */
 const COMPOSITIONS = new Set(Object.entries(A.compositions)
   .filter(([k, v]) => k !== '_' && v && v.authored).map(([, v]) => v.authored));
@@ -63,7 +94,6 @@ const COLLECTION_MODES = new Set(Object.keys(A.collections)
   .filter((k) => k.startsWith('collection.')).map((k) => k.slice('collection.'.length)));
 const VIEWS_MODES = new Set(Object.keys(A.collections)
   .filter((k) => k.startsWith('views.')).map((k) => k.slice('views.'.length)));
-const SIZES = Object.keys(A.mediaSize.classes);
 
 class MissingCapability extends Error {
   constructor(what, asked, available) {
@@ -138,15 +168,17 @@ function composition(node, figs) {
         + steps(k.steps, 'Worked solution') + answer(k.answer) + `</section>`).join('')
       + `</div>` + synthesis(node.synthesis) + `</article>`;
   if (c === 'visual') {
-    if (!node.mediaSize) throw new MissingCapability('a mediaSize for the figure ' + node.figure,
-      '(none authored)', SIZES);
-    if (!SIZES.includes(node.mediaSize)) throw new MissingCapability('a mediaSize', node.mediaSize, SIZES);
-    const req = `${node.figure}@${node.mediaSize}`;
+    /* THE ROLE IS REQUIRED AND IS NEVER INFERRED. It says what the object is FOR; the catalogue
+       turns that, with the plane's own geometry class and the surface, into one approved slot. */
+    if (!node.presentationRole) throw new MissingCapability('a presentationRole for the figure ' + node.figure,
+      '(none authored)', ROLES);
+    if (!ROLES.includes(node.presentationRole)) throw new MissingCapability('a presentationRole', node.presentationRole, ROLES);
+    const req = `${node.figure}@${node.presentationRole}`;
     const f = figs[req];
     if (!f) throw new MissingCapability('a figure', node.figure, [...new Set(Object.values(figs).map((x) => x.key))]);
     return `<div data-tpl="visual" data-fig="${esc(req)}">`
       + (node.title ? `<h3 data-slot="title">${t(node.title)}</h3>` : '')
-      + `<div data-slot="figure"><p class="at-lab">${esc(node.label || 'Graph')}</p>{{FIG:${req}}}</div>`
+      + `<div data-slot="figure" data-fig-slot="${esc(req)}"><p class="at-lab">${esc(node.label || 'Graph')}</p>{{FIG:${req}}}</div>`
       + `<div data-slot="interpretation"><p class="at-lab">${esc(node.reading.label)}</p>`
       + node.reading.paragraphs.map(para).join('') + `</div></div>`;
   }
@@ -248,12 +280,96 @@ const APP_CSS = await (async () => {
 if (!/\.mx-figskin\.tp-slide/.test(APP_CSS)) throw new Error('the lifted stylesheet is missing the figure token mapping');
 
 const figPage = await openFigurePage(browser, base);
-/* a REQUEST is a figure at an authored size, because the same plane at two sizes is two figures as
-   far as the media contract is concerned — and one of them is not the other scaled in a wrapper */
+/* a REQUEST is a figure in an authored ROLE, because the same plane presented two ways is two
+   figures as far as the composition is concerned — and one of them is not the other in a wrapper */
 const wantFigs = new Set([...JSON.stringify(LESSON)
-  .matchAll(/"figure":\s*"([a-z0-9-]+)",\s*"mediaSize":\s*"([a-z]+)"/g)].map((m) => `${m[1]}@${m[2]}`));
-console.log('\nmedia size and media geometry — the figures this lesson authors');
-const FIG = await measureFigures({ figPage, A, FIGS, want: wantFigs, log: console.log });
+  .matchAll(/"figure":\s*"([a-z0-9-]+)",\s*"presentationRole":\s*"([a-z]+)"/g)].map((m) => `${m[1]}@${m[2]}`));
+
+/* ROLE × GEOMETRY CLASS × SURFACE → ONE APPROVED SUBDESIGN. Exactly the catalogue's selection, with
+   no fallback: a role the pattern has not approved for this surface and aspect is reported, because
+   choosing the nearest one would be the renderer deciding what the author's figure is for. */
+function pickSubdesign(gs, aspect, role) {
+  const m = VISUAL.subdesigns.filter((d) => d.surface === gs && (!d.aspects || d.aspects.includes(aspect))
+    && (!d.roles || d.roles.includes(role)));
+  if (!m.length) {
+    const byAspect = VISUAL.subdesigns.filter((d) => d.surface === gs && (!d.aspects || d.aspects.includes(aspect)));
+    throw new MissingCapability(`an approved ${gs} subdesign for a ${aspect} plane presented as \`${role}\``,
+      `${gs}/${aspect}/${role}`,
+      byAspect.length ? byAspect.map((d) => `${d.id}[${(d.roles || ['any']).join('|')}]`) : ['nothing for this aspect']);
+  }
+  /* SEVERAL APPROVED ANSWERS ARE ORDERED BY SPAN, SMALLEST FIRST — the catalogue's own rule. The
+     narrowest approved slot a figure can render faithfully in is the one it gets; a wider one is a
+     promotion the figure had to earn by not fitting. */
+  return m.slice().sort((a, b) => (a.slotSpan || 0) - (b.slotSpan || 0));
+}
+
+/* THE PLANE IS ASKED ONE QUESTION: inside THIS width, at equal unit scale, what is the faithful
+   rendering? It has no way to express a width it would prefer, and nothing here reads prose. */
+async function measureLessonFigures(want) {
+  const paint = makePainter(figPage);
+  const { boxForWidth } = makeSolvers(paint);
+  const out = {};
+  for (const req of want) {
+    const [key, role] = String(req).split('@');
+    const f = FIGS[key];
+    if (!f) throw new MissingCapability('a figure', key, Object.keys(FIGS).filter((k) => k[0] !== '_'));
+    const d = f.figure.domain, xs = d.xMax - d.xMin, ys = d.yMax - d.yMin;
+    const cls = classOf(ys / xs, A.mediaGeometry.bands);
+    const box = {}, sub = {}, chosen = {}, at = {};
+    for (const sName of Object.keys(A.surfaces)) {
+      const gs = GRID_SURFACE[sName];
+      const ladder = pickSubdesign(gs, cls, role);
+      let got = null, tried = [];
+      for (const cand of ladder) {
+        const w = Math.round(span(gs, cand.slotSpan));
+        tried.push(`${cand.id} ${w}px`);
+        const r = await boxForWidth(key, f.figure, w);
+        if (r && square(r.box)) { got = { d: cand, w, box: r.box }; break; }
+      }
+      /* NO APPROVED SPAN RENDERS THIS PLANE FAITHFULLY. Reported, never accommodated: widening the
+         catalogue to fit one figure is the system making the lesson fit rather than the reverse. */
+      if (!got) throw new Error(`${req}: no approved ${gs} span paints this domain at equal unit `
+        + `scale (tried ${tried.join(', ')})`);
+      box[sName] = got.box; sub[sName] = arrangementOf(got.d); chosen[sName] = got.d; at[sName] = got.w;
+    }
+    out[req] = { key, role, cls, sub, chosen, at, box,
+      resolved: Object.fromEntries(Object.keys(sub).map((k) => [k, 'visual.' + sub[k]])) };
+  }
+  return out;
+}
+
+console.log('\npresentation role and media geometry — the figures this lesson authors');
+const FIG = await measureLessonFigures(wantFigs);
+for (const [req, f] of Object.entries(FIG))
+  console.log(`  ${req.padEnd(22)} ${f.cls.padEnd(9)} → `
+    + Object.keys(A.surfaces).map((n) => `${n} ${f.chosen[n].id} span ${f.chosen[n].slotSpan} = `
+      + `${f.at[n]}px → ${f.box[n].w}×${f.box[n].h}`).join(' · '));
+
+/* CONTROL · EVERY SLOT WIDTH IS A RUNG OF THE MASTER GRID. A width that is nobody's span is how a
+   683px graph reached a 1152px page: it satisfied a band and belonged to no column. */
+for (const [req, f] of Object.entries(FIG)) for (const sName of Object.keys(A.surfaces)) {
+  const gs = GRID_SURFACE[sName], g = GRID.surfaces[gs];
+  const rungs = [];
+  for (let n = 1; n <= g.columns; n++) rungs.push(Math.round(span(gs, n)));
+  if (!rungs.includes(f.box[sName].w))
+    throw new Error(`${req} paints ${f.box[sName].w}px on the ${gs} surface — the grid's spans are `
+      + `${rungs.join(', ')}, and a width that is nobody's span belongs to no column`);
+}
+
+/* CONTROL · THE GENERATED SLOT CSS IS FOR SLOTS THAT EXIST. Every subdesign this lesson actually
+   selects must be one the stylesheet below emits a rule for, or a centred stage would silently be
+   a left-aligned one. */
+const SLOT_CSS = (sName) => {
+  const gs = GRID_SURFACE[sName], out = [];
+  for (const d of VISUAL.subdesigns) {
+    if (d.surface !== gs || !d.slotSpan) continue;
+    const w = Math.round(span(gs, d.slotSpan));
+    /* A `center` anchor is a STAGE: the block is exactly its slot and sits in the middle of the
+       page. `full` needs no rule — the slot already is the surface. */
+    if (d.slotAnchor === 'center') out.push(`[data-tpl="visual"][data-subdesign="${d.id}"]{width:${w}px;margin-inline:auto;}`);
+  }
+  return out.join('\n');
+};
 
 const tokens = (surface, pad) => `:root{
   --at-surface:${surface}px; --at-pad:${pad}px; --at-gap:${M.gap}px;
@@ -283,17 +399,24 @@ async function shot(name, state, surfaceName, opts = {}) {
     if (box.w > surface + 1) throw new Error(`${name}: ${key} needs ${box.w}px in a ${surface}px region`);
     return skin(box.w, box.h, box.html);
   });
-  for (const key of used)
-    body = body.split(`data-fig="${key}"`).join(`data-fig="${key}" data-fig-class="${FIG[key].cls}" `
-      + `data-media-size="${FIG[key].size}" data-sub="${FIG[key].sub}"`);
+  for (const key of used) {
+    const f = FIG[key], d = f.chosen[surfaceName];
+    body = body.split(`data-fig="${key}"`).join(`data-fig="${key}" data-fig-class="${f.cls}" `
+      + `data-media-role="${f.role}" data-sub="${f.sub[surfaceName]}" data-subdesign="${d.id}" `
+      + `data-slot-span="${d.slotSpan}"`);
+    body = body.split(`data-fig-slot="${key}"`).join(`data-fig-slot="${key}" data-anchor="${d.slotAnchor}"`);
+  }
+  /* THE FIGURE NO LONGER CARRIES A SWITCH POINT. Its arrangement is the approved subdesign for THIS
+     surface, chosen before the page was built; the remaining switch points belong to compositions
+     that hold no media (`single.split`, `comparison.paired`) and are unchanged. */
   const figSwitch = {};
-  for (const key of used) figSwitch[key] = FIG[key].switchAt;
 
   const doc = `<!doctype html><html data-theme="mathematics"><head><meta charset="utf-8"><style>
 ${APP_CSS}
 </style><style>
 ${tokens(surface, pad)}
 ${CSS_KIT}
+${SLOT_CSS(surfaceName)}
 </style></head><body class="mx${surfaceName === 'desktop' ? '' : ' at-' + surfaceName}"><div class="at-page">
 <div class="at-cap"><span class="at-tpl">${esc(LESSON.lesson)} · ${surfaceName} ${surface}px · ${esc(state.key)}</span>${esc(LESSON.stage)} — rendered from lesson JSON through the frozen grammar; no fragment, no fixture.</div>
 <div class="at-surface"><h2 class="at-h2">${t(LESSON.page.title)}</h2><p class="at-sub">${t(LESSON.page.lede)}</p>
@@ -310,7 +433,7 @@ ${body}</div>
     const surf = document.querySelector('.at-surface');
     for (const el of surf.querySelectorAll('[data-tpl]')) {
       const fig = el.getAttribute('data-fig');
-      const at = fig && figSwitch[fig] != null ? figSwitch[fig] : SWITCH[el.getAttribute('data-tpl')];
+      const at = fig && figSwitch[fig] != null ? figSwitch[fig] : (fig ? null : SWITCH[el.getAttribute('data-tpl')]);
       el.setAttribute('data-state', at && surface < at ? 'narrow' : 'wide');
     }
     for (const el of surf.querySelectorAll('[data-slot="cases"]')) {
@@ -409,7 +532,24 @@ ${body}</div>
       return { region: Math.round(r.getBoundingClientRect().width), ratio,
         plane: q ? Math.round(q.getBoundingClientRect().width) : null,
         planeH: q ? Math.round(q.getBoundingClientRect().height) : null,
-        size: own && own.getAttribute('data-media-size'), cls: own && own.getAttribute('data-fig-class'),
+        role: own && own.getAttribute('data-media-role'), cls: own && own.getAttribute('data-fig-class'),
+        subdesign: own && own.getAttribute('data-subdesign'),
+        slotSpan: own && +own.getAttribute('data-slot-span'),
+        anchor: r.getAttribute('data-anchor'),
+        /* THE STAGE, AS PAINTED: how wide the composition block is and how much page is left on
+           each side of it. A `center` anchor that is not actually centred shows up here as two
+           unequal numbers, and a slot that does not fill its block shows up as `block > region`. */
+        block: own ? Math.round(own.getBoundingClientRect().width) : null,
+        ...(() => {
+          if (!own) return { freeL: null, freeR: null, page: null };
+          /* AGAINST THE CONTENT BOX OF WHATEVER HOLDS THE COMPOSITION, not its border box: the
+             surface carries the page pad and a panel may carry its own, and counting either as free
+             page would make every full-width stage look inset. */
+          const h = own.parentElement, hr = h.getBoundingClientRect(), hs = getComputedStyle(h);
+          const l = hr.left + parseFloat(hs.paddingLeft), rr = hr.right - parseFloat(hs.paddingRight);
+          const b = own.getBoundingClientRect();
+          return { freeL: Math.round(b.left - l), freeR: Math.round(rr - b.right), page: Math.round(rr - l) };
+        })(),
         fig: own && own.getAttribute('data-fig') };
     });
     const scrollers = { y: [], x: [] };
@@ -503,12 +643,32 @@ function verify(name, state, r) {
        authored size class prescribes — a band-sized box around an unchanged narrow plane would pass
        any measurement of the region and fail this one. */
     if (f.region - f.plane > 1) throw new Error(`${name}: a figure region is ${f.region}px around a ${f.plane}px plane`);
-    if (!f.size) throw new Error(`${name}: a figure is painted with no authored mediaSize`);
-    const bd = A.mediaSize.classes[f.size].bounds[r.surfaceName], av = r.surface;
-    const lo = Math.min(bd.min, av), hi = Math.min(bd.max, av);
-    if (f.plane < lo - 1 || f.plane > hi + 1)
-      throw new Error(`${name}: ${f.fig} painted ${f.plane}px wide — outside the ${f.size} band `
-        + `${lo}-${hi}px for a ${av}px surface`);
+    if (!f.role) throw new MissingCapability('a presentationRole for a painted figure', '(none)', ROLES);
+    /* CONTROL · THE PLANE IS THE SLOT, TO THE PIXEL. The subdesign declares a span, the grid turns
+       it into a width, and the painted plane is that width — not a band containing it. This is the
+       control the `mediaSize` band could not state: a band is satisfied by any width inside it, so
+       683px passed while belonging to no column. */
+    const gs = GRID_SURFACE[r.surfaceName], want = Math.round(span(gs, f.slotSpan));
+    if (Math.abs(f.plane - want) > 1)
+      throw new Error(`${name}: ${f.fig} painted ${f.plane}px in ${f.subdesign}, whose slotSpan `
+        + `${f.slotSpan} is ${want}px on the ${gs} grid`);
+    /* CONTROL · THE ANCHOR IS THE ONE THE SUBDESIGN DECLARES. `center` means centred on the page;
+       `full` means the block is the surface. Neither is inferred, and an anchor that painted as the
+       other one would leave the composition claiming an arrangement it does not have. */
+    if (f.anchor === 'center') {
+      if (Math.abs(f.freeL - f.freeR) > 1)
+        throw new Error(`${name}: ${f.fig} declares a centred stage and painted ${f.freeL}px to its `
+          + `left and ${f.freeR}px to its right`);
+      if (f.freeL < 1)
+        throw new Error(`${name}: ${f.fig} declares a centred stage and there is no page beside it — `
+          + `a centred slot that fills the surface is a full one`);
+    } else if (f.anchor === 'full') {
+      if (f.freeL > 1 || f.freeR > 1)
+        throw new Error(`${name}: ${f.fig} declares a full-width stage and painted ${f.freeL}/${f.freeR}px `
+          + `of page beside it`);
+    } else throw new Error(`${name}: ${f.fig} painted with slot anchor "${f.anchor}"`);
+    if (f.block - f.region > 1)
+      throw new Error(`${name}: ${f.fig} sits in a ${f.block}px composition block around a ${f.region}px slot`);
     if (f.ratio != null && Math.abs(f.ratio - 1) > 0.01)
       throw new Error(`${name}: a plane painted at ${f.ratio} — one x-unit and one y-unit are not the same length`);
   }
@@ -566,7 +726,8 @@ for (const state of STATES) {
     REPORT.push({ image: name, state: state.key, surface: r.surface, surfaceName: r.surfaceName,
       sideBalance: m.sideBalance, figs: m.figs,
       compositions: m.tpls, resolved: [...new Set(m.resolved)], states: m.states,
-      pageHeight: m.docH, scrollX: m.scrollers.x.length, figures: r.used.map((k) => `${k}:${FIG[k].cls}→${FIG[k].resolved}@${FIG[k].box[r.surfaceName].w}×${FIG[k].box[r.surfaceName].h}`) });
+      pageHeight: m.docH, scrollX: m.scrollers.x.length, figures: r.used.map((k) => `${k}:${FIG[k].cls}→${FIG[k].chosen[r.surfaceName].id} span `
+        + `${FIG[k].chosen[r.surfaceName].slotSpan}@${FIG[k].box[r.surfaceName].w}×${FIG[k].box[r.surfaceName].h}`) });
     console.log(`  ${name.padEnd(46)} ${String(r.surface).padStart(4)}px  page ${String(m.docH).padStart(5)}px`
       + `  ${[...new Set(m.resolved)].filter((x) => x.includes('.')).join(' ')}`
       + (m.figs.length ? '  · ' + m.figs.map((f) => `${f.fig} ${f.plane}×${f.planeH}`).join(' ') : ''));

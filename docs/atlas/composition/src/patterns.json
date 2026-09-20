@@ -92,14 +92,14 @@
           "intro intro intro intro intro intro intro .",
           "support support support support support . . .",
           "reading reading reading reading reading reading reading .",
-          "illustration illustration illustration illustration . . . .",
+          "illustration illustration illustration illustration illustration illustration illustration .",
           "examples examples examples examples examples examples examples .",
           "synthesis synthesis synthesis synthesis synthesis synthesis synthesis ."
         ],
         "notes": "Five tablet columns beside seven would set the intro at 514px — a 52-character measure. The aside drops below instead.",
-        "slotSpan": 4,
+        "slotSpan": 7,
         "slotAnchor": "start",
-        "anchorReason": "THE TABLET MEASURE IS SEVEN COLUMNS AND CANNOT HOLD A CENTRED FOUR. A row centred within the spine needs the same parity as the spine it sits in: (7 - 4) is odd, and there is no odd rung between `inset` and the measure itself to reach for. So the illustration stays on the reading's own left edge here — a recorded consequence of an odd measure, not a second opinion about alignment. Found by rendering the approved composition at every surface rather than at desktop alone."
+        "anchorReason": "THE REGION IS THE READING MEASURE AND THE OBJECT IS CENTRED INSIDE IT. A four-column illustration cannot be centred within a SEVEN-column measure on whole columns, and holding it at the reading's left edge left a rail of nothing down its right. So the region takes the measure — which is why it starts at the reading's own edge and reads as `start` — and the object keeps its authored presentation width, centred within it under `contain`. The surrounding space belongs to the named region, not to unclaimed neighbouring columns, and the visible card hugs the object so the caption sits beneath the image rather than at a wide plate's far corner. Desktop and phone are unchanged."
       },
       {
         "id": "stacked",
@@ -281,21 +281,6 @@
     ],
     "subdesigns": [
       {
-        "id": "side-6",
-        "surface": "desktop",
-        "aspects": [
-          "balanced"
-        ],
-        "selectedWhen": "desktop AND a plane about as wide as it is tall",
-        "areas": [
-          "media media media media media media interpretation interpretation interpretation interpretation interpretation interpretation",
-          "support support support support support support . . . . . ."
-        ],
-        "notes": "Six and six. The key idea sits UNDER THE FIGURE rather than under the reading: under the reading it enclosed a hole between two pieces of one column whenever the reading was short.",
-        "slotSpan": 6,
-        "slotAnchor": "paired"
-      },
-      {
         "id": "down-8",
         "surface": "desktop",
         "aspects": [
@@ -311,7 +296,10 @@
         ],
         "notes": "A CENTRED SPINE, and the only one in the catalogue. Eight columns of media with two free on each side, the reading beneath at the same eight, the key idea centred at six. Left-inset, the same 760px plane sat against the left edge of a 1152px page with 392px beside it that had no role — free columns beside PROSE are reading margin, free columns beside MEDIA are not, because media has no measure to be bound by. Centring is how an 8-column media block stops being stranded.",
         "slotSpan": 8,
-        "slotAnchor": "center"
+        "slotAnchor": "center",
+        "roles": [
+          "explanatory"
+        ]
       },
       {
         "id": "down-12",
@@ -330,7 +318,10 @@
         ],
         "notes": "The full grid. A plane three times wider than it is tall gains real reach from the width; the reading returns to the measure beneath, so the two deliberately do not share a right edge.",
         "slotSpan": 12,
-        "slotAnchor": "full"
+        "slotAnchor": "full",
+        "roles": [
+          "explanatory"
+        ]
       },
       {
         "id": "stacked",
@@ -388,7 +379,6 @@
     "promotionOrder": "Within one (surface, aspect class) the approved subdesigns are ordered by slot span ascending and the FIRST the object says it can inhabit is taken. balanced: 6 -> 8 -> 12 · landscape: 8 -> 12 · portrait: 8 -> 12 · wide: 12.",
     "approvedSlotSpans": {
       "desktop": [
-        6,
         8,
         12
       ],
@@ -401,7 +391,8 @@
     },
     "removed": {
       "side-7": "DESIGNED, PROVEN TO HOLD AN OBJECT, MEASURED AND REMOVED — seven columns of media beside five of reading. It was approved before anything landscape existed to put in it. Given one (a 16:9 photograph and a 16:9 clip, both 662×372 at this span) it holds the object perfectly: the fit contract passes, nothing horizontal is unclaimed. And the page is still wrong. With the atlas's fixed filler the object stands 256px taller than the prose beside it, against the 240px this project calibrated as a hole on four earlier observed cases. Landscape objects now fall through to `down-8`: 760px centred on the twelve with the reading beneath it at the same eight, which has no hole at any prose length. THE GENERAL FINDING IS LARGER THAN THIS ONE ARRANGEMENT and is the maintainer's to rule on: `side-6` measures +474px and `interactive.primary/beside` +472px on the same fixtures. Pairing media with PROSE is sound only for the lengths an author happened to write, which is the pairing rule's original finding arriving a second time. `practice.workbook/beside` is not affected: its neighbour is a workspace with a designed height, and its gaps run +139px to −263px."
-    }
+    },
+    "withdrawnSide6": "SIX COLUMNS OF PLANE BESIDE SIX OF READING, REMOVED. It was the smallest approved span for a balanced plane, so `pick` reached it first and page 10 took it — and it was MEASURED in the slot-span atlas leaving 474px of nothing beneath the reading column beside it. The blueprint layer withdrew it for that reason; this is the same withdrawal, in the catalogue the lesson actually renders from. A balanced plane now takes `down-8` — the eight-column centred stage its explanatory role approves — which is what the blueprint gives `explanatory/balanced`. Removed rather than left with an empty `aspects` list, because a subdesign nothing can select is a subdesign nobody has read."
   },
   "visual.compare": {
     "id": "visual.compare",
@@ -823,7 +814,10 @@
         ],
         "notes": "FIVE AND SEVEN. The questions are short and the writing is not, so the workspace takes the larger share — the reverse of what a resolver balancing areas would produce. It SPANS BOTH ROWS so the reference plane and the question list stack in one column beside it. With no reference the first row collapses and the pairing is unchanged.",
         "slotSpan": 5,
-        "slotAnchor": "paired"
+        "slotAnchor": "paired",
+        "roles": [
+          "supporting"
+        ]
       },
       {
         "id": "beside",
@@ -836,7 +830,10 @@
         ],
         "notes": "Four and four. The pane survives here because the pairing is the template.",
         "slotSpan": 4,
-        "slotAnchor": "paired"
+        "slotAnchor": "paired",
+        "roles": [
+          "supporting"
+        ]
       },
       {
         "id": "stacked",

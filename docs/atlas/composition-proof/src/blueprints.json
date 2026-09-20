@@ -378,7 +378,8 @@
       "blueprints": {
         "notes-inset": {
           "role": "supporting",
-          "title": "notes with an upright illustration — `inset` 4 centred WITHIN the reading spine",
+          "title": "notes with an upright illustration — `inset` 4 within the reading on desktop, the measure on tablet",
+          "theTabletArrangement": "THE PARITY ANSWER WAS CORRECT AND UNSATISFYING, so the tablet does something else. Four columns cannot be centred inside a SEVEN-column measure on whole columns, and leaving the illustration on the reading's left edge put a rail of nothing down its right — a milder version of the defect the alignment ruling exists to remove. So the ROW takes the whole measure and the OBJECT is centred inside it at its authored presentation width, which is `contain` plus a centred media anchor and needs no new machinery. The SURFACE is compact there: it hugs the object and its chrome rather than filling the region, so the caption sits under the image at its left edge instead of at a mostly empty plate's far corner, and the space either side belongs to the named region. Ruled from a three-way render: left edge, wide card, compact card. DESKTOP AND PHONE ARE UNCHANGED — desktop centres on whole columns already, and on the phone the illustration IS the measure. `notes-aside` keeps its `narrow` rung at tablet: six of seven leaves one column, not three, and changing it would be changing a layout nobody asked about.",
           "why": "THE DEFAULT PAGE. The brief pairs with the key ideas beside it, the reading and the examples return to the measure, and the illustration takes the `inset` rung that `supporting` approves for an upright object — centred INSIDE the eight-column reading it supports, columns 3-6. Subordinate to the prose without being stranded against the page edge or claiming a page-level media stage it has not earned. APPROVED FROM THE PROTOTYPE after the two alignment systems were ruled. The shipping subdesign centres it on the PAGE instead, which is the defect recorded below.",
           "spine": {
             "desktop": {
@@ -514,14 +515,15 @@
                 "horizontal": {
                   "mode": "solo",
                   "spans": [
-                    "inset"
+                    "spine"
                   ],
-                  "preferred": "inset"
+                  "preferred": "spine"
                 },
                 "vertical": "hug",
                 "region": "illustration",
                 "gapAfter": "normal",
-                "media": true
+                "media": true,
+                "surface": "compact"
               },
               {
                 "id": "examples",
@@ -916,264 +918,6 @@
             "landscape": "notes-aside",
             "wide": "notes-aside",
             "panoramic": "notes-aside"
-          }
-        }
-      },
-      "candidates": {
-        "notes-inset-tablet-region": {
-          "role": "supporting",
-          "notFrozen": true,
-          "title": "THE TABLET ILLUSTRATION IN A REGION SPANNING THE READING MEASURE, object centred inside it",
-          "why": "THE PARITY ANSWER WAS CORRECT AND UNSATISFYING. A four-column illustration cannot be centred inside a SEVEN-column measure on whole columns, so it stayed on the reading's left edge with a rail of nothing down its right — which is a milder version of the defect the whole alignment ruling exists to remove. The grid's parity should not get to decide where the illustration looks like it belongs. So the ROW takes the whole reading measure and the OBJECT is centred inside it: `notes` is a `contain` pattern, so the object paints at its authored presentation width and `mediaAnchor: center` places it, which is machinery the contract already has rather than anything new. The space either side is then INSIDE AN OWNED MEDIA REGION — valid space number six in the whitespace taxonomy — instead of unclaimed neighbouring columns. The image keeps its approved dimensions and aspect, the reading spine is untouched, the caption still belongs to the surface, and no half-column, geometry class or content-dependent calculation is introduced. DESKTOP AND PHONE ARE UNCHANGED: desktop centres within the reading on whole columns already, and on the phone the illustration IS the measure.",
-          "spine": {
-            "desktop": {
-              "align": "left-edge",
-              "span": 8
-            },
-            "tablet": {
-              "align": "left-edge",
-              "span": 7
-            },
-            "phone": {
-              "align": "left-edge",
-              "span": 4
-            }
-          },
-          "rows": {
-            "desktop": [
-              {
-                "id": "brief",
-                "horizontal": {
-                  "mode": "paired",
-                  "split": "8/4",
-                  "regions": [
-                    "intro",
-                    "support"
-                  ],
-                  "origin": "top",
-                  "imbalanceMax": 180,
-                  "pairReason": "an explanation beside the key ideas it establishes — two PROSE regions, both written"
-                },
-                "vertical": "hug",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "reading",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine",
-                    "expanded"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "reading",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "illustration",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "inset"
-                  ],
-                  "preferred": "inset"
-                },
-                "vertical": "hug",
-                "region": "illustration",
-                "gapAfter": "normal",
-                "media": true,
-                "origin": "within-reading"
-              },
-              {
-                "id": "examples",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine",
-                    "expanded"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "examples",
-                "gapAfter": "section"
-              },
-              {
-                "id": "synthesis",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine",
-                    "expanded"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "synthesis"
-              }
-            ],
-            "tablet": [
-              {
-                "id": "intro",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "intro",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "support",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "support",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "reading",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "reading",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "illustration",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "illustration",
-                "gapAfter": "normal",
-                "media": true
-              },
-              {
-                "id": "examples",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "examples",
-                "gapAfter": "section"
-              },
-              {
-                "id": "synthesis",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "synthesis"
-              }
-            ],
-            "phone": [
-              {
-                "id": "intro",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "intro",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "support",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "support",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "reading",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "reading",
-                "gapAfter": "normal"
-              },
-              {
-                "id": "illustration",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "illustration",
-                "gapAfter": "normal",
-                "media": true
-              },
-              {
-                "id": "examples",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "examples",
-                "gapAfter": "section"
-              },
-              {
-                "id": "synthesis",
-                "horizontal": {
-                  "mode": "solo",
-                  "spans": [
-                    "spine"
-                  ],
-                  "preferred": "spine"
-                },
-                "vertical": "hug",
-                "region": "synthesis"
-              }
-            ]
           }
         }
       },

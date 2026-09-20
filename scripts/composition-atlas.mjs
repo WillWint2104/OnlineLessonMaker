@@ -290,9 +290,27 @@ const ASPECTS = ['portrait', 'balanced', 'landscape', 'wide', 'none'];
    Not "choose the prettiest arrangement based on content measurements". The only input is a number
    the media reported about ITSELF. If no approved span clears it, the widest is taken and the build
    reports it rather than silently shrinking the plane. */
-const pick = (p, surface, aspect, canRender) => {
-  const m = p.subdesigns.filter((d) => d.surface === surface && (!d.aspects || d.aspects.includes(aspect)));
-  if (!m.length) throw new PatternError(`${p.id}: no approved subdesign matches ${surface}/${aspect}`);
+const pick = (p, surface, aspect, canRender, role) => {
+  /* THE PRESENTATION ROLE IS THE THIRD SELECTION INPUT, and it is the one the blueprint layer has and
+     this catalogue did not. Role x geometry class x surface -> one approved subdesign. It is AUTHORED on
+     the media block — what the object is FOR — and never inferred from a size, a length or an area; a
+     pattern whose subdesigns declare no roles is unaffected, so this narrows selection where it has been
+     decided and leaves it alone everywhere else. */
+  /* NO OBJECT, NO ROLE. `none` is an aspect class — a page whose optional media is absent is a state the
+     pattern designed — and a presentation role is a property of a media object, so there is nothing to
+     author on a page that has none. Demanding one there refused `practice.workbook`'s own no-reference
+     page, which is the pattern working correctly. */
+  const roleApplies = aspect !== 'none';
+  const m = p.subdesigns.filter((d) => d.surface === surface && (!d.aspects || d.aspects.includes(aspect))
+    && (!roleApplies || !d.roles || (role && d.roles.includes(role))));
+  if (!m.length) {
+    const byAspect = p.subdesigns.filter((d) => d.surface === surface && (!d.aspects || d.aspects.includes(aspect)));
+    if (byAspect.length) throw new PatternError(`${p.id}: ${surface}/${aspect} has approved subdesign(s) `
+      + `(${byAspect.map((d) => `${d.id}[${(d.roles || ['any']).join('|')}]`).join(', ')}) and this page `
+      + `presents its media as \`${role || 'nothing authored'}\` — author a presentationRole the pattern `
+      + `approves, or approve this one`);
+    throw new PatternError(`${p.id}: no approved subdesign matches ${surface}/${aspect}`);
+  }
   const by = m.slice().sort((a, b) => (a.slotSpan || 0) - (b.slotSpan || 0));
   /* A SINGLE CANDIDATE IS STILL ASKED. An earlier version returned it unexamined, so a pattern with
      one approved arrangement could paint a figure at a width that figure cannot render faithfully
@@ -499,7 +517,10 @@ function buildInstance(inst, page, surface, opts = {}) {
   const figures = [];
   for (const sl of p.slots) for (const b of flat(content[sl.name])) if (b.figure) figures.push(b.figure);
   const canRender = figures.length ? (w) => figures.every((f) => rendersAt(f, w)) : null;
-  const chosen = pick(p, surface, aspect, canRender);
+  /* the AUTHORED role of this page's media, read off the block that carries the figure */
+  let role = null;
+  for (const sl of p.slots) for (const b of flat(content[sl.name])) if (b.figure && b.presentationRole) role = b.presentationRole;
+  const chosen = pick(p, surface, aspect, canRender, role);
   const d0 = chosen.d;
   const filled = (c) => c && (Array.isArray(c) ? c.length > 0 : true);
   const absent = new Set(p.slots.filter((s) => s.occupancy === 'optional-collapse' && !filled(content[s.name])).map((s) => s.name));

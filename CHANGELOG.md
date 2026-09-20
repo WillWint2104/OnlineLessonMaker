@@ -8,6 +8,41 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Changed
+- **The lesson's graphs come off the master grid, not out of a band** (`scripts/lesson-render.mjs`,
+  `docs/atlas/lesson/quadratics.lesson.json`; no app change). The lesson renderer still sized figures
+  from an authored `mediaSize` class — a width BAND with a height ceiling — while the composition
+  catalogue had already moved to a slot that hands the media its width. The two disagreed, and the
+  disagreement was visible: the quadratics lesson painted its symmetry graph at **683px** and its
+  flatter parabola at **1000px**, neither of which is a span of the 12-column grid (368 · 564 · 760 ·
+  956 · 1152). A band is a range and a grid is a ladder, so a figure could satisfy the band and belong
+  to no column.
+  - The lesson now authors `presentationRole` instead of `mediaSize` on a `visual` node, and the
+    renderer reads `docs/atlas/composition/src/patterns.json`: **role × geometry class × surface → one
+    approved subdesign → its `slotSpan` → arithmetic on the master grid.** The plane is then asked the
+    one question the catalogue asks it — *inside THIS width, at equal unit scale, what is the faithful
+    rendering?* Height follows and the page grows.
+  - Both graphs now land on rungs and agree with the catalogue, page for page: `symmetry@explanatory`
+    is **down-8, 760px, centred** on desktop and **stacked, 834px** on tablet; `landscape@explanatory`
+    is **down-12, 1152px** on desktop and **stacked, 834px** on tablet.
+  - The figure no longer carries a derived switch point, because its arrangement is the approved
+    subdesign for the surface it is being drawn on. The switch points that remain belong to
+    compositions holding no media (`single.split` 760, `comparison.paired` 680) and are untouched, so
+    the no-residue and content-perturbation controls still have something to prove.
+  - **Eight controls, each driven to failure before it was kept.** (1) the grid and the atlas must
+    describe the same surfaces — *the grid's desktop surface is 1152px and the atlas's narrow surface
+    is 382px*; (2) every slot width is a rung — *paints 767px … a width that is nobody's span belongs
+    to no column*; (3) the painted plane IS the declared slot to the pixel — *painted 760px in down-8,
+    whose slotSpan 7 is 662px*; (4) a `center` anchor is actually centred — *painted 0px to its left
+    and 392px to its right*, which is precisely the original defect; (5) a `full` anchor has no page
+    beside it — *painted 117/117px of page beside it*; (6) the composition block is not wider than the
+    slot it holds — *a 900px block around a 760px slot*; (7) a role the pattern has not approved for a
+    surface is reported, not approximated; (8) a figure authored with no role is reported.
+- **The lesson sheet shows both renderers side by side** (`scripts/lesson-sheet.mjs`). One picture per
+  surface, desktop 1152 and tablet 834: the authored lesson in every tab and view state it declares,
+  then the same four subtopics through the composition catalogue's page patterns. The point of putting
+  them together is that the graphs should now be the same width in both halves — and they are. States
+  are read from the lesson JSON rather than from the filenames, so a state that stops being rendered
+  goes missing loudly.
 - **Two alignment systems, not one axis per page** (`docs/atlas/composition-proof/`,
   `scripts/composition-proof-atlas.mjs`; no app change). Step 1 drove "everything shares the left
   edge" to its conclusion and the renders showed it was the wrong rule: a 10-column plate and a

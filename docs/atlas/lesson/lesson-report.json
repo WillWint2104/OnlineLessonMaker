@@ -46,8 +46,8 @@
     "pageHeight": 1906,
     "scrollX": 2,
     "figures": [
-      "symmetry@standard:portrait→visual.down@683×860",
-      "landscape@large:wide→visual.down@1000×463"
+      "symmetry@explanatory:portrait→down-8 span 8@760×952",
+      "landscape@explanatory:wide→down-12 span 12@1152×527"
     ]
   },
   {
@@ -97,8 +97,8 @@
     "pageHeight": 1872,
     "scrollX": 2,
     "figures": [
-      "symmetry@standard:portrait→visual.down@616×779",
-      "landscape@large:wide→visual.down@800×378"
+      "symmetry@explanatory:portrait→stacked span 8@834×1041",
+      "landscape@explanatory:wide→stacked span 8@834×393"
     ]
   },
   {
@@ -148,8 +148,8 @@
     "pageHeight": 2236,
     "scrollX": 2,
     "figures": [
-      "symmetry@standard:portrait→visual.down@382×498",
-      "landscape@large:wide→visual.down@382×211"
+      "symmetry@explanatory:portrait→stacked span 4@382×498",
+      "landscape@explanatory:wide→stacked span 4@382×211"
     ]
   },
   {
@@ -199,8 +199,8 @@
     "pageHeight": 1503,
     "scrollX": 1,
     "figures": [
-      "symmetry@standard:portrait→visual.down@683×860",
-      "landscape@large:wide→visual.down@1000×463"
+      "symmetry@explanatory:portrait→down-8 span 8@760×952",
+      "landscape@explanatory:wide→down-12 span 12@1152×527"
     ]
   },
   {
@@ -250,8 +250,8 @@
     "pageHeight": 1469,
     "scrollX": 1,
     "figures": [
-      "symmetry@standard:portrait→visual.down@616×779",
-      "landscape@large:wide→visual.down@800×378"
+      "symmetry@explanatory:portrait→stacked span 8@834×1041",
+      "landscape@explanatory:wide→stacked span 8@834×393"
     ]
   },
   {
@@ -301,8 +301,8 @@
     "pageHeight": 1876,
     "scrollX": 1,
     "figures": [
-      "symmetry@standard:portrait→visual.down@382×498",
-      "landscape@large:wide→visual.down@382×211"
+      "symmetry@explanatory:portrait→stacked span 4@382×498",
+      "landscape@explanatory:wide→stacked span 4@382×211"
     ]
   },
   {
@@ -352,8 +352,8 @@
     "pageHeight": 954,
     "scrollX": 2,
     "figures": [
-      "symmetry@standard:portrait→visual.down@683×860",
-      "landscape@large:wide→visual.down@1000×463"
+      "symmetry@explanatory:portrait→down-8 span 8@760×952",
+      "landscape@explanatory:wide→down-12 span 12@1152×527"
     ]
   },
   {
@@ -403,8 +403,8 @@
     "pageHeight": 920,
     "scrollX": 2,
     "figures": [
-      "symmetry@standard:portrait→visual.down@616×779",
-      "landscape@large:wide→visual.down@800×378"
+      "symmetry@explanatory:portrait→stacked span 8@834×1041",
+      "landscape@explanatory:wide→stacked span 8@834×393"
     ]
   },
   {
@@ -454,8 +454,8 @@
     "pageHeight": 1348,
     "scrollX": 2,
     "figures": [
-      "symmetry@standard:portrait→visual.down@382×498",
-      "landscape@large:wide→visual.down@382×211"
+      "symmetry@explanatory:portrait→stacked span 4@382×498",
+      "landscape@explanatory:wide→stacked span 4@382×211"
     ]
   },
   {
@@ -466,13 +466,20 @@
     "sideBalance": [],
     "figs": [
       {
-        "region": 683,
-        "ratio": 1.001,
-        "plane": 683,
-        "planeH": 860,
-        "size": "standard",
+        "region": 760,
+        "ratio": 0.999,
+        "plane": 760,
+        "planeH": 952,
+        "role": "explanatory",
         "cls": "portrait",
-        "fig": "symmetry@standard"
+        "subdesign": "down-8",
+        "slotSpan": 8,
+        "anchor": "center",
+        "block": 760,
+        "freeL": 196,
+        "freeR": 196,
+        "page": 1152,
+        "fig": "symmetry@explanatory"
       }
     ],
     "compositions": [
@@ -512,11 +519,11 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1656,
+    "pageHeight": 1748,
     "scrollX": 2,
     "figures": [
-      "symmetry@standard:portrait→visual.down@683×860",
-      "landscape@large:wide→visual.down@1000×463"
+      "symmetry@explanatory:portrait→down-8 span 8@760×952",
+      "landscape@explanatory:wide→down-12 span 12@1152×527"
     ]
   },
   {
@@ -527,13 +534,20 @@
     "sideBalance": [],
     "figs": [
       {
-        "region": 616,
+        "region": 834,
         "ratio": 1,
-        "plane": 616,
-        "planeH": 779,
-        "size": "standard",
+        "plane": 834,
+        "planeH": 1041,
+        "role": "explanatory",
         "cls": "portrait",
-        "fig": "symmetry@standard"
+        "subdesign": "stacked",
+        "slotSpan": 8,
+        "anchor": "full",
+        "block": 834,
+        "freeL": 0,
+        "freeR": 0,
+        "page": 834,
+        "fig": "symmetry@explanatory"
       }
     ],
     "compositions": [
@@ -573,11 +587,11 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1541,
+    "pageHeight": 1803,
     "scrollX": 2,
     "figures": [
-      "symmetry@standard:portrait→visual.down@616×779",
-      "landscape@large:wide→visual.down@800×378"
+      "symmetry@explanatory:portrait→stacked span 8@834×1041",
+      "landscape@explanatory:wide→stacked span 8@834×393"
     ]
   },
   {
@@ -592,9 +606,16 @@
         "ratio": 1,
         "plane": 382,
         "planeH": 498,
-        "size": "standard",
+        "role": "explanatory",
         "cls": "portrait",
-        "fig": "symmetry@standard"
+        "subdesign": "stacked",
+        "slotSpan": 4,
+        "anchor": "full",
+        "block": 382,
+        "freeL": 0,
+        "freeR": 0,
+        "page": 382,
+        "fig": "symmetry@explanatory"
       }
     ],
     "compositions": [
@@ -637,8 +658,8 @@
     "pageHeight": 1380,
     "scrollX": 2,
     "figures": [
-      "symmetry@standard:portrait→visual.down@382×498",
-      "landscape@large:wide→visual.down@382×211"
+      "symmetry@explanatory:portrait→stacked span 4@382×498",
+      "landscape@explanatory:wide→stacked span 4@382×211"
     ]
   },
   {
@@ -649,13 +670,20 @@
     "sideBalance": [],
     "figs": [
       {
-        "region": 1000,
-        "ratio": 1.003,
-        "plane": 1000,
-        "planeH": 463,
-        "size": "large",
+        "region": 1152,
+        "ratio": 1.002,
+        "plane": 1152,
+        "planeH": 527,
+        "role": "explanatory",
         "cls": "wide",
-        "fig": "landscape@large"
+        "subdesign": "down-12",
+        "slotSpan": 12,
+        "anchor": "full",
+        "block": 1152,
+        "freeL": 0,
+        "freeR": 0,
+        "page": 1152,
+        "fig": "landscape@explanatory"
       }
     ],
     "compositions": [
@@ -695,11 +723,11 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1265,
+    "pageHeight": 1329,
     "scrollX": 1,
     "figures": [
-      "symmetry@standard:portrait→visual.down@683×860",
-      "landscape@large:wide→visual.down@1000×463"
+      "symmetry@explanatory:portrait→down-8 span 8@760×952",
+      "landscape@explanatory:wide→down-12 span 12@1152×527"
     ]
   },
   {
@@ -710,13 +738,20 @@
     "sideBalance": [],
     "figs": [
       {
-        "region": 800,
-        "ratio": 1.005,
-        "plane": 800,
-        "planeH": 378,
-        "size": "large",
+        "region": 834,
+        "ratio": 1.001,
+        "plane": 834,
+        "planeH": 393,
+        "role": "explanatory",
         "cls": "wide",
-        "fig": "landscape@large"
+        "subdesign": "stacked",
+        "slotSpan": 8,
+        "anchor": "full",
+        "block": 834,
+        "freeL": 0,
+        "freeR": 0,
+        "page": 834,
+        "fig": "landscape@explanatory"
       }
     ],
     "compositions": [
@@ -756,11 +791,11 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1146,
+    "pageHeight": 1161,
     "scrollX": 1,
     "figures": [
-      "symmetry@standard:portrait→visual.down@616×779",
-      "landscape@large:wide→visual.down@800×378"
+      "symmetry@explanatory:portrait→stacked span 8@834×1041",
+      "landscape@explanatory:wide→stacked span 8@834×393"
     ]
   },
   {
@@ -775,9 +810,16 @@
         "ratio": 0.996,
         "plane": 382,
         "planeH": 211,
-        "size": "large",
+        "role": "explanatory",
         "cls": "wide",
-        "fig": "landscape@large"
+        "subdesign": "stacked",
+        "slotSpan": 4,
+        "anchor": "full",
+        "block": 382,
+        "freeL": 0,
+        "freeR": 0,
+        "page": 382,
+        "fig": "landscape@explanatory"
       }
     ],
     "compositions": [
@@ -820,8 +862,8 @@
     "pageHeight": 1151,
     "scrollX": 1,
     "figures": [
-      "symmetry@standard:portrait→visual.down@382×498",
-      "landscape@large:wide→visual.down@382×211"
+      "symmetry@explanatory:portrait→stacked span 4@382×498",
+      "landscape@explanatory:wide→stacked span 4@382×211"
     ]
   }
 ]

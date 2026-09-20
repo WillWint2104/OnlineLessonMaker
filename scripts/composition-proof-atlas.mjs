@@ -1254,7 +1254,13 @@ async function board(pid, surface, bid, o = {}) {
   for (const [k, v] of Object.entries(o.forceSpan || {})) realised[k] = v;
   const L = layout(pid, surface, bid, { rows: o.rows, allowOrphans: o.allowOrphans, spine: o.spine, realised });
 
-  const fsMode = o.fs || 'off';
+  /* A ROW MAY DECLARE THAT ITS SURFACE IS COMPACT — the card hugs the object and centres inside the
+     region rather than filling it. That is treatment B, and it is the blueprint's decision rather than
+     the board's, so an explicit `fs` on the call still wins for the comparison boards that exist to show
+     both. Adopted for the tablet supporting illustration, where the region takes the whole reading
+     measure and a full-width card would put the caption at a mostly empty plate's far corner. */
+  const compactRow = (rows0 || []).some((r) => r.media && r.surface === 'compact');
+  const fsMode = o.fs || (compactRow ? 'B' : 'off');
   let solvedBox = null, figHtml = null, engineCaption = '';
 
   /* THE PLANE IS SOLVED BEFORE THE MARKUP IS BUILT, because the SURFACE owns the caption and therefore
@@ -1945,42 +1951,6 @@ for (const v of VERIFY) {
     `${v.label} — ${v.pid}/${v.bid} at desktop 1152, tablet 834 and phone 382. Same authored content; `
     + `only the surface differs.`, 'surface', SURFACES);
 }
-
-/* ── THE TABLET SUPPORTING ILLUSTRATION, TWO WAYS ────────────────────────────────────────────────
-   Approved at desktop and phone; the TABLET arrangement is the open question. A four-column
-   illustration cannot be centred inside a seven-column measure on whole columns, so today it keeps the
-   reading's left edge and leaves an obvious rail down its right — a milder version of the defect the
-   alignment ruling exists to remove. The proposal is not a half-column: the ROW takes the whole reading
-   measure and the OBJECT is centred inside it, which `contain` plus `mediaAnchor: center` already do.
-   Rendered beside the current one, because which of two legal arrangements looks right is a question
-   about the pages. */
-console.log('\nthe tablet supporting illustration — the current arrangement and the proposal');
-await board('notes', 'tablet', 'notes-inset',
-  { klass: 'portrait', fs: 'A', tag: 't1', collect: 'TAB', noShot: true,
-    collectLabel: 'SHIPS TODAY · illustration row = inset 4, on the reading\'s left edge',
-    name: 'T1__notes-inset__tablet__AS-IT-SHIPS' });
-await board('notes', 'tablet', 'notes-inset-tablet-region',
-  { klass: 'portrait', fs: 'A', candidate: true, tag: 't2', collect: 'TAB', noShot: true,
-    collectLabel: 'PROPOSED · illustration row = the whole reading measure, object centred inside it',
-    name: 'T2__notes-inset__tablet__REGION-SPANS-THE-MEASURE' });
-/* THE REFINEMENT. The wide region was approved and the wide CARD was not: the bordered surface spanned
-   the whole measure, so the illustration sat in the middle of a mostly empty plate and the caption ended
-   up at the plate's far left rather than under the image it describes. Separating the two is what the
-   figure surface's treatment B already does — `width:fit-content` with auto margins — so the REGION
-   still spans the reading measure and owns the space, while the CARD hugs the object and centres inside
-   it, taking its caption with it.
-
-   AND THIS IS NOT THE B THAT WAS REJECTED. B was thrown out when it shrink-wrapped a plate inside a
-   region that claimed to be wider than it painted — a composition saying eight columns while the eye saw
-   six. Here the region's width is the point: it is declared, it is the reading measure, and the space
-   around the card belongs to it. Same mechanism, opposite situation. */
-await board('notes', 'tablet', 'notes-inset-tablet-region',
-  { klass: 'portrait', fs: 'B', candidate: true, tag: 't3', collect: 'TAB', noShot: true,
-    collectLabel: 'REFINED · region spans the measure, CARD hugs the object and centres in it',
-    name: 'T3__notes-inset__tablet__COMPACT-CARD-CENTRED-IN-THE-REGION' });
-await strip('TAB', 'T__TABLET-SUPPORTING-ILLUSTRATION__current-vs-proposed',
-  'THE TABLET SUPPORTING ILLUSTRATION — same object, same reading spine, same caption owner; what the '
-  + 'illustration ROW spans and how wide its CARD is are what differ', 'span');
 
 /* DRIVES · each control shown able to fail. */
 /* H1's AXIS BRANCH, WHICH REGROUPING COULD HAVE KILLED. Grouping the solo rows by alignment system
