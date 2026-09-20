@@ -46,42 +46,40 @@ SUBJECTS.push({ key: 'left-edge-axis', synthetic: true, spec: {
 
 /* DECLARED sizes. `ships-today` is read from the stylesheet by rendering with no override at all. */
 const CANDIDATES = [
-  { id: 'ships-today', tick: null },
+  { id: 'phone-rule', tick: null },   // whatever the stylesheet gives at this viewport — now 14px
+  { id: 'declared-11', tick: 11 },    // the old flat value, for comparison
   { id: 'declared-13', tick: 13 },
-  { id: 'declared-14', tick: 14 },
   { id: 'declared-16', tick: 16 },
 ];
 
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
-const figPage = await openFigurePage(browser, 'file://' + path.join(root, 'lesson-studio.html'));
+/* A REAL HANDSET VIEWPORT. The rule lives in `@media (max-width:640px)`, so a page opened at desktop
+   width would measure the desktop type and report it as the phone's — which is exactly the mistake the
+   composition atlas cannot avoid, since its boards are one wide page holding narrow columns. This
+   harness is where the handset rule is actually exercised. */
+const figPage = await browser.newPage({ viewport: { width: 382, height: 1400 }, deviceScaleFactor: 2 });
+await figPage.goto('file://' + path.join(root, 'lesson-studio.html'), { waitUntil: 'load' });
+await figPage.evaluate(() => document.fonts.ready);
 
 /* the type rule goes in BEFORE the engine measures anything, and the label solver's reservation goes
    with it: the engine hard-codes 11px in two places — the stylesheet and `figTickBoxes`, which
    reserves tick-label boxes as obstacles for the point-label search. Moving one without the other
    would put point labels on top of enlarged numbers, so the prototype moves both. */
 async function applyType(t) {
+  /* THE OVERRIDE MOVES THE TOKEN, NOTHING ELSE. `--tp-fig-ticksize` is the one place the size is
+     declared, and the shipped engine reads it in three: the stylesheet draws with it, `figTickBoxes`
+     reserves obstacles at it, and `figSvgBody` offsets each label from its axis in proportion to it. So
+     setting the token exercises the REAL code path — an earlier version of this harness monkey-patched
+     `figTickBoxes` instead, which tested a prototype rather than the engine. `null` means "leave the
+     stylesheet alone", which at this viewport is the handset rule itself. */
   await figPage.evaluate((tick) => {
     document.querySelectorAll('[data-phone-type]').forEach((n) => n.remove());
-    if (!window.__figTickBoxes0) window.__figTickBoxes0 = window.figTickBoxes;
-    if (tick == null) { window.figTickBoxes = window.__figTickBoxes0; return; }
+    if (tick == null) return;
     const st = document.createElement('style');
     st.setAttribute('data-phone-type', '1');
-    /* the reference label and the point identifier move with the numbering: they are the same
-       instructional register, and leaving them behind would just relocate the complaint */
-    st.textContent = `.tp-slide .tp-fig-ticklabel{font-size:${tick}px;}`
-      + `.tp-slide .tp-fig-reflab{font-size:${(tick + 1).toFixed(1)}px;}`
-      + `.tp-slide .tp-fig-ptid{font-size:${(tick + 1.5).toFixed(1)}px;}`;
+    st.textContent = `:root{--tp-fig-ticksize:${tick}px;--tp-fig-reflabsize:${tick + 1}px;`
+      + `--tp-fig-ptidsize:${tick + 1.5}px;}`;
     document.head.appendChild(st);
-    window.figTickBoxes = function (V, tt) {
-      const D = V.dom, axisX = V.sx(Math.min(Math.max(0, D.x0), D.x1)), axisY = V.sy(Math.min(Math.max(0, D.y0), D.y1));
-      const xT = figNiceTicks(D.x0, D.x1, tt || 5), yT = figNiceTicks(D.y0, D.y1, tt || 5);
-      const FS = tick, H = FS * 1.15, wOf = (s) => String(s).length * FS * 0.6 + 2, boxes = [];
-      /* the offsets are the engine's own, scaled by the type: 16/8/4 at 11px is 1.45/0.73/0.36 of it */
-      const below = FS * 1.45, gap = FS * 0.73, mid = FS * 0.36;
-      xT.ticks.forEach((v) => { const w = wOf(figFmtTick(v, xT.decimals)); boxes.push({ x: V.sx(v) - w / 2, y: axisY + below - H * 0.8, w, h: H }); });
-      yT.ticks.forEach((v) => { if (Math.abs(v) < 1e-9) return; const w = wOf(figFmtTick(v, yT.decimals)); boxes.push({ x: axisX - gap - w, y: V.sy(v) + mid - H * 0.8, w, h: H }); });
-      return boxes;
-    };
   }, t);
 }
 
@@ -95,6 +93,20 @@ async function measure(W, H, spec) {
     host.innerHTML = `<div class="mx-part" data-mx-part="figure" data-fig-viewport
       style="position:relative;width:${W}px;height:${H}px;"><div class="mx-figstage"><div
       class="mx-figskin tp-slide"></div></div></div>`;
+    /* APPENDED TO THE BODY, NOT INTO `#slide`. Inside the slide the probe measured 92px wide at a
+       handset viewport and 243px at a desktop one, despite an inline `width:344px` — the deck scales
+       its own stage, and every "painted" size taken in there came back multiplied by that scale. The
+       collision and geometry results were unaffected, because a uniform scale preserves overlap, but the
+       absolute pixel sizes were not mine to quote. Out here the host is 344px at both viewports and the
+       handset rule still resolves, which is the geometry the composition actually gives the figure. */
+    /* RENDERED INSIDE `#slide`, AND THE STAGE'S OWN SCALE DIVIDED BACK OUT. The deck scales its stage
+       to fit, so the probe measured 92px wide at a handset viewport and 243px at a desktop one despite
+       an inline `width:344px`, and every "painted" size taken in there came back multiplied by that
+       scale. The collision and geometry results were unaffected - a uniform scale preserves overlap -
+       but the absolute pixel figures were not mine to quote. Moving the probe out to the body fixed the
+       width and BROKE THE FIT: every figure then returned the same 520x360 viewBox, which is the engine
+       unable to find its viewport, not six figures agreeing. So it stays where the fit works, and the
+       stage scale is measured and removed instead. */
     document.querySelector('#slide').appendChild(host);
     host.querySelector('.mx-figskin').innerHTML = fragFigure(mxFigPolicy(spec), 'probe');
     figFitAll();
@@ -106,7 +118,8 @@ async function measure(W, H, spec) {
     const svg = host.querySelector('.tp-fig-svg');
     const sr = svg.getBoundingClientRect();
     const vb = (svg.getAttribute('viewBox') || '0 0 1 1').split(/\s+/).map(Number);
-    const scale = vb[2] ? sr.width / vb[2] : 1;
+    const stage = host.getBoundingClientRect().width / W;     // what the deck did to the whole probe
+    const scale = vb[2] ? (sr.width / stage) / vb[2] : 1;     // the SVG's own scale, stage removed
     const decl = (sel) => { const el = host.querySelector(sel); return el ? parseFloat(getComputedStyle(el).fontSize) : null; };
     const rel = (el) => { const b = el.getBoundingClientRect();
       return { x: b.x - sr.x, y: b.y - sr.y, w: b.width, h: b.height, t: (el.textContent || '').trim() }; };
@@ -147,7 +160,8 @@ async function measure(W, H, spec) {
       const d = q[q.length - 1].n - q[0].n; return d ? +Math.abs((q[q.length - 1].p - q[0].p) / d).toFixed(3) : null; };
     const xs = ticks.filter((o, i) => anchorOf(i) === 'middle');
     const ys = ticks.filter((o, i) => anchorOf(i) === 'end');
-    return { svgW: Math.round(sr.width), svgH: Math.round(sr.height), viewBox: `${Math.round(vb[2])}x${Math.round(vb[3])}`,
+    return { svgW: Math.round(sr.width / stage), svgH: Math.round(sr.height / stage),
+      viewBox: `${Math.round(vb[2])}x${Math.round(vb[3])}`, stageScale: +stage.toFixed(3),
       scale: +scale.toFixed(3),
       tickDeclared: decl('.tp-fig-ticklabel'), refDeclared: decl('.tp-fig-reflab'), idDeclared: decl('.tp-fig-ptid'),
       tickPainted: +(decl('.tp-fig-ticklabel') * scale).toFixed(1),
@@ -182,7 +196,7 @@ for (const subj of SUBJECTS) for (const c of CANDIDATES) {
 {
   const cards = CANDIDATES.map((c) => {
     const r = rows.find((x) => x.figure === 'symmetry' && x.id === c.id);
-    return `<figure><figcaption>${c.id}${c.tick == null ? ' (the stylesheet as it ships)' : ''}`
+    return `<figure><figcaption>${c.id}${c.tick == null ? ' — what the handset rule now gives' : ''}`
       + ` — declared ${r.tickDeclared}px, <b>painted ${r.tickPainted}px</b></figcaption>`
       + `<img src="phone-type__${c.id}.png"></figure>`;
   }).join('');
@@ -197,7 +211,7 @@ for (const subj of SUBJECTS) for (const c of CANDIDATES) {
     figure{margin:0;flex:0 0 auto;width:400px;padding:14px 18px;}
     figcaption{margin:0 0 10px;color:#2b3b34;}
     img{width:363px;height:auto;display:block;background:#fff;border:1px solid #dcdcd8;}
-    </style><h1>PHONE GRAPH TYPOGRAPHY — symmetry at the approved 344px phone plot box; only the declared type differs</h1>
+    </style><h1>PHONE GRAPH TYPOGRAPHY — symmetry at the approved 344px phone plot box, rendered at a real 382px viewport; only the declared type differs</h1>
     <div class="row">${cards}</div>`;
   const docPath = path.join(OUT, '_comparison.html');
   fs.writeFileSync(docPath, docHtml);

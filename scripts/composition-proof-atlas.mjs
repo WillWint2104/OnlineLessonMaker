@@ -502,8 +502,15 @@ function slotBody(pid, name, adversarial) {
    region directly would fail every surfaced board by the width of its own chrome) and wrong under
    `CONTAIN`, where the contract is about the OBJECT's authored presentation width. The marker
    therefore moves inward for `contain` and stays on the surface for `fill`. */
-function figureSurface(inner, cap, treatment, label, fit) {
-  return `<div class="fs-surface" data-figure-surface data-fs="${esc(treatment)}"${fit === 'contain' ? '' : ' data-media-object'}>`
+function figureSurface(inner, cap, treatment, label, fit, objW) {
+  /* TREATMENT B IS TOLD THE OBJECT'S WIDTH RATHER THAN ASKED TO INFER IT. `width:fit-content` alone did
+     not hug: the object inside is capped with `min(<authored>px, 100%)`, and a percentage inside an
+     intrinsic-width calculation is circular, so the card kept resolving to the whole region. The
+     authored presentation width is a number the catalogue already knows, so it is handed over. The card
+     is then exactly the object's width, and the caption — which would otherwise set the width itself,
+     its max-content being the whole sentence on one line — fills and wraps inside it. */
+  const w = treatment === 'B' && objW ? ` style="--fs-obj:${objW}px"` : '';
+  return `<div class="fs-surface" data-figure-surface data-fs="${esc(treatment)}"${fit === 'contain' ? '' : ' data-media-object'}${w}>`
     + `<div class="fs-head"><span class="fs-lab">${esc(label || 'Figure')}</span></div>`
     + `<div class="fs-plot" data-fs-plot>${inner}</div>`
     + (cap ? `<figcaption class="fs-cap" data-fs-cap>${cap}</figcaption>` : '') + `</div>`;
@@ -514,13 +521,13 @@ function mediaMarkup(fx, fit, fs, captionOverride) {
   const cap = capText ? `<figcaption class="cp-figcap">${capText}</figcaption>` : '';
   const LAB = { graph: 'Graph', image: 'Figure', diagram: 'Diagram', video: 'Clip', interactive: 'Instrument' }[fx.kind] || 'Figure';
   if (fx.kind === 'graph') {
-    if (fs && fs !== 'off') return figureSurface(`{{FIG:${fx.figure}}}`, capText, fs, LAB, fit);
+    if (fs && fs !== 'off') return figureSurface(`{{FIG:${fx.figure}}}`, capText, fs, LAB, fit, fx.presentationWidth);
     return `<figure class="cp-figure">{{FIG:${fx.figure}}}${cap}</figure>`;
   }
   if (fx.kind === 'interactive') {
     const frame = `<div class="cp-media"${fs && fs !== 'off' ? '' : ' data-media-object'} style="aspect-ratio:${1 / fx.aspect};`
       + `background:linear-gradient(#eef1f0,#dfe6e3);border:1px solid #cfd8d4;border-radius:3px"></div>`;
-    return fs && fs !== 'off' ? figureSurface(frame, capText, fs, LAB, fit) : frame;
+    return fs && fs !== 'off' ? figureSurface(frame, capText, fs, LAB, fit, fx.presentationWidth) : frame;
   }
   /* WHO IS "THE OBJECT" WHEN THERE IS A FIGURE SURFACE. With the surface on, the marker used to be
      dropped, so `measureMedia` fell through to "the widest thing the slot put on screen" — which is the
@@ -545,7 +552,7 @@ function mediaMarkup(fx, fit, fs, captionOverride) {
      `.fs-plot` already centres what it holds, so the object lands centred inside its own region and
      the space either side belongs to that region rather than to nobody. */
   const cw = fit === 'contain' ? ` style="width:min(${fx.presentationWidth}px,100%)"` : '';
-  if (fs && fs !== 'off') return figureSurface(`<span class="cp-media"${cw}>${inner}</span>`, capText, fs, LAB, fit);
+  if (fs && fs !== 'off') return figureSurface(`<span class="cp-media"${cw}>${inner}</span>`, capText, fs, LAB, fit, fx.presentationWidth);
   return `<figure class="cp-figure"><span class="cp-media"${cw}>${inner}</span>${cap}</figure>`;
 }
 
@@ -555,6 +562,15 @@ const FIGURE_SURFACE_CSS = `
   background:#fcfdfc;padding:18px 18px 14px;}
 .fs-surface[data-fs="A"]{width:100%;}
 .fs-surface[data-fs="B"]{width:fit-content;max-width:100%;margin-left:auto;margin-right:auto;}
+.fs-surface[data-fs="B"][style*="--fs-obj"]{width:min(calc(var(--fs-obj) + 38px),100%);}
+/* THE CAPTION MUST NOT SET THE CARD'S WIDTH. fit-content takes the widest child's MAX-CONTENT, and a
+   caption's max-content is the whole sentence on one line — so a compact card with a real caption came
+   out spanning the region anyway, which is the defect this treatment exists to avoid. Zero width with a
+   100% minimum keeps the caption out of the intrinsic calculation and then lets it fill and wrap inside
+   whatever the object decided. The card is the object's width; the caption sits under it, at its left
+   edge, and wraps there. */
+.fs-surface[data-fs="B"] .fs-cap{width:0;min-width:100%;}
+.fs-surface[data-fs="B"] .fs-head{width:0;min-width:100%;}
 .fs-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 12px;min-height:14px;}
 .fs-lab{font:700 11px/1 var(--mx-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--mx-ink-2);}
 .fs-plot{display:flex;justify-content:center;}
@@ -1601,6 +1617,16 @@ async function strip(group, name, title, kind = 'span', expect = null) {
     return `--cp-surface:${g.width}px;--cp-pad:${g.pad}px;--cp-pad-y:24px;--cp-frame:0px;--cp-cols:${g.columns};`
       + `--cp-gut:${g.gutter}px;--cp-measure:${GRID.readingMeasure.px}px;`
       + `--cp-pad-h:${sf === 'phone' ? 360 : 480}px;--cp-pane-h:460px;`; };
+  /* THE HANDSET RULE, MIRRORED PER COLUMN. Each BOARD is its own page at its own surface width, so the
+     app's `@media (max-width:640px)` fires there by itself and a phone board really does draw 14px
+     numbering. A STRIP is one wide page holding narrow columns, so the media query cannot fire in it and
+     the phone column would quietly render desktop type — a picture of the phone that is not the phone.
+     The tokens are therefore set on the narrow sections directly. This MIRRORS the app rule for the sake
+     of the picture; the per-surface boards remain the authority, and if the two ever disagree it is this
+     line that is wrong. */
+  const HANDSET = 640;
+  const handsetVars = '--tp-fig-ticksize:14px;--tp-fig-reflabsize:15px;--tp-fig-ptidsize:15.5px;';
+  const isHandset = (sf) => GRID.surfaces[sf].width <= HANDSET;
   const doc = `<!doctype html><html data-theme="mathematics"><head><meta charset="utf-8"><style>
 ${APP_CSS}
 </style><style>
@@ -1615,7 +1641,7 @@ ${items.map((x) => x.css).join('\n')}
 .cp-strip > section:first-child{border-left:0;}
 </style></head><body class="mx"><div class="pf-board" style="width:${items.reduce((a2, x) => a2 + x.width, 0) + items.length - 1}px">
 <div class="pf-head">${esc(title)}</div>
-<div class="cp-strip">${items.map((x) => `<section class="cp-${esc(x.surface)}" style="width:${x.width}px;${vars(x.surface)}">`
+<div class="cp-strip">${items.map((x) => `<section class="cp-${esc(x.surface)}" style="width:${x.width}px;${vars(x.surface)}${isHandset(x.surface) ? handsetVars : ''}">`
     + `<div class="pf-capt">${esc(x.label)}</div>${x.html}</section>`).join('')}</div>
 </div></body></html>`;
 
@@ -1937,9 +1963,24 @@ await board('notes', 'tablet', 'notes-inset-tablet-region',
   { klass: 'portrait', fs: 'A', candidate: true, tag: 't2', collect: 'TAB', noShot: true,
     collectLabel: 'PROPOSED · illustration row = the whole reading measure, object centred inside it',
     name: 'T2__notes-inset__tablet__REGION-SPANS-THE-MEASURE' });
+/* THE REFINEMENT. The wide region was approved and the wide CARD was not: the bordered surface spanned
+   the whole measure, so the illustration sat in the middle of a mostly empty plate and the caption ended
+   up at the plate's far left rather than under the image it describes. Separating the two is what the
+   figure surface's treatment B already does — `width:fit-content` with auto margins — so the REGION
+   still spans the reading measure and owns the space, while the CARD hugs the object and centres inside
+   it, taking its caption with it.
+
+   AND THIS IS NOT THE B THAT WAS REJECTED. B was thrown out when it shrink-wrapped a plate inside a
+   region that claimed to be wider than it painted — a composition saying eight columns while the eye saw
+   six. Here the region's width is the point: it is declared, it is the reading measure, and the space
+   around the card belongs to it. Same mechanism, opposite situation. */
+await board('notes', 'tablet', 'notes-inset-tablet-region',
+  { klass: 'portrait', fs: 'B', candidate: true, tag: 't3', collect: 'TAB', noShot: true,
+    collectLabel: 'REFINED · region spans the measure, CARD hugs the object and centres in it',
+    name: 'T3__notes-inset__tablet__COMPACT-CARD-CENTRED-IN-THE-REGION' });
 await strip('TAB', 'T__TABLET-SUPPORTING-ILLUSTRATION__current-vs-proposed',
-  'THE TABLET SUPPORTING ILLUSTRATION — same object, same reading spine, same caption owner; only what '
-  + 'the illustration ROW spans differs', 'span');
+  'THE TABLET SUPPORTING ILLUSTRATION — same object, same reading spine, same caption owner; what the '
+  + 'illustration ROW spans and how wide its CARD is are what differ', 'span');
 
 /* DRIVES · each control shown able to fail. */
 /* H1's AXIS BRANCH, WHICH REGROUPING COULD HAVE KILLED. Grouping the solo rows by alignment system

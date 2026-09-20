@@ -3354,9 +3354,22 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-grid-minor{stroke:var(--graph-grid,var(--outline-variant));stroke-width:.5;opacity:.4;}
 .tp-slide .tp-fig-axis{stroke:var(--graph-axis,var(--on-surface-variant));stroke-width:1.4;}
 .tp-slide .tp-fig-tick{stroke:var(--graph-axis,var(--on-surface-variant));stroke-width:1;}
-.tp-slide .tp-fig-ticklabel{fill:var(--graph-axis,var(--on-surface-variant));font-family:var(--tp-body);font-size:11px;}
+/* GRAPH TYPE IS ONE SET OF TOKENS, AND THE HANDSET GETS A BIGGER ONE. A plot is an SVG with a viewBox
+   painted into whatever box the composition gives it, so these sizes are in VIEWBOX UNITS and reach the
+   reader multiplied by the SVG's own scale. That scale is SMALLEST on a phone — the axis gutters are
+   close to a fixed number of viewBox units, so a small plot spends proportionally more of its viewBox on
+   gutter — which made the phone the surface where instructional numbering was hardest to read, the exact
+   opposite of what it needs. Measured painted: 14.6px desktop, 14.1px tablet, 12.5px phone at the old
+   flat 11px. Declaring 14 here brings the phone to 15.9px painted, measured at a real 382px viewport.
+   THEY ARE CUSTOM PROPERTIES BECAUSE THE GEOMETRY READS THEM TOO: `figTickBoxes` reserves tick labels as
+   obstacles for the point-label search and has to reserve them at the size they will actually be drawn,
+   and `figSvgBody` offsets each label from its axis by an amount that only looks right in proportion to
+   the type. One value, three readers. */
+:root{--tp-fig-ticksize:11px;--tp-fig-reflabsize:12px;--tp-fig-ptidsize:12.5px;}
+@media (max-width:640px){:root{--tp-fig-ticksize:14px;--tp-fig-reflabsize:15px;--tp-fig-ptidsize:15.5px;}}
+.tp-slide .tp-fig-ticklabel{fill:var(--graph-axis,var(--on-surface-variant));font-family:var(--tp-body);font-size:var(--tp-fig-ticksize);}
 .tp-slide .tp-fig-pt{fill:var(--primary);stroke:var(--graph-surface,var(--surface-lowest));stroke-width:1.6;}
-.tp-slide .tp-fig-ptid{fill:var(--on-surface);font-family:var(--tp-body);font-size:12.5px;font-weight:600;}
+.tp-slide .tp-fig-ptid{fill:var(--on-surface);font-family:var(--tp-body);font-size:var(--tp-fig-ptidsize);font-weight:600;}
 .tp-slide .tp-fig-pill{fill:var(--graph-surface,var(--surface-lowest));stroke:var(--outline-variant);stroke-width:.5;opacity:.9;}   /* Stage 1b knockout box — retained for Stage 3 marks; point identifiers now render plain (approved visual target) */
 /* Stage 2 — graph front-end: curves, segments, reveal-on-tap callout. Token-only, fallback chains (no theme fork). */
 .tp-slide .tp-fig-stage{position:relative;}
@@ -3364,7 +3377,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .tp-slide .tp-fig-seg{stroke:var(--primary);stroke-width:1.6;stroke-linecap:round;}
 .tp-slide .tp-fig-ref{stroke:var(--graph-axis,var(--on-surface-variant));stroke-width:1.3;opacity:.75;}
 .tp-slide .tp-fig-ref-dash{stroke-dasharray:6 4;}
-.tp-slide .tp-fig-reflab{fill:var(--on-surface-variant);font:500 12px/1 var(--mx-ui,system-ui,sans-serif);opacity:.9;}
+.tp-slide .tp-fig-reflab{fill:var(--on-surface-variant);font:500 var(--tp-fig-reflabsize)/1 var(--mx-ui,system-ui,sans-serif);opacity:.9;}
 /* Stage 3 geometry marks — same token vocabulary as the graph (§1.6: colour via tokens, never inline hex), so
    a geometry figure reads as the same object in every theme rather than carrying its own palette. */
 .tp-slide .tp-fig-poly{stroke:var(--primary);stroke-width:1.9;stroke-linejoin:round;fill:none;}
@@ -9808,11 +9821,36 @@ function figPaintedArms(curves,segs,V,lines,P){
    digits, a minus and at most one point, so the estimate is tight. `tt` is the caller's tick target —
    figNiceTicks is the single source of tick positions, so the reserved boxes are the ones that will actually be
    painted at that density, inline (5) or focused (whatever Options is set to). */
+/* THE DRAWN TYPE SIZE, READ FROM THE ONE PLACE THAT DECLARES IT. The stylesheet sets
+   `--tp-fig-ticksize` and raises it on a handset; the geometry below has to reserve and offset labels at
+   the size they will ACTUALLY be drawn, or the point-label search clears boxes nobody paints. Falls back
+   to the old constant if the property is missing, so a figure rendered outside the app still works. */
+function figFS(){ const v=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tp-fig-ticksize')); return isFinite(v)&&v>0?v:11; }
+/* Label offsets stated as PROPORTIONS of the type rather than the constants 16 / 8 / 4, which were those
+   proportions of 11px. A bigger number needs to stand off its axis by more, or it sits on the line it
+   labels. figSvgBody paints with the same three, so the reserved box and the painted glyph agree. */
+const figLabOff=fs=>({below:Math.round(fs*1.45), gap:Math.round(fs*0.73), mid:Math.round(fs*0.36)});
+/* REFERENCE-LINE LABELS ARE OBSTACLES TOO. They were not, and nothing noticed because the only thing
+   that had to clear them happened to clear them: in `roots` the label "y = 0" and the identifier
+   "(2, 0)" pass each other by SEVEN TENTHS OF A PIXEL, which is a coincidence and not a margin. Raising
+   the handset type turned that coincidence into an overlap, which is how it was found — the type exposed
+   the defect rather than causing it. Geometry mirrors figSvgBody's own emission: a y-line's label is
+   anchored `end` at (sx(x1)-6, sy(at)-7) and an x-line's `start` at (sx(at)+6, sy(y1)+14); widths are
+   estimated from the glyph count on the same basis as figPillSize and figTickBoxes. */
+function figRefLabBoxes(V,lines){
+  const P=V.view||V.dom, FS=figFS(), H=FS*1.15, wOf=t=>String(t).length*FS*0.6+2, out=[];
+  (lines||[]).forEach(L=>{ if(!L||!L.label) return;
+    const w=wOf(L.label);
+    if(L.axis==='y'){ const py=V.sy(L.at); out.push({x:V.sx(P.x1)-6-w, y:py-7-H*0.8, w, h:H}); }
+    else { const px=V.sx(L.at); out.push({x:px+6, y:V.sy(P.y1)+14-H*0.8, w, h:H}); } });
+  return out;
+}
 function figTickBoxes(V,tt){
   const D=V.dom, axisX=V.sx(Math.min(Math.max(0,D.x0),D.x1)), axisY=V.sy(Math.min(Math.max(0,D.y0),D.y1));
-  const xT=figNiceTicks(D.x0,D.x1,tt||5), yT=figNiceTicks(D.y0,D.y1,tt||5), FS=11, H=FS*1.15, wOf=t=>String(t).length*FS*0.6+2, boxes=[];
-  xT.ticks.forEach(v=>{ const w=wOf(figFmtTick(v,xT.decimals)); boxes.push({x:V.sx(v)-w/2, y:axisY+16-H*0.8, w, h:H}); });
-  yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const w=wOf(figFmtTick(v,yT.decimals)); boxes.push({x:axisX-8-w, y:V.sy(v)+4-H*0.8, w, h:H}); });
+  const xT=figNiceTicks(D.x0,D.x1,tt||5), yT=figNiceTicks(D.y0,D.y1,tt||5), FS=figFS(), H=FS*1.15, wOf=t=>String(t).length*FS*0.6+2, boxes=[];
+  const O=figLabOff(FS);
+  xT.ticks.forEach(v=>{ const w=wOf(figFmtTick(v,xT.decimals)); boxes.push({x:V.sx(v)-w/2, y:axisY+O.below-H*0.8, w, h:H}); });
+  yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const w=wOf(figFmtTick(v,yT.decimals)); boxes.push({x:axisX-O.gap-w, y:V.sy(v)+O.mid-H*0.8, w, h:H}); });
   return boxes;
 }
 /* Build the whole §5 graph model — {figure:'graph', domain, objects:[{type:'function'|'points'|'segment'}], grid, aspect}.
@@ -9877,7 +9915,7 @@ function figGraph(b, box){
   // placement 1b would have made, at 1b's cost. Segments are few, so they always stay in.
   const nSub=curves.reduce((a,c)=>a+c.paths.length,0);
   const painted=figPaintedArms(nSub<=20?curves:[],segs,V,lines,V.view||V.dom);
-  const furn=figTickBoxes(V,FIG_TARGET_TICKS);                             // Stage 2c — the printed axis numbering is an obstacle too, at exactly the density figSvgBody prints
+  const furn=figTickBoxes(V,FIG_TARGET_TICKS).concat(figRefLabBoxes(V,lines));  // Stage 2c — the printed axis numbering AND the reference-line labels are obstacles too
   const layout=figLayoutPills(pts,V,box,painted,furn);
   layout.forEach(L=>{ if(!L.valid) errors.push('identifier '+L.p.id+' could not be placed clear of the plotted geometry'); });
   /* `callouts:"hidden"` — the same vocabulary as `grid`. A figure that only ILLUSTRATES has nothing to
@@ -10672,7 +10710,7 @@ function figxPaint(xid){                                                   // re
   if(!M) return null; e.sig=sig; e.M=M;
   const geo=M.kind==='geometry';
   const nm=(!geo&&st.names)?figxNameArms(M.V,e.box):[];
-  const furn=geo?[]:figTickBoxes(M.V,st.tt);                                // Stage 2c — reserve the numbering AT THIS density; changing Tick density changes what a label must clear
+  const furn=geo?[]:figTickBoxes(M.V,st.tt).concat(figRefLabBoxes(M.V,M.lines));  // Stage 2c — reserve the numbering AT THIS density, and the reference-line labels with it
   const layout=geo?M.labels:figLayoutPills(M.pts,M.V,e.box,(M.painted||[]).concat(nm),furn);
   const paint=geo?M:Object.assign({},M,{segs:figxSegs(e),layout});          // chords drawn in full, then clipped by the viewport
   const svg=p.querySelector('[data-figx-svg]');
@@ -10788,8 +10826,9 @@ function figSvgBody(M, box, opt){
   // AXIS EXTENT IS THE VIEWPORT, never the last tick: the plane continues past the numbering, as a plane does.
   const ax=figDraw.line(V.sx(P.x0),axisY,V.sx(P.x1),axisY,'tp-fig-axis')+figDraw.line(axisX,V.sy(P.y0),axisX,V.sy(P.y1),'tp-fig-axis');
   let tk='', lb='';
-  xT.ticks.forEach(v=>{ const px=V.sx(v); tk+=figDraw.tick(px,axisY-4,0,8,'tp-fig-tick'); lb+=figDraw.text(px,axisY+16,figFmtTick(v,xT.decimals),'tp-fig-ticklabel','middle'); });
-  yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const py=V.sy(v); tk+=figDraw.tick(axisX-4,py,8,0,'tp-fig-tick'); lb+=figDraw.text(axisX-8,py+4,figFmtTick(v,yT.decimals),'tp-fig-ticklabel','end'); });
+  const LO=figLabOff(figFS());                                            // the same proportions figTickBoxes reserves, so the box and the glyph agree
+  xT.ticks.forEach(v=>{ const px=V.sx(v); tk+=figDraw.tick(px,axisY-4,0,8,'tp-fig-tick'); lb+=figDraw.text(px,axisY+LO.below,figFmtTick(v,xT.decimals),'tp-fig-ticklabel','middle'); });
+  yT.ticks.forEach(v=>{ if(Math.abs(v)<1e-9) return; const py=V.sy(v); tk+=figDraw.tick(axisX-4,py,8,0,'tp-fig-tick'); lb+=figDraw.text(axisX-LO.gap,py+LO.mid,figFmtTick(v,yT.decimals),'tp-fig-ticklabel','end'); });
   let sg='';
   /* A reference line spans the viewport, beneath the curve it is read against. Its label sits at the edge
      the line runs to, quiet enough not to compete with the plotted identifiers. */

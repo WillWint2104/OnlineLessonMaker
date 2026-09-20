@@ -88,6 +88,40 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     **0.7px**. That is a coincidence, not a margin. The fix belongs in the engine: reserve
     `tp-fig-reflab` alongside the tick boxes.
 
+- **Phone graph typography adopted at 14px declared, and the label-placement defect fixed**
+  (`lesson-studio.html` — the frozen app, unfrozen for exactly this, with the maintainer's authorisation).
+  Graph type is now three custom properties on `:root`, raised on a handset (`@media (max-width:640px)`)
+  to 14 / 15 / 15.5px for tick numbering, reference-line labels and point identifiers. **One value, three
+  readers**: the stylesheet draws with it, `figTickBoxes` reserves obstacles at it, and `figSvgBody`
+  offsets each label from its axis in proportion to it — the offsets 16 / 8 / 4 are now stated as the
+  proportions of 11px they always were.
+  - **Reference-line labels are obstacles now.** They never were, and nothing noticed because the only
+    thing that had to clear them happened to: in `roots` the label "y = 0" and the identifier "(2, 0)"
+    passed each other by **0.7px**. Larger type turned that coincidence into an overlap, which is how it
+    was found. With `figRefLabBoxes` reserved at both furniture sites, `roots` is clean at every size
+    tested, up to 16px.
+  - Verified across the whole graph registry at a **real 382px viewport**, plus a probe the registry does
+    not contain (y-axis at the left edge, two-digit numbering): no collisions, nothing outside the plot,
+    and domain, tick values, point labels, viewBox and solved box **identical** at 11 / 13 / 14 / 16px.
+  - Every app gate green, including `corpus-identity` **250/250 byte-identical** and `label-placement`
+    **927/927** — the handset rule fires only below 640px, so nothing on desktop moved.
+- **The compact tablet illustration card** (`T3`). The region spans the reading measure and the CARD now
+  hugs the object and centres inside it, taking its caption with it, so the caption sits under the image
+  at its left edge instead of at a wide plate's far corner. This is the figure surface's treatment B, and
+  it is **not** the B that was rejected: B was thrown out when it shrink-wrapped a plate inside a region
+  claiming to be wider than it painted. Here the region's width is declared and the space around the card
+  belongs to it. `fit-content` alone would not hug — the object's own `min(<authored>px, 100%)` cap makes
+  intrinsic sizing circular, and a caption's max-content is the whole sentence on one line — so the card
+  is handed the authored presentation width the catalogue already knows.
+- **A correction to a number I reported: 14px declared paints at 15.9px, not 16.8px.** The 16.8 came from
+  a harness that rendered the probe inside `#slide`, which the deck scales to fit — so every "painted"
+  size measured in there was multiplied by that stage scale. The probe measured 92px wide at a handset
+  viewport and 243px at a desktop one despite an inline `width:344px`. Collision and geometry results
+  were unaffected (a uniform scale preserves overlap), but the absolute pixel figures were not mine to
+  quote. The harness now measures the stage scale and divides it out, and its phone SVG scale of **1.139
+  agrees exactly** with the composition atlas's independent reading. Moving the probe out of `#slide`
+  instead was tried and rejected: it fixed the width and broke the fit, returning the same 520×360 viewBox
+  for all six figures — the engine unable to find its viewport, not six figures agreeing.
 - **The tablet supporting illustration, prototyped** (`notes/notes-inset-tablet-region`, rendered beside
   the current arrangement as `T__TABLET-SUPPORTING-ILLUSTRATION__current-vs-proposed`). A four-column
   illustration cannot be centred inside a seven-column measure on whole columns, so today it keeps the
