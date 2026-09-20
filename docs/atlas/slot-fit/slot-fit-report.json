@@ -417,7 +417,7 @@
     "surface": "desktop",
     "slot": "media",
     "slotFit": "fill",
-    "slotAnchor": "start",
+    "slotAnchor": "center",
     "mediaAnchor": null,
     "slotSpan": 10,
     "slotPx": 956,
@@ -447,7 +447,7 @@
       ],
       [
         "MEDIA SLOT",
-        "media · columns 1–10 of 12 · slotSpan 10 = 956px · realised 956px"
+        "media · columns 2–11 of 12 · slotSpan 10 = 956px · realised 956px"
       ],
       [
         "PAINTED MEDIA",
@@ -459,7 +459,7 @@
       ],
       [
         "ANCHOR",
-        "slot start in the grid"
+        "slot center in the grid"
       ],
       [
         "SHAPE PRESERVED",
@@ -1248,7 +1248,7 @@
     "surface": "desktop",
     "slot": "media",
     "slotFit": "fill",
-    "slotAnchor": "start",
+    "slotAnchor": "center",
     "mediaAnchor": null,
     "slotSpan": 10,
     "slotPx": 956,
@@ -1278,7 +1278,7 @@
       ],
       [
         "MEDIA SLOT",
-        "media · columns 1–10 of 12 · slotSpan 10 = 956px · realised 956px"
+        "media · columns 2–11 of 12 · slotSpan 10 = 956px · realised 956px"
       ],
       [
         "PAINTED MEDIA",
@@ -1290,7 +1290,7 @@
       ],
       [
         "ANCHOR",
-        "slot start in the grid"
+        "slot center in the grid"
       ],
       [
         "SHAPE PRESERVED",
@@ -2492,7 +2492,7 @@
     "surface": "desktop",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "start",
+    "slotAnchor": "within-reading",
     "mediaAnchor": "center",
     "slotSpan": 4,
     "slotPx": 368,
@@ -2522,7 +2522,7 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 1–4 of 12 · slotSpan 4 = 368px · realised 368px"
+        "illustration · columns 3–6 of 12 · slotSpan 4 = 368px · realised 368px"
       ],
       [
         "PAINTED MEDIA",
@@ -2534,7 +2534,7 @@
       ],
       [
         "ANCHOR",
-        "slot start in the grid · object center in the slot (resolved by the renderer)"
+        "slot within-reading in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -3116,7 +3116,7 @@
     "surface": "desktop",
     "slot": "media",
     "slotFit": "fill",
-    "slotAnchor": "start",
+    "slotAnchor": "center",
     "mediaAnchor": null,
     "slotSpan": 10,
     "slotPx": 956,
@@ -3146,7 +3146,7 @@
       ],
       [
         "MEDIA SLOT",
-        "media · columns 1–10 of 12 · slotSpan 10 = 956px · realised 956px"
+        "media · columns 2–11 of 12 · slotSpan 10 = 956px · realised 956px"
       ],
       [
         "PAINTED MEDIA",
@@ -3158,7 +3158,7 @@
       ],
       [
         "ANCHOR",
-        "slot start in the grid"
+        "slot center in the grid"
       ],
       [
         "SHAPE PRESERVED",
@@ -3534,7 +3534,7 @@
     "surface": "desktop",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "start",
+    "slotAnchor": "within-reading",
     "mediaAnchor": "center",
     "slotSpan": 4,
     "slotPx": 368,
@@ -3564,7 +3564,7 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 1–4 of 12 · slotSpan 4 = 368px · realised 368px"
+        "illustration · columns 3–6 of 12 · slotSpan 4 = 368px · realised 368px"
       ],
       [
         "PAINTED MEDIA",
@@ -3576,7 +3576,7 @@
       ],
       [
         "ANCHOR",
-        "slot start in the grid · object center in the slot (resolved by the renderer)"
+        "slot within-reading in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -4163,7 +4163,7 @@
     "surface": "desktop",
     "slot": "media",
     "slotFit": "fill",
-    "slotAnchor": "start",
+    "slotAnchor": "center",
     "mediaAnchor": null,
     "slotSpan": 10,
     "slotPx": 956,
@@ -4193,7 +4193,7 @@
       ],
       [
         "MEDIA SLOT",
-        "media · columns 1–10 of 12 · slotSpan 10 = 956px · realised 956px"
+        "media · columns 2–11 of 12 · slotSpan 10 = 956px · realised 956px"
       ],
       [
         "PAINTED MEDIA",
@@ -4205,7 +4205,7 @@
       ],
       [
         "ANCHOR",
-        "slot start in the grid"
+        "slot center in the grid"
       ],
       [
         "SHAPE PRESERVED",
@@ -4581,7 +4581,7 @@
     "surface": "desktop",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "start",
+    "slotAnchor": "within-reading",
     "mediaAnchor": "center",
     "slotSpan": 4,
     "slotPx": 368,
@@ -4611,7 +4611,7 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 1–4 of 12 · slotSpan 4 = 368px · realised 368px"
+        "illustration · columns 3–6 of 12 · slotSpan 4 = 368px · realised 368px"
       ],
       [
         "PAINTED MEDIA",
@@ -4623,7 +4623,7 @@
       ],
       [
         "ANCHOR",
-        "slot start in the grid · object center in the slot (resolved by the renderer)"
+        "slot within-reading in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -6449,7 +6449,7 @@
     "surface": "desktop",
     "slot": "illustration",
     "slotFit": "contain",
-    "slotAnchor": "start",
+    "slotAnchor": "within-reading",
     "mediaAnchor": "center",
     "slotSpan": 4,
     "slotPx": 368,
@@ -6479,7 +6479,7 @@
       ],
       [
         "MEDIA SLOT",
-        "illustration · columns 1–4 of 12 · slotSpan 4 = 368px · realised 368px"
+        "illustration · columns 3–6 of 12 · slotSpan 4 = 368px · realised 368px"
       ],
       [
         "PAINTED MEDIA",
@@ -6491,7 +6491,7 @@
       ],
       [
         "ANCHOR",
-        "slot start in the grid · object center in the slot (resolved by the renderer)"
+        "slot within-reading in the grid · object center in the slot (resolved by the renderer)"
       ],
       [
         "SHAPE PRESERVED",
@@ -7073,7 +7073,7 @@
     "surface": "desktop",
     "slot": "media",
     "slotFit": "fill",
-    "slotAnchor": "start",
+    "slotAnchor": "center",
     "mediaAnchor": null,
     "slotSpan": 10,
     "slotPx": 956,
@@ -7103,7 +7103,7 @@
       ],
       [
         "MEDIA SLOT",
-        "media · columns 1–10 of 12 · slotSpan 10 = 956px · realised 956px"
+        "media · columns 2–11 of 12 · slotSpan 10 = 956px · realised 956px"
       ],
       [
         "PAINTED MEDIA",
@@ -7115,7 +7115,7 @@
       ],
       [
         "ANCHOR",
-        "slot start in the grid"
+        "slot center in the grid"
       ],
       [
         "SHAPE PRESERVED",

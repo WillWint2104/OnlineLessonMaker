@@ -1,7 +1,10 @@
 THE ADOPTION SCAN — every shipping subdesign against the blueprint layer
 
 ── notes
-     measure   desktop  rows match `notes-inset`
+     measure   desktop  DIFFERS
+         shipping  intro:1-8 support:9-12 | reading:1-8 | illustration:3-6 | examples:1-8 | synthesis:1-8
+         notes-inset            intro:1-8 support:9-12 | reading:1-8 | illustration:1-4 | examples:1-8 | synthesis:1-8
+         notes-aside            intro:1-8 support:9-12 | reading:1-8 | illustration:1-6 | examples:1-8 | synthesis:1-8
      measure   tablet   DIFFERS
          shipping  intro:1-7 | support:1-5 | reading:1-7 | illustration:1-4 | examples:1-7 | synthesis:1-7
          notes-inset            intro:1-7 | support:1-7 | reading:1-7 | illustration:1-4 | examples:1-7 | synthesis:1-7
@@ -66,7 +69,10 @@ THE ADOPTION SCAN — every shipping subdesign against the blueprint layer
      stacked   phone    rows match `compare-tall`
 ── media.full
      full      desktop  rows match `plate-full`
-     centred   desktop  rows match `plate-wide`
+     centred   desktop  DIFFERS
+         shipping  media:2-11 | interpretation:1-8 | support:1-6
+         plate-full             media:1-12 | interpretation:1-8 | support:1-6
+         plate-wide             media:1-10 | interpretation:1-8 | support:1-6
      full      tablet   DIFFERS
          shipping  media:1-8 | interpretation:1-7 | support:1-5
          plate-full             media:1-8 | interpretation:1-7 | support:1-7
@@ -85,7 +91,7 @@ THE ADOPTION SCAN — every shipping subdesign against the blueprint layer
      beside    tablet   rows match `workbook-5-7`
      stacked   phone    rows match `workbook-stacked`
 
-15 subdesign(s) match a blueprint's rows · 9 differ
+13 subdesign(s) match a blueprint's rows · 11 differ
 
 THE SELECTION CHANGE, which no row comparison can show
   The shipping catalogue selects by (surface, aspect class). The blueprint layer selects by

@@ -21,13 +21,37 @@
 export const TOLPX = 1.5;                 /* a slot edge and a painted edge agreeing to the pixel */
 export const TOLASPECT = 0.02;            /* 2% — below a perceptible stretch, above rounding */
 export const MEDIA_SLOTS = new Set(['media', 'interactive']);
-export const ANCHORS = ['center', 'start', 'end', 'paired', 'full'];
+export const ANCHORS = ['center', 'within-reading', 'start', 'end', 'paired', 'full'];
 export const MEDIA_ANCHORS = ['center', 'start', 'end'];
 
 /* ── WHERE A SLOT SITS IN ITS ROW, read back off the areas the subdesign declares ────────────────
    The subdesign DECLARES its slotAnchor and this derives it independently; a control holds the two
    to each other, so neither the prose nor the grid can drift without the build saying so. */
-export function anchorFromAreas(areas, name) {
+/* ── THE READING SPINE OF A SUBDESIGN, DERIVED FROM ITS OWN AREAS ───────────────────────────────
+   The blueprint layer declares a spine per surface; the shipping catalogue never had one, which is
+   why "centred within the reading" was inexpressible here and `media.full/centred` and `notes/measure`
+   could only be centred on the PAGE. It is derived rather than declared because the areas already say
+   it — a second hand-maintained field would only be something for the first one to disagree with.
+
+   It is the extent of the rows that hold ONE prose slot and nothing else. A paired row is skipped: in
+   `notes` the brief runs intro 1-8 beside support 9-12, and taking that row's extent would make the
+   "reading spine" the whole twelve columns, which is the opposite of what a measure means. */
+const PROSE = new Set(['reading', 'support', 'examples', 'worked', 'questions', 'scenario', 'synthesis']);
+export function spineFromAreas(areas, slots) {
+  const proseNames = new Set((slots || []).filter((s) => PROSE.has(s.slotType)).map((s) => s.name));
+  let from = null, to = null;
+  for (const row of areas) {
+    const tk = row.trim().split(/\s+/);
+    const named = [...new Set(tk.filter((x) => x !== '.'))];
+    if (named.length !== 1 || !proseNames.has(named[0])) continue;
+    const l = tk.indexOf(named[0]) + 1, r = tk.lastIndexOf(named[0]) + 1;
+    from = from == null ? l : Math.min(from, l);
+    to = to == null ? r : Math.max(to, r);
+  }
+  return from == null ? null : { from, to, span: to - from + 1 };
+}
+
+export function anchorFromAreas(areas, name, spine) {
   for (const row of areas) {
     const tk = row.trim().split(/\s+/);
     if (!tk.includes(name)) continue;
@@ -44,6 +68,16 @@ export function anchorFromAreas(areas, name) {
        first subdesign to use `start` (media.full, fixing its two-origin defect) was rejected for
        declaring `start` where "its areas give `end`". A branch no fixture reaches is a branch nobody
        has read. */
+    /* CENTRED INSIDE THE READING IT SUPPORTS, which is neither page-centred nor stranded. Ruled
+       after the prototype: a supporting object hard against the page's left edge reads as abandoned,
+       and one centred on the PAGE claims a media stage it has not earned. It is only this when the
+       object sits wholly inside the spine AND sits symmetrically in it — an asymmetric position
+       inside the reading is still asymmetric. */
+    if (spine) {
+      const l0 = tk.indexOf(name) + 1, r0 = tk.lastIndexOf(name) + 1;
+      if (l0 >= spine.from && r0 <= spine.to && (l0 - spine.from) === (spine.to - r0) && l0 > spine.from)
+        return 'within-reading';
+    }
     if (!lead) return 'start';        /* nothing before it — hard against the LEFT */
     if (!trail) return 'end';         /* nothing after it — hard against the RIGHT */
     return 'asymmetric';              /* dots on both sides, unequal — no anchor describes this */

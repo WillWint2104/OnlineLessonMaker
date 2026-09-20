@@ -30,8 +30,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 import { openFigurePage, makePainter, makeSolvers, square, classOf, capability, diagnose } from './lib/figure-geometry.mjs';
-import { MEDIA_SLOTS, TOLPX, ANCHORS, MEDIA_ANCHORS, anchorFromAreas, approvedSpans, measureMedia,
-  slotFit, inspectorLines, drawInspector } from './lib/slots.mjs';
+import { MEDIA_SLOTS, TOLPX, ANCHORS, MEDIA_ANCHORS, anchorFromAreas, spineFromAreas, approvedSpans,
+  measureMedia, slotFit, inspectorLines, drawInspector } from './lib/slots.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = path.join(root, 'docs/atlas/composition/src');
@@ -144,7 +144,7 @@ function validate() {
     for (const d of p.subdesigns) {
       const ms = p.slots.find((x) => MEDIA_SLOTS.has(x.slotType));
       if (!ms || !areaSpans(d.areas)[ms.name]) continue;
-      const got = anchorFromAreas(d.areas, ms.name);
+      const got = anchorFromAreas(d.areas, ms.name, spineFromAreas(d.areas, p.slots));
       if (!ANCHORS.includes(d.slotAnchor))
         throw new PatternError(`${id}/${d.id}: declares slotAnchor \`${d.slotAnchor}\`; it must be one of ${ANCHORS.join(', ')}`);
       if (got === 'asymmetric')
@@ -212,15 +212,31 @@ function validate() {
        that started all this is named — not kept as an independent gate, which it no longer is. */
     for (const d of p.subdesigns) for (const sl of p.slots) {
       if (!MEDIA_SLOTS.has(sl.slotType)) continue;
+      const spine = spineFromAreas(d.areas, p.slots);
       for (const row of d.areas) {
         const tk = row.trim().split(/\s+/);
         if (!tk.includes(sl.name)) continue;
         if (tk.some((x) => x !== '.' && x !== sl.name)) continue;      // another slot owns the gap
         const l = tk.indexOf(sl.name), r = tk.length - 1 - tk.lastIndexOf(sl.name);
-        if (l !== r && !d.anchorReason)
+        if (l === r) continue;                                          // centred on the page
+        /* AND NOW THE SPINE EXISTS, so this asks it instead of accepting prose. The note left here at
+           step 1 said a declared reason was "a weaker guard than the spine itself — a reason is prose
+           and a spine is checkable — and the spine arrives with the catalogue adoption pass, at which
+           point this should be tightened to require it." This is that pass, and this is that tightening.
+           An unequal row centred INSIDE the reading spine is a composition and needs no excuse; an
+           unequal row that is not still needs one. That is strictly stronger than before, because the
+           excuse no longer covers the case the spine can now decide. */
+        const from = tk.indexOf(sl.name) + 1, to = tk.lastIndexOf(sl.name) + 1;
+        const withinReading = spine && from >= spine.from && to <= spine.to
+          && (from - spine.from) === (spine.to - to) && from > spine.from;
+        if (withinReading) continue;
+        if (!d.anchorReason)
           throw new PatternError(`${id}/${d.id}: "${sl.name}" is the only slot in its row and sits ${l} column(s) from `
-            + `the left and ${r} from the right — media with unnamed columns on one side is stranded, not inset. `
-            + `Centre it, span the grid, or declare an \`anchorReason\` saying what those columns are.`);
+            + `the left and ${r} from the right`
+            + (spine ? `, and it is not centred inside the ${spine.span}-column reading spine (${spine.from}-${spine.to}) either` : '')
+            + ` — media with unnamed columns on one side is stranded, not inset. Centre it on the page, `
+            + `centre it within the reading, span the grid, or declare an \`anchorReason\` saying what those `
+            + `columns are.`);
       }
     }
     /* EVERY (surface, aspect class) NEEDS AN APPROVED SUBDESIGN — and `none` is one of the classes.

@@ -92,6 +92,30 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   directory that the run did not produce now fails. It caught its own six on the first run — including,
   embarrassingly, after two bugs of mine: the check ran *after* the failure report was printed, and its
   console line asserted "all produced" without looking.
+- **The shipping catalogue revised to the approved compositions** (`docs/atlas/composition/src/
+  patterns.json`, `vocabulary.json`, `scripts/lib/slots.mjs`, `scripts/composition-atlas.mjs`; no app
+  change — `lesson-studio.html` does not reference the catalogue). `media.full/centred` takes the
+  ten-column **centred media stage** (columns 2–11, `slotAnchor: center`), and `notes/measure` takes
+  the four-column illustration **centred within the reading spine** (columns 3–6).
+  - **The shipping layer had no reading spine, which is why "centred within the reading" could not be
+    written down here at all** — `center` means centred on the *page*. The spine is now **derived** from
+    each subdesign's own prose rows (the rows holding one prose slot and nothing else, so a paired brief
+    can't make the "measure" the whole twelve columns), and `within-reading` joins the anchor
+    vocabulary, checked against that derivation rather than asserted beside it.
+  - **The step-1 note has been paid off.** It said a declared `anchorReason` was "a weaker guard than
+    the spine itself — a reason is prose and a spine is checkable — and the spine arrives with the
+    catalogue adoption pass, at which point this should be tightened to require it." The per-row
+    backstop now asks the spine: a row centred inside the reading needs no excuse, and one that isn't
+    still needs a reason. Strictly stronger, because the excuse no longer covers the case the spine can
+    decide.
+  - **`notes/measure` at tablet keeps its left edge, with the real reason recorded.** A row centred
+    within the spine needs the spine's parity, and (7 − 4) is odd. The old reason said "the page has one
+    alignment origin", which is the rule that was overruled.
+  - Proven in the shipping atlases, not asserted: `image-portrait__notes__desktop` reports *columns 3–6
+    of 12 · slotSpan 4 = 368px · realised 368px · within-reading · undistorted · 0px unclaimed*, and
+    `graph-portrait__media-full__desktop` reports `center` at 10 columns. No page in the composition
+    atlas fills the `notes` illustration slot, so the slot-fit atlas is where that one is visible — a
+    gap already on the record.
 - **The two shipping-catalogue defects: `media.full/centred` and `notes/measure`** (`docs/atlas/
   composition/src/patterns.json`, `scripts/composition-atlas.mjs`, `scripts/lib/slots.mjs`; no app
   change — `lesson-studio.html` does not reference the catalogue). Both centred their object over
