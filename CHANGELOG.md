@@ -72,7 +72,32 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   **Instructional type does not scale with the figure**: the caption is 13.5px, tick labels 11px and
   the reference label 12px at *every* surface and every media width.
 
+- **Phone graph typography, investigated** (`scripts/phone-typography.mjs`,
+  `docs/atlas/phone-typography/`; no app change). Asked for after the responsive review: the phone
+  graph's labels are too small to accept as the standard presentation of instructional mathematics.
+  **Raising them is geometrically free.** Every graph figure in the registry was re-solved at the 344px
+  phone plot box at declared 11 / 13 / 14 / 16px, plus a probe the registry does not contain — the
+  y-axis at the *left edge* with two-digit numbering, the case most likely to break. In all six the
+  domain, tick values, point labels, viewBox and solved box came through **identical**: the feared
+  feedback loop (bigger labels → bigger gutters → bigger viewBox → smaller scale) does not occur.
+  Painted sizes: 11px declared → **13.2px**, 13 → 15.6, 14 → 16.8, 16 → 19.2.
+  - **The one failure is not caused by larger type.** `roots` collides at 13px and above — the
+    reference-line label "y = 0" against the point label "(2, 0)" — because `figTickBoxes` is the only
+    furniture the label solver reserves. A reference-line label is *never* an obstacle, so the search
+    places point labels with no knowledge of it. At the shipped 11px those two clear each other by
+    **0.7px**. That is a coincidence, not a margin. The fix belongs in the engine: reserve
+    `tp-fig-reflab` alongside the tick boxes.
+
 ### Fixed
+- **A correction: "instructional type does not scale with the figure" was wrong.** It was true of the
+  stylesheet and false of the page, and the control I added to check it measured the wrong quantity.
+  The plot is an SVG with a viewBox painted into a box the composition chose, so every `font-size`
+  inside it is in **viewBox units** and is multiplied by the SVG's own scale before anyone sees it.
+  H22 now reports the **painted** size and applies the floor to that. Measured: tick numbering is
+  14.6px on desktop, 14.1px on tablet and **12.5px on phone** — because the axis gutters are close to a
+  fixed number of viewBox units, so a smaller plot spends proportionally more of its viewBox on gutter
+  and its scale falls. The phone is the surface where instructional type is *smallest*, which is the
+  opposite of what it needs. The caption is HTML rather than SVG and is genuinely constant at 13.5px.
 - **Three defects the responsive pass exposed, all of them dormant because nothing had rendered these
   compositions at more than one surface.**
   - **`stage-primary` and `plate-wide` had no tablet form at all.** Both declared a tablet media rung

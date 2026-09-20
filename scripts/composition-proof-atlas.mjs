@@ -1335,7 +1335,19 @@ ${o.injectCSS || ''}
      for a decorative photograph, not for a mathematical diagram a student has to read. The sizes are
      READ BACK here rather than asserted, because a floor nobody has measured against is a guess. */
   const LEG = await pg.evaluate(() => {
-    const px = (el) => Math.round(parseFloat(getComputedStyle(el).fontSize) * 10) / 10;
+    /* THE DECLARED SIZE IS NOT THE SIZE A READER GETS, and the first version of this control measured
+       the wrong one. The plot is an SVG with a viewBox, painted into a box the composition chose, so
+       every `font-size` inside it is in VIEWBOX UNITS and is multiplied by the SVG's own scale before
+       anyone sees it. An 11px tick label in a viewBox painted 1.3x larger is ~14px on the glass; the
+       same 11px in a viewBox painted smaller would be less. So the readout reports BOTH, and the floor
+       is applied to the painted one. Caught while investigating phone legibility: the earlier finding
+       that "type does not scale with the figure" was true of the stylesheet and false of the page. */
+    const svg = document.querySelector('[data-cp-host] .tp-fig-svg');
+    const vb = svg ? (svg.getAttribute('viewBox') || '0 0 1 1').split(/\s+/).map(Number) : null;
+    const scale = svg && vb && vb[2] ? svg.getBoundingClientRect().width / vb[2] : 1;
+    const px = (el) => { const d = parseFloat(getComputedStyle(el).fontSize);
+      const k = el.ownerSVGElement ? scale : 1;
+      return Math.round(d * k * 10) / 10; };
     const host = document.querySelector('[data-cp-host]');
     const cap = host.querySelector('[data-fs-cap]') || host.querySelector('figcaption');
     const ticks = [].slice.call(host.querySelectorAll('.tp-fig-ticklabel'));
@@ -1345,8 +1357,12 @@ ${o.injectCSS || ''}
        must say so, so the count is reported beside the size. */
     const labels = [].slice.call(host.querySelectorAll('.tp-fig-callout, .tp-fig-reflab, .tp-fig-gsym, .tp-fig-gprose'));
     const min = (a) => a.length ? Math.min.apply(null, a.map(px)) : null;
+    const declared = (el) => Math.round(parseFloat(getComputedStyle(el).fontSize) * 10) / 10;
+    const minD = (a) => a.length ? Math.min.apply(null, a.map(declared)) : null;
     return { caption: cap ? px(cap) : null, tick: min(ticks), ticks: ticks.length,
-      label: min(labels), labels: labels.length };
+      label: min(labels), labels: labels.length,
+      svgScale: +scale.toFixed(3), tickDeclared: minD(ticks), labelDeclared: minD(labels),
+      captionDeclared: cap ? declared(cap) : null };
   });
 
   /* the media verdict comes from the ONE owner the other two atlases use */
