@@ -31,6 +31,7 @@ on:
       - 'scripts/verify-workbook.mjs'
       - 'scripts/verify-notes-examples.mjs'
       - 'scripts/verify-composition-grid.mjs'
+      - 'scripts/verify-mx-authoring.mjs'
       - 'docs/atlas/composition/src/grid.json'
       - 'docs/atlas/composition/src/patterns.json'
       - 'docs/atlas/worked-examples/src/atlas.json'
@@ -64,3 +65,7 @@ jobs:
       # of it rather than whichever tab was open. Same reasoning — a page that renders is not a page that
       # is data-driven, and only a control that changes the JSON can tell the two apart.
       - run: node scripts/verify-notes-examples.mjs
+      # Stage D: the mathematics pages can be AUTHORED, not only rendered — created from the palette,
+      # edited through the inspector, exported, reopened from the file and edited again. Every other
+      # mathematics gate asserts that authored JSON renders; only this one asserts the JSON can be made.
+      - run: node scripts/verify-mx-authoring.mjs

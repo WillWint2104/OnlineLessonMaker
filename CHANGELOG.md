@@ -7,7 +7,38 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
-### Changed
+### Added
+- **A mathematics page can now be AUTHORED, not only rendered** (`lesson-studio.html`,
+  `scripts/verify-mx-authoring.mjs`, `scripts/shots-mx-authoring.mjs`, `docs/atlas/authoring/`). The
+  `.mx-*` pages are registered with `registerPage()` and the composable blocks with `registerBlock()`; the
+  editor only ever knew the second registry, so a `workedExamples` page could be drawn but never made and
+  never edited. A renderer without an authoring path is a demo.
+
+  **The whole integration is three things**: a seed per authorable page type (`MX_PAGE_SEED`), a palette
+  tile for it, and one inspector branch. The two registries stay separate and nothing is renamed to fit.
+
+  **The branch is keyed on the registry, never on the type name.** `tpPageEntry(s)` asks `PAGES` whether
+  this is a responsive page registered for this theme; a legacy slide that merely shares a name cannot
+  satisfy it. That matters concretely: the legacy canvas already has a `notes` slide type (heading +
+  `blocks[{h,bd}]`) which is a completely different object from the mathematics `notes` PAGE. Disabling the
+  branch in a drive shows the page falling straight into a legacy form — `Worked examples (page) · fields |
+  Worksheet | Images | …` — which is exactly the failure the registry key prevents.
+
+  **Everything below the outline is existing machinery.** The fields are `inT`/`inA`/`inSel` writing
+  ordinary `data-bind` paths, so `setP` and the live re-render do what they already did for every other
+  type. The only new UI is the structure outline itself: groups → examples → steps, each row selectable,
+  with add and remove at every level.
+- **`scripts/verify-mx-authoring.mjs` — the create → edit → save → reopen gate (14 checks).** Every click is
+  a real click: the palette tile, the outline rows, the inputs and their real `input` events. What is then
+  asserted is the **data**, because the claim is that editing updates the page JSON rather than the rendered
+  HTML. Save and reopen is exercised the way the app actually works — the app is deliberately stateless
+  (golden rule 2: no `localStorage`; the file is the state, via Export), so the export serialisation runs,
+  the resulting document is **served and opened in a fresh page**, and the authored content has to come
+  back still editable. Four drives to failure: the palette tile removed, the inspector branch disabled, the
+  seed emptied, and — the one this gate exists for — the fields made to repaint without writing, which the
+  JSON assertion and the reopen assertion both catch.
+
+### Changed (the worked-example corrections)
 - **The question panel hugs its content — a rule reversed, and its control reversed with it**
   (`lesson-studio.html`). A worked example's QUESTION and WORKED SOLUTION were both forced to the row's
   full height, on the principle that "the regions are aligned, never the amount of content in them".

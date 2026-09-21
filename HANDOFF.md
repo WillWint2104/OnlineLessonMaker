@@ -748,6 +748,36 @@ renderer is referenced.
      220px → 18px. The rule between the regions still spans the band, because only the ask hugs and the
      working goes on stretching — the one declaration `align-items:start` would have got wrong.
 
+  **THE THIRD MILESTONE HAS STARTED: LESSON AUTHORING (21 Sep).** Rendering is complete; the question is
+  now whether a person can MAKE one of these pages in the app. The audit found they could not, and why:
+
+      registerBlock(type, theme, pageFn, fragFn)  ->  REGISTRY + THEME_TYPES  ->  the palette + the inspector
+      registerPage(theme, type, fn, opts)         ->  PAGES                   ->  the .mx-* responsive pages
+
+  The editor only ever knew the first registry. A wider finding came with it: the legacy inline-editing
+  canvas is UNREACHABLE FOR EVERY THEME THE APP OFFERS — all five (imperium, microhistory, geolearn,
+  mathematics, scholarmath) are in PACK_THEMES, and a sweep of all 14 slides of the geolearn sample in Edit
+  found 0 `.editable[data-bind]`, 0 `[data-zone]`, 0 `[data-drop]`. The 23 `.editable` sites are vestigial.
+  The editor that IS alive is the composable page: `blockOutline` + `repeatGroup` + `data-bind`/`addrepp`,
+  which already add, delete and bind NESTED ARRAYS AT ARBITRARY PATHS. That machinery is the asset.
+
+  **THE VERTICAL SLICE IS DONE.** `MX_PAGE_SEED` + one palette tile + one inspector branch, and the branch
+  is keyed on `tpPageEntry(s)` — the PAGE REGISTRY — never on the type name. That is not fussiness: the
+  legacy canvas has its own `notes` slide type, a different object from the mathematics `notes` PAGE, and a
+  drive with the branch disabled shows a mathematics page falling into a legacy form. `mxOutline` walks
+  groups -> examples -> steps; every field below it is an existing helper on an ordinary bound path.
+  `scripts/verify-mx-authoring.mjs` (14 checks, 4 drives) proves create -> edit -> add -> save -> reopen ->
+  edit again, with the reopen done by serving the exported document and opening it fresh.
+
+  **SAVE AND REOPEN MEANS EXPORT AND REOPEN.** Golden rule 2 stands: no localStorage, the file is the
+  state. `LESSON` is assigned exactly once, from `#lesson-data` at boot, and the palette is built once from
+  that lesson's theme — every exported document IS its lesson. Any harness that swaps `LESSON` in a booted
+  page is not reproducing a real flow and will leave the palette built for the default theme (geolearn).
+
+  **STILL TO AUTHOR** (the maintainer's stage 3, not started): reorder; figures' `objects[]` (function,
+  reference line, marked points); the table of values; staged states. The acceptance test is to rebuild the
+  quadratics lesson through the UI and compare it semantically with `docs/atlas/lesson/quadratics.app.json`.
+
   **TWO PIECES OF OUTSTANDING WORK, RECORDED FOR A LATER PHASE — neither is to be expanded now:**
   1. **The image block.** `block()` in `scripts/composition-atlas.mjs` sends every media block through
      the graph solver, so an `image` block cannot render and the `contain` branch is designed and

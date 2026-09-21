@@ -4139,7 +4139,7 @@ const ICON={
   medal:'<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="9" r="6"/><path d="M8.5 13.5L7 22l5-3 5 3-1.5-8.5"/><path d="M12 6.4l.85 1.7 1.9.28-1.37 1.33.32 1.88L12 10.8l-1.7.9.32-1.88L9.25 8.5l1.9-.28z" fill="currentColor" stroke="none"/></svg>',
   book:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6c-2-1.4-5-1.4-7 0v12c2-1.4 5-1.4 7 0 2-1.4 5-1.4 7 0V6c-2-1.4-5-1.4-7 0z"/><path d="M12 6v12"/></svg>',
   outcomes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>'};
-const TYPELAB={figure:"Figure",cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
+const TYPELAB={workedExamples:"Worked examples (page)",figure:"Figure",cover:"Section",notes:"Notes",text:"Text",textImage:"Text + image",list:"List",infographic:"Infographic",video:"Video",image:"Image",question:"Question",source:"Source",model3d:"3D Artefact",artifact:"Artifact",worksheet:"Worksheet",task:"Analysis task",external:"External",complete:"Complete",outcomes:"Outcomes",formula:"Formula",workedExample:"Worked example",mastery:"Mastery",selfCheck:"Self-check",practiceSet:"Practice set",skillHeader:"Skill header",banner:"Banner",section:"Section"};
 /* themes whose slides render through the dedicated JSON slide pack (renderPackSlide) */
 const PACK_THEMES=new Set(['imperium','microhistory','geolearn','mathematics','scholarmath']);   // S1 — ScholarMath is a token variant on the shared pack path (composable pages)
 /* ═══ CAPABILITY PROFILES — the application is multi-domain; a THEME is not ═══
@@ -5239,6 +5239,103 @@ function blockForm(i,k,b,sel){   // dispatch: reuse the page inspector case (reb
   if(b.type==='figure') return blockFigureForm(i,b,sel,base);             // Stage 1a — coordinate plane (points authored in the block JSON for now)
   return inspectorForm(i,b,sel,base);   // penResponse / graphQuestion / labeledGraphic — schemas match; base rebases every path
 }
+/* ═══ AUTHORING A MATHEMATICS PAGE ═══════════════════════════════════════════════════════════════
+   The `.mx-*` pages are registered with registerPage(), the composable blocks with registerBlock(), and
+   the editor only ever knew the second registry — so a workedExamples page could be rendered but not made
+   and not edited. THIS IS THE WHOLE INTEGRATION: a seed per authorable page type, a palette tile for it,
+   and one inspector branch. The two registries stay separate and nothing is renamed to fit.
+
+   THE BRANCH IS KEYED ON THE REGISTRY, NEVER ON THE TYPE NAME. `tpPageEntry(s)` answers "is this a
+   responsive page registered for this theme" by looking it up in PAGES; it cannot be satisfied by a legacy
+   slide that merely shares a name. That matters here in particular: the legacy canvas already has a
+   `notes` slide type (heading + blocks[{h,bd}]) which is a completely different object from the
+   mathematics `notes` PAGE, and routing by string would quietly hand one the other's form. */
+const MX_PAGE_SEED={
+  workedExamples:{ type:'workedExamples', navLabel:'Worked examples', title:'Worked examples',
+    lede:'What this page shows.',
+    groups:[{ id:'g1', type:'sequence', title:'First subtopic', lede:'Why these examples, in this order.',
+      examples:[{ id:'ex1', label:'First example', prompt:'State the question.',
+        steps:[{ id:'s1', text:'Describe the first move.', math:'_y_ = _x_^2' }],
+        answer:'State the result.' }] }] },
+};
+/* offered only where the page family that renders it is actually registered for this theme */
+function mxAuthorablePages(){ const t=(LESSON.meta&&LESSON.meta.theme)||'', byTheme=PAGES[t]||{};
+  return Object.keys(MX_PAGE_SEED).filter(k=>byTheme[k]&&byTheme[k].layoutMode==='responsive'); }
+function mxPageSeed(t){ return JSON.parse(JSON.stringify(MX_PAGE_SEED[t])); }
+/* selection: mx.g.<group> · mx.e.<group>.<example> · mx.s.<group>.<example>.<step> */
+function mxSel(sel){ const m=/^mx\.([ges])\.(\d+)(?:\.(\d+))?(?:\.(\d+))?$/.exec(String(sel||''));
+  return m?{kind:m[1],g:+m[2],e:m[3]==null?null:+m[3],s:m[4]==null?null:+m[4]}:null; }
+function mxGroups(s){ return Array.isArray(s.groups)?s.groups:[]; }
+/* THE OUTLINE IS THE STRUCTURE, and it is the only new UI: every field below it is an existing helper
+   (inT/inA/inSel) writing an ordinary data-bind path, so setP/getP and the live re-render do the work
+   they already did for every other type. */
+function mxOutline(i,s,sel){
+  const S=mxSel(sel), base=`slides.${i}`;
+  const row=(cls,zone,label,name,del)=>`<div class="blk-row${zone===sel?' cur':''}" data-mxsel="${zone}" style="${cls}">
+      <span class="blk-t">${esc(label)}${name?` · <span class="muted">${esc(String(name).slice(0,42))}</span>`:''}</span>
+      <span class="blk-ord"><button class="ibtn-x" data-mxdel="${del}" title="Remove">✕</button></span></div>`;
+  let tree='';
+  mxGroups(s).forEach((g,gi)=>{
+    tree+=row('',`mx.g.${gi}`,`Group ${gi+1} · ${g.type||'sequence'}`,g.title,`g.${gi}`);
+    if(S&&S.g===gi){
+      (g.examples||[]).forEach((ex,ei)=>{
+        tree+=row('margin-left:14px',`mx.e.${gi}.${ei}`,`Example ${ei+1}`,ex.label,`e.${gi}.${ei}`);
+        if(S.e===ei) (ex.steps||[]).forEach((st,si)=>{
+          tree+=row('margin-left:28px',`mx.s.${gi}.${ei}.${si}`,`Step ${si+1}`,st.text,`s.${gi}.${ei}.${si}`); });
+        if(S.e===ei) tree+=`<button class="blk-add-t" data-mxadd="s.${gi}.${ei}">＋ Add step</button>`;
+      });
+      tree+=`<button class="blk-add-t" data-mxadd="e.${gi}">＋ Add example</button>`;
+    }
+  });
+  const form=(()=>{
+    if(!S) return `<div class="ihint">Select a group, example or step above to edit it, or add one.</div>`;
+    const g=mxGroups(s)[S.g]; if(!g) return `<div class="ihint">That group is gone — select another.</div>`;
+    const gb=`${base}.groups.${S.g}`;
+    if(S.kind==='g') return `<div class="isec"><div class="isec-h">Group · fields</div>
+      ${ig('mxg.type',sel,inSel('Composition',`${gb}.type`,g.type||'sequence',
+        [['sequence','Sequence — N examples stacked'],['standard','Standard — one example'],['staged','Staged — authored representations'],['comparison','Comparison — two cases and a plane'],['extended','Extended — one long derivation']]))}
+      ${ig('mxg.title',sel,inT('Tab title',`${gb}.title`,g.title))}
+      ${ig('mxg.lede',sel,inA('Lede — what this subtopic is for',`${gb}.lede`,g.lede))}
+      ${ig('mxg.foot',sel,inT('Closing region label (optional)',`${gb}.footLabel`,g.footLabel))}</div>`;
+    const ex=(g.examples||[])[S.e]; if(!ex) return `<div class="ihint">That example is gone — select another.</div>`;
+    const eb=`${gb}.examples.${S.e}`;
+    if(S.kind==='e') return `<div class="isec"><div class="isec-h">Example · fields</div>
+      ${ig('mxe.label',sel,inT('Example title',`${eb}.label`,ex.label))}
+      ${ig('mxe.prompt',sel,inA('Question (use _x_ for italics, ^2 for powers)',`${eb}.prompt`,ex.prompt))}
+      ${ig('mxe.answer',sel,inA('Answer',`${eb}.answer`,ex.answer))}
+      ${ig('mxe.rlab',sel,inT('Answer label (optional — default "Answer")',`${eb}.resultLabel`,ex.resultLabel))}</div>`;
+    const st=(ex.steps||[])[S.s]; if(!st) return `<div class="ihint">That step is gone — select another.</div>`;
+    const sb=`${eb}.steps.${S.s}`;
+    return `<div class="isec"><div class="isec-h">Step · fields</div>
+      ${ig('mxs.text',sel,inA('What this step does',`${sb}.text`,st.text))}
+      ${ig('mxs.math',sel,inT('Mathematics (_x_ italic · ^2 power · − minus · 2/3 builds up)',`${sb}.math`,st.math))}
+      ${ig('mxs.note',sel,inT('Note (optional)',`${sb}.note`,st.note))}</div>`;
+  })();
+  return `<div class="isec"><div class="isec-h">Structure · ${esc(TYPELAB[s.type]||s.type)}</div>
+    <div class="blk-list">${tree||'<div class="muted small">No groups yet — add one below.</div>'}</div>
+    <div class="blk-palette"><button class="blk-add-t" data-mxadd="g">＋ Add group</button></div></div>${form}`;
+}
+function mxOutlineWire(i){
+  const ins=$('#inspector'), s=LESSON.slides[i]; if(!s) return;
+  const groups=()=>(s.groups=Array.isArray(s.groups)?s.groups:[]);
+  const uid=(p,n)=>p+(n+1)+'-'+Math.random().toString(36).slice(2,6);
+  ins.querySelectorAll('[data-mxsel]').forEach(el=>el.addEventListener('click',e=>{
+    if(e.target.closest('[data-mxdel]')) return; selZone=el.dataset.mxsel; renderSlide(); }));
+  ins.querySelectorAll('[data-mxadd]').forEach(b=>b.onclick=()=>{
+    const a=b.dataset.mxadd.split('.'), G=groups();
+    if(a[0]==='g'){ G.push({id:uid('g',G.length),type:'sequence',title:'New subtopic',examples:[]}); selZone=`mx.g.${G.length-1}`; }
+    else if(a[0]==='e'){ const g=G[+a[1]]; const ex=(g.examples=g.examples||[]);
+      ex.push({id:uid('ex',ex.length),label:'New example',prompt:'State the question.',steps:[],answer:''}); selZone=`mx.e.${a[1]}.${ex.length-1}`; }
+    else { const ex=G[+a[1]].examples[+a[2]]; const st=(ex.steps=ex.steps||[]);
+      st.push({id:uid('s',st.length),text:'Describe this step.',math:''}); selZone=`mx.s.${a[1]}.${a[2]}.${st.length-1}`; }
+    renderSlide(); });
+  ins.querySelectorAll('[data-mxdel]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
+    const a=b.dataset.mxdel.split('.'), G=groups();
+    if(a[0]==='g') G.splice(+a[1],1);
+    else if(a[0]==='e') G[+a[1]].examples.splice(+a[2],1);
+    else G[+a[1]].examples[+a[2]].steps.splice(+a[3],1);
+    selZone=null; renderSlide(); });
+}
 function blockOutline(i,s,sel){
   const blocks=Array.isArray(s.blocks)?s.blocks:[];
   const selK=(typeof sel==='string'&&sel.indexOf('block.')===0)?+sel.slice(6).split('.')[0]:null;
@@ -5525,6 +5622,15 @@ function renderInspector(){
   if(mode!=='edit'){ ins.innerHTML=''; return; }
   if(!LESSON.slides.length){ ins.innerHTML=`<div class="ins-h"><span>Inspector</span></div><div class="ihint">No slides yet — add one from the palette below.</div>${metaSection()}`; wireInspector(); return; }
   const s=LESSON.slides[cur], i=cur;
+  /* A REGISTERED RESPONSIVE PAGE WE CAN AUTHOR — asked of PAGES via tpPageEntry, so a legacy slide that
+     merely shares a name (`notes`) can never land here and be handed the wrong form. Before the legacy
+     path for exactly that reason. */
+  if(tpPageEntry(s)&&MX_PAGE_SEED[s.type]){
+    ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${mxOutline(i,s,selZone)}${metaSection()}`;
+    wireInspector(); mxOutlineWire(i);
+    const c0=ins.querySelector('.cur'); if(c0) c0.scrollIntoView({block:'nearest'});
+    return;
+  }
   if(Array.isArray(s.blocks)){                                    // v3 A3 — composite page → block outline (blocks own their own media/links)
     ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${blockOutline(i,s,selZone)}${layoutSection()}${metaSection()}`;
     wireInspector(); wireOutline(i);
@@ -12063,10 +12169,11 @@ function convertSlide(idx,to){
 const PALETTE_DEFAULT_ZONE={cover:'title',outcomes:'heading',notes:'heading',text:'heading',textImage:'heading',list:'heading',infographic:'heading',image:'heading',video:'heading',question:'heading',source:'heading',model3d:'heading',artifact:'title',worksheet:'heading',external:'title',complete:'title',labeledGraphic:'title',timeline:'title',penResponse:'title',graphQuestion:'title'};
 function insertSlide(type, atIndex){
   const isPage=type==='__page';                                  // v3 A3 — "Page (composable)" palette entry → an empty composite ready for blocks
-  if(!isPage && !PACK_FACTORY[type] && !SLIDE_FACTORY[type]) return;
+  const isMx=mxAuthorablePages().indexOf(type)>=0;               // a registerPage() responsive page with a seed
+  if(!isPage && !isMx && !PACK_FACTORY[type] && !SLIDE_FACTORY[type]) return;
   const idx=Math.max(0,Math.min(LESSON.slides.length, atIndex));
-  LESSON.slides.splice(idx,0, isPage?{blocks:[]}:makeSlide(type));
-  cur=idx; selZone=isPage?null:(PALETTE_DEFAULT_ZONE[type]||null);   // select + load the new slide in the inspector
+  LESSON.slides.splice(idx,0, isPage?{blocks:[]}:(isMx?mxPageSeed(type):makeSlide(type)));
+  cur=idx; selZone=isPage?null:(isMx?'mx.g.0':(PALETTE_DEFAULT_ZONE[type]||null));   // select + load the new slide in the inspector
   renderNav(); renderSlide(); $('#stage').scrollTop=0;
 }
 
@@ -12137,7 +12244,12 @@ function renderPalette(){
   const pageTile = types.length ? `<button class="pal-thumb" draggable="true" data-ptype="__page" title="Add a composable Page — stack blocks in a flow">
       <span class="wf-box"><svg class="wf" viewBox="0 0 80 52" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="6" width="64" height="10" rx="2" class="f"/><rect x="8" y="20" width="64" height="10" rx="2" class="s"/><rect x="8" y="34" width="64" height="10" rx="2" class="f"/></svg></span>
       <span class="pal-lbl">Page</span></button>` : '';   // v3 A3 — composable page
-  const items=pageTile+types.map(t=>{ const m=PACK_PALETTE[t]||{label:t,wf:''};
+  /* the authorable responsive pages, ahead of the block types: they are whole pages, not blocks, and the
+     list comes from the PAGE registry crossed with the seeds — never from a hand-kept name list */
+  const mxTiles=mxAuthorablePages().map(t=>`<button class="pal-thumb" draggable="true" data-ptype="${esc(t)}" title="Add a ${esc(TYPELAB[t]||t)} page">
+      <span class="wf-box"><svg class="wf" viewBox="0 0 80 52" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="6" width="64" height="7" rx="2" class="f"/><rect x="8" y="18" width="26" height="28" rx="2" class="s"/><rect x="38" y="18" width="34" height="6" rx="2" class="f"/><rect x="38" y="28" width="34" height="6" rx="2" class="f"/><rect x="38" y="38" width="22" height="6" rx="2" class="f"/></svg></span>
+      <span class="pal-lbl">${esc(TYPELAB[t]||t)}</span></button>`).join('');
+  const items=pageTile+mxTiles+types.map(t=>{ const m=PACK_PALETTE[t]||{label:t,wf:''};
     return `<button class="pal-thumb" draggable="true" data-ptype="${esc(t)}" title="Add ${esc(m.label)} slide">
       <span class="wf-box"><svg class="wf" viewBox="0 0 80 52" xmlns="http://www.w3.org/2000/svg">${m.wf||''}</svg></span>
       <span class="pal-lbl">${esc(m.label)}</span></button>`; }).join('');
