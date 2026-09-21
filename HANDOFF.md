@@ -730,21 +730,23 @@ renderer is referenced.
   `docs/atlas/composition/src/{grid.json,patterns.json}` or `atlas.json`'s bands. The catalogue stays
   the one owner.
 
-  **THREE DIFFERENCES FROM THE APPROVED STANDALONE RENDER remain, all app behaviour rather than
-  integration damage, none of them corrected:**
+  **THREE DIFFERENCES FROM THE APPROVED STANDALONE RENDER were reported after the integration. TWO ARE
+  NOW FIXED at the maintainer's direction (21 Sep); the first remains open and is not to be expanded:**
   1. **A height bound the catalogue does not have.** `MX_PLOT_H = 720` caps a plane's height, so a
      very tall plane takes less than its span. It never binds on this lesson (the tallest plane is
      702px), but the composition catalogue has no height cap at all — "the page scrolls" — so the two
      would disagree on a plane taller than about 12 units at this width.
-  2. **A narrow fraction grammar.** `mxM()` builds `−2/3` and `4/9` into vertical fractions but leaves
-     `(−2)^2 / 3^2` as a slash, because the rule is digits-only on purpose. One step of the fraction
-     example therefore reads inconsistently with the two around it. Widening the grammar is a
-     maintainer call, not a renderer's.
-  3. **The ask column stretches to the working's height.** In a `standard` worked-example row the grey
-     QUESTION panel matches the worked solution's height, which on a short question leaves a large
-     tinted void. Pre-existing (`.mx-wexrow`, untouched by this work — the corpus renders byte-identical
-     against `main`), visible on the Substitution tab, and the next thing worth looking at in the app's
-     own layout.
+  2. ~~**A narrow fraction grammar.**~~ **FIXED 21 Sep** — `mxM()` now also takes a bracketed signed
+     integer on either side, so `(−2)^2 / 3^2` builds up like the two steps around it. ONE SIDE MUST BE
+     BRACKETED, which is what keeps the surrounding spaces safe and `1914 / 1918` out of it; tested
+     differentially against 36 strings from the repo's own content, of which only the target changed. A
+     VARIABLE numerator (`_x_^2 / 12`, `1/x`) is still deliberately a slash: widening to letters would
+     rewrite existing lessons, and the maintainer asked only for consistency inside the worked example.
+  3. ~~**The ask column stretches to the working's height.**~~ **FIXED 21 Sep** — the maintainer reviewed
+     the app renders, ruled that the regions share a top edge rather than a depth, and it is done:
+     `align-self:start` on `.mx-wexask` in split rows only. Question panel 283px → 81px, empty tint
+     220px → 18px. The rule between the regions still spans the band, because only the ask hugs and the
+     working goes on stretching — the one declaration `align-items:start` would have got wrong.
 
   **TWO PIECES OF OUTSTANDING WORK, RECORDED FOR A LATER PHASE — neither is to be expanded now:**
   1. **The image block.** `block()` in `scripts/composition-atlas.mjs` sends every media block through

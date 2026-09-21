@@ -277,6 +277,41 @@ const iok = (what, cond, detail) => {
   iok('and the table of values arrives whole — every heading and every cell the lesson authors',
       seen.tables === tbl.length && seen.cells === wantCells,
       `${seen.tables} table(s), ${seen.cells} cells / ${wantCells} authored (${tblSpec ? tblSpec.rows.length + '×' + tblSpec.rows[0].cells.length + ' + stub + head' : 'none'})`);
+  /* STUDY, EDIT AND PRESENT. The maintainer's acceptance condition, and the honest answer is that the
+     mathematics page family has NO inline edit affordance: renderCanvas sets mode='study' for the duration
+     of a responsive page and restores it after, so Edit renders Study-identical by design, and tagZones only
+     hooks the legacy canvas slide types. So what is asserted is what is actually claimed — the lesson
+     survives all three intact — rather than an invented per-mode difference. Present is entered and left
+     through its own controls; Escape only leaves fullscreen, which headless does not have. */
+  const shape = () => ({ mode, body: document.body.className,
+    present: document.body.classList.contains('present'),
+    tabs: document.querySelectorAll('[data-mx-tab]').length,
+    steps: document.querySelectorAll('.mx-step').length,
+    answers: document.querySelectorAll('[data-mx-sec="answer"]').length,
+    tables: document.querySelectorAll('.mx-tblwrap').length,
+    chars: (document.querySelector('.mx-page') || document.body).textContent.replace(/\s+/g, ' ').trim().length });
+  /* FROM THE SAME STANDING START EACH TIME. Switching mode re-renders the slide, which returns both the tab
+     AND a staged group's state to their defaults — and textContent counts hidden panes, so capturing Study
+     on whatever the drive above left behind reported the `visual` state against the others' `workings` and
+     called a 28-character difference a mode defect. It was the probe, not the page. */
+  const firstTab = () => p.evaluate(() => { render(); go(0); });
+  await firstTab(); await p.waitForTimeout(350);
+  const modes = { study: await p.evaluate(shape) };
+  await p.evaluate(() => document.querySelector('#modeSeg [data-mode="edit"]').click());
+  await p.waitForTimeout(450); await firstTab(); await p.waitForTimeout(300); modes.edit = await p.evaluate(shape);
+  await p.evaluate(() => document.querySelector('#presentBtn').click());
+  await p.waitForTimeout(550); await firstTab(); await p.waitForTimeout(300); modes.present = await p.evaluate(shape);
+  await p.evaluate(() => document.querySelector('#presentExit').click());
+  await p.waitForTimeout(550); await firstTab(); await p.waitForTimeout(300); modes.back = await p.evaluate(shape);
+  const same = (a, b) => a.tabs === b.tabs && a.steps === b.steps && a.answers === b.answers && a.tables === b.tables && a.chars === b.chars;
+  iok('the whole lesson survives Study, Edit and Present — every tab, step, answer and table, in all three',
+      modes.study.tabs === GROUPS.length && same(modes.study, modes.edit) && same(modes.study, modes.present),
+      Object.entries(modes).map(([k, v]) => `${k}: ${v.tabs} tabs / ${v.steps} steps / ${v.answers} answers / ${v.tables} table / ${v.chars} chars`).join(' · '));
+  iok('and each mode really is the mode it claims — Edit is not Study wearing its name, Present sets the board',
+      modes.study.mode === 'study' && !modes.study.present && modes.edit.mode === 'edit' && modes.present.present,
+      `study mode=${modes.study.mode} · edit mode=${modes.edit.mode} · present body="${modes.present.body}"`);
+  iok('and Present gives the lesson back when it is left, rather than stranding the reader on the board',
+      !modes.back.present && same(modes.study, modes.back), `back to body="${modes.back.body}", ${modes.back.chars} chars`);
   iok('and nothing threw while any of that was driven', errs.length === 0, errs[0] || 'no page errors');
   await p.close();
 }

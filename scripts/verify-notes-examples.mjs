@@ -1081,6 +1081,10 @@ const anatomy = (p) => p.evaluate(() => {
         ask: ask ? { l: Math.round(R(ask).left), r: Math.round(R(ask).right), t: Math.round(R(ask).top), b: Math.round(R(ask).bottom),
           inset: Math.round(inset(ask)), bg: acs.backgroundColor, br: acs.borderRightWidth, radius: acs.borderRadius,
           qbR: qb ? Math.round(R(qb).right) : null,
+          /* where the question's own content ends, and the pad the region adds after it — the two numbers
+             that say whether the tint hugs or has been padded out to somebody else's depth */
+          contentB: Math.max.apply(null, [].slice.call(ask.children).map((c) => R(c).bottom).concat([R(ask).top])),
+          padB: parseFloat(acs.paddingBottom),
           labT: al ? Math.round(R(al).top) : null, labL: al ? Math.round(R(al).left) : null } : null,
         work: { l: Math.round(R(work).left), r: Math.round(R(work).right), t: Math.round(R(work).top), b: Math.round(R(work).bottom),
           inset: Math.round(inset(work)), bl: wcs2.borderLeftWidth, labT: wl ? Math.round(R(wl).top) : null, labL: wl ? Math.round(R(wl).left) : null,
@@ -1117,19 +1121,29 @@ const named = (list) => list.filter((e) => !e.unnamed);
   ok('QUESTION and WORKED SOLUTION begin on the same line beneath it',
      S.length >= 6 && S.every((e) => e.ask && e.ask.labT != null && e.work.labT != null && Math.abs(e.ask.labT - e.work.labT) <= 1),
      S.map((e) => `${e.id}: ${fmt(e.ask && e.ask.labT)} / ${fmt(e.work.labT)}`).join(' · '));
-  /* Both regions are rectangles the row's full height, in one surface, with exactly one quiet rule where
-     they meet and the question's tint — a shade neither the surface nor the ground is — reaching that rule
-     on one side and the surface's edge on the other; no radius. The channels either side of the rule are
-     the published pads — the maintainer's "no wide gutter" — and together they stay under the 40px gutter
-     that was rejected. */
-  const rect = (e) => e.ask && e.ask.t === e.work.t && e.ask.b === e.work.b && Math.abs(e.ask.r - e.work.l) <= 1
+  /* THE REGIONS SHARE A TOP EDGE, NOT A DEPTH — the rule reversed on 21 Sep, and this assertion reversed
+     with it rather than dropped. It used to require `ask.b === work.b`, which is exactly what produced the
+     defect the maintainer reported: a 63px question painted inside a 283px tinted panel, 220px of it empty.
+     What is asserted now is stricter in the part that matters and honest about the part that changed:
+       · the tops still meet, because positional alignment is the alignment that was ever wanted;
+       · THE TINT ENDS WHERE THE QUESTION DOES — the gap below the last thing in the ask is the region's own
+         padding and nothing more, so a panel padded out to a neighbour's height fails here;
+       · THE WORKING STILL SPANS THE WHOLE BAND, so the one quiet rule between them — which is the working's
+         left border — never stops short, including when the QUESTION is the taller of the two.
+     Both regions remain rectangles in one surface with the question's tint (a shade neither the surface nor
+     the ground is) reaching that rule on one side and the surface's edge on the other; no radius. The
+     channels either side of the rule are the published pads — the maintainer's "no wide gutter" — and
+     together they stay under the 40px gutter that was rejected. */
+  const hugs = (e) => e.ask && Math.abs((e.ask.b - e.ask.contentB) - e.ask.padB) <= 1.5;
+  const bandSpanned = (e) => e.ask && e.work.b >= e.ask.b - 1;
+  const rect = (e) => e.ask && e.ask.t === e.work.t && hugs(e) && bandSpanned(e) && Math.abs(e.ask.r - e.work.l) <= 1
     && e.work.bl === '1px' && e.ask.br === '0px' && e.ask.radius === '0px'
     && e.ask.bg !== e.surf.surfBg && e.ask.bg !== e.surf.ground && e.inSurface
     && Math.abs(e.ask.l - e.surf.surfL) <= 1 && Math.abs(e.work.r - (e.surf.surfR - e.surf.surfPad)) <= 1;
   const chan = (e) => ({ q: e.ask && e.ask.qbR != null ? e.work.l - e.ask.qbR : null, w: e.work.inset - e.work.l - 1 });
-  ok('PROBLEM and WORKING are explicit rectangles inside one surface — the row\'s full height each, one rule between them, the tint reaching it',
+  ok('PROBLEM and WORKING share a top edge, the tint ends where the question does, and the working still spans the band so the rule never stops short',
      S.length >= 6 && S.every(rect),
-     S.map((e) => `${e.id}: ${e.ask.t}→${e.ask.b} both, rule at ${e.work.l}`).join(' · '));
+     S.map((e) => `${e.id}: tops ${e.ask.t}, tint ends ${e.ask.b} (${Math.round(e.ask.b - e.ask.contentB)}px of ${e.ask.padB}px pad after the question), working to ${e.work.b}, rule at ${e.work.l}`).join(' · '));
   ok('no wide gutter: the channels either side of the rule are the published pads, and together less than the 40px that was rejected',
      S.length >= 6 && S.every((e) => { const c = chan(e); return c.q != null && Math.abs(c.q - e.surf.pads.ask) <= 1 && c.w === e.surf.pads.work && c.q + 1 + c.w < 40; }),
      S.slice(0, 3).map((e) => { const c = chan(e); return `${e.id}: question text → rule ${c.q}px (pad ${e.surf.pads.ask}), rule → working text ${c.w}px (pad ${e.surf.pads.work})`; }).join(' · '));
@@ -1166,6 +1180,28 @@ const named = (list) => list.filter((e) => !e.unnamed);
   ok('CONTROL: the old floating card fails the band contract — the label leaves the inset and the wrapped value no longer returns to it',
      !!card.res && (card.res.labL !== card.work.inset || card.res.radius !== '0px') && card.res.lines.length > 1 && card.res.lines[1] !== card.res.l,
      `with the card restored the label sits at ${card.res && card.res.labL} against an inset of ${card.work.inset}, radius ${card.res && card.res.radius}, wrapped line at ${card.res && card.res.lines[1]} against ${card.res && card.res.l}`);
+  /* CONTROLS FOR THE REVERSED RULE. The assertion above replaced one that required both regions to be the
+     same height, so it has to be shown capable of failing in BOTH directions the reversal opened up —
+     otherwise re-aiming it would just have moved a tautology. The first restores the old behaviour exactly
+     (the ask stretched to the row) and the tint must stop hugging; the second stops the WORKING stretching
+     and, beside a question deliberately made the taller of the two, the rule must be caught stopping short. */
+  const ph = await open({ slide: WEX });
+  await ph.addStyleTag({ content: '[data-mx-rows="split"] .mx-wexseq>.mx-wexex>.mx-wexask{align-self:stretch !important}' });
+  await ph.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await ph.waitForTimeout(300);
+  const stretched = named((await anatomy(ph)).ex).filter((e) => e.ask)[0]; await ph.close();
+  ok('CONTROL: stretch the question back to the row and the tint stops hugging, so the hug is measured and not assumed',
+     !!stretched && Math.abs((stretched.ask.b - stretched.ask.contentB) - stretched.ask.padB) > 1.5,
+     stretched ? `with the old rule restored the tint runs ${Math.round(stretched.ask.b - stretched.ask.contentB)}px past the question against a ${stretched.ask.padB}px pad` : 'no example');
+  const pt = await open({ slide: WEX, lesson: (() => { const L = JSON.parse(JSON.stringify(FIX));
+    const g = L.slides[WEX].groups.find((x) => x.type === 'sequence');
+    g.examples[0].prompt = String(g.examples[0].prompt || 'Question.') + ' ' + 'A question long enough to outgrow its own solution. '.repeat(12);
+    g.examples[0].steps = [g.examples[0].steps[0]]; delete g.examples[0].answer; return L; })() });
+  await pt.addStyleTag({ content: '[data-mx-rows="split"] .mx-wexseq>.mx-wexex>.mx-wexwork{align-self:start !important}' });
+  await pt.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await pt.waitForTimeout(300);
+  const short = named((await anatomy(pt)).ex).filter((e) => e.ask)[0]; await pt.close();
+  ok('CONTROL: stop the working stretching beside a taller question and the rule is caught stopping short of the band',
+     !!short && short.ask.b > short.work.b + 1,
+     short ? `question to ${short.ask.b}, working (and so the rule) only to ${short.work.b} — ${short.ask.b - short.work.b}px short` : 'no example');
   const pf = await open({ slide: WEX });
   await pf.addStyleTag({ content: '.mx-wexfoot{margin-left:36% !important}' });
   await pf.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await pf.waitForTimeout(300);

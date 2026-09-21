@@ -7,7 +7,52 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **The question panel hugs its content — a rule reversed, and its control reversed with it**
+  (`lesson-studio.html`). A worked example's QUESTION and WORKED SOLUTION were both forced to the row's
+  full height, on the principle that "the regions are aligned, never the amount of content in them".
+  Measured on the real lesson, that painted a **63px question inside a 283px tinted panel — 220px of empty
+  tint**, and the maintainer ruled that a defined region at that scale reads as a hole however deliberately
+  it was reserved. The regions now share a TOP EDGE, not a depth.
+
+  | | before | after |
+  |---|---|---|
+  | question panel, desktop | 283px | **81px** |
+  | empty tint below the question | **220px** | 18px (its own padding) |
+  | the rule between them | full band | full band — unchanged |
+
+  The change is one declaration — `align-self:start` on `.mx-wexask`, scoped to `[data-mx-rows="split"]` —
+  and NOT `align-items:start` on the row. The difference matters: the rule between the regions is the
+  *working's* left border, so the working must go on stretching or the rule stops short. Measured both ways
+  against a deliberately over-long question: with the row set to `start` the rule ended **350px above** the
+  band; this way it spans it. Stacked, solo, the comparison bridge and the media foot are untouched — the
+  bridge's three full-height zones are a different rule and stay.
+- **`verify-notes-examples` — the assertion is reversed, not dropped.** It required
+  `ask.b === work.b`, which is precisely the defect that was reported, so leaving it would have kept the old
+  rule enforced and deleting it would have left the new one unguarded. It now asserts that the tops meet,
+  that the gap below the question is the region's own padding and nothing more, and that the working still
+  spans the band. **Two new controls, both driven to failure:** restoring the old stretch makes the tint run
+  **220px** past the question (the reported defect, now permanently caught), and stopping the working
+  stretching beside a taller question catches the rule **286px** short. 123/123.
+- **A bracketed term is a term** (`mxM()`). `(−2)^2 / 3^2` printed as a slash in the middle of a worked
+  example whose other two steps built up, because the fraction grammar was digits-only. It now also accepts
+  a bracketed signed integer on either side, which is what makes the surrounding spaces safe — ordinary
+  prose does not write `(…)/…`. **One side must be bracketed**, or the rule would reach `1914 / 1918`.
+  Tested differentially against 36 strings drawn from the repo's own content: the target case changes and
+  **nothing else does**, including `1/x`, `_x_^2 / 12`, `C5/C6`, `Stage 2c/3c/3d`, file paths, URLs, `km/h`,
+  `and/or` and every fraction that already built up. A variable numerator stays a slash on purpose —
+  widening to letters would rewrite existing lessons and nothing asked for it.
+
 ### Added
+- **Study, Edit and Present are now part of the app-lesson pass** (`scripts/shots-quadratics-app.mjs`,
+  14 checks). The honest finding is recorded rather than an invented per-mode difference: the mathematics
+  page family has **no inline edit affordance** — `renderCanvas` sets `mode='study'` for the duration of a
+  responsive page and restores it after, and `tagZones` only hooks the legacy canvas slide types — so Edit
+  renders Study-identical by design. What is asserted is that the whole lesson survives all three intact
+  (4 tabs / 19 steps / 7 answers / 1 table / 5483 chars in each), that each mode really is the mode it
+  claims, and that leaving Present gives the lesson back.
+
+### Added (the application integration)
 - **The quadratics lesson, in the actual application** (`docs/atlas/lesson/quadratics.app.json`,
   `scripts/shots-quadratics-app.mjs`, `docs/atlas/app-lesson/`). The complete lesson — four
   subtopics, nineteen worked steps, the table of values, both Symmetry representations and both

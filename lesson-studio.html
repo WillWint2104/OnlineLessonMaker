@@ -1970,9 +1970,13 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 /* THE PRIMITIVE — ONE WORKED EXAMPLE IS ONE NAMED-REGION RECTANGLE, and the browser lays out the regions:
        TITLE spanning the whole example
        QUESTION | WORKED SOLUTION … ANSWER
-   The prose and the mathematics merely flow inside them. THE REGIONS ARE ALIGNED, NEVER THE AMOUNT OF
-   CONTENT IN THEM: both regions take the row's full height, so a short question beside a long solution is a
-   short question in a visibly defined rectangle, not a hole. The same rules serve `standard` (one instance),
+   The prose and the mathematics merely flow inside them. THE REGIONS ARE ALIGNED AT THEIR TOP, AND EACH
+   TAKES THE HEIGHT ITS OWN CONTENT NEEDS. The alignment that matters is positional — one top edge, one
+   inset, one rule — not two backgrounds padded to a common depth. This reverses the earlier rule that made
+   both regions the row's full height: measured on the lesson, a 63px question was painted in a 283px tinted
+   panel, and 220px of empty tint reads as a hole however deliberately it was reserved. It is the same
+   reasoning `.mx-split` already applies to the two Notes columns a layer up. The same rules serve
+   `standard` (one instance),
    `sequence` (N instances, identical geometry at every count — no 2 + 1, no centred remainder), a staged
    state, an extended derivation and each case of a collapsed comparison. Nothing here reads a count. */
 .mx-wexseq{display:flex;flex-direction:column;margin:0 calc(-1 * var(--mx-surface-pad));}
@@ -2006,7 +2010,12 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 [data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"]){
   grid-template-columns:minmax(calc(var(--mx-ask-min,300px) + var(--mx-ask-pad,16px)),36fr) minmax(calc(var(--mx-work-min,420px) + var(--mx-work-pad,22px) + 1px),64fr);
   grid-template-areas:"title title" "ask work";}
-[data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"])>.mx-wexask{margin-right:0;padding-right:var(--mx-ask-pad,16px);}
+/* THE TINT ENDS WHERE THE QUESTION DOES. `align-self:start` on the ask alone — not `align-items:start` on
+   the row — because the working must go on stretching: the rule between them is the WORKING's left border,
+   so stretching only the ask's neighbour is what keeps that rule running the full band when the question is
+   the taller of the two. Measured both ways on a deliberately long question: with the row set to `start`
+   the rule stopped 350px short of the band; this way it spans it. Split only — stacked already hugs. */
+[data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"])>.mx-wexask{margin-right:0;padding-right:var(--mx-ask-pad,16px);align-self:start;}
 [data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"])>.mx-wexwork{border-left:1px solid var(--mx-line);padding-left:var(--mx-work-pad,22px);}
 /* ANSWER — THE FINAL BAND OF THE WORKING REGION, not a card: a rule above it, the label run in, the value
    flowing as text so a wrapped answer returns to the region's own inset. No box, no radius, no fill. Green
@@ -7324,11 +7333,24 @@ function mxPlain(v){ return String(v==null?'':v).replace(/_([A-Za-z])_/g,'$1').r
    brackets. Digits only — deliberately narrow, so ordinary prose ("and/or", a date) is never touched — and
    the parenthesised form first, so its brackets can grow to the built-up height. Three digits a side keeps
    a year range ("1914/1918") out of it. */
+/* the two sides a fraction may have: a bracketed signed integer (optionally squared), or a plain one */
+const MX_FRAC_T = '\\((?:\\u2212|-)?\\d{1,3}\\)(?:\\^\\d)?', MX_FRAC_D = '\\d{1,3}(?:\\^\\d)?';
 function mxM(v){
   return esc(v==null?'':String(v))
     .replace(/\((\d+)\/(\d+)\)/g,'<span class="mx-pfrac">$&</span>')
     .replace(/<span class="mx-pfrac">\((\d+)\/(\d+)\)<\/span>/g,
       '<span class="mx-pfrac"><span class="mx-frac"><span>$1</span><span>$2</span></span></span>')
+    /* A BRACKETED TERM IS A TERM. `(\u22122)^2 / 3^2` is one value over another exactly as `3^2/2^2` already
+       was; the brackets and the spaces around the divide were the only reason it printed as a slash, in the
+       middle of a worked example whose other two steps built up. The brackets are also what makes the spaces
+       safe here — ordinary prose does not write `(\u2026)/\u2026`, so whitespace that would be reckless around bare
+       digits is inert beside a bracket. ONE SIDE MUST BE BRACKETED, or this would reach `1914 / 1918`. A
+       variable numerator (`_x_^2 / 12`, `1/x`) is deliberately still a slash: widening to letters would
+       rewrite existing lessons, and nothing has asked for it. */
+    .replace(new RegExp('(^|[\\s=+])((?:' + MX_FRAC_T + ')\\s*\\/\\s*(?:' + MX_FRAC_T + '|' + MX_FRAC_D + ')'
+      + '|(?:' + MX_FRAC_D + ')\\s*\\/\\s*(?:' + MX_FRAC_T + '))(?![\\w\\/])', 'g'),
+      (m, pre, body) => { const i = body.indexOf('/');
+        return pre + '<span class="mx-frac"><span>' + body.slice(0, i).trim() + '</span><span>' + body.slice(i + 1).trim() + '</span></span>'; })
     .replace(/(^|[\s(=+\u2212-])(\d{1,3}(?:\^\d)?)\/(\d{1,3}(?:\^\d)?)(?![\d\/])/g,
       '$1<span class="mx-frac"><span>$2</span><span>$3</span></span>')
     .replace(/_([A-Za-z])_/g,'<i>$1</i>')
@@ -8071,10 +8093,11 @@ function mxWexSteps(ex,range){
        TITLE, spanning the whole example
        QUESTION | WORKED SOLUTION
                 | ANSWER — the final band of the working
-   THE REGIONS ARE ALIGNED, NEVER THE AMOUNT OF CONTENT IN THEM. A one-line question beside a five-step
-   solution is a short question in a region as tall as the solution; the region is a visible rectangle, so
-   the space below the question is a defined region, not a hole. The QUESTION and WORKED SOLUTION labels
-   begin on the same line beneath the title; everything is left-aligned to one inset.
+   THE REGIONS SHARE A TOP EDGE, NOT A DEPTH. A one-line question beside a five-step solution is a short
+   tinted band, not a tall one padded out to the solution's height — the region is still a visible
+   rectangle, it simply ends where its content does. The working keeps the row's full height, so the one
+   quiet rule between them runs the whole band even when it is the QUESTION that is taller. The QUESTION and
+   WORKED SOLUTION labels begin on the same line beneath the title; everything is left-aligned to one inset.
    `standard` is one instance of this. `sequence` is N identical instances, stacked. A staged state, an
    extended derivation and each case of a collapsed comparison are the same instance again. There is no
    second function and no second stylesheet for a "row": nothing here reads the count, the length of the
