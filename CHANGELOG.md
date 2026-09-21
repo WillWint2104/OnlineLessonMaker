@@ -7,6 +7,45 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **The Symmetry graph's authored window widened from ±5 to ±6.5**
+  (`docs/atlas/worked-examples/src/figures.json`; two lines, x only). The maintainer approved the
+  composition system for this lesson and asked for one targeted graph adjustment: the portrait plane
+  was taller than the relationship it demonstrates needs. The vertical domain, both marked points,
+  the `y = 9` reference line and equal unit scale are untouched — only the horizontal window moved.
+  - **Desktop 760 × 952 → 760 × 755 (−21%); tablet 834 × 1041 → 834 × 824 (−21%).** The Symmetry page
+    is 1737px → 1540px, and the graph falls from 55% of the page to 49%.
+  - **The approved composition is unchanged**, which was the thing to verify: `visual.explanation`
+    still selects `down-8` / 760px centred on desktop and `stacked` / 834px on tablet, in the lesson
+    renderer AND in the shipping catalogue, and the cross-layer control asserts both. The geometry
+    class moves `portrait → balanced`, and `down-8` admits `balanced`, so selection does not move.
+  - The other four lesson states are byte-identical, including the flatter parabola (1152 × 527).
+    No label collisions: the two point identifiers and the `y = 9` label all clear the curve and each
+    other at the new window.
+
+### Fixed
+- **A content change silently emptied a regression fixture** (`docs/atlas/media/media.json`). The
+  `graph.portrait` fixture pointed at the lesson's `symmetry` figure. Widening that figure's window
+  moved it from 0.83:1 to 1.08:1 — out of the `portrait` band — and the fixture set was then left with
+  **no portrait graph at all**. Every proof board declaring `klass: portrait` fell through to the
+  portrait *image*, and `H14` went from comparing real surface/no-surface pairs to comparing **none**.
+  - `graph.portrait` now points at `roots` (`y = x² − 4`, 0.71:1, genuinely portrait), which is not
+    courseware anyone is editing. **A regression asset must not be the same object as a piece of
+    courseware**: the courseware is free to change and the asset is not. Recorded in the file.
+  - The note was first written *inside* `fixtures`, where the fixture loader would have read it as an
+    eleventh fixture with no `kind` — the same trap `classify()` documents for its own `_`-prefixed
+    band keys. Moved to a sibling key.
+- **A drive that could not run crashed instead of saying so**
+  (`scripts/composition-proof-atlas.mjs`). Every counterexample is built by finding one genuine record
+  and spoiling a copy. With the portrait graph gone there was no figure-surface record to copy, so
+  `REAL.find(...)` returned `undefined`, `{ ...undefined }` spread to `{}`, and the control died with
+  `TypeError: Cannot read properties of undefined (reading 'fs')` — *one line after* `H14` had
+  correctly reported `0 pair(s)`. The real finding was buried under a stack trace that read like a bug
+  in the control rather than a gap in the corpus.
+  - Six drive sites (H7, H14, H15, H17, H18 ×2, H19) now take their baseline through `driveBase()`,
+    which records a drive that did not fire — already a run failure — and prints `✗ NO BASELINE`.
+  - Driven to failure by making H14's baseline predicate unsatisfiable.
+
 ### Fixed
 - **A section label had two sizes on one page** (`docs/atlas/worked-examples/src/atlas.css`; no app
   change). `.at-lab` is specificity (0,1,0); the slot paragraph rules `[data-slot="question"] p`,

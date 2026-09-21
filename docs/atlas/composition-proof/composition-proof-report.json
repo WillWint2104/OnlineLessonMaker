@@ -18,7 +18,7 @@
           "rung": "inset",
           "declared": "inset",
           "media": true,
-          "h": 528.25,
+          "h": 604.5,
           "air": 0,
           "imbalance": null
         },
@@ -87,7 +87,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 12.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 13.7,
         "labels": 1,
         "svgScale": 1.142,
@@ -96,8 +96,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 528,
-      "viewportShare": 0.59,
+      "surfaceH": 605,
+      "viewportShare": 0.67,
       "identity": "spine-supporting|supporting|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -105,10 +105,10 @@
         "support": "hug"
       },
       "structure": "spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "330x436",
-      "solvedBox": "330x436",
-      "unitScale": "28.55/28.49",
-      "surfaceBox": "368x528"
+      "plotBox": "330x492",
+      "solvedBox": "330x492",
+      "unitScale": "27.98/27.93",
+      "surfaceBox": "368x605"
     },
     {
       "pattern": "visual.explanation",
@@ -128,7 +128,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 998.25,
+          "h": 1133.25,
           "air": 0,
           "imbalance": null
         },
@@ -197,7 +197,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13.8,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15,
         "labels": 1,
         "svgScale": 1.253,
@@ -206,8 +206,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 998,
-      "viewportShare": 1.11,
+      "surfaceH": 1133,
+      "viewportShare": 1.26,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -215,10 +215,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "722x906",
-      "solvedBox": "722x906",
-      "unitScale": "62.67/62.65",
-      "surfaceBox": "760x998"
+      "plotBox": "722x1041",
+      "solvedBox": "722x1041",
+      "unitScale": "62.23/62.18",
+      "surfaceBox": "760x1133"
     },
     {
       "pattern": "visual.explanation",
@@ -238,7 +238,7 @@
           "rung": "wide",
           "declared": "wide",
           "media": true,
-          "h": 1234.25,
+          "h": 1407.25,
           "air": 0,
           "imbalance": null
         },
@@ -307,7 +307,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.9,
         "labels": 1,
         "svgScale": 1.327,
@@ -316,8 +316,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1234,
-      "viewportShare": 1.37,
+      "surfaceH": 1407,
+      "viewportShare": 1.56,
       "identity": "stage-primary|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -325,10 +325,10 @@
         "support": "hug"
       },
       "structure": "stage-primary|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:narrow:6:hug",
-      "plotBox": "918x1142",
-      "solvedBox": "918x1142",
-      "unitScale": "79.82/79.79",
-      "surfaceBox": "956x1234"
+      "plotBox": "918x1315",
+      "solvedBox": "918x1315",
+      "unitScale": "79.12/79.13",
+      "surfaceBox": "956x1407"
     },
     {
       "pattern": "visual.explanation",
@@ -678,7 +678,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 1087.25,
+          "h": 1236.25,
           "air": 0,
           "imbalance": null
         },
@@ -747,7 +747,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.1,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.4,
         "labels": 1,
         "svgScale": 1.282,
@@ -756,8 +756,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1087,
-      "viewportShare": 1.21,
+      "surfaceH": 1236,
+      "viewportShare": 1.37,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -765,10 +765,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
-      "plotBox": "796x995",
-      "solvedBox": "796x995",
-      "unitScale": "69.11/69.1",
-      "surfaceBox": "834x1087"
+      "plotBox": "796x1144",
+      "solvedBox": "796x1144",
+      "unitScale": "68.58/68.51",
+      "surfaceBox": "834x1236"
     },
     {
       "pattern": "visual.explanation",
@@ -788,7 +788,7 @@
           "rung": "spine",
           "declared": "spine",
           "media": true,
-          "h": 545.25,
+          "h": 624.5,
           "air": 0,
           "imbalance": null
         },
@@ -857,7 +857,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 15.9,
-        "ticks": 10,
+        "ticks": 12,
         "label": 17.1,
         "labels": 1,
         "svgScale": 1.139,
@@ -866,8 +866,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 545,
-      "viewportShare": 0.61,
+      "surfaceH": 625,
+      "viewportShare": 0.69,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -875,10 +875,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|left-edge4|media:solo:spine:4:hug,interpretation:solo:spine:4:hug,support:solo:spine:4:hug",
-      "plotBox": "344x453",
-      "solvedBox": "344x453",
-      "unitScale": "29.71/29.72",
-      "surfaceBox": "382x545"
+      "plotBox": "344x512",
+      "solvedBox": "344x512",
+      "unitScale": "29.21/29.2",
+      "surfaceBox": "382x625"
     },
     {
       "pattern": "media.full",
@@ -898,7 +898,7 @@
           "rung": "wide",
           "declared": "wide",
           "media": true,
-          "h": 1234.25,
+          "h": 1407.25,
           "air": 0,
           "imbalance": null
         },
@@ -967,7 +967,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.9,
         "labels": 1,
         "svgScale": 1.327,
@@ -976,8 +976,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1234,
-      "viewportShare": 1.37,
+      "surfaceH": 1407,
+      "viewportShare": 1.56,
       "identity": "plate-wide|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -985,10 +985,10 @@
         "support": "hug"
       },
       "structure": "plate-wide|left-edge8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:narrow:6:hug",
-      "plotBox": "918x1142",
-      "solvedBox": "918x1142",
-      "unitScale": "79.82/79.79",
-      "surfaceBox": "956x1234"
+      "plotBox": "918x1315",
+      "solvedBox": "918x1315",
+      "unitScale": "79.12/79.13",
+      "surfaceBox": "956x1407"
     },
     {
       "pattern": "media.full",
@@ -1714,7 +1714,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 998.25,
+          "h": 1133.25,
           "air": 0,
           "imbalance": null
         },
@@ -1801,7 +1801,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13.8,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15,
         "labels": 1,
         "svgScale": 1.253,
@@ -1810,8 +1810,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 998,
-      "viewportShare": 1.11,
+      "surfaceH": 1133,
+      "viewportShare": 1.26,
       "identity": "compare-measure|explanatory|caseA,caseB,interpretation,intro,media,synthesis",
       "verticals": {
         "intro": "hug",
@@ -1821,10 +1821,10 @@
         "synthesis": "hug"
       },
       "structure": "compare-measure|left-edge8|intro:solo:spine:8:hug,cases:paired:6/6::hug,media:solo:expanded:8:hug,interpretation:solo:spine:8:hug,synthesis:solo:spine:8:hug",
-      "plotBox": "722x906",
-      "solvedBox": "722x906",
-      "unitScale": "62.67/62.65",
-      "surfaceBox": "760x998"
+      "plotBox": "722x1041",
+      "solvedBox": "722x1041",
+      "unitScale": "62.23/62.18",
+      "surfaceBox": "760x1133"
     },
     {
       "pattern": "visual.compare",
@@ -2736,9 +2736,9 @@
           "rung": null,
           "declared": null,
           "media": true,
-          "h": 646.25,
+          "h": 721.25,
           "air": 0,
-          "imbalance": 134.25
+          "imbalance": 209.25
         },
         {
           "id": "questions",
@@ -2793,7 +2793,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 12.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 13.7,
         "labels": 1,
         "svgScale": 1.144,
@@ -2802,8 +2802,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 646,
-      "viewportShare": 0.72,
+      "surfaceH": 721,
+      "viewportShare": 0.8,
       "identity": "workbook-5-7|workspace|intro,questions,reference,workspace",
       "verticals": {
         "intro": "hug",
@@ -2811,10 +2811,10 @@
         "questions": "designed"
       },
       "structure": "workbook-5-7|left-edge8|intro:solo:spine:8:hug,reference:workspace:5/7::designed,questions:workspace:5/7::designed",
-      "plotBox": "428x554",
-      "solvedBox": "428x554",
-      "unitScale": "37.1/37.07",
-      "surfaceBox": "466x646"
+      "plotBox": "428x629",
+      "solvedBox": "428x629",
+      "unitScale": "36.46/36.4",
+      "surfaceBox": "466x721"
     },
     {
       "pattern": "visual.explanation",
@@ -2834,7 +2834,7 @@
           "rung": "inset",
           "declared": "inset",
           "media": true,
-          "h": 512.14,
+          "h": 595.28,
           "air": 0,
           "imbalance": null
         },
@@ -2903,7 +2903,7 @@
       "legibility": {
         "caption": 13,
         "tick": 12.5,
-        "ticks": 10,
+        "ticks": 12,
         "label": 13.7,
         "labels": 1,
         "svgScale": 1.139,
@@ -2921,9 +2921,9 @@
         "support": "hug"
       },
       "structure": "spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "368x482",
-      "solvedBox": "368x482",
-      "unitScale": "31.81/31.84",
+      "plotBox": "368x545",
+      "solvedBox": "368x545",
+      "unitScale": "31.09/31.14",
       "surfaceBox": null
     },
     {
@@ -2944,7 +2944,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 982.14,
+          "h": 1124.14,
           "air": 0,
           "imbalance": null
         },
@@ -3013,7 +3013,7 @@
       "legibility": {
         "caption": 13,
         "tick": 13.9,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.2,
         "labels": 1,
         "svgScale": 1.267,
@@ -3031,9 +3031,9 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "760x952",
-      "solvedBox": "760x952",
-      "unitScale": "65.87/65.94",
+      "plotBox": "760x1094",
+      "solvedBox": "760x1094",
+      "unitScale": "65.32/65.4",
       "surfaceBox": null
     },
     {
@@ -3054,7 +3054,7 @@
           "rung": "wide",
           "declared": "wide",
           "media": true,
-          "h": 1217.14,
+          "h": 1398.14,
           "air": 0,
           "imbalance": null
         },
@@ -3123,7 +3123,7 @@
       "legibility": {
         "caption": 13,
         "tick": 14.7,
-        "ticks": 10,
+        "ticks": 12,
         "label": 16.1,
         "labels": 1,
         "svgScale": 1.341,
@@ -3141,9 +3141,9 @@
         "support": "hug"
       },
       "structure": "stage-primary|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:narrow:6:hug",
-      "plotBox": "956x1187",
-      "solvedBox": "956x1187",
-      "unitScale": "83.02/83.06",
+      "plotBox": "956x1368",
+      "solvedBox": "956x1368",
+      "unitScale": "82.46/82.5",
       "surfaceBox": null
     },
     {
@@ -3494,7 +3494,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 1071.14,
+          "h": 1228.14,
           "air": 0,
           "imbalance": null
         },
@@ -3563,7 +3563,7 @@
       "legibility": {
         "caption": 13,
         "tick": 14.2,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.5,
         "labels": 1,
         "svgScale": 1.295,
@@ -3581,9 +3581,9 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
-      "plotBox": "834x1041",
-      "solvedBox": "834x1041",
-      "unitScale": "72.52/72.51",
+      "plotBox": "834x1198",
+      "solvedBox": "834x1198",
+      "unitScale": "71.87/71.88",
       "surfaceBox": null
     },
     {
@@ -3604,7 +3604,7 @@
           "rung": "spine",
           "declared": "spine",
           "media": true,
-          "h": 528.14,
+          "h": 615.28,
           "air": 0,
           "imbalance": null
         },
@@ -3673,7 +3673,7 @@
       "legibility": {
         "caption": 13,
         "tick": 16,
-        "ticks": 10,
+        "ticks": 12,
         "label": 17.1,
         "labels": 1,
         "svgScale": 1.14,
@@ -3691,9 +3691,9 @@
         "support": "hug"
       },
       "structure": "spine-narrow|left-edge4|media:solo:spine:4:hug,interpretation:solo:spine:4:hug,support:solo:spine:4:hug",
-      "plotBox": "382x498",
-      "solvedBox": "382x498",
-      "unitScale": "32.97/32.99",
+      "plotBox": "382x565",
+      "solvedBox": "382x565",
+      "unitScale": "32.5/32.49",
       "surfaceBox": null
     },
     {
@@ -3726,9 +3726,9 @@
           "rung": null,
           "declared": null,
           "media": true,
-          "h": 629.14,
+          "h": 712.14,
           "air": 0,
-          "imbalance": 117.14
+          "imbalance": 200.14
         },
         {
           "id": "questions",
@@ -3783,7 +3783,7 @@
       "legibility": {
         "caption": 13,
         "tick": 12.7,
-        "ticks": 10,
+        "ticks": 12,
         "label": 13.9,
         "labels": 1,
         "svgScale": 1.156,
@@ -3801,9 +3801,9 @@
         "questions": "designed"
       },
       "structure": "workbook-5-7|left-edge8|intro:solo:spine:8:hug,reference:workspace:5/7::designed,questions:workspace:5/7::designed",
-      "plotBox": "466x599",
-      "solvedBox": "466x599",
-      "unitScale": "40.38/40.37",
+      "plotBox": "466x682",
+      "solvedBox": "466x682",
+      "unitScale": "39.73/39.78",
       "surfaceBox": null
     },
     {
@@ -3824,7 +3824,7 @@
           "rung": "inset",
           "declared": "inset",
           "media": true,
-          "h": 528.25,
+          "h": 604.5,
           "air": 0,
           "imbalance": null
         },
@@ -3893,7 +3893,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 12.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 13.7,
         "labels": 1,
         "svgScale": 1.142,
@@ -3902,8 +3902,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 528,
-      "viewportShare": 0.59,
+      "surfaceH": 605,
+      "viewportShare": 0.67,
       "identity": "spine-supporting|supporting|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -3911,10 +3911,10 @@
         "support": "hug"
       },
       "structure": "spine-supporting|centre6|media:solo:inset:4:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "330x436",
-      "solvedBox": "330x436",
-      "unitScale": "28.55/28.49",
-      "surfaceBox": "368x528"
+      "plotBox": "330x492",
+      "solvedBox": "330x492",
+      "unitScale": "27.98/27.93",
+      "surfaceBox": "368x605"
     },
     {
       "pattern": "visual.explanation",
@@ -3934,7 +3934,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 998.25,
+          "h": 1133.25,
           "air": 0,
           "imbalance": null
         },
@@ -4003,7 +4003,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13.8,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15,
         "labels": 1,
         "svgScale": 1.253,
@@ -4012,8 +4012,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 998,
-      "viewportShare": 1.11,
+      "surfaceH": 1133,
+      "viewportShare": 1.26,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -4021,10 +4021,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "722x906",
-      "solvedBox": "722x906",
-      "unitScale": "62.67/62.65",
-      "surfaceBox": "760x998"
+      "plotBox": "722x1041",
+      "solvedBox": "722x1041",
+      "unitScale": "62.23/62.18",
+      "surfaceBox": "760x1133"
     },
     {
       "pattern": "visual.explanation",
@@ -4044,7 +4044,7 @@
           "rung": "wide",
           "declared": "wide",
           "media": true,
-          "h": 1234.25,
+          "h": 1407.25,
           "air": 0,
           "imbalance": null
         },
@@ -4113,7 +4113,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.9,
         "labels": 1,
         "svgScale": 1.327,
@@ -4122,8 +4122,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1234,
-      "viewportShare": 1.37,
+      "surfaceH": 1407,
+      "viewportShare": 1.56,
       "identity": "stage-primary|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -4131,10 +4131,10 @@
         "support": "hug"
       },
       "structure": "stage-primary|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:narrow:6:hug",
-      "plotBox": "918x1142",
-      "solvedBox": "918x1142",
-      "unitScale": "79.82/79.79",
-      "surfaceBox": "956x1234"
+      "plotBox": "918x1315",
+      "solvedBox": "918x1315",
+      "unitScale": "79.12/79.13",
+      "surfaceBox": "956x1407"
     },
     {
       "pattern": "visual.explanation",
@@ -4484,7 +4484,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 1087.25,
+          "h": 1236.25,
           "air": 0,
           "imbalance": null
         },
@@ -4553,7 +4553,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.1,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.4,
         "labels": 1,
         "svgScale": 1.282,
@@ -4562,8 +4562,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1087,
-      "viewportShare": 1.21,
+      "surfaceH": 1236,
+      "viewportShare": 1.37,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -4571,10 +4571,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
-      "plotBox": "796x995",
-      "solvedBox": "796x995",
-      "unitScale": "69.11/69.1",
-      "surfaceBox": "834x1087"
+      "plotBox": "796x1144",
+      "solvedBox": "796x1144",
+      "unitScale": "68.58/68.51",
+      "surfaceBox": "834x1236"
     },
     {
       "pattern": "visual.explanation",
@@ -4594,7 +4594,7 @@
           "rung": "spine",
           "declared": "spine",
           "media": true,
-          "h": 545.25,
+          "h": 624.5,
           "air": 0,
           "imbalance": null
         },
@@ -4663,7 +4663,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 15.9,
-        "ticks": 10,
+        "ticks": 12,
         "label": 17.1,
         "labels": 1,
         "svgScale": 1.139,
@@ -4672,8 +4672,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 545,
-      "viewportShare": 0.61,
+      "surfaceH": 625,
+      "viewportShare": 0.69,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -4681,10 +4681,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|left-edge4|media:solo:spine:4:hug,interpretation:solo:spine:4:hug,support:solo:spine:4:hug",
-      "plotBox": "344x453",
-      "solvedBox": "344x453",
-      "unitScale": "29.71/29.72",
-      "surfaceBox": "382x545"
+      "plotBox": "344x512",
+      "solvedBox": "344x512",
+      "unitScale": "29.21/29.2",
+      "surfaceBox": "382x625"
     },
     {
       "pattern": "media.full",
@@ -4704,7 +4704,7 @@
           "rung": "wide",
           "declared": "wide",
           "media": true,
-          "h": 1234.25,
+          "h": 1407.25,
           "air": 0,
           "imbalance": null
         },
@@ -4773,7 +4773,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.9,
         "labels": 1,
         "svgScale": 1.327,
@@ -4782,8 +4782,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1234,
-      "viewportShare": 1.37,
+      "surfaceH": 1407,
+      "viewportShare": 1.56,
       "identity": "plate-wide|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -4791,10 +4791,10 @@
         "support": "hug"
       },
       "structure": "plate-wide|left-edge8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:narrow:6:hug",
-      "plotBox": "918x1142",
-      "solvedBox": "918x1142",
-      "unitScale": "79.82/79.79",
-      "surfaceBox": "956x1234"
+      "plotBox": "918x1315",
+      "solvedBox": "918x1315",
+      "unitScale": "79.12/79.13",
+      "surfaceBox": "956x1407"
     },
     {
       "pattern": "media.full",
@@ -5520,7 +5520,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 998.25,
+          "h": 1133.25,
           "air": 0,
           "imbalance": null
         },
@@ -5607,7 +5607,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13.8,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15,
         "labels": 1,
         "svgScale": 1.253,
@@ -5616,8 +5616,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 998,
-      "viewportShare": 1.11,
+      "surfaceH": 1133,
+      "viewportShare": 1.26,
       "identity": "compare-measure|explanatory|caseA,caseB,interpretation,intro,media,synthesis",
       "verticals": {
         "intro": "hug",
@@ -5627,10 +5627,10 @@
         "synthesis": "hug"
       },
       "structure": "compare-measure|left-edge8|intro:solo:spine:8:hug,cases:paired:6/6::hug,media:solo:expanded:8:hug,interpretation:solo:spine:8:hug,synthesis:solo:spine:8:hug",
-      "plotBox": "722x906",
-      "solvedBox": "722x906",
-      "unitScale": "62.67/62.65",
-      "surfaceBox": "760x998"
+      "plotBox": "722x1041",
+      "solvedBox": "722x1041",
+      "unitScale": "62.23/62.18",
+      "surfaceBox": "760x1133"
     },
     {
       "pattern": "visual.compare",
@@ -6542,9 +6542,9 @@
           "rung": null,
           "declared": null,
           "media": true,
-          "h": 646.25,
+          "h": 721.25,
           "air": 0,
-          "imbalance": 134.25
+          "imbalance": 209.25
         },
         {
           "id": "questions",
@@ -6599,7 +6599,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 12.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 13.7,
         "labels": 1,
         "svgScale": 1.144,
@@ -6608,8 +6608,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 646,
-      "viewportShare": 0.72,
+      "surfaceH": 721,
+      "viewportShare": 0.8,
       "identity": "workbook-5-7|workspace|intro,questions,reference,workspace",
       "verticals": {
         "intro": "hug",
@@ -6617,10 +6617,10 @@
         "questions": "designed"
       },
       "structure": "workbook-5-7|left-edge8|intro:solo:spine:8:hug,reference:workspace:5/7::designed,questions:workspace:5/7::designed",
-      "plotBox": "428x554",
-      "solvedBox": "428x554",
-      "unitScale": "37.1/37.07",
-      "surfaceBox": "466x646"
+      "plotBox": "428x629",
+      "solvedBox": "428x629",
+      "unitScale": "36.46/36.4",
+      "surfaceBox": "466x721"
     },
     {
       "pattern": "visual.explanation",
@@ -13195,7 +13195,7 @@
           "rung": "full",
           "declared": "full",
           "media": true,
-          "h": 1469.25,
+          "h": 1682.25,
           "air": 0,
           "imbalance": null
         },
@@ -13264,7 +13264,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 15.3,
-        "ticks": 10,
+        "ticks": 12,
         "label": 16.7,
         "labels": 1,
         "svgScale": 1.391,
@@ -13273,8 +13273,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1469,
-      "viewportShare": 1.63,
+      "surfaceH": 1682,
+      "viewportShare": 1.87,
       "identity": "stage-primary-full12|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -13282,10 +13282,10 @@
         "support": "hug"
       },
       "structure": "stage-primary-full12|centre8|media:solo:full:12:hug,interpretation:solo:spine:8:hug,support:solo:narrow:6:hug",
-      "plotBox": "1114x1377",
-      "solvedBox": "1114x1377",
-      "unitScale": "96.77/96.82",
-      "surfaceBox": "1152x1469"
+      "plotBox": "1114x1590",
+      "solvedBox": "1114x1590",
+      "unitScale": "96.36/96.33",
+      "surfaceBox": "1152x1682"
     },
     {
       "pattern": "visual.explanation",
@@ -13305,7 +13305,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 998.25,
+          "h": 1133.25,
           "air": 0,
           "imbalance": null
         },
@@ -13374,7 +13374,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 26.3,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15,
         "labels": 1,
         "svgScale": 1.253,
@@ -13383,8 +13383,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 998,
-      "viewportShare": 1.11,
+      "surfaceH": 1133,
+      "viewportShare": 1.26,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -13392,10 +13392,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "722x906",
-      "solvedBox": "722x906",
-      "unitScale": "62.67/62.65",
-      "surfaceBox": "760x998"
+      "plotBox": "722x1041",
+      "solvedBox": "722x1041",
+      "unitScale": "62.23/62.18",
+      "surfaceBox": "760x1133"
     },
     {
       "pattern": "visual.explanation",
@@ -13415,7 +13415,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 763.25,
+          "h": 858.25,
           "air": 0,
           "imbalance": null
         },
@@ -13484,7 +13484,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13,
-        "ticks": 10,
+        "ticks": 12,
         "label": 14.2,
         "labels": 1,
         "svgScale": 1.179,
@@ -13493,8 +13493,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 763,
-      "viewportShare": 0.85,
+      "surfaceH": 858,
+      "viewportShare": 0.95,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -13502,10 +13502,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "526x671",
-      "solvedBox": "526x671",
-      "unitScale": "45.5/45.56",
-      "surfaceBox": "564x763"
+      "plotBox": "526x766",
+      "solvedBox": "526x766",
+      "unitScale": "44.98/45",
+      "surfaceBox": "564x858"
     },
     {
       "pattern": "visual.explanation",
@@ -13525,7 +13525,7 @@
           "rung": "spine",
           "declared": "expanded",
           "media": true,
-          "h": 763.25,
+          "h": 858.25,
           "air": 0,
           "imbalance": null
         },
@@ -13587,7 +13587,7 @@
       "fails": [
         [
           "H11",
-          "visual.explanation/spine-narrow/desktop row `media`: one region, approved spans expanded=8, preferred `expanded` — realised `spine` (6 col, 564px) where `expanded` was available. The preferred rung is feasible — the plane solves to 760×952px at equal unit scale. The row is structurally owned and UNDER-REALISED: a smaller span being legal is not a reason to stay on it."
+          "visual.explanation/spine-narrow/desktop row `media`: one region, approved spans expanded=8, preferred `expanded` — realised `spine` (6 col, 564px) where `expanded` was available. The preferred rung is feasible — the plane solves to 760×1094px at equal unit scale. The row is structurally owned and UNDER-REALISED: a smaller span being legal is not a reason to stay on it."
         ]
       ],
       "fs": "A",
@@ -13599,7 +13599,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13,
-        "ticks": 10,
+        "ticks": 12,
         "label": 14.2,
         "labels": 1,
         "svgScale": 1.179,
@@ -13608,8 +13608,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 763,
-      "viewportShare": 0.85,
+      "surfaceH": 858,
+      "viewportShare": 0.95,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -13617,10 +13617,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:spine:6:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "526x671",
-      "solvedBox": "526x671",
-      "unitScale": "45.5/45.56",
-      "surfaceBox": "564x763"
+      "plotBox": "526x766",
+      "solvedBox": "526x766",
+      "unitScale": "44.98/45",
+      "surfaceBox": "564x858"
     },
     {
       "pattern": "visual.explanation",
@@ -13640,7 +13640,7 @@
           "rung": null,
           "declared": null,
           "media": true,
-          "h": 763.25,
+          "h": 858.25,
           "air": 0,
           "imbalance": null
         },
@@ -13717,7 +13717,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13,
-        "ticks": 10,
+        "ticks": 12,
         "label": 14.2,
         "labels": 1,
         "svgScale": 1.179,
@@ -13726,8 +13726,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 763,
-      "viewportShare": 0.85,
+      "surfaceH": 858,
+      "viewportShare": 0.95,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -13735,10 +13735,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:paired:6/6::hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
-      "plotBox": "526x671",
-      "solvedBox": "526x671",
-      "unitScale": "45.5/45.56",
-      "surfaceBox": "564x763"
+      "plotBox": "526x766",
+      "solvedBox": "526x766",
+      "unitScale": "44.98/45",
+      "surfaceBox": "564x858"
     },
     {
       "pattern": "visual.explanation",
@@ -13758,9 +13758,9 @@
           "rung": null,
           "declared": null,
           "media": false,
-          "h": 646.25,
+          "h": 721.25,
           "air": 0,
-          "imbalance": 552.61
+          "imbalance": 627.61
         },
         {
           "id": "support",
@@ -13799,7 +13799,7 @@
       "fails": [
         [
           "H4",
-          "visual.explanation/side-study/desktop row `study`: the siblings terminate 552.61px apart and the blueprint declares at most 160px (an object beside the reading of it). All twelve columns can be owned and the relationship still be visually invalid"
+          "visual.explanation/side-study/desktop row `study`: the siblings terminate 627.61px apart and the blueprint declares at most 160px (an object beside the reading of it). All twelve columns can be owned and the relationship still be visually invalid"
         ]
       ],
       "fs": "A",
@@ -13811,7 +13811,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 12.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 13.7,
         "labels": 1,
         "svgScale": 1.144,
@@ -13820,18 +13820,18 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 646,
-      "viewportShare": 0.72,
+      "surfaceH": 721,
+      "viewportShare": 0.8,
       "identity": "side-study|explanatory|interpretation,media,support",
       "verticals": {
         "study": "hug",
         "support": "hug"
       },
       "structure": "side-study|left-edge8|study:paired:5/7::hug,support:solo:narrow:6:hug",
-      "plotBox": "428x554",
-      "solvedBox": "428x554",
-      "unitScale": "37.1/37.07",
-      "surfaceBox": "466x646"
+      "plotBox": "428x629",
+      "solvedBox": "428x629",
+      "unitScale": "36.46/36.4",
+      "surfaceBox": "466x721"
     },
     {
       "pattern": "interactive.primary",
@@ -13966,7 +13966,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 998.25,
+          "h": 1133.25,
           "air": 0,
           "imbalance": null
         },
@@ -14035,7 +14035,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13.8,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15,
         "labels": 1,
         "svgScale": 1.253,
@@ -14044,8 +14044,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 998,
-      "viewportShare": 1.11,
+      "surfaceH": 1133,
+      "viewportShare": 1.26,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -14053,10 +14053,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "722x906",
-      "solvedBox": "722x906",
-      "unitScale": "62.67/62.65",
-      "surfaceBox": "760x998"
+      "plotBox": "722x1041",
+      "solvedBox": "722x1041",
+      "unitScale": "62.23/62.18",
+      "surfaceBox": "760x1133"
     },
     {
       "pattern": "visual.explanation",
@@ -14076,7 +14076,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 1087.25,
+          "h": 1236.25,
           "air": 0,
           "imbalance": null
         },
@@ -14145,7 +14145,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.1,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.4,
         "labels": 1,
         "svgScale": 1.282,
@@ -14154,8 +14154,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1087,
-      "viewportShare": 1.21,
+      "surfaceH": 1236,
+      "viewportShare": 1.37,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -14163,10 +14163,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
-      "plotBox": "796x995",
-      "solvedBox": "796x995",
-      "unitScale": "69.11/69.1",
-      "surfaceBox": "834x1087"
+      "plotBox": "796x1144",
+      "solvedBox": "796x1144",
+      "unitScale": "68.58/68.51",
+      "surfaceBox": "834x1236"
     },
     {
       "pattern": "visual.explanation",
@@ -14186,7 +14186,7 @@
           "rung": "spine",
           "declared": "spine",
           "media": true,
-          "h": 545.25,
+          "h": 624.5,
           "air": 0,
           "imbalance": null
         },
@@ -14255,7 +14255,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 15.9,
-        "ticks": 10,
+        "ticks": 12,
         "label": 17.1,
         "labels": 1,
         "svgScale": 1.139,
@@ -14264,8 +14264,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 545,
-      "viewportShare": 0.61,
+      "surfaceH": 625,
+      "viewportShare": 0.69,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -14273,10 +14273,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|left-edge4|media:solo:spine:4:hug,interpretation:solo:spine:4:hug,support:solo:spine:4:hug",
-      "plotBox": "344x453",
-      "solvedBox": "344x453",
-      "unitScale": "29.71/29.72",
-      "surfaceBox": "382x545"
+      "plotBox": "344x512",
+      "solvedBox": "344x512",
+      "unitScale": "29.21/29.2",
+      "surfaceBox": "382x625"
     },
     {
       "pattern": "visual.explanation",
@@ -14296,7 +14296,7 @@
           "rung": "wide",
           "declared": "wide",
           "media": true,
-          "h": 1234.25,
+          "h": 1407.25,
           "air": 0,
           "imbalance": null
         },
@@ -14365,7 +14365,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.9,
         "labels": 1,
         "svgScale": 1.327,
@@ -14374,8 +14374,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1234,
-      "viewportShare": 1.37,
+      "surfaceH": 1407,
+      "viewportShare": 1.56,
       "identity": "stage-primary|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -14383,10 +14383,10 @@
         "support": "hug"
       },
       "structure": "stage-primary|centre8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:narrow:6:hug",
-      "plotBox": "918x1142",
-      "solvedBox": "918x1142",
-      "unitScale": "79.82/79.79",
-      "surfaceBox": "956x1234"
+      "plotBox": "918x1315",
+      "solvedBox": "918x1315",
+      "unitScale": "79.12/79.13",
+      "surfaceBox": "956x1407"
     },
     {
       "pattern": "visual.explanation",
@@ -14406,7 +14406,7 @@
           "rung": "wide",
           "declared": "wide",
           "media": true,
-          "h": 1087.25,
+          "h": 1236.25,
           "air": 0,
           "imbalance": null
         },
@@ -14475,7 +14475,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.1,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.4,
         "labels": 1,
         "svgScale": 1.282,
@@ -14484,8 +14484,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1087,
-      "viewportShare": 1.21,
+      "surfaceH": 1236,
+      "viewportShare": 1.37,
       "identity": "stage-primary|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -14493,10 +14493,10 @@
         "support": "hug"
       },
       "structure": "stage-primary|centre6|media:solo:wide:8:hug,interpretation:solo:spine:6:hug,support:solo:spine:6:hug",
-      "plotBox": "796x995",
-      "solvedBox": "796x995",
-      "unitScale": "69.11/69.1",
-      "surfaceBox": "834x1087"
+      "plotBox": "796x1144",
+      "solvedBox": "796x1144",
+      "unitScale": "68.58/68.51",
+      "surfaceBox": "834x1236"
     },
     {
       "pattern": "visual.explanation",
@@ -14516,7 +14516,7 @@
           "rung": "spine",
           "declared": "spine",
           "media": true,
-          "h": 545.25,
+          "h": 624.5,
           "air": 0,
           "imbalance": null
         },
@@ -14585,7 +14585,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 15.9,
-        "ticks": 10,
+        "ticks": 12,
         "label": 17.1,
         "labels": 1,
         "svgScale": 1.139,
@@ -14594,8 +14594,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 545,
-      "viewportShare": 0.61,
+      "surfaceH": 625,
+      "viewportShare": 0.69,
       "identity": "stage-primary|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -14603,10 +14603,10 @@
         "support": "hug"
       },
       "structure": "stage-primary|left-edge4|media:solo:spine:4:hug,interpretation:solo:spine:4:hug,support:solo:spine:4:hug",
-      "plotBox": "344x453",
-      "solvedBox": "344x453",
-      "unitScale": "29.71/29.72",
-      "surfaceBox": "382x545"
+      "plotBox": "344x512",
+      "solvedBox": "344x512",
+      "unitScale": "29.21/29.2",
+      "surfaceBox": "382x625"
     },
     {
       "pattern": "media.full",
@@ -14626,7 +14626,7 @@
           "rung": "wide",
           "declared": "wide",
           "media": true,
-          "h": 1234.25,
+          "h": 1407.25,
           "air": 0,
           "imbalance": null
         },
@@ -14695,7 +14695,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.6,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.9,
         "labels": 1,
         "svgScale": 1.327,
@@ -14704,8 +14704,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1234,
-      "viewportShare": 1.37,
+      "surfaceH": 1407,
+      "viewportShare": 1.56,
       "identity": "plate-wide|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -14713,10 +14713,10 @@
         "support": "hug"
       },
       "structure": "plate-wide|left-edge8|media:solo:wide:10:hug,interpretation:solo:spine:8:hug,support:solo:narrow:6:hug",
-      "plotBox": "918x1142",
-      "solvedBox": "918x1142",
-      "unitScale": "79.82/79.79",
-      "surfaceBox": "956x1234"
+      "plotBox": "918x1315",
+      "solvedBox": "918x1315",
+      "unitScale": "79.12/79.13",
+      "surfaceBox": "956x1407"
     },
     {
       "pattern": "media.full",
@@ -14736,7 +14736,7 @@
           "rung": "wide",
           "declared": "wide",
           "media": true,
-          "h": 1087.25,
+          "h": 1236.25,
           "air": 0,
           "imbalance": null
         },
@@ -14805,7 +14805,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 14.1,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15.4,
         "labels": 1,
         "svgScale": 1.282,
@@ -14814,8 +14814,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 1087,
-      "viewportShare": 1.21,
+      "surfaceH": 1236,
+      "viewportShare": 1.37,
       "identity": "plate-wide|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -14823,10 +14823,10 @@
         "support": "hug"
       },
       "structure": "plate-wide|left-edge7|media:solo:wide:8:hug,interpretation:solo:spine:7:hug,support:solo:spine:7:hug",
-      "plotBox": "796x995",
-      "solvedBox": "796x995",
-      "unitScale": "69.11/69.1",
-      "surfaceBox": "834x1087"
+      "plotBox": "796x1144",
+      "solvedBox": "796x1144",
+      "unitScale": "68.58/68.51",
+      "surfaceBox": "834x1236"
     },
     {
       "pattern": "media.full",
@@ -14846,7 +14846,7 @@
           "rung": "spine",
           "declared": "spine",
           "media": true,
-          "h": 545.25,
+          "h": 624.5,
           "air": 0,
           "imbalance": null
         },
@@ -14915,7 +14915,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 15.9,
-        "ticks": 10,
+        "ticks": 12,
         "label": 17.1,
         "labels": 1,
         "svgScale": 1.139,
@@ -14924,8 +14924,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 545,
-      "viewportShare": 0.61,
+      "surfaceH": 625,
+      "viewportShare": 0.69,
       "identity": "plate-wide|primary|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -14933,10 +14933,10 @@
         "support": "hug"
       },
       "structure": "plate-wide|left-edge4|media:solo:spine:4:hug,interpretation:solo:spine:4:hug,support:solo:spine:4:hug",
-      "plotBox": "344x453",
-      "solvedBox": "344x453",
-      "unitScale": "29.71/29.72",
-      "surfaceBox": "382x545"
+      "plotBox": "344x512",
+      "solvedBox": "344x512",
+      "unitScale": "29.21/29.2",
+      "surfaceBox": "382x625"
     },
     {
       "pattern": "notes",
@@ -16135,7 +16135,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 966,
+          "h": 1101,
           "air": 0,
           "imbalance": null
         },
@@ -16209,7 +16209,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13.8,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15,
         "labels": 1,
         "svgScale": 1.253,
@@ -16218,8 +16218,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 966,
-      "viewportShare": 1.07,
+      "surfaceH": 1101,
+      "viewportShare": 1.22,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -16227,10 +16227,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "722x906",
-      "solvedBox": "722x906",
-      "unitScale": "62.67/62.65",
-      "surfaceBox": "760x966"
+      "plotBox": "722x1041",
+      "solvedBox": "722x1041",
+      "unitScale": "62.23/62.18",
+      "surfaceBox": "760x1101"
     },
     {
       "pattern": "visual.explanation",
@@ -16250,7 +16250,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 998.25,
+          "h": 1133.25,
           "air": 0,
           "imbalance": null
         },
@@ -16328,7 +16328,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13.8,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15,
         "labels": 1,
         "svgScale": 1.253,
@@ -16337,8 +16337,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 998,
-      "viewportShare": 1.11,
+      "surfaceH": 1133,
+      "viewportShare": 1.26,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -16346,10 +16346,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "722x906",
-      "solvedBox": "722x906",
-      "unitScale": "62.67/62.65",
-      "surfaceBox": "940x998"
+      "plotBox": "722x1041",
+      "solvedBox": "722x1041",
+      "unitScale": "62.23/62.18",
+      "surfaceBox": "940x1133"
     },
     {
       "pattern": "visual.explanation",
@@ -16369,7 +16369,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 998.25,
+          "h": 1133.25,
           "air": 0,
           "imbalance": null
         },
@@ -16443,7 +16443,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 13.8,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15,
         "labels": 1,
         "svgScale": 1.253,
@@ -16452,8 +16452,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 966,
-      "viewportShare": 1.07,
+      "surfaceH": 1101,
+      "viewportShare": 1.22,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -16461,10 +16461,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "722x906",
-      "solvedBox": "722x906",
-      "unitScale": "62.67/62.65",
-      "surfaceBox": "760x966"
+      "plotBox": "722x1041",
+      "solvedBox": "722x1041",
+      "unitScale": "62.23/62.18",
+      "surfaceBox": "760x1101"
     },
     {
       "pattern": "visual.explanation",
@@ -16484,7 +16484,7 @@
           "rung": "expanded",
           "declared": "expanded",
           "media": true,
-          "h": 998.25,
+          "h": 1133.25,
           "air": 0,
           "imbalance": null
         },
@@ -16553,7 +16553,7 @@
       "legibility": {
         "caption": 13.5,
         "tick": 26.3,
-        "ticks": 10,
+        "ticks": 12,
         "label": 15,
         "labels": 1,
         "svgScale": 1.253,
@@ -16562,8 +16562,8 @@
         "captionDeclared": 13.5
       },
       "sideways": 0,
-      "surfaceH": 998,
-      "viewportShare": 1.11,
+      "surfaceH": 1133,
+      "viewportShare": 1.26,
       "identity": "spine-narrow|explanatory|interpretation,media,support",
       "verticals": {
         "media": "hug",
@@ -16571,10 +16571,10 @@
         "support": "hug"
       },
       "structure": "spine-narrow|centre6|media:solo:expanded:8:hug,interpretation:solo:spine:6:hug,support:solo:narrow:6:hug",
-      "plotBox": "722x906",
-      "solvedBox": "722x906",
-      "unitScale": "62.67/62.65",
-      "surfaceBox": "760x998"
+      "plotBox": "722x1041",
+      "solvedBox": "722x1041",
+      "unitScale": "62.23/62.18",
+      "surfaceBox": "760x1133"
     }
   ],
   "drives": [
@@ -16659,7 +16659,7 @@
       "control": "H17",
       "hit": true,
       "got": [
-        "P__plot-chrome-cannot-move-the-surface: enlarging the plot's own chrome moved the figure surface from 999x999 to 760x998 — a surface takes its width from the region the blueprint assigned, never from what the plot happens to draw inside it"
+        "P__plot-chrome-cannot-move-the-surface: enlarging the plot's own chrome moved the figure surface from 999x999 to 760x1133 — a surface takes its width from the region the blueprint assigned, never from what the plot happens to draw inside it"
       ]
     },
     {

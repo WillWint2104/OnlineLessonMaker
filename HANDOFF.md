@@ -655,6 +655,31 @@ renderer is referenced.
   lesson page and nothing else, desktop 1152 and tablet 834, kept apart from the captioned build
   artefacts beside them. A control asserts that the lesson renderer and the shipping catalogue select
   the same subdesign AND paint the same width for every state both of them render.
+  **THE COMPOSITION SYSTEM IS APPROVED AND CLOSED** (maintainer, 21 Sep) for the quadratics lesson,
+  with one authored adjustment applied: the Symmetry graph's x-window widened from ±5 to ±6.5, which
+  cost 21% of its height (desktop 952 → 755px) and moved no composition. Do not open further
+  composition or layout research; the next priority is the learning application and its lesson-
+  authoring functionality, built on this system.
+
+  **TWO PIECES OF OUTSTANDING WORK, RECORDED FOR A LATER PHASE — neither is to be expanded now:**
+  1. **The image block.** `block()` in `scripts/composition-atlas.mjs` sends every media block through
+     the graph solver, so an `image` block cannot render and the `contain` branch is designed and
+     unexercised. Wiring it needs a decision the slot contract does not carry: HOW WIDE A CONTAINED
+     OBJECT IS when the region's span is the reading measure and the object's is not (on tablet, 4
+     columns = 407px inside a 727px region). This is what blocks supporting illustrations, including
+     the approved T3 composition, from reaching a real page.
+  2. **Page composition is expressed twice.** Media sizing is unified — both layers take the width
+     from one table and a control asserts they agree — but the lesson renderer lays out worked
+     solutions, paired cases and tabs with its own kit (`docs/atlas/worked-examples/src/atlas.css`)
+     while the catalogue uses pattern grids (`docs/atlas/composition/src/composition.css`). No visible
+     divergence today, both checked, but it is two implementations of one lesson and it is the next
+     thing that will drift.
+
+  **A RULE THAT COST A RUN:** a regression fixture must not be the same object as a piece of
+  courseware. `media.json`'s `graph.portrait` pointed at the lesson's `symmetry` figure; widening that
+  figure's window took it out of the portrait band, left the fixture set with no portrait graph, and
+  turned `H14` into a control comparing nothing. It now points at `roots`.
+
   **The one named gap:** the `notes` pattern's supporting-illustration composition (region = the
   reading measure, the compact card centred inside it) is approved and proven in the Composition Proof
   Atlas, but no real page uses it, because the shipping renderer has no `image` block — `block()` sends

@@ -2022,6 +2022,25 @@ const H8 = (recs) => recs.filter((r) => !r.sequence).flatMap((r) => {
 const fails = [];
 const check = (cond, msg) => { if (!cond) fails.push(msg); };
 
+/* A DRIVE NEEDS A REAL RECORD TO DOCTOR, AND SAYS SO WHEN THERE IS NONE.
+   Every counterexample below is built by finding one genuine record and spoiling a copy of it. When
+   the atlas stops producing the kind of record a drive needs, the drive cannot run — and it used to
+   discover that by spreading `undefined` and dying inside the control with a TypeError, which reads
+   like a bug in the control rather than a gap in the corpus. Found when a fixture change emptied the
+   figure-surface records: H14 correctly reported `0 pair(s)` and the run crashed one line later,
+   burying the real finding under a stack trace.
+
+   A missing baseline is now recorded as a drive that did not fire, which already fails the run. */
+const driveBase = (pred, id, control, what) => {
+  const r = REAL.find(pred);
+  if (!r) {
+    drives.push({ id, control, hit: false,
+      got: [`no ${what} record exists to build the counterexample from, so ${control} is unproven`] });
+    console.log(`  ✗ NO BASELINE  ${id.padEnd(26)} ${control} — no ${what} record to doctor`);
+  }
+  return r || null;
+};
+
 /* ── H14 · PLOT GEOMETRY PRESERVED · H15 · LAYOUT INVARIANCE ─────────────────────────────────────
    Written as pure functions of the records so each can be run twice: once on the atlas, where it
    must stay silent, and once on a doctored set, where it must speak. Turning a presentation
@@ -2218,12 +2237,15 @@ for (const r of REAL) for (const [c, f] of r.fails) fails.push(`${c} · ${f}`);
   check(h7.compared > 0, 'H7 · no adversarial comparison ran, so the prose-independence control is untested');
   console.log(`\ncontrol H7 · prose length moved nothing across ${h7.compared} comparison(s)`);
   /* DRIVEN: the same control, on a set where the doubled payload chose a different page. */
-  const doctored = [...REAL.filter((r) => r.pattern === 'visual.explanation' && r.klass === 'portrait' && !r.adversarial),
-    { ...REAL.find((r) => r.pattern === 'visual.explanation' && r.klass === 'portrait' && !r.adversarial),
-      adversarial: true, blueprint: 'stage-full' }];
-  const dr = H7(doctored);
-  drives.push({ id: 'prose-chose-the-page', control: 'H7', hit: dr.out.length > 0, got: dr.out.slice(0, 1) });
-  console.log(`  ${dr.out.length ? '✓' : '✗ DID NOT FIRE'}  prose-chose-the-page        H7`);
+  const b7 = driveBase((r) => r.pattern === 'visual.explanation' && r.klass === 'portrait' && !r.adversarial,
+    'prose-chose-the-page', 'H7', 'portrait visual.explanation');
+  if (b7) {
+    const doctored = [...REAL.filter((r) => r.pattern === 'visual.explanation' && r.klass === 'portrait' && !r.adversarial),
+      { ...b7, adversarial: true, blueprint: 'stage-full' }];
+    const dr = H7(doctored);
+    drives.push({ id: 'prose-chose-the-page', control: 'H7', hit: dr.out.length > 0, got: dr.out.slice(0, 1) });
+    console.log(`  ${dr.out.length ? '✓' : '✗ DID NOT FIRE'}  prose-chose-the-page        H7`);
+  }
 }
 {
   const h14 = H14(REAL);
@@ -2231,44 +2253,56 @@ for (const r of REAL) for (const [c, f] of r.fails) fails.push(`${c} · ${f}`);
   check(h14.compared > 0, 'H14 · no surface/no-surface pair was compared, so the geometry control is untested');
   console.log(`control H14 · equal unit scale and the authored domain held across ${h14.compared} surface/no-surface pair(s)`);
   for (const n of [...new Set(h14.notes)]) console.log(`    · ${n}`);
-  const base14 = REAL.find((r) => r.fs === 'off' && r.unitScale);
-  const d14 = H14([base14, { ...base14, fs: 'A', unitScale: '50/70' }]);
-  drives.push({ id: 'surface-stretched-the-plane', control: 'H14', hit: d14.out.length > 0, got: d14.out.slice(0, 1) });
-  console.log(`  ${d14.out.length ? '✓' : '✗ DID NOT FIRE'}  surface-stretched-the-plane   H14`);
+  const base14 = driveBase((r) => r.fs === 'off' && r.unitScale, 'surface-stretched-the-plane', 'H14',
+    'figure-surface baseline carrying a unit scale');
+  if (base14) {
+    const d14 = H14([base14, { ...base14, fs: 'A', unitScale: '50/70' }]);
+    drives.push({ id: 'surface-stretched-the-plane', control: 'H14', hit: d14.out.length > 0, got: d14.out.slice(0, 1) });
+    console.log(`  ${d14.out.length ? '✓' : '✗ DID NOT FIRE'}  surface-stretched-the-plane   H14`);
+  }
 
   const h17 = H17(REAL);
   for (const f of h17.out) fails.push(`H17 · ${f}`);
   check(h17.compared > 0, 'H17 · no chrome/no-chrome pair was compared, so the chrome-invariance control is untested');
   console.log(`control H17 · plot chrome reached neither the surface nor the span across ${h17.compared} pair(s)`);
-  const b17 = REAL.find((r) => r.chrome);
-  const d17 = H17([{ ...b17, chrome: false, surfaceBox: '999x999' }, b17]);
-  drives.push({ id: 'chrome-moved-the-surface', control: 'H17', hit: d17.out.length > 0, got: d17.out.slice(0, 1) });
-  console.log(`  ${d17.out.length ? '✓' : '✗ DID NOT FIRE'}  chrome-moved-the-surface      H17`);
+  const b17 = driveBase((r) => r.chrome, 'chrome-moved-the-surface', 'H17', 'plot-chrome');
+  if (b17) {
+    const d17 = H17([{ ...b17, chrome: false, surfaceBox: '999x999' }, b17]);
+    drives.push({ id: 'chrome-moved-the-surface', control: 'H17', hit: d17.out.length > 0, got: d17.out.slice(0, 1) });
+    console.log(`  ${d17.out.length ? '✓' : '✗ DID NOT FIRE'}  chrome-moved-the-surface      H17`);
+  }
 
   const h18 = H18(REAL);
   for (const f of h18.out) fails.push(`H18 · ${f}`);
   check(h18.compared > 0, 'H18 · no blueprint was rendered on more than one surface, so the identity control is untested');
   console.log(`control H18 · structural identity held across ${h18.compared} multi-surface blueprint(s)`);
-  const b18 = REAL.find((r) => r.identity && r.surface === 'desktop' && !r.counterexample);
   /* TWO DRIVES, because H18 now refuses two different things: a region that did not survive the
      narrower surface, and a surviving row that changed how it sizes itself. */
-  const d18 = H18([b18, { ...b18, surface: 'phone', identity: b18.identity.replace(/,[^,]+$/, '') }]);
-  drives.push({ id: 'identity-changed-on-phone', control: 'H18', hit: d18.out.length > 0, got: d18.out.slice(0, 1) });
-  console.log(`  ${d18.out.length ? '✓' : '✗ DID NOT FIRE'}  identity-changed-on-phone     H18`);
-  const d18b = H18([b18, { ...b18, surface: 'phone',
-    verticals: Object.fromEntries(Object.entries(b18.verticals || {}).map(([k2], i) => [k2, i ? 'hug' : 'designed'])) }]);
-  drives.push({ id: 'a-row-redefined-on-phone', control: 'H18', hit: d18b.out.length > 0, got: d18b.out.slice(0, 1) });
-  console.log(`  ${d18b.out.length ? '✓' : '✗ DID NOT FIRE'}  a-row-redefined-on-phone      H18`);
+  const b18 = driveBase((r) => r.identity && r.surface === 'desktop' && !r.counterexample,
+    'identity-changed-on-phone', 'H18', 'desktop identity');
+  if (!b18) drives.push({ id: 'a-row-redefined-on-phone', control: 'H18', hit: false,
+    got: ['no desktop identity record exists to build the counterexample from, so H18 is unproven'] });
+  if (b18) {
+    const d18 = H18([b18, { ...b18, surface: 'phone', identity: b18.identity.replace(/,[^,]+$/, '') }]);
+    drives.push({ id: 'identity-changed-on-phone', control: 'H18', hit: d18.out.length > 0, got: d18.out.slice(0, 1) });
+    console.log(`  ${d18.out.length ? '✓' : '✗ DID NOT FIRE'}  identity-changed-on-phone     H18`);
+    const d18b = H18([b18, { ...b18, surface: 'phone',
+      verticals: Object.fromEntries(Object.entries(b18.verticals || {}).map(([k2], i) => [k2, i ? 'hug' : 'designed'])) }]);
+    drives.push({ id: 'a-row-redefined-on-phone', control: 'H18', hit: d18b.out.length > 0, got: d18b.out.slice(0, 1) });
+    console.log(`  ${d18b.out.length ? '✓' : '✗ DID NOT FIRE'}  a-row-redefined-on-phone      H18`);
+  }
 
   const h19 = H19(REAL);
   for (const f of h19.out) fails.push(`H19 · ${f}`);
   check(h19.compared > 0, 'H19 · no two calibration shapes shared a class, so the class-selects control is untested');
   console.log(`control H19 · the geometry CLASS selected across ${h19.compared} class(es) holding more than one shape`);
   for (const n of h19.notes) console.log(`    ! ${n}`);
-  const b19 = REAL.find((r) => r.calibration);
-  const d19 = H19([b19, { ...b19, calibration: { ...b19.calibration }, blueprint: 'something-else' }]);
-  drives.push({ id: 'shape-chose-the-composition', control: 'H19', hit: d19.out.length > 0, got: d19.out.slice(0, 1) });
-  console.log(`  ${d19.out.length ? '✓' : '✗ DID NOT FIRE'}  shape-chose-the-composition   H19`);
+  const b19 = driveBase((r) => r.calibration, 'shape-chose-the-composition', 'H19', 'calibration');
+  if (b19) {
+    const d19 = H19([b19, { ...b19, calibration: { ...b19.calibration }, blueprint: 'something-else' }]);
+    drives.push({ id: 'shape-chose-the-composition', control: 'H19', hit: d19.out.length > 0, got: d19.out.slice(0, 1) });
+    console.log(`  ${d19.out.length ? '✓' : '✗ DID NOT FIRE'}  shape-chose-the-composition   H19`);
+  }
 
   const h20 = H20(REAL);
   for (const f of h20.out) fails.push(`H20 · ${f}`);
@@ -2291,10 +2325,12 @@ for (const r of REAL) for (const [c, f] of r.fails) fails.push(`${c} · ${f}`);
   for (const f of h15.out) fails.push(`H15 · ${f}`);
   check(h15.compared > 0, 'H15 · no surface/no-surface pair was compared, so the invariance control is untested');
   console.log(`control H15 · the composition was identical across ${h15.compared} surface/no-surface pair(s)`);
-  const base15 = REAL.find((r) => r.fs === 'off');
-  const d15 = H15([base15, { ...base15, fs: 'A', structure: 'something-else' }]);
-  drives.push({ id: 'surface-moved-the-layout', control: 'H15', hit: d15.out.length > 0, got: d15.out.slice(0, 1) });
-  console.log(`  ${d15.out.length ? '✓' : '✗ DID NOT FIRE'}  surface-moved-the-layout      H15`);
+  const base15 = driveBase((r) => r.fs === 'off', 'surface-moved-the-layout', 'H15', 'figure-surface baseline');
+  if (base15) {
+    const d15 = H15([base15, { ...base15, fs: 'A', structure: 'something-else' }]);
+    drives.push({ id: 'surface-moved-the-layout', control: 'H15', hit: d15.out.length > 0, got: d15.out.slice(0, 1) });
+    console.log(`  ${d15.out.length ? '✓' : '✗ DID NOT FIRE'}  surface-moved-the-layout      H15`);
+  }
 }
 {
   /* H22 · INSTRUCTIONAL TYPE DOES NOT SHRINK. The floor is declared in the catalogue, not here, and

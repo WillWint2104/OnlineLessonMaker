@@ -72,8 +72,8 @@
     "pattern": "visual.explanation",
     "subdesign": "down-8",
     "surface": "desktop",
-    "aspect": "portrait",
-    "pageHeight": 1995,
+    "aspect": "balanced",
+    "pageHeight": 1798,
     "sig": "visual.explanation/down-8{media:760|interpretation:760|support:564}"
   },
   {
@@ -83,8 +83,8 @@
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "tablet",
-    "aspect": "portrait",
-    "pageHeight": 1906,
+    "aspect": "balanced",
+    "pageHeight": 1689,
     "sig": "visual.explanation/stacked{media:834|interpretation:727.25|support:513.75}"
   },
   {
@@ -94,8 +94,8 @@
     "pattern": "visual.explanation",
     "subdesign": "stacked",
     "surface": "phone",
-    "aspect": "portrait",
-    "pageHeight": 1473,
+    "aspect": "balanced",
+    "pageHeight": 1381,
     "sig": "visual.explanation/stacked{media:382|interpretation:382|support:382}"
   },
   {
@@ -138,8 +138,8 @@
     "pattern": "visual.compare",
     "subdesign": "paired",
     "surface": "desktop",
-    "aspect": "portrait",
-    "pageHeight": 2706,
+    "aspect": "balanced",
+    "pageHeight": 2401,
     "sig": "visual.compare/paired{intro:760|caseA:564|caseB:564|media:1152|interpretation:760|synthesis:760}"
   },
   {
@@ -149,8 +149,8 @@
     "pattern": "visual.compare",
     "subdesign": "paired",
     "surface": "tablet",
-    "aspect": "portrait",
-    "pageHeight": 2077,
+    "aspect": "balanced",
+    "pageHeight": 1860,
     "sig": "visual.compare/paired{intro:727.25|caseA:407|caseB:407|media:834|interpretation:727.25|synthesis:727.25}"
   },
   {
@@ -160,8 +160,8 @@
     "pattern": "visual.compare",
     "subdesign": "stacked",
     "surface": "phone",
-    "aspect": "portrait",
-    "pageHeight": 1931,
+    "aspect": "balanced",
+    "pageHeight": 1839,
     "sig": "visual.compare/stacked{intro:382|caseA:382|caseB:382|media:382|interpretation:382|synthesis:382}"
   },
   {
@@ -502,7 +502,7 @@
     "subdesign": "down-8",
     "surface": "desktop",
     "aspect": "none",
-    "pageHeight": 1935,
+    "pageHeight": 1738,
     "sig": "visual.explanation/down-8{media:760|interpretation:760|support:564}"
   },
   {
@@ -513,7 +513,7 @@
     "subdesign": "stacked",
     "surface": "tablet",
     "aspect": "none",
-    "pageHeight": 2013,
+    "pageHeight": 1796,
     "sig": "visual.explanation/stacked{media:834|interpretation:727.25|support:513.75}"
   },
   {
@@ -524,7 +524,7 @@
     "subdesign": "stacked",
     "surface": "phone",
     "aspect": "none",
-    "pageHeight": 1576,
+    "pageHeight": 1484,
     "sig": "visual.explanation/stacked{media:382|interpretation:382|support:382}"
   },
   {
