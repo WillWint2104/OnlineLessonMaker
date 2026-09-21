@@ -1,0 +1,388 @@
+{
+  "_": "THE QUADRATICS LESSON, IN THE APPLICATION'S OWN SCHEMA. Converted from docs/atlas/lesson/quadratics.lesson.json with no loss and no invention: the same mathematics, the same worked solutions, the same table of values, the same graphs and their authored domains, the same explanatory prose, and the same two Symmetry representations. Nothing here is new content — where the authored lesson said `single.flow` this says an example in a `sequence` group, where it said `views.tabs` this says a staged group's states, and where it said `visual` this says a group whose teaching is its representation. Notation is the app's: _x_ is a variable, ^2 a superscript, − a minus sign.",
+  "meta": {
+    "title": "Quadratic relationships",
+    "theme": "mathematics",
+    "stage": "NSW Stage 5",
+    "year": "Year 10",
+    "unit": "Quadratic relationships"
+  },
+  "slides": [
+    {
+      "type": "workedExamples",
+      "id": "parabola",
+      "navLabel": "The parabola",
+      "title": "The parabola _y_ = _x_^2",
+      "lede": "Four ways into the same curve: putting numbers in, taking them back out, the mirror down its middle, and what happens when the rule is divided through.",
+      "groups": [
+        {
+          "id": "g-substitution",
+          "type": "sequence",
+          "title": "Substitution",
+          "lede": "Three values of _x_, chosen because each one goes wrong in a different way.",
+          "examples": [
+            {
+              "id": "ex-negative",
+              "label": "A negative value",
+              "prompt": "Use the rule _y_ = _x_^2 to find _y_ when _x_ = −4.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Write the rule.",
+                  "math": "_y_ = _x_^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Substitute the given value. Keep the brackets — the whole of −4 is squared, not just the 4.",
+                  "math": "_y_ = (−4)^2"
+                },
+                {
+                  "id": "s3",
+                  "text": "Evaluate. A negative multiplied by a negative gives a positive.",
+                  "math": "_y_ = (−4)(−4) = 16"
+                }
+              ],
+              "answer": "_y_ = 16, so (−4, 16) lies on the curve."
+            },
+            {
+              "id": "ex-fraction",
+              "label": "A fraction",
+              "prompt": "Find _y_ when _x_ = −2/3.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Substitute, keeping the brackets so the sign and the whole fraction are squared together.",
+                  "math": "_y_ = (−2/3)^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Squaring a fraction squares the numerator and the denominator separately.",
+                  "math": "_y_ = (−2)^2 / 3^2"
+                },
+                {
+                  "id": "s3",
+                  "text": "Evaluate both.",
+                  "math": "_y_ = 4/9"
+                }
+              ],
+              "answer": "_y_ = 4/9, which is less than 1 — the point sits below (−1, 1)."
+            },
+            {
+              "id": "ex-decimal",
+              "label": "A decimal, and a table",
+              "prompt": "Find _y_ when _x_ = 0.2, then tabulate _y_ for whole values of _x_ from −5 to 5.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Square it. A value between −1 and 1 always gets smaller, not larger.",
+                  "math": "_y_ = 0.2 × 0.2 = 0.04"
+                },
+                {
+                  "id": "s2",
+                  "text": "The same substitution, done once for each whole value. The table is one row of paired readings, so it is never wrapped onto two lines — it scrolls sideways instead.",
+                  "visual": {
+                    "kind": "table",
+                    "stub": "_x_",
+                    "head": [
+                      "−5",
+                      "−4",
+                      "−3",
+                      "−2",
+                      "−1",
+                      "0",
+                      "1",
+                      "2",
+                      "3",
+                      "4",
+                      "5"
+                    ],
+                    "rows": [
+                      {
+                        "label": "_y_ = _x_^2",
+                        "cells": [
+                          "25",
+                          "16",
+                          "9",
+                          "4",
+                          "1",
+                          "0",
+                          "1",
+                          "4",
+                          "9",
+                          "16",
+                          "25"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ],
+              "answer": "_y_ = 0.04, and the table reads the same forwards and backwards."
+            }
+          ],
+          "footLabel": "What the three show",
+          "relations": [
+            {
+              "kind": "prose",
+              "body": "Substitution never changes the rule — it only replaces _x_. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a decimal below 1 gets smaller rather than larger."
+            },
+            {
+              "kind": "prose",
+              "body": "The table row reading the same in both directions is the first sign of the mirror that the Symmetry tab is about."
+            }
+          ]
+        },
+        {
+          "id": "g-solving",
+          "type": "sequence",
+          "title": "Solving for _x_",
+          "lede": "Going the other way. Two examples: the bare equation, then the same algebra inside a situation.",
+          "examples": [
+            {
+              "id": "ex-solve16",
+              "label": "Solving _x_^2 = 16",
+              "prompt": "Solve _x_^2 = 16.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Ask which numbers square to 16.",
+                  "math": "_x_^2 = 16"
+                },
+                {
+                  "id": "s2",
+                  "text": "Take the square root of both sides. Squaring destroys the sign, so undoing it has to return both numbers that could have produced 16.",
+                  "math": "_x_ = ±4"
+                },
+                {
+                  "id": "s3",
+                  "text": "Check each one back in the original equation.",
+                  "math": "4^2 = 16 and (−4)^2 = 16"
+                }
+              ],
+              "answer": "_x_ = 4 or _x_ = −4."
+            },
+            {
+              "id": "ex-stone",
+              "label": "The same algebra, inside a situation",
+              "prompt": "A stone is dropped from a bridge. The distance it has fallen, in metres, is modelled by _d_ = 5_t_^2, where _t_ is the time in seconds since it was released. The bridge deck is 45 metres above the water, and the model is only trusted while the stone is still falling. Find how long the stone takes to reach the water.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Write the rule and substitute the distance you want.",
+                  "math": "45 = 5_t_^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Divide both sides by 5 to leave the square on its own.",
+                  "math": "_t_^2 = 9"
+                },
+                {
+                  "id": "s3",
+                  "text": "Take the square root. The algebra offers both signs.",
+                  "math": "_t_ = ±3"
+                },
+                {
+                  "id": "s4",
+                  "text": "Reject the negative root. It solves the equation but not the question — the stone was not falling three seconds before it was dropped.",
+                  "math": "_t_ = 3"
+                }
+              ],
+              "answer": "3 seconds."
+            }
+          ],
+          "footLabel": "What the two show",
+          "relations": [
+            {
+              "kind": "prose",
+              "body": "The ± is not a convention bolted onto the square root. It is the record of a fact about squaring: two different numbers can arrive at the same square, so undoing a square has to return both of them."
+            },
+            {
+              "kind": "prose",
+              "body": "A situation can rule one of them out, and saying why is part of the answer. The algebra does not know the stone was dropped."
+            }
+          ]
+        },
+        {
+          "id": "g-symmetry",
+          "type": "staged",
+          "title": "Symmetry",
+          "lede": "One idea, two authored representations. Solve it, then look at the same fact on the curve.",
+          "examples": [
+            {
+              "id": "ex-caseA",
+              "label": "Case A",
+              "prompt": "Find _y_ when _x_ = −3.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Substitute, keeping the brackets.",
+                  "math": "_y_ = (−3)^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Evaluate.",
+                  "math": "_y_ = 9"
+                }
+              ],
+              "answer": "(−3, 9)"
+            },
+            {
+              "id": "ex-caseB",
+              "label": "Case B",
+              "prompt": "Find _y_ when _x_ = 3.",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Substitute.",
+                  "math": "_y_ = 3^2"
+                },
+                {
+                  "id": "s2",
+                  "text": "Evaluate.",
+                  "math": "_y_ = 9"
+                }
+              ],
+              "answer": "(3, 9)"
+            }
+          ],
+          "states": [
+            {
+              "id": "workings",
+              "label": "Workings",
+              "lede": "Both cases worked in full. Squaring destroys the sign, so _x_ and −_x_ always give the same _y_ — the two cases are a mirror pair rather than two unrelated results.",
+              "show": [
+                "question",
+                "steps",
+                "answer"
+              ]
+            },
+            {
+              "id": "visual",
+              "label": "Visual explanation",
+              "show": [
+                "visual",
+                "relations"
+              ]
+            }
+          ],
+          "relations": [
+            {
+              "kind": "figure",
+              "figure": {
+                "type": "figure",
+                "figure": "graph",
+                "aspect": "equal",
+                "grid": "shown",
+                "callouts": "hidden",
+                "domain": {
+                  "xMin": -6.5,
+                  "xMax": 6.5,
+                  "yMin": -1,
+                  "yMax": 11
+                },
+                "objects": [
+                  {
+                    "type": "function",
+                    "f": "x^2",
+                    "label": "y = x^2"
+                  },
+                  {
+                    "type": "line",
+                    "y": 9,
+                    "label": "y = 9"
+                  },
+                  {
+                    "type": "points",
+                    "rows": [
+                      [
+                        "(−3, 9)",
+                        -3,
+                        9
+                      ],
+                      [
+                        "(3, 9)",
+                        3,
+                        9
+                      ]
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "kind": "relations",
+              "label": "The same fact, on the curve",
+              "items": [
+                "The horizontal line _y_ = 9 meets _y_ = _x_^2 at exactly the two points the cases found: (−3, 9) and (3, 9).",
+                "They sit at equal distances either side of the _y_-axis. That mirror is what “squaring destroys the sign” looks like when it is drawn.",
+                "Any line above the vertex meets the curve twice, once on each side. At the vertex the two crossings have met, which is the single solution of _x_^2 = 0. Below it the line misses the curve entirely — the same fact as “no real number squares to give a negative”."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "g-flatter",
+          "type": "staged",
+          "title": "A flatter parabola",
+          "lede": "The same shape, divided through by 12 — and a window wide enough to see what that did.",
+          "examples": [],
+          "relations": [
+            {
+              "kind": "figure",
+              "figure": {
+                "type": "figure",
+                "figure": "graph",
+                "aspect": "equal",
+                "grid": "shown",
+                "callouts": "hidden",
+                "domain": {
+                  "xMin": -12,
+                  "xMax": 12,
+                  "yMin": -2,
+                  "yMax": 6
+                },
+                "objects": [
+                  {
+                    "type": "function",
+                    "f": "x^2/12",
+                    "label": "y = x^2 / 12"
+                  },
+                  {
+                    "type": "line",
+                    "y": 3,
+                    "label": "y = 3"
+                  },
+                  {
+                    "type": "points",
+                    "rows": [
+                      [
+                        "(−6, 3)",
+                        -6,
+                        3
+                      ],
+                      [
+                        "(6, 3)",
+                        6,
+                        3
+                      ]
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "kind": "relations",
+              "label": "Reading the curve",
+              "items": [
+                "Dividing by 12 does not change the shape into something else. It stretches it sideways: this curve needs about 8.5 units of _x_ to climb the 6 units of _y_ that _y_ = _x_^2 covers in about 2.5.",
+                "The line _y_ = 3 still meets it twice, at _x_ = −6 and _x_ = 6, and those crossings are still mirror images about the _y_-axis. Flattening changes the scale, never the symmetry.",
+                "Read a value the same way as before: go up from _x_, across to _y_. At _x_ = 6 the height is 36 ÷ 12 = 3, which is the crossing the line marks.",
+                "A window this wide is why the figure is drawn across the page rather than beside this reading. The shape of the mathematics decided that, not the length of this paragraph."
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

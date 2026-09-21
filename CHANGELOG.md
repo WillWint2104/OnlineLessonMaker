@@ -8,6 +8,61 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **The quadratics lesson, in the actual application** (`docs/atlas/lesson/quadratics.app.json`,
+  `scripts/shots-quadratics-app.mjs`, `docs/atlas/app-lesson/`). The complete lesson — four
+  subtopics, nineteen worked steps, the table of values, both Symmetry representations and both
+  graphs — converted into the app's own worked-example schema and loaded through
+  `lesson-studio.html` itself. No renderer of its own: the app's `registerPage` mathematics page,
+  its `mx-wex` primitive, its figure engine, its stylesheet.
+
+  The app now places a media foot on the approved `visual.explanation` subdesigns instead of the old
+  GRAPH | INTERPRETATION rail. Measured off the painted page, at the viewport where the app's
+  worked-example surface is the catalogue's own 1152px desktop surface:
+
+  | render | surface | subdesign | media | free each side | plane | reading | px per unit |
+  |---|---|---|---|---|---|---|---|
+  | Symmetry · visual | 1152 | `down-8` | **760px** (8 of 12, cols 3–10) | 196 / 196 | 760×702 | 760 | 50.98 / 50.98 |
+  | A flatter parabola | 1152 | `down-12` | **1152px** (12 of 12) | 0 / 0 | 1152×576 | 760 | 42.61 / 42.61 |
+  | Symmetry · visual | 742 | `down-8` | 742px (full) | 0 / 0 | 742×685 | 742 | 49.76 / 49.84 |
+  | A flatter parabola | 742 | `down-12` | 742px (full) | 0 / 0 | 742×371 | 742 | 27.50 / 27.55 |
+
+  760px is not forced in: the foot is a real twelve-column grid over the app's own inner width, and
+  eight of those columns *is* 760 at 1152. The wide plane takes all twelve, with its reading back at
+  the measure from the left edge, exactly as `down-12` draws itself.
+- **`scripts/verify-composition-grid.mjs` — the app's copy of the composition numbers cannot drift.**
+  The app is one file with no build step, so it cannot read the catalogue at runtime and must carry
+  a copy. This check reads `docs/atlas/composition/src/{grid.json,patterns.json}` and
+  `docs/atlas/worked-examples/src/atlas.json` and fails if the copy disagrees: the column count,
+  gutter, media span and start, the reading measure, the desktop surface, and the geometry band that
+  chooses `down-12` over `down-8`. It names no number of its own — every expectation is read out of
+  the catalogue and every actual out of the app, so retuning the catalogue turns it red rather than
+  silently changing nothing. Five drives to failure: the app moved off centre, the band retuned, the
+  band inverted, the catalogue narrowed to seven columns, a third desktop subdesign approved. Runs
+  file-only, in CI ahead of the browser install.
+- **The lesson is driven, not just photographed** (interaction pass in `shots-quadratics-app.mjs`,
+  11 checks). Every tab clicked and the live panel read back; both Symmetry representations shown
+  one at a time with the hidden one reserving no height; the graph expanded into the focused
+  workspace (760px → 1482×920) and Escape returning it; nineteen of nineteen authored steps, seven
+  of seven answers, and every cell of the table of values counted against the lesson JSON.
+
+### Changed
+- **The media foot is a grid, not a flex rail** (`lesson-studio.html`). `mxFootPairs` (which asked
+  whether a plane and a reading column both cleared their floors) is replaced by `mxFootStage`
+  (whether the surface is at least the desktop surface the composition was designed on), and a new
+  `mxMediaPlace` picks `down-8` or `down-12` from the authored domain's aspect using the shipping
+  grammar's own `landscapeAbove` band. The graph sits above its reading on the approved columns at
+  every surface; the side-by-side arrangement is gone.
+- **`scripts/verify-notes-examples.mjs` — the foot assertion now enforces the approved arrangement.**
+  The old assertion required GRAPH | INTERPRETATION side by side; it is not removed but re-aimed:
+  the media lands on its approved span, centred, with the reading beneath on the same columns and
+  never wider than the measure; the plane takes the span it was given **or its own height bound
+  where that is narrower, never a width between the two**; equal unit scale within 2%; `down-12` on
+  a wide plane and `down-8` on a balanced one, read from the real lesson; full width below the
+  desktop surface. Three controls drive it to failure. (The height-bound clause is not a weakening —
+  the fixture's plane is 22 units tall by 12 wide, so filling 760px would make it 1226px tall and
+  `MX_PLOT_H` refuses. That is the app behaving correctly, and the first assertion was too strong.)
+
+### Added (earlier in this cycle)
 - **The space study — one lesson, four arrangements, measured** (`scripts/space-study.mjs`,
   `scripts/space-sheet.mjs`, `docs/atlas/space-study/`; investigation only, nothing adopted, no
   change to the shipping renderer). On desktop the Symmetry page gives its graph eight columns —

@@ -1430,58 +1430,130 @@ const named = (list) => list.filter((e) => !e.unnamed);
      !!zw && Math.abs(zw.zones[1].figW - natural(zw)) <= 1, zw ? `${zw.zones[1].figW}px in a ${zw.zones[1].h}px-tall zone, natural ${natural(zw)}px` : 'no bridge');
 }
 {
-  /* GRAPH | INTERPRETATION — two sibling regions with one top edge and one rule between them, decided by
-     the composition's floors; stacked graph-first below them. The two regions' first blocks sit the same
-     distance under their labels — nothing loose between a label and its content. */
-  const pair = (p) => p.evaluate((id) => {
+  /* GRAPH, THEN THE READING OF IT — `visual.explanation` from the composition catalogue, rendered by the
+     application itself. THIS BLOCK USED TO REQUIRE THE OPPOSITE. It asserted `foot === 'pair'`: the two
+     regions side by side with a rule between them. That arrangement was measured on the real lesson
+     against the three the catalogue approves and ruled against — beside a 249px reading, a 574-755px
+     plane leaves 346-384px under the text — so the assertion is not weakened here, it is turned around
+     and made stricter: the media must land on its APPROVED SPAN of the master grid, centred, with the
+     reading beneath it, and the plane must fill the span it was given rather than sit inside it.
+
+     THE TWO APPROVED DESKTOP SUBDESIGNS ARE BOTH CHECKED, on the two figures the lesson authors:
+     `down-8`  a balanced plane on columns 3-10, the reading beneath on the same eight;
+     `down-12` a wide plane on all twelve, the reading beneath on eight from the left edge. */
+  const stage = (p, gid, sid) => p.evaluate(({ id, st }) => {
     document.querySelector(`[data-mx-tab="${id}"]`).click();
     const pane = document.querySelector(`[data-mx-panel="${id}"]`);
-    const last = pane.querySelector('[data-mx-state]:last-child'); if (last) last.click();
+    if (st) { const b = pane.querySelector(`[data-mx-state="${st}"]`); if (b) b.click(); }
+    else { const last = pane.querySelector('[data-mx-state]:last-child'); if (last) last.click(); }
     const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
     const foot = live.querySelector('.mx-wexfoot[data-mx-form="pair"]'); if (!foot) return null;
     const R = (e) => e.getBoundingClientRect();
-    const cs = getComputedStyle(document.querySelector('.mx-wex'));
+    const surf = pane.querySelector('.mx-wexsurface'), scs = getComputedStyle(surf), sr = R(surf);
+    const cl = sr.left + parseFloat(scs.paddingLeft), cr = sr.right - parseFloat(scs.paddingRight);
+    const inner = cr - cl;
+    const wcs = getComputedStyle(document.querySelector('.mx-wex')), fcs = getComputedStyle(foot);
+    const num = (cs, k) => parseFloat(cs.getPropertyValue(k));
     const g = foot.querySelector('[data-mx-region="graph"]'), i = foot.querySelector('[data-mx-region="interpretation"]');
-    const fig = g.querySelector('.mx-part[data-mx-part="figure"]'), svg = g.querySelector('.tp-fig-svg'), lead = i.querySelector('.mx-wexres[data-mx-lead]');
-    const lab = (z) => z.querySelector(':scope>.mx-wexlab, :scope>.mx-part>.mx-parth');
-    const first = [].slice.call(i.children).filter((c) => !c.classList.contains('mx-wexlab'))[0];
-    return { foot: document.querySelector('.mx').dataset.mxFoot,
-      g: { t: Math.round(R(g).top), b: Math.round(R(g).bottom), l: Math.round(R(g).left), w: Math.round(R(g).width), h: Math.round(R(g).height), labT: Math.round(R(lab(g)).top), labB: Math.round(R(lab(g)).bottom) },
-      i: { t: Math.round(R(i).top), b: Math.round(R(i).bottom), l: Math.round(R(i).left), w: Math.round(R(i).width), h: Math.round(R(i).height), labT: Math.round(R(lab(i)).top), labB: Math.round(R(lab(i)).bottom), bl: getComputedStyle(i).borderLeftWidth,
-        firstT: first ? Math.round(R(first).top) : null },
-      svgT: svg ? Math.round(R(svg).top) : null,
-      figW: Math.round(R(fig).width), figH: Math.round(R(fig).height), ar: parseFloat(getComputedStyle(fig).getPropertyValue('--mx-plot-ar')),
-      leadRule: lead ? getComputedStyle(lead).borderTopWidth : null,
-      plotW: parseInt(cs.getPropertyValue('--mx-plot-w'), 10), plotH: parseInt(cs.getPropertyValue('--mx-plot-h'), 10),
-      interpMax: parseInt(cs.getPropertyValue('--mx-interp-max'), 10) }; }, GROUPS.find((g) => g.type === 'staged').id);
-  const pd = await open({ slide: WEX }); await reveal(pd, GROUPS.find((g) => g.type === 'staged').id);
-  const d = await pair(pd); await pd.close();
-  ok('GRAPH and INTERPRETATION are sibling regions with one top edge, one rule the full height between them, the plane at its natural size and the interpretation at a reading measure',
-     !!d && d.foot === 'pair' && d.g.t === d.i.t && d.g.labT === d.i.labT && d.i.l >= d.g.l + d.g.w - 1 && d.i.bl === '1px' && d.i.h === d.g.h
-     && d.figW <= d.plotW + 1 && d.figW <= Math.round(d.plotH * d.ar) + 1 && d.i.w <= d.interpMax + 1 && d.leadRule === '0px',
-     d ? `tops ${d.g.t}/${d.i.t}, labels ${d.g.labT}/${d.i.labT}, rule ${d.i.bl} over ${d.i.h}px beside a ${d.g.h}px graph region; plane ${d.figW}×${d.figH} (natural ≤ ${Math.round(d.plotH * d.ar)}), interpretation ${d.i.w}px (≤ ${d.interpMax})` : 'no pair');
-  ok('and the plane and the algebraic result each begin the same distance under their labels — nothing loose between a label and its content',
-     !!d && d.svgT != null && d.i.firstT != null && Math.abs((d.svgT - d.g.labB) - (d.i.firstT - d.i.labB)) <= 1 && d.svgT - d.g.labB <= 16,
-     d ? `plane ${d.svgT - d.g.labB}px under GRAPH, result ${d.i.firstT - d.i.labB}px under INTERPRETATION` : 'no pair');
-  const pp = await open({ w: 414, h: 896, slide: WEX }); await reveal(pp, GROUPS.find((g) => g.type === 'staged').id);
-  const m = await pair(pp); await pp.close();
-  ok('below their floors the two stack, graph first, with no rule',
-     !!m && m.foot === 'stack' && m.i.t >= m.g.b - 1 && m.i.bl === '0px' && m.g.l === m.i.l,
-     m ? `414px: graph ${m.g.t}→${m.g.b}, interpretation from ${m.i.t}, rule ${m.i.bl}` : 'no pair');
-  /* CONTROLS: centre the pair and the labels part; raise the plane's floor and the pair stacks at 1536. */
+    const fig = g.querySelector('.mx-part[data-mx-part="figure"]'), svg = g.querySelector('.tp-fig-svg');
+    const cols = num(wcs, '--mx-cols'), gut = num(wcs, '--mx-gutter');
+    const span = num(fcs, '--mx-media-span'), colW = (inner - (cols - 1) * gut) / cols;
+    /* px per unit per axis off the PAINTED svg — a container and a viewBox can agree while the plane
+       inside them is distorted, so the mathematics is measured, not the box */
+    let unit = null;
+    if (svg) {
+      const vb = (svg.getAttribute('viewBox') || '0 0 1 1').split(/\s+/).map(Number), r = R(svg);
+      const labs = [].slice.call(svg.querySelectorAll('.tp-fig-ticklabel'));
+      const val = (x) => parseFloat(x.textContent.replace('\u2212', '-'));
+      const per = (a, at) => { const z = labs.filter((x) => x.getAttribute('text-anchor') === a)
+          .map((x) => ({ v: val(x), px: +x.getAttribute(at) })).filter((o) => isFinite(o.v));
+        if (z.length < 2) return null; z.sort((m, n) => m.v - n.v);
+        const d = z[z.length - 1].v - z[0].v; return d ? Math.abs((z[z.length - 1].px - z[0].px) / d) : null; };
+      const ux = per('middle', 'x'), uy = per('end', 'y');
+      if (ux && uy) unit = { x: ux * r.width / vb[2], y: uy * r.height / vb[3] };
+    }
+    return { foot: document.querySelector('.mx').dataset.mxFoot, sub: foot.getAttribute('data-mx-sub'),
+      inner: Math.round(inner), span, wantSpan: Math.round(span * colW + (span - 1) * gut),
+      measure: num(wcs, '--mx-measure'),
+      g: { w: Math.round(R(g).width), b: Math.round(R(g).bottom), l: Math.round(R(g).left - cl), r: Math.round(cr - R(g).right) },
+      i: { w: Math.round(R(i).width), t: Math.round(R(i).top), l: Math.round(R(i).left - cl), bl: getComputedStyle(i).borderLeftWidth },
+      figW: Math.round(R(fig).width), figH: Math.round(R(fig).height), unit,
+      plotH: num(wcs, '--mx-plot-h'), ar: parseFloat(getComputedStyle(fig).getPropertyValue('--mx-plot-ar')) };
+  }, { id: gid, st: sid });
+
+  const SYM = GROUPS.find((g) => g.type === 'staged').id;
+  const pd = await open({ slide: WEX }); await reveal(pd, SYM);
+  const d = await stage(pd, SYM); await pd.close();
+  ok('the media lands on its approved span of the master grid, centred, with the reading beneath it on the same columns',
+     !!d && d.foot === 'stage' && d.sub === 'down-8' && Math.abs(d.g.w - d.wantSpan) <= 1
+     && Math.abs(d.g.l - d.g.r) <= 1 && d.g.l > 0 && d.i.t >= d.g.b - 1 && d.i.l === d.g.l && d.i.bl === '0px',
+     d ? `${d.sub} on a ${d.inner}px surface: media ${d.g.w}px (span ${d.span} = ${d.wantSpan}px), free ${d.g.l}/${d.g.r}, reading ${d.i.w}px from ${d.i.t} under a media ending at ${d.g.b}` : 'no media foot');
+  /* THE PLANE TAKES THE SPAN IT WAS GIVEN, OR ITS OWN HEIGHT BOUND, AND NOTHING IN BETWEEN.
+     `slotFit: fill` says the slot gives the width — but the app also bounds a plane on its longer
+     side (MX_PLOT_H), and a plane 22 units tall in a 12-unit window would be 1226px high at eight
+     columns. The catalogue would let that scroll; the app refuses it, and that refusal is existing
+     behaviour this integration has no mandate to discard. So the assertion is not "always 760": it
+     is that the plane sits EXACTLY at whichever of the two bounds governs. A plane at neither — 560px
+     of natural width inside a 760px region, which is what this page did before — fails. */
+  const bound = (x) => Math.min(x.g.w, Math.round(x.plotH * x.ar));
+  ok('and the plane takes the span it was given, or its own height bound where that is narrower — never a width between the two',
+     !!d && Math.abs(d.figW - bound(d)) <= 1 && d.i.w <= d.measure + 1,
+     d ? `plane ${d.figW}×${d.figH} in a ${d.g.w}px region (height bound ${Math.round(d.plotH * d.ar)}px, so ${bound(d) === d.g.w ? 'the span' : 'the height'} governs), reading ${d.i.w}px (measure ${d.measure})` : 'no media foot');
+  ok('and the mathematics is untouched by the wider region: one x-unit and one y-unit are the same painted length',
+     !!d && !!d.unit && Math.abs(d.unit.x / d.unit.y - 1) <= 0.02,
+     d && d.unit ? `${d.unit.x.toFixed(2)} px per x-unit, ${d.unit.y.toFixed(2)} px per y-unit` : 'no unit scale');
+
+  /* THE OTHER APPROVED DESKTOP SUBDESIGN, on the real lesson rather than a fixture. Neither visual
+     fixture authors a plane wide enough to reach `down-12`, and an assertion that silently skips is
+     an assertion nobody has read — so this one loads the shipping quadratics lesson, which does. */
+  const APPL = JSON.parse(fs.readFileSync(path.join(root, 'docs/atlas/lesson/quadratics.app.json'), 'utf8'));
+  const APPWEX = APPL.slides.findIndex((x) => x.type === 'workedExamples');
+  const WIDE = APPL.slides[APPWEX].groups.find((g) => {
+    const f = (g.relations || g.visual || []).filter((q) => q && q.kind === 'figure')[0];
+    const dm = f && f.figure && f.figure.domain;
+    return dm && (dm.yMax - dm.yMin) / (dm.xMax - dm.xMin) < 0.4; });
+  ok('the shipping lesson authors a plane wide enough to reach the second approved subdesign',
+     !!WIDE, WIDE ? `group ${WIDE.id}` : 'no wide plane in docs/atlas/lesson/quadratics.app.json');
+  const pw2 = await open({ slide: APPWEX, lesson: APPL });
+  const w = await stage(pw2, WIDE.id); await pw2.close();
+  ok('a WIDE plane takes the other approved subdesign — all twelve columns, with the reading beneath on eight from the page edge',
+     !!w && w.sub === 'down-12' && Math.abs(w.g.w - w.inner) <= 1 && w.i.l === 0 && w.i.w <= w.measure + 1,
+     w ? `${w.sub}: media ${w.g.w}px of ${w.inner}, reading ${w.i.w}px from the left edge` : 'no wide media foot');
+  /* and the same lesson's BALANCED plane still takes the centred eight, so the two are really being
+     told apart by the geometry rather than one rule happening to fit both */
+  const pb = await open({ slide: APPWEX, lesson: APPL });
+  const bsub = await stage(pb, APPL.slides[APPWEX].groups.find((g) => (g.states || []).length > 1).id, 'visual');
+  await pb.close();
+  ok('and the same lesson\'s balanced plane still takes the centred eight — the geometry is what tells them apart',
+     !!bsub && bsub.sub === 'down-8' && Math.abs(bsub.g.l - bsub.g.r) <= 1 && bsub.g.l > 0,
+     bsub ? `${bsub.sub}: media ${bsub.g.w}px, free ${bsub.g.l}/${bsub.g.r}` : 'no balanced media foot');
+
+  /* below the desktop surface the media takes the full width — the approved tablet and phone behaviour */
+  const pp = await open({ w: 834, h: 1100, slide: WEX }); await reveal(pp, SYM);
+  const m = await stage(pp, SYM); await pp.close();
+  ok('below the desktop surface the stage gives way and the media takes the full width, the reading still beneath it',
+     !!m && m.foot === 'full' && Math.abs(m.g.w - m.inner) <= 1 && m.g.l === 0 && m.i.t >= m.g.b - 1,
+     m ? `834px: surface ${m.inner}px, media ${m.g.w}px from ${m.g.l}, reading from ${m.i.t} under a media ending at ${m.g.b}` : 'no media foot');
+
+  /* CONTROLS — each breaks the approved arrangement in a different way, and each must be caught. */
   const pc = await open({ slide: WEX });
-  await pc.addStyleTag({ content: '.mx-wexpair{align-items:center !important}' });
-  await reveal(pc, GROUPS.find((g) => g.type === 'staged').id);
-  const c = await pair(pc); await pc.close();
-  ok('CONTROL: centring the pair separates the labels, and the measure sees it',
-     !!c && Math.abs(c.g.labT - c.i.labT) > 20, c ? `labels ${c.g.labT} and ${c.i.labT}` : 'no pair');
-  const pf = await open({ slide: WEX });
-  await pf.addStyleTag({ content: '.mx-wex{--mx-plot-min-w:900px !important}' });
-  await pf.evaluate(() => mxResolveFit()); await pf.waitForTimeout(500);
-  await reveal(pf, GROUPS.find((g) => g.type === 'staged').id);
-  const f = await pair(pf); await pf.close();
-  ok('CONTROL: the FLOOR decides the pair — raise the plane\'s floor and the same regions stack at 1536px',
-     !!f && f.foot === 'stack' && f.i.t >= f.g.b - 1 && f.i.bl === '0px', f ? `data-mx-foot="${f.foot}", interpretation from ${f.i.t} under a graph ending at ${f.g.b}` : 'no pair');
+  await pc.addStyleTag({ content: '[data-mx-foot="stage"] .mx-wexpair>.mx-wexzone[data-mx-region="graph"]{grid-column:1 / -1 !important}' });
+  await reveal(pc, SYM);
+  const c = await stage(pc, SYM); await pc.close();
+  ok('CONTROL: widen the media off its approved span and the measure sees it',
+     !!c && Math.abs(c.g.w - c.wantSpan) > 1, c ? `media ${c.g.w}px against an approved ${c.wantSpan}px` : 'no media foot');
+  const pu = await open({ slide: WEX });
+  await pu.addStyleTag({ content: '.mx-wexpair>.mx-wexzone[data-mx-region="graph"] .mx-part[data-mx-part="figure"]{width:560px !important}' });
+  await reveal(pu, SYM);
+  const u = await stage(pu, SYM); await pu.close();
+  ok('CONTROL: leave the plane at its old natural width inside the region and the measure sees the unclaimed space',
+     !!u && Math.abs(u.figW - bound(u)) > 1, u ? `plane ${u.figW}px inside a ${u.g.w}px region (bound ${bound(u)}px)` : 'no media foot');
+  const ps = await open({ slide: WEX });
+  await ps.addStyleTag({ content: '[data-mx-foot="stage"] .mx-wexpair>.mx-wexzone[data-mx-region="graph"]{grid-column:1 / span 8 !important}' });
+  await reveal(ps, SYM);
+  const o = await stage(ps, SYM); await ps.close();
+  ok('CONTROL: strand the stage against one edge and the measure sees it is no longer centred',
+     !!o && Math.abs(o.g.l - o.g.r) > 1, o ? `free ${o.g.l}px left, ${o.g.r}px right` : 'no media foot');
 }
 {
   /* A STATE WITH NO QUESTION keeps the working at a reading measure — between the working's floor and the

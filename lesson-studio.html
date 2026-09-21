@@ -2044,16 +2044,29 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
   padding:16px var(--mx-surface-pad) 18px var(--mx-zone-pad,22px);}
 .mx-wexmid{min-width:0;}
 .mx-wexmid .mx-part[data-mx-part="figure"]{width:min(100%,var(--mx-plot-w),calc(var(--mx-plot-h,720px) * var(--mx-plot-ar,1.333)));margin:0;}
-/* GRAPH | INTERPRETATION — two sibling regions with one top edge and one rule between them, decided by
-   mxFootPairs and published as data-mx-foot. The plane takes its own natural width and its height follows
-   its authored aspect — a tall plane makes the page LONGER and it scrolls; the interpretation is held to a
-   reading measure and whatever the page has spare stays trailing space. Below the floors: graph, then
-   interpretation, full width, no rule. */
+/* GRAPH, THEN THE READING OF IT — `visual.explanation/down-8` from the composition catalogue, which is
+   the arrangement the maintainer approved against three alternatives on this very lesson.
+
+   THE STAGE IS A GRID, NOT A WIDTH. The pair is laid over the master grid's twelve columns with its
+   24px gutters, and the media takes columns 3-10 — eight of twelve, centred, with the reading beneath
+   it on the same eight. At the desktop surface the catalogue designed this on, eight columns comes
+   out at 760px; at any other surface the same eight columns come out at whatever the grid makes them.
+   Nothing here names 760.
+
+   THE SLOT GIVES THE WIDTH AND THE PLANE TAKES IT (`slotFit: fill`), so inside the stage the plane's
+   natural-width cap does not apply — its height still follows its authored aspect and the page
+   scrolls. Free columns beside the media are not a hole: media has no measure to be bound by, and
+   centring is what stops an eight-column plane being stranded against one edge.
+
+   BELOW THE DESKTOP SURFACE the media takes the full width and the reading stays inside the measure,
+   which is the approved tablet and phone behaviour. */
 .mx-wexfoot{margin-top:26px;}
 .mx-wexfoot>.mx-wexlab{margin-bottom:12px;}
-.mx-wexpair{display:flex;flex-direction:column;align-items:stretch;}
-.mx-wexpair>.mx-wexzone{display:flex;flex-direction:column;gap:0;min-width:0;}
-.mx-wexpair>.mx-wexzone[data-mx-region="interpretation"]{margin-top:22px;max-width:var(--mx-interp-max,620px);}
+.mx-wexpair{display:grid;grid-template-columns:repeat(var(--mx-cols,12),minmax(0,1fr));
+  column-gap:var(--mx-gutter,24px);align-items:start;}
+.mx-wexpair>.mx-wexzone{display:flex;flex-direction:column;gap:0;min-width:0;
+  grid-column:1 / -1;}
+.mx-wexpair>.mx-wexzone[data-mx-region="interpretation"]{margin-top:22px;max-width:var(--mx-measure,760px);}
 /* the two regions' first blocks sit the same distance under their labels — the plane under GRAPH, the
    algebraic result under INTERPRETATION — and the interpretation's pieces are spaced from each other, not
    from the label */
@@ -2062,11 +2075,20 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-wexpair>.mx-wexzone>.mx-wexzl{margin-bottom:12px;}
 .mx-wexpair .mx-wexres[data-mx-lead]{border-top:0;padding-top:0;}
 .mx-wexpair>.mx-wexzone>.mx-part:first-child>.mx-parth{margin-top:0;}
-[data-mx-foot="pair"] .mx-wexpair{flex-direction:row;flex-wrap:nowrap;}
-[data-mx-foot="pair"] .mx-wexpair>.mx-wexzone[data-mx-region="graph"]{flex:1 1 var(--mx-plot-min-w);
-  min-width:min(100%,var(--mx-plot-min-w));max-width:min(var(--mx-plot-w),calc(var(--mx-plot-h,720px) * var(--mx-plot-ar,1.333)));}
-[data-mx-foot="pair"] .mx-wexpair>.mx-wexzone[data-mx-region="interpretation"]{flex:1 1 var(--mx-ask-min,300px);
-  margin-top:0;padding-left:var(--mx-zone-pad,22px);border-left:1px solid var(--mx-line);}
+/* THE CENTRED STAGE — both regions on the media's eight columns, so the reading begins on the plane's
+   own left edge rather than the page's. One declaration places both; they cannot drift apart. */
+[data-mx-foot="stage"] .mx-wexpair>.mx-wexzone[data-mx-region="graph"]{
+  grid-column:var(--mx-media-start,3) / span var(--mx-media-span,8);}
+/* the reading keeps the measure's eight columns in both subdesigns and only its ORIGIN changes: under
+   a centred stage it begins on the plane's left edge, under the full grid on the page's */
+[data-mx-foot="stage"] .mx-wexpair>.mx-wexzone[data-mx-region="interpretation"]{
+  grid-column:var(--mx-read-start,3) / span 8;}
+/* `slotFit: fill` — THE SLOT GIVES THE WIDTH AND THE PLANE TAKES IT, on the centred stage and on the
+   full width alike. The natural-width cap still governs a plane that is nobody's media slot (an
+   example's own companion), but a media region that asked for eight columns and then painted 560px
+   would be claiming a width it does not use, which is the defect this whole contract is about. */
+.mx-wexpair>.mx-wexzone[data-mx-region="graph"] .mx-part[data-mx-part="figure"]{
+  width:min(100%,calc(var(--mx-plot-h,720px) * var(--mx-plot-ar,1.333)));}
 /* extended — the figure BREAKS OUT of the reading measure at the step that earns it, then the reading
    flow resumes. Wider than the prose, never wider than a plane wants to be, and left-aligned like all else. */
 .mx-wexpane[data-mx-wextype="extended"] .mx-stepvis{margin-left:-6px;}
@@ -7445,6 +7467,25 @@ const MX_WB_CHROME=96;                              /* the workbook's own toolba
    must give it the whole width beneath the solution instead of a column beside it. Same lesson as the
    workbook: A REGION EXISTING IS NOT A REGION BEING USABLE. One owner; the CSS reads these, never a copy. */
 const MX_PLOT_MIN_W=340, MX_PLOT_MIN_H=255, MX_PLOT_W=560;
+/* THE APPROVED COMPOSITION, AS NUMBERS — and they are not this file's to invent. They are the master
+   grid and the `visual.explanation/down-8` subdesign: twelve columns, 24px gutters, the media on
+   columns 3-10 (eight of twelve) with the reading beneath at the same eight, and prose never set
+   wider than the measure. `scripts/verify-composition-grid.mjs` reads
+   docs/atlas/composition/src/{grid.json,patterns.json} and fails if these disagree with it, so the
+   catalogue stays the one owner and this copy cannot drift.
+
+   MX_STAGE_MIN is the DESKTOP SURFACE ITSELF, not a breakpoint someone chose: the centred eight-of-
+   twelve stage is the desktop composition, so it applies while the worked-example surface is at
+   least as wide as the desktop surface the catalogue designed it on. Below that the media takes the
+   full width, which is the approved tablet and phone behaviour. */
+const MX_GRID_COLS=12, MX_GRID_GUTTER=24, MX_MEDIA_SPAN=8, MX_MEDIA_START=3, MX_MEASURE=760, MX_STAGE_MIN=1152;
+/* THE TWO APPROVED DESKTOP SUBDESIGNS, and the one threshold that chooses between them.
+   `down-8`  media on columns 3-10, the reading beneath on the same eight — a centred stage.
+   `down-12` media on all twelve, the reading beneath on eight from the left edge — the full grid.
+   A plane much wider than it is tall gains real reach from the width; everything else does not, and
+   would only get taller. MX_WIDE_BELOW is the shipping grammar's `landscapeAbove` band read as
+   height/width: below 0.4 the plane is `wide`. Nothing else here classifies anything. */
+const MX_WIDE_BELOW=0.4, MX_WIDE_SPAN=12, MX_WIDE_START=1, MX_WIDE_READ_START=1;
 /* THE ASK COLUMN'S READING FLOOR. A worked example divides its row into the ask and the working; below
    roughly 37 characters a question column is a shape, not a measure. The row's grid holds the 35/65
    proportion only while both sides clear their floor — under that the ask keeps this width and the working
@@ -7541,12 +7582,18 @@ function mxRowSplits(root){
   return inner>=mxWexProp(root,'--mx-ask-min',MX_ASK_MIN)+mxWexProp(root,'--mx-ask-pad',MX_ASK_PAD)
     +mxWexProp(root,'--mx-work-pad',MX_WORK_PAD)+1+mxWexProp(root,'--mx-work-min',MX_WB_MIN_W);
 }
-/* GRAPH | INTERPRETATION coexist while the plane's legibility floor and the interpretation's reading floor
-   both fit beside one rule; below that they stack, graph first. */
-function mxFootPairs(root){
+/* THE MEDIA STAGE. The graph and its reading STACK — graph first, reading beneath — and the only
+   question is whether the surface is wide enough to carry the approved centred stage.
+
+   They used to sit SIDE BY SIDE whenever both cleared their floors, and this function used to decide
+   that. The arrangement was measured on the real lesson against the three the catalogue approves and
+   ruled against: beside a 249px reading, a 574-755px plane leaves 346-384px under the text, which is
+   the rail this project has rejected four times now. Stacking spends horizontal space instead, and
+   the catalogue calls free width beside PROSE reading margin and free width beside MEDIA a centred
+   stage. Nothing here reads content: the surface's width is the only input. */
+function mxFootStage(root){
   const inner=mxWexInner(root); if(inner<0) return true;
-  return inner>=mxWexProp(root,'--mx-plot-min-w',MX_PLOT_MIN_W)+mxWexProp(root,'--mx-zone-pad',MX_ZONE_PAD)+1
-    +mxWexProp(root,'--mx-ask-min',MX_ASK_MIN);
+  return inner>=mxWexProp(root,'--mx-stage-min',MX_STAGE_MIN);
 }
 function mxResolveFit(){
   const root=$('#slide').querySelector('.mx'); if(!root) return;
@@ -7562,7 +7609,7 @@ function mxResolveFit(){
     if(MX_BRIDGE!==b){ const keep=mxWexPlace(root); MX_BRIDGE=b; root.setAttribute('data-mx-bridge',b); renderSlide(); mxWexRestore(keep); return; }
     root.setAttribute('data-mx-bridge',b);
     root.setAttribute('data-mx-rows',mxRowSplits(root)?'split':'stacked');
-    root.setAttribute('data-mx-foot',mxFootPairs(root)?'pair':'stack');
+    root.setAttribute('data-mx-foot',mxFootStage(root)?'stage':'full');
   }
   /* A representation page has a composition to resolve too: side by side while the example region can hold
      an example, stacked at full width when it cannot. Keeping two columns while one of them empties out is
@@ -7888,6 +7935,16 @@ function mxFigPolicy(fig){
    tallish frame, and forcing it into a 4:3 slot makes the engine reveal x out to ±12 to compensate — the
    mathematics stays honest and the picture becomes useless. So the slot takes its aspect from the domain.
    Clamped, because a degenerate authored domain must not be able to produce an absurd box. */
+/* WHICH APPROVED SPAN THIS PLANE EARNS. The authored domain decides, exactly as the catalogue's
+   `pick` does: a `wide` plane takes the full grid, everything else the centred eight. It reads the
+   domain and nothing else — not the prose beside it, not the space available, not how tall the page
+   turned out. Returns the grid placement for both regions, because a subdesign places both. */
+function mxMediaPlace(fig){
+  const f=mxFigPolicy(fig), d=f&&f.domain;
+  const wide=!!(d&&(+d.xMax-+d.xMin)>0&&((+d.yMax-+d.yMin)/(+d.xMax-+d.xMin))<MX_WIDE_BELOW);
+  return wide?{span:MX_WIDE_SPAN,start:MX_WIDE_START,readStart:MX_WIDE_READ_START,id:'down-12'}
+             :{span:MX_MEDIA_SPAN,start:MX_MEDIA_START,readStart:MX_MEDIA_START,id:'down-8'};
+}
 function mxFigRatio(fig){
   const f=mxFigPolicy(fig);
   if(!f||f.figure!=='graph'||f.aspect!=='equal') return 0;
@@ -7972,6 +8029,9 @@ function mxWexStates(g){
   if(mxWexStaged(g)) return [norm({id:'workings',label:'Workings',show:['question','steps','answer']},0),
                              norm({id:'visual',label:'Visual explanation',show:['visual','relations']},1)];
   if(g.type!=='staged') return [];
+  /* nothing to stage against: a group with no worked solution has one thing to show, so it shows it
+     without a stage bar offering a stage that would be empty */
+  if(!g.examples.length) return [];
   const hasVis=mxParts((g.examples[0]||{}).visual).length||mxParts(g.relations||g.visual).length;
   return hasVis?[norm({id:'solution',label:'Worked solution',show:['question','steps','answer']},0),
                  norm({id:'visual',label:'Visual explanation',show:['visual','relations']},1)]:[];
@@ -8054,7 +8114,12 @@ function mxWexStaged(g){
 }
 function mxWexGroupBody(g,s,i,state){
   const key=(tpRespId(s)||i)+'-'+g.id, ex=g.examples;
-  if(!ex.length) return '<div class="mx-ph">This group has no examples authored yet.</div>';
+  /* A GROUP WHOSE TEACHING IS ITS REPRESENTATION. Some subtopics are a plane and the reading of it and
+     have no worked solution to show — `A flatter parabola` in the quadratics lesson is one. That is a
+     group the author wrote, not a group they forgot to finish, so it renders its foot and says
+     nothing. A group with neither examples NOR a representation is still unfinished, and still says so. */
+  if(!ex.length) return mxParts(g.relations||g.visual).length ? ''
+    : '<div class="mx-ph">This group has no examples authored yet.</div>';
   if(state&&state.show.indexOf('steps')<0&&state.show.indexOf('question')<0)
     return '';    /* a visual state carries no worked solution; its answer leads the interpretation */
   /* An example's own companion is part of its working: it sits inside the working region, and the answer
@@ -8108,10 +8173,12 @@ function mxWexFootRender(g,s,i,foot,state){
   const lead=mxWexLead(g,state);
   /* GRAPH | INTERPRETATION — two sibling regions with one top edge, each named once: a region whose first
      piece already carries its own heading is named by that heading, exactly as the foot label above is.
-     Side by side while both clear their floors (mxFootPairs), stacked graph-first below that. */
+     Graph first, then its reading: on the approved centred eight-column stage while the surface can
+     carry it (mxFootStage), on the full width below that. */
   if(plane.length&&(rest.length||lead)){
     const zone=(reg,name,own,html)=>`<div class="mx-wexzone" data-mx-region="${reg}">${own?`<h4 class="mx-wexlab mx-wexzl">${name}</h4>`:''}${html}</div>`;
-    return `<section class="mx-wexfoot" data-mx-form="pair"${ar?` style="--mx-plot-ar:${ar.toFixed(3)}"`:''}>${lab?`<h4 class="mx-wexlab">${lab}</h4>`:''}
+    const pl=mxMediaPlace(plane[0].figure);
+    return `<section class="mx-wexfoot" data-mx-form="pair" data-mx-sub="${pl.id}" style="--mx-media-span:${pl.span};--mx-media-start:${pl.start};--mx-read-start:${pl.readStart}${ar?`;--mx-plot-ar:${ar.toFixed(3)}`:''}">${lab?`<h4 class="mx-wexlab">${lab}</h4>`:''}
       <div class="mx-wexpair">${zone('graph','Graph',!(plane[0].label),mxCompanion(plane,key))}
         ${zone('interpretation','Interpretation',!!lead||!(rest[0]&&rest[0].label),lead+mxCompanion(rest,key+'-r'))}</div></section>`;
   }
@@ -8161,7 +8228,7 @@ function mxWorkedExamplesPage(s,i){
   if(!gs.length) return `<div class="mx-panel"><div class="mx-ph">This page has no worked examples yet.</div></div>`;
   const bar=gs.map((g,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}"
     data-mx-tab="${esc(g.id)}" aria-selected="${k?'false':'true'}">${mxM(g.title)}</button>`).join('');
-  return `<div class="mx-wex" style="--mx-plot-min-w:${MX_PLOT_MIN_W}px;--mx-plot-min-h:${MX_PLOT_MIN_H}px;--mx-plot-w:${MX_PLOT_W}px;--mx-ask-min:${MX_ASK_MIN}px;--mx-work-min:${MX_WB_MIN_W}px;--mx-interp-max:${MX_INTERP_MAX}px;--mx-plot-h:${MX_PLOT_H}px;--mx-ask-pad:${MX_ASK_PAD}px;--mx-work-pad:${MX_WORK_PAD}px;--mx-zone-pad:${MX_ZONE_PAD}px">
+  return `<div class="mx-wex" style="--mx-plot-min-w:${MX_PLOT_MIN_W}px;--mx-plot-min-h:${MX_PLOT_MIN_H}px;--mx-plot-w:${MX_PLOT_W}px;--mx-ask-min:${MX_ASK_MIN}px;--mx-work-min:${MX_WB_MIN_W}px;--mx-interp-max:${MX_INTERP_MAX}px;--mx-plot-h:${MX_PLOT_H}px;--mx-ask-pad:${MX_ASK_PAD}px;--mx-work-pad:${MX_WORK_PAD}px;--mx-zone-pad:${MX_ZONE_PAD}px;--mx-cols:${MX_GRID_COLS};--mx-gutter:${MX_GRID_GUTTER}px;--mx-media-span:${MX_MEDIA_SPAN};--mx-media-start:${MX_MEDIA_START};--mx-measure:${MX_MEASURE}px;--mx-stage-min:${MX_STAGE_MIN}px">
     <div class="mx-tabs" role="tablist" data-mx-tabset aria-label="Worked example groups">${bar}</div>
     ${gs.map((g,k)=>mxWexGroup(g,s,i,k>0)).join('')}</div>`;
 }

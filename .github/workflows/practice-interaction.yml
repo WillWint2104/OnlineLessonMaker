@@ -30,6 +30,10 @@ on:
       - 'scripts/verify-type-interaction.mjs'
       - 'scripts/verify-workbook.mjs'
       - 'scripts/verify-notes-examples.mjs'
+      - 'scripts/verify-composition-grid.mjs'
+      - 'docs/atlas/composition/src/grid.json'
+      - 'docs/atlas/composition/src/patterns.json'
+      - 'docs/atlas/worked-examples/src/atlas.json'
       - 'tests/visual/lessons/mathematics-shell.json'
       - 'tests/visual/lessons/mathematics-wide-table.json'
       - 'lessons/closing-the-gap-geolearn.json'
@@ -48,6 +52,9 @@ jobs:
         with:
           node-version: 20
       - run: npm install
+      # The app's copy of the approved composition numbers against the catalogue that owns them. Reads
+      # files only, so it runs before the browser install and fails in seconds when the two have drifted.
+      - run: node scripts/verify-composition-grid.mjs
       - run: npx playwright install --with-deps chromium
       # What a student can DO with keyboard, pointer and focus in the rendered page.
       - run: node scripts/verify-type-interaction.mjs
