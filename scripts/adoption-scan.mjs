@@ -10,7 +10,15 @@
    catalogue keys on (surface, aspect class), the blueprint layer on (presentationRole, geometryClass,
    surface) — so a subdesign whose rows match a blueprint exactly may still be chosen for different
    objects afterwards. The selection change is reported separately at the end, because it is the part
-   that cannot be settled inside the catalogue: the shipping pages declare no presentationRole at all.
+   that cannot be settled inside the catalogue: it has to be AUTHORED, page by page, on the block that
+   carries the object.
+
+   THE TAIL USED TO ASSERT — IN A HARDCODED SENTENCE — THAT NO SHIPPING PAGE DECLARED A
+   presentationRole, and it kept saying so after every page had been given one, because it read what
+   the PATTERN admits and never what the PAGE authored. A report that cannot observe the thing it
+   reports on is a report that will eventually be wrong without changing. It now reads the role off
+   each media block, and it walks a SHELL's nested instances too — the subtopics shell holds the whole
+   lesson and was skipped entirely, so the pages that matter most were the ones missing from the list.
 
    Run: node scripts/adoption-scan.mjs */
 import fs from 'node:fs';
@@ -76,17 +84,43 @@ for (const [pid, p] of Object.entries(P)) {
 console.log(`\n${same.length} subdesign(s) match a blueprint's rows · ${differs.length} differ\n`);
 console.log('THE SELECTION CHANGE, which no row comparison can show');
 console.log('  The shipping catalogue selects by (surface, aspect class). The blueprint layer selects by');
-console.log('  (presentationRole, geometryClass, surface). NO SHIPPING PAGE DECLARES A presentationRole,');
-console.log('  so adoption is not catalogue-only: every page carrying media has to author one. Pages that');
-console.log('  carry media:');
+console.log('  (presentationRole, geometryClass, surface), so adoption is not catalogue-only: every page');
+console.log('  carrying media has to AUTHOR a role on the block that carries the object. What each one');
+console.log('  declares today:');
 const PAGES = rd('docs/atlas/composition/src/pages.json');
+
+/* EVERY PATTERN INSTANCE ON A PAGE, INCLUDING THE ONES A SHELL HOLDS. A shell is not a pattern — it
+   holds a tree of them — and walking only the top level skipped the subtopics shell, which is where
+   the actual lesson lives. */
+const instances = (node, out = []) => {
+  if (!node || typeof node !== 'object') return out;
+  if (Array.isArray(node)) { for (const x of node) instances(x, out); return out; }
+  if (node.pattern && node.slots) out.push(node);
+  for (const k of ['body', 'items', 'alternate']) if (node[k]) instances(node[k], out);
+  return out;
+};
+/* the blocks a slot holds, whether the slot is a plain list or a disclosure group */
+const blocksOf = (c) => !c ? [] : Array.isArray(c) ? c : (c.items || []).flatMap((i) => i.blocks || []);
+
+let unauthored = 0;
 for (const e of (PAGES.pages || PAGES)) {
-  if (!e.slots) continue;
-  const B = BP.patterns[e.pattern];
-  const mediaSlot = B && B.mediaSlot;
-  if (!mediaSlot || !e.slots[mediaSlot]) continue;
-  const roles = B.admits ? B.admits.roles : null;
-  console.log(`    page ${e.n}  ${e.pattern.padEnd(20)} slot "${mediaSlot}"`
-    + `  admits ${roles ? roles.join('/') : '(no admits declared)'}`
-    + (roles && roles.length === 1 ? '  → forced, no authoring needed' : '  → MUST BE AUTHORED'));
+  for (const inst of instances(e)) {
+    const B = BP.patterns[inst.pattern];
+    const mediaSlot = B && B.mediaSlot;
+    if (!mediaSlot || !inst.slots[mediaSlot]) continue;
+    const roles = B.admits ? B.admits.roles : null;
+    const forced = roles && roles.length === 1;
+    for (const b of blocksOf(inst.slots[mediaSlot])) {
+      if (!b.figure) continue;
+      const got = b.presentationRole || null;
+      if (!got && !forced) unauthored++;
+      console.log(`    page ${String(e.n).padEnd(3)} ${inst.pattern.padEnd(20)} ${String(b.figure).padEnd(11)}`
+        + ` admits ${(roles ? roles.join('/') : '—').padEnd(32)}`
+        + (got ? `authored \`${got}\`` + (roles && !roles.includes(got) ? '  ✗ NOT ADMITTED' : '')
+          : forced ? 'forced by `admits`, no authoring needed' : '✗ NOT AUTHORED'));
+    }
+  }
 }
+console.log(unauthored
+  ? `\n  ${unauthored} media block(s) still need a role authored.`
+  : '\n  Every media block that needs a role has one.');
