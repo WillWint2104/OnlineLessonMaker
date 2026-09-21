@@ -1,0 +1,167 @@
+{
+  "surface": "desktop",
+  "width": 1152,
+  "columns": 12,
+  "gutter": 24,
+  "column": 74,
+  "figure": "symmetry",
+  "domain": {
+    "xMin": -6.5,
+    "xMax": 6.5,
+    "yMin": -1,
+    "yMax": 11
+  },
+  "aspect": 0.9231,
+  "geometryClass": "balanced",
+  "readingMeasure": 760,
+  "arrangements": [
+    {
+      "id": "A__down-8",
+      "label": "A · down-8 — the shipping arrangement",
+      "status": "APPROVED and currently selected",
+      "note": "Eight columns of plane centred on the twelve, the reading beneath at the same eight. Four columns carry nothing. No vertical hole at any prose length.",
+      "mediaSpan": 8,
+      "readSpan": 8,
+      "side": false,
+      "surface": 1152,
+      "mediaSlot": 760,
+      "plane": "760×755",
+      "readingSlot": 760,
+      "proseWidth": 760,
+      "readingHeight": 248.8,
+      "blockHeight": 1064.8,
+      "unusedColumns": 392,
+      "verticalHole": 0,
+      "holeUnder": null,
+      "labels": [
+        {
+          "text": "y = 9",
+          "kind": "tp-fig-reflab",
+          "toCurve": 159.2
+        },
+        {
+          "text": "(−3, 9)",
+          "kind": "tp-fig-ptid",
+          "toCurve": 29.6
+        },
+        {
+          "text": "(3, 9)",
+          "kind": "tp-fig-ptid",
+          "toCurve": 30.8
+        }
+      ],
+      "nearestLabelToCurve": 29.6
+    },
+    {
+      "id": "B1__side-7",
+      "label": "B1 · side-7 — seven of plane beside five of reading",
+      "status": "REMOVED from the catalogue (measured +256px of hole on filler prose)",
+      "note": "Fills the surface exactly. The question is what is left BENEATH the shorter column.",
+      "mediaSpan": 7,
+      "readSpan": 5,
+      "side": true,
+      "surface": 1152,
+      "mediaSlot": 662,
+      "plane": "662×665",
+      "readingSlot": 466,
+      "proseWidth": 466,
+      "readingHeight": 301.9,
+      "blockHeight": 686,
+      "unusedColumns": 0,
+      "verticalHole": 384.1,
+      "holeUnder": "reading",
+      "labels": [
+        {
+          "text": "y = 9",
+          "kind": "tp-fig-reflab",
+          "toCurve": 133.6
+        },
+        {
+          "text": "(−3, 9)",
+          "kind": "tp-fig-ptid",
+          "toCurve": 28.7
+        },
+        {
+          "text": "(3, 9)",
+          "kind": "tp-fig-ptid",
+          "toCurve": 29.8
+        }
+      ],
+      "nearestLabelToCurve": 28.7
+    },
+    {
+      "id": "B2__side-6",
+      "label": "B2 · side-6 — six of plane beside six of reading",
+      "status": "WITHDRAWN from the catalogue (measured +474px of hole on filler prose)",
+      "note": "The symmetrical split. A narrower plane is a shorter plane, so the hole should be smaller than side-7 — and the reading is wider, so it is shorter too.",
+      "mediaSpan": 6,
+      "readSpan": 6,
+      "side": true,
+      "surface": 1152,
+      "mediaSlot": 564,
+      "plane": "564×574",
+      "readingSlot": 564,
+      "proseWidth": 564,
+      "readingHeight": 248.8,
+      "blockHeight": 595,
+      "unusedColumns": 0,
+      "verticalHole": 346.2,
+      "holeUnder": "reading",
+      "labels": [
+        {
+          "text": "y = 9",
+          "kind": "tp-fig-reflab",
+          "toCurve": 107.8
+        },
+        {
+          "text": "(−3, 9)",
+          "kind": "tp-fig-ptid",
+          "toCurve": 27.7
+        },
+        {
+          "text": "(3, 9)",
+          "kind": "tp-fig-ptid",
+          "toCurve": 28.9
+        }
+      ],
+      "nearestLabelToCurve": 27.7
+    },
+    {
+      "id": "B3__down-12",
+      "label": "B3 · down-12 — the full-width stage, already approved",
+      "status": "APPROVED for this pattern, reached only by a `wide` plane today",
+      "note": "The other approved desktop span. Uses every column, and pays for it in height: a plane this shape gets taller exactly as fast as it gets wider.",
+      "mediaSpan": 12,
+      "readSpan": 8,
+      "side": false,
+      "surface": 1152,
+      "mediaSlot": 1152,
+      "plane": "1152×1117",
+      "readingSlot": 760,
+      "proseWidth": 760,
+      "readingHeight": 248.8,
+      "blockHeight": 1426.8,
+      "unusedColumns": 0,
+      "verticalHole": 0,
+      "holeUnder": null,
+      "labels": [
+        {
+          "text": "y = 9",
+          "kind": "tp-fig-reflab",
+          "toCurve": 261.4
+        },
+        {
+          "text": "(−3, 9)",
+          "kind": "tp-fig-ptid",
+          "toCurve": 33.1
+        },
+        {
+          "text": "(3, 9)",
+          "kind": "tp-fig-ptid",
+          "toCurve": 34
+        }
+      ],
+      "nearestLabelToCurve": 33.1
+    }
+  ]
+}

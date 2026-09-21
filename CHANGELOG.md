@@ -7,6 +7,47 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **The space study — one lesson, four arrangements, measured** (`scripts/space-study.mjs`,
+  `scripts/space-sheet.mjs`, `docs/atlas/space-study/`; investigation only, nothing adopted, no
+  change to the shipping renderer). On desktop the Symmetry page gives its graph eight columns —
+  760px of 1152 — centred, with 196px carrying nothing on each side. The slot contract is satisfied;
+  what it had never been asked is whether a different approved arrangement would use that width to
+  instructional effect. The study renders the **actual** Symmetry lesson — same figure, same authored
+  domain, same four paragraphs — in four arrangements the catalogue already describes, and measures
+  them.
+
+  | | media | plane | reading | block height | unused columns | vertical hole |
+  |---|---|---|---|---|---|---|
+  | **A** `down-8` (shipping) | 8 col · 760px | 760×755 | 8 col · 760px · 249px | **1065px** | **392px** | none |
+  | **B1** `side-7` (removed) | 7 col · 662px | 662×665 | 5 col · 466px · 302px | **686px** | 0 | **384px** |
+  | **B2** `side-6` (withdrawn) | 6 col · 564px | 564×574 | 6 col · 564px · 249px | **595px** | 0 | **346px** |
+  | **B3** `down-12` (approved) | 12 col · 1152px | 1152×1117 | 8 col · 760px · 249px | **1427px** | 0 | none |
+
+  - **The width is not authored — it is the narrowest approved span the object can inhabit.**
+    `promotionOrder` orders subdesigns by span ascending and takes the first the plane renders
+    faithfully in. `side-6` was the narrower option and was withdrawn, so `down-8` is now first.
+  - **B3 disproves "use the available width" as an objective.** It uses every column, has no unused
+    space beside the media and no hole — and is the worst page in the set: the plane grows to
+    1117px tall and the block to 1427px. A rule that maximised horizontal use would select it.
+  - **The old measurements did not survive contact with the real lesson.** `side-7` was removed at
+    +256px of hole and `side-6` withdrawn at +474px, both against fixed filler prose. On the actual
+    lesson they are **+384px** and **+346px** — one worse, one better. Filler prose was not a
+    predictor in either direction.
+  - **The reading is short and width-insensitive.** It wraps to the same seven lines at 760px, 662px
+    and 564px alike, and only grows to nine at 466px. So the hole in any side arrangement is set
+    almost entirely by the plane's height, which comes from the authored domain.
+  - **Label placement does not degrade.** Nearest identifier or reference label to the painted curve:
+    29.6px (A), 28.7px (B1), 27.7px (B2), 33.1px (B3) — measured against the function path, not
+    eyeballed. A narrower plane does not push a label onto the curve here.
+  - **Not Symmetry-specific.** Every desktop arrangement that fills its row pairs the media with
+    something that has a **designed height** — `interactive.primary/beside` with prompts,
+    `practice.workbook/beside` with a workspace. Every arrangement that leaves columns carrying
+    nothing has media **alone on its row**: `visual.explanation/down-8` (4 columns),
+    `media.full/centred` (2 columns), `notes/measure` (the supporting illustration). Prose is the
+    only neighbour on offer, and prose height is content-dependent — which is exactly why the side
+    arrangements were removed.
+
 ### Changed
 - **The Symmetry graph's authored window widened from ±5 to ±6.5**
   (`docs/atlas/worked-examples/src/figures.json`; two lines, x only). The maintainer approved the
