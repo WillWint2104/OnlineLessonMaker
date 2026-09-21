@@ -4,6 +4,55 @@
     "state": "substitution",
     "surface": 1152,
     "surfaceName": "desktop",
+    "finalShot": "docs/atlas/lesson/final/LESSON__substitution__desktop.png",
+    "type": {
+      "labels": [
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "What the three show",
+          "px": 11,
+          "slot": "synthesis"
+        }
+      ],
+      "prose": 16,
+      "step": 15.5,
+      "math": 18,
+      "answer": 18,
+      "label": 11,
+      "tab": 13.5,
+      "title": 20,
+      "h2": 26,
+      "figure": {}
+    },
     "sideBalance": [],
     "figs": [],
     "compositions": [
@@ -43,7 +92,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1906,
+    "pageHeight": 1866,
     "scrollX": 2,
     "figures": [
       "symmetry@explanatory:portrait→down-8 span 8@760×952",
@@ -55,6 +104,55 @@
     "state": "substitution",
     "surface": 834,
     "surfaceName": "tablet",
+    "finalShot": "docs/atlas/lesson/final/LESSON__substitution__tablet.png",
+    "type": {
+      "labels": [
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "What the three show",
+          "px": 11,
+          "slot": "synthesis"
+        }
+      ],
+      "prose": 16,
+      "step": 15.5,
+      "math": 18,
+      "answer": 18,
+      "label": 11,
+      "tab": 13.5,
+      "title": 20,
+      "h2": 26,
+      "figure": {}
+    },
     "sideBalance": [],
     "figs": [],
     "compositions": [
@@ -94,7 +192,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1872,
+    "pageHeight": 1832,
     "scrollX": 2,
     "figures": [
       "symmetry@explanatory:portrait→stacked span 8@834×1041",
@@ -106,6 +204,55 @@
     "state": "substitution",
     "surface": 382,
     "surfaceName": "narrow",
+    "finalShot": null,
+    "type": {
+      "labels": [
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "What the three show",
+          "px": 11,
+          "slot": "synthesis"
+        }
+      ],
+      "prose": 16,
+      "step": 15.5,
+      "math": 18,
+      "answer": 18,
+      "label": 11,
+      "tab": 13.5,
+      "title": 20,
+      "h2": 26,
+      "figure": {}
+    },
     "sideBalance": [],
     "figs": [],
     "compositions": [
@@ -145,7 +292,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 2236,
+    "pageHeight": 2196,
     "scrollX": 2,
     "figures": [
       "symmetry@explanatory:portrait→stacked span 4@382×498",
@@ -157,6 +304,45 @@
     "state": "solving-for-x",
     "surface": 1152,
     "surfaceName": "desktop",
+    "finalShot": "docs/atlas/lesson/final/LESSON__solving-for-x__desktop.png",
+    "type": {
+      "labels": [
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Scenario",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "What the two show",
+          "px": 11,
+          "slot": "synthesis"
+        }
+      ],
+      "prose": 16,
+      "step": 15.5,
+      "math": 18,
+      "answer": 18,
+      "label": 11,
+      "tab": 13.5,
+      "title": 20,
+      "h2": 26,
+      "figure": {}
+    },
     "sideBalance": [],
     "figs": [],
     "compositions": [
@@ -196,7 +382,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1503,
+    "pageHeight": 1483,
     "scrollX": 1,
     "figures": [
       "symmetry@explanatory:portrait→down-8 span 8@760×952",
@@ -208,6 +394,45 @@
     "state": "solving-for-x",
     "surface": 834,
     "surfaceName": "tablet",
+    "finalShot": "docs/atlas/lesson/final/LESSON__solving-for-x__tablet.png",
+    "type": {
+      "labels": [
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Scenario",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "What the two show",
+          "px": 11,
+          "slot": "synthesis"
+        }
+      ],
+      "prose": 16,
+      "step": 15.5,
+      "math": 18,
+      "answer": 18,
+      "label": 11,
+      "tab": 13.5,
+      "title": 20,
+      "h2": 26,
+      "figure": {}
+    },
     "sideBalance": [],
     "figs": [],
     "compositions": [
@@ -247,7 +472,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1469,
+    "pageHeight": 1449,
     "scrollX": 1,
     "figures": [
       "symmetry@explanatory:portrait→stacked span 8@834×1041",
@@ -259,6 +484,45 @@
     "state": "solving-for-x",
     "surface": 382,
     "surfaceName": "narrow",
+    "finalShot": null,
+    "type": {
+      "labels": [
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Scenario",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "What the two show",
+          "px": 11,
+          "slot": "synthesis"
+        }
+      ],
+      "prose": 16,
+      "step": 15.5,
+      "math": 18,
+      "answer": 18,
+      "label": 11,
+      "tab": 13.5,
+      "title": 20,
+      "h2": 26,
+      "figure": {}
+    },
     "sideBalance": [],
     "figs": [],
     "compositions": [
@@ -298,7 +562,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1876,
+    "pageHeight": 1846,
     "scrollX": 1,
     "figures": [
       "symmetry@explanatory:portrait→stacked span 4@382×498",
@@ -310,6 +574,45 @@
     "state": "symmetry-workings",
     "surface": 1152,
     "surfaceName": "desktop",
+    "finalShot": "docs/atlas/lesson/final/LESSON__symmetry-workings__desktop.png",
+    "type": {
+      "labels": [
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Why they agree",
+          "px": 11,
+          "slot": "synthesis"
+        }
+      ],
+      "prose": 16,
+      "step": 15.5,
+      "math": 18,
+      "answer": 18,
+      "label": 11,
+      "tab": 13.5,
+      "title": null,
+      "h2": 26,
+      "figure": {}
+    },
     "sideBalance": [],
     "figs": [],
     "compositions": [
@@ -349,7 +652,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 954,
+    "pageHeight": 934,
     "scrollX": 2,
     "figures": [
       "symmetry@explanatory:portrait→down-8 span 8@760×952",
@@ -361,6 +664,45 @@
     "state": "symmetry-workings",
     "surface": 834,
     "surfaceName": "tablet",
+    "finalShot": "docs/atlas/lesson/final/LESSON__symmetry-workings__tablet.png",
+    "type": {
+      "labels": [
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Why they agree",
+          "px": 11,
+          "slot": "synthesis"
+        }
+      ],
+      "prose": 16,
+      "step": 15.5,
+      "math": 18,
+      "answer": 18,
+      "label": 11,
+      "tab": 13.5,
+      "title": null,
+      "h2": 26,
+      "figure": {}
+    },
     "sideBalance": [],
     "figs": [],
     "compositions": [
@@ -400,7 +742,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 920,
+    "pageHeight": 900,
     "scrollX": 2,
     "figures": [
       "symmetry@explanatory:portrait→stacked span 8@834×1041",
@@ -412,6 +754,45 @@
     "state": "symmetry-workings",
     "surface": 382,
     "surfaceName": "narrow",
+    "finalShot": null,
+    "type": {
+      "labels": [
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Question",
+          "px": 11,
+          "slot": "question"
+        },
+        {
+          "text": "Worked solution",
+          "px": 11,
+          "slot": "steps"
+        },
+        {
+          "text": "Why they agree",
+          "px": 11,
+          "slot": "synthesis"
+        }
+      ],
+      "prose": 16,
+      "step": 15.5,
+      "math": 18,
+      "answer": 18,
+      "label": 11,
+      "tab": 13.5,
+      "title": null,
+      "h2": 26,
+      "figure": {}
+    },
     "sideBalance": [],
     "figs": [],
     "compositions": [
@@ -451,7 +832,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1348,
+    "pageHeight": 1318,
     "scrollX": 2,
     "figures": [
       "symmetry@explanatory:portrait→stacked span 4@382×498",
@@ -463,6 +844,35 @@
     "state": "symmetry-visual-explanation",
     "surface": 1152,
     "surfaceName": "desktop",
+    "finalShot": "docs/atlas/lesson/final/LESSON__symmetry-visual-explanation__desktop.png",
+    "type": {
+      "labels": [
+        {
+          "text": "Graph",
+          "px": 11,
+          "slot": "figure"
+        },
+        {
+          "text": "The same fact, on the curve",
+          "px": 11,
+          "slot": "interpretation"
+        }
+      ],
+      "prose": 15.5,
+      "step": null,
+      "math": null,
+      "answer": null,
+      "label": 11,
+      "tab": 13.5,
+      "title": null,
+      "h2": 26,
+      "figure": {
+        "tick": 13.9,
+        "pointId": 15.8,
+        "refLabel": 15.2,
+        "scale": 1.267
+      }
+    },
     "sideBalance": [],
     "figs": [
       {
@@ -519,7 +929,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1748,
+    "pageHeight": 1737,
     "scrollX": 2,
     "figures": [
       "symmetry@explanatory:portrait→down-8 span 8@760×952",
@@ -531,6 +941,35 @@
     "state": "symmetry-visual-explanation",
     "surface": 834,
     "surfaceName": "tablet",
+    "finalShot": "docs/atlas/lesson/final/LESSON__symmetry-visual-explanation__tablet.png",
+    "type": {
+      "labels": [
+        {
+          "text": "Graph",
+          "px": 11,
+          "slot": "figure"
+        },
+        {
+          "text": "The same fact, on the curve",
+          "px": 11,
+          "slot": "interpretation"
+        }
+      ],
+      "prose": 15.5,
+      "step": null,
+      "math": null,
+      "answer": null,
+      "label": 11,
+      "tab": 13.5,
+      "title": null,
+      "h2": 26,
+      "figure": {
+        "tick": 14.2,
+        "pointId": 16.2,
+        "refLabel": 15.5,
+        "scale": 1.295
+      }
+    },
     "sideBalance": [],
     "figs": [
       {
@@ -587,7 +1026,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1803,
+    "pageHeight": 1792,
     "scrollX": 2,
     "figures": [
       "symmetry@explanatory:portrait→stacked span 8@834×1041",
@@ -599,6 +1038,35 @@
     "state": "symmetry-visual-explanation",
     "surface": 382,
     "surfaceName": "narrow",
+    "finalShot": null,
+    "type": {
+      "labels": [
+        {
+          "text": "Graph",
+          "px": 11,
+          "slot": "figure"
+        },
+        {
+          "text": "The same fact, on the curve",
+          "px": 11,
+          "slot": "interpretation"
+        }
+      ],
+      "prose": 15.5,
+      "step": null,
+      "math": null,
+      "answer": null,
+      "label": 11,
+      "tab": 13.5,
+      "title": null,
+      "h2": 26,
+      "figure": {
+        "tick": 16,
+        "pointId": 17.7,
+        "refLabel": 17.1,
+        "scale": 1.14
+      }
+    },
     "sideBalance": [],
     "figs": [
       {
@@ -655,7 +1123,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1380,
+    "pageHeight": 1368,
     "scrollX": 2,
     "figures": [
       "symmetry@explanatory:portrait→stacked span 4@382×498",
@@ -667,6 +1135,35 @@
     "state": "a-flatter-parabola",
     "surface": 1152,
     "surfaceName": "desktop",
+    "finalShot": "docs/atlas/lesson/final/LESSON__a-flatter-parabola__desktop.png",
+    "type": {
+      "labels": [
+        {
+          "text": "Graph",
+          "px": 11,
+          "slot": "figure"
+        },
+        {
+          "text": "Reading the curve",
+          "px": 11,
+          "slot": "interpretation"
+        }
+      ],
+      "prose": 15.5,
+      "step": null,
+      "math": null,
+      "answer": null,
+      "label": 11,
+      "tab": 13.5,
+      "title": null,
+      "h2": 26,
+      "figure": {
+        "tick": 15.3,
+        "pointId": 17.4,
+        "refLabel": 16.7,
+        "scale": 1.391
+      }
+    },
     "sideBalance": [],
     "figs": [
       {
@@ -723,7 +1220,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1329,
+    "pageHeight": 1317,
     "scrollX": 1,
     "figures": [
       "symmetry@explanatory:portrait→down-8 span 8@760×952",
@@ -735,6 +1232,35 @@
     "state": "a-flatter-parabola",
     "surface": 834,
     "surfaceName": "tablet",
+    "finalShot": "docs/atlas/lesson/final/LESSON__a-flatter-parabola__tablet.png",
+    "type": {
+      "labels": [
+        {
+          "text": "Graph",
+          "px": 11,
+          "slot": "figure"
+        },
+        {
+          "text": "Reading the curve",
+          "px": 11,
+          "slot": "interpretation"
+        }
+      ],
+      "prose": 15.5,
+      "step": null,
+      "math": null,
+      "answer": null,
+      "label": 11,
+      "tab": 13.5,
+      "title": null,
+      "h2": 26,
+      "figure": {
+        "tick": 14.2,
+        "pointId": 16.2,
+        "refLabel": 15.5,
+        "scale": 1.295
+      }
+    },
     "sideBalance": [],
     "figs": [
       {
@@ -791,7 +1317,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1161,
+    "pageHeight": 1149,
     "scrollX": 1,
     "figures": [
       "symmetry@explanatory:portrait→stacked span 8@834×1041",
@@ -803,6 +1329,35 @@
     "state": "a-flatter-parabola",
     "surface": 382,
     "surfaceName": "narrow",
+    "finalShot": null,
+    "type": {
+      "labels": [
+        {
+          "text": "Graph",
+          "px": 11,
+          "slot": "figure"
+        },
+        {
+          "text": "Reading the curve",
+          "px": 11,
+          "slot": "interpretation"
+        }
+      ],
+      "prose": 15.5,
+      "step": null,
+      "math": null,
+      "answer": null,
+      "label": 11,
+      "tab": 13.5,
+      "title": null,
+      "h2": 26,
+      "figure": {
+        "tick": 16,
+        "pointId": 17.7,
+        "refLabel": 17.1,
+        "scale": 1.14
+      }
+    },
     "sideBalance": [],
     "figs": [
       {
@@ -859,7 +1414,7 @@
       "visual:wide",
       "visual:wide"
     ],
-    "pageHeight": 1151,
+    "pageHeight": 1139,
     "scrollX": 1,
     "figures": [
       "symmetry@explanatory:portrait→stacked span 4@382×498",

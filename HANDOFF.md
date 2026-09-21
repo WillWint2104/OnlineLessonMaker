@@ -651,6 +651,10 @@ renderer is referenced.
   give the same answer; `scripts/lesson-sheet.mjs` puts both halves on one sheet per surface so the
   agreement is visible. `mediaSize` survives only in `scripts/atlas-worked-examples.mjs`, which is the
   older atlas and does not feed the lesson.
+  The finished lesson renders to `docs/atlas/lesson/final/LESSON__<state>__<surface>.png` — the
+  lesson page and nothing else, desktop 1152 and tablet 834, kept apart from the captioned build
+  artefacts beside them. A control asserts that the lesson renderer and the shipping catalogue select
+  the same subdesign AND paint the same width for every state both of them render.
   **The one named gap:** the `notes` pattern's supporting-illustration composition (region = the
   reading measure, the compact card centred inside it) is approved and proven in the Composition Proof
   Atlas, but no real page uses it, because the shipping renderer has no `image` block — `block()` sends

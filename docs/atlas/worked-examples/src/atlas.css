@@ -52,8 +52,16 @@ body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
 
 /* ── SHARED SLOT TYPOGRAPHY ──────────────────────────────────────────────────────────────────── */
 [data-slot="title"]{margin:0 0 16px;font-family:var(--mx-serif);font-size:20px;font-weight:600;color:var(--mx-ink);}
-.at-lab{margin:0 0 8px;font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;color:var(--mx-ink-2);}
+/* A LABEL IS A LABEL WHEREVER IT SITS, and it needs the specificity to stay one. `.at-lab` is
+   (0,1,0) and the slot paragraph rules below are (0,1,1) and come later, so a label written as a
+   `<p class="at-lab">` inside `question`, `synthesis`, `interpretation` or `stimulus` lost its own
+   font-size to the body text it labels: QUESTION and SCENARIO painted at 16px and THE SAME FACT, ON
+   THE CURVE at 15.5px, while WORKED SOLUTION, GRAPH and ANSWER — which sit in slots with no
+   paragraph rule — painted at 11px. Two sizes of the same thing on one page. The colour overrides
+   further down were written as `[data-slot="…"] .at-lab`, so the author already assumed this rule
+   reached them; only the size and margin were being taken. */
+[data-slot] .at-lab,.at-lab{margin:0 0 8px;font-family:var(--mx-ui);font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--mx-ink-2);}
 [data-slot="question"] p{margin:0 0 10px;font-size:16px;line-height:1.62;color:var(--mx-ink-body);}
 [data-slot="question"] p:last-child{margin-bottom:0;}
 .at-steps{list-style:none;margin:0;padding:0;counter-reset:atstep;}

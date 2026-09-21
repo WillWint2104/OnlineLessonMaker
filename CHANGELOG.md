@@ -7,6 +7,52 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Fixed
+- **A section label had two sizes on one page** (`docs/atlas/worked-examples/src/atlas.css`; no app
+  change). `.at-lab` is specificity (0,1,0); the slot paragraph rules `[data-slot="question"] p`,
+  `[data-slot="synthesis"] p`, `[data-slot="interpretation"] p` and `[data-slot="stimulus"] p` are
+  (0,1,1) and come later in the file. So a label written as a `<p class="at-lab">` inside one of those
+  slots lost its own `font-size` to the body text it labels: **QUESTION and SCENARIO painted at 16px
+  and THE SAME FACT, ON THE CURVE at 15.5px, beside an 11px WORKED SOLUTION, GRAPH and ANSWER** — two
+  sizes of the same typographic role, on the same page, in the lesson that was about to be reviewed.
+  The colour overrides further down were already written as `[data-slot="…"] .at-lab`, so the author
+  had assumed the base rule reached them; only the size and margin were being taken.
+  - Found by **measuring painted type**, not by reading CSS. Every gate on the page was green: the
+    content was correct, the labels were present, the measure held, nothing overflowed. A payload
+    gate cannot see this.
+  - The rule is now `[data-slot] .at-lab,.at-lab` — (0,2,0), which beats (0,1,1) regardless of order.
+    All five label kinds (`figure`, `interpretation`, `question`, `steps`, `synthesis`) now paint at
+    11px.
+  - **Control · one section label, one size.** Every visible `.at-lab` on a page must paint at the
+    same size. Driven to failure by restoring the specificity defect: *section labels paint at 11px,
+    15.5px, 16px — "Worked solution" (steps) 11px vs "What the three show" (synthesis) 15.5px vs
+    "Question" (question) 16px*.
+
+### Changed
+- **The finished lesson, rendered as courseware** (`scripts/lesson-render.mjs`). Every render the
+  lesson build produced carried a diagnostic caption naming the state and the surface, and a footer
+  restating the scroll contract — useful for reading a build, and exactly what makes a picture look
+  like a test artefact. The build now also writes `docs/atlas/lesson/final/LESSON__<state>__<surface>.png`:
+  the same pixels at the same `deviceScaleFactor`, cropped to `.at-surface`, which *is* the lesson
+  page. Desktop 1152 and tablet 834, five states each. Kept in their own directory so they cannot be
+  mistaken for an atlas board.
+- **Control · the lesson and the shipping catalogue select the same composition.** The two layers now
+  read one table; this is the assertion that says so rather than leaving it to be inferred from two
+  reports nobody diffs. For every state and surface the catalogue's subtopics shell also renders, the
+  subdesign it selects for the media must equal the one the lesson renderer selects — **and so must
+  the painted width**, because agreeing on a name while painting different pixels is not agreeing.
+  It refuses to pass vacuously: if no state is rendered by both, that is an error, and the pairs it
+  did compare are printed. Both branches driven to failure.
+  Today: `symmetry@explanatory` → `down-8` desktop / `stacked` tablet, `landscape@explanatory` →
+  `down-12` desktop / `stacked` tablet, both layers, four pairs.
+- **Legibility reported as painted px, never acted on.** In-figure type is set in viewBox units and
+  painted at the SVG's own scale, so its declared size is not its size. At the two surfaces under
+  review: page title 26 · prose 16 · step 15.5 · mathematics 18 · answer 18 · section label 11 ·
+  tab 13.5; in-figure, axis values **13.9** (desktop) / **14.2** (tablet), point identifiers 15.8 /
+  16.2, reference labels 15.2 / 15.5 — all above their 11–12.5px declared sizes because the plane is
+  painted larger than its viewBox. A renderer that resized its own type to satisfy a floor would be
+  deciding what is legible, which is the reader's question.
+
 ### Changed
 - **The lesson's graphs come off the master grid, not out of a band** (`scripts/lesson-render.mjs`,
   `docs/atlas/lesson/quadratics.lesson.json`; no app change). The lesson renderer still sized figures

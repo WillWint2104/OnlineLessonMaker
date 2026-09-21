@@ -50,6 +50,12 @@ const SRC = path.join(root, 'docs/atlas/worked-examples/src');
 const LESSON_DIR = path.join(root, 'docs/atlas/lesson');
 const OUT = path.resolve(process.argv[2] || LESSON_DIR);
 fs.mkdirSync(OUT, { recursive: true });
+/* THE FINISHED LESSON, KEPT APART FROM THE DIAGNOSTICS. Everything in `OUT` is a build artefact with
+   a caption saying so; everything in here is the lesson page and nothing else, at the two surfaces
+   under review, named so it cannot be mistaken for an atlas board. */
+const FINAL = path.join(OUT, 'final');
+const FINAL_SURFACES = ['desktop', 'tablet'];
+fs.mkdirSync(FINAL, { recursive: true });
 
 const A = JSON.parse(fs.readFileSync(path.join(SRC, 'atlas.json'), 'utf8'));
 const FIGS = JSON.parse(fs.readFileSync(path.join(SRC, 'figures.json'), 'utf8'));
@@ -590,7 +596,42 @@ ${body}</div>
       .filter((e) => e.style.width || e.style.gridTemplateColumns || e.style.height || e.style.maxHeight)
       .filter((e) => !e.hasAttribute('data-fig-viewport'))
       .map((e) => e.tagName + '.' + e.className);
-    return { clip, sideBalance, payload: seen.join(' '), tabSig, affordance, figs, scrollers, wide, frame, inline,
+    /* LEGIBILITY AS A NUMBER, NOT AN IMPRESSION. Painted px for the type a reader actually reads:
+       prose, the step text, the answer, a section label — and the type INSIDE a figure, which is set
+       in viewBox units and painted at the SVG's own scale, so its declared size is not its size. */
+    const px = (el) => el ? +parseFloat(getComputedStyle(el).fontSize).toFixed(1) : null;
+    const first = (sel) => { for (const e of surf.querySelectorAll(sel)) if (vis(e)) return e; return null; };
+    const svgType = () => {
+      const out = {};
+      for (const svg of surf.querySelectorAll('.tp-fig-svg')) {
+        if (!vis(svg)) continue;
+        const vb = (svg.getAttribute('viewBox') || '0 0 1 1').split(/\s+/).map(Number);
+        const r = svg.getBoundingClientRect();
+        if (!vb[2] || !r.width) continue;
+        const k = r.width / vb[2];   /* viewBox units -> painted px */
+        const one = (sel) => { const t = svg.querySelector(sel);
+          return t ? +(parseFloat(getComputedStyle(t).fontSize) * k).toFixed(1) : null; };
+        out.tick = one('.tp-fig-ticklabel');
+        out.pointId = one('.tp-fig-ptid');
+        out.refLabel = one('.tp-fig-reflab');
+        out.scale = +k.toFixed(3);
+        break;
+      }
+      return out;
+    };
+    /* EVERY SECTION LABEL ON THE PAGE, so "they are all the same size" is measured rather than
+       assumed. This is the defect a payload gate cannot see: the content is right, the labels are
+       present, and two of them are set in body type. */
+    const labels = [].slice.call(surf.querySelectorAll('.at-lab')).filter(vis)
+      .map((e) => ({ text: e.textContent.replace(/\s+/g, ' ').trim().slice(0, 30), px: px(e),
+        slot: (e.closest('[data-slot]') || {}).getAttribute ? e.closest('[data-slot]').getAttribute('data-slot') : null }));
+    const type = { labels, /* NOT the label — the first probe matched `p.at-lab` and reported the label's size as the
+         prose size, which is how a measurement quietly answers a different question. */
+      prose: px(first('[data-slot="interpretation"] p:not(.at-lab), [data-slot="question"] p:not(.at-lab)')),
+      step: px(first('.at-st')), math: px(first('.at-sm')), answer: px(first('[data-slot="answer"]')),
+      label: px(first('.at-lab')), tab: px(first('.at-tab')), title: px(first('h3[data-slot="title"]')),
+      h2: px(first('.at-h2')), figure: svgType() };
+    return { clip, sideBalance, type, payload: seen.join(' '), tabSig, affordance, figs, scrollers, wide, frame, inline,
       tpls: [].slice.call(surf.querySelectorAll('[data-tpl]')).map((n) => n.getAttribute('data-tpl')),
       resolved: [].slice.call(surf.querySelectorAll('[data-tpl]')).map((n) => {
         const x = n.getAttribute('data-tpl'), sb = n.getAttribute('data-sub'); return sb ? x + '.' + sb : x; }),
@@ -601,15 +642,29 @@ ${body}</div>
       slots: [].slice.call(surf.querySelectorAll('[data-slot]')).filter(vis).map((n) => n.getAttribute('data-slot')).join(',') };
   }, { flow: M.flow });
 
+  let finalShot = null;
   if (!opts.noShot) {
     const bb = await (await p.$('.at-page')).boundingBox();
     await p.setViewportSize({ width: surface + 2 * pad + 120, height: Math.ceil(bb.height) + 8 });
     await p.waitForTimeout(160);
     await (await p.$('.at-page')).screenshot({ path: path.join(OUT, name + '.png') });
+    /* THE LESSON ITSELF, AND NOTHING AROUND IT. The render above carries a diagnostic caption and a
+       footer stating which state and which surface it is — useful for reading a build, and exactly
+       what makes a picture look like a test artefact rather than courseware. `.at-surface` IS the
+       lesson page, so this is the same pixels, cropped to the thing a student would see. Same
+       deviceScaleFactor, so it is full resolution, not a downscale.
+
+       Desktop and tablet only. Phone renders and their controls still run — they are simply not part
+       of this review, by the maintainer's ruling. */
+    if (FINAL_SURFACES.includes(surfaceName)) {
+      const file = path.join(FINAL, `LESSON__${state.key}__${surfaceName}.png`);
+      await (await p.$('.at-surface')).screenshot({ path: file });
+      finalShot = path.relative(root, file);
+    }
   }
   if (errs.length) throw new Error(`${name}: ${errs[0]}`);
   await p.close();
-  return { m, residue, surface, surfaceName, used };
+  return { m, residue, surface, surfaceName, used, finalShot };
 }
 
 /* ── the controls ─────────────────────────────────────────────────────────────────────────────── */
@@ -672,6 +727,20 @@ function verify(name, state, r) {
     if (f.ratio != null && Math.abs(f.ratio - 1) > 0.01)
       throw new Error(`${name}: a plane painted at ${f.ratio} — one x-unit and one y-unit are not the same length`);
   }
+  /* CONTROL · ONE SECTION LABEL, ONE SIZE. A label is a single typographic role, so every `.at-lab`
+     on a page must paint at the same size whatever slot it sits in. Found by measuring painted type
+     rather than by reading CSS: `.at-lab` is (0,1,0) and the slot paragraph rules are (0,1,1), so
+     QUESTION and SCENARIO were being set in 16px body type beside an 11px WORKED SOLUTION. Every
+     gate on this page passed while it was happening, because the content was correct. */
+  {
+    const sizes = [...new Set((m.type.labels || []).map((l) => l.px))];
+    if (sizes.length > 1) {
+      const by = (n) => (m.type.labels.find((l) => l.px === n) || {});
+      throw new Error(`${name}: section labels paint at ${sizes.sort((a, b) => a - b).join('px, ')}px — `
+        + sizes.map((n) => `“${by(n).text}” (${by(n).slot}) ${n}px`).join(' vs ')
+        + ' — a label is one typographic role and may not have two sizes on one page');
+    }
+  }
   if (m.wide.length) throw new Error(`${name}: ${m.wide.length} paragraph(s) past the ${M.flow}px measure — ${m.wide[0].w}px: “${m.wide[0].s}…”`);
   if (m.docW > m.docCW + 1) throw new Error(`${name}: the page itself scrolls sideways`);
   /* CONTROL · THE FRAME HOLDS THE SURFACE. Overflow inside the page clips text without ever making
@@ -724,7 +793,7 @@ for (const state of STATES) {
     if (SIG == null) SIG = r.m.tabSig;
     const m = verify(name, state, r);
     REPORT.push({ image: name, state: state.key, surface: r.surface, surfaceName: r.surfaceName,
-      sideBalance: m.sideBalance, figs: m.figs,
+      finalShot: r.finalShot, type: m.type, sideBalance: m.sideBalance, figs: m.figs,
       compositions: m.tpls, resolved: [...new Set(m.resolved)], states: m.states,
       pageHeight: m.docH, scrollX: m.scrollers.x.length, figures: r.used.map((k) => `${k}:${FIG[k].cls}→${FIG[k].chosen[r.surfaceName].id} span `
         + `${FIG[k].chosen[r.surfaceName].slotSpan}@${FIG[k].box[r.surfaceName].w}×${FIG[k].box[r.surfaceName].h}`) });
@@ -757,6 +826,48 @@ for (const state of STATES) {
 
 await figPage.close(); await browser.close(); server.close();
 
+/* CONTROL · THE LESSON AND THE CATALOGUE CHOOSE THE SAME COMPOSITION.
+   The two layers now read one table, and this is the assertion that says so out loud rather than
+   leaving it to be inferred from two reports nobody diffs. The shipping catalogue renders this same
+   lesson as its subtopics shell (page 20); for every state and surface it rendered, the subdesign it
+   selected for the media must be the subdesign the lesson renderer selected. A difference here is
+   the whole class of defect this pass existed to remove — one lesson, two answers.
+
+   It compares only the states the catalogue actually renders. That is honest rather than convenient:
+   the catalogue's shell is a demonstration of the composition and does not carry every worked example
+   the authored lesson does, so a state it does not render is not a disagreement. The count is printed
+   so the comparison cannot quietly shrink to nothing. */
+{
+  const CR = path.join(root, 'docs/atlas/composition/composition-report.json');
+  if (!fs.existsSync(CR)) throw new Error('no composition report to compare against — run '
+    + 'scripts/composition-atlas.mjs first, because "both layers agree" is a claim, not a hope');
+  const cat = JSON.parse(fs.readFileSync(CR, 'utf8')).filter((r) => r.shell === 'subtopics');
+  if (!cat.length) throw new Error('the composition report contains no subtopics shell renders');
+  const pairs = [];
+  for (const r of REPORT) {
+    if (!r.figs.length) continue;
+    const c = cat.find((x) => x.state === r.state && x.surface === r.surfaceName);
+    if (!c) continue;
+    for (const f of r.figs) {
+      pairs.push({ state: r.state, surface: r.surfaceName, fig: f.fig, lesson: f.subdesign, catalogue: c.subdesign });
+      if (f.subdesign !== c.subdesign)
+        throw new Error(`${r.state} / ${r.surfaceName}: the lesson renderer put ${f.fig} in `
+          + `\`${f.subdesign}\` and the shipping catalogue puts the same figure in \`${c.subdesign}\` — `
+          + `one lesson, two answers, which is the defect this whole pass removed`);
+      /* the width, too: agreeing on a name while painting different pixels is not agreeing */
+      const want = +(new RegExp(`media:([0-9.]+)`).exec(c.sig) || [])[1];
+      if (isFinite(want) && Math.abs(want - f.plane) > 1)
+        throw new Error(`${r.state} / ${r.surfaceName}: both layers say \`${f.subdesign}\` and the `
+          + `lesson paints ${f.fig} at ${f.plane}px while the catalogue gives its media ${want}px`);
+    }
+  }
+  if (!pairs.length) throw new Error('no state was rendered by BOTH the lesson renderer and the '
+    + 'shipping catalogue, so the agreement between them was never actually tested');
+  console.log(`\ncontrol · the lesson and the shipping catalogue select the same composition`);
+  for (const q of pairs)
+    console.log(`  ${(q.state + ' / ' + q.surface).padEnd(42)} ${q.fig.padEnd(22)} both → ${q.catalogue}`);
+}
+
 /* CONTROL · THE PERMISSION WAS ACTUALLY NEEDED SOMEWHERE. If no region ever overflowed at any
    width, `scroll.x = local-when-needed` was never exercised and the declaration proves nothing. */
 if (!LIVE_X.length) throw new Error('no region overflowed horizontally at any width — the lesson '
@@ -779,5 +890,21 @@ const unused = [...COMPOSITIONS].filter((c) => !used.some((u) => u === c || u.st
 console.log(`  (not needed by this lesson: ${unused.join(', ') || 'none'})`);
 console.log('\nTHE TWO TAB KINDS');
 for (const [k, v] of Object.entries(AFFORD)) console.log(`  ${k.padEnd(11)} ${v.sig}`);
+
+/* PAINTED TYPE AT THE SURFACES UNDER REVIEW. Reported, never acted on — a renderer that resized its
+   own type to satisfy a floor would be deciding what is legible, which is the reader's question and
+   the maintainer's call. In-figure type is set in viewBox units and painted at the SVG's own scale,
+   so the number here is what lands on glass, not what the stylesheet declares. */
+console.log('\nLEGIBILITY — PAINTED px AT THE SURFACES UNDER REVIEW (reported, never acted on)');
+for (const sName of FINAL_SURFACES) {
+  const rows = REPORT.filter((r) => r.surfaceName === sName);
+  const any = (k) => { for (const r of rows) if (r.type && r.type[k] != null) return r.type[k]; return null; };
+  const fig = (k) => { for (const r of rows) if (r.type && r.type.figure && r.type.figure[k] != null) return r.type.figure[k]; return null; };
+  console.log(`  ${sName.padEnd(8)} page title ${any('h2')}  · prose ${any('prose')}  · step ${any('step')}`
+    + `  · mathematics ${any('math')}  · answer ${any('answer')}  · section label ${any('label')}`
+    + `  · tab ${any('tab')}`);
+  console.log(`  ${''.padEnd(8)} in-figure at scale ${fig('scale')}: axis values ${fig('tick')}`
+    + `  · point identifiers ${fig('pointId')}  · reference labels ${fig('refLabel')}`);
+}
 fs.writeFileSync(path.join(OUT, 'lesson-report.json'), JSON.stringify(REPORT, null, 2));
 console.log(`\nwrote ${path.relative(root, OUT)} — ${REPORT.length} renders, ${STATES.length} states × ${Object.keys(A.surfaces).length} surfaces`);
