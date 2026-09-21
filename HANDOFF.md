@@ -655,6 +655,55 @@ renderer is referenced.
   lesson page and nothing else, desktop 1152 and tablet 834, kept apart from the captioned build
   artefacts beside them. A control asserts that the lesson renderer and the shipping catalogue select
   the same subdesign AND paint the same width for every state both of them render.
+- **NEXT: the quadratics lesson through the APPLICATION, not the standalone renderer.** The lesson is
+  proven in `scripts/lesson-render.mjs`, which is a harness with its own stylesheet. Getting it into
+  `lesson-studio.html` is a CONVERSION, not a port — the app's schema already expresses every piece
+  of it:
+
+  | authored lesson (`quadratics.lesson.json`) | the app's schema, today |
+  | --- | --- |
+  | `page.collection.tabs` over four subtopics | a `workedExamples` slide with four `groups` |
+  | `collection.repeat` of `single.flow` | one group with N `examples` (the `sequence` composition) |
+  | `single.split` — scenario \| solution | the primitive's own ask/working split (`mxRowSplits`) |
+  | `comparison.paired` — two cases | the `comparison` composition |
+  | `views.tabs` — Workings \| Visual explanation | group `states: ['solution','graph']` — already in the fixture |
+  | `visual` — graph + reading | the `graph` state, `GRAPH \| INTERPRETATION` |
+  | the table of values | `parts: [{kind:'table'}]` |
+
+  **TWO REAL DIVERGENCES, and they are the decision to take before any code:**
+  1. **Layout.** The app pairs `GRAPH | INTERPRETATION` side by side whenever both clear their floors
+     (`mxFootPairs`, `MX_PLOT_MIN_W` 340 + `MX_ZONE_PAD` 22 + `MX_ASK_MIN` 300), and its own comment
+     says "whatever the page has spare stays trailing space". The approved composition system rules
+     the opposite way — `down-8`, stacked, centred — and the maintainer has just confirmed it in the
+     space study. **`verify-notes-examples.mjs:1460` asserts `foot === 'pair'` at desktop**, so this
+     is gated behaviour: changing it means changing the app AND its gate.
+  2. **Figure sizing.** The app sizes a plane from its NATURAL size (`MX_PLOT_W` 560, floors 340×255),
+     not from a grid rung. The whole `presentationRole → approved subdesign → slotSpan → span(n)`
+     chain has no implementation in the app: `slotSpan`, `presentationRole`, `down-8` and the master
+     grid appear zero times in `lesson-studio.html`.
+
+  So there are two possible scopes, and they are very different sizes:
+  · **Convert only** — author the lesson in the app's existing schema and accept the app's own layout.
+    Shortest path to a usable lesson; the Symmetry page renders side-by-side, not as approved.
+  · **Convert and align** — additionally bring the app's graph/interpretation foot into line with the
+    ruling, and (optionally, larger) port the grid/span/role chain. Needs app changes and gate
+    changes, both of which need the maintainer's authorisation under the golden rules.
+
+  **THE SPACE STUDY IS CLOSED — RULED 21 Sep.** Arrangement **A (`down-8`) is retained** for the
+  Symmetry lesson: the centred eight-column graph with the explanation beneath it. B1 and B2 are not
+  adopted — they cut the block height but open 346–384px beneath the explanatory text and narrow the
+  graph; B3 is not adopted — filling every column makes the graph dominant and the page taller. No
+  unused-column ceiling and no automatic layout-selection mechanism come out of this investigation.
+  **Unused space is not the same as wasted space, and maximising column occupancy is not the goal.**
+  THE FINDING TO CARRY FORWARD, recorded but not acted on: a side-by-side arrangement is justified
+  when the media's companion is SUBSTANTIAL INSTRUCTIONAL MATERIAL with a relationship to specific
+  parts of the plane — a table of values, interactive controls, a worked example. It is not justified
+  by short explanatory prose moved sideways to fill columns. This is the same distinction the two
+  working `beside` arrangements already embody (`interactive.primary` with prompts,
+  `practice.workbook` with a workspace): a companion with a designed height, not prose whose height
+  is whatever the author wrote. Do not build new composition patterns for it until an actual lesson
+  requires one.
+
   **THE COMPOSITION SYSTEM IS APPROVED AND CLOSED** (maintainer, 21 Sep) for the quadratics lesson,
   with one authored adjustment applied: the Symmetry graph's x-window widened from ±5 to ±6.5, which
   cost 21% of its height (desktop 952 → 755px) and moved no composition. Do not open further
