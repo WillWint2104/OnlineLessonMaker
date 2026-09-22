@@ -774,9 +774,22 @@ renderer is referenced.
   that lesson's theme — every exported document IS its lesson. Any harness that swaps `LESSON` in a booted
   page is not reproducing a real flow and will leave the palette built for the default theme (geolearn).
 
-  **STILL TO AUTHOR** (the maintainer's stage 3, not started): reorder; figures' `objects[]` (function,
-  reference line, marked points); the table of values; staged states. The acceptance test is to rebuild the
-  quadratics lesson through the UI and compare it semantically with `docs/atlas/lesson/quadratics.app.json`.
+  **STAGE 3A IS DONE**: reorder (groups, examples, steps, representations — one address scheme, ends
+  disabled not hidden) and the Workings / Visual explanation editor (add, remove, reorder, rename, and a
+  checkbox per semantic region read from `MX_WEX_SECTIONS`). A `staged` group that authors no `states` still
+  RENDERS two when it has something to stage against (`mxWexStates` → `hasVis`); the editor shows those as
+  defaults with one button to write them in, because editing something the JSON does not contain would be a
+  lie. 21 checks, 8 drives.
+
+  **STILL TO AUTHOR** — 3B: the figure's `objects[]` (function, reference line, marked points, labels); the
+  frame form (domain/grid/aspect) already exists on the composable `figure` block to copy. 3C: the table of
+  values, then rebuild the whole quadratics lesson through the UI and compare it SEMANTICALLY (not
+  byte-identically) with `docs/atlas/lesson/quadratics.app.json`, and render it in Study, Edit and Present.
+  Desktop authoring only.
+
+  **THE STUDY / EDIT DISTINCTION IS CORRECT, measured 22 Sep**: inspector visible ⟺ `mode==='edit'` ⟺ Edit
+  carries `.on`; Study clears the inspector's content entirely. A screenshot that appeared to show otherwise
+  had simply been misread; the capture script now prints the mode it photographed.
 
   **TWO PIECES OF OUTSTANDING WORK, RECORDED FOR A LATER PHASE — neither is to be expanded now:**
   1. **The image block.** `block()` in `scripts/composition-atlas.mjs` sends every media block through

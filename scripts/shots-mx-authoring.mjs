@@ -25,8 +25,15 @@ const p = await b.newPage({ viewport: { width: 1600, height: 1000 }, deviceScale
 await p.goto(`${origin}/authoring.html`, { waitUntil: 'load' });
 await p.evaluate(() => document.querySelector('#modeSeg [data-mode="edit"]').click());
 await p.waitForTimeout(500);
+/* every capture states the mode it was taken in, read off the page — a demonstration image whose mode is
+   guessed from the picture is how "Study looks selected while the inspector is open" becomes a defect
+   report about a screenshot rather than about the product */
 const shot = async (n, label) => { await p.waitForTimeout(400);
-  await p.screenshot({ path: path.join(OUT, `AUTHOR-${n}.png`) }); console.log(`  ${n}  ${label}`); };
+  const m = await p.evaluate(() => ({ mode, on: ([].slice.call(document.querySelectorAll('#modeSeg button'))
+    .find((b) => b.classList.contains('on')) || {}).dataset?.mode,
+    inspector: (document.querySelector('#inspector') || {}).innerHTML ? 'open' : 'closed' }));
+  await p.screenshot({ path: path.join(OUT, `AUTHOR-${n}.png`) });
+  console.log(`  ${n.padEnd(11)} [mode=${m.mode} · segment=${m.on} · inspector ${m.inspector}]  ${label}`); };
 console.log('the authoring workflow:');
 await shot('1-empty', 'an empty mathematics lesson, Edit mode — the palette offers the page');
 await p.click('#palette [data-ptype="workedExamples"]');

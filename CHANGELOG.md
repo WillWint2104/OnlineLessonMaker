@@ -8,6 +8,33 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 3A — the lesson's structure is fully editable** (`lesson-studio.html`,
+  `scripts/verify-mx-authoring.mjs` now 21 checks). Two things, both on the machinery Stage 2 established:
+  - **Reorder.** Groups, examples, steps and representations all move by `↑ ↓` on their outline row, through
+    one address scheme (`arrAt`) so the same three lines serve every sibling array. The arrows at the ends
+    are **disabled rather than hidden**, so a list's shape is legible without clicking anything. The gate
+    asserts the order *in the data*, and the drive that repaints the row without moving the item is caught.
+  - **The representations (Workings / Visual explanation).** Add, remove, reorder and rename them, and
+    choose which semantic regions each one carries with a checkbox per region — read from
+    `MX_WEX_SECTIONS`, so the editor cannot offer a region the renderer ignores. The written array is kept
+    in the renderer's canonical order, so two states showing the same regions read identically.
+
+  **The defaults are shown as defaults.** A `staged` group that authors no `states` still *renders* two
+  (`mxWexStates` supplies them when the group has something to stage against). An editor that let you change
+  something the JSON does not contain would be lying, so those appear as a labelled default with one button
+  to write them in — after which they are the page's own states and are editable. The drive that presents
+  the rendered defaults as if they were authored is caught.
+
+  Four drives to failure: reorder that repaints without moving, end arrows left enabled, defaults presented
+  as authored, and the region list invented instead of read from the renderer's own vocabulary.
+- **Every demonstration capture states the mode it was taken in** (`scripts/shots-mx-authoring.mjs`). The
+  maintainer asked whether a screenshot showing Study selected with the inspector open was a defect. It was
+  not — and it was not what the image showed either: measured, `inspector visible ⟺ mode==='edit' ⟺ Edit
+  carries `.on``, and Study clears the inspector entirely. The picture had been misread. Each capture now
+  prints `[mode=… · segment=… · inspector …]` read off the page, so a demonstration image cannot be
+  misread that way again.
+
+### Added (the authoring vertical slice)
 - **A mathematics page can now be AUTHORED, not only rendered** (`lesson-studio.html`,
   `scripts/verify-mx-authoring.mjs`, `scripts/shots-mx-authoring.mjs`, `docs/atlas/authoring/`). The
   `.mx-*` pages are registered with `registerPage()` and the composable blocks with `registerBlock()`; the

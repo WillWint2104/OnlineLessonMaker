@@ -138,6 +138,78 @@ const shrunk = await p.evaluate(() => { const b = document.querySelector('[data-
   return { groups: LESSON.slides[cur].groups.length }; });
 ok('and removed again', shrunk.groups === 1, `back to ${shrunk.groups} group`);
 
+console.log('\n--- reorder (3A) ---');
+/* two examples with distinguishable titles, then moved through the real arrows */
+await p.evaluate(() => { const g = LESSON.slides[cur].groups[0];
+  g.examples[0].label = 'FIRST'; g.examples[1].label = 'SECOND'; selZone = 'mx.g.0'; renderSlide(); });
+await p.waitForTimeout(250);
+const moved = await p.evaluate(() => {
+  const before = LESSON.slides[cur].groups[0].examples.map((e) => e.label);
+  const b = document.querySelector('[data-mxmove="e.0:1:-1"]'); if (b) b.click();
+  return { before, after: LESSON.slides[cur].groups[0].examples.map((e) => e.label), clicked: !!b };
+});
+ok('an example can be moved up, and the ORDER IN THE DATA changes — not just the row in the list',
+   moved.clicked && moved.before.join('>') === 'FIRST>SECOND' && moved.after.join('>') === 'SECOND>FIRST',
+   `${moved.before.join(' > ')}  →  ${moved.after.join(' > ')}`);
+const ends = await p.evaluate(() => { const rows = [].slice.call(document.querySelectorAll('[data-mxmove]'));
+  const up = rows.filter((b) => /:-1$/.test(b.dataset.mxmove)), dn = rows.filter((b) => /:1$/.test(b.dataset.mxmove));
+  return { firstUpDisabled: up[0] ? up[0].disabled : null, lastDownDisabled: dn.length ? dn[dn.length - 1].disabled : null }; });
+ok('and the ends are disabled rather than hidden, so the list\'s shape is legible without clicking',
+   ends.firstUpDisabled === true && ends.lastDownDisabled === true,
+   `first ↑ disabled ${ends.firstUpDisabled}, last ↓ disabled ${ends.lastDownDisabled}`);
+const stepMove = await p.evaluate(() => { selZone = 'mx.e.0.0'; renderSlide();
+  const ex = LESSON.slides[cur].groups[0].examples[0];
+  ex.steps = [{ id: 'a', text: 'ALPHA' }, { id: 'b', text: 'BETA' }]; renderSlide();
+  const before = ex.steps.map((x) => x.text);
+  const b = document.querySelector('[data-mxmove="s.0.0:0:1"]'); if (b) b.click();
+  return { before, after: LESSON.slides[cur].groups[0].examples[0].steps.map((x) => x.text) }; });
+ok('and steps reorder by the same mechanism', stepMove.after.join('>') === 'BETA>ALPHA',
+   `${stepMove.before.join(' > ')}  →  ${stepMove.after.join(' > ')}`);
+
+console.log('\n--- representations (3A) ---');
+/* a staged group renders two states whether or not it authors them; the editor must not pretend to edit
+   what the JSON does not contain */
+/* STAGING NEEDS SOMETHING TO STAGE AGAINST — mxWexStates gives a `staged` group the two defaults only when
+   it has a visual (hasVis). A staged group with no figure has one thing to show and correctly gets no state
+   bar, so the group is given a figure here exactly as the real Symmetry subtopic has one. */
+const defaults = await p.evaluate(() => { const g = LESSON.slides[cur].groups[0];
+  g.type = 'staged'; delete g.states;
+  g.relations = [{ kind: 'figure', figure: { type: 'figure', figure: 'graph', aspect: 'equal',
+    domain: { xMin: -5, xMax: 5, yMin: -1, yMax: 11 }, objects: [{ type: 'function', f: 'x^2' }] } }];
+  selZone = 'mx.g.0'; renderSlide();
+  return { authored: !!g.states, offered: !!document.querySelector('[data-mxstates]'),
+    rendered: document.querySelectorAll('[data-mx-state]').length,
+    editableRows: document.querySelectorAll('[data-mxsel^="mx.t."]').length }; });
+ok('a staged group that authors NO states renders them but does not pretend they are editable',
+   defaults.authored === false && defaults.rendered >= 2 && defaults.editableRows === 0 && defaults.offered,
+   `authored ${defaults.authored} · ${defaults.rendered} state button(s) painted · ${defaults.editableRows} editable row(s) · offer shown ${defaults.offered}`);
+const adopted = await p.evaluate(() => { document.querySelector('[data-mxstates]').click();
+  const g = LESSON.slides[cur].groups[0];
+  return { states: (g.states || []).map((x) => `${x.id}:${(x.show || []).join('+')}`),
+    rows: document.querySelectorAll('[data-mxsel^="mx.t."]').length }; });
+ok('and one click writes them in, at which point they ARE the page\'s states and are editable',
+   adopted.states.length === 2 && adopted.rows === 2,
+   adopted.states.join(' · ') || 'none written');
+const toggled = await p.evaluate(() => { selZone = 'mx.t.0.1'; renderSlide();
+  const boxes = [].slice.call(document.querySelectorAll('[data-mxshow]'));
+  const answer = boxes.find((b) => /:answer$/.test(b.dataset.mxshow));
+  const before = LESSON.slides[cur].groups[0].states[1].show.slice();
+  answer.checked = true; answer.dispatchEvent(new Event('change', { bubbles: true }));
+  return { boxes: boxes.length, before, after: LESSON.slides[cur].groups[0].states[1].show.slice() }; });
+ok('every semantic region the renderer tests for is offered, and toggling one writes the authored array',
+   toggled.boxes === 5 && toggled.before.indexOf('answer') < 0 && toggled.after.indexOf('answer') >= 0,
+   `${toggled.boxes} regions offered · [${toggled.before.join(', ')}] → [${toggled.after.join(', ')}]`);
+ok('and the array stays in the renderer\'s canonical order, so two identical states read identically',
+   JSON.stringify(toggled.after) === JSON.stringify(['question', 'steps', 'answer', 'visual', 'relations']
+     .filter((k) => toggled.after.indexOf(k) >= 0)), `[${toggled.after.join(', ')}]`);
+/* put the group back as the edit section left it — the save/reopen section below asserts THOSE values, and
+   a restore that invented placeholders would fail the reopen for a reason the product does not have */
+await p.evaluate(({ e }) => { const g = LESSON.slides[cur].groups[0];
+  g.type = 'sequence'; delete g.states; delete g.relations; g.title = e.gTitle;
+  g.examples = [{ id: 'ex1', label: 'A negative value', prompt: e.prompt, answer: e.answer,
+    steps: [{ id: 's1', text: e.stepText, math: e.stepMath }] }];
+  selZone = null; renderSlide(); }, { e: EDIT });
+
 console.log('\n--- save, leave, reopen ---');
 /* the app's real persistence: serialise exactly as Export does, then OPEN THAT DOCUMENT FRESH */
 EXPORTED = await p.evaluate(() => {
