@@ -795,6 +795,21 @@ renderer is referenced.
   nothing throws and no other object is disturbed. So the editor needs NO debounce and NO validation of its
   own — adding either would only duplicate, worse, what the engine already says.
 
+  **WHAT THE 3B REVIEW CAUGHT, AND THE RULE IT RESTATES.** The editor shipped with four defects that its own
+  gate had passed. THE WORST: `inSel` always emits `data-bind`, so giving the Direction select the OBJECT's
+  path made a real click overwrite `{type:'line',y:9}` with the string `"x"` — because a select fires
+  `input` BEFORE `change`, and the inspector's generic handler listens on `input`. The gate dispatched only
+  `change` and so tested a sequence the browser never produces. DRIVE THE REAL EVENT SEQUENCE, NOT A
+  CONVENIENT ONE. The other three were all the same species — a field offered that the renderer does not
+  honour: a curve `label` figGraph carries but figSvgBody never draws; an `aspect` choice mxFigPolicy
+  overrides to `equal` on every mathematics graph; and `isFinite(+v)` where figGraph uses its own `num()`,
+  so a cleared value read as a healthy line. ASK THE RENDERER WHAT IT HONOURS, THEN OFFER EXACTLY THAT.
+
+  **TWO THINGS THE RENDERER AND ITS SCHEMA DISAGREE ABOUT — the maintainer's call, not the editor's:**
+  a function's `label` is documented in SCHEMA.md and accepted by figGraph but never painted; and
+  `scaleMode:"authored"`, the only way to opt a mathematics graph out of equal scale, appears nowhere in
+  SCHEMA.md.
+
   **STILL TO AUTHOR** — 3C: the table of values (stub/head/rows/cells), then rebuild the whole quadratics
   lesson through the UI and compare it SEMANTICALLY (not byte-identically) with
   `docs/atlas/lesson/quadratics.app.json`, and render it in Study, Edit and Present. Desktop authoring only.

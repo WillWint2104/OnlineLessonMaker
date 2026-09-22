@@ -5279,12 +5279,16 @@ function mxFigAt(g){ const r=Array.isArray(g&&g.relations)?g.relations:[];
 /* WHAT THE RENDERER READS, SAID BACK. figGraph accepts `f` with a legacy `expr` alias, `rows` with a legacy
    `points` alias, and `between` with legacy `from`/`to`; the form reads the same fallbacks so a lesson
    authored the old way still shows its values, and writes only the canonical field. */
+/* figGraph's OWN test for a number, not a looser one. `+null` and `+''` are both 0, so `isFinite(+v)` calls
+   a cleared field a healthy value while the renderer refuses it — the editor would then show "y = " as a
+   line and the page would say "give exactly one of x or y". One predicate, copied from figGraph. */
+function mxNum(v){ return typeof v==='number'?isFinite(v):(typeof v==='string'&&v.trim()!==''&&isFinite(+v)); }
 function mxObjF(o){ return o&&o.f!=null?o.f:(o&&o.expr!=null?o.expr:''); }
 function mxObjRows(o){ return (o&&Array.isArray(o.rows))?o.rows:((o&&Array.isArray(o.points))?o.points:[]); }
 function mxObjLabel(o){
   if(!o||!o.type) return 'object';
   if(o.type==='function') return 'function · '+(mxObjF(o)||'(empty)');
-  if(o.type==='line') return 'line · '+(isFinite(+o.y)?('y = '+o.y):(isFinite(+o.x)?('x = '+o.x):'(no x or y)'));
+  if(o.type==='line') return 'line · '+(mxNum(o.y)?('y = '+o.y):(mxNum(o.x)?('x = '+o.x):'(no x or y)'));
   if(o.type==='points') return 'points · '+mxObjRows(o).length+' marked';
   if(o.type==='segment'){ const b=Array.isArray(o.between)?o.between:[o.from,o.to]; return 'segment · '+(b[0]||'?')+'–'+(b[1]||'?'); }
   return String(o.type);
@@ -5353,21 +5357,22 @@ function mxOutline(i,s,sel){
       if(S.kind==='f') return `<div class="isec"><div class="isec-h">Graph · the window it is drawn in</div>
         ${ig('mxf.x0',sel,inT('x from',`${fb}.domain.xMin`,d.xMin))}${ig('mxf.x1',sel,inT('x to',`${fb}.domain.xMax`,d.xMax))}
         ${ig('mxf.y0',sel,inT('y from',`${fb}.domain.yMin`,d.yMin))}${ig('mxf.y1',sel,inT('y to',`${fb}.domain.yMax`,d.yMax))}
-        ${ig('mxf.asp',sel,inSel('Unit scale',`${fb}.aspect`,F.fig.aspect==='equal'?'equal':'stretch',
-          [['equal','Equal — one x-unit is one y-unit'],['stretch','Stretch to the box']]))}
         ${ig('mxf.grid',sel,inSel('Grid',`${fb}.grid`,F.fig.grid==='hidden'?'hidden':'shown',[['shown','Shown'],['hidden','Hidden']]))}
         ${ig('mxf.co',sel,inSel('Tap-to-read callouts',`${fb}.callouts`,F.fig.callouts==='hidden'?'hidden':'shown',[['shown','Shown'],['hidden','Hidden']]))}
-        <div class="muted small">The window decides the plane's shape, and the shape decides the composition — a wide window earns the full width, everything else the centred stage. That is the approved rule, so it is meant to move.</div></div>`;
+        <div class="muted small">One x-unit is one y-unit: mxFigPolicy holds every mathematics graph to an equal scale, so there is no choice to offer here.
+        The window decides the plane's shape, and the shape decides the composition — a wide window earns the full width, everything else the centred stage. That is the approved rule, so it is meant to move.</div></div>`;
       const OB=Array.isArray(F.fig.objects)?F.fig.objects:[], o=OB[S.e];
       if(!o) return `<div class="ihint">That object is gone — select another.</div>`;
       const ob=`${fb}.objects.${S.e}`;
       if(o.type==='function') return `<div class="isec"><div class="isec-h">Function · fields</div>
         ${ig('mxo.f',sel,inT('y = …  (x, + − * / ^, brackets)',`${ob}.f`,mxObjF(o)))}
-        ${ig('mxo.fl',sel,inT('Label on the curve (optional)',`${ob}.label`,o.label))}
-        <div class="muted small">An expression the engine cannot read is reported on the figure itself and simply not plotted — nothing else on the page is disturbed, so it is safe to type into.</div></div>`;
-      if(o.type==='line'){ const axis=isFinite(+o.y)?'y':'x';
+        <div class="muted small">An expression the engine cannot read is reported on the figure itself and simply not plotted — nothing else on the page is disturbed, so it is safe to type into.
+        A curve takes no label here: figGraph carries <code>label</code> but the painter never draws one, so offering the field would promise a mark that never appears.</div></div>`;
+      if(o.type==='line'){ const axis=mxNum(o.y)?'y':(mxNum(o.x)?'x':'y');
         return `<div class="isec"><div class="isec-h">Reference line · fields</div>
-        ${ig('mxo.ax',sel,inSel('Direction',`${ob}`,axis,[['y','Horizontal — y = k'],['x','Vertical — x = k']],`data-mxaxis="${ob}"`))}
+        ${ig('mxo.ax',sel,`<label>Direction</label><select class="ii" data-mxaxis="${ob}">`
+          +[['y','Horizontal — y = k'],['x','Vertical — x = k']].map(([v,l])=>`<option value="${v}"${v===axis?' selected':''}>${esc(l)}</option>`).join('')
+          +`</select>`)}
         ${ig('mxo.at',sel,inT(axis==='y'?'y =':'x =',`${ob}.${axis}`,axis==='y'?o.y:o.x))}
         ${ig('mxo.ll',sel,inT('Label (optional)',`${ob}.label`,o.label))}
         ${ig('mxo.ls',sel,inSel('Style',`${ob}.style`,o.style==='solid'?'solid':'dashed',[['dashed','Dashed'],['solid','Solid']]))}</div>`; }
@@ -5465,7 +5470,7 @@ function mxOutlineWire(i){
      the direction MOVES the value rather than adding a second key, and the editor can never author the
      broken state it would then have to explain. */
   ins.querySelectorAll('[data-mxaxis]').forEach(sl=>sl.onchange=()=>{ const o=getP(LESSON,sl.dataset.mxaxis);
-    const want=sl.value, had=isFinite(+o.y)?'y':(isFinite(+o.x)?'x':null);
+    const want=sl.value, had=mxNum(o.y)?'y':(mxNum(o.x)?'x':null);
     if(want===had) return; const v=had?o[had]:0; delete o.x; delete o.y; o[want]=v; renderSlide(); });
   ins.querySelectorAll('[data-mxshow]').forEach(c=>c.onchange=()=>{
     const [path,key]=c.dataset.mxshow.split(':'); const st=getP(LESSON,path);

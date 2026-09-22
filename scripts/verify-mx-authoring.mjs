@@ -276,17 +276,50 @@ ok('a HALF-TYPED expression is reported on the figure and skipped — it never t
    midTyping.map((r) => `"${r.f}"→${r.err} err`).join(' · ') + ` · e.g. ${midTyping[0].msg}`);
 /* THE LINE'S ONE-OF-x-OR-y RULE. The renderer skips a line that has both or neither, so the editor must
    MOVE the value rather than add a second key. */
+/* THE REAL EVENT SEQUENCE, NOT A CONVENIENT ONE. A user picking an option fires `input` and THEN `change`,
+   and the inspector's generic [data-bind] handler listens on `input`. Dispatching only `change` skipped
+   that handler entirely and passed this check while a real click destroyed the object — the gate was
+   testing a sequence the browser never produces. */
 const axis = await p.evaluate(() => { const fo = LESSON.slides[cur].groups[0].relations[0].figure.objects;
   fo.push({ type: 'line', y: 0, style: 'dashed' }, { type: 'points', rows: [['A', 0, 0]] });
   selZone = 'mx.o.0.1'; renderSlide();
   const o = () => LESSON.slides[cur].groups[0].relations[0].figure.objects[1];
   o().y = 9; renderSlide(); selZone = 'mx.o.0.1'; renderSlide();
   const sl = document.querySelector('[data-mxaxis]'); const before = JSON.stringify(o());
-  sl.value = 'x'; sl.dispatchEvent(new Event('change', { bubbles: true }));
-  const after = JSON.stringify(o());
-  return { before, after, hasX: 'x' in o(), hasY: 'y' in o(), val: o().x }; });
+  sl.value = 'x';
+  sl.dispatchEvent(new Event('input', { bubbles: true }));
+  sl.dispatchEvent(new Event('change', { bubbles: true }));
+  const v = o();
+  return { before, after: JSON.stringify(v), isObject: !!v && typeof v === 'object',
+    hasX: !!v && typeof v === 'object' && 'x' in v, hasY: !!v && typeof v === 'object' && 'y' in v,
+    val: v && v.x }; });
 ok('switching a reference line between horizontal and vertical MOVES the value — never both keys, never neither',
-   axis.hasX && !axis.hasY && +axis.val === 9, `${axis.before} → ${axis.after}`);
+   axis.isObject && axis.hasX && !axis.hasY && +axis.val === 9, `${axis.before} → ${axis.after}`);
+/* AN EMPTY VALUE IS NOT A LINE. figGraph's num() rejects "" and null; a bare isFinite(+v) accepts both as 0,
+   so an editor testing that way calls a cleared field a healthy horizontal line while the page says "give
+   exactly one of x or y". The outline row and the direction control must use the renderer's own predicate. */
+const cleared = await p.evaluate(() => { const o = LESSON.slides[cur].groups[0].relations[0].figure.objects[1];
+  delete o.x; delete o.y; o.y = ''; selZone = 'mx.o.0.1'; renderSlide();
+  const row = [].slice.call(document.querySelectorAll('[data-mxsel="mx.o.0.1"] .blk-t')).map((e) => e.textContent)[0] || '';
+  const fg = document.querySelector('.mx-wexfoot .tp-fig');
+  const msg = fg ? ((fg.querySelector('.tp-fig-err') || {}).textContent || '') : '';
+  return { row, saysNotDrawn: /exactly one of x or y/.test(msg) }; });
+ok('and a line whose value has been cleared is shown as having none — the editor uses the renderer\'s own test for a number',
+   cleared.saysNotDrawn && /no x or y/.test(cleared.row),
+   `outline reads "${cleared.row.trim()}" · figure reports the one-of rule: ${cleared.saysNotDrawn}`);
+/* EVERY FIELD THE FORM OFFERS MUST BE ONE THE RENDERER HONOURS. Two were not: a curve `label` that figGraph
+   carries but figSvgBody never draws, and an `aspect` that mxFigPolicy overrides to "equal" on every
+   mathematics graph page. Offering either is the lie this whole editor is supposed to avoid. */
+const honoured = await p.evaluate(() => {
+  const labels = (zone) => { selZone = zone; renderSlide();
+    return [].slice.call(document.querySelector('#inspector').querySelectorAll('label')).map((l) => l.textContent.trim()); };
+  return { fn: labels('mx.o.0.0'), fig: labels('mx.f.0'),
+    policyForces: (() => { const f = { figure: 'graph', aspect: 'stretch' }; return mxFigPolicy(f).aspect; })() };
+});
+ok('the form offers no field the renderer ignores — no curve label (never drawn) and no unit-scale choice (the page forces it)',
+   !honoured.fn.some((l) => /label on the curve/i.test(l)) && !honoured.fig.some((l) => /unit scale/i.test(l))
+   && honoured.policyForces === 'equal',
+   `function fields [${honoured.fn.join(' · ')}] · graph fields [${honoured.fig.join(' · ')}] · mxFigPolicy turns "stretch" into "${honoured.policyForces}"`);
 /* marked points: rows are [id,x,y] arrays, and a bound path must reach inside one */
 const pts = await p.evaluate(() => { selZone = 'mx.o.0.2'; renderSlide();
   document.querySelector('[data-mxrowadd]').click(); selZone = 'mx.o.0.2'; renderSlide();

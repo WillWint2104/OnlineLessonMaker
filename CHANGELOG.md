@@ -7,7 +7,34 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
-### Added
+### Fixed
+- **Four defects in the Stage 3B graph editor, one of them destructive** — found by an adversarial review of
+  the code against the renderer, after the gate had already passed it.
+  - **The direction control replaced the whole line object with a string.** `inSel` always emits
+    `data-bind`, and the Direction select was given the OBJECT's path as its bind target. A real click fires
+    `input` and then `change`; the inspector's generic `[data-bind]` handler listens on `input`, so it ran
+    first and did `setP(LESSON, …objects.1, "x")` — turning `{type:'line',y:9,style:'dashed'}` into the bare
+    string `"x"`, which `figGraph` then reports as "object 2 ignored — unknown type (missing)". The control
+    now carries only `data-mxaxis` and no bind.
+  - **THE GATE PASSED IT because it dispatched only `change`.** A select fires `input` first, so the check
+    was exercising a sequence the browser never produces. It now fires both, in order — and fails on the old
+    code. A control that tests a convenient sequence instead of the real one is not a control.
+  - **A curve label that is never drawn.** `figGraph` carries `label` on a function and `figSvgBody` never
+    paints it — there is no legend and no CSS class for one. The field is withdrawn rather than left
+    promising a mark that never appears. (The shipping lesson already carries two such labels in its JSON;
+    they are and always were invisible. Drawing them is a renderer change and the maintainer's call.)
+  - **A unit-scale choice the page overrides.** `mxFigPolicy` forces `aspect:'equal'` on every mathematics
+    graph unless the undocumented `scaleMode:"authored"` is set, so a "Stretch" option changed nothing. The
+    control is replaced by a statement of the rule.
+  - **A cleared value read as a healthy line.** The editor tested `isFinite(+o.y)`, but `+null` and `+''`
+    are both 0, while `figGraph`'s own `num()` rejects them. Clearing the field left the outline reading
+    "line · y = " while the figure said "give exactly one of x or y". All three sites now use the
+    renderer's predicate, copied.
+
+  Three new assertions cover exactly these: the real event pair, a cleared value, and a sweep that the form
+  offers no field the renderer ignores. 30/30.
+
+### Added (stage 3B)
 - **Stage 3B — the mathematics inside a graph is editable** (`lesson-studio.html`,
   `scripts/verify-mx-authoring.mjs` now 28 checks). The graph and its objects are rows in the same outline
   as everything else, with the same reorder and remove, and the fields below are the same helpers on
