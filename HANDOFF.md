@@ -868,6 +868,22 @@ renderer is referenced.
   - Panel heights at the places a teacher works: table 3474 → 1481px, points 2304 → 1599, window
     2208 → 1576, subtopic 1790 → 1519, open 1134 → 1000, against 1000px visible.
 
+  **A SECOND LESSON HAS BEEN MADE IN THE APP** — `lessons/straight-lines.json`, built by
+  `scripts/author-straight-lines.mjs` through the interface only, on a topic chosen to stress what
+  quadratics did not. 189 interactions; exports, reopens identical, renders in all three modes. TEN FINDINGS
+  in `docs/atlas/authoring/FINDINGS.md`, each measured during the run. THE TWO THAT PUT SOMETHING WRONG ON
+  THE PAGE, and neither says so:
+  - `1/2x+1` parses as `1/(2x)+1` (juxtaposition binds tighter than division — figParse documents this) so a
+    gradient of a half draws a HYPERBOLA. No error, because the expression is valid.
+  - `(5 − 2)/(5 − 1)` does not build up. MX_FRAC_T is a bracketed SIGNED INTEGER, not a bracketed sum, so the
+    substitution line of a gradient example sets differently from its answer.
+  Also: four curves share one style (no per-object colour/dash, and a function `label` is never painted), so
+  a comparison subtopic cannot name its lines; everything you ADD arrives empty while the palette's page
+  arrives seeded; a six-column table costs 4 add-column clicks + 6 heading edits before a value; reorder is
+  one click per place; the `line` object is axis-parallel only; axis numbering uses `-` where the prose uses
+  `−`. NO PRODUCT CHANGE WAS MADE ON THE STRENGTH OF THESE — they are the input to the maintainer's next
+  decision.
+
   **STILL TO AUTHOR**: a FIGURE attached to an example or a step. `mxPart` renders one anywhere, but the
   object editor is addressed per group (`mx.f` / `mx.o`, one graph per group, found the way the renderer
   finds it), so the part palette offers `prose · relations · points · table` and not `figure`. Both of this

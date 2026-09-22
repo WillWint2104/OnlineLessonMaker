@@ -8,6 +8,35 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **A lesson that did not exist, made in the application — and a record of what got in the way.**
+  `scripts/author-straight-lines.mjs` authors *Straight lines: y = mx + c* (NSW Stage 5, Year 9) entirely
+  through the interface: four subtopics, four worked examples, eleven steps, a six-column table of values,
+  two graphs carrying four curves, a deliberate step reorder, then export and reopen. **189 interactions**
+  — 56 outline selections, 39 buttons, 94 fields. It exports, reopens byte-identical, and renders intact in
+  Study, Edit and Present with no page errors. The lesson is `lessons/straight-lines.json`; the captures and
+  the findings are in `docs/atlas/authoring/`.
+  The topic was chosen to stress what quadratics never did: gradients are fractions, a sloping line is not
+  the `line` object the graph editor offers, and three lines share one plane.
+  **Ten findings, each measured during the run** (`docs/atlas/authoring/FINDINGS.md`), ranked by what to fix
+  first. Nothing prevented the lesson from being made; two put something wrong on the page without saying so:
+  - **`1/2x+1` is read as `1/(2x)+1`** — juxtaposition binds tighter than division — so a gradient of a half
+    draws a hyperbola. 4 broken subpaths against 3 for `x/2+1`, and **no error is reported**, because the
+    expression is valid; it is simply not the one the teacher wrote.
+  - **`(5 − 2)/(5 − 1)` does not build up** while `(−4)/6` and `−2/3` do: the grammar takes a bracketed
+    signed integer or bare digits, not a bracketed sum. So a gradient example's answer sets as a fraction
+    and the working that produces it does not. 3 of 6 step expressions kept a slash.
+  - **Four curves, one style** (`rgb(15, 122, 76)/2px/none`): no colour, weight or dash per graph object,
+    and a function's `label` is never painted — so a subtopic comparing three gradients cannot say which
+    line is which.
+  - **Everything you add arrives empty** — a new group with no examples, a new example with no steps and a
+    page that says so — while the page created from the palette arrives seeded with the whole chain.
+  - A six-column table needed 4 add-column clicks and 6 heading replacements before a value could be typed;
+    reordering is one click per place per row; the object named `line` is axis-parallel only; and the axis
+    numbering uses a hyphen where the lesson's prose uses a minus.
+  **No product change was made on the strength of these** — they are the input to the next decision, not a
+  licence to start. The findings argue against a structural equation editor for now, which matches the
+  maintainer's position: the two that put wrong mathematics on the page are about the editor staying silent
+  when what you typed is not what you meant, not about how the expression is stored.
 - **Stage 4 — the authoring experience, on the maintainer's three priorities.** Nothing student-facing
   moved: `docs/atlas/app-lesson/`'s ten renders are byte-identical and `corpus-identity` is 250/250, so
   every change below is confined to the Edit panel.
