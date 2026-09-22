@@ -24,7 +24,12 @@ const arg = (n, d) => { const i = process.argv.indexOf(`--${n}`); return i > 0 ?
 const OUT = path.join(root, 'docs/atlas/presentation', arg('out', 'after'));
 fs.mkdirSync(OUT, { recursive: true });
 
-const APP = fs.readFileSync(path.join(root, 'lesson-studio.html'), 'utf8');
+/* --app <path> serves a DIFFERENT copy of the application, which is how the "before" side is taken:
+   `git show <ref>:lesson-studio.html > /tmp/before.html` and point this at it. Never by stashing the
+   working tree — a stash of an already-committed file saves nothing, the run then photographs the FIXED
+   app and labels it "before", and the pop that follows can land an unrelated older stash on the branch.
+   (It did, once, on the way to these captures.) */
+const APP = fs.readFileSync(arg('app', path.join(root, 'lesson-studio.html')), 'utf8');
 const QUAD = fs.readFileSync(path.join(root, 'docs/atlas/lesson/quadratics.app.json'), 'utf8');
 /* the lesson as a document: this is what Export writes and what a school opens */
 const DOC = APP.replace(/(<script id="lesson-data" type="application\/json">)[\s\S]*?(<\/script>)/,
@@ -184,7 +189,19 @@ for (const S of SURFACES) {
         const foot = live.querySelector('.mx-wexfoot'); if (!foot) return false;
         foot.scrollIntoView({ block: 'center' }); return true;
       }, { gid: V.group });
-      if (scrolled) { await p.waitForTimeout(600); await p.screenshot({ path: path.join(OUT, name.replace('.png', '__foot.png')) }); }
+      if (scrolled) { await p.waitForTimeout(600); await p.screenshot({ path: path.join(OUT, name.replace('.png', '__foot.png')) });
+        /* THE SEAM ITSELF, clipped to the foot's own top edge rather than to a fraction of the page, so the
+           before and the after are the same window on the same join even though the after page is taller. */
+        const clip = await p.evaluate(({ gid }) => {
+          const pane = document.querySelector(`[data-mx-panel="${gid}"]`);
+          const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
+          const foot = live.querySelector('.mx-wexfoot'); if (!foot) return null;
+          const r = foot.getBoundingClientRect(), s = live.querySelector('.mx-wexsurface') || live;
+          const sr = s.getBoundingClientRect();
+          return { x: Math.max(0, Math.round(sr.left) - 8), y: Math.max(0, Math.round(r.top) - 150),
+            width: Math.min(Math.round(sr.width) + 16, 2000), height: 300 };
+        }, { gid: V.group });
+        if (clip && clip.height > 0) await p.screenshot({ path: path.join(OUT, name.replace('.png', '__seam.png')), clip }); }
       report.push(Object.assign({ view: V.id, mode: M, surface: S.id, how, errors: errs }, m));
       const g = m.gap;
       console.log(`${name}\n   mode=${m.mode}/${m.seg}  [${how} → ${m.showing}]  question bg ${m.askBg}  text ${m.qColor}  separator: ${m.sep}`
