@@ -858,9 +858,15 @@ renderer is referenced.
   finds it), so the part palette offers `prose · relations · points · table` and not `figure`. Both of this
   lesson's graphs are group graphs, so nothing is blocked by it. Desktop authoring only.
 
-  **THE STUDY / EDIT DISTINCTION IS CORRECT, measured 22 Sep**: inspector visible ⟺ `mode==='edit'` ⟺ Edit
-  carries `.on`; Study clears the inspector's content entirely. A screenshot that appeared to show otherwise
-  had simply been misread; the capture script now prints the mode it photographed.
+  **THE STUDY / EDIT DISTINCTION IS CORRECT, measured 22 Sep** — ON `#modeSeg`: inspector visible ⟺
+  `mode==='edit'` ⟺ that Edit button carries `.on`; Study clears the inspector's content entirely.
+  **BUT `#modeSeg` IS HIDDEN ON A RESPONSIVE PAGE** — the app header is not on screen at all — and the bar
+  the author can see is `mxTopBar`'s, a different element. That one DID say Study while the author was in
+  Edit, because it is built inside the window where `renderCanvas` forces `mode` to `'study'` for the
+  Study-identical Edit render. Fixed by `authorMode()`, which reports the author's mode to the chrome while
+  the canvas keeps painting in the rendering one. TWO LESSONS: a correct finding about one element is not a
+  finding about the element the user is looking at; and the assertion that should have caught it read the
+  bar only in Study, the one state where the defect is invisible.
 
   **TWO PIECES OF OUTSTANDING WORK, RECORDED FOR A LATER PHASE — neither is to be expanded now:**
   1. **The image block.** `block()` in `scripts/composition-atlas.mjs` sends every media block through

@@ -84,16 +84,37 @@ await p.evaluate(() => document.querySelector('#modeSeg [data-mode="edit"]').cli
 await p.waitForTimeout(300);
 
 /* ---- the author's hands. Every one of these is the real control: a click on the button the panel
-   renders, or a value typed into the input that carries the data-bind path the panel emitted. ---- */
+   renders, or a value typed into the input that carries the data-bind path the panel emitted.
+   MX_AUDIT=<dir> counts them and measures the panel as it grows, so "is this comfortable to use?" is a
+   number rather than an impression. The counting is passive — it changes nothing the assertions read. ---- */
+const EFFORT = { selections: 0, buttons: 0, fields: 0, lists: 0, selects: 0, byPhase: {} };
+let PHASE = 'setup';
+const tally = (k) => { EFFORT[k]++; (EFFORT.byPhase[PHASE] = EFFORT.byPhase[PHASE] || { selections: 0, buttons: 0, fields: 0 });
+  if (k === 'selections' || k === 'buttons') EFFORT.byPhase[PHASE][k]++; else EFFORT.byPhase[PHASE].fields++; };
 const click = async (sel) => { await p.click(sel, { timeout: 15000 }); await p.waitForTimeout(25); };
-const pick = (zone) => click(`#inspector [data-mxsel="${zone}"]`);
-const add = (token) => click(`#inspector [data-mxadd="${token}"]`);
-const press = (attr, val) => click(`#inspector [${attr}="${val}"]`);
-const set = async (bindPath, value) => { await p.fill(`#inspector [data-bind="${bindPath}"]`, String(value), { timeout: 15000 }); };
-const setList = async (bindPath, arr) => { await p.fill(`#inspector [data-split="${bindPath}"]`, arr.join('\n'), { timeout: 15000 }); };
-const choose = async (bindPath, value) => { await p.selectOption(`#inspector [data-bind="${bindPath}"]`, String(value), { timeout: 15000 }); await p.waitForTimeout(25); };
-const meta = async (key, value) => { await p.fill(`#inspector [data-meta="${key}"]`, String(value), { timeout: 15000 }); };
+const pick = async (zone) => { tally('selections'); await click(`#inspector [data-mxsel="${zone}"]`); };
+const add = async (token) => { tally('buttons'); await click(`#inspector [data-mxadd="${token}"]`); };
+const press = async (attr, val) => { tally('buttons'); await click(`#inspector [${attr}="${val}"]`); };
+const set = async (bindPath, value) => { tally('fields'); await p.fill(`#inspector [data-bind="${bindPath}"]`, String(value), { timeout: 15000 }); };
+const setList = async (bindPath, arr) => { tally('lists'); await p.fill(`#inspector [data-split="${bindPath}"]`, arr.join('\n'), { timeout: 15000 }); };
+const choose = async (bindPath, value) => { tally('selects'); await p.selectOption(`#inspector [data-bind="${bindPath}"]`, String(value), { timeout: 15000 }); await p.waitForTimeout(25); };
+const meta = async (key, value) => { tally('fields'); await p.fill(`#inspector [data-meta="${key}"]`, String(value), { timeout: 15000 }); };
 const lesson = () => p.evaluate(() => JSON.parse(JSON.stringify(LESSON)));
+/* WHAT THE AUTHOR IS LOOKING AT: how tall the panel has become, how much of it is off-screen, how far
+   down the thing they just selected sits, and whether it is even in view. */
+const panel = () => p.evaluate(() => {
+  const ins = document.querySelector('#inspector'); if (!ins) return null;
+  const cur = ins.querySelector('.blk-row.cur');
+  const r = ins.getBoundingClientRect();
+  return { height: Math.round(ins.scrollHeight), visible: Math.round(ins.clientHeight),
+    offscreen: Math.max(0, Math.round(ins.scrollHeight - ins.clientHeight)),
+    rows: ins.querySelectorAll('.blk-row').length,
+    fields: ins.querySelectorAll('input.ii,textarea.ia').length,
+    selectedTop: cur ? Math.round(cur.getBoundingClientRect().top - r.top + ins.scrollTop) : null,
+    selectedInView: cur ? (cur.getBoundingClientRect().top >= r.top && cur.getBoundingClientRect().bottom <= r.bottom) : null };
+});
+const SNAPS = [];
+const snap = async (label) => { if (process.env.MX_AUDIT) SNAPS.push(Object.assign({ label }, await panel())); };
 
 console.log('--- create the page ---');
 await click('#palette [data-ptype="workedExamples"]');
@@ -119,6 +140,7 @@ await meta('stage', TARGET.meta.stage); await meta('year', TARGET.meta.year); aw
 console.log('--- the four groups ---');
 for (let gi = 0; gi < PAGE.groups.length; gi++) {
   const g = PAGE.groups[gi];
+  PHASE = `group ${gi + 1} · ${g.title.replace(/_/g, '')}`;
   if (gi > 0) await add('g');
   await pick(`mx.g.${gi}`);
   const gb = `${B}.groups.${gi}`;
@@ -146,6 +168,7 @@ for (let gi = 0; gi < PAGE.groups.length; gi++) {
       await set(`${sb}.text`, st.text);
       await set(`${sb}.math`, st.math || '');
       if (st.note) await set(`${sb}.note`, st.note);
+      await snap(`group ${gi + 1}, example ${ei + 1}, step ${si + 1} selected`);
       /* THE TABLE OF VALUES, authored where it belongs — under the step whose substitution it tabulates. */
       for (const part of [].concat(st.visual ? (Array.isArray(st.visual) ? st.visual : [st.visual]) : [])) {
         await pick(`mx.s.${gi}.${ei}.${si}`);
@@ -159,7 +182,8 @@ for (let gi = 0; gi < PAGE.groups.length; gi++) {
   /* THE CLOSING REGION — the graph, then the prose or the relationship list, in authored order. */
   for (let k = 0; k < (g.relations || []).length; k++) {
     const rel = g.relations[k];
-    if (rel.kind === 'figure') { await add(`f.${gi}`); await buildFigure(gi, `${gb}.relations.${k}.figure`, rel.figure); }
+    if (rel.kind === 'figure') { await add(`f.${gi}`); await buildFigure(gi, `${gb}.relations.${k}.figure`, rel.figure);
+      await snap(`group ${gi + 1}, the graph's marked points selected`); }
     else {
       await pick(`mx.g.${gi}`);
       await add(`p.${gi}.${rel.kind}`);
@@ -234,8 +258,26 @@ async function buildFigure(gi, fb, fig) {
   }
 }
 
+await snap('the whole lesson built, last step still selected');
 const built = await lesson();
 REBUILT = withLesson(built);
+if (process.env.MX_AUDIT) {
+  const dir = path.resolve(root, process.env.MX_AUDIT);
+  fs.mkdirSync(dir, { recursive: true });
+  const worst = SNAPS.reduce((a, b) => (b.height > (a ? a.height : 0) ? b : a), null);
+  const total = EFFORT.selections + EFFORT.buttons + EFFORT.fields + EFFORT.lists + EFFORT.selects;
+  const report = { total, effort: EFFORT, panel: SNAPS, worstPanel: worst };
+  fs.writeFileSync(path.join(dir, 'authoring-effort.json'), JSON.stringify(report, null, 2));
+  console.log('\n=== AUTHORING EFFORT, for the whole quadratics lesson ===');
+  console.log(`  ${total} interactions: ${EFFORT.selections} outline selections · ${EFFORT.buttons} add/remove buttons`
+    + ` · ${EFFORT.fields} text fields · ${EFFORT.lists} list fields · ${EFFORT.selects} dropdowns`);
+  for (const [k, v] of Object.entries(EFFORT.byPhase))
+    console.log(`    ${k.padEnd(28)} ${String(v.selections).padStart(3)} selections  ${String(v.buttons).padStart(3)} buttons  ${String(v.fields).padStart(3)} fields`);
+  console.log('  panel at the demanding moments (height / visible / off-screen / rows / fields / selected row in view):');
+  for (const x of SNAPS)
+    console.log(`    ${x.label.padEnd(46)} ${String(x.height).padStart(5)}px /${String(x.visible).padStart(5)} /${String(x.offscreen).padStart(5)} · ${String(x.rows).padStart(2)} rows · ${String(x.fields).padStart(2)} fields · in view: ${x.selectedInView}`);
+  console.log(`  wrote ${path.join(dir, 'authoring-effort.json')}`);
+}
 console.log('--- what was built ---');
 {
   const s = built.slides[0], g = s.groups || [];

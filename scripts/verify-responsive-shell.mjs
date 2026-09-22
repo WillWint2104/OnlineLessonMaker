@@ -235,6 +235,15 @@ mark('chrome');
     fire('[data-mx-mode="study"]'); out.afterStudy = mode;
     const before = cur; fire('[data-mx-go="next"]'); out.next = cur;
     fire('[data-mx-go="prev"]'); out.back = cur; out.before = before;
+    /* THE BAR IS READ IN BOTH MODES, and Edit is the one that matters. #modeSeg is the app header's
+       control and a responsive page HIDES the app header, so this bar is the only mode indicator the
+       author can see — and it is built inside the window where renderCanvas forces `mode` to 'study' to
+       keep Edit true WYSIWYG. Reading it only after switching back to Study, as this check once did,
+       cannot tell a correct bar from one that is stuck on Study. */
+    const marks = () => [].slice.call(document.querySelectorAll('[data-mx-mode]'))
+      .filter((b) => b.classList.contains('on')).map((b) => b.dataset.mxMode).join(',');
+    fire('[data-mx-mode="edit"]'); out.inEdit = { mode, marked: marks(), headerShown: !!document.querySelector('#modeSeg').getClientRects().length };
+    fire('[data-mx-mode="study"]'); out.inStudy = { mode, marked: marks() };
     out.marked = document.querySelector('[data-mx-mode="study"]').classList.contains('on');
     return out;
   });
@@ -242,6 +251,13 @@ mark('chrome');
      prox.afterEdit === 'edit' && prox.afterStudy === 'study', `${prox.startMode} -> edit -> study`);
   ok('the pager proxies really navigate', prox.next === prox.before + 1 && prox.back === prox.before, `${prox.before} -> ${prox.next} -> ${prox.back}`);
   ok('the active mode is marked in the bar', prox.marked === true);
+  /* THE VISIBLE BAR MUST NOT SAY STUDY WHILE THE AUTHOR IS IN EDIT. It did: mode 'edit', body.edit,
+     #modeSeg's edit button marked — and this bar, the only one on screen, marked Study, because it is
+     built while renderCanvas has forced `mode` to 'study' for the Study-identical Edit render. */
+  ok('THE MODE BAR TELLS THE TRUTH IN EDIT TOO — and it is the only mode control a responsive page shows',
+     prox.inEdit.mode === 'edit' && prox.inEdit.marked === 'edit' && prox.inStudy.marked === 'study'
+       && prox.inEdit.headerShown === false,
+     `Edit: mode ${prox.inEdit.mode}, bar marks "${prox.inEdit.marked}" · Study: bar marks "${prox.inStudy.marked}" · #modeSeg on screen: ${prox.inEdit.headerShown}`);
   // the Write / Type selector is lesson-level, session-only, and only on a page that takes written work
   const rsel = await p.evaluate((NOTES) => {
     go(4); const bar = document.querySelector('.mx-resp');

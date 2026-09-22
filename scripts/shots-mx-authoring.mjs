@@ -2,7 +2,12 @@
 /* THE AUTHORING WORKFLOW, PHOTOGRAPHED — the editor as an author actually meets it.
    node scripts/shots-mx-authoring.mjs
    Boots a blank mathematics document, then drives the real palette, outline and fields, capturing each
-   step. Same path as scripts/verify-mx-authoring.mjs asserts; this is what it looks like. */
+   step. Same path as scripts/verify-mx-authoring.mjs asserts; this is what it looks like.
+   IT IS A TOUR OF THE CONTROLS, NOT A RENDER OF THE QUADRATICS LESSON. It builds one group carrying a
+   table, a graph and a relationship list so each editor can be photographed; the finished lesson puts its
+   table on the Substitution subtopic and its graphs on Symmetry and A flatter parabola. The lesson's own
+   renders are docs/atlas/app-lesson/, and scripts/verify-quadratics-authoring.mjs is what proves the
+   arrangement. */
 import http from 'node:http'; import fs from 'node:fs'; import path from 'node:path';
 import { fileURLToPath } from 'node:url'; import { chromium } from 'playwright';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -58,16 +63,23 @@ await p.waitForTimeout(300);
 await set('mx.s.0.0.1', 'What this step does', 'Evaluate. A negative multiplied by a negative gives a positive.');
 await set('mx.s.0.0.1', 'Mathematics', '_y_ = (−4)(−4) = 16');
 await shot('5-steps', 'two worked steps, the notation set as mathematics');
-/* THE TABLE OF VALUES, built where it belongs — under the step whose substitution it tabulates.
-   Stage 3C: added from the step's own palette, widened a column at a time, and filled cell by cell. */
+/* THE TABLE OF VALUES, built where the LESSON puts it — on its own worked example, under the step whose
+   substitution it tabulates, not bolted onto the negative-value example. These captures are a tour of the
+   controls rather than a render of the finished lesson, and an arrangement the lesson does not have would
+   be read as one it does. The finished lesson's own renders are docs/atlas/app-lesson/. */
 const press = async (attr, val) => { await p.click(`#inspector [${attr}="${val}"]`); await p.waitForTimeout(140); };
 const bind = async (path, value) => { await p.fill(`#inspector [data-bind="${path}"]`, String(value)); await p.waitForTimeout(60); };
-await p.evaluate(() => { const bn = document.querySelector('[data-mxadd="s.0.0"]'); if (bn) bn.click(); });
+await p.evaluate(() => { const bn = document.querySelector('[data-mxadd="e.0"]'); if (bn) bn.click(); });
 await p.waitForTimeout(250);
-await set('mx.s.0.0.2', 'What this step does', 'The same substitution, done once for each whole value.');
-await p.evaluate(() => { selZone = 'mx.s.0.0.2'; renderSlide(); }); await p.waitForTimeout(200);
-await press('data-mxadd', 'w.0.0.2.table');
-const TB = 'slides.0.groups.0.examples.0.steps.2.visual.0';
+await set('mx.e.0.1', 'Example title', 'A decimal, and a table');
+await set('mx.e.0.1', 'Question', 'Find _y_ when _x_ = 0.2, then tabulate _y_ for whole values of _x_ from −5 to 5.');
+await set('mx.e.0.1', 'Answer', '_y_ = 0.04, and the table reads the same forwards and backwards.');
+await p.evaluate(() => { const bn = document.querySelector('[data-mxadd="s.0.1"]'); if (bn) bn.click(); });
+await p.waitForTimeout(250);
+await set('mx.s.0.1.0', 'What this step does', 'The same substitution, done once for each whole value.');
+await p.evaluate(() => { selZone = 'mx.s.0.1.0'; renderSlide(); }); await p.waitForTimeout(200);
+await press('data-mxadd', 'w.0.1.0.table');
+const TB = 'slides.0.groups.0.examples.1.steps.0.visual.0';
 const HEAD = ['−5', '−4', '−3', '−2', '−1', '0', '1', '2', '3', '4', '5'];
 const CELLS = ['25', '16', '9', '4', '1', '0', '1', '4', '9', '16', '25'];
 for (let c = 2; c < HEAD.length; c++) await press('data-mxcoladd', TB);
@@ -75,7 +87,7 @@ await bind(`${TB}.stub`, '_x_');
 for (let c = 0; c < HEAD.length; c++) await bind(`${TB}.head.${c}`, HEAD[c]);
 await bind(`${TB}.rows.0.label`, '_y_ = _x_^2');
 for (let c = 0; c < CELLS.length; c++) await bind(`${TB}.rows.0.cells.${c}`, CELLS[c]);
-await shot('6-table', 'the table of values: headings, corner cell and every value, all through the inspector');
+await shot('6-table', 'the table of values on its own example, as the lesson has it — headings, corner cell and every value, all through the inspector');
 
 /* THE GRAPH, and everything in it, built through the same outline — one object at a time. */
 await p.evaluate(() => { selZone = 'mx.g.0'; renderSlide(); }); await p.waitForTimeout(200);
@@ -107,6 +119,6 @@ await shot('9-parts', 'prose, relationships, points and tables are one vocabular
 await p.evaluate(() => { selZone = null; renderSlide(); });
 await p.evaluate(() => document.querySelector('#modeSeg [data-mode="study"]').click());
 await p.waitForTimeout(600);
-await shot('10-study', 'the finished page in Study — table, graph and relationships, all authored here');
+await shot('10-study', 'the page in Study. A TOUR OF THE CONTROLS, not the finished lesson — see docs/atlas/app-lesson/ for that');
 await b.close(); server.close();
 console.log(`\nwrote ${path.relative(root, OUT)}`);

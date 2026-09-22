@@ -4520,7 +4520,7 @@ function renderCanvas(){
   document.body.classList.toggle('respo',!!RP_ENTRY);
   const present=document.body.classList.contains('present');
   if(!LESSON.slides.length){ $('#slide').innerHTML=glEmptyState(); $('#prev').disabled=true; $('#next').disabled=true; fitCanvas(); return; }
-  if(realEdit) mode='study';   // Edit canvas renders Study-identical (no contenteditable, no inline editors, true WYSIWYG)
+  if(realEdit){ MODE_PAINTING_AS=mode; mode='study'; }   // Edit canvas renders Study-identical (no contenteditable, no inline editors, true WYSIWYG); authorMode() still reports Edit so the chrome does not lie
   try {
   if(RP_ENTRY){ h=renderResponsivePage(RP_ENTRY,s,i); }                                   // A: responsive page template — laid out at the real viewport, never through the canvas
   else if(PACK_THEMES.has(LESSON.meta&&LESSON.meta.theme)){ h=renderPackSlide(s,i,present); }   // imperium/microhistory: dedicated JSON-rendered slide pack
@@ -4887,7 +4887,7 @@ function renderCanvas(){
       ${mode==='edit'?`<div class="syllabus"><div class="syl-h">${ICON.book} NSW syllabus links — shown to students in a popup</div>${sylInline}<button class="qadd" data-addsyl="${i}">＋ add a syllabus link</button></div>`:''}
     </div>`;
   }
-  } finally { if(realEdit) mode=_savedMode; }   // always restore mode, even if a branch throws
+  } finally { if(realEdit){ mode=_savedMode; MODE_PAINTING_AS=null; } }   // always restore mode, even if a branch throws
   $('#slide').innerHTML=h;
   if(realEdit) tagZones(s,i);            // Edit: add data-zone hooks + media drop target + selection outline
   wire();
@@ -7924,9 +7924,19 @@ function rpWorkspace(ws,s,i){
 /* The mode controls are PROXIES: each one clicks the real application button, which is hidden on a
    responsive page. The handlers stay exactly where they are, so the chrome cannot drift away from what
    the buttons actually do, and nothing here has to be kept in step with them. */
+/* THE MODE THE AUTHOR IS IN, WHICH IS NOT ALWAYS THE MODE THE CANVAS IS PAINTING IN. renderCanvas forces
+   `mode` to 'study' while it paints a responsive page — deliberately, so Edit is true WYSIWYG — and this
+   bar is BUILT INSIDE THAT WINDOW. Reading `mode` here made the bar say Study while the author was in
+   Edit, and on this page family that bar is the ONLY mode control on screen: #modeSeg belongs to the app
+   header, which a responsive page hides. So the chrome asks for the author's mode while the canvas goes
+   on painting in the rendering one. Measured 22 Sep: mode 'edit', body.edit, #modeSeg edit marked — and
+   the visible bar marked Study. The earlier finding that the mode logic is correct was measured on
+   #modeSeg, which is correct AND invisible here; the two are different elements. */
+let MODE_PAINTING_AS=null;
+function authorMode(){ return MODE_PAINTING_AS===null?mode:MODE_PAINTING_AS; }
 const MX_MODES=[
-  {id:'study', label:'Study', target:'#modeSeg [data-mode="study"]', state:()=>mode==='study'&&!document.body.classList.contains('present')},
-  {id:'edit', label:'Edit', target:'#modeSeg [data-mode="edit"]', state:()=>mode==='edit'},
+  {id:'study', label:'Study', target:'#modeSeg [data-mode="study"]', state:()=>authorMode()==='study'&&!document.body.classList.contains('present')},
+  {id:'edit', label:'Edit', target:'#modeSeg [data-mode="edit"]', state:()=>authorMode()==='edit'},
   {id:'present', label:'Present', target:'#presentBtn'},
   {id:'worksheet', label:'Worksheet', target:'#worksheetBtn'},
   {id:'export', label:'Export', target:'#exportBtn'},

@@ -58,8 +58,31 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   - **Four controls**, each withdrawing one thing the comparisons claim to police: a line of mathematics
     changed, a heading spliced out without its cells, a table cell changed, a graph window widened. Each
     fires.
+  - **What it costs a teacher to author the lesson, measured rather than guessed** (`MX_AUDIT=<dir>`):
+    **260 interactions** — 62 outline selections, 52 add/remove buttons, 136 text fields, 2 list fields,
+    8 dropdowns — for 4 subtopics, 7 worked examples, 19 steps, an 11-column table and 2 graphs. Roughly
+    1.6 interactions per authored value.
+  - **The inspector's length, at the places a teacher actually works** (`scripts/shots-authoring-lesson.mjs`,
+    which photographs and measures the REAL lesson rather than a page built for the photograph): 1134px at
+    rest, 1583–2304px on a subtopic, graph or list — against 1000px of visible panel, so one to one-and-a-bit
+    screens of scrolling. **The table editor is the outlier at 3474px**, because it renders one input per
+    heading and one per cell stacked vertically: 33 inputs for an 11-column table, 2474px off screen.
+    Selecting a row always scrolls it into view (measured on every row type); the row only leaves view
+    once you scroll down into the form under it, which is ordinary. Reported, not acted on.
 
 ### Fixed
+- **THE MODE BAR SAID STUDY WHILE THE AUTHOR WAS IN EDIT** — and on a mathematics page it is the only mode
+  control on screen. Measured, at the maintainer's request, on the capture that raised it rather than
+  assumed either way: `mode` was `'edit'`, `body` carried `.edit`, `#modeSeg`'s Edit button was marked —
+  and the visible bar marked Study. The earlier finding that the mode logic is correct was measured on
+  `#modeSeg`, which is correct **and hidden here**: a responsive page hides the app header entirely. The
+  two are different elements, and only one of them is on screen. Cause: `renderCanvas` forces `mode` to
+  `'study'` while it paints a responsive page — deliberately, so Edit is true WYSIWYG — and `mxTopBar` is
+  built inside that window. `authorMode()` now reports the author's mode to the chrome while the canvas
+  goes on painting in the rendering one.
+  The assertion that should have caught this read the bar **only after switching back to Study**, the one
+  state in which the defect is invisible. It now reads the bar in both modes and asserts that the app
+  header really is off screen; reverting the fix makes it report `bar marks "study"` in Edit.
 - **The outline no longer opens an example when something else is selected.** `S.e` holds an example index
   only for some selection kinds; for a graph object or a representation it holds that object's index, and
   the expansion test read it regardless. `mxInEx()` now names the kinds that mean an example.
