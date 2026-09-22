@@ -781,11 +781,25 @@ renderer is referenced.
   defaults with one button to write them in, because editing something the JSON does not contain would be a
   lie. 21 checks, 8 drives.
 
-  **STILL TO AUTHOR** — 3B: the figure's `objects[]` (function, reference line, marked points, labels); the
-  frame form (domain/grid/aspect) already exists on the composable `figure` block to copy. 3C: the table of
-  values, then rebuild the whole quadratics lesson through the UI and compare it SEMANTICALLY (not
-  byte-identically) with `docs/atlas/lesson/quadratics.app.json`, and render it in Study, Edit and Present.
-  Desktop authoring only.
+  **STAGE 3B IS DONE**: the graph and its objects are rows in the same outline. The offered set is exactly
+  what `figGraph` accepts — `function` · `line` · `points` · `segment` — read from the renderer, not from
+  SCHEMA.md. Legacy aliases (`expr`, `points`, `from`/`to`) still READ so an old lesson shows its values;
+  only the canonical field is written. A reference line's direction MOVES its value between `x` and `y`,
+  because the renderer skips a line with both or neither. Point rows are `[id, x, y]` arrays and the bound
+  path reaches inside one. The window's form states the consequence: geometry decides composition, so a wide
+  window moving the page to `down-12` is the approved rule working, not a regression — asserted.
+
+  **A HALF-TYPED EXPRESSION IS SAFE, and that was measured before anything was built.** The inspector
+  re-renders on every keystroke, so `x^`, `x^2 -`, `√x` and the empty string all reach the figure engine.
+  Every one is reported ON THE FIGURE ("function 1 not plotted — unexpected end of expression") and skipped;
+  nothing throws and no other object is disturbed. So the editor needs NO debounce and NO validation of its
+  own — adding either would only duplicate, worse, what the engine already says.
+
+  **STILL TO AUTHOR** — 3C: the table of values (stub/head/rows/cells), then rebuild the whole quadratics
+  lesson through the UI and compare it SEMANTICALLY (not byte-identically) with
+  `docs/atlas/lesson/quadratics.app.json`, and render it in Study, Edit and Present. Desktop authoring only.
+  Note that a figure attached to a STEP (`step.visual`) is not yet editable — 3B covers the group's graph,
+  which is where both of this lesson's graphs live; the table is a step visual, so 3C needs that path.
 
   **THE STUDY / EDIT DISTINCTION IS CORRECT, measured 22 Sep**: inspector visible ⟺ `mode==='edit'` ⟺ Edit
   carries `.on`; Study clears the inspector's content entirely. A screenshot that appeared to show otherwise

@@ -8,6 +8,43 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 3B — the mathematics inside a graph is editable** (`lesson-studio.html`,
+  `scripts/verify-mx-authoring.mjs` now 28 checks). The graph and its objects are rows in the same outline
+  as everything else, with the same reorder and remove, and the fields below are the same helpers on
+  ordinary bound paths. No second layout system, and the figure engine is untouched.
+  - **Exactly the vocabulary the RENDERER accepts** — `function` · `line` · `points` · `segment`, read out
+    of `figGraph`, not out of SCHEMA.md. An editor offering a fifth type the page ignores would be a lie,
+    and the drive that adds one is caught.
+  - **The legacy aliases still read.** `figGraph` accepts `f` with an `expr` alias, `rows` with a `points`
+    alias, and `between` with `from`/`to`. The form reads the same fallbacks so a lesson authored the old
+    way shows its values, and writes only the canonical field.
+  - **A reference line has exactly one of x or y** — the renderer skips it with a reported error otherwise.
+    So changing the direction MOVES the value between the keys rather than adding a second, and the editor
+    cannot author the broken state it would then have to explain.
+  - **Marked points are `[id, x, y]` arrays**, and the bound path reaches inside one
+    (`…objects.2.rows.1.1`); `setP` walks numeric keys, and `figGraph`'s `num()` accepts the string a text
+    input writes while still rejecting an empty cell rather than reading it as an authored 0.
+  - **The window is offered with the consequence stated.** Domain, unit scale, grid and callouts — and the
+    note that the window decides the plane's shape and the shape decides the composition, which is the
+    approved rule, so a wide window moving the page to the full grid is correct behaviour rather than a
+    regression. The gate asserts that move: tall → `down-8`, wide → `down-12`.
+
+  **Measured before building any of it: a half-typed expression is safe.** The inspector re-renders on every
+  keystroke, so `x^`, `x^2 -`, `√x` and `` all reach the figure engine. Every one of them is reported on the
+  figure itself — "function 1 not plotted — unexpected end of expression", "unexpected character √" — and
+  skipped. Nothing throws, the page stays alive, and no other object is disturbed. The editor therefore
+  needs no debounce and no validation of its own; the engine already says exactly what is wrong.
+
+  Four drives to failure: the axis switch leaving both keys set, a type offered that the renderer ignores, a
+  graph seeded with nothing to plot, and a point's coordinate bound to its row rather than into it.
+
+### Fixed
+- **A control that crashed instead of failing** (`scripts/verify-mx-authoring.mjs`). The object-type check
+  clicked each add button directly, so removing one made the click throw and killed the run before it could
+  report — the one thing a control must never do is be unable to say it failed. It now reads the offered set
+  back and names what is missing.
+
+### Added (stage 3A)
 - **Stage 3A — the lesson's structure is fully editable** (`lesson-studio.html`,
   `scripts/verify-mx-authoring.mjs` now 21 checks). Two things, both on the machinery Stage 2 established:
   - **Reorder.** Groups, examples, steps and representations all move by `↑ ↓` on their outline row, through

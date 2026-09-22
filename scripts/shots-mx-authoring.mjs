@@ -58,6 +58,18 @@ await p.waitForTimeout(300);
 await set('mx.s.0.0.1', 'What this step does', 'Evaluate. A negative multiplied by a negative gives a positive.');
 await set('mx.s.0.0.1', 'Mathematics', '_y_ = (−4)(−4) = 16');
 await shot('5-steps', 'two worked steps, the notation set as mathematics');
+/* the graph, authored through the same outline */
+await p.evaluate(() => { const g = LESSON.slides[cur].groups[0];
+  g.relations = [{ kind: 'figure', figure: { type: 'figure', figure: 'graph', aspect: 'equal', grid: 'shown',
+      domain: { xMin: -6.5, xMax: 6.5, yMin: -1, yMax: 11 },
+      objects: [{ type: 'function', f: 'x^2', label: 'y = x^2' }, { type: 'line', y: 9, label: 'y = 9' },
+                { type: 'points', rows: [['(−3, 9)', -3, 9], ['(3, 9)', 3, 9]] }] } },
+    { kind: 'relations', label: 'The same fact, on the curve',
+      items: ['The horizontal line _y_ = 9 meets _y_ = _x_^2 at exactly the two points the cases found.'] }];
+  selZone = 'mx.o.0.0'; renderSlide(); });
+await shot('7-graph', 'the graph: its function, reference line and marked points, all in the outline');
+await p.evaluate(() => { selZone = 'mx.f.0'; renderSlide(); });
+await shot('8-window', 'the window the graph is drawn in — and the shape decides the composition');
 await p.evaluate(() => { selZone = null; renderSlide(); });
 await p.evaluate(() => document.querySelector('#modeSeg [data-mode="study"]').click());
 await p.waitForTimeout(600);

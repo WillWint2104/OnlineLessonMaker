@@ -210,6 +210,128 @@ await p.evaluate(({ e }) => { const g = LESSON.slides[cur].groups[0];
     steps: [{ id: 's1', text: e.stepText, math: e.stepMath }] }];
   selZone = null; renderSlide(); }, { e: EDIT });
 
+console.log('\n--- graph authoring (3B) ---');
+/* the graph is added from the outline, not injected — and a seeded graph must render at once */
+const fig = await p.evaluate(() => { const g = LESSON.slides[cur].groups[0];
+  delete g.relations; selZone = 'mx.g.0'; renderSlide();
+  const add = document.querySelector('[data-mxadd="f.0"]'); const offered = !!add; if (add) add.click();
+  const F = (LESSON.slides[cur].groups[0].relations || [])[0];
+  return { offered, kind: F && F.kind, objs: F && (F.figure.objects || []).map((o) => o.type),
+    rows: document.querySelectorAll('[data-mxsel^="mx.o."]').length }; });
+ok('a graph can be ADDED to a group from the outline, seeded so it plots the moment it exists',
+   fig.offered && fig.kind === 'figure' && fig.objs.join() === 'function' && fig.rows === 1,
+   `relation kind "${fig.kind}", objects [${(fig.objs || []).join(', ')}], ${fig.rows} object row(s)`);
+/* A MISSING BUTTON MUST FAIL THIS CHECK, NOT KILL THE RUN. Clicking a null threw and the whole gate died
+   before it could report, which is the one thing a control must never do — it has to be able to SAY it
+   failed. The offered set is read back and compared instead. */
+const objAdd = await p.evaluate(() => { const missing = [];
+  for (const t of ['line', 'points', 'segment']) { const b = document.querySelector(`[data-mxadd="o.0.${t}"]`);
+    if (b) b.click(); else missing.push(t); }
+  const o = LESSON.slides[cur].groups[0].relations[0].figure.objects;
+  return { types: o.map((x) => x.type), missing,
+    offered: [].slice.call(document.querySelectorAll('[data-mxadd^="o.0."]')).map((b) => b.dataset.mxadd.split('.').pop()),
+    line: o[1] || null, seg: o[3] || null }; });
+ok('and every object type the RENDERER accepts can be added — function, line, points, segment, and nothing else',
+   objAdd.types.join() === 'function,line,points,segment' && !objAdd.missing.length
+   && objAdd.offered.join() === 'function,line,points,segment',
+   `offered [${objAdd.offered.join(', ')}] · built [${objAdd.types.join(', ')}]`
+   + (objAdd.missing.length ? ` · MISSING ${objAdd.missing.join(', ')}` : '')
+   + (objAdd.line ? ` · line seeded ${JSON.stringify(objAdd.line)}` : ''));
+/* the mathematics itself: type an expression and watch the painted curve change */
+const curve = await p.evaluate(() => {
+  const setField = (zone, label, value) => { selZone = zone; renderSlide();
+    const ins = document.querySelector('#inspector');
+    const l = [].slice.call(ins.querySelectorAll('label')).find((x) => x.textContent.indexOf(label) === 0);
+    const el = l && l.nextElementSibling; if (!el) return null;
+    el.value = value; el.dispatchEvent(new Event('input', { bubbles: true })); return el.dataset.bind; };
+  /* THE CURVE IS A <polyline>, not a path — figSvg.polyline emits the sampled function. Measuring path[d]
+     found only an axis arrow and reported the same 20 characters whatever the expression said. */
+  const path = () => { const fg = document.querySelector('.mx-wexfoot .tp-fig');
+    if (!fg) return { d: '', err: null };
+    const ps = [].slice.call(fg.querySelectorAll('polyline[points]')).map((x) => x.getAttribute('points') || '');
+    return { d: ps.sort((a, b) => b.length - a.length)[0] || '', err: +fg.getAttribute('data-tp-fig-errors') }; };
+  /* measure the FUNCTION's own curve — the segment added above refers to a point "B" that does not exist,
+     which is its own reported error and would otherwise be read as this edit failing */
+  LESSON.slides[cur].groups[0].relations[0].figure.objects =
+    [LESSON.slides[cur].groups[0].relations[0].figure.objects[0]];
+  const before = path();
+  const bound = setField('mx.o.0.0', 'y = ', 'x^2 - 4');
+  const after = path();
+  return { bound, changed: before.d !== after.d, beforeLen: before.d.length, afterLen: after.d.length,
+    authored: LESSON.slides[cur].groups[0].relations[0].figure.objects[0].f, err: after.err }; });
+ok('editing the FUNCTION writes to the page JSON and repaints the curve through the figure engine',
+   curve.authored === 'x^2 - 4' && curve.changed && curve.afterLen > 100 && curve.err === 0,
+   `bound ${curve.bound} · f = "${curve.authored}" · painted path ${curve.beforeLen} → ${curve.afterLen} chars, ${curve.err} figure error(s)`);
+/* a half-typed expression must not break anything — the engine reports and skips */
+const midTyping = await p.evaluate(() => { const o = LESSON.slides[cur].groups[0].relations[0].figure.objects[0];
+  const out = []; for (const f of ['x^', 'x^2 -', '√x', '']) { o.f = f; let threw = null;
+    try { renderSlide(); } catch (e) { threw = String(e); }
+    const fg = document.querySelector('.mx-wexfoot .tp-fig');
+    out.push({ f, threw, err: fg ? +fg.getAttribute('data-tp-fig-errors') : null,
+      msg: fg ? ((fg.querySelector('.tp-fig-err') || {}).textContent || '').slice(0, 44) : '',
+      alive: !!document.querySelector('.mx-page') }); }
+  o.f = 'x^2'; renderSlide(); return out; });
+ok('a HALF-TYPED expression is reported on the figure and skipped — it never throws and never breaks the page',
+   midTyping.every((r) => !r.threw && r.alive && r.err >= 1 && r.msg),
+   midTyping.map((r) => `"${r.f}"→${r.err} err`).join(' · ') + ` · e.g. ${midTyping[0].msg}`);
+/* THE LINE'S ONE-OF-x-OR-y RULE. The renderer skips a line that has both or neither, so the editor must
+   MOVE the value rather than add a second key. */
+const axis = await p.evaluate(() => { const fo = LESSON.slides[cur].groups[0].relations[0].figure.objects;
+  fo.push({ type: 'line', y: 0, style: 'dashed' }, { type: 'points', rows: [['A', 0, 0]] });
+  selZone = 'mx.o.0.1'; renderSlide();
+  const o = () => LESSON.slides[cur].groups[0].relations[0].figure.objects[1];
+  o().y = 9; renderSlide(); selZone = 'mx.o.0.1'; renderSlide();
+  const sl = document.querySelector('[data-mxaxis]'); const before = JSON.stringify(o());
+  sl.value = 'x'; sl.dispatchEvent(new Event('change', { bubbles: true }));
+  const after = JSON.stringify(o());
+  return { before, after, hasX: 'x' in o(), hasY: 'y' in o(), val: o().x }; });
+ok('switching a reference line between horizontal and vertical MOVES the value — never both keys, never neither',
+   axis.hasX && !axis.hasY && +axis.val === 9, `${axis.before} → ${axis.after}`);
+/* marked points: rows are [id,x,y] arrays, and a bound path must reach inside one */
+const pts = await p.evaluate(() => { selZone = 'mx.o.0.2'; renderSlide();
+  document.querySelector('[data-mxrowadd]').click(); selZone = 'mx.o.0.2'; renderSlide();
+  const ins = document.querySelector('#inspector');
+  const labels = [].slice.call(ins.querySelectorAll('label')).map((x) => x.textContent);
+  const xs = [].slice.call(ins.querySelectorAll('[data-bind]')).filter((e) => /rows\.1\.1$/.test(e.dataset.bind))[0];
+  if (xs) { xs.value = '3'; xs.dispatchEvent(new Event('input', { bubbles: true })); }
+  const rows = LESSON.slides[cur].groups[0].relations[0].figure.objects[2].rows;
+  return { n: rows.length, row1: rows[1], bound: xs && xs.dataset.bind, labels: labels.slice(0, 4) }; });
+ok('marked points are editable row by row, and a bound path reaches INSIDE the [id, x, y] array',
+   pts.n === 2 && pts.row1 && String(pts.row1[1]) === '3' && /rows\.1\.1$/.test(pts.bound || ''),
+   `${pts.n} rows · bound ${pts.bound} · row 2 now ${JSON.stringify(pts.row1)}`);
+/* THE COMPOSITION MUST STILL FOLLOW THE GEOMETRY — the approved rule, so a domain edit SHOULD move it */
+const comp = await p.evaluate(() => {
+  /* THE STAGE FORM NEEDS A COMPANION. mxWexFootRender emits the GRAPH | INTERPRETATION stage only when the
+     plane has a reading beside it; a figure alone correctly takes the plain full-width foot, which carries
+     no data-mx-sub at all. The real lesson pairs every graph with its reading, so the test does too. */
+  const g = LESSON.slides[cur].groups[0], fig = g.relations[0].figure;
+  fig.objects = [{ type: 'function', f: 'x^2' }];
+  g.relations = [g.relations[0], { kind: 'relations', label: 'Reading the curve', items: ['What the picture shows.'] }];
+  const read = () => { renderSlide();
+    const pane = [].slice.call(document.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0]
+      || document.querySelector('[data-mx-panel]');
+    const fo = (pane || document).querySelector('.mx-wexfoot[data-mx-form="pair"]');
+    const gz = fo && fo.querySelector('[data-mx-region="graph"]');
+    return { sub: fo && fo.getAttribute('data-mx-sub'), w: gz ? Math.round(gz.getBoundingClientRect().width) : 0,
+      /* BELOW THE DESKTOP SURFACE BOTH SUBDESIGNS TAKE THE FULL WIDTH — the approved tablet behaviour, and
+         in Edit the inspector narrows the surface past that threshold, so the widths are equal by design.
+         The DECISION is still the thing under test, and it is carried on data-mx-sub either way. */
+      stage: document.querySelector('.mx').dataset.mxFoot }; };
+  fig.domain = { xMin: -5, xMax: 5, yMin: -1, yMax: 11 }; const tall = read();
+  fig.domain = { xMin: -12, xMax: 12, yMin: -2, yMax: 6 }; const wide = read();
+  return { tall, wide }; });
+ok('and the COMPOSITION still follows the authored geometry — a wide window earns the full grid, everything else the centred stage',
+   comp.tall.sub === 'down-8' && comp.wide.sub === 'down-12'
+   && (comp.wide.stage === 'stage' ? comp.wide.w > comp.tall.w : comp.wide.w === comp.tall.w),
+   `tall window → ${comp.tall.sub} at ${comp.tall.w}px · wide window → ${comp.wide.sub} at ${comp.wide.w}px · surface "${comp.wide.stage}"`
+   + (comp.wide.stage === 'stage' ? '' : ' (below the desktop surface both take the full width, as approved — the decision is what moved)'));
+/* restore for the save/reopen section */
+await p.evaluate(({ e }) => { const g = LESSON.slides[cur].groups[0];
+  delete g.relations; g.type = 'sequence'; delete g.states; g.title = e.gTitle;
+  g.examples = [{ id: 'ex1', label: 'A negative value', prompt: e.prompt, answer: e.answer,
+    steps: [{ id: 's1', text: e.stepText, math: e.stepMath }] }];
+  selZone = null; renderSlide(); }, { e: EDIT });
+
 console.log('\n--- save, leave, reopen ---');
 /* the app's real persistence: serialise exactly as Export does, then OPEN THAT DOCUMENT FRESH */
 EXPORTED = await p.evaluate(() => {
