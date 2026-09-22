@@ -537,6 +537,94 @@ console.log('\n--- an expression that reads differently from how it was typed sa
      noisy.length === 0, noisy.length ? `flagged: ${noisy.join(', ')}` : `${QUIET.length} expression(s), none flagged`);
 }
 
+console.log('\n--- a curve can be told from the one beside it ---');
+{
+  /* Stage 5 · 3. Four curves on one plane were painted `rgb(15,122,76) / 2px / none` — one distinct style
+     — and a function's `label` was collected by figGraph and never drawn, so the straight-lines lesson's
+     "Comparing steepness" had to be carried entirely by the prose beside the picture (FINDINGS.md §3).
+     SHAPE FIRST: a dash pattern differentiates in every theme, in print, and without asking a reader to
+     tell two colours apart. The name is the second half, and it is opted into per figure, because 38
+     committed function objects already carry a `label` written before any painter could draw one. */
+  const FIG = 'slides.0.groups.0.relations.0.figure';
+  const put = (objs) => p.evaluate((o) => { const g = LESSON.slides[cur].groups[0];
+    g.relations = [{ kind: 'figure', figure: { type: 'figure', figure: 'graph', aspect: 'equal', grid: 'shown',
+      domain: { xMin: -5, xMax: 5, yMin: -4, yMax: 6 }, objects: JSON.parse(o) } }];
+    selZone = 'mx.o.0.0'; renderSlide(); }, JSON.stringify(objs));
+  const read = () => p.evaluate(() => ({
+    pens: [...new Set([...document.querySelectorAll('#slide .tp-fig-svg polyline')].map((e) => e.getAttribute('class')))],
+    strokes: [...new Set([...document.querySelectorAll('#slide .tp-fig-svg polyline')]
+      .map((e) => { const c = getComputedStyle(e); return `${c.stroke}/${c.strokeWidth}/${c.strokeDasharray}`; }))],
+    labs: [...document.querySelectorAll('#slide .tp-fig-fnlab')].map((e) => e.textContent),
+    /* every curve name and every point identifier, as painted boxes, so "it is an obstacle" is measured */
+    boxes: [...document.querySelectorAll('#slide .tp-fig-fnlab')].map((e) => e.getBoundingClientRect())
+      .map((r) => ({ x: r.x, y: r.y, w: r.width, h: r.height })),
+    pills: [...document.querySelectorAll('#slide .tp-fig-ptid, #slide .tp-fig-pill')].map((e) => e.getBoundingClientRect())
+      .map((r) => ({ x: r.x, y: r.y, w: r.width, h: r.height })),
+    curveLabels: (getP(LESSON, 'slides.0.groups.0.relations.0.figure') || {}).curveLabels }));
+
+  /* THE DEFECT, MEASURED FIRST — three gradients through one intercept, authored the way they were before
+     this stage existed: a name on each and nothing asking for it. */
+  await put([{ type: 'function', f: '2x+1', label: 'y = 2x + 1' },
+             { type: 'function', f: 'x+1', label: 'y = x + 1' },
+             { type: 'function', f: '(1/2)x+1', label: 'y = ½x + 1' },
+             { type: 'function', f: '-x+1', label: 'y = −x + 1' },
+             { type: 'function', f: 'x^2-3', label: 'y = x² − 3' },
+             /* plotted points, so "a name is an obstacle" is measured against identifiers that EXIST — a
+                check read in the one state where the defect is invisible is the same failure as no check */
+             { type: 'points', from: 'table', rows: [['A', 2, 5], ['B', -3, -2], ['C', 4, 3]] }]);
+  await p.waitForTimeout(300);
+  const plain = await read();
+  ok('A LABEL WRITTEN BEFORE THIS STAGE STILL DRAWS NOTHING, and every curve is still the one mark it was',
+     plain.pens.length === 1 && plain.pens[0] === 'tp-fig-fn' && plain.labs.length === 0,
+     `${plain.pens.length} distinct class(es) ${JSON.stringify(plain.pens)} · ${plain.labs.length} name(s) drawn`);
+
+  /* NOW AUTHOR IT, through the panel: name the first curve, then give the other two their own pen. */
+  await p.fill(`#inspector [data-bind="${FIG}.objects.0.label"]`, 'y = 2x + 1');
+  await p.waitForTimeout(250);
+  const oneNamed = await read();
+  ok('…and typing a name in the panel turns the graph’s curve names on, once — the field is not a dead end',
+     oneNamed.curveLabels === 'shown' && oneNamed.labs.length === 5,
+     `curveLabels is ${JSON.stringify(oneNamed.curveLabels)} and ${oneNamed.labs.length} name(s) are drawn: ${oneNamed.labs.join(' · ')}`);
+  for (const [i, pen] of [[1, 'dashed'], [2, 'dotted'], [3, 'dashdot'], [4, 'quiet']]) {
+    await p.evaluate((z) => { selZone = z; renderSlide(); }, `mx.o.0.${i}`);
+    await p.waitForTimeout(200);
+    await p.selectOption(`#inspector [data-bind="${FIG}.objects.${i}.pen"]`, pen);
+    await p.waitForTimeout(220);
+  }
+  const done = await read();
+  ok('FIVE CURVES ON ONE PLANE ARE NOW FIVE DIFFERENT MARKS, and each says which it is',
+     done.pens.length === 5 && done.strokes.length === 5 && done.labs.length === 5,
+     `${done.pens.length} class(es), ${done.strokes.length} painted stroke(s): ${done.strokes.join(' | ')} · names ${done.labs.join(' · ')}`);
+  /* …AND A NAME IS AN OBSTACLE. A point identifier that lands on a curve's name is two marks in one place;
+     figFnLabBoxes reserves the same geometry figFnLabAt paints. */
+  const hit = done.boxes.filter((b) => done.pills.some((q) => b.x < q.x + q.w && q.x < b.x + b.w && b.y < q.y + q.h && q.y < b.y + b.h));
+  ok('…and no point identifier is placed on top of a curve’s name', hit.length === 0 && done.pills.length > 0,
+     `${done.boxes.length} name(s) against ${done.pills.length} identifier(s), ${hit.length} overlap(s)`);
+
+  /* THE PEN VOCABULARY IS LOOKED UP, NEVER ASSEMBLED. figDraw interpolates `class="${cls}"` RAW, so a pen
+     that reached the attribute would be an injection point — and a plain object literal would answer
+     "constructor" with the Object constructor, whose source would then be stringified into the markup. */
+  await put([{ type: 'function', f: 'x^2', pen: 'constructor' },
+             { type: 'function', f: 'x', pen: '" onload="alert(1)' },
+             { type: 'function', f: 'x-2', pen: '__proto__' }]);
+  await p.waitForTimeout(300);
+  const evil = await read();
+  const raw = await p.evaluate(() => document.querySelector('#slide .tp-fig-svg').innerHTML);
+  ok('AN AUTHORED PEN OUTSIDE THE VOCABULARY DRAWS THE ORDINARY CURVE — and reaches no attribute',
+     evil.pens.length === 1 && evil.pens[0] === 'tp-fig-fn' && !/onload|function Object|\[native code\]/.test(raw),
+     `${evil.pens.length} class(es) ${JSON.stringify(evil.pens)}; markup carries no injected attribute`);
+
+  /* AND THE DEFAULT IS BYTE-IDENTICAL. No pen, no names asked for: exactly `class="tp-fig-fn"`, no trailing
+     space — which is what keeps all 240 figure-render units and every committed figure where they were. */
+  await put([{ type: 'function', f: 'x^2', label: 'y = x²' }]);
+  await p.waitForTimeout(300);
+  const dflt = await p.evaluate(() => ({ html: document.querySelector('#slide .tp-fig-svg').innerHTML,
+    labs: document.querySelectorAll('#slide .tp-fig-fnlab').length }));
+  ok('…and a curve that asked for nothing emits exactly class="tp-fig-fn" and draws no name',
+     /class="tp-fig-fn"/.test(dflt.html) && !/class="tp-fig-fn /.test(dflt.html) && dflt.labs === 0,
+     `${dflt.labs} name(s) drawn; the class attribute is exactly "tp-fig-fn"`);
+}
+
 console.log('\n--- mathematics is entered, not remembered ---');
 await p.evaluate(() => { selZone = 'mx.s.0.0.0'; renderSlide(); });
 await p.waitForTimeout(250);

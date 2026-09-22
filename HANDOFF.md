@@ -904,8 +904,33 @@ renderer is referenced.
   - The two corpus-wide invariants that now guard `mxM` live in `verify-notes-examples.mjs`: no committed
     string loses or gains a visible character, and no built-up fraction is a division that was not written.
     They are what the NEXT widening will be measured against.
-  STILL OPEN from the findings: curves cannot be told apart (§3), everything you add arrives empty (§4), a
-  table's columns are built one at a time (§5), reordering is one click per place (§6).
+  **STAGE 5 · 3 — A CURVE CAN BE TOLD FROM THE ONE BESIDE IT.** Two new authored keys; the Figure Engine's
+  geometry, placement solver and composition rules are untouched.
+  - `{"type":"function","pen":"dashed"|"dotted"|"dashdot"|"quiet"}` — SHAPE FIRST. A dash reads in every
+    theme, survives a photocopy and asks nobody to tell two teals apart (WCAG 1.4.1); a second colour token
+    would have failed all three, since the mathematics pack declares ONE accent and `ww1`/`rome`/`wellbeing`
+    declare no `--secondary` at all. `quiet` is the one ink variation and borrows the reference line's token.
+    THE CLASS IS LOOKED UP, NEVER ASSEMBLED: `figDraw` interpolates `class="${cls}"` RAW and escapes only
+    text, so `FIG_FN_PEN` has a null prototype (`"constructor"`, `"__proto__"` are not members) and its value
+    is re-checked as a string. An authored `"pen":"constructor"` draws the ordinary curve.
+  - `curveLabels:"shown"` on the FIGURE, in the same vocabulary as `grid` and `callouts`, draws each curve's
+    `label` at the end of its longest arm. OPT-IN because 38 committed function objects already carry a
+    `label` written before any painter could draw one. Typing a name in the panel sets the switch the first
+    time, so the field is not a dead end. `figFnLabBoxes` reserves exactly what `figFnLabAt` paints, at both
+    the inline and the expanded solve, so no point identifier lands on a name.
+  - `figure-render`: **0 moved · 36 added · 0 removed**, baseline now 276. The 36 are
+    `tests/visual/lessons/figure-curve-identity.json`, added in the same change because nothing committed
+    carries a pen or asks for names — its third slide carries labels and does NOT ask for them.
+
+  **STAGE 5 · 4 — THE REPETITIVE OPERATIONS.** A new group arrives with one example, a new example with one
+  step (§4). A **Columns** field sizes a table in one entry (§5). Shift + ↑/↓ moves a row to the top or the
+  end (§6); for adjacent positions the splice is exactly the swap it replaced. `verify-quadratics-authoring`
+  was re-aimed for the seeding — its rebuild loop counted on adds arriving empty — and now pays one delete
+  for each of the two groups the lesson ends with that carry no worked example.
+
+  STILL OPEN from the findings: the object called `line` is axis-parallel only (§7), `rise/run` stays a
+  slash because a fraction needs numbers both sides (§8), and the figure's axis numbering uses a hyphen
+  where the lesson's prose uses a minus (§9).
 
   **STILL TO AUTHOR**: a FIGURE attached to an example or a step. `mxPart` renders one anywhere, but the
   object editor is addressed per group (`mx.f` / `mx.o`, one graph per group, found the way the renderer

@@ -8,6 +8,47 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 5 · 4 — the repetitive operations, from the friction log.** Three findings, three small changes,
+  all in the panel.
+  - **EVERYTHING YOU ADD ARRIVES READY TO TYPE INTO** (§4). A new group arrives with one example, a new
+    example with one step — the shape the palette's page always had. One definition of "a new example",
+    used by both adds, so the two cannot drift. The page no longer reads "This example has no solution
+    steps yet." on the way to being written.
+  - **A TABLE IS GIVEN ITS COLUMNS** (§5). A **Columns** field above the grid, so a six-column table of
+    values is one entry rather than four 「＋ Add column」 clicks. Same mutation as the button, which stays.
+  - **SHIFT TAKES A ROW THE WHOLE WAY** (§6). ↑ and ↓ still move one place; holding Shift moves the row to
+    the top or the end, so putting the last step of a five-step solution first is one click rather than
+    four. For adjacent positions the splice is exactly the swap it replaced, so the ordinary click is
+    unchanged.
+  `verify-quadratics-authoring` was deliberately re-aimed for the new seeding — it rebuilds the whole
+  quadratics lesson through the panel, and its loop counted on adds arriving empty. It now adds one fewer
+  control per example and per step, and pays one delete for each of the two groups the lesson ends with
+  that carry no worked example, which is a legitimate authored shape.
+- **Stage 5 · 3 — a curve can be told from the one beside it.** Four curves on one plane were painted
+  `rgb(15, 122, 76) / 2px / none` — one distinct style — and `figGraph` collected a function's `label` that
+  the painter never drew, so *Comparing steepness* had to be carried entirely by the prose beside the
+  picture (FINDINGS.md §3). Two new authored keys, and the Figure Engine's geometry, placement solver and
+  composition rules are untouched.
+  - **A PEN, SHAPE FIRST.** `{"type":"function", "pen":"dashed"}` — also `dotted`, `dashdot`, and `quiet`
+    for a background curve. A dash pattern differentiates in **every** theme, survives a photocopied
+    worksheet, and does not ask a reader to tell two teals apart (WCAG 1.4.1) — which a second colour
+    token would have, since the mathematics pack declares one accent and three packs declare no
+    `--secondary` at all. `quiet` is the one ink variation and borrows the token the reference line
+    already uses. The class is **looked up, never assembled**: `figDraw` interpolates `class="${cls}"` raw
+    and escapes only text, so the map has a null prototype and its value is re-checked as a string —
+    an authored `"pen":"constructor"` draws the ordinary curve and reaches no attribute.
+  - **A NAME, OPTED INTO PER FIGURE.** `curveLabels:"shown"` on the figure, in the same vocabulary as
+    `grid` and `callouts`, draws each curve's `label` at the end of its longest arm. It is opt-in because
+    **38 committed function objects already carry a `label`** written before any painter could draw one;
+    drawing them unasked would have re-rendered two lessons and five fixtures. Typing a name in the panel
+    turns the switch on the first time, so the field is not a dead end for the author in front of us. The
+    name is an obstacle as well as a mark — `figFnLabBoxes` reserves exactly the geometry `figFnLabAt`
+    paints, at both the inline and the expanded-workspace solve — so no point identifier lands on it.
+  - **Inertness, measured**: `figure-render` reports **0 moved · 36 added · 0 removed** — every one of the
+    240 existing units byte-identical, the 36 new ones from `tests/visual/lessons/figure-curve-identity.json`,
+    a fixture added in the same change because nothing already committed carries a pen or asks for names,
+    and a feature with no rendered coverage is a feature that ships untested. Its third slide is a figure
+    that carries labels and does *not* ask for them, which must keep rendering exactly as it did.
 - **Stage 5 · the two mathematical defects the authoring review found.** Both are the smallest change that
   fixes them: `figParse` is not touched, the lesson schema is not migrated, and no editor framework arrives.
   - **AN EXPRESSION THAT READS DIFFERENTLY FROM HOW IT WAS TYPED NOW SAYS SO.** `1/2x+1` is a valid

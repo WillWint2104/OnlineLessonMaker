@@ -154,9 +154,14 @@ for (let gi = 0; gi < PAGE.groups.length; gi++) {
   await set(`${gb}.lede`, g.lede);
   if (g.footLabel) await set(`${gb}.footLabel`, g.footLabel);
 
-  /* THE EXAMPLES AND THEIR WORKINGS. The seeded group already holds one example with one step; every
-     further one is added with the button the outline renders for it. */
-  const seeded = gi === 0 ? 1 : 0;
+  /* THE EXAMPLES AND THEIR WORKINGS. EVERY group now arrives holding one example with one step — the
+     palette's page did from the start, and since Stage 5 · 4 an ADDED group and an ADDED example do too
+     (FINDINGS.md §4: the first example of a lesson was free and every one after it cost two more clicks,
+     with the page reading "This example has no solution steps yet." in between). So the rebuild adds one
+     fewer control per example and per step — and pays one DELETE for the two groups this lesson ends with
+     that carry no worked example at all, which is a legitimate authored shape and now costs a click. */
+  const seeded = 1;
+  if (!g.examples.length) { await press('data-mxdel', `e.${gi}.0`); }
   for (let ei = 0; ei < g.examples.length; ei++) {
     if (ei >= seeded) await add(`e.${gi}`);
     await pick(`mx.e.${gi}.${ei}`);
@@ -164,7 +169,7 @@ for (let gi = 0; gi < PAGE.groups.length; gi++) {
     await set(`${eb}.label`, ex.label);
     await set(`${eb}.prompt`, ex.prompt);
     await set(`${eb}.answer`, ex.answer);
-    const seededSteps = (gi === 0 && ei === 0) ? 1 : 0;
+    const seededSteps = 1;
     for (let si = 0; si < (ex.steps || []).length; si++) {
       if (si >= seededSteps) await add(`s.${gi}.${ei}`);
       await pick(`mx.s.${gi}.${ei}.${si}`);
