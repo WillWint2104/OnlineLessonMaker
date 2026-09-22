@@ -1968,6 +1968,9 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-stn{font-size:11.5px;font-weight:700;letter-spacing:.04em;color:var(--mx-ink-3);}
 .mx-stbtn.on .mx-stn{color:var(--mx-green);}
 .mxchks{display:flex;flex-wrap:wrap;gap:6px 14px;margin:2px 0 10px;}
+.inspector .mxcol{display:flex;align-items:flex-end;gap:6px;margin-bottom:6px;}
+.inspector .mxcol .ii{flex:1;min-width:0;}
+.inspector .mxcol>label{display:none;}
 .mxchk{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mx-ink-2,#4a5550);text-transform:none;letter-spacing:0;}
 .mx-stpane[hidden]{display:none;}          /* a hidden state reserves no layout space */
 .mx-stpane{min-width:0;}
@@ -5281,13 +5284,72 @@ const MX_PAGE_SEED={
         steps:[{ id:'s1', text:'Describe the first move.', math:'_y_ = _x_^2' }],
         answer:'State the result.' }] }] },
 };
+/* THE COMPANION VOCABULARY an author may add anywhere a part can live. `figure` is deliberately absent:
+   one graph per group, found the way the renderer finds it, with its own row and its own object editor. */
+const MX_PART_KINDS=['prose','relations','points','table'];
 /* offered only where the page family that renders it is actually registered for this theme */
 function mxAuthorablePages(){ const t=(LESSON.meta&&LESSON.meta.theme)||'', byTheme=PAGES[t]||{};
   return Object.keys(MX_PAGE_SEED).filter(k=>byTheme[k]&&byTheme[k].layoutMode==='responsive'); }
-function mxPageSeed(t){ return JSON.parse(JSON.stringify(MX_PAGE_SEED[t])); }
-/* selection: mx.g.<group> · mx.e.<group>.<example> · mx.s.<group>.<example>.<step> */
-function mxSel(sel){ const m=/^mx\.([gestfo])\.(\d+)(?:\.(\d+))?(?:\.(\d+))?$/.exec(String(sel||''));
-  return m?{kind:m[1],g:+m[2],e:m[3]==null?null:+m[3],s:m[4]==null?null:+m[4]}:null; }
+/* A NEW PAGE IS STAMPED WITH AN ID, once, at creation. tpRespId() keys the response store on it and a page
+   without one "does not participate" — so a page made in the app would silently lose the very student
+   responses a page loaded from a file keeps. Generated rather than typed, for the same reason every group,
+   example and step id is: it must be stable and unique, and neither is an author's job. */
+function mxPageSeed(t){ const o=JSON.parse(JSON.stringify(MX_PAGE_SEED[t]));
+  o.id=t.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'-'+Math.random().toString(36).slice(2,7); return o; }
+/* selection: mx.g.<group> · mx.e.<group>.<example> · mx.s.<group>.<example>.<step>
+   and the COMPANION PARTS, which are one vocabulary in three places, so they read as one address too:
+     mx.p.<group>.<part>                     a part of the group's closing relations
+     mx.v.<group>.<example>.<part>           a part of an example's companion
+     mx.w.<group>.<example>.<step>.<part>    a part of a step's companion
+   Each kind fills the index positions it needs and leaves the rest null, exactly as `t` and `o` already
+   put a state / object index in the second position. */
+function mxSel(sel){ const m=/^mx\.([gestfopvw])\.(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?$/.exec(String(sel||''));
+  return m?{kind:m[1],g:+m[2],e:m[3]==null?null:+m[3],s:m[4]==null?null:+m[4],k:m[5]==null?null:+m[5]}:null; }
+/* IS THIS SELECTION INSIDE AN EXAMPLE? Only these kinds put an EXAMPLE index in the second position — for
+   `t` and `o` that number is a state or an object — so only these may open an example's step list. */
+function mxInEx(S){ return !!S&&(S.kind==='e'||S.kind==='s'||S.kind==='v'||S.kind==='w'); }
+/* WHERE A PART LIVES. One resolver for all three hosts: the array it belongs to, the index inside it and
+   the data-bind base, so every form and every button below is written once rather than three times. */
+function mxPartHost(s,S,base){
+  const g=mxGroups(s)[S.g]; if(!g) return null;
+  const gb=`${base}.groups.${S.g}`;
+  if(S.kind==='p') return {owner:g,key:'relations',path:`${gb}.relations`,k:S.e};
+  const ex=(g.examples||[])[S.e]; if(!ex) return null;
+  if(S.kind==='v') return {owner:ex,key:'visual',path:`${gb}.examples.${S.e}.visual`,k:S.s};
+  const st=(ex.steps||[])[S.s]; if(!st) return null;
+  if(S.kind==='w') return {owner:st,key:'visual',path:`${gb}.examples.${S.e}.steps.${S.s}.visual`,k:S.k};
+  return null;
+}
+/* mxParts() reads a bare object, a {parts:[…]} wrapper and an array alike. AUTHORING WRITES ONE SHAPE —
+   an array — so add, remove and reorder are the same three lines here that they are everywhere else in
+   this panel, and a lesson authored either of the other two ways is migrated in place the first time it
+   is edited rather than growing a second representation beside the first. */
+function mxPartsArr(owner,key){
+  const v=owner[key];
+  if(Array.isArray(v)) return v;
+  if(v&&typeof v==='object'&&Array.isArray(v.parts)) return (owner[key]=v.parts.filter(x=>x&&typeof x==='object'));
+  if(v&&typeof v==='object'&&v.kind) return (owner[key]=[v]);
+  return (owner[key]=[]);
+}
+/* A NEW PART, SEEDED SO IT RENDERS THE MOMENT IT EXISTS. An empty part draws a placeholder and teaches the
+   author nothing about what that kind of part is for. The table is seeded RECTANGULAR — two columns and
+   one row whose `cells` is already the width of `head` — because every mutation below preserves that and
+   setP cannot create a missing level. */
+function mxPartSeed(kind){
+  return {prose:{kind:'prose',body:'What this shows.'},
+    relations:{kind:'relations',label:'What to notice',items:['State the first relationship.']},
+    points:{kind:'points',label:'',items:['State the first point.']},
+    table:{kind:'table',label:'',stub:'',head:['Column 1','Column 2'],rows:[{label:'Row 1',cells:['','']}]}}[kind]||null;
+}
+function mxPartLabel(pt){
+  const k=String((pt&&pt.kind)||'part');
+  if(k==='prose') return 'Prose · '+String((pt.body||'')).slice(0,34);
+  if(k==='relations') return 'Relationships · '+((pt.items||[]).length)+' listed';
+  if(k==='points') return 'Points · '+((pt.items||[]).length)+' listed';
+  if(k==='table') return 'Table · '+((pt.head||[]).length)+' × '+((pt.rows||[]).length);
+  if(k==='figure') return 'Graph';
+  return k;
+}
 function mxGroups(s){ return Array.isArray(s.groups)?s.groups:[]; }
 /* THE OUTLINE IS THE STRUCTURE, and it is the only new UI: every field below it is an existing helper
    (inT/inA/inSel) writing an ordinary data-bind path, so setP/getP and the live re-render do the work
@@ -5313,6 +5375,45 @@ function mxObjLabel(o){
   if(o.type==='points') return 'points · '+mxObjRows(o).length+' marked';
   if(o.type==='segment'){ const b=Array.isArray(o.between)?o.between:[o.from,o.to]; return 'segment · '+(b[0]||'?')+'–'+(b[1]||'?'); }
   return String(o.type);
+}
+/* THE TABLE OF VALUES. `head` is the column headings, `stub` the corner cell above the row headings, and
+   each row is {label, cells} — exactly the shape mxPartTable reads, with no second idea of a table.
+   EVERY ROW IS THE WIDTH OF THE HEADINGS. Adding a column appends an empty cell to every row and removing
+   one splices the same index out of each, because a ragged table in the JSON is a ragged table on the page
+   and no author asked for one. It is also what makes the per-cell data-bind paths safe: setP walks an
+   existing path and does not create it, so the shape has to be complete before a cell can be typed into.
+   Every cell goes through mxM() on render, so _x_, ^2 and 3/4 mean here what they mean in a step. */
+function mxTableForm(path,c,sel){
+  const head=Array.isArray(c.head)?c.head:[], rows=Array.isArray(c.rows)?c.rows:[];
+  const cols=head.length?head.map((h,ci)=>`<div class="mxcol">${inT('Column '+(ci+1),`${path}.head.${ci}`,h)}<button class="ibtn-x" data-mxcoldel="${path}:${ci}" title="Remove this column"${head.length<2?' disabled':''}>✕</button></div>`).join('')
+    :'<div class="muted small">No columns yet.</div>';
+  const body=rows.length?rows.map((r,ri)=>`<div class="qg"><div class="qg-h"><b>Row ${ri+1}</b><button class="ibtn-x" data-mxtrowdel="${path}:${ri}" title="Remove this row">✕</button></div>
+      ${inT('Row heading',`${path}.rows.${ri}.label`,r&&r.label)}
+      ${head.map((h,ci)=>inT(String(h==null||h===''?('Column '+(ci+1)):h),`${path}.rows.${ri}.cells.${ci}`,(r&&Array.isArray(r.cells))?r.cells[ci]:'')).join('')}</div>`).join('')
+    :'<div class="muted small">No rows yet.</div>';
+  return `${ig('mxp.lab',sel,inT('Heading above the table (optional)',`${path}.label`,c.label))}
+    ${ig('mxp.stub',sel,inT('Corner cell — what the row headings are',`${path}.stub`,c.stub))}
+    <label>Columns</label>${cols}
+    <button class="ibtn-add" data-mxcoladd="${path}">＋ Add column</button>
+    <label>Rows</label>${body}
+    <button class="ibtn-add" data-mxtrowadd="${path}">＋ Add row</button>
+    <div class="muted small">A cell reads as mathematics: <code>_x_</code> italic · <code>^2</code> power · <code>3/4</code> builds up · <code>−</code> minus.</div>`;
+}
+/* ONE FORM PER PART KIND, and the same form wherever that part lives — the renderer draws a table under a
+   step exactly as it draws one under a group, so the editor must not have two opinions about it. */
+function mxPartForm(path,pt,sel){
+  const k=String((pt&&pt.kind)||'');
+  if(k==='table') return `<div class="isec"><div class="isec-h">Table · fields</div>${mxTableForm(path,pt,sel)}</div>`;
+  if(k==='prose') return `<div class="isec"><div class="isec-h">Prose · fields</div>
+    ${ig('mxp.body',sel,inA('The paragraph (use _x_ for italics, ^2 for powers)',`${path}.body`,pt.body))}
+    <div class="muted small">Explanatory text that closes a subtopic or sits beside a step. It is content, not chrome.</div></div>`;
+  if(k==='relations'||k==='points'){ const isRel=k==='relations';
+    return `<div class="isec"><div class="isec-h">${isRel?'Relationships':'Points'} · fields</div>
+    ${ig('mxp.lab',sel,inT('Heading above the list (optional)',`${path}.label`,pt.label))}
+    ${ig('mxp.items',sel,inList(isRel?'One relationship per line':'One point per line',`${path}.items`,(pt.items||[]).map(x=>(x&&typeof x==='object')?(x.body!=null?x.body:(x.term||'')):x)))}
+    <div class="muted small">${isRel?'What the mathematics just shown amounts to — read as a list of statements about the same object.':'Short statements, each on its own bullet.'}</div></div>`; }
+  if(k==='figure') return `<div class="ihint">Select the Graph row above to edit the plane and what is drawn in it.</div>`;
+  return `<div class="ihint">No fields for "${esc(k||'(none)')}".</div>`;
 }
 function mxOutline(i,s,sel){
   const S=mxSel(sel), base=`slides.${i}`;
@@ -5342,22 +5443,43 @@ function mxOutline(i,s,sel){
       }
       /* THE GRAPH AND WHAT IS IN IT. The objects are the mathematics — the curve, the reference line, the
          marked points — and they are listed and edited exactly like every other array here. */
-      const F=mxFigAt(g);
-      if(F){
-        tree+=`<div class="blk-row${sel===`mx.f.${gi}`?' cur':''}" data-mxsel="mx.f.${gi}" style="margin-left:14px">
-          <span class="blk-t">Graph${F.fig.domain?` · <span class="muted">${esc('x '+F.fig.domain.xMin+'…'+F.fig.domain.xMax)}</span>`:''}</span>
-          <span class="blk-ord"><button class="ibtn-x" data-mxdel="f.${gi}" title="Remove the graph">✕</button></span></div>`;
-        if(S.kind==='f'||S.kind==='o'){ const OB=Array.isArray(F.fig.objects)?F.fig.objects:[];
-          OB.forEach((o,oi)=>tree+=row('margin-left:28px',`mx.o.${gi}.${oi}`,mxObjLabel(o),(o&&o.label)||'',`o.${gi}.${oi}`,`o.${gi}`,oi,OB.length));
-          tree+=`<div class="blk-palette" style="margin-left:28px">${['function','line','points','segment']
-            .map(t=>`<button class="blk-add-t" data-mxadd="o.${gi}.${t}">＋ ${t}</button>`).join('')}</div>`; }
-      } else tree+=`<button class="blk-add-t" data-mxadd="f.${gi}">＋ Add a graph</button>`;
+      /* THE CLOSING REGION, IN AUTHORED ORDER. `relations` is one array of parts and the page reads it in
+         order, so the outline lists it in order too — the graph keeps its own row and its own address
+         (the plane and the objects in it are a different kind of editing from a paragraph), but it moves
+         through the same array as everything beside it. */
+      const REL=Array.isArray(g.relations)?g.relations:[], F=mxFigAt(g);
+      REL.forEach((pt,k)=>{
+        if(pt&&pt.kind==='figure'&&pt.figure){
+          tree+=`<div class="blk-row${sel===`mx.f.${gi}`?' cur':''}" data-mxsel="mx.f.${gi}" style="margin-left:14px">
+            <span class="blk-t">Graph${pt.figure.domain?` · <span class="muted">${esc('x '+pt.figure.domain.xMin+'…'+pt.figure.domain.xMax)}</span>`:''}</span>
+            <span class="blk-ord"><button class="ibtn-x" data-mxmove="p.${gi}:${k}:-1" title="Move up"${k===0?' disabled':''}>↑</button><button class="ibtn-x" data-mxmove="p.${gi}:${k}:1" title="Move down"${k===REL.length-1?' disabled':''}>↓</button><button class="ibtn-x" data-mxdel="f.${gi}" title="Remove the graph">✕</button></span></div>`;
+          if(S.kind==='f'||S.kind==='o'){ const OB=Array.isArray(pt.figure.objects)?pt.figure.objects:[];
+            OB.forEach((o,oi)=>tree+=row('margin-left:28px',`mx.o.${gi}.${oi}`,mxObjLabel(o),(o&&o.label)||'',`o.${gi}.${oi}`,`o.${gi}`,oi,OB.length));
+            tree+=`<div class="blk-palette" style="margin-left:28px">${['function','line','points','segment']
+              .map(t=>`<button class="blk-add-t" data-mxadd="o.${gi}.${t}">＋ ${t}</button>`).join('')}</div>`; }
+          return; }
+        tree+=row('margin-left:14px',`mx.p.${gi}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`p.${gi}.${k}`,`p.${gi}`,k,REL.length);
+      });
+      tree+=`<div class="blk-palette" style="margin-left:14px">${(F?[]:[`<button class="blk-add-t" data-mxadd="f.${gi}">＋ graph</button>`])
+        .concat(MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="p.${gi}.${t}">＋ ${t}</button>`)).join('')}</div>`;
       (g.examples||[]).forEach((ex,ei)=>{
         const EX=g.examples;
         tree+=row('margin-left:14px',`mx.e.${gi}.${ei}`,`Example ${ei+1}`,ex.label,`e.${gi}.${ei}`,`e.${gi}`,ei,EX.length);
-        if(S.e===ei&&S.kind!=='t'){ const ST=ex.steps||[];
-          ST.forEach((st,si)=>tree+=row('margin-left:28px',`mx.s.${gi}.${ei}.${si}`,`Step ${si+1}`,st.text,`s.${gi}.${ei}.${si}`,`s.${gi}.${ei}`,si,ST.length));
-          tree+=`<button class="blk-add-t" data-mxadd="s.${gi}.${ei}">＋ Add step</button>`; }
+        if(S.e===ei&&mxInEx(S)){ const ST=ex.steps||[];
+          ST.forEach((st,si)=>{
+            tree+=row('margin-left:28px',`mx.s.${gi}.${ei}.${si}`,`Step ${si+1}`,st.text,`s.${gi}.${ei}.${si}`,`s.${gi}.${ei}`,si,ST.length);
+            /* A STEP'S OWN COMPANION — the table of values that belongs to the substitution it sits under,
+               not to the page. Listed under the step it belongs to, and only while that step is open. */
+            const SP=(S.s===si&&(S.kind==='s'||S.kind==='w'))?mxParts(st.visual):[];
+            SP.forEach((pt,k)=>tree+=row('margin-left:42px',`mx.w.${gi}.${ei}.${si}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`w.${gi}.${ei}.${si}.${k}`,`w.${gi}.${ei}.${si}`,k,SP.length));
+            if(S.s===si&&(S.kind==='s'||S.kind==='w'))
+              tree+=`<div class="blk-palette" style="margin-left:42px">${MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="w.${gi}.${ei}.${si}.${t}">＋ ${t}</button>`).join('')}</div>`;
+          });
+          tree+=`<button class="blk-add-t" data-mxadd="s.${gi}.${ei}">＋ Add step</button>`;
+          /* THE EXAMPLE'S OWN COMPANION sits inside the working, beside its steps. */
+          const EP=mxParts(ex.visual);
+          EP.forEach((pt,k)=>tree+=row('margin-left:28px',`mx.v.${gi}.${ei}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`v.${gi}.${ei}.${k}`,`v.${gi}.${ei}`,k,EP.length));
+          tree+=`<div class="blk-palette" style="margin-left:28px">${MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="v.${gi}.${ei}.${t}">＋ ${t}</button>`).join('')}</div>`; }
       });
       tree+=`<button class="blk-add-t" data-mxadd="e.${gi}">＋ Add example</button>`;
     }
@@ -5421,6 +5543,12 @@ function mxOutline(i,s,sel){
         ${ig('mxt.id',sel,inT('Id (kept stable so a reader\u2019s chosen view survives a re-render)',`${tb}.id`,st.id))}
         ${ig('mxt.lede',sel,inA('Lede for this representation (optional)',`${tb}.lede`,st.lede))}
         <label>Shows</label><div class="mxchks">${checks}</div></div>`; }
+    if(S.kind==='p'||S.kind==='v'||S.kind==='w'){
+      const H=mxPartHost(s,S,base); if(!H) return `<div class="ihint">That part's owner is gone — select another.</div>`;
+      const pt=mxParts(H.owner[H.key])[H.k];
+      if(!pt) return `<div class="ihint">That part is gone — select another.</div>`;
+      return mxPartForm(`${H.path}.${H.k}`,pt,sel);
+    }
     const ex=(g.examples||[])[S.e]; if(!ex) return `<div class="ihint">That example is gone — select another.</div>`;
     const eb=`${gb}.examples.${S.e}`;
     if(S.kind==='e') return `<div class="isec"><div class="isec-h">Example · fields</div>
@@ -5435,7 +5563,13 @@ function mxOutline(i,s,sel){
       ${ig('mxs.math',sel,inT('Mathematics (_x_ italic · ^2 power · − minus · 2/3 builds up)',`${sb}.math`,st.math))}
       ${ig('mxs.note',sel,inT('Note (optional)',`${sb}.note`,st.note))}</div>`;
   })();
-  return `<div class="isec"><div class="isec-h">Structure · ${esc(TYPELAB[s.type]||s.type)}</div>
+  /* THE PAGE ITSELF. Its title, its opening lede and the name it takes in the rail are content the lesson
+     carries and the reader sees, so they are edited here rather than left to a hand-written JSON file. */
+  const page=`<div class="isec"><div class="isec-h">Page · ${esc(TYPELAB[s.type]||s.type)}</div>
+    ${ig('mxpg.title',sel,inT('Title (use _x_ for italics, ^2 for powers)',`${base}.title`,s.title))}
+    ${ig('mxpg.lede',sel,inA('Opening lede — what the page is for',`${base}.lede`,s.lede))}
+    ${ig('mxpg.nav',sel,inT('Name in the rail (optional — defaults to the title)',`${base}.navLabel`,s.navLabel))}</div>`;
+  return `${page}<div class="isec"><div class="isec-h">Structure · ${esc(TYPELAB[s.type]||s.type)}</div>
     <div class="blk-list">${tree||'<div class="muted small">No groups yet — add one below.</div>'}</div>
     <div class="blk-palette"><button class="blk-add-t" data-mxadd="g">＋ Add group</button></div></div>${form}`;
 }
@@ -5463,19 +5597,35 @@ function mxOutlineWire(i){
       st.push({id:uid('st',st.length),label:'New representation',show:['question','steps','answer']}); selZone=`mx.t.${a[1]}.${st.length-1}`; }
     else if(a[0]==='e'){ const g=G[+a[1]]; const ex=(g.examples=g.examples||[]);
       ex.push({id:uid('ex',ex.length),label:'New example',prompt:'State the question.',steps:[],answer:''}); selZone=`mx.e.${a[1]}.${ex.length-1}`; }
-    else { const ex=G[+a[1]].examples[+a[2]]; const st=(ex.steps=ex.steps||[]);
+    else if(a[0]==='s'){ const ex=G[+a[1]].examples[+a[2]]; const st=(ex.steps=ex.steps||[]);
       st.push({id:uid('s',st.length),text:'Describe this step.',math:''}); selZone=`mx.s.${a[1]}.${a[2]}.${st.length-1}`; }
+    /* THE PARTS — one add for all three hosts, because they are one vocabulary. The trailing segment is the
+       kind; everything before it addresses the owner. */
+    else if(a[0]==='p'||a[0]==='v'||a[0]==='w'){
+      const kind=a[a.length-1], seed=mxPartSeed(kind); if(!seed) return;
+      const S={kind:a[0],g:+a[1],e:a[0]==='p'?null:+a[2],s:a[0]==='w'?+a[3]:null};
+      const H=mxPartHost(s,S,`slides.${i}`); if(!H) return;
+      const arr=mxPartsArr(H.owner,H.key); arr.push(JSON.parse(JSON.stringify(seed)));
+      selZone=a[0]==='p'?`mx.p.${a[1]}.${arr.length-1}`
+        :a[0]==='v'?`mx.v.${a[1]}.${a[2]}.${arr.length-1}`:`mx.w.${a[1]}.${a[2]}.${a[3]}.${arr.length-1}`; }
     renderSlide(); });
   /* ONE ADDRESS SCHEME FOR EVERY SIBLING ARRAY, so reorder is the same three lines wherever it appears */
   const figOf=(gi)=>{ const F=mxFigAt(groups()[gi]); return F&&(F.fig.objects=Array.isArray(F.fig.objects)?F.fig.objects:[]); };
+  const partAt=(a)=>{ const S={kind:a[0],g:+a[1],e:a[0]==='p'?null:+a[2],s:a[0]==='w'?+a[3]:null};
+    const H=mxPartHost(s,S,`slides.${i}`); return H?mxPartsArr(H.owner,H.key):null; };
   const arrAt=(a)=>a[0]==='g'?groups():a[0]==='o'?figOf(+a[1]):a[0]==='t'?(groups()[+a[1]].states=groups()[+a[1]].states||[])
+    :(a[0]==='p'||a[0]==='v'||a[0]==='w')?partAt(a)
     :a[0]==='e'?(groups()[+a[1]].examples=groups()[+a[1]].examples||[])
     :(groups()[+a[1]].examples[+a[2]].steps=groups()[+a[1]].examples[+a[2]].steps||[]);
   ins.querySelectorAll('[data-mxmove]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
     const parts=b.dataset.mxmove.split(':'), a=parts[0].split('.'), k=+parts[1], d=+parts[2];
-    const arr=arrAt(a), nk=k+d; if(nk<0||nk>=arr.length) return;
+    const arr=arrAt(a); if(!arr) return; const nk=k+d; if(nk<0||nk>=arr.length) return;
     const t=arr[k]; arr[k]=arr[nk]; arr[nk]=t;
+    /* A PART THAT MOVES KEEPS ITS SELECTION — except the graph, which is selected by its group and not by
+       its index, so a move that carried it would address a part that is no longer there. */
     selZone=(a[0]==='g')?`mx.g.${nk}`:(a[0]==='o')?`mx.o.${a[1]}.${nk}`:(a[0]==='t')?`mx.t.${a[1]}.${nk}`
+      :(a[0]==='p')?(arr[nk]&&arr[nk].kind==='figure'?`mx.f.${a[1]}`:`mx.p.${a[1]}.${nk}`)
+      :(a[0]==='v')?`mx.v.${a[1]}.${a[2]}.${nk}`:(a[0]==='w')?`mx.w.${a[1]}.${a[2]}.${a[3]}.${nk}`
       :(a[0]==='e')?`mx.e.${a[1]}.${nk}`:`mx.s.${a[1]}.${a[2]}.${nk}`;
     renderSlide(); });
   /* adopt the rendered defaults into the JSON, so what is edited is what the page reads */
@@ -5487,6 +5637,22 @@ function mxOutlineWire(i){
     rows.push(['P'+(rows.length+1),0,0]); renderSlide(); });
   ins.querySelectorAll('[data-mxrowdel]').forEach(b=>b.onclick=()=>{ const [path,ri]=b.dataset.mxrowdel.split(':');
     const o=getP(LESSON,path); const rows=Array.isArray(o.rows)?o.rows:o.points; if(rows) rows.splice(+ri,1); renderSlide(); });
+  /* THE TABLE STAYS RECTANGULAR. Every mutation writes `head` and every row's `cells` together, so the
+     per-cell data-bind paths a redraw emits all exist — setP walks a path and does not create it. */
+  const tbl=(path)=>{ const c=getP(LESSON,path);
+    c.head=Array.isArray(c.head)?c.head:[]; c.rows=Array.isArray(c.rows)?c.rows:[];
+    c.rows.forEach(r=>{ if(!Array.isArray(r.cells)) r.cells=[]; }); return c; };
+  const square=(c)=>c.rows.forEach(r=>{ while(r.cells.length<c.head.length) r.cells.push('');
+    if(r.cells.length>c.head.length) r.cells.length=c.head.length; });
+  ins.querySelectorAll('[data-mxcoladd]').forEach(b=>b.onclick=()=>{ const c=tbl(b.dataset.mxcoladd);
+    c.head.push('Column '+(c.head.length+1)); square(c); renderSlide(); });
+  ins.querySelectorAll('[data-mxcoldel]').forEach(b=>b.onclick=()=>{ const [path,ci]=b.dataset.mxcoldel.split(':');
+    const c=tbl(path); if(c.head.length<2) return;           // a table with no columns is not a table
+    c.head.splice(+ci,1); c.rows.forEach(r=>r.cells.splice(+ci,1)); square(c); renderSlide(); });
+  ins.querySelectorAll('[data-mxtrowadd]').forEach(b=>b.onclick=()=>{ const c=tbl(b.dataset.mxtrowadd);
+    c.rows.push({label:'Row '+(c.rows.length+1),cells:c.head.map(()=>'')}); renderSlide(); });
+  ins.querySelectorAll('[data-mxtrowdel]').forEach(b=>b.onclick=()=>{ const [path,ri]=b.dataset.mxtrowdel.split(':');
+    const c=tbl(path); c.rows.splice(+ri,1); renderSlide(); });
   /* A LINE HAS EXACTLY ONE OF x OR y — the renderer skips it with a reported error otherwise. So changing
      the direction MOVES the value rather than adding a second key, and the editor can never author the
      broken state it would then have to explain. */
@@ -5508,6 +5674,12 @@ function mxOutlineWire(i){
     else if(a[0]==='o'){ const F=mxFigAt(G[+a[1]]); if(F) F.fig.objects.splice(+a[2],1); }
     else if(a[0]==='t'){ G[+a[1]].states.splice(+a[2],1); if(!G[+a[1]].states.length) delete G[+a[1]].states; }
     else if(a[0]==='e') G[+a[1]].examples.splice(+a[2],1);
+    else if(a[0]==='p'||a[0]==='v'||a[0]==='w'){ const arr=partAt(a); if(!arr) return;
+      arr.splice(+a[a.length-1],1);
+      /* An emptied companion is REMOVED, not left as an empty array — the page tests the parts list for
+         length and a lesson that carries `visual: []` everywhere reads as though something were missing. */
+      if(!arr.length){ const S={kind:a[0],g:+a[1],e:a[0]==='p'?null:+a[2],s:a[0]==='w'?+a[3]:null};
+        const H=mxPartHost(s,S,`slides.${i}`); if(H) delete H.owner[H.key]; } }
     else G[+a[1]].examples[+a[2]].steps.splice(+a[3],1);
     selZone=null; renderSlide(); });
 }
@@ -5662,6 +5834,7 @@ function metaSection(){
   const m=LESSON.meta||{};
   return `<div class="isec"><div class="isec-h">Lesson</div>
     <div class="ig">${inMeta('Subject','subject',m.subject)}</div>
+    <div class="ig">${inMeta('Stage','stage',m.stage)}</div>
     <div class="ig">${inMeta('Year','year',m.year)}</div>
     <div class="ig">${inMeta('Unit','unit',m.unit)}</div>
     <div class="ig"><label>Outcomes codes <span class="muted">(comma-separated)</span></label><input class="ii" data-metacodes value="${esc(Array.isArray(m.outcomes)?m.outcomes.join(', '):(m.outcomes||''))}"></div>

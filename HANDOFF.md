@@ -783,7 +783,7 @@ renderer is referenced.
   legacy canvas has its own `notes` slide type, a different object from the mathematics `notes` PAGE, and a
   drive with the branch disabled shows a mathematics page falling into a legacy form. `mxOutline` walks
   groups -> examples -> steps; every field below it is an existing helper on an ordinary bound path.
-  `scripts/verify-mx-authoring.mjs` (14 checks, 4 drives) proves create -> edit -> add -> save -> reopen ->
+  `scripts/verify-mx-authoring.mjs` (30 checks) proves create -> edit -> add -> save -> reopen ->
   edit again, with the reopen done by serving the exported document and opening it fresh.
 
   **SAVE AND REOPEN MEANS EXPORT AND REOPEN.** Golden rule 2 stands: no localStorage, the file is the
@@ -827,11 +827,36 @@ renderer is referenced.
   `scaleMode:"authored"`, the only way to opt a mathematics graph out of equal scale, appears nowhere in
   SCHEMA.md.
 
-  **STILL TO AUTHOR** — 3C: the table of values (stub/head/rows/cells), then rebuild the whole quadratics
-  lesson through the UI and compare it SEMANTICALLY (not byte-identically) with
-  `docs/atlas/lesson/quadratics.app.json`, and render it in Study, Edit and Present. Desktop authoring only.
-  Note that a figure attached to a STEP (`step.visual`) is not yet editable — 3B covers the group's graph,
-  which is where both of this lesson's graphs live; the table is a step visual, so 3C needs that path.
+  **STAGE 3C IS DONE — the whole lesson can be made in the app.** 30 checks, and the headline one is that
+  the committed quadratics lesson is REBUILT from an empty mathematics lesson through real clicks and real
+  typing (`scripts/verify-quadratics-authoring.mjs`), then exported, reopened and edited again.
+  - **The table of values** — stub, headings, row headings and cells, on ordinary bound paths. THE ROWS
+    ARE KEPT AS WIDE AS THE HEADINGS by every mutation, not merely on creation, because `setP` walks an
+    existing path and does not create it: a row shorter than `head` means a cell whose `data-bind` has
+    nowhere to land, and the input silently does nothing.
+  - **Parts are one vocabulary in three places** — a group's closing region (`mx.p`), an example's
+    companion (`mx.v`) and a step's own (`mx.w`) — which is how a step visual became editable without a
+    second idea of what a part is. `mxPartsArr` migrates the three legal companion shapes (bare object,
+    `{parts:[…]}`, array) onto the one the editor writes.
+  - **THE COMPARISON IS THE INTERESTING PART.** Two of them. The structural one runs over a normalised
+    copy and names and counts every class of difference it will tolerate — generated ids, typed numbers
+    arriving as their own text, blank fields written as `""`, defaults written out in full, the curve
+    label the painter never draws, a companion written as a list of one — and FAILS on anything
+    unnamed. The rendered one settles it: every word, every table cell and the `d` of all 64 painted
+    paths identical across all four views. Pixels are compared separately, with
+    `shots-quadratics-app.mjs --lesson` (all ten renders byte-identical), and NOT inside the gate —
+    `.mx-page` is the scroller and the document never scrolls, so a screenshot taken there stops at the
+    fold and cannot see the table at all. The first attempt reported two pages whose tables read "0" and
+    "99" as identical. SUSPECT THE PROBE.
+  - **Two gaps the rebuild exposed that no reading of the code would have**: `meta.stage` is painted in
+    the header, the crumb and the printed worksheet and nothing could set it; and a page created in the
+    app carried no `id`, so `tpRespId()` would have excluded it from the response store — a page made
+    here would silently have lost the student responses a page loaded from a file keeps.
+
+  **STILL TO AUTHOR**: a FIGURE attached to an example or a step. `mxPart` renders one anywhere, but the
+  object editor is addressed per group (`mx.f` / `mx.o`, one graph per group, found the way the renderer
+  finds it), so the part palette offers `prose · relations · points · table` and not `figure`. Both of this
+  lesson's graphs are group graphs, so nothing is blocked by it. Desktop authoring only.
 
   **THE STUDY / EDIT DISTINCTION IS CORRECT, measured 22 Sep**: inspector visible ⟺ `mode==='edit'` ⟺ Edit
   carries `.on`; Study clears the inspector's content entirely. A screenshot that appeared to show otherwise

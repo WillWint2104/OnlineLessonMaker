@@ -32,6 +32,8 @@ on:
       - 'scripts/verify-notes-examples.mjs'
       - 'scripts/verify-composition-grid.mjs'
       - 'scripts/verify-mx-authoring.mjs'
+      - 'scripts/verify-quadratics-authoring.mjs'
+      - 'docs/atlas/lesson/quadratics.app.json'
       - 'docs/atlas/composition/src/grid.json'
       - 'docs/atlas/composition/src/patterns.json'
       - 'docs/atlas/worked-examples/src/atlas.json'
@@ -69,3 +71,9 @@ jobs:
       # edited through the inspector, exported, reopened from the file and edited again. Every other
       # mathematics gate asserts that authored JSON renders; only this one asserts the JSON can be made.
       - run: node scripts/verify-mx-authoring.mjs
+      # Stage 3C: the whole quadratics lesson is REBUILT through the inspector from an empty mathematics
+      # lesson — four groups, seven worked examples, nineteen steps, the table of values, both graphs and
+      # every piece of explanatory prose — then exported, reopened and edited again. The rebuilt lesson is
+      # compared with the committed one twice: structurally, where every tolerated difference is named,
+      # and by rendering both and comparing every word, every table cell and every painted path.
+      - run: node scripts/verify-quadratics-authoring.mjs

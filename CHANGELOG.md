@@ -7,6 +7,68 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Added
+- **Stage 3C — the whole quadratics lesson can now be made in the application.** The milestone is that you
+  can open the app, create a mathematics lesson from nothing, author every part of it through the
+  inspector, and export a complete lesson without editing JSON by hand. It is asserted, not asserted-ish:
+  `scripts/verify-quadratics-authoring.mjs` starts from an empty mathematics lesson and rebuilds the
+  committed quadratics lesson through real clicks and real typing — four groups, seven worked examples,
+  nineteen steps, the eleven-column table of values, both graphs with their curves, reference lines and
+  marked points, all six pieces of explanatory prose and the two Symmetry representations — then exports
+  it, reopens it from the file and edits it again. **30/30.**
+  - **The table editor.** Corner cell, column headings, row headings and every cell, each an ordinary
+    `data-bind` path. **Every row is exactly as wide as the headings**: adding a column appends an empty
+    cell to every row and removing one splices the same index out of each, because a ragged table in the
+    JSON is a ragged table on the page — and because `setP` walks an existing path rather than creating
+    it, so the shape has to be complete before a cell can be typed into.
+  - **Parts are one vocabulary in three places.** `prose`, `relations`, `points` and `table` can be added
+    to a group's closing region, to an example's companion or to a step's own — the same list, the same
+    forms, the same reorder, because the renderer already drew them the same way wherever they sat. The
+    selection grammar gains `mx.p` / `mx.v` / `mx.w` for them, and `mxPartsArr` canonicalises the three
+    legal companion shapes onto the array the editor writes.
+  - **The graph keeps its own row and its own address** (`mx.f` / `mx.o`) inside that list, and now moves
+    through the same array as the parts beside it — the closing region renders in authored order, so the
+    outline lists it in authored order.
+  - **The page's own fields** — its title, its opening lede and the name it takes in the rail — are
+    edited in the inspector rather than left to a hand-written file, and **Stage** joins Subject, Year and
+    Unit in the lesson section, because the mathematics header, the crumb and the printed worksheet all
+    read `meta.stage` and nothing could set it.
+  - **A new page is stamped with an id at creation.** `tpRespId()` keys the response store on it and a
+    page without one "does not participate", so a page made in the app would have silently lost the
+    student responses a page loaded from a file keeps. Generated, not typed — like every group, example
+    and step id.
+  - **How "the same lesson" is judged.** Byte-identical JSON is the wrong bar: an `<input>` yields the
+    string `"-6.5"` where a hand-written file holds the number `-6.5`, the editor generates its own ids,
+    and a field the painter never reads can be present or absent without changing anything. So the gate
+    compares twice. The structural comparison runs over a normalised copy and **every class of difference
+    it tolerates is named and counted** — 33 generated ids, 18 typed numbers arriving as their own text,
+    3 blank fields written as `""`, 2 defaults written out in full, 2 curve labels the painter never
+    draws, 1 companion written as a list of one — and an unnamed difference fails it. The rendered
+    comparison is the one that settles it: **every word, every table cell and the actual `d` of all 64
+    painted paths are identical across all four views.**
+  - **And the two lessons photograph the same.** `shots-quadratics-app.mjs --lesson` renders the rebuilt
+    lesson through the app and its own measurements: **all ten renders byte-identical** to the committed
+    lesson's, at desktop and tablet, across every tab and both Symmetry representations, with the same
+    subdesigns and the same px-per-unit (760px `down-8` at 50.98/50.98; 1152px `down-12` at 42.61/42.61).
+    That comparison is deliberately NOT made inside the gate: `.mx-page` is the scroller and the document
+    never scrolls, so a screenshot taken there — viewport, `fullPage` or element — stops at the fold and
+    cannot see the table of values at all. The first attempt photographed two pages whose tables read
+    "0" and "99" and reported them identical, which is the third time this session a probe rather than
+    the page was the defect. The three commands that do make it are in the gate's header.
+  - **Four controls**, each withdrawing one thing the comparisons claim to police: a line of mathematics
+    changed, a heading spliced out without its cells, a table cell changed, a graph window widened. Each
+    fires.
+
+### Fixed
+- **The outline no longer opens an example when something else is selected.** `S.e` holds an example index
+  only for some selection kinds; for a graph object or a representation it holds that object's index, and
+  the expansion test read it regardless. `mxInEx()` now names the kinds that mean an example.
+- **`scripts/shots-quadratics-app.mjs` read only one of the three legal companion shapes**, so it reported
+  "0 cells authored" against a page on which it had just counted 24 drawn. It now reads a bare part, a
+  `{parts:[…]}` wrapper and an array alike, as `mxParts()` does. It also gains `--lesson` and `--out`, and
+  finds the staged group by the fact that it authors representations rather than by the id the committed
+  lesson happens to give it — which is what lets it photograph a lesson whose ids the editor generated.
+
 ### Changed
 - **The divider treatment is withdrawn; the worked example separates by space and typography.** The
   maintainer reviewed the corrections below and approved the wrapping fix and the white question ground,
