@@ -336,6 +336,24 @@ mark('surface');
 // ══ Worked examples — composition is AUTHORED, never measured ═══════════════════════════════════
 mark('examples');
 const GROUPS = FIX.slides[WEX].groups;
+/* EVERY DISTINCT STRING IN EVERY COMMITTED LESSON, read here and rendered in the page by the fraction
+   section below. A notation rule is changed for one new shape; the claim that matters is that none of the
+   shapes already shipping moved, and the only honest way to make that claim is to look at all of them. */
+const CORPUS_STRINGS = (() => {
+  const out = new Set();
+  const walk = (o) => { if (Array.isArray(o)) return o.forEach(walk);
+    if (o && typeof o === 'object') return Object.values(o).forEach(walk);
+    if (typeof o === 'string' && o.trim()) out.add(o); };
+  for (const d of ['examples', 'lessons', 'docs/atlas/lesson', 'tests/visual']) {
+    const dir = path.join(root, d); if (!fs.existsSync(dir)) continue;
+    const st = [dir];
+    while (st.length) { const c = st.pop();
+      for (const e of fs.readdirSync(c, { withFileTypes: true })) { const q = path.join(c, e.name);
+        if (e.isDirectory()) st.push(q);
+        else if (e.name.endsWith('.json')) { try { walk(JSON.parse(fs.readFileSync(q, 'utf8'))); } catch (x) { /* not a lesson */ } } } }
+  }
+  return [...out];
+})();
 /* Measured on the pane that is ON SCREEN. A hidden pane reports grid-template-columns as the SPECIFIED
    value ("repeat(2, minmax(0px, 1fr))"), which is not a column count — so each tab is selected and the
    columns are counted from where the cells actually land. */
@@ -2222,7 +2240,157 @@ mark('presentation');
      `the foot follows ${onlyrep.footAfter} and carries a ${onlyrep.footBT}px rule`);
 }
 
-const SECTIONS = ['composition', 'viability', 'surface', 'examples', 'reference', 'scale', 'slots', 'primitive', 'proofs', 'states', 'flat', 'presentation'];
+
+// ══ THE FRACTION GRAMMAR ═════════════════════════════════════════════════════════════════════════
+// A GRADIENT IS A FRACTION, AND SO IS THE LINE THAT PRODUCES IT. Until this stage the grammar took a
+// bracketed signed integer or bare digits, so in a gradient example the ANSWER set as a fraction and the
+// WORKING that produced it kept a slash — `_m_ = (5 − 2)/(5 − 1)`, the single commonest line in gradient
+// work. Measured while authoring a straight-lines lesson through the app: 3 of its 6 step expressions.
+// The widening is a bracketed SUM of signed integers, at most three joins, one level of nesting allowed
+// for an operand so `(4 − (−2))` reads. It carries no letters and no slash, and the rule that ONE SIDE
+// MUST BE BRACKETED is untouched — which is what still keeps `1914 / 1918` a year range.
+//
+// Two claims, and neither is read off the regular expression: the gradient working now builds up ON THE
+// RENDERED PAGE, and NOTHING ELSE MOVED — measured over every string in every committed lesson, because
+// "it renders the new case" and "it did not disturb the old ones" are different claims and only the second
+// one is a regression. The corpus invariants are the ones that will still be true after the next widening.
+mark('fractions');
+{
+  /* A gradient example as a teacher writes it: the rule, the substitution, the answer. The substitution is
+     the line the whole method turns on and the one that used to keep a slash. */
+  const GRAD = (() => { const L = JSON.parse(JSON.stringify(FIX));
+    const g = L.slides[WEX].groups.find((x) => x.type === 'sequence');
+    g.examples = [{ id: 'ex-grad', label: 'Gradient from two points',
+      prompt: 'Find the gradient of the line through (1, 2) and (5, 5).',
+      steps: [
+        { id: 'g1', text: 'Write the rule.', math: '_m_ = rise/run' },
+        { id: 'g2', text: 'Substitute the two points.', math: '_m_ = (5 − 2)/(5 − 1)' },
+        { id: 'g3', text: 'Evaluate both differences.', math: '_m_ = 3/4' },
+      ],
+      answer: 'The gradient is _m_ = 3/4.' },
+      { id: 'ex-grad2', label: 'A negative gradient',
+        prompt: 'Find the gradient of the line through (−2, 4) and (4, 0).',
+        steps: [
+          { id: 'h1', text: 'Substitute, taking the points in the same order on top and underneath.',
+            math: '_m_ = (0 − 4)/(4 − (−2))' },
+          { id: 'h2', text: 'Evaluate both differences.', math: '_m_ = (−4)/6' },
+          { id: 'h3', text: 'Simplify.', math: '_m_ = −2/3' },
+        ],
+        answer: 'The gradient is _m_ = −2/3, so the line falls.' }];
+    return L; })();
+  const steps = await (async () => { const p = await open({ w: 1536, h: 1024, slide: WEX, lesson: GRAD });
+    await p.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await p.waitForTimeout(350);
+    const r = await p.evaluate(() => [].slice.call(document.querySelectorAll('[data-mx-panel]:not([hidden]) .mx-stepm'))
+      .filter((e) => e.offsetParent !== null)
+      .map((e) => ({ t: e.textContent.replace(/\s+/g, ' ').trim(), n: e.querySelectorAll('.mx-frac').length,
+        /* the two operands, in the order they were written */
+        parts: [].slice.call(e.querySelectorAll('.mx-frac')).map((f) => [].slice.call(f.children).map((c) => c.textContent.trim())) })));
+    await p.close(); return r; })();
+  const sub = steps.filter((s) => /\(/.test(s.t) || /−/.test(s.t));
+  ok('THE SUBSTITUTION STEP OF A GRADIENT EXAMPLE IS NOW SET AS A FRACTION — the working reads like the answer it produces',
+     steps.length === 6 && steps[1].n === 1 && steps[3].n === 1,
+     steps.map((s) => `${s.n ? 'built up' : 'SLASH   '} ${s.t}`).join(' · '));
+  /* PRECEDENCE: the two halves of the built-up fraction are the operands either side of the divide, in the
+     order they were written. A fraction that renders beautifully upside down is a wrong answer. */
+  const halves = steps.filter((s) => s.n).map((s) => s.parts[0]);
+  const over = halves.map((h) => h.join('/'));
+  ok('…and each one carries the operands either side of the divide, in the order they were written',
+     halves.length === 5 && halves.every((h) => h.length === 2)
+     && over.indexOf('(5 − 2)/(5 − 1)') >= 0 && over.indexOf('(0 − 4)/(4 − (−2))') >= 0
+     && over.indexOf('3/4') >= 0 && over.indexOf('(−4)/6') >= 0 && over.indexOf('2/3') >= 0,
+     halves.map((h) => h.join(' over ')).join(' · '));
+  /* CONTROL: the same probe on the same page reads the general form of the rule as a slash — so "it built
+     up" is a measurement and not a probe that answers yes to everything. A variable numerator is still
+     deliberately a slash: widening to letters would rewrite existing lessons, and nothing has asked for it. */
+  ok('CONTROL: the general form of the rule is read by the same probe as a slash — `rise/run` did not move',
+     steps.length === 6 && steps[0].n === 0 && /rise\/run/.test(steps[0].t),
+     `step 1 reads "${steps[0].t}" with ${steps[0].n} built-up fraction(s)`);
+
+  /* ── everything else in every committed lesson ────────────────────────────────────────────────────
+     The rendering of existing lesson content is preserved. Not sampled: every distinct string in every
+     lesson this repository ships, put through mxM in the page and read back. */
+  const p = await open({ w: 1536, h: 1024 });
+  const MEASURE = (list) => {
+    const d = document.createElement('div');
+    const plain = (s) => s.replace(/_([A-Za-z])_/g, '$1').replace(/\^([0-9n])/g, '$1');
+    const bare = (s) => s.replace(/\s+/g, '');
+    const cnt = (s, c) => s.split(c).length - 1;
+    /* Three notation conventions move characters, and only three: a variable loses its underscores, an
+       exponent loses its caret, a built-up fraction hands its divide to the rule between the two halves,
+       and a parenthesised fraction hands its two brackets to CSS. Everything else a reader can see must
+       survive, in order. */
+    const read = (fn, s) => { const h = fn(s); d.innerHTML = h;
+      const t = d.textContent, e = plain(s);
+      const fr = d.querySelectorAll('.mx-frac').length, pf = d.querySelectorAll('.mx-pfrac').length;
+      const chars = bare(t).replace(/[()\/]/g, '') === bare(e).replace(/[()\/]/g, '');
+      const slash = cnt(t, '/') + fr === cnt(e, '/');
+      const paren = cnt(t, '(') + pf === cnt(e, '(') && cnt(t, ')') + pf === cnt(e, ')');
+      /* …AND NO DIVISION IS INVENTED: every built-up fraction is a divide that was written, with those
+         exact two operands either side of it. */
+      const real = [].slice.call(d.querySelectorAll('.mx-frac')).every((f) => {
+        const c = f.children; if (c.length !== 2) return false;
+        return bare(e).indexOf(bare(c[0].textContent) + '/' + bare(c[1].textContent)) >= 0; });
+      return { s: s, chars: chars, slash: slash, paren: paren, real: real, fr: fr, t: t }; };
+    return list.map((s) => read(window.mxM, s));
+  };
+  const corpus = await p.evaluate(MEASURE, CORPUS_STRINGS);
+  const lost = corpus.filter((r) => !r.chars || !r.slash || !r.paren);
+  ok('NOTHING A READER CAN SEE IS LOST OR GAINED, across every string in every committed lesson',
+     CORPUS_STRINGS.length > 900 && lost.length === 0,
+     lost.length ? lost.slice(0, 3).map((r) => `"${r.s.slice(0, 40)}" → "${r.t.slice(0, 40)}"`).join(' | ')
+       : `${CORPUS_STRINGS.length} distinct strings, every character accounted for`);
+  const invented = corpus.filter((r) => !r.real);
+  ok('…and NO DIVISION IS INVENTED — every built-up fraction is a divide that was written, with those two operands',
+     invented.length === 0,
+     invented.length ? invented.slice(0, 3).map((r) => `"${r.s.slice(0, 44)}"`).join(' | ')
+       : `${corpus.reduce((n, r) => n + r.fr, 0)} built-up fractions, all of them written as one`);
+  /* WHAT MUST STAY A SLASH. Each of these is committed content or the shape of it, and each would be
+     wrong set as a fraction: a year range is not a division, a variable numerator is deliberately a slash,
+     and a stroke inside a word or a reference is not mathematics at all. */
+  /* The first six of these already stayed a slash BEFORE the widening, so on their own they pin nothing the
+     widening could break. The last three are the ones that matter: each is a bracketed numeric range over a
+     number, and each stays a slash only because an operand may carry at most three digits. They fail the
+     instant someone relaxes that bound — which is the bound that keeps `1914 / 1918` a year range. */
+  const KEEP = ['1914 / 1918', '_m_ = rise/run', '_y_ = _x_^2 / 12', '_y_ = 1/_x_', 'Stage 4 C5/C6',
+    'He scored (5 − 2) goals in the first half', 'the ratio 3 : 4', 'and/or',
+    '(2015 - 16)/2', '(1000 − 2)/3', 'the years (1914 − 1918)/2'];
+  const keep = await p.evaluate(MEASURE, KEEP);
+  ok('WHAT MUST STAY A SLASH STAYS ONE — a year range bracketed or bare, a variable numerator, a reference, a word',
+     keep.every((r) => r.fr === 0), keep.filter((r) => r.fr).map((r) => `"${r.s}" built up`).join(' | ')
+       || KEEP.map((k) => `"${k}"`).join(' · '));
+  /* A LINE BREAK IS NOT A SPACE. The spaces a bracketed sum may carry are literal spaces and tabs, not `\s`:
+     a prose field carrying "(1 +\n2)/3" is two lines of writing, and building it up would put a raw newline
+     inside the numerator span. */
+  const nl = await p.evaluate(() => { const d = document.createElement('div');
+    d.innerHTML = mxM('(1 +\n2)/3'); return { fr: d.querySelectorAll('.mx-frac').length, t: d.textContent }; });
+  ok('…and a bracketed sum broken across two lines is NOT built up — spaces and tabs only, never a newline',
+     nl.fr === 0, `${nl.fr} built-up fraction(s) for a numerator with a line break in it`);
+  /* CONTROLS. Both corpus invariants are run against a deliberately wrong grammar, so a green result above
+     means the measure looked and found nothing rather than that it cannot see. */
+  const ctl = await p.evaluate((list) => {
+    const d = document.createElement('div');
+    const bare = (s) => s.replace(/\s+/g, '');
+    const swallow = (s) => esc(s).replace(/(\w+)\s*\/\s*(\w+)/g,
+      '<span class="mx-frac"><span>$2</span><span>$1</span></span>');
+    const invent = (s) => esc(s).replace(/(\d+)\s*([+−])\s*(\d+)/g,
+      '<span class="mx-frac"><span>$1</span><span>$3</span></span>');
+    const count = (fn, test) => list.filter((s) => { d.innerHTML = fn(s);
+      return test(d, s); }).length;
+    return {
+      swallowed: count(swallow, (d, s) => bare(d.textContent).replace(/[()\/]/g, '')
+        !== bare(s.replace(/_([A-Za-z])_/g, '$1').replace(/\^([0-9n])/g, '$1')).replace(/[()\/]/g, '')),
+      invented: count(invent, (d, s) => [].slice.call(d.querySelectorAll('.mx-frac')).some((f) =>
+        bare(s).indexOf(bare(f.children[0].textContent) + '/' + bare(f.children[1].textContent)) < 0)),
+    };
+  }, CORPUS_STRINGS);
+  ok('CONTROL: a grammar that reorders what it takes is caught by the character measure',
+     ctl.swallowed > 0, `${ctl.swallowed} of ${CORPUS_STRINGS.length} strings come back different`);
+  ok('CONTROL: a grammar that builds a fraction where no divide was written is caught by the other',
+     ctl.invented > 0, `${ctl.invented} of ${CORPUS_STRINGS.length} strings gain a division nobody wrote`);
+  await p.close();
+}
+
+const SECTIONS = ['composition', 'viability', 'surface', 'examples', 'reference', 'scale', 'slots', 'primitive', 'proofs', 'states', 'flat', 'presentation', 'fractions'];
 ok('every section ran', SECTIONS.every((s) => sections.has(s)), `${sections.size} sections`);
 ok('no page error while rendering or switching', pageErrs.length === 0, pageErrs.slice(0, 2).join(' | ') || 'none');
 await browser.close(); server.close();

@@ -8,6 +8,44 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 5 · the two mathematical defects the authoring review found.** Both are the smallest change that
+  fixes them: `figParse` is not touched, the lesson schema is not migrated, and no editor framework arrives.
+  - **AN EXPRESSION THAT READS DIFFERENTLY FROM HOW IT WAS TYPED NOW SAYS SO.** `1/2x+1` is a valid
+    expression that draws a hyperbola, because a juxtaposition binds tighter than division — the one finding
+    that put wrong mathematics in front of a class while reporting nothing. `figAmbiguous()` re-reads
+    `figTok`'s token stream (it does **not** re-parse; re-binding division would silently re-read `sin 2x`
+    and every committed lesson) and, where a divisor swallows a run of two or more adjacent atoms, shows the
+    reading under the field: *Reads as `1/(2·x)+1` — a factor written next to the divisor is taken into it.
+    If that is not what you meant, bracket it.* Live as you type, **in the inspector only** — never on the
+    page: `.tp-fig-err` is for an expression the engine cannot read, and this one it can. Bracketing it —
+    `(1/2)x+1` — silences the warning and straightens the curve. The field's own help now states the rule
+    before the mistake is made.
+    Three things it deliberately does not do, each with a gate assertion behind it: it does not speak when
+    `figParse` already rejects the expression (`1/2x(` is the keystroke state of someone typing
+    `1/2x(x+1)`); it does not speak when the swallowed run carries no variable, because `1/2pi` *is*
+    1/(2π) and advising an author to bracket π is wrong; and **the reading it shows is one the engine reads
+    back the same way** — `figTok` discards whitespace, so pasting the tokens together would render
+    `1/2 sin x` as an unparseable `1/(2sinx)` and `1/2 3` as `1/(23)`, a different number. A juxtaposition
+    is written out as the multiplication it is. Every flagged reading is parsed back and evaluated against
+    its source at six values of *x*, and every function expression in every committed lesson is put through
+    the detector and must not be flagged.
+  - **A FRACTION OF TWO BRACKETED DIFFERENCES NOW BUILDS UP.** `_m_ = (5 − 2)/(5 − 1)` — the substitution
+    step the whole gradient method turns on — kept a slash while its own answer `−2/3` built up, because the
+    grammar took a bracketed *signed integer* and not a bracketed *sum*. `MX_FRAC_T` now also admits a
+    bracketed run of signed integers joined by `+` or `−`, at most three joins, with one level of nesting
+    for an operand so `(4 − (−2))` reads. Its single use site is unchanged, so **one side must still be
+    bracketed** — which is what keeps `1914 / 1918` a year range and `rise/run` a slash. A variable
+    numerator is still deliberately a slash.
+    Measured over **every distinct string in every committed lesson** (1950 of them): exactly **two** render
+    differently, and both are the gradient working lines of `straight-lines.app.json`.
+    Two corpus-wide invariants now guard `mxM` against the *next* widening, whatever it is: no committed
+    string loses or gains a visible character, and no built-up fraction is a division that was not written
+    with those two operands. A line break is not a space — the sum's padding is spaces and tabs, so
+    `(1 +⏎2)/3` stays two lines of prose.
+    **Known and accepted**: a bracketed numeric range divided by a number now builds up wherever it appears,
+    so `pages (10 - 12)/2` would set as a fraction. It is arithmetic, no committed lesson writes it, and the
+    three-digit bound is what still keeps `1914 / 1918` out — which is now pinned by three negative controls
+    that fail the moment that bound is relaxed. Nesting is one level deep: `((5 − 2) − 1)/3` stays a slash.
 - **A lesson that did not exist, made in the application — and a record of what got in the way.**
   `scripts/author-straight-lines.mjs` authors *Straight lines: y = mx + c* (NSW Stage 5, Year 9) entirely
   through the interface: four subtopics, four worked examples, eleven steps, a six-column table of values,

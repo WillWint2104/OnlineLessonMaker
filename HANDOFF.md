@@ -884,6 +884,29 @@ renderer is referenced.
   `−`. NO PRODUCT CHANGE WAS MADE ON THE STRENGTH OF THESE — they are the input to the maintainer's next
   decision.
 
+  **STAGE 5 FIXED THE TWO THAT PUT WRONG MATHEMATICS ON THE PAGE.** Neither touches `figParse`, the lesson
+  schema or any student-facing composition.
+  - `figAmbiguous(src)` (beside `figTok`) re-reads the TOKEN STREAM — it does not re-parse — and, where a
+    divisor swallows a run of adjacent atoms, shows the reading under the expression field in the inspector:
+    `1/2x+1` → *Reads as `1/(2·x)+1`*. Never on the page: `.tp-fig-err` is for an expression the engine
+    CANNOT read, and this one it can. Three deliberate silences, each with an assertion behind it — nothing
+    is said when `figParse` already rejects the source (`1/2x(` is a keystroke state), nothing is said when
+    the swallowed run carries no variable (`1/2pi` IS 1/(2π)), and the reading shown is one the engine
+    reads back the same way. That last one is the trap: `figTok` DISCARDS whitespace, so pasting the tokens
+    together renders `1/2 sin x` as an unparseable `1/(2sinx)` and `1/2 3` as `1/(23)`, a different number.
+    A juxtaposition is therefore written out as the multiplication it is, and every flagged reading is
+    parsed back and evaluated against its source at six values of x by the gate.
+  - `MX_FRAC_T` also admits a BRACKETED SUM of signed integers (≤ 3 joins, one level of nesting for an
+    operand, so `(4 − (−2))` reads). Its single use site is untouched, so ONE SIDE MUST STILL BE BRACKETED
+    — that is what keeps `1914 / 1918` a year range and `rise/run` a slash. Over every distinct string in
+    every committed lesson (1950), exactly TWO render differently: the two gradient working lines of
+    `straight-lines.app.json`.
+  - The two corpus-wide invariants that now guard `mxM` live in `verify-notes-examples.mjs`: no committed
+    string loses or gains a visible character, and no built-up fraction is a division that was not written.
+    They are what the NEXT widening will be measured against.
+  STILL OPEN from the findings: curves cannot be told apart (§3), everything you add arrives empty (§4), a
+  table's columns are built one at a time (§5), reordering is one click per place (§6).
+
   **STILL TO AUTHOR**: a FIGURE attached to an example or a step. `mxPart` renders one anywhere, but the
   object editor is addressed per group (`mx.f` / `mx.o`, one graph per group, found the way the renderer
   finds it), so the part palette offers `prose · relations · points · table` and not `figure`. Both of this

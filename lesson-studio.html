@@ -2010,6 +2010,12 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
   cursor:pointer;font-family:'LM Math',Cambria Math,serif;font-size:15px;line-height:1;color:var(--ink);}
 .inspector .mxkey:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);}
 .inspector .mxkey sup{font-size:.62em;vertical-align:super;}
+/* what the engine will read, when that differs from what was typed. A caution, not an error: the
+   expression is valid and the figure is correct for it — this is about intent, so it stays in the panel. */
+.inspector .mxamb{margin:-4px 0 2px;padding:7px 9px;border-radius:7px;font-size:12px;line-height:1.45;
+  background:color-mix(in srgb,#B4690E 12%,transparent);color:#7A4708;border:1px solid color-mix(in srgb,#B4690E 30%,transparent);}
+.inspector .mxamb[hidden]{display:none;}
+.inspector .mxamb b{font-family:'LM Math',Cambria Math,serif;font-size:13.5px;}
 
 .mxchk{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mx-ink-2,#4a5550);text-transform:none;letter-spacing:0;}
 .mx-stpane[hidden]{display:none;}          /* a hidden state reserves no layout space */
@@ -5476,6 +5482,19 @@ function mxKeys(){
     <div class="mxkeys-row">${MX_KEYS.map(x=>`<button type="button" class="mxkey" data-mxkey="${esc(x.k)}" title="${esc(x.tip)}" aria-label="${esc(x.tip)}">${x.lab}</button>`).join('')}</div>
     <div class="muted small">Typed into the field you last used. A fraction is just <code>3/4</code> — the preview under each field shows what will be drawn.</div></div>`;
 }
+/* AN EXPRESSION FIELD: the control, then — only when the two differ — what the engine will actually READ.
+   Silent for every expression whose reading is the obvious one, which is all of them in every committed
+   lesson; it speaks only when a juxtaposition has swallowed a division. It never reaches the page. */
+function inExpr(label,path,val){
+  const v=val==null?'':String(val);
+  return `<label>${esc(label)}</label><input class="ii mxfx" data-bind="${path}" value="${esc(v)}">
+    ${mxAmbHtml(v)}`;
+}
+function mxAmbSay(a){ return `Reads as <b>${esc(a.read)}</b> — a factor written next to the divisor is taken into it. If that is not what you meant, bracket it.`; }
+function mxAmbHtml(v){
+  const a=(typeof figAmbiguous==='function')?figAmbiguous(v):null;
+  return `<div class="mxamb"${a?'':' hidden'}>${a?mxAmbSay(a):''}</div>`;
+}
 /* A MATHS FIELD: the control, then what it will draw. The preview is the control's next sibling, so the
    wiring needs no ids and cannot point at the wrong one. */
 function inMath(label,path,val,area){
@@ -5635,8 +5654,9 @@ function mxOutline(i,s,sel){
       if(!o) return `<div class="ihint">That object is gone — select another.</div>`;
       const ob=`${fb}.objects.${S.e}`;
       if(o.type==='function') return `<div class="isec"><div class="isec-h">Function · fields</div>
-        ${ig('mxo.f',sel,inT('y = …  (x, + − * / ^, brackets)',`${ob}.f`,mxObjF(o)))}
-        <div class="muted small">An expression the engine cannot read is reported on the figure itself and simply not plotted — nothing else on the page is disturbed, so it is safe to type into.
+        ${ig('mxo.f',sel,inExpr('y = …  (x, + − * / ^, brackets)',`${ob}.f`,mxObjF(o)))}
+        <div class="muted small">A factor written beside a divisor belongs to it: <code>1/2x</code> is 1/(2x). For half of <i>x</i> write <code>x/2</code> or <code>(1/2)x</code> — and when a reading differs from the plain shape, the field says so as you type.
+        An expression the engine cannot read is reported on the figure itself and simply not plotted — nothing else on the page is disturbed, so it is safe to type into.
         A curve takes no label here: figGraph carries <code>label</code> but the painter never draws one, so offering the field would promise a mark that never appears.</div></div>`;
       if(o.type==='line'){ const axis=mxNum(o.y)?'y':(mxNum(o.x)?'x':'y');
         return `<div class="isec"><div class="isec-h">Reference line · fields</div>
@@ -5731,6 +5751,16 @@ function mxOutlineWire(i){
   ins.querySelectorAll('.mxm').forEach(el=>{
     el.addEventListener('input',()=>prev(el));
     el.addEventListener('focus',()=>{ MX_FOCUS=el; });
+  });
+  /* THE READING, LIVE. An expression whose reading differs from its plain shape says so as it is typed —
+     in the panel, never on the page: the page is correct for what was typed, and a reader must not be
+     shown a note about the author's typing. */
+  ins.querySelectorAll('.mxfx').forEach(el=>{
+    const say=()=>{ const w=el.nextElementSibling; if(!w||!w.classList.contains('mxamb')) return;
+      const a=figAmbiguous(el.value);
+      w.innerHTML=a?mxAmbSay(a):'';
+      w.hidden=!a; };
+    el.addEventListener('input',say);
   });
   /* THE WHOLE TABLE, PREVIEWED AS THE PAGE WILL DRAW IT — a grid of source strings is not a table of
      values until you can see it set. Redrawn from the data after any cell changes. */
@@ -7977,7 +8007,17 @@ function mxPlain(v){ return String(v==null?'':v).replace(/_([A-Za-z])_/g,'$1').r
    the parenthesised form first, so its brackets can grow to the built-up height. Three digits a side keeps
    a year range ("1914/1918") out of it. */
 /* the two sides a fraction may have: a bracketed signed integer (optionally squared), or a plain one */
-const MX_FRAC_T = '\\((?:\\u2212|-)?\\d{1,3}\\)(?:\\^\\d)?', MX_FRAC_D = '\\d{1,3}(?:\\^\\d)?';
+/* A BRACKETED SUM IS A TERM TOO. `(\u22122)` was a term and `(5 \u2212 2)` was not, so in a gradient example the
+   ANSWER set as a fraction and the WORKING that produced it kept a slash — `(5 \u2212 2)/(5 \u2212 1)`, which is the
+   single commonest line in gradient work. Found by authoring a straight-lines lesson; FINDINGS.md §2.
+   The widening is deliberately narrow: a bracketed run of SIGNED INTEGERS joined by + or \u2212, at most three
+   joins, with one level of nesting allowed for an operand so `(4 \u2212 (\u22122))` reads. It carries no letters and
+   no slash, so it cannot swallow prose, and the rule that ONE SIDE MUST BE BRACKETED is untouched — which
+   is what keeps `1914 / 1918` a year range and `rise/run` a slash. */
+const MX_FRAC_N = '(?:\\u2212|-)?\\d{1,3}';                                   /* a signed integer */
+const MX_FRAC_P = '\\((?:\\u2212|-)?\\d{1,3}\\)';                              /* one bracketed, as an operand */
+const MX_FRAC_S = '\\([ \\t]*' + MX_FRAC_N + '(?:[ \\t]*[+\\u2212-][ \\t]*(?:' + MX_FRAC_P + '|' + MX_FRAC_N + ')){1,3}[ \\t]*\\)(?:\\^\\d)?';   /* SPACES, NOT \\s: a newline inside a built-up numerator is not a fraction, it is two lines */
+const MX_FRAC_T = '(?:\\((?:\\u2212|-)?\\d{1,3}\\)(?:\\^\\d)?|' + MX_FRAC_S + ')', MX_FRAC_D = '\\d{1,3}(?:\\^\\d)?';
 /* MATHEMATICS DOES NOT WRAP LIKE PROSE. `_x_ = −4` is one statement; a line break inside it strands the
    value on the next line and leaves the reader to put the sentence back together — which is exactly what
    the question band did at the width the open inspector leaves it. So the LAST thing mxM does is find the
@@ -10469,6 +10509,67 @@ function figTok(src){ const s=String(src), t=[]; let i=0;
   return {toks:t};
 }
 // → {fn} or {error}. Grammar: expr(+ -) → term(* / implicit) → unary(-) → power(^, right-assoc) → atom.
+/* ── WHEN WHAT YOU TYPED IS NOT WHAT YOU MEANT ───────────────────────────────────────────────────────
+   figParse binds a JUXTAPOSITION chain tighter than * and / — it says so itself, two comments below —
+   so `1/2x` is 1/(2x). That is a valid expression and the figure plots it without complaint: it is simply
+   not what a teacher writing a gradient of a half means, and the only sign is that the picture looks odd.
+   Found by authoring a straight-lines lesson; see docs/atlas/authoring/FINDINGS.md §1.
+
+   THE PARSER IS NOT TOUCHED. Re-binding division would silently re-read `sin 2x`, `e^2x` and every
+   committed lesson, and figure-render compares 240 units byte for byte. So the SAME token stream is read a
+   second time, and a division whose divisor is a run of two or more adjacent atoms is REPORTED.
+
+   WHERE IT IS REPORTED MATTERS. Not on the figure: `.tp-fig-err` paints on the page the student reads, and
+   the page is CORRECT for what was typed — a reader must never be shown a note about the author's typing.
+   It is shown in the inspector, beside the field, where the author is.
+
+   A FUNCTION NAME IS NOT AN AMBIGUITY. `1/sin 2x` reads as 1/sin(2x) and that is the standard reading of
+   it, so a divisor that opens with a known function name is left alone.
+   Checked against every expression in every committed lesson: none is flagged. */
+function figAmbiguous(src){
+  if(figParse(src).error) return null;          // an expression the engine REJECTS is already reported on the figure
+  const lx=figTok(src); if(!lx||lx.error||!lx.toks) return null;
+  const T=lx.toks, isAtomStart=(t)=>t&&(t.k==='num'||t.k==='id'||t.k==='(');
+  const isFn=(t)=>!!t&&t.k==='id'&&Object.prototype.hasOwnProperty.call(FIG_FN1,t.v);
+  /* consume one atom — a number, a name, or a bracketed group — plus any ^exponent hanging off it */
+  const atom=(i)=>{
+    let j=i;
+    if(T[j]&&T[j].k==='('){ let d=0; for(;j<T.length;j++){ if(T[j].k==='(')d++; else if(T[j].k===')'&&--d===0){ j++; break; } } }
+    else if(T[j]&&(T[j].k==='num'||T[j].k==='id')) j++;
+    else return i;
+    while(T[j]&&T[j].k==='^'){ j++; while(T[j]&&(T[j].k==='+'||T[j].k==='-')) j++; const k=atom(j); if(k===j) break; j=k; }
+    return j;
+  };
+  for(let i=0;i<T.length;i++){
+    if(T[i].k!=='/') continue;
+    let j=i+1;
+    while(T[j]&&(T[j].k==='+'||T[j].k==='-')) j++;                       // unary sign belongs to the divisor
+    if(isFn(T[j])) continue;
+    let n=0, k=j;
+    while(isAtomStart(T[k])){ const e=atom(k); if(e===k) break; k=e; n++; }
+    if(n<2) continue;
+    /* ONLY WHERE IT CHANGES A CURVE. `1/2pi` and `1/2 3` group the same way, and there the grouping is what
+       anyone means — flagging them would be noise, and telling an author to bracket \u03c0 is wrong advice.
+       The reading only matters when the swallowed run carries the variable the curve is drawn against. */
+    let hasX=false; for(let a=j;a<k;a++) if(T[a].k==='id'&&T[a].v==='x') hasX=true;
+    if(!hasX) continue;
+    /* SAY WHAT IT READS AS — and say it in something the engine would read back the same way. figTok
+       DISCARDS whitespace, so pasting the tokens together would turn `1/2 3` into `1/(23)` and `1/2 sin x`
+       into an unparseable `1/(2sinx)`: an echo that lies is worse than no echo. So a juxtaposition is
+       written out as the multiplication it is (\u00b7), and a function keeps the space before its argument. */
+    const sym=(t)=>t.k==='num'?String(t.v):t.k==='id'?t.v:t.k;
+    const endsAtom=(t)=>!!t&&(t.k==='num'||t.k===')'||(t.k==='id'&&!isFn(t)));
+    let out='';
+    for(let a=0;a<T.length;a++){
+      if(a>0&&isAtomStart(T[a])){ if(endsAtom(T[a-1])) out+='\u00b7'; else if(isFn(T[a-1])&&T[a].k!=='(') out+=' '; }
+      out+=sym(T[a]);
+      if(a===i) out+='(';
+      if(a===k-1) out+=')';
+    }
+    return {read:out, from:j, to:k};
+  }
+  return null;
+}
 function figParse(src){
   if(src==null||!String(src).trim()) return {error:'empty expression'};
   const lx=figTok(src); if(lx.error) return {error:lx.error};

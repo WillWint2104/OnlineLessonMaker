@@ -54,6 +54,23 @@ const ok = (what, cond, detail) => {
   if (cond) { pass++; console.log(`PASS ${what}${detail ? '  ' + detail : ''}`); }
   else { fail++; console.log(`FAIL ${what}${detail ? '  ' + detail : ''}`); }
 };
+/* every function expression in every committed lesson — read here, asserted in the page below */
+const COMMITTED_EXPRS = (() => {
+  const out = new Set();
+  const walk = (o) => { if (Array.isArray(o)) return o.forEach(walk);
+    if (o && typeof o === 'object') { if (o.type === 'function' && (o.f != null || o.expr != null)) out.add(String(o.f != null ? o.f : o.expr));
+      Object.values(o).forEach(walk); } };
+  for (const d of ['examples', 'lessons', 'docs/atlas/lesson', 'tests/visual']) {
+    const dir = path.join(root, d); if (!fs.existsSync(dir)) continue;
+    const st = [dir];
+    while (st.length) { const c = st.pop();
+      for (const e of fs.readdirSync(c, { withFileTypes: true })) { const q = path.join(c, e.name);
+        if (e.isDirectory()) st.push(q);
+        else if (e.name.endsWith('.json')) { try { walk(JSON.parse(fs.readFileSync(q, 'utf8'))); } catch (x) { /* not a lesson */ } } } }
+  }
+  return [...out];
+})();
+
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 const errs = [];
 const p = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
@@ -448,6 +465,76 @@ await p.waitForTimeout(200);
   ok('and only the selected host offers its add-palette — not every open one at once',
      onGroup === N && onEx === N,
      `group selected: ${onGroup} chips · example selected: ${onEx} chips · one host's worth is ${N}`);
+}
+
+console.log('\n--- an expression that reads differently from how it was typed says so ---');
+{
+  /* Stage 5 · 1. figParse binds a juxtaposition tighter than division, so `1/2x` is 1/(2x): a valid
+     expression, plotted without complaint, and not what a teacher writing a gradient of a half means.
+     The parser is NOT changed — re-binding division would re-read `sin 2x` and every committed lesson.
+     The reading is reported instead, in the panel, never on the page. */
+  await p.evaluate(() => { const g = LESSON.slides[cur].groups[0];
+    g.relations = [{ kind: 'figure', figure: { type: 'figure', figure: 'graph', aspect: 'equal', grid: 'shown',
+      domain: { xMin: -6, xMax: 6, yMin: -4, yMax: 6 }, objects: [{ type: 'function', f: 'x' }] } }];
+    selZone = 'mx.o.0.0'; renderSlide(); });
+  await p.waitForTimeout(250);
+  const bind = 'slides.0.groups.0.relations.0.figure.objects.0.f';
+  const warn = async () => p.evaluate(() => { const w = document.querySelector('#inspector .mxamb');
+    return w ? { shown: !w.hidden, text: w.textContent.trim() } : null; });
+  await p.fill(`#inspector [data-bind="${bind}"]`, '1/2x+1');
+  await p.waitForTimeout(200);
+  const bad = await warn();
+  ok('TYPING `1/2x+1` SAYS HOW IT WILL BE READ — the one finding that put wrong mathematics on a page',
+     !!bad && bad.shown && /1\/\(2\u00b7x\)\+1/.test(bad.text),
+     bad ? `panel says ${JSON.stringify(bad.text.slice(0, 74))}` : 'no warning element at all');
+  /* and the figure really did draw the hyperbola, which is why the warning is needed */
+  const drew = await p.evaluate(() => document.querySelectorAll('#slide svg .tp-fig-fn').length);
+  await p.fill(`#inspector [data-bind="${bind}"]`, '(1/2)x+1');
+  await p.waitForTimeout(250);
+  const fixed = await warn();
+  const drew2 = await p.evaluate(() => document.querySelectorAll('#slide svg .tp-fig-fn').length);
+  ok('and bracketing it silences the warning and straightens the curve',
+     !!fixed && !fixed.shown && drew > drew2,
+     `1/2x+1 → ${drew} subpath(s) and a warning · (1/2)x+1 → ${drew2} and none`);
+  await p.fill(`#inspector [data-bind="${bind}"]`, 'x/2+1');
+  await p.waitForTimeout(200);
+  const plain = await warn();
+  ok('and the ordinary way of writing the same gradient is never flagged',
+     !!plain && !plain.shown, `x/2+1 · warning shown: ${plain && plain.shown}`);
+  /* THE GUARD THAT KEEPS IT QUIET. A detector that cried wolf on committed content would be worse than
+     the defect. Every expression in every committed lesson is put through it here, so it can never
+     become noisy without this failing. */
+  const committed = await p.evaluate((list) => list.filter((e) => !!figAmbiguous(e)), COMMITTED_EXPRS);
+  ok('and NO expression in any committed lesson is flagged — the detector cannot cry wolf',
+     committed.length === 0,
+     committed.length ? `flagged: ${committed.join(', ')}` : `${COMMITTED_EXPRS.length} expression(s) checked, none flagged`);
+  /* AN ECHO THAT LIES IS WORSE THAN NO ECHO. The warning tells the author what the engine will read, so
+     the sentence it shows must be something the engine reads THE SAME WAY. figTok discards whitespace, so
+     a reading pasted back together from the tokens turns `1/2 sin x` into `1/(2sinx)` — which does not even
+     parse — and `1/2 3` into `1/(23)`, a different number. Every flagged reading is therefore parsed back
+     and evaluated against the source at six values of x. */
+  const honest = await p.evaluate((list) => list.map((src) => {
+    const a = figAmbiguous(src); if (!a) return { src, flagged: false };
+    const q = figParse(a.read), r = figParse(src);
+    if (q.error || r.error) return { src, read: a.read, flagged: true, ok: false, why: q.error || r.error };
+    const off = [-3.5, -1, 0.25, 2, 4, 7.5].filter((x) => {
+      const u = r.fn(x), v = q.fn(x);
+      return !(Object.is(u, v) || Math.abs(u - v) < 1e-12); });
+    return { src, read: a.read, flagged: true, ok: off.length === 0, why: off.length ? 'differs at x=' + off.join(',') : '' };
+  }), ['1/2x+1', '1/2x', '1/2 sin x', '1/2(x+1)', '3/4x^2', '1/-2x', '(x+1)/2x', '1/2(x+1)(x-1)']);
+  const lying = honest.filter((h) => h.flagged && !h.ok), quiet = honest.filter((h) => !h.flagged);
+  ok('and every reading it shows is one the engine reads back the same way — the echo cannot lie',
+     lying.length === 0 && quiet.length === 0,
+     lying.length ? lying.map((h) => `"${h.src}" → "${h.read}" ${h.why}`).join(' | ')
+       : quiet.length ? `not flagged at all: ${quiet.map((h) => h.src).join(', ')}`
+       : honest.map((h) => `${h.src} → ${h.read}`).join(' · '));
+  /* AND IT STAYS QUIET WHERE THE GROUPING IS WHAT ANYONE MEANS. `1/2pi` is 1/(2π) and that is what it was
+     written for; `1/2x(` is the keystroke state of someone half-way through typing `1/2x(x+1)`, and the
+     figure already reports that one as unreadable. Neither is a place to interrupt an author. */
+  const QUIET = ['1/2pi', '1/2e', '1/2 3', '1/2x(', '1/2x)', '1/2 y', 'x//2x', 'sin 2x', '1/sin 2x', '(1/2)x+1', '1/2*x', 'x/2+1'];
+  const noisy = await p.evaluate((list) => list.filter((e) => !!figAmbiguous(e)), QUIET);
+  ok('…and it says nothing about a constant, a half-typed bracket, or an expression the engine already rejects',
+     noisy.length === 0, noisy.length ? `flagged: ${noisy.join(', ')}` : `${QUIET.length} expression(s), none flagged`);
 }
 
 console.log('\n--- mathematics is entered, not remembered ---');
