@@ -9,7 +9,7 @@ complicated, so the findings decide what is built next.
 
 **The lesson**: *Straight lines: y = mx + c* (NSW Stage 5, Year 9, Linear relationships) — four subtopics,
 four worked examples, eleven steps, a six-column table of values, two graphs carrying four curves between
-them. It is in `lessons/straight-lines.json` and its captures are beside this file. **It was chosen because
+them. It is in `docs/atlas/lesson/straight-lines.app.json` and its captures are beside this file. **It was chosen because
 it stresses parts of the editor the quadratics lesson never touched**: gradients are fractions, a sloping
 line is not the `line` object the graph editor offers, and three lines share one plane.
 
@@ -92,6 +92,18 @@ first line of the first example already needs the author to know the rule.
 throughout. The same number, set two ways, on one screen.
 
 ---
+
+## One thing I got wrong, recorded because it is a repository rule, not an authoring one
+
+The lesson was first written to `lessons/`. That directory **is** the corpus `verify-corpus-identity`
+renders: every lesson in it, re-skinned to all five pack themes and compared byte for byte against the
+reference ref. So a mathematics lesson put there gets re-skinned to `imperium` and `microhistory` — which
+means nothing — and shows up as five differences on every run because it does not exist on `main`. CI said
+so precisely: `7 lesson(s) × 5 theme(s) = 255 render units … ✗ 5/255 DIFFER (250 identical)`.
+
+It now lives beside `docs/atlas/lesson/quadratics.app.json`, which the corpus gate does not read. This is
+CLAUDE.md's rule — *a regression asset must not be the same object as a piece of courseware* — and the gate
+caught it doing its job.
 
 ## What this says about the next step
 

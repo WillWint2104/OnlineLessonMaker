@@ -24,7 +24,13 @@ import { chromium } from 'playwright';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (n, d) => { const k = process.argv.indexOf('--' + n); return k > 0 && process.argv[k + 1] ? process.argv[k + 1] : d; };
-const OUT = path.resolve(root, arg('out', 'lessons/straight-lines.json'));
+/* NOT `lessons/`. That directory IS the corpus verify-corpus-identity renders — every lesson in it,
+   re-skinned to all five PACK themes and compared byte for byte against the reference ref. A mathematics
+   lesson put there is re-skinned to imperium and microhistory, which means nothing, and appears as five
+   "differences" on every run because it does not exist on main. CLAUDE.md's rule, learned the hard way:
+   A REGRESSION ASSET MUST NOT BE THE SAME OBJECT AS A PIECE OF COURSEWARE. The app-schema mathematics
+   lessons live beside docs/atlas/lesson/quadratics.app.json, which the corpus gate does not read. */
+const OUT = path.resolve(root, arg('out', 'docs/atlas/lesson/straight-lines.app.json'));
 const SHOTS = path.resolve(root, arg('shots', 'docs/atlas/authoring/straight-lines'));
 fs.mkdirSync(SHOTS, { recursive: true });
 const MIME = { '.html': 'text/html', '.json': 'application/json', '.woff2': 'font/woff2', '.png': 'image/png', '.svg': 'image/svg+xml' };

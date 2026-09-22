@@ -13,7 +13,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   through the interface: four subtopics, four worked examples, eleven steps, a six-column table of values,
   two graphs carrying four curves, a deliberate step reorder, then export and reopen. **189 interactions**
   — 56 outline selections, 39 buttons, 94 fields. It exports, reopens byte-identical, and renders intact in
-  Study, Edit and Present with no page errors. The lesson is `lessons/straight-lines.json`; the captures and
+  Study, Edit and Present with no page errors. The lesson is `docs/atlas/lesson/straight-lines.app.json`; the captures and
   the findings are in `docs/atlas/authoring/`.
   The topic was chosen to stress what quadratics never did: gradients are fractions, a sloping line is not
   the `line` object the graph editor offers, and three lines share one plane.

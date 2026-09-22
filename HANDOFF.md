@@ -868,7 +868,7 @@ renderer is referenced.
   - Panel heights at the places a teacher works: table 3474 → 1481px, points 2304 → 1599, window
     2208 → 1576, subtopic 1790 → 1519, open 1134 → 1000, against 1000px visible.
 
-  **A SECOND LESSON HAS BEEN MADE IN THE APP** — `lessons/straight-lines.json`, built by
+  **A SECOND LESSON HAS BEEN MADE IN THE APP** — `docs/atlas/lesson/straight-lines.app.json`, built by
   `scripts/author-straight-lines.mjs` through the interface only, on a topic chosen to stress what
   quadratics did not. 189 interactions; exports, reopens identical, renders in all three modes. TEN FINDINGS
   in `docs/atlas/authoring/FINDINGS.md`, each measured during the run. THE TWO THAT PUT SOMETHING WRONG ON
