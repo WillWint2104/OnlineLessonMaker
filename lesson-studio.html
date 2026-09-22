@@ -10798,11 +10798,26 @@ function figFnLabAt(c,V,P,FS){
   if(!c||!c.label) return null;
   let best=null; (c.paths||[]).forEach(q=>{ if(q&&q.length&&(!best||q.length>best.length)) best=q; });
   if(!best||!best.length) return null;
-  const H=FS*1.15, w=String(c.label).length*FS*0.6+2, x0=V.sx(P.x0), x1=V.sx(P.x1);
-  const e=best[best.length-1], a=best[0];
-  if(e[0]+6+w<=x1-2) return {x:e[0]+6, y:e[1]-6, anchor:'start', bx:e[0]+6, by:e[1]-6-H*0.8, w, h:H};
-  if(a[0]-6-w>=x0+2) return {x:a[0]-6, y:a[1]-6, anchor:'end', bx:a[0]-6-w, by:a[1]-6-H*0.8, w, h:H};
-  return {x:e[0]-6, y:e[1]-6, anchor:'end', bx:e[0]-6-w, by:e[1]-6-H*0.8, w, h:H};
+  const H=FS*1.15, w=String(c.label).length*FS*0.6+2;
+  const x0=V.sx(P.x0), x1=V.sx(P.x1), yTop=V.sy(P.y1), yBot=V.sy(P.y0);
+  /* A NAME PLACED OFF THE PLOT IS WORSE THAN NO NAME. A steep line leaves through the TOP, so its last
+     sample is at the ceiling and a label hung there is clipped — which is what the first capture showed
+     while the node count said three names were drawn. So the anchor is the RIGHT-MOST sample of the arm
+     at which the whole glyph still fits inside the plate, tried to the right first and then to the left;
+     a curve with no such sample takes no name rather than a clipped one. */
+  const fits=(pt,side)=>{
+    const bx=side>0?pt[0]+6:pt[0]-6-w, by=pt[1]-6-H*0.8;
+    return bx>=x0+2 && bx+w<=x1-2 && by>=yTop+2 && by+H<=yBot-2;
+  };
+  let R=null, L=null;
+  for(let i=best.length-1;i>=0;i--){ const pt=best[i];
+    if(!R&&fits(pt,1)) R=pt;
+    if(!L&&fits(pt,-1)) L=pt;
+    if(R&&L) break; }
+  const pick=R||L, side=R?1:-1;
+  if(!pick) return null;
+  const bx=side>0?pick[0]+6:pick[0]-6-w;
+  return {x:side>0?pick[0]+6:pick[0]-6, y:pick[1]-6, anchor:side>0?'start':'end', bx, by:pick[1]-6-H*0.8, w, h:H};
 }
 /* …and the same geometry as an OBSTACLE, so a point identifier never lands on a curve's name. Mirrors
    figRefLabBoxes' contract exactly: nothing is reserved for a figure that draws no names. */

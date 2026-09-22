@@ -67,17 +67,37 @@ for (const [name, slide, why] of CAPS) {
   console.log(`    ${m.errors} figure error(s)`);
 }
 
-/* THE PANEL. The same figure, opened in the editor with the first curve selected, so the two controls this
-   stage adds are photographed where a teacher meets them rather than described. */
-await p.evaluate(() => { go(0); document.querySelector('#modeSeg [data-mode="edit"]').click(); });
+/* THE PANEL. The two controls this stage adds, photographed where a teacher meets them rather than
+   described. The fixture above is a composable PAGE lesson — the mathematics inspector answers for the
+   responsive pages — so the panel is shown on a mathematics worked-examples page carrying the same three
+   lines, with the first curve selected. */
+await p.evaluate(() => {
+  LESSON = { meta: { title: 'Curve identity', theme: 'mathematics', stage: 'NSW Stage 5', year: 'Year 9' },
+    slides: [{ type: 'workedExamples', id: 'wex', navLabel: 'Comparing steepness', title: 'Comparing steepness',
+      lede: 'Three gradients through one intercept.',
+      groups: [{ id: 'g1', type: 'sequence', title: 'Three gradients', lede: 'Same intercept, different slope.',
+        relations: [{ kind: 'figure', figure: { type: 'figure', figure: 'graph', aspect: 'equal', grid: 'shown',
+          curveLabels: 'shown', domain: { xMin: -5, xMax: 5, yMin: -4, yMax: 6 },
+          objects: [{ type: 'function', f: '2x+1', label: 'y = 2x + 1' },
+                    { type: 'function', f: 'x+1', pen: 'dashed', label: 'y = x + 1' },
+                    { type: 'function', f: '(1/2)x+1', pen: 'dotted', label: 'y = \u00bdx + 1' }] } }],
+        examples: [{ id: 'e1', label: 'Reading a gradient', prompt: 'Which line is steepest, and how do you know?',
+          steps: [{ id: 's1', text: 'Compare the coefficient of _x_.', math: '2 > 1 > 1/2' }],
+          answer: '_y_ = 2_x_ + 1 is the steepest.' }] }] }] };
+  cur = 0; render(); go(0); document.querySelector('#modeSeg [data-mode="edit"]').click();
+});
+await p.waitForTimeout(400);
+await p.evaluate(() => { selZone = 'mx.o.0.0'; renderSlide(); });
 await p.waitForTimeout(400);
 const panel = await p.evaluate(() => {
   const ins = document.querySelector('#inspector');
-  return { fields: [...ins.querySelectorAll('label')].map((l) => l.textContent.trim()).filter(Boolean) };
+  return { fields: [...ins.querySelectorAll('.isec label')].map((l) => l.textContent.trim()).filter(Boolean),
+    pens: [...(ins.querySelector('[data-bind$=".pen"]') || { options: [] }).options].map((o) => o.textContent.trim()) };
 });
 await p.screenshot({ path: path.join(OUT, '4-panel.png') });
 console.log(`\n· 4-panel — the editor, first curve selected`);
-console.log(`    panel offers: ${panel.fields.slice(0, 12).join(' · ')}`);
+console.log(`    the curve's fields: ${panel.fields.join(' · ')}`);
+console.log(`    the pens on offer: ${panel.pens.join(' · ')}`);
 console.log(`\npage errors: ${errs.length ? errs.slice(0, 2).join(' | ') : 'none'}`);
 console.log(`written to ${path.relative(root, OUT)}`);
 await browser.close(); server.close();

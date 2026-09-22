@@ -24,7 +24,7 @@
         {
           "type": "figure",
           "figure": "graph",
-          "title": "y = mx + 1 for three gradients",
+          "title": "$y=mx+1$ for three gradients",
           "caption": "The steeper the line, the larger $m$.",
           "domain": { "xMin": -5, "xMax": 5, "yMin": -4, "yMax": 6 },
           "grid": "shown",
@@ -55,7 +55,7 @@
         {
           "type": "figure",
           "figure": "graph",
-          "title": "y = x^2 and y = (x − 2)^2",
+          "title": "$y=x^2$ and $y=(x-2)^2$",
           "domain": { "xMin": -4, "xMax": 6, "yMin": -1, "yMax": 9 },
           "grid": "shown",
           "aspect": "stretch",

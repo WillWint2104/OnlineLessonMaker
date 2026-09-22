@@ -560,6 +560,9 @@ console.log('\n--- a curve can be told from the one beside it ---');
       .map((r) => ({ x: r.x, y: r.y, w: r.width, h: r.height })),
     pills: [...document.querySelectorAll('#slide .tp-fig-ptid, #slide .tp-fig-pill')].map((e) => e.getBoundingClientRect())
       .map((r) => ({ x: r.x, y: r.y, w: r.width, h: r.height })),
+    /* the plate a name has to stay on — the drawn surface, not the figure shell around it */
+    plate: (() => { const g = document.querySelector('#slide .tp-fig-svg');
+      if (!g) return null; const r = g.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; })(),
     curveLabels: (getP(LESSON, 'slides.0.groups.0.relations.0.figure') || {}).curveLabels }));
 
   /* THE DEFECT, MEASURED FIRST — three gradients through one intercept, authored the way they were before
@@ -600,6 +603,15 @@ console.log('\n--- a curve can be told from the one beside it ---');
   const hit = done.boxes.filter((b) => done.pills.some((q) => b.x < q.x + q.w && q.x < b.x + b.w && b.y < q.y + q.h && q.y < b.y + b.h));
   ok('…and no point identifier is placed on top of a curve’s name', hit.length === 0 && done.pills.length > 0,
      `${done.boxes.length} name(s) against ${done.pills.length} identifier(s), ${hit.length} overlap(s)`);
+  /* A NAME PLACED OFF THE PLATE IS WORSE THAN NO NAME, and a COUNT cannot see it: the first capture of this
+     stage showed one visible name while the node count said three — the two steep lines leave through the
+     top, so a label hung at their last sample was clipped. The claim is therefore about the PAINTED box. */
+  const off = done.boxes.filter((b) => !done.plate
+    || b.x < done.plate.x - 0.5 || b.x + b.w > done.plate.x + done.plate.w + 0.5
+    || b.y < done.plate.y - 0.5 || b.y + b.h > done.plate.y + done.plate.h + 0.5);
+  ok('…and every name is painted INSIDE the plate — a clipped name is not a name',
+     off.length === 0 && done.boxes.length === 5,
+     `${done.boxes.length} name(s), ${off.length} outside the ${done.plate ? Math.round(done.plate.w) + '×' + Math.round(done.plate.h) : '(missing)'} plate`);
 
   /* THE PEN VOCABULARY IS LOOKED UP, NEVER ASSEMBLED. figDraw interpolates `class="${cls}"` RAW, so a pen
      that reached the attribute would be an injection point — and a plain object literal would answer
