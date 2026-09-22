@@ -17,9 +17,9 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     has just built — atoms (a variable, a number, a bracket, a built-up fraction, each carrying whatever
     superscript follows it) joined by relations and operators — and holding each one on one line
     (`.mx-nb`). The prose around them wraps exactly as before. `_x_ = −4` in a question band narrowed by the
-    open inspector used to break after the `=`, stranding the value on the next line; measured with a Range
-    over the characters either side of every operator on the page, that was 2 expressions split at the
-    desktop surface in Edit and is now 0. A run too long for its column is not clipped and does not
+    open inspector used to break after the `=`, stranding the value on the next line; measured by ranging
+    over the OPERANDS either side of every operator on the page, that was the one expression split across
+    lines anywhere in this lesson, at the desktop surface in Edit, and is now none. A run too long for its column is not clipped and does not
     overflow sideways: above 30 visible characters it is offered break points AFTER relations and
     operators only, never inside a term and never inside brackets, so the operator stays on the line it
     closes and the next line begins with a whole term. It reads the rendered markup rather than the source,
@@ -55,6 +55,16 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
   question again and the no-fill check sees the fill; take the stacked rule away and nothing separates the
   two regions. One of those controls was found passing vacuously — its predicate reached for a field the
   object did not have, so it answered "false" for both sides — and was fixed before it was trusted.
+
+  **The split measure itself was wrong twice, and CI found the first one.** It read one text node at a
+  time, so it could not see across the italic in `<i>x</i> = −4`, and it flagged a WORD break in front of a
+  signed number — "the whole of −4 is squared" — as a split expression. That depends on where the fonts
+  happen to wrap, so it passed here and failed on the runner. It now reads the host's text flattened across
+  element boundaries and counts an operator only where a value stands either side of it, skipping spaces
+  and one leading sign. Made to see across elements it then flagged every built-up FRACTION, whose
+  numerator and denominator sit at different tops on one line; lines are now clustered by vertical overlap,
+  the way this file already reads the lines of a wrapped answer. The stronger measure changes the reported
+  count of the original defect from 2 to 1 — the same single break, no longer counted twice.
 
   `scripts/shots-presentation.mjs` (new) is the before/after harness: the lesson served as a REAL DOCUMENT
   with `#lesson-data` replaced, Study and Edit, 1536 and 834, and beside every capture the numbers for all

@@ -2005,26 +2005,56 @@ mark('presentation');
     const vis = (e) => e.offsetParent !== null && R(e).height > 0;
     const MATH = '.mx-wexqb, .mx-stepm, .mx-wexrv, .mx-relations li, .mx-stept';
     /* AN EXPRESSION SPLIT ACROSS LINES, measured without asking the engine what it thinks it held: a Range
-       over the few characters either side of every relation or operator on the page. A Range the browser
-       broke a line inside reports two client rectangles on two different tops. */
-    const OPS = /[=+−×÷±≤≥]/g;
-    const split = [];
-    [].slice.call(live.querySelectorAll(MATH)).filter(vis).forEach((host) => {
-      const w = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
-      for (let n = w.nextNode(); n; n = w.nextNode()) {
-        const t = n.nodeValue; OPS.lastIndex = 0;
-        for (let m = OPS.exec(t); m; m = OPS.exec(t)) {
-          const a = Math.max(0, m.index - 3), b = Math.min(t.length, m.index + 4);
-          const r = document.createRange(); r.setStart(n, a); r.setEnd(n, b);
-          const tops = []; [].slice.call(r.getClientRects()).forEach((x) => { if (!tops.some((y) => Math.abs(y - x.top) < 4)) tops.push(x.top); });
-          if (tops.length > 1) split.push(`${host.className || host.tagName}: "…${t.slice(a, b)}…"`);
-        }
+       over the operands either side of every relation or operator on the page. A Range the browser broke a
+       line inside reports client rectangles on two different tops. */
+    /* AN OPERATOR IS PART OF AN EXPRESSION ONLY WHEN IT HAS AN OPERAND ON BOTH SIDES. A minus that merely
+       signs a number in prose — "the whole of −4 is squared", "Starting from _x_ = −3" — has a WORD to its
+       left, and a line break in front of it is ordinary prose wrapping, not a split expression. So the
+       host's text is read FLATTENED, across element boundaries (`<i>x</i> = −4` is one thing, not three),
+       and an operator counts only when a value stands either side of it, skipping spaces and one leading
+       sign. The break is then measured between those two operands.
+       The earlier version read one text node at a time, could not see past the italic, and reported the
+       prose case as a defect — which is why it passed on one machine and failed on CI, where the fonts
+       wrap in different places. The measure was wrong, not the page. */
+    /* LINES ARE CLUSTERED BY VERTICAL OVERLAP, NOT BY EQUAL TOPS. A built-up fraction puts its numerator
+       above the line and its denominator below it, so `_y_ = 4/9` hands back rectangles at three different
+       tops on ONE line; counting distinct tops calls that a line break. Two rectangles belong to the same
+       line whenever they overlap vertically at all — which is exactly how this file already reads the lines
+       of a wrapped answer. */
+    const lineCount = (rects) => { const rs = [].slice.call(rects).filter((r) => r.width >= 1 && r.height >= 1)
+        .sort((a, b) => a.top - b.top), out = [];
+      rs.forEach((r) => { const c = out[out.length - 1];
+        if (c && r.top < c.bottom - 2) c.bottom = Math.max(c.bottom, r.bottom); else out.push({ bottom: r.bottom }); });
+      return out.length; };
+    const flat = (host) => { const out = [], w = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+      for (let n = w.nextNode(); n; n = w.nextNode()) { const val = !!(n.parentElement && n.parentElement.closest('i, sup'));
+        for (let k = 0; k < n.nodeValue.length; k++) out.push({ c: n.nodeValue.charAt(k), n: n, k: k, val: val }); }
+      return out; };
+    const OPCH = '=+−×÷±≤≥', SIGNCH = '+−';
+    const isVal = (t) => !!t && (t.val || /[0-9.()\[\]]/.test(t.c));
+    const splitsIn = (host) => { const f = flat(host), bad = [];
+      const skip = (i, d) => { while (f[i] && /\s/.test(f[i].c)) i += d; return i; };
+      for (let i = 0; i < f.length; i++) {
+        if (f[i].val || OPCH.indexOf(f[i].c) < 0) continue;
+        const l = skip(i - 1, -1); let r = skip(i + 1, 1);
+        if (f[r] && !f[r].val && SIGNCH.indexOf(f[r].c) >= 0) r = skip(r + 1, 1);
+        if (!isVal(f[l]) || !isVal(f[r])) continue;
+        /* …and a break AT A CHUNK BOUNDARY is the deliberate one, not a defect: a run too long for its
+           column is split into held chunks on purpose, and the break between two of them is where the
+           mathematics was meant to break. Only a break inside one chunk, or in notation the grammar
+           never held at all, counts here. */
+        const runOf = (t) => t.n.parentElement && t.n.parentElement.closest('.mx-nb');
+        const rl = runOf(f[l]), rr = runOf(f[r]);
+        if (rl && rr && rl !== rr) continue;
+        const rg = document.createRange(); rg.setStart(f[l].n, f[l].k); rg.setEnd(f[r].n, f[r].k + 1);
+        if (lineCount(rg.getClientRects()) > 1) bad.push(`${host.className || host.tagName}: "${rg.toString().replace(/\s+/g, ' ')}"`);
       }
-    });
+      return bad; };
+    const split = [];
+    [].slice.call(live.querySelectorAll(MATH)).filter(vis).forEach((h) => { [].push.apply(split, splitsIn(h)); });
     /* an inline element also reports several rectangles for fragments side by side on ONE line — an italic
        beside upright text is enough — so a held run is only broken when its fragments sit on different tops */
-    const tops = (e) => { const t = []; [].slice.call(e.getClientRects())
-      .forEach((r) => { if (!t.some((y) => Math.abs(y - r.top) < 4)) t.push(r.top); }); return t.length; };
+    const tops = (e) => lineCount(e.getClientRects());
     const runs = [].slice.call(live.querySelectorAll('.mx-nb')).filter(vis);
     const ex0 = live.querySelector('.mx-wexex');
     const ask = ex0 && ex0.querySelector('.mx-wexask'), work = ex0 && ex0.querySelector('.mx-wexwork');
@@ -2052,7 +2082,9 @@ mark('presentation');
   ok('NO EXPRESSION IS SPLIT ACROSS LINES, at any width — a relation and the value it states stay together',
      seen.length === WIDTHS.length && seen.every((r) => r.split.length === 0 && r.held.length === 0 && r.over.length === 0)
      && seen.every((r) => r.runs > 0),
-     seen.map((r) => `${r.w}px: ${r.runs} held runs, ${r.split.length} split, ${r.over.length} overflowing`).join(' · '));
+     seen.map((r) => `${r.w}px: ${r.runs} held runs, ${r.split.length} split, ${r.over.length} overflowing`
+       + (r.split.length ? ` ← ${r.split.slice(0, 2).join(' | ')}` : '')
+       + (r.held.length ? ` ← HELD BUT SPLIT: ${r.held.slice(0, 2).join(' | ')}` : '')).join(' · '));
   /* CONTROL: take the hold away and the same measure finds the breaks — so "nothing is split" is measured
      and not a measure that cannot see. Held on a lesson whose question is deliberately long enough that a
      narrow column must break inside the expression if nothing is stopping it. */
@@ -2070,9 +2102,11 @@ mark('presentation');
   ok('CONTROL: remove the hold and the same Range measure catches the breaks it was there to prevent',
      loose.some((r) => r.split.length > 0),
      loose.filter((r) => r.split.length).map((r) => `${r.w}px: ${r.split.length} — ${r.split[0]}`).join(' · ') || 'nothing broke, so the measure proves nothing');
+  const heldq = await Promise.all(WIDTHS.map(([w, h]) => look({ w, h, lesson: LONGQ })));
   ok('…and with the hold back, that same long question breaks between words instead',
-     (await Promise.all(WIDTHS.map(([w, h]) => look({ w, h, lesson: LONGQ })))).every((r) => r.split.length === 0 && r.over.length === 0),
-     'the question wraps; the expression inside it does not');
+     heldq.every((r) => r.split.length === 0 && r.over.length === 0),
+     heldq.map((r, i) => `${WIDTHS[i][0]}px: ${r.split.length} split, ${r.over.length} over`
+       + (r.split.length ? ` ← ${r.split.slice(0, 2).join(' | ')}` : '')).join(' · '));
   /* A RUN TOO LONG FOR ITS COLUMN IS BROKEN THE WAY MATHEMATICS IS BROKEN — after a relation or an
      operator, never inside a term — and it is never clipped and never overflows sideways. */
   const LONGM = (() => { const L = JSON.parse(JSON.stringify(FIX));
@@ -2085,8 +2119,10 @@ mark('presentation');
       const m = document.querySelector('[data-mx-panel]:not([hidden]) .mx-stepm'); if (!m) return null;
       const chunks = [].slice.call(m.querySelectorAll('.mx-nb'));
       const rg = document.createRange(); rg.selectNodeContents(m);
-      const tops = []; [].slice.call(rg.getClientRects()).forEach((x) => { if (!tops.some((y) => Math.abs(y - x.top) < 4)) tops.push(x.top); });
-      return { chunks: chunks.length, lines: tops.length,
+      const rs = [].slice.call(rg.getClientRects()).filter((r) => r.width >= 1 && r.height >= 1).sort((a, b) => a.top - b.top), cl = [];
+      rs.forEach((r) => { const c = cl[cl.length - 1];
+        if (c && r.top < c.bottom - 2) c.bottom = Math.max(c.bottom, r.bottom); else cl.push({ bottom: r.bottom }); });
+      return { chunks: chunks.length, lines: cl.length,
         /* every chunk but the last ends on the operator it carries over */
         ends: chunks.slice(0, -1).map((c) => c.textContent.trim().slice(-1)),
         over: m.scrollWidth > m.clientWidth + 1, text: m.textContent.replace(/\s+/g, ' ').trim() };

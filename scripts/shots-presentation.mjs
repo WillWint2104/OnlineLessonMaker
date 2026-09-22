@@ -66,25 +66,54 @@ const READ = ({ gid }) => {
          build marks its runs. It reads the same on both sides of the change, which is the whole point.
      (b) the marked runs, once they exist: a held run split across lines would be a run held in vain. */
   const MATH = '.mx-wexqb, .mx-stepm, .mx-wexrv, .mx-relations li, .mx-stept';
-  const OPS = /[=+−×÷±≤≥]/g;
-  const wrapped = [];
-  [].slice.call(live.querySelectorAll(MATH)).filter(vis).forEach((host) => {
-    const w = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
-    for (let n = w.nextNode(); n; n = w.nextNode()) {
-      const t = n.nodeValue; OPS.lastIndex = 0;
-      for (let m = OPS.exec(t); m; m = OPS.exec(t)) {
-        const a = Math.max(0, m.index - 3), b = Math.min(t.length, m.index + 4);
-        const r = document.createRange(); r.setStart(n, a); r.setEnd(n, b);
-        if (r.getClientRects().length > 1) wrapped.push(`${host.className || host.tagName}: "…${t.slice(a, b)}…"`);
-      }
+  /* AN OPERATOR IS PART OF AN EXPRESSION ONLY WHEN IT HAS AN OPERAND ON BOTH SIDES. A minus that merely
+     signs a number in prose — "the whole of −4 is squared", "Starting from _x_ = −3" — has a WORD to its
+     left, and a line break in front of it is ordinary prose wrapping, not a split expression. So the
+     host's text is read FLATTENED, across element boundaries (`<i>x</i> = −4` is one thing, not three),
+     and an operator counts only when a value stands either side of it, skipping spaces and one leading
+     sign. The break is then measured between those two operands.
+     The earlier version read one text node at a time, could not see past the italic, and reported the
+     prose case as a defect — which is why it passed on one machine and failed on CI, where the fonts
+     wrap in different places. The measure was wrong, not the page. */
+  /* LINES ARE CLUSTERED BY VERTICAL OVERLAP, NOT BY EQUAL TOPS. A built-up fraction puts its numerator
+     above the line and its denominator below it, so `_y_ = 4/9` hands back rectangles at three different
+     tops on ONE line; counting distinct tops calls that a line break. Two rectangles belong to the same
+     line whenever they overlap vertically at all — which is exactly how this file already reads the lines
+     of a wrapped answer. */
+  const lineCount = (rects) => { const rs = [].slice.call(rects).filter((r) => r.width >= 1 && r.height >= 1)
+      .sort((a, b) => a.top - b.top), out = [];
+    rs.forEach((r) => { const c = out[out.length - 1];
+      if (c && r.top < c.bottom - 2) c.bottom = Math.max(c.bottom, r.bottom); else out.push({ bottom: r.bottom }); });
+    return out.length; };
+  const flat = (host) => { const out = [], w = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+    for (let n = w.nextNode(); n; n = w.nextNode()) { const val = !!(n.parentElement && n.parentElement.closest('i, sup'));
+      for (let k = 0; k < n.nodeValue.length; k++) out.push({ c: n.nodeValue.charAt(k), n: n, k: k, val: val }); }
+    return out; };
+  const OPCH = '=+−×÷±≤≥', SIGNCH = '+−';
+  const isVal = (t) => !!t && (t.val || /[0-9.()\[\]]/.test(t.c));
+  const splitsIn = (host) => { const f = flat(host), bad = [];
+    const skip = (i, d) => { while (f[i] && /\s/.test(f[i].c)) i += d; return i; };
+    for (let i = 0; i < f.length; i++) {
+      if (f[i].val || OPCH.indexOf(f[i].c) < 0) continue;
+      const l = skip(i - 1, -1); let r = skip(i + 1, 1);
+      if (f[r] && !f[r].val && SIGNCH.indexOf(f[r].c) >= 0) r = skip(r + 1, 1);
+      if (!isVal(f[l]) || !isVal(f[r])) continue;
+      /* …and a break AT A CHUNK BOUNDARY is the deliberate one, not a defect: a run too long for its
+         column is split into held chunks on purpose, and the break between two of them is where the
+         mathematics was meant to break. Only a break inside one chunk, or in notation the grammar
+         never held at all, counts here. */
+      const runOf = (t) => t.n.parentElement && t.n.parentElement.closest('.mx-nb');
+      const rl = runOf(f[l]), rr = runOf(f[r]);
+      if (rl && rr && rl !== rr) continue;
+      const rg = document.createRange(); rg.setStart(f[l].n, f[l].k); rg.setEnd(f[r].n, f[r].k + 1);
+      if (lineCount(rg.getClientRects()) > 1) bad.push(`${host.className || host.tagName}: "${rg.toString().replace(/\s+/g, ' ')}"`);
     }
-  });
-  /* A held run is SPLIT only when its fragments sit on different lines. An inline element also reports
-     several client rectangles for fragments side by side on one line — an italic beside upright text is
-     enough — so counting rectangles alone reports a defect that is not there. Compare their tops. */
+    return bad; };
+  const split = [];
+  [].slice.call(live.querySelectorAll(MATH)).filter(vis).forEach((h) => { [].push.apply(split, splitsIn(h)); });
+  const wrapped = split;
   const runs = [].slice.call(live.querySelectorAll('.mx-nb')).filter(vis);
-  const lines = (e) => { const t = []; [].slice.call(e.getClientRects())
-    .forEach((r) => { if (!t.some((y) => Math.abs(y - r.top) < 4)) t.push(r.top); }); return t.length; };
+  const lines = (e) => lineCount(e.getClientRects());
   const broken = runs.filter((e) => lines(e) > 1)
     .map((e) => e.textContent.replace(/\s+/g, ' ').trim());
   /* nothing may reach past its own region, at any width */
