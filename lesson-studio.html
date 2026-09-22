@@ -1993,17 +1993,17 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    or the state bar above is the sequence's own margin */
 .mx-wexlede+.mx-wexseq,.mx-wexsurface>.mx-wexseq:first-child,.mx-stpane>.mx-wexseq:first-child{margin-top:-18px;}
 .mx-wexex>.mx-wexh{grid-area:title;margin:0 0 14px;}
-/* THE QUESTION IS INSTRUCTION, NOT A FIELD. It used to be a tinted rectangle, and a filled grey box beside
-   a white one reads as something to type into rather than something to read — a form control on a teaching
-   page. So the question is written on the same white paper as the working, in the same body ink, and what
-   tells the two apart is a LINE and a LABEL, not a fill: the rule beside it where the row splits, the rule
-   under it where the row stacks. The band still runs to the surface's edge — its bleed IS the surface
-   padding, read from the same property, so that rule, the rule between examples and the surface edge are
-   one edge and the question's text stays on the page's single left inset. Flat: no fill, no radius, no
-   shadow; one hairline. */
+/* THE QUESTION IS INSTRUCTION, NOT A FIELD — AND NOT A COMPARTMENT EITHER. It was first a tinted
+   rectangle (a filled grey box beside a white one reads as something to type into), and then a white one
+   with a hairline. Both were the same mistake one step apart: separating the question from the working with
+   a MARK. SPACE SEPARATES, TYPOGRAPHY IDENTIFIES, AND A BORDER IS KEPT FOR GENUINELY SEPARATE CONTENT — so
+   the question now carries no fill and no rule, and what tells it from the working is its QUESTION heading,
+   the channel beside it and the shared top edge. The band still runs to the surface's edge — its bleed IS
+   the surface padding, read from the same property — so the question's text stays on the page's single
+   left inset. Where the row stacks there is no channel, so the SPACE under the question does that work
+   instead, and the split override below puts it back to the hug. */
 .mx-wexask{grid-area:ask;background:transparent;
-  margin:0 calc(-1 * var(--mx-surface-pad));padding:16px var(--mx-surface-pad) 18px;min-width:0;
-  border-bottom:1px solid var(--mx-line);}
+  margin:0 calc(-1 * var(--mx-surface-pad));padding:16px var(--mx-surface-pad) 28px;min-width:0;}
 .mx-wexask>.mx-wexlab{color:var(--mx-ink-2);}
 .mx-wexwork{grid-area:work;padding:16px 0 0;min-width:0;}
 .mx-wexwork>.mx-wexsec{margin:0;}
@@ -2018,20 +2018,23 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 [data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"]){
   grid-template-columns:minmax(calc(var(--mx-ask-min,300px) + var(--mx-ask-pad,16px)),36fr) minmax(calc(var(--mx-work-min,420px) + var(--mx-work-pad,22px) + 1px),64fr);
   grid-template-areas:"title title" "ask work";}
-/* THE TINT ENDS WHERE THE QUESTION DOES. `align-self:start` on the ask alone — not `align-items:start` on
-   the row — because the working must go on stretching: the rule between them is the WORKING's left border,
-   so stretching only the ask's neighbour is what keeps that rule running the full band when the question is
-   the taller of the two. Measured both ways on a deliberately long question: with the row set to `start`
-   the rule stopped 350px short of the band; this way it spans it. Split only — stacked already hugs. */
-/* …and where the row splits, the rule that separates question from working is the WORKING's left border,
-   so the question does not also carry one underneath: two rules meeting at a corner around a hugged
-   question is a box, and the question is not in a box. */
-[data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"])>.mx-wexask{margin-right:0;padding-right:var(--mx-ask-pad,16px);align-self:start;border-bottom:0;}
-[data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"])>.mx-wexwork{border-left:1px solid var(--mx-line);padding-left:var(--mx-work-pad,22px);}
-/* ANSWER — THE FINAL BAND OF THE WORKING REGION, not a card: a rule above it, the label run in, the value
-   flowing as text so a wrapped answer returns to the region's own inset. No box, no radius, no fill. Green
-   identifies the label; it never carries the mathematics. */
-.mx-wexres{display:block;margin:0;padding:12px 0 0;border-top:1px solid var(--mx-line);
+/* THE QUESTION ENDS WHERE THE QUESTION DOES. `align-self:start` on the ask alone, so the region hugs its
+   own content rather than being padded out to the solution's depth — measured on the lesson, the old rule
+   painted a 63px question inside a 283px band.
+   THE CHANNEL IS THE SEPARATION, and it is the whole of it: the two pads that used to sit either side of a
+   hairline are now one unbroken gutter of white. Nothing else changes — the floors, the column minimums and
+   the reading measures are the numbers they always were, and the vanished 1px is simply part of the gutter
+   now, so no threshold moves. Split rows hug their question at the foot; the extra space the STACKED form
+   needs instead is in the base rule above. */
+[data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"])>.mx-wexask{margin-right:0;padding-right:var(--mx-ask-pad,16px);padding-bottom:18px;align-self:start;}
+[data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"])>.mx-wexwork{padding-left:calc(var(--mx-work-pad,22px) + 1px);}
+/* ANSWER — THE FINAL BAND OF THE WORKING REGION, not a card and no longer a ruled-off one: the green
+   ANSWER label names it, the larger mathematical face sets it apart from the steps, and the space above it
+   is what closes the working. The rule it used to carry was the last line left inside an example once the
+   others went, and one stray hairline reads as a fragment rather than a boundary. The label is run in and
+   the value flows as text, so a wrapped answer returns to the region's own inset. No box, no radius, no
+   fill. Green identifies the label; it never carries the mathematics. */
+.mx-wexres{display:block;margin:0;padding:20px 0 0;
   font-family:'LM Math',Cambria Math,serif;font-size:18px;line-height:1.5;color:var(--mx-ink);}
 .mx-wexrl{display:inline;margin-right:14px;font-family:var(--mx-ui);font-size:11.5px;font-weight:700;letter-spacing:.11em;
   text-transform:uppercase;color:var(--mx-green);}
@@ -2083,16 +2086,13 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-wexfoot{margin-top:26px;}
 /* WHERE THE EXAMPLES END AND THE REPRESENTATION BEGINS. The foot is a different kind of thing from the
    worked cases above it — the drawing and the reading of it, not another case — and it used to open on 26px
-   of white with nothing to say so, which left the graph looking like the tail of the last solution. It now
-   opens on the sequence's own edge-to-edge hairline, set further apart than the rules BETWEEN examples so
-   the page reads examples · examples · then this. The bleed is the surface padding taken off as margin and
-   put straight back as padding: the rule reaches the surface edge while the pair's grid keeps exactly the
-   width, origin and alignment the composition gave it — the stage is not touched, only what stands above
-   it. Drawn only after a body: a foot that IS the pane (a representation-only group) has nothing to be
-   separated from. */
-.mx-wexseq+.mx-wexfoot,.mx-wexbridge+.mx-wexfoot{
-  margin:34px calc(-1 * var(--mx-surface-pad)) 0;padding:28px var(--mx-surface-pad) 0;
-  border-top:1px solid var(--mx-line);}
+   of white with nothing to say so, which left the graph looking like the tail of the last solution. It
+   opens on SPACE, and the GRAPH heading names it. It briefly opened on an edge-to-edge rule instead; that
+   was withdrawn, because a page whose question, answer, graph section and plane each carried a line of
+   their own read as fragments rather than as sections. The plane already has its own frame: nothing else is
+   drawn around it. The gap is the whole device, and it is only taken after a body — a foot that IS the pane
+   (a representation-only group) has nothing above it to be separated from. */
+.mx-wexseq+.mx-wexfoot,.mx-wexbridge+.mx-wexfoot{margin-top:56px;}
 .mx-wexfoot>.mx-wexlab{margin-bottom:12px;}
 .mx-wexpair{display:grid;grid-template-columns:repeat(var(--mx-cols,12),minmax(0,1fr));
   column-gap:var(--mx-gutter,24px);align-items:start;}

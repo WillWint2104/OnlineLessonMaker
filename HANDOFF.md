@@ -390,11 +390,15 @@ QUESTION | WORKED SOLUTION
 `"title" "ask" "work"` stacked. **THE REGIONS ARE ALIGNED AT THEIR TOP, AND EACH TAKES THE HEIGHT ITS OWN
 CONTENT NEEDS** — a one-line question beside a five-step solution ends where the question ends; the working
 goes on stretching, because the rule between them is the WORKING's left border and it must span the band.
-**THE QUESTION IS INSTRUCTION, NOT A FIELD**: it carries no fill (the old `--mx-ask-tint` is gone — a filled
-grey box beside a white one reads as something to type into), and what separates it from the working is a
-line and a label — the rule beside it where the row splits, a hairline under it where the row stacks. The
+**THE QUESTION IS INSTRUCTION, NOT A FIELD — AND NOT A COMPARTMENT EITHER**: it carries no fill (the old
+`--mx-ask-tint` is gone — a filled grey box beside a white one reads as something to type into) and no rule.
+**SPACE SEPARATES, TYPOGRAPHY IDENTIFIES, AND A BORDER IS KEPT FOR GENUINELY SEPARATE CONTENT** (the
+maintainer's ruling, 22 Sep): what tells the question from the working is its QUESTION heading, the
+unbroken channel beside it and the shared top edge — and where the row stacks, the space under it. The
 band still runs to the surface's edge, and the QUESTION and WORKED SOLUTION labels begin on the same line
-beneath the title. The ANSWER is the
+beneath the title. The ANSWER carries no rule either; the green label and the larger mathematical face name
+it. The section below the examples opens on space and its heading, not on a line. The ONE rule inside a
+worked-examples surface is the boundary between complete examples. The ANSWER is the
 final band of the working — a rule above it, the label run in, the value flowing as text so a wrapped answer
 returns to the region's own inset — never a floating card. The band and its label sit at the working's
 inset — the step-number column, as the maintainer's sketch draws it (`──── / ANSWER   y = 16`) — and the

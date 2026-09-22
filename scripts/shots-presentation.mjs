@@ -21,7 +21,21 @@ import { chromium } from 'playwright';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const arg = (n, d) => { const i = process.argv.indexOf(`--${n}`); return i > 0 ? process.argv[i + 1] : d; };
-const OUT = path.join(root, 'docs/atlas/presentation', arg('out', 'after'));
+/* --out NAMES A DIRECTORY, and an ABSOLUTE one is taken at its word. `path.join(root, …, '/tmp/x')`
+   silently treats the absolute path as a relative segment and writes INSIDE the repository — which is how
+   100 scratch captures ended up committed under docs/atlas/presentation/tmp/. An absolute path now goes
+   where it says, a relative one stays inside the atlas directory, and anything that climbs out of it with
+   `..` is refused rather than quietly redirected. */
+const OUT = (() => {
+  const v = arg('out', 'after');
+  if (path.isAbsolute(v)) return v;
+  const dir = path.resolve(root, 'docs/atlas/presentation', v);
+  if (!dir.startsWith(path.resolve(root, 'docs/atlas/presentation') + path.sep)) {
+    console.error(`--out "${v}" resolves outside docs/atlas/presentation; give an absolute path instead.`);
+    process.exit(2);
+  }
+  return dir;
+})();
 fs.mkdirSync(OUT, { recursive: true });
 
 /* --app <path> serves a DIFFERENT copy of the application, which is how the "before" side is taken:
@@ -47,7 +61,15 @@ const server = http.createServer((q, r) => {
 await new Promise((r) => server.listen(0, '127.0.0.1', r));
 const origin = `http://127.0.0.1:${server.address().port}`;
 
-const SURFACES = [{ id: 'desktop', w: 1536, h: 1100 }, { id: 'tablet', w: 834, h: 1300 }];
+/* --review adds a DESKTOP capture on a tall viewport, so one picture carries the whole worked example,
+   its answer and the opening of the section below it — the rhythm of the page, not a cropped boundary.
+   Height is safe to change for this: every composition decision on this page is keyed on WIDTH
+   (mxRowSplits, mxBridgeFits, mxFootStage) and the plane's height bound is a constant, not a viewport
+   fraction. The standard 1536x1100 pass runs alongside it and is what the geometry is read from. */
+const REVIEW = process.argv.indexOf('--review') > 0;
+const SURFACES = REVIEW
+  ? [{ id: 'review', w: 1536, h: 2600 }]
+  : [{ id: 'desktop', w: 1536, h: 1100 }, { id: 'tablet', w: 834, h: 1300 }];
 const MODES = ['study', 'edit'];
 const VIEWS = [{ id: 'substitution', group: 'g-substitution', state: null },
                { id: 'symmetry', group: 'g-symmetry', state: 'visual' }];

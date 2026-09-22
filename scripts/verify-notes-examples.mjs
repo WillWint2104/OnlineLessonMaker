@@ -1059,14 +1059,15 @@ const anatomy = (p) => p.evaluate(() => {
       if (c && r.top < c.bottom - 2) { c.left = Math.min(c.left, r.left); c.bottom = Math.max(c.bottom, r.bottom); }
       else out.push({ left: r.left, bottom: r.bottom }); });
     return out.map((c) => Math.round(c.left)); };
-  /* the bottom of the last painted thing inside an element, and the top of the first — what the eye reads
-     as the edge of the content, which is not the padded box's edge */
-  const contentBottom = (e) => { let m = -Infinity;
-    [].slice.call(e.querySelectorAll('*')).forEach((c) => { const r = R(c); if (r.height > 0.5) m = Math.max(m, r.bottom); });
-    return m === -Infinity ? R(e).bottom : m; };
-  const contentTop = (e) => { let m = Infinity;
-    [].slice.call(e.querySelectorAll('*')).forEach((c) => { const r = R(c); if (r.height > 0.5) m = Math.min(m, r.top); });
-    return m === Infinity ? R(e).top : m; };
+  /* THE EDGE OF THE CONTENT IS WHERE THE INK IS, and only LEAF elements say where that is. A container's
+     rectangle includes its own padding, so measuring the gap above the foot against `.mx-wexseq` (whose
+     last child is a padded example) and the gap around a rule against `.mx-wexex` (whose children are not
+     padded) compared two different things and made a 82px break read as 56px. Leaves only, both times. */
+  const leaves = (e) => [].slice.call(e.querySelectorAll('*')).filter((c) => !c.firstElementChild && R(c).height > 0.5);
+  const contentBottom = (e) => { const l = leaves(e);
+    return l.length ? Math.max.apply(null, l.map((c) => R(c).bottom)) : R(e).bottom; };
+  const contentTop = (e) => { const l = leaves(e);
+    return l.length ? Math.min.apply(null, l.map((c) => R(c).top)) : R(e).top; };
   const foot = live.querySelector('.mx-wexfoot');
   return { rows: document.querySelector('.mx').dataset.mxRows, foot: document.querySelector('.mx').dataset.mxFoot,
     surfL: Math.round(sr.left), surfR: Math.round(sr.right), surfBg: scs.backgroundColor, ground,
@@ -1104,7 +1105,7 @@ const anatomy = (p) => p.evaluate(() => {
         box: { l: Math.round(x.left), w: Math.round(x.width), t: Math.round(x.top) },
         title: { l: Math.round(R(ttl).left), r: Math.round(R(ttl).right), b: Math.round(R(ttl).bottom), align: getComputedStyle(ttl).textAlign },
         ask: ask ? { l: Math.round(R(ask).left), r: Math.round(R(ask).right), t: Math.round(R(ask).top), b: Math.round(R(ask).bottom),
-          inset: Math.round(inset(ask)), bg: acs.backgroundColor, br: acs.borderRightWidth, radius: acs.borderRadius,
+          inset: Math.round(inset(ask)), bg: acs.backgroundColor, br: acs.borderRightWidth, bb: acs.borderBottomWidth, radius: acs.borderRadius,
           qbR: qb ? Math.round(R(qb).right) : null,
           /* where the question's own content ends, and the pad the region adds after it — the two numbers
              that say whether the tint hugs or has been padded out to somebody else's depth */
@@ -1114,8 +1115,13 @@ const anatomy = (p) => p.evaluate(() => {
         work: { l: Math.round(R(work).left), r: Math.round(R(work).right), t: Math.round(R(work).top), b: Math.round(R(work).bottom),
           inset: Math.round(inset(work)), bl: wcs2.borderLeftWidth, labT: wl ? Math.round(R(wl).top) : null, labL: wl ? Math.round(R(wl).left) : null,
           stepsL: steps ? Math.round(R(steps).left) : null,
-          lastBottom: Math.max.apply(null, [].slice.call(work.children).filter((c) => c !== res).map((c) => R(c).bottom).concat([0])) },
+          lastBottom: Math.max.apply(null, [].slice.call(work.children).filter((c) => c !== res).map((c) => R(c).bottom).concat([0])),
+          /* …and the same edge measured to the INK, so the clear space above the answer is the white the
+             reader actually sees rather than the distance between two padded boxes (which is 0) */
+          lastPaint: Math.max.apply(null, [].slice.call(work.children).filter((c) => c !== res)
+            .map((c) => contentBottom(c)).concat([R(work).top])) },
         res: res ? { l: Math.round(R(res).left), r: Math.round(R(res).right), t: Math.round(R(res).top), b: Math.round(R(res).bottom),
+          paintT: Math.round(contentTop(res)),
           labL: Math.round(R(rl).left), valL: Math.round(R(rv).left), lines: lines(rv),
           radius: rcs.borderRadius, bg: rcs.backgroundColor, bt: rcs.borderTopWidth, bl: rcs.borderLeftWidth, br: rcs.borderRightWidth, bb: rcs.borderBottomWidth,
           align: rcs.textAlign } : null }; }) }; });
@@ -1153,36 +1159,45 @@ const named = (list) => list.filter((e) => !e.unnamed);
        · the tops still meet, because positional alignment is the alignment that was ever wanted;
        · THE TINT ENDS WHERE THE QUESTION DOES — the gap below the last thing in the ask is the region's own
          padding and nothing more, so a panel padded out to a neighbour's height fails here;
-       · THE WORKING STILL SPANS THE WHOLE BAND, so the one quiet rule between them — which is the working's
-         left border — never stops short, including when the QUESTION is the taller of the two.
-     Both regions remain rectangles in one surface with the question's tint (a shade neither the surface nor
-     the ground is) reaching that rule on one side and the surface's edge on the other; no radius. The
-     channels either side of the rule are the published pads — the maintainer's "no wide gutter" — and
-     together they stay under the 40px gutter that was rejected. */
+       · THE WORKING STILL SPANS THE WHOLE BAND — the region takes the row, so the channel beside the
+         question is a full-height run of white rather than one that stops where the question does.
+     NOTHING IS MARKED OFF. The question carries no fill, no rule beside it and no rule under it; the
+     answer carries no rule above it. What separates them is the CHANNEL, the two headings and the shared
+     top edge — space separates, typography identifies, and a border is kept for genuinely separate content.
+     The channel is the two published pads plus the 1px the withdrawn rule used to occupy, and it stays
+     under the 40px gutter that was rejected. */
   const hugs = (e) => e.ask && Math.abs((e.ask.b - e.ask.contentB) - e.ask.padB) <= 1.5;
   const bandSpanned = (e) => e.ask && e.work.b >= e.ask.b - 1;
+  const unmarked = (e) => e.work.bl === '0px' && e.ask.br === '0px' && e.ask.bb === '0px'
+    && e.ask.radius === '0px' && /rgba\(0, 0, 0, 0\)|transparent/.test(e.ask.bg);
   const rect = (e) => e.ask && e.ask.t === e.work.t && hugs(e) && bandSpanned(e) && Math.abs(e.ask.r - e.work.l) <= 1
-    && e.work.bl === '1px' && e.ask.br === '0px' && e.ask.radius === '0px'
-    && /rgba\(0, 0, 0, 0\)|transparent/.test(e.ask.bg) && e.inSurface
+    && unmarked(e) && e.inSurface
     && Math.abs(e.ask.l - e.surf.surfL) <= 1 && Math.abs(e.work.r - (e.surf.surfR - e.surf.surfPad)) <= 1;
   const chan = (e) => ({ q: e.ask && e.ask.qbR != null ? e.work.l - e.ask.qbR : null, w: e.work.inset - e.work.l - 1 });
-  /* THE QUESTION CARRIES NO FILL. It used to be a tinted rectangle and the clause here used to require the
-     tint to be a colour neither the surface nor the ground is; a filled box beside a white one reads as a
-     field to type into, so the question is now written on the surface's own paper and the RULE beside it —
-     the working's left border, asserted in the same expression — is what separates the two. The region
-     still ends where its content does: the hug is measured off the pad, not off a colour. */
-  ok('PROBLEM and WORKING share a top edge, the question carries no fill, it ends where its content does, and the working still spans the band so the rule never stops short',
+  /* THE QUESTION CARRIES NO MARK OF ANY KIND. It was first a tinted rectangle, then a white one with a
+     hairline; this clause required each in turn. Both were the same mistake one step apart — separating the
+     question from the working with a MARK — so it now requires the ABSENCE of all of them: no fill, no rule
+     beside, no rule under, no radius. The region still ends where its content does, measured off the pad. */
+  ok('PROBLEM and WORKING share a top edge, neither is marked off — no fill and no rule — the question ends where its content does, and the working still spans the band',
      S.length >= 6 && S.every(rect),
-     S.map((e) => `${e.id}: tops ${e.ask.t}, question on ${e.ask.bg} ending at ${e.ask.b} (${Math.round(e.ask.b - e.ask.contentB)}px of ${e.ask.padB}px pad after it), working to ${e.work.b}, rule at ${e.work.l}`).join(' · '));
-  ok('no wide gutter: the channels either side of the rule are the published pads, and together less than the 40px that was rejected',
-     S.length >= 6 && S.every((e) => { const c = chan(e); return c.q != null && Math.abs(c.q - e.surf.pads.ask) <= 1 && c.w === e.surf.pads.work && c.q + 1 + c.w < 40; }),
-     S.slice(0, 3).map((e) => { const c = chan(e); return `${e.id}: question text → rule ${c.q}px (pad ${e.surf.pads.ask}), rule → working text ${c.w}px (pad ${e.surf.pads.work})`; }).join(' · '));
-  ok('ANSWER is the final band of the working, at the same inset as the solution above it — no box, no fill, no radius',
+     S.map((e) => `${e.id}: tops ${e.ask.t}, question on ${e.ask.bg} with ${e.ask.bb}/${e.work.bl} rule under/beside, ending at ${e.ask.b} (${Math.round(e.ask.b - e.ask.contentB)}px of ${e.ask.padB}px pad after it), working to ${e.work.b}`).join(' · '));
+  ok('and the channel between them is ONE unbroken run of white — the two published pads and the 1px the withdrawn rule used to take, still under the 40px gutter that was rejected',
+     S.length >= 6 && S.every((e) => { const c = chan(e);
+       return c.q != null && Math.abs(c.q - e.surf.pads.ask) <= 1 && c.w === e.surf.pads.work
+         && c.q + 1 + c.w < 40 && e.work.bl === '0px'; }),
+     S.slice(0, 3).map((e) => { const c = chan(e); return `${e.id}: question text → working edge ${c.q}px (pad ${e.surf.pads.ask}), edge → working text ${c.w}px (pad ${e.surf.pads.work}), border ${e.work.bl}`; }).join(' · '));
+  /* THE ANSWER CARRIES NO RULE EITHER. It used to open on a hairline; once the others went, that was the
+     last line left inside an example, and one stray hairline reads as a fragment rather than a boundary.
+     The green ANSWER label names it, the larger mathematical face sets it apart from the step prose, and
+     the space above it closes the working — so the clause now requires ALL FOUR borders to be absent, and
+     the clear space above the answer to be real. */
+  ok('ANSWER is the final band of the working, at the same inset as the solution above it — no box, no fill, no radius and no rule',
      S.length >= 6 && S.every((e) => e.res && e.res.labL === e.work.inset && e.work.stepsL === e.work.inset && e.work.labL === e.work.inset
        && e.res.l === e.work.inset && Math.abs(e.res.r - e.work.r) <= 1 && e.res.t >= e.work.lastBottom - 1
        && e.res.radius === '0px' && /rgba\(0, 0, 0, 0\)|transparent/.test(e.res.bg)
-       && e.res.bt === '1px' && e.res.bl === '0px' && e.res.br === '0px' && e.res.bb === '0px'),
-     S.map((e) => `${e.id}: label at ${fmt(e.res && e.res.labL)} = steps at ${fmt(e.work.stepsL)}, rule-top ${fmt(e.res && e.res.bt)}, radius ${fmt(e.res && e.res.radius)}`).join(' · '));
+       && e.res.bt === '0px' && e.res.bl === '0px' && e.res.br === '0px' && e.res.bb === '0px'
+       && e.res.paintT - e.work.lastPaint >= 20),
+     S.map((e) => `${e.id}: label at ${fmt(e.res && e.res.labL)} = steps at ${fmt(e.work.stepsL)}, borders ${fmt(e.res && e.res.bt)}, ${Math.round(e.res.paintT - e.work.lastPaint)}px of white above the answer`).join(' · '));
   /* IDENTICAL GEOMETRY ACROSS EVERY INSTANCE ON EVERY PAGE — the same title-to-region gap, the same insets,
      the same tint, whether the instance is the whole of a standard group, the first row of a sequence or its
      third, on the shipping lesson or the design fixture. A rule keyed on a group id or on a row's position
@@ -1199,16 +1214,20 @@ const named = (list) => list.filter((e) => !e.unnamed);
   ok('the synthesis follows the whole sequence as a full-width region — title edge to working edge, below the last instance',
      F.length >= 3 && F.every((f) => Math.abs(f.f.cl - f.t.l) <= 1 && Math.abs(f.f.cr - f.w.r) <= 1 && f.f.t >= f.bottom),
      F.map((f) => `${f.id}: ${f.f.cl}→${f.f.cr} against ${f.t.l}→${f.w.r}, ${f.f.t - f.bottom}px below the last instance`).join(' · '));
-  /* AND THE SECTION OPENS ON A RULE — the examples' own edge-to-edge hairline, reaching past the reading
-     inset on both sides to the surface edge, set FURTHER APART than the rules between examples so the page
-     reads example · example · then this. The graph section used to begin on 26px of plain white, which
-     left the drawing looking like the tail of the last solution. */
-  ok('and the section opens on the examples\' own edge-to-edge rule, set further apart than the rules between them',
-     F.length >= 3 && F.every((f) => f.f.bt >= 1 && f.f.l < f.t.l - 1 && f.f.cr < f.f.r
-       && f.f.after === 'mx-wexseq' && f.f.above > 0 && f.f.below > 0
-       && (f.div ? (f.f.above + f.f.below) > (f.div.above + f.div.below) + 8 : true)),
-     F.map((f) => `${f.id}: ${f.f.bt}px rule ${f.f.l}→${f.f.r} against a reading inset of ${f.t.l}→${f.w.r}, `
-       + `${f.f.above}+${f.f.below}px of clear space against ${f.div ? f.div.above + '+' + f.div.below : '—'}px around the rules between examples`).join(' · '));
+  /* AND THE SECTION OPENS ON SPACE. It briefly opened on an edge-to-edge hairline instead, and this clause
+     required one; that was withdrawn, because a page whose question, answer, section and plane each carried
+     a line of their own read as fragments rather than as sections. The clause now requires NO rule and a
+     gap that is DEMONSTRABLY BIGGER than the space around the rules BETWEEN examples — so "it opens on
+     space" cannot be satisfied by simply deleting the rule and leaving the old 26px behind. */
+  /* the reference gap is the one BETWEEN examples, and a `standard` group has a single example and so no
+     rule to measure — the comparison is against the number the page actually uses, taken from whichever
+     group has two, not from each group separately */
+  const divRef = F.map((f) => f.div).filter(Boolean).map((d) => d.above + d.below)[0];
+  ok('and the section below the examples opens on SPACE, not a rule — and on more space than separates one example from the next',
+     F.length >= 3 && divRef > 0 && F.every((f) => f.f.bt === 0 && f.f.after === 'mx-wexseq'
+       && f.f.below === 0 && f.f.above > divRef + 8),
+     F.map((f) => `${f.id}: ${f.f.bt}px rule, ${f.f.above}px of clear space above it`).join(' · ')
+       + ` — against ${divRef}px around the rules between examples`);
   /* CONTROLS: put the old card back and the band contract fails — its label moves in and, on a phone, its
      wrapped lines no longer return to the inset; confine the synthesis to the working and the full-width
      claim fails. */
@@ -1229,9 +1248,9 @@ const named = (list) => list.filter((e) => !e.unnamed);
   await ph.addStyleTag({ content: '[data-mx-rows="split"] .mx-wexseq>.mx-wexex>.mx-wexask{align-self:stretch !important}' });
   await ph.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await ph.waitForTimeout(300);
   const stretched = named((await anatomy(ph)).ex).filter((e) => e.ask)[0]; await ph.close();
-  ok('CONTROL: stretch the question back to the row and the tint stops hugging, so the hug is measured and not assumed',
+  ok('CONTROL: stretch the question back to the row and it stops hugging, so the hug is measured and not assumed',
      !!stretched && Math.abs((stretched.ask.b - stretched.ask.contentB) - stretched.ask.padB) > 1.5,
-     stretched ? `with the old rule restored the tint runs ${Math.round(stretched.ask.b - stretched.ask.contentB)}px past the question against a ${stretched.ask.padB}px pad` : 'no example');
+     stretched ? `with the old rule restored the region runs ${Math.round(stretched.ask.b - stretched.ask.contentB)}px past the question against a ${stretched.ask.padB}px pad` : 'no example');
   const pt = await open({ slide: WEX, lesson: (() => { const L = JSON.parse(JSON.stringify(FIX));
     const g = L.slides[WEX].groups.find((x) => x.type === 'sequence');
     g.examples[0].prompt = String(g.examples[0].prompt || 'Question.') + ' ' + 'A question long enough to outgrow its own solution. '.repeat(12);
@@ -1239,9 +1258,9 @@ const named = (list) => list.filter((e) => !e.unnamed);
   await pt.addStyleTag({ content: '[data-mx-rows="split"] .mx-wexseq>.mx-wexex>.mx-wexwork{align-self:start !important}' });
   await pt.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await pt.waitForTimeout(300);
   const short = named((await anatomy(pt)).ex).filter((e) => e.ask)[0]; await pt.close();
-  ok('CONTROL: stop the working stretching beside a taller question and the rule is caught stopping short of the band',
+  ok('CONTROL: stop the working stretching beside a taller question and the band is caught stopping short',
      !!short && short.ask.b > short.work.b + 1,
-     short ? `question to ${short.ask.b}, working (and so the rule) only to ${short.work.b} — ${short.ask.b - short.work.b}px short` : 'no example');
+     short ? `question to ${short.ask.b}, working only to ${short.work.b} — ${short.ask.b - short.work.b}px short, so the channel beside the question would run out before it does` : 'no example');
   const pf = await open({ slide: WEX });
   await pf.addStyleTag({ content: '.mx-wexfoot{margin-left:36% !important}' });
   await pf.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await pf.waitForTimeout(300);
@@ -1651,8 +1670,9 @@ const named = (list) => list.filter((e) => !e.unnamed);
   withQ.slides[0].groups.find((g) => g.id === ext.id).states.find((s) => s.id === st.id).show.push('question');
   const b = (await solo(withQ)).ex[0];
   ok('CONTROL: author the question into that state and the two-region form returns',
-     !!b && !b.unnamed && b.form === '' && !!b.ask && b.ask.t === b.work.t && b.work.bl === '1px',
-     b && !b.unnamed ? `${b.id}: question ${b.ask ? 'present' : 'absent'}, regions at ${b.ask && b.ask.t}/${b.work.t}, rule ${b.work.bl}` : 'no example');
+     !!b && !b.unnamed && b.form === '' && !!b.ask && b.ask.t === b.work.t
+     && b.work.bl === '0px' && Math.abs(b.ask.r - b.work.l) <= 1,
+     b && !b.unnamed ? `${b.id}: question ${b.ask ? 'present' : 'absent'}, regions at ${b.ask && b.ask.t}/${b.work.t}, meeting at ${b.work.l} with no rule (${b.work.bl})` : 'no example');
 }
 {
   /* A STRUCTURAL TRANSITION REBUILDS THE PAGE, NOT THE READER'S PLACE. Dragging a window through the
@@ -2058,8 +2078,21 @@ mark('presentation');
     const runs = [].slice.call(live.querySelectorAll('.mx-nb')).filter(vis);
     const ex0 = live.querySelector('.mx-wexex');
     const ask = ex0 && ex0.querySelector('.mx-wexask'), work = ex0 && ex0.querySelector('.mx-wexwork');
+    /* the clear space either side of a boundary, measured to the nearest PAINTED thing rather than to a
+       padded box's edge — the examples carry their own padding, so a box-to-box gap reads 0 whatever the
+       spacing actually is */
+    const lv = (e) => [].slice.call(e.querySelectorAll('*')).filter((c) => !c.firstElementChild && R(c).height > 0.5);
+    const cBottom = (e) => { const l = lv(e); return l.length ? Math.max.apply(null, l.map((c) => R(c).bottom)) : R(e).bottom; };
+    const cTop = (e) => { const l = lv(e); return l.length ? Math.min.apply(null, l.map((c) => R(c).top)) : R(e).top; };
     const foot = live.querySelector('.mx-wexfoot');
+    const res = live.querySelector('[data-mx-region="answer"]');
+    const div = live.querySelector('.mx-wexdiv');
     return { split, runs: runs.length,
+      resBT: res ? parseFloat(getComputedStyle(res).borderTopWidth) : null,
+      divBT: div ? parseFloat(getComputedStyle(div).borderTopWidth) : null,
+      divGap: div && div.previousElementSibling && div.nextElementSibling
+        ? Math.round((R(div).top - cBottom(div.previousElementSibling)) + (cTop(div.nextElementSibling) - R(div).bottom)) : null,
+      footGap: foot && foot.previousElementSibling ? Math.round(cTop(foot) - cBottom(foot.previousElementSibling)) : null,
       held: runs.filter((e) => tops(e) > 1).map((e) => e.textContent.replace(/\s+/g, ' ').trim()),
       over: [].slice.call(live.querySelectorAll(MATH)).filter(vis)
         .filter((e) => e.scrollWidth > e.clientWidth + 1).map((e) => `${e.className} ${e.scrollWidth}>${e.clientWidth}`),
@@ -2133,30 +2166,50 @@ mark('presentation');
      && longm.ends.length > 0 && longm.ends.every((c) => '=+−×÷'.indexOf(c) >= 0),
      longm ? `${longm.chunks} chunks over ${longm.lines} lines, each carrying its operator (${longm.ends.join(' ')}), no overflow` : 'no step measured');
 
-  /* ── 2. the question is instruction, not a form field ──────────────────────────────────────────── */
-  const forms = seen.map((r) => ({ w: r.w, rows: r.rows, bg: r.askBg, bb: r.askBB, bl: r.workBL }));
+  /* ── 2. NOTHING INSIDE AN EXAMPLE IS MARKED OFF ────────────────────────────────────────────────
+     The maintainer's ruling, 22 Sep: space separates, typography identifies, and a border is kept for
+     genuinely separate content. The question was first tinted and then hairlined, and this block asserted
+     each in turn; it now asserts the ABSENCE of every mark inside an example, at every width — no fill on
+     the question, no rule beside it, no rule under it, no rule above the answer. The one rule that stays is
+     the boundary BETWEEN complete examples, and that is asserted too, so "no marks" cannot be satisfied by
+     stripping the page bare. */
+  const forms = seen.map((r) => ({ w: r.w, rows: r.rows, bg: r.askBg, bb: r.askBB, bl: r.workBL, rt: r.resBT, dv: r.divBT }));
   /* takes the COLOUR, not an object: the two shapes in this block spell the field differently (`bg` on a
      row summary, `askBg` on a raw read) and a predicate that reached for the wrong one answered "false" for
      both — which made the tint control pass by saying nothing. */
   const noFill = (c) => /rgba\(0, 0, 0, 0\)|transparent/.test(String(c));
-  ok('THE QUESTION CARRIES NO FILL AT ANY WIDTH, and is separated by a line instead — the rule beside it where the row splits, under it where it stacks',
-     forms.length === WIDTHS.length && forms.every((r) => noFill(r.bg))
-     && forms.every((r) => (r.rows === 'split' ? (r.bl >= 1 && r.bb === 0) : (r.bb >= 1 && r.bl === 0))),
-     forms.map((r) => `${r.w}px ${r.rows}: ${r.bg}, rule beside ${r.bl}px / under ${r.bb}px`).join(' · '));
-  /* CONTROL: paint the question again and the no-fill measure fires — so "no fill" is read off the page. */
+  ok('NOTHING INSIDE AN EXAMPLE IS MARKED OFF, at any width — no fill on the question, no rule beside it, none under it, none above the answer',
+     forms.length === WIDTHS.length
+     && forms.every((r) => noFill(r.bg) && r.bl === 0 && r.bb === 0 && r.rt === 0),
+     forms.map((r) => `${r.w}px ${r.rows}: ${r.bg}, beside ${r.bl} / under ${r.bb} / above answer ${r.rt}`).join(' · '));
+  ok('…and the ONE rule that stays is the boundary between complete examples',
+     forms.length === WIDTHS.length && forms.every((r) => r.dv >= 1),
+     forms.map((r) => `${r.w}px: ${r.dv}px between examples`).join(' · '));
+  /* CONTROLS — each mark put back one at a time, so the absence is read off the page and not merely
+     assumed, and the boundary removed, so its presence is too. */
   const tinted = await look({ w: 1536, h: 1024 }, '.mx-wexask{background:#F1F3F2 !important}');
   ok('CONTROL: paint the question region again and the check sees the fill',
      !noFill(tinted.askBg), `with the tint restored the question is on ${tinted.askBg}`);
-  /* CONTROL: take the stacked rule away and the stacked row has nothing between question and working. */
-  const unruled = await look({ w: 414, h: 896 }, '.mx-wexask{border-bottom:0 !important}');
-  ok('CONTROL: take the stacked rule away and nothing separates the question from the working',
-     unruled.rows !== 'split' && unruled.askBB === 0 && unruled.workBL === 0 && noFill(unruled.askBg),
-     `stacked, no fill, no rule beside (${unruled.workBL}px) and none under (${unruled.askBB}px)`);
+  const ruled = await look({ w: 1536, h: 1024 },
+    '[data-mx-rows="split"] .mx-wexseq>.mx-wexex>.mx-wexwork{border-left:1px solid #E5E9E6 !important}'
+    + ' .mx-wexres{border-top:1px solid #E5E9E6 !important}');
+  ok('CONTROL: draw the question/solution rule and the answer rule back, and the check sees both',
+     ruled.workBL >= 1 && ruled.resBT >= 1,
+     `restored: ${ruled.workBL}px beside the question, ${ruled.resBT}px above the answer`);
+  const undivided = await look({ w: 1536, h: 1024 }, '.mx-wexdiv{border-top:0 !important}');
+  ok('CONTROL: take the boundary between examples away and the check sees that too',
+     undivided.divBT === 0, `with it removed the sequence carries a ${undivided.divBT}px boundary`);
 
-  /* ── 3. the section below the examples announces itself ────────────────────────────────────────── */
-  ok('A FOOT THAT FOLLOWS EXAMPLES OPENS ON A RULE',
-     seen.every((r) => r.footAfter === 'mx-wexseq' && r.footBT >= 1),
-     seen.map((r) => `${r.w}px: after ${r.footAfter}, ${r.footBT}px rule`).join(' · '));
+  /* ── 3. the section below the examples opens on SPACE ──────────────────────────────────────────── */
+  ok('A FOOT THAT FOLLOWS EXAMPLES OPENS ON SPACE, NOT A RULE — and on more of it than separates one example from the next',
+     seen.every((r) => r.footAfter === 'mx-wexseq' && r.footBT === 0 && r.footGap > r.divGap + 8),
+     seen.map((r) => `${r.w}px: after ${r.footAfter}, ${r.footBT}px rule, ${r.footGap}px of space against ${r.divGap}px between examples`).join(' · '));
+  /* CONTROL: leave the rule off but put the old 26px back, and the gap claim fails — so "opens on space"
+     is a measured amount of space and not merely the absence of a line. */
+  const tight = await look({ w: 1536, h: 1024 }, '.mx-wexseq+.mx-wexfoot{margin-top:26px !important}');
+  ok('CONTROL: shrink the gap back to what it was and the check fires, so the claim is the SPACE and not just the missing rule',
+     tight.footBT === 0 && !(tight.footGap > tight.divGap + 8),
+     `with the old 26px restored: ${tight.footGap}px of space against ${tight.divGap}px between examples`);
   /* …AND A FOOT THAT IS THE WHOLE PANE DOES NOT. A representation-only group — the shipping quadratics
      lesson authors two of them — has nothing above it to be separated from, and a rule at the top of an
      otherwise empty pane is a rule under nothing. */

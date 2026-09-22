@@ -4,3 +4,10 @@ screenshots/
 *.log
 *.zip
 .dev.vars
+
+# Scratch captures. The screenshot harnesses write review runs under the atlas directory; a run named
+# `tmp` (or anything under it) is working material, never a committed asset — 100 of them were swept in
+# by a `git add -A` once. The approved comparison boards live in docs/atlas/presentation/compare/ and in
+# the named before/after directories, which are NOT ignored.
+docs/atlas/presentation/tmp/
+docs/atlas/**/_scratch/

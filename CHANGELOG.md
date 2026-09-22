@@ -7,6 +7,42 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Changed
+- **The divider treatment is withdrawn; the worked example separates by space and typography.** The
+  maintainer reviewed the corrections below and approved the wrapping fix and the white question ground,
+  but ruled against the marks: the question/solution rule, the answer rule, the full-width graph-section
+  rule and the plane's own frame were four greys competing to separate one page, and the result read as
+  fragments rather than sections. **SPACE SEPARATES, TYPOGRAPHY IDENTIFIES, AND A BORDER IS KEPT FOR
+  GENUINELY SEPARATE CONTENT.**
+  - **The question carries no rule, beside it or under it.** What tells it from the working is its QUESTION
+    heading, the unbroken channel and the shared top edge. The channel is unchanged in width — the two
+    published pads plus the 1px the rule used to occupy — so no floor, column minimum or reading measure
+    moved, and the `+ 1px` in the split grid's minimum is now a padding rather than a border.
+  - **The answer carries no rule above it.** Once the others went it was the last line left inside an
+    example, and one stray hairline reads as a fragment. The green ANSWER label names it, the larger
+    mathematical face sets it apart from the step prose, and 36px of white closes the working.
+  - **The section below the examples opens on space**, 82px of it against the 53px around the rules
+    between examples, with the GRAPH heading naming it. The plane already has its own frame; nothing else
+    is drawn around it.
+  - **The one rule that stays** is the boundary between complete examples.
+
+  **Nine assertions were enforcing the withdrawn rules and have been re-aimed** — not three, which is what
+  a reading of the presentation section alone would have suggested: the primitive's split clause, the
+  gutter clause, the answer clause, the solo-state control, two controls that named the rule in their own
+  labels, and the three in the presentation section. Each now asserts the ABSENCE of the marks, and each
+  carries a control that puts one back and must fire: the tint repainted, the question/solution and answer
+  rules drawn again, the boundary between examples removed, and the section gap shrunk to its old 26px
+  (which fails even with the rule still absent, so the claim is the space and not merely the missing line).
+
+  **Both new gap measures were wrong before they were right, and both were the measurement.** The first
+  compared box edges, and the steps' trailing padding sits INSIDE the section's rectangle, so 36px of real
+  white read as 0. The second compared the space above the foot (measured against `.mx-wexseq`, whose last
+  child is a padded example) with the space around a rule (measured against `.mx-wexex`, whose children are
+  not), so one 82px break read as 56. Both now measure to painted LEAF elements, where the ink actually is.
+  A third took the between-examples gap per group and failed on `standard`, which has one example and so no
+  rule to compare against; the reference is now the number the page actually uses, taken from a group that
+  has two.
+
 ### Fixed
 - **Three presentation corrections to the mathematics worked-examples page** (`lesson-studio.html`,
   `scripts/shots-presentation.mjs`, `scripts/verify-notes-examples.mjs`, `scripts/verify-responsive-shell.mjs`).
