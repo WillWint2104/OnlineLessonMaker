@@ -387,11 +387,14 @@ QUESTION | WORKED SOLUTION
 `mxWexEx()` is the one function that emits it (`article.mx-wexex` → `[data-mx-region="title"]`,
 `[data-mx-region="question"]`, `[data-mx-region="working"]` holding the steps and
 `[data-mx-region="answer"]`), and it is a CSS grid with named areas — `"title title" "ask work"` split,
-`"title" "ask" "work"` stacked. **THE REGIONS ARE ALIGNED, NEVER THE AMOUNT OF CONTENT IN THEM.** Both
-regions take the row's full height, so a one-line question beside a five-step solution is a short question
-in a visibly defined rectangle — the question region is tinted (`--mx-ask-tint`, a shade neither the
-surface nor the ground is) and runs to the surface's edge, one quiet rule stands between it and the working,
-and the QUESTION and WORKED SOLUTION labels begin on the same line beneath the title. The ANSWER is the
+`"title" "ask" "work"` stacked. **THE REGIONS ARE ALIGNED AT THEIR TOP, AND EACH TAKES THE HEIGHT ITS OWN
+CONTENT NEEDS** — a one-line question beside a five-step solution ends where the question ends; the working
+goes on stretching, because the rule between them is the WORKING's left border and it must span the band.
+**THE QUESTION IS INSTRUCTION, NOT A FIELD**: it carries no fill (the old `--mx-ask-tint` is gone — a filled
+grey box beside a white one reads as something to type into), and what separates it from the working is a
+line and a label — the rule beside it where the row splits, a hairline under it where the row stacks. The
+band still runs to the surface's edge, and the QUESTION and WORKED SOLUTION labels begin on the same line
+beneath the title. The ANSWER is the
 final band of the working — a rule above it, the label run in, the value flowing as text so a wrapped answer
 returns to the region's own inset — never a floating card. The band and its label sit at the working's
 inset — the step-number column, as the maintainer's sketch draws it (`──── / ANSWER   y = 16`) — and the
@@ -431,6 +434,16 @@ heading saying the same thing.
 
 **Fractions are fractions, not slashes.** `mxM` sets `3/2` built-up, and `(3/2)^2` inside brackets that
 grow to its height. Digits only, three a side, so ordinary prose and a year range are never touched.
+
+**Mathematics does not wrap like prose.** The last thing `mxM` does is find the mathematical RUNS in the
+markup it has just built — atoms (a variable, a number, a bracket, a built-up fraction, each carrying
+whatever superscript follows it) joined by relations and operators — and hold each one on one line
+(`.mx-nb`, `white-space:nowrap`). It reads the rendered markup rather than the source, so `(−2)^2 / 3^2` is
+held as the one fraction it has already become. The prose around a run wraps exactly as before. Above
+`MX_NB_MAX` (30) visible characters a run is instead given break points AFTER relations and operators
+only — never inside a term, never inside brackets — so a long derivation breaks the way mathematics breaks
+and is never clipped or pushed into horizontal overflow. `mxPlain` remains the plain-text reading for
+places that take text rather than markup.
 
 ### THE PAGE NEVER RESHAPES THE MATHEMATICS
 

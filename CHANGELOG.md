@@ -8,6 +8,61 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Fixed
+- **Three presentation corrections to the mathematics worked-examples page** (`lesson-studio.html`,
+  `scripts/shots-presentation.mjs`, `scripts/verify-notes-examples.mjs`, `scripts/verify-responsive-shell.mjs`).
+  Each was reported off a render of
+  the real quadratics lesson and each is measured, before and after, by the same harness in Study and Edit
+  at the desktop and tablet surfaces.
+  - **Mathematics no longer wraps like prose.** `mxM` now ends by finding the mathematical RUNS in what it
+    has just built — atoms (a variable, a number, a bracket, a built-up fraction, each carrying whatever
+    superscript follows it) joined by relations and operators — and holding each one on one line
+    (`.mx-nb`). The prose around them wraps exactly as before. `_x_ = −4` in a question band narrowed by the
+    open inspector used to break after the `=`, stranding the value on the next line; measured with a Range
+    over the characters either side of every operator on the page, that was 2 expressions split at the
+    desktop surface in Edit and is now 0. A run too long for its column is not clipped and does not
+    overflow sideways: above 30 visible characters it is offered break points AFTER relations and
+    operators only, never inside a term and never inside brackets, so the operator stays on the line it
+    closes and the next line begins with a whole term. It reads the rendered markup rather than the source,
+    so `(−2)^2 / 3^2` is held as the one fraction it has already become.
+  - **The question is instruction, not a form field.** The tint is gone (`--mx-ask-tint` with it): the
+    question is written on the same white paper as the working, in the same body ink, and what tells the two
+    apart is a line and a label. Where the row splits, the rule beside it — the working's left border, which
+    was always there. Where the row stacks (the tablet surface, a handset, each case of a comparison), a
+    hairline under it, which was NOT there: the tint was doing that work alone, and the measurement said so
+    (`separator: none` at 834px before, `rule under` after).
+  - **The graph section begins on a rule.** A foot that follows a worked-example sequence or a comparison
+    now opens on the sequence's own edge-to-edge hairline, set further apart than the rules BETWEEN
+    examples (34px above, 28px below, against 26px of plain white before). The bleed is the surface padding
+    taken off as margin and put straight back as padding, so the rule reaches the surface edge while the
+    pair's grid keeps exactly the width, origin and alignment the composition gave it: the four planes
+    measure 760×702 at x=522, 780×720 at x=326, 742×685 at x=46 and 454×419 at x=46 on both sides of the
+    change. A foot that IS the pane — a representation-only group, which is how this lesson's two graph
+    sections are authored — has nothing above it to be separated from and gets no rule.
+
+  **Three controls were enforcing yesterday's rules and have been re-aimed at the property that actually
+  matters, not weakened.** (a) The primitive's split clause required the question to be painted a colour
+  neither the surface nor the ground is; it now requires the question to carry NO fill, with the working's
+  left border — asserted in the same expression — as what separates the two. (b) The synthesis clause
+  measured the foot's BORDER box against the reading inset; since the section now opens on an edge-to-edge
+  rule, the border box lining up would mean the rule stopping short of the surface edge, so it measures the
+  foot's CONTENT box (`326→1478` against `326→1478`, unchanged) and a new clause asserts the rule itself.
+  (c) `verify-responsive-shell`'s escape check named "the two tags it is allowed to" and failed the moment
+  held runs arrived; it now asserts the closed tag SET over a battery of inputs — `i, span, span.mx-frac,
+  span.mx-nb, span.mx-pfrac, sup` and nothing else — which is the safety property, and which a new
+  convention has to declare itself against. Ten new assertions cover the three corrections
+  (`verify-notes-examples` 123 → 133, `verify-responsive-shell` 88 → 89), each with a control driven to
+  failure first: remove the hold and the same Range measure catches the breaks; paint the
+  question again and the no-fill check sees the fill; take the stacked rule away and nothing separates the
+  two regions. One of those controls was found passing vacuously — its predicate reached for a field the
+  object did not have, so it answered "false" for both sides — and was fixed before it was trusted.
+
+  `scripts/shots-presentation.mjs` (new) is the before/after harness: the lesson served as a REAL DOCUMENT
+  with `#lesson-data` replaced, Study and Edit, 1536 and 834, and beside every capture the numbers for all
+  three corrections. It settles the view before it photographs it — in Edit a click also selects a zone and
+  rebuilds the slide, which can put the first tab back after the switch appeared to succeed — and it prints
+  how it got there, so a capture cannot claim a group it is not showing.
+
+### Fixed
 - **Four defects in the Stage 3B graph editor, one of them destructive** — found by an adversarial review of
   the code against the renderer, after the gate had already passed it.
   - **The direction control replaced the whole line object with a string.** `inSel` always emits

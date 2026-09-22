@@ -645,12 +645,32 @@ mark('escape');
   const p = await newPage(1440, 900);
   const r = await p.evaluate(() => {
     const probe = '<img src=x onerror=alert(1)>"><b>bold</b>';
+    /* THE CLOSED TAG SET, taken off a battery rather than off two hard-coded strings. mxM escapes first and
+       then applies its own conventions, so the only markup that can leave it is markup it wrote itself: a
+       variable in `<i>`, an exponent in `<sup>`, and its own spans — the built-up fraction, its bracketed
+       form, the two bare spans a fraction is made of, and the run it holds on one line. Asserting the SET
+       means a NEW convention has to declare itself here; asserting one expected string means the next
+       convention breaks the check for saying nothing about safety. (This replaced a check that named "the
+       two tags" and failed the moment held runs arrived — which was the check enforcing yesterday's rule,
+       not the safety property.) */
+    const BATTERY = ['_x_ = 3', '_x_^2', '_y_ = (\u22122)^2 / 3^2', '(3/2)^2', 'prose with no notation at all',
+      '_y_ = _x_^2 + 12_x_ + 36 \u2212 4_x_^2 + 8_x_ \u2212 16 = \u22123_x_^2 + 20_x_ + 20', probe];
+    const ALLOWED = ['i', 'sup', 'span', 'span.mx-frac', 'span.mx-pfrac', 'span.mx-nb'];
+    const seen = new Set();
+    BATTERY.forEach((t) => (mxM(t).match(/<([a-z]+)((?:\s[^>]*)?)>/g) || []).forEach((tag) => {
+      const m = /^<([a-z]+)((?:\s[^>]*)?)>$/.exec(tag), c = /class="([^"]+)"/.exec(m[2] || '');
+      seen.add(m[1] + (c ? '.' + c[1] : '')); }));
     return { esc: mxM(probe), italic: mxM('_x_ = 3'), sup: mxM('_x_^2'),
-      tagInside: mxM('_<b>_'), scriptSurvives: /<script|<img|<b>bold/.test(mxM(probe)) };
+      tagInside: mxM('_<b>_'), scriptSurvives: /<script|<img|<b>bold/.test(mxM(probe)),
+      seen: Array.from(seen).sort(), unexpected: Array.from(seen).filter((t) => ALLOWED.indexOf(t) < 0) };
   });
   ok('the inline-notation helper escapes first — markup in author text stays text',
      r.scriptSurvives === false && /&lt;img/.test(r.esc), r.esc.slice(0, 46) + '…');
-  ok('and it still emits the two tags it is allowed to', r.italic === '<i>x</i> = 3' && r.sup === '<i>x</i><sup>2</sup>',
+  ok('and it still emits only the markup it writes itself — <i>, <sup> and its own spans, nothing else',
+     r.unexpected.length === 0 && r.seen.indexOf('i') >= 0 && r.seen.indexOf('sup') >= 0,
+     r.unexpected.length ? `unexpected: ${r.unexpected.join(', ')}` : `emitted ${r.seen.join(', ')}`);
+  ok('and the conventions still land — the variable italic, the exponent raised, the statement held on one line',
+     /^<span class="mx-nb"><i>x<\/i> = 3<\/span>$/.test(r.italic) && r.sup === '<i>x</i><sup>2</sup>',
      `${r.italic}  ·  ${r.sup}`);
   await p.close();
 }

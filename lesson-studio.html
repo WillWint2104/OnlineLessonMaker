@@ -1610,7 +1610,6 @@ body.present .card a,body.present .card button,body.present .card .poi,body.pres
 .mx{
   --mx-white:#FFFFFF;
   --mx-ground:#F7F9F8;            /* page ground — barely cool, never beige */
-  --mx-ask-tint:#F1F3F2;          /* the question region — neutral, a shade neither the surface nor the ground is */
   --mx-rail:#FAFCFB;              /* the navigation rail */
   --mx-line:#E5E9E6;              /* thin quiet border */
   --mx-line-soft:#EFF2F0;         /* hairline between items */
@@ -1915,6 +1914,9 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-frac>span{display:block;padding:0 .3em;}
 .mx-frac>span:first-child{border-bottom:1px solid currentColor;padding-bottom:.05em;}
 .mx-frac>span:last-child{padding-top:.05em;}
+/* A HELD RUN — one mathematical statement, kept on one line. `mxNb` decides where they begin and end and
+   where a long one may be broken; this is the whole of what that costs the stylesheet. */
+.mx-nb{white-space:nowrap;}
 .mx-pfrac{display:inline-block;vertical-align:middle;white-space:nowrap;}
 .mx-pfrac::before{content:"(";}
 .mx-pfrac::after{content:")";}
@@ -1991,13 +1993,17 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    or the state bar above is the sequence's own margin */
 .mx-wexlede+.mx-wexseq,.mx-wexsurface>.mx-wexseq:first-child,.mx-stpane>.mx-wexseq:first-child{margin-top:-18px;}
 .mx-wexex>.mx-wexh{grid-area:title;margin:0 0 14px;}
-/* THE QUESTION REGION IS A TINTED RECTANGLE that runs to the surface's edge: its bleed IS the surface
-   padding, read from the same property, so the tint, the rule between examples and the surface edge are one
-   edge and the question's text stays on the page's single left inset. The tint is its own token — a shade
-   the page ground is not — so on a handset, where the surface has no margin, the band still belongs to the
-   white surface rather than merging into the ground beside it. Flat: no radius, no border, no shadow. */
-.mx-wexask{grid-area:ask;background:var(--mx-ask-tint);print-color-adjust:exact;-webkit-print-color-adjust:exact;
-  margin:0 calc(-1 * var(--mx-surface-pad));padding:16px var(--mx-surface-pad) 18px;min-width:0;}
+/* THE QUESTION IS INSTRUCTION, NOT A FIELD. It used to be a tinted rectangle, and a filled grey box beside
+   a white one reads as something to type into rather than something to read — a form control on a teaching
+   page. So the question is written on the same white paper as the working, in the same body ink, and what
+   tells the two apart is a LINE and a LABEL, not a fill: the rule beside it where the row splits, the rule
+   under it where the row stacks. The band still runs to the surface's edge — its bleed IS the surface
+   padding, read from the same property, so that rule, the rule between examples and the surface edge are
+   one edge and the question's text stays on the page's single left inset. Flat: no fill, no radius, no
+   shadow; one hairline. */
+.mx-wexask{grid-area:ask;background:transparent;
+  margin:0 calc(-1 * var(--mx-surface-pad));padding:16px var(--mx-surface-pad) 18px;min-width:0;
+  border-bottom:1px solid var(--mx-line);}
 .mx-wexask>.mx-wexlab{color:var(--mx-ink-2);}
 .mx-wexwork{grid-area:work;padding:16px 0 0;min-width:0;}
 .mx-wexwork>.mx-wexsec{margin:0;}
@@ -2017,7 +2023,10 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    so stretching only the ask's neighbour is what keeps that rule running the full band when the question is
    the taller of the two. Measured both ways on a deliberately long question: with the row set to `start`
    the rule stopped 350px short of the band; this way it spans it. Split only — stacked already hugs. */
-[data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"])>.mx-wexask{margin-right:0;padding-right:var(--mx-ask-pad,16px);align-self:start;}
+/* …and where the row splits, the rule that separates question from working is the WORKING's left border,
+   so the question does not also carry one underneath: two rules meeting at a corner around a hugged
+   question is a box, and the question is not in a box. */
+[data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"])>.mx-wexask{margin-right:0;padding-right:var(--mx-ask-pad,16px);align-self:start;border-bottom:0;}
 [data-mx-rows="split"] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"])>.mx-wexwork{border-left:1px solid var(--mx-line);padding-left:var(--mx-work-pad,22px);}
 /* ANSWER — THE FINAL BAND OF THE WORKING REGION, not a card: a rule above it, the label run in, the value
    flowing as text so a wrapped answer returns to the region's own inset. No box, no radius, no fill. Green
@@ -2072,6 +2081,18 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
    BELOW THE DESKTOP SURFACE the media takes the full width and the reading stays inside the measure,
    which is the approved tablet and phone behaviour. */
 .mx-wexfoot{margin-top:26px;}
+/* WHERE THE EXAMPLES END AND THE REPRESENTATION BEGINS. The foot is a different kind of thing from the
+   worked cases above it — the drawing and the reading of it, not another case — and it used to open on 26px
+   of white with nothing to say so, which left the graph looking like the tail of the last solution. It now
+   opens on the sequence's own edge-to-edge hairline, set further apart than the rules BETWEEN examples so
+   the page reads examples · examples · then this. The bleed is the surface padding taken off as margin and
+   put straight back as padding: the rule reaches the surface edge while the pair's grid keeps exactly the
+   width, origin and alignment the composition gave it — the stage is not touched, only what stands above
+   it. Drawn only after a body: a foot that IS the pane (a representation-only group) has nothing to be
+   separated from. */
+.mx-wexseq+.mx-wexfoot,.mx-wexbridge+.mx-wexfoot{
+  margin:34px calc(-1 * var(--mx-surface-pad)) 0;padding:28px var(--mx-surface-pad) 0;
+  border-top:1px solid var(--mx-line);}
 .mx-wexfoot>.mx-wexlab{margin-bottom:12px;}
 .mx-wexpair{display:grid;grid-template-columns:repeat(var(--mx-cols,12),minmax(0,1fr));
   column-gap:var(--mx-gutter,24px);align-items:start;}
@@ -7595,8 +7616,56 @@ function mxPlain(v){ return String(v==null?'':v).replace(/_([A-Za-z])_/g,'$1').r
    a year range ("1914/1918") out of it. */
 /* the two sides a fraction may have: a bracketed signed integer (optionally squared), or a plain one */
 const MX_FRAC_T = '\\((?:\\u2212|-)?\\d{1,3}\\)(?:\\^\\d)?', MX_FRAC_D = '\\d{1,3}(?:\\^\\d)?';
+/* MATHEMATICS DOES NOT WRAP LIKE PROSE. `_x_ = −4` is one statement; a line break inside it strands the
+   value on the next line and leaves the reader to put the sentence back together — which is exactly what
+   the question band did at the width the open inspector leaves it. So the LAST thing mxM does is find the
+   mathematical RUNS in what it has just built — atoms (a variable, a number, a bracket, a built-up
+   fraction, each carrying whatever superscript follows it) joined by relations and operators — and hold
+   each one together. The prose around them goes on wrapping exactly as it did; nothing else is touched.
+   A run too long for its column is NEVER clipped and never overflows sideways: it is broken the way
+   mathematics is broken — AFTER a relation or an operator, never inside a term and never inside brackets —
+   so the operator stays on the line it closes and the next line starts with a whole term.
+   This reads the rendered markup rather than the source, so `(−2)^2 / 3^2` is held as the one fraction it
+   has already become rather than as the five tokens it was written as. */
+const MX_NB_MAX = 30;    /* visible characters a run may carry and still be held whole */
+const MX_NB_IN   = '(?:[^<]|<sup>[0-9n]<\\/sup>|<i>[A-Za-z]<\\/i>)*';
+const MX_NB_FRAC = '<span class="mx-frac"><span>' + MX_NB_IN + '<\\/span><span>' + MX_NB_IN + '<\\/span><\\/span>';
+const MX_NB_ATOM = '(?:<span class="mx-pfrac">' + MX_NB_FRAC + '<\\/span>|' + MX_NB_FRAC
+  + '|<i>[A-Za-z]<\\/i>|\\d+(?:\\.\\d+)?|[()])(?:<sup>[0-9n]<\\/sup>)*';
+/* `<` and `>` are never operators here: escaping has already turned a written one into `&lt;`, so a raw
+   angle bracket in this string can only be a tag of our own making. */
+const MX_NB_OP   = '[=+\\u2212\\u00d7\\u00f7\\u00b1\\u2264\\u2265\\u2248,\\/]|&lt;|&gt;';
+function mxNb(h){
+  const A = new RegExp(MX_NB_ATOM, 'y'), S = new RegExp('\\s*(?:(?:' + MX_NB_OP + ')\\s*)*', 'y');
+  let out = '', i = 0;
+  while(i < h.length){
+    A.lastIndex = i; const first = A.exec(h);
+    if(!first){ out += h.charAt(i); i++; continue; }
+    let end = A.lastIndex, atoms = 1, ops = 0, brk = [];
+    let depth = first[0].charAt(0)==='(' ? 1 : (first[0].charAt(0)===')' ? -1 : 0);
+    for(;;){
+      S.lastIndex = end; const s = S.exec(h); const sep = s ? s[0] : '';
+      A.lastIndex = end + sep.length; const a = A.exec(h);
+      if(!a) break;                                  /* the separator is only consumed once a term follows it */
+      const op = /\S/.test(sep);
+      if(op && depth <= 0 && /\s$/.test(sep)) brk.push([end + sep.replace(/\s+$/,'').length, end + sep.length]);
+      if(op) ops++;
+      const c = a[0].charAt(0); if(c==='(') depth++; else if(c===')') depth--;
+      end = A.lastIndex; atoms++;
+    }
+    if(atoms < 2 || !ops){ out += h.slice(i, end); i = end; continue; }
+    const run = h.slice(i, end);
+    const seen = run.replace(/<[^>]*>/g,'').replace(/&[a-z#0-9]+;/gi,'.').length;
+    if(seen <= MX_NB_MAX || !brk.length) out += '<span class="mx-nb">' + run + '</span>';
+    else { let at = i;
+      brk.forEach(b => { out += '<span class="mx-nb">' + h.slice(at, b[0]) + '</span>' + h.slice(b[0], b[1]); at = b[1]; });
+      out += '<span class="mx-nb">' + h.slice(at, end) + '</span>'; }
+    i = end;
+  }
+  return out;
+}
 function mxM(v){
-  return esc(v==null?'':String(v))
+  return mxNb(esc(v==null?'':String(v))
     .replace(/\((\d+)\/(\d+)\)/g,'<span class="mx-pfrac">$&</span>')
     .replace(/<span class="mx-pfrac">\((\d+)\/(\d+)\)<\/span>/g,
       '<span class="mx-pfrac"><span class="mx-frac"><span>$1</span><span>$2</span></span></span>')
@@ -7614,7 +7683,7 @@ function mxM(v){
     .replace(/(^|[\s(=+\u2212-])(\d{1,3}(?:\^\d)?)\/(\d{1,3}(?:\^\d)?)(?![\d\/])/g,
       '$1<span class="mx-frac"><span>$2</span><span>$3</span></span>')
     .replace(/_([A-Za-z])_/g,'<i>$1</i>')
-    .replace(/\^([0-9n])/g,'<sup>$1</sup>');
+    .replace(/\^([0-9n])/g,'<sup>$1</sup>'));
 }
 const MXI={
   leaf:'<path d="M20 4C10 5 4 10 4 17c0 2 1 3 1 3s2-9 15-13c0 0-8 4-11 12 5 2 11-1 11-15z"/>',

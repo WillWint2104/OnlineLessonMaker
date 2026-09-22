@@ -1059,12 +1059,37 @@ const anatomy = (p) => p.evaluate(() => {
       if (c && r.top < c.bottom - 2) { c.left = Math.min(c.left, r.left); c.bottom = Math.max(c.bottom, r.bottom); }
       else out.push({ left: r.left, bottom: r.bottom }); });
     return out.map((c) => Math.round(c.left)); };
+  /* the bottom of the last painted thing inside an element, and the top of the first — what the eye reads
+     as the edge of the content, which is not the padded box's edge */
+  const contentBottom = (e) => { let m = -Infinity;
+    [].slice.call(e.querySelectorAll('*')).forEach((c) => { const r = R(c); if (r.height > 0.5) m = Math.max(m, r.bottom); });
+    return m === -Infinity ? R(e).bottom : m; };
+  const contentTop = (e) => { let m = Infinity;
+    [].slice.call(e.querySelectorAll('*')).forEach((c) => { const r = R(c); if (r.height > 0.5) m = Math.min(m, r.top); });
+    return m === Infinity ? R(e).top : m; };
   const foot = live.querySelector('.mx-wexfoot');
   return { rows: document.querySelector('.mx').dataset.mxRows, foot: document.querySelector('.mx').dataset.mxFoot,
     surfL: Math.round(sr.left), surfR: Math.round(sr.right), surfBg: scs.backgroundColor, ground,
     surfPad: parseFloat(scs.paddingLeft),
     pads: { ask: prop('--mx-ask-pad'), work: prop('--mx-work-pad'), interp: prop('--mx-interp-max'), workMin: prop('--mx-work-min') },
-    footBox: foot ? { l: Math.round(R(foot).left), r: Math.round(R(foot).right), t: Math.round(R(foot).top) } : null,
+    /* the foot's BORDER box and its CONTENT box. Since the section opens on an edge-to-edge rule the two
+       differ by the surface padding, and it is the CONTENT that has to line up with the examples — the
+       border box lining up would mean the rule stopping short of the surface edge. The clear space either
+       side of a rule is measured to the nearest PAINTED thing, not to a padded box's edge: the examples
+       carry their own padding, so a box-to-box gap reads 0 whatever the spacing actually is. */
+    footBox: foot ? (() => { const fr = R(foot), fcs = getComputedStyle(foot); const pl = parseFloat(fcs.paddingLeft), pr = parseFloat(fcs.paddingRight);
+      const pv = foot.previousElementSibling;
+      return { l: Math.round(fr.left), r: Math.round(fr.right), t: Math.round(fr.top),
+        cl: Math.round(fr.left + parseFloat(fcs.borderLeftWidth) + pl), cr: Math.round(fr.right - parseFloat(fcs.borderRightWidth) - pr),
+        bt: parseFloat(fcs.borderTopWidth), btc: fcs.borderTopColor,
+        above: pv ? Math.round(fr.top - contentBottom(pv)) : null, below: Math.round(contentTop(foot) - fr.top),
+        after: pv ? (pv.className.split(' ')[0] || pv.tagName) : '(first)' }; })() : null,
+    /* the rule BETWEEN two examples, and the clear space either side of it, so the section rule can be
+       asked to be further apart than it rather than merely to exist */
+    divBox: (() => { const d = live.querySelector('.mx-wexdiv'); if (!d) return null;
+      const pv = d.previousElementSibling, nx = d.nextElementSibling;
+      return { above: pv ? Math.round(R(d).top - contentBottom(pv)) : null, below: nx ? Math.round(contentTop(nx) - R(d).bottom) : null,
+        l: Math.round(R(d).left), r: Math.round(R(d).right) }; })(),
     ex: [].slice.call(live.querySelectorAll('.mx-wexex')).map((ex) => {
       const ttl = ex.querySelector('[data-mx-region="title"]'), ask = ex.querySelector('[data-mx-region="question"]'), work = ex.querySelector('[data-mx-region="working"]');
       const x = R(ex);
@@ -1138,12 +1163,17 @@ const named = (list) => list.filter((e) => !e.unnamed);
   const bandSpanned = (e) => e.ask && e.work.b >= e.ask.b - 1;
   const rect = (e) => e.ask && e.ask.t === e.work.t && hugs(e) && bandSpanned(e) && Math.abs(e.ask.r - e.work.l) <= 1
     && e.work.bl === '1px' && e.ask.br === '0px' && e.ask.radius === '0px'
-    && e.ask.bg !== e.surf.surfBg && e.ask.bg !== e.surf.ground && e.inSurface
+    && /rgba\(0, 0, 0, 0\)|transparent/.test(e.ask.bg) && e.inSurface
     && Math.abs(e.ask.l - e.surf.surfL) <= 1 && Math.abs(e.work.r - (e.surf.surfR - e.surf.surfPad)) <= 1;
   const chan = (e) => ({ q: e.ask && e.ask.qbR != null ? e.work.l - e.ask.qbR : null, w: e.work.inset - e.work.l - 1 });
-  ok('PROBLEM and WORKING share a top edge, the tint ends where the question does, and the working still spans the band so the rule never stops short',
+  /* THE QUESTION CARRIES NO FILL. It used to be a tinted rectangle and the clause here used to require the
+     tint to be a colour neither the surface nor the ground is; a filled box beside a white one reads as a
+     field to type into, so the question is now written on the surface's own paper and the RULE beside it —
+     the working's left border, asserted in the same expression — is what separates the two. The region
+     still ends where its content does: the hug is measured off the pad, not off a colour. */
+  ok('PROBLEM and WORKING share a top edge, the question carries no fill, it ends where its content does, and the working still spans the band so the rule never stops short',
      S.length >= 6 && S.every(rect),
-     S.map((e) => `${e.id}: tops ${e.ask.t}, tint ends ${e.ask.b} (${Math.round(e.ask.b - e.ask.contentB)}px of ${e.ask.padB}px pad after the question), working to ${e.work.b}, rule at ${e.work.l}`).join(' · '));
+     S.map((e) => `${e.id}: tops ${e.ask.t}, question on ${e.ask.bg} ending at ${e.ask.b} (${Math.round(e.ask.b - e.ask.contentB)}px of ${e.ask.padB}px pad after it), working to ${e.work.b}, rule at ${e.work.l}`).join(' · '));
   ok('no wide gutter: the channels either side of the rule are the published pads, and together less than the 40px that was rejected',
      S.length >= 6 && S.every((e) => { const c = chan(e); return c.q != null && Math.abs(c.q - e.surf.pads.ask) <= 1 && c.w === e.surf.pads.work && c.q + 1 + c.w < 40; }),
      S.slice(0, 3).map((e) => { const c = chan(e); return `${e.id}: question text → rule ${c.q}px (pad ${e.surf.pads.ask}), rule → working text ${c.w}px (pad ${e.surf.pads.work})`; }).join(' · '));
@@ -1163,12 +1193,22 @@ const named = (list) => list.filter((e) => !e.unnamed);
      `${S.length} instances over ${new Set(S.map((e) => e.tab)).size} groups: ${new Set(S.map(sig)).size} distinct geometry signature(s) — ${sig(S[0])}`);
   /* THE SYNTHESIS FOLLOWS THE WHOLE EXAMPLE OR SEQUENCE as a full-width region — the title's left edge to
      the working's right edge, below the last instance — never confined to either region. */
-  const foots = split.filter((e) => e.surf.footBox).map((e) => ({ id: e.tab, f: e.surf.footBox, t: e.title, w: e.work, bottom: Math.max.apply(null, named(split.filter((x) => x.tab === e.tab)).map((x) => x.work.b)) }));
+  const foots = split.filter((e) => e.surf.footBox).map((e) => ({ id: e.tab, f: e.surf.footBox, div: e.surf.divBox, t: e.title, w: e.work, bottom: Math.max.apply(null, named(split.filter((x) => x.tab === e.tab)).map((x) => x.work.b)) }));
   const seenFoot = {}; foots.forEach((f) => { seenFoot[f.id] = f; });
   const F = Object.keys(seenFoot).map((k) => seenFoot[k]);
   ok('the synthesis follows the whole sequence as a full-width region — title edge to working edge, below the last instance',
-     F.length >= 3 && F.every((f) => Math.abs(f.f.l - f.t.l) <= 1 && Math.abs(f.f.r - f.w.r) <= 1 && f.f.t >= f.bottom),
-     F.map((f) => `${f.id}: ${f.f.l}→${f.f.r} against ${f.t.l}→${f.w.r}, ${f.f.t - f.bottom}px below the last instance`).join(' · '));
+     F.length >= 3 && F.every((f) => Math.abs(f.f.cl - f.t.l) <= 1 && Math.abs(f.f.cr - f.w.r) <= 1 && f.f.t >= f.bottom),
+     F.map((f) => `${f.id}: ${f.f.cl}→${f.f.cr} against ${f.t.l}→${f.w.r}, ${f.f.t - f.bottom}px below the last instance`).join(' · '));
+  /* AND THE SECTION OPENS ON A RULE — the examples' own edge-to-edge hairline, reaching past the reading
+     inset on both sides to the surface edge, set FURTHER APART than the rules between examples so the page
+     reads example · example · then this. The graph section used to begin on 26px of plain white, which
+     left the drawing looking like the tail of the last solution. */
+  ok('and the section opens on the examples\' own edge-to-edge rule, set further apart than the rules between them',
+     F.length >= 3 && F.every((f) => f.f.bt >= 1 && f.f.l < f.t.l - 1 && f.f.cr < f.f.r
+       && f.f.after === 'mx-wexseq' && f.f.above > 0 && f.f.below > 0
+       && (f.div ? (f.f.above + f.f.below) > (f.div.above + f.div.below) + 8 : true)),
+     F.map((f) => `${f.id}: ${f.f.bt}px rule ${f.f.l}→${f.f.r} against a reading inset of ${f.t.l}→${f.w.r}, `
+       + `${f.f.above}+${f.f.below}px of clear space against ${f.div ? f.div.above + '+' + f.div.below : '—'}px around the rules between examples`).join(' · '));
   /* CONTROLS: put the old card back and the band contract fails — its label moves in and, on a phone, its
      wrapped lines no longer return to the inset; confine the synthesis to the working and the full-width
      claim fails. */
@@ -1950,7 +1990,150 @@ mark('flat');
      'renaming a group reaches the worksheet with no renderer change');
   await p.close();
 }
-const SECTIONS = ['composition', 'viability', 'surface', 'examples', 'reference', 'scale', 'slots', 'primitive', 'proofs', 'states', 'flat'];
+// ══ PRESENTATION — how the mathematics, the question and the graph section are SET ════════════════
+// Three corrections the maintainer reported off a render of the shipping lesson, each measured here so it
+// cannot quietly come back: notation must not wrap like prose, the question must not read as a form field,
+// and the section below the examples must announce itself.
+mark('presentation');
+{
+  /* Every measure in this block is taken the same way on both sides of a control, and every control is a
+     stylesheet perturbation read back before anything is asserted on it. */
+  const READ = () => {
+    const pane = [].slice.call(document.querySelectorAll('[data-mx-panel]')).find((e) => !e.hidden);
+    const live = [].slice.call(pane.querySelectorAll('.mx-stpane')).filter((n) => !n.hidden)[0] || pane;
+    const R = (e) => e.getBoundingClientRect();
+    const vis = (e) => e.offsetParent !== null && R(e).height > 0;
+    const MATH = '.mx-wexqb, .mx-stepm, .mx-wexrv, .mx-relations li, .mx-stept';
+    /* AN EXPRESSION SPLIT ACROSS LINES, measured without asking the engine what it thinks it held: a Range
+       over the few characters either side of every relation or operator on the page. A Range the browser
+       broke a line inside reports two client rectangles on two different tops. */
+    const OPS = /[=+−×÷±≤≥]/g;
+    const split = [];
+    [].slice.call(live.querySelectorAll(MATH)).filter(vis).forEach((host) => {
+      const w = document.createTreeWalker(host, NodeFilter.SHOW_TEXT);
+      for (let n = w.nextNode(); n; n = w.nextNode()) {
+        const t = n.nodeValue; OPS.lastIndex = 0;
+        for (let m = OPS.exec(t); m; m = OPS.exec(t)) {
+          const a = Math.max(0, m.index - 3), b = Math.min(t.length, m.index + 4);
+          const r = document.createRange(); r.setStart(n, a); r.setEnd(n, b);
+          const tops = []; [].slice.call(r.getClientRects()).forEach((x) => { if (!tops.some((y) => Math.abs(y - x.top) < 4)) tops.push(x.top); });
+          if (tops.length > 1) split.push(`${host.className || host.tagName}: "…${t.slice(a, b)}…"`);
+        }
+      }
+    });
+    /* an inline element also reports several rectangles for fragments side by side on ONE line — an italic
+       beside upright text is enough — so a held run is only broken when its fragments sit on different tops */
+    const tops = (e) => { const t = []; [].slice.call(e.getClientRects())
+      .forEach((r) => { if (!t.some((y) => Math.abs(y - r.top) < 4)) t.push(r.top); }); return t.length; };
+    const runs = [].slice.call(live.querySelectorAll('.mx-nb')).filter(vis);
+    const ex0 = live.querySelector('.mx-wexex');
+    const ask = ex0 && ex0.querySelector('.mx-wexask'), work = ex0 && ex0.querySelector('.mx-wexwork');
+    const foot = live.querySelector('.mx-wexfoot');
+    return { split, runs: runs.length,
+      held: runs.filter((e) => tops(e) > 1).map((e) => e.textContent.replace(/\s+/g, ' ').trim()),
+      over: [].slice.call(live.querySelectorAll(MATH)).filter(vis)
+        .filter((e) => e.scrollWidth > e.clientWidth + 1).map((e) => `${e.className} ${e.scrollWidth}>${e.clientWidth}`),
+      rows: document.querySelector('.mx').dataset.mxRows,
+      askBg: ask ? getComputedStyle(ask).backgroundColor : null,
+      askBB: ask ? parseFloat(getComputedStyle(ask).borderBottomWidth) : null,
+      workBL: work ? parseFloat(getComputedStyle(work).borderLeftWidth) : null,
+      footBT: foot ? parseFloat(getComputedStyle(foot).borderTopWidth) : null,
+      footAfter: foot ? (foot.previousElementSibling ? (foot.previousElementSibling.className.split(' ')[0] || foot.previousElementSibling.tagName) : '(first)') : null };
+  };
+  const look = async (opt, css) => { const p = await open(Object.assign({ slide: WEX }, opt));
+    if (css) await p.addStyleTag({ content: css });
+    await p.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await p.waitForTimeout(350);
+    const r = await p.evaluate(READ); await p.close(); return r; };
+
+  /* ── 1. notation does not wrap like prose ───────────────────────────────────────────────────────── */
+  const WIDTHS = [[1536, 1024], [1200, 900], [1146, 834], [834, 1112], [414, 896]];
+  const seen = [];
+  for (const [w, h] of WIDTHS) seen.push(Object.assign({ w }, await look({ w, h })));
+  ok('NO EXPRESSION IS SPLIT ACROSS LINES, at any width — a relation and the value it states stay together',
+     seen.length === WIDTHS.length && seen.every((r) => r.split.length === 0 && r.held.length === 0 && r.over.length === 0)
+     && seen.every((r) => r.runs > 0),
+     seen.map((r) => `${r.w}px: ${r.runs} held runs, ${r.split.length} split, ${r.over.length} overflowing`).join(' · '));
+  /* CONTROL: take the hold away and the same measure finds the breaks — so "nothing is split" is measured
+     and not a measure that cannot see. Held on a lesson whose question is deliberately long enough that a
+     narrow column must break inside the expression if nothing is stopping it. */
+  /* A question carrying MANY short expressions at many different offsets, so that at five widths at least
+     one of them must straddle a line break unless something is holding it. One expression in one sentence
+     is a coin toss about where the wrap happens to fall; this is not. */
+  const LONGQ = (() => { const L = JSON.parse(JSON.stringify(FIX));
+    const g = L.slides[WEX].groups.find((x) => x.type === 'sequence');
+    const many = [1, 22, 333, 4, 55, 666, 7, 88, 999, 12, 3, 44]
+      .map((n, k) => `${'and '.repeat(k % 3)}substitute _x_ = ${n} to get _y_ = ${n}`).join(', then ');
+    g.examples.forEach((e) => { e.prompt = `Work through this carefully: ${many}, and stop.`; });
+    return L; })();
+  const loose = [];
+  for (const [w, h] of WIDTHS) loose.push(Object.assign({ w }, await look({ w, h, lesson: LONGQ }, '.mx-nb{white-space:normal !important}')));
+  ok('CONTROL: remove the hold and the same Range measure catches the breaks it was there to prevent',
+     loose.some((r) => r.split.length > 0),
+     loose.filter((r) => r.split.length).map((r) => `${r.w}px: ${r.split.length} — ${r.split[0]}`).join(' · ') || 'nothing broke, so the measure proves nothing');
+  ok('…and with the hold back, that same long question breaks between words instead',
+     (await Promise.all(WIDTHS.map(([w, h]) => look({ w, h, lesson: LONGQ })))).every((r) => r.split.length === 0 && r.over.length === 0),
+     'the question wraps; the expression inside it does not');
+  /* A RUN TOO LONG FOR ITS COLUMN IS BROKEN THE WAY MATHEMATICS IS BROKEN — after a relation or an
+     operator, never inside a term — and it is never clipped and never overflows sideways. */
+  const LONGM = (() => { const L = JSON.parse(JSON.stringify(FIX));
+    const g = L.slides[WEX].groups.find((x) => x.type === 'sequence');
+    g.examples[0].steps[0].math = '_y_ = _x_^2 + 12_x_ + 36 − 4_x_^2 + 8_x_ − 16 = −3_x_^2 + 20_x_ + 20 + 7_x_ − 9';
+    return L; })();
+  const longm = await (async () => { const p = await open({ w: 414, h: 896, slide: WEX, lesson: LONGM });
+    await p.click(`[data-mx-tab="${GROUPS.find((g) => g.type === 'sequence').id}"]`); await p.waitForTimeout(350);
+    const r = await p.evaluate(() => {
+      const m = document.querySelector('[data-mx-panel]:not([hidden]) .mx-stepm'); if (!m) return null;
+      const chunks = [].slice.call(m.querySelectorAll('.mx-nb'));
+      const rg = document.createRange(); rg.selectNodeContents(m);
+      const tops = []; [].slice.call(rg.getClientRects()).forEach((x) => { if (!tops.some((y) => Math.abs(y - x.top) < 4)) tops.push(x.top); });
+      return { chunks: chunks.length, lines: tops.length,
+        /* every chunk but the last ends on the operator it carries over */
+        ends: chunks.slice(0, -1).map((c) => c.textContent.trim().slice(-1)),
+        over: m.scrollWidth > m.clientWidth + 1, text: m.textContent.replace(/\s+/g, ' ').trim() };
+    });
+    await p.close(); return r; })();
+  ok('A RUN TOO LONG FOR ITS COLUMN breaks after a relation or an operator, never inside a term, and never overflows',
+     !!longm && longm.chunks > 1 && longm.lines > 1 && !longm.over
+     && longm.ends.length > 0 && longm.ends.every((c) => '=+−×÷'.indexOf(c) >= 0),
+     longm ? `${longm.chunks} chunks over ${longm.lines} lines, each carrying its operator (${longm.ends.join(' ')}), no overflow` : 'no step measured');
+
+  /* ── 2. the question is instruction, not a form field ──────────────────────────────────────────── */
+  const forms = seen.map((r) => ({ w: r.w, rows: r.rows, bg: r.askBg, bb: r.askBB, bl: r.workBL }));
+  /* takes the COLOUR, not an object: the two shapes in this block spell the field differently (`bg` on a
+     row summary, `askBg` on a raw read) and a predicate that reached for the wrong one answered "false" for
+     both — which made the tint control pass by saying nothing. */
+  const noFill = (c) => /rgba\(0, 0, 0, 0\)|transparent/.test(String(c));
+  ok('THE QUESTION CARRIES NO FILL AT ANY WIDTH, and is separated by a line instead — the rule beside it where the row splits, under it where it stacks',
+     forms.length === WIDTHS.length && forms.every((r) => noFill(r.bg))
+     && forms.every((r) => (r.rows === 'split' ? (r.bl >= 1 && r.bb === 0) : (r.bb >= 1 && r.bl === 0))),
+     forms.map((r) => `${r.w}px ${r.rows}: ${r.bg}, rule beside ${r.bl}px / under ${r.bb}px`).join(' · '));
+  /* CONTROL: paint the question again and the no-fill measure fires — so "no fill" is read off the page. */
+  const tinted = await look({ w: 1536, h: 1024 }, '.mx-wexask{background:#F1F3F2 !important}');
+  ok('CONTROL: paint the question region again and the check sees the fill',
+     !noFill(tinted.askBg), `with the tint restored the question is on ${tinted.askBg}`);
+  /* CONTROL: take the stacked rule away and the stacked row has nothing between question and working. */
+  const unruled = await look({ w: 414, h: 896 }, '.mx-wexask{border-bottom:0 !important}');
+  ok('CONTROL: take the stacked rule away and nothing separates the question from the working',
+     unruled.rows !== 'split' && unruled.askBB === 0 && unruled.workBL === 0 && noFill(unruled.askBg),
+     `stacked, no fill, no rule beside (${unruled.workBL}px) and none under (${unruled.askBB}px)`);
+
+  /* ── 3. the section below the examples announces itself ────────────────────────────────────────── */
+  ok('A FOOT THAT FOLLOWS EXAMPLES OPENS ON A RULE',
+     seen.every((r) => r.footAfter === 'mx-wexseq' && r.footBT >= 1),
+     seen.map((r) => `${r.w}px: after ${r.footAfter}, ${r.footBT}px rule`).join(' · '));
+  /* …AND A FOOT THAT IS THE WHOLE PANE DOES NOT. A representation-only group — the shipping quadratics
+     lesson authors two of them — has nothing above it to be separated from, and a rule at the top of an
+     otherwise empty pane is a rule under nothing. */
+  const ONLYREP = (() => { const L = JSON.parse(JSON.stringify(FIX));
+    const g = L.slides[WEX].groups.find((x) => x.type === 'sequence');
+    g.examples = []; return L; })();
+  const onlyrep = await look({ w: 1536, h: 1024, lesson: ONLYREP });
+  ok('…and a foot that IS the pane — a group whose teaching is its representation — opens on no rule',
+     onlyrep.footAfter !== null && onlyrep.footAfter !== 'mx-wexseq' && onlyrep.footBT === 0,
+     `the foot follows ${onlyrep.footAfter} and carries a ${onlyrep.footBT}px rule`);
+}
+
+const SECTIONS = ['composition', 'viability', 'surface', 'examples', 'reference', 'scale', 'slots', 'primitive', 'proofs', 'states', 'flat', 'presentation'];
 ok('every section ran', SECTIONS.every((s) => sections.has(s)), `${sections.size} sections`);
 ok('no page error while rendering or switching', pageErrs.length === 0, pageErrs.slice(0, 2).join(' | ') || 'none');
 await browser.close(); server.close();
