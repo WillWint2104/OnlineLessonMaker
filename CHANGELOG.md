@@ -8,6 +8,46 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 4 — the authoring experience, on the maintainer's three priorities.** Nothing student-facing
+  moved: `docs/atlas/app-lesson/`'s ten renders are byte-identical and `corpus-identity` is 250/250, so
+  every change below is confined to the Edit panel.
+  - **A PROPER TABLE EDITOR.** The eleven-column table of values was 33 inputs in a single column —
+    3474px of panel against 1000px of screen, and a teacher entering a row could not see the row. It is
+    now an editable grid shaped like the finished table: corner cell, column headings across the top, row
+    headings down the side, a cell per value, ✕ per column and per row, ＋ for each. **The row headings
+    stay put while the values scroll**, exactly as they do in the rendered table, because the panel is
+    340px and a table of values is wider than that in the editor for the same reason it is on the page.
+    Under it, the table as the page will draw it, by `mxPartTable()` itself. The `data-bind` paths are
+    unchanged from the stacked form, so the whole-lesson rebuild needed no edit to keep passing.
+  - **A COMPACT INSPECTOR.** Groups, examples and steps collapse and expand on their own twisty, which
+    never changes the selection — looking through a lesson is not the same act as choosing to edit it.
+    The chain down to the selection is pinned open, because a selected row you cannot see is worse than a
+    long panel. **An add-palette now belongs to the thing you have selected**, where three copies of
+    prose/relations/points/table used to sit on screen at once, above the fields you were reaching for.
+    The Page and Lesson sections fold away — they are set once, not per step — each showing what it holds
+    on its header line, the page's under `mxM()` so a page called `y = _x_^2` does not announce itself as
+    "y = x2". Expansion is session state like `selZone`: golden rule 2 stands, the file is the lesson.
+  - **MATHEMATICS IS ENTERED, NOT REMEMBERED.** Every maths field shows what it will draw, live, under the
+    box — rendered by `mxM()`, **the same function the page uses**, so the preview cannot drift from the
+    render. A notation row types `_x_` (wrapping a selection, or inserting an x for you), `^2`, and −, ×,
+    ÷, ±, ≤, ≥, ≈, √ into the field you last used, and fires a real `input` event so the ordinary
+    data-bind handler saves it — there is no second save path. **A symbol never lands inside an italic
+    run**: after the italic key gives you `_x_` with the x selected, the caret sits between the letter and
+    the closing mark, and the next insert would have produced `_y−_`, which is not notation; an insert
+    that is not itself an italic steps over the closing mark. Found by driving it, not by reading it.
+  - **WHAT IT IS NOT.** This is not a structural equation editor. The lesson stores mathematics as
+    strings; the app's other editor (TPMath, the Type workbook) stores a JSON tree. Moving worked examples
+    onto that tree would change the lesson file format — every existing lesson, the schema and the flat
+    output — and that is the maintainer's call, not this panel's.
+  - **The panel, measured at the places a teacher works** (`scripts/shots-authoring-lesson.mjs`): the
+    table 3474px → **1481px**, marked points 2304 → 1599, the graph window 2208 → 1576, a subtopic
+    1790 → 1519, the relationship list 1700 → 1572, and the lesson as it opens 1134 → 1000. Every view now
+    sits within about half a screen of scroll; the table, which was 2474px off-screen, is 481px.
+    The previews and the notation row cost some of what the folds saved — that is the trade, and it is why
+    the numbers are here rather than an adjective.
+  - **Eleven new assertions in `verify-mx-authoring` (41/41)**, each driven through the real controls and
+    each driven to failure: laying the grid out as a column again, making the twisty a no-op, and removing
+    the preview each make their own check fire.
 - **Stage 3C — the whole quadratics lesson can now be made in the application.** The milestone is that you
   can open the app, create a mathematics lesson from nothing, author every part of it through the
   inspector, and export a complete lesson without editing JSON by hand. It is asserted, not asserted-ish:

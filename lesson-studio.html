@@ -1243,7 +1243,7 @@ html.ins-collapsed body.edit #insReopen{display:flex;align-items:center;gap:6px;
 .inspector .blk-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:var(--surface);cursor:pointer;}
 .inspector .blk-row:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line));}
 .inspector .blk-row.cur{border-color:var(--accent);background:var(--accent-soft);}
-.inspector .blk-t{font-size:.85rem;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.inspector .blk-t{flex:1 1 auto;font-size:.85rem;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .inspector .blk-t .muted{font-weight:400;color:var(--muted);}
 .inspector .blk-ord{display:flex;gap:2px;flex-shrink:0;}
 .inspector .blk-ord .ibtn-x[disabled]{opacity:.3;pointer-events:none;}
@@ -1971,6 +1971,46 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .inspector .mxcol{display:flex;align-items:flex-end;gap:6px;margin-bottom:6px;}
 .inspector .mxcol .ii{flex:1;min-width:0;}
 .inspector .mxcol>label{display:none;}
+/* THE TABLE, EDITED AS A TABLE. Its row headings stay put while the values scroll, exactly as they do in
+   the rendered table — the panel is 340px and a table of values is wider than that. */
+.inspector .mxg-wrap{overflow-x:auto;overflow-y:hidden;margin:2px 0 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);}
+.inspector .mxg{border-collapse:separate;border-spacing:0;}
+.inspector .mxg th,.inspector .mxg td{padding:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);}
+.inspector .mxg tr:last-child th,.inspector .mxg tr:last-child td{border-bottom:0;}
+.inspector .mxg .mxg-stick{position:sticky;left:0;z-index:2;background:var(--surface);border-right:1px solid var(--line);}
+.inspector .mxg-i{width:62px;min-width:62px;border:0;background:transparent;padding:6px 5px;font-size:12.5px;color:inherit;font-family:inherit;}
+.inspector .mxg-i.mxg-stub{width:96px;min-width:96px;font-weight:600;}
+.inspector .mxg-i:focus{outline:2px solid var(--accent);outline-offset:-2px;border-radius:3px;}
+.inspector .mxg-acts td{border-bottom:0;padding:1px;text-align:center;}
+.inspector .mxg-h th{background:color-mix(in srgb,var(--accent) 7%,transparent);}
+.inspector .mxg-x,.inspector .mxg-plus{font-size:.7rem;line-height:1;color:var(--muted);padding:2px 4px;border-radius:4px;background:transparent;border:0;cursor:pointer;}
+.inspector .mxg-x:hover,.inspector .mxg-plus:hover{color:#fff;background:var(--accent);}
+.inspector .mxg-x[disabled]{opacity:.25;pointer-events:none;}
+.inspector .mxg-plus{color:var(--accent);font-weight:700;}
+.inspector .mxtw{flex:0 0 auto;width:16px;height:18px;margin-right:2px;padding:0;border:0;background:transparent;cursor:pointer;
+  color:var(--muted);font-size:.68rem;line-height:1;border-radius:4px;}
+.inspector .mxtw:hover{color:#fff;background:var(--accent);}
+.inspector .mxtw[disabled]{opacity:.45;pointer-events:none;}
+.inspector .mxtw-sp{flex:0 0 auto;width:16px;margin-right:2px;}
+.inspector .isec-tog{display:flex;align-items:center;gap:6px;width:100%;text-align:left;background:transparent;border:0;padding:0;cursor:pointer;color:inherit;font:inherit;letter-spacing:inherit;text-transform:inherit;}
+.inspector .isec-tog .mxtw{pointer-events:none;}
+.inspector .isec-tog:hover{color:var(--accent);}
+.inspector .isec-sub{margin-left:auto;font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%;}
+.inspector .isec-fold:not(.on){gap:0;}
+/* what a maths field will draw, under the field, by the page's own renderer */
+.inspector .mxprev{margin:-4px 0 2px;padding:7px 9px;border-radius:7px;background:color-mix(in srgb,var(--accent) 6%,transparent);
+  font-family:'LM Math',Cambria Math,serif;font-size:15px;line-height:1.45;color:var(--ink);overflow-x:auto;}
+.inspector .mxprev[hidden]{display:none;}
+.inspector .mxprev-l div{margin:2px 0;}
+.inspector .mxprev-t{padding:6px;}
+.inspector .mxprev-t .mx-tbl{border-collapse:collapse;font-size:12px;}
+.inspector .mxprev-t .mx-tbl th,.inspector .mxprev-t .mx-tbl td{border:1px solid var(--line);padding:2px 5px;}
+.inspector .mxkeys-row{display:flex;flex-wrap:wrap;gap:4px;}
+.inspector .mxkey{min-width:30px;height:28px;padding:0 7px;border:1px solid var(--line);border-radius:7px;background:var(--surface);
+  cursor:pointer;font-family:'LM Math',Cambria Math,serif;font-size:15px;line-height:1;color:var(--ink);}
+.inspector .mxkey:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);}
+.inspector .mxkey sup{font-size:.62em;vertical-align:super;}
+
 .mxchk{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--mx-ink-2,#4a5550);text-transform:none;letter-spacing:0;}
 .mx-stpane[hidden]{display:none;}          /* a hidden state reserves no layout space */
 .mx-stpane{min-width:0;}
@@ -5308,6 +5348,24 @@ function mxSel(sel){ const m=/^mx\.([gestfopvw])\.(\d+)(?:\.(\d+))?(?:\.(\d+))?(
 /* IS THIS SELECTION INSIDE AN EXAMPLE? Only these kinds put an EXAMPLE index in the second position — for
    `t` and `o` that number is a state or an object — so only these may open an example's step list. */
 function mxInEx(S){ return !!S&&(S.kind==='e'||S.kind==='s'||S.kind==='v'||S.kind==='w'); }
+/* WHAT IS OPEN. The outline used to expand whatever the selection happened to sit under and nothing else,
+   so a lesson of four subtopics showed one subtopic's entire contents and no way to see the others' —
+   and no way to close the one you had finished with. Expansion is now its own state, SESSION-ONLY like
+   `selZone` and the nav: golden rule 2 stands, the file is the lesson and this is not part of it.
+   The chain down to the selection is always open, because a selected row you cannot see is worse than a
+   long panel. Everything else answers to its own twisty. */
+const MX_OPEN=new Set();
+function mxAncestors(S){
+  if(!S) return [];
+  const g=`mx.g.${S.g}`;
+  if(S.kind==='g'||S.kind==='p'||S.kind==='t') return [g];
+  if(S.kind==='f'||S.kind==='o') return [g,`mx.f.${S.g}`];
+  const e=`mx.e.${S.g}.${S.e}`;
+  if(S.kind==='e'||S.kind==='v') return [g,e];
+  const st=`mx.s.${S.g}.${S.e}.${S.s}`;
+  return [g,e,st];                                   /* s and w */
+}
+function mxOpenSet(S){ const o=new Set(MX_OPEN); mxAncestors(S).forEach(z=>o.add(z)); return o; }
 /* WHERE A PART LIVES. One resolver for all three hosts: the array it belongs to, the index inside it and
    the data-bind base, so every form and every button below is written once rather than three times. */
 function mxPartHost(s,S,base){
@@ -5376,28 +5434,86 @@ function mxObjLabel(o){
   if(o.type==='segment'){ const b=Array.isArray(o.between)?o.between:[o.from,o.to]; return 'segment · '+(b[0]||'?')+'–'+(b[1]||'?'); }
   return String(o.type);
 }
-/* THE TABLE OF VALUES. `head` is the column headings, `stub` the corner cell above the row headings, and
-   each row is {label, cells} — exactly the shape mxPartTable reads, with no second idea of a table.
+/* THE TABLE OF VALUES, EDITED AS A TABLE. `head` is the column headings, `stub` the corner cell above the
+   row headings, and each row is {label, cells} — exactly the shape mxPartTable reads, with no second idea
+   of a table. The BINDINGS are unchanged from the stacked form that preceded this; only the arrangement
+   is. An eleven-column table was 33 inputs in a column, 3474px of panel against 1000px of screen, and a
+   teacher entering a row of values could not see the row they were entering.
    EVERY ROW IS THE WIDTH OF THE HEADINGS. Adding a column appends an empty cell to every row and removing
    one splices the same index out of each, because a ragged table in the JSON is a ragged table on the page
-   and no author asked for one. It is also what makes the per-cell data-bind paths safe: setP walks an
-   existing path and does not create it, so the shape has to be complete before a cell can be typed into.
+   and no author asked for one. It is also what makes the per-cell paths safe: setP walks an existing path
+   and does not create it, so the shape has to be complete before a cell can be typed into.
+   THE ROW HEADINGS STAY PUT while the values scroll, exactly as they do in the rendered table — the panel
+   is 340px and a table of values is wider than that, in the editor for the same reason it is on the page.
    Every cell goes through mxM() on render, so _x_, ^2 and 3/4 mean here what they mean in a step. */
+/* ═══ MATHEMATICS ENTRY ═══════════════════════════════════════════════════════════════════════════════
+   A teacher should not have to remember that `_x_` is an italic x and `^2` is a power. Two things fix
+   that without inventing a second way to store mathematics:
+     · EVERY MATHS FIELD SHOWS WHAT IT WILL DRAW, live, under the box — rendered by mxM(), THE SAME
+       FUNCTION THE PAGE USES, so the preview cannot drift from the render. It escapes its input, so a
+       preview is as safe as the page is.
+     · A NOTATION ROW inserts the right characters at the caret of whichever field was last focused, and
+       fires a real `input` event, so the ordinary data-bind handler saves it. No second save path.
+   WHAT THIS DELIBERATELY IS NOT: a structural editor. The lesson stores mathematics as STRINGS, and the
+   app's other equation editor (TPMath, the Type workbook) stores a JSON tree. Moving worked examples onto
+   that tree would change the lesson file format — every existing lesson, the schema and the flat output —
+   and that is the maintainer's call, not this panel's. */
+let MX_FOCUS=null;                                   /* the maths field the notation row types into */
+const MX_KEYS=[
+  {k:'italic', lab:'<i>x</i>', tip:'Italic variable — wraps the selection, or inserts x'},
+  {k:'pow',    lab:'x<sup>2</sup>', tip:'Power'},
+  {k:'\u2212', lab:'\u2212', tip:'Minus sign (not a hyphen)'},
+  {k:'\u00d7', lab:'\u00d7', tip:'Times'},
+  {k:'\u00f7', lab:'\u00f7', tip:'Divide'},
+  {k:'\u00b1', lab:'\u00b1', tip:'Plus or minus'},
+  {k:'\u2264', lab:'\u2264', tip:'Less than or equal to'},
+  {k:'\u2265', lab:'\u2265', tip:'Greater than or equal to'},
+  {k:'\u2248', lab:'\u2248', tip:'Approximately equal to'},
+  {k:'\u221a', lab:'\u221a', tip:'Square root'},
+];
+function mxKeys(){
+  return `<div class="isec mxkeys"><div class="isec-h">Mathematics notation</div>
+    <div class="mxkeys-row">${MX_KEYS.map(x=>`<button type="button" class="mxkey" data-mxkey="${esc(x.k)}" title="${esc(x.tip)}" aria-label="${esc(x.tip)}">${x.lab}</button>`).join('')}</div>
+    <div class="muted small">Typed into the field you last used. A fraction is just <code>3/4</code> — the preview under each field shows what will be drawn.</div></div>`;
+}
+/* A MATHS FIELD: the control, then what it will draw. The preview is the control's next sibling, so the
+   wiring needs no ids and cannot point at the wrong one. */
+function inMath(label,path,val,area){
+  const v=val==null?'':String(val);
+  const ctl=area?`<textarea class="ia mxm" data-bind="${path}">${esc(v)}</textarea>`
+                :`<input class="ii mxm" data-bind="${path}" value="${esc(v)}">`;
+  return `<label>${esc(label)}</label>${ctl}<div class="mxprev"${v?'':' hidden'}>${mxM(v)}</div>`;
+}
+function inMathList(label,path,arr){
+  const lines=(arr||[]).map(x=>(x&&typeof x==='object')?(x.body!=null?x.body:(x.term||'')):x);
+  return `<label>${esc(label)} <span class="muted">(one per line)</span></label><textarea class="ia mxm" data-split="${path}">${esc(lines.join('\n'))}</textarea>
+    <div class="mxprev mxprev-l"${lines.length?'':' hidden'}>${lines.map(x=>`<div>${mxM(x)}</div>`).join('')}</div>`;
+}
+function mxgCell(path,val,aria,cls){
+  return `<input class="mxg-i mxm${cls?' '+cls:''}" data-bind="${path}" value="${esc(val==null?'':String(val))}" aria-label="${esc(aria)}">`;
+}
 function mxTableForm(path,c,sel){
   const head=Array.isArray(c.head)?c.head:[], rows=Array.isArray(c.rows)?c.rows:[];
-  const cols=head.length?head.map((h,ci)=>`<div class="mxcol">${inT('Column '+(ci+1),`${path}.head.${ci}`,h)}<button class="ibtn-x" data-mxcoldel="${path}:${ci}" title="Remove this column"${head.length<2?' disabled':''}>✕</button></div>`).join('')
-    :'<div class="muted small">No columns yet.</div>';
-  const body=rows.length?rows.map((r,ri)=>`<div class="qg"><div class="qg-h"><b>Row ${ri+1}</b><button class="ibtn-x" data-mxtrowdel="${path}:${ri}" title="Remove this row">✕</button></div>
-      ${inT('Row heading',`${path}.rows.${ri}.label`,r&&r.label)}
-      ${head.map((h,ci)=>inT(String(h==null||h===''?('Column '+(ci+1)):h),`${path}.rows.${ri}.cells.${ci}`,(r&&Array.isArray(r.cells))?r.cells[ci]:'')).join('')}</div>`).join('')
-    :'<div class="muted small">No rows yet.</div>';
+  const colName=(h,ci)=>String(h==null||h===''?('column '+(ci+1)):h);
+  const acts=`<tr class="mxg-acts"><td class="mxg-stick"></td>`
+    +head.map((h,ci)=>`<td><button class="mxg-x" data-mxcoldel="${path}:${ci}" title="Remove ${esc(colName(h,ci))}" aria-label="Remove ${esc(colName(h,ci))}"${head.length<2?' disabled':''}>✕</button></td>`).join('')
+    +`<td><button class="mxg-plus" data-mxcoladd="${path}" title="Add a column" aria-label="Add a column">＋</button></td></tr>`;
+  const heads=`<tr class="mxg-h"><th class="mxg-stick">${mxgCell(`${path}.stub`,c.stub,'Corner cell — what the row headings are','mxg-stub')}</th>`
+    +head.map((h,ci)=>`<th>${mxgCell(`${path}.head.${ci}`,h,'Heading of column '+(ci+1))}</th>`).join('')
+    +`<td></td></tr>`;
+  const body=rows.map((r,ri)=>`<tr><th class="mxg-stick">${mxgCell(`${path}.rows.${ri}.label`,r&&r.label,'Heading of row '+(ri+1),'mxg-stub')}</th>`
+    +head.map((h,ci)=>`<td>${mxgCell(`${path}.rows.${ri}.cells.${ci}`,(r&&Array.isArray(r.cells))?r.cells[ci]:'',
+      colName(h,ci)+', row '+(ri+1))}</td>`).join('')
+    +`<td><button class="mxg-x" data-mxtrowdel="${path}:${ri}" title="Remove row ${ri+1}" aria-label="Remove row ${ri+1}">✕</button></td></tr>`).join('');
+  const grid=head.length
+    ? `<div class="mxg-wrap"><table class="mxg">${acts}${heads}${body}</table></div>
+       <button class="ibtn-add" data-mxtrowadd="${path}">＋ Add row</button>`
+    : `<div class="muted small">This table has no columns yet.</div><button class="ibtn-add" data-mxcoladd="${path}">＋ Add column</button>`;
   return `${ig('mxp.lab',sel,inT('Heading above the table (optional)',`${path}.label`,c.label))}
-    ${ig('mxp.stub',sel,inT('Corner cell — what the row headings are',`${path}.stub`,c.stub))}
-    <label>Columns</label>${cols}
-    <button class="ibtn-add" data-mxcoladd="${path}">＋ Add column</button>
-    <label>Rows</label>${body}
-    <button class="ibtn-add" data-mxtrowadd="${path}">＋ Add row</button>
-    <div class="muted small">A cell reads as mathematics: <code>_x_</code> italic · <code>^2</code> power · <code>3/4</code> builds up · <code>−</code> minus.</div>`;
+    <label>The table <span class="muted">(${head.length} × ${rows.length}; scrolls sideways, as it does on the page)</span></label>
+    ${grid}
+    <div class="mxprev mxprev-t">${mxPartTable(c)}</div>
+    <div class="muted small">A cell reads as mathematics — use the notation row above; <code>3/4</code> builds up on its own.</div>`;
 }
 /* ONE FORM PER PART KIND, and the same form wherever that part lives — the renderer draws a table under a
    step exactly as it draws one under a group, so the editor must not have two opinions about it. */
@@ -5405,12 +5521,12 @@ function mxPartForm(path,pt,sel){
   const k=String((pt&&pt.kind)||'');
   if(k==='table') return `<div class="isec"><div class="isec-h">Table · fields</div>${mxTableForm(path,pt,sel)}</div>`;
   if(k==='prose') return `<div class="isec"><div class="isec-h">Prose · fields</div>
-    ${ig('mxp.body',sel,inA('The paragraph (use _x_ for italics, ^2 for powers)',`${path}.body`,pt.body))}
+    ${ig('mxp.body',sel,inMath('The paragraph',`${path}.body`,pt.body,true))}
     <div class="muted small">Explanatory text that closes a subtopic or sits beside a step. It is content, not chrome.</div></div>`;
   if(k==='relations'||k==='points'){ const isRel=k==='relations';
     return `<div class="isec"><div class="isec-h">${isRel?'Relationships':'Points'} · fields</div>
     ${ig('mxp.lab',sel,inT('Heading above the list (optional)',`${path}.label`,pt.label))}
-    ${ig('mxp.items',sel,inList(isRel?'One relationship per line':'One point per line',`${path}.items`,(pt.items||[]).map(x=>(x&&typeof x==='object')?(x.body!=null?x.body:(x.term||'')):x)))}
+    ${ig('mxp.items',sel,inMathList(isRel?'Relationships':'Points',`${path}.items`,pt.items))}
     <div class="muted small">${isRel?'What the mathematics just shown amounts to — read as a list of statements about the same object.':'Short statements, each on its own bullet.'}</div></div>`; }
   if(k==='figure') return `<div class="ihint">Select the Graph row above to edit the plane and what is drawn in it.</div>`;
   return `<div class="ihint">No fields for "${esc(k||'(none)')}".</div>`;
@@ -5420,14 +5536,23 @@ function mxOutline(i,s,sel){
   /* REORDER LIVES ON THE ROW, exactly as it does for blocks: the arrows are disabled at the ends rather
      than hidden, so the list's shape is legible without clicking anything. `mv` is the sibling array's
      address and `k` the index inside it. */
-  const row=(cls,zone,label,name,del,mv,k,n)=>`<div class="blk-row${zone===sel?' cur':''}" data-mxsel="${zone}" style="${cls}">
-      <span class="blk-t">${esc(label)}${name?` · <span class="muted">${esc(String(name).slice(0,42))}</span>`:''}</span>
+  /* A TWISTY ONLY WHERE THERE IS SOMETHING TO OPEN, and it never changes the selection — opening a subtopic
+     to see what is in it is not the same act as choosing to edit it. Ancestors of the selection are drawn
+     open and their twisty disabled: closing the branch you are editing would hide the row you are on. */
+  const OPEN=mxOpenSet(S), PIN=new Set(mxAncestors(S));
+  const tw=(zone,has)=>!has?'<span class="mxtw-sp"></span>'
+    :`<button class="mxtw" data-mxtw="${zone}" aria-expanded="${OPEN.has(zone)?'true':'false'}"${PIN.has(zone)?' disabled':''} title="${OPEN.has(zone)?'Collapse':'Expand'}" aria-label="${OPEN.has(zone)?'Collapse':'Expand'}">${OPEN.has(zone)?'▾':'▸'}</button>`;
+  const row=(cls,zone,label,name,del,mv,k,n,has)=>`<div class="blk-row${zone===sel?' cur':''}" data-mxsel="${zone}" style="${cls}">
+      ${tw(zone,has)}<span class="blk-t">${esc(label)}${name?` · <span class="muted">${esc(String(name).slice(0,42))}</span>`:''}</span>
       <span class="blk-ord"><button class="ibtn-x" data-mxmove="${mv}:${k}:-1" title="Move up"${k===0?' disabled':''}>↑</button><button class="ibtn-x" data-mxmove="${mv}:${k}:1" title="Move down"${k===n-1?' disabled':''}>↓</button><button class="ibtn-x" data-mxdel="${del}" title="Remove">✕</button></span></div>`;
+  /* AN ADD-PALETTE BELONGS TO THE THING YOU HAVE SELECTED. Showing every open host's palette put three
+     copies of prose/relations/points/table on screen at once, above the fields you were trying to reach. */
+  const pal=(zone,inner)=>zone===sel?inner:'';
   let tree='';
   const G=mxGroups(s);
   G.forEach((g,gi)=>{
-    tree+=row('',`mx.g.${gi}`,`Group ${gi+1} · ${g.type||'sequence'}`,g.title,`g.${gi}`,`g`,gi,G.length);
-    if(S&&S.g===gi){
+    tree+=row('',`mx.g.${gi}`,`Group ${gi+1} · ${g.type||'sequence'}`,g.title,`g.${gi}`,`g`,gi,G.length,true);
+    if(OPEN.has(`mx.g.${gi}`)){
       /* THE REPRESENTATIONS, where the group authors them. A staged group that authors none still RENDERS
          two (mxWexStates supplies the obvious pair), and an editor that let you change something the JSON
          does not contain would be lying — so the defaults are shown as defaults, with one button to write
@@ -5435,7 +5560,7 @@ function mxOutline(i,s,sel){
       const stAuth=Array.isArray(g.states)?g.states:null, stEff=mxWexStates(g);
       if(stAuth&&stAuth.length){
         stAuth.forEach((st,ti)=>tree+=row('margin-left:14px',`mx.t.${gi}.${ti}`,`Representation ${ti+1}`,
-          (st.label||st.id||'')+' · '+((st.show||[]).join(', ')||'everything'),`t.${gi}.${ti}`,`t.${gi}`,ti,stAuth.length));
+          (st.label||st.id||'')+' · '+((st.show||[]).join(', ')||'everything'),`t.${gi}.${ti}`,`t.${gi}`,ti,stAuth.length,false));
         tree+=`<button class="blk-add-t" data-mxadd="t.${gi}">＋ Add representation</button>`;
       } else if(stEff.length){
         tree+=`<div class="muted small" style="margin-left:14px">${stEff.length} representation(s) by default · ${esc(stEff.map(x=>x.label).join(' · '))}</div>
@@ -5450,36 +5575,38 @@ function mxOutline(i,s,sel){
       const REL=Array.isArray(g.relations)?g.relations:[], F=mxFigAt(g);
       REL.forEach((pt,k)=>{
         if(pt&&pt.kind==='figure'&&pt.figure){
-          tree+=`<div class="blk-row${sel===`mx.f.${gi}`?' cur':''}" data-mxsel="mx.f.${gi}" style="margin-left:14px">
-            <span class="blk-t">Graph${pt.figure.domain?` · <span class="muted">${esc('x '+pt.figure.domain.xMin+'…'+pt.figure.domain.xMax)}</span>`:''}</span>
+          const fz=`mx.f.${gi}`;
+          tree+=`<div class="blk-row${sel===fz?' cur':''}" data-mxsel="${fz}" style="margin-left:14px">
+            ${tw(fz,true)}<span class="blk-t">Graph${pt.figure.domain?` · <span class="muted">${esc('x '+pt.figure.domain.xMin+'…'+pt.figure.domain.xMax)}</span>`:''}</span>
             <span class="blk-ord"><button class="ibtn-x" data-mxmove="p.${gi}:${k}:-1" title="Move up"${k===0?' disabled':''}>↑</button><button class="ibtn-x" data-mxmove="p.${gi}:${k}:1" title="Move down"${k===REL.length-1?' disabled':''}>↓</button><button class="ibtn-x" data-mxdel="f.${gi}" title="Remove the graph">✕</button></span></div>`;
-          if(S.kind==='f'||S.kind==='o'){ const OB=Array.isArray(pt.figure.objects)?pt.figure.objects:[];
-            OB.forEach((o,oi)=>tree+=row('margin-left:28px',`mx.o.${gi}.${oi}`,mxObjLabel(o),(o&&o.label)||'',`o.${gi}.${oi}`,`o.${gi}`,oi,OB.length));
-            tree+=`<div class="blk-palette" style="margin-left:28px">${['function','line','points','segment']
-              .map(t=>`<button class="blk-add-t" data-mxadd="o.${gi}.${t}">＋ ${t}</button>`).join('')}</div>`; }
+          if(OPEN.has(fz)){ const OB=Array.isArray(pt.figure.objects)?pt.figure.objects:[];
+            OB.forEach((o,oi)=>tree+=row('margin-left:28px',`mx.o.${gi}.${oi}`,mxObjLabel(o),(o&&o.label)||'',`o.${gi}.${oi}`,`o.${gi}`,oi,OB.length,false));
+            tree+=pal(fz,`<div class="blk-palette" style="margin-left:28px">${['function','line','points','segment']
+              .map(t=>`<button class="blk-add-t" data-mxadd="o.${gi}.${t}">＋ ${t}</button>`).join('')}</div>`); }
           return; }
-        tree+=row('margin-left:14px',`mx.p.${gi}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`p.${gi}.${k}`,`p.${gi}`,k,REL.length);
+        tree+=row('margin-left:14px',`mx.p.${gi}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`p.${gi}.${k}`,`p.${gi}`,k,REL.length,false);
       });
-      tree+=`<div class="blk-palette" style="margin-left:14px">${(F?[]:[`<button class="blk-add-t" data-mxadd="f.${gi}">＋ graph</button>`])
-        .concat(MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="p.${gi}.${t}">＋ ${t}</button>`)).join('')}</div>`;
+      tree+=pal(`mx.g.${gi}`,`<div class="blk-palette" style="margin-left:14px">${(F?[]:[`<button class="blk-add-t" data-mxadd="f.${gi}">＋ graph</button>`])
+        .concat(MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="p.${gi}.${t}">＋ ${t}</button>`)).join('')}</div>`);
       (g.examples||[]).forEach((ex,ei)=>{
-        const EX=g.examples;
-        tree+=row('margin-left:14px',`mx.e.${gi}.${ei}`,`Example ${ei+1}`,ex.label,`e.${gi}.${ei}`,`e.${gi}`,ei,EX.length);
-        if(S.e===ei&&mxInEx(S)){ const ST=ex.steps||[];
+        const EX=g.examples, ez=`mx.e.${gi}.${ei}`;
+        tree+=row('margin-left:14px',ez,`Example ${ei+1}`,ex.label,`e.${gi}.${ei}`,`e.${gi}`,ei,EX.length,true);
+        if(OPEN.has(ez)){ const ST=ex.steps||[];
           ST.forEach((st,si)=>{
-            tree+=row('margin-left:28px',`mx.s.${gi}.${ei}.${si}`,`Step ${si+1}`,st.text,`s.${gi}.${ei}.${si}`,`s.${gi}.${ei}`,si,ST.length);
             /* A STEP'S OWN COMPANION — the table of values that belongs to the substitution it sits under,
                not to the page. Listed under the step it belongs to, and only while that step is open. */
-            const SP=(S.s===si&&(S.kind==='s'||S.kind==='w'))?mxParts(st.visual):[];
-            SP.forEach((pt,k)=>tree+=row('margin-left:42px',`mx.w.${gi}.${ei}.${si}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`w.${gi}.${ei}.${si}.${k}`,`w.${gi}.${ei}.${si}`,k,SP.length));
-            if(S.s===si&&(S.kind==='s'||S.kind==='w'))
-              tree+=`<div class="blk-palette" style="margin-left:42px">${MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="w.${gi}.${ei}.${si}.${t}">＋ ${t}</button>`).join('')}</div>`;
+            const sz=`mx.s.${gi}.${ei}.${si}`, SP=mxParts(st.visual);
+            tree+=row('margin-left:28px',sz,`Step ${si+1}`,st.text,`s.${gi}.${ei}.${si}`,`s.${gi}.${ei}`,si,ST.length,SP.length>0);
+            if(OPEN.has(sz)){
+              SP.forEach((pt,k)=>tree+=row('margin-left:42px',`mx.w.${gi}.${ei}.${si}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`w.${gi}.${ei}.${si}.${k}`,`w.${gi}.${ei}.${si}`,k,SP.length,false));
+            }
+            tree+=pal(sz,`<div class="blk-palette" style="margin-left:42px">${MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="w.${gi}.${ei}.${si}.${t}">＋ ${t}</button>`).join('')}</div>`);
           });
           tree+=`<button class="blk-add-t" data-mxadd="s.${gi}.${ei}">＋ Add step</button>`;
           /* THE EXAMPLE'S OWN COMPANION sits inside the working, beside its steps. */
           const EP=mxParts(ex.visual);
-          EP.forEach((pt,k)=>tree+=row('margin-left:28px',`mx.v.${gi}.${ei}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`v.${gi}.${ei}.${k}`,`v.${gi}.${ei}`,k,EP.length));
-          tree+=`<div class="blk-palette" style="margin-left:28px">${MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="v.${gi}.${ei}.${t}">＋ ${t}</button>`).join('')}</div>`; }
+          EP.forEach((pt,k)=>tree+=row('margin-left:28px',`mx.v.${gi}.${ei}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`v.${gi}.${ei}.${k}`,`v.${gi}.${ei}`,k,EP.length,false));
+          tree+=pal(ez,`<div class="blk-palette" style="margin-left:28px">${MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="v.${gi}.${ei}.${t}">＋ ${t}</button>`).join('')}</div>`); }
       });
       tree+=`<button class="blk-add-t" data-mxadd="e.${gi}">＋ Add example</button>`;
     }
@@ -5491,8 +5618,8 @@ function mxOutline(i,s,sel){
     if(S.kind==='g') return `<div class="isec"><div class="isec-h">Group · fields</div>
       ${ig('mxg.type',sel,inSel('Composition',`${gb}.type`,g.type||'sequence',
         [['sequence','Sequence — N examples stacked'],['standard','Standard — one example'],['staged','Staged — authored representations'],['comparison','Comparison — two cases and a plane'],['extended','Extended — one long derivation']]))}
-      ${ig('mxg.title',sel,inT('Tab title',`${gb}.title`,g.title))}
-      ${ig('mxg.lede',sel,inA('Lede — what this subtopic is for',`${gb}.lede`,g.lede))}
+      ${ig('mxg.title',sel,inMath('Tab title',`${gb}.title`,g.title))}
+      ${ig('mxg.lede',sel,inMath('Lede — what this subtopic is for',`${gb}.lede`,g.lede,true))}
       ${ig('mxg.foot',sel,inT('Closing region label (optional)',`${gb}.footLabel`,g.footLabel))}</div>`;
     if(S.kind==='f'||S.kind==='o'){
       const F=mxFigAt(g); if(!F) return `<div class="ihint">That graph is gone — add one.</div>`;
@@ -5552,33 +5679,91 @@ function mxOutline(i,s,sel){
     const ex=(g.examples||[])[S.e]; if(!ex) return `<div class="ihint">That example is gone — select another.</div>`;
     const eb=`${gb}.examples.${S.e}`;
     if(S.kind==='e') return `<div class="isec"><div class="isec-h">Example · fields</div>
-      ${ig('mxe.label',sel,inT('Example title',`${eb}.label`,ex.label))}
-      ${ig('mxe.prompt',sel,inA('Question (use _x_ for italics, ^2 for powers)',`${eb}.prompt`,ex.prompt))}
-      ${ig('mxe.answer',sel,inA('Answer',`${eb}.answer`,ex.answer))}
+      ${ig('mxe.label',sel,inMath('Example title',`${eb}.label`,ex.label))}
+      ${ig('mxe.prompt',sel,inMath('Question',`${eb}.prompt`,ex.prompt,true))}
+      ${ig('mxe.answer',sel,inMath('Answer',`${eb}.answer`,ex.answer,true))}
       ${ig('mxe.rlab',sel,inT('Answer label (optional — default "Answer")',`${eb}.resultLabel`,ex.resultLabel))}</div>`;
     const st=(ex.steps||[])[S.s]; if(!st) return `<div class="ihint">That step is gone — select another.</div>`;
     const sb=`${eb}.steps.${S.s}`;
     return `<div class="isec"><div class="isec-h">Step · fields</div>
-      ${ig('mxs.text',sel,inA('What this step does',`${sb}.text`,st.text))}
-      ${ig('mxs.math',sel,inT('Mathematics (_x_ italic · ^2 power · − minus · 2/3 builds up)',`${sb}.math`,st.math))}
-      ${ig('mxs.note',sel,inT('Note (optional)',`${sb}.note`,st.note))}</div>`;
+      ${ig('mxs.text',sel,inMath('What this step does',`${sb}.text`,st.text,true))}
+      ${ig('mxs.math',sel,inMath('Mathematics',`${sb}.math`,st.math))}
+      ${ig('mxs.note',sel,inMath('Note (optional)',`${sb}.note`,st.note))}</div>`;
   })();
-  /* THE PAGE ITSELF. Its title, its opening lede and the name it takes in the rail are content the lesson
-     carries and the reader sees, so they are edited here rather than left to a hand-written JSON file. */
-  const page=`<div class="isec"><div class="isec-h">Page · ${esc(TYPELAB[s.type]||s.type)}</div>
-    ${ig('mxpg.title',sel,inT('Title (use _x_ for italics, ^2 for powers)',`${base}.title`,s.title))}
-    ${ig('mxpg.lede',sel,inA('Opening lede — what the page is for',`${base}.lede`,s.lede))}
-    ${ig('mxpg.nav',sel,inT('Name in the rail (optional — defaults to the title)',`${base}.navLabel`,s.navLabel))}</div>`;
-  return `${page}<div class="isec"><div class="isec-h">Structure · ${esc(TYPELAB[s.type]||s.type)}</div>
+  /* THE PAGE AND THE LESSON ARE SET ONCE, AND THEN NOT AGAIN. They were on screen for every selection —
+     eight fields and their labels above the outline, between a teacher and the step they were editing.
+     Folded shut by default, with what they hold shown on the header line so nothing is hidden, only put
+     away. The fold is session state like the outline's, never the file's. This is the MATHEMATICS panel's
+     own arrangement: metaSection() is shared with the legacy inspector and is not touched. */
+  const fold=(key,head,sub,inner)=>{ const open=MX_OPEN.has(key);
+    return `<div class="isec isec-fold${open?' on':''}"><button type="button" class="isec-h isec-tog" data-mxtw="${key}" aria-expanded="${open?'true':'false'}">
+      <span class="mxtw" aria-hidden="true">${open?'▾':'▸'}</span><span>${esc(head)}</span>${sub?`<span class="isec-sub">${mxM(String(sub).slice(0,40))}</span>`:''}</button>${open?inner:''}</div>`; };
+  /* the folded row SETS the title it is standing in for — mxM, not mxPlain, or a page called `y = _x_^2`
+     announces itself as "y = x2" in the one place it is meant to be recognisable. mxM escapes its input. */
+  const page=fold('mx.page','Page',s.title||'',
+    `${ig('mxpg.title',sel,inMath('Title',`${base}.title`,s.title))}
+     ${ig('mxpg.lede',sel,inMath('Opening lede — what the page is for',`${base}.lede`,s.lede,true))}
+     ${ig('mxpg.nav',sel,inT('Name in the rail (optional — defaults to the title)',`${base}.navLabel`,s.navLabel))}`);
+  /* ONE notation row for the whole panel, shown only when the open form actually has a maths field in it */
+  const keys=/class="(?:ii|ia|mxg-i) mxm/.test(form)||/ mxm/.test(form)?mxKeys():'';
+  return `${page}<div class="isec"><div class="isec-h">Structure</div>
     <div class="blk-list">${tree||'<div class="muted small">No groups yet — add one below.</div>'}</div>
-    <div class="blk-palette"><button class="blk-add-t" data-mxadd="g">＋ Add group</button></div></div>${form}`;
+    <div class="blk-palette"><button class="blk-add-t" data-mxadd="g">＋ Add group</button></div></div>${keys}${form}`;
 }
 function mxOutlineWire(i){
   const ins=$('#inspector'), s=LESSON.slides[i]; if(!s) return;
   const groups=()=>(s.groups=Array.isArray(s.groups)?s.groups:[]);
   const uid=(p,n)=>p+(n+1)+'-'+Math.random().toString(36).slice(2,6);
   ins.querySelectorAll('[data-mxsel]').forEach(el=>el.addEventListener('click',e=>{
-    if(e.target.closest('[data-mxdel]')) return; selZone=el.dataset.mxsel; renderSlide(); }));
+    if(e.target.closest('[data-mxdel],[data-mxtw]')) return; selZone=el.dataset.mxsel; renderSlide(); }));
+  /* OPENING A BRANCH IS NOT CHOOSING TO EDIT IT — the twisty toggles and stops there, so a teacher can
+     look through the lesson's structure without the form under the panel changing on every click. */
+  ins.querySelectorAll('[data-mxtw]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
+    const z=b.dataset.mxtw; if(MX_OPEN.has(z)) MX_OPEN.delete(z); else MX_OPEN.add(z); renderInspector(); });
+  /* THE PREVIEW IS THE RENDERER. Each maths field's preview is its next sibling, redrawn on every
+     keystroke by mxM() — the same function the page uses, so what the box promises is what the page
+     draws. The value has already been saved by the generic data-bind handler; this only shows it. */
+  const prev=(el)=>{ const pv=el.nextElementSibling; if(!pv||!pv.classList.contains('mxprev')) return;
+    const v=el.value;
+    pv.innerHTML=pv.classList.contains('mxprev-l')
+      ? v.split('\n').filter(x=>x.trim()).map(x=>`<div>${mxM(x)}</div>`).join('') : mxM(v);
+    pv.hidden=!v.trim(); };
+  ins.querySelectorAll('.mxm').forEach(el=>{
+    el.addEventListener('input',()=>prev(el));
+    el.addEventListener('focus',()=>{ MX_FOCUS=el; });
+  });
+  /* THE WHOLE TABLE, PREVIEWED AS THE PAGE WILL DRAW IT — a grid of source strings is not a table of
+     values until you can see it set. Redrawn from the data after any cell changes. */
+  const tprev=ins.querySelector('.mxprev-t');
+  if(tprev){ const any=ins.querySelector('.mxg-i');
+    ins.querySelectorAll('.mxg-i').forEach(el=>el.addEventListener('input',()=>{
+      const m=(any&&any.dataset.bind||'').match(/^(.*)\.(?:stub|head|rows)\b/);
+      const c=m?getP(LESSON,m[1]):null; if(c) tprev.innerHTML=mxPartTable(c); })); }
+  /* THE NOTATION ROW types into the field last used. mousedown is prevented so the click never takes the
+     focus away from the field it is about to type into, and a real `input` event is dispatched so the
+     ordinary binding saves it — there is no second save path. */
+  ins.querySelectorAll('[data-mxkey]').forEach(b=>{
+    b.addEventListener('mousedown',e=>e.preventDefault());
+    b.onclick=()=>{
+      const el=(MX_FOCUS&&ins.contains(MX_FOCUS))?MX_FOCUS:ins.querySelector('.mxm');
+      if(!el) return;
+      const k=b.dataset.mxkey; let a=el.selectionStart??el.value.length, z=el.selectionEnd??a;
+      /* A SYMBOL NEVER LANDS INSIDE AN ITALIC RUN. Click the italic key on an empty field and you get
+         `_x_` with the x selected, so typing a letter replaces it — and leaves the caret between that
+         letter and the closing underscore. The next symbol would then be typed INSIDE the italics, and
+         `_y−_` is not notation. So an insert that is not itself an italic steps over the closing mark. */
+      if(k!=='italic'&&a===z&&el.value[z]==='_'&&/_[A-Za-z]$/.test(el.value.slice(0,z))){ a=z=z+1; }
+      const sel=el.value.slice(a,z);
+      let ins2, caret, mark=0;
+      if(k==='italic'){ if(sel){ ins2='_'+sel+'_'; caret=a+ins2.length; } else { ins2='_x_'; caret=a+1; mark=1; } }
+      else if(k==='pow'){ ins2='^2'; caret=a+2; }
+      else { ins2=k; caret=a+k.length; }
+      el.value=el.value.slice(0,a)+ins2+el.value.slice(z);
+      el.focus(); el.setSelectionRange(caret,caret+mark);
+      MX_FOCUS=el;
+      el.dispatchEvent(new Event('input',{bubbles:true}));   // saves through the data-bind handler and repaints
+    };
+  });
   ins.querySelectorAll('[data-mxadd]').forEach(b=>b.onclick=()=>{
     const a=b.dataset.mxadd.split('.'), G=groups();
     if(a[0]==='g'){ G.push({id:uid('g',G.length),type:'sequence',title:'New subtopic',examples:[]}); selZone=`mx.g.${G.length-1}`; }
@@ -5974,7 +6159,11 @@ function renderInspector(){
      merely shares a name (`notes`) can never land here and be handed the wrong form. Before the legacy
      path for exactly that reason. */
   if(tpPageEntry(s)&&MX_PAGE_SEED[s.type]){
-    ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${mxOutline(i,s,selZone)}${metaSection()}`;
+    /* the shared Lesson section, folded — see the note in mxOutline. metaSection() itself is unchanged. */
+    const m=LESSON.meta||{}, lOpen=MX_OPEN.has('mx.meta');
+    const lesson=`<div class="isec isec-fold${lOpen?' on':''}"><button type="button" class="isec-h isec-tog" data-mxtw="mx.meta" aria-expanded="${lOpen?'true':'false'}">
+      <span class="mxtw" aria-hidden="true">${lOpen?'▾':'▸'}</span><span>Lesson</span><span class="isec-sub">${esc([m.stage,m.year,m.unit].filter(Boolean).join(' · ').slice(0,30))}</span></button>${lOpen?metaSection():''}</div>`;
+    ins.innerHTML=`<div class="ins-h"><span>Inspector</span><button class="ins-x" id="insCollapse" title="Collapse panel" aria-label="Collapse panel">›</button></div>${mxOutline(i,s,selZone)}${lesson}`;
     wireInspector(); mxOutlineWire(i);
     const c0=ins.querySelector('.cur'); if(c0) c0.scrollIntoView({block:'nearest'});
     return;

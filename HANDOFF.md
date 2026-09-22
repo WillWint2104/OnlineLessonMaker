@@ -853,6 +853,21 @@ renderer is referenced.
     app carried no `id`, so `tpRespId()` would have excluded it from the response store — a page made
     here would silently have lost the student responses a page loaded from a file keeps.
 
+  **STAGE 4 — THE AUTHORING EXPERIENCE** (the maintainer's three priorities, after the Stage 3C review):
+  - **The table is edited as a table** — a grid shaped like the finished one, row headings sticky, values
+    scrolling, ✕/＋ per row and column, and the page's own `mxPartTable()` previewing it underneath. THE
+    BINDINGS DID NOT MOVE, which is why the whole-lesson rebuild kept passing without an edit.
+  - **The outline collapses.** `MX_OPEN` is session state; the chain to the selection is pinned open; the
+    twisty toggles and never selects. An add-palette belongs to the SELECTED host, not to every open one.
+    The Page and Lesson sections fold, each showing what it holds on its header line.
+  - **Maths fields preview through `mxM()` — the renderer itself**, and a notation row inserts at the
+    caret and fires a real `input` so the ordinary binding saves it. An insert that is not an italic steps
+    over a closing `_`, or the caret left inside `_x_` turns the next symbol into `_y−_`.
+  - **NOT a structural equation editor.** The lesson stores strings; TPMath stores a tree. Putting worked
+    examples on that tree is a LESSON FILE FORMAT CHANGE and belongs to the maintainer.
+  - Panel heights at the places a teacher works: table 3474 → 1481px, points 2304 → 1599, window
+    2208 → 1576, subtopic 1790 → 1519, open 1134 → 1000, against 1000px visible.
+
   **STILL TO AUTHOR**: a FIGURE attached to an example or a step. `mxPart` renders one anywhere, but the
   object editor is addressed per group (`mx.f` / `mx.o`, one graph per group, found the way the renderer
   finds it), so the part palette offers `prose · relations · points · table` and not `figure`. Both of this

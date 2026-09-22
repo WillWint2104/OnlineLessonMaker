@@ -225,8 +225,14 @@ ok('a graph can be ADDED to a group from the outline, seeded so it plots the mom
    before it could report, which is the one thing a control must never do — it has to be able to SAY it
    failed. The offered set is read back and compared instead. */
 const objAdd = await p.evaluate(() => { const missing = [];
-  for (const t of ['line', 'points', 'segment']) { const b = document.querySelector(`[data-mxadd="o.0.${t}"]`);
+  /* AN ADD-PALETTE BELONGS TO THE SELECTED THING (Stage 4B), so the graph is selected before anything is
+     added to it — which is what an author does anyway. Each click re-renders and re-selects the new
+     object, so the graph is re-selected for the next one. */
+  for (const t of ['line', 'points', 'segment']) {
+    selZone = 'mx.f.0'; renderSlide();
+    const b = document.querySelector(`[data-mxadd="o.0.${t}"]`);
     if (b) b.click(); else missing.push(t); }
+  selZone = 'mx.f.0'; renderSlide();
   const o = LESSON.slides[cur].groups[0].relations[0].figure.objects;
   return { types: o.map((x) => x.type), missing,
     offered: [].slice.call(document.querySelectorAll('[data-mxadd^="o.0."]')).map((b) => b.dataset.mxadd.split('.').pop()),
@@ -358,6 +364,120 @@ ok('and the COMPOSITION still follows the authored geometry — a wide window ea
    && (comp.wide.stage === 'stage' ? comp.wide.w > comp.tall.w : comp.wide.w === comp.tall.w),
    `tall window → ${comp.tall.sub} at ${comp.tall.w}px · wide window → ${comp.wide.sub} at ${comp.wide.w}px · surface "${comp.wide.stage}"`
    + (comp.wide.stage === 'stage' ? '' : ' (below the desktop surface both take the full width, as approved — the decision is what moved)'));
+/* ═══ STAGE 4 — IS IT COMFORTABLE TO USE? ════════════════════════════════════════════════════════════
+   Everything above asks whether the lesson CAN be made. These ask whether a teacher would want to. Each
+   one is driven through the real controls and each is followed by the state that would have made it fail
+   before the change. */
+console.log('\n--- the table is edited as a table ---');
+await p.evaluate(() => { const g = LESSON.slides[cur].groups[0];
+  g.examples[0].steps[0].visual = [{ kind: 'table', stub: '_x_', head: ['1', '2'], rows: [{ label: '_y_', cells: ['1', '4'] }] }];
+  selZone = 'mx.s.0.0.0'; renderSlide(); });
+await p.waitForTimeout(250);
+await p.click('#inspector [data-mxsel="mx.w.0.0.0.0"]');
+await p.waitForTimeout(250);
+const grid = await p.evaluate(() => {
+  const t = document.querySelector('#inspector .mxg');
+  if (!t) return null;
+  const rows = [].slice.call(t.rows);
+  const cells = [].slice.call(t.querySelectorAll('input.mxg-i'));
+  const stub = t.querySelector('.mxg-stick input');
+  const r = stub && stub.getBoundingClientRect(), wrap = document.querySelector('#inspector .mxg-wrap');
+  return { rows: rows.length, inputs: cells.length,
+    /* a GRID, not a list: the first row's inputs sit side by side, at the same top */
+    sideBySide: (() => { const a = t.rows[1] && [].slice.call(t.rows[1].querySelectorAll('input')); if (!a || a.length < 2) return false;
+      const b = a.map((x) => x.getBoundingClientRect()); return Math.abs(b[0].top - b[1].top) < 2 && b[1].left > b[0].right - 1; })(),
+    stubSticky: stub ? getComputedStyle(stub.closest('th,td')).position : '',
+    scrolls: wrap ? getComputedStyle(wrap).overflowX : '',
+    preview: !!document.querySelector('#inspector .mxprev-t .mx-tbl') };
+});
+ok('THE TABLE IS EDITED AS A TABLE — a grid of cells, not a column of fields',
+   !!grid && grid.sideBySide && grid.inputs === 6,
+   grid ? `${grid.rows} grid rows · ${grid.inputs} cell inputs · side by side: ${grid.sideBySide}` : 'no grid');
+ok('and it behaves like the rendered one: the row headings stay put and the values scroll',
+   !!grid && grid.stubSticky === 'sticky' && grid.scrolls === 'auto',
+   grid ? `row heading ${grid.stubSticky} · values ${grid.scrolls}` : '');
+ok('and the finished table is previewed beside the grid, drawn by the page\'s own renderer',
+   !!grid && grid.preview, grid && grid.preview ? 'mxPartTable() output in the panel' : 'no preview');
+{ /* a cell typed into the grid reaches the data and the page */
+  const sel = '#inspector input.mxg-i[data-bind$="rows.0.cells.1"]';
+  await p.fill(sel, '4 (a square)');
+  await p.waitForTimeout(200);
+  const v = await p.evaluate(() => LESSON.slides[cur].groups[0].examples[0].steps[0].visual[0].rows[0].cells[1]);
+  const drawn = await p.evaluate(() => [].slice.call(document.querySelectorAll('#slide .mx-tbl td')).map((x) => x.textContent.trim()).join(','));
+  ok('and a cell typed into the grid lands in the lesson and repaints the page',
+     v === '4 (a square)' && drawn.indexOf('4 (a square)') >= 0, `cell "${v}" · page "${drawn}"`);
+}
+
+console.log('\n--- the panel shows what you are working on ---');
+const fold = await p.evaluate(() => ({
+  pageFold: !!document.querySelector('#inspector [data-mxtw="mx.page"]'),
+  pageFields: document.querySelectorAll('#inspector [data-bind$=".navLabel"]').length,
+  metaFold: !!document.querySelector('#inspector [data-mxtw="mx.meta"]'),
+  metaFields: document.querySelectorAll('#inspector [data-meta]').length }));
+ok('the Page and Lesson sections are folded away until they are wanted — they are set once, not per step',
+   fold.pageFold && fold.metaFold && fold.pageFields === 0 && fold.metaFields === 0,
+   `folds present: page ${fold.pageFold}, lesson ${fold.metaFold} · fields on screen: ${fold.pageFields} + ${fold.metaFields}`);
+await p.click('#inspector [data-mxtw="mx.page"]');
+await p.waitForTimeout(200);
+ok('and opening one brings its fields back',
+   (await p.evaluate(() => document.querySelectorAll('#inspector [data-bind$=".navLabel"]').length)) === 1);
+await p.click('#inspector [data-mxtw="mx.page"]');
+await p.waitForTimeout(200);
+{ /* collapsing a branch really removes its children, and the branch you are editing cannot be collapsed */
+  /* the branch you are EDITING is pinned open — a selected row you cannot see is worse than a long panel */
+  await p.evaluate(() => { selZone = 'mx.s.0.0.0'; renderSlide(); }); await p.waitForTimeout(200);
+  const pinned = await p.evaluate(() => (document.querySelector('#inspector [data-mxtw="mx.e.0.0"]') || {}).disabled);
+  /* select elsewhere, open the example by its twisty, then close it again and watch the steps go */
+  await p.evaluate(() => { selZone = 'mx.g.0'; renderSlide(); }); await p.waitForTimeout(200);
+  await p.click('#inspector [data-mxtw="mx.e.0.0"]'); await p.waitForTimeout(200);
+  const before = await p.evaluate(() => document.querySelectorAll('#inspector [data-mxsel^="mx.s.0.0."]').length);
+  await p.click('#inspector [data-mxtw="mx.e.0.0"]'); await p.waitForTimeout(200);
+  const after = await p.evaluate(() => document.querySelectorAll('#inspector [data-mxsel^="mx.s.0.0."]').length);
+  ok('COLLAPSING A BRANCH REMOVES ITS CHILDREN — the outline is navigable, not one long list',
+     pinned === true && before > 0 && after === 0,
+     `the branch being edited is pinned open: ${pinned} · steps shown ${before} → ${after} on its twisty`);
+}
+{ /* an add-palette belongs to the selected thing */
+  /* the vocabulary is read from the app, not copied here, so the count cannot drift from what it offers */
+  const N = await p.evaluate(() => MX_PART_KINDS.length);
+  const pals = async () => p.evaluate(() => document.querySelectorAll('#inspector [data-mxadd^="p.0."],#inspector [data-mxadd^="v.0."],#inspector [data-mxadd^="w.0."]').length);
+  await p.evaluate(() => { selZone = 'mx.g.0'; renderSlide(); }); await p.waitForTimeout(200);
+  const onGroup = await pals();
+  await p.evaluate(() => { selZone = 'mx.e.0.0'; renderSlide(); }); await p.waitForTimeout(200);
+  const onEx = await pals();
+  ok('and only the selected host offers its add-palette — not every open one at once',
+     onGroup === N && onEx === N,
+     `group selected: ${onGroup} chips · example selected: ${onEx} chips · one host's worth is ${N}`);
+}
+
+console.log('\n--- mathematics is entered, not remembered ---');
+await p.evaluate(() => { selZone = 'mx.s.0.0.0'; renderSlide(); });
+await p.waitForTimeout(250);
+{
+  const bind = 'slides.0.groups.0.examples.0.steps.0.math';
+  await p.fill(`#inspector [data-bind="${bind}"]`, '');
+  await p.waitForTimeout(150);
+  await p.click('#inspector [data-bind="' + bind + '"]');
+  const keys = await p.evaluate(() => [].slice.call(document.querySelectorAll('#inspector [data-mxkey]')).map((b) => b.dataset.mxkey));
+  ok('a notation row is offered, so _x_ and ^2 do not have to be remembered', keys.length >= 8,
+     `${keys.length} keys: ${keys.join(' ')}`);
+  await p.click('#inspector [data-mxkey="italic"]');
+  await p.waitForTimeout(120);
+  await p.keyboard.type('y');
+  await p.click('#inspector [data-mxkey="\u2212"]');
+  await p.click('#inspector [data-mxkey="pow"]');
+  await p.waitForTimeout(200);
+  const saved = await p.evaluate(() => LESSON.slides[cur].groups[0].examples[0].steps[0].math);
+  ok('AND WHAT IT TYPES IS SAVED THROUGH THE ORDINARY BINDING — no second save path',
+     saved === '_y_\u2212^2', `the field now holds ${JSON.stringify(saved)}`);
+  const shown = await p.evaluate(() => { const el = document.querySelector('#inspector [data-bind$=".steps.0.math"]');
+    const pv = el && el.nextElementSibling; return pv && pv.classList.contains('mxprev') ? pv.innerHTML : null; });
+  ok('and the field previews what the PAGE will draw, through the page\'s own renderer',
+     shown === await p.evaluate((v) => mxM(v), saved), `preview ${JSON.stringify((shown || '').slice(0, 44))}`);
+  await p.fill(`#inspector [data-bind="${bind}"]`, EDIT.stepMath);
+  await p.waitForTimeout(150);
+}
+
 /* restore for the save/reopen section */
 await p.evaluate(({ e }) => { const g = LESSON.slides[cur].groups[0];
   delete g.relations; g.type = 'sequence'; delete g.states; g.title = e.gTitle;

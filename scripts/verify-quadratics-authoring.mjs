@@ -122,11 +122,15 @@ await p.waitForTimeout(250);
 ok('an empty mathematics lesson yields a worked-examples page from the palette',
    (await lesson()).slides.length === 1, `slides ${(await lesson()).slides.length}`);
 
-/* THE PAGE'S OWN FIELDS — its title, its opening lede and the name it takes in the rail. */
+/* THE PAGE'S OWN FIELDS — its title, its opening lede and the name it takes in the rail. The Page and
+   Lesson sections are folded shut by default (they are set once, and they were on screen for every
+   selection), so the author opens them the way the panel offers: by clicking the section header. */
 const B = 'slides.0';
+await press('data-mxtw', 'mx.page');
 await set(`${B}.title`, PAGE.title);
 await set(`${B}.lede`, PAGE.lede);
 await set(`${B}.navLabel`, PAGE.navLabel);
+await press('data-mxtw', 'mx.meta');
 await meta('stage', TARGET.meta.stage); await meta('year', TARGET.meta.year); await meta('unit', TARGET.meta.unit);
 {
   const s = (await lesson()).slides[0];
@@ -182,10 +186,12 @@ for (let gi = 0; gi < PAGE.groups.length; gi++) {
   /* THE CLOSING REGION — the graph, then the prose or the relationship list, in authored order. */
   for (let k = 0; k < (g.relations || []).length; k++) {
     const rel = g.relations[k];
+    /* an add-palette belongs to the selected thing, so the group is selected before anything is added to
+       it — which is what an author does anyway. */
+    await pick(`mx.g.${gi}`);
     if (rel.kind === 'figure') { await add(`f.${gi}`); await buildFigure(gi, `${gb}.relations.${k}.figure`, rel.figure);
       await snap(`group ${gi + 1}, the graph's marked points selected`); }
     else {
-      await pick(`mx.g.${gi}`);
       await add(`p.${gi}.${rel.kind}`);
       const pb = `${gb}.relations.${k}`;
       if (rel.kind === 'prose') await set(`${pb}.body`, rel.body);
@@ -357,7 +363,7 @@ const fingerprint = async (url) => {
     const tabs = [].slice.call(document.querySelectorAll('.mx-tab,[data-mx-tab]'));
     const grab = () => ({
       text: (document.querySelector('.mx-page') || document.body).innerText.replace(/\s+/g, ' ').trim(),
-      cells: [].slice.call(document.querySelectorAll('.mx-tbl th,.mx-tbl td')).map((x) => x.textContent.trim()),
+      cells: [].slice.call(document.querySelectorAll('#slide .mx-tbl th,#slide .mx-tbl td')).map((x) => x.textContent.trim()),
       paths: [].slice.call(document.querySelectorAll('svg path,svg polyline')).map((x) => (x.getAttribute('d') || x.getAttribute('points') || '').slice(0, 4000)),
       steps: document.querySelectorAll('.mx-step').length,
       wex: document.querySelectorAll('[data-mx-wex],.mx-wexex').length,
@@ -487,7 +493,7 @@ await q.waitForTimeout(150);
     await q.fill(`#inspector [data-bind="${pb}.rows.0.cells.5"]`, '0 (the vertex)');
     await q.waitForTimeout(150);
     const cell = await q.evaluate((path) => { const seg = path.split('.'); let t = LESSON; for (const k of seg) t = t[k]; return t; }, `${pb}.rows.0.cells.5`);
-    const painted = await q.evaluate(() => [].slice.call(document.querySelectorAll('.mx-tbl td')).map((x) => x.textContent.trim()).join(','));
+    const painted = await q.evaluate(() => [].slice.call(document.querySelectorAll('#slide .mx-tbl td')).map((x) => x.textContent.trim()).join(','));
     ok('and a cell edited after reopening lands in the data and repaints the table',
        cell === '0 (the vertex)' && painted.indexOf('0 (the vertex)') >= 0, `cell now "${cell}" · painted "${painted.slice(0, 60)}…"`);
   } else { ok('and a cell edited after reopening lands in the data and repaints the table', false, 'unreachable'); }
@@ -515,7 +521,9 @@ await q.waitForTimeout(150);
      taller.rows.length === before.rows.length + 1 && taller.rows.every((n) => n === taller.head)
        && back.rows.length === before.rows.length,
      `${before.rows.length} → ${taller.rows.length} → ${back.rows.length} row(s), each ${taller.head} wide`);
-  const painted = await q.evaluate(() => document.querySelectorAll('.mx-tbl tr').length);
+  /* SCOPED TO THE PAGE. The inspector now shows its own preview of the table — a second .mx-tbl in the
+     document — and the claim here is about what the PAGE draws, not about how many tables are on screen. */
+  const painted = await q.evaluate(() => document.querySelectorAll('#slide .mx-tbl tr').length);
   ok('and the page repaints from the data each time — the table is never stale markup', painted === back.rows.length + 1,
      `${painted} rendered row(s) including the headings, against ${back.rows.length} authored`);
 }
