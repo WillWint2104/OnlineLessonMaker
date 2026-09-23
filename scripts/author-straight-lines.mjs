@@ -283,9 +283,7 @@ const XS = ['\u22122', '\u22121', '0', '1', '2', '3'], YS = ['\u22125', '\u22123
   for (let c = 0; c < YS.length; c++) await set(`${TB}.rows.0.cells.${c}`, YS[c]);
   const cells = await p.evaluate(() => document.querySelectorAll('#slide .mx-tbl td, #slide .mx-tbl th').length);
   console.log(`    a ${XS.length}-column table built from a 2-column default — ${cells} cells painted`);
-  friction('Building a table', 'A new table starts at two columns and grows one click at a time; the headings arrive as "Column 1", "Column 2" and must each be replaced',
-    `a six-column table of values needed ${XS.length - 2} "＋ Add column" clicks plus ${XS.length} heading edits before any value could be typed`,
-    'the shape of the table is built before the mathematics, one column at a time');
+  console.log(`    This session used ${XS.length - 2} Add column clicks; the Columns field also sets the count directly. Each authored heading still needs its own text.`);
 }
 /* THE GRAPH. A straight line is not the `line` object — that one is axis-parallel only. */
 await pick('mx.g.2'); await add('f.2');

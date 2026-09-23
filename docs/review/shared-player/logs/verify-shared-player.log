@@ -2,7 +2,7 @@ PASS JSON import Factorising quadratics
 PASS neutral shared player at desktop
 PASS missing video omitted for learner
 PASS one complete example per authored activity
-PASS split example has one introduction and a named worked section
+PASS split example omits the group-wide introduction and has a named worked section
 PASS question precedes working, no empty parallel column
 PASS activity navigation resets reading position and focuses heading
 PASS paper has no digital response surfaces
@@ -13,7 +13,7 @@ PASS JSON import Factorising quadratics
 PASS neutral shared player at tablet
 PASS missing video omitted for learner
 PASS one complete example per authored activity
-PASS split example has one introduction and a named worked section
+PASS split example omits the group-wide introduction and has a named worked section
 PASS question precedes working, no empty parallel column
 PASS activity navigation resets reading position and focuses heading
 PASS paper has no digital response surfaces
@@ -58,9 +58,11 @@ PASS published controls absent
 PASS JSON import Factorising quadratics
 PASS longest example has no raw notation markers
 PASS longest example has no raw notation markers
+PASS single non-monic activity does not advertise sibling examples
+PASS single non-monic activity does not advertise sibling examples
 PASS JSON import Factorising quadratics
 PASS safe video URL normalized (playback blocked deliberately)
 PASS new activity lesson starts in graphical editor
 PASS new lesson has stable id and paper default
 PASS no browser errors: 
-65 assertions passed
+67 assertions passed

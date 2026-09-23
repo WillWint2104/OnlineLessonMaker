@@ -37,7 +37,7 @@ try{
   await shot(name+'-01-opening');
   await p.locator('[data-lp-move="1"]').click();await shot(name+'-02-working');
   check(await p.locator('.mx-wexex').count()===1,'one complete example per authored activity');
-  check(await p.locator('.lp .mx-wexlede').count()===0 && !!(await p.locator('.lp .mx-wexpane').getAttribute('aria-label')),'split example has one introduction and a named worked section');
+  check(await p.locator('.lp .mx-wexlede,.lp .mx-lede').count()===0 && !!(await p.locator('.lp .mx-wexpane').getAttribute('aria-label')),'split example omits the group-wide introduction and has a named worked section');
   check(await p.evaluate(()=>{const q=document.querySelector('.mx-wexask').getBoundingClientRect(),w=document.querySelector('.mx-wexwork').getBoundingClientRect();return w.top>=q.bottom-1;}),'question precedes working, no empty parallel column');
   await p.locator('.mx-wexanswer,.mx-wexans').first().count();
   await p.locator('.mx-page').evaluate(e=>e.scrollTop=e.scrollHeight);await shot(name+'-02b-working-end');
@@ -115,6 +115,7 @@ try{
  // All non-monic examples have five steps; the negative example has the longest rendered answer.
  for(const [w,h,name] of [[1536,960,'desktop'],[1024,768,'tablet']]){
   await p.setViewportSize({width:w,height:h});await p.locator('[data-lp-go="1"]').click();await p.locator('[data-lp-go="1:nonmonic-ex-n2"]').click();
+  check(await p.locator('.lp .mx-lede,.lp .mx-wexlede').count()===0 && !(await p.locator('.lp').innerText()).includes('Three examples:'),'single non-monic activity does not advertise sibling examples');
   await shot(name+'-nonmonic-longest');await p.locator('.mx-page').evaluate(e=>e.scrollTop=e.scrollHeight);await shot(name+'-nonmonic-longest-end');
  }
  const video=structuredClone(L);video.slides[0].video.url='https://www.youtube.com/watch?v=ABCDEFGHIJK';await load(video);await p.locator('[data-lp-go="0:monic-video"]').click();

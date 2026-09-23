@@ -14,9 +14,11 @@ as coverage. Corrective commits require a subsequent review before merge.
 - Correct the current authoring gate count to 54; retain dated historical changelog counts.
 - Reuse seeded examples/steps in the straight-line authoring session, remove the unused final
   example, and reject blank or extra steps before saving. Remove the obsolete rearranging complaint.
-- Split multi-example groups without duplicating the introduction. Name each nested section after
+- Split multi-example groups without carrying their group-wide introduction. Name each nested section after
   its example; single-example groups retain their group title and introduction. Check the result in
   both desktop and tablet learner views.
+  A follow-up caught the non-monic introduction still saying “Three examples” on a one-example activity;
+  the outer introduction is now omitted too, with an explicit non-monic desktop/tablet regression check.
 - Correct the three-curve capture names and descriptions.
 - Start each suite report fresh so a subset invocation cannot inherit stale results.
 

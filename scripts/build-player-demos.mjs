@@ -12,7 +12,7 @@ const skills=['monic','nonmonic'].map((id,k)=>{
     {id:id+'-video',title:'Watch and connect the method',optionalVideo:true},
     ...g.flatMap(group=>group.examples.map(ex=>{
       const split=group.examples.length>1;
-      return {id:id+'-'+ex.id,title:ex.label,lede:split?group.lede:undefined,
+      return {id:id+'-'+ex.id,title:ex.label,
         workedExamples:[{...group,title:split?ex.label:group.title,lede:split?'':group.lede,examples:[ex]}]};
     })),
     {id:id+'-practice',title:'Practise and check by expanding',questions:prefix(k?find('practice-nonmonic').questions:monic.questions,id)}
