@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "id": "motion-demo",
+    "title": "Reading motion data",
+    "subject": "Physics",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper"
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "constant-speed",
+      "title": "Connect data and speed",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "motion-calculate",
+          "title": "From measurements to average speed",
+          "lede": "Synthetic test data for an object moving along a straight track.",
+          "notes": [
+            {
+              "term": "Prediction",
+              "body": "The distance increases by the same amount each second. Predict what this suggests about the motion."
+            }
+          ],
+          "workedExamples": [
+            {
+              "id": "motion-group",
+              "type": "sequence",
+              "title": "Calculate and interpret",
+              "examples": [
+                {
+                  "id": "motion-example",
+                  "label": "Average speed",
+                  "prompt": "An object travels 12 m in 4 s. Find its average speed.",
+                  "steps": [
+                    {
+                      "id": "motion-step1",
+                      "text": "Average speed is distance divided by elapsed time.",
+                      "math": "12 ÷ 4 = 3"
+                    }
+                  ],
+                  "answer": "Average speed = 3 m/s",
+                  "visual": [
+                    {
+                      "kind": "table",
+                      "stub": "Time (s)",
+                      "head": [
+                        "Distance (m)"
+                      ],
+                      "rows": [
+                        [
+                          "0",
+                          "0"
+                        ],
+                        [
+                          "1",
+                          "3"
+                        ],
+                        [
+                          "2",
+                          "6"
+                        ],
+                        [
+                          "3",
+                          "9"
+                        ],
+                        [
+                          "4",
+                          "12"
+                        ]
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "questions": [
+            {
+              "id": "motion-reason",
+              "stem": "Does the average speed alone prove that the object moved at constant speed? Explain what further measurements would help."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
