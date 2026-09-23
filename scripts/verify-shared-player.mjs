@@ -56,7 +56,14 @@ try{
  await p.locator('[data-lp-move="1"]').click();check((await p.locator('.lp-title').textContent())==='Both signs positive','Present uses the same activity navigation');await p.locator('#presentExit').click();
  const bad=structuredClone(L);bad.slides[0].activities[0].unsupportedWidget={};
  await p.locator('[data-mx-mode="json"]').click();await p.locator('#jsonArea').fill(JSON.stringify(bad));await p.locator('#jsonLoad').click();
- check((await p.locator('#jsonErr').textContent()).includes('Unsupported activity field'),'invalid component rejected before import');await p.keyboard.press('Escape');
+ check((await p.locator('#jsonErr').textContent()).includes('Unsupported activity field'),'invalid component rejected before import');
+ for(const kind of ['skill','question']){
+  const unsafe=structuredClone(L);
+  if(kind==='skill')unsafe.slides[0].id='__proto__';else unsafe.slides[0].activities.find(a=>a.questions?.length).questions[0].id='constructor';
+  await p.locator('#jsonArea').fill(JSON.stringify(unsafe));await p.locator('#jsonLoad').click();
+  check((await p.locator('#jsonErr').textContent()).includes('reserved object keys'),kind+' identity cannot collide with navigation/response object prototypes');
+ }
+ await p.keyboard.press('Escape');
  const three=structuredClone(L);const third=structuredClone(three.slides[0]);third.id='third';third.activities=third.activities.map(a=>({...a,id:'third-'+a.id,questions:a.questions?.map(q=>({...q,id:'third-'+q.id}))}));three.slides.push(third);await load(three);
  check(await p.locator('.mx-navitem').count()===3,'three skills from JSON');
  await load(L);await p.setViewportSize({width:390,height:844});await shot('phone');

@@ -4795,7 +4795,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
           ]
         },
         {
-          "id": "activity-653d8419-2664-453d-8ed2-58d2dc98bdd7",
+          "id": "activity-fc9577a2-b2b7-4d1c-b103-618e1804f4f0",
           "title": "UI-authored explanation",
           "notes": [
             {
@@ -9898,10 +9898,10 @@ function lpCurrent(s){
 }
 function lpValidate(d){
   if(!(d.slides||[]).some(lpEnabled)&&!(d.meta&&d.meta.player==='activities')) return;
-  if(!d.meta.id) throw Error('Activity lessons need a stable meta.id.');
+  if(!d.meta||typeof d.meta.id!=='string'||!d.meta.id.trim()) throw Error('Activity lessons need a stable string meta.id.');
   if(d.meta.responseMode&&!MX_RESPONSE_ALIAS[d.meta.responseMode]) throw Error('responseMode must be paper, typed or pen (type/write aliases supported).');
   const ids=new Set();
-  function id(o,label){ if(!o||typeof o.id!=='string'||!o.id.trim()||o.id.includes(':')||ids.has(o.id)) throw Error(label+' needs a unique stable id without colons.'); ids.add(o.id); }
+  function id(o,label){ if(!o||typeof o.id!=='string'||!o.id.trim()||o.id.includes(':')||Object.prototype.hasOwnProperty.call(Object.prototype,o.id)||ids.has(o.id)) throw Error(label+' needs a unique stable id without colons or reserved object keys.'); ids.add(o.id); }
   function parts(value){mxParts(value).forEach(p=>{if(!['prose','figure','table','points','relations'].includes(p.kind))throw Error('Unsupported instructional part: '+p.kind);});}
   d.slides.forEach(s=>{
     id(s,'Skill'); if(!lpEnabled(s)) throw Error('Activity lessons support skill pages only.');

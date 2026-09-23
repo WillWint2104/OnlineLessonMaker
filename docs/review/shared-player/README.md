@@ -114,5 +114,5 @@ an activity is a location, not mastery. No XP or answer-gated progression was ad
 Run `node scripts/verify-player-suite.mjs` with the local review server running. Logs are
 separate under `logs/`. These are local results; remote CI has not run. No visual regression
 baseline files were regenerated. Review fixtures live here rather than in the regression corpus.
-See `TEST_RESULTS.md` for the 61 player assertions and corrected 25-gate run; `FAILURE_RESOLUTION.md`
+See `TEST_RESULTS.md` for the 63 player assertions and corrected 25-gate run; `FAILURE_RESOLUTION.md`
 explains the five diagnosed failures and the two exact corpus transitions restoring lost quiz content.

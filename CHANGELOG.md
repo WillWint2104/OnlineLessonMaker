@@ -8,6 +8,9 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Shared-player integration corrections
+- Reject reserved object-key identities on activity import/publication. An imported skill named
+  `__proto__` previously passed validation but could not retain activity navigation; question identities
+  now receive the same guard. Lesson identity must be a non-empty string.
 - Restore authored Microhistory quizzes through the existing quiz renderer; the paragraph fork had
   silently rendered no quiz questions. Retain all questions, attempt gating and accessible reveal.
 - Correct five stale legacy harness assumptions without dropping their behavioral checks: explicit

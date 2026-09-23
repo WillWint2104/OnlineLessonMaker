@@ -600,7 +600,10 @@ The document root remains `{meta, slides}`. Set `meta.player: "activities"`, a s
 shared page capability independently of `meta.theme`; historical slides without activities
 retain their existing rendering contract.
 
-Each activity has a unique stable `id` (no colon), `title`, optional `lede`, and any combination
+Skill, activity and question IDs must not be reserved Object.prototype keys such as `__proto__` or
+`constructor`; those names collide with the existing navigation/response stores. `meta.id` is a non-empty string.
+
+Each activity has a unique stable `id` (no colon or reserved Object.prototype key), `title`, optional `lede`, and any combination
 of existing instructional fields: `notes: [{term,body}]`, `workedExamples: [group]`,
 `examples: [example]`, `questions: [question]`, `video`, `keyIdea`, and their existing
 section-title/response-instruction fields. A slot with `optionalVideo: true` reads its skill's

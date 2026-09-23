@@ -7,7 +7,8 @@ The coordinated pipeline is `node scripts/verify-player-suite.mjs`: 25 gates, se
 separate per-gate logs and machine-readable `logs/results.json`. The original five-failure report
 is retained as `TEST_RESULTS-0c3a8e1.md`; it is historical, not the corrected build's result.
 
-The shared-player walkthrough passes 61 assertions, including real UI activity creation, text edits,
+The shared-player walkthrough now passes 63 assertions (the original 61 plus two reserved-identity
+regressions), including real UI activity creation, text edits,
 activity/skill reorder, Study/Present, paper/typed/pen policy, JSON export/reimport, HTML export and
 fresh-context reopening. Refreshed normal-viewport captures include the non-monic negative example.
 

@@ -32,3 +32,11 @@ The previously deferred CodeRabbit CI finding is also addressed under the user's
 authorization: the three named workflows now trigger on themselves and npm manifests; the corpus workflow
 also watches the pinned transitions, and mathematics CI runs the shared-player check. No hosting,
 branch-protection, permissions or auto-merge settings changed.
+
+## Imported-identity navigation regression
+
+A focused real-UI check then found that skill ID `__proto__` passed import validation but selecting
+the next activity returned to the first activity: the plain-object navigation store could not retain
+that key. Activity lessons now reject reserved Object.prototype keys for skills, activities and
+questions before import/publication, and require a non-empty string lesson ID. Two additional player
+assertions exercise a reserved skill ID and a reserved question ID; the walkthrough now has 63 checks.
