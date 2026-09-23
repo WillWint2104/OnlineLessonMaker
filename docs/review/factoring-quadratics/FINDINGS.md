@@ -3,7 +3,14 @@
 `CHROMIUM_PATH=/opt/pw-browsers/chromium node scripts/shots-lesson-review.mjs \`
 `  --lesson docs/atlas/lesson/factoring-quadratics.app.json --out docs/review/factoring-quadratics`
 
-Branch `claude/stage-4-block-wiring` at **706f50a**, working tree clean, PR #153 open and unmerged, all
+**Current correction status (23 September 2026): A1, B4 and C1 are resolved.** Both lesson formats now
+use single-letter notation markers and the recap uses the existing notes renderer. `captures.json`
+and the associated images have been refreshed through `shots-lesson-review.mjs`; the final record is
+`notes — Summary` with no placeholder. The observations below preserve the original review and its
+remaining legacy limitations. The delivered shared activity player has separate video and authoring
+contracts documented in `../shared-player/AUTHORING_COVERAGE.md`.
+
+Original review: branch `claude/stage-4-block-wiring` at **706f50a**, working tree clean, PR #153 open and unmerged, all
 seven checks green. The lesson is the one committed in **662b6f3**; it was read from the repository, not
 reconstructed. It was loaded **through the app's own ⌗ JSON dialog** — the supported workflow — into
 `lesson-studio.html` itself, put in **Study** mode, and photographed at **1536 × 960**. A mathematics page
@@ -20,7 +27,7 @@ Ten captures, no page errors, no figure errors, no 404s.
 | 4 | `04-video-non-monic.png` | the second video frame, 4 chapters |
 | 5 | `05-non-monic.png` | 3 worked examples, 15 steps |
 | 6 | `06-practice-non-monic.png` | 7 questions, an input table, the workbook |
-| 7 | `07-summary.png` | the lede — and an unimplemented-stage placeholder |
+| 7 | `07-summary.png` | current capture: the complete recap through notes, with no placeholder |
 
 **What is genuinely good, so the defects below are read in proportion.** The worked examples are the
 strongest thing here: the question/solution primitive reads cleanly, every step's mathematics sets in the
@@ -32,7 +39,7 @@ table cells a student types into. Nothing is clipped, nothing overlaps, and noth
 
 ## A · Rendering defects in the application
 
-**A1 · A multi-letter variable prints its underscores to the student.** `mxM` italicises exactly one
+**A1 · Resolved — the lesson's multi-letter markers were corrected.** Original observation: `mxM` italicises exactly one
 letter (`lesson-studio.html:8137`, `/_([A-Za-z])_/g`), so `_bx_` and `_ax_` are left as literal text.
 **Five leaked tokens on three of the eight pages, including two page titles** — the largest type in the
 lesson. Nothing reports it: the page renders "successfully" with `_bx_` in the headline.
@@ -73,7 +80,7 @@ no state change.
 **B3 · The chapter list is static text.** "0:00 / 1:30 / 3:10 / 4:40" cannot be clicked to seek, because
 there is nothing to seek.
 
-**B4 · The lesson ends on an unimplemented-stage notice.** `summary` is registered to `mxStubPage`, which
+**B4 · Resolved — the recap now uses notes.** Original observation: `summary` is registered to `mxStubPage`, which
 paints *"The shell for this page type is in place; its content lands in a later stage."* The page's lede
 renders, so the three rules are readable — then a dotted placeholder box sits under them, addressed to a
 developer, in front of a student.
@@ -91,7 +98,7 @@ JSON. They render, but they cannot be authored, edited or duplicated by a teache
 
 ## C · Incomplete authored content (mine, not the app's)
 
-- **C1** The four `_ax_` / `_bx_` strings behind A1 are my error against the app's one-letter convention.
+- **C1 · Resolved.** The four `_ax_` / `_bx_` strings behind A1 were corrected to the app's one-letter convention.
 - **C2** No video source is authored, because there is nowhere to put one (B1). The durations, chapter
   times and `progress` values are invented placeholders and should not be read as describing real videos.
 - **C3** Some `math` fields carry prose — `multiply to 12, add to 7`, `a × c = 2 × 3 = 6` — so a sentence
@@ -113,7 +120,7 @@ JSON. They render, but they cannot be authored, edited or duplicated by a teache
 
 ---
 
-## Is it usable by a student working independently?
+## Original independent-use assessment (before the corrections above)
 
 **The reading is; the doing is not.** The notes, the worked examples and the question sets would carry a
 student through a lesson with a teacher in the room. Alone, they would meet a play button that does

@@ -47,3 +47,13 @@ offers 382px while its graph's minimum legal ladder entry is 386px. The new guar
 build with the exact 4px overflow diagnostic. This is the requested rejection behavior,
 verified as a negative case; the atlas run is not reported as a successful rebuild. Its
 historical full report remains historical. No application gate is exempted or allowed to fail.
+
+## Full follow-up review at `5a8f025`
+
+Review 5290868027 rechecked the complete continuation plus prerequisite corrections and raised five
+further issues. The historical authoring findings now carry explicit Stage 5 status; the canonical
+factoring capture record and findings reflect the corrected notation and notes recap; the walkthrough
+count is consistently 67; the authoring screenshot script reuses its seeded step; and the independently
+opened export page records script errors and rejects external dependencies before navigation. The
+authoring session also measures the existing ambiguity warning instead of describing it as absent.
+Affected browser captures are refreshed; these changes do not change the application runtime.

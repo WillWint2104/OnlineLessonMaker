@@ -18,8 +18,14 @@ complete lesson that exports, reopens byte-identical, and renders intact in Stud
 page errors. Nothing below prevented the lesson from being made. All of it made it slower or riskier than it
 should have been, and two of them put something **wrong** on the page without saying so.
 
-Every entry was produced by the run and carries what was measured. They are ranked by what I would fix
-first, which is not the order they were found in.
+The entries below preserve the original run's measurements and priorities; they are historical findings,
+not a claim that rerunning the current script reproduces every issue.
+
+**Stage 5 status (23 September 2026): §§1–6 are fixed.** The editor warns about ambiguous division,
+bracketed numeric sums render as fractions, curves have pens and names, added items are seeded,
+tables have a Columns field, and Shift + arrow moves rows directly to an end. Rerunning
+`author-straight-lines.mjs` no longer reports §§3, 4 or 6. **§§7–9 remain open** as documented
+authoring/typography limitations; they do not prevent the lesson from being authored or reopened.
 
 ---
 
@@ -105,7 +111,7 @@ It now lives beside `docs/atlas/lesson/quadratics.app.json`, which the corpus ga
 CLAUDE.md's rule — *a regression asset must not be the same object as a piece of courseware* — and the gate
 caught it doing its job.
 
-## What this says about the next step
+## Original next-step assessment (completed in Stage 5)
 
 Nothing here argues for a structural equation editor yet, which matches the maintainer's position. The two
 findings that actually put wrong or unreadable mathematics on the page — the `1/2x` trap and identical

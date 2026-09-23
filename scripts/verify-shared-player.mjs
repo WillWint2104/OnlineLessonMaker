@@ -102,7 +102,13 @@ try{
  check(await p.evaluate(expected=>JSON.stringify(LESSON)===expected,authored),'JSON export/reimport preserves all authored content and identities');
  const downloadPromise=p.waitForEvent('download');await p.locator('[data-mx-mode="export"]').click();const download=await downloadPromise;
  await download.saveAs(path.join(out,'published-authoring.html'));
- const fresh=await browser.newPage();await fresh.goto(origin+'/docs/review/shared-player/published-authoring.html');
+ const fresh=await browser.newPage();
+ fresh.on('pageerror',e=>errors.push('Published page: '+e.message));
+ await fresh.route('**/*',r=>{
+  if(r.request().url().startsWith(origin))return r.continue();
+  errors.push('Published external dependency: '+r.request().url());return r.abort();
+ });
+ await fresh.goto(origin+'/docs/review/shared-player/published-authoring.html');
  check(await fresh.locator('.lp').count()===1,'independent published learner entry');
  check(await fresh.evaluate(expected=>JSON.stringify(LESSON)===expected,authored),'published HTML preserves authored content and identities');
  check(await fresh.locator('[data-mx-mode]').count()===0,'published controls absent');await fresh.screenshot({path:path.join(out,'independent.png')});await fresh.close();

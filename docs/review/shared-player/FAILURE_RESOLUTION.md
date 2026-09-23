@@ -39,4 +39,5 @@ A focused real-UI check then found that skill ID `__proto__` passed import valid
 the next activity returned to the first activity: the plain-object navigation store could not retain
 that key. Activity lessons now reject reserved Object.prototype keys for skills, activities and
 questions before import/publication, and require a non-empty string lesson ID. Two additional player
-assertions exercise a reserved skill ID and a reserved question ID; the walkthrough now has 63 checks.
+assertions exercise a reserved skill ID and a reserved question ID. Four later single-example content
+checks bring the current walkthrough to 67 checks.

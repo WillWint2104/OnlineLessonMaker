@@ -195,13 +195,11 @@ for (let i = 0; i < EX2.steps.length; i++) {
     .map((e) => ({ t: e.textContent.replace(/\s+/g, ' ').trim().slice(0, 34), frac: e.querySelectorAll('.mx-frac').length })));
   console.log('    fraction shapes as painted:');
   shapes.forEach((x) => console.log(`      ${x.frac ? 'built up' : 'SLASH   '}  ${x.t}`));
-  const slashed = shapes.filter((x) => !x.frac && /\//.test(x.t));
+  const slashed = shapes.filter((x) => !x.frac && /\)\s*\/\s*\(/.test(x.t));
   if (slashed.length)
     friction('Step mathematics — THE BIGGEST ONE',
       'A fraction of two BRACKETED EXPRESSIONS does not build up, and that is exactly how a substituted gradient is written',
-      `${slashed.length} of ${shapes.length} step expressions kept a slash. "(5 \u2212 2)/(5 \u2212 1)" stayed a slash`
-      + ' while "(\u22124)/6" and "\u22122/3" built up: the grammar takes a bracketed SIGNED INTEGER or bare digits,'
-      + ' not a bracketed sum. So the working line of every gradient example sets differently from its answer',
+      `${slashed.length} substituted bracketed expression(s) kept a slash: ${slashed.map(x => x.t).join('; ')}`,
       'the substitution step — the one the whole method turns on — cannot be set as a fraction at all');
 }
 await pick('mx.g.0'); await add('p.0.prose');
@@ -349,13 +347,16 @@ await pick('mx.f.3'); await add('o.3.function');
     return { n: ps.length, span: ys.length ? Math.round(Math.max(...ys) - Math.min(...ys)) : 0, sub: last.getAttribute('points') ? 'polyline' : 'path' }; });
   await set(`${GB}.objects.1.f`, '1/2x+1');
   await p.waitForTimeout(250);
+  const warningNode = p.locator('#inspector .mxamb:not([hidden])');
+  const warning = await warningNode.count() ? await warningNode.textContent() : '';
   const naive = await geom();
   const naivePaths = await p.evaluate(() => document.querySelectorAll('#slide svg .tp-fig-fn').length);
   await set(`${GB}.objects.1.f`, 'x/2+1');
   await p.waitForTimeout(250);
   const fixedPaths = await p.evaluate(() => document.querySelectorAll('#slide svg .tp-fig-fn').length);
   console.log(`    "1/2x+1" drew ${naivePaths} subpath(s); "x/2+1" drew ${fixedPaths}`);
-  friction('Entering a gradient of a half', 'Typing the gradient the way it is written turns the line into a hyperbola, silently',
+  if (warning) console.log(`    the editor warns: ${warning.trim()}`);
+  else friction('Entering a gradient of a half', 'Typing the gradient the way it is written turns the line into a hyperbola, silently',
     `"1/2x+1" is read as 1/(2x)+1 — juxtaposition binds tighter than division — and painted ${naivePaths} broken`
     + ` subpath(s) either side of an asymptote; "x/2+1" paints ${fixedPaths}. NOTHING reports an error: the expression is valid,`
     + ' it is simply a different function from the one the teacher wrote',

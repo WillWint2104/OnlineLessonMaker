@@ -1,11 +1,11 @@
 {
- "lesson": "docs/atlas/lesson/factoring-quadratics.app.json",
+ "lesson": "docs\\atlas\\lesson\\factoring-quadratics.app.json",
  "viewport": "1536x960",
  "shots": [
   {
    "name": "00-notes",
    "caption": "notes — Notes",
-   "chars": 1516,
+   "chars": 1510,
    "tabs": [
     "Finding the pair",
     "What the signs tell you"
@@ -24,12 +24,12 @@
    "placeholder": [],
    "clipped": [],
    "grown": 125,
-   "kb": 405
+   "kb": 354
   },
   {
    "name": "00-notes-tab2",
    "caption": "Notes — tab 2 of 2",
-   "chars": 1532,
+   "chars": 1526,
    "tabs": [
     "Finding the pair",
     "What the signs tell you"
@@ -48,7 +48,7 @@
    "placeholder": [],
    "clipped": [],
    "grown": 125,
-   "kb": 402
+   "kb": 350
   },
   {
    "name": "01-video-monic",
@@ -69,12 +69,12 @@
    "placeholder": [],
    "clipped": [],
    "grown": 18,
-   "kb": 586
+   "kb": 560
   },
   {
    "name": "02-monic",
    "caption": "workedExamples — Monic",
-   "chars": 1445,
+   "chars": 1443,
    "tabs": [
     "Multiply to c, add to b",
     "Take the common factor out first"
@@ -93,12 +93,12 @@
    "placeholder": [],
    "clipped": [],
    "grown": 771,
-   "kb": 372
+   "kb": 333
   },
   {
    "name": "02-monic-tab2",
    "caption": "Monic — tab 2 of 2",
-   "chars": 701,
+   "chars": 699,
    "tabs": [
     "Multiply to c, add to b",
     "Take the common factor out first"
@@ -117,7 +117,7 @@
    "placeholder": [],
    "clipped": [],
    "grown": 0,
-   "kb": 193
+   "kb": 172
   },
   {
    "name": "03-practice-monic",
@@ -138,7 +138,7 @@
    "placeholder": [],
    "clipped": [],
    "grown": 163,
-   "kb": 332
+   "kb": 294
   },
   {
    "name": "04-video-non-monic",
@@ -159,12 +159,12 @@
    "placeholder": [],
    "clipped": [],
    "grown": 18,
-   "kb": 594
+   "kb": 565
   },
   {
    "name": "05-non-monic",
    "caption": "workedExamples — Non-monic",
-   "chars": 1841,
+   "chars": 1837,
    "tabs": [
     "Multiply, split, group"
    ],
@@ -182,7 +182,7 @@
    "placeholder": [],
    "clipped": [],
    "grown": 1098,
-   "kb": 463
+   "kb": 417
   },
   {
    "name": "06-practice-non-monic",
@@ -203,16 +203,16 @@
    "placeholder": [],
    "clipped": [],
    "grown": 212,
-   "kb": 346
+   "kb": 307
   },
   {
    "name": "07-summary",
-   "caption": "summary — Summary",
-   "chars": 281,
+   "caption": "notes — Summary",
+   "chars": 235,
    "tabs": [],
    "examples": 0,
    "steps": 0,
-   "items": 0,
+   "items": 1,
    "concepts": 0,
    "tables": 0,
    "inputs": 0,
@@ -221,12 +221,10 @@
    "videoFrame": false,
    "videoIsImage": null,
    "iframes": 0,
-   "placeholder": [
-    "The shell for this page type is in place; its content lands in a later stage."
-   ],
+   "placeholder": [],
    "clipped": [],
    "grown": 0,
-   "kb": 95
+   "kb": 73
   }
  ]
 }

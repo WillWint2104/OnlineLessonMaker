@@ -74,8 +74,8 @@ await p.waitForTimeout(250);
 await set('mx.e.0.1', 'Example title', 'A decimal, and a table');
 await set('mx.e.0.1', 'Question', 'Find _y_ when _x_ = 0.2, then tabulate _y_ for whole values of _x_ from −5 to 5.');
 await set('mx.e.0.1', 'Answer', '_y_ = 0.04, and the table reads the same forwards and backwards.');
-await p.evaluate(() => { const bn = document.querySelector('[data-mxadd="s.0.1"]'); if (bn) bn.click(); });
-await p.waitForTimeout(250);
+if (await p.evaluate(() => LESSON.slides[0].groups[0].examples[1].steps.length) !== 1)
+  throw new Error('The new example must contain exactly its seeded first step');
 await set('mx.s.0.1.0', 'What this step does', 'The same substitution, done once for each whole value.');
 await p.evaluate(() => { selZone = 'mx.s.0.1.0'; renderSlide(); }); await p.waitForTimeout(200);
 await press('data-mxadd', 'w.0.1.0.table');
