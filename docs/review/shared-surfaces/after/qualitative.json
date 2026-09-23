@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "id": "source-analysis-demo",
+    "title": "Reading a source critically",
+    "subject": "History",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper"
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "analyse-source",
+      "title": "Distinguish evidence from inference",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "source-context",
+          "title": "What can this notice establish?",
+          "lede": "Synthetic classroom material — this is not a historical quotation.",
+          "notes": [
+            {
+              "term": "Source A · fictional community notice",
+              "body": "The town committee plans to open a new reading room on Saturday. Volunteers are asked to bring books and help arrange the furniture."
+            },
+            {
+              "term": "Read the limits of the evidence",
+              "body": "The notice states a plan and requests help. It does not establish whether the room opened, how many volunteers attended, or who could use it."
+            }
+          ],
+          "questions": [
+            {
+              "id": "source-evidence",
+              "stem": "Identify two statements supported directly by the notice."
+            },
+            {
+              "id": "source-inference",
+              "stem": "What additional evidence would you need to establish whether the reading room opened? Explain why."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
