@@ -5,7 +5,7 @@
 //   node scripts/shots-curve-identity.mjs --out DIR
 //
 // Three painted cases and one panel, from the fixture the figure-render baseline now carries:
-//   1 · five gradients through one intercept, each with its own pen and its own name
+//   1 · three gradients through one intercept, each with its own pen and its own name
 //   2 · a quiet "before" curve against a dash-dot "after"
 //   3 · THE CONTROL — a figure whose curves carry names and which does not ask for them. It must look
 //       exactly as it did before curve identity existed: one stroke, no names. If capture 3 shows names,
@@ -45,7 +45,7 @@ await p.goto(base, { waitUntil: 'load' });
 await p.evaluate((L) => { LESSON = JSON.parse(JSON.stringify(L)); render(); }, FIX);
 
 const CAPS = [
-  ['1-five-pens', 0, 'five gradients through one intercept'],
+  ['1-three-pens', 0, 'three gradients through one intercept'],
   ['2-before-after', 1, 'a quiet original against a dash-dot transform'],
   ['3-untouched', 2, 'CONTROL — labels written, none asked for: this must not change'],
 ];

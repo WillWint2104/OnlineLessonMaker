@@ -842,7 +842,7 @@ renderer is referenced.
   legacy canvas has its own `notes` slide type, a different object from the mathematics `notes` PAGE, and a
   drive with the branch disabled shows a mathematics page falling into a legacy form. `mxOutline` walks
   groups -> examples -> steps; every field below it is an existing helper on an ordinary bound path.
-  `scripts/verify-mx-authoring.mjs` (30 checks) proves create -> edit -> add -> save -> reopen ->
+  `scripts/verify-mx-authoring.mjs` (54 checks as verified on 23 September 2026) proves create -> edit -> add -> save -> reopen ->
   edit again, with the reopen done by serving the exported document and opening it fresh.
 
   **SAVE AND REOPEN MEANS EXPORT AND REOPEN.** Golden rule 2 stands: no localStorage, the file is the

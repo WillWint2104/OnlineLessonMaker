@@ -351,6 +351,10 @@ inline `$…$`.
   `--poi` (or `--redpen`) left-stroke on `--popup-surface`. Rows with only `{term, definition}` render
   exactly as before.
 
+### Image placements
+
+An image block supports `contained` (a reduced centred image), `beside` (image and companion prose), and `pair` (two images). Omitting placement retains the bare image.
+
 ## `figure` *(figure engine — composable page block; shared Figure Shell)*
 
 **`companion` (C6b)** — the rich prose that sits beside a figure at `placement:"beside"`. It is the SAME
@@ -398,7 +402,7 @@ they read.
 | `meta` | string | Optional context shown beside the title. |
 | `caption` | string | Sits under the figure. Typeset (`$…$` ok). |
 | `placement` | `""` \| `"contained"` \| `"beside"` | How the figure block sits in the lesson around it — see below. Omit for the full-width default. |
-| `domain` | `{xMin,xMax,yMin,yMax}` | **Graph kind only** — geometry solves its own bounds from the construction. The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
+| `domain` | `{xMin,xMax,yMin,yMax}` | Required in practice for graphs; optional for geometry, which otherwise fits bounds to the construction. The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
 | `aspect` | `"stretch"` \| `"equal"` | `equal` keeps a unit square square (default `stretch`). |
 | `curveLabels` | `"shown"` | **Graph kind only.** Draws each function's `label` on the curve, at the end of its longest arm. Opt-in, in the same vocabulary as `grid` and `callouts`: many figures already carry a `label` on a function, written before the painter could draw one, so absent → no name is drawn and no existing figure moves. |
 | `callouts` | `"hidden"` | Same vocabulary as `grid`. A figure that only ILLUSTRATES has nothing to reveal on tap, and the shell's hint is keyed on the callout count. Absent → callouts as before, so no existing figure moves. |
@@ -416,7 +420,7 @@ imperium-placement or scholarmath-placement.
 | `"contained"` | A self-contained figure at a reduced measure, centred. |
 | `"beside"` | The figure and its prose read as one purpose-unit. |
 
-Same vocabulary and the same meanings as the [`image`](#image) block's placements, because a figure beside its
+Same vocabulary and the same meanings as the [`image`](#image-placements) block's placements, because a figure beside its
 prose is the same authorial idea as an image beside its prose. **The default differs by block, intentionally:**
 an image with no placement is a bare `<img>`, whereas a figure is always the Figure Shell, so a figure with no
 placement is that shell at full width. `pair` is not offered — the image block's pair takes two `src` values in

@@ -2,6 +2,7 @@ PASS JSON import Factorising quadratics
 PASS neutral shared player at desktop
 PASS missing video omitted for learner
 PASS one complete example per authored activity
+PASS split example has one introduction and a named worked section
 PASS question precedes working, no empty parallel column
 PASS activity navigation resets reading position and focuses heading
 PASS paper has no digital response surfaces
@@ -12,6 +13,7 @@ PASS JSON import Factorising quadratics
 PASS neutral shared player at tablet
 PASS missing video omitted for learner
 PASS one complete example per authored activity
+PASS split example has one introduction and a named worked section
 PASS question precedes working, no empty parallel column
 PASS activity navigation resets reading position and focuses heading
 PASS paper has no digital response surfaces
@@ -27,6 +29,8 @@ PASS cosmetic theme cannot change capabilities or policy
 PASS Present content click cannot skip activities
 PASS Present uses the same activity navigation
 PASS invalid component rejected before import
+PASS skill identity cannot collide with navigation/response object prototypes
+PASS question identity cannot collide with navigation/response object prototypes
 PASS JSON import Factorising quadratics
 PASS three skills from JSON
 PASS JSON import Factorising quadratics
@@ -59,4 +63,4 @@ PASS safe video URL normalized (playback blocked deliberately)
 PASS new activity lesson starts in graphical editor
 PASS new lesson has stable id and paper default
 PASS no browser errors: 
-61 assertions passed
+65 assertions passed

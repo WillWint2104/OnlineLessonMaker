@@ -76,10 +76,8 @@ const list = async (b, a) => { EFFORT.fields++; await p.fill(`#inspector [data-s
 const choose = async (b, v) => { EFFORT.fields++; await p.selectOption(`#inspector [data-bind="${b}"]`, String(v)); await p.waitForTimeout(30); };
 const meta = async (k, v) => { EFFORT.fields++; await p.fill(`#inspector [data-meta="${k}"]`, String(v)); };
 const L = () => p.evaluate(() => JSON.parse(JSON.stringify(LESSON)));
-/* EVERYTHING YOU ADD ARRIVES EMPTY, while the page you create from the palette arrives with a whole
-   group → example → step chain already in it. So the first example of a lesson is free and every one
-   after it costs two more clicks before there is anything to type into. Measured the first time each
-   happens, then done silently. */
+/* Added groups and examples now seed their child chain. Keep the measured empty-state diagnostics
+   so an authoring regression is reported, while the session reuses each seeded item. */
 let TOLD_G = false, TOLD_E = false;
 const newGroup = async () => {
   await add('g');
@@ -181,15 +179,13 @@ const EX2 = {
   ],
 };
 await newExample(0);
-{ /* (recorded by newExample) AN ADDED EXAMPLE ARRIVES WITH NO STEPS — the seeded page's example arrives with one. Measured here
-     because the drive stopped on it: after "＋ Add example" there is no step row to select. */
-}
+// The added example includes its first step.
 await pick('mx.e.0.1');
 await set('slides.0.groups.0.examples.1.label', EX2.label);
 await set('slides.0.groups.0.examples.1.prompt', EX2.prompt);
 await set('slides.0.groups.0.examples.1.answer', EX2.answer);
 for (let i = 0; i < EX2.steps.length; i++) {
-  await newStep(0, 1);
+  if (i > 0) await newStep(0, 1);
   await pick(`mx.s.0.1.${i}`);
   await set(`slides.0.groups.0.examples.1.steps.${i}.text`, EX2.steps[i].text);
   await set(`slides.0.groups.0.examples.1.steps.${i}.math`, EX2.steps[i].math);
@@ -217,7 +213,7 @@ console.log('\n  subtopic 2 — Intercepts, with the steps deliberately entered 
 await newGroup();
 await set('slides.0.groups.1.title', 'Where the line crosses');
 await set('slides.0.groups.1.lede', 'Put one variable to zero and the other one falls out. Two substitutions give both intercepts.');
-await newExample(1);
+// The group already contains its first example and step.
 await pick('mx.e.1.0');
 await set('slides.0.groups.1.examples.0.label', 'Both intercepts of _y_ = 2_x_ − 1');
 await set('slides.0.groups.1.examples.0.prompt', 'Find where _y_ = 2_x_ − 1 crosses each axis.');
@@ -229,7 +225,7 @@ const SWAPPED = [
   { text: 'Put _x_ = 0 to find where it crosses the _y_-axis.', math: '_y_ = 2(0) − 1 = −1' },
 ];
 for (let i = 0; i < SWAPPED.length; i++) {
-  await newStep(1, 0);
+  if (i > 0) await newStep(1, 0);
   await pick(`mx.s.1.0.${i}`);
   await set(`slides.0.groups.1.examples.0.steps.${i}.text`, SWAPPED[i].text);
   await set(`slides.0.groups.1.examples.0.steps.${i}.math`, SWAPPED[i].math);
@@ -246,9 +242,7 @@ for (let i = 0; i < SWAPPED.length; i++) {
   const painted = await p.evaluate(() => [].slice.call(document.querySelectorAll('#slide .mx-step .mx-stepm')).map((e) => e.textContent.trim()));
   if (after[0] !== before[2]) friction('Rearranging', 'moving a step did not put it where it was asked to go', JSON.stringify(after), 'blocks rearranging');
   else console.log(`    the page now reads ${JSON.stringify(painted.slice(-3))}`);
-  friction('Rearranging', 'A row moves one place per click, and the selection follows it — there is no drag and no "move to top"',
-    `putting step 3 first took ${2} separate ↑ clicks; a five-step example would take four`,
-    'reordering a long worked solution is one click per place, per step');
+  // Shift + arrow also moves directly to the start/end; ordinary arrows remain useful here.
 }
 await pick('mx.g.1'); await add('p.1.prose');
 await set('slides.0.groups.1.relations.0.body', 'Reading the rule for the _y_-intercept is quicker than the working: in _y_ = _m__x_ + _c_ the number on its own IS where the line crosses. The working is here because the _x_-intercept has no such shortcut.');
@@ -261,7 +255,7 @@ await choose('slides.0.groups.2.type', 'staged');
 await pick('mx.g.2');
 await set('slides.0.groups.2.title', 'From a rule to a picture');
 await set('slides.0.groups.2.lede', 'Two points fix a straight line. The third one is the check that you have not made an arithmetic slip.');
-await newExample(2);
+// Reuse the seeded example.
 await pick('mx.e.2.0');
 await set('slides.0.groups.2.examples.0.label', 'Plotting _y_ = 2_x_ \u2212 1');
 await set('slides.0.groups.2.examples.0.prompt', 'Draw _y_ = 2_x_ \u2212 1 for _x_ from \u22122 to 3.');
@@ -271,7 +265,7 @@ const S3 = [
   { text: 'Plot the pairs and join them. If one point is off the line, it is that point\u2019s arithmetic that is wrong, not the rule.', math: '' },
 ];
 for (let i = 0; i < S3.length; i++) {
-  await newStep(2, 0);
+  if (i > 0) await newStep(2, 0);
   await pick(`mx.s.2.0.${i}`);
   await set(`slides.0.groups.2.examples.0.steps.${i}.text`, S3[i].text);
 }
@@ -335,6 +329,7 @@ await choose('slides.0.groups.3.type', 'staged');
 await pick('mx.g.3');
 await set('slides.0.groups.3.title', 'Comparing steepness');
 await set('slides.0.groups.3.lede', 'Three lines through the same point on the _y_-axis, so the only thing that differs is the gradient.');
+await press('data-mxdel', 'e.3.0');
 await pick('mx.g.3'); await add('f.3');
 const GB = 'slides.0.groups.3.relations.0.figure';
 await pick('mx.f.3');
@@ -386,6 +381,13 @@ await shot('4-three-lines', 'three gradients through one intercept');
 console.log('\n  the finished lesson');
 await p.evaluate(() => { selZone = null; renderSlide(); });
 const built = await L();
+// Reject silent seeded leftovers before this session can overwrite its lesson output.
+const expectedSteps = [[3, 3], [3], [2], []];
+for (const [gi, counts] of expectedSteps.entries()) {
+  const examples = built.slides[0].groups[gi].examples || [];
+  if (examples.length !== counts.length || examples.some((e, i) => e.steps.length !== counts[i] || e.steps.some(s => !s.text.trim())))
+    throw new Error(`Subtopic ${gi + 1} contains a blank or unexpected seeded example/step`);
+}
 FINAL = withLesson(built);
 {
   const g = built.slides[0].groups;
@@ -441,10 +443,7 @@ console.log(`    exported ${Math.round(EXPORTED.length / 1024)}KB and reopened: 
     return { curves: fns.length, styles, hyphen: texts.filter((t) => /^-/.test(t)).length, minus: texts.filter((t) => /^\u2212/.test(t)).length };
   });
   if (fig.curves > 1 && fig.styles.length === 1)
-    friction('Comparing lines on one plane', 'Every curve on a plane is painted identically, and a function\'s label is never drawn — so a subtopic about comparing gradients cannot say which line is which',
-      `${fig.curves} curves, ${fig.styles.length} distinct style: ${fig.styles[0]}. The graph editor offers no colour, weight or dash per object,`
-      + ' and figGraph carries a function `label` that the painter never draws (the field is withheld from the form for exactly that reason)',
-      'the whole point of this subtopic — three gradients through one intercept — has to be carried by the prose beside it');
+    console.log(`    This session retained default curve pens (${fig.styles[0]}). The editor's pen and label controls can distinguish them; this is an authored choice, not an absent capability.`);
   if (fig.hyphen && !fig.minus)
     friction('Typography of the figure', 'The axis numbering uses a hyphen where the lesson\'s own text uses a minus sign',
       `${fig.hyphen} axis labels begin with "-" and ${fig.minus} with "\u2212", on a page whose prose and working are written with \u2212 throughout`,

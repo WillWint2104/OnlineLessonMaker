@@ -52,7 +52,7 @@ const CANDIDATES = [
   { id: 'declared-16', tick: 16 },
 ];
 
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 /* A REAL HANDSET VIEWPORT. The rule lives in `@media (max-width:640px)`, so a page opened at desktop
    width would measure the desktop type and report it as the phone's — which is exactly the mistake the
    composition atlas cannot avoid, since its boards are one wide page holding narrow columns. This
@@ -183,6 +183,7 @@ for (const subj of SUBJECTS) for (const c of CANDIDATES) {
   const { boxForWidth } = makeSolvers(makePainter(figPage));
   let box = null, solveNote = '';
   try { box = await boxForWidth(KEY, spec, PHONE_W); } catch (e) { solveNote = String(e.message || e); }
+  if (box?.err != null) solveNote = `Solve failed at ${PHONE_W}px: ${JSON.stringify(box.err)}`;
   const H = box ? Math.round(box.box ? box.box.h : box.h) : 453;
   const m = await measure(PHONE_W, H, spec);
   rows.push({ figure: KEY, synthetic: !!subj.synthetic, ...c, solvedH: H, solveNote, ...m });

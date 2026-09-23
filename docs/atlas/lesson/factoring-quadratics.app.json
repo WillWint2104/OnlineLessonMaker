@@ -21,8 +21,8 @@
       "workspace": { "kind": "representation" },
       "concepts": [
         { "id": "reverse", "term": "The reverse of expanding", "body": "Expanding turns (_x_ + 2)(_x_ + 3) into _x_^2 + 5_x_ + 6. Factorising turns it back. If your factors expand to the original, you are right." },
-        { "id": "monic", "term": "Monic", "body": "A quadratic is monic when the coefficient of _x_^2 is 1 — _x_^2 + _bx_ + _c_." },
-        { "id": "nonmonic", "term": "Non-monic", "body": "A quadratic is non-monic when the coefficient of _x_^2 is not 1 — _ax_^2 + _bx_ + _c_ with _a_ ≠ 1." },
+        { "id": "monic", "term": "Monic", "body": "A quadratic is monic when the coefficient of _x_^2 is 1 — _x_^2 + _b__x_ + _c_." },
+        { "id": "nonmonic", "term": "Non-monic", "body": "A quadratic is non-monic when the coefficient of _x_^2 is not 1 — _a__x_^2 + _b__x_ + _c_ with _a_ ≠ 1." },
         { "id": "sumproduct", "term": "Sum and product", "body": "For a monic quadratic, find two numbers that MULTIPLY to _c_ and ADD to _b_. Those two numbers go straight into the brackets." },
         { "id": "common", "term": "Common factor first", "body": "Always look for a common factor before anything else. 2_x_^2 + 10_x_ + 12 becomes 2(_x_^2 + 5_x_ + 6), and the bracket is now monic." },
         { "id": "signs", "term": "Reading the signs", "body": "If _c_ is positive, both numbers share the sign of _b_. If _c_ is negative, one number is positive and one is negative." }
@@ -113,7 +113,7 @@
       "type": "workedExamples",
       "id": "wex-monic",
       "navLabel": "Monic",
-      "title": "Monic quadratics — _x_^2 + _bx_ + _c_",
+      "title": "Monic quadratics — _x_^2 + _b__x_ + _c_",
       "lede": "10 minutes. Four examples, one for each sign pattern you will meet, and one where a common factor comes out first.",
       "groups": [
         {
@@ -275,7 +275,7 @@
       "type": "workedExamples",
       "id": "wex-nonmonic",
       "navLabel": "Non-monic",
-      "title": "Non-monic quadratics — _ax_^2 + _bx_ + _c_",
+      "title": "Non-monic quadratics — _a__x_^2 + _b__x_ + _c_",
       "lede": "12 minutes. The same four moves every time: multiply, find the pair, split, group.",
       "groups": [
         {
@@ -385,11 +385,11 @@
     },
 
     {
-      "type": "summary",
+      "type": "notes",
       "id": "summary",
       "navLabel": "Summary",
       "title": "Summary",
-      "lede": "Common factor first. Monic: multiply to _c_, add to _b_. Non-monic: multiply _a_ by _c_, split the middle term, group in pairs. Every answer is checked by expanding it."
+      "concepts": [{ "id": "recap", "term": "Check the method", "body": "Common factor first. Monic: multiply to _c_, add to _b_. Non-monic: multiply _a_ by _c_, split the middle term, group in pairs. Every answer is checked by expanding it." }]
     }
   ]
 }

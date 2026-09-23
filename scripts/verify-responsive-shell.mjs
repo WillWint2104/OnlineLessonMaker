@@ -528,7 +528,7 @@ mark('viewport');
      A.lastXLab !== null && A.lastXLab < A.xAxis.x2 - 8 && A.firstXLab > A.xAxis.x1 + 8,
      `last x label at ${A.lastXLab}, axis ends at ${A.xAxis.x2}`);
   ok('the ticks are generated from the mathematical range, not from the viewport',
-     A.tickVals.every(t => { const v = +String(t).replace('\u2212', '-'); return v >= A.dom.x0 - 1e-6 && v <= Math.max(A.dom.x1, A.dom.y1) + 1e-6; })
+     A.tickVals.every(t => { const v = +String(t).replace('\u2212', '-'); return v >= Math.min(A.dom.x0, A.dom.y0) - 1e-6 && v <= Math.max(A.dom.x1, A.dom.y1) + 1e-6; })
      && A.view.x1 > A.dom.x1 && A.view.x0 < A.dom.x0,
      `${A.nTicks} labels inside the domain; viewport ${A.view.x0.toFixed(2)}…${A.view.x1.toFixed(2)} vs domain ${A.dom.x0.toFixed(2)}…${A.dom.x1.toFixed(2)}`);
 

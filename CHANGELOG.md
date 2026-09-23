@@ -8,6 +8,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Shared-player integration corrections
+- Current authoring verification: `verify-mx-authoring.mjs` passes 54/54; historical stage counts below describe their original runs.
+- Resolve the substantive PR #153/#154 review findings: preserve the factoring recap through notes,
+  correct mathematical wording, reuse seeded authoring items, remove duplicated activity introductions,
+  and keep subset verification results independent. Refresh the affected learner evidence.
+- Correct atlas reporting and bounded solver/overflow checks, portable browser launch paths, visible
+  figure measurements, and stale pattern documentation. Details are in the review resolution record.
 - Reject reserved object-key identities on activity import/publication. An imported skill named
   `__proto__` previously passed validation but could not retain activity navigation; question identities
   now receive the same guard. Lesson identity must be a non-empty string.

@@ -552,6 +552,7 @@ const shot = async (name, fragName, surfaceName, opts) => {
 /* ── the controls the pack is only trustworthy because of ─────────────────────────────────────── */
 function verify(name, log, measured, surface) {
   for (const r of log) {
+    if (r.state === 'stack' && r.margin < 0) throw new Error(`${name}: stacked figure overflows by ${-r.margin}px`);
     /* CONTROL · EVERY REGION IS ON ITS DECLARED ORIGIN. Nothing is centred, and nothing drifts
        because it happens to be narrower than the space around it. */
     const map = C.origins.map[r.kind === 'visualInterpretation' ? 'visualInterpretation:' + r.state

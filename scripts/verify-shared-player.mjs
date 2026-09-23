@@ -37,6 +37,7 @@ try{
   await shot(name+'-01-opening');
   await p.locator('[data-lp-move="1"]').click();await shot(name+'-02-working');
   check(await p.locator('.mx-wexex').count()===1,'one complete example per authored activity');
+  check(await p.locator('.lp .mx-wexlede').count()===0 && !!(await p.locator('.lp .mx-wexpane').getAttribute('aria-label')),'split example has one introduction and a named worked section');
   check(await p.evaluate(()=>{const q=document.querySelector('.mx-wexask').getBoundingClientRect(),w=document.querySelector('.mx-wexwork').getBoundingClientRect();return w.top>=q.bottom-1;}),'question precedes working, no empty parallel column');
   await p.locator('.mx-wexanswer,.mx-wexans').first().count();
   await p.locator('.mx-page').evaluate(e=>e.scrollTop=e.scrollHeight);await shot(name+'-02b-working-end');

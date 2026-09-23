@@ -1,0 +1,123 @@
+catalogue · 7 patterns, 23 approved subdesigns — all areas rows and reading measures check out
+
+media capability — of the catalogue’s approved spans, which each figure can render faithfully
+  approved media spans: 368px · 382px · 407px · 466px · 727.25px · 760px · 834px · 956px · 1152px
+  landscape    aspect  0.333 · equal unit scale required · focus available
+               renders faithfully at every approved span in this catalogue
+               diagnostic: a binary search crosses at 266px; just below it, tick(s) outside the authored domain: y=8 · a different tick set from the same figure at full width
+  squareish    aspect  0.857 · equal unit scale required · focus available
+               renders faithfully at every approved span in this catalogue
+               diagnostic: a binary search crosses at 249px; just below it, tick(s) outside the authored domain: y=12 · a different tick set from the same figure at full width
+  symmetry     aspect  0.923 · equal unit scale required · focus available
+               renders faithfully at every approved span in this catalogue
+               diagnostic: a binary search crosses at 233px; just below it, tick(s) outside the authored domain: y=12 · a different tick set from the same figure at full width
+
+rendering the composition atlas
+  01-notes-desktop                                   1152px page  1246px  notes/measure
+  01-notes-tablet                                     834px page  1178px  notes/measure
+  01-notes-phone                                      382px page  1445px  notes/stacked
+  02-notes-desktop                                   1152px page  1319px  notes/measure
+  02-notes-tablet                                     834px page  1226px  notes/measure
+  02-notes-phone                                      382px page  1383px  notes/stacked
+  03-visual-explanation-desktop                      1152px page  1760px  visual.explanation/down-8
+  03-visual-explanation-tablet                        834px page  1651px  visual.explanation/stacked
+  03-visual-explanation-phone                         382px page  1325px  visual.explanation/stacked
+  04-visual-explanation-desktop                      1152px page  1331px  visual.explanation/down-12
+  04-visual-explanation-tablet                        834px page  1030px  visual.explanation/stacked
+  04-visual-explanation-phone                         382px page   977px  visual.explanation/stacked
+  05-visual-compare-desktop                          1152px page  2401px  visual.compare/paired
+  05-visual-compare-tablet                            834px page  1860px  visual.compare/paired
+  05-visual-compare-phone                             382px page  1839px  visual.compare/stacked
+  06-media-full-desktop                              1152px page  1449px  media.full/full
+  06-media-full-tablet                                834px page  1113px  media.full/full
+  06-media-full-phone                                 382px page  1028px  media.full/full
+  07-interactive-primary-desktop                     1152px page  1231px  interactive.primary/beside
+  07-interactive-primary-tablet                       834px page  1242px  interactive.primary/stacked
+  07-interactive-primary-phone                        382px page  1307px  interactive.primary/stacked
+  08-practice-workbook-desktop                       1152px page  1342px  practice.workbook/beside
+  08-practice-workbook-tablet                         834px page  1139px  practice.workbook/beside
+  08-practice-workbook-phone                          382px page  1333px  practice.workbook/stacked
+  09-practice-workbook-desktop                       1152px page  1417px  practice.workbook/beside
+  09-practice-workbook-tablet                         834px page  1190px  practice.workbook/beside
+  09-practice-workbook-phone                          382px page  1663px  practice.workbook/stacked
+  10-visual-explanation-desktop                      1152px page  1697px  visual.explanation/down-8
+  10-visual-explanation-tablet                        834px page  1557px  visual.explanation/stacked
+  10-visual-explanation-phone                         382px page  1354px  visual.explanation/stacked
+  11-worked-single-desktop                           1152px page  1403px  worked.single/measure
+  11-worked-single-tablet                             834px page  1165px  worked.single/stacked
+  11-worked-single-phone                              382px page  1271px  worked.single/stacked
+  12-worked-single-desktop                           1152px page  1462px  worked.single/measure
+  12-worked-single-tablet                             834px page  1248px  worked.single/stacked
+  12-worked-single-phone                              382px page  1402px  worked.single/stacked
+  20-shell-subtopics-substitution-desktop            1152px page  2250px  notes/measure
+  20-shell-subtopics-substitution-tablet              834px page  2282px  notes/measure
+  20-shell-subtopics-substitution-phone               382px page  2684px  notes/stacked
+  20-shell-subtopics-solving-for-x-desktop           1152px page  2209px  worked.single/measure + worked.single/measure
+  20-shell-subtopics-solving-for-x-tablet             834px page  2173px  worked.single/stacked + worked.single/stacked
+  20-shell-subtopics-solving-for-x-phone              382px page  2452px  worked.single/stacked + worked.single/stacked
+  20-shell-subtopics-symmetry-workings-desktop       1152px page  1160px  visual.compare/paired
+  20-shell-subtopics-symmetry-workings-tablet         834px page  1125px  visual.compare/paired
+  20-shell-subtopics-symmetry-workings-phone          382px page  1597px  visual.compare/stacked
+  20-shell-subtopics-symmetry-visual-explanation-desktop 1152px page  1738px  visual.explanation/down-8
+  20-shell-subtopics-symmetry-visual-explanation-tablet  834px page  1796px  visual.explanation/stacked
+  20-shell-subtopics-symmetry-visual-explanation-phone  382px page  1484px  visual.explanation/stacked
+  20-shell-subtopics-a-flatter-parabola-desktop      1152px page  1296px  visual.explanation/down-12
+  20-shell-subtopics-a-flatter-parabola-tablet        834px page  1126px  visual.explanation/stacked
+  20-shell-subtopics-a-flatter-parabola-phone         382px page  1058px  visual.explanation/stacked
+
+control · adversarial payloads must move nothing but height
+  notes                      same subdesign, same slots, same widths — only taller
+  notes                      same subdesign, same slots, same widths — only taller
+  visual.explanation         same subdesign, same slots, same widths — only taller
+  visual.compare             same subdesign, same slots, same widths — only taller
+  media.full                 same subdesign, same slots, same widths — only taller
+  interactive.primary        same subdesign, same slots, same widths — only taller
+  practice.workbook          same subdesign, same slots, same widths — only taller
+  practice.workbook          same subdesign, same slots, same widths — only taller
+  visual.explanation         same subdesign, same slots, same widths — only taller
+  worked.single              same subdesign, same slots, same widths — only taller
+  worked.single              same subdesign, same slots, same widths — only taller
+
+control · a different media aspect selects the pattern’s other approved subdesign
+  media.full                 balanced plane → centred, media slot 956px
+
+control · local-x needed at 7 render(s) — first: 01-notes-desktop (850px in 760px)
+control · a pane genuinely overflowed at 1 render(s) — first: 08-practice-workbook-desktop-adversarial
+control · optional-collapse fired at 62 render(s) — first: 01-notes-desktop:notes.illustration
+note      · no pattern in this catalogue needed `optional-reserved`. The policy is declared and its
+            control is in place; nothing here yet has a designed emptiness worth naming, and saying
+            so is better than inventing one to make a count non-zero.
+
+THE TWO TAB KINDS — one affordance each, at every depth, and distinguishable
+  collection  1px/0px/rgba(0, 0, 0, 0)/2px
+  views       1px/7px/rgb(228, 243, 234)/2px
+
+THE SLOT INSPECTOR — 40 media slot(s) painted, every one inhabiting its slot
+  interactive.primary/beside instrument 8col=760px fill → 760px
+  interactive.primary/stacked instrument 4col=382px fill → 382px
+  interactive.primary/stacked instrument 8col=834px fill → 834px
+  media.full/centred media 10col=956px fill → 956px
+  media.full/full media 12col=1152px fill → 1152px
+  media.full/full media 4col=382px fill → 382px
+  media.full/full media 8col=834px fill → 834px
+  practice.workbook/beside reference 4col=407px fill → 407px
+  practice.workbook/beside reference 5col=466px fill → 466px
+  practice.workbook/stacked reference 4col=382px fill → 382px
+  visual.compare/paired media 12col=1152px fill → 1152px
+  visual.compare/paired media 8col=834px fill → 834px
+  visual.compare/stacked media 4col=382px fill → 382px
+  visual.explanation/down-12 media 12col=1152px fill → 1152px
+  visual.explanation/down-8 media 8col=760px fill → 760px
+  visual.explanation/stacked media 4col=382px fill → 382px
+  visual.explanation/stacked media 8col=834px fill → 834px
+
+THE CATALOGUE, AS RENDERED
+  notes                      d:measure t:measure p:stacked d:measure t:measure p:stacked d:measure t:measure p:stacked  page 1178-2684px
+  worked.single              d:measure t:stacked p:stacked d:measure t:stacked p:stacked  page 1165-1462px
+  visual.explanation         d:down-8 t:stacked p:stacked d:down-12 t:stacked p:stacked d:down-8 t:stacked p:stacked d:down-8 t:stacked p:stacked d:down-12 t:stacked p:stacked  page 977-1796px
+  visual.compare             d:paired t:paired p:stacked d:paired t:paired p:stacked  page 1125-2401px
+  media.full                 d:full t:full p:full  page 1028-1449px
+  interactive.primary        d:beside t:stacked p:stacked  page 1231-1307px
+  practice.workbook          d:beside t:beside p:stacked d:beside t:beside p:stacked  page 1139-1663px
+
+wrote review-delivery\review-fixes\composition — 74 renders, 7 patterns, 1 shell(s), 13 pages

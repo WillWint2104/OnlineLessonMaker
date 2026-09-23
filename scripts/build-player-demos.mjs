@@ -10,7 +10,11 @@ const skills=['monic','nonmonic'].map((id,k)=>{
   return {type:'skill',id,title:k?'Factorising non-monic quadratics':'Factorising monic quadratics',video:{url:''},activities:[
     {id:id+'-explain',title:k?'Split the middle term':'Reverse the expansion',notes:k?find('notes').concepts:monic.notes},
     {id:id+'-video',title:'Watch and connect the method',optionalVideo:true},
-    ...g.flatMap(group=>group.examples.map(ex=>({id:id+'-'+ex.id,title:ex.label,lede:group.lede,workedExamples:[{...group,examples:[ex]}]}))),
+    ...g.flatMap(group=>group.examples.map(ex=>{
+      const split=group.examples.length>1;
+      return {id:id+'-'+ex.id,title:ex.label,lede:split?group.lede:undefined,
+        workedExamples:[{...group,title:split?ex.label:group.title,lede:split?'':group.lede,examples:[ex]}]};
+    })),
     {id:id+'-practice',title:'Practise and check by expanding',questions:prefix(k?find('practice-nonmonic').questions:monic.questions,id)}
   ]};
 });

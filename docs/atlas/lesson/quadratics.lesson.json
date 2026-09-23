@@ -43,7 +43,7 @@
                   "title": "A decimal, and a table",
                   "question": ["Find *y* when *x* = 0.2, then tabulate *y* for whole values of *x* from −5 to 5."],
                   "steps": [
-                    { "say": "Square it. A value between −1 and 1 always gets smaller, not larger.", "math": "*y* = 0.2 × 0.2 = 0.04" },
+                    { "say": "Square it. A number between 0 and 1 gets smaller when it is squared, not larger.", "math": "*y* = 0.2 × 0.2 = 0.04" },
                     { "say": "The same substitution, done once for each whole value. The table is one row of paired readings, so it is never wrapped onto two lines — it scrolls sideways instead.",
                       "table": { "head": ["*x*", "−5", "−4", "−3", "−2", "−1", "0", "1", "2", "3", "4", "5"],
                                  "rows": [["*y* = *x*^2", "25", "16", "9", "4", "1", "0", "1", "4", "9", "16", "25"]] } }
@@ -55,7 +55,7 @@
           "synthesis": {
             "label": "What the three show",
             "paragraphs": [
-              "Substitution never changes the rule — it only replaces *x*. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a decimal below 1 gets smaller rather than larger.",
+              "Substitution never changes the rule — it only replaces *x*. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a positive decimal below 1 gets smaller rather than larger.",
               "The table row reading the same in both directions is the first sign of the mirror that the Symmetry tab is about."
             ]
           } },

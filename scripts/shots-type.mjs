@@ -134,7 +134,7 @@ const state = (p) => p.evaluate(() => { const d = tpRespGet('practice-equations'
   // 8 — away and back, then the drawer, still in Type.
   await p.evaluate(() => mxSetResponseMode('type')); await p.waitForTimeout(250);
   await p.evaluate(() => { go(0); }); await p.waitForTimeout(250);
-  await p.evaluate(() => { go(4); }); await p.waitForTimeout(350);
+  await p.evaluate(i => { go(i); }, PRACTICE); await p.waitForTimeout(350);
   await shot(p, '08-type-after-navigation');
   await p.evaluate(() => rpNavToggle()); await p.waitForTimeout(300);
   await shot(p, '09-type-with-drawer-open');

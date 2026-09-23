@@ -224,8 +224,9 @@ const iok = (what, cond, detail) => {
      RETURN are measured — an overlay that never closes is a trap, not a feature. */
   await p.evaluate((gid) => document.querySelector(`[data-mx-panel="${gid}"]`).querySelector('[data-mx-state="visual"]').click(), sym.id);
   await p.waitForTimeout(300);
-  const before = await p.evaluate(() => Math.round(document.querySelector('.mx-wexfoot .tp-fig-svg').getBoundingClientRect().width));
-  await p.evaluate(() => document.querySelector('.mx-wexfoot .tp-fig-expand').click());
+  const visibleFigure = `[data-mx-panel="${sym.id}"] [data-mx-statepanel="visual"]:not([hidden]) .mx-wexfoot`;
+  const before = await p.locator(visibleFigure+' .tp-fig-svg').first().evaluate(e => Math.round(e.getBoundingClientRect().width));
+  await p.locator(visibleFigure+' .tp-fig-expand').click();
   await p.waitForTimeout(800);
   const open = await p.evaluate(() => {
     const panel = [].slice.call(document.querySelectorAll('.tp-fpanel-figx')).filter((e) => e.getBoundingClientRect().width > 0)[0];
@@ -235,15 +236,15 @@ const iok = (what, cond, detail) => {
   });
   await p.keyboard.press('Escape');
   await p.waitForTimeout(500);
-  const after = await p.evaluate(() => {
+  const after = await p.evaluate((selector) => {
     const open = [].slice.call(document.querySelectorAll('.tp-fpanel-figx')).filter((e) => e.getBoundingClientRect().width > 0).length;
-    const inline = document.querySelector('.mx-wexfoot .tp-fig-svg');
+    const inline = document.querySelector(selector+' .tp-fig-svg');
     return { open, w: inline ? Math.round(inline.getBoundingClientRect().width) : 0 };
-  });
+  }, visibleFigure);
   iok('the graph expands into the focused workspace, and it really is bigger than the page allows',
-      open.panel && open.w > before + 200, `inline ${before}px → workspace ${open.w}×${open.h}px`);
+      before > 0 && open.panel && open.w > before + 200, `inline ${before}px → workspace ${open.w}×${open.h}px`);
   iok('and Escape returns the student to the lesson with the inline graph back at its approved width',
-      after.open === 0 && after.w === before, `${after.open} workspace(s) open, inline back at ${after.w}px`);
+      before > 0 && after.open === 0 && after.w === before, `${after.open} workspace(s) open, inline back at ${after.w}px`);
 
   /* THE WORKED SOLUTIONS AND THE TABLE. Counted against the lesson JSON, because "steps are present"
      is satisfied by one step and this lesson authors fourteen. */

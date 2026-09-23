@@ -49,7 +49,7 @@ const SURFACES = [{ id: 'desktop', w: 1152, scale: 0.46 }, { id: 'tablet', w: 83
 const esc = (x) => String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const t = (x) => esc(x).replace(/\*([^*]+)\*/g, '<i>$1</i>').replace(/\^([-−]?[0-9A-Za-z]+)/g, '<sup>$1</sup>');
 
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 for (const S of SURFACES) {
   /* HALF ONE · the authored lesson, in the order the lesson declares it */
   const authored = ORDER.map((o) => {
