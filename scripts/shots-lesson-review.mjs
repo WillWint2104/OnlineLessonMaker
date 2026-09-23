@@ -32,6 +32,7 @@ const MIME = { '.html': 'text/html', '.json': 'application/json', '.woff2': 'fon
   '.svg': 'image/svg+xml', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.glb': 'model/gltf-binary' };
 const server = http.createServer((req, res) => {
   const u = decodeURIComponent(req.url.split('?')[0]);
+  if (u === '/favicon.ico') { res.writeHead(204); return res.end(); }   // the browser always asks; a 404 here is harness noise, not a page defect
   const f = path.join(root, u === '/' ? '/lesson-studio.html' : u);
   if (!f.startsWith(root) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); return res.end(); }
   res.writeHead(200, { 'Content-Type': MIME[path.extname(f)] || 'application/octet-stream' });
@@ -99,6 +100,17 @@ const measure = () => p.evaluate(() => {
       .map((e) => `${e.className || e.tagName} ${e.scrollWidth}>${e.clientWidth}`).slice(0, 4),
   };
 });
+/* THE WHOLE WINDOW, at the real viewport — the rail, the header and the first screen a student meets.
+   The page capture above is the complete instructional content; this is what it looks like on a screen. */
+const shootChrome = async (name) => {
+  await p.setViewportSize({ width: W, height: H });
+  await p.waitForTimeout(200);
+  await p.evaluate(() => document.fonts.ready);
+  await p.screenshot({ path: path.join(OUT, name + '--screen.png') });
+  const nav = await p.evaluate(() => [...document.querySelectorAll('.mx-navitem')]
+    .map((e) => e.innerText.replace(/\s+/g, ' ').trim()));
+  console.log(`    navigation lists: ${nav.map((t) => JSON.stringify(t)).join(' · ') || '(none)'}`);
+};
 const shoot = async (name, caption) => {
   const need = await grow();
   await p.evaluate(() => document.fonts.ready);
@@ -123,7 +135,9 @@ for (let i = 0; i < LESSON.slides.length; i++) {
   await p.evaluate((j) => go(j), i);
   await p.waitForTimeout(320);
   const n = String(i).padStart(2, '0');
-  await shoot(`${n}-${String(s.navLabel || s.type).replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`, `${s.type} — ${s.navLabel}`);
+  const base = `${n}-${String(s.navLabel || s.type).replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
+  await shoot(base, `${s.type} — ${s.navLabel}`);
+  await shootChrome(base);
   /* A TAB IS A DIFFERENT PAGE OF TEACHING, not a decoration: photograph each one. */
   const tabs = await p.evaluate(() => [...document.querySelectorAll('[data-mx-tab]')].map((e) => e.dataset.mxTab));
   for (let t = 1; t < tabs.length; t++) {

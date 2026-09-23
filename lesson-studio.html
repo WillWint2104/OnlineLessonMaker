@@ -2185,6 +2185,45 @@ input.mx-cell:focus{outline:2px solid var(--mx-green);outline-offset:1px;border-
 .mx-wexlab{font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
   color:var(--mx-ink-3);margin:0 0 7px;}
 .mx-wexqb{font-size:16px;line-height:1.62;color:var(--mx-ink-body);}
+/* ── A SKILL SECTION ───────────────────────────────────────────────────────────────────────────
+   One reading surface that scrolls, not a slide. The sections are separated by SPACE and named by a
+   numbered heading — the lesson's own rule: space separates, typography identifies, and a border is kept
+   for genuinely separate content. Nothing here is centred and nothing is boxed for decoration. */
+.mx-skill{display:flex;flex-direction:column;gap:46px;}
+.mx-sk-sec{display:flex;flex-direction:column;gap:14px;}
+.mx-sk-h{display:flex;align-items:center;gap:11px;margin:0;font-family:var(--mx-serif);
+  font-size:23px;font-weight:600;letter-spacing:-.01em;color:var(--mx-ink);}
+.mx-sk-n{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;flex:0 0 auto;
+  border-radius:50%;background:var(--mx-green-pale);color:var(--mx-green-deep);
+  font-family:var(--mx-ui);font-size:13.5px;font-weight:700;}
+.mx-sk-notes{margin:0;}
+.mx-sk-grp+.mx-sk-grp{margin-top:34px;padding-top:30px;border-top:1px solid var(--mx-line);}
+.mx-sk-gh{margin:0 0 4px;font-family:var(--mx-serif);font-size:18.5px;font-weight:600;color:var(--mx-ink);}
+/* THE VIDEO IS THE SKILL'S, AT THE SKILL'S MEASURE — 16:9, capped so it does not dominate the reading. */
+.mx-sk-video{position:relative;width:100%;max-width:760px;aspect-ratio:16/9;border-radius:var(--mx-rad);
+  overflow:hidden;background:var(--mx-ink);border:1px solid var(--mx-line);}
+.mx-sk-video iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.mx-sk-vnote{margin:10px 0 0;font-size:14px;color:var(--mx-ink-2);}
+/* NO URL, NO PLAYER. An author-facing notice, deliberately unlike a player: nothing here is clickable. */
+.mx-sk-vmissing{max-width:760px;padding:18px 20px;border:1px dashed var(--mx-line);border-radius:var(--mx-rad);
+  background:var(--mx-green-tint);color:var(--mx-ink-2);font-size:14.5px;line-height:1.6;}
+.mx-sk-vmissing b{color:var(--mx-ink);}
+.mx-sk-vmissing code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;
+  background:var(--mx-white);border:1px solid var(--mx-line);border-radius:5px;padding:1px 5px;}
+.mx-sk-ask{margin:0;font-size:15.5px;line-height:1.6;color:var(--mx-ink-body);}
+.mx-sk-qs{margin:0;}
+/* WORKED SOLUTIONS NEED ROOM TO BE READ ONE STEP AT A TIME. The maintainer's finding on the factorising
+   captures: a long compact document with small workings. Inside a skill each step gets more vertical
+   rhythm and its mathematics a little more size — scoped to .mx-skill, so no existing page moves. */
+.mx-skill .mx-step{padding-bottom:26px;}
+.mx-skill .mx-stept{font-size:16px;line-height:1.62;}
+.mx-skill .mx-stepm{margin-top:10px;font-size:19.5px;}
+.mx-skill .mx-wexex{padding-top:6px;}
+.mx-skill .mx-wexpane+.mx-wexpane{margin-top:8px;}
+/* A blank a student copies into their book — ruled, and never an input. */
+.mx-tbl td.mx-blank{background:repeating-linear-gradient(transparent 0 calc(100% - 1px),var(--mx-line) calc(100% - 1px) 100%);
+  min-width:64px;height:34px;}
+.mx-respw{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mx-ink-3);margin-right:2px;}
 .mx-steps{list-style:none;margin:0;padding:0;counter-reset:mxstep;}
 .mx-step{position:relative;padding:0 0 16px 34px;counter-increment:mxstep;}
 .mx-step::before{content:counter(mxstep);position:absolute;left:0;top:1px;width:23px;height:23px;border-radius:50%;
@@ -8160,7 +8199,7 @@ const MXI={
   pip:'<rect x="3" y="5" width="18" height="14" rx="2"/><rect x="12" y="11" width="7" height="5" rx="1"/>',
   full:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
 };
-const MX_NAV_ICON={notes:'notes',videoShell:'video',interactiveShell:'interactive',workedExamples:'book',
+const MX_NAV_ICON={skill:'book',notes:'notes',videoShell:'video',interactiveShell:'interactive',workedExamples:'book',
   practice:'pencil',practiceGraphs:'bars',practiceGeometry:'triangle',summary:'summary'};
 function mxIc(name,size){
   const d=MXI[name]||MXI.notes, n=size||18;
@@ -8224,15 +8263,33 @@ const MX_MODES=[
    they answer, not which page they are on. Stage A renders the selector and reflects it on the shell
    (`data-mx-response`); Stage B binds it to TP_RESP so a typed answer and a written one land in the same
    response id. It is shown only on a page that actually accepts written work. */
-const MX_RESPONSE_MODES=['write','type'];
+/* THREE MODES, TWO IMPLEMENTATIONS. `pen` and `typed` are the public names for the `write` and `type`
+   values already carried by 24 committed lesson files and read by 22 gates, so the vocabulary is a
+   NORMALISATION and not a migration — nothing on disk has to change. `paper` is the genuinely new one:
+   the lesson is a website to read, and the work happens in the student's own book.
+   AN UNKNOWN MODE IS REPORTED, NOT SWALLOWED. Before this, `responseMode:"paper"` silently produced a pen
+   workbook — the app answered a question it had not been asked. */
+const MX_RESPONSE_MODES=['paper','write','type'];
+const MX_RESPONSE_ALIAS=Object.assign(Object.create(null),
+  {paper:'paper', external:'paper', pen:'write', write:'write', typed:'type', type:'type'});
 let MX_RESPONSE=null;
+function mxHasSkill(){ return ((LESSON&&LESSON.slides)||[]).some(s=>s&&s.type==='skill'); }
 function mxResponseMode(){
   if(MX_RESPONSE===null){
-    const want=((LESSON&&LESSON.meta&&LESSON.meta.responseMode)||'write');
-    MX_RESPONSE=(MX_RESPONSE_MODES.indexOf(want)>=0)?want:'write';
+    const raw=String((LESSON&&LESSON.meta&&LESSON.meta.responseMode)||'').trim().toLowerCase();
+    const known=raw?MX_RESPONSE_ALIAS[raw]:'';
+    if(raw&&!known&&typeof console!=='undefined'&&console.warn)
+      console.warn('lesson responseMode "'+raw+'" is not one of paper / typed / pen — using the default');
+    /* THE DEFAULT IS THE LESSON'S OWN ERA. A skill-based lesson that says nothing means paper, which is
+       the approved default for the new structure; a lesson written before it keeps the behaviour it was
+       authored against, so no committed file and no gate moves. */
+    MX_RESPONSE=known||(mxHasSkill()?'paper':'write');
   }
   return MX_RESPONSE;
 }
+/* PAPER IS NOT A WORKBOOK MODE. Every digital response surface — the workbook, its tools, the
+   Questions/Workbook switch, the answer cells in a table question — is absent, not merely hidden. */
+function mxOnPaper(){ return mxResponseMode()==='paper'; }
 function mxSetResponseMode(m){
   if(MX_RESPONSE_MODES.indexOf(m)<0) return;
   MX_RESPONSE=m;
@@ -8488,6 +8545,7 @@ function mxSetView(v){
   }
 }
 function mxWritesResponses(s){
+  if(mxOnPaper()) return false;                       /* the work is in the student's own book */
   const ws=s&&s.workspace; return !!(ws&&typeof ws==='object'&&ws.kind==='grid');
 }
 /* A STRUCTURED TABLE IS NEVER SILENTLY CLIPPED. Three steps, in order, measured each time: fit as authored;
@@ -8523,11 +8581,14 @@ function mxCrumb(s){
 function mxTopBar(s,i,n,open){
   const modes=MX_MODES.map(m=>`<button type="button" class="mx-mode${m.state&&m.state()?' on':''}" data-mx-mode="${m.id}">${esc(m.label)}</button>`).join('');
   const rm=mxResponseMode();
-  const resp=mxWritesResponses(s)?`<div class="mx-resp" role="group" aria-label="How to answer">
-      <button type="button" class="mx-respbtn${rm==='write'?' on':''}" data-mx-resp="write"
-        aria-pressed="${rm==='write'?'true':'false'}">${mxIc('pencil',15)} Write</button>
-      <button type="button" class="mx-respbtn${rm==='type'?' on':''}" data-mx-resp="type"
-        aria-pressed="${rm==='type'?'true':'false'}">${mxIc('keyboard',15)} Type</button>
+  /* THE SAVED JSON IS AUTHORITATIVE. A student never chooses how they answer — the lesson does, once, at
+     the top. The selector survives only as an AUTHOR'S PREVIEW in Edit, and it writes to the session, not
+     to the lesson: `mxSetResponseMode` sets MX_RESPONSE and nothing else, so an export carries what was
+     authored whatever the author last previewed. */
+  const resp=(authorMode()==='edit')?`<div class="mx-resp" role="group" aria-label="Preview how a student answers">
+      <span class="mx-respw">Preview</span>
+      ${MX_RESPONSE_MODES.map(m=>`<button type="button" class="mx-respbtn${rm===m?' on':''}" data-mx-resp="${m}"
+        aria-pressed="${rm===m?'true':'false'}">${mxIc(m==='paper'?'notes':(m==='write'?'pencil':'keyboard'),15)} ${m==='paper'?'Paper':(m==='write'?'Pen':'Typed')}</button>`).join('')}
     </div>`:'';
   return `<header class="mx-top">
     <button type="button" class="mx-iconbtn" data-rp-navtoggle aria-controls="mxNav" aria-expanded="${open?'true':'false'}"
@@ -8544,6 +8605,13 @@ function mxTopBar(s,i,n,open){
     </div>
   </header>`;
 }
+/* WHICH SKILL THIS IS. Numbered by position among the SKILLS, not among the slides, so a lesson that also
+   carries a summary or a reference page still reads "Skill 1, Skill 2". */
+function mxSkillNo(k){
+  const sl=LESSON.slides||[]; let n=0;
+  for(let j=0;j<=k&&j<sl.length;j++) if(sl[j]&&sl[j].type==='skill') n++;
+  return (sl[k]&&sl[k].type==='skill')?n:0;
+}
 function mxRail(){
   const m=LESSON.meta||{};
   const meta=[m.stage,m.year].filter(Boolean).join('  •  ');
@@ -8551,7 +8619,8 @@ function mxRail(){
     const ic=(s.navIcon&&MXI[s.navIcon])?s.navIcon:(MX_NAV_ICON[s.type]||'notes');
     return `<li><button type="button" class="mx-navitem${k===cur?' on':''}" data-rp-go="${k}"${k===cur?' aria-current="page"':''}>
       <span class="mx-navic">${mxIc(ic,16)}</span>
-      <span class="mx-navtx"><b>${esc(mxNavLabel(s))}</b>${s.navSub?`<span>${esc(s.navSub)}</span>`:''}</span></button></li>`;
+      <span class="mx-navtx"><b>${esc(mxNavLabel(s))}</b>${(()=>{ const no=mxSkillNo(k);
+        return no?`<span>Skill ${no}</span>`:(s.navSub?`<span>${esc(s.navSub)}</span>`:''); })()}</span></button></li>`;
   }).join('');
   return `<nav class="mx-nav" id="mxNav" aria-label="Lesson pages">
     <div class="mx-navhead"><div class="mx-course">${esc(m.unit||m.title||'')}</div>${meta?`<div class="mx-coursemeta">${esc(meta)}</div>`:''}</div>
@@ -8688,11 +8757,17 @@ function mxWexRestore(keep){
    It is not a digital notebook: there is no "record this" field, no "what to write down" panel and no
    progress encouragement. The concepts are an authored LIST of any length, each with a stable id, and the
    Key Idea is optional enrichment that occupies no space at all when it is absent. */
-function mxNotesPage(s){
-  const items=(Array.isArray(s.concepts)&&s.concepts.length)?s.concepts:(Array.isArray(s.keyIdeas)?s.keyIdeas:[]);
-  const list=items.map((c,j)=>`<div class="mx-item" data-mx-concept="${esc(String((c&&c.id)||('c'+(j+1))))}">
+/* ONE CONCEPT LIST, TWO HOSTS. The Notes page and a skill's own notes are the same thing rendered in two
+   frames, so the list is written once and called twice — a skill must not grow a second idea of what a
+   concept is. */
+function mxConceptList(items){
+  return (items||[]).map((c,j)=>`<div class="mx-item" data-mx-concept="${esc(String((c&&c.id)||('c'+(j+1))))}">
     <span class="mx-num">${j+1}</span>
     <div class="mx-itembd"><h3>${mxM((c&&(c.term||c.title))||'')}</h3><p>${mxM((c&&c.body)||'')}</p></div></div>`).join('');
+}
+function mxNotesPage(s){
+  const items=(Array.isArray(s.concepts)&&s.concepts.length)?s.concepts:(Array.isArray(s.keyIdeas)?s.keyIdeas:[]);
+  const list=mxConceptList(items);
   return `<div class="mx-panel"><h2 class="mx-panelh">${esc(s.contentTitle||'Key concepts')}</h2>${list
     ||'<div class="mx-ph">This notes page has no concepts yet.</div>'}</div>`;
 }
@@ -9042,28 +9117,37 @@ function mxWorkedExamplesPage(s,i){
   if(!gs.length) return `<div class="mx-panel"><div class="mx-ph">This page has no worked examples yet.</div></div>`;
   const bar=gs.map((g,k)=>`<button type="button" role="tab" class="mx-tab${k?'':' on'}"
     data-mx-tab="${esc(g.id)}" aria-selected="${k?'false':'true'}">${mxM(g.title)}</button>`).join('');
-  return `<div class="mx-wex" style="--mx-plot-min-w:${MX_PLOT_MIN_W}px;--mx-plot-min-h:${MX_PLOT_MIN_H}px;--mx-plot-w:${MX_PLOT_W}px;--mx-ask-min:${MX_ASK_MIN}px;--mx-work-min:${MX_WB_MIN_W}px;--mx-interp-max:${MX_INTERP_MAX}px;--mx-plot-h:${MX_PLOT_H}px;--mx-ask-pad:${MX_ASK_PAD}px;--mx-work-pad:${MX_WORK_PAD}px;--mx-zone-pad:${MX_ZONE_PAD}px;--mx-cols:${MX_GRID_COLS};--mx-gutter:${MX_GRID_GUTTER}px;--mx-media-span:${MX_MEDIA_SPAN};--mx-media-start:${MX_MEDIA_START};--mx-measure:${MX_MEASURE}px;--mx-stage-min:${MX_STAGE_MIN}px">
+  return `<div class="mx-wex" ${mxWexVars()}>
     <div class="mx-tabs" role="tablist" data-mx-tabset aria-label="Worked example groups">${bar}</div>
     ${gs.map((g,k)=>mxWexGroup(g,s,i,k>0)).join('')}</div>`;
 }
+/* THE APPROVED COMPOSITION NUMBERS, PUBLISHED ONCE. A skill's worked examples are laid out by the same
+   rules as a worked-examples page's, so they read the same custom properties rather than a second copy —
+   which is what verify-composition-grid polices against the catalogue. */
+function mxWexVars(){ return `style="--mx-plot-min-w:${MX_PLOT_MIN_W}px;--mx-plot-min-h:${MX_PLOT_MIN_H}px;--mx-plot-w:${MX_PLOT_W}px;--mx-ask-min:${MX_ASK_MIN}px;--mx-work-min:${MX_WB_MIN_W}px;--mx-interp-max:${MX_INTERP_MAX}px;--mx-plot-h:${MX_PLOT_H}px;--mx-ask-pad:${MX_ASK_PAD}px;--mx-work-pad:${MX_WORK_PAD}px;--mx-zone-pad:${MX_ZONE_PAD}px;--mx-cols:${MX_GRID_COLS};--mx-gutter:${MX_GRID_GUTTER}px;--mx-media-span:${MX_MEDIA_SPAN};--mx-media-start:${MX_MEDIA_START};--mx-measure:${MX_MEASURE}px;--mx-stage-min:${MX_STAGE_MIN}px"`; }
 /* STRUCTURED ENTRY, and only where the structure IS the task. A question is not turned into a card and
    does not grow an answer box merely because it expects an answer — the workbook is where answers are
    written. A table of values is the exception the brief names: the empty cells are the question. Each cell
    is keyed by its COLUMN VALUE, not by its index, so the response says "when x = −3" rather than "the
    first cell" and a re-ordered table cannot re-attribute an answer. */
-function mxPracticePage(s,i){
-  const page=tpRespId(s)||('slide-'+i);
-  const qs=(s.questions||[]).map((q,j)=>{
+/* ONE QUESTION LIST, TWO HOSTS — the Practice page and a skill's own practice. A TABLE QUESTION IS THE
+   ONE PLACE A QUESTION CARRIES AN ANSWER FIELD, because there the empty cells ARE the question. ON PAPER
+   THERE IS NO FIELD AT ALL: the cell is ruled and empty, to be copied into an exercise book, because an
+   input a student cannot be asked to use is furniture. */
+function mxQuestionList(questions,page){
+  const paper=mxOnPaper();
+  return (questions||[]).map((q,j)=>{
     const parts=(q.parts||[]).map((pt,k)=>`<div class="mx-part"><b class="mx-pl">(${String.fromCharCode(97+k)})</b><span>${mxM(pt)}</span></div>`).join('');
     let tbl='';
     if(q.table&&Array.isArray(q.table.head)){
       const qid=(q.id?String(q.id):'q'+(j+1));
-      const saved=(tpRespGet(page,qid)||{});
+      const saved=paper?{}:(tpRespGet(page,qid)||{});
       const cells=(saved.kind==='table'&&saved.value&&saved.value.cells)?saved.value.cells:{};
       const head=q.table.head.map(h=>`<th scope="col">${mxM(h)}</th>`).join('');
       const rows=(q.table.rows||[]).map(r=>`<tr><th scope="row">${mxM(r.label||'')}</th>`
         +(r.cells||[]).map((c,ci)=>{ const key=String(q.table.head[ci]==null?ci:q.table.head[ci]);
             if(c!=null&&c!=='') return `<td>${mxM(c)}</td>`;
+            if(paper) return `<td class="mx-blank" aria-label="${esc((r.label||'value')+' when '+key+' \u2014 answer in your book')}"></td>`;
             return `<td><input class="mx-cell" type="text" inputmode="text" data-mx-cell="${esc(key)}"
               value="${esc(cells[key]==null?'':String(cells[key]))}"
               aria-label="${esc((r.label||'value')+' when '+key)}"></td>`; }).join('')+'</tr>').join('');
@@ -9074,6 +9158,10 @@ function mxPracticePage(s,i){
       <div class="mx-stem">${mxM(q.stem||'')}</div>${tbl}
       ${parts?`<div class="mx-parts${q.stack?' mx-stack':''}">${parts}</div>`:''}</div></div>`;
   }).join('');
+}
+function mxPracticePage(s,i){
+  const page=tpRespId(s)||('slide-'+i);
+  const qs=mxQuestionList(s.questions,page);
   return `<div class="mx-col">${s.contentTitle?`<h2 class="mx-panelh">${esc(s.contentTitle)}</h2>`:''}${qs
     ||'<div class="mx-ph">This practice page has no questions yet.</div>'}</div>`;
 }
@@ -9117,6 +9205,70 @@ registerWorkspace('videoSupport',(ws)=>{
       <h2>${esc(wf.title||'Watch for')}</h2><ul>${bullets}</ul></div></div>`:''}
     ${!ch&&!bullets?'<div class="mx-ph">This video page has no supporting material yet.</div>':''}`;
 });
+/* ────────────────────────────────────────────────────────────────────────────────────────────────
+   A SKILL IS ONE COMPLETE INSTRUCTIONAL SECTION, NOT A SLIDE.
+
+   The maintainer's ruling after seeing the factorising lesson: separating a skill's explanation from its
+   video, its worked examples and its questions puts unrelated page types between a student and one idea.
+   So the unit of the lesson is the SKILL, and everything a skill teaches lives in one reading surface
+   that scrolls — notes, then the video, then the worked examples, then the practice, in that order.
+
+   IT COMPOSES; IT DOES NOT REIMPLEMENT. The concepts come from mxConceptList, the worked examples from
+   mxWexGroup (the same five compositions, the same primitive, the same published numbers via mxWexVars),
+   the questions from mxQuestionList, the figures from the Figure Engine, the notation from mxM. A skill
+   adds no renderer of its own — it adds an ORDER, and the section headings that make the order legible.
+
+   THE JSON DECIDES HOW MANY. `slides[]` is unchanged: one skill is one page of type `skill`, so a lesson
+   has as many skills as it authors, in the order it authors them, and the rail already lists them. */
+function mxSkillSection(n,title,body,extra){
+  return `<section class="mx-sk-sec"${extra||''}>
+    <h2 class="mx-sk-h"><span class="mx-sk-n">${n}</span>${mxM(title)}</h2>
+    ${body}</section>`;
+}
+/* THE VIDEO, HONESTLY. A real URL is embedded through the app's own safeUrl/toEmbed gate — the same
+   allowlist (youtube / youtu.be / youtube-nocookie / vimeo) the legacy video block and validate.mjs use.
+   NO URL MEANS NO PLAYER. Not a play button that does nothing, not a scrubber, not a fabricated duration
+   or chapter list: an author-facing notice saying what is missing and where to put it. A simulated player
+   in front of a student is worse than an empty space, because the student tries it. */
+function mxVideoRegion(v,label){
+  const o=(v&&typeof v==='object')?v:(typeof v==='string'?{url:v}:{});
+  const raw=String(o.url||'').trim();
+  const embed=raw?toEmbed(safeUrl(raw,'embed')):'';
+  if(embed) return `<div class="mx-sk-video"><iframe src="${esc(embed)}" title="${esc(o.title||label||'Lesson video')}"
+      loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
+      allow="accelerometer; clipboard-write; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+    ${o.note?`<p class="mx-sk-vnote">${mxM(o.note)}</p>`:''}`;
+  return `<div class="mx-sk-vmissing" role="note">
+    <b>No video yet.</b> ${raw?`The URL <code>${esc(raw.slice(0,80))}</code> is not an allowed video address — use a YouTube or Vimeo link.`
+      :`Add this skill’s video address to <code>video.url</code> and it will appear here.`}
+    </div>`;
+}
+function mxSkillPage(s,i){
+  const page=tpRespId(s)||('slide-'+i);
+  const notes=Array.isArray(s.notes)?s.notes:((s.notes&&Array.isArray(s.notes.concepts))?s.notes.concepts:[]);
+  const groups=mxWexGroups({groups:s.workedExamples,examples:s.examples,contentTitle:'Worked examples'});
+  const questions=Array.isArray(s.questions)?s.questions:((s.practice&&Array.isArray(s.practice.questions))?s.practice.questions:[]);
+  const hasVideo=!!(s.video&&(typeof s.video==='string'||typeof s.video==='object'));
+  let n=0; const sec=[];
+  if(notes.length) sec.push(mxSkillSection(++n,s.notesTitle||'Notes and method',
+    `<div class="mx-panel mx-sk-notes">${mxConceptList(notes)}</div>`));
+  if(hasVideo) sec.push(mxSkillSection(++n,s.videoTitle||'Video',mxVideoRegion(s.video,s.title)));
+  /* A GROUP KEEPS ITS NAME. On a worked-examples page the tab bar carried the group's teaching title
+     ("The same method, three sign patterns"); a skill has no tabs, so without this the title vanished and
+     two groups ran together as one undifferentiated list. The title is the heading it always was. */
+  if(groups.length) sec.push(mxSkillSection(++n,s.examplesTitle||'Worked examples',
+    `<div class="mx-wex mx-sk-wex" ${mxWexVars()}>${groups.map(g=>
+      `<div class="mx-sk-grp">${groups.length>1?`<h3 class="mx-sk-gh">${mxM(g.title)}</h3>`:''}${mxWexGroup(g,s,i,false)}</div>`).join('')}</div>`));
+  if(questions.length){
+    /* THE INSTRUCTION IS PART OF THE QUESTION SET ON PAPER. A student reading a website has to be told
+       where the work goes; the lesson says it once, above the questions, rather than implying it. */
+    const ask=s.practiceNote||(mxOnPaper()?'Show your working in your exercise book.':'');
+    sec.push(mxSkillSection(++n,s.questionsTitle||'Practice',
+      `${ask?`<p class="mx-sk-ask">${mxM(ask)}</p>`:''}<div class="mx-col mx-sk-qs">${mxQuestionList(questions,page)}</div>`));
+  }
+  if(!sec.length) return `<div class="mx-panel"><div class="mx-ph">This skill has no content yet.</div></div>`;
+  return `<div class="mx-skill">${sec.join('')}</div>`;
+}
 function mxStubPage(s){
   return `<div class="mx-panel"><div class="mx-ph">${esc(s.stubNote
     ||'The shell for this page type is in place; its content lands in a later stage.')}</div></div>`;
@@ -9498,6 +9650,7 @@ registerPage('mathematics','practiceGraphs',mxStubPage,{surface:'flush'});
 registerPage('mathematics','practiceGeometry',mxStubPage,{surface:'flush'});
 registerPage('mathematics','summary',mxStubPage);
 /* temporary names — see the open decision at the top of this block */
+registerPage('mathematics','skill',mxSkillPage,{surface:'panel'});
 registerPage('mathematics','videoShell',mxVideoPage,{surface:'panel'});
 registerPage('mathematics','interactiveShell',mxStubPage);
 
@@ -13518,7 +13671,9 @@ $('#jsonLoad').onclick=()=>{
     if(Array.isArray(d)) d={meta:{title:LESSON.meta.title,theme:LESSON.meta.theme},slides:d};
     if(!d.slides||!Array.isArray(d.slides)) throw new Error('Your JSON needs a "slides" array.');
     d.meta=Object.assign({title:'Lesson',theme:'indigo'}, d.meta||{});
-    LESSON=d; cur=0; TP_RUNTIME={}; tpRespReset(d); modal.hidden=true; render();
+    /* THE RESPONSE MODE BELONGS TO THE LESSON, so a new lesson brings its own. mxResponseMode()
+       memoises, and without this a paper lesson loaded after a pen one kept the pen workbook. */
+    LESSON=d; cur=0; TP_RUNTIME={}; MX_RESPONSE=null; tpRespReset(d); modal.hidden=true; render();
   }catch(err){ $('#jsonErr').textContent='⚠ '+err.message; }
 };
 $('#jsonCopy').onclick=()=>{ try{navigator.clipboard.writeText(JSON.stringify(LESSON,null,2));}catch(e){} $('#jsonCopy').textContent='Copied ✓'; setTimeout(()=>$('#jsonCopy').textContent='Copy',1200); };

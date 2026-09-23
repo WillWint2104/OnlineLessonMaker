@@ -258,26 +258,51 @@ mark('chrome');
      prox.inEdit.mode === 'edit' && prox.inEdit.marked === 'edit' && prox.inStudy.marked === 'study'
        && prox.inEdit.headerShown === false,
      `Edit: mode ${prox.inEdit.mode}, bar marks "${prox.inEdit.marked}" · Study: bar marks "${prox.inStudy.marked}" · #modeSeg on screen: ${prox.inEdit.headerShown}`);
-  // the Write / Type selector is lesson-level, session-only, and only on a page that takes written work
+  /* THE RESPONSE MODE IS THE LESSON'S, NOT THE STUDENT'S (Stage 6). This block used to assert the
+     opposite — a Write / Type selector in the student-facing bar on any page that took written work.
+     The maintainer's ruling after the factorising review is that the saved JSON is authoritative and a
+     class does not vote on how it answers, so the control survives ONLY as an author's PREVIEW in Edit.
+     The checks are correspondingly harder: it must be absent from EVERY page in Study, the authored mode
+     must still be in force there, and previewing must not write `meta.responseMode`. */
   const rsel = await p.evaluate((NOTES) => {
-    go(4); const bar = document.querySelector('.mx-resp');
-    const labels = bar ? [...bar.querySelectorAll('[data-mx-resp]')].map(b => b.textContent.trim()) : [];
-    const start = document.querySelector('.mx').dataset.mxResponse;
+    const btns = () => [].slice.call(document.querySelectorAll('button[data-mx-resp]'));
+    const attr = () => document.querySelector('.mx').dataset.mxResponse;
+    const out = { study: {}, edit: {} };
+    document.querySelector('[data-mx-mode="study"]').click();
+    go(4);     out.study.onPractice = btns().length;
+    go(NOTES); out.study.onNotes = btns().length;
+    out.study.attr = attr();
+    out.authored = (LESSON.meta || {}).responseMode;
+    document.querySelector('[data-mx-mode="edit"]').click();
+    go(4);
+    out.edit.labels = btns().map((b) => b.textContent.trim());
+    out.edit.start = attr();
     document.querySelector('[data-mx-resp="type"]').click();
-    const after = { attr: document.querySelector('.mx').dataset.mxResponse,
+    out.edit.after = { attr: attr(),
       onType: document.querySelector('[data-mx-resp="type"]').classList.contains('on'),
       onWrite: document.querySelector('[data-mx-resp="write"]').classList.contains('on') };
-    go(NOTES); const onNotes = !!document.querySelector('.mx-resp');
-    go(4); const kept = document.querySelector('.mx').dataset.mxResponse;
+    go(NOTES); out.edit.onNotes = btns().length;
+    go(4);     out.edit.kept = attr();
+    out.metaAfter = (LESSON.meta || {}).responseMode;
     document.querySelector('[data-mx-resp="write"]').click();
-    return { labels, start, after, onNotes, kept, storage: localStorage.length + sessionStorage.length };
+    document.querySelector('[data-mx-mode="study"]').click();
+    out.studyAgain = btns().length;
+    out.storage = localStorage.length + sessionStorage.length;
+    return out;
   }, NOTES);
-  ok('a page that takes written work offers Write / Type, defaulting to Write',
-     rsel.labels.join('/') === 'Write/Type' && rsel.start === 'write', rsel.labels.join(' · '));
-  ok('choosing Type changes the shell state, not just the button',
-     rsel.after.attr === 'type' && rsel.after.onType && !rsel.after.onWrite);
-  ok('it is a LESSON-level choice — it survives navigating away and back', rsel.kept === 'type');
-  ok('and a page with no written work does not offer it', rsel.onNotes === false);
+  ok('A STUDENT IS NEVER OFFERED THE CHOICE — no page in Study carries a response-mode control',
+     rsel.study.onPractice === 0 && rsel.study.onNotes === 0 && rsel.studyAgain === 0,
+     `practice ${rsel.study.onPractice} · notes ${rsel.study.onNotes} · after an author previewed ${rsel.studyAgain}`);
+  ok('and the mode the lesson authored is the one in force there', rsel.study.attr === 'write',
+     `meta.responseMode ${JSON.stringify(rsel.authored)} -> shell "${rsel.study.attr}"`);
+  ok('the author can preview all three modes in Edit, named Paper / Pen / Typed',
+     rsel.edit.labels.join('/') === 'Paper/Pen/Typed' && rsel.edit.start === 'write', rsel.edit.labels.join(' · '));
+  ok('choosing Typed changes the shell state, not just the button',
+     rsel.edit.after.attr === 'type' && rsel.edit.after.onType && !rsel.edit.after.onWrite);
+  ok('it is a LESSON-level choice — it survives navigating away and back, and is offered on every page',
+     rsel.edit.kept === 'type' && rsel.edit.onNotes === 3, `kept "${rsel.edit.kept}" · notes offers ${rsel.edit.onNotes}`);
+  ok('PREVIEWING IS NOT AUTHORING — meta.responseMode is untouched by the control',
+     rsel.metaAfter === rsel.authored, `${JSON.stringify(rsel.authored)} -> ${JSON.stringify(rsel.metaAfter)}`);
   ok('the response mode is session-only — nothing is written to storage', rsel.storage === 0);
 
   const narrow = await newPage(414, 860);

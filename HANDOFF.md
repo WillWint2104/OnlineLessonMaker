@@ -596,6 +596,54 @@ Ownership is unchanged: JSON carries content and semantic capability; the page r
 the theme owns the visual language; the Figure Engine owns mathematical figures. No pixel widths, placement
 or styling decisions belong in lesson JSON.
 
+### A SKILL IS ONE INSTRUCTIONAL SECTION, NOT A PRESENTATION SLIDE
+
+**Skill** — `{ id, type:"skill", title, notes?, video?, workedExamples? | examples?, questions?,
+notesTitle?, videoTitle?, examplesTitle?, questionsTitle?, practiceNote? }`. It is a registered page
+(`registerPage('mathematics','skill', mxSkillPage, {surface:'panel'})`), so it lives in the ordinary
+`slides[]`, is reached by the ordinary rail, and is keyed by `tpPageEntry()` like every other page — there
+is no separate skills root. `notes` accepts the notes page's `concepts[]` directly or nested as
+`{concepts:[…]}`; `questions` likewise accepts `practice.questions`.
+
+The page renders, in this fixed order and numbered from what is present: **Notes and method → Video →
+Worked examples → Practice**. An absent part reserves nothing (the surface rule, above). Missing all four,
+the page says so rather than drawing an empty frame.
+
+**IT ASSEMBLES, IT DOES NOT RE-IMPLEMENT.** The concept list (`mxConceptList`) and the question list
+(`mxQuestionList`) are the same functions `mxNotesPage` and `mxPracticePage` call; worked examples go
+through `mxWexGroups` / `mxWexGroup` unchanged. The single deliberate difference is that a skill does NOT
+draw the worked-example tab strip — a tab hides a group behind a click, and a skill's groups are stages of
+one method, not alternative demonstrations of one object (the tab rule, above). They stack, each keeping
+its title as an `.mx-sk-gh` heading.
+
+**IT IS NOT HEIGHT-BOXED.** `.mx-skill` grows and `.mx-page` scrolls it; a real skill runs several
+thousand pixels past the fold. Anything measuring a skill must grow the viewport by the scroller's
+overflow first — the document itself never scrolls (§8b).
+
+**A VIDEO IS EITHER REAL OR DECLARED ABSENT.** `mxVideoRegion()` takes `video` as a string or
+`{url, note?}`, puts the URL through the app's existing `safeUrl(raw,'embed')` + `toEmbed()` gate, and
+writes an `<iframe>` only if that returns an address. No URL, or one the gate refuses, writes an
+author-facing note naming what is missing. It never renders playback progress, a duration, chapters, a
+transcript or timestamps — there is nothing behind them.
+
+### RESPONSE MODES ARE THE LESSON'S, READ ONCE FROM `meta.responseMode`
+
+Three modes: **`paper`** (the work is in the student's own exercise book), **`pen`** (the handwriting
+canvas) and **`typed`** (the keyboard workspace). `MX_RESPONSE_ALIAS` is a null-prototype table mapping the
+authored word to the value the engine has always stored — `paper→paper`, `pen→write`, `typed→type` — and
+the stored names `write` / `type` remain valid input, so existing lessons were not migrated and either
+vocabulary may be written. An unrecognised value warns once and falls back (`paper` for a lesson
+containing a skill, `write` otherwise). `mxResponseMode()` memoises in `MX_RESPONSE`; reset it when the
+lesson is replaced.
+
+**Paper removes response controls, it does not disable them.** `mxWritesResponses()` is false, which takes
+away the workbook, the tools and the pen/type view switch; a table answer cell becomes a ruled
+`td.mx-blank` with an "answer in your book" label rather than a disabled `<input>`.
+
+**THE SAVED JSON IS THE AUTHORITY AND A STUDENT DOES NOT VOTE.** The three-way control is rendered only
+when `authorMode()==='edit'`, labelled *Preview*, and assigns `MX_RESPONSE` for the session only — it never
+writes `meta.responseMode`. In Study mode it is absent in all three modes.
+
 ## 9. Roadmap / next up
 
 ### Page-family architecture — the boundary, decided

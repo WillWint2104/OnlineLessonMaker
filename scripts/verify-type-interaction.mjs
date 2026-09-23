@@ -45,7 +45,10 @@ const open = async ({ w = 1536, h = 1024, lesson = FIX, slide = PRACTICE, type =
   await p.goto(base, { waitUntil: 'load' });
   await p.evaluate(({ L, s }) => { LESSON = JSON.parse(JSON.stringify(L)); render(); go(s); }, { L: lesson, s: slide });
   await p.waitForTimeout(400);
-  if (type) { await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(300); }
+  /* THE STUDENT-FACING SELECTOR IS GONE (Stage 6) — the lesson's own `meta.responseMode` decides, and
+     the author previews in Edit. These sections test the TYPED WORKSPACE, not the control, so they set
+     the mode through the engine's own setter, which is exactly what the preview button calls. */
+  if (type) { await p.evaluate(() => mxSetResponseMode('type')); await p.waitForTimeout(300); }
   return p;
 };
 // What has the focus, named the way a person would name it.
@@ -368,10 +371,17 @@ mark('semantics');
   const named = (sel) => p.evaluate((sel) => [].slice.call(document.querySelectorAll(sel)).map((e) => ({
     name: (e.getAttribute('aria-label') || (e.textContent || '').trim().replace(/\s+/g, ' ')).slice(0, 60),
     pressed: e.getAttribute('aria-pressed'), current: e.getAttribute('aria-current'), role: e.getAttribute('role') })), sel);
-  const modes = await named('[data-mx-resp]');
   const ink = await named('.mx-wsbar .mx-tool');
   const tabs = await named('.mx-ptab');
-  ok('Write and Type say which one is on', modes.length === 2 && modes.every((m) => m.name && m.pressed) && modes.filter((m) => m.pressed === 'true').length === 1,
+  /* The three modes are named for the AUTHOR now: the control exists only in Edit, so it is read there and
+     Study is checked to offer nothing at all. */
+  const studyModes = await named('button[data-mx-resp]');
+  await p.evaluate(() => document.querySelector('[data-mx-mode="edit"]').click()); await p.waitForTimeout(300);
+  const modes = await named('button[data-mx-resp]');
+  await p.evaluate(() => document.querySelector('[data-mx-mode="study"]').click()); await p.waitForTimeout(300);
+  ok('a student is told nothing about response modes, because they do not choose one', studyModes.length === 0);
+  ok('the author’s three previews name themselves and say which one is on',
+     modes.length === 3 && modes.every((m) => m.name && m.pressed) && modes.filter((m) => m.pressed === 'true').length === 1,
      modes.map((m) => `${m.name}=${m.pressed}`).join(' · '));
   ok('the ink tools are named and say which is selected',
      ink.every((t) => t.name) && ink.filter((t) => t.pressed === 'true').length >= 1,
@@ -379,7 +389,7 @@ mark('semantics');
   ok('the workbook page tabs name themselves and mark the current one',
      tabs.every((t) => t.name) && tabs.filter((t) => t.current === 'true').length === 1,
      tabs.map((t) => t.name + (t.current ? ' (current)' : '')).join(' · '));
-  await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(300);
+  await p.evaluate(() => mxSetResponseMode('type')); await p.waitForTimeout(300);
   const type = await named('.mx-wsbar .mx-tool');
   ok('the Type tools are named, and Text/Equation say which is active',
      type.every((t) => t.name) && type.filter((t) => t.pressed === 'true').length >= 1,

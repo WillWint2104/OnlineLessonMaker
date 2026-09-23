@@ -106,7 +106,7 @@ const state = (p) => p.evaluate(() => { const d = tpRespGet('practice-equations'
   for (const s of WORK_1) await draw(p, s);
   await shot(p, '01-write-page-1-ink');
   // 2 — Type replaces the workbook surface, and only that.
-  await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(300);
+  await p.evaluate(() => mxSetResponseMode('type')); await p.waitForTimeout(300);
   await shot(p, '02-type-mode-empty-page');
   // 3 — the equation bar: the app's own TPMath editor, opened in place.
   await type(p, ['Substituting x = 3 into the rule:']);
@@ -128,11 +128,11 @@ const state = (p) => p.evaluate(() => { const d = tpRespGet('practice-equations'
   await p.click('[data-mx-sheet="w1"]'); await p.waitForTimeout(250);
   await shot(p, '06-type-page-1-restored');
   // 7 — Write again: the original ink, untouched by any of that.
-  await p.click('[data-mx-resp="write"]'); await p.waitForTimeout(300);
+  await p.evaluate(() => mxSetResponseMode('write')); await p.waitForTimeout(300);
   await shot(p, '07-write-ink-restored');
   const afterRound = await state(p);
   // 8 — away and back, then the drawer, still in Type.
-  await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(250);
+  await p.evaluate(() => mxSetResponseMode('type')); await p.waitForTimeout(250);
   await p.evaluate(() => { go(0); }); await p.waitForTimeout(250);
   await p.evaluate(() => { go(4); }); await p.waitForTimeout(350);
   await shot(p, '08-type-after-navigation');
@@ -169,7 +169,7 @@ const state = (p) => p.evaluate(() => { const d = tpRespGet('practice-equations'
 // ── 10 — Expand, and the narrow layout, both in Type ──────────────────────────────────────────────
 {
   const p = await open(1536, 1024);
-  await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(300);
+  await p.evaluate(() => mxSetResponseMode('type')); await p.waitForTimeout(300);
   await type(p, ['Q7 — a rectangle of area 36 m², length x and width x − 2:']);
   await equation(p, ['x', '(', 'x', '#−', '2', 'ArrowRight', '=', '3', '6']);
   await p.click('[data-mx-eqok]'); await p.waitForTimeout(200);
@@ -179,7 +179,7 @@ const state = (p) => p.evaluate(() => { const d = tpRespGet('practice-equations'
   await shot(p, '10a-type-expanded');
   await p.close();
   const n = await open(900, 1100);
-  await n.click('[data-mx-resp="type"]'); await n.waitForTimeout(300);
+  await n.evaluate(() => mxSetResponseMode('type')); await n.waitForTimeout(300);
   await shot(n, '10b-narrow-questions');
   await n.click('.mx-viewsw [data-mx-view="workbook"]'); await n.waitForTimeout(250);
   await type(n, ['Q1  3 + 5 × 2 = 13', '', 'because × is done first.']);
@@ -191,7 +191,7 @@ const state = (p) => p.evaluate(() => { const d = tpRespGet('practice-equations'
   await n.close();
   // A handset: the workbook takes the page, and the equation bar still fits on it.
   const f = await open(414, 860);
-  await f.click('[data-mx-resp="type"]'); await f.waitForTimeout(300);
+  await f.evaluate(() => mxSetResponseMode('type')); await f.waitForTimeout(300);
   await f.click('.mx-viewsw [data-mx-view="workbook"]'); await f.waitForTimeout(350);
   await type(f, ['Q1  3 + 5 x 2', '', '= 3 + 10', '= 13']);
   await f.evaluate(() => document.querySelector('[data-mx-typed]').blur()); await f.waitForTimeout(200);
@@ -203,7 +203,7 @@ const state = (p) => p.evaluate(() => { const d = tpRespGet('practice-equations'
 // ── 11 · 12 — the equation lands at the caret, and Insert is reachable on a short laptop ──────────
 {
   const p = await open(1536, 1024);
-  await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(300);
+  await p.evaluate(() => mxSetResponseMode('type')); await p.waitForTimeout(300);
   await type(p, ['Q1(a)  Substituting ']);
   await equation(p, ['x', '=', '3']);
   await p.click('[data-mx-eqok]'); await p.waitForTimeout(250);
@@ -216,7 +216,7 @@ const state = (p) => p.evaluate(() => { const d = tpRespGet('practice-equations'
   await p.close();
   // A 13-inch laptop: the bar opens, and Insert and the page tabs stay inside the region.
   const n = await open(1280, 760);
-  await n.click('[data-mx-resp="type"]'); await n.waitForTimeout(300);
+  await n.evaluate(() => mxSetResponseMode('type')); await n.waitForTimeout(300);
   await n.evaluate(() => mxSetView('workbook')); await n.waitForTimeout(350);
   await n.click('[data-mx-typed]'); await n.keyboard.type('Q6(c)  Solving by expanding first:');
   await n.click('[data-mx-tsel="eq"]'); await n.waitForTimeout(300);

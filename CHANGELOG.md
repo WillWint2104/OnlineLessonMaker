@@ -8,6 +8,55 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 ## [Unreleased]
 
 ### Added
+- **Stage 6 · 1 — a skill, not a stack of slides.** The factorising review found the lesson arriving as a
+  run of page types (notes, then video, then practice) with the instruction for one skill scattered across
+  three transitions. A `skill` page puts one skill's whole instruction on one scrolling surface —
+  **notes → video → worked examples → practice**, numbered, in that order — and the rail names it by what it
+  teaches. This is the first skill only (`docs/atlas/lesson/factorising-skills.app.json`, *Factorising monic
+  quadratics*, paper mode); the full lesson is not rebuilt.
+  - **THE DOCUMENT ROOT IS UNTOUCHED.** A skill is a registered page — `registerPage('mathematics','skill',…,
+    {surface:'panel'})` — so it is an entry in the existing `slides[]`, reached by the existing rail, keyed by
+    the existing `tpPageEntry()` branch. No `{lesson:{skills:[]}}` re-root (89 app references, 22 gates and 24
+    lesson files would have moved), and `notes`, `practice`, `videoShell` and `summary` all still render as
+    they did — the audit's ten-slide lesson is unchanged, unit for unit.
+  - **NOTHING IS RENDERED TWICE.** `mxConceptList()` and `mxQuestionList()` were lifted out of `mxNotesPage`
+    and `mxPracticePage` so the skill calls the same code the standalone pages call; worked examples reuse
+    `mxWexGroups`/`mxWexGroup` as-is. The one thing the skill does not inherit is the worked-example tab strip
+    — a tab hides the second group behind a click, which is the compression the review complained of — so the
+    groups stack, each under its own `.mx-sk-gh` heading, and no title is lost.
+  - **NOT A SLIDE-HEIGHT BOX.** `.mx-skill` is a column that grows; the skill measures **3668px past the
+    fold** at 1440×900 and scrolls in `.mx-page`, which is what a complete instructional section costs.
+  - **A PLAYER IS NEVER FAKED.** `mxVideoRegion()` gates the URL through the app's existing `safeUrl()` +
+    `toEmbed()` and only then writes an `<iframe>`. With no URL — which is the state of this skill, no address
+    having been supplied — it writes an author-facing note asking for one; with a URL the embed gate refuses
+    (a `javascript:` scheme, a host off `EMBED_HOSTS`) it names the address and says so. It never draws a
+    scrubber, a duration, a chapter list or a transcript that no video is behind.
+- **Stage 6 · 2 — the response mode is the lesson's, and the student does not vote on it.** `MX_RESPONSE_MODES`
+  gains `paper` beside the existing `write` and `type`, read once from `meta.responseMode`.
+  - **THE INTENDED VOCABULARY, WITHOUT A MIGRATION.** `MX_RESPONSE_ALIAS` (null prototype) maps
+    `paper→paper`, `pen→write`, `typed→type`, with the stored names still accepted, so an author may write the
+    three words the milestone specifies while the 24 committed lessons keep the values they were authored
+    with and are not touched. An unrecognised mode warns once and falls back.
+  - **PAPER MEANS NOTHING TO TYPE INTO.** `mxWritesResponses()` returns false on paper, which already removed
+    the workbook, the tools and the view switch; the residue was the table cells, which still wrote
+    `<input class="mx-cell">`. They now write a ruled `td.mx-blank` carrying the "answer in your book" label.
+    Measured on the skill: **0 inputs, 0 workbook, 0 view-switch buttons**, and the control with `mxOnPaper()`
+    forced false puts 4 inputs back.
+  - **STUDY MODE OFFERS NO CHOICE.** The three-way control renders only in Edit, labelled *Preview*, and sets
+    a session variable — it never writes `meta.responseMode`, so previewing pen does not change what the class
+    is given. In Study the saved JSON is the only authority and the control is absent in all three modes.
+  - **THE GATES THAT USED THE STUDENT'S BUTTON WERE RE-AIMED, NOT RELAXED.** `verify-type-interaction` and
+    `verify-workbook` reached the typed workspace by clicking the selector; they now set the mode through the
+    engine's own `mxSetResponseMode`, which is exactly what the preview button calls, so the workspaces are
+    exercised identically (53/53 and 84/84, unchanged counts). `verify-responsive-shell`'s five assertions on
+    the selector became six harder ones: absent on EVERY page in Study *and* after an author has previewed,
+    the authored mode still in force there, named Paper / Pen / Typed in Edit, and `meta.responseMode`
+    untouched by previewing. Driving `authorMode()==='edit'` to `true` fails the first of them.
+  - **`scripts/verify-skill-page.mjs`** (22 checks) pins all of the above: the surface and its four parts, the
+    group titles, the rail's instructional name and number, that no notation reaches the student as literal
+    text, the alias table and the fallback, the missing-video and refused-URL notices, that a one-skill and a
+    three-skill lesson list one and three, and the reload defect below. Three of its assertions are driven to
+    failure first, so a control that cannot fail is not counted as a pass.
 - **Stage 5 · 4 — the repetitive operations, from the friction log.** Three findings, three small changes,
   all in the panel.
   - **EVERYTHING YOU ADD ARRIVES READY TO TYPE INTO** (§4). A new group arrives with one example, a new
@@ -219,6 +268,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
     once you scroll down into the form under it, which is ordinary. Reported, not acted on.
 
 ### Fixed
+- **A NEW LESSON KEPT THE PREVIOUS LESSON'S RESPONSE MODE.** `mxResponseMode()` memoises in `MX_RESPONSE`,
+  and the ⌗ dialog's load path reset `LESSON`, `cur`, `TP_RUNTIME` and the responses but not that — so a
+  teacher who opened a pen lesson and then opened a paper one was given a pen workbook on top of a paper
+  lesson, **with four answer inputs on a page that has none**. Found by writing the check for the real
+  loading path rather than the gate's shortcut of assigning `LESSON` directly. One statement at the load
+  site; removing it fails `verify-skill-page`'s new reload assertion with the exact four inputs.
+- **TWO STATEMENTS IN ONE `math` FIELD READ AS ONE.** In the factorising skill, `"? × ? = 12          ? + ? = 7"`
+  separated its two statements with spaces; mathematical typesetting collapses runs of whitespace, so a
+  student read `? × ? = 12 ? + ? = 7`. Seven step fields, authored content, now separated by a comma. The
+  same skill's non-monic answer carried a sentence of advice inside the answer — set in the mathematical
+  face, as part of the result — which is now a `note` on the step it belongs to.
 - **THE MODE BAR SAID STUDY WHILE THE AUTHOR WAS IN EDIT** — and on a mathematics page it is the only mode
   control on screen. Measured, at the maintainer's request, on the capture that raised it rather than
   assumed either way: `mode` was `'edit'`, `body` carried `.edit`, `#modeSeg`'s Edit button was marked —
