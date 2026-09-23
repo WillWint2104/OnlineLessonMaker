@@ -59,5 +59,5 @@ authoring session also measures the existing ambiguity warning instead of descri
 Affected browser captures are refreshed; these changes do not change the application runtime.
 
 Review 5291010088 verified that batch and requested one metadata correction: capture manifests now
-normalize the generated relative lesson path to `/` on both Windows and Linux. The existing capture
-record is normalized without recapturing or changing its images.
+normalize the generated relative lesson path to `/` on both Windows and Linux. The existing
+`docs/review/factoring-quadratics/captures.json` record is normalized without recapturing or changing its images.
