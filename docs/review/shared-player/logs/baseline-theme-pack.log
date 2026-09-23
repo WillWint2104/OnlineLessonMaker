@@ -1,0 +1,15 @@
+Base 2189477ef628e002a18323fe1e0ee1234e3b68bb
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.evaluate: TypeError: Cannot read properties of null (reading 'disabled')
+    at eval (eval at evaluate (:303:30), <anonymous>:1:51)
+    at UtilityScript.evaluate (<anonymous>:305:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at runTheme (C:\Users\willi\Videos\Online Lesson Maker\scripts\.baseline-legacy.tmp.mjs:73:29)
+    at async file:///C:/Users/willi/Videos/Online%20Lesson%20Maker/scripts/.baseline-legacy.tmp.mjs:92:1 {
+  log: []
+}
+
+Node.js v24.14.1

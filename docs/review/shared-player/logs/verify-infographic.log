@@ -1,0 +1,27 @@
+✓ wellbeing (Terra Anima) theme applied  data-theme=wellbeing
+✓ present mode active
+✓ stat: 3 cards rendered  ["40,000","24 %","14 %"]
+✓ stat: numbers present as text
+✓ stat: delta + icon drawn
+✓ stat: cards keyboard-focusable
+✓ stat: focus reveals tooltip  tip="40,000 · Young people seeking help each year"
+✓ bar: 4 bars rendered  ["45%","34%","14%","13%"]
+✓ bar: percentages shown as text
+✓ bar: fills are non-zero and within track  ["519.297px","392.359px","161.547px","150.016px"]
+✓ bar: hover reveals tooltip  tip="45% · Family & domestic violence"
+✓ bar: active highlight dims siblings
+✓ donut: 5 segments drawn
+✓ donut: legend has 5 items with %
+✓ donut: centre label present  center="100%"
+✓ donut: SVG has aria-label
+✓ donut: focus reveals tooltip  tip="44% · Overcrowded dwelling"
+✓ reduced-motion: load animation suppressed  animationName=none
+✓ reduced-motion: hover reveal still works
+✓ infographic introduces no external hosts  []
+✓ XSS: malicious label does not execute in tooltip  tip=<b>50%</b> · &lt;img src=x onerror="window.__xss=1"&gt;
+✓ XSS: malicious label is rendered as escaped text
+
+Page errors: (none)
+Screenshots in screenshots/infographic
+
+ALL PASSED.

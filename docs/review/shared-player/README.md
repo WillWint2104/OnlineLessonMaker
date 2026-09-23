@@ -3,7 +3,7 @@
 This is an implementation review, not visual approval. Start the local app with
 `node scripts/serve-player.mjs`, then open [the authoring app](http://127.0.0.1:8099/lesson-studio.html)
 or [the independent factorising lesson](http://127.0.0.1:8099/docs/review/shared-player/published-factorising.html).
-Nothing has been deployed or merged.
+PR #153 is the integration route. Consult its current review/check state for merge and deployment status.
 
 ## Implementation map and decisions
 
@@ -45,7 +45,8 @@ is one activity; practice keeps related questions together. Long activities scro
    the skill's video URL, and activity navigation. Use **Add explanation activity**, edit its
    title and concept text, and use **Move activity earlier/later**. Select another skill or
    use **Move skill earlier/later**. Existing nested-array controls add/remove concepts and
-   questions. The established page palette supplies additional skill pages.
+   questions. Additional skills currently require JSON: the new activity flow does not expose
+   the established page palette. See `AUTHORING_COVERAGE.md` for the exact graphical boundary.
 3. Choose **Study** to preview the actual learner renderer. Use the outline or Back/Next.
    The final Next opens a deliberate end page; Back returns to the last activity.
 4. Open **JSON → Download .json** to retain canonical editable data. Paste it back into
@@ -81,6 +82,7 @@ without shrinking the type.
 | `desktop-02-working.png`, `tablet-02-working.png` | Question above working; no empty parallel question column |
 | `*-02b-working-end.png` | Remaining steps and final answer |
 | `*-longest.png`, `*-longest-end.png` | Longest authored derivation, preserved in full |
+| `*-nonmonic-longest.png`, `*-nonmonic-longest-end.png` | Non-monic negative-sign example, five complete steps and the longest non-monic answer |
 | `desktop-03-practice.png`, `tablet-03-practice.png` | Grouped practice and non-editable paper table blanks |
 | `qualitative.png`, `qualitative-end.png` | Clearly labelled synthetic source context with analysis prompts |
 | `physics.png`, `physics-end.png` | Explanation, worked calculation, instructional data table and reasoning |
@@ -88,6 +90,7 @@ without shrinking the type.
 | `authoring.png` | Actual UI-authored text and reordered skill |
 | `independent.png` | Reopened exported lesson without author controls |
 | `phone.png` | Basic narrow-screen behavior |
+| `legacy-corrections/*-quiz.png`, `legacy-corrections/*-focus.png` | Restored quiz content and the real theme-specific Focus dialogs |
 
 Content corrections are separate from presentation: inherited `_bx_`/`_ax_` style notation
 was normalized to individual variable tokens, an unsupported fabricated six-minute video
@@ -111,5 +114,5 @@ an activity is a location, not mastery. No XP or answer-gated progression was ad
 Run `node scripts/verify-player-suite.mjs` with the local review server running. Logs are
 separate under `logs/`. These are local results; remote CI has not run. No visual regression
 baseline files were regenerated. Review fixtures live here rather than in the regression corpus.
-See `TEST_RESULTS.md` for the 61 passing player assertions, 250 identical corpus renders, and
-the five independently reproduced inherited legacy-gate failures.
+See `TEST_RESULTS.md` for the 61 player assertions and corrected 25-gate run; `FAILURE_RESOLUTION.md`
+explains the five diagnosed failures and the two exact corpus transitions restoring lost quiz content.

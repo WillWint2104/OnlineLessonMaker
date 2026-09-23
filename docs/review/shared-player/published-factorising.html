@@ -8458,6 +8458,7 @@ function glEmptyState(){ return `<div class="gl-empty"><div class="gl-empty-card
    the microhistory task/reveal classes (.tp-task/.tp-tnum/.tp-answ/.tp-reveal-btn/.tp-tmodel) and the
    shared reveal wiring (data-tp-block / data-tp-reveal / data-tp-submit / data-tp-model) — no new JS. */
 function mhGuided(s){
+  if(s.mode==='quiz') return packGuidedResponse(s); // Preserve authored quiz questions; the paragraph scaffold has no quiz fields.
   const mode=s.mode==='short'?'short':'extended';   // default: paragraph scaffold
   const stim=s.stimulus||null;
   const pills=Array.isArray(s.pills)?s.pills:[];

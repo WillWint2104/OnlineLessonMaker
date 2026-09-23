@@ -1,7 +1,9 @@
 // One sequential pipeline; every gate has its own log. No shared-output concurrent runs.
 import fs from 'node:fs';
-import {spawnSync} from 'node:child_process';
-const dir='docs/review/shared-player/logs';fs.mkdirSync(dir,{recursive:true});
+import {spawnSync,execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const dir=(process.env.PLAYER_REVIEW_DIR||'docs/review/shared-player')+'/logs';fs.mkdirSync(dir,{recursive:true});
+fs.writeFileSync(dir+'/run-info.json',JSON.stringify({started:new Date().toISOString(),head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),node:process.version,appSha256:createHash('sha256').update(fs.readFileSync('lesson-studio.html')).digest('hex')},null,2));
 const gates=process.argv.slice(2).length?process.argv.slice(2):['validate','verify-shared-player','verify-skill-page','verify-composition-grid','verify-figure-container','verify-figure-render','verify-geometry-semantics','verify-label-placement','verify-learning-card','verify-measure-surface','verify-mx-authoring','verify-notes-examples','verify-quadratics-authoring','verify-response-store','verify-responsive-shell','verify-type-interaction','verify-workbook','verify-lesson-page','verify-media','verify-newtypes','verify-pack-fixes','verify-theme-pack','verify-interactive','verify-infographic','verify-corpus-identity'];
 const results=process.argv.length>2&&fs.existsSync(dir+'/results.json')?JSON.parse(fs.readFileSync(dir+'/results.json','utf8')):[];
 let failures=0;

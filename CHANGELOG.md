@@ -7,6 +7,19 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Shared-player integration corrections
+- Restore authored Microhistory quizzes through the existing quiz renderer; the paragraph fork had
+  silently rendered no quiz questions. Retain all questions, attempt gating and accessible reveal.
+- Correct five stale legacy harness assumptions without dropping their behavioral checks: explicit
+  media fixtures and async downloads, theme-specific Focus controls, actual Present navigation gating,
+  explicit placeholder fixtures and the infographic XSS fixture's renderer selection.
+- Pin only the two complete before/after corpus DOM hashes affected by quiz restoration; all other
+  renders remain strictly byte-identical. Refresh shared-player exports and non-monic review evidence.
+- Correct the activity-player authoring documentation: adding skills and detailed worked/table/figure
+  editing remain JSON-only in the new flow; existing standalone mathematics editors remain available.
+- Address CodeRabbit's deferred workflow-input filters and run the shared-player gate in mathematics CI.
+  No hosting or auto-merge configuration changes.
+
 ### Added
 - **Stage 6 · 1 — a skill, not a stack of slides.** The factorising review found the lesson arriving as a
   run of page types (notes, then video, then practice) with the instruction for one skill scattered across

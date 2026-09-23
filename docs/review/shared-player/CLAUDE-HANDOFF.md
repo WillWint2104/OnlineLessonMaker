@@ -3,16 +3,20 @@
 Base: `2189477ef628e002a18323fe1e0ee1234e3b68bb` on
 `origin/claude/stage-4-block-wiring`. Main/merge base:
 `e328db01524e448a103ac58d73aba60bddd04fdc`. Task branch:
-`codex/shared-lesson-player`. PR #153 was verified open at the base; it was not modified.
+`codex/shared-lesson-player`. PR #153 is the integration route; its head is
+`claude/stage-4-block-wiring` and its target is `main`.
 
 Implementation commit: `bdd4c3d` (shared player, authoring, schema and reproducible tooling).
-The following commit contains review JSON, exports, captures and test summaries. The branch
-has no upstream, preventing an accidental push to Claude's development branch.
+The following commit, `0c3a8e1`, contains the original review evidence. Later integration commits
+carry the diagnosed corrections and refreshed evidence. The Codex branch tracks
+`origin/codex/shared-lesson-player`; integration uses a normal fast-forward push to the existing PR branch.
 
 Use `git log --oneline 2189477..codex/shared-lesson-player` for the incremental commit range
 and `git diff --stat 2189477..codex/shared-lesson-player` for the final file list. Do not reset
-or replace the development branch. Integrate only after the user's visual review; do not
-merge or deploy automatically.
+or replace the development branch. The user's explicit integration authorization is to complete
+substantive CodeRabbit review, corrective work,
+passing local/remote verification, then squash-merge PR #153 and verify main and the normal deployment.
+Visual polish remains subject to later user review. See FAILURE_RESOLUTION.md for integration fixes.
 
 Main app changes are in `lesson-studio.html`: `lpEnabled/lpValidate/lpProjection/lpRender`,
 `lpMove/lpNavigate/lpInspector`, the `shared.skill` registration, theme-independent lookup,

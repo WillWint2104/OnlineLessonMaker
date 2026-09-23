@@ -1,0 +1,79 @@
+--- create ---
+PASS the mathematics palette offers a worked-examples PAGE, not only block types  tile "Worked examples (page)"
+PASS clicking it makes a real workedExamples page — one group, one example, one step  1 slide(s), type "workedExamples", 1 group / 1 example / 1 step
+PASS and it paints immediately through the mathematics renderer — no second rendering path  1 worked-example primitive(s) on the page
+PASS and the inspector shows the page STRUCTURE with fields — the thing that did not exist before  2 outline row(s), 7 add control(s), 4 field(s): ▸PageWorked examples | Structure | Mathematics notation | Group · fields | ▸Lesson
+
+--- edit ---
+PASS every field writes THROUGH to the page JSON — the model changed, not just the markup  bound paths 5/5 · title "Substitution" · math "_y_ = (−4)^2"
+PASS and the preview follows the edit immediately, through the approved mathematics renderer  tab reads "Substitution", the question is on the page
+PASS and the authored notation is set as mathematics, not printed as source  1 italic variable(s), 1 power(s) in the step
+
+--- add structure ---
+PASS groups, examples and steps can all be ADDED from the outline  2 groups · 2 examples in the first · 2 steps in the first · 2 tab(s) painted
+PASS and removed again  back to 1 group
+
+--- reorder (3A) ---
+PASS an example can be moved up, and the ORDER IN THE DATA changes — not just the row in the list  FIRST > SECOND  →  SECOND > FIRST
+PASS and the ends are disabled rather than hidden, so the list's shape is legible without clicking  first ↑ disabled true, last ↓ disabled true
+PASS and steps reorder by the same mechanism  ALPHA > BETA  →  BETA > ALPHA
+
+--- representations (3A) ---
+PASS a staged group that authors NO states renders them but does not pretend they are editable  authored false · 2 state button(s) painted · 0 editable row(s) · offer shown true
+PASS and one click writes them in, at which point they ARE the page's states and are editable  solution:question+steps+answer · visual:visual+relations
+PASS every semantic region the renderer tests for is offered, and toggling one writes the authored array  5 regions offered · [visual, relations] → [answer, visual, relations]
+PASS and the array stays in the renderer's canonical order, so two identical states read identically  [answer, visual, relations]
+
+--- graph authoring (3B) ---
+PASS a graph can be ADDED to a group from the outline, seeded so it plots the moment it exists  relation kind "figure", objects [function], 1 object row(s)
+PASS and every object type the RENDERER accepts can be added — function, line, points, segment, and nothing else  offered [function, line, points, segment] · built [function, line, points, segment] · line seeded {"type":"line","y":0,"style":"dashed"}
+PASS editing the FUNCTION writes to the page JSON and repaints the curve through the figure engine  bound slides.0.groups.0.relations.0.figure.objects.0.f · f = "x^2 - 4" · painted path 1186 → 1336 chars, 0 figure error(s)
+PASS a HALF-TYPED expression is reported on the figure and skipped — it never throws and never breaks the page  "x^"→1 err · "x^2 -"→1 err · "√x"→1 err · ""→1 err · e.g. function 1 not plotted — unexpected end of e
+PASS switching a reference line between horizontal and vertical MOVES the value — never both keys, never neither  {"type":"line","y":9,"style":"dashed"} → {"type":"line","style":"dashed","x":9}
+PASS and a line whose value has been cleared is shown as having none — the editor uses the renderer's own test for a number  outline reads "line · (no x or y)" · figure reports the one-of rule: true
+PASS the form offers no field the renderer ignores — no curve label (never drawn) and no unit-scale choice (the page forces it)  function fields [y = …  (x, + − * / ^, brackets) · Name on the curve (optional) · Pen] · graph fields [x from · x to · y from · y to · Grid · Tap-to-read callouts · Curve names] · mxFigPolicy turns "stretch" into "equal"
+PASS marked points are editable row by row, and a bound path reaches INSIDE the [id, x, y] array  2 rows · bound slides.0.groups.0.relations.0.figure.objects.2.rows.1.1 · row 2 now ["P2","3",0]
+PASS and the COMPOSITION still follows the authored geometry — a wide window earns the full grid, everything else the centred stage  tall window → down-8 at 876px · wide window → down-12 at 876px · surface "full" (below the desktop surface both take the full width, as approved — the decision is what moved)
+
+--- the table is edited as a table ---
+PASS THE TABLE IS EDITED AS A TABLE — a grid of cells, not a column of fields  3 grid rows · 6 cell inputs · side by side: true
+PASS and it behaves like the rendered one: the row headings stay put and the values scroll  row heading sticky · values auto
+PASS and the finished table is previewed beside the grid, drawn by the page's own renderer  mxPartTable() output in the panel
+PASS and a cell typed into the grid lands in the lesson and repaints the page  cell "4 (a square)" · page "1,4 (a square)"
+
+--- the panel shows what you are working on ---
+PASS the Page and Lesson sections are folded away until they are wanted — they are set once, not per step  folds present: page true, lesson true · fields on screen: 0 + 0
+PASS and opening one brings its fields back
+PASS COLLAPSING A BRANCH REMOVES ITS CHILDREN — the outline is navigable, not one long list  the branch being edited is pinned open: true · steps shown 1 → 0 on its twisty
+PASS and only the selected host offers its add-palette — not every open one at once  group selected: 4 chips · example selected: 4 chips · one host's worth is 4
+
+--- an expression that reads differently from how it was typed says so ---
+PASS TYPING `1/2x+1` SAYS HOW IT WILL BE READ — the one finding that put wrong mathematics on a page  panel says "Reads as 1/(2·x)+1 — a factor written next to the divisor is taken into it"
+PASS and bracketing it silences the warning and straightens the curve  1/2x+1 → 2 subpath(s) and a warning · (1/2)x+1 → 1 and none
+PASS and the ordinary way of writing the same gradient is never flagged  x/2+1 · warning shown: false
+PASS and NO expression in any committed lesson is flagged — the detector cannot cry wolf  17 expression(s) checked, none flagged
+PASS and every reading it shows is one the engine reads back the same way — the echo cannot lie  1/2x+1 → 1/(2·x)+1 · 1/2x → 1/(2·x) · 1/2 sin x → 1/(2·sin x) · 1/2(x+1) → 1/(2·(x+1)) · 3/4x^2 → 3/(4·x^2) · 1/-2x → 1/(-2·x) · (x+1)/2x → (x+1)/(2·x) · 1/2(x+1)(x-1) → 1/(2·(x+1)·(x-1))
+PASS …and it says nothing about a constant, a half-typed bracket, or an expression the engine already rejects  12 expression(s), none flagged
+
+--- a curve can be told from the one beside it ---
+PASS A LABEL WRITTEN BEFORE THIS STAGE STILL DRAWS NOTHING, and every curve is still the one mark it was  1 distinct class(es) ["tp-fig-fn"] · 0 name(s) drawn
+PASS …and typing a name in the panel turns the graph’s curve names on, once — the field is not a dead end  curveLabels is "shown" and 5 name(s) are drawn: y = 2x + 1 · y = x + 1 · y = ½x + 1 · y = −x + 1 · y = x² − 3
+PASS FIVE CURVES ON ONE PLANE ARE NOW FIVE DIFFERENT MARKS, and each says which it is  5 class(es), 5 painted stroke(s): rgb(15, 122, 76)/2px/none | rgb(15, 122, 76)/2px/9px, 5.5px | rgb(15, 122, 76)/2px/1.6px, 4.6px | rgb(15, 122, 76)/2px/12px, 4.5px, 2px, 4.5px | rgb(21, 24, 26)/1.5px/none · names y = 2x + 1 · y = x + 1 · y = ½x + 1 · y = −x + 1 · y = x² − 3
+PASS …and no point identifier is placed on top of a curve’s name  5 name(s) against 3 identifier(s), 0 overlap(s)
+PASS …and every name is painted INSIDE the plate — a clipped name is not a name  5 name(s), 0 outside the 560×487 plate
+PASS AN AUTHORED PEN OUTSIDE THE VOCABULARY DRAWS THE ORDINARY CURVE — and reaches no attribute  1 class(es) ["tp-fig-fn"]; markup carries no injected attribute
+PASS …and a curve that asked for nothing emits exactly class="tp-fig-fn" and draws no name  0 name(s) drawn; the class attribute is exactly "tp-fig-fn"
+
+--- mathematics is entered, not remembered ---
+PASS a notation row is offered, so _x_ and ^2 do not have to be remembered  10 keys: italic pow − × ÷ ± ≤ ≥ ≈ √
+PASS AND WHAT IT TYPES IS SAVED THROUGH THE ORDINARY BINDING — no second save path  the field now holds "_y_−^2"
+PASS and the field previews what the PAGE will draw, through the page's own renderer  preview "<i>y</i>−<sup>2</sup>"
+
+--- save, leave, reopen ---
+PASS the authored page survives into the saved file  2017KB written, with the authored mathematics in it
+PASS REOPENED FROM THE FILE, every authored value is back  type "workedExamples", tab "Substitution", math "_y_ = (−4)^2"
+PASS and it renders again through the mathematics page family  1 worked-example primitive(s)
+PASS and the reopened lesson is EDITABLE AGAIN — the outline is there and a further edit lands in the data  reopened with "_y_ = (−4)^2", edited to "_y_ = (−4)(−4) = 16"
+PASS no page error at any point — create, edit, save, reopen, edit again  none
+
+54/54 checks passed

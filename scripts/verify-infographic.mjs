@@ -166,6 +166,7 @@ ok('infographic introduces no external hosts', hosts.length === 0, JSON.stringif
 const xssPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 await xssPage.goto(URL, { waitUntil: 'networkidle' });
 await xssPage.evaluate(() => {
+  LESSON.meta.theme='wellbeing'; setTheme('wellbeing'); // Exercise the legacy infographic tooltip, not a pack renderer.
   LESSON.slides = [{ type: 'infographic', heading: 'X', variant: 'bar',
     figures: [{ label: '<img src=x onerror="window.__xss=1">', pct: 50, color: 'primary' }] }];
   cur = 0; renderNav(); renderSlide();

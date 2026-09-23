@@ -18,7 +18,8 @@ try{
  const results=[];
  for(const [name,signature] of [['media',"waiting for locator('#slide .hero')"],['newtypes',"reading 'focus'"],['pack-fixes',"reading 'click'"],['theme-pack',"reading 'disabled'"],['infographic',"waiting for locator('.ig-bar')"]]){
   const base=`http://127.0.0.1:${server.address().port}`;
-  fs.writeFileSync(temp,fs.readFileSync('scripts/verify-'+name+'.mjs','utf8').replace('http://localhost:8099',base));
+  // Historical reproduction uses the original failing tests, not today's corrected harnesses.
+  fs.writeFileSync(temp,execFileSync('git',['show','0c3a8e1:scripts/verify-'+name+'.mjs'],{encoding:'utf8'}).replace('http://localhost:8099',base));
   const proc=spawn(process.execPath,[temp],{env:{...process.env,BASE:base}});let output='';proc.stdout.on('data',d=>output+=d);proc.stderr.on('data',d=>output+=d);
   const code=await new Promise(r=>proc.on('close',r));
   fs.writeFileSync('docs/review/shared-player/logs/baseline-'+name+'.log','Base '+ref+'\n'+output);

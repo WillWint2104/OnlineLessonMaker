@@ -3,10 +3,13 @@ import http from 'node:http';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
-const root=process.cwd(), out=path.join(root,'docs/review/shared-player');
+const root=process.cwd(), fixtures=path.join(root,'docs/review/shared-player'), out=path.resolve(process.env.PLAYER_REVIEW_DIR||fixtures);
+fs.mkdirSync(out,{recursive:true});
+if(out!==fixtures)for(const name of ['factorising','qualitative','physics'])fs.copyFileSync(path.join(fixtures,name+'.json'),path.join(out,name+'.json'));
 const server=http.createServer((req,res)=>{
- const p=path.resolve(root,'.'+decodeURIComponent(req.url.split('?')[0]));
- if(!p.startsWith(root+path.sep)||!fs.existsSync(p)||fs.statSync(p).isDirectory()){res.writeHead(404);return res.end();}
+ const url=decodeURIComponent(req.url.split('?')[0]);
+ const p=url.startsWith('/docs/review/shared-player/')?path.join(out,path.basename(url)):path.resolve(root,'.'+url);
+ if((!p.startsWith(root+path.sep)&&!p.startsWith(out+path.sep))||!fs.existsSync(p)||fs.statSync(p).isDirectory()){res.writeHead(404);return res.end();}
  res.setHeader('Content-Type',p.endsWith('.html')?'text/html':p.endsWith('.js')?'text/javascript':'application/octet-stream');res.end(fs.readFileSync(p));
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
@@ -100,6 +103,11 @@ try{
  for(const [w,h,name] of [[1536,960,'desktop'],[1024,768,'tablet']]){
   await p.setViewportSize({width:w,height:h});await p.locator(`[data-lp-go="${longest.i}"]`).click();await p.locator(`[data-lp-go="${longest.i}:${longest.a.id}"]`).click();await shot(name+'-longest');await p.locator('.mx-page').evaluate(e=>e.scrollTop=e.scrollHeight);await shot(name+'-longest-end');
   check(!(await p.locator('.mx-page').innerText()).match(/_[a-zA-Z]+_/),'longest example has no raw notation markers');
+ }
+ // All non-monic examples have five steps; the negative example has the longest rendered answer.
+ for(const [w,h,name] of [[1536,960,'desktop'],[1024,768,'tablet']]){
+  await p.setViewportSize({width:w,height:h});await p.locator('[data-lp-go="1"]').click();await p.locator('[data-lp-go="1:nonmonic-ex-n2"]').click();
+  await shot(name+'-nonmonic-longest');await p.locator('.mx-page').evaluate(e=>e.scrollTop=e.scrollHeight);await shot(name+'-nonmonic-longest-end');
  }
  const video=structuredClone(L);video.slides[0].video.url='https://www.youtube.com/watch?v=ABCDEFGHIJK';await load(video);await p.locator('[data-lp-go="0:monic-video"]').click();
  check((await p.locator('iframe').getAttribute('src')).includes('/embed/ABCDEFGHIJK'),'safe video URL normalized (playback blocked deliberately)');

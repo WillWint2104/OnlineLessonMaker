@@ -26,6 +26,11 @@ permissions:
 on:
   pull_request:
     paths:
+      - '.github/workflows/practice-interaction.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/verify-shared-player.mjs'
+      - 'docs/review/shared-player/**'
       - 'lesson-studio.html'
       - 'scripts/verify-type-interaction.mjs'
       - 'scripts/verify-workbook.mjs'
@@ -84,3 +89,4 @@ jobs:
       # student-facing choice. This gate is the only one that asserts the skill's ORDER and the absence of
       # the response controls on paper; every other mathematics gate reads pages that have neither.
       - run: node scripts/verify-skill-page.mjs
+      - run: node scripts/verify-shared-player.mjs

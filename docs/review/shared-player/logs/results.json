@@ -73,19 +73,19 @@
   },
   {
     "name": "verify-media",
-    "status": 1
+    "status": 0
   },
   {
     "name": "verify-newtypes",
-    "status": 1
+    "status": 0
   },
   {
     "name": "verify-pack-fixes",
-    "status": 1
+    "status": 0
   },
   {
     "name": "verify-theme-pack",
-    "status": 1
+    "status": 0
   },
   {
     "name": "verify-interactive",
@@ -93,14 +93,10 @@
   },
   {
     "name": "verify-infographic",
-    "status": 1
-  },
-  {
-    "name": "verify-corpus-identity",
     "status": 0
   },
   {
-    "name": "verify-baseline-legacy",
+    "name": "verify-corpus-identity",
     "status": 0
   }
 ]

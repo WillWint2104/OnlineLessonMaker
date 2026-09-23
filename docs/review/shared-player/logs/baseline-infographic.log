@@ -1,0 +1,15 @@
+Base 2189477ef628e002a18323fe1e0ee1234e3b68bb
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.hover: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('.ig-bar')[22m
+
+    at C:\Users\willi\Videos\Online Lesson Maker\scripts\.baseline-legacy.tmp.mjs:174:15 {
+  log: [ "  - waiting for locator('.ig-bar')" ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.14.1

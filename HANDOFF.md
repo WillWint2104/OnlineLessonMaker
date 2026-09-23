@@ -2,6 +2,17 @@
 
 _Last updated: 2026-06-20_
 
+## Shared-player integration status (23 September 2026)
+
+PR #153 now also integrates the shared skill/activity player from `codex/shared-lesson-player`.
+See `docs/review/shared-player/README.md`, `AUTHORING_COVERAGE.md` and `FAILURE_RESOLUTION.md` there
+for review evidence, the exact UI/JSON authoring boundary and the five legacy-gate diagnoses.
+Microhistory quiz content is restored by reusing its existing quiz renderer. Two full corpus DOM
+transitions are pinned; every other render remains strictly compared. The single-file architecture,
+stateless delivery, existing mathematical editors and hosting configuration remain unchanged.
+Merge requires current-head substantive CodeRabbit coverage, passing local/remote checks and real
+browser inspection; the maintainer has authorized that cycle and the subsequent squash merge.
+
 This is the working state of **Lesson Studio**: a single‑file, no‑backend web app for
 authoring and delivering interactive secondary‑school lessons (built first for NSW
 Ancient History — Tutankhamun, with Rome / Wellbeing / WW1 themes alongside).
