@@ -671,11 +671,11 @@ mark('isolation');
   ok('the ONE documented shared seam is the Figure engine, and it is scoped to the figure host',
      seam.allSkins && seam.n === seam.figs && seam.n > 0,
      `${seam.n} .tp-slide carriers for ${seam.figs} authored figures, and every one of them is .mx-figskin`);
-  // The generalist family, when it is designed, gets its own theme namespace. Nothing may pre-empt it.
+  // Activity skills share a capability namespace; legacy themes retain their existing routing.
   const ns = await p.evaluate(() => ({ themes: Object.keys(PAGES),
-    mathsOnly: Object.keys(PAGES).length === 1 && Object.keys(PAGES)[0] === 'mathematics',
+    mathsOnly: Object.keys(PAGES).length === 2 && !!PAGES.mathematics && Object.keys(PAGES.shared||{}).join(',') === 'skill',
     legacyUntouched: ['imperium', 'microhistory', 'geolearn', 'scholarmath'].every((t) => !PAGES[t]) }));
-  ok('the responsive namespace holds exactly one theme — mathematics', ns.mathsOnly, ns.themes.join(', '));
+  ok('the responsive registry contains legacy mathematics and only the shared skill capability', ns.mathsOnly, ns.themes.join(', '));
   ok('no legacy theme has been given a responsive page family', ns.legacyUntouched);
   await p.close();
 }

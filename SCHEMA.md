@@ -592,3 +592,32 @@ tile** (it degrades gracefully). imperium = laurel‑wreath crest + gold glow; m
 The worksheet generator and other engine tooling are unaffected — these themes render through a
 dedicated path. The pack never uses `localStorage`, adds no third‑party host, and every content
 string is escaped (`esc()`), so `node scripts/validate.mjs` stays green.
+# Shared activity lessons (additive contract)
+
+The document root remains `{meta, slides}`. Set `meta.player: "activities"`, a stable
+`meta.id`, and optional `meta.subject`. Each slide is a registered `skill` with stable `id`,
+`title`, optional `video: {url}`, and authored `activities[]`. This additive shape uses the
+shared page capability independently of `meta.theme`; historical slides without activities
+retain their existing rendering contract.
+
+Each activity has a unique stable `id` (no colon), `title`, optional `lede`, and any combination
+of existing instructional fields: `notes: [{term,body}]`, `workedExamples: [group]`,
+`examples: [example]`, `questions: [question]`, `video`, `keyIdea`, and their existing
+section-title/response-instruction fields. A slot with `optionalVideo: true` reads its skill's
+`video.url` and is omitted in learner mode when there is no safe embed URL. Related components
+stay together in one activity. Array order controls navigation; no dimensions determine order.
+
+Questions require stable IDs and `stem`; their existing `parts`, `stack` and `table` shapes
+are reused. Worked-example groups retain the existing composition/step/companion contracts.
+Supported companion parts are prose, figure, table, points and relations. New capabilities
+must be added through existing registrations, not arbitrary HTML or executable lesson code.
+Unknown activity fields, parts/compositions, missing IDs, empty activities and invalid response
+settings are rejected by `lpValidate` on import and publication. The current graphical editor
+supports activity titles/introductions, concept text, question prompts, ordering and video URLs;
+worked steps, figures, table structure and subparts remain JSON fields.
+
+`meta.responseMode` is paper (new-flow default), typed/type, or pen/write. `meta.colors.accent`
+is an optional six-digit hex decoration token. Neither theme nor subject controls response
+policy or available capabilities. Activity location is session-only and independent of the
+existing response store. Workbooks use skill ID plus activity-derived workbook ID; changing
+array positions does not re-key work. Re-import resets learner responses, as in the existing app.

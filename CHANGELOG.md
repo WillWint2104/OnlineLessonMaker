@@ -4614,3 +4614,13 @@ The single-file app (`lesson-studio.html`) carrying:
 
 Known follow-ups (see `HANDOFF.md` §9 roadmap): vendor fonts + model-viewer for school
 firewalls, WW1 design pass, accessibility pass, decide the dormant `task` type.
+# Shared activity lesson player (visual review pending)
+
+- Added a theme-independent skill/activity sequence using the existing page registry and
+  instructional renderers, with neutral navigation, end/revisit states and paper defaults.
+- Added activity text/question authoring and reordering, skill reordering, independent HTML
+  export evidence, and mathematics/source-analysis/physics review examples outside the corpus.
+- Corrected the new flow's algebra composition to place the question before its working and
+  isolated table-response rows; retained existing graph compositions and legacy lesson routing.
+- Added a sequential verification pipeline and Windows file-URL handling in the geometry gate.
+  See `docs/review/shared-player/README.md` and `logs/` for evidence and limitations.
