@@ -1,0 +1,42 @@
+{
+  "_": "THE SHELL LAYER. A shell is NOT a pattern: it carries no slots and no grid areas. It owns the page's title, its tab strips, and which panel is open — and every panel holds one or more PATTERNS. The catalogue needed it because the lesson is not a stack of pages: its top level is a strip over four subtopics, and one of those subtopics is two DIFFERENT PATTERNS seen as two representations of one idea.",
+  "notAPattern": "If a shell ever acquires a slot, a grid area or a media rule, it has become a pattern and the layering has collapsed. It may only: hold patterns, name them, and say which is visible.",
+  "theTwoKinds": {
+    "_": "ENCODED, NOT STYLED. The previous atlas established this and the build asserts it: the affordance is keyed on `data-tabs-kind`, so a views switch reads as a views switch at any nesting depth and an item selector reads as an item selector at any depth. Styling them alike and hoping the context explains it is how one control came to be keyed on depth rather than on meaning.",
+    "subtopics": {
+      "kind": "collection",
+      "means": "several SIBLING parts of a lesson; select one",
+      "holds": "one or more patterns per panel, in reading order — a subtopic is often several pages' worth of material",
+      "example": "[ Substitution ] [ Solving for x ] [ Symmetry ] [ A flatter parabola ]",
+      "appropriateWhen": "the parts are equivalent in kind, the learner does not need to see them simultaneously, and showing every one at full length makes a page nobody reads to the end",
+      "neverFor": ["a sequential explanation whose steps must be read in order", "parts that must be compared with each other"]
+    },
+    "views": {
+      "kind": "views",
+      "means": "ONE instructional object seen in multiple REPRESENTATIONS",
+      "holds": "one pattern per panel, and DIFFERENT patterns are the normal case — that is what makes this a shell rather than a pattern with a state",
+      "example": "Symmetry — [ Workings → visual.compare ] [ Visual explanation → visual.explanation ]",
+      "appropriateWhen": "solve it one way, then inspect the same fact another way",
+      "neverFor": ["a sequential explanation", "items that must be compared with each other"]
+    }
+  },
+  "strip": {
+    "grid": "The strip spans the full surface — 12 / 8 / 4 columns. It is the one element in the system that deliberately crosses the reading measure, because it is navigation rather than content.",
+    "phone": "ONE HORIZONTAL ROW, ALWAYS. It never wraps: it scrolls locally in x, and the active tab is brought fully into view. Never a dropdown, never smaller type. A partly visible neighbour at the edge is the affordance.",
+    "keyboard": "The W3C APG tabs pattern — role=tablist / role=tab / aria-controls / aria-labelledby, and a roving tabindex so exactly one tab is focusable.",
+    "authored": "The strip is authored pedagogical structure. THE RENDERER NEVER CREATES, REMOVES, REORDERS OR COLLAPSES A TAB, at any width. `data-active` is stamped from the authored selection and from nothing else."
+  },
+  "scroll": {
+    "rule": "A shell introduces NO scroll of its own. The page scrolls vertically; the strip scrolls horizontally inside itself and nothing else does.",
+    "never": "A shell may not bound a panel's height. Hiding half a subtopic behind a local scrollbar is the space-saving move this whole architecture exists to refuse."
+  },
+  "title": {
+    "_": "THE SHELL OWNS THE PAGE TITLE AND LEDE. Five pattern records assumed a title that no pattern declared — the shell is where it lives, because a title belongs to the whole page and a pattern is only part of one.",
+    "grid": "Title and lede at the reading measure — 8 / 7 / 4 columns — like every other piece of prose."
+  },
+  "nesting": {
+    "allowed": "subtopics → views → patterns. A views shell inside a subtopic panel is the lesson's own shape.",
+    "forbidden": "subtopics inside subtopics. Two levels of sibling selection is a table of contents pretending to be a page.",
+    "depth": "The affordance is keyed on KIND at every depth. A views strip nested inside a collection panel must look like every other views strip."
+  }
+}

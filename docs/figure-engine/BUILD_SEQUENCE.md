@@ -112,9 +112,26 @@ finds nothing legal, is not displacement-ranked. It is the structural last resor
 guarantee, and it does not fire on any fixture — the harness asserts that, so if a future figure starts
 using it that shows up as a failure rather than as a silently unranked label.
 
-**Stage 3 still owes the geometry half of this:** `figure-geometry-baseline.json`'s crowded-labels and
-long-labels cases must be reviewed before Stage 3 is considered complete, since vertex and side anchors are
-new candidate sources this stage did not exercise.
+**The geometry half — DISCHARGED at Stage 4.** The debt was real: `verify-geometry-semantics` asserts
+REGION LEGALITY (Stage 3c), which is not this stage's property, and `verify-label-placement`'s fixture
+list was three GRAPH files, so no geometry figure had ever been asserted for nearest-legal placement.
+Stage 4 closed it, because container-aware sizing feeds geometry a different box and moves the whole
+candidate space with the host.
+
+`verify-label-placement` now independently verifies geometry nearest-legal placement across the
+reference box, an intermediate box and the narrow Stage 4 box — 15 figures × 3 boxes, 537 annotations
+(532 directional / 5 scan / 0 unplaced), with the region predicates, the clearance maths and the
+candidate enumeration all re-derived rather than borrowed (`figPlacePill`, `figScanPill`,
+`figGeomPlace`, `figClear`, `figBoxSeg` and `figDirs` are never called). Proven non-vacuous by pushing
+every directional placement 9px off its anchor: 69 geometry assertions fail, each naming the drift.
+
+**What this does NOT claim.** It does not mean every geometry annotation is semantically placeable at
+any width. Below a density-dependent host width there is no legal candidate inside the Stage 3c
+region at all, and the engine takes its documented relaxation path and reports the weakened
+association — correct as an emergency fallback, and deliberately outside the designed range. That is a
+separate constraint, now carried by the **geometry minimum stage width** (`FIG_MIN_STAGE.geometry = 420`
+logical px, measured — the usable `.tp-fig-stage` width, not the block's outer width) and asserted by
+contract 10, not by this gate.
 
 ## STAGE 3 — Geometry 2D front-end (DONE)
 Delivered as `figGeometry` / `figGeomBody`, dispatched from `fragFigure` on `b.figure==='geometry'`. It renders
@@ -225,15 +242,54 @@ Deferred out of this stage, deliberately:
   the chip tokens now degrade through Layer A, but the engine-wide fix is its own change, and it lands before
   the WW1 design pass puts a figure on a WW1 slide.
 
-## STAGE 4 — Block wiring (plug engines into the containers)
+## STAGE 4 — Block wiring (the engines through the containers that exist)
 Branch off the merged front-ends. Spec §8.
-Delivers: register `graph` and `geometry` as figure block/part types that render via the engine inside
-the EXISTING containers (exercise grid cell, standalone figure, beside-text); the declarative figure
-JSON is authorable block content; wire the grid-cell ⤢ Expand to Stage 2b; a figure part in the
-exercise set opens the SAME solution modal. ZERO changes to the frozen container runtime — this is
-registration + intake only.
-ACCEPTANCE: a lesson JSON with a graph part and a geometry part renders in ScholarMath; Expand works
-from a grid cell; a geometry/graph part opens the solution modal; ADDITIVE clean; legacy byte-identical.
+
+**Narrowed, deliberately.** The original text delivered "the EXISTING containers (exercise grid cell,
+standalone figure, beside-text)" on the strength of §8's claim that those containers were done. The
+exercise grid cell does not exist, and the two-column solution container it would carry is engine
+Stage 5's deliverable — so the original scope pulled Blocks Stage C and Stage 5 into Stage 4, and
+`fragSelfCheck` / `fragPracticeSet` are frozen, which forecloses the cheap route. §8 now records what
+actually exists.
+
+Delivers:
+- `graph` and `geometry` as genuinely **authorable** figure block content — a geometry figure is
+  creatable from the block palette without hand-editing JSON, which it is not today.
+- **Standalone**, **contained** and **beside-text** figure placement, reusing the `image` placement
+  vocabulary (Blocks Stage B). `pair` only if the generic machinery gives it away free.
+- **Container-aware sizing**: the figure box is re-solved from the measured stage before labels are placed,
+  so annotation size is a design quantity rather than a function of container width — under a BOUNDED
+  RESPONSIVE scale, not a fixed one. Three regimes rather than two bad extremes: protected readability at and
+  below the geometry minimum stage (scale 1.00), a gentle linear ramp through normal desktop widths, and a
+  capped plateau from 1089px (scale 1.22) so typography stops growing. The scale multiplies the ONE conversion
+  between viewBox units and logical px, so type, gaps, stroke widths and chip padding move together and every
+  Stage 3d proportion is preserved by construction — no per-role scaling, no graph/geometry typography fork,
+  and nothing resized after placement.
+- **Expand** correct from nested and narrow hosts.
+- Non-blocking **capability guidance** on the figure-authoring path (§3.4, `themeSupports()`).
+
+MOVED to Blocks Stage C, where the container it needs is built: Expand from an exercise-grid cell · a
+figure part in an exercise set · a figure part opening the shared solution modal. ONE solution
+treatment — never a Stage-4 version replaced by a Stage-5 one.
+
+FROZEN, unmodified: `fragSelfCheck`, `fragPracticeSet`, `renderPackSlide`, `renderFragment`,
+`wirePack`, `resolveInteractions`. `graphQuestion` is untouched (§8.1).
+
+**Why container-aware sizing is the load-bearing part.** `#canvas` is a fixed 1280 logical px surface
+that is `transform:scale()`'d to the viewport, so a figure's on-screen shrink on a phone is the canvas
+zooming out — body copy shrinks with it, and the annotation-to-body ratio is a constant 1.48× at every
+viewport. That is not a figure defect. The figure defect is that the SVG is a fixed `520×360` viewBox
+painted at `width:100%`, which makes annotation size a function of HOST WIDTH: measured in logical
+canvas px, the same measurement label is 23.5px in a full-width pane (1.42× the 16.5px body copy) and
+5.2px in a 260px host. Stage 4 adds narrow hosts, so this must be fixed first, in logical px.
+`figxBoxFor` already re-solves this way for the focused workspace; the inline path reuses that shape.
+
+ACCEPTANCE: a lesson JSON with a graph figure and a geometry figure renders in ScholarMath at every
+placement; a geometry figure is authorable from the palette; every annotation resolves at 11–15
+logical px (hard floor 11, primary values normally 12–15) in every supported host; narrow layouts
+promote or stack rather than shrinking below the floor; Expand works from a nested host and restores
+focus; resize is a deterministic re-solve; Stage 2c/3c/3d gates unmoved; ADDITIVE clean; legacy
+byte-identical.
 
 ## STAGE 5 — Solution/worked-example typesetting (the pending fixes, unified)
 Branch off Stage 4. Reuses the annotated-two-column design locked in chat.

@@ -1,0 +1,193 @@
+/* ==============================================================================================
+   THE COMPOSITION KIT — FOUR PRIMITIVES, AND NOTHING ELSE.
+
+   Every layout in this pack is one of four primitives, selected by `data-mk`:
+
+       instructionSplit     prompt │ solution
+       repeat               a child composition, repeated down or across
+       visualInterpretation figure │ interpretation
+       stack                the regions in semantic order
+
+   The named compositions (standard, sequence, pairedVisual, visualCheck, extended) are ASSEMBLIES
+   of those four. None of them has a layout of its own, and this file contains no rule keyed on a
+   composition name.
+
+   NOTHING HERE IS A TYPED WIDTH, AND NOTHING HERE IS A BREAKPOINT. Every dimension is
+   `var(--mk-…)` generated from contracts.json, and every track box is assigned at layout time by the
+   resolver in scripts/mockups-compositions.mjs, after it has measured a candidate arrangement
+   against the width, fidelity, occupancy and dead-space gates.
+
+   These `mk-*` names are MOCKUP names. The app must implement this grammar through its own
+   semantic names and must not import this file.
+   ============================================================================================== */
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--mx-ground);}
+body{font-family:var(--mx-ui);-webkit-font-smoothing:antialiased;}
+
+.mk-page{width:calc(var(--mk-surface-w) + 2 * var(--mk-pad) + 60px);padding:30px;background:var(--mx-ground);}
+.mk-narrow .mk-page{width:calc(var(--mk-surface-w) + 24px);padding:12px;}
+.mk-caption{margin:0 0 16px;font-family:var(--mx-ui);font-size:12.5px;line-height:1.5;color:var(--mx-ink-2);max-width:74ch;}
+.mk-caption-k{display:block;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mx-green);margin-bottom:5px;}
+
+/* THE CONTENT REGION — the white teaching surface, and the CONTAINER every state is measured
+   against. Every width in this pack is resolved inside it; none is resolved against a viewport. */
+.mk-surface{width:calc(var(--mk-surface-w) + 2 * var(--mk-pad));padding:26px var(--mk-pad) 30px;
+  background:var(--mx-white);border-bottom:1px solid var(--mx-line);
+  position:relative;}
+.mk-narrow .mk-surface{padding:18px var(--mk-pad) 20px;}
+.mk-lede{margin:0 0 20px;font-size:15px;line-height:1.6;color:var(--mx-ink-2);}
+
+/* ── THE STATES ARE NAMED, AND EACH IS A FRESH LAYOUT ──────────────────────────────────────────
+   The resolver writes `data-mk-state` and the track boxes. There are no container queries: a query
+   can ask how wide the container is, not whether a question has enough substance to be a track.
+
+   Every state below is reachable ONLY through its family's ladder, and a rejected candidate leaves
+   no dimensional residue — the resolver clears the element completely before measuring the next
+   state. (The previous build did not: a visualInterpretation that failed and stacked kept the track
+   allocation from the side candidate it had already rejected.)
+
+   ── instructionSplit · a balanced example ──────────────────────────────────────────────────── */
+[data-mk="instructionSplit"][data-mk-state="split"]{display:grid;align-items:start;column-gap:0;
+  grid-template-areas:"title title title" "prompt rule solution";}
+[data-mk="instructionSplit"][data-mk-state="split"] > [data-mk-region="title"]{grid-area:title;}
+[data-mk="instructionSplit"][data-mk-state="split"] > [data-mk-region="prompt"]{grid-area:prompt;min-width:0;}
+[data-mk="instructionSplit"][data-mk-state="split"] > .mk-rule{grid-area:rule;
+  justify-self:center;align-self:stretch;width:1px;}   /* centred IN ITS GUTTER COLUMN, which is the gutter's own geometry */
+[data-mk="instructionSplit"][data-mk-state="split"] > [data-mk-region="solution"]{grid-area:solution;min-width:0;}
+
+/* ── instructionFlow · a short task, then the reasoning ────────────────────────────────────────
+   NOT A FALLBACK. Most worked examples are this shape — the question is one line and the solution
+   is the lesson — and forcing them through split-or-stack was what produced both the giant empty
+   question box and, later, the enormous full-width column. The task leads, a rule closes it, and
+   the reasoning runs beneath at its own reading measure while the page grows downwards. Every
+   region sits on the CONTENT ORIGIN. */
+[data-mk="instructionSplit"][data-mk-state="flow"],
+[data-mk="instructionFlow"]{display:block;}
+[data-mk-state="flow"] > .mk-rule{display:block;justify-self:stretch;align-self:auto;
+  width:auto;height:1px;margin:16px 0 20px;}
+[data-mk-state="flow"] > [data-mk-region="prompt"]{max-width:var(--mk-prompt-flow-max);}
+[data-mk-state="flow"] > [data-mk-region="solution"]{max-width:var(--mk-solution-max);}
+[data-mk-state="flow"] > [data-mk-region="title"]{margin-bottom:14px;}
+
+/* ── repeat ────────────────────────────────────────────────────────────────────────────────────
+   The count is nowhere in this rule and neither is any child's identity. Judged on each complete
+   item's minimum width, never on height. */
+[data-mk="repeat"][data-mk-axis="down"]{display:flex;flex-direction:column;}
+[data-mk="repeat"][data-mk-axis="across"][data-mk-state="across"]{display:grid;align-items:start;}
+[data-mk="repeat"][data-mk-axis="across"][data-mk-state="down"]{display:flex;flex-direction:column;
+  gap:var(--mk-stackgap);}
+.mk-div{height:1px;background:var(--mx-line);margin:var(--mk-rowgap) 0;}
+
+/* ── visualInterpretation ──────────────────────────────────────────────────────────────────────
+   NO HEIGHT TEST. A 700px plane beside a 180px explanation is a good relationship: the plane is the
+   object being explained and the prose does not have to fill its height. The figure track is the
+   plane's own measured box, decided before the rail is allocated; leftover width is never a figure
+   size. When the side state is refused the plane is RE-MEASURED against the whole content region. */
+[data-mk="visualInterpretation"][data-mk-state="side"]{display:grid;align-items:start;
+  column-gap:var(--mk-gap);grid-template-areas:"figure interpretation";}
+[data-mk="visualInterpretation"][data-mk-state="stack"]{display:block;}
+[data-mk="visualInterpretation"][data-mk-state="stack"] > [data-mk-region="interpretation"]{
+  margin-top:var(--mk-stackgap);max-width:var(--mk-interp-max);}
+[data-mk="visualInterpretation"][data-mk-state="side"] > [data-mk-region="figure"]{grid-area:figure;}
+[data-mk="visualInterpretation"][data-mk-state="side"] > [data-mk-region="interpretation"]{
+  grid-area:interpretation;min-width:0;}
+
+/* ── stack · regions in semantic order on the content origin ──────────────────────────────────── */
+[data-mk="stack"]{display:flex;flex-direction:column;align-items:stretch;}
+[data-mk="stack"] > * + *{margin-top:var(--mk-stackgap);}
+[data-mk="stack"] > .mk-rule{display:none;}
+
+/* Two primitives assembled into one composition are separated by the row gap. The separation
+   belongs to the assembly, not to either primitive. */
+.mk-surface > [data-mk] + [data-mk]{margin-top:var(--mk-rowgap);}
+
+/* ── the hairline between two tracks ───────────────────────────────────────────────────────────
+   An element of the SPLIT, never of a track and never keyed on a track's position. */
+/* THE RULE CARRIES NO ALIGNMENT OF ITS OWN. Each state says where its rule goes.
+   (It used to carry `justify-self:center`, and Chrome honours justify-self in BLOCK layout: the
+   flow state's full-width hairline was being shrink-to-fit-and-centred to 0px. An inherited centring
+   instruction, which is the exact thing the origins contract forbids — and invisible in a
+   screenshot, because a missing hairline looks like spacing.) */
+.mk-rule{background:var(--mx-line);}
+/* HEIGHT IS NOT A CONSTRAINT. The page scrolls; nothing here has a target height. */
+html,body,.mk-page,.mk-surface{height:auto;}
+
+/* ── REGIONS ───────────────────────────────────────────────────────────────────────────────────
+   Each region carries its contract: its reading measure caps the PROSE, never the track, so
+   surplus width a region does not need stays unused rather than being filled. */
+[data-mk-region="title"]{margin:0 0 18px;font-family:var(--mx-serif);font-size:20px;font-weight:600;
+  color:var(--mx-ink);}
+.mk-lab{margin:0 0 8px;font-family:var(--mx-ui);font-size:11px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--mx-ink-2);}
+[data-mk-region="prompt"] p:not(.mk-lab){margin:0 0 10px;font-size:16px;line-height:1.62;
+  color:var(--mx-ink-body);max-width:var(--mk-prompt-max);}
+[data-mk-region="solution"] .mk-st{font-size:15.5px;line-height:1.6;color:var(--mx-ink-body);
+  max-width:var(--mk-solution-max);}
+
+.mk-steps{list-style:none;margin:0;padding:0;counter-reset:mkstep;}
+.mk-step{position:relative;padding:0 0 16px 34px;counter-increment:mkstep;}
+.mk-step::before{content:counter(mkstep);position:absolute;left:0;top:1px;width:23px;height:23px;
+  border-radius:50%;background:var(--mx-green-pale);color:var(--mx-green-deep);
+  font:600 12.5px/23px var(--mx-ui);text-align:center;}
+.mk-step:not(:last-child)::after{content:"";position:absolute;left:11px;top:27px;bottom:3px;width:1px;
+  background:var(--mx-line);}
+.mk-sm{margin-top:6px;font-family:'LM Math',Cambria Math,serif;font-size:18px;color:var(--mx-ink);}
+
+/* A LINE OF MATHEMATICS IS NOT PROSE and does not wrap. When one is wider than the track it is
+   in, it takes its own horizontal scroll — the track is never widened past its sibling's claim
+   and the mathematics is never shrunk to fit. (Same rule the workbook already applies to a table
+   that cannot be set at its authored width.) */
+.mk-scroll{overflow-x:auto;padding-bottom:6px;}
+.mk-scroll > .mk-sm{white-space:nowrap;}
+
+/* ANSWER — inherited geometry. It begins at its owning solution's content origin and flows as
+   text; a wrapped answer returns to that same inset. No box, no fill, no radius, no centring. */
+[data-mk-region="answer"]{margin-top:2px;padding-top:12px;border-top:1px solid var(--mx-line);
+  font-family:'LM Math',Cambria Math,serif;font-size:18px;line-height:1.5;color:var(--mx-ink);}
+[data-mk-region="answer"] b{display:inline;margin-right:14px;font-family:var(--mx-ui);font-size:11.5px;
+  font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--mx-green);}
+
+/* SYNTHESIS AND INTERPRETATION — one region, one styling contract, two placements. */
+[data-mk-region="synthesis"],[data-mk-region="interpretation"]{min-width:0;}
+[data-mk-region="synthesis"]{margin-top:28px;}
+[data-mk-region="synthesis"] .mk-lab,[data-mk-region="interpretation"] .mk-lab{color:var(--mx-ink-3);}
+[data-mk-region="synthesis"] p{margin:0 0 10px;font-size:15.5px;line-height:1.7;color:var(--mx-ink-body);
+  max-width:var(--mk-synthesis-max);}
+[data-mk-region="interpretation"] p{margin:0 0 12px;font-size:15.5px;line-height:1.7;
+  color:var(--mx-ink-body);max-width:var(--mk-interp-max);}
+[data-mk-region="interpretation"] p:last-child{margin-bottom:0;}
+.mk-said{font-family:'LM Math',Cambria Math,serif;font-size:17px;color:var(--mx-ink);}
+
+/* the case in a comparison — a complete example, stacked, repeated across */
+[data-mk-region="case"]{min-width:0;}
+[data-mk-region="case"] > * + *{margin-top:14px;}
+
+/* local states — the composition's own pagination, not a layout */
+.mk-states{display:flex;gap:8px;margin:0 0 22px;}
+.mk-state{font:700 11px/1 var(--mx-ui);letter-spacing:.1em;text-transform:uppercase;
+  padding:9px 13px;border:1px solid var(--mx-line);border-radius:3px;color:var(--mx-ink-3);
+  background:var(--mx-white);}
+.mk-state[data-on]{color:var(--mx-green);border-color:var(--mx-green);}
+.mk-stateh{margin:0 0 14px;font:700 11px/1 var(--mx-ui);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--mx-ink-3);}
+.mk-stateblock + .mk-stateblock{margin-top:34px;padding-top:30px;border-top:1px solid var(--mx-line);}
+
+/* the annotation layer — only on `-spec` images, never part of the geometry */
+.mk-dim{margin-top:12px;font:500 11px/1.5 var(--mx-ui);color:var(--mx-green-deep);
+  background:var(--mx-green-pale);border-left:2px solid var(--mx-green);padding:7px 9px;display:none;}
+[data-mk-spec] .mk-dim{display:block;}
+.mk-note{display:none;margin-top:14px;font:400 11.5px/1.55 var(--mx-ui);color:var(--mx-ink-2);
+  border-top:1px dashed var(--mx-line);padding-top:10px;}
+[data-mk-spec] .mk-note{display:block;}
+.mk-note b{display:block;font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--mx-ink-3);margin-bottom:3px;}
+
+/* THE VERDICT, ON THE IMAGE. A reference pack that shows an arrangement without saying why the
+   resolver chose it is back to being a screenshot. */
+.mk-verdict{margin:10px 0 0;font:500 11px/1.55 var(--mx-ui);color:var(--mx-ink-2);
+  border-left:2px solid var(--mx-line);padding:6px 0 6px 10px;}
+.mk-verdict b{font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:10px;
+  color:var(--mx-ink-3);margin-right:8px;}
+.mk-ladder{display:block;margin-top:6px;font-size:10.5px;line-height:1.6;color:var(--mx-ink-3);}

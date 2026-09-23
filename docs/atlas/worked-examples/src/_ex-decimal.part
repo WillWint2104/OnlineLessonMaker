@@ -1,0 +1,14 @@
+  <h3 data-slot="title">A decimal</h3>
+  <div data-slot="question">
+    <p class="at-lab">Question</p>
+    <p>Use the rule <i>y</i> = <i>x</i><sup>2</sup> to find <i>y</i> when <i>x</i> = 0.4.</p>
+  </div>
+  <hr class="at-hr">
+  <div data-slot="steps">
+    <p class="at-lab">Worked solution</p>
+    <ol class="at-steps">
+      <li class="at-step"><div class="at-st">Substitute.</div><div class="at-sm"><i>y</i> = 0.4<sup>2</sup></div></li>
+      <li class="at-step"><div class="at-st">Evaluate. A value between 0 and 1 gets smaller when it is squared, not larger.</div><div class="at-sm"><i>y</i> = 0.4 &times; 0.4 = 0.16</div></li>
+    </ol>
+  </div>
+  <div data-slot="answer"><b>Answer</b><i>y</i> = 0.16, so (0.4, 0.16) lies on the graph.</div>

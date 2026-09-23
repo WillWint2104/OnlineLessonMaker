@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 640" width="480" height="640" role="img"
+     aria-label="The parts of a parabola: vertex, axis of symmetry, roots and the direction of opening.">
+  <title>The parts of a parabola</title>
+  <rect width="480" height="640" fill="#f7f6f3"/>
+  <g stroke="#dfddd6" stroke-width="1">
+    <path d="M60 80V600M160 80V600M260 80V600M360 80V600M440 80V600"/>
+    <path d="M40 120H460M40 220H460M40 320H460M40 420H460M40 520H460"/>
+  </g>
+  <path d="M60 520H460" stroke="#8d8a80" stroke-width="1.5"/>
+  <path d="M260 80V600" stroke="#2f6f4e" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <path d="M110 120Q260 700 410 120" fill="none" stroke="#1f5c40" stroke-width="3.5"/>
+  <circle cx="260" cy="410" r="6" fill="#1f5c40"/>
+  <circle cx="163" cy="520" r="5" fill="#b4532a"/>
+  <circle cx="357" cy="520" r="5" fill="#b4532a"/>
+  <g font-family="Georgia, 'Times New Roman', serif" font-size="17" fill="#33312c">
+    <text x="272" y="404">vertex</text>
+    <text x="96" y="545">root</text>
+    <text x="330" y="545">root</text>
+    <text x="272" y="104" fill="#2f6f4e">axis of symmetry</text>
+    <text x="60" y="176">opens upward</text>
+  </g>
+  <g font-family="Georgia, 'Times New Roman', serif" font-size="13" fill="#6b675d">
+    <text x="40" y="624">diagram-portrait.svg · authored 480×640</text>
+  </g>
+</svg>

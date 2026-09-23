@@ -1,0 +1,22 @@
+<p class="mk-lede"><b>Adversarial proof &mdash; a line of mathematics wider than the track it is in.</b> Prose wraps; an equation does not. The track is not widened past its sibling's claim and the mathematics is not shrunk: the line takes its own horizontal scroll, exactly as an over-wide table already does in the workbook.</p>
+<article data-mk="instructionSplit">
+  <h3 data-mk-region="title">Expanding a product of three brackets</h3>
+  <div data-mk-region="prompt">
+    <p class="mk-lab">Question</p>
+    <p>Expand and simplify (<i>x</i> + 2)(<i>x</i> &minus; 3)(2<i>x</i> + 5).</p>
+    <div class="mk-dim" data-mk-measure="prompt">{{DIM:prompt}}</div>
+  </div>
+  <div class="mk-rule"></div>
+  <div data-mk-region="solution">
+    <p class="mk-lab">Worked solution</p>
+    <ol class="mk-steps">
+      <li class="mk-step"><div class="mk-st">Expand the first two brackets.</div><div class="mk-sm"><i>x</i><sup>2</sup> &minus; <i>x</i> &minus; 6</div></li>
+      <li class="mk-step"><div class="mk-st">Multiply every term of that result by every term of the third bracket. This line does not wrap, and it is not made smaller to fit &mdash; it scrolls.</div>
+        <div class="mk-scroll"><div class="mk-sm">2<i>x</i><sup>3</sup> + 5<i>x</i><sup>2</sup> &minus; 2<i>x</i><sup>2</sup> &minus; 5<i>x</i> &minus; 12<i>x</i> &minus; 30 = 2<i>x</i><sup>3</sup> + (5 &minus; 2)<i>x</i><sup>2</sup> &minus; (5 + 12)<i>x</i> &minus; 30</div></div></li>
+      <li class="mk-step"><div class="mk-st">Collect like terms.</div><div class="mk-sm">2<i>x</i><sup>3</sup> + 3<i>x</i><sup>2</sup> &minus; 17<i>x</i> &minus; 30</div></li>
+    </ol>
+    <div data-mk-region="answer"><b>Answer</b>2<i>x</i><sup>3</sup> + 3<i>x</i><sup>2</sup> &minus; 17<i>x</i> &minus; 30</div>
+    <div class="mk-dim" data-mk-measure="solution">{{DIM:solution}}</div>
+  </div>
+</article>
+<div class="mk-note"><b>What this proves</b>Content size changes feasibility, never the composition. An over-wide line does not promote this example to a different family, does not steal width from the question, and does not trigger a smaller type size. It is one region reporting that it cannot be set at this width, handled locally.</div>

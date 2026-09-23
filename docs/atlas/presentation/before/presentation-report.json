@@ -1,0 +1,224 @@
+[
+  {
+    "view": "substitution",
+    "mode": "study",
+    "surface": "desktop",
+    "how": "tab clicked",
+    "errors": [],
+    "broken": [],
+    "over": [],
+    "wrapped": [],
+    "runs": 0,
+    "showing": "(whole pane)",
+    "askBg": "rgb(241, 243, 242)",
+    "qColor": "rgb(35, 40, 41)",
+    "sep": "rule beside (rgb(229, 233, 230))",
+    "gap": {
+      "divider": "none",
+      "above": 26,
+      "below": 0,
+      "bled": -60,
+      "heading": "What the three show",
+      "after": "mx-wexseq"
+    },
+    "plane": null,
+    "seg": "study"
+  },
+  {
+    "view": "symmetry",
+    "mode": "study",
+    "surface": "desktop",
+    "how": "tab clicked → state clicked",
+    "errors": [],
+    "broken": [],
+    "over": [],
+    "wrapped": [],
+    "runs": 0,
+    "showing": "visual",
+    "askBg": "(no question)",
+    "qColor": "-",
+    "sep": "no row",
+    "gap": {
+      "divider": "none",
+      "above": null,
+      "below": 0,
+      "bled": 0,
+      "heading": "Graph",
+      "after": "(first)"
+    },
+    "plane": {
+      "w": 760,
+      "h": 702,
+      "left": 522,
+      "vb": "0 0 600 554"
+    },
+    "seg": "study"
+  },
+  {
+    "view": "substitution",
+    "mode": "edit",
+    "surface": "desktop",
+    "how": "tab clicked",
+    "errors": [],
+    "broken": [],
+    "over": [],
+    "wrapped": [
+      "mx-wexqb: \"x = −4\""
+    ],
+    "runs": 0,
+    "showing": "(whole pane)",
+    "askBg": "rgb(241, 243, 242)",
+    "qColor": "rgb(35, 40, 41)",
+    "sep": "rule beside (rgb(229, 233, 230))",
+    "gap": {
+      "divider": "none",
+      "above": 26,
+      "below": 0,
+      "bled": -60,
+      "heading": "What the three show",
+      "after": "mx-wexseq"
+    },
+    "plane": null,
+    "seg": "edit"
+  },
+  {
+    "view": "symmetry",
+    "mode": "edit",
+    "surface": "desktop",
+    "how": "tab clicked → state clicked → tab re-shown → state re-shown",
+    "errors": [],
+    "broken": [],
+    "over": [],
+    "wrapped": [],
+    "runs": 0,
+    "showing": "visual",
+    "askBg": "(no question)",
+    "qColor": "-",
+    "sep": "no row",
+    "gap": {
+      "divider": "none",
+      "above": null,
+      "below": 0,
+      "bled": 0,
+      "heading": "Graph",
+      "after": "(first)"
+    },
+    "plane": {
+      "w": 780,
+      "h": 720,
+      "left": 326,
+      "vb": "0 0 612 565"
+    },
+    "seg": "edit"
+  },
+  {
+    "view": "substitution",
+    "mode": "study",
+    "surface": "tablet",
+    "how": "tab clicked",
+    "errors": [],
+    "broken": [],
+    "over": [],
+    "wrapped": [],
+    "runs": 0,
+    "showing": "(whole pane)",
+    "askBg": "rgb(241, 243, 242)",
+    "qColor": "rgb(35, 40, 41)",
+    "sep": "none",
+    "gap": {
+      "divider": "none",
+      "above": 26,
+      "below": 0,
+      "bled": -60,
+      "heading": "What the three show",
+      "after": "mx-wexseq"
+    },
+    "plane": null,
+    "seg": "study"
+  },
+  {
+    "view": "symmetry",
+    "mode": "study",
+    "surface": "tablet",
+    "how": "tab clicked → state clicked",
+    "errors": [],
+    "broken": [],
+    "over": [],
+    "wrapped": [],
+    "runs": 0,
+    "showing": "visual",
+    "askBg": "(no question)",
+    "qColor": "-",
+    "sep": "no row",
+    "gap": {
+      "divider": "none",
+      "above": null,
+      "below": 0,
+      "bled": 0,
+      "heading": "Graph",
+      "after": "(first)"
+    },
+    "plane": {
+      "w": 742,
+      "h": 685,
+      "left": 46,
+      "vb": "0 0 589 543"
+    },
+    "seg": "study"
+  },
+  {
+    "view": "substitution",
+    "mode": "edit",
+    "surface": "tablet",
+    "how": "tab clicked",
+    "errors": [],
+    "broken": [],
+    "over": [],
+    "wrapped": [],
+    "runs": 0,
+    "showing": "(whole pane)",
+    "askBg": "rgb(241, 243, 242)",
+    "qColor": "rgb(35, 40, 41)",
+    "sep": "none",
+    "gap": {
+      "divider": "none",
+      "above": 26,
+      "below": 0,
+      "bled": -60,
+      "heading": "What the three show",
+      "after": "mx-wexseq"
+    },
+    "plane": null,
+    "seg": "edit"
+  },
+  {
+    "view": "symmetry",
+    "mode": "edit",
+    "surface": "tablet",
+    "how": "tab clicked → state clicked → tab re-shown → state re-shown",
+    "errors": [],
+    "broken": [],
+    "over": [],
+    "wrapped": [],
+    "runs": 0,
+    "showing": "visual",
+    "askBg": "(no question)",
+    "qColor": "-",
+    "sep": "no row",
+    "gap": {
+      "divider": "none",
+      "above": null,
+      "below": 0,
+      "bled": 0,
+      "heading": "Graph",
+      "after": "(first)"
+    },
+    "plane": {
+      "w": 454,
+      "h": 419,
+      "left": 46,
+      "vb": "0 0 394 363"
+    },
+    "seg": "edit"
+  }
+]

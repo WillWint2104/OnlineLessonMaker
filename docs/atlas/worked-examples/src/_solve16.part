@@ -1,0 +1,14 @@
+  <div data-slot="question">
+    <p class="at-lab">Question</p>
+    <p>Solve <i>x</i><sup>2</sup> = 16.</p>
+  </div>
+  <hr class="at-hr">
+  <div data-slot="steps">
+    <p class="at-lab">Worked solution</p>
+    <ol class="at-steps">
+      <li class="at-step"><div class="at-st">Ask which numbers square to 16.</div><div class="at-sm"><i>x</i><sup>2</sup> = 16</div></li>
+      <li class="at-step"><div class="at-st">Take the square root of both sides. Squaring destroys the sign, so the root must carry both.</div><div class="at-sm"><i>x</i> = &plusmn;4</div></li>
+      <li class="at-step"><div class="at-st">Check each one back in the original equation.</div><div class="at-sm">4<sup>2</sup> = 16 &nbsp;&nbsp; (&minus;4)<sup>2</sup> = 16</div></li>
+    </ol>
+  </div>
+  <div data-slot="answer"><b>Answer</b><i>x</i> = 4 or <i>x</i> = &minus;4</div>

@@ -1,0 +1,1180 @@
+[
+  {
+    "n": "01",
+    "pattern": "notes",
+    "title": "Substituting into *y* = *x*^2",
+    "lede": "Before anything is solved, the rule has to be read: put a number in, take a number out.",
+    "c": "THE DEFAULT PAGE, with no examples: that row collapses. One column at the measure; the four unused desktop columns are reading margin, not an empty track.",
+    "slots": {
+      "intro": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "A rule like *y* = *x*^2 is a set of instructions with one input. Give it a value of *x*, do what it says, and it hands back a value of *y*. Nothing about that changes when the number is negative, or a fraction, or a decimal — which is exactly why those cases are worth doing once each.",
+            "The instruction here is square it. Everything else on this page follows from taking that literally."
+          ]
+        }
+      ],
+      "reading": [
+        {
+          "block": "prose",
+          "heading": "Reading the instruction literally",
+          "paragraphs": [
+            "Squaring means multiplying a number by itself. Two negatives multiplied give a positive, so a negative input and its positive twin come back as the same output:",
+            {
+              "math": [
+                "(−4)^2 = 16",
+                "4^2 = 16"
+              ]
+            },
+            "That is not a special rule for negatives. It is the ordinary rule for multiplying signs, applied to a number and itself.",
+            "Laid out across a range of inputs the pattern is easier to see than to describe — the outputs fall away from zero and climb identically on both sides:"
+          ]
+        },
+        {
+          "block": "table",
+          "head": [
+            "*x*",
+            "-9",
+            "-8",
+            "-7",
+            "-6",
+            "-5",
+            "-4",
+            "-3",
+            "-2",
+            "-1",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
+          ],
+          "rows": [
+            [
+              "*y* = *x*^2",
+              "81",
+              "64",
+              "49",
+              "36",
+              "25",
+              "16",
+              "9",
+              "4",
+              "1",
+              "0",
+              "1",
+              "4",
+              "9",
+              "16",
+              "25",
+              "36",
+              "49",
+              "64",
+              "81"
+            ]
+          ]
+        },
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Read the row backwards and a second fact appears: every output except zero is reached twice."
+          ]
+        }
+      ],
+      "support": [
+        {
+          "block": "keyIdea",
+          "label": "The rule to carry",
+          "paragraphs": [
+            "Squaring destroys the sign. A number and its negative have the same square, so *x*^2 = *k* has two answers whenever *k* is positive, one when *k* is zero, and none when *k* is negative."
+          ]
+        }
+      ],
+      "synthesis": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Substitution is the whole of this page: read the instruction, apply it exactly, and let the arithmetic say what it says. Every later idea about this curve — where it crosses a line, why it is symmetric — is this one operation observed carefully."
+          ]
+        }
+      ]
+    },
+    "adversarial": {
+      "reading": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Squaring means multiplying a number by itself, and the reason this deserves a paragraph rather than a sentence is that almost every mistake a student makes with quadratics later in the course is this operation being applied loosely rather than literally, so it is worth being slow here: to square −4 you multiply −4 by −4, and because the product of two negative numbers is positive the answer is 16, which is exactly the answer you get for 4, and that single observation — that a number and its negative are indistinguishable after squaring — is the seed of the symmetry that the graph will make visible, the reason a horizontal line meets the curve twice, and the reason an equation like *x*^2 = 16 has two solutions rather than the one that a student who has only ever solved linear equations will expect it to have, which is a great deal of consequence for one instruction obeyed exactly."
+          ]
+        },
+        {
+          "block": "table",
+          "head": [
+            "*x*",
+            "-9",
+            "-8",
+            "-7",
+            "-6",
+            "-5",
+            "-4",
+            "-3",
+            "-2",
+            "-1",
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
+          ],
+          "rows": [
+            [
+              "*y* = *x*^2",
+              "81",
+              "64",
+              "49",
+              "36",
+              "25",
+              "16",
+              "9",
+              "4",
+              "1",
+              "0",
+              "1",
+              "4",
+              "9",
+              "16",
+              "25",
+              "36",
+              "49",
+              "64",
+              "81"
+            ]
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "n": "02",
+    "pattern": "notes",
+    "title": "Three substitutions, one move",
+    "lede": "A negative, a fraction and a decimal. The same instruction each time.",
+    "c": "THE SAME PATTERN WITH ITS EXAMPLES SLOT FILLED, and the disclosure authored INSIDE the slot. Equivalent sibling items are the one situation GOV.UK's guidance says tabs suit; the renderer never created these tabs and cannot remove them.",
+    "tabs": {
+      "examples": "a-negative-value"
+    },
+    "slots": {
+      "intro": [
+        {
+          "block": "prose",
+          "ref": "substitution",
+          "paragraphs": [
+            "Each of these does the same thing to a different kind of number. Read one and you have read the move; read all three and you have read the range of numbers it survives."
+          ]
+        }
+      ],
+      "support": [
+        {
+          "block": "keyIdea",
+          "label": "The move",
+          "paragraphs": [
+            "Substitute, then square. The kind of number never changes the instruction."
+          ]
+        }
+      ],
+      "examples": {
+        "disclosure": "collection.tabs",
+        "label": "Worked examples",
+        "items": [
+          {
+            "label": "A negative value",
+            "blocks": [
+              {
+                "block": "workedExample",
+                "ref": "substitution/0",
+                "noTitle": true
+              }
+            ]
+          },
+          {
+            "label": "A fraction",
+            "blocks": [
+              {
+                "block": "workedExample",
+                "ref": "substitution/1",
+                "noTitle": true
+              }
+            ]
+          },
+          {
+            "label": "A decimal",
+            "blocks": [
+              {
+                "block": "workedExample",
+                "ref": "substitution/2",
+                "noTitle": true
+              }
+            ]
+          }
+        ]
+      },
+      "synthesis": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Three different kinds of number, one instruction, and in every case the output is positive. The sign of the input never survives the squaring."
+          ]
+        }
+      ]
+    },
+    "adversarial": {
+      "examples": {
+        "disclosure": "collection.tabs",
+        "label": "Worked examples",
+        "items": [
+          {
+            "label": "A negative value, worked in full",
+            "blocks": [
+              {
+                "block": "workedExample",
+                "ref": "substitution/0",
+                "noTitle": true
+              }
+            ]
+          },
+          {
+            "label": "A fraction with an awkward denominator",
+            "blocks": [
+              {
+                "block": "workedExample",
+                "ref": "substitution/1",
+                "noTitle": true
+              }
+            ]
+          },
+          {
+            "label": "A decimal, and a table of values",
+            "blocks": [
+              {
+                "block": "workedExample",
+                "ref": "substitution/2",
+                "noTitle": true
+              }
+            ]
+          },
+          {
+            "label": "A very large value indeed",
+            "blocks": [
+              {
+                "block": "workedExample",
+                "ref": "substitution/0",
+                "noTitle": true
+              }
+            ]
+          },
+          {
+            "label": "A value of zero",
+            "blocks": [
+              {
+                "block": "workedExample",
+                "ref": "substitution/1",
+                "noTitle": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  {
+    "n": "03",
+    "pattern": "visual.explanation",
+    "title": "The mirror down the middle",
+    "lede": "Where *y* = *x*^2 reaches a height of 9, and why it does so twice.",
+    "c": "A PORTRAIT PLANE, which takes `down-8` — eight columns CENTRED on the twelve. Not eight hard against the left with four unnamed beside them: free columns beside prose are the reading measure doing its job, free columns beside media are nothing. 760px wide and 952px tall, and the page scrolls.",
+    "slots": {
+      "media": [
+        {
+          "block": "graph",
+          "figure": "symmetry",
+          "caption": "*y* = *x*^2 with the line *y* = 9, meeting it at (−3, 9) and (3, 9).",
+          "presentationRole": "explanatory"
+        }
+      ],
+      "interpretation": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "The horizontal line *y* = 9 meets *y* = *x*^2 at exactly the two points the arithmetic found.",
+            {
+              "math": "(−3, 9) and (3, 9)"
+            },
+            "They sit at equal distances either side of the *y*-axis. That mirror is what “squaring destroys the sign” looks like when it is drawn.",
+            "Any line above the vertex meets the curve twice, once on each side. At the vertex the two crossings have met, which is the single solution of *x*^2 = 0. Below it the line misses the curve entirely — the same fact as “no real number squares to give a negative”."
+          ]
+        }
+      ],
+      "support": [
+        {
+          "block": "keyIdea",
+          "label": "What the picture adds",
+          "paragraphs": [
+            "The number of solutions of *x*^2 = *k* is the number of times a horizontal line crosses the curve. Two, one, or none — and you can see which before solving anything."
+          ]
+        }
+      ]
+    },
+    "adversarial": {
+      "interpretation": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "The line meets the curve twice.",
+            {
+              "math": "(−3, 9) and (3, 9)"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "n": "04",
+    "pattern": "visual.explanation",
+    "title": "A flatter parabola",
+    "lede": "The same shape, divided through by 12 — and a window wide enough to see what that did.",
+    "c": "THE SAME FIGURE AS PAGE 06, IN A DIFFERENT PATTERN. Here the reading teaches and the plane still takes the whole grid — `down-12`, because a plane three times wider than it is tall gains real reach from the width and the reading returns to the measure beneath it. On page 06 the plane IS the page. That is an authorial choice about what the page is for, not a shape the renderer noticed. This page also omits its optional support slot: the row is DROPPED, not left as an empty 40px band.",
+    "slots": {
+      "media": [
+        {
+          "block": "graph",
+          "figure": "landscape",
+          "caption": "*y* = *x*^2 / 12 with the line *y* = 3, meeting it at (−6, 3) and (6, 3).",
+          "presentationRole": "explanatory"
+        }
+      ],
+      "interpretation": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Dividing by 12 does not change the shape into something else. It stretches it sideways: this curve needs about 8.5 units of *x* to climb the 6 units of *y* that *y* = *x*^2 covers in about 2.5.",
+            {
+              "math": "*y* = *x*^2 / 12"
+            },
+            "The line *y* = 3 still meets it twice, at *x* = −6 and *x* = 6, and those crossings are still mirror images about the *y*-axis. Flattening changes the scale, never the symmetry."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "n": "05",
+    "pattern": "visual.compare",
+    "title": "Two cases, one curve",
+    "lede": "Both roads to *x*^2 = 9, and the single picture that holds them.",
+    "c": "COMPARISON IS THE POINT, so neither case may ever sit behind a tab. Six columns and six columns: identical width IS the argument.",
+    "slots": {
+      "intro": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Two values of *x* give the same output. Worked separately they look like two different problems; drawn together they are one."
+          ]
+        }
+      ],
+      "caseA": [
+        {
+          "block": "workedExample",
+          "ref": "symmetry/workings#0"
+        }
+      ],
+      "caseB": [
+        {
+          "block": "workedExample",
+          "ref": "symmetry/workings#1"
+        }
+      ],
+      "media": [
+        {
+          "block": "graph",
+          "figure": "symmetry",
+          "caption": "One plane belonging to both cases.",
+          "presentationRole": "explanatory"
+        }
+      ],
+      "interpretation": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "The two cases are the two crossings. Neither is the “real” answer and the other a curiosity — the curve gives them equal standing, which is why the composition does too."
+          ]
+        }
+      ],
+      "synthesis": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Whenever a square equals a positive number there are two answers, and they are reflections of each other in the *y*-axis."
+          ]
+        }
+      ]
+    },
+    "adversarial": {
+      "caseB": [
+        {
+          "block": "workedExample",
+          "ref": "solving-for-x/0"
+        }
+      ]
+    }
+  },
+  {
+    "n": "06",
+    "pattern": "media.full",
+    "title": "The whole window",
+    "lede": "What a flatter parabola looks like when it is given the room its shape asks for.",
+    "c": "THE ONE SLOT PERMITTED TO CROSS THE READING MEASURE — because it carries no prose. Twelve columns, 1152px, and the commentary beneath stays at 760.",
+    "slots": {
+      "media": [
+        {
+          "block": "graph",
+          "figure": "landscape",
+          "caption": "*y* = *x*^2 / 12 across the full grid — twelve columns, 1152px.",
+          "presentationRole": "primary"
+        }
+      ],
+      "interpretation": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "At this width the flattening is the first thing you see rather than something the caption has to claim. The curve leaves the vertex slowly, and by *x* = 6 it has climbed only to 3.",
+            "The prose is not set to the graph's width. It stays at the reading measure, which is why the two have different left edges: the graph is the object of this page and this is commentary on it."
+          ]
+        }
+      ],
+      "support": [
+        {
+          "block": "keyIdea",
+          "label": "When a page is one object",
+          "paragraphs": [
+            "Give a wide plane the whole grid only when its shape earns it. A plane taller than it is wide takes this pattern's centred subdesign instead — eight of the twelve columns, centred, rather than a negotiated width."
+          ]
+        }
+      ]
+    },
+    "alternate": {
+      "expect": "centred",
+      "slots": {
+        "media": [
+          {
+            "block": "graph",
+            "figure": "symmetry",
+            "caption": "A portrait plane in the same pattern — the centred subdesign, not a 1400px-tall figure.",
+            "presentationRole": "primary"
+          }
+        ]
+      }
+    },
+    "adversarial": {
+      "interpretation": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "At this width the flattening is the first thing you see."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "n": "07",
+    "pattern": "interactive.primary",
+    "title": "Vary the coefficient",
+    "lede": "Move *a* and watch what happens to the curve — and to where the line meets it.",
+    "c": "THE CONTROLS BELONG TO THE OBJECT, in one slot. A control detached from what it controls is the spatial-contiguity failure in its purest form. Nothing here functions yet; this is the slot geometry and the affordances.",
+    "slots": {
+      "intro": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "This is *y* = *a x*^2 with a horizontal line you can also move. Changing *a* stretches the curve; changing the line changes how high across it you are cutting.",
+            "Nothing about the symmetry changes, however far you push either. That is the thing to watch for."
+          ]
+        }
+      ],
+      "prompts": [
+        {
+          "block": "prose",
+          "heading": "Try this",
+          "paragraphs": [
+            "Set *a* to 1 and read the *x*-window. How far does the curve now travel to climb the same height?",
+            "Drag the line below the vertex. How many crossings are there, and what does that say about *x*^2 = *k* for negative *k*?",
+            "Find a value of *a* where the crossings sit exactly on the grid lines."
+          ]
+        }
+      ],
+      "synthesis": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Whatever *a* you chose, the two crossings stayed the same distance either side of the *y*-axis. The stretch is a change of scale; the mirror is a property of squaring."
+          ]
+        }
+      ],
+      "instrument": [
+        {
+          "block": "interactive",
+          "figure": "landscape",
+          "label": "Curve controls",
+          "controls": [
+            {
+              "name": "*a*",
+              "at": 8,
+              "value": "1/12"
+            },
+            {
+              "name": "*y* =",
+              "at": 50,
+              "value": "3"
+            },
+            {
+              "name": "*x* to",
+              "at": 75,
+              "value": "±12"
+            }
+          ],
+          "presentationRole": "primary"
+        }
+      ]
+    },
+    "adversarial": {
+      "prompts": [
+        {
+          "block": "prose",
+          "heading": "Try this",
+          "paragraphs": [
+            "Set *a* to 1.",
+            "Drag the line below the vertex.",
+            "Now above it.",
+            "Now exactly on it.",
+            "Set *a* to 1/4.",
+            "And to 4.",
+            "And to 1/100.",
+            "Find crossings on the grid lines.",
+            "Do it again for a negative *a*.",
+            "Predict before you move anything.",
+            "Write down what never changed."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "n": "08",
+    "pattern": "practice.workbook",
+    "title": "Substitution — practice",
+    "lede": "Work down the list. The pad stays where it is.",
+    "c": "SCROLL.Y = PANE, the one place in the catalogue it is allowed: an explicit template feature, never a way of making teaching content shorter. Five columns and seven — the writing needs more room than the questions do.",
+    "slots": {
+      "intro": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Substitute each value into *y* = *x*^2 and write the output. Show the squaring step; the answer alone is not the work."
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "block": "questionSet",
+          "items": [
+            {
+              "say": "Find *y* when *x* = 7.",
+              "math": "*y* = *x*^2"
+            },
+            {
+              "say": "Find *y* when *x* = −7."
+            },
+            {
+              "say": "Find *y* when *x* = 0.5."
+            },
+            {
+              "say": "Find *y* when *x* = −0.5."
+            },
+            {
+              "say": "Find *y* when *x* = 2/3.",
+              "math": "*y* = *x*^2"
+            },
+            {
+              "say": "Two different values of *x* give *y* = 49. Write both."
+            },
+            {
+              "say": "Explain why no value of *x* gives *y* = −4."
+            }
+          ]
+        }
+      ],
+      "workspace": [
+        {
+          "block": "handwrittenResponse",
+          "label": "Your working"
+        }
+      ]
+    },
+    "adversarial": {
+      "questions": [
+        {
+          "block": "questionSet",
+          "items": [
+            {
+              "say": "Find *y* when *x* = 1."
+            },
+            {
+              "say": "Find *y* when *x* = −1."
+            },
+            {
+              "say": "Find *y* when *x* = 2."
+            },
+            {
+              "say": "Find *y* when *x* = −2."
+            },
+            {
+              "say": "Find *y* when *x* = 3."
+            },
+            {
+              "say": "Find *y* when *x* = −3."
+            },
+            {
+              "say": "Find *y* when *x* = 4."
+            },
+            {
+              "say": "Find *y* when *x* = −4."
+            },
+            {
+              "say": "Find *y* when *x* = 5."
+            },
+            {
+              "say": "Find *y* when *x* = −5."
+            },
+            {
+              "say": "Find *y* when *x* = 6."
+            },
+            {
+              "say": "Find *y* when *x* = −6."
+            },
+            {
+              "say": "Find *y* when *x* = 7."
+            },
+            {
+              "say": "Find *y* when *x* = −7."
+            },
+            {
+              "say": "Find *y* when *x* = 8."
+            },
+            {
+              "say": "Find *y* when *x* = −8."
+            },
+            {
+              "say": "Find *y* when *x* = 9."
+            },
+            {
+              "say": "Find *y* when *x* = −9."
+            },
+            {
+              "say": "Find *y* when *x* = 10."
+            },
+            {
+              "say": "Find *y* when *x* = −10."
+            },
+            {
+              "say": "Find *y* when *x* = 11."
+            },
+            {
+              "say": "Find *y* when *x* = −11."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "n": "09",
+    "pattern": "practice.workbook",
+    "title": "Plot it yourself",
+    "lede": "Grid paper, and a plane to plot against.",
+    "c": "THE SAME PATTERN AS PAGE 08, with its optional reference plane and grid paper instead of lined. Grid versus lined is a property of the BLOCK; a pattern that forked on it would have collapsed the two vocabularies.",
+    "slots": {
+      "intro": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Plot *y* = *x*^2 for −4 ≤ *x* ≤ 4, one unit to one square in both directions. Then draw *y* = 9 across it and mark where the two meet."
+          ]
+        }
+      ],
+      "questions": [
+        {
+          "block": "questionSet",
+          "items": [
+            {
+              "say": "Draw and label both axes, *x* from −5 to 5 and *y* from 0 to 20."
+            },
+            {
+              "say": "Plot the nine points for whole-number *x*."
+            },
+            {
+              "say": "Join them with a smooth curve — not straight segments."
+            },
+            {
+              "say": "Draw *y* = 9 across it and mark both crossings."
+            },
+            {
+              "say": "Write the coordinates of each crossing."
+            }
+          ]
+        }
+      ],
+      "workspace": [
+        {
+          "block": "handwrittenResponse",
+          "label": "Plot here",
+          "paper": "grid"
+        }
+      ],
+      "reference": [
+        {
+          "block": "graph",
+          "figure": "squareish",
+          "caption": "The plane you are reproducing.",
+          "presentationRole": "supporting"
+        }
+      ]
+    },
+    "adversarial": {
+      "questions": [
+        {
+          "block": "questionSet",
+          "items": [
+            {
+              "say": "Plot it."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "n": "10",
+    "pattern": "visual.explanation",
+    "title": "Where the curve reaches 9",
+    "lede": "A plane no taller than it is wide, at the same eight columns as a tall one.",
+    "c": "A BALANCED PLANE, which takes `side-6` — six columns of plane beside six of reading. The pattern's side-by-side row was once removed for leaving 734px of nothing under a reading column beside a PORTRAIT plane; it returns only for the balanced class, at a width the pattern approves, and this page carries the adversarial payload that proves the pairing survives content it was not written for.",
+    "slots": {
+      "media": [
+        {
+          "block": "graph",
+          "figure": "squareish",
+          "caption": "*y* = *x*^2 over a wider window, with the line *y* = 9.",
+          "presentationRole": "explanatory"
+        }
+      ],
+      "interpretation": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Widen the window and the same two crossings are still there, still the same distance either side of the *y*-axis.",
+            {
+              "math": "(−3, 9) and (3, 9)"
+            },
+            "What changed is the shape of the picture, not the mathematics in it. This plane is *balanced* — at equal unit scale it is no taller than it is wide — and on this grid that buys it the same eight columns as a tall plane, because a figure beside prose is only sound when the prose happens to be long."
+          ]
+        }
+      ],
+      "support": [
+        {
+          "block": "keyIdea",
+          "label": "Why nothing sits beside a figure",
+          "paragraphs": [
+            "Seven columns of plane beside five of reading fills the surface exactly and reads well when the reading runs long. With a short reading it leaves several hundred pixels of empty column. A composition that is sound only for some lengths of prose is decided by content, and content may never decide a composition."
+          ]
+        }
+      ]
+    },
+    "adversarial": {
+      "interpretation": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Still two crossings."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "n": "11",
+    "pattern": "worked.single",
+    "title": "Solving *x*^2 = 16",
+    "lede": "One worked example, and the move it instances.",
+    "c": "THE GAP THE REVIEW FOUND. The catalogue had no home for a SINGLE worked example — `visual.compare` needs a pair and `notes` needs a set — so two of the four subtopics of its own lesson could not be laid out. With no scenario the beside row collapses and the solution returns to the measure.",
+    "slots": {
+      "intro": [
+        {
+          "block": "prose",
+          "ref": "solving-for-x",
+          "paragraphs": [
+            "Substitution ran the rule forwards. This runs it backwards: the output is known and the input is not."
+          ]
+        }
+      ],
+      "worked": [
+        {
+          "block": "workedExample",
+          "ref": "solving-for-x/0"
+        }
+      ],
+      "support": [
+        {
+          "block": "keyIdea",
+          "label": "Both signs, every time",
+          "paragraphs": [
+            "Taking a square root offers two answers. Writing only the positive one is the single most common way to lose half a solution."
+          ]
+        }
+      ],
+      "synthesis": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "The algebra hands back both roots because squaring destroyed the sign on the way in. Whether both are kept is a question about the situation, not about the algebra."
+          ]
+        }
+      ]
+    },
+    "adversarial": {
+      "worked": [
+        {
+          "block": "workedExample",
+          "ref": "substitution/2"
+        }
+      ]
+    }
+  },
+  {
+    "n": "12",
+    "pattern": "worked.single",
+    "title": "The same algebra, inside a situation",
+    "lede": "A stone, a bridge, and a root the question rejects.",
+    "c": "THE SCENARIO IN ITS OWN SLOT, above the algebra that models it. Five columns of situation beside seven of solution was designed, rendered and measured — with a one-line scenario it left 247px of empty column. Both sides of that row were unbounded prose, and such a row is sound only for the lengths the author happened to write.",
+    "slots": {
+      "scenario": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "A stone is dropped from a bridge. The distance it has fallen, in metres, is modelled by *d* = 5*t*^2, where *t* is the time in seconds since it was released.",
+            "The bridge deck is 45 metres above the water, and the model is only trusted while the stone is still falling.",
+            "Find how long the stone takes to reach the water."
+          ]
+        }
+      ],
+      "worked": [
+        {
+          "block": "workedExample",
+          "ref": "solving-for-x/1",
+          "noTitle": true,
+          "noPrompt": true
+        }
+      ],
+      "support": [
+        {
+          "block": "keyIdea",
+          "label": "When a root is rejected",
+          "paragraphs": [
+            "A negative root can solve the equation and still not answer the question. Rejecting it is a statement about the situation — here, that the stone was not falling before it was dropped — and it belongs in the working, not in the reader's head."
+          ]
+        }
+      ],
+      "synthesis": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "Same three lines of algebra as the page before. What the situation adds is the last step: deciding which of the two answers the world allows."
+          ]
+        }
+      ]
+    },
+    "adversarial": {
+      "scenario": [
+        {
+          "block": "prose",
+          "paragraphs": [
+            "A stone is dropped from a 45-metre bridge."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "n": "20",
+    "shell": "subtopics",
+    "title": "The parabola *y* = *x*^2",
+    "lede": "Four ways into the same curve: putting numbers in, taking them back out, the mirror down its middle, and what happens when the rule is divided through.",
+    "c": "THE WHOLE LESSON, THROUGH THE CATALOGUE. A subtopics shell over four parts; the Symmetry part is a VIEWS shell whose two panels are DIFFERENT PATTERNS. The shell owns the title and the strips and nothing else — no slots, no grid, no media rule.",
+    "items": [
+      {
+        "label": "Substitution",
+        "lede": "Three values of *x*, chosen because each one goes wrong in a different way.",
+        "body": [
+          {
+            "pattern": "notes",
+            "slots": {
+              "intro": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "A rule like *y* = *x*^2 is a set of instructions with one input. Give it a value of *x*, do what it says, and it hands back a value of *y*. The three examples below do the same thing to three kinds of number."
+                  ]
+                }
+              ],
+              "support": [
+                {
+                  "block": "keyIdea",
+                  "label": "The move",
+                  "paragraphs": [
+                    "Substitute, then square. The kind of number never changes the instruction."
+                  ]
+                }
+              ],
+              "examples": [
+                {
+                  "block": "workedExample",
+                  "ref": "substitution/0"
+                },
+                {
+                  "block": "workedExample",
+                  "ref": "substitution/1"
+                },
+                {
+                  "block": "workedExample",
+                  "ref": "substitution/2"
+                }
+              ],
+              "synthesis": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "Substitution never changes the rule — it only replaces *x*. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a decimal below 1 gets smaller rather than larger.",
+                    "Read the table row backwards and a second fact appears: every output except zero is reached twice."
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Solving for *x*",
+        "lede": "Going the other way. Two examples: the bare equation, then the same algebra inside a situation.",
+        "body": [
+          {
+            "pattern": "worked.single",
+            "slots": {
+              "intro": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "Substitution ran the rule forwards. This runs it backwards: the output is known and the input is not."
+                  ]
+                }
+              ],
+              "worked": [
+                {
+                  "block": "workedExample",
+                  "ref": "solving-for-x/0"
+                }
+              ],
+              "support": [
+                {
+                  "block": "keyIdea",
+                  "label": "Both signs, every time",
+                  "paragraphs": [
+                    "Taking a square root offers two answers. Writing only the positive one is the single most common way to lose half a solution."
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "pattern": "worked.single",
+            "slots": {
+              "scenario": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "A stone is dropped from a bridge. The distance it has fallen, in metres, is modelled by *d* = 5*t*^2, where *t* is the time in seconds since it was released.",
+                    "The bridge deck is 45 metres above the water, and the model is only trusted while the stone is still falling.",
+                    "Find how long the stone takes to reach the water."
+                  ]
+                }
+              ],
+              "worked": [
+                {
+                  "block": "workedExample",
+                  "ref": "solving-for-x/1",
+                  "noTitle": true,
+                  "noPrompt": true
+                }
+              ],
+              "support": [
+                {
+                  "block": "keyIdea",
+                  "label": "When a root is rejected",
+                  "paragraphs": [
+                    "A negative root can solve the equation and still not answer the question. Rejecting it is a statement about the situation, and it belongs in the working."
+                  ]
+                }
+              ],
+              "synthesis": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "The ± is not a convention bolted onto the square root. It is the record of a fact about squaring: two different numbers can arrive at the same square, so undoing a square has to return both of them.",
+                    "A situation can rule one of them out, and saying why is part of the answer."
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "label": "Symmetry",
+        "lede": "One idea, two authored representations. Solve it, then look at the same fact on the curve.",
+        "body": {
+          "shell": "views",
+          "items": [
+            {
+              "label": "Workings",
+              "body": [
+                {
+                  "pattern": "visual.compare",
+                  "slots": {
+                    "intro": [
+                      {
+                        "block": "prose",
+                        "paragraphs": [
+                          "Two values of *x* give the same output. Worked separately they look like two different problems."
+                        ]
+                      }
+                    ],
+                    "caseA": [
+                      {
+                        "block": "workedExample",
+                        "ref": "symmetry/workings#0"
+                      }
+                    ],
+                    "caseB": [
+                      {
+                        "block": "workedExample",
+                        "ref": "symmetry/workings#1"
+                      }
+                    ],
+                    "synthesis": [
+                      {
+                        "block": "prose",
+                        "paragraphs": [
+                          "Whenever a square equals a positive number there are two answers, and they are reflections of each other in the *y*-axis."
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "label": "Visual explanation",
+              "body": [
+                {
+                  "pattern": "visual.explanation",
+                  "slots": {
+                    "media": [
+                      {
+                        "block": "graph",
+                        "figure": "symmetry",
+                        "caption": "*y* = *x*^2 with the line *y* = 9, meeting it at (−3, 9) and (3, 9).",
+                        "presentationRole": "explanatory"
+                      }
+                    ],
+                    "interpretation": [
+                      {
+                        "block": "prose",
+                        "paragraphs": [
+                          "The horizontal line *y* = 9 meets *y* = *x*^2 at exactly the two points the arithmetic found.",
+                          {
+                            "math": "(−3, 9) and (3, 9)"
+                          },
+                          "They sit at equal distances either side of the *y*-axis. That mirror is what “squaring destroys the sign” looks like when it is drawn."
+                        ]
+                      }
+                    ],
+                    "support": [
+                      {
+                        "block": "keyIdea",
+                        "label": "What the picture adds",
+                        "paragraphs": [
+                          "The number of solutions of *x*^2 = *k* is the number of times a horizontal line crosses the curve. Two, one, or none — and you can see which before solving anything."
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "label": "A flatter parabola",
+        "lede": "The same shape, divided through by 12 — and a window wide enough to see what that did.",
+        "body": [
+          {
+            "pattern": "visual.explanation",
+            "slots": {
+              "media": [
+                {
+                  "block": "graph",
+                  "figure": "landscape",
+                  "caption": "*y* = *x*^2 / 12 with the line *y* = 3, meeting it at (−6, 3) and (6, 3).",
+                  "presentationRole": "explanatory"
+                }
+              ],
+              "interpretation": [
+                {
+                  "block": "prose",
+                  "paragraphs": [
+                    "Dividing by 12 does not change the shape into something else. It stretches it sideways: this curve needs about 8.5 units of *x* to climb the 6 units of *y* that *y* = *x*^2 covers in about 2.5.",
+                    {
+                      "math": "*y* = *x*^2 / 12"
+                    },
+                    "The line *y* = 3 still meets it twice, at *x* = −6 and *x* = 6, and those crossings are still mirror images about the *y*-axis."
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

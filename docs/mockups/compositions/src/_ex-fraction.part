@@ -1,0 +1,15 @@
+  <h3 data-mk-region="title">A fraction</h3>
+  <div data-mk-region="prompt">
+    <p class="mk-lab">Question</p>
+    <p>Use the rule <i>y</i> = <i>x</i><sup>2</sup> to find <i>y</i> when <i>x</i> = 3/2.</p>
+  </div>
+  <div class="mk-rule"></div>
+  <div data-mk-region="solution">
+    <p class="mk-lab">Worked solution</p>
+    <ol class="mk-steps">
+      <li class="mk-step"><div class="mk-st">Substitute. The whole fraction is squared, not just the numerator.</div><div class="mk-sm"><i>y</i> = (3/2)<sup>2</sup></div></li>
+      <li class="mk-step"><div class="mk-st">Square the top and the bottom.</div><div class="mk-sm"><i>y</i> = 3<sup>2</sup>/2<sup>2</sup> = 9/4</div></li>
+      <li class="mk-step"><div class="mk-st">Squaring a value above 1 makes it larger; this one lands just above 2.</div><div class="mk-sm">9/4 = 2.25</div></li>
+    </ol>
+    <div data-mk-region="answer"><b>Answer</b><i>y</i> = 9/4, so (3/2, 9/4) lies on the graph.</div>
+  </div>

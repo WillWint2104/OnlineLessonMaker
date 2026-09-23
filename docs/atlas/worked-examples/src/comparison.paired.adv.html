@@ -1,0 +1,29 @@
+<p class="at-intro">Two cases of very unequal length. They are a comparison because the author said so.</p>
+<article data-tpl="comparison.paired">
+<div data-slot="cases">
+  <section data-slot="case">
+    <h4 data-slot="title">Case A &mdash; by inspection</h4>
+    <div data-slot="question"><p class="at-lab">Question</p><p>Solve <i>x</i><sup>2</sup> = 16.</p></div>
+    <div data-slot="steps"><p class="at-lab">Worked solution</p>
+      <ol class="at-steps"><li class="at-step"><div class="at-st">Ask which numbers square to 16, carrying both signs.</div><div class="at-sm"><i>x</i> = &plusmn;4</div></li></ol></div>
+    <div data-slot="answer"><b>Answer</b><i>x</i> = 4 or <i>x</i> = &minus;4</div>
+  </section>
+  <section data-slot="case">
+    <h4 data-slot="title">Case B &mdash; by completing the square</h4>
+    <div data-slot="question"><p class="at-lab">Question</p><p>Solve <i>x</i><sup>2</sup> &minus; 8<i>x</i> = 0 by completing the square, so the method can be compared with inspection.</p></div>
+    <div data-slot="steps"><p class="at-lab">Worked solution</p>
+      <ol class="at-steps">
+        <li class="at-step"><div class="at-st">Halve the coefficient of <i>x</i> and square it.</div><div class="at-sm">(8 &divide; 2)<sup>2</sup> = 16</div></li>
+        <li class="at-step"><div class="at-st">Add it to both sides.</div><div class="at-sm"><i>x</i><sup>2</sup> &minus; 8<i>x</i> + 16 = 16</div></li>
+        <li class="at-step"><div class="at-st">The left side is a perfect square.</div><div class="at-sm">(<i>x</i> &minus; 4)<sup>2</sup> = 16</div></li>
+        <li class="at-step"><div class="at-st">Take the root, carrying both signs.</div><div class="at-sm"><i>x</i> &minus; 4 = &plusmn;4</div></li>
+        <li class="at-step"><div class="at-st">Solve each case.</div><div class="at-sm"><i>x</i> = 8 &nbsp;or&nbsp; <i>x</i> = 0</div></li>
+      </ol></div>
+    <div data-slot="answer"><b>Answer</b><i>x</i> = 0 or <i>x</i> = 8</div>
+  </section>
+</div>
+<section data-slot="synthesis">
+  <p class="at-lab">Why they agree</p>
+  <p>Both methods land on the same pair of solutions. Inspection is quicker when the equation is already a perfect square; completing the square works whether it is or not.</p>
+</section>
+</article>

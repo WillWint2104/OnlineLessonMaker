@@ -1,0 +1,5237 @@
+{
+  "_": "APPROVED PAGE COMPOSITIONS — A PROPOSAL, awaiting the maintainer. Nothing here is wired into the shipping catalogue in docs/atlas/composition/src/, into the lesson, or into lesson-studio.html.",
+  "theChain": "blueprint → row relationship → named span → media realisation → rhythm. Structural validity (does every part of the active composition have an owner?) and composition fitness (is the approved blueprint making appropriate use of the surface?) are TWO LAYERS, asked in that order.",
+  "theTwoAxes": {
+    "_": "HORIZONTAL RELATIONSHIP AND VERTICAL BEHAVIOUR ARE SEPARATE DECLARATIONS. `hug`, `paired` and `workspace` were doing double duty as both, which is why a page could be structurally perfect and still timid.",
+    "horizontal": {
+      "solo": "ONE semantic region. It takes a span from an approved LADDER, never a calculated width.",
+      "paired": "TWO sibling regions in a declared split, on one origin, with a termination tolerance.",
+      "workspace": "a split in which one region has a designed height."
+    },
+    "vertical": {
+      "hug": "the row is exactly as tall as the regions that begin in it.",
+      "designed": "a region in the row has a height that was decided rather than derived."
+    }
+  },
+  "theSpine": {
+    "_": "THE PAGE'S ONE ALIGNMENT AXIS — an axis and a default span. Every solo row is aligned to it; a solo row may take a WIDER approved rung and stay on the same axis, which is why the spine is an axis rather than a width.",
+    "align: centre": "symmetric page margin either side. A centred rung whose complement is odd is refused.",
+    "align: left-edge": "the rung begins at column 1 and the page margin is all on the trailing side.",
+    "whyItIsNotSixColumns": "A centred six-column spine and a six-column region at the left of a twelve-column active row occupy the same columns and are not the same thing. The first declares the axis and puts its margin outside the composition; the second leaves half of an active row unexplained."
+  },
+  "legibility": {
+    "_": "THE SMALLEST TYPE A STUDENT IS ASKED TO READ, AND IT MUST NOT GET SMALLER ON A NARROWER SURFACE. Raised against the supporting-illustration render, where the caption and the small text inside the object looked very small — acceptable for a decorative photograph, not for a mathematical diagram somebody has to examine.",
+    "theMeasurement": "CORRECTED. An earlier version of this said \"the type does not scale with the figure\", which was true of the STYLESHEET and false of the PAGE. The plot is an SVG with a viewBox painted into a box the composition chose, so every font-size inside it is in VIEWBOX UNITS and is multiplied by the SVG's own scale before a reader sees it — and the first reading of this measured the declared size, which is not what anybody gets. Painted: the tick numbering is 14.6px on desktop, 14.1px on tablet and 12.5px on PHONE, because the axis gutters are close to a fixed number of viewBox units, so a smaller plot spends proportionally more of its viewBox on gutter and its scale falls. The phone is therefore the surface where instructional type is SMALLEST, which is the opposite of what it needs, and it is exactly what the maintainer saw. The caption is HTML rather than SVG and is genuinely constant at 13.5px.",
+    "twoDifferentPROBLEMS": "AND ONLY ONE OF THEM IS TYPE. A graph is drawn by the figure engine, so its labels are real text with a computed size that can be held to a floor. An IMAGE illustration carries its small text as PIXELS inside the raster, where no floor can reach it — the `notes` renders report zero labels for exactly that reason. The second problem is an authoring and asset question, not a composition one.",
+    "captionMinPx": 13,
+    "inFigureMinPx": 11,
+    "theFloorRECORDSTodaysValue": "IT DOES NOT CLAIM TODAY'S VALUE IS BIG ENOUGH — and the maintainer has since ruled that it is not, for a phone. The floor is applied to the PAINTED size and is set at what the engine currently produces, so any future change that shrinks instructional type on a narrower surface is caught the first time it renders.",
+    "theInvestigation": "RAISING PHONE TYPE IS GEOMETRICALLY FREE, measured rather than assumed. Every graph figure in the registry was re-solved at the 344px phone plot box at declared 11, 13, 14 and 16px, together with a probe the registry does not contain — the y-axis at the LEFT EDGE with two-digit numbering, the case most likely to break. In all six the domain, the tick values, the point labels, the viewBox and the solved box came through IDENTICAL: the feared feedback loop, where bigger labels need bigger gutters and a bigger viewBox gives back a smaller scale, does not occur. See `docs/atlas/phone-typography/`.",
+    "theOneFailure": "`roots` COLLIDES AT 13px AND ABOVE — and larger type did not cause it. The reference line label \"y = 0\" and the point label \"(2, 0)\" overlap, because `figTickBoxes` is the ONLY furniture the label solver reserves: a reference-line label is never an obstacle, so the search places point labels with no knowledge of it. At the shipped 11px those two clear each other by ZERO POINT SEVEN PIXELS. That is not a margin, it is a coincidence. The fix belongs in the engine — reserve `tp-fig-reflab` alongside the tick boxes — and it is a pre-existing defect that this pass exposed rather than a cost of readable type.",
+    "theEnlargedView": "ALREADY EXISTS. The figure engine renders a `tp-fig-expand` control on the surface and `verify-label-placement` drives it, so \"offer an enlarged view when necessary\" is a capability the product already has rather than one this pass has to add."
+  },
+  "soloLadder": {
+    "_": "THE APPROVED SPAN POSITIONS FOR A ROW HOLDING ONE REGION. Design-system positions, not measurements: no 683px, no 717px, no 58% occupancy. `spine` resolves to the blueprint's own spine span.",
+    "desktop": {
+      "inset": 4,
+      "narrow": 6,
+      "spine": null,
+      "expanded": 8,
+      "wide": 10,
+      "full": 12
+    },
+    "tablet": {
+      "inset": 4,
+      "narrow": 6,
+      "spine": null,
+      "expanded": 8,
+      "wide": 8,
+      "full": 8
+    },
+    "phone": {
+      "inset": 4,
+      "narrow": 4,
+      "spine": null,
+      "expanded": 4,
+      "wide": 4,
+      "full": 4
+    },
+    "heightIsNotAFailure": "The page scrolls. A wider rung that makes the page taller is not a cost to be avoided; usable width is not sacrificed to keep a page short."
+  },
+  "soloFamilies": {
+    "_": "WHAT A REGION IS CONSTRAINS WHICH RUNGS ARE LEGAL FOR IT. Since the vocabulary split, a MEDIA family is a single rung per class and role — the blueprint no longer chooses from within a family, because a choice at realisation time is exactly the hidden resolver the calibration set found. Prose families keep their ladder and are additionally capped at the reading measure; `spine` is always available to a prose region.",
+    "reading": [
+      "spine",
+      "expanded"
+    ],
+    "support": [
+      "spine",
+      "narrow",
+      "expanded"
+    ],
+    "worked": [
+      "spine",
+      "expanded"
+    ],
+    "questions": [
+      "spine",
+      "expanded"
+    ],
+    "_roles": "A MEDIA REGION'S FAMILY IS KEYED BY ITS GEOMETRY CLASS AND ITS AUTHORED PRESENTATION ROLE. The role is not a size and it is not inferred: it says what the object is FOR. A supporting graph and a primary graph are different blueprints, not the same blueprint with a size calculation.",
+    "_oneRung": "ONE ROW, ONE RUNG — and the FAMILY is a different thing from the row. The row-level refusal is what removed the resolver: a media row declaring two rungs is a ladder the exact aspect ratio can climb at realisation time, which is how `tall` and `portrait` came to take different desktop rungs out of one blueprint. With the row pinned to one rung there is nothing left to climb, so a family may again hold more than one — it is the UNION of the rungs approved blueprints use for that class and role ACROSS PATTERNS, and it bounds what any pattern may write down. `media.landscape.primary` holds `wide` and `full` for exactly that reason: `visual.explanation` gives a landscape primary ten columns, `media.full` gives it twelve, and both are approved compositions of their own pattern. What no pattern may do is leave the choice to the object.",
+    "_primaryIsNotWider": "PRIMARY DOES NOT MEAN MAXIMUM HORIZONTAL SPAN, and for a TALL object it does not even mean a wide one. A plane preserves its geometry, so span buys height: the tall calibration shape measures 760x1572 at eight columns, 956x1965 at ten and 1152x2359 at twelve. `media.tall` therefore tops out at `expanded`, and no portrait family reaches `full` — a full-width primary portrait is inexpressible rather than merely discouraged. `primary/tall` buys its primacy from page structure instead: its own stage, a section step either side, the reading beneath and narrower. Full width stays available where the geometry genuinely benefits from width.",
+    "media.tall.supporting": [
+      "inset"
+    ],
+    "media.tall.explanatory": [
+      "narrow"
+    ],
+    "media.tall.primary": [
+      "expanded"
+    ],
+    "media.portrait.supporting": [
+      "inset"
+    ],
+    "media.portrait.explanatory": [
+      "expanded"
+    ],
+    "media.portrait.primary": [
+      "wide"
+    ],
+    "media.balanced.supporting": [
+      "inset"
+    ],
+    "media.balanced.explanatory": [
+      "expanded"
+    ],
+    "media.balanced.primary": [
+      "wide"
+    ],
+    "media.landscape.supporting": [
+      "narrow"
+    ],
+    "media.landscape.explanatory": [
+      "expanded"
+    ],
+    "media.landscape.primary": [
+      "wide",
+      "full"
+    ],
+    "media.wide.supporting": [
+      "narrow"
+    ],
+    "media.wide.explanatory": [
+      "wide"
+    ],
+    "media.wide.primary": [
+      "full"
+    ],
+    "media.panoramic.supporting": [
+      "narrow"
+    ],
+    "media.panoramic.explanatory": [
+      "full"
+    ],
+    "media.panoramic.primary": [
+      "full"
+    ],
+    "media.tall": [
+      "inset",
+      "narrow",
+      "expanded"
+    ],
+    "media.portrait": [
+      "inset",
+      "expanded",
+      "wide"
+    ],
+    "media.balanced": [
+      "inset",
+      "expanded",
+      "wide"
+    ],
+    "media.landscape": [
+      "narrow",
+      "expanded",
+      "wide",
+      "full"
+    ],
+    "media.wide": [
+      "narrow",
+      "wide",
+      "full"
+    ],
+    "media.panoramic": [
+      "narrow",
+      "full"
+    ],
+    "interactive": [
+      "wide",
+      "full"
+    ],
+    "workspace": [
+      "full"
+    ],
+    "_supportIsSubordinate": "A SOLO `support` ROW TAKES `narrow` ON DESKTOP. It is secondary content; at the spine's full eight columns it reads as another body section rather than as the aside it is. `narrow` is in the family for exactly this and for nothing else. Tablet and phone return to the spine, because six of seven columns is not subordination, it is crowding."
+  },
+  "whitespace": {
+    "_": "THE FIVE SPACES, KEPT SEPARATE. Structural validity only. Fitness is a separate question, asked by H11 after these are satisfied.",
+    "1 · page margin": "the grid outside the row's realised span, and the symmetric containment of a centred split. Intentionally empty, valid, no semantic owner needed. VALID IS NOT THE SAME AS WELL USED.",
+    "2 · blueprint rhythm": "the named step between two semantic regions.",
+    "3 · internal block space": "owned by the block; may never reach a region's exterior.",
+    "4 · unclaimed composition space": "free width inside a paired or workspace row. Always invalid. H2.",
+    "5 · pair imbalance": "all width owned and the pair still terminates too far apart. H4."
+  },
+  "ownership": {
+    "block": [
+      "typography",
+      "spacing inside the component",
+      "spacing between steps and equations",
+      "padding required by a VISIBLE surface"
+    ],
+    "blueprint": [
+      "region placement",
+      "the spine and its axis",
+      "the solo span ladder and the preferred rung",
+      "pairing",
+      "ALL spacing between semantic regions"
+    ],
+    "rule": "A semantic region HUGS its meaningful ink or visible surface at its exterior boundary (H10)."
+  },
+  "rhythm": {
+    "steps": {
+      "tight": 16,
+      "normal": 32,
+      "section": 56
+    },
+    "rule": "Every row but the last declares `gapAfter`; a gap may declare `gapWithin` to sit inside one region's columns."
+  },
+  "presentationRoles": {
+    "_": "AUTHORED, NEVER INFERRED. The renderer may choose between the responsive forms of an authored blueprint; it may never read available space, prose length or occupancy and conclude that a visual is important. Pedagogical weight is a thing an author says.",
+    "supporting": "a visual that supports a reading it does not carry. Deliberately small, centred on the same axis as the reading.",
+    "explanatory": "the ordinary case: the object and the reading of it share the page, and the reading carries the teaching.",
+    "primary": "the page exists substantially to explain this object. It may be very large and very tall, because the page scrolls and height is not itself a defect.",
+    "workspace": "a surface the learner acts on. Its height is designed, not derived.",
+    "theSeparation": [
+      "blueprint span = how much page geometry the media owns",
+      "surface = the complete visual object occupying that geometry",
+      "plot realisation = how the graph uses the surface while preserving scale and labels",
+      "presentation role = what the object is FOR, authored"
+    ]
+  },
+  "frozen": {
+    "_": "FROZEN BY THE MAINTAINER. These are settled; later passes build on them rather than revisit them.",
+    "items": [
+      "Treatment A — the figure surface takes the media region and the plot is solved inside it.",
+      "Figure-surface OWNERSHIP: blueprint region → figure surface → plot → caption.",
+      "The caption is owned by the SURFACE, not the plot.",
+      "The four boundaries stay independently inspectable.",
+      "The presentation role is AUTHORED and never inferred.",
+      "Responsive blueprint identity is invariant: the rungs may change, the blueprint may not.",
+      "Plot chrome cannot change the composition.",
+      "Internal figure-surface whitespace is valid OWNED space, categorically unlike an unowned column.",
+      "Treatment B remains a rejected counterexample.",
+      "Geometry PARTICIPATES in blueprint selection — `presentationRole × geometryClass → named blueprint`, never `aspect ratio → calculated width`.",
+      "`primary` cannot mean \"largest possible box\"; full-width portrait is rejected.",
+      "supporting / explanatory / primary are genuinely different presentation INTENTS.",
+      "The geometry vocabulary is SIX CLASSES with declared boundaries — tall < 0.70 / portrait < 0.90 / balanced < 1.20 / landscape < 1.75 / wide < 2.50 / panoramic, read as width:height, half-open upward. FROZEN. Geometry calibration stops here.",
+      "The mapping is `presentationRole × geometryClass × surface → ONE named blueprint`, and that blueprint names ONE rung. The exact ratio decides nothing after the class is chosen.",
+      "A media solo row may declare exactly one rung. A second rung is a ladder a ratio can climb at realisation time, which is the resolver this pass removed.",
+      "`primary` is not `wider`. For a tall object primacy comes from page structure — its own stage, a section step either side, the reading beneath and narrower — not from span.",
+      "ACCEPTANCE IS CATEGORICAL: within one class, one surface and one role, every probe selects the same named blueprint and the same rung, or the boundary or the blueprint is wrong.",
+      "THE INVARIANT, in full: within one pattern family, `role × geometry class × surface → one named blueprint → one declared rung`. A NEIGHBOURING CLASS IS ALLOWED TO CONVERGE on the same blueprint. What is forbidden is the exact aspect ratio subsequently changing the rung.",
+      "GEOMETRY CALIBRATION IS FINISHED. No further width or height is tuned unless a REAL AUTHORED PAGE produces a categorical failure under this contract."
+    ],
+    "convergences": {
+      "_": "RECORDED, NOT DISGUISED, AND NOT PAPERED OVER WITH AN INVENTED WIDTH. Where two classes or two roles currently resolve to the same design, the catalogue says so. Each is a gap to be filled with a genuine structural distinction later, or to be accepted as a real convergence.",
+      "portrait ≡ balanced": "ACCEPTED, NOT A DEFECT, AND DELIBERATELY NOT MERGED. `visual.explanation` treats them identically at all three roles. That one composition family does not distinguish square-ish media from upright media does not make them globally the same thing, and they may diverge in another family later. Keeping the semantic distinction costs almost nothing; manufacturing different widths to justify the two labels would be worse.",
+      "wide ≡ panoramic": "separated only at `explanatory`, where `panoramic` takes the full grid and `wide` stays at ten. At `supporting` and `primary` they converge.",
+      "panoramic explanatory ≡ panoramic primary": "both take the full grid, because there is no rung above `full`. At the top of the ladder the role can no longer be expressed as span, so it must be expressed as page structure or accepted as a convergence.",
+      "landscape ≡ portrait at explanatory and primary": "separated only at `supporting`, where landscape takes six columns and portrait four."
+    }
+  },
+  "geometryVocabulary": {
+    "_": "SIX CLASSES, AND THE BOUNDARIES ARE DECLARED. The four-class vocabulary was ruled too coarse: it let the EXACT ASPECT RATIO keep making layout decisions after the class had supposedly been chosen. Two members of `portrait` — 0.45 and 0.75 — came out of one blueprint at two different desktop rungs, which is a small resolver hiding inside the blueprint system.",
+    "bands": {
+      "_": "Read as WIDTH:HEIGHT, which is how a designer talks about a shape, and half-open upward: a shape at exactly 0.90 is `balanced`, not `portrait`. `tall` is deliberately open below; nothing in the catalogue is proven for a shape narrower than the probed floor and the atlas says so.",
+      "_movedTo070": "THE tall → portrait BOUNDARY WAS 0.60 AND IS NOW 0.70. At 0.60 an object could become slightly LESS tall geometrically and be promoted from the eight-column tall composition to the ten-column portrait one, ending up substantially TALLER on the page: a 0.63 shape came out 956x1570 — 1.74 desktop viewports — against 760x1371 for a 0.57 shape one class down. A categorical edge case producing a worse result the moment you cross it is the exact failure the classes exist to prevent. 0.67 / 0.70 / 0.73 were probed around the new line.",
+      "tall": {
+        "below": 0.7
+      },
+      "portrait": {
+        "from": 0.7,
+        "below": 0.9
+      },
+      "balanced": {
+        "from": 0.9,
+        "below": 1.2
+      },
+      "landscape": {
+        "from": 1.2,
+        "below": 1.75
+      },
+      "wide": {
+        "from": 1.75,
+        "below": 2.5
+      },
+      "panoramic": {
+        "from": 2.5
+      }
+    },
+    "superseded": {
+      "portrait": "h/w > 1.0",
+      "balanced": "0.75 – 1.0",
+      "landscape": "0.4 – 0.75",
+      "wide": "< 0.4"
+    },
+    "theRule": "The mapping is `presentationRole × geometryClass × surface → ONE approved named blueprint`, and that blueprint names ONE rung. An aspect ratio never calculates a width, and once a shape has landed in a class its exact ratio has nothing left to decide. If two members of one class need different compositions, the class boundary is wrong or the blueprint is wrong — never a fallback.",
+    "acceptance": "WITHIN ONE CLASS, ON ONE SURFACE, AT ONE ROLE, EVERY PROBE SELECTS THE SAME NAMED BLUEPRINT AND THE SAME RUNG. H19 proves it categorically; H20 refuses the fallback that would otherwise let a ratio escape its class.",
+    "heightIsEvidence": "The realised height and its share of a 900px desktop viewport are recorded on every calibration render as DIAGNOSTIC EVIDENCE. Nothing reads them back, and no composition is selected from them. The class captures the relevant shape difference ahead of time; height only says what that decision cost.",
+    "shipping": "THE SHIPPING GRAMMAR HAS NOT MOVED. `docs/atlas/worked-examples/src/atlas.json` still declares the four-class `mediaGeometry.bands` that the `visual.side` switch point and the figure-container gate depend on, and `classOf()` still reads it. Adopting six classes there is a migration, not a rename, and it belongs with the blueprint system rather than ahead of it."
+  },
+  "golden": [
+    "visual.explanation/spine-narrow",
+    "worked.paired/cases-6-6"
+  ],
+  "figureSurface": {
+    "_": "A SEMANTIC PRESENTATION PRIMITIVE OWNED BY THE MEDIA REGION, PROPOSED AND NOT ENABLED. It is applied AFTER layout has resolved and it decides nothing about width or composition. Both treatments below are rendered for comparison; neither is frozen.",
+    "enabled": true,
+    "treatment": "A",
+    "adopted": "THE CONCEPT IS ADOPTED; THE EXACT DIMENSIONS ARE NOT FROZEN. What treatment A proved is the ownership model — blueprint → media region → figure surface → plot — not that 760px is the right width for a graph. The width comes from the blueprint span, which comes from the authored presentation role and the media geometry.",
+    "caption": {
+      "owner": "surface",
+      "_": "THE CAPTION BELONGS TO THE FIGURE SURFACE, NOT TO THE PLOT. The plot is the mathematical drawing; the caption describes the COMPLETE MEDIA OBJECT. The graph engine may supply the content, and the surface renders and owns it. This is what generalises to images, diagrams, videos and interactives, which then all share: surface header · media payload · local controls · caption."
+    },
+    "theProblem": "Both successful pages are structurally correct and neither says clearly enough that the graph, its caption and its graph-local controls are ONE VISUAL OBJECT, separate from the prose that interprets it. The separation exists in the blueprint and is not obvious in the courseware.",
+    "whereItSits": "blueprint/grid → row cardinality → solo rung / paired / workspace → realised media geometry → figureSurface { figure · local controls · caption }. It is the LAST step and it is presentation only.",
+    "isNot": [
+      "a resolver",
+      "an occupancy mechanism",
+      "a new grid owner",
+      "a way to fill dead space",
+      "permission to stretch a media object",
+      "permission to convert a bad pair into a good one"
+    ],
+    "threeBoundaries": {
+      "_": "KEPT SEPARATE ON PURPOSE. Collapsing them into one box is how a border would start deciding composition.",
+      "1 region": "the grid columns the blueprint assigned. Decides where the object may exist.",
+      "2 surface": "visually groups the media, its caption and its media-local controls.",
+      "3 plot": "the mathematical coordinate plane itself, which the surface never touches."
+    },
+    "internalSpace": "Width left over INSIDE an owned figure surface is intentional internal space and is valid. It is not the old defect: empty grid columns in an ACTIVE ROW are unowned composition space and stay invalid. That is the whole difference, and the atlas classifies them separately.",
+    "chromePx": {
+      "pad": 18,
+      "border": 1,
+      "_": "DECLARED, BECAUSE THE PLANE IS SOLVED FOR THE WIDTH AVAILABLE INSIDE THE SURFACE. The first build solved it for the REGION width and then let the surface clamp it, which squeezed the plane to 62.57px per x-unit against 65.94 per y-unit. H14 caught it on the first run. A surface never stretches or squeezes the mathematics to fit itself; the mathematics is solved for the room it actually has."
+    },
+    "chrome": {
+      "border": "1px neutral",
+      "radius": "4px",
+      "surface": "white on a very slightly neutral page",
+      "padding": "18px 18px 14px",
+      "shadow": "none",
+      "_": "A textbook figure or an interactive plate, not a dashboard card. The plotting area stays clean."
+    },
+    "treatments": {
+      "A": {
+        "title": "centred plot inside a full-width figure surface",
+        "surface": "the media region width",
+        "plot": "its own solved width, centred",
+        "fit": "fill — the SURFACE consumes the region and the plane keeps its geometry inside it"
+      },
+      "B": {
+        "rejected": true,
+        "rejectedBecause": "It recreates the old six-column visual footprint inside a nominally wider composition: the plate lands at 564px, exactly the width of the six-column reading spine below it, so the composition says eight columns while the eye still sees six. Kept as a counterexample.",
+        "title": "surface shrink-wrapped to the mathematical plane",
+        "surface": "the plane width plus chrome",
+        "plot": "solved at the row's NEXT RUNG DOWN",
+        "fit": "contain — the surface is the object and the region owns the space either side of it",
+        "_": "A surface that hugs a plane solved for the region width is just treatment A, so B is only a real alternative when the plane keeps a NARROWER correct geometry: it is solved at the other rung the row approves, and the surface wraps that."
+      }
+    },
+    "ruling": "A. Measured and rendered both; B rejected for the reason recorded against it."
+  },
+  "patterns": {
+    "notes": {
+      "intent": "Teaching notes: an explanation, optionally a rule set apart, optionally a set of equivalent worked examples. The default page of a lesson.",
+      "mediaSlot": "illustration",
+      "slotFit": "contain",
+      "selectBy": [
+        "presentationRole",
+        "mediaGeometry"
+      ],
+      "admits": {
+        "roles": [
+          "supporting"
+        ],
+        "classes": [
+          "tall",
+          "portrait",
+          "balanced",
+          "landscape",
+          "wide",
+          "panoramic"
+        ],
+        "one role": "AN ILLUSTRATION IN A PAGE OF NOTES IS SUPPORTING BY CONSTRUCTION. The slot is `optional-collapse` — the page is complete without it — and a page whose object is explanatory or primary is `visual.explanation` or `media.full`, which is what those patterns are for.",
+        "all six classes, though only three are RENDERED": "AND THAT IS A DIFFERENT KIND OF GAP FROM `interactive.primary`'s. There, no frozen mapping exists for an instrument at all, so admitting an unrendered class would be claiming a composition nobody has designed. Here the frozen table already says what `supporting × class` gets for every class, so selecting it is an APPLICATION of a decision already made, not a new claim. What is missing is a PICTURE: the permanent image fixtures are 0.75:1, 1.0:1 and 1.78:1, which land in `portrait`, `balanced` and `wide`, so tall, landscape and panoramic illustrations are unrendered rather than unclaimed."
+      },
+      "blueprints": {
+        "notes-inset": {
+          "role": "supporting",
+          "title": "notes with an upright illustration — `inset` 4 within the reading on desktop, the measure on tablet",
+          "theTabletArrangement": "THE PARITY ANSWER WAS CORRECT AND UNSATISFYING, so the tablet does something else. Four columns cannot be centred inside a SEVEN-column measure on whole columns, and leaving the illustration on the reading's left edge put a rail of nothing down its right — a milder version of the defect the alignment ruling exists to remove. So the ROW takes the whole measure and the OBJECT is centred inside it at its authored presentation width, which is `contain` plus a centred media anchor and needs no new machinery. The SURFACE is compact there: it hugs the object and its chrome rather than filling the region, so the caption sits under the image at its left edge instead of at a mostly empty plate's far corner, and the space either side belongs to the named region. Ruled from a three-way render: left edge, wide card, compact card. DESKTOP AND PHONE ARE UNCHANGED — desktop centres on whole columns already, and on the phone the illustration IS the measure. `notes-aside` keeps its `narrow` rung at tablet: six of seven leaves one column, not three, and changing it would be changing a layout nobody asked about.",
+          "why": "THE DEFAULT PAGE. The brief pairs with the key ideas beside it, the reading and the examples return to the measure, and the illustration takes the `inset` rung that `supporting` approves for an upright object — centred INSIDE the eight-column reading it supports, columns 3-6. Subordinate to the prose without being stranded against the page edge or claiming a page-level media stage it has not earned. APPROVED FROM THE PROTOTYPE after the two alignment systems were ruled. The shipping subdesign centres it on the PAGE instead, which is the defect recorded below.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "brief",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "8/4",
+                  "regions": [
+                    "intro",
+                    "support"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "an explanation beside the key ideas it establishes — two PROSE regions, both written"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "inset"
+                  ],
+                  "preferred": "inset"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true,
+                "origin": "within-reading"
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true,
+                "surface": "compact"
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "notes-aside": {
+          "role": "supporting",
+          "title": "notes with a wider illustration — `narrow` 6, centred within the reading spine",
+          "why": "THE SAME PAGE FOR AN OBJECT THAT IS WIDER THAN IT IS TALL. Four columns would make a landscape or panoramic illustration a sliver, so `supporting` approves six for those classes — still visibly narrower than the 760px reading it supports, which is what keeps it subordinate. It is centred within the reading for the same reason `notes-inset` is, and it CHANGED HERE TOO rather than being left behind: the ruling is about what a supporting illustration IS, not about one rung. Rendered alongside so the wider case is examined rather than assumed.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "brief",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "8/4",
+                  "regions": [
+                    "intro",
+                    "support"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "an explanation beside the key ideas it establishes — two PROSE regions, both written"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true,
+                "origin": "within-reading"
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reading",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reading",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "illustration",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "illustration",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "examples",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "examples",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "supporting": {
+            "tall": "notes-inset",
+            "portrait": "notes-inset",
+            "balanced": "notes-inset",
+            "landscape": "notes-aside",
+            "wide": "notes-aside",
+            "panoramic": "notes-aside"
+          }
+        },
+        "tablet": {
+          "supporting": {
+            "tall": "notes-inset",
+            "portrait": "notes-inset",
+            "balanced": "notes-inset",
+            "landscape": "notes-aside",
+            "wide": "notes-aside",
+            "panoramic": "notes-aside"
+          }
+        },
+        "phone": {
+          "supporting": {
+            "tall": "notes-inset",
+            "portrait": "notes-inset",
+            "balanced": "notes-inset",
+            "landscape": "notes-aside",
+            "wide": "notes-aside",
+            "panoramic": "notes-aside"
+          }
+        }
+      },
+      "withdrawn": {
+        "page-centred-6": {
+          "_": "THE PRE-STEP-1 ARRANGEMENT: six columns centred on the twelve-column PAGE (4-9) over prose anchored at column 1. Rendered beside the revision so the two could be judged against each other rather than described.",
+          "whyItIsRefused": "TWO REASONS, AND THE SECOND IS INDEPENDENT OF THE ARGUMENT. It claims a page-level MEDIA STAGE that a supporting object has not earned — the illustration is subordinate to the prose and a stage says the opposite. It is also outside the approved span family for supporting portrait media, which approves `inset` alone, so `select` could never name it. And it fails H6 on its own terms: a `contain` object painted 564px wide where its authored presentation width is 420px.",
+          "theFix": "`notes-inset`, which now centres the illustration WITHIN the eight-column reading spine (columns 3-6) — subordinate without being stranded. Approved from the prototype."
+        },
+        "measure-centred-illustration": {
+          "_": "THE SHIPPING `notes/measure` SUBDESIGN, AND IT IS THE SECOND INSTANCE OF THE SAME DEFECT. Its areas run intro 1–8 beside support 9–12, reading 1–8, ILLUSTRATION 4–9, examples 1–8, synthesis 1–8. Every prose region is anchored to the left edge and the illustration alone is CENTRED on the twelve-column grid, so the page has two alignment origins.",
+          "sameAs": "`media.full/centred` does exactly this with its media. Two patterns in the shipping catalogue independently centre their object over left-anchored prose, which suggests it was a habit rather than a decision.",
+          "whyItIsNotRendered": "Same reason as `media.full/centred`: a blueprint declares ONE spine per surface, and no rung on a left-edge axis resolves to columns 4–9. The composition is INEXPRESSIBLE under the contract, which is the finding. Faking it — by writing the row as a pair with a null sibling — makes H2 fire for the encoding rather than the design, and a counterexample that fails for the wrong reason proves nothing.",
+          "theFix": "`notes-inset`: the illustration at `inset` 4 on the same left edge as the reading."
+        }
+      }
+    },
+    "visual.explanation": {
+      "intent": "One primary visual and the reading of it, where the READING carries the teaching.",
+      "mediaSlot": "media",
+      "slotFit": "fill",
+      "selectBy": [
+        "presentationRole",
+        "mediaGeometry"
+      ],
+      "admits": {
+        "roles": [
+          "supporting",
+          "explanatory",
+          "primary"
+        ],
+        "classes": [
+          "tall",
+          "portrait",
+          "balanced",
+          "landscape",
+          "wide",
+          "panoramic"
+        ]
+      },
+      "blueprints": {
+        "spine-supporting": {
+          "role": "supporting",
+          "title": "a supporting visual — centred `inset`, the reading beside nothing and beneath it",
+          "why": "A SUPPORTING VISUAL IS A DIFFERENT BLUEPRINT, NOT A SMALLER CALCULATION. The object takes the `inset` rung — four columns — centred on the same axis as the reading it supports, so the page still has one centre line and the object still reads as deliberately placed. Nothing measured chose four columns: the author said this visual is supporting, and supporting portrait media approves exactly one rung.",
+          "role_": "supporting",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 6
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "inset"
+                  ],
+                  "preferred": "inset"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "inset"
+                  ],
+                  "preferred": "inset"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "spine-narrow": {
+          "golden": true,
+          "role": "explanatory",
+          "title": "the standard explanatory visual — centred spine 6, media solo at `expanded`",
+          "why": "THE ORDINARY EXPLANATORY CASE. The object takes eight columns — the `expanded` rung — and the reading returns to the six-column spine beneath it. One centre line, page margin either side, and the plane solved for the room inside the surface. This is what treatment A proved; what it proved is the OWNERSHIP MODEL, not that 760px is the right width for a graph.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 6
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "expanded"
+                  ],
+                  "preferred": "expanded"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "expanded"
+                  ],
+                  "preferred": "expanded"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "stage-primary": {
+          "role": "primary",
+          "title": "the primary visual for the middle of the range — centred `wide`, ten columns",
+          "why": "PRIMARY IS NOT MAXIMUM. A plane preserves its geometry, so the full grid made the portrait shape 1152x1469 — legal, because the page scrolls, and not a good default. Ten centred columns is 956px of object against a 760px reading: unmistakably the principal thing on the page, dominating through vertical presence and surrounding whitespace rather than by consuming every column. `full` is not in the portrait, balanced or landscape family at all, so the twelve-column version cannot be written down. RENAMED from `stage-primary-portrait` when the vocabulary split: it is the approved primary composition for `portrait`, `balanced` AND `landscape`, and a name that claimed one of the three was reading as a promise the catalogue does not make.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "spine-supporting-wide": {
+          "role": "supporting",
+          "title": "a supporting WIDE visual — centred `narrow`, six columns",
+          "why": "THE SAME ROLE, A DIFFERENT GEOMETRY, A DIFFERENT BLUEPRINT. A wide plane at four columns would be a sliver, so supporting wide media takes six — visibly narrower than the 760px reading it supports, which is what makes it read as subordinate.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "stage-wide": {
+          "role": "explanatory",
+          "title": "the explanatory WIDE visual — centred `wide`, ten columns",
+          "why": "A wide plane is short by construction, so ten columns costs 437px of height and reads as the object the page is discussing without becoming the whole page.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "stage-full": {
+          "role": "primary",
+          "title": "the primary WIDE visual — the full grid",
+          "why": "FULL WIDTH WHERE THE GEOMETRY BENEFITS FROM WIDTH. A wide plane, a timeline, a wide diagram, an interactive or a workspace can take every column and stay a sensible height — a wide plane at twelve columns is 1152x527. This is the one family where the whole grid is the right answer, which is exactly why it must not be the generic meaning of `primary`. A PRIMARY VISUAL MAY BE VERY LARGE; it is an AUTHORED decision, and the renderer never infers pedagogical importance from available space.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "spine-tall": {
+          "role": "explanatory",
+          "title": "the explanatory TALL visual — centred `narrow`, six columns",
+          "why": "A TALL PLANE BUYS HEIGHT WITH EVERY COLUMN IT TAKES. At the `expanded` rung an object at the tall end of the class is 760x1572 — almost two desktop viewports for a figure the reading is meant to be discussing. Six columns costs 564x1213, which is still tall and is the point: the class exists because tall objects need a NARROWER approved composition than portrait ones, not because a resolver noticed the taller one would not fit. The reading stays on the same centre.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 6
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "stage-tall": {
+          "role": "primary",
+          "title": "the primary TALL visual — its own stage at `expanded`, eight columns",
+          "why": "PRIMARY IS NOT WIDER, AND THIS IS THE BLUEPRINT THAT SAYS SO OUT LOUD. A tall object cannot express importance by span: ten columns makes the tall calibration shape 956x1965 and twelve makes it 1152x2359, so a `primary` that meant \"as wide as possible\" would produce two and a half desktop viewports of one figure. This composition gives it eight and buys its primacy from the PAGE STRUCTURE instead. The difference from `spine-tall` is not just a rung: there the object sits INSIDE the reading column — media six, spine six, one edge — while here it BREAKS OUT past the reading on both sides, media eight against a six-column spine, so the reading is visibly subordinate to the figure and the page reads as built around it. That is the role, and it is authored; nothing measured it.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 6
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "expanded"
+                  ],
+                  "preferred": "expanded"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "expanded"
+                  ],
+                  "preferred": "expanded"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "stage-panorama": {
+          "role": "explanatory",
+          "title": "the explanatory PANORAMIC visual — the full grid",
+          "why": "THE ONE CLASS WHERE AN EXPLANATORY OBJECT EARNS THE WHOLE GRID. Past 2.5:1 width is nearly free — twelve columns costs 1152x601, less height than a 1.5:1 object at ten — and a panorama read at ten columns is a band with margins either side rather than a panorama. This is what separates `panoramic` from `wide`, which stays at ten at this role.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "supporting": {
+            "tall": "spine-supporting",
+            "portrait": "spine-supporting",
+            "balanced": "spine-supporting",
+            "landscape": "spine-supporting-wide",
+            "wide": "spine-supporting-wide",
+            "panoramic": "spine-supporting-wide"
+          },
+          "explanatory": {
+            "tall": "spine-tall",
+            "portrait": "spine-narrow",
+            "balanced": "spine-narrow",
+            "landscape": "spine-narrow",
+            "wide": "stage-wide",
+            "panoramic": "stage-panorama"
+          },
+          "primary": {
+            "tall": "stage-tall",
+            "portrait": "stage-primary",
+            "balanced": "stage-primary",
+            "landscape": "stage-primary",
+            "wide": "stage-full",
+            "panoramic": "stage-full"
+          }
+        },
+        "tablet": {
+          "supporting": {
+            "tall": "spine-supporting",
+            "portrait": "spine-supporting",
+            "balanced": "spine-supporting",
+            "landscape": "spine-supporting-wide",
+            "wide": "spine-supporting-wide",
+            "panoramic": "spine-supporting-wide"
+          },
+          "explanatory": {
+            "tall": "spine-tall",
+            "portrait": "spine-narrow",
+            "balanced": "spine-narrow",
+            "landscape": "spine-narrow",
+            "wide": "stage-wide",
+            "panoramic": "stage-panorama"
+          },
+          "primary": {
+            "tall": "stage-tall",
+            "portrait": "stage-primary",
+            "balanced": "stage-primary",
+            "landscape": "stage-primary",
+            "wide": "stage-full",
+            "panoramic": "stage-full"
+          }
+        },
+        "phone": {
+          "supporting": {
+            "tall": "spine-supporting",
+            "portrait": "spine-supporting",
+            "balanced": "spine-supporting",
+            "landscape": "spine-supporting-wide",
+            "wide": "spine-supporting-wide",
+            "panoramic": "spine-supporting-wide"
+          },
+          "explanatory": {
+            "tall": "spine-tall",
+            "portrait": "spine-narrow",
+            "balanced": "spine-narrow",
+            "landscape": "spine-narrow",
+            "wide": "stage-wide",
+            "panoramic": "stage-panorama"
+          },
+          "primary": {
+            "tall": "stage-tall",
+            "portrait": "stage-primary",
+            "balanced": "stage-primary",
+            "landscape": "stage-primary",
+            "wide": "stage-full",
+            "panoramic": "stage-full"
+          }
+        }
+      },
+      "candidates": {
+        "stage-primary-full12": {
+          "role": "primary",
+          "notFrozen": true,
+          "title": "the primary portrait at the full grid — NOT FROZEN, kept for comparison",
+          "why": "THE VERSION THIS PASS DECLINED TO FREEZE. Nothing is mathematically wrong with it and the page scrolls, but a portrait plane preserves its geometry, so twelve columns makes it 1152x1469. It proves that pedagogical importance must not automatically mean maximum horizontal span, which is why `full` was removed from the portrait span family and `primary/portrait` now selects `stage-primary-portrait` at ten centred columns. Rendered beside it for comparison, and reachable only as a candidate — `select` cannot name it.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        }
+      },
+      "withdrawn": {
+        "side-study": {
+          "role": "explanatory",
+          "title": "media-5 + explanation-7",
+          "why": "WITHDRAWN, AND KEPT AS EVIDENCE. Its row owns all twelve columns and the page still looks wrong: the object and the reading beside it terminate ~535px apart against the 160px it declared. A wider graph would not fix that, and neither would a border.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "study",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "5/7",
+                  "regions": [
+                    "media",
+                    "interpretation"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 160,
+                  "pairReason": "an object beside the reading of it"
+                },
+                "vertical": "hug",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "media.full": {
+      "intent": "A single media object IS the page, with its reading beneath. THE ONE PATTERN WHOSE PLANE CROSSES THE READING MEASURE — in `visual.explanation` the reading teaches and the object illustrates; here the object teaches and the reading comments.",
+      "mediaSlot": "media",
+      "slotFit": "fill",
+      "selectBy": [
+        "presentationRole",
+        "mediaGeometry"
+      ],
+      "admits": {
+        "roles": [
+          "primary"
+        ],
+        "classes": [
+          "portrait",
+          "balanced",
+          "landscape",
+          "wide",
+          "panoramic"
+        ],
+        "refuses tall": "THE PATTERN AND A TALL OBJECT ARE AT ODDS, and the honest answer is to say so rather than degrade. `media.full` is defined by the plane CROSSING the reading measure; a tall plane cannot cross it without becoming enormous — the 0.45 calibration shape is 1152x2359 at twelve columns — so the only rung it could take here is the measure itself, at which point the pattern has become `visual.explanation` with extra steps. A tall object authored into `media.full` is an AUTHORING error with a correct fix: `visual.explanation` at `primary`, which has a composition for exactly this (`stage-tall`)."
+      },
+      "blueprints": {
+        "plate-full": {
+          "role": "primary",
+          "title": "the full-bleed plate — media at `full`, the reading inset to the measure beneath",
+          "why": "THE PATTERN AT ITS PUREST. The object takes every column and the reading returns to the eight-column measure beneath it, on the SAME LEFT EDGE. One axis, and the media breaks out to the right of it — which is what the left-edge spine is for, and what distinguishes this pattern from `visual.explanation`, where one centred axis holds everything. Landscape, wide and panoramic objects all arrive here: those classes were separated in `visual.explanation`, and in the pattern whose whole point is full bleed they converge by design.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        },
+        "plate-wide": {
+          "role": "primary",
+          "title": "the upright plate — media at `wide` on a centred MEDIA STAGE, still crossing the measure",
+          "why": "A PORTRAIT OR NEAR-SQUARE OBJECT STILL CROSSES THE MEASURE, but not by every column: ten columns is 956px against a 760px reading, so the plane is unmistakably the page without the height that twelve would buy. It sits on a CENTRED MEDIA STAGE and the reading returns to its own left edge beneath — two named regions doing different jobs, not a mixed axis. Anchoring the plate to the reading's left edge instead was structurally legal and visibly worse: it left an obvious rail of nothing down the right and made a standalone object look unfinished rather than staged. APPROVED FROM THE PROTOTYPE. The width is unchanged and still comes only from role × geometry — the stage decides where the object sits, never how wide it is. Measured 956x1234 for the portrait plane, 1.37 diagnostic viewports: prominence bought with height, which is the right trade when the object IS the page and the wrong one when it merely illustrates the prose. That is why `visual.explanation` keeps a narrower explanatory portrait rather than promoting it here.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true,
+                "origin": "stage"
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ],
+            "phone": [
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "primary": {
+            "portrait": "plate-wide",
+            "balanced": "plate-wide",
+            "landscape": "plate-full",
+            "wide": "plate-full",
+            "panoramic": "plate-full"
+          }
+        },
+        "tablet": {
+          "primary": {
+            "portrait": "plate-wide",
+            "balanced": "plate-wide",
+            "landscape": "plate-full",
+            "wide": "plate-full",
+            "panoramic": "plate-full"
+          }
+        },
+        "phone": {
+          "primary": {
+            "portrait": "plate-wide",
+            "balanced": "plate-wide",
+            "landscape": "plate-full",
+            "wide": "plate-full",
+            "panoramic": "plate-full"
+          }
+        }
+      },
+      "withdrawn": {
+        "expanded-8-primary-stage": {
+          "_": "THE NARROW END OF THE PORTRAIT-STAGE COMPARISON, RENDERED AND THEN DECLINED. Eight columns on a centred stage, 760x998 for the portrait plane against 956x1234 at ten — 1.11 diagnostic viewports instead of 1.37.",
+          "whyItWasRendered": "Centring the stage removed the horizontal imbalance and exposed a second effect: a portrait plane preserves its geometry, so span buys HEIGHT, and at ten columns the object had become tall enough to dominate the page. Eight, nine and ten were rendered side by side with identical content so the choice could be made from the pages rather than from a rule.",
+          "theRuling": "BOTH SPANS ARE APPROVED — for DIFFERENT PRESENTATION ROLES, in different patterns. Ten columns stays the primary portrait, here and in `visual.explanation/stage-primary`, because prominence is the point when the object IS the page and the vertical footprint is the price of it. Eight columns is the EXPLANATORY portrait, and it already exists: `visual.explanation/spine-narrow` renders at exactly 760x998. So there is nothing for this blueprint to be. `media.full` admits `primary` alone — its defining property is the plane crossing the reading measure — and an eight-column primary would contradict the ruling it came from. It is withdrawn rather than kept as a candidate nobody can select.",
+          "theRealFinding": "THE TWO APPROVED COMPOSITIONS ALREADY EXISTED AND NEITHER MOVED. The comparison did not produce a new blueprint; it produced a reason to keep both of the ones already frozen, and a rule against promoting every portrait graph to the wider one."
+        },
+        "nine-column-stage": {
+          "_": "NINE COLUMNS, 858px, RENDERED OFF THE GRID AND REFUSED. The middle of the same comparison.",
+          "whyItCannotExist": "A centred stage needs a symmetric page margin, and on a twelve-column grid (12 - 9) is odd — so a nine-column row lands a HALF COLUMN (49px) off the grid on both sides. `layout` already refused it, in the same code that defined the two alignment systems; the refusal was not written for this question. The render exists only because \"what does 858px look like\" deserved an answer, and it fails H1 and H2 for exactly the right reason: the row declares ten columns and paints nine, leaving columns 2 and 11 declared and empty.",
+          "theRuling": "NO NINE-COLUMN RUNG. Eight and ten already serve distinct instructional purposes and nothing in the renders argued for a third. Adopting nine would have been a decision to change the GRID, not to pick a rung."
+        },
+        "centred-two-origins": {
+          "_": "THE SHIPPING `media.full/centred` SUBDESIGN, AND IT CANNOT BE WRITTEN DOWN HERE AT ALL. Its areas put the media across columns 3–10 — centred on the twelve-column grid — and the interpretation across 1–8 and the support across 1–6, anchored to the LEFT EDGE. That is two alignment origins on one surface.",
+          "whyItIsNotRendered": "IT IS RECORDED RATHER THAN DRAWN, BECAUSE DRAWING IT WOULD HAVE TO CHEAT. A blueprint declares ONE spine per surface and `soloCols` resolves a rung against it: on a centred axis an eight-column row is columns 3–10, and there is no rung on a centred axis that resolves to 1–8. So the composition is INEXPRESSIBLE under the contract — which is the finding. A first attempt did render it, by writing the prose rows as `paired` with a null sibling to force them left; that fired H2 and H4, and both were artefacts of the encoding rather than evidence about the design. A counterexample that fails for the wrong reason proves nothing, so it was removed.",
+          "theDefect": "Under the whitespace taxonomy the prose rows are fine on their own — a solo row on a left-edge spine leaves PAGE MARGIN to its right, which is valid space #1. Nothing structural is wrong with either row in isolation. What is wrong is the pair of them: the object is centred on the page and the reading is anchored to the left, so the eye is given two axes and neither wins. That is precisely what the spine primitive was introduced to name, found in the shipping catalogue rather than invented for the atlas.",
+          "theFix": "`plate-wide` — one left edge, the media breaking out past it to ten columns. Same crossing of the reading measure, one axis.",
+          "forTheMaintainer": "This is a DEFECT IN THE SHIPPING CATALOGUE (`docs/atlas/composition/src/patterns.json`, `media.full`, subdesign `centred`), not in the proposal. Nothing here is wired into it, so nothing is fixed by this pass; it is reported."
+        }
+      }
+    },
+    "interactive.primary": {
+      "intent": "A manipulable object is the page: an opening brief, the instrument, and prompts directing what to try.",
+      "mediaSlot": "instrument",
+      "slotFit": "fill",
+      "selectBy": [
+        "presentationRole",
+        "mediaGeometry"
+      ],
+      "admits": {
+        "roles": [
+          "primary"
+        ],
+        "classes": [
+          "landscape",
+          "wide"
+        ],
+        "one role": "THE PATTERN IS NAMED FOR IT. An instrument the page is not built around belongs in a different pattern, so `supporting` and `explanatory` are not variants here.",
+        "the other four classes are a FIXTURE GAP, not a refusal": "DIFFERENT FROM `media.full` REFUSING `tall`, AND THE TWO MUST NOT BE CONFLATED. `media.full` refuses `tall` for a reason anyone can check: the pattern is defined by crossing the reading measure and a tall plane cannot. Here there is no argument at all — the permanent fixture set contains exactly two instruments, at 1.33:1 and 1.78:1, which land in `landscape` and `wide`. A tall, portrait, balanced or panoramic instrument has never been rendered, so the catalogue declines to claim a composition for one. The fix is a fixture, not a ruling."
+      },
+      "blueprints": {
+        "instrument-spine": {
+          "role": "primary",
+          "title": "the instrument on a centred spine, the prompts BENEATH it",
+          "why": "THE SHIPPING 8/4 PAIR WAS MEASURED AND REMOVED, and this is what replaced it. Pairing the instrument with prompts put an object whose height is DERIVED beside prose whose height is WRITTEN: measured on identical filler the instrument stood +472px past the prompts, and no width fixes that, because the gap is a property of the sentence the author happened to type. The prompts now sit beneath the instrument on the same centre line, which has no hole at any prose length. Same finding as `visual.explanation/side-6` at +474px; the pairing rule arriving a second time.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            },
+            "tablet": {
+              "align": "centre",
+              "span": 6
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "instrument",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "instrument",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "prompts",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "prompts",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "instrument",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "instrument",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "prompts",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "prompts",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "instrument",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "instrument",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "prompts",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "prompts",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "primary": {
+            "landscape": "instrument-spine",
+            "wide": "instrument-spine"
+          }
+        },
+        "tablet": {
+          "primary": {
+            "landscape": "instrument-spine",
+            "wide": "instrument-spine"
+          }
+        },
+        "phone": {
+          "primary": {
+            "landscape": "instrument-spine",
+            "wide": "instrument-spine"
+          }
+        }
+      },
+      "withdrawn": {
+        "beside-8-4": {
+          "role": "primary",
+          "title": "the shipping `beside` subdesign — instrument 8 PAIRED with prompts 4",
+          "why": "WITHDRAWN, MEASURED, AND KEPT AS EVIDENCE. An object whose height is DERIVED beside prose whose height is WRITTEN: the slot-span atlas measured the instrument standing +472px past the prompts on identical filler, alongside +474px for `visual.explanation/side-6`. No width fixes it, because the gap is a property of the sentence the author happened to type. Rendered here so THIS atlas measures it too rather than citing a number from another one.",
+          "spine": {
+            "desktop": {
+              "align": "centre",
+              "span": 8
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "instrument",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "8/4",
+                  "regions": [
+                    "instrument",
+                    "prompts"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 160,
+                  "pairReason": "an instrument beside the prompts directing it"
+                },
+                "vertical": "hug",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
+      "openQuestion": {
+        "_": "DOES THE `interactive` SLOT TYPE JOIN THE ROLE x GEOMETRY CONTRACT? It does not today, and the bypass is one line: `familyFor` short-circuits on `slotType === interactive` and returns a flat `soloFamilies.interactive`, so an instrument never consults `media.<class>.<role>` and the frozen mapping does not reach it.",
+        "forIt": "An instrument with a fixed aspect behaves exactly like a plane — geometry constrains which compositions work, which is the whole premise of the freeze.",
+        "againstIt": "An instrument carries CONTROLS, and a control has a minimum usable size that has nothing to do with aspect ratio. A contract keyed only on shape could approve a composition that is geometrically fine and unusable.",
+        "status": "NOT DECIDED HERE. Routing a slot type into the frozen contract is a change to the contract's reach, not a catalogue entry, and the maintainer froze it deliberately. This pattern is expressed with the existing `interactive` family and one declared rung, which is enough to render and prove it either way."
+      }
+    },
+    "visual.compare": {
+      "intent": "Two cases worked side by side, with an optional visual that belongs to both.",
+      "mediaSlot": "media",
+      "slotFit": "fill",
+      "selectBy": [
+        "presentationRole",
+        "mediaGeometry"
+      ],
+      "reapproved": "RE-EXPRESSED AND RE-RENDERED. It was schema-migrated twice — once to solo/paired and once to the six-class vocabulary — without anybody looking at it, and a migration is not an approval. It now selects by `presentationRole × geometryClass × surface` like every other media pattern, its phone form lives INSIDE each blueprint instead of in a separate one, and it is rendered.",
+      "admits": {
+        "roles": [
+          "explanatory"
+        ],
+        "classes": [
+          "none",
+          "tall",
+          "portrait",
+          "balanced",
+          "landscape",
+          "wide",
+          "panoramic"
+        ],
+        "one role": "A SHARED VISUAL BELONGS TO BOTH CASES; THE CASES ARE THE PAGE. That is the definition of `explanatory` — the object carries the explanation and the reading is the page's spine. A `primary` object would make this `media.full`, and a `supporting` one would not be worth the row.",
+        "none is a real authored state, not a hole": "`none` means the author wrote two cases and NO shared visual, which the shipping pattern already supports and which is the common case. It is listed as an admitted class so the select table is complete rather than silently short one entry — the whole point of `admits` is that a gap and a refusal stop looking alike."
+      },
+      "blueprints": {
+        "compare-plain": {
+          "noMedia": true,
+          "title": "two cases, no shared visual",
+          "why": "THE COMMON CASE. Intro, the two cases at identical width, then the reading of them. Nothing is centred and nothing reaches for the grid: every prose region sits on the same left edge as the cases row begins on, and the 6/6 split owns all twelve columns between them.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "caseA",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseA",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "caseB",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseB",
+                "gapAfter": "section"
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "compare-tall": {
+          "role": "explanatory",
+          "title": "two cases and a TALL shared visual — `narrow` 6",
+          "why": "A tall shared visual takes the rung `explanatory` approves for its class. Six columns, on the same left edge, beneath the cases it belongs to.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "caseA",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseA",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "caseB",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseB",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "compare-measure": {
+          "role": "explanatory",
+          "title": "two cases and an UPRIGHT shared visual — `expanded` 8",
+          "why": "Portrait, balanced and landscape shared visuals take eight columns — the reading measure, and the spine this pattern is built on, so the object and the prose share both edges.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "expanded"
+                  ],
+                  "preferred": "expanded"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "caseA",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseA",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "caseB",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseB",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "compare-wide": {
+          "role": "explanatory",
+          "title": "two cases and a WIDE shared visual — `wide` 10",
+          "why": "A wide plane is short by construction, so ten columns costs little height and lets the object belong visibly to both cases rather than to the column beneath one of them.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "wide"
+                  ],
+                  "preferred": "wide"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "caseA",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseA",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "caseB",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseB",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "compare-panorama": {
+          "role": "explanatory",
+          "title": "two cases and a PANORAMIC shared visual — the full grid",
+          "why": "Past 2.5:1 width is nearly free, and a panorama read at ten columns is a band with margins rather than a panorama.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "caseA",
+                    "caseB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two cases of the same kind, at identical width"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "full"
+                  ],
+                  "preferred": "full"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "caseA",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseA",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "caseB",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "caseB",
+                "gapAfter": "section"
+              },
+              {
+                "id": "media",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "media",
+                "gapAfter": "section",
+                "media": true
+              },
+              {
+                "id": "interpretation",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "interpretation",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "explanatory": {
+            "none": "compare-plain",
+            "tall": "compare-tall",
+            "portrait": "compare-measure",
+            "balanced": "compare-measure",
+            "landscape": "compare-measure",
+            "wide": "compare-wide",
+            "panoramic": "compare-panorama"
+          }
+        },
+        "tablet": {
+          "explanatory": {
+            "none": "compare-plain",
+            "tall": "compare-tall",
+            "portrait": "compare-measure",
+            "balanced": "compare-measure",
+            "landscape": "compare-measure",
+            "wide": "compare-wide",
+            "panoramic": "compare-panorama"
+          }
+        },
+        "phone": {
+          "explanatory": {
+            "none": "compare-plain",
+            "tall": "compare-tall",
+            "portrait": "compare-measure",
+            "balanced": "compare-measure",
+            "landscape": "compare-measure",
+            "wide": "compare-wide",
+            "panoramic": "compare-panorama"
+          }
+        }
+      }
+    },
+    "worked.single": {
+      "noAdmits": "A MEDIA-LESS PATTERN DECLARES NO `admits`, AND THAT IS NOT AN OVERSIGHT. `admits` names the presentation ROLES and geometry CLASSES a pattern accepts, and both only exist where there is an object to have a role and a shape. Its job is to make a hole in the select table distinguishable from a refusal, by giving validate a SECOND declaration to cross-check the table against. Here the table is keyed by an authored variant name and there is no second source — a missing variant is simply a variant nobody wrote, so there is nothing for a hole to be a hole IN.",
+      "intent": "One worked example. Every row is solo PROSE, which is what makes it the proof that the solo ladder is not \"one region, therefore wider\".",
+      "mediaSlot": null,
+      "selectBy": "authored",
+      "authoredKey": "form",
+      "blueprints": {
+        "flow": {
+          "title": "single.flow — every row solo prose at the measure",
+          "why": "PROSE ALONE STAYS AT THE MEASURE. Every row here holds exactly one region and none of them may reach for the grid: the reading measure is 760px and eight desktop columns is exactly that, so the ladder stops. A region being alone in its row is not a reason to widen it — the reason is what the region IS, and the span family for prose ends at the measure.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "scenario",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "worked",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "worked",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "scenario",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "worked",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "worked",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "scenario",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "worked",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "worked",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "split": {
+          "title": "single.split — the same widths, a section step and a rule",
+          "why": "The same spine and the same spans; only the rhythm differs.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            },
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "scenario",
+                "gapAfter": "section",
+                "ruleAfter": true
+              },
+              {
+                "id": "worked",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "worked",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "narrow"
+                  ],
+                  "preferred": "narrow"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "scenario",
+                "gapAfter": "section",
+                "ruleAfter": true
+              },
+              {
+                "id": "worked",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "worked",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "scenario",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "scenario",
+                "gapAfter": "section",
+                "ruleAfter": true
+              },
+              {
+                "id": "worked",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "worked",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "support",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "support",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "flow": "flow",
+          "split": "split"
+        },
+        "tablet": {
+          "flow": "flow",
+          "split": "split"
+        },
+        "phone": {
+          "flow": "flow",
+          "split": "split"
+        }
+      }
+    },
+    "worked.paired": {
+      "noAdmits": "A MEDIA-LESS PATTERN DECLARES NO `admits`, AND THAT IS NOT AN OVERSIGHT. `admits` names the presentation ROLES and geometry CLASSES a pattern accepts, and both only exist where there is an object to have a role and a shape. Its job is to make a hole in the select table distinguishable from a refusal, by giving validate a SECOND declaration to cross-check the table against. Here the table is keyed by an authored variant name and there is no second source — a missing variant is simply a variant nobody wrote, so there is nothing for a hole to be a hole IN.",
+      "intent": "Two worked examples of the same kind, side by side, and what they show together.",
+      "proposedPattern": true,
+      "slots": [
+        {
+          "name": "intro",
+          "slotType": "reading",
+          "occupancy": "optional-collapse",
+          "allowedBlocks": [
+            "prose"
+          ]
+        },
+        {
+          "name": "workedA",
+          "slotType": "worked",
+          "occupancy": "required",
+          "allowedBlocks": [
+            "workedExample",
+            "table"
+          ]
+        },
+        {
+          "name": "workedB",
+          "slotType": "worked",
+          "occupancy": "required",
+          "allowedBlocks": [
+            "workedExample",
+            "table"
+          ]
+        },
+        {
+          "name": "synthesis",
+          "slotType": "reading",
+          "occupancy": "required",
+          "allowedBlocks": [
+            "prose"
+          ]
+        }
+      ],
+      "mediaSlot": null,
+      "selectBy": "surface",
+      "blueprints": {
+        "cases-6-6": {
+          "golden": true,
+          "unchangedBy": "the solo-span layer — there is no solo row to reclaim space in",
+          "title": "intro solo · worked 6/6 paired · synthesis solo",
+          "why": "FROZEN AND UNCHANGED. The solo ladder does not touch this page: its one substantive row holds TWO regions that already own all twelve columns, so there is no solo space to reclaim. The prose rows are solo and stay at the measure. This is the proof that the new contract is scoped to cardinality 1 and does not simply make things bigger.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "6/6",
+                  "regions": [
+                    "workedA",
+                    "workedB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 180,
+                  "pairReason": "two worked examples of the same kind"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "cases",
+                "horizontal": {
+                  "mode": "paired",
+                  "split": "4/4",
+                  "regions": [
+                    "workedA",
+                    "workedB"
+                  ],
+                  "origin": "top",
+                  "imbalanceMax": 200,
+                  "pairReason": "two worked examples of the same kind"
+                },
+                "vertical": "hug",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        },
+        "cases-stacked": {
+          "title": "the phone stack",
+          "why": "Below the pairing surface the argument is carried by the synthesis.",
+          "spine": {
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "section"
+              },
+              {
+                "id": "workedA",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "workedA",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "workedB",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "workedB",
+                "gapAfter": "section"
+              },
+              {
+                "id": "synthesis",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "synthesis"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "any": "cases-6-6"
+        },
+        "tablet": {
+          "any": "cases-6-6"
+        },
+        "phone": {
+          "any": "cases-stacked"
+        }
+      }
+    },
+    "practice.workbook": {
+      "intent": "A question set beside a workspace the learner acts on.",
+      "mediaSlot": "reference",
+      "slotFit": "fill",
+      "selectBy": "surface",
+      "blueprints": {
+        "workbook-5-7": {
+          "role": "workspace",
+          "unchangedBy": "the solo-span layer — its central rows are designed 5/7 relationships, not solo rows",
+          "title": "intro solo · reference-5 over questions-5 · workspace-7 spanning both",
+          "why": "UNCHANGED. Its central working rows each hold TWO meaningful semantic regions in a designed 5/7 relationship, so the solo ladder does not apply to them and the reference is not widened. Only the intro is solo, and it stays at the measure. The workspace row is `vertical: designed` — its height is a design decision, not a derivation — which is now stated separately from its horizontal mode.",
+          "spine": {
+            "desktop": {
+              "align": "left-edge",
+              "span": 8
+            },
+            "tablet": {
+              "align": "left-edge",
+              "span": 7
+            }
+          },
+          "rows": {
+            "desktop": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine",
+                    "expanded"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reference",
+                "horizontal": {
+                  "mode": "workspace",
+                  "split": "5/7",
+                  "regions": [
+                    "reference",
+                    "workspace"
+                  ],
+                  "workspaceSlot": "workspace"
+                },
+                "vertical": "designed",
+                "gapAfter": "normal",
+                "media": true,
+                "gapWithin": "reference"
+              },
+              {
+                "id": "questions",
+                "horizontal": {
+                  "mode": "workspace",
+                  "split": "5/7",
+                  "regions": [
+                    "questions",
+                    "workspace"
+                  ],
+                  "workspaceSlot": "workspace"
+                },
+                "vertical": "designed"
+              }
+            ],
+            "tablet": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reference",
+                "horizontal": {
+                  "mode": "workspace",
+                  "split": "4/4",
+                  "regions": [
+                    "reference",
+                    "workspace"
+                  ],
+                  "workspaceSlot": "workspace"
+                },
+                "vertical": "designed",
+                "gapAfter": "normal",
+                "media": true,
+                "gapWithin": "reference"
+              },
+              {
+                "id": "questions",
+                "horizontal": {
+                  "mode": "workspace",
+                  "split": "4/4",
+                  "regions": [
+                    "questions",
+                    "workspace"
+                  ],
+                  "workspaceSlot": "workspace"
+                },
+                "vertical": "designed"
+              }
+            ]
+          }
+        },
+        "workbook-stacked": {
+          "role": "workspace",
+          "title": "the phone stack",
+          "why": "The workspace follows the worklist.",
+          "spine": {
+            "phone": {
+              "align": "left-edge",
+              "span": 4
+            }
+          },
+          "rows": {
+            "phone": [
+              {
+                "id": "intro",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "intro",
+                "gapAfter": "normal"
+              },
+              {
+                "id": "reference",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "reference",
+                "gapAfter": "normal",
+                "media": true
+              },
+              {
+                "id": "questions",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "hug",
+                "region": "questions",
+                "gapAfter": "section"
+              },
+              {
+                "id": "workspace",
+                "horizontal": {
+                  "mode": "solo",
+                  "spans": [
+                    "spine"
+                  ],
+                  "preferred": "spine"
+                },
+                "vertical": "designed",
+                "region": "workspace"
+              }
+            ]
+          }
+        }
+      },
+      "select": {
+        "desktop": {
+          "any": "workbook-5-7"
+        },
+        "tablet": {
+          "any": "workbook-5-7"
+        },
+        "phone": {
+          "any": "workbook-stacked"
+        }
+      }
+    }
+  },
+  "proofs": {
+    "_": "WHAT THIS PASS HAD TO SHOW, AND WHERE.",
+    "portrait graph, alone": "spine-narrow realises `expanded` (8 col). The same row forced to `spine` (6 col) is structurally perfect and FAILS H11.",
+    "prose, alone": "worked.single/flow — every row solo prose, every one capped at the measure, none reaching for the grid.",
+    "wide figure, alone": "stage-full realises `full` (12 col).",
+    "worked.paired": "unchanged — no solo row to reclaim.",
+    "practice.workbook": "unchanged — its working rows are designed 5/7 relationships.",
+    "side-study": "still fails H4, and a wider graph would not have saved it."
+  }
+}

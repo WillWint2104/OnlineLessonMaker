@@ -1,0 +1,341 @@
+# The worked-example grammar
+
+> **The author chooses the instructional structure. The renderer chooses only the prescribed
+> responsive state and media subdesign belonging to that structure.**
+
+That one sentence is the recoverable path from where the resolver went wrong, and everything below is
+it spelled out. The resolver experiment is retained at `docs/mockups/compositions/` as research
+evidence, and **its layout-selection logic must not be ported into the app.** `lesson-studio.html` has
+been untouched since `41d40a8` throughout.
+
+`node scripts/atlas-worked-examples.mjs` renders all 60 images in Chromium using the app's own
+stylesheet and the shipped Figure Engine. `ATLAS_ONLY=01,16 node scripts/…` renders a subset.
+
+---
+
+## 1. The proof — one authentic page
+
+**Image `01`** is the deliverable. Four tab states × desktop 1152 · tablet 834 · phone 382. It is a
+real Worked Examples page, built out of nothing but this vocabulary:
+
+```
+PAGE  ·  Worked examples — quadratics
+│
+├── collection.tabs                              ← several sibling subtopics; select one
+│   ├── "Substitution"    → collection.repeat    → single.flow × 3
+│   ├── "Solving for x"   → single.flow
+│   └── "Symmetry"        → views.tabs           ← one object, seen two ways
+│                              ├── Workings           → comparison.paired
+│                              └── Visual explanation → visual.down   ← media geometry
+└── scroll.y = page
+```
+
+| | desktop 1152 | tablet 834 | phone 382 |
+| --- | --- | --- | --- |
+| Substitution | 1854px | 1820px | 2154px |
+| Solving for *x* | 1030px | 996px | 1140px |
+| Symmetry · Workings | 1010px | 976px | 1440px |
+| Symmetry · Visual explanation | 1477px | 1443px | 1472px |
+
+Every one of those heights is an outcome, never a target.
+
+## 2. What never decides anything
+
+The number of words · the height of anything · occupancy · whitespace · the number of solution steps ·
+how tall the page turned out. The renderer never invents a tab, never moves content between tabs, and
+never treats a tall screen as a failure. **Those were the things that destroyed the earlier approach.**
+
+## 3. The frozen axes
+
+| Axis | Question it answers | Decided by |
+| --- | --- | --- |
+| **Composition** | What is visible together, and where? | **author** |
+| **Collection / disclosure** | If there are several related things, which are visible at once? | **author** |
+| **Scroll** | Which surface is allowed to move? | **author** |
+| **Media size** | How much visual importance should this media receive? | **author** |
+| **Media geometry** | Which approved subdesign does the media *shape* permit? | the figure's own geometry |
+
+The chain runs in that order and each step may answer only its own question:
+
+```
+media type → mediaSize (authored) → geometry class → approved subdesign → responsive state
+```
+
+The responsive state is **not** an axis. It is the prescribed wide/narrow arrangement *of* a
+composition, from the surface width alone, and it can never select a different composition.
+
+### Compositions
+
+| | Wide | Narrow | Adversarial payload |
+| --- | --- | --- | --- |
+| **`single.flow`** · the default | one column at a 760px measure | **no state change** | seven steps → taller, same composition |
+| **`single.split`** | SCENARIO │ WORKED SOLUTION | stacked below 760px | a one-line prompt → **still a split** |
+| **`comparison.paired`** | CASE A │ CASE B, then why they agree | stacked below 680px | cases of very unequal height |
+| **`visual.side`** | FIGURE │ INTERPRETATION — a plane no taller than it is wide | stacked — see §5 | — |
+| **`visual.down`** | the figure across the measure, interpretation beneath | **no state change** | portrait, landscape and wide planes all resolve here |
+| **`comparison.sharedVisual.side`** | the cases across, then FIGURE │ INTERPRETATION | stacked below 680px | — |
+| **`comparison.sharedVisual.down`** | the cases across, then the figure across the measure | stacked below 680px | a wide figure resolves here |
+
+### Collections and views — the distinction that needed a name
+
+| | Means | Reads as |
+| --- | --- | --- |
+| **`collection.repeat`** | several sibling items, all visible | items down the page |
+| **`collection.tabs`** | **several SIBLING ITEMS; select one** — `[ Negative ] [ Fraction ] [ Decimal ]` | an **item selector**: an underlined bar |
+| **`views.tabs`** | **ONE object, seen in several REPRESENTATIONS** — `[ Workings ] [ Graph check ]` | a **view switch**: a segmented control |
+
+`collection.tabs` and `views.tabs` look alike and mean importantly different things, so the difference
+is **encoded** (`data-tabs-kind`), not merely styled — and the affordance is keyed on the **kind**, so
+a views group reads as a view switch wherever it sits. An earlier pass keyed it on nesting depth,
+which would render a top-level `views.tabs` as an item selector and lie about what the tabs mean. The
+build asserts one affordance per kind at every depth:
+
+```
+collection  border-bottom 1px · no radius · transparent current tab with a 2px underscore
+views       1px box · 7px radius · filled current tab, no underscore
+```
+
+**`visualCheck` is gone as a composition** and has no rendering logic anywhere. It was always
+`views.tabs{ Workings → single.flow, Graph check → visual }`. A future `[ Method 1 ] [ Method 2 ]` is
+`views.tabs{ single.flow, single.flow }` — not a new template. That is how the vocabulary scales
+without sixty named layouts.
+
+### Scroll — two contracts, not one enum
+
+A long equation is not the same design decision as an independently scrolling workspace, so they are
+separate fields:
+
+```json
+{ "scroll": { "y": "page", "x": "local-when-needed" } }
+```
+
+| | | |
+| --- | --- | --- |
+| **`scroll.y = page`** | **the default.** The document may get arbitrarily tall. | virtually all Notes, Worked Examples, Videos and ordinary teaching pages |
+| **`scroll.y = pane`** | an explicit template feature — one pane moves, another stays | the Workbook shape. **Not** available as a renderer trick for making lesson content shorter |
+| **`scroll.x = local-when-needed`** | indivisible material overflows inside its own region | a long equation, a table of values |
+
+The build refuses teaching prose (`question · steps · solution · answer · synthesis · interpretation`)
+inside a `scroll.y = pane` region, and refuses any vertical scroller outside a persistent-pane
+template.
+
+### Media size — the layer that was missing
+
+Geometry can say what shape a plane must keep. It can never say **how large that plane deserves to
+be**. A tiny supporting number-line, an ordinary worked-example graph, a major explanatory graph and
+an interactive workspace can all have exactly the same aspect ratio.
+
+For a long time the contract published a `preferredWidth` and the renderer treated it as the final
+instructional display size. It never was: it is the largest box that still paints the authored domain
+at equal unit scale within a legibility bound, which for a tall plane is a small box. That is how a
+**488×625 symmetry graph** ended up on a **1152px** desktop page — undistorted, legible, and a
+thumbnail.
+
+`mediaSize` is authored on the composition node and is **required** — a default would be the renderer
+deciding how important the author's figure is.
+
+| class | means | desktop band | ceiling |
+| --- | --- | --- | --- |
+| `compact` | a **supporting** visual — it accompanies material the reader is there for anyway | 300–420 | 560 |
+| `standard` | an **ordinary instructional** visual — the reader is meant to stop and look at it | 600–760 | 860 |
+| `large` | a **primary explanatory** visual — the page exists in order to show it | 760–1000 | 1040 |
+| `workspace` | a **working surface** someone acts on; reserved for the practice family | 820–1100 | 1040 |
+
+The class prescribes a **width band and a height ceiling per surface**. The figure is realised at the
+widest width in the band whose *measured* box clears the ceiling — the width comes down, the plane is
+never squashed, the mathematics never moves. If even the band minimum overruns the ceiling the
+minimum wins and the build says so: the authored size outranks the ceiling.
+
+**Reference design 21 is the proof.** One tall plane and one wide plane, each at all three sizes:
+
+| figure | aspect | `compact` | `standard` | `large` | what binds |
+| --- | --- | --- | --- | --- | --- |
+| `symmetry` | 1.20 | 420×544 | **683×860** | 833×1040 | the **height ceiling** |
+| `landscape` | 0.33 | 420×223 | 760×363 | 1000×463 | the **width band** |
+
+Down each ladder the geometry class, the subdesign and the composition are identical and only the
+physical footprint moves — and the two ladders are the same three authored decisions landing in very
+different places, which is exactly why size cannot be read off geometry.
+
+This also **removed a special case**: the old contract grew only planes wider than they are tall, to
+one hardcoded `widePreferredWidth: 900`, because there was nowhere to say how large a figure should
+be. Every class is now realised the same way.
+
+`compact` is a **reserved word**. It means a media size and nothing else: no composition, subdesign or
+responsive state in this grammar may be called `compact`, because one word cannot mean both physical
+importance and spatial arrangement.
+
+A `large` figure can essentially never take `visual.side` — the derived switch point is figure + gap +
+420px of reading, and a large figure already consumes the surface. That is the layering working: a
+figure that shares a row with a reading column **is** a supporting figure, so it is authored `compact`.
+
+### Media geometry stays extremely dumb
+
+It answers exactly one question — *which approved subdesign does this composition use* — and may never
+answer *maybe this should be a different composition*.
+
+**Retuned after the first lesson.** `visual.side` puts a plane beside a reading column, and a plane
+taller than it is wide guarantees the column ends far above the plane's foot — measured at 388px of
+empty rail. `side` is now reserved for the one shape it suits:
+
+| class | aspect | resolves |
+| --- | --- | --- |
+| `portrait` | > 1.0 — taller than wide | **`down`** |
+| `balanced` | 0.75 – 1.0 — no taller than wide | **`side`** |
+| `landscape` | 0.4 – 0.75 | `down` |
+| `wide` | < 0.4 | `down` |
+
+Tightening `balanced` alone could not deliver that: at 1.20 the plane simply moved into `portrait`,
+which also resolved `side`. The thresholds live in `atlas.json` under `mediaGeometry.bands`, and
+`scripts/lib/figure-geometry.mjs` reads them from there — they used to be hardcoded in that module
+while this grammar declared them in prose, so retuning the grammar silently changed nothing.
+
+| Figure | aspect | class | resolves | preferred |
+| --- | --- | --- | --- | --- |
+| squareish 14 × 12 | 0.86 | balanced | **`side`** | 615 × 585 |
+| symmetry 10 × 12 | 1.20 | portrait | `down` | 488 × 625 |
+| roots 10 × 14 | 1.40 | portrait | `down` | 424 × 624 |
+| graph check 12 × 22 | 1.83 | portrait | `down` | 386 × 716 |
+| landscape 24 × 8 | 0.33 | **wide** | `down` | 717 × 346 → 900 × 421 |
+
+`squareish` exists because after the retune every other figure resolved `down`, which would have left
+`visual.side`, its switch point and both its controls unexercised — a contract nothing tests.
+
+**A plane is never grown past its legible preferred size.** `down` grows a figure to the atlas's
+wide-figure width only when it is wider than it is tall; that rule met a tall plane for the first
+time after the retune and inflated a 488 × 625 graph to 900 × 1120 before it was fixed.
+
+Images `10` and `11` remain the proof that matters: the same authored `comparison.sharedVisual`, with
+a balanced figure and with a wide one, resolving `.side` and `.down`. **Both remain
+`comparison.sharedVisual`.**
+
+### What whitespace means
+
+Replacing every occupancy percentage the resolver ever used:
+
+| | |
+| --- | --- |
+| Free width **outside** a composition | legitimate reading margin. *Use all the available width* is **not** a goal |
+| Unexplained empty area **inside** a semantic track | not automatically acceptable — fixed by choosing a different prescribed subdesign, never by measuring content |
+| A tall page | completely acceptable |
+| Local horizontal scrolling | only for components whose contract permits it: `local` (indivisible material) and `tabstrip` |
+| Changing composition because a paragraph is short | **forbidden** |
+
+### The tab strip
+
+`collection.tabs` is **one row that scrolls locally in x and never wraps**, at every width, with the
+current tab scrolled fully into view. Not a dropdown, not smaller type. The partly visible neighbour
+at the edge is the affordance — a fade would dim the control the reader is reaching for.
+
+
+## 4. The JSON principle
+
+**The JSON describes intent, not layout arithmetic.**
+
+```json
+{ "composition": "comparison.sharedVisual", "cases": [...], "visual": {...}, "interpretation": {...} }
+{ "collection": { "mode": "tabs",  "items": [...] } }
+{ "views":      { "mode": "tabs",  "items": [...] } }
+```
+
+not
+
+```json
+{ "leftWidth": 42, "occupancy": 0.55, "preferSplit": true, "maxDeadSpace": 96 }
+```
+
+The first says what the lesson **is**; the second tells CSS how to improvise. The build scans every
+authored file and refuses the second — not the rendered page, the *source*, because the principle is
+about what an author is allowed to write.
+
+## 5. One derived switch point — approved
+
+Every switch point in the atlas is a constant belonging to its composition, **except one**.
+`visual.side` switches at
+
+```
+figure.preferredWidth + gap + minInterpretation        (minInterpretation = 420px)
+```
+
+which gives 940px for the symmetry plane, 876px for roots, 838px for the graph check.
+
+A fixed number cannot serve a figure system whose planes are 386–717px wide. **Measured:** at the
+834px tablet a fixed 720 leaves the 488px symmetry plane beside a **314px** reading column — narrower
+than the atlas's own 520px case measure. The derived point stacks instead, which is the right design
+and is still *prescribed*: two numbers, the authored figure's own preferred width and one
+design-system constant. It never looks at the prose, the step count or the height of anything.
+
+`visual.down` has no switch point at all — the arrangement is identical at every width and only the
+plane's box changes.
+
+**Approved**, as a responsive viability calculation and nothing more: it may use only the figure's
+media-geometry preferred width and fixed design-system tokens, never prose length, rendered height,
+step count, occupancy or dead space. Crossing it changes the prescribed responsive state only, never
+the authored composition. Two controls in the lesson build hold that shut — content perturbation and
+no-residue.
+
+## 6. Later, and deliberately separate
+
+The assessment/workspace family gets its **own** rigid compositions rather than bending the teaching
+ones: `practice.paper`, `practice.workbook`, `practice.graphWorkbook`, `practice.geometryWorkbook`.
+Named here so nobody reaches for a teaching composition to build a workbook. `views.stepper` is named
+for the same reason. None is built.
+
+## 7. What the build checks
+
+Twenty-one controls. Each is here because it caught something, and each has been driven to fail on
+purpose — the regression script lives in this commit's history, not in the repo.
+
+| Control | What it caught |
+| --- | --- |
+| **The authored tab structure** | the invariant the disclosure axis exists to protect. Driven to fail four ways: a width that drops a tab, a width that invents one, a panel that omits its content, a composition swapped inside a panel |
+| **The two kinds are encoded, not styled** | an affordance keyed on nesting depth rather than on meaning — a top-level `views.tabs` would have rendered as an item selector |
+| **A resolved name stays in the vocabulary** | a subdesign that invents a name, and a subdesign that changes its base composition |
+| **No layout arithmetic in an authored file** | the JSON principle, made a property of the source rather than a paragraph in a document |
+| **A tab hides content, it does not replace it** | "the structure is identical" turned out to be satisfiable by an empty box |
+| **Prose is measured** | a repeated child ran the full 1152px canvas: the old control ("a region that declares a maximum must honour it") was vacuous exactly where no maximum was declared |
+| **A box solved for a width must use it** | the landscape plane's narrow box came back **169 × 156** against a 382px cap. It paints perfectly square and screenshots as a graph; only the width told the truth |
+| **Settle, then measure** | the same box measured x/y = 1.045 and then 1.005 on an immediate repeat — and paints are memoised, so identical code gave different figures on different runs |
+| **Height is not a constraint** | the app's own stylesheet sets `overflow:hidden` on the body, because the app is a slide surface. A lesson page is not a slide |
+| **`scroll.y = pane` is a workspace behaviour and nothing else** | `overflow-x:auto` with `overflow-y:visible` is not a state CSS has — the spec coerces the visible one to `auto`, in both directions |
+| **`scroll.x` is local, and the proof is live** | the over-wide proof was **inert**: the table and the expansion both fitted their region on the desktop surface |
+| **A pane must actually overflow** | the same failure mode in the other axis |
+| **The page never scrolls sideways** | local overflow is local or it is a defect |
+| **A figure region contains a painted plane, and is exactly it** | a region holding the literal text `undefined`; a full-width region around a narrower plane |
+| **Same payload, same slots, at every width and tab state** | a proof that shows different material at two widths proves nothing about either |
+| **The tab strip is one row, and the current tab is whole** | four tabs falling onto a second line reads as an accident; a current tab half off the end is worse |
+| **Only a declared contract may scroll sideways** | `local` for authored indivisible material and `tabstrip` for the strip — anything else is a defect |
+| **The figure carries an authored `mediaSize`** | a figure with no authored size, and an invented size name; both refused rather than defaulted |
+| **A bounded wrapper is not a size** | a band-sized box around an unchanged narrow plane satisfies every measurement of the *region* and fails this one |
+| **A realisation lies inside its authored band** | a size class whose numbers stopped being the ones that reach the page |
+| **Two size classes realise genuinely different planes** | `compact` and `standard` given identical bounds: the class would have been decoration |
+| **A size class never changes the geometry class or the subdesign** | size and shape are separate axes, and a size that reclassifies a shape has collapsed them |
+
+## 8. Superseded, and by what
+
+**The page-composition problem was being solved at the wrong layer.** This atlas asks a composition
+how large its media should be; the maintainer has ruled that the question belongs to a *slot on a
+master grid*, given by a *page pattern* chosen before any content exists. The successor is
+`docs/atlas/composition/` — a 12/8/4-column master grid, typed slots, and a catalogue of golden page
+patterns whose arrangements are designed first and encoded second.
+
+What survives from here, and is built on rather than revisited: the two tab kinds and the evidence
+that they must be *encoded* rather than styled · scroll as two separate contracts · equal-unit media
+geometry and the aspect classes · the reading measure · height is never a constraint · and the
+discipline that every control must be driven to fail on purpose.
+
+What does not: `mediaSize` (`compact | standard | large | workspace`) was a useful **failed
+intermediate**. It proved that semantic importance and media geometry are separate concerns — which
+is exactly why the successor has a slot layer — but the slot, not an authored size class, is the
+permanent mechanism. The derived `visual.side` switch point goes with it: a pattern now declares its
+approved subdesigns outright instead of deriving a threshold.
+
+## 9. Status
+
+These 63 images are a **proposal**. `lesson-studio.html` is frozen and nothing is built until the
+grammar is approved. `src/atlas.json` is the grammar; `src/atlas.css` states the designs;
+`src/*.html` are the payloads; `src/pack.json` authors the composition list and tab signature of every
+page; `atlas-report.json` records every render.
+
+**No more resolver research.** The next thing this vocabulary should produce is lesson JSON, not
+another thirty width cases.

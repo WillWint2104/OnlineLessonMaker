@@ -1,0 +1,8 @@
+    <h4 data-slot="title">Case A</h4>
+    <div data-slot="question"><p class="at-lab">Question</p><p>Find <i>y</i> when <i>x</i> = &minus;3.</p></div>
+    <div data-slot="steps"><p class="at-lab">Worked solution</p>
+      <ol class="at-steps">
+        <li class="at-step"><div class="at-st">Substitute, keeping the brackets.</div><div class="at-sm"><i>y</i> = (&minus;3)<sup>2</sup></div></li>
+        <li class="at-step"><div class="at-st">Evaluate.</div><div class="at-sm"><i>y</i> = 9</div></li>
+      </ol></div>
+    <div data-slot="answer"><b>Answer</b>(&minus;3, 9)</div>

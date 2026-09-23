@@ -1,0 +1,23 @@
+<article data-tpl="single.split">
+  <h3 data-slot="title">Reading a value from a described situation</h3>
+  <div data-slot="question">
+    <p class="at-lab">Scenario</p>
+    <p>A stone is dropped from a bridge. The distance it has fallen, in metres, is modelled by <i>d</i> = 5<i>t</i><sup>2</sup>, where <i>t</i> is the time in seconds since it was released.</p>
+    <p>The bridge deck is 45 metres above the water, and the model is only trusted while the stone is still falling.</p>
+    <p>Find how far the stone has fallen after 2 seconds, and say whether it has reached the water by then.</p>
+  </div>
+  <div class="at-rule"></div>
+  <div data-slot="solution">
+    <p class="at-lab">Worked solution</p>
+    <ol class="at-steps">
+      <li class="at-step"><div class="at-st">Write the rule and substitute <i>t</i> = 2.</div><div class="at-sm"><i>d</i> = 5(2)<sup>2</sup></div></li>
+      <li class="at-step"><div class="at-st">Square first, then multiply. The 5 is not squared.</div><div class="at-sm"><i>d</i> = 5 &times; 4 = 20</div></li>
+      <li class="at-step"><div class="at-st">Compare with the height of the deck.</div><div class="at-sm">20 &lt; 45</div></li>
+    </ol>
+    <div data-slot="answer"><b>Answer</b>20 m &mdash; still 25 m above the water.</div>
+  </div>
+<section data-slot="synthesis">
+  <p class="at-lab">What this shows</p>
+  <p>Substituting into a model answers a question about the situation, not only about the algebra: the last step is the comparison that turns 20 into &ldquo;not yet&rdquo;.</p>
+</section>
+</article>

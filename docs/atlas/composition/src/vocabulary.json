@@ -1,0 +1,298 @@
+{
+  "_": "TWO VOCABULARIES, DELIBERATELY SEPARATE. A BLOCK says what something IS. A SLOT says what kind of thing may live THERE. Collapsing them is how a graph came to own a size: the block was asked how big it should be, when the answer belongs to the slot the pattern gave it.",
+  "theOneRule": "PAGE PATTERN OWNS THE SLOT · SLOT OWNS THE AVAILABLE GEOMETRY · MEDIA FAITHFULLY OCCUPIES THE SLOT.",
+  "chain": [
+    "LESSON SEMANTICS",
+    "PAGE PATTERN",
+    "APPROVED SUBDESIGN",
+    "NAMED SLOTS ON MASTER GRID",
+    "BLOCKS OCCUPY SLOTS",
+    "MEDIA FITS ITS SLOT"
+  ],
+  "notThis": [
+    "measure everything",
+    "compare dimensions",
+    "infer arrangement",
+    "resize things",
+    "hope the page looks balanced"
+  ],
+  "slotTypes": {
+    "reading": "continuous prose the learner reads. Bound by the reading measure, always.",
+    "worked": "a worked solution — ordered steps with their mathematics.",
+    "media": "a figure, image or diagram. The slot gives a width; the media renders faithfully inside it.",
+    "interactive": "a manipulable object with controls.",
+    "workspace": "a surface the learner acts ON — a writing pad, grid paper.",
+    "data": "a table given a track of its own. A table inside an explanation stays in the reading slot; this type is for a page whose data IS the content.",
+    "examples": "a collection of sibling worked examples, shown together or behind tabs.",
+    "questions": "a question set. The one slot type that may own a local vertical scroll.",
+    "support": "a key rule, definition or aside. Subordinate to a reading slot, never a substitute for one."
+  },
+  "blockTypes": {
+    "prose": "explanation the learner reads",
+    "workedExample": "a question, its worked solution and its answer",
+    "graph": "a Cartesian plane with an authored domain",
+    "image": "a picture",
+    "video": "a recorded explanation",
+    "interactive": "a manipulable object",
+    "table": "rows and columns of values",
+    "questionSet": "numbered questions to attempt",
+    "handwrittenResponse": "what the learner writes",
+    "keyIdea": "a rule or definition stated once, set apart"
+  },
+  "blockFitsSlot": {
+    "prose": [
+      "reading",
+      "support"
+    ],
+    "workedExample": [
+      "worked",
+      "examples"
+    ],
+    "graph": [
+      "media"
+    ],
+    "image": [
+      "media"
+    ],
+    "video": [
+      "media"
+    ],
+    "interactive": [
+      "interactive",
+      "workspace"
+    ],
+    "table": [
+      "data",
+      "worked",
+      "reading"
+    ],
+    "questionSet": [
+      "questions"
+    ],
+    "handwrittenResponse": [
+      "workspace"
+    ],
+    "keyIdea": [
+      "support"
+    ],
+    "_": "The build refuses a block placed in a slot this table does not permit. It is the compatibility check that replaces asking a block how large it wants to be."
+  },
+  "occupancy": {
+    "required": "the pattern is not itself without this slot",
+    "optional-collapse": "absent → the slot disappears and the pattern uses its approved no-X subdesign",
+    "optional-reserved": "the emptiness IS part of the composition. Should be RARE, and every use is justified in the pattern record.",
+    "_": "What must never recur: 'there are 400px left over beside the graph because the maths worked out that way'. That is not whitespace, it is layout residue."
+  },
+  "mediaInASlot": {
+    "rule": "A GRAPH NO LONGER OWNS A SIZE. It receives a media slot and answers only: inside this width, at equal unit scale, this is the faithful rendering I can provide. Its height follows from the authored domain and the page grows.",
+    "whenItCannot": "If the media's ASPECT CLASS means it cannot work in one subdesign, the pattern declares an approved alternative — chosen from the surface and the aspect class alone. It never negotiates width with neighbouring prose.",
+    "aspectClasses": {
+      "portrait": "> 1.0",
+      "balanced": "0.75 – 1.0",
+      "landscape": "0.4 – 0.75",
+      "wide": "< 0.4"
+    },
+    "supersedes": "`mediaSize` (compact | standard | large | workspace) was a useful FAILED intermediate: it proved that semantic importance and media geometry are separate concerns, which is why this layer exists. It is not the permanent mechanism — the slot is."
+  },
+  "disclosure": {
+    "inline": {
+      "means": "everything visible, in order",
+      "default": true
+    },
+    "collection.tabs": {
+      "means": "several SIBLING items; select one",
+      "appropriateWhen": "the items are equivalent (three worked examples), the learner does not need to see them simultaneously, and quick switching is valuable",
+      "neverFor": [
+        "a sequential explanation",
+        "items that must be compared with each other"
+      ]
+    },
+    "views.tabs": {
+      "means": "ONE object seen in multiple REPRESENTATIONS",
+      "appropriateWhen": "algebra | graph — the same fact, examined two ways",
+      "neverFor": [
+        "a sequential explanation",
+        "items that must be compared with each other"
+      ]
+    },
+    "details": {
+      "means": "an aside the learner may open",
+      "appropriateWhen": "genuinely supplementary material"
+    },
+    "scroll.x": {
+      "means": "indivisible material overflows inside its own region",
+      "carriedBy": "THE TABLE BLOCK, not a slot type. A table of values belongs to the explanation it is part of, so it appears inside a `reading` or `worked` slot far more often than in a `data` one — and the contract has to travel with the material, not with the track it happens to be in. The grammar previously said only a `data` SLOT could scroll sideways while the implementation attached it to the block; one of the two was wrong and it was the sentence.",
+      "appropriateWhen": "a wide table of values",
+      "neverFor": [
+        "prose",
+        "a worked solution",
+        "a figure"
+      ]
+    },
+    "expand": {
+      "means": "one object opened to the full surface",
+      "appropriateWhen": "a figure worth inspecting closely"
+    },
+    "_": "TABS ARE A DISCLOSURE PATTERN, NOT A SPACE-SAVING HACK. A layout may never reach for a tab because something did not fit, and the renderer may never create or remove one. Keyboard behaviour follows the W3C APG tabs pattern.",
+    "_evidence": "GOV.UK tabs guidance (clearly labelled related sections, no need to see all at once, never for sequential or comparative content) and Mayer's segmenting principle (learner-paced segments beat one continuous presentation for complex material)."
+  },
+  "scrollOwnership": {
+    "page": {
+      "means": "the document may get arbitrarily tall",
+      "default": true,
+      "rule": "Virtually every teaching page. Never compressed to fit a viewport."
+    },
+    "pane": {
+      "means": "an explicit TEMPLATE FEATURE — one pane moves while another stays",
+      "use": "the workbook shape only",
+      "rule": "Never a renderer trick for making teaching content shorter. Teaching prose never sits in one."
+    }
+  },
+  "spatialContiguity": {
+    "rule": "A BLOCK THAT EXPLAINS A VISUAL BELONGS TO THE SAME PATTERN AS THAT VISUAL — beside it, or immediately beneath it.",
+    "_evidence": "Mayer's spatial-contiguity principle: learners do better when corresponding words and pictures are near each other, because the search for the relationship is itself extraneous load.",
+    "consequence": "It is a pattern-design rule, not a runtime one. Nothing measures anything to satisfy it."
+  },
+  "pairingRule": {
+    "_": "WHEN TWO SLOTS MAY SHARE A ROW. Derived from two side-by-side subdesigns that were designed, rendered, measured and removed — `visual.side` (a plane beside its reading) and `worked.single`'s `beside` (a scenario beside its solution).",
+    "rule": "A row may pair two slots only when they are THE SAME KIND, deliberately given identical width — a comparison, where unequal heights read as 'one case was shorter' — or when AT LEAST ONE SLOT HAS A DESIGNED HEIGHT: a plotting pad, an instrument, a card.",
+    "forbidden": "Two UNBOUNDED materials in one row. Such a row is sound only for the lengths the author happened to write, and how much prose an author wrote is content — which may never decide a composition. Both removals were exactly this.",
+    "pairsInTheCatalogue": "caseA | caseB (same kind, identical width) · questions | workspace (the paper has a designed height) · instrument | prompts (the instrument does) · intro | support (a card). Nothing else pairs.",
+    "consequence": "Every visual pattern stacks its media and its reading, and every worked example stacks its scenario and its solution. A taller page is the deliberate outcome.",
+    "reconciledWithSlotFit": "SIDE-6 AND SIDE-7 PUT MEDIA BESIDE PROSE AGAIN, and the rule above had removed exactly that. They are not an exception to it — the rule's second clause now covers them, because what a media slot IS changed. `forbidden` names two UNBOUNDED materials in one row: material whose height depends on how much someone happened to write. Under the slot-fit contract a media slot is no longer one of those. Its width is the slot's, and its height is a deterministic function of that width and the authored domain — invariant to content, which the adversarial control proves on every render. A DERIVED height is a designed height. What the rule still forbids is prose beside prose, and that is still not in the catalogue. WHAT REMAINS TRUE FROM THE REMOVAL: a plane much TALLER than the prose beside it leaves a hole under the prose. That is why side-6 is approved for the `balanced` class only and side-7 for `landscape` only; a `portrait` plane has no side-by-side subdesign at any surface, and the column-residue control measures the hole rather than trusting the class."
+  },
+  "rejected": {
+    "bento": "Automatic 'find aesthetically balanced cells for six blocks' placement. Attractive for dashboards and galleries; wrong for instruction, which has a pedagogical reading order. A grid is our alignment infrastructure, never an auto-placement algorithm.",
+    "occupancyThreshold": "gone",
+    "deadSpaceResolver": "gone",
+    "semanticMediaPixelSize": "gone — the slot decides",
+    "contentHeightComparison": "gone"
+  },
+  "mediaFit": {
+    "_": "WHAT IT MEANS FOR MEDIA TO INHABIT A SLOT WELL. The catalogue solved 'what pattern is this?'. It did not solve this, and the visible result was a 760px graph left-aligned on a 1152px page with 392px beside it that had no role. Every media slot now declares a FIT and an ALIGNMENT.",
+    "fill": {
+      "means": "THE OBJECT MUST CONSUME THE SLOT WIDTH.",
+      "check": [
+        "painted width == slot width, within 1.5px",
+        "no unclaimed internal width"
+      ],
+      "forAGraph": "slot width → graph width; the authored domain and the equal-unit rule → graph height. NEVER graph width → a height cap → a squeezed width. There is no height cap.",
+      "blocks": [
+        "graph",
+        "video",
+        "interactive",
+        "image (a major diagram or large instructional image)"
+      ]
+    },
+    "contain": {
+      "means": "The object MAY be smaller than the slot, but must be DELIBERATELY POSITIONED.",
+      "check": [
+        "painted width == min(authored presentation width, slot width)",
+        "the object sits where its declared mediaAnchor says, within 1.5px",
+        "the anchor was RESOLVED BY A RENDERER RULE, not left to CSS",
+        "the unused width belongs explicitly to the contain slot"
+      ],
+      "default": "center",
+      "blocks": [
+        "image (a portrait photo, a small diagram, an illustrative or supporting figure)"
+      ],
+      "whereItLives": "`notes.illustration` is the catalogue's one contain slot. It was added in this phase because the contract had a `contain` half that nothing exercised, and a branch no object has ever been through is not a contract.",
+      "smell": "A contained object that is consistently small is evidence THE PATTERN SHOULD USE A SMALLER SPAN — not that the object should grow. The atlas prints the percentage and compares it to nothing; a human rules."
+    },
+    "theGraphRules": [
+      "1 · Graphs default to fit:fill, never intrinsic left alignment.",
+      "2 · A graph's width is the selected slot's width.",
+      "3 · Height is derived from graph geometry; normal lesson pages scroll. There is no height ceiling.",
+      "4 · A graph may use only the approved spans of its pattern.",
+      "5 · If an approved span is below the graph's minimum legible width, promote to the next approved span.",
+      "6 · If no span works, use the pattern's full-width state or its focus workspace.",
+      "7 · A contained graph must be centred; start alignment requires an explicit design reason.",
+      "8 · The build FAILS if a media slot contains anonymous horizontal residue."
+    ],
+    "whatTheMediaMayReport": {
+      "_": "CAPABILITY, NEVER FOOTPRINT. The media is asked ONE question, about widths it did not choose: of these approved spans, which can you render faithfully? The answer is a subset of a set someone else supplied. There is no number in it a caller could mistake for a display size — 'I would like to be 488px wide' is not expressible, which is how tiny media ended up on large pages.",
+      "legibleAtAWidth": {
+        "_": "THREE CATEGORICAL PREDICATES, ALL OF WHICH MUST HOLD. The first version of this asked only the first and was wrong for three figures out of four.",
+        "1 collision": "no two painted texts overlap.",
+        "2 fidelity": "every painted tick value lies inside the AUTHORED domain on its own axis. Under equal unit scale the engine EXPANDS the shorter domain to fill the plot rect and derives its ticks from the expanded range, so a narrow plane prints a scale the author never wrote: at a 209px box `symmetry` prints a y tick at 12 for an authored yMax of 11, and `landscape` prints x = −15 for an authored −12. A plane showing a domain the author did not write is not legible, however cleanly it is set.",
+        "3 stability": "the painted tick set is the one the same figure prints at full width. This catches fabricated precision INSIDE the domain: −7.5, −5.0, −2.5 … for an authored ±7, one decimal place more than the scale has."
+      },
+      "itJudgesTheSolvedBox": "NOT A GUESSED ONE, and this was the sharpest correction. An earlier version painted at a seed height round(aspect×(w−50)+100) and judged that — and the verdict moved with the seed: `symmetry` in a 382px slot is clean at h=498, prints x = ±6 for an authored ±5 at h=398, and prints decimals at h=698. That made the answer a property of the measuring instrument rather than of the media. It now asks the renderer's own box solver for the box the page would actually get at that slot width, and judges those pixels.",
+      "noMonotonicityAssumption": "There was one and it BROKE. `roots` is clean at 264px, collides at 296 and 328, and is clean again at 360 — an illegible BAND, not a threshold. No single crossing width describes it, and a binary search returns whichever edge it lands on. Asking each approved span directly needs no such assumption. A diagnostic still reports the crossing number for a human reading a build log, and says when it is unsafe; nothing in the system decides anything with it.",
+      "mayNotReport": [
+        "a preferred width",
+        "a preferred height",
+        "anything about the page it is on",
+        "a crossing width dressed as a requirement"
+      ],
+      "theFinding": "Every figure in this corpus renders faithfully at EVERY approved span in the catalogue — the smallest is 382px and the diagnostics cross at 225–266px. So promotion never fires on real content, and the defect that started this was a pattern and alignment problem, not a legibility one. It is proved by driving it: a 2-column (172px) state approved for the balanced class is skipped, and a pattern whose ONLY approved state is that one fails the build rather than painting an unfaithful plane."
+    },
+    "promotion": "Within one (surface, aspect class) the approved subdesigns are ordered by media span ASCENDING and the first the media says it can render faithfully is taken. Ties cannot occur because two subdesigns of one pattern may not share a span at one surface, and the build refuses a pattern where they do. A SINGLE candidate is still asked — an earlier version returned it unexamined, so a pattern with one arrangement could paint a figure at a width that figure cannot render and nothing would say so. If no approved span works the build FAILS: rule 6's full-width state or focus workspace is a design decision for a human, not one the renderer may make."
+  },
+  "whitespace": {
+    "_": "THREE KINDS, AND OWNERSHIP IS WHAT SEPARATES THEM. The catalogue once had one word for all three.",
+    "readingMargin": {
+      "legal": true,
+      "owner": "the page",
+      "is": "Deliberate unused page width beside a PROSE slot, because prose is bound by the reading measure and the page is wider."
+    },
+    "patternWhitespace": {
+      "legal": true,
+      "owner": "the subdesign",
+      "is": "Empty grid columns the subdesign PRESCRIBED. A centred 8-column slot on a 12-column grid, written 2 + 8 + 2, is valid: those outer columns have a declared role."
+    },
+    "slotResidue": {
+      "legal": false,
+      "owner": "nobody — which is the defect",
+      "is": "Unused width INSIDE a media slot. Illegal under `fill`, always. Legal under `contain` only because the slot explicitly owns it and the object has an approved anchor.",
+      "theOldSituation": "An 8-column graph sitting on the left of a larger unnamed region now FAILS, in the catalogue, before anything is rendered."
+    },
+    "height": "A tall page is completely acceptable. Height is unconstrained and the page scrolls.",
+    "whatTheContractCannotSee": "A `paired` row puts an object beside prose, and the prose can run out first. The slot contract is satisfied — nothing horizontal is unclaimed — and the page can still read badly. The slot-fit atlas MEASURES that gap and prints it, and compares it to nothing, because prose length is content and content may never decide a composition. It is evidence for a human, not a rule."
+  },
+  "slotInspector": {
+    "_": "THE ANSWER TO 'IS THE MEDIA ACTUALLY INHABITING ITS SLOT WELL?' — a different question from 'what pattern is this?', and until now only the second had one. It turns what we were judging from screenshots into a contract.",
+    "oneOwner": "ONE function judges a media slot. The control that fails the build and the overlay you look at both read it, so the picture and the build can never say different things. The overlay computes no verdict of its own.",
+    "reports": [
+      "PATTERN",
+      "SUBDESIGN",
+      "MASTER GRID",
+      "MEDIA SLOT (columns, span, granted px, painted px)",
+      "PAINTED MEDIA (what kind, and its actual size)",
+      "FIT",
+      "ALIGNMENT",
+      "ASPECT-SCALE (px per x-unit, px per y-unit, and whether they are equal)",
+      "UNCLAIMED INTERNAL WIDTH",
+      "VERDICT — or DIAGNOSIS and LEGAL ACTIONS on failure"
+    ],
+    "drawn": "Over the render it measured: the slot dashed, the painted media outlined, and any unclaimed width hatched where it actually is — blue where the slot declared it (a centred `contain`), red where nobody did. Written beside every render that has media, as `<name>-inspect.png`.",
+    "notAResolver": "NOTHING IT COMPUTES REACHES LAYOUT. There is no threshold at which it changes a span and no 'if occupancy < 55%, stack' — that is what made the system lose the design. Every verdict is categorical. It DOES report the occupancy of every contained object, and deliberately WITHOUT a threshold: the first version compared a painted content dimension to a tuned 0.6, which is the shape of the resolver this architecture refuses, sitting inside the gate and dormant only because the corpus has no contained media yet. It now prints the number and compares it to nothing. A human reads the run and rules.",
+    "whichSlots": "Slot types that hold an object with a footprint: `media` and `interactive`. Prose is bound by the reading measure instead; a workspace is a surface the learner acts on, not an object placed in one.",
+    "catalogueTime": [
+      "every media slot declares a fit",
+      "`contain` + start alignment requires a declared design reason",
+      "a declared `mediaSpan` equals the columns its areas actually give",
+      "`approvedMediaSpans` matches the spans the subdesigns actually approve",
+      "a row whose only named slot is media is CENTRED OR FULL — never inset against one edge"
+    ],
+    "caughtOnItsFirstRun": "Three arrangements in the catalogue were stranded media and nobody had noticed: `visual.compare/paired` (8 of 12, four unnamed to the right), `media.full/inset` (the same, and named after the defect), and the tablet forms of both. `practice.workbook/beside` declared a 7-column media span for a 5-column slot.",
+    "unexercised": "EVERY media slot in this catalogue is `fill`, because every media block in the corpus is a plane. The `contain` branch — its centring rule, its alignment reason, its occupancy report — is designed and UNEXERCISED, and the build says so on every run rather than letting a green result imply otherwise. One open question belongs to it: `contain` gives a maximum, an alignment and a stage, and does not say WHO CHOOSES THE PAINTED WIDTH. For a raster that is its intrinsic pixels; for anything else it would be the renderer, which is media-geometry deciding width — the direction `fill` exists to forbid. The maintainer should rule before the first contained image is authored."
+  },
+  "slotContract": {
+    "_": "WHAT EVERY MEDIA SLOT PRESCRIBES. The chain runs one way and only one way: the pattern chooses an approved subdesign → the subdesign's slot determines the footprint → the media proves it can inhabit that footprint → the inspector verifies what was actually painted. The slot and the media stay separate concepts throughout. A graph being mathematically undistorted is not enough for the layout to pass.",
+    "slotSpan": "How many columns of the master grid the slot occupies, declared per subdesign. It is the whole horizontal footprint: discrete, chosen from the pattern's approved set, never negotiated.",
+    "slotFit": "`fill` or `contain`, declared on the slot. See mediaFit.",
+    "slotAnchor": {
+      "_": "WHERE THE SLOT SITS IN ITS ROW, declared per subdesign and held against the areas by a control. The vocabulary is deliberately tiny, and `start`/`end` exist only for an approved subdesign with a genuine reason for asymmetry — a generic stacked media object must never quietly default to left.",
+      "center": "equal free columns either side. Those columns are PATTERN WHITESPACE: the subdesign prescribed them, so 2 + 8 + 2 on a twelve-column grid is a composition, not a stranding.",
+      "within-reading": "CENTRED INSIDE THE READING SPINE, not on the page. For SUPPORTING media belonging to reading content: the object sits in the middle of the prose it supports, visibly smaller than the reading and visibly placed on purpose. The spine is DERIVED from the subdesign's own prose rows — the rows holding one prose slot and nothing else — so the declaration is checked against the grid rather than asserted beside it. It requires the object to sit wholly inside the spine AND symmetrically in it; an asymmetric position inside the reading is still asymmetric. Where the measure has the wrong parity for the rung (a seven-column tablet measure cannot hold a centred four) the subdesign falls back to `start` with a declared reason, which is a fact about the grid rather than a change of mind.",
+      "start": "hard against the left with free columns after it. REQUIRES a declared `anchorReason`; without one this is the stranded-media defect the whole contract exists to name.",
+      "end": "hard against the right with free columns before it. Same requirement.",
+      "paired": "the row holds another named slot beside it. Nothing is unclaimed horizontally.",
+      "full": "the slot spans the grid."
+    },
+    "mediaAnchor": "Where the OBJECT sits inside a `contain` slot: center (the default a contained object should have), or start/end with a declared `anchorReason`. Under `fill` there is nothing to anchor, because the object is the slot's width. The renderer marks a slot `data-anchor-resolved` only when one of its own anchor rules positioned the object, so the inspector can tell a deliberate placement from a CSS default that happens to look identical in a screenshot.",
+    "presentationWidth": "THE AUTHORED PRESENTATION WIDTH of an object, in CSS px. Under `contain` the painted width is min(presentationWidth, slotWidth). RAW RASTER PIXEL DIMENSIONS ARE NEVER A PRESENTATION SIZE: a 900×1200 photograph is not a request to be painted 900px wide.",
+    "theReadingSpine": "THE AXIS PROSE IS ALIGNED TO, AND THE PAGE MAY HAVE MORE THAN ONE. A row belongs to the reading spine (start-aligned to it), to a centred MEDIA STAGE (a standalone explanatory or primary media row, whose WIDTH still comes only from role x geometry — the stage decides where the object sits, never how wide it is), or is centred WITHIN the reading. So two left edges are not automatically a defect: a centred stage above start-aligned commentary is two named regions doing different jobs. Competing axes are invalid only INSIDE one compositional group, where sibling regions are meant to align with each other."
+  }
+}
