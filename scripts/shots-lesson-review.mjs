@@ -149,6 +149,6 @@ for (let i = 0; i < LESSON.slides.length; i++) {
 
 console.log(`\npage errors: ${errs.length ? errs.slice(0, 4).join(' | ') : 'none'}`);
 console.log(`${shots.length} capture(s) → ${path.relative(root, OUT)}`);
-fs.writeFileSync(path.join(OUT, 'captures.json'), JSON.stringify({ lesson: path.relative(root, LESSON_PATH), viewport: `${W}x${H}`, shots }, null, 1) + '\n');
+fs.writeFileSync(path.join(OUT, 'captures.json'), JSON.stringify({ lesson: path.relative(root, LESSON_PATH).split(path.sep).join('/'), viewport: `${W}x${H}`, shots }, null, 1) + '\n');
 await browser.close(); server.close();
 process.exit(errs.length ? 1 : 0);

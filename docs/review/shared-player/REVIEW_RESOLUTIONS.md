@@ -57,3 +57,7 @@ count is consistently 67; the authoring screenshot script reuses its seeded step
 opened export page records script errors and rejects external dependencies before navigation. The
 authoring session also measures the existing ambiguity warning instead of describing it as absent.
 Affected browser captures are refreshed; these changes do not change the application runtime.
+
+Review 5291010088 verified that batch and requested one metadata correction: capture manifests now
+normalize the generated relative lesson path to `/` on both Windows and Linux. The existing capture
+record is normalized without recapturing or changing its images.
