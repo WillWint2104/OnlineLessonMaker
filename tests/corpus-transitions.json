@@ -1,0 +1,12 @@
+{
+  "examples/imperium-questions.json|microhistory|1": {
+    "before": "5ac58e6835c88bf792a547d7719789919b1d9d1a99e8d4d949497e5536879956",
+    "after": "3744f4c3c23a4c9d5f6b9f41e145a1b531fd9e6058513a032c66b43aeec17552",
+    "reason": "Restore all authored Microhistory quiz questions instead of rendering an empty paragraph scaffold; verify-pack-fixes checks attempt gating and accessible reveal."
+  },
+  "examples/microhistory-questions.json|microhistory|1": {
+    "before": "5ac58e6835c88bf792a547d7719789919b1d9d1a99e8d4d949497e5536879956",
+    "after": "85c51218af79d65ab2b01a06e48dfa5482cc6fed2c5eae281b87c740b9ef719a",
+    "reason": "Restore all authored Microhistory quiz questions instead of rendering an empty paragraph scaffold; verify-pack-fixes checks attempt gating and accessible reveal."
+  }
+}

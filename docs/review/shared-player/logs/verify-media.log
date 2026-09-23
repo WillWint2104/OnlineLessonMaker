@@ -1,0 +1,23 @@
+✓ cover: media block renders in panel
+✓ cover: URL sets hero image (rendered as <img>, default not behind gradient)
+✓ cover: default cover honors fit/focus (object-fit/position present, no transform at z=1)  object-fit:cover;object-position:50.0% 50.0%;
+✓ cover: media thumbnail now shown
+✓ cover: heroBg on → hero-bg class + hero-img element
+✓ cover: overlay slider drives veil opacity  opacity=0.3
+✓ cover: fit=contain applied to hero img  object-fit:contain;object-position:50.0% 50.0%;
+✓ cover: zoom scales hero img  object-fit:contain;object-position:50.0% 50.0%;transform:scale(2);transform-origin:50.0% 50.0%;
+✓ cover: focus preset sets object-position  object-fit:contain;object-position:0.0% 0.0%;transform:scale(2);transform-origin:0.0% 0.0%;
+✓ cover: dragging focus pad sets object-position (~80% 25%)  object-fit:contain;object-position:80.0% 25.0%;transform:scale(2);transform-origin:80.0% 25.0%;
+✓ cover: Remove clears hero image
+✓ cover: empty drop state shown after remove
+✓ cover: dropping image FILE on panel embeds inline (data URL)  drop=dropped
+✓ image slide: media block renders
+✓ image slide: fit+focus applied to img  object-fit:contain;object-position:100.0% 0.0%;
+✓ external: image media block renders
+✓ external: activity URL + source fallback fields present  url=true fallback=true
+✓ export: dropped image embedded inline (data URL) in exported file  len=2066139
+✓ export: body=study, inspector+palette stripped  {"hasDataUrl":true,"studyBody":true,"inspectorStripped":true,"paletteStripped":true,"thirdParty":false,"len":2066139}
+✓ export: no third-party http(s) src/href in exported file
+✓ media editing and publication: no browser or console errors
+
+Page errors: (none)

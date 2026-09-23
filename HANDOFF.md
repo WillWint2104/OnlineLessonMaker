@@ -2,6 +2,17 @@
 
 _Last updated: 2026-06-20_
 
+## Shared-player integration status (23 September 2026)
+
+PR #153 now also integrates the shared skill/activity player from `codex/shared-lesson-player`.
+See `docs/review/shared-player/README.md`, `AUTHORING_COVERAGE.md` and `FAILURE_RESOLUTION.md` there
+for review evidence, the exact UI/JSON authoring boundary and the five legacy-gate diagnoses.
+Microhistory quiz content is restored by reusing its existing quiz renderer. Two full corpus DOM
+transitions are pinned; every other render remains strictly compared. The single-file architecture,
+stateless delivery, existing mathematical editors and hosting configuration remain unchanged.
+Merge requires current-head substantive CodeRabbit coverage, passing local/remote checks and real
+browser inspection; the maintainer has authorized that cycle and the subsequent squash merge.
+
 This is the working state of **Lesson Studio**: a single‑file, no‑backend web app for
 authoring and delivering interactive secondary‑school lessons (built first for NSW
 Ancient History — Tutankhamun, with Rome / Wellbeing / WW1 themes alongside).
@@ -596,6 +607,54 @@ Ownership is unchanged: JSON carries content and semantic capability; the page r
 the theme owns the visual language; the Figure Engine owns mathematical figures. No pixel widths, placement
 or styling decisions belong in lesson JSON.
 
+### A SKILL IS ONE INSTRUCTIONAL SECTION, NOT A PRESENTATION SLIDE
+
+**Skill** — `{ id, type:"skill", title, notes?, video?, workedExamples? | examples?, questions?,
+notesTitle?, videoTitle?, examplesTitle?, questionsTitle?, practiceNote? }`. It is a registered page
+(`registerPage('mathematics','skill', mxSkillPage, {surface:'panel'})`), so it lives in the ordinary
+`slides[]`, is reached by the ordinary rail, and is keyed by `tpPageEntry()` like every other page — there
+is no separate skills root. `notes` accepts the notes page's `concepts[]` directly or nested as
+`{concepts:[…]}`; `questions` likewise accepts `practice.questions`.
+
+The page renders, in this fixed order and numbered from what is present: **Notes and method → Video →
+Worked examples → Practice**. An absent part reserves nothing (the surface rule, above). Missing all four,
+the page says so rather than drawing an empty frame.
+
+**IT ASSEMBLES, IT DOES NOT RE-IMPLEMENT.** The concept list (`mxConceptList`) and the question list
+(`mxQuestionList`) are the same functions `mxNotesPage` and `mxPracticePage` call; worked examples go
+through `mxWexGroups` / `mxWexGroup` unchanged. The single deliberate difference is that a skill does NOT
+draw the worked-example tab strip — a tab hides a group behind a click, and a skill's groups are stages of
+one method, not alternative demonstrations of one object (the tab rule, above). They stack, each keeping
+its title as an `.mx-sk-gh` heading.
+
+**IT IS NOT HEIGHT-BOXED.** `.mx-skill` grows and `.mx-page` scrolls it; a real skill runs several
+thousand pixels past the fold. Anything measuring a skill must grow the viewport by the scroller's
+overflow first — the document itself never scrolls (§8b).
+
+**A VIDEO IS EITHER REAL OR DECLARED ABSENT.** `mxVideoRegion()` takes `video` as a string or
+`{url, note?}`, puts the URL through the app's existing `safeUrl(raw,'embed')` + `toEmbed()` gate, and
+writes an `<iframe>` only if that returns an address. No URL, or one the gate refuses, writes an
+author-facing note naming what is missing. It never renders playback progress, a duration, chapters, a
+transcript or timestamps — there is nothing behind them.
+
+### RESPONSE MODES ARE THE LESSON'S, READ ONCE FROM `meta.responseMode`
+
+Three modes: **`paper`** (the work is in the student's own exercise book), **`pen`** (the handwriting
+canvas) and **`typed`** (the keyboard workspace). `MX_RESPONSE_ALIAS` is a null-prototype table mapping the
+authored word to the value the engine has always stored — `paper→paper`, `pen→write`, `typed→type` — and
+the stored names `write` / `type` remain valid input, so existing lessons were not migrated and either
+vocabulary may be written. An unrecognised value warns once and falls back (`paper` for a lesson
+containing a skill, `write` otherwise). `mxResponseMode()` memoises in `MX_RESPONSE`; reset it when the
+lesson is replaced.
+
+**Paper removes response controls, it does not disable them.** `mxWritesResponses()` is false, which takes
+away the workbook, the tools and the pen/type view switch; a table answer cell becomes a ruled
+`td.mx-blank` with an "answer in your book" label rather than a disabled `<input>`.
+
+**THE SAVED JSON IS THE AUTHORITY AND A STUDENT DOES NOT VOTE.** The three-way control is rendered only
+when `authorMode()==='edit'`, labelled *Preview*, and assigns `MX_RESPONSE` for the session only — it never
+writes `meta.responseMode`. In Study mode it is absent in all three modes.
+
 ## 9. Roadmap / next up
 
 ### Page-family architecture — the boundary, decided
@@ -783,7 +842,7 @@ renderer is referenced.
   legacy canvas has its own `notes` slide type, a different object from the mathematics `notes` PAGE, and a
   drive with the branch disabled shows a mathematics page falling into a legacy form. `mxOutline` walks
   groups -> examples -> steps; every field below it is an existing helper on an ordinary bound path.
-  `scripts/verify-mx-authoring.mjs` (14 checks, 4 drives) proves create -> edit -> add -> save -> reopen ->
+  `scripts/verify-mx-authoring.mjs` (54 checks as verified on 23 September 2026) proves create -> edit -> add -> save -> reopen ->
   edit again, with the reopen done by serving the exported document and opening it fresh.
 
   **SAVE AND REOPEN MEANS EXPORT AND REOPEN.** Golden rule 2 stands: no localStorage, the file is the
@@ -827,15 +886,125 @@ renderer is referenced.
   `scaleMode:"authored"`, the only way to opt a mathematics graph out of equal scale, appears nowhere in
   SCHEMA.md.
 
-  **STILL TO AUTHOR** — 3C: the table of values (stub/head/rows/cells), then rebuild the whole quadratics
-  lesson through the UI and compare it SEMANTICALLY (not byte-identically) with
-  `docs/atlas/lesson/quadratics.app.json`, and render it in Study, Edit and Present. Desktop authoring only.
-  Note that a figure attached to a STEP (`step.visual`) is not yet editable — 3B covers the group's graph,
-  which is where both of this lesson's graphs live; the table is a step visual, so 3C needs that path.
+  **STAGE 3C IS DONE — the whole lesson can be made in the app.** 30 checks, and the headline one is that
+  the committed quadratics lesson is REBUILT from an empty mathematics lesson through real clicks and real
+  typing (`scripts/verify-quadratics-authoring.mjs`), then exported, reopened and edited again.
+  - **The table of values** — stub, headings, row headings and cells, on ordinary bound paths. THE ROWS
+    ARE KEPT AS WIDE AS THE HEADINGS by every mutation, not merely on creation, because `setP` walks an
+    existing path and does not create it: a row shorter than `head` means a cell whose `data-bind` has
+    nowhere to land, and the input silently does nothing.
+  - **Parts are one vocabulary in three places** — a group's closing region (`mx.p`), an example's
+    companion (`mx.v`) and a step's own (`mx.w`) — which is how a step visual became editable without a
+    second idea of what a part is. `mxPartsArr` migrates the three legal companion shapes (bare object,
+    `{parts:[…]}`, array) onto the one the editor writes.
+  - **THE COMPARISON IS THE INTERESTING PART.** Two of them. The structural one runs over a normalised
+    copy and names and counts every class of difference it will tolerate — generated ids, typed numbers
+    arriving as their own text, blank fields written as `""`, defaults written out in full, the curve
+    label the painter never draws, a companion written as a list of one — and FAILS on anything
+    unnamed. The rendered one settles it: every word, every table cell and the `d` of all 64 painted
+    paths identical across all four views. Pixels are compared separately, with
+    `shots-quadratics-app.mjs --lesson` (all ten renders byte-identical), and NOT inside the gate —
+    `.mx-page` is the scroller and the document never scrolls, so a screenshot taken there stops at the
+    fold and cannot see the table at all. The first attempt reported two pages whose tables read "0" and
+    "99" as identical. SUSPECT THE PROBE.
+  - **Two gaps the rebuild exposed that no reading of the code would have**: `meta.stage` is painted in
+    the header, the crumb and the printed worksheet and nothing could set it; and a page created in the
+    app carried no `id`, so `tpRespId()` would have excluded it from the response store — a page made
+    here would silently have lost the student responses a page loaded from a file keeps.
 
-  **THE STUDY / EDIT DISTINCTION IS CORRECT, measured 22 Sep**: inspector visible ⟺ `mode==='edit'` ⟺ Edit
-  carries `.on`; Study clears the inspector's content entirely. A screenshot that appeared to show otherwise
-  had simply been misread; the capture script now prints the mode it photographed.
+  **STAGE 4 — THE AUTHORING EXPERIENCE** (the maintainer's three priorities, after the Stage 3C review):
+  - **The table is edited as a table** — a grid shaped like the finished one, row headings sticky, values
+    scrolling, ✕/＋ per row and column, and the page's own `mxPartTable()` previewing it underneath. THE
+    BINDINGS DID NOT MOVE, which is why the whole-lesson rebuild kept passing without an edit.
+  - **The outline collapses.** `MX_OPEN` is session state; the chain to the selection is pinned open; the
+    twisty toggles and never selects. An add-palette belongs to the SELECTED host, not to every open one.
+    The Page and Lesson sections fold, each showing what it holds on its header line.
+  - **Maths fields preview through `mxM()` — the renderer itself**, and a notation row inserts at the
+    caret and fires a real `input` so the ordinary binding saves it. An insert that is not an italic steps
+    over a closing `_`, or the caret left inside `_x_` turns the next symbol into `_y−_`.
+  - **NOT a structural equation editor.** The lesson stores strings; TPMath stores a tree. Putting worked
+    examples on that tree is a LESSON FILE FORMAT CHANGE and belongs to the maintainer.
+  - Panel heights at the places a teacher works: table 3474 → 1481px, points 2304 → 1599, window
+    2208 → 1576, subtopic 1790 → 1519, open 1134 → 1000, against 1000px visible.
+
+  **A SECOND LESSON HAS BEEN MADE IN THE APP** — `docs/atlas/lesson/straight-lines.app.json`, built by
+  `scripts/author-straight-lines.mjs` through the interface only, on a topic chosen to stress what
+  quadratics did not. 189 interactions; exports, reopens identical, renders in all three modes. TEN FINDINGS
+  in `docs/atlas/authoring/FINDINGS.md`, each measured during the run. THE TWO THAT PUT SOMETHING WRONG ON
+  THE PAGE, and neither says so:
+  - `1/2x+1` parses as `1/(2x)+1` (juxtaposition binds tighter than division — figParse documents this) so a
+    gradient of a half draws a HYPERBOLA. No error, because the expression is valid.
+  - `(5 − 2)/(5 − 1)` does not build up. MX_FRAC_T is a bracketed SIGNED INTEGER, not a bracketed sum, so the
+    substitution line of a gradient example sets differently from its answer.
+  Also: four curves share one style (no per-object colour/dash, and a function `label` is never painted), so
+  a comparison subtopic cannot name its lines; everything you ADD arrives empty while the palette's page
+  arrives seeded; a six-column table costs 4 add-column clicks + 6 heading edits before a value; reorder is
+  one click per place; the `line` object is axis-parallel only; axis numbering uses `-` where the prose uses
+  `−`. NO PRODUCT CHANGE WAS MADE ON THE STRENGTH OF THESE — they are the input to the maintainer's next
+  decision.
+
+  **STAGE 5 FIXED THE TWO THAT PUT WRONG MATHEMATICS ON THE PAGE.** Neither touches `figParse`, the lesson
+  schema or any student-facing composition.
+  - `figAmbiguous(src)` (beside `figTok`) re-reads the TOKEN STREAM — it does not re-parse — and, where a
+    divisor swallows a run of adjacent atoms, shows the reading under the expression field in the inspector:
+    `1/2x+1` → *Reads as `1/(2·x)+1`*. Never on the page: `.tp-fig-err` is for an expression the engine
+    CANNOT read, and this one it can. Three deliberate silences, each with an assertion behind it — nothing
+    is said when `figParse` already rejects the source (`1/2x(` is a keystroke state), nothing is said when
+    the swallowed run carries no variable (`1/2pi` IS 1/(2π)), and the reading shown is one the engine
+    reads back the same way. That last one is the trap: `figTok` DISCARDS whitespace, so pasting the tokens
+    together renders `1/2 sin x` as an unparseable `1/(2sinx)` and `1/2 3` as `1/(23)`, a different number.
+    A juxtaposition is therefore written out as the multiplication it is, and every flagged reading is
+    parsed back and evaluated against its source at six values of x by the gate.
+  - `MX_FRAC_T` also admits a BRACKETED SUM of signed integers (≤ 3 joins, one level of nesting for an
+    operand, so `(4 − (−2))` reads). Its single use site is untouched, so ONE SIDE MUST STILL BE BRACKETED
+    — that is what keeps `1914 / 1918` a year range and `rise/run` a slash. Over every distinct string in
+    every committed lesson (1950), exactly TWO render differently: the two gradient working lines of
+    `straight-lines.app.json`.
+  - The two corpus-wide invariants that now guard `mxM` live in `verify-notes-examples.mjs`: no committed
+    string loses or gains a visible character, and no built-up fraction is a division that was not written.
+    They are what the NEXT widening will be measured against.
+  **STAGE 5 · 3 — A CURVE CAN BE TOLD FROM THE ONE BESIDE IT.** Two new authored keys; the Figure Engine's
+  geometry, placement solver and composition rules are untouched.
+  - `{"type":"function","pen":"dashed"|"dotted"|"dashdot"|"quiet"}` — SHAPE FIRST. A dash reads in every
+    theme, survives a photocopy and asks nobody to tell two teals apart (WCAG 1.4.1); a second colour token
+    would have failed all three, since the mathematics pack declares ONE accent and `ww1`/`rome`/`wellbeing`
+    declare no `--secondary` at all. `quiet` is the one ink variation and borrows the reference line's token.
+    THE CLASS IS LOOKED UP, NEVER ASSEMBLED: `figDraw` interpolates `class="${cls}"` RAW and escapes only
+    text, so `FIG_FN_PEN` has a null prototype (`"constructor"`, `"__proto__"` are not members) and its value
+    is re-checked as a string. An authored `"pen":"constructor"` draws the ordinary curve.
+  - `curveLabels:"shown"` on the FIGURE, in the same vocabulary as `grid` and `callouts`, draws each curve's
+    `label` at the end of its longest arm. OPT-IN because 38 committed function objects already carry a
+    `label` written before any painter could draw one. Typing a name in the panel sets the switch the first
+    time, so the field is not a dead end. `figFnLabBoxes` reserves exactly what `figFnLabAt` paints, at both
+    the inline and the expanded solve, so no point identifier lands on a name.
+  - `figure-render`: **0 moved · 36 added · 0 removed**, baseline now 276. The 36 are
+    `tests/visual/lessons/figure-curve-identity.json`, added in the same change because nothing committed
+    carries a pen or asks for names — its third slide carries labels and does NOT ask for them.
+
+  **STAGE 5 · 4 — THE REPETITIVE OPERATIONS.** A new group arrives with one example, a new example with one
+  step (§4). A **Columns** field sizes a table in one entry (§5). Shift + ↑/↓ moves a row to the top or the
+  end (§6); for adjacent positions the splice is exactly the swap it replaced. `verify-quadratics-authoring`
+  was re-aimed for the seeding — its rebuild loop counted on adds arriving empty — and now pays one delete
+  for each of the two groups the lesson ends with that carry no worked example.
+
+  STILL OPEN from the findings: the object called `line` is axis-parallel only (§7), `rise/run` stays a
+  slash because a fraction needs numbers both sides (§8), and the figure's axis numbering uses a hyphen
+  where the lesson's prose uses a minus (§9).
+
+  **STILL TO AUTHOR**: a FIGURE attached to an example or a step. `mxPart` renders one anywhere, but the
+  object editor is addressed per group (`mx.f` / `mx.o`, one graph per group, found the way the renderer
+  finds it), so the part palette offers `prose · relations · points · table` and not `figure`. Both of this
+  lesson's graphs are group graphs, so nothing is blocked by it. Desktop authoring only.
+
+  **THE STUDY / EDIT DISTINCTION IS CORRECT, measured 22 Sep** — ON `#modeSeg`: inspector visible ⟺
+  `mode==='edit'` ⟺ that Edit button carries `.on`; Study clears the inspector's content entirely.
+  **BUT `#modeSeg` IS HIDDEN ON A RESPONSIVE PAGE** — the app header is not on screen at all — and the bar
+  the author can see is `mxTopBar`'s, a different element. That one DID say Study while the author was in
+  Edit, because it is built inside the window where `renderCanvas` forces `mode` to `'study'` for the
+  Study-identical Edit render. Fixed by `authorMode()`, which reports the author's mode to the chrome while
+  the canvas keeps painting in the rendering one. TWO LESSONS: a correct finding about one element is not a
+  finding about the element the user is looking at; and the assertion that should have caught it read the
+  bar only in Study, the one state where the defect is invisible.
 
   **TWO PIECES OF OUTSTANDING WORK, RECORDED FOR A LATER PHASE — neither is to be expanded now:**
   1. **The image block.** `block()` in `scripts/composition-atlas.mjs` sends every media block through

@@ -1,0 +1,29 @@
+lifted 1184KB of the app's own stylesheet
+
+figure layout signatures — each plane offers the sizes it can legally be drawn at
+  symmetry    min 373×486 @34.0  pref 484×621 @43.8  max 565×718 @51.5  · 14 legal sizes
+  graphcheck  min 386×716 @28.0  pref 386×716 @28.0  max 386×716 @28.0  · 1 legal size  [FLOOR UNREACHABLE — the plot needs 28.3 px/unit to clear 340×255, and the 720px box bound is reached at 28.0]
+  roots       min 380×561 @34.0  pref 421×619 @37.4  max 490×716 @44.0  · 14 legal sizes
+  portrait    min 332×705 @35.5  pref 332×705 @35.5  max 332×705 @35.5  · 1 legal size  [FLOOR UNREACHABLE — the plot needs 56.7 px/unit to clear 340×255, and the 720px box bound is reached at 35.5]
+  landscape   min 717×346 @28.0  pref 717×346 @28.0  max 717×346 @28.0  · 1 legal size  [FLOOR UNREACHABLE — the plot needs 31.9 px/unit to clear 340×255, and the 720px box bound is reached at 28.0]
+
+resolving and rendering
+  01-standard-balanced-desktop         1152px  instructionSplit:split 77%
+  01-standard-balanced-narrow           382px  instructionSplit:flow
+  02-standard-desktop                  1152px  instructionSplit:flow 22%
+  02-standard-narrow                    382px  instructionSplit:flow
+  03-sequence-desktop                  1152px  instructionSplit:flow 22%  instructionSplit:flow 22%  instructionSplit:flow 29%
+  03-sequence-narrow                    382px  instructionSplit:flow  instructionSplit:flow  instructionSplit:flow
+  04-pairedvisual-desktop              1152px  repeat:across  visualInterpretation:side
+  04-pairedvisual-middle                700px  repeat:across  visualInterpretation:stack
+  04-pairedvisual-narrow                382px  repeat:down  visualInterpretation:stack
+  05-visualcheck-desktop               1152px  instructionSplit:flow 22%  visualInterpretation:side
+file:///C:/Users/willi/Videos/Online%20Lesson%20Maker/scripts/mockups-compositions.mjs:555
+    if (r.state === 'stack' && r.margin < 0) throw new Error(`${name}: stacked figure overflows by ${-r.margin}px`);
+                                                   ^
+
+Error: 05-visualcheck-narrow: stacked figure overflows by 4px
+    at verify (file:///C:/Users/willi/Videos/Online%20Lesson%20Maker/scripts/mockups-compositions.mjs:555:52)
+    at file:///C:/Users/willi/Videos/Online%20Lesson%20Maker/scripts/mockups-compositions.mjs:635:5
+
+Node.js v24.14.1

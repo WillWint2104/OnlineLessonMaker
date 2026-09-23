@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "title": "Figure engine — telling curves apart",
+    "theme": "mathematics",
+    "year": "Year 9",
+    "subject": "Mathematics",
+    "unit": "Linear relationships"
+  },
+  "slides": [
+    {
+      "type": "page",
+      "title": "Three gradients through one intercept",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "Comparing steepness",
+          "flow": [
+            {
+              "kind": "para",
+              "text": "Three lines share the intercept $(0, 1)$ and differ only in gradient. Each is drawn with its own pen and carries its own name, so the picture states which is which without the prose having to."
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "figure": "graph",
+          "title": "$y=mx+1$ for three gradients",
+          "caption": "The steeper the line, the larger $m$.",
+          "domain": { "xMin": -5, "xMax": 5, "yMin": -4, "yMax": 6 },
+          "grid": "shown",
+          "aspect": "equal",
+          "curveLabels": "shown",
+          "objects": [
+            { "type": "function", "f": "2x+1", "label": "y = 2x + 1" },
+            { "type": "function", "f": "x+1", "pen": "dashed", "label": "y = x + 1" },
+            { "type": "function", "f": "(1/2)x+1", "pen": "dotted", "label": "y = ½x + 1" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Before and after",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "A curve and the one it came from",
+          "flow": [
+            {
+              "kind": "para",
+              "text": "The original is drawn quietly and the transformed curve in full ink, so the comparison reads at a glance and still reads in print."
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "figure": "graph",
+          "title": "$y=x^2$ and $y=(x-2)^2$",
+          "domain": { "xMin": -4, "xMax": 6, "yMin": -1, "yMax": 9 },
+          "grid": "shown",
+          "aspect": "stretch",
+          "curveLabels": "shown",
+          "objects": [
+            { "type": "function", "f": "x^2", "pen": "quiet", "label": "y = x²" },
+            { "type": "function", "f": "(x-2)^2", "pen": "dashdot", "label": "y = (x − 2)²" },
+            { "type": "points", "from": "table", "rows": [["V", 2, 0]] }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "page",
+      "title": "Nothing asked for, nothing drawn",
+      "blocks": [
+        {
+          "type": "section",
+          "title": "The default is untouched",
+          "flow": [
+            {
+              "kind": "para",
+              "text": "This figure carries a label on each curve and no pen, and does not turn curve labels on. It must render exactly as it did before curve identity existed — one stroke, no names."
+            }
+          ]
+        },
+        {
+          "type": "figure",
+          "figure": "graph",
+          "title": "Two curves, no identity asked for",
+          "domain": { "xMin": -4, "xMax": 4, "yMin": -2, "yMax": 8 },
+          "grid": "shown",
+          "aspect": "stretch",
+          "objects": [
+            { "type": "function", "f": "x^2", "label": "y = x²" },
+            { "type": "function", "f": "x+2", "label": "y = x + 2" }
+          ]
+        }
+      ]
+    }
+  ]
+}

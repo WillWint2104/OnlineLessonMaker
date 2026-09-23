@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 import fs from 'fs';
 
-const URL = 'http://localhost:8099/lesson-studio.html';
+const URL = `${process.env.BASE || 'http://localhost:8099'}/lesson-studio.html`;
 // tiny solid-red 2x2 PNG
 const PNG = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVR4nGP8z8Dwn4EIwDiqEAAh4wMBdrYZNwAAAABJRU5ErkJggg==';
 const results = [];
@@ -13,6 +13,13 @@ const errs = [];
 page.on('pageerror', e => errs.push(String(e)));
 page.on('console', m => { if(m.type()==='error') errs.push(m.text()); });
 await page.goto(URL, { waitUntil: 'networkidle' });
+// The app intentionally starts empty. Supply the three legacy media surfaces this gate edits.
+fs.mkdirSync('screenshots',{recursive:true});
+await page.evaluate(() => { LESSON={meta:{title:'Media regression',theme:'egypt'},slides:[
+  {type:'cover',title:'Media cover',sub:'Image controls'},
+  {type:'image',title:'Media image',caption:'Test image'},
+  {type:'external',title:'Media external',url:'',sourceUrl:'',image:''}
+]};cur=0;render(); });
 
 // helper: run app code in page (engine vars are module-scoped, so drive via DOM + exposed UI)
 const enterEdit = () => page.click('[data-mode="edit"]');
@@ -73,6 +80,7 @@ ok('cover: focus preset sets object-position', /object-position:0\.0% 0\.0%/.tes
 // focus DRAG on the pad (regression: grid buttons used to cover the pad and block dragging)
 await page.click('#slide .hero'); await page.waitForTimeout(80);
 const pad = await page.$('#inspector .mfocus');
+await pad.scrollIntoViewIfNeeded();
 const box = await pad.boundingBox();
 await page.mouse.move(box.x + box.width*0.8, box.y + box.height*0.25);
 await page.mouse.down();
@@ -116,7 +124,7 @@ if(!(await exists('#slide .hero.hero-bg'))){ await page.click('#inspector [data-
 await page.screenshot({ path: 'screenshots/media-a-cover.png' });
 
 // ---- SLIDE IMAGE (slide 7 = 'image') ----
-await page.evaluate(()=>{ document.querySelectorAll('#nav [data-go]')[7]?.click(); });
+await page.evaluate(()=>go(LESSON.slides.findIndex(s=>s.type==='image')));
 await page.waitForTimeout(150);
 await page.click('#slide .frame').catch(()=>{});
 await page.waitForTimeout(100);
@@ -139,7 +147,7 @@ await page.click('#slide .frame'); await page.waitForTimeout(80);
 await page.screenshot({ path: 'screenshots/media-b-empty.png' });
 
 // ---- EXTERNAL embed (slide 4) media block + fallback link field ----
-await page.evaluate(()=>{ document.querySelectorAll('#nav [data-go]')[4]?.click(); });
+await page.evaluate(()=>go(LESSON.slides.findIndex(s=>s.type==='external')));
 await page.waitForTimeout(150);
 await page.click('#slide .ex-img').catch(()=>{});
 await page.waitForTimeout(100);
@@ -152,30 +160,23 @@ ok('external: activity URL + source fallback fields present', hasUrlField && has
 // ---- EXPORT self-contained ----
 await page.evaluate(()=>{ document.querySelectorAll('#nav [data-go]')[0]?.click(); });
 await page.waitForTimeout(120);
-const exportInfo = await page.evaluate(() => {
-  let captured = null;
-  const RealBlob = window.Blob;
-  window.Blob = function(parts, opts){ if(opts && opts.type==='text/html') captured = parts.join(''); return new RealBlob(parts, opts); };
-  const realClick = HTMLAnchorElement.prototype.click; HTMLAnchorElement.prototype.click = function(){};
-  const realCreate = URL.createObjectURL, realRevoke = URL.revokeObjectURL;
-  URL.createObjectURL = () => 'blob:stub'; URL.revokeObjectURL = () => {};
-  try { document.getElementById('exportBtn').click(); } finally {
-    HTMLAnchorElement.prototype.click = realClick; window.Blob = RealBlob;
-    URL.createObjectURL = realCreate; URL.revokeObjectURL = realRevoke;
-  }
-  const flat = (captured||'').replace(/\n/g,' ');
-  return {
-    hasDataUrl: flat.includes('data:image/png'),
-    studyBody: /<body class="study"/.test(flat),
-    inspectorStripped: /id="inspector"[^>]*>\s*<\/(div|aside|section|nav)>/.test(flat),
-    paletteStripped: /id="palette"[^>]*>\s*<\/(div|aside|section|nav)>/.test(flat),
-    thirdParty: /(src|href)="https?:\/\/(?!localhost)/i.test(flat),
-    len: (captured||'').length
-  };
-});
+// Publication now awaits asset inlining; capture the actual download rather than a synchronous Blob stub.
+const downloadPromise=page.waitForEvent('download');
+await page.locator('#exportBtn').click();
+const download=await downloadPromise;
+const stream=await download.createReadStream();const chunks=[];for await(const chunk of stream)chunks.push(chunk);
+const flat=Buffer.concat(chunks).toString('utf8').replace(/\n/g,' ');
+const exportInfo={
+ hasDataUrl:flat.includes('data:image/png'),
+ studyBody:/<body class="study"/.test(flat),
+ inspectorStripped:/id="inspector"[^>]*>\s*<\/(div|aside|section|nav)>/.test(flat),
+ paletteStripped:/id="palette"[^>]*>\s*<\/(div|aside|section|nav)>/.test(flat),
+ thirdParty:/(src|href)="https?:\/\/(?!localhost)/i.test(flat),len:flat.length
+};
 ok('export: dropped image embedded inline (data URL) in exported file', exportInfo.hasDataUrl, `len=${exportInfo.len}`);
 ok('export: body=study, inspector+palette stripped', exportInfo.studyBody && exportInfo.inspectorStripped && exportInfo.paletteStripped, JSON.stringify(exportInfo));
 ok('export: no third-party http(s) src/href in exported file', !exportInfo.thirdParty);
+ok('media editing and publication: no browser or console errors',errs.length===0,errs.join(' | '));
 
 await browser.close();
 fs.writeFileSync('screenshots/media-verify.txt', results.join('\n')+'\n\nPage errors:\n'+(errs.join('\n')||'(none)'));

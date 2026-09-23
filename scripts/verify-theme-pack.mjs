@@ -16,10 +16,13 @@ const ok = (n, c, extra = '') => { results.push(`${c ? '✓' : '✗'} ${n}${extr
 const isExternal = (u) => !u.startsWith(BASE) && !/^(data|blob|about):/i.test(u) && /^https?:\/\//i.test(u);
 
 const TYPES = ['title', 'outcomes', 'text', 'imageText', 'infographic', 'video', 'knowledgeCheck'];
-const MARK = { title: '.tp-htitle', outcomes: '.tp-objs,.tp-objl', text: '.tp-doc .tp-lead', imageText: '.tp-llcard,.tp-itgrid', infographic: '.tp-ig-map,.tp-mapcard', video: '.tp-vframe,.tp-player', knowledgeCheck: '[data-tp-kc]' };
+const MARK = { title: '.tp-htitle', outcomes: '.tp-objs,.tp-objl', text: '.tp-doc .tp-lead,.tp-readband', imageText: '.tp-llcard,.tp-itgrid', infographic: '.tp-ig-map,.tp-mapcard', video: '.tp-vframe,.tp-player', knowledgeCheck: '[data-tp-kc]' };
 
 async function runTheme(theme, file, fontNeedle) {
-  const json = readFileSync(file, 'utf8');
+  // Exercise empty media slots explicitly; the shipped samples now contain real image paths.
+  const fixture=JSON.parse(readFileSync(file,'utf8'));
+  for(const s of fixture.slides){s.image='';if(s.artifact)s.artifact.image='';}
+  const json = JSON.stringify(fixture);
   const page = await browser.newPage({ viewport: { width: 1440, height: 840 } });
   const external = [], errs = [];
   page.on('request', (r) => { if (isExternal(r.url())) external.push(r.url()); });
@@ -70,19 +73,26 @@ async function runTheme(theme, file, fontNeedle) {
   // knowledgeCheck gating (slide index 6)
   await page.evaluate(() => go(6));
   await page.waitForTimeout(300);
-  const before = await page.evaluate(() => document.querySelector('[data-tp-continue]').disabled);
+  // Phase 2 removed duplicate in-slide footers. Verify the actual Present advance gate instead.
+  const before = await page.evaluate(() => {
+    LESSON.slides.push({type:'title',title:'Gate destination'});
+    document.querySelector('#stage').dispatchEvent(new MouseEvent('click',{bubbles:true,clientX:innerWidth*.9}));
+    return cur===6 && !document.querySelector('[data-tp-kc]').dataset.tpDone;
+  });
   await page.evaluate(() => { const c = [...document.querySelectorAll('[data-tp-opt]')].find((o) => o.dataset.tpCorrect === '1'); c && c.click(); });
   await page.waitForTimeout(300);
-  const after = await page.evaluate(() => document.querySelector('[data-tp-continue]').disabled);
+  const after = await page.evaluate(() => document.querySelector('[data-tp-kc]').dataset.tpDone==='1');
   const fbShown = await page.evaluate(() => !!document.querySelector('.tp-feedback:not([hidden])'));
-  ok(`${theme}/knowledgeCheck: Continue gated until correct`, before === true && after === false, `${before}->${after}`);
+  ok(`${theme}/knowledgeCheck: advance gated until correct`, before && after, `${before}->${after}`);
   ok(`${theme}/knowledgeCheck: feedback revealed on answer`, fbShown);
+  await page.evaluate(() => document.querySelector('#stage').dispatchEvent(new MouseEvent('click',{bubbles:true,clientX:innerWidth*.9})));
+  ok(`${theme}/knowledgeCheck: correct answer unlocks actual navigation`,await page.evaluate(()=>cur===7));
   // wrong answer does NOT enable / keeps retry
   await page.evaluate(() => go(6)); await page.waitForTimeout(250);
   await page.evaluate(() => { const w = [...document.querySelectorAll('[data-tp-opt]')].find((o) => o.dataset.tpCorrect !== '1'); w && w.click(); });
   await page.waitForTimeout(200);
-  const afterWrong = await page.evaluate(() => document.querySelector('[data-tp-continue]').disabled);
-  ok(`${theme}/knowledgeCheck: wrong answer keeps Continue disabled`, afterWrong === true);
+  const afterWrong = await page.evaluate(() => { document.querySelector('#stage').dispatchEvent(new MouseEvent('click',{bubbles:true,clientX:innerWidth*.9}));return cur===6&&!document.querySelector('[data-tp-kc]').dataset.tpDone; });
+  ok(`${theme}/knowledgeCheck: wrong answer keeps advance blocked`, afterWrong === true);
 
   ok(`${theme}: zero external requests`, external.length === 0, external.slice(0, 3).join(', '));
   ok(`${theme}: no page errors`, errs.length === 0, errs.slice(0, 2).join(' | '));
@@ -98,7 +108,7 @@ await runTheme('microhistory', 'examples/microhistory-sample.json', 'Courier Pri
   await page.goto(URL, { waitUntil: 'networkidle' });
   await page.evaluate(() => { LESSON = { meta: { title: 'X', theme: 'egypt' }, slides: [{ type: 'cover', tag: 'Section', title: 'Old Kingdom', sub: 'Intro' }] }; cur = 0; render(); });
   await page.waitForTimeout(300);
-  const r = await page.evaluate(() => ({ pack: !!document.querySelector('.tp-slide'), cover: !!document.querySelector('#slide .cover') }));
+  const r = await page.evaluate(() => ({ pack: !!document.querySelector('#slide .tp-slide'), cover: !!document.querySelector('#slide .cover') }));
   ok('existing theme (egypt) unaffected — renders via engine, not the pack', !r.pack && r.cover, JSON.stringify(r));
   await page.close();
 }

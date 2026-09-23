@@ -1,0 +1,300 @@
+{
+  "meta": {
+    "title": "Straight-line graphs",
+    "theme": "mathematics",
+    "stage": "NSW Stage 5",
+    "year": "Year 9",
+    "unit": "Linear relationships"
+  },
+  "slides": [
+    {
+      "type": "workedExamples",
+      "navLabel": "Straight lines",
+      "title": "Straight lines: _y_ = _m__x_ + _c_",
+      "lede": "A straight line is a constant rate of change. Its rule tells you how steep it is and where it starts, and its picture shows you both at once.",
+      "groups": [
+        {
+          "id": "g1",
+          "type": "sequence",
+          "title": "Gradient",
+          "lede": "Gradient is a rate: how far up for how far across. Any two points on the line give the same answer.",
+          "examples": [
+            {
+              "id": "ex1",
+              "label": "A line that rises",
+              "prompt": "Find the gradient of the line through (1, 2) and (5, 5).",
+              "steps": [
+                {
+                  "id": "s1",
+                  "text": "Write the gradient as rise over run.",
+                  "math": "_m_ = rise/run"
+                },
+                {
+                  "id": "s2-zhff",
+                  "text": "Subtract in the same order top and bottom. Second point minus first, both times.",
+                  "math": "_m_ = (5 − 2)/(5 − 1)"
+                },
+                {
+                  "id": "s3-ymkx",
+                  "text": "Work out each subtraction, then simplify.",
+                  "math": "_m_ = 3/4"
+                }
+              ],
+              "answer": "_m_ = 3/4 — the line rises 3 for every 4 across."
+            },
+            {
+              "id": "ex2-ondd",
+              "label": "A line that falls",
+              "prompt": "Find the gradient of the line through (−2, 4) and (4, 0).",
+              "steps": [
+                {
+                  "id": "s1-3nra",
+                  "text": "Substitute, keeping the brackets around the negative coordinate.",
+                  "math": "_m_ = (0 − 4)/(4 − (−2))"
+                },
+                {
+                  "id": "s2-bj1k",
+                  "text": "Subtracting a negative adds. The run is 6, not 2.",
+                  "math": "_m_ = (−4)/6"
+                },
+                {
+                  "id": "s3-ggvb",
+                  "text": "Simplify. A negative gradient means the line falls as _x_ increases.",
+                  "math": "_m_ = −2/3"
+                }
+              ],
+              "answer": "_m_ = −2/3 — the line falls 2 for every 3 across."
+            }
+          ],
+          "footLabel": "What the two show",
+          "relations": [
+            {
+              "kind": "prose",
+              "body": "Both examples used the same subtraction in the same order. Reversing one of them, but not the other, is the mistake to watch for: it turns a rise into a fall."
+            }
+          ]
+        },
+        {
+          "id": "g2-kkm9",
+          "type": "sequence",
+          "title": "Where the line crosses",
+          "examples": [
+            {
+              "id": "ex1-bwnv",
+              "label": "Both intercepts of _y_ = 2_x_ − 1",
+              "prompt": "Find where _y_ = 2_x_ − 1 crosses each axis.",
+              "steps": [
+                {
+                  "id": "s3-k4q0",
+                  "text": "Put _x_ = 0 to find where it crosses the _y_-axis.",
+                  "math": "_y_ = 2(0) − 1 = −1"
+                },
+                {
+                  "id": "s1-5h79",
+                  "text": "Put _y_ = 0 to find where it crosses the _x_-axis.",
+                  "math": "0 = 2_x_ − 1"
+                },
+                {
+                  "id": "s2-0guu",
+                  "text": "Solve for _x_. The answer is a fraction, and that is normal.",
+                  "math": "_x_ = 1/2"
+                }
+              ],
+              "answer": "It crosses at (0, −1) and at (1/2, 0)."
+            }
+          ],
+          "lede": "Put one variable to zero and the other one falls out. Two substitutions give both intercepts.",
+          "relations": [
+            {
+              "kind": "prose",
+              "body": "Reading the rule for the _y_-intercept is quicker than the working: in _y_ = _m__x_ + _c_ the number on its own IS where the line crosses. The working is here because the _x_-intercept has no such shortcut."
+            }
+          ]
+        },
+        {
+          "id": "g3-xq3a",
+          "type": "staged",
+          "title": "From a rule to a picture",
+          "examples": [
+            {
+              "id": "ex1-oezg",
+              "label": "Plotting _y_ = 2_x_ − 1",
+              "prompt": "Draw _y_ = 2_x_ − 1 for _x_ from −2 to 3.",
+              "steps": [
+                {
+                  "id": "s1-q4oz",
+                  "text": "Choose whole values of _x_ across the range you were given, and work out each _y_.",
+                  "math": "",
+                  "visual": [
+                    {
+                      "kind": "table",
+                      "label": "",
+                      "stub": "_x_",
+                      "head": [
+                        "−2",
+                        "−1",
+                        "0",
+                        "1",
+                        "2",
+                        "3"
+                      ],
+                      "rows": [
+                        {
+                          "label": "_y_ = 2_x_ − 1",
+                          "cells": [
+                            "−5",
+                            "−3",
+                            "−1",
+                            "1",
+                            "3",
+                            "5"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "s2-gkrb",
+                  "text": "Plot the pairs and join them. If one point is off the line, it is that point’s arithmetic that is wrong, not the rule.",
+                  "math": ""
+                }
+              ],
+              "answer": "A straight line through (0, −1), going up 2 for every 1 across."
+            }
+          ],
+          "lede": "Two points fix a straight line. The third one is the check that you have not made an arithmetic slip.",
+          "relations": [
+            {
+              "kind": "figure",
+              "figure": {
+                "type": "figure",
+                "figure": "graph",
+                "aspect": "equal",
+                "grid": "shown",
+                "domain": {
+                  "xMin": "-3",
+                  "xMax": "4",
+                  "yMin": "-6",
+                  "yMax": "6"
+                },
+                "objects": [
+                  {
+                    "type": "function",
+                    "f": "2x-1"
+                  },
+                  {
+                    "type": "points",
+                    "rows": [
+                      [
+                        "(0, −1)",
+                        "0",
+                        "-1"
+                      ],
+                      [
+                        "(3, 5)",
+                        "3",
+                        "5"
+                      ]
+                    ]
+                  }
+                ],
+                "callouts": "hidden"
+              }
+            },
+            {
+              "kind": "relations",
+              "label": "Reading the line against the table",
+              "items": [
+                "Every pair in the table is a point on the line, and every point on the line is a pair that would fit the table.",
+                "Going one step right along the table adds 2 to _y_ every time. That constant step IS the gradient.",
+                "The column for _x_ = 0 holds −1, and that is where the line crosses the _y_-axis."
+              ]
+            }
+          ],
+          "states": [
+            {
+              "id": "solution",
+              "label": "Worked solution",
+              "lede": "",
+              "show": [
+                "question",
+                "steps",
+                "answer"
+              ]
+            },
+            {
+              "id": "visual",
+              "label": "Visual explanation",
+              "lede": "",
+              "show": [
+                "visual",
+                "relations"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "g4-8rra",
+          "type": "staged",
+          "title": "Comparing steepness",
+          "examples": [],
+          "lede": "Three lines through the same point on the _y_-axis, so the only thing that differs is the gradient.",
+          "relations": [
+            {
+              "kind": "figure",
+              "figure": {
+                "type": "figure",
+                "figure": "graph",
+                "aspect": "equal",
+                "grid": "shown",
+                "domain": {
+                  "xMin": "-6",
+                  "xMax": "6",
+                  "yMin": "-4",
+                  "yMax": "6"
+                },
+                "objects": [
+                  {
+                    "type": "function",
+                    "f": "2x+1"
+                  },
+                  {
+                    "type": "function",
+                    "f": "x/2+1"
+                  },
+                  {
+                    "type": "function",
+                    "f": "-x+1"
+                  },
+                  {
+                    "type": "points",
+                    "rows": [
+                      [
+                        "(0, 1)",
+                        "0",
+                        "1"
+                      ]
+                    ]
+                  }
+                ],
+                "callouts": "hidden"
+              }
+            },
+            {
+              "kind": "relations",
+              "label": "What the three show",
+              "items": [
+                "All three meet at (0, 1), because all three rules end in + 1. The intercept is the constant.",
+                "The steepest climb is _m_ = 2: one across, two up. Half the gradient is half the climb for the same step.",
+                "The third gradient is negative, so the line falls. Its steepness is still 1 — the sign says direction, the size says steepness.",
+                "A gradient of 0 would be flat, and a vertical line has no gradient at all: the run would be zero, and you cannot divide by it."
+              ]
+            }
+          ]
+        }
+      ],
+      "id": "workedexamples-xao5n"
+    }
+  ]
+}

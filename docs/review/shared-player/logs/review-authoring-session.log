@@ -1,0 +1,64 @@
+
+AUTHORING "Straight-line graphs" — a lesson that does not exist yet
+
+  the page
+    title set to "Straight lines: _y_ = _m__x_ + _c_"
+
+  subtopic 1 — Gradient
+    3 built-up fraction(s) on the page
+    fraction shapes as painted:
+      SLASH     m = rise/run
+      built up  m = (5 − 2)(5 − 1)
+      built up  m = 34
+      built up  m = (0 − 4)(4 − (−2))
+      built up  m = (−4)6
+      built up  m = −23
+    · 1-gradient — two worked examples whose answers are fractions
+
+  subtopic 2 — Intercepts, with the steps deliberately entered out of order
+    steps reordered: ["0 = 2_x_ − 1","_x_ = 1/2","_y_ = 2(0) − 1 = −1"]
+                  -> ["_y_ = 2(0) − 1 = −1","0 = 2_x_ − 1","_x_ = 1/2"]
+    the page now reads ["y = 2(0) − 1 = −1","0 = 2x − 1","x = 12"]
+    · 2-intercepts — one example, its steps put back into teaching order
+
+  subtopic 3 — a table of values, then the graph
+    a 6-column table built from a 2-column default — 14 cells painted
+    This session used 4 Add column clicks; the Columns field also sets the count directly. Each authored heading still needs its own text.
+    the staged pair (Workings / Visual explanation) adopted from the app’s own defaults
+    · 3-table-and-graph — the table of values and the line it becomes
+
+  subtopic 4 — three lines on one plane
+    "1/2x+1" drew 4 subpath(s); "x/2+1" drew 3
+    the editor warns: Reads as 1/(2·x)+1 — a factor written next to the divisor is taken into it. If that is not what you meant, bracket it.
+    · 4-three-lines — three gradients through one intercept
+
+  the finished lesson
+    4 subtopics · 4 worked examples · 11 steps · 2 graphs · 1 table
+    180 interactions — 51 selections, 35 buttons, 94 fields
+    exported 2026KB and reopened: identical
+    study    4 tabs · 4 examples · 11 steps
+    edit     4 tabs · 4 examples · 11 steps
+    present  4 tabs · 4 examples · 11 steps
+    This session retained default curve pens (rgb(15, 122, 76)/2px/none). The editor's pen and label controls can distinguish them; this is an authored choice, not an absent capability.
+
+  written to review-delivery\review-fixes\straight-lines.json and review-delivery\review-fixes\straight-lines
+  page errors: none
+
+══ FRICTION LOG ══════════════════════════════════════════════════════════════
+
+1. STEP MATHEMATICS
+   A fraction only builds up when BOTH parts are numbers — `rise/run` stays a slash
+   evidence: "_m_ = rise/run" painted as "<i>m</i> = rise/run"
+   costs:    the author has to know the fraction grammar is numeric, and rewrite the idea or accept a slash
+
+2. DRAWING A STRAIGHT LINE
+   The object called "line" cannot draw a straight line — it is axis-parallel only, so a sloping line has to be entered as a "function"
+   evidence: the graph offers [function, line, points, segment]; "line" takes y = k or x = k, so _y_ = 2_x_ − 1 must be typed as the function "2x-1"
+   costs:    in a lesson ABOUT straight lines, the control named line is the wrong one every single time
+
+3. TYPOGRAPHY OF THE FIGURE
+   The axis numbering uses a hyphen where the lesson's own text uses a minus sign
+   evidence: 11 axis labels begin with "-" and 0 with "−", on a page whose prose and working are written with − throughout
+   costs:    the same number is set two ways on one screen
+
+══════════════════════════════════════════════════════════════════════════════

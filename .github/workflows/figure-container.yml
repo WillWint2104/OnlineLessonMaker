@@ -18,6 +18,9 @@ permissions:
 on:
   pull_request:
     paths:
+      - '.github/workflows/figure-container.yml'
+      - 'package.json'
+      - 'package-lock.json'
       - 'lesson-studio.html'
       - 'scripts/verify-figure-container.mjs'
       - 'scripts/verify-figure-render.mjs'

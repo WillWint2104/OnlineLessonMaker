@@ -1,0 +1,13 @@
+the authoring workflow:
+  1-empty     [mode=edit · segment=edit · inspector open]  an empty mathematics lesson, Edit mode — the palette offers the page
+  2-created   [mode=edit · segment=edit · inspector open]  one click: a real workedExamples page, seeded and already painting
+  3-group     [mode=edit · segment=edit · inspector open]  editing the group — the tab title lands in the page as you type
+  4-example   [mode=edit · segment=edit · inspector open]  the question and the answer
+  5-steps     [mode=edit · segment=edit · inspector open]  two worked steps, the notation set as mathematics
+  6-table     [mode=edit · segment=edit · inspector open]  the table of values on its own example, as the lesson has it — headings, corner cell and every value, all through the inspector
+  7-graph     [mode=edit · segment=edit · inspector open]  the graph: its function, reference line and marked points, all in the outline
+  8-window    [mode=edit · segment=edit · inspector open]  the window the graph is drawn in — and the shape decides the composition
+  9-parts     [mode=edit · segment=edit · inspector open]  prose, relationships, points and tables are one vocabulary — added anywhere a part can live
+  10-study    [mode=study · segment=study · inspector closed]  the page in Study. A TOUR OF THE CONTROLS, not the finished lesson — see docs/atlas/app-lesson/ for that
+
+wrote docs\atlas\authoring

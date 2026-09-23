@@ -1,0 +1,928 @@
+✓ figure-labels-baseline.json · Three isolated points — clearance >= GAP (6)  worst 7.5 over 3
+✓ figure-labels-baseline.json · Three isolated points — clears the printed tick labels  worst 74.8
+✓ figure-labels-baseline.json · Three isolated points — every identifier on canvas  all
+✓ figure-labels-baseline.json · Three isolated points — nearest legal position  max displacement 20.5
+✓ figure-labels-baseline.json · Three isolated points — directional search resolved every identifier  3/3 via dir
+✓ figure-labels-baseline.json · Three isolated points — deterministic across solves
+✓ figure-labels-baseline.json · Points on the axes — clearance >= GAP (6)  worst 6.1 over 5
+✓ figure-labels-baseline.json · Points on the axes — clears the printed tick labels  worst 13.1
+✓ figure-labels-baseline.json · Points on the axes — every identifier on canvas  all
+✓ figure-labels-baseline.json · Points on the axes — nearest legal position  max displacement 23.5
+✓ figure-labels-baseline.json · Points on the axes — directional search resolved every identifier  5/5 via dir
+✓ figure-labels-baseline.json · Points on the axes — deterministic across solves
+✓ figure-labels-baseline.json · Points on a curve, joined by chords — clearance >= GAP (6)  worst 6.0 over 5
+✓ figure-labels-baseline.json · Points on a curve, joined by chords — clears the printed tick labels  worst 11.5
+✓ figure-labels-baseline.json · Points on a curve, joined by chords — every identifier on canvas  all
+✓ figure-labels-baseline.json · Points on a curve, joined by chords — nearest legal position  max displacement 32.3
+✓ figure-labels-baseline.json · Points on a curve, joined by chords — directional search resolved every identifier  5/5 via dir
+✓ figure-labels-baseline.json · Points on a curve, joined by chords — deterministic across solves
+✓ figure-labels-baseline.json · Points at the domain corners and edges — clearance >= GAP (6)  worst 7.2 over 8
+✓ figure-labels-baseline.json · Points at the domain corners and edges — clears the printed tick labels  worst 21.3
+✓ figure-labels-baseline.json · Points at the domain corners and edges — every identifier on canvas  all
+✓ figure-labels-baseline.json · Points at the domain corners and edges — nearest legal position  max displacement 21.4
+✓ figure-labels-baseline.json · Points at the domain corners and edges — directional search resolved every identifier  8/8 via dir
+✓ figure-labels-baseline.json · Points at the domain corners and edges — deterministic across solves
+✓ figure-labels-baseline.json · Long identifiers at close spacing — clearance >= GAP (6)  worst 7.3 over 6
+✓ figure-labels-baseline.json · Long identifiers at close spacing — clears the printed tick labels  worst 18.7
+✓ figure-labels-baseline.json · Long identifiers at close spacing — every identifier on canvas  all
+✓ figure-labels-baseline.json · Long identifiers at close spacing — nearest legal position  max displacement 42.2
+✓ figure-labels-baseline.json · Long identifiers at close spacing — directional search resolved every identifier  6/6 via dir
+✓ figure-labels-baseline.json · Long identifiers at close spacing — deterministic across solves
+✓ figure-graph-baseline.json · y = x squared — clearance >= GAP (6)  worst 6.8 over 2
+✓ figure-graph-baseline.json · y = x squared — clears the printed tick labels  worst 20.4
+✓ figure-graph-baseline.json · y = x squared — every identifier on canvas  all
+✓ figure-graph-baseline.json · y = x squared — nearest legal position  max displacement 31.5
+✓ figure-graph-baseline.json · y = x squared — directional search resolved every identifier  2/2 via dir
+✓ figure-graph-baseline.json · y = x squared — deterministic across solves
+✓ figure-graph-baseline.json · Crowded plane — twelve identifiers, two curves — clearance >= GAP (6)  worst 6.7 over 12
+✓ figure-graph-baseline.json · Crowded plane — twelve identifiers, two curves — clears the printed tick labels  worst 16.4
+✓ figure-graph-baseline.json · Crowded plane — twelve identifiers, two curves — every identifier on canvas  all
+✓ figure-graph-baseline.json · Crowded plane — twelve identifiers, two curves — nearest legal position  max displacement 32.2
+✓ figure-graph-baseline.json · Crowded plane — twelve identifiers, two curves — directional search resolved every identifier  12/12 via dir
+✓ figure-graph-baseline.json · Crowded plane — twelve identifiers, two curves — deterministic across solves
+✓ figure-graph-baseline.json · y = 1/x with an asymptote at x = 0 — clearance >= GAP (6)  worst 6.1 over 2
+✓ figure-graph-baseline.json · y = 1/x with an asymptote at x = 0 — clears the printed tick labels  worst 9.6
+✓ figure-graph-baseline.json · y = 1/x with an asymptote at x = 0 — every identifier on canvas  all
+✓ figure-graph-baseline.json · y = 1/x with an asymptote at x = 0 — nearest legal position  max displacement 35.1
+✓ figure-graph-baseline.json · y = 1/x with an asymptote at x = 0 — directional search resolved every identifier  2/2 via dir
+✓ figure-graph-baseline.json · y = 1/x with an asymptote at x = 0 — deterministic across solves
+✓ figure-graph-baseline.json · Author error state — clearance >= GAP (6)  worst 7.5 over 1
+✓ figure-graph-baseline.json · Author error state — clears the printed tick labels  worst 230.5
+✓ figure-graph-baseline.json · Author error state — every identifier on canvas  all
+✓ figure-graph-baseline.json · Author error state — nearest legal position  max displacement 20.5
+✓ figure-graph-baseline.json · Author error state — directional search resolved every identifier  1/1 via dir
+✓ figure-graph-baseline.json · Author error state — deterministic across solves
+✓ composable-page-baseline.json · y = 3(x+4), which is the same line as y = 3x+1 — clearance >= GAP (6)  worst 6.1 over 2
+✓ composable-page-baseline.json · y = 3(x+4), which is the same line as y = 3x+1 — clears the printed tick labels  worst 12.8
+✓ composable-page-baseline.json · y = 3(x+4), which is the same line as y = 3x+1 — every identifier on canvas  all
+✓ composable-page-baseline.json · y = 3(x+4), which is the same line as y = 3x+1 — nearest legal position  max displacement 23.5
+✓ composable-page-baseline.json · y = 3(x+4), which is the same line as y = 3x+1 — directional search resolved every identifier  2/2 via dir
+✓ composable-page-baseline.json · y = 3(x+4), which is the same line as y = 3x+1 — deterministic across solves
+✓ 1440×900 · figure-graph s0 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 20.4 · box 1386x660
+✓ 1440×900 · figure-graph s0 · ≈4 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1440×900 · figure-graph s0 · ≈4 ticks — nearest legal position  max displacement 31.5
+✓ 1440×900 · figure-graph s0 · ≈4 ticks — deterministic
+✓ 1440×900 · figure-graph s0 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 20.4 · box 1386x660
+✓ 1440×900 · figure-graph s0 · ≈5 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1440×900 · figure-graph s0 · ≈5 ticks — nearest legal position  max displacement 31.5
+✓ 1440×900 · figure-graph s0 · ≈5 ticks — deterministic
+✓ 1440×900 · figure-graph s0 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 20.4 · box 1386x660
+✓ 1440×900 · figure-graph s0 · ≈6 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1440×900 · figure-graph s0 · ≈6 ticks — nearest legal position  max displacement 31.5
+✓ 1440×900 · figure-graph s0 · ≈6 ticks — deterministic
+✓ 1440×900 · figure-graph s0 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 20.4 · box 1386x660
+✓ 1440×900 · figure-graph s0 · ≈8 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1440×900 · figure-graph s0 · ≈8 ticks — nearest legal position  max displacement 31.5
+✓ 1440×900 · figure-graph s0 · ≈8 ticks — deterministic
+✓ 1440×900 · figure-graph s0 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 18.6 · box 1386x660
+✓ 1440×900 · figure-graph s0 · ≈10 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1440×900 · figure-graph s0 · ≈10 ticks — nearest legal position  max displacement 31.5
+✓ 1440×900 · figure-graph s0 · ≈10 ticks — deterministic
+✓ 1440×900 · figure-graph s1 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 21.8 · box 1386x660
+✓ 1440×900 · figure-graph s1 · ≈4 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 1440×900 · figure-graph s1 · ≈4 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-graph s1 · ≈4 ticks — deterministic
+✓ 1440×900 · figure-graph s1 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 19.5 · box 1386x660
+✓ 1440×900 · figure-graph s1 · ≈5 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 1440×900 · figure-graph s1 · ≈5 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-graph s1 · ≈5 ticks — deterministic
+✓ 1440×900 · figure-graph s1 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 19.5 · box 1386x660
+✓ 1440×900 · figure-graph s1 · ≈6 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 1440×900 · figure-graph s1 · ≈6 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-graph s1 · ≈6 ticks — deterministic
+✓ 1440×900 · figure-graph s1 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 19.5 · box 1386x660
+✓ 1440×900 · figure-graph s1 · ≈8 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 1440×900 · figure-graph s1 · ≈8 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-graph s1 · ≈8 ticks — deterministic
+✓ 1440×900 · figure-graph s1 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 7.2 · box 1386x660
+✓ 1440×900 · figure-graph s1 · ≈10 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 1440×900 · figure-graph s1 · ≈10 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-graph s1 · ≈10 ticks — deterministic
+✓ 1440×900 · figure-graph s2 · ≈4 ticks — clears everything incl. tick labels  clear 7.9 · tick 43.1 · box 1386x660
+✓ 1440×900 · figure-graph s2 · ≈4 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1440×900 · figure-graph s2 · ≈4 ticks — nearest legal position  max displacement 27.9
+✓ 1440×900 · figure-graph s2 · ≈4 ticks — deterministic
+✓ 1440×900 · figure-graph s2 · ≈5 ticks — clears everything incl. tick labels  clear 7.9 · tick 37.6 · box 1386x660
+✓ 1440×900 · figure-graph s2 · ≈5 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1440×900 · figure-graph s2 · ≈5 ticks — nearest legal position  max displacement 27.9
+✓ 1440×900 · figure-graph s2 · ≈5 ticks — deterministic
+✓ 1440×900 · figure-graph s2 · ≈6 ticks — clears everything incl. tick labels  clear 7.9 · tick 19.5 · box 1386x660
+✓ 1440×900 · figure-graph s2 · ≈6 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1440×900 · figure-graph s2 · ≈6 ticks — nearest legal position  max displacement 27.9
+✓ 1440×900 · figure-graph s2 · ≈6 ticks — deterministic
+✓ 1440×900 · figure-graph s2 · ≈8 ticks — clears everything incl. tick labels  clear 7.9 · tick 19.5 · box 1386x660
+✓ 1440×900 · figure-graph s2 · ≈8 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1440×900 · figure-graph s2 · ≈8 ticks — nearest legal position  max displacement 27.9
+✓ 1440×900 · figure-graph s2 · ≈8 ticks — deterministic
+✓ 1440×900 · figure-graph s2 · ≈10 ticks — clears everything incl. tick labels  clear 7.9 · tick 19.5 · box 1386x660
+✓ 1440×900 · figure-graph s2 · ≈10 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1440×900 · figure-graph s2 · ≈10 ticks — nearest legal position  max displacement 27.9
+✓ 1440×900 · figure-graph s2 · ≈10 ticks — deterministic
+✓ 1440×900 · figure-graph s3 · ≈4 ticks — clears everything incl. tick labels  clear 7.5 · tick 461.7 · box 1386x660
+✓ 1440×900 · figure-graph s3 · ≈4 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 1440×900 · figure-graph s3 · ≈4 ticks — nearest legal position  max displacement 20.5
+✓ 1440×900 · figure-graph s3 · ≈4 ticks — deterministic
+✓ 1440×900 · figure-graph s3 · ≈5 ticks — clears everything incl. tick labels  clear 7.5 · tick 450.7 · box 1386x660
+✓ 1440×900 · figure-graph s3 · ≈5 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 1440×900 · figure-graph s3 · ≈5 ticks — nearest legal position  max displacement 20.5
+✓ 1440×900 · figure-graph s3 · ≈5 ticks — deterministic
+✓ 1440×900 · figure-graph s3 · ≈6 ticks — clears everything incl. tick labels  clear 7.5 · tick 450.7 · box 1386x660
+✓ 1440×900 · figure-graph s3 · ≈6 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 1440×900 · figure-graph s3 · ≈6 ticks — nearest legal position  max displacement 20.5
+✓ 1440×900 · figure-graph s3 · ≈6 ticks — deterministic
+✓ 1440×900 · figure-graph s3 · ≈8 ticks — clears everything incl. tick labels  clear 7.5 · tick 450.7 · box 1386x660
+✓ 1440×900 · figure-graph s3 · ≈8 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 1440×900 · figure-graph s3 · ≈8 ticks — nearest legal position  max displacement 20.5
+✓ 1440×900 · figure-graph s3 · ≈8 ticks — deterministic
+✓ 1440×900 · figure-graph s3 · ≈10 ticks — clears everything incl. tick labels  clear 7.5 · tick 439.0 · box 1386x660
+✓ 1440×900 · figure-graph s3 · ≈10 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 1440×900 · figure-graph s3 · ≈10 ticks — nearest legal position  max displacement 20.5
+✓ 1440×900 · figure-graph s3 · ≈10 ticks — deterministic
+✓ 1440×900 · figure-labels s0 · ≈4 ticks — clears everything incl. tick labels  clear 7.5 · tick 184.6 · box 1386x661
+✓ 1440×900 · figure-labels s0 · ≈4 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 1440×900 · figure-labels s0 · ≈4 ticks — nearest legal position  max displacement 20.5
+✓ 1440×900 · figure-labels s0 · ≈4 ticks — deterministic
+✓ 1440×900 · figure-labels s0 · ≈5 ticks — clears everything incl. tick labels  clear 7.5 · tick 171.6 · box 1386x661
+✓ 1440×900 · figure-labels s0 · ≈5 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 1440×900 · figure-labels s0 · ≈5 ticks — nearest legal position  max displacement 20.5
+✓ 1440×900 · figure-labels s0 · ≈5 ticks — deterministic
+✓ 1440×900 · figure-labels s0 · ≈6 ticks — clears everything incl. tick labels  clear 7.5 · tick 171.6 · box 1386x661
+✓ 1440×900 · figure-labels s0 · ≈6 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 1440×900 · figure-labels s0 · ≈6 ticks — nearest legal position  max displacement 20.5
+✓ 1440×900 · figure-labels s0 · ≈6 ticks — deterministic
+✓ 1440×900 · figure-labels s0 · ≈8 ticks — clears everything incl. tick labels  clear 7.5 · tick 171.6 · box 1386x661
+✓ 1440×900 · figure-labels s0 · ≈8 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 1440×900 · figure-labels s0 · ≈8 ticks — nearest legal position  max displacement 20.5
+✓ 1440×900 · figure-labels s0 · ≈8 ticks — deterministic
+✓ 1440×900 · figure-labels s0 · ≈10 ticks — clears everything incl. tick labels  clear 7.5 · tick 171.6 · box 1386x661
+✓ 1440×900 · figure-labels s0 · ≈10 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 1440×900 · figure-labels s0 · ≈10 ticks — nearest legal position  max displacement 20.5
+✓ 1440×900 · figure-labels s0 · ≈10 ticks — deterministic
+✓ 1440×900 · figure-labels s1 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 1386x661
+✓ 1440×900 · figure-labels s1 · ≈4 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1440×900 · figure-labels s1 · ≈4 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-labels s1 · ≈4 ticks — deterministic
+✓ 1440×900 · figure-labels s1 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 1386x661
+✓ 1440×900 · figure-labels s1 · ≈5 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1440×900 · figure-labels s1 · ≈5 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-labels s1 · ≈5 ticks — deterministic
+✓ 1440×900 · figure-labels s1 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 1386x661
+✓ 1440×900 · figure-labels s1 · ≈6 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1440×900 · figure-labels s1 · ≈6 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-labels s1 · ≈6 ticks — deterministic
+✓ 1440×900 · figure-labels s1 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 1386x661
+✓ 1440×900 · figure-labels s1 · ≈8 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1440×900 · figure-labels s1 · ≈8 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-labels s1 · ≈8 ticks — deterministic
+✓ 1440×900 · figure-labels s1 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 1386x661
+✓ 1440×900 · figure-labels s1 · ≈10 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1440×900 · figure-labels s1 · ≈10 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-labels s1 · ≈10 ticks — deterministic
+✓ 1440×900 · figure-labels s2 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 1386x661
+✓ 1440×900 · figure-labels s2 · ≈4 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1440×900 · figure-labels s2 · ≈4 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-labels s2 · ≈4 ticks — deterministic
+✓ 1440×900 · figure-labels s2 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 1386x661
+✓ 1440×900 · figure-labels s2 · ≈5 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1440×900 · figure-labels s2 · ≈5 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-labels s2 · ≈5 ticks — deterministic
+✓ 1440×900 · figure-labels s2 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 1386x661
+✓ 1440×900 · figure-labels s2 · ≈6 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1440×900 · figure-labels s2 · ≈6 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-labels s2 · ≈6 ticks — deterministic
+✓ 1440×900 · figure-labels s2 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 1386x661
+✓ 1440×900 · figure-labels s2 · ≈8 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1440×900 · figure-labels s2 · ≈8 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-labels s2 · ≈8 ticks — deterministic
+✓ 1440×900 · figure-labels s2 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 1386x661
+✓ 1440×900 · figure-labels s2 · ≈10 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1440×900 · figure-labels s2 · ≈10 ticks — nearest legal position  max displacement 23.5
+✓ 1440×900 · figure-labels s2 · ≈10 ticks — deterministic
+✓ 1440×900 · figure-labels s3 · ≈4 ticks — clears everything incl. tick labels  clear 7.2 · tick 38.7 · box 1386x661
+✓ 1440×900 · figure-labels s3 · ≈4 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 1440×900 · figure-labels s3 · ≈4 ticks — nearest legal position  max displacement 21.4
+✓ 1440×900 · figure-labels s3 · ≈4 ticks — deterministic
+✓ 1440×900 · figure-labels s3 · ≈5 ticks — clears everything incl. tick labels  clear 7.2 · tick 38.7 · box 1386x661
+✓ 1440×900 · figure-labels s3 · ≈5 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 1440×900 · figure-labels s3 · ≈5 ticks — nearest legal position  max displacement 21.4
+✓ 1440×900 · figure-labels s3 · ≈5 ticks — deterministic
+✓ 1440×900 · figure-labels s3 · ≈6 ticks — clears everything incl. tick labels  clear 7.2 · tick 38.7 · box 1386x661
+✓ 1440×900 · figure-labels s3 · ≈6 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 1440×900 · figure-labels s3 · ≈6 ticks — nearest legal position  max displacement 21.4
+✓ 1440×900 · figure-labels s3 · ≈6 ticks — deterministic
+✓ 1440×900 · figure-labels s3 · ≈8 ticks — clears everything incl. tick labels  clear 7.2 · tick 17.0 · box 1386x661
+✓ 1440×900 · figure-labels s3 · ≈8 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 1440×900 · figure-labels s3 · ≈8 ticks — nearest legal position  max displacement 21.4
+✓ 1440×900 · figure-labels s3 · ≈8 ticks — deterministic
+✓ 1440×900 · figure-labels s3 · ≈10 ticks — clears everything incl. tick labels  clear 7.2 · tick 17.0 · box 1386x661
+✓ 1440×900 · figure-labels s3 · ≈10 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 1440×900 · figure-labels s3 · ≈10 ticks — nearest legal position  max displacement 21.4
+✓ 1440×900 · figure-labels s3 · ≈10 ticks — deterministic
+✓ 1440×900 · figure-labels s4 · ≈4 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 1386x661
+✓ 1440×900 · figure-labels s4 · ≈4 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 1440×900 · figure-labels s4 · ≈4 ticks — nearest legal position  max displacement 42.2
+✓ 1440×900 · figure-labels s4 · ≈4 ticks — deterministic
+✓ 1440×900 · figure-labels s4 · ≈5 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 1386x661
+✓ 1440×900 · figure-labels s4 · ≈5 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 1440×900 · figure-labels s4 · ≈5 ticks — nearest legal position  max displacement 42.2
+✓ 1440×900 · figure-labels s4 · ≈5 ticks — deterministic
+✓ 1440×900 · figure-labels s4 · ≈6 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 1386x661
+✓ 1440×900 · figure-labels s4 · ≈6 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 1440×900 · figure-labels s4 · ≈6 ticks — nearest legal position  max displacement 42.2
+✓ 1440×900 · figure-labels s4 · ≈6 ticks — deterministic
+✓ 1440×900 · figure-labels s4 · ≈8 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 1386x661
+✓ 1440×900 · figure-labels s4 · ≈8 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 1440×900 · figure-labels s4 · ≈8 ticks — nearest legal position  max displacement 42.2
+✓ 1440×900 · figure-labels s4 · ≈8 ticks — deterministic
+✓ 1440×900 · figure-labels s4 · ≈10 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.5 · box 1386x661
+✓ 1440×900 · figure-labels s4 · ≈10 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 1440×900 · figure-labels s4 · ≈10 ticks — nearest legal position  max displacement 42.2
+✓ 1440×900 · figure-labels s4 · ≈10 ticks — deterministic
+✓ 1440×900 — no console errors in the focused workspace
+✓ 1024×768 · figure-graph s0 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 20.4 · box 970x528
+✓ 1024×768 · figure-graph s0 · ≈4 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1024×768 · figure-graph s0 · ≈4 ticks — nearest legal position  max displacement 31.5
+✓ 1024×768 · figure-graph s0 · ≈4 ticks — deterministic
+✓ 1024×768 · figure-graph s0 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 20.4 · box 970x528
+✓ 1024×768 · figure-graph s0 · ≈5 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1024×768 · figure-graph s0 · ≈5 ticks — nearest legal position  max displacement 31.5
+✓ 1024×768 · figure-graph s0 · ≈5 ticks — deterministic
+✓ 1024×768 · figure-graph s0 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 20.4 · box 970x528
+✓ 1024×768 · figure-graph s0 · ≈6 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1024×768 · figure-graph s0 · ≈6 ticks — nearest legal position  max displacement 31.5
+✓ 1024×768 · figure-graph s0 · ≈6 ticks — deterministic
+✓ 1024×768 · figure-graph s0 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 8.8 · box 970x528
+✓ 1024×768 · figure-graph s0 · ≈8 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1024×768 · figure-graph s0 · ≈8 ticks — nearest legal position  max displacement 31.5
+✓ 1024×768 · figure-graph s0 · ≈8 ticks — deterministic
+✓ 1024×768 · figure-graph s0 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 8.8 · box 970x528
+✓ 1024×768 · figure-graph s0 · ≈10 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1024×768 · figure-graph s0 · ≈10 ticks — nearest legal position  max displacement 31.5
+✓ 1024×768 · figure-graph s0 · ≈10 ticks — deterministic
+✓ 1024×768 · figure-graph s1 · ≈4 ticks — clears everything incl. tick labels  clear 7.0 · tick 16.0 · box 970x528
+✓ 1024×768 · figure-graph s1 · ≈4 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 1024×768 · figure-graph s1 · ≈4 ticks — nearest legal position  max displacement 22.9
+✓ 1024×768 · figure-graph s1 · ≈4 ticks — deterministic
+✓ 1024×768 · figure-graph s1 · ≈5 ticks — clears everything incl. tick labels  clear 7.0 · tick 16.9 · box 970x528
+✓ 1024×768 · figure-graph s1 · ≈5 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 1024×768 · figure-graph s1 · ≈5 ticks — nearest legal position  max displacement 22.9
+✓ 1024×768 · figure-graph s1 · ≈5 ticks — deterministic
+✓ 1024×768 · figure-graph s1 · ≈6 ticks — clears everything incl. tick labels  clear 7.0 · tick 16.9 · box 970x528
+✓ 1024×768 · figure-graph s1 · ≈6 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 1024×768 · figure-graph s1 · ≈6 ticks — nearest legal position  max displacement 22.9
+✓ 1024×768 · figure-graph s1 · ≈6 ticks — deterministic
+✓ 1024×768 · figure-graph s1 · ≈8 ticks — clears everything incl. tick labels  clear 7.0 · tick 16.9 · box 970x528
+✓ 1024×768 · figure-graph s1 · ≈8 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 1024×768 · figure-graph s1 · ≈8 ticks — nearest legal position  max displacement 22.9
+✓ 1024×768 · figure-graph s1 · ≈8 ticks — deterministic
+✓ 1024×768 · figure-graph s1 · ≈10 ticks — clears everything incl. tick labels  clear 7.0 · tick 7.2 · box 970x528
+✓ 1024×768 · figure-graph s1 · ≈10 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 1024×768 · figure-graph s1 · ≈10 ticks — nearest legal position  max displacement 22.9
+✓ 1024×768 · figure-graph s1 · ≈10 ticks — deterministic
+✓ 1024×768 · figure-graph s2 · ≈4 ticks — clears everything incl. tick labels  clear 7.7 · tick 16.7 · box 970x528
+✓ 1024×768 · figure-graph s2 · ≈4 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1024×768 · figure-graph s2 · ≈4 ticks — nearest legal position  max displacement 27.9
+✓ 1024×768 · figure-graph s2 · ≈4 ticks — deterministic
+✓ 1024×768 · figure-graph s2 · ≈5 ticks — clears everything incl. tick labels  clear 7.7 · tick 22.8 · box 970x528
+✓ 1024×768 · figure-graph s2 · ≈5 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1024×768 · figure-graph s2 · ≈5 ticks — nearest legal position  max displacement 27.9
+✓ 1024×768 · figure-graph s2 · ≈5 ticks — deterministic
+✓ 1024×768 · figure-graph s2 · ≈6 ticks — clears everything incl. tick labels  clear 7.7 · tick 8.3 · box 970x528
+✓ 1024×768 · figure-graph s2 · ≈6 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1024×768 · figure-graph s2 · ≈6 ticks — nearest legal position  max displacement 27.9
+✓ 1024×768 · figure-graph s2 · ≈6 ticks — deterministic
+✓ 1024×768 · figure-graph s2 · ≈8 ticks — clears everything incl. tick labels  clear 7.7 · tick 8.3 · box 970x528
+✓ 1024×768 · figure-graph s2 · ≈8 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1024×768 · figure-graph s2 · ≈8 ticks — nearest legal position  max displacement 27.9
+✓ 1024×768 · figure-graph s2 · ≈8 ticks — deterministic
+✓ 1024×768 · figure-graph s2 · ≈10 ticks — clears everything incl. tick labels  clear 7.5 · tick 7.5 · box 970x528
+✓ 1024×768 · figure-graph s2 · ≈10 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 1024×768 · figure-graph s2 · ≈10 ticks — nearest legal position  max displacement 27.9
+✓ 1024×768 · figure-graph s2 · ≈10 ticks — deterministic
+✓ 1024×768 · figure-graph s3 · ≈4 ticks — clears everything incl. tick labels  clear 7.5 · tick 363.3 · box 970x528
+✓ 1024×768 · figure-graph s3 · ≈4 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 1024×768 · figure-graph s3 · ≈4 ticks — nearest legal position  max displacement 20.5
+✓ 1024×768 · figure-graph s3 · ≈4 ticks — deterministic
+✓ 1024×768 · figure-graph s3 · ≈5 ticks — clears everything incl. tick labels  clear 7.5 · tick 357.2 · box 970x528
+✓ 1024×768 · figure-graph s3 · ≈5 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 1024×768 · figure-graph s3 · ≈5 ticks — nearest legal position  max displacement 20.5
+✓ 1024×768 · figure-graph s3 · ≈5 ticks — deterministic
+✓ 1024×768 · figure-graph s3 · ≈6 ticks — clears everything incl. tick labels  clear 7.5 · tick 357.2 · box 970x528
+✓ 1024×768 · figure-graph s3 · ≈6 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 1024×768 · figure-graph s3 · ≈6 ticks — nearest legal position  max displacement 20.5
+✓ 1024×768 · figure-graph s3 · ≈6 ticks — deterministic
+✓ 1024×768 · figure-graph s3 · ≈8 ticks — clears everything incl. tick labels  clear 7.5 · tick 357.2 · box 970x528
+✓ 1024×768 · figure-graph s3 · ≈8 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 1024×768 · figure-graph s3 · ≈8 ticks — nearest legal position  max displacement 20.5
+✓ 1024×768 · figure-graph s3 · ≈8 ticks — deterministic
+✓ 1024×768 · figure-graph s3 · ≈10 ticks — clears everything incl. tick labels  clear 7.5 · tick 350.0 · box 970x528
+✓ 1024×768 · figure-graph s3 · ≈10 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 1024×768 · figure-graph s3 · ≈10 ticks — nearest legal position  max displacement 20.5
+✓ 1024×768 · figure-graph s3 · ≈10 ticks — deterministic
+✓ 1024×768 · figure-labels s0 · ≈4 ticks — clears everything incl. tick labels  clear 7.5 · tick 135.4 · box 970x529
+✓ 1024×768 · figure-labels s0 · ≈4 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 1024×768 · figure-labels s0 · ≈4 ticks — nearest legal position  max displacement 20.5
+✓ 1024×768 · figure-labels s0 · ≈4 ticks — deterministic
+✓ 1024×768 · figure-labels s0 · ≈5 ticks — clears everything incl. tick labels  clear 7.5 · tick 131.3 · box 970x529
+✓ 1024×768 · figure-labels s0 · ≈5 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 1024×768 · figure-labels s0 · ≈5 ticks — nearest legal position  max displacement 20.5
+✓ 1024×768 · figure-labels s0 · ≈5 ticks — deterministic
+✓ 1024×768 · figure-labels s0 · ≈6 ticks — clears everything incl. tick labels  clear 7.5 · tick 131.3 · box 970x529
+✓ 1024×768 · figure-labels s0 · ≈6 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 1024×768 · figure-labels s0 · ≈6 ticks — nearest legal position  max displacement 20.5
+✓ 1024×768 · figure-labels s0 · ≈6 ticks — deterministic
+✓ 1024×768 · figure-labels s0 · ≈8 ticks — clears everything incl. tick labels  clear 7.5 · tick 131.3 · box 970x529
+✓ 1024×768 · figure-labels s0 · ≈8 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 1024×768 · figure-labels s0 · ≈8 ticks — nearest legal position  max displacement 20.5
+✓ 1024×768 · figure-labels s0 · ≈8 ticks — deterministic
+✓ 1024×768 · figure-labels s0 · ≈10 ticks — clears everything incl. tick labels  clear 7.5 · tick 131.3 · box 970x529
+✓ 1024×768 · figure-labels s0 · ≈10 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 1024×768 · figure-labels s0 · ≈10 ticks — nearest legal position  max displacement 20.5
+✓ 1024×768 · figure-labels s0 · ≈10 ticks — deterministic
+✓ 1024×768 · figure-labels s1 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 970x529
+✓ 1024×768 · figure-labels s1 · ≈4 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1024×768 · figure-labels s1 · ≈4 ticks — nearest legal position  max displacement 23.5
+✓ 1024×768 · figure-labels s1 · ≈4 ticks — deterministic
+✓ 1024×768 · figure-labels s1 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 970x529
+✓ 1024×768 · figure-labels s1 · ≈5 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1024×768 · figure-labels s1 · ≈5 ticks — nearest legal position  max displacement 23.5
+✓ 1024×768 · figure-labels s1 · ≈5 ticks — deterministic
+✓ 1024×768 · figure-labels s1 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 970x529
+✓ 1024×768 · figure-labels s1 · ≈6 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1024×768 · figure-labels s1 · ≈6 ticks — nearest legal position  max displacement 23.5
+✓ 1024×768 · figure-labels s1 · ≈6 ticks — deterministic
+✓ 1024×768 · figure-labels s1 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 970x529
+✓ 1024×768 · figure-labels s1 · ≈8 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1024×768 · figure-labels s1 · ≈8 ticks — nearest legal position  max displacement 23.5
+✓ 1024×768 · figure-labels s1 · ≈8 ticks — deterministic
+✓ 1024×768 · figure-labels s1 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 970x529
+✓ 1024×768 · figure-labels s1 · ≈10 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1024×768 · figure-labels s1 · ≈10 ticks — nearest legal position  max displacement 23.5
+✓ 1024×768 · figure-labels s1 · ≈10 ticks — deterministic
+✓ 1024×768 · figure-labels s2 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 970x529
+✓ 1024×768 · figure-labels s2 · ≈4 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1024×768 · figure-labels s2 · ≈4 ticks — nearest legal position  max displacement 23.5
+✓ 1024×768 · figure-labels s2 · ≈4 ticks — deterministic
+✓ 1024×768 · figure-labels s2 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 970x529
+✓ 1024×768 · figure-labels s2 · ≈5 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1024×768 · figure-labels s2 · ≈5 ticks — nearest legal position  max displacement 23.5
+✓ 1024×768 · figure-labels s2 · ≈5 ticks — deterministic
+✓ 1024×768 · figure-labels s2 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 970x529
+✓ 1024×768 · figure-labels s2 · ≈6 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1024×768 · figure-labels s2 · ≈6 ticks — nearest legal position  max displacement 23.5
+✓ 1024×768 · figure-labels s2 · ≈6 ticks — deterministic
+✓ 1024×768 · figure-labels s2 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 970x529
+✓ 1024×768 · figure-labels s2 · ≈8 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1024×768 · figure-labels s2 · ≈8 ticks — nearest legal position  max displacement 23.5
+✓ 1024×768 · figure-labels s2 · ≈8 ticks — deterministic
+✓ 1024×768 · figure-labels s2 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 970x529
+✓ 1024×768 · figure-labels s2 · ≈10 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 1024×768 · figure-labels s2 · ≈10 ticks — nearest legal position  max displacement 23.5
+✓ 1024×768 · figure-labels s2 · ≈10 ticks — deterministic
+✓ 1024×768 · figure-labels s3 · ≈4 ticks — clears everything incl. tick labels  clear 7.2 · tick 17.0 · box 970x529
+✓ 1024×768 · figure-labels s3 · ≈4 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 1024×768 · figure-labels s3 · ≈4 ticks — nearest legal position  max displacement 21.4
+✓ 1024×768 · figure-labels s3 · ≈4 ticks — deterministic
+✓ 1024×768 · figure-labels s3 · ≈5 ticks — clears everything incl. tick labels  clear 7.2 · tick 30.2 · box 970x529
+✓ 1024×768 · figure-labels s3 · ≈5 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 1024×768 · figure-labels s3 · ≈5 ticks — nearest legal position  max displacement 21.4
+✓ 1024×768 · figure-labels s3 · ≈5 ticks — deterministic
+✓ 1024×768 · figure-labels s3 · ≈6 ticks — clears everything incl. tick labels  clear 7.2 · tick 30.2 · box 970x529
+✓ 1024×768 · figure-labels s3 · ≈6 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 1024×768 · figure-labels s3 · ≈6 ticks — nearest legal position  max displacement 21.4
+✓ 1024×768 · figure-labels s3 · ≈6 ticks — deterministic
+✓ 1024×768 · figure-labels s3 · ≈8 ticks — clears everything incl. tick labels  clear 7.2 · tick 19.5 · box 970x529
+✓ 1024×768 · figure-labels s3 · ≈8 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 1024×768 · figure-labels s3 · ≈8 ticks — nearest legal position  max displacement 21.4
+✓ 1024×768 · figure-labels s3 · ≈8 ticks — deterministic
+✓ 1024×768 · figure-labels s3 · ≈10 ticks — clears everything incl. tick labels  clear 7.2 · tick 17.0 · box 970x529
+✓ 1024×768 · figure-labels s3 · ≈10 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 1024×768 · figure-labels s3 · ≈10 ticks — nearest legal position  max displacement 21.4
+✓ 1024×768 · figure-labels s3 · ≈10 ticks — deterministic
+✓ 1024×768 · figure-labels s4 · ≈4 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 970x529
+✓ 1024×768 · figure-labels s4 · ≈4 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 1024×768 · figure-labels s4 · ≈4 ticks — nearest legal position  max displacement 42.2
+✓ 1024×768 · figure-labels s4 · ≈4 ticks — deterministic
+✓ 1024×768 · figure-labels s4 · ≈5 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 970x529
+✓ 1024×768 · figure-labels s4 · ≈5 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 1024×768 · figure-labels s4 · ≈5 ticks — nearest legal position  max displacement 42.2
+✓ 1024×768 · figure-labels s4 · ≈5 ticks — deterministic
+✓ 1024×768 · figure-labels s4 · ≈6 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 970x529
+✓ 1024×768 · figure-labels s4 · ≈6 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 1024×768 · figure-labels s4 · ≈6 ticks — nearest legal position  max displacement 42.2
+✓ 1024×768 · figure-labels s4 · ≈6 ticks — deterministic
+✓ 1024×768 · figure-labels s4 · ≈8 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 970x529
+✓ 1024×768 · figure-labels s4 · ≈8 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 1024×768 · figure-labels s4 · ≈8 ticks — nearest legal position  max displacement 42.2
+✓ 1024×768 · figure-labels s4 · ≈8 ticks — deterministic
+✓ 1024×768 · figure-labels s4 · ≈10 ticks — clears everything incl. tick labels  clear 7.3 · tick 15.3 · box 970x529
+✓ 1024×768 · figure-labels s4 · ≈10 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 1024×768 · figure-labels s4 · ≈10 ticks — nearest legal position  max displacement 42.2
+✓ 1024×768 · figure-labels s4 · ≈10 ticks — deterministic
+✓ 1024×768 — no console errors in the focused workspace
+✓ 834×1112 · figure-graph s0 · ≈4 ticks — clears everything incl. tick labels  clear 7.3 · tick 8.7 · box 780x872
+✓ 834×1112 · figure-graph s0 · ≈4 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 834×1112 · figure-graph s0 · ≈4 ticks — nearest legal position  max displacement 31.5
+✓ 834×1112 · figure-graph s0 · ≈4 ticks — deterministic
+✓ 834×1112 · figure-graph s0 · ≈5 ticks — clears everything incl. tick labels  clear 7.3 · tick 8.7 · box 780x872
+✓ 834×1112 · figure-graph s0 · ≈5 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 834×1112 · figure-graph s0 · ≈5 ticks — nearest legal position  max displacement 31.5
+✓ 834×1112 · figure-graph s0 · ≈5 ticks — deterministic
+✓ 834×1112 · figure-graph s0 · ≈6 ticks — clears everything incl. tick labels  clear 7.3 · tick 8.7 · box 780x872
+✓ 834×1112 · figure-graph s0 · ≈6 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 834×1112 · figure-graph s0 · ≈6 ticks — nearest legal position  max displacement 31.5
+✓ 834×1112 · figure-graph s0 · ≈6 ticks — deterministic
+✓ 834×1112 · figure-graph s0 · ≈8 ticks — clears everything incl. tick labels  clear 7.3 · tick 8.7 · box 780x872
+✓ 834×1112 · figure-graph s0 · ≈8 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 834×1112 · figure-graph s0 · ≈8 ticks — nearest legal position  max displacement 31.5
+✓ 834×1112 · figure-graph s0 · ≈8 ticks — deterministic
+✓ 834×1112 · figure-graph s0 · ≈10 ticks — clears everything incl. tick labels  clear 6.0 · tick 23.7 · box 780x872
+✓ 834×1112 · figure-graph s0 · ≈10 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 834×1112 · figure-graph s0 · ≈10 ticks — nearest legal position  max displacement 31.7
+✓ 834×1112 · figure-graph s0 · ≈10 ticks — deterministic
+✓ 834×1112 · figure-graph s1 · ≈4 ticks — clears everything incl. tick labels  clear 7.3 · tick 8.7 · box 780x872
+✓ 834×1112 · figure-graph s1 · ≈4 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 834×1112 · figure-graph s1 · ≈4 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-graph s1 · ≈4 ticks — deterministic
+✓ 834×1112 · figure-graph s1 · ≈5 ticks — clears everything incl. tick labels  clear 7.3 · tick 19.5 · box 780x872
+✓ 834×1112 · figure-graph s1 · ≈5 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 834×1112 · figure-graph s1 · ≈5 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-graph s1 · ≈5 ticks — deterministic
+✓ 834×1112 · figure-graph s1 · ≈6 ticks — clears everything incl. tick labels  clear 7.3 · tick 19.5 · box 780x872
+✓ 834×1112 · figure-graph s1 · ≈6 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 834×1112 · figure-graph s1 · ≈6 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-graph s1 · ≈6 ticks — deterministic
+✓ 834×1112 · figure-graph s1 · ≈8 ticks — clears everything incl. tick labels  clear 7.3 · tick 19.5 · box 780x872
+✓ 834×1112 · figure-graph s1 · ≈8 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 834×1112 · figure-graph s1 · ≈8 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-graph s1 · ≈8 ticks — deterministic
+✓ 834×1112 · figure-graph s1 · ≈10 ticks — clears everything incl. tick labels  clear 7.3 · tick 11.3 · box 780x872
+✓ 834×1112 · figure-graph s1 · ≈10 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 834×1112 · figure-graph s1 · ≈10 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-graph s1 · ≈10 ticks — deterministic
+✓ 834×1112 · figure-graph s2 · ≈4 ticks — clears everything incl. tick labels  clear 7.0 · tick 21.5 · box 780x872
+✓ 834×1112 · figure-graph s2 · ≈4 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 834×1112 · figure-graph s2 · ≈4 ticks — nearest legal position  max displacement 27.9
+✓ 834×1112 · figure-graph s2 · ≈4 ticks — deterministic
+✓ 834×1112 · figure-graph s2 · ≈5 ticks — clears everything incl. tick labels  clear 7.0 · tick 21.5 · box 780x872
+✓ 834×1112 · figure-graph s2 · ≈5 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 834×1112 · figure-graph s2 · ≈5 ticks — nearest legal position  max displacement 27.9
+✓ 834×1112 · figure-graph s2 · ≈5 ticks — deterministic
+✓ 834×1112 · figure-graph s2 · ≈6 ticks — clears everything incl. tick labels  clear 7.0 · tick 21.5 · box 780x872
+✓ 834×1112 · figure-graph s2 · ≈6 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 834×1112 · figure-graph s2 · ≈6 ticks — nearest legal position  max displacement 27.9
+✓ 834×1112 · figure-graph s2 · ≈6 ticks — deterministic
+✓ 834×1112 · figure-graph s2 · ≈8 ticks — clears everything incl. tick labels  clear 6.4 · tick 6.4 · box 780x872
+✓ 834×1112 · figure-graph s2 · ≈8 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 834×1112 · figure-graph s2 · ≈8 ticks — nearest legal position  max displacement 27.9
+✓ 834×1112 · figure-graph s2 · ≈8 ticks — deterministic
+✓ 834×1112 · figure-graph s2 · ≈10 ticks — clears everything incl. tick labels  clear 6.4 · tick 6.4 · box 780x872
+✓ 834×1112 · figure-graph s2 · ≈10 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 834×1112 · figure-graph s2 · ≈10 ticks — nearest legal position  max displacement 27.9
+✓ 834×1112 · figure-graph s2 · ≈10 ticks — deterministic
+✓ 834×1112 · figure-graph s3 · ≈4 ticks — clears everything incl. tick labels  clear 7.5 · tick 483.9 · box 780x872
+✓ 834×1112 · figure-graph s3 · ≈4 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 834×1112 · figure-graph s3 · ≈4 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-graph s3 · ≈4 ticks — deterministic
+✓ 834×1112 · figure-graph s3 · ≈5 ticks — clears everything incl. tick labels  clear 7.5 · tick 479.3 · box 780x872
+✓ 834×1112 · figure-graph s3 · ≈5 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 834×1112 · figure-graph s3 · ≈5 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-graph s3 · ≈5 ticks — deterministic
+✓ 834×1112 · figure-graph s3 · ≈6 ticks — clears everything incl. tick labels  clear 7.5 · tick 479.3 · box 780x872
+✓ 834×1112 · figure-graph s3 · ≈6 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 834×1112 · figure-graph s3 · ≈6 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-graph s3 · ≈6 ticks — deterministic
+✓ 834×1112 · figure-graph s3 · ≈8 ticks — clears everything incl. tick labels  clear 7.5 · tick 479.3 · box 780x872
+✓ 834×1112 · figure-graph s3 · ≈8 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 834×1112 · figure-graph s3 · ≈8 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-graph s3 · ≈8 ticks — deterministic
+✓ 834×1112 · figure-graph s3 · ≈10 ticks — clears everything incl. tick labels  clear 7.5 · tick 476.7 · box 780x872
+✓ 834×1112 · figure-graph s3 · ≈10 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 834×1112 · figure-graph s3 · ≈10 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-graph s3 · ≈10 ticks — deterministic
+✓ 834×1112 · figure-labels s0 · ≈4 ticks — clears everything incl. tick labels  clear 7.5 · tick 219.9 · box 780x873
+✓ 834×1112 · figure-labels s0 · ≈4 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 834×1112 · figure-labels s0 · ≈4 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-labels s0 · ≈4 ticks — deterministic
+✓ 834×1112 · figure-labels s0 · ≈5 ticks — clears everything incl. tick labels  clear 7.5 · tick 227.6 · box 780x873
+✓ 834×1112 · figure-labels s0 · ≈5 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 834×1112 · figure-labels s0 · ≈5 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-labels s0 · ≈5 ticks — deterministic
+✓ 834×1112 · figure-labels s0 · ≈6 ticks — clears everything incl. tick labels  clear 7.5 · tick 227.6 · box 780x873
+✓ 834×1112 · figure-labels s0 · ≈6 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 834×1112 · figure-labels s0 · ≈6 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-labels s0 · ≈6 ticks — deterministic
+✓ 834×1112 · figure-labels s0 · ≈8 ticks — clears everything incl. tick labels  clear 7.5 · tick 227.6 · box 780x873
+✓ 834×1112 · figure-labels s0 · ≈8 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 834×1112 · figure-labels s0 · ≈8 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-labels s0 · ≈8 ticks — deterministic
+✓ 834×1112 · figure-labels s0 · ≈10 ticks — clears everything incl. tick labels  clear 7.5 · tick 227.6 · box 780x873
+✓ 834×1112 · figure-labels s0 · ≈10 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 834×1112 · figure-labels s0 · ≈10 ticks — nearest legal position  max displacement 20.5
+✓ 834×1112 · figure-labels s0 · ≈10 ticks — deterministic
+✓ 834×1112 · figure-labels s1 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 780x873
+✓ 834×1112 · figure-labels s1 · ≈4 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 834×1112 · figure-labels s1 · ≈4 ticks — nearest legal position  max displacement 23.5
+✓ 834×1112 · figure-labels s1 · ≈4 ticks — deterministic
+✓ 834×1112 · figure-labels s1 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 780x873
+✓ 834×1112 · figure-labels s1 · ≈5 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 834×1112 · figure-labels s1 · ≈5 ticks — nearest legal position  max displacement 23.5
+✓ 834×1112 · figure-labels s1 · ≈5 ticks — deterministic
+✓ 834×1112 · figure-labels s1 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 780x873
+✓ 834×1112 · figure-labels s1 · ≈6 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 834×1112 · figure-labels s1 · ≈6 ticks — nearest legal position  max displacement 23.5
+✓ 834×1112 · figure-labels s1 · ≈6 ticks — deterministic
+✓ 834×1112 · figure-labels s1 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 780x873
+✓ 834×1112 · figure-labels s1 · ≈8 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 834×1112 · figure-labels s1 · ≈8 ticks — nearest legal position  max displacement 23.5
+✓ 834×1112 · figure-labels s1 · ≈8 ticks — deterministic
+✓ 834×1112 · figure-labels s1 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.1 · box 780x873
+✓ 834×1112 · figure-labels s1 · ≈10 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 834×1112 · figure-labels s1 · ≈10 ticks — nearest legal position  max displacement 23.5
+✓ 834×1112 · figure-labels s1 · ≈10 ticks — deterministic
+✓ 834×1112 · figure-labels s2 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 780x873
+✓ 834×1112 · figure-labels s2 · ≈4 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 834×1112 · figure-labels s2 · ≈4 ticks — nearest legal position  max displacement 23.5
+✓ 834×1112 · figure-labels s2 · ≈4 ticks — deterministic
+✓ 834×1112 · figure-labels s2 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 780x873
+✓ 834×1112 · figure-labels s2 · ≈5 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 834×1112 · figure-labels s2 · ≈5 ticks — nearest legal position  max displacement 23.5
+✓ 834×1112 · figure-labels s2 · ≈5 ticks — deterministic
+✓ 834×1112 · figure-labels s2 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 780x873
+✓ 834×1112 · figure-labels s2 · ≈6 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 834×1112 · figure-labels s2 · ≈6 ticks — nearest legal position  max displacement 23.5
+✓ 834×1112 · figure-labels s2 · ≈6 ticks — deterministic
+✓ 834×1112 · figure-labels s2 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 780x873
+✓ 834×1112 · figure-labels s2 · ≈8 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 834×1112 · figure-labels s2 · ≈8 ticks — nearest legal position  max displacement 23.5
+✓ 834×1112 · figure-labels s2 · ≈8 ticks — deterministic
+✓ 834×1112 · figure-labels s2 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.8 · box 780x873
+✓ 834×1112 · figure-labels s2 · ≈10 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 834×1112 · figure-labels s2 · ≈10 ticks — nearest legal position  max displacement 23.5
+✓ 834×1112 · figure-labels s2 · ≈10 ticks — deterministic
+✓ 834×1112 · figure-labels s3 · ≈4 ticks — clears everything incl. tick labels  clear 7.2 · tick 17.0 · box 780x873
+✓ 834×1112 · figure-labels s3 · ≈4 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 834×1112 · figure-labels s3 · ≈4 ticks — nearest legal position  max displacement 21.4
+✓ 834×1112 · figure-labels s3 · ≈4 ticks — deterministic
+✓ 834×1112 · figure-labels s3 · ≈5 ticks — clears everything incl. tick labels  clear 7.2 · tick 43.5 · box 780x873
+✓ 834×1112 · figure-labels s3 · ≈5 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 834×1112 · figure-labels s3 · ≈5 ticks — nearest legal position  max displacement 21.4
+✓ 834×1112 · figure-labels s3 · ≈5 ticks — deterministic
+✓ 834×1112 · figure-labels s3 · ≈6 ticks — clears everything incl. tick labels  clear 7.2 · tick 43.5 · box 780x873
+✓ 834×1112 · figure-labels s3 · ≈6 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 834×1112 · figure-labels s3 · ≈6 ticks — nearest legal position  max displacement 21.4
+✓ 834×1112 · figure-labels s3 · ≈6 ticks — deterministic
+✓ 834×1112 · figure-labels s3 · ≈8 ticks — clears everything incl. tick labels  clear 7.2 · tick 19.5 · box 780x873
+✓ 834×1112 · figure-labels s3 · ≈8 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 834×1112 · figure-labels s3 · ≈8 ticks — nearest legal position  max displacement 21.4
+✓ 834×1112 · figure-labels s3 · ≈8 ticks — deterministic
+✓ 834×1112 · figure-labels s3 · ≈10 ticks — clears everything incl. tick labels  clear 7.2 · tick 17.0 · box 780x873
+✓ 834×1112 · figure-labels s3 · ≈10 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 834×1112 · figure-labels s3 · ≈10 ticks — nearest legal position  max displacement 21.4
+✓ 834×1112 · figure-labels s3 · ≈10 ticks — deterministic
+✓ 834×1112 · figure-labels s4 · ≈4 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 780x873
+✓ 834×1112 · figure-labels s4 · ≈4 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 834×1112 · figure-labels s4 · ≈4 ticks — nearest legal position  max displacement 42.2
+✓ 834×1112 · figure-labels s4 · ≈4 ticks — deterministic
+✓ 834×1112 · figure-labels s4 · ≈5 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 780x873
+✓ 834×1112 · figure-labels s4 · ≈5 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 834×1112 · figure-labels s4 · ≈5 ticks — nearest legal position  max displacement 42.2
+✓ 834×1112 · figure-labels s4 · ≈5 ticks — deterministic
+✓ 834×1112 · figure-labels s4 · ≈6 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 780x873
+✓ 834×1112 · figure-labels s4 · ≈6 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 834×1112 · figure-labels s4 · ≈6 ticks — nearest legal position  max displacement 42.2
+✓ 834×1112 · figure-labels s4 · ≈6 ticks — deterministic
+✓ 834×1112 · figure-labels s4 · ≈8 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 780x873
+✓ 834×1112 · figure-labels s4 · ≈8 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 834×1112 · figure-labels s4 · ≈8 ticks — nearest legal position  max displacement 42.2
+✓ 834×1112 · figure-labels s4 · ≈8 ticks — deterministic
+✓ 834×1112 · figure-labels s4 · ≈10 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.5 · box 780x873
+✓ 834×1112 · figure-labels s4 · ≈10 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 834×1112 · figure-labels s4 · ≈10 ticks — nearest legal position  max displacement 42.2
+✓ 834×1112 · figure-labels s4 · ≈10 ticks — deterministic
+✓ 834×1112 — no console errors in the focused workspace
+✓ 390×844 · figure-graph s0 · ≈4 ticks — clears everything incl. tick labels  clear 7.5 · tick 7.8 · box 336x577
+✓ 390×844 · figure-graph s0 · ≈4 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 390×844 · figure-graph s0 · ≈4 ticks — nearest legal position  max displacement 31.5
+✓ 390×844 · figure-graph s0 · ≈4 ticks — deterministic
+✓ 390×844 · figure-graph s0 · ≈5 ticks — clears everything incl. tick labels  clear 7.5 · tick 7.8 · box 336x577
+✓ 390×844 · figure-graph s0 · ≈5 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 390×844 · figure-graph s0 · ≈5 ticks — nearest legal position  max displacement 31.5
+✓ 390×844 · figure-graph s0 · ≈5 ticks — deterministic
+✓ 390×844 · figure-graph s0 · ≈6 ticks — clears everything incl. tick labels  clear 7.5 · tick 7.8 · box 336x577
+✓ 390×844 · figure-graph s0 · ≈6 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 390×844 · figure-graph s0 · ≈6 ticks — nearest legal position  max displacement 31.5
+✓ 390×844 · figure-graph s0 · ≈6 ticks — deterministic
+✓ 390×844 · figure-graph s0 · ≈8 ticks — clears everything incl. tick labels  clear 7.5 · tick 7.8 · box 336x577
+✓ 390×844 · figure-graph s0 · ≈8 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 390×844 · figure-graph s0 · ≈8 ticks — nearest legal position  max displacement 31.5
+✓ 390×844 · figure-graph s0 · ≈8 ticks — deterministic
+✓ 390×844 · figure-graph s0 · ≈10 ticks — clears everything incl. tick labels  clear 7.3 · tick 18.7 · box 336x577
+✓ 390×844 · figure-graph s0 · ≈10 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 390×844 · figure-graph s0 · ≈10 ticks — nearest legal position  max displacement 42.2
+✓ 390×844 · figure-graph s0 · ≈10 ticks — deterministic
+✓ 390×844 · figure-graph s1 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 9.0 · box 336x577
+✓ 390×844 · figure-graph s1 · ≈4 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 390×844 · figure-graph s1 · ≈4 ticks — nearest legal position  max displacement 36.1
+✓ 390×844 · figure-graph s1 · ≈4 ticks — deterministic
+✓ 390×844 · figure-graph s1 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 7.3 · box 336x577
+✓ 390×844 · figure-graph s1 · ≈5 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 390×844 · figure-graph s1 · ≈5 ticks — nearest legal position  max displacement 41.3
+✓ 390×844 · figure-graph s1 · ≈5 ticks — deterministic
+✓ 390×844 · figure-graph s1 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 7.3 · box 336x577
+✓ 390×844 · figure-graph s1 · ≈6 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 390×844 · figure-graph s1 · ≈6 ticks — nearest legal position  max displacement 41.3
+✓ 390×844 · figure-graph s1 · ≈6 ticks — deterministic
+✓ 390×844 · figure-graph s1 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 7.3 · box 336x577
+✓ 390×844 · figure-graph s1 · ≈8 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 390×844 · figure-graph s1 · ≈8 ticks — nearest legal position  max displacement 41.3
+✓ 390×844 · figure-graph s1 · ≈8 ticks — deterministic
+✓ 390×844 · figure-graph s1 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 7.3 · box 336x577
+✓ 390×844 · figure-graph s1 · ≈10 ticks — on canvas, one identifier per marker  12 ids / 12 markers
+✓ 390×844 · figure-graph s1 · ≈10 ticks — nearest legal position  max displacement 41.3
+✓ 390×844 · figure-graph s1 · ≈10 ticks — deterministic
+✓ 390×844 · figure-graph s2 · ≈4 ticks — clears everything incl. tick labels  clear 11.9 · tick 15.6 · box 336x577
+✓ 390×844 · figure-graph s2 · ≈4 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 390×844 · figure-graph s2 · ≈4 ticks — nearest legal position  max displacement 37.0
+✓ 390×844 · figure-graph s2 · ≈4 ticks — deterministic
+✓ 390×844 · figure-graph s2 · ≈5 ticks — clears everything incl. tick labels  clear 11.9 · tick 15.6 · box 336x577
+✓ 390×844 · figure-graph s2 · ≈5 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 390×844 · figure-graph s2 · ≈5 ticks — nearest legal position  max displacement 37.0
+✓ 390×844 · figure-graph s2 · ≈5 ticks — deterministic
+✓ 390×844 · figure-graph s2 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.3 · box 336x577
+✓ 390×844 · figure-graph s2 · ≈6 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 390×844 · figure-graph s2 · ≈6 ticks — nearest legal position  max displacement 42.6
+✓ 390×844 · figure-graph s2 · ≈6 ticks — deterministic
+✓ 390×844 · figure-graph s2 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.3 · box 336x577
+✓ 390×844 · figure-graph s2 · ≈8 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 390×844 · figure-graph s2 · ≈8 ticks — nearest legal position  max displacement 42.6
+✓ 390×844 · figure-graph s2 · ≈8 ticks — deterministic
+✓ 390×844 · figure-graph s2 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 13.3 · box 336x577
+✓ 390×844 · figure-graph s2 · ≈10 ticks — on canvas, one identifier per marker  2 ids / 2 markers
+✓ 390×844 · figure-graph s2 · ≈10 ticks — nearest legal position  max displacement 42.6
+✓ 390×844 · figure-graph s2 · ≈10 ticks — deterministic
+✓ 390×844 · figure-graph s3 · ≈4 ticks — clears everything incl. tick labels  clear 7.5 · tick 178.5 · box 336x577
+✓ 390×844 · figure-graph s3 · ≈4 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 390×844 · figure-graph s3 · ≈4 ticks — nearest legal position  max displacement 20.5
+✓ 390×844 · figure-graph s3 · ≈4 ticks — deterministic
+✓ 390×844 · figure-graph s3 · ≈5 ticks — clears everything incl. tick labels  clear 7.5 · tick 173.9 · box 336x577
+✓ 390×844 · figure-graph s3 · ≈5 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 390×844 · figure-graph s3 · ≈5 ticks — nearest legal position  max displacement 20.5
+✓ 390×844 · figure-graph s3 · ≈5 ticks — deterministic
+✓ 390×844 · figure-graph s3 · ≈6 ticks — clears everything incl. tick labels  clear 7.5 · tick 173.9 · box 336x577
+✓ 390×844 · figure-graph s3 · ≈6 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 390×844 · figure-graph s3 · ≈6 ticks — nearest legal position  max displacement 20.5
+✓ 390×844 · figure-graph s3 · ≈6 ticks — deterministic
+✓ 390×844 · figure-graph s3 · ≈8 ticks — clears everything incl. tick labels  clear 7.5 · tick 173.9 · box 336x577
+✓ 390×844 · figure-graph s3 · ≈8 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 390×844 · figure-graph s3 · ≈8 ticks — nearest legal position  max displacement 20.5
+✓ 390×844 · figure-graph s3 · ≈8 ticks — deterministic
+✓ 390×844 · figure-graph s3 · ≈10 ticks — clears everything incl. tick labels  clear 7.5 · tick 171.9 · box 336x577
+✓ 390×844 · figure-graph s3 · ≈10 ticks — on canvas, one identifier per marker  1 ids / 1 markers
+✓ 390×844 · figure-graph s3 · ≈10 ticks — nearest legal position  max displacement 20.5
+✓ 390×844 · figure-graph s3 · ≈10 ticks — deterministic
+✓ 390×844 · figure-labels s0 · ≈4 ticks — clears everything incl. tick labels  clear 7.5 · tick 74.8 · box 336x542
+✓ 390×844 · figure-labels s0 · ≈4 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 390×844 · figure-labels s0 · ≈4 ticks — nearest legal position  max displacement 20.5
+✓ 390×844 · figure-labels s0 · ≈4 ticks — deterministic
+✓ 390×844 · figure-labels s0 · ≈5 ticks — clears everything incl. tick labels  clear 7.5 · tick 78.0 · box 336x542
+✓ 390×844 · figure-labels s0 · ≈5 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 390×844 · figure-labels s0 · ≈5 ticks — nearest legal position  max displacement 20.5
+✓ 390×844 · figure-labels s0 · ≈5 ticks — deterministic
+✓ 390×844 · figure-labels s0 · ≈6 ticks — clears everything incl. tick labels  clear 7.5 · tick 78.0 · box 336x542
+✓ 390×844 · figure-labels s0 · ≈6 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 390×844 · figure-labels s0 · ≈6 ticks — nearest legal position  max displacement 20.5
+✓ 390×844 · figure-labels s0 · ≈6 ticks — deterministic
+✓ 390×844 · figure-labels s0 · ≈8 ticks — clears everything incl. tick labels  clear 7.5 · tick 78.0 · box 336x542
+✓ 390×844 · figure-labels s0 · ≈8 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 390×844 · figure-labels s0 · ≈8 ticks — nearest legal position  max displacement 20.5
+✓ 390×844 · figure-labels s0 · ≈8 ticks — deterministic
+✓ 390×844 · figure-labels s0 · ≈10 ticks — clears everything incl. tick labels  clear 7.5 · tick 78.0 · box 336x542
+✓ 390×844 · figure-labels s0 · ≈10 ticks — on canvas, one identifier per marker  3 ids / 3 markers
+✓ 390×844 · figure-labels s0 · ≈10 ticks — nearest legal position  max displacement 20.5
+✓ 390×844 · figure-labels s0 · ≈10 ticks — deterministic
+✓ 390×844 · figure-labels s1 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 14.0 · box 336x542
+✓ 390×844 · figure-labels s1 · ≈4 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 390×844 · figure-labels s1 · ≈4 ticks — nearest legal position  max displacement 23.5
+✓ 390×844 · figure-labels s1 · ≈4 ticks — deterministic
+✓ 390×844 · figure-labels s1 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 14.2 · box 336x542
+✓ 390×844 · figure-labels s1 · ≈5 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 390×844 · figure-labels s1 · ≈5 ticks — nearest legal position  max displacement 23.5
+✓ 390×844 · figure-labels s1 · ≈5 ticks — deterministic
+✓ 390×844 · figure-labels s1 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 14.2 · box 336x542
+✓ 390×844 · figure-labels s1 · ≈6 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 390×844 · figure-labels s1 · ≈6 ticks — nearest legal position  max displacement 23.5
+✓ 390×844 · figure-labels s1 · ≈6 ticks — deterministic
+✓ 390×844 · figure-labels s1 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 14.2 · box 336x542
+✓ 390×844 · figure-labels s1 · ≈8 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 390×844 · figure-labels s1 · ≈8 ticks — nearest legal position  max displacement 23.5
+✓ 390×844 · figure-labels s1 · ≈8 ticks — deterministic
+✓ 390×844 · figure-labels s1 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 14.0 · box 336x542
+✓ 390×844 · figure-labels s1 · ≈10 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 390×844 · figure-labels s1 · ≈10 ticks — nearest legal position  max displacement 23.5
+✓ 390×844 · figure-labels s1 · ≈10 ticks — deterministic
+✓ 390×844 · figure-labels s2 · ≈4 ticks — clears everything incl. tick labels  clear 6.1 · tick 14.0 · box 336x542
+✓ 390×844 · figure-labels s2 · ≈4 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 390×844 · figure-labels s2 · ≈4 ticks — nearest legal position  max displacement 23.5
+✓ 390×844 · figure-labels s2 · ≈4 ticks — deterministic
+✓ 390×844 · figure-labels s2 · ≈5 ticks — clears everything incl. tick labels  clear 6.1 · tick 14.0 · box 336x542
+✓ 390×844 · figure-labels s2 · ≈5 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 390×844 · figure-labels s2 · ≈5 ticks — nearest legal position  max displacement 23.5
+✓ 390×844 · figure-labels s2 · ≈5 ticks — deterministic
+✓ 390×844 · figure-labels s2 · ≈6 ticks — clears everything incl. tick labels  clear 6.1 · tick 14.0 · box 336x542
+✓ 390×844 · figure-labels s2 · ≈6 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 390×844 · figure-labels s2 · ≈6 ticks — nearest legal position  max displacement 23.5
+✓ 390×844 · figure-labels s2 · ≈6 ticks — deterministic
+✓ 390×844 · figure-labels s2 · ≈8 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.1 · box 336x542
+✓ 390×844 · figure-labels s2 · ≈8 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 390×844 · figure-labels s2 · ≈8 ticks — nearest legal position  max displacement 23.5
+✓ 390×844 · figure-labels s2 · ≈8 ticks — deterministic
+✓ 390×844 · figure-labels s2 · ≈10 ticks — clears everything incl. tick labels  clear 6.1 · tick 12.1 · box 336x542
+✓ 390×844 · figure-labels s2 · ≈10 ticks — on canvas, one identifier per marker  5 ids / 5 markers
+✓ 390×844 · figure-labels s2 · ≈10 ticks — nearest legal position  max displacement 23.5
+✓ 390×844 · figure-labels s2 · ≈10 ticks — deterministic
+✓ 390×844 · figure-labels s3 · ≈4 ticks — clears everything incl. tick labels  clear 7.2 · tick 18.3 · box 336x542
+✓ 390×844 · figure-labels s3 · ≈4 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 390×844 · figure-labels s3 · ≈4 ticks — nearest legal position  max displacement 21.4
+✓ 390×844 · figure-labels s3 · ≈4 ticks — deterministic
+✓ 390×844 · figure-labels s3 · ≈5 ticks — clears everything incl. tick labels  clear 7.2 · tick 18.5 · box 336x542
+✓ 390×844 · figure-labels s3 · ≈5 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 390×844 · figure-labels s3 · ≈5 ticks — nearest legal position  max displacement 21.4
+✓ 390×844 · figure-labels s3 · ≈5 ticks — deterministic
+✓ 390×844 · figure-labels s3 · ≈6 ticks — clears everything incl. tick labels  clear 7.2 · tick 18.5 · box 336x542
+✓ 390×844 · figure-labels s3 · ≈6 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 390×844 · figure-labels s3 · ≈6 ticks — nearest legal position  max displacement 21.4
+✓ 390×844 · figure-labels s3 · ≈6 ticks — deterministic
+✓ 390×844 · figure-labels s3 · ≈8 ticks — clears everything incl. tick labels  clear 7.2 · tick 18.5 · box 336x542
+✓ 390×844 · figure-labels s3 · ≈8 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 390×844 · figure-labels s3 · ≈8 ticks — nearest legal position  max displacement 21.4
+✓ 390×844 · figure-labels s3 · ≈8 ticks — deterministic
+✓ 390×844 · figure-labels s3 · ≈10 ticks — clears everything incl. tick labels  clear 7.2 · tick 18.3 · box 336x542
+✓ 390×844 · figure-labels s3 · ≈10 ticks — on canvas, one identifier per marker  8 ids / 8 markers
+✓ 390×844 · figure-labels s3 · ≈10 ticks — nearest legal position  max displacement 21.4
+✓ 390×844 · figure-labels s3 · ≈10 ticks — deterministic
+✓ 390×844 · figure-labels s4 · ≈4 ticks — clears everything incl. tick labels  clear 7.3 · tick 19.8 · box 336x542
+✓ 390×844 · figure-labels s4 · ≈4 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 390×844 · figure-labels s4 · ≈4 ticks — nearest legal position  max displacement 42.2
+✓ 390×844 · figure-labels s4 · ≈4 ticks — deterministic
+✓ 390×844 · figure-labels s4 · ≈5 ticks — clears everything incl. tick labels  clear 7.3 · tick 19.7 · box 336x542
+✓ 390×844 · figure-labels s4 · ≈5 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 390×844 · figure-labels s4 · ≈5 ticks — nearest legal position  max displacement 42.2
+✓ 390×844 · figure-labels s4 · ≈5 ticks — deterministic
+✓ 390×844 · figure-labels s4 · ≈6 ticks — clears everything incl. tick labels  clear 7.3 · tick 19.7 · box 336x542
+✓ 390×844 · figure-labels s4 · ≈6 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 390×844 · figure-labels s4 · ≈6 ticks — nearest legal position  max displacement 42.2
+✓ 390×844 · figure-labels s4 · ≈6 ticks — deterministic
+✓ 390×844 · figure-labels s4 · ≈8 ticks — clears everything incl. tick labels  clear 7.3 · tick 19.7 · box 336x542
+✓ 390×844 · figure-labels s4 · ≈8 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 390×844 · figure-labels s4 · ≈8 ticks — nearest legal position  max displacement 42.2
+✓ 390×844 · figure-labels s4 · ≈8 ticks — deterministic
+✓ 390×844 · figure-labels s4 · ≈10 ticks — clears everything incl. tick labels  clear 7.3 · tick 17.3 · box 336x542
+✓ 390×844 · figure-labels s4 · ≈10 ticks — on canvas, one identifier per marker  6 ids / 6 markers
+✓ 390×844 · figure-labels s4 · ≈10 ticks — nearest legal position  max displacement 42.2
+✓ 390×844 · figure-labels s4 · ≈10 ticks — deterministic
+✓ 390×844 — no console errors in the focused workspace
+✓ geometry · Right triangle 3-4-5 · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Right triangle 3-4-5 · 520x360 (reference) — nearest legal position  6 directional · max displacement 20.8
+✓ geometry · Scalene triangle with angle arcs · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Scalene triangle with angle arcs · 520x360 (reference) — nearest legal position  6 directional · max displacement 39.4
+✓ geometry · Stress — three arcs on a ~6px arm · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  4 labels · worst clearance 7.13
+✓ geometry · Stress — three arcs on a ~6px arm · 520x360 (reference) — nearest legal position  4 directional · max displacement 23.6
+✓ geometry · Three arcs on a genuinely small angle · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  4 labels · worst clearance 7.10
+✓ geometry · Three arcs on a genuinely small angle · 520x360 (reference) — nearest legal position  4 directional · max displacement 36.6
+✓ geometry · Right angle at an arbitrary orientation · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  5 labels · worst clearance 7.32
+✓ geometry · Right angle at an arbitrary orientation · 520x360 (reference) — nearest legal position  5 directional · max displacement 21.6
+✓ geometry · Quadrilateral with interior angles · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.02
+✓ geometry · Quadrilateral with interior angles · 520x360 (reference) — nearest legal position  8 directional · max displacement 30.9
+✓ geometry · Irregular heptagon · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 8.04
+✓ geometry · Irregular heptagon · 520x360 (reference) — nearest legal position  7 directional · max displacement 21.6
+✓ geometry · Crowded — names, sides and angles together · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  15 labels · worst clearance 6.00
+✓ geometry · Crowded — names, sides and angles together · 520x360 (reference) — nearest legal position  15 directional · max displacement 35.3
+✓ geometry · Long identifiers on a small triangle · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 6.00
+✓ geometry · Long identifiers on a small triangle · 520x360 (reference) — nearest legal position  7 directional · max displacement 88.7
+✓ geometry · Dart — one reflex interior angle · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 6.68
+✓ geometry · Dart — one reflex interior angle · 520x360 (reference) — nearest legal position  7 directional · max displacement 94.5
+✓ geometry · Quadrilateral — one winding · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  10 labels · worst clearance 7.43
+✓ geometry · Quadrilateral — one winding · 520x360 (reference) — nearest legal position  10 directional · max displacement 30.9
+✓ geometry · Quadrilateral — reversed winding · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  10 labels · worst clearance 7.43
+✓ geometry · Quadrilateral — reversed winding · 520x360 (reference) — nearest legal position  10 directional · max displacement 30.9
+✓ geometry · Polygon at the domain edge · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Polygon at the domain edge · 520x360 (reference) — nearest legal position  5 directional · max displacement 20.6
+✓ geometry · triangleSSS 7-8-9 · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 6.00
+✓ geometry · triangleSSS 7-8-9 · 520x360 (reference) — nearest legal position  7 directional · max displacement 36.6
+✓ geometry · Author error state · 520x360 (reference) — has annotations to check  no labels, and the figure reports 4 author error(s) — expected
+✓ geometry · Right triangle 3-4-5 · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Right triangle 3-4-5 · 449x311 (host 530) — nearest legal position  6 directional · max displacement 20.6
+✓ geometry · Scalene triangle with angle arcs · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Scalene triangle with angle arcs · 449x311 (host 530) — nearest legal position  6 directional · max displacement 39.4
+✓ geometry · Stress — three arcs on a ~6px arm · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  4 labels · worst clearance 7.26
+✓ geometry · Stress — three arcs on a ~6px arm · 449x311 (host 530) — nearest legal position  4 directional · max displacement 23.6
+✓ geometry · Three arcs on a genuinely small angle · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  4 labels · worst clearance 8.07
+✓ geometry · Three arcs on a genuinely small angle · 449x311 (host 530) — nearest legal position  4 directional · max displacement 61.4
+✓ geometry · Right angle at an arbitrary orientation · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  5 labels · worst clearance 7.32
+✓ geometry · Right angle at an arbitrary orientation · 449x311 (host 530) — nearest legal position  5 directional · max displacement 21.6
+✓ geometry · Quadrilateral with interior angles · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.02
+✓ geometry · Quadrilateral with interior angles · 449x311 (host 530) — nearest legal position  8 directional · max displacement 30.9
+✓ geometry · Irregular heptagon · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 8.04
+✓ geometry · Irregular heptagon · 449x311 (host 530) — nearest legal position  7 directional · max displacement 21.6
+✓ geometry · Crowded — names, sides and angles together · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  15 labels · worst clearance 6.00
+✓ geometry · Crowded — names, sides and angles together · 449x311 (host 530) — nearest legal position  15 directional · max displacement 35.3
+✓ geometry · Long identifiers on a small triangle · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 6.00
+✓ geometry · Long identifiers on a small triangle · 449x311 (host 530) — nearest legal position  7 directional · max displacement 88.7
+✓ geometry · Dart — one reflex interior angle · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 6.68
+✓ geometry · Dart — one reflex interior angle · 449x311 (host 530) — nearest legal position  7 directional · max displacement 94.5
+✓ geometry · Quadrilateral — one winding · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  10 labels · worst clearance 7.43
+✓ geometry · Quadrilateral — one winding · 449x311 (host 530) — nearest legal position  10 directional · max displacement 30.9
+✓ geometry · Quadrilateral — reversed winding · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  10 labels · worst clearance 7.43
+✓ geometry · Quadrilateral — reversed winding · 449x311 (host 530) — nearest legal position  10 directional · max displacement 30.9
+✓ geometry · Polygon at the domain edge · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Polygon at the domain edge · 449x311 (host 530) — nearest legal position  5 directional · max displacement 20.6
+✓ geometry · triangleSSS 7-8-9 · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 6.00
+✓ geometry · triangleSSS 7-8-9 · 449x311 (host 530) — nearest legal position  7 directional · max displacement 36.6
+✓ geometry · Author error state · 449x311 (host 530) — has annotations to check  no labels, and the figure reports 4 author error(s) — expected
+✓ geometry · Right triangle 3-4-5 · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Right triangle 3-4-5 · 298x206 (host 340) — nearest legal position  6 directional · max displacement 20.8
+✓ geometry · Scalene triangle with angle arcs · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Scalene triangle with angle arcs · 298x206 (host 340) — nearest legal position  6 directional · max displacement 39.4
+✓ geometry · Stress — three arcs on a ~6px arm · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  4 labels · worst clearance 6.89
+✓ geometry · Stress — three arcs on a ~6px arm · 298x206 (host 340) — nearest legal position  4 directional · max displacement 23.6
+✓ geometry · Three arcs on a genuinely small angle · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  4 labels · worst clearance 6.90
+✓ geometry · Three arcs on a genuinely small angle · 298x206 (host 340) — nearest legal position  4 directional · max displacement 52.6
+✓ geometry · Right angle at an arbitrary orientation · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  5 labels · worst clearance 7.32
+✓ geometry · Right angle at an arbitrary orientation · 298x206 (host 340) — nearest legal position  5 directional · max displacement 21.6
+✓ geometry · Quadrilateral with interior angles · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.02
+✓ geometry · Quadrilateral with interior angles · 298x206 (host 340) — nearest legal position  8 directional · max displacement 30.9
+✓ geometry · Irregular heptagon · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 6.56
+✓ geometry · Irregular heptagon · 298x206 (host 340) — nearest legal position  7 directional · max displacement 31.5
+✓ geometry · Crowded — names, sides and angles together · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  15 labels · worst clearance 6.70 · 5 RELAXED (engine reported): "111.1°" "92.9°" "103.2°" "125.6°" "107.1°"
+✓ geometry · Crowded — names, sides and angles together · 298x206 (host 340) — nearest legal position  15 directional · max displacement 73.6
+✓ geometry · Long identifiers on a small triangle · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 6.00
+✓ geometry · Long identifiers on a small triangle · 298x206 (host 340) — nearest legal position  5 directional · max displacement 57.9
+✓ geometry · Dart — one reflex interior angle · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 6.10 · 3 RELAXED (engine reported): "27.5°" "27.5°" "67.4°"
+✓ geometry · Dart — one reflex interior angle · 298x206 (host 340) — nearest legal position  7 directional · max displacement 46.7
+✓ geometry · Quadrilateral — one winding · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  10 labels · worst clearance 7.43
+✓ geometry · Quadrilateral — one winding · 298x206 (host 340) — nearest legal position  10 directional · max displacement 30.9
+✓ geometry · Quadrilateral — reversed winding · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  10 labels · worst clearance 7.43
+✓ geometry · Quadrilateral — reversed winding · 298x206 (host 340) — nearest legal position  10 directional · max displacement 30.9
+✓ geometry · Polygon at the domain edge · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Polygon at the domain edge · 298x206 (host 340) — nearest legal position  5 directional · max displacement 20.6
+✓ geometry · triangleSSS 7-8-9 · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  7 labels · worst clearance 6.00
+✓ geometry · triangleSSS 7-8-9 · 298x206 (host 340) — nearest legal position  7 directional · max displacement 36.6
+✓ geometry · Author error state · 298x206 (host 340) — has annotations to check  no labels, and the figure reports 4 author error(s) — expected
+✓ geometry · Right triangle 3-4-5 · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Right triangle 3-4-5 · 520x360 (reference) — nearest legal position  6 directional · max displacement 20.8
+✓ geometry · Crowded pentagon · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  15 labels · worst clearance 6.00
+✓ geometry · Crowded pentagon · 520x360 (reference) — nearest legal position  15 directional · max displacement 35.3
+✓ geometry · Regular octagon — eight measures · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  16 labels · worst clearance 6.00
+✓ geometry · Regular octagon — eight measures · 520x360 (reference) — nearest legal position  16 directional · max displacement 26.5
+✓ geometry · Square at the domain edge · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.00
+✓ geometry · Square at the domain edge · 520x360 (reference) — nearest legal position  8 directional · max displacement 23.7
+✓ geometry · Mixed measurement formats · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.00
+✓ geometry · Mixed measurement formats · 520x360 (reference) — nearest legal position  8 directional · max displacement 35.4
+✓ geometry · Three faces on one figure · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Three faces on one figure · 520x360 (reference) — nearest legal position  6 directional · max displacement 31.4
+✓ geometry · Explicit label overrides the classifier · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.00
+✓ geometry · Explicit label overrides the classifier · 520x360 (reference) — nearest legal position  8 directional · max displacement 56.3
+✓ geometry · A word the author declares a measurement · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  5 labels · worst clearance 6.00
+✓ geometry · A word the author declares a measurement · 520x360 (reference) — nearest legal position  5 directional · max displacement 39.1
+✓ geometry · Reported, not silently rendered · 520x360 (reference) — every placed label is legal (clearance + region + on canvas)  5 labels · worst clearance 6.82
+✓ geometry · Reported, not silently rendered · 520x360 (reference) — nearest legal position  5 directional · max displacement 29.3
+✓ geometry · Right triangle 3-4-5 · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Right triangle 3-4-5 · 449x311 (host 530) — nearest legal position  6 directional · max displacement 20.6
+✓ geometry · Crowded pentagon · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  15 labels · worst clearance 6.00
+✓ geometry · Crowded pentagon · 449x311 (host 530) — nearest legal position  15 directional · max displacement 35.3
+✓ geometry · Regular octagon — eight measures · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  16 labels · worst clearance 6.00
+✓ geometry · Regular octagon — eight measures · 449x311 (host 530) — nearest legal position  16 directional · max displacement 26.5
+✓ geometry · Square at the domain edge · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.00
+✓ geometry · Square at the domain edge · 449x311 (host 530) — nearest legal position  8 directional · max displacement 23.7
+✓ geometry · Mixed measurement formats · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.00
+✓ geometry · Mixed measurement formats · 449x311 (host 530) — nearest legal position  8 directional · max displacement 35.4
+✓ geometry · Three faces on one figure · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Three faces on one figure · 449x311 (host 530) — nearest legal position  6 directional · max displacement 31.4
+✓ geometry · Explicit label overrides the classifier · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.00
+✓ geometry · Explicit label overrides the classifier · 449x311 (host 530) — nearest legal position  8 directional · max displacement 134.5
+✓ geometry · A word the author declares a measurement · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  5 labels · worst clearance 6.00
+✓ geometry · A word the author declares a measurement · 449x311 (host 530) — nearest legal position  5 directional · max displacement 39.1
+✓ geometry · Reported, not silently rendered · 449x311 (host 530) — every placed label is legal (clearance + region + on canvas)  5 labels · worst clearance 6.82
+✓ geometry · Reported, not silently rendered · 449x311 (host 530) — nearest legal position  5 directional · max displacement 29.3
+✓ geometry · Right triangle 3-4-5 · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Right triangle 3-4-5 · 298x206 (host 340) — nearest legal position  6 directional · max displacement 20.8
+✓ geometry · Crowded pentagon · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  15 labels · worst clearance 6.70 · 5 RELAXED (engine reported): "111.1°" "92.9°" "103.2°" "125.6°" "107.1°"
+✓ geometry · Crowded pentagon · 298x206 (host 340) — nearest legal position  15 directional · max displacement 73.6
+✓ geometry · Regular octagon — eight measures · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  16 labels · worst clearance 6.00
+✓ geometry · Regular octagon — eight measures · 298x206 (host 340) — nearest legal position  16 directional · max displacement 67.0
+✓ geometry · Square at the domain edge · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.00
+✓ geometry · Square at the domain edge · 298x206 (host 340) — nearest legal position  8 directional · max displacement 23.7
+✓ geometry · Mixed measurement formats · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.00
+✓ geometry · Mixed measurement formats · 298x206 (host 340) — nearest legal position  8 directional · max displacement 95.5
+✓ geometry · Three faces on one figure · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  6 labels · worst clearance 6.00
+✓ geometry · Three faces on one figure · 298x206 (host 340) — nearest legal position  6 directional · max displacement 31.4
+✓ geometry · Explicit label overrides the classifier · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  8 labels · worst clearance 6.00
+✓ geometry · Explicit label overrides the classifier · 298x206 (host 340) — nearest legal position  8 directional · max displacement 87.6
+✓ geometry · A word the author declares a measurement · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  5 labels · worst clearance 6.00
+✓ geometry · A word the author declares a measurement · 298x206 (host 340) — nearest legal position  5 directional · max displacement 39.1
+✓ geometry · Reported, not silently rendered · 298x206 (host 340) — every placed label is legal (clearance + region + on canvas)  5 labels · worst clearance 6.82
+✓ geometry · Reported, not silently rendered · 298x206 (host 340) — nearest legal position  5 directional · max displacement 29.3
+✓ geometry — the nearest-legal assertions actually ran  537 annotations · 532 directional / 5 scan / 0 unplaced · worst displacement 202.4
+✓ no console errors / page errors
+927/927 passed

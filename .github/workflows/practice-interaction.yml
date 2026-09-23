@@ -26,12 +26,21 @@ permissions:
 on:
   pull_request:
     paths:
+      - '.github/workflows/practice-interaction.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'scripts/verify-shared-player.mjs'
+      - 'docs/review/shared-player/**'
       - 'lesson-studio.html'
       - 'scripts/verify-type-interaction.mjs'
       - 'scripts/verify-workbook.mjs'
       - 'scripts/verify-notes-examples.mjs'
       - 'scripts/verify-composition-grid.mjs'
       - 'scripts/verify-mx-authoring.mjs'
+      - 'scripts/verify-quadratics-authoring.mjs'
+      - 'scripts/verify-skill-page.mjs'
+      - 'docs/atlas/lesson/factorising-skills.app.json'
+      - 'docs/atlas/lesson/quadratics.app.json'
       - 'docs/atlas/composition/src/grid.json'
       - 'docs/atlas/composition/src/patterns.json'
       - 'docs/atlas/worked-examples/src/atlas.json'
@@ -69,3 +78,15 @@ jobs:
       # edited through the inspector, exported, reopened from the file and edited again. Every other
       # mathematics gate asserts that authored JSON renders; only this one asserts the JSON can be made.
       - run: node scripts/verify-mx-authoring.mjs
+      # Stage 3C: the whole quadratics lesson is REBUILT through the inspector from an empty mathematics
+      # lesson — four groups, seven worked examples, nineteen steps, the table of values, both graphs and
+      # every piece of explanatory prose — then exported, reopened and edited again. The rebuilt lesson is
+      # compared with the committed one twice: structurally, where every tolerated difference is named,
+      # and by rendering both and comparing every word, every table cell and every painted path.
+      - run: node scripts/verify-quadratics-authoring.mjs
+      # Stage 6: a SKILL is one instructional section — notes, video, worked examples and practice on one
+      # scrolling surface — and the lesson's `meta.responseMode` decides how a student answers, with no
+      # student-facing choice. This gate is the only one that asserts the skill's ORDER and the absence of
+      # the response controls on paper; every other mathematics gate reads pages that have neither.
+      - run: node scripts/verify-skill-page.mjs
+      - run: node scripts/verify-shared-player.mjs

@@ -1,5 +1,5 @@
 import { chromium } from 'playwright';
-import { readFileSync } from 'fs';
+import { readFileSync, mkdirSync } from 'fs';
 
 // Verifies the three pack bug-fixes by loading the worked-example lessons (both themes)
 // exactly as the in-app ⌗ JSON panel would:
@@ -10,6 +10,7 @@ import { readFileSync } from 'fs';
 const BASE = process.env.BASE || 'http://localhost:8290';
 const URL = `${BASE}/lesson-studio.html`;
 const browser = await chromium.launch();
+mkdirSync('screenshots/legacy-corrections',{recursive:true});
 const results = [];
 const ok = (n, c, extra = '') => { results.push(`${c ? '✓' : '✗'} ${n}${extra ? '  ' + extra : ''}`); if (!c) process.exitCode = 1; };
 
@@ -68,7 +69,7 @@ for (const name of files) {
 
   // quiz (only in the -questions examples)
   const qi = lesson.slides.findIndex((s) => s.type === 'guidedResponse' && s.mode === 'quiz');
-  if (qi >= 0) {
+    if (qi >= 0) {
     await page.evaluate((i) => go(i), qi); await page.waitForTimeout(150);
     const quiz = await page.evaluate(() => {
       const n = document.querySelectorAll('.tp-quizitem').length;
@@ -80,7 +81,10 @@ for (const name of files) {
       return { n, blocked, shown: document.querySelector('.tp-quizitem [data-tp-model]').classList.contains('tp-shown'), exp: btn.getAttribute('aria-expanded'), live: !!document.querySelector('[data-tp-live]') };
     });
     ok(`${name}: quiz — ${quiz.n} questions, answer revealed only after attempt, on one slide`, quiz.n >= 2 && quiz.blocked && quiz.shown);
+    const prompts=await page.locator('.tp-quizitem .tp-plabel').allTextContents();
+    ok(`${name}: every authored quiz question retained in order`,JSON.stringify(prompts)===JSON.stringify(lesson.slides[qi].questions.map(q=>q.question)));
     ok(`${name}: quiz — accessible (aria-expanded + live region)`, quiz.exp === 'true' && quiz.live);
+    await page.screenshot({path:`screenshots/legacy-corrections/${name}-quiz.png`});
   }
 
   ok(`${name}: no page errors`, errs.length === 0, errs.slice(0, 2).join(' | '));

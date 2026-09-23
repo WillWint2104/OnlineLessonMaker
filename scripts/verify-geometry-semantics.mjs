@@ -19,8 +19,9 @@ import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
 import { createServer } from 'node:http';
 import { extname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = resolve(new URL('..', import.meta.url).pathname);
+const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const LESSON = process.argv.includes('--lesson')
   ? process.argv[process.argv.indexOf('--lesson') + 1]
   : join(ROOT, 'tests/visual/lessons/figure-geometry-baseline.json');
@@ -30,7 +31,7 @@ const BOXES = [ {W:520,H:360,padL:40,padR:18,padT:16,padB:30},      // inline ca
 const MIME = {'.html':'text/html','.json':'application/json','.js':'text/javascript','.css':'text/css','.woff2':'font/woff2','.png':'image/png','.svg':'image/svg+xml','.glb':'model/gltf-binary'};
 const server = createServer((req,res)=>{
   const f = join(ROOT, decodeURIComponent(req.url.split('?')[0]));
-  try { res.writeHead(200,{'content-type':MIME[extname(f)]||'application/octet-stream'}).end(readFileSync(f)); }
+  try { const data=readFileSync(f); res.writeHead(200,{'content-type':MIME[extname(f)]||'application/octet-stream'}).end(data); }
   catch { res.writeHead(404).end('nope'); }
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));

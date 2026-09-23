@@ -351,6 +351,10 @@ inline `$…$`.
   `--poi` (or `--redpen`) left-stroke on `--popup-surface`. Rows with only `{term, definition}` render
   exactly as before.
 
+### Image placements
+
+An image block supports `contained` (a reduced centred image), `beside` (image and companion prose), and `pair` (two images). Omitting placement retains the bare image.
+
 ## `figure` *(figure engine — composable page block; shared Figure Shell)*
 
 **`companion` (C6b)** — the rich prose that sits beside a figure at `placement:"beside"`. It is the SAME
@@ -398,10 +402,11 @@ they read.
 | `meta` | string | Optional context shown beside the title. |
 | `caption` | string | Sits under the figure. Typeset (`$…$` ok). |
 | `placement` | `""` \| `"contained"` \| `"beside"` | How the figure block sits in the lesson around it — see below. Omit for the full-width default. |
-| `domain` | `{xMin,xMax,yMin,yMax}` | **Graph kind only** — geometry solves its own bounds from the construction. The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
+| `domain` | `{xMin,xMax,yMin,yMax}` | Required in practice for graphs; optional for geometry, which otherwise fits bounds to the construction. The authored view. All four must be finite with `xMin<xMax`, `yMin<yMax`, or it is ignored with a reported error. Auto-fit only ever *expands* it so nothing collides at an edge. |
 | `aspect` | `"stretch"` \| `"equal"` | `equal` keeps a unit square square (default `stretch`). |
+| `curveLabels` | `"shown"` | **Graph kind only.** Draws each function's `label` on the curve, at the end of its longest arm. Opt-in, in the same vocabulary as `grid` and `callouts`: many figures already carry a `label` on a function, written before the painter could draw one, so absent → no name is drawn and no existing figure moves. |
 | `callouts` | `"hidden"` | Same vocabulary as `grid`. A figure that only ILLUSTRATES has nothing to reveal on tap, and the shell's hint is keyed on the callout count. Absent → callouts as before, so no existing figure moves. |
-| `objects[]` | array | **Graph kind:** `{type:'function', f, label?}` · `{type:'points', rows:[[id,x,y],…]}` (`from:'table'` is optional and documentary — the rows are read either way) · `{type:'segment', between:[idA,idB]}` · `{type:'line', y:k}` or `{type:'line', x:k}` — a **reference line** spanning the viewport, with an optional `label` and `style:"dashed"` (default) \| `"solid"`; give exactly one of `x` or `y` or the line is skipped with a reported error. **Geometry kind** reads a different set (`polygon` · `angle` · `rightAngle` · `sideLabel`) — see **`figure: "geometry"`** below. Unknown types are ignored with a reported error. |
+| `objects[]` | array | **Graph kind:** `{type:'function', f, label?, pen?}` · `{type:'points', rows:[[id,x,y],…]}` (`from:'table'` is optional and documentary — the rows are read either way) · `{type:'segment', between:[idA,idB]}` · `{type:'line', y:k}` or `{type:'line', x:k}` — a **reference line** spanning the viewport, with an optional `label` and `style:"dashed"` (default) \| `"solid"`; give exactly one of `x` or `y` or the line is skipped with a reported error. A function's `pen` is one of `"dashed"` · `"dotted"` · `"dashdot"` · `"quiet"` — how the curve is STROKED, so two curves on one plane can be told apart in any theme and in print; absent is the graph's own ink, and any other value is ignored and draws the ordinary curve. **Geometry kind** reads a different set (`polygon` · `angle` · `rightAngle` · `sideLabel`) — see **`figure: "geometry"`** below. Unknown types are ignored with a reported error. |
 
 **Placement** — `placement` states the RELATIONSHIP you want between the figure block and the content around
 it. It is deliberately not a size, a column count or a breakpoint: the JSON says what is wanted and the
@@ -415,7 +420,7 @@ imperium-placement or scholarmath-placement.
 | `"contained"` | A self-contained figure at a reduced measure, centred. |
 | `"beside"` | The figure and its prose read as one purpose-unit. |
 
-Same vocabulary and the same meanings as the [`image`](#image) block's placements, because a figure beside its
+Same vocabulary and the same meanings as the [`image`](#image-placements) block's placements, because a figure beside its
 prose is the same authorial idea as an image beside its prose. **The default differs by block, intentionally:**
 an image with no placement is a bare `<img>`, whereas a figure is always the Figure Shell, so a figure with no
 placement is that shell at full width. `pair` is not offered — the image block's pair takes two `src` values in
@@ -591,3 +596,35 @@ tile** (it degrades gracefully). imperium = laurel‑wreath crest + gold glow; m
 The worksheet generator and other engine tooling are unaffected — these themes render through a
 dedicated path. The pack never uses `localStorage`, adds no third‑party host, and every content
 string is escaped (`esc()`), so `node scripts/validate.mjs` stays green.
+# Shared activity lessons (additive contract)
+
+The document root remains `{meta, slides}`. Set `meta.player: "activities"`, a stable
+`meta.id`, and optional `meta.subject`. Each slide is a registered `skill` with stable `id`,
+`title`, optional `video: {url}`, and authored `activities[]`. This additive shape uses the
+shared page capability independently of `meta.theme`; historical slides without activities
+retain their existing rendering contract.
+
+Skill, activity and question IDs must not be reserved Object.prototype keys such as `__proto__` or
+`constructor`; those names collide with the existing navigation/response stores. `meta.id` is a non-empty string.
+
+Each activity has a unique stable `id` (no colon or reserved Object.prototype key), `title`, optional `lede`, and any combination
+of existing instructional fields: `notes: [{term,body}]`, `workedExamples: [group]`,
+`examples: [example]`, `questions: [question]`, `video`, `keyIdea`, and their existing
+section-title/response-instruction fields. A slot with `optionalVideo: true` reads its skill's
+`video.url` and is omitted in learner mode when there is no safe embed URL. Related components
+stay together in one activity. Array order controls navigation; no dimensions determine order.
+
+Questions require stable IDs and `stem`; their existing `parts`, `stack` and `table` shapes
+are reused. Worked-example groups retain the existing composition/step/companion contracts.
+Supported companion parts are prose, figure, table, points and relations. New capabilities
+must be added through existing registrations, not arbitrary HTML or executable lesson code.
+Unknown activity fields, parts/compositions, missing IDs, empty activities and invalid response
+settings are rejected by `lpValidate` on import and publication. The current graphical editor
+supports activity titles/introductions, concept text, question prompts, ordering and video URLs;
+worked steps, figures, table structure and subparts remain JSON fields.
+
+`meta.responseMode` is paper (new-flow default), typed/type, or pen/write. `meta.colors.accent`
+is an optional six-digit hex decoration token. Neither theme nor subject controls response
+policy or available capabilities. Activity location is session-only and independent of the
+existing response store. Workbooks use skill ID plus activity-derived workbook ID; changing
+array positions does not re-key work. Re-import resets learner responses, as in the existing app.

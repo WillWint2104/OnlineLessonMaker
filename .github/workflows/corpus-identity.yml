@@ -23,6 +23,10 @@ permissions:
 on:
   pull_request:
     paths:
+      - '.github/workflows/corpus-identity.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tests/corpus-transitions.json'
       - 'lesson-studio.html'
       - 'examples/**'
       - 'lessons/**'

@@ -1,0 +1,602 @@
+{
+  "meta": {
+    "id": "factorising-quadratics",
+    "title": "Factorising quadratics",
+    "subject": "Mathematics",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper"
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "monic",
+      "title": "Factorising monic quadratics",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "monic-explain",
+          "title": "Reverse the expansion",
+          "notes": [
+            {
+              "id": "reverse",
+              "term": "Factorising is expanding, backwards",
+              "body": "Expanding turns (_x_ + 2)(_x_ + 3) into _x_^2 + 5_x_ + 6. Factorising turns it back. If your brackets expand to the original, you are right — so every answer can be checked without asking anyone."
+            },
+            {
+              "id": "monic",
+              "term": "Monic",
+              "body": "A quadratic is monic when the coefficient of _x_^2 is 1: _x_^2 + _b__x_ + _c_. Today every expression is monic once any common factor is taken out."
+            },
+            {
+              "id": "sumproduct",
+              "term": "Multiply to _c_, add to _b_",
+              "body": "Find two numbers whose product is _c_ and whose sum is _b_. For _x_^2 + 7_x_ + 12 that is 3 and 4, so the factors are (_x_ + 3)(_x_ + 4)."
+            },
+            {
+              "id": "signs",
+              "term": "Let the signs narrow the search",
+              "body": "If _c_ is positive, both numbers share the sign of _b_ — both positive, or both negative. If _c_ is negative, one is positive and one is negative, and the larger takes the sign of _b_."
+            },
+            {
+              "id": "common",
+              "term": "Common factor first, always",
+              "body": "2_x_^2 + 10_x_ + 12 is not monic — but take out the 2 and it becomes 2(_x_^2 + 5_x_ + 6), and the bracket is. Check for a common factor before anything else, and keep it in your answer."
+            }
+          ]
+        },
+        {
+          "id": "monic-video",
+          "title": "Watch and connect the method",
+          "optionalVideo": true
+        },
+        {
+          "id": "monic-ex-pp",
+          "title": "Both signs positive",
+          "workedExamples": [
+            {
+              "id": "g-signs",
+              "type": "sequence",
+              "title": "Both signs positive",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "ex-pp",
+                  "label": "Both signs positive",
+                  "prompt": "Factorise _x_^2 + 7_x_ + 12.",
+                  "steps": [
+                    {
+                      "id": "s1",
+                      "text": "Check for a common factor first. There is none, and the coefficient of _x_^2 is 1, so the expression is monic.",
+                      "math": "_x_^2 + 7_x_ + 12"
+                    },
+                    {
+                      "id": "s2",
+                      "text": "The constant is positive and the middle term is positive, so both numbers are positive. You need two of them that multiply to 12 and add to 7.",
+                      "math": "? × ? = 12, ? + ? = 7"
+                    },
+                    {
+                      "id": "s3",
+                      "text": "There are only three factor pairs of 12 to try: 1 and 12 add to 13; 2 and 6 add to 8; 3 and 4 add to 7.",
+                      "math": "3 × 4 = 12, 3 + 4 = 7"
+                    },
+                    {
+                      "id": "s4",
+                      "text": "Put that pair into the brackets.",
+                      "math": "(_x_ + 3)(_x_ + 4)"
+                    }
+                  ],
+                  "answer": "_x_^2 + 7_x_ + 12 = (_x_ + 3)(_x_ + 4)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "monic-ex-nn",
+          "title": "Both signs negative",
+          "workedExamples": [
+            {
+              "id": "g-signs",
+              "type": "sequence",
+              "title": "Both signs negative",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "ex-nn",
+                  "label": "Both signs negative",
+                  "prompt": "Factorise _x_^2 − 5_x_ + 6.",
+                  "steps": [
+                    {
+                      "id": "s1",
+                      "text": "No common factor, and the expression is monic.",
+                      "math": "_x_^2 − 5_x_ + 6"
+                    },
+                    {
+                      "id": "s2",
+                      "text": "The constant is positive, so both numbers share a sign. The middle term is negative, so that shared sign is negative.",
+                      "math": "? × ? = 6, ? + ? = −5"
+                    },
+                    {
+                      "id": "s3",
+                      "text": "Two negatives that multiply to 6 and add to −5.",
+                      "math": "(−2) × (−3) = 6, (−2) + (−3) = −5"
+                    },
+                    {
+                      "id": "s4",
+                      "text": "Put that pair into the brackets.",
+                      "math": "(_x_ − 2)(_x_ − 3)"
+                    }
+                  ],
+                  "answer": "_x_^2 − 5_x_ + 6 = (_x_ − 2)(_x_ − 3)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "monic-ex-mixed",
+          "title": "Mixed signs",
+          "workedExamples": [
+            {
+              "id": "g-signs",
+              "type": "sequence",
+              "title": "Mixed signs",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "ex-mixed",
+                  "label": "Mixed signs",
+                  "prompt": "Factorise _x_^2 + 2_x_ − 15.",
+                  "steps": [
+                    {
+                      "id": "s1",
+                      "text": "No common factor, and the expression is monic.",
+                      "math": "_x_^2 + 2_x_ − 15"
+                    },
+                    {
+                      "id": "s2",
+                      "text": "The constant is negative, so one number is positive and one is negative.",
+                      "math": "? × ? = −15, ? + ? = 2"
+                    },
+                    {
+                      "id": "s3",
+                      "text": "The pair is 5 and −3. The larger number takes the sign of the middle term, which is positive here.",
+                      "math": "5 × (−3) = −15, 5 + (−3) = 2"
+                    },
+                    {
+                      "id": "s4",
+                      "text": "Put that pair into the brackets.",
+                      "math": "(_x_ + 5)(_x_ − 3)"
+                    },
+                    {
+                      "id": "s5",
+                      "text": "Check by expanding — this is the step that makes the answer yours rather than the teacher’s.",
+                      "math": "_x_^2 − 3_x_ + 5_x_ − 15 = _x_^2 + 2_x_ − 15"
+                    }
+                  ],
+                  "answer": "_x_^2 + 2_x_ − 15 = (_x_ + 5)(_x_ − 3)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "monic-ex-cf",
+          "title": "A common factor of 2",
+          "workedExamples": [
+            {
+              "id": "g-common",
+              "type": "standard",
+              "title": "When a common factor comes out first",
+              "lede": "An expression that is not monic is often a monic one wearing a coat.",
+              "examples": [
+                {
+                  "id": "ex-cf",
+                  "label": "A common factor of 2",
+                  "prompt": "Factorise 2_x_^2 + 10_x_ + 12.",
+                  "steps": [
+                    {
+                      "id": "s1",
+                      "text": "Every term is divisible by 2. Take it out before anything else — and write it down, because it stays in the final answer.",
+                      "math": "2(_x_^2 + 5_x_ + 6)"
+                    },
+                    {
+                      "id": "s2",
+                      "text": "The bracket is now monic. Two numbers that multiply to 6 and add to 5.",
+                      "math": "2 × 3 = 6, 2 + 3 = 5"
+                    },
+                    {
+                      "id": "s3",
+                      "text": "Factorise the bracket, keeping the 2 in front.",
+                      "math": "2(_x_ + 2)(_x_ + 3)",
+                      "note": "Leaving out the 2 is the commonest mistake in this question type."
+                    }
+                  ],
+                  "answer": "2_x_^2 + 10_x_ + 12 = 2(_x_ + 2)(_x_ + 3)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "monic-practice",
+          "title": "Practise and check by expanding",
+          "questions": [
+            {
+              "id": "monic-q1",
+              "stem": "Copy and complete this table for _x_^2 + 8_x_ + 15, then say which pair factorises it.",
+              "table": {
+                "stub": "Factor pair of 15",
+                "head": [
+                  "1 and 15",
+                  "3 and 5"
+                ],
+                "rows": [
+                  {
+                    "label": "Product",
+                    "cells": [
+                      "",
+                      ""
+                    ]
+                  },
+                  {
+                    "label": "Sum",
+                    "cells": [
+                      "",
+                      ""
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "monic-q2",
+              "stem": "Factorise each expression. Both numbers are positive.",
+              "parts": [
+                "_x_^2 + 6_x_ + 8",
+                "_x_^2 + 9_x_ + 20",
+                "_x_^2 + 11_x_ + 24"
+              ]
+            },
+            {
+              "id": "monic-q3",
+              "stem": "Factorise each expression. Both numbers are negative.",
+              "parts": [
+                "_x_^2 − 7_x_ + 12",
+                "_x_^2 − 8_x_ + 15",
+                "_x_^2 − 10_x_ + 21"
+              ]
+            },
+            {
+              "id": "monic-q4",
+              "stem": "Factorise each expression. The constant is negative, so the signs differ.",
+              "parts": [
+                "_x_^2 + 3_x_ − 10",
+                "_x_^2 − 2_x_ − 24",
+                "_x_^2 + 5_x_ − 14",
+                "_x_^2 − _x_ − 20"
+              ]
+            },
+            {
+              "id": "monic-q5",
+              "stem": "Take out the common factor first, then factorise the bracket.",
+              "parts": [
+                "3_x_^2 + 12_x_ + 9",
+                "2_x_^2 − 14_x_ + 24",
+                "5_x_^2 + 5_x_ − 30"
+              ]
+            },
+            {
+              "id": "monic-q6",
+              "stem": "Sasha writes _x_^2 − 4_x_ − 12 = (_x_ − 6)(_x_ − 2).",
+              "stack": true,
+              "parts": [
+                "Expand her answer.",
+                "Use the sign rule to say what went wrong.",
+                "Write the correct factorisation."
+              ]
+            },
+            {
+              "id": "monic-q7",
+              "stem": "A rectangle has area _x_^2 + 9_x_ + 18 square centimetres.",
+              "stack": true,
+              "parts": [
+                "Factorise the area.",
+                "Write an expression for each side length.",
+                "Find the length, width and area when _x_ = 4."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "skill",
+      "id": "nonmonic",
+      "title": "Factorising non-monic quadratics",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "nonmonic-explain",
+          "title": "Split the middle term",
+          "notes": [
+            {
+              "id": "reverse",
+              "term": "The reverse of expanding",
+              "body": "Expanding turns (_x_ + 2)(_x_ + 3) into _x_^2 + 5_x_ + 6. Factorising turns it back. If your factors expand to the original, you are right."
+            },
+            {
+              "id": "monic",
+              "term": "Monic",
+              "body": "A quadratic is monic when the coefficient of _x_^2 is 1 — _x_^2 + _b__x_ + _c_."
+            },
+            {
+              "id": "nonmonic",
+              "term": "Non-monic",
+              "body": "A quadratic is non-monic when the coefficient of _x_^2 is not 1 — _a__x_^2 + _b__x_ + _c_ with _a_ ≠ 1."
+            },
+            {
+              "id": "sumproduct",
+              "term": "Sum and product",
+              "body": "For a monic quadratic, find two numbers that MULTIPLY to _c_ and ADD to _b_. Those two numbers go straight into the brackets."
+            },
+            {
+              "id": "common",
+              "term": "Common factor first",
+              "body": "Always look for a common factor before anything else. 2_x_^2 + 10_x_ + 12 becomes 2(_x_^2 + 5_x_ + 6), and the bracket is now monic."
+            },
+            {
+              "id": "signs",
+              "term": "Reading the signs",
+              "body": "If _c_ is positive, both numbers share the sign of _b_. If _c_ is negative, one number is positive and one is negative."
+            }
+          ]
+        },
+        {
+          "id": "nonmonic-video",
+          "title": "Watch and connect the method",
+          "optionalVideo": true
+        },
+        {
+          "id": "nonmonic-ex-n1",
+          "title": "Both signs positive",
+          "workedExamples": [
+            {
+              "id": "g-nonmonic",
+              "type": "sequence",
+              "title": "Both signs positive",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "ex-n1",
+                  "label": "Both signs positive",
+                  "prompt": "Factorise 2_x_^2 + 7_x_ + 3.",
+                  "steps": [
+                    {
+                      "id": "n1s1",
+                      "text": "There is no common factor, and the leading coefficient is not 1. Multiply the first and last coefficients.",
+                      "math": "_a_ × _c_ = 2 × 3 = 6"
+                    },
+                    {
+                      "id": "n1s2",
+                      "text": "Find two numbers that multiply to 6 and add to the middle coefficient, 7.",
+                      "math": "1 × 6 = 6,   1 + 6 = 7"
+                    },
+                    {
+                      "id": "n1s3",
+                      "text": "Split the middle term into those two terms. The order does not matter.",
+                      "math": "2_x_^2 + _x_ + 6_x_ + 3"
+                    },
+                    {
+                      "id": "n1s4",
+                      "text": "Group in pairs and factorise each pair.",
+                      "math": "_x_(2_x_ + 1) + 3(2_x_ + 1)"
+                    },
+                    {
+                      "id": "n1s5",
+                      "text": "The bracket (2_x_ + 1) is common to both. Take it out.",
+                      "math": "(2_x_ + 1)(_x_ + 3)"
+                    }
+                  ],
+                  "answer": "2_x_^2 + 7_x_ + 3 = (2_x_ + 1)(_x_ + 3)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nonmonic-ex-n2",
+          "title": "Both signs negative",
+          "workedExamples": [
+            {
+              "id": "g-nonmonic",
+              "type": "sequence",
+              "title": "Both signs negative",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "ex-n2",
+                  "label": "Both signs negative",
+                  "prompt": "Factorise 6_x_^2 − 11_x_ + 3.",
+                  "steps": [
+                    {
+                      "id": "n2s1",
+                      "text": "Multiply the first and last coefficients.",
+                      "math": "_a_ × _c_ = 6 × 3 = 18"
+                    },
+                    {
+                      "id": "n2s2",
+                      "text": "The product is positive and the middle term is negative, so both numbers are negative.",
+                      "math": "(−2) × (−9) = 18,   (−2) + (−9) = −11"
+                    },
+                    {
+                      "id": "n2s3",
+                      "text": "Split the middle term.",
+                      "math": "6_x_^2 − 2_x_ − 9_x_ + 3"
+                    },
+                    {
+                      "id": "n2s4",
+                      "text": "Group and factorise each pair. Take out −3 from the second pair so the bracket matches.",
+                      "math": "2_x_(3_x_ − 1) − 3(3_x_ − 1)"
+                    },
+                    {
+                      "id": "n2s5",
+                      "text": "Take out the common bracket.",
+                      "math": "(3_x_ − 1)(2_x_ − 3)"
+                    }
+                  ],
+                  "answer": "6_x_^2 − 11_x_ + 3 = (3_x_ − 1)(2_x_ − 3). Taking out +3 instead of −3 in step 4 leaves two different brackets — that is the signal to go back one line."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nonmonic-ex-n3",
+          "title": "Mixed signs",
+          "workedExamples": [
+            {
+              "id": "g-nonmonic",
+              "type": "sequence",
+              "title": "Mixed signs",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "ex-n3",
+                  "label": "Mixed signs",
+                  "prompt": "Factorise 2_x_^2 − 5_x_ − 3.",
+                  "steps": [
+                    {
+                      "id": "n3s1",
+                      "text": "Multiply the first and last coefficients. The product is negative, so the two numbers have different signs.",
+                      "math": "_a_ × _c_ = 2 × (−3) = −6"
+                    },
+                    {
+                      "id": "n3s2",
+                      "text": "Find the pair that adds to −5.",
+                      "math": "1 × (−6) = −6,   1 + (−6) = −5"
+                    },
+                    {
+                      "id": "n3s3",
+                      "text": "Split the middle term.",
+                      "math": "2_x_^2 + _x_ − 6_x_ − 3"
+                    },
+                    {
+                      "id": "n3s4",
+                      "text": "Group and factorise each pair.",
+                      "math": "_x_(2_x_ + 1) − 3(2_x_ + 1)"
+                    },
+                    {
+                      "id": "n3s5",
+                      "text": "Take out the common bracket, then check by expanding.",
+                      "math": "(2_x_ + 1)(_x_ − 3)"
+                    }
+                  ],
+                  "answer": "2_x_^2 − 5_x_ − 3 = (2_x_ + 1)(_x_ − 3)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nonmonic-practice",
+          "title": "Practise and check by expanding",
+          "questions": [
+            {
+              "id": "nonmonic-pn1",
+              "stem": "For each quadratic, write down _a_ × _c_ and the pair of numbers that multiplies to it and adds to _b_. Do not factorise yet.",
+              "table": {
+                "stub": "Quadratic",
+                "head": [
+                  "2_x_^2 + 9_x_ + 4",
+                  "3_x_^2 + 10_x_ + 8",
+                  "5_x_^2 − 12_x_ + 4"
+                ],
+                "rows": [
+                  {
+                    "label": "_a_ × _c_",
+                    "cells": [
+                      "",
+                      "",
+                      ""
+                    ]
+                  },
+                  {
+                    "label": "The pair",
+                    "cells": [
+                      "",
+                      "",
+                      ""
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "nonmonic-pn2",
+              "stem": "Factorise each expression.",
+              "parts": [
+                "2_x_^2 + 9_x_ + 4",
+                "3_x_^2 + 11_x_ + 6",
+                "2_x_^2 + 11_x_ + 12"
+              ]
+            },
+            {
+              "id": "nonmonic-pn3",
+              "stem": "Factorise each expression. Both numbers in the pair will be negative.",
+              "parts": [
+                "3_x_^2 − 10_x_ + 8",
+                "4_x_^2 − 11_x_ + 6",
+                "5_x_^2 − 12_x_ + 4"
+              ]
+            },
+            {
+              "id": "nonmonic-pn4",
+              "stem": "Factorise each expression. The constant is negative, so the pair has mixed signs.",
+              "parts": [
+                "2_x_^2 + _x_ − 6",
+                "3_x_^2 − 5_x_ − 2",
+                "4_x_^2 + 4_x_ − 3"
+              ]
+            },
+            {
+              "id": "nonmonic-pn5",
+              "stem": "Mixed set — decide first whether there is a common factor, and whether it is monic or non-monic.",
+              "parts": [
+                "_x_^2 − 13_x_ + 40",
+                "6_x_^2 + 7_x_ + 2",
+                "4_x_^2 + 20_x_ + 24",
+                "_x_^2 + 4_x_ − 21"
+              ]
+            },
+            {
+              "id": "nonmonic-pn6",
+              "stem": "Dev factorises 3_x_^2 + 7_x_ + 2 and gets (3_x_ + 2)(_x_ + 1).",
+              "stack": true,
+              "parts": [
+                "Expand his answer.",
+                "Explain how expanding shows it is wrong.",
+                "Give the correct factorisation."
+              ]
+            },
+            {
+              "id": "nonmonic-pn7",
+              "stem": "A rectangle has area 2_x_^2 + 7_x_ + 6 square metres and its width is (_x_ + 2) metres.",
+              "stack": true,
+              "parts": [
+                "Factorise the area.",
+                "Write an expression for the length.",
+                "Find the perimeter when _x_ = 3."
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+✓ imperium: JSON loaded without error
+✓ imperium: theme applied  data-theme=imperium
+✓ imperium: 7 slides loaded  n=7
+✓ imperium/title: renders via pack
+✓ imperium/title: image placeholder shown
+✓ imperium/outcomes: renders via pack
+✓ imperium/outcomes: image placeholder shown
+✓ imperium/text: renders via pack
+✓ imperium/imageText: renders via pack
+✓ imperium/imageText: image placeholder shown
+✓ imperium/infographic: renders via pack
+✓ imperium/infographic: image placeholder shown
+✓ imperium/video: renders via pack
+✓ imperium/video: image placeholder shown
+✓ imperium/knowledgeCheck: renders via pack
+✓ imperium/knowledgeCheck: image placeholder shown
+✓ imperium: display font Playfair Display applied  font="Playfair Display", Georgia, serif
+✓ imperium/knowledgeCheck: advance gated until correct  true->true
+✓ imperium/knowledgeCheck: feedback revealed on answer
+✓ imperium/knowledgeCheck: correct answer unlocks actual navigation
+✓ imperium/knowledgeCheck: wrong answer keeps advance blocked
+✓ imperium: zero external requests
+✓ imperium: no page errors
+✓ microhistory: JSON loaded without error
+✓ microhistory: theme applied  data-theme=microhistory
+✓ microhistory: 7 slides loaded  n=7
+✓ microhistory/title: renders via pack
+✓ microhistory/title: image placeholder shown
+✓ microhistory/outcomes: renders via pack
+✓ microhistory/text: renders via pack
+✓ microhistory/imageText: renders via pack
+✓ microhistory/imageText: image placeholder shown
+✓ microhistory/infographic: renders via pack
+✓ microhistory/infographic: image placeholder shown
+✓ microhistory/video: renders via pack
+✓ microhistory/video: image placeholder shown
+✓ microhistory/knowledgeCheck: renders via pack
+✓ microhistory/knowledgeCheck: image placeholder shown
+✓ microhistory: display font Courier Prime applied  font="Courier Prime", ui-monospace, monospace
+✓ microhistory/knowledgeCheck: advance gated until correct  true->true
+✓ microhistory/knowledgeCheck: feedback revealed on answer
+✓ microhistory/knowledgeCheck: correct answer unlocks actual navigation
+✓ microhistory/knowledgeCheck: wrong answer keeps advance blocked
+✓ microhistory: zero external requests
+✓ microhistory: no page errors
+✓ existing theme (egypt) unaffected — renders via engine, not the pack  {"pack":false,"cover":true}
+
+Screenshots in screenshots/theme-pack
+
+ALL PASSED.

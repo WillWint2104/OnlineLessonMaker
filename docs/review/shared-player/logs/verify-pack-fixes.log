@@ -1,0 +1,24 @@
+✓ imperium-sample: supplied images render + load (3 slots)
+✓ imperium-sample: empty image slots fall back to placeholder (3)
+✓ imperium-sample: title renders title hero, no video play button
+✓ imperium-sample: no page errors
+✓ microhistory-sample: supplied images render + load (3 slots)
+✓ microhistory-sample: empty image slots fall back to placeholder (2)
+✓ microhistory-sample: title renders title hero, no video play button
+✓ microhistory-sample: no page errors
+✓ imperium-questions: supplied images render + load (1 slots)
+✓ imperium-questions: empty image slots fall back to placeholder (1)
+✓ imperium-questions: title renders title hero, no video play button
+✓ imperium-questions: quiz — 3 questions, answer revealed only after attempt, on one slide
+✓ imperium-questions: every authored quiz question retained in order
+✓ imperium-questions: quiz — accessible (aria-expanded + live region)
+✓ imperium-questions: no page errors
+✓ microhistory-questions: supplied images render + load (1 slots)
+✓ microhistory-questions: empty image slots fall back to placeholder (1)
+✓ microhistory-questions: title renders title hero, no video play button
+✓ microhistory-questions: quiz — 3 questions, answer revealed only after attempt, on one slide
+✓ microhistory-questions: every authored quiz question retained in order
+✓ microhistory-questions: quiz — accessible (aria-expanded + live region)
+✓ microhistory-questions: no page errors
+
+ALL PASSED.

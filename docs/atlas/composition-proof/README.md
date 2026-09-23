@@ -6,7 +6,7 @@ narrow: it renders only what it proves.
 
 ```
 node scripts/composition-proof-atlas.mjs
-CP_ONLY=worked.paired CP_SURFACE=desktop   # a slice
+CP_ONLY=worked.paired CP_SURFACE=desktop node scripts/composition-proof-atlas.mjs   # a slice
 ```
 
 ## Two layers, asked in order
@@ -244,7 +244,7 @@ hit. `corpus-identity` 250/250 byte-identical, `figure-render` 240/240 identical
 With that fixed, the second original finding dissolved too: `tall` at `explanatory` fell back to
 `spine` 564 only because `expanded` 760 had been *mismeasured* as infeasible. Both `tall` and
 `portrait` would now take 760 — which is exactly why the class still has to be split **by design**.
-A 0.45:1 object at 760px is 1572px tall. The composition must say so; a failed search must not.
+A 0.45:1 object at 760px is 1582px tall. The composition must say so; a failed search must not.
 
 ### The mapping, frozen
 
@@ -424,7 +424,7 @@ refuses that combination" and "somebody forgot one"; the two want opposite respo
 ### A defect in the shipping catalogue
 
 `media.full/centred` (in `docs/atlas/composition/src/patterns.json`) sets the media across columns
-**3–10** — centred on the twelve-column grid — over an interpretation across **1–8** and a support
+**2–11** — centred on the twelve-column grid — over an interpretation across **1–8** and a support
 across **1–6**, both anchored to the **left edge**. That is two alignment origins on one surface.
 
 Each row is fine alone: a solo row on a left-edge spine leaves *page margin* to its right, which is
@@ -522,17 +522,7 @@ can fix. Two written heights move together, and `notes` shows them doing it.
 
 ### The same shipping defect, a second time
 
-`notes/measure` runs intro 1–8 beside support 9–12, reading 1–8, **illustration 4–9**, examples 1–8,
-synthesis 1–8. Every prose region is anchored to the left edge and the illustration alone is
-**centred** on the twelve-column grid. Two alignment origins, again.
-
-`media.full/centred` does exactly this with its media. **Two patterns in the shipping catalogue
-independently centre their object over left-anchored prose**, which suggests a habit rather than a
-decision. Both are recorded rather than rendered, for the same reason: a blueprint declares one spine
-per surface, no rung on a left-edge axis resolves to columns 4–9, and faking it makes H2 fire for the
-encoding instead of the design.
-
-The fix is `notes-inset` — the illustration at `inset` 4 on the same left edge as the reading.
+The current `notes/measure` record uses intro 1–8 beside support 9–12, reading 1–8, illustration **3–6**, examples 1–8 and synthesis 1–8 on desktop. The illustration is centred within the reading spine, not across the page. On tablet the intro and support stack (1–7 then 1–5); the illustration occupies 1–7 with its object centred inside that region. The older diagnosis below the prototype history must not be read as the current shipping geometry. `media.full/centred` uses its separate primary-object stage at columns 2–11.
 
 ### Admitting a class you have not rendered
 

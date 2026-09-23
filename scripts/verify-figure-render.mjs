@@ -52,6 +52,12 @@ const FIXTURES = [
   { file: 'tests/visual/lessons/figure-geometry-baseline.json', kind: 'geometry' },
   { file: 'tests/visual/lessons/figure-measure-surface.json', kind: 'geometry' },
   { file: 'tests/visual/lessons/figure-graph-baseline.json', kind: 'graph' },
+  /* Stage 5 · 3 — CURVE IDENTITY. Nothing already committed carries a pen or asks for curve names, so
+     without a fixture that does, the feature would ship with no rendered coverage at all: three slides,
+     one per case — three pens on one plane with names, a quiet "before" curve against a dash-dot "after",
+     and a figure carrying labels that does NOT ask for them, which must render exactly as it did before
+     this stage existed. */
+  { file: 'tests/visual/lessons/figure-curve-identity.json', kind: 'graph' },
 ];
 const THEMES = { geometry: ['mathematics', 'scholarmath'], graph: ['mathematics', 'scholarmath', 'geolearn'] };
 

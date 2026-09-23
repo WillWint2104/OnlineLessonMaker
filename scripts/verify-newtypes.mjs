@@ -1,5 +1,5 @@
 import { chromium } from 'playwright';
-import { readFileSync } from 'fs';
+import { readFileSync, mkdirSync } from 'fs';
 
 // Verifies the new typed-answer + outro pack types (sourceAnalysis, guidedResponse, outro)
 // in BOTH themes, loading the worked-example lessons via the in-app JSON loader:
@@ -9,6 +9,7 @@ import { readFileSync } from 'fs';
 const BASE = process.env.BASE || 'http://localhost:8285';
 const URL = `${BASE}/lesson-studio.html`;
 const browser = await chromium.launch();
+mkdirSync('screenshots/legacy-corrections',{recursive:true});
 const results = [];
 const ok = (n, c, extra = '') => { results.push(`${c ? '✓' : '✗'} ${n}${extra ? '  ' + extra : ''}`); if (!c) process.exitCode = 1; };
 
@@ -63,27 +64,31 @@ for (const theme of ['imperium', 'microhistory']) {
 
   // guidedResponse short: submit gate + reveal + readonly
   await page.evaluate((i) => go(i), grShortIdx); await page.waitForTimeout(250);
-  const grs = await page.evaluate(() => { const ta = document.querySelector('textarea[data-tp-field]'); ta.value = 'answer'; ta.dispatchEvent(new Event('input', { bubbles: true })); document.querySelector('[data-tp-reveal]').click(); return { shown: document.querySelector('[data-tp-model]').classList.contains('tp-shown'), readonly: ta.hasAttribute('readonly'), crit: document.querySelectorAll('.tp-crit li').length }; });
+  const grs = await page.evaluate(() => { const ta = document.querySelector('textarea[data-tp-field]'); ta.value = 'answer'; ta.dispatchEvent(new Event('input', { bubbles: true })); document.querySelector('[data-tp-reveal]').click(); return { shown: document.querySelector('[data-tp-model]').classList.contains('tp-shown'), readonly: ta.hasAttribute('readonly'), crit: document.querySelectorAll('.tp-crit li,.tp-gcrit li').length }; });
   ok(`${theme}/guidedResponse short: submit reveals model + criteria + locks box`, grs.shown && grs.readonly && grs.crit >= 1);
 
   // guidedResponse extended: per-paragraph reveal + Focus modal (open, Esc, focus return)
   await page.evaluate((i) => go(i), grExtIdx); await page.waitForTimeout(250);
-  const paras = await page.evaluate(() => document.querySelectorAll('.tp-para').length);
+  const paras = await page.evaluate(() => document.querySelectorAll('.tp-para,.tp-gpara').length);
   ok(`${theme}/guidedResponse extended: paragraph boxes render (${paras})`, paras >= 2);
-  const modal = await page.evaluate(() => {
-    const trigger = document.querySelector('[data-tp-focus-open]'); trigger.focus(); trigger.click();
-    const ov = document.querySelector('[data-tp-overlay]');
+  // Microhistory's established per-question modal moves the editable card; Imperium uses the reading overlay.
+  const modal = await page.evaluate((mh) => {
+    const trigger = document.querySelector(mh?'[data-mhq-focus]':'[data-tp-focus-open]'); trigger.focus(); trigger.click();
+    const ov = document.querySelector(mh?'[data-tp-qmodal]':'[data-tp-overlay]');
     const opened = !ov.hidden;
     const dialog = ov.getAttribute('role') === 'dialog' && ov.getAttribute('aria-modal') === 'true';
     const focusInside = ov.contains(document.activeElement);
-    ov.querySelector('[data-tp-focus-close]').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    ov.querySelector(mh?'[data-tp-qclose]':'[data-tp-focus-close]').dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     const closed = ov.hidden;
     const focusBack = document.activeElement === trigger;
     return { opened, dialog, focusInside, closed, focusBack };
-  });
+  }, theme==='microhistory');
   ok(`${theme}/guidedResponse extended: Focus modal role=dialog+aria-modal`, modal.dialog);
   ok(`${theme}/guidedResponse extended: Focus modal opens, focus moves in`, modal.opened && modal.focusInside);
   ok(`${theme}/guidedResponse extended: Esc closes + focus returns to trigger`, modal.closed && modal.focusBack);
+  await page.locator(theme==='microhistory'?'[data-mhq-focus]':'[data-tp-focus-open]').first().click();
+  await page.screenshot({path:`screenshots/legacy-corrections/${theme}-focus.png`});
+  await page.locator(theme==='microhistory'?'[data-tp-qclose]':'[data-tp-focus-close]').first().click();
 
   // outro: score-tile hiding (imperium example has 3 tiles, microhistory has 2)
   await page.evaluate((i) => go(i), outroIdx); await page.waitForTimeout(250);

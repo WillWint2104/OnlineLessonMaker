@@ -1,0 +1,39 @@
+--- create the page ---
+PASS an empty mathematics lesson yields a worked-examples page from the palette  slides 1
+PASS the page's title, lede and rail name are authorable — not only its groups  title "The parabola _y_ = _x_^2…" · nav "The parabola"
+--- the four groups ---
+--- what was built ---
+PASS every group is there, with the composition the lesson authors  4 groups · sequence, sequence, staged, staged
+PASS every worked example and every step of every solution is there  7/7 examples · 19/19 steps
+PASS THE TABLE OF VALUES was built through the inspector — headings, stub and cells  11 columns × 1 row · stub "_x_" · cells 25 16 9 4 1 0 1 4 9 16 25
+PASS and every row is exactly as wide as the headings — the editor cannot author a ragged table  11/11
+PASS both graphs were authored, each with its curve, its reference line and its marked points  figures per group [0,0,1,1] · objects function+line+points | function+line+points
+PASS the explanatory prose and the relationship lists are authored content, not chrome  4 prose · 2 relationship lists
+PASS the Symmetry group carries its two representations, edited from the app's own defaults  [workings/Workings · visual/Visual explanation]
+--- the rebuilt lesson against the committed one ---
+PASS every difference from the committed lesson is one of the named, equivalent representations  33× the editor generates its own ids · 3× a field left blank is written as "" · 1× one companion written as a list of one · 18× a typed number arrives as its own text · 2× a curve label the painter never draws · 2× a default written out in full
+PASS the rebuilt lesson renders the same number of views as the committed one  4 vs 4 view(s)
+PASS EVERY WORD OF THE RENDERED LESSON IS THE SAME — prose, questions, workings, answers, relationships  1894 characters, identical across 4 view(s)
+PASS and every cell of the table of values is the same  96 cells · e.g. x −5 −4 −3 −2 −1 0 1 2 3 4 5 y = x2
+PASS and the FIGURE ENGINE PAINTS THE SAME GEOMETRY — every curve, axis and marker to the same coordinates  64 painted path(s) vs 64, identical
+--- controls ---
+PASS CONTROL: change one line of mathematics and the structural comparison reports it  page.groups[0].examples[0].steps[1].math: "_y_ = -4^2" vs "_y_ = (−4)^2"
+PASS CONTROL: splice a heading out without the cells and the rectangularity check fires  11 cells against 10 headings
+PASS CONTROL: change one cell of the table and the rendered comparison sees it, in the cells and in the words  the 0 at the vertex reads "99" · cells seen · text seen
+PASS CONTROL: widen one graph's window and the painted geometry comparison sees it  x to 6.5 → 8 · 4 of 64 painted path(s) now draw to different coordinates
+--- save, leave, reopen, edit again ---
+PASS the rebuilt lesson survives into the saved file  2030KB written
+PASS REOPENED FROM THE FILE, the whole lesson is back — nothing was lost in the round trip  4 groups · 7768 vs 7768 characters
+PASS and it renders again through the mathematics page family  7 worked-example primitive(s)
+PASS THE TABLE IS STILL EDITABLE AFTER THE ROUND TRIP — it is structure, not baked-in markup  the table appears in the reopened outline under its own step
+PASS and a cell edited after reopening lands in the data and repaints the table  cell now "0 (the vertex)" · painted "25,16,9,4,1,0 (the vertex),1,4,9,16,25…"
+PASS ADDING A COLUMN WIDENS EVERY ROW WITH IT, and removing one narrows every row with it  11 → 12 → 11 headings · rows 11 → 12 → 11
+PASS and a new row arrives already the width of the headings  1 → 2 → 1 row(s), each 11 wide
+PASS and the page repaints from the data each time — the table is never stale markup  2 rendered row(s) including the headings, against 1 authored
+--- Study, Edit and Present ---
+PASS the rebuilt lesson renders intact in STUDY  7 example(s) · 19 step(s)
+PASS the rebuilt lesson renders intact in EDIT  7 example(s) · 19 step(s)
+PASS the rebuilt lesson renders intact in PRESENT  7 example(s) · 19 step(s) · body.present true
+PASS no page error at any point — build, export, reopen, edit again, all three modes  none
+
+30/30 checks passed

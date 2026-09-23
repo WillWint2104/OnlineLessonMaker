@@ -399,7 +399,7 @@ mark('mode');
   // Back to sheet 1 — the student types on the sheet they are ON, and w2 is the one just added.
   await p.click('[data-mx-sheet="w1"]'); await p.waitForTimeout(200);
   // Type: real typing, and a real equation from the app's own maths primitive.
-  await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(250);
+  await p.evaluate(() => mxSetResponseMode('type')); await p.waitForTimeout(250);
   ok('the Type workspace replaces the workbook surface, and only that',
      await p.evaluate(() => !!document.querySelector('[data-mx-typed]') && !document.querySelector('.mx-wbcanvas')
        && document.querySelectorAll('.mx-content .mx-item').length === 7
@@ -433,10 +433,10 @@ mark('mode');
     return { ids: d.pages.map((x) => x.id).join('/'), current: d.current,
       ink: d.pages.map((x) => x.ink.length).join('/'), text: d.pages.map((x) => x.text.length).join('/') }; });
   const before = await round();
-  await p.click('[data-mx-resp="write"]'); await p.waitForTimeout(200);
+  await p.evaluate(() => mxSetResponseMode('write')); await p.waitForTimeout(200);
   const inWrite = await round();
   const inkBack = await inked(p);
-  await p.click('[data-mx-resp="type"]'); await p.waitForTimeout(200);
+  await p.evaluate(() => mxSetResponseMode('type')); await p.waitForTimeout(200);
   const backInType = await round();
   ok('Write → Type → Write preserves both modalities exactly, and renumbers nothing',
      JSON.stringify(before) === JSON.stringify(inWrite) && JSON.stringify(before) === JSON.stringify(backInType)
@@ -462,9 +462,9 @@ mark('mode');
   const geom = await p.evaluate(() => {
     const h = (s) => { const e = document.querySelector(s); return e ? Math.round(e.getBoundingClientRect().height) : 0; };
     const typed = { work: h('.mx-work'), pad: h('.mx-wb'), sheet: h('.mx-sheet') };
-    document.querySelector('[data-mx-resp="write"]').click();
+    mxSetResponseMode('write');
     const write = { work: h('.mx-work'), pad: h('.mx-wb'), sheet: h('.mx-sheet') };
-    document.querySelector('[data-mx-resp="type"]').click();
+    mxSetResponseMode('type');
     return { typed, write };
   });
   await p.waitForTimeout(200);

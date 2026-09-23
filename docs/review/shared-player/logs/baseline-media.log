@@ -1,0 +1,15 @@
+Base 2189477ef628e002a18323fe1e0ee1234e3b68bb
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+page.click: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('#slide .hero')[22m
+
+    at C:\Users\willi\Videos\Online Lesson Maker\scripts\.baseline-legacy.tmp.mjs:27:12 {
+  log: [ "  - waiting for locator('#slide .hero')" ],
+  name: 'TimeoutError'
+}
+
+Node.js v24.14.1

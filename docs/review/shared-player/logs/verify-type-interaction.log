@@ -1,0 +1,55 @@
+PASS an equation is placed at the caret and the prose carries on after it  p+eq+p+eq+p — "First, " ⟦eq⟧ " is the rule. Halving gives " ⟦eq⟧ " of it."
+PASS CONTROL: appending to the end of the page would have put both equations last  the last block is prose (p), not an equation
+PASS and the order is the same after leaving the page and coming back  2 equations rendered in "First, x2 is the rule. Halving gives 12​ of it."
+PASS re-opening an equation continues it, and leaves the others alone  chips read x2+1 and 12​
+PASS CONTROL: a caret left at the start of the row would have read "+1x2"  it reads "x2+1"
+PASS an equation you clicked on survives writing the next one  "working " ⟦eq⟧ ⟦eq⟧ " TAIL"
+PASS CONTROL: a caret recorded inside the chip would have deleted it and nested the new one in its place  two equations, neither inside the other
+PASS opening the editor puts the keyboard in it  the equation field
+PASS Tab leaves the editor forward and reaches its actions  a symbol button → a structure button → Cancel → Insert
+PASS Shift-Tab leaves it backward, onto the page it came from  the typed page → Expand
+PASS CONTROL: the ribbon is two stops, not forty — Tab reaches Insert within four presses  Insert at press 4
+PASS Escape closes the editor and hands the focus back to whatever opened it  from the button → the Equation button; from an equation → the equation
+PASS CONTROL: it is the OPENER, not just "somewhere sensible" — the two differ  the Equation button vs the equation
+PASS Insert puts the student back on the page, writing after the equation  focus on the typed page; "TAIL" follows the equation
+PASS no control that replaces or hides its own container drops the focus on the floor  Cancel → the Equation button · Add page → page tab w2 · page tab → page tab w1
+PASS leaving the Workbook view leaves a usable place to carry on from  Workbook → Expand · Expand → Expand · Questions → Expand
+PASS CONTROL: the control that had the focus is hidden by then, so BODY is what happens otherwise  the Expand button is no longer displayed
+PASS an arrow key never pages the lesson out from under something being edited  the typed page: held · the equation field: held · a symbol button: held · a structure button: held · Insert: held · a placed equation: held · a question answer box: held
+PASS CONTROL: on the lesson surface the same key still turns the page  a workbook page tab: 4→5→4 · nothing in particular: 4→5→4
+PASS the same boundary covers graphQuestion, which shares the primitive  in its field 0→0; on the page 0→1
+PASS after ten trips through the editor each key still arrives once  "abc" reads "abc" after 5 cancels; "zz" reads "zz" after 5 more inserts
+PASS CONTROL: a listener left behind per visit would have read "aaaaaabbbbbbcccccc" by now  5 equations placed, field holds 3 characters
+PASS a blank line is still one blank line after the page is re-rendered from the store  stored "one\n\ntwo", re-rendered with 2 breaks
+PASS CONTROL: counting the block break and the <br> inside it would have given three  it did not
+PASS with the editor open at 1280x760, every control is reachable by ordinary scrolling  toolbar, page, symbols, Insert, Cancel and tabs · 0px sideways
+PASS with the editor open at 1366x720, every control is reachable by ordinary scrolling  toolbar, page, symbols, Insert, Cancel and tabs · 0px sideways
+PASS with the editor open at 1280x680, every control is reachable by ordinary scrolling  toolbar, page, symbols, Insert, Cancel and tabs · 0px sideways
+PASS with the editor open at 1024x640, every control is reachable by ordinary scrolling  toolbar, page, symbols, Insert, Cancel and tabs · 0px sideways
+PASS with the editor open at 414x860, every control is reachable by ordinary scrolling  toolbar, page, symbols, Insert, Cancel and tabs · 0px sideways
+PASS with the editor open at 360x780, every control is reachable by ordinary scrolling  toolbar, page, symbols, Insert, Cancel and tabs · 0px sideways
+PASS at 414x860 Insert stays on the same screen as the equation field  382px below the field, in a 860px viewport
+PASS CONTROL: an uncapped ribbon at 414x860 pushes it off the bottom instead  491px below the field without the cap
+PASS at 360x780 Insert stays on the same screen as the equation field  355px below the field, in a 780px viewport
+PASS CONTROL: an uncapped ribbon at 360x780 pushes it off the bottom instead  490px below the field without the cap
+PASS CONTROL: holding the writing floor open is exactly what put Insert below the fold  Insert at 675 now, 880 with the floor, in a 760px viewport
+PASS a student is told nothing about response modes, because they do not choose one
+PASS the author’s three previews name themselves and say which one is on  Paper=false · Pen=true · Typed=false
+PASS the ink tools are named and say which is selected  Pen=true · Eraser=false · Clear · Expand=false
+PASS the workbook page tabs name themselves and mark the current one  Page 1 (current) · Add a workbook page
+PASS the Type tools are named, and Text/Equation say which is active  Text=true · Equation=false · Clear · Expand=false
+PASS the equation field is a named text box, not an anonymous styled span  role=textbox, tabindex 0, "Equation — type it, or use the symbol and structure buttons"
+PASS the editor and its two ribbons are named groups  Equation editor: Symbols + Structures
+PASS Insert and Cancel are named  Cancel · Insert
+PASS a placed equation is announced as something operable, and says what it holds  role=button, "Equation 4 — select to edit"
+PASS CONTROL: role="math" alone would have announced it as static text with no hint it can be opened  it is button
+PASS an empty slot in a fraction is visible  2 slots, dotted
+PASS CONTROL: unstyled, the slot has no border and there is nothing to aim at  none
+PASS the narrow Questions / Workbook switch says which region is showing  Questions=true · Workbook=false
+PASS deleting every Type-only rule changes the Type surface and nothing else  23 rules removed · Type changed · Practice — Write, Notes, Video, legacy geolearn text, legacy geolearn video identical
+PASS CONTROL: the same deletion visibly moves the Type surface, so "identical" means something  Practice — Type changed under 23 deletions
+PASS and it does not reach graphQuestion, which uses the same maths primitive  23 rules removed → identical
+PASS every section ran  7 sections
+PASS no page error while typing, editing or navigating  none
+
+53/53 checks passed

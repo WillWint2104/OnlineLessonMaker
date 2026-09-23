@@ -13,7 +13,7 @@ const DIR = path.join(root, 'docs/atlas/space-study');
 const R = JSON.parse(fs.readFileSync(path.join(DIR, 'space-study.json'), 'utf8'));
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 for (const kind of ['clean', 'overlay']) {
   const card = (a) => {
     const dead = a.side ? a.verticalHole * a.readingSlot : a.unusedColumns * a.blockHeight;

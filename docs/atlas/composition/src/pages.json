@@ -302,7 +302,7 @@
     "pattern": "visual.explanation",
     "title": "The mirror down the middle",
     "lede": "Where *y* = *x*^2 reaches a height of 9, and why it does so twice.",
-    "c": "A PORTRAIT PLANE, which takes `down-8` — eight columns CENTRED on the twelve. Not eight hard against the left with four unnamed beside them: free columns beside prose are the reading measure doing its job, free columns beside media are nothing. 760px wide and 952px tall, and the page scrolls.",
+    "c": "A BALANCED PLANE on down-8: a centred eight-column plane measuring 760 × 755, followed by the reading at its own measure.",
     "slots": {
       "media": [
         {
@@ -468,7 +468,7 @@
           "block": "keyIdea",
           "label": "When a page is one object",
           "paragraphs": [
-            "Give a wide plane the whole grid only when its shape earns it. A plane taller than it is wide takes this pattern's centred subdesign instead — eight of the twelve columns, centred, rather than a negotiated width."
+            "Give a wide plane the whole grid only when its shape earns it. A plane taller than it is wide takes this pattern's centred subdesign instead — ten of the twelve columns, centred, rather than a negotiated width."
           ]
         }
       ]
@@ -779,7 +779,7 @@
     "pattern": "visual.explanation",
     "title": "Where the curve reaches 9",
     "lede": "A plane no taller than it is wide, at the same eight columns as a tall one.",
-    "c": "A BALANCED PLANE, which takes `side-6` — six columns of plane beside six of reading. The pattern's side-by-side row was once removed for leaving 734px of nothing under a reading column beside a PORTRAIT plane; it returns only for the balanced class, at a width the pattern approves, and this page carries the adversarial payload that proves the pairing survives content it was not written for.",
+    "c": "A BALANCED PLANE on down-8. The plane occupies eight columns above the reading; the authored text length does not choose the arrangement.",
     "slots": {
       "media": [
         {
@@ -827,7 +827,7 @@
     "pattern": "worked.single",
     "title": "Solving *x*^2 = 16",
     "lede": "One worked example, and the move it instances.",
-    "c": "THE GAP THE REVIEW FOUND. The catalogue had no home for a SINGLE worked example — `visual.compare` needs a pair and `notes` needs a set — so two of the four subtopics of its own lesson could not be laid out. With no scenario the beside row collapses and the solution returns to the measure.",
+    "c": "A SINGLE worked example, with the optional scenario omitted and the solution at the reading measure.",
     "slots": {
       "intro": [
         {

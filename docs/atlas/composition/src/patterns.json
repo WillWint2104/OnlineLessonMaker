@@ -350,8 +350,8 @@
         "slotAnchor": "full"
       }
     ],
-    "readingMeasure": "interpretation is 466px in `side` and 760px in `stacked` — both inside the measure, and both a grid position rather than a chosen number.",
-    "mediaSlotBehaviour": "THE SLOT DECIDES THE WIDTH; THE AUTHORED DOMAIN DECIDES THE HEIGHT. Four approved desktop spans — 6, 7, 8 and 12 columns — and the renderer may not invent a fifth. The aspect class selects the family and span promotion selects among spans that clear the media's minimum legible width. There is no height ceiling: if a six-column slot makes a tall plane 950px high, the page scrolls.",
+    "readingMeasure": "Interpretation uses the approved eight-column desktop reading measure below the plane.",
+    "mediaSlotBehaviour": "The slot decides the width and the authored domain decides the height. Approved desktop spans are 8 and 12 columns. Aspect selects the family; span promotion selects a legible approved span. Height remains intrinsic and the page scrolls.",
     "disclosureAllowed": [
       "inline",
       "expand"
@@ -365,8 +365,6 @@
     "residueRisk": "A SIDE-BY-SIDE SUBDESIGN WAS DESIGNED, RENDERED, MEASURED AND REMOVED. Seven columns of plane beside five of reading fills the surface exactly and looks right when the reading runs to four paragraphs; with a one-sentence reading it left roughly 600px of empty column — the same rail this project has now rejected three times. A composition whose soundness depends on HOW MUCH PROSE THE AUTHOR HAPPENED TO WRITE is content-dependent, and content is exactly what may never decide a composition. So every visual pattern in this catalogue stacks its media and its reading, and the aspect class chooses only how wide the plane is.",
     "approvedProseSpans": {
       "desktop": [
-        5,
-        6,
         8
       ],
       "tablet": [
@@ -376,7 +374,7 @@
         4
       ]
     },
-    "promotionOrder": "Within one (surface, aspect class) the approved subdesigns are ordered by slot span ascending and the FIRST the object says it can inhabit is taken. balanced: 6 -> 8 -> 12 · landscape: 8 -> 12 · portrait: 8 -> 12 · wide: 12.",
+    "promotionOrder": "Within one surface and aspect class, select the first feasible approved span: balanced, landscape and portrait 8 -> 12; wide 12.",
     "approvedSlotSpans": {
       "desktop": [
         8,
@@ -599,7 +597,7 @@
           "interpretation interpretation interpretation interpretation interpretation interpretation interpretation interpretation . . . .",
           "support support support support support support . . . . . ."
         ],
-        "notes": "An upright plane still crosses the reading measure, but not by every column: ten columns is 956px of object against a 760px reading, unmistakably the page without the height that twelve would buy (a portrait plane at the full grid measures 1152x1469). Same left edge as the prose, a shorter break-out. RENAMED IN INTENT, NOT IN NAME: `centred` is now anchored `start`; the id is left alone so the page fixture that selects it keeps working, and the catalogue adoption pass renames it.",
+        "notes": "A primary upright plane occupies ten columns, centred at columns 2–11. The reading returns to its left edge beneath; the media slot anchor is center.",
         "slotSpan": 10,
         "slotAnchor": "center",
         "whyCentred": "A STANDALONE PRIMARY OBJECT SITS ON A CENTRED MEDIA STAGE. Ten columns — the width role x geometry gives a primary portrait, unchanged — centred on the page at columns 2-11, with the reading returning to its own left edge beneath. Two named regions doing different jobs, not a mixed axis. Step 1 anchored it to the reading edge instead, which was structurally legal and visibly worse: an obvious rail of nothing down the right, and a standalone object that looked unfinished rather than staged. Ruled and approved from the `media.full/plate-wide` prototype."

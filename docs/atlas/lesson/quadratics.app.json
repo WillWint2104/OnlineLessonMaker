@@ -74,7 +74,7 @@
               "steps": [
                 {
                   "id": "s1",
-                  "text": "Square it. A value between −1 and 1 always gets smaller, not larger.",
+                  "text": "Square it. A number between 0 and 1 gets smaller when it is squared, not larger.",
                   "math": "_y_ = 0.2 × 0.2 = 0.04"
                 },
                 {
@@ -124,7 +124,7 @@
           "relations": [
             {
               "kind": "prose",
-              "body": "Substitution never changes the rule — it only replaces _x_. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a decimal below 1 gets smaller rather than larger."
+              "body": "Substitution never changes the rule — it only replaces _x_. The brackets keep the whole value together: a negative loses its sign when squared, a fraction is squared top and bottom, and a positive decimal below 1 gets smaller rather than larger."
             },
             {
               "kind": "prose",

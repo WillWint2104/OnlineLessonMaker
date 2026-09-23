@@ -432,7 +432,8 @@ ${html}
       d.innerHTML = c.lines.map(([k, v]) => `<div><b>${k}</b><i>${String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</i></div>`).join('');
       sec.appendChild(d);
     }
-    document.body.innerHTML = document.body.innerHTML.replace(/\{\{INS:[a-z]+\}\}/g, '');
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) walker.currentNode.nodeValue = walker.currentNode.nodeValue.replace(/\{\{INS:[a-z]+\}\}/g, '');
   }, { cards: rows.map((r, i) => ({ klass: secs.filter((s) => !s.missing)[i].klass, ok: r.fit.ok, lines: r.lines })) });
   await pg.waitForTimeout(120);
 

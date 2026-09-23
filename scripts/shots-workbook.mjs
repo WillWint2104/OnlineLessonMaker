@@ -88,7 +88,7 @@ const shot = async (p, name, sel) => {
   await shot(p, '07a-page-1-ink');
   // 8 — away and back
   await p.evaluate(() => go(0)); await p.waitForTimeout(200);
-  await p.evaluate(() => go(4)); await p.waitForTimeout(300);
+  await p.evaluate(i => go(i), PRACTICE); await p.waitForTimeout(300);
   await shot(p, '08-navigate-away-and-back');
   // 9 — the drawer, with the workbook state intact
   await p.evaluate(() => rpNavToggle()); await p.waitForTimeout(200);
@@ -97,8 +97,8 @@ const shot = async (p, name, sel) => {
   const bundle = await p.evaluate(() => {
     const d = tpRespGet('practice-equations', 'workbook');
     d.value.pages[0].text = [{ t: 'p', v: 'y = x² so when x = 3, y = 9' }];
-    document.querySelector('[data-mx-resp="type"]').click();
-    document.querySelector('[data-mx-resp="write"]').click();
+    mxSetResponseMode('type');
+    mxSetResponseMode('write');
     const b = tpRespBundle().pages['practice-equations'].workbook;
     return { kind: b.kind, mode: b.value.mode, current: b.value.current,
       pages: b.value.pages.map((x) => ({ id: x.id, ink: x.ink.length, text: x.text.length })) };

@@ -21,7 +21,8 @@
 // ABORTED in both pages, so a render is a pure function of the engine and the lesson JSON. Both
 // sides are driven by one browser instance under identical conditions.
 //
-// EXIT CODE. 0 when every unit matches, 1 on any mismatch or setup failure — so it is usable as a
+// EXIT CODE. 0 when every unit matches or its full before/after hashes match a documented content
+// repair in tests/corpus-transitions.json; 1 on any other mismatch or setup failure — usable as a
 // gate. It is NOT wired into CI: it needs Playwright + Chromium, which only the (informational,
 // non-gating) screenshots workflow installs, and changing what gates merge is a maintainer call.
 //
@@ -29,6 +30,7 @@
 // a wall-clock number from one shared runner is not a repeatable benchmark, and treating it as a
 // threshold would make the suite flaky. Introduce a real methodology before asserting on it.
 import { chromium } from 'playwright';
+import {createHash} from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -156,6 +158,15 @@ fs.rmSync(tmp, { recursive: true, force: true });
 const keys = [...new Set([...Object.keys(A.out), ...Object.keys(B.out)])].sort();
 const diffs = keys.filter((k) => A.out[k] !== B.out[k]);
 const same = keys.length - diffs.length;
+// A bounded repair may intentionally restore lost content. Pin BOTH complete DOM hashes;
+// no selectors, themes or fixtures are skipped, and any further drift still fails.
+const transitionPath=path.join(root,'tests/corpus-transitions.json');
+const transitions=fs.existsSync(transitionPath)?JSON.parse(fs.readFileSync(transitionPath,'utf8')):{};
+const digest=s=>createHash('sha256').update(s||'').digest('hex');
+const verified=diffs.filter(k=>transitions[k]?.before===digest(A.out[k])&&transitions[k]?.after===digest(B.out[k]));
+const unexpected=diffs.filter(k=>!verified.includes(k));
+const report=arg('report','');
+if(report)fs.writeFileSync(report,JSON.stringify(Object.fromEntries(diffs.map(k=>[k,{before:digest(A.out[k]),after:digest(B.out[k])}])),null,2));
 
 console.log(`corpus: ${corpus.length} lesson(s) × ${THEMES.length} theme(s) = ${keys.length} render units`);
 if (onlyRef.length) console.log(`  only in ${REF}: ${onlyRef.join(', ')}`);
@@ -168,6 +179,7 @@ if (!diffs.length) {
   console.log(`\n✓ ${same}/${keys.length} render units byte-identical`);
   process.exit(0);
 }
+if(!unexpected.length){console.log(`\n✓ ${same}/${keys.length} render units byte-identical; ${verified.length} exact content-repair transitions verified`);for(const k of verified)console.log('  ✓ '+k+' — '+transitions[k].reason);process.exit(0);}
 console.log(`\n✗ ${diffs.length}/${keys.length} render units DIFFER (${same} identical)`);
 for (const k of diffs.slice(0, MAX_DIFFS)) {
   const [lesson, theme, slide] = k.split('|');

@@ -488,7 +488,7 @@ function slotMarkup(pattern, s, content, ctx) {
      with itself and the inspector would report a hole it could not see. */
   const a = ctx.area;
   const cols = a ? ` data-cols="${a.c0 + 1}\u2013${a.c1 + 1}" data-span="${a.cols}"` : '';
-  const med = MEDIA_SLOTS.has(s.slotType) ? ' data-media-slot' : '';
+  const med = MEDIA_SLOTS.has(s.slotType) ? ' data-media-slot' + (ctx.slotAnchor ? ` data-slot-anchor="${esc(ctx.slotAnchor)}"` : '') : '';
   return `<div data-slot="${esc(s.name)}" data-slot-type="${esc(s.slotType)}" data-occupancy="${esc(s.occupancy)}"${scrollY}${fit}${cols}${med}>`
     + (s.label ? `<p class="cp-lab">${esc(s.label)}</p>` : '') + inner + `</div>`;
 }
@@ -1133,7 +1133,7 @@ for (const page of SELECTED) {
       REPORT.push({ image: name, shell: page.shell || null, state: state.key || null,
         pattern: page.shell ? m.grids.map((G) => G.pattern).join(' + ') : page.pattern,
         subdesign: m.grids.map((G) => G.subdesign).join(' + '), surface,
-        aspect: r.built.instances[0] ? r.built.instances[0].aspect : null,
+        aspect: m.grids.map(G => r.built.instances[G.inst]?.aspect).filter(Boolean).join(' + ') || null,
         pageHeight: m.docH, sig: sig(m) });
       console.log(`  ${name.padEnd(50)} ${String(r.g.width).padStart(4)}px page ${String(m.docH).padStart(5)}px  `
         + m.grids.map((G) => `${G.pattern}/${G.subdesign}`).join(' + '));

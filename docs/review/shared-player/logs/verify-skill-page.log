@@ -1,0 +1,33 @@
+--- one skill is one instructional section ---
+PASS A SKILL IS ONE SURFACE — notes, video, worked examples and practice in one page, in that order  Notes and method → Watch: factorising monic quadratics → Worked examples → Practice
+PASS …and every part of it is actually there  5 concept(s) · 4 example(s) · 16 step(s) · 7 question(s)
+PASS …and a group keeps its teaching title, which the tab bar used to carry  The same method, three sign patterns | When a common factor comes out first
+PASS NO TAB STRIP — the student never switches to reconstruct one skill  0 tab(s)
+PASS the rail names the skill by its teaching title and its number  "Factorising monic quadratics Skill 1"
+PASS NO NOTATION REACHES THE STUDENT AS LITERAL TEXT  no _x_ or ^n markers survive anywhere on the page
+
+--- the lesson JSON decides how a student answers ---
+PASS PAPER IS THE DEFAULT FOR A SKILL-BASED LESSON — one that says nothing gets paper  no responseMode → "paper"
+PASS …and `pen` and `typed` are names for the values already in 24 committed lessons — no migration  pen→write · typed→type · write→write · type→type
+PASS …and an unknown mode falls back rather than pretending — the old code silently made "paper" a pen workbook  "nonsense" → "paper"
+PASS ON PAPER THERE IS NOTHING DIGITAL TO ANSWER INTO — no input, no workbook, no view switch  0 input(s) · 0 workbook(s) · 0 view switch(es)
+PASS …and the table question’s empty cells become ruled blanks to copy, not fields  4 blank cell(s), 0 input(s)
+PASS A STUDENT NEVER CHOOSES THE MODE — the selector is absent in Study, in every mode  paper 0 · pen 0 · typed 0 control(s)
+PASS CONTROL: in EDIT the author gets a preview control, so "absent in Study" is measured and not blind  3 preview control(s) in Edit
+PASS …and the preview changes the session, never the saved lesson  meta.responseMode stays "paper" while the page previews "type"
+
+--- the video is real or it is honest ---
+PASS A REAL URL IS EMBEDDED, through the app’s own allowlist gate  https://www.youtube.com/embed/ABCDEFGHIJK
+PASS NO URL MEANS NO PLAYER — an author-facing notice, and not one simulated control  0 iframe(s) · 1 notice(s) · 0 simulated player part(s)
+PASS …and a dangerous or non-allowlisted address is refused, not framed  0 iframe(s) for a javascript: URL
+
+--- the JSON decides how many skills ---
+PASS a lesson of 1 skill(s) lists 1 in the rail, numbered in order  Skill topic 1 Skill 1
+PASS a lesson of 3 skill(s) lists 3 in the rail, numbered in order  Skill topic 1 Skill 1 | Skill topic 2 Skill 2 | Skill topic 3 Skill 3
+
+--- the mode is re-read when a new lesson is loaded ---
+PASS a lesson loaded through the ⌗ dialog is on the mode it authored  pen → "write"
+PASS AND THE NEXT LESSON BRINGS ITS OWN — the previous lesson’s mode does not survive the load  then paper → "paper", 0 input(s), 0 workbook(s)
+PASS no page error anywhere  none
+
+22/22 checks passed

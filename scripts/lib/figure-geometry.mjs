@@ -311,8 +311,8 @@ async function realise(key, fig, bounds, avail, boxForWidth, label) {
   const slope = (top.h - bot.h) / (maxW - minW);
   let w = Math.max(minW, Math.min(maxW, Math.floor(minW + (H - bot.h) / slope)));
   let box = await solve(w);
-  for (let i = 0; i < 12 && box.h > H && w > minW; i++) { w = Math.max(minW, w - 4); box = await solve(w); }
-  if (box.h > H) return { box: bot, bound: 'height', yielded: true };
+  while (box.h > H && w > minW) { w = Math.max(minW, w - 4); box = await solve(w); }
+  if (box.h > H) return { box: bot, bound: 'height', yielded: false };
   return { box, bound: 'height', yielded: false };
 }
 

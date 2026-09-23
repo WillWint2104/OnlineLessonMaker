@@ -1,0 +1,7 @@
+corpus: 6 lesson(s) × 5 theme(s) = 250 render units
+reference: 2189477ef628e002a18323fe1e0ee1234e3b68bb (2189477)   ·   subject: working tree
+render time: 646ms / 662ms (informational — not a benchmark, never fails the run)
+
+✓ 248/250 render units byte-identical; 2 exact content-repair transitions verified
+  ✓ examples/imperium-questions.json|microhistory|1 — Restore all authored Microhistory quiz questions instead of rendering an empty paragraph scaffold; verify-pack-fixes checks attempt gating and accessible reveal.
+  ✓ examples/microhistory-questions.json|microhistory|1 — Restore all authored Microhistory quiz questions instead of rendering an empty paragraph scaffold; verify-pack-fixes checks attempt gating and accessible reveal.

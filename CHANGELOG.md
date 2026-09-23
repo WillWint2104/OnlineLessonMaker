@@ -7,6 +7,321 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Shared-player integration corrections
+- Current authoring verification: `verify-mx-authoring.mjs` passes 54/54; historical stage counts below describe their original runs.
+- Resolve the substantive PR #153/#154 review findings: preserve the factoring recap through notes,
+  correct mathematical wording, reuse seeded authoring items, remove duplicated activity introductions,
+  and keep subset verification results independent. Refresh the affected learner evidence.
+- Correct atlas reporting and bounded solver/overflow checks, portable browser launch paths, visible
+  figure measurements, and stale pattern documentation. Details are in the review resolution record.
+- Reject reserved object-key identities on activity import/publication. An imported skill named
+  `__proto__` previously passed validation but could not retain activity navigation; question identities
+  now receive the same guard. Lesson identity must be a non-empty string.
+- Restore authored Microhistory quizzes through the existing quiz renderer; the paragraph fork had
+  silently rendered no quiz questions. Retain all questions, attempt gating and accessible reveal.
+- Correct five stale legacy harness assumptions without dropping their behavioral checks: explicit
+  media fixtures and async downloads, theme-specific Focus controls, actual Present navigation gating,
+  explicit placeholder fixtures and the infographic XSS fixture's renderer selection.
+- Pin only the two complete before/after corpus DOM hashes affected by quiz restoration; all other
+  renders remain strictly byte-identical. Refresh shared-player exports and non-monic review evidence.
+- Correct the activity-player authoring documentation: adding skills and detailed worked/table/figure
+  editing remain JSON-only in the new flow; existing standalone mathematics editors remain available.
+- Address CodeRabbit's deferred workflow-input filters and run the shared-player gate in mathematics CI.
+  No hosting or auto-merge configuration changes.
+
+### Added
+- **Stage 6 · 1 — a skill, not a stack of slides.** The factorising review found the lesson arriving as a
+  run of page types (notes, then video, then practice) with the instruction for one skill scattered across
+  three transitions. A `skill` page puts one skill's whole instruction on one scrolling surface —
+  **notes → video → worked examples → practice**, numbered, in that order — and the rail names it by what it
+  teaches. This is the first skill only (`docs/atlas/lesson/factorising-skills.app.json`, *Factorising monic
+  quadratics*, paper mode); the full lesson is not rebuilt.
+  - **THE DOCUMENT ROOT IS UNTOUCHED.** A skill is a registered page — `registerPage('mathematics','skill',…,
+    {surface:'panel'})` — so it is an entry in the existing `slides[]`, reached by the existing rail, keyed by
+    the existing `tpPageEntry()` branch. No `{lesson:{skills:[]}}` re-root (89 app references, 22 gates and 24
+    lesson files would have moved), and `notes`, `practice`, `videoShell` and `summary` all still render as
+    they did — the audit's ten-slide lesson is unchanged, unit for unit.
+  - **NOTHING IS RENDERED TWICE.** `mxConceptList()` and `mxQuestionList()` were lifted out of `mxNotesPage`
+    and `mxPracticePage` so the skill calls the same code the standalone pages call; worked examples reuse
+    `mxWexGroups`/`mxWexGroup` as-is. The one thing the skill does not inherit is the worked-example tab strip
+    — a tab hides the second group behind a click, which is the compression the review complained of — so the
+    groups stack, each under its own `.mx-sk-gh` heading, and no title is lost.
+  - **NOT A SLIDE-HEIGHT BOX.** `.mx-skill` is a column that grows; the skill measures **3668px past the
+    fold** at 1440×900 and scrolls in `.mx-page`, which is what a complete instructional section costs.
+  - **A PLAYER IS NEVER FAKED.** `mxVideoRegion()` gates the URL through the app's existing `safeUrl()` +
+    `toEmbed()` and only then writes an `<iframe>`. With no URL — which is the state of this skill, no address
+    having been supplied — it writes an author-facing note asking for one; with a URL the embed gate refuses
+    (a `javascript:` scheme, a host off `EMBED_HOSTS`) it names the address and says so. It never draws a
+    scrubber, a duration, a chapter list or a transcript that no video is behind.
+- **Stage 6 · 2 — the response mode is the lesson's, and the student does not vote on it.** `MX_RESPONSE_MODES`
+  gains `paper` beside the existing `write` and `type`, read once from `meta.responseMode`.
+  - **THE INTENDED VOCABULARY, WITHOUT A MIGRATION.** `MX_RESPONSE_ALIAS` (null prototype) maps
+    `paper→paper`, `pen→write`, `typed→type`, with the stored names still accepted, so an author may write the
+    three words the milestone specifies while the 24 committed lessons keep the values they were authored
+    with and are not touched. An unrecognised mode warns once and falls back.
+  - **PAPER MEANS NOTHING TO TYPE INTO.** `mxWritesResponses()` returns false on paper, which already removed
+    the workbook, the tools and the view switch; the residue was the table cells, which still wrote
+    `<input class="mx-cell">`. They now write a ruled `td.mx-blank` carrying the "answer in your book" label.
+    Measured on the skill: **0 inputs, 0 workbook, 0 view-switch buttons**, and the control with `mxOnPaper()`
+    forced false puts 4 inputs back.
+  - **STUDY MODE OFFERS NO CHOICE.** The three-way control renders only in Edit, labelled *Preview*, and sets
+    a session variable — it never writes `meta.responseMode`, so previewing pen does not change what the class
+    is given. In Study the saved JSON is the only authority and the control is absent in all three modes.
+  - **THE GATES THAT USED THE STUDENT'S BUTTON WERE RE-AIMED, NOT RELAXED.** `verify-type-interaction` and
+    `verify-workbook` reached the typed workspace by clicking the selector; they now set the mode through the
+    engine's own `mxSetResponseMode`, which is exactly what the preview button calls, so the workspaces are
+    exercised identically (53/53 and 84/84, unchanged counts). `verify-responsive-shell`'s five assertions on
+    the selector became six harder ones: absent on EVERY page in Study *and* after an author has previewed,
+    the authored mode still in force there, named Paper / Pen / Typed in Edit, and `meta.responseMode`
+    untouched by previewing. Driving `authorMode()==='edit'` to `true` fails the first of them.
+  - **`scripts/verify-skill-page.mjs`** (22 checks) pins all of the above: the surface and its four parts, the
+    group titles, the rail's instructional name and number, that no notation reaches the student as literal
+    text, the alias table and the fallback, the missing-video and refused-URL notices, that a one-skill and a
+    three-skill lesson list one and three, and the reload defect below. Three of its assertions are driven to
+    failure first, so a control that cannot fail is not counted as a pass.
+- **Stage 5 · 4 — the repetitive operations, from the friction log.** Three findings, three small changes,
+  all in the panel.
+  - **EVERYTHING YOU ADD ARRIVES READY TO TYPE INTO** (§4). A new group arrives with one example, a new
+    example with one step — the shape the palette's page always had. One definition of "a new example",
+    used by both adds, so the two cannot drift. The page no longer reads "This example has no solution
+    steps yet." on the way to being written.
+  - **A TABLE IS GIVEN ITS COLUMNS** (§5). A **Columns** field above the grid, so a six-column table of
+    values is one entry rather than four 「＋ Add column」 clicks. Same mutation as the button, which stays.
+  - **SHIFT TAKES A ROW THE WHOLE WAY** (§6). ↑ and ↓ still move one place; holding Shift moves the row to
+    the top or the end, so putting the last step of a five-step solution first is one click rather than
+    four. For adjacent positions the splice is exactly the swap it replaced, so the ordinary click is
+    unchanged.
+  `verify-quadratics-authoring` was deliberately re-aimed for the new seeding — it rebuilds the whole
+  quadratics lesson through the panel, and its loop counted on adds arriving empty. It now adds one fewer
+  control per example and per step, and pays one delete for each of the two groups the lesson ends with
+  that carry no worked example, which is a legitimate authored shape.
+- **Stage 5 · 3 — a curve can be told from the one beside it.** Four curves on one plane were painted
+  `rgb(15, 122, 76) / 2px / none` — one distinct style — and `figGraph` collected a function's `label` that
+  the painter never drew, so *Comparing steepness* had to be carried entirely by the prose beside the
+  picture (FINDINGS.md §3). Two new authored keys, and the Figure Engine's geometry, placement solver and
+  composition rules are untouched.
+  - **A PEN, SHAPE FIRST.** `{"type":"function", "pen":"dashed"}` — also `dotted`, `dashdot`, and `quiet`
+    for a background curve. A dash pattern differentiates in **every** theme, survives a photocopied
+    worksheet, and does not ask a reader to tell two teals apart (WCAG 1.4.1) — which a second colour
+    token would have, since the mathematics pack declares one accent and three packs declare no
+    `--secondary` at all. `quiet` is the one ink variation and borrows the token the reference line
+    already uses. The class is **looked up, never assembled**: `figDraw` interpolates `class="${cls}"` raw
+    and escapes only text, so the map has a null prototype and its value is re-checked as a string —
+    an authored `"pen":"constructor"` draws the ordinary curve and reaches no attribute.
+  - **A NAME, OPTED INTO PER FIGURE.** `curveLabels:"shown"` on the figure, in the same vocabulary as
+    `grid` and `callouts`, draws each curve's `label` at the end of its longest arm. It is opt-in because
+    **38 committed function objects already carry a `label`** written before any painter could draw one;
+    drawing them unasked would have re-rendered two lessons and five fixtures. Typing a name in the panel
+    turns the switch on the first time, so the field is not a dead end for the author in front of us. The
+    name is an obstacle as well as a mark — `figFnLabBoxes` reserves exactly the geometry `figFnLabAt`
+    paints, at both the inline and the expanded-workspace solve — so no point identifier lands on it.
+  - **Inertness, measured**: `figure-render` reports **0 moved · 36 added · 0 removed** — every one of the
+    240 existing units byte-identical, the 36 new ones from `tests/visual/lessons/figure-curve-identity.json`,
+    a fixture added in the same change because nothing already committed carries a pen or asks for names,
+    and a feature with no rendered coverage is a feature that ships untested. Its third slide is a figure
+    that carries labels and does *not* ask for them, which must keep rendering exactly as it did.
+- **Stage 5 · the two mathematical defects the authoring review found.** Both are the smallest change that
+  fixes them: `figParse` is not touched, the lesson schema is not migrated, and no editor framework arrives.
+  - **AN EXPRESSION THAT READS DIFFERENTLY FROM HOW IT WAS TYPED NOW SAYS SO.** `1/2x+1` is a valid
+    expression that draws a hyperbola, because a juxtaposition binds tighter than division — the one finding
+    that put wrong mathematics in front of a class while reporting nothing. `figAmbiguous()` re-reads
+    `figTok`'s token stream (it does **not** re-parse; re-binding division would silently re-read `sin 2x`
+    and every committed lesson) and, where a divisor swallows a run of two or more adjacent atoms, shows the
+    reading under the field: *Reads as `1/(2·x)+1` — a factor written next to the divisor is taken into it.
+    If that is not what you meant, bracket it.* Live as you type, **in the inspector only** — never on the
+    page: `.tp-fig-err` is for an expression the engine cannot read, and this one it can. Bracketing it —
+    `(1/2)x+1` — silences the warning and straightens the curve. The field's own help now states the rule
+    before the mistake is made.
+    Three things it deliberately does not do, each with a gate assertion behind it: it does not speak when
+    `figParse` already rejects the expression (`1/2x(` is the keystroke state of someone typing
+    `1/2x(x+1)`); it does not speak when the swallowed run carries no variable, because `1/2pi` *is*
+    1/(2π) and advising an author to bracket π is wrong; and **the reading it shows is one the engine reads
+    back the same way** — `figTok` discards whitespace, so pasting the tokens together would render
+    `1/2 sin x` as an unparseable `1/(2sinx)` and `1/2 3` as `1/(23)`, a different number. A juxtaposition
+    is written out as the multiplication it is. Every flagged reading is parsed back and evaluated against
+    its source at six values of *x*, and every function expression in every committed lesson is put through
+    the detector and must not be flagged.
+  - **A FRACTION OF TWO BRACKETED DIFFERENCES NOW BUILDS UP.** `_m_ = (5 − 2)/(5 − 1)` — the substitution
+    step the whole gradient method turns on — kept a slash while its own answer `−2/3` built up, because the
+    grammar took a bracketed *signed integer* and not a bracketed *sum*. `MX_FRAC_T` now also admits a
+    bracketed run of signed integers joined by `+` or `−`, at most three joins, with one level of nesting
+    for an operand so `(4 − (−2))` reads. Its single use site is unchanged, so **one side must still be
+    bracketed** — which is what keeps `1914 / 1918` a year range and `rise/run` a slash. A variable
+    numerator is still deliberately a slash.
+    Measured over **every distinct string in every committed lesson** (1950 of them): exactly **two** render
+    differently, and both are the gradient working lines of `straight-lines.app.json`.
+    Two corpus-wide invariants now guard `mxM` against the *next* widening, whatever it is: no committed
+    string loses or gains a visible character, and no built-up fraction is a division that was not written
+    with those two operands. A line break is not a space — the sum's padding is spaces and tabs, so
+    `(1 +⏎2)/3` stays two lines of prose.
+    **Known and accepted**: a bracketed numeric range divided by a number now builds up wherever it appears,
+    so `pages (10 - 12)/2` would set as a fraction. It is arithmetic, no committed lesson writes it, and the
+    three-digit bound is what still keeps `1914 / 1918` out — which is now pinned by three negative controls
+    that fail the moment that bound is relaxed. Nesting is one level deep: `((5 − 2) − 1)/3` stays a slash.
+- **A lesson that did not exist, made in the application — and a record of what got in the way.**
+  `scripts/author-straight-lines.mjs` authors *Straight lines: y = mx + c* (NSW Stage 5, Year 9) entirely
+  through the interface: four subtopics, four worked examples, eleven steps, a six-column table of values,
+  two graphs carrying four curves, a deliberate step reorder, then export and reopen. **189 interactions**
+  — 56 outline selections, 39 buttons, 94 fields. It exports, reopens byte-identical, and renders intact in
+  Study, Edit and Present with no page errors. The lesson is `docs/atlas/lesson/straight-lines.app.json`; the captures and
+  the findings are in `docs/atlas/authoring/`.
+  The topic was chosen to stress what quadratics never did: gradients are fractions, a sloping line is not
+  the `line` object the graph editor offers, and three lines share one plane.
+  **Ten findings, each measured during the run** (`docs/atlas/authoring/FINDINGS.md`), ranked by what to fix
+  first. Nothing prevented the lesson from being made; two put something wrong on the page without saying so:
+  - **`1/2x+1` is read as `1/(2x)+1`** — juxtaposition binds tighter than division — so a gradient of a half
+    draws a hyperbola. 4 broken subpaths against 3 for `x/2+1`, and **no error is reported**, because the
+    expression is valid; it is simply not the one the teacher wrote.
+  - **`(5 − 2)/(5 − 1)` does not build up** while `(−4)/6` and `−2/3` do: the grammar takes a bracketed
+    signed integer or bare digits, not a bracketed sum. So a gradient example's answer sets as a fraction
+    and the working that produces it does not. 3 of 6 step expressions kept a slash.
+  - **Four curves, one style** (`rgb(15, 122, 76)/2px/none`): no colour, weight or dash per graph object,
+    and a function's `label` is never painted — so a subtopic comparing three gradients cannot say which
+    line is which.
+  - **Everything you add arrives empty** — a new group with no examples, a new example with no steps and a
+    page that says so — while the page created from the palette arrives seeded with the whole chain.
+  - A six-column table needed 4 add-column clicks and 6 heading replacements before a value could be typed;
+    reordering is one click per place per row; the object named `line` is axis-parallel only; and the axis
+    numbering uses a hyphen where the lesson's prose uses a minus.
+  **No product change was made on the strength of these** — they are the input to the next decision, not a
+  licence to start. The findings argue against a structural equation editor for now, which matches the
+  maintainer's position: the two that put wrong mathematics on the page are about the editor staying silent
+  when what you typed is not what you meant, not about how the expression is stored.
+- **Stage 4 — the authoring experience, on the maintainer's three priorities.** Nothing student-facing
+  moved: `docs/atlas/app-lesson/`'s ten renders are byte-identical and `corpus-identity` is 250/250, so
+  every change below is confined to the Edit panel.
+  - **A PROPER TABLE EDITOR.** The eleven-column table of values was 33 inputs in a single column —
+    3474px of panel against 1000px of screen, and a teacher entering a row could not see the row. It is
+    now an editable grid shaped like the finished table: corner cell, column headings across the top, row
+    headings down the side, a cell per value, ✕ per column and per row, ＋ for each. **The row headings
+    stay put while the values scroll**, exactly as they do in the rendered table, because the panel is
+    340px and a table of values is wider than that in the editor for the same reason it is on the page.
+    Under it, the table as the page will draw it, by `mxPartTable()` itself. The `data-bind` paths are
+    unchanged from the stacked form, so the whole-lesson rebuild needed no edit to keep passing.
+  - **A COMPACT INSPECTOR.** Groups, examples and steps collapse and expand on their own twisty, which
+    never changes the selection — looking through a lesson is not the same act as choosing to edit it.
+    The chain down to the selection is pinned open, because a selected row you cannot see is worse than a
+    long panel. **An add-palette now belongs to the thing you have selected**, where three copies of
+    prose/relations/points/table used to sit on screen at once, above the fields you were reaching for.
+    The Page and Lesson sections fold away — they are set once, not per step — each showing what it holds
+    on its header line, the page's under `mxM()` so a page called `y = _x_^2` does not announce itself as
+    "y = x2". Expansion is session state like `selZone`: golden rule 2 stands, the file is the lesson.
+  - **MATHEMATICS IS ENTERED, NOT REMEMBERED.** Every maths field shows what it will draw, live, under the
+    box — rendered by `mxM()`, **the same function the page uses**, so the preview cannot drift from the
+    render. A notation row types `_x_` (wrapping a selection, or inserting an x for you), `^2`, and −, ×,
+    ÷, ±, ≤, ≥, ≈, √ into the field you last used, and fires a real `input` event so the ordinary
+    data-bind handler saves it — there is no second save path. **A symbol never lands inside an italic
+    run**: after the italic key gives you `_x_` with the x selected, the caret sits between the letter and
+    the closing mark, and the next insert would have produced `_y−_`, which is not notation; an insert
+    that is not itself an italic steps over the closing mark. Found by driving it, not by reading it.
+  - **WHAT IT IS NOT.** This is not a structural equation editor. The lesson stores mathematics as
+    strings; the app's other editor (TPMath, the Type workbook) stores a JSON tree. Moving worked examples
+    onto that tree would change the lesson file format — every existing lesson, the schema and the flat
+    output — and that is the maintainer's call, not this panel's.
+  - **The panel, measured at the places a teacher works** (`scripts/shots-authoring-lesson.mjs`): the
+    table 3474px → **1481px**, marked points 2304 → 1599, the graph window 2208 → 1576, a subtopic
+    1790 → 1519, the relationship list 1700 → 1572, and the lesson as it opens 1134 → 1000. Every view now
+    sits within about half a screen of scroll; the table, which was 2474px off-screen, is 481px.
+    The previews and the notation row cost some of what the folds saved — that is the trade, and it is why
+    the numbers are here rather than an adjective.
+  - **Eleven new assertions in `verify-mx-authoring` (41/41)**, each driven through the real controls and
+    each driven to failure: laying the grid out as a column again, making the twisty a no-op, and removing
+    the preview each make their own check fire.
+- **Stage 3C — the whole quadratics lesson can now be made in the application.** The milestone is that you
+  can open the app, create a mathematics lesson from nothing, author every part of it through the
+  inspector, and export a complete lesson without editing JSON by hand. It is asserted, not asserted-ish:
+  `scripts/verify-quadratics-authoring.mjs` starts from an empty mathematics lesson and rebuilds the
+  committed quadratics lesson through real clicks and real typing — four groups, seven worked examples,
+  nineteen steps, the eleven-column table of values, both graphs with their curves, reference lines and
+  marked points, all six pieces of explanatory prose and the two Symmetry representations — then exports
+  it, reopens it from the file and edits it again. **30/30.**
+  - **The table editor.** Corner cell, column headings, row headings and every cell, each an ordinary
+    `data-bind` path. **Every row is exactly as wide as the headings**: adding a column appends an empty
+    cell to every row and removing one splices the same index out of each, because a ragged table in the
+    JSON is a ragged table on the page — and because `setP` walks an existing path rather than creating
+    it, so the shape has to be complete before a cell can be typed into.
+  - **Parts are one vocabulary in three places.** `prose`, `relations`, `points` and `table` can be added
+    to a group's closing region, to an example's companion or to a step's own — the same list, the same
+    forms, the same reorder, because the renderer already drew them the same way wherever they sat. The
+    selection grammar gains `mx.p` / `mx.v` / `mx.w` for them, and `mxPartsArr` canonicalises the three
+    legal companion shapes onto the array the editor writes.
+  - **The graph keeps its own row and its own address** (`mx.f` / `mx.o`) inside that list, and now moves
+    through the same array as the parts beside it — the closing region renders in authored order, so the
+    outline lists it in authored order.
+  - **The page's own fields** — its title, its opening lede and the name it takes in the rail — are
+    edited in the inspector rather than left to a hand-written file, and **Stage** joins Subject, Year and
+    Unit in the lesson section, because the mathematics header, the crumb and the printed worksheet all
+    read `meta.stage` and nothing could set it.
+  - **A new page is stamped with an id at creation.** `tpRespId()` keys the response store on it and a
+    page without one "does not participate", so a page made in the app would have silently lost the
+    student responses a page loaded from a file keeps. Generated, not typed — like every group, example
+    and step id.
+  - **How "the same lesson" is judged.** Byte-identical JSON is the wrong bar: an `<input>` yields the
+    string `"-6.5"` where a hand-written file holds the number `-6.5`, the editor generates its own ids,
+    and a field the painter never reads can be present or absent without changing anything. So the gate
+    compares twice. The structural comparison runs over a normalised copy and **every class of difference
+    it tolerates is named and counted** — 33 generated ids, 18 typed numbers arriving as their own text,
+    3 blank fields written as `""`, 2 defaults written out in full, 2 curve labels the painter never
+    draws, 1 companion written as a list of one — and an unnamed difference fails it. The rendered
+    comparison is the one that settles it: **every word, every table cell and the actual `d` of all 64
+    painted paths are identical across all four views.**
+  - **And the two lessons photograph the same.** `shots-quadratics-app.mjs --lesson` renders the rebuilt
+    lesson through the app and its own measurements: **all ten renders byte-identical** to the committed
+    lesson's, at desktop and tablet, across every tab and both Symmetry representations, with the same
+    subdesigns and the same px-per-unit (760px `down-8` at 50.98/50.98; 1152px `down-12` at 42.61/42.61).
+    That comparison is deliberately NOT made inside the gate: `.mx-page` is the scroller and the document
+    never scrolls, so a screenshot taken there — viewport, `fullPage` or element — stops at the fold and
+    cannot see the table of values at all. The first attempt photographed two pages whose tables read
+    "0" and "99" and reported them identical, which is the third time this session a probe rather than
+    the page was the defect. The three commands that do make it are in the gate's header.
+  - **Four controls**, each withdrawing one thing the comparisons claim to police: a line of mathematics
+    changed, a heading spliced out without its cells, a table cell changed, a graph window widened. Each
+    fires.
+  - **What it costs a teacher to author the lesson, measured rather than guessed** (`MX_AUDIT=<dir>`):
+    **260 interactions** — 62 outline selections, 52 add/remove buttons, 136 text fields, 2 list fields,
+    8 dropdowns — for 4 subtopics, 7 worked examples, 19 steps, an 11-column table and 2 graphs. Roughly
+    1.6 interactions per authored value.
+  - **The inspector's length, at the places a teacher actually works** (`scripts/shots-authoring-lesson.mjs`,
+    which photographs and measures the REAL lesson rather than a page built for the photograph): 1134px at
+    rest, 1583–2304px on a subtopic, graph or list — against 1000px of visible panel, so one to one-and-a-bit
+    screens of scrolling. **The table editor is the outlier at 3474px**, because it renders one input per
+    heading and one per cell stacked vertically: 33 inputs for an 11-column table, 2474px off screen.
+    Selecting a row always scrolls it into view (measured on every row type); the row only leaves view
+    once you scroll down into the form under it, which is ordinary. Reported, not acted on.
+
+### Fixed
+- **A NEW LESSON KEPT THE PREVIOUS LESSON'S RESPONSE MODE.** `mxResponseMode()` memoises in `MX_RESPONSE`,
+  and the ⌗ dialog's load path reset `LESSON`, `cur`, `TP_RUNTIME` and the responses but not that — so a
+  teacher who opened a pen lesson and then opened a paper one was given a pen workbook on top of a paper
+  lesson, **with four answer inputs on a page that has none**. Found by writing the check for the real
+  loading path rather than the gate's shortcut of assigning `LESSON` directly. One statement at the load
+  site; removing it fails `verify-skill-page`'s new reload assertion with the exact four inputs.
+- **TWO STATEMENTS IN ONE `math` FIELD READ AS ONE.** In the factorising skill, `"? × ? = 12          ? + ? = 7"`
+  separated its two statements with spaces; mathematical typesetting collapses runs of whitespace, so a
+  student read `? × ? = 12 ? + ? = 7`. Seven step fields, authored content, now separated by a comma. The
+  same skill's non-monic answer carried a sentence of advice inside the answer — set in the mathematical
+  face, as part of the result — which is now a `note` on the step it belongs to.
+- **THE MODE BAR SAID STUDY WHILE THE AUTHOR WAS IN EDIT** — and on a mathematics page it is the only mode
+  control on screen. Measured, at the maintainer's request, on the capture that raised it rather than
+  assumed either way: `mode` was `'edit'`, `body` carried `.edit`, `#modeSeg`'s Edit button was marked —
+  and the visible bar marked Study. The earlier finding that the mode logic is correct was measured on
+  `#modeSeg`, which is correct **and hidden here**: a responsive page hides the app header entirely. The
+  two are different elements, and only one of them is on screen. Cause: `renderCanvas` forces `mode` to
+  `'study'` while it paints a responsive page — deliberately, so Edit is true WYSIWYG — and `mxTopBar` is
+  built inside that window. `authorMode()` now reports the author's mode to the chrome while the canvas
+  goes on painting in the rendering one.
+  The assertion that should have caught this read the bar **only after switching back to Study**, the one
+  state in which the defect is invisible. It now reads the bar in both modes and asserts that the app
+  header really is off screen; reverting the fix makes it report `bar marks "study"` in Edit.
+- **The outline no longer opens an example when something else is selected.** `S.e` holds an example index
+  only for some selection kinds; for a graph object or a representation it holds that object's index, and
+  the expansion test read it regardless. `mxInEx()` now names the kinds that mean an example.
+- **`scripts/shots-quadratics-app.mjs` read only one of the three legal companion shapes**, so it reported
+  "0 cells authored" against a page on which it had just counted 24 drawn. It now reads a bare part, a
+  `{parts:[…]}` wrapper and an array alike, as `mxParts()` does. It also gains `--lesson` and `--out`, and
+  finds the staged group by the fact that it authors representations rather than by the id the committed
+  lesson happens to give it — which is what lets it photograph a lesson whose ids the editor generated.
+
 ### Changed
 - **The divider treatment is withdrawn; the worked example separates by space and typography.** The
   maintainer reviewed the corrections below and approved the wrapping fix and the white question ground,
@@ -4321,3 +4636,13 @@ The single-file app (`lesson-studio.html`) carrying:
 
 Known follow-ups (see `HANDOFF.md` §9 roadmap): vendor fonts + model-viewer for school
 firewalls, WW1 design pass, accessibility pass, decide the dormant `task` type.
+# Shared activity lesson player (visual review pending)
+
+- Added a theme-independent skill/activity sequence using the existing page registry and
+  instructional renderers, with neutral navigation, end/revisit states and paper defaults.
+- Added activity text/question authoring and reordering, skill reordering, independent HTML
+  export evidence, and mathematics/source-analysis/physics review examples outside the corpus.
+- Corrected the new flow's algebra composition to place the question before its working and
+  isolated table-response rows; retained existing graph compositions and legacy lesson routing.
+- Added a sequential verification pipeline and Windows file-URL handling in the geometry gate.
+  See `docs/review/shared-player/README.md` and `logs/` for evidence and limitations.

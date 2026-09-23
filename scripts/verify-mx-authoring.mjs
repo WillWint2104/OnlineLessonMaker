@@ -54,6 +54,23 @@ const ok = (what, cond, detail) => {
   if (cond) { pass++; console.log(`PASS ${what}${detail ? '  ' + detail : ''}`); }
   else { fail++; console.log(`FAIL ${what}${detail ? '  ' + detail : ''}`); }
 };
+/* every function expression in every committed lesson — read here, asserted in the page below */
+const COMMITTED_EXPRS = (() => {
+  const out = new Set();
+  const walk = (o) => { if (Array.isArray(o)) return o.forEach(walk);
+    if (o && typeof o === 'object') { if (o.type === 'function' && (o.f != null || o.expr != null)) out.add(String(o.f != null ? o.f : o.expr));
+      Object.values(o).forEach(walk); } };
+  for (const d of ['examples', 'lessons', 'docs/atlas/lesson', 'tests/visual']) {
+    const dir = path.join(root, d); if (!fs.existsSync(dir)) continue;
+    const st = [dir];
+    while (st.length) { const c = st.pop();
+      for (const e of fs.readdirSync(c, { withFileTypes: true })) { const q = path.join(c, e.name);
+        if (e.isDirectory()) st.push(q);
+        else if (e.name.endsWith('.json')) { try { walk(JSON.parse(fs.readFileSync(q, 'utf8'))); } catch (x) { /* not a lesson */ } } } }
+  }
+  return [...out];
+})();
+
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 const errs = [];
 const p = await browser.newPage({ viewport: { width: 1600, height: 1000 } });
@@ -225,8 +242,14 @@ ok('a graph can be ADDED to a group from the outline, seeded so it plots the mom
    before it could report, which is the one thing a control must never do — it has to be able to SAY it
    failed. The offered set is read back and compared instead. */
 const objAdd = await p.evaluate(() => { const missing = [];
-  for (const t of ['line', 'points', 'segment']) { const b = document.querySelector(`[data-mxadd="o.0.${t}"]`);
+  /* AN ADD-PALETTE BELONGS TO THE SELECTED THING (Stage 4B), so the graph is selected before anything is
+     added to it — which is what an author does anyway. Each click re-renders and re-selects the new
+     object, so the graph is re-selected for the next one. */
+  for (const t of ['line', 'points', 'segment']) {
+    selZone = 'mx.f.0'; renderSlide();
+    const b = document.querySelector(`[data-mxadd="o.0.${t}"]`);
     if (b) b.click(); else missing.push(t); }
+  selZone = 'mx.f.0'; renderSlide();
   const o = LESSON.slides[cur].groups[0].relations[0].figure.objects;
   return { types: o.map((x) => x.type), missing,
     offered: [].slice.call(document.querySelectorAll('[data-mxadd^="o.0."]')).map((b) => b.dataset.mxadd.split('.').pop()),
@@ -358,6 +381,290 @@ ok('and the COMPOSITION still follows the authored geometry — a wide window ea
    && (comp.wide.stage === 'stage' ? comp.wide.w > comp.tall.w : comp.wide.w === comp.tall.w),
    `tall window → ${comp.tall.sub} at ${comp.tall.w}px · wide window → ${comp.wide.sub} at ${comp.wide.w}px · surface "${comp.wide.stage}"`
    + (comp.wide.stage === 'stage' ? '' : ' (below the desktop surface both take the full width, as approved — the decision is what moved)'));
+/* ═══ STAGE 4 — IS IT COMFORTABLE TO USE? ════════════════════════════════════════════════════════════
+   Everything above asks whether the lesson CAN be made. These ask whether a teacher would want to. Each
+   one is driven through the real controls and each is followed by the state that would have made it fail
+   before the change. */
+console.log('\n--- the table is edited as a table ---');
+await p.evaluate(() => { const g = LESSON.slides[cur].groups[0];
+  g.examples[0].steps[0].visual = [{ kind: 'table', stub: '_x_', head: ['1', '2'], rows: [{ label: '_y_', cells: ['1', '4'] }] }];
+  selZone = 'mx.s.0.0.0'; renderSlide(); });
+await p.waitForTimeout(250);
+await p.click('#inspector [data-mxsel="mx.w.0.0.0.0"]');
+await p.waitForTimeout(250);
+const grid = await p.evaluate(() => {
+  const t = document.querySelector('#inspector .mxg');
+  if (!t) return null;
+  const rows = [].slice.call(t.rows);
+  const cells = [].slice.call(t.querySelectorAll('input.mxg-i'));
+  const stub = t.querySelector('.mxg-stick input');
+  const r = stub && stub.getBoundingClientRect(), wrap = document.querySelector('#inspector .mxg-wrap');
+  return { rows: rows.length, inputs: cells.length,
+    /* a GRID, not a list: the first row's inputs sit side by side, at the same top */
+    sideBySide: (() => { const a = t.rows[1] && [].slice.call(t.rows[1].querySelectorAll('input')); if (!a || a.length < 2) return false;
+      const b = a.map((x) => x.getBoundingClientRect()); return Math.abs(b[0].top - b[1].top) < 2 && b[1].left > b[0].right - 1; })(),
+    stubSticky: stub ? getComputedStyle(stub.closest('th,td')).position : '',
+    scrolls: wrap ? getComputedStyle(wrap).overflowX : '',
+    preview: !!document.querySelector('#inspector .mxprev-t .mx-tbl') };
+});
+ok('THE TABLE IS EDITED AS A TABLE — a grid of cells, not a column of fields',
+   !!grid && grid.sideBySide && grid.inputs === 6,
+   grid ? `${grid.rows} grid rows · ${grid.inputs} cell inputs · side by side: ${grid.sideBySide}` : 'no grid');
+ok('and it behaves like the rendered one: the row headings stay put and the values scroll',
+   !!grid && grid.stubSticky === 'sticky' && grid.scrolls === 'auto',
+   grid ? `row heading ${grid.stubSticky} · values ${grid.scrolls}` : '');
+ok('and the finished table is previewed beside the grid, drawn by the page\'s own renderer',
+   !!grid && grid.preview, grid && grid.preview ? 'mxPartTable() output in the panel' : 'no preview');
+{ /* a cell typed into the grid reaches the data and the page */
+  const sel = '#inspector input.mxg-i[data-bind$="rows.0.cells.1"]';
+  await p.fill(sel, '4 (a square)');
+  await p.waitForTimeout(200);
+  const v = await p.evaluate(() => LESSON.slides[cur].groups[0].examples[0].steps[0].visual[0].rows[0].cells[1]);
+  const drawn = await p.evaluate(() => [].slice.call(document.querySelectorAll('#slide .mx-tbl td')).map((x) => x.textContent.trim()).join(','));
+  ok('and a cell typed into the grid lands in the lesson and repaints the page',
+     v === '4 (a square)' && drawn.indexOf('4 (a square)') >= 0, `cell "${v}" · page "${drawn}"`);
+}
+
+console.log('\n--- the panel shows what you are working on ---');
+const fold = await p.evaluate(() => ({
+  pageFold: !!document.querySelector('#inspector [data-mxtw="mx.page"]'),
+  pageFields: document.querySelectorAll('#inspector [data-bind$=".navLabel"]').length,
+  metaFold: !!document.querySelector('#inspector [data-mxtw="mx.meta"]'),
+  metaFields: document.querySelectorAll('#inspector [data-meta]').length }));
+ok('the Page and Lesson sections are folded away until they are wanted — they are set once, not per step',
+   fold.pageFold && fold.metaFold && fold.pageFields === 0 && fold.metaFields === 0,
+   `folds present: page ${fold.pageFold}, lesson ${fold.metaFold} · fields on screen: ${fold.pageFields} + ${fold.metaFields}`);
+await p.click('#inspector [data-mxtw="mx.page"]');
+await p.waitForTimeout(200);
+ok('and opening one brings its fields back',
+   (await p.evaluate(() => document.querySelectorAll('#inspector [data-bind$=".navLabel"]').length)) === 1);
+await p.click('#inspector [data-mxtw="mx.page"]');
+await p.waitForTimeout(200);
+{ /* collapsing a branch really removes its children, and the branch you are editing cannot be collapsed */
+  /* the branch you are EDITING is pinned open — a selected row you cannot see is worse than a long panel */
+  await p.evaluate(() => { selZone = 'mx.s.0.0.0'; renderSlide(); }); await p.waitForTimeout(200);
+  const pinned = await p.evaluate(() => (document.querySelector('#inspector [data-mxtw="mx.e.0.0"]') || {}).disabled);
+  /* select elsewhere, open the example by its twisty, then close it again and watch the steps go */
+  await p.evaluate(() => { selZone = 'mx.g.0'; renderSlide(); }); await p.waitForTimeout(200);
+  await p.click('#inspector [data-mxtw="mx.e.0.0"]'); await p.waitForTimeout(200);
+  const before = await p.evaluate(() => document.querySelectorAll('#inspector [data-mxsel^="mx.s.0.0."]').length);
+  await p.click('#inspector [data-mxtw="mx.e.0.0"]'); await p.waitForTimeout(200);
+  const after = await p.evaluate(() => document.querySelectorAll('#inspector [data-mxsel^="mx.s.0.0."]').length);
+  ok('COLLAPSING A BRANCH REMOVES ITS CHILDREN — the outline is navigable, not one long list',
+     pinned === true && before > 0 && after === 0,
+     `the branch being edited is pinned open: ${pinned} · steps shown ${before} → ${after} on its twisty`);
+}
+{ /* an add-palette belongs to the selected thing */
+  /* the vocabulary is read from the app, not copied here, so the count cannot drift from what it offers */
+  const N = await p.evaluate(() => MX_PART_KINDS.length);
+  const pals = async () => p.evaluate(() => document.querySelectorAll('#inspector [data-mxadd^="p.0."],#inspector [data-mxadd^="v.0."],#inspector [data-mxadd^="w.0."]').length);
+  await p.evaluate(() => { selZone = 'mx.g.0'; renderSlide(); }); await p.waitForTimeout(200);
+  const onGroup = await pals();
+  await p.evaluate(() => { selZone = 'mx.e.0.0'; renderSlide(); }); await p.waitForTimeout(200);
+  const onEx = await pals();
+  ok('and only the selected host offers its add-palette — not every open one at once',
+     onGroup === N && onEx === N,
+     `group selected: ${onGroup} chips · example selected: ${onEx} chips · one host's worth is ${N}`);
+}
+
+console.log('\n--- an expression that reads differently from how it was typed says so ---');
+{
+  /* Stage 5 · 1. figParse binds a juxtaposition tighter than division, so `1/2x` is 1/(2x): a valid
+     expression, plotted without complaint, and not what a teacher writing a gradient of a half means.
+     The parser is NOT changed — re-binding division would re-read `sin 2x` and every committed lesson.
+     The reading is reported instead, in the panel, never on the page. */
+  await p.evaluate(() => { const g = LESSON.slides[cur].groups[0];
+    g.relations = [{ kind: 'figure', figure: { type: 'figure', figure: 'graph', aspect: 'equal', grid: 'shown',
+      domain: { xMin: -6, xMax: 6, yMin: -4, yMax: 6 }, objects: [{ type: 'function', f: 'x' }] } }];
+    selZone = 'mx.o.0.0'; renderSlide(); });
+  await p.waitForTimeout(250);
+  const bind = 'slides.0.groups.0.relations.0.figure.objects.0.f';
+  const warn = async () => p.evaluate(() => { const w = document.querySelector('#inspector .mxamb');
+    return w ? { shown: !w.hidden, text: w.textContent.trim() } : null; });
+  await p.fill(`#inspector [data-bind="${bind}"]`, '1/2x+1');
+  await p.waitForTimeout(200);
+  const bad = await warn();
+  ok('TYPING `1/2x+1` SAYS HOW IT WILL BE READ — the one finding that put wrong mathematics on a page',
+     !!bad && bad.shown && /1\/\(2\u00b7x\)\+1/.test(bad.text),
+     bad ? `panel says ${JSON.stringify(bad.text.slice(0, 74))}` : 'no warning element at all');
+  /* and the figure really did draw the hyperbola, which is why the warning is needed */
+  const drew = await p.evaluate(() => document.querySelectorAll('#slide svg .tp-fig-fn').length);
+  await p.fill(`#inspector [data-bind="${bind}"]`, '(1/2)x+1');
+  await p.waitForTimeout(250);
+  const fixed = await warn();
+  const drew2 = await p.evaluate(() => document.querySelectorAll('#slide svg .tp-fig-fn').length);
+  ok('and bracketing it silences the warning and straightens the curve',
+     !!fixed && !fixed.shown && drew > drew2,
+     `1/2x+1 → ${drew} subpath(s) and a warning · (1/2)x+1 → ${drew2} and none`);
+  await p.fill(`#inspector [data-bind="${bind}"]`, 'x/2+1');
+  await p.waitForTimeout(200);
+  const plain = await warn();
+  ok('and the ordinary way of writing the same gradient is never flagged',
+     !!plain && !plain.shown, `x/2+1 · warning shown: ${plain && plain.shown}`);
+  /* THE GUARD THAT KEEPS IT QUIET. A detector that cried wolf on committed content would be worse than
+     the defect. Every expression in every committed lesson is put through it here, so it can never
+     become noisy without this failing. */
+  const committed = await p.evaluate((list) => list.filter((e) => !!figAmbiguous(e)), COMMITTED_EXPRS);
+  ok('and NO expression in any committed lesson is flagged — the detector cannot cry wolf',
+     committed.length === 0,
+     committed.length ? `flagged: ${committed.join(', ')}` : `${COMMITTED_EXPRS.length} expression(s) checked, none flagged`);
+  /* AN ECHO THAT LIES IS WORSE THAN NO ECHO. The warning tells the author what the engine will read, so
+     the sentence it shows must be something the engine reads THE SAME WAY. figTok discards whitespace, so
+     a reading pasted back together from the tokens turns `1/2 sin x` into `1/(2sinx)` — which does not even
+     parse — and `1/2 3` into `1/(23)`, a different number. Every flagged reading is therefore parsed back
+     and evaluated against the source at six values of x. */
+  const honest = await p.evaluate((list) => list.map((src) => {
+    const a = figAmbiguous(src); if (!a) return { src, flagged: false };
+    const q = figParse(a.read), r = figParse(src);
+    if (q.error || r.error) return { src, read: a.read, flagged: true, ok: false, why: q.error || r.error };
+    const off = [-3.5, -1, 0.25, 2, 4, 7.5].filter((x) => {
+      const u = r.fn(x), v = q.fn(x);
+      return !(Object.is(u, v) || Math.abs(u - v) < 1e-12); });
+    return { src, read: a.read, flagged: true, ok: off.length === 0, why: off.length ? 'differs at x=' + off.join(',') : '' };
+  }), ['1/2x+1', '1/2x', '1/2 sin x', '1/2(x+1)', '3/4x^2', '1/-2x', '(x+1)/2x', '1/2(x+1)(x-1)']);
+  const lying = honest.filter((h) => h.flagged && !h.ok), quiet = honest.filter((h) => !h.flagged);
+  ok('and every reading it shows is one the engine reads back the same way — the echo cannot lie',
+     lying.length === 0 && quiet.length === 0,
+     lying.length ? lying.map((h) => `"${h.src}" → "${h.read}" ${h.why}`).join(' | ')
+       : quiet.length ? `not flagged at all: ${quiet.map((h) => h.src).join(', ')}`
+       : honest.map((h) => `${h.src} → ${h.read}`).join(' · '));
+  /* AND IT STAYS QUIET WHERE THE GROUPING IS WHAT ANYONE MEANS. `1/2pi` is 1/(2π) and that is what it was
+     written for; `1/2x(` is the keystroke state of someone half-way through typing `1/2x(x+1)`, and the
+     figure already reports that one as unreadable. Neither is a place to interrupt an author. */
+  const QUIET = ['1/2pi', '1/2e', '1/2 3', '1/2x(', '1/2x)', '1/2 y', 'x//2x', 'sin 2x', '1/sin 2x', '(1/2)x+1', '1/2*x', 'x/2+1'];
+  const noisy = await p.evaluate((list) => list.filter((e) => !!figAmbiguous(e)), QUIET);
+  ok('…and it says nothing about a constant, a half-typed bracket, or an expression the engine already rejects',
+     noisy.length === 0, noisy.length ? `flagged: ${noisy.join(', ')}` : `${QUIET.length} expression(s), none flagged`);
+}
+
+console.log('\n--- a curve can be told from the one beside it ---');
+{
+  /* Stage 5 · 3. Four curves on one plane were painted `rgb(15,122,76) / 2px / none` — one distinct style
+     — and a function's `label` was collected by figGraph and never drawn, so the straight-lines lesson's
+     "Comparing steepness" had to be carried entirely by the prose beside the picture (FINDINGS.md §3).
+     SHAPE FIRST: a dash pattern differentiates in every theme, in print, and without asking a reader to
+     tell two colours apart. The name is the second half, and it is opted into per figure, because 38
+     committed function objects already carry a `label` written before any painter could draw one. */
+  const FIG = 'slides.0.groups.0.relations.0.figure';
+  const put = (objs) => p.evaluate((o) => { const g = LESSON.slides[cur].groups[0];
+    g.relations = [{ kind: 'figure', figure: { type: 'figure', figure: 'graph', aspect: 'equal', grid: 'shown',
+      domain: { xMin: -5, xMax: 5, yMin: -4, yMax: 6 }, objects: JSON.parse(o) } }];
+    selZone = 'mx.o.0.0'; renderSlide(); }, JSON.stringify(objs));
+  const read = () => p.evaluate(() => ({
+    pens: [...new Set([...document.querySelectorAll('#slide .tp-fig-svg polyline')].map((e) => e.getAttribute('class')))],
+    strokes: [...new Set([...document.querySelectorAll('#slide .tp-fig-svg polyline')]
+      .map((e) => { const c = getComputedStyle(e); return `${c.stroke}/${c.strokeWidth}/${c.strokeDasharray}`; }))],
+    labs: [...document.querySelectorAll('#slide .tp-fig-fnlab')].map((e) => e.textContent),
+    /* every curve name and every point identifier, as painted boxes, so "it is an obstacle" is measured */
+    boxes: [...document.querySelectorAll('#slide .tp-fig-fnlab')].map((e) => e.getBoundingClientRect())
+      .map((r) => ({ x: r.x, y: r.y, w: r.width, h: r.height })),
+    pills: [...document.querySelectorAll('#slide .tp-fig-ptid, #slide .tp-fig-pill')].map((e) => e.getBoundingClientRect())
+      .map((r) => ({ x: r.x, y: r.y, w: r.width, h: r.height })),
+    /* the plate a name has to stay on — the drawn surface, not the figure shell around it */
+    plate: (() => { const g = document.querySelector('#slide .tp-fig-svg');
+      if (!g) return null; const r = g.getBoundingClientRect(); return { x: r.x, y: r.y, w: r.width, h: r.height }; })(),
+    curveLabels: (getP(LESSON, 'slides.0.groups.0.relations.0.figure') || {}).curveLabels }));
+
+  /* THE DEFECT, MEASURED FIRST — three gradients through one intercept, authored the way they were before
+     this stage existed: a name on each and nothing asking for it. */
+  await put([{ type: 'function', f: '2x+1', label: 'y = 2x + 1' },
+             { type: 'function', f: 'x+1', label: 'y = x + 1' },
+             { type: 'function', f: '(1/2)x+1', label: 'y = ½x + 1' },
+             { type: 'function', f: '-x+1', label: 'y = −x + 1' },
+             { type: 'function', f: 'x^2-3', label: 'y = x² − 3' },
+             /* plotted points, so "a name is an obstacle" is measured against identifiers that EXIST — a
+                check read in the one state where the defect is invisible is the same failure as no check */
+             { type: 'points', from: 'table', rows: [['A', 2, 5], ['B', -3, -2], ['C', 4, 3]] }]);
+  await p.waitForTimeout(300);
+  const plain = await read();
+  ok('A LABEL WRITTEN BEFORE THIS STAGE STILL DRAWS NOTHING, and every curve is still the one mark it was',
+     plain.pens.length === 1 && plain.pens[0] === 'tp-fig-fn' && plain.labs.length === 0,
+     `${plain.pens.length} distinct class(es) ${JSON.stringify(plain.pens)} · ${plain.labs.length} name(s) drawn`);
+
+  /* NOW AUTHOR IT, through the panel: name the first curve, then give the other two their own pen. */
+  await p.fill(`#inspector [data-bind="${FIG}.objects.0.label"]`, 'y = 2x + 1');
+  await p.waitForTimeout(250);
+  const oneNamed = await read();
+  ok('…and typing a name in the panel turns the graph’s curve names on, once — the field is not a dead end',
+     oneNamed.curveLabels === 'shown' && oneNamed.labs.length === 5,
+     `curveLabels is ${JSON.stringify(oneNamed.curveLabels)} and ${oneNamed.labs.length} name(s) are drawn: ${oneNamed.labs.join(' · ')}`);
+  for (const [i, pen] of [[1, 'dashed'], [2, 'dotted'], [3, 'dashdot'], [4, 'quiet']]) {
+    await p.evaluate((z) => { selZone = z; renderSlide(); }, `mx.o.0.${i}`);
+    await p.waitForTimeout(200);
+    await p.selectOption(`#inspector [data-bind="${FIG}.objects.${i}.pen"]`, pen);
+    await p.waitForTimeout(220);
+  }
+  const done = await read();
+  ok('FIVE CURVES ON ONE PLANE ARE NOW FIVE DIFFERENT MARKS, and each says which it is',
+     done.pens.length === 5 && done.strokes.length === 5 && done.labs.length === 5,
+     `${done.pens.length} class(es), ${done.strokes.length} painted stroke(s): ${done.strokes.join(' | ')} · names ${done.labs.join(' · ')}`);
+  /* …AND A NAME IS AN OBSTACLE. A point identifier that lands on a curve's name is two marks in one place;
+     figFnLabBoxes reserves the same geometry figFnLabAt paints. */
+  const hit = done.boxes.filter((b) => done.pills.some((q) => b.x < q.x + q.w && q.x < b.x + b.w && b.y < q.y + q.h && q.y < b.y + b.h));
+  ok('…and no point identifier is placed on top of a curve’s name', hit.length === 0 && done.pills.length > 0,
+     `${done.boxes.length} name(s) against ${done.pills.length} identifier(s), ${hit.length} overlap(s)`);
+  /* A NAME PLACED OFF THE PLATE IS WORSE THAN NO NAME, and a COUNT cannot see it: the first capture of this
+     stage showed one visible name while the node count said three — the two steep lines leave through the
+     top, so a label hung at their last sample was clipped. The claim is therefore about the PAINTED box. */
+  const off = done.boxes.filter((b) => !done.plate
+    || b.x < done.plate.x - 0.5 || b.x + b.w > done.plate.x + done.plate.w + 0.5
+    || b.y < done.plate.y - 0.5 || b.y + b.h > done.plate.y + done.plate.h + 0.5);
+  ok('…and every name is painted INSIDE the plate — a clipped name is not a name',
+     off.length === 0 && done.boxes.length === 5,
+     `${done.boxes.length} name(s), ${off.length} outside the ${done.plate ? Math.round(done.plate.w) + '×' + Math.round(done.plate.h) : '(missing)'} plate`);
+
+  /* THE PEN VOCABULARY IS LOOKED UP, NEVER ASSEMBLED. figDraw interpolates `class="${cls}"` RAW, so a pen
+     that reached the attribute would be an injection point — and a plain object literal would answer
+     "constructor" with the Object constructor, whose source would then be stringified into the markup. */
+  await put([{ type: 'function', f: 'x^2', pen: 'constructor' },
+             { type: 'function', f: 'x', pen: '" onload="alert(1)' },
+             { type: 'function', f: 'x-2', pen: '__proto__' }]);
+  await p.waitForTimeout(300);
+  const evil = await read();
+  const raw = await p.evaluate(() => document.querySelector('#slide .tp-fig-svg').innerHTML);
+  ok('AN AUTHORED PEN OUTSIDE THE VOCABULARY DRAWS THE ORDINARY CURVE — and reaches no attribute',
+     evil.pens.length === 1 && evil.pens[0] === 'tp-fig-fn' && !/onload|function Object|\[native code\]/.test(raw),
+     `${evil.pens.length} class(es) ${JSON.stringify(evil.pens)}; markup carries no injected attribute`);
+
+  /* AND THE DEFAULT IS BYTE-IDENTICAL. No pen, no names asked for: exactly `class="tp-fig-fn"`, no trailing
+     space — which is what keeps all 240 figure-render units and every committed figure where they were. */
+  await put([{ type: 'function', f: 'x^2', label: 'y = x²' }]);
+  await p.waitForTimeout(300);
+  const dflt = await p.evaluate(() => ({ html: document.querySelector('#slide .tp-fig-svg').innerHTML,
+    labs: document.querySelectorAll('#slide .tp-fig-fnlab').length }));
+  ok('…and a curve that asked for nothing emits exactly class="tp-fig-fn" and draws no name',
+     /class="tp-fig-fn"/.test(dflt.html) && !/class="tp-fig-fn /.test(dflt.html) && dflt.labs === 0,
+     `${dflt.labs} name(s) drawn; the class attribute is exactly "tp-fig-fn"`);
+}
+
+console.log('\n--- mathematics is entered, not remembered ---');
+await p.evaluate(() => { selZone = 'mx.s.0.0.0'; renderSlide(); });
+await p.waitForTimeout(250);
+{
+  const bind = 'slides.0.groups.0.examples.0.steps.0.math';
+  await p.fill(`#inspector [data-bind="${bind}"]`, '');
+  await p.waitForTimeout(150);
+  await p.click('#inspector [data-bind="' + bind + '"]');
+  const keys = await p.evaluate(() => [].slice.call(document.querySelectorAll('#inspector [data-mxkey]')).map((b) => b.dataset.mxkey));
+  ok('a notation row is offered, so _x_ and ^2 do not have to be remembered', keys.length >= 8,
+     `${keys.length} keys: ${keys.join(' ')}`);
+  await p.click('#inspector [data-mxkey="italic"]');
+  await p.waitForTimeout(120);
+  await p.keyboard.type('y');
+  await p.click('#inspector [data-mxkey="\u2212"]');
+  await p.click('#inspector [data-mxkey="pow"]');
+  await p.waitForTimeout(200);
+  const saved = await p.evaluate(() => LESSON.slides[cur].groups[0].examples[0].steps[0].math);
+  ok('AND WHAT IT TYPES IS SAVED THROUGH THE ORDINARY BINDING — no second save path',
+     saved === '_y_\u2212^2', `the field now holds ${JSON.stringify(saved)}`);
+  const shown = await p.evaluate(() => { const el = document.querySelector('#inspector [data-bind$=".steps.0.math"]');
+    const pv = el && el.nextElementSibling; return pv && pv.classList.contains('mxprev') ? pv.innerHTML : null; });
+  ok('and the field previews what the PAGE will draw, through the page\'s own renderer',
+     shown === await p.evaluate((v) => mxM(v), saved), `preview ${JSON.stringify((shown || '').slice(0, 44))}`);
+  await p.fill(`#inspector [data-bind="${bind}"]`, EDIT.stepMath);
+  await p.waitForTimeout(150);
+}
+
 /* restore for the save/reopen section */
 await p.evaluate(({ e }) => { const g = LESSON.slides[cur].groups[0];
   delete g.relations; g.type = 'sequence'; delete g.states; g.title = e.gTitle;

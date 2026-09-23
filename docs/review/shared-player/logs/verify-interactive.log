@@ -1,0 +1,25 @@
+✓ HTTP 200 served  status=200
+✓ no "[bundle] error" text in body
+✓ no "{{ t.label }}" placeholders in body
+✓ region tab label present: "FULL BODY"
+✓ region tab label present: "SKULL"
+✓ region tab label present: "LEFT THIGH"
+✓ region tab label present: "LEFT FOOT"
+✓ region tab label present: "THE VERDICT"
+✓ zero external network requests  (all localhost/inline)
+
+Page errors: 
+[dc-runtime] template compile FAILED for tutankhamun-ct-scan TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at collectProps (blob:http://127.0.0.1:8099/637dc120-29c2-4c9b-9787-9126ec0dc22a:390:49)
+    at walkElement (blob:http://127.0.0.1:8099/637dc120-29c2-4c9b-9787-9126ec0dc22a:641:44)
+    at walk (blob:http://127.0.0.1:8099/637dc120-29c2-4c9b-9787-9126ec0dc22a:447:12)
+    at blob:http://127.0.0.1:8099/637dc120-29c2-4c9b-9787-9126ec0dc22a:435:44
+    at Array.map (<anonymous>)
+    at walkChildren (blob:http://127.0.0.1:8099/637dc120-29c2-4c9b-9787-9126ec0dc22a:435:33)
+    at walkIf (blob:http://127.0.0.1:8099/637dc120-29c2-4c9b-9787-9126ec0dc22a:537:18)
+    at walk (blob:http://127.0.0.1:8099/637dc120-29c2-4c9b-9787-9126ec0dc22a:443:33)
+    at blob:http://127.0.0.1:8099/637dc120-29c2-4c9b-9787-9126ec0dc22a:435:44
+    at Array.map (<anonymous>)
+Screenshot: screenshots/interactive-tut.png
+
+GATE PASSED.

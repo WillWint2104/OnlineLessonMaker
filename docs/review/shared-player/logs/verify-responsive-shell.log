@@ -1,0 +1,95 @@
+PASS the Mathematics templates report layoutMode "responsive"
+PASS a legacy type reports "canvas", and so does an unregistered one  canvas / canvas
+PASS the SAME type under a theme that has not registered it stays on the canvas  notes + geolearn -> canvas
+PASS an unknown layoutMode or surface is refused at REGISTRATION, not at render
+PASS control: a `layoutMode` key written into lesson JSON is inert in BOTH directions  legacy slide claiming responsive stayed on the canvas; a template claiming canvas stayed responsive
+PASS nothing writes layoutMode or surface back into the lesson
+PASS a responsive page carries body.respo; a legacy page does not
+PASS the canvas transform is released on a responsive page  none
+PASS control: the legacy page in the same lesson IS still scale()d  matrix(0.850781, 0, 0, 0.850781, 0, 0)
+PASS control: the legacy canvas is still 1280 logical px wide  1280px
+PASS the responsive canvas is the stage width, not 1280  canvas 1440px = stage 1440px
+PASS calling fitCanvas() on a responsive page mutates nothing  ["","","","canvas"]
+PASS the canvas model is intact on the legacy page rendered straight after a responsive one  1280px matrix(0.850781, 0, 0, 0.850781, 0, 0)
+PASS the content region really changes width with the viewport  1440->498px  1100->776px  834->802px  390->358px
+PASS control: the legacy page keeps ONE logical width at every viewport (it is scaled, not reflowed)  1440->1280px  1100->1280px  834->1280px  390->1280px
+PASS on a wide screen the prose is held at its reading measure, not stretched to the region  lede 518px = the 518.42px measure, inside a 710px region
+PASS below the measure it tracks the viewport and the prose genuinely re-wraps  390 -> 358px / 2 lines against 518px / 1
+PASS two columns on a desktop, one on a handset  1440 -> 2 cols · 390 -> 1
+PASS the page never scrolls sideways at any width  1440:1440/1440  1100:1100/1100  834:834/834  390:390/390
+PASS the window itself never scrolls at any width
+     · content region 498px at 1440 down to 358px at 390 — the legacy control is 1280px at both
+PASS the app bar, page sidebar and footer bar are all hidden on a responsive page  none / none / none
+PASS control: all three are still shown on the legacy page in the same lesson  flex / flex / flex
+PASS exactly ONE navigation is visible  1 visible
+PASS the Study / Edit proxies really change the application mode  study -> edit -> study
+PASS the pager proxies really navigate  4 -> 5 -> 4
+PASS the active mode is marked in the bar
+PASS THE MODE BAR TELLS THE TRUTH IN EDIT TOO — and it is the only mode control a responsive page shows  Edit: mode edit, bar marks "edit" · Study: bar marks "study" · #modeSeg on screen: false
+PASS A STUDENT IS NEVER OFFERED THE CHOICE — no page in Study carries a response-mode control  practice 0 · notes 0 · after an author previewed 0
+PASS and the mode the lesson authored is the one in force there  meta.responseMode undefined -> shell "write"
+PASS the author can preview all three modes in Edit, named Paper / Pen / Typed  Paper · Pen · Typed
+PASS choosing Typed changes the shell state, not just the button
+PASS it is a LESSON-level choice — it survives navigating away and back, and is offered on every page  kept "type" · notes offers 3
+PASS PREVIEWING IS NOT AUTHORING — meta.responseMode is untouched by the control  undefined -> undefined
+PASS the response mode is session-only — nothing is written to storage
+PASS on a handset the application controls step back and the pager stays  modes none · crumb none · pager flex
+PASS the practice page is a flush textbook column with a workspace beside it
+PASS the question column is a REAL scroller before anything is asserted about it  737/508
+PASS scrolling the questions to the end does not move the workbook one pixel  questions scrolled 229px, workbook moved 0px
+PASS and it moves nothing else either
+PASS the rail is its own scroller too, and scrolling it leaves the questions where they were  rail 523px
+PASS wide: questions and workbook sit side by side, each clipped to its own box  content left 28 · workspace left 608
+PASS narrow: one region at a time, behind a Questions / Workbook switch  starts on questions, switches to workbook
+PASS narrow: the navigation defaults closed
+PASS narrow: the open drawer sits OVER the page, with a scrim, and does not push it  nav absolute · scrim block · content left unchanged at 16
+PASS control: at 1280 the same rail takes its own column, with no scrim  nav static · scrim none
+PASS wide: the navigation defaults open
+PASS the rail names lesson SECTIONS, not page numbers  Notes · Worked examples · Video · Interactive …
+PASS every page has an icon and the current one is marked exactly once
+PASS collapsing the rail gives its width back to the page  content 510px -> 634px
+PASS the toggle is a class flip, NOT a re-render — same node, and the reader keeps their place  scrollTop 154px -> 154px -> 154px
+PASS re-opening restores the rail
+PASS the nav state is session-only — nothing is written to storage
+PASS clicking a section navigates to it
+PASS narrow: choosing a section closes the drawer behind it
+PASS narrow: tapping the scrim closes the drawer
+PASS a page that declares no workspace gets no split region  content 1116px fills the split
+PASS a page that declares one gets it, filled by the registered kind  content narrows 1116px -> 498px
+PASS the example tabs show exactly one whole example at a time and switch  Graph and key points · Table to graph · Symmetry → showing "ex-table"
+PASS an unregistered kind SAYS SO in the page instead of collapsing the region  This page asks for a “nosuchkind” workspace, and no workspace of that kind is registered yet.
+PASS a workspace with no kind says that too  This page declares a workspace but no kind, so there is nothing to put in it.
+PASS a workspace that throws is reported in place, and the page still renders  Workspace error: kaboom
+PASS the plane is painted at the size of its container, not at a fixed internal size  svg 614x570 inside a 616x572 stage (1px border each side), viewBox 508x471
+PASS the x-axis runs to the drawable viewport boundaries  x-axis 0 → 508 in a 508-wide box
+PASS the y-axis does too  y-axis 0 → 471 in a 471-tall box
+PASS CONTROL: the axis is STRICTLY outside where the domain ends — the old rule would have stopped it there  x: axis 0…508 vs domain 39…490
+PASS CONTROL: the last labelled tick is not the end of the axis  last x label at 428.9, axis ends at 508
+PASS the ticks are generated from the mathematical range, not from the viewport  9 labels inside the domain; viewport -6.44…5.92 vs domain -5.49…5.49
+PASS resizing the container resizes the mathematical viewport  616x572 → viewport 12.4 x 11.5 units;  616x287 → 24.7 x 11.5
+PASS and the axes still reach the boundaries at the new size
+PASS CONTROL: the viewport takes the SHAPE of its container, at both sizes  1.08 container → 1.08 plane · 2.15 container → 2.14 plane
+PASS CONTROL: with a tick exactly on the domain edge, the axis still runs past it to the viewport  tick "4" and the domain edge coincide at 582.0; the axis ends at 600
+PASS an explanatory figure shows no "select a point" hint and no tap targets
+PASS CONTROL: without `callouts:"hidden"` the same figure DOES carry them  3 tap targets, hint present
+PASS the video is the dominant asset on the page  video 774x469 against a 418px support column
+PASS the supporting material is beside it, compact, and authored
+PASS the after-watching prompts and the transcript control are on the page
+PASS nothing from the legacy video renderer is on this page
+PASS it is a Mathematics page, in the Mathematics shell
+PASS no class from a legacy pack renderer appears anywhere in a Mathematics page  164 classes across 8 pages, all shell or Figure engine
+PASS the ONE documented shared seam is the Figure engine, and it is scoped to the figure host  3 .tp-slide carriers for 3 authored figures, and every one of them is .mx-figskin
+PASS the responsive registry contains legacy mathematics and only the shared skill capability  mathematics, shared
+PASS no legacy theme has been given a responsive page family
+PASS the inline-notation helper escapes first — markup in author text stays text  &lt;img src=x onerror=alert(1)&gt;&quot;&gt;&l…
+PASS and it still emits only the markup it writes itself — <i>, <sup> and its own spans, nothing else  emitted i, span, span.mx-frac, span.mx-nb, span.mx-pfrac, sup
+PASS and the conventions still land — the variable italic, the exponent raised, the statement held on one line  <span class="mx-nb"><i>x</i> = 3</span>  ·  <i>x</i><sup>2</sup>
+PASS no slide of a shipped lesson takes the responsive path  10 slides
+PASS every one of them is still a 1280px scaled canvas
+PASS NOTHING is shadowed: no responsive type takes a name the canvas already answers for this theme  (none)
+PASS the two colliding names are still the canvas renderers
+PASS no other theme has a responsive namespace at all
+PASS every section ran  14 sections
+PASS no page error or console error while rendering
+
+92/92 checks passed
