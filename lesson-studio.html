@@ -87,7 +87,7 @@
 .lp-activities button{width:100%;text-align:left;font:inherit;font-size:13px;line-height:1.4;padding:9px 12px;border:0;background:transparent;color:var(--mx-ink-2);border-radius:6px;cursor:pointer;}
 .lp-activities [aria-current="step"]{background:white;color:var(--mx-green);box-shadow:inset 3px 0 var(--mx-green);font-weight:600;}
 body.edit #slide .lp .mx-top button,body.edit #slide .lp .mx-nav button,body.edit #slide .lp-footer button{pointer-events:auto;}
-.mx.lp .mx-work{min-height:0;height:560px;max-height:none;margin:0;display:flex;flex-direction:column;}
+.mx.lp .mx-work{min-height:0;height:var(--lp-work-height,560px);max-height:none;margin:0;display:flex;flex-direction:column;}
 .mx.lp .mx-work>.mx-wb{flex:1;min-height:0;border:1px solid var(--mx-line);border-radius:12px;overflow:hidden;}
 .mx.lp .mx-work>.mx-wb.tp-slide{overflow:hidden;background:var(--mx-white);}
 .lp .lp-response-view .mx-viewsw{display:flex;flex-wrap:wrap;max-width:100%;margin:22px 0 0;}
@@ -95,9 +95,9 @@ body.edit #slide .lp .mx-top button,body.edit #slide .lp .mx-nav button,body.edi
 /* A supporting table can sit beside its working without stretching the table itself.
    Below the two reading floors, retain the original question → steps → table → answer order. */
 @container (min-width:700px){
-  .lp .mx-wexwork:has(> .mx-wexaside [data-mx-part="table"]):not(:has(> .mx-wexaside [data-mx-part="figure"])){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:24px;align-items:start;}
-  .lp .mx-wexwork:has(> .mx-wexaside [data-mx-part="table"]):not(:has(> .mx-wexaside [data-mx-part="figure"]))>.mx-wexaside{margin:0;}
-  .lp .mx-wexwork:has(> .mx-wexaside [data-mx-part="table"]):not(:has(> .mx-wexaside [data-mx-part="figure"]))>.mx-wexres{grid-column:1 / -1;}
+  .lp .lp-table-working{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:24px;align-items:start;}
+  .lp .lp-table-working>.mx-wexaside{margin:0;}
+  .lp .lp-table-working>.mx-wexres{grid-column:1 / -1;}
 }
 @media(max-width:1100px){.lp .mx-page{padding:24px;}.lp-title{font-size:30px;}}
 @media(max-width:600px){.lp .mx-page{padding:16px 12px 28px;}.lp-activity{--lp-pad:22px;}.lp-activity[data-lp-arrangement="response"] .lp-header,.lp-activity[data-lp-arrangement="response"] .mx-content{padding:22px;}.lp .mx-top{flex-wrap:wrap;}.lp-brand{max-width:210px;font-size:14px;}.lp-footer{padding:12px;}.lp-footer button{padding:10px 12px;}.lp-title{font-size:28px;}}
@@ -8550,6 +8550,12 @@ function mxResolveFit(){
     const activity=root.querySelector('.lp-activity'), response=activity?.dataset.lpArrangement==='response';
     const fit=response?(activity.clientWidth>=1000?'split':'stack'):'n/a';
     MX_FIT=fit; root.setAttribute('data-mx-fit',fit);
+    if(response){
+      const height=Math.min(560,Math.max(260,root.querySelector('.mx-page').clientHeight-16));
+      const chrome=['.mx-wsbar','.mx-pagetabs'].reduce((sum,selector)=>sum+(root.querySelector(selector)?.getBoundingClientRect().height||0),0);
+      root.style.setProperty('--lp-work-height',height+'px');
+      root.style.setProperty('--mx-wb-min-h',Math.max(140,Math.min(MX_WB_MIN_H,height-chrome-2))+'px');
+    }
     mxFitTables(root); return;
   }
   /* A representation page has a composition to resolve too: side by side while the example region can hold
@@ -9048,11 +9054,13 @@ function mxWexEx(ex,k,state,extra){
   const q=ex.prompt||ex.question, a=ex.answer||ex.result;
   const show=x=>!state||state.show.indexOf(x)>=0;
   const ask=!!(q&&show('question'));
+  const companion=mxParts(ex.visual);
+  const tableWorking=lpEnabled(LESSON.slides[cur])&&extra&&companion.length&&companion.every(part=>part.kind==='table');
   return `<article class="mx-wexex" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${ask?'':' data-mx-form="solo"'}>
     <h3 class="mx-wexh" data-mx-region="title">${mxM(String(ex.label||('Example '+(k+1))))}</h3>
     ${ask?`<div class="mx-wexask" data-mx-region="question" data-mx-sec="question"><h4 class="mx-wexlab">Question</h4>
       <div class="mx-wexqb">${mxM(q)}</div></div>`:''}
-    <div class="mx-wexwork" data-mx-region="working">
+    <div class="mx-wexwork${tableWorking?' lp-table-working':''}" data-mx-region="working">
       ${show('steps')?`<section class="mx-wexsec" data-mx-sec="steps"><h4 class="mx-wexlab">Worked solution</h4>${mxWexSteps(ex,state&&state.steps)}</section>`:''}
       ${extra||''}
       ${(a&&show('answer'))?`<div class="mx-wexres" data-mx-region="answer" data-mx-sec="answer"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span><span class="mx-wexrv">${mxM(a)}</span></div>`:''}

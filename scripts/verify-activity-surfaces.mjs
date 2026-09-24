@@ -19,7 +19,9 @@ const server=http.createServer((req,res)=>{
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const origin='http://127.0.0.1:'+server.address().port;
 const browser=await chromium.launch(),p=await browser.newPage({viewport:{width:1536,height:960}});
-const report={ref:ref||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),appSha256:createHash('sha256').update(app).digest('hex'),checks:[],captures:[],errors:[]};
+const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+const dirty=!ref&&execFileSync('git',['status','--porcelain','--','lesson-studio.html'],{encoding:'utf8'}).trim();
+const report={ref:ref||(dirty?'working-tree (uncommitted, based on '+head+')':head),appSha256:createHash('sha256').update(app).digest('hex'),checks:[],captures:[],errors:[]};
 const check=(ok,message)=>{assert.ok(ok,message);report.checks.push(message);};
 p.on('pageerror',e=>report.errors.push(e.message));
 await p.route('**/*',r=>r.request().url().startsWith(origin)?r.continue():r.abort());
@@ -91,6 +93,18 @@ try{
   await p.locator('.mx-page').evaluate(e=>e.scrollTop=e.scrollHeight);await shot('long-practice-'+label+'-end');
   await p.locator('[data-lp-move="-1"]').click();
   check(await p.evaluate(()=>document.querySelector('.mx-page').scrollTop===0&&document.activeElement.classList.contains('lp-title')),'navigation resets heading at '+label);
+ }
+ // Short viewports must accommodate the entire digital workbook, including its controls.
+ for(const mode of ['typed','pen']){
+  await p.setViewportSize({width:768,height:480});const L=read('factorising');L.meta.responseMode=mode;await load(L);await practice();
+  if(!ref){
+   await p.locator('.mx-work').scrollIntoViewIfNeeded();
+   const w=await bounds('.mx-work'),page=await bounds('.mx-page'),footer=await bounds('.lp-footer'),sheet=await bounds('.mx-sheet');
+   check(w.y>=page.y-1&&w.y+w.height<=footer.y+1,mode+' whole workbook fits short viewport');
+   check(sheet.height>=140,mode+' short viewport retains useful writing area');
+   for(const selector of ['.mx-wsbar','.mx-pagetabs']){const b=await bounds(selector);check(b.y>=page.y-1&&b.y+b.height<=footer.y+1,mode+' short viewport controls visible '+selector);}
+  }
+  await shot(mode+'-short-viewport');
  }
  // A real figure-bearing composition continues to use the existing geometry/figure engine.
  const graph=read('physics'),groups=JSON.parse(fs.readFileSync('docs/atlas/lesson/quadratics.app.json')).slides[0].groups;

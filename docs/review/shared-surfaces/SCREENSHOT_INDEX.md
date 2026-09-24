@@ -69,6 +69,7 @@ All images are actual browser captures. Matching before/after filenames use the 
 | [variations/pen-1536.png](variations/pen-1536.png) | 1536 x 960 |
 | [variations/pen-768-workspace.png](variations/pen-768-workspace.png) | 768 x 768 |
 | [variations/pen-768.png](variations/pen-768.png) | 768 x 768 |
+| [variations/pen-short-viewport.png](variations/pen-short-viewport.png) | 768 x 480 |
 | [variations/physics-1024-end.png](variations/physics-1024-end.png) | 1024 x 768 |
 | [variations/physics-1024.png](variations/physics-1024.png) | 1024 x 768 |
 | [variations/physics-1536-end.png](variations/physics-1536-end.png) | 1536 x 960 |
@@ -89,6 +90,7 @@ All images are actual browser captures. Matching before/after filenames use the 
 | [variations/typed-1536.png](variations/typed-1536.png) | 1536 x 960 |
 | [variations/typed-768-workspace.png](variations/typed-768-workspace.png) | 768 x 768 |
 | [variations/typed-768.png](variations/typed-768.png) | 768 x 768 |
+| [variations/typed-short-viewport.png](variations/typed-short-viewport.png) | 768 x 480 |
 | [variations-before/author-preview.png](variations-before/author-preview.png) | 1536 x 960 |
 | [variations-before/figure-composition.png](variations-before/figure-composition.png) | 1536 x 960 |
 | [variations-before/long-practice-200-percent-reflow-end.png](variations-before/long-practice-200-percent-reflow-end.png) | 768 x 480 |

@@ -11,14 +11,16 @@ Paper activities place their context, heading and complete instructional content
 surface. Notes and examples use internal headings, spacing and rules instead of additional cards.
 The pale canvas remains outside. Reading uses the established 760px measure plus 40px side padding;
 practice permits a 980px outer span, and figure-bearing activities permit a 1240px media span.
-Supporting tables sit beside worked steps when the content container clears 700px, and otherwise
+Table-only supporting companions sit beside worked steps when the content container clears 700px, and otherwise
 follow the steps in their original reading order. Tables are not stretched to fill available space.
 
 Digital response activities use a white header followed by coordinated white prompt and workbook
 panes. Their outer span permits 1240px; the actual available activity width must reach 1000px before
 splitting. This allows at least 440px of prompt content (after padding) and 420px for the workbook.
 Narrower widths stack both panes in the same scrollable activity. Expand and return-to-questions
-remain available; the 560px workspace does not grow with the complete practice set.
+remain available; the workspace is capped at 560px and shrinks with the available viewport height,
+independently of the complete practice set. Its writing-area minimum also allows the toolbar and
+page controls to fit at short viewports.
 
 These arrangements follow component roles and response policy, never titles, subjects or text length.
 Existing graph composition and figure geometry still determine how figures render inside the surface.
@@ -40,6 +42,9 @@ Additional `*-workspace.png` views show the after-state workbook/page controls a
 The `200-percent-reflow` capture uses a 768x480 CSS viewport, equivalent to the layout space at
 200% browser zoom on a 1536x960 content viewport. This is an automated reflow check, not a claim
 that a browser's native zoom menu was operated. The phone capture separately checks 390x844.
+An additional isolated full-Chromium profile check applies native page zoom at 100% and 200%.
+It verifies devicePixelRatio 1/2, halved CSS layout width, and final-question/subpart reachability;
+the receipt and native screenshots are included in the delivery package.
 
 The final question and every subpart are scrolled into view and checked against the footer's actual
 position. Navigation from that scrolled position must reset the page to zero and focus the title.
@@ -47,7 +52,8 @@ The old player already passed the navigation test: the earlier headerless captur
 views, not evidence of a navigation defect. No fixed-height activity screen has been introduced.
 
 `variations/results.json` records the source application SHA-256, assertions, errors and viewports.
-At initial implementation validation, all 367 layout checks and all 67 existing player checks passed.
+After review corrections, all 377 surface checks and all 67 existing player checks passed,
+including the entire typed/pen workbook and controls at a 768x480 viewport.
 Exact final-head regression, review, merge and publication receipts are supplied in the delivery
 package; these implementation captures do not claim those later stages have already completed.
 

@@ -1,6 +1,6 @@
 {
-  "ref": "03572ff2e888c4397de2a9700ccb3a4834e2f6bc",
-  "appSha256": "29dbca06199967c1521c89e764c41f82068b0d0d31701ebb720b0e3c1c8a9279",
+  "ref": "working-tree (uncommitted, based on 35c0450029c481427cca57e08ef94fa89f97a341)",
+  "appSha256": "959b956046169c2b3cd4b6303248591f5e022e4e5062b34fed195994ca51a126",
   "checks": [
     "UI import Reading a source critically",
     "qualitative 1536 instructional text has a white ancestor",
@@ -361,6 +361,16 @@
     "phone question/subpart reachable above footer",
     "phone question/subpart reachable above footer",
     "navigation resets heading at phone",
+    "UI import Factorising quadratics",
+    "typed whole workbook fits short viewport",
+    "typed short viewport retains useful writing area",
+    "typed short viewport controls visible .mx-wsbar",
+    "typed short viewport controls visible .mx-pagetabs",
+    "UI import Factorising quadratics",
+    "pen whole workbook fits short viewport",
+    "pen short viewport retains useful writing area",
+    "pen short viewport controls visible .mx-wsbar",
+    "pen short viewport controls visible .mx-pagetabs",
     "UI import Figure composition variation",
     "figure role selects wider media span",
     "existing figure renderer remains visible",
@@ -593,6 +603,20 @@
       "viewport": {
         "width": 390,
         "height": 844
+      }
+    },
+    {
+      "name": "typed-short-viewport",
+      "viewport": {
+        "width": 768,
+        "height": 480
+      }
+    },
+    {
+      "name": "pen-short-viewport",
+      "viewport": {
+        "width": 768,
+        "height": 480
       }
     },
     {
