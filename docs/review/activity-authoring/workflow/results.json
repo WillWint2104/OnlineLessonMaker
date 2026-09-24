@@ -1,0 +1,182 @@
+{
+  "head": "576c3fa81be9950691048b1f9af8d91b65ecc734",
+  "appSha256": "57222bc2edc484bb0eca065b4b84b893c2696bdbcd7ff27a287ab2f86283d96a",
+  "checks": [
+    "Add skill reachable from a new blank activity lesson",
+    "Note reorder changes the intended skill data 0",
+    "Step reorder retains identities 0",
+    "Question reorder changes the selected activity 0",
+    "Removing a question preserves the surviving table blanks 0",
+    "One optional-video slot per skill 0",
+    "Video URL saves in the skill representation 0",
+    "Video URL can be edited 0",
+    "Video URL can be cleared without losing slot 0",
+    "Note reorder changes the intended skill data 1",
+    "Step reorder retains identities 1",
+    "Question reorder changes the selected activity 1",
+    "Removing a question preserves the surviving table blanks 1",
+    "One optional-video slot per skill 1",
+    "Video URL saves in the skill representation 1",
+    "Video URL can be edited 1",
+    "Video URL can be cleared without losing slot 1",
+    "Skill reorder changes actual data",
+    "Skill removal retains two authored skills",
+    "Activity reorder retains selection",
+    "Both skills were built with genuine multistep examples",
+    "Saved response policy stays paper",
+    "Actual learner preview honours paper mode",
+    "Empty video slots are omitted in learner preview",
+    "Reopen valid lesson via file JSON",
+    "Fresh-context JSON reopen preserves complete authored data",
+    "Reopened nested table remains editable",
+    "Independent offline HTML preserves all authored structures",
+    "Published browser-tab title uses lesson metadata",
+    "Published learner has no author controls",
+    "Reopen valid lesson via file JSON",
+    "Source editing preserves every unrelated imported field",
+    "Reopen valid lesson via file JSON",
+    "Array-form instructional table values are visible",
+    "Array-form table edits keep the original row representation",
+    "Intermediate domain typing is retained",
+    "Incomplete expression is retained without crashing",
+    "Unexposed example metadata survives graph and step editing",
+    "Group reorder preserves the existing group identity",
+    "Group deletion selects a surviving neighbour",
+    "Temporary group/example operations preserve the richer original object",
+    "Reopen valid lesson via file JSON",
+    "Embedded graph edits preserve aliases, other points, segment endpoint and wrapper metadata",
+    "Wrapped instructional table retains wrapper metadata",
+    "Reopen valid lesson via file JSON",
+    "Explicit organisation keeps legacy example content and identities intact",
+    "Reopen valid lesson via file JSON",
+    "Rich relationship item edit preserves its source and sibling statement",
+    "Reopen valid lesson via file JSON",
+    "Authoring/preview preserves responseMode paper",
+    "Reopen valid lesson via file JSON",
+    "Authoring/preview preserves responseMode typed",
+    "Reopen valid lesson via file JSON",
+    "Authoring/preview preserves responseMode pen",
+    "Reopen valid lesson via file JSON",
+    "Authoring/preview preserves responseMode type",
+    "Reopen valid lesson via file JSON",
+    "Authoring/preview preserves responseMode write",
+    "Reopen valid lesson via file JSON",
+    "One skill uses singular interface text",
+    "Supporting-table answer remains beside the reasoning above the table bottom",
+    "Paper fallback is subject-neutral",
+    "Reopen valid lesson via file JSON",
+    "Single repeated example title becomes one principal heading and a type label",
+    "Single-example section keeps an accessible heading sequence",
+    "Authoring application retains its browser title",
+    "No browser errors: "
+  ],
+  "captures": [
+    {
+      "name": "01-blank-lesson-controls",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "skill-0-table-editor",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "skill-0-practice-editor",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "skill-0-optional-video",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "02-second-skill-controls",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "skill-1-table-editor",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "skill-1-practice-editor",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "skill-1-optional-video",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "paper-preview",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "reopened-nested-table",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "worked-learner-desktop",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "worked-learner-tablet",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "qualitative-source-editor",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "physics-graph-editor",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "physics-graph-learner",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    }
+  ],
+  "errors": [],
+  "source": "working-tree based on 576c3fa81be9950691048b1f9af8d91b65ecc734"
+}

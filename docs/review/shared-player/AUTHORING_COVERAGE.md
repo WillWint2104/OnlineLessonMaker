@@ -1,3 +1,5 @@
+Historical report. See [current connected-authoring coverage](../activity-authoring/AUTHORING_COVERAGE.md) for the subsequent integration.
+
 # Graphical authoring boundary at 0c3a8e1
 
 The new player has a limited activity inspector. The established detailed mathematics editor

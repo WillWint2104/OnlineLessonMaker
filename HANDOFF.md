@@ -2,6 +2,10 @@
 
 _Last updated: 2026-06-20_
 
+## Connected activity authoring (24 September 2026)
+
+Continue from PR #155. The current activity inspector exposes skills, supported activity creation, nested mathematics editing, question/subpart/table controls and optional video-slot lifecycle. Its mathematics adapter uses the registered shared-player authoring contract and rebases the existing controls to the active activity. See docs/review/activity-authoring/AUTHORING_COVERAGE.md for supported UI operations and preserved JSON-only boundaries. The coordinated suite has 27 gates, with an explicit recorded CORPUS_REF. Tablet question-reference enhancement remains deferred; do not make it block paper-mode authoring.
+
 ## Shared activity surface pass (24 September 2026)
 
 The shared player now owns white activity surfaces and role-based reading/practice/media/response

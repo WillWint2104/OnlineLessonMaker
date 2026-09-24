@@ -1,0 +1,18 @@
+# Actual browser captures
+
+- [01-blank-lesson-controls.png](workflow/01-blank-lesson-controls.png)
+- [02-second-skill-controls.png](workflow/02-second-skill-controls.png)
+- [independent-learner.png](workflow/independent-learner.png)
+- [paper-preview.png](workflow/paper-preview.png)
+- [physics-graph-editor.png](workflow/physics-graph-editor.png)
+- [physics-graph-learner.png](workflow/physics-graph-learner.png)
+- [qualitative-source-editor.png](workflow/qualitative-source-editor.png)
+- [reopened-nested-table.png](workflow/reopened-nested-table.png)
+- [skill-0-optional-video.png](workflow/skill-0-optional-video.png)
+- [skill-0-practice-editor.png](workflow/skill-0-practice-editor.png)
+- [skill-0-table-editor.png](workflow/skill-0-table-editor.png)
+- [skill-1-optional-video.png](workflow/skill-1-optional-video.png)
+- [skill-1-practice-editor.png](workflow/skill-1-practice-editor.png)
+- [skill-1-table-editor.png](workflow/skill-1-table-editor.png)
+- [worked-learner-desktop.png](workflow/worked-learner-desktop.png)
+- [worked-learner-tablet.png](workflow/worked-learner-tablet.png)

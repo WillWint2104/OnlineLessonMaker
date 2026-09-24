@@ -1,0 +1,256 @@
+{
+  "meta": {
+    "id": "lesson-4613e6e1-992f-476f-9b25-e0b9f9771104",
+    "title": "Factorising with signed terms",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper"
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "title": "Monic quadratics",
+      "activities": [
+        {
+          "id": "activity-dc667da7-f122-452d-be19-5f8dedc0c7a6",
+          "title": "Find the signed pair",
+          "notes": [
+            {
+              "term": "Reverse expansion",
+              "body": "Find two integers whose product is −20 and sum is 1. Expand your brackets to check."
+            }
+          ]
+        },
+        {
+          "id": "activity-688c4c8d-1366-490e-858c-f3856195dbde",
+          "title": "Factorise with opposite signs",
+          "workedExamples": [
+            {
+              "id": "group-1f58571b-7f6f-43b3-b7f6-71402fbf876a",
+              "type": "sequence",
+              "title": "A complete method",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "example-6750f023-eb9f-4323-9732-dbef86bb1046",
+                  "label": "Factorise with opposite signs",
+                  "prompt": "Factorise _x_^2 + _x_ − 20.",
+                  "steps": [
+                    {
+                      "id": "step-14474782-2d21-485a-be93-8fdcbd1f69c9",
+                      "text": "Find a pair with product −20.",
+                      "math": "5 × (−4) = −20"
+                    },
+                    {
+                      "id": "s2-u8o7",
+                      "text": "Check the sum.",
+                      "math": "5 + (−4) = 1"
+                    },
+                    {
+                      "id": "s3-ufrq",
+                      "text": "Write the factors.",
+                      "math": "(_x_ + 5)(_x_ − 4)"
+                    }
+                  ],
+                  "answer": "(_x_ + 5)(_x_ − 4)",
+                  "visual": [
+                    {
+                      "kind": "table",
+                      "label": "",
+                      "stub": "",
+                      "head": [
+                        "Pair",
+                        "Sum"
+                      ],
+                      "rows": [
+                        {
+                          "label": "Candidate",
+                          "cells": [
+                            "5, −4",
+                            "1"
+                          ]
+                        },
+                        {
+                          "label": "Product",
+                          "cells": [
+                            "",
+                            "−20"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "activity-ef5b6719-8f17-406b-90d7-74c88f1aae07",
+          "title": "Practise and check",
+          "questions": [
+            {
+              "id": "question-f25f16cb-3700-4127-b3e1-d74b3223a203",
+              "stem": "Factorise each expression and check by expanding.",
+              "parts": [
+                "_x_^2 − 3_x_ − 18",
+                "_x_^2 + 2_x_ − 24"
+              ],
+              "table": {
+                "label": "",
+                "stub": "",
+                "head": [
+                  "Expression",
+                  "Factors"
+                ],
+                "rows": [
+                  {
+                    "label": "Row 1",
+                    "cells": [
+                      "_x_^2 + _x_ − 20",
+                      ""
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "activity-1d5bb324-b4c6-48b9-b330-60a46cfa0c54",
+          "title": "Optional video",
+          "optionalVideo": true
+        }
+      ],
+      "video": {
+        "url": ""
+      },
+      "id": "skill-fv5en"
+    },
+    {
+      "type": "skill",
+      "title": "Non-monic quadratics",
+      "activities": [
+        {
+          "id": "activity-d5ae212c-25f5-42d0-9e68-00756ebb2827",
+          "title": "Split the middle term",
+          "notes": [
+            {
+              "term": "Product and sum",
+              "body": "For 2_x_^2 + 5_x_ − 3, split 5_x_ into 6_x_ − _x_, then group."
+            }
+          ]
+        },
+        {
+          "id": "activity-9a76a2c8-6faa-4a23-b44d-d26058178866",
+          "title": "Factorise a non-monic expression",
+          "workedExamples": [
+            {
+              "id": "group-a24ea40a-7f76-457d-8aef-e290958a0d81",
+              "type": "sequence",
+              "title": "A complete method",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "example-41233121-5893-4c51-8aee-675860e01daa",
+                  "label": "Factorise a non-monic expression",
+                  "prompt": "Factorise 2_x_^2 + 5_x_ − 3.",
+                  "steps": [
+                    {
+                      "id": "step-dda1323d-fb07-4314-b027-c0a3895b399d",
+                      "text": "Multiply a and c.",
+                      "math": "2 × (−3) = −6"
+                    },
+                    {
+                      "id": "s2-vdm5",
+                      "text": "Find the signed pair.",
+                      "math": "6 + (−1) = 5"
+                    },
+                    {
+                      "id": "s3-892u",
+                      "text": "Split and group.",
+                      "math": "2_x_(_x_ + 3) − 1(_x_ + 3)"
+                    },
+                    {
+                      "id": "s4-hq9s",
+                      "text": "Factor the common bracket.",
+                      "math": "(2_x_ − 1)(_x_ + 3)"
+                    }
+                  ],
+                  "answer": "(2_x_ − 1)(_x_ + 3)",
+                  "visual": [
+                    {
+                      "kind": "table",
+                      "label": "",
+                      "stub": "",
+                      "head": [
+                        "Pair",
+                        "Sum"
+                      ],
+                      "rows": [
+                        {
+                          "label": "Candidate",
+                          "cells": [
+                            "6, −1",
+                            "5"
+                          ]
+                        },
+                        {
+                          "label": "Product",
+                          "cells": [
+                            "",
+                            "−6"
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "activity-48515e64-cc57-45e0-8dab-f1d7dde51e20",
+          "title": "Practise and check",
+          "questions": [
+            {
+              "id": "question-65ce61a9-495a-44e4-816c-e386064e123d",
+              "stem": "Factorise each expression and check by expanding.",
+              "parts": [
+                "3_x_^2 + 11_x_ + 6",
+                "2_x_^2 − 7_x_ + 3"
+              ],
+              "table": {
+                "label": "",
+                "stub": "",
+                "head": [
+                  "Expression",
+                  "Factors"
+                ],
+                "rows": [
+                  {
+                    "label": "Row 1",
+                    "cells": [
+                      "2_x_^2 + 5_x_ − 3",
+                      ""
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "activity-3797ddd8-1d48-4742-87f7-258336974508",
+          "title": "Optional video",
+          "optionalVideo": true
+        }
+      ],
+      "video": {
+        "url": ""
+      },
+      "id": "skill-rjt4w"
+    }
+  ]
+}
