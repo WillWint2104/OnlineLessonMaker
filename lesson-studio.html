@@ -97,8 +97,9 @@ body.edit #slide .lp .mx-top button,body.edit #slide .lp .mx-nav button,body.edi
 @container (min-width:700px){
   .lp .lp-table-working{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:24px;align-items:start;}
   .lp .lp-table-working>.mx-wexaside{margin:0;}
-  .lp .lp-table-working>.mx-wexres{grid-column:1 / -1;}
+  .lp .lp-table-reasoning{min-width:0;}
 }
+.lp .lp-kind{font-size:12px;font-weight:600;line-height:1.5;letter-spacing:.08em;text-transform:uppercase;color:var(--mx-ink-2);margin:0 0 18px;}
 @media(max-width:1100px){.lp .mx-page{padding:24px;}.lp-title{font-size:30px;}}
 @media(max-width:600px){.lp .mx-page{padding:16px 12px 28px;}.lp-activity{--lp-pad:22px;}.lp-activity[data-lp-arrangement="response"] .lp-header,.lp-activity[data-lp-arrangement="response"] .mx-content{padding:22px;}.lp .mx-top{flex-wrap:wrap;}.lp-brand{max-width:210px;font-size:14px;}.lp-footer{padding:12px;}.lp-footer button{padding:10px 12px;}.lp-title{font-size:28px;}}
 
@@ -9056,14 +9057,17 @@ function mxWexEx(ex,k,state,extra){
   const ask=!!(q&&show('question'));
   const companion=mxParts(ex.visual);
   const tableWorking=lpEnabled(LESSON.slides[cur])&&extra&&companion.length&&companion.every(part=>part.kind==='table');
+  const activity=lpEnabled(LESSON.slides[cur])&&lpCurrent(LESSON.slides[cur]);
+  const sameTitle=activity&&lpSingleExample(activity)===ex&&String(ex.label||'').trim()===String(activity.title||'').trim();
+  const heading=sameTitle?'h3':'h4';
+  const steps=show('steps')?`<section class="mx-wexsec" data-mx-sec="steps"><${heading} class="mx-wexlab">Worked solution</${heading}>${mxWexSteps(ex,state&&state.steps)}</section>`:'';
+  const answer=(a&&show('answer'))?`<div class="mx-wexres" data-mx-region="answer" data-mx-sec="answer"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span><span class="mx-wexrv">${mxM(a)}</span></div>`:'';
   return `<article class="mx-wexex" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${ask?'':' data-mx-form="solo"'}>
-    <h3 class="mx-wexh" data-mx-region="title">${mxM(String(ex.label||('Example '+(k+1))))}</h3>
-    ${ask?`<div class="mx-wexask" data-mx-region="question" data-mx-sec="question"><h4 class="mx-wexlab">Question</h4>
+    ${sameTitle?'':`<h3 class="mx-wexh" data-mx-region="title">${mxM(String(ex.label||('Example '+(k+1))))}</h3>`}
+    ${ask?`<div class="mx-wexask" data-mx-region="question" data-mx-sec="question"><${heading} class="mx-wexlab">Question</${heading}>
       <div class="mx-wexqb">${mxM(q)}</div></div>`:''}
     <div class="mx-wexwork${tableWorking?' lp-table-working':''}" data-mx-region="working">
-      ${show('steps')?`<section class="mx-wexsec" data-mx-sec="steps"><h4 class="mx-wexlab">Worked solution</h4>${mxWexSteps(ex,state&&state.steps)}</section>`:''}
-      ${extra||''}
-      ${(a&&show('answer'))?`<div class="mx-wexres" data-mx-region="answer" data-mx-sec="answer"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span><span class="mx-wexrv">${mxM(a)}</span></div>`:''}
+      ${tableWorking?`<div class="lp-table-reasoning">${steps}${answer}</div>${extra}`:steps+(extra||'')+answer}
     </div></article>`;
 }
 /* A PART IS DRAWN ONCE. When `comparison` lifts the plane into the middle column it IS the bridge between
@@ -9304,6 +9308,10 @@ registerWorkspace('videoSupport',(ws)=>{
 /* Shared skill player. Activities compose the existing skill content vocabulary; no theme routing. */
 let LP_STATE={lesson:null,activity:{},end:false};
 function lpEnabled(s){ return !!(s&&s.type==='skill'&&Array.isArray(s.activities)); }
+function lpSingleExample(a){
+  const groups=a.workedExamples||[], examples=groups.length?groups.flatMap(g=>g.examples||[]):(a.examples||[]);
+  return groups.length<=1&&examples.length===1?examples[0]:null;
+}
 function lpActivities(s){ return s.activities.filter(a=>!a.optionalVideo||!!toEmbed(safeUrl((s.video||{}).url||'','embed'))||authorMode()==='edit'); }
 function lpCurrent(s){
   if(LP_STATE.lesson!==LESSON){ LP_STATE={lesson:LESSON,activity:{},end:false}; }
@@ -9352,7 +9360,7 @@ function lpRender(s,i){
   const rail=LESSON.slides.map((sk,k)=>`<li><button class="mx-navitem${k===i?' on':''}" data-lp-go="${k}" aria-current="${k===i?'page':'false'}"><span class="mx-navtx"><span>Skill ${k+1}</span><b>${esc(sk.title)}</b></span></button>${k===i?`<ol class="lp-activities">${lpActivities(sk).map((act,j)=>`<li><button data-lp-go="${k}:${esc(act.id)}"${act===a&&!end?' aria-current="step"':''}>${j+1}. ${esc(act.title)}</button></li>`).join('')}</ol>`:''}</li>`).join('');
   return `<div class="mx lp${open?' mx-navopen':''}" data-rp-type="skill" data-rp-layout="responsive" data-mx-response="${esc(mxResponseMode())}" data-mx-view="split" style="--mx-green:${accent};--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px;--mx-rep-min-h:${MX_REP_MIN_H}px">
     <header class="mx-top"><button class="mx-iconbtn" data-rp-navtoggle aria-label="Show lesson skills" aria-expanded="${open}" aria-controls="mxNav">${mxIc('menu')}</button><b class="lp-brand">${esc(m.title)}</b><div class="mx-top-sp"></div><div class="mx-modes">${document.documentElement.dataset.export?'':MX_MODES.filter(x=>x.id!=='worksheet').concat([{id:'json',label:'JSON'}]).map(x=>`<button class="mx-mode${x.state&&x.state()?' on':''}" data-mx-mode="${x.id}">${esc(x.label)}</button>`).join('')}</div></header>
-    <div class="mx-body"><nav class="mx-nav" id="mxNav" aria-label="Skills and activities"><div class="mx-navhead"><div class="mx-course">Lesson outline</div><p class="mx-coursemeta">${LESSON.slides.length} skills · revisit any activity</p></div><ol class="mx-navlist">${rail}</ol></nav><button class="mx-scrim" data-rp-navtoggle tabindex="-1" aria-hidden="true"></button>
+    <div class="mx-body"><nav class="mx-nav" id="mxNav" aria-label="Skills and activities"><div class="mx-navhead"><div class="mx-course">Lesson outline</div><p class="mx-coursemeta">${LESSON.slides.length} ${LESSON.slides.length===1?'skill':'skills'} · revisit any activity</p></div><ol class="mx-navlist">${rail}</ol></nav><button class="mx-scrim" data-rp-navtoggle tabindex="-1" aria-hidden="true"></button>
     <main class="mx-main"><div class="mx-page" tabindex="-1" data-mx-surface="activity"><article class="lp-activity" data-lp-arrangement="${arrangement}" aria-labelledby="lpTitle">${errors}<header class="lp-header"><div class="lp-location">Skill ${i+1} of ${LESSON.slides.length} · ${esc(s.title)}</div>
       <h1 id="lpTitle" class="lp-title" tabindex="-1">${esc(end?'End of lesson':(a?a.title:'Add your first activity'))}</h1>${!end&&a&&a.lede?`<p class="mx-lede">${mxM(a.lede)}</p>`:''}
       <div class="lp-response-view">${ws?`<div class="mx-viewsw"><button type="button" data-mx-view="questions">Questions and working</button><button type="button" data-mx-view="workbook">Workbook</button></div>`:''}</div></header>
@@ -9391,9 +9399,9 @@ function lpInspector(s,i){
   ins.querySelectorAll('[data-lp-skillmove]').forEach(b=>b.onclick=()=>{const to=i+(+b.dataset.lpSkillmove);if(to<0||to>=LESSON.slides.length)return;[LESSON.slides[i],LESSON.slides[to]]=[LESSON.slides[to],LESSON.slides[i]];go(to);});
 }
 
-function mxSkillSection(n,title,body,extra){
+function mxSkillSection(n,title,body,extra,kind){
   return `<section class="mx-sk-sec"${extra||''}>
-    <h2 class="mx-sk-h"><span class="mx-sk-n">${n}</span>${mxM(title)}</h2>
+    <h2 class="${kind?'lp-kind':'mx-sk-h'}">${kind?'':`<span class="mx-sk-n">${n}</span>`}${mxM(kind?'Worked example':title)}</h2>
     ${body}</section>`;
 }
 /* THE VIDEO, HONESTLY. A real URL is embedded through the app's own safeUrl/toEmbed gate — the same
@@ -9427,13 +9435,15 @@ function mxSkillPage(s,i){
   /* A GROUP KEEPS ITS NAME. On a worked-examples page the tab bar carried the group's teaching title
      ("The same method, three sign patterns"); a skill has no tabs, so without this the title vanished and
      two groups ran together as one undifferentiated list. The title is the heading it always was. */
+  const single=lpEnabled(LESSON.slides[i])&&lpSingleExample(s);
+  const workedHeading=single&&String(single.label||'').trim()===String(s.title||'').trim();
   if(groups.length) sec.push(mxSkillSection(++n,s.examplesTitle||'Worked examples',
     `<div class="mx-wex mx-sk-wex" ${mxWexVars()}>${groups.map(g=>
-      `<div class="mx-sk-grp">${groups.length>1?`<h3 class="mx-sk-gh">${mxM(g.title)}</h3>`:''}${mxWexGroup(g,s,i,false)}</div>`).join('')}</div>`));
+      `<div class="mx-sk-grp">${groups.length>1?`<h3 class="mx-sk-gh">${mxM(g.title)}</h3>`:''}${mxWexGroup(g,s,i,false)}</div>`).join('')}</div>`,null,workedHeading));
   if(questions.length){
     /* THE INSTRUCTION IS PART OF THE QUESTION SET ON PAPER. A student reading a website has to be told
        where the work goes; the lesson says it once, above the questions, rather than implying it. */
-    const ask=s.practiceNote||(mxOnPaper()?'Show your working in your exercise book.':'');
+    const ask=s.practiceNote||(mxOnPaper()?'Answer the questions in your exercise book.':'');
     sec.push(mxSkillSection(++n,s.questionsTitle||'Practice',
       `${ask?`<p class="mx-sk-ask">${mxM(ask)}</p>`:''}<div class="mx-col mx-sk-qs">${mxQuestionList(questions,page)}</div>`));
   }
@@ -13472,6 +13482,7 @@ $('#exportBtn').onclick=async ()=>{
     const res=await inlineRemoteAssets(LESSON);   // deep clone; in-memory LESSON untouched
     document.getElementById('lesson-data').textContent=JSON.stringify(res.lesson,null,2).replace(/</g,'\\u003c');
     const clone=document.documentElement.cloneNode(true);
+    clone.querySelector('title').textContent=LESSON.meta.title||'Lesson';
     if(LESSON.slides.every(lpEnabled)) clone.querySelectorAll('script[src="assets/vendor/model-viewer.min.js"]').forEach(el=>el.remove());
     clone.querySelector('#slide').innerHTML='';        // re-renders fresh from data on open
     const ins=clone.querySelector('#inspector'); if(ins) ins.innerHTML='';   // edit-only panel never ships

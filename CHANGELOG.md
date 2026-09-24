@@ -7,6 +7,10 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Connected activity authoring
+- Refine redundant single-example headings, keep supporting-table answers with reasoning, use neutral paper instructions and singular skill labels, and name exported browser tabs from lesson metadata.
+- Retain the shared presentation baseline; tablet question-reference enhancements remain deferred.
+
 ### Shared activity surfaces and response balance
 - Put activity context, headings, explanations, worked examples and paper questions on one white
   learning surface. Keep the pale canvas outside it; remove nested notes/example card chrome.
