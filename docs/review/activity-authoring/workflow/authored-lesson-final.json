@@ -2,7 +2,7 @@
   "meta": {
     "title": "Factorising with signed terms",
     "theme": "neutral",
-    "id": "lesson-b1a26df3-8afd-40d8-92af-6b1a008303d6",
+    "id": "lesson-3be47f15-d813-409d-9118-dce67bb1037b",
     "player": "activities",
     "responseMode": "paper"
   },
@@ -12,7 +12,7 @@
       "title": "Monic quadratics",
       "activities": [
         {
-          "id": "activity-b2e9ef8a-76a2-4cc2-9df8-c0138a1d8f1a",
+          "id": "activity-a5e4bd97-2116-4d0e-b07f-389eb67e48d5",
           "title": "Find the signed pair",
           "notes": [
             {
@@ -22,33 +22,33 @@
           ]
         },
         {
-          "id": "activity-0b169f33-106b-423e-852d-94cffa134679",
+          "id": "activity-aa9f471a-1658-4a38-a45b-50db33492e66",
           "title": "Factorise with opposite signs",
           "workedExamples": [
             {
-              "id": "group-d28d3325-cfee-45b7-a8c0-d3dad60e3cfd",
+              "id": "group-5188345f-0bc8-47bc-83f6-3d7c478ac82e",
               "type": "sequence",
               "title": "A complete method",
               "lede": "",
               "examples": [
                 {
-                  "id": "example-18654c4a-c700-47b3-a9c2-9a1cc3ba66e8",
+                  "id": "example-41f3bc3c-de29-4430-9d97-54c81f977947",
                   "label": "Factorise with opposite signs",
                   "prompt": "Factorise _x_^2 + _x_ − 20.",
                   "steps": [
                     {
-                      "id": "step-a98b42f5-cf4c-43cd-a3b9-90afb38cb64e",
+                      "id": "step-d0d1ce51-f3c3-4d99-9dd2-e87cc6b60613",
                       "text": "Find a pair with product −20.",
                       "math": "5 × (−4) = −20",
                       "note": "Check both the product and the sum."
                     },
                     {
-                      "id": "s2-sujl",
+                      "id": "s2-l009",
                       "text": "Check the sum.",
                       "math": "5 + (−4) = 1"
                     },
                     {
-                      "id": "s3-x38w",
+                      "id": "s3-n403",
                       "text": "Write the factors.",
                       "math": "(_x_ + 5)(_x_ − 4)"
                     }
@@ -90,11 +90,11 @@
           ]
         },
         {
-          "id": "activity-4aaa19dc-e7a2-4161-8da3-990a50052f75",
+          "id": "activity-0d9a9eca-4b07-44ee-a015-1ded5baa0e1e",
           "title": "Practise and check",
           "questions": [
             {
-              "id": "question-13cfca16-1fe7-494e-862f-0661fd8dc34a",
+              "id": "question-ca11c23f-eae5-4275-aec5-551c6707cd25",
               "stem": "Factorise each expression and check by expanding.",
               "parts": [
                 "_x_^2 − 3_x_ − 18",
@@ -121,7 +121,7 @@
           ]
         },
         {
-          "id": "activity-de59b5df-1b26-431b-8e31-accee05a7b90",
+          "id": "activity-c037e97a-55fd-407b-8645-0e5a5df4779c",
           "title": "Optional video",
           "optionalVideo": true
         }
@@ -129,14 +129,14 @@
       "video": {
         "url": ""
       },
-      "id": "skill-00sqx"
+      "id": "skill-hj4z8"
     },
     {
       "type": "skill",
       "title": "Non-monic quadratics",
       "activities": [
         {
-          "id": "activity-5e0f2c73-86d4-4c54-8604-5fd349b44e93",
+          "id": "activity-1c79afb3-2b4f-4307-91ed-0698803ba877",
           "title": "Split the middle term",
           "notes": [
             {
@@ -146,37 +146,37 @@
           ]
         },
         {
-          "id": "activity-00357589-8159-4c00-ae0d-cdd48571a0af",
+          "id": "activity-9664835e-de11-47bc-aa85-f3349874ee34",
           "title": "Factorise a non-monic expression",
           "workedExamples": [
             {
-              "id": "group-2652ceb6-1574-4753-a5d4-826d5c4bcdf3",
+              "id": "group-6f628fc6-cad4-4cea-8488-ebcaebeec3b9",
               "type": "sequence",
               "title": "A complete method",
               "lede": "",
               "examples": [
                 {
-                  "id": "example-b896d9c4-5b1a-45d5-b03e-d16c4bb54121",
+                  "id": "example-87f05a58-a3ff-496d-ba92-372d6defb391",
                   "label": "Factorise a non-monic expression",
                   "prompt": "Factorise 2_x_^2 + 5_x_ − 3.",
                   "steps": [
                     {
-                      "id": "step-d213792f-6cc0-4a7d-afe8-06bac34fac70",
+                      "id": "step-efe6e7aa-eb4b-4797-9df0-38b4418e6c5e",
                       "text": "Multiply a and c.",
                       "math": "2 × (−3) = −6"
                     },
                     {
-                      "id": "s2-y9cq",
+                      "id": "s2-kllm",
                       "text": "Find the signed pair.",
                       "math": "6 + (−1) = 5"
                     },
                     {
-                      "id": "s3-0zly",
+                      "id": "s3-a0rx",
                       "text": "Split and group.",
                       "math": "2_x_(_x_ + 3) − 1(_x_ + 3)"
                     },
                     {
-                      "id": "s4-ci99",
+                      "id": "s4-2j80",
                       "text": "Factor the common bracket.",
                       "math": "(2_x_ − 1)(_x_ + 3)"
                     }
@@ -218,11 +218,11 @@
           ]
         },
         {
-          "id": "activity-f1354096-b684-4a51-bf74-f2597db91a6f",
+          "id": "activity-1fa7b738-3f88-4d91-b176-089c2a08035a",
           "title": "Practise and check",
           "questions": [
             {
-              "id": "question-569e5db3-8478-4a73-8355-ad39485af1c4",
+              "id": "question-01f8145a-c104-48a6-afea-dfac228a195c",
               "stem": "Factorise each expression and check by expanding.",
               "parts": [
                 "3_x_^2 + 11_x_ + 6",
@@ -249,7 +249,7 @@
           ]
         },
         {
-          "id": "activity-93bb3268-700c-4ca0-82c4-857214dfd72a",
+          "id": "activity-efd1902f-2c3a-4605-b8e3-2e5f252355a9",
           "title": "Optional video",
           "optionalVideo": true
         }
@@ -257,7 +257,7 @@
       "video": {
         "url": ""
       },
-      "id": "skill-f25fi"
+      "id": "skill-95iwc"
     }
   ]
 }
