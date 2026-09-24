@@ -1,10 +1,11 @@
 {
-  "head": "576c3fa81be9950691048b1f9af8d91b65ecc734",
-  "appSha256": "57222bc2edc484bb0eca065b4b84b893c2696bdbcd7ff27a287ab2f86283d96a",
+  "head": "3f24262557fc643be8f5670a978dc8049eba37f1",
+  "appSha256": "29440cc5abf197ce559ac5cb16b854116db532e7cd9eb979d2d7ebe9e9106d04",
   "checks": [
     "Add skill reachable from a new blank activity lesson",
     "Note reorder changes the intended skill data 0",
     "Step reorder retains identities 0",
+    "Product has its own instructional column 0",
     "Question reorder changes the selected activity 0",
     "Removing a question preserves the surviving table blanks 0",
     "One optional-video slot per skill 0",
@@ -13,6 +14,7 @@
     "Video URL can be cleared without losing slot 0",
     "Note reorder changes the intended skill data 1",
     "Step reorder retains identities 1",
+    "Product has its own instructional column 1",
     "Question reorder changes the selected activity 1",
     "Removing a question preserves the surviving table blanks 1",
     "One optional-video slot per skill 1",
@@ -46,6 +48,10 @@
     "Reopen valid lesson via file JSON",
     "Embedded graph edits preserve aliases, other points, segment endpoint and wrapper metadata",
     "Wrapped instructional table retains wrapper metadata",
+    "Reopen valid lesson via file JSON",
+    "Filtered example part binds and moves by its raw index",
+    "Filtered step part binds and moves by its raw index",
+    "Filtered companion deletion preserves null slots, sibling objects and both wrappers",
     "Reopen valid lesson via file JSON",
     "Explicit organisation keeps legacy example content and identities intact",
     "Reopen valid lesson via file JSON",
@@ -178,5 +184,5 @@
     }
   ],
   "errors": [],
-  "source": "working-tree based on 576c3fa81be9950691048b1f9af8d91b65ecc734"
+  "source": "working-tree based on 3f24262557fc643be8f5670a978dc8049eba37f1"
 }

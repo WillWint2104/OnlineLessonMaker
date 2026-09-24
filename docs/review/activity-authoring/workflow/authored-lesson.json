@@ -1,6 +1,6 @@
 {
   "meta": {
-    "id": "lesson-4613e6e1-992f-476f-9b25-e0b9f9771104",
+    "id": "lesson-b1a26df3-8afd-40d8-92af-6b1a008303d6",
     "title": "Factorising with signed terms",
     "theme": "neutral",
     "player": "activities",
@@ -12,7 +12,7 @@
       "title": "Monic quadratics",
       "activities": [
         {
-          "id": "activity-dc667da7-f122-452d-be19-5f8dedc0c7a6",
+          "id": "activity-b2e9ef8a-76a2-4cc2-9df8-c0138a1d8f1a",
           "title": "Find the signed pair",
           "notes": [
             {
@@ -22,32 +22,32 @@
           ]
         },
         {
-          "id": "activity-688c4c8d-1366-490e-858c-f3856195dbde",
+          "id": "activity-0b169f33-106b-423e-852d-94cffa134679",
           "title": "Factorise with opposite signs",
           "workedExamples": [
             {
-              "id": "group-1f58571b-7f6f-43b3-b7f6-71402fbf876a",
+              "id": "group-d28d3325-cfee-45b7-a8c0-d3dad60e3cfd",
               "type": "sequence",
               "title": "A complete method",
               "lede": "",
               "examples": [
                 {
-                  "id": "example-6750f023-eb9f-4323-9732-dbef86bb1046",
+                  "id": "example-18654c4a-c700-47b3-a9c2-9a1cc3ba66e8",
                   "label": "Factorise with opposite signs",
                   "prompt": "Factorise _x_^2 + _x_ − 20.",
                   "steps": [
                     {
-                      "id": "step-14474782-2d21-485a-be93-8fdcbd1f69c9",
+                      "id": "step-a98b42f5-cf4c-43cd-a3b9-90afb38cb64e",
                       "text": "Find a pair with product −20.",
                       "math": "5 × (−4) = −20"
                     },
                     {
-                      "id": "s2-u8o7",
+                      "id": "s2-sujl",
                       "text": "Check the sum.",
                       "math": "5 + (−4) = 1"
                     },
                     {
-                      "id": "s3-ufrq",
+                      "id": "s3-x38w",
                       "text": "Write the factors.",
                       "math": "(_x_ + 5)(_x_ − 4)"
                     }
@@ -60,19 +60,22 @@
                       "stub": "",
                       "head": [
                         "Pair",
-                        "Sum"
+                        "Sum",
+                        "Product"
                       ],
                       "rows": [
                         {
                           "label": "Candidate",
                           "cells": [
                             "5, −4",
-                            "1"
+                            "1",
+                            ""
                           ]
                         },
                         {
                           "label": "Product",
                           "cells": [
+                            "",
                             "",
                             "−20"
                           ]
@@ -86,11 +89,11 @@
           ]
         },
         {
-          "id": "activity-ef5b6719-8f17-406b-90d7-74c88f1aae07",
+          "id": "activity-4aaa19dc-e7a2-4161-8da3-990a50052f75",
           "title": "Practise and check",
           "questions": [
             {
-              "id": "question-f25f16cb-3700-4127-b3e1-d74b3223a203",
+              "id": "question-13cfca16-1fe7-494e-862f-0661fd8dc34a",
               "stem": "Factorise each expression and check by expanding.",
               "parts": [
                 "_x_^2 − 3_x_ − 18",
@@ -117,7 +120,7 @@
           ]
         },
         {
-          "id": "activity-1d5bb324-b4c6-48b9-b330-60a46cfa0c54",
+          "id": "activity-de59b5df-1b26-431b-8e31-accee05a7b90",
           "title": "Optional video",
           "optionalVideo": true
         }
@@ -125,14 +128,14 @@
       "video": {
         "url": ""
       },
-      "id": "skill-fv5en"
+      "id": "skill-00sqx"
     },
     {
       "type": "skill",
       "title": "Non-monic quadratics",
       "activities": [
         {
-          "id": "activity-d5ae212c-25f5-42d0-9e68-00756ebb2827",
+          "id": "activity-5e0f2c73-86d4-4c54-8604-5fd349b44e93",
           "title": "Split the middle term",
           "notes": [
             {
@@ -142,37 +145,37 @@
           ]
         },
         {
-          "id": "activity-9a76a2c8-6faa-4a23-b44d-d26058178866",
+          "id": "activity-00357589-8159-4c00-ae0d-cdd48571a0af",
           "title": "Factorise a non-monic expression",
           "workedExamples": [
             {
-              "id": "group-a24ea40a-7f76-457d-8aef-e290958a0d81",
+              "id": "group-2652ceb6-1574-4753-a5d4-826d5c4bcdf3",
               "type": "sequence",
               "title": "A complete method",
               "lede": "",
               "examples": [
                 {
-                  "id": "example-41233121-5893-4c51-8aee-675860e01daa",
+                  "id": "example-b896d9c4-5b1a-45d5-b03e-d16c4bb54121",
                   "label": "Factorise a non-monic expression",
                   "prompt": "Factorise 2_x_^2 + 5_x_ − 3.",
                   "steps": [
                     {
-                      "id": "step-dda1323d-fb07-4314-b027-c0a3895b399d",
+                      "id": "step-d213792f-6cc0-4a7d-afe8-06bac34fac70",
                       "text": "Multiply a and c.",
                       "math": "2 × (−3) = −6"
                     },
                     {
-                      "id": "s2-vdm5",
+                      "id": "s2-y9cq",
                       "text": "Find the signed pair.",
                       "math": "6 + (−1) = 5"
                     },
                     {
-                      "id": "s3-892u",
+                      "id": "s3-0zly",
                       "text": "Split and group.",
                       "math": "2_x_(_x_ + 3) − 1(_x_ + 3)"
                     },
                     {
-                      "id": "s4-hq9s",
+                      "id": "s4-ci99",
                       "text": "Factor the common bracket.",
                       "math": "(2_x_ − 1)(_x_ + 3)"
                     }
@@ -185,19 +188,22 @@
                       "stub": "",
                       "head": [
                         "Pair",
-                        "Sum"
+                        "Sum",
+                        "Product"
                       ],
                       "rows": [
                         {
                           "label": "Candidate",
                           "cells": [
                             "6, −1",
-                            "5"
+                            "5",
+                            ""
                           ]
                         },
                         {
                           "label": "Product",
                           "cells": [
+                            "",
                             "",
                             "−6"
                           ]
@@ -211,11 +217,11 @@
           ]
         },
         {
-          "id": "activity-48515e64-cc57-45e0-8dab-f1d7dde51e20",
+          "id": "activity-f1354096-b684-4a51-bf74-f2597db91a6f",
           "title": "Practise and check",
           "questions": [
             {
-              "id": "question-65ce61a9-495a-44e4-816c-e386064e123d",
+              "id": "question-569e5db3-8478-4a73-8355-ad39485af1c4",
               "stem": "Factorise each expression and check by expanding.",
               "parts": [
                 "3_x_^2 + 11_x_ + 6",
@@ -242,7 +248,7 @@
           ]
         },
         {
-          "id": "activity-3797ddd8-1d48-4742-87f7-258336974508",
+          "id": "activity-93bb3268-700c-4ca0-82c4-857214dfd72a",
           "title": "Optional video",
           "optionalVideo": true
         }
@@ -250,7 +256,7 @@
       "video": {
         "url": ""
       },
-      "id": "skill-rjt4w"
+      "id": "skill-f25fi"
     }
   ]
 }

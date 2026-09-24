@@ -11,6 +11,7 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 - Connect skill/activity creation and nested mathematics editing through the existing registered editor, including notes, questions, tables, graphs, optional-video slots and safe structural edits.
 - Verify the complete blank two-skill UI workflow, JSON reopen and independent publication, preserving rich imported content and saved response policy.
 - Refine redundant single-example headings, keep supporting-table answers with reasoning, use neutral paper instructions and singular skill labels, and name exported browser tabs from lesson metadata.
+- Preserve raw imported companion indexes during nested edits and structural changes, and retain the corpus-reference fallback for local-only checkouts.
 - Retain the shared presentation baseline; tablet question-reference enhancements remain deferred.
 
 ### Shared activity surfaces and response balance

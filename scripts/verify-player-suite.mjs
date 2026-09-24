@@ -2,7 +2,11 @@
 import fs from 'node:fs';
 import {spawnSync,execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
-const corpusRef=process.env.CORPUS_REF||'origin/main';
+let corpusRef=process.env.CORPUS_REF;
+if(!corpusRef)for(const candidate of ['origin/main','main']){
+ try{execFileSync('git',['rev-parse','--verify',candidate+'^{commit}'],{stdio:'ignore'});corpusRef=candidate;break;}catch{}
+}
+if(!corpusRef)throw Error('No corpus reference; set CORPUS_REF to a commit or branch.');
 const dir=(process.env.PLAYER_REVIEW_DIR||'docs/review/shared-player')+'/logs';fs.mkdirSync(dir,{recursive:true});
 fs.writeFileSync(dir+'/run-info.json',JSON.stringify({started:new Date().toISOString(),head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),node:process.version,corpusRef:execFileSync('git',['rev-parse',corpusRef],{encoding:'utf8'}).trim(),appSha256:createHash('sha256').update(fs.readFileSync('lesson-studio.html')).digest('hex')},null,2));
 const gates=process.argv.slice(2).length?process.argv.slice(2):['validate','verify-shared-player','verify-activity-surfaces','verify-activity-authoring','verify-skill-page','verify-composition-grid','verify-figure-container','verify-figure-render','verify-geometry-semantics','verify-label-placement','verify-learning-card','verify-measure-surface','verify-mx-authoring','verify-notes-examples','verify-quadratics-authoring','verify-response-store','verify-responsive-shell','verify-type-interaction','verify-workbook','verify-lesson-page','verify-media','verify-newtypes','verify-pack-fixes','verify-theme-pack','verify-interactive','verify-infographic','verify-corpus-identity'];

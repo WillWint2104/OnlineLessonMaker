@@ -5496,10 +5496,13 @@ function mxPartHost(s,S,base,groupKey="groups"){
   if(S.kind==='w') return {owner:st,key:'visual',path:`${gb}.examples.${S.e}.steps.${S.s}.visual`,k:S.k};
   return null;
 }
-/* mxParts() reads a bare object, a {parts:[…]} wrapper and an array alike. AUTHORING WRITES ONE SHAPE —
-   an array — so add, remove and reorder are the same three lines here that they are everywhere else in
-   this panel, and a lesson authored either of the other two ways is migrated in place the first time it
-   is edited rather than growing a second representation beside the first. */
+/* Preserve raw part indexes and wrapper metadata during authoring. A bare part is wrapped only
+   for an explicit structural mutation; opening or editing its fields does not migrate it. */
+function mxPartSlots(value){
+  if(Array.isArray(value))return value;
+  if(value&&typeof value==='object'&&Array.isArray(value.parts))return value.parts;
+  return value&&typeof value==='object'&&value.kind?[value]:[];
+}
 function mxPartsArr(owner,key){
   const v=owner[key];
   if(Array.isArray(v)) return v;
@@ -5788,17 +5791,17 @@ function mxOutline(i,s,sel,context={}){
           ST.forEach((st,si)=>{
             /* A STEP'S OWN COMPANION — the table of values that belongs to the substitution it sits under,
                not to the page. Listed under the step it belongs to, and only while that step is open. */
-            const sz=`mx.s.${gi}.${ei}.${si}`, SP=mxParts(st.visual);
-            tree+=row('margin-left:28px',sz,`Step ${si+1}`,st.text,`s.${gi}.${ei}.${si}`,`s.${gi}.${ei}`,si,ST.length,SP.length>0);
+            const sz=`mx.s.${gi}.${ei}.${si}`, SP=mxPartSlots(st.visual);
+            tree+=row('margin-left:28px',sz,`Step ${si+1}`,st.text,`s.${gi}.${ei}.${si}`,`s.${gi}.${ei}`,si,ST.length,SP.some(pt=>pt&&typeof pt==='object'));
             if(OPEN.has(sz)){
-              SP.forEach((pt,k)=>tree+=row('margin-left:42px',`mx.w.${gi}.${ei}.${si}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`w.${gi}.${ei}.${si}.${k}`,`w.${gi}.${ei}.${si}`,k,SP.length,false));
+              SP.forEach((pt,k)=>{if(pt&&typeof pt==='object')tree+=row('margin-left:42px',`mx.w.${gi}.${ei}.${si}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`w.${gi}.${ei}.${si}.${k}`,`w.${gi}.${ei}.${si}`,k,SP.length,false);});
             }
             tree+=pal(sz,`<div class="blk-palette" style="margin-left:42px">${MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="w.${gi}.${ei}.${si}.${t}">＋ ${t}</button>`).join('')}</div>`);
           });
           tree+=`<button class="blk-add-t" data-mxadd="s.${gi}.${ei}">＋ Add step</button>`;
           /* THE EXAMPLE'S OWN COMPANION sits inside the working, beside its steps. */
-          const EP=mxParts(ex.visual);
-          EP.forEach((pt,k)=>tree+=row('margin-left:28px',`mx.v.${gi}.${ei}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`v.${gi}.${ei}.${k}`,`v.${gi}.${ei}`,k,EP.length,false));
+          const EP=mxPartSlots(ex.visual);
+          EP.forEach((pt,k)=>{if(pt&&typeof pt==='object')tree+=row('margin-left:28px',`mx.v.${gi}.${ei}.${k}`,mxPartLabel(pt),(pt&&pt.label)||'',`v.${gi}.${ei}.${k}`,`v.${gi}.${ei}`,k,EP.length,false);});
           tree+=pal(ez,`<div class="blk-palette" style="margin-left:28px">${MX_PART_KINDS.map(t=>`<button class="blk-add-t" data-mxadd="v.${gi}.${ei}.${t}">＋ ${t}</button>`).join('')}</div>`); }
       });
       tree+=`<button class="blk-add-t" data-mxadd="e.${gi}">＋ Add example</button>`;
@@ -5831,7 +5834,7 @@ function mxOutline(i,s,sel,context={}){
         <label>Shows</label><div class="mxchks">${checks}</div></div>`; }
     if(S.kind==='p'||S.kind==='v'||S.kind==='w'){
       const H=mxPartHost(s,S,base,groupKey); if(!H) return `<div class="ihint">That part's owner is gone — select another.</div>`;
-      const pt=mxParts(H.owner[H.key])[H.k];
+      const pt=mxPartSlots(H.owner[H.key])[H.k];
       if(!pt) return `<div class="ihint">That part is gone — select another.</div>`;
       return mxPartForm(mxPartPath(H),pt,sel);
     }
