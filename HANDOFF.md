@@ -2,6 +2,14 @@
 
 _Last updated: 2026-06-20_
 
+## Shared activity surface pass (24 September 2026)
+
+The shared player now owns white activity surfaces and role-based reading/practice/media/response
+spans. Digital panes stack by actual available activity width; the existing workbook remains intact.
+See `docs/review/shared-surfaces/README.md` for rules, matched captures and scrolling evidence.
+`scripts/verify-activity-surfaces.mjs` joins the coordinated suite as its 26th gate. Authoring limits,
+lesson data, persistence policy and hosting configuration are unchanged.
+
 ## Shared-player integration status (23 September 2026)
 
 PR #153 now also integrates the shared skill/activity player from `codex/shared-lesson-player`.

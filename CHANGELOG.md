@@ -7,6 +7,17 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Shared activity surfaces and response balance
+- Put activity context, headings, explanations, worked examples and paper questions on one white
+  learning surface. Keep the pale canvas outside it; remove nested notes/example card chrome.
+- Select reading, practice, media and response spans from component roles and response policy.
+  Preserve the existing 760px reading measure and natural table/figure sizing.
+- Align white prompt/workbook panes on desktop and stack before either becomes too narrow.
+  Keep the workbook's useful height independent of question-set length and retain Expand/page controls.
+- Verify matched before/after views, long/short sources, long expressions, tablet/phone reflow,
+  footer reachability, author preview and independently opened publication. Existing data, response
+  storage, navigation and documented JSON-only authoring boundaries are unchanged.
+
 ### Shared-player integration corrections
 - Current authoring verification: `verify-mx-authoring.mjs` passes 54/54; historical stage counts below describe their original runs.
 - Resolve the substantive PR #153/#154 review findings: preserve the factoring recap through notes,
