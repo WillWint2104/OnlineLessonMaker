@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {once} from 'node:events';
+import {observePlayer} from './player-process.mjs';
+const options={stdio:'ignore',windowsHide:true};
+const failed=spawn('nonexistent-player-executable-for-test',[],options),stopFailed=observePlayer(failed);
+await once(failed,'error');await stopFailed();
+const exited=spawn(process.execPath,['-e','process.exit(0)'],options),stopExited=observePlayer(exited);
+await once(exited,'exit');await stopExited();
+const signalled=spawn(process.execPath,['-e','setInterval(()=>{},1000)'],options),stopSignalled=observePlayer(signalled);
+await once(signalled,'spawn');const ended=once(signalled,'exit');signalled.kill();await ended;await stopSignalled();
+const running=spawn(process.execPath,['-e','setInterval(()=>{},1000)'],options),stopRunning=observePlayer(running);
+await once(running,'spawn');await stopRunning();assert.ok(running.exitCode!==null||running.signalCode!==null);
+console.log('PASS: failed spawn, prior normal exit, prior signal exit and running-child cleanup');

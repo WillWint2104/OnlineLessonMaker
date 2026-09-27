@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import {spawn,spawnSync,execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
+import {observePlayer} from './player-process.mjs';
 let corpusRef=process.env.CORPUS_REF;
 if(!corpusRef)for(const candidate of ['origin/main','main']){
  try{execFileSync('git',['rev-parse','--verify',candidate+'^{commit}'],{stdio:'ignore'});corpusRef=candidate;break;}catch{}
@@ -14,13 +15,14 @@ const results=[];
 let failures=0;
 // Some established gates use the local player URL. Reuse only a matching server;
 // otherwise own its lifecycle. Never terminate a server started by the caller.
-const base='http://127.0.0.1:8099';let player;
+const base='http://127.0.0.1:8099';let player,stopPlayer;
 try{
  let existing;try{existing=await fetch(base+'/lesson-studio.html',{signal:AbortSignal.timeout(1000)});}catch{}
  if(existing){
   if(!existing.ok||!Buffer.from(await existing.arrayBuffer()).equals(fs.readFileSync('lesson-studio.html')))throw Error('Port 8099 is serving a different application; stop it before running this suite.');
  }else{
   player=spawn(process.execPath,['scripts/serve-player.mjs'],{env:{...process.env,PORT:'8099'},stdio:['ignore','pipe','pipe'],windowsHide:true});
+  stopPlayer=observePlayer(player);
   await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('Player server startup timed out')),10000);const done=fn=>value=>{clearTimeout(timer);fn(value);};player.once('error',done(reject));player.once('exit',done(code=>reject(Error('Player server exited during startup: '+code))));player.stdout.once('data',done(resolve));});
  }
 for(const name of gates){
@@ -31,4 +33,4 @@ for(const name of gates){
 }
 fs.writeFileSync(dir+'/results.json',JSON.stringify(results,null,2));
 process.exitCode=failures?1:0;
-}finally{if(player&&player.exitCode===null){const stopped=new Promise(resolve=>player.once('exit',resolve));player.kill();await stopped;}}
+}finally{if(stopPlayer)await stopPlayer();}
