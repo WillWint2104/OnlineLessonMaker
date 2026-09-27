@@ -1,0 +1,847 @@
+{
+  "source": "working tree based on 876fee0342cdaeb4da98a94df0340deed54315c3; appSha256 pins the actual renderer",
+  "appSha256": "0862c2330efe5edac135fa9433b0d080fad435b3ff7374fb7b0e0438dbccd23c",
+  "checks": [
+    "UI imports Find, factor and check",
+    "positive 1536 no page overflow",
+    "positive 1536 working precedes annotation 0",
+    "positive 1536 no decorative numbering 0",
+    "positive 1536 mathematics fits without clipping 0",
+    "positive 1536 pair follows available width 0",
+    "positive 1536 working precedes annotation 1",
+    "positive 1536 no decorative numbering 1",
+    "positive 1536 mathematics fits without clipping 1",
+    "positive 1536 pair follows available width 1",
+    "positive 1536 working precedes annotation 2",
+    "positive 1536 no decorative numbering 2",
+    "positive 1536 mathematics fits without clipping 2",
+    "positive 1536 pair follows available width 2",
+    "positive 1536 working precedes annotation 3",
+    "positive 1536 no decorative numbering 3",
+    "positive 1536 mathematics fits without clipping 3",
+    "positive 1536 pair follows available width 3",
+    "positive 1536 working precedes annotation 4",
+    "positive 1536 no decorative numbering 4",
+    "positive 1536 mathematics fits without clipping 4",
+    "positive 1536 pair follows available width 4",
+    "positive final content reachable above footer",
+    "mixed 1536 no page overflow",
+    "mixed 1536 working precedes annotation 0",
+    "mixed 1536 no decorative numbering 0",
+    "mixed 1536 mathematics fits without clipping 0",
+    "mixed 1536 pair follows available width 0",
+    "mixed 1536 working precedes annotation 1",
+    "mixed 1536 no decorative numbering 1",
+    "mixed 1536 mathematics fits without clipping 1",
+    "mixed 1536 pair follows available width 1",
+    "mixed 1536 working precedes annotation 2",
+    "mixed 1536 no decorative numbering 2",
+    "mixed 1536 mathematics fits without clipping 2",
+    "mixed 1536 pair follows available width 2",
+    "mixed 1536 working precedes annotation 3",
+    "mixed 1536 no decorative numbering 3",
+    "mixed 1536 mathematics fits without clipping 3",
+    "mixed 1536 pair follows available width 3",
+    "mixed 1536 working precedes annotation 4",
+    "mixed 1536 no decorative numbering 4",
+    "mixed 1536 mathematics fits without clipping 4",
+    "mixed 1536 pair follows available width 4",
+    "mixed final content reachable above footer",
+    "completion 1536 no page overflow",
+    "Completion does not show a solved counterpart",
+    "Completion retains intentional paper blanks",
+    "completion final content reachable above footer",
+    "nonmonic 1536 no page overflow",
+    "nonmonic 1536 working precedes annotation 0",
+    "nonmonic 1536 no decorative numbering 0",
+    "nonmonic 1536 mathematics fits without clipping 0",
+    "nonmonic 1536 pair follows available width 0",
+    "nonmonic 1536 working precedes annotation 1",
+    "nonmonic 1536 no decorative numbering 1",
+    "nonmonic 1536 mathematics fits without clipping 1",
+    "nonmonic 1536 pair follows available width 1",
+    "nonmonic 1536 working precedes annotation 2",
+    "nonmonic 1536 no decorative numbering 2",
+    "nonmonic 1536 mathematics fits without clipping 2",
+    "nonmonic 1536 pair follows available width 2",
+    "nonmonic 1536 working precedes annotation 3",
+    "nonmonic 1536 no decorative numbering 3",
+    "nonmonic 1536 mathematics fits without clipping 3",
+    "nonmonic 1536 pair follows available width 3",
+    "nonmonic 1536 working precedes annotation 4",
+    "nonmonic 1536 no decorative numbering 4",
+    "nonmonic 1536 mathematics fits without clipping 4",
+    "nonmonic 1536 pair follows available width 4",
+    "nonmonic 1536 working precedes annotation 5",
+    "nonmonic 1536 no decorative numbering 5",
+    "nonmonic 1536 mathematics fits without clipping 5",
+    "nonmonic 1536 pair follows available width 5",
+    "nonmonic final content reachable above footer",
+    "UI imports Reading motion data",
+    "physics 1536 no page overflow",
+    "physics 1536 working precedes annotation 0",
+    "physics 1536 no decorative numbering 0",
+    "physics 1536 mathematics fits without clipping 0",
+    "physics 1536 pair follows available width 0",
+    "physics 1536 working precedes annotation 1",
+    "physics 1536 no decorative numbering 1",
+    "physics 1536 mathematics fits without clipping 1",
+    "physics 1536 pair follows available width 1",
+    "physics 1536 working precedes annotation 2",
+    "physics 1536 no decorative numbering 2",
+    "physics 1536 mathematics fits without clipping 2",
+    "physics 1536 pair follows available width 2",
+    "physics 1536 working precedes annotation 3",
+    "physics 1536 no decorative numbering 3",
+    "physics 1536 mathematics fits without clipping 3",
+    "Measurements precede physics question",
+    "physics final content reachable above footer",
+    "UI imports Reading a source critically",
+    "qualitative 1536 no page overflow",
+    "qualitative final content reachable above footer",
+    "UI imports Find, factor and check",
+    "positive 1024 no page overflow",
+    "positive 1024 working precedes annotation 0",
+    "positive 1024 no decorative numbering 0",
+    "positive 1024 mathematics fits without clipping 0",
+    "positive 1024 pair follows available width 0",
+    "positive 1024 working precedes annotation 1",
+    "positive 1024 no decorative numbering 1",
+    "positive 1024 mathematics fits without clipping 1",
+    "positive 1024 pair follows available width 1",
+    "positive 1024 working precedes annotation 2",
+    "positive 1024 no decorative numbering 2",
+    "positive 1024 mathematics fits without clipping 2",
+    "positive 1024 pair follows available width 2",
+    "positive 1024 working precedes annotation 3",
+    "positive 1024 no decorative numbering 3",
+    "positive 1024 mathematics fits without clipping 3",
+    "positive 1024 pair follows available width 3",
+    "positive 1024 working precedes annotation 4",
+    "positive 1024 no decorative numbering 4",
+    "positive 1024 mathematics fits without clipping 4",
+    "positive 1024 pair follows available width 4",
+    "positive final content reachable above footer",
+    "mixed 1024 no page overflow",
+    "mixed 1024 working precedes annotation 0",
+    "mixed 1024 no decorative numbering 0",
+    "mixed 1024 mathematics fits without clipping 0",
+    "mixed 1024 pair follows available width 0",
+    "mixed 1024 working precedes annotation 1",
+    "mixed 1024 no decorative numbering 1",
+    "mixed 1024 mathematics fits without clipping 1",
+    "mixed 1024 pair follows available width 1",
+    "mixed 1024 working precedes annotation 2",
+    "mixed 1024 no decorative numbering 2",
+    "mixed 1024 mathematics fits without clipping 2",
+    "mixed 1024 pair follows available width 2",
+    "mixed 1024 working precedes annotation 3",
+    "mixed 1024 no decorative numbering 3",
+    "mixed 1024 mathematics fits without clipping 3",
+    "mixed 1024 pair follows available width 3",
+    "mixed 1024 working precedes annotation 4",
+    "mixed 1024 no decorative numbering 4",
+    "mixed 1024 mathematics fits without clipping 4",
+    "mixed 1024 pair follows available width 4",
+    "mixed final content reachable above footer",
+    "completion 1024 no page overflow",
+    "Completion does not show a solved counterpart",
+    "Completion retains intentional paper blanks",
+    "completion final content reachable above footer",
+    "nonmonic 1024 no page overflow",
+    "nonmonic 1024 working precedes annotation 0",
+    "nonmonic 1024 no decorative numbering 0",
+    "nonmonic 1024 mathematics fits without clipping 0",
+    "nonmonic 1024 pair follows available width 0",
+    "nonmonic 1024 working precedes annotation 1",
+    "nonmonic 1024 no decorative numbering 1",
+    "nonmonic 1024 mathematics fits without clipping 1",
+    "nonmonic 1024 pair follows available width 1",
+    "nonmonic 1024 working precedes annotation 2",
+    "nonmonic 1024 no decorative numbering 2",
+    "nonmonic 1024 mathematics fits without clipping 2",
+    "nonmonic 1024 pair follows available width 2",
+    "nonmonic 1024 working precedes annotation 3",
+    "nonmonic 1024 no decorative numbering 3",
+    "nonmonic 1024 mathematics fits without clipping 3",
+    "nonmonic 1024 pair follows available width 3",
+    "nonmonic 1024 working precedes annotation 4",
+    "nonmonic 1024 no decorative numbering 4",
+    "nonmonic 1024 mathematics fits without clipping 4",
+    "nonmonic 1024 pair follows available width 4",
+    "nonmonic 1024 working precedes annotation 5",
+    "nonmonic 1024 no decorative numbering 5",
+    "nonmonic 1024 mathematics fits without clipping 5",
+    "nonmonic 1024 pair follows available width 5",
+    "nonmonic final content reachable above footer",
+    "UI imports Reading motion data",
+    "physics 1024 no page overflow",
+    "physics 1024 working precedes annotation 0",
+    "physics 1024 no decorative numbering 0",
+    "physics 1024 mathematics fits without clipping 0",
+    "physics 1024 pair follows available width 0",
+    "physics 1024 working precedes annotation 1",
+    "physics 1024 no decorative numbering 1",
+    "physics 1024 mathematics fits without clipping 1",
+    "physics 1024 pair follows available width 1",
+    "physics 1024 working precedes annotation 2",
+    "physics 1024 no decorative numbering 2",
+    "physics 1024 mathematics fits without clipping 2",
+    "physics 1024 pair follows available width 2",
+    "physics 1024 working precedes annotation 3",
+    "physics 1024 no decorative numbering 3",
+    "physics 1024 mathematics fits without clipping 3",
+    "Measurements precede physics question",
+    "physics final content reachable above footer",
+    "UI imports Reading a source critically",
+    "qualitative 1024 no page overflow",
+    "qualitative final content reachable above footer",
+    "UI imports Find, factor and check",
+    "positive 768 no page overflow",
+    "positive 768 working precedes annotation 0",
+    "positive 768 no decorative numbering 0",
+    "positive 768 mathematics fits without clipping 0",
+    "positive 768 pair follows available width 0",
+    "positive 768 working precedes annotation 1",
+    "positive 768 no decorative numbering 1",
+    "positive 768 mathematics fits without clipping 1",
+    "positive 768 pair follows available width 1",
+    "positive 768 working precedes annotation 2",
+    "positive 768 no decorative numbering 2",
+    "positive 768 mathematics fits without clipping 2",
+    "positive 768 pair follows available width 2",
+    "positive 768 working precedes annotation 3",
+    "positive 768 no decorative numbering 3",
+    "positive 768 mathematics fits without clipping 3",
+    "positive 768 pair follows available width 3",
+    "positive 768 working precedes annotation 4",
+    "positive 768 no decorative numbering 4",
+    "positive 768 mathematics fits without clipping 4",
+    "positive 768 pair follows available width 4",
+    "positive final content reachable above footer",
+    "mixed 768 no page overflow",
+    "mixed 768 working precedes annotation 0",
+    "mixed 768 no decorative numbering 0",
+    "mixed 768 mathematics fits without clipping 0",
+    "mixed 768 pair follows available width 0",
+    "mixed 768 working precedes annotation 1",
+    "mixed 768 no decorative numbering 1",
+    "mixed 768 mathematics fits without clipping 1",
+    "mixed 768 pair follows available width 1",
+    "mixed 768 working precedes annotation 2",
+    "mixed 768 no decorative numbering 2",
+    "mixed 768 mathematics fits without clipping 2",
+    "mixed 768 pair follows available width 2",
+    "mixed 768 working precedes annotation 3",
+    "mixed 768 no decorative numbering 3",
+    "mixed 768 mathematics fits without clipping 3",
+    "mixed 768 pair follows available width 3",
+    "mixed 768 working precedes annotation 4",
+    "mixed 768 no decorative numbering 4",
+    "mixed 768 mathematics fits without clipping 4",
+    "mixed 768 pair follows available width 4",
+    "mixed final content reachable above footer",
+    "completion 768 no page overflow",
+    "Completion does not show a solved counterpart",
+    "Completion retains intentional paper blanks",
+    "completion final content reachable above footer",
+    "nonmonic 768 no page overflow",
+    "nonmonic 768 working precedes annotation 0",
+    "nonmonic 768 no decorative numbering 0",
+    "nonmonic 768 mathematics fits without clipping 0",
+    "nonmonic 768 pair follows available width 0",
+    "nonmonic 768 working precedes annotation 1",
+    "nonmonic 768 no decorative numbering 1",
+    "nonmonic 768 mathematics fits without clipping 1",
+    "nonmonic 768 pair follows available width 1",
+    "nonmonic 768 working precedes annotation 2",
+    "nonmonic 768 no decorative numbering 2",
+    "nonmonic 768 mathematics fits without clipping 2",
+    "nonmonic 768 pair follows available width 2",
+    "nonmonic 768 working precedes annotation 3",
+    "nonmonic 768 no decorative numbering 3",
+    "nonmonic 768 mathematics fits without clipping 3",
+    "nonmonic 768 pair follows available width 3",
+    "nonmonic 768 working precedes annotation 4",
+    "nonmonic 768 no decorative numbering 4",
+    "nonmonic 768 mathematics fits without clipping 4",
+    "nonmonic 768 pair follows available width 4",
+    "nonmonic 768 working precedes annotation 5",
+    "nonmonic 768 no decorative numbering 5",
+    "nonmonic 768 mathematics fits without clipping 5",
+    "nonmonic 768 pair follows available width 5",
+    "nonmonic final content reachable above footer",
+    "UI imports Reading motion data",
+    "physics 768 no page overflow",
+    "physics 768 working precedes annotation 0",
+    "physics 768 no decorative numbering 0",
+    "physics 768 mathematics fits without clipping 0",
+    "physics 768 pair follows available width 0",
+    "physics 768 working precedes annotation 1",
+    "physics 768 no decorative numbering 1",
+    "physics 768 mathematics fits without clipping 1",
+    "physics 768 pair follows available width 1",
+    "physics 768 working precedes annotation 2",
+    "physics 768 no decorative numbering 2",
+    "physics 768 mathematics fits without clipping 2",
+    "physics 768 pair follows available width 2",
+    "physics 768 working precedes annotation 3",
+    "physics 768 no decorative numbering 3",
+    "physics 768 mathematics fits without clipping 3",
+    "Measurements precede physics question",
+    "physics final content reachable above footer",
+    "UI imports Reading a source critically",
+    "qualitative 768 no page overflow",
+    "qualitative final content reachable above footer",
+    "UI imports Find, factor and check",
+    "positive 390 no page overflow",
+    "positive 390 working precedes annotation 0",
+    "positive 390 no decorative numbering 0",
+    "positive 390 mathematics fits without clipping 0",
+    "positive 390 pair follows available width 0",
+    "positive 390 working precedes annotation 1",
+    "positive 390 no decorative numbering 1",
+    "positive 390 mathematics fits without clipping 1",
+    "positive 390 pair follows available width 1",
+    "positive 390 working precedes annotation 2",
+    "positive 390 no decorative numbering 2",
+    "positive 390 mathematics fits without clipping 2",
+    "positive 390 pair follows available width 2",
+    "positive 390 working precedes annotation 3",
+    "positive 390 no decorative numbering 3",
+    "positive 390 mathematics fits without clipping 3",
+    "positive 390 pair follows available width 3",
+    "positive 390 working precedes annotation 4",
+    "positive 390 no decorative numbering 4",
+    "positive 390 mathematics fits without clipping 4",
+    "positive 390 pair follows available width 4",
+    "positive final content reachable above footer",
+    "mixed 390 no page overflow",
+    "mixed 390 working precedes annotation 0",
+    "mixed 390 no decorative numbering 0",
+    "mixed 390 mathematics fits without clipping 0",
+    "mixed 390 pair follows available width 0",
+    "mixed 390 working precedes annotation 1",
+    "mixed 390 no decorative numbering 1",
+    "mixed 390 mathematics fits without clipping 1",
+    "mixed 390 pair follows available width 1",
+    "mixed 390 working precedes annotation 2",
+    "mixed 390 no decorative numbering 2",
+    "mixed 390 mathematics fits without clipping 2",
+    "mixed 390 pair follows available width 2",
+    "mixed 390 working precedes annotation 3",
+    "mixed 390 no decorative numbering 3",
+    "mixed 390 mathematics fits without clipping 3",
+    "mixed 390 pair follows available width 3",
+    "mixed 390 working precedes annotation 4",
+    "mixed 390 no decorative numbering 4",
+    "mixed 390 mathematics fits without clipping 4",
+    "mixed 390 pair follows available width 4",
+    "mixed final content reachable above footer",
+    "completion 390 no page overflow",
+    "Completion does not show a solved counterpart",
+    "Completion retains intentional paper blanks",
+    "completion final content reachable above footer",
+    "nonmonic 390 no page overflow",
+    "nonmonic 390 working precedes annotation 0",
+    "nonmonic 390 no decorative numbering 0",
+    "nonmonic 390 mathematics fits without clipping 0",
+    "nonmonic 390 pair follows available width 0",
+    "nonmonic 390 working precedes annotation 1",
+    "nonmonic 390 no decorative numbering 1",
+    "nonmonic 390 mathematics fits without clipping 1",
+    "nonmonic 390 pair follows available width 1",
+    "nonmonic 390 working precedes annotation 2",
+    "nonmonic 390 no decorative numbering 2",
+    "nonmonic 390 mathematics fits without clipping 2",
+    "nonmonic 390 pair follows available width 2",
+    "nonmonic 390 working precedes annotation 3",
+    "nonmonic 390 no decorative numbering 3",
+    "nonmonic 390 mathematics fits without clipping 3",
+    "nonmonic 390 pair follows available width 3",
+    "nonmonic 390 working precedes annotation 4",
+    "nonmonic 390 no decorative numbering 4",
+    "nonmonic 390 mathematics fits without clipping 4",
+    "nonmonic 390 pair follows available width 4",
+    "nonmonic 390 working precedes annotation 5",
+    "nonmonic 390 no decorative numbering 5",
+    "nonmonic 390 mathematics fits without clipping 5",
+    "nonmonic 390 pair follows available width 5",
+    "nonmonic final content reachable above footer",
+    "UI imports Reading motion data",
+    "physics 390 no page overflow",
+    "physics 390 working precedes annotation 0",
+    "physics 390 no decorative numbering 0",
+    "physics 390 mathematics fits without clipping 0",
+    "physics 390 pair follows available width 0",
+    "physics 390 working precedes annotation 1",
+    "physics 390 no decorative numbering 1",
+    "physics 390 mathematics fits without clipping 1",
+    "physics 390 pair follows available width 1",
+    "physics 390 working precedes annotation 2",
+    "physics 390 no decorative numbering 2",
+    "physics 390 mathematics fits without clipping 2",
+    "physics 390 pair follows available width 2",
+    "physics 390 working precedes annotation 3",
+    "physics 390 no decorative numbering 3",
+    "physics 390 mathematics fits without clipping 3",
+    "Measurements precede physics question",
+    "physics final content reachable above footer",
+    "UI imports Reading a source critically",
+    "qualitative 390 no page overflow",
+    "qualitative final content reachable above footer",
+    "UI imports Find, factor and check",
+    "data-only variation 1536 no page overflow",
+    "data-only variation 1536 working precedes annotation 0",
+    "data-only variation 1536 no decorative numbering 0",
+    "data-only variation 1536 mathematics fits without clipping 0",
+    "data-only variation 1536 pair follows available width 0",
+    "data-only variation 1536 working precedes annotation 1",
+    "data-only variation 1536 no decorative numbering 1",
+    "data-only variation 1536 mathematics fits without clipping 1",
+    "data-only variation 1536 pair follows available width 1",
+    "data-only variation 1536 working precedes annotation 2",
+    "data-only variation 1536 no decorative numbering 2",
+    "data-only variation 1536 mathematics fits without clipping 2",
+    "data-only variation 1536 pair follows available width 2",
+    "data-only variation 1536 working precedes annotation 3",
+    "data-only variation 1536 no decorative numbering 3",
+    "data-only variation 1536 mathematics fits without clipping 3",
+    "data-only variation 1536 pair follows available width 3",
+    "data-only variation 1536 working precedes annotation 4",
+    "data-only variation 1536 no decorative numbering 4",
+    "data-only variation 1536 mathematics fits without clipping 4",
+    "data-only variation 1536 pair follows available width 4",
+    "data-only variation 1536 working precedes annotation 5",
+    "data-only variation 1536 no decorative numbering 5",
+    "data-only variation 1536 mathematics fits without clipping 5",
+    "data-only variation 1536 pair follows available width 5",
+    "data-only variation 768 no page overflow",
+    "data-only variation 768 working precedes annotation 0",
+    "data-only variation 768 no decorative numbering 0",
+    "data-only variation 768 mathematics fits without clipping 0",
+    "data-only variation 768 pair follows available width 0",
+    "data-only variation 768 working precedes annotation 1",
+    "data-only variation 768 no decorative numbering 1",
+    "data-only variation 768 mathematics fits without clipping 1",
+    "data-only variation 768 pair follows available width 1",
+    "data-only variation 768 working precedes annotation 2",
+    "data-only variation 768 no decorative numbering 2",
+    "data-only variation 768 mathematics fits without clipping 2",
+    "data-only variation 768 pair follows available width 2",
+    "data-only variation 768 working precedes annotation 3",
+    "data-only variation 768 no decorative numbering 3",
+    "data-only variation 768 mathematics fits without clipping 3",
+    "data-only variation 768 pair follows available width 3",
+    "data-only variation 768 working precedes annotation 4",
+    "data-only variation 768 no decorative numbering 4",
+    "data-only variation 768 mathematics fits without clipping 4",
+    "data-only variation 768 pair follows available width 4",
+    "data-only variation 768 working precedes annotation 5",
+    "data-only variation 768 no decorative numbering 5",
+    "data-only variation 768 mathematics fits without clipping 5",
+    "data-only variation 768 pair follows available width 5",
+    "data-only variation 390 no page overflow",
+    "data-only variation 390 working precedes annotation 0",
+    "data-only variation 390 no decorative numbering 0",
+    "data-only variation 390 mathematics fits without clipping 0",
+    "data-only variation 390 pair follows available width 0",
+    "data-only variation 390 working precedes annotation 1",
+    "data-only variation 390 no decorative numbering 1",
+    "data-only variation 390 mathematics fits without clipping 1",
+    "data-only variation 390 pair follows available width 1",
+    "data-only variation 390 working precedes annotation 2",
+    "data-only variation 390 no decorative numbering 2",
+    "data-only variation 390 mathematics fits without clipping 2",
+    "data-only variation 390 pair follows available width 2",
+    "data-only variation 390 working precedes annotation 3",
+    "data-only variation 390 no decorative numbering 3",
+    "data-only variation 390 mathematics fits without clipping 3",
+    "data-only variation 390 pair follows available width 3",
+    "data-only variation 390 working precedes annotation 4",
+    "data-only variation 390 no decorative numbering 4",
+    "data-only variation 390 mathematics fits without clipping 4",
+    "data-only variation 390 pair follows available width 4",
+    "data-only variation 390 working precedes annotation 5",
+    "data-only variation 390 no decorative numbering 5",
+    "data-only variation 390 mathematics fits without clipping 5",
+    "data-only variation 390 pair follows available width 5",
+    "UI imports Find, factor and check",
+    "Move keeps working, annotation, caution, table and identity together",
+    "UI imports Find, factor and check",
+    "Fresh-context JSON reopen preserves all edited and unknown data",
+    "Reopened paired step remains editable",
+    "Independent offline learner HTML uses the same paired component",
+    "UI imports Find, factor and check",
+    "UI imports Reading motion data",
+    "UI imports Reading a source critically",
+    "No browser errors"
+  ],
+  "captures": [
+    {
+      "name": "positive-1536",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "positive-1536-end",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "mixed-1536",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "mixed-1536-end",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "completion-1536",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "completion-1536-end",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "nonmonic-1536",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "nonmonic-1536-end",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "physics-1536",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "physics-1536-end",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "qualitative-1536",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "qualitative-1536-end",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "positive-1024",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "positive-1024-end",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "mixed-1024",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "mixed-1024-end",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "completion-1024",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "completion-1024-end",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "nonmonic-1024",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "nonmonic-1024-end",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "physics-1024",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "physics-1024-end",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "qualitative-1024",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "qualitative-1024-end",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      }
+    },
+    {
+      "name": "positive-768",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "positive-768-end",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "mixed-768",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "mixed-768-end",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "completion-768",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "completion-768-end",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "nonmonic-768",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "nonmonic-768-end",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "physics-768",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "physics-768-end",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "qualitative-768",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "qualitative-768-end",
+      "viewport": {
+        "width": 768,
+        "height": 960
+      }
+    },
+    {
+      "name": "positive-390",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "positive-390-end",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "mixed-390",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "mixed-390-end",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "completion-390",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "completion-390-end",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "nonmonic-390",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "nonmonic-390-end",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "physics-390",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "physics-390-end",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "qualitative-390",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "qualitative-390-end",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "long-data-only-variation",
+      "viewport": {
+        "width": 390,
+        "height": 960
+      }
+    },
+    {
+      "name": "edit-working-and-annotation",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "edit-attached-candidate-table",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    },
+    {
+      "name": "reopened-and-edited-again",
+      "viewport": {
+        "width": 1536,
+        "height": 960
+      }
+    }
+  ],
+  "errors": []
+}

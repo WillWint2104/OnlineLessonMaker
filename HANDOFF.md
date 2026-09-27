@@ -2,6 +2,12 @@
 
 _Last updated: 2026-06-20_
 
+## Annotated activity solutions (27 September 2026)
+
+The activity player now renders each existing `steps[]` object as working followed by its matched annotation, with step-owned evidence spanning that row. Wide component widths pair the two; narrow widths stack them without shrinking mathematics. Legacy page layouts remain intact. Mathematical working stays a newline-capable string, edited separately from explanation and caution. The additive `example.visualPlacement: "question"` moves existing evidence before the question; absence preserves the former location. See `docs/review/annotated-solutions/REFERENCES.md` for the contract and instructional rationale.
+
+Publication validates the learner sequence independently of Edit/Study mode and directs the author to empty skills. JSON draft saves remain available. Explicit content selections reveal primary editing fields without scroll changes on each keystroke. Five focused gates join the coordinated suite (32 total); use a distinct `PLAYER_REVIEW_DIR` and an explicit `CORPUS_REF`. Native zoom needs the existing local server. Historical review folders are retained. Actual teacher videos and tablet question-reference enhancements remain outstanding; merging is not teacher visual acceptance.
+
 ## Connected activity authoring (24 September 2026)
 
 Continue from PR #155. The current activity inspector exposes skills, supported activity creation, nested mathematics editing, question/subpart/table controls and optional video-slot lifecycle. Its mathematics adapter uses the registered shared-player authoring contract and rebases the existing controls to the active activity. See docs/review/activity-authoring/AUTHORING_COVERAGE.md for supported UI operations and preserved JSON-only boundaries. The coordinated suite has 27 gates, with an explicit recorded CORPUS_REF. Tablet question-reference enhancement remains deferred; do not make it block paper-mode authoring.

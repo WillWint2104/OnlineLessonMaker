@@ -1,0 +1,13 @@
+import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import assert from 'node:assert/strict';import {chromium} from 'playwright';
+const out=process.env.ANNOTATED_ZOOM_OUT||path.join(process.env.PLAYER_REVIEW_DIR||'docs/review/annotated-solutions','zoom');fs.mkdirSync(out,{recursive:true});const results=[];
+for(const factor of [1,2]){
+ const profile=fs.mkdtempSync(path.join(os.tmpdir(),'annotated-zoom-'));fs.mkdirSync(path.join(profile,'Default'));fs.writeFileSync(path.join(profile,'Default','Preferences'),JSON.stringify({partition:{default_zoom_level:{x:Math.log(factor)/Math.log(1.2)}}}));
+ const ctx=await chromium.launchPersistentContext(profile,{channel:'chromium',headless:true,viewport:null,args:['--window-size=1536,960']});
+ try{const p=ctx.pages()[0];await p.goto('http://127.0.0.1:8099/docs/review/annotated-solutions/after/published-factorising.html');await p.evaluate(()=>document.fonts.ready);const metrics=await p.evaluate(()=>({width:innerWidth,height:innerHeight,dpr:devicePixelRatio,cssZoom:getComputedStyle(document.documentElement).zoom}));assert.ok(Math.abs(metrics.dpr-factor)<.02);
+  const shot=async(name)=>{const cdp=await ctx.newCDPSession(p),r=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true});fs.writeFileSync(path.join(out,name+'.png'),Buffer.from(r.data,'base64'));await cdp.detach();};
+  await shot('native-'+factor*100+'-top');await p.locator('.mx-page').evaluate(e=>e.scrollTop=e.scrollHeight);await shot('native-'+factor*100+'-end');assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.querySelector('.mx-page').scrollWidth<=document.querySelector('.mx-page').clientWidth+1));
+  for(const row of await p.locator('.mx-step[data-mx-paired]').all()){const math=await row.locator('.mx-stepm').boundingBox(),annotation=await row.locator('.mx-annotation').boundingBox();if(factor===2)assert.ok(annotation.y>=math.y+math.height-1);}
+  if(!await p.locator('[data-lp-go="0:monic-completion"]').isVisible())await p.locator('[data-rp-navtoggle]').first().click();await p.locator('[data-lp-go="0:monic-completion"]').click();for(const part of await p.locator('.mx-sk-qs .mx-parts .mx-part').all()){await part.scrollIntoViewIfNeeded();const b=await part.boundingBox(),f=await p.locator('.lp-footer').boundingBox();assert.ok(b.y+b.height<=f.y+1);}await shot('native-'+factor*100+'-completion');results.push({factor,metrics,pairsStackAt200:true,allCompletionPartsReachable:true});
+ }finally{await ctx.close();}
+}
+assert.ok(Math.abs(results[0].metrics.width/2-results[1].metrics.width)<2);fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(results,null,2));console.log(JSON.stringify(results));
