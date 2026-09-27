@@ -1,12 +1,13 @@
 // Observe immediately after spawn, including failures that never emit exit.
 export function observePlayer(child) {
- let finished=false;
- const completion=new Promise(resolve=>{
+ let finished=false,stopping=false;
+ const completion=new Promise((resolve,reject)=>{
   const done=()=>{finished=true;resolve();};
-  child.once('error',done);child.once('exit',done);
+  child.once('error',error=>stopping?reject(error):done());child.once('exit',done);
  });
  return async()=>{
   if(finished)return;
+  stopping=true;
   child.kill();
   let timer;
   try{await Promise.race([completion,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Player server did not stop within five seconds')),5000);})]);}
