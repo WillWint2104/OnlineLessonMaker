@@ -54,11 +54,12 @@
 .lp .mx-page{width:100%;max-width:none;margin:0;padding:32px;flex:1;min-height:0;overflow:auto;display:block;}
 .lp-activity{--lp-pad:40px;box-sizing:border-box;width:100%;max-width:calc(760px + 2 * var(--lp-pad));margin:0 auto;background:#fff;border:1px solid var(--mx-line);border-radius:12px;padding:var(--lp-pad);}
 .lp-activity[data-lp-arrangement="practice"]{max-width:980px;}
+.lp-activity[data-lp-arrangement="solution"]{max-width:1060px;}
 .lp-activity[data-lp-arrangement="media"]{max-width:1240px;}
 .lp-activity[data-lp-arrangement="response"]{max-width:1240px;padding:0;background:transparent;border:0;}
 .lp-activity[data-lp-arrangement="response"] .lp-header{padding:28px 32px;background:#fff;border:1px solid var(--mx-line);border-radius:12px;}
 .lp-activity[data-lp-arrangement="response"] .mx-content{padding:28px;background:#fff;border:1px solid var(--mx-line);border-radius:12px;}
-.lp-header{margin:0 0 30px;padding-bottom:26px;border-bottom:1px solid var(--mx-line);}
+.lp-header{margin:0 0 30px;padding-bottom:0;}
 .lp-header .mx-lede{max-width:760px;margin:16px 0 0;}
 .lp-location{font-size:13px;color:var(--mx-ink-2);margin-bottom:12px;}
 .lp-title{font-family:var(--mx-serif);font-size:34px;line-height:1.18;margin:0;outline-offset:6px;}
@@ -68,17 +69,17 @@
 .lp .mx-content{min-width:0;container-type:inline-size;}
 .lp .mx-skill{gap:30px;}
 .lp .mx-sk-sec{margin:0;}
-.lp .mx-sk-sec+.mx-sk-sec{padding-top:28px;border-top:1px solid var(--mx-line);}
+.lp .mx-sk-sec+.mx-sk-sec{padding-top:12px;}
 .lp .mx-sk-h{font-size:21px;}
 .lp .mx-sk-n{display:none;}
 .lp .mx-sk-notes{padding:0;border:0;border-radius:0;background:transparent;}
 .lp .mx-itembd p{max-width:760px;line-height:1.65;}
 .mx.lp .mx-wexsurface{--mx-surface-pad:0px;padding:0;border:0;background:transparent;}
 .lp .mx-wexpane{padding:0;}
-.mx.lp .mx-wexseq{max-width:760px;margin-top:0;}
+.mx.lp .mx-wexseq{max-width:none;margin-top:0;}
 .mx.lp[data-mx-rows] .mx-wexseq>.mx-wexex:not([data-mx-form="solo"]){grid-template-columns:100%;grid-template-areas:"title" "ask" "work";}
 .mx.lp[data-mx-rows] .mx-wexseq>.mx-wexex>.mx-wexwork{padding-left:0;padding-top:22px;}
-.mx.lp[data-mx-rows] .mx-wexseq>.mx-wexex>.mx-wexask{padding:12px 0 22px;margin:0;border-bottom:1px solid var(--mx-line);}
+.mx.lp[data-mx-rows] .mx-wexseq>.mx-wexex>.mx-wexask{padding:0;margin:0;border:0;}
 .lp-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 32px;background:#fff;border-top:1px solid var(--mx-line);font-size:13px;}
 .lp-footer button{font:inherit;font-weight:600;padding:10px 20px;border:1px solid var(--mx-line);background:white;color:var(--mx-ink);border-radius:8px;cursor:pointer;}
 .lp-footer button:disabled{opacity:.4;cursor:default;}
@@ -100,6 +101,23 @@ body.edit #slide .lp .mx-top button,body.edit #slide .lp .mx-nav button,body.edi
   .lp .lp-table-reasoning{min-width:0;}
 }
 .lp .lp-kind{font-size:12px;font-weight:600;line-height:1.5;letter-spacing:.08em;text-transform:uppercase;color:var(--mx-ink-2);margin:0 0 18px;}
+/* Shared activity solutions: each list item owns working, annotation and its evidence.
+   The component's available width determines pairing; subjects and lesson IDs do not. */
+.lp .mx-wexsec{container-type:inline-size;}
+.mx .mx-annotated>.mx-step{padding:0;margin:0 0 26px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px 28px;}
+.mx .mx-annotated>.mx-step::before,.mx .mx-annotated>.mx-step::after{content:none;}
+.mx .mx-annotated .mx-stepm{margin:0;min-width:0;font-size:19.5px;line-height:1.65;}
+.mx .mx-annotated .mx-annotation{min-width:0;}
+.mx .mx-annotated .mx-stepvis{grid-column:1/-1;margin:4px 0 0;padding:0;border:0;}
+.mx .mx-worklines{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px .4em;}
+.mx .mx-workline{grid-column:1/-1;min-width:0;}
+.mx .mx-workline[data-mx-equality]{display:grid;grid-template-columns:subgrid;}
+.mx .mx-workline[data-mx-equality]>:first-child{white-space:nowrap;}
+.lp .mx-item,.lp .mx-sk-grp+.mx-sk-grp,.lp .mx-wexfoot{border-top:0;}
+.lp .mx-wexdiv{border:0;background:none;height:0;margin:24px 0;}
+@container(min-width:760px){
+  .mx .mx-annotated>.mx-step[data-mx-paired]{grid-template-columns:minmax(0,3fr) minmax(0,2fr);}
+}
 @media(max-width:1100px){.lp .mx-page{padding:24px;}.lp-title{font-size:30px;}}
 @media(max-width:600px){.lp .mx-page{padding:16px 12px 28px;}.lp-activity{--lp-pad:22px;}.lp-activity[data-lp-arrangement="response"] .lp-header,.lp-activity[data-lp-arrangement="response"] .mx-content{padding:22px;}.lp .mx-top{flex-wrap:wrap;}.lp-brand{max-width:210px;font-size:14px;}.lp-footer{padding:12px;}.lp-footer button{padding:10px 12px;}.lp-title{font-size:28px;}}
 
@@ -5620,10 +5638,10 @@ function mxAmbHtml(v){
 /* A MATHS FIELD: the control, then what it will draw. The preview is the control's next sibling, so the
    wiring needs no ids and cannot point at the wrong one. */
 function inMath(label,path,val,area){
-  const v=val==null?'':String(val);
+  const v=val==null?'':String(val), working=/\.steps\.\d+\.math$/.test(path);
   const ctl=area?`<textarea class="ia mxm" data-bind="${path}">${esc(v)}</textarea>`
                 :`<input class="ii mxm" data-bind="${path}" value="${esc(v)}">`;
-  return `<label>${esc(label)}</label>${ctl}<div class="mxprev"${v?'':' hidden'}>${mxM(v)}</div>`;
+  return `<label>${esc(label)}</label>${ctl}<div class="mxprev${working?' mxprev-work':''}"${v?'':' hidden'}>${working?mxWorking(v):mxM(v)}</div>`;
 }
 function inMathList(label,path,arr){
   if((arr||[]).some(x=>x&&typeof x==='object'))return `<label>${esc(label)}</label>`+(arr||[]).map((x,k)=>
@@ -5843,15 +5861,16 @@ function mxOutline(i,s,sel,context={}){
     if(S.kind==='e') return `<div class="isec"><div class="isec-h">Example · fields</div>
       ${ig('mxe.label',sel,inMath('Example title',`${eb}.label`,ex.label))}
       ${ig('mxe.prompt',sel,inMath('Question',eb+(ex.prompt==null&&ex.question!=null?'.question':'.prompt'),ex.prompt??ex.question,true))}
+      ${inSel('Example evidence placement',`${eb}.visualPlacement`,ex.visualPlacement||'working',[['working','Alongside the solution'],['question','Before the question']])}
       ${ig('mxe.answer',sel,inMath('Answer',eb+(ex.answer==null&&ex.result!=null?'.result':'.answer'),ex.answer??ex.result,true))}
       ${ig('mxe.rlab',sel,inT('Answer label (optional — default "Answer")',`${eb}.resultLabel`,ex.resultLabel))}</div>`;
     const st=(ex.steps||[])[S.s]; if(!st) return `<div class="ihint">That step is gone — select another.</div>`;
     const sb=`${eb}.steps.${S.s}`;
     if(typeof st==='string')return `<div class="isec">${inMath('Step text',sb,st,true)}</div>`;
     return `<div class="isec"><div class="isec-h">Step · fields</div>
-      ${ig('mxs.text',sel,inMath('What this step does',`${sb}.text`,st.text,true))}
-      ${ig('mxs.math',sel,inMath('Mathematics',`${sb}.math`,st.math))}
-      ${ig('mxs.note',sel,inMath('Note (optional)',`${sb}.note`,st.note))}</div>`;
+      ${ig('mxs.math',sel,inMath('Mathematical working (one line per statement)',`${sb}.math`,st.math,true))}
+      ${ig('mxs.text',sel,inMath('Matched explanation',`${sb}.text`,st.text,true))}
+      ${ig('mxs.note',sel,inMath('Caution / note (optional)',`${sb}.note`,st.note,true))}</div>`;
   })();
   /* THE PAGE AND THE LESSON ARE SET ONCE, AND THEN NOT AGAIN. They were on screen for every selection —
      eight fields and their labels above the outline, between a teacher and the step they were editing.
@@ -5899,7 +5918,7 @@ function mxOutlineWire(i,context={}){
      draws. The value has already been saved by the generic data-bind handler; this only shows it. */
   const prev=(el)=>{ const pv=el.nextElementSibling; if(!pv||!pv.classList.contains('mxprev')) return;
     const v=el.value;
-    pv.innerHTML=pv.classList.contains('mxprev-l')
+    pv.innerHTML=pv.classList.contains('mxprev-work')?mxWorking(v):pv.classList.contains('mxprev-l')
       ? v.split('\n').filter(x=>x.trim()).map(x=>`<div>${mxM(x)}</div>`).join('') : mxM(v);
     pv.hidden=!v.trim(); };
   ins.querySelectorAll('.mxm').forEach(el=>{
@@ -9048,16 +9067,29 @@ function mxWexGroups(s){
   return ex.length?[{id:'all',title:String(s.contentTitle||'Worked examples'),type:'extended',declared:'',
     lede:'',relations:null,visual:null,states:null,examples:ex}]:[];
 }
-function mxWexSteps(ex,range){
+function mxWorking(value){
+  const lines=String(value).split(/\r?\n/);
+  // Newlines stay authored boundaries. Only continuation equalities form an aligned chain.
+  const chain=lines.some(line=>/^\s*=/.test(line));
+  return `<div class="mx-worklines">${lines.map(line=>{
+    const at=chain?line.indexOf('='):-1;
+    return at<0?`<div class="mx-workline">${mxM(line)||'<br>'}</div>`:`<div class="mx-workline" data-mx-equality><span>${mxM(line.slice(0,at))}</span><span>= ${mxM(line.slice(at+1))}</span></div>`;
+  }).join('')}</div>`;
+}
+function mxWexSteps(ex,range,annotated=false){
   let steps=Array.isArray(ex.steps)?ex.steps:[];
   /* A state may carry a RANGE of the derivation; the numbering keeps counting from where it left off, so
      the learner reads one continuous argument across the states rather than three that all start at 1. */
   const from=range?Math.max(1,range[0]):1;
   if(range) steps=steps.slice(from-1,range[1]);
   if(!steps.length) return '<div class="mx-ph">This example has no solution steps yet.</div>';
-  return `<ol class="mx-steps"${from>1?` start="${from}" style="counter-reset:mxstep ${from-1}"`:''}>${steps.map((st,k)=>{
+  return `<ol class="mx-steps${annotated?' mx-annotated':''}"${annotated?' role="list"':''}${from>1?` start="${from}" style="counter-reset:mxstep ${from-1}"`:''}>${steps.map((st,k)=>{
     const o=(st&&typeof st==='object')?st:{text:st};
     const sp=mxParts(o.visual);
+    if(annotated)return `<li class="mx-step" data-mx-step="${esc(String(o.id||('s'+(k+1))))}"${o.math&&(o.text||o.note)?' data-mx-paired':''}${sp.length?' data-mx-stepvis':''}>
+      ${o.math?`<div class="mx-stepm">${mxWorking(o.math)}</div>`:''}
+      ${o.text||o.note?`<div class="mx-annotation">${o.text?`<div class="mx-stept">${mxM(o.text)}</div>`:''}${o.note?`<div class="mx-stepn">${mxM(o.note)}</div>`:''}</div>`:''}
+      ${sp.length?`<div class="mx-stepvis">${mxCompanion(sp,'step-'+esc(String(ex.id||'ex'))+'-'+k)}</div>`:''}</li>`;
     return `<li class="mx-step" data-mx-step="${esc(String(o.id||('s'+(k+1))))}"${sp.length?' data-mx-stepvis':''}>
       ${o.text?`<div class="mx-stept">${mxM(o.text)}</div>`:''}
       ${o.math?`<div class="mx-stepm">${mxM(o.math)}</div>`:''}
@@ -9087,16 +9119,18 @@ function mxWexEx(ex,k,state,extra){
   const show=x=>!state||state.show.indexOf(x)>=0;
   const ask=!!(q&&show('question'));
   const companion=mxParts(ex.visual);
+  const questionEvidence=ask&&ex.visualPlacement==='question'?(extra||''):'';
+  if(questionEvidence)extra='';
   const tableWorking=lpEnabled(LESSON.slides[cur])&&extra&&companion.length&&companion.every(part=>part.kind==='table');
   const activity=lpEnabled(LESSON.slides[cur])&&lpCurrent(LESSON.slides[cur]);
   const sameTitle=activity&&lpSingleExample(activity)===ex&&String(ex.label||'').trim()===String(activity.title||'').trim();
   const heading=sameTitle?'h3':'h4';
-  const steps=show('steps')?`<section class="mx-wexsec" data-mx-sec="steps"><${heading} class="mx-wexlab">Worked solution</${heading}>${mxWexSteps(ex,state&&state.steps)}</section>`:'';
+  const steps=show('steps')?`<section class="mx-wexsec" data-mx-sec="steps"><${heading} class="mx-wexlab">Worked solution</${heading}>${mxWexSteps(ex,state&&state.steps,!!activity)}</section>`:'';
   const answer=(a&&show('answer'))?`<div class="mx-wexres" data-mx-region="answer" data-mx-sec="answer"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span><span class="mx-wexrv">${mxM(a)}</span></div>`:'';
   return `<article class="mx-wexex" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${ask?'':' data-mx-form="solo"'}>
     ${sameTitle?'':`<h3 class="mx-wexh" data-mx-region="title">${mxM(String(ex.label||('Example '+(k+1))))}</h3>`}
     ${ask?`<div class="mx-wexask" data-mx-region="question" data-mx-sec="question"><${heading} class="mx-wexlab">Question</${heading}>
-      <div class="mx-wexqb">${mxM(q)}</div></div>`:''}
+      ${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}
     <div class="mx-wexwork${tableWorking?' lp-table-working':''}" data-mx-region="working">
       ${tableWorking?`<div class="lp-table-reasoning">${steps}${answer}</div>${extra}`:steps+'\n      '+(extra||'')+'\n      '+answer}
     </div></article>`;
@@ -9394,7 +9428,7 @@ function lpRender(s,i){
   const ws=projection&&projection.workspace&&!mxOnPaper()?projection.workspace:null;
   // Component roles choose the span; lesson names and content-length guesses never do.
   const hasFigure=o=>!!o&&typeof o==='object'&&(o.kind==='figure'||Object.values(o).some(v=>Array.isArray(v)?v.some(hasFigure):v&&typeof v==='object'&&hasFigure(v)));
-  const arrangement=ws?'response':hasFigure(projection)?'media':projection?.questions?.length&&!projection?.notes?.length&&!projection?.workedExamples?.length&&!projection?.examples?.length?'practice':'reading';
+  const arrangement=ws?'response':hasFigure(projection)?'media':projection?.workedExamples?.length||projection?.examples?.length?'solution':projection?.questions?.length&&!projection?.notes?.length?'practice':'reading';
   const accent=/^#[0-9a-f]{6}$/i.test((m.colors||{}).accent||'')?m.colors.accent:'#365d63';
   const rail=LESSON.slides.map((sk,k)=>`<li><button class="mx-navitem${k===i?' on':''}" data-lp-go="${k}" aria-current="${k===i?'page':'false'}"><span class="mx-navtx"><span>Skill ${k+1}</span><b>${esc(sk.title)}</b></span></button>${k===i?`<ol class="lp-activities">${lpActivities(sk).map((act,j)=>`<li><button data-lp-go="${k}:${esc(act.id)}"${act===a&&!end?' aria-current="step"':''}>${j+1}. ${esc(act.title)}</button></li>`).join('')}</ol>`:''}</li>`).join('');
   return `<div class="mx lp${open?' mx-navopen':''}" data-rp-type="skill" data-rp-layout="responsive" data-mx-response="${esc(mxResponseMode())}" data-mx-view="split" style="--mx-green:${accent};--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px;--mx-rep-min-h:${MX_REP_MIN_H}px">
