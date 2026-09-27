@@ -5871,7 +5871,12 @@ function mxOutline(i,s,sel,context={}){
   const keys=/class="(?:ii|ia|mxg-i) mxm/.test(form)||/ mxm/.test(form)?mxKeys():'';
   return `${context.embedded?"":page}<div class="isec"><div class="isec-h">Structure</div>
     <div class="blk-list">${tree||'<div class="muted small">No groups yet — add one below.</div>'}</div>
-    <div class="blk-palette"><button class="blk-add-t" data-mxadd="g">＋ Add group</button></div></div>${keys}${form}`;
+    <div class="blk-palette"><button class="blk-add-t" data-mxadd="g">＋ Add group</button></div></div>${keys}<div data-mx-fields>${form}</div>`;
+}
+/* Explicit selection reveals the editing controls, not the outline. Never run on input. */
+function mxRevealFields(selector='[data-mx-fields] [data-bind]'){
+  const field=$('#inspector')?.querySelector(selector);if(!field)return;
+  field.scrollIntoView({block:'start',inline:'nearest'});field.focus({preventScroll:true});
 }
 function mxOutlineWire(i,context={}){
   const ins=$('#inspector'), s=context.owner||LESSON.slides[i], base=context.base||`slides.${i}`, groupKey=context.groupKey||'groups'; if(!s) return;
@@ -5884,7 +5889,7 @@ function mxOutlineWire(i,context={}){
   ins.querySelectorAll('[data-mxgraphdel]').forEach(el=>el.onclick=()=>{const fig=getP(LESSON,el.dataset.mxgraphdel),arr=fig.objects,k=arr.indexOf(MX_GRAPH_FOCUS.get(fig));if(k<0)return;arr.splice(k,1);MX_GRAPH_FOCUS.set(fig,arr[Math.min(k,arr.length-1)]);renderSlide();});
   const uid=(p,n)=>p+(n+1)+'-'+Math.random().toString(36).slice(2,6);
   ins.querySelectorAll('[data-mxsel]').forEach(el=>el.addEventListener('click',e=>{
-    if(e.target.closest('[data-mxdel],[data-mxtw]')) return; selZone=el.dataset.mxsel; renderSlide(); }));
+    if(e.target.closest('[data-mxdel],[data-mxtw],[data-mxmove]')) return; selZone=el.dataset.mxsel; renderSlide();mxRevealFields(); }));
   /* OPENING A BRANCH IS NOT CHOOSING TO EDIT IT — the twisty toggles and stops there, so a teacher can
      look through the lesson's structure without the form under the panel changing on every click. */
   ins.querySelectorAll('[data-mxtw]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
@@ -9457,7 +9462,7 @@ function lpInspector(s,i){
     if(item&&key==='notes') content+=`<div class="isec">${inMath('Heading',path+(item.title!=null&&item.term==null?'.title':'.term'),item.term||item.title||'')}${inMath('Text (include attribution)',path+'.body',item.body,true)}${['attribution','source','citation'].filter(f=>typeof item[f]==='string').map(f=>inT(f[0].toUpperCase()+f.slice(1),path+'.'+f,item[f])).join('')}</div>`;
     if(item&&key==='questions'){
       content+=`<div class="isec">${inMath('Question prompt',path+'.stem',item.stem,true)}${inMath('Practice instructions (optional)',ab+'.practiceNote',a.practiceNote||'',true)}<label><input type="checkbox" data-lp-stack="${path}"${item.stack?' checked':''}> Stack subparts</label>
-        ${(item.parts||[]).map((p,j)=>`<div class="qg"><div class="qg-h"><b>Part ${String.fromCharCode(97+j)}</b>${order('parts',j,item.parts.length)}</div>${typeof p==='string'?inMath('Part text',path+'.parts.'+j,p,true):'<p class="ihint">This imported part is retained. Its non-text structure has no editor in this vocabulary.</p>'}</div>`).join('')}<button class="ibtn-add" data-lp-partadd>Add subpart</button></div>`;
+        ${(item.parts||[]).map((p,j)=>`<div class="qg"><div class="qg-h"><button type="button" class="ibtn-add" data-lp-partselect="${j}">Edit part ${String.fromCharCode(97+j)}</button>${order('parts',j,item.parts.length)}</div>${typeof p==='string'?inMath('Part text',path+'.parts.'+j,p,true):'<p class="ihint">This imported part is retained. Its non-text structure has no editor in this vocabulary.</p>'}</div>`).join('')}<button class="ibtn-add" data-lp-partadd>Add subpart</button></div>`;
       content+=item.table?`<div class="isec"><div class="isec-h">Question table</div><p class="ihint">Filled cells are instructional values. Empty cells are student answer blanks; editing this table never edits stored student responses.</p>${mxTableForm(path+'.table',item.table,null)}<button class="ibtn-add" data-lp-table="remove">Remove question table</button></div>`:`<button class="ibtn-add" data-lp-table="add">Add question table</button>`;
     }
     if(item)content=mxKeys()+content;
@@ -9482,12 +9487,13 @@ function lpInspector(s,i){
   ins.querySelector('[data-lp-vclear]')?.addEventListener('click',()=>{lpSet(base+'.video.url','');renderSlide();});
   ins.querySelector('[data-lp-organise]')?.addEventListener('click',()=>{(a.workedExamples=a.workedExamples||[]).push({id:'group-'+crypto.randomUUID(),type:'extended',title:'Worked examples',examples:a.examples});delete a.examples;LP_EDIT.part='worked';selZone='mx.g.'+(a.workedExamples.length-1);renderSlide();});
   ins.querySelectorAll('[data-lp-part]').forEach(b=>b.onclick=()=>{LP_EDIT.part=b.dataset.lpPart;LP_EDIT.index=0;selZone=null;renderInspector();});
-  ins.querySelectorAll('[data-lp-itemselect]').forEach(b=>b.onclick=()=>{LP_EDIT.index=+b.dataset.lpItemselect;renderInspector();});
+  ins.querySelectorAll('[data-lp-itemselect]').forEach(b=>b.onclick=()=>{LP_EDIT.index=+b.dataset.lpItemselect;renderInspector();mxRevealFields('[data-bind="'+ab+'.'+part+'.'+LP_EDIT.index+'.'+(part==='questions'?'stem':'body')+'"]');});
   ins.querySelector('[data-lp-itemadd]')?.addEventListener('click',e=>{const key=e.currentTarget.dataset.lpItemadd,arr=a[key]=a[key]||[];arr.push(key==='notes'?{term:'Key idea',body:'Explain here.'}:{id:'question-'+crypto.randomUUID(),stem:'New question'});LP_EDIT.index=arr.length-1;renderSlide();});
   ins.querySelectorAll('[data-lp-item]').forEach(b=>b.onclick=()=>{const [key,at,action]=b.dataset.lpItem.split(':'),k=+at,arr=key==='parts'?a.questions[LP_EDIT.index].parts:a[key];if(action==='remove'){arr.splice(k,1);if(key!=='parts')LP_EDIT.index=Math.min(k,Math.max(0,arr.length-1));}else{const to=k+(+action);if(to<0||to>=arr.length)return;arr.splice(to,0,arr.splice(k,1)[0]);if(key!=='parts')LP_EDIT.index=to;}renderSlide();});
   ins.querySelector('[data-lp-partadd]')?.addEventListener('click',()=>{const q=a.questions[LP_EDIT.index];(q.parts=q.parts||[]).push('New part.');renderSlide();});
   ins.querySelector('[data-lp-stack]')?.addEventListener('change',e=>{lpSet(e.currentTarget.dataset.lpStack+'.stack',e.currentTarget.checked);renderCanvas();});
   ins.querySelector('[data-lp-table]')?.addEventListener('click',e=>{const q=a.questions[LP_EDIT.index];if(e.currentTarget.dataset.lpTable==='remove'){if(!confirm('Remove this question table?'))return;delete q.table;}else{const t=mxPartSeed('table');delete t.kind;q.table=t;}renderSlide();});
+  ins.querySelectorAll('[data-lp-partselect]').forEach(b=>b.onclick=()=>mxRevealFields('[data-bind="'+ab+'.questions.'+LP_EDIT.index+'.parts.'+b.dataset.lpPartselect+'"]'));
   const selected=ins.querySelector('.blk-row.cur');if(selected)selected.scrollIntoView({block:'nearest'});
 }
 
