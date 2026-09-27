@@ -9338,7 +9338,15 @@ function lpSingleExample(a){
   const groups=a.workedExamples||[], examples=groups.length?groups.flatMap(g=>g.examples||[]):(a.examples||[]);
   return groups.length<=1&&examples.length===1?examples[0]:null;
 }
-function lpActivities(s){ return s.activities.filter(a=>!a.optionalVideo||!!toEmbed(safeUrl((s.video||{}).url||'','embed'))||authorMode()==='edit'); }
+function lpLearnerActivities(s){ return s.activities.filter(a=>!a.optionalVideo||!!toEmbed(safeUrl((s.video||{}).url||'','embed'))); }
+function lpActivities(s){ return authorMode()==='edit'?s.activities:lpLearnerActivities(s); }
+function lpValidatePublication(d){
+  lpValidate(d);
+  if(!(d.slides||[]).some(lpEnabled)&&d.meta?.player!=='activities')return;
+  const i=d.slides.findIndex(s=>!lpLearnerActivities(s).length);
+  if(i>=0){const error=Error('Skill '+(i+1)+' “'+d.slides[i].title+'” has no learner-visible activities. Add instructional content in this skill before publishing. An empty optional video does not count.');error.skillIndex=i;throw error;}
+  if(!d.slides.length)throw Error('This lesson has no skills. Add a skill with instructional content before publishing.');
+}
 function lpCurrent(s){
   if(LP_STATE.lesson!==LESSON){ LP_STATE={lesson:LESSON,activity:{},end:false}; }
   const list=lpActivities(s); return list.find(a=>a.id===LP_STATE.activity[s.id])||list[0];
@@ -13563,7 +13571,13 @@ async function inlineRemoteAssets(lesson){
 $('#exportBtn').onclick=async ()=>{
   const btn=$('#exportBtn'), label=btn.textContent; btn.disabled=true; btn.textContent='Exporting…';
   try{
-    try{ lpValidate(LESSON); }catch(e){ alert('Cannot publish: '+e.message); return; }
+    try{ lpValidatePublication(LESSON); }catch(e){
+      if(Number.isInteger(e.skillIndex)){
+        $('#modeSeg [data-mode="edit"]').click();lpNavigate(e.skillIndex);
+        const add=$('#inspector [data-lp-add]');add?.scrollIntoView({block:'center'});add?.focus({preventScroll:true});
+      }
+      alert('Cannot publish: '+e.message); return;
+    }
     const res=await inlineRemoteAssets(LESSON);   // deep clone; in-memory LESSON untouched
     document.getElementById('lesson-data').textContent=JSON.stringify(res.lesson,null,2).replace(/</g,'\\u003c');
     const clone=document.documentElement.cloneNode(true);
