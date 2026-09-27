@@ -1,5 +1,5 @@
 {
-  "source": "working tree based on 93208cccc84f40d0c721103347b5c47d9eebe732; appSha256 pins the actual renderer",
+  "source": "working tree based on 04979f23c6186d2780cf7e6910ae49e1e8173e63",
   "appSha256": "a0521971bc7171d740a4ab668518085be7b6301ad7e3a55182a90bebe8513b12",
   "checks": [
     "UI imports Find, factor and check",
@@ -470,7 +470,9 @@
     "data-only variation 390 mathematics fits without clipping 5",
     "data-only variation 390 pair follows available width 5",
     "UI imports Find, factor and check",
+    "Visible working, explanation and caution edits change the intended values and preserve every other field",
     "Move keeps working, annotation, caution, table and identity together",
+    "Visible table edit changes its saved value and preserves all other content",
     "UI imports Find, factor and check",
     "Fresh-context JSON reopen preserves all edited and unknown data",
     "Reopened paired step remains editable",

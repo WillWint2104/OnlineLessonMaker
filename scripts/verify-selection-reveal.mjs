@@ -12,7 +12,7 @@ try{
  else{
   for(const top of [0,600,2000]){
    await mx('mx.e.0.0');await p.locator('#inspector').evaluate((e,y)=>e.scrollTop=y,top);await mx('mx.s.0.0.0');assert.ok(await measure(eb+'.steps.0.math','Step from scroll '+top));assert.ok(await measure(eb+'.steps.0.text','Matched explanation from scroll '+top));
-   const unchanged=await data(),scroll=await p.locator('#inspector').evaluate(e=>e.scrollTop);await p.locator('[data-bind="'+eb+'.steps.0.text"]').press('End');assert.equal(await p.locator('#inspector').evaluate(e=>e.scrollTop),scroll);assert.deepEqual(await data(),unchanged);
+   const unchanged=await data(),scroll=await p.locator('#inspector').evaluate(e=>e.scrollTop),field=p.locator('[data-bind="'+eb+'.steps.0.text"]'),original=await field.inputValue();await field.press('Control+End');await field.press('Space');assert.equal(await field.inputValue(),original+' ');assert.equal(await p.locator('#inspector').evaluate(e=>e.scrollTop),scroll);assert.equal(await p.evaluate(()=>document.activeElement.dataset.bind),eb+'.steps.0.text');await field.fill(original);assert.deepEqual(await data(),unchanged);checks.push({label:'Typing from scroll '+top,focusKept:true,scrollKept:true});
    await mx('mx.v.0.0.0');assert.ok(await measure(eb+'.visual.0.stub','Table from scroll '+top));
   }
   await mx('mx.g.0');await click('[data-mxadd="f.0"]');await mx('mx.f.0');assert.ok(await measure('slides.0.activities.0.workedExamples.0.relations.0.figure.domain.xMin','Graph domain'));
