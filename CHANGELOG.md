@@ -7,6 +7,13 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Annotated solutions and purposeful activities
+- Pair mathematical working with its matched explanation and caution in the shared activity player; retain authored multiline working and stack each pair at narrow widths.
+- Place existing example evidence before its question when explicitly selected, retain step-owned tables, and remove automatic numbered spines and repeated section rules inside activity surfaces.
+- Supply corrected factor-search examples, separate guided completion/practice, and a synthetic average-speed activity with measurements, units and interpretation.
+- Reject publication of skills with no learner-visible activities while retaining draft JSON saving; explicit inspector selection reveals the relevant editing fields.
+- Add separate publication, selection, semantic-content, browser-layout and native-zoom evidence. See `docs/review/annotated-solutions/`.
+
 ### Connected activity authoring
 - Connect skill/activity creation and nested mathematics editing through the existing registered editor, including notes, questions, tables, graphs, optional-video slots and safe structural edits.
 - Verify the complete blank two-skill UI workflow, JSON reopen and independent publication, preserving rich imported content and saved response policy.

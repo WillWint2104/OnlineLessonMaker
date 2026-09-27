@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "id": "motion-demo",
+    "title": "Reading motion data",
+    "subject": "Physics",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "reviewFixture": true
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "constant-speed",
+      "title": "Connect data and speed",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "motion-calculate",
+          "title": "Average speed over an interval",
+          "lede": "Synthetic test data: the table records cumulative distance travelled, measured from the start. It is not a displacement table.",
+          "workedExamples": [
+            {
+              "id": "motion-group",
+              "type": "sequence",
+              "title": "Calculate and interpret",
+              "examples": [
+                {
+                  "id": "motion-example",
+                  "label": "Average speed over an interval",
+                  "prompt": "Use the measurements to find the average speed over the full interval from 0 s to 4 s.",
+                  "steps": [
+                    {
+                      "id": "motion-step1",
+                      "math": "Total distance = 12 m\nElapsed time = 4 s − 0 s = 4 s",
+                      "text": "Read the final cumulative distance and subtract the start time from the end time."
+                    },
+                    {
+                      "id": "motion-relationship",
+                      "math": "Average speed = total distance ÷ elapsed time",
+                      "text": "Average speed uses total distance travelled. Average velocity instead uses displacement and includes direction."
+                    },
+                    {
+                      "id": "motion-substitution",
+                      "math": "Average speed = (12 m)/(4 s)\n= 3 m/s",
+                      "text": "Substitute the measured distance and elapsed time. Metres divided by seconds gives metres per second."
+                    },
+                    {
+                      "id": "motion-interpretation",
+                      "math": "",
+                      "text": "Over these four seconds, the object covered an average of 3 metres per second. The samples show equal distance increments in each one-second interval; they do not establish what happened between observations.",
+                      "note": "An overall average does not prove constant instantaneous speed."
+                    }
+                  ],
+                  "answer": "",
+                  "visual": [
+                    {
+                      "kind": "table",
+                      "stub": "Time (s)",
+                      "head": [
+                        "Distance (m)"
+                      ],
+                      "rows": [
+                        [
+                          "0",
+                          "0"
+                        ],
+                        [
+                          "1",
+                          "3"
+                        ],
+                        [
+                          "2",
+                          "6"
+                        ],
+                        [
+                          "3",
+                          "9"
+                        ],
+                        [
+                          "4",
+                          "12"
+                        ]
+                      ]
+                    }
+                  ],
+                  "visualPlacement": "question"
+                }
+              ]
+            }
+          ],
+          "questions": [
+            {
+              "id": "motion-reason",
+              "stem": "What do the sampled measurements establish about each one-second interval, and what remains unknown about motion between observations? Explain why this distance table cannot determine the direction of average velocity."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
