@@ -108,10 +108,10 @@ body.edit #slide .lp .mx-top button,body.edit #slide .lp .mx-nav button,body.edi
 .mx .mx-annotated .mx-stepm{margin:0;min-width:0;font-size:19.5px;line-height:1.65;container-type:inline-size;}
 .mx .mx-annotated .mx-annotation{min-width:0;}
 .mx .mx-annotated .mx-stepvis{grid-column:1/-1;margin:4px 0 0;padding:0;border:0;}
-.mx .mx-worklines{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px .4em;}
+.mx .mx-worklines{display:grid;grid-template-columns:fit-content(50%) minmax(0,1fr);gap:4px .4em;}
 .mx .mx-workline{grid-column:1/-1;min-width:0;}
 .mx .mx-workline[data-mx-equality]{display:grid;grid-template-columns:subgrid;}
-.mx .mx-workline[data-mx-equality]>:first-child{white-space:nowrap;}
+.mx .mx-workline[data-mx-equality]>:first-child{white-space:normal;}
 .lp .mx-item,.lp .mx-sk-grp+.mx-sk-grp,.lp .mx-wexfoot{border-top:0;}
 .lp .mx-wexdiv{border:0;background:none;height:0;margin:24px 0;}
 @container(min-width:760px){
@@ -6139,8 +6139,8 @@ function mxAmbHtml(v){
 }
 /* A MATHS FIELD: the control, then what it will draw. The preview is the control's next sibling, so the
    wiring needs no ids and cannot point at the wrong one. */
-function inMath(label,path,val,area){
-  const v=val==null?'':String(val), working=/\.steps\.\d+\.math$/.test(path);
+function inMath(label,path,val,area,working=false){
+  const v=val==null?'':String(val);
   const ctl=area?`<textarea class="ia mxm" data-bind="${path}">${esc(v)}</textarea>`
                 :`<input class="ii mxm" data-bind="${path}" value="${esc(v)}">`;
   return `<label>${esc(label)}</label>${ctl}<div class="mxprev${working?' mxprev-work':''}"${v?'':' hidden'}>${working?mxWorking(v):mxM(v)}</div>`;
@@ -6370,9 +6370,9 @@ function mxOutline(i,s,sel,context={}){
     const sb=`${eb}.steps.${S.s}`;
     if(typeof st==='string')return `<div class="isec">${inMath('Step text',sb,st,true)}</div>`;
     return `<div class="isec"><div class="isec-h">Step · fields</div>
-      ${ig('mxs.math',sel,inMath('Mathematical working (one line per statement)',`${sb}.math`,st.math,true))}
-      ${ig('mxs.text',sel,inMath('Matched explanation',`${sb}.text`,st.text,true))}
-      ${ig('mxs.note',sel,inMath('Caution / note (optional)',`${sb}.note`,st.note,true))}</div>`;
+      ${ig('mxs.math',sel,inMath(context.embedded?'Mathematical working (one line per statement)':'Mathematics',`${sb}.math`,st.math,!!context.embedded,!!context.embedded))}
+      ${ig('mxs.text',sel,inMath(context.embedded?'Matched explanation':'What this step does',`${sb}.text`,st.text,true))}
+      ${ig('mxs.note',sel,inMath(context.embedded?'Caution / note (optional)':'Note (optional)',`${sb}.note`,st.note,!!context.embedded))}</div>`;
   })();
   /* THE PAGE AND THE LESSON ARE SET ONCE, AND THEN NOT AGAIN. They were on screen for every selection —
      eight fields and their labels above the outline, between a teacher and the step they were editing.
@@ -9572,9 +9572,9 @@ function mxWexGroups(s){
 function mxWorking(value){
   const lines=String(value).split(/\r?\n/);
   // Newlines stay authored boundaries. Only continuation equalities form an aligned chain.
-  const chain=lines.some(line=>/^\s*=/.test(line));
+  const chain=lines.some(line=>/^\s*=(?!=|>)/.test(line));
   return `<div class="mx-worklines">${lines.map(line=>{
-    const at=chain?line.indexOf('='):-1;
+    const equality=chain&&/(^|[^<>=!])=(?!=|>)/.exec(line), at=equality?equality.index+equality[1].length:-1;
     return at<0?`<div class="mx-workline">${mxM(line)||'<br>'}</div>`:`<div class="mx-workline" data-mx-equality><span>${mxM(line.slice(0,at))}</span><span>= ${mxM(line.slice(at+1))}</span></div>`;
   }).join('')}</div>`;
 }

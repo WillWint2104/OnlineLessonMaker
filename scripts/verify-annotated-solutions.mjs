@@ -3,6 +3,7 @@ import fs from 'node:fs';import path from 'node:path';import http from 'node:htt
 const dir='docs/review/annotated-solutions',ref=process.env.ANNOTATED_REF,out=process.env.ANNOTATED_OUT||path.join(process.env.PLAYER_REVIEW_DIR||'review-delivery/annotated','solutions');fs.mkdirSync(out,{recursive:true});
 const app=ref?execFileSync('git',['show',ref+':lesson-studio.html'],{maxBuffer:8e6}):fs.readFileSync('lesson-studio.html');
 const report={source:ref||execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),appSha256:createHash('sha256').update(app).digest('hex'),checks:[],captures:[],errors:[]};
+if(!ref&&execFileSync('git',['status','--porcelain','--','lesson-studio.html'],{encoding:'utf8'}).trim())report.source='working tree based on '+report.source;
 const server=http.createServer((req,res)=>{const f=path.resolve('.'+decodeURIComponent(req.url.split('?')[0]));if(f===path.resolve('lesson-studio.html')){res.setHeader('Content-Type','text/html');return res.end(app);}if(!f.startsWith(process.cwd()+path.sep)||!fs.existsSync(f)||fs.statSync(f).isDirectory()){res.writeHead(404);return res.end();}res.end(fs.readFileSync(f));});await new Promise(r=>server.listen(0,'127.0.0.1',r));const origin='http://127.0.0.1:'+server.address().port;
 const browser=await chromium.launch();let ctx=await browser.newContext({viewport:{width:1536,height:960}}),p=await ctx.newPage();
 const setup=async()=>{p.setDefaultTimeout(12000);p.on('dialog',d=>d.accept());p.on('pageerror',e=>report.errors.push(e.message));await p.route('**/*',r=>r.request().url().startsWith(origin)||r.request().url().startsWith('file:')?r.continue():r.abort());};await setup();
@@ -30,6 +31,9 @@ try{
   }
  }
  if(!ref){
+  // Isolated formatter check: a continuation equality must not split composite operators.
+  const operators=await p.evaluate(()=>{const box=document.createElement('div');box.innerHTML=mxWorking('_x_ >= 3\n_x_ <= 9\n_y_ != 0\n_y_ == 6\n_y_ = 2 + 4\n= 6');return [...box.children[0].children].map(e=>({text:e.textContent,equality:e.hasAttribute('data-mx-equality')}));});
+  check(operators.slice(0,4).every(x=>!x.equality),'Composite operators stay intact beside an equality chain');check(operators[0].text.includes('>=')&&operators[1].text.includes('<=')&&operators[2].text.includes('!=')&&operators[3].text.includes('=='),'Composite operator spelling survives formatting');check(operators.slice(4).every(x=>x.equality),'Standalone equalities retain alignment');
   // Data-only generalisation: longer expression, longer commentary, extra rows, same app/CSS.
   const varied=structuredClone(math),ex=varied.slides[0].activities[0].workedExamples[0].examples[0];ex.steps.push({id:'long-review-fixture',math:'12_x_^2 + 48_x_ + 36 = 12(_x_ + 1)(_x_ + 3)\n= 12_x_^2 + 48_x_ + 36',text:'This deliberately longer review fixture tests wrapping and pairing. '+ex.steps[0].text,note:'Synthetic layout fixture, separate from the taught method.'});
   await load(varied);await click('[data-mx-mode="study"]');for(const width of [1536,768,390]){await p.setViewportSize({width,height:960});await inspect('data-only variation '+width);}await shot('long-data-only-variation');

@@ -1,6 +1,6 @@
 {
-  "source": "working tree based on 876fee0342cdaeb4da98a94df0340deed54315c3; appSha256 pins the actual renderer",
-  "appSha256": "0862c2330efe5edac135fa9433b0d080fad435b3ff7374fb7b0e0438dbccd23c",
+  "source": "working tree based on 93208cccc84f40d0c721103347b5c47d9eebe732; appSha256 pins the actual renderer",
+  "appSha256": "a0521971bc7171d740a4ab668518085be7b6301ad7e3a55182a90bebe8513b12",
   "checks": [
     "UI imports Find, factor and check",
     "positive 1536 no page overflow",
@@ -390,6 +390,9 @@
     "UI imports Reading a source critically",
     "qualitative 390 no page overflow",
     "qualitative final content reachable above footer",
+    "Composite operators stay intact beside an equality chain",
+    "Composite operator spelling survives formatting",
+    "Standalone equalities retain alignment",
     "UI imports Find, factor and check",
     "data-only variation 1536 no page overflow",
     "data-only variation 1536 working precedes annotation 0",
