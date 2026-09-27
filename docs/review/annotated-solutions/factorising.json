@@ -1,0 +1,486 @@
+{
+  "meta": {
+    "id": "annotated-factorising-review",
+    "title": "Find, factor and check",
+    "subject": "Mathematics",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "reviewFixture": true
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "monic",
+      "title": "Factorising monic quadratics",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "monic-ex-pp",
+          "title": "Find the positive factor pair",
+          "workedExamples": [
+            {
+              "id": "g-signs",
+              "type": "sequence",
+              "title": "Both signs positive",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "ex-pp",
+                  "label": "Find the positive factor pair",
+                  "prompt": "Factorise _x_^2 + 7_x_ + 12.",
+                  "steps": [
+                    {
+                      "id": "s1",
+                      "math": "_m_ × _n_ = 12\n_m_ + _n_ = 7",
+                      "text": "The constant gives the product; the coefficient of x gives the sum. A positive product and positive sum require two positive numbers."
+                    },
+                    {
+                      "id": "s2",
+                      "math": "12 ÷ 1 = 12 → (1, 12)\n12 ÷ 2 = 6 → (2, 6)\n12 ÷ 3 = 4 → (3, 4)",
+                      "text": "Try positive divisors in order. Trying 4 next gives (4, 3), reversing the last pair; every later successful divisor also reverses a pair already recorded."
+                    },
+                    {
+                      "id": "s3",
+                      "math": "3 × 4 = 12\n3 + 4 = 7",
+                      "text": "Compare the sums of all three distinct pairs. Only 3 and 4 meet both requirements.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "stub": "Pair",
+                          "head": [
+                            "Product",
+                            "Sum"
+                          ],
+                          "rows": [
+                            [
+                              "(1, 12)",
+                              "12",
+                              "13"
+                            ],
+                            [
+                              "(2, 6)",
+                              "12",
+                              "8"
+                            ],
+                            [
+                              "(3, 4)",
+                              "12",
+                              "7"
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "s4",
+                      "math": "_x_^2 + 7_x_ + 12 = (_x_ + 3)(_x_ + 4)",
+                      "text": "Put the selected numbers into the two brackets."
+                    },
+                    {
+                      "id": "positive-check",
+                      "math": "(_x_ + 3)(_x_ + 4) = _x_^2 + 4_x_ + 3_x_ + 12\n= _x_^2 + 7_x_ + 12",
+                      "text": "Check by expanding. The combined middle terms and the constant reproduce the original expression."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ],
+          "lede": "There is no common factor other than 1. The coefficient of x² is 1, so use the monic product-and-sum method."
+        },
+        {
+          "id": "activity-aa9f471a-1658-4a38-a45b-50db33492e66",
+          "title": "Choose signs after finding magnitudes",
+          "workedExamples": [
+            {
+              "id": "group-5188345f-0bc8-47bc-83f6-3d7c478ac82e",
+              "type": "sequence",
+              "title": "A complete method",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "example-41f3bc3c-de29-4430-9d97-54c81f977947",
+                  "label": "Choose signs after finding magnitudes",
+                  "prompt": "Factorise _x_^2 + _x_ − 20.",
+                  "steps": [
+                    {
+                      "id": "step-d0d1ce51-f3c3-4d99-9dd2-e87cc6b60613",
+                      "math": "_m_ × _n_ = −20\n_m_ + _n_ = 1",
+                      "text": "The constant is negative, so the numbers have opposite signs. The sum is positive, so the number with the larger absolute value must be positive."
+                    },
+                    {
+                      "id": "s2-l009",
+                      "math": "20 ÷ 1 = 20 → (1, 20)\n20 ÷ 2 = 10 → (2, 10)\n20 = 3 × 6 + 2\n20 ÷ 4 = 5 → (4, 5)",
+                      "text": "Test magnitudes in order. The remainder rejects 3 as a divisor. Trying 5 reverses (4, 5), so stop: the distinct magnitude pairs have all been found."
+                    },
+                    {
+                      "id": "s3-n403",
+                      "math": "(−4) × 5 = −20\n−4 + 5 = 1",
+                      "text": "These are the candidates after the sign restriction. The pair −4 and 5 is the only one with sum 1.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "stub": "Signed pair",
+                          "head": [
+                            "Product",
+                            "Sum"
+                          ],
+                          "rows": [
+                            [
+                              "(−1, 20)",
+                              "−20",
+                              "19"
+                            ],
+                            [
+                              "(−2, 10)",
+                              "−20",
+                              "8"
+                            ],
+                            [
+                              "(−4, 5)",
+                              "−20",
+                              "1"
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "mixed-factor",
+                      "math": "_x_^2 + _x_ − 20 = (_x_ − 4)(_x_ + 5)",
+                      "text": "Use the selected signed numbers. Reversing the order of the factors gives the same product."
+                    },
+                    {
+                      "id": "mixed-check",
+                      "math": "(_x_ − 4)(_x_ + 5) = _x_^2 + 5_x_ − 4_x_ − 20\n= _x_^2 + _x_ − 20",
+                      "text": "Expand and collect like terms to check the original quadratic."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ],
+          "lede": "Factorise x² + x − 20. Search the magnitudes first, then use the signs to narrow the candidates."
+        },
+        {
+          "id": "monic-completion",
+          "title": "Complete the missing decisions",
+          "lede": "Guided completion · write the missing entries and reasoning in your exercise book. This is a new question, not another fully worked example.",
+          "questions": [
+            {
+              "id": "complete-positive",
+              "stem": "Complete the factorisation of x² + 8x + 15. List the distinct positive pairs with product 15, complete each sum, then choose the pair with sum 8.",
+              "table": {
+                "stub": "Positive pair",
+                "head": [
+                  "Product",
+                  "Sum"
+                ],
+                "rows": [
+                  {
+                    "label": "(1, 15)",
+                    "cells": [
+                      "15",
+                      ""
+                    ]
+                  },
+                  {
+                    "label": "(3, 5)",
+                    "cells": [
+                      "15",
+                      ""
+                    ]
+                  }
+                ]
+              },
+              "parts": [
+                "Choose the pair and explain why the other pair fails.",
+                "Complete x² + 8x + 15 = (x + __)(x + __).",
+                "Expand your answer to check both the middle term and constant."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "monic-practice",
+          "title": "Practise and check by expanding",
+          "questions": [
+            {
+              "id": "monic-q1",
+              "stem": "Copy and complete this table for _x_^2 + 8_x_ + 15, then say which pair factorises it.",
+              "table": {
+                "stub": "Factor pair of 15",
+                "head": [
+                  "1 and 15",
+                  "3 and 5"
+                ],
+                "rows": [
+                  {
+                    "label": "Product",
+                    "cells": [
+                      "",
+                      ""
+                    ]
+                  },
+                  {
+                    "label": "Sum",
+                    "cells": [
+                      "",
+                      ""
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "monic-q2",
+              "stem": "Factorise each expression. Both numbers are positive.",
+              "parts": [
+                "_x_^2 + 6_x_ + 8",
+                "_x_^2 + 9_x_ + 20",
+                "_x_^2 + 11_x_ + 24"
+              ]
+            },
+            {
+              "id": "monic-q3",
+              "stem": "Factorise each expression. Both numbers are negative.",
+              "parts": [
+                "_x_^2 − 7_x_ + 12",
+                "_x_^2 − 8_x_ + 15",
+                "_x_^2 − 10_x_ + 21"
+              ]
+            },
+            {
+              "id": "monic-q4",
+              "stem": "Factorise each expression. The constant is negative, so the signs differ.",
+              "parts": [
+                "_x_^2 + 3_x_ − 10",
+                "_x_^2 − 2_x_ − 24",
+                "_x_^2 + 5_x_ − 14",
+                "_x_^2 − _x_ − 20"
+              ]
+            },
+            {
+              "id": "monic-q5",
+              "stem": "Take out the common factor first, then factorise the bracket.",
+              "parts": [
+                "3_x_^2 + 12_x_ + 9",
+                "2_x_^2 − 14_x_ + 24",
+                "5_x_^2 + 5_x_ − 30"
+              ]
+            },
+            {
+              "id": "monic-q6",
+              "stem": "Sasha writes _x_^2 − 4_x_ − 12 = (_x_ − 6)(_x_ − 2).",
+              "stack": true,
+              "parts": [
+                "Expand her answer.",
+                "Use the sign rule to say what went wrong.",
+                "Write the correct factorisation."
+              ]
+            },
+            {
+              "id": "monic-q7",
+              "stem": "A rectangle has area _x_^2 + 9_x_ + 18 square centimetres.",
+              "stack": true,
+              "parts": [
+                "Factorise the area.",
+                "Write an expression for each side length.",
+                "Find the length, width and area when _x_ = 4."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "skill",
+      "id": "nonmonic",
+      "title": "Factorising non-monic quadratics",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "nonmonic-ex-n2",
+          "title": "Split, group and factor",
+          "workedExamples": [
+            {
+              "id": "g-nonmonic",
+              "type": "sequence",
+              "title": "Both signs negative",
+              "lede": "",
+              "examples": [
+                {
+                  "id": "ex-n2",
+                  "label": "Split, group and factor",
+                  "prompt": "Factorise 6_x_^2 − 11_x_ + 3.",
+                  "steps": [
+                    {
+                      "id": "n2s1",
+                      "math": "_a_ × _c_ = 6 × 3 = 18\n_m_ + _n_ = −11",
+                      "text": "The split coefficients need product 18 and sum −11. Both must be negative: their product is positive and their sum is negative."
+                    },
+                    {
+                      "id": "n2s2",
+                      "math": "18 ÷ 1 = 18 → (1, 18)\n18 ÷ 2 = 9 → (2, 9)\n18 ÷ 3 = 6 → (3, 6)\n(−2) × (−9) = 18\n−2 + (−9) = −11",
+                      "text": "The divisors 4 and 5 fail; 6 reverses (3, 6). Apply the negative signs and compare the sums to select −2 and −9.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "stub": "Negative pair",
+                          "head": [
+                            "Product",
+                            "Sum"
+                          ],
+                          "rows": [
+                            [
+                              "(−1, −18)",
+                              "18",
+                              "−19"
+                            ],
+                            [
+                              "(−2, −9)",
+                              "18",
+                              "−11"
+                            ],
+                            [
+                              "(−3, −6)",
+                              "18",
+                              "−9"
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "n2s3",
+                      "math": "6_x_^2 − 11_x_ + 3\n= 6_x_^2 − 2_x_ − 9_x_ + 3",
+                      "text": "Split −11x into −2x − 9x. Their sum leaves the expression unchanged."
+                    },
+                    {
+                      "id": "n2s4",
+                      "math": "= 2_x_(3_x_ − 1) − 3(3_x_ − 1)",
+                      "text": "Take out 2x from the first pair and −3 from the second pair. Both brackets are now 3x − 1.",
+                      "note": "Taking out +3 gives −3x + 1 in the second bracket; use the negative common factor so the brackets match."
+                    },
+                    {
+                      "id": "n2s5",
+                      "math": "= (3_x_ − 1)(2_x_ − 3)",
+                      "text": "Factor out the common bracket 3x − 1."
+                    },
+                    {
+                      "id": "nonmonic-check",
+                      "math": "(3_x_ − 1)(2_x_ − 3) = 6_x_^2 − 9_x_ − 2_x_ + 3\n= 6_x_^2 − 11_x_ + 3",
+                      "text": "Check the factorisation by expansion. The two middle terms combine to −11x."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ],
+          "lede": "There is no common factor other than 1. The leading coefficient is 6, so search using the product of the first and last coefficients."
+        },
+        {
+          "id": "nonmonic-practice",
+          "title": "Practise and check by expanding",
+          "questions": [
+            {
+              "id": "nonmonic-pn1",
+              "stem": "For each quadratic, write down _a_ × _c_ and the pair of numbers that multiplies to it and adds to _b_. Do not factorise yet.",
+              "table": {
+                "stub": "Quadratic",
+                "head": [
+                  "2_x_^2 + 9_x_ + 4",
+                  "3_x_^2 + 10_x_ + 8",
+                  "5_x_^2 − 12_x_ + 4"
+                ],
+                "rows": [
+                  {
+                    "label": "_a_ × _c_",
+                    "cells": [
+                      "",
+                      "",
+                      ""
+                    ]
+                  },
+                  {
+                    "label": "The pair",
+                    "cells": [
+                      "",
+                      "",
+                      ""
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "nonmonic-pn2",
+              "stem": "Factorise each expression.",
+              "parts": [
+                "2_x_^2 + 9_x_ + 4",
+                "3_x_^2 + 11_x_ + 6",
+                "2_x_^2 + 11_x_ + 12"
+              ]
+            },
+            {
+              "id": "nonmonic-pn3",
+              "stem": "Factorise each expression. Both numbers in the pair will be negative.",
+              "parts": [
+                "3_x_^2 − 10_x_ + 8",
+                "4_x_^2 − 11_x_ + 6",
+                "5_x_^2 − 12_x_ + 4"
+              ]
+            },
+            {
+              "id": "nonmonic-pn4",
+              "stem": "Factorise each expression. The constant is negative, so the pair has mixed signs.",
+              "parts": [
+                "2_x_^2 + _x_ − 6",
+                "3_x_^2 − 5_x_ − 2",
+                "4_x_^2 + 4_x_ − 3"
+              ]
+            },
+            {
+              "id": "nonmonic-pn5",
+              "stem": "Mixed set — decide first whether there is a common factor, and whether it is monic or non-monic.",
+              "parts": [
+                "_x_^2 − 13_x_ + 40",
+                "6_x_^2 + 7_x_ + 2",
+                "4_x_^2 + 20_x_ + 24",
+                "_x_^2 + 4_x_ − 21"
+              ]
+            },
+            {
+              "id": "nonmonic-pn6",
+              "stem": "Dev factorises 3_x_^2 + 7_x_ + 2 and gets (3_x_ + 2)(_x_ + 1).",
+              "stack": true,
+              "parts": [
+                "Expand his answer.",
+                "Explain how expanding shows it is wrong.",
+                "Give the correct factorisation."
+              ]
+            },
+            {
+              "id": "nonmonic-pn7",
+              "stem": "A rectangle has area 2_x_^2 + 7_x_ + 6 square metres and its width is (_x_ + 2) metres.",
+              "stack": true,
+              "parts": [
+                "Factorise the area.",
+                "Write an expression for the length.",
+                "Find the perimeter when _x_ = 3."
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
