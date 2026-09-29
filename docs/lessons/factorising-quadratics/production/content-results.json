@@ -1,0 +1,32 @@
+{
+  "lessonSha256": "de763be5384a24d0d751b07bdbb8737866161128bd7562ef054ba7689bae2c64",
+  "checks": [
+    "Two classroom skills, paper default, one empty optional-video activity each, no fixture labels",
+    "monic-positive: generate → compare → verify → factorise → expand",
+    "monic-positive: exhaustive candidates, arithmetic, selected pair and every algebraic transformation independently checked",
+    "monic-negative: generate → compare → verify → factorise → expand",
+    "monic-negative: exhaustive candidates, arithmetic, selected pair and every algebraic transformation independently checked",
+    "monic-mixed: generate → compare → verify → factorise → expand",
+    "monic-mixed: exhaustive candidates, arithmetic, selected pair and every algebraic transformation independently checked",
+    "nonmonic-positive: generate → compare → verify → factorise → expand",
+    "nonmonic-positive: exhaustive candidates, arithmetic, selected pair and every algebraic transformation independently checked",
+    "nonmonic-negative: generate → compare → verify → factorise → expand",
+    "nonmonic-negative: exhaustive candidates, arithmetic, selected pair and every algebraic transformation independently checked",
+    "nonmonic-mixed: generate → compare → verify → factorise → expand",
+    "nonmonic-mixed: exhaustive candidates, arithmetic, selected pair and every algebraic transformation independently checked",
+    "monic-completion: supplied candidates, blank sums and no solved counterpart",
+    "nonmonic-completion: supplied candidates, blank sums and no solved counterpart",
+    "monic-practice-positive: all 3 practice factors expand to the actual questions",
+    "monic-practice-negative: all 3 practice factors expand to the actual questions",
+    "monic-practice-mixed: all 3 practice factors expand to the actual questions",
+    "monic-practice-common: all 2 practice factors expand to the actual questions",
+    "nonmonic-practice-positive: all 3 practice factors expand to the actual questions",
+    "nonmonic-practice-negative: all 3 practice factors expand to the actual questions",
+    "nonmonic-practice-mixed: all 3 practice factors expand to the actual questions",
+    "nonmonic-practice-common: all 2 practice factors expand to the actual questions",
+    "monic-practice-area: area factors, positive dimensions and perimeter derived with consistent length units",
+    "nonmonic-practice-area: area factors, positive dimensions and perimeter derived with consistent length units",
+    "Guided answers and error-analysis corrections expand correctly; teacher answers are separate from learner data"
+  ],
+  "limit": "Arithmetic and schema checks supplement human reading of the explanations and classroom suitability."
+}

@@ -2,6 +2,10 @@
 
 _Last updated: 2026-06-20_
 
+## Factorising classroom lesson (29 September 2026)
+
+The accepted PR #157 application is the working baseline. The separate classroom lesson is `lessons/factorising-quadratics.html`, with editable JSON in `lessons/factorising-quadratics/lesson.json` and teacher guidance/answers/screenshots in `docs/lessons/factorising-quadratics/`. It contains two skills, six worked examples, guided completion, independent paper practice and two real optional-video activities awaiting teacher URLs. Shared application code and earlier review evidence are unchanged; continue from the finished lesson rather than restarting a historical engine stage. Teacher visual acceptance and real-video playback remain separate from technical verification.
+
 ## Annotated activity solutions (27 September 2026)
 
 The activity player now renders each existing `steps[]` object as working followed by its matched annotation, with step-owned evidence spanning that row. Wide component widths pair the two; narrow widths stack them without shrinking mathematics. Legacy page layouts remain intact. Mathematical working stays a newline-capable string, edited separately from explanation and caution. The additive `example.visualPlacement: "question"` moves existing evidence before the question; absence preserves the former location. See `docs/review/annotated-solutions/REFERENCES.md` for the contract and instructional rationale.
