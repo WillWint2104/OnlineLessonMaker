@@ -1,0 +1,780 @@
+{
+  "meta": {
+    "id": "factorising-quadratics-classroom",
+    "title": "Factorising quadratics",
+    "subject": "Mathematics",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper"
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "monic",
+      "title": "Factorising monic quadratics",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "monic-notes",
+          "title": "From expansion to factorisation",
+          "lede": "Learn to write a monic quadratic as a product of two linear factors. Work in your exercise book.",
+          "notes": [
+            {
+              "term": "Before you begin",
+              "body": "You should be able to multiply signed integers, list integer factor pairs, collect like terms and expand two brackets. Start by expanding (_x_ + 2)(_x_ + 3) in your book."
+            },
+            {
+              "term": "Reverse the expansion",
+              "body": "(_x_ + _m_)(_x_ + _n_) = _x_^2 + (_m_ + _n_)_x_ + _m_ × _n_. A monic quadratic has leading coefficient 1. To factorise _x_^2 + _b_ × _x_ + _c_, find integers with product c and sum b."
+            },
+            {
+              "term": "Search systematically",
+              "body": "First check for a common factor. For a monic quadratic, test positive divisors of |c| in order and record each distinct magnitude pair once. Apply the signs, compare the sums, verify the selected pair, write the brackets and check by expansion."
+            },
+            {
+              "term": "Choose the signs",
+              "body": "If c is positive, the signs agree: both are positive when b is positive, and both are negative when b is negative. If c is negative, the signs differ; the greater absolute value takes the sign of b. If b is zero and c is negative, the two numbers must be opposites."
+            },
+            {
+              "term": "What counts as a complete solution?",
+              "body": "Record enough working to justify your pair. Keep every sign, then expand to check all three terms. The examples and practice here factorise over the integers. If no integer pair satisfies both conditions, do not force a factorisation."
+            }
+          ]
+        },
+        {
+          "id": "monic-positive",
+          "title": "A positive factor pair",
+          "workedExamples": [
+            {
+              "id": "monic-positive-group",
+              "type": "sequence",
+              "title": "A positive factor pair",
+              "examples": [
+                {
+                  "id": "monic-positive-example",
+                  "label": "A positive factor pair",
+                  "prompt": "Factorise _x_^2 + 7_x_ + 12.",
+                  "steps": [
+                    {
+                      "id": "monic-positive-target",
+                      "math": "_m_ × _n_ = 12\n_m_ + _n_ = 7",
+                      "text": "A positive product and positive sum require two positive numbers."
+                    },
+                    {
+                      "id": "monic-positive-generate",
+                      "math": "12 ÷ 1 = 12 → (1, 12)\n12 ÷ 2 = 6 → (2, 6)\n12 ÷ 3 = 4 → (3, 4)",
+                      "text": "Test positive divisors in order to find the distinct magnitude pairs. Stop when the next successful divisor reverses a pair already recorded. Then apply the required signs."
+                    },
+                    {
+                      "id": "monic-positive-verify",
+                      "math": "(3) × (4) = 12\n3 + (4) = 7",
+                      "text": "The selected pair satisfies both conditions. Use these signed numbers in the factorisation."
+                    },
+                    {
+                      "id": "monic-positive-compare",
+                      "math": "",
+                      "text": "Compare the sums in the table with the required sum 7. Each candidate already has the required product.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "stub": "Candidate pair",
+                          "head": [
+                            "Product",
+                            "Sum"
+                          ],
+                          "rows": [
+                            [
+                              "(1, 12)",
+                              "12",
+                              "13"
+                            ],
+                            [
+                              "(2, 6)",
+                              "12",
+                              "8"
+                            ],
+                            [
+                              "(3, 4)",
+                              "12",
+                              "7"
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "monic-positive-factor-0",
+                      "math": "_x_^2 + 7_x_ + 12 = (_x_ + 3)(_x_ + 4)",
+                      "text": "For a monic quadratic, the selected numbers go directly into the two brackets."
+                    },
+                    {
+                      "id": "monic-positive-check",
+                      "math": "(_x_ + 3)(_x_ + 4) = _x_^2 + 4_x_ + 3_x_ + 12\n= _x_^2 + 7_x_ + 12",
+                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "monic-negative",
+          "title": "Two negative numbers",
+          "workedExamples": [
+            {
+              "id": "monic-negative-group",
+              "type": "sequence",
+              "title": "Two negative numbers",
+              "examples": [
+                {
+                  "id": "monic-negative-example",
+                  "label": "Two negative numbers",
+                  "prompt": "Factorise _x_^2 − 7_x_ + 10.",
+                  "steps": [
+                    {
+                      "id": "monic-negative-target",
+                      "math": "_m_ × _n_ = 10\n_m_ + _n_ = −7",
+                      "text": "A positive product and negative sum require two negative numbers."
+                    },
+                    {
+                      "id": "monic-negative-generate",
+                      "math": "10 ÷ 1 = 10 → (1, 10)\n10 ÷ 2 = 5 → (2, 5)",
+                      "text": "Test positive divisors in order to find the distinct magnitude pairs. Stop when the next successful divisor reverses a pair already recorded. Then apply the required signs."
+                    },
+                    {
+                      "id": "monic-negative-compare",
+                      "math": "",
+                      "text": "Compare the sums in the table with the required sum -7. Each candidate already has the required product.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "stub": "Candidate pair",
+                          "head": [
+                            "Product",
+                            "Sum"
+                          ],
+                          "rows": [
+                            [
+                              "(−1, −10)",
+                              "10",
+                              "−11"
+                            ],
+                            [
+                              "(−2, −5)",
+                              "10",
+                              "−7"
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "monic-negative-verify",
+                      "math": "(−2) × (−5) = 10\n−2 + (−5) = −7",
+                      "text": "The selected pair satisfies both conditions. Use these signed numbers in the factorisation."
+                    },
+                    {
+                      "id": "monic-negative-factor-0",
+                      "math": "_x_^2 − 7_x_ + 10 = (_x_ − 2)(_x_ − 5)",
+                      "text": "Both selected numbers are negative, so both brackets contain subtraction."
+                    },
+                    {
+                      "id": "monic-negative-check",
+                      "math": "(_x_ − 2)(_x_ − 5) = _x_^2 − 5_x_ − 2_x_ + 10\n= _x_^2 − 7_x_ + 10",
+                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "monic-mixed",
+          "title": "Opposite signs",
+          "workedExamples": [
+            {
+              "id": "monic-mixed-group",
+              "type": "sequence",
+              "title": "Opposite signs",
+              "examples": [
+                {
+                  "id": "monic-mixed-example",
+                  "label": "Opposite signs",
+                  "prompt": "Factorise _x_^2 + _x_ − 20.",
+                  "steps": [
+                    {
+                      "id": "monic-mixed-target",
+                      "math": "_m_ × _n_ = −20\n_m_ + _n_ = 1",
+                      "text": "The product is negative, so the signs differ. The number with greater absolute value takes the sign of the sum."
+                    },
+                    {
+                      "id": "monic-mixed-generate",
+                      "math": "20 ÷ 1 = 20 → (1, 20)\n20 ÷ 2 = 10 → (2, 10)\n20 = 3 × 6 + 2\n20 ÷ 4 = 5 → (4, 5)",
+                      "text": "The remainder rejects 3 as a divisor of 20. Testing 5 would reverse (4, 5), so all distinct magnitude pairs have been found. The greater magnitude must be positive to make the sum positive."
+                    },
+                    {
+                      "id": "monic-mixed-compare",
+                      "math": "",
+                      "text": "Compare the sums in the table with the required sum 1. Each candidate already has the required product.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "stub": "Candidate pair",
+                          "head": [
+                            "Product",
+                            "Sum"
+                          ],
+                          "rows": [
+                            [
+                              "(−1, 20)",
+                              "−20",
+                              "19"
+                            ],
+                            [
+                              "(−2, 10)",
+                              "−20",
+                              "8"
+                            ],
+                            [
+                              "(−4, 5)",
+                              "−20",
+                              "1"
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "monic-mixed-verify",
+                      "math": "(−4) × (5) = −20\n−4 + (5) = 1",
+                      "text": "The selected pair satisfies both conditions. Use these signed numbers in the factorisation."
+                    },
+                    {
+                      "id": "monic-mixed-factor-0",
+                      "math": "_x_^2 + _x_ − 20 = (_x_ − 4)(_x_ + 5)",
+                      "text": "Keep the signs with the selected numbers. Reversing the order of the brackets gives the same product."
+                    },
+                    {
+                      "id": "monic-mixed-check",
+                      "math": "(_x_ − 4)(_x_ + 5) = _x_^2 + 5_x_ − 4_x_ − 20\n= _x_^2 + _x_ − 20",
+                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "monic-completion",
+          "title": "Your turn: complete the factor search",
+          "lede": "Guided completion · copy the table and complete the working in your exercise book.",
+          "practiceNote": "Complete the supplied scaffold. Keep the signs with each number.",
+          "questions": [
+            {
+              "id": "monic-completion-question",
+              "stem": "Factorise _x_^2 + 8_x_ + 15. The candidate pairs are supplied. Complete the sums, then select the pair with sum 8.",
+              "table": {
+                "stub": "Candidate pair",
+                "head": [
+                  "Product",
+                  "Sum"
+                ],
+                "rows": [
+                  {
+                    "label": "(1, 15)",
+                    "cells": [
+                      "15",
+                      ""
+                    ]
+                  },
+                  {
+                    "label": "(3, 5)",
+                    "cells": [
+                      "15",
+                      ""
+                    ]
+                  }
+                ]
+              },
+              "parts": [
+                "Choose a pair and explain your choice.",
+                "Complete _x_^2 + 8_x_ + 15 = (_x_ + __)(_x_ + __).",
+                "Expand your factors and compare all three terms with the original expression."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "monic-practice",
+          "title": "Independent practice: monic quadratics",
+          "lede": "Work independently in your exercise book. Use the worked examples only when you need to revisit the method.",
+          "practiceNote": "Show the factor search and your reasoning. Check every completed factorisation by expansion.",
+          "questions": [
+            {
+              "id": "monic-practice-positive",
+              "stem": "Factorise each expression. Show your candidate pairs and compare their sums.",
+              "parts": [
+                "_x_^2 + 5_x_ + 6",
+                "_x_^2 + 9_x_ + 20",
+                "_x_^2 + 11_x_ + 24"
+              ]
+            },
+            {
+              "id": "monic-practice-negative",
+              "stem": "Factorise each expression. Explain the signs you choose.",
+              "parts": [
+                "_x_^2 − 8_x_ + 12",
+                "_x_^2 − 9_x_ + 14",
+                "_x_^2 − 11_x_ + 30"
+              ]
+            },
+            {
+              "id": "monic-practice-mixed",
+              "stem": "Factorise each expression and check by expansion.",
+              "parts": [
+                "_x_^2 + 3_x_ − 10",
+                "_x_^2 − 2_x_ − 24",
+                "_x_^2 − _x_ − 30"
+              ]
+            },
+            {
+              "id": "monic-practice-common",
+              "stem": "Take out the greatest common factor first, then factorise the remaining monic quadratic.",
+              "parts": [
+                "2_x_^2 + 12_x_ + 16",
+                "3_x_^2 − 3_x_ − 18"
+              ]
+            },
+            {
+              "id": "monic-practice-explain",
+              "stem": "A student writes _x_^2 − _x_ − 12 = (_x_ − 3)(_x_ + 4).",
+              "parts": [
+                "Expand the proposed factors and identify the error.",
+                "Write a correct factorisation and check it."
+              ]
+            },
+            {
+              "id": "monic-practice-area",
+              "stem": "A rectangle has area (_x_^2 + 10_x_ + 21) cm² and width (_x_ + 3) cm, where _x_ > 0.",
+              "parts": [
+                "Factorise the area expression.",
+                "Find an expression for the length, including its unit.",
+                "Find the perimeter when _x_ = 2. Show your substitution and include the unit."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "skill",
+      "id": "nonmonic",
+      "title": "Factorising non-monic quadratics",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "nonmonic-notes",
+          "title": "Why we split the middle term",
+          "lede": "Extend the product-and-sum method to quadratics whose leading coefficient is not 1.",
+          "notes": [
+            {
+              "term": "Start with the common factor",
+              "body": "Write the expression in the form _a_ × _x_^2 + _b_ × _x_ + _c_, with a non-zero a. Remove the greatest common factor first. If the remaining leading coefficient is 1, use the monic method. In the non-monic examples here, the remaining leading coefficient is greater than 1."
+            },
+            {
+              "term": "Product ac, sum b",
+              "body": "Find integers m and n with _m_ × _n_ = _a_ × _c_ and _m_ + _n_ = _b_. Splitting _b_ × _x_ as _m_ × _x_ + _n_ × _x_ preserves the expression. The product condition makes the four terms suitable for factorising by grouping."
+            },
+            {
+              "term": "Where the product comes from",
+              "body": "Expanding (_p_ × _x_ + _q_)(_r_ × _x_ + _s_) gives _p_ × _r_ × _x_^2 + (_p_ × _s_ + _q_ × _r_)_x_ + _q_ × _s_. The split coefficients ps and qr add to b, and their product is (pr)(qs) = ac."
+            },
+            {
+              "term": "Group, then factor",
+              "body": "Group the first two and last two terms. Factor each group so that the bracketed expressions match, then factor out that shared bracket. A negative common factor may be needed. If the brackets do not match, recheck the pair and each sign."
+            },
+            {
+              "term": "Do not skip the grouping",
+              "body": "The ac pair splits the middle term; it is not usually the pair of constants in the final brackets. Keep the original leading coefficient and constant, then check your final factors by expansion."
+            }
+          ]
+        },
+        {
+          "id": "nonmonic-positive",
+          "title": "Split and group: positive terms",
+          "workedExamples": [
+            {
+              "id": "nonmonic-positive-group",
+              "type": "sequence",
+              "title": "Split and group: positive terms",
+              "examples": [
+                {
+                  "id": "nonmonic-positive-example",
+                  "label": "Split and group: positive terms",
+                  "prompt": "Factorise 2_x_^2 + 7_x_ + 3.",
+                  "steps": [
+                    {
+                      "id": "nonmonic-positive-target",
+                      "math": "_a_ × _c_ = 2 × 3 = 6\n_m_ × _n_ = 6\n_m_ + _n_ = 7",
+                      "text": "Multiply the leading coefficient by the constant to obtain the required product. A positive product and positive sum require two positive numbers."
+                    },
+                    {
+                      "id": "nonmonic-positive-generate",
+                      "math": "6 ÷ 1 = 6 → (1, 6)\n6 ÷ 2 = 3 → (2, 3)",
+                      "text": "Test positive divisors in order to find the distinct magnitude pairs. Stop when the next successful divisor reverses a pair already recorded. Then apply the required signs."
+                    },
+                    {
+                      "id": "nonmonic-positive-compare",
+                      "math": "",
+                      "text": "Compare the sums in the table with the required sum 7. Each candidate already has the required product.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "stub": "Candidate pair",
+                          "head": [
+                            "Product",
+                            "Sum"
+                          ],
+                          "rows": [
+                            [
+                              "(1, 6)",
+                              "6",
+                              "7"
+                            ],
+                            [
+                              "(2, 3)",
+                              "6",
+                              "5"
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "nonmonic-positive-verify",
+                      "math": "(1) × (6) = 6\n1 + (6) = 7",
+                      "text": "This pair has product ac and sum b. Use it to split the middle term, not directly as the numbers in the final brackets."
+                    },
+                    {
+                      "id": "nonmonic-positive-factor-0",
+                      "math": "2_x_^2 + 7_x_ + 3\n= 2_x_^2 + _x_ + 6_x_ + 3",
+                      "text": "Split 7x as x + 6x. The value of the expression is unchanged."
+                    },
+                    {
+                      "id": "nonmonic-positive-factor-1",
+                      "math": "= _x_(2_x_ + 1) + 3(2_x_ + 1)",
+                      "text": "Factor each pair of terms. Both groups must leave the same bracket."
+                    },
+                    {
+                      "id": "nonmonic-positive-factor-2",
+                      "math": "= (_x_ + 3)(2_x_ + 1)",
+                      "text": "Factor out the shared bracket (2x + 1). The remaining terms form the other factor."
+                    },
+                    {
+                      "id": "nonmonic-positive-check",
+                      "math": "(_x_ + 3)(2_x_ + 1) = 2_x_^2 + _x_ + 6_x_ + 3\n= 2_x_^2 + 7_x_ + 3",
+                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nonmonic-negative",
+          "title": "Split and group: a negative middle term",
+          "workedExamples": [
+            {
+              "id": "nonmonic-negative-group",
+              "type": "sequence",
+              "title": "Split and group: a negative middle term",
+              "examples": [
+                {
+                  "id": "nonmonic-negative-example",
+                  "label": "Split and group: a negative middle term",
+                  "prompt": "Factorise 6_x_^2 − 11_x_ + 3.",
+                  "steps": [
+                    {
+                      "id": "nonmonic-negative-target",
+                      "math": "_a_ × _c_ = 6 × 3 = 18\n_m_ × _n_ = 18\n_m_ + _n_ = −11",
+                      "text": "Multiply the leading coefficient by the constant to obtain the required product. A positive product and negative sum require two negative numbers."
+                    },
+                    {
+                      "id": "nonmonic-negative-generate",
+                      "math": "18 ÷ 1 = 18 → (1, 18)\n18 ÷ 2 = 9 → (2, 9)\n18 ÷ 3 = 6 → (3, 6)",
+                      "text": "Test positive divisors in order to find the distinct magnitude pairs. Stop when the next successful divisor reverses a pair already recorded. Then apply the required signs."
+                    },
+                    {
+                      "id": "nonmonic-negative-compare",
+                      "math": "",
+                      "text": "Compare the sums in the table with the required sum -11. Each candidate already has the required product.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "stub": "Candidate pair",
+                          "head": [
+                            "Product",
+                            "Sum"
+                          ],
+                          "rows": [
+                            [
+                              "(−1, −18)",
+                              "18",
+                              "−19"
+                            ],
+                            [
+                              "(−2, −9)",
+                              "18",
+                              "−11"
+                            ],
+                            [
+                              "(−3, −6)",
+                              "18",
+                              "−9"
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "nonmonic-negative-verify",
+                      "math": "(−2) × (−9) = 18\n−2 + (−9) = −11",
+                      "text": "This pair has product ac and sum b. Use it to split the middle term, not directly as the numbers in the final brackets."
+                    },
+                    {
+                      "id": "nonmonic-negative-factor-0",
+                      "math": "6_x_^2 − 11_x_ + 3\n= 6_x_^2 − 2_x_ − 9_x_ + 3",
+                      "text": "Split −11x as −2x − 9x."
+                    },
+                    {
+                      "id": "nonmonic-negative-factor-1",
+                      "math": "= 2_x_(3_x_ − 1) − 3(3_x_ − 1)",
+                      "text": "Take out 2x from the first pair and −3 from the second pair.",
+                      "note": "Taking out +3 would leave −3x + 1 in the second bracket. Take out −3 so both brackets are (3x − 1)."
+                    },
+                    {
+                      "id": "nonmonic-negative-factor-2",
+                      "math": "= (3_x_ − 1)(2_x_ − 3)",
+                      "text": "Factor out the common bracket (3x − 1)."
+                    },
+                    {
+                      "id": "nonmonic-negative-check",
+                      "math": "(3_x_ − 1)(2_x_ − 3) = 6_x_^2 − 9_x_ − 2_x_ + 3\n= 6_x_^2 − 11_x_ + 3",
+                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nonmonic-mixed",
+          "title": "Split and group: opposite signs",
+          "workedExamples": [
+            {
+              "id": "nonmonic-mixed-group",
+              "type": "sequence",
+              "title": "Split and group: opposite signs",
+              "examples": [
+                {
+                  "id": "nonmonic-mixed-example",
+                  "label": "Split and group: opposite signs",
+                  "prompt": "Factorise 3_x_^2 + 5_x_ − 2.",
+                  "steps": [
+                    {
+                      "id": "nonmonic-mixed-target",
+                      "math": "_a_ × _c_ = 3 × (−2) = −6\n_m_ × _n_ = −6\n_m_ + _n_ = 5",
+                      "text": "Multiply the leading coefficient by the constant to obtain the required product. The product is negative, so the signs differ. The number with greater absolute value takes the sign of the sum."
+                    },
+                    {
+                      "id": "nonmonic-mixed-generate",
+                      "math": "6 ÷ 1 = 6 → (1, 6)\n6 ÷ 2 = 3 → (2, 3)",
+                      "text": "Test positive divisors in order to find the distinct magnitude pairs. Stop when the next successful divisor reverses a pair already recorded. Then apply the required signs."
+                    },
+                    {
+                      "id": "nonmonic-mixed-compare",
+                      "math": "",
+                      "text": "Compare the sums in the table with the required sum 5. Each candidate already has the required product.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "stub": "Candidate pair",
+                          "head": [
+                            "Product",
+                            "Sum"
+                          ],
+                          "rows": [
+                            [
+                              "(−1, 6)",
+                              "−6",
+                              "5"
+                            ],
+                            [
+                              "(−2, 3)",
+                              "−6",
+                              "1"
+                            ]
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "nonmonic-mixed-verify",
+                      "math": "(6) × (−1) = −6\n6 + (−1) = 5",
+                      "text": "This pair has product ac and sum b. Use it to split the middle term, not directly as the numbers in the final brackets."
+                    },
+                    {
+                      "id": "nonmonic-mixed-factor-0",
+                      "math": "3_x_^2 + 5_x_ − 2\n= 3_x_^2 + 6_x_ − _x_ − 2",
+                      "text": "Split 5x as 6x − x. Reordering the selected pair is useful for grouping."
+                    },
+                    {
+                      "id": "nonmonic-mixed-factor-1",
+                      "math": "= 3_x_(_x_ + 2) − 1(_x_ + 2)",
+                      "text": "Take out 3x from the first pair and −1 from the second pair.",
+                      "note": "The second group is −x − 2. Factoring out −1 changes both signs inside its bracket."
+                    },
+                    {
+                      "id": "nonmonic-mixed-factor-2",
+                      "math": "= (3_x_ − 1)(_x_ + 2)",
+                      "text": "The common bracket is (x + 2)."
+                    },
+                    {
+                      "id": "nonmonic-mixed-check",
+                      "math": "(3_x_ − 1)(_x_ + 2) = 3_x_^2 + 6_x_ − _x_ − 2\n= 3_x_^2 + 5_x_ − 2",
+                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nonmonic-completion",
+          "title": "Your turn: split, group and check",
+          "lede": "Guided completion · copy the table and complete the working in your exercise book.",
+          "practiceNote": "Complete the supplied scaffold. Keep the signs with each number.",
+          "questions": [
+            {
+              "id": "nonmonic-completion-question",
+              "stem": "Factorise 2_x_^2 + 9_x_ + 10. The candidate pairs are supplied. Complete the sums, then select the pair with sum 9.",
+              "table": {
+                "stub": "Candidate pair",
+                "head": [
+                  "Product",
+                  "Sum"
+                ],
+                "rows": [
+                  {
+                    "label": "(1, 20)",
+                    "cells": [
+                      "20",
+                      ""
+                    ]
+                  },
+                  {
+                    "label": "(2, 10)",
+                    "cells": [
+                      "20",
+                      ""
+                    ]
+                  },
+                  {
+                    "label": "(4, 5)",
+                    "cells": [
+                      "20",
+                      ""
+                    ]
+                  }
+                ]
+              },
+              "parts": [
+                "State a, b and c, and explain why the required product is 20.",
+                "Verify both the product and sum of your selected pair.",
+                "Complete 2_x_^2 + 9_x_ + 10 = 2_x_^2 + __x + __x + 10.",
+                "Group the terms, factor each group and then factor the common bracket.",
+                "Expand your final factors to check all three coefficients."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nonmonic-practice",
+          "title": "Independent practice: non-monic quadratics",
+          "lede": "Choose and justify your own factor pairs. Complete the algebra in your exercise book.",
+          "practiceNote": "Remove any common factor, show the ac search, split and group, then check by expansion.",
+          "questions": [
+            {
+              "id": "nonmonic-practice-positive",
+              "stem": "Factorise each expression. Show the ac search, split the middle term and group.",
+              "parts": [
+                "2_x_^2 + 5_x_ + 2",
+                "3_x_^2 + 10_x_ + 3",
+                "4_x_^2 + 8_x_ + 3"
+              ]
+            },
+            {
+              "id": "nonmonic-practice-negative",
+              "stem": "Factorise each expression. Pay attention to negative common factors when grouping.",
+              "parts": [
+                "6_x_^2 − 7_x_ + 2",
+                "2_x_^2 − 9_x_ + 4",
+                "3_x_^2 − 14_x_ + 8"
+              ]
+            },
+            {
+              "id": "nonmonic-practice-mixed",
+              "stem": "Factorise each expression and check by expansion.",
+              "parts": [
+                "2_x_^2 + _x_ − 6",
+                "6_x_^2 + _x_ − 2",
+                "4_x_^2 − 4_x_ − 3"
+              ]
+            },
+            {
+              "id": "nonmonic-practice-common",
+              "stem": "Factorise fully: remove the greatest common factor before choosing your next method.",
+              "parts": [
+                "4_x_^2 + 14_x_ + 6",
+                "6_x_^2 − 6_x_ − 12"
+              ]
+            },
+            {
+              "id": "nonmonic-practice-explain",
+              "stem": "A student writes 3_x_^2 + 8_x_ + 4 = (3_x_ + 4)(_x_ + 1).",
+              "parts": [
+                "Expand the proposed factors. Which coefficient does not match?",
+                "Use an ac search and grouping to find the correct factors."
+              ]
+            },
+            {
+              "id": "nonmonic-practice-area",
+              "stem": "A rectangle has area (2_x_^2 + 7_x_ + 6) m² and width (_x_ + 2) m, where _x_ > 0.",
+              "parts": [
+                "Factorise the area expression.",
+                "Find an expression for the length, including its unit.",
+                "Find the perimeter when _x_ = 3. Show your substitution and include the unit."
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

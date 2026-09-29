@@ -1,0 +1,40 @@
+{
+  "monic-practice-positive": [
+    "(_x_ + 2)(_x_ + 3)",
+    "(_x_ + 4)(_x_ + 5)",
+    "(_x_ + 3)(_x_ + 8)"
+  ],
+  "monic-practice-negative": [
+    "(_x_ − 2)(_x_ − 6)",
+    "(_x_ − 2)(_x_ − 7)",
+    "(_x_ − 5)(_x_ − 6)"
+  ],
+  "monic-practice-mixed": [
+    "(_x_ + 5)(_x_ − 2)",
+    "(_x_ − 6)(_x_ + 4)",
+    "(_x_ − 6)(_x_ + 5)"
+  ],
+  "monic-practice-common": [
+    "2(_x_ + 2)(_x_ + 4)",
+    "3(_x_ − 3)(_x_ + 2)"
+  ],
+  "nonmonic-practice-positive": [
+    "(2_x_ + 1)(_x_ + 2)",
+    "(3_x_ + 1)(_x_ + 3)",
+    "(2_x_ + 1)(2_x_ + 3)"
+  ],
+  "nonmonic-practice-negative": [
+    "(3_x_ − 2)(2_x_ − 1)",
+    "(2_x_ − 1)(_x_ − 4)",
+    "(3_x_ − 2)(_x_ − 4)"
+  ],
+  "nonmonic-practice-mixed": [
+    "(2_x_ − 3)(_x_ + 2)",
+    "(3_x_ + 2)(2_x_ − 1)",
+    "(2_x_ − 3)(2_x_ + 1)"
+  ],
+  "nonmonic-practice-common": [
+    "2(2_x_ + 1)(_x_ + 3)",
+    "6(_x_ − 2)(_x_ + 1)"
+  ]
+}

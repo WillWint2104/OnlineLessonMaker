@@ -7,6 +7,11 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Factorising quadratics classroom lesson
+- Publish a separate two-skill lesson with notes, six scaffolded worked examples, guided completion and exercise-book practice, retaining the PR #157 application and historical review evidence unchanged.
+- Put candidate comparisons before selected-pair conclusions and correct completion instructions to match the supplied tables; add one actual optional-video activity per skill through the authoring controls, with URLs left empty.
+- Supply editable JSON, independent learner HTML, teacher answers and readable production screenshots; verify content arithmetic, UI edits, JSON reopening, publication and the complete learner sequence at desktop/tablet/narrow widths.
+
 ### Annotated solutions and purposeful activities
 - Pair mathematical working with its matched explanation and caution in the shared activity player; retain authored multiline working and stack each pair at narrow widths.
 - Place existing example evidence before its question when explicitly selected, retain step-owned tables, and remove automatic numbered spines and repeated section rules inside activity surfaces.

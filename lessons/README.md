@@ -11,3 +11,9 @@ Flow:
 
 Tip: keep per-lesson media in `lessons/assets/` so it's served same-origin (firewall-safe).
 See `../HANDOFF.md` §8 for the firewall notes.
+
+## Factorising quadratics
+
+[Learner lesson](factorising-quadratics.html) · [Editable JSON](factorising-quadratics/lesson.json) · [Teacher guide, answers and screenshots](../docs/lessons/factorising-quadratics/README.md).
+
+Two skills, paper responses, scaffolded examples and independent practice. Each skill retains an optional-video activity with an empty URL for the teacher to supply later.
