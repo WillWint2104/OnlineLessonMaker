@@ -70,6 +70,10 @@
     "Paired layout retains staged visibility, authored row number and example evidence",
     "Example evidence remains visible when the optional question is empty",
     "Reordering moves visible neighbours while preserving missing imported references",
+    "Annotated collection member has a live labelled tabpanel",
+    "Annotated layout exposes authored optional methods with isolated navigation and focus return",
+    "Deleting a collected example preserves and renders group visual",
+    "Deleting a collected example preserves and renders group relations",
     "Candidate deletion retains the selected pair or clears a deleted selection, including imported visual wrappers",
     "Add, reorder and delete authored collection members by stable identity",
     "JSON save, fresh reopen, further edit and learner export preserve imported unknown data",
@@ -1373,9 +1377,9 @@
     "reopened-edit"
   ],
   "errors": [],
-  "head": "74c6d0969f827d463a929e67709caa8a3d501870",
-  "appSha256": "a8e004cb0c3268b64af46383464e17f7e726db181ed630b25335b01aab93bbfc",
-  "lessonSha256": "885e8df0e08f58583c5a3f8ac2f9274ad7e4ca8747ea593f8fe60f3ee4876942",
+  "head": "6c092b1c408ba9d3d38c241533c325a9b1033945",
+  "appSha256": "9c3b0fec1f57e6632e9d3b5a40a0a2cb20726f489fc8486b660769db69c10357",
+  "lessonSha256": "b63f486af10d8c66ac9801935c28210b882d43d85e6c10318c51ca23c5bb750e",
   "typography": {
     "before": {
       "family": "\"LM Math\", \"Cambria Math\", serif",
