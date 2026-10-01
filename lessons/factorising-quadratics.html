@@ -10115,7 +10115,7 @@ function mxWexEx(ex,k,state,extra){
 function mxPairedExample(ex,k,state,extra){
   const all=Array.isArray(ex.steps)?ex.steps:[],q=ex.prompt||ex.question||'',answer=ex.answer||ex.result;
   const show=x=>!state||state.show.includes(x),from=state?.steps?Math.max(1,state.steps[0]):1;
-  const steps=state?.steps?all.slice(from-1,state.steps[1]):all,questionEvidence=show('question')&&ex.visualPlacement==='question'?(extra||''):'';
+  const steps=state?.steps?all.slice(from-1,state.steps[1]):all,questionEvidence=q&&show('question')&&ex.visualPlacement==='question'?(extra||''):'';
   if(questionEvidence)extra='';
   const activity=lpEnabled(LESSON.slides[cur])?lpCurrent(LESSON.slides[cur]):null;
   const collection=activity&&lpCollection(LESSON.slides[cur],activity),members=collection?lpCollectionMembers(LESSON.slides[cur],collection):[];
@@ -10539,7 +10539,7 @@ function lpCollectionWire(s,a,i){
     if(action==='add'){const next=lpActivitySeed('worked'),example=lpSingleExample(next);example.solutionLayout='paired-table';s.activities.splice(s.activities.indexOf(members.at(-1).a)+1,0,next);c.members.push(example.id);lpNavigate(i,next.id);return;}
     if(action==='join'){const id=ins.querySelector('#lpExistingExample').value;if(!c.members.includes(id))c.members.push(id);}
     if(action==='delete'){if(!confirm('Remove this example and its activity?'))return;const entry=members[j];s.activities.splice(s.activities.indexOf(entry.a),1);lpForgetExample(s,entry.ex.id);lpNavigate(i,lpCollectionMembers(s,c)[Math.min(j,c.members.length-1)]?.a.id||s.activities[0]?.id);return;}
-    if(action==='up'||action==='down'){const id=members[j].ex.id,index=c.members.indexOf(id),to=index+(action==='up'?-1:1);if(to>=0&&to<c.members.length)c.members.splice(to,0,c.members.splice(index,1)[0]);}
+    if(action==='up'||action==='down'){const neighbour=members[j+(action==='up'?-1:1)];if(neighbour){const index=c.members.indexOf(members[j].ex.id),to=c.members.indexOf(neighbour.ex.id);[c.members[index],c.members[to]]=[c.members[to],c.members[index]];}}
     if(action==='ungroup')s.exampleCollections.splice(s.exampleCollections.indexOf(c),1);
     renderSlide();});
 }
