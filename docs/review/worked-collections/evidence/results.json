@@ -68,6 +68,8 @@
     "Keyboard tabs and Back/Next visit every example before leaving the collection",
     "Long explanation keeps the same 18px instructional type",
     "Paired layout retains staged visibility, authored row number and example evidence",
+    "Example evidence remains visible when the optional question is empty",
+    "Reordering moves visible neighbours while preserving missing imported references",
     "Candidate deletion retains the selected pair or clears a deleted selection, including imported visual wrappers",
     "Add, reorder and delete authored collection members by stable identity",
     "JSON save, fresh reopen, further edit and learner export preserve imported unknown data",
@@ -1371,8 +1373,8 @@
     "reopened-edit"
   ],
   "errors": [],
-  "head": "7cf9aa201c7329f9fe8eb888ca01127123790085",
-  "appSha256": "2e20760cafe1fc2f3ca088a61756cf0b84b020311a1f8170ee18f30c74608ad5",
+  "head": "74c6d0969f827d463a929e67709caa8a3d501870",
+  "appSha256": "a8e004cb0c3268b64af46383464e17f7e726db181ed630b25335b01aab93bbfc",
   "lessonSha256": "885e8df0e08f58583c5a3f8ac2f9274ad7e4ca8747ea593f8fe60f3ee4876942",
   "typography": {
     "before": {
