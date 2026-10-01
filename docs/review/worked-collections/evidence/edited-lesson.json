@@ -60,7 +60,7 @@
                     {
                       "id": "monic-positive-target",
                       "math": "3, 4",
-                      "text": "3 and 4 have product 12 and sum 7."
+                      "text": "These numbers have product 12 and sum 7."
                     },
                     {
                       "id": "monic-positive-factor-0",
@@ -75,7 +75,7 @@
                   ],
                   "answer": "_x_^2 + 7_x_ + 12 = (_x_ + 3)(_x_ + 4)",
                   "solutionLayout": "paired-table",
-                  "tabLabel": "Positive pair",
+                  "tabLabel": "A longer authored label for the positive pair",
                   "resultLabel": "So",
                   "support": {
                     "title": "How was this pair found?",
@@ -90,34 +90,30 @@
                         "id": "monic-positive-compare",
                         "math": "",
                         "text": "Compare the candidate sums with 7.",
-                        "visual": [
-                          {
-                            "kind": "table",
-                            "stub": "Positive factor pair",
-                            "head": [
-                              "Product",
-                              "Sum"
-                            ],
-                            "rows": [
-                              [
-                                "(1, 12)",
-                                "12",
-                                "13"
+                        "visual": {
+                          "parts": [
+                            null,
+                            {
+                              "kind": "table",
+                              "stub": "Signed candidates",
+                              "head": [
+                                "Product",
+                                "Sum"
                               ],
-                              [
-                                "(2, 6)",
-                                "12",
-                                "8"
-                              ],
-                              [
-                                "(3, 4)",
-                                "12",
-                                "7"
+                              "rows": [
+                                {
+                                  "label": "(2, 6)",
+                                  "cells": [
+                                    "12",
+                                    "8"
+                                  ]
+                                }
                               ]
-                            ]
-                          }
-                        ],
-                        "selectedRow": 2
+                            }
+                          ],
+                          "futureMetadata": "retain wrapper"
+                        },
+                        "selectedRow": ""
                       },
                       {
                         "id": "monic-positive-verify",
@@ -125,6 +121,9 @@
                         "text": "This pair satisfies both conditions."
                       }
                     ]
+                  },
+                  "futureMetadata": {
+                    "retained": "unknown imported data"
                   }
                 }
               ]

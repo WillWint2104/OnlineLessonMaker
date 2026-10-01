@@ -1,6 +1,6 @@
 # Teacher answers — factorising quadratics
 
-Keep this guide separate from the learner lesson. Equivalent factor orderings are correct. Students should show a justified search and check by expansion; an answer alone does not demonstrate the method.
+Keep this guide separate from the learner lesson. Equivalent factor orderings are correct. Students should show their chosen pair and factorisation, including splitting and grouping for non-monic quadratics. Detailed searching and expansion are optional support unless a task explicitly requests them; an answer alone does not demonstrate the method.
 
 ## Guided completion
 

@@ -8,6 +8,15 @@ import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {chromium} from 'playwright';
 
+// PR #158's prepared-input authoring replay is historical. Current collections use
+// the current acceptance/export workflow, never reconstruct from the old draft.
+const canonical=JSON.parse(fs.readFileSync('lessons/factorising-quadratics/lesson.json','utf8'));
+if(canonical.slides.some(s=>s.exampleCollections?.length)){
+ if(process.argv.includes('--produce'))throw Error('The PR #158 preparation input is superseded. Use node scripts/verify-worked-collections.mjs --publish to export the current lesson without replacing its content or IDs.');
+ await import('./verify-worked-collections.mjs');
+ process.exit(0);
+}
+
 const produce=process.argv.includes('--produce'),root='docs/lessons/factorising-quadratics';
 const out=process.env.FACTORISING_OUT||'review-delivery/factorising-verification';
 const finalJson='lessons/factorising-quadratics/lesson.json',finalHtml='lessons/factorising-quadratics.html';

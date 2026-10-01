@@ -2,6 +2,14 @@
 
 _Last updated: 2026-06-20_
 
+## Worked-example collections (1 October 2026)
+
+The approved shared-table direction is implemented through small additions to existing examples: `solutionLayout: "paired-table"`, `tabLabel` and optional `support` with existing `steps` and visual parts. Skills can author `exampleCollections: [{id, title, members}]`; members reference stable example IDs in single-example activities. This preserves the original activity ownership and response IDs. Tabs, sidebar and Back/Next use the same authored ordering. One-member collections omit redundant tabs. The inspector edits collections, paired rows and supporting candidate tables; JSON save/reopen preserves unknown fields.
+
+The six classroom examples retain numeric reasoning, non-monic split/grouping and a final expansion check. Detailed signed-pair searches are optional modal content. See `docs/review/worked-collections/README.md` for the implementation contract and evidence; PR #158 captures in the classroom `production/` folder remain historical. The existing math font is unchanged: the alternate italic candidate remains unapproved, not silently accepted as a fix.
+
+Later phases remain teacher-provided video URLs/playback, tablet question-reference enhancement and source-verified curriculum alignment for Australian jurisdictions and potentially US frameworks. Do not reopen superseded PR #153 reports or implement these phases as part of worked-example presentation.
+
 ## Factorising classroom lesson (29 September 2026)
 
 The accepted PR #157 application is the working baseline. The separate classroom lesson is `lessons/factorising-quadratics.html`, with editable JSON in `lessons/factorising-quadratics/lesson.json` and teacher guidance/answers/screenshots in `docs/lessons/factorising-quadratics/`. It contains two skills, six worked examples, guided completion, independent paper practice and two real optional-video activities awaiting teacher URLs. Shared application code and earlier review evidence are unchanged; continue from the finished lesson rather than restarting a historical engine stage. Teacher visual acceptance and real-video playback remain separate from technical verification.

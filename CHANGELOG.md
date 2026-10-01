@@ -7,6 +7,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Concise worked-example collections
+- Present opted-in examples in one shared Working/Explanation table with mirrored row numbers, 21px mathematics, 18px black explanations and row-by-row stacking at narrow widths.
+- Connect authored collections, stable-ID tabs and outline/Back/Next navigation; expose example labels, paired-row ordering and optional method/table editing through the existing inspector.
+- Keep signed-factor search in a focus-contained optional dialog and the expansion check in the main solution; update all six classroom examples and republish through the application.
+- Preserve the existing mathematics font, legacy layouts and unknown imported fields. Review evidence and the focused authoring/native-zoom checks live under `docs/review/worked-collections/`.
+
 ### Factorising quadratics classroom lesson
 - Publish a separate two-skill lesson with notes, six scaffolded worked examples, guided completion and exercise-book practice, retaining the PR #157 application and historical review evidence unchanged.
 - Put candidate comparisons before selected-pair conclusions and correct completion instructions to match the supplied tables; add one actual optional-video activity per skill through the authoring controls, with URLs left empty.

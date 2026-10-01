@@ -1,0 +1,1427 @@
+{
+  "checks": [
+    "monic-positive 1536: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow monic-positive 1536",
+    "Conclusion reachable monic-positive 1536",
+    "monic-negative 1536: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow monic-negative 1536",
+    "Conclusion reachable monic-negative 1536",
+    "monic-mixed 1536: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow monic-mixed 1536",
+    "Conclusion reachable monic-mixed 1536",
+    "nonmonic-positive 1536: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow nonmonic-positive 1536",
+    "Conclusion reachable nonmonic-positive 1536",
+    "nonmonic-negative 1536: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow nonmonic-negative 1536",
+    "Conclusion reachable nonmonic-negative 1536",
+    "nonmonic-mixed 1536: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow nonmonic-mixed 1536",
+    "Conclusion reachable nonmonic-mixed 1536",
+    "monic-positive 1024: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow monic-positive 1024",
+    "Conclusion reachable monic-positive 1024",
+    "monic-negative 1024: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow monic-negative 1024",
+    "Conclusion reachable monic-negative 1024",
+    "monic-mixed 1024: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow monic-mixed 1024",
+    "Conclusion reachable monic-mixed 1024",
+    "nonmonic-positive 1024: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow nonmonic-positive 1024",
+    "Conclusion reachable nonmonic-positive 1024",
+    "nonmonic-negative 1024: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow nonmonic-negative 1024",
+    "Conclusion reachable nonmonic-negative 1024",
+    "nonmonic-mixed 1024: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow nonmonic-mixed 1024",
+    "Conclusion reachable nonmonic-mixed 1024",
+    "monic-positive 390: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow monic-positive 390",
+    "Conclusion reachable monic-positive 390",
+    "monic-negative 390: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow monic-negative 390",
+    "Conclusion reachable monic-negative 390",
+    "monic-mixed 390: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow monic-mixed 390",
+    "Conclusion reachable monic-mixed 390",
+    "nonmonic-positive 390: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow nonmonic-positive 390",
+    "Conclusion reachable nonmonic-positive 390",
+    "nonmonic-negative 390: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow nonmonic-negative 390",
+    "Conclusion reachable nonmonic-negative 390",
+    "nonmonic-mixed 390: matched numbers, consistent black 21/18px and responsive rows",
+    "No overflow nonmonic-mixed 390",
+    "Conclusion reachable nonmonic-mixed 390",
+    "Actual embedded mathematics face remains unchanged; no alternate italic substitution",
+    "Candidate table uses consistent 18px black text",
+    "Panel owns focus during ArrowRight",
+    "Panel owns focus during ArrowLeft",
+    "Panel owns focus during ArrowDown",
+    "Panel owns focus during ArrowUp",
+    "Panel owns focus during Home",
+    "Panel owns focus during End",
+    "Panel owns focus during Tab",
+    "Panel owns focus during Shift+Tab",
+    "Panel returns focus to live same-example opener",
+    "Keyboard tabs and Back/Next visit every example before leaving the collection",
+    "Long explanation keeps the same 18px instructional type",
+    "Paired layout retains staged visibility, authored row number and example evidence",
+    "Example evidence remains visible when the optional question is empty",
+    "Reordering moves visible neighbours while preserving missing imported references",
+    "Annotated collection member has a live labelled tabpanel",
+    "Annotated layout exposes authored optional methods with isolated navigation and focus return",
+    "Deleting a collected example preserves and renders group visual",
+    "Deleting a collected example preserves and renders group relations",
+    "Candidate deletion retains the selected pair or clears a deleted selection, including imported visual wrappers",
+    "Add, reorder and delete authored collection members by stable identity",
+    "JSON save, fresh reopen, further edit and learner export preserve imported unknown data",
+    "Canonical learner publication opens offline with exact lesson JSON",
+    "1536: publication traverses all twelve activities in order, paper mode, no video placeholder or overflow, endings reachable",
+    "1024: publication traverses all twelve activities in order, paper mode, no video placeholder or overflow, endings reachable",
+    "390: publication traverses all twelve activities in order, paper mode, no video placeholder or overflow, endings reachable",
+    "Deleting the last collected example removes its empty collection and leaves a publishable lesson",
+    "No browser errors"
+  ],
+  "metrics": [
+    {
+      "id": "monic-positive",
+      "width": 1536,
+      "rows": [
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "monic-negative",
+      "width": 1536,
+      "rows": [
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "monic-mixed",
+      "width": 1536,
+      "rows": [
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "nonmonic-positive",
+      "width": 1536,
+      "rows": [
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "4",
+            "4"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "5",
+            "5"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "6",
+            "6"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "nonmonic-negative",
+      "width": 1536,
+      "rows": [
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "4",
+            "4"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "5",
+            "5"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "6",
+            "6"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "nonmonic-mixed",
+      "width": 1536,
+      "rows": [
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "4",
+            "4"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "5",
+            "5"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        },
+        {
+          "width": 1120,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "6",
+            "6"
+          ],
+          "side": true,
+          "stack": false,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "monic-positive",
+      "width": 1024,
+      "rows": [
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "monic-negative",
+      "width": 1024,
+      "rows": [
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "monic-mixed",
+      "width": 1024,
+      "rows": [
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "nonmonic-positive",
+      "width": 1024,
+      "rows": [
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "4",
+            "4"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "5",
+            "5"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "6",
+            "6"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "nonmonic-negative",
+      "width": 1024,
+      "rows": [
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "4",
+            "4"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "5",
+            "5"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "6",
+            "6"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "nonmonic-mixed",
+      "width": 1024,
+      "rows": [
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "4",
+            "4"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "5",
+            "5"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 624,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "6",
+            "6"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "monic-positive",
+      "width": 390,
+      "rows": [
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "monic-negative",
+      "width": 390,
+      "rows": [
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "monic-mixed",
+      "width": 390,
+      "rows": [
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "nonmonic-positive",
+      "width": 390,
+      "rows": [
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "4",
+            "4"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "5",
+            "5"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "6",
+            "6"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "nonmonic-negative",
+      "width": 390,
+      "rows": [
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "4",
+            "4"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "5",
+            "5"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "6",
+            "6"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    },
+    {
+      "id": "nonmonic-mixed",
+      "width": 390,
+      "rows": [
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "1",
+            "1"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "2",
+            "2"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "3",
+            "3"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "4",
+            "4"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "5",
+            "5"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        },
+        {
+          "width": 318,
+          "math": "21px",
+          "prose": "18px",
+          "ink": "rgb(0, 0, 0)",
+          "opacity": "1",
+          "numbers": [
+            "6",
+            "6"
+          ],
+          "side": false,
+          "stack": true,
+          "overflow": false
+        }
+      ]
+    }
+  ],
+  "captures": [
+    "before-monic",
+    "before-nonmonic",
+    "monic-positive-1536",
+    "monic-positive-1536-end",
+    "monic-negative-1536",
+    "monic-negative-1536-end",
+    "monic-mixed-1536",
+    "monic-mixed-1536-end",
+    "nonmonic-positive-1536",
+    "nonmonic-positive-1536-end",
+    "nonmonic-negative-1536",
+    "nonmonic-negative-1536-end",
+    "nonmonic-mixed-1536",
+    "nonmonic-mixed-1536-end",
+    "monic-positive-1024",
+    "monic-positive-1024-end",
+    "monic-negative-1024",
+    "monic-negative-1024-end",
+    "monic-mixed-1024",
+    "monic-mixed-1024-end",
+    "nonmonic-positive-1024",
+    "nonmonic-positive-1024-end",
+    "nonmonic-negative-1024",
+    "nonmonic-negative-1024-end",
+    "nonmonic-mixed-1024",
+    "nonmonic-mixed-1024-end",
+    "monic-positive-390",
+    "monic-positive-390-end",
+    "monic-negative-390",
+    "monic-negative-390-end",
+    "monic-mixed-390",
+    "monic-mixed-390-end",
+    "nonmonic-positive-390",
+    "nonmonic-positive-390-end",
+    "nonmonic-negative-390",
+    "nonmonic-negative-390-end",
+    "nonmonic-mixed-390",
+    "nonmonic-mixed-390-end",
+    "signed-pair-panel",
+    "panel-return",
+    "single-example",
+    "linear-long-explanation",
+    "author-method-table",
+    "author-paired-row",
+    "five-examples",
+    "reopened-edit"
+  ],
+  "errors": [],
+  "head": "6c092b1c408ba9d3d38c241533c325a9b1033945",
+  "appSha256": "9c3b0fec1f57e6632e9d3b5a40a0a2cb20726f489fc8486b660769db69c10357",
+  "lessonSha256": "b63f486af10d8c66ac9801935c28210b882d43d85e6c10318c51ca23c5bb750e",
+  "typography": {
+    "before": {
+      "family": "\"LM Math\", \"Cambria Math\", serif",
+      "style": "italic",
+      "size": "19.5px",
+      "synthesis": "weight style small-caps",
+      "loaded": true,
+      "width": 10.296875,
+      "sup": {
+        "size": "12.09px",
+        "verticalAlign": "6.2868px",
+        "width": 6.046875
+      },
+      "platformFonts": [
+        {
+          "familyName": "Latin Modern Math",
+          "postScriptName": "LatinModernMath-Regular",
+          "isCustomFont": true,
+          "glyphCount": 1
+        }
+      ]
+    },
+    "after": {
+      "family": "\"LM Math\", serif",
+      "style": "italic",
+      "size": "21px",
+      "synthesis": "weight style small-caps",
+      "loaded": true,
+      "width": 11.09375,
+      "sup": {
+        "size": "13.02px",
+        "verticalAlign": "6.7704px",
+        "width": 6.515625
+      },
+      "platformFonts": [
+        {
+          "familyName": "Latin Modern Math",
+          "postScriptName": "LatinModernMath-Regular",
+          "isCustomFont": true,
+          "glyphCount": 1
+        }
+      ]
+    }
+  }
+}

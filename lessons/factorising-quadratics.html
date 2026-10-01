@@ -4214,6 +4214,61 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 :root[data-theme="microhistory"] .tp-flarge h3{font-family:var(--tp-mono);font-size:19px;letter-spacing:.05em;text-transform:uppercase;color:var(--primary);margin:10px 0 8px;}
 
 </style>
+<style>
+/* Opt-in shared worked-solution surface. Existing compositions keep their layout. */
+.lp-activity:has(.mx-worked-example){max-width:1440px!important;--mx-ink:#000;--mx-ink-body:#000;--mx-ink-2:#000;--mx-ink-3:#000;}
+.lp-activity:has(.mx-worked-example) .lp-location,.mx-sk-sec:has(.mx-worked-example)>.lp-kind{display:none;}
+.mx-worked-example{display:block;padding:0!important;}
+.mx-example-question{display:flex;gap:24px;justify-content:space-between;align-items:center;background:#eff7fc;border-radius:7px;padding:18px 20px;margin:0 0 16px;color:#000;}
+.mx-example-question h2{font:600 30px/1.2 var(--mx-serif);margin:6px 0 10px;}
+.mx-example-number{font:600 16px/1.4 var(--mx-ui);}
+.mx-worked-example .mx-wexqb{font:400 21px/1.55 'LM Math',serif;color:#000;}
+.mx-collection-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px;}
+.mx-collection-tabs button,.mx-support-open{font:500 18px/1.4 var(--mx-ui);color:#000;background:white;border:1px solid #b3c8ce;border-radius:6px;padding:8px 14px;cursor:pointer;}
+.mx-collection-tabs button[aria-selected=true]{border-color:#297084;background:#e3f3f7;box-shadow:inset 0 0 0 1px #297084;}
+.mx-collection-tabs button:focus-visible,.mx-support-open:focus-visible{outline:3px solid #297084;outline-offset:3px;}
+.lp-collection-title{font-weight:700;padding:12px 8px 4px;color:#000;}
+.lp-collection-members{list-style:none;margin:0;padding:0;}
+.mx-solution{container-type:inline-size;}
+.mx-worked-example .mx-nb{white-space:normal;}
+.mx-solution-table{width:100%;border:1px solid #d2e1e7;border-radius:7px;border-spacing:0;overflow:hidden;display:block;color:#000;}
+.mx-solution-table thead,.mx-solution-table tbody{display:block;}
+.mx-solution-table tr{display:grid;grid-template-columns:40px minmax(0,1.1fr) 40px minmax(0,1fr);}
+.mx-solution-table th,.mx-solution-table td{padding:13px 16px;text-align:left;min-width:0;border:0;}
+.mx-solution-table th{background:#eff7fc;font:600 16px/1.4 var(--mx-ui);}
+.mx-solution-table th:nth-child(odd){padding-left:8px;padding-right:8px;text-align:center;}
+.mx-solution-table .mx-step{position:static;margin:0;padding:0;border-top:1px solid #e2ebef;}
+.mx-solution-table .mx-step::before,.mx-solution-table .mx-step::after{content:none;}
+.mx-solution-table th:nth-child(3),.mx-solution-table td:nth-child(3){border-left:2px solid #a3c1cf;}
+.mx-solution-table .mx-row-number{font:600 16px/1.65 var(--mx-ui);text-align:center;padding-left:8px;padding-right:8px;}
+.mx-solution-table .mx-stepm{font:400 21px/1.6 'LM Math',serif;margin:0;color:#000;}
+.mx-solution-table .mx-stept,.mx-solution-table .mx-stepn{font:400 18px/1.55 var(--mx-ui);color:#000;opacity:1;margin:0;}
+.mx-conclusion{display:flex;gap:10px;align-items:baseline;width:fit-content;max-width:100%;box-sizing:border-box;margin:12px 0 0;padding:10px 16px;border-radius:7px;background:#e5f5ed;color:#000;font:400 21px/1.5 'LM Math',serif;}
+.mx-support-dialog{box-sizing:border-box;width:min(640px,calc(100vw - 32px));max-height:85vh;overflow:auto;border:1px solid #b3c8ce;border-radius:9px;padding:24px;color:#000;background:white;font:400 18px/1.55 'Hanken Grotesk',sans-serif;}
+.mx-support-dialog::backdrop{background:#102c3a44;}
+.mx-support-dialog header{display:flex;align-items:start;justify-content:space-between;gap:20px;}
+.mx-support-dialog h2{font:600 23px/1.3 'Hanken Grotesk',sans-serif;margin:0;}
+.mx-support-dialog button{color:#000;background:white;border:0;font-size:26px;cursor:pointer;}
+.mx-support-dialog .mx-support-context{font-weight:600;}
+.mx-support-dialog .mx-step{padding:0;margin:0 0 20px;}
+.mx-support-dialog .mx-step::before,.mx-support-dialog .mx-step::after{display:none;}
+.mx-support-dialog .mx-stepm{font:400 21px/1.6 'LM Math',serif;margin:0;color:#000;}
+.mx-support-dialog .mx-stept,.mx-support-dialog .mx-stepn,.mx-support-dialog table,.mx-support-dialog th,.mx-support-dialog td{font-size:18px;line-height:1.5;color:#000;opacity:1;}
+.mx-support-dialog .mx-tbl{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #d2e1e7;border-radius:7px;overflow:hidden;}
+.mx-support-dialog .mx-tbl th,.mx-support-dialog .mx-tbl td{padding:10px 12px;text-align:left;border:0;border-bottom:1px solid #e2ebef;}
+.mx-support-dialog .mx-tbl tr:first-child{background:#eff7fc;}
+.mx-support-dialog .mx-tbl .mx-selected-pair{background:#e0f6ea;}
+.mx-support-dialog .mx-tblwrap{margin:12px 0;overflow:auto;}
+.mx-support-dialog sup{font-size:.62em;line-height:0;vertical-align:.52em;}
+@container(max-width:850px){
+ .mx-solution-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);}
+ .mx-solution-table tr{grid-template-columns:36px minmax(0,1fr);}
+ .mx-solution-table td:nth-child(3){border-left:0;}
+ .mx-solution-table .mx-annotation{padding-top:0;}
+ .mx-solution-table .mx-row-repeat{padding-top:0;}
+}
+@media(max-width:800px){.mx-example-question{display:block;padding:16px;}.mx-support-open{margin-top:14px;}.mx-example-question h2{font-size:26px;}.mx-solution-table th,.mx-solution-table td{padding-left:10px;padding-right:10px;}}
+</style>
 </head>
 <body class="study">
 
@@ -4316,7 +4371,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
   <div class="sheet">
     <div class="sheet-h"><b>Lesson data · JSON</b><button id="modalX" title="Close">✕</button></div>
     <p class="sheet-note">Paste a lesson JSON to build the whole slideshow instantly — or copy the current one to save and re-edit later. Notes, questions, model answers, improve-points and pitfalls all live in here.</p>
-    <textarea id="jsonArea" spellcheck="false" placeholder="Paste a lesson JSON here, then Load JSON →   (or use “Load example” below)" style=""></textarea>
+    <textarea id="jsonArea" spellcheck="false" placeholder="Paste a lesson JSON here, then Load JSON →   (or use “Load example” below)"></textarea>
     <div class="sheet-err" id="jsonErr"></div>
     <div class="sheet-f">
       <button class="btn ghost" id="jsonCopy">Copy</button>
@@ -4362,7 +4417,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
             },
             {
               "term": "Search systematically",
-              "body": "First check for a common factor. For a monic quadratic, test positive divisors of |c| in order and record each distinct magnitude pair once. Apply the signs, compare the sums, verify the selected pair, write the brackets and check by expansion."
+              "body": "First check for a common factor. Find two integers with the required product and sum, then write the brackets. If the pair is not clear, list distinct magnitude pairs and compare their signed sums."
             },
             {
               "term": "Choose the signs",
@@ -4370,7 +4425,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
             },
             {
               "term": "What counts as a complete solution?",
-              "body": "Record enough working to justify your pair. Keep every sign, then expand to check all three terms. The examples and practice here factorise over the integers. If no integer pair satisfies both conditions, do not force a factorisation."
+              "body": "Record the selected pair and the factorisation, keeping every sign. Expansion is a useful check when you are unsure. These examples factorise over the integers; if no pair works, do not force a factorisation."
             }
           ]
         },
@@ -4390,63 +4445,73 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
                   "steps": [
                     {
                       "id": "monic-positive-target",
-                      "math": "_m_ × _n_ = 12\n_m_ + _n_ = 7",
-                      "text": "A positive product and positive sum require two positive numbers."
-                    },
-                    {
-                      "id": "monic-positive-generate",
-                      "math": "12 ÷ 1 = 12 → (1, 12)\n12 ÷ 2 = 6 → (2, 6)\n12 ÷ 3 = 4 → (3, 4)",
-                      "text": "Test positive divisors in order to find the distinct magnitude pairs. Stop when the next successful divisor reverses a pair already recorded. Then apply the required signs."
-                    },
-                    {
-                      "id": "monic-positive-compare",
-                      "math": "",
-                      "text": "Compare the sums in the table with the required sum 7. Each candidate already has the required product.",
-                      "visual": [
-                        {
-                          "kind": "table",
-                          "stub": "Positive factor pair",
-                          "head": [
-                            "Product",
-                            "Sum"
-                          ],
-                          "rows": [
-                            [
-                              "(1, 12)",
-                              "12",
-                              "13"
-                            ],
-                            [
-                              "(2, 6)",
-                              "12",
-                              "8"
-                            ],
-                            [
-                              "(3, 4)",
-                              "12",
-                              "7"
-                            ]
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "id": "monic-positive-verify",
-                      "math": "3 × 4 = 12\n3 + 4 = 7",
-                      "text": "The table shows that 3 and 4 have the required sum. Verify their product and sum before writing the brackets."
+                      "math": "3, 4",
+                      "text": "3 and 4 have product 12 and sum 7."
                     },
                     {
                       "id": "monic-positive-factor-0",
                       "math": "_x_^2 + 7_x_ + 12 = (_x_ + 3)(_x_ + 4)",
-                      "text": "For a monic quadratic, the selected numbers go directly into the two brackets."
+                      "text": "Write the selected numbers in the two brackets."
                     },
                     {
                       "id": "monic-positive-check",
                       "math": "(_x_ + 3)(_x_ + 4) = _x_^2 + 4_x_ + 3_x_ + 12\n= _x_^2 + 7_x_ + 12",
-                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                      "text": "Expand and check that all coefficients match."
                     }
                   ],
-                  "answer": ""
+                  "answer": "_x_^2 + 7_x_ + 12 = (_x_ + 3)(_x_ + 4)",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Positive pair",
+                  "resultLabel": "So",
+                  "support": {
+                    "title": "How was this pair found?",
+                    "introduction": "Find factor pairs of 12.",
+                    "steps": [
+                      {
+                        "id": "monic-positive-generate",
+                        "math": "12 ÷ 1 = 12 → (1, 12)\n12 ÷ 2 = 6 → (2, 6)\n12 ÷ 3 = 4 → (3, 4)",
+                        "text": "Use two positive numbers to make both the product and sum positive."
+                      },
+                      {
+                        "id": "monic-positive-compare",
+                        "math": "",
+                        "text": "Compare the candidate sums with 7.",
+                        "visual": [
+                          {
+                            "kind": "table",
+                            "stub": "Positive factor pair",
+                            "head": [
+                              "Product",
+                              "Sum"
+                            ],
+                            "rows": [
+                              [
+                                "(1, 12)",
+                                "12",
+                                "13"
+                              ],
+                              [
+                                "(2, 6)",
+                                "12",
+                                "8"
+                              ],
+                              [
+                                "(3, 4)",
+                                "12",
+                                "7"
+                              ]
+                            ]
+                          }
+                        ],
+                        "selectedRow": 2
+                      },
+                      {
+                        "id": "monic-positive-verify",
+                        "math": "3 × 4 = 12\n3 + 4 = 7",
+                        "text": "This pair satisfies both conditions."
+                      }
+                    ]
+                  }
                 }
               ]
             }
@@ -4468,58 +4533,68 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
                   "steps": [
                     {
                       "id": "monic-negative-target",
-                      "math": "_m_ × _n_ = 10\n_m_ + _n_ = −7",
-                      "text": "A positive product and negative sum require two negative numbers."
-                    },
-                    {
-                      "id": "monic-negative-generate",
-                      "math": "10 ÷ 1 = 10 → (1, 10)\n10 ÷ 2 = 5 → (2, 5)",
-                      "text": "Test positive divisors in order to find the distinct magnitude pairs. Stop when the next successful divisor reverses a pair already recorded. Then apply the required signs."
-                    },
-                    {
-                      "id": "monic-negative-compare",
-                      "math": "",
-                      "text": "Compare the sums in the table with the required sum -7. Each candidate already has the required product.",
-                      "visual": [
-                        {
-                          "kind": "table",
-                          "stub": "Candidate pair",
-                          "head": [
-                            "Product",
-                            "Sum"
-                          ],
-                          "rows": [
-                            [
-                              "(−1, −10)",
-                              "10",
-                              "−11"
-                            ],
-                            [
-                              "(−2, −5)",
-                              "10",
-                              "−7"
-                            ]
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "id": "monic-negative-verify",
-                      "math": "(−2) × (−5) = 10\n−2 + (−5) = −7",
-                      "text": "The selected pair satisfies both conditions. Use these signed numbers in the factorisation."
+                      "math": "−2, −5",
+                      "text": "−2 and −5 have product 10 and sum −7."
                     },
                     {
                       "id": "monic-negative-factor-0",
                       "math": "_x_^2 − 7_x_ + 10 = (_x_ − 2)(_x_ − 5)",
-                      "text": "Both selected numbers are negative, so both brackets contain subtraction."
+                      "text": "Write the selected numbers in the two brackets."
                     },
                     {
                       "id": "monic-negative-check",
                       "math": "(_x_ − 2)(_x_ − 5) = _x_^2 − 5_x_ − 2_x_ + 10\n= _x_^2 − 7_x_ + 10",
-                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                      "text": "Expand and check that all coefficients match."
                     }
                   ],
-                  "answer": ""
+                  "answer": "_x_^2 − 7_x_ + 10 = (_x_ − 2)(_x_ − 5)",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Two negatives",
+                  "resultLabel": "So",
+                  "support": {
+                    "title": "How was this pair found?",
+                    "introduction": "Find factor pairs of 10.",
+                    "steps": [
+                      {
+                        "id": "monic-negative-generate",
+                        "math": "10 ÷ 1 = 10 → (1, 10)\n10 ÷ 2 = 5 → (2, 5)",
+                        "text": "Apply two negative signs to make the product positive and the sum negative."
+                      },
+                      {
+                        "id": "monic-negative-compare",
+                        "math": "",
+                        "text": "Compare the candidate sums with −7.",
+                        "visual": [
+                          {
+                            "kind": "table",
+                            "stub": "Candidate pair",
+                            "head": [
+                              "Product",
+                              "Sum"
+                            ],
+                            "rows": [
+                              [
+                                "(−1, −10)",
+                                "10",
+                                "−11"
+                              ],
+                              [
+                                "(−2, −5)",
+                                "10",
+                                "−7"
+                              ]
+                            ]
+                          }
+                        ],
+                        "selectedRow": 1
+                      },
+                      {
+                        "id": "monic-negative-verify",
+                        "math": "(−2) × (−5) = 10\n−2 + (−5) = −7",
+                        "text": "This pair satisfies both conditions."
+                      }
+                    ]
+                  }
                 }
               ]
             }
@@ -4541,63 +4616,73 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
                   "steps": [
                     {
                       "id": "monic-mixed-target",
-                      "math": "_m_ × _n_ = −20\n_m_ + _n_ = 1",
-                      "text": "The product is negative, so the signs differ. The number with greater absolute value takes the sign of the sum."
-                    },
-                    {
-                      "id": "monic-mixed-generate",
-                      "math": "20 ÷ 1 = 20 → (1, 20)\n20 ÷ 2 = 10 → (2, 10)\n20 = 3 × 6 + 2\n20 ÷ 4 = 5 → (4, 5)",
-                      "text": "The remainder rejects 3 as a divisor of 20. Testing 5 would reverse (4, 5), so all distinct magnitude pairs have been found. The greater magnitude must be positive to make the sum positive."
-                    },
-                    {
-                      "id": "monic-mixed-compare",
-                      "math": "",
-                      "text": "Compare the sums in the table with the required sum 1. Each candidate already has the required product.",
-                      "visual": [
-                        {
-                          "kind": "table",
-                          "stub": "Candidate pair",
-                          "head": [
-                            "Product",
-                            "Sum"
-                          ],
-                          "rows": [
-                            [
-                              "(−1, 20)",
-                              "−20",
-                              "19"
-                            ],
-                            [
-                              "(−2, 10)",
-                              "−20",
-                              "8"
-                            ],
-                            [
-                              "(−4, 5)",
-                              "−20",
-                              "1"
-                            ]
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "id": "monic-mixed-verify",
-                      "math": "(−4) × (5) = −20\n−4 + (5) = 1",
-                      "text": "The selected pair satisfies both conditions. Use these signed numbers in the factorisation."
+                      "math": "−4, 5",
+                      "text": "−4 and 5 have product −20 and sum 1."
                     },
                     {
                       "id": "monic-mixed-factor-0",
                       "math": "_x_^2 + _x_ − 20 = (_x_ − 4)(_x_ + 5)",
-                      "text": "Keep the signs with the selected numbers. Reversing the order of the brackets gives the same product."
+                      "text": "Write the selected numbers in the two brackets."
                     },
                     {
                       "id": "monic-mixed-check",
                       "math": "(_x_ − 4)(_x_ + 5) = _x_^2 + 5_x_ − 4_x_ − 20\n= _x_^2 + _x_ − 20",
-                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                      "text": "Expand and check that all coefficients match."
                     }
                   ],
-                  "answer": ""
+                  "answer": "_x_^2 + _x_ − 20 = (_x_ − 4)(_x_ + 5)",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Opposite signs",
+                  "resultLabel": "So",
+                  "support": {
+                    "title": "How was this pair found?",
+                    "introduction": "Find factor pairs of 20.",
+                    "steps": [
+                      {
+                        "id": "monic-mixed-generate",
+                        "math": "20 ÷ 1 = 20 → (1, 20)\n20 ÷ 2 = 10 → (2, 10)\n20 ÷ 4 = 5 → (4, 5)",
+                        "text": "Apply opposite signs, with the larger magnitude positive to make the sum positive."
+                      },
+                      {
+                        "id": "monic-mixed-compare",
+                        "math": "",
+                        "text": "Compare the candidate sums with 1.",
+                        "visual": [
+                          {
+                            "kind": "table",
+                            "stub": "Candidate pair",
+                            "head": [
+                              "Product",
+                              "Sum"
+                            ],
+                            "rows": [
+                              [
+                                "(−1, 20)",
+                                "−20",
+                                "19"
+                              ],
+                              [
+                                "(−2, 10)",
+                                "−20",
+                                "8"
+                              ],
+                              [
+                                "(−4, 5)",
+                                "−20",
+                                "1"
+                              ]
+                            ]
+                          }
+                        ],
+                        "selectedRow": 2
+                      },
+                      {
+                        "id": "monic-mixed-verify",
+                        "math": "(−4) × (5) = −20\n−4 + (5) = 1",
+                        "text": "This pair satisfies both conditions."
+                      }
+                    ]
+                  }
                 }
               ]
             }
@@ -4647,11 +4732,11 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
           "id": "monic-practice",
           "title": "Independent practice: monic quadratics",
           "lede": "Work independently in your exercise book. Use the worked examples only when you need to revisit the method.",
-          "practiceNote": "Show the factor search and your reasoning. Check every completed factorisation by expansion.",
+          "practiceNote": "Show your chosen pair and factors; expand when you want to check.",
           "questions": [
             {
               "id": "monic-practice-positive",
-              "stem": "Factorise each expression. Show your candidate pairs and compare their sums.",
+              "stem": "Factorise each expression. Show your chosen pair.",
               "parts": [
                 "_x_^2 + 5_x_ + 6",
                 "_x_^2 + 9_x_ + 20",
@@ -4669,7 +4754,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
             },
             {
               "id": "monic-practice-mixed",
-              "stem": "Factorise each expression and check by expansion.",
+              "stem": "Factorise each expression; use expansion if you need to check.",
               "parts": [
                 "_x_^2 + 3_x_ − 10",
                 "_x_^2 − 2_x_ − 24",
@@ -4708,6 +4793,17 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
           "title": "Optional video: monic quadratics",
           "optionalVideo": true
         }
+      ],
+      "exampleCollections": [
+        {
+          "id": "monic-worked-collection",
+          "title": "Worked examples",
+          "members": [
+            "monic-positive-example",
+            "monic-negative-example",
+            "monic-mixed-example"
+          ]
+        }
       ]
     },
     {
@@ -4741,7 +4837,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
             },
             {
               "term": "Do not skip the grouping",
-              "body": "The ac pair splits the middle term; it is not usually the pair of constants in the final brackets. Keep the original leading coefficient and constant, then check your final factors by expansion."
+              "body": "The selected pair splits the middle term; it is not usually the pair of constants in the final brackets. Keep the split and grouping in your written solution. Expand if you need to check."
             }
           ]
         },
@@ -4761,68 +4857,83 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
                   "steps": [
                     {
                       "id": "nonmonic-positive-target",
-                      "math": "_a_ × _c_ = 2 × 3 = 6\n_m_ × _n_ = 6\n_m_ + _n_ = 7",
-                      "text": "Multiply the leading coefficient by the constant to obtain the required product. A positive product and positive sum require two positive numbers."
-                    },
-                    {
-                      "id": "nonmonic-positive-generate",
-                      "math": "6 ÷ 1 = 6 → (1, 6)\n6 ÷ 2 = 3 → (2, 3)",
-                      "text": "Test positive divisors in order to find the distinct magnitude pairs. Stop when the next successful divisor reverses a pair already recorded. Then apply the required signs."
+                      "math": "2 × 3 = 6",
+                      "text": "Find two numbers with product 6 and sum 7."
                     },
                     {
                       "id": "nonmonic-positive-compare",
-                      "math": "",
-                      "text": "Compare the sums in the table with the required sum 7. Each candidate already has the required product.",
-                      "visual": [
-                        {
-                          "kind": "table",
-                          "stub": "Candidate pair",
-                          "head": [
-                            "Product",
-                            "Sum"
-                          ],
-                          "rows": [
-                            [
-                              "(1, 6)",
-                              "6",
-                              "7"
-                            ],
-                            [
-                              "(2, 3)",
-                              "6",
-                              "5"
-                            ]
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "id": "nonmonic-positive-verify",
-                      "math": "(1) × (6) = 6\n1 + (6) = 7",
-                      "text": "This pair has product ac and sum b. Use it to split the middle term, not directly as the numbers in the final brackets."
+                      "math": "1, 6",
+                      "text": "Use 1 and 6 to split the middle term."
                     },
                     {
                       "id": "nonmonic-positive-factor-0",
                       "math": "2_x_^2 + 7_x_ + 3\n= 2_x_^2 + _x_ + 6_x_ + 3",
-                      "text": "Split 7x as x + 6x. The value of the expression is unchanged."
+                      "text": "Split 7_x_ into _x_ + 6_x_."
                     },
                     {
                       "id": "nonmonic-positive-factor-1",
                       "math": "= _x_(2_x_ + 1) + 3(2_x_ + 1)",
-                      "text": "Factor each pair of terms. Both groups must leave the same bracket."
+                      "text": "Factor each group to leave the same bracket."
                     },
                     {
                       "id": "nonmonic-positive-factor-2",
                       "math": "= (_x_ + 3)(2_x_ + 1)",
-                      "text": "Factor out the shared bracket (2x + 1). The remaining terms form the other factor."
+                      "text": "Factor out the shared bracket."
                     },
                     {
                       "id": "nonmonic-positive-check",
                       "math": "(_x_ + 3)(2_x_ + 1) = 2_x_^2 + _x_ + 6_x_ + 3\n= 2_x_^2 + 7_x_ + 3",
-                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                      "text": "Expand and check that all coefficients match."
                     }
                   ],
-                  "answer": ""
+                  "answer": "2_x_^2 + 7_x_ + 3 = (_x_ + 3)(2_x_ + 1)",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Positive terms",
+                  "resultLabel": "So",
+                  "support": {
+                    "title": "How was this pair found?",
+                    "introduction": "Find factor pairs of 6.",
+                    "steps": [
+                      {
+                        "id": "nonmonic-positive-generate",
+                        "math": "6 ÷ 1 = 6 → (1, 6)\n6 ÷ 2 = 3 → (2, 3)",
+                        "text": "Use two positive numbers to make both the product and sum positive."
+                      },
+                      {
+                        "id": "nonmonic-positive-compare",
+                        "math": "",
+                        "text": "Compare the candidate sums with 7.",
+                        "visual": [
+                          {
+                            "kind": "table",
+                            "stub": "Candidate pair",
+                            "head": [
+                              "Product",
+                              "Sum"
+                            ],
+                            "rows": [
+                              [
+                                "(1, 6)",
+                                "6",
+                                "7"
+                              ],
+                              [
+                                "(2, 3)",
+                                "6",
+                                "5"
+                              ]
+                            ]
+                          }
+                        ],
+                        "selectedRow": 0
+                      },
+                      {
+                        "id": "nonmonic-positive-verify",
+                        "math": "(1) × (6) = 6\n1 + (6) = 7",
+                        "text": "This pair satisfies both conditions."
+                      }
+                    ]
+                  }
                 }
               ]
             }
@@ -4844,74 +4955,88 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
                   "steps": [
                     {
                       "id": "nonmonic-negative-target",
-                      "math": "_a_ × _c_ = 6 × 3 = 18\n_m_ × _n_ = 18\n_m_ + _n_ = −11",
-                      "text": "Multiply the leading coefficient by the constant to obtain the required product. A positive product and negative sum require two negative numbers."
-                    },
-                    {
-                      "id": "nonmonic-negative-generate",
-                      "math": "18 ÷ 1 = 18 → (1, 18)\n18 ÷ 2 = 9 → (2, 9)\n18 ÷ 3 = 6 → (3, 6)",
-                      "text": "Test positive divisors in order to find the distinct magnitude pairs. Stop when the next successful divisor reverses a pair already recorded. Then apply the required signs."
+                      "math": "6 × 3 = 18",
+                      "text": "Find two numbers with product 18 and sum −11."
                     },
                     {
                       "id": "nonmonic-negative-compare",
-                      "math": "",
-                      "text": "Compare the sums in the table with the required sum -11. Each candidate already has the required product.",
-                      "visual": [
-                        {
-                          "kind": "table",
-                          "stub": "Candidate pair",
-                          "head": [
-                            "Product",
-                            "Sum"
-                          ],
-                          "rows": [
-                            [
-                              "(−1, −18)",
-                              "18",
-                              "−19"
-                            ],
-                            [
-                              "(−2, −9)",
-                              "18",
-                              "−11"
-                            ],
-                            [
-                              "(−3, −6)",
-                              "18",
-                              "−9"
-                            ]
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "id": "nonmonic-negative-verify",
-                      "math": "(−2) × (−9) = 18\n−2 + (−9) = −11",
-                      "text": "This pair has product ac and sum b. Use it to split the middle term, not directly as the numbers in the final brackets."
+                      "math": "−2, −9",
+                      "text": "Use −2 and −9 to split the middle term."
                     },
                     {
                       "id": "nonmonic-negative-factor-0",
                       "math": "6_x_^2 − 11_x_ + 3\n= 6_x_^2 − 2_x_ − 9_x_ + 3",
-                      "text": "Split −11x as −2x − 9x."
+                      "text": "Split −11_x_ into −2_x_ − 9_x_."
                     },
                     {
                       "id": "nonmonic-negative-factor-1",
                       "math": "= 2_x_(3_x_ − 1) − 3(3_x_ − 1)",
-                      "text": "Take out 2x from the first pair and −3 from the second pair.",
-                      "note": "Taking out +3 would leave −3x + 1 in the second bracket. Take out −3 so both brackets are (3x − 1)."
+                      "text": "Take out 2_x_ from the first pair and −3 from the second."
                     },
                     {
                       "id": "nonmonic-negative-factor-2",
                       "math": "= (3_x_ − 1)(2_x_ − 3)",
-                      "text": "Factor out the common bracket (3x − 1)."
+                      "text": "Factor out the shared bracket."
                     },
                     {
                       "id": "nonmonic-negative-check",
                       "math": "(3_x_ − 1)(2_x_ − 3) = 6_x_^2 − 9_x_ − 2_x_ + 3\n= 6_x_^2 − 11_x_ + 3",
-                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                      "text": "Expand and check that all coefficients match."
                     }
                   ],
-                  "answer": ""
+                  "answer": "6_x_^2 − 11_x_ + 3 = (3_x_ − 1)(2_x_ − 3)",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Negative middle",
+                  "resultLabel": "So",
+                  "support": {
+                    "title": "How was this pair found?",
+                    "introduction": "Find factor pairs of 18.",
+                    "steps": [
+                      {
+                        "id": "nonmonic-negative-generate",
+                        "math": "18 ÷ 1 = 18 → (1, 18)\n18 ÷ 2 = 9 → (2, 9)\n18 ÷ 3 = 6 → (3, 6)",
+                        "text": "Apply two negative signs to make the product positive and the sum negative."
+                      },
+                      {
+                        "id": "nonmonic-negative-compare",
+                        "math": "",
+                        "text": "Compare the candidate sums with −11.",
+                        "visual": [
+                          {
+                            "kind": "table",
+                            "stub": "Candidate pair",
+                            "head": [
+                              "Product",
+                              "Sum"
+                            ],
+                            "rows": [
+                              [
+                                "(−1, −18)",
+                                "18",
+                                "−19"
+                              ],
+                              [
+                                "(−2, −9)",
+                                "18",
+                                "−11"
+                              ],
+                              [
+                                "(−3, −6)",
+                                "18",
+                                "−9"
+                              ]
+                            ]
+                          }
+                        ],
+                        "selectedRow": 1
+                      },
+                      {
+                        "id": "nonmonic-negative-verify",
+                        "math": "(−2) × (−9) = 18\n−2 + (−9) = −11",
+                        "text": "This pair satisfies both conditions."
+                      }
+                    ]
+                  }
                 }
               ]
             }
@@ -4933,69 +5058,83 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
                   "steps": [
                     {
                       "id": "nonmonic-mixed-target",
-                      "math": "_a_ × _c_ = 3 × (−2) = −6\n_m_ × _n_ = −6\n_m_ + _n_ = 5",
-                      "text": "Multiply the leading coefficient by the constant to obtain the required product. The product is negative, so the signs differ. The number with greater absolute value takes the sign of the sum."
-                    },
-                    {
-                      "id": "nonmonic-mixed-generate",
-                      "math": "6 ÷ 1 = 6 → (1, 6)\n6 ÷ 2 = 3 → (2, 3)",
-                      "text": "Test positive divisors in order to find the distinct magnitude pairs. Stop when the next successful divisor reverses a pair already recorded. Then apply the required signs."
+                      "math": "3 × (−2) = −6",
+                      "text": "Find two numbers with product −6 and sum 5."
                     },
                     {
                       "id": "nonmonic-mixed-compare",
-                      "math": "",
-                      "text": "Compare the sums in the table with the required sum 5. Each candidate already has the required product.",
-                      "visual": [
-                        {
-                          "kind": "table",
-                          "stub": "Candidate pair",
-                          "head": [
-                            "Product",
-                            "Sum"
-                          ],
-                          "rows": [
-                            [
-                              "(−1, 6)",
-                              "−6",
-                              "5"
-                            ],
-                            [
-                              "(−2, 3)",
-                              "−6",
-                              "1"
-                            ]
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "id": "nonmonic-mixed-verify",
-                      "math": "(6) × (−1) = −6\n6 + (−1) = 5",
-                      "text": "This pair has product ac and sum b. Use it to split the middle term, not directly as the numbers in the final brackets."
+                      "math": "6, −1",
+                      "text": "Use 6 and −1 to split the middle term."
                     },
                     {
                       "id": "nonmonic-mixed-factor-0",
                       "math": "3_x_^2 + 5_x_ − 2\n= 3_x_^2 + 6_x_ − _x_ − 2",
-                      "text": "Split 5x as 6x − x. Reordering the selected pair is useful for grouping."
+                      "text": "Split 5_x_ into 6_x_ − _x_."
                     },
                     {
                       "id": "nonmonic-mixed-factor-1",
                       "math": "= 3_x_(_x_ + 2) − 1(_x_ + 2)",
-                      "text": "Take out 3x from the first pair and −1 from the second pair.",
-                      "note": "The second group is −x − 2. Factoring out −1 changes both signs inside its bracket."
+                      "text": "Factor out −1 from the second group so both brackets match."
                     },
                     {
                       "id": "nonmonic-mixed-factor-2",
                       "math": "= (3_x_ − 1)(_x_ + 2)",
-                      "text": "The common bracket is (x + 2)."
+                      "text": "Factor out the shared bracket."
                     },
                     {
                       "id": "nonmonic-mixed-check",
                       "math": "(3_x_ − 1)(_x_ + 2) = 3_x_^2 + 6_x_ − _x_ − 2\n= 3_x_^2 + 5_x_ − 2",
-                      "text": "Expand the factors and collect like terms. The quadratic, linear and constant terms must all match the original expression."
+                      "text": "Expand and check that all coefficients match."
                     }
                   ],
-                  "answer": ""
+                  "answer": "3_x_^2 + 5_x_ − 2 = (3_x_ − 1)(_x_ + 2)",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Opposite signs",
+                  "resultLabel": "So",
+                  "support": {
+                    "title": "How was this pair found?",
+                    "introduction": "Find factor pairs of 6.",
+                    "steps": [
+                      {
+                        "id": "nonmonic-mixed-generate",
+                        "math": "6 ÷ 1 = 6 → (1, 6)\n6 ÷ 2 = 3 → (2, 3)",
+                        "text": "Apply opposite signs, with the larger magnitude positive to make the sum positive."
+                      },
+                      {
+                        "id": "nonmonic-mixed-compare",
+                        "math": "",
+                        "text": "Compare the candidate sums with 5.",
+                        "visual": [
+                          {
+                            "kind": "table",
+                            "stub": "Candidate pair",
+                            "head": [
+                              "Product",
+                              "Sum"
+                            ],
+                            "rows": [
+                              [
+                                "(−1, 6)",
+                                "−6",
+                                "5"
+                              ],
+                              [
+                                "(−2, 3)",
+                                "−6",
+                                "1"
+                              ]
+                            ]
+                          }
+                        ],
+                        "selectedRow": 0
+                      },
+                      {
+                        "id": "nonmonic-mixed-verify",
+                        "math": "(6) × (−1) = −6\n6 + (−1) = 5",
+                        "text": "This pair satisfies both conditions."
+                      }
+                    ]
+                  }
                 }
               ]
             }
@@ -5054,11 +5193,11 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
           "id": "nonmonic-practice",
           "title": "Independent practice: non-monic quadratics",
           "lede": "Choose and justify your own factor pairs. Complete the algebra in your exercise book.",
-          "practiceNote": "Remove any common factor, show the ac search, split and group, then check by expansion.",
+          "practiceNote": "Show the split and grouping; expand when you want to check.",
           "questions": [
             {
               "id": "nonmonic-practice-positive",
-              "stem": "Factorise each expression. Show the ac search, split the middle term and group.",
+              "stem": "Factorise each expression. Split the middle term and group.",
               "parts": [
                 "2_x_^2 + 5_x_ + 2",
                 "3_x_^2 + 10_x_ + 3",
@@ -5076,7 +5215,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
             },
             {
               "id": "nonmonic-practice-mixed",
-              "stem": "Factorise each expression and check by expansion.",
+              "stem": "Factorise each expression; use expansion if you need to check.",
               "parts": [
                 "2_x_^2 + _x_ − 6",
                 "6_x_^2 + _x_ − 2",
@@ -5114,6 +5253,17 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
           "id": "activity-0ae3cb4e-b20d-4165-bf47-f978ba75e3c8",
           "title": "Optional video: non-monic quadratics",
           "optionalVideo": true
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "nonmonic-worked-collection",
+          "title": "Worked examples",
+          "members": [
+            "nonmonic-positive-example",
+            "nonmonic-negative-example",
+            "nonmonic-mixed-example"
+          ]
         }
       ]
     }
@@ -6664,11 +6814,13 @@ function mxOutline(i,s,sel,context={}){
     const ex=(g.examples||[])[S.e]; if(!ex) return `<div class="ihint">That example is gone — select another.</div>`;
     const eb=`${gb}.examples.${S.e}`;
     if(S.kind==='e') return `<div class="isec"><div class="isec-h">Example · fields</div>
+      ${inSel('Solution layout',`${eb}.solutionLayout`,ex.solutionLayout||'annotated',[['annotated','Annotated working'],['paired-table','Shared Working / Explanation table']])}
+      ${inT('Example tab label (optional)',`${eb}.tabLabel`,ex.tabLabel||'')}
       ${ig('mxe.label',sel,inMath('Example title',`${eb}.label`,ex.label))}
       ${ig('mxe.prompt',sel,inMath('Question',eb+(ex.prompt==null&&ex.question!=null?'.question':'.prompt'),ex.prompt??ex.question,true))}
       ${inSel('Example evidence placement',`${eb}.visualPlacement`,ex.visualPlacement||'working',[['working','Alongside the solution'],['question','Before the question']])}
       ${ig('mxe.answer',sel,inMath('Answer',eb+(ex.answer==null&&ex.result!=null?'.result':'.answer'),ex.answer??ex.result,true))}
-      ${ig('mxe.rlab',sel,inT('Answer label (optional — default "Answer")',`${eb}.resultLabel`,ex.resultLabel))}</div>`;
+      ${ig('mxe.rlab',sel,inT('Answer label (optional — default "Answer")',`${eb}.resultLabel`,ex.resultLabel))}${mxSupportForm(ex,eb)}</div>`;
     const st=(ex.steps||[])[S.s]; if(!st) return `<div class="ihint">That step is gone — select another.</div>`;
     const sb=`${eb}.steps.${S.s}`;
     if(typeof st==='string')return `<div class="isec">${inMath('Step text',sb,st,true)}</div>`;
@@ -6702,9 +6854,21 @@ function mxRevealFields(selector='[data-mx-fields] [data-bind]'){
   const field=$('#inspector')?.querySelector(selector);if(!field)return;
   field.scrollIntoView({block:'start',inline:'nearest'});field.focus({preventScroll:true});
 }
+function mxSupportForm(ex,path){
+  if(!ex.support)return `<button class="ibtn-add" data-support-edit="${path}:add">Add optional method</button>`;
+  const base=path+'.support',detail=ex.support;
+  return `<div class="isec-h">Optional method</div>${inT('Open button / panel title',base+'.title',detail.title||'Show method')}${inMath('Introduction',base+'.introduction',detail.introduction||'',true)}
+    ${(detail.steps||[]).map((st,j)=>{const sb=base+'.steps.'+j,slots=mxPartSlots(st.visual),table=slots.find(pt=>pt?.kind==='table');return `<div class="qg"><div class="qg-h">Method row ${j+1}<span><button type="button" data-support-edit="${path}:up:${j}"${j===0?' disabled':''}>↑</button><button type="button" data-support-edit="${path}:down:${j}"${j===detail.steps.length-1?' disabled':''}>↓</button><button type="button" data-support-edit="${path}:remove:${j}">Remove</button></span></div>${inMath('Working',sb+'.math',st.math||'',true,true)}${inMath('Explanation',sb+'.text',st.text||'',true)}${slots.map((pt,k)=>pt?.kind==='table'?mxTableForm(mxPartPath({owner:st,key:'visual',path:sb+'.visual',k}),pt,null):'<p class="ihint">Imported supporting content is retained.</p>').join('')}${table?inSel('Highlight candidate row',sb+'.selectedRow',st.selectedRow??'',[['','None'],...(table.rows||[]).map((_,k)=>[String(k),'Row '+(k+1)])]):`<button class="ibtn-add" data-support-edit="${path}:table:${j}">Add candidate table</button>`}</div>`;}).join('')}
+    <button class="ibtn-add" data-support-edit="${path}:row">Add method row</button><button class="ibtn-add" data-support-edit="${path}:delete">Remove optional method</button>`;
+}
 function mxOutlineWire(i,context={}){
   const ins=$('#inspector'), s=context.owner||LESSON.slides[i], base=context.base||`slides.${i}`, groupKey=context.groupKey||'groups'; if(!s) return;
   const groups=()=>(s[groupKey]=Array.isArray(s[groupKey])?s[groupKey]:[]);
+  ins.querySelectorAll('[data-support-edit]').forEach(b=>b.onclick=()=>{const [path,action,at]=b.dataset.supportEdit.split(':'),ex=getP(LESSON,path),j=+at;
+    if(action==='add')ex.support={title:'Show method',introduction:'',steps:[]};
+    else if(action==='delete'){if(!confirm('Remove this optional method?'))return;delete ex.support;}
+    else{const rows=ex.support.steps||(ex.support.steps=[]);if(action==='row')rows.push({id:'method-'+crypto.randomUUID(),math:'',text:'Explain here.'});else if(action==='table'){const row=rows[j];mxPartsArr(row,'visual').push(mxPartSeed('table'));}else if(action==='remove')rows.splice(j,1);else{const to=j+(action==='up'?-1:1);if(to>=0&&to<rows.length)rows.splice(to,0,rows.splice(j,1)[0]);}}
+    renderSlide();});
   ins.querySelectorAll('[data-mxlistadd]').forEach(el=>el.onclick=()=>{getP(LESSON,el.dataset.mxlistadd).push('New item.');renderSlide();});
   ins.querySelectorAll('[data-mxlistdel]').forEach(el=>el.onclick=()=>{const [path,k]=el.dataset.mxlistdel.split(':');getP(LESSON,path).splice(+k,1);renderSlide();});
   ins.querySelectorAll('[data-mxgraphselect]').forEach(el=>el.onchange=()=>{const fig=getP(LESSON,el.dataset.mxgraphselect);MX_GRAPH_FOCUS.set(fig,(fig.objects||[])[+el.value]);renderInspector();});
@@ -6869,7 +7033,11 @@ function mxOutlineWire(i,context={}){
   ins.querySelectorAll('[data-mxtrowadd]').forEach(b=>b.onclick=()=>{ const c=tbl(b.dataset.mxtrowadd);
     c.rows.push({label:'Row '+(c.rows.length+1),cells:c.head.map(()=>'')}); renderSlide(); });
   ins.querySelectorAll('[data-mxtrowdel]').forEach(b=>b.onclick=()=>{ const [path,ri]=b.dataset.mxtrowdel.split(':');
-    const c=tbl(path); c.rows.splice(+ri,1); renderSlide(); });
+    const c=tbl(path),method=path.match(/^(.*\.support\.steps\.\d+)\.visual(?:\.|$)/),step=method&&getP(LESSON,method[1]);
+    if(step&&mxParts(step.visual).find(pt=>pt.kind==='table')===c&&step.selectedRow!=null&&step.selectedRow!==''){
+      const selected=Number(step.selectedRow);if(selected===+ri)step.selectedRow='';else if(selected>+ri)step.selectedRow=selected-1;
+    }
+    c.rows.splice(+ri,1); renderSlide(); });
   /* A LINE HAS EXACTLY ONE OF x OR y — the renderer skips it with a reported error otherwise. So changing
      the direction MOVES the value rather than adding a second key, and the editor can never author the
      broken state it would then have to explain. */
@@ -6885,6 +7053,7 @@ function mxOutlineWire(i,context={}){
     renderSlide(); });
   ins.querySelectorAll('[data-mxdel]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
     const a=b.dataset.mxdel.split('.'), G=groups();
+    const parent=context.embedded?LESSON.slides[i]:null,previous=parent&&lpCollection(parent,s),previousExample=previous&&lpSingleExample(s);
     if(a[0]==='g') G.splice(+a[1],1);
     else if(a[0]==='f'){ const F=mxFigAt(G[+a[1]]); if(F){ G[+a[1]].relations.splice(F.k,1);
       if(!G[+a[1]].relations.length) delete G[+a[1]].relations; } }
@@ -6898,6 +7067,7 @@ function mxOutlineWire(i,context={}){
       if(!arr.length){ const S={kind:a[0],g:+a[1],e:a[0]==='p'?null:+a[2],s:a[0]==='w'?+a[3]:null};
         const H=mxPartHost(s,S,base,groupKey); if(H) delete H.owner[H.key]; } }
     else G[+a[1]].examples[+a[2]].steps.splice(+a[3],1);
+    if(previous&&!lpSingleExample(s)){lpForgetExample(parent,previousExample.id);if(!s.notes?.length&&!s.questions?.length&&!s.workedExamples?.some(g=>g.examples?.length||mxParts(g.visual).length||mxParts(g.relations).length)&&!s.examples?.length)parent.activities.splice(parent.activities.indexOf(s),1);lpNavigate(i,lpCollectionMembers(parent,previous)[0]?.a.id||parent.activities[0]?.id);return;}
     selZone=context.embedded&&groups().length?`mx.g.${Math.min(+a[1],groups().length-1)}`:null; renderSlide(); });
 }
 function blockOutline(i,s,sel){
@@ -9920,6 +10090,7 @@ function mxWexSteps(ex,range,annotated=false){
    A state that carries no question (a derivation's middle stage) has no ask region and says so, so the
    working keeps a reading measure rather than spanning the surface. */
 function mxWexEx(ex,k,state,extra){
+  if(ex.solutionLayout==='paired-table')return mxPairedExample(ex,k,state,extra);
   const q=ex.prompt||ex.question, a=ex.answer||ex.result;
   const show=x=>!state||state.show.indexOf(x)>=0;
   const ask=!!(q&&show('question'));
@@ -9938,7 +10109,39 @@ function mxWexEx(ex,k,state,extra){
       ${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}
     <div class="mx-wexwork${tableWorking?' lp-table-working':''}" data-mx-region="working">
       ${tableWorking?`<div class="lp-table-reasoning">${steps}${answer}</div>${extra}`:steps+'\n      '+(extra||'')+'\n      '+answer}
-    </div></article>`;
+    </div>${mxSupportButton(ex)}</article>`;
+}
+/* The same authored steps drive both halves; a row is never split into two arrays. */
+function mxSupportButton(ex){return ex.support?.steps?.length?`<button type="button" class="mx-support-open" data-mx-support="${esc(ex.id||'')}">${esc(ex.support.title||'Show method')}</button>`:'';}
+function mxPairedExample(ex,k,state,extra){
+  const all=Array.isArray(ex.steps)?ex.steps:[],q=ex.prompt||ex.question||'',answer=ex.answer||ex.result;
+  const show=x=>!state||state.show.includes(x),from=state?.steps?Math.max(1,state.steps[0]):1;
+  const steps=state?.steps?all.slice(from-1,state.steps[1]):all,questionEvidence=q&&show('question')&&ex.visualPlacement==='question'?(extra||''):'';
+  if(questionEvidence)extra='';
+  const activity=lpEnabled(LESSON.slides[cur])?lpCurrent(LESSON.slides[cur]):null;
+  const collection=activity&&lpCollection(LESSON.slides[cur],activity),members=collection?lpCollectionMembers(LESSON.slides[cur],collection):[];
+  const number=members.length?members.findIndex(x=>x.ex===ex)+1:k+1;
+  return `<article class="mx-wexex mx-worked-example" data-mx-example="${esc(ex.id||'')}" aria-label="${esc(mxPlain(ex.label||'Worked example'))}">
+    <header class="mx-example-question"><div><div class="mx-example-number">Example ${number}</div><h2 data-mx-region="title">${mxM(ex.label||'Worked example')}</h2>${q&&show('question')?`<div data-mx-region="question" data-mx-sec="question">${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}</div>
+      ${mxSupportButton(ex)}</header>
+    <section data-mx-region="working" class="mx-solution">${show('steps')?`<table class="mx-solution-table" data-mx-sec="steps"><thead><tr><th scope="col">No.</th><th scope="col">Working</th><th scope="col">No.</th><th scope="col">Explanation</th></tr></thead><tbody>
+      ${steps.map((st,j)=>{const o=st&&typeof st==='object'?st:{text:st};return `<tr class="mx-step" data-mx-step="${esc(o.id||'s'+(j+from))}"><td class="mx-row-number">${j+from}</td><td class="mx-stepm">${mxWorking(o.math||'')}</td><td class="mx-row-number mx-row-repeat">${j+from}</td><td class="mx-annotation"><div class="mx-stept">${mxM(o.text||'')}</div>${o.note?`<div class="mx-stepn">${mxM(o.note)}</div>`:''}${mxParts(o.visual).length?mxCompanion(mxParts(o.visual),'paired-'+esc(ex.id||k)+'-'+j):''}</td></tr>`;}).join('')}
+    </tbody></table>`:''}${extra||''}${answer&&show('answer')?`<div class="mx-conclusion" data-mx-region="answer" data-mx-sec="answer"><span aria-hidden="true">✓</span><span>${ex.resultLabel?esc(ex.resultLabel)+' ':''}${mxM(answer)}</span></div>`:''}</section></article>`;
+}
+function mxSupportOpen(ex,opener){
+  if(document.querySelector('[data-mx-support-dialog]'))return;
+  const detail=ex.support,owner=LESSON,index=cur,activity=lpEnabled(LESSON.slides[cur])?lpCurrent(LESSON.slides[cur]):LESSON.slides[cur];
+  const dialog=document.createElement('dialog');dialog.className='mx-support-dialog';dialog.dataset.mxSupportDialog='';dialog.setAttribute('aria-labelledby','mxSupportTitle');
+  dialog.innerHTML=`<header><h2 id="mxSupportTitle">${esc(detail.title||'Supporting method')}</h2><button type="button" data-support-close aria-label="Close method">×</button></header><p class="mx-support-context">${mxM(ex.label||'Worked example')}</p>${detail.introduction?`<p>${mxM(detail.introduction)}</p>`:''}${mxWexSteps({id:ex.id,steps:detail.steps},null,true)}`;
+  document.body.append(dialog);
+  (detail.steps||[]).forEach((step,j)=>{if(step.selectedRow!=null&&step.selectedRow!==''&&Number.isInteger(Number(step.selectedRow)))dialog.querySelectorAll('.mx-step')[j]?.querySelectorAll('tbody tr')[Number(step.selectedRow)+1]?.classList.add('mx-selected-pair');});
+  dialog.querySelector('[data-support-close]').onclick=()=>dialog.close();
+  dialog.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();dialog.close();}else if(e.key.startsWith('Arrow'))e.stopPropagation();else if(e.key==='Tab'){const items=[...dialog.querySelectorAll('button,a[href],input,select,textarea,[tabindex="0"]')].filter(x=>!x.disabled);const at=items.indexOf(document.activeElement);e.preventDefault();items[(at+(e.shiftKey?-1:1)+items.length)%items.length]?.focus();}});
+  dialog.addEventListener('close',()=>{dialog.remove();if(LESSON===owner&&cur===index&&(lpEnabled(LESSON.slides[cur])?lpCurrent(LESSON.slides[cur]):LESSON.slides[cur])===activity){const target=opener.isConnected?opener:document.querySelector('[data-mx-support="'+CSS.escape(ex.id||'')+'"]');target?.focus({preventScroll:true});}});
+  dialog.showModal();
+}
+function mxSupportWire(a){
+  if(!a)return;document.querySelectorAll('[data-mx-support]').forEach(b=>b.onclick=e=>{e.stopPropagation();const ex=[...(a.examples||[]),...(a.workedExamples||a.groups||[]).flatMap(g=>g.examples||[])].find(x=>x.id===b.dataset.mxSupport);if(ex?.support?.steps?.length)mxSupportOpen(ex,b);});
 }
 /* A PART IS DRAWN ONCE. When `comparison` lifts the plane into the middle column it IS the bridge between
    the two cases, so the connection region below must not draw the same plane a second time — one decision,
@@ -10182,8 +10385,24 @@ function lpSingleExample(a){
   const groups=a.workedExamples||[], examples=groups.length?groups.flatMap(g=>g.examples||[]):(a.examples||[]);
   return groups.length<=1&&examples.length===1?examples[0]:null;
 }
-function lpLearnerActivities(s){ return s.activities.filter(a=>!a.optionalVideo||!!toEmbed(safeUrl((s.video||{}).url||'','embed'))); }
-function lpActivities(s){ return authorMode()==='edit'?s.activities:lpLearnerActivities(s); }
+/* Collections reference stable examples owned by existing single-example activities.
+   They change the presented order, never copy questions or alter response identities. */
+function lpCollectionMembers(s,c){
+  const entries=s.activities.map(a=>({a,ex:lpSingleExample(a)})).filter(x=>x.ex);
+  return (c.members||[]).map(id=>entries.find(x=>x.ex.id===id)).filter(Boolean);
+}
+function lpCollection(s,a){return (s.exampleCollections||[]).find(c=>lpCollectionMembers(s,c).some(x=>x.a===a));}
+function lpForgetExample(s,id){
+  if(!s.exampleCollections||!id)return;
+  s.exampleCollections=s.exampleCollections.filter(c=>{if(!c.members.includes(id))return true;c.members=c.members.filter(member=>member!==id);return c.members.length>0;});
+}
+function lpOrderedActivities(s){
+  const out=[],seen=new Set();
+  s.activities.forEach(a=>{const c=lpCollection(s,a);for(const item of c?lpCollectionMembers(s,c).map(x=>x.a):[a])if(!seen.has(item.id)){seen.add(item.id);out.push(item);}});
+  return out;
+}
+function lpLearnerActivities(s){ return lpOrderedActivities(s).filter(a=>!a.optionalVideo||!!toEmbed(safeUrl((s.video||{}).url||'','embed'))); }
+function lpActivities(s){ return authorMode()==='edit'?lpOrderedActivities(s):lpLearnerActivities(s); }
 function lpValidatePublication(d){
   lpValidate(d);
   if(!(d.slides||[]).some(lpEnabled)&&d.meta?.player!=='activities')return;
@@ -10205,6 +10424,10 @@ function lpValidate(d){
   d.slides.forEach(s=>{
     id(s,'Skill'); if(!lpEnabled(s)) throw Error('Activity lessons support skill pages only.');
     if(!s.activities.length) throw Error('Skill '+s.title+' has no activities. Add content before publication.');
+    if(s.exampleCollections!=null&&!Array.isArray(s.exampleCollections))throw Error('Example collections must be an array.');
+    const assigned=new Set();
+    (s.exampleCollections||[]).forEach(c=>{id(c,'Example collection');if(!Array.isArray(c.members)||c.members.some(x=>typeof x!=='string'||!x))throw Error('Collection members must be stable example ids.');
+      c.members.forEach(member=>{if(assigned.has(member))throw Error('An example cannot belong to two collection positions.');assigned.add(member);const matches=s.activities.filter(a=>lpSingleExample(a)?.id===member);if(matches.length>1)throw Error('A collection example id must identify one activity.');});});
     s.activities.forEach(a=>{
       id(a,'Activity'); if(!a.title) throw Error('Activity '+a.id+' needs a title.');
       const allowed=['id','title','lede','notes','notesTitle','workedExamples','examples','examplesTitle','questions','questionsTitle','practiceNote','video','optionalVideo','workspace','keyIdea'];
@@ -10214,7 +10437,7 @@ function lpValidate(d){
       (a.notes||[]).forEach(n=>{if(!n||typeof n.body!=='string')throw Error('Explanation needs a text body in '+a.id);});
       (a.questions||[]).forEach(q=>{id(q,'Question');if(typeof q.stem!=='string'||!q.stem.trim())throw Error('Question '+q.id+' needs a prompt.');if(q.type&&!['question','table'].includes(q.type))throw Error('Unsupported question type: '+q.type);});
       (a.workedExamples||[]).forEach(g=>{if(g.type&&!MX_WEX_TYPES[g.type]&&!MX_WEX_ALIAS[g.type])throw Error('Unsupported worked composition: '+g.type);parts(g.relations);parts(g.visual);});
-      [...(a.examples||[]),...(a.workedExamples||[]).flatMap(g=>g.examples||[])].forEach(ex=>{parts(ex.visual);(ex.steps||[]).forEach(step=>parts(step.visual));});
+      [...(a.examples||[]),...(a.workedExamples||[]).flatMap(g=>g.examples||[])].forEach(ex=>{parts(ex.visual);(ex.steps||[]).forEach(step=>parts(step.visual));if(ex.support){if(!Array.isArray(ex.support.steps))throw Error('Optional method needs an ordered steps array.');ex.support.steps.forEach(step=>parts(step.visual));}});
       if(a.workspace&&a.workspace.kind!=='grid') throw Error('Only the grid response workspace is supported inside activities.');
     });
   });
@@ -10226,8 +10449,16 @@ function lpProjection(s){
   if(a.questions&&a.questions.length) out.workspace={kind:'grid',id:a.id+'-work'};
   return out;
 }
+function lpCollectionRail(s,i,current,end){
+  const done=new Set();return lpActivities(s).map(a=>{const c=lpCollection(s,a);if(c){if(done.has(c.id))return '';done.add(c.id);return `<li><div class="lp-collection-title">${esc(c.title||'Worked examples')}</div><ol class="lp-collection-members">${lpCollectionMembers(s,c).map(({a:act,ex},j)=>`<li><button data-lp-go="${i}:${esc(act.id)}"${act===current&&!end?' aria-current="step"':''}>Example ${j+1} · ${esc(ex.tabLabel||ex.label||'Example '+(j+1))}</button></li>`).join('')}</ol></li>`;}return `<li><button data-lp-go="${i}:${esc(a.id)}"${a===current&&!end?' aria-current="step"':''}>${esc(a.title)}</button></li>`;}).join('');
+}
+function lpCollectionTabs(s,a){
+  const c=lpCollection(s,a);if(!c)return '';const members=lpCollectionMembers(s,c);if(members.length<2)return '';
+  return `<div class="mx-collection-tabs" role="tablist" aria-label="${esc(c.title||'Worked examples')}">${members.map(({a:act,ex},j)=>`<button type="button" role="tab" id="lp-tab-${esc(ex.id)}" aria-controls="lp-example-panel" aria-selected="${act===a}" tabindex="${act===a?0:-1}" data-lp-example="${esc(act.id)}">${esc(ex.tabLabel||'Example '+(j+1))}</button>`).join('')}</div>`;
+}
 function lpRender(s,i){
   const a=lpCurrent(s), list=lpActivities(s), pos=list.indexOf(a), m=LESSON.meta||{};
+  const collection=lpCollection(s,a),members=collection?lpCollectionMembers(s,collection):[],examplePosition=members.findIndex(x=>x.a===a);
   const end=LP_STATE.end, projection=lpProjection(s), open=rpNavOpen();
   let errors=''; try{lpValidate(LESSON);}catch(e){errors=`<p class="mx-err" role="alert">${esc(e.message)}</p>`;}
   const ws=projection&&projection.workspace&&!mxOnPaper()?projection.workspace:null;
@@ -10235,23 +10466,25 @@ function lpRender(s,i){
   const hasFigure=o=>!!o&&typeof o==='object'&&(o.kind==='figure'||Object.values(o).some(v=>Array.isArray(v)?v.some(hasFigure):v&&typeof v==='object'&&hasFigure(v)));
   const arrangement=ws?'response':hasFigure(projection)?'media':projection?.workedExamples?.length||projection?.examples?.length?'solution':projection?.questions?.length&&!projection?.notes?.length?'practice':'reading';
   const accent=/^#[0-9a-f]{6}$/i.test((m.colors||{}).accent||'')?m.colors.accent:'#365d63';
-  const rail=LESSON.slides.map((sk,k)=>`<li><button class="mx-navitem${k===i?' on':''}" data-lp-go="${k}" aria-current="${k===i?'page':'false'}"><span class="mx-navtx"><span>Skill ${k+1}</span><b>${esc(sk.title)}</b></span></button>${k===i?`<ol class="lp-activities">${lpActivities(sk).map((act,j)=>`<li><button data-lp-go="${k}:${esc(act.id)}"${act===a&&!end?' aria-current="step"':''}>${j+1}. ${esc(act.title)}</button></li>`).join('')}</ol>`:''}</li>`).join('');
+  const rail=LESSON.slides.map((sk,k)=>`<li><button class="mx-navitem${k===i?' on':''}" data-lp-go="${k}" aria-current="${k===i?'page':'false'}"><span class="mx-navtx"><span>Skill ${k+1}</span><b>${esc(sk.title)}</b></span></button>${k===i?`<ol class="lp-activities">${sk.exampleCollections?.length?lpCollectionRail(sk,k,a,end):lpActivities(sk).map((act,j)=>`<li><button data-lp-go="${k}:${esc(act.id)}"${act===a&&!end?' aria-current="step"':''}>${j+1}. ${esc(act.title)}</button></li>`).join('')}</ol>`:''}</li>`).join('');
   return `<div class="mx lp${open?' mx-navopen':''}" data-rp-type="skill" data-rp-layout="responsive" data-mx-response="${esc(mxResponseMode())}" data-mx-view="split" style="--mx-green:${accent};--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px;--mx-rep-min-h:${MX_REP_MIN_H}px">
     <header class="mx-top"><button class="mx-iconbtn" data-rp-navtoggle aria-label="Show lesson skills" aria-expanded="${open}" aria-controls="mxNav">${mxIc('menu')}</button><b class="lp-brand">${esc(m.title)}</b><div class="mx-top-sp"></div><div class="mx-modes">${document.documentElement.dataset.export?'':MX_MODES.filter(x=>x.id!=='worksheet').concat([{id:'json',label:'JSON'}]).map(x=>`<button class="mx-mode${x.state&&x.state()?' on':''}" data-mx-mode="${x.id}">${esc(x.label)}</button>`).join('')}</div></header>
     <div class="mx-body"><nav class="mx-nav" id="mxNav" aria-label="Skills and activities"><div class="mx-navhead"><div class="mx-course">Lesson outline</div><p class="mx-coursemeta">${LESSON.slides.length} ${LESSON.slides.length===1?'skill':'skills'} · revisit any activity</p></div><ol class="mx-navlist">${rail}</ol></nav><button class="mx-scrim" data-rp-navtoggle tabindex="-1" aria-hidden="true"></button>
     <main class="mx-main"><div class="mx-page" tabindex="-1" data-mx-surface="activity"><article class="lp-activity" data-lp-arrangement="${arrangement}" aria-labelledby="lpTitle">${errors}<header class="lp-header"><div class="lp-location">Skill ${i+1} of ${LESSON.slides.length} · ${esc(s.title)}</div>
-      <h1 id="lpTitle" class="lp-title" tabindex="-1">${esc(end?'End of lesson':(a?a.title:'Add your first activity'))}</h1>${!end&&a&&a.lede?`<p class="mx-lede">${mxM(a.lede)}</p>`:''}
+      <h1 id="lpTitle" class="lp-title" tabindex="-1">${esc(end?'End of lesson':(collection?collection.title||'Worked examples':a?a.title:'Add your first activity'))}</h1>${!end?lpCollectionTabs(s,a):''}${!end&&a&&a.lede?`<p class="mx-lede">${mxM(a.lede)}</p>`:''}
       <div class="lp-response-view">${ws?`<div class="mx-viewsw"><button type="button" data-mx-view="questions">Questions and working</button><button type="button" data-mx-view="workbook">Workbook</button></div>`:''}</div></header>
       ${end?'<p>You have reached the end of the lesson. Revisit any activity using the outline. Your responses remain available in this session.</p><p>Reaching this page does not indicate assessed mastery.</p>':`<div class="mx-split${ws?'':' mx-1col'}"><section class="mx-content">${projection?mxSkillPage(projection,i):'<p>This skill has no activities yet.</p>'}</section>${ws?`<section class="mx-work">${rpWorkspace(ws,projection,i)}</section>`:''}</div>`}
-    </article></div><footer class="lp-footer"><button data-lp-move="-1"${i===0&&pos===0&&!end?' disabled':''}>← Back</button><span aria-live="polite">${end?'Lesson end':`Activity ${pos+1} of ${list.length}`}</span><button data-lp-move="1"${end?' disabled':''}>${i===LESSON.slides.length-1&&pos===list.length-1?'Finish lesson':'Next'} →</button></footer></main></div></div>`;
+    </article></div><footer class="lp-footer"><button data-lp-move="-1"${i===0&&pos===0&&!end?' disabled':''}>← Back</button><span aria-live="polite">${end?'Lesson end':collection?`Example ${examplePosition+1} of ${members.length} · ${esc(s.title)}`:`Activity ${pos+1} of ${list.length}`}</span><button data-lp-move="1"${end?' disabled':''}>${i===LESSON.slides.length-1&&pos===list.length-1?'Finish lesson':'Next'} →</button></footer></main></div></div>`;
 }
 function lpNavigate(i,id){
+  if(document.querySelector('[data-mx-support-dialog][open]'))return;
   LP_STATE.end=false; if(id) LP_STATE.activity[LESSON.slides[i].id]=id;
   Object.keys(MX_SCROLL).forEach(k=>delete MX_SCROLL[k]); MX_VIEW='split';
   if(rpNarrow()) RP_NAV=false;
   go(i); document.querySelector('.lp-title')?.focus({preventScroll:true});
 }
 function lpMove(d){
+  if(document.querySelector('[data-mx-support-dialog][open]'))return;
   const s=LESSON.slides[cur]; if(!lpEnabled(s))return;
   const list=lpActivities(s), a=lpCurrent(s), j=list.indexOf(a);
   if(LP_STATE.end) return lpNavigate(cur,a&&a.id);
@@ -10261,8 +10494,13 @@ function lpMove(d){
   if(d>0){LP_STATE.end=true;renderSlide();document.querySelector('.lp-title')?.focus({preventScroll:true});}
 }
 function lpWire(){
+  if(!lpEnabled(LESSON.slides[cur])){mxSupportWire(LESSON.slides[cur]);return;}
   document.querySelectorAll('[data-lp-go]').forEach(b=>b.onclick=e=>{e.stopPropagation();const [i,id]=b.dataset.lpGo.split(':');lpNavigate(+i,id);});
   document.querySelectorAll('[data-lp-move]').forEach(b=>b.onclick=e=>{e.stopPropagation();lpMove(+b.dataset.lpMove);});
+  const s=LESSON.slides[cur],a=lpCurrent(s),c=lpCollection(s,a),members=c?lpCollectionMembers(s,c):[];
+  if(members.length>1){const panel=document.querySelector('.lp-activity');if(panel){panel.id='lp-example-panel';panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby','lp-tab-'+lpSingleExample(a).id);}}
+  document.querySelectorAll('[data-lp-example]').forEach((b,j)=>{const select=k=>{lpNavigate(cur,members[k].a.id);document.getElementById('lp-tab-'+members[k].ex.id)?.focus({preventScroll:true});};b.onclick=e=>{e.stopPropagation();select(j);};b.onkeydown=e=>{let k=j;if(e.key==='ArrowRight')k=(j+1)%members.length;else if(e.key==='ArrowLeft')k=(j+members.length-1)%members.length;else if(e.key==='Home')k=0;else if(e.key==='End')k=members.length-1;else return;e.preventDefault();e.stopPropagation();select(k);};});
+  mxSupportWire(a);
 }
 let LP_EDIT={activity:null,part:'notes',index:0};
 function lpActivitySeed(kind){
@@ -10284,6 +10522,27 @@ function lpSet(path,value){
   const keys=path.split('.');let obj=LESSON;
   keys.slice(0,-1).forEach((key,k)=>{if(obj[key]==null)obj[key]=/^\d+$/.test(keys[k+1])?[]:{};obj=obj[key];});
   obj[keys[keys.length-1]]=value;
+}
+function lpCollectionForm(s,a,base){
+  const ex=lpSingleExample(a);if(!ex)return '';
+  const c=lpCollection(s,a);if(!c)return '<div class="isec"><button class="ibtn-add" data-collection="create">Create example collection</button></div>';
+  const ci=s.exampleCollections.indexOf(c),members=lpCollectionMembers(s,c),available=s.activities.filter(x=>lpSingleExample(x)&&!lpCollection(s,x));
+  return `<div class="isec"><div class="isec-h">Example collection</div>${inT('Collection heading',base+'.exampleCollections.'+ci+'.title',c.title||'Worked examples')}
+    ${members.map(({a:act,ex:example},j)=>`<div class="qg-h"><button class="ibtn-add" data-collection="select:${j}">${esc(example.tabLabel||example.label||'Example '+(j+1))}</button><span><button type="button" data-collection="up:${j}"${j===0?' disabled':''}>↑</button><button type="button" data-collection="down:${j}"${j===members.length-1?' disabled':''}>↓</button><button type="button" data-collection="delete:${j}">Remove example</button></span></div>`).join('')}
+    <button class="ibtn-add" data-collection="add">Add example to collection</button>${available.length?`<label for="lpExistingExample">Existing example</label><select class="ii" id="lpExistingExample">${available.map(x=>`<option value="${esc(lpSingleExample(x).id)}">${esc(x.title)}</option>`).join('')}</select><button class="ibtn-add" data-collection="join">Include existing example</button>`:''}<button class="ibtn-add" data-collection="ungroup">Remove grouping; keep examples</button></div>`;
+}
+function lpCollectionWire(s,a,i){
+  const c=lpCollection(s,a),ex=lpSingleExample(a),ins=$('#inspector');
+  ins.querySelectorAll('[data-collection]').forEach(b=>b.onclick=()=>{const [action,at]=b.dataset.collection.split(':'),j=+at;
+    if(action==='create'){(s.exampleCollections=s.exampleCollections||[]).push({id:'collection-'+crypto.randomUUID(),title:'Worked examples',members:[ex.id]});renderSlide();return;}
+    if(!c)return;const members=lpCollectionMembers(s,c);
+    if(action==='select'){lpNavigate(i,members[j].a.id);return;}
+    if(action==='add'){const next=lpActivitySeed('worked'),example=lpSingleExample(next);example.solutionLayout='paired-table';s.activities.splice(s.activities.indexOf(members.at(-1).a)+1,0,next);c.members.push(example.id);lpNavigate(i,next.id);return;}
+    if(action==='join'){const id=ins.querySelector('#lpExistingExample').value;if(!c.members.includes(id))c.members.push(id);}
+    if(action==='delete'){if(!confirm('Remove this example and its activity?'))return;const entry=members[j];s.activities.splice(s.activities.indexOf(entry.a),1);lpForgetExample(s,entry.ex.id);lpNavigate(i,lpCollectionMembers(s,c)[Math.min(j,c.members.length-1)]?.a.id||s.activities[0]?.id);return;}
+    if(action==='up'||action==='down'){const neighbour=members[j+(action==='up'?-1:1)];if(neighbour){const index=c.members.indexOf(members[j].ex.id),to=c.members.indexOf(neighbour.ex.id);[c.members[index],c.members[to]]=[c.members[to],c.members[index]];}}
+    if(action==='ungroup')s.exampleCollections.splice(s.exampleCollections.indexOf(c),1);
+    renderSlide();});
 }
 function lpInspector(s,i){
   const ins=$('#inspector'), a=lpCurrent(s), ai=s.activities.indexOf(a), base=`slides.${i}`, ab=base+'.activities.'+ai;
@@ -10313,7 +10572,8 @@ function lpInspector(s,i){
     <label for="lpActivityType">Activity to add</label><select class="ii" id="lpActivityType"><option value="notes">Explanation / source</option><option value="worked">Worked examples</option><option value="questions">Practice</option><option value="video"${hasVideo?' disabled':''}>Optional skill video</option></select><button class="ibtn-add" data-lp-add>Add activity</button></div>
     ${a?`<div class="isec">${inT('Activity title',ab+'.title',a.title)}${inA('Introduction',ab+'.lede',a.lede||'')}<button class="ibtn-add" data-lp-reorder="-1"${ai===0?' disabled':''}>Move activity earlier</button><button class="ibtn-add" data-lp-reorder="1"${ai===s.activities.length-1?' disabled':''}>Move activity later</button><button class="ibtn-add" data-lp-remove${s.activities.length<2?' disabled':''}>Remove activity</button></div>
     ${a.optionalVideo?`<p class="ihint">One optional video per skill. Add or clear its URL above. A missing video is omitted from the learner view; the author retains this setup slot.</p><button class="ibtn-add" data-lp-vclear>Clear video URL</button>`:`<div class="isec"><div class="isec-h">Edit content</div>${[['notes','Explanation / source'],['worked','Worked examples'],['questions','Questions']].map(([v,l])=>row(l,0,part===v,`data-lp-part="${v}"`)).join('')}</div>${a.examples?.length?'<button class="ibtn-add" data-lp-organise>Organise existing examples into editable groups</button>':''}${content}`}`:''}`;
-  wireInspector();if(a&&editor)editor.wire(i,context);
+  if(a)ins.insertAdjacentHTML('beforeend',lpCollectionForm(s,a,base));
+  wireInspector();if(a&&editor)editor.wire(i,context);if(a)lpCollectionWire(s,a,i);
   ins.querySelector('[data-bind="meta.responseMode"]')?.addEventListener('input',()=>{MX_RESPONSE=null;renderCanvas();});
   ins.querySelectorAll('[data-lp-select]').forEach(b=>b.onclick=()=>lpNavigate(i,s.activities[+b.dataset.lpSelect].id));
   ins.querySelector('[data-lp-add]').onclick=()=>{const kind=ins.querySelector('#lpActivityType').value;if(kind==='video'&&hasVideo)return;const next=lpActivitySeed(kind);s.activities.push(next);lpNavigate(i,next.id);};
@@ -10322,7 +10582,7 @@ function lpInspector(s,i){
   ins.querySelectorAll('[data-lp-skillmove]').forEach(b=>b.onclick=()=>{const to=i+(+b.dataset.lpSkillmove);if(to<0||to>=LESSON.slides.length)return;[LESSON.slides[i],LESSON.slides[to]]=[LESSON.slides[to],LESSON.slides[i]];go(to);});
   if(!a)return;
   ins.querySelectorAll('[data-lp-reorder]').forEach(b=>b.onclick=()=>{const to=ai+(+b.dataset.lpReorder);if(to<0||to>=s.activities.length)return;s.activities.splice(to,0,s.activities.splice(ai,1)[0]);renderSlide();});
-  ins.querySelector('[data-lp-remove]').onclick=()=>{if(s.activities.length<2||!confirm('Remove this activity?'))return;s.activities.splice(ai,1);lpNavigate(i,s.activities[Math.min(ai,s.activities.length-1)].id);};
+  ins.querySelector('[data-lp-remove]').onclick=()=>{if(s.activities.length<2||!confirm('Remove this activity?'))return;lpForgetExample(s,lpSingleExample(a)?.id);s.activities.splice(ai,1);lpNavigate(i,s.activities[Math.min(ai,s.activities.length-1)].id);};
   ins.querySelector('[data-lp-vclear]')?.addEventListener('click',()=>{lpSet(base+'.video.url','');renderSlide();});
   ins.querySelector('[data-lp-organise]')?.addEventListener('click',()=>{(a.workedExamples=a.workedExamples||[]).push({id:'group-'+crypto.randomUUID(),type:'extended',title:'Worked examples',examples:a.examples});delete a.examples;LP_EDIT.part='worked';selZone='mx.g.'+(a.workedExamples.length-1);renderSlide();});
   ins.querySelectorAll('[data-lp-part]').forEach(b=>b.onclick=()=>{LP_EDIT.part=b.dataset.lpPart;LP_EDIT.index=0;selZone=null;renderInspector();});
@@ -14363,7 +14623,7 @@ document.addEventListener('keydown',e=>{
      the region — one boundary, marked where the editor is built, rather than a list of roles that grew
      every time something new was put in a surface (the field, then the equation chip, then the symbol
      buttons, each of which paged the lesson away and took the student's work with it). */
-  if(e.defaultPrevented) return;
+  if(e.defaultPrevented||document.querySelector('[data-mx-support-dialog][open]')) return;
   const t=e.target;
   if(t&&t.closest&&t.closest('textarea,input,[contenteditable=true],[data-tp-editing]'))return;
   if(e.key==='ArrowRight'){if(lpEnabled(LESSON.slides[cur]))lpMove(1);else go(cur+1);} if(e.key==='ArrowLeft'){if(lpEnabled(LESSON.slides[cur]))lpMove(-1);else go(cur-1);}
