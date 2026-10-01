@@ -4640,7 +4640,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
                     "steps": [
                       {
                         "id": "monic-mixed-generate",
-                        "math": "20 ÷ 1 = 20 → (1, 20)\n20 ÷ 2 = 10 → (2, 10)\n20 = 3 × 6 + 2\n20 ÷ 4 = 5 → (4, 5)",
+                        "math": "20 ÷ 1 = 20 → (1, 20)\n20 ÷ 2 = 10 → (2, 10)\n20 ÷ 4 = 5 → (4, 5)",
                         "text": "Apply opposite signs, with the larger magnitude positive to make the sum positive."
                       },
                       {
@@ -7067,7 +7067,7 @@ function mxOutlineWire(i,context={}){
       if(!arr.length){ const S={kind:a[0],g:+a[1],e:a[0]==='p'?null:+a[2],s:a[0]==='w'?+a[3]:null};
         const H=mxPartHost(s,S,base,groupKey); if(H) delete H.owner[H.key]; } }
     else G[+a[1]].examples[+a[2]].steps.splice(+a[3],1);
-    if(previous&&!lpSingleExample(s)){lpForgetExample(parent,previousExample.id);if(!s.notes?.length&&!s.questions?.length&&!s.workedExamples?.some(g=>g.examples?.length)&&!s.examples?.length)parent.activities.splice(parent.activities.indexOf(s),1);lpNavigate(i,lpCollectionMembers(parent,previous)[0]?.a.id||parent.activities[0]?.id);return;}
+    if(previous&&!lpSingleExample(s)){lpForgetExample(parent,previousExample.id);if(!s.notes?.length&&!s.questions?.length&&!s.workedExamples?.some(g=>g.examples?.length||mxParts(g.visual).length||mxParts(g.relations).length)&&!s.examples?.length)parent.activities.splice(parent.activities.indexOf(s),1);lpNavigate(i,lpCollectionMembers(parent,previous)[0]?.a.id||parent.activities[0]?.id);return;}
     selZone=context.embedded&&groups().length?`mx.g.${Math.min(+a[1],groups().length-1)}`:null; renderSlide(); });
 }
 function blockOutline(i,s,sel){
@@ -10109,9 +10109,10 @@ function mxWexEx(ex,k,state,extra){
       ${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}
     <div class="mx-wexwork${tableWorking?' lp-table-working':''}" data-mx-region="working">
       ${tableWorking?`<div class="lp-table-reasoning">${steps}${answer}</div>${extra}`:steps+'\n      '+(extra||'')+'\n      '+answer}
-    </div></article>`;
+    </div>${mxSupportButton(ex)}</article>`;
 }
 /* The same authored steps drive both halves; a row is never split into two arrays. */
+function mxSupportButton(ex){return ex.support?.steps?.length?`<button type="button" class="mx-support-open" data-mx-support="${esc(ex.id||'')}">${esc(ex.support.title||'Show method')}</button>`:'';}
 function mxPairedExample(ex,k,state,extra){
   const all=Array.isArray(ex.steps)?ex.steps:[],q=ex.prompt||ex.question||'',answer=ex.answer||ex.result;
   const show=x=>!state||state.show.includes(x),from=state?.steps?Math.max(1,state.steps[0]):1;
@@ -10122,7 +10123,7 @@ function mxPairedExample(ex,k,state,extra){
   const number=members.length?members.findIndex(x=>x.ex===ex)+1:k+1;
   return `<article class="mx-wexex mx-worked-example" data-mx-example="${esc(ex.id||'')}" aria-label="${esc(mxPlain(ex.label||'Worked example'))}">
     <header class="mx-example-question"><div><div class="mx-example-number">Example ${number}</div><h2 data-mx-region="title">${mxM(ex.label||'Worked example')}</h2>${q&&show('question')?`<div data-mx-region="question" data-mx-sec="question">${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}</div>
-      ${ex.support?.steps?.length?`<button type="button" class="mx-support-open" data-mx-support="${esc(ex.id||'')}">${esc(ex.support.title||'Show method')}</button>`:''}</header>
+      ${mxSupportButton(ex)}</header>
     <section data-mx-region="working" class="mx-solution">${show('steps')?`<table class="mx-solution-table" data-mx-sec="steps"><thead><tr><th scope="col">No.</th><th scope="col">Working</th><th scope="col">No.</th><th scope="col">Explanation</th></tr></thead><tbody>
       ${steps.map((st,j)=>{const o=st&&typeof st==='object'?st:{text:st};return `<tr class="mx-step" data-mx-step="${esc(o.id||'s'+(j+from))}"><td class="mx-row-number">${j+from}</td><td class="mx-stepm">${mxWorking(o.math||'')}</td><td class="mx-row-number mx-row-repeat">${j+from}</td><td class="mx-annotation"><div class="mx-stept">${mxM(o.text||'')}</div>${o.note?`<div class="mx-stepn">${mxM(o.note)}</div>`:''}${mxParts(o.visual).length?mxCompanion(mxParts(o.visual),'paired-'+esc(ex.id||k)+'-'+j):''}</td></tr>`;}).join('')}
     </tbody></table>`:''}${extra||''}${answer&&show('answer')?`<div class="mx-conclusion" data-mx-region="answer" data-mx-sec="answer"><span aria-hidden="true">✓</span><span>${ex.resultLabel?esc(ex.resultLabel)+' ':''}${mxM(answer)}</span></div>`:''}</section></article>`;
@@ -10497,7 +10498,7 @@ function lpWire(){
   document.querySelectorAll('[data-lp-go]').forEach(b=>b.onclick=e=>{e.stopPropagation();const [i,id]=b.dataset.lpGo.split(':');lpNavigate(+i,id);});
   document.querySelectorAll('[data-lp-move]').forEach(b=>b.onclick=e=>{e.stopPropagation();lpMove(+b.dataset.lpMove);});
   const s=LESSON.slides[cur],a=lpCurrent(s),c=lpCollection(s,a),members=c?lpCollectionMembers(s,c):[];
-  if(members.length>1){const panel=document.querySelector('.mx-worked-example');if(panel){panel.id='lp-example-panel';panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby','lp-tab-'+lpSingleExample(a).id);}}
+  if(members.length>1){const panel=document.querySelector('.lp-activity');if(panel){panel.id='lp-example-panel';panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby','lp-tab-'+lpSingleExample(a).id);}}
   document.querySelectorAll('[data-lp-example]').forEach((b,j)=>{const select=k=>{lpNavigate(cur,members[k].a.id);document.getElementById('lp-tab-'+members[k].ex.id)?.focus({preventScroll:true});};b.onclick=e=>{e.stopPropagation();select(j);};b.onkeydown=e=>{let k=j;if(e.key==='ArrowRight')k=(j+1)%members.length;else if(e.key==='ArrowLeft')k=(j+members.length-1)%members.length;else if(e.key==='Home')k=0;else if(e.key==='End')k=members.length-1;else return;e.preventDefault();e.stopPropagation();select(k);};});
   mxSupportWire(a);
 }
