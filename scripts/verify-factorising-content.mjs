@@ -32,6 +32,19 @@ const activities=lesson.slides.flatMap(s=>s.activities),questions=activities.fla
 for(const a of activities.filter(a=>a.workedExamples)){
  const ex=a.workedExamples[0].examples[0],expected=polynomial(ex.prompt.match(/^Factorise (.+)\.$/)[1]);
  const [c,b,leading]=expected,product=leading*c;
+ if(ex.solutionLayout==='paired-table'){
+  assert.ok(!/_[mnabc]_/.test(JSON.stringify(ex)));assert.ok(ex.steps.every(st=>!st.note&&st.text.split('.').filter(Boolean).length<=1));
+  const support=ex.support;assert.ok(support&&support.steps.length===3);const table=support.steps[1].visual[0];
+  const pairs=table.rows.map(row=>{const [m,n]=row[0].replaceAll('−','-').match(/-?\d+/g).map(Number);assert.equal(m*n,product);assert.equal(Number(row[1].replaceAll('−','-')),product);assert.equal(Number(row[2].replaceAll('−','-')),m+n);return [m,n];});
+  const magnitude=[];for(let d=1;d*d<=Math.abs(product);d++)if(Math.abs(product)%d===0)magnitude.push([d,Math.abs(product)/d]);assert.deepEqual(pairs.map(p=>p.map(Math.abs)),magnitude);
+  const selected=pairs[Number(support.steps[1].selectedRow)];assert.equal(selected[0]+selected[1],b);
+  const generated=support.steps[0].math.split('\n');for(const line of generated){const quotient=line.match(/^(\d+) ÷ (\d+) = (\d+) → \((\d+), (\d+)\)$/);if(quotient){const [,n,d,q,u,v]=quotient.map(Number);assert.equal(n,Math.abs(product));assert.equal(n,d*q);assert.equal(u,d);assert.equal(v,q);}else{const rem=line.match(/^(\d+) = (\d+) × (\d+) \+ (\d+)$/);assert.ok(rem);const [,n,d,q,r]=rem.map(Number);assert.equal(n,d*q+r);assert.ok(r>0&&r<d);}}
+  let algebra=0;for(const st of [...ex.steps,...support.steps])for(const line of st.math.split('\n')){if(line.includes('_x_')){for(const expr of line.split('=').filter(x=>x.trim())){assert.deepEqual(polynomial(expr),expected);algebra++;}}else if(line.includes('=')&&!line.includes('→')&&!line.includes('÷')){const values=line.split('=').map(polynomial);values.forEach(v=>assert.deepEqual(v,values[0]));}}
+  ex.answer.split('=').forEach(expr=>assert.deepEqual(polynomial(expr),expected));assert.ok(algebra>=4);assert.equal(ex.steps.at(-1).id,a.id+'-check');
+  if(leading!==1)assert.ok(ex.steps.filter(st=>st.id.includes('-factor-')).length===3,'Split, group and shared-factor extraction retained');
+  const collection=lesson.slides.find(s=>s.activities.includes(a)).exampleCollections[0];assert.ok(collection.members.includes(ex.id));
+  check(true,a.id+': concise signed numeric solution, stable collection membership and no caution/helper variables');check(true,a.id+': exhaustive optional candidates, selected row, every algebraic equality, expansion and conclusion verified');continue;
+ }
  const order=['target','generate','compare','verify','factor-0','check'].map(s=>ex.steps.findIndex(x=>x.id===a.id+'-'+s));
  check(order.every((v,i)=>v>=0&&(!i||v>order[i-1])),a.id+': generate → compare → verify → factorise → expand');
  const first=ex.steps[0].math.replaceAll('−','-');
@@ -62,7 +75,7 @@ for(const a of activities.filter(a=>a.id.endsWith('completion'))){
  assert.ok(!/answer|model|solution/i.test(Object.keys(q).join(',')));check(true,a.id+': supplied candidates, blank sums and no solved counterpart');
 }
 const plain=s=>s.replaceAll('_x_','x').replaceAll('^2','²');
-let guide='# Teacher answers — factorising quadratics\n\nKeep this guide separate from the learner lesson. Equivalent factor orderings are correct. Students should show a justified search and check by expansion; an answer alone does not demonstrate the method.\n\n## Guided completion\n\nMonic: the sums are 16 and 8. Select 3 and 5: x² + 8x + 15 = (x + 3)(x + 5).\n\nNon-monic: a = 2, b = 9, c = 10, so ac = 20. The sums are 21, 12 and 9. Select 4 and 5. One valid chain is 2x² + 9x + 10 = 2x² + 4x + 5x + 10 = 2x(x + 2) + 5(x + 2) = (2x + 5)(x + 2).\n\n## Independent practice\n';
+let guide='# Teacher answers — factorising quadratics\n\nKeep this guide separate from the learner lesson. Equivalent factor orderings are correct. Students should show their chosen pair and factorisation, including splitting and grouping for non-monic quadratics. Detailed searching and expansion are optional support unless a task explicitly requests them; an answer alone does not demonstrate the method.\n\n## Guided completion\n\nMonic: the sums are 16 and 8. Select 3 and 5: x² + 8x + 15 = (x + 3)(x + 5).\n\nNon-monic: a = 2, b = 9, c = 10, so ac = 20. The sums are 21, 12 and 9. Select 4 and 5. One valid chain is 2x² + 9x + 10 = 2x² + 4x + 5x + 10 = 2x(x + 2) + 5(x + 2) = (2x + 5)(x + 2).\n\n## Independent practice\n';
 for(const [id,answers]of Object.entries(keys)){
  const q=questions.find(q=>q.id===id);assert.ok(q);assert.equal(q.parts.length,answers.length);
  guide+='\n### '+id.replaceAll('-',' ')+'\n\n';
@@ -89,6 +102,6 @@ for(const [id,area,width,length,x,unit]of [
 check(true,'Guided answers and error-analysis corrections expand correctly; teacher answers are separate from learner data');
 if(process.argv.includes('--write-guide'))fs.writeFileSync(root+'/TEACHER-ANSWERS.md',guide);
 else assert.equal(fs.readFileSync(root+'/TEACHER-ANSWERS.md','utf8'),guide,'Teacher answer guide matches verified calculations');
-const out=process.env.FACTORISING_OUT||'review-delivery/factorising-verification';fs.mkdirSync(out,{recursive:true});
+const out=process.env.FACTORISING_OUT||(process.env.PLAYER_REVIEW_DIR?process.env.PLAYER_REVIEW_DIR+'/factorising':'review-delivery/factorising-verification');fs.mkdirSync(out,{recursive:true});
 fs.writeFileSync(out+'/content-results.json',JSON.stringify({lessonSha256:createHash('sha256').update(fs.readFileSync(file)).digest('hex'),checks,limit:'Arithmetic and schema checks supplement human reading of the explanations and classroom suitability.'},null,2)+'\n');
 console.log(checks.length+' content checks passed');
