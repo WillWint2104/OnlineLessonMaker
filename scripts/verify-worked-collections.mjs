@@ -64,4 +64,3 @@ try{
  await load(single);await click('[data-lp-select="1"]');await click('[data-collection="delete:0"]');assert.equal((await data()).slides[0].exampleCollections.length,0);check(await p.evaluate(()=>{lpValidatePublication(LESSON);return true;}),'Deleting the last collected example removes its empty collection and leaves a publishable lesson');
  check(!report.errors.length,'No browser errors');fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));console.log(report.checks.length+' checks; '+report.captures.length+' captures');
 }finally{await ctx.close();await browser.close();}
-
