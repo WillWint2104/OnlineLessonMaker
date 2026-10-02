@@ -7,6 +7,11 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Lesson opening and skill journey
+- Add optional ordered lesson-level Overview/Outcomes pages, authored images, concise introductions, video focus points and a secondary curriculum dialog to the existing activity player.
+- Connect the same content to the graphical inspector, JSON round-trip and standalone learner export; count only visible activities and preserve PR #159's worked-example collections.
+- Keep curriculum records explicitly authored/draft/demo and teacher video slots empty until supplied; add responsive, native-zoom and authoring regression coverage.
+
 ### Concise worked-example collections
 - Present opted-in examples in one shared Working/Explanation table with mirrored row numbers, 21px mathematics, 18px black explanations and row-by-row stacking at narrow widths.
 - Connect authored collections, stable-ID tabs and outline/Back/Next navigation; expose example labels, paired-row ordering and optional method/table editing through the existing inspector.

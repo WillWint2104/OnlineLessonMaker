@@ -1,5 +1,7 @@
 # Themed Slide Pack — author schema (Imperium Scholar · MicroHistory Archive)
 
+For the shared activity player's additive lesson-level front matter, images, learning intentions, generic curriculum mappings, concise introductions and video focus points, see [the lesson journey contract](docs/review/lesson-journey/README.md). It retains the existing `{meta, slides}` root; these capabilities are independent of theme-pack slide routing.
+
 Two self‑contained themes render their slides **natively from JSON**, reproducing the
 reference designs in `reference-templates/`:
 

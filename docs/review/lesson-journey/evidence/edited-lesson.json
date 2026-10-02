@@ -12,10 +12,10 @@
         "id": "lesson-overview",
         "kind": "overview",
         "title": "Factorising quadratics",
-        "description": "Learn to factorise quadratic expressions, starting with monic quadratics and then moving to non-monic quadratics. Build confidence with worked examples and practice questions.",
+        "description": "An edited introduction.",
         "image": {
           "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5MDAiIGhlaWdodD0iNzIwIiB2aWV3Qm94PSIwIDAgOTAwIDcyMCI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTMyIDBIMFYzMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjY2NkY2Q5IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDI9IjEiIHkyPSIxIj48c3RvcCBzdG9wLWNvbG9yPSIjZTdmNGVmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjYjdkN2NlIi8+PC9saW5lYXJHcmFkaWVudD48ZmlsdGVyIGlkPSJzaGFkb3ciPjxmZURyb3BTaGFkb3cgZHg9IjAiIGR5PSIxNiIgc3RkRGV2aWF0aW9uPSIxOCIgZmxvb2Qtb3BhY2l0eT0iLjE1Ii8+PC9maWx0ZXI+PC9kZWZzPjxyZWN0IHdpZHRoPSI5MDAiIGhlaWdodD0iNzIwIiBmaWxsPSJ1cmwoI2JnKSIvPjxjaXJjbGUgY3g9Ijc5MCIgY3k9IjEwMCIgcj0iMjAwIiBmaWxsPSIjOTJjNWI1IiBvcGFjaXR5PSIuMzUiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg5MCA4MCkgcm90YXRlKC01IDM2MCAyODApIiBmaWx0ZXI9InVybCgjc2hhZG93KSI+PHJlY3Qgd2lkdGg9IjcyMCIgaGVpZ2h0PSI1NTAiIHJ4PSIxNiIgZmlsbD0iI2ZmZmVmOSIvPjxyZWN0IHg9IjI0IiB5PSIyNCIgd2lkdGg9IjY3MiIgaGVpZ2h0PSI1MDIiIGZpbGw9InVybCgjZ3JpZCkiLz48cGF0aCBkPSJNMTAwIDI0VjUyNiIgc3Ryb2tlPSIjZGJiNGIwIi8+PHRleHQgeD0iMTQ1IiB5PSIxMDgiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjI2IiBmaWxsPSIjMDg3YzcwIj5Gcm9tIGEgc3VtIHRvIGEgcHJvZHVjdDwvdGV4dD48dGV4dCB4PSIxNDUiIHk9IjIzNSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iNjAiIGZpbGw9IiMxNTJiMzEiPnjCsiArIDd4ICsgMTI8L3RleHQ+PHBhdGggZD0iTTM4MCAyNzBWMzMwbS0xNi0xOCAxNiAxOCAxNi0xOCIgc3Ryb2tlPSIjMDg3YzcwIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz48dGV4dCB4PSIxNDAiIHk9IjQxNCIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iNTciIGZpbGw9IiMxNTJiMzEiPih4ICsgMykoeCArIDQpPC90ZXh0PjxwYXRoIGQ9Ik0xNDUgNDUwSDYxNSIgc3Ryb2tlPSIjMDg3YzcwIiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L3N2Zz4=",
-          "alt": "A squared-paper illustration showing x squared plus 7x plus 12 factorised as (x plus 3)(x plus 4)."
+          "alt": "Edited image description"
         }
       },
       {
@@ -35,7 +35,15 @@
         }
       }
     ],
-    "curriculumMappings": []
+    "curriculumMappings": [
+      {
+        "jurisdiction": "Draft jurisdiction",
+        "status": "draft"
+      }
+    ],
+    "futureOption": {
+      "kept": true
+    }
   },
   "slides": [
     {
@@ -43,7 +51,7 @@
       "id": "monic",
       "title": "Factorising monic quadratics",
       "video": {
-        "url": ""
+        "url": "https://youtu.be/dQw4w9WgXcQ"
       },
       "activities": [
         {
@@ -73,14 +81,16 @@
             }
           ],
           "introduction": {
-            "why": "Factorising can help solve quadratic equations and reveal important features of a quadratic.",
+            "why": "A concise authored reason.",
             "keyIdea": "_x_^2 + _b__x_ + _c_ = (_x_ + _m_)(_x_ + _n_), where _m_ and _n_ have product _c_ and sum _b_.",
             "method": [
               "Find two numbers with the correct product.",
               "Check their sum.",
-              "Write the factorised form."
+              "Write the factorised form.",
+              "New item"
             ],
-            "illustration": "_x_^2 + 7_x_ + 12 → (_x_ + 3)(_x_ + 4)"
+            "illustration": "_x_^2 + 7_x_ + 12 → (_x_ + 3)(_x_ + 4)",
+            "futureOption": "retained"
           }
         },
         {
@@ -89,7 +99,7 @@
           "optionalVideo": true,
           "lede": "Watch: factorising monic quadratics.",
           "focusPoints": [
-            "How to find numbers with the correct product and sum.",
+            "Watch this authored point",
             "How to write the factorisation using brackets.",
             "How to check the answer."
           ]
