@@ -2,6 +2,10 @@
 
 _Last updated: 2026-06-20_
 
+## Lesson opening and skill journey (2 October 2026)
+
+The activity player supports additive `meta.frontMatter` lesson pages and `meta.curriculumMappings`, alongside skill-owned `activity.introduction` and `activity.focusPoints`. The existing root, skill/activity IDs, response system and PR #159 worked-example component remain intact. See `docs/review/lesson-journey/README.md` for the complete mapping, editing workflow and evidence. Missing optional video URLs still remove videos from the learner sequence; the classroom lesson contains no claimed official curriculum records. Teacher video playback and authentic curriculum population remain outstanding.
+
 ## Worked-example collections (1 October 2026)
 
 The approved shared-table direction is implemented through small additions to existing examples: `solutionLayout: "paired-table"`, `tabLabel` and optional `support` with existing `steps` and visual parts. Skills can author `exampleCollections: [{id, title, members}]`; members reference stable example IDs in single-example activities. This preserves the original activity ownership and response IDs. Tabs, sidebar and Back/Next use the same authored ordering. One-member collections omit redundant tabs. The inspector edits collections, paired rows and supporting candidate tables; JSON save/reopen preserves unknown fields.
