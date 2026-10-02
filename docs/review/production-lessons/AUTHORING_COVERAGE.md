@@ -15,7 +15,9 @@ Bulk writing, initial IDs, seven example collections/members, initial graphs/tab
 | Questions | Edited a guided-practice subpart. |
 | Preview/export/reopen | Previewed, downloaded JSON, imported it again and edited the table label a second time. Exported learner HTML through the application's Export control. |
 
-The final graph screenshot shows the existing segment form after the domain correction. The separate authoring receipt records the earlier function editing session. The final canonical JSON and learner HTML contain the corrected segments; no draft is substituted for final classroom content.
+The final-graph-inspector screenshot shows the existing segment form after the domain correction. Authoring filenames are reserved for captures from actual editing operations and export/reopen, and plain validation runs never overwrite them. The final canonical JSON and learner HTML contain the corrected segments; the clearly labelled authoring exercise illustrates edits to a temporary imported copy.
+
+The initial authoring receipt was recorded against `34ce29d` before the curriculum commit; the original final-content results were recorded against `b9e6f5c`. These heads describe different evidence sessions, not conflicting claims about one checkout. The retained initial receipt is named `initial-authoring-receipt.json`. The refreshed `authoring-receipt.json` records the later exercise-only run and its source/script hashes. That exercise exports its temporary edits, then returns to the unchanged canonical lessons for final-content checks.
 
 Visual review also found that a six-column table inside a paired step inherited row styling and wrapped its cells awkwardly. The table was moved, in supported JSON, to the example's existing supporting-evidence area beside the graph, then reopened in the same table editor. This uses the current composition rather than adding application code; nested wide tables remain an authoring limitation outside this lesson's final content.
 
