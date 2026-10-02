@@ -2,6 +2,10 @@
 
 _Last updated: 2026-06-20_
 
+## Production mathematics lessons (2 October 2026)
+
+Factorising now has current source-reviewed NSW Advanced Path mappings and bounded Australian Curriculum Version 9 references. Straight lines is a second complete three-skill graph/table/equation lesson at `lessons/straight-lines.html`, editable via `lessons/straight-lines/lesson.json`. Both use the accepted PR159/160 player with no application changes. See `docs/curriculum/production-mathematics.md` for source/attribution and partial coverage, and `docs/review/production-lessons/` for authoring coverage and evidence. Empty teacher videos, tablet response references and broader curriculum population remain deferred. Earlier entries below describe their historical completion state.
+
 ## Lesson opening and skill journey (2 October 2026)
 
 The activity player supports additive `meta.frontMatter` lesson pages and `meta.curriculumMappings`, alongside skill-owned `activity.introduction` and `activity.focusPoints`. The existing root, skill/activity IDs, response system and PR #159 worked-example component remain intact. See `docs/review/lesson-journey/README.md` for the complete mapping, editing workflow and evidence. Missing optional video URLs still remove videos from the learner sequence; the classroom lesson contains no claimed official curriculum records. Teacher video playback and authentic curriculum population remain outstanding.

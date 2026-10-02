@@ -1,0 +1,252 @@
+{
+  "head": "8cead8d484febfee2b0e61985bd5bac10e1ba3b4",
+  "appSha256": "8d7dd772886c05e083c76bb5477ea903cb03f013449535c765af92176ab95a0e",
+  "checks": [
+    "Independent signed-gradient, intercept, table, endpoints and practice arithmetic",
+    "Factorising quadratics: unique navigation IDs (step IDs are scoped to examples)",
+    "Factorising quadratics: sourced, reviewed, bounded mappings",
+    "Factorising quadratics: empty optional videos",
+    "Straight lines: unique navigation IDs (step IDs are scoped to examples)",
+    "Straight lines: sourced, reviewed, bounded mappings",
+    "Straight lines: empty optional videos",
+    "Factorising changes limited to curriculum mappings",
+    "straight-lines: committed publication matches editable JSON",
+    "straight-lines: curriculum provenance, graphs, tables and IDs round-trip",
+    "straight-lines: standalone learner publication, no author controls",
+    "straight-lines: two real NSW records",
+    "straight-lines: official wording and authored mapping are labelled separately",
+    "factorising-quadratics: committed publication matches editable JSON",
+    "factorising-quadratics: curriculum provenance, graphs, tables and IDs round-trip",
+    "factorising-quadratics: standalone learner publication, no author controls",
+    "factorising-quadratics: two real NSW records",
+    "factorising-quadratics: official wording and authored mapping are labelled separately",
+    "Distinct adopted national Year 9/10 references",
+    "All six classroom figures parse with valid points, labels and objects",
+    "Two restricted-domain graphs use existing finite segments",
+    "Actual lesson table cells and complete answer-key part counts checked",
+    "No horizontal overflow worked-collection",
+    "No horizontal overflow graph-comparison",
+    "No horizontal overflow instructional-table",
+    "No horizontal overflow rule-graph",
+    "No horizontal overflow guided-practice",
+    "No horizontal overflow independent-practice",
+    "Optional method returns focus to same example",
+    "Learner destination gradient-intro",
+    "Learner destination gradient-rising",
+    "Selected example agrees with navigation gradient-rising",
+    "Learner destination gradient-signs",
+    "Selected example agrees with navigation gradient-signs",
+    "Learner destination gradient-steepness",
+    "Selected example agrees with navigation gradient-steepness",
+    "Learner destination gradient-guided",
+    "Learner destination gradient-practice",
+    "Learner destination intercept-intro",
+    "Learner destination intercept-rule",
+    "Selected example agrees with navigation intercept-rule",
+    "Learner destination intercept-table",
+    "Selected example agrees with navigation intercept-table",
+    "Learner destination intercept-guided",
+    "Learner destination intercept-practice",
+    "Learner destination rule-graph-intro",
+    "Learner destination rule-table",
+    "Selected example agrees with navigation rule-table",
+    "Learner destination rule-gradient",
+    "Selected example agrees with navigation rule-gradient",
+    "Learner destination rule-guided",
+    "Learner destination rule-practice",
+    "Next omits empty video",
+    "Next visits second collection member",
+    "Back agrees with tabs",
+    "Final practice reaches shared end state",
+    "Narrow graph has no page overflow",
+    "Unknown curriculum fields preserved through export",
+    "Curriculum strings escaped and unsafe source URL omitted",
+    "Legacy lesson without mappings/front matter opens at skill",
+    "Response policy retained paper",
+    "Response workspace follows paper",
+    "Response policy retained typed",
+    "Response workspace follows typed",
+    "Response policy retained pen",
+    "Response workspace follows pen",
+    "No browser errors",
+    "Native 200% graph/table layout without horizontal overflow"
+  ],
+  "authoring": [],
+  "captures": [
+    "straight-lines-nsw",
+    "factorising-quadratics-nsw",
+    "factorising-national",
+    "final-graph-inspector",
+    "final-table-inspector",
+    "overview",
+    "outcomes",
+    "introduction",
+    "worked-collection",
+    "worked-collection-working",
+    "graph-comparison",
+    "graph-comparison-working",
+    "instructional-table",
+    "rule-graph",
+    "rule-graph-working",
+    "guided-practice",
+    "independent-practice",
+    "optional-method",
+    "narrow-graph",
+    "narrow-graph-end",
+    "native-200",
+    "native-200-end"
+  ],
+  "errors": [],
+  "source": "8cead8d484febfee2b0e61985bd5bac10e1ba3b4",
+  "lessonSha256": {
+    "factorising-quadratics": "751db8162bcb984c89a9566100facdad659ddd8a0b39a31e09d38e575919b891",
+    "straight-lines": "6257b068cdc32adca2bb0b9e9e9af27896dc79cf884aa3052f24741871275b5d"
+  },
+  "verificationScriptSha256": "3c8106ce7423f547fa2e74164b3ed4f7ccafd025235f6ee894370c8e87af35d8",
+  "figures": [
+    {
+      "title": "A rising line: y = 2x",
+      "errors": [],
+      "curves": 1,
+      "segments": 0,
+      "points": [
+        {
+          "id": "A",
+          "x": 1,
+          "y": 2
+        },
+        {
+          "id": "B",
+          "x": 4,
+          "y": 8
+        }
+      ],
+      "domain": {
+        "xMin": -1,
+        "xMax": 5,
+        "yMin": -2,
+        "yMax": 10
+      }
+    },
+    {
+      "title": "Solid: y = −x + 3; dashed: y = 1",
+      "errors": [],
+      "curves": 2,
+      "segments": 0,
+      "points": [
+        {
+          "id": "A",
+          "x": 0,
+          "y": 3
+        },
+        {
+          "id": "B",
+          "x": 3,
+          "y": 0
+        }
+      ],
+      "domain": {
+        "xMin": -1,
+        "xMax": 5,
+        "yMin": -2,
+        "yMax": 5
+      }
+    },
+    {
+      "title": "Solid: y = 2x + 1; dashed: y = −x/2 + 1",
+      "errors": [],
+      "curves": 2,
+      "segments": 0,
+      "points": [],
+      "domain": {
+        "xMin": -3,
+        "xMax": 3,
+        "yMin": -5,
+        "yMax": 7
+      }
+    },
+    {
+      "title": "The line crosses the y-axis at (0, 3)",
+      "errors": [],
+      "curves": 1,
+      "segments": 0,
+      "points": [
+        {
+          "id": "(0, 3)",
+          "x": 0,
+          "y": 3
+        }
+      ],
+      "domain": {
+        "xMin": -2,
+        "xMax": 3,
+        "yMin": -4,
+        "yMax": 8
+      }
+    },
+    {
+      "title": "y = 2x − 1 on the authored domain −2 ≤ x ≤ 3",
+      "errors": [],
+      "curves": 0,
+      "segments": 1,
+      "points": [
+        {
+          "id": "A",
+          "x": -2,
+          "y": -5
+        },
+        {
+          "id": "B",
+          "x": 0,
+          "y": -1
+        },
+        {
+          "id": "C",
+          "x": 3,
+          "y": 5
+        }
+      ],
+      "domain": {
+        "xMin": -2,
+        "xMax": 3,
+        "yMin": -6,
+        "yMax": 6
+      }
+    },
+    {
+      "title": "y = −x/2 + 2 on −2 ≤ x ≤ 4",
+      "errors": [],
+      "curves": 0,
+      "segments": 1,
+      "points": [
+        {
+          "id": "A",
+          "x": -2,
+          "y": 3
+        },
+        {
+          "id": "B",
+          "x": 0,
+          "y": 2
+        },
+        {
+          "id": "C",
+          "x": 4,
+          "y": 0
+        }
+      ],
+      "domain": {
+        "xMin": -2,
+        "xMax": 4,
+        "yMin": -1,
+        "yMax": 4
+      }
+    }
+  ],
+  "zoom": {
+    "dpr": 2,
+    "width": 757,
+    "cssZoom": "1",
+    "overflow": false
+  }
+}

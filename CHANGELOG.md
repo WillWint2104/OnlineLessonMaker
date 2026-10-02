@@ -7,6 +7,11 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Production mathematics lessons
+- Add source-reviewed current NSW Advanced Path mappings and bounded Australian Curriculum Version 9 references to Factorising, preserving its accepted lesson content.
+- Publish a three-skill Straight lines classroom lesson with seven paired examples, labelled graphs, instructional tables, finite-domain segments and six practice activities through the existing player.
+- Document curriculum provenance, partial coverage, teacher answers and actual graphical edits/export/reopen; supply representative desktop/narrow/native-zoom captures and content/publication checks. Application code is unchanged.
+
 ### Lesson opening and skill journey
 - Add optional ordered lesson-level Overview/Outcomes pages, authored images, concise introductions, video focus points and a secondary curriculum dialog to the existing activity player.
 - Connect the same content to the graphical inspector, JSON round-trip and standalone learner export; count only visible activities and preserve PR #159's worked-example collections.

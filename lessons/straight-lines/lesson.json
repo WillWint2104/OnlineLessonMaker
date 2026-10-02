@@ -1,0 +1,935 @@
+{
+  "meta": {
+    "title": "Straight lines",
+    "theme": "neutral",
+    "id": "straight-lines-classroom",
+    "subject": "Mathematics",
+    "player": "activities",
+    "responseMode": "paper",
+    "context": "Stage 5 · Years 9–10",
+    "frontMatter": [
+      {
+        "id": "lesson-overview",
+        "kind": "overview",
+        "title": "Straight lines",
+        "description": "Read the story of a straight line: how steep it is, where it crosses the y-axis and how its rule creates a graph. Start with signed numbers and plotting coordinates."
+      },
+      {
+        "id": "lesson-outcomes",
+        "kind": "outcomes",
+        "title": "What you will learn",
+        "description": "By the end of this lesson, you should be able to:",
+        "intentions": [
+          "Calculate gradient from two points and interpret its sign.",
+          "Identify the y-intercept from a rule, table or graph.",
+          "Graph a linear rule using a table or gradient and intercept.",
+          "Check plotted points by substitution and respect a stated x-domain."
+        ]
+      }
+    ],
+    "curriculumMappings": [
+      {
+        "jurisdiction": "NSW",
+        "authority": "NSW Education Standards Authority (NESA)",
+        "curriculum": "Mathematics K–10 Syllabus (2022)",
+        "version": "2022 syllabus; Years 7–10 implementation from 2024; checked 2026-10-02",
+        "level": "Stage 5 (Years 9–10)",
+        "domain": "Linear relationships A (Core)",
+        "identifier": "MA5-LIN-C-01",
+        "wording": "OFFICIAL OUTCOME: determines the midpoint, gradient and length of an interval, and graphs linear relationships, with and without digital tools",
+        "sourceUrl": "https://curriculum.nsw.edu.au/learning-areas/mathematics/mathematics-k-10-2022/content/stage-5/fa7f703ea7",
+        "note": "LESSON MAPPING / AUTHOR INTERPRETATION: This lesson covers gradient, tables, graphing and identifying intercepts. Midpoint and distance are outside its scope; this is partial coverage. © NSW Education Standards Authority for and on behalf of the Crown in right of the State of New South Wales. Reviewed against the seven authored examples.",
+        "status": "verified",
+        "recordType": "official outcome with selected content mapping",
+        "wordingScope": "complete outcome",
+        "provenance": {
+          "accessed": "2026-10-02",
+          "implementationSource": "https://education.nsw.gov.au/teaching-and-learning/curriculum/mathematics/leading-mathematics-k-12/leading-mathematics-7-12/mathematics-7-10-syllabus-information",
+          "copyrightUrl": "https://www.nsw.gov.au/education-and-training/nesa/copyright",
+          "attribution": "© NSW Education Standards Authority for and on behalf of the Crown in right of the State of New South Wales."
+        },
+        "mappingReview": {
+          "date": "2026-10-02",
+          "reviewer": "OnlineLessonMaker author source/content review",
+          "status": "source and lesson scope checked; not authority endorsement"
+        },
+        "mappedSkillIds": [
+          "gradient",
+          "intercept",
+          "rule-graph"
+        ]
+      },
+      {
+        "jurisdiction": "NSW",
+        "authority": "NSW Education Standards Authority (NESA)",
+        "curriculum": "Mathematics K–10 Syllabus (2022)",
+        "version": "2022 syllabus; Years 7–10 implementation from 2024; checked 2026-10-02",
+        "level": "Stage 5 (Years 9–10)",
+        "domain": "Linear relationships B (Core)",
+        "identifier": "MA5-LIN-C-02",
+        "wording": "OFFICIAL OUTCOME: graphs and interprets linear relationships using the gradient/slope-intercept form",
+        "sourceUrl": "https://curriculum.nsw.edu.au/learning-areas/mathematics/mathematics-k-10-2022/content/stage-5/fa528f5a54",
+        "note": "LESSON MAPPING / AUTHOR INTERPRETATION: The three skills connect gradient, intercept and graphing in y = mx + c. Parallel/perpendicular line equations are outside this introductory lesson. © NSW Education Standards Authority for and on behalf of the Crown in right of the State of New South Wales.",
+        "status": "verified",
+        "recordType": "official outcome with selected content mapping",
+        "wordingScope": "complete outcome",
+        "provenance": {
+          "accessed": "2026-10-02",
+          "implementationSource": "https://education.nsw.gov.au/teaching-and-learning/curriculum/mathematics/leading-mathematics-k-12/leading-mathematics-7-12/mathematics-7-10-syllabus-information",
+          "copyrightUrl": "https://www.nsw.gov.au/education-and-training/nesa/copyright",
+          "attribution": "© NSW Education Standards Authority for and on behalf of the Crown in right of the State of New South Wales."
+        },
+        "mappingReview": {
+          "date": "2026-10-02",
+          "reviewer": "OnlineLessonMaker author source/content review",
+          "status": "source and lesson scope checked; not authority endorsement"
+        },
+        "mappedSkillIds": [
+          "gradient",
+          "intercept",
+          "rule-graph"
+        ]
+      }
+    ]
+  },
+  "slides": [
+    {
+      "id": "gradient",
+      "type": "skill",
+      "title": "Gradient",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "gradient-intro",
+          "title": "Introduction",
+          "lede": "Gradient measures the vertical change for each unit of horizontal change.",
+          "introduction": {
+            "why": "Gradient lets you compare rates of change and steepness.",
+            "keyIdea": "_m_ = rise/run = (change in _y_)/(change in _x_). Positive rises, negative falls, and zero is horizontal; a vertical line has undefined gradient.",
+            "method": [
+              "Choose two distinct points.",
+              "Find the changes in y and x in the same order.",
+              "Divide the change in y by the change in x."
+            ]
+          }
+        },
+        {
+          "id": "gradient-video",
+          "title": "Video",
+          "optionalVideo": true,
+          "lede": "Watch: gradient.",
+          "focusPoints": [
+            "Connect the rule with the graph.",
+            "Follow the working, then try the examples."
+          ]
+        },
+        {
+          "id": "gradient-rising",
+          "title": "A rising line",
+          "workedExamples": [
+            {
+              "id": "gradient-rising-group",
+              "type": "sequence",
+              "title": "A rising line",
+              "examples": [
+                {
+                  "id": "gradient-rising-example",
+                  "label": "A rising line",
+                  "tabLabel": "Rise and run",
+                  "prompt": "Find the gradient through A(1, 2) and B(4, 8).",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "rise",
+                      "math": "8 − 2 = 6",
+                      "text": "Find the vertical change from A to B."
+                    },
+                    {
+                      "id": "run",
+                      "math": "4 − 1 = 3",
+                      "text": "Find the change in x in the same order."
+                    },
+                    {
+                      "id": "gradient",
+                      "math": "_m_ = 6/3 = 2",
+                      "text": "Divide rise by run."
+                    }
+                  ],
+                  "answer": "_m_ = 2",
+                  "visual": [
+                    {
+                      "kind": "figure",
+                      "figure": {
+                        "type": "figure",
+                        "figure": "graph",
+                        "title": "A rising line: y = 2x",
+                        "caption": "A rising line: y = 2x",
+                        "aspect": "equal",
+                        "grid": "shown",
+                        "callouts": "shown",
+                        "curveLabels": "shown",
+                        "domain": {
+                          "xMin": -1,
+                          "xMax": 5,
+                          "yMin": -2,
+                          "yMax": 10
+                        },
+                        "objects": [
+                          {
+                            "type": "function",
+                            "f": "2x",
+                            "label": "y = 2x",
+                            "pen": "solid"
+                          },
+                          {
+                            "type": "points",
+                            "from": "table",
+                            "rows": [
+                              [
+                                "A",
+                                1,
+                                2
+                              ],
+                              [
+                                "B",
+                                4,
+                                8
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "visualPlacement": "question",
+                  "support": {
+                    "title": "Why does any pair work?",
+                    "introduction": "A straight line has a constant rate of change.",
+                    "steps": [
+                      {
+                        "id": "support-rise",
+                        "math": "(8 − 2)/(4 − 1) = 2",
+                        "text": "Use the same point order in numerator and denominator."
+                      },
+                      {
+                        "id": "support-check",
+                        "math": "(2 − 8)/(1 − 4) = 2",
+                        "text": "Reversing both changes leaves the quotient unchanged."
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gradient-signs",
+          "title": "Falling and horizontal lines",
+          "workedExamples": [
+            {
+              "id": "gradient-signs-group",
+              "type": "sequence",
+              "title": "Falling and horizontal lines",
+              "examples": [
+                {
+                  "id": "gradient-signs-example",
+                  "label": "Falling and horizontal lines",
+                  "tabLabel": "Negative and zero",
+                  "prompt": "Find the gradients of y = −x + 3 and y = 1.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "fall",
+                      "math": "_m_ = (0 − 3)/(3 − 0) = −1",
+                      "text": "The falling line drops 1 for each step right."
+                    },
+                    {
+                      "id": "flat",
+                      "math": "_m_ = (1 − 1)/(3 − 0) = 0",
+                      "text": "The horizontal line has no vertical change."
+                    }
+                  ],
+                  "answer": "The gradients are −1 and 0.",
+                  "visual": [
+                    {
+                      "kind": "figure",
+                      "figure": {
+                        "type": "figure",
+                        "figure": "graph",
+                        "title": "Solid: y = −x + 3; dashed: y = 1",
+                        "caption": "Solid: y = −x + 3; dashed: y = 1",
+                        "aspect": "equal",
+                        "grid": "shown",
+                        "callouts": "shown",
+                        "curveLabels": "shown",
+                        "domain": {
+                          "xMin": -1,
+                          "xMax": 5,
+                          "yMin": -2,
+                          "yMax": 5
+                        },
+                        "objects": [
+                          {
+                            "type": "function",
+                            "f": "-x+3",
+                            "label": "y = −x + 3",
+                            "pen": "solid"
+                          },
+                          {
+                            "type": "function",
+                            "f": "1",
+                            "label": "y = 1",
+                            "pen": "dashed"
+                          },
+                          {
+                            "type": "points",
+                            "from": "table",
+                            "rows": [
+                              [
+                                "A",
+                                0,
+                                3
+                              ],
+                              [
+                                "B",
+                                3,
+                                0
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "visualPlacement": "question"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gradient-steepness",
+          "title": "Compare steepness",
+          "workedExamples": [
+            {
+              "id": "gradient-steepness-group",
+              "type": "sequence",
+              "title": "Compare steepness",
+              "examples": [
+                {
+                  "id": "gradient-steepness-example",
+                  "label": "Compare steepness",
+                  "tabLabel": "Steepness",
+                  "prompt": "Which is steeper: y = 2x + 1 or y = −x/2 + 1?",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "read",
+                      "math": "_m_ = 2 or −1/2",
+                      "text": "Read the coefficient of x in each rule."
+                    },
+                    {
+                      "id": "compare",
+                      "math": "|2| > |−1/2|",
+                      "text": "Compare the magnitudes on equal-scale axes."
+                    }
+                  ],
+                  "answer": "y = 2x + 1 is steeper.",
+                  "visual": [
+                    {
+                      "kind": "figure",
+                      "figure": {
+                        "type": "figure",
+                        "figure": "graph",
+                        "title": "Solid: y = 2x + 1; dashed: y = −x/2 + 1",
+                        "caption": "Solid: y = 2x + 1; dashed: y = −x/2 + 1",
+                        "aspect": "equal",
+                        "grid": "shown",
+                        "callouts": "shown",
+                        "curveLabels": "shown",
+                        "domain": {
+                          "xMin": -3,
+                          "xMax": 3,
+                          "yMin": -5,
+                          "yMax": 7
+                        },
+                        "objects": [
+                          {
+                            "type": "function",
+                            "f": "2x+1",
+                            "label": "y = 2x + 1",
+                            "pen": "solid"
+                          },
+                          {
+                            "type": "function",
+                            "f": "-x/2+1",
+                            "label": "y = −x/2 + 1",
+                            "pen": "dashed"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "visualPlacement": "question"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "gradient-guided",
+          "title": "Your turn: find gradient",
+          "practiceNote": "Work in your exercise book. Show your calculations and label any graph.",
+          "questions": [
+            {
+              "id": "gradient-guided-q1",
+              "stem": "The points A(−1, 1) and B(2, 7) lie on one line. Complete the working.",
+              "parts": [
+                "Rise = 7 − 1 = ____.",
+                "Run = 2 − (−1) = ____.",
+                "Gradient = rise/run = ____. Describe whether the line rises or falls."
+              ],
+              "stack": true
+            }
+          ]
+        },
+        {
+          "id": "gradient-practice",
+          "title": "Independent practice: gradient",
+          "practiceNote": "Work in your exercise book. Show your calculations and label any graph.",
+          "questions": [
+            {
+              "id": "gradient-practice-q1",
+              "stem": "Calculate each gradient and explain its sign.",
+              "parts": [
+                "A(0, −2), B(3, 4).",
+                "A(−2, 5), B(2, −3).",
+                "A(−3, 4), B(2, 4).",
+                "Which is steeper on equal-scale axes: gradient −3 or gradient 1/2? Explain.",
+                "A(2, 1), B(2, 5): explain why the gradient is undefined."
+              ],
+              "stack": true
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "gradient-collection",
+          "title": "Worked examples",
+          "members": [
+            "gradient-rising-example",
+            "gradient-signs-example",
+            "gradient-steepness-example"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "intercept",
+      "type": "skill",
+      "title": "The y-intercept",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "intercept-intro",
+          "title": "Introduction",
+          "lede": "The y-intercept is the y-value where a line crosses the y-axis.",
+          "introduction": {
+            "why": "It gives a starting point for drawing the line.",
+            "keyIdea": "In _y_ = _m__x_ + _c_, _m_ is the gradient and _c_ is the y-intercept; the crossing point is (0, _c_).",
+            "method": [
+              "Set x = 0 or locate the y-axis.",
+              "Find the corresponding y-value.",
+              "Write the intercept and its coordinate."
+            ]
+          }
+        },
+        {
+          "id": "intercept-video",
+          "title": "Video",
+          "optionalVideo": true,
+          "lede": "Watch: the y-intercept.",
+          "focusPoints": [
+            "Connect the rule with the graph.",
+            "Follow the working, then try the examples."
+          ]
+        },
+        {
+          "id": "intercept-rule",
+          "title": "Read the y-intercept",
+          "workedExamples": [
+            {
+              "id": "intercept-rule-group",
+              "type": "sequence",
+              "title": "Read the y-intercept",
+              "examples": [
+                {
+                  "id": "intercept-rule-example",
+                  "label": "Read the y-intercept",
+                  "tabLabel": "From a rule",
+                  "prompt": "Find the y-intercept of y = −2x + 3.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "set-zero",
+                      "math": "_x_ = 0",
+                      "text": "Every point on the y-axis has x = 0."
+                    },
+                    {
+                      "id": "substitute",
+                      "math": "_y_ = −2(0) + 3 = 3",
+                      "text": "Substitute zero into the rule."
+                    }
+                  ],
+                  "answer": "The y-intercept is 3, at (0, 3).",
+                  "visual": [
+                    {
+                      "kind": "figure",
+                      "figure": {
+                        "type": "figure",
+                        "figure": "graph",
+                        "title": "The line crosses the y-axis at (0, 3)",
+                        "caption": "The line crosses the y-axis at (0, 3)",
+                        "aspect": "equal",
+                        "grid": "shown",
+                        "callouts": "shown",
+                        "curveLabels": "shown",
+                        "domain": {
+                          "xMin": -2,
+                          "xMax": 3,
+                          "yMin": -4,
+                          "yMax": 8
+                        },
+                        "objects": [
+                          {
+                            "type": "function",
+                            "f": "-2x+3",
+                            "label": "y = −2x + 3",
+                            "pen": "solid"
+                          },
+                          {
+                            "type": "points",
+                            "from": "table",
+                            "rows": [
+                              [
+                                "(0, 3)",
+                                0,
+                                3
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "visualPlacement": "question"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "intercept-table",
+          "title": "Read a rule from a table",
+          "workedExamples": [
+            {
+              "id": "intercept-table-group",
+              "type": "sequence",
+              "title": "Read a rule from a table",
+              "examples": [
+                {
+                  "id": "intercept-table-example",
+                  "label": "Read a rule from a table",
+                  "tabLabel": "From a table",
+                  "prompt": "Find the gradient, y-intercept and rule.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "difference",
+                      "math": "_m_ = (3 − 1)/(1 − 0) = 2",
+                      "text": "Use two columns to find the constant rate."
+                    },
+                    {
+                      "id": "zero",
+                      "math": "_c_ = 1",
+                      "text": "Read y from the column where x = 0."
+                    },
+                    {
+                      "id": "rule",
+                      "math": "_y_ = 2_x_ + 1",
+                      "text": "Use the gradient and y-intercept in y = mx + c."
+                    }
+                  ],
+                  "answer": "_y_ = 2_x_ + 1",
+                  "visual": [
+                    {
+                      "kind": "table",
+                      "label": "Values on one straight line",
+                      "stub": "_x_",
+                      "head": [
+                        "−1",
+                        "0",
+                        "1",
+                        "2"
+                      ],
+                      "rows": [
+                        {
+                          "label": "_y_",
+                          "cells": [
+                            "−1",
+                            "1",
+                            "3",
+                            "5"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "visualPlacement": "question"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "intercept-guided",
+          "title": "Your turn: find the intercept",
+          "practiceNote": "Work in your exercise book. Show your calculations and label any graph.",
+          "questions": [
+            {
+              "id": "intercept-guided-q1",
+              "stem": "For y = 3x − 4, complete the reasoning.",
+              "parts": [
+                "On the y-axis, x = ____.",
+                "y = 3(____) − 4 = ____.",
+                "Write the y-intercept and its coordinate."
+              ],
+              "stack": true
+            }
+          ]
+        },
+        {
+          "id": "intercept-practice",
+          "title": "Independent practice: y-intercept",
+          "practiceNote": "Work in your exercise book. Show your calculations and label any graph.",
+          "questions": [
+            {
+              "id": "intercept-practice-q1",
+              "stem": "Find the y-intercept and write its coordinate.",
+              "parts": [
+                "y = 2x + 5.",
+                "y = −3x − 2.",
+                "y = x/2.",
+                "y = 4: state both gradient and y-intercept.",
+                "A line has gradient −2 and y-intercept 1. Write its rule."
+              ],
+              "stack": true
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "intercept-collection",
+          "title": "Worked examples",
+          "members": [
+            "intercept-rule-example",
+            "intercept-table-example"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rule-graph",
+      "type": "skill",
+      "title": "From rule to graph",
+      "video": {
+        "url": ""
+      },
+      "activities": [
+        {
+          "id": "rule-graph-intro",
+          "title": "Introduction",
+          "lede": "A rule gives every point on a straight line; two distinct points determine it.",
+          "introduction": {
+            "why": "A graph makes a constant rate of change visible.",
+            "keyIdea": "Use a table, or start at (0, _c_) and move using _m_. Choose equal-scale axes and respect the stated x-domain.",
+            "method": [
+              "Read the gradient and intercept.",
+              "Calculate useful points within the domain.",
+              "Plot and join them, then check another point."
+            ]
+          }
+        },
+        {
+          "id": "rule-graph-video",
+          "title": "Video",
+          "optionalVideo": true,
+          "lede": "Watch: from rule to graph.",
+          "focusPoints": [
+            "Connect the rule with the graph.",
+            "Follow the working, then try the examples."
+          ]
+        },
+        {
+          "id": "rule-table",
+          "title": "Plot from a table",
+          "workedExamples": [
+            {
+              "id": "rule-table-group",
+              "type": "sequence",
+              "title": "Plot from a table",
+              "examples": [
+                {
+                  "id": "rule-table-example",
+                  "label": "Plot from a table",
+                  "tabLabel": "Table to graph",
+                  "prompt": "Draw y = 2x − 1 for −2 ≤ x ≤ 3.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "values",
+                      "math": "_x_ = −2: _y_ = 2(−2) − 1 = −5",
+                      "text": "Substitute each chosen x-value."
+                    },
+                    {
+                      "id": "plot",
+                      "math": "(−2, −5), (0, −1), (3, 5)",
+                      "text": "Plot the pairs on equal-scale axes."
+                    },
+                    {
+                      "id": "join",
+                      "math": "−2 ≤ _x_ ≤ 3",
+                      "text": "Join the points only across the stated domain."
+                    }
+                  ],
+                  "answer": "A straight segment from (−2, −5) to (3, 5).",
+                  "visual": [
+                    {
+                      "kind": "figure",
+                      "figure": {
+                        "type": "figure",
+                        "figure": "graph",
+                        "title": "y = 2x − 1 on the authored domain −2 ≤ x ≤ 3",
+                        "caption": "y = 2x − 1 on the authored domain −2 ≤ x ≤ 3",
+                        "aspect": "equal",
+                        "grid": "shown",
+                        "callouts": "shown",
+                        "curveLabels": "shown",
+                        "domain": {
+                          "xMin": -2,
+                          "xMax": 3,
+                          "yMin": "-6",
+                          "yMax": 6
+                        },
+                        "objects": [
+                          {
+                            "type": "points",
+                            "from": "table",
+                            "rows": [
+                              [
+                                "A",
+                                -2,
+                                -5
+                              ],
+                              [
+                                "B",
+                                0,
+                                -1
+                              ],
+                              [
+                                "C",
+                                3,
+                                5
+                              ]
+                            ]
+                          },
+                          {
+                            "type": "segment",
+                            "between": [
+                              "A",
+                              "C"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "kind": "table",
+                      "label": "Checked table of values for y = 2x − 1",
+                      "stub": "_x_",
+                      "head": [
+                        "−2",
+                        "−1",
+                        "0",
+                        "1",
+                        "2",
+                        "3"
+                      ],
+                      "rows": [
+                        {
+                          "label": "_y_",
+                          "cells": [
+                            "−5",
+                            "−3",
+                            "−1",
+                            "1",
+                            "3",
+                            "5"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "visualPlacement": "question"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rule-gradient",
+          "title": "Plot from gradient and intercept",
+          "workedExamples": [
+            {
+              "id": "rule-gradient-group",
+              "type": "sequence",
+              "title": "Plot from gradient and intercept",
+              "examples": [
+                {
+                  "id": "rule-gradient-example",
+                  "label": "Plot from gradient and intercept",
+                  "tabLabel": "Intercept and slope",
+                  "prompt": "Draw y = −x/2 + 2 for −2 ≤ x ≤ 4.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "read",
+                      "math": "_m_ = −1/2, _c_ = 2",
+                      "text": "Start at the y-intercept (0, 2)."
+                    },
+                    {
+                      "id": "move",
+                      "math": "(0, 2) → (2, 1) → (4, 0)",
+                      "text": "Move right 2 and down 1 each time."
+                    },
+                    {
+                      "id": "domain",
+                      "math": "(−2, 3) to (4, 0)",
+                      "text": "Extend left to the domain endpoint and join the points."
+                    }
+                  ],
+                  "answer": "A straight segment from (−2, 3) to (4, 0).",
+                  "visual": [
+                    {
+                      "kind": "figure",
+                      "figure": {
+                        "type": "figure",
+                        "figure": "graph",
+                        "title": "y = −x/2 + 2 on −2 ≤ x ≤ 4",
+                        "caption": "y = −x/2 + 2 on −2 ≤ x ≤ 4",
+                        "aspect": "equal",
+                        "grid": "shown",
+                        "callouts": "shown",
+                        "curveLabels": "shown",
+                        "domain": {
+                          "xMin": -2,
+                          "xMax": 4,
+                          "yMin": -1,
+                          "yMax": 4
+                        },
+                        "objects": [
+                          {
+                            "type": "points",
+                            "from": "table",
+                            "rows": [
+                              [
+                                "A",
+                                -2,
+                                3
+                              ],
+                              [
+                                "B",
+                                0,
+                                2
+                              ],
+                              [
+                                "C",
+                                4,
+                                0
+                              ]
+                            ]
+                          },
+                          {
+                            "type": "segment",
+                            "between": [
+                              "A",
+                              "C"
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "visualPlacement": "question"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rule-guided",
+          "title": "Your turn: build a graph",
+          "practiceNote": "Work in your exercise book. Show your calculations and label any graph.",
+          "questions": [
+            {
+              "id": "rule-guided-q1",
+              "stem": "Draw y = x + 2 for −2 ≤ x ≤ 2.",
+              "parts": [
+                "Complete a table for x = −2, 0, 2.",
+                "Plot the three pairs on equal-scale axes and join them across the stated domain.",
+                "State the gradient and y-intercept."
+              ],
+              "stack": true
+            }
+          ]
+        },
+        {
+          "id": "rule-practice",
+          "title": "Independent practice: straight-line graphs",
+          "practiceNote": "Work in your exercise book. Show your calculations and label any graph.",
+          "questions": [
+            {
+              "id": "rule-practice-q1",
+              "stem": "Draw each graph in your book using equal-scale axes. Label the rule and domain endpoints.",
+              "parts": [
+                "y = −x + 1 for −2 ≤ x ≤ 3.",
+                "y = x/2 − 1 for −4 ≤ x ≤ 4.",
+                "y = 3 for −2 ≤ x ≤ 2.",
+                "Does (2, 3) lie on y = 2x − 1? Check by substitution.",
+                "A line passes through (0, −2) and (3, 4). Find its rule and sketch it for 0 ≤ x ≤ 3."
+              ],
+              "stack": true
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "rule-graph-collection",
+          "title": "Worked examples",
+          "members": [
+            "rule-table-example",
+            "rule-gradient-example"
+          ]
+        }
+      ]
+    }
+  ]
+}
