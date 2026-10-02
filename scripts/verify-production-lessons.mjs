@@ -3,6 +3,7 @@ import fs from 'node:fs';import path from 'node:path';import os from 'node:os';i
 const out=process.env.PRODUCTION_OUT||'review-delivery/production-lessons';fs.mkdirSync(out,{recursive:true});
 const publish=process.argv.includes('--publish'),author=process.argv.includes('--author');
 const exerciseOnly=process.argv.includes('--exercise-only');assert.ok(!exerciseOnly||author,'--exercise-only requires --author');assert.ok(!exerciseOnly||!publish,'--exercise-only cannot be combined with --publish');
+assert.ok(!author||publish||exerciseOnly,'--author requires --publish or --exercise-only');
 const read=p=>JSON.parse(fs.readFileSync(p)),factor=read('lessons/factorising-quadratics/lesson.json'),linear=read('lessons/straight-lines/lesson.json');
 const report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),appSha256:createHash('sha256').update(fs.readFileSync('lesson-studio.html')).digest('hex'),checks:[],authoring:[],captures:[],errors:[]};
 report.source=execFileSync('git',['status','--porcelain','--','lessons/factorising-quadratics/lesson.json','lessons/straight-lines/lesson.json'],{encoding:'utf8'}).trim()?'working tree based on '+report.head:report.head;
