@@ -7,6 +7,11 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Shared evidence/task compositions
+- Add opt-in Evidence + task and Visual + companion question surfaces, selected by explicit content roles or an author override; preserve legacy unspecified layouts.
+- Connect composition/role controls and the existing image renderer/editor to shared example parts; preserve imported fields and content through switching, export and reopen.
+- Adopt Auto for two Straight Lines examples without changing their mathematics or solution tables; add cross-subject, responsive, native-zoom and authoring coverage to the full regression suite.
+
 ### Production mathematics lessons
 - Add source-reviewed current NSW Advanced Path mappings and bounded Australian Curriculum Version 9 references to Factorising, preserving its accepted lesson content.
 - Publish a three-skill Straight lines classroom lesson with seven paired examples, labelled graphs, instructional tables, finite-domain segments and six practice activities through the existing player.
