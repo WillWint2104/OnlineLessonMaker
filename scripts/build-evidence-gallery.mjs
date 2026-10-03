@@ -1,6 +1,6 @@
 // Assemble only evidence from a successful focused run; no rendering or application mutation.
 import fs from 'node:fs';import path from 'node:path';
-const source=process.env.EVIDENCE_OUT||'review-delivery/evidence-full/evidence-compositions',dest='docs/review/evidence-compositions';
+const root=process.env.PLAYER_REVIEW_DIR||'review-delivery/evidence-exact-head',source=process.env.EVIDENCE_OUT||root+'/evidence-compositions',dest='docs/review/evidence-compositions';
 const report=JSON.parse(fs.readFileSync(source+'/results.json'));if(report.errors.length)throw Error('Focused run contains browser errors');
 fs.mkdirSync(dest+'/screenshots',{recursive:true});fs.mkdirSync(dest+'/verification',{recursive:true});
 for(const name of report.captures)fs.copyFileSync(source+'/'+name+'.png',dest+'/screenshots/'+name+'.png');
@@ -8,7 +8,7 @@ fs.copyFileSync('tests/visual/lessons/evidence-compositions.json',dest+'/fixture
 fs.copyFileSync(source+'/authored-learner.html',dest+'/published-review.html');
 fs.copyFileSync(source+'/authored-lesson.json',dest+'/authored-lesson.json');
 fs.copyFileSync(source+'/results.json',dest+'/verification/focused-results.json');
-for(const f of ['results.json','run-info.json'])fs.copyFileSync('review-delivery/evidence-full/logs/'+f,dest+'/verification/full-'+f);
+for(const f of ['results.json','run-info.json'])fs.copyFileSync(root+'/logs/'+f,dest+'/verification/full-'+f);
 const gates=JSON.parse(fs.readFileSync(dest+'/verification/full-results.json'));if(gates.some(g=>g.status!==0))throw Error('Full regression has failed gates');
 const titles={'intercept-table-1536':'A · classroom table and task','straight-lines-selector':'Classroom author layout selector','rule-table-1536':'B · classroom graph, values and task','rule-table-1024':'Tablet · reading order','rule-table-1024-end':'Tablet · answer reachable','rule-table-390':'Narrow · primary evidence','rule-table-390-end':'Narrow · solution end','native-200':'Native 200% browser zoom','native-200-end':'Native 200% · answer reachable','review-source-1536':'A · synthetic qualitative source','review-image-1536':'B · synthetic science image and measurements','author-selector':'Edited graph/table/task in inspector','author-image':'Existing image editor','reopened-edit':'Fresh JSON reopen and further edit','legacy-factorising':'Legacy Factorising unchanged'};
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

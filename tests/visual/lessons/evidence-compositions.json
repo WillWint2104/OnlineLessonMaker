@@ -83,7 +83,7 @@
         },
         {
           "id": "review-source",
-          "title": "Worked examples",
+          "title": "Read a viewpoint",
           "workedExamples": [
             {
               "id": "review-source-group",
@@ -239,7 +239,7 @@
         },
         {
           "id": "review-image",
-          "title": "Worked examples",
+          "title": "Compare the seedlings",
           "workedExamples": [
             {
               "id": "review-image-group",
@@ -300,6 +300,22 @@
                 }
               ]
             }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "review-source-collection",
+          "title": "Worked examples",
+          "members": [
+            "review-source-example"
+          ]
+        },
+        {
+          "id": "review-image-collection",
+          "title": "Worked examples",
+          "members": [
+            "review-image-example"
           ]
         }
       ]
