@@ -1,8 +1,8 @@
 {
-  "head": "184187b8ca6e65053bc8163f0a52a165e08620ba",
-  "appSha256": "ca3fe25775cd4efeee7b79bde79d9a3d07b449dce83c4f57dd7411abccc35717",
+  "head": "66b6e90fe476e7551f88bc0f979e782b01b6f89a",
+  "appSha256": "a480cc7285bfddbc42ab7f67f610b07b29ce7a57aee789d049a55d41cb1c8b22",
   "checks": [
-    "Semantic selection auto-B: Auto: one primary visual and an explicit companion in the same example.",
+    "Semantic selection auto-B: Auto: one populated primary visual and an explicit companion in the same example.",
     "Semantic selection auto-A: Auto: evidence and task; no eligible explicit visual/companion relationship.",
     "Semantic selection no-relationship: Auto: evidence and task; no eligible explicit visual/companion relationship.",
     "Semantic selection outside-owner: Auto: evidence and task; no eligible explicit visual/companion relationship.",
@@ -17,6 +17,10 @@
     "Selection is read-only",
     "Manual B with missing optional companion has one task and no empty companion panel",
     "New compatible examples default to Auto",
+    "Auto counts populated evidence while retaining empty primary and labelled companion parts",
+    "Both labels and placeholders remain visible in paired-table",
+    "Both labels and placeholders remain visible in annotated",
+    "Eligibility and composed rendering preserve the full authored payload",
     "Inspector visual-companion updates preview without payload/response loss",
     "Inspector evidence-task updates preview without payload/response loss",
     "Inspector auto updates preview without payload/response loss",
@@ -42,6 +46,7 @@
     "Unspecified legacy example keeps existing layout and paired solution",
     "Native 200% browser zoom without CSS zoom or overflow",
     "Native zoom stacks evidence in authored reading order",
+    "Owned native-zoom profile removed after context closes",
     "No browser errors"
   ],
   "captures": [
@@ -110,7 +115,7 @@
     {
       "name": "auto-B",
       "layout": "visual-companion",
-      "reason": "Auto: one primary visual and an explicit companion in the same example."
+      "reason": "Auto: one populated primary visual and an explicit companion in the same example."
     },
     {
       "name": "auto-A",
