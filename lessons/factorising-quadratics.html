@@ -4288,6 +4288,31 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
  .mx-solution-table .mx-row-repeat{padding-top:0;}
 }
 @media(max-width:800px){.mx-example-question{display:block;padding:16px;}.mx-support-open{margin-top:14px;}.mx-example-question h2{font-size:26px;}.mx-solution-table th,.mx-solution-table td{padding-left:10px;padding-right:10px;}}
+/* Opt-in evidence composition. Content roles select the layout; available width only stacks it. */
+.mx-composed-example{display:block!important;}
+.mx-composed-question{display:block;container-type:inline-size;padding:20px;color:#000;}
+.mx-evidence-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:24px;align-items:start;}
+.mx-evidence-primary,.mx-evidence-right{min-width:0;}
+.mx-evidence-primary{padding-right:24px;border-right:1px solid #cbdfe5;}
+.mx-evidence-stage{display:flex;flex-direction:column;align-items:flex-start;gap:12px;}
+.mx-evidence-stage>.mx-part{max-width:100%;min-width:0;margin:0;}
+.mx-evidence-right{display:flex;flex-direction:column;gap:16px;}
+.mx-evidence-panel{min-width:0;padding:18px 20px;background:#ffffffa8;border-radius:7px;}
+.mx-evidence-panel h3,.mx-evidence-panel h4{margin:0 0 12px;font:600 18px/1.4 var(--mx-ui);color:#184e5a;}
+.mx-composed-question .mx-wexqb,.mx-composed-question .mx-repprose{font:400 18px/1.55 var(--mx-ui);color:#000;}
+.mx-composed-question .mx-part[data-mx-part="figure"]{width:100%;max-width:440px;aspect-ratio:1;height:auto;min-height:0;}
+.mx-composed-question .mx-part[data-mx-part="image"]{width:100%;max-width:440px;}
+.mx-composed-question .tp-imgf{width:100%;margin:0;}
+.mx-composed-question .tp-imgf img,.mx-composed-question .tp-int-img{display:block;max-width:100%;width:auto;max-height:440px;object-fit:contain;}
+.mx-composed-question .mx-parth{font-size:16px;color:#000;}
+.mx-composed-question .mx-tbl{width:auto;max-width:100%;font-size:18px;}
+.mx-composed-question .mx-tbl th,.mx-composed-question .mx-tbl td{min-width:0;padding:8px 14px;font-size:18px;}
+.mx-composed-question .mx-tblwrap{margin:0;}
+.mx-composed-question .mx-support-open{margin-top:16px;}
+@container(max-width:760px){
+ .mx-evidence-grid{grid-template-columns:minmax(0,1fr);gap:18px;}
+ .mx-evidence-primary{padding:0 0 18px;border-right:0;border-bottom:1px solid #cbdfe5;}
+}
 </style>
 </head>
 <body class="study">
@@ -6454,7 +6479,10 @@ function blockKcForm(i,b,sel,base){   // lean knowledgeCheck block (question + o
    (modal/zoom/tooltip/reveal — NOT goToPage) with payload fields conditional on the chosen effect; the effect
    select carries data-reinspect so switching it re-renders the payload fields. Reuses inSel/inT/inA + the
    base-aware repeatGroup (full-path add/del). */
-function blockImageForm(i,b,sel,base){
+function blockImageForm(i,b,sel,base,evidenceOnly=false){
+  if(evidenceOnly)return ig('src',sel,inT('Image URL / data URI',`${base}.src`,b.src))
+    +ig('alt',sel,inT('Alt text (accessibility)',`${base}.alt`,b.alt))
+    +ig('caption',sel,inT('Caption (optional)',`${base}.caption`,b.caption));
   const its=Array.isArray(b.interactions)?b.interactions:[];
   its.forEach(it=>{ if(it&&typeof it==='object'&&!it.payload) it.payload={}; });   // ensure payload exists so its dot-path fields bind (setP doesn't create intermediates); edit-only, render-invariant
   const EFFECTS=[['modal','Window (modal)'],['zoom','Zoom image'],['tooltip','Tooltip'],['reveal','Click to reveal']];
@@ -6610,13 +6638,13 @@ const MX_PAGE_SEED={
   workedExamples:{ type:'workedExamples', navLabel:'Worked examples', title:'Worked examples',
     lede:'What this page shows.',
     groups:[{ id:'g1', type:'sequence', title:'First subtopic', lede:'Why these examples, in this order.',
-      examples:[{ id:'ex1', label:'First example', prompt:'State the question.',
+      examples:[{ id:'ex1', label:'First example', prompt:'State the question.', questionComposition:'auto',
         steps:[{ id:'s1', text:'Describe the first move.', math:'_y_ = _x_^2' }],
         answer:'State the result.' }] }] },
 };
 /* THE COMPANION VOCABULARY an author may add anywhere a part can live. `figure` is deliberately absent:
    one graph per group, found the way the renderer finds it, with its own row and its own object editor. */
-const MX_PART_KINDS=['prose','relations','points','table'];
+const MX_PART_KINDS=['prose','relations','points','table','image'];
 /* offered only where the page family that renders it is actually registered for this theme */
 function mxAuthorablePages(){ if(LESSON.meta&&LESSON.meta.player==='activities') return ['skill']; const t=(LESSON.meta&&LESSON.meta.theme)||'', byTheme=PAGES[t]||{};
   return Object.keys(MX_PAGE_SEED).filter(k=>byTheme[k]&&byTheme[k].layoutMode==='responsive'); }
@@ -6687,7 +6715,7 @@ function mxPartsArr(owner,key){
    one row whose `cells` is already the width of `head` — because every mutation below preserves that and
    setP cannot create a missing level. */
 function mxPartSeed(kind){
-  return {prose:{kind:'prose',body:'What this shows.'},
+  return {prose:{kind:'prose',body:'What this shows.'},image:{kind:'image',src:'',alt:'',caption:'',placement:'contained'},
     relations:{kind:'relations',label:'What to notice',items:['State the first relationship.']},
     points:{kind:'points',label:'',items:['State the first point.']},
     table:{kind:'table',label:'',stub:'',head:['Column 1','Column 2'],rows:[{label:'Row 1',cells:['','']}]}}[kind]||null;
@@ -6699,6 +6727,7 @@ function mxPartLabel(pt){
   if(k==='points') return 'Points · '+((pt.items||[]).length)+' listed';
   if(k==='table') return 'Table · '+((pt.head||[]).length)+' × '+((pt.rows||[]).length);
   if(k==='figure') return 'Graph';
+  if(k==='image') return 'Image';
   return k;
 }
 function mxPartPath(H){
@@ -6887,6 +6916,7 @@ function mxGraphFields(fb,fig,objectIndex,sel){
 }
 function mxPartForm(path,pt,sel){
   const k=String((pt&&pt.kind)||'');
+  if(k==='image')return `<div class="isec"><div class="isec-h">Image · fields</div>${blockImageForm(cur,pt,sel,path,true)}</div>`;
   if(k==='table') return `<div class="isec"><div class="isec-h">Table · fields</div>${mxTableForm(path,pt,sel)}</div>`;
   if(k==='prose') return `<div class="isec"><div class="isec-h">Prose · fields</div>
     ${ig('mxp.body',sel,inMath('The paragraph',`${path}.body`,pt.body,true))}
@@ -7008,12 +7038,14 @@ function mxOutline(i,s,sel,context={}){
       const H=mxPartHost(s,S,base,groupKey); if(!H) return `<div class="ihint">That part's owner is gone — select another.</div>`;
       const pt=mxPartSlots(H.owner[H.key])[H.k];
       if(!pt) return `<div class="ihint">That part is gone — select another.</div>`;
-      return mxPartForm(mxPartPath(H),pt,sel);
+      const pp=mxPartPath(H);
+      return (S.kind==='v'?mxEvidenceRoleForm(pp,pt):'')+mxPartForm(pp,pt,sel);
     }
     const ex=(g.examples||[])[S.e]; if(!ex) return `<div class="ihint">That example is gone — select another.</div>`;
     const eb=`${gb}.examples.${S.e}`;
     if(S.kind==='e') return `<div class="isec"><div class="isec-h">Example · fields</div>
       ${inSel('Solution layout',`${eb}.solutionLayout`,ex.solutionLayout||'annotated',[['annotated','Annotated working'],['paired-table','Shared Working / Explanation table']])}
+      ${mxQuestionCompositionForm(eb,ex)}
       ${inT('Example tab label (optional)',`${eb}.tabLabel`,ex.tabLabel||'')}
       ${ig('mxe.label',sel,inMath('Example title',`${eb}.label`,ex.label))}
       ${ig('mxe.prompt',sel,inMath('Question',eb+(ex.prompt==null&&ex.question!=null?'.question':'.prompt'),ex.prompt??ex.question,true))}
@@ -7149,7 +7181,7 @@ function mxOutlineWire(i,context={}){
      in between. Measured authoring a straight-lines lesson: FINDINGS.md §4. ONE definition of "a new
      example", used by the group add and the example add alike, so the two cannot drift apart. */
   const seedStep=(n)=>({id:uid('s',n),text:'Describe this step.',math:''});
-  const seedEx=(n)=>({id:uid('ex',n),label:'New example',prompt:'State the question.',steps:[seedStep(0)],answer:''});
+  const seedEx=(n)=>({id:uid('ex',n),label:'New example',prompt:'State the question.',questionComposition:'auto',steps:[seedStep(0)],answer:''});
   ins.querySelectorAll('[data-mxadd]').forEach(b=>b.onclick=()=>{
     const a=b.dataset.mxadd.split('.'), G=groups();
     if(a[0]==='g'){ G.push({id:uid('g',G.length),type:'sequence',title:'New subtopic',examples:[seedEx(0)]}); selZone=`mx.g.${G.length-1}`; }
@@ -10162,6 +10194,7 @@ function mxPart(part,key){
      slot then letterboxes — the drawing shrinks into the middle instead of using the width. Declaring it
      here is what lets a composition choose the SHAPE of the slot and get more mathematical range for it. */
   else if(kind==='table') body=mxPartTable(part);
+  else if(kind==='image') body=fragImage(part,'mximage-'+String(key));
   else if(kind==='points') body=mxPartPoints(part);
   else if(kind==='relations') body=mxPartRelations(part);
   else if(kind==='prose') body=`<div class="mx-repprose">${mxM(part.body||'')}</div>`;
@@ -10171,6 +10204,58 @@ function mxPart(part,key){
 }
 function mxCompanion(parts,key){
   return (parts||[]).map((p,k)=>mxPart(p,key+'-'+k)).join('');
+}
+/* Roles are scoped by the existing example.visual ownership, not inferred from shape or topic.
+   Unspecified/unknown composition values stay legacy. Resolving never writes to imported data. */
+function mxEvidenceHasContent(p){
+  if(!p||typeof p!=='object')return false;
+  if(p.kind==='figure')return !!p.figure&&Array.isArray(p.figure.objects)&&p.figure.objects.length>0;
+  if(p.kind==='image')return !!(p.src||p.a?.src||p.b?.src);
+  if(p.kind==='table')return !!(p.head?.length||p.rows?.length);
+  if(p.kind==='prose')return !!String(p.body||'').trim();
+  if(p.kind==='points'||p.kind==='relations')return !!p.items?.length;
+  return false;
+}
+function mxEvidencePlan(ex,parts=mxParts(ex.visual),prompt=ex.prompt||ex.question){
+  const requested=ex.questionComposition;
+  if(!['auto','evidence-task','visual-companion'].includes(requested))return {layout:'legacy',reason:'Existing placement: no supported composition was authored.'};
+  if(!prompt||!parts.length)return {layout:'legacy',reason:'Normal content: evidence and a task are both required.'};
+  const companions=parts.filter(p=>p.role==='companion');
+  const primary=parts.filter(p=>p.role!=='companion');
+  const contentPrimary=primary.filter(mxEvidenceHasContent),contentCompanions=companions.filter(mxEvidenceHasContent);
+  if(!primary.length)return {layout:'legacy',reason:'Normal content: no primary evidence is authored.'};
+  const eligible=contentPrimary.length===1&&['figure','image'].includes(contentPrimary[0].kind)&&contentCompanions.length>0;
+  const layout=requested==='auto'?(eligible?'visual-companion':'evidence-task'):requested;
+  return {layout,primary:layout==='evidence-task'?parts:primary,companions:layout==='visual-companion'?companions:[],
+    reason:requested!=='auto'?'Manual choice: '+(layout==='evidence-task'?'Evidence + task.':'Visual + companion.'):
+      eligible?'Auto: one populated primary visual and an explicit companion in the same example.':'Auto: evidence and task; no eligible explicit visual/companion relationship.'};
+}
+function mxQuestionCompositionForm(base,ex){
+  const options=[['auto','Auto'],['evidence-task','Evidence + task'],['visual-companion','Visual + companion']];
+  const value=ex.questionComposition??'';
+  if(!options.some(([v])=>v===value))options.unshift([value,value?'Imported value: '+value:'Existing placement (legacy)']);
+  return inSel('Evidence / task layout',base+'.questionComposition',value,options,'data-reinspect')
+    +`<p class="ihint">${esc(mxEvidencePlan(ex).reason)} Evidence roles belong to this example; layout changes keep its content and IDs.</p>`;
+}
+function mxEvidenceRoleForm(base,part){
+  const options=[['','Unassigned'],['primary','Primary evidence'],['companion','Companion to this example']],value=part.role??'';
+  if(!options.some(([v])=>v===value))options.push([value,'Imported role: '+value]);
+  return `<div class="isec"><div class="isec-h">Evidence relationship</div>${inSel('Role in this example',base+'.role',value,options,'data-reinspect')}</div>`;
+}
+function mxExampleOrdinal(ex,k){
+  const s=LESSON.slides[cur],activity=lpEnabled(s)?lpCurrent(s):null,collection=activity&&lpCollection(s,activity);
+  const members=collection?lpCollectionMembers(s,collection):[],at=members.findIndex(x=>x.ex===ex);
+  return at>=0?at+1:k+1;
+}
+function mxEvidenceQuestion(ex,k,parts,prompt,headings={}){
+  const plan=mxEvidencePlan(ex,parts,prompt);if(plan.layout==='legacy')return '';
+  const partKey=p=>'evidence-'+(ex.id||k)+'-'+(p.id||parts.indexOf(p));
+  const primary=plan.primary.map(p=>mxPart(p,partKey(p))).join('');
+  const companion=plan.companions.length?`<section class="mx-evidence-panel" data-evidence-zone="companion" aria-label="Supporting evidence">${plan.companions.map(p=>mxPart(p,partKey(p))).join('')}</section>`:'';
+  const titleTag=headings.titleTag==='h3'?'h3':'h2',taskTag=headings.taskTag==='h4'?'h4':'h3';
+  return `<header class="mx-example-question mx-composed-question" data-question-composition="${esc(plan.layout)}" data-composition-reason="${esc(plan.reason)}">
+    <div class="mx-evidence-grid"><div class="mx-evidence-primary" data-evidence-zone="primary"><div class="mx-example-number">Example ${mxExampleOrdinal(ex,k)}</div>${headings.omitTitle?'':`<${titleTag} data-mx-region="title">${mxM(ex.label||'Worked example')}</${titleTag}>`}<div class="mx-evidence-stage">${primary}</div>${mxSupportButton(ex)}</div>
+      <div class="mx-evidence-right">${companion}<section class="mx-evidence-panel" data-evidence-zone="task" data-mx-region="question" data-mx-sec="question" aria-label="Your task"><${taskTag}${headings.annotated?' class="mx-wexlab"':''}>Your task</${taskTag}><div class="mx-wexqb">${mxM(prompt)}</div></section></div></div></header>`;
 }
 /* The Notes examples. `examples[]` is the one structure — the same field name the worked-example page
    uses — so there are not two parallel ideas of "an example" in the JSON. */
@@ -10294,35 +10379,39 @@ function mxWexEx(ex,k,state,extra){
   const show=x=>!state||state.show.indexOf(x)>=0;
   const ask=!!(q&&show('question'));
   const companion=mxParts(ex.visual);
-  const questionEvidence=ask&&ex.visualPlacement==='question'?(extra||''):'';
-  if(questionEvidence)extra='';
-  const tableWorking=lpEnabled(LESSON.slides[cur])&&extra&&companion.length&&companion.every(part=>part.kind==='table');
   const activity=lpEnabled(LESSON.slides[cur])&&lpCurrent(LESSON.slides[cur]);
   const sameTitle=activity&&lpSingleExample(activity)===ex&&String(ex.label||'').trim()===String(activity.title||'').trim();
   const heading=sameTitle?'h3':'h4';
+  const composed=ask&&extra?mxEvidenceQuestion(ex,k,companion,q,{titleTag:'h3',taskTag:heading,omitTitle:sameTitle,annotated:true}):'';
+  if(composed)extra='';
+  const questionEvidence=ask&&ex.visualPlacement==='question'?(extra||''):'';
+  if(questionEvidence)extra='';
+  const tableWorking=lpEnabled(LESSON.slides[cur])&&extra&&companion.length&&companion.every(part=>part.kind==='table');
   const steps=show('steps')?`<section class="mx-wexsec" data-mx-sec="steps"><${heading} class="mx-wexlab">Worked solution</${heading}>${mxWexSteps(ex,state&&state.steps,!!activity)}</section>`:'';
   const answer=(a&&show('answer'))?`<div class="mx-wexres" data-mx-region="answer" data-mx-sec="answer"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span><span class="mx-wexrv">${mxM(a)}</span></div>`:'';
-  return `<article class="mx-wexex" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${ask?'':' data-mx-form="solo"'}>
-    ${sameTitle?'':`<h3 class="mx-wexh" data-mx-region="title">${mxM(String(ex.label||('Example '+(k+1))))}</h3>`}
-    ${ask?`<div class="mx-wexask" data-mx-region="question" data-mx-sec="question"><${heading} class="mx-wexlab">Question</${heading}>
+  return `<article class="mx-wexex${composed?' mx-composed-example':''}" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${ask?'':' data-mx-form="solo"'}>
+    ${composed||''}${composed||sameTitle?'':`<h3 class="mx-wexh" data-mx-region="title">${mxM(String(ex.label||('Example '+(k+1))))}</h3>`}
+    ${ask&&!composed?`<div class="mx-wexask" data-mx-region="question" data-mx-sec="question"><${heading} class="mx-wexlab">Question</${heading}>
       ${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}
     <div class="mx-wexwork${tableWorking?' lp-table-working':''}" data-mx-region="working">
       ${tableWorking?`<div class="lp-table-reasoning">${steps}${answer}</div>${extra}`:steps+'\n      '+(extra||'')+'\n      '+answer}
-    </div>${mxSupportButton(ex)}</article>`;
+    </div>${composed?'':mxSupportButton(ex)}</article>`;
 }
 /* The same authored steps drive both halves; a row is never split into two arrays. */
 function mxSupportButton(ex){return ex.support?.steps?.length?`<button type="button" class="mx-support-open" data-mx-support="${esc(ex.id||'')}">${esc(ex.support.title||'Show method')}</button>`:'';}
 function mxPairedExample(ex,k,state,extra){
   const all=Array.isArray(ex.steps)?ex.steps:[],q=ex.prompt||ex.question||'',answer=ex.answer||ex.result;
   const show=x=>!state||state.show.includes(x),from=state?.steps?Math.max(1,state.steps[0]):1;
+  const composed=q&&show('question')&&extra?mxEvidenceQuestion(ex,k,mxParts(ex.visual),q):'';
+  if(composed)extra='';
   const steps=state?.steps?all.slice(from-1,state.steps[1]):all,questionEvidence=q&&show('question')&&ex.visualPlacement==='question'?(extra||''):'';
   if(questionEvidence)extra='';
   const activity=lpEnabled(LESSON.slides[cur])?lpCurrent(LESSON.slides[cur]):null;
   const collection=activity&&lpCollection(LESSON.slides[cur],activity),members=collection?lpCollectionMembers(LESSON.slides[cur],collection):[];
   const number=members.length?members.findIndex(x=>x.ex===ex)+1:k+1;
   return `<article class="mx-wexex mx-worked-example" data-mx-example="${esc(ex.id||'')}" aria-label="${esc(mxPlain(ex.label||'Worked example'))}">
-    <header class="mx-example-question"><div><div class="mx-example-number">Example ${number}</div><h2 data-mx-region="title">${mxM(ex.label||'Worked example')}</h2>${q&&show('question')?`<div data-mx-region="question" data-mx-sec="question">${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}</div>
-      ${mxSupportButton(ex)}</header>
+    ${composed||`<header class="mx-example-question"><div><div class="mx-example-number">Example ${number}</div><h2 data-mx-region="title">${mxM(ex.label||'Worked example')}</h2>${q&&show('question')?`<div data-mx-region="question" data-mx-sec="question">${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}</div>
+      ${mxSupportButton(ex)}</header>`}
     <section data-mx-region="working" class="mx-solution">${show('steps')?`<table class="mx-solution-table" data-mx-sec="steps"><thead><tr><th scope="col">No.</th><th scope="col">Working</th><th scope="col">No.</th><th scope="col">Explanation</th></tr></thead><tbody>
       ${steps.map((st,j)=>{const o=st&&typeof st==='object'?st:{text:st};return `<tr class="mx-step" data-mx-step="${esc(o.id||'s'+(j+from))}"><td class="mx-row-number">${j+from}</td><td class="mx-stepm">${mxWorking(o.math||'')}</td><td class="mx-row-number mx-row-repeat">${j+from}</td><td class="mx-annotation"><div class="mx-stept">${mxM(o.text||'')}</div>${o.note?`<div class="mx-stepn">${mxM(o.note)}</div>`:''}${mxParts(o.visual).length?mxCompanion(mxParts(o.visual),'paired-'+esc(ex.id||k)+'-'+j):''}</td></tr>`;}).join('')}
     </tbody></table>`:''}${extra||''}${answer&&show('answer')?`<div class="mx-conclusion" data-mx-region="answer" data-mx-sec="answer"><span aria-hidden="true">✓</span><span>${ex.resultLabel?esc(ex.resultLabel)+' ':''}${mxM(answer)}</span></div>`:''}</section></article>`;
@@ -10668,7 +10757,7 @@ function lpValidate(d){
   if(d.meta.responseMode&&!MX_RESPONSE_ALIAS[d.meta.responseMode]) throw Error('responseMode must be paper, typed or pen (type/write aliases supported).');
   const ids=new Set();
   function id(o,label){ if(!o||typeof o.id!=='string'||!o.id.trim()||o.id.includes(':')||Object.prototype.hasOwnProperty.call(Object.prototype,o.id)||ids.has(o.id)) throw Error(label+' needs a unique stable id without colons or reserved object keys.'); ids.add(o.id); }
-  function parts(value){mxParts(value).forEach(p=>{if(!['prose','figure','table','points','relations'].includes(p.kind))throw Error('Unsupported instructional part: '+p.kind);});}
+  function parts(value){mxParts(value).forEach(p=>{if(!['figure',...MX_PART_KINDS].includes(p.kind))throw Error('Unsupported instructional part: '+p.kind);});}
   if(d.meta.frontMatter!=null&&!Array.isArray(d.meta.frontMatter))throw Error('frontMatter must be an ordered array.');
   (d.meta.frontMatter||[]).forEach(p=>{id(p,'Lesson page');if(!['overview','outcomes'].includes(p.kind))throw Error('Unsupported lesson page kind.');if(p.image!=null&&(!p.image||typeof p.image!=='object'||Array.isArray(p.image)))throw Error('Lesson page image must be an object with src and alt.');if(p.intentions!=null&&(!Array.isArray(p.intentions)||p.intentions.some(t=>typeof t!=='string')))throw Error('Learning intentions must be text items.');});
   if(d.meta.curriculumMappings!=null&&(!Array.isArray(d.meta.curriculumMappings)||d.meta.curriculumMappings.some(r=>!r||typeof r!=='object'||Array.isArray(r))))throw Error('Curriculum mappings must be records.');
@@ -15249,6 +15338,7 @@ function mxWsFig(c){
     }catch(e){}
     return svg?`<div class="ws-mx-fig">${svg}</div>`:''; }
   if(c.kind==='table') return mxPartTable(c);
+  if(c.kind==='image')return fragImage(c,'mxws-image');
   if(c.kind==='points') return mxPartPoints(c);
   if(c.kind==='relations') return mxPartRelations(c);
   if(c.kind==='prose') return `<div class="ws-mx-prose">${mxM(c.body||'')}</div>`;

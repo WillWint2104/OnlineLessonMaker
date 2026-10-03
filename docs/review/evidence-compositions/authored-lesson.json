@@ -1,0 +1,334 @@
+{
+  "meta": {
+    "title": "Evidence compositions — synthetic review",
+    "theme": "neutral",
+    "id": "evidence-composition-review",
+    "subject": "Cross-subject review fixtures",
+    "player": "activities",
+    "responseMode": "paper",
+    "colors": {
+      "accent": "#365d63"
+    }
+  },
+  "slides": [
+    {
+      "id": "evidence-review-skill",
+      "type": "skill",
+      "title": "Evidence and task",
+      "activities": [
+        {
+          "id": "intercept-table",
+          "title": "Read a rule from a table",
+          "workedExamples": [
+            {
+              "id": "intercept-table-group",
+              "type": "sequence",
+              "title": "Read a rule from a table",
+              "examples": [
+                {
+                  "id": "intercept-table-example",
+                  "label": "Read a rule from a table",
+                  "tabLabel": "From a table",
+                  "prompt": "Find the gradient, y-intercept and rule.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "difference",
+                      "math": "_m_ = (3 − 1)/(1 − 0) = 2",
+                      "text": "Use two columns to find the constant rate."
+                    },
+                    {
+                      "id": "zero",
+                      "math": "_c_ = 1",
+                      "text": "Read y from the column where x = 0."
+                    },
+                    {
+                      "id": "rule",
+                      "math": "_y_ = 2_x_ + 1",
+                      "text": "Use the gradient and y-intercept in y = mx + c."
+                    }
+                  ],
+                  "answer": "_y_ = 2_x_ + 1",
+                  "visual": [
+                    {
+                      "kind": "table",
+                      "label": "Values on one straight line",
+                      "stub": "_x_",
+                      "head": [
+                        "−1",
+                        "0",
+                        "1",
+                        "2"
+                      ],
+                      "rows": [
+                        {
+                          "label": "_y_",
+                          "cells": [
+                            "−1",
+                            "1",
+                            "3",
+                            "5"
+                          ]
+                        }
+                      ],
+                      "role": "primary"
+                    }
+                  ],
+                  "visualPlacement": "question",
+                  "questionComposition": "auto"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "review-source",
+          "title": "Read a viewpoint",
+          "workedExamples": [
+            {
+              "id": "review-source-group",
+              "type": "standard",
+              "title": "Read a viewpoint",
+              "examples": [
+                {
+                  "id": "review-source-example",
+                  "label": "Read a viewpoint",
+                  "prompt": "What does this account suggest about the writer’s priorities? Cite one phrase.",
+                  "questionComposition": "auto",
+                  "solutionLayout": "paired-table",
+                  "visual": [
+                    {
+                      "kind": "prose",
+                      "role": "primary",
+                      "label": "Synthetic diary source — review material",
+                      "body": "We reached the station before dawn. I counted the crates twice, but nobody asked whether the workers had eaten."
+                    }
+                  ],
+                  "visualPlacement": "question",
+                  "steps": [
+                    {
+                      "id": "source-reason",
+                      "math": "“nobody asked whether the workers had eaten”",
+                      "text": "The writer contrasts counting supplies with concern for the workers."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "rule-table",
+          "title": "Plot from a table",
+          "workedExamples": [
+            {
+              "id": "rule-table-group",
+              "type": "sequence",
+              "title": "Plot from a table",
+              "examples": [
+                {
+                  "id": "rule-table-example",
+                  "label": "Plot from a table",
+                  "tabLabel": "Table to graph",
+                  "prompt": "Draw y = 2x − 1 for −2 ≤ x ≤ 3. Read the plotted coordinates.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "values",
+                      "math": "_x_ = −2: _y_ = 2(−2) − 1 = −5",
+                      "text": "Substitute each chosen x-value."
+                    },
+                    {
+                      "id": "plot",
+                      "math": "(−2, −5), (0, −1), (3, 5)",
+                      "text": "Plot the pairs on equal-scale axes."
+                    },
+                    {
+                      "id": "join",
+                      "math": "−2 ≤ _x_ ≤ 3",
+                      "text": "Join the points only across the stated domain."
+                    }
+                  ],
+                  "answer": "A straight segment from (−2, −5) to (3, 5).",
+                  "visual": {
+                    "parts": [
+                      null,
+                      {
+                        "kind": "figure",
+                        "figure": {
+                          "type": "figure",
+                          "figure": "graph",
+                          "title": "y = 2x − 1 on the authored domain −2 ≤ x ≤ 3",
+                          "caption": "y = 2x − 1 on the authored domain −2 ≤ x ≤ 3",
+                          "aspect": "equal",
+                          "grid": "shown",
+                          "callouts": "shown",
+                          "curveLabels": "shown",
+                          "domain": {
+                            "xMin": -2,
+                            "xMax": "5",
+                            "yMin": "-6",
+                            "yMax": 6
+                          },
+                          "objects": [
+                            {
+                              "type": "points",
+                              "from": "table",
+                              "rows": [
+                                [
+                                  "A",
+                                  -2,
+                                  -5
+                                ],
+                                [
+                                  "B",
+                                  0,
+                                  -1
+                                ],
+                                [
+                                  "C",
+                                  3,
+                                  5
+                                ]
+                              ]
+                            },
+                            {
+                              "type": "segment",
+                              "between": [
+                                "A",
+                                "C"
+                              ]
+                            }
+                          ]
+                        },
+                        "role": "primary"
+                      },
+                      {
+                        "kind": "table",
+                        "label": "Edited supporting values",
+                        "stub": "_x_",
+                        "head": [
+                          "−2",
+                          "−1",
+                          "0",
+                          "1",
+                          "2",
+                          "3"
+                        ],
+                        "rows": [
+                          {
+                            "label": "_y_",
+                            "cells": [
+                              "−5",
+                              "−3",
+                              "−1",
+                              "1",
+                              "3",
+                              "5"
+                            ]
+                          }
+                        ],
+                        "role": "companion"
+                      }
+                    ],
+                    "futureWrapper": "preserve"
+                  },
+                  "visualPlacement": "question",
+                  "questionComposition": "auto",
+                  "futureMetadata": {
+                    "unknown": [
+                      "retain",
+                      1
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "review-image",
+          "title": "Compare the seedlings",
+          "workedExamples": [
+            {
+              "id": "review-image-group",
+              "type": "standard",
+              "title": "Compare the seedlings",
+              "examples": [
+                {
+                  "id": "review-image-example",
+                  "label": "Compare the seedlings",
+                  "prompt": "Which tray grew taller? Use the diagram and measurements to support your answer.",
+                  "questionComposition": "auto",
+                  "solutionLayout": "paired-table",
+                  "visual": [
+                    {
+                      "kind": "image",
+                      "role": "primary",
+                      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0NDAgMjgwIj48cmVjdCB3aWR0aD0iNDQwIiBoZWlnaHQ9IjI4MCIgZmlsbD0iI2ZmZiIvPjx0ZXh0IHg9IjIyMCIgeT0iMzAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjE5Ij5TZWVkbGluZ3MgYWZ0ZXIgc2V2ZW4gZGF5czwvdGV4dD48ZyBzdHJva2U9IiMzMTVmNTgiIHN0cm9rZS13aWR0aD0iNCIgZmlsbD0ibm9uZSI+PHBhdGggZD0iTTEwMCAyMjBWMTYwTTMxNSAyMjBWOTAiLz48cGF0aCBkPSJNMTAwIDE4NVE2MCAxNDUgNjUgMTgwUTgwIDIwMCAxMDAgMTg1TTEwMCAxNzVRMTQwIDEzNSAxMzUgMTcwUTEyMCAxOTAgMTAwIDE3NU0zMTUgMTQ1UTI2MCAxMDAgMjc1IDE0MFEyOTUgMTYzIDMxNSAxNDVNMzE1IDEyNVEzNzAgNzAgMzU1IDEyMFEzMzUgMTQzIDMxNSAxMjUiIGZpbGw9IiNkN2VlZTUiLz48L2c+PGcgZmlsbD0iI2U0ZWVmMCIgc3Ryb2tlPSIjMzE1ZjU4IiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik02MCAyMTBIMTQwTDEzMCAyNTBINzBaIi8+PHBhdGggZD0iTTI3NSAyMTBIMzU1TDM0NSAyNTBIMjg1WiIvPjwvZz48ZyBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwMCI+PHRleHQgeD0iMTAwIiB5PSIyNzAiPlRyYXkgQTwvdGV4dD48dGV4dCB4PSIzMTUiIHk9IjI3MCI+VHJheSBCPC90ZXh0PjwvZz48L3N2Zz4=",
+                      "placement": "contained",
+                      "alt": "Edited alternative text for synthetic seedlings.",
+                      "caption": "Synthetic science review diagram; both trays were observed after seven days."
+                    },
+                    {
+                      "kind": "table",
+                      "role": "companion",
+                      "label": "Measured growth — synthetic data",
+                      "stub": "Tray",
+                      "head": [
+                        "Starting height",
+                        "Day 7 height"
+                      ],
+                      "rows": [
+                        {
+                          "label": "A",
+                          "cells": [
+                            "2 cm",
+                            "5 cm"
+                          ]
+                        },
+                        {
+                          "label": "B",
+                          "cells": [
+                            "2 cm",
+                            "9 cm"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "visualPlacement": "question",
+                  "steps": [
+                    {
+                      "id": "growth-compare",
+                      "math": "Tray A: 5 − 2 = 3 cm\nTray B: 9 − 2 = 7 cm",
+                      "text": "Compare the increase from the same starting height."
+                    }
+                  ],
+                  "answer": ""
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "review-source-collection",
+          "title": "Worked examples",
+          "members": [
+            "review-source-example"
+          ]
+        },
+        {
+          "id": "review-image-collection",
+          "title": "Worked examples",
+          "members": [
+            "review-image-example"
+          ]
+        }
+      ]
+    }
+  ]
+}

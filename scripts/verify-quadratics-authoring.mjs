@@ -342,6 +342,14 @@ function diff(a, b, at, out) {
   }
   if (a && b && typeof a === 'object' && typeof b === 'object') {
     for (const k of new Set([...Object.keys(a), ...Object.keys(b)])) {
+      // New examples author Auto, but without example-owned evidence it resolves to legacy rendering.
+      // This narrow default equivalence never ignores a layout for an evidence-bearing example.
+      const noVisual = v => v == null || (Array.isArray(v) && v.length === 0)
+        || (v && typeof v === 'object' && Array.isArray(v.parts) && v.parts.length === 0);
+      if (k === 'questionComposition' && a[k] === 'auto' && b[k] === undefined
+          && noVisual(a.visual) && noVisual(b.visual)) {
+        note('newly authored Auto without example evidence retains legacy rendering'); continue;
+      }
       if (ID.test(k) && typeof a[k] === 'string' && typeof b[k] === 'string') { note('the editor generates its own ids'); continue; }
       if (k === 'style' && a[k] === 'dashed' && b[k] === undefined) { note('a default written out in full'); continue; }
       if (k === 'label' && b[k] !== undefined && a[k] === undefined) { note('a curve label the painter never draws'); continue; }
@@ -414,6 +422,16 @@ ok('the rebuilt lesson renders the same number of views as the committed one',
    thing the assertions above claim to police, and the same predicate has to report it. ---- */
 console.log('--- controls ---');
 const clone = (x) => JSON.parse(JSON.stringify(x));
+{
+  const visual = [{kind:'table',head:['Value'],rows:[{cells:['1']}]}], out=[];
+  diff({questionComposition:'auto',visual},{visual},'evidence-example',out);
+  ok('CONTROL: an evidence-bearing Auto layout is never ignored by the structural comparison',
+     out.length===1 && out[0].includes('questionComposition'),out.join(' · '));
+  const choices=['evidence-task','visual-companion','future-layout'];
+  ok('CONTROL: explicit and unknown layout choices are never normalised away',choices.every(value=>{
+    const errors=[];diff({questionComposition:value},{},'example',errors);return errors.length===1&&errors[0].includes('questionComposition');
+  }),choices.join(' · '));
+}
 {
   const bad = clone(built.slides[0]);
   bad.groups[0].examples[0].steps[1].math = '_y_ = -4^2';      // the brackets dropped — the whole point of that step

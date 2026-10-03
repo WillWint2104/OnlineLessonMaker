@@ -1,0 +1,217 @@
+{
+  "head": "66b6e90fe476e7551f88bc0f979e782b01b6f89a",
+  "appSha256": "a480cc7285bfddbc42ab7f67f610b07b29ce7a57aee789d049a55d41cb1c8b22",
+  "checks": [
+    "Semantic selection auto-B: Auto: one populated primary visual and an explicit companion in the same example.",
+    "Semantic selection auto-A: Auto: evidence and task; no eligible explicit visual/companion relationship.",
+    "Semantic selection no-relationship: Auto: evidence and task; no eligible explicit visual/companion relationship.",
+    "Semantic selection outside-owner: Auto: evidence and task; no eligible explicit visual/companion relationship.",
+    "Semantic selection empty-companion: Auto: evidence and task; no eligible explicit visual/companion relationship.",
+    "Semantic selection manual-A: Manual choice: Evidence + task.",
+    "Semantic selection manual-B: Manual choice: Visual + companion.",
+    "Semantic selection missing-companion: Manual choice: Visual + companion.",
+    "Semantic selection legacy: Existing placement: no supported composition was authored.",
+    "Semantic selection unknown: Existing placement: no supported composition was authored.",
+    "Semantic selection no-task: Normal content: evidence and a task are both required.",
+    "Semantic selection no-primary: Normal content: no primary evidence is authored.",
+    "Selection is read-only",
+    "Manual B with missing optional companion has one task and no empty companion panel",
+    "New compatible examples default to Auto",
+    "Auto counts populated evidence while retaining empty primary and labelled companion parts",
+    "Both labels and placeholders remain visible in paired-table",
+    "Both labels and placeholders remain visible in annotated",
+    "Eligibility and composed rendering preserve the full authored payload",
+    "Inspector visual-companion updates preview without payload/response loss",
+    "Inspector evidence-task updates preview without payload/response loss",
+    "Inspector auto updates preview without payload/response loss",
+    "Selector works with keyboard",
+    "Primary, companion, task and role edits work; reorder retains semantic relationship and raw wrapper",
+    "Existing image editor edits the primary evidence",
+    "Export, fresh reopen, further editing and standalone offline learner retain composition and unknown fields",
+    "intercept-table desktop has no page overflow",
+    "intercept-table has one task and unchanged paired rows",
+    "rule-table desktop has no page overflow",
+    "rule-table has one task and unchanged paired rows",
+    "Classroom inspector capture belongs to the same small-table example with Auto selected",
+    "Actual plotted A/B coordinates have equal horizontal and vertical pixels per unit",
+    "Authored tabs and Back/Next preserve Straight Lines collection navigation",
+    "No page overflow at 1024",
+    "Responsive DOM and visual reading order 1024",
+    "Answer reachable above footer 1024",
+    "No page overflow at 390",
+    "Responsive DOM and visual reading order 390",
+    "Answer reachable above footer 390",
+    "review-source uses shared composition without overflow",
+    "review-image uses shared composition without overflow",
+    "Unspecified legacy example keeps existing layout and paired solution",
+    "Native 200% browser zoom without CSS zoom or overflow",
+    "Native zoom stacks evidence in authored reading order",
+    "Owned native-zoom profile removed after context closes",
+    "No browser errors"
+  ],
+  "captures": [
+    "author-selector",
+    "author-image",
+    "reopened-edit",
+    "intercept-table-1536",
+    "rule-table-1536",
+    "straight-lines-selector",
+    "rule-table-1024",
+    "rule-table-1024-task",
+    "rule-table-1024-end",
+    "rule-table-390",
+    "rule-table-390-task",
+    "rule-table-390-end",
+    "review-source-1536",
+    "review-image-1536",
+    "legacy-factorising",
+    "native-200",
+    "native-200-end"
+  ],
+  "metrics": [
+    {
+      "width": 1024,
+      "zones": [
+        {
+          "zone": "primary",
+          "y": 253.578125,
+          "bottom": 786.96875
+        },
+        {
+          "zone": "companion",
+          "y": 804.96875,
+          "bottom": 960.359375
+        },
+        {
+          "zone": "task",
+          "y": 976.359375,
+          "bottom": 1077.4375
+        }
+      ]
+    },
+    {
+      "width": 390,
+      "zones": [
+        {
+          "zone": "primary",
+          "y": 276.40625,
+          "bottom": 644.984375
+        },
+        {
+          "zone": "companion",
+          "y": 662.984375,
+          "bottom": 814.765625
+        },
+        {
+          "zone": "task",
+          "y": 830.765625,
+          "bottom": 959.734375
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "semantic": [
+    {
+      "name": "auto-B",
+      "layout": "visual-companion",
+      "reason": "Auto: one populated primary visual and an explicit companion in the same example."
+    },
+    {
+      "name": "auto-A",
+      "layout": "evidence-task",
+      "reason": "Auto: evidence and task; no eligible explicit visual/companion relationship."
+    },
+    {
+      "name": "no-relationship",
+      "layout": "evidence-task",
+      "reason": "Auto: evidence and task; no eligible explicit visual/companion relationship."
+    },
+    {
+      "name": "outside-owner",
+      "layout": "evidence-task",
+      "reason": "Auto: evidence and task; no eligible explicit visual/companion relationship."
+    },
+    {
+      "name": "empty-companion",
+      "layout": "evidence-task",
+      "reason": "Auto: evidence and task; no eligible explicit visual/companion relationship."
+    },
+    {
+      "name": "manual-A",
+      "layout": "evidence-task",
+      "reason": "Manual choice: Evidence + task."
+    },
+    {
+      "name": "manual-B",
+      "layout": "visual-companion",
+      "reason": "Manual choice: Visual + companion."
+    },
+    {
+      "name": "missing-companion",
+      "layout": "visual-companion",
+      "reason": "Manual choice: Visual + companion."
+    },
+    {
+      "name": "legacy",
+      "layout": "legacy",
+      "reason": "Existing placement: no supported composition was authored."
+    },
+    {
+      "name": "unknown",
+      "layout": "legacy",
+      "reason": "Existing placement: no supported composition was authored."
+    },
+    {
+      "name": "no-task",
+      "layout": "legacy",
+      "reason": "Normal content: evidence and a task are both required."
+    },
+    {
+      "name": "no-primary",
+      "layout": "legacy",
+      "reason": "Normal content: no primary evidence is authored."
+    }
+  ],
+  "graphScale": {
+    "centers": [
+      {
+        "x": 540.9933166503906,
+        "y": 659.4406127929688
+      },
+      {
+        "x": 587.5615539550781,
+        "y": 566.3040466308594
+      },
+      {
+        "x": 657.4139709472656,
+        "y": 426.5992431640625
+      }
+    ],
+    "xUnit": 23.28411865234375,
+    "yUnit": 23.284141540527344
+  },
+  "zoom": {
+    "dpr": 2,
+    "width": 757,
+    "cssZoom": "1",
+    "overflow": false,
+    "zones": [
+      {
+        "zone": "primary",
+        "y": 253.59375,
+        "bottom": 782.1875
+      },
+      {
+        "zone": "companion",
+        "y": 800.1875,
+        "bottom": 954.5859375
+      },
+      {
+        "zone": "task",
+        "y": 970.5859375,
+        "bottom": 1071.6796875
+      }
+    ]
+  }
+}

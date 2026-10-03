@@ -2,6 +2,10 @@
 
 _Last updated: 2026-06-20_
 
+## Evidence/task compositions (3 October 2026)
+
+Worked examples may opt into `questionComposition: "auto" | "evidence-task" | "visual-companion"`. Unspecified/unknown values retain their established rendering; new examples default to Auto. Explicit `role: "companion"` on an existing example-owned visual part establishes the relationship; Auto selects B only when exactly one populated primary part is a figure/image and a populated companion belongs to that same example; rendering retains all authored parts, including empty placeholders and labels. Other compatible evidence/tasks use A. The inspector edits layout and roles, and the existing shared parts now include the registered image renderer/editor. Switching preserves payload, unknown fields, IDs and responses. Straight Lines adopts Auto for its small table and graph/table examples; mathematical content and PR #159 solution components are unchanged. See `docs/review/evidence-compositions/` for actual captures, contract and verification. The coordinated suite now includes evidence-composition and production-lesson checks (39 gates). Teacher video playback, tablet question references, font changes and curriculum expansion remain outside this milestone.
+
 ## Production mathematics lessons (2 October 2026)
 
 Factorising now has current source-reviewed NSW Advanced Path mappings and bounded Australian Curriculum Version 9 references. Straight lines is a second complete three-skill graph/table/equation lesson at `lessons/straight-lines.html`, editable via `lessons/straight-lines/lesson.json`. Both use the accepted PR159/160 player with no application changes. See `docs/curriculum/production-mathematics.md` for source/attribution and partial coverage, and `docs/review/production-lessons/` for authoring coverage and evidence. Empty teacher videos, tablet response references and broader curriculum population remain deferred. Earlier entries below describe their historical completion state.
