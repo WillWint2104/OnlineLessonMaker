@@ -10105,14 +10105,15 @@ function mxEvidencePlan(ex,parts=mxParts(ex.visual),prompt=ex.prompt||ex.questio
   const requested=ex.questionComposition;
   if(!['auto','evidence-task','visual-companion'].includes(requested))return {layout:'legacy',reason:'Existing placement: no supported composition was authored.'};
   if(!prompt||!parts.length)return {layout:'legacy',reason:'Normal content: evidence and a task are both required.'};
-  const companions=parts.filter(p=>p.role==='companion'&&mxEvidenceHasContent(p));
+  const companions=parts.filter(p=>p.role==='companion');
   const primary=parts.filter(p=>p.role!=='companion');
+  const contentPrimary=primary.filter(mxEvidenceHasContent),contentCompanions=companions.filter(mxEvidenceHasContent);
   if(!primary.length)return {layout:'legacy',reason:'Normal content: no primary evidence is authored.'};
-  const eligible=primary.length===1&&['figure','image'].includes(primary[0].kind)&&mxEvidenceHasContent(primary[0])&&companions.length>0;
+  const eligible=contentPrimary.length===1&&['figure','image'].includes(contentPrimary[0].kind)&&contentCompanions.length>0;
   const layout=requested==='auto'?(eligible?'visual-companion':'evidence-task'):requested;
   return {layout,primary:layout==='evidence-task'?parts:primary,companions:layout==='visual-companion'?companions:[],
     reason:requested!=='auto'?'Manual choice: '+(layout==='evidence-task'?'Evidence + task.':'Visual + companion.'):
-      eligible?'Auto: one primary visual and an explicit companion in the same example.':'Auto: evidence and task; no eligible explicit visual/companion relationship.'};
+      eligible?'Auto: one populated primary visual and an explicit companion in the same example.':'Auto: evidence and task; no eligible explicit visual/companion relationship.'};
 }
 function mxQuestionCompositionForm(base,ex){
   const options=[['auto','Auto'],['evidence-task','Evidence + task'],['visual-companion','Visual + companion']];
