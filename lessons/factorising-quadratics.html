@@ -10233,7 +10233,7 @@ function mxQuestionCompositionForm(base,ex){
   const options=[['auto','Auto'],['evidence-task','Evidence + task'],['visual-companion','Visual + companion']];
   const value=ex.questionComposition??'';
   if(!options.some(([v])=>v===value))options.unshift([value,value?'Imported value: '+value:'Existing placement (legacy)']);
-  return inSel('Question / evidence layout',base+'.questionComposition',value,options,'data-reinspect')
+  return inSel('Evidence / task layout',base+'.questionComposition',value,options,'data-reinspect')
     +`<p class="ihint">${esc(mxEvidencePlan(ex).reason)} Evidence roles belong to this example; layout changes keep its content and IDs.</p>`;
 }
 function mxEvidenceRoleForm(base,part){

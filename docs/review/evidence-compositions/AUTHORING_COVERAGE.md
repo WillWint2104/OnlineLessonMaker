@@ -2,7 +2,7 @@
 
 | Operation | Control / evidence |
 | --- | --- |
-| Choose Auto, A or B | Edit → current worked activity → group → example → Question / evidence layout; preview updates on change |
+| Choose Auto, A or B | Edit → current worked activity → group → example → Evidence / task layout; preview updates on change |
 | Author the relationship | Select an example-owned visual part → Role in this example; Primary evidence, Companion to this example or Unassigned |
 | Edit a primary graph | Existing Graph window and object controls; the verification changes x maximum through that editor |
 | Edit supporting table | Existing table heading, editable grid, row/column controls |
