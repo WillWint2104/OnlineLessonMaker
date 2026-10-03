@@ -588,10 +588,12 @@
                             "5"
                           ]
                         }
-                      ]
+                      ],
+                      "role": "primary"
                     }
                   ],
-                  "visualPlacement": "question"
+                  "visualPlacement": "question",
+                  "questionComposition": "auto"
                 }
               ]
             }
@@ -758,7 +760,8 @@
                             ]
                           }
                         ]
-                      }
+                      },
+                      "role": "primary"
                     },
                     {
                       "kind": "table",
@@ -784,10 +787,12 @@
                             "5"
                           ]
                         }
-                      ]
+                      ],
+                      "role": "companion"
                     }
                   ],
-                  "visualPlacement": "question"
+                  "visualPlacement": "question",
+                  "questionComposition": "auto"
                 }
               ]
             }
