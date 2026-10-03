@@ -4299,7 +4299,7 @@ body.ws-open #worksheet.wsg-on{background:#eaeef0;}
 .mx-evidence-stage>.mx-part{max-width:100%;min-width:0;margin:0;}
 .mx-evidence-right{display:flex;flex-direction:column;gap:16px;}
 .mx-evidence-panel{min-width:0;padding:18px 20px;background:#ffffffa8;border-radius:7px;}
-.mx-evidence-panel h3{margin:0 0 12px;font:600 18px/1.4 var(--mx-ui);color:#184e5a;}
+.mx-evidence-panel h3,.mx-evidence-panel h4{margin:0 0 12px;font:600 18px/1.4 var(--mx-ui);color:#184e5a;}
 .mx-composed-question .mx-wexqb,.mx-composed-question .mx-repprose{font:400 18px/1.55 var(--mx-ui);color:#000;}
 .mx-composed-question .mx-part[data-mx-part="figure"]{width:100%;max-width:440px;aspect-ratio:1;height:auto;min-height:0;}
 .mx-composed-question .mx-part[data-mx-part="image"]{width:100%;max-width:440px;}
@@ -9171,14 +9171,15 @@ function mxExampleOrdinal(ex,k){
   const members=collection?lpCollectionMembers(s,collection):[],at=members.findIndex(x=>x.ex===ex);
   return at>=0?at+1:k+1;
 }
-function mxEvidenceQuestion(ex,k,parts,prompt){
+function mxEvidenceQuestion(ex,k,parts,prompt,headings={}){
   const plan=mxEvidencePlan(ex,parts,prompt);if(plan.layout==='legacy')return '';
   const partKey=p=>'evidence-'+(ex.id||k)+'-'+(p.id||parts.indexOf(p));
   const primary=plan.primary.map(p=>mxPart(p,partKey(p))).join('');
   const companion=plan.companions.length?`<section class="mx-evidence-panel" data-evidence-zone="companion" aria-label="Supporting evidence">${plan.companions.map(p=>mxPart(p,partKey(p))).join('')}</section>`:'';
+  const titleTag=headings.titleTag==='h3'?'h3':'h2',taskTag=headings.taskTag==='h4'?'h4':'h3';
   return `<header class="mx-example-question mx-composed-question" data-question-composition="${esc(plan.layout)}" data-composition-reason="${esc(plan.reason)}">
-    <div class="mx-evidence-grid"><div class="mx-evidence-primary" data-evidence-zone="primary"><div class="mx-example-number">Example ${mxExampleOrdinal(ex,k)}</div><h2 data-mx-region="title">${mxM(ex.label||'Worked example')}</h2><div class="mx-evidence-stage">${primary}</div>${mxSupportButton(ex)}</div>
-      <div class="mx-evidence-right">${companion}<section class="mx-evidence-panel" data-evidence-zone="task" data-mx-region="question" data-mx-sec="question" aria-label="Your task"><h3>Your task</h3><div class="mx-wexqb">${mxM(prompt)}</div></section></div></div></header>`;
+    <div class="mx-evidence-grid"><div class="mx-evidence-primary" data-evidence-zone="primary"><div class="mx-example-number">Example ${mxExampleOrdinal(ex,k)}</div>${headings.omitTitle?'':`<${titleTag} data-mx-region="title">${mxM(ex.label||'Worked example')}</${titleTag}>`}<div class="mx-evidence-stage">${primary}</div>${mxSupportButton(ex)}</div>
+      <div class="mx-evidence-right">${companion}<section class="mx-evidence-panel" data-evidence-zone="task" data-mx-region="question" data-mx-sec="question" aria-label="Your task"><${taskTag}${headings.annotated?' class="mx-wexlab"':''}>Your task</${taskTag}><div class="mx-wexqb">${mxM(prompt)}</div></section></div></div></header>`;
 }
 /* The Notes examples. `examples[]` is the one structure — the same field name the worked-example page
    uses — so there are not two parallel ideas of "an example" in the JSON. */
@@ -9302,14 +9303,14 @@ function mxWexEx(ex,k,state,extra){
   const show=x=>!state||state.show.indexOf(x)>=0;
   const ask=!!(q&&show('question'));
   const companion=mxParts(ex.visual);
-  const composed=ask&&extra?mxEvidenceQuestion(ex,k,companion,q):'';
+  const activity=lpEnabled(LESSON.slides[cur])&&lpCurrent(LESSON.slides[cur]);
+  const sameTitle=activity&&lpSingleExample(activity)===ex&&String(ex.label||'').trim()===String(activity.title||'').trim();
+  const heading=sameTitle?'h3':'h4';
+  const composed=ask&&extra?mxEvidenceQuestion(ex,k,companion,q,{titleTag:'h3',taskTag:heading,omitTitle:sameTitle,annotated:true}):'';
   if(composed)extra='';
   const questionEvidence=ask&&ex.visualPlacement==='question'?(extra||''):'';
   if(questionEvidence)extra='';
   const tableWorking=lpEnabled(LESSON.slides[cur])&&extra&&companion.length&&companion.every(part=>part.kind==='table');
-  const activity=lpEnabled(LESSON.slides[cur])&&lpCurrent(LESSON.slides[cur]);
-  const sameTitle=activity&&lpSingleExample(activity)===ex&&String(ex.label||'').trim()===String(activity.title||'').trim();
-  const heading=sameTitle?'h3':'h4';
   const steps=show('steps')?`<section class="mx-wexsec" data-mx-sec="steps"><${heading} class="mx-wexlab">Worked solution</${heading}>${mxWexSteps(ex,state&&state.steps,!!activity)}</section>`:'';
   const answer=(a&&show('answer'))?`<div class="mx-wexres" data-mx-region="answer" data-mx-sec="answer"><span class="mx-wexrl">${esc(ex.resultLabel||'Answer')}</span><span class="mx-wexrv">${mxM(a)}</span></div>`:'';
   return `<article class="mx-wexex${composed?' mx-composed-example':''}" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${ask?'':' data-mx-form="solo"'}>
@@ -9318,7 +9319,7 @@ function mxWexEx(ex,k,state,extra){
       ${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}
     <div class="mx-wexwork${tableWorking?' lp-table-working':''}" data-mx-region="working">
       ${tableWorking?`<div class="lp-table-reasoning">${steps}${answer}</div>${extra}`:steps+'\n      '+(extra||'')+'\n      '+answer}
-    </div>${mxSupportButton(ex)}</article>`;
+    </div>${composed?'':mxSupportButton(ex)}</article>`;
 }
 /* The same authored steps drive both halves; a row is never split into two arrays. */
 function mxSupportButton(ex){return ex.support?.steps?.length?`<button type="button" class="mx-support-open" data-mx-support="${esc(ex.id||'')}">${esc(ex.support.title||'Show method')}</button>`:'';}
