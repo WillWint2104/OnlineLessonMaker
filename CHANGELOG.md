@@ -7,6 +7,11 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Home-front propaganda classroom lesson
+- Add a three-skill Year 10 History source inquiry using two authentic public-domain Australian War Memorial posters, optional prose analysis, paper tasks and a short comparative argument.
+- Verify four NSW History 7–10 (2024) outcome mappings with explicit partial coverage; include source provenance, teacher guidance, responses and a formative rubric.
+- Publish through the unchanged shared player; document graphical edits, JSON export/reopen, responsive captures and independent learner checks. No History renderer, theme or application changes.
+
 ### Shared evidence/task compositions
 - Add opt-in Evidence + task and Visual + companion question surfaces, selected by explicit content roles or an author override; preserve legacy unspecified layouts.
 - Connect composition/role controls and the existing image renderer/editor to shared example parts; preserve imported fields and content through switching, export and reopen.
