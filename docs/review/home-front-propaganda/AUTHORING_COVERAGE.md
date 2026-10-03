@@ -20,10 +20,11 @@ The existing two-state example presentation places **Source and task** first and
 | Edit historical question subpart | Existing practice inspector; demonstrated |
 | Export JSON and reopen edited content | Actual download/import equality check, including full metadata |
 | Publish learner HTML | Actual application export, separate from editable application |
-| Structured catalogue/source provenance and authored state `show` arrays | JSON fields; preserved, no dedicated History provenance/state editor |
+| Structured catalogue/source provenance | JSON fields; preserved, no dedicated History provenance editor |
+| Source/model state labels and visible regions | Existing representation inspector; label and visibility edits demonstrated |
 | Source links in image captions | Existing plain text only; readable record locator shown, clickable exact links in teacher guide/gallery and full URLs in source metadata |
 | Smaller-screen source/task layout | Existing stack, with scrolling and no horizontal overflow; separate paper activities revisit sources through outline |
 
-The review workflow contains a deliberately edited authoring exercise and the untouched canonical round trip/publication. Exercise files are labelled and not substituted for the classroom lesson. See `workflow/results.json` for app/data/script digests and all actual checks. Core tests block remote requests: no claim that videos or remote dependencies work offline. No substantial qualitative blocker was found. Structured metadata editing and plain caption links are visible boundaries, not silently implemented features.
+The review workflow contains a deliberately edited authoring exercise and the untouched canonical round trip/publication. Exercise files are labelled and not substituted for the classroom lesson. See `workflow/results.json` for app/data/script digests and all actual checks. Core tests block remote requests: no claim that videos or remote dependencies work offline. No substantial qualitative blocker was found. Structured provenance editing and plain caption links are visible boundaries, not silently implemented features.
 
 Teacher videos, tablet question references, additional curriculum frameworks and WWII styling remain deferred.

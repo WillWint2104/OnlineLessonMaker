@@ -1,10 +1,10 @@
 {
-  "date": "2026-10-03T12:31:59.463Z",
-  "baseline": "6c5aea413f0b9c846f8816b7fc0b438ee50dc2aa",
+  "date": "2026-10-03T12:37:17.144Z",
+  "baseline": "e873213b05cea2ebb49c574bc93ee021cefdcc6e",
   "source": "working lesson data; source digests identify tested files",
   "appSha256": "a480cc7285bfddbc42ab7f67f610b07b29ce7a57aee789d049a55d41cb1c8b22",
   "lessonSha256": "0dce7d3987f9d91d03058101483d3dc3cf6dc0ca2f4a7ef8d4c34c1ba4dc24db",
-  "scriptSha256": "393c64c090b7375481b47b12352622001ede2e97ebf9f3f61be1929f21ac64ef",
+  "scriptSha256": "6fd584adcff5ea85926b01c16195a7592ee007e58ae93e4694557ac7ae1d5de6",
   "checks": [
     "Lesson passes existing activity publication validation",
     "Exactly four verified partial curriculum mappings",
@@ -104,6 +104,7 @@
     "Responsive no overflow narrow read-source",
     "Responsive no overflow narrow compare-sources",
     "Responsive no overflow narrow final-argument",
+    "Existing representation controls edit state labels and visible regions",
     "Graphical edits and full source metadata survive JSON export/reopen",
     "Canonical JSON export/reopen preserves all source records, states, IDs and curriculum",
     "Standalone learner publication opens independently without author controls",
@@ -143,6 +144,7 @@
     "comparison-narrow-task",
     "argument-narrow",
     "argument-narrow-task",
+    "author-state",
     "author-image",
     "author-question",
     "published-argument",
@@ -150,6 +152,7 @@
     "comparison-tall-review"
   ],
   "authoring": [
+    "Edited source-state tab label and toggled model visibility through existing representation controls",
     "Edited source alt text in the existing image inspector",
     "Edited prose model analysis through the existing step inspector",
     "Edited a historical question subpart through existing practice controls",

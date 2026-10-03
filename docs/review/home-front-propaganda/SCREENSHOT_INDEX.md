@@ -31,6 +31,7 @@ Desktop 1536 × 960; tablet 1024 × 768; narrow 390 × 844. Metadata/task captur
 - [comparison-narrow-task](screenshots/comparison-narrow-task.png)
 - [argument-narrow](screenshots/argument-narrow.png)
 - [argument-narrow-task](screenshots/argument-narrow-task.png)
+- [author-state](screenshots/author-state.png)
 - [author-image](screenshots/author-image.png)
 - [author-question](screenshots/author-question.png)
 - [published-argument](screenshots/published-argument.png)
