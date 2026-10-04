@@ -1,4 +1,4 @@
-param([string]$SourceCommit = 'HEAD')
+param([string]$SourceCommit = 'HEAD', [string]$ReceiptsDirectory = 'review-delivery/m1-postmerge-receipts')
 $ErrorActionPreference = 'Stop'
 $workspace = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 Set-Location -LiteralPath $workspace
@@ -25,6 +25,16 @@ foreach ($file in $files) {
   New-Item -ItemType Directory -Path (Split-Path $destination) -Force | Out-Null
   Copy-Item -LiteralPath (Join-Path $workspace $file) -Destination $destination
 }
+$receiptCount = 0
+if (Test-Path -LiteralPath $ReceiptsDirectory -PathType Container) {
+  foreach ($receipt in Get-ChildItem -LiteralPath $ReceiptsDirectory -File | Where-Object Extension -eq '.json') {
+    $destination = Join-Path $stage ('docs/review/mathematics-m1/verification/post-merge/' + $receipt.Name)
+    New-Item -ItemType Directory -Path (Split-Path $destination) -Force | Out-Null
+    Copy-Item -LiteralPath $receipt.FullName -Destination $destination
+    if ((Get-FileHash -LiteralPath $receipt.FullName -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $destination -Algorithm SHA256).Hash) { throw 'Copied receipt differs.' }
+    $receiptCount++
+  }
+}
 $guide = @"
 # Mathematics M1 — start here
 
@@ -40,7 +50,7 @@ The published lessons embed their data, fonts and illustrations and open directl
 
 The supplied YouTube URLs are external dependencies. The automated checks verify their authored surfaces and navigation with external requests blocked; they do not prove playback, school firewall access or offline remote-video availability. There is no new recording. Screenshots are actual renders. Edited demonstration files contain authoring-test changes and are distinct from the canonical 18-question lessons.
 
-Review documentation and verification receipts: docs/review/mathematics-m1/. Original combined teacher JSON and the 36-answer key: docs/lessons/expanding/. Each canonical lesson contains three archetypes with four Basic and two Moderate independent problems per archetype; retained guided substeps count as one problem.
+Review documentation and verification receipts: docs/review/mathematics-m1/. Post-merge receipts, when available, are in verification/post-merge/ and were retrieved after the identified source commit; they are evidence records, not later application files. Original combined teacher JSON and the 36-answer key: docs/lessons/expanding/. Each canonical lesson contains three archetypes with four Basic and two Moderate independent problems per archetype; retained guided substeps count as one problem.
 
 SHA256SUMS.txt records all payload files except itself. PACKAGE-VERIFICATION.json records the packaging checks. This is a review package, not another application implementation or a claim of formal tablet/assistive-technology certification.
 "@
@@ -64,7 +74,7 @@ $links = Test-GalleryLinks $stage
 foreach ($file in $files) {
   if ((Get-FileHash -LiteralPath (Join-Path $stage $file) -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath (Join-Path $workspace $file) -Algorithm SHA256).Hash) { throw "Copied file differs: $file" }
 }
-Set-Content -LiteralPath (Join-Path $stage 'PACKAGE-VERIFICATION.json') -Value (@{sourceCommit=$commit;sourceFiles=$files.Count;localGalleryReferences=$links;copiedFilesMatch=$true;verification='Archive extraction and every SHA-256 checked after ZIP creation; no application-regression run by packaging.'} | ConvertTo-Json) -Encoding utf8
+Set-Content -LiteralPath (Join-Path $stage 'PACKAGE-VERIFICATION.json') -Value (@{sourceCommit=$commit;sourceFiles=$files.Count;postMergeReceipts=$receiptCount;localGalleryReferences=$links;copiedFilesMatch=$true;verification='Archive extraction and every SHA-256 checked after ZIP creation; no application-regression run by packaging.'} | ConvertTo-Json) -Encoding utf8
 $manifest = @(Get-ChildItem -LiteralPath $stage -Recurse -File | Sort-Object FullName | ForEach-Object {
   $relative = [IO.Path]::GetRelativePath($stage,$_.FullName).Replace('\','/')
   (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant() + '  ' + $relative
