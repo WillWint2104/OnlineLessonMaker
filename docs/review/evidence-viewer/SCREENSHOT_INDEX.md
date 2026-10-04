@@ -26,4 +26,4 @@ Viewport captures from the actual player. Inline captures can require scrolling 
 - [square inline](screenshots/square-inline.png) — 1536 × 960
 - [document inline](screenshots/document-inline.png) — 1536 × 960
 - [native 100 inspect](screenshots/native-100-inspect.png) — 1514 × 862
-- [native 200 inspect](screenshots/native-200-inspect.png) — 757 × 431
+- [native 200 inspect](screenshots/native-200-inspect.png) — 1514 × 862

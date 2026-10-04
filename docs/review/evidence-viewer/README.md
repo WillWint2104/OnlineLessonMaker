@@ -23,7 +23,7 @@ Ordinary imported JPEG/PNG assets are embedded and work without network in indep
 
 ## Evidence
 
-`workflow/results.json` contains the local viewer/editor/publication checks; `workflow/publication-results.json` contains local PNG pyramid, fallback, keyboard isolation and genuine Chromium native 100%/200% zoom checks. Native zoom is browser preferences, not CSS zoom. Captures include 1536×960, 1024×768 and 390×844. The source pane scrolls independently in the existing lesson shell; inline start/end captures are distinct from fit-source inspection.
+`workflow/results.json` contains the local viewer/editor/publication checks; `workflow/publication-results.json` contains local PNG pyramid, fallback, keyboard isolation and genuine Chromium native 100%/200% zoom checks. Native zoom is browser preferences, not CSS zoom. Native captures use the complete browser surface (1514×862 device pixels); at 200% the CSS viewport is 757×431. This avoids the default automation capture cropping the enlarged surface. Captures include 1536×960, 1024×768 and 390×844. The source pane scrolls independently in the existing lesson shell; inline start/end captures are distinct from fit-source inspection.
 
 The AWM posters remain their original 426×654 and 428×654 derivatives. Inspection openly identifies their limited resolution; no missing detail has been invented. The Science fixture is 3200×1800 and its local PNG pyramid is generated from that exact source. The tests include square and document-like native sources and a missing-source fallback.
 
