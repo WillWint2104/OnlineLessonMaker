@@ -1,6 +1,6 @@
 {
-  "head": "1949e03f299ff7a3958781f64621fd0c2cf5ee4e",
-  "appSha256": "adf27b6f0af9106cb3b43cab720f4e1a51b8747f76890a17359d0b7614ed3fb6",
+  "head": "54ddb1dc8e49efa922969bb1d52bb8a6646b64c0",
+  "appSha256": "cf46142acf8ee64e225c9405db39d22d9acc19921e67c172e4bcf8bb6ff8fa6b",
   "checks": [
     "expanding-two-binomials one skill and its supplied teacher video",
     "expanding-two-binomials 18 independent problems: 4 Basic + 2 Moderate per archetype; every answer independently checked",
@@ -49,6 +49,9 @@
     "Single-skill simplification does not silently apply to other subjects",
     "Original multi-skill Mathematics remains supported",
     "Matched practice preserves accepted punctuated example IDs",
+    "Next uses authored label when tabLabel is absent",
+    "Incomplete archetype remains editable but blocks publication",
+    "Changing practice collections remaps stale archetype links and preserves question identity",
     "Single-skill rail stays concise without front matter",
     "Completion image retained without front matter",
     "expanding-two-binomials native 100% zoom",
@@ -104,6 +107,9 @@
     "Single-skill simplification does not silently apply to other subjects",
     "Original multi-skill Mathematics remains supported",
     "Matched practice preserves accepted punctuated example IDs",
+    "Next uses authored label when tabLabel is absent",
+    "Incomplete archetype remains editable but blocks publication",
+    "Changing practice collections remaps stale archetype links and preserves question identity",
     "Single-skill rail stays concise without front matter",
     "Completion image retained without front matter",
     "expanding-binomial-trinomial native 100% zoom",
