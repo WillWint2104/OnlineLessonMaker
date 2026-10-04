@@ -1,0 +1,30 @@
+{
+  "baseline": "88f68ebcae83a2e5b76e395496fbdfccf4abb26d",
+  "workingHead": "3d593680fcbf50ec6ea3d7edb0de8f92348b4959",
+  "baselineApplication": {
+    "bytes": 2145159,
+    "gzipBytes": 980420,
+    "sha256": "a480cc7285bfddbc42ab7f67f610b07b29ce7a57aee789d049a55d41cb1c8b22"
+  },
+  "application": {
+    "bytes": 2635006,
+    "gzipBytes": 1128817,
+    "sha256": "a1e2c43c5611fd5d3c760076237bed703db24ad31faf33b4b40fc0e0662196a1"
+  },
+  "applicationAddedBytes": 489847,
+  "applicationAddedGzipBytes": 148397,
+  "openSeadragon": {
+    "version": "6.1.1",
+    "licence": "BSD-3-Clause",
+    "bytes": 352735,
+    "gzipBytes": 87653,
+    "sha256": "14d587cd3ee7c4861f1a41077ce642029364a21029956ba635bd8fb1202cf9ad",
+    "inertBase64Bytes": 470316
+  },
+  "publication": {
+    "bytes": 4838713,
+    "gzipBytes": 2763332,
+    "sha256": "5b95c187d172a7a9c223a72880932147b4de4a32ac646bee47d2b0e8f115e98a"
+  },
+  "note": "Actual artifact/gzipSync bytes, not a network/device performance benchmark. Vendor initializes on Inspect; authoring payload is transported with the HTML."
+}
