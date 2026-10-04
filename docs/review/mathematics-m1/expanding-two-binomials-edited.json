@@ -1,0 +1,371 @@
+{
+  "meta": {
+    "title": "Expanding two binomials",
+    "theme": "neutral",
+    "id": "expanding-two-binomials",
+    "subject": "Mathematics",
+    "player": "activities",
+    "responseMode": "paper",
+    "context": "Algebra review",
+    "frontMatter": [
+      {
+        "id": "lesson-overview",
+        "kind": "overview",
+        "title": "Expanding two binomials",
+        "description": "Expand two brackets systematically and collect like terms.",
+        "image": {
+          "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9Ijc1MCIgdmlld0JveD0iMCAwIDEyMDAgNzUwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI3NTAiIGZpbGw9IiNlZGY1ZjMiLz48ZyBzdHJva2U9IiM4YWI0YWQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTAgMHY3NTAiLz48cGF0aCBkPSJNMTAwIDB2NzUwIi8+PHBhdGggZD0iTTIwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0zMDAgMHY3NTAiLz48cGF0aCBkPSJNNDAwIDB2NzUwIi8+PHBhdGggZD0iTTUwMCAwdjc1MCIvPjxwYXRoIGQ9Ik02MDAgMHY3NTAiLz48cGF0aCBkPSJNNzAwIDB2NzUwIi8+PHBhdGggZD0iTTgwMCAwdjc1MCIvPjxwYXRoIGQ9Ik05MDAgMHY3NTAiLz48cGF0aCBkPSJNMTAwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0xMTAwIDB2NzUwIi8+PHBhdGggZD0iTTAgMGgxMjAwIi8+PHBhdGggZD0iTTAgMTAwaDEyMDAiLz48cGF0aCBkPSJNMCAyMDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDMwMGgxMjAwIi8+PHBhdGggZD0iTTAgNDAwaDEyMDAiLz48cGF0aCBkPSJNMCA1MDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDYwMGgxMjAwIi8+PHBhdGggZD0iTTAgNzAwaDEyMDAiLz48L2c+PHJlY3QgeD0iMTYwIiB5PSIxNTAiIHdpZHRoPSI4ODAiIGhlaWdodD0iNDUwIiByeD0iMjQiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzM2NWQ2MyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iNjAwIiB5PSIyODUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5BbGdlYnJhPC90ZXh0Pjx0ZXh0IHg9IjYwMCIgeT0iNDEwIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwNmI2MiI+KHggKyAyKSh4ICsgNSk8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSI1MTUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjMyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5EaXN0cmlidXRlIGV2ZXJ5IHRlcm08L3RleHQ+PC9zdmc+",
+          "alt": "Decorative algebra grid with the expression (x + 2)(x + 5)."
+        }
+      },
+      {
+        "id": "lesson-outcomes",
+        "kind": "outcomes",
+        "title": "What you will learn",
+        "description": "By the end of this lesson, you should be able to:",
+        "intentions": [
+          "Expand the product of two binomials.",
+          "Keep negative signs attached to their terms.",
+          "Multiply coefficients and collect like terms."
+        ],
+        "image": {
+          "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9Ijc1MCIgdmlld0JveD0iMCAwIDEyMDAgNzUwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI3NTAiIGZpbGw9IiNlZGY1ZjMiLz48ZyBzdHJva2U9IiM4YWI0YWQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTAgMHY3NTAiLz48cGF0aCBkPSJNMTAwIDB2NzUwIi8+PHBhdGggZD0iTTIwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0zMDAgMHY3NTAiLz48cGF0aCBkPSJNNDAwIDB2NzUwIi8+PHBhdGggZD0iTTUwMCAwdjc1MCIvPjxwYXRoIGQ9Ik02MDAgMHY3NTAiLz48cGF0aCBkPSJNNzAwIDB2NzUwIi8+PHBhdGggZD0iTTgwMCAwdjc1MCIvPjxwYXRoIGQ9Ik05MDAgMHY3NTAiLz48cGF0aCBkPSJNMTAwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0xMTAwIDB2NzUwIi8+PHBhdGggZD0iTTAgMGgxMjAwIi8+PHBhdGggZD0iTTAgMTAwaDEyMDAiLz48cGF0aCBkPSJNMCAyMDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDMwMGgxMjAwIi8+PHBhdGggZD0iTTAgNDAwaDEyMDAiLz48cGF0aCBkPSJNMCA1MDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDYwMGgxMjAwIi8+PHBhdGggZD0iTTAgNzAwaDEyMDAiLz48L2c+PHJlY3QgeD0iMTYwIiB5PSIxNTAiIHdpZHRoPSI4ODAiIGhlaWdodD0iNDUwIiByeD0iMjQiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzM2NWQ2MyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iNjAwIiB5PSIyODUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5BbGdlYnJhPC90ZXh0Pjx0ZXh0IHg9IjYwMCIgeT0iNDEwIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwNmI2MiI+KHggKyAyKSh4ICsgNSk8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSI1MTUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjMyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5Nb2RlbCDihpIgcHJhY3Rpc2Ug4oaSIGNoZWNrPC90ZXh0Pjwvc3ZnPg==",
+          "alt": "Decorative algebra grid with the expression (x + 2)(x + 5)."
+        }
+      }
+    ],
+    "curriculumMappings": [],
+    "description": "Expand two brackets systematically and collect like terms.",
+    "completion": {
+      "description": "Review any archetype that needs more practice. Finishing the pages is not a claim of assessed mastery.",
+      "image": {
+        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9Ijc1MCIgdmlld0JveD0iMCAwIDEyMDAgNzUwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI3NTAiIGZpbGw9IiNlZGY1ZjMiLz48ZyBzdHJva2U9IiM4YWI0YWQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTAgMHY3NTAiLz48cGF0aCBkPSJNMTAwIDB2NzUwIi8+PHBhdGggZD0iTTIwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0zMDAgMHY3NTAiLz48cGF0aCBkPSJNNDAwIDB2NzUwIi8+PHBhdGggZD0iTTUwMCAwdjc1MCIvPjxwYXRoIGQ9Ik02MDAgMHY3NTAiLz48cGF0aCBkPSJNNzAwIDB2NzUwIi8+PHBhdGggZD0iTTgwMCAwdjc1MCIvPjxwYXRoIGQ9Ik05MDAgMHY3NTAiLz48cGF0aCBkPSJNMTAwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0xMTAwIDB2NzUwIi8+PHBhdGggZD0iTTAgMGgxMjAwIi8+PHBhdGggZD0iTTAgMTAwaDEyMDAiLz48cGF0aCBkPSJNMCAyMDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDMwMGgxMjAwIi8+PHBhdGggZD0iTTAgNDAwaDEyMDAiLz48cGF0aCBkPSJNMCA1MDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDYwMGgxMjAwIi8+PHBhdGggZD0iTTAgNzAwaDEyMDAiLz48L2c+PHJlY3QgeD0iMTYwIiB5PSIxNTAiIHdpZHRoPSI4ODAiIGhlaWdodD0iNDUwIiByeD0iMjQiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzM2NWQ2MyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iNjAwIiB5PSIyODUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5BbGdlYnJhPC90ZXh0Pjx0ZXh0IHg9IjYwMCIgeT0iNDEwIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwNmI2MiI+KHggKyAyKSh4ICsgNSk8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSI1MTUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjMyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5LZWVwIGJ1aWxkaW5nIGNvbXBldGVuY2U8L3RleHQ+PC9zdmc+",
+        "alt": "Decorative algebra grid with the expression (x + 2)(x + 5)."
+      }
+    }
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "binomial-products",
+      "title": "Expanding two binomials",
+      "description": "Expand two brackets systematically and collect like terms.",
+      "video": {
+        "url": "https://youtu.be/8cDC_Y2MKwA"
+      },
+      "activities": [
+        {
+          "id": "binomial-introduction",
+          "title": "Introduction",
+          "lede": "When two binomials are multiplied, every term in one bracket must multiply every term in the other bracket.",
+          "introduction": {
+            "why": "Expanding brackets rewrites a product as one polynomial expression and prepares you for later algebraic manipulation.",
+            "keyIdea": "Every term in the first bracket multiplies every term in the second bracket.",
+            "method": [
+              "Distribute each term across the other bracket.",
+              "Keep the sign attached to each term.",
+              "Collect like terms."
+            ],
+            "illustration": "(_x_ + 2)(_x_ + 5) → _x_^2 + 7_x_ + 10"
+          }
+        },
+        {
+          "id": "binomial-video",
+          "title": "Video",
+          "optionalVideo": true,
+          "lede": "Watch: expanding products of two brackets.",
+          "focusPoints": [
+            "How every term is distributed.",
+            "How negative signs are handled.",
+            "How like terms are collected at the end."
+          ]
+        },
+        {
+          "id": "binomial-positive",
+          "title": "Positive terms",
+          "workedExamples": [
+            {
+              "id": "binomial-positive-group",
+              "type": "sequence",
+              "title": "Positive terms",
+              "examples": [
+                {
+                  "id": "binomial-positive-example",
+                  "label": "Positive terms",
+                  "prompt": "Expand and simplify (_x_ + 2)(_x_ + 5).",
+                  "steps": [
+                    {
+                      "id": "binomial-positive-distribute",
+                      "math": "_x_(_x_ + 5) + 2(_x_ + 5)",
+                      "text": "Distribute both terms from the first bracket."
+                    },
+                    {
+                      "id": "binomial-positive-expand",
+                      "math": "_x_^2 + 5_x_ + 2_x_ + 10",
+                      "text": "Expand each product."
+                    },
+                    {
+                      "id": "binomial-positive-collect",
+                      "math": "_x_^2 + 7_x_ + 10",
+                      "text": "Collect the like terms."
+                    }
+                  ],
+                  "answer": "(_x_ + 2)(_x_ + 5) = _x_^2 + 7_x_ + 10",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Positive terms",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "binomial-negative",
+          "title": "A negative term",
+          "workedExamples": [
+            {
+              "id": "binomial-negative-group",
+              "type": "sequence",
+              "title": "A negative term",
+              "examples": [
+                {
+                  "id": "binomial-negative-example",
+                  "label": "A negative term",
+                  "prompt": "Expand and simplify (_x_ − 4)(_x_ + 3).",
+                  "steps": [
+                    {
+                      "id": "binomial-negative-distribute",
+                      "math": "_x_(_x_ + 3) − 4(_x_ + 3)",
+                      "text": "Keep the negative sign with 4 when distributing."
+                    },
+                    {
+                      "id": "binomial-negative-expand",
+                      "math": "_x_^2 + 3_x_ − 4_x_ − 12",
+                      "text": "Expand each product."
+                    },
+                    {
+                      "id": "binomial-negative-collect",
+                      "math": "_x_^2 − _x_ − 12",
+                      "text": "Collect the like terms."
+                    }
+                  ],
+                  "answer": "(_x_ − 4)(_x_ + 3) = _x_^2 − _x_ − 12",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Negative term",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "binomial-coefficients",
+          "title": "Coefficients",
+          "workedExamples": [
+            {
+              "id": "binomial-coefficients-group",
+              "type": "sequence",
+              "title": "Coefficients",
+              "examples": [
+                {
+                  "id": "binomial-coefficients-example",
+                  "label": "Coefficients",
+                  "prompt": "Expand and simplify (2_x_ + 3)(_x_ − 5).",
+                  "steps": [
+                    {
+                      "id": "binomial-coefficients-distribute",
+                      "math": "2_x_(_x_ − 5) + 3(_x_ − 5)",
+                      "text": "Distribute 2x and then 3 across the second bracket."
+                    },
+                    {
+                      "id": "binomial-coefficients-expand",
+                      "math": "2_x_^2 − 10_x_ + 3_x_ − 15",
+                      "text": "Expand each product."
+                    },
+                    {
+                      "id": "binomial-coefficients-collect",
+                      "math": "2_x_^2 − 7_x_ − 15",
+                      "text": "Collect the like terms."
+                    }
+                  ],
+                  "answer": "(2_x_ + 3)(_x_ − 5) = 2_x_^2 − 7_x_ − 15",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Coefficients",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "binomial-practice",
+          "title": "Practice",
+          "lede": "Practise each worked-example archetype, starting with close repetition.",
+          "practiceNote": "Work in your exercise book. Complete Basic before Moderate, then deliberately reveal that group’s answers.",
+          "questions": [
+            {
+              "id": "binomial-products-positive-q1",
+              "stem": "Expand and simplify (_x_ + 2)(_x_ + 4).",
+              "archetypeId": "binomial-positive-example",
+              "level": "basic",
+              "answer": "_x_^2 + 6_x_ + 8",
+              "futureMetadata": {
+                "keep": "unknown"
+              },
+              "workedAnswer": "Use the distribution method shown in the matching worked example."
+            },
+            {
+              "id": "binomial-products-positive-q2",
+              "stem": "Expand and simplify (_x_ + 3)(_x_ + 5).",
+              "archetypeId": "binomial-positive-example",
+              "level": "basic",
+              "answer": "_x_^2 + 8_x_ + 15"
+            },
+            {
+              "id": "question-e86398d5-c486-4829-87cd-f0db9e8bde13",
+              "stem": "Expand and simplify (_x_ + 2)(_x_ + 4).",
+              "archetypeId": "binomial-negative-example",
+              "level": "moderate",
+              "answer": "_x_^2 + 6_x_ + 8",
+              "futureMetadata": {
+                "keep": "unknown"
+              },
+              "workedAnswer": "Use the distribution method shown in the matching worked example."
+            },
+            {
+              "id": "binomial-products-positive-q3",
+              "stem": "Expand and simplify (_x_ + 1)(_x_ + 7).",
+              "archetypeId": "binomial-positive-example",
+              "level": "basic",
+              "answer": "_x_^2 + 8_x_ + 7"
+            },
+            {
+              "id": "binomial-products-positive-q4",
+              "stem": "Expand and simplify (_x_ + 4)(_x_ + 6).",
+              "archetypeId": "binomial-positive-example",
+              "level": "basic",
+              "answer": "_x_^2 + 10_x_ + 24"
+            },
+            {
+              "id": "binomial-products-positive-q5",
+              "stem": "Expand and simplify (_x_ + 5)(_x_ + 8).",
+              "archetypeId": "binomial-positive-example",
+              "level": "moderate",
+              "answer": "_x_^2 + 13_x_ + 40"
+            },
+            {
+              "id": "binomial-products-positive-q6",
+              "stem": "Expand and simplify (_x_ + 7)(_x_ + 9).",
+              "archetypeId": "binomial-positive-example",
+              "level": "moderate",
+              "answer": "_x_^2 + 16_x_ + 63"
+            },
+            {
+              "id": "binomial-products-signs-q1",
+              "stem": "Expand and simplify (_x_ − 2)(_x_ + 5).",
+              "archetypeId": "binomial-negative-example",
+              "level": "basic",
+              "answer": "_x_^2 + 3_x_ − 10"
+            },
+            {
+              "id": "binomial-products-signs-q2",
+              "stem": "Expand and simplify (_x_ − 3)(_x_ + 4).",
+              "archetypeId": "binomial-negative-example",
+              "level": "basic",
+              "answer": "_x_^2 + _x_ − 12"
+            },
+            {
+              "id": "binomial-products-signs-q3",
+              "stem": "Expand and simplify (_x_ − 1)(_x_ + 6).",
+              "archetypeId": "binomial-negative-example",
+              "level": "basic",
+              "answer": "_x_^2 + 5_x_ − 6"
+            },
+            {
+              "id": "binomial-guided-question",
+              "stem": "Expand and simplify (_x_ + 4)(_x_ − 3).",
+              "archetypeId": "binomial-negative-example",
+              "level": "basic",
+              "answer": "_x_^2 + _x_ − 12",
+              "parts": [
+                "Write the distributed form _x_(_x_ − 3) + 4(_x_ − 3).",
+                "Expand the two products.",
+                "Collect the like terms.",
+                "State the final simplified expression."
+              ],
+              "workedAnswer": "(_x_ + 4)(_x_ − 3)\n= _x_^2 − 3_x_ + 4_x_ − 12\n= _x_^2 + _x_ − 12"
+            },
+            {
+              "id": "binomial-products-signs-q5",
+              "stem": "Expand and simplify (_x_ − 7)(_x_ + 9).",
+              "archetypeId": "binomial-negative-example",
+              "level": "moderate",
+              "answer": "_x_^2 + 2_x_ − 63"
+            },
+            {
+              "id": "binomial-products-signs-q6",
+              "stem": "Expand and simplify (_x_ − 8)(_x_ + 5).",
+              "archetypeId": "binomial-negative-example",
+              "level": "moderate",
+              "answer": "_x_^2 − 3_x_ − 40"
+            },
+            {
+              "id": "binomial-products-coefficients-q1",
+              "stem": "Expand and simplify (2_x_ + 1)(_x_ − 3).",
+              "archetypeId": "binomial-coefficients-example",
+              "level": "basic",
+              "answer": "2_x_^2 − 5_x_ − 3"
+            },
+            {
+              "id": "binomial-products-coefficients-q2",
+              "stem": "Expand and simplify (2_x_ + 3)(_x_ − 4).",
+              "archetypeId": "binomial-coefficients-example",
+              "level": "basic",
+              "answer": "2_x_^2 − 5_x_ − 12"
+            },
+            {
+              "id": "binomial-products-coefficients-q3",
+              "stem": "Expand and simplify (3_x_ + 1)(_x_ − 2).",
+              "archetypeId": "binomial-coefficients-example",
+              "level": "basic",
+              "answer": "3_x_^2 − 5_x_ − 2"
+            },
+            {
+              "id": "binomial-products-coefficients-q4",
+              "stem": "Expand and simplify (3_x_ + 2)(_x_ − 3).",
+              "archetypeId": "binomial-coefficients-example",
+              "level": "basic",
+              "answer": "3_x_^2 − 7_x_ − 6"
+            },
+            {
+              "id": "binomial-products-coefficients-q5",
+              "stem": "Expand and simplify (2_x_ + 3)(3_x_ − 4).",
+              "archetypeId": "binomial-coefficients-example",
+              "level": "moderate",
+              "answer": "6_x_^2 + _x_ − 12"
+            },
+            {
+              "id": "binomial-products-coefficients-q6",
+              "stem": "Expand and simplify (3_x_ + 2)(2_x_ − 5).",
+              "archetypeId": "binomial-coefficients-example",
+              "level": "moderate",
+              "answer": "6_x_^2 − 11_x_ − 10"
+            }
+          ],
+          "practiceCollectionId": "binomial-worked-collection"
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "binomial-worked-collection",
+          "title": "Worked examples",
+          "members": [
+            "binomial-positive-example",
+            "binomial-negative-example",
+            "binomial-coefficients-example"
+          ]
+        }
+      ]
+    }
+  ]
+}

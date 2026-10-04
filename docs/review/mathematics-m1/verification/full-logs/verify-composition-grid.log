@@ -1,0 +1,36 @@
+--- the master grid ---
+PASS the app counts the columns the master grid declares  app 12, grid.json desktop 12
+PASS and uses the same gutter  app 24px, grid.json 24px
+PASS and treats the desktop surface itself as the threshold for the desktop composition  app MX_STAGE_MIN 1152px, grid.json desktop width 1152px
+PASS and sets prose at the declared reading measure  app 760px, grid.json readingMeasure 760px
+PASS and the measure is exactly the media span on that grid - not a typographic number that happens to match  span(8) = 760px, measure 760px, prose ceiling 8 columns
+
+--- visual.explanation, the approved subdesigns ---
+PASS down-8 exists in the catalogue and is the centred stage  slotSpan 8, anchor center
+PASS the app gives the media the span down-8 declares  app 8, catalogue 8
+PASS and starts it on the column down-8 draws it on  app column 3, areas row starts at 3
+PASS and the drawing agrees with its own slotSpan  8 media cells, slotSpan 8
+PASS and the reading sits beneath the media on the same columns - the centred spine  media 3+8, interpretation 3+8
+PASS down-12 exists and takes the full grid  slotSpan 12, anchor full
+PASS the app gives the wide plane the span down-12 declares  app 12, catalogue 12, grid 12
+PASS and starts both the media and the reading at the left edge, as down-12 draws them  app media 1 / reading 1, areas media 1 / interpretation 1
+PASS and the reading still returns to the measure beneath a full-width plane  8 columns = 760px
+PASS and these are the ONLY desktop subdesigns the catalogue approves - the app knows no others  catalogue: down-12 · down-8
+
+--- the geometry band that chooses between them ---
+PASS the app splits down-8 from down-12 on the shipping grammar's own landscape band  app MX_WIDE_BELOW 0.4, atlas.json landscapeAbove 0.4
+PASS and that band is the boundary of the class down-12 is approved for  down-12 aspects: wide, portrait, balanced, landscape · atlas wide = < 0.4
+PASS and the classes below it are the ones down-8 is approved for  down-8 aspects: portrait, balanced, landscape
+PASS CONTROL: the band is read as height/width, so the wide class is the LOW side of it  0.4 and the app tests "< MX_WIDE_BELOW"
+
+--- the copy cannot hide ---
+PASS --mx-cols is published from MX_GRID_COLS, never re-typed
+PASS --mx-gutter is published from MX_GRID_GUTTER, never re-typed
+PASS --mx-media-span is published from MX_MEDIA_SPAN, never re-typed
+PASS --mx-media-start is published from MX_MEDIA_START, never re-typed
+PASS --mx-measure is published from MX_MEASURE, never re-typed
+PASS --mx-stage-min is published from MX_STAGE_MIN, never re-typed
+PASS and the CSS reads the placement properties rather than repeating their values  each appears as var(...) in the stylesheet
+PASS and the surface threshold is read back off the element, not held only in the script  mxFootStage reads --mx-stage-min with MX_STAGE_MIN only as its fallback
+
+27/27 checks passed

@@ -1,0 +1,79 @@
+PASS Add skill reachable from a new blank activity lesson
+PASS Note reorder changes the intended skill data 0
+PASS Step reorder retains identities 0
+PASS Product has its own instructional column 0
+PASS Question reorder changes the selected activity 0
+PASS Removing a question preserves the surviving table blanks 0
+PASS One optional-video slot per skill 0
+PASS Video URL saves in the skill representation 0
+PASS Video URL can be edited 0
+PASS Video URL can be cleared without losing slot 0
+PASS Note reorder changes the intended skill data 1
+PASS Step reorder retains identities 1
+PASS Product has its own instructional column 1
+PASS Question reorder changes the selected activity 1
+PASS Removing a question preserves the surviving table blanks 1
+PASS One optional-video slot per skill 1
+PASS Video URL saves in the skill representation 1
+PASS Video URL can be edited 1
+PASS Video URL can be cleared without losing slot 1
+PASS Skill reorder changes actual data
+PASS Skill removal retains two authored skills
+PASS Activity reorder retains selection
+PASS Both skills were built with genuine multistep examples
+PASS Saved response policy stays paper
+PASS Actual learner preview honours paper mode
+PASS Empty video slots are omitted in learner preview
+PASS Reopen valid lesson via file JSON
+PASS Fresh-context JSON reopen preserves complete authored data
+PASS Reopened nested table remains editable
+PASS Independent offline HTML preserves all authored structures
+PASS Published browser-tab title uses lesson metadata
+PASS Published learner has no author controls
+PASS Reopen valid lesson via file JSON
+PASS Source editing preserves every unrelated imported field
+PASS Reopen valid lesson via file JSON
+PASS Array-form instructional table values are visible
+PASS Array-form table edits keep the original row representation
+PASS Intermediate domain typing is retained
+PASS Incomplete expression is retained without crashing
+PASS Unexposed example metadata survives graph and step editing
+PASS Group reorder preserves the existing group identity
+PASS Group deletion selects a surviving neighbour
+PASS Temporary group/example operations preserve the richer original object
+PASS Reopen valid lesson via file JSON
+PASS Embedded graph edits preserve aliases, other points, segment endpoint and wrapper metadata
+PASS Wrapped instructional table retains wrapper metadata
+PASS Reopen valid lesson via file JSON
+PASS Filtered example part binds and moves by its raw index
+PASS Filtered step part binds and moves by its raw index
+PASS Filtered companion deletion preserves null slots, sibling objects and both wrappers
+PASS Reopen valid lesson via file JSON
+PASS Explicit organisation keeps legacy example content and identities intact
+PASS Reopen valid lesson via file JSON
+PASS Rich relationship item edit preserves its source and sibling statement
+PASS Reopen valid lesson via file JSON
+PASS Defensive inspector preserves a null note as an indexed placeholder
+PASS Note action names identify each individual row
+PASS Selecting a surviving note does not normalise the null slot
+PASS Reopen valid lesson via file JSON
+PASS Question and subpart action names identify the affected rows
+PASS Reopen valid lesson via file JSON
+PASS Authoring/preview preserves responseMode paper
+PASS Reopen valid lesson via file JSON
+PASS Authoring/preview preserves responseMode typed
+PASS Reopen valid lesson via file JSON
+PASS Authoring/preview preserves responseMode pen
+PASS Reopen valid lesson via file JSON
+PASS Authoring/preview preserves responseMode type
+PASS Reopen valid lesson via file JSON
+PASS Authoring/preview preserves responseMode write
+PASS Reopen valid lesson via file JSON
+PASS One skill uses singular interface text
+PASS Supporting-table answer remains beside the reasoning above the table bottom
+PASS Paper fallback is subject-neutral
+PASS Reopen valid lesson via file JSON
+PASS Single repeated example title becomes one principal heading and a type label
+PASS Single-example section keeps an accessible heading sequence
+PASS Authoring application retains its browser title
+PASS No browser errors: 

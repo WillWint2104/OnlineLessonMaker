@@ -1,0 +1,35 @@
+PASS a lesson with no card field renders exactly as it did before C6b  30/30 units identical
+     · 6 legacy slides x 5 themes = 30 render units, hashed
+PASS control: the baseline detects a card field added to a legacy block  1 unit(s) differ, as they must
+PASS no legacy slide picks up a learning-card class  1 legacy title slide(s) probed
+PASS microhistory's own .tp-card is untouched by the learning card  display:block padding:0px height:605px
+PASS every card slot is exercised by the fixture  9 slots seen
+PASS the figure companion is the same card primitive, not a second renderer  companion shape tp-lcard-kicker>tp-lcard-rule>tp-lcard-title>tp-lcard-body>tp-lcard-foot · standalone tp-lcard-kicker>tp-lcard-rule>tp-lcard-title>tp-lcard-body>tp-lcard-chip
+PASS omitted fontStyle is identical to fontStyle:"theme"  both resolve body to EB Garamond
+PASS fontStyle:"sans" changes the whole authored hierarchy together  title/body/step/foot/chip all Inter, against the theme's EB Garamond
+PASS fontStyle:"serif" resolves a serif prose face  EB Garamond
+PASS the optical size travels with the face  theme 19px vs sans 16px
+PASS the face is never applied to the card container (so font:inherit controls cannot inherit it)  container stays EB Garamond under every fontStyle
+PASS mathematical notation keeps its own face under every fontStyle  math resolves ["LM Math","LM Math","LM Math","LM Math"]
+PASS control: the container check would fail if the face were put on the container  injecting the container rule moves it to Inter
+PASS a valid icon and fontStyle report nothing
+PASS an https:// icon is reported and never rendered  1 error(s), <img> emitted: false
+PASS a data: icon is reported and never rendered  1 error(s), <img> emitted: false
+PASS a path icon is reported and never rendered  1 error(s), <img> emitted: false
+PASS an unknown icon name is reported and never rendered  1 error(s), <img> emitted: false
+PASS an unsupported fontStyle is reported and falls back to the theme  1 error(s), face attr ""
+PASS control: tpIc itself would emit an <img> for that URL (the allow-list is what prevents it)  <img class="tp-icimg" src="https://cdn.example.com/i.png" al
+PASS a figure carrying BOTH text and companion reports the ambiguity  1 error(s)
+PASS …and resolves to the legacy `text`, the shape existing lessons use
+PASS beside siblings are top-aligned, never stretched to equal height  start
+PASS the figure stage minima are unchanged  graph 340 · geometry 420
+PASS the companion card's chrome is MEASURED, not assumed  64px of padding + borders
+PASS an uncarded companion measures zero chrome (the measurement is per-companion)  plain and carded both leave beside at 755px — the figure minimum still binds
+     · transition points: graph leaves beside at 755px available, geometry at 915px
+PASS the correction did not move the transition points (the figure minimum is still binding)  graph 755 (expected 755) · geometry 915 (expected 915)
+PASS control: the prose-CONTENT floor can drive the layout — it is not inert  inflating the card chrome to 324px moves the graph transition 755 → 1191
+PASS control: inflating the CARD chrome leaves an uncarded companion alone  plain stays at 755px while the carded one moves
+PASS a stacked companion recovers the full available width  stacked, slot 700px of 700px
+PASS the chip label clears WCAG AA on its own tint in every designed theme  mathematics 13.82:1 · scholarmath 14.94:1 · imperium 13.3:1 · microhistory 14.78:1 · geolearn 13.25:1
+
+✓ learning card: 31/31 checks

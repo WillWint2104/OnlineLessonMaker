@@ -1,0 +1,68 @@
+PASS Independent signed-gradient, intercept, table, endpoints and practice arithmetic
+PASS Factorising quadratics: unique navigation IDs (step IDs are scoped to examples)
+PASS Factorising quadratics: sourced, reviewed, bounded mappings
+PASS Factorising quadratics: empty optional videos
+PASS Straight lines: unique navigation IDs (step IDs are scoped to examples)
+PASS Straight lines: sourced, reviewed, bounded mappings
+PASS Straight lines: empty optional videos
+PASS Factorising changes limited to curriculum mappings
+PASS straight-lines: committed publication matches editable JSON
+PASS straight-lines: curriculum provenance, graphs, tables and IDs round-trip
+PASS straight-lines: standalone learner publication, no author controls
+PASS straight-lines: two real NSW records
+PASS straight-lines: official wording and authored mapping are labelled separately
+PASS factorising-quadratics: committed publication matches editable JSON
+PASS factorising-quadratics: curriculum provenance, graphs, tables and IDs round-trip
+PASS factorising-quadratics: standalone learner publication, no author controls
+PASS factorising-quadratics: two real NSW records
+PASS factorising-quadratics: official wording and authored mapping are labelled separately
+PASS Distinct adopted national Year 9/10 references
+PASS All six classroom figures parse with valid points, labels and objects
+PASS Two restricted-domain graphs use existing finite segments
+PASS Actual lesson table cells and complete answer-key part counts checked
+PASS No horizontal overflow worked-collection
+PASS No horizontal overflow graph-comparison
+PASS No horizontal overflow instructional-table
+PASS No horizontal overflow rule-graph
+PASS No horizontal overflow guided-practice
+PASS No horizontal overflow independent-practice
+PASS Optional method returns focus to same example
+PASS Learner destination gradient-intro
+PASS Learner destination gradient-rising
+PASS Selected example agrees with navigation gradient-rising
+PASS Learner destination gradient-signs
+PASS Selected example agrees with navigation gradient-signs
+PASS Learner destination gradient-steepness
+PASS Selected example agrees with navigation gradient-steepness
+PASS Learner destination gradient-guided
+PASS Learner destination gradient-practice
+PASS Learner destination intercept-intro
+PASS Learner destination intercept-rule
+PASS Selected example agrees with navigation intercept-rule
+PASS Learner destination intercept-table
+PASS Selected example agrees with navigation intercept-table
+PASS Learner destination intercept-guided
+PASS Learner destination intercept-practice
+PASS Learner destination rule-graph-intro
+PASS Learner destination rule-table
+PASS Selected example agrees with navigation rule-table
+PASS Learner destination rule-gradient
+PASS Selected example agrees with navigation rule-gradient
+PASS Learner destination rule-guided
+PASS Learner destination rule-practice
+PASS Next omits empty video
+PASS Next visits second collection member
+PASS Back agrees with tabs
+PASS Final practice reaches shared end state
+PASS Narrow graph has no page overflow
+PASS Unknown curriculum fields preserved through export
+PASS Curriculum strings escaped and unsafe source URL omitted
+PASS Legacy lesson without mappings/front matter opens at skill
+PASS Response policy retained paper
+PASS Response workspace follows paper
+PASS Response policy retained typed
+PASS Response workspace follows typed
+PASS Response policy retained pen
+PASS Response workspace follows pen
+PASS No browser errors
+PASS Native 200% graph/table layout without horizontal overflow
