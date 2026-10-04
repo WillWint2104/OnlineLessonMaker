@@ -1,0 +1,376 @@
+{
+  "meta": {
+    "title": "Expanding a binomial by a trinomial",
+    "theme": "neutral",
+    "id": "expanding-binomial-trinomial",
+    "subject": "Mathematics",
+    "player": "activities",
+    "responseMode": "paper",
+    "context": "Algebra review",
+    "frontMatter": [
+      {
+        "id": "lesson-overview",
+        "kind": "overview",
+        "title": "Expanding a binomial by a trinomial",
+        "description": "Extend the same distribution process to three terms in the second bracket.",
+        "image": {
+          "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9Ijc1MCIgdmlld0JveD0iMCAwIDEyMDAgNzUwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI3NTAiIGZpbGw9IiNlZGY1ZjMiLz48ZyBzdHJva2U9IiM4YWI0YWQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTAgMHY3NTAiLz48cGF0aCBkPSJNMTAwIDB2NzUwIi8+PHBhdGggZD0iTTIwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0zMDAgMHY3NTAiLz48cGF0aCBkPSJNNDAwIDB2NzUwIi8+PHBhdGggZD0iTTUwMCAwdjc1MCIvPjxwYXRoIGQ9Ik02MDAgMHY3NTAiLz48cGF0aCBkPSJNNzAwIDB2NzUwIi8+PHBhdGggZD0iTTgwMCAwdjc1MCIvPjxwYXRoIGQ9Ik05MDAgMHY3NTAiLz48cGF0aCBkPSJNMTAwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0xMTAwIDB2NzUwIi8+PHBhdGggZD0iTTAgMGgxMjAwIi8+PHBhdGggZD0iTTAgMTAwaDEyMDAiLz48cGF0aCBkPSJNMCAyMDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDMwMGgxMjAwIi8+PHBhdGggZD0iTTAgNDAwaDEyMDAiLz48cGF0aCBkPSJNMCA1MDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDYwMGgxMjAwIi8+PHBhdGggZD0iTTAgNzAwaDEyMDAiLz48L2c+PHJlY3QgeD0iMTYwIiB5PSIxNTAiIHdpZHRoPSI4ODAiIGhlaWdodD0iNDUwIiByeD0iMjQiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzM2NWQ2MyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iNjAwIiB5PSIyODUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5BbGdlYnJhPC90ZXh0Pjx0ZXh0IHg9IjYwMCIgeT0iNDEwIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwNmI2MiI+KHggKyAyKSh4ICsgNSk8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSI1MTUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjMyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5EaXN0cmlidXRlIGV2ZXJ5IHRlcm08L3RleHQ+PC9zdmc+",
+          "alt": "Decorative algebra grid with the expression (x + 2)(x + 5)."
+        }
+      },
+      {
+        "id": "lesson-outcomes",
+        "kind": "outcomes",
+        "title": "What you will learn",
+        "description": "By the end of this lesson, you should be able to:",
+        "intentions": [
+          "Expand a binomial by a trinomial.",
+          "Keep negative signs attached to their terms.",
+          "Multiply coefficients and collect like terms."
+        ],
+        "image": {
+          "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9Ijc1MCIgdmlld0JveD0iMCAwIDEyMDAgNzUwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI3NTAiIGZpbGw9IiNlZGY1ZjMiLz48ZyBzdHJva2U9IiM4YWI0YWQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTAgMHY3NTAiLz48cGF0aCBkPSJNMTAwIDB2NzUwIi8+PHBhdGggZD0iTTIwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0zMDAgMHY3NTAiLz48cGF0aCBkPSJNNDAwIDB2NzUwIi8+PHBhdGggZD0iTTUwMCAwdjc1MCIvPjxwYXRoIGQ9Ik02MDAgMHY3NTAiLz48cGF0aCBkPSJNNzAwIDB2NzUwIi8+PHBhdGggZD0iTTgwMCAwdjc1MCIvPjxwYXRoIGQ9Ik05MDAgMHY3NTAiLz48cGF0aCBkPSJNMTAwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0xMTAwIDB2NzUwIi8+PHBhdGggZD0iTTAgMGgxMjAwIi8+PHBhdGggZD0iTTAgMTAwaDEyMDAiLz48cGF0aCBkPSJNMCAyMDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDMwMGgxMjAwIi8+PHBhdGggZD0iTTAgNDAwaDEyMDAiLz48cGF0aCBkPSJNMCA1MDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDYwMGgxMjAwIi8+PHBhdGggZD0iTTAgNzAwaDEyMDAiLz48L2c+PHJlY3QgeD0iMTYwIiB5PSIxNTAiIHdpZHRoPSI4ODAiIGhlaWdodD0iNDUwIiByeD0iMjQiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzM2NWQ2MyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iNjAwIiB5PSIyODUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5BbGdlYnJhPC90ZXh0Pjx0ZXh0IHg9IjYwMCIgeT0iNDEwIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwNmI2MiI+KHggKyAyKSh4ICsgNSk8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSI1MTUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjMyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5Nb2RlbCDihpIgcHJhY3Rpc2Ug4oaSIGNoZWNrPC90ZXh0Pjwvc3ZnPg==",
+          "alt": "Decorative algebra grid with the expression (x + 2)(x + 5)."
+        }
+      }
+    ],
+    "curriculumMappings": [],
+    "description": "Extend the same distribution process to three terms in the second bracket.",
+    "completion": {
+      "description": "Review any archetype that needs more practice. Finishing the pages is not a claim of assessed mastery.",
+      "image": {
+        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9Ijc1MCIgdmlld0JveD0iMCAwIDEyMDAgNzUwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI3NTAiIGZpbGw9IiNlZGY1ZjMiLz48ZyBzdHJva2U9IiM4YWI0YWQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTAgMHY3NTAiLz48cGF0aCBkPSJNMTAwIDB2NzUwIi8+PHBhdGggZD0iTTIwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0zMDAgMHY3NTAiLz48cGF0aCBkPSJNNDAwIDB2NzUwIi8+PHBhdGggZD0iTTUwMCAwdjc1MCIvPjxwYXRoIGQ9Ik02MDAgMHY3NTAiLz48cGF0aCBkPSJNNzAwIDB2NzUwIi8+PHBhdGggZD0iTTgwMCAwdjc1MCIvPjxwYXRoIGQ9Ik05MDAgMHY3NTAiLz48cGF0aCBkPSJNMTAwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0xMTAwIDB2NzUwIi8+PHBhdGggZD0iTTAgMGgxMjAwIi8+PHBhdGggZD0iTTAgMTAwaDEyMDAiLz48cGF0aCBkPSJNMCAyMDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDMwMGgxMjAwIi8+PHBhdGggZD0iTTAgNDAwaDEyMDAiLz48cGF0aCBkPSJNMCA1MDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDYwMGgxMjAwIi8+PHBhdGggZD0iTTAgNzAwaDEyMDAiLz48L2c+PHJlY3QgeD0iMTYwIiB5PSIxNTAiIHdpZHRoPSI4ODAiIGhlaWdodD0iNDUwIiByeD0iMjQiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzM2NWQ2MyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iNjAwIiB5PSIyODUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5BbGdlYnJhPC90ZXh0Pjx0ZXh0IHg9IjYwMCIgeT0iNDEwIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwNmI2MiI+KHggKyAyKSh4ICsgNSk8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSI1MTUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjMyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5LZWVwIGJ1aWxkaW5nIGNvbXBldGVuY2U8L3RleHQ+PC9zdmc+",
+        "alt": "Decorative algebra grid with the expression (x + 2)(x + 5)."
+      }
+    }
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "binomial-trinomial-products",
+      "title": "Expanding a binomial by a trinomial",
+      "description": "Extend the same distribution process to three terms in the second bracket.",
+      "video": {
+        "url": "https://youtu.be/c17efvFF2as"
+      },
+      "activities": [
+        {
+          "id": "trinomial-introduction",
+          "title": "Introduction",
+          "lede": "The distributive law does not change when one bracket has three terms: each term in the binomial multiplies every term in the trinomial.",
+          "introduction": {
+            "why": "This extends bracket expansion to larger polynomial products without introducing a new method.",
+            "keyIdea": "Each term in the binomial must multiply all three terms in the trinomial.",
+            "method": [
+              "Distribute the first term across the trinomial.",
+              "Distribute the second term across the trinomial.",
+              "Collect like terms."
+            ],
+            "illustration": "(_x_ + 2)(_x_^2 + 3_x_ + 4) → _x_^3 + 5_x_^2 + 10_x_ + 8"
+          }
+        },
+        {
+          "id": "trinomial-video",
+          "title": "Video",
+          "optionalVideo": true,
+          "lede": "Watch: expanding products involving a trinomial.",
+          "focusPoints": [
+            "How each binomial term is distributed across all three trinomial terms.",
+            "How powers and signs are kept organised.",
+            "How like terms are collected at the end."
+          ]
+        },
+        {
+          "id": "trinomial-basic",
+          "title": "Positive terms",
+          "workedExamples": [
+            {
+              "id": "trinomial-basic-group",
+              "type": "sequence",
+              "title": "Positive terms",
+              "examples": [
+                {
+                  "id": "trinomial-basic-example",
+                  "label": "Positive terms",
+                  "prompt": "Expand and simplify (_x_ + 2)(_x_^2 + 3_x_ + 4).",
+                  "steps": [
+                    {
+                      "id": "trinomial-basic-distribute",
+                      "math": "_x_(_x_^2 + 3_x_ + 4) + 2(_x_^2 + 3_x_ + 4)",
+                      "text": "Distribute each binomial term across all three trinomial terms."
+                    },
+                    {
+                      "id": "trinomial-basic-expand",
+                      "math": "_x_^3 + 3_x_^2 + 4_x_ + 2_x_^2 + 6_x_ + 8",
+                      "text": "Expand the six products."
+                    },
+                    {
+                      "id": "trinomial-basic-collect",
+                      "math": "_x_^3 + 5_x_^2 + 10_x_ + 8",
+                      "text": "Collect like terms."
+                    }
+                  ],
+                  "answer": "(_x_ + 2)(_x_^2 + 3_x_ + 4) = _x_^3 + 5_x_^2 + 10_x_ + 8",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Positive terms",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "trinomial-signs",
+          "title": "Negative terms",
+          "workedExamples": [
+            {
+              "id": "trinomial-signs-group",
+              "type": "sequence",
+              "title": "Negative terms",
+              "examples": [
+                {
+                  "id": "trinomial-signs-example",
+                  "label": "Negative terms",
+                  "prompt": "Expand and simplify (_x_ − 3)(_x_^2 + 2_x_ − 5).",
+                  "steps": [
+                    {
+                      "id": "trinomial-signs-distribute",
+                      "math": "_x_(_x_^2 + 2_x_ − 5) − 3(_x_^2 + 2_x_ − 5)",
+                      "text": "Keep the negative sign attached to 3 while distributing."
+                    },
+                    {
+                      "id": "trinomial-signs-expand",
+                      "math": "_x_^3 + 2_x_^2 − 5_x_ − 3_x_^2 − 6_x_ + 15",
+                      "text": "Expand the six products."
+                    },
+                    {
+                      "id": "trinomial-signs-collect",
+                      "math": "_x_^3 − _x_^2 − 11_x_ + 15",
+                      "text": "Collect like terms."
+                    }
+                  ],
+                  "answer": "(_x_ − 3)(_x_^2 + 2_x_ − 5) = _x_^3 − _x_^2 − 11_x_ + 15",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Negative terms",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "trinomial-coefficients",
+          "title": "Coefficients",
+          "workedExamples": [
+            {
+              "id": "trinomial-coefficients-group",
+              "type": "sequence",
+              "title": "Coefficients",
+              "examples": [
+                {
+                  "id": "trinomial-coefficients-example",
+                  "label": "Coefficients",
+                  "prompt": "Expand and simplify (2_x_ − 1)(_x_^2 − _x_ + 3).",
+                  "steps": [
+                    {
+                      "id": "trinomial-coefficients-distribute",
+                      "math": "2_x_(_x_^2 − _x_ + 3) − 1(_x_^2 − _x_ + 3)",
+                      "text": "Distribute both terms across all three trinomial terms."
+                    },
+                    {
+                      "id": "trinomial-coefficients-expand",
+                      "math": "2_x_^3 − 2_x_^2 + 6_x_ − _x_^2 + _x_ − 3",
+                      "text": "Expand the six products."
+                    },
+                    {
+                      "id": "trinomial-coefficients-collect",
+                      "math": "2_x_^3 − 3_x_^2 + 7_x_ − 3",
+                      "text": "Collect like terms."
+                    }
+                  ],
+                  "answer": "(2_x_ − 1)(_x_^2 − _x_ + 3) = 2_x_^3 − 3_x_^2 + 7_x_ − 3",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Coefficients",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "trinomial-practice",
+          "title": "Practice",
+          "lede": "Practise each worked-example archetype, starting with close repetition.",
+          "practiceNote": "Work in your exercise book. Complete Basic before Moderate, then deliberately reveal that group’s answers.",
+          "questions": [
+            {
+              "id": "trinomial-guided-question",
+              "stem": "Expand and simplify (_x_ + 1)(_x_^2 + 2_x_ + 3).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "basic",
+              "answer": "_x_^3 + 3_x_^2 + 5_x_ + 3",
+              "parts": [
+                "Distribute x across the trinomial.",
+                "Distribute 1 across the trinomial.",
+                "Write all six products.",
+                "Collect like terms."
+              ],
+              "workedAnswer": "Use the distribution method shown in the matching worked example.",
+              "futureMetadata": {
+                "keep": "unknown"
+              }
+            },
+            {
+              "id": "binomial-trinomial-products-positive-q2",
+              "stem": "Expand and simplify (_x_ + 2)(_x_^2 + _x_ + 2).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "basic",
+              "answer": "_x_^3 + 3_x_^2 + 4_x_ + 4"
+            },
+            {
+              "id": "question-b029d18f-70c9-4fcf-b1b4-5663e2754527",
+              "stem": "Expand and simplify (_x_ + 1)(_x_^2 + 2_x_ + 3).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "moderate",
+              "answer": "_x_^3 + 3_x_^2 + 5_x_ + 3",
+              "parts": [
+                "Distribute x across the trinomial.",
+                "Distribute 1 across the trinomial.",
+                "Write all six products.",
+                "Collect like terms."
+              ],
+              "workedAnswer": "Use the distribution method shown in the matching worked example.",
+              "futureMetadata": {
+                "keep": "unknown"
+              }
+            },
+            {
+              "id": "binomial-trinomial-products-positive-q3",
+              "stem": "Expand and simplify (_x_ + 3)(_x_^2 + 2_x_ + 1).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "basic",
+              "answer": "_x_^3 + 5_x_^2 + 7_x_ + 3"
+            },
+            {
+              "id": "binomial-trinomial-products-positive-q4",
+              "stem": "Expand and simplify (_x_ + 1)(_x_^2 + 3_x_ + 4).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "basic",
+              "answer": "_x_^3 + 4_x_^2 + 7_x_ + 4"
+            },
+            {
+              "id": "binomial-trinomial-products-positive-q5",
+              "stem": "Expand and simplify (_x_ + 4)(_x_^2 + 5_x_ + 6).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "moderate",
+              "answer": "_x_^3 + 9_x_^2 + 26_x_ + 24"
+            },
+            {
+              "id": "binomial-trinomial-products-positive-q6",
+              "stem": "Expand and simplify (_x_ + 5)(_x_^2 + 4_x_ + 7).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "moderate",
+              "answer": "_x_^3 + 9_x_^2 + 27_x_ + 35"
+            },
+            {
+              "id": "binomial-trinomial-products-signs-q1",
+              "stem": "Expand and simplify (_x_ − 1)(_x_^2 + 2_x_ − 3).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "basic",
+              "answer": "_x_^3 + _x_^2 − 5_x_ + 3"
+            },
+            {
+              "id": "binomial-trinomial-products-signs-q2",
+              "stem": "Expand and simplify (_x_ − 2)(_x_^2 + _x_ − 4).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "basic",
+              "answer": "_x_^3 − _x_^2 − 6_x_ + 8"
+            },
+            {
+              "id": "binomial-trinomial-products-signs-q3",
+              "stem": "Expand and simplify (_x_ − 3)(_x_^2 + _x_ − 2).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "basic",
+              "answer": "_x_^3 − 2_x_^2 − 5_x_ + 6"
+            },
+            {
+              "id": "binomial-trinomial-products-signs-q4",
+              "stem": "Expand and simplify (_x_ − 2)(_x_^2 + 3_x_ − 1).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "basic",
+              "answer": "_x_^3 + _x_^2 − 7_x_ + 2"
+            },
+            {
+              "id": "binomial-trinomial-products-signs-q5",
+              "stem": "Expand and simplify (_x_ − 5)(_x_^2 + 4_x_ − 6).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "moderate",
+              "answer": "_x_^3 − _x_^2 − 26_x_ + 30"
+            },
+            {
+              "id": "binomial-trinomial-products-signs-q6",
+              "stem": "Expand and simplify (_x_ − 4)(_x_^2 + 5_x_ − 7).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "moderate",
+              "answer": "_x_^3 + _x_^2 − 27_x_ + 28"
+            },
+            {
+              "id": "binomial-trinomial-products-coefficients-q1",
+              "stem": "Expand and simplify (2_x_ − 1)(_x_^2 + _x_ + 2).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "basic",
+              "answer": "2_x_^3 + _x_^2 + 3_x_ − 2"
+            },
+            {
+              "id": "binomial-trinomial-products-coefficients-q2",
+              "stem": "Expand and simplify (2_x_ − 3)(_x_^2 + 2_x_ + 1).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "basic",
+              "answer": "2_x_^3 + _x_^2 − 4_x_ − 3"
+            },
+            {
+              "id": "binomial-trinomial-products-coefficients-q3",
+              "stem": "Expand and simplify (3_x_ − 1)(_x_^2 + _x_ + 3).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "basic",
+              "answer": "3_x_^3 + 2_x_^2 + 8_x_ − 3"
+            },
+            {
+              "id": "binomial-trinomial-products-coefficients-q4",
+              "stem": "Expand and simplify (3_x_ − 2)(_x_^2 + 2_x_ + 4).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "basic",
+              "answer": "3_x_^3 + 4_x_^2 + 8_x_ − 8"
+            },
+            {
+              "id": "binomial-trinomial-products-coefficients-q5",
+              "stem": "Expand and simplify (2_x_ − 3)(2_x_^2 − _x_ + 4).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "moderate",
+              "answer": "4_x_^3 − 8_x_^2 + 11_x_ − 12"
+            },
+            {
+              "id": "binomial-trinomial-products-coefficients-q6",
+              "stem": "Expand and simplify (3_x_ − 2)(2_x_^2 − 3_x_ + 5).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "moderate",
+              "answer": "6_x_^3 − 13_x_^2 + 21_x_ − 10"
+            }
+          ],
+          "practiceCollectionId": "trinomial-worked-collection"
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "trinomial-worked-collection",
+          "title": "Worked examples",
+          "members": [
+            "trinomial-basic-example",
+            "trinomial-signs-example",
+            "trinomial-coefficients-example"
+          ]
+        }
+      ]
+    }
+  ]
+}
