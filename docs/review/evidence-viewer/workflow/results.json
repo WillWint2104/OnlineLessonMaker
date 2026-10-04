@@ -21,7 +21,8 @@
     "Task drawer arrow keys do not pan source narrow",
     "Responsive inspection no horizontal overflow narrow",
     "Landscape source uses shared aspect-aware viewer",
-    "JPEG/PNG upload embeds image and intrinsic dimensions through graphical editor",
+    "PNG upload embeds original image and intrinsic dimensions through graphical editor",
+    "JPEG upload embeds original image and intrinsic dimensions through graphical editor",
     "Missing source retains readable provenance and disables failed inspect",
     "Zero page errors",
     "Local acceptance uses no remote requests"
@@ -49,6 +50,6 @@
   ],
   "errors": [],
   "externalRequests": [],
-  "publication": "C:\\Users\\willi\\Videos\\Online Lesson Maker\\docs\\review\\evidence-viewer\\workflow\\published-history.html",
+  "publication": "C:\\Users\\willi\\Videos\\Online Lesson Maker\\review-delivery\\evidence-viewer-review-fixes\\workflow\\published-history.html",
   "scope": "Phase 1A local focused checks; not full WCAG certification"
 }
