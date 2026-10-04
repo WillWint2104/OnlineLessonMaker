@@ -4827,6 +4827,7 @@ function figFocusExit(){
 }
 function renderSlide(){ renderCanvas(); renderInspector(); }
 function renderCanvas(){
+  EV_SOURCES.clear();
   figFocusExit();                                                          // the slide is about to be replaced — never strand a reparented figure
   const realEdit=(mode==='edit'), _savedMode=mode;
   const s=LESSON.slides[cur], i=cur; let h='';
@@ -5439,10 +5440,23 @@ function blockKcForm(i,b,sel,base){   // lean knowledgeCheck block (question + o
    (modal/zoom/tooltip/reveal — NOT goToPage) with payload fields conditional on the chosen effect; the effect
    select carries data-reinspect so switching it re-renders the payload fields. Reuses inSel/inT/inA + the
    base-aware repeatGroup (full-path add/del). */
+function evForm(b,base){
+  if(!evConfigured(b))return `<div class="isec"><div class="isec-h">Evidence source</div><button type="button" class="ibtn-add" data-ev-enable="${esc(base)}">Enable source inspection and citation</button></div>`;
+  const m=b.sourceMetadata||{},field=(label,path,value,area=false)=>`<label>${esc(label)}${area?`<textarea class="ia" data-ev-field="${esc(path)}">${esc(value||'')}</textarea>`:`<input class="ii" data-ev-field="${esc(path)}" value="${esc(value||'')}">`}</label>`;
+  return `<div class="isec"><div class="isec-h">Evidence source</div>${field('Stable source ID',base+'.id',b.id)}<label>Choose source image (JPEG / PNG)<input type="file" accept="image/jpeg,image/png" data-ev-upload="${esc(base)}"></label><p class="ihint" data-ev-upload-status>Imported files are embedded for independent publication.</p><label><input type="checkbox" data-ev-enabled="${esc(base)}"${b.evidence.inspect!==false?' checked':''}> Inspect source enabled</label><h4>Essential citation</h4>${[['title','Title'],['date','Date'],['institution','Institution'],['accession','Identifier']].map(([k,l])=>field(l,base+'.sourceMetadata.'+k,m[k])).join('')}<details><summary>Expanded provenance</summary>${[['creator','Creator'],['originatingBody','Originating body'],['collection','Collection'],['rights','Rights / licence'],['url','Source URL'],['attribution','Attribution'],['notes','Relevant notes']].map(([k,l])=>field(l,base+'.sourceMetadata.'+k,m[k],k==='notes')).join('')}</details>${field('Task available during inspection',base+'.evidence.task',b.evidence.task,true)}<p class="ihint">Annotations are deferred. Future annotations can refer to this stable source ID.</p><button class="ibtn-add" type="button" data-ev-disable="${esc(base)}">Return to ordinary image presentation</button></div>`;
+}
+function evInspectorWire(ins){
+  ins.querySelectorAll('[data-ev-field]').forEach(el=>el.oninput=()=>{lpSet(el.dataset.evField,el.value);renderCanvas();});
+  ins.querySelectorAll('[data-ev-enable]').forEach(button=>button.onclick=()=>{const b=getP(LESSON,button.dataset.evEnable);if(!b.id)b.id='source-'+crypto.randomUUID();b.evidence={inspect:true,task:''};renderSlide();});
+  ins.querySelectorAll('[data-ev-disable]').forEach(button=>button.onclick=()=>{delete getP(LESSON,button.dataset.evDisable).evidence;renderSlide();});
+  ins.querySelectorAll('[data-ev-enabled]').forEach(box=>box.onchange=()=>{getP(LESSON,box.dataset.evEnabled).evidence.inspect=box.checked;renderCanvas();});
+  ins.querySelectorAll('[data-ev-upload]').forEach(input=>input.onchange=async()=>{const file=input.files?.[0],status=input.closest('.isec').querySelector('[data-ev-upload-status]'),owner=LESSON,b=getP(owner,input.dataset.evUpload);if(!file)return;if(!['image/jpeg','image/png'].includes(file.type)){status.textContent='Choose a JPEG or PNG image.';return;}try{const src=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);}),image=new Image();image.src=src;await image.decode();if(LESSON!==owner||getP(owner,input.dataset.evUpload)!==b)return;b.src=src;if(!b.id)b.id='source-'+crypto.randomUUID();b.sourceMetadata={...(b.sourceMetadata||{}),width:image.naturalWidth,height:image.naturalHeight};status.textContent='Embedded '+image.naturalWidth+' × '+image.naturalHeight+' image.';renderCanvas();}catch{status.textContent='Image could not be read. Choose a valid JPEG or PNG file.';}});
+}
+
 function blockImageForm(i,b,sel,base,evidenceOnly=false){
   if(evidenceOnly)return ig('src',sel,inT('Image URL / data URI',`${base}.src`,b.src))
     +ig('alt',sel,inT('Alt text (accessibility)',`${base}.alt`,b.alt))
-    +ig('caption',sel,inT('Caption (optional)',`${base}.caption`,b.caption));
+    +ig('caption',sel,inT('Caption (optional)',`${base}.caption`,b.caption))+evForm(b,base);
   const its=Array.isArray(b.interactions)?b.interactions:[];
   its.forEach(it=>{ if(it&&typeof it==='object'&&!it.payload) it.payload={}; });   // ensure payload exists so its dot-path fields bind (setP doesn't create intermediates); edit-only, render-invariant
   const EFFECTS=[['modal','Window (modal)'],['zoom','Zoom image'],['tooltip','Tooltip'],['reveal','Click to reveal']];
@@ -5464,7 +5478,7 @@ function blockImageForm(i,b,sel,base,evidenceOnly=false){
   else if(place==='pair') placeFields=
       ig('a',sel,inT('Left image URL / data URI',`${base}.a.src`,(b.a||{}).src)+inT('Left alt text',`${base}.a.alt`,(b.a||{}).alt)+inT('Left label (optional)',`${base}.a.label`,(b.a||{}).label))
      +ig('b',sel,inT('Right image URL / data URI',`${base}.b.src`,(b.b||{}).src)+inT('Right alt text',`${base}.b.alt`,(b.b||{}).alt)+inT('Right label (optional)',`${base}.b.label`,(b.b||{}).label));
-  return ig('placement',sel,inSel('Placement',`${base}.placement`,place,[['','Inline (default — bare image)'],['contained','Contained figure (centred ~78%, caption)'],['beside','Beside text (one unit, stacks on mobile)'],['pair','Comparison pair (two images)']],'data-reinspect'))
+  return evForm(b,base)+ig('placement',sel,inSel('Placement',`${base}.placement`,place,[['','Inline (default — bare image)'],['contained','Contained figure (centred ~78%, caption)'],['beside','Beside text (one unit, stacks on mobile)'],['pair','Comparison pair (two images)']],'data-reinspect'))
     +ig('src',sel,inT('Image URL / data URI',`${base}.src`,b.src))
     +ig('alt',sel,inT('Alt text (accessibility)',`${base}.alt`,b.alt)+altWarn+pairWarn)
     +(place?ig('caption',sel,inT('Caption (optional, shown under the figure)',`${base}.caption`,b.caption)):'')
@@ -6579,6 +6593,7 @@ function renderInspector(){
   const c=ins.querySelector('.cur'); if(c) c.scrollIntoView({block:'nearest'});
 }
 function wireInspector(){
+  evInspectorWire($('#inspector'));
   const ins=$('#inspector');
   ins.querySelectorAll('[data-bind]').forEach(el=>el.addEventListener('input',()=>{ (lpEnabled(LESSON.slides[cur])?lpSet:setP.bind(null,LESSON))(el.dataset.bind, el.value); renderCanvas(); }));
   // infographic: switching variant swaps the figures editor ⇄ donut-segments editor, so re-render the form
@@ -11029,27 +11044,27 @@ function evProvenance(b){const m=b.sourceMetadata||{},fields=[['title','Title'],
 let EV_LOADING;
 function evLoad(){
   if(window.OpenSeadragon)return Promise.resolve(window.OpenSeadragon);
-  if(!EV_LOADING)EV_LOADING=new Promise((resolve,reject)=>{try{const payload=document.getElementById('ev-runtime-data')?.content.textContent.trim();if(!payload)throw Error('Inspection runtime unavailable.');const script=document.createElement('script');script.dataset.evRuntime='';script.textContent=atob(payload);document.head.append(script);script.remove();if(!window.OpenSeadragon)throw Error('Inspection runtime unavailable.');resolve(window.OpenSeadragon);}catch(e){reject(e);}});
+  if(!EV_LOADING)EV_LOADING=new Promise((resolve,reject)=>{try{const payload=document.getElementById('ev-runtime-data')?.content.textContent.trim();if(!payload)throw Error('Inspection runtime unavailable.');const script=document.createElement('script');script.dataset.evRuntime='';script.textContent=new TextDecoder().decode(Uint8Array.from(atob(payload),c=>c.charCodeAt(0)));document.head.append(script);script.remove();if(!window.OpenSeadragon)throw Error('Inspection runtime unavailable.');resolve(window.OpenSeadragon);}catch(e){reject(e);}});
   return EV_LOADING;
 }
 function evDialog(b,opener,inspect){
   if(document.querySelector('dialog[open]'))return;
   const d=document.createElement('dialog');d.className='ev-dialog'+(inspect?' ev-inspecting':'');d.setAttribute('aria-labelledby','ev-dialog-title');
   const m=b.sourceMetadata||{},src=evSrc(b.src),e=b.evidence||{};
-  d.innerHTML=`<header><h2 id="ev-dialog-title">${inspect?'Inspect source':'Source details'}${m.title?' · '+esc(m.title):''}</h2><button type="button" data-ev-close>Close</button></header>${inspect?`<nav aria-label="Source view controls"><button data-ev-command="in">Zoom in</button><button data-ev-command="out">Zoom out</button><button data-ev-command="fit">Fit source</button><button data-ev-command="reset">Reset view</button><button data-ev-task aria-expanded="false">Task</button><button data-ev-provenance aria-expanded="false">Source details</button></nav><div class="ev-workspace"><div class="ev-stage" tabindex="0" aria-label="Source inspection. Arrow keys pan; plus and minus zoom; zero fits the source."><img class="ev-fallback" src="${esc(src)}" alt="${esc(b.alt||'')}"><p class="ev-loading" role="status">Opening source…</p></div><aside class="ev-drawer" hidden><section data-ev-task-panel hidden><h3>Inquiry task</h3><p>${esc(e.task||'Return to the source and task in the lesson after inspection.')}</p></section><section data-ev-provenance-panel hidden><h3>Source details</h3>${evProvenance(b)}</section></aside></div><p class="ev-citation">${esc([m.title,m.date].filter(Boolean).join(', '))}${m.institution||m.accession?' · '+esc([m.institution,m.accession].filter(Boolean).join(' · ')):''}</p>`:`<section class="ev-detail-text">${evProvenance(b)}</section>`}`;
+  d.innerHTML=`<header><h2 id="ev-dialog-title">${inspect?'Inspect source':'Source details'}${m.title?' · '+esc(m.title):''}</h2><button type="button" data-ev-close>Close</button></header>${inspect?`<nav aria-label="Source view controls"><button data-ev-command="in">Zoom in</button><button data-ev-command="out">Zoom out</button><button data-ev-command="fit">Fit source</button><button data-ev-command="reset">Reset view</button><button data-ev-task aria-expanded="false">Task</button><button data-ev-provenance aria-expanded="false">Source details</button></nav><div class="ev-workspace"><div class="ev-stage" tabindex="0" aria-label="Source inspection. ${esc(b.alt||'')} Arrow keys pan; plus and minus zoom; zero fits the source."><img class="ev-fallback" src="${esc(src)}" alt="${esc(b.alt||'')}"><p class="ev-loading" role="status">Opening source…</p></div><aside class="ev-drawer" hidden><section data-ev-task-panel hidden><h3>Inquiry task</h3><p>${esc(e.task||'Return to the source and task in the lesson after inspection.')}</p></section><section data-ev-provenance-panel hidden><h3>Source details</h3>${evProvenance(b)}</section></aside></div><p class="ev-citation">${esc([m.title,m.date].filter(Boolean).join(', '))}${m.institution||m.accession?' · '+esc([m.institution,m.accession].filter(Boolean).join(' · ')):''}</p>`:`<section class="ev-detail-text">${evProvenance(b)}</section>`}`;
   document.body.append(d);let viewer,closed=false,usingPyramid=false;
   d.querySelector('[data-ev-close]').onclick=()=>d.close();
   d.addEventListener('close',()=>{closed=true;viewer?.destroy();d.remove();if(opener.isConnected)opener.focus({preventScroll:true});});
-  d.addEventListener('keydown',event=>{event.stopPropagation();if(event.key==='Escape'){event.preventDefault();d.close();return;}if(event.key==='Tab'){const items=[...d.querySelectorAll('button,a[href],[tabindex="0"]')].filter(x=>!x.disabled&&x.getClientRects().length),i=items.indexOf(document.activeElement);if(items.length){event.preventDefault();items[(i+(event.shiftKey?-1:1)+items.length)%items.length].focus();}return;}if(event.target.closest('button,a,textarea,input,select')||!viewer)return;const v=viewer.viewport;let handled=true;if(event.key==='ArrowRight')v.panBy(new OpenSeadragon.Point(.06,0));else if(event.key==='ArrowLeft')v.panBy(new OpenSeadragon.Point(-.06,0));else if(event.key==='ArrowDown')v.panBy(new OpenSeadragon.Point(0,.06));else if(event.key==='ArrowUp')v.panBy(new OpenSeadragon.Point(0,-.06));else if(['+','='].includes(event.key))v.zoomBy(1.4);else if(event.key==='-')v.zoomBy(1/1.4);else if(event.key==='0')v.goHome();else handled=false;if(handled){event.preventDefault();v.applyConstraints();}});
+  d.addEventListener('keydown',event=>{event.stopPropagation();if(event.key==='Escape'){event.preventDefault();d.close();return;}if(event.key==='Tab'){const items=[...d.querySelectorAll('button,a[href],[tabindex="0"]')].filter(x=>!x.disabled&&x.getClientRects().length),i=items.indexOf(document.activeElement);if(items.length){event.preventDefault();items[(i+(event.shiftKey?-1:1)+items.length)%items.length].focus();}return;}if(event.target.closest('button,a,textarea,input,select')||!viewer)return;const v=viewer.viewport;let handled=true;if(event.key==='ArrowRight')v.panBy(new OpenSeadragon.Point(.06,0),true);else if(event.key==='ArrowLeft')v.panBy(new OpenSeadragon.Point(-.06,0),true);else if(event.key==='ArrowDown')v.panBy(new OpenSeadragon.Point(0,.06),true);else if(event.key==='ArrowUp')v.panBy(new OpenSeadragon.Point(0,-.06),true);else if(['+','='].includes(event.key))v.zoomBy(1.4);else if(event.key==='-')v.zoomBy(1/1.4);else if(event.key==='0')v.goHome();else handled=false;if(handled){event.preventDefault();v.applyConstraints();}});
   d.showModal();d.querySelector('[data-ev-close]').focus({preventScroll:true});if(!inspect)return;
   const stage=d.querySelector('.ev-stage'),status=d.querySelector('.ev-loading'),drawer=d.querySelector('.ev-drawer');
-  const commands=d.querySelectorAll('[data-ev-command]');commands.forEach(x=>{x.disabled=true;x.onclick=()=>{if(!viewer)return;const v=viewer.viewport,command=x.dataset.evCommand;if(command==='fit'||command==='reset'){v.setRotation(0);v.goHome(true);}else{v.zoomBy(command==='in'?1.4:1/1.4);v.applyConstraints();}};});
+  const commands=d.querySelectorAll('[data-ev-command]');commands.forEach(x=>{x.disabled=true;x.onclick=()=>{if(!viewer)return;const v=viewer.viewport,command=x.dataset.evCommand;if(command==='fit'||command==='reset'){v.setRotation(0);v.goHome(true);}else{v.zoomBy(command==='in'?1.4:1/1.4,null,true);v.applyConstraints(true);}};});
   for(const name of ['task','provenance'])d.querySelector('[data-ev-'+name+']').onclick=()=>{const button=d.querySelector('[data-ev-'+name+']'),panel=d.querySelector('[data-ev-'+name+'-panel]'),open=button.getAttribute('aria-expanded')!=='true';button.setAttribute('aria-expanded',String(open));panel.hidden=!open;drawer.hidden=![...drawer.children].some(x=>!x.hidden);};
   const pyramid=e.pyramid; // provider-neutral local pyramid contract; single-file exports inspect embedded preview.
   evLoad().then(OSD=>{if(closed)return;let tiles={type:'image',url:src};if(pyramid&&document.documentElement.dataset.export!=='1'&&Number.isInteger(pyramid.width)&&pyramid.width>0&&Number.isInteger(pyramid.height)&&pyramid.height>0&&Number.isInteger(pyramid.tileSize)&&pyramid.tileSize>0&&/^\/?[\w./-]+\/$/.test(pyramid.baseUrl||'')&&!pyramid.baseUrl.split('/').includes('..')&&['jpg','jpeg','png','svg'].includes(pyramid.format)){usingPyramid=true;tiles={width:pyramid.width,height:pyramid.height,tileSize:pyramid.tileSize,tileOverlap:0,minLevel:0,maxLevel:Math.ceil(Math.log2(Math.max(pyramid.width,pyramid.height))),getTileUrl:(level,x,y)=>pyramid.baseUrl+level+'/'+x+'_'+y+'.'+pyramid.format};}
     const canvas=document.createElement('div');canvas.className='ev-canvas';canvas.setAttribute('aria-hidden','true');stage.prepend(canvas);
-    viewer=OSD({element:canvas,tileSources:tiles,showNavigationControl:false,showNavigator:false,animationTime:.15,visibilityRatio:1,constrainDuringPan:true,maxZoomPixelRatio:3,gestureSettingsMouse:{clickToZoom:false},gestureSettingsTouch:{pinchToZoom:true}});d.evViewer=viewer;
-    viewer.addHandler('open',()=>{if(closed)return;d.querySelector('.ev-fallback').hidden=true;commands.forEach(x=>x.disabled=false);const item=viewer.world.getItemAt(0),size=item.getContentSize();status.textContent=usingPyramid?'':pyramid?'Single-file publication: inspecting the embedded preview; local pyramid tiles are not embedded.':size.x<800||size.y<600?'Limited-resolution image ('+size.x+' × '+size.y+'); zoom cannot recover missing detail.':'';});
+    viewer=OSD({element:canvas,tileSources:tiles,showNavigationControl:false,showNavigator:false,preserveImageSizeOnResize:true,animationTime:.15,visibilityRatio:1,constrainDuringPan:true,maxZoomPixelRatio:3,gestureSettingsMouse:{clickToZoom:false},gestureSettingsTouch:{pinchToZoom:true}});d.evViewer=viewer;
+    viewer.addHandler('open',()=>{if(closed)return;canvas.querySelectorAll('[tabindex]').forEach(el=>el.tabIndex=-1);d.querySelector('.ev-fallback').hidden=true;commands.forEach(x=>x.disabled=false);const item=viewer.world.getItemAt(0),size=item.getContentSize();status.textContent=usingPyramid?'':pyramid?'Single-file publication: inspecting the embedded preview; local pyramid tiles are not embedded.':size.x<800||size.y<600?'Limited-resolution image ('+size.x+' × '+size.y+'); zoom cannot recover missing detail.':'';});
     const failure=()=>{if(closed)return;if(usingPyramid){usingPyramid=false;viewer.open({type:'image',url:src});status.textContent='Local tiles unavailable; showing the supplied preview.';}else{canvas.hidden=true;d.querySelector('.ev-fallback').hidden=false;status.textContent='Source inspection unavailable. The image description and source details remain available.';commands.forEach(x=>x.disabled=true);}};viewer.addHandler('open-failed',failure);viewer.addHandler('tile-load-failed',failure);
   }).catch(()=>{if(!closed)status.textContent='Advanced inspection unavailable; showing the supplied image. Source details remain available.';});
 }
@@ -14025,8 +14040,9 @@ async function inlineRemoteAssets(lesson){
     if(Array.isArray(o)){ o.forEach(walk); return; }
     Object.keys(o).forEach(k=>{ const v=o[k];
       if(typeof v==='string'){
+        if(k==='src'&&evConfigured(o)&&v&&!v.startsWith('data:'))lessonImages.add(o);
         if(MEDIA_KEYS[k]&&isRemote(v)) tasks.push({o,k,url:v});
-        else if(k==='icon'&&isRelImg(v)) tasks.push({o,k,url:new URL(v,document.baseURI).href});   // repo-relative icon path → resolve + inline so exports stay self-contained
+        else if((k==='icon'||(k==='src'&&evConfigured(o)))&&isRelImg(v)) tasks.push({o,k,url:new URL(v,document.baseURI).href});   // repo-relative icon path → resolve + inline so exports stay self-contained
       }
       else if(v&&typeof v==='object') walk(v);
     });
