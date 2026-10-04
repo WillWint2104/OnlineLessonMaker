@@ -7,6 +7,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Evidence Viewer foundation
+- Add opt-in, aspect-aware single-source images with structured citation/provenance and large keyboard-accessible inspection; preserve lesson navigation, response state and source view while toggling the task pane.
+- Integrate graphical JPEG/PNG import, metadata and inspection controls in the existing image editor; keep export/reopen and independent single-file publication.
+- Pin OpenSeadragon 6.1.1 with bundled licence and inert local runtime; initialize on Inspect and omit its payload from exports without inspection. Local tiled exports disclose embedded-preview fallback.
+- Adopt individual Home Front sources and verify a shared synthetic Science fixture, local PNG pyramids, responsive layouts and native 200% zoom. Maps, hotspots and analytical comparison remain deferred.
+
 ### Home-front propaganda classroom lesson
 - Add a three-skill Year 10 History source inquiry using two authentic public-domain Australian War Memorial posters, optional prose analysis, paper tasks and a short comparative argument.
 - Verify four NSW History 7–10 (2024) outcome mappings with explicit partial coverage; include source provenance, teacher guidance, responses and a formative rubric.

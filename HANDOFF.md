@@ -2,6 +2,10 @@
 
 _Last updated: 2026-06-20_
 
+## Evidence Viewer Phase 1A (4 October 2026)
+
+Single image parts/blocks can opt into evidence:{inspect:true,task:...}, retaining src/alt/id/sourceMetadata. Native inline presentation preserves aspect; the shared ev adapter owns inspection/provenance and disposes its viewer on close. OpenSeadragon 6.1.1 is an inert embedded payload initialized only on Inspect, so the app and ordinary exported lessons remain single-file. Exports with no inspectable source omit the payload. Local pyramids need tile assets/HTTP; single-file exports explicitly inspect their embedded preview. The existing image inspector edits assets, citation, provenance and inspection; no new editor, response store, map engine or publication architecture. Three individual Home Front source instances opt in; lesson pedagogy and existing comparisons remain unchanged. See docs/review/evidence-viewer/ for contract, byte measurements, source/authoring/publication/zoom checks and captures. Full pipeline includes the two new focused gates. Phase 1B hotspots and all map work remain deferred pending viewer acceptance.
+
 ## Qualitative classroom lesson (3 October 2026)
 
 The first real qualitative-domain test is `lessons/australia-home-front-propaganda.html`, with editable data under the matching lesson directory. It uses three historical skills, two authentic public-domain AWM posters, shared Evidence + task and an existing optional two-state prose model. It maps only four verified NSW History 7–10 (2024) outcomes with partial coverage. Teacher guide, source catalogue and response rubric are in `docs/lessons/australia-home-front-propaganda/`; actual captures and authoring/publication evidence are in `docs/review/home-front-propaganda/`. Application code is unchanged. Structured provenance remains JSON; representation-state labels and visible regions have existing controls and captions remain plain text; full source links are in the guide/gallery/catalogue. No substantial qualitative blocker was found. Teacher videos, tablet question references, curriculum expansion and WWII styling remain deferred.
