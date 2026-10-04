@@ -7,6 +7,12 @@ All notable changes to **Lesson Studio** are recorded here. Format follows
 
 ## [Unreleased]
 
+### Mathematics M1
+- Collapse learner worked collections to core destinations while retaining internal tabs, sequential Back/Next and nested authoring controls.
+- Simplify single-skill Mathematics presentation; link authored Basic/Moderate practice to stable worked-example IDs with grouped answer reveal and optional worked answers.
+- Add connected practice authoring and an optional completion image using the existing image controls; preserve JSON, paper response and single-file publication.
+- Split the actual Expanding brackets test into two one-skill lessons, each with its supplied video and 18 independent checked problems. Calculator and graph-sketch integration remain deferred pending M1 review.
+
 ### Evidence Viewer foundation
 - Add opt-in, aspect-aware single-source images with structured citation/provenance and large keyboard-accessible inspection; preserve lesson navigation, response state and source view while toggling the task pane.
 - Integrate graphical JPEG/PNG import, metadata and inspection controls in the existing image editor; keep export/reopen and independent single-file publication.

@@ -1,0 +1,469 @@
+{
+  "meta": {
+    "title": "Expanding brackets",
+    "theme": "neutral",
+    "id": "expanding-brackets-classroom",
+    "subject": "Mathematics",
+    "player": "activities",
+    "responseMode": "paper",
+    "context": "Algebra review",
+    "frontMatter": [
+      {
+        "id": "lesson-overview",
+        "kind": "overview",
+        "title": "Expanding brackets",
+        "description": "Expand products of binomials and binomial–trinomial products, keep signs organised and collect like terms."
+      },
+      {
+        "id": "lesson-outcomes",
+        "kind": "outcomes",
+        "title": "What you will learn",
+        "description": "By the end of this lesson, you should be able to:",
+        "intentions": [
+          "Expand the product of two binomials.",
+          "Expand products containing coefficients and negative terms.",
+          "Expand a binomial by a trinomial.",
+          "Collect like terms to write the final expression in simplest form."
+        ]
+      }
+    ],
+    "curriculumMappings": []
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "binomial-products",
+      "title": "Expanding two binomials",
+      "description": "Expand two brackets systematically and collect like terms.",
+      "video": {
+        "url": "https://youtu.be/8cDC_Y2MKwA"
+      },
+      "activities": [
+        {
+          "id": "binomial-introduction",
+          "title": "Introduction",
+          "lede": "When two binomials are multiplied, every term in one bracket must multiply every term in the other bracket.",
+          "introduction": {
+            "why": "Expanding brackets rewrites a product as one polynomial expression and prepares you for later algebraic manipulation.",
+            "keyIdea": "Every term in the first bracket multiplies every term in the second bracket.",
+            "method": [
+              "Distribute each term across the other bracket.",
+              "Keep the sign attached to each term.",
+              "Collect like terms."
+            ],
+            "illustration": "(_x_ + 2)(_x_ + 5) → _x_^2 + 7_x_ + 10"
+          }
+        },
+        {
+          "id": "binomial-video",
+          "title": "Video",
+          "optionalVideo": true,
+          "lede": "Watch: expanding products of two brackets.",
+          "focusPoints": [
+            "How every term is distributed.",
+            "How negative signs are handled.",
+            "How like terms are collected at the end."
+          ]
+        },
+        {
+          "id": "binomial-positive",
+          "title": "Positive terms",
+          "workedExamples": [
+            {
+              "id": "binomial-positive-group",
+              "type": "sequence",
+              "title": "Positive terms",
+              "examples": [
+                {
+                  "id": "binomial-positive-example",
+                  "label": "Positive terms",
+                  "prompt": "Expand and simplify (_x_ + 2)(_x_ + 5).",
+                  "steps": [
+                    {
+                      "id": "binomial-positive-distribute",
+                      "math": "_x_(_x_ + 5) + 2(_x_ + 5)",
+                      "text": "Distribute both terms from the first bracket."
+                    },
+                    {
+                      "id": "binomial-positive-expand",
+                      "math": "_x_^2 + 5_x_ + 2_x_ + 10",
+                      "text": "Expand each product."
+                    },
+                    {
+                      "id": "binomial-positive-collect",
+                      "math": "_x_^2 + 7_x_ + 10",
+                      "text": "Collect the like terms."
+                    }
+                  ],
+                  "answer": "(_x_ + 2)(_x_ + 5) = _x_^2 + 7_x_ + 10",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Positive terms",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "binomial-negative",
+          "title": "A negative term",
+          "workedExamples": [
+            {
+              "id": "binomial-negative-group",
+              "type": "sequence",
+              "title": "A negative term",
+              "examples": [
+                {
+                  "id": "binomial-negative-example",
+                  "label": "A negative term",
+                  "prompt": "Expand and simplify (_x_ − 4)(_x_ + 3).",
+                  "steps": [
+                    {
+                      "id": "binomial-negative-distribute",
+                      "math": "_x_(_x_ + 3) − 4(_x_ + 3)",
+                      "text": "Keep the negative sign with 4 when distributing."
+                    },
+                    {
+                      "id": "binomial-negative-expand",
+                      "math": "_x_^2 + 3_x_ − 4_x_ − 12",
+                      "text": "Expand each product."
+                    },
+                    {
+                      "id": "binomial-negative-collect",
+                      "math": "_x_^2 − _x_ − 12",
+                      "text": "Collect the like terms."
+                    }
+                  ],
+                  "answer": "(_x_ − 4)(_x_ + 3) = _x_^2 − _x_ − 12",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Negative term",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "binomial-coefficients",
+          "title": "Coefficients",
+          "workedExamples": [
+            {
+              "id": "binomial-coefficients-group",
+              "type": "sequence",
+              "title": "Coefficients",
+              "examples": [
+                {
+                  "id": "binomial-coefficients-example",
+                  "label": "Coefficients",
+                  "prompt": "Expand and simplify (2_x_ + 3)(_x_ − 5).",
+                  "steps": [
+                    {
+                      "id": "binomial-coefficients-distribute",
+                      "math": "2_x_(_x_ − 5) + 3(_x_ − 5)",
+                      "text": "Distribute 2x and then 3 across the second bracket."
+                    },
+                    {
+                      "id": "binomial-coefficients-expand",
+                      "math": "2_x_^2 − 10_x_ + 3_x_ − 15",
+                      "text": "Expand each product."
+                    },
+                    {
+                      "id": "binomial-coefficients-collect",
+                      "math": "2_x_^2 − 7_x_ − 15",
+                      "text": "Collect the like terms."
+                    }
+                  ],
+                  "answer": "(2_x_ + 3)(_x_ − 5) = 2_x_^2 − 7_x_ − 15",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Coefficients",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "binomial-guided",
+          "title": "Your turn: expand two binomials",
+          "lede": "Use the same distribution process, then collect like terms.",
+          "practiceNote": "Complete the working in your exercise book.",
+          "questions": [
+            {
+              "id": "binomial-guided-question",
+              "stem": "Expand and simplify (_x_ + 4)(_x_ − 3).",
+              "parts": [
+                "Write the distributed form _x_(_x_ − 3) + 4(_x_ − 3).",
+                "Expand the two products.",
+                "Collect the like terms.",
+                "State the final simplified expression."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "binomial-practice",
+          "title": "Independent practice: two binomials",
+          "lede": "Expand each product and simplify completely.",
+          "practiceNote": "Show enough working to make the distribution and collection of like terms clear.",
+          "questions": [
+            {
+              "id": "binomial-practice-positive",
+              "stem": "Expand and simplify.",
+              "parts": [
+                "(_x_ + 3)(_x_ + 7)",
+                "(_x_ + 4)(_x_ + 6)",
+                "(_x_ + 1)(_x_ + 9)"
+              ]
+            },
+            {
+              "id": "binomial-practice-signs",
+              "stem": "Expand and simplify. Pay attention to the signs.",
+              "parts": [
+                "(_x_ − 5)(_x_ + 2)",
+                "(_x_ + 6)(_x_ − 3)",
+                "(_x_ − 4)(_x_ − 7)"
+              ]
+            },
+            {
+              "id": "binomial-practice-coefficients",
+              "stem": "Expand and simplify.",
+              "parts": [
+                "(2_x_ + 1)(_x_ + 5)",
+                "(3_x_ − 2)(_x_ + 4)",
+                "(2_x_ − 3)(2_x_ + 1)"
+              ]
+            },
+            {
+              "id": "binomial-practice-error",
+              "stem": "A student writes (_x_ + 2)(_x_ + 5) = _x_^2 + 10.",
+              "parts": [
+                "Explain what the student has missed.",
+                "Write the correct expanded expression."
+              ]
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "binomial-worked-collection",
+          "title": "Worked examples",
+          "members": [
+            "binomial-positive-example",
+            "binomial-negative-example",
+            "binomial-coefficients-example"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "skill",
+      "id": "binomial-trinomial-products",
+      "title": "Expanding a binomial by a trinomial",
+      "description": "Extend the same distribution process to three terms in the second bracket.",
+      "video": {
+        "url": "https://youtu.be/c17efvFF2as"
+      },
+      "activities": [
+        {
+          "id": "trinomial-introduction",
+          "title": "Introduction",
+          "lede": "The distributive law does not change when one bracket has three terms: each term in the binomial multiplies every term in the trinomial.",
+          "introduction": {
+            "why": "This extends bracket expansion to larger polynomial products without introducing a new method.",
+            "keyIdea": "Each term in the binomial must multiply all three terms in the trinomial.",
+            "method": [
+              "Distribute the first term across the trinomial.",
+              "Distribute the second term across the trinomial.",
+              "Collect like terms."
+            ],
+            "illustration": "(_x_ + 2)(_x_^2 + 3_x_ + 4) → _x_^3 + 5_x_^2 + 10_x_ + 8"
+          }
+        },
+        {
+          "id": "trinomial-video",
+          "title": "Video",
+          "optionalVideo": true,
+          "lede": "Watch: expanding products involving a trinomial.",
+          "focusPoints": [
+            "How each binomial term is distributed across all three trinomial terms.",
+            "How powers and signs are kept organised.",
+            "How like terms are collected at the end."
+          ]
+        },
+        {
+          "id": "trinomial-basic",
+          "title": "Positive terms",
+          "workedExamples": [
+            {
+              "id": "trinomial-basic-group",
+              "type": "sequence",
+              "title": "Positive terms",
+              "examples": [
+                {
+                  "id": "trinomial-basic-example",
+                  "label": "Positive terms",
+                  "prompt": "Expand and simplify (_x_ + 2)(_x_^2 + 3_x_ + 4).",
+                  "steps": [
+                    {
+                      "id": "trinomial-basic-distribute",
+                      "math": "_x_(_x_^2 + 3_x_ + 4) + 2(_x_^2 + 3_x_ + 4)",
+                      "text": "Distribute each binomial term across all three trinomial terms."
+                    },
+                    {
+                      "id": "trinomial-basic-expand",
+                      "math": "_x_^3 + 3_x_^2 + 4_x_ + 2_x_^2 + 6_x_ + 8",
+                      "text": "Expand the six products."
+                    },
+                    {
+                      "id": "trinomial-basic-collect",
+                      "math": "_x_^3 + 5_x_^2 + 10_x_ + 8",
+                      "text": "Collect like terms."
+                    }
+                  ],
+                  "answer": "(_x_ + 2)(_x_^2 + 3_x_ + 4) = _x_^3 + 5_x_^2 + 10_x_ + 8",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Positive terms",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "trinomial-signs",
+          "title": "Negative terms",
+          "workedExamples": [
+            {
+              "id": "trinomial-signs-group",
+              "type": "sequence",
+              "title": "Negative terms",
+              "examples": [
+                {
+                  "id": "trinomial-signs-example",
+                  "label": "Negative terms",
+                  "prompt": "Expand and simplify (_x_ − 3)(_x_^2 + 2_x_ − 5).",
+                  "steps": [
+                    {
+                      "id": "trinomial-signs-distribute",
+                      "math": "_x_(_x_^2 + 2_x_ − 5) − 3(_x_^2 + 2_x_ − 5)",
+                      "text": "Keep the negative sign attached to 3 while distributing."
+                    },
+                    {
+                      "id": "trinomial-signs-expand",
+                      "math": "_x_^3 + 2_x_^2 − 5_x_ − 3_x_^2 − 6_x_ + 15",
+                      "text": "Expand the six products."
+                    },
+                    {
+                      "id": "trinomial-signs-collect",
+                      "math": "_x_^3 − _x_^2 − 11_x_ + 15",
+                      "text": "Collect like terms."
+                    }
+                  ],
+                  "answer": "(_x_ − 3)(_x_^2 + 2_x_ − 5) = _x_^3 − _x_^2 − 11_x_ + 15",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Negative terms",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "trinomial-coefficients",
+          "title": "Coefficients",
+          "workedExamples": [
+            {
+              "id": "trinomial-coefficients-group",
+              "type": "sequence",
+              "title": "Coefficients",
+              "examples": [
+                {
+                  "id": "trinomial-coefficients-example",
+                  "label": "Coefficients",
+                  "prompt": "Expand and simplify (2_x_ − 1)(_x_^2 − _x_ + 3).",
+                  "steps": [
+                    {
+                      "id": "trinomial-coefficients-distribute",
+                      "math": "2_x_(_x_^2 − _x_ + 3) − 1(_x_^2 − _x_ + 3)",
+                      "text": "Distribute both terms across all three trinomial terms."
+                    },
+                    {
+                      "id": "trinomial-coefficients-expand",
+                      "math": "2_x_^3 − 2_x_^2 + 6_x_ − _x_^2 + _x_ − 3",
+                      "text": "Expand the six products."
+                    },
+                    {
+                      "id": "trinomial-coefficients-collect",
+                      "math": "2_x_^3 − 3_x_^2 + 7_x_ − 3",
+                      "text": "Collect like terms."
+                    }
+                  ],
+                  "answer": "(2_x_ − 1)(_x_^2 − _x_ + 3) = 2_x_^3 − 3_x_^2 + 7_x_ − 3",
+                  "solutionLayout": "paired-table",
+                  "tabLabel": "Coefficients",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "trinomial-guided",
+          "title": "Your turn: expand a binomial by a trinomial",
+          "lede": "Apply the same distribution process to all six products.",
+          "practiceNote": "Complete the working in your exercise book.",
+          "questions": [
+            {
+              "id": "trinomial-guided-question",
+              "stem": "Expand and simplify (_x_ + 1)(_x_^2 + 2_x_ + 3).",
+              "parts": [
+                "Distribute x across the trinomial.",
+                "Distribute 1 across the trinomial.",
+                "Write all six products.",
+                "Collect like terms."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "trinomial-practice",
+          "title": "Independent practice: binomial × trinomial",
+          "lede": "Expand each product and simplify completely.",
+          "practiceNote": "Keep the six products organised before collecting like terms.",
+          "questions": [
+            {
+              "id": "trinomial-practice-routine",
+              "stem": "Expand and simplify.",
+              "parts": [
+                "(_x_ + 3)(_x_^2 + _x_ + 2)",
+                "(_x_ − 2)(_x_^2 + 4_x_ + 1)",
+                "(2_x_ + 1)(_x_^2 + 2_x_ − 3)",
+                "(_x_ + 2)(2_x_^2 − _x_ + 5)"
+              ]
+            },
+            {
+              "id": "trinomial-practice-error",
+              "stem": "A student writes (_x_ − 2)(_x_^2 + 3_x_ + 1) = _x_^3 + 3_x_^2 + _x_ − 2.",
+              "parts": [
+                "Identify the missing distribution.",
+                "Write the correct expanded expression."
+              ]
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "trinomial-worked-collection",
+          "title": "Worked examples",
+          "members": [
+            "trinomial-basic-example",
+            "trinomial-signs-example",
+            "trinomial-coefficients-example"
+          ]
+        }
+      ]
+    }
+  ]
+}
