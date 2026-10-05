@@ -1,0 +1,269 @@
+{
+  "baseline": "44017f836bfc3d72ace895c84f082c22c7f27fc9",
+  "fullRegression": {
+    "appSha256": "f343edeee1df1ef13bf9eb3148e33c68af15bf7a9dbf2b6f4fc22a173cf1392e",
+    "gates": [
+      {
+        "name": "validate",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/validate.log"
+      },
+      {
+        "name": "verify-mathematics-textbook",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-mathematics-textbook.log"
+      },
+      {
+        "name": "verify-class-session",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-class-session.log"
+      },
+      {
+        "name": "verify-class-session-browser",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-corrected-tests/logs/verify-class-session-browser.log"
+      },
+      {
+        "name": "verify-mathematics-m1",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-corrected-tests/logs/verify-mathematics-m1.log"
+      },
+      {
+        "name": "verify-lesson-journey",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-lesson-journey.log"
+      },
+      {
+        "name": "verify-journey-zoom",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-journey-zoom.log"
+      },
+      {
+        "name": "verify-shared-player",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-shared-player.log"
+      },
+      {
+        "name": "verify-activity-surfaces",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-activity-surfaces.log"
+      },
+      {
+        "name": "verify-activity-authoring",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-activity-authoring.log"
+      },
+      {
+        "name": "verify-activity-publication",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-activity-publication.log"
+      },
+      {
+        "name": "verify-selection-reveal",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-selection-reveal.log"
+      },
+      {
+        "name": "verify-annotated-content",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-annotated-content.log"
+      },
+      {
+        "name": "verify-annotated-solutions",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-annotated-solutions.log"
+      },
+      {
+        "name": "verify-annotated-zoom",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-annotated-zoom.log"
+      },
+      {
+        "name": "verify-factorising-content",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-factorising-content.log"
+      },
+      {
+        "name": "verify-worked-collections",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-worked-collections.log"
+      },
+      {
+        "name": "verify-worked-zoom",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-worked-zoom.log"
+      },
+      {
+        "name": "verify-evidence-compositions",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-evidence-compositions.log"
+      },
+      {
+        "name": "verify-production-lessons",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-production-lessons.log"
+      },
+      {
+        "name": "verify-skill-page",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-skill-page.log"
+      },
+      {
+        "name": "verify-composition-grid",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-composition-grid.log"
+      },
+      {
+        "name": "verify-figure-container",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-figure-container.log"
+      },
+      {
+        "name": "verify-figure-render",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-figure-render.log"
+      },
+      {
+        "name": "verify-geometry-semantics",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-geometry-semantics.log"
+      },
+      {
+        "name": "verify-label-placement",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-label-placement.log"
+      },
+      {
+        "name": "verify-learning-card",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-learning-card.log"
+      },
+      {
+        "name": "verify-measure-surface",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-measure-surface.log"
+      },
+      {
+        "name": "verify-mx-authoring",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-mx-authoring.log"
+      },
+      {
+        "name": "verify-notes-examples",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-notes-examples.log"
+      },
+      {
+        "name": "verify-quadratics-authoring",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-quadratics-authoring.log"
+      },
+      {
+        "name": "verify-response-store",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-response-store.log"
+      },
+      {
+        "name": "verify-responsive-shell",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-responsive-shell.log"
+      },
+      {
+        "name": "verify-type-interaction",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-type-interaction.log"
+      },
+      {
+        "name": "verify-workbook",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-workbook.log"
+      },
+      {
+        "name": "verify-lesson-page",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-lesson-page.log"
+      },
+      {
+        "name": "verify-media",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-media.log"
+      },
+      {
+        "name": "verify-newtypes",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-newtypes.log"
+      },
+      {
+        "name": "verify-pack-fixes",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-pack-fixes.log"
+      },
+      {
+        "name": "verify-theme-pack",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-theme-pack.log"
+      },
+      {
+        "name": "verify-interactive",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-interactive.log"
+      },
+      {
+        "name": "verify-infographic",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-infographic.log"
+      },
+      {
+        "name": "verify-evidence-viewer",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-evidence-viewer.log"
+      },
+      {
+        "name": "verify-evidence-publication",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-evidence-publication.log"
+      },
+      {
+        "name": "verify-corpus-identity",
+        "status": 0,
+        "receipt": "review-delivery/m1-2-regression/logs/verify-corpus-identity.log"
+      }
+    ],
+    "note": "43 passed on the initial run; two outdated fixture assumptions were corrected and rerun on the same application SHA."
+  },
+  "completionFix": {
+    "appSha256": "6ed554cc74528bfa32e9418c48cf843267b40d2f9c69dca28aef0727212142d2",
+    "focusedChecks": 29,
+    "zeroPageErrors": true,
+    "followup": [
+      {
+        "name": "validate",
+        "status": 0
+      },
+      {
+        "name": "verify-class-session-browser",
+        "status": 0
+      },
+      {
+        "name": "verify-mathematics-m1",
+        "status": 0
+      },
+      {
+        "name": "verify-lesson-journey",
+        "status": 0
+      },
+      {
+        "name": "verify-corpus-identity",
+        "status": 0
+      },
+      {
+        "name": "verify-textbook-publication",
+        "status": 0
+      }
+    ],
+    "note": "Completion now has its own wide content role; media, focus, zoom, compatibility, privacy, corpus and staged publication rollback were checked after this change."
+  },
+  "approvedAlgebraAsset": "Pending user-supplied file or URL",
+  "merged": false,
+  "deployed": false
+}

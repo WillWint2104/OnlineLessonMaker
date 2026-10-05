@@ -2,6 +2,10 @@
 
 _Last updated: 2026-06-20_
 
+## Mathematics M1.2 — branch work in progress (5 October 2026)
+
+Baseline main is `44017f8`; this correction is not yet merged/deployed. Each expanding lesson now has 60 core questions (12 Foundation + 8 Moderate per archetype), retaining previous identities and mathematical content. Optional question `presentation: compact|multipart|extended` and `group` own semantic layout; legacy `layout` remains readable. Existing parts editing is reused. Both Answer Hub tabs use two desktop columns, full spans for extended/long working and a compact number filter. The existing frontMatter Overview/Outcomes image and completion.image slots reuse src/alt/fit/focus and upload/publication helpers. Approved author-supplied Algebra artwork is still required; current bookends show missing-image fallback. See `docs/review/mathematics-m1-2/`. M2/M3 remain stopped and Supabase is unchanged and not deployed. Finish asset acceptance, exact-head review, clean merge/deployment and final ZIP before claiming completion.
+
 ## Mathematics M1.1 (5 October 2026)
 
 The two expanding lessons opt into meta.practiceLayout=textbook: assessed archetypes are distinct rail pages; pathways remain internal. Stable IDs, flat questions and existing renderer/export remain. question.layout and teacherNote add width/editing; independent meta.answerPolicy fields control the Answer Hub. Present permits projector access; hidden/teacher-with-hidden-fallback export strips answer fields and teacher notes. Image-led bookends use authored assets; completion adds practised and optional nextLesson. Both lessons have 36 problems with fully checked working. Supabase migrations/function/client adapter are prepared, not deployed; see supabase/README.md. Five-second polling, Auth/teacher registry, four-hour expiry, separated answer bundle and offline fallback are adapter-tested. No new browser dependency or storage. M2/M3 remain deferred pending user review.

@@ -1,0 +1,86 @@
+PASS the workbook is the shared ink engine, not a second implementation
+PASS a drawn stroke paints ink and lands in the response store  5152 inked pixels, 2 strokes
+PASS the stroke carries a pressure sample per point (constant on a mouse, variable on a pen)  25 points, pressure values 0.5
+PASS the eraser is a tool of the same engine and removes ink  5152 → 4723 inked pixels
+PASS Clear empties the sheet and the stored strokes with it
+PASS a new sheet starts blank and takes its own strokes  w1:1 · w2:2
+PASS going back to a sheet redraws THAT sheet  1861 inked pixels on w1
+PASS and the other sheet is untouched by the visit
+PASS CONTROL: if every sheet shared one stroke array the sheets would be indistinguishable  1 vs 2 becomes 1 vs 1
+PASS the canvas really is destroyed by navigating away
+PASS and the work comes back when the page does  3244 → 3244 inked pixels
+PASS CONTROL: a DOM-local workspace would have lost the work on that same navigation  the canvas left the document; the response store still holds 1 strokes
+PASS nothing is written to browser storage
+PASS the bundle names page → response → kind → payload  1 page(s); workbook is kind "workbook" with 1 sheet(s)
+PASS the bundle is a deep copy — mutating it cannot reach live state
+PASS a reordered lesson keeps the workbook with ITS page  practice moved from index 4 to index 0; 1 strokes still under "practice-equations"
+PASS CONTROL: the same reorder changes what index 4 refers to  index 4 was "practice-equations", is now "interactive" — keying on it would have attributed these strokes to a different page
+PASS scrolling the questions does not move the workbook  questions scrolled 10px, workbook moved 0
+PASS Expand gives the whole page to the workbook, without replacing the canvas  638px → 1212px, same canvas node
+PASS and the ink is still there afterwards
+PASS and it gives it back
+PASS a handset starts on Questions, with the workbook one tap away
+PASS switching view keeps the question scroll position  scrollTop 220 → 220
+PASS opening the navigation drawer keeps it too
+PASS and the workbook keeps its sheet, its ink and the response mode  2363 inked pixels on w1
+PASS only the table question takes typed entry — no answer box appears on the others  7 questions, 7 cells, 7 inputs in total
+PASS cells are keyed by their column VALUE, not by position  −3 −2 −1 0 1 2 3
+PASS a typed cell is stored under the question id, keyed by column value  {"3":"9","−2":"4"}
+PASS and it is still there after leaving the page and coming back  −2=4 3=9
+PASS wherever the split exists, BOTH regions clear their usable minima  desktop:split q554/w638/h731  tablet landscape:solo  tablet portrait:solo  iPad portrait:solo
+PASS a portrait tablet uses Questions / Workbook rather than a split it cannot support  900x1100 → solo · 834x1112 → solo
+PASS the same viewport changes its answer when the available width changes — it is geometry, not a device  1180x900 with the rail → solo; rail collapsed → split (q513/w591/h613)
+PASS CONTROL: forcing the split past the minima reproduces the shallow workbook this rule exists to prevent  sheet 613px with the floor, 0px without it
+PASS a legitimately wide authored table compacts first, then takes its OWN horizontal scroll  13 columns · natural 781px, compact 637px, column 487px
+PASS every column is reachable — nothing disappears past the boundary
+PASS and the question pane itself never overflows sideways  0px
+PASS CONTROL: the ordinary 7-column table fits with no compaction and no scroll  natural 451px in a 487px column
+PASS on a handset the same ordinary table compacts, and scrolls only if it still does not fit  natural 451px → compact 367px in a 337px column, scrolling
+PASS ONE sheet list, with both modalities on each sheet — they cannot diverge  sheets w1, w2 · each holds id,ink,text
+PASS the Type workspace replaces the workbook surface, and only that  question list untouched: 7 questions, 7 table cells, no per-question boxes
+PASS typed prose and an inserted equation are both stored, as text and as a TPMath tree  blocks p+eq+p · 1 rendered <math> · line break preserved
+PASS a second sheet takes its own typed content  w1: ink 1, 48 chars · w2: ink 1, 21 chars
+PASS Write → Type → Write preserves both modalities exactly, and renumbers nothing  {"ids":"w1/w2","current":"w2","ink":"1/1","text":"3/1"}
+PASS and the ink is still painted when Write comes back  2619 inked pixels
+PASS nothing is lost or renumbered by changing sheet, navigating, the drawer, or Expand  sheet:kept · nav:kept · drawer:kept · expand:kept
+PASS the typing page fills its region exactly as the writing page does  type 729px vs write 731px in a 832px region
+PASS CONTROL: leaving the borrowed slide layout in place is what collapsed it  729px neutralised, 340px with the slide layout
+PASS the equation bar appears when asked for and goes away again  closed gone → open visible → closed gone
+PASS the equation field takes the keyboard, and each key once  tabindex 0 role textbox focused true · typed "x^2" reads "x2"
+PASS CONTROL: a second visit to the bar still inserts each key once — a stacked binding would double them  after re-opening, "y=9" reads "y=9"
+PASS a rich paste arrives as text, and what is on the page is what is in the store  0 markup nodes · shown "bold link tail" · stored "bold link tail"
+PASS CONTROL: the same content inserted the way an un-intercepted paste would does bring markup in  3 markup nodes entered the page; the inline handler ran
+PASS a placed equation can be re-opened from the keyboard, not by pointer alone  bar closed → focus the equation ("Equation y=x — select to edit") → Enter → bar open
+PASS an equation lands where the caret is, and what is typed next continues after it  blocks p+eq+p — the equation is at 1 of 2, prose "Step one: |THEN"
+PASS CONTROL: appending to the end of the page would have put it last, with the later prose in front of it  appending gives index 2; the caret gives 1
+PASS re-opening a placed equation continues it rather than typing in front of it  "1" then "2" reads "12"
+PASS CONTROL: a caret left at the start would have read "21"  it reads "12"
+PASS Escape closes the equation bar and returns the focus to what opened it  bar closed, focus on the Equation button
+PASS and Tab leaves the editor rather than being swallowed by the expression  Tab moved the focus out of the field
+PASS CONTROL: the arrows still move the caret inside the expression — that is why Tab could be freed  ArrowLeft kept the focus in the field
+PASS the empty slots of a fraction are visible  2 slots, 1px dotted
+PASS CONTROL: without that rule the slot has no border at all and the student aims at nothing  unstyled slot: border-style none
+PASS a blank line comes back as one blank line, not two  stored "one\n\ntwo", re-rendered with 2 breaks
+PASS CONTROL: counting the block break AND the <br> inside it is what made it two  it would have stored "one\n\n\ntwo"
+PASS Cancel and Add-page leave the focus somewhere a keyboard can carry on from  Cancel → the Equation button · Add page → BUTTON.mx-ptab
+PASS CONTROL: both replace or hide their own container, so focus would otherwise fall to BODY  it is BUTTON.mx-ptab
+PASS an arrow key inside the equation editor does not page the lesson out from under it  page 4 → 4 in the editor
+PASS CONTROL: the same key outside it still moves the lesson on  page 4 → 5 outside
+PASS nor does an arrow key on a placed equation inside the typed page  focused a [role=button] chip · page 4 → 4 · the equation is still there
+PASS CONTROL: a destructive switch would empty one modality  text 1/1 would become 0/0
+PASS CONTROL: separate per-modality page counters would diverge; one shared list cannot  two counters give w1/w2 vs w1/w2/w3; the real payload has one list
+PASS CONTROL: DOM-local typed state would vanish on that navigation; the store does not  the surface left the document; the store still holds 1 block(s)
+PASS the bundle keeps BOTH modalities, per sheet, with the mode alongside rather than deciding it  {"kind":"workbook","mode":"type","sheets":[{"id":"w1","ink":1,"text":1},{"id":"w2","ink":1,"text":1}]}
+PASS working longer than the window gives the student more paper, inside the workbook  paper grew 545px → 758px in a 545px window
+PASS and the lesson page does not become several screens tall to hold it  page fits the screen; page tabs end at 835 of 860
+PASS the paper moves and the toolbar and page tabs stay where they are  scrolled 213px · toolbar 191→191, tabs 835→835
+PASS the strokes already written keep their exact coordinates and their place on the plane  first point (100, 215.01) · 3899 inked pixels in the top quarter · horizontal scale still 1000 units
+PASS CONTROL: the plane grew, and the first stroke did NOT move — more paper, not smaller writing  paper 545→758px, plane 1434→1995 units; the first point stayed (100, 215.01)
+PASS writing near the bottom survives scrolling away and back  5 strokes before, 5 after
+PASS each workbook page keeps its own scroll position  Page 1 at 213px → Page 2 opens at 0px → Page 1 returns to 213px
+PASS on desktop the question column and the workbook paper scroll independently  questions → 150 leaves the workbook still (0px) and its paper at 0; paper → 150 leaves the questions at 150
+PASS CONTROL: both regions really could have scrolled, so "independent" is not "neither moved"  question column and sheet are both scrollable at this height
+PASS every section ran  11 sections
+PASS no page error while drawing, switching or navigating
+
+84/84 checks passed

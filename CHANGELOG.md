@@ -1,5 +1,12 @@
 # Changelog
 
+## Mathematics M1.2 — in progress
+
+- Both expanding lessons now author 60 core problems: 12 Foundation and 8 Moderate per archetype. The existing IDs, expressions, answers, working, example models, policies and videos are retained; three-question scaffold families lead into independent practice.
+- Textbook practice supports semantic Compact/Multipart/Extended presentation and optional contiguous group headings, with existing subpart editing. Final and worked Answer Hub views use two desktop columns, a compact filter toolbar and full-width extended solutions.
+- Existing lesson image slots now expose shared crop/focal fields. Rejected generated artwork is removed; approved author-supplied Algebra assets are still pending. M2/M3 remain stopped; Supabase remains prepared, not deployed.
+
+
 ## Mathematics M1.1 — 5 October 2026
 
 Textbook practice destinations, internal Foundation/Moderate/optional Advanced pathways, responsive exercise widths, authored full working and dedicated Answer Hub. Independent final/worked policies, image-led Overview/Complete and an optional next lesson. Two actual lessons now have 36 problems each. Supabase session service and authenticated controls are prepared and adapter-tested, not deployed; secure hidden export omits answer fields. M2/M3 remain deferred.

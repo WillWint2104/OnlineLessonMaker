@@ -1,0 +1,18 @@
+{
+  "baseline": "44017f836bfc3d72ace895c84f082c22c7f27fc9",
+  "checks": [
+    "lessons/expanding-two-binomials/lesson.json: all 36 previous IDs/expressions/answers/working retained; policies, model examples and videos unchanged",
+    "lessons/expanding-binomial-trinomial/lesson.json: all 36 previous IDs/expressions/answers/working retained; policies, model examples and videos unchanged"
+  ],
+  "builderIdempotent": true,
+  "sourceFiles": [
+    {
+      "file": "lessons/expanding-two-binomials/lesson.json",
+      "sha256": "1de0e2aa1a79f23b01a847fe585936453a5108e86894c562dcd6955fc4fc18f1"
+    },
+    {
+      "file": "lessons/expanding-binomial-trinomial/lesson.json",
+      "sha256": "fea130967fc0dbe90e5aacc1e59ce0e95f4bc92a0f19859668efb10a2b4157a2"
+    }
+  ]
+}

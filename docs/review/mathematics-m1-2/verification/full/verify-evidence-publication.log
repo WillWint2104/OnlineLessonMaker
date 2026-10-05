@@ -1,0 +1,21 @@
+PASS Actual local PNG pyramid requests and renders
+PASS Tab stays inside dialog
+PASS Reverse Tab stays inside dialog
+PASS Background Next and outline navigation blocked
+PASS Single-file tiled export has explicit embedded-preview inspection fallback
+PASS Unknown structured provenance survives independent publication
+PASS Unconfigured source rendering remains byte-identical
+PASS Exports without inspection omit the vendor payload
+PASS square intrinsic aspect preserved
+PASS document intrinsic aspect preserved
+PASS Native 100% browser zoom
+PASS Inspection within native zoom viewport
+PASS Native zoom capture covers the full browser surface
+PASS Native zoom controls visible without horizontal page overflow
+PASS Native zoom focus return
+PASS Native 200% browser zoom
+PASS Inspection within native zoom viewport
+PASS Native zoom capture covers the full browser surface
+PASS Native zoom controls visible without horizontal page overflow
+PASS Native zoom focus return
+PASS Zero publication/pyramid page errors

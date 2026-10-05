@@ -1,0 +1,40 @@
+PASS expanding-two-binomials one skill and its supplied teacher video
+PASS expanding-two-binomials 18 independent problems: 4 Basic + 2 Moderate per archetype; every answer independently checked
+PASS Single-skill Overview avoids redundant skill furniture
+PASS Learner rail shows core destinations only
+PASS Worked collection has one clickable destination
+PASS Introduction reached from Outcomes
+PASS Real video destination is retained
+PASS Video surface is authored
+PASS Core Worked examples rail stays highlighted 1
+PASS Core Worked examples rail stays highlighted 2
+PASS Core Worked examples rail stays highlighted 3
+PASS Six actual questions displayed for archetype 1
+PASS Paper practice has no fake answer workspace
+PASS Answers initially concealed
+PASS Basic answers deliberately revealed as one group
+PASS Six actual questions displayed for archetype 2
+PASS Paper practice has no fake answer workspace
+PASS Answers initially concealed
+PASS Basic answers deliberately revealed as one group
+PASS Six actual questions displayed for archetype 3
+PASS Paper practice has no fake answer workspace
+PASS Answers initially concealed
+PASS Basic answers deliberately revealed as one group
+PASS Completion after all practice archetypes
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Authored completion image uses existing image rendering
+    at check (file:///C:/Users/willi/Videos/Online%20Lesson%20Maker/scripts/verify-mathematics-m1.mjs:5:32)
+    at file:///C:/Users/willi/Videos/Online%20Lesson%20Maker/scripts/verify-mathematics-m1.mjs:26:116 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.14.1
