@@ -1,0 +1,43 @@
+{
+  "head": "098c88122aa1d867537f70684bc7668758af4206",
+  "appSha256": "c729a2771a68a503692c08313de5bcb8addaa98a2a549942fbe98174a38c7464",
+  "checks": [
+    "1536 bounded shell and independently scrollable answer body",
+    "Worked solutions default expanded",
+    "Readable two-column worked desktop",
+    "Answer body reaches bottom while filters stay fixed",
+    "Background lesson does not scroll behind modal",
+    "Collapse all closes visible working",
+    "Expand all restores visible working",
+    "Answer body accepts keyboard scrolling",
+    "Native modal owns keyboard focus",
+    "Escape closes and restores trigger focus",
+    "Reopening restores scoped pathway and question filters",
+    "Final key has no accordion",
+    "1280 bounded hub with readable content",
+    "1024 bounded hub with readable content",
+    "390 bounded hub with readable content",
+    "Inspector preview subparts follow actual question width",
+    "Inspector narrows multipart blocks to one column",
+    "Narrow inspector subparts stack at insufficient component width",
+    "Inspector reduces compact grid from three to two columns",
+    "Long stress fixture gets full width and line-local horizontal scrolling",
+    "Long working does not widen shell or page",
+    "Zero page errors"
+  ],
+  "captures": [
+    "practice-toolbar-desktop",
+    "hub-top-desktop",
+    "hub-middle-desktop",
+    "hub-bottom-desktop",
+    "final-answers-dense",
+    "hub-1280",
+    "hub-1024",
+    "hub-390",
+    "edit-multipart-inspector",
+    "edit-multipart-inspector-1280",
+    "edit-compact-inspector",
+    "long-full-width-fixture"
+  ],
+  "errors": []
+}

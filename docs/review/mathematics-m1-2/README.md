@@ -1,4 +1,4 @@
-# Mathematics M1.2 — correction review in progress
+# Mathematics M1.2 — structural correction review
 
 This branch extends verified main `44017f836bfc3d72ace895c84f082c22c7f27fc9`.
 It is not merged or deployed. The approved author-supplied Algebra artwork
@@ -28,8 +28,7 @@ owns responsive spans; authors do not enter CSS or pixel widths. Existing
 either field, parts infer Multipart and table/image/figure infer Extended.
 Long stems or lengthy subparts can occupy the whole row. The optional text
 `group` labels contiguous authored runs; neither groups nor presentation
-reorders questions. Multipart defaults to half-width on wide desktop and
-full-width on tablet. An orphaned final half-width item automatically spans its row. Short subparts use a two-column desktop grid and stack on tablet/mobile; long or explicitly stacked parts remain vertical. Compact uses three/two/one columns. Final and worked
+reorders questions. Multipart uses half-width only with at least 1000px of actual practice width, and otherwise fills the row. An orphaned final half-width item automatically spans its row. Short subparts use two columns only when their own question has at least 500px available; long or explicitly stacked parts remain vertical. Compact uses three/two/one columns according to the actual practice width, including with the Edit inspector open. Final and worked
 answers both use two desktop columns; Extended and long working lines span
 both. Each authored working newline remains one line with horizontal scrolling when needed; mobile maths remains 20px. Practice and answers restart numbering within the selected pathway.
 
@@ -108,3 +107,13 @@ preserves all three runs and their distinct hashes; this is not a claim that all
 remains after supplied-artwork acceptance. `reviewed-content-identity.json` also
 confirms that all 60 reviewed questions per lesson retain their mathematical
 content and IDs, alongside the idempotent generator.
+
+## Final structural pass
+
+The Answer Hub is a bounded 86vw / 1320px surface with a 90dvh height. Only its answer body scrolls; header, tabs, selectors and Close remain accessible. Native modal focus and background scroll locking preserve the lesson. Worked solutions start expanded, with optional Collapse all / Expand all. Final answers have denser row padding and no accordions. Authored equation lines never wrap; real glyph measurements promote long working to a whole row before line-local scrolling is needed. The grid responds to available answer-body width.
+
+Practice uses natural, compact answer-access copy. Reopening the hub on the same lesson context retains filters and answer-body position; a new practice/pathway context receives its own current defaults. The four-part editor and mathematical content remain unchanged.
+
+`structure-*.png` show the new dedicated top/middle/bottom, dense finals, long stress fixture (explicitly altered only for layout testing), mobile, tablet and inspector captures. The existing `*-native-200.png` files use native Chromium zoom; image-fixture captures use the labelled repository sample only. These are development captures of the same application bytes; `results.json` and `structural-results.json` record their provenance. Earlier correction receipts remain historical.
+
+The delivery ZIP adds `EXACT-HEAD-VERIFICATION.json` and `verification/exact-head/` from the full sequential suite after committing this source. That run must show clean tracked source, unchanged commit and application hash before/after, and every gate green. Existing untracked review-delivery and scratchpad directories are preserved. No source or artwork changes are made after that test run. No merge, deployment or CodeRabbit request is part of this pass. Supabase remains prepared, not deployed and not tested against a live project. Approved artwork is the next pass; M2/M3 remain stopped.

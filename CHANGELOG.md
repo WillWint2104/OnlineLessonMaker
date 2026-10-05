@@ -1,5 +1,11 @@
 # Changelog
 
+## Mathematics M1.2 — final structural correction
+
+- Bound the Answer Hub to the viewport with an independently scrolling answer body, persistent controls, optional bulk collapse/expand, denser finals and preserved scoped filter/scroll context. Native modal focus and background scroll locking support keyboard use.
+- Promote long working using actual rendered line width; keep horizontal scrolling local to each authored equation line. Practice and subpart grids respond to available component width, including with the authoring inspector open.
+- Compact answer access and replace learner-facing policy language. Add structural, preserved-content and publication-rollback gates to the full exact-head suite. Approved artwork remains pending; no merge/deployment or M2/M3 work.
+
 ## Mathematics M1.2 — in progress
 
 - Both expanding lessons now author 63 core problems: 12 Foundation and 9 Moderate per archetype. The existing IDs, expressions, answers, working, example models, policies and videos are retained; four-question scaffold families lead into independent practice.
