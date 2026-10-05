@@ -3,7 +3,7 @@ create table public.olm_teachers (user_id uuid primary key references auth.users
 create table public.olm_class_sessions (
  id uuid primary key default gen_random_uuid(),
  code text unique not null check (code ~ '^[0-9]{6}$'),
- reader_token text not null check (reader_token ~ '^[0-9a-f]{32}$'),
+ reader_token text not null check (length(reader_token) <= 1500 and reader_token ~ '^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]{43}$'),
  teacher_id uuid not null references public.olm_teachers(user_id),
  lesson_id text not null check (length(lesson_id) between 1 and 200),
  answer_state text not null default 'locked' check (answer_state in ('locked','finals','worked')),

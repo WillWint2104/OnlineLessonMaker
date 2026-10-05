@@ -1,5 +1,6 @@
 // Dependency-free handler shared by the Edge Function and local contract tests.
-export function createClassHandler({store,authenticate,now=()=>Date.now(),code=()=>String(crypto.getRandomValues(new Uint32Array(1))[0]%1000000).padStart(6,'0'),readerToken=()=>Array.from(crypto.getRandomValues(new Uint8Array(16)),v=>v.toString(16).padStart(2,'0')).join(''),origins=[]}){
+import {createReaderTokens} from './readers.mjs';
+export function createClassHandler({store,authenticate,now=()=>Date.now(),code=()=>String(crypto.getRandomValues(new Uint32Array(1))[0]%1000000).padStart(6,'0'),readerTokens=createReaderTokens(crypto.randomUUID()+crypto.randomUUID()),origins=[]}){
  return async function handle(request){
   const origin=request.headers.get('origin')||'',allowed=origins.includes(origin),headers={'Content-Type':'application/json','Cache-Control':'no-store','Vary':'Origin',...(allowed?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Headers':'authorization,apikey,content-type','Access-Control-Allow-Methods':'POST,OPTIONS'}:{})};
   const respond=(body,status=200)=>new Response(JSON.stringify(body),{status,headers});
@@ -13,17 +14,19 @@ export function createClassHandler({store,authenticate,now=()=>Date.now(),code=(
    if(action==='start'){
     const answers=data.answers;if(!answers||typeof answers!=='object'||Array.isArray(answers)||Object.keys(answers).length>1000)return respond({error:'Invalid answer bundle.'},400);
     const bundle=Object.create(null);for(const [id,q]of Object.entries(answers)){if(id.length>500||!q||typeof q.answer!=='string'||typeof q.workedAnswer!=='string'||q.answer.length>20000||q.workedAnswer.length>50000)return respond({error:'Invalid answer content.'},400);bundle[id]={answer:q.answer,workedAnswer:q.workedAnswer};}
-    const expiresAt=new Date(now()+4*60*60*1000).toISOString();for(let attempt=0;attempt<8;attempt++){const c=code(),token=readerToken();if(await store.insert({code:c,reader_token:token,teacher_id:teacher,lesson_id:lessonId,answer_state:'locked',answer_bundle:bundle,expires_at:expiresAt}))return respond({code:c,readerToken:token,active:true,state:'locked',expiresAt});}return respond({error:'Unable to allocate a class code.'},503);
+    const expiresAt=new Date(now()+4*60*60*1000).toISOString();for(let attempt=0;attempt<8;attempt++){const c=code(),token=await readerTokens.issue(c,lessonId,expiresAt);if(await store.insert({code:c,reader_token:token,teacher_id:teacher,lesson_id:lessonId,answer_state:'locked',answer_bundle:bundle,expires_at:expiresAt}))return respond({code:c,readerToken:token,active:true,state:'locked',expiresAt});}return respond({error:'Unable to allocate a class code.'},503);
    }
    if(typeof data.code!=='string'||!/^\d{6}$/.test(data.code))return respond({error:'Invalid class code.'},400);
+   if(action==='read'){
+    const claims=await readerTokens.verify(data.readerToken,data.code,lessonId),reader=claims&&claims.expiresAt>now();
+    if(!await store.rateLimit(request,reader?'read':'guess',reader?data.readerToken:null))return respond({error:'Too many requests. Try again shortly.'},429);
+    if(claims&&!reader)return respond({code:data.code,active:false,state:'locked',answers:{}});
+    if(!reader)return respond({error:'Join this class before polling.'},401);
+   }
    let session=await store.find(data.code,lessonId);
    const active=!!session&&Date.parse(session.expires_at)>now();
-   if(action==='read'){
-    const reader=active&&typeof data.readerToken==='string'&&data.readerToken===session.reader_token;
-    if(!await store.rateLimit(request,reader?'read':'guess',reader?session.reader_token:null))return respond({error:'Too many requests. Try again shortly.'},429);
-    if(active&&!reader)return respond({error:'Join this class before polling.'},401);
-   }
    if(!active)return respond({code:data.code,active:false,state:'locked',answers:{}});
+   if(action==='read'&&data.readerToken!==session.reader_token)return respond({error:'Join this class before polling.'},401);
    if(['release','end'].includes(action)){
     if(session.teacher_id!==teacher)return respond({error:'Only this session’s teacher can change it.'},403);
     if(action==='end'){await store.update(session.id,{answer_state:'locked',answer_bundle:{},expires_at:new Date(now()).toISOString()});return respond({code:data.code,active:false,state:'locked',answers:{}});}
