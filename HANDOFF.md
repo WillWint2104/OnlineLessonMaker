@@ -2,6 +2,10 @@
 
 _Last updated: 2026-06-20_
 
+## Mathematics artwork placement review (5 October 2026)
+
+User accepted M1.2 structure at 910af58. Three user-supplied immutable PNGs now fill Overview, Outcomes and Completion in both expanding lessons via existing src/alt/fit/focus fields. Canonical originals and hashes live in assets/mathematics; JSON embeds them for direct local import/publication. No lesson content except the three image slots, renderer or architecture changed. See docs/review/mathematics-m1-2/artwork/. Stale development receipts are clearly archived under historical; the delivery ZIP refreshes current-head focused results without attributing the baseline 48-gate run to a newer artwork head. STOP FOR PLACEMENT VISUAL REVIEW before CodeRabbit/final checks/merge/deploy. Supabase remains prepared/not deployed; M2/M3 remain stopped.
+
 ## Mathematics M1.2 — final structural pass (5 October 2026)
 
 Answer Hub now bounds its shell to 90dvh and scrolls only its answer body. Controls remain visible; native modal focus, background scroll lock and context-scoped filter/scroll restoration preserve the lesson. Worked solutions default expanded with Collapse all / Expand all; finals are denser. Loaded-glyph measurement promotes long working to full width; individual authored lines scroll horizontally only. Practice and short-part grids use named container queries, so the inspector reduces columns according to available space. Natural learner copy and compact answer access replace policy terminology. All accepted mathematical content, editor, navigation, bookend image roles and prepared/not-deployed Supabase are retained. Dedicated structural gate plus mathematical content identity and publication rollback gates join the full suite. Delivery receipts are generated after the final commit into untracked review-delivery, with exact-head and clean-tracked-tree checks before/after. STOP FOR STRUCTURAL REVIEW; approved artwork is next. No merge, deployment or CodeRabbit workflow yet.

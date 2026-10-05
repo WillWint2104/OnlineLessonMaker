@@ -1,3 +1,7 @@
+# Current review: supplied Mathematics artwork
+
+The structural design is accepted at 910af58. The supplied image set is now in the existing three roles; open artwork/index.html for placement review. Original artwork bytes, lesson structure and application renderer are preserved. No merge/deployment. Current artwork receipts are generated for the inspection ZIP; earlier development receipts are explicitly archived under historical/. The following sections describe the accepted structural baseline and its historical verification.
+
 # Mathematics M1.2 — structural correction review
 
 This branch extends verified main `44017f836bfc3d72ace895c84f082c22c7f27fc9`.

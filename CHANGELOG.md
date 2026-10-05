@@ -1,5 +1,10 @@
 # Changelog
 
+## Mathematics supplied artwork — placement review
+
+- Place the three supplied original PNGs into existing Overview, Outcomes and Completion image slots in both expanding lessons, using authored crop/focal settings and embedded image data for standalone publication. Freeze the accepted renderer and all non-image lesson data.
+- Add original-byte, JSON round-trip, exported image and responsive/native-zoom verification. Separate historical review metadata from current-head focused receipts. Placement awaits visual approval; no merge/deployment.
+
 ## Mathematics M1.2 — final structural correction
 
 - Bound the Answer Hub to the viewport with an independently scrolling answer body, persistent controls, optional bulk collapse/expand, denser finals and preserved scoped filter/scroll context. Native modal focus and background scroll locking support keyboard use.
