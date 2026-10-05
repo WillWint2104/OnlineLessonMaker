@@ -129,6 +129,13 @@ body.edit #slide .lp .mx-top button,body.edit #slide .lp .mx-nav button,body.edi
 @media(max-width:700px){.ev-source .ev-media img{max-height:340px!important}.ev-dialog{padding:12px}.ev-dialog h2{font-size:20px}.ev-dialog nav{gap:5px}.ev-dialog nav button{padding:7px 9px;font-size:16px}.ev-workspace{flex-direction:column}.ev-drawer{flex:0 1 34%;max-height:34%;font-size:16px}.ev-citation{font-size:14px}}@media(prefers-reduced-motion:reduce){.ev-dialog *{scroll-behavior:auto!important}}
 
 .lp-location:empty{display:none}.lp-practice-level{margin:24px 0}.lp-practice-level h2{font-size:22px}.lp-practice-answers{margin:14px 0;padding:12px 18px;border:1px solid #bfd2d5;border-radius:8px;color:#142c32;background:#f2f8f7}.lp-practice-answers summary{cursor:pointer;font-size:18px;font-weight:600}.lp-practice-answers li{margin:10px 0}.lp-practice .mx-collection-tabs{margin:12px 0 24px}
+.lp-textbook-shell .lp-activity[data-lp-arrangement="practice"],.lp-textbook-shell .lp-activity[data-lp-arrangement="front"]{max-width:1240px}
+.lp-textbook-shell .lp-book-overview{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:center}.lp-textbook-shell .lp-book-overview .lp-composition{display:block}.lp-textbook-shell .lp-book-overview .lp-title{font-size:clamp(32px,4vw,60px);line-height:1.05}.lp-textbook-shell .lp-book-overview>figure img{aspect-ratio:1;object-fit:cover}.lp-textbook-shell .lp-book-overview .lp-composition figure{display:none}
+.lp-book-tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0}.lp-book-status{padding:12px 18px;border-radius:8px;background:#edf7f3;color:#153c3a}.lp-exercise-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 26px}.lp-exercise-cell{min-width:0;border-bottom:1px solid #e1ece8;padding:8px 0}.lp-exercise-cell .mx-item{padding:8px 0}.lp-exercise-cell .mx-stem,.lp-exercise-cell .mx-itembd p{font-size:21px;line-height:1.6;color:#000}.lp-exercise-cell .mx-parts{font-size:18px}.lp-span-wide{grid-column:span 2}.lp-span-full{grid-column:1/-1}.lp-book-paths{list-style:none;margin:0;padding-left:12px}
+.lp-answer-hub{width:min(960px,calc(100vw - 32px));max-width:960px;max-height:calc(100dvh - 36px);overflow:auto;padding:28px;color:#000}.lp-answer-hub header{display:flex;justify-content:space-between;align-items:center}.lp-answer-hub header h2{margin:0}.lp-answer-hub label{display:block;margin:18px 0}.lp-answer-hub input{font:inherit;max-width:100%;padding:8px}.lp-answer-list article{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid #dce9e5;min-width:0}.lp-answer-list article>div{min-width:0;overflow-wrap:anywhere}.lp-answer-key{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 20px}.lp-answer-hub .mx-working,.lp-answer-hub .mx-math{font-size:21px}.lp-answer-no{display:grid;place-items:center;min-width:32px;height:32px;border-radius:50%;background:#e2f4ed}.lp-book-outro>.lp-hero-image img{aspect-ratio:2.6;object-fit:cover}.lp-book-outro section{padding:20px;background:#f1f8f5;border-radius:10px;margin:24px 0}.lp-next-lesson{display:flex;flex-direction:column;gap:10px;padding:24px;border:1px solid #c8dfd7;border-radius:10px;color:#155b51;text-decoration:none}.lp-class-dialog label{display:block;margin:12px 0}.lp-class-dialog input,.lp-class-dialog select{display:block;font:inherit;padding:10px;max-width:100%}
+@media(max-width:1250px){.lp-exercise-grid,.lp-answer-key{grid-template-columns:repeat(2,minmax(0,1fr))}.lp-textbook-shell .lp-book-overview{gap:24px}}
+@media(max-width:1050px){.lp-textbook-shell .lp-book-overview{grid-template-columns:1fr}.lp-textbook-shell .lp-book-overview>figure{max-width:600px;width:100%}.lp-book-outro>.lp-hero-image img{aspect-ratio:1.6}}
+@media(max-width:700px){.lp-exercise-grid,.lp-answer-key{grid-template-columns:1fr}.lp-span-wide{grid-column:1/-1}.lp-answer-hub{padding:18px}.lp-book-outro>.lp-hero-image img{aspect-ratio:1.2}.lp-book-tools{align-items:stretch;flex-direction:column}.lp-exercise-cell .mx-itembd p{font-size:21px}}
 </style>
 <!-- VENDORED-FONTS:END -->
 <!-- IMPERIUM-FONT: Playfair Display (variable woff2 400-900, vendored base64 from the theme pack; self-contained, no external host) -->
@@ -4472,8 +4479,8 @@ POSSIBILITY OF SUCH DAMAGE.
         "title": "Expanding a binomial by a trinomial",
         "description": "Extend the same distribution process to three terms in the second bracket.",
         "image": {
-          "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9Ijc1MCIgdmlld0JveD0iMCAwIDEyMDAgNzUwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI3NTAiIGZpbGw9IiNlZGY1ZjMiLz48ZyBzdHJva2U9IiM4YWI0YWQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTAgMHY3NTAiLz48cGF0aCBkPSJNMTAwIDB2NzUwIi8+PHBhdGggZD0iTTIwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0zMDAgMHY3NTAiLz48cGF0aCBkPSJNNDAwIDB2NzUwIi8+PHBhdGggZD0iTTUwMCAwdjc1MCIvPjxwYXRoIGQ9Ik02MDAgMHY3NTAiLz48cGF0aCBkPSJNNzAwIDB2NzUwIi8+PHBhdGggZD0iTTgwMCAwdjc1MCIvPjxwYXRoIGQ9Ik05MDAgMHY3NTAiLz48cGF0aCBkPSJNMTAwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0xMTAwIDB2NzUwIi8+PHBhdGggZD0iTTAgMGgxMjAwIi8+PHBhdGggZD0iTTAgMTAwaDEyMDAiLz48cGF0aCBkPSJNMCAyMDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDMwMGgxMjAwIi8+PHBhdGggZD0iTTAgNDAwaDEyMDAiLz48cGF0aCBkPSJNMCA1MDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDYwMGgxMjAwIi8+PHBhdGggZD0iTTAgNzAwaDEyMDAiLz48L2c+PHJlY3QgeD0iMTYwIiB5PSIxNTAiIHdpZHRoPSI4ODAiIGhlaWdodD0iNDUwIiByeD0iMjQiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzM2NWQ2MyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iNjAwIiB5PSIyODUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5BbGdlYnJhPC90ZXh0Pjx0ZXh0IHg9IjYwMCIgeT0iNDEwIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwNmI2MiI+KHggKyAyKSh4ICsgNSk8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSI1MTUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjMyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5EaXN0cmlidXRlIGV2ZXJ5IHRlcm08L3RleHQ+PC9zdmc+",
-          "alt": "Decorative algebra grid with the expression (x + 2)(x + 5)."
+          "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAwIiBoZWlnaHQ9IjE1MDAiIHZpZXdCb3g9IjAgMCAxNjAwIDE1MDAiPjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iYmciPjxzdG9wIHN0b3AtY29sb3I9IiNlZWZhZjUiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNiY2U0ZDYiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCBpZD0iYmxvY2siIHgyPSIxIiB5Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzQ1OWY4OSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAwNmI1YyIvPjwvbGluZWFyR3JhZGllbnQ+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI4MCIgaGVpZ2h0PSI4MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTgwIDBIMFY4MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmNhYTk5IiBzdHJva2Utb3BhY2l0eT0iLjIyIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTYwMCIgaGVpZ2h0PSIxNTAwIiBmaWxsPSJ1cmwoI2JnKSIvPjxyZWN0IHdpZHRoPSIxNjAwIiBoZWlnaHQ9IjE1MDAiIGZpbGw9InVybCgjZ3JpZCkiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzODAgNDIwKSI+PHJlY3QgeD0iMCIgeT0iODAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMTYwIiByeD0iNiIgZmlsbD0idXJsKCNibG9jaykiLz48cmVjdCB4PSI4MCIgeT0iMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSI1NjAiIHJ4PSI2IiBmaWxsPSJ1cmwoI2Jsb2NrKSIvPjxyZWN0IHg9IjQwMCIgeT0iMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSI1NjAiIHJ4PSI2IiBmaWxsPSIjZDlmMGU4IiBzdHJva2U9IiM2ZGFhOTgiLz48cmVjdCB4PSIwIiB5PSI0MDAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMTYwIiByeD0iNiIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjODdiYmFiIi8+PHJlY3QgeD0iMjQwIiB5PSIyNDAiIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIiBmaWxsPSIjMmI4ZjdiIi8+PC9nPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE4ODQ3MiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIuNTUiPjxwYXRoIGQ9Ik0xMDAgMTgwSDE0MDBNMTMyMCA4MFYxMzAwTTEyMCAxMzAwTDE0ODAgMjAwIi8+PGNpcmNsZSBjeD0iMTI4MCIgY3k9IjExNTAiIHI9IjE5MCIgc3Ryb2tlLWRhc2hhcnJheT0iOCAxMiIvPjwvZz48Y2lyY2xlIGN4PSIxMzIwIiBjeT0iMTgwIiByPSI5IiBmaWxsPSIjMDg3ZjY5Ii8+PC9zdmc+",
+          "alt": "Decorative interlocking algebra blocks on a light mint technical grid."
         }
       },
       {
@@ -4495,10 +4502,24 @@ POSSIBILITY OF SUCH DAMAGE.
     "curriculumMappings": [],
     "description": "Extend the same distribution process to three terms in the second bracket.",
     "completion": {
-      "description": "Review any archetype that needs more practice. Finishing the pages is not a claim of assessed mastery.",
+      "description": "You have practised expanding a binomial by a trinomial. Review your answers and return to any pattern that needs more practice.",
       "image": {
-        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAwIiBoZWlnaHQ9Ijc1MCIgdmlld0JveD0iMCAwIDEyMDAgNzUwIj48cmVjdCB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI3NTAiIGZpbGw9IiNlZGY1ZjMiLz48ZyBzdHJva2U9IiM4YWI0YWQiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTAgMHY3NTAiLz48cGF0aCBkPSJNMTAwIDB2NzUwIi8+PHBhdGggZD0iTTIwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0zMDAgMHY3NTAiLz48cGF0aCBkPSJNNDAwIDB2NzUwIi8+PHBhdGggZD0iTTUwMCAwdjc1MCIvPjxwYXRoIGQ9Ik02MDAgMHY3NTAiLz48cGF0aCBkPSJNNzAwIDB2NzUwIi8+PHBhdGggZD0iTTgwMCAwdjc1MCIvPjxwYXRoIGQ9Ik05MDAgMHY3NTAiLz48cGF0aCBkPSJNMTAwMCAwdjc1MCIvPjxwYXRoIGQ9Ik0xMTAwIDB2NzUwIi8+PHBhdGggZD0iTTAgMGgxMjAwIi8+PHBhdGggZD0iTTAgMTAwaDEyMDAiLz48cGF0aCBkPSJNMCAyMDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDMwMGgxMjAwIi8+PHBhdGggZD0iTTAgNDAwaDEyMDAiLz48cGF0aCBkPSJNMCA1MDBoMTIwMCIvPjxwYXRoIGQ9Ik0wIDYwMGgxMjAwIi8+PHBhdGggZD0iTTAgNzAwaDEyMDAiLz48L2c+PHJlY3QgeD0iMTYwIiB5PSIxNTAiIHdpZHRoPSI4ODAiIGhlaWdodD0iNDUwIiByeD0iMjQiIGZpbGw9IiNmZmYiIHN0cm9rZT0iIzM2NWQ2MyIgc3Ryb2tlLXdpZHRoPSI0Ii8+PHRleHQgeD0iNjAwIiB5PSIyODUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjUyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5BbGdlYnJhPC90ZXh0Pjx0ZXh0IHg9IjYwMCIgeT0iNDEwIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSI2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwNmI2MiI+KHggKyAyKSh4ICsgNSk8L3RleHQ+PHRleHQgeD0iNjAwIiB5PSI1MTUiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXNpemU9IjMyIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMTQyYzMyIj5LZWVwIGJ1aWxkaW5nIGNvbXBldGVuY2U8L3RleHQ+PC9zdmc+",
-        "alt": "Decorative algebra grid with the expression (x + 2)(x + 5)."
+        "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNjAwIiBoZWlnaHQ9IjY1MCIgdmlld0JveD0iMCAwIDE2MDAgNjUwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJnIj48c3RvcCBzdG9wLWNvbG9yPSIjZWVmYWY1Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjYmNlNGQ2Ii8+PC9saW5lYXJHcmFkaWVudD48bGluZWFyR3JhZGllbnQgaWQ9ImJsb2NrIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIHN0b3AtY29sb3I9IiM0NTlmODkiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMDZiNWMiLz48L2xpbmVhckdyYWRpZW50PjxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iODAiIGhlaWdodD0iODAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik04MCAwSDBWODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZjYWE5OSIgc3Ryb2tlLW9wYWNpdHk9Ii4yMiIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjE2MDAiIGhlaWdodD0iMTUwMCIgZmlsbD0idXJsKCNiZykiLz48cmVjdCB3aWR0aD0iMTYwMCIgaGVpZ2h0PSIxNTAwIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNTIwIDMwKSI+PHJlY3QgeD0iMCIgeT0iODAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMTYwIiByeD0iNiIgZmlsbD0idXJsKCNibG9jaykiLz48cmVjdCB4PSI4MCIgeT0iMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSI1NjAiIHJ4PSI2IiBmaWxsPSJ1cmwoI2Jsb2NrKSIvPjxyZWN0IHg9IjQwMCIgeT0iMCIgd2lkdGg9IjE2MCIgaGVpZ2h0PSI1NjAiIHJ4PSI2IiBmaWxsPSIjZDlmMGU4IiBzdHJva2U9IiM2ZGFhOTgiLz48cmVjdCB4PSIwIiB5PSI0MDAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMTYwIiByeD0iNiIgZmlsbD0iI2ZmZiIgc3Ryb2tlPSIjODdiYmFiIi8+PHJlY3QgeD0iMjQwIiB5PSIyNDAiIHdpZHRoPSIxNjAiIGhlaWdodD0iMTYwIiBmaWxsPSIjMmI4ZjdiIi8+PC9nPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE4ODQ3MiIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIuNTUiPjxwYXRoIGQ9Ik0xMDAgMTgwSDE0MDBNMTMyMCA4MFYxMzAwTTEyMCAxMzAwTDE0ODAgMjAwIi8+PGNpcmNsZSBjeD0iMTI4MCIgY3k9IjQ0MCIgcj0iMTkwIiBzdHJva2UtZGFzaGFycmF5PSI4IDEyIi8+PC9nPjxjaXJjbGUgY3g9IjEzMjAiIGN5PSIxODAiIHI9IjkiIGZpbGw9IiMwODdmNjkiLz48L3N2Zz4=",
+        "alt": "Decorative interlocking algebra blocks on a light mint technical grid."
+      },
+      "practised": [
+        "Distribute every term across the second bracket.",
+        "Keep signs attached to their terms.",
+        "Collect like terms to simplify the result."
+      ]
+    },
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "end",
+      "fallback": {
+        "final": "hidden",
+        "worked": "hidden"
       }
     }
   },
@@ -4658,8 +4679,8 @@ POSSIBILITY OF SUCH DAMAGE.
         {
           "id": "trinomial-practice",
           "title": "Practice",
-          "lede": "Practise each worked-example archetype, starting with close repetition.",
-          "practiceNote": "Work in your exercise book. Complete Basic before Moderate, then deliberately reveal that group’s answers.",
+          "lede": "",
+          "practiceNote": "Work in your exercise book. Choose Foundation or Moderate.",
           "questions": [
             {
               "id": "trinomial-guided-question",
@@ -4673,126 +4694,287 @@ POSSIBILITY OF SUCH DAMAGE.
                 "Write all six products.",
                 "Collect like terms."
               ],
-              "workedAnswer": "(_x_ + 1)(_x_^2 + 2_x_ + 3)\n= _x_^3 + 2_x_^2 + 3_x_ + _x_^2 + 2_x_ + 3\n= _x_^3 + 3_x_^2 + 5_x_ + 3"
+              "workedAnswer": "_x_(_x_^2 + 2_x_ + 3) + 1(_x_^2 + 2_x_ + 3)\n= _x_^3 + 2_x_^2 + 3_x_ + _x_^2 + 2_x_ + 3\n= _x_^3 + 3_x_^2 + 5_x_ + 3"
             },
             {
               "id": "binomial-trinomial-products-positive-q2",
               "stem": "Expand and simplify (_x_ + 2)(_x_^2 + _x_ + 2).",
               "archetypeId": "trinomial-basic-example",
               "level": "basic",
-              "answer": "_x_^3 + 3_x_^2 + 4_x_ + 4"
+              "answer": "_x_^3 + 3_x_^2 + 4_x_ + 4",
+              "workedAnswer": "_x_(_x_^2 + _x_ + 2) + 2(_x_^2 + _x_ + 2)\n= _x_^3 + _x_^2 + 2_x_ + 2_x_^2 + 2_x_ + 4\n= _x_^3 + 3_x_^2 + 4_x_ + 4"
             },
             {
               "id": "binomial-trinomial-products-positive-q3",
               "stem": "Expand and simplify (_x_ + 3)(_x_^2 + 2_x_ + 1).",
               "archetypeId": "trinomial-basic-example",
               "level": "basic",
-              "answer": "_x_^3 + 5_x_^2 + 7_x_ + 3"
+              "answer": "_x_^3 + 5_x_^2 + 7_x_ + 3",
+              "workedAnswer": "_x_(_x_^2 + 2_x_ + 1) + 3(_x_^2 + 2_x_ + 1)\n= _x_^3 + 2_x_^2 + _x_ + 3_x_^2 + 6_x_ + 3\n= _x_^3 + 5_x_^2 + 7_x_ + 3"
             },
             {
               "id": "binomial-trinomial-products-positive-q4",
               "stem": "Expand and simplify (_x_ + 1)(_x_^2 + 3_x_ + 4).",
               "archetypeId": "trinomial-basic-example",
               "level": "basic",
-              "answer": "_x_^3 + 4_x_^2 + 7_x_ + 4"
+              "answer": "_x_^3 + 4_x_^2 + 7_x_ + 4",
+              "workedAnswer": "_x_(_x_^2 + 3_x_ + 4) + 1(_x_^2 + 3_x_ + 4)\n= _x_^3 + 3_x_^2 + 4_x_ + _x_^2 + 3_x_ + 4\n= _x_^3 + 4_x_^2 + 7_x_ + 4"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-basic-example-new-foundation-1",
+              "stem": "Expand and simplify (_x_ + 2)(_x_^2 + 3_x_ + 1).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "basic",
+              "answer": "_x_^3 + 5_x_^2 + 7_x_ + 2",
+              "workedAnswer": "_x_(_x_^2 + 3_x_ + 1) + 2(_x_^2 + 3_x_ + 1)\n= _x_^3 + 3_x_^2 + _x_ + 2_x_^2 + 6_x_ + 2\n= _x_^3 + 5_x_^2 + 7_x_ + 2"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-basic-example-new-foundation-2",
+              "stem": "Expand and simplify (_x_ + 3)(_x_^2 + _x_ + 4).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "basic",
+              "answer": "_x_^3 + 4_x_^2 + 7_x_ + 12",
+              "workedAnswer": "_x_(_x_^2 + _x_ + 4) + 3(_x_^2 + _x_ + 4)\n= _x_^3 + _x_^2 + 4_x_ + 3_x_^2 + 3_x_ + 12\n= _x_^3 + 4_x_^2 + 7_x_ + 12"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-basic-example-new-foundation-3",
+              "stem": "Expand and simplify (_x_ + 4)(_x_^2 + 2_x_ + 3).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "basic",
+              "answer": "_x_^3 + 6_x_^2 + 11_x_ + 12",
+              "workedAnswer": "_x_(_x_^2 + 2_x_ + 3) + 4(_x_^2 + 2_x_ + 3)\n= _x_^3 + 2_x_^2 + 3_x_ + 4_x_^2 + 8_x_ + 12\n= _x_^3 + 6_x_^2 + 11_x_ + 12"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-basic-example-new-foundation-4",
+              "stem": "Expand and simplify (_x_ + 2)(_x_^2 + 4_x_ + 5).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "basic",
+              "answer": "_x_^3 + 6_x_^2 + 13_x_ + 10",
+              "workedAnswer": "_x_(_x_^2 + 4_x_ + 5) + 2(_x_^2 + 4_x_ + 5)\n= _x_^3 + 4_x_^2 + 5_x_ + 2_x_^2 + 8_x_ + 10\n= _x_^3 + 6_x_^2 + 13_x_ + 10"
             },
             {
               "id": "binomial-trinomial-products-positive-q5",
               "stem": "Expand and simplify (_x_ + 4)(_x_^2 + 5_x_ + 6).",
               "archetypeId": "trinomial-basic-example",
               "level": "moderate",
-              "answer": "_x_^3 + 9_x_^2 + 26_x_ + 24"
+              "answer": "_x_^3 + 9_x_^2 + 26_x_ + 24",
+              "workedAnswer": "_x_(_x_^2 + 5_x_ + 6) + 4(_x_^2 + 5_x_ + 6)\n= _x_^3 + 5_x_^2 + 6_x_ + 4_x_^2 + 20_x_ + 24\n= _x_^3 + 9_x_^2 + 26_x_ + 24"
             },
             {
               "id": "binomial-trinomial-products-positive-q6",
               "stem": "Expand and simplify (_x_ + 5)(_x_^2 + 4_x_ + 7).",
               "archetypeId": "trinomial-basic-example",
               "level": "moderate",
-              "answer": "_x_^3 + 9_x_^2 + 27_x_ + 35"
+              "answer": "_x_^3 + 9_x_^2 + 27_x_ + 35",
+              "workedAnswer": "_x_(_x_^2 + 4_x_ + 7) + 5(_x_^2 + 4_x_ + 7)\n= _x_^3 + 4_x_^2 + 7_x_ + 5_x_^2 + 20_x_ + 35\n= _x_^3 + 9_x_^2 + 27_x_ + 35"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-basic-example-new-moderate-1",
+              "stem": "Expand and simplify (_x_ + 6)(_x_^2 + 7_x_ + 4).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "moderate",
+              "answer": "_x_^3 + 13_x_^2 + 46_x_ + 24",
+              "workedAnswer": "_x_(_x_^2 + 7_x_ + 4) + 6(_x_^2 + 7_x_ + 4)\n= _x_^3 + 7_x_^2 + 4_x_ + 6_x_^2 + 42_x_ + 24\n= _x_^3 + 13_x_^2 + 46_x_ + 24"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-basic-example-new-moderate-2",
+              "stem": "Expand and simplify (_x_ + 7)(_x_^2 + 6_x_ + 8).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "moderate",
+              "answer": "_x_^3 + 13_x_^2 + 50_x_ + 56",
+              "workedAnswer": "_x_(_x_^2 + 6_x_ + 8) + 7(_x_^2 + 6_x_ + 8)\n= _x_^3 + 6_x_^2 + 8_x_ + 7_x_^2 + 42_x_ + 56\n= _x_^3 + 13_x_^2 + 50_x_ + 56"
             },
             {
               "id": "binomial-trinomial-products-signs-q1",
               "stem": "Expand and simplify (_x_ − 1)(_x_^2 + 2_x_ − 3).",
               "archetypeId": "trinomial-signs-example",
               "level": "basic",
-              "answer": "_x_^3 + _x_^2 − 5_x_ + 3"
+              "answer": "_x_^3 + _x_^2 − 5_x_ + 3",
+              "workedAnswer": "_x_(_x_^2 + 2_x_ − 3) − 1(_x_^2 + 2_x_ − 3)\n= _x_^3 + 2_x_^2 − 3_x_ − _x_^2 − 2_x_ + 3\n= _x_^3 + _x_^2 − 5_x_ + 3"
             },
             {
               "id": "binomial-trinomial-products-signs-q2",
               "stem": "Expand and simplify (_x_ − 2)(_x_^2 + _x_ − 4).",
               "archetypeId": "trinomial-signs-example",
               "level": "basic",
-              "answer": "_x_^3 − _x_^2 − 6_x_ + 8"
+              "answer": "_x_^3 − _x_^2 − 6_x_ + 8",
+              "workedAnswer": "_x_(_x_^2 + _x_ − 4) − 2(_x_^2 + _x_ − 4)\n= _x_^3 + _x_^2 − 4_x_ − 2_x_^2 − 2_x_ + 8\n= _x_^3 − _x_^2 − 6_x_ + 8"
             },
             {
               "id": "binomial-trinomial-products-signs-q3",
               "stem": "Expand and simplify (_x_ − 3)(_x_^2 + _x_ − 2).",
               "archetypeId": "trinomial-signs-example",
               "level": "basic",
-              "answer": "_x_^3 − 2_x_^2 − 5_x_ + 6"
+              "answer": "_x_^3 − 2_x_^2 − 5_x_ + 6",
+              "workedAnswer": "_x_(_x_^2 + _x_ − 2) − 3(_x_^2 + _x_ − 2)\n= _x_^3 + _x_^2 − 2_x_ − 3_x_^2 − 3_x_ + 6\n= _x_^3 − 2_x_^2 − 5_x_ + 6"
             },
             {
               "id": "binomial-trinomial-products-signs-q4",
               "stem": "Expand and simplify (_x_ − 2)(_x_^2 + 3_x_ − 1).",
               "archetypeId": "trinomial-signs-example",
               "level": "basic",
-              "answer": "_x_^3 + _x_^2 − 7_x_ + 2"
+              "answer": "_x_^3 + _x_^2 − 7_x_ + 2",
+              "workedAnswer": "_x_(_x_^2 + 3_x_ − 1) − 2(_x_^2 + 3_x_ − 1)\n= _x_^3 + 3_x_^2 − _x_ − 2_x_^2 − 6_x_ + 2\n= _x_^3 + _x_^2 − 7_x_ + 2"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-signs-example-new-foundation-1",
+              "stem": "Expand and simplify (_x_ − 3)(_x_^2 + 2_x_ − 4).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "basic",
+              "answer": "_x_^3 − _x_^2 − 10_x_ + 12",
+              "workedAnswer": "_x_(_x_^2 + 2_x_ − 4) − 3(_x_^2 + 2_x_ − 4)\n= _x_^3 + 2_x_^2 − 4_x_ − 3_x_^2 − 6_x_ + 12\n= _x_^3 − _x_^2 − 10_x_ + 12"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-signs-example-new-foundation-2",
+              "stem": "Expand and simplify (_x_ − 4)(_x_^2 + 3_x_ − 2).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "basic",
+              "answer": "_x_^3 − _x_^2 − 14_x_ + 8",
+              "workedAnswer": "_x_(_x_^2 + 3_x_ − 2) − 4(_x_^2 + 3_x_ − 2)\n= _x_^3 + 3_x_^2 − 2_x_ − 4_x_^2 − 12_x_ + 8\n= _x_^3 − _x_^2 − 14_x_ + 8"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-signs-example-new-foundation-3",
+              "stem": "Expand and simplify (_x_ − 2)(_x_^2 − _x_ + 3).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "basic",
+              "answer": "_x_^3 − 3_x_^2 + 5_x_ − 6",
+              "workedAnswer": "_x_(_x_^2 − _x_ + 3) − 2(_x_^2 − _x_ + 3)\n= _x_^3 − _x_^2 + 3_x_ − 2_x_^2 + 2_x_ − 6\n= _x_^3 − 3_x_^2 + 5_x_ − 6"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-signs-example-new-foundation-4",
+              "stem": "Expand and simplify (_x_ − 1)(_x_^2 − 3_x_ − 4).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "basic",
+              "answer": "_x_^3 − 4_x_^2 − _x_ + 4",
+              "workedAnswer": "_x_(_x_^2 − 3_x_ − 4) − 1(_x_^2 − 3_x_ − 4)\n= _x_^3 − 3_x_^2 − 4_x_ − _x_^2 + 3_x_ + 4\n= _x_^3 − 4_x_^2 − _x_ + 4"
             },
             {
               "id": "binomial-trinomial-products-signs-q5",
               "stem": "Expand and simplify (_x_ − 5)(_x_^2 + 4_x_ − 6).",
               "archetypeId": "trinomial-signs-example",
               "level": "moderate",
-              "answer": "_x_^3 − _x_^2 − 26_x_ + 30"
+              "answer": "_x_^3 − _x_^2 − 26_x_ + 30",
+              "workedAnswer": "_x_(_x_^2 + 4_x_ − 6) − 5(_x_^2 + 4_x_ − 6)\n= _x_^3 + 4_x_^2 − 6_x_ − 5_x_^2 − 20_x_ + 30\n= _x_^3 − _x_^2 − 26_x_ + 30"
             },
             {
               "id": "binomial-trinomial-products-signs-q6",
               "stem": "Expand and simplify (_x_ − 4)(_x_^2 + 5_x_ − 7).",
               "archetypeId": "trinomial-signs-example",
               "level": "moderate",
-              "answer": "_x_^3 + _x_^2 − 27_x_ + 28"
+              "answer": "_x_^3 + _x_^2 − 27_x_ + 28",
+              "workedAnswer": "_x_(_x_^2 + 5_x_ − 7) − 4(_x_^2 + 5_x_ − 7)\n= _x_^3 + 5_x_^2 − 7_x_ − 4_x_^2 − 20_x_ + 28\n= _x_^3 + _x_^2 − 27_x_ + 28"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-signs-example-new-moderate-1",
+              "stem": "Expand and simplify (_x_ − 7)(_x_^2 + 6_x_ − 5).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "moderate",
+              "answer": "_x_^3 − _x_^2 − 47_x_ + 35",
+              "workedAnswer": "_x_(_x_^2 + 6_x_ − 5) − 7(_x_^2 + 6_x_ − 5)\n= _x_^3 + 6_x_^2 − 5_x_ − 7_x_^2 − 42_x_ + 35\n= _x_^3 − _x_^2 − 47_x_ + 35"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-signs-example-new-moderate-2",
+              "stem": "Expand and simplify (_x_ − 6)(_x_^2 + 7_x_ − 8).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "moderate",
+              "answer": "_x_^3 + _x_^2 − 50_x_ + 48",
+              "workedAnswer": "_x_(_x_^2 + 7_x_ − 8) − 6(_x_^2 + 7_x_ − 8)\n= _x_^3 + 7_x_^2 − 8_x_ − 6_x_^2 − 42_x_ + 48\n= _x_^3 + _x_^2 − 50_x_ + 48"
             },
             {
               "id": "binomial-trinomial-products-coefficients-q1",
               "stem": "Expand and simplify (2_x_ − 1)(_x_^2 + _x_ + 2).",
               "archetypeId": "trinomial-coefficients-example",
               "level": "basic",
-              "answer": "2_x_^3 + _x_^2 + 3_x_ − 2"
+              "answer": "2_x_^3 + _x_^2 + 3_x_ − 2",
+              "workedAnswer": "2_x_(_x_^2 + _x_ + 2) − 1(_x_^2 + _x_ + 2)\n= 2_x_^3 + 2_x_^2 + 4_x_ − _x_^2 − _x_ − 2\n= 2_x_^3 + _x_^2 + 3_x_ − 2"
             },
             {
               "id": "binomial-trinomial-products-coefficients-q2",
               "stem": "Expand and simplify (2_x_ − 3)(_x_^2 + 2_x_ + 1).",
               "archetypeId": "trinomial-coefficients-example",
               "level": "basic",
-              "answer": "2_x_^3 + _x_^2 − 4_x_ − 3"
+              "answer": "2_x_^3 + _x_^2 − 4_x_ − 3",
+              "workedAnswer": "2_x_(_x_^2 + 2_x_ + 1) − 3(_x_^2 + 2_x_ + 1)\n= 2_x_^3 + 4_x_^2 + 2_x_ − 3_x_^2 − 6_x_ − 3\n= 2_x_^3 + _x_^2 − 4_x_ − 3"
             },
             {
               "id": "binomial-trinomial-products-coefficients-q3",
               "stem": "Expand and simplify (3_x_ − 1)(_x_^2 + _x_ + 3).",
               "archetypeId": "trinomial-coefficients-example",
               "level": "basic",
-              "answer": "3_x_^3 + 2_x_^2 + 8_x_ − 3"
+              "answer": "3_x_^3 + 2_x_^2 + 8_x_ − 3",
+              "workedAnswer": "3_x_(_x_^2 + _x_ + 3) − 1(_x_^2 + _x_ + 3)\n= 3_x_^3 + 3_x_^2 + 9_x_ − _x_^2 − _x_ − 3\n= 3_x_^3 + 2_x_^2 + 8_x_ − 3"
             },
             {
               "id": "binomial-trinomial-products-coefficients-q4",
               "stem": "Expand and simplify (3_x_ − 2)(_x_^2 + 2_x_ + 4).",
               "archetypeId": "trinomial-coefficients-example",
               "level": "basic",
-              "answer": "3_x_^3 + 4_x_^2 + 8_x_ − 8"
+              "answer": "3_x_^3 + 4_x_^2 + 8_x_ − 8",
+              "workedAnswer": "3_x_(_x_^2 + 2_x_ + 4) − 2(_x_^2 + 2_x_ + 4)\n= 3_x_^3 + 6_x_^2 + 12_x_ − 2_x_^2 − 4_x_ − 8\n= 3_x_^3 + 4_x_^2 + 8_x_ − 8"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-coefficients-example-new-foundation-1",
+              "stem": "Expand and simplify (2_x_ + 1)(_x_^2 + 3_x_ + 2).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "basic",
+              "answer": "2_x_^3 + 7_x_^2 + 7_x_ + 2",
+              "workedAnswer": "2_x_(_x_^2 + 3_x_ + 2) + 1(_x_^2 + 3_x_ + 2)\n= 2_x_^3 + 6_x_^2 + 4_x_ + _x_^2 + 3_x_ + 2\n= 2_x_^3 + 7_x_^2 + 7_x_ + 2"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-coefficients-example-new-foundation-2",
+              "stem": "Expand and simplify (3_x_ − 2)(_x_^2 + _x_ + 4).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "basic",
+              "answer": "3_x_^3 + _x_^2 + 10_x_ − 8",
+              "workedAnswer": "3_x_(_x_^2 + _x_ + 4) − 2(_x_^2 + _x_ + 4)\n= 3_x_^3 + 3_x_^2 + 12_x_ − 2_x_^2 − 2_x_ − 8\n= 3_x_^3 + _x_^2 + 10_x_ − 8"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-coefficients-example-new-foundation-3",
+              "stem": "Expand and simplify (4_x_ + 1)(_x_^2 − 2_x_ + 3).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "basic",
+              "answer": "4_x_^3 − 7_x_^2 + 10_x_ + 3",
+              "workedAnswer": "4_x_(_x_^2 − 2_x_ + 3) + 1(_x_^2 − 2_x_ + 3)\n= 4_x_^3 − 8_x_^2 + 12_x_ + _x_^2 − 2_x_ + 3\n= 4_x_^3 − 7_x_^2 + 10_x_ + 3"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-coefficients-example-new-foundation-4",
+              "stem": "Expand and simplify (5_x_ − 3)(_x_^2 + 2_x_ + 1).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "basic",
+              "answer": "5_x_^3 + 7_x_^2 − _x_ − 3",
+              "workedAnswer": "5_x_(_x_^2 + 2_x_ + 1) − 3(_x_^2 + 2_x_ + 1)\n= 5_x_^3 + 10_x_^2 + 5_x_ − 3_x_^2 − 6_x_ − 3\n= 5_x_^3 + 7_x_^2 − _x_ − 3"
             },
             {
               "id": "binomial-trinomial-products-coefficients-q5",
               "stem": "Expand and simplify (2_x_ − 3)(2_x_^2 − _x_ + 4).",
               "archetypeId": "trinomial-coefficients-example",
               "level": "moderate",
-              "answer": "4_x_^3 − 8_x_^2 + 11_x_ − 12"
+              "answer": "4_x_^3 − 8_x_^2 + 11_x_ − 12",
+              "workedAnswer": "2_x_(2_x_^2 − _x_ + 4) − 3(2_x_^2 − _x_ + 4)\n= 4_x_^3 − 2_x_^2 + 8_x_ − 6_x_^2 + 3_x_ − 12\n= 4_x_^3 − 8_x_^2 + 11_x_ − 12"
             },
             {
               "id": "binomial-trinomial-products-coefficients-q6",
               "stem": "Expand and simplify (3_x_ − 2)(2_x_^2 − 3_x_ + 5).",
               "archetypeId": "trinomial-coefficients-example",
               "level": "moderate",
-              "answer": "6_x_^3 − 13_x_^2 + 21_x_ − 10"
+              "answer": "6_x_^3 − 13_x_^2 + 21_x_ − 10",
+              "workedAnswer": "3_x_(2_x_^2 − 3_x_ + 5) − 2(2_x_^2 − 3_x_ + 5)\n= 6_x_^3 − 9_x_^2 + 15_x_ − 4_x_^2 + 6_x_ − 10\n= 6_x_^3 − 13_x_^2 + 21_x_ − 10"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-coefficients-example-new-moderate-1",
+              "stem": "Expand and simplify (4_x_ − 3)(3_x_^2 − 2_x_ + 5).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "moderate",
+              "answer": "12_x_^3 − 17_x_^2 + 26_x_ − 15",
+              "workedAnswer": "4_x_(3_x_^2 − 2_x_ + 5) − 3(3_x_^2 − 2_x_ + 5)\n= 12_x_^3 − 8_x_^2 + 20_x_ − 9_x_^2 + 6_x_ − 15\n= 12_x_^3 − 17_x_^2 + 26_x_ − 15"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-coefficients-example-new-moderate-2",
+              "stem": "Expand and simplify (5_x_ − 4)(2_x_^2 − 3_x_ + 7).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "moderate",
+              "answer": "10_x_^3 − 23_x_^2 + 47_x_ − 28",
+              "workedAnswer": "5_x_(2_x_^2 − 3_x_ + 7) − 4(2_x_^2 − 3_x_ + 7)\n= 10_x_^3 − 15_x_^2 + 35_x_ − 8_x_^2 + 12_x_ − 28\n= 10_x_^3 − 23_x_^2 + 47_x_ − 28"
             }
           ],
           "practiceCollectionId": "trinomial-worked-collection"
@@ -10022,7 +10204,7 @@ function lpVideoBody(s,a){const v=a.optionalVideo?s.video:a.video;return `<div c
 function lpGoFront(id){if(document.querySelector('dialog[open]'))return;lpCurrent(LESSON.slides[cur]);LP_STATE.front=id;LP_STATE.end=false;Object.keys(MX_SCROLL).forEach(k=>delete MX_SCROLL[k]);if(rpNarrow())RP_NAV=false;renderSlide();document.querySelector('.lp-title')?.focus({preventScroll:true});}
 function lpJourneyRail(s,i,a,end){
   const front=lpFront();let rail=`<li class="lp-lesson-label">Lesson</li>${lpFrontPages().map(p=>`<li><button class="mx-navitem${front===p?' on':''}" data-lp-front="${esc(p.id)}"${front===p?' aria-current="page"':''}>${esc(p.kind==='overview'?'Overview':'Learning outcomes')}</button></li>`).join('')}`;
-  rail+=LESSON.slides.map((sk,k)=>{let n=0;const seen=new Set();const rows=lpActivities(sk).map(act=>{const c=lpCollection(sk,act);if(c&&authorMode()!=='edit'){if(seen.has(c.id))return '';seen.add(c.id);return `<li><button data-lp-go="${k}:${esc(lpCollectionMembers(sk,c)[0].a.id)}"${!front&&k===i&&lpCollection(sk,a)===c&&!end?' aria-current="step"':''}>${++n}. ${esc(c.title||'Worked examples')}</button></li>`;}if(c){if(seen.has(c.id))return '';seen.add(c.id);return `<li><div class="lp-collection-title">${++n}. ${esc(c.title||'Worked examples')}</div><ol class="lp-collection-members">${lpCollectionMembers(sk,c).map(({a:member,ex},j)=>`<li><button data-lp-go="${k}:${esc(member.id)}"${!front&&k===i&&member===a&&!end?' aria-current="step"':''}>Example ${j+1} · ${esc(ex.tabLabel||ex.label||'Example '+(j+1))}</button></li>`).join('')}</ol></li>`;}return `<li><button data-lp-go="${k}:${esc(act.id)}"${!front&&k===i&&act===a&&!end?' aria-current="step"':''}>${++n}. ${esc(act.title)}</button></li>`;}).join('');return `<li><button class="mx-navitem${!front&&k===i?' on':''}" data-lp-go="${k}"><span class="mx-navtx">${lpMathSingle()?'<span>Skill</span>':`<span>Skill ${k+1}</span><b>${esc(sk.title)}</b>`}</span></button><ol class="lp-activities">${rows}</ol></li>`;}).join('');if(authorMode()!=='edit')rail+=`<li><button data-lp-end${end?' aria-current="page"':''}>Lesson complete</button></li>`;return rail;
+  rail+=LESSON.slides.map((sk,k)=>{let n=0;const seen=new Set();const rows=lpActivities(sk).map(act=>{const c=lpCollection(sk,act);if(lpTextbook()&&act.practiceCollectionId&&authorMode()!=='edit'){return `<li><div class="lp-collection-title">Practice</div><ol class="lp-book-paths">${lpPracticeMembers(sk,act).map(({ex})=>`<li><button data-book-page="${esc(ex.id)}" data-book-skill="${k}" data-book-activity="${esc(act.id)}"${!front&&k===i&&act===a&&!end&&lpPracticeCurrent(sk,act)?.ex.id===ex.id?' aria-current="step"':''}>${esc(ex.tabLabel||ex.label)}</button></li>`).join('')}</ol></li>`;}if(c&&authorMode()!=='edit'){if(seen.has(c.id))return '';seen.add(c.id);return `<li><button data-lp-go="${k}:${esc(lpCollectionMembers(sk,c)[0].a.id)}"${!front&&k===i&&lpCollection(sk,a)===c&&!end?' aria-current="step"':''}>${++n}. ${esc(c.title||'Worked examples')}</button></li>`;}if(c){if(seen.has(c.id))return '';seen.add(c.id);return `<li><div class="lp-collection-title">${++n}. ${esc(c.title||'Worked examples')}</div><ol class="lp-collection-members">${lpCollectionMembers(sk,c).map(({a:member,ex},j)=>`<li><button data-lp-go="${k}:${esc(member.id)}"${!front&&k===i&&member===a&&!end?' aria-current="step"':''}>Example ${j+1} · ${esc(ex.tabLabel||ex.label||'Example '+(j+1))}</button></li>`).join('')}</ol></li>`;}return `<li><button data-lp-go="${k}:${esc(act.id)}"${!front&&k===i&&act===a&&!end?' aria-current="step"':''}>${++n}. ${esc(act.title)}</button></li>`;}).join('');return `<li><button class="mx-navitem${!front&&k===i?' on':''}" data-lp-go="${k}"><span class="mx-navtx">${lpMathSingle()?'<span>Skill</span>':`<span>Skill ${k+1}</span><b>${esc(sk.title)}</b>`}</span></button><ol class="lp-activities">${rows}</ol></li>`;}).join('');if(authorMode()!=='edit')rail+=`<li><button data-lp-end${end?' aria-current="page"':''}>Lesson complete</button></li>`;return rail;
 }
 function lpNextLabel(s,a){const list=lpActivities(s),j=list.indexOf(a),next=list[j+1];return next?(lpCollection(s,next)?.title||next.title):LESSON.slides[cur+1]?'Skill '+(cur+2):'Finish lesson';}
 function lpCurriculum(opener){
@@ -10038,7 +10220,7 @@ function lpFrontInspector(){
   const ins=$('#inspector'),p=lpFront(),i=lpFrontPages().indexOf(p),base='meta.frontMatter.'+i;
   ins.innerHTML=`<div class="ins-h">Lesson pages</div><div class="isec">${inT('Lesson title','meta.title',LESSON.meta.title)}${inT('Subject','meta.subject',LESSON.meta.subject||'')}${inT('Year / course context','meta.context',LESSON.meta.context||'')}${lpFrontPages().map(f=>`<button data-front-edit="${esc(f.id)}">${esc(f.kind==='overview'?'Overview':'Learning outcomes')}</button>`).join('')}<button data-front-add="overview">Add overview</button><button data-front-add="outcomes">Add outcomes</button></div>${p?`<div class="isec">${inT('Page title',base+'.title',p.title||'')}${inA('Description',base+'.description',p.description||'')}<button data-journey-array="meta.frontMatter:${i}:-1"${i===0?' disabled':''}>Move page earlier</button><button data-journey-array="meta.frontMatter:${i}:1"${i===lpFrontPages().length-1?' disabled':''}>Move page later</button><button data-front-remove>Remove page</button></div>${lpImageForm(base+'.image',p.image,p.kind==='overview'?'Lesson image':'Outcomes image')}${p.kind==='outcomes'?lpListForm('Learning intention',base+'.intentions',p.intentions):''}`:''}
   <div class="isec"><h3>Curriculum mappings</h3><p>Mappings are authored drafts unless explicitly marked. The application does not verify official content.</p>${(LESSON.meta.curriculumMappings||[]).map((r,j)=>{const b='meta.curriculumMappings.'+j;return `<details><summary>${esc(r.jurisdiction||'New mapping')}</summary>${[['jurisdiction','Jurisdiction'],['authority','Authority'],['curriculum','Curriculum / syllabus'],['level','Year / stage / course'],['domain','Strand / domain'],['version','Version'],['identifier','Official identifier'],['wording','Official wording'],['sourceUrl','Source URL'],['note','Reviewed mapping note']].map(([k,l])=>inA(l,b+'.'+k,r[k]||'')).join('')}${inSel('Verification status',b+'.status',r.status||'draft',[['draft','Authored draft'],['demo','Demo — not official'],['verified','Author marked as verified']])}<button data-journey-array="meta.curriculumMappings:${j}:remove">Remove mapping</button></details>`;}).join('')}<button data-mapping-add>Add mapping</button></div>`;
-  ins.insertAdjacentHTML('beforeend',lpImageForm('meta.completion.image',LESSON.meta.completion?.image,'Lesson complete image'));
+  ins.insertAdjacentHTML('beforeend',lpImageForm('meta.completion.image',LESSON.meta.completion?.image,'Lesson complete image')+lpBookPolicyForm());
   wireInspector();lpJourneyEditorWire();ins.querySelector('[data-front-remove]')?.addEventListener('click',()=>{LESSON.meta.frontMatter.splice(i,1);LP_STATE.front=lpFrontPages()[Math.min(i,lpFrontPages().length-1)]?.id||null;renderSlide();});
 }
 function lpJourneyEditorWire(){const ins=$('#inspector');
@@ -10085,11 +10267,12 @@ function lpValidatePublication(d){
   if(!d.slides.length)throw Error('This lesson has no skills. Add a skill with instructional content before publishing.');
 }
 function lpCurrent(s){
-  if(LP_STATE.lesson!==LESSON){ LP_STATE={lesson:LESSON,activity:{},end:false,front:lpFrontPages()[0]?.id||null}; }
+  if(LP_STATE.lesson!==LESSON){ clearTimeout(LP_BOOK.timer);LP_BOOK={pathways:{},completed:false,session:null,timer:null,teacherToken:null}; LP_STATE={lesson:LESSON,activity:{},end:false,front:lpFrontPages()[0]?.id||null}; }
   if(LP_STATE.front&&!lpFront())LP_STATE.front=null;
   const list=lpActivities(s); return list.find(a=>a.id===LP_STATE.activity[s.id])||list[0];
 }
 function lpValidate(d){
+  lpBookValidate(d);
   if(!(d.slides||[]).some(lpEnabled)&&!(d.meta&&d.meta.player==='activities')) return;
   if(!d.meta||typeof d.meta.id!=='string'||!d.meta.id.trim()) throw Error('Activity lessons need a stable string meta.id.');
   if(d.meta.responseMode&&!MX_RESPONSE_ALIAS[d.meta.responseMode]) throw Error('responseMode must be paper, typed or pen (type/write aliases supported).');
@@ -10119,7 +10302,7 @@ function lpValidate(d){
       (a.questions||[]).forEach(q=>{id(q,'Question');if(typeof q.stem!=='string'||!q.stem.trim())throw Error('Question '+q.id+' needs a prompt.');if(q.type&&!['question','table'].includes(q.type))throw Error('Unsupported question type: '+q.type);});
       (a.workedExamples||[]).forEach(g=>{if(g.type&&!MX_WEX_TYPES[g.type]&&!MX_WEX_ALIAS[g.type])throw Error('Unsupported worked composition: '+g.type);parts(g.relations);parts(g.visual);});
       [...(a.examples||[]),...(a.workedExamples||[]).flatMap(g=>g.examples||[])].forEach(ex=>{parts(ex.visual);(ex.steps||[]).forEach(step=>parts(step.visual));if(ex.support){if(!Array.isArray(ex.support.steps))throw Error('Optional method needs an ordered steps array.');ex.support.steps.forEach(step=>parts(step.visual));}});
-      if(a.practiceCollectionId!=null){if(typeof a.practiceCollectionId!=='string'||!a.practiceCollectionId.trim())throw Error('Practice needs a stable collection id.');const members=lpPracticeMembers(s,a);if(!members.length)throw Error('Practice needs an existing non-empty example collection.');(a.questions||[]).forEach(q=>{if(!members.some(x=>x.ex.id===q.archetypeId)||!['basic','moderate'].includes(q.level))throw Error('Practice questions need a linked archetype and Basic/Moderate level.');if(q.answer!=null&&typeof q.answer!=='string'||q.workedAnswer!=null&&typeof q.workedAnswer!=='string')throw Error('Practice answers must be text.');});}
+      if(a.practiceCollectionId!=null){if(typeof a.practiceCollectionId!=='string'||!a.practiceCollectionId.trim())throw Error('Practice needs a stable collection id.');const members=lpPracticeMembers(s,a);if(!members.length)throw Error('Practice needs an existing non-empty example collection.');(a.questions||[]).forEach(q=>{if(!members.some(x=>x.ex.id===q.archetypeId)||!['basic','moderate','advanced'].includes(q.level))throw Error('Practice questions need a linked archetype and Foundation/Moderate/Advanced level.');if(q.answer!=null&&typeof q.answer!=='string'||q.workedAnswer!=null&&typeof q.workedAnswer!=='string')throw Error('Practice answers must be text.');});}
       if(a.workspace&&a.workspace.kind!=='grid') throw Error('Only the grid response workspace is supported inside activities.');
     });
   });
@@ -10140,10 +10323,73 @@ function lpCollectionTabs(s,a){
 }
 /* Practice references the existing example collection and stable example IDs.
    Questions stay in their original flat array; selected tabs and reveals are transient. */
+// Textbook presentation is authored; older linked-practice files retain their M1 view.
+function lpTextbook(){return LESSON.meta.practiceLayout==='textbook';}
+function lpBookTeacher(){return !document.documentElement.dataset.export&&(authorMode()==='edit'||document.body.classList.contains('present'));}
+let LP_BOOK={pathways:{},completed:false,session:null,timer:null,teacherToken:null};
+function lpBookKey(a,ex){return JSON.stringify([a.id,ex.id]);}
+function lpBookLevel(a,ex){const qs=(a.questions||[]).filter(q=>q.archetypeId===ex.id),levels=['basic','moderate','advanced'].filter(l=>qs.some(q=>q.level===l)),saved=LP_BOOK.pathways[lpBookKey(a,ex)];return levels.includes(saved)?saved:levels[0];}
+function lpBookPolicy(kind){const p=LESSON.meta.answerPolicy?.[kind]||'autonomous';return p==='teacher'?(LESSON.meta.answerPolicy?.fallback?.[kind]||'hidden'):p;}
+function lpBookAllowed(kind){
+  if(lpBookTeacher())return true;
+  const policy=LESSON.meta.answerPolicy?.[kind]||'autonomous',session=LP_BOOK.session;
+  if(policy==='teacher'&&session?.active)return kind==='final'?['finals','worked'].includes(session.state):session.state==='worked';
+  const p=lpBookPolicy(kind);return p==='autonomous'||p==='end'&&(LP_BOOK.completed||LP_STATE.end);
+}
+function lpBookQuestion(q,kind){const remote=LP_BOOK.session?.answers?.[q.id];return remote?.[kind==='final'?'answer':'workedAnswer']??q[kind==='final'?'answer':'workedAnswer'];}
+function lpBookStatus(){const remote=LESSON.meta.answerPolicy&&Object.values(LESSON.meta.answerPolicy).includes('teacher');return LP_BOOK.session?.active?'Class '+esc(LP_BOOK.session.code)+' · '+esc(LP_BOOK.session.state==='locked'?'Waiting for teacher release':'Answers released'):remote?'Live class not connected. Using the authored fallback.':lpBookAllowed('final')||lpBookAllowed('worked')?'Answers available':'Answers locked until permitted by your teacher’s policy.';}
+function lpBookAnswerButton(){return `<div class="lp-book-status" role="status">${lpBookStatus()}</div><button class="lp-primary" data-book-hub>${lpBookAllowed('final')||lpBookAllowed('worked')?'Check answers':'Answer access'}</button>${LESSON.meta.classSession?.endpoint?`<button class="mx-tool" data-book-class>${document.documentElement.dataset.export?'Join class':'Class session'}</button>`:''}${!document.documentElement.dataset.export&&document.body.classList.contains('present')?'<p>Projector view: answers on this display only; class release is separate.</p>':''}`;}
+function lpTextbookPractice(s,a){
+  const current=lpPracticeCurrent(s,a);if(!current)return '<p>Add a worked-example collection.</p>';const ex=current.ex,level=lpBookLevel(a,ex),all=(a.questions||[]).filter(q=>q.archetypeId===ex.id),qs=all.filter(q=>q.level===level),levels=['basic','moderate','advanced'].filter(l=>all.some(q=>q.level===l));
+  const number=q=>all.indexOf(q)+1,page=tpRespId(lpProjection(s));
+  return `<div class="lp-textbook"><p>Work in your exercise book. Expand and simplify each product.</p><div class="mx-collection-tabs" role="tablist" aria-label="Practice pathway">${levels.map(l=>`<button role="tab" id="book-level-${l}" aria-controls="book-exercise" aria-selected="${l===level}" tabindex="${l===level?0:-1}" data-book-level="${l}">${l==='basic'?'Foundation':l==='moderate'?'Moderate':'Advanced (optional)'}</button>`).join('')}</div><div class="lp-book-tools">${lpBookAnswerButton()}</div><section id="book-exercise" role="tabpanel" aria-labelledby="book-level-${level}"><div class="lp-exercise-grid">${qs.map(q=>{const span=q.layout&&q.layout!=='auto'?q.layout:((q.parts?.length||q.figure||q.image||q.stem?.length>150)?'full':'compact');return `<div class="lp-exercise-cell lp-span-${esc(span)}" data-book-question="${esc(q.id)}">${mxQuestionList([{...q,stem:q.parts?.length?q.stem:q.stem.replace(/^Expand and simplify\s+/,'')}],page,number(q)-1)}</div>`;}).join('')}</div></section></div>`;
+}
+function lpBookHub(opener){
+  const d=document.createElement('dialog');d.className='mx-support-dialog lp-answer-hub';d.setAttribute('aria-labelledby','book-hub-title');
+  const s=LESSON.slides[cur],a=lpCurrent(s),ex=lpPracticeCurrent(s,a)?.ex,level=ex&&lpBookLevel(a,ex);
+  const groups=LP_STATE.end?LESSON.slides.flatMap(sk=>sk.activities.filter(act=>act.practiceCollectionId).flatMap(act=>lpPracticeMembers(sk,act).map(({ex})=>({a:act,ex})))):ex?[{a,ex}]:[];
+  let kind=lpBookAllowed('final')?'final':lpBookAllowed('worked')?'worked':'final';
+  d.innerHTML=`<header><h2 id="book-hub-title">Answer hub</h2><button data-book-close aria-label="Close answer hub">×</button></header><p>${lpBookStatus()}</p><div class="mx-collection-tabs" role="tablist" aria-label="Answer type"><button role="tab" id="book-final" aria-controls="book-answers" data-book-kind="final">Final answers</button><button role="tab" id="book-worked" aria-controls="book-answers" data-book-kind="worked">Worked solutions</button></div><label>Question number <input type="search" inputmode="numeric" data-book-search placeholder="All questions"></label><div id="book-answers" role="tabpanel"></div>`;
+  document.body.append(d);const draw=()=>{d.querySelectorAll('[data-book-kind]').forEach(b=>{b.setAttribute('aria-selected',String(b.dataset.bookKind===kind));b.tabIndex=b.dataset.bookKind===kind?0:-1;});const panel=d.querySelector('#book-answers');panel.setAttribute('aria-labelledby','book-'+kind);if(!lpBookAllowed(kind)){panel.innerHTML='<p>These answers are currently locked. Your teacher can choose a different access policy or release them in a configured live class.</p>';return;}const search=d.querySelector('[data-book-search]').value.trim();panel.innerHTML=groups.map(g=>{const all=g.a.questions.filter(q=>q.archetypeId===g.ex.id),qs=all.filter(q=>(LP_STATE.end||q.level===level)&&(!search||String(all.indexOf(q)+1)===search));return `<section><h3>${esc(g.ex.tabLabel||g.ex.label)}</h3><div class="lp-answer-list ${kind==='final'?'lp-answer-key':''}">${qs.map(q=>`<article><b class="lp-answer-no">${all.indexOf(q)+1}</b><div>${kind==='worked'?`<p>${mxM(q.stem)}</p>`:''}${lpBookQuestion(q,kind)?kind==='final'?mxM(lpBookQuestion(q,kind)):mxWorking(lpBookQuestion(q,kind)):'No solution authored.'}${!document.documentElement.dataset.export&&document.body.classList.contains('present')&&q.teacherNote?`<p>${esc(q.teacherNote)}</p>`:''}</div></article>`).join('')}</div></section>`;}).join('')||'<p>No practice answers on this page.</p>';};
+  draw();d.querySelectorAll('[data-book-kind]').forEach((b,i)=>{b.onclick=()=>{kind=b.dataset.bookKind;draw();};b.onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const buttons=d.querySelectorAll('[data-book-kind]'),next=e.key==='Home'?0:e.key==='End'?1:1-i;buttons[next].click();buttons[next].focus();}};});d.querySelector('[data-book-search]').oninput=draw;
+  const update=()=>{d.querySelector('header+p').textContent=LP_BOOK.session?.active?'Class '+LP_BOOK.session.code+' · '+LP_BOOK.session.state:'Using the authored answer policy.';draw();};document.addEventListener('book-session',update);d.querySelector('[data-book-close]').onclick=()=>d.close();d.onclose=()=>{document.removeEventListener('book-session',update);d.remove();if(opener?.isConnected)opener.focus({preventScroll:true});else document.querySelector('.lp-title')?.focus({preventScroll:true});};d.onkeydown=e=>e.stopPropagation();d.showModal();d.querySelector('[data-book-close]').focus();
+}
+function lpBookComplete(){const c=LESSON.meta.completion||{},next=c.nextLesson,url=safeUrl(next?.url,'frame');return `<div class="lp-book-outro"><p>${mxM(c.description||'You have completed this lesson. Keep building fluency through practice.')}</p>${lpImage(c.image)}${c.practised?.length?`<section><h2>What you practised</h2><ul>${c.practised.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></section>`:''}<div class="lp-book-tools"><button class="lp-primary" data-lp-front="${esc(lpFrontPages()[0]?.id||'')}">Review lesson →</button>${lpBookAnswerButton()}</div>${url?`<a class="lp-next-lesson" href="${esc(url)}"><span>Next lesson</span><b>${esc(next.title||'Continue learning')} →</b></a>`:''}</div>`;}
+function lpBookStudentData(lesson){const out=JSON.parse(JSON.stringify(lesson));if(!out.meta.answerPolicy)return out;for(const s of out.slides)for(const a of s.activities||[])for(const q of a.questions||[]){delete q.teacherNote;for(const [kind,key]of [['final','answer'],['worked','workedAnswer']]){const p=out.meta.answerPolicy[kind]||'autonomous';if(p==='hidden'||p==='teacher'&&(out.meta.answerPolicy.fallback?.[kind]||'hidden')==='hidden')delete q[key];}}return out;}
+function lpBookWire(){
+  if(!lpTextbook())return;if(LP_STATE.end)LP_BOOK.completed=true;
+  document.querySelectorAll('[data-book-page]').forEach(b=>b.onclick=()=>{const skill=+b.dataset.bookSkill,a=LESSON.slides[skill].activities.find(a=>a.id===b.dataset.bookActivity);(LP_STATE.practice=LP_STATE.practice||{})[a.id]=b.dataset.bookPage;lpNavigate(skill,a.id);});
+  document.querySelectorAll('[data-book-level]').forEach((b,i)=>{const select=l=>{const a=lpCurrent(LESSON.slides[cur]),ex=lpPracticeCurrent(LESSON.slides[cur],a)?.ex;if(!ex)return;LP_BOOK.pathways[lpBookKey(a,ex)]=l;renderSlide();document.querySelector('[data-book-level="'+l+'"]')?.focus({preventScroll:true});};b.onclick=()=>select(b.dataset.bookLevel);b.onkeydown=e=>{const buttons=[...document.querySelectorAll('[data-book-level]')];let k=i;if(e.key==='ArrowRight')k=(i+1)%buttons.length;else if(e.key==='ArrowLeft')k=(i+buttons.length-1)%buttons.length;else if(e.key==='Home')k=0;else if(e.key==='End')k=buttons.length-1;else return;e.preventDefault();e.stopPropagation();select(buttons[k].dataset.bookLevel);};});
+  document.querySelectorAll('[data-book-hub]').forEach(b=>b.onclick=()=>lpBookHub(b));document.querySelectorAll('[data-book-class]').forEach(b=>b.onclick=()=>lpBookClass(b));
+}
+function lpBookValidate(d){
+  const m=d.meta||{},p=m.answerPolicy;if(m.practiceLayout!=null&&!['textbook','legacy'].includes(m.practiceLayout))throw Error('Unknown practice presentation.');
+  if(p){if(typeof p!=='object'||Array.isArray(p))throw Error('Answer policy must be an object.');for(const k of ['final','worked']){if(p[k]!=null&&!['autonomous','end','teacher','hidden'].includes(p[k]))throw Error('Unknown answer access policy.');if(p.fallback?.[k]!=null&&!['autonomous','end','hidden'].includes(p.fallback[k]))throw Error('Unknown offline answer fallback.');}}
+  const cfg=m.classSession;if(cfg){if(typeof cfg!=='object'||Array.isArray(cfg))throw Error('Class session configuration must be an object.');if(cfg.endpoint&&!/^https:\/\/[^\s]+$/.test(cfg.endpoint))throw Error('Class session endpoint must use HTTPS.');if(cfg.publishableKey!=null&&typeof cfg.publishableKey!=='string')throw Error('Class session public key must be text.');let secret=/^sb_secret_/.test(cfg.publishableKey||'');try{secret=secret||JSON.parse(atob((cfg.publishableKey||'').split('.')[1].replace(/-/g,'+').replace(/_/g,'/'))).role==='service_role';}catch{}if(secret)throw Error('Use a public project key, never a service-role or secret key.');}
+  const c=m.completion;if(c?.practised!=null&&(!Array.isArray(c.practised)||c.practised.some(x=>typeof x!=='string')))throw Error('Completion summary must be text items.');if(c?.nextLesson&&(c.nextLesson.title||c.nextLesson.url)&&(typeof c.nextLesson!=='object'||Array.isArray(c.nextLesson)||!safeUrl(c.nextLesson.url,'frame')))throw Error('Next lesson needs a valid link.');
+  for(const sk of d.slides||[])for(const a of sk.activities||[])for(const q of a.questions||[]){if(q.layout!=null&&!['auto','compact','wide','full'].includes(q.layout))throw Error('Unknown question width.');if(q.teacherNote!=null&&typeof q.teacherNote!=='string')throw Error('Teacher note must be text.');}
+}
+function lpBookPolicyForm(){const p=LESSON.meta.answerPolicy||{},c=LESSON.meta.completion||{},options=[['autonomous','Autonomous'],['end','End of lesson'],['teacher','Teacher release'],['hidden','Hidden']];return `<div class="isec"><h3>Mathematics practice and answers</h3>${inSel('Practice presentation','meta.practiceLayout',LESSON.meta.practiceLayout||'legacy',[['legacy','Original linked practice'],['textbook','Textbook pages']])}${inSel('Final answers','meta.answerPolicy.final',p.final||'autonomous',options)}${inSel('Worked solutions','meta.answerPolicy.worked',p.worked||'autonomous',options)}${['final','worked'].map(k=>inSel((k==='final'?'Final answers':'Worked solutions')+' without a live class','meta.answerPolicy.fallback.'+k,p.fallback?.[k]||'hidden',options.filter(([v])=>v!=='teacher'))).join('')}<p>End-of-lesson access is a local pacing rule. Teacher release requires a deployed class endpoint. Choosing an available offline fallback deliberately includes those answers in the student file.</p>${inT('Class endpoint (HTTPS)','meta.classSession.endpoint',LESSON.meta.classSession?.endpoint||'')}${inT('Class public key','meta.classSession.publishableKey',LESSON.meta.classSession?.publishableKey||'')}<p>Public key only. Never paste a service-role key.</p></div><div class="isec"><h3>Lesson complete</h3>${inA('Completion message','meta.completion.description',c.description||'')}${inT('Next lesson title','meta.completion.nextLesson.title',c.nextLesson?.title||'')}${inT('Next lesson URL','meta.completion.nextLesson.url',c.nextLesson?.url||'')}${lpListForm('Practised skill','meta.completion.practised',c.practised||[])}</div>`;}
+async function lpBookApi(action,data={},token){const cfg=LESSON.meta.classSession||{};if(!cfg.endpoint)throw Error('No class endpoint is configured.');const r=await fetch(cfg.endpoint,{method:'POST',headers:{'Content-Type':'application/json',apikey:cfg.publishableKey||'',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify({action,lessonId:LESSON.meta.id,...data}),signal:AbortSignal.timeout(12000)});const result=await r.json();if(!r.ok)throw Error(result.error||'Class service is unavailable.');return result;}
+function lpBookRefresh(){const page=document.querySelector('.mx-page'),scroll=page?.scrollTop||0;renderSlide();document.querySelector('.mx-page')?.scrollTo(0,scroll);document.dispatchEvent(new Event('book-session'));}
+function lpBookPoll(){clearTimeout(LP_BOOK.timer);const session=LP_BOOK.session;if(!session?.active)return;LP_BOOK.timer=setTimeout(async()=>{try{const next=await lpBookApi('read',{code:session.code});if(LP_BOOK.session!==session)return;LP_BOOK.session={...next,code:session.code};lpBookRefresh();}catch{if(LP_BOOK.session!==session)return;LP_BOOK.session=null;lpBookRefresh();}lpBookPoll();},5000);}
+function lpBookClass(opener){
+  const teacher=!document.documentElement.dataset.export,d=document.createElement('dialog');d.className='mx-support-dialog lp-class-dialog';d.setAttribute('aria-labelledby','book-class-title');
+  d.innerHTML=`<header><h2 id="book-class-title">${teacher?'Teacher class session':'Join class'}</h2><button data-book-close aria-label="Close class session">×</button></header>${teacher?'<p>Authenticated release controls are separate from this projector’s answers.</p><label>Teacher email<input type="email" autocomplete="username" data-class-email></label><label>Password<input type="password" autocomplete="current-password" data-class-password></label><button data-class-start>Sign in and start class</button><div data-class-controls hidden><p data-class-code></p><label>Answers<select data-class-state><option value="locked">Locked</option><option value="finals">Reveal final answers</option><option value="worked">Reveal worked solutions</option></select></label><button data-class-release>Publish to class</button><button data-class-end>End session</button></div>':'<label>Six-digit class code<input inputmode="numeric" autocomplete="off" maxlength="6" data-class-code-input></label><button data-class-join>Join class</button><button data-class-leave>Leave class</button>'}<p data-class-status role="status"></p>`;
+  document.body.append(d);const status=d.querySelector('[data-class-status]'),run=fn=>async e=>{const button=e.currentTarget;button.disabled=true;try{await fn();}catch(error){status.textContent=error.message;}finally{button.disabled=false;}};
+  const show=()=>{const controls=d.querySelector('[data-class-controls]');if(controls){controls.hidden=!LP_BOOK.session?.active;d.querySelector('[data-class-code]').textContent=LP_BOOK.session?.active?'Class code: '+LP_BOOK.session.code+' · expires '+new Date(LP_BOOK.session.expiresAt).toLocaleTimeString():'';}};show();
+  d.querySelector('[data-class-start]')?.addEventListener('click',run(async()=>{const cfg=LESSON.meta.classSession,endpoint=new URL(cfg.endpoint),email=d.querySelector('[data-class-email]').value,password=d.querySelector('[data-class-password]').value;const r=await fetch(endpoint.origin+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json',apikey:cfg.publishableKey||''},body:JSON.stringify({email,password}),signal:AbortSignal.timeout(12000)});d.querySelector('[data-class-password]').value='';const auth=await r.json();if(!r.ok||!auth.access_token)throw Error('Teacher sign-in failed.');LP_BOOK.teacherToken=auth.access_token;const answers={};for(const sk of LESSON.slides)for(const a of sk.activities||[])if(a.practiceCollectionId)for(const q of a.questions||[])answers[q.id]={answer:q.answer||'',workedAnswer:q.workedAnswer||''};LP_BOOK.session=await lpBookApi('start',{answers},LP_BOOK.teacherToken);status.textContent='Class started. Share the code with students.';show();lpBookPoll();lpBookRefresh();}));
+  d.querySelector('[data-class-release]')?.addEventListener('click',run(async()=>{const state=d.querySelector('[data-class-state]').value;LP_BOOK.session=await lpBookApi('release',{code:LP_BOOK.session?.code,state},LP_BOOK.teacherToken);status.textContent='Release state published to class.';show();lpBookPoll();lpBookRefresh();}));
+  d.querySelector('[data-class-end]')?.addEventListener('click',run(async()=>{await lpBookApi('end',{code:LP_BOOK.session?.code},LP_BOOK.teacherToken);LP_BOOK.session=null;clearTimeout(LP_BOOK.timer);status.textContent='Session ended. Students return to their authored fallback.';show();lpBookRefresh();}));
+  d.querySelector('[data-class-join]')?.addEventListener('click',run(async()=>{const code=d.querySelector('[data-class-code-input]').value.trim();if(!/^\d{6}$/.test(code))throw Error('Enter a six-digit class code.');const session=await lpBookApi('join',{code});LP_BOOK.session=session;status.textContent=session.active?'Joined class. Waiting for teacher release.':'That class has ended.';lpBookPoll();lpBookRefresh();}));
+  d.querySelector('[data-class-leave]')?.addEventListener('click',()=>{clearTimeout(LP_BOOK.timer);LP_BOOK.session=null;status.textContent='Left class. Using the authored fallback.';lpBookRefresh();});
+  d.querySelector('[data-book-close]').onclick=()=>d.close();d.onclose=()=>{d.remove();if(opener.isConnected)opener.focus({preventScroll:true});else document.querySelector('.lp-title')?.focus({preventScroll:true});};d.onkeydown=e=>e.stopPropagation();d.showModal();d.querySelector('[data-book-close]').focus();
+}
 function lpPracticeMembers(s,a){const c=(s.exampleCollections||[]).find(c=>c.id===a?.practiceCollectionId);return c?lpCollectionMembers(s,c):[];}
 function lpPracticeCurrent(s,a){const members=lpPracticeMembers(s,a);return members.find(x=>x.ex.id===LP_STATE.practice?.[a?.id])||members[0];}
 function lpPracticeSelect(a,id){(LP_STATE.practice=LP_STATE.practice||{})[a.id]=id;renderSlide();document.getElementById('lp-practice-tab-'+id)?.focus({preventScroll:true});}
 function lpPracticeBody(s,a){
+  if(lpTextbook())return lpTextbookPractice(s,a);
   const members=lpPracticeMembers(s,a),current=lpPracticeCurrent(s,a);if(!current)return '<p>No worked-example archetypes are linked to this practice yet.</p>';
   const selected=current.ex.id,page=tpRespId(lpProjection(s)),questions=(a.questions||[]).filter(q=>q.archetypeId===selected);let offset=0;
   const levels=['basic','moderate'].map(level=>{const qs=questions.filter(q=>q.level===level),start=offset;offset+=qs.length;if(!qs.length)return '';
@@ -10152,6 +10398,7 @@ function lpPracticeBody(s,a){
   return `<div class="lp-practice"><div class="mx-collection-tabs" role="tablist" aria-label="Practice archetypes">${members.map(({ex})=>`<button role="tab" type="button" id="lp-practice-tab-${esc(ex.id)}" aria-controls="lp-practice-panel" aria-selected="${ex.id===selected}" tabindex="${ex.id===selected?0:-1}" data-lp-practice-tab="${esc(ex.id)}">${esc(ex.tabLabel||ex.label)}</button>`).join('')}</div><section id="lp-practice-panel" role="tabpanel" aria-labelledby="lp-practice-tab-${esc(selected)}">${a.practiceNote?`<p>${mxM(a.practiceNote)}</p>`:''}${levels||'<p>Add questions for this archetype.</p>'}</section></div>`;
 }
 function lpPracticeWire(){
+  lpBookWire();
   const s=LESSON.slides[cur],a=lpCurrent(s),members=lpPracticeMembers(s,a);
   document.querySelectorAll('[data-lp-practice-tab]').forEach((b,j)=>{b.onclick=()=>lpPracticeSelect(a,b.dataset.lpPracticeTab);b.onkeydown=e=>{let k=j;if(e.key==='ArrowRight')k=(j+1)%members.length;else if(e.key==='ArrowLeft')k=(j+members.length-1)%members.length;else if(e.key==='Home')k=0;else if(e.key==='End')k=members.length-1;else return;e.preventDefault();e.stopPropagation();lpPracticeSelect(a,members[k].ex.id);};});
   document.querySelector('[data-lp-practice]')?.addEventListener('click',e=>{const activity=e.currentTarget.dataset.lpPractice,id=e.currentTarget.dataset.lpArchetype;(LP_STATE.practice=LP_STATE.practice||{})[activity]=id;lpNavigate(cur,activity);});
@@ -10169,14 +10416,14 @@ function lpRender(s,i){
   const hasFigure=o=>!!o&&typeof o==='object'&&(o.kind==='figure'||Object.values(o).some(v=>Array.isArray(v)?v.some(hasFigure):v&&typeof v==='object'&&hasFigure(v)));
   const arrangement=front?'front':ws?'response':hasFigure(projection)?'media':projection?.workedExamples?.length||projection?.examples?.length?'solution':projection?.questions?.length&&!projection?.notes?.length?'practice':'reading';
   const accent=/^#[0-9a-f]{6}$/i.test((m.colors||{}).accent||'')?m.colors.accent:'#365d63';
-  const rail=journey?lpJourneyRail(s,i,a,end):LESSON.slides.map((sk,k)=>`<li><button class="mx-navitem${k===i?' on':''}" data-lp-go="${k}" aria-current="${k===i?'page':'false'}"><span class="mx-navtx">${lpMathSingle()?'<span>Skill</span>':`<span>Skill ${k+1}</span><b>${esc(sk.title)}</b>`}</span></button>${k===i?`<ol class="lp-activities">${sk.exampleCollections?.length?lpCollectionRail(sk,k,a,end):lpActivities(sk).map((act,j)=>`<li><button data-lp-go="${k}:${esc(act.id)}"${act===a&&!end?' aria-current="step"':''}>${j+1}. ${esc(act.title)}</button></li>`).join('')}</ol>`:''}</li>`).join('')+(authorMode()==='edit'?'':`<li><button data-lp-end${end?' aria-current="page"':''}>Lesson complete</button></li>`);
-  return `<div class="mx lp${open?' mx-navopen':''}" data-rp-type="skill" data-rp-layout="responsive" data-mx-response="${esc(mxResponseMode())}" data-mx-view="split" style="--mx-green:${accent};--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px;--mx-rep-min-h:${MX_REP_MIN_H}px">
+  const rail=journey||lpTextbook()?lpJourneyRail(s,i,a,end):LESSON.slides.map((sk,k)=>`<li><button class="mx-navitem${k===i?' on':''}" data-lp-go="${k}" aria-current="${k===i?'page':'false'}"><span class="mx-navtx">${lpMathSingle()?'<span>Skill</span>':`<span>Skill ${k+1}</span><b>${esc(sk.title)}</b>`}</span></button>${k===i?`<ol class="lp-activities">${sk.exampleCollections?.length?lpCollectionRail(sk,k,a,end):lpActivities(sk).map((act,j)=>`<li><button data-lp-go="${k}:${esc(act.id)}"${act===a&&!end?' aria-current="step"':''}>${j+1}. ${esc(act.title)}</button></li>`).join('')}</ol>`:''}</li>`).join('')+(authorMode()==='edit'?'':`<li><button data-lp-end${end?' aria-current="page"':''}>Lesson complete</button></li>`);
+  return `<div class="mx lp${lpTextbook()?' lp-textbook-shell':''}${open?' mx-navopen':''}" data-rp-type="skill" data-rp-layout="responsive" data-mx-response="${esc(mxResponseMode())}" data-mx-view="split" style="--mx-green:${accent};--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px;--mx-rep-min-h:${MX_REP_MIN_H}px">
     <header class="mx-top"><button class="mx-iconbtn" data-rp-navtoggle aria-label="Show lesson skills" aria-expanded="${open}" aria-controls="mxNav">${mxIc('menu')}</button><b class="lp-brand">${esc(m.title)}</b><div class="mx-top-sp"></div><div class="mx-modes">${document.documentElement.dataset.export?'':MX_MODES.filter(x=>x.id!=='worksheet').concat([{id:'json',label:'JSON'}]).map(x=>`<button class="mx-mode${x.state&&x.state()?' on':''}" data-mx-mode="${x.id}">${esc(x.label)}</button>`).join('')}</div></header>
     <div class="mx-body"><nav class="mx-nav" id="mxNav" aria-label="Skills and activities"><div class="mx-navhead"><div class="mx-course">Lesson outline</div><p class="mx-coursemeta">${lpMathSingle()?'Revisit any page':`${LESSON.slides.length} ${LESSON.slides.length===1?'skill':'skills'} · revisit any activity`}</p></div><ol class="mx-navlist">${rail}</ol></nav><button class="mx-scrim" data-rp-navtoggle tabindex="-1" aria-hidden="true"></button>
-    <main class="mx-main"><div class="mx-page" tabindex="-1" data-mx-surface="activity"><article class="lp-activity" data-lp-arrangement="${arrangement}" aria-labelledby="lpTitle">${errors}<header class="lp-header"><div class="lp-location">${front?esc([m.subject,m.context].filter(Boolean).join(' · ')):lpMathSingle()?'':`Skill ${i+1} of ${LESSON.slides.length} · ${esc(s.title)}`}</div>
-      <h1 id="lpTitle" class="lp-title" tabindex="-1">${esc(front?(front.title||m.title):end?(journey?'Lesson complete':'End of lesson'):(collection?collection.title||'Worked examples':a?.introduction?(a.introduction.title||s.title):a?a.title:'Add your first activity'))}</h1>${!end&&!front?lpCollectionTabs(s,a):''}${!end&&!front&&practiceTarget?`<button class="mx-tool" data-lp-practice="${esc(practiceTarget.id)}" data-lp-archetype="${esc(lpSingleExample(a).id)}">Practice this example →</button>`:''}${!end&&!front&&a&&a.lede?`<p class="mx-lede">${mxM(a.lede)}</p>`:''}
+    <main class="mx-main"><div class="mx-page" tabindex="-1" data-mx-surface="activity"><article class="lp-activity" data-lp-arrangement="${arrangement}" aria-labelledby="lpTitle">${errors}${lpTextbook()&&front?.kind==='overview'?'<div class="lp-book-overview"><div>':''}<header class="lp-header"><div class="lp-location">${front?esc([m.subject,m.context].filter(Boolean).join(' · ')):lpMathSingle()?'':`Skill ${i+1} of ${LESSON.slides.length} · ${esc(s.title)}`}</div>
+      <h1 id="lpTitle" class="lp-title" tabindex="-1">${esc(front?(front.title||m.title):end?(journey||lpTextbook()?'Lesson complete':'End of lesson'):(collection?collection.title||'Worked examples':a?.introduction?(a.introduction.title||s.title):a?lpTextbook()&&practiceMember?'Practice: '+(practiceMember.ex.tabLabel||practiceMember.ex.label):a.title:'Add your first activity'))}</h1>${!end&&!front?lpCollectionTabs(s,a):''}${!end&&!front&&practiceTarget?`<button class="mx-tool" data-lp-practice="${esc(practiceTarget.id)}" data-lp-archetype="${esc(lpSingleExample(a).id)}">Practice this example →</button>`:''}${!end&&!front&&a&&a.lede?`<p class="mx-lede">${mxM(a.lede)}</p>`:''}
       <div class="lp-response-view">${ws?`<div class="mx-viewsw"><button type="button" data-mx-view="questions">Questions and working</button><button type="button" data-mx-view="workbook">Workbook</button></div>`:''}</div></header>
-      ${front?lpFrontBody(front):end&&journey?`<p>You have reached the end of this lesson.</p>${lpMathSingle()?'':`<h2>Skills in this lesson</h2><ul>${LESSON.slides.map(sk=>`<li>${esc(sk.title)}</li>`).join('')}</ul>`}${LESSON.meta.completion?.description?`<p>${mxM(LESSON.meta.completion.description)}</p>`:''}${lpImage(LESSON.meta.completion?.image)}<button class="lp-primary" data-lp-front="${esc(lpFrontPages()[0].id)}">Review lesson →</button>`:end?`<p>You have reached the end of the lesson. Revisit any activity using the outline. Your responses remain available in this session.</p><p>Reaching this page does not indicate assessed mastery.</p>${m.completion?.description?`<p>${mxM(m.completion.description)}</p>`:''}${lpImage(m.completion?.image)}`:`<div class="mx-split${ws?'':' mx-1col'}"><section class="mx-content">${a?.introduction?lpIntroduction(a):lpVideoOnly(a)?lpVideoBody(s,a):a?.practiceCollectionId?lpPracticeBody(s,a):projection?mxSkillPage(projection,i):'<p>This skill has no activities yet.</p>'}</section>${ws?`<section class="mx-work">${rpWorkspace(ws,projection,i)}</section>`:''}</div>`}
+      ${front?lpFrontBody(front)+(lpTextbook()&&front.kind==='overview'?'</div>'+lpImage(front.image)+'</div>':''):end&&lpTextbook()?lpBookComplete():end&&journey?`<p>You have reached the end of this lesson.</p>${lpMathSingle()?'':`<h2>Skills in this lesson</h2><ul>${LESSON.slides.map(sk=>`<li>${esc(sk.title)}</li>`).join('')}</ul>`}${LESSON.meta.completion?.description?`<p>${mxM(LESSON.meta.completion.description)}</p>`:''}${lpImage(LESSON.meta.completion?.image)}<button class="lp-primary" data-lp-front="${esc(lpFrontPages()[0].id)}">Review lesson →</button>`:end?`<p>You have reached the end of the lesson. Revisit any activity using the outline. Your responses remain available in this session.</p><p>Reaching this page does not indicate assessed mastery.</p>${m.completion?.description?`<p>${mxM(m.completion.description)}</p>`:''}${lpImage(m.completion?.image)}`:`<div class="mx-split${ws?'':' mx-1col'}"><section class="mx-content">${a?.introduction?lpIntroduction(a):lpVideoOnly(a)?lpVideoBody(s,a):a?.practiceCollectionId?lpPracticeBody(s,a):projection?mxSkillPage(projection,i):'<p>This skill has no activities yet.</p>'}</section>${ws?`<section class="mx-work">${rpWorkspace(ws,projection,i)}</section>`:''}</div>`}
     </article></div><footer class="lp-footer"><button data-lp-move="-1"${front?lpFrontPages().indexOf(front)===0?' disabled':'':!journey&&i===0&&pos===0&&!end?' disabled':''}>← Back</button><span aria-live="polite">${front?esc(front.kind==='overview'?'Overview':'Learning outcomes'):end?'Lesson end':practiceMember?`Practice ${practicePosition+1} of ${practiceMembers.length} · ${esc(practiceMember.ex.tabLabel||practiceMember.ex.label)}`:collection?`Example ${examplePosition+1} of ${members.length}${lpMathSingle()?'':' · '+esc(s.title)}`:journey?(lpMathSingle()?esc(a?.title||''):`Skill ${i+1} of ${LESSON.slides.length}`):`Activity ${pos+1} of ${list.length}`}</span><button data-lp-move="1"${end?' disabled':''}>${front?'Next: '+esc(lpFrontPages()[lpFrontPages().indexOf(front)+1]?.title||(lpMathSingle()?'Introduction':'Skill 1')):journey?'Next: '+esc(practiceMembers[practicePosition+1]?.ex.tabLabel||practiceMembers[practicePosition+1]?.ex.label||lpNextLabel(s,a)):i===LESSON.slides.length-1&&pos===list.length-1?'Finish lesson':'Next'} →</button></footer></main></div></div>`;
 }
 function lpNavigate(i,id){
@@ -10260,7 +10507,7 @@ function lpCollectionWire(s,a,i){
 function lpPracticeForm(s,a,base,part){
   const options=[['','Ordinary questions'],...(s.exampleCollections||[]).map(c=>[c.id,c.title||'Worked examples'])];
   const q=a.questions?.[LP_EDIT.index],members=lpPracticeMembers(s,a),path=base+'.questions.'+LP_EDIT.index;
-  return `<div class="isec"><h3>Matched practice</h3><label>Worked-example collection<select class="ii" data-practice-collection>${options.map(([v,l])=>`<option value="${esc(v)}"${a.practiceCollectionId===v||!a.practiceCollectionId&&!v?' selected':''}>${esc(l)}</option>`).join('')}</select></label><p>Choose the worked examples that model these questions.</p></div>${part==='questions'&&q?`<div class="isec"><h3>Selected question</h3>${members.length?inSel('Archetype',path+'.archetypeId',q.archetypeId||'',members.map(({ex})=>[ex.id,ex.tabLabel||ex.label]))+inSel('Practice level',path+'.level',q.level||'basic',[['basic','Basic'],['moderate','Moderate']]):''}${inMath('Final answer',path+'.answer',q.answer||'',true)}${inMath('Worked answer (optional)',path+'.workedAnswer',q.workedAnswer||'',true)}<button class="ibtn-add" data-practice-duplicate>Duplicate question</button></div>`:''}`;
+  return `<div class="isec"><h3>Matched practice</h3><label>Worked-example collection<select class="ii" data-practice-collection>${options.map(([v,l])=>`<option value="${esc(v)}"${a.practiceCollectionId===v||!a.practiceCollectionId&&!v?' selected':''}>${esc(l)}</option>`).join('')}</select></label><p>Choose the worked examples that model these questions.</p></div>${part==='questions'&&q?`<div class="isec"><h3>Selected question</h3>${members.length?inSel('Archetype',path+'.archetypeId',q.archetypeId||'',members.map(({ex})=>[ex.id,ex.tabLabel||ex.label]))+inSel('Practice level',path+'.level',q.level||'basic',[['basic','Foundation'],['moderate','Moderate'],['advanced','Advanced (optional)']]):''}${inMath('Final answer',path+'.answer',q.answer||'',true)}${inMath('Worked solution',path+'.workedAnswer',q.workedAnswer||'',true)}${inA('Teacher note (not published)',path+'.teacherNote',q.teacherNote||'')}${inSel('Question width',path+'.layout',q.layout||'auto',[['auto','Automatic'],['compact','Compact'],['wide','Two columns'],['full','Full width']])}<button class="ibtn-add" data-practice-duplicate>Duplicate question</button></div>`:''}`;
 }
 function lpPracticeEditorWire(s,a){
   const ins=$('#inspector');ins.querySelector('[data-practice-collection]')?.addEventListener('change',e=>{const id=e.currentTarget.value;if(id){a.practiceCollectionId=id;const members=lpPracticeMembers(s,a),first=members[0]?.ex.id;(a.questions||[]).forEach(q=>{if(!members.some(x=>x.ex.id===q.archetypeId))q.archetypeId=first;if(!q.level)q.level='basic';});}else delete a.practiceCollectionId;renderSlide();});
@@ -14462,12 +14709,13 @@ $('#exportBtn').onclick=async ()=>{
       }
       alert('Cannot publish: '+e.message); return;
     }
-    let res;try{res=await inlineRemoteAssets(LESSON);}catch(e){alert('Cannot publish: '+e.message);return;}   // deep clone; in-memory LESSON untouched
+    let res;try{res=await inlineRemoteAssets(lpBookStudentData(LESSON));}catch(e){alert('Cannot publish: '+e.message);return;}   // deep clone; in-memory LESSON untouched
     document.getElementById('lesson-data').textContent=JSON.stringify(res.lesson,null,2).replace(/</g,'\\u003c');
     const clone=document.documentElement.cloneNode(true);
+    clone.querySelector('#jsonArea')?.replaceChildren();
     clone.querySelector('title').textContent=LESSON.meta.title||'Lesson';
     if(LESSON.slides.every(lpEnabled)) clone.querySelectorAll('script[src="assets/vendor/model-viewer.min.js"]').forEach(el=>el.remove());
-    clone.querySelectorAll('.ev-dialog,[data-ev-runtime]').forEach(el=>el.remove());
+    clone.querySelectorAll('.ev-dialog,.lp-answer-hub,.lp-class-dialog,[data-ev-runtime]').forEach(el=>el.remove());
     if(!evHasInspection(res.lesson))clone.querySelector('#ev-runtime-data')?.remove();
     clone.querySelector('#slide').innerHTML='';        // re-renders fresh from data on open
     const ins=clone.querySelector('#inspector'); if(ins) ins.innerHTML='';   // edit-only panel never ships

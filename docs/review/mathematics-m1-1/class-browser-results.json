@@ -1,0 +1,12 @@
+{
+  "checks": [
+    "Student export starts with neither final nor worked payload",
+    "Actual frontend joins, polls and receives only final answers after release",
+    "Worked release updates already-open Answer Hub",
+    "Relock removes current hub content and remote cache",
+    "Expiry restores hidden authored fallback",
+    "Zero frontend page errors"
+  ],
+  "errors": [],
+  "scope": "Real browser and real handler; authentication/database adapters are mocked. Supabase deployment remains unconfigured."
+}

@@ -60,6 +60,9 @@
         "final": "hidden",
         "worked": "hidden"
       }
+    },
+    "future": {
+      "keep": true
     }
   },
   "slides": [
@@ -227,7 +230,9 @@
               "archetypeId": "binomial-positive-example",
               "level": "basic",
               "answer": "_x_^2 + 6_x_ + 8",
-              "workedAnswer": "_x_(_x_ + 4) + 2(_x_ + 4)\n= _x_^2 + 4_x_ + 2_x_ + 8\n= _x_^2 + 6_x_ + 8"
+              "workedAnswer": "_x_(_x_ + 4) + 2(_x_ + 4)\n= _x_^2 + 4_x_ + 2_x_ + 8\n= _x_^2 + 6_x_ + 8",
+              "teacherNote": "Private teacher note",
+              "layout": "wide"
             },
             {
               "id": "binomial-products-positive-q2",

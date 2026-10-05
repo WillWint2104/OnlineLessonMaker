@@ -1,0 +1,34 @@
+# Optional classroom answer service — prepared, not deployed
+
+Audit: OnlineLessonMaker is a single-file static app on GitHub Pages, with no Auth/database/backend. This additive service keeps the existing renderer and publication model. It introduces no browser SDK and does not execute until an author configures `meta.classSession.endpoint` and `publishableKey`. No project or credential was available here, so real Supabase SQL execution, JWT integration, deployment, firewall access and load testing remain outstanding. The prepared handler and browser adapter tests are reproducible; they are not a deployment certificate.
+
+## Deployment
+
+1. Create or choose a Supabase project under the school's/account owner's control. Use its Auth system for teachers; disable public teacher enrolment and create the required teacher accounts administratively.
+2. Apply `migrations/202610050001_class_sessions.sql` with a privileged migration connection. It creates RLS-protected tables with no anon/authenticated read/write privileges, a service-only rate-limit RPC and a pg_cron cleanup job. Verify pg_cron availability and that the scheduled job runs; expiry is enforced on every request even if cleanup is delayed.
+3. Register each authorised teacher in `public.olm_teachers` using their Auth user UUID. Only administrators/service role manage this list.
+4. Deploy `functions/class-session` with `verify_jwt=false` from the included configuration. This permits anonymous student reads; the function independently validates the teacher's bearer token using `/auth/v1/user`, checks the teacher registry and verifies session ownership on every write.
+5. Set `CLASS_ALLOWED_ORIGINS` to a comma-separated list of exact approved HTTPS origins (for example the actual GitHub Pages origin and your local development HTTP origin). Never allow `null` for production file-origin clients or wildcard origins. Set a random server-only `RATE_LIMIT_SALT`. Standard server-only Supabase URL/service-role variables remain inside the function environment.
+6. Author the HTTPS `/functions/v1/class-session` endpoint and the **publishable/anon public key** in the teacher lesson. No service-role/secret key goes in lesson JSON or browser code.
+7. Set final/worked policies to Teacher release and choose offline fallbacks deliberately. Hidden fallback strips the answer fields from the published learner HTML. Publish only that student HTML, not the teacher JSON, teacher source, answer key or answer-bearing historical exports. The teacher app sends its private authored bundle on Start class.
+8. Test two separate real browsers on the intended network: unauthorised writes rejected; locked payload empty; final-only payload excludes working; worked release; relock; teacher ownership; wrong lesson code; four-hour expiry; End session; endpoint outage; mobile/zoom; Auth token expiry. Then configure production lessons. Do not label this deployment accepted before those tests pass.
+
+Teacher email/password sign-in is sent directly to the configured Supabase Auth endpoint. Password fields clear after the request. Tokens are memory only; no local/session storage. Reauthenticate if the access token expires; the current minimal UI starts a new class on sign-in rather than implementing durable classroom management. Reloads lose local session state; students can rejoin using the code. End old sessions before restarting when possible; remaining sessions expire automatically.
+
+## Protocol and security
+
+POST `start`: authenticated registered teacher sends lesson ID and `{questionID:{answer,workedAnswer}}` bundle. Server allocates a random six-digit code, stores it privately and returns a locked four-hour session.
+
+POST `join`/`read`: code + lesson ID. Only server-selected fields are returned: locked has no answers; finals includes final strings only; worked includes both. Five-second polling avoids requiring a Realtime SDK. Teacher `release` and `end` require a validated Auth JWT, registry entry and matching owner. The class code never grants write authority. Invalid code/expired/wrong lesson returns no payload. All responses are `no-store`; secrets/errors are not logged by the handler.
+
+Join/write requests are limited to 60 per origin IP per minute; reads to 1,200, allowing classroom NAT. Gateway IP identity must be confirmed for your deployment; changing proxy topology requires revisiting this configuration. Limits are database-atomic and buckets expire. Origin checks supplement Auth; they are not authentication. A shared short code allows read access to anyone who receives it during the session. No student identity, attendance or course-management system is introduced.
+
+Expiry takes effect by server clock at four hours. Scheduled cleanup runs every 15 minutes. Ending the session discards its answer bundle and expires it immediately. Relocking withholds future responses and clears the UI cache; it cannot retract an answer already delivered. Local end-of-lesson/autonomous policies intentionally include answers in the student file and cannot be sold as secure teacher release. Available offline fallback likewise intentionally delivers content.
+
+The service gates the private bundle, not mathematical inference: worked models and public reference content may let students derive answers. Lesson IDs must be unique per published revision; do not reuse an ID for a different question set while a class is active. The current preparation has no persistent session recovery, student authentication or automatic teacher token renewal.
+
+## Research basis
+
+Supabase documents [Edge Function authentication](https://supabase.com/docs/guides/functions/auth), [function configuration](https://supabase.com/docs/guides/functions/function-configuration), and [Realtime authorization with RLS](https://supabase.com/docs/guides/realtime/authorization). The architecture inference here is that an authenticated Edge Function plus private Postgres rows and short polling is the smaller first deployment; Realtime is optional later and must never broadcast the private bundle on a public channel. No third-party browser runtime dependency is needed.
+
+Run `node scripts/verify-class-session.mjs` for handler-contract tests and `node scripts/verify-class-session-browser.mjs` for actual frontend controls with test adapters. These tests do not execute migrations against a remote database.

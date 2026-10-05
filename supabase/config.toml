@@ -1,0 +1,3 @@
+[functions.class-session]
+# Students have no Auth JWT. The function independently authenticates teacher writes.
+verify_jwt = false

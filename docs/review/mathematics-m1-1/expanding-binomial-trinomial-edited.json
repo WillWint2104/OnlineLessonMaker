@@ -56,6 +56,9 @@
         "final": "hidden",
         "worked": "hidden"
       }
+    },
+    "future": {
+      "keep": true
     }
   },
   "slides": [
@@ -229,7 +232,9 @@
                 "Write all six products.",
                 "Collect like terms."
               ],
-              "workedAnswer": "_x_(_x_^2 + 2_x_ + 3) + 1(_x_^2 + 2_x_ + 3)\n= _x_^3 + 2_x_^2 + 3_x_ + _x_^2 + 2_x_ + 3\n= _x_^3 + 3_x_^2 + 5_x_ + 3"
+              "workedAnswer": "_x_(_x_^2 + 2_x_ + 3) + 1(_x_^2 + 2_x_ + 3)\n= _x_^3 + 2_x_^2 + 3_x_ + _x_^2 + 2_x_ + 3\n= _x_^3 + 3_x_^2 + 5_x_ + 3",
+              "teacherNote": "Private teacher note",
+              "layout": "wide"
             },
             {
               "id": "binomial-trinomial-products-positive-q2",

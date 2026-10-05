@@ -1,0 +1,20 @@
+{
+  "checks": [
+    "Unauthenticated teacher writes denied",
+    "Teacher starts four-hour session without sending bundle back",
+    "Locked student response contains no answer payload",
+    "Student cannot release",
+    "Other teacher cannot release",
+    "Final-only release excludes worked payload",
+    "Worked release delivers authored working",
+    "Relock withholds future fetches",
+    "Class code belongs to exact lesson identity",
+    "Server-clock expiry prevents release after four hours",
+    "End session immediately restores fallback",
+    "Rate limit blocks code enumeration",
+    "Unexpected origins cannot use browser endpoint",
+    "Deployment includes browser-role restrictions and expiry cleanup"
+  ],
+  "remoteDeployment": "Not configured or certified",
+  "tested": "Dependency-free deployed handler with in-memory persistence/auth test adapter"
+}
