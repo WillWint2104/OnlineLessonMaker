@@ -18,7 +18,7 @@ $files = @(& git ls-files) | Where-Object {
   $_ -eq 'lesson-studio.html' -or $_ -eq 'package.json' -or $_ -match '^assets/' -or
   $_ -match '^docs/review/mathematics-m1-1/' -or $_ -match '^docs/lessons/expanding/' -or
   $_ -match '^lessons/expanding-(two-binomials|binomial-trinomial)(/|\.html$)' -or
-  $_ -match '^supabase/' -or $_ -match '^scripts/(build-expanding-textbook|build-mathematics-textbook-review|verify-mathematics-textbook|verify-class-session|verify-class-session-browser)\.mjs$'
+  $_ -match '^supabase/' -or $_ -match '^scripts/(build-expanding-textbook|build-mathematics-textbook-review|verify-mathematics-textbook|verify-class-session|verify-class-session-browser|verify-textbook-publication)\.mjs$'
 }
 foreach ($file in $files) {
   $destination = Join-Path $stage $file

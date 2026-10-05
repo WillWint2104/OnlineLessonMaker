@@ -3,8 +3,11 @@
     "Student export starts with neither final nor worked payload",
     "Actual frontend joins, polls and receives only final answers after release",
     "Worked release updates already-open Answer Hub",
+    "Transient failure clears answers but automatically rejoins with retained reader capability",
+    "HTML gateway failure produces useful service message",
     "Relock removes current hub content and remote cache",
     "Expiry restores hidden authored fallback",
+    "Pending teacher sign-in cannot start or attach a class to an imported replacement lesson",
     "Zero frontend page errors"
   ],
   "errors": [],

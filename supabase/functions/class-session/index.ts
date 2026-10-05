@@ -7,7 +7,9 @@ const store={
  insert:async(row:unknown)=>!!await db('olm_class_sessions',{method:'POST',body:JSON.stringify(row)}),
  find:async(code:string,lesson:string)=>(await db('olm_class_sessions?code=eq.'+code+'&lesson_id=eq.'+encodeURIComponent(lesson)+'&select=*'))[0],
  update:async(id:string,row:unknown)=>db('olm_class_sessions?id=eq.'+encodeURIComponent(id),{method:'PATCH',body:JSON.stringify(row)}),
- rateLimit:async(request:Request,action:string)=>{const ip=request.headers.get('x-forwarded-for')?.split(',')[0].trim()||'unknown',digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ip+Deno.env.get('RATE_LIMIT_SALT'))),hash=Array.from(new Uint8Array(digest),v=>v.toString(16).padStart(2,'0')).join(''),bucket=Math.floor(Date.now()/60000)+':'+(action==='read'?'read':'write')+':'+hash;return await db('rpc/olm_class_rate_limit',{method:'POST',body:JSON.stringify({bucket_key:bucket,max_hits:action==='read'?1200:60})});}
+ // Lookup/write limits are project-wide; spoofable forwarded headers never select a bucket.
+ // Only a server-validated reader capability receives the classroom polling allowance.
+ rateLimit:async(_request:Request,action:string,reader:string|null=null)=>{const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode((reader||'project')+Deno.env.get('RATE_LIMIT_SALT'))),hash=Array.from(new Uint8Array(digest),v=>v.toString(16).padStart(2,'0')).join(''),bucket=Math.floor(Date.now()/60000)+':'+(action==='read'?'read':'write')+':'+hash;return await db('rpc/olm_class_rate_limit',{method:'POST',body:JSON.stringify({bucket_key:bucket,max_hits:action==='read'?1200:60})});}
 };
 const authenticate=async(authorization:string)=>{if(!authorization.startsWith('Bearer '))return null;const r=await fetch(url+'/auth/v1/user',{headers:{apikey:key,Authorization:authorization},signal:AbortSignal.timeout(10000)});if(!r.ok)return null;return (await r.json()).id||null;};
 const origins=(Deno.env.get('CLASS_ALLOWED_ORIGINS')||'').split(',').map(s=>s.trim()).filter(Boolean);

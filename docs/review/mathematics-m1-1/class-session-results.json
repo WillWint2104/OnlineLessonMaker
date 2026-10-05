@@ -3,9 +3,13 @@
     "Unauthenticated teacher writes denied",
     "Teacher starts four-hour session without sending bundle back",
     "Locked student response contains no answer payload",
+    "Join issues a random 128-bit polling capability",
+    "Code-only read uses lower lookup limit and cannot receive answers",
+    "Invented reader tokens cannot select the higher polling limit",
     "Student cannot release",
     "Other teacher cannot release",
     "Final-only release excludes worked payload",
+    "Only a validated server capability selects the polling allowance",
     "Worked release delivers authored working",
     "Relock withholds future fetches",
     "Class code belongs to exact lesson identity",
@@ -13,8 +17,9 @@
     "End session immediately restores fallback",
     "Rate limit blocks code enumeration",
     "Unexpected origins cannot use browser endpoint",
-    "Deployment includes browser-role restrictions and expiry cleanup"
+    "Deployment includes browser-role restrictions and expiry cleanup",
+    "Rate buckets do not trust caller-supplied IP headers"
   ],
   "remoteDeployment": "Not configured or certified",
-  "tested": "Dependency-free deployed handler with in-memory persistence/auth test adapter"
+  "tested": "Edge Function handler with in-memory persistence/auth test adapter"
 }
