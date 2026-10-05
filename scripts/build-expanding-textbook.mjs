@@ -28,6 +28,8 @@ for(const [index,slug]of slugs.entries()){
  a.questions=c.members.flatMap((id,k)=>{
   const previous=old.filter(q=>q.archetypeId===id),make=([u,v],level,suffix)=>({id:sk.id+'-'+id+'-'+suffix,stem:'Expand and simplify ('+poly(u)+')('+poly(v)+').',archetypeId:id,level});
   const baseline=[...previous.filter(q=>q.level==='basic').slice(0,4),...extra[k].slice(0,4).map((f,j)=>previous.find(q=>q.id===sk.id+'-'+id+'-new-foundation-'+(j+1))||make(f,'basic','new-foundation-'+(j+1))),...additions[k].slice(0,4).map((f,j)=>previous.find(q=>q.id===sk.id+'-'+id+'-m12-foundation-'+(j+1))||make(f,'basic','m12-foundation-'+(j+1))),...previous.filter(q=>q.level==='moderate').slice(0,2),...extra[k].slice(4).map((f,j)=>previous.find(q=>q.id===sk.id+'-'+id+'-new-moderate-'+(j+1))||make(f,'moderate','new-moderate-'+(j+1))),...additions[k].slice(4).map((f,j)=>previous.find(q=>q.id===sk.id+'-'+id+'-m12-moderate-'+(j+1))||make(f,'moderate','m12-moderate-'+(j+1)))];
+  const ninth=(index===0?[[[1,12],[1,15]],[[1,-13],[1,9]],[[6,-5],[3,8]]]:[[[1,11],[1,8,9]],[[1,-11],[1,8,-9]],[[6,-5],[3,-2,8]]])[k];
+  baseline.push(previous.find(q=>q.id===sk.id+'-'+id+'-m12-moderate-5')||make(ninth,'moderate','m12-moderate-5'));
   // The existing negative binomial scaffold leads its family; no identity or expression changes.
   if(index===0&&k===1){const at=baseline.findIndex(q=>q.id==='binomial-guided-question');baseline.unshift(...baseline.splice(at,1));const third=baseline.findIndex(q=>q.id==='binomial-products-signs-q3');baseline.splice(2,0,...baseline.splice(third,1));}
   return baseline.map((q,j)=>{
@@ -35,7 +37,7 @@ for(const [index,slug]of slugs.entries()){
    u.forEach((x,i)=>v.forEach((y,j)=>{answer[i+j]+=x*y;const degree=u.length+v.length-2-i-j;terms.push(poly([x*y,...Array(degree).fill(0)]));}));
    q.answer=poly(answer);q.workedAnswer=sum(u.map((x,i)=>poly([x,...Array(1-i).fill(0)])+'('+poly(v)+')'))+'\n= '+sum(terms)+'\n= '+q.answer;
    if((index===0&&k===1||index===1&&k===0)&&q.level==='basic'){
-    if(j<3){q.presentation='multipart';q.group='Structured practice';q.parts=index===0?['Write the distributed form.','Expand both products.','Collect like terms.','State the simplified expression.']:['Distribute _x_ across the trinomial.','Distribute '+poly([u[1]])+' across the trinomial.','Write all six products.','Collect like terms.'];}
+    if(j<4){q.presentation='multipart';q.group='Structured practice';q.parts=index===0?['Write the distributed form.','Expand both products.','Collect like terms.','State the simplified expression.']:['Distribute _x_ across the trinomial.','Distribute '+poly([u[1]])+' across the trinomial.','Write all six products.','Collect like terms.'];}
     else{q.presentation='compact';q.group='Independent practice';delete q.parts;}
    }else if(!q.presentation)q.presentation='compact';
    return q;

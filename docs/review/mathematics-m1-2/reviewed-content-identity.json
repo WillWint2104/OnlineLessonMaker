@@ -1,0 +1,18 @@
+{
+  "reviewedCommit": "d9157b08533226c4fbbdadddc7bb3d633f74fde4",
+  "builderIdempotent": true,
+  "checks": [
+    "lessons/expanding-two-binomials/lesson.json: all 60 reviewed question IDs/expressions/finals/working preserved; model examples, policies and videos unchanged",
+    "lessons/expanding-binomial-trinomial/lesson.json: all 60 reviewed question IDs/expressions/finals/working preserved; model examples, policies and videos unchanged"
+  ],
+  "sourceFiles": [
+    {
+      "file": "lessons/expanding-two-binomials/lesson.json",
+      "sha256": "776810090f3ecb86709ba2a5219566d09ab435475e0d4f06b4fe5f7ef477ae05"
+    },
+    {
+      "file": "lessons/expanding-binomial-trinomial/lesson.json",
+      "sha256": "c07f2d592b668d73ab470e53f90e989c1fb0be3614b7bec0ae1a3a38f63ed149"
+    }
+  ]
+}

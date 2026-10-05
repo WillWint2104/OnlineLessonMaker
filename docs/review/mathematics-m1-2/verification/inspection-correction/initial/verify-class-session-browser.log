@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(await student.evaluate(node=>node.isConnected&&document.activeElement===node,editor))
+
+    at file:///C:/Users/willi/Videos/Online%20Lesson%20Maker/scripts/verify-class-session-browser.mjs:16:524 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

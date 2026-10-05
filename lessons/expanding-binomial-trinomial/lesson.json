@@ -260,8 +260,14 @@
               "level": "basic",
               "answer": "_x_^3 + 4_x_^2 + 7_x_ + 4",
               "workedAnswer": "_x_(_x_^2 + 3_x_ + 4) + 1(_x_^2 + 3_x_ + 4)\n= _x_^3 + 3_x_^2 + 4_x_ + _x_^2 + 3_x_ + 4\n= _x_^3 + 4_x_^2 + 7_x_ + 4",
-              "presentation": "compact",
-              "group": "Independent practice"
+              "presentation": "multipart",
+              "group": "Structured practice",
+              "parts": [
+                "Distribute _x_ across the trinomial.",
+                "Distribute 1 across the trinomial.",
+                "Write all six products.",
+                "Collect like terms."
+              ]
             },
             {
               "id": "binomial-trinomial-products-trinomial-basic-example-new-foundation-1",
@@ -413,6 +419,15 @@
               "level": "moderate",
               "answer": "_x_^3 + 17_x_^2 + 78_x_ + 80",
               "workedAnswer": "_x_(_x_^2 + 7_x_ + 8) + 10(_x_^2 + 7_x_ + 8)\n= _x_^3 + 7_x_^2 + 8_x_ + 10_x_^2 + 70_x_ + 80\n= _x_^3 + 17_x_^2 + 78_x_ + 80",
+              "presentation": "compact"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-basic-example-m12-moderate-5",
+              "stem": "Expand and simplify (_x_ + 11)(_x_^2 + 8_x_ + 9).",
+              "archetypeId": "trinomial-basic-example",
+              "level": "moderate",
+              "answer": "_x_^3 + 19_x_^2 + 97_x_ + 99",
+              "workedAnswer": "_x_(_x_^2 + 8_x_ + 9) + 11(_x_^2 + 8_x_ + 9)\n= _x_^3 + 8_x_^2 + 9_x_ + 11_x_^2 + 88_x_ + 99\n= _x_^3 + 19_x_^2 + 97_x_ + 99",
               "presentation": "compact"
             },
             {
@@ -596,6 +611,15 @@
               "presentation": "compact"
             },
             {
+              "id": "binomial-trinomial-products-trinomial-signs-example-m12-moderate-5",
+              "stem": "Expand and simplify (_x_ − 11)(_x_^2 + 8_x_ − 9).",
+              "archetypeId": "trinomial-signs-example",
+              "level": "moderate",
+              "answer": "_x_^3 − 3_x_^2 − 97_x_ + 99",
+              "workedAnswer": "_x_(_x_^2 + 8_x_ − 9) − 11(_x_^2 + 8_x_ − 9)\n= _x_^3 + 8_x_^2 − 9_x_ − 11_x_^2 − 88_x_ + 99\n= _x_^3 − 3_x_^2 − 97_x_ + 99",
+              "presentation": "compact"
+            },
+            {
               "id": "binomial-trinomial-products-coefficients-q1",
               "stem": "Expand and simplify (2_x_ − 1)(_x_^2 + _x_ + 2).",
               "archetypeId": "trinomial-coefficients-example",
@@ -773,6 +797,15 @@
               "level": "moderate",
               "answer": "10_x_^3 + 47_x_^2 + 27_x_ − 18",
               "workedAnswer": "5_x_(2_x_^2 + 7_x_ − 3) + 6(2_x_^2 + 7_x_ − 3)\n= 10_x_^3 + 35_x_^2 − 15_x_ + 12_x_^2 + 42_x_ − 18\n= 10_x_^3 + 47_x_^2 + 27_x_ − 18",
+              "presentation": "compact"
+            },
+            {
+              "id": "binomial-trinomial-products-trinomial-coefficients-example-m12-moderate-5",
+              "stem": "Expand and simplify (6_x_ − 5)(3_x_^2 − 2_x_ + 8).",
+              "archetypeId": "trinomial-coefficients-example",
+              "level": "moderate",
+              "answer": "18_x_^3 − 27_x_^2 + 58_x_ − 40",
+              "workedAnswer": "6_x_(3_x_^2 − 2_x_ + 8) − 5(3_x_^2 − 2_x_ + 8)\n= 18_x_^3 − 12_x_^2 + 48_x_ − 15_x_^2 + 10_x_ − 40\n= 18_x_^3 − 27_x_^2 + 58_x_ − 40",
               "presentation": "compact"
             }
           ],

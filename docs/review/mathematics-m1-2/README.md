@@ -7,16 +7,16 @@ currently demonstrate the missing-image fallback, not approved image acceptance.
 
 Open `index.html` for actual application captures and the two generated learner
 HTML files in this directory. Those files use the branch's application and
-60-question content; the existing production HTML remains unchanged until the
+63-question content; the existing production HTML remains unchanged until the
 acceptance material is complete. Import the corresponding
 `../../../lessons/expanding-two-binomials/lesson.json` or
 `../../../lessons/expanding-binomial-trinomial/lesson.json` into
 `../../../lesson-studio.html` to edit the lesson.
 
-Each real lesson has three archetypes, each with 12 Foundation and 8 Moderate
+Each real lesson has three archetypes, each with 12 Foundation and 9 Moderate
 questions. Pathways are internal tabs. The negative binomial Foundation and
-positive trinomial Foundation each begin with three repeated multipart
-scaffolds, followed by nine independent expressions. Existing question IDs,
+positive trinomial Foundation each begin with four repeated multipart
+scaffolds, followed by eight independent expressions. Existing question IDs,
 worked models and teacher video URLs are retained. The complete key is
 `../../lessons/expanding/TEXTBOOK_ANSWERS.md`.
 
@@ -29,14 +29,26 @@ either field, parts infer Multipart and table/image/figure infer Extended.
 Long stems or lengthy subparts can occupy the whole row. The optional text
 `group` labels contiguous authored runs; neither groups nor presentation
 reorders questions. Multipart defaults to half-width on wide desktop and
-full-width on tablet. Compact uses three/two/one columns. Final and worked
+full-width on tablet. An orphaned final half-width item automatically spans its row. Short subparts use a two-column desktop grid and stack on tablet/mobile; long or explicitly stacked parts remain vertical. Compact uses three/two/one columns. Final and worked
 answers both use two desktop columns; Extended and long working lines span
-both. All reflow without shrinking mathematics.
+both. Each authored working newline remains one line with horizontal scrolling when needed; mobile maths remains 20px. Practice and answers restart numbering within the selected pathway.
 
 The existing question inspector edits stem, individual subparts, duplicate,
 move, archetype, pathway, final answer, worked answer and teacher note. It now
 adds semantic Presentation and optional Section/group. Parts remain the
-existing string array; no second question model has been introduced.
+existing parts array; imported objects and their IDs remain retained. Subpart text uses a compact ordered editor with move, delete and duplicate controls; no second question model has been introduced.
+
+The Answer Hub defaults to the current practice/pathway, or the most recently
+visited practice/pathway at Lesson Complete. Practice, Pathway and Question
+selectors narrow both answer tabs; All practice is explicit. Individual question
+selection uses stable IDs rather than ambiguous shared numbers. The learner rail
+omits the empty single-skill heading; authoring and multi-skill structure remain.
+Wide practice pages put pathway tabs and compact answer access on one toolbar.
+
+Completion integrates its heading, message, indicators and authored image into
+one hero, with separate text and artwork regions for contrast. What you practised,
+Answer Hub, Review lesson and an authored next lesson follow it. The frame is
+implemented; final artwork acceptance is still pending.
 
 ## Authored images
 
@@ -67,11 +79,32 @@ access. No new recording was made. M2/M3 and other subject work remain stopped.
 captures explicitly use fixtures (28 questions, mixed presentation, optional
 Advanced and extended working); they do not add enrichment to the real lessons.
 
-`regression-summary.json` distinguishes the full 45-gate run and corrected
+The earlier checkpoint records in `regression-summary.json` distinguish the full 45-gate run and corrected
 fixture reruns from the six follow-up gates after the completion-width fix.
 Original logs are retained under `verification/full`, `verification/corrected`
 and `verification/completion`. `content-identity.json` records preservation of
 all 36 prior questions per lesson and content-generator idempotence. The
 `media-fixture` captures use the existing repository sample image solely to
 check image controls and large containers; that sample is not approved Algebra
-artwork and is not used in either classroom lesson.
+artwork and is not used in either classroom lesson. Sample-only Outcomes and
+Completion captures now cover desktop and tablet. Actual approved-asset upload,
+three-slot final renders and visual acceptance remain pending the supplied files.
+
+## Inspection feedback correction pass
+
+The current correction increases the two lessons to 126 questions total. All
+original question IDs, expressions, answers, worked lines, models, policies and
+video URLs are retained; mathematical equivalence is checked again after additions.
+`correction-regression.json` records this pass separately from the earlier checkpoint
+logs. No merge, deployment or CodeRabbit request is made before the approved-asset
+acceptance step. Supabase is not live-tested against a real project.
+
+The correction pass has 31 focused checks and 74 fresh captures, with zero page
+errors. The initial full 45-gate run passed 43 gates and exposed a removed part
+selection hook and a dialog-close test race. Both were corrected; the final nine
+affected gates pass at the final application hash. `correction-regression.json`
+preserves all three runs and their distinct hashes; this is not a claim that all
+45 gates ran again on that final hash. The exact-head final regression/review step
+remains after supplied-artwork acceptance. `reviewed-content-identity.json` also
+confirms that all 60 reviewed questions per lesson retain their mathematical
+content and IDs, alongside the idempotent generator.

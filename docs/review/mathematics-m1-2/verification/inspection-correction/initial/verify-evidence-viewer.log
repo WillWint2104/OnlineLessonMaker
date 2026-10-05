@@ -1,0 +1,25 @@
+PASS History pedagogy, answers, metadata, comparisons and original image bytes unchanged; only three individual-source viewer opt-ins
+PASS Vendor is inert before inspection
+PASS Portrait intrinsic aspect preserved
+PASS Concise structured citation
+PASS Structured provenance and unknown creator shown honestly
+PASS Provenance Escape returns focus
+PASS Low-resolution limitation explicit
+PASS Pan arrows do not navigate the lesson
+PASS Task open/close retains view state
+PASS Inspect Escape returns to same live control
+PASS Repeated dialog focus ownership
+PASS Source B uses same viewer and metadata contract
+PASS Author can disable inspection
+PASS Authoring and unknown metadata survive JSON export/reopen
+PASS Independent single-file publication includes working inspection
+PASS Task drawer arrow keys do not pan source tablet
+PASS Responsive inspection no horizontal overflow tablet
+PASS Task drawer arrow keys do not pan source narrow
+PASS Responsive inspection no horizontal overflow narrow
+PASS Landscape source uses shared aspect-aware viewer
+PASS PNG upload embeds original image and intrinsic dimensions through graphical editor
+PASS JPEG upload embeds original image and intrinsic dimensions through graphical editor
+PASS Missing source retains readable provenance and disables failed inspect
+PASS Zero page errors
+PASS Local acceptance uses no remote requests

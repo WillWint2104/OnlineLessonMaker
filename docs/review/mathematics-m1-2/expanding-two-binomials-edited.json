@@ -394,6 +394,15 @@
               "presentation": "compact"
             },
             {
+              "id": "binomial-products-binomial-positive-example-m12-moderate-5",
+              "stem": "Expand and simplify (_x_ + 12)(_x_ + 15).",
+              "archetypeId": "binomial-positive-example",
+              "level": "moderate",
+              "answer": "_x_^2 + 27_x_ + 180",
+              "workedAnswer": "_x_(_x_ + 15) + 12(_x_ + 15)\n= _x_^2 + 15_x_ + 12_x_ + 180\n= _x_^2 + 27_x_ + 180",
+              "presentation": "compact"
+            },
+            {
               "id": "binomial-guided-question",
               "stem": "Expand and simplify (_x_ + 4)(_x_ − 3).",
               "archetypeId": "binomial-negative-example",
@@ -448,8 +457,14 @@
               "level": "basic",
               "answer": "_x_^2 + _x_ − 12",
               "workedAnswer": "_x_(_x_ + 4) − 3(_x_ + 4)\n= _x_^2 + 4_x_ − 3_x_ − 12\n= _x_^2 + _x_ − 12",
-              "presentation": "compact",
-              "group": "Independent practice"
+              "presentation": "multipart",
+              "group": "Structured practice",
+              "parts": [
+                "Write the distributed form.",
+                "Expand both products.",
+                "Collect like terms.",
+                "State the simplified expression."
+              ]
             },
             {
               "id": "binomial-products-binomial-negative-example-new-foundation-1",
@@ -601,6 +616,15 @@
               "level": "moderate",
               "answer": "_x_^2 − 23_x_ + 126",
               "workedAnswer": "_x_(_x_ − 14) − 9(_x_ − 14)\n= _x_^2 − 14_x_ − 9_x_ + 126\n= _x_^2 − 23_x_ + 126",
+              "presentation": "compact"
+            },
+            {
+              "id": "binomial-products-binomial-negative-example-m12-moderate-5",
+              "stem": "Expand and simplify (_x_ − 13)(_x_ + 9).",
+              "archetypeId": "binomial-negative-example",
+              "level": "moderate",
+              "answer": "_x_^2 − 4_x_ − 117",
+              "workedAnswer": "_x_(_x_ + 9) − 13(_x_ + 9)\n= _x_^2 + 9_x_ − 13_x_ − 117\n= _x_^2 − 4_x_ − 117",
               "presentation": "compact"
             },
             {
@@ -781,6 +805,15 @@
               "level": "moderate",
               "answer": "12_x_^2 + 53_x_ + 56",
               "workedAnswer": "4_x_(3_x_ + 8) + 7(3_x_ + 8)\n= 12_x_^2 + 32_x_ + 21_x_ + 56\n= 12_x_^2 + 53_x_ + 56",
+              "presentation": "compact"
+            },
+            {
+              "id": "binomial-products-binomial-coefficients-example-m12-moderate-5",
+              "stem": "Expand and simplify (6_x_ − 5)(3_x_ + 8).",
+              "archetypeId": "binomial-coefficients-example",
+              "level": "moderate",
+              "answer": "18_x_^2 + 33_x_ − 40",
+              "workedAnswer": "6_x_(3_x_ + 8) − 5(3_x_ + 8)\n= 18_x_^2 + 48_x_ − 15_x_ − 40\n= 18_x_^2 + 33_x_ − 40",
               "presentation": "compact"
             }
           ],

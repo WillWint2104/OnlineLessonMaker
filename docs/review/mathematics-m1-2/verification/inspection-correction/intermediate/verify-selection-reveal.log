@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(await measure('slides.0.activities.0.questions.0.parts.1','Question part b'))
+
+    at file:///C:/Users/willi/Videos/Online%20Lesson%20Maker/scripts/verify-selection-reveal.mjs:19:92 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

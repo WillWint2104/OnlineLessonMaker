@@ -1,0 +1,364 @@
+{
+  "status": "Draft corrected; final supplied-artwork acceptance and CodeRabbit/exact-head review remain pending. No merge or deployment.",
+  "sourceBase": "d9157b08533226c4fbbdadddc7bb3d633f74fde4",
+  "appSha256": "ec9b9d39e033fee8441871f450d3007774797cb6b9c849a66dd9bf111ed57906",
+  "trackedCorrectionsUncommittedAtRun": true,
+  "initialFullRegression": {
+    "runInfo": {
+      "started": "2026-10-05T08:14:11.780Z",
+      "head": "d9157b08533226c4fbbdadddc7bb3d633f74fde4",
+      "node": "v24.14.1",
+      "corpusRef": "44017f836bfc3d72ace895c84f082c22c7f27fc9",
+      "appSha256": "cb660d3ef2609550d8f30c4e2b821a661dde066f1852da5f590b5227338dc53e"
+    },
+    "gates": [
+      {
+        "name": "validate",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/validate.log"
+      },
+      {
+        "name": "verify-mathematics-textbook",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-mathematics-textbook.log"
+      },
+      {
+        "name": "verify-class-session",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-class-session.log"
+      },
+      {
+        "name": "verify-class-session-browser",
+        "status": 1,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-class-session-browser.log"
+      },
+      {
+        "name": "verify-mathematics-m1",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-mathematics-m1.log"
+      },
+      {
+        "name": "verify-lesson-journey",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-lesson-journey.log"
+      },
+      {
+        "name": "verify-journey-zoom",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-journey-zoom.log"
+      },
+      {
+        "name": "verify-shared-player",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-shared-player.log"
+      },
+      {
+        "name": "verify-activity-surfaces",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-activity-surfaces.log"
+      },
+      {
+        "name": "verify-activity-authoring",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-activity-authoring.log"
+      },
+      {
+        "name": "verify-activity-publication",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-activity-publication.log"
+      },
+      {
+        "name": "verify-selection-reveal",
+        "status": 1,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-selection-reveal.log"
+      },
+      {
+        "name": "verify-annotated-content",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-annotated-content.log"
+      },
+      {
+        "name": "verify-annotated-solutions",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-annotated-solutions.log"
+      },
+      {
+        "name": "verify-annotated-zoom",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-annotated-zoom.log"
+      },
+      {
+        "name": "verify-factorising-content",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-factorising-content.log"
+      },
+      {
+        "name": "verify-worked-collections",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-worked-collections.log"
+      },
+      {
+        "name": "verify-worked-zoom",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-worked-zoom.log"
+      },
+      {
+        "name": "verify-evidence-compositions",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-evidence-compositions.log"
+      },
+      {
+        "name": "verify-production-lessons",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-production-lessons.log"
+      },
+      {
+        "name": "verify-skill-page",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-skill-page.log"
+      },
+      {
+        "name": "verify-composition-grid",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-composition-grid.log"
+      },
+      {
+        "name": "verify-figure-container",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-figure-container.log"
+      },
+      {
+        "name": "verify-figure-render",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-figure-render.log"
+      },
+      {
+        "name": "verify-geometry-semantics",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-geometry-semantics.log"
+      },
+      {
+        "name": "verify-label-placement",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-label-placement.log"
+      },
+      {
+        "name": "verify-learning-card",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-learning-card.log"
+      },
+      {
+        "name": "verify-measure-surface",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-measure-surface.log"
+      },
+      {
+        "name": "verify-mx-authoring",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-mx-authoring.log"
+      },
+      {
+        "name": "verify-notes-examples",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-notes-examples.log"
+      },
+      {
+        "name": "verify-quadratics-authoring",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-quadratics-authoring.log"
+      },
+      {
+        "name": "verify-response-store",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-response-store.log"
+      },
+      {
+        "name": "verify-responsive-shell",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-responsive-shell.log"
+      },
+      {
+        "name": "verify-type-interaction",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-type-interaction.log"
+      },
+      {
+        "name": "verify-workbook",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-workbook.log"
+      },
+      {
+        "name": "verify-lesson-page",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-lesson-page.log"
+      },
+      {
+        "name": "verify-media",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-media.log"
+      },
+      {
+        "name": "verify-newtypes",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-newtypes.log"
+      },
+      {
+        "name": "verify-pack-fixes",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-pack-fixes.log"
+      },
+      {
+        "name": "verify-theme-pack",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-theme-pack.log"
+      },
+      {
+        "name": "verify-interactive",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-interactive.log"
+      },
+      {
+        "name": "verify-infographic",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-infographic.log"
+      },
+      {
+        "name": "verify-evidence-viewer",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-evidence-viewer.log"
+      },
+      {
+        "name": "verify-evidence-publication",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-evidence-publication.log"
+      },
+      {
+        "name": "verify-corpus-identity",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/initial/verify-corpus-identity.log"
+      }
+    ]
+  },
+  "intermediateFollowup": {
+    "runInfo": {
+      "started": "2026-10-05T08:27:55.483Z",
+      "head": "d9157b08533226c4fbbdadddc7bb3d633f74fde4",
+      "node": "v24.14.1",
+      "corpusRef": "44017f836bfc3d72ace895c84f082c22c7f27fc9",
+      "appSha256": "f147949bd1642615dce6283cb2bb9d36f5a4fb6f31f2541e70773b27ad17456d"
+    },
+    "gates": [
+      {
+        "name": "validate",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/intermediate/validate.log"
+      },
+      {
+        "name": "verify-mathematics-textbook",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/intermediate/verify-mathematics-textbook.log"
+      },
+      {
+        "name": "verify-class-session-browser",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/intermediate/verify-class-session-browser.log"
+      },
+      {
+        "name": "verify-selection-reveal",
+        "status": 1,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/intermediate/verify-selection-reveal.log"
+      },
+      {
+        "name": "verify-mathematics-m1",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/intermediate/verify-mathematics-m1.log"
+      },
+      {
+        "name": "verify-lesson-journey",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/intermediate/verify-lesson-journey.log"
+      },
+      {
+        "name": "verify-responsive-shell",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/intermediate/verify-responsive-shell.log"
+      },
+      {
+        "name": "verify-corpus-identity",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/intermediate/verify-corpus-identity.log"
+      },
+      {
+        "name": "verify-textbook-publication",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/intermediate/verify-textbook-publication.log"
+      }
+    ]
+  },
+  "finalFollowup": {
+    "runInfo": {
+      "started": "2026-10-05T08:31:22.821Z",
+      "head": "d9157b08533226c4fbbdadddc7bb3d633f74fde4",
+      "node": "v24.14.1",
+      "corpusRef": "44017f836bfc3d72ace895c84f082c22c7f27fc9",
+      "appSha256": "ec9b9d39e033fee8441871f450d3007774797cb6b9c849a66dd9bf111ed57906"
+    },
+    "gates": [
+      {
+        "name": "validate",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/followup/validate.log"
+      },
+      {
+        "name": "verify-selection-reveal",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/followup/verify-selection-reveal.log"
+      },
+      {
+        "name": "verify-mathematics-textbook",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/followup/verify-mathematics-textbook.log"
+      },
+      {
+        "name": "verify-class-session-browser",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/followup/verify-class-session-browser.log"
+      },
+      {
+        "name": "verify-mathematics-m1",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/followup/verify-mathematics-m1.log"
+      },
+      {
+        "name": "verify-lesson-journey",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/followup/verify-lesson-journey.log"
+      },
+      {
+        "name": "verify-responsive-shell",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/followup/verify-responsive-shell.log"
+      },
+      {
+        "name": "verify-corpus-identity",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/followup/verify-corpus-identity.log"
+      },
+      {
+        "name": "verify-textbook-publication",
+        "status": 0,
+        "receipt": "docs/review/mathematics-m1-2/verification/inspection-correction/followup/verify-textbook-publication.log"
+      }
+    ]
+  },
+  "focusedChecks": 31,
+  "captures": 74,
+  "pageErrors": [],
+  "note": "The full run had two failures (removed subpart-selection hook and dialog-close test race). The hook was restored; the browser test now waits for close cleanup without weakening focus/caret assertions. Final follow-up gates cover these corrections and the final application hash; earlier successful gates are retained with their earlier hash, not relabelled as exact-head checks.",
+  "pending": [
+    "Approved Algebra assets and real desktop/tablet renders of all three fixed image slots",
+    "Approved-asset upload, crop/focus, JSON export and reopen evidence",
+    "CodeRabbit review, fixes, exact-head verification, then FINAL VISUAL APPROVAL BEFORE MERGE"
+  ],
+  "supabase": "Prepared, not deployed, not live-tested against a real Supabase project. M2/M3 remain stopped."
+}
