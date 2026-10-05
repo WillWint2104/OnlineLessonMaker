@@ -15,7 +15,7 @@ $archive = Join-Path $delivery "mathematics-m1-1-$short-review.zip"
 if (Test-Path -LiteralPath $archive) { throw "Archive already exists: $archive" }
 New-Item -ItemType Directory -Path $stage,$extract -Force | Out-Null
 $files = @(& git ls-files) | Where-Object {
-  $_ -eq 'lesson-studio.html' -or $_ -match '^assets/' -or
+  $_ -eq 'lesson-studio.html' -or $_ -eq 'package.json' -or $_ -match '^assets/' -or
   $_ -match '^docs/review/mathematics-m1-1/' -or $_ -match '^docs/lessons/expanding/' -or
   $_ -match '^lessons/expanding-(two-binomials|binomial-trinomial)(/|\.html$)' -or
   $_ -match '^supabase/' -or $_ -match '^scripts/(build-expanding-textbook|build-mathematics-textbook-review|verify-mathematics-textbook|verify-class-session|verify-class-session-browser)\.mjs$'
@@ -48,7 +48,7 @@ This is implemented M1.1, using the existing player. Optional Supabase service c
 
 The published lessons embed their data, fonts and illustrations and open directly from disk. The editable app's local vendor assets are included with relative paths. For arbitrary local asset paths, serve this extracted root, for example python -m http.server 8138, then open http://127.0.0.1:8138/docs/review/mathematics-m1-1/index.html.
 
-The supplied YouTube URLs are external dependencies. The automated checks verify their authored surfaces and navigation with external requests blocked; they do not prove playback, school firewall access or offline remote-video availability. There is no new recording. Screenshots are actual renders. Edited demonstration files contain authoring-test changes and are distinct from the canonical 18-question lessons.
+The supplied YouTube URLs are external dependencies. The automated checks verify their authored surfaces and navigation with external requests blocked; they do not prove playback, school firewall access or offline remote-video availability. There is no new recording. Screenshots are actual renders. Edited demonstration files contain authoring-test changes and are distinct from the canonical 36-question lessons.
 
 Review documentation and verification receipts: docs/review/mathematics-m1-1/. Post-merge receipts, when available, are in verification/post-merge/ and were retrieved after the identified source commit; they are evidence records, not later application files. Original combined teacher JSON and the 72-answer key: docs/lessons/expanding/. Each canonical lesson contains three archetypes with eight Foundation and four Moderate independent problems per archetype; retained guided substeps count as one problem.
 

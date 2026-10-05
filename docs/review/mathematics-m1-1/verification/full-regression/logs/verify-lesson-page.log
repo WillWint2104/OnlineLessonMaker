@@ -1,0 +1,11 @@
+✓ HTTP 200  status=200
+✓ cover/lesson reads "Investigating the Remains"  title="Case File 6 — Investigating the Remains"
+✓ lesson has 11 slides  n=11
+✓ cover slide renders the title text
+✓ CT slide embeds the interactive inline (iframe)  src=https://willwint2104.github.io/OnlineLessonMaker/interactives/tutankhamun-ct-scan.html
+✓ "Open ↗" fallback present, points at the interactive  label="Open the CT investigation ↗ →"
+• (iframe-content check skipped — cross-origin to page; checked on live same-origin run)
+
+Screenshot: screenshots/case6-lesson.png
+
+ALL PASSED.
