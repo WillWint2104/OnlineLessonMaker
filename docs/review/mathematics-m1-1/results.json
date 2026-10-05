@@ -1,6 +1,6 @@
 {
-  "head": "865505b631880dd8a280e5186a0e4e6ce7c581d5",
-  "appSha256": "c29e085709c84031361049ce16b889ed1a7fdff704b168317ccfab238054b0b0",
+  "head": "4f08db3b542da74f8ae07d1fdbbd3cfe6f508c7e",
+  "appSha256": "c647a07dd3b6af7d633fa3c8e009af91294d0ca13a6c16313607c66596421582",
   "checks": [
     "expanding-two-binomials: 36 independent problems and every worked line/final checked at six values",
     "Separate practice destinations; two internal pathways; modal preserves state",
@@ -15,7 +15,12 @@
     "expanding-binomial-trinomial: 36 independent problems and every worked line/final checked at six values",
     "Separate practice destinations; two internal pathways; modal preserves state",
     "End unlock, complete answer key, full working and question search",
-    "JSON preserves policy/notes/width/unknown fields; publication excludes teacher note"
+    "JSON preserves policy/notes/width/unknown fields; publication excludes teacher note",
+    "Desktop/tablet/mobile exercise and hub reflow without horizontal clipping",
+    "Projector may show answers without student release",
+    "Teacher/hidden answers absent from exported bytes, including open JSON editor",
+    "Actual native 200% zoom: usable answer hub",
+    "Zero page errors"
   ],
   "captures": [
     "expanding-two-binomials-overview",
@@ -46,7 +51,10 @@
     "expanding-binomial-trinomial-answer-authoring",
     "expanding-binomial-trinomial-hub-1536",
     "expanding-binomial-trinomial-hub-1280",
-    "expanding-binomial-trinomial-hub-1024"
+    "expanding-binomial-trinomial-hub-1024",
+    "expanding-binomial-trinomial-hub-390",
+    "expanding-binomial-trinomial-projector",
+    "expanding-binomial-trinomial-native-200"
   ],
   "errors": []
 }
