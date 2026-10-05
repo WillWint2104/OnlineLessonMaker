@@ -1,8 +1,9 @@
 {
-  "recordType": "Accepted structural baseline reference; not a current test execution receipt",
+  "recordType": "Verification provenance index; generated execution receipts live in the final delivery artifact",
   "sourceCommit": "910af58748ab8c03fd56145b9ea66625f9c4ce24",
   "acceptedVerification": "historical/910af58-structural-results.json",
   "fullRegression": "historical/910af58-full-gates.json",
   "historicalDevelopment": "historical/098c881-development-structural-results.json",
-  "note": "Current-head structural checks are refreshed in the artwork inspection ZIP. No renderer changes are part of the artwork pass."
+  "note": "Historical records are explicitly archived. The final full 49-gate execution receipt identifies its exact clean source snapshot; deployment/live receipts identify the merged Pages commit. This provenance index is not a contradictory current execution receipt.",
+  "stage": "Structure and artwork visually accepted; final Completion copy and release verification"
 }

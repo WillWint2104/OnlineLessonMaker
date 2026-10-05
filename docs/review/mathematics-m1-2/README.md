@@ -1,6 +1,10 @@
-# Current review: supplied Mathematics artwork
+# Mathematics M1.2 — accepted final design
 
-The structural design is accepted at 910af58. The supplied image set is now in the existing three roles; open artwork/index.html for placement review. Original artwork bytes, lesson structure and application renderer are preserved. No merge/deployment. Current artwork receipts are generated for the inspection ZIP; earlier development receipts are explicitly archived under historical/. The following sections describe the accepted structural baseline and its historical verification.
+Structure at 910af58 and supplied artwork placements are visually accepted. Overview, Outcomes and Completion crops remain authored per image; no Algebra focal settings become a global Mathematics default. The only final polish removes the redundant skill-count line on single-skill Completion. Production expanding lesson HTML is regenerated through the validated exporter, retaining all 63 questions per lesson and supplied original artwork. Open artwork/index.html for the accepted composition captures and use lessons/expanding-*.html for production lesson entry points.
+
+Final full exact-head verification uses 49 gates including artwork; its records identify the tested implementation commit, application hash and clean tracked source before/after. Generated full/current metadata is supplied in the final delivery artifact, while older records are explicitly under historical/. CodeRabbit review/fixes, exact-head CI, clean squash merge and GitHub Pages/live verification are authorised. Supabase remains prepared, not deployed or verified live; M2/M3 remain stopped until M1.2 deployment is confirmed clean.
+
+## Accepted structural baseline (historical detail)
 
 # Mathematics M1.2 — structural correction review
 

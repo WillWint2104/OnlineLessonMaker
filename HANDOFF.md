@@ -2,6 +2,10 @@
 
 _Last updated: 2026-06-20_
 
+## Mathematics M1.2 — final review/deployment (5 October 2026)
+
+User visually accepted both structure and artwork, and explicitly authorised final CodeRabbit/fixes/full exact-head regression, squash merge, deployment and live verification. The only final polish removes the redundant count from single-skill Completion. The two production learner HTML files are regenerated through the validated exporter with 63 questions each and the accepted original artwork. Focal values remain lesson/image-owned; default focus stays centred. The full suite includes supplied artwork (49 gates). Preserve old receipts under historical; final delivery records are generated after committing the exact source to avoid dirty-tree or earlier-head claims. Stop after confirmed clean M1.2 deployment; do not start M2/M3. Supabase remains prepared and not deployed. The earlier STOP FOR REVIEW notes below are historical and superseded by this approval.
+
 ## Mathematics artwork placement review (5 October 2026)
 
 User accepted M1.2 structure at 910af58. Three user-supplied immutable PNGs now fill Overview, Outcomes and Completion in both expanding lessons via existing src/alt/fit/focus fields. Canonical originals and hashes live in assets/mathematics; JSON embeds them for direct local import/publication. No lesson content except the three image slots, renderer or architecture changed. See docs/review/mathematics-m1-2/artwork/. Stale development receipts are clearly archived under historical; the delivery ZIP refreshes current-head focused results without attributing the baseline 48-gate run to a newer artwork head. STOP FOR PLACEMENT VISUAL REVIEW before CodeRabbit/final checks/merge/deploy. Supabase remains prepared/not deployed; M2/M3 remain stopped.

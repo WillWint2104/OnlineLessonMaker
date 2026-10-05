@@ -1,5 +1,10 @@
 # Changelog
 
+## Mathematics M1.2 — approved final release
+
+- Remove the redundant single-skill count from Completion while retaining the accepted artwork, image-owned crop/focal settings and centred defaults for future assets. Regenerate both production expanding lesson HTML files with the accepted 63-question content and supplied artwork.
+- Include artwork in the final 49-gate exact-head suite; preserve historical receipts separately and complete CodeRabbit, merge, Pages deployment and live verification before starting M2/M3.
+
 ## Mathematics supplied artwork — placement review
 
 - Place the three supplied original PNGs into existing Overview, Outcomes and Completion image slots in both expanding lessons, using authored crop/focal settings and embedded image data for standalone publication. Freeze the accepted renderer and all non-image lesson data.

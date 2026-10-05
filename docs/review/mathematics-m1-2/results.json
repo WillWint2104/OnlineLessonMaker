@@ -1,10 +1,10 @@
 {
-  "recordType": "Review metadata index; not a current test execution receipt",
-  "stage": "Supplied-artwork placement review; awaiting visual approval",
+  "recordType": "Verification provenance index; generated execution receipts live in the final delivery artifact",
+  "stage": "Structure and artwork visually accepted; final Completion copy and release verification",
   "currentArtworkGallery": "artwork/index.html",
   "currentVerification": "artwork/results.json (generated against the committed artwork head; included in the delivery ZIP)",
   "acceptedStructuralBaseline": "910af58748ab8c03fd56145b9ea66625f9c4ce24",
   "baselineVerification": "historical/910af58-full-run-info.json",
   "historicalDevelopment": "historical/098c881-development-results.json",
-  "note": "The final inspection ZIP replaces this index with actual final-head focused verification. Historical 48-gate results apply to the accepted structural baseline, not a new artwork-head full run."
+  "note": "Historical records are explicitly archived. The final full 49-gate execution receipt identifies its exact clean source snapshot; deployment/live receipts identify the merged Pages commit. This provenance index is not a contradictory current execution receipt."
 }
