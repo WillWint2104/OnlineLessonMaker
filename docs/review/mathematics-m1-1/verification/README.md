@@ -1,0 +1,11 @@
+# Verification provenance
+
+The full sequential regression passed all 45 gates at implementation commit 3213659fc2b77a53ae99ff748ad7a49631eb9cb3, application SHA-256 c647a07dd3b6af7d633fa3c8e009af91294d0ca13a6c16313607c66596421582. Original logs, results and run-info remain in full-regression/logs/. They precede the subsequent CodeRabbit corrections; they are not represented as a full rerun of the corrected application. The authoring-captures.json record is an earlier supplementary run of that baseline.
+
+Current root gallery screenshots and textbook results come from the latest corrected working candidate: base HEAD 13e59b3974f8ab1998cd03492974a600a218cad8, application SHA-256 18857b9bbb56fd33d3b4aa1b4d091648cec2f2c318af15cefafb011c8fbf6515. The application corrections were working changes at capture time. Exact-head and post-merge receipts separately establish the final committed source and matching application bytes.
+
+The corrected class browser checks cover actual teacher/student controls, transient recovery, active-class reauthentication, typed-editor node/focus/caret retention on unchanged polling and release transitions, teacher controls retained after three failed polls, and successful relocking of the still-active server class. The class handler checks include scoped signed capabilities, pre-lookup limits, tampering, stable signing keys across independent instances, ownership, withholding, release and expiry. Authentication and persistence adapters are mocked. Actual Supabase deployment, SQL/JWT integration, school-network access and load acceptance remain outstanding.
+
+The publication-rollback.json record is an earlier successful isolated rollback calibration. Latest exact-head receipts rerun this calibration: deliberately corrupt the second lesson after the first finishes, and confirm both existing publications remain byte-identical. Canonical source files are never changed by that test. Interrupted full runs are excluded.
+
+External YouTube playback is outside the blocked-network render checks. No recording was produced. The package contains the final source plus explicitly labelled earlier and final verification records, not later application files mixed with old screenshots.

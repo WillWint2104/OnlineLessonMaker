@@ -1,0 +1,19 @@
+{
+  "checks": [
+    "Student export starts with neither final nor worked payload",
+    "Signing in again preserves the active class and creates no second session",
+    "Actual frontend joins, polls and receives only final answers after release",
+    "Worked release updates already-open Answer Hub",
+    "Transient failure clears answers but automatically rejoins with retained reader capability",
+    "HTML gateway failure produces useful service message",
+    "Unchanged poll preserves the actual typed editor, focus and caret",
+    "Release transition updates answer access without replacing the typed editor or selection",
+    "Relock removes current hub content and remote cache",
+    "Teacher retains class code and release/end controls after three failed polls and can relock the active server class",
+    "Expiry restores hidden authored fallback",
+    "Pending teacher sign-in cannot start or attach a class to an imported replacement lesson",
+    "Zero frontend page errors"
+  ],
+  "errors": [],
+  "scope": "Real browser and real handler; authentication/database adapters are mocked. Supabase deployment remains unconfigured."
+}

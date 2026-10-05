@@ -2,6 +2,10 @@
 
 _Last updated: 2026-06-20_
 
+## Mathematics M1.1 (5 October 2026)
+
+The two expanding lessons opt into meta.practiceLayout=textbook: assessed archetypes are distinct rail pages; pathways remain internal. Stable IDs, flat questions and existing renderer/export remain. question.layout and teacherNote add width/editing; independent meta.answerPolicy fields control the Answer Hub. Present permits projector access; hidden/teacher-with-hidden-fallback export strips answer fields and teacher notes. Image-led bookends use authored assets; completion adds practised and optional nextLesson. Both lessons have 36 problems with fully checked working. Supabase migrations/function/client adapter are prepared, not deployed; see supabase/README.md. Five-second polling, Auth/teacher registry, four-hour expiry, separated answer bundle and offline fallback are adapter-tested. No new browser dependency or storage. M2/M3 remain deferred pending user review.
+
 ## Mathematics Phase M1 (4 October 2026)
 
 The learner activity rail now collapses authored worked-example collections; internal tabs and Back/Next retain the same stable example order. Edit keeps the nested authoring structure. Single-skill Mathematics suppresses redundant skill counts and summary furniture without restricting multi-skill lessons. Questions can reference existing example IDs via archetypeId, with Basic/Moderate level, final answer and optional worked answer; activity.practiceCollectionId selects the existing worked collection. Grouped reveal is deliberate and paper remains first-class. The existing inspector connects collection, question attachment, level, duplicate, answer and reorder controls. Optional meta.completion.image uses the existing image/upload/export mechanism. See docs/review/mathematics-m1/ for the contract and actual review captures. Two production lessons split the unchanged teacher combined JSON, retain worked-example identity and each contain 18 independent problems. M1 must stop for user review; M2 calculator and M3 sketch work have not started. The supplied HGL standalone files remain later-phase references.

@@ -1,5 +1,9 @@
 # Changelog
 
+## Mathematics M1.1 — 5 October 2026
+
+Textbook practice destinations, internal Foundation/Moderate/optional Advanced pathways, responsive exercise widths, authored full working and dedicated Answer Hub. Independent final/worked policies, image-led Overview/Complete and an optional next lesson. Two actual lessons now have 36 problems each. Supabase session service and authenticated controls are prepared and adapter-tested, not deployed; secure hidden export omits answer fields. M2/M3 remain deferred.
+
 All notable changes to **Lesson Studio** are recorded here. Format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/); add a line for every PR so
 "what changed and was it checked" stays visible (see `docs/CHANGELOG` note in

@@ -1,0 +1,28 @@
+{
+  "checks": [
+    "Stable configured signing key verifies across independent function instances",
+    "Different signing key cannot authenticate a reader capability",
+    "Unauthenticated teacher writes denied",
+    "Teacher starts four-hour session without sending bundle back",
+    "Locked student response contains no answer payload",
+    "Join returns a signed payload with a 22-character nonce field",
+    "Code-only reads are limited and denied before any session lookup",
+    "Invented reader tokens cannot select the higher polling limit or query sessions",
+    "Tampered signed reader capability is denied before lookup",
+    "Student cannot release",
+    "Other teacher cannot release",
+    "Final-only release excludes worked payload",
+    "Only a validated server capability selects the polling allowance",
+    "Worked release delivers authored working",
+    "Relock withholds future fetches",
+    "Reader capability belongs to exact lesson identity",
+    "Signed server-clock expiry prevents release and lookup after four hours",
+    "End session immediately restores fallback",
+    "Rate limit blocks join/read enumeration before database lookups",
+    "Unexpected origins cannot use browser endpoint",
+    "Deployment includes browser-role restrictions and expiry cleanup",
+    "Rate buckets do not trust caller-supplied IP headers"
+  ],
+  "remoteDeployment": "Not configured or certified",
+  "tested": "Edge Function handler with in-memory persistence/auth test adapter"
+}
