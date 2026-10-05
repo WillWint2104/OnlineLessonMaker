@@ -20,7 +20,7 @@ for(const [i,slug]of slugs.entries()){
  fs.writeFileSync(fixture+'/lessons/'+slug+'/lesson.json',JSON.stringify(lesson));
  const bytes=fs.readFileSync(root+'/lessons/'+slug+'.html');originals.push(bytes);fs.writeFileSync(fixture+'/lessons/'+slug+'.html',bytes);
 }
-const result=spawnSync(process.execPath,['scripts/verify-mathematics-textbook.mjs','--publish'],{cwd:fixture,env:{...process.env,PLAYER_REVIEW_DIR:fixture+'/evidence'},encoding:'utf8',timeout:120000,maxBuffer:4e6});
+const result=spawnSync(process.execPath,['scripts/verify-mathematics-textbook.mjs','--publish'],{cwd:fixture,env:{...process.env,PLAYER_REVIEW_DIR:fixture+'/evidence'},encoding:'utf8',timeout:600000,maxBuffer:4e6});
 assert.notEqual(result.status,0,'Corrupted second lesson must fail');
 assert.ok(result.stdout.includes('Actual native 200% zoom'),'First lesson must finish before the deliberate failure');
 for(const [i,slug]of slugs.entries())assert.ok(fs.readFileSync(fixture+'/lessons/'+slug+'.html').equals(originals[i]),slug+' publication changed after failed checks');

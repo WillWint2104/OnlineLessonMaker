@@ -1,0 +1,73 @@
+PASS figure-geometry-baseline.json - mathematics - annotations were actually measured  75 figure renders - 510 text nodes
+PASS figure-geometry-baseline.json - mathematics - every annotation inside the logical-px band  min 13.13 tp-fig-gsmeas - max 18.08 tp-fig-gvert
+PASS figure-geometry-baseline.json - mathematics - measurement text stays inside its own surface
+PASS figure-geometry-baseline.json - mathematics - no Stage 3c relaxed placement at or above the 420px geometry stage floor
+     . figure-geometry-baseline.json - mathematics: smallest 13.13px tp-fig-gsmeas "4" @stage 420 slide 0 - largest 18.08px tp-fig-gvert "A" @stage 1089 slide 0
+PASS figure-geometry-baseline.json - scholarmath - annotations were actually measured  75 figure renders - 510 text nodes
+PASS figure-geometry-baseline.json - scholarmath - every annotation inside the logical-px band  min 13.13 tp-fig-gsmeas - max 18.08 tp-fig-gvert
+PASS figure-geometry-baseline.json - scholarmath - measurement text stays inside its own surface
+PASS figure-geometry-baseline.json - scholarmath - no Stage 3c relaxed placement at or above the 420px geometry stage floor
+     . figure-geometry-baseline.json - scholarmath: smallest 13.13px tp-fig-gsmeas "4" @stage 420 slide 0 - largest 18.08px tp-fig-gvert "A" @stage 1089 slide 0
+PASS figure-measure-surface.json - mathematics - annotations were actually measured  45 figure renders - 430 text nodes
+PASS figure-measure-surface.json - mathematics - every annotation inside the logical-px band  min 11.18 tp-fig-gunit - max 18.08 tp-fig-gvert
+PASS figure-measure-surface.json - mathematics - measurement text stays inside its own surface
+PASS figure-measure-surface.json - mathematics - no Stage 3c relaxed placement at or above the 420px geometry stage floor
+     . figure-measure-surface.json - mathematics: smallest 11.18px tp-fig-gunit "cm" @stage 420 slide 2 - largest 18.08px tp-fig-gvert "A" @stage 1089 slide 0
+PASS figure-measure-surface.json - scholarmath - annotations were actually measured  45 figure renders - 430 text nodes
+PASS figure-measure-surface.json - scholarmath - every annotation inside the logical-px band  min 11.18 tp-fig-gunit - max 18.08 tp-fig-gvert
+PASS figure-measure-surface.json - scholarmath - measurement text stays inside its own surface
+PASS figure-measure-surface.json - scholarmath - no Stage 3c relaxed placement at or above the 420px geometry stage floor
+     . figure-measure-surface.json - scholarmath: smallest 11.18px tp-fig-gunit "cm" @stage 420 slide 2 - largest 18.08px tp-fig-gvert "A" @stage 1089 slide 0
+PASS figure-graph-baseline.json - mathematics - annotations were actually measured  20 figure renders - 304 text nodes
+PASS figure-graph-baseline.json - mathematics - every annotation inside the logical-px band  min 12.55 tp-fig-ticklabel - max 17.39 tp-fig-ptid
+PASS figure-graph-baseline.json - mathematics - measurement text stays inside its own surface
+     . figure-graph-baseline.json - mathematics: smallest 12.55px tp-fig-ticklabel "-3" @stage 340 slide 0 - largest 17.39px tp-fig-ptid "V" @stage 1089 slide 0
+PASS figure-graph-baseline.json - scholarmath - annotations were actually measured  20 figure renders - 304 text nodes
+PASS figure-graph-baseline.json - scholarmath - every annotation inside the logical-px band  min 12.55 tp-fig-ticklabel - max 17.39 tp-fig-ptid
+PASS figure-graph-baseline.json - scholarmath - measurement text stays inside its own surface
+     . figure-graph-baseline.json - scholarmath: smallest 12.55px tp-fig-ticklabel "-3" @stage 340 slide 0 - largest 17.39px tp-fig-ptid "V" @stage 1089 slide 0
+PASS figure-graph-baseline.json - geolearn - annotations were actually measured  20 figure renders - 304 text nodes
+PASS figure-graph-baseline.json - geolearn - every annotation inside the logical-px band  min 12.55 tp-fig-ticklabel - max 17.39 tp-fig-ptid
+PASS figure-graph-baseline.json - geolearn - measurement text stays inside its own surface
+     . figure-graph-baseline.json - geolearn: smallest 12.55px tp-fig-ticklabel "-3" @stage 340 slide 0 - largest 17.39px tp-fig-ptid "V" @stage 1089 slide 0
+PASS the ramp probe hit every stage width it claims  340->340 420->420 530->530 700->700 900->900 1089->1089 1250->1250
+PASS the responsive scale follows the contracted ramp  340:1.000 420:1.000 530:1.034 700:1.091 900:1.156 1089:1.219 1250:1.218
+PASS at and below the ramp start the scale is 1.00  340 -> 0.9997 · 420 -> 1.0000 (±0.004 box rounding)
+PASS the scale is monotonically non-decreasing across the ramp  1.000 <= 1.000 <= 1.034 <= 1.091 <= 1.156 <= 1.219 <= 1.218
+PASS the scale never drops below 1.00
+PASS typography STOPS growing above the ramp end (1089px)  1089 -> 1.2186 · 1250 -> 1.2183 · ceiling 1.22
+PASS role ordering survives the ramp at every stage width
+PASS the unit:value ratio was actually measurable  7/7 stage widths produced both a unit and a value
+PASS the Stage 3d unit:value ratio survives the ramp (0.852 everywhere)  340:0.8522 420:0.8522 530:0.8522 700:0.8522 900:0.8522 1089:0.8522 1250:0.8522
+PASS every named representative size was observed  6/6: tp-fig-gunit@1089 tp-fig-gunit@420 tp-fig-gunit@700 tp-fig-gvert@1089 tp-fig-gvert@420 tp-fig-gvert@700
+PASS every inline text class was exercised  10 classes: tp-fig-gmeas tp-fig-gprose tp-fig-gsmeas tp-fig-gsprose tp-fig-gssym tp-fig-gsym tp-fig-gunit tp-fig-gvert tp-fig-ptid tp-fig-ticklabel
+PASS the 420px geometry stage floor is load-bearing (dense figures DO relax below it)  9 relaxed labels at stage 330, none at or above 420
+PASS observer setup is idempotent across repeated calls  setupFigureObserver() re-entered without replacing the observer
+PASS a re-solve at an unchanged stage width does no work  0 repaints from 3 extra figFitAll() passes over 1 figures
+PASS a settled placement is not rewritten on every pass  0 layout writes from 3 extra figFitAll() passes at an unchanged width
+PASS a slide with callouts was found to test against  2 callouts on slide 0
+PASS the re-solve replaces the <svg>
+PASS callout hit-targets keep their DOM identity across a re-solve  the nodes carry wirePackTyped listeners and must not be re-emitted
+PASS callout dialogs keep their DOM identity across a re-solve
+PASS callout positions are updated by the re-solve
+PASS a callout still opens after the re-solve (listeners survived)  hidden before true - some open after true
+PASS a slide with two figures was found to test against  slide 5
+PASS two figures in one host get distinct ids  tpfig-5-1-x tpfig-5-2-x
+PASS two figures register two independent FIGX entries
+PASS both figures re-solved to their own box  562x389 562x389
+PASS a resize does not feed the observer back into itself  0 further repaints in the 500ms after the resize settled
+PASS wide -> narrow -> wide returns identical figure DOM
+PASS ...and the narrow state really was different (the round trip was not a no-op)
+PASS a callout-count mismatch bails before mutating  returned false - viewBox unchanged true - data-fig-box unchanged true - svg intact true
+PASS placement resolution was actually exercised  66 placed renders — contained 24 · beside 8 · stacked 25 · full 9
+PASS the resolved mode matches an independent prediction at every width
+PASS a reduced layout never starves the figure below its minimum stage
+PASS beside always has its prose, and a stacked figure recovers the width
+PASS repeated resize across the transition does not oscillate  beside,beside,beside,stacked,beside,beside
+PASS a beside <-> stacked transition preserves the figure and its interaction state  {"sameNode":true,"sameId":true,"sameEntry":true}
+PASS `beside` with no prose reports once and falls back to the default figure  1 case(s), first: wrapped=false attr=null
+PASS an unrecognised placement still reports and falls back (C5 behaviour unchanged)  wrapped=false attr=null
+PASS `text` outside `beside` is reported rather than silently dropped  1 case(s)
+PASS a figure with no placement gains no wrapper  1 case(s)
+PASS no console errors / page errors
+65/65 passed

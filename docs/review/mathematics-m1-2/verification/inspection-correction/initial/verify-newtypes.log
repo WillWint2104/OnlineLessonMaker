@@ -1,0 +1,30 @@
+✓ imperium/sourceAnalysis renders (3 tasks)
+✓ imperium/sourceAnalysis: every textarea has a <label>
+✓ imperium/sourceAnalysis: aria-live region present
+✓ imperium/sourceAnalysis: source column sticky
+✓ imperium/sourceAnalysis: canvas-internal scroll
+✓ imperium/sourceAnalysis: model gated until attempt
+✓ imperium/sourceAnalysis: answer + reveal survive navigation (session-kept)
+✓ imperium/guidedResponse short: submit reveals model + criteria + locks box
+✓ imperium/guidedResponse extended: paragraph boxes render (4)
+✓ imperium/guidedResponse extended: Focus modal role=dialog+aria-modal
+✓ imperium/guidedResponse extended: Focus modal opens, focus moves in
+✓ imperium/guidedResponse extended: Esc closes + focus returns to trigger
+✓ imperium/outro renders 3 stat tiles (hides absent score gracefully)
+✓ imperium: no page errors
+✓ microhistory/sourceAnalysis renders (3 tasks)
+✓ microhistory/sourceAnalysis: every textarea has a <label>
+✓ microhistory/sourceAnalysis: aria-live region present
+✓ microhistory/sourceAnalysis: source column sticky
+✓ microhistory/sourceAnalysis: canvas-internal scroll
+✓ microhistory/sourceAnalysis: model gated until attempt
+✓ microhistory/sourceAnalysis: answer + reveal survive navigation (session-kept)
+✓ microhistory/guidedResponse short: submit reveals model + criteria + locks box
+✓ microhistory/guidedResponse extended: paragraph boxes render (4)
+✓ microhistory/guidedResponse extended: Focus modal role=dialog+aria-modal
+✓ microhistory/guidedResponse extended: Focus modal opens, focus moves in
+✓ microhistory/guidedResponse extended: Esc closes + focus returns to trigger
+✓ microhistory/outro renders 2 stat tiles (hides absent score gracefully)
+✓ microhistory: no page errors
+
+ALL PASSED.

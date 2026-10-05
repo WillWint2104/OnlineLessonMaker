@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+12 !== 8
+
+    at file:///C:/Users/willi/Videos/Online%20Lesson%20Maker/scripts/verify-class-session-browser.mjs:12:266 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 12,
+  expected: 8,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.1

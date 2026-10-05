@@ -1,0 +1,24 @@
+PASS a response survives navigating away and back  {"kind":"text","value":"x = 3"}
+PASS a response is NOT reattributed when the page array is reordered  {"kind":"text","value":"x = 3"}
+PASS …and does not leak onto the page that took its old index
+PASS control: index keying DOES reattribute under the same reorder  the answer stays at index 1 while the page moved to index 0
+PASS a duplicate PAGE id is reported  duplicate page id "same" (slides 0 and 1) — response state would be shared between them, so give each page its own id
+PASS a duplicate RESPONSE id within a page is reported  duplicate response id "q1" on page "p" (items 0 and 1) — the two answers would overwrite each other
+PASS the same response id on DIFFERENT pages is legal  no false positive
+PASS no runtime suffixing — the reported ids are the authored ones
+PASS control: without the audit, duplicate ids DO share one response slot  which is exactly what the audit exists to report
+PASS typed, ink and graph payloads remain distinguishable  text, ink, graph
+PASS an ink payload survives intact
+PASS a graph payload coexists with written work on one page
+PASS an unknown kind is rejected rather than stored
+PASS bundle() is deterministic across repeated calls
+PASS bundle() key order is sorted, not insertion order  intro, practice, review
+PASS mutating the returned bundle does not mutate live state  live q1 still "a"
+PASS bundle() is JSON-serialisable
+PASS clear() removes all lesson responses  1 → 0 pages
+PASS the "none" adapter accepts a bundle with no side effects
+PASS an unknown submission adapter falls back to "none" rather than throwing
+PASS a page with no authored id does not participate and reports nothing
+PASS the legacy index-keyed runtime still works alongside the new store
+
+✓ response store: 22/22 checks

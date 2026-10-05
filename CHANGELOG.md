@@ -1,5 +1,29 @@
 # Changelog
 
+## Mathematics M1.2 — approved final release
+
+- Remove the redundant single-skill count from Completion while retaining the accepted artwork, image-owned crop/focal settings and centred defaults for future assets. Regenerate both production expanding lesson HTML files with the accepted 63-question content and supplied artwork.
+- Include artwork in the final 49-gate exact-head suite; preserve historical receipts separately and complete CodeRabbit, merge, Pages deployment and live verification before starting M2/M3.
+
+## Mathematics supplied artwork — placement review
+
+- Place the three supplied original PNGs into existing Overview, Outcomes and Completion image slots in both expanding lessons, using authored crop/focal settings and embedded image data for standalone publication. Freeze the accepted renderer and all non-image lesson data.
+- Add original-byte, JSON round-trip, exported image and responsive/native-zoom verification. Separate historical review metadata from current-head focused receipts. Placement awaits visual approval; no merge/deployment.
+
+## Mathematics M1.2 — final structural correction
+
+- Bound the Answer Hub to the viewport with an independently scrolling answer body, persistent controls, optional bulk collapse/expand, denser finals and preserved scoped filter/scroll context. Native modal focus and background scroll locking support keyboard use.
+- Promote long working using actual rendered line width; keep horizontal scrolling local to each authored equation line. Practice and subpart grids respond to available component width, including with the authoring inspector open.
+- Compact answer access and replace learner-facing policy language. Add structural, preserved-content and publication-rollback gates to the full exact-head suite. Approved artwork remains pending; no merge/deployment or M2/M3 work.
+
+## Mathematics M1.2 — in progress
+
+- Both expanding lessons now author 63 core problems: 12 Foundation and 9 Moderate per archetype. The existing IDs, expressions, answers, working, example models, policies and videos are retained; four-question scaffold families lead into independent practice.
+- Textbook practice supports semantic Compact/Multipart/Extended presentation and optional contiguous group headings, with existing subpart editing. Final and worked Answer Hub views use two desktop columns, Practice/Pathway/Question filters defaulting to the current or most recent practice, pathway-local numbering and full-width extended solutions. Short subparts use a responsive internal grid; orphan multipart questions fill the row. Mobile working lines scroll individually.
+- Remove the empty single-skill learner heading, compact the subpart editor and combine practice pathways with answer access in one toolbar. Completion now uses a text-and-artwork hero composition.
+- Existing lesson image slots now expose shared crop/focal fields. Rejected generated artwork is removed; approved author-supplied Algebra assets are still pending. M2/M3 remain stopped; Supabase remains prepared, not deployed.
+
+
 ## Mathematics M1.1 — 5 October 2026
 
 Textbook practice destinations, internal Foundation/Moderate/optional Advanced pathways, responsive exercise widths, authored full working and dedicated Answer Hub. Independent final/worked policies, image-led Overview/Complete and an optional next lesson. Two actual lessons now have 36 problems each. Supabase session service and authenticated controls are prepared and adapter-tested, not deployed; secure hidden export omits answer fields. M2/M3 remain deferred.
