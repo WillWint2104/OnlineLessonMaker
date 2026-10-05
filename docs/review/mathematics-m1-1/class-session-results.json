@@ -5,7 +5,7 @@
     "Unauthenticated teacher writes denied",
     "Teacher starts four-hour session without sending bundle back",
     "Locked student response contains no answer payload",
-    "Join issues a signed capability with a random 128-bit nonce",
+    "Join returns a signed payload with a 22-character nonce field",
     "Code-only reads are limited and denied before any session lookup",
     "Invented reader tokens cannot select the higher polling limit or query sessions",
     "Tampered signed reader capability is denied before lookup",
