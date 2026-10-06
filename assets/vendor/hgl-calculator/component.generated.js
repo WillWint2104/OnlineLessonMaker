@@ -6339,7 +6339,9 @@ root.addEventListener('click',event=>{
   if(!cell){showToast('Select a data-entry cell first.');return;}
   const action=button.dataset.statNav;
   if(action&&action!=='del'){
-    const cells=[...root.querySelectorAll('.st-cell')],index=cells.indexOf(cell),step=action==='left'?-1:action==='right'?1:action==='up'?-2:2;
+    const vertical=action==='up'||action==='down';
+    const cells=[...root.querySelectorAll('.st-cell')].filter(candidate=>!vertical||candidate.dataset.col===cell.dataset.col);
+    const index=cells.indexOf(cell),step=action==='left'||action==='up'?-1:1;
     cells[Math.max(0,Math.min(cells.length-1,index+step))].focus();return;
   }
   let start=cell.selectionStart??cell.value.length,end=cell.selectionEnd??start;

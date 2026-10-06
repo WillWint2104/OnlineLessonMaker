@@ -79,6 +79,11 @@ try{
  const xs=p.locator('.st-cell[data-col="x"]');await xs.nth(0).fill('2');await xs.nth(1).fill('4');await xs.nth(2).fill('7');await key('[data-act="calc"]');await shot('09-medium-statistics');assert.equal((await box()).height,normal.height);
  await key('[data-math-expand]');await actionContrast();await shot('16-expanded-statistics');check(await p.locator('.olm-stat-workspace section').count()===3,'Expanded Statistics has data, actual results and supported tools/keypad regions');
  await p.locator('.st-cell[data-col="x"]').nth(0).fill('2');await key('[data-stat-insert="4"]');assert.equal(await p.locator('.st-cell[data-col="x"]').nth(0).inputValue(),'24');await key('[data-stat-nav="del"]');assert.equal(await p.locator('.st-cell[data-col="x"]').nth(0).inputValue(),'2');await key('[data-stat-nav="down"]');assert.equal(await p.locator('.st-cell[data-col="x"]').nth(1).evaluate(e=>e===e.getRootNode().activeElement),true);check(true,'Statistics keypad edits the selected source cell and navigation changes cell focus');
+ const cells=p.locator('.st-cell'),topSecond=cells.nth(1),bottomFirst=cells.nth(await cells.count()-2);
+ await topSecond.focus();await key('[data-stat-nav="up"]');assert.ok(await topSecond.evaluate(e=>e===e.getRootNode().activeElement));
+ await bottomFirst.focus();await key('[data-stat-nav="down"]');assert.ok(await bottomFirst.evaluate(e=>e===e.getRootNode().activeElement));
+ await key('[data-stat-nav="up"]');assert.ok(await cells.nth(await cells.count()-4).evaluate(e=>e===e.getRootNode().activeElement));
+ check(true,'Statistics vertical navigation clamps at both boundaries and preserves the column');
  await key('[data-math-close]');await open();check((await p.locator('[data-math-mode]').textContent()).startsWith('Statistics'),'Selected mode survives close/reopen');assert.equal(await p.locator('.olm-mode-picker').count(),0);assert.equal(await p.locator('.st-cell[data-col="x"]').nth(2).inputValue(),'7');
  for(const [id,name]of [['table','17-expanded-table'],['spreadsheet','18-expanded-spreadsheet'],['complex','19-expanded-complex'],['vector','20-expanded-vector'],['inequality','21-expanded-inequality'],['distribution','22-expanded-distribution']]){
    await mode(id);if(!await p.locator('.math-utility-dialog').evaluate(e=>e.classList.contains('math-utility-expanded')))await key('[data-math-expand]');
