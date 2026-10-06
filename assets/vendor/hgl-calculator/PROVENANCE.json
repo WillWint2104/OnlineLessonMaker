@@ -16,7 +16,7 @@
     "src/js/features/calc/calc-ui-v2.js",
     "src/js/features/calc/calc-catalog.js"
   ],
-  "componentSha256": "6d7b5a3fae0b9428c9b162cd33bf2d1c64d149673c118efe7acb41c76cdab6cb",
+  "componentSha256": "81cce872b254794928d658b0311ff23b25b3292c685ee8884852c015596fa96f",
   "fonts": [
     {
       "family": "Manrope",
@@ -42,7 +42,10 @@
     "fixed delegated inline actions",
     "standalone boot/legacy launcher removed",
     "isolated Shadow CSS and containment/touch rules",
-    "packaged Latin variable fonts"
+    "packaged Latin variable fonts",
+    "one active authored SHIFT key definition for label and dispatch",
+    "movable medium shell and expanded source-mode layouts",
+    "transient inline mode chooser; selected mode survives reopen"
   ],
   "engineChanges": []
 }

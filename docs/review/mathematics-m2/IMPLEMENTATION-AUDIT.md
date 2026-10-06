@@ -1,4 +1,6 @@
-# Authoritative calculator audit — before application changes
+# Authoritative calculator audit — original source behavior
+
+This records the supplied reference before integration. The current floating scientific presentation and reopening contract supersede the original Home-first shell described below; see `UX-CORRECTION.md` for the current behavior. The reference bytes and mathematics engine are unchanged.
 
 Source: newly supplied HGL `build/calculator.html`, 383,499 bytes; SHA-256 `dd7ba18759110d309f19fda0f0a625a73537d21ba0171c962540a2423352bbe5`. The unchanged reference is retained at `assets/vendor/hgl-calculator/calculator-reference.html`. It supersedes all earlier calculator references. Production baseline: `0765310047a5b67a24f59e13002ce7c773d2d24e`, confirmed against GitHub main.
 
