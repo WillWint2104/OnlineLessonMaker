@@ -58,7 +58,7 @@ function mathUtilityOpen(opener){
       }
       if(event.key==='Tab'&&!event.defaultPrevented){
         const items=[...dialog.querySelectorAll('button'),...root.querySelectorAll('button,input,select,textarea,[tabindex="0"]')]
-          .filter(el=>!el.disabled&&el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');
+          .filter(el=>!el.disabled&&!el.closest('[inert]')&&el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');
         const focused=root.activeElement||document.activeElement,index=items.indexOf(focused);
         if(items.length){event.preventDefault();items[(index+(event.shiftKey?-1:1)+items.length)%items.length].focus();}
       }
@@ -80,7 +80,7 @@ function mathUtilityOpen(opener){
           if(dialog.open)clampPosition();
         },
         mode:(label,picker)=>{
-          const button=dialog.querySelector('[data-math-mode]');button.textContent=label+' ▾';button.setAttribute('aria-expanded',String(picker));
+          const button=dialog.querySelector('[data-math-mode]');button.textContent=label+' ▾';button.setAttribute('aria-label','Select calculator mode; current mode '+label);button.setAttribute('aria-expanded',String(picker));
         }
       });
     }catch(error){

@@ -16,6 +16,8 @@ function showToast(message) { callbacks.status?.(String(message)); }
 function toast(message) { showToast(message); }
 function togCalc() { callbacks.close(); }
 root.addEventListener('keydown',event=>{
+  // The chooser covers the expression editor; its keys must not reach that editor.
+  if(olmPicker&&!['Tab','Escape'].includes(event.key)){event.stopImmediatePropagation();return;}
   if(event.key==='Delete'&&CALC_STATE.mode==='calculate'&&!event.target.matches('input,textarea')){
     event.preventDefault();event.stopImmediatePropagation();calcInputBackspace();_afterInput();
   }
@@ -91,6 +93,7 @@ function olmWorkspace(panel){
     workspace.append(data,results,tools);wrap.append(workspace);
   }
   if(olmPicker){
+    [...wrap.children].forEach(child=>{child.inert=true;});
     const picker=hostDocument.createElement('section');picker.className='olm-mode-picker';
     picker.setAttribute('aria-label','Calculator modes');
     const source=hostDocument.createElement('div');source.innerHTML=_calcRenderHome();
@@ -138,7 +141,7 @@ calcRenderUI = function() {
   _hglRender();
   const panel = document.getElementById('calc-p');
   olmWorkspace(panel);
-  panel.tabIndex = 0;
+  panel.tabIndex = olmPicker?-1:0;
   panel.setAttribute('aria-label','Calculator input; type numbers and operators, Escape clears the expression');
   root.querySelectorAll('button').forEach(button => {
     button.type = 'button';
@@ -149,7 +152,9 @@ calcRenderUI = function() {
   callbacks.expanded?.(CALC_STATE.fullscreen);
   // Restore focus synchronously after the source replaced its UI. A capture-phase microtask can run
   // before the target's click handler and would leave subsequent keyboard input on the background.
-  if(focused&&!focused.isConnected){
+  if(olmPicker){
+    root.querySelector('.olm-mode-picker .calc-tile')?.focus({preventScroll:true});
+  }else if(focused&&!focused.isConnected){
     const replacement=selector&&root.querySelector(selector);
     (replacement?.getClientRects().length?replacement:panel).focus({preventScroll:true});
   }

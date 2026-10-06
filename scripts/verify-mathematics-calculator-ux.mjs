@@ -15,6 +15,16 @@ const input=async text=>{await p.locator('#calc-p').focus();await p.keyboard.typ
 const ac=async()=>key('[data-act="ac"]');
 const execute=async expected=>{await key('[data-act="exe"]');assert.ok(Math.abs(Number(await p.locator('.calc-result-value').textContent())-expected)<1e-8);};
 const box=()=>p.locator('.math-utility-dialog').boundingBox();
+const actionContrast=async()=>{
+ for(const button of await p.locator('.st-btn-p').all()){
+  await button.hover();
+  assert.ok(await button.evaluate(e=>{
+   const s=getComputedStyle(e),rgb=value=>value.match(/[\d.]+/g).map(Number),bg=rgb(s.backgroundColor),fg=rgb(s.color);
+   const luminance=values=>values.slice(0,3).map(v=>v/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4).reduce((n,v,i)=>n+v*[.2126,.7152,.0722][i],0);
+   const a=luminance(bg),b=luminance(fg);return (bg[3]??1)>=.99&&(Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5;
+  }),'Primary action remains legible while hovered');
+ }
+};
 try{
  await p.goto(pathToFileURL(path.resolve('lesson-studio.html')).href);await p.evaluate(l=>{LESSON=l;cur=0;render();},lesson);await shot('01-lesson-launcher');
  const before=await p.locator('.mx-main').evaluate(e=>({html:e.innerHTML,width:e.getBoundingClientRect().width}));
@@ -61,9 +71,13 @@ try{
  const handle=await p.locator('.math-utility-bar b').boundingBox();await p.mouse.move(handle.x+20,handle.y+12);await p.mouse.down();await p.mouse.move(350,160,{steps:10});await p.mouse.up();const moved=await box();check(moved.x<normal.x-200,'Header drag moves the medium window');
  await p.mouse.move(moved.x+70,moved.y+20);await p.mouse.down();await p.mouse.move(-400,-300,{steps:5});await p.mouse.up();const bounded=await box();check(bounded.x>=6&&bounded.y>=6,'Dragging clamps the window to viewport bounds');await shot('29-moved-calculator');
  assert.deepEqual(await p.locator('.mx-main').evaluate(e=>({html:e.innerHTML,width:e.getBoundingClientRect().width})),before);check(true,'Open, expand, restore and drag leave lesson markup and width unchanged');
- await key('[data-math-mode]');await shot('08-mode-picker');await key('.calc-tile[data-mode="statistics"]');
+ const beforePicker=await p.locator('.calc-input').innerHTML();await key('[data-math-mode]');await shot('08-mode-picker');
+ await p.keyboard.type('123');assert.equal(await p.locator('.calc-input').innerHTML(),beforePicker);
+ for(let i=0;i<16;i++){await p.keyboard.press('Tab');assert.ok(await p.evaluate(()=>{const e=MATH_UTILITY.root.activeElement||document.activeElement;return !!e.closest('.olm-mode-picker,.math-utility-bar');}),'Chooser Tab never enters covered controls');}
+ await p.locator('.calc-tile[data-mode="calculate"]').focus();await p.keyboard.press('Enter');assert.equal(await p.locator('.olm-mode-picker').count(),0);
+ check(true,'Mode chooser isolates hidden editor keys and Tab while retaining Enter selection');await mode('statistics');
  const xs=p.locator('.st-cell[data-col="x"]');await xs.nth(0).fill('2');await xs.nth(1).fill('4');await xs.nth(2).fill('7');await key('[data-act="calc"]');await shot('09-medium-statistics');assert.equal((await box()).height,normal.height);
- await key('[data-math-expand]');await shot('16-expanded-statistics');check(await p.locator('.olm-stat-workspace section').count()===3,'Expanded Statistics has data, actual results and supported tools/keypad regions');
+ await key('[data-math-expand]');await actionContrast();await shot('16-expanded-statistics');check(await p.locator('.olm-stat-workspace section').count()===3,'Expanded Statistics has data, actual results and supported tools/keypad regions');
  await p.locator('.st-cell[data-col="x"]').nth(0).fill('2');await key('[data-stat-insert="4"]');assert.equal(await p.locator('.st-cell[data-col="x"]').nth(0).inputValue(),'24');await key('[data-stat-nav="del"]');assert.equal(await p.locator('.st-cell[data-col="x"]').nth(0).inputValue(),'2');await key('[data-stat-nav="down"]');assert.equal(await p.locator('.st-cell[data-col="x"]').nth(1).evaluate(e=>e===e.getRootNode().activeElement),true);check(true,'Statistics keypad edits the selected source cell and navigation changes cell focus');
  await key('[data-math-close]');await open();check((await p.locator('[data-math-mode]').textContent()).startsWith('Statistics'),'Selected mode survives close/reopen');assert.equal(await p.locator('.olm-mode-picker').count(),0);assert.equal(await p.locator('.st-cell[data-col="x"]').nth(2).inputValue(),'7');
  for(const [id,name]of [['table','17-expanded-table'],['spreadsheet','18-expanded-spreadsheet'],['complex','19-expanded-complex'],['vector','20-expanded-vector'],['inequality','21-expanded-inequality'],['distribution','22-expanded-distribution']]){
@@ -78,7 +92,8 @@ try{
    if(id==='vector')assert.equal(await p.locator('.dt-rvalue').textContent(),'[ 0, 0, 1 ]');
    if(id==='distribution')assert.match(await p.locator('.dt-rvalue').textContent(),/^0\.3989/);
    if(id==='inequality')assert.ok((await p.locator('.iq-result').textContent()).length>0);
-   await shot(name);check(true,id+': meaningful expanded source result');
+   await actionContrast();if(id==='vector')assert.equal(await p.locator('.vc-slots').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(248, 250, 252)');
+   await shot(name);check(true,id+': meaningful expanded source result and readable action hover');
    await key('[data-math-expand]');const modeText=await p.locator('[data-math-mode]').textContent();await key('[data-math-expand]');assert.equal(await p.locator('[data-math-mode]').textContent(),modeText);
  }
  await mode('calculate');await key('[data-act="shift"]');await close();await open();assert.equal(await p.locator('[data-act="shift"]').getAttribute('aria-pressed'),'false');
