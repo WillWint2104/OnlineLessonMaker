@@ -1,0 +1,11 @@
+.math-utility-launcher{flex:0 0 auto;font-family:inherit;font-size:13px;font-weight:600;color:inherit;border:1px solid #c4d5d0;border-radius:6px;background:transparent;padding:8px 10px;cursor:pointer;min-height:36px;}
+.math-utility-dialog{box-sizing:border-box;padding:0;border:1px solid #47584c;border-radius:12px;background:#242624;color:#faf9f5;width:min(544px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 24px);overflow:auto;overscroll-behavior:contain;box-shadow:0 20px 80px #0008;}
+.math-utility-dialog::backdrop{background:#10231955;}
+.math-utility-bar{box-sizing:border-box;height:56px;display:flex;align-items:center;gap:8px;padding:8px 12px;position:sticky;top:0;z-index:10;background:#181a18;font:600 14px/1.2 Manrope,sans-serif;}
+.math-utility-bar b{margin-right:auto;}
+.math-utility-bar button{background:#2a2d2a;color:#beffdc;border:1px solid #47584c;border-radius:6px;min-height:36px;padding:6px 10px;cursor:pointer;font:inherit;}
+.math-utility-bar [data-math-close]{min-width:36px;font-size:22px;line-height:1;}
+.math-utility-status{font:13px/1.4 'Plus Jakarta Sans',sans-serif;padding:0 12px;margin:8px 0;overflow-wrap:anywhere;}
+.math-utility-status:empty{display:none;}
+.math-utility-expanded{width:min(900px,calc(100vw - 24px));}
+@media(max-width:600px){.math-utility-dialog{width:calc(100vw - 12px);max-height:calc(100dvh - 12px);border-radius:8px;margin:6px auto;}.math-utility-launcher{font-size:12px;padding:6px 8px;}}
