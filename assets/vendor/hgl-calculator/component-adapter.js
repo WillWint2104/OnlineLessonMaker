@@ -41,6 +41,7 @@ function olmScientificKey(key){
   return '<button class="ck calc-v2-mathkey" type="button" data-'+action+'="'+_escCalc(active[action])+'" aria-label="'+_escCalc(accessible)+'">'+active.html+'</button>';
 }
 let olmPicker=false;
+let olmStatsView='data'; // Presentation only; both views retain the source-owned cells/results.
 const sourceGoMode=calcGoMode;
 calcGoMode=function(mode){olmPicker=false;CALC_STATE.shift=false;CALC_STATE.activePanel=null;sourceGoMode(mode);};
 calcGoHome=function(){olmPicker=!olmPicker;CALC_STATE.shift=false;calcRenderUI();};
@@ -92,6 +93,13 @@ function olmWorkspace(panel){
     const tools=hostDocument.createElement('section');tools.className='olm-stat-tools';tools.innerHTML='<h3>Statistics tools</h3><button class="st-btn" data-act="mode-1var">1-variable summary</button><button class="st-btn" data-act="mode-2var">Regression & correlation</button><button class="st-btn st-btn-p" data-act="calc">Calculate results</button><p>Enter values in the table. Use two-variable mode for a linear regression and correlation.</p><div class="olm-stat-nav">'+[['left','←'],['right','→'],['up','↑'],['down','↓'],['del','DEL']].map(([action,label])=>'<button type="button" data-stat-nav="'+action+'" aria-label="'+({left:'Previous cell',right:'Next cell',up:'Cell above',down:'Cell below',del:'Delete in selected cell'}[action])+'">'+label+'</button>').join('')+'</div><div class="olm-stat-keypad">'+['7','8','9','4','5','6','1','2','3','0','.','−'].map(value=>'<button type="button" data-stat-insert="'+value+'">'+value+'</button>').join('')+'</div>';
     workspace.append(data,results,tools);wrap.append(workspace);
   }
+  if(CALC_STATE.mode==='statistics'&&!CALC_STATE.fullscreen){
+    const tabs=hostDocument.createElement('div');tabs.className='olm-stat-tabs';tabs.setAttribute('role','group');tabs.setAttribute('aria-label','Statistics view');
+    tabs.innerHTML=['data','results'].map(view=>'<button type="button" class="st-pill'+(olmStatsView===view?' on':'')+'" data-stat-view="'+view+'" aria-pressed="'+(olmStatsView===view)+'">'+(view==='data'?'Data entry':'Results')+'</button>').join('');
+    const data=wrap.querySelector('.st-table'),results=wrap.querySelector('.st-results');
+    data.hidden=olmStatsView!=='data';results.hidden=olmStatsView!=='results';wrap.insertBefore(tabs,data);
+    wrap.querySelector('[data-act="calc"]').textContent='Calculate';
+  }
   if(olmPicker){
     [...wrap.children].forEach(child=>{child.inert=true;});
     const picker=hostDocument.createElement('section');picker.className='olm-mode-picker';
@@ -102,6 +110,8 @@ function olmWorkspace(panel){
   callbacks.mode?.(CALC_MODES.find(mode=>mode.id===CALC_STATE.mode)?.label||'Calculate',olmPicker);
 }
 root.addEventListener('click',event=>{
+  const statsView=event.target.closest('[data-stat-view]');
+  if(statsView){olmStatsView=statsView.dataset.statView;calcRenderUI();return;}
   const control=event.target.closest('[data-olm-nav]');if(!control)return;
   CALC_INPUT.cursor={path:[],pos:control.dataset.olmNav==='home'?0:CALC_INPUT.atoms.length};
   _afterInput();document.getElementById('calc-p').focus({preventScroll:true});

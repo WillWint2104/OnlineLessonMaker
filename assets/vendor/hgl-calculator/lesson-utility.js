@@ -25,6 +25,7 @@ function mathUtilityOpen(opener){
     dialog.querySelector('[data-math-expand]').onclick=()=>MATH_UTILITY.calculator?.expand();
     dialog.querySelector('[data-math-mode]').onclick=()=>MATH_UTILITY.calculator?.picker();
     const clampPosition=()=>{
+        host.style.setProperty('--olm-body-height',host.clientHeight+'px');
       const rect=dialog.getBoundingClientRect(),margin=6;
       const position=utility.position||{x:Math.max(margin,innerWidth-rect.width-24),y:Math.max(margin,Math.min(88,innerHeight-rect.height-margin))};
       dialog.style.left=Math.max(margin,Math.min(position.x,innerWidth-rect.width-margin))+'px';
@@ -80,7 +81,10 @@ function mathUtilityOpen(opener){
           if(dialog.open)clampPosition();
         },
         mode:(label,picker)=>{
+          dialog.dataset.calculatorMode=label.toLowerCase();
+          dialog.querySelector('[data-math-expand]').classList.toggle('math-expand-grid',label==='Spreadsheet');
           const button=dialog.querySelector('[data-math-mode]');button.textContent=label+' ▾';button.setAttribute('aria-label','Select calculator mode; current mode '+label);button.setAttribute('aria-expanded',String(picker));
+          if(dialog.open)clampPosition();
         }
       });
     }catch(error){

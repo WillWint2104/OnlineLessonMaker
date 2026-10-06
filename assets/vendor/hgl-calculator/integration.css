@@ -87,3 +87,68 @@ button{touch-action:manipulation;}
 .olm-stat-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}.olm-stat-nav button{border:1px solid #dde6ed;border-radius:7px;min-height:38px;color:#152a3c;background:#f4f8fa;}
 .calc-wrap .st-btn-p:hover,.calc-wrap .st-btn-p:focus-visible{background:#00695c;color:#fff;border-color:#00695c;box-shadow:0 0 0 2px #ccebe4;}
 .calc-wrap .vc-slots{background:#f8fafc;}
+/* Purposeful compositions share source controls/state rather than scaling one layout. */
+#calc-p>.calc-wrap:not(.calc-v2){box-sizing:border-box;display:flex;flex:none;flex-direction:column;height:var(--olm-body-height,764px);min-height:0;gap:0;}
+.calc-wrap:not(.calc-v2)>:not(.st-table):not(.st-results):not(.sh-gridwrap):not(.dt-result):not(.olm-stat-workspace){flex-shrink:0;}
+.calc-wrap:not(.calc-v2) .st-pill,.calc-wrap:not(.calc-v2) .st-btn{font-size:14px;min-height:38px;letter-spacing:0;}
+.calc-wrap:not(.calc-v2) .dt-plabel,.calc-wrap:not(.calc-v2) .vc-slot-hdr{font-size:14px;letter-spacing:0;text-transform:none;}
+.calc-wrap:not(.calc-v2) .dt-pinput,.calc-wrap:not(.calc-v2) .vc-cell{font-size:16px;min-height:44px;}
+.calc-wrap .tb-expr,.calc-wrap .cx-expr{font-size:16px!important;}
+.calc-wrap .dt-params{gap:12px;padding:16px;}
+.calc-wrap:not(.calc-v2) .dt-p{min-width:0;}
+.calc-wrap:not(.calc-v2) .dt-pinput{width:100%;box-sizing:border-box;}
+.calc-wrap:not(.calc-v2) .st-empty{font-size:15px;font-style:normal;color:#203440;line-height:1.5;}
+.calc-wrap:not(.calc-v2) .st-table th{text-transform:none;letter-spacing:0;}
+.calc-sheet .sh-cell.formula{color:#006f92;}
+.calc-wrap .dt-actions{padding:12px 16px;}
+.calc-wrap:not(.calc-v2) .st-modebar>span{font-size:13px!important;letter-spacing:0!important;line-height:1.5;}
+.calc-wrap .dt-result{flex:1;min-height:140px;overflow:auto;gap:12px;}
+.calc-wrap .dt-rvalue,.calc-wrap .cx-rv{white-space:normal;overflow-wrap:anywhere;font-size:28px;}
+.calc-wrap .dt-rlabel,.calc-wrap .cx-rk{font-size:14px;letter-spacing:0;text-transform:none;}
+.olm-stat-tabs{display:flex;gap:8px;padding:12px;}
+.calc-stats:not(.olm-expanded)>.st-table,.calc-stats:not(.olm-expanded)>.st-results{flex:1;min-height:0;max-height:none;overflow:auto;}
+.calc-stats [hidden]{display:none!important;}
+.calc-stats .st-table th,.calc-stats .st-table td{font-size:15px;padding:8px;}
+.calc-stats .st-cell{font-size:16px;min-height:44px;}
+.calc-stats:not(.olm-expanded) .st-grid{grid-template-columns:1fr;gap:8px;}
+.calc-stats:not(.olm-expanded) .st-grid>div{flex-direction:row;align-items:center;justify-content:space-between;gap:16px;padding:12px;}
+.calc-stats:not(.olm-expanded) .st-k,.calc-stats:not(.olm-expanded) .st-v{font-size:16px;white-space:normal;overflow-wrap:anywhere;}
+.calc-stats:not(.olm-expanded) .st-empty{font-size:16px;line-height:1.6;padding:24px;}
+.calc-stats.olm-expanded .olm-stat-workspace{flex:1;min-height:0;}
+.calc-stats.olm-expanded .olm-stat-workspace>section{display:flex;flex-direction:column;min-height:0;}
+.calc-stats.olm-expanded .st-table,.calc-stats.olm-expanded .st-results{flex:1;min-height:0;max-height:none;overflow:auto;}
+.calc-table>.st-table{flex:1;min-height:0;max-height:none!important;overflow:auto;}
+.calc-table .st-table th,.calc-table .st-table td{font-size:16px;padding:14px;}
+.calc-table .st-table thead{position:sticky;top:0;background:#edf6f3;}
+.calc-sheet .sh-gridwrap{flex:1;min-height:0;max-height:none!important;}
+.calc-sheet .sh-grid{height:100%;font-size:16px;table-layout:fixed;min-width:700px;}
+.calc-sheet .sh-grid th,.calc-sheet .sh-grid td{height:48px;font-size:16px;padding:10px;}
+.calc-sheet .sh-grid th:first-child{width:44px;}
+.calc-sheet .sh-finput{font-size:16px;min-height:44px;min-width:0;}
+.calc-sheet .sh-selref{font-size:15px;}
+.calc-vector .vc-slot{padding:14px;gap:12px;}
+.calc-vector.olm-expanded .vc-slots{padding:20px;gap:20px;}
+.calc-vector.olm-expanded .vc-slot{padding:24px;}
+.calc-vector.olm-expanded .vc-cell{min-height:64px;font-size:22px;}
+.calc-vector.olm-expanded .dt-rvalue{font-size:36px;}
+.calc-complex .dt-result,.calc-dist .dt-result{min-height:150px;padding:24px;}
+.calc-complex.olm-expanded .cx-expr{font-size:22px!important;min-height:70px;}
+.calc-complex .cx-row{padding:20px;}
+.calc-dist.olm-expanded .dt-pinput{font-size:20px;min-height:58px;}
+.calc-dist.olm-expanded .dt-rvalue,.calc-complex.olm-expanded .cx-rv{font-size:36px;}
+.calc-inequality .iq-statement{font-size:16px;overflow-wrap:anywhere;}
+.calc-inequality .iq-k{font-size:14px;}.calc-inequality .iq-v{font-size:18px;overflow-wrap:anywhere;}
+@container(max-width:500px){
+ .calc-table .dt-params{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+ .calc-table .dt-params>label:first-child{grid-column:1/-1!important;}
+ .calc-vector .vc-slots{grid-template-columns:1fr;gap:10px;}
+ .calc-vector .vc-slot{flex-direction:row;align-items:center;gap:12px;}
+ .calc-vector .vc-slot-hdr{min-width:48px;}
+ .calc-vector .vc-slot-cells{flex:1;}
+ .calc-vector .dt-params{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+ .calc-inequality .dt-params{grid-template-columns:1fr!important;gap:8px;}
+ .calc-inequality .dt-p{display:grid;grid-template-columns:110px 1fr;align-items:center;}
+ .calc-inequality .iq-solution-grid{grid-template-columns:1fr;}
+ .calc-complex .st-modebar>span{flex-basis:100%;}
+ .calc-dist .dt-params{grid-template-columns:repeat(2,minmax(0,1fr));}
+}

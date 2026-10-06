@@ -12,6 +12,11 @@
 .math-instrument{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;}
 .math-utility-status{font:13px/1.4 'Plus Jakarta Sans',sans-serif;padding:0 12px;margin:8px 0;overflow-wrap:anywhere;}.math-utility-status:empty{display:none;}
 .math-utility-expanded{width:min(1200px,calc(100vw - 24px));}
+.math-utility-dialog[data-calculator-mode="complex"],.math-utility-dialog[data-calculator-mode="distribution"]{height:min(580px,calc(100dvh - 24px));}
+.math-utility-expanded[data-calculator-mode="complex"],.math-utility-expanded[data-calculator-mode="distribution"]{width:min(760px,calc(100vw - 24px));height:min(640px,calc(100dvh - 24px));}
+.math-utility-dialog[data-calculator-mode="complex"]{height:min(520px,calc(100dvh - 24px));}
+.math-utility-expanded[data-calculator-mode="complex"]{height:min(540px,calc(100dvh - 24px));}
+.math-utility-bar .math-expand-grid{background:#007d6c;color:white;border-color:#007d6c;}
 @media(max-width:600px){.math-utility-dialog{width:calc(100vw - 12px);height:calc(100dvh - 12px);border-radius:8px;}.math-utility-launcher{padding:6px 8px;}.math-launch-label{display:none;}.math-utility-bar{cursor:default;}.math-drag-cue,[data-math-expand]{display:none;}}
 .math-utility-bar>.math-calculator-icon{display:flex;background:#007e6d;color:#fff;border-radius:8px;padding:6px;}
 .math-utility-bar [data-math-mode]{font-size:12px;min-width:100px;}

@@ -77,6 +77,8 @@ try{
  await p.locator('.calc-tile[data-mode="calculate"]').focus();await p.keyboard.press('Enter');assert.equal(await p.locator('.olm-mode-picker').count(),0);
  check(true,'Mode chooser isolates hidden editor keys and Tab while retaining Enter selection');await mode('statistics');
  const xs=p.locator('.st-cell[data-col="x"]');await xs.nth(0).fill('2');await xs.nth(1).fill('4');await xs.nth(2).fill('7');await key('[data-act="calc"]');await shot('09-medium-statistics');assert.equal((await box()).height,normal.height);
+ await key('[data-stat-view="results"]');await shot('32-medium-statistics-results');assert.ok(!await p.locator('.st-table').isVisible());assert.equal(await p.locator('.st-v').first().evaluate(e=>getComputedStyle(e).fontSize),'16px');
+ await key('[data-stat-view="data"]');assert.equal(await xs.nth(2).inputValue(),'7');check(true,'Medium Statistics separates readable Data and Results without losing source values');
  await key('[data-math-expand]');await actionContrast();await shot('16-expanded-statistics');check(await p.locator('.olm-stat-workspace section').count()===3,'Expanded Statistics has data, actual results and supported tools/keypad regions');
  await p.locator('.st-cell[data-col="x"]').nth(0).fill('2');await key('[data-stat-insert="4"]');assert.equal(await p.locator('.st-cell[data-col="x"]').nth(0).inputValue(),'24');await key('[data-stat-nav="del"]');assert.equal(await p.locator('.st-cell[data-col="x"]').nth(0).inputValue(),'2');await key('[data-stat-nav="down"]');assert.equal(await p.locator('.st-cell[data-col="x"]').nth(1).evaluate(e=>e===e.getRootNode().activeElement),true);check(true,'Statistics keypad edits the selected source cell and navigation changes cell focus');
  const cells=p.locator('.st-cell'),topSecond=cells.nth(1),bottomFirst=cells.nth(await cells.count()-2);
@@ -99,6 +101,14 @@ try{
    if(id==='inequality')assert.ok((await p.locator('.iq-result').textContent()).length>0);
    await actionContrast();if(id==='vector')assert.equal(await p.locator('.vc-slots').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(248, 250, 252)');
    await shot(name);check(true,id+': meaningful expanded source result and readable action hover');
+   if(id!=='spreadsheet')assert.ok(await p.locator('.calc-wrap').evaluate(e=>e.scrollWidth<=e.clientWidth+1),'Expanded mode has no horizontal spill');
+   await key('[data-math-expand]');await shot('medium-'+id);
+   if(id==='table')assert.ok(await p.locator('.st-table').evaluate(e=>e.clientHeight>250&&e.scrollHeight>e.clientHeight&&getComputedStyle(e.querySelector('td')).fontSize==='16px'));
+   if(id==='spreadsheet')assert.ok(await p.locator('.sh-gridwrap').evaluate(e=>e.clientHeight>400&&e.scrollWidth>e.clientWidth));
+   if(id==='vector')assert.equal(await p.locator('.vc-slots').evaluate(e=>getComputedStyle(e).gridTemplateColumns.split(' ').length),1);
+   if(id==='complex'||id==='distribution')assert.ok((await box()).height<normal.height&&(await box()).height>=500);
+   if(id!=='spreadsheet')assert.ok(await p.locator('.calc-wrap').evaluate(e=>e.scrollWidth<=e.clientWidth+1),'Medium mode has no horizontal spill');
+   check(true,id+': dedicated medium composition with unchanged calculated state');await key('[data-math-expand]');
    await key('[data-math-expand]');const modeText=await p.locator('[data-math-mode]').textContent();await key('[data-math-expand]');assert.equal(await p.locator('[data-math-mode]').textContent(),modeText);
  }
  await mode('calculate');await key('[data-act="shift"]');await close();await open();assert.equal(await p.locator('[data-act="shift"]').getAttribute('aria-pressed'),'false');
@@ -107,6 +117,28 @@ try{
  for(const [width,height,label]of [[1024,768,'23-tablet-medium'],[390,844,'25-mobile']]){
    await close();await p.setViewportSize({width,height});await open();await shot(label);check(await p.evaluate(()=>{const r=MATH_UTILITY.dialog.getBoundingClientRect();return r.x>=0&&r.y>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&document.documentElement.scrollWidth<=innerWidth+1;}),'Viewport-bounded calculator at '+width);
    if(width===1024){await key('[data-math-expand]');await shot('24-tablet-expanded');await key('[data-math-expand]');}else{assert.ok(!await p.locator('[data-math-expand]').isVisible());await key('[data-act="shift"]');await shot('30-mobile-shift');await p.locator('[data-act="exe"]').scrollIntoViewIfNeeded();await shot('31-mobile-keypad');}
+ }
+ for(const [width,height]of [[1024,768],[390,844]]){
+   await close();await p.setViewportSize({width,height});await open();
+   for(const id of ['statistics','table','spreadsheet','complex','vector','inequality','distribution']){
+     await mode(id);
+     if(id==='statistics'){for(const [i,v]of ['2','4','7'].entries())await p.locator('.st-cell[data-col="x"]').nth(i).fill(v);await key('[data-act="calc"]');}
+     if(id==='table'){await p.locator('[data-tkey="expr"]').fill('2x+1');await p.locator('[data-tkey="start"]').fill('0');await p.locator('[data-tkey="end"]').fill('10');await key('[data-act="compute"]');}
+     if(id==='spreadsheet'){await p.locator('.sh-finput').fill('2');await key('[data-ref="A2"]');await p.locator('.sh-finput').fill('3');await key('[data-ref="B1"]');await p.locator('.sh-finput').fill('=SUM(A1:A2)');await key('[data-ref="C1"]');}
+     if(['complex','vector','distribution'].includes(id))await key(id==='complex'?'[data-act="evaluate"]':'[data-act="compute"]');
+     if(id==='inequality')await key('[data-iact="solve"]');
+     const values=await p.locator('.calc-wrap input,.calc-wrap select').evaluateAll(es=>es.map(e=>e.value));
+     assert.ok(await p.evaluate(()=>{const r=MATH_UTILITY.dialog.getBoundingClientRect();return r.x>=0&&r.y>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1&&document.documentElement.scrollWidth<=innerWidth+1;}));
+     if(id!=='spreadsheet')assert.ok(await p.locator('.calc-wrap').evaluate(e=>e.scrollWidth<=e.clientWidth+1),id+' fits '+width);
+     await shot('responsive-'+width+'-'+id);
+     if(width===1024){await key('[data-math-expand]');await shot('responsive-'+width+'-'+id+'-expanded');await key('[data-math-expand]');}
+     assert.deepEqual(await p.locator('.calc-wrap input,.calc-wrap select').evaluateAll(es=>es.map(e=>e.value)),values);
+     if(id==='statistics'){await key('[data-stat-view="results"]');await p.locator('.st-v').last().scrollIntoViewIfNeeded();await key('[data-stat-view="data"]');}
+     if(id==='table')await p.locator('.st-table tbody tr').last().scrollIntoViewIfNeeded();
+     if(id==='spreadsheet')await p.locator('[data-ref="E10"]').scrollIntoViewIfNeeded();
+     await p.locator('[data-math-close]').scrollIntoViewIfNeeded();
+     check(true,id+': '+width+' viewport, accessible data and preserved presentation state');
+   }
  }
  await close();await p.setViewportSize({width:1536,height:960});await p.goto(pathToFileURL(path.resolve('lessons/expanding-two-binomials.html')).href);await open();await input('7*8');await execute(56);await shot('27-independent-learner');check(true,'Independent published learner lesson runs the corrected calculator');await close();
  const bytes=fs.readFileSync('lessons/expanding-two-binomials.html'),server=http.createServer((req,res)=>res.end(bytes));await new Promise(r=>server.listen(0,'127.0.0.1',r));
