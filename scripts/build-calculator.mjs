@@ -28,6 +28,9 @@ for(const [family,slug]of [['Manrope','manrope'],['Plus Jakarta Sans','plus-jaka
   const filename=slug+'-latin-wght-normal.woff2',bytes=fs.readFileSync('node_modules/@fontsource-variable/'+slug+'/files/'+filename);
   fs.writeFileSync(dir+'/'+filename,bytes);
   fs.copyFileSync('node_modules/@fontsource-variable/'+slug+'/LICENSE',dir+'/'+slug+'-LICENSE.txt');
+  const license=fs.readFileSync(dir+'/'+slug+'-LICENSE.txt','utf8');
+  if(license.includes('*/')||/<\/style/i.test(license))throw Error('Font licence cannot be embedded safely as a CSS comment');
+  fontCss+='/* '+family+' font copyright and complete OFL licence\n'+license+'\n*/\n';
   fonts.push({family,filename,bytes:bytes.length,sha256:sha(bytes)});
   fontCss+='@font-face{font-family:"'+family+'";font-style:normal;font-weight:100 900;font-display:swap;src:url(data:font/woff2;base64,'+bytes.toString('base64')+') format("woff2");}\n';
 }

@@ -19,6 +19,12 @@ function mathUtilityOpen(opener){
     const utility=MATH_UTILITY;
     dialog.querySelector('[data-math-close]').onclick=mathUtilityClose;
     dialog.querySelector('[data-math-expand]').onclick=()=>MATH_UTILITY.calculator?.expand();
+    // Dismiss a subpanel before Calculate's root listener consumes Escape to clear input.
+    dialog.addEventListener('keydown',event=>{
+      if(event.key==='Escape'&&utility.calculator?.escapePanel()){
+        event.preventDefault();event.stopImmediatePropagation();
+      }
+    },true);
     // Native modal inertness protects all background controls. These bubble handlers also isolate keys.
     dialog.addEventListener('keydown',event=>{
       event.stopPropagation();
