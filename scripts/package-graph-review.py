@@ -52,7 +52,7 @@ guide=f'''# READ ME FIRST — Mathematics M3 Graph Response
 Source commit: `{head}`. This is the actual implementation under review, not a handoff or static mock-up. The draft PR must remain unmerged until visual/functional approval.
 
 1. Open `docs/review/mathematics-m3/index.html` for the gallery, original-resolution PNGs and browser recording.
-2. Open `lesson-studio.html`, choose JSON, and import `docs/review/mathematics-m3/workflow/graph-response-lesson.json`. Study → Practice contains five real graph responses. Edit exposes the question inspector. Local release preview affects this display only.
+2. Open `lesson-studio.html`, choose JSON, and import `docs/review/mathematics-m3/workflow/graph-response-lesson.json`. Study → Practice contains five real graph responses. Edit exposes the question inspector. Teacher-only local release preview is available in Edit/Present and affects this display only; Study has no teacher-preview control.
 3. Open `docs/review/mathematics-m3/workflow/published-graph-response.html` for the independently exported learner lesson. Its JSON deliberately uses autonomous answer access so the model/working/table/attempt hub can be inspected offline. The separate verification JSON retains teacher-group locks.
 4. Try a line drag, a turning-point parabola drag, linked table edits, separate sketch strokes, Expand/return, Undo/Redo, the Answer Hub and authored axes/tools/models/release groups.
 

@@ -1,5 +1,11 @@
 # Changelog
 
+## Mathematics M3 — composition correction
+
+- Align question headers and graph planes, reserve axis-name gutters, use existing mathematics typography and prioritise authored construction tools. Keep the accepted response/schema architecture.
+- Present released model cards and full-width worked/table/graph solutions inside the existing Answer Hub; omit locked content and prevent empty locked hubs. Keep answer access after exercises and teacher previews in Edit/Present.
+- Refresh real responsive, authoring, native-zoom captures and exact-head review evidence before visual approval. No merge or deployment.
+
 ## Mathematics M3 — Graph Response review
 
 - Reuse the supplied HGL safe graph parser, SVG renderer and stroke replay in question-authored compact/expanded responses, using the existing stable-ID graph response store. Add linked tables, plot/construct, free-sketch and hybrid responses.

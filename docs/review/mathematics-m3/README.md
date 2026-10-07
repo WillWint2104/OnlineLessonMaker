@@ -2,7 +2,7 @@
 
 This gallery shows a working implementation in the existing OnlineLessonMaker player and authoring application, based on merged M2 `b992021735afc7d6aa9c913501d9173a38d3a32e`. It is not a prompt, static mock-up or a separate graph-builder application.
 
-Open `index.html` for the original-resolution captures and recording. Open `../../../lesson-studio.html`, use JSON, and import `workflow/graph-response-lesson.json` for the editable verification lesson. Study → Practice provides five graph responses in three release groups. Local release preview can release Set 1 models, then Set 1 working, while later sets stay locked. The control explicitly affects this display only.
+Open `index.html` for the original-resolution captures and recording. Open `../../../lesson-studio.html`, use JSON, and import `workflow/graph-response-lesson.json` for the editable verification lesson. Study → Practice provides five graph responses in three release groups. The teacher-only local release preview in Edit/Present can release Set 1 models, then Set 1 working, while later sets stay locked. The control explicitly affects this display only.
 
 `workflow/published-graph-response.html` is an actual independently exported learner file. Its companion JSON deliberately uses autonomous group access for inspecting the model graphs offline. It does not expose teacher release controls. The authored verification JSON retains teacher group policies; publishing that version strips deferred teacher-controlled graph answers.
 

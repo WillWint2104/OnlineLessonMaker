@@ -80,7 +80,7 @@
                   "id": "graph-method-example",
                   "label": "Construct and compare",
                   "tabLabel": "Graph methods",
-                  "prompt": "Plot _y_=2_x_+1.",
+                  "prompt": "Plot $y=2x+1$.",
                   "steps": [
                     {
                       "id": "graph-step-0",
@@ -112,12 +112,12 @@
           "questions": [
             {
               "id": "graph-line",
-              "stem": "Construct the segment for _y_=2_x_+1 from _x_=-2 to _x_=2.",
+              "stem": "Construct the segment for $y=2x+1$ from $x=-2$ to $x=2$.",
               "archetypeId": "graph-method-example",
               "level": "basic",
               "group": "Set 1 · Construct",
-              "answer": "_y_=2_x_+1, for -2≤ _x_≤2.",
-              "workedAnswer": "Use (-2,-3) and (2,5) as endpoints.\nJoin the endpoints with one straight segment.\n_y_=2_x_+1, for -2≤ _x_≤2.",
+              "answer": "$y=2x+1$, for $-2≤ x≤2$.",
+              "workedAnswer": "Use $(-2,-3)$ and $(2,5)$ as endpoints.\nJoin the endpoints with one straight segment.\n$y=2x+1$, for $-2≤ x≤2$.",
               "releaseGroup": "set-1",
               "graphResponse": {
                 "type": "plotConstruct",
@@ -160,12 +160,12 @@
             },
             {
               "id": "graph-parabola",
-              "stem": "Construct _y_=(_x_-1)^2-3. Start at the turning point and drag to a second point.",
+              "stem": "Construct $y=(x-1)^2-3$.\nStart at the turning point and drag to a second point.",
               "archetypeId": "graph-method-example",
               "level": "basic",
               "group": "Set 1 · Construct",
-              "answer": "The axis of symmetry is _x_=1.",
-              "workedAnswer": "The turning point is (1,-3).\nAt _x_=2, _y_=-2; drag from (1,-3) to (2,-2).\nThe axis of symmetry is _x_=1.",
+              "answer": "The axis of symmetry is $x=1$.",
+              "workedAnswer": "The turning point is $(1,-3)$.\nAt $x=2$, $y=-2$; drag from $(1,-3)$ to $(2,-2)$.\nThe axis of symmetry is $x=1$.",
               "releaseGroup": "set-1",
               "graphResponse": {
                 "type": "plotConstruct",
@@ -206,13 +206,13 @@
               }
             },
             {
-              "id": "question-37958993-32eb-4d03-8f72-79159a6dd3ad",
-              "stem": "Complete the table for _y_=_x_^2-4 and plot the values. No curve is drawn automatically.",
+              "id": "question-7ef0c284-2465-4563-8dfd-299de87286e6",
+              "stem": "Complete the table for $y=x^2-4$.\nThe points will appear on the graph; then draw the parabola through them.",
               "archetypeId": "graph-method-example",
               "level": "basic",
               "group": "Set 2 · Linked values and sketch",
               "answer": "Draw the parabola through the completed points.",
-              "workedAnswer": "Square each _x_ value, then subtract 4.\nThe turning point is (0,-4).\nDraw the parabola through the completed points.",
+              "workedAnswer": "Square each $x$ value, then subtract $4$.\nThe turning point is $(0,-4)$.\nDraw the parabola through the completed points.",
               "graphResponse": {
                 "type": "tableGraph",
                 "axes": {
@@ -263,8 +263,8 @@
                   ],
                   "editX": false,
                   "editY": true,
-                  "allowAdd": true,
-                  "allowDelete": true,
+                  "allowAdd": false,
+                  "allowDelete": false,
                   "connection": "none"
                 }
               },
@@ -314,12 +314,12 @@
             },
             {
               "id": "graph-table",
-              "stem": "Complete the table for _y_=_x_^2-4 and plot the values. No curve is drawn automatically.",
+              "stem": "Complete the table for $y=x^2-4$.\nThe points will appear on the graph; then draw the parabola through them.",
               "archetypeId": "graph-method-example",
               "level": "basic",
               "group": "Set 2 · Linked values and sketch",
               "answer": "Draw the parabola through the completed points.",
-              "workedAnswer": "Square each _x_ value, then subtract 4.\nThe turning point is (0,-4).\nDraw the parabola through the completed points.",
+              "workedAnswer": "Square each $x$ value, then subtract $4$.\nThe turning point is $(0,-4)$.\nDraw the parabola through the completed points.",
               "graphResponse": {
                 "type": "tableGraph",
                 "axes": {
@@ -370,8 +370,8 @@
                   ],
                   "editX": false,
                   "editY": true,
-                  "allowAdd": true,
-                  "allowDelete": true,
+                  "allowAdd": false,
+                  "allowDelete": false,
                   "connection": "none"
                 }
               },
@@ -421,12 +421,12 @@
             },
             {
               "id": "graph-reciprocal",
-              "stem": "Sketch _y_=1/_x_ for -4≤ _x_≤-0.5 and 0.5≤ _x_≤4. Leave a gap at _x_=0.",
+              "stem": "Sketch $y=\\frac{1}{x}$.\nUse $-4≤ x≤-0.5$ and $0.5≤ x≤4$; leave a gap at $x=0$.",
               "archetypeId": "graph-method-example",
               "level": "basic",
               "group": "Set 2 · Linked values and sketch",
               "answer": "Keep the two stated domains separate.",
-              "workedAnswer": "Sketch the two branches separately.\nThe graph approaches, but does not cross, _x_=0 or _y_=0.\nKeep the two stated domains separate.",
+              "workedAnswer": "Sketch the two branches separately.\nThe graph approaches, but does not cross, $x=0$ or $y=0$.\nKeep the two stated domains separate.",
               "releaseGroup": "set-2",
               "graphResponse": {
                 "type": "freeSketch",
@@ -499,12 +499,12 @@
             },
             {
               "id": "graph-hybrid",
-              "stem": "Complete the values for _y_=-_x_+2, add a segment, then sketch a separate annotation.",
+              "stem": "Complete the values for $y=-x+2$.\nThe points appear automatically; add a segment and sketch a separate annotation.",
               "archetypeId": "graph-method-example",
               "level": "basic",
               "group": "Set 3 · Hybrid",
-              "answer": "Join (-2,4) to (3,-1).",
-              "workedAnswer": "Subtract each _x_ value from 2.\nThe gradient is -1 and the _y_-intercept is 2.\nJoin (-2,4) to (3,-1).",
+              "answer": "Join $(-2,4)$ to $(3,-1)$.",
+              "workedAnswer": "Subtract each $x$ value from $2$.\nThe gradient is $-1$ and the $y$-intercept is $2$.\nJoin $(-2,4)$ to $(3,-1)$.",
               "releaseGroup": "set-3",
               "graphResponse": {
                 "type": "hybrid",
@@ -550,7 +550,7 @@
                       "y": ""
                     }
                   ],
-                  "editX": false,
+                  "editX": true,
                   "editY": true,
                   "allowAdd": true,
                   "allowDelete": true,
