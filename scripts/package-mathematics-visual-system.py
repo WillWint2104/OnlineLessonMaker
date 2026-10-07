@@ -8,7 +8,9 @@ root = Path.cwd().resolve()
 verification = Path(sys.argv[1]).resolve()
 head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
 info = json.loads((verification / 'logs/run-info.json').read_text(encoding='utf-8'))
-assert info['head'] == head and info['exactHeadUnchanged'] and info['failures'] == 0
+assert info['head'] == head and info['exactHeadUnchanged'] and info['failures'] == 0 and info.get('fullSuite') is True
+gate_results = json.loads((verification / 'logs/results.json').read_text(encoding='utf-8'))
+assert len(gate_results) == info['gates'] and all(gate['status'] == 0 for gate in gate_results)
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
 assert sha(root / 'lesson-studio.html') == info['appSha256']
 subprocess.run([sys.executable, 'scripts/package-graph-review.py', str(verification)], check=True)
