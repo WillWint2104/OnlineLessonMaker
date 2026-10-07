@@ -1,0 +1,51 @@
+{
+  "sourceSha256": "dd7ba18759110d309f19fda0f0a625a73537d21ba0171c962540a2423352bbe5",
+  "sourceBytes": 383499,
+  "modules": [
+    "src/js/features/calc/calc-core.js",
+    "src/js/features/calc/calc-templates.js",
+    "src/js/features/calc/calc-undo.js",
+    "src/js/features/calc/calc-stats.js",
+    "src/js/features/calc/calc-dist.js",
+    "src/js/features/calc/calc-table.js",
+    "src/js/features/calc/calc-complex.js",
+    "src/js/features/calc/calc-vector.js",
+    "src/js/features/calc/calc-spreadsheet.js",
+    "src/js/features/calc/calc-inequality.js",
+    "src/js/features/calc/calc-ui.js",
+    "src/js/features/calc/calc-ui-v2.js",
+    "src/js/features/calc/calc-catalog.js"
+  ],
+  "componentSha256": "fbcf574d5b87a5d077c23b7b5d04a69810ac4a3c4b3138c4139e8bb91f2ab327",
+  "fonts": [
+    {
+      "family": "Manrope",
+      "filename": "manrope-latin-wght-normal.woff2",
+      "bytes": 24836,
+      "sha256": "a30ddcd349703aff7464c34bef3fffdff405ee50c113440d7c8693c02d210972"
+    },
+    {
+      "family": "Plus Jakarta Sans",
+      "filename": "plus-jakarta-sans-latin-wght-normal.woff2",
+      "bytes": 27348,
+      "sha256": "153fc85b70298beeb1d61a5f723331649e7f23bb77302a66e61cb3e2fbdb5e79"
+    },
+    {
+      "family": "JetBrains Mono",
+      "filename": "jetbrains-mono-latin-wght-normal.woff2",
+      "bytes": 40404,
+      "sha256": "18be452724bfdc236c074ca94a249a7f41a86752c7d04ab258ce9ed5651f6a7e"
+    }
+  ],
+  "adaptations": [
+    "closure-local document/window",
+    "fixed delegated inline actions",
+    "standalone boot/legacy launcher removed",
+    "isolated Shadow CSS and containment/touch rules",
+    "packaged Latin variable fonts",
+    "one active authored SHIFT key definition for label and dispatch",
+    "movable medium shell and expanded source-mode layouts",
+    "transient inline mode chooser; selected mode survives reopen"
+  ],
+  "engineChanges": []
+}
