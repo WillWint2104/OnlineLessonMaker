@@ -51,3 +51,5 @@
 @container graph-response (min-width:700px){.gr-expanded .gr-expanded-response>.gr-main{grid-template-columns:240px minmax(0,1fr)}}
 .gr-answer-grid.gr-answer-with-context:not(:has(.gr-answer-model)){grid-template-columns:minmax(0,1fr)}
 @container graph-response (max-width:699px){.gr-expanded .gr-expanded-response>.gr-main>.gr-plot{order:-1;max-width:none}}
+
+.gr-continuation{fill:#007e6e}.gr-domain-end{stroke:#007e6e;stroke-width:1.8;vector-effect:non-scaling-stroke}.gr-open-end{fill:white}.gr-closed-end{fill:#007e6e}.gr-no-attempt{font:15px/1.5 Arial,sans-serif;color:#40574c;margin:14px 0 0}

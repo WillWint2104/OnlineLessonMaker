@@ -13,6 +13,6 @@ fs.writeFileSync(dir+'/foundation.generated.js',component);
 let app=fs.readFileSync('lesson-studio.html','utf8').replace(/\r\n/g,'\n');
 const replace=(start,end,body,anchor)=>{const section=start+'\n'+body+'\n'+end;const at=app.indexOf(start);if(at>=0)app=app.slice(0,at)+section+app.slice(app.indexOf(end,at)+end.length);else app=app.replace(anchor,section+'\n'+anchor);};
 replace('/* GRAPH_RESPONSE_CSS_START */','/* GRAPH_RESPONSE_CSS_END */',fs.readFileSync('src/graph-response/graph-response.css','utf8'),'</style>');
-replace('/* GRAPH_RESPONSE_COMPONENT_START */','/* GRAPH_RESPONSE_COMPONENT_END */',component+'\n'+fs.readFileSync('src/graph-response/graph-response.js','utf8'),'function mxQuestionList(');
+replace('/* GRAPH_RESPONSE_COMPONENT_START */','/* GRAPH_RESPONSE_COMPONENT_END */',component+'\n'+fs.readFileSync('src/graph-response/extent.js','utf8')+'\n'+fs.readFileSync('src/graph-response/graph-response.js','utf8'),'function mxQuestionList(');
 fs.writeFileSync('lesson-studio.html',app);
 console.log('Built Graph Response with '+functions.length+' unchanged HGL functions; reference SHA-256 '+expected);
