@@ -54,6 +54,15 @@ function olmWorkspace(panel){
   if(angles){angles.classList.add('olm-angle');wrap.prepend(angles);}
   wrap.querySelectorAll('.calc-v2-hdr,.calc-hdr').forEach(header=>header.remove());
   wrap.classList.toggle('olm-expanded',CALC_STATE.fullscreen);
+  if(CALC_STATE.mode==='complex'||CALC_STATE.mode==='spreadsheet'){
+    const hint=[...wrap.querySelectorAll('.st-modebar span')].find(node=>node.textContent.trim().startsWith('fns:'));
+    if(hint){
+      const names=hint.textContent.trim().slice(4).trim().split(/\s+/);
+      hint.removeAttribute('style');hint.className='olm-function-hint';hint.textContent='';
+      const label=hostDocument.createElement('span');label.textContent='Functions';hint.append(label);
+      for(const name of names){const chip=hostDocument.createElement('code');chip.textContent=name;hint.append(chip);}
+    }
+  }
   const pad=wrap.querySelector('.calc-v2-keypad');
   if(pad&&!CALC_STATE.activePanel){
     const action=pad.querySelector('.calc-v2-action'),utility=pad.querySelector('.calc-v2-utility');

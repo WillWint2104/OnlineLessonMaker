@@ -88,6 +88,8 @@ button{touch-action:manipulation;}
 .calc-wrap .st-btn-p:hover,.calc-wrap .st-btn-p:focus-visible{background:#00695c;color:#fff;border-color:#00695c;box-shadow:0 0 0 2px #ccebe4;}
 .calc-wrap .vc-slots{background:#f8fafc;}
 /* Purposeful compositions share source controls/state rather than scaling one layout. */
+.calc-wrap .st-modebar>.olm-function-hint{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px!important;letter-spacing:0;line-height:1.5;color:#405967;}
+.olm-function-hint code{font-size:13px;padding:2px 6px;border:1px solid #dbe6eb;border-radius:5px;background:#f4f8fa;color:#405967;}
 #calc-p>.calc-wrap:not(.calc-v2){box-sizing:border-box;display:flex;flex:none;flex-direction:column;height:var(--olm-body-height,764px);min-height:0;gap:0;}
 .calc-wrap:not(.calc-v2)>:not(.st-table):not(.st-results):not(.sh-gridwrap):not(.dt-result):not(.olm-stat-workspace){flex-shrink:0;}
 .calc-wrap:not(.calc-v2) .st-pill,.calc-wrap:not(.calc-v2) .st-btn{font-size:14px;min-height:38px;letter-spacing:0;}
