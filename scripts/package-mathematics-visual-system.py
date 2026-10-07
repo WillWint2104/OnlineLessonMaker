@@ -57,8 +57,6 @@ Exact-head regression: {info['gates']}/{info['gates']} gates passed on clean, un
 Limits: session-only learner responses, no automatic marking, no Supabase deployment, no new graph-reading tools. Teacher-video setup, tablet question-reference enhancement and curriculum expansion remain outside this pass. SHA256SUMS.txt covers all payload files except itself; PACKAGING-VERIFICATION.json records extraction/link/media/copy integrity.
 '''
 (payload / 'READ-ME-FIRST.md').write_text(guide, encoding='utf-8')
-index = payload / 'docs/review/mathematics-visual-system/index.html'
-index.write_text(index.read_text(encoding='utf-8').replace('<nav>', '<nav><a href="../mathematics-m3/index.html">Complete M3 workflow and recording</a><a href="../mathematics-m3-plane/index.html">Measured coordinate planes</a><a href="EXTENSIONS.md">Compatible data extensions</a>'), encoding='utf-8')
 receipt = {**info, 'packageSourceCommit': head, 'mergeStatus': 'draft; unmerged; approval required', 'reviewFolders': ['mathematics-visual-system', 'mathematics-m3', 'mathematics-m3-plane']}
 (payload / 'EXACT-HEAD-VERIFICATION.json').write_text(json.dumps(receipt, indent=2), encoding='utf-8')
 class Links(HTMLParser):
@@ -79,6 +77,8 @@ def links(base):
             assert target.is_relative_to(base.resolve()) and target.exists(), (file, url)
             count += 1
     return count
+for relative, digest in copies.items():
+    assert sha(payload / relative) == digest
 count = links(payload)
 media = [p for p in (payload / 'docs/review').rglob('*') if p.suffix in ['.png', '.webm']]
 assert media and all(p.stat().st_size > 0 for p in media)
