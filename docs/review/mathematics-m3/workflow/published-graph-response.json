@@ -63,7 +63,7 @@
                   "id": "graph-method-example",
                   "label": "Construct and compare",
                   "tabLabel": "Graph methods",
-                  "prompt": "Plot _y_=2x+1.",
+                  "prompt": "Plot _y_=2_x_+1.",
                   "steps": [
                     {
                       "id": "graph-step-0",
@@ -95,12 +95,12 @@
           "questions": [
             {
               "id": "graph-line",
-              "stem": "Construct the segment for _y_=2x+1 from _x_=-2 to _x_=2.",
+              "stem": "Construct the segment for _y_=2_x_+1 from _x_=-2 to _x_=2.",
               "archetypeId": "graph-method-example",
               "level": "basic",
               "group": "Set 1 · Construct",
-              "answer": "_y_=2x+1, for -2≤ _x_≤2.",
-              "workedAnswer": "Use (-2,-3) and (2,5) as endpoints.\nJoin the endpoints with one straight segment.\n_y_=2x+1, for -2≤ _x_≤2.",
+              "answer": "_y_=2_x_+1, for -2≤ _x_≤2.",
+              "workedAnswer": "Use (-2,-3) and (2,5) as endpoints.\nJoin the endpoints with one straight segment.\n_y_=2_x_+1, for -2≤ _x_≤2.",
               "releaseGroup": "set-1",
               "graphResponse": {
                 "type": "plotConstruct",

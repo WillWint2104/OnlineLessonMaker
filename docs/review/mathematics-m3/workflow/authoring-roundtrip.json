@@ -80,7 +80,7 @@
                   "id": "graph-method-example",
                   "label": "Construct and compare",
                   "tabLabel": "Graph methods",
-                  "prompt": "Plot _y_=2x+1.",
+                  "prompt": "Plot _y_=2_x_+1.",
                   "steps": [
                     {
                       "id": "graph-step-0",
@@ -112,12 +112,12 @@
           "questions": [
             {
               "id": "graph-line",
-              "stem": "Construct the segment for _y_=2x+1 from _x_=-2 to _x_=2.",
+              "stem": "Construct the segment for _y_=2_x_+1 from _x_=-2 to _x_=2.",
               "archetypeId": "graph-method-example",
               "level": "basic",
               "group": "Set 1 · Construct",
-              "answer": "_y_=2x+1, for -2≤ _x_≤2.",
-              "workedAnswer": "Use (-2,-3) and (2,5) as endpoints.\nJoin the endpoints with one straight segment.\n_y_=2x+1, for -2≤ _x_≤2.",
+              "answer": "_y_=2_x_+1, for -2≤ _x_≤2.",
+              "workedAnswer": "Use (-2,-3) and (2,5) as endpoints.\nJoin the endpoints with one straight segment.\n_y_=2_x_+1, for -2≤ _x_≤2.",
               "releaseGroup": "set-1",
               "graphResponse": {
                 "type": "plotConstruct",
@@ -206,14 +206,13 @@
               }
             },
             {
-              "id": "question-7ebd8dea-e4c5-4b00-b739-bc46a0dea400",
+              "id": "question-cc77f6c0-bf26-4ae3-b037-057fcba2fe76",
               "stem": "Complete the table for _y_=_x_^2-4 and plot the values. No curve is drawn automatically.",
               "archetypeId": "graph-method-example",
               "level": "basic",
               "group": "Set 2 · Linked values and sketch",
               "answer": "Draw the parabola through the completed points.",
               "workedAnswer": "Square each _x_ value, then subtract 4.\nThe turning point is (0,-4).\nDraw the parabola through the completed points.",
-              "releaseGroup": "table-a",
               "graphResponse": {
                 "type": "tableGraph",
                 "axes": {
@@ -238,7 +237,7 @@
                   "rows": [
                     {
                       "id": "row-0",
-                      "x": -2,
+                      "x": "-3",
                       "y": ""
                     },
                     {
@@ -310,7 +309,8 @@
                 "showWorkedSolution": true,
                 "showTable": true,
                 "showComparison": true
-              }
+              },
+              "releaseGroup": "table-a"
             },
             {
               "id": "graph-table",
@@ -320,7 +320,6 @@
               "group": "Set 2 · Linked values and sketch",
               "answer": "Draw the parabola through the completed points.",
               "workedAnswer": "Square each _x_ value, then subtract 4.\nThe turning point is (0,-4).\nDraw the parabola through the completed points.",
-              "releaseGroup": "table-a",
               "graphResponse": {
                 "type": "tableGraph",
                 "axes": {
@@ -345,7 +344,7 @@
                   "rows": [
                     {
                       "id": "row-0",
-                      "x": -2,
+                      "x": "-3",
                       "y": ""
                     },
                     {
@@ -417,7 +416,8 @@
                 "showWorkedSolution": true,
                 "showTable": true,
                 "showComparison": true
-              }
+              },
+              "releaseGroup": "table-a"
             },
             {
               "id": "graph-reciprocal",

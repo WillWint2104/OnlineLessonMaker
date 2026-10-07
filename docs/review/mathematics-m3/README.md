@@ -13,3 +13,5 @@ Read `SCHEMA.md` and `../../../assets/vendor/hgl-graph/AUDIT.md` for data respon
 Limitations: session memory only; visual comparison without automatic marking; no graph formula solver or full teacher graph-builder UI; no remote release/Supabase deployment; no M1/M2 redesign. Teacher video setup, tablet question-reference work and curriculum expansion remain outside M3. Embedded assets work offline; links to external sites do not imply offline availability.
 
 Captured screenshots are real browser states. Some are intentionally scrolled to show the response or inspector; a cropped header is not a navigation reset failure. Final package receipts identify the exact tested head and replace draft-run metadata. M3 must remain unmerged until visual/functional approval.
+
+Keyboard access: focus a graph and use N/P to select objects, arrows to move selected points, and Delete to remove allowed objects. Exact coordinate fields add/edit points; the optional Exact construction panel creates or edits lines and parabolas without pointer input. Authoring previews use separate response documents and do not modify an existing learner attempt.

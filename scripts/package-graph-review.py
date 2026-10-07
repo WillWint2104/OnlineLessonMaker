@@ -12,11 +12,12 @@ head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
 status=subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],text=True).strip()
 if status:raise RuntimeError('Packaging requires clean tracked source.')
 verification=args.verification.resolve()
-info=json.loads((verification/'logs/run-info.json').read_text())
+info=json.loads((verification/'logs/run-info.json').read_text(encoding='utf-8'))
 if info['head']!=head or info.get('failures')!=0 or not info.get('exactHeadUnchanged'):raise RuntimeError('Exact-head receipt is missing, stale or failed.')
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 if sha(root/'lesson-studio.html')!=info['appSha256']:raise RuntimeError('App differs from tested source.')
 out=root/'review-delivery'
+out.mkdir(parents=True,exist_ok=True)
 stage=Path(tempfile.mkdtemp(prefix='m3-package-',dir=out))
 payload=stage/'payload'
 payload.mkdir()
@@ -44,7 +45,7 @@ for p in focused.rglob('*'):
     copy(p,review/rel)
 for p in (verification/'logs').glob('*'):copy(p,Path('verification/logs')/p.name)
 if (verification/'review-receipt.json').exists():copy(verification/'review-receipt.json','verification/review-receipt.json')
-receipt={**info,'focusedChecks':len(json.loads((focused/'results.json').read_text())['checks']),'packageSourceCommit':head,'mergeStatus':'draft; unmerged; visual/functional approval required','remoteRelease':'not deployed; local display preview only'}
+receipt={**info,'focusedChecks':len(json.loads((focused/'results.json').read_text(encoding='utf-8'))['checks']),'packageSourceCommit':head,'mergeStatus':'draft; unmerged; visual/functional approval required','remoteRelease':'not deployed; local display preview only'}
 (payload/'EXACT-HEAD-VERIFICATION.json').write_text(json.dumps(receipt,indent=2)+'\n')
 guide=f'''# READ ME FIRST — Mathematics M3 Graph Response
 
