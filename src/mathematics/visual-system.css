@@ -71,3 +71,8 @@ body:has(.lp-textbook-shell) #inspector :is(input,textarea,select){border-color:
 .lp-textbook-shell .gr-answer-access .lp-primary{background:#087c70;color:#fff;}
 @media(max-width:850px){.lp-textbook-shell .mx-solution-table tr{grid-template-columns:36px minmax(0,1fr);}.lp-textbook-shell .mx-solution-table .mx-row-number{grid-row:span 2;}.lp-textbook-shell .mx-solution-table .mx-annotation{grid-column:2;border-left:0;padding-top:0;}}
 .lp-textbook-shell .lp-exercise-grid:has(.gr-response){row-gap:14px}.lp-textbook-shell .lp-exercise-cell:has(.gr-response){padding:16px;row-gap:14px}
+
+/* Optional structured part fields remain one readable inspector column. */
+.lp-parts-editor .lp-part-fields{min-width:0;grid-column:2;display:block;}
+.lp-parts-editor .lp-part-fields textarea{box-sizing:border-box;width:100%;min-height:70px;}
+.lp-parts-editor .lp-part-fields .mxprev{overflow-wrap:anywhere;min-width:0;}

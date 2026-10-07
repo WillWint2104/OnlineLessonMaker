@@ -4839,6 +4839,11 @@ body:has(.lp-textbook-shell) #inspector :is(input,textarea,select){border-color:
 @media(max-width:850px){.lp-textbook-shell .mx-solution-table tr{grid-template-columns:36px minmax(0,1fr);}.lp-textbook-shell .mx-solution-table .mx-row-number{grid-row:span 2;}.lp-textbook-shell .mx-solution-table .mx-annotation{grid-column:2;border-left:0;padding-top:0;}}
 .lp-textbook-shell .lp-exercise-grid:has(.gr-response){row-gap:14px}.lp-textbook-shell .lp-exercise-cell:has(.gr-response){padding:16px;row-gap:14px}
 
+/* Optional structured part fields remain one readable inspector column. */
+.lp-parts-editor .lp-part-fields{min-width:0;grid-column:2;display:block;}
+.lp-parts-editor .lp-part-fields textarea{box-sizing:border-box;width:100%;min-height:70px;}
+.lp-parts-editor .lp-part-fields .mxprev{overflow-wrap:anywhere;min-width:0;}
+
 /* MATHEMATICS_VISUAL_SYSTEM_END */
 </style>
 </head>
@@ -18152,7 +18157,7 @@ function lpInspector(s,i){
     if(item&&key==='notes') content+=`<div class="isec">${inMath('Heading',path+(item.title!=null&&item.term==null?'.title':'.term'),item.term||item.title||'')}${inMath('Text (include attribution)',path+'.body',item.body,true)}${['attribution','source','citation'].filter(f=>typeof item[f]==='string').map(f=>inT(f[0].toUpperCase()+f.slice(1),path+'.'+f,item[f])).join('')}</div>`;
     if(item&&key==='questions'){
       content+=`<div class="isec">${inMath('Question prompt',path+'.stem',item.stem,true)}${inMath('Practice instructions (optional)',ab+'.practiceNote',a.practiceNote||'',true)}<label><input type="checkbox" data-lp-stack="${path}"${item.stack?' checked':''}> Stack subparts</label>
-        <ol class="lp-parts-editor">${(item.parts||[]).map((p,j)=>`<li><label for="lp-part-${j}" data-lp-partselect="${j}">(${String.fromCharCode(97+j)})</label>${typeof p==='string'?`<textarea id="lp-part-${j}" class="ii" rows="2" data-bind="${path}.parts.${j}" aria-label="Part ${String.fromCharCode(97+j)} text">${esc(p)}</textarea>`:`${inMath('Part prompt',path+'.parts.'+j+'.prompt',lpBookPartText(p),true)}${inMath('Part final answer',path+'.parts.'+j+'.finalAnswer',p.finalAnswer||'',true)}${inMath('Part worked solution',path+'.parts.'+j+'.workedAnswer',p.workedAnswer||'',true)}`}<span class="lp-part-controls">${order('parts',j,item.parts.length)}<button type="button" class="ibtn-x" data-lp-partduplicate="${j}" aria-label="Duplicate part ${String.fromCharCode(97+j)}">⧉</button></span></li>`).join('')}</ol><button class="ibtn-add" data-lp-partadd>Add subpart</button></div>`;
+        <ol class="lp-parts-editor">${(item.parts||[]).map((p,j)=>`<li><label for="lp-part-${j}" data-lp-partselect="${j}">(${String.fromCharCode(97+j)})</label>${typeof p==='string'?`<textarea id="lp-part-${j}" class="ii" rows="2" data-bind="${path}.parts.${j}" aria-label="Part ${String.fromCharCode(97+j)} text">${esc(p)}</textarea>`:`<div class="lp-part-fields">${inMath('Part prompt',path+'.parts.'+j+'.prompt',lpBookPartText(p),true)}${inMath('Part final answer',path+'.parts.'+j+'.finalAnswer',p.finalAnswer||'',true)}${inMath('Part worked solution',path+'.parts.'+j+'.workedAnswer',p.workedAnswer||'',true)}</div>`}<span class="lp-part-controls">${order('parts',j,item.parts.length)}<button type="button" class="ibtn-x" data-lp-partduplicate="${j}" aria-label="Duplicate part ${String.fromCharCode(97+j)}">⧉</button></span></li>`).join('')}</ol><button class="ibtn-add" data-lp-partadd>Add subpart</button></div>`;
       content+=item.table?`<div class="isec"><div class="isec-h">Question table</div><p class="ihint">Filled cells are instructional values. Empty cells are student answer blanks; editing this table never edits stored student responses.</p>${mxTableForm(path+'.table',item.table,null)}<button class="ibtn-add" data-lp-table="remove">Remove question table</button></div>`:`<button class="ibtn-add" data-lp-table="add">Add question table</button>`;
     }
     if(item)content=mxKeys()+content;
