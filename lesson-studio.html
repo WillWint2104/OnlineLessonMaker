@@ -17370,13 +17370,13 @@ function grNiceInterval(minimum){const power=10**Math.floor(Math.log10(minimum))
 function grPlane(svg,a,w,h,pixels){
   const ns='http://www.w3.org/2000/svg',scale=w/Math.max(1,pixels.width||w),sx=(w-8)/(a.xMax-a.xMin),sy=(h-8)/(a.yMax-a.yMin);
   const x=v=>4+(v-a.xMin)*sx,y=v=>4+(a.yMax-v)*sy;
-  const ax=Math.max(4,Math.min(w-4,x(0))),ay=Math.max(4,Math.min(h-4,y(0))),layer=document.createElementNS(ns,'g');layer.setAttribute('data-gr-plane','');svg.insertBefore(layer,svg.querySelector('.gp-curve,.gp-point')||null);
+  const ax=Math.max(4,Math.min(w-4,x(0))),ay=Math.max(4,Math.min(h-4,y(0))),layer=document.createElementNS(ns,'g');layer.setAttribute('data-gr-plane','');svg.insertBefore(layer,svg.querySelector('.gr-object,.gr-handle,.gp-curve,.gp-point')||null);
   const add=(tag,attrs)=>{const n=document.createElementNS(ns,tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);layer.append(n);return n;};
   const fmt=v=>String(Number(v.toPrecision(10))).replace('-','−');
   const axes=[{axis:'x',min:a.xMin,max:a.xMax,step:a.xStep,units:sx,pixels:pixels.width||w,map:x},{axis:'y',min:a.yMin,max:a.yMax,step:a.yStep,units:sy,pixels:pixels.height||h,map:y}];
   for(const d of axes){
-    const major=Math.max(d.step,grNiceInterval((d.max-d.min)*8/Math.max(1,d.pixels))),minor=major/2;
-    const values=(step,draw)=>{const lo=Math.ceil(d.min/step),hi=Math.floor(d.max/step);for(let i=lo;i<=hi&&i-lo<201;i++)draw(Number((i*step).toPrecision(12)));};
+    const readable=grNiceInterval((d.max-d.min)*8/Math.max(1,d.pixels)),multiple=Math.max(1,Math.ceil(readable/d.step)),major=Number.isFinite(multiple*d.step)?multiple*d.step:readable,minor=major/2;
+    const values=(step,draw)=>{const lo=Math.ceil(d.min/step),hi=Math.floor(d.max/step);let previous;for(let offset=0;offset<201;offset++){const i=lo+offset;if(i>hi)break;const value=Number((i*step).toPrecision(17));if(!Number.isFinite(value)||value===previous)continue;previous=value;draw(value);}};
     const grid=(v,cls)=>add('line',d.axis==='x'?{x1:x(v),x2:x(v),y1:4,y2:h-4,class:cls}:{y1:y(v),y2:y(v),x1:4,x2:w-4,class:cls});
     if(d.pixels*minor/(d.max-d.min)>=12)values(minor,v=>{if(Math.abs(v/major-Math.round(v/major))>1e-7)grid(v,'gp-grid-minor');});
     values(major,v=>{grid(v,'gp-grid');if(v!==0)add('line',d.axis==='x'?{x1:x(v),x2:x(v),y1:ay-2.5*scale,y2:ay+2.5*scale,class:'gp-tick'}:{y1:y(v),y2:y(v),x1:ax-2.5*scale,x2:ax+2.5*scale,class:'gp-tick'});});
@@ -17395,7 +17395,7 @@ function grPlane(svg,a,w,h,pixels){
   const name=(axis,value,attrs)=>{const n=add('text',{...attrs,class:'gp-point-label','data-gr-axis-name':axis});n.style.fontSize=14*scale+'px';n.textContent=value;};
   name('x',a.xLabel||'x',{x:w-4+24*scale,y:ay-7*scale,'text-anchor':'middle'});
   name('y',a.yLabel||'y',{x:ax+12*scale,y:4-24*scale,'text-anchor':'start'});
-  if((a.xMin<=0&&a.xMax>=0)||(a.yMin<=0&&a.yMax>=0)){const n=add('text',{x:ax-9*scale,y:ay+19*scale,'text-anchor':'end',class:'gp-tick-label','data-gr-origin':''});n.style.fontSize=14*scale+'px';n.textContent='0';}
+  if(a.xMin<=0&&a.xMax>=0&&a.yMin<=0&&a.yMax>=0){const n=add('text',{x:ax-9*scale,y:ay+19*scale,'text-anchor':'end',class:'gp-tick-label','data-gr-origin':''});n.style.fontSize=14*scale+'px';n.textContent='0';}
 }
 // Use actual rendered glyph boxes, including authored axis names, as the final guard.
 function grPlaneFit(svg){
@@ -17418,6 +17418,7 @@ function grSvg(c,doc,prefix,selected,pixels={}){
   for(const o of objects){if(o.type==='line'){const p1={x:o.x1,y:o.y1},p2={x:o.x2,y:o.y2};line(p1,p2);for(const p of [p1,p2]){const[x,y]=map(p);el('circle',{cx:x,cy:y,r:5,class:'gr-handle'});}}if(o.type==='parabola'){const[x,y]=map({x:o.h,y:o.k});el('circle',{cx:x,cy:y,r:5,class:'gr-handle'});}}
   if(c.table?.connection==='segments'){let prev=null;for(const row of doc.rows){const x=grNumber(row.x),y=grNumber(row.y);if(x===null||y===null){prev=null;continue;}const p={x,y};if(prev)line(prev,p);prev=p;}}
   grPlane(svg,a,w,h,pixels);
+  svg.querySelectorAll('text').forEach(n=>n.style.fontSize=(14*w/(pixels.width||w))+'px');
   // Only plotted curves are clipped. Tick/axis labels retain their separate gutters.
   const defs=document.createElementNS('http://www.w3.org/2000/svg','defs'),clip=document.createElementNS('http://www.w3.org/2000/svg','clipPath'),rect=document.createElementNS('http://www.w3.org/2000/svg','rect');clip.id=prefix+'-plot-clip';for(const[k,v]of Object.entries({x:4,y:4,width:w-8,height:h-8}))rect.setAttribute(k,v);clip.append(rect);defs.append(clip);svg.prepend(defs);svg.querySelectorAll('.gp-curve,.gr-object').forEach(n=>n.setAttribute('clip-path','url(#'+clip.id+')'));
   return svg;
