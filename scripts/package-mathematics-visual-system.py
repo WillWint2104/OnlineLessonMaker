@@ -5,14 +5,18 @@ from urllib.parse import urlsplit, unquote
 import hashlib, json, shutil, subprocess, sys, tempfile, zipfile
 
 root = Path.cwd().resolve()
+def require(condition, message):
+    if not condition:
+        raise RuntimeError(message)
+
 verification = Path(sys.argv[1]).resolve()
 head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
 info = json.loads((verification / 'logs/run-info.json').read_text(encoding='utf-8'))
-assert info['head'] == head and info['exactHeadUnchanged'] and info['failures'] == 0 and info.get('fullSuite') is True
+require(isinstance(info, dict) and info.get('head') == head and info.get('exactHeadUnchanged') is True and info.get('failures') == 0 and info.get('fullSuite') is True, 'A complete, successful, unchanged exact-head suite receipt is required.')
 gate_results = json.loads((verification / 'logs/results.json').read_text(encoding='utf-8'))
-assert len(gate_results) == info['gates'] and all(gate['status'] == 0 for gate in gate_results)
+require(isinstance(gate_results, list) and bool(gate_results) and len(gate_results) == info.get('gates') and all(isinstance(gate, dict) and gate.get('status') == 0 for gate in gate_results), 'Gate coverage is incomplete or unsuccessful.')
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
-assert sha(root / 'lesson-studio.html') == info['appSha256']
+require(sha(root / 'lesson-studio.html') == info['appSha256'], 'Application differs from the verified source.')
 subprocess.run([sys.executable, 'scripts/package-graph-review.py', str(verification)], check=True)
 base = root / 'review-delivery' / f'mathematics-m3-{head[:7]}-review.zip'
 stage = Path(tempfile.mkdtemp(prefix='mathematics-final-', dir=root / 'review-delivery'))
@@ -24,13 +28,13 @@ def copy(source, relative):
     target = payload / relative
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, target)
-    assert sha(source) == sha(target)
+    require(sha(source) == sha(target), f'Copy mismatch: {source}')
     copies[str(relative).replace('\\', '/')] = sha(source)
 
 for name in ['mathematics-visual-system', 'mathematics-m3-plane']:
     folder = verification / name
     result = json.loads((folder / 'results.json').read_text(encoding='utf-8'))
-    assert result['head'] == head and result['appSha256'] == info['appSha256'] and not result['errors']
+    require(result['head'] == head and result['appSha256'] == info['appSha256'] and not result['errors'], f'Stale or failed focused report: {folder}')
     for p in folder.rglob('*'):
         if p.is_file():
             copy(p, Path('docs/review') / name / p.relative_to(folder))
@@ -76,14 +80,14 @@ def links(base):
             if u.scheme or u.netloc or not u.path or u.path.startswith('/'):
                 continue
             target = (file.parent / unquote(u.path)).resolve()
-            assert target.is_relative_to(base.resolve()) and target.exists(), (file, url)
+            require(target.is_relative_to(base.resolve()) and target.exists(), f'Invalid local link: {file} -> {url}')
             count += 1
     return count
 for relative, digest in copies.items():
-    assert sha(payload / relative) == digest
+    require(sha(payload / relative) == digest, f'Payload copy mismatch: {relative}')
 count = links(payload)
 media = [p for p in (payload / 'docs/review').rglob('*') if p.suffix in ['.png', '.webm']]
-assert media and all(p.stat().st_size > 0 for p in media)
+require(bool(media) and all(p.stat().st_size > 0 for p in media), 'Missing or empty review media.')
 (payload / 'PACKAGING-VERIFICATION.json').write_text(json.dumps({'sourceCommit': head, 'localLinksChecked': count, 'nonEmptyMedia': len(media), 'copiedFileHashes': copies, 'archiveExtraction': 'CRC and extracted SHA-256 values verified', 'scope': 'packaging integrity only'}, indent=2), encoding='utf-8')
 manifest = payload / 'SHA256SUMS.txt'
 manifest.write_text(''.join(sha(p) + '  ' + p.relative_to(payload).as_posix() + '\n' for p in sorted(payload.rglob('*')) if p.is_file() and p != manifest), encoding='utf-8')
@@ -93,10 +97,10 @@ with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as z:
         if p.is_file(): z.write(p, p.relative_to(payload).as_posix())
 extracted = stage / 'extracted'
 with zipfile.ZipFile(archive) as z:
-    assert z.testzip() is None
+    require(z.testzip() is None, 'Archive CRC verification failed.')
     z.extractall(extracted)
 for p in payload.rglob('*'):
-    if p.is_file(): assert sha(p) == sha(extracted / p.relative_to(payload))
-assert links(extracted) == count
+    if p.is_file(): require(sha(p) == sha(extracted / p.relative_to(payload)), f'Extracted file mismatch: {p}')
+require(links(extracted) == count, 'Extracted local link coverage differs.')
 archive.with_suffix('.zip.sha256').write_text(sha(archive) + '  ' + archive.name + '\n', encoding='utf-8')
 print(json.dumps({'zip': str(archive), 'bytes': archive.stat().st_size, 'sha256': sha(archive), 'extracted': str(extracted), 'localLinksChecked': count}, indent=2))
