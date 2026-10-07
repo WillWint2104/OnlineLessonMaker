@@ -32,3 +32,5 @@ jobs:
           node-version: 20
       - name: Validate app + lessons
         run: node scripts/validate.mjs
+      - name: Validate Mathematics graph foundation and authored contract
+        run: node scripts/verify-mathematics-graph.mjs

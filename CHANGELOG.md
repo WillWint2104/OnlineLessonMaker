@@ -1,5 +1,11 @@
 # Changelog
 
+## Mathematics M3 — Graph Response review
+
+- Reuse the supplied HGL safe graph parser, SVG renderer and stroke replay in question-authored compact/expanded responses, using the existing stable-ID graph response store. Add linked tables, plot/construct, free-sketch and hybrid responses.
+- Connect graph authoring/JSON, model/working/table/attempt presentations inside the existing Answer Hub and independent local release-group previews. Deferred teacher-group answers are stripped from learner publication. No remote service or automatic marking.
+- Add a real five-question verification lesson, offline export, actual pointer/touch and responsive/native-zoom evidence plus source and UX gates in the full player suite. Keep the PR draft and stop with the exact-head review ZIP before merge or deployment.
+
 ## Mathematics M1.2 — approved final release
 
 - Remove the redundant single-skill count from Completion while retaining the accepted artwork, image-owned crop/focal settings and centred defaults for future assets. Regenerate both production expanding lesson HTML files with the accepted 63-question content and supplied artwork.
