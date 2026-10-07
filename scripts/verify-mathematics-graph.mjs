@@ -1,9 +1,11 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
 const ref=fs.readFileSync('assets/vendor/hgl-graph/graph-reference.html');
 assert.equal(createHash('sha256').update(ref).digest('hex'),'f9fd53f26dfaaf04f330c47bccbaccaa8fe54722dfe0e49b7bf300f8e8e8cb9a');
+const normalized=file=>fs.readFileSync(file,'utf8').replace(/\r\n/g,'\n');
 const core=fs.readFileSync('assets/vendor/hgl-graph/foundation.generated.js','utf8'),integration=fs.readFileSync('src/graph-response/graph-response.js','utf8'),app=fs.readFileSync('lesson-studio.html','utf8');
-assert.ok(app.includes(core));assert.ok(app.includes(integration));assert.ok(!/(?<![.\w])eval\s*\(|new\s+Function\s*\(/.test(core.replace(/\/\*[^]*?\*\/|\/\/[^\n]*/g,'')));
-const box=vm.createContext({crypto:{randomUUID:()=>String(Math.random())},console});vm.runInContext(core+'\n'+integration,box);const call=expression=>vm.runInContext(expression,box);
+const extent=normalized('src/graph-response/extent.js');
+assert.ok(app.replace(/\r\n/g,'\n').includes(core.replace(/\r\n/g,'\n')));assert.ok(app.replace(/\r\n/g,'\n').includes(integration.replace(/\r\n/g,'\n')));assert.ok(app.replace(/\r\n/g,'\n').includes(extent));assert.ok(!/(?<![.\w])eval\s*\(|new\s+Function\s*\(/.test(core.replace(/\/\*[^]*?\*\/|\/\/[^\n]*/g,'')));
+const box=vm.createContext({crypto:{randomUUID:()=>String(Math.random())},console});vm.runInContext(core+'\n'+extent+'\n'+integration,box);const call=expression=>vm.runInContext(expression,box);
 for(const [expr,x,y]of [['2x+1',2,5],['(x-1)^2-3',1,-3],['x²−4',-2,0],['1/x',-2,-.5],['-x^2',2,-4],['2^-3',0,.125],['sqrt(x)',4,2],['sin(pi/2)',0,1]]){const result=call('GR_HGL.compile('+JSON.stringify(expr)+')');assert.equal(result.error,null,expr);assert.ok(Math.abs(result.eval(x)-y)<1e-9,expr);}
 for(const expr of ['alert(1)','window','constructor(1)','x;1','x+','(x+1','x=1'])assert.ok(call('GR_HGL.compile('+JSON.stringify(expr)+').error'),expr);
 assert.ok(!Number.isFinite(call("GR_HGL.compile('1/x').eval(0)")));console.log('PASS supplied parser precedence, Unicode, implicit multiplication, domains and hostile/malformed input');
