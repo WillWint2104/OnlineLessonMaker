@@ -113,7 +113,8 @@
       "owner": null,
       "pr": null,
       "blocker": "Foundation merge, explicit Stage A launch and concrete Year 12 Ancient History brief required",
-      "card": "docs/development/tasks/HIST-001.md"
+      "card": "docs/development/tasks/HIST-001.md",
+      "launchGate": "HUMANITIES-STAGE-A"
     },
     {
       "id": "SOURCE-001",
@@ -160,7 +161,8 @@
       "implementationGate": {
         "checkpoint": "HIST-001:A",
         "scopeReconciledWith": null
-      }
+      },
+      "launchGate": "HUMANITIES-STAGE-A"
     },
     {
       "id": "MAP-001",
@@ -207,7 +209,8 @@
       "implementationGate": {
         "checkpoint": "HIST-001:A",
         "scopeReconciledWith": null
-      }
+      },
+      "launchGate": "HUMANITIES-STAGE-A"
     }
   ],
   "deferredStreams": [
@@ -218,6 +221,6 @@
     "future-mathematics",
     "remote-classroom-release"
   ],
-  "approvedCheckpoints": []
+  "approvedCheckpoints": [],
+  "approvedLaunches": []
 }
-

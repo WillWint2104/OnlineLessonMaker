@@ -22,6 +22,7 @@ function verify(b){
  assert.equal(b.version,1); assert.equal(ownership.version,1);
  assert.equal(b.activation,'HUMAN_APPROVAL_REQUIRED_NO_DISPATCH');
  assert.equal(b.limits.featureBuilders,3);assert.equal(b.limits.projectsAwaitingDesignReview,2);
+ assert.ok(Array.isArray(b.approvedLaunches)&&b.approvedLaunches.every(v=>typeof v==='string'&&v.length>0),'Missing explicit launch approval record');
  assert.ok(ownership.protectedPaths.every(safe)&&ownership.areas.every(a=>[a.source,a.tests,a.instructions].every(safe)),'Unsupported ownership pattern');
  const byId=new Map();
  for(const t of b.tasks){assert.ok(!byId.has(t.id),'Duplicate task ID');byId.set(t.id,t);}
@@ -34,9 +35,15 @@ function verify(b){
   assert.ok(Array.isArray(t.dependencies)&&t.dependencies.every(d=>byId.has(d)&&d!==t.id),'Unknown/self dependency');
   assert.ok(Array.isArray(t.approvedDependencies)&&t.approvedDependencies.every(d=>t.dependencies.includes(d)),'Invalid dependency approval');
   if(t.state==='BLOCKED')assert.ok(t.blocker,'Missing blocker');
+  const initialFeature=['HIST-001','SOURCE-001','MAP-001'].includes(t.id);
+  if(initialFeature)assert.equal(t.launchGate,'HUMANITIES-STAGE-A','Missing Humanities launch gate');
   if(['ACTIVE','INTEGRATION','MERGE-CANDIDATE'].includes(t.state)){
    assert.ok(t.branch?.startsWith('codex/')&&t.owner&&t.worktree&&t.startingCommit,'Missing active checkout ownership');
    assert.ok(t.dependencies.every(d=>t.approvedDependencies.includes(d)||byId.get(d).state==='MERGED'),'Unaccepted dependency');
+   if(initialFeature){
+    assert.equal(byId.get('FOUND-001')?.state,'MERGED','Foundation must actually be merged');
+    assert.ok(b.approvedLaunches.includes(t.launchGate),'Explicit human Stage A launch approval required');
+   }
   }
   if(t.lane==='feature'){
    const area=ownership.areas.find(a=>a.id===t.stream);assert.ok(area,'Unknown owned stream');
@@ -68,22 +75,29 @@ function verify(b){
 verify(backlog);
 if(process.argv.includes('--self-test')){
  const reject=(label,change,pattern)=>{const b=structuredClone(backlog);change(b);assert.throws(()=>verify(b),pattern);console.log('PASS guard: '+label);};
+ const launchFixture=b=>{b.tasks[0].state='MERGED';b.tasks[0].waitingForHuman=false;b.approvedLaunches=['HUMANITIES-STAGE-A'];};
  reject('duplicate IDs',b=>b.tasks.push(structuredClone(b.tasks[1])),/Duplicate task/);
  reject('dependency cycles',b=>b.tasks[0].dependencies=['MAP-001'],/Dependency cycle/);
  reject('protected central edits',b=>b.tasks[1].allowedPaths.push('lesson-studio.html'),/outside its area|protected area/);
  reject('unaccepted dependencies',b=>Object.assign(b.tasks[1],{state:'ACTIVE',branch:'codex/test',worktree:'C:/test/history',startingCommit:ownership.baseline,owner:'test'}),/Unaccepted dependency/);
  reject('review saturation',b=>{b.tasks[1].waitingForHuman=true;b.tasks[1].project='history-independent';b.tasks[2].waitingForHuman=true;b.tasks[2].project='source-independent';},/Human-review capacity/);
- reject('four builders',b=>{b.tasks=b.tasks.slice(1);for(const t of b.tasks)Object.assign(t,{state:'ACTIVE',dependencies:[],approvedDependencies:[],branch:'codex/'+t.id,worktree:'C:/test/'+t.id,owner:'test',startingCommit:ownership.baseline});b.tasks.push({...structuredClone(b.tasks[0]),id:'DATA-001',stream:'data',allowedPaths:['src/data/**'],worktree:'C:/test/data',project:'data'});},/Feature-builder capacity/);
- reject('shared writable checkout',b=>{b.tasks=b.tasks.slice(1,3);for(const t of b.tasks)Object.assign(t,{state:'ACTIVE',dependencies:[],approvedDependencies:[],branch:'codex/'+t.id,worktree:'C:/test/shared',owner:'test',startingCommit:ownership.baseline});},/Shared writable/);
+ reject('four builders',b=>{launchFixture(b);for(const t of b.tasks.slice(1))Object.assign(t,{state:'ACTIVE',branch:'codex/'+t.id,worktree:'C:/test/'+t.id,owner:'test',startingCommit:ownership.baseline});b.tasks.push({...structuredClone(b.tasks[1]),id:'DATA-001',stream:'data',allowedPaths:['src/data/**'],worktree:'C:/test/data',project:'data'});},/Feature-builder capacity/);
+ reject('shared writable checkout',b=>{launchFixture(b);b.tasks=b.tasks.slice(0,3);for(const t of b.tasks.slice(1))Object.assign(t,{state:'ACTIVE',branch:'codex/'+t.id,worktree:'C:/test/shared',owner:'test',startingCommit:ownership.baseline});},/Shared writable/);
  for(const p of ['src/humanities/*.js','src/humanities/lesson-*.js','src/**/lesson.js','**','src/humanities/file?.js'])reject('unsupported wildcard '+p,b=>b.tasks[1].allowedPaths.push(p),/Unsupported ownership pattern/);
  for(const state of ['ACTIVE','STAGED-REVIEW','INTEGRATION','MERGE-CANDIDATE','BLOCKED','DEFERRED'])reject(state+' retains path reservation',b=>{
+  launchFixture(b);
   const first=structuredClone(b.tasks[1]),second=structuredClone(first);
   b.tasks=[b.tasks[0],first,second];second.id='HIST-002';second.project='history-second';first.allowedPaths=['src/humanities/**'];second.allowedPaths=['src/humanities/**'];
   for(const [i,t]of [first,second].entries())Object.assign(t,{state:i?'ACTIVE':state,dependencies:[],approvedDependencies:[],branch:'codex/history-'+i,worktree:'C:/test/history-'+i,owner:'test',startingCommit:ownership.baseline,blocker:state==='BLOCKED'?'dependency':'',waitingForHuman:false});
  },/Overlapping reserved ownership/);
- const concurrent=structuredClone(backlog);concurrent.tasks[0].state='MERGED';concurrent.tasks[0].waitingForHuman=false;
+ for(const id of ['HIST-001','SOURCE-001','MAP-001']){
+  const activate=b=>Object.assign(b.tasks.find(t=>t.id===id),{state:'ACTIVE',approvedDependencies:['FOUND-001'],branch:'codex/'+id,worktree:'C:/test/'+id,owner:'test',startingCommit:ownership.baseline});
+  reject(id+' cannot bypass staged foundation with dependency/launch approval',b=>{b.approvedLaunches=['HUMANITIES-STAGE-A'];activate(b);},/Foundation must actually be merged/);
+  reject(id+' cannot launch after merge without explicit human approval',b=>{b.tasks[0].state='MERGED';activate(b);b.approvedCheckpoints=['HIST-001:A'];},/Explicit human Stage A launch/);
+ }
+ const concurrent=structuredClone(backlog);launchFixture(concurrent);
  for(const t of concurrent.tasks.slice(1))Object.assign(t,{state:'ACTIVE',branch:'codex/'+t.id,worktree:'C:/test/'+t.id,owner:'test',startingCommit:ownership.baseline});
- verify(concurrent);console.log('PASS guard: three concurrent Stage A streams after foundation merge');
+ verify(concurrent);console.log('PASS guard: three concurrent Stage A streams after merge AND explicit launch');
  reject('Stage A implementation creep',b=>b.tasks[2].allowedPaths.push('src/evidence-viewer/**'),/Stage A research/);
  reject('Stage B before History approval',b=>b.tasks[2].reviewStage='B',/History Stage A approval/);
  reject('Stage B without reconciled scope',b=>{b.approvedCheckpoints=['HIST-001:A'];b.tasks[2].reviewStage='B';},/History Stage A approval/);

@@ -46,3 +46,5 @@ Use exact verified paths; no --force, recursive deletion or automatic branch del
 ## Human decisions remaining
 Contract V1, ownership and capacity rules are adopted. Final foundation corrections require merge approval; no launch is authorised yet. Choose a concrete Year 12 Ancient History production brief before HIST-001 activation. Source/Map research may run concurrently after merge/launch; implementation scope waits for the approved History need. No choice of map vendor, GIS dataset, source-analysis UX or complete History layout is made here.
 
+
+Record an explicitly authorised Humanities Stage A launch in backlog.approvedLaunches as HUMANITIES-STAGE-A only after FOUND-001 is actually merged. Each initial feature task has that launchGate. Dependency approvals cannot bypass the merge, and neither branch/worktree existence nor HIST-001:A approval implies launch permission. The current launch record is empty and all feature tasks remain inactive.

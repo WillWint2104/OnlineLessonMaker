@@ -14,3 +14,5 @@ Allowed/protected paths support exact repository-relative paths and terminal dir
 
 The setup checker includes non-ignored untracked paths, so new unowned source files cannot escape the diff guard. Existing local docs/review/, review-delivery/ and scratchpad/ evidence is outside this setup source check. Two pre-existing historical scripts (apply-mathematics-consolidation.py and package-mathematics-visual-alignment.py) are explicitly preserved. These exclusions grant no editing authority; tracked changes in these paths remain checked. No runtime/source-directory exemption is granted.
 
+
+Initial Humanities activation has an absolute gate: FOUND-001.state must be MERGED and approvedLaunches must contain HUMANITIES-STAGE-A, matching each initial task’s launchGate. approvedDependencies, checkout existence and History checkpoint approval cannot substitute for either condition. The launch list is currently empty. Only an explicit human launch after the actual merge may populate it; this checker validates the recorded decision, it does not create authority. The same gate is retained for active/integration/merge-candidate work.
