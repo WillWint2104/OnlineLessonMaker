@@ -62,9 +62,9 @@
         "export sanity"
       ],
       "humanStopConditions": [
-        "Approve setup/contract/ownership/dependency model"
+        "Final foundation merge approval; feature launch requires separate explicit authorisation"
       ],
-      "reviewStage": "A",
+      "reviewStage": "D",
       "waitingForHuman": true,
       "branch": "codex/integration-FOUND-001-agentic-foundation",
       "worktree": "C:/Users/willi/Videos/Online Lesson Maker",
@@ -77,7 +77,7 @@
     },
     {
       "id": "HIST-001",
-      "project": "history-foundation",
+      "project": "humanities-stage-a",
       "stream": "history",
       "lane": "feature",
       "priority": 0,
@@ -103,8 +103,7 @@
         ".github/**",
         ".coderabbit.yaml",
         "supabase/**",
-        "scripts/build-*.mjs",
-        "scripts/verify-*.mjs"
+        "scripts/**"
       ],
       "reviewStage": "A",
       "waitingForHuman": false,
@@ -113,24 +112,21 @@
       "startingCommit": null,
       "owner": null,
       "pr": null,
-      "blocker": "Setup approval and concrete Year 12 Ancient History brief required",
+      "blocker": "Foundation merge, explicit Stage A launch and concrete Year 12 Ancient History brief required",
       "card": "docs/development/tasks/HIST-001.md"
     },
     {
       "id": "SOURCE-001",
-      "project": "source-foundation",
+      "project": "humanities-stage-a",
       "stream": "source",
       "lane": "feature",
       "priority": 0,
       "state": "BLOCKED",
       "dependencies": [
-        "FOUND-001",
-        "HIST-001"
+        "FOUND-001"
       ],
       "approvedDependencies": [],
       "allowedPaths": [
-        "src/evidence-viewer/**",
-        "tests/widgets/evidence-viewer/**",
         "docs/review/source-SOURCE-001/**"
       ],
       "protectedPaths": [
@@ -145,8 +141,7 @@
         ".github/**",
         ".coderabbit.yaml",
         "supabase/**",
-        "scripts/build-*.mjs",
-        "scripts/verify-*.mjs"
+        "scripts/**"
       ],
       "reviewStage": "A",
       "waitingForHuman": false,
@@ -155,24 +150,30 @@
       "startingCommit": null,
       "owner": null,
       "pr": null,
-      "blocker": "Setup approval and approved HIST-001 Stage A scope required",
-      "card": "docs/development/tasks/SOURCE-001.md"
+      "blocker": "Foundation merge and explicit concurrent Stage A research launch required",
+      "card": "docs/development/tasks/SOURCE-001.md",
+      "stageBAllowedPaths": [
+        "src/evidence-viewer/**",
+        "tests/widgets/evidence-viewer/**",
+        "docs/review/source-SOURCE-001/**"
+      ],
+      "implementationGate": {
+        "checkpoint": "HIST-001:A",
+        "scopeReconciledWith": null
+      }
     },
     {
       "id": "MAP-001",
-      "project": "map-foundation",
+      "project": "humanities-stage-a",
       "stream": "map",
       "lane": "feature",
       "priority": 0,
       "state": "BLOCKED",
       "dependencies": [
-        "FOUND-001",
-        "HIST-001"
+        "FOUND-001"
       ],
       "approvedDependencies": [],
       "allowedPaths": [
-        "src/map/**",
-        "tests/widgets/map/**",
         "docs/review/map-MAP-001/**"
       ],
       "protectedPaths": [
@@ -187,8 +188,7 @@
         ".github/**",
         ".coderabbit.yaml",
         "supabase/**",
-        "scripts/build-*.mjs",
-        "scripts/verify-*.mjs"
+        "scripts/**"
       ],
       "reviewStage": "A",
       "waitingForHuman": false,
@@ -197,8 +197,17 @@
       "startingCommit": null,
       "owner": null,
       "pr": null,
-      "blocker": "Setup approval and approved HIST-001 Stage A scope required",
-      "card": "docs/development/tasks/MAP-001.md"
+      "blocker": "Foundation merge and explicit concurrent Stage A research launch required",
+      "card": "docs/development/tasks/MAP-001.md",
+      "stageBAllowedPaths": [
+        "src/map/**",
+        "tests/widgets/map/**",
+        "docs/review/map-MAP-001/**"
+      ],
+      "implementationGate": {
+        "checkpoint": "HIST-001:A",
+        "scopeReconciledWith": null
+      }
     }
   ],
   "deferredStreams": [
@@ -208,6 +217,7 @@
     "business-simulations",
     "future-mathematics",
     "remote-classroom-release"
-  ]
+  ],
+  "approvedCheckpoints": []
 }
 

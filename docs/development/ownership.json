@@ -1,7 +1,7 @@
 {
   "version": 1,
   "baseline": "aae1b1a891d495e31e879bcbd6a79404f576fe57",
-  "status": "PROPOSED_REVIEW",
+  "status": "ADOPTED",
   "protectedPaths": [
     "lesson-studio.html",
     "docs/development/**",
@@ -14,8 +14,7 @@
     ".github/**",
     ".coderabbit.yaml",
     "supabase/**",
-    "scripts/build-*.mjs",
-    "scripts/verify-*.mjs"
+    "scripts/**"
   ],
   "areas": [
     {

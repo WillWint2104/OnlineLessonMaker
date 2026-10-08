@@ -1,4 +1,4 @@
-# Agentic development foundation — review candidate
+# Agentic development foundation — final correction review
 
 Baseline: production main `aae1b1a891d495e31e879bcbd6a79404f576fe57`; PRs #169/#170 merged. **General Mathematics architecture frozen.** Setup-only: no feature builders launched, no new learner features, no migration, merge or deployment.
 
@@ -11,7 +11,7 @@ Read in order:
 6. [Deferred streams](DEFERRED-STREAMS.md).
 7. Root/scoped AGENTS.md guidance and the review package verification receipt.
 
-Human review is required before adopting this proposed ownership/contract and activating streams. The initial dependency is deliberate: History scoping establishes the real lesson requirements before Source/Map V1 scope is accepted. Their audits may later run concurrently, but feature implementation needs the approved scope. Nothing automatically launches from backlog edits.
+Widget Contract V1, ownership boundaries and capacity limits are adopted following human review. Final correction/merge approval is pending; feature activation requires a separate explicit launch after FOUND-001 merges. History, Source and Map Stage A may then run concurrently toward one combined human checkpoint. Source/Map Stage A is audit/research/proposal only; Stage B is gated on human-approved History Stage A and reconciled bounded V1 scope. Nothing automatically launches or advances from backlog edits.
 
 Validate coordination data using `node scripts/verify-development-foundation.mjs`. It checks references, state/capacity, dependency cycles and disjoint allowed ownership. It is a read-only checker, not an agent launcher, runtime registry or project-management system. Branch protection/CODEOWNERS enforcement is not added in this setup.
 

@@ -9,19 +9,23 @@ const read=name=>JSON.parse(fs.readFileSync(path.join(root,name),'utf8'));
 const ownership=read('docs/development/ownership.json');
 const backlog=read('docs/development/backlog.json');
 const states=new Set(['QUEUED','ACTIVE','BLOCKED','STAGED-REVIEW','INTEGRATION','MERGE-CANDIDATE','MERGED','DEFERRED']);
-const safe=p=>typeof p==='string'&&p&&!p.includes('\\')&&!p.startsWith('/')&&!p.split('/').includes('..');
 const base=p=>p.endsWith('/**')?p.slice(0,-3):p;
+// Ownership supports exact repository paths and terminal directory /** only.
+const safe=p=>typeof p==='string'&&p.length>0&&p===p.trim()&&!/[\\:\x00-\x1f]/.test(p)&&!p.startsWith('/')&&!/[*?\[\]{}]/.test(base(p))&&base(p).split('/').every(s=>s&&s!=='.'&&s!=='..');
 const overlaps=(a,b)=>a===b||(a.endsWith('/**')&&(base(b)===base(a)||base(b).startsWith(base(a)+'/')))||(b.endsWith('/**')&&(base(a)===base(b)||base(a).startsWith(base(b)+'/')));
+const setupDiffArgs=['diff','--no-renames','--name-only',ownership.baseline,'--'];
+const setupPathsAllowed=(changed,allowed)=>changed.every(p=>allowed.some(a=>a===p||(a.endsWith('/**')&&p.startsWith(base(a)+'/'))));
 function verify(b){
  assert.equal(b.version,1); assert.equal(ownership.version,1);
  assert.equal(b.activation,'HUMAN_APPROVAL_REQUIRED_NO_DISPATCH');
  assert.equal(b.limits.featureBuilders,3);assert.equal(b.limits.projectsAwaitingDesignReview,2);
+ assert.ok(ownership.protectedPaths.every(safe)&&ownership.areas.every(a=>[a.source,a.tests,a.instructions].every(safe)),'Unsupported ownership pattern');
  const byId=new Map();
  for(const t of b.tasks){assert.ok(!byId.has(t.id),'Duplicate task ID');byId.set(t.id,t);}
  for(const t of b.tasks){
   assert.ok(states.has(t.state),'Invalid task state');assert.ok(Number.isInteger(t.priority)&&t.priority>=0&&t.priority<=2,'Invalid priority');
   assert.ok(['feature','integration'].includes(t.lane),'Invalid lane');
-  assert.ok(t.allowedPaths?.length&&t.allowedPaths.every(safe)&&t.protectedPaths?.every(safe),'Unsafe/missing paths');
+  assert.ok(t.allowedPaths?.length&&t.allowedPaths.every(safe)&&t.protectedPaths?.every(safe),'Unsupported ownership pattern or missing paths');
   assert.ok(safe(t.card)&&fs.existsSync(path.join(root,t.card)),'Missing task card');
   assert.ok(['A','B','C','D'].includes(t.reviewStage),'Missing review stage');
   assert.ok(Array.isArray(t.dependencies)&&t.dependencies.every(d=>byId.has(d)&&d!==t.id),'Unknown/self dependency');
@@ -37,6 +41,12 @@ function verify(b){
     assert.ok([area.source,area.tests,`docs/review/${t.stream}-${t.id}/**`].some(a=>overlaps(a,p)&&base(p).startsWith(base(a))),'Feature allowed path outside its area');
     assert.ok(!ownership.protectedPaths.some(a=>overlaps(a,p)),'Feature allowed path overlaps protected area');
    }
+   if(['SOURCE-001','MAP-001'].includes(t.id)){
+    const gate=t.implementationGate;
+    assert.ok(gate?.checkpoint==='HIST-001:A'&&byId.has('HIST-001'),'Missing History implementation gate');
+    if(t.reviewStage==='A')assert.ok(t.allowedPaths.every(p=>p===`docs/review/${t.stream}-${t.id}/**`),'Stage A research cannot own implementation paths');
+    else assert.ok(b.approvedCheckpoints?.includes(gate.checkpoint)&&gate.scopeReconciledWith===gate.checkpoint,'History Stage A approval and reconciled V1 scope required');
+   }
   }
  }
  const visited=new Set(),pending=new Set();
@@ -45,10 +55,11 @@ function verify(b){
  const active=b.tasks.filter(t=>t.lane==='feature'&&t.state==='ACTIVE');
  assert.ok(active.length<=b.limits.featureBuilders,'Feature-builder capacity exceeded');
  const reviews=new Set(b.tasks.filter(t=>t.waitingForHuman).map(t=>t.project));assert.ok(reviews.size<=b.limits.projectsAwaitingDesignReview,'Human-review capacity exceeded');
- const occupied=b.tasks.filter(t=>['ACTIVE','INTEGRATION'].includes(t.state));
- const reserved=b.tasks.filter(t=>t.worktree&&!['MERGED','DEFERRED'].includes(t.state));
+ // DEFERRED is a pause, not release: a retained checkout continues reserving paths.
+ const reserved=b.tasks.filter(t=>t.worktree&&t.state!=='MERGED'&&!t.ownershipReleased);
+ for(const t of b.tasks.filter(t=>t.ownershipReleased))assert.ok(!t.worktree&&!t.branch,'Released ownership must clear branch/worktree');
  const trees=new Set();for(const t of reserved){const key=path.resolve(t.worktree).toLowerCase();assert.ok(!trees.has(key),'Shared writable worktree');trees.add(key);}
- for(let i=0;i<occupied.length;i++)for(let j=i+1;j<occupied.length;j++)assert.ok(!occupied[i].allowedPaths.some(a=>occupied[j].allowedPaths.some(b=>overlaps(a,b))),'Overlapping active ownership');
+ for(let i=0;i<reserved.length;i++)for(let j=i+1;j<reserved.length;j++)assert.ok(!reserved[i].allowedPaths.some(a=>reserved[j].allowedPaths.some(b=>overlaps(a,b))),'Overlapping reserved ownership');
  for(const a of ownership.areas)assert.ok(fs.existsSync(path.join(root,a.instructions)),'Missing scoped instructions');
 }
 verify(backlog);
@@ -58,14 +69,30 @@ if(process.argv.includes('--self-test')){
  reject('dependency cycles',b=>b.tasks[0].dependencies=['MAP-001'],/Dependency cycle/);
  reject('protected central edits',b=>b.tasks[1].allowedPaths.push('lesson-studio.html'),/outside its area|protected area/);
  reject('unaccepted dependencies',b=>Object.assign(b.tasks[1],{state:'ACTIVE',branch:'codex/test',worktree:'C:/test/history',startingCommit:ownership.baseline,owner:'test'}),/Unaccepted dependency/);
- reject('review saturation',b=>{b.tasks[1].waitingForHuman=true;b.tasks[2].waitingForHuman=true;},/Human-review capacity/);
+ reject('review saturation',b=>{b.tasks[1].waitingForHuman=true;b.tasks[1].project='history-independent';b.tasks[2].waitingForHuman=true;b.tasks[2].project='source-independent';},/Human-review capacity/);
  reject('four builders',b=>{b.tasks=b.tasks.slice(1);for(const t of b.tasks)Object.assign(t,{state:'ACTIVE',dependencies:[],approvedDependencies:[],branch:'codex/'+t.id,worktree:'C:/test/'+t.id,owner:'test',startingCommit:ownership.baseline});b.tasks.push({...structuredClone(b.tasks[0]),id:'DATA-001',stream:'data',allowedPaths:['src/data/**'],worktree:'C:/test/data',project:'data'});},/Feature-builder capacity/);
  reject('shared writable checkout',b=>{b.tasks=b.tasks.slice(1,3);for(const t of b.tasks)Object.assign(t,{state:'ACTIVE',dependencies:[],approvedDependencies:[],branch:'codex/'+t.id,worktree:'C:/test/shared',owner:'test',startingCommit:ownership.baseline});},/Shared writable/);
+ for(const p of ['src/humanities/*.js','src/humanities/lesson-*.js','src/**/lesson.js','**','src/humanities/file?.js'])reject('unsupported wildcard '+p,b=>b.tasks[1].allowedPaths.push(p),/Unsupported ownership pattern/);
+ for(const state of ['ACTIVE','STAGED-REVIEW','INTEGRATION','MERGE-CANDIDATE','BLOCKED','DEFERRED'])reject(state+' retains path reservation',b=>{
+  const first=structuredClone(b.tasks[1]),second=structuredClone(first);
+  b.tasks=[b.tasks[0],first,second];second.id='HIST-002';second.project='history-second';first.allowedPaths=['src/humanities/**'];second.allowedPaths=['src/humanities/**'];
+  for(const [i,t]of [first,second].entries())Object.assign(t,{state:i?'ACTIVE':state,dependencies:[],approvedDependencies:[],branch:'codex/history-'+i,worktree:'C:/test/history-'+i,owner:'test',startingCommit:ownership.baseline,blocker:state==='BLOCKED'?'dependency':'',waitingForHuman:false});
+ },/Overlapping reserved ownership/);
+ const concurrent=structuredClone(backlog);concurrent.tasks[0].state='MERGED';concurrent.tasks[0].waitingForHuman=false;
+ for(const t of concurrent.tasks.slice(1))Object.assign(t,{state:'ACTIVE',branch:'codex/'+t.id,worktree:'C:/test/'+t.id,owner:'test',startingCommit:ownership.baseline});
+ verify(concurrent);console.log('PASS guard: three concurrent Stage A streams after foundation merge');
+ reject('Stage A implementation creep',b=>b.tasks[2].allowedPaths.push('src/evidence-viewer/**'),/Stage A research/);
+ reject('Stage B before History approval',b=>b.tasks[2].reviewStage='B',/History Stage A approval/);
+ reject('Stage B without reconciled scope',b=>{b.approvedCheckpoints=['HIST-001:A'];b.tasks[2].reviewStage='B';},/History Stage A approval/);
+ const accepted=structuredClone(backlog);accepted.approvedCheckpoints=['HIST-001:A'];
+ for(const t of accepted.tasks.filter(t=>['SOURCE-001','MAP-001'].includes(t.id))){t.reviewStage='B';t.implementationGate.scopeReconciledWith='HIST-001:A';t.allowedPaths=structuredClone(t.stageBAllowedPaths);}
+ verify(accepted);console.log('PASS guard: reconciled Stage B scope after History approval');
+ assert.ok(setupDiffArgs.includes('--no-renames'));assert.equal(setupPathsAllowed(['src/graph-response/extent.js','docs/development/extent.js'],backlog.tasks[0].allowedPaths),false);console.log('PASS guard: protected rename source cannot hide behind allowed destination');
 }
 if(process.argv.includes('--setup')){
- const changed=execFileSync('git',['diff','--name-only',ownership.baseline,'--'],{cwd:root,encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
+ const changed=execFileSync('git',setupDiffArgs,{cwd:root,encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
  const allowed=backlog.tasks.find(t=>t.id==='FOUND-001').allowedPaths;
- assert.ok(changed.every(p=>allowed.some(a=>a===p||(a.endsWith('/**')&&p.startsWith(base(a)+'/')))),'Setup changed an unowned/runtime file');
+ assert.ok(setupPathsAllowed(changed,allowed),'Setup changed an unowned/runtime file');
  for(const file of ['lesson-studio.html','lessons/expanding-two-binomials.html','lessons/expanding-binomial-trinomial.html','lessons/factorising-quadratics.html','lessons/straight-lines.html']){
   const before=execFileSync('git',['show',ownership.baseline+':'+file],{cwd:root,maxBuffer:32*1024*1024});
   const after=fs.readFileSync(path.join(root,file));assert.ok(before.equals(after),'Frozen runtime differs: '+file);

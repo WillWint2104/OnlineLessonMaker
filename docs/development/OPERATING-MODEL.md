@@ -12,7 +12,9 @@ Integration/QA owns central wiring and shared gates: registry/schema, existing c
 Limits: **3 active feature builders; 2 distinct projects waiting for human design review**. Integration/QA is separate. Independent review uses available capacity and never displaces the integration lane with a fourth builder. A free slot does not authorise new work when design review is saturated. Raising the limit requires explicit operating-policy approval, not merely having a free agent.
 
 ## Checkpoints and pipeline
-A: architecture/runnable foundation. B: core interaction. C: realistic lesson fixture/visual treatment. D: merge candidate. Task cards choose meaningful stops; not every task stops at all four.
+A: architecture/audit/research proposal (runnable foundation only where explicitly scoped). B: core interaction. C: realistic lesson fixture/visual treatment. D: merge candidate. Task cards choose meaningful stops; not every task stops at all four.
+
+After FOUND-001 merges and an explicit launch is authorised, HIST-001, SOURCE-001 and MAP-001 may run Stage A concurrently. Source audits ev*, OpenSeadragon, publication/provenance and reusable source options; Map researches authoritative data, vendors/libraries, projection/licence and chronology. Source/Map Stage A cannot implement new UX, choose a committed vendor or build the full interaction. Their allowed paths are proposal/evidence only. Stage B requires human-approved HIST-001 Stage A plus reconciled bounded V1 scope. Submit one combined humanities-stage-a checkpoint where practical; later independent implementation projects count separately against review capacity.
 
 Stop for product judgement: ambiguous learner UX, material pedagogy, new interaction model, core architecture/contract change, unresolved accuracy or major identity choice. Continue routine bugs, tests, accessibility/responsive fixes and approved designs without repeated approval requests.
 
@@ -41,6 +43,6 @@ git worktree list
 ```
 Use exact verified paths; no --force, recursive deletion or automatic branch deletion. Main stays available for integration/production, not shared mutable builder state. Setup currently uses its own branch in the existing checkout; there are no independent builders.
 
-## Human decisions for this setup
-Approve/adjust the proposed contract and ownership; approve the History-first scope dependency and capacity limits. Choose a concrete Year 12 Ancient History production brief before HIST-001 is activated. SOURCE/MAP implementation scope waits for that approved lesson need. No choice of map vendor, GIS dataset, source-analysis UX or complete History layout is made here.
+## Human decisions remaining
+Contract V1, ownership and capacity rules are adopted. Final foundation corrections require merge approval; no launch is authorised yet. Choose a concrete Year 12 Ancient History production brief before HIST-001 activation. Source/Map research may run concurrently after merge/launch; implementation scope waits for the approved History need. No choice of map vendor, GIS dataset, source-analysis UX or complete History layout is made here.
 

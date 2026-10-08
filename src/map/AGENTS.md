@@ -8,5 +8,7 @@ Protected: lesson-studio.html, shared schema/registry/contracts, neighbouring co
 
 Bound V1 to the approved real lesson; authoritative locations/boundaries/data, provenance and uncertainty. Do not invent geography. 3D/campaigns/terrain are deferred unless explicitly scoped.
 
-New substantial widgets follow [Widget Contract V1](../../docs/development/WIDGET-CONTRACT-V1.md). Include focused config/state/reset/resize/disposal/keyboard/error tests where relevant, a runnable fixture and honest responsive/publishing evidence. Integration owns central wiring and combined regression. CodeRabbit remains required for a stable PR; stop at product/contract/architecture decisions and assigned staged review, not routine fixes. Preserve legacy config/IDs/unknown fields and host answer policy.
+New substantial widgets follow [ADOPTED Widget Contract V1](../../docs/development/WIDGET-CONTRACT-V1.md). Include focused config/state/reset/resize/disposal/keyboard/error tests where relevant, a runnable fixture and honest responsive/publishing evidence. Integration owns central wiring and combined regression. CodeRabbit remains required for a stable PR; stop at product/contract/architecture decisions and assigned staged review, not routine fixes. Preserve legacy config/IDs/unknown fields and host answer policy.
 
+
+Stage A may run alongside History after foundation merge and an explicit launch, owning only its proposal/evidence directory. Stage B requires human approval of HIST-001 Stage A and reconciliation of this stream’s V1 scope with that approved lesson need. No implementation or vendor integration in Stage A.

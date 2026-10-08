@@ -1,6 +1,6 @@
 # Reusable learner Widget Contract V1
 
-Version 1.0 — **proposed, protected, pending setup review**. Governs NEW substantial learner widgets. This is a small lifecycle/data contract, not a runtime framework or a requirement to migrate existing Mathematics/Evidence components.
+**ADOPTED — Widget Contract V1**, version 1.0, protected and human-approved. Governs NEW substantial learner widgets. This is a small lifecycle/data contract, not a runtime framework or a requirement to migrate existing Mathematics/Evidence components.
 
 ## Data and identity
 - Stable namespaced widget type and stable authored instance ID; document config schema version and required/optional fields in the component directory.
@@ -32,5 +32,5 @@ Builder delivers isolated source, config/state documentation, focused tests, run
 
 Learner component may later be imported by HGL Studio from the SAME source. Studio owns its presenter/recording controls; they must not enter the learner component. No divergent Studio fork by default.
 
-Changes to this protected contract need a bounded explicit task, integration review/regression and human decision for behaviour/product architecture. V1 adoption itself is a setup review decision.
+Changes to this protected contract need a bounded explicit task, integration review/regression and human decision for behaviour/product architecture. Contract adoption does not authorise feature launch or foundation merge.
 
