@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const dir='assets/vendor/hgl-graph';
+const bytes=fs.readFileSync(dir+'/graph-reference.html');
+const expected='f9fd53f26dfaaf04f330c47bccbaccaa8fe54722dfe0e49b7bf300f8e8e8cb9a';
+if(createHash('sha256').update(bytes).digest('hex')!==expected)throw Error('Graph reference changed. Audit a new reference before rebuilding.');
+const ref=bytes.toString('utf8').replace(/\r\n/g,'\n');
+const fn=name=>{const match=ref.match(new RegExp('^function '+name+'\\([^]*?^}', 'm'));if(!match)throw Error('Missing HGL function '+name);return match[0];};
+const constants=ref.slice(ref.indexOf('const _GP_FNS ='),ref.indexOf('function _gpUnicodeNormalize'));
+const functions=['_gpUnicodeNormalize','_gpTokenize','_gpToRPN','_gpEvalRPN','_gpValidateRPN','graphCompile','_gpEffectiveGridStep','_svgEl','_gpEnsureAxisHeadDefs','_gpBuildSvg','_gpIsSafeColor','_gpFmtNum','_gpPaintStroke','_gpHexToRgba'];
+const component='// Generated from the immutable HGL reference; see AUDIT.md.\nconst GR_HGL=(()=>{\n'+constants+'\nconst _GP_SVG_NS="http://www.w3.org/2000/svg",_GP_MAX_GRID_LINES=200;\n'+functions.map(fn).join('\n')+'\nreturn {compile:graphCompile,svg:_gpBuildSvg,paintStroke:_gpPaintStroke};\n})();\n';
+fs.writeFileSync(dir+'/foundation.generated.js',component);
+let app=fs.readFileSync('lesson-studio.html','utf8').replace(/\r\n/g,'\n');
+const replace=(start,end,body,anchor)=>{const section=start+'\n'+body+'\n'+end;const at=app.indexOf(start);if(at>=0)app=app.slice(0,at)+section+app.slice(app.indexOf(end,at)+end.length);else app=app.replace(anchor,section+'\n'+anchor);};
+replace('/* GRAPH_RESPONSE_CSS_START */','/* GRAPH_RESPONSE_CSS_END */',fs.readFileSync('src/graph-response/graph-response.css','utf8'),'</style>');
+replace('/* GRAPH_RESPONSE_COMPONENT_START */','/* GRAPH_RESPONSE_COMPONENT_END */',component+'\n'+fs.readFileSync('src/graph-response/extent.js','utf8')+'\n'+fs.readFileSync('src/graph-response/graph-response.js','utf8'),'function mxQuestionList(');
+fs.writeFileSync('lesson-studio.html',app);
+console.log('Built Graph Response with '+functions.length+' unchanged HGL functions; reference SHA-256 '+expected);

@@ -1,0 +1,78 @@
+/* Accepted Mathematics visual language, reapplied onto the final M3 foundation. */
+.lp-textbook-shell{--mx-green:#087c70;--mx-green-tint:#e5f5ef;--mx-green-pale:#eef8f4;--mx-rail:#f8fbfa;--mx-ink:#172421;--mx-ink-body:#23332e;--mx-ink-2:#495d55;--mx-ink-3:#495d55;--mx-line:#dce8e2;background:#f7faf9;}
+.lp-textbook-shell .mx-top{border-bottom:1px solid #dce8e2;background:#fff;}
+.lp-textbook-shell .mx-page{padding:28px 30px;}
+.lp-textbook-shell .lp-activity{--lp-pad:32px;border-color:#dce8e2;border-radius:12px;max-width:1100px;}
+.lp-textbook-shell .lp-activity:is([data-lp-arrangement="front"],[data-lp-arrangement="completion"],[data-lp-arrangement="practice"]){max-width:1240px;}
+.lp-textbook-shell .lp-header{margin-bottom:24px;}
+.lp-textbook-shell .lp-title{color:#172421;font-size:36px;}
+.lp-textbook-shell .lp-location{color:#495d55;letter-spacing:.02em;}
+.lp-textbook-shell .lp-book-overview{grid-template-columns:1fr 1.05fr;gap:36px;}
+.lp-textbook-shell .lp-book-overview .lp-title{font-size:clamp(34px,4vw,56px);line-height:1.08;}
+.lp-textbook-shell .lp-book-overview>.lp-hero-image img{aspect-ratio:1.1;border-radius:10px;}
+.lp-textbook-shell .lp-composition{gap:32px;}
+.lp-textbook-shell .lp-composition>.lp-hero-image img{aspect-ratio:1.05;}
+.lp-textbook-shell .lp-intentions{background:#f3faf7;border:1px solid #e2efe8;padding:22px;}
+.lp-textbook-shell .lp-intentions li{margin-bottom:18px;}
+.lp-textbook-shell .lp-summary{color:#23332e;margin:24px 0;}
+.lp-textbook-shell .lp-primary{background:#087c70;border-color:#087c70;border-radius:7px;}
+.lp-textbook-shell .lp-introduction .lp-key-idea,.lp-textbook-shell .lp-video-page .lp-key-idea{background:#eef8f4;border:1px solid #e0eee7;border-radius:9px;}
+.lp-textbook-shell .lp-introduction section{margin-bottom:26px;}
+.lp-textbook-shell .lp-introduction h2,.lp-textbook-shell .lp-video-page h2{color:#172421;}
+.lp-textbook-shell .mx-collection-tabs button,.lp-answer-hub:not(.lp-graph-hub) .mx-collection-tabs button{border-color:#cbded4;background:#fff;color:#23332e;border-radius:6px;}
+.lp-textbook-shell .mx-collection-tabs button[aria-selected="true"],.lp-answer-hub:not(.lp-graph-hub) .mx-collection-tabs button[aria-selected="true"]{background:#e4f5ef;color:#00685d;border-color:#087c70;box-shadow:inset 0 0 0 1px #087c70;}
+.lp-textbook-shell .mx-example-question{background:#f0f9f5;border:1px solid #deeee5;padding:20px 22px;border-radius:9px;}
+.lp-textbook-shell .mx-example-number{color:#087c70;}
+.lp-textbook-shell .mx-support-open{color:#00685d;border-color:#94bdb0;background:#fff;}
+.lp-textbook-shell .mx-solution-table{border-color:#dce8e2;border-radius:8px;}
+.lp-textbook-shell .mx-solution-table th{background:#f3f9f6;color:#172421;}
+.lp-textbook-shell .mx-solution-table td{border-color:#e5eee9;}
+.lp-textbook-shell .mx-solution-table :is(th,td):nth-child(3){border-left-color:#c1dbcf;}
+.lp-textbook-shell .mx-solution-table .mx-row-number span{background:#e4f5ef;color:#00685d;}
+.lp-textbook-shell .lp-practice-toolbar{padding:0 0 16px;border-bottom:1px solid #e3ece7;gap:12px;}
+.lp-textbook-shell .lp-practice-toolbar .lp-book-status{font-size:16px;color:#495d55;}
+.lp-textbook-shell .lp-practice-toolbar [data-book-hub]{background:#fff;color:#00685d;border-color:#abcbbd;}
+.lp-textbook-shell .lp-exercise-grid{gap:8px 28px;}
+.lp-textbook-shell .lp-exercise-cell{border-color:#e5eee9;padding:10px 0;}
+.lp-textbook-shell .lp-exercise-cell .mx-num{color:#00685d;background:#e4f5ef;}
+.lp-textbook-shell .lp-footer{border-top-color:#dce8e2;background:#fff;}
+.lp-textbook-shell .lp-footer button{border-color:#cbded4;color:#23332e;border-radius:7px;}
+.lp-textbook-shell .lp-completion-hero{background:#f2faf6;border:1px solid #deeee5;padding:26px;grid-template-columns:1fr 1.2fr;}
+.lp-textbook-shell .lp-book-outro>section{background:#fff;border:1px solid #dce8e2;}
+.lp-answer-hub:not(.lp-graph-hub){border:1px solid #d3e3da;border-radius:12px;background:#fff;color:#172421;}
+.lp-answer-hub:not(.lp-graph-hub)::backdrop{background:rgba(24,48,38,.26);}
+.lp-answer-hub:not(.lp-graph-hub) .lp-hub-status{color:#495d55;}
+.lp-answer-hub:not(.lp-graph-hub) .lp-answer-filters{padding:10px 0 14px;border-bottom:1px solid #e2ece6;}
+.lp-answer-hub:not(.lp-graph-hub) .lp-answer-filters select{border:1px solid #cbded4;border-radius:6px;background:#fff;color:#23332e;}
+.lp-answer-hub:not(.lp-graph-hub) .lp-answer-list article{border:1px solid #e0ebe4;border-radius:8px;background:#fff;padding:14px;}
+.lp-answer-hub:not(.lp-graph-hub) .lp-answer-key article{padding:10px 12px;}
+.lp-answer-hub:not(.lp-graph-hub) .lp-answer-no{background:#e4f5ef;color:#00685d;}
+.lp-answer-hub:not(.lp-graph-hub) .lp-answer-list{gap:14px;}
+body:has(.lp-textbook-shell) #inspector .isec{border-color:#dce8e2;}
+body:has(.lp-textbook-shell) #inspector :is(input,textarea,select){border-color:#cbded4;}
+@media(max-width:1280px){.lp-textbook-shell .mx-page{padding:22px;}.lp-textbook-shell .lp-activity{--lp-pad:28px;}.lp-textbook-shell .lp-book-overview{gap:28px;}}
+@media(max-width:1050px){.lp-textbook-shell .lp-book-overview,.lp-textbook-shell .lp-completion-hero{grid-template-columns:1fr;}.lp-textbook-shell .lp-book-overview>.lp-hero-image{max-width:620px;width:100%;}.lp-textbook-shell .lp-book-overview>.lp-hero-image img{aspect-ratio:1.6;}.lp-textbook-shell .lp-completion-hero .lp-hero-image img{aspect-ratio:1.6;min-height:0;}}
+@media(max-width:600px){.lp-textbook-shell .mx-page{padding:14px 12px 24px;}.lp-textbook-shell .lp-activity{--lp-pad:20px;border-radius:9px;}.lp-textbook-shell .lp-title{font-size:29px;}.lp-textbook-shell .lp-book-overview .lp-title{font-size:36px;}.lp-textbook-shell .lp-book-overview,.lp-textbook-shell .lp-composition{gap:22px;}.lp-textbook-shell .lp-composition>.lp-hero-image img{aspect-ratio:1.4;}.lp-textbook-shell .mx-example-question{padding:16px;}.lp-textbook-shell .lp-completion-hero{padding:18px;}.lp-textbook-shell .lp-practice-toolbar .lp-book-tools{flex-direction:row;align-items:center;}.lp-answer-hub:not(.lp-graph-hub) .lp-answer-filters{padding:4px 0 8px;}.lp-answer-hub:not(.lp-graph-hub) .lp-answer-list article{padding:10px;}.lp-answer-hub:not(.lp-graph-hub) .lp-answer-list{gap:10px;}}
+
+/* Multipart questions are full assessment units; subparts respond to their own canvas. */
+.lp-textbook .lp-exercise-cell:has(.mx-parts){grid-column:1/-1!important;border:1px solid #dce8e2;border-radius:8px;padding:18px 20px;background:white;}
+.lp-textbook .lp-exercise-cell:has(.mx-parts) .mx-parts{display:grid;grid-template-columns:minmax(0,1fr);gap:14px 28px;}
+@container exercise-question (min-width:800px){.lp-textbook .lp-exercise-cell.lp-short-parts .mx-parts{grid-template-columns:repeat(2,minmax(0,1fr));}}
+.lp-textbook-shell .mx-solution-table tr{grid-template-columns:40px minmax(0,1.1fr) minmax(0,1fr);}
+.lp-textbook-shell .mx-solution-table th:nth-child(3){text-align:left;padding:13px 16px;}
+.lp-textbook-shell .mx-solution-table .mx-annotation{border-left:1px solid #c1dbcf;}
+.lp-textbook-shell .mx-solution-table .mx-stepm{overflow-x:auto;font-size:21px;}
+.lp-textbook-shell .mx-solution-table .mx-stepm math{white-space:nowrap;}
+.lp-part-answers{margin:10px 0;display:grid;gap:14px;}
+.lp-part-answer{display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px;}
+.lp-part-answer p{margin:0 0 6px;font:17px/1.5 var(--mx-ui);}
+.lp-part-answer .mx-stepm{font-size:21px;min-width:0;}
+.lp-answer-hub .mx-collection-tabs button[aria-selected=true]{background:#e4f5ef;color:#00685d;border-color:#087c70;}
+.lp-textbook-shell .gr-answer-access .lp-primary{background:#087c70;color:#fff;}
+@media(max-width:850px){.lp-textbook-shell .mx-solution-table tr{grid-template-columns:36px minmax(0,1fr);}.lp-textbook-shell .mx-solution-table .mx-row-number{grid-row:span 2;}.lp-textbook-shell .mx-solution-table .mx-annotation{grid-column:2;border-left:0;padding-top:0;}}
+.lp-textbook-shell .lp-exercise-grid:has(.gr-response){row-gap:14px}.lp-textbook-shell .lp-exercise-cell:has(.gr-response){padding:16px;row-gap:14px}
+
+/* Optional structured part fields remain one readable inspector column. */
+.lp-parts-editor .lp-part-fields{min-width:0;grid-column:2;display:block;}
+.lp-parts-editor .lp-part-fields textarea{box-sizing:border-box;width:100%;min-height:70px;}
+.lp-parts-editor .lp-part-fields .mxprev{overflow-wrap:anywhere;min-width:0;}
