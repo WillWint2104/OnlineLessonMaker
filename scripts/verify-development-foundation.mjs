@@ -15,6 +15,9 @@ const safe=p=>typeof p==='string'&&p.length>0&&p===p.trim()&&!/[\\:\x00-\x1f]/.t
 const overlaps=(a,b)=>a===b||(a.endsWith('/**')&&(base(b)===base(a)||base(b).startsWith(base(a)+'/')))||(b.endsWith('/**')&&(base(a)===base(b)||base(a).startsWith(base(b)+'/')));
 const setupDiffArgs=['diff','--no-renames','--name-only',ownership.baseline,'--'];
 const setupPathsAllowed=(changed,allowed)=>changed.every(p=>allowed.some(a=>a===p||(a.endsWith('/**')&&p.startsWith(base(a)+'/'))));
+// Pre-existing local evidence/scratch is preserved, not granted task edit ownership.
+const preservedUntracked=['docs/review/**','review-delivery/**','scratchpad/**','scripts/apply-mathematics-consolidation.py','scripts/package-mathematics-visual-alignment.py'];
+const setupChangedPaths=(tracked,untracked)=>[...tracked,...untracked.filter(p=>!setupPathsAllowed([p],preservedUntracked))];
 function verify(b){
  assert.equal(b.version,1); assert.equal(ownership.version,1);
  assert.equal(b.activation,'HUMAN_APPROVAL_REQUIRED_NO_DISPATCH');
@@ -88,9 +91,14 @@ if(process.argv.includes('--self-test')){
  for(const t of accepted.tasks.filter(t=>['SOURCE-001','MAP-001'].includes(t.id))){t.reviewStage='B';t.implementationGate.scopeReconciledWith='HIST-001:A';t.allowedPaths=structuredClone(t.stageBAllowedPaths);}
  verify(accepted);console.log('PASS guard: reconciled Stage B scope after History approval');
  assert.ok(setupDiffArgs.includes('--no-renames'));assert.equal(setupPathsAllowed(['src/graph-response/extent.js','docs/development/extent.js'],backlog.tasks[0].allowedPaths),false);console.log('PASS guard: protected rename source cannot hide behind allowed destination');
+ assert.equal(setupPathsAllowed(setupChangedPaths([],['src/widgets/unowned.js']),backlog.tasks[0].allowedPaths),false);console.log('PASS guard: untracked unowned source cannot bypass setup check');
+ assert.equal(setupPathsAllowed(setupChangedPaths([],['docs/development/new.md']),backlog.tasks[0].allowedPaths),true);console.log('PASS guard: untracked owned setup file is permitted');
+ assert.deepEqual(setupChangedPaths([],['review-delivery/prior.zip','scratchpad/prior.txt','docs/review/prior/results.json']),[]);console.log('PASS guard: preserved local evidence is excluded without runtime exemption');
 }
 if(process.argv.includes('--setup')){
- const changed=execFileSync('git',setupDiffArgs,{cwd:root,encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
+ const tracked=execFileSync('git',setupDiffArgs,{cwd:root,encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
+ const untracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{cwd:root,encoding:'utf8'}).split('\0').filter(Boolean);
+ const changed=setupChangedPaths(tracked,untracked);
  const allowed=backlog.tasks.find(t=>t.id==='FOUND-001').allowedPaths;
  assert.ok(setupPathsAllowed(changed,allowed),'Setup changed an unowned/runtime file');
  for(const file of ['lesson-studio.html','lessons/expanding-two-binomials.html','lessons/expanding-binomial-trinomial.html','lessons/factorising-quadratics.html','lessons/straight-lines.html']){
