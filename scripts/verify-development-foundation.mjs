@@ -97,7 +97,7 @@ if(process.argv.includes('--self-test')){
 }
 if(process.argv.includes('--setup')){
  const tracked=execFileSync('git',setupDiffArgs,{cwd:root,encoding:'utf8'}).trim().split(/\r?\n/).filter(Boolean);
- const untracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{cwd:root,encoding:'utf8'}).split('\0').filter(Boolean);
+ const untracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{cwd:root,encoding:'utf8',maxBuffer:32*1024*1024}).split('\0').filter(Boolean);
  const changed=setupChangedPaths(tracked,untracked);
  const allowed=backlog.tasks.find(t=>t.id==='FOUND-001').allowedPaths;
  assert.ok(setupPathsAllowed(changed,allowed),'Setup changed an unowned/runtime file');
