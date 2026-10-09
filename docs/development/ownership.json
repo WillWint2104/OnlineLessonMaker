@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "baseline": "aae1b1a891d495e31e879bcbd6a79404f576fe57",
+  "status": "ADOPTED",
+  "protectedPaths": [
+    "lesson-studio.html",
+    "docs/development/**",
+    "src/widgets/**",
+    "src/mathematics/**",
+    "src/graph-response/**",
+    "assets/vendor/**",
+    "lessons/**",
+    "examples/**",
+    ".github/**",
+    ".coderabbit.yaml",
+    "supabase/**",
+    "scripts/**"
+  ],
+  "areas": [
+    {
+      "id": "history",
+      "source": "src/humanities/**",
+      "tests": "tests/widgets/humanities/**",
+      "instructions": "src/humanities/AGENTS.md"
+    },
+    {
+      "id": "source",
+      "source": "src/evidence-viewer/**",
+      "tests": "tests/widgets/evidence-viewer/**",
+      "instructions": "src/evidence-viewer/AGENTS.md"
+    },
+    {
+      "id": "map",
+      "source": "src/map/**",
+      "tests": "tests/widgets/map/**",
+      "instructions": "src/map/AGENTS.md"
+    },
+    {
+      "id": "data",
+      "source": "src/data/**",
+      "tests": "tests/widgets/data/**",
+      "instructions": "src/data/AGENTS.md",
+      "deferred": true
+    },
+    {
+      "id": "themes",
+      "source": "src/themes/**",
+      "tests": "tests/widgets/themes/**",
+      "instructions": "src/themes/AGENTS.md",
+      "deferred": true
+    }
+  ]
+}
+

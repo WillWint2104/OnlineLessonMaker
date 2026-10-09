@@ -1,0 +1,226 @@
+{
+  "version": 1,
+  "activation": "HUMAN_APPROVAL_REQUIRED_NO_DISPATCH",
+  "limits": {
+    "featureBuilders": 3,
+    "projectsAwaitingDesignReview": 2
+  },
+  "tasks": [
+    {
+      "id": "FOUND-001",
+      "project": "agentic-foundation",
+      "stream": "integration",
+      "lane": "integration",
+      "priority": 0,
+      "productionNeed": "Controlled parallel work after Mathematics freeze",
+      "state": "STAGED-REVIEW",
+      "dependencies": [],
+      "blocks": [
+        "HIST-001",
+        "SOURCE-001",
+        "MAP-001"
+      ],
+      "allowedPaths": [
+        "AGENTS.md",
+        "docs/development/**",
+        "src/humanities/AGENTS.md",
+        "src/evidence-viewer/AGENTS.md",
+        "src/map/AGENTS.md",
+        "src/data/AGENTS.md",
+        "src/themes/AGENTS.md",
+        "src/mathematics/AGENTS.md",
+        "scripts/AGENTS.md",
+        "tests/AGENTS.md",
+        "scripts/verify-development-foundation.mjs"
+      ],
+      "protectedPaths": [
+        "lesson-studio.html",
+        "lessons/**",
+        "assets/**",
+        "supabase/**",
+        ".github/**"
+      ],
+      "deliverables": [
+        "ownership",
+        "contract v1",
+        "scoped instructions",
+        "task/backlog/roles/worktree/review rules",
+        "three inactive task cards",
+        "verification",
+        "review ZIP"
+      ],
+      "acceptanceCriteria": [
+        "No learner/runtime changes",
+        "No builders launched",
+        "Human setup review before merge"
+      ],
+      "testRequirements": [
+        "foundation validator",
+        "repository validate",
+        "Math smoke",
+        "player/authoring boot",
+        "export sanity"
+      ],
+      "humanStopConditions": [
+        "Final foundation merge approval; feature launch requires separate explicit authorisation"
+      ],
+      "reviewStage": "D",
+      "waitingForHuman": true,
+      "branch": "codex/integration-FOUND-001-agentic-foundation",
+      "worktree": "C:/Users/willi/Videos/Online Lesson Maker",
+      "startingCommit": "aae1b1a891d495e31e879bcbd6a79404f576fe57",
+      "owner": "current setup agent",
+      "pr": 171,
+      "approvedDependencies": [],
+      "blocker": null,
+      "card": "docs/development/README.md"
+    },
+    {
+      "id": "HIST-001",
+      "project": "humanities-stage-a",
+      "stream": "history",
+      "lane": "feature",
+      "priority": 0,
+      "state": "BLOCKED",
+      "dependencies": [
+        "FOUND-001"
+      ],
+      "approvedDependencies": [],
+      "allowedPaths": [
+        "src/humanities/**",
+        "tests/widgets/humanities/**",
+        "docs/review/history-HIST-001/**"
+      ],
+      "protectedPaths": [
+        "lesson-studio.html",
+        "docs/development/**",
+        "src/widgets/**",
+        "src/mathematics/**",
+        "src/graph-response/**",
+        "assets/vendor/**",
+        "lessons/**",
+        "examples/**",
+        ".github/**",
+        ".coderabbit.yaml",
+        "supabase/**",
+        "scripts/**"
+      ],
+      "reviewStage": "A",
+      "waitingForHuman": false,
+      "branch": null,
+      "worktree": null,
+      "startingCommit": null,
+      "owner": null,
+      "pr": null,
+      "blocker": "Foundation merge, explicit Stage A launch and concrete Year 12 Ancient History brief required",
+      "card": "docs/development/tasks/HIST-001.md",
+      "launchGate": "HUMANITIES-STAGE-A"
+    },
+    {
+      "id": "SOURCE-001",
+      "project": "humanities-stage-a",
+      "stream": "source",
+      "lane": "feature",
+      "priority": 0,
+      "state": "BLOCKED",
+      "dependencies": [
+        "FOUND-001"
+      ],
+      "approvedDependencies": [],
+      "allowedPaths": [
+        "docs/review/source-SOURCE-001/**"
+      ],
+      "protectedPaths": [
+        "lesson-studio.html",
+        "docs/development/**",
+        "src/widgets/**",
+        "src/mathematics/**",
+        "src/graph-response/**",
+        "assets/vendor/**",
+        "lessons/**",
+        "examples/**",
+        ".github/**",
+        ".coderabbit.yaml",
+        "supabase/**",
+        "scripts/**"
+      ],
+      "reviewStage": "A",
+      "waitingForHuman": false,
+      "branch": null,
+      "worktree": null,
+      "startingCommit": null,
+      "owner": null,
+      "pr": null,
+      "blocker": "Foundation merge and explicit concurrent Stage A research launch required",
+      "card": "docs/development/tasks/SOURCE-001.md",
+      "stageBAllowedPaths": [
+        "src/evidence-viewer/**",
+        "tests/widgets/evidence-viewer/**",
+        "docs/review/source-SOURCE-001/**"
+      ],
+      "implementationGate": {
+        "checkpoint": "HIST-001:A",
+        "scopeReconciledWith": null
+      },
+      "launchGate": "HUMANITIES-STAGE-A"
+    },
+    {
+      "id": "MAP-001",
+      "project": "humanities-stage-a",
+      "stream": "map",
+      "lane": "feature",
+      "priority": 0,
+      "state": "BLOCKED",
+      "dependencies": [
+        "FOUND-001"
+      ],
+      "approvedDependencies": [],
+      "allowedPaths": [
+        "docs/review/map-MAP-001/**"
+      ],
+      "protectedPaths": [
+        "lesson-studio.html",
+        "docs/development/**",
+        "src/widgets/**",
+        "src/mathematics/**",
+        "src/graph-response/**",
+        "assets/vendor/**",
+        "lessons/**",
+        "examples/**",
+        ".github/**",
+        ".coderabbit.yaml",
+        "supabase/**",
+        "scripts/**"
+      ],
+      "reviewStage": "A",
+      "waitingForHuman": false,
+      "branch": null,
+      "worktree": null,
+      "startingCommit": null,
+      "owner": null,
+      "pr": null,
+      "blocker": "Foundation merge and explicit concurrent Stage A research launch required",
+      "card": "docs/development/tasks/MAP-001.md",
+      "stageBAllowedPaths": [
+        "src/map/**",
+        "tests/widgets/map/**",
+        "docs/review/map-MAP-001/**"
+      ],
+      "implementationGate": {
+        "checkpoint": "HIST-001:A",
+        "scopeReconciledWith": null
+      },
+      "launchGate": "HUMANITIES-STAGE-A"
+    }
+  ],
+  "deferredStreams": [
+    "data-statistics",
+    "themes",
+    "3d-assets",
+    "business-simulations",
+    "future-mathematics",
+    "remote-classroom-release"
+  ],
+  "approvedCheckpoints": [],
+  "approvedLaunches": []
+}
