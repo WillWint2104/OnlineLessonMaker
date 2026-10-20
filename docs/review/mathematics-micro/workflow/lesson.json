@@ -1,0 +1,844 @@
+{
+  "meta": {
+    "title": "Cancelling When The Brackets Are Reversed",
+    "theme": "neutral",
+    "id": "cancelling-reversed-brackets-micro",
+    "subject": "Mathematics",
+    "player": "activities",
+    "responseMode": "paper",
+    "context": "Algebra review",
+    "frontMatter": [
+      {
+        "id": "lesson-overview",
+        "kind": "overview",
+        "title": "Cancelling When The Brackets Are Reversed",
+        "description": "Use a factor of −1 to reverse a binomial so matching factors can be cancelled or opposite denominators can be combined."
+      },
+      {
+        "id": "lesson-outcomes",
+        "kind": "outcomes",
+        "title": "What you will learn",
+        "description": "By the end of this lesson, you should be able to:",
+        "intentions": [
+          "Rewrite a reversed binomial by factoring out −1.",
+          "Use the sign reversal to cancel matching factors.",
+          "Combine opposite denominators efficiently.",
+          "Recognise when another factorisation is needed first."
+        ]
+      }
+    ],
+    "description": "Use a factor of −1 to reverse a binomial so matching factors can be cancelled or opposite denominators can be combined.",
+    "completion": {
+      "description": "You have practised reversing signs to reveal matching factors and simplify algebraic fractions.",
+      "practised": [
+        "Reverse subtraction using a factor of −1.",
+        "Factor before cancelling when needed.",
+        "Combine fractions with opposite denominators."
+      ]
+    },
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "end",
+      "worked": "end",
+      "fallback": {
+        "final": "hidden",
+        "worked": "hidden"
+      }
+    },
+    "artworkPack": "mathematics/algebra/signs",
+    "generation": {
+      "version": 1,
+      "sourceVideo": "https://youtu.be/bcyZjCbvUfM",
+      "thesis": "Factor out −1 to reverse subtraction order so factors or denominators match.",
+      "sourceEvidence": "Original supplied video-only lesson; three-skill progression specified by the teacher. Video transcript not independently available."
+    }
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "reversed-brackets",
+      "title": "Cancelling when the brackets are reversed",
+      "description": "Factor out −1 to reverse subtraction order and create matching factors.",
+      "video": {
+        "url": "https://youtu.be/bcyZjCbvUfM?si=hMY99tX6IGZEkU2V"
+      },
+      "activities": [
+        {
+          "id": "reversed-introduction",
+          "title": "Introduction",
+          "lede": "Factor out −1 to reverse subtraction order so algebraic factors or denominators can match.",
+          "notes": [
+            {
+              "term": "The key rewrite",
+              "body": "_b_ − _a_ = −(_a_ − _b_). Factoring out −1 reverses the subtraction."
+            },
+            {
+              "term": "Why it helps",
+              "body": "Once the brackets match exactly, a common factor can be cancelled or opposite denominators can be combined."
+            },
+            {
+              "term": "Do not lose the negative",
+              "body": "The factor −1 remains after the matching bracket is cancelled."
+            }
+          ],
+          "introduction": {
+            "why": "This technique can turn an algebraic fraction that appears not to cancel into one with an obvious common factor.",
+            "keyIdea": "$b-a=-(a-b)$",
+            "method": [
+              "Look for the same terms in opposite order.",
+              "Factor first if needed.",
+              "Use a factor of −1 to make the order match.",
+              "Cancel non-zero factors or combine the fractions."
+            ],
+            "illustration": "$\\frac{b-a}{a-b}=-\\frac{a-b}{a-b}=-1$, with $a\\ne b$.",
+            "title": "Introduction"
+          }
+        },
+        {
+          "id": "reversed-video",
+          "title": "Video",
+          "optionalVideo": true,
+          "lede": "Watch: cancelling when the brackets are reversed.",
+          "focusPoints": [
+            "How factoring out −1 reverses a bracket.",
+            "Why the negative remains after cancellation.",
+            "When factorisation is needed before cancellation.",
+            "How opposite denominators can be rewritten before combining fractions."
+          ]
+        },
+        {
+          "id": "opposites-basic",
+          "title": "Reverse a bracket",
+          "workedExamples": [
+            {
+              "id": "opposites-basic-group",
+              "type": "sequence",
+              "title": "Opposite binomials",
+              "examples": [
+                {
+                  "id": "opposites-basic-example",
+                  "label": "Worked example",
+                  "tabLabel": "Reverse a bracket",
+                  "prompt": "Simplify $\\frac{b-a}{a-b}$.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "opposites-basic-step-1",
+                      "math": "$b-a=-(a-b)$",
+                      "text": "Factor out −1 to reverse the subtraction."
+                    },
+                    {
+                      "id": "opposites-basic-step-2",
+                      "math": "$\\frac{b-a}{a-b}=-\\frac{a-b}{a-b}$",
+                      "text": "The same non-zero factor now appears above and below."
+                    },
+                    {
+                      "id": "opposites-basic-step-3",
+                      "math": "$=-1$",
+                      "text": "Cancel the common factor and keep the negative."
+                    }
+                  ],
+                  "answer": "$-1$",
+                  "resultLabel": "So",
+                  "practice": {
+                    "instructions": "Simplify each expression. Rewrite reversed brackets by factoring out −1. Assume all denominators are non-zero.",
+                    "generator": {
+                      "family": "reverse",
+                      "counts": {
+                        "basic": 8,
+                        "moderate": 4
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "quadratic-factor",
+          "title": "Factor first",
+          "workedExamples": [
+            {
+              "id": "quadratic-factor-group",
+              "type": "sequence",
+              "title": "Quadratic factorisation",
+              "examples": [
+                {
+                  "id": "quadratic-factor-example",
+                  "label": "Worked example",
+                  "tabLabel": "Factor first",
+                  "prompt": "Simplify $\\frac{x^2-5x+6}{2-x}$.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "quadratic-factor-step-1",
+                      "math": "$x^2-5x+6=(x-2)(x-3)$",
+                      "text": "Factorise the numerator."
+                    },
+                    {
+                      "id": "quadratic-factor-step-2",
+                      "math": "$2-x=-(x-2)$",
+                      "text": "Reverse the denominator by taking out −1."
+                    },
+                    {
+                      "id": "quadratic-factor-step-3",
+                      "math": "$\\frac{(x-2)(x-3)}{-(x-2)}=-(x-3)$",
+                      "text": "Cancel the matching non-zero factor, with x ≠ 2."
+                    }
+                  ],
+                  "answer": "$-(x-3)$",
+                  "resultLabel": "So",
+                  "practice": {
+                    "instructions": "Factor first, then rewrite the reversed factor and simplify. Assume all denominators are non-zero.",
+                    "generator": {
+                      "family": "factor",
+                      "counts": {
+                        "basic": 8,
+                        "moderate": 4
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "subtract-opposite",
+          "title": "Opposite denominators",
+          "workedExamples": [
+            {
+              "id": "subtract-opposite-group",
+              "type": "sequence",
+              "title": "Subtracting opposite denominators",
+              "examples": [
+                {
+                  "id": "subtract-opposite-example",
+                  "label": "Worked example",
+                  "tabLabel": "Opposite denominators",
+                  "prompt": "Simplify $\\frac{1}{a-b}-\\frac{1}{b-a}$.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "subtract-opposite-step-1",
+                      "math": "$b-a=-(a-b)$",
+                      "text": "Rewrite the second denominator."
+                    },
+                    {
+                      "id": "subtract-opposite-step-2",
+                      "math": "$\\frac{1}{a-b}-\\frac{1}{b-a}=\\frac{1}{a-b}+\\frac{1}{a-b}$",
+                      "text": "Subtracting the negative fraction becomes addition."
+                    },
+                    {
+                      "id": "subtract-opposite-step-3",
+                      "math": "$=\\frac{2}{a-b}$",
+                      "text": "Combine the numerators, with a ≠ b."
+                    }
+                  ],
+                  "answer": "$\\frac{2}{a-b}$",
+                  "resultLabel": "So",
+                  "practice": {
+                    "instructions": "Rewrite the reversed denominator before combining the fractions. Assume all denominators are non-zero.",
+                    "generator": {
+                      "family": "opposite",
+                      "counts": {
+                        "basic": 8,
+                        "moderate": 4
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "reversed-practice",
+          "title": "Core skills",
+          "lede": "",
+          "practiceNote": "Work in your exercise book. Choose Foundation or Moderate.",
+          "questions": [
+            {
+              "id": "opposites-basic-example-basic-1",
+              "archetypeId": "opposites-basic-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{b-a}{a-b}$",
+              "answer": "$-1$",
+              "workedAnswer": "$b-a=-(a-b)$\n$\\frac{b-a}{a-b}=-\\frac{a-b}{a-b}$\n$=-1$\n$a-b\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "a",
+                "b": "b",
+                "k": 1,
+                "d": 1
+              }
+            },
+            {
+              "id": "opposites-basic-example-basic-2",
+              "archetypeId": "opposites-basic-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{5-x}{x-5}$",
+              "answer": "$-1$",
+              "workedAnswer": "$5-x=-(x-5)$\n$\\frac{5-x}{x-5}=-\\frac{x-5}{x-5}$\n$=-1$\n$x-5\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "x",
+                "b": "5",
+                "k": 1,
+                "d": 1
+              }
+            },
+            {
+              "id": "opposites-basic-example-basic-3",
+              "archetypeId": "opposites-basic-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{q-p}{p-q}$",
+              "answer": "$-1$",
+              "workedAnswer": "$q-p=-(p-q)$\n$\\frac{q-p}{p-q}=-\\frac{p-q}{p-q}$\n$=-1$\n$p-q\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "p",
+                "b": "q",
+                "k": 1,
+                "d": 1
+              }
+            },
+            {
+              "id": "opposites-basic-example-basic-4",
+              "archetypeId": "opposites-basic-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{3-y}{y-3}$",
+              "answer": "$-1$",
+              "workedAnswer": "$3-y=-(y-3)$\n$\\frac{3-y}{y-3}=-\\frac{y-3}{y-3}$\n$=-1$\n$y-3\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "y",
+                "b": "3",
+                "k": 1,
+                "d": 1
+              }
+            },
+            {
+              "id": "opposites-basic-example-basic-5",
+              "archetypeId": "opposites-basic-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{n-m}{m-n}$",
+              "answer": "$-1$",
+              "workedAnswer": "$n-m=-(m-n)$\n$\\frac{n-m}{m-n}=-\\frac{m-n}{m-n}$\n$=-1$\n$m-n\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "m",
+                "b": "n",
+                "k": 1,
+                "d": 1
+              }
+            },
+            {
+              "id": "opposites-basic-example-basic-6",
+              "archetypeId": "opposites-basic-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{7-t}{t-7}$",
+              "answer": "$-1$",
+              "workedAnswer": "$7-t=-(t-7)$\n$\\frac{7-t}{t-7}=-\\frac{t-7}{t-7}$\n$=-1$\n$t-7\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "t",
+                "b": "7",
+                "k": 1,
+                "d": 1
+              }
+            },
+            {
+              "id": "opposites-basic-example-basic-7",
+              "archetypeId": "opposites-basic-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{v-u}{u-v}$",
+              "answer": "$-1$",
+              "workedAnswer": "$v-u=-(u-v)$\n$\\frac{v-u}{u-v}=-\\frac{u-v}{u-v}$\n$=-1$\n$u-v\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "u",
+                "b": "v",
+                "k": 1,
+                "d": 1
+              }
+            },
+            {
+              "id": "opposites-basic-example-basic-8",
+              "archetypeId": "opposites-basic-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{4-z}{z-4}$",
+              "answer": "$-1$",
+              "workedAnswer": "$4-z=-(z-4)$\n$\\frac{4-z}{z-4}=-\\frac{z-4}{z-4}$\n$=-1$\n$z-4\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "z",
+                "b": "4",
+                "k": 1,
+                "d": 1
+              }
+            },
+            {
+              "id": "opposites-basic-example-moderate-1",
+              "archetypeId": "opposites-basic-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{2(b-a)}{a-b}$",
+              "answer": "$-2$",
+              "workedAnswer": "$b-a=-(a-b)$\n$\\frac{2(b-a)}{a-b}=-\\frac{2(a-b)}{a-b}$\n$=-2$\n$a-b\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "a",
+                "b": "b",
+                "k": 2,
+                "d": 1
+              }
+            },
+            {
+              "id": "opposites-basic-example-moderate-2",
+              "archetypeId": "opposites-basic-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{2(5-x)}{2(x-5)}$",
+              "answer": "$-\\frac{2}{2}$",
+              "workedAnswer": "$5-x=-(x-5)$\n$\\frac{2(5-x)}{2(x-5)}=-\\frac{2(x-5)}{2(x-5)}$\n$=-\\frac{2}{2}$\n$x-5\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "x",
+                "b": "5",
+                "k": 2,
+                "d": 2
+              }
+            },
+            {
+              "id": "opposites-basic-example-moderate-3",
+              "archetypeId": "opposites-basic-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{2(q-p)}{p-q}$",
+              "answer": "$-2$",
+              "workedAnswer": "$q-p=-(p-q)$\n$\\frac{2(q-p)}{p-q}=-\\frac{2(p-q)}{p-q}$\n$=-2$\n$p-q\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "p",
+                "b": "q",
+                "k": 2,
+                "d": 1
+              }
+            },
+            {
+              "id": "opposites-basic-example-moderate-4",
+              "archetypeId": "opposites-basic-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{2(3-y)}{2(y-3)}$",
+              "answer": "$-\\frac{2}{2}$",
+              "workedAnswer": "$3-y=-(y-3)$\n$\\frac{2(3-y)}{2(y-3)}=-\\frac{2(y-3)}{2(y-3)}$\n$=-\\frac{2}{2}$\n$y-3\\ne0$",
+              "generation": {
+                "family": "reverse",
+                "a": "y",
+                "b": "3",
+                "k": 2,
+                "d": 2
+              }
+            },
+            {
+              "id": "quadratic-factor-example-basic-1",
+              "archetypeId": "quadratic-factor-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 5x + 6}{2-x}$",
+              "answer": "$-(x - 3)$",
+              "workedAnswer": "$x^2 - 5x + 6=(x - 2)(x - 3)$\n$2-x=-(x - 2)$\n$\\frac{x^2 - 5x + 6}{2-x}=-(x - 3)$\n$x\\ne2$",
+              "generation": {
+                "family": "factor",
+                "r": 2,
+                "s": 3
+              }
+            },
+            {
+              "id": "quadratic-factor-example-basic-2",
+              "archetypeId": "quadratic-factor-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 5x + 4}{1-x}$",
+              "answer": "$-(x - 4)$",
+              "workedAnswer": "$x^2 - 5x + 4=(x - 1)(x - 4)$\n$1-x=-(x - 1)$\n$\\frac{x^2 - 5x + 4}{1-x}=-(x - 4)$\n$x\\ne1$",
+              "generation": {
+                "family": "factor",
+                "r": 1,
+                "s": 4
+              }
+            },
+            {
+              "id": "quadratic-factor-example-basic-3",
+              "archetypeId": "quadratic-factor-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 8x + 15}{3-x}$",
+              "answer": "$-(x - 5)$",
+              "workedAnswer": "$x^2 - 8x + 15=(x - 3)(x - 5)$\n$3-x=-(x - 3)$\n$\\frac{x^2 - 8x + 15}{3-x}=-(x - 5)$\n$x\\ne3$",
+              "generation": {
+                "family": "factor",
+                "r": 3,
+                "s": 5
+              }
+            },
+            {
+              "id": "quadratic-factor-example-basic-4",
+              "archetypeId": "quadratic-factor-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 7x + 10}{2-x}$",
+              "answer": "$-(x - 5)$",
+              "workedAnswer": "$x^2 - 7x + 10=(x - 2)(x - 5)$\n$2-x=-(x - 2)$\n$\\frac{x^2 - 7x + 10}{2-x}=-(x - 5)$\n$x\\ne2$",
+              "generation": {
+                "family": "factor",
+                "r": 2,
+                "s": 5
+              }
+            },
+            {
+              "id": "quadratic-factor-example-basic-5",
+              "archetypeId": "quadratic-factor-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 7x + 6}{1-x}$",
+              "answer": "$-(x - 6)$",
+              "workedAnswer": "$x^2 - 7x + 6=(x - 1)(x - 6)$\n$1-x=-(x - 1)$\n$\\frac{x^2 - 7x + 6}{1-x}=-(x - 6)$\n$x\\ne1$",
+              "generation": {
+                "family": "factor",
+                "r": 1,
+                "s": 6
+              }
+            },
+            {
+              "id": "quadratic-factor-example-basic-6",
+              "archetypeId": "quadratic-factor-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 11x + 28}{4-x}$",
+              "answer": "$-(x - 7)$",
+              "workedAnswer": "$x^2 - 11x + 28=(x - 4)(x - 7)$\n$4-x=-(x - 4)$\n$\\frac{x^2 - 11x + 28}{4-x}=-(x - 7)$\n$x\\ne4$",
+              "generation": {
+                "family": "factor",
+                "r": 4,
+                "s": 7
+              }
+            },
+            {
+              "id": "quadratic-factor-example-basic-7",
+              "archetypeId": "quadratic-factor-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 11x + 24}{3-x}$",
+              "answer": "$-(x - 8)$",
+              "workedAnswer": "$x^2 - 11x + 24=(x - 3)(x - 8)$\n$3-x=-(x - 3)$\n$\\frac{x^2 - 11x + 24}{3-x}=-(x - 8)$\n$x\\ne3$",
+              "generation": {
+                "family": "factor",
+                "r": 3,
+                "s": 8
+              }
+            },
+            {
+              "id": "quadratic-factor-example-basic-8",
+              "archetypeId": "quadratic-factor-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 14x + 45}{5-x}$",
+              "answer": "$-(x - 9)$",
+              "workedAnswer": "$x^2 - 14x + 45=(x - 5)(x - 9)$\n$5-x=-(x - 5)$\n$\\frac{x^2 - 14x + 45}{5-x}=-(x - 9)$\n$x\\ne5$",
+              "generation": {
+                "family": "factor",
+                "r": 5,
+                "s": 9
+              }
+            },
+            {
+              "id": "quadratic-factor-example-moderate-1",
+              "archetypeId": "quadratic-factor-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 5x + 6}{2-x}$",
+              "answer": "$-(x - 3)$",
+              "workedAnswer": "$x^2 - 5x + 6=(x - 2)(x - 3)$\n$2-x=-(x - 2)$\n$\\frac{x^2 - 5x + 6}{2-x}=-(x - 3)$\n$x\\ne2$",
+              "generation": {
+                "family": "factor",
+                "r": 2,
+                "s": 3
+              }
+            },
+            {
+              "id": "quadratic-factor-example-moderate-2",
+              "archetypeId": "quadratic-factor-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 1}{1-x}$",
+              "answer": "$-(x + 1)$",
+              "workedAnswer": "$x^2 - 1=(x - 1)(x + 1)$\n$1-x=-(x - 1)$\n$\\frac{x^2 - 1}{1-x}=-(x + 1)$\n$x\\ne1$",
+              "generation": {
+                "family": "factor",
+                "r": 1,
+                "s": -1
+              }
+            },
+            {
+              "id": "quadratic-factor-example-moderate-3",
+              "archetypeId": "quadratic-factor-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 8x + 15}{3-x}$",
+              "answer": "$-(x - 5)$",
+              "workedAnswer": "$x^2 - 8x + 15=(x - 3)(x - 5)$\n$3-x=-(x - 3)$\n$\\frac{x^2 - 8x + 15}{3-x}=-(x - 5)$\n$x\\ne3$",
+              "generation": {
+                "family": "factor",
+                "r": 3,
+                "s": 5
+              }
+            },
+            {
+              "id": "quadratic-factor-example-moderate-4",
+              "archetypeId": "quadratic-factor-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{x^2 - 4}{2-x}$",
+              "answer": "$-(x + 2)$",
+              "workedAnswer": "$x^2 - 4=(x - 2)(x + 2)$\n$2-x=-(x - 2)$\n$\\frac{x^2 - 4}{2-x}=-(x + 2)$\n$x\\ne2$",
+              "generation": {
+                "family": "factor",
+                "r": 2,
+                "s": -2
+              }
+            },
+            {
+              "id": "subtract-opposite-example-basic-1",
+              "archetypeId": "subtract-opposite-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{a-b} - \\frac{1}{b-a}$",
+              "answer": "$\\frac{2}{a-b}$",
+              "workedAnswer": "$b-a=-(a-b)$\n$\\frac{1}{a-b} - \\frac{1}{b-a}=\\frac{1}{a-b} + \\frac{1}{a-b}$\n$=\\frac{2}{a-b}$\n$a\\ne b$",
+              "generation": {
+                "family": "opposite",
+                "a": "a",
+                "b": "b",
+                "p": 1,
+                "q": 1,
+                "subtract": true
+              }
+            },
+            {
+              "id": "subtract-opposite-example-basic-2",
+              "archetypeId": "subtract-opposite-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{x-y} + \\frac{1}{y-x}$",
+              "answer": "$0$",
+              "workedAnswer": "$y-x=-(x-y)$\n$\\frac{1}{x-y} + \\frac{1}{y-x}=\\frac{1}{x-y} - \\frac{1}{x-y}$\n$=0$\n$x\\ne y$",
+              "generation": {
+                "family": "opposite",
+                "a": "x",
+                "b": "y",
+                "p": 1,
+                "q": 1,
+                "subtract": false
+              }
+            },
+            {
+              "id": "subtract-opposite-example-basic-3",
+              "archetypeId": "subtract-opposite-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{p-q} - \\frac{1}{q-p}$",
+              "answer": "$\\frac{2}{p-q}$",
+              "workedAnswer": "$q-p=-(p-q)$\n$\\frac{1}{p-q} - \\frac{1}{q-p}=\\frac{1}{p-q} + \\frac{1}{p-q}$\n$=\\frac{2}{p-q}$\n$p\\ne q$",
+              "generation": {
+                "family": "opposite",
+                "a": "p",
+                "b": "q",
+                "p": 1,
+                "q": 1,
+                "subtract": true
+              }
+            },
+            {
+              "id": "subtract-opposite-example-basic-4",
+              "archetypeId": "subtract-opposite-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{m-n} + \\frac{1}{n-m}$",
+              "answer": "$0$",
+              "workedAnswer": "$n-m=-(m-n)$\n$\\frac{1}{m-n} + \\frac{1}{n-m}=\\frac{1}{m-n} - \\frac{1}{m-n}$\n$=0$\n$m\\ne n$",
+              "generation": {
+                "family": "opposite",
+                "a": "m",
+                "b": "n",
+                "p": 1,
+                "q": 1,
+                "subtract": false
+              }
+            },
+            {
+              "id": "subtract-opposite-example-basic-5",
+              "archetypeId": "subtract-opposite-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{2}{a-b} - \\frac{1}{b-a}$",
+              "answer": "$\\frac{3}{a-b}$",
+              "workedAnswer": "$b-a=-(a-b)$\n$\\frac{2}{a-b} - \\frac{1}{b-a}=\\frac{2}{a-b} + \\frac{1}{a-b}$\n$=\\frac{3}{a-b}$\n$a\\ne b$",
+              "generation": {
+                "family": "opposite",
+                "a": "a",
+                "b": "b",
+                "p": 2,
+                "q": 1,
+                "subtract": true
+              }
+            },
+            {
+              "id": "subtract-opposite-example-basic-6",
+              "archetypeId": "subtract-opposite-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{2}{x-y} + \\frac{1}{y-x}$",
+              "answer": "$\\frac{1}{x-y}$",
+              "workedAnswer": "$y-x=-(x-y)$\n$\\frac{2}{x-y} + \\frac{1}{y-x}=\\frac{2}{x-y} - \\frac{1}{x-y}$\n$=\\frac{1}{x-y}$\n$x\\ne y$",
+              "generation": {
+                "family": "opposite",
+                "a": "x",
+                "b": "y",
+                "p": 2,
+                "q": 1,
+                "subtract": false
+              }
+            },
+            {
+              "id": "subtract-opposite-example-basic-7",
+              "archetypeId": "subtract-opposite-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{2}{p-q} - \\frac{1}{q-p}$",
+              "answer": "$\\frac{3}{p-q}$",
+              "workedAnswer": "$q-p=-(p-q)$\n$\\frac{2}{p-q} - \\frac{1}{q-p}=\\frac{2}{p-q} + \\frac{1}{p-q}$\n$=\\frac{3}{p-q}$\n$p\\ne q$",
+              "generation": {
+                "family": "opposite",
+                "a": "p",
+                "b": "q",
+                "p": 2,
+                "q": 1,
+                "subtract": true
+              }
+            },
+            {
+              "id": "subtract-opposite-example-basic-8",
+              "archetypeId": "subtract-opposite-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{2}{m-n} + \\frac{1}{n-m}$",
+              "answer": "$\\frac{1}{m-n}$",
+              "workedAnswer": "$n-m=-(m-n)$\n$\\frac{2}{m-n} + \\frac{1}{n-m}=\\frac{2}{m-n} - \\frac{1}{m-n}$\n$=\\frac{1}{m-n}$\n$m\\ne n$",
+              "generation": {
+                "family": "opposite",
+                "a": "m",
+                "b": "n",
+                "p": 2,
+                "q": 1,
+                "subtract": false
+              }
+            },
+            {
+              "id": "subtract-opposite-example-moderate-1",
+              "archetypeId": "subtract-opposite-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{3}{a-b} - \\frac{2}{b-a}$",
+              "answer": "$\\frac{5}{a-b}$",
+              "workedAnswer": "$b-a=-(a-b)$\n$\\frac{3}{a-b} - \\frac{2}{b-a}=\\frac{3}{a-b} + \\frac{2}{a-b}$\n$=\\frac{5}{a-b}$\n$a\\ne b$",
+              "generation": {
+                "family": "opposite",
+                "a": "a",
+                "b": "b",
+                "p": 3,
+                "q": 2,
+                "subtract": true
+              }
+            },
+            {
+              "id": "subtract-opposite-example-moderate-2",
+              "archetypeId": "subtract-opposite-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{3}{x-y} + \\frac{3}{y-x}$",
+              "answer": "$0$",
+              "workedAnswer": "$y-x=-(x-y)$\n$\\frac{3}{x-y} + \\frac{3}{y-x}=\\frac{3}{x-y} - \\frac{3}{x-y}$\n$=0$\n$x\\ne y$",
+              "generation": {
+                "family": "opposite",
+                "a": "x",
+                "b": "y",
+                "p": 3,
+                "q": 3,
+                "subtract": false
+              }
+            },
+            {
+              "id": "subtract-opposite-example-moderate-3",
+              "archetypeId": "subtract-opposite-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{3}{p-q} - \\frac{4}{q-p}$",
+              "answer": "$\\frac{7}{p-q}$",
+              "workedAnswer": "$q-p=-(p-q)$\n$\\frac{3}{p-q} - \\frac{4}{q-p}=\\frac{3}{p-q} + \\frac{4}{p-q}$\n$=\\frac{7}{p-q}$\n$p\\ne q$",
+              "generation": {
+                "family": "opposite",
+                "a": "p",
+                "b": "q",
+                "p": 3,
+                "q": 4,
+                "subtract": true
+              }
+            },
+            {
+              "id": "subtract-opposite-example-moderate-4",
+              "archetypeId": "subtract-opposite-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{3}{m-n} + \\frac{2}{n-m}$",
+              "answer": "$\\frac{1}{m-n}$",
+              "workedAnswer": "$n-m=-(m-n)$\n$\\frac{3}{m-n} + \\frac{2}{n-m}=\\frac{3}{m-n} - \\frac{2}{m-n}$\n$=\\frac{1}{m-n}$\n$m\\ne n$",
+              "generation": {
+                "family": "opposite",
+                "a": "m",
+                "b": "n",
+                "p": 3,
+                "q": 2,
+                "subtract": false
+              }
+            }
+          ],
+          "practiceCollectionId": "reversed-worked-collection"
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "reversed-worked-collection",
+          "title": "Core skills",
+          "members": [
+            "opposites-basic-example",
+            "quadratic-factor-example",
+            "subtract-opposite-example"
+          ]
+        }
+      ],
+      "practiceComposition": "micro"
+    }
+  ]
+}
