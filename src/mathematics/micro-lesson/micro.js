@@ -20,7 +20,7 @@ globalThis.MathMicro=(()=>{
           const pairs=[['a','b'],['x','5'],['p','q'],['y','3'],['m','n'],['t','7'],['u','v'],['z','4']];
           const [a,b]=pairs[i%pairs.length],k=level==='basic'?1+Math.floor(i/8):2+Math.floor(i/4),d=level==='basic'?1:1+i%2;
           const top=b+'-'+a,bottom=a+'-'+b;
-          expression=frac(mul(k,top),mul(d,bottom));answer=d===1?String(-k):'-'+frac(String(k),String(d));
+          expression=frac(mul(k,top),mul(d,bottom));answer=k%d===0?String(-k/d):'-'+frac(String(k),String(d));
           working=[math(top+'=-('+bottom+')'),math(expression+'=-'+frac(mul(k,bottom),mul(d,bottom))),math('='+answer),math(bottom+'\\ne0')].join('\n');
           proof={family,a,b,k,d};
         }else if(family==='factor'){

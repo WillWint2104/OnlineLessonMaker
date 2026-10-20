@@ -31,7 +31,9 @@ for(const [id,family,title,instructions,prompt,steps,answer]of entries){
   const a=byId.get(id),ex=a.workedExamples[0].examples[0];
   a.title=title;ex.label='Worked example';ex.tabLabel=title;ex.prompt=prompt;ex.answer='$'+answer+'$';
   ex.steps=steps.map(([math,text],i)=>({id:ex.steps[i]?.id||ex.id+'-step-'+(i+1),math:'$'+math+'$',text}));
-  ex.practice={instructions,generator:{family,counts:{basic:8,moderate:4}}};selected.push(a);
+  ex.practice={instructions,generator:{family,counts:{basic:8,moderate:4}}};
+  if(family==='factor')ex.support={title:'Difference-of-squares reminder',steps:[{math:'$x^2-9=(x-3)(x+3)$',text:'Recognise the difference of two squares.'},{math:'$3-x=-(x-3)$',text:'Reverse the denominator with a factor of −1.'},{math:'$\\frac{x^2-9}{3-x}=-(x+3)$',text:'Cancel the common factor, with x ≠ 3.'}]};
+  selected.push(a);
 }
 const intro=byId.get('reversed-introduction');intro.lede='Factor out −1 to reverse subtraction order so algebraic factors or denominators can match.';
 intro.introduction.keyIdea='$b-a=-(a-b)$';intro.introduction.illustration='$\\frac{b-a}{a-b}=-\\frac{a-b}{a-b}=-1$, with $a\\ne b$.';

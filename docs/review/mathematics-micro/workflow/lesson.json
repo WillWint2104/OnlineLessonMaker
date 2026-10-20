@@ -198,6 +198,23 @@
                         "moderate": 4
                       }
                     }
+                  },
+                  "support": {
+                    "title": "Difference-of-squares reminder",
+                    "steps": [
+                      {
+                        "math": "$x^2-9=(x-3)(x+3)$",
+                        "text": "Recognise the difference of two squares."
+                      },
+                      {
+                        "math": "$3-x=-(x-3)$",
+                        "text": "Reverse the denominator with a factor of −1."
+                      },
+                      {
+                        "math": "$\\frac{x^2-9}{3-x}=-(x+3)$",
+                        "text": "Cancel the common factor, with x ≠ 3."
+                      }
+                    ]
                   }
                 }
               ]
@@ -409,8 +426,8 @@
               "level": "moderate",
               "presentation": "compact",
               "stem": "$\\frac{2(5-x)}{2(x-5)}$",
-              "answer": "$-\\frac{2}{2}$",
-              "workedAnswer": "$5-x=-(x-5)$\n$\\frac{2(5-x)}{2(x-5)}=-\\frac{2(x-5)}{2(x-5)}$\n$=-\\frac{2}{2}$\n$x-5\\ne0$",
+              "answer": "$-1$",
+              "workedAnswer": "$5-x=-(x-5)$\n$\\frac{2(5-x)}{2(x-5)}=-\\frac{2(x-5)}{2(x-5)}$\n$=-1$\n$x-5\\ne0$",
               "generation": {
                 "family": "reverse",
                 "a": "x",
@@ -441,8 +458,8 @@
               "level": "moderate",
               "presentation": "compact",
               "stem": "$\\frac{2(3-y)}{2(y-3)}$",
-              "answer": "$-\\frac{2}{2}$",
-              "workedAnswer": "$3-y=-(y-3)$\n$\\frac{2(3-y)}{2(y-3)}=-\\frac{2(y-3)}{2(y-3)}$\n$=-\\frac{2}{2}$\n$y-3\\ne0$",
+              "answer": "$-1$",
+              "workedAnswer": "$3-y=-(y-3)$\n$\\frac{2(3-y)}{2(y-3)}=-\\frac{2(y-3)}{2(y-3)}$\n$=-1$\n$y-3\\ne0$",
               "generation": {
                 "family": "reverse",
                 "a": "y",
