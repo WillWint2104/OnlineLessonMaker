@@ -18,14 +18,15 @@ globalThis.MathMicro=(()=>{
         let expression,answer,working,proof;
         if(family==='reverse'){
           const pairs=[['a','b'],['x','5'],['p','q'],['y','3'],['m','n'],['t','7'],['u','v'],['z','4']];
-          const [a,b]=pairs[i%pairs.length],k=level==='basic'?1+Math.floor(i/8):2+Math.floor(i/4),d=level==='basic'?1:1+i%2;
+          const [a,b]=pairs[i%pairs.length],k=level==='basic'?1+Math.floor(i/8):4+Math.floor(i/4),d=level==='basic'?1:1+i%2;
           const top=b+'-'+a,bottom=a+'-'+b;
           expression=frac(mul(k,top),mul(d,bottom));answer=k%d===0?String(-k/d):'-'+frac(String(k),String(d));
           working=[math(top+'=-('+bottom+')'),math(expression+'=-'+frac(mul(k,bottom),mul(d,bottom))),math('='+answer),math(bottom+'\\ne0')].join('\n');
           proof={family,a,b,k,d};
         }else if(family==='factor'){
           const pairs=[[2,3],[1,4],[3,5],[2,5],[1,6],[4,7],[3,8],[5,9]];
-          const r=pairs[i%8][0]+Math.floor(i/8)*2,s=pairs[i%8][1]+Math.floor(i/8)*3,square=level==='moderate'&&i%2===1,other=square?-r:s;
+          const r=level==='moderate'?i+2:pairs[i%8][0]+Math.floor(i/8)*2,s=level==='moderate'?i+3:pairs[i%8][1]+Math.floor(i/8)*3;
+          const square=level==='moderate'&&i%2===1,other=square?-r:level==='moderate'?-s:s;
           const top=poly(r,other),den=r+'-x';expression=frac(top,den);answer='-('+linear(other)+')';
           working=[math(top+'=('+linear(r)+')('+linear(other)+')'),math(den+'=-('+linear(r)+')'),math(expression+'=-('+linear(other)+')'),math('x\\ne'+r)].join('\n');
           proof={family,r,s:other};
@@ -41,6 +42,7 @@ globalThis.MathMicro=(()=>{
         qs.push({id:archetypeId+'-'+level+'-'+(i+1),archetypeId,level,presentation:'compact',stem:math(expression),answer:math(answer),workedAnswer:working,generation:proof});
       }
     }
+    if(new Set(qs.map(q=>q.stem)).size!==qs.length)throw Error('Generated questions must have distinct stems.');
     return qs;
   }
   /** Decorative local SVGs are generated from a finite pack/role catalogue; no formula or answer text. */

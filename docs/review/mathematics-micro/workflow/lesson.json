@@ -409,14 +409,14 @@
               "archetypeId": "opposites-basic-example",
               "level": "moderate",
               "presentation": "compact",
-              "stem": "$\\frac{2(b-a)}{a-b}$",
-              "answer": "$-2$",
-              "workedAnswer": "$b-a=-(a-b)$\n$\\frac{2(b-a)}{a-b}=-\\frac{2(a-b)}{a-b}$\n$=-2$\n$a-b\\ne0$",
+              "stem": "$\\frac{4(b-a)}{a-b}$",
+              "answer": "$-4$",
+              "workedAnswer": "$b-a=-(a-b)$\n$\\frac{4(b-a)}{a-b}=-\\frac{4(a-b)}{a-b}$\n$=-4$\n$a-b\\ne0$",
               "generation": {
                 "family": "reverse",
                 "a": "a",
                 "b": "b",
-                "k": 2,
+                "k": 4,
                 "d": 1
               }
             },
@@ -425,14 +425,14 @@
               "archetypeId": "opposites-basic-example",
               "level": "moderate",
               "presentation": "compact",
-              "stem": "$\\frac{2(5-x)}{2(x-5)}$",
-              "answer": "$-1$",
-              "workedAnswer": "$5-x=-(x-5)$\n$\\frac{2(5-x)}{2(x-5)}=-\\frac{2(x-5)}{2(x-5)}$\n$=-1$\n$x-5\\ne0$",
+              "stem": "$\\frac{4(5-x)}{2(x-5)}$",
+              "answer": "$-2$",
+              "workedAnswer": "$5-x=-(x-5)$\n$\\frac{4(5-x)}{2(x-5)}=-\\frac{4(x-5)}{2(x-5)}$\n$=-2$\n$x-5\\ne0$",
               "generation": {
                 "family": "reverse",
                 "a": "x",
                 "b": "5",
-                "k": 2,
+                "k": 4,
                 "d": 2
               }
             },
@@ -441,14 +441,14 @@
               "archetypeId": "opposites-basic-example",
               "level": "moderate",
               "presentation": "compact",
-              "stem": "$\\frac{2(q-p)}{p-q}$",
-              "answer": "$-2$",
-              "workedAnswer": "$q-p=-(p-q)$\n$\\frac{2(q-p)}{p-q}=-\\frac{2(p-q)}{p-q}$\n$=-2$\n$p-q\\ne0$",
+              "stem": "$\\frac{4(q-p)}{p-q}$",
+              "answer": "$-4$",
+              "workedAnswer": "$q-p=-(p-q)$\n$\\frac{4(q-p)}{p-q}=-\\frac{4(p-q)}{p-q}$\n$=-4$\n$p-q\\ne0$",
               "generation": {
                 "family": "reverse",
                 "a": "p",
                 "b": "q",
-                "k": 2,
+                "k": 4,
                 "d": 1
               }
             },
@@ -457,14 +457,14 @@
               "archetypeId": "opposites-basic-example",
               "level": "moderate",
               "presentation": "compact",
-              "stem": "$\\frac{2(3-y)}{2(y-3)}$",
-              "answer": "$-1$",
-              "workedAnswer": "$3-y=-(y-3)$\n$\\frac{2(3-y)}{2(y-3)}=-\\frac{2(y-3)}{2(y-3)}$\n$=-1$\n$y-3\\ne0$",
+              "stem": "$\\frac{4(3-y)}{2(y-3)}$",
+              "answer": "$-2$",
+              "workedAnswer": "$3-y=-(y-3)$\n$\\frac{4(3-y)}{2(y-3)}=-\\frac{4(y-3)}{2(y-3)}$\n$=-2$\n$y-3\\ne0$",
               "generation": {
                 "family": "reverse",
                 "a": "y",
                 "b": "3",
-                "k": 2,
+                "k": 4,
                 "d": 2
               }
             },
@@ -585,13 +585,13 @@
               "archetypeId": "quadratic-factor-example",
               "level": "moderate",
               "presentation": "compact",
-              "stem": "$\\frac{x^2 - 5x + 6}{2-x}$",
-              "answer": "$-(x - 3)$",
-              "workedAnswer": "$x^2 - 5x + 6=(x - 2)(x - 3)$\n$2-x=-(x - 2)$\n$\\frac{x^2 - 5x + 6}{2-x}=-(x - 3)$\n$x\\ne2$",
+              "stem": "$\\frac{x^2 + x - 6}{2-x}$",
+              "answer": "$-(x + 3)$",
+              "workedAnswer": "$x^2 + x - 6=(x - 2)(x + 3)$\n$2-x=-(x - 2)$\n$\\frac{x^2 + x - 6}{2-x}=-(x + 3)$\n$x\\ne2$",
               "generation": {
                 "family": "factor",
                 "r": 2,
-                "s": 3
+                "s": -3
               }
             },
             {
@@ -599,13 +599,13 @@
               "archetypeId": "quadratic-factor-example",
               "level": "moderate",
               "presentation": "compact",
-              "stem": "$\\frac{x^2 - 1}{1-x}$",
-              "answer": "$-(x + 1)$",
-              "workedAnswer": "$x^2 - 1=(x - 1)(x + 1)$\n$1-x=-(x - 1)$\n$\\frac{x^2 - 1}{1-x}=-(x + 1)$\n$x\\ne1$",
+              "stem": "$\\frac{x^2 - 9}{3-x}$",
+              "answer": "$-(x + 3)$",
+              "workedAnswer": "$x^2 - 9=(x - 3)(x + 3)$\n$3-x=-(x - 3)$\n$\\frac{x^2 - 9}{3-x}=-(x + 3)$\n$x\\ne3$",
               "generation": {
                 "family": "factor",
-                "r": 1,
-                "s": -1
+                "r": 3,
+                "s": -3
               }
             },
             {
@@ -613,13 +613,13 @@
               "archetypeId": "quadratic-factor-example",
               "level": "moderate",
               "presentation": "compact",
-              "stem": "$\\frac{x^2 - 8x + 15}{3-x}$",
-              "answer": "$-(x - 5)$",
-              "workedAnswer": "$x^2 - 8x + 15=(x - 3)(x - 5)$\n$3-x=-(x - 3)$\n$\\frac{x^2 - 8x + 15}{3-x}=-(x - 5)$\n$x\\ne3$",
+              "stem": "$\\frac{x^2 + x - 20}{4-x}$",
+              "answer": "$-(x + 5)$",
+              "workedAnswer": "$x^2 + x - 20=(x - 4)(x + 5)$\n$4-x=-(x - 4)$\n$\\frac{x^2 + x - 20}{4-x}=-(x + 5)$\n$x\\ne4$",
               "generation": {
                 "family": "factor",
-                "r": 3,
-                "s": 5
+                "r": 4,
+                "s": -5
               }
             },
             {
@@ -627,13 +627,13 @@
               "archetypeId": "quadratic-factor-example",
               "level": "moderate",
               "presentation": "compact",
-              "stem": "$\\frac{x^2 - 4}{2-x}$",
-              "answer": "$-(x + 2)$",
-              "workedAnswer": "$x^2 - 4=(x - 2)(x + 2)$\n$2-x=-(x - 2)$\n$\\frac{x^2 - 4}{2-x}=-(x + 2)$\n$x\\ne2$",
+              "stem": "$\\frac{x^2 - 25}{5-x}$",
+              "answer": "$-(x + 5)$",
+              "workedAnswer": "$x^2 - 25=(x - 5)(x + 5)$\n$5-x=-(x - 5)$\n$\\frac{x^2 - 25}{5-x}=-(x + 5)$\n$x\\ne5$",
               "generation": {
                 "family": "factor",
-                "r": 2,
-                "s": -2
+                "r": 5,
+                "s": -5
               }
             },
             {
