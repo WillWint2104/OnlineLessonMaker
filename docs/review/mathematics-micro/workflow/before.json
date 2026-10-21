@@ -1,0 +1,543 @@
+{
+  "meta": {
+    "title": "Cancelling when the brackets are reversed",
+    "theme": "neutral",
+    "id": "cancelling-reversed-brackets-video-only",
+    "subject": "Mathematics",
+    "player": "activities",
+    "responseMode": "paper",
+    "context": "Algebra review",
+    "frontMatter": [
+      {
+        "id": "lesson-overview",
+        "kind": "overview",
+        "title": "Cancelling when the brackets are reversed",
+        "description": "Use a factor of −1 to reverse a binomial so matching factors can be cancelled or opposite denominators can be combined."
+      },
+      {
+        "id": "lesson-outcomes",
+        "kind": "outcomes",
+        "title": "What you will learn",
+        "description": "By the end of this lesson, you should be able to:",
+        "intentions": [
+          "Rewrite a reversed binomial by factoring out −1.",
+          "Use the sign reversal to cancel matching factors.",
+          "Combine opposite denominators efficiently.",
+          "Recognise when another factorisation is needed first."
+        ]
+      }
+    ],
+    "description": "Use a factor of −1 to reverse a binomial so matching factors can be cancelled or opposite denominators can be combined.",
+    "completion": {
+      "description": "You have practised reversing signs to reveal matching factors and simplify algebraic fractions.",
+      "practised": [
+        "Factor out −1 to reverse a subtraction.",
+        "Factor first when another algebraic pattern is present.",
+        "Keep the negative factor after cancellation.",
+        "Rewrite opposite denominators before combining fractions."
+      ]
+    },
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "end",
+      "worked": "end",
+      "fallback": {
+        "final": "hidden",
+        "worked": "hidden"
+      }
+    }
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "reversed-brackets",
+      "title": "Cancelling when the brackets are reversed",
+      "description": "Factor out −1 to reverse subtraction order and create matching factors.",
+      "video": {
+        "url": "https://youtu.be/bcyZjCbvUfM?si=hMY99tX6IGZEkU2V"
+      },
+      "activities": [
+        {
+          "id": "reversed-introduction",
+          "title": "Introduction",
+          "lede": "Two binomials such as _a_ − _b_ and _b_ − _a_ contain the same terms in the opposite order.",
+          "notes": [
+            {
+              "term": "The key rewrite",
+              "body": "_b_ − _a_ = −(_a_ − _b_). Factoring out −1 reverses the subtraction."
+            },
+            {
+              "term": "Why it helps",
+              "body": "Once the brackets match exactly, a common factor can be cancelled or opposite denominators can be combined."
+            },
+            {
+              "term": "Do not lose the negative",
+              "body": "The factor −1 remains after the matching bracket is cancelled."
+            }
+          ],
+          "introduction": {
+            "why": "This technique can turn an algebraic fraction that appears not to cancel into one with an obvious common factor.",
+            "keyIdea": "_b_ − _a_ = −(_a_ − _b_).",
+            "method": [
+              "Look for the same two terms in the opposite order.",
+              "Factor out −1 from one bracket.",
+              "Rewrite so the brackets match.",
+              "Cancel or combine only after the rewrite.",
+              "Keep any remaining negative factor."
+            ],
+            "illustration": "(_b_ − _a_)/(_a_ − _b_) = −(_a_ − _b_)/(_a_ − _b_) = −1"
+          }
+        },
+        {
+          "id": "reversed-video",
+          "title": "Video",
+          "optionalVideo": true,
+          "lede": "Watch: cancelling when the brackets are reversed.",
+          "focusPoints": [
+            "How factoring out −1 reverses a bracket.",
+            "Why the negative remains after cancellation.",
+            "When factorisation is needed before cancellation.",
+            "How opposite denominators can be rewritten before combining fractions."
+          ]
+        },
+        {
+          "id": "opposites-basic",
+          "title": "Opposite binomials",
+          "workedExamples": [
+            {
+              "id": "opposites-basic-group",
+              "type": "sequence",
+              "title": "Opposite binomials",
+              "examples": [
+                {
+                  "id": "opposites-basic-example",
+                  "label": "Opposite binomials",
+                  "tabLabel": "Reverse the bracket",
+                  "prompt": "Simplify (_b_ − _a_)/(_a_ − _b_).",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "opposites-basic-step-1",
+                      "math": "_b_ − _a_ = −(_a_ − _b_)",
+                      "text": "Factor out −1 so the bracket order matches."
+                    },
+                    {
+                      "id": "opposites-basic-step-2",
+                      "math": "(_b_ − _a_)/(_a_ − _b_) = −(_a_ − _b_)/(_a_ − _b_)",
+                      "text": "The same factor now appears above and below."
+                    },
+                    {
+                      "id": "opposites-basic-step-3",
+                      "math": "= −1",
+                      "text": "Cancel the common bracket and keep the negative factor."
+                    }
+                  ],
+                  "answer": "−1",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "difference-squares",
+          "title": "Difference of squares",
+          "workedExamples": [
+            {
+              "id": "difference-squares-group",
+              "type": "sequence",
+              "title": "Difference of squares",
+              "examples": [
+                {
+                  "id": "difference-squares-example",
+                  "label": "Difference of squares",
+                  "tabLabel": "Factor first",
+                  "prompt": "Simplify (_v_^2 − _u_^2)/(_u_ − _v_).",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "difference-squares-step-1",
+                      "math": "_v_^2 − _u_^2 = (_v_ + _u_)(_v_ − _u_)",
+                      "text": "Factor the difference of squares."
+                    },
+                    {
+                      "id": "difference-squares-step-2",
+                      "math": "_v_ − _u_ = −(_u_ − _v_)",
+                      "text": "Reverse the factor by taking out −1."
+                    },
+                    {
+                      "id": "difference-squares-step-3",
+                      "math": "= −(_v_ + _u_)",
+                      "text": "Cancel the matching factor and keep the negative."
+                    }
+                  ],
+                  "answer": "−(_v_ + _u_)",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "quadratic-factor",
+          "title": "Quadratic factorisation",
+          "workedExamples": [
+            {
+              "id": "quadratic-factor-group",
+              "type": "sequence",
+              "title": "Quadratic factorisation",
+              "examples": [
+                {
+                  "id": "quadratic-factor-example",
+                  "label": "Quadratic factorisation",
+                  "tabLabel": "Factor the quadratic",
+                  "prompt": "Simplify (_x_^2 − 5_x_ + 6)/(2 − _x_).",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "quadratic-factor-step-1",
+                      "math": "−2 + (−3) = −5\n(−2)(−3) = 6",
+                      "text": "Find the pair used to factor the quadratic."
+                    },
+                    {
+                      "id": "quadratic-factor-step-2",
+                      "math": "_x_^2 − 5_x_ + 6 = (_x_ − 2)(_x_ − 3)",
+                      "text": "Factorise the numerator."
+                    },
+                    {
+                      "id": "quadratic-factor-step-3",
+                      "math": "_x_ − 2 = −(2 − _x_)",
+                      "text": "Reverse the factor that matches the denominator."
+                    },
+                    {
+                      "id": "quadratic-factor-step-4",
+                      "math": "= −(_x_ − 3)",
+                      "text": "Cancel the matching factor and keep the negative."
+                    }
+                  ],
+                  "answer": "−(_x_ − 3)",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "subtract-opposite",
+          "title": "Subtracting opposite denominators",
+          "workedExamples": [
+            {
+              "id": "subtract-opposite-group",
+              "type": "sequence",
+              "title": "Subtracting opposite denominators",
+              "examples": [
+                {
+                  "id": "subtract-opposite-example",
+                  "label": "Subtracting opposite denominators",
+                  "tabLabel": "Subtraction",
+                  "prompt": "Simplify 1/(_a_ − _b_) − 1/(_b_ − _a_).",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "subtract-opposite-step-1",
+                      "math": "_b_ − _a_ = −(_a_ − _b_)",
+                      "text": "Rewrite the second denominator."
+                    },
+                    {
+                      "id": "subtract-opposite-step-2",
+                      "math": "1/(_a_ − _b_) − 1/[−(_a_ − _b_)] = 1/(_a_ − _b_) + 1/(_a_ − _b_)",
+                      "text": "The subtraction of a negative fraction becomes addition."
+                    },
+                    {
+                      "id": "subtract-opposite-step-3",
+                      "math": "= 2/(_a_ − _b_)",
+                      "text": "Combine the numerators."
+                    }
+                  ],
+                  "answer": "2/(_a_ − _b_)",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "add-opposite",
+          "title": "Adding opposite denominators",
+          "workedExamples": [
+            {
+              "id": "add-opposite-group",
+              "type": "sequence",
+              "title": "Adding opposite denominators",
+              "examples": [
+                {
+                  "id": "add-opposite-example",
+                  "label": "Adding opposite denominators",
+                  "tabLabel": "Addition",
+                  "prompt": "Simplify _m_/(_m_ − _n_) + _n_/(_n_ − _m_).",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "add-opposite-step-1",
+                      "math": "_n_ − _m_ = −(_m_ − _n_)",
+                      "text": "Rewrite the second denominator."
+                    },
+                    {
+                      "id": "add-opposite-step-2",
+                      "math": "_m_/(_m_ − _n_) + _n_/[−(_m_ − _n_)] = _m_/(_m_ − _n_) − _n_/(_m_ − _n_)",
+                      "text": "The second fraction becomes negative."
+                    },
+                    {
+                      "id": "add-opposite-step-3",
+                      "math": "= (_m_ − _n_)/(_m_ − _n_) = 1",
+                      "text": "Combine the numerators and cancel."
+                    }
+                  ],
+                  "answer": "1",
+                  "resultLabel": "So"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "reversed-practice",
+          "title": "Practice",
+          "lede": "",
+          "practiceNote": "Work in your exercise book. Choose Foundation or Moderate.",
+          "questions": [
+            {
+              "id": "opp-f1",
+              "stem": "Simplify (_x_ − 5)/(5 − _x_).",
+              "archetypeId": "opposites-basic-example",
+              "level": "basic",
+              "answer": "−1",
+              "workedAnswer": "5 − _x_ = −(_x_ − 5)\n= −1",
+              "presentation": "multipart",
+              "group": "Structured practice",
+              "parts": [
+                "Rewrite the denominator by factoring out −1.",
+                "Identify the matching factor.",
+                "Cancel and simplify."
+              ]
+            },
+            {
+              "id": "opp-f2",
+              "stem": "Simplify (_p_ − _q_)/(_q_ − _p_).",
+              "archetypeId": "opposites-basic-example",
+              "level": "basic",
+              "answer": "−1",
+              "workedAnswer": "_q_ − _p_ = −(_p_ − _q_)\n= −1",
+              "presentation": "compact",
+              "group": "Independent practice"
+            },
+            {
+              "id": "opp-m1",
+              "stem": "Simplify 2(_a_ − _b_)/(_b_ − _a_).",
+              "archetypeId": "opposites-basic-example",
+              "level": "moderate",
+              "answer": "−2",
+              "workedAnswer": "_b_ − _a_ = −(_a_ − _b_)\n= −2",
+              "presentation": "compact"
+            },
+            {
+              "id": "opp-m2",
+              "stem": "Simplify 3(_m_ − _n_)/(_n_ − _m_).",
+              "archetypeId": "opposites-basic-example",
+              "level": "moderate",
+              "answer": "−3",
+              "workedAnswer": "_n_ − _m_ = −(_m_ − _n_)\n= −3",
+              "presentation": "compact"
+            },
+            {
+              "id": "dos-f1",
+              "stem": "Simplify (_x_^2 − _y_^2)/(_y_ − _x_).",
+              "archetypeId": "difference-squares-example",
+              "level": "basic",
+              "answer": "−(_x_ + _y_)",
+              "workedAnswer": "_x_^2 − _y_^2 = (_x_ + _y_)(_x_ − _y_)\n_x_ − _y_ = −(_y_ − _x_)\n= −(_x_ + _y_)",
+              "presentation": "multipart",
+              "group": "Structured practice",
+              "parts": [
+                "Factor the difference of squares.",
+                "Rewrite the reversed factor using −1.",
+                "Cancel and simplify."
+              ]
+            },
+            {
+              "id": "dos-f2",
+              "stem": "Simplify (_a_^2 − _b_^2)/(_b_ − _a_).",
+              "archetypeId": "difference-squares-example",
+              "level": "basic",
+              "answer": "−(_a_ + _b_)",
+              "workedAnswer": "_a_^2 − _b_^2 = (_a_ + _b_)(_a_ − _b_)\n_a_ − _b_ = −(_b_ − _a_)\n= −(_a_ + _b_)",
+              "presentation": "compact",
+              "group": "Independent practice"
+            },
+            {
+              "id": "dos-m1",
+              "stem": "Simplify (4_p_^2 − 9_q_^2)/(3_q_ − 2_p_).",
+              "archetypeId": "difference-squares-example",
+              "level": "moderate",
+              "answer": "−(2_p_ + 3_q_)",
+              "workedAnswer": "4_p_^2 − 9_q_^2 = (2_p_ + 3_q_)(2_p_ − 3_q_)\n2_p_ − 3_q_ = −(3_q_ − 2_p_)\n= −(2_p_ + 3_q_)",
+              "presentation": "compact"
+            },
+            {
+              "id": "dos-m2",
+              "stem": "Simplify (9_m_^2 − _n_^2)/(_n_ − 3_m_).",
+              "archetypeId": "difference-squares-example",
+              "level": "moderate",
+              "answer": "−(3_m_ + _n_)",
+              "workedAnswer": "9_m_^2 − _n_^2 = (3_m_ + _n_)(3_m_ − _n_)\n3_m_ − _n_ = −(_n_ − 3_m_)\n= −(3_m_ + _n_)",
+              "presentation": "compact"
+            },
+            {
+              "id": "quad-f1",
+              "stem": "Simplify (_x_^2 − 7_x_ + 12)/(3 − _x_).",
+              "archetypeId": "quadratic-factor-example",
+              "level": "basic",
+              "answer": "−(_x_ − 4)",
+              "workedAnswer": "_x_^2 − 7_x_ + 12 = (_x_ − 3)(_x_ − 4)\n_x_ − 3 = −(3 − _x_)\n= −(_x_ − 4)",
+              "presentation": "multipart",
+              "group": "Structured practice",
+              "parts": [
+                "Factorise the quadratic numerator.",
+                "Rewrite the reversed factor.",
+                "Cancel and simplify."
+              ]
+            },
+            {
+              "id": "quad-f2",
+              "stem": "Simplify (_x_^2 − 9_x_ + 20)/(4 − _x_).",
+              "archetypeId": "quadratic-factor-example",
+              "level": "basic",
+              "answer": "−(_x_ − 5)",
+              "workedAnswer": "_x_^2 − 9_x_ + 20 = (_x_ − 4)(_x_ − 5)\n_x_ − 4 = −(4 − _x_)\n= −(_x_ − 5)",
+              "presentation": "compact",
+              "group": "Independent practice"
+            },
+            {
+              "id": "quad-m1",
+              "stem": "Simplify (_x_^2 + _x_ − 6)/(2 − _x_).",
+              "archetypeId": "quadratic-factor-example",
+              "level": "moderate",
+              "answer": "−(_x_ + 3)",
+              "workedAnswer": "_x_^2 + _x_ − 6 = (_x_ + 3)(_x_ − 2)\n_x_ − 2 = −(2 − _x_)\n= −(_x_ + 3)",
+              "presentation": "compact"
+            },
+            {
+              "id": "quad-m2",
+              "stem": "Simplify (_x_^2 − 2_x_ − 15)/(5 − _x_).",
+              "archetypeId": "quadratic-factor-example",
+              "level": "moderate",
+              "answer": "−(_x_ + 3)",
+              "workedAnswer": "_x_^2 − 2_x_ − 15 = (_x_ − 5)(_x_ + 3)\n_x_ − 5 = −(5 − _x_)\n= −(_x_ + 3)",
+              "presentation": "compact"
+            },
+            {
+              "id": "sub-f1",
+              "stem": "Simplify 1/(_x_ − _y_) − 1/(_y_ − _x_).",
+              "archetypeId": "subtract-opposite-example",
+              "level": "basic",
+              "answer": "2/(_x_ − _y_)",
+              "workedAnswer": "_y_ − _x_ = −(_x_ − _y_)\n= 1/(_x_ − _y_) + 1/(_x_ − _y_)\n= 2/(_x_ − _y_)",
+              "presentation": "multipart",
+              "group": "Structured practice",
+              "parts": [
+                "Rewrite the second denominator.",
+                "Resolve the sign.",
+                "Combine the fractions."
+              ]
+            },
+            {
+              "id": "sub-f2",
+              "stem": "Simplify 1/(_m_ − _n_) − 1/(_n_ − _m_).",
+              "archetypeId": "subtract-opposite-example",
+              "level": "basic",
+              "answer": "2/(_m_ − _n_)",
+              "workedAnswer": "_n_ − _m_ = −(_m_ − _n_)\n= 2/(_m_ − _n_)",
+              "presentation": "compact",
+              "group": "Independent practice"
+            },
+            {
+              "id": "sub-m1",
+              "stem": "Simplify 3/(_m_ − _n_) − 1/(_n_ − _m_).",
+              "archetypeId": "subtract-opposite-example",
+              "level": "moderate",
+              "answer": "4/(_m_ − _n_)",
+              "workedAnswer": "_n_ − _m_ = −(_m_ − _n_)\n= 3/(_m_ − _n_) + 1/(_m_ − _n_)\n= 4/(_m_ − _n_)",
+              "presentation": "compact"
+            },
+            {
+              "id": "sub-m2",
+              "stem": "Simplify 2/(_p_ − _q_) − 5/(_q_ − _p_).",
+              "archetypeId": "subtract-opposite-example",
+              "level": "moderate",
+              "answer": "7/(_p_ − _q_)",
+              "workedAnswer": "_q_ − _p_ = −(_p_ − _q_)\n= 2/(_p_ − _q_) + 5/(_p_ − _q_)\n= 7/(_p_ − _q_)",
+              "presentation": "compact"
+            },
+            {
+              "id": "add-f1",
+              "stem": "Simplify _x_/(_x_ − _y_) + _y_/(_y_ − _x_).",
+              "archetypeId": "add-opposite-example",
+              "level": "basic",
+              "answer": "1",
+              "workedAnswer": "_y_ − _x_ = −(_x_ − _y_)\n= _x_/(_x_ − _y_) − _y_/(_x_ − _y_)\n= 1",
+              "presentation": "multipart",
+              "group": "Structured practice",
+              "parts": [
+                "Rewrite the second denominator.",
+                "Resolve the sign of the second fraction.",
+                "Combine and simplify."
+              ]
+            },
+            {
+              "id": "add-f2",
+              "stem": "Simplify _r_/(_r_ − _s_) + _s_/(_s_ − _r_).",
+              "archetypeId": "add-opposite-example",
+              "level": "basic",
+              "answer": "1",
+              "workedAnswer": "_s_ − _r_ = −(_r_ − _s_)\n= _r_/(_r_ − _s_) − _s_/(_r_ − _s_)\n= 1",
+              "presentation": "compact",
+              "group": "Independent practice"
+            },
+            {
+              "id": "add-m1",
+              "stem": "Simplify 2_m_/(_m_ − _n_) + _n_/(_n_ − _m_).",
+              "archetypeId": "add-opposite-example",
+              "level": "moderate",
+              "answer": "(2_m_ − _n_)/(_m_ − _n_)",
+              "workedAnswer": "_n_ − _m_ = −(_m_ − _n_)\n= 2_m_/(_m_ − _n_) − _n_/(_m_ − _n_)\n= (2_m_ − _n_)/(_m_ − _n_)",
+              "presentation": "compact"
+            },
+            {
+              "id": "add-m2",
+              "stem": "Simplify _m_/(_m_ − _n_) + 2_n_/(_n_ − _m_).",
+              "archetypeId": "add-opposite-example",
+              "level": "moderate",
+              "answer": "(_m_ − 2_n_)/(_m_ − _n_)",
+              "workedAnswer": "_n_ − _m_ = −(_m_ − _n_)\n= _m_/(_m_ − _n_) − 2_n_/(_m_ − _n_)\n= (_m_ − 2_n_)/(_m_ − _n_)",
+              "presentation": "compact"
+            }
+          ],
+          "practiceCollectionId": "reversed-worked-collection"
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "reversed-worked-collection",
+          "title": "Worked examples",
+          "members": [
+            "opposites-basic-example",
+            "difference-squares-example",
+            "quadratic-factor-example",
+            "subtract-opposite-example",
+            "add-opposite-example"
+          ]
+        }
+      ]
+    }
+  ]
+}
