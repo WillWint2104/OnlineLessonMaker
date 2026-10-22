@@ -45,15 +45,8 @@ globalThis.MathMicro=(()=>{
     if(new Set(qs.map(q=>q.stem)).size!==qs.length)throw Error('Generated questions must have distinct stems.');
     return qs;
   }
-  /** Decorative local SVGs are generated from a finite pack/role catalogue; no formula or answer text. */
-  function image(pack,role){
-    const variant=packs.findIndex(([id])=>id===pack);if(variant<0)return null;
-    const phase={overview:0,outcomes:1,completion:2}[role];if(phase==null)return null;
-    const shapes=Array.from({length:6},(_,i)=>{const x=380+i*78,y=350-(i%3)*70-phase*20;
-      return variant===1?`<path d="M${x} ${y}l70 -110v210l-70 110z" fill="${i%2?'#087c70':'#9edfcc'}" opacity=".75"/>`:variant===2?`<rect x="${x}" y="${y}" width="65" height="${100+i*16}" rx="5" fill="${i%2?'#0a8275':'#9edfcc'}"/>`:`<path d="M${x} ${y}l50 -25 50 25v100l-50 25-50-25z" fill="${i%2?'#159a86':'#b0e9d7'}"/>`;}).join('');
-    const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 960 600"><defs><linearGradient id="bg"><stop stop-color="#f7fffc"/><stop offset="1" stop-color="#c9eee1"/></linearGradient><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#329c89" stroke-opacity=".12"/></pattern></defs><rect width="960" height="600" fill="url(#bg)"/><rect width="960" height="600" fill="url(#grid)"/><circle cx="710" cy="230" r="180" fill="none" stroke="#148b78" stroke-dasharray="6 9" opacity=".3"/>${shapes}<path d="M280 520L900 130" stroke="#0a8275" stroke-opacity=".2" fill="none"/><circle cx="820" cy="100" r="7" fill="#087c70"/></svg>`;
-    return {src:'data:image/svg+xml;base64,'+btoa(svg),alt:'',fit:'cover',focus:{x:.68,y:.5}};
-  }
+  /** Compatibility adapter; Mathematics generation stays independent of artwork lookup. */
+  function image(pack,role){return ArtworkPacks.image(pack,role);}
   /** Lint only recognised generated rational families; never rewrite arbitrary prose. */
   function lint(question){
     if(!families.some(([id])=>id===question.generation?.family))return;
