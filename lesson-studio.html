@@ -17966,7 +17966,8 @@ function lpFrontInspector(){
   wireInspector();lpJourneyEditorWire();ins.querySelector('[data-front-remove]')?.addEventListener('click',()=>{LESSON.meta.frontMatter.splice(i,1);LP_STATE.front=lpFrontPages()[Math.min(i,lpFrontPages().length-1)]?.id||null;renderSlide();});
 }
 function lpJourneyEditorWire(){const ins=$('#inspector');
-  ins.querySelector('[data-bind="meta.artworkPack"]')?.addEventListener('input',()=>renderInspector());
+  const artworkPack=ins.querySelector('[data-bind="meta.artworkPack"]');
+  artworkPack?.addEventListener('input',()=>{const keepFocus=document.activeElement===artworkPack;renderInspector();if(keepFocus)ins.querySelector('[data-bind="meta.artworkPack"]')?.focus({preventScroll:true});});
   ins.querySelectorAll('[data-front-edit]').forEach(b=>b.onclick=()=>lpGoFront(b.dataset.frontEdit));
   ins.querySelectorAll('[data-front-add]').forEach(b=>b.onclick=()=>{const kind=b.dataset.frontAdd,p={id:'front-'+crypto.randomUUID(),kind,title:kind==='overview'?'':'What you will learn',description:'',...(kind==='outcomes'?{intentions:[]}:{})};(LESSON.meta.frontMatter=LESSON.meta.frontMatter||[]).push(p);lpGoFront(p.id);});
   ins.querySelectorAll('[data-journey-add]').forEach(b=>b.onclick=()=>{const path=b.dataset.journeyAdd;if(!getP(LESSON,path))lpSet(path,[]);getP(LESSON,path).push('New item');renderSlide();});
@@ -18338,7 +18339,6 @@ function lpInspector(s,i){
 
   if(a?.questions){ins.insertAdjacentHTML('beforeend',lpPracticeForm(s,a,ab,part));}
   wireInspector();lpJourneyEditorWire();if(a&&editor)editor.wire(i,context);if(a)lpCollectionWire(s,a,i);
-  ins.querySelector('[data-bind="meta.artworkPack"]')?.addEventListener('input',()=>renderInspector());
   ins.querySelector('[data-bind="meta.responseMode"]')?.addEventListener('input',()=>{MX_RESPONSE=null;renderCanvas();});
   ins.querySelectorAll('[data-lp-select]').forEach(b=>b.onclick=()=>lpNavigate(i,s.activities[+b.dataset.lpSelect].id));
   ins.querySelector('[data-lp-add]').onclick=()=>{const kind=ins.querySelector('#lpActivityType').value;if(kind==='video'&&hasVideo)return;const next=lpActivitySeed(kind);s.activities.push(next);lpNavigate(i,next.id);};

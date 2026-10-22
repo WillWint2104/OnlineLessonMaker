@@ -23,6 +23,8 @@ assert not subprocess.check_output(['git', 'status', '--porcelain', '--untracked
 assert digest(root / 'lesson-studio.html') == report['applicationSha256']
 for capture in report['captures']:
     assert digest(review / capture['file']) == capture['sha256']
+workflow = {p.relative_to(review).as_posix(): digest(p) for p in (review / 'workflow').rglob('*') if p.is_file()}
+assert workflow == {item['file']: item['sha256'] for item in report['workflow']}
 
 delivery = root / 'review-delivery'
 delivery.mkdir(exist_ok=True)
