@@ -388,14 +388,14 @@
               "archetypeId": "like-denominators-example",
               "level": "moderate",
               "presentation": "compact",
-              "stem": "$\\frac{9}{2x} + \\frac{4}{2x}$",
-              "answer": "$\\frac{13}{2x}$",
-              "workedAnswer": "$\\frac{9}{2x} + \\frac{4}{2x}=\\frac{9+4}{2x}$\n$=\\frac{13}{2x}$\n$x\\ne0$",
+              "stem": "$\\frac{9}{5x} + \\frac{4}{5x}$",
+              "answer": "$\\frac{13}{5x}$",
+              "workedAnswer": "$\\frac{9}{5x} + \\frac{4}{5x}=\\frac{9+4}{5x}$\n$=\\frac{13}{5x}$\n$x\\ne0$",
               "generation": {
                 "family": "like-denominators",
                 "left": 9,
                 "right": 4,
-                "denominator": "2x",
+                "denominator": "5x",
                 "operation": "add"
               }
             },
@@ -420,14 +420,14 @@
               "archetypeId": "like-denominators-example",
               "level": "moderate",
               "presentation": "compact",
-              "stem": "$\\frac{12}{4p} - \\frac{7}{4p}$",
-              "answer": "$\\frac{5}{4p}$",
-              "workedAnswer": "$\\frac{12}{4p} - \\frac{7}{4p}=\\frac{12-7}{4p}$\n$=\\frac{5}{4p}$\n$p\\ne0$",
+              "stem": "$\\frac{12}{5p} - \\frac{8}{5p}$",
+              "answer": "$\\frac{4}{5p}$",
+              "workedAnswer": "$\\frac{12}{5p} - \\frac{8}{5p}=\\frac{12-8}{5p}$\n$=\\frac{4}{5p}$\n$p\\ne0$",
               "generation": {
                 "family": "like-denominators",
                 "left": 12,
-                "right": 7,
-                "denominator": "4p",
+                "right": 8,
+                "denominator": "5p",
                 "operation": "subtract"
               }
             },
@@ -526,15 +526,15 @@
               "archetypeId": "common-denominator-example",
               "level": "basic",
               "presentation": "compact",
-              "stem": "$\\frac{1}{3p} + \\frac{3}{6p}$",
-              "answer": "$\\frac{5}{6p}$",
-              "workedAnswer": "Lowest common denominator: $6p$\n$\\frac{1}{3p}=\\frac{1\\times 2}{6p}=\\frac{2}{6p}$\n$\\frac{3}{6p}=\\frac{3}{6p}$\n$\\frac{2}{6p} + \\frac{3}{6p}=\\frac{5}{6p}$\n$p\\ne0$",
+              "stem": "$\\frac{1}{3p} + \\frac{5}{6p}$",
+              "answer": "$\\frac{7}{6p}$",
+              "workedAnswer": "Lowest common denominator: $6p$\n$\\frac{1}{3p}=\\frac{1\\times 2}{6p}=\\frac{2}{6p}$\n$\\frac{5}{6p}=\\frac{5}{6p}$\n$\\frac{2}{6p} + \\frac{5}{6p}=\\frac{7}{6p}$\n$p\\ne0$",
               "generation": {
                 "family": "common-denominator",
                 "n1": 1,
                 "d1": "3p",
                 "operation": "add",
-                "n2": 3,
+                "n2": 5,
                 "d2": "6p",
                 "lcd": "6p"
               }
