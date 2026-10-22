@@ -1,0 +1,15 @@
+{
+  "questionCount": 36,
+  "requireFullAnswers": true,
+  "coreSkillCounts": {
+    "like-denominators-example": {"basic": 8, "moderate": 4},
+    "common-denominator-example": {"basic": 8, "moderate": 4},
+    "simplify-result-example": {"basic": 8, "moderate": 4}
+  },
+  "journey": ["Adding Fractions With Algebraic Denominators", "What you will learn", "Introduction", "Video", "Same denominator", "Build a common denominator", "Simplify the result", "Lesson complete"],
+  "videoUrl": "https://youtu.be/kOZr5rvpzeY",
+  "forbiddenText": ["operatorname"],
+  "simplifyResultArchetype": "simplify-result-example",
+  "twoStepExample": "like-denominators-example",
+  "columns": {"1536": 3, "1024": 2, "390": 1}
+}

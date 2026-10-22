@@ -1,0 +1,896 @@
+{
+  "meta": {
+    "title": "Adding Fractions With Algebraic Denominators",
+    "theme": "neutral",
+    "id": "adding-fractions-algebraic-denominators-micro",
+    "subject": "Mathematics",
+    "player": "activities",
+    "responseMode": "paper",
+    "context": "Algebra review",
+    "frontMatter": [
+      {
+        "id": "lesson-overview",
+        "kind": "overview",
+        "title": "Adding Fractions With Algebraic Denominators",
+        "description": "Add and subtract algebraic fractions by keeping like denominators or building a lowest common denominator, then simplify the result."
+      },
+      {
+        "id": "lesson-outcomes",
+        "kind": "outcomes",
+        "title": "What you will learn",
+        "description": "By the end of this lesson, you should be able to:",
+        "intentions": [
+          "Add and subtract fractions that already have the same algebraic denominator.",
+          "Find a lowest common denominator for denominators such as a, 2a, 2x and 3x.",
+          "Create equivalent fractions before combining the numerators.",
+          "Simplify the final algebraic fraction when a numerical common factor remains."
+        ]
+      }
+    ],
+    "description": "Use the same fraction principles with algebraic denominators: find a common denominator, create equivalent fractions, combine numerators and simplify.",
+    "completion": {
+      "description": "You have practised adding and subtracting fractions with algebraic denominators.",
+      "practised": [
+        "Combine numerators when the denominators already match.",
+        "Build equivalent fractions using the lowest common denominator.",
+        "Reduce the final fraction when a common numerical factor remains."
+      ]
+    },
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "end",
+      "worked": "end",
+      "fallback": {
+        "final": "hidden",
+        "worked": "hidden"
+      }
+    },
+    "artworkPack": "mathematics/algebra/general",
+    "generation": {
+      "version": 1,
+      "sourceVideo": "https://youtu.be/kOZr5rvpzeY",
+      "thesis": "Use the same fraction rules with algebraic denominators: find or keep a common denominator, combine numerators and simplify.",
+      "sourceEvidence": "Generated from the video's accessible transcript and visual walkthrough."
+    }
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "algebraic-denominators",
+      "title": "Adding fractions with algebraic denominators",
+      "description": "Find or keep a common algebraic denominator, combine the numerators, then simplify if possible.",
+      "video": {
+        "url": "https://youtu.be/kOZr5rvpzeY"
+      },
+      "activities": [
+        {
+          "id": "algebraic-denominators-introduction",
+          "title": "Introduction",
+          "lede": "Algebraic denominators follow the same fraction rules as numerical denominators.",
+          "notes": [
+            {
+              "term": "Same denominator",
+              "body": "If the denominators already match, keep that denominator and add or subtract the numerators."
+            },
+            {
+              "term": "Different denominators",
+              "body": "Find the lowest common denominator, then multiply the numerator and denominator of each fraction by the same factor to create equivalent fractions."
+            },
+            {
+              "term": "Simplify at the end",
+              "body": "After combining the numerators, check whether a numerical common factor can be cancelled from the numerator and denominator."
+            }
+          ],
+          "introduction": {
+            "why": "The denominator may contain a pronumeral, but the fraction process is still the same one used with ordinary numerical fractions.",
+            "keyIdea": "$\\frac{p}{ka}\\pm\\frac{q}{ma}$: find a common denominator, rewrite equivalent fractions, combine the numerators, then simplify.",
+            "method": [
+              "If the denominators already match, keep the denominator.",
+              "If they differ, find the lowest common denominator from the numerical coefficients and the shared pronumeral.",
+              "Multiply numerator and denominator by the same factor to make equivalent fractions.",
+              "Add or subtract the numerators.",
+              "Simplify the final fraction if possible."
+            ],
+            "illustration": "$\\frac{1}{a}+\\frac{1}{2a}=\\frac{2}{2a}+\\frac{1}{2a}=\\frac{3}{2a}$",
+            "title": "Introduction"
+          }
+        },
+        {
+          "id": "algebraic-denominators-video",
+          "title": "Video",
+          "optionalVideo": true,
+          "lede": "Watch: adding fractions with algebraic denominators.",
+          "focusPoints": [
+            "What stays the same when the denominators already match.",
+            "How the lowest common denominator is found from the numerical coefficients.",
+            "Why the same multiplier must be applied to the numerator and denominator.",
+            "When the final algebraic fraction can be simplified."
+          ]
+        },
+        {
+          "id": "like-denominators",
+          "title": "Same denominator",
+          "workedExamples": [
+            {
+              "id": "like-denominators-group",
+              "type": "sequence",
+              "title": "Same algebraic denominator",
+              "examples": [
+                {
+                  "id": "like-denominators-example",
+                  "label": "Worked example",
+                  "tabLabel": "Same denominator",
+                  "prompt": "Simplify $\\frac{1}{a}+\\frac{1}{a}$.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "like-denominators-step-2",
+                      "math": "$\\frac{1}{a}+\\frac{1}{a}=\\frac{1+1}{a}$",
+                      "text": "The denominators already match, so keep a and add the numerators."
+                    },
+                    {
+                      "id": "like-denominators-step-3",
+                      "math": "$=\\frac{2}{a}$",
+                      "text": "Simplify the numerator, with a ≠ 0."
+                    }
+                  ],
+                  "answer": "$\\frac{2}{a}$",
+                  "resultLabel": "So",
+                  "practice": {
+                    "instructions": "Keep the common denominator and add or subtract the numerators. Assume all pronumerals in denominators are non-zero."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "common-denominator",
+          "title": "Build a common denominator",
+          "workedExamples": [
+            {
+              "id": "common-denominator-group",
+              "type": "sequence",
+              "title": "Build a common denominator",
+              "examples": [
+                {
+                  "id": "common-denominator-example",
+                  "label": "Worked example",
+                  "tabLabel": "Build a common denominator",
+                  "prompt": "Simplify $\\frac{1}{a}+\\frac{1}{2a}$.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "common-denominator-step-1",
+                      "math": "$2a$",
+                      "text": "The lowest common denominator of a and 2a is 2a."
+                    },
+                    {
+                      "id": "common-denominator-step-2",
+                      "math": "$\\frac{1}{a}=\\frac{1\\times2}{2a}=\\frac{2}{2a}$",
+                      "text": "Multiply the first numerator and denominator by 2."
+                    },
+                    {
+                      "id": "common-denominator-step-3",
+                      "math": "$\\frac{2}{2a}+\\frac{1}{2a}=\\frac{3}{2a}$",
+                      "text": "Now the denominators match, combine the numerators."
+                    }
+                  ],
+                  "answer": "$\\frac{3}{2a}$",
+                  "resultLabel": "So",
+                  "practice": {
+                    "instructions": "Find the lowest common denominator, create equivalent fractions and combine the numerators. Assume all pronumerals in denominators are non-zero."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "simplify-result",
+          "title": "Simplify the result",
+          "workedExamples": [
+            {
+              "id": "simplify-result-group",
+              "type": "sequence",
+              "title": "Simplify after combining",
+              "examples": [
+                {
+                  "id": "simplify-result-example",
+                  "label": "Worked example",
+                  "tabLabel": "Simplify the result",
+                  "prompt": "Simplify $\\frac{5}{6x}-\\frac{1}{3x}$.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "simplify-result-step-1",
+                      "math": "$6x$",
+                      "text": "The lowest common denominator of 6x and 3x is 6x."
+                    },
+                    {
+                      "id": "simplify-result-step-2",
+                      "math": "$\\frac{1}{3x}=\\frac{2}{6x}$",
+                      "text": "Multiply the second numerator and denominator by 2."
+                    },
+                    {
+                      "id": "simplify-result-step-3",
+                      "math": "$\\frac{5}{6x}-\\frac{2}{6x}=\\frac{3}{6x}$",
+                      "text": "Subtract the numerators."
+                    },
+                    {
+                      "id": "simplify-result-step-4",
+                      "math": "$\\frac{3}{6x}=\\frac{1}{2x}$",
+                      "text": "Cancel the common numerical factor of 3, with x ≠ 0."
+                    }
+                  ],
+                  "answer": "$\\frac{1}{2x}$",
+                  "resultLabel": "So",
+                  "practice": {
+                    "instructions": "Build the common denominator, combine the numerators, then reduce any common numerical factor. Assume all pronumerals in denominators are non-zero."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "algebraic-denominators-practice",
+          "title": "Core skills",
+          "lede": "",
+          "practiceNote": "Work in your exercise book. Choose Foundation or Moderate.",
+          "questions": [
+            {
+              "id": "like-denominators-example-basic-1",
+              "archetypeId": "like-denominators-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{a} + \\frac{1}{a}$",
+              "answer": "$\\frac{2}{a}$",
+              "workedAnswer": "$\\frac{1}{a} + \\frac{1}{a}=\\frac{1+1}{a}$\n$=\\frac{2}{a}$\n$a\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 1,
+                "right": 1,
+                "denominator": "a",
+                "operation": "add"
+              }
+            },
+            {
+              "id": "like-denominators-example-basic-2",
+              "archetypeId": "like-denominators-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{3}{x} + \\frac{2}{x}$",
+              "answer": "$\\frac{5}{x}$",
+              "workedAnswer": "$\\frac{3}{x} + \\frac{2}{x}=\\frac{3+2}{x}$\n$=\\frac{5}{x}$\n$x\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 3,
+                "right": 2,
+                "denominator": "x",
+                "operation": "add"
+              }
+            },
+            {
+              "id": "like-denominators-example-basic-3",
+              "archetypeId": "like-denominators-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{5}{m} - \\frac{2}{m}$",
+              "answer": "$\\frac{3}{m}$",
+              "workedAnswer": "$\\frac{5}{m} - \\frac{2}{m}=\\frac{5-2}{m}$\n$=\\frac{3}{m}$\n$m\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 5,
+                "right": 2,
+                "denominator": "m",
+                "operation": "subtract"
+              }
+            },
+            {
+              "id": "like-denominators-example-basic-4",
+              "archetypeId": "like-denominators-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{2}{n} - \\frac{5}{n}$",
+              "answer": "$-\\frac{3}{n}$",
+              "workedAnswer": "$\\frac{2}{n} - \\frac{5}{n}=\\frac{2-5}{n}$\n$=-\\frac{3}{n}$\n$n\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 2,
+                "right": 5,
+                "denominator": "n",
+                "operation": "subtract"
+              }
+            },
+            {
+              "id": "like-denominators-example-basic-5",
+              "archetypeId": "like-denominators-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{4}{p} + \\frac{3}{p}$",
+              "answer": "$\\frac{7}{p}$",
+              "workedAnswer": "$\\frac{4}{p} + \\frac{3}{p}=\\frac{4+3}{p}$\n$=\\frac{7}{p}$\n$p\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 4,
+                "right": 3,
+                "denominator": "p",
+                "operation": "add"
+              }
+            },
+            {
+              "id": "like-denominators-example-basic-6",
+              "archetypeId": "like-denominators-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{7}{q} - \\frac{4}{q}$",
+              "answer": "$\\frac{3}{q}$",
+              "workedAnswer": "$\\frac{7}{q} - \\frac{4}{q}=\\frac{7-4}{q}$\n$=\\frac{3}{q}$\n$q\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 7,
+                "right": 4,
+                "denominator": "q",
+                "operation": "subtract"
+              }
+            },
+            {
+              "id": "like-denominators-example-basic-7",
+              "archetypeId": "like-denominators-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{6}{t} + \\frac{5}{t}$",
+              "answer": "$\\frac{11}{t}$",
+              "workedAnswer": "$\\frac{6}{t} + \\frac{5}{t}=\\frac{6+5}{t}$\n$=\\frac{11}{t}$\n$t\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 6,
+                "right": 5,
+                "denominator": "t",
+                "operation": "add"
+              }
+            },
+            {
+              "id": "like-denominators-example-basic-8",
+              "archetypeId": "like-denominators-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{3}{y} - \\frac{8}{y}$",
+              "answer": "$-\\frac{5}{y}$",
+              "workedAnswer": "$\\frac{3}{y} - \\frac{8}{y}=\\frac{3-8}{y}$\n$=-\\frac{5}{y}$\n$y\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 3,
+                "right": 8,
+                "denominator": "y",
+                "operation": "subtract"
+              }
+            },
+            {
+              "id": "like-denominators-example-moderate-1",
+              "archetypeId": "like-denominators-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{7}{3a} - \\frac{11}{3a}$",
+              "answer": "$-\\frac{4}{3a}$",
+              "workedAnswer": "$\\frac{7}{3a} - \\frac{11}{3a}=\\frac{7-11}{3a}$\n$=-\\frac{4}{3a}$\n$a\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 7,
+                "right": 11,
+                "denominator": "3a",
+                "operation": "subtract"
+              }
+            },
+            {
+              "id": "like-denominators-example-moderate-2",
+              "archetypeId": "like-denominators-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{9}{5x} + \\frac{4}{5x}$",
+              "answer": "$\\frac{13}{5x}$",
+              "workedAnswer": "$\\frac{9}{5x} + \\frac{4}{5x}=\\frac{9+4}{5x}$\n$=\\frac{13}{5x}$\n$x\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 9,
+                "right": 4,
+                "denominator": "5x",
+                "operation": "add"
+              }
+            },
+            {
+              "id": "like-denominators-example-moderate-3",
+              "archetypeId": "like-denominators-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{4}{5m} - \\frac{13}{5m}$",
+              "answer": "$-\\frac{9}{5m}$",
+              "workedAnswer": "$\\frac{4}{5m} - \\frac{13}{5m}=\\frac{4-13}{5m}$\n$=-\\frac{9}{5m}$\n$m\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 4,
+                "right": 13,
+                "denominator": "5m",
+                "operation": "subtract"
+              }
+            },
+            {
+              "id": "like-denominators-example-moderate-4",
+              "archetypeId": "like-denominators-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{12}{5p} - \\frac{8}{5p}$",
+              "answer": "$\\frac{4}{5p}$",
+              "workedAnswer": "$\\frac{12}{5p} - \\frac{8}{5p}=\\frac{12-8}{5p}$\n$=\\frac{4}{5p}$\n$p\\ne0$",
+              "generation": {
+                "family": "like-denominators",
+                "left": 12,
+                "right": 8,
+                "denominator": "5p",
+                "operation": "subtract"
+              }
+            },
+            {
+              "id": "common-denominator-example-basic-1",
+              "archetypeId": "common-denominator-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{a} + \\frac{1}{2a}$",
+              "answer": "$\\frac{3}{2a}$",
+              "workedAnswer": "Lowest common denominator: $2a$\n$\\frac{1}{a}=\\frac{1\\times 2}{2a}=\\frac{2}{2a}$\n$\\frac{1}{2a}=\\frac{1}{2a}$\n$\\frac{2}{2a} + \\frac{1}{2a}=\\frac{3}{2a}$\n$a\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 1,
+                "d1": "a",
+                "operation": "add",
+                "n2": 1,
+                "d2": "2a",
+                "lcd": "2a"
+              }
+            },
+            {
+              "id": "common-denominator-example-basic-2",
+              "archetypeId": "common-denominator-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{x} + \\frac{1}{3x}$",
+              "answer": "$\\frac{4}{3x}$",
+              "workedAnswer": "Lowest common denominator: $3x$\n$\\frac{1}{x}=\\frac{1\\times 3}{3x}=\\frac{3}{3x}$\n$\\frac{1}{3x}=\\frac{1}{3x}$\n$\\frac{3}{3x} + \\frac{1}{3x}=\\frac{4}{3x}$\n$x\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 1,
+                "d1": "x",
+                "operation": "add",
+                "n2": 1,
+                "d2": "3x",
+                "lcd": "3x"
+              }
+            },
+            {
+              "id": "common-denominator-example-basic-3",
+              "archetypeId": "common-denominator-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{2}{a} + \\frac{1}{2a}$",
+              "answer": "$\\frac{5}{2a}$",
+              "workedAnswer": "Lowest common denominator: $2a$\n$\\frac{2}{a}=\\frac{2\\times 2}{2a}=\\frac{4}{2a}$\n$\\frac{1}{2a}=\\frac{1}{2a}$\n$\\frac{4}{2a} + \\frac{1}{2a}=\\frac{5}{2a}$\n$a\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 2,
+                "d1": "a",
+                "operation": "add",
+                "n2": 1,
+                "d2": "2a",
+                "lcd": "2a"
+              }
+            },
+            {
+              "id": "common-denominator-example-basic-4",
+              "archetypeId": "common-denominator-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{2m} + \\frac{1}{4m}$",
+              "answer": "$\\frac{3}{4m}$",
+              "workedAnswer": "Lowest common denominator: $4m$\n$\\frac{1}{2m}=\\frac{1\\times 2}{4m}=\\frac{2}{4m}$\n$\\frac{1}{4m}=\\frac{1}{4m}$\n$\\frac{2}{4m} + \\frac{1}{4m}=\\frac{3}{4m}$\n$m\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 1,
+                "d1": "2m",
+                "operation": "add",
+                "n2": 1,
+                "d2": "4m",
+                "lcd": "4m"
+              }
+            },
+            {
+              "id": "common-denominator-example-basic-5",
+              "archetypeId": "common-denominator-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{3}{2n} - \\frac{1}{4n}$",
+              "answer": "$\\frac{5}{4n}$",
+              "workedAnswer": "Lowest common denominator: $4n$\n$\\frac{3}{2n}=\\frac{3\\times 2}{4n}=\\frac{6}{4n}$\n$\\frac{1}{4n}=\\frac{1}{4n}$\n$\\frac{6}{4n} - \\frac{1}{4n}=\\frac{5}{4n}$\n$n\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 3,
+                "d1": "2n",
+                "operation": "subtract",
+                "n2": 1,
+                "d2": "4n",
+                "lcd": "4n"
+              }
+            },
+            {
+              "id": "common-denominator-example-basic-6",
+              "archetypeId": "common-denominator-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{3p} + \\frac{5}{6p}$",
+              "answer": "$\\frac{7}{6p}$",
+              "workedAnswer": "Lowest common denominator: $6p$\n$\\frac{1}{3p}=\\frac{1\\times 2}{6p}=\\frac{2}{6p}$\n$\\frac{5}{6p}=\\frac{5}{6p}$\n$\\frac{2}{6p} + \\frac{5}{6p}=\\frac{7}{6p}$\n$p\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 1,
+                "d1": "3p",
+                "operation": "add",
+                "n2": 5,
+                "d2": "6p",
+                "lcd": "6p"
+              }
+            },
+            {
+              "id": "common-denominator-example-basic-7",
+              "archetypeId": "common-denominator-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{5}{4q} - \\frac{1}{2q}$",
+              "answer": "$\\frac{3}{4q}$",
+              "workedAnswer": "Lowest common denominator: $4q$\n$\\frac{5}{4q}=\\frac{5}{4q}$\n$\\frac{1}{2q}=\\frac{1\\times 2}{4q}=\\frac{2}{4q}$\n$\\frac{5}{4q} - \\frac{2}{4q}=\\frac{3}{4q}$\n$q\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 5,
+                "d1": "4q",
+                "operation": "subtract",
+                "n2": 1,
+                "d2": "2q",
+                "lcd": "4q"
+              }
+            },
+            {
+              "id": "common-denominator-example-basic-8",
+              "archetypeId": "common-denominator-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{2}{5t} + \\frac{3}{10t}$",
+              "answer": "$\\frac{7}{10t}$",
+              "workedAnswer": "Lowest common denominator: $10t$\n$\\frac{2}{5t}=\\frac{2\\times 2}{10t}=\\frac{4}{10t}$\n$\\frac{3}{10t}=\\frac{3}{10t}$\n$\\frac{4}{10t} + \\frac{3}{10t}=\\frac{7}{10t}$\n$t\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 2,
+                "d1": "5t",
+                "operation": "add",
+                "n2": 3,
+                "d2": "10t",
+                "lcd": "10t"
+              }
+            },
+            {
+              "id": "common-denominator-example-moderate-1",
+              "archetypeId": "common-denominator-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{2x} - \\frac{1}{3x}$",
+              "answer": "$\\frac{1}{6x}$",
+              "workedAnswer": "Lowest common denominator: $6x$\n$\\frac{1}{2x}=\\frac{1\\times 3}{6x}=\\frac{3}{6x}$\n$\\frac{1}{3x}=\\frac{1\\times 2}{6x}=\\frac{2}{6x}$\n$\\frac{3}{6x} - \\frac{2}{6x}=\\frac{1}{6x}$\n$x\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 1,
+                "d1": "2x",
+                "operation": "subtract",
+                "n2": 1,
+                "d2": "3x",
+                "lcd": "6x"
+              }
+            },
+            {
+              "id": "common-denominator-example-moderate-2",
+              "archetypeId": "common-denominator-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{3}{4a} + \\frac{4}{3a}$",
+              "answer": "$\\frac{25}{12a}$",
+              "workedAnswer": "Lowest common denominator: $12a$\n$\\frac{3}{4a}=\\frac{3\\times 3}{12a}=\\frac{9}{12a}$\n$\\frac{4}{3a}=\\frac{4\\times 4}{12a}=\\frac{16}{12a}$\n$\\frac{9}{12a} + \\frac{16}{12a}=\\frac{25}{12a}$\n$a\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 3,
+                "d1": "4a",
+                "operation": "add",
+                "n2": 4,
+                "d2": "3a",
+                "lcd": "12a"
+              }
+            },
+            {
+              "id": "common-denominator-example-moderate-3",
+              "archetypeId": "common-denominator-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{2}{5m} + \\frac{3}{2m}$",
+              "answer": "$\\frac{19}{10m}$",
+              "workedAnswer": "Lowest common denominator: $10m$\n$\\frac{2}{5m}=\\frac{2\\times 2}{10m}=\\frac{4}{10m}$\n$\\frac{3}{2m}=\\frac{3\\times 5}{10m}=\\frac{15}{10m}$\n$\\frac{4}{10m} + \\frac{15}{10m}=\\frac{19}{10m}$\n$m\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 2,
+                "d1": "5m",
+                "operation": "add",
+                "n2": 3,
+                "d2": "2m",
+                "lcd": "10m"
+              }
+            },
+            {
+              "id": "common-denominator-example-moderate-4",
+              "archetypeId": "common-denominator-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{5}{6n} - \\frac{1}{4n}$",
+              "answer": "$\\frac{7}{12n}$",
+              "workedAnswer": "Lowest common denominator: $12n$\n$\\frac{5}{6n}=\\frac{5\\times 2}{12n}=\\frac{10}{12n}$\n$\\frac{1}{4n}=\\frac{1\\times 3}{12n}=\\frac{3}{12n}$\n$\\frac{10}{12n} - \\frac{3}{12n}=\\frac{7}{12n}$\n$n\\ne0$",
+              "generation": {
+                "family": "common-denominator",
+                "n1": 5,
+                "d1": "6n",
+                "operation": "subtract",
+                "n2": 1,
+                "d2": "4n",
+                "lcd": "12n"
+              }
+            },
+            {
+              "id": "simplify-result-example-basic-1",
+              "archetypeId": "simplify-result-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{6x} + \\frac{1}{3x}$",
+              "answer": "$\\frac{1}{2x}$",
+              "workedAnswer": "Lowest common denominator: $6x$\n$\\frac{1}{6x}=\\frac{1}{6x}$\n$\\frac{1}{3x}=\\frac{1\\times 2}{6x}=\\frac{2}{6x}$\n$\\frac{1}{6x} + \\frac{2}{6x}=\\frac{3}{6x}$\n$=\\frac{1}{2x}$\n$x\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 1,
+                "d1": "6x",
+                "operation": "add",
+                "n2": 1,
+                "d2": "3x",
+                "lcd": "6x",
+                "gcf": 3
+              }
+            },
+            {
+              "id": "simplify-result-example-basic-2",
+              "archetypeId": "simplify-result-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{7}{10a} - \\frac{1}{5a}$",
+              "answer": "$\\frac{1}{2a}$",
+              "workedAnswer": "Lowest common denominator: $10a$\n$\\frac{7}{10a}=\\frac{7}{10a}$\n$\\frac{1}{5a}=\\frac{1\\times 2}{10a}=\\frac{2}{10a}$\n$\\frac{7}{10a} - \\frac{2}{10a}=\\frac{5}{10a}$\n$=\\frac{1}{2a}$\n$a\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 7,
+                "d1": "10a",
+                "operation": "subtract",
+                "n2": 1,
+                "d2": "5a",
+                "lcd": "10a",
+                "gcf": 5
+              }
+            },
+            {
+              "id": "simplify-result-example-basic-3",
+              "archetypeId": "simplify-result-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{12m} + \\frac{1}{6m}$",
+              "answer": "$\\frac{1}{4m}$",
+              "workedAnswer": "Lowest common denominator: $12m$\n$\\frac{1}{12m}=\\frac{1}{12m}$\n$\\frac{1}{6m}=\\frac{1\\times 2}{12m}=\\frac{2}{12m}$\n$\\frac{1}{12m} + \\frac{2}{12m}=\\frac{3}{12m}$\n$=\\frac{1}{4m}$\n$m\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 1,
+                "d1": "12m",
+                "operation": "add",
+                "n2": 1,
+                "d2": "6m",
+                "lcd": "12m",
+                "gcf": 3
+              }
+            },
+            {
+              "id": "simplify-result-example-basic-4",
+              "archetypeId": "simplify-result-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{8}{15n} - \\frac{1}{5n}$",
+              "answer": "$\\frac{1}{3n}$",
+              "workedAnswer": "Lowest common denominator: $15n$\n$\\frac{8}{15n}=\\frac{8}{15n}$\n$\\frac{1}{5n}=\\frac{1\\times 3}{15n}=\\frac{3}{15n}$\n$\\frac{8}{15n} - \\frac{3}{15n}=\\frac{5}{15n}$\n$=\\frac{1}{3n}$\n$n\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 8,
+                "d1": "15n",
+                "operation": "subtract",
+                "n2": 1,
+                "d2": "5n",
+                "lcd": "15n",
+                "gcf": 5
+              }
+            },
+            {
+              "id": "simplify-result-example-basic-5",
+              "archetypeId": "simplify-result-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{5}{12p} + \\frac{1}{4p}$",
+              "answer": "$\\frac{2}{3p}$",
+              "workedAnswer": "Lowest common denominator: $12p$\n$\\frac{5}{12p}=\\frac{5}{12p}$\n$\\frac{1}{4p}=\\frac{1\\times 3}{12p}=\\frac{3}{12p}$\n$\\frac{5}{12p} + \\frac{3}{12p}=\\frac{8}{12p}$\n$=\\frac{2}{3p}$\n$p\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 5,
+                "d1": "12p",
+                "operation": "add",
+                "n2": 1,
+                "d2": "4p",
+                "lcd": "12p",
+                "gcf": 4
+              }
+            },
+            {
+              "id": "simplify-result-example-basic-6",
+              "archetypeId": "simplify-result-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{9}{14q} - \\frac{1}{7q}$",
+              "answer": "$\\frac{1}{2q}$",
+              "workedAnswer": "Lowest common denominator: $14q$\n$\\frac{9}{14q}=\\frac{9}{14q}$\n$\\frac{1}{7q}=\\frac{1\\times 2}{14q}=\\frac{2}{14q}$\n$\\frac{9}{14q} - \\frac{2}{14q}=\\frac{7}{14q}$\n$=\\frac{1}{2q}$\n$q\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 9,
+                "d1": "14q",
+                "operation": "subtract",
+                "n2": 1,
+                "d2": "7q",
+                "lcd": "14q",
+                "gcf": 7
+              }
+            },
+            {
+              "id": "simplify-result-example-basic-7",
+              "archetypeId": "simplify-result-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{11}{18r} - \\frac{1}{9r}$",
+              "answer": "$\\frac{1}{2r}$",
+              "workedAnswer": "Lowest common denominator: $18r$\n$\\frac{11}{18r}=\\frac{11}{18r}$\n$\\frac{1}{9r}=\\frac{1\\times 2}{18r}=\\frac{2}{18r}$\n$\\frac{11}{18r} - \\frac{2}{18r}=\\frac{9}{18r}$\n$=\\frac{1}{2r}$\n$r\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 11,
+                "d1": "18r",
+                "operation": "subtract",
+                "n2": 1,
+                "d2": "9r",
+                "lcd": "18r",
+                "gcf": 9
+              }
+            },
+            {
+              "id": "simplify-result-example-basic-8",
+              "archetypeId": "simplify-result-example",
+              "level": "basic",
+              "presentation": "compact",
+              "stem": "$\\frac{7}{12s} + \\frac{1}{6s}$",
+              "answer": "$\\frac{3}{4s}$",
+              "workedAnswer": "Lowest common denominator: $12s$\n$\\frac{7}{12s}=\\frac{7}{12s}$\n$\\frac{1}{6s}=\\frac{1\\times 2}{12s}=\\frac{2}{12s}$\n$\\frac{7}{12s} + \\frac{2}{12s}=\\frac{9}{12s}$\n$=\\frac{3}{4s}$\n$s\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 7,
+                "d1": "12s",
+                "operation": "add",
+                "n2": 1,
+                "d2": "6s",
+                "lcd": "12s",
+                "gcf": 3
+              }
+            },
+            {
+              "id": "simplify-result-example-moderate-1",
+              "archetypeId": "simplify-result-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{6x} + \\frac{1}{10x}$",
+              "answer": "$\\frac{4}{15x}$",
+              "workedAnswer": "Lowest common denominator: $30x$\n$\\frac{1}{6x}=\\frac{1\\times 5}{30x}=\\frac{5}{30x}$\n$\\frac{1}{10x}=\\frac{1\\times 3}{30x}=\\frac{3}{30x}$\n$\\frac{5}{30x} + \\frac{3}{30x}=\\frac{8}{30x}$\n$=\\frac{4}{15x}$\n$x\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 1,
+                "d1": "6x",
+                "operation": "add",
+                "n2": 1,
+                "d2": "10x",
+                "lcd": "30x",
+                "gcf": 2
+              }
+            },
+            {
+              "id": "simplify-result-example-moderate-2",
+              "archetypeId": "simplify-result-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{10a} + \\frac{1}{15a}$",
+              "answer": "$\\frac{1}{6a}$",
+              "workedAnswer": "Lowest common denominator: $30a$\n$\\frac{1}{10a}=\\frac{1\\times 3}{30a}=\\frac{3}{30a}$\n$\\frac{1}{15a}=\\frac{1\\times 2}{30a}=\\frac{2}{30a}$\n$\\frac{3}{30a} + \\frac{2}{30a}=\\frac{5}{30a}$\n$=\\frac{1}{6a}$\n$a\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 1,
+                "d1": "10a",
+                "operation": "add",
+                "n2": 1,
+                "d2": "15a",
+                "lcd": "30a",
+                "gcf": 5
+              }
+            },
+            {
+              "id": "simplify-result-example-moderate-3",
+              "archetypeId": "simplify-result-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{1}{6m} + \\frac{2}{15m}$",
+              "answer": "$\\frac{3}{10m}$",
+              "workedAnswer": "Lowest common denominator: $30m$\n$\\frac{1}{6m}=\\frac{1\\times 5}{30m}=\\frac{5}{30m}$\n$\\frac{2}{15m}=\\frac{2\\times 2}{30m}=\\frac{4}{30m}$\n$\\frac{5}{30m} + \\frac{4}{30m}=\\frac{9}{30m}$\n$=\\frac{3}{10m}$\n$m\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 1,
+                "d1": "6m",
+                "operation": "add",
+                "n2": 2,
+                "d2": "15m",
+                "lcd": "30m",
+                "gcf": 3
+              }
+            },
+            {
+              "id": "simplify-result-example-moderate-4",
+              "archetypeId": "simplify-result-example",
+              "level": "moderate",
+              "presentation": "compact",
+              "stem": "$\\frac{5}{12n} - \\frac{1}{20n}$",
+              "answer": "$\\frac{11}{30n}$",
+              "workedAnswer": "Lowest common denominator: $60n$\n$\\frac{5}{12n}=\\frac{5\\times 5}{60n}=\\frac{25}{60n}$\n$\\frac{1}{20n}=\\frac{1\\times 3}{60n}=\\frac{3}{60n}$\n$\\frac{25}{60n} - \\frac{3}{60n}=\\frac{22}{60n}$\n$=\\frac{11}{30n}$\n$n\\ne0$",
+              "generation": {
+                "family": "simplify-result",
+                "n1": 5,
+                "d1": "12n",
+                "operation": "subtract",
+                "n2": 1,
+                "d2": "20n",
+                "lcd": "60n",
+                "gcf": 2
+              }
+            }
+          ],
+          "practiceCollectionId": "algebraic-denominators-worked-collection"
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "algebraic-denominators-worked-collection",
+          "title": "Core skills",
+          "members": [
+            "like-denominators-example",
+            "common-denominator-example",
+            "simplify-result-example"
+          ]
+        }
+      ],
+      "practiceComposition": "micro"
+    }
+  ]
+}
