@@ -37,8 +37,10 @@ function verify(b){
   assert.ok(Array.isArray(t.dependencies)&&t.dependencies.every(d=>byId.has(d)&&d!==t.id),'Unknown/self dependency');
   assert.ok(Array.isArray(t.approvedDependencies)&&t.approvedDependencies.every(d=>t.dependencies.includes(d)),'Invalid dependency approval');
   if(t.state==='BLOCKED')assert.ok(t.blocker,'Missing blocker');
-  const geography=['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'].includes(t.id);
+  const geographyStreams={'GEO-001':'geography','GEO-MAP-001':'geography-map','GEO-EVIDENCE-001':'geography-evidence'};
+  const geography=Object.hasOwn(geographyStreams,t.id);
   if(geography){
+   assert.equal(t.stream,geographyStreams[t.id],'Geography task must retain its assigned stream');
    assert.equal(t.lane,'feature','Geography researchers must occupy the feature lane');
    assert.equal(t.launchGate,'GEOGRAPHY-STAGE-A','Missing Geography launch gate');
    assert.equal(t.reviewStage,'A','Geography implementation requires a new bounded task');
@@ -63,6 +65,7 @@ function verify(b){
   if(t.lane==='feature'){
    const research=ownership.researchAreas?.find(a=>a.id===t.stream);
    if(research){
+    assert.ok(geography,'Research ownership requires a fixed Geography task ID');
     assert.ok(safe(research.output)&&safe(research.instructions)&&fs.existsSync(path.join(root,research.instructions)),'Invalid research ownership');
     assert.ok(t.allowedPaths.every(p=>p===research.output),'Research-only ownership violation');
     assert.ok(!ownership.protectedPaths.some(a=>overlaps(a,research.output)),'Research overlaps protected area');
@@ -91,7 +94,13 @@ function verify(b){
  // DEFERRED is a pause, not release: a retained checkout continues reserving paths.
  const reserved=b.tasks.filter(t=>t.worktree&&t.state!=='MERGED'&&!t.ownershipReleased);
  for(const t of b.tasks.filter(t=>t.ownershipReleased))assert.ok(!t.worktree&&!t.branch,'Released ownership must clear branch/worktree');
- const trees=new Set();for(const t of reserved){const key=path.resolve(t.worktree).toLowerCase();assert.ok(!trees.has(key),'Shared writable worktree');trees.add(key);}
+ const branches=new Set(),trees=new Set();
+ for(const t of reserved){
+  assert.ok(t.branch?.startsWith('codex/'),'Missing retained branch');
+  assert.ok(path.isAbsolute(t.worktree)||path.win32.isAbsolute(t.worktree),'Retained worktree must be absolute');
+  assert.ok(!branches.has(t.branch),'Shared branch');branches.add(t.branch);
+  const key=path.resolve(t.worktree).toLowerCase();assert.ok(!trees.has(key),'Shared writable worktree');trees.add(key);
+ }
  for(let i=0;i<reserved.length;i++)for(let j=i+1;j<reserved.length;j++)assert.ok(!reserved[i].allowedPaths.some(a=>reserved[j].allowedPaths.some(b=>overlaps(a,b))),'Overlapping reserved ownership');
  for(const a of ownership.areas)assert.ok(fs.existsSync(path.join(root,a.instructions)),'Missing scoped instructions');
 }
@@ -147,6 +156,10 @@ if(process.argv.includes('--self-test')){
  for(const state of ['QUEUED','STAGED-REVIEW']){const approved=structuredClone(geoConcurrent);for(const t of approved.tasks.filter(t=>t.project==='geography-stage-a'))t.state=state;verify(approved);console.log('PASS guard: Geography '+state+' accepted after actual merge and separate launch');}
  for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])reject(id+' cannot evade builder count via integration lane',b=>{geoReady(b);b.externalFeatureBuilders=1;b.tasks.find(t=>t.id===id).lane='integration';},/Geography researchers must occupy the feature lane/);
  reject('Mathematics reservation prevents three Geography builders',b=>{geoReady(b);b.externalFeatureBuilders=1;},/Feature-builder capacity/);
+ for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])reject(id+' cannot claim a neighbouring stream',b=>{const t=b.tasks.find(t=>t.id===id);t.stream='source';t.allowedPaths=['docs/review/source-'+id+'/**'];},/Geography task must retain its assigned stream/);
+ reject('Geography shared branch',b=>{geoReady(b);b.tasks.find(t=>t.id==='GEO-MAP-001').branch='codex/GEO-001';},/Shared branch/);
+ for(const worktree of ['relative/geography','../geography','C:geography'])reject('relative retained checkout '+worktree,b=>{geoReady(b);b.tasks.find(t=>t.id==='GEO-001').worktree=worktree;},/Retained worktree must be absolute/);
+ for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])reject(id+' research ownership cannot bypass gates with another task ID',b=>{const t=b.tasks.find(t=>t.id===id);Object.assign(t,{id:'OTHER-001',state:'ACTIVE',dependencies:[],approvedDependencies:[],branch:'codex/other',worktree:'C:/test/other',owner:'test',startingCommit:ownership.baseline});},/Research ownership requires a fixed Geography task ID/);
  reject('Geography shared checkout',b=>{geoReady(b);b.tasks.find(t=>t.id==='GEO-MAP-001').worktree='C:/test/GEO-001';},/Shared writable/);
  assert.ok(setupDiffArgs.includes('--no-renames'));assert.equal(setupPathsAllowed(['src/graph-response/extent.js','docs/development/extent.js'],backlog.tasks[0].allowedPaths),false);console.log('PASS guard: protected rename source cannot hide behind allowed destination');
  assert.equal(setupPathsAllowed(setupChangedPaths([],['src/widgets/unowned.js']),backlog.tasks[0].allowedPaths),false);console.log('PASS guard: untracked unowned source cannot bypass setup check');
