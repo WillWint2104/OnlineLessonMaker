@@ -5,7 +5,8 @@ export function reviewNumerical({lesson,config={}},runtime){
  const minValid=Math.max(16,config.minValid||16),minFraction=Math.max(.6,config.minValidFraction||.6);
  const totals={attempted:0,valid:0,excluded:0,unsupported:0,failed:0};
  const report={...totals,records:[],unverified:[],restrictions:[],questions:0,examples:0,limitation:'Deterministic numerical sampling is not a formal symbolic proof. Domain restrictions constrain samples; their necessity and completeness are not proved.'};
- const covered=new Set(config.coveredNotes||[]),pool=[-101,-27,-7,-2,-.5,0,.5,1,2,7,27,101];
+ // Non-half-integer values also prevent periodic expressions from only hitting zeros.
+ const covered=new Set(config.coveredNotes||[]),pool=[-101,-27,-7,-2,-.83,-.5,0,.1,.37,.5,1,2,7,17.29,27,101];
  function samples(variables){const equal=[0,1,-1,2,-2,.5,-.5,27];return Array.from({length:48},(_,i)=>Object.fromEntries(variables.map(v=>{let value;if(i<equal.length)value=equal[i];else{let h=2166136261;for(const ch of v+':'+i){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)>>>0;}value=pool[h%pool.length];}return [v,value];})));}
  const allowedCommands=new Set(['frac','sqrt','left','right','times','cdot','div','sin','cos','tan','ln','log','abs','pi']);
  function parse(text){
