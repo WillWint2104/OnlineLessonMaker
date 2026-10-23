@@ -1,0 +1,70 @@
+{
+  "questionCount": 36,
+  "requireFullAnswers": true,
+  "questionIds": [
+    "opposites-basic-example-basic-1",
+    "opposites-basic-example-basic-2",
+    "opposites-basic-example-basic-3",
+    "opposites-basic-example-basic-4",
+    "opposites-basic-example-basic-5",
+    "opposites-basic-example-basic-6",
+    "opposites-basic-example-basic-7",
+    "opposites-basic-example-basic-8",
+    "opposites-basic-example-moderate-1",
+    "opposites-basic-example-moderate-2",
+    "opposites-basic-example-moderate-3",
+    "opposites-basic-example-moderate-4",
+    "quadratic-factor-example-basic-1",
+    "quadratic-factor-example-basic-2",
+    "quadratic-factor-example-basic-3",
+    "quadratic-factor-example-basic-4",
+    "quadratic-factor-example-basic-5",
+    "quadratic-factor-example-basic-6",
+    "quadratic-factor-example-basic-7",
+    "quadratic-factor-example-basic-8",
+    "quadratic-factor-example-moderate-1",
+    "quadratic-factor-example-moderate-2",
+    "quadratic-factor-example-moderate-3",
+    "quadratic-factor-example-moderate-4",
+    "subtract-opposite-example-basic-1",
+    "subtract-opposite-example-basic-2",
+    "subtract-opposite-example-basic-3",
+    "subtract-opposite-example-basic-4",
+    "subtract-opposite-example-basic-5",
+    "subtract-opposite-example-basic-6",
+    "subtract-opposite-example-basic-7",
+    "subtract-opposite-example-basic-8",
+    "subtract-opposite-example-moderate-1",
+    "subtract-opposite-example-moderate-2",
+    "subtract-opposite-example-moderate-3",
+    "subtract-opposite-example-moderate-4"
+  ],
+  "coreSkillCounts": {
+    "opposites-basic-example": {
+      "basic": 8,
+      "moderate": 4
+    },
+    "quadratic-factor-example": {
+      "basic": 8,
+      "moderate": 4
+    },
+    "subtract-opposite-example": {
+      "basic": 8,
+      "moderate": 4
+    }
+  },
+  "skillIntents": {
+    "opposites-basic-example": {
+      "tabLabel": "Reverse a bracket",
+      "instructionsInclude": "Simplify each expression. Rewrite reversed brackets by factoring out −1. Assume all denominators are non-zero."
+    },
+    "quadratic-factor-example": {
+      "tabLabel": "Factor first",
+      "instructionsInclude": "Factor first, then rewrite the reversed factor and simplify. Assume all denominators are non-zero."
+    },
+    "subtract-opposite-example": {
+      "tabLabel": "Opposite denominators",
+      "instructionsInclude": "Rewrite the reversed denominator before combining the fractions. Assume all denominators are non-zero."
+    }
+  }
+}

@@ -1,0 +1,20 @@
+// Real-application integration regression. Retains every run and historical byte.
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {spawnSync,execFileSync} from 'node:child_process';
+const input='docs/review/adding-fractions-algebraic-denominators/lesson.json',root=process.cwd(),base=path.resolve('review-delivery/math-review-reliability');
+fs.mkdirSync(base,{recursive:true});const output=fs.mkdtempSync(path.join(base,'preservation-')),checks=[];
+const sha=f=>createHash('sha256').update(fs.readFileSync(f)).digest('hex'),inputHash=sha(input),appHash=sha('lesson-studio.html'),head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+function snapshot(dir){const files={};function walk(at){for(const entry of fs.readdirSync(at,{withFileTypes:true})){const f=path.join(at,entry.name);if(entry.isDirectory())walk(f);else files[path.relative(dir,f)]=sha(f);}}walk(dir);return files;}
+function run(name,args,success=true){const result=spawnSync(process.execPath,['scripts/review-mathematics-lesson.mjs',input,...args],{encoding:'utf8',timeout:240000,maxBuffer:16*1024*1024,windowsHide:true});fs.writeFileSync(path.join(output,name+'.log'),result.stdout+'\n'+result.stderr);assert.equal(result.status===0,success,name+': '+result.stderr);return success?JSON.parse(result.stdout.trim().split('\n').at(-1)):null;}
+const first=run('first-default',[]),dir=path.dirname(first.gallery),before=snapshot(dir),zipHash=sha(first.zip),receiptHash=sha(first.zip+'.receipt.json');
+const second=run('second-default',[]);assert.notEqual(second.zip,first.zip);assert.notEqual(second.gallery,first.gallery);checks.push('two consecutive default processes create distinct directories and ZIPs');
+assert.deepEqual(snapshot(dir),before);assert.equal(sha(first.zip),zipHash);assert.equal(sha(first.zip+'.receipt.json'),receiptHash);checks.push('first directory, archive and receipt remain byte-identical');
+for(const r of [first,second]){assert.equal(r.acceptance.completeCandidate,true);assert.equal(r.packageReceipt.completeReviewCandidate,true);assert.equal(r.packageReceipt.extraction,'CRC and SHA-256 manifest passed');assert.ok(r.packageReceipt.localLinksResolved>0);assert.equal(r.pageErrors,0);assert.equal(sha(r.zip),r.packageReceipt.sha256);}checks.push('both complete candidates have verified archive integrity and local links');
+run('explicit-directory-rejected',['--out',dir],false);run('explicit-archive-rejected',['--zip',first.zip],false);assert.deepEqual(snapshot(dir),before);assert.equal(sha(first.zip),zipHash);checks.push('explicit existing output paths fail without changing prior evidence');
+const smoke=run('smoke',['--mode','smoke','--widths','1536','--no-native','--no-package']);assert.equal(smoke.acceptance.outcome,'smoke-only');assert.equal(smoke.acceptance.completeCandidate,false);assert.equal(smoke.zip,null);
+const rejected=spawnSync(process.env.PYTHON||'python',['scripts/package-mathematics-lesson.py',path.dirname(smoke.gallery),path.join(output,'must-not-exist.zip')],{encoding:'utf8',windowsHide:true});assert.notEqual(rejected.status,0);assert.equal(fs.existsSync(path.join(output,'must-not-exist.zip')),false);checks.push('structural smoke cannot produce a complete review ZIP');
+assert.equal(sha(input),inputHash);assert.equal(sha('lesson-studio.html'),appHash);checks.push('authored lesson and application remain byte-identical');
+const result={head,checks,pass:checks.length,fail:0,first,second,smoke,preserved:{inputHash,appHash,zipHash,receiptHash,files:Object.keys(before).length}};fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(result,null,2));console.log(JSON.stringify({pass:checks.length,fail:0,skip:0,results:path.join(output,'results.json'),first:first.zip,second:second.zip}));
