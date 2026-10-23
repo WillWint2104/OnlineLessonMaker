@@ -19,7 +19,8 @@ export function reviewExpectations(lesson,expected={}){
   if(fact.kind==='lowest-common-denominator'&&index>=0&&parts.length===2&&parts[0][3]===parts[1][3]){const a=+(parts[0][2]||1),b=+(parts[1][2]||1),lcd=a*b/gcd(a,b);correct=ex.steps[index].math==='$'+(lcd===1?'':lcd)+parts[0][3]+'$';}
   check(correct,fact.exampleId+': expected worked-example mathematical fact '+fact.stepId);if(correct)coveredNotes.push(fact.exampleId+':worked:'+index);
  }
- for(const [id,rule]of Object.entries(expected.fractionSkills||{})){
+ const fractionSkills={...(expected.simplifyResultArchetype?{[expected.simplifyResultArchetype]:{inputsReduced:true,denominators:'different',resultRequiresReduction:true}}:{}),...expected.fractionSkills};
+ for(const [id,rule]of Object.entries(fractionSkills)){
   const qs=questions.filter(q=>q.archetypeId===id);check(qs.length>0,id+': fraction skill exists');
   for(const q of qs){const parts=[...String(q.stem).matchAll(/\\frac\{(\d+)\}\{(\d*)([a-z])\}/g)];
    const shape=parts.length===2&&parts[0][3]===parts[1][3]&&/^\$\\frac\{\d+\}\{\d*[a-z]\}\s*[+-]\s*\\frac\{\d+\}\{\d*[a-z]\}\$$/.test(q.stem);
