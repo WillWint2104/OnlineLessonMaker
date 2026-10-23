@@ -39,6 +39,7 @@ function verify(b){
   if(t.state==='BLOCKED')assert.ok(t.blocker,'Missing blocker');
   const geography=['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'].includes(t.id);
   if(geography){
+   assert.equal(t.lane,'feature','Geography researchers must occupy the feature lane');
    assert.equal(t.launchGate,'GEOGRAPHY-STAGE-A','Missing Geography launch gate');
    assert.equal(t.reviewStage,'A','Geography implementation requires a new bounded task');
    assert.deepEqual(t.allowedPaths,[`docs/review/${t.stream}-${t.id}/**`],'Geography Stage A research cannot own implementation paths');
@@ -144,6 +145,7 @@ if(process.argv.includes('--self-test')){
  const geoReady=b=>{b.externalFeatureBuilders=0;b.tasks.find(t=>t.id==='GEO-SETUP-001').state='MERGED';b.tasks.find(t=>t.id==='GEO-SETUP-001').waitingForHuman=false;b.approvedLaunches=['GEOGRAPHY-STAGE-A'];for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])geoActivate(b,id);};
  const geoConcurrent=structuredClone(backlog);geoReady(geoConcurrent);verify(geoConcurrent);console.log('PASS guard: Geography concurrent research only after separate merged setup and launch');
  for(const state of ['QUEUED','STAGED-REVIEW']){const approved=structuredClone(geoConcurrent);for(const t of approved.tasks.filter(t=>t.project==='geography-stage-a'))t.state=state;verify(approved);console.log('PASS guard: Geography '+state+' accepted after actual merge and separate launch');}
+ for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])reject(id+' cannot evade builder count via integration lane',b=>{geoReady(b);b.externalFeatureBuilders=1;b.tasks.find(t=>t.id===id).lane='integration';},/Geography researchers must occupy the feature lane/);
  reject('Mathematics reservation prevents three Geography builders',b=>{geoReady(b);b.externalFeatureBuilders=1;},/Feature-builder capacity/);
  reject('Geography shared checkout',b=>{geoReady(b);b.tasks.find(t=>t.id==='GEO-MAP-001').worktree='C:/test/GEO-001';},/Shared writable/);
  assert.ok(setupDiffArgs.includes('--no-renames'));assert.equal(setupPathsAllowed(['src/graph-response/extent.js','docs/development/extent.js'],backlog.tasks[0].allowedPaths),false);console.log('PASS guard: protected rename source cannot hide behind allowed destination');
