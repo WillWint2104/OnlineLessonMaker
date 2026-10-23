@@ -30,7 +30,7 @@ export function reviewExpectations(lesson,expected={}){
    if(rule.denominators)check(rule.denominators==='same'?d1===d2:rule.denominators==='different'&&d1!==d2,q.id+': denominator skill intent');
    const lcd=d1*d2/gcd(d1,d2),n=n1*lcd/d1+(q.stem.includes(' - ')?-1:1)*n2*lcd/d2;
    if(rule.resultRequiresReduction)check(n!==0&&gcd(n,lcd)>1,q.id+': combined result requires cancellation');
-   if(rule.lowestCommonDenominator)for(const [i,line]of String(q.workedAnswer).split('\n').entries())if(line.startsWith('Lowest common denominator: ')){const correct=line==='Lowest common denominator: $'+(lcd===1?'':lcd)+variable+'$';check(correct,q.id+': correct lowest common denominator');if(correct)coveredNotes.push(q.id+':worked:'+i);}
+   if(rule.lowestCommonDenominator){let seen=0;for(const [i,line]of String(q.workedAnswer).split('\n').entries())if(line.startsWith('Lowest common denominator: ')){seen++;const correct=line==='Lowest common denominator: $'+(lcd===1?'':lcd)+variable+'$';check(correct,q.id+': correct lowest common denominator');if(correct)coveredNotes.push(q.id+':worked:'+i);}check(seen>0,q.id+': worked answer states lowest common denominator');}
   }
  }
  return {checks,issues,coveredNotes,questionIds:ids,questionCount:questions.length,skillCounts:Object.fromEntries(Object.keys(expected.coreSkillCounts||{}).map(id=>[id,Object.fromEntries(['basic','moderate','advanced'].map(level=>[level,questions.filter(q=>q.archetypeId===id&&q.level===level).length]))])),answerCoverage};
@@ -44,7 +44,7 @@ export function completeAcceptance({mode,expected,structure,numerical,widths,nat
  if(!Object.keys(expected.coreSkillCounts||{}).length||!Object.keys(expected.skillIntents||{}).length)issues.push('Explicit practice counts and instructional-skill intent required');
  if(!numerical?.complete)issues.push('Numerical coverage incomplete; inspect unsupported, insufficient and unverified material');
  if(![1536,1024,390].every(w=>widths.includes(w)))issues.push('Required responsive widths not all inspected');
- if(!nativeZoom||Math.abs(nativeZoom.dpr-2)>=.02||!['1','normal'].includes(nativeZoom.cssZoom))issues.push('Native 200% browser inspection required');
+ if(!nativeZoom||!Number.isFinite(nativeZoom.dpr)||Math.abs(nativeZoom.dpr-2)>=.02||!['1','normal'].includes(nativeZoom.cssZoom))issues.push('Native 200% browser inspection required');
  if(!roundTrip)issues.push('Actual import/export/reopen required');
  if(errors.length)issues.push('Page errors present');
  if(trackedSourceDirty)issues.push('Clean exact-head source required for complete candidate');

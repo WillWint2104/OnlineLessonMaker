@@ -2,7 +2,7 @@
 from pathlib import Path
 from urllib.parse import urlsplit,unquote
 from html.parser import HTMLParser
-import hashlib,json,shutil,subprocess,sys,tempfile,zipfile
+import hashlib,json,math,shutil,subprocess,sys,tempfile,zipfile
 
 root=Path.cwd().resolve()
 review=Path(sys.argv[1]).resolve();archive=Path(sys.argv[2]).resolve()
@@ -16,8 +16,8 @@ if not report.get('passed') or report.get('reviewMode')!='complete' or not repor
 numeric=report.get('numericalVerification',{})
 if report['acceptance'].get('issues') or report.get('structure',{}).get('issues') or not numeric.get('complete') or numeric.get('unverified') or any(numeric.get(k) for k in ['failed','unsupported','insufficient']):raise RuntimeError('Review coverage is incomplete')
 if not numeric.get('records') or any(r.get('status')!='verified-by-sampling' or r.get('valid',0)<16 or r['valid']/max(1,r.get('attempted',0))<.6 for r in numeric['records']):raise RuntimeError('Insufficient valid numerical coverage')
-zoom=report.get('nativeZoom',{})
-if not all(w in report.get('widths',[]) for w in [1536,1024,390]) or abs(zoom.get('dpr',0)-2)>=.02 or zoom.get('cssZoom') not in ['1','normal'] or not report.get('roundTrip'):raise RuntimeError('Responsive/native-200/import-export-reopen checks incomplete')
+zoom=report.get('nativeZoom',{});dpr=zoom.get('dpr')
+if not all(w in report.get('widths',[]) for w in [1536,1024,390]) or not isinstance(dpr,(int,float)) or isinstance(dpr,bool) or not math.isfinite(dpr) or abs(dpr-2)>=.02 or zoom.get('cssZoom') not in ['1','normal'] or not report.get('roundTrip'):raise RuntimeError('Responsive/native-200/import-export-reopen checks incomplete')
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 if subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()!=report['head']:raise RuntimeError('Review source HEAD is stale')
 if report.get('trackedSourceDirty') or subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],text=True).strip():raise RuntimeError('Complete candidate requires clean tracked source')
