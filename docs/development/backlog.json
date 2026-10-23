@@ -13,7 +13,7 @@
       "lane": "integration",
       "priority": 0,
       "productionNeed": "Controlled parallel work after Mathematics freeze",
-      "state": "STAGED-REVIEW",
+      "state": "MERGED",
       "dependencies": [],
       "blocks": [
         "HIST-001",
@@ -65,7 +65,7 @@
         "Final foundation merge approval; feature launch requires separate explicit authorisation"
       ],
       "reviewStage": "D",
-      "waitingForHuman": true,
+      "waitingForHuman": false,
       "branch": "codex/integration-FOUND-001-agentic-foundation",
       "worktree": "C:/Users/willi/Videos/Online Lesson Maker",
       "startingCommit": "aae1b1a891d495e31e879bcbd6a79404f576fe57",
@@ -73,7 +73,11 @@
       "pr": 171,
       "approvedDependencies": [],
       "blocker": null,
-      "card": "docs/development/README.md"
+      "card": "docs/development/README.md",
+      "mergeCommit": "27116ec0b4c72c4a8797fdd8f2fd526bfec0701d",
+      "mergedAt": "2026-10-09T05:13:15Z",
+      "mergeEvidence": "https://github.com/WillWint2104/OnlineLessonMaker/pull/171",
+      "historyNote": "Previously STAGED-REVIEW; reconciled from verified GitHub merge on 2026-10-23. Branch/worktree retained as historical provenance. No launch inferred."
     },
     {
       "id": "HIST-001",
@@ -211,6 +215,169 @@
         "scopeReconciledWith": null
       },
       "launchGate": "HUMANITIES-STAGE-A"
+    },
+    {
+      "id": "GEO-SETUP-001",
+      "project": "geography-setup",
+      "stream": "integration",
+      "lane": "integration",
+      "priority": 1,
+      "state": "STAGED-REVIEW",
+      "dependencies": [
+        "FOUND-001"
+      ],
+      "approvedDependencies": [],
+      "allowedPaths": [
+        "AGENTS.md",
+        "docs/development/**",
+        "scripts/verify-development-foundation.mjs"
+      ],
+      "protectedPaths": [
+        "lesson-studio.html",
+        "src/**",
+        "lessons/**",
+        "examples/**",
+        "assets/**",
+        ".github/**"
+      ],
+      "reviewStage": "D",
+      "waitingForHuman": true,
+      "branch": "codex/integration-GEO-SETUP-001-stage-a",
+      "worktree": "C:/Users/willi/Videos/Online Lesson Maker/review-delivery/worktrees/geography-stage-a-setup",
+      "startingCommit": "400814614e821a976f4c9bae7994d9505455cf04",
+      "owner": "Geography setup coordinator",
+      "pr": null,
+      "blocker": null,
+      "card": "docs/development/tasks/GEO-SETUP-001.md"
+    },
+    {
+      "id": "GEO-001",
+      "project": "geography-stage-a",
+      "stream": "geography",
+      "lane": "feature",
+      "priority": 1,
+      "state": "BLOCKED",
+      "dependencies": [
+        "FOUND-001",
+        "GEO-SETUP-001"
+      ],
+      "approvedDependencies": [],
+      "allowedPaths": [
+        "docs/review/geography-GEO-001/**"
+      ],
+      "protectedPaths": [
+        "lesson-studio.html",
+        "docs/development/**",
+        "src/**",
+        "scripts/**",
+        "tests/**",
+        "lessons/**",
+        "examples/**",
+        "assets/**",
+        ".github/**",
+        ".coderabbit.yaml",
+        "supabase/**"
+      ],
+      "reviewStage": "A",
+      "waitingForHuman": false,
+      "branch": null,
+      "worktree": null,
+      "startingCommit": null,
+      "owner": null,
+      "pr": null,
+      "blocker": "Setup governance approval and actual merge; separate explicit Geography Stage A launch; capacity and ownership refresh required",
+      "card": "docs/development/tasks/GEO-001.md",
+      "launchGate": "GEOGRAPHY-STAGE-A",
+      "implementationGate": {
+        "checkpoint": "GEOGRAPHY-STAGE-A:A",
+        "scopeReconciledWith": null
+      }
+    },
+    {
+      "id": "GEO-MAP-001",
+      "project": "geography-stage-a",
+      "stream": "geography-map",
+      "lane": "feature",
+      "priority": 1,
+      "state": "BLOCKED",
+      "dependencies": [
+        "FOUND-001",
+        "GEO-SETUP-001"
+      ],
+      "approvedDependencies": [],
+      "allowedPaths": [
+        "docs/review/geography-map-GEO-MAP-001/**"
+      ],
+      "protectedPaths": [
+        "lesson-studio.html",
+        "docs/development/**",
+        "src/**",
+        "scripts/**",
+        "tests/**",
+        "lessons/**",
+        "examples/**",
+        "assets/**",
+        ".github/**",
+        ".coderabbit.yaml",
+        "supabase/**"
+      ],
+      "reviewStage": "A",
+      "waitingForHuman": false,
+      "branch": null,
+      "worktree": null,
+      "startingCommit": null,
+      "owner": null,
+      "pr": null,
+      "blocker": "Setup governance approval and actual merge; separate explicit Geography Stage A launch; capacity and ownership refresh required",
+      "card": "docs/development/tasks/GEO-MAP-001.md",
+      "launchGate": "GEOGRAPHY-STAGE-A",
+      "implementationGate": {
+        "checkpoint": "GEOGRAPHY-STAGE-A:A",
+        "scopeReconciledWith": null
+      }
+    },
+    {
+      "id": "GEO-EVIDENCE-001",
+      "project": "geography-stage-a",
+      "stream": "geography-evidence",
+      "lane": "feature",
+      "priority": 1,
+      "state": "BLOCKED",
+      "dependencies": [
+        "FOUND-001",
+        "GEO-SETUP-001"
+      ],
+      "approvedDependencies": [],
+      "allowedPaths": [
+        "docs/review/geography-evidence-GEO-EVIDENCE-001/**"
+      ],
+      "protectedPaths": [
+        "lesson-studio.html",
+        "docs/development/**",
+        "src/**",
+        "scripts/**",
+        "tests/**",
+        "lessons/**",
+        "examples/**",
+        "assets/**",
+        ".github/**",
+        ".coderabbit.yaml",
+        "supabase/**"
+      ],
+      "reviewStage": "A",
+      "waitingForHuman": false,
+      "branch": null,
+      "worktree": null,
+      "startingCommit": null,
+      "owner": null,
+      "pr": null,
+      "blocker": "Setup governance approval and actual merge; separate explicit Geography Stage A launch; capacity and ownership refresh required",
+      "card": "docs/development/tasks/GEO-EVIDENCE-001.md",
+      "launchGate": "GEOGRAPHY-STAGE-A",
+      "implementationGate": {
+        "checkpoint": "GEOGRAPHY-STAGE-A:A",
+        "scopeReconciledWith": null
+      }
     }
   ],
   "deferredStreams": [
@@ -222,5 +389,7 @@
     "remote-classroom-release"
   ],
   "approvedCheckpoints": [],
-  "approvedLaunches": []
+  "approvedLaunches": [],
+  "externalFeatureBuilders": 1,
+  "externalCapacityNote": "Conservative Mathematics reservation from current user instruction; math-fractions-review checkout retained. Reconcile actual next task and paths before launch. ART-001 merged. Old PRs #99/#135 require review-capacity classification; backlog is not a complete live agent inventory."
 }
