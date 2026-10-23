@@ -13,8 +13,12 @@ const base=p=>p.endsWith('/**')?p.slice(0,-3):p;
 // Ownership supports exact repository paths and terminal directory /** only.
 const safe=p=>typeof p==='string'&&p.length>0&&p===p.trim()&&!/[\\:\x00-\x1f]/.test(p)&&!p.startsWith('/')&&!/[*?\[\]{}]/.test(base(p))&&base(p).split('/').every(s=>s&&s!=='.'&&s!=='..');
 const overlaps=(a,b)=>a===b||(a.endsWith('/**')&&(base(b)===base(a)||base(b).startsWith(base(a)+'/')))||(b.endsWith('/**')&&(base(a)===base(b)||base(a).startsWith(base(b)+'/')));
-// Compare drive/UNC paths consistently even when this checker runs on POSIX.
-const worktreeKey=p=>(path.win32.isAbsolute(p)&&path.win32.parse(p).root.length>1?path.win32.resolve(p):path.resolve(p)).toLowerCase();
+/** Compare Windows drive/UNC aliases on any host; preserve case-sensitive POSIX identity. */
+function worktreeKey(p,platform=process.platform){
+ const windows=path.win32.isAbsolute(p)&&path.win32.parse(p).root.length>1;
+ const key=windows?path.win32.resolve(p):path.resolve(p);
+ return windows||platform==='win32'?key.toLowerCase():key;
+}
 const setupDiffArgs=['diff','--no-renames','--name-only',ownership.baseline,'--'];
 const setupPathsAllowed=(changed,allowed)=>changed.every(p=>allowed.some(a=>a===p||(a.endsWith('/**')&&p.startsWith(base(a)+'/'))));
 // Pre-existing local evidence/scratch is preserved, not granted task edit ownership.
@@ -109,6 +113,9 @@ function verify(b){
 verify(backlog);
 if(process.argv.includes('--self-test')){
  const reject=(label,change,pattern)=>{const b=structuredClone(backlog);change(b);assert.throws(()=>verify(b),pattern);console.log('PASS guard: '+label);};
+ assert.notEqual(worktreeKey('/tmp/Geo','linux'),worktreeKey('/tmp/geo','linux'));console.log('PASS guard: distinct POSIX path case is preserved');
+ assert.equal(worktreeKey('/tmp/Geo','win32'),worktreeKey('/tmp/geo','win32'));console.log('PASS guard: native Windows path case aliases collide');
+ assert.equal(worktreeKey('C:/test/Geo','linux'),worktreeKey('c:/test/geo','linux'));console.log('PASS guard: Windows path case aliases collide on POSIX');
  const originalFeatures=b=>b.tasks.filter(t=>['HIST-001','SOURCE-001','MAP-001'].includes(t.id));
  const launchFixture=b=>{b.externalFeatureBuilders=0;b.tasks[0].state='MERGED';b.tasks[0].waitingForHuman=false;b.approvedLaunches=['HUMANITIES-STAGE-A'];};
  reject('duplicate IDs',b=>b.tasks.push(structuredClone(b.tasks[1])),/Duplicate task/);
