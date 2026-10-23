@@ -54,7 +54,7 @@ with tempfile.TemporaryDirectory(prefix='artwork-package-', dir=delivery) as tem
         assert digest(target) == digest(file)
     (stage / 'READ-ME-FIRST.md').write_text(f'''# Artwork pack review — {head}
 
-Open docs/review/artwork-packs/index.html for actual application captures and runnable learner exports. The six exports and editable JSON live in workflow/; screenshots in captures/. AUDIT.md records the baseline; docs/artwork-packs.md contains IDs, fallback and generation guidance. results.json and logs/ contain actual verification receipts, not inferred passes.
+Open docs/review/artwork-packs/index.html for actual application captures and runnable learner exports. The six exports and editable JSON live in workflow/; screenshots in captures/. AUDIT.md records the baseline; docs/artwork-packs.md contains IDs, fallback and generation guidance. results.json contains the actual focused verification receipt, not inferred passes.
 
 Open lesson-studio.html, choose Edit → JSON and import a workflow/*.json to exercise authoring. The role preview, upload/URL, crop/focal controls and Use pack image are the real application. Source and local assets retain their relative paths. Direct file opening works; alternatively serve this extracted root with python -m http.server 8099.
 
