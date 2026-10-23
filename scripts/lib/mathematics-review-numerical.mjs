@@ -60,6 +60,10 @@ export function reviewNumerical({lesson,config={}},runtime){
  report.insufficient=report.records.filter(r=>r.status==='insufficient').length;
  report.checked=report.records.filter(r=>r.kind==='question'&&r.status==='verified-by-sampling').reduce((n,r)=>n+r.valid,0);
  report.exampleComparisons=report.records.filter(r=>r.kind==='example'&&r.status==='verified-by-sampling').reduce((n,r)=>n+r.valid,0);
+ // Retain useful report keys from the former reviewer, with explicit reasons rather than silent skips.
+ const omitted=kind=>{const entries=[...report.unverified.filter(r=>r.kind===kind||!r.kind&&report.records.some(p=>p.id===r.id&&p.kind===kind)),...report.records.filter(r=>r.kind===kind&&r.status!=='verified-by-sampling').map(r=>({id:r.id,reason:r.reason||r.status}))];return [...new Map(entries.map(r=>[r.id,{id:r.id,reason:r.reason}])).values()];};
+ report.skipped=omitted('question');report.skippedExamples=omitted('example');
+ report.examplesChecked=new Set(report.records.filter(r=>r.kind==='example'&&!report.skippedExamples.some(s=>s.id===r.id)).map(r=>r.id)).size;
  report.complete=report.records.length>0&&!report.unverified.length&&report.records.every(r=>r.status==='verified-by-sampling');
  return report;
 }

@@ -47,6 +47,6 @@ export function completeAcceptance({mode,expected,structure,numerical,widths,nat
  if(!roundTrip)issues.push('Actual import/export/reopen required');
  if(errors.length)issues.push('Page errors present');
  if(trackedSourceDirty)issues.push('Clean exact-head source required for complete candidate');
- const completeCandidate=mode==='complete'&&issues.length===0;
- return {outcome:completeCandidate?'complete-review-candidate':mode==='smoke'?'smoke-only':'incomplete',completeCandidate,archiveIntegrity:'pending',issues,requiresHumanApproval:true};
+ const checksComplete=mode==='complete'&&issues.length===0;
+ return {outcome:checksComplete?'package-pending':mode==='smoke'?'smoke-only':'incomplete',checksComplete,completeCandidate:false,archiveIntegrity:'pending',issues,requiresHumanApproval:true};
 }

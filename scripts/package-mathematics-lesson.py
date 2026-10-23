@@ -12,7 +12,7 @@ for name in [archive,Path(str(archive)+'.sha256'),Path(str(archive)+'.receipt.js
  if name.exists():raise RuntimeError('Refusing to overwrite prior evidence: '+str(name))
 if archive.is_relative_to(review):raise RuntimeError('ZIP output must be outside the reviewed directory')
 report=json.loads((review/'results.json').read_text(encoding='utf-8'))
-if not report.get('passed') or report.get('reviewMode')!='complete' or not report.get('acceptance',{}).get('completeCandidate') or report.get('errors'):raise RuntimeError('Refusing to package a smoke/failed/incomplete review as a complete candidate')
+if not report.get('passed') or report.get('reviewMode')!='complete' or not report.get('acceptance',{}).get('checksComplete') or report.get('errors'):raise RuntimeError('Refusing to package a smoke/failed/incomplete review as a complete candidate')
 numeric=report.get('numericalVerification',{})
 if report['acceptance'].get('issues') or report.get('structure',{}).get('issues') or not numeric.get('complete') or numeric.get('unverified') or any(numeric.get(k) for k in ['failed','unsupported','insufficient']):raise RuntimeError('Review coverage is incomplete')
 if not numeric.get('records') or any(r.get('status')!='verified-by-sampling' or r.get('valid',0)<16 or r['valid']/max(1,r.get('attempted',0))<.6 for r in numeric['records']):raise RuntimeError('Insufficient valid numerical coverage')
