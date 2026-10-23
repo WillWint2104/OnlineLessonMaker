@@ -1,6 +1,6 @@
 # Global + Mathematics artwork review
 
-Run `node scripts/build-artwork-packs.mjs` and `node scripts/build-mathematics-micro.mjs`, then `node scripts/verify-artwork-packs.mjs` from the repository root. `index.html` is generated only from actual Lesson Studio exports and captures. `results.json` records tested HEAD, application hash, checks, native zoom metrics, page errors and capture hashes. A failed run stays visibly failed and is not a valid package candidate.
+Run `node scripts/build-artwork-packs.mjs` and `node scripts/build-mathematics-micro.mjs`, then `node scripts/verify-artwork-packs.mjs` from the repository root. After verification passes on a clean committed head, run `python scripts/package-artwork-packs.py` (or `python3 scripts/package-artwork-packs.py`) to create the uniquely versioned review ZIP, SHA-256 manifest and integrity receipt. `index.html` is generated only from actual Lesson Studio exports and captures. `results.json` records tested HEAD, application hash, checks, native zoom metrics, page errors and capture hashes. A failed run stays visibly failed and is not a valid package candidate.
 
 Six catalogue entries: global/general; mathematics/general; mathematics/algebra/general, signs, factorisation, fractions. The original three procedural families remain byte-identical. No production lesson has been switched to a new pack. See AUDIT.md and ../../artwork-packs.md for source audit and the contract.
 
