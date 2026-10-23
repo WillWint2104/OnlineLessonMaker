@@ -15,9 +15,9 @@ const safe=p=>typeof p==='string'&&p.length>0&&p===p.trim()&&!/[\\:\x00-\x1f]/.t
 const overlaps=(a,b)=>a===b||(a.endsWith('/**')&&(base(b)===base(a)||base(b).startsWith(base(a)+'/')))||(b.endsWith('/**')&&(base(a)===base(b)||base(a).startsWith(base(b)+'/')));
 /** Compare Windows drive/UNC aliases on any host; preserve case-sensitive POSIX identity. */
 function worktreeKey(p,platform=process.platform){
- const windows=path.win32.isAbsolute(p)&&path.win32.parse(p).root.length>1;
- const key=windows?path.win32.resolve(p):path.resolve(p);
- return windows||platform==='win32'?key.toLowerCase():key;
+ const windows=platform==='win32'||/^[a-z]:[\\/]/i.test(p)||p.startsWith('\\\\');
+ const key=windows?path.win32.resolve(p):path.posix.resolve(p);
+ return windows?key.toLowerCase():key;
 }
 const setupDiffArgs=['diff','--no-renames','--name-only',ownership.baseline,'--'];
 const setupPathsAllowed=(changed,allowed)=>changed.every(p=>allowed.some(a=>a===p||(a.endsWith('/**')&&p.startsWith(base(a)+'/'))));
@@ -103,7 +103,7 @@ function verify(b){
  const branches=new Set(),trees=new Set();
  for(const t of reserved){
   assert.ok(t.branch?.startsWith('codex/'),'Missing retained branch');
-  assert.ok(path.isAbsolute(t.worktree)||path.win32.isAbsolute(t.worktree),'Retained worktree must be absolute');
+  assert.ok(path.isAbsolute(t.worktree)||(path.win32.isAbsolute(t.worktree)&&path.win32.parse(t.worktree).root.length>1),'Retained worktree must be absolute');
   assert.ok(!branches.has(t.branch),'Shared branch');branches.add(t.branch);
   const key=worktreeKey(t.worktree);assert.ok(!trees.has(key),'Shared writable worktree');trees.add(key);
  }
@@ -116,6 +116,8 @@ if(process.argv.includes('--self-test')){
  assert.notEqual(worktreeKey('/tmp/Geo','linux'),worktreeKey('/tmp/geo','linux'));console.log('PASS guard: distinct POSIX path case is preserved');
  assert.equal(worktreeKey('/tmp/Geo','win32'),worktreeKey('/tmp/geo','win32'));console.log('PASS guard: native Windows path case aliases collide');
  assert.equal(worktreeKey('C:/test/Geo','linux'),worktreeKey('c:/test/geo','linux'));console.log('PASS guard: Windows path case aliases collide on POSIX');
+ assert.equal(worktreeKey('//tmp/shared','linux'),worktreeKey('/tmp/shared','linux'));console.log('PASS guard: POSIX double slash aliases collide');
+ assert.equal(worktreeKey('//server/share/geography','win32'),worktreeKey(String.raw`\\server\share\geography`,'win32'));console.log('PASS guard: native Windows forward UNC aliases collide');
  const originalFeatures=b=>b.tasks.filter(t=>['HIST-001','SOURCE-001','MAP-001'].includes(t.id));
  const launchFixture=b=>{b.externalFeatureBuilders=0;b.tasks[0].state='MERGED';b.tasks[0].waitingForHuman=false;b.approvedLaunches=['HUMANITIES-STAGE-A'];};
  reject('duplicate IDs',b=>b.tasks.push(structuredClone(b.tasks[1])),/Duplicate task/);
@@ -167,7 +169,7 @@ if(process.argv.includes('--self-test')){
  reject('Mathematics reservation prevents three Geography builders',b=>{geoReady(b);b.externalFeatureBuilders=1;},/Feature-builder capacity/);
  for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])reject(id+' cannot claim a neighbouring stream',b=>{const t=b.tasks.find(t=>t.id===id);t.stream='source';t.allowedPaths=['docs/review/source-'+id+'/**'];},/Geography task must retain its assigned stream/);
  for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])reject(id+' integration alias cannot bypass research identity',b=>{const t=b.tasks.find(t=>t.id===id);Object.assign(t,{id:'OTHER-001',lane:'integration',state:'ACTIVE',dependencies:[],approvedDependencies:[],branch:'codex/other',worktree:'C:/test/other',owner:'test',startingCommit:ownership.baseline});},/Research ownership requires a fixed Geography task ID/);
- for(const [first,second] of [['C:/test/shared',String.raw`C:\test\shared`],['C:/test/shared','c:/TEST/other/../shared/'],['//server/share/geography',String.raw`\\server\share\geography`]])reject('Windows checkout aliases '+first,b=>{geoReady(b);b.tasks.find(t=>t.id==='GEO-001').worktree=first;b.tasks.find(t=>t.id==='GEO-MAP-001').worktree=second;},/Shared writable/);
+ for(const [first,second] of [['C:/test/shared',String.raw`C:\test\shared`],['C:/test/shared','c:/TEST/other/../shared/'],[String.raw`\\server\share\geography`,String.raw`\\SERVER\share\other\..\geography`]])reject('Windows checkout aliases '+first,b=>{geoReady(b);b.tasks.find(t=>t.id==='GEO-001').worktree=first;b.tasks.find(t=>t.id==='GEO-MAP-001').worktree=second;},/Shared writable/);
  reject('Geography shared branch',b=>{geoReady(b);b.tasks.find(t=>t.id==='GEO-MAP-001').branch='codex/GEO-001';},/Shared branch/);
  for(const worktree of ['relative/geography','../geography','C:geography'])reject('relative retained checkout '+worktree,b=>{geoReady(b);b.tasks.find(t=>t.id==='GEO-001').worktree=worktree;},/Retained worktree must be absolute/);
  for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])reject(id+' research ownership cannot bypass gates with another task ID',b=>{const t=b.tasks.find(t=>t.id===id);Object.assign(t,{id:'OTHER-001',state:'ACTIVE',dependencies:[],approvedDependencies:[],branch:'codex/other',worktree:'C:/test/other',owner:'test',startingCommit:ownership.baseline});},/Research ownership requires a fixed Geography task ID/);
