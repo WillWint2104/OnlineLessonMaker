@@ -18,10 +18,11 @@ const setupPathsAllowed=(changed,allowed)=>changed.every(p=>allowed.some(a=>a===
 // Pre-existing local evidence/scratch is preserved, not granted task edit ownership.
 const preservedUntracked=['docs/review/**','review-delivery/**','scratchpad/**','scripts/apply-mathematics-consolidation.py','scripts/package-mathematics-visual-alignment.py'];
 const setupChangedPaths=(tracked,untracked)=>[...tracked,...untracked.filter(p=>!setupPathsAllowed([p],preservedUntracked))];
+/** Validate recorded coordination boundaries and gates; never dispatch or infer approval. */
 function verify(b){
  assert.equal(b.version,1); assert.equal(ownership.version,1);
  assert.equal(b.activation,'HUMAN_APPROVAL_REQUIRED_NO_DISPATCH');
- assert.ok(Number.isInteger(b.externalFeatureBuilders??0)&&(b.externalFeatureBuilders??0)>=0,'Invalid external builder reservation');
+ assert.ok(Number.isInteger(b.externalFeatureBuilders)&&(b.externalFeatureBuilders)>=0,'Invalid external builder reservation');
  assert.equal(b.limits.featureBuilders,3);assert.equal(b.limits.projectsAwaitingDesignReview,2);
  assert.ok(Array.isArray(b.approvedLaunches)&&b.approvedLaunches.every(v=>typeof v==='string'&&v.length>0),'Missing explicit launch approval record');
  assert.ok(ownership.protectedPaths.every(safe)&&ownership.areas.every(a=>[a.source,a.tests,a.instructions].every(safe)),'Unsupported ownership pattern');
@@ -48,15 +49,15 @@ function verify(b){
   if(['ACTIVE','INTEGRATION','MERGE-CANDIDATE'].includes(t.state)){
    assert.ok(t.branch?.startsWith('codex/')&&t.owner&&t.worktree&&t.startingCommit,'Missing active checkout ownership');
    assert.ok(t.dependencies.every(d=>t.approvedDependencies.includes(d)||byId.get(d).state==='MERGED'),'Unaccepted dependency');
-   if(geography){
-    assert.equal(byId.get('FOUND-001')?.state,'MERGED','Foundation must actually be merged');
-    assert.equal(byId.get('GEO-SETUP-001')?.state,'MERGED','Geography setup must actually be merged');
-    assert.ok(b.approvedLaunches.includes('GEOGRAPHY-STAGE-A'),'Explicit human Geography launch approval required');
-   }
    if(initialFeature){
     assert.equal(byId.get('FOUND-001')?.state,'MERGED','Foundation must actually be merged');
     assert.ok(b.approvedLaunches.includes(t.launchGate),'Explicit human Stage A launch approval required');
    }
+  }
+  if(geography&&['QUEUED','ACTIVE','STAGED-REVIEW','INTEGRATION','MERGE-CANDIDATE'].includes(t.state)){
+   assert.equal(byId.get('FOUND-001')?.state,'MERGED','Foundation must actually be merged');
+   assert.equal(byId.get('GEO-SETUP-001')?.state,'MERGED','Geography setup must actually be merged');
+   assert.ok(b.approvedLaunches.includes('GEOGRAPHY-STAGE-A'),'Explicit human Geography launch approval required');
   }
   if(t.lane==='feature'){
    const research=ownership.researchAreas?.find(a=>a.id===t.stream);
@@ -80,10 +81,11 @@ function verify(b){
   }
  }
  const visited=new Set(),pending=new Set();
+ /** Reject dependency cycles while visiting each task once. */
  function visit(id){assert.ok(!pending.has(id),'Dependency cycle');if(visited.has(id))return;pending.add(id);for(const d of byId.get(id).dependencies)visit(d);pending.delete(id);visited.add(id);}
  for(const id of byId.keys())visit(id);
  const active=b.tasks.filter(t=>t.lane==='feature'&&t.state==='ACTIVE');
- assert.ok(active.length+(b.externalFeatureBuilders??0)<=b.limits.featureBuilders,'Feature-builder capacity exceeded');
+ assert.ok(active.length+(b.externalFeatureBuilders)<=b.limits.featureBuilders,'Feature-builder capacity exceeded');
  const reviews=new Set(b.tasks.filter(t=>t.waitingForHuman).map(t=>t.project));assert.ok(reviews.size<=b.limits.projectsAwaitingDesignReview,'Human-review capacity exceeded');
  // DEFERRED is a pause, not release: a retained checkout continues reserving paths.
  const reserved=b.tasks.filter(t=>t.worktree&&t.state!=='MERGED'&&!t.ownershipReleased);
@@ -125,6 +127,8 @@ if(process.argv.includes('--self-test')){
  const accepted=structuredClone(backlog);accepted.approvedCheckpoints=['HIST-001:A'];
  for(const t of accepted.tasks.filter(t=>['SOURCE-001','MAP-001'].includes(t.id))){t.reviewStage='B';t.implementationGate.scopeReconciledWith='HIST-001:A';t.allowedPaths=structuredClone(t.stageBAllowedPaths);}
  verify(accepted);console.log('PASS guard: reconciled Stage B scope after History approval');
+ reject('missing external builder reservation',b=>{delete b.externalFeatureBuilders;},/Invalid external builder reservation/);
+ for(const value of [null,-1,0.5,'0'])reject('invalid external builder reservation '+JSON.stringify(value),b=>{b.externalFeatureBuilders=value;},/Invalid external builder reservation/);
  const geoActivate=(b,id='GEO-001')=>{const t=b.tasks.find(t=>t.id===id);Object.assign(t,{state:'ACTIVE',branch:'codex/'+id,worktree:'C:/test/'+id,owner:'test',startingCommit:ownership.baseline,approvedDependencies:[...t.dependencies]});};
  for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001']){
   reject(id+' cannot bypass unmerged setup',b=>{b.approvedLaunches=['GEOGRAPHY-STAGE-A'];geoActivate(b,id);},/Geography setup must actually be merged/);
@@ -132,8 +136,14 @@ if(process.argv.includes('--self-test')){
   reject(id+' rejects runtime ownership',b=>b.tasks.find(t=>t.id===id).allowedPaths.push('src/map/**'),/Stage A research/);
   reject(id+' cannot advance to B',b=>b.tasks.find(t=>t.id===id).reviewStage='B',/new bounded task/);
  }
+ for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])for(const state of ['QUEUED','STAGED-REVIEW']){
+  reject(id+' '+state+' requires merged foundation',b=>{b.tasks[0].state='STAGED-REVIEW';b.tasks.find(t=>t.id===id).state=state;},/Foundation must actually be merged/);
+  reject(id+' '+state+' requires merged setup',b=>{b.tasks.find(t=>t.id===id).state=state;b.approvedLaunches=['GEOGRAPHY-STAGE-A'];},/Geography setup must actually be merged/);
+  reject(id+' '+state+' requires Geography launch',b=>{b.tasks.find(t=>t.id==='GEO-SETUP-001').state='MERGED';b.tasks.find(t=>t.id===id).state=state;b.approvedLaunches=['HUMANITIES-STAGE-A'];},/Explicit human Geography launch/);
+ }
  const geoReady=b=>{b.externalFeatureBuilders=0;b.tasks.find(t=>t.id==='GEO-SETUP-001').state='MERGED';b.tasks.find(t=>t.id==='GEO-SETUP-001').waitingForHuman=false;b.approvedLaunches=['GEOGRAPHY-STAGE-A'];for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])geoActivate(b,id);};
  const geoConcurrent=structuredClone(backlog);geoReady(geoConcurrent);verify(geoConcurrent);console.log('PASS guard: Geography concurrent research only after separate merged setup and launch');
+ for(const state of ['QUEUED','STAGED-REVIEW']){const approved=structuredClone(geoConcurrent);for(const t of approved.tasks.filter(t=>t.project==='geography-stage-a'))t.state=state;verify(approved);console.log('PASS guard: Geography '+state+' accepted after actual merge and separate launch');}
  reject('Mathematics reservation prevents three Geography builders',b=>{geoReady(b);b.externalFeatureBuilders=1;},/Feature-builder capacity/);
  reject('Geography shared checkout',b=>{geoReady(b);b.tasks.find(t=>t.id==='GEO-MAP-001').worktree='C:/test/GEO-001';},/Shared writable/);
  assert.ok(setupDiffArgs.includes('--no-renames'));assert.equal(setupPathsAllowed(['src/graph-response/extent.js','docs/development/extent.js'],backlog.tasks[0].allowedPaths),false);console.log('PASS guard: protected rename source cannot hide behind allowed destination');
@@ -153,4 +163,4 @@ if(process.argv.includes('--setup')){
  }
  console.log('PASS setup diff ownership and frozen runtime byte identity');
 }
-console.log(JSON.stringify({tasks:backlog.tasks.length,externalFeatureBuilders:backlog.externalFeatureBuilders??0,activeFeatureBuilders:backlog.tasks.filter(t=>t.lane==='feature'&&t.state==='ACTIVE').length,projectsWaitingForHuman:new Set(backlog.tasks.filter(t=>t.waitingForHuman).map(t=>t.project)).size,dispatch:'disabled; explicit human authority required'}));
+console.log(JSON.stringify({tasks:backlog.tasks.length,externalFeatureBuilders:backlog.externalFeatureBuilders,activeFeatureBuilders:backlog.tasks.filter(t=>t.lane==='feature'&&t.state==='ACTIVE').length,projectsWaitingForHuman:new Set(backlog.tasks.filter(t=>t.waitingForHuman).map(t=>t.project)).size,dispatch:'disabled; explicit human authority required'}));
