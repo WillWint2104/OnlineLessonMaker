@@ -1,0 +1,304 @@
+{
+  "meta": {
+    "id": "b2-data-tables-paper",
+    "title": "Grouped frequency and two-way probability tables",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-data-tables",
+      "type": "skill",
+      "title": "Grouped frequency and two-way probability tables",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-data-tables",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-data-tables",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-data-tables",
+                  "label": "Grouped frequency and two-way probability tables",
+                  "tabLabel": "Grouped frequency and two-way probability tables",
+                  "prompt": "Complete the totals in the two-way table. Find the probability that a randomly chosen student walks.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "data-tables-example-0",
+                      "math": "$T=12+8+9+11=40$",
+                      "text": "Each student is counted once."
+                    },
+                    {
+                      "id": "data-tables-example-1",
+                      "math": "$P=\\frac{12+9}{40}=\\frac{21}{40}$",
+                      "text": "Use all walkers divided by all students.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "label": "Completed example table",
+                          "stub": "Group",
+                          "head": [
+                            "Walk",
+                            "Cycle",
+                            "Total"
+                          ],
+                          "rows": [
+                            {
+                              "label": "Year 7",
+                              "cells": [
+                                "12",
+                                "8",
+                                "20"
+                              ]
+                            },
+                            {
+                              "label": "Year 8",
+                              "cells": [
+                                "9",
+                                "11",
+                                "20"
+                              ]
+                            },
+                            {
+                              "label": "Total",
+                              "cells": [
+                                "21",
+                                "19",
+                                "40"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "answer": "Row totals $20,20$; column totals $21,19,40$; probability $\\frac{21}{40}$.",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "data-tables-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-data-tables",
+          "title": "Practice",
+          "practiceCollectionId": "collection-data-tables",
+          "questions": [
+            {
+              "id": "data-tables-q1",
+              "archetypeId": "method-data-tables",
+              "level": "basic",
+              "stem": "Complete the totals in the two-way table. Find the probability that a randomly chosen student walks.",
+              "answer": "Row totals $20,20$; column totals $21,19,40$; probability $\\frac{21}{40}$.",
+              "presentation": "extended",
+              "type": "table",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "data-tables-answer-0",
+                    "math": "T=12+8+9+11=40",
+                    "text": "Each student is counted once.",
+                    "alignmentGroup": "work"
+                  },
+                  {
+                    "id": "data-tables-answer-1",
+                    "math": "P=\\frac{12+9}{40}=\\frac{21}{40}",
+                    "text": "Use all walkers divided by all students.",
+                    "alignmentGroup": "work"
+                  }
+                ]
+              },
+              "visualRefs": [
+                "data-tables-given-0"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "data-tables-given-0",
+                    "completionCells": [
+                      [
+                        "12",
+                        "8",
+                        "20"
+                      ],
+                      [
+                        "9",
+                        "11",
+                        "20"
+                      ],
+                      [
+                        "21",
+                        "19",
+                        "40"
+                      ]
+                    ]
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "data-tables-given-0",
+                    "completionCells": [
+                      [
+                        "12",
+                        "8",
+                        "20"
+                      ],
+                      [
+                        "9",
+                        "11",
+                        "20"
+                      ],
+                      [
+                        "21",
+                        "19",
+                        "40"
+                      ]
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "data-tables-q2",
+              "archetypeId": "method-data-tables",
+              "level": "basic",
+              "type": "table",
+              "stem": "For the grouped times, calculate the total frequency and estimate the mean using class midpoints.",
+              "answer": "Total $10$; estimated mean $16$ minutes.",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "freq-total",
+                    "math": "N=2+5+3=10",
+                    "text": "Sum the frequencies."
+                  },
+                  {
+                    "id": "freq-mean",
+                    "math": "M=\\frac{5\\times2+15\\times5+25\\times3}{10}=16",
+                    "text": "Use class midpoints 5, 15 and 25; this is an estimate."
+                  }
+                ]
+              },
+              "visualRefs": [
+                "data-tables-given-1"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "data-tables-given-1",
+                    "completionCells": [
+                      [
+                        "2",
+                        "5",
+                        "3"
+                      ]
+                    ]
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "data-tables-given-1",
+                    "completionCells": [
+                      [
+                        "2",
+                        "5",
+                        "3"
+                      ]
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-data-tables",
+          "title": "Grouped frequency and two-way probability tables",
+          "members": [
+            "method-data-tables"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "table",
+          "label": "Two-way data",
+          "stub": "Group",
+          "head": [
+            "Walk",
+            "Cycle",
+            "Total"
+          ],
+          "rows": [
+            {
+              "label": "Year 7",
+              "cells": [
+                "12",
+                "8",
+                ""
+              ]
+            },
+            {
+              "label": "Year 8",
+              "cells": [
+                "9",
+                "11",
+                ""
+              ]
+            },
+            {
+              "label": "Total",
+              "cells": [
+                "",
+                "",
+                ""
+              ]
+            }
+          ],
+          "id": "data-tables-given-0",
+          "description": "The two-way table counts walking and cycling students in Years 7 and 8. Given counts are 12, 8, 9 and 11; totals are blank."
+        },
+        {
+          "kind": "table",
+          "stub": "Time (min)",
+          "head": [
+            "$0\\le t<10$",
+            "$10\\le t<20$",
+            "$20\\le t<30$"
+          ],
+          "rows": [
+            {
+              "label": "Frequency",
+              "cells": [
+                "2",
+                "5",
+                "3"
+              ]
+            }
+          ],
+          "id": "data-tables-given-1",
+          "description": "Grouped times in minutes have frequencies 2, 5 and 3 for the classes 0 to 10, 10 to 20 and 20 to 30."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "meta": {
+    "id": "b2-quadrilateral-paper",
+    "title": "Quadrilateral area and units",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-quadrilateral",
+      "type": "skill",
+      "title": "Quadrilateral area and units",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-quadrilateral",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-quadrilateral",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-quadrilateral",
+                  "label": "Quadrilateral area and units",
+                  "tabLabel": "Quadrilateral area and units",
+                  "prompt": "Use the trapezium ABCD. Parallel sides measure 6 cm and 4 cm; perpendicular height is 3 cm. Find its area.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "quadrilateral-example-0",
+                      "math": "$A=\\frac{1}{2}(6+4)\\times3=15$",
+                      "text": "Multiply the mean parallel-side length by the perpendicular height."
+                    }
+                  ],
+                  "answer": "$15$ cm²",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "quadrilateral-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-quadrilateral",
+          "title": "Practice",
+          "practiceCollectionId": "collection-quadrilateral",
+          "questions": [
+            {
+              "id": "quadrilateral-q1",
+              "archetypeId": "method-quadrilateral",
+              "level": "basic",
+              "stem": "Use the trapezium ABCD. Parallel sides measure 6 cm and 4 cm; perpendicular height is 3 cm. Find its area.",
+              "answer": "$15$ cm²",
+              "presentation": "multipart",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "quadrilateral-answer-0",
+                    "math": "A=\\frac{1}{2}(6+4)\\times3=15",
+                    "text": "Multiply the mean parallel-side length by the perpendicular height.",
+                    "alignmentGroup": "work"
+                  }
+                ]
+              },
+              "visualRefs": [
+                "quadrilateral-given-0"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "quadrilateral-given-0"
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "quadrilateral-given-0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-quadrilateral",
+          "title": "Quadrilateral area and units",
+          "members": [
+            "method-quadrilateral"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "figure",
+          "label": "Trapezium ABCD",
+          "figure": {
+            "type": "figure",
+            "figure": "geometry",
+            "title": "Trapezium ABCD",
+            "caption": "Lengths in centimetres. Geometry is constructed from the stated coordinates.",
+            "grid": "hidden",
+            "objects": [
+              {
+                "type": "points",
+                "from": "table",
+                "rows": [
+                  [
+                    "A",
+                    0,
+                    0
+                  ],
+                  [
+                    "B",
+                    6,
+                    0
+                  ],
+                  [
+                    "C",
+                    4,
+                    3
+                  ],
+                  [
+                    "D",
+                    0,
+                    3
+                  ]
+                ]
+              },
+              {
+                "type": "polygon",
+                "vertices": [
+                  "A",
+                  "B",
+                  "C",
+                  "D"
+                ]
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "A",
+                  "B"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "C",
+                  "D"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "A",
+                  "D"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              },
+              {
+                "type": "rightAngle",
+                "at": "A",
+                "between": [
+                  "B",
+                  "D"
+                ]
+              }
+            ]
+          },
+          "id": "quadrilateral-given-0",
+          "description": "Trapezium ABCD has parallel horizontal bases of 6 cm and 4 cm with perpendicular height 3 cm."
+        }
+      ]
+    }
+  ]
+}

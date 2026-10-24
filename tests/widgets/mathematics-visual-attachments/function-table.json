@@ -1,0 +1,203 @@
+{
+  "meta": {
+    "id": "b2-function-table-paper",
+    "title": "Function table and shared multipart evidence",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-function-table",
+      "type": "skill",
+      "title": "Function table and shared multipart evidence",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-function-table",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-function-table",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-function-table",
+                  "label": "Function table and shared multipart evidence",
+                  "tabLabel": "Function table and shared multipart evidence",
+                  "prompt": "Complete the table for y=2x+1. Both parts use this same table.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "function-table-example-0",
+                      "math": "$y=2(-1)+1=-1$",
+                      "text": "Substitute the first missing x-value."
+                    },
+                    {
+                      "id": "function-table-example-1",
+                      "math": "$y=2(1)+1=3$",
+                      "text": "Repeat for the second missing value.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "label": "Completed example table",
+                          "stub": "$x$",
+                          "head": [
+                            "$-1$",
+                            "$0$",
+                            "$1$",
+                            "$2$"
+                          ],
+                          "rows": [
+                            {
+                              "label": "$y$",
+                              "cells": [
+                                "-1",
+                                "1",
+                                "3",
+                                "5"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "answer": "Missing values $-1$, $3$; $y(2)=5$.",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "function-table-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-function-table",
+          "title": "Practice",
+          "practiceCollectionId": "collection-function-table",
+          "questions": [
+            {
+              "id": "function-table-q1",
+              "archetypeId": "method-function-table",
+              "level": "basic",
+              "stem": "Complete the table for y=2x+1. Both parts use this same table.",
+              "answer": "Missing values $-1$, $3$; $y(2)=5$.",
+              "presentation": "extended",
+              "type": "table",
+              "table": {
+                "stub": "$x$",
+                "head": [
+                  "$-1$",
+                  "$0$",
+                  "$1$",
+                  "$2$"
+                ],
+                "rows": [
+                  {
+                    "label": "$y$",
+                    "cells": [
+                      "",
+                      "1",
+                      "",
+                      "5"
+                    ]
+                  }
+                ]
+              },
+              "parts": [
+                {
+                  "label": "a",
+                  "prompt": "Fill the two blank values.",
+                  "finalAnswer": "$-1$, $3$",
+                  "workedAnswer": "$y(-1)=-1$ and $y(1)=3$."
+                },
+                {
+                  "label": "b",
+                  "prompt": "State y when x=2.",
+                  "finalAnswer": "$5$",
+                  "workedAnswer": "Read the existing value in the final column."
+                }
+              ],
+              "workedAnswer": "$y(-1)=-1$ and $y(1)=3$.\nRead the existing value in the final column.",
+              "visualRefs": [],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "@questionTable",
+                    "completionCells": [
+                      [
+                        "-1",
+                        "1",
+                        "3",
+                        "5"
+                      ]
+                    ]
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "@questionTable",
+                    "completionCells": [
+                      [
+                        "-1",
+                        "1",
+                        "3",
+                        "5"
+                      ]
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-function-table",
+          "title": "Function table and shared multipart evidence",
+          "members": [
+            "method-function-table"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "table",
+          "label": "Given function values",
+          "stub": "$x$",
+          "head": [
+            "$-1$",
+            "$0$",
+            "$1$",
+            "$2$"
+          ],
+          "rows": [
+            {
+              "label": "$y$",
+              "cells": [
+                "",
+                "1",
+                "",
+                "5"
+              ]
+            }
+          ],
+          "id": "function-table-given-0",
+          "description": "The table shows y = 2x + 1 at x = -1, 0, 1 and 2. Values for x = -1 and x = 1 are blank; the other values are given."
+        }
+      ]
+    }
+  ]
+}

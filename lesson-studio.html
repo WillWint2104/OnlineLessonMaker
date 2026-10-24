@@ -536,6 +536,36 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
 /* GRAPH_RESPONSE_CSS_END */
 
+/* MATHEMATICS_VISUAL_ATTACHMENTS_CSS_START */
+/* C2 containment, scoped to instructional Mathematics media, not artwork or navigation. */
+.mv-evidence{display:block;min-width:0;max-width:100%;margin:16px 0;overflow-wrap:anywhere;}
+.mv-evidence>.mx-part{display:block;min-width:0;max-width:100%;}
+.mv-evidence .mx-figstage{max-width:680px;margin-inline:auto;}
+.mx .mv-evidence>.mx-part[data-mx-part="figure"],.lp-answer-hub .mv-evidence>.mx-part[data-mx-part="figure"]{width:min(100%,560px);height:auto;min-height:0;aspect-ratio:var(--mx-plot-ar,4/3);margin-inline:auto;}
+.mx .mv-evidence>.mx-part[data-mx-part="figure"] .mx-figstage{inset:24px 0 0;}
+.lp-answer-hub .mv-evidence .mx-figskin.tp-slide{position:static;display:flex;flex-direction:column;height:100%;min-height:0;background:transparent;--primary:var(--mx-green);--on-surface:var(--mx-ink-body);--on-surface-variant:var(--mx-ink-2);--outline-variant:var(--mx-line);--graph-axis:var(--mx-ink);--graph-grid:var(--mx-line);}
+.lp-answer-hub .mv-evidence .tp-fig{display:flex;flex-direction:column;flex:1;min-height:0;margin:0;}
+.lp-answer-hub .mv-evidence .tp-fig-stage{flex:1;min-height:0;}
+.lp-answer-hub .mv-evidence .tp-fig-svg{width:100%;height:100%;}
+.lp-answer-hub .mv-evidence .tp-fig-ident{display:none;}
+.mx .mx-item:has(.mv-evidence){align-items:flex-start;}
+.mv-description,.mv-caption{font:400 16px/1.5 'Hanken Grotesk',sans-serif!important;margin:8px 0;color:inherit;}
+.mv-error{color:#9e2929;white-space:pre-wrap;}
+.mv-author label{display:block;}.mv-author details{margin:12px 0;}.mv-author .mx-tblwrap{max-width:100%;}
+.mx .mx-part[data-mx-part="image"]{min-width:0;max-width:100%;}
+.mx .mx-part[data-mx-part="image"] img,.mv-evidence img{display:block;max-width:100%;height:auto;object-fit:contain;}
+.mx .mx-wexex,.mx .mx-wexwork,.mx .mx-solution,.mx .mx-example-question,.mx .mx-annotation,.mx .mx-itembd{min-width:0;max-width:100%;}
+.mx .mx-wexex:has(.mx-tblwrap) .mx-solution-table{width:100%;table-layout:fixed;}
+.mx .mx-wexex:has(.mx-tblwrap) .mx-solution-table th:first-child{width:42px;}
+.mx .mx-wexex:has(.mx-tblwrap) .mx-solution-table td{min-width:0;overflow-wrap:anywhere;}
+.mx .mx-wexex:has(.mx-tblwrap) .mx-conclusion>span{min-width:0;max-width:100%;overflow-x:auto;}
+.mx .mx-tblwrap,.mv-evidence .mx-tblwrap{min-width:0;max-width:100%;overflow-x:auto;}
+.mv-evidence .mx-tbl{width:max-content;min-width:100%;}
+.lp-exercise-cell:has(.mv-evidence){grid-column:1/-1;}
+.lp-answer-hub article:has(.mv-evidence){grid-column:1/-1;min-width:0;}
+.mv-evidence .mx-tblwrap:focus-visible{outline:2px solid #146d61;outline-offset:2px;}
+
+/* MATHEMATICS_VISUAL_ATTACHMENTS_CSS_END */
 </style>
 <!-- VENDORED-FONTS:END -->
 <!-- IMPERIUM-FONT: Playfair Display (variable woff2 400-900, vendored base64 from the theme pack; self-contained, no external host) -->
@@ -11925,6 +11955,7 @@ function figFocusEnter(ov){
   const root=document.getElementById('figfocus'), host=document.getElementById('ffSlide');
   if(!root||!host||FIGFOCUS) return false;
   const src=ov.closest('.tp-slide');
+  if(src){const style=getComputedStyle(src);for(const token of ['--primary','--on-surface','--on-surface-variant','--surface','--outline','--outline-variant','--graph-axis','--graph-grid','--graph-curve']){const value=style.getPropertyValue(token);value?host.style.setProperty(token,value):host.style.removeProperty(token);}}
   FIGFOCUS={ov:ov, parent:ov.parentNode, next:ov.nextSibling};
   host.setAttribute('data-tp-theme',(src&&src.getAttribute('data-tp-theme'))||'');
   ov.style.top=''; ov.style.height='';                                     // drop any parked band — the workspace is the surface now
@@ -13148,7 +13179,7 @@ function mxOutline(i,s,sel,context={}){
     }
     const ex=(g.examples||[])[S.e]; if(!ex) return `<div class="ihint">That example is gone — select another.</div>`;
     const eb=`${gb}.examples.${S.e}`;
-    if(S.kind==='e') return `<div class="isec"><div class="isec-h">Example · fields</div>
+    if(S.kind==='e') return mvReferenceForm(ex,eb)+`<div class="isec"><div class="isec-h">Example · fields</div>
       ${inSel('Solution layout',`${eb}.solutionLayout`,ex.solutionLayout||'annotated',[['annotated','Annotated working'],['paired-table','Shared Working / Explanation table']])}
       ${mxQuestionCompositionForm(eb,ex)}
       ${inT('Example tab label (optional)',`${eb}.tabLabel`,ex.tabLabel||'')}
@@ -13688,7 +13719,7 @@ function linksSection(i,s){
     <div class="muted small">Paste a link — it appears live on the slide.</div>
     ${rows}</div>`;
 }
-function renderInspector(){ renderInspectorContent(); mathUtilityAuthor(); }
+function renderInspector(){ renderInspectorContent(); mathUtilityAuthor(); mvWireEditor(); }
 function renderInspectorContent(){
   const ins=$('#inspector'); if(!ins) return;
   if(mode!=='edit'){ ins.innerHTML=''; return; }
@@ -15584,7 +15615,7 @@ function mxNb(h){
 }
 function mxM(v){
   // Explicit authored math uses the existing parser/MathML renderer. Legacy prose is untouched.
-  if((LESSON.slides?.some(s=>s.practiceComposition==='micro')||globalThis.MathDisplay&&mdUsesStructured(LESSON))&&/\$[^$]+\$/.test(String(v||'')))return String(v).split(/(\$[^$]+\$)/g).map(t=>t.length>=3&&t.startsWith('$')&&t.endsWith('$')?mdMath(t.slice(1,-1)):mxM(t)).join('');
+  if((LESSON.slides?.some(s=>s.practiceComposition==='micro'||s.visuals?.length)||globalThis.MathDisplay&&mdUsesStructured(LESSON))&&/\$[^$]+\$/.test(String(v||'')))return String(v).split(/(\$[^$]+\$)/g).map(t=>t.length>=3&&t.startsWith('$')&&t.endsWith('$')?mdMath(t.slice(1,-1)):mxM(t)).join('');
   return mxNb(esc(v==null?'':String(v))
     .replace(/\((\d+)\/(\d+)\)/g,'<span class="mx-pfrac">$&</span>')
     .replace(/<span class="mx-pfrac">\((\d+)\/(\d+)\)<\/span>/g,
@@ -16223,6 +16254,179 @@ function mxNotesPage(s){
    it: the figure, the coordinates that belong to that figure, the relationship worth noticing. The parts
    are a single vocabulary shared with the worked examples' supporting representation, because they are
    the same thing in a different frame. */
+/* MATHEMATICS_VISUAL_ATTACHMENTS_START */
+/* C2: optional skill-local teaching evidence. Pure data helpers; no new state store. */
+const MathVisuals=(()=>{
+  const record=x=>!!x&&typeof x==='object'&&!Array.isArray(x);
+  const list=x=>Array.isArray(x)?x:[];
+  const blank=x=>x==null||x==='';
+  function definition(skill,id){return list(skill?.visuals).find(v=>v?.id===id);}
+  function references(owner,inherited=[]){return [...new Set(list(owner?.visualRefs).filter(id=>typeof id==='string'&&!inherited.includes(id)))];}
+  function table(skill,owner){return owner?.table||references(owner).map(id=>definition(skill,id)).find(v=>v?.kind==='table');}
+  function completed(given,cells){return {...given,rows:list(given.rows).map((r,i)=>({...r,cells:list(r.cells).map((v,j)=>blank(v)?cells?.[i]?.[j]:v)}))};}
+  function imageIssue(src){
+    if(typeof src!=='string'||!src.trim())return 'Image source is missing.';
+    if(/[\u0000-\u0020\\]/.test(src)||src.startsWith('//')||src.includes('#'))return 'Unsafe image source.';
+    if(src.startsWith('data:'))return /^data:image\/(png|jpeg|gif|webp|avif|svg\+xml);base64,[A-Za-z0-9+/]+={0,2}$/.test(src)?'':'Use a supported base64 image.';
+    if(/^[a-z][a-z\d+.-]*:/i.test(src)&&!/^https:\/\//i.test(src))return 'Image must use a local path, upload, or HTTPS.';
+    return '';
+  }
+  function owners(skill){
+    const out=[];
+    const add=(o,path,kind)=>{if(!record(o))return;out.push({owner:o,path,kind});for(const[p,part]of list(o.parts).entries())add(part,path+'.parts.'+p,'part');};
+    for(const[a,activity]of list(skill?.activities).entries()){
+      for(const[q,question]of list(activity.questions).entries())add(question,`activities.${a}.questions.${q}`,'question');
+      for(const[e,example]of list(activity.examples).entries())add(example,`activities.${a}.examples.${e}`,'example');
+      for(const[g,group]of list(activity.workedExamples).entries())for(const[e,example]of list(group.examples).entries())add(example,`activities.${a}.workedExamples.${g}.examples.${e}`,'example');
+    }
+    for(const[q,question]of list(skill?.questions).entries())add(question,`questions.${q}`,'question');
+    for(const[g,group]of list(skill?.groups).entries())for(const[e,example]of list(group.examples).entries())add(example,`groups.${g}.examples.${e}`,'example');
+    return out;
+  }
+  function issues(lesson,figureIssues=()=>[]){
+    const errors=[];
+    for(const[si,skill]of list(lesson?.slides).entries()){
+      const root=`slides.${si}`,ids=new Set(),defs=list(skill.visuals),add=(path,text)=>errors.push(path+': '+text);
+      if(skill.visuals!=null&&!Array.isArray(skill.visuals))add(root+'.visuals','Visual definitions must be an array.');
+      for(const[vi,v]of defs.entries()){
+        const p=root+'.visuals.'+vi;
+        if(!record(v)){add(p,'Visual must be an object.');continue;}
+        if(typeof v.id!=='string'||!/^[a-z][\w-]*$/i.test(v.id)||['__proto__','constructor','prototype'].includes(v.id)||ids.has(v.id))add(p,'Visual needs a unique stable ID.');ids.add(v.id);
+        if(!['figure','table','image'].includes(v.kind))add(p,`Visual ${v.id}: unsupported payload ${v.kind}.`);
+        if(v.completionCells!=null||v.answerVisuals!=null)add(p,`Visual ${v.id}: model values belong in answer-controlled question data.`);
+        if(typeof v.description!=='string'||v.description.trim().length<20||v.description.trim().split(/\s+/).length<4)add(p,`Visual ${v.id}: describe the mathematical givens and relationships.`);
+        if(v.kind==='figure'){
+          if(!record(v.figure))add(p,`Visual ${v.id}: missing figure payload.`);
+          else for(const error of figureIssues(v.figure))add(p,`Visual ${v.id}: ${error}`);
+        }
+        if(v.kind==='image'){const error=imageIssue(v.src);if(error)add(p,`Visual ${v.id}: ${error}`);if(typeof v.alt!=='string'||!v.alt.trim())add(p,`Visual ${v.id}: image alternative text is required.`);}
+        if(v.kind==='table'&&(!list(v.head).length||!list(v.rows).length||v.rows.some(r=>!record(r)||!Array.isArray(r.cells)||r.cells.length!==v.head.length)))add(p,`Visual ${v.id}: table rows must match the headings.`);
+      }
+      for(const {owner:o,path}of owners(skill)){
+        const p=root+'.'+path,who=o.id||path;
+        if(o.visualRefs!=null&&(!Array.isArray(o.visualRefs)||o.visualRefs.some(id=>typeof id!=='string')))add(p,`Question/example ${who}: visualRefs must be ID strings.`);
+        if(list(o.visualRefs).length!==new Set(list(o.visualRefs)).size)add(p,`Question/example ${who}: duplicate visual reference.`);
+        for(const id of list(o.visualRefs))if(!definition(skill,id))add(p,`Question/example ${who}: missing visual ${id}.`);
+        if(!o.answerVisuals)continue;
+        if(!record(o.answerVisuals)){add(p,`Question ${who}: answerVisuals must contain final/worked arrays.`);continue;}
+        for(const kind of ['final','worked']){
+          const entries=o.answerVisuals[kind];
+          if(entries!=null&&!Array.isArray(entries)){add(p,`Question ${who}: ${kind} visuals must be an array.`);continue;}
+          const seen=new Set();
+          for(const entry of list(entries)){
+            if(!record(entry)||typeof entry.ref!=='string'){add(p,`Question ${who}: ${kind} visual needs a ref.`);continue;}
+            const v=entry.ref==='@questionTable'?o.table:definition(skill,entry.ref);
+            if(seen.has(entry.ref))add(p,`Question ${who}: duplicate ${kind} visual ${entry.ref}.`);seen.add(entry.ref);
+            if(!v){add(p,`Question ${who}: ${kind} visual ${entry.ref} cannot resolve.`);continue;}
+            if(entry.completionCells!=null){
+              const c=entry.completionCells,rows=list(v.rows);
+              if((v.kind&&v.kind!=='table')||!Array.isArray(c)||c.length!==rows.length||rows.some((r,i)=>!Array.isArray(c[i])||c[i].length!==list(v.head).length||c[i].some((x,j)=>!blank(r.cells?.[j])&&!blank(x)&&String(x)!==String(r.cells[j])||blank(r.cells?.[j])&&blank(x)||x!=null&&!['string','number'].includes(typeof x))))add(p,`Question ${who}: ${kind} table ${entry.ref} completion shape/values must match givens and fill every blank.`);
+            }
+          }
+        }
+      }
+    }
+    return errors;
+  }
+  function stripAnswers(lesson){
+    for(const skill of list(lesson.slides))for(const {owner:o}of owners(skill))for(const kind of ['final','worked']){
+      const policy=lesson.meta?.answerPolicy,access=policy?.[kind]||'autonomous',hidden=access==='hidden'||access==='teacher'&&(policy?.fallback?.[kind]||'hidden')==='hidden';
+      if(hidden&&o.answerVisuals){delete o.answerVisuals[kind];if(!Object.keys(o.answerVisuals).length)delete o.answerVisuals;}
+    }
+    return lesson;
+  }
+  return {definition,references,table,completed,imageIssue,owners,issues,stripAnswers};
+})();
+if(typeof module!=='undefined')module.exports=MathVisuals;
+
+/* Uses the existing mxPart/figure/table/response/export host. No separate widget lifecycle. */
+function mvFigureIssues(f){
+  if(!f||!Array.isArray(f.objects))return ['Figure objects must be an array.'];
+  if(!['geometry','graph'].includes(f.figure))return ['Unsupported figure type; use an authored image.'];
+  if(f.figure==='geometry'&&f.construction==='circle')return ['Circle/sector evidence requires an authored image in C2.'];
+  if(f.figure==='geometry'&&(f.objects||[]).some(o=>!['points','polygon','segment','angle','rightAngle','sideLabel'].includes(o.type)))return ['Unsupported geometry object; use supported primitives or an authored image.'];
+  try{const stage=figFigStage(f,FIG_BOX0);return stage.M.errors||[];}catch(e){return ['Invalid figure: '+e.message];}
+}
+function mvPreflight(lesson){const errors=MathVisuals.issues(lesson,mvFigureIssues);if(errors.length)throw Error(errors.join('\n'));}
+function mvSkill(owner){return LESSON.slides.find(s=>MathVisuals.owners(s).some(x=>x.owner===owner))||LESSON.slides[cur];}
+function mvUsers(skill,id){return MathVisuals.owners(skill).filter(x=>x.owner.visualRefs?.includes(id)||['final','worked'].some(kind=>x.owner.answerVisuals?.[kind]?.some(e=>e.ref===id)));}
+function mvChildParts(owner,key,skill,inherited){
+  return (owner.parts||[]).map((pt,k)=>`<div class="mx-part"><b class="mx-pl">(${esc(pt?.label||String.fromCharCode(97+k))})</b><div>${mxM(lpBookPartText(pt))}${mvRefs(pt,key+'-'+k,{skill,inherited})}${mvChildParts(pt,key+'-'+k,skill,[...inherited,...MathVisuals.references(pt)])}</div></div>`).join('');
+}
+let MV_RENDER_ID=0;
+function mvVisual(v,key,body,readOnly=false){
+  const id='mv-description-'+(++MV_RENDER_ID),description=String(v.description||''),caption=String(v.caption||'');
+  let html=body??mxPart(v,key);
+  html=html.replace(/loading="lazy"/g,'loading="eager"');
+  // Model evidence is inline in the existing modal; avoid an unwired nested expansion control.
+  if(readOnly)html=html.replace(/<button class="tp-fig-expand"/g,'<button hidden disabled class="tp-fig-expand"');
+  // Accessible descriptions follow the figure into its existing expanded workspace.
+  if(v.kind==='figure')html=html.replace(/<svg\b/g,`<svg aria-describedby="${id}"`);
+  return `<section class="mv-evidence" data-mv-ref="${esc(v.id||key)}" aria-describedby="${id}">${html}<p id="${id}" class="mv-description">${esc(description)}</p>${caption?`<p class="mv-caption">${mxM(caption)}</p>`:''}</section>`;
+}
+function mvRefs(owner,key,options={}){
+  const skill=options.skill||mvSkill(owner);
+  return MathVisuals.references(owner,options.inherited).map(id=>{
+    const v=MathVisuals.definition(skill,id);
+    if(!v)return `<p class="mv-error" role="status">Required visual ${esc(id)} is unavailable. Ask the author to repair this question.</p>`;
+    try{return mvVisual(v,key+'-'+id,v===options.responseTable?options.tableHtml:undefined);}catch{return `<p class="mv-error" role="status">Required visual ${esc(id)} is invalid. Repair its definition in Edit mode.</p>`;}
+  }).join('');
+}
+function mvAnswer(owner,kind,skill=mvSkill(owner)){
+  if(!lpBookAllowed(kind))return '';
+  return (Array.isArray(owner.answerVisuals?.[kind])?owner.answerVisuals[kind]:[]).map((entry,i)=>{
+    const given=entry.ref==='@questionTable'?{...owner.table,kind:'table',id:'question-table',description:'The completed table uses the original headings and given values.'}:MathVisuals.definition(skill,entry.ref);
+    if(!given)return '<p class="mv-error">Answer visual unavailable.</p>';
+    const v=entry.completionCells?MathVisuals.completed(given,entry.completionCells):given;
+    return mvVisual(v,'answer-'+owner.id+'-'+kind+'-'+i,undefined,true);
+  }).join('');
+}
+function mvFitAnswers(panel){for(const figure of panel.querySelectorAll('.mv-evidence .tp-fig'))figInlineSolve(figure);}
+function mvReferenceForm(owner,path,skill=LESSON.slides[cur]){
+  const defs=Array.isArray(skill.visuals)?skill.visuals:[],selected=Array.isArray(owner.visualRefs)?owner.visualRefs:[];
+  return `<details class="isec mv-author"><summary>Required question visuals</summary><p>Shared skill givens. Displayed after the prompt, before subparts and response.</p>${defs.map(v=>`<label><input type="checkbox" data-mv-select="${esc(path)}" data-mv-id="${esc(v.id)}" ${selected.includes(v.id)?'checked':''}> ${esc(v.label||v.id)} · ${esc(v.kind)}</label>`).join('')||'<p>No shared visuals yet. Add one below.</p>'}${selected.filter(id=>!defs.some(v=>v.id===id)).map(id=>`<p class="mv-error">Missing visual ${esc(id)} <button type="button" data-mv-unref="${esc(path)}" data-mv-id="${esc(id)}">Remove broken reference</button></p>`).join('')}</details>`;
+}
+function mvModelForm(owner,path){
+  const skill=mvSkill(owner),refs=MathVisuals.references(owner),tables=refs.map(id=>MathVisuals.definition(skill,id)).filter(v=>v?.kind==='table');
+  if(owner.table)tables.push({...owner.table,id:'@questionTable',label:'Question table'});
+  const options=[...new Set([...refs,...tables.map(t=>t.id)])];
+  return `<details class="isec mv-author"><summary>Answer visuals and completed tables</summary><p>Final and worked models follow their separate answer policies. Givens remain shared.</p>${['final','worked'].map(kind=>`<h4>${kind==='final'?'Final answer':'Worked solution'}</h4>${options.map(id=>{const entries=owner.answerVisuals?.[kind]||[],at=entries.findIndex(e=>e.ref===id),table=tables.find(t=>t.id===id);return `<label><input type="checkbox" data-mv-model="${esc(path)}" data-mv-kind="${kind}" data-mv-id="${esc(id)}" ${at>=0?'checked':''}> ${esc(table?.label||id)}</label>${at>=0&&table?`<div class="mx-tblwrap" tabindex="0" role="region" aria-label="${kind} completion editor"><table class="mx-tbl"><tr><th>Row</th>${table.head.map(h=>`<th scope="col">${mxM(h)}</th>`).join('')}</tr>${table.rows.map((r,ri)=>`<tr><th scope="row">${mxM(r.label||'')}</th>${r.cells.map((c,ci)=>`<td>${c!=null&&c!==''?mxM(c):`<input class="ii" aria-label="${kind} ${esc(r.label||'row '+(ri+1))}, ${esc(table.head[ci])}" data-bind="${path}.answerVisuals.${kind}.${at}.completionCells.${ri}.${ci}" value="${esc(entries[at].completionCells?.[ri]?.[ci]??'')}">`}</td>`).join('')}</tr>`).join('')}</table></div>`:''}`;}).join('')}`).join('')}</details>`;
+}
+function mvLibraryForm(skill,index){
+  const defs=Array.isArray(skill.visuals)?skill.visuals:[],base='slides.'+index;
+  return `<details class="isec mv-author"><summary>Shared skill visuals (${defs.length})</summary><p>Define givens once. Each question/example chooses its own references.</p>${defs.map((v,i)=>{if(!v||typeof v!=='object')return '<p class="mv-error">Malformed shared visual '+i+'; repair in JSON.</p>';const path=base+'.visuals.'+i,uses=mvUsers(skill,v.id).map(x=>x.owner.id||x.path);return `<details><summary>${esc(v.label||v.id)} · ${esc(v.kind)}</summary><p>Used by: ${esc(uses.join(', ')||'none')}</p>${inT('Stable visual ID',path+'.id',v.id)}${inA('Mathematical description — givens and relationships',path+'.description',v.description||'')}${inA('Caption (optional)',path+'.caption',v.caption||'')}${v.kind==='image'?`<label>Choose image<input type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" data-mv-upload="${path}.src"></label><p data-mv-upload-status role="status"></p>`:''}${v.kind==='figure'&&v.figure?.figure==='geometry'?blockFigureForm(index,{type:'figure',...v.figure},null,path+'.figure'):mxPartForm(path,v,null)}<button type="button" data-mv-delete="${i}">Delete shared visual (references will need repair)</button></details>`;}).join('')}<label>Visual type<select data-mv-new-kind><option value="figure">Existing Figure Engine</option><option value="table">Table</option><option value="image">Image</option></select></label><button type="button" data-mv-add>Add shared visual</button><p class="mv-error" data-mv-diagnostics>${esc(MathVisuals.issues({slides:[skill]},mvFigureIssues).join('\n'))}</p></details>`;
+}
+function mvWireEditor(){
+  const ins=document.getElementById('inspector');if(!ins)return;
+  const refresh=()=>renderSlide(),skill=LESSON.slides[cur];
+  ins.querySelector('[data-mv-add]')?.addEventListener('click',()=>{const kind=ins.querySelector('[data-mv-new-kind]').value,v=mxPartSeed(kind);v.id='visual-'+crypto.randomUUID();v.description='';(skill.visuals=Array.isArray(skill.visuals)?skill.visuals:[]).push(v);refresh();});
+  ins.querySelectorAll('[data-mv-upload]').forEach(el=>el.onchange=()=>{const file=el.files?.[0];if(file)embedImageToSlot(el.dataset.mvUpload,file,el.parentElement.nextElementSibling);});
+  ins.querySelectorAll('[data-mv-delete]').forEach(b=>b.onclick=()=>{const v=skill.visuals[+b.dataset.mvDelete],uses=mvUsers(skill,v.id);if(confirm('Delete '+v.id+'? '+uses.length+' question/example references may need repair.')){skill.visuals.splice(+b.dataset.mvDelete,1);refresh();}});
+  ins.querySelectorAll('[data-mv-select],[data-mv-unref]').forEach(el=>el.addEventListener(el.matches('button')?'click':'change',()=>{const o=getP(LESSON,el.dataset.mvSelect||el.dataset.mvUnref);if(!o)return;const refs=new Set(o.visualRefs||[]);el.checked?refs.add(el.dataset.mvId):refs.delete(el.dataset.mvId);o.visualRefs=[...refs];refresh();}));
+  ins.querySelectorAll('[data-mv-model]').forEach(el=>el.onchange=()=>{const o=getP(LESSON,el.dataset.mvModel),kind=el.dataset.mvKind,id=el.dataset.mvId;if(!o)return;o.answerVisuals=o.answerVisuals||{};const entries=o.answerVisuals[kind]=o.answerVisuals[kind]||[];if(el.checked){const t=id==='@questionTable'?o.table:MathVisuals.definition(skill,id);entries.push({ref:id,...(t?.head?{completionCells:t.rows.map(r=>r.cells.map(c=>c??''))}:{})});}else o.answerVisuals[kind]=entries.filter(e=>e.ref!==id);refresh();});
+}
+async function mvEmbedAssets(out){
+  const manifest=[];
+  for(const [si,skill]of (out.slides||[]).entries())for(const v of skill.visuals||[])if(v.kind==='image'){
+    const issue=MathVisuals.imageIssue(v.src);if(issue)throw Error('Visual '+v.id+': '+issue);
+    const source=v.src,data=source.startsWith('data:')?source:await fetchDataURI(new URL(source,document.baseURI).href,8000);
+    const response=await fetch(data),blob=await response.blob();
+    if(!['image/png','image/jpeg','image/gif','image/webp','image/avif','image/svg+xml'].includes(blob.type))throw Error('Visual '+v.id+': unsupported image content.');
+    if(blob.size>10*1024*1024)throw Error('Visual '+v.id+': image exceeds 10 MiB.');
+    if(blob.type==='image/svg+xml'){
+      const text=await blob.text(),xml=new DOMParser().parseFromString(text,'image/svg+xml');
+      if(xml.querySelector('parsererror')||xml.documentElement.localName!=='svg'||xml.querySelector('script,foreignObject,style,iframe,object,embed,animate,set,animateTransform,animateMotion')||[...xml.querySelectorAll('*')].some(n=>[...n.attributes].some(a=>/^on/i.test(a.name)||/url\s*\(/i.test(a.value)||['href','xlink:href','src'].includes(a.name))))throw Error('Visual '+v.id+': unsafe or malformed SVG. Use a static self-contained image.');
+    }
+    // Decode raster bytes as well; MIME alone cannot prove that an upload is a valid image.
+    const image=new Image();image.src=data;try{await image.decode();}catch{throw Error('Visual '+v.id+': image cannot be decoded.');}
+    const bytes=await blob.arrayBuffer(),hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(n=>n.toString(16).padStart(2,'0')).join('');
+    manifest.push({skill:skill.id||si,visual:v.id,mime:blob.type,bytes:blob.size,sha256:hash,source:source.startsWith('data:')?'embedded upload':source});v.src=data;
+  }
+  if(manifest.length){out.meta=out.meta||{};out.meta.visualAssetManifest=manifest;}
+  return out;
+}
+
+/* MATHEMATICS_VISUAL_ATTACHMENTS_END */
 function mxParts(x){
   if(!x||typeof x!=='object') return [];
   if(Array.isArray(x)) return x.filter(p=>p&&typeof p==='object');
@@ -16237,7 +16441,7 @@ function mxPartTable(c){
     return `<tr><th scope="row">${mxM(lab)}</th>${cells}</tr>`;
   }).join('');
   if(!head&&!rows) return '<div class="mx-ph">This table has no rows yet.</div>';
-  return `<div class="mx-tblwrap"><table class="mx-tbl"><tr><th scope="row">${mxM(c.stub||'')}</th>${head}</tr>${rows}</table></div>`;
+  return `<div class="mx-tblwrap" tabindex="0" role="region" aria-label="Data table; scroll horizontally if needed"><table class="mx-tbl"><tr><th scope="row">${mxM(c.stub||'')}</th>${head}</tr>${rows}</table></div>`;
 }
 function mxPartPoints(c){
   const items=(Array.isArray(c.items)?c.items:[]).map(it=>{
@@ -16616,7 +16820,7 @@ function mxWexEx(ex,k,state,extra){
   return `<article class="mx-wexex${composed?' mx-composed-example':''}" data-mx-example="${esc(String(ex.id||('ex'+(k+1))))}"${ask?'':' data-mx-form="solo"'}>
     ${composed||''}${composed||sameTitle?'':`<h3 class="mx-wexh" data-mx-region="title">${mxM(String(ex.label||('Example '+(k+1))))}</h3>`}
     ${ask&&!composed?`<div class="mx-wexask" data-mx-region="question" data-mx-sec="question"><${heading} class="mx-wexlab">Question</${heading}>
-      ${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}
+      ${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div>${mvRefs(ex,'example-'+ex.id)}</div>`:''}
     <div class="mx-wexwork${tableWorking?' lp-table-working':''}" data-mx-region="working">
       ${tableWorking?`<div class="lp-table-reasoning">${steps}${answer}</div>${extra}`:steps+'\n      '+(extra||'')+'\n      '+answer}
     </div>${composed?'':mxSupportButton(ex)}</article>`;
@@ -16635,11 +16839,11 @@ function mxPairedExample(ex,k,state,extra){
   const collection=activity&&lpCollection(LESSON.slides[cur],activity),members=collection?lpCollectionMembers(LESSON.slides[cur],collection):[];
   const number=members.length?members.findIndex(x=>x.ex===ex)+1:k+1;
   return `<article class="mx-wexex mx-worked-example" data-mx-example="${esc(ex.id||'')}" aria-label="${esc(mxPlain(ex.label||'Worked example'))}">
-    ${composed||`<header class="mx-example-question"><div><div class="mx-example-number">Example ${number}</div><h2 data-mx-region="title">${mxM(ex.label||'Worked example')}</h2>${q&&show('question')?`<div data-mx-region="question" data-mx-sec="question">${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div></div>`:''}</div>
+    ${composed||`<header class="mx-example-question"><div><div class="mx-example-number">Example ${number}</div><h2 data-mx-region="title">${mxM(ex.label||'Worked example')}</h2>${q&&show('question')?`<div data-mx-region="question" data-mx-sec="question">${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div>${mvRefs(ex,'example-'+ex.id)}</div>`:''}</div>
       ${mxSupportButton(ex)}</header>`}
     <section data-mx-region="working" class="mx-solution">${show('steps')?`<table class="mx-solution-table"${ex.steps?.some(s=>s?.alignmentGroup)?' data-md-owner':''} data-mx-sec="steps"><thead><tr><th scope="col">No.</th><th scope="col">Working</th>${lpTextbook()?'':'<th scope="col">No.</th>'}<th scope="col">Explanation</th></tr></thead><tbody>
       ${steps.map((st,j)=>{const o=st&&typeof st==='object'?st:{text:st};return `<tr class="mx-step" data-mx-step="${esc(o.id||'s'+(j+from))}"><td class="mx-row-number">${j+from}</td><td class="mx-stepm">${o.alignmentGroup?mdWorkingCell(o):mxWorking(o.math||'')}</td>${lpTextbook()?'':`<td class="mx-row-number mx-row-repeat">${j+from}</td>`}<td class="mx-annotation"><div class="mx-stept">${mxM(o.text||'')}</div>${o.note?`<div class="mx-stepn">${mxM(o.note)}</div>`:''}${mxParts(o.visual).length?mxCompanion(mxParts(o.visual),'paired-'+esc(ex.id||k)+'-'+j):''}</td></tr>`;}).join('')}
-    </tbody></table>`:''}${extra||''}${answer&&show('answer')?`<div class="mx-conclusion" data-mx-region="answer" data-mx-sec="answer"><span aria-hidden="true">✓</span><span>${ex.resultLabel?esc(ex.resultLabel)+' ':''}${mxM(answer)}</span></div>`:''}</section></article>`;
+    </tbody></table>`:''}${extra||''}${answer&&show('answer')?`<div class="mx-conclusion" data-mx-region="answer" data-mx-sec="answer"><span aria-hidden="true">✓</span><span${ex.visualRefs?.length?' tabindex="0" aria-label="Example conclusion; scroll horizontally if needed"':''}>${ex.resultLabel?esc(ex.resultLabel)+' ':''}${mxM(answer)}</span></div>`:''}</section></article>`;
 }
 function mxSupportOpen(ex,opener){
   if(document.querySelector('[data-mx-support-dialog]'))return;
@@ -17852,25 +18056,26 @@ function mxQuestionList(questions,page,start=0){
   const paper=mxOnPaper();
   return (questions||[]).map((q,j)=>{
     if(q.graphResponse)return grHeader(q,j+1+start)+grResponseHtml(q,page);
-    const parts=(q.parts||[]).map((pt,k)=>`<div class="mx-part"><b class="mx-pl">(${esc(typeof pt==='object'&&pt.label||String.fromCharCode(97+k))})</b><span>${mxM(lpBookPartText(pt))}</span></div>`).join('');
+    const skill=mvSkill(q),table=MathVisuals.table(skill,q);
+    const parts=(q.parts||[]).map((pt,k)=>{const extra=mvRefs(pt,'part-'+q.id+'-'+k,{skill,inherited:q.visualRefs||[]})+mvChildParts(pt,'nested-'+q.id+'-'+k,skill,[...(q.visualRefs||[]),...MathVisuals.references(pt)]),tag=extra?'div':'span';return `<div class="mx-part"><b class="mx-pl">(${esc(typeof pt==='object'&&pt.label||String.fromCharCode(97+k))})</b><${tag}>${mxM(lpBookPartText(pt))}${extra}</${tag}></div>`;}).join('');
     let tbl='';
-    if(q.table&&Array.isArray(q.table.head)){
+    if(table&&Array.isArray(table.head)){
       const qid=(q.id?String(q.id):'q'+(j+1));
       const saved=paper?{}:(tpRespGet(page,qid)||{});
       const cells=(saved.kind==='table'&&saved.value&&saved.value.cells)?saved.value.cells:{};
-      const head=q.table.head.map(h=>`<th scope="col">${mxM(h)}</th>`).join('');
-      const rows=(q.table.rows||[]).map((r,ri)=>`<tr><th scope="row">${mxM(r.label||'')}</th>`
-        +(r.cells||[]).map((c,ci)=>{ const key=(lpEnabled(LESSON.slides[cur])?ri+':':'')+String(q.table.head[ci]==null?ci:q.table.head[ci]);
+      const head=table.head.map(h=>`<th scope="col">${mxM(h)}</th>`).join('');
+      const rows=(table.rows||[]).map((r,ri)=>`<tr><th scope="row">${mxM(r.label||'')}</th>`
+        +(r.cells||[]).map((c,ci)=>{ const key=(lpEnabled(LESSON.slides[cur])?ri+':':'')+String(table.head[ci]==null?ci:table.head[ci]);
             if(c!=null&&c!=='') return `<td>${mxM(c)}</td>`;
             if(paper) return `<td class="mx-blank" aria-label="${esc((r.label||'value')+' when '+key+' \u2014 answer in your book')}"></td>`;
             return `<td><input class="mx-cell" type="text" inputmode="text" data-mx-cell="${esc(key)}"
               value="${esc(cells[key]==null?'':String(cells[key]))}"
               aria-label="${esc((r.label||'value')+' when '+key)}"></td>`; }).join('')+'</tr>').join('');
-      tbl=`<div class="mx-tblwrap" data-mx-table="${esc(qid)}"><table class="mx-tbl">`
-        +`<tr><th scope="row">${mxM(q.table.stub||'')}</th>${head}</tr>${rows}</table></div>`;
+      tbl=`<div class="mx-tblwrap" tabindex="0" role="region" aria-label="Question table; scroll horizontally if needed" data-mx-table="${esc(qid)}"><table class="mx-tbl">`
+        +`<tr><th scope="row">${mxM(table.stub||'')}</th>${head}</tr>${rows}</table></div>`;
     }
     return `<div class="mx-item"><span class="mx-num">${j+1+start}</span><div class="mx-itembd">
-      <div class="mx-stem">${mxM(q.stem||'')}</div>${q.graphResponse?grResponseHtml(q,page):tbl}
+      <div class="mx-stem">${mxM(q.stem||'')}</div>${mvRefs(q,'question-'+q.id,{skill,responseTable:table,tableHtml:tbl})}${MathVisuals.references(q).some(id=>MathVisuals.definition(skill,id)===table)?'':tbl}
       ${parts?`<div class="mx-parts${q.stack?' mx-stack':''}">${parts}</div>`:''}</div></div>`;
   }).join('');
 }
@@ -18150,6 +18355,7 @@ function lpActivities(s){ return authorMode()==='edit'?lpOrderedActivities(s):lp
 function lpValidatePublication(d){
   lpValidate(d);
   mdPreflight(d);
+  mvPreflight(d);
   if(!(d.slides||[]).some(lpEnabled)&&d.meta?.player!=='activities')return;
   const i=d.slides.findIndex(s=>!lpLearnerActivities(s).length);
   if(i>=0){const error=Error('Skill '+(i+1)+' “'+d.slides[i].title+'” has no learner-visible activities. Add instructional content in this skill before publishing. An empty optional video does not count.');error.skillIndex=i;throw error;}
@@ -18235,7 +18441,7 @@ function lpBookStatus(){const graph=grReleaseStatus();if(graph)return graph;retu
 function lpBookShortStatus(){const graph=grReleaseStatus();if(graph)return graph;return lpBookAllowed('final')||lpBookAllowed('worked')?'Answers available':lpBookPolicy('final')==='end'?'Answers available at lesson end.':'Your teacher has not released answers yet.';}
 function lpBookAnswerButton(){const available=grHubAny('final')||grHubAny('worked');return `<div class="lp-book-status" role="status" title="${esc(lpBookStatus())}">${esc(lpBookShortStatus())}</div><button class="lp-primary" data-book-hub ${available?'':'hidden disabled'}>View released answers</button>${grReleaseButton()}${LESSON.meta.classSession?.endpoint?`<button class="mx-tool" data-book-class>${document.documentElement.dataset.export?'Join class':'Class session'}</button>`:''}${!document.documentElement.dataset.export&&document.body.classList.contains('present')?'<p>Projector view: answers on this display only; class release is separate.</p>':''}`;}
 // Semantic footprints; legacy width metadata remains readable without migration.
-function lpBookPresentation(q){return q.presentation||({compact:'compact',wide:'multipart',full:'extended'}[q.layout])||(q.figure||q.image||q.table?'extended':q.parts?.length?'multipart':'compact');}
+function lpBookPresentation(q){return q.presentation||({compact:'compact',wide:'multipart',full:'extended'}[q.layout])||(q.figure||q.image||q.table||q.visualRefs?.length?'extended':q.parts?.length?'multipart':'compact');}
 function lpBookSpan(q,worked=false){
   if(worked&&[q,...(q.parts||[])].some(o=>Array.isArray(o?.workedSolution?.steps)&&o.workedSolution.steps.some(s=>s?.text)))return 'full';
   if(worked){const working=lpBookQuestion(q,'worked'),text=working&&typeof working==='object'?MathDisplay.fallback(working):String(working||'');return lpBookPresentation(q)==='extended'||text.split('\n').some(line=>line.length>110)?'full':'half';}
@@ -18245,14 +18451,14 @@ function lpBookSpan(q,worked=false){
 function lpBookRunSpan(qs,k){const span=qs[k].graphResponse?'half':lpBookSpan(qs[k]);if(span!=='half'||k!==qs.length-1)return span;let used=0;for(let j=0;j<k;j++){const width={compact:4,half:6,full:12}[lpBookSpan(qs[j])];if(used+width>12)used=0;used=(used+width)%12;}return used===0?'full':span;}
 function lpBookShortParts(q){return !q.stack&&q.parts?.length>1&&q.parts.every(p=>lpBookPartText(p).length<=110&&!lpBookPartText(p).includes('\n'));}
 function lpBookPartText(p){return typeof p==='string'?p:p?.prompt||p?.text||p?.stem||'';}
-function lpBookPartAnswers(q,kind){const parts=(q.parts||[]).filter(p=>p&&typeof p==='object');if(!parts.some(p=>kind==='worked'?mdHasWorking(p):p.finalAnswer))return '';return '<div class="lp-part-answers">'+(q.parts||[]).map((p,k)=>'<section class="lp-part-answer"><b>('+esc(p?.label||String.fromCharCode(97+k))+')</b><div><p>'+mxM(lpBookPartText(p))+'</p>'+(kind==='worked'?(mdHasWorking(p)?mdWorking(p):'No part answer authored.'):lpBookWorking(p?.finalAnswer||'No part answer authored.'))+'</div></section>').join('')+'</div>';}
+function lpBookPartAnswers(q,kind){const parts=(q.parts||[]).filter(p=>p&&typeof p==='object');if(!parts.some(p=>(kind==='worked'?mdHasWorking(p):p.finalAnswer)||p.answerVisuals?.[kind]?.length||p.parts?.length))return '';return '<div class="lp-part-answers">'+(q.parts||[]).map((p,k)=>'<section class="lp-part-answer"><b>('+esc(p?.label||String.fromCharCode(97+k))+')</b><div><p>'+mxM(lpBookPartText(p))+'</p>'+mvAnswer(p,kind,mvSkill(q))+(kind==='worked'?(mdHasWorking(p)?mdWorking(p):'No part answer authored.'):lpBookWorking(p?.finalAnswer||'No part answer authored.'))+lpBookPartAnswers(p,kind)+'</div></section>').join('')+'</div>';}
 function lpBookWorking(value){const text=String(value||'');if(/(^|\n)\s*\$?=/.test(text))return '<div class="lp-working-line" tabindex="0" aria-label="Working group">'+mxWorking(text)+'</div>';return text.split('\n').map(line=>'<div class="lp-working-line" tabindex="0" aria-label="Working line">'+mxWorking(line)+'</div>').join('');}
 
 function lpBookRuns(qs){const runs=[];for(const q of qs){const family=lpBookPresentation(q),group=q.group||'',last=runs.at(-1);if(last&&last.family===family&&last.group===group)last.questions.push(q);else runs.push({family,group,questions:[q]});}return runs;}
 function lpTextbookPractice(s,a){
   const current=lpPracticeCurrent(s,a);if(!current)return '<p>Add a worked-example collection.</p>';const ex=current.ex,level=lpBookLevel(a,ex),all=(a.questions||[]).filter(q=>q.archetypeId===ex.id),qs=all.filter(q=>q.level===level),levels=['basic','moderate','advanced'].filter(l=>all.some(q=>q.level===l));
   const number=q=>qs.indexOf(q)+1,page=tpRespId(lpProjection(s)),graph=qs.some(q=>q.graphResponse);
-  return `<div class="lp-textbook${lpMicro(s)?' lp-micro-practice':''}">${lpMicro(s)?`<section class="lp-micro-example" aria-label="Representative worked example">${mxWexEx(ex,0,null,'')}</section><h2>Practice</h2>`:''}<p>${lpMicro(s)?mxM(ex.practice?.instructions||'Add skill-specific practice instructions in Edit mode.'):qs.some(q=>q.graphResponse)?esc(a.practiceNote||'Use the tools on each graph. Expand a response for more room.'): 'Work in your exercise book. Expand and simplify each product.'}</p><div class="lp-practice-toolbar"><div class="mx-collection-tabs" role="tablist" aria-label="Practice pathway">${levels.map(l=>`<button role="tab" id="book-level-${l}" aria-controls="book-exercise" aria-selected="${l===level}" tabindex="${l===level?0:-1}" data-book-level="${l}">${l==='basic'?'Foundation':l==='moderate'?'Moderate':'Advanced (optional)'}</button>`).join('')}</div></div><section id="book-exercise" role="tabpanel" aria-labelledby="book-level-${level}">${lpBookRuns(qs).map((run,j,runs)=>`<section class="lp-exercise-run">${run.group&&run.group!==runs[j-1]?.group?`<h2>${esc(run.group)}</h2>`:''}<div class="lp-exercise-grid">${run.questions.map((q,k)=>`<div class="lp-exercise-cell lp-span-${lpBookRunSpan(run.questions,k)}${lpBookShortParts(q)?' lp-short-parts':''}" data-book-question="${esc(q.id)}">${mxQuestionList([{...q,stem:q.parts?.length?q.stem:q.stem.replace(/^Expand and simplify\s+/,'')}],page,number(q)-1)}</div>`).join('')}</div></section>`).join('')}</section><section class="gr-answer-access" aria-label="Answer access"><h2>Answers</h2><div class="lp-book-tools">${lpBookAnswerButton()}</div></section></div>`;
+  return `<div class="lp-textbook${lpMicro(s)?' lp-micro-practice':''}">${lpMicro(s)?`<section class="lp-micro-example" aria-label="Representative worked example">${mxWexEx(ex,0,null,mxParts(ex.visual).length?mxCompanion(mxParts(ex.visual),'micro-'+ex.id):'')}</section><h2>Practice</h2>`:''}<p>${lpMicro(s)?mxM(ex.practice?.instructions||'Add skill-specific practice instructions in Edit mode.'):qs.some(q=>q.graphResponse)?esc(a.practiceNote||'Use the tools on each graph. Expand a response for more room.'): 'Work in your exercise book. Expand and simplify each product.'}</p><div class="lp-practice-toolbar"><div class="mx-collection-tabs" role="tablist" aria-label="Practice pathway">${levels.map(l=>`<button role="tab" id="book-level-${l}" aria-controls="book-exercise" aria-selected="${l===level}" tabindex="${l===level?0:-1}" data-book-level="${l}">${l==='basic'?'Foundation':l==='moderate'?'Moderate':'Advanced (optional)'}</button>`).join('')}</div></div><section id="book-exercise" role="tabpanel" aria-labelledby="book-level-${level}">${lpBookRuns(qs).map((run,j,runs)=>`<section class="lp-exercise-run">${run.group&&run.group!==runs[j-1]?.group?`<h2>${esc(run.group)}</h2>`:''}<div class="lp-exercise-grid">${run.questions.map((q,k)=>`<div class="lp-exercise-cell lp-span-${lpBookRunSpan(run.questions,k)}${lpBookShortParts(q)?' lp-short-parts':''}" data-book-question="${esc(q.id)}">${mxQuestionList([{...q,stem:q.parts?.length?q.stem:q.stem.replace(/^Expand and simplify\s+/,'')}],page,number(q)-1)}</div>`).join('')}</div></section>`).join('')}</section><section class="gr-answer-access" aria-label="Answer access"><h2>Answers</h2><div class="lp-book-tools">${lpBookAnswerButton()}</div></section></div>`;
 }
 function lpBookHub(opener){
   if(!grHubAny('final')&&!grHubAny('worked'))return;
@@ -18271,7 +18477,7 @@ function lpBookHub(opener){
   const options=()=>{const gs=active(),levels=['basic','moderate','advanced'].filter(l=>gs.some(g=>g.a.questions.some(q=>q.archetypeId===g.ex.id&&q.level===l)));if(!levels.includes(level))level=levels[0];pathway.innerHTML=levels.map(l=>`<option value="${l}">${label(l)}</option>`).join('');pathway.value=level||'';question.innerHTML='<option value="">All</option>'+gs.map(g=>g.a.questions.filter(q=>q.archetypeId===g.ex.id&&q.level===level).map((q,i)=>({q,i})).filter(({q})=>grHubVisible(q,kind)).map(({q,i})=>`<option value="${esc(JSON.stringify([g.key,q.id]))}">${practice.value==='all'?esc(practiceLabel(g))+' · ':''}${i+1}</option>`).join('')).join('');};
   // Measure the real column, including loaded glyphs, before promoting long working.
   const fit=()=>{mdAlign(panel);updateAdaptive();panel.querySelectorAll('[data-book-base-span]').forEach(el=>el.classList.toggle('lp-answer-full',el.dataset.bookBaseSpan==='full'));panel.querySelectorAll('.lp-answer-list:not(.lp-answer-key) article:not(.lp-answer-full)').forEach(el=>{if(getComputedStyle(el.parentElement).gridTemplateColumns.split(' ').length>1&&[...el.querySelectorAll('.lp-working-line')].some(line=>line.scrollWidth>line.clientWidth+1))el.classList.add('lp-answer-full');});};
-  const draw=()=>{d.classList.toggle('lp-graph-hub',active().some(g=>g.a.questions.some(q=>q.graphResponse&&grHubVisible(q,kind))));d.querySelector('[data-book-kind="final"]').textContent=d.classList.contains('lp-graph-hub')?'Model graphs':'Final answers';d.querySelectorAll('[data-book-kind]').forEach(b=>{b.setAttribute('aria-selected',String(b.dataset.bookKind===kind));b.tabIndex=b.dataset.bookKind===kind?0:-1;b.disabled=!grHubAny(b.dataset.bookKind);});panel.setAttribute('aria-labelledby','book-'+kind);d.querySelector('.lp-answer-expand').hidden=kind!=='worked'||!lpBookAllowed(kind);if(!grHubAny(kind)){panel.innerHTML='<p>'+esc(lpBookLockedCopy(kind))+'</p>';return;}panel.innerHTML=active().map(g=>{const qs=g.a.questions.filter(q=>q.archetypeId===g.ex.id&&q.level===level),visible=qs.filter(q=>grHubVisible(q,kind)&&(!question.value||JSON.stringify([g.key,q.id])===question.value));if(!visible.length)return '';return `<section><h3>${esc(practiceLabel(g))} · ${label(level)}</h3><div class="lp-answer-list ${kind==='final'?'lp-answer-key':''}">${visible.map(q=>{const key=JSON.stringify([g.key,q.id]),span=q.graphResponse?(kind==='worked'?'full':'half'):kind==='worked'?lpBookSpan(q,true):'half';return `<article class="${q.graphResponse?'gr-answer-card ':''}${span==='full'?'lp-answer-full':''}" data-book-base-span="${span}" data-book-answer="${esc(q.id)}"><b class="lp-answer-no">${qs.indexOf(q)+1}</b><div>${q.graphResponse?grAnswerHtml(q,g.page,kind,{key,collapsed:collapsed.has(key)}):!lpBookAllowed(kind)?`<p>${esc(lpBookLockedCopy(kind))}</p>`:kind==='worked'?`<details data-book-solution="${esc(key)}" ${collapsed.has(key)?'':'open'}><summary>${mxM(q.stem)}</summary><div class="mx-stepm">${lpBookPartAnswers(q,kind)||(lpBookQuestion(q,kind)?(q.workedSolution?mdStructured(q.workedSolution):lpBookWorking(lpBookQuestion(q,kind))):'No solution authored.')}</div></details>`:(lpBookPartAnswers(q,kind)||mxM(lpBookQuestion(q,kind)||'No answer authored.'))}${!document.documentElement.dataset.export&&document.body.classList.contains('present')&&q.teacherNote?`<p>${esc(q.teacherNote)}</p>`:''}</div></article>`;}).join('')}</div></section>`;}).join('')||'<p>No practice answers in this selection.</p>';grAnswerWire(panel);panel.querySelectorAll('[data-book-solution]').forEach(el=>el.ontoggle=()=>{el.open?collapsed.delete(el.dataset.bookSolution):collapsed.add(el.dataset.bookSolution);requestAnimationFrame(fit);});requestAnimationFrame(fit);};
+  const draw=()=>{d.classList.toggle('lp-graph-hub',active().some(g=>g.a.questions.some(q=>q.graphResponse&&grHubVisible(q,kind))));d.querySelector('[data-book-kind="final"]').textContent=d.classList.contains('lp-graph-hub')?'Model graphs':'Final answers';d.querySelectorAll('[data-book-kind]').forEach(b=>{b.setAttribute('aria-selected',String(b.dataset.bookKind===kind));b.tabIndex=b.dataset.bookKind===kind?0:-1;b.disabled=!grHubAny(b.dataset.bookKind);});panel.setAttribute('aria-labelledby','book-'+kind);d.querySelector('.lp-answer-expand').hidden=kind!=='worked'||!lpBookAllowed(kind);if(!grHubAny(kind)){panel.innerHTML='<p>'+esc(lpBookLockedCopy(kind))+'</p>';return;}panel.innerHTML=active().map(g=>{const qs=g.a.questions.filter(q=>q.archetypeId===g.ex.id&&q.level===level),visible=qs.filter(q=>grHubVisible(q,kind)&&(!question.value||JSON.stringify([g.key,q.id])===question.value));if(!visible.length)return '';return `<section><h3>${esc(practiceLabel(g))} · ${label(level)}</h3><div class="lp-answer-list ${kind==='final'?'lp-answer-key':''}">${visible.map(q=>{const key=JSON.stringify([g.key,q.id]),span=q.graphResponse?(kind==='worked'?'full':'half'):kind==='worked'?lpBookSpan(q,true):'half';return `<article class="${q.graphResponse?'gr-answer-card ':''}${span==='full'?'lp-answer-full':''}" data-book-base-span="${span}" data-book-answer="${esc(q.id)}"><b class="lp-answer-no">${qs.indexOf(q)+1}</b><div>${q.graphResponse?grAnswerHtml(q,g.page,kind,{key,collapsed:collapsed.has(key)}):!lpBookAllowed(kind)?`<p>${esc(lpBookLockedCopy(kind))}</p>`:kind==='worked'?`<details data-book-solution="${esc(key)}" ${collapsed.has(key)?'':'open'}><summary>${mxM(q.stem)}</summary><div class="mx-stepm">${mvAnswer(q,kind)}${lpBookPartAnswers(q,kind)||(lpBookQuestion(q,kind)?(q.workedSolution?mdStructured(q.workedSolution):lpBookWorking(lpBookQuestion(q,kind))):'No solution authored.')}</div></details>`:(mvAnswer(q,kind)+(lpBookPartAnswers(q,kind)||mxM(lpBookQuestion(q,kind)||'No answer authored.')))}${!document.documentElement.dataset.export&&document.body.classList.contains('present')&&q.teacherNote?`<p>${esc(q.teacherNote)}</p>`:''}</div></article>`;}).join('')}</div></section>`;}).join('')||'<p>No practice answers in this selection.</p>';grAnswerWire(panel);requestAnimationFrame(()=>{mvFitAnswers(panel);});panel.querySelectorAll('[data-book-solution]').forEach(el=>el.ontoggle=()=>{el.open?collapsed.delete(el.dataset.bookSolution):collapsed.add(el.dataset.bookSolution);requestAnimationFrame(fit);});requestAnimationFrame(fit);};
   options();if(saved?.question&&[...question.options].some(o=>o.value===saved.question))question.value=saved.question;draw();practice.onchange=()=>{options();draw();panel.scrollTop=0;};pathway.onchange=()=>{level=pathway.value;options();draw();panel.scrollTop=0;};question.onchange=()=>{draw();panel.scrollTop=0;};
   d.querySelectorAll('[data-book-expand]').forEach(b=>b.onclick=()=>panel.querySelectorAll('[data-book-solution]').forEach(el=>{el.open=b.dataset.bookExpand==='true';el.open?collapsed.delete(el.dataset.bookSolution):collapsed.add(el.dataset.bookSolution);}));
   d.querySelectorAll('[data-book-kind]').forEach((b,i)=>{b.onclick=()=>{kind=b.dataset.bookKind;options();draw();panel.scrollTop=0;};b.onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const buttons=d.querySelectorAll('[data-book-kind]'),next=e.key==='Home'?0:e.key==='End'?1:1-i;buttons[next].click();buttons[next].focus();}};});
@@ -18279,7 +18485,7 @@ function lpBookHub(opener){
   const observer=new ResizeObserver(fit);observer.observe(panel);d.querySelector('[data-book-close]').onclick=()=>d.close();d.onclose=()=>{LP_BOOK.hubStates[context]={practice:practice.value==='all'?'all':groups[+practice.value]?.key,level,kind,question:question.value,collapsed:[...collapsed],scroll:panel.scrollTop};observer.disconnect();document.removeEventListener('book-session',update);d.remove();for(const[el,top]of lessonScroll)if(el.isConnected)el.scrollTop=top;window.scrollTo(...windowScroll);if(opener?.isConnected&&!opener.hidden&&!opener.disabled)opener.focus({preventScroll:true});else document.querySelector('.lp-title')?.focus({preventScroll:true});};d.onkeydown=e=>e.stopPropagation();updateAdaptive=mdAdaptiveHub(d);d.showModal();fit();document.fonts.ready.then(()=>{if(d.isConnected)fit();});panel.scrollTop=saved?.scroll||0;d.querySelector('[data-book-close]').focus();
 }
 function lpBookComplete(){const c=LESSON.meta.completion||{},next=c.nextLesson,url=safeUrl(next?.url,'frame'),image=lpImage(lpRoleImage('completion',c.image));return `<div class="lp-book-outro"><div class="lp-completion-hero${image?'':' lp-no-image'}"><div><p class="lp-completion-kicker">Well done</p><h1 id="lpTitle" class="lp-title" tabindex="-1">Lesson complete</h1><p>${mxM(c.description||'You have completed this lesson. Keep building fluency through practice.')}</p><ul class="lp-completion-indicators">${LESSON.slides.length>1?`<li>${LESSON.slides.length} skills in this lesson</li>`:''}<li>Worked examples available to revisit</li><li>Practice questions available to revisit</li></ul></div>${image}</div>${c.practised?.length?`<section><h2>What you practised</h2><ul>${c.practised.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></section>`:''}<div class="lp-book-tools"><button class="lp-primary" data-lp-front="${esc(lpFrontPages()[0]?.id||'')}">Review lesson →</button>${lpBookAnswerButton()}</div>${url?`<a class="lp-next-lesson" href="${esc(url)}"><span>Next lesson</span><b>${esc(next.title||'Continue learning')} →</b></a>`:''}</div>`;}
-function lpBookStudentData(lesson){const out=JSON.parse(JSON.stringify(lesson));for(const p of out.meta.frontMatter||[])p.image=lpRoleImage(p.kind,p.image,out.meta);if(out.meta.artworkPack){out.meta.completion=out.meta.completion||{};out.meta.completion.image=lpRoleImage('completion',out.meta.completion.image,out.meta);}for(const s of out.slides)for(const a of s.activities||[])for(const q of a.questions||[]){delete q.teacherNote;delete q.generation;if(!out.meta.answerPolicy)continue;for(const [kind,key]of [['final','answer'],['worked','workedAnswer']]){const p=q.graphResponse&&out.meta.answerPolicy.groups?.[q.releaseGroup]?.[kind]||out.meta.answerPolicy[kind]||'autonomous';if(p==='hidden'||p==='teacher'&&(out.meta.answerPolicy.fallback?.[kind]||'hidden')==='hidden'){delete q[key];if(kind==='worked')mdStripWorked(q);for(const part of q.parts||[])if(part&&typeof part==='object')delete part[kind==='final'?'finalAnswer':'workedAnswer'];}}}return grStudentData(out);}
+function lpBookStudentData(lesson){const out=JSON.parse(JSON.stringify(lesson));for(const p of out.meta.frontMatter||[])p.image=lpRoleImage(p.kind,p.image,out.meta);if(out.meta.artworkPack){out.meta.completion=out.meta.completion||{};out.meta.completion.image=lpRoleImage('completion',out.meta.completion.image,out.meta);}for(const s of out.slides)for(const a of s.activities||[])for(const q of a.questions||[]){delete q.teacherNote;delete q.generation;if(!out.meta.answerPolicy)continue;for(const [kind,key]of [['final','answer'],['worked','workedAnswer']]){const p=q.graphResponse&&out.meta.answerPolicy.groups?.[q.releaseGroup]?.[kind]||out.meta.answerPolicy[kind]||'autonomous';if(p==='hidden'||p==='teacher'&&(out.meta.answerPolicy.fallback?.[kind]||'hidden')==='hidden'){delete q[key];if(kind==='worked')mdStripWorked(q);for(const part of q.parts||[])if(part&&typeof part==='object')delete part[kind==='final'?'finalAnswer':'workedAnswer'];}}}return grStudentData(MathVisuals.stripAnswers(out));}
 function lpBookWire(){
   if(!lpTextbook())return;if(LP_STATE.end)LP_BOOK.completed=true;else if(!LP_STATE.front){const a=lpCurrent(LESSON.slides[cur]),ex=lpPracticeCurrent(LESSON.slides[cur],a)?.ex;if(a?.practiceCollectionId&&ex)LP_BOOK.recent={key:lpBookKey(a,ex),level:lpBookLevel(a,ex)};}
   document.querySelectorAll('[data-book-page]').forEach(b=>b.onclick=()=>{const skill=+b.dataset.bookSkill,a=LESSON.slides[skill].activities.find(a=>a.id===b.dataset.bookActivity);(LP_STATE.practice=LP_STATE.practice||{})[a.id]=b.dataset.bookPage;lpNavigate(skill,a.id);});
@@ -18468,7 +18674,8 @@ function lpInspector(s,i){
     if(item&&key==='notes') content+=`<div class="isec">${inMath('Heading',path+(item.title!=null&&item.term==null?'.title':'.term'),item.term||item.title||'')}${inMath('Text (include attribution)',path+'.body',item.body,true)}${['attribution','source','citation'].filter(f=>typeof item[f]==='string').map(f=>inT(f[0].toUpperCase()+f.slice(1),path+'.'+f,item[f])).join('')}</div>`;
     if(item&&key==='questions'){
       content+=`<div class="isec">${inMath('Question prompt',path+'.stem',item.stem,true)}${inMath('Practice instructions (optional)',ab+'.practiceNote',a.practiceNote||'',true)}<label><input type="checkbox" data-lp-stack="${path}"${item.stack?' checked':''}> Stack subparts</label>
-        <ol class="lp-parts-editor">${(item.parts||[]).map((p,j)=>`<li><label for="lp-part-${j}" data-lp-partselect="${j}">(${String.fromCharCode(97+j)})</label>${typeof p==='string'?`<textarea id="lp-part-${j}" class="ii" rows="2" data-bind="${path}.parts.${j}" aria-label="Part ${String.fromCharCode(97+j)} text">${esc(p)}</textarea>`:`<div class="lp-part-fields">${inMath('Part prompt',path+'.parts.'+j+'.prompt',lpBookPartText(p),true)}${inMath('Part final answer',path+'.parts.'+j+'.finalAnswer',p.finalAnswer||'',true)}${mdSolutionForm(path+'.parts.'+j,p,'Part worked solution')}</div>`}<span class="lp-part-controls">${order('parts',j,item.parts.length)}<button type="button" class="ibtn-x" data-lp-partduplicate="${j}" aria-label="Duplicate part ${String.fromCharCode(97+j)}">⧉</button></span></li>`).join('')}</ol><button class="ibtn-add" data-lp-partadd>Add subpart</button></div>`;
+        <ol class="lp-parts-editor">${(item.parts||[]).map((p,j)=>`<li><label for="lp-part-${j}" data-lp-partselect="${j}">(${String.fromCharCode(97+j)})</label>${typeof p==='string'?`<textarea id="lp-part-${j}" class="ii" rows="2" data-bind="${path}.parts.${j}" aria-label="Part ${String.fromCharCode(97+j)} text">${esc(p)}</textarea>`:`<div class="lp-part-fields">${inMath('Part prompt',path+'.parts.'+j+'.prompt',lpBookPartText(p),true)}${inMath('Part final answer',path+'.parts.'+j+'.finalAnswer',p.finalAnswer||'',true)}${mdSolutionForm(path+'.parts.'+j,p,'Part worked solution')}${mvReferenceForm(p,path+'.parts.'+j)}${mvModelForm(p,path+'.parts.'+j)}</div>`}<span class="lp-part-controls">${order('parts',j,item.parts.length)}<button type="button" class="ibtn-x" data-lp-partduplicate="${j}" aria-label="Duplicate part ${String.fromCharCode(97+j)}">⧉</button></span></li>`).join('')}</ol><button class="ibtn-add" data-lp-partadd>Add subpart</button></div>`;
+      content+=mvReferenceForm(item,path)+mvModelForm(item,path);
       content+=item.table?`<div class="isec"><div class="isec-h">Question table</div><p class="ihint">Filled cells are instructional values. Empty cells are student answer blanks; editing this table never edits stored student responses.</p>${mxTableForm(path+'.table',item.table,null)}<button class="ibtn-add" data-lp-table="remove">Remove question table</button></div>`:`<button class="ibtn-add" data-lp-table="add">Add question table</button>`;
     }
     if(item)content=mxKeys()+content;
@@ -18480,6 +18687,7 @@ function lpInspector(s,i){
     <label for="lpActivityType">Activity to add</label><select class="ii" id="lpActivityType"><option value="notes">Explanation / source</option><option value="introduction">Quick introduction</option><option value="worked">Worked examples</option><option value="questions">Practice</option><option value="video"${hasVideo?' disabled':''}>Optional skill video</option></select><button class="ibtn-add" data-lp-add>Add activity</button></div>
     ${a?`<div class="isec">${inT('Activity title',ab+'.title',a.title)}${inA('Introduction',ab+'.lede',a.lede||'')}<button class="ibtn-add" data-lp-reorder="-1"${ai===0?' disabled':''}>Move activity earlier</button><button class="ibtn-add" data-lp-reorder="1"${ai===s.activities.length-1?' disabled':''}>Move activity later</button><button class="ibtn-add" data-lp-remove${s.activities.length<2?' disabled':''}>Remove activity</button></div>
     ${a.introduction?`<details class="isec"><summary>Retained detailed notes — not shown on the quick introduction</summary>${content}</details>`:a.optionalVideo?`<p class="ihint">One optional video per skill. Add or clear its URL above. A missing video is omitted from the learner view; the author retains this setup slot.</p><button class="ibtn-add" data-lp-vclear>Clear video URL</button>`:`<div class="isec"><div class="isec-h">Edit content</div>${[['notes','Explanation / source'],['worked','Worked examples'],['questions','Questions']].map(([v,l])=>row(l,0,part===v,`data-lp-part="${v}"`)).join('')}</div>${a.examples?.length?'<button class="ibtn-add" data-lp-organise>Organise existing examples into editable groups</button>':''}${content}`}`:''}`;
+  ins.insertAdjacentHTML('beforeend',mvLibraryForm(s,i));
   if(a)ins.insertAdjacentHTML('beforeend',lpCollectionForm(s,a,base));
   ins.insertAdjacentHTML('afterbegin',`<div class="isec">${lpFrontPages().map(p=>`<button data-front-edit="${esc(p.id)}">Edit ${esc(p.kind)}</button>`).join('')}<button data-front-add="overview">Add lesson overview</button><button data-front-add="outcomes">Add learning outcomes</button></div>`);
   if(a?.introduction){const n=a.introduction;ins.insertAdjacentHTML('beforeend',`<div class="isec"><h3>Quick introduction</h3>${inT('Introduction heading',ab+'.introduction.title',n.title||s.title)}${inA('Why it matters',ab+'.introduction.why',n.why||'')}${inA('Key idea',ab+'.introduction.keyIdea',n.keyIdea||'')}${inA('Illustrative expression / example',ab+'.introduction.illustration',n.illustration||'')}</div>${lpListForm('Method item',ab+'.introduction.method',n.method)}`);}
@@ -21055,7 +21263,8 @@ function figInlineSolve(fig){
      points, not the box, so a mismatch means this figure is not what we think it is: bail before mutating. */
   if(hits.length!==cl.length||cos.length!==cl.length) return false;
   const old=stage.querySelector('.tp-fig-svg'); if(!old) return false;
-  old.outerHTML=st.svg;                                            // the svg is pure paint — no listeners hang off it
+  const description=old.getAttribute('aria-describedby');
+  old.outerHTML=description?st.svg.replace('<svg ','<svg aria-describedby="'+esc(description)+'" '):st.svg;
   cl.forEach((c,i)=>{ hits[i].style.left=figPc(c.px/box.W*100); hits[i].style.top=figPc(c.py/box.H*100);
                       cos[i].style.left=figPc(c.box.x/box.W*100); cos[i].style.top=figPc(c.box.y/box.H*100); });
   fig.dataset.figBox=key;
@@ -22024,51 +22233,7 @@ function packOutro(s,i){
 }
 
 /* ---------- interactivity for the typed-answer + focus-modal types ---------- */
-function wirePackTyped(){
-  const slide=$('#slide'); const root=slide.querySelector('.tp-slide'); if(!root) return;
-  const present=document.body.classList.contains('present');
-  const type=root.dataset.tpType||'';
-  const live=root.querySelector('[data-tp-live]');
-  const announce=(m)=>{ if(live) live.textContent=m; };
-  // review (outro) → restart the lesson from the first slide
-  const rv=root.querySelector('[data-tp-review]'); if(rv) rv.addEventListener('click',()=>go(0));
-  const gated=(type==='sourceAnalysis'||type==='guidedResponse');
-  if(!gated && type!=='outro' && !root.querySelector('[data-tp-block]')) { /* nothing typed here */ }
-  const rt=tpRT();
-  // session answers: restore + persist
-  const tas=[...root.querySelectorAll('textarea[data-tp-field]')];
-  const recomputeDone=()=>{
-    if(!gated) return;
-    const allFilled = tas.length>0 && tas.every(t=>t.value.trim().length>0);
-    root.dataset.tpKc='1';                                   // mark for the present skip-guard
-    if(allFilled) root.dataset.tpDone='1'; else delete root.dataset.tpDone;
-  };
-  tas.forEach(ta=>{ const f=ta.dataset.tpField;
-    if(rt.ans[f]!=null) ta.value=rt.ans[f];                  // restore session value
-    ta.addEventListener('input',()=>{ rt.ans[f]=ta.value; recomputeDone(); });
-  });
-  // reveal buttons (per-task / per-paragraph / short submit) — gate on a non-empty attempt in the same block
-  root.querySelectorAll('[data-tp-reveal]').forEach(btn=>{
-    const block=btn.closest('[data-tp-block]'); if(!block) return;
-    const ta=block.querySelector('textarea[data-tp-field]');
-    const model=block.querySelector('[data-tp-model]');
-    const fid=btn.dataset.tpReveal;
-    const doReveal=(fromRestore)=>{
-      if(model) model.classList.add('tp-shown');
-      btn.setAttribute('aria-expanded','true'); btn.disabled=true; btn.textContent=btn.dataset.tpDonelabel||'Model answer shown';
-      if(btn.hasAttribute('data-tp-submit')){ if(ta) ta.setAttribute('readonly',''); const hn=block.querySelector('[data-tp-hintnote]'); if(hn) hn.style.display='none'; }
-      rt.shown[fid]=true;
-      if(!fromRestore) announce('Model '+(btn.dataset.tpDonelabel&&/paragraph/i.test(btn.dataset.tpDonelabel)?'paragraph':'answer')+' for '+(btn.dataset.tpRevname||'this task')+' revealed.');
-    };
-    if(rt.shown[fid]) doReveal(true);                        // restore revealed state
-    btn.addEventListener('click',()=>{
-      if(btn.disabled) return;
-      if(ta && !ta.value.trim()){ ta.focus(); ta.classList.add('tp-answ-invalid'); announce('Write your response to '+(btn.dataset.tpRevname||'this task')+' before revealing the model answer.'); return; }
-      if(ta) ta.classList.remove('tp-answ-invalid');
-      doReveal(false);
-    });
-  });
-  recomputeDone();
+function wirePackOverlays(root){
   // Focus overlays (reading / image zoom / typed media). Generalised so a slide can carry MORE THAN ONE
   // overlay: each open control may reference its overlay by id via data-tp-focus-open="<overlayId>";
   // a bare data-tp-focus-open (no value) falls back to the slide's single [data-tp-overlay] (back-compat
@@ -22150,6 +22315,53 @@ function wirePackTyped(){
       ov.addEventListener('click',(e)=>{ if(e.target===ov) closeOv(ov); });
     });
   }
+}
+function wirePackTyped(){
+  const slide=$('#slide'); const root=slide.querySelector('.tp-slide'); if(!root) return;
+  const present=document.body.classList.contains('present');
+  const type=root.dataset.tpType||'';
+  const live=root.querySelector('[data-tp-live]');
+  const announce=(m)=>{ if(live) live.textContent=m; };
+  // review (outro) → restart the lesson from the first slide
+  const rv=root.querySelector('[data-tp-review]'); if(rv) rv.addEventListener('click',()=>go(0));
+  const gated=(type==='sourceAnalysis'||type==='guidedResponse');
+  if(!gated && type!=='outro' && !root.querySelector('[data-tp-block]')) { /* nothing typed here */ }
+  const rt=tpRT();
+  // session answers: restore + persist
+  const tas=[...root.querySelectorAll('textarea[data-tp-field]')];
+  const recomputeDone=()=>{
+    if(!gated) return;
+    const allFilled = tas.length>0 && tas.every(t=>t.value.trim().length>0);
+    root.dataset.tpKc='1';                                   // mark for the present skip-guard
+    if(allFilled) root.dataset.tpDone='1'; else delete root.dataset.tpDone;
+  };
+  tas.forEach(ta=>{ const f=ta.dataset.tpField;
+    if(rt.ans[f]!=null) ta.value=rt.ans[f];                  // restore session value
+    ta.addEventListener('input',()=>{ rt.ans[f]=ta.value; recomputeDone(); });
+  });
+  // reveal buttons (per-task / per-paragraph / short submit) — gate on a non-empty attempt in the same block
+  root.querySelectorAll('[data-tp-reveal]').forEach(btn=>{
+    const block=btn.closest('[data-tp-block]'); if(!block) return;
+    const ta=block.querySelector('textarea[data-tp-field]');
+    const model=block.querySelector('[data-tp-model]');
+    const fid=btn.dataset.tpReveal;
+    const doReveal=(fromRestore)=>{
+      if(model) model.classList.add('tp-shown');
+      btn.setAttribute('aria-expanded','true'); btn.disabled=true; btn.textContent=btn.dataset.tpDonelabel||'Model answer shown';
+      if(btn.hasAttribute('data-tp-submit')){ if(ta) ta.setAttribute('readonly',''); const hn=block.querySelector('[data-tp-hintnote]'); if(hn) hn.style.display='none'; }
+      rt.shown[fid]=true;
+      if(!fromRestore) announce('Model '+(btn.dataset.tpDonelabel&&/paragraph/i.test(btn.dataset.tpDonelabel)?'paragraph':'answer')+' for '+(btn.dataset.tpRevname||'this task')+' revealed.');
+    };
+    if(rt.shown[fid]) doReveal(true);                        // restore revealed state
+    btn.addEventListener('click',()=>{
+      if(btn.disabled) return;
+      if(ta && !ta.value.trim()){ ta.focus(); ta.classList.add('tp-answ-invalid'); announce('Write your response to '+(btn.dataset.tpRevname||'this task')+' before revealing the model answer.'); return; }
+      if(ta) ta.classList.remove('tp-answ-invalid');
+      doReveal(false);
+    });
+  });
+  recomputeDone();
+  wirePackOverlays(root.closest('.mx')||root);
   // microhistory PER-QUESTION focus modal: MOVE the focused card into the large-print modal slot; the
   // card keeps its wired textarea + reveal + model, so the model stays gated (never shown before reveal).
   // One modal per slide (emitted only for microhistory source/guided); Esc / close / backdrop dismiss and
@@ -22649,7 +22861,7 @@ $('#exportBtn').onclick=async ()=>{
       }
       alert('Cannot publish: '+e.message); return;
     }
-    let res;try{res=await inlineRemoteAssets(lpBookStudentData(LESSON));}catch(e){alert('Cannot publish: '+e.message);return;}   // deep clone; in-memory LESSON untouched
+    let res;try{res=await inlineRemoteAssets(await mvEmbedAssets(lpBookStudentData(LESSON)));}catch(e){alert('Cannot publish: '+e.message);return;}   // deep clone; in-memory LESSON untouched
     document.getElementById('lesson-data').textContent=JSON.stringify(res.lesson,null,2).replace(/</g,'\\u003c');
     const clone=document.documentElement.cloneNode(true);
     clone.querySelector('#jsonArea')?.replaceChildren();
