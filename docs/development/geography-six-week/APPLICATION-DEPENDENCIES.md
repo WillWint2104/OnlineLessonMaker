@@ -2,15 +2,15 @@
 
 Provisional requirements across 33 periods; no implementation authority. **Already available** means identifiable behaviour, not verified fitness for all new lessons. **Requiring adaptation** means plausible reuse needing data/configuration/accessibility/authoring/export scope. **New reusable component** means no accepted generic implementation was identified; it is an investigation candidate. **Deferred** grants no build scope. No committed vendor or new data framework is selected.
 
-Counts measure direct lesson references, not learning value or development effort. Common C01/C02 are counted once per lesson. Optional references must not become essential requirements automatically. C11 is a cross-unit design proposal, C12 has no essential lesson requirement.
+Counts measure direct lesson references, not learning value or development effort. Common C01/C02 are counted once per lesson. Interaction-candidate references must not become essential requirements automatically. These counts describe minimum curriculum delivery, not the feature baseline of the intended richer professional online experience. A map can be substitutable for minimum teaching yet prove essential to the intended online investigation after pilot evaluation. C11 is a cross-unit design proposal, C12 has no essential lesson requirement.
 
-| Capability | Classification | Need / optional lesson count | Priority | Existing evidence and limits | Research responsibility |
+| Capability | Classification | Minimum-delivery need / interaction-candidate count | Priority | Existing evidence and limits | Research responsibility |
 | --- | --- | --- | --- | --- | --- |
 | C01 — Explanations, notes and model examples | already available | 33 / 0 | P0 | GeoLearn text/imageText and guidedResponse in examples/geolearn-sample.json. Audit authoring and release policy before new lesson acceptance. | GEO-001 |
 | C02 — Responses, understanding checks and controlled learner model release | already available | 33 / 0 | P0 | knowledgeCheck/sourceAnalysis/guidedResponse exist. Reuse host response identity and release rules; no new store. | GEO-001 |
 | C03 — Geographic evidence and source investigation | requiring adaptation | 28 / 1 | P0 | Existing ev* single-source image viewer/sourceMetadata and sourceAnalysis. Audit geographic source bundles and accessible alternatives; no duplicate viewer. | GEO-EVIDENCE-001 |
 | C04 — Question-owned maps and thematic layers | new reusable component | 0 / 22 | P1 conditional | Infographic/map links and a historical map bundle are not an accepted generic map widget. Compare static maps with bounded interactive needs. | GEO-MAP-001 |
-| C05 — Graphs, statistics and accessible tables | requiring adaptation | 29 / 0 | P0 | Existing infographic and hard-coded chart interactives; common data/provenance/units/table configuration and authoring/export need design. | GEO-EVIDENCE-001 |
+| C05 — Graphs, statistics and accessible tables | requiring adaptation | 29 / 0 (12 Year 9 + 17 Year 10) | P0 | Existing infographic and hard-coded chart interactives; common data/provenance/units/table configuration and authoring/export need design. | GEO-EVIDENCE-001 |
 | C06 — Population-pyramid reading and comparison | requiring adaptation | 3 / 0 | P1 | interactives/indigenous-population-pyramid.html labels approximate 2016 Census values. Audit/reconfigure; not current generic data or a construction tool. | GEO-EVIDENCE-001 |
 | C07 — Migration-flow visualisation | new reusable component | 0 / 3 | P1 conditional | Existing refugee charts are not a reusable origin-destination map. Test static flow maps plus tables before proposing interaction. | GEO-MAP-001 with Evidence data audit |
 | C08 — Spatial-change and imagery comparison | new reusable component | 0 / 1 | P2 optional | Single-source inspection exists; georeferenced comparison is not established. Dated side-by-side images can meet initial teaching needs. | GEO-MAP-001 with Evidence source audit |
@@ -21,7 +21,7 @@ Counts measure direct lesson references, not learning value or development effor
 
 ## Exact lesson dependencies
 
-| Capability | Directly needed lesson IDs | Optional enhancement lesson IDs |
+| Capability | Minimum-delivery dependency lesson IDs | Interactive product-design candidate lesson IDs |
 | --- | --- | --- |
 | C01 | Y9-01, Y9-02, Y9-03, Y9-04, Y9-05, Y9-06, Y9-07, Y9-08, Y9-09, Y9-10, Y9-11, Y9-12, Y9-13, Y9-14, Y9-15, Y10-01, Y10-02, Y10-03, Y10-04, Y10-05, Y10-06, Y10-07, Y10-08, Y10-09, Y10-10, Y10-11, Y10-12, Y10-13, Y10-14, Y10-15, Y10-16, Y10-17, Y10-18 | none |
 | C02 | Y9-01, Y9-02, Y9-03, Y9-04, Y9-05, Y9-06, Y9-07, Y9-08, Y9-09, Y9-10, Y9-11, Y9-12, Y9-13, Y9-14, Y9-15, Y10-01, Y10-02, Y10-03, Y10-04, Y10-05, Y10-06, Y10-07, Y10-08, Y10-09, Y10-10, Y10-11, Y10-12, Y10-13, Y10-14, Y10-15, Y10-16, Y10-17, Y10-18 | none |
@@ -38,7 +38,7 @@ Counts measure direct lesson references, not learning value or development effor
 
 ## Minimum viable library and priorities
 
-Start with C01/C02 and the smallest C03/C05/C10 adaptations justified by the two pilots. They support most teaching through verified static maps, charts, tables, images and written responses. C06 is a bounded population-reading adaptation, not a simulator. C09 is essential for the three designated full digital construction lessons: Y9-14, Y10-03, Y10-05. Separate map/graph construction, feedback and marking needs before building it. Static evidence does not satisfy a construction objective.
+Start with C01/C02 and the smallest C03/C05/C10 adaptations justified by the two pilots. They can support minimum curriculum delivery through static maps, charts, tables, images and written responses only after source accuracy, dates/units, rights and accessibility have been verified and the lesson has been authored and checked. No such lesson-level readiness is certified by this plan. C06 is a bounded population-reading adaptation, not a simulator. C09 is essential for the three designated full digital construction lessons: Y9-14, Y10-03, Y10-05. Separate map/graph construction, feedback and marking needs before building it. Static evidence does not satisfy a construction objective.
 
 Research C04/C07 against the importance and breadth of actual spatial tasks. Compare static routes and bounded shared map/flow scope; choose no architecture here. C08 can wait while dated paired images meet comparison objectives. C11 implementation and C12 remain deferred. Do not build one app per lesson or delay source-based lesson production for a general map engine. Priorities are provisional until whole-scope coverage review and pilot review establish essential versus optional interactions.
 
@@ -71,3 +71,9 @@ Preserve host response identity, unknown authored fields, model-release rules an
 | Map, pyramid and graph construction | Y9-14, Y10-03, Y10-05 | C09: construct a representation from bounded givens and critique it; no unrestricted GIS or automatic-essay marking | Paper/base-map/grid route; complete online construction requires approved digital input and feedback design |
 
 The two pilots should explicitly compare an interactive investigation with its static alternative: Y9-07 tests whether linked flow/table selection improves reasoning; Y10-02 tests whether a bounded indicator/scale comparison improves understanding of national averages. These are design hypotheses to review, not approved controls or implementation. Judge them by the quality of learner explanations, accessibility and state/answer-policy behaviour, not animation or novelty.
+
+## Product-quality decision, separate from minimum coverage
+
+C04 remains 0 minimum-delivery dependencies and 22 interactive candidates. This means static evidence can cover those curriculum tasks; it does not settle the intended online product. The pilots must test selecting origin/destination, comparing map regions, switching a displayed indicator and linking a map selection to statistical evidence. Use the same sources/questions for a static comparison so the interaction is judged by spatial reasoning, evidence selection, quality of explanations, independence, accessibility and state clarity. Do not reduce all spatial/source/construction families to ordinary multiple-choice or text boxes.
+
+For each interaction, recommend adopt/adapt/defer and whether it is essential to the intended online learner journey, with observed or explicitly proposed evidence and limitations. Do not automatically promote every map candidate. Any changed build priority or essential subset must be reconciled across the lesson matrices before separate implementation approval. [The pilot checkpoint](PILOT-DESIGN-CHECKPOINT.md) defines the required depth; the coverage matrices remain planning artefacts, not completed lessons.

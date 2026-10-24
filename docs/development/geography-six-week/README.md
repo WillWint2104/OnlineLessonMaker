@@ -9,6 +9,7 @@ The requirement is six teaching weeks for each course. **15 one-hour Year 9 peri
 - [Application dependency matrix](APPLICATION-DEPENDENCIES.md)
 - [Question-type catalogue and reusable application families](QUESTION-CATALOGUE.md)
 - [Isolated classroom-consumer design proposal](CLASSROOM-CONSUMER-PROPOSAL.md)
+- [Next pilot-design checkpoint and interactive/static comparison](PILOT-DESIGN-CHECKPOINT.md)
 
 Each coverage matrix has three linked tables covering inquiry/intentions/outcomes/knowledge/skills, teaching/evidence/applications/questions/checks, and independent/teacher-led/no-device/relief requirements. Notes, sources, models and relief packs are requirements to author, not completed resources.
 
@@ -88,3 +89,9 @@ One GEOGRAPHY-STAGE-A:A checkpoint presents both reviewed six-week matrices, the
 Decisions still required: starting points and actual period counts; adopted syllabus and exact outcome mapping; assessment/fieldwork obligations; case/local-area choices and source rights; curriculum/cultural appropriateness; essential versus optional interactions; full digital construction scope; and whether a future classroom consumer merits separate architecture work. Missing original resources are not a blocker. Closing the Gap is one Year 10 sequence, not the architecture's sole anchor. Its regional-data suitability requirement and prohibition on treating SEIFA as direct Indigenous wellbeing remain in force.
 
 This amendment grants **no Stage A launch**. Setup approval/merge, separate explicit launch, refreshed ownership/capacity and exclusive worktrees remain required. Mathematics still counts toward three total builders; do not activate three Geography researchers alongside it. Two design-review projects remain the limit. No merge, deployment or next milestone is authorised.
+
+## Review acceptance and production status
+
+The user has accepted the current topic breadth and 15/18-period coverage as the provisional Stage A foundation. Do not expand the topics. Prioritise depth in Y9-07 and Y10-02 after setup merge and separate research launch; GEO-001 and GEO-EVIDENCE-001 are the preferred initial pair within capacity, informing Map scope. This does not populate approvedLaunches or constitute a completed Stage A checkpoint.
+
+The matrices now distinguish two axes: 30 lessons have a CURRENT-functionality minimum-delivery route after source/content checks; Y9-14/Y10-03/Y10-05 require NEW C09 capability for full digital construction. The intended richer routes list ADAPT dependencies separately, including on the construction lessons. All 33 remain HOLD: no lesson-level authored-content, source/rights/accessibility and answer QA receipt is supplied by this plan. Repeated teacher-led/relief rows specify delivery requirements; the next pilot checkpoint must demonstrate actual instructional designs and feedback.
