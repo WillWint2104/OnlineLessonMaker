@@ -11955,6 +11955,16 @@ function figFocusEnter(ov){
   const src=ov.closest('.tp-slide');
   if(src){const style=getComputedStyle(src);for(const token of ['--primary','--on-surface','--on-surface-variant','--surface','--outline','--outline-variant','--graph-axis','--graph-grid','--graph-curve']){const value=style.getPropertyValue(token);value?host.style.setProperty(token,value):host.style.removeProperty(token);}}
   FIGFOCUS={ov:ov, parent:ov.parentNode, next:ov.nextSibling};
+  FIGFOCUS.keydown=e=>{
+    if(e.key!=='Tab')return;
+    const items=[...ov.querySelectorAll('button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')].filter(el=>el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden');
+    if(!items.length)return;
+    const at=items.indexOf(document.activeElement);
+    if(e.shiftKey&&at<=0){e.preventDefault();items.at(-1).focus();}
+    else if(!e.shiftKey&&(at<0||at===items.length-1)){e.preventDefault();items[0].focus();}
+    e.stopPropagation();
+  };
+  ov.addEventListener('keydown',FIGFOCUS.keydown);
   host.setAttribute('data-tp-theme',(src&&src.getAttribute('data-tp-theme'))||'');
   ov.style.top=''; ov.style.height='';                                     // drop any parked band — the workspace is the surface now
   host.appendChild(ov);
@@ -11974,6 +11984,7 @@ function figFocusEnter(ov){
 function figFocusExit(){
   if(!FIGFOCUS) return;
   const f=FIGFOCUS; FIGFOCUS=null;
+  if(f.keydown)f.ov.removeEventListener('keydown',f.keydown);
   if(f.rs) window.removeEventListener('resize',f.rs);
   if(f.parent) f.parent.insertBefore(f.ov,f.next);                         // exactly where it came from
   const root=document.getElementById('figfocus');

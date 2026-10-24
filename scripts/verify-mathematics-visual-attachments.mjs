@@ -47,6 +47,8 @@ async function family(p,c,width){
     report.expandedProbe=await p.evaluate(()=>({root:document.getElementById('figfocus').outerHTML.slice(0,2600),tokens:[...document.querySelectorAll('#ffSlide,.mx-figskin')].map(e=>({cls:e.className,inline:e.getAttribute('style'),primary:getComputedStyle(e).getPropertyValue('--primary')}))}));report.expandedEdges=edges;
     // Graphs use other curve primitives; the geometry fixtures must have actual painted edge paths.
     if(sk.visuals[0].figure.figure==='geometry')check('Expanded painted geometry '+width+' '+c.id,edges.length>0&&edges.every(e=>e.stroke!=='none'&&e.box>0));
+    await p.locator('#figfocus button:visible').last().focus();await p.keyboard.press('Tab');check('Expanded Tab stays contained '+width+' '+c.id,await p.locator('#figfocus').evaluate(e=>e.contains(document.activeElement)));
+    await p.locator('#figfocus button:visible').first().focus();await p.keyboard.press('Shift+Tab');check('Expanded Shift+Tab stays contained '+width+' '+c.id,await p.locator('#figfocus').evaluate(e=>e.contains(document.activeElement)));
     await shot(p,c.id,'expanded',width);await p.keyboard.press('Escape');check('Expansion returns focus '+width+' '+c.id,await expand.evaluate(e=>e===document.activeElement));
   }
   await p.locator('[data-book-hub]').click();await p.locator('[data-book-kind="final"]').click();await shot(p,c.id,'final',width);check('Final evidence in existing Hub '+width+' '+c.id,await p.locator('.lp-answer-body .mv-evidence').count()>0);await p.locator('[data-book-kind="worked"]').click();await shot(p,c.id,'worked',width);await p.locator('[data-book-close]').click();
