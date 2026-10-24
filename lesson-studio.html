@@ -548,6 +548,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .lp-answer-hub .mv-evidence .tp-fig-stage{flex:1;min-height:0;}
 .lp-answer-hub .mv-evidence .tp-fig-svg{width:100%;height:100%;}
 .lp-answer-hub .mv-evidence .tp-fig-ident{display:none;}
+.lp-answer-hub .mv-evidence .tp-fig-expand[hidden]{display:none!important;}
 .mx .mx-item:has(.mv-evidence){align-items:flex-start;}
 .mv-description,.mv-caption{font:400 16px/1.5 'Hanken Grotesk',sans-serif!important;margin:8px 0;color:inherit;}
 .mv-error{color:#9e2929;white-space:pre-wrap;}
@@ -16044,6 +16045,7 @@ function mxFitTables(root){
     wrap.classList.toggle('mx-tbl-compact',compact);
     const scrolls=(compact?min:nat)>avail+1;
     if(scrolls) wrap.setAttribute('data-mx-tblscroll','1'); else wrap.removeAttribute('data-mx-tblscroll');
+    if(scrolls){wrap.tabIndex=0;wrap.setAttribute('role','region');if(!wrap.hasAttribute('aria-label'))wrap.setAttribute('aria-label','Data table; scroll horizontally if needed');}
   });
 }
 function mxNavLabel(s){ return (s&&(s.navLabel||s.title||s.heading))||TYPELAB[s&&s.type]||'Page'; }
@@ -16357,6 +16359,7 @@ let MV_RENDER_ID=0;
 function mvVisual(v,key,body,readOnly=false){
   const id='mv-description-'+(++MV_RENDER_ID),description=String(v.description||''),caption=String(v.caption||'');
   let html=body??mxPart(v,key);
+  if(v.kind==='table'&&!html.includes('role="region"'))html=html.replace('<div class="mx-tblwrap"','<div class="mx-tblwrap" tabindex="0" role="region" aria-label="Data table; scroll horizontally if needed"');
   html=html.replace(/loading="lazy"/g,'loading="eager"');
   // Model evidence is inline in the existing modal; avoid an unwired nested expansion control.
   if(readOnly)html=html.replace(/<button class="tp-fig-expand"/g,'<button hidden disabled class="tp-fig-expand"');
@@ -16382,6 +16385,11 @@ function mvAnswer(owner,kind,skill=mvSkill(owner)){
   }).join('');
 }
 function mvFitAnswers(panel){for(const figure of panel.querySelectorAll('.mv-evidence .tp-fig'))figInlineSolve(figure);}
+function mvHubTheme(dialog){
+  const source=document.querySelector('#slide .mx');if(!source)return;
+  const style=getComputedStyle(source);
+  for(const property of style)if(property.startsWith('--mx-'))dialog.style.setProperty(property,style.getPropertyValue(property));
+}
 function mvReferenceForm(owner,path,skill=LESSON.slides[cur]){
   const defs=Array.isArray(skill.visuals)?skill.visuals:[],selected=Array.isArray(owner.visualRefs)?owner.visualRefs:[];
   return `<details class="isec mv-author"><summary>Required question visuals</summary><p>Shared skill givens. Displayed after the prompt, before subparts and response.</p>${defs.map(v=>`<label><input type="checkbox" data-mv-select="${esc(path)}" data-mv-id="${esc(v.id)}" ${selected.includes(v.id)?'checked':''}> ${esc(v.label||v.id)} · ${esc(v.kind)}</label>`).join('')||'<p>No shared visuals yet. Add one below.</p>'}${selected.filter(id=>!defs.some(v=>v.id===id)).map(id=>`<p class="mv-error">Missing visual ${esc(id)} <button type="button" data-mv-unref="${esc(path)}" data-mv-id="${esc(id)}">Remove broken reference</button></p>`).join('')}</details>`;
@@ -16409,7 +16417,8 @@ async function mvEmbedAssets(out){
   const manifest=[];
   for(const [si,skill]of (out.slides||[]).entries())for(const v of skill.visuals||[])if(v.kind==='image'){
     const issue=MathVisuals.imageIssue(v.src);if(issue)throw Error('Visual '+v.id+': '+issue);
-    const source=v.src,data=source.startsWith('data:')?source:await fetchDataURI(new URL(source,document.baseURI).href,8000);
+    const source=v.src;let data;
+    try{data=source.startsWith('data:')?source:await fetchDataURI(new URL(source,document.baseURI).href,8000);}catch(error){throw Error('Visual '+v.id+' ('+source+'): '+error.message);}
     const response=await fetch(data),blob=await response.blob();
     if(!['image/png','image/jpeg','image/gif','image/webp','image/avif','image/svg+xml'].includes(blob.type))throw Error('Visual '+v.id+': unsupported image content.');
     if(blob.size>10*1024*1024)throw Error('Visual '+v.id+': image exceeds 10 MiB.');
@@ -16441,7 +16450,7 @@ function mxPartTable(c){
     return `<tr><th scope="row">${mxM(lab)}</th>${cells}</tr>`;
   }).join('');
   if(!head&&!rows) return '<div class="mx-ph">This table has no rows yet.</div>';
-  return `<div class="mx-tblwrap" tabindex="0" role="region" aria-label="Data table; scroll horizontally if needed"><table class="mx-tbl"><tr><th scope="row">${mxM(c.stub||'')}</th>${head}</tr>${rows}</table></div>`;
+  return `<div class="mx-tblwrap"><table class="mx-tbl"><tr><th scope="row">${mxM(c.stub||'')}</th>${head}</tr>${rows}</table></div>`;
 }
 function mxPartPoints(c){
   const items=(Array.isArray(c.items)?c.items:[]).map(it=>{
@@ -18071,7 +18080,7 @@ function mxQuestionList(questions,page,start=0){
             return `<td><input class="mx-cell" type="text" inputmode="text" data-mx-cell="${esc(key)}"
               value="${esc(cells[key]==null?'':String(cells[key]))}"
               aria-label="${esc((r.label||'value')+' when '+key)}"></td>`; }).join('')+'</tr>').join('');
-      tbl=`<div class="mx-tblwrap" tabindex="0" role="region" aria-label="Question table; scroll horizontally if needed" data-mx-table="${esc(qid)}"><table class="mx-tbl">`
+      tbl=`<div class="mx-tblwrap"${q.visualRefs?.length||q.answerVisuals?' tabindex="0" role="region" aria-label="Question table; scroll horizontally if needed"':''} data-mx-table="${esc(qid)}"><table class="mx-tbl">`
         +`<tr><th scope="row">${mxM(table.stub||'')}</th>${head}</tr>${rows}</table></div>`;
     }
     return `<div class="mx-item"><span class="mx-num">${j+1+start}</span><div class="mx-itembd">
@@ -18462,7 +18471,7 @@ function lpTextbookPractice(s,a){
 }
 function lpBookHub(opener){
   if(!grHubAny('final')&&!grHubAny('worked'))return;
-  const d=document.createElement('dialog');d.className='mx-support-dialog lp-answer-hub';d.setAttribute('aria-labelledby','book-hub-title');
+  const d=document.createElement('dialog');d.className='mx-support-dialog lp-answer-hub';d.setAttribute('aria-labelledby','book-hub-title');mvHubTheme(d);
   const groups=LESSON.slides.flatMap(sk=>sk.activities.filter(a=>a.practiceCollectionId).flatMap(a=>lpPracticeMembers(sk,a).map(({ex})=>({a,ex,page:sk.id,skill:sk.title,key:lpBookKey(a,ex)}))));
   const a=lpCurrent(LESSON.slides[cur]),ex=!LP_STATE.end&&a?.practiceCollectionId&&lpPracticeCurrent(LESSON.slides[cur],a)?.ex,recent=LP_BOOK.recent;
   const context=JSON.stringify([LP_STATE.end?'end':a?.id,ex?lpBookKey(a,ex):recent?.key,ex?lpBookLevel(a,ex):recent?.level]),saved=LP_BOOK.hubStates[context];

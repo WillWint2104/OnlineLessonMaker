@@ -16,6 +16,7 @@ let MV_RENDER_ID=0;
 function mvVisual(v,key,body,readOnly=false){
   const id='mv-description-'+(++MV_RENDER_ID),description=String(v.description||''),caption=String(v.caption||'');
   let html=body??mxPart(v,key);
+  if(v.kind==='table'&&!html.includes('role="region"'))html=html.replace('<div class="mx-tblwrap"','<div class="mx-tblwrap" tabindex="0" role="region" aria-label="Data table; scroll horizontally if needed"');
   html=html.replace(/loading="lazy"/g,'loading="eager"');
   // Model evidence is inline in the existing modal; avoid an unwired nested expansion control.
   if(readOnly)html=html.replace(/<button class="tp-fig-expand"/g,'<button hidden disabled class="tp-fig-expand"');
@@ -41,6 +42,11 @@ function mvAnswer(owner,kind,skill=mvSkill(owner)){
   }).join('');
 }
 function mvFitAnswers(panel){for(const figure of panel.querySelectorAll('.mv-evidence .tp-fig'))figInlineSolve(figure);}
+function mvHubTheme(dialog){
+  const source=document.querySelector('#slide .mx');if(!source)return;
+  const style=getComputedStyle(source);
+  for(const property of style)if(property.startsWith('--mx-'))dialog.style.setProperty(property,style.getPropertyValue(property));
+}
 function mvReferenceForm(owner,path,skill=LESSON.slides[cur]){
   const defs=Array.isArray(skill.visuals)?skill.visuals:[],selected=Array.isArray(owner.visualRefs)?owner.visualRefs:[];
   return `<details class="isec mv-author"><summary>Required question visuals</summary><p>Shared skill givens. Displayed after the prompt, before subparts and response.</p>${defs.map(v=>`<label><input type="checkbox" data-mv-select="${esc(path)}" data-mv-id="${esc(v.id)}" ${selected.includes(v.id)?'checked':''}> ${esc(v.label||v.id)} · ${esc(v.kind)}</label>`).join('')||'<p>No shared visuals yet. Add one below.</p>'}${selected.filter(id=>!defs.some(v=>v.id===id)).map(id=>`<p class="mv-error">Missing visual ${esc(id)} <button type="button" data-mv-unref="${esc(path)}" data-mv-id="${esc(id)}">Remove broken reference</button></p>`).join('')}</details>`;
@@ -68,7 +74,8 @@ async function mvEmbedAssets(out){
   const manifest=[];
   for(const [si,skill]of (out.slides||[]).entries())for(const v of skill.visuals||[])if(v.kind==='image'){
     const issue=MathVisuals.imageIssue(v.src);if(issue)throw Error('Visual '+v.id+': '+issue);
-    const source=v.src,data=source.startsWith('data:')?source:await fetchDataURI(new URL(source,document.baseURI).href,8000);
+    const source=v.src;let data;
+    try{data=source.startsWith('data:')?source:await fetchDataURI(new URL(source,document.baseURI).href,8000);}catch(error){throw Error('Visual '+v.id+' ('+source+'): '+error.message);}
     const response=await fetch(data),blob=await response.blob();
     if(!['image/png','image/jpeg','image/gif','image/webp','image/avif','image/svg+xml'].includes(blob.type))throw Error('Visual '+v.id+': unsupported image content.');
     if(blob.size>10*1024*1024)throw Error('Visual '+v.id+': image exceeds 10 MiB.');

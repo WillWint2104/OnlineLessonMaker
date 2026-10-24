@@ -22,6 +22,11 @@ async function load(p,lesson){const size=p.viewportSize();if(size&&size.width<10
 async function go(p,id,kind='practice'){await p.evaluate(({id,kind})=>lpNavigate(0,kind+'-'+id),{id,kind});await p.evaluate(()=>document.fonts.ready);await p.waitForTimeout(80);}
 async function shot(p,id,state,width){
   await p.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.querySelectorAll('.mv-evidence img')].map(i=>i.decode().catch(()=>{})));});
+  await p.evaluate(()=>new Promise(requestAnimationFrame));
+  if(await p.locator('.lp-answer-body [data-tp-fig-kind="geometry"]').count()){
+    const edges=await p.locator('.lp-answer-body .tp-fig-stage .tp-fig-poly,.lp-answer-body .tp-fig-stage .tp-fig-seg').evaluateAll(es=>es.map(e=>getComputedStyle(e).stroke));
+    check(`Model geometry has painted edges ${width} ${id} ${state}`,edges.length>0&&edges.every(s=>s!=='none'));
+  }
   const metrics=await p.evaluate(()=>{const page=document.querySelector('.mx-page'),hub=document.querySelector('.lp-answer-hub');return {width:innerWidth,height:innerHeight,dpr:devicePixelRatio,cssZoom:getComputedStyle(document.documentElement).zoom,documentWidth:document.documentElement.scrollWidth,pageWidth:page?.clientWidth,pageScroll:page?.scrollWidth,hub:hub?{top:hub.getBoundingClientRect().top,bottom:hub.getBoundingClientRect().bottom}:null,images:[...document.querySelectorAll('.mv-evidence img')].map(i=>({loaded:i.complete&&i.naturalWidth>0,width:i.getBoundingClientRect().width,alt:i.alt})),tables:[...document.querySelectorAll('.mv-evidence .mx-tblwrap,[data-mx-table]')].map(t=>({width:t.clientWidth,scroll:t.scrollWidth,tab:t.tabIndex})),evidence:document.querySelectorAll('.mv-evidence').length};});
   report.measurements.push({id,state,width,...metrics});
   if(metrics.pageScroll>metrics.pageWidth+2)report.overflowNodes=await p.locator('.mx-page *').evaluateAll(es=>es.filter(e=>e.getBoundingClientRect().right>innerWidth+2).map(e=>({tag:e.tagName,cls:e.className,width:e.clientWidth,scroll:e.scrollWidth,min:getComputedStyle(e).minWidth,display:getComputedStyle(e).display})).slice(0,25));
