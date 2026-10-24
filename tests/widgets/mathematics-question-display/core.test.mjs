@@ -29,3 +29,6 @@ test('Generated block is idempotent and incomplete markers cannot corrupt the ap
 });
 
 test('Unsupported non-textbook structured scope is publication-blocking, not silently ignored',()=>{const l=structuredClone(fixture);l.meta.practiceLayout='legacy';assert.ok(M.issues(l,syntax).some(e=>e.message.includes('supported on textbook')));});
+
+test('Doubled-dollar notation cannot bypass preflight',()=>{const l=structuredClone(fixture);q(l).workedAnswer='$$\\bogus$$';assert.ok(M.issues(l,syntax).some(e=>e.message.includes('Display-math')));});
+test('Malformed bare worked-example math is checked without reinterpreting legacy italics',()=>{const l=structuredClone(fixture);const step=l.slides[0].activities[0].workedExamples[0].examples[0].steps[0];delete step.alignmentGroup;step.math='x^{2';assert.ok(M.issues(l,syntax).some(e=>e.path.endsWith('.math')));});

@@ -8,7 +8,7 @@ async function study(){await p.locator('[data-mx-mode="study"]').click();await p
 async function publish(name){const d=p.waitForEvent('download');await p.locator('[data-mx-mode="export"]').click();const file=out+'/'+name+'.html';await(await d).saveAs(file);return fs.readFileSync(file,'utf8');}
 function embedded(html){return JSON.parse(html.match(/<script[^>]*id="lesson-data"[^>]*>([\s\S]*?)<\/script>/)[1]);}
 try{
- await load(fixture);await study();check('Canonical fixture passes actual publication preflight',await p.evaluate(()=>{lpValidatePublication(LESSON);return true;}));
+ await load(fixture);await study();check('Long math-only structured working promotes without object stringification',await p.evaluate(()=>{const q={stem:'Simplify.',answer:'x',workedSolution:{steps:[{id:'long',math:'\\frac{'+Array(70).fill('x').join('+')+'}{70}=x'}]}};return lpBookSpan(q,true)==='full';}));check('Canonical fixture passes actual publication preflight',await p.evaluate(()=>{lpValidatePublication(LESSON);return true;}));
  await p.locator('[data-book-hub]').click();await p.locator('[data-book-kind="worked"]').click();await p.locator('.md-steps').first().waitFor();await p.evaluate(()=>document.fonts.ready);await p.waitForTimeout(100);
  check('Structured question and part solutions use real paired Hub',await p.locator('.md-steps').count()===3);
  const positions=await p.locator('[data-book-answer="equations-q1"] .md-equation').evaluateAll(es=>es.map(e=>e.children[1].getBoundingClientRect().x));check('Equals signs align to <=1 CSS px',Math.max(...positions)-Math.min(...positions)<=1);

@@ -10,7 +10,7 @@ import zipfile
 
 
 def git(*args):
-    return subprocess.check_output(['git', *args], text=True).strip()
+    return subprocess.check_output(['git', *args], text=True, encoding='utf-8').strip()
 
 
 def digest(file):
