@@ -49,6 +49,22 @@
       "instructions": "src/themes/AGENTS.md",
       "deferred": true
     }
+  ],
+  "researchAreas": [
+    {
+      "id": "geography",
+      "output": "docs/review/geography-GEO-001/**",
+      "instructions": "docs/development/AGENTS.md"
+    },
+    {
+      "id": "geography-map",
+      "output": "docs/review/geography-map-GEO-MAP-001/**",
+      "instructions": "docs/development/AGENTS.md"
+    },
+    {
+      "id": "geography-evidence",
+      "output": "docs/review/geography-evidence-GEO-EVIDENCE-001/**",
+      "instructions": "docs/development/AGENTS.md"
+    }
   ]
 }
-
