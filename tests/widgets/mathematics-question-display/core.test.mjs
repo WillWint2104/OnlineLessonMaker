@@ -27,3 +27,5 @@ test('Generated block is idempotent and incomplete markers cannot corrupt the ap
  for(const broken of ['/* MATHEMATICS_QUESTION_DISPLAY_END */function mxWorking(value){}','/* MATHEMATICS_QUESTION_DISPLAY_START */']){fs.writeFileSync(target,broken);assert.notEqual(run().status,0);assert.equal(fs.readFileSync(target,'utf8'),broken);}
  }finally{fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+test('Unsupported non-textbook structured scope is publication-blocking, not silently ignored',()=>{const l=structuredClone(fixture);l.meta.practiceLayout='legacy';assert.ok(M.issues(l,syntax).some(e=>e.message.includes('supported on textbook')));});
