@@ -90,7 +90,8 @@ def main():
     shutil.copytree('src/mathematics/question-display', root / 'source')
     shutil.copy2('tests/widgets/mathematics-question-display/lesson.json', root / 'source/fixture.json')
     shutil.copy2('docs/review/mathematics-question-display-c1/README.md', root / 'README.md')
-    (root / 'source/change.patch').write_text(git('diff', '--binary', base, head) + '\n', encoding='utf-8')
+    (root / 'source/change.patch').write_bytes(
+        subprocess.check_output(['git', 'diff', '--binary', base, head]))
     receipt = dict(head=head, applicationSha256=app_hash, draft=True, unmerged=True,
                    deployed=False, published=False, captureCount=len(gallery['captures']),
                    focusedChecks=len(focused['checks']), regressionGates=regression['gates'],
@@ -108,7 +109,7 @@ def main():
 a{color:#006b5d}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,450px),1fr));gap:24px}
 figure{margin:0;padding:12px;background:white;border:1px solid #cbded3}img{width:100%;height:auto}figcaption{padding:8px}</style>
 <h1>Mathematics C1 — integrated application review</h1><p>Final head <code>{{HEAD}}</code>. Draft; no merge, deployment or lesson publication.</p>
-<p>Application captures and full regression executed at <code>{{RUNTIME_HEAD}}</code>. Later changes are confined to the verification/packaging files listed in PACKAGE.json, with the same application hash. Focused checks run at the final head. Original execution commits are retained in every receipt.</p>
+<p>Gallery captured at <code>{{GALLERY_HEAD}}</code>; full regression executed at <code>{{RUNTIME_HEAD}}</code>. Later changes are confined to the verification/packaging files listed in PACKAGE.json, with the same application hash. Focused checks run at the final head. Original execution commits are retained in every receipt.</p>
 <p>{{CAPTURES}} real C1 captures. Open an image for full resolution. Native 200% uses browser zoom, DPR 2 and CSS zoom 1. Background regression logs/JSON receipts are included; their additional screenshots remain in the original worktree evidence.</p>
 <p>Runnable learner fixtures: <a href="gallery/exports/paper.html">Paper</a> · <a href="gallery/exports/typed.html">Typed</a> ·
 <a href="gallery/exports/pen.html">Pen</a>. Use the lesson outline to open the skill and Answer Hub. These are synthetic verification fixtures.</p>
@@ -116,6 +117,7 @@ figure{margin:0;padding:12px;background:white;border:1px solid #cbded3}img{width
 <a href="regression/logs/run-info.json">Full regression</a> · <a href="focused/results.json">Authoring/release checks</a> ·
 <a href="gallery/results.json">Capture measurements</a> · <a href="source/fixture.json">Canonical fixture</a></p><main>{{CARDS}}</main></html>'''
     (root / 'index.html').write_text(page.replace('{{HEAD}}', head).replace('{{RUNTIME_HEAD}}', runtime_head)
+                                   .replace('{{GALLERY_HEAD}}', gallery['head'])
                                    .replace('{{CAPTURES}}', str(len(gallery['captures'])))
                                    .replace('{{CARDS}}', cards), encoding='utf-8')
     # Hash every payload file, then independently verify both extracted and ZIP bytes.
