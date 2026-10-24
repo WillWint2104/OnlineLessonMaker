@@ -72,10 +72,17 @@ const MathVisuals=(()=>{
     return errors;
   }
   function stripAnswers(lesson){
-    for(const skill of list(lesson.slides))for(const {owner:o}of owners(skill))for(const kind of ['final','worked']){
-      const policy=lesson.meta?.answerPolicy,access=policy?.[kind]||'autonomous',hidden=access==='hidden'||access==='teacher'&&(policy?.fallback?.[kind]||'hidden')==='hidden';
-      if(hidden&&o.answerVisuals){delete o.answerVisuals[kind];if(!Object.keys(o.answerVisuals).length)delete o.answerVisuals;}
+    const policy=lesson.meta?.answerPolicy;
+    function strip(o,inheritedGroup){
+      const group=o.graphResponse?policy?.groups?.[o.releaseGroup]:inheritedGroup;
+      for(const kind of ['final','worked']){
+        const access=group?.[kind]||policy?.[kind]||'autonomous';
+        const hidden=access==='hidden'||access==='teacher'&&(group?.[kind]==='teacher'||(policy?.fallback?.[kind]||'hidden')==='hidden');
+        if(hidden&&record(o.answerVisuals)){delete o.answerVisuals[kind];if(!Object.keys(o.answerVisuals).length)delete o.answerVisuals;}
+      }
+      for(const part of list(o.parts))if(record(part))strip(part,group);
     }
+    for(const skill of list(lesson.slides))for(const {owner,kind}of owners(skill))if(kind!=='part')strip(owner);
     return lesson;
   }
   return {definition,references,table,completed,imageIssue,owners,issues,stripAnswers};

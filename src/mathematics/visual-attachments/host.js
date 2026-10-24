@@ -47,6 +47,17 @@ function mvHubTheme(dialog){
   const style=getComputedStyle(source);
   for(const property of style)if(property.startsWith('--mx-'))dialog.style.setProperty(property,style.getPropertyValue(property));
 }
+const MV_SCROLL_ATTRIBUTES=new WeakMap();
+function mvTableScrollAttributes(wrap,scrolls){
+  if(scrolls){
+    const added=MV_SCROLL_ATTRIBUTES.get(wrap)||[];
+    for(const[name,value]of [['tabindex','0'],['role','region'],['aria-label','Data table; scroll horizontally if needed']])if(!wrap.hasAttribute(name)){wrap.setAttribute(name,value);added.push([name,value]);}
+    MV_SCROLL_ATTRIBUTES.set(wrap,added);
+  }else{
+    for(const[name,value]of MV_SCROLL_ATTRIBUTES.get(wrap)||[])if(wrap.getAttribute(name)===value)wrap.removeAttribute(name);
+    MV_SCROLL_ATTRIBUTES.delete(wrap);
+  }
+}
 function mvReferenceForm(owner,path,skill=LESSON.slides[cur]){
   const defs=Array.isArray(skill.visuals)?skill.visuals.filter(v=>v&&typeof v==='object'):[],selected=Array.isArray(owner.visualRefs)?owner.visualRefs:[];
   return `<details class="isec mv-author"><summary>Required question visuals</summary><p>Shared skill givens. Displayed after the prompt, before subparts and response.</p>${defs.map(v=>`<label><input type="checkbox" data-mv-select="${esc(path)}" data-mv-id="${esc(v.id)}" ${selected.includes(v.id)?'checked':''}> ${esc(v.label||v.id)} · ${esc(v.kind)}</label>`).join('')||'<p>No shared visuals yet. Add one below.</p>'}${selected.filter(id=>!defs.some(v=>v.id===id)).map(id=>`<p class="mv-error">Missing visual ${esc(id)} <button type="button" data-mv-unref="${esc(path)}" data-mv-id="${esc(id)}">Remove broken reference</button></p>`).join('')}</details>`;
