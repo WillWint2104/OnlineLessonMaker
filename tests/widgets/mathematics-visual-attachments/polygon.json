@@ -1,0 +1,149 @@
+{
+  "meta": {
+    "id": "b2-polygon-paper",
+    "title": "Regular polygons",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-polygon",
+      "type": "skill",
+      "title": "Regular polygons",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-polygon",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-polygon",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-polygon",
+                  "label": "Regular polygons",
+                  "tabLabel": "Regular polygons",
+                  "prompt": "The shown regular hexagon has side length 2 cm. Find its perimeter.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "polygon-example-0",
+                      "math": "$P=6\\times2=12$",
+                      "text": "A regular hexagon has six equal sides."
+                    }
+                  ],
+                  "answer": "$12$ cm",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "polygon-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-polygon",
+          "title": "Practice",
+          "practiceCollectionId": "collection-polygon",
+          "questions": [
+            {
+              "id": "polygon-q1",
+              "archetypeId": "method-polygon",
+              "level": "basic",
+              "stem": "The shown regular hexagon has side length 2 cm. Find its perimeter.",
+              "answer": "$12$ cm",
+              "presentation": "multipart",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "polygon-answer-0",
+                    "math": "P=6\\times2=12",
+                    "text": "A regular hexagon has six equal sides.",
+                    "alignmentGroup": "work"
+                  }
+                ]
+              },
+              "visualRefs": [
+                "polygon-given-0"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "polygon-given-0"
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "polygon-given-0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-polygon",
+          "title": "Regular polygons",
+          "members": [
+            "method-polygon"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "figure",
+          "label": "Regular hexagon",
+          "figure": {
+            "type": "figure",
+            "figure": "geometry",
+            "title": "Regular hexagon",
+            "caption": "Regular hexagon; every side has the same length. One computed side is labelled.",
+            "construction": "regularPolygon",
+            "params": {
+              "n": 6,
+              "radius": 2
+            },
+            "objects": [
+              {
+                "type": "polygon",
+                "vertices": [
+                  "P1",
+                  "P2",
+                  "P3",
+                  "P4",
+                  "P5",
+                  "P6"
+                ]
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "P1",
+                  "P2"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              }
+            ]
+          },
+          "id": "polygon-given-0",
+          "description": "A regular hexagon has six equal sides of 2 cm. All six vertices are on the same circle."
+        }
+      ]
+    }
+  ]
+}

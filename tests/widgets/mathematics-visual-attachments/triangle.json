@@ -1,0 +1,205 @@
+{
+  "meta": {
+    "id": "b2-triangle-paper",
+    "title": "Pythagoras, area and trigonometry",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-triangle",
+      "type": "skill",
+      "title": "Pythagoras, area and trigonometry",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-triangle",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-triangle",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-triangle",
+                  "label": "Pythagoras, area and trigonometry",
+                  "tabLabel": "Pythagoras, area and trigonometry",
+                  "prompt": "Use the right triangle ABC shown. AB=4 cm and AC=3 cm. All three parts share that figure.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "triangle-example-0",
+                      "math": "$c^2=4^2+3^2=25$",
+                      "text": "Apply Pythagoras to the perpendicular sides."
+                    },
+                    {
+                      "id": "triangle-example-1",
+                      "math": "$c=5$",
+                      "text": "Use the positive square root."
+                    }
+                  ],
+                  "answer": "$5$ cm; $6$ cm²; $\\frac{3}{5}$.",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "triangle-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-triangle",
+          "title": "Practice",
+          "practiceCollectionId": "collection-triangle",
+          "questions": [
+            {
+              "id": "triangle-q1",
+              "archetypeId": "method-triangle",
+              "level": "basic",
+              "stem": "Use the right triangle ABC shown. AB=4 cm and AC=3 cm. All three parts share that figure.",
+              "answer": "$5$ cm; $6$ cm²; $\\frac{3}{5}$.",
+              "presentation": "multipart",
+              "parts": [
+                {
+                  "label": "a",
+                  "prompt": "Find c.",
+                  "finalAnswer": "$5$ cm",
+                  "workedAnswer": "$c=\\sqrt{4^2+3^2}=5$ cm."
+                },
+                {
+                  "label": "b",
+                  "prompt": "Find the area.",
+                  "finalAnswer": "$6$ cm²",
+                  "workedAnswer": "$A=\\frac{1}{2}\\times4\\times3=6$ cm²."
+                },
+                {
+                  "label": "c",
+                  "prompt": "Find sin(B).",
+                  "finalAnswer": "$\\frac{3}{5}$",
+                  "workedAnswer": "$\\sin(B)=\\frac{3}{5}$."
+                }
+              ],
+              "workedAnswer": "$c=\\sqrt{4^2+3^2}=5$ cm.\n$A=\\frac{1}{2}\\times4\\times3=6$ cm².\n$\\sin(B)=\\frac{3}{5}$.",
+              "visualRefs": [
+                "triangle-given-0"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "triangle-given-0"
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "triangle-given-0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-triangle",
+          "title": "Pythagoras, area and trigonometry",
+          "members": [
+            "method-triangle"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "figure",
+          "label": "Right triangle ABC",
+          "figure": {
+            "type": "figure",
+            "figure": "geometry",
+            "title": "Right triangle ABC",
+            "caption": "Lengths in centimetres. Geometry is constructed from the stated coordinates.",
+            "grid": "hidden",
+            "objects": [
+              {
+                "type": "points",
+                "from": "table",
+                "rows": [
+                  [
+                    "A",
+                    0,
+                    0
+                  ],
+                  [
+                    "B",
+                    4,
+                    0
+                  ],
+                  [
+                    "C",
+                    0,
+                    3
+                  ]
+                ]
+              },
+              {
+                "type": "polygon",
+                "vertices": [
+                  "A",
+                  "B",
+                  "C"
+                ]
+              },
+              {
+                "type": "rightAngle",
+                "at": "A",
+                "between": [
+                  "B",
+                  "C"
+                ]
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "A",
+                  "B"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "A",
+                  "C"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "B",
+                  "C"
+                ],
+                "text": "c",
+                "label": "name"
+              }
+            ]
+          },
+          "id": "triangle-given-0",
+          "description": "Triangle ABC is right angled at A. AB is 4 cm, AC is 3 cm, and the hypotenuse BC is labelled c."
+        }
+      ]
+    }
+  ]
+}

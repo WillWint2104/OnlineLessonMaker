@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "id": "b2-solid-paper",
+    "title": "Surface area and volume",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-solid",
+      "type": "skill",
+      "title": "Surface area and volume",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-solid",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-solid",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-solid",
+                  "label": "Surface area and volume",
+                  "tabLabel": "Surface area and volume",
+                  "prompt": "The cuboid shown has dimensions 4 cm, 3 cm and 12 cm. Find its volume and total surface area.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "solid-example-0",
+                      "math": "$V=4\\times3\\times12=144$",
+                      "text": "Multiply the three perpendicular dimensions."
+                    },
+                    {
+                      "id": "solid-example-1",
+                      "math": "$S=2(4\\times3+4\\times12+3\\times12)=192$",
+                      "text": "Add each pair of congruent rectangular faces."
+                    }
+                  ],
+                  "answer": "$144$ cm³; $192$ cm².",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "solid-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-solid",
+          "title": "Practice",
+          "practiceCollectionId": "collection-solid",
+          "questions": [
+            {
+              "id": "solid-q1",
+              "archetypeId": "method-solid",
+              "level": "basic",
+              "stem": "The cuboid shown has dimensions 4 cm, 3 cm and 12 cm. Find its volume and total surface area.",
+              "answer": "$144$ cm³; $192$ cm².",
+              "presentation": "multipart",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "solid-answer-0",
+                    "math": "V=4\\times3\\times12=144",
+                    "text": "Multiply the three perpendicular dimensions.",
+                    "alignmentGroup": "work"
+                  },
+                  {
+                    "id": "solid-answer-1",
+                    "math": "S=2(4\\times3+4\\times12+3\\times12)=192",
+                    "text": "Add each pair of congruent rectangular faces.",
+                    "alignmentGroup": "work"
+                  }
+                ]
+              },
+              "visualRefs": [
+                "solid-given-0"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "solid-given-0"
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "solid-given-0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-solid",
+          "title": "Surface area and volume",
+          "members": [
+            "method-solid"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "image",
+          "src": "tests/widgets/mathematics-visual-attachments/assets/cuboid.svg",
+          "alt": "Cuboid with perpendicular dimensions 4 cm, 3 cm and 12 cm. Dashed edges are hidden. Oblique schematic is not drawn to scale.",
+          "caption": "Cuboid with perpendicular dimensions 4 cm, 3 cm and 12 cm. Dashed edges are hidden. Oblique schematic is not drawn to scale.",
+          "id": "solid-given-0",
+          "description": "A cuboid has perpendicular dimensions 4 cm, 3 cm and 12 cm. Dashed edges are hidden edges. This is a schematic oblique projection, not to scale."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "meta": {
+    "id": "b2-coordinates-paper",
+    "title": "Static coordinate geometry",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-coordinates",
+      "type": "skill",
+      "title": "Static coordinate geometry",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-coordinates",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-coordinates",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-coordinates",
+                  "label": "Static coordinate geometry",
+                  "tabLabel": "Static coordinate geometry",
+                  "prompt": "Read A and B from the supplied coordinate diagram. Find the gradient and length AB. This is not a graph-construction response.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "coordinates-example-0",
+                      "math": "$m=\\frac{2-(-1)}{2-(-2)}=\\frac{3}{4}$",
+                      "text": "Use change in y divided by change in x."
+                    },
+                    {
+                      "id": "coordinates-example-1",
+                      "math": "$d=\\sqrt{4^2+3^2}=5$",
+                      "text": "Apply Pythagoras to the horizontal and vertical differences."
+                    }
+                  ],
+                  "answer": "Gradient $\\frac{3}{4}$; length $5$.",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "coordinates-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-coordinates",
+          "title": "Practice",
+          "practiceCollectionId": "collection-coordinates",
+          "questions": [
+            {
+              "id": "coordinates-q1",
+              "archetypeId": "method-coordinates",
+              "level": "basic",
+              "stem": "Read A and B from the supplied coordinate diagram. Find the gradient and length AB. This is not a graph-construction response.",
+              "answer": "Gradient $\\frac{3}{4}$; length $5$.",
+              "presentation": "multipart",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "coordinates-answer-0",
+                    "math": "m=\\frac{2-(-1)}{2-(-2)}=\\frac{3}{4}",
+                    "text": "Use change in y divided by change in x.",
+                    "alignmentGroup": "work"
+                  },
+                  {
+                    "id": "coordinates-answer-1",
+                    "math": "d=\\sqrt{4^2+3^2}=5",
+                    "text": "Apply Pythagoras to the horizontal and vertical differences.",
+                    "alignmentGroup": "work"
+                  }
+                ]
+              },
+              "visualRefs": [
+                "coordinates-given-0"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "coordinates-given-0"
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "coordinates-given-0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-coordinates",
+          "title": "Static coordinate geometry",
+          "members": [
+            "method-coordinates"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "figure",
+          "label": "Coordinate segment AB",
+          "figure": {
+            "type": "figure",
+            "figure": "graph",
+            "title": "Coordinate segment AB",
+            "caption": "A is (−2,−1) and B is (2,2). Equal unit scales; this is supplied evidence, not a graph-response tool.",
+            "domain": {
+              "xMin": -4,
+              "xMax": 4,
+              "yMin": -3,
+              "yMax": 4
+            },
+            "aspect": "equal",
+            "grid": "shown",
+            "axisNames": true,
+            "objects": [
+              {
+                "type": "points",
+                "from": "table",
+                "rows": [
+                  [
+                    "A",
+                    -2,
+                    -1
+                  ],
+                  [
+                    "B",
+                    2,
+                    2
+                  ]
+                ]
+              },
+              {
+                "type": "segment",
+                "between": [
+                  "A",
+                  "B"
+                ]
+              }
+            ]
+          },
+          "id": "coordinates-given-0",
+          "description": "On equal-scale coordinate axes, A is at (-2, -1) and B is at (2, 2). The segment AB joins them."
+        }
+      ]
+    }
+  ]
+}

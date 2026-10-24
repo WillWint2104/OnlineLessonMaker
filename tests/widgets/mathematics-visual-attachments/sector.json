@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "id": "b2-sector-paper",
+    "title": "Circle, arc and sector evidence",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-sector",
+      "type": "skill",
+      "title": "Circle, arc and sector evidence",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-sector",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-sector",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-sector",
+                  "label": "Circle, arc and sector evidence",
+                  "tabLabel": "Circle, arc and sector evidence",
+                  "prompt": "Use the quarter-sector OAB shown. Find the arc length AB and the shaded area. Give exact answers.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "sector-example-0",
+                      "math": "$L=\\frac{90}{360}\\times2\\pi\\times6=3\\pi$",
+                      "text": "Use one quarter of the circumference."
+                    },
+                    {
+                      "id": "sector-example-1",
+                      "math": "$A=\\frac{90}{360}\\times\\pi\\times6^2=9\\pi$",
+                      "text": "Use one quarter of the circle area."
+                    }
+                  ],
+                  "answer": "Arc $3\\pi$ cm; area $9\\pi$ cm².",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "sector-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-sector",
+          "title": "Practice",
+          "practiceCollectionId": "collection-sector",
+          "questions": [
+            {
+              "id": "sector-q1",
+              "archetypeId": "method-sector",
+              "level": "basic",
+              "stem": "Use the quarter-sector OAB shown. Find the arc length AB and the shaded area. Give exact answers.",
+              "answer": "Arc $3\\pi$ cm; area $9\\pi$ cm².",
+              "presentation": "multipart",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "sector-answer-0",
+                    "math": "L=\\frac{90}{360}\\times2\\pi\\times6=3\\pi",
+                    "text": "Use one quarter of the circumference.",
+                    "alignmentGroup": "work"
+                  },
+                  {
+                    "id": "sector-answer-1",
+                    "math": "A=\\frac{90}{360}\\times\\pi\\times6^2=9\\pi",
+                    "text": "Use one quarter of the circle area.",
+                    "alignmentGroup": "work"
+                  }
+                ]
+              },
+              "visualRefs": [
+                "sector-given-0"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "sector-given-0"
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "sector-given-0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-sector",
+          "title": "Circle, arc and sector evidence",
+          "members": [
+            "method-sector"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "image",
+          "src": "tests/widgets/mathematics-visual-attachments/assets/sector.svg",
+          "alt": "Quarter-sector OAB. Radius OA=OB=6 cm and angle AOB=90°. Dashed full circle is context, not the requested boundary.",
+          "caption": "Quarter-sector OAB. Radius OA=OB=6 cm and angle AOB=90°. Dashed full circle is context, not the requested boundary.",
+          "id": "sector-given-0",
+          "description": "Sector AOB has centre O, radius OA = OB = 6 cm and central angle 90 degrees. Only the quarter-circle arc AB is required."
+        }
+      ]
+    }
+  ]
+}

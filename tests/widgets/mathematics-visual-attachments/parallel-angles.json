@@ -1,0 +1,209 @@
+{
+  "meta": {
+    "id": "b2-parallel-angles-paper",
+    "title": "Angles and parallel lines",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-parallel-angles",
+      "type": "skill",
+      "title": "Angles and parallel lines",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-parallel-angles",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-parallel-angles",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-parallel-angles",
+                  "label": "Angles and parallel lines",
+                  "tabLabel": "Angles and parallel lines",
+                  "prompt": "AB is parallel to CD. Use the supplied diagram to find the corresponding angle x.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "parallel-angles-example-0",
+                      "math": "$x=60°$",
+                      "text": "Corresponding angles between parallel lines are equal."
+                    }
+                  ],
+                  "answer": "$60°$",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "parallel-angles-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-parallel-angles",
+          "title": "Practice",
+          "practiceCollectionId": "collection-parallel-angles",
+          "questions": [
+            {
+              "id": "parallel-angles-q1",
+              "archetypeId": "method-parallel-angles",
+              "level": "basic",
+              "stem": "AB is parallel to CD. Use the supplied diagram to find the corresponding angle x.",
+              "answer": "$60°$",
+              "presentation": "multipart",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "parallel-angles-answer-0",
+                    "math": "x=60°",
+                    "text": "Corresponding angles between parallel lines are equal.",
+                    "alignmentGroup": "work"
+                  }
+                ]
+              },
+              "visualRefs": [
+                "parallel-angles-given-0"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "parallel-angles-given-0"
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "parallel-angles-given-0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-parallel-angles",
+          "title": "Angles and parallel lines",
+          "members": [
+            "method-parallel-angles"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "figure",
+          "label": "Parallel lines and a transversal",
+          "figure": {
+            "type": "figure",
+            "figure": "geometry",
+            "title": "Parallel lines and a transversal",
+            "caption": "AB is parallel to CD. The lower angle is 60°. Find the corresponding angle x.",
+            "objects": [
+              {
+                "type": "points",
+                "from": "table",
+                "rows": [
+                  [
+                    "A",
+                    -2,
+                    0
+                  ],
+                  [
+                    "B",
+                    3,
+                    0
+                  ],
+                  [
+                    "C",
+                    -2,
+                    1.7320508075688772
+                  ],
+                  [
+                    "D",
+                    3,
+                    1.7320508075688772
+                  ],
+                  [
+                    "E",
+                    0,
+                    0
+                  ],
+                  [
+                    "F",
+                    1,
+                    1.7320508075688772
+                  ],
+                  [
+                    "P",
+                    -1,
+                    -1.7320508075688772
+                  ],
+                  [
+                    "Q",
+                    2,
+                    3.4641016151377544
+                  ]
+                ]
+              },
+              {
+                "type": "segment",
+                "between": [
+                  "A",
+                  "B"
+                ]
+              },
+              {
+                "type": "segment",
+                "between": [
+                  "C",
+                  "D"
+                ]
+              },
+              {
+                "type": "segment",
+                "between": [
+                  "P",
+                  "Q"
+                ]
+              },
+              {
+                "type": "angle",
+                "at": "E",
+                "between": [
+                  "B",
+                  "F"
+                ],
+                "label": "measure"
+              },
+              {
+                "type": "angle",
+                "at": "F",
+                "between": [
+                  "D",
+                  "Q"
+                ],
+                "label": "x"
+              }
+            ]
+          },
+          "id": "parallel-angles-given-0",
+          "description": "Two parallel horizontal lines are crossed by one sloping transversal. The lower corresponding angle is 60 degrees; the upper corresponding angle is x."
+        }
+      ]
+    }
+  ]
+}
