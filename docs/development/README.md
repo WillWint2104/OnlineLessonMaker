@@ -11,3 +11,5 @@ Read [ownership](OWNERSHIP.md), ownership.json, [Widget Contract V1](WIDGET-CONT
 Validate with node scripts/verify-development-foundation.mjs and --self-test. The checker is read-only coordination validation, not a launcher or proof that the live agent/review inventory is complete. --setup remains the historical FOUND-001 baseline guard; use the current setup task's base and allowlist for this PR, as documented in the receipt.
 
 Older README/HANDOFF sections mention superseded Mathematics milestones and Present controls. Current root instructions and direct task scope govern new work. Preserve historical receipts and existing lesson compatibility.
+
+The current Geography production proposal covers six teaching weeks of both Year 9 and Year 10: [coverage matrices, question catalogue and application dependencies](geography-six-week/README.md). The user has authorised curriculum redesign from the topic guidance without waiting for old school resources. Lesson sequence/timetable remain provisional, and this planning amendment grants no launch or implementation authority.

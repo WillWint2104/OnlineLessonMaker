@@ -2,19 +2,19 @@
 
 Proposal for human governance review, not a launch. GEO-SETUP-001 must be approved and merged first. Then a separate explicit human GEOGRAPHY-STAGE-A launch may be recorded with evidence. The old HUMANITIES-STAGE-A gate belongs to History; neither its existence nor approval applies here. approvedLaunches remains empty.
 
-## Authentic production brief for approval
+## Revised six-week production brief for approval
 
-Year 10 Geography, Human Wellbeing: **Closing the Gap — how does wellbeing vary across Australia, and what evidence supports community-led responses?** Start with the existing 35-minute lessons/closing-the-gap-geolearn.json and its publication, not a Mathematics template. Proposed inquiry sequence (duration and assessment to be confirmed during A):
+Plan the final six teaching weeks of **both Year 9 Changing Places and Year 10 Human Wellbeing**, using the user's expanded topic/skills guidance and redesign direction. Approximate 15/18 one-hour periods are planning capacity scenarios, not confirmed timetables or a six-week software-development deadline. Do not invent class starting points or completed lessons. The original resources are in another conversation; the user has directed us to stop searching and proceed without them.
 
-1. Explain wellbeing indicators and the purpose/context of Closing the Gap, respecting Aboriginal and Torres Strait Islander perspectives and self-determination.
-2. Read a dated official life-expectancy source; identify population, units and reference period before calculating/comparing a gap.
-3. Compare a small set of compatible regional observations using a map and the same accessible table. Describe pattern, variation and limitations; never infer individual outcomes from regional averages.
-4. Investigate explanatory evidence, distinguish association from causation and compare source purpose/limitations.
-5. Construct a supported explanation and evaluate a community-led response; practice first, then a short independent synthesis with evidence criteria and separately released model response.
+The immediate review package is the [two coverage matrices, application dependencies and question catalogue](geography-six-week/README.md). It covers urbanisation/settlement/megacities, internal and international migration, refugees/asylum seekers, multiculturalism and urban futures; and wellbeing measurement/spatial patterns/population, interacting influences, service access, Australia/Closing the Gap and responses. Exact lesson sequence, syllabus/version, assessment/fieldwork and timetable alignment remain provisional educational-design decisions.
 
-The regional comparison is a proposal, not an invented dataset: A must establish whether a comparable official regional series and boundaries exist. If unavailable/suppressed/incompatible, propose a dated static map plus honest table/text or a narrower spatial question for human decision. Do not imply regional life expectancy is available for arbitrary units. No numeric data or syllabus mapping is certified current by this setup.
+Every lesson proposal identifies inquiry, intentions/outcomes, knowledge/skills, explanations/notes/models, evidence, useful interactions, questions/exercises, checks and independent/teacher-led/no-device/relief requirements. Classify capabilities as already available, requiring adaptation, new reusable component or deferred. Prioritise genuine learning needs and authentic cross-lesson reuse; never one bespoke app per lesson.
 
-Candidate minimum interactions: existing source inspection, ordinary response/model release, accessible table/chart reading and a bounded question-specific map if it adds learning value beyond a static source. Legends may be necessary for interpretation; toggled layers/markers/choropleths/measurement are justified individually. No full GIS, 3D, new player, shared data framework or vendor commitment.
+Proposed pilots are **Y9-07 international migration flows** and **Y10-02 global wellbeing**. They test two learner journeys, representative JSON proposals and interaction mock-ups after whole-scope planning; they do not reduce the scope to demonstration lessons. Review the minimal viable widget set before later approved builds, then produce the remaining 31 periods in validated batches. Source-based lessons can use existing learner functionality and static evidence while more advanced widgets are developed under separate authority. Full digital construction needs an approved construction capability; paper work is an alternative mode, not digital acceptance.
+
+Research a separately isolated JSON-informed classroom consumer for projection, demonstrations, whole-class investigation, structured notes/book work, controlled reveal, print, relief and no-device teaching. Reuse content and completed widgets without contaminating the online player. This is design research only: no new presenter controls, consumer runtime, shared contract, export/print pipeline or architecture is approved by this brief.
+
+Closing the Gap remains one Year 10 sequence, not the sole architecture anchor. Test whether authoritative geographically comparable regional data supports any proposed inquiry; if not, recommend a better spatial investigation. Do not force a map or treat SEIFA disadvantage as direct Indigenous wellbeing. No numeric dataset or school-specific outcome mapping is certified by this amendment.
 
 ## Boundaries and shared dependencies
 
@@ -24,7 +24,7 @@ Candidate minimum interactions: existing source inspection, ordinary response/mo
 | GEO-MAP-001 | docs/review/geography-map-GEO-MAP-001/** |
 | GEO-EVIDENCE-001 | docs/review/geography-evidence-GEO-EVIDENCE-001/** |
 
-All reports trace to GEO-001's question/source IDs. Map and Evidence can audit the common brief concurrently, but final V1 recommendations depend on the reconciled learner journey and representative JSON. Report disagreements as decisions, not competing engines. Each builder writes only its folder; coordinator synthesis goes in a separately assigned integration planning task, without editing builders' retained checkouts.
+All reports trace to the two coverage matrices and GEO-001's lesson/question/source IDs. Map and Evidence can investigate the common scope after launch, but final V1 recommendations depend on the reconciled coverage and both pilot journeys/JSON proposals. Report disagreements as decisions, not competing engines. Each builder writes only its folder; coordinator synthesis goes in a separately assigned integration planning task, without editing builders' retained checkouts.
 
 Future Stage B boundaries are proposals only: lesson composition in src/humanities; map in src/map; source reuse in src/evidence-viewer; data transformations in src/data only if needed. History/Source/Map retain their existing reservations and must be reconciled before any Geography source assignment. Data and evidence must receive separate named file/module responsibilities if both are needed. No current Geography card grants any source path. Central lesson-studio.html/schema/registry/export/CSS/published lessons/Mathematics/vendor/generated/CI stay protected and integration-owned.
 
@@ -38,8 +38,8 @@ Future Stage B boundaries are proposals only: lesson composition in src/humaniti
 
 ## Shared human checkpoint
 
-GEOGRAPHY-STAGE-A:A presents the learner journey and representative JSON, requirement-to-capability matrix, Map V1 proposal, data/source catalogue, reuse/minimal adapter plan, accessibility/offline/export risks, precise proposed Stage B paths, exclusions and unresolved decisions. Stable draft PRs and CodeRabbit/actionable fixes precede presentation. The coordinator proposes one coherent learner outcome and explicitly records deferred capability.
+GEOGRAPHY-STAGE-A:A presents both six-week coverage matrices, the question/application catalogue, two pilot learner journeys/representative JSON proposals and mock-ups, Map V1 proposal, data/source catalogue, isolated classroom-consumer design options, reuse/minimal adapter plan, accessibility/offline/export risks, batched lesson-production/validation plan, precise proposed Stage B paths, exclusions and unresolved decisions. Stable draft PRs and CodeRabbit/actionable fixes precede presentation. The coordinator proposes one coherent learner outcome and explicitly records deferred capability.
 
 Human approval of that checkpoint does not itself launch Stage B: reconcile bounded V1 scope, resolve source ownership with existing Humanities streams, assign separate implementation/integration tasks and obtain explicit implementation authority. No automatic merge, ready-for-review transition, deployment or next milestone.
 
-Research suitability decision: Closing the Gap remains the preferred candidate, conditional on authoritative, geographically comparable regional data supporting the inquiry. GEO-001 must test that condition with Map and Evidence findings; if it fails, recommend a better spatial-investigation anchor. Do not force a map into the lesson, and do not treat SEIFA disadvantage figures as direct measurements of Indigenous wellbeing. This is a future Stage A research requirement, not an approved dataset, interaction or launch.
+The regional-data suitability decision applies within the wider Year 10 scope; it does not reduce whole-program planning to Closing the Gap. This remains a future research requirement, not an approved dataset, interaction or launch.
