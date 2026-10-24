@@ -32,3 +32,5 @@ test('Unsupported non-textbook structured scope is publication-blocking, not sil
 
 test('Doubled-dollar notation cannot bypass preflight',()=>{const l=structuredClone(fixture);q(l).workedAnswer='$$\\bogus$$';assert.ok(M.issues(l,syntax).some(e=>e.message.includes('Display-math')));});
 test('Malformed bare worked-example math is checked without reinterpreting legacy italics',()=>{const l=structuredClone(fixture);const step=l.slides[0].activities[0].workedExamples[0].examples[0].steps[0];delete step.alignmentGroup;step.math='x^{2';assert.ok(M.issues(l,syntax).some(e=>e.path.endsWith('.math')));});
+
+test('Escaped literal dollar before inline maths remains valid',()=>{const l=structuredClone(fixture);q(l).stem='Value: \\$$x$';assert.deepEqual(M.issues(l,syntax),[]);assert.equal(M.spans(q(l).stem).spans[0].math,'x');});
