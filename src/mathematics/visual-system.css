@@ -76,3 +76,32 @@ body:has(.lp-textbook-shell) #inspector :is(input,textarea,select){border-color:
 .lp-parts-editor .lp-part-fields{min-width:0;grid-column:2;display:block;}
 .lp-parts-editor .lp-part-fields textarea{box-sizing:border-box;width:100%;min-height:70px;}
 .lp-parts-editor .lp-part-fields .mxprev{overflow-wrap:anywhere;min-width:0;}
+
+/* C1: approved paired working (local to the existing Hub). */
+/* Approved P1 type sizes and paired identity. */
+.md-equation{display:grid;grid-template-columns:var(--md-lhs,max-content) max-content max-content;align-items:center;column-gap:.25em;min-width:0;overflow-x:auto;max-width:100%;font:400 21px/1.6 'LM Math',serif;white-space:nowrap;padding:3px 0;}
+.md-left{justify-self:end}.md-equation>span{min-width:max-content}.md-equation math{font-size:21px!important}.md-equation:focus-visible{outline:2px solid #087c70;outline-offset:-2px}
+.lp-answer-hub .md-steps{width:100%;table-layout:fixed;border-collapse:collapse;border:1px solid #dce8e2;margin-top:12px}
+.lp-answer-hub .md-steps tr{display:grid;grid-template-columns:48px minmax(0,1.25fr) minmax(0,1fr)}
+.lp-answer-hub .md-steps tr.mx-step{margin:0;padding:0}
+.lp-answer-hub .md-steps th,.lp-answer-hub .md-steps td{min-width:0;text-align:left;padding:10px 8px;border-bottom:1px solid #e5eee9}
+.lp-answer-hub .md-steps th{font:600 15px/1.5 system-ui,sans-serif;background:#f3f9f6}
+.lp-answer-hub .md-steps .mx-stept{font:400 18px/1.55 Inter,system-ui,sans-serif;white-space:normal}
+.lp-answer-hub .md-steps .mx-annotation{border-left:1px solid #c1dbcf}
+.md-filter-disclosure{flex-shrink:0}.md-filter-disclosure>summary{display:none}.md-filter-disclosure .lp-answer-expand{margin:0 0 8px}
+.md-notation-error,.md-diagnostics{color:#754800;background:#fff6df;border:1px solid #d4ba7c;padding:8px;white-space:normal;font:16px/1.5 var(--mx-ui,system-ui)}
+.md-editor fieldset{min-width:0;margin:12px 0;border:1px solid #cbded3}.md-editor textarea{width:100%;min-height:120px}.md-diagnostics li{overflow-wrap:anywhere}
+.lp-answer-hub .md-prose{font:400 18px/1.55 var(--mx-ui,system-ui);white-space:normal;overflow-wrap:normal}
+@media(max-width:850px){.lp-answer-hub .md-steps tr{grid-template-columns:44px minmax(0,1fr)}.lp-answer-hub .md-steps .mx-row-number{grid-row:span 2}.lp-answer-hub .md-steps .mx-annotation{grid-column:2;border-left:0;padding-top:0}.lp-answer-hub .md-steps th:nth-child(3){grid-column:2}}
+@media(max-height:560px){
+ .mx-support-dialog.lp-answer-hub.md-adaptive-hub:not(.lp-graph-hub){height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);padding:10px 16px}
+ .md-adaptive-hub:not(.lp-graph-hub) .lp-hub-status{margin:2px 0 4px}
+ .md-adaptive-hub:not(.lp-graph-hub) .lp-answer-toolbar{margin:0 0 4px}
+ .md-adaptive-hub:not(.lp-graph-hub) .md-filter-disclosure>summary{display:list-item;font:600 16px/1.5 var(--mx-ui,system-ui);color:#00685d;cursor:pointer;padding:4px 0;margin:0 0 4px}
+ .md-filter-disclosure>summary:focus-visible{outline:2px solid #087c70;outline-offset:1px}
+ .md-adaptive-hub:not(.lp-graph-hub) .md-filter-disclosure[open]{max-height:45dvh;overflow-y:auto}
+ .md-adaptive-hub:not(.lp-graph-hub) .lp-answer-body>section>h3{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .md-adaptive-hub:not(.lp-graph-hub) .lp-answer-list{margin-top:2px}
+ .md-adaptive-hub:not(.lp-graph-hub) .md-steps{margin-top:4px}
+ .md-adaptive-hub:not(.lp-graph-hub) .lp-answer-list article{padding:8px 10px}
+}

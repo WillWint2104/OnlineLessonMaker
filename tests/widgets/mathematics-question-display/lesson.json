@@ -1,0 +1,204 @@
+{
+  "meta": {
+    "id": "c1-question-display-verification",
+    "title": "Mathematics question display verification",
+    "subject": "Mathematics",
+    "context": "C1 synthetic verification only; not a published lesson",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    },
+    "completion": {
+      "description": "Audit fixture only. No publication approval."
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-equations",
+      "type": "skill",
+      "title": "Equations, inequalities and simultaneous equations",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-equations",
+          "title": "Representative worked example",
+          "workedExamples": [
+            {
+              "id": "group-equations",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-equations",
+                  "label": "Worked example",
+                  "tabLabel": "Equations, inequalities and simultaneous equations",
+                  "prompt": "Solve $2x+3=7$.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "equations-step0",
+                      "math": "$2x+3=7$",
+                      "text": "Start with the given equation.",
+                      "alignmentGroup": "linear-example"
+                    },
+                    {
+                      "id": "equations-step1",
+                      "math": "$2x=4$",
+                      "text": "Subtract 3 from both sides.",
+                      "alignmentGroup": "linear-example"
+                    },
+                    {
+                      "id": "equations-step2",
+                      "math": "$x=2$",
+                      "text": "Divide both sides by 2.",
+                      "alignmentGroup": "linear-example"
+                    }
+                  ],
+                  "answer": "$x=2$",
+                  "practice": {
+                    "instructions": "Complete the questions in your exercise book or the authored workbook. This is an audit fixture."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-equations",
+          "title": "Practice: Equations, inequalities and simultaneous equations",
+          "practiceCollectionId": "collection-equations",
+          "questions": [
+            {
+              "stem": "Solve $2x+3=7$.",
+              "answer": "$x=2$",
+              "id": "equations-q1",
+              "archetypeId": "method-equations",
+              "level": "basic",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "eq-start",
+                    "math": "2x+3=7",
+                    "text": "Start with the equation.",
+                    "alignmentGroup": "solve"
+                  },
+                  {
+                    "id": "eq-subtract",
+                    "math": "2x=4",
+                    "text": "Subtract 3 from both sides.",
+                    "alignmentGroup": "solve"
+                  },
+                  {
+                    "id": "eq-divide",
+                    "math": "x=2",
+                    "text": "Divide both sides by 2.",
+                    "alignmentGroup": "solve"
+                  }
+                ]
+              }
+            },
+            {
+              "stem": "Solve $-2x<6$.",
+              "answer": "$x>-3$",
+              "workedAnswer": "$-2x<6$\n$x>-3$\nReverse the inequality when dividing by a negative.",
+              "id": "equations-q2",
+              "archetypeId": "method-equations",
+              "level": "basic"
+            },
+            {
+              "stem": "Solve the simultaneous equations $x+y=5$ and $x-y=1$.",
+              "presentation": "multipart",
+              "answer": "$x=3$, $y=2$.",
+              "id": "equations-q3",
+              "archetypeId": "method-equations",
+              "level": "basic",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "sys-given-1",
+                    "math": "x+y=5",
+                    "text": "Equation 1.",
+                    "alignmentGroup": "given"
+                  },
+                  {
+                    "id": "sys-given-2",
+                    "math": "x-y=1",
+                    "text": "Equation 2.",
+                    "alignmentGroup": "given"
+                  },
+                  {
+                    "id": "sys-add",
+                    "math": "2x=6",
+                    "text": "Add equations 1 and 2.",
+                    "alignmentGroup": "solve"
+                  },
+                  {
+                    "id": "sys-divide",
+                    "math": "x=3",
+                    "text": "Divide by 2.",
+                    "alignmentGroup": "solve"
+                  },
+                  {
+                    "id": "sys-substitute",
+                    "math": "y=5-3=2",
+                    "text": "Substitute into equation 1.",
+                    "alignmentGroup": "substitute"
+                  }
+                ]
+              }
+            },
+            {
+              "stem": "A rectangle has length $x+3$ and width $x$ centimetres.",
+              "presentation": "multipart",
+              "parts": [
+                {
+                  "label": "a",
+                  "prompt": "Write an expression for its area.",
+                  "finalAnswer": "$x(x+3)$ cm²",
+                  "workedSolution": {
+                    "steps": [
+                      {
+                        "id": "area-formula",
+                        "math": "A=x(x+3)",
+                        "text": "Multiply length by width."
+                      }
+                    ]
+                  }
+                },
+                {
+                  "label": "b",
+                  "prompt": "Find the area when $x=4$.",
+                  "finalAnswer": "$28$ cm²",
+                  "workedAnswer": "$4(4+3)=28$."
+                },
+                {
+                  "label": "c",
+                  "prompt": "Explain why $x$ must be positive.",
+                  "finalAnswer": "The width is a physical length.",
+                  "workedAnswer": "A physical rectangle must have positive width, so $x>0$."
+                }
+              ],
+              "id": "c1-multipart",
+              "archetypeId": "method-equations",
+              "level": "basic",
+              "answer": "$x(x+3)$ cm²\n$28$ cm²\nThe width is a physical length.",
+              "workedAnswer": "Area = length × width: $x(x+3)$.\n$4(4+3)=28$.\nA physical rectangle must have positive width, so $x>0$."
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-equations",
+          "title": "Equations, inequalities and simultaneous equations",
+          "members": [
+            "method-equations"
+          ]
+        }
+      ]
+    }
+  ]
+}
