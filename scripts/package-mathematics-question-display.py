@@ -33,6 +33,9 @@ def main():
     args = parser.parse_args()
     head = git('rev-parse', 'HEAD')
     require(not git('status', '--porcelain', '--untracked-files=no'), 'Tracked source must be clean.')
+    require(not git('status', '--porcelain', '--untracked-files=all', '--ignored',
+                    '--', 'src/mathematics/question-display'),
+            'Packaged source tree must contain no untracked or ignored files.')
     gallery, focused = read(args.gallery / 'results.json'), read(args.focused / 'results.json')
     regression = read(args.regression / 'logs/run-info.json')
     review, micro = read(args.review), read(args.micro / 'results.json')
