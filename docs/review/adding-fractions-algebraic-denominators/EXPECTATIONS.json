@@ -2,14 +2,119 @@
   "questionCount": 36,
   "requireFullAnswers": true,
   "coreSkillCounts": {
-    "like-denominators-example": {"basic": 8, "moderate": 4},
-    "common-denominator-example": {"basic": 8, "moderate": 4},
-    "simplify-result-example": {"basic": 8, "moderate": 4}
+    "like-denominators-example": {
+      "basic": 8,
+      "moderate": 4
+    },
+    "common-denominator-example": {
+      "basic": 8,
+      "moderate": 4
+    },
+    "simplify-result-example": {
+      "basic": 8,
+      "moderate": 4
+    }
   },
-  "journey": ["Adding Fractions With Algebraic Denominators", "What you will learn", "Introduction", "Video", "Same denominator", "Build a common denominator", "Simplify the result", "Lesson complete"],
+  "journey": [
+    "Adding Fractions With Algebraic Denominators",
+    "What you will learn",
+    "Introduction",
+    "Video",
+    "Same denominator",
+    "Build a common denominator",
+    "Simplify the result",
+    "Lesson complete"
+  ],
   "videoUrl": "https://youtu.be/kOZr5rvpzeY",
-  "forbiddenText": ["operatorname"],
+  "forbiddenText": [
+    "operatorname"
+  ],
   "simplifyResultArchetype": "simplify-result-example",
   "twoStepExample": "like-denominators-example",
-  "columns": {"1536": 3, "1024": 2, "390": 1}
+  "columns": {
+    "1536": 3,
+    "1024": 2,
+    "390": 1
+  },
+  "questionIds": [
+    "like-denominators-example-basic-1",
+    "like-denominators-example-basic-2",
+    "like-denominators-example-basic-3",
+    "like-denominators-example-basic-4",
+    "like-denominators-example-basic-5",
+    "like-denominators-example-basic-6",
+    "like-denominators-example-basic-7",
+    "like-denominators-example-basic-8",
+    "like-denominators-example-moderate-1",
+    "like-denominators-example-moderate-2",
+    "like-denominators-example-moderate-3",
+    "like-denominators-example-moderate-4",
+    "common-denominator-example-basic-1",
+    "common-denominator-example-basic-2",
+    "common-denominator-example-basic-3",
+    "common-denominator-example-basic-4",
+    "common-denominator-example-basic-5",
+    "common-denominator-example-basic-6",
+    "common-denominator-example-basic-7",
+    "common-denominator-example-basic-8",
+    "common-denominator-example-moderate-1",
+    "common-denominator-example-moderate-2",
+    "common-denominator-example-moderate-3",
+    "common-denominator-example-moderate-4",
+    "simplify-result-example-basic-1",
+    "simplify-result-example-basic-2",
+    "simplify-result-example-basic-3",
+    "simplify-result-example-basic-4",
+    "simplify-result-example-basic-5",
+    "simplify-result-example-basic-6",
+    "simplify-result-example-basic-7",
+    "simplify-result-example-basic-8",
+    "simplify-result-example-moderate-1",
+    "simplify-result-example-moderate-2",
+    "simplify-result-example-moderate-3",
+    "simplify-result-example-moderate-4"
+  ],
+  "skillIntents": {
+    "like-denominators-example": {
+      "tabLabel": "Same denominator",
+      "instructionsInclude": "Keep the common denominator and add or subtract the numerators. Assume all pronumerals in denominators are non-zero."
+    },
+    "common-denominator-example": {
+      "tabLabel": "Build a common denominator",
+      "instructionsInclude": "Find the lowest common denominator, create equivalent fractions and combine the numerators. Assume all pronumerals in denominators are non-zero."
+    },
+    "simplify-result-example": {
+      "tabLabel": "Simplify the result",
+      "instructionsInclude": "Build the common denominator, combine the numerators, then reduce any common numerical factor. Assume all pronumerals in denominators are non-zero."
+    }
+  },
+  "fractionSkills": {
+    "like-denominators-example": {
+      "inputsReduced": true,
+      "denominators": "same"
+    },
+    "common-denominator-example": {
+      "inputsReduced": true,
+      "denominators": "different",
+      "lowestCommonDenominator": true
+    },
+    "simplify-result-example": {
+      "inputsReduced": true,
+      "denominators": "different",
+      "resultRequiresReduction": true,
+      "lowestCommonDenominator": true
+    }
+  },
+  "exampleFacts": [
+    {
+      "exampleId": "common-denominator-example",
+      "stepId": "common-denominator-step-1",
+      "kind": "lowest-common-denominator"
+    },
+    {
+      "exampleId": "simplify-result-example",
+      "stepId": "simplify-result-step-1",
+      "kind": "lowest-common-denominator"
+    }
+  ]
 }

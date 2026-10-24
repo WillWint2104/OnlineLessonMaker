@@ -2,14 +2,28 @@
 from pathlib import Path
 from urllib.parse import urlsplit,unquote
 from html.parser import HTMLParser
-import hashlib,json,shutil,subprocess,sys,tempfile,zipfile
+import hashlib,json,math,shutil,subprocess,sys,tempfile,zipfile
 
+root=Path.cwd().resolve()
 review=Path(sys.argv[1]).resolve();archive=Path(sys.argv[2]).resolve()
+for candidate in [review,archive]:
+ if not any(candidate.is_relative_to(root/base) and candidate != root/base for base in ['review-delivery','docs/review']):raise RuntimeError('Evidence paths must remain in repository review directories')
+for name in [archive,Path(str(archive)+'.sha256'),Path(str(archive)+'.receipt.json')]:
+ if name.exists():raise RuntimeError('Refusing to overwrite prior evidence: '+str(name))
 if archive.is_relative_to(review):raise RuntimeError('ZIP output must be outside the reviewed directory')
 report=json.loads((review/'results.json').read_text(encoding='utf-8'))
-if not report.get('passed'):raise RuntimeError('Refusing to package a failed/incomplete review')
+if not report.get('passed') or report.get('reviewMode')!='complete' or not report.get('acceptance',{}).get('checksComplete') or report.get('errors'):raise RuntimeError('Refusing to package a smoke/failed/incomplete review as a complete candidate')
+numeric=report.get('numericalVerification',{})
+if report['acceptance'].get('issues') or report.get('structure',{}).get('issues') or not numeric.get('complete') or numeric.get('unverified') or any(numeric.get(k) for k in ['failed','unsupported','insufficient']):raise RuntimeError('Review coverage is incomplete')
+if not numeric.get('records') or any(r.get('status')!='verified-by-sampling' or r.get('valid',0)<16 or r['valid']/max(1,r.get('attempted',0))<.6 for r in numeric['records']):raise RuntimeError('Insufficient valid numerical coverage')
+zoom=report.get('nativeZoom',{});dpr=zoom.get('dpr')
+if not all(w in report.get('widths',[]) for w in [1536,1024,390]) or not isinstance(dpr,(int,float)) or isinstance(dpr,bool) or not math.isfinite(dpr) or abs(dpr-2)>=.02 or zoom.get('cssZoom') not in ['1','normal'] or not report.get('roundTrip'):raise RuntimeError('Responsive/native-200/import-export-reopen checks incomplete')
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 if subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()!=report['head']:raise RuntimeError('Review source HEAD is stale')
+if report.get('trackedSourceDirty') or subprocess.check_output(['git','status','--porcelain','--untracked-files=no'],text=True).strip():raise RuntimeError('Complete candidate requires clean tracked source')
+for name,digest in report['sourceHashes'].items():
+ if not (root/name).resolve().is_relative_to(root) or sha(root/name)!=digest:raise RuntimeError('Review source changed: '+name)
+if report.get('expectations',{}).get('sha256')!=sha(review/'EXPECTATIONS.json'):raise RuntimeError('Expectations identity mismatch')
 for name,key in [('lesson.json','sourceSha256'),('learner.html','learnerSha256'),('authoring-roundtrip.json','authoringRoundtripSha256')]:
  if sha(review/name)!=report[key]:raise RuntimeError('Artifact changed after review: '+name)
 for capture in report['captures']:
@@ -45,7 +59,7 @@ for document in[payload/'index.html',payload/'learner.html']:
   links+=1
 manifest=payload/'SHA256SUMS.txt'
 manifest.write_text(''.join(sha(p)+'  '+p.relative_to(payload).as_posix()+'\n'for p in sorted(payload.rglob('*'))if p.is_file()and p!=manifest),encoding='utf-8')
-with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=6)as z:
+with zipfile.ZipFile(archive,'x',zipfile.ZIP_DEFLATED,compresslevel=6)as z:
  for p in sorted(payload.rglob('*')):
   if p.is_file():z.write(p,p.relative_to(payload).as_posix())
 extracted=stage/'extracted'
@@ -55,7 +69,7 @@ with zipfile.ZipFile(archive)as z:
 for line in(extracted/'SHA256SUMS.txt').read_text(encoding='utf-8').splitlines():
  digest,name=line.split('  ',1)
  if sha(extracted/name)!=digest:raise RuntimeError('Extracted manifest mismatch: '+name)
-receipt={'head':report['head'],'zip':str(archive),'bytes':archive.stat().st_size,'sha256':sha(archive),'captureCount':len(report['captures']),'localLinksResolved':links,'sourceCopyHashes':'matched','extraction':'CRC and SHA-256 manifest passed','extracted':str(extracted)}
-archive.with_suffix('.zip.sha256').write_text(receipt['sha256']+'  '+archive.name+'\n',encoding='utf-8')
-archive.with_suffix('.zip.receipt.json').write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8')
+receipt={'format':2,'completeReviewCandidate':True,'humanApproval':'PENDING','reviewMode':report['reviewMode'],'acceptanceOutcome':'verified-complete-review-candidate','input':report['input'],'sourceSha256':report['sourceSha256'],'applicationSha256':report['applicationSha256'],'expectations':report['expectations'],'sourceHashes':report['sourceHashes'],'questionCount':report['questionCount'],'skillCounts':report['skillCounts'],'answerCoverage':report['answerCoverage'],'numericalVerification':{key:report['numericalVerification'][key] for key in ['attempted','valid','excluded','unsupported','failed','insufficient','complete']},'head':report['head'],'zip':str(archive),'bytes':archive.stat().st_size,'sha256':sha(archive),'captureCount':len(report['captures']),'localLinksResolved':links,'sourceCopyHashes':'matched','extraction':'CRC and SHA-256 manifest passed','extracted':str(extracted)}
+with archive.with_suffix('.zip.sha256').open('x',encoding='utf-8') as f:f.write(receipt['sha256']+'  '+archive.name+'\n')
+with archive.with_suffix('.zip.receipt.json').open('x',encoding='utf-8') as f:f.write(json.dumps(receipt,indent=2)+'\n')
 print(json.dumps(receipt))
