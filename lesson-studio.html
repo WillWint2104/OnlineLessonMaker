@@ -556,11 +556,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .mx .mx-part[data-mx-part="image"]{min-width:0;max-width:100%;}
 .mx .mx-part[data-mx-part="image"] img,.mv-evidence img{display:block;max-width:100%;height:auto;object-fit:contain;}
 .mx .mx-wexex,.mx .mx-wexwork,.mx .mx-solution,.mx .mx-example-question,.mx .mx-annotation,.mx .mx-itembd{min-width:0;max-width:100%;}
-.mx .mx-wexex:has(.mx-tblwrap) .mx-solution-table{width:100%;table-layout:fixed;}
-.mx .mx-wexex:has(.mx-tblwrap) .mx-solution-table th:first-child{width:42px;}
-.mx .mx-wexex:has(.mx-tblwrap) .mx-solution-table td{min-width:0;overflow-wrap:anywhere;}
-.mx .mx-wexex:has(.mx-tblwrap) .mx-conclusion>span{min-width:0;max-width:100%;overflow-x:auto;}
-.mx .mx-tblwrap,.mv-evidence .mx-tblwrap{min-width:0;max-width:100%;overflow-x:auto;}
+.mx .mx-conclusion>span{min-width:0;max-width:100%;overflow-x:auto;}
+.mx .mx-tblwrap,.mv-evidence .mx-tblwrap{min-width:0;max-width:100%;overflow-x:auto;contain:inline-size;}
 .mv-evidence .mx-tbl{width:max-content;min-width:100%;}
 .lp-exercise-cell:has(.mv-evidence){grid-column:1/-1;}
 .lp-answer-hub article:has(.mv-evidence){grid-column:1/-1;min-width:0;}
@@ -16263,8 +16260,8 @@ const MathVisuals=(()=>{
   const list=x=>Array.isArray(x)?x:[];
   const blank=x=>x==null||x==='';
   function definition(skill,id){return list(skill?.visuals).find(v=>v?.id===id);}
-  function references(owner,inherited=[]){return [...new Set(list(owner?.visualRefs).filter(id=>typeof id==='string'&&!inherited.includes(id)))];}
-  function table(skill,owner){return owner?.table||references(owner).map(id=>definition(skill,id)).find(v=>v?.kind==='table');}
+  function references(owner,inherited=[]){return [...new Set(list(owner?.visualRefs).filter(id=>typeof id==='string'&&!list(inherited).includes(id)))];}
+  function table(skill,owner){return owner?.table||references(owner).map(id=>definition(skill,id)).find(v=>v?.kind==='table'&&Array.isArray(v.head)&&Array.isArray(v.rows)&&v.rows.every(r=>record(r)&&Array.isArray(r.cells)&&r.cells.length===v.head.length));}
   function completed(given,cells){return {...given,rows:list(given.rows).map((r,i)=>({...r,cells:list(r.cells).map((v,j)=>blank(v)?cells?.[i]?.[j]:v)}))};}
   function imageIssue(src){
     if(typeof src!=='string'||!src.trim())return 'Image source is missing.';
@@ -16309,7 +16306,7 @@ const MathVisuals=(()=>{
         if(o.visualRefs!=null&&(!Array.isArray(o.visualRefs)||o.visualRefs.some(id=>typeof id!=='string')))add(p,`Question/example ${who}: visualRefs must be ID strings.`);
         if(list(o.visualRefs).length!==new Set(list(o.visualRefs)).size)add(p,`Question/example ${who}: duplicate visual reference.`);
         for(const id of list(o.visualRefs))if(!definition(skill,id))add(p,`Question/example ${who}: missing visual ${id}.`);
-        if(!o.answerVisuals)continue;
+        if(o.answerVisuals==null)continue;
         if(!record(o.answerVisuals)){add(p,`Question ${who}: answerVisuals must contain final/worked arrays.`);continue;}
         for(const kind of ['final','worked']){
           const entries=o.answerVisuals[kind];
@@ -16346,14 +16343,14 @@ function mvFigureIssues(f){
   if(!f||!Array.isArray(f.objects))return ['Figure objects must be an array.'];
   if(!['geometry','graph'].includes(f.figure))return ['Unsupported figure type; use an authored image.'];
   if(f.figure==='geometry'&&f.construction==='circle')return ['Circle/sector evidence requires an authored image in C2.'];
-  if(f.figure==='geometry'&&(f.objects||[]).some(o=>!['points','polygon','segment','angle','rightAngle','sideLabel'].includes(o.type)))return ['Unsupported geometry object; use supported primitives or an authored image.'];
+  if(f.figure==='geometry'&&(f.objects||[]).some(o=>!o||!['points','polygon','segment','angle','rightAngle','sideLabel'].includes(o.type)))return ['Unsupported geometry object; use supported primitives or an authored image.'];
   try{const stage=figFigStage(f,FIG_BOX0);return stage.M.errors||[];}catch(e){return ['Invalid figure: '+e.message];}
 }
 function mvPreflight(lesson){const errors=MathVisuals.issues(lesson,mvFigureIssues);if(errors.length)throw Error(errors.join('\n'));}
 function mvSkill(owner){return LESSON.slides.find(s=>MathVisuals.owners(s).some(x=>x.owner===owner))||LESSON.slides[cur];}
-function mvUsers(skill,id){return MathVisuals.owners(skill).filter(x=>x.owner.visualRefs?.includes(id)||['final','worked'].some(kind=>x.owner.answerVisuals?.[kind]?.some(e=>e.ref===id)));}
+function mvUsers(skill,id){const arr=x=>Array.isArray(x)?x:[];return MathVisuals.owners(skill).filter(x=>arr(x.owner.visualRefs).includes(id)||['final','worked'].some(kind=>arr(x.owner.answerVisuals?.[kind]).some(e=>e?.ref===id)));}
 function mvChildParts(owner,key,skill,inherited){
-  return (owner.parts||[]).map((pt,k)=>`<div class="mx-part"><b class="mx-pl">(${esc(pt?.label||String.fromCharCode(97+k))})</b><div>${mxM(lpBookPartText(pt))}${mvRefs(pt,key+'-'+k,{skill,inherited})}${mvChildParts(pt,key+'-'+k,skill,[...inherited,...MathVisuals.references(pt)])}</div></div>`).join('');
+  return (Array.isArray(owner.parts)?owner.parts:[]).map((pt,k)=>`<div class="mx-part"><b class="mx-pl">(${esc(pt?.label||String.fromCharCode(97+k))})</b><div>${mxM(lpBookPartText(pt))}${mvRefs(pt,key+'-'+k,{skill,inherited})}${pt&&typeof pt==='object'?mvChildParts(pt,key+'-'+k,skill,[...inherited,...MathVisuals.references(pt)]):''}</div></div>`).join('');
 }
 let MV_RENDER_ID=0;
 function mvVisual(v,key,body,readOnly=false){
@@ -16378,10 +16375,10 @@ function mvRefs(owner,key,options={}){
 function mvAnswer(owner,kind,skill=mvSkill(owner)){
   if(!lpBookAllowed(kind))return '';
   return (Array.isArray(owner.answerVisuals?.[kind])?owner.answerVisuals[kind]:[]).map((entry,i)=>{
+    if(!entry||typeof entry!=='object'||Array.isArray(entry))return '<p class="mv-error" role="status">Answer visual unavailable.</p>';
     const given=entry.ref==='@questionTable'?{...owner.table,kind:'table',id:'question-table',description:'The completed table uses the original headings and given values.'}:MathVisuals.definition(skill,entry.ref);
-    if(!given)return '<p class="mv-error">Answer visual unavailable.</p>';
-    const v=entry.completionCells?MathVisuals.completed(given,entry.completionCells):given;
-    return mvVisual(v,'answer-'+owner.id+'-'+kind+'-'+i,undefined,true);
+    if(!given)return '<p class="mv-error" role="status">Answer visual unavailable.</p>';
+    try{const v=entry.completionCells?MathVisuals.completed(given,entry.completionCells):given;return mvVisual(v,'answer-'+owner.id+'-'+kind+'-'+i,undefined,true);}catch{return '<p class="mv-error" role="status">Answer visual is invalid. Repair its definition in Edit mode.</p>';}
   }).join('');
 }
 function mvFitAnswers(panel){for(const figure of panel.querySelectorAll('.mv-evidence .tp-fig'))figInlineSolve(figure);}
@@ -16391,18 +16388,19 @@ function mvHubTheme(dialog){
   for(const property of style)if(property.startsWith('--mx-'))dialog.style.setProperty(property,style.getPropertyValue(property));
 }
 function mvReferenceForm(owner,path,skill=LESSON.slides[cur]){
-  const defs=Array.isArray(skill.visuals)?skill.visuals:[],selected=Array.isArray(owner.visualRefs)?owner.visualRefs:[];
+  const defs=Array.isArray(skill.visuals)?skill.visuals.filter(v=>v&&typeof v==='object'):[],selected=Array.isArray(owner.visualRefs)?owner.visualRefs:[];
   return `<details class="isec mv-author"><summary>Required question visuals</summary><p>Shared skill givens. Displayed after the prompt, before subparts and response.</p>${defs.map(v=>`<label><input type="checkbox" data-mv-select="${esc(path)}" data-mv-id="${esc(v.id)}" ${selected.includes(v.id)?'checked':''}> ${esc(v.label||v.id)} · ${esc(v.kind)}</label>`).join('')||'<p>No shared visuals yet. Add one below.</p>'}${selected.filter(id=>!defs.some(v=>v.id===id)).map(id=>`<p class="mv-error">Missing visual ${esc(id)} <button type="button" data-mv-unref="${esc(path)}" data-mv-id="${esc(id)}">Remove broken reference</button></p>`).join('')}</details>`;
 }
+function mvPartEditor(path,v,index){try{return v.kind==='figure'&&v.figure?.figure==='geometry'?blockFigureForm(index,{type:'figure',...v.figure},null,path+'.figure'):mxPartForm(path,v,null);}catch{return '<p class="mv-error">This payload is malformed. Repair its JSON; the draft is preserved.</p>';}}
 function mvModelForm(owner,path){
   const skill=mvSkill(owner),refs=MathVisuals.references(owner),tables=refs.map(id=>MathVisuals.definition(skill,id)).filter(v=>v?.kind==='table');
   if(owner.table)tables.push({...owner.table,id:'@questionTable',label:'Question table'});
   const options=[...new Set([...refs,...tables.map(t=>t.id)])];
-  return `<details class="isec mv-author"><summary>Answer visuals and completed tables</summary><p>Final and worked models follow their separate answer policies. Givens remain shared.</p>${['final','worked'].map(kind=>`<h4>${kind==='final'?'Final answer':'Worked solution'}</h4>${options.map(id=>{const entries=owner.answerVisuals?.[kind]||[],at=entries.findIndex(e=>e.ref===id),table=tables.find(t=>t.id===id);return `<label><input type="checkbox" data-mv-model="${esc(path)}" data-mv-kind="${kind}" data-mv-id="${esc(id)}" ${at>=0?'checked':''}> ${esc(table?.label||id)}</label>${at>=0&&table?`<div class="mx-tblwrap" tabindex="0" role="region" aria-label="${kind} completion editor"><table class="mx-tbl"><tr><th>Row</th>${table.head.map(h=>`<th scope="col">${mxM(h)}</th>`).join('')}</tr>${table.rows.map((r,ri)=>`<tr><th scope="row">${mxM(r.label||'')}</th>${r.cells.map((c,ci)=>`<td>${c!=null&&c!==''?mxM(c):`<input class="ii" aria-label="${kind} ${esc(r.label||'row '+(ri+1))}, ${esc(table.head[ci])}" data-bind="${path}.answerVisuals.${kind}.${at}.completionCells.${ri}.${ci}" value="${esc(entries[at].completionCells?.[ri]?.[ci]??'')}">`}</td>`).join('')}</tr>`).join('')}</table></div>`:''}`;}).join('')}`).join('')}</details>`;
+  return `<details class="isec mv-author"><summary>Answer visuals and completed tables</summary><p>Final and worked models follow their separate answer policies. Givens remain shared.</p>${['final','worked'].map(kind=>`<h4>${kind==='final'?'Final answer':'Worked solution'}</h4>${options.map(id=>{const entries=Array.isArray(owner.answerVisuals?.[kind])?owner.answerVisuals[kind]:[],at=entries.findIndex(e=>e?.ref===id),table=tables.find(t=>t.id===id);return `<label><input type="checkbox" data-mv-model="${esc(path)}" data-mv-kind="${kind}" data-mv-id="${esc(id)}" ${at>=0?'checked':''}> ${esc(table?.label||id)}</label>${at>=0&&table?`<div class="mx-tblwrap" tabindex="0" role="region" aria-label="${kind} completion editor"><table class="mx-tbl"><tr><th>Row</th>${table.head.map(h=>`<th scope="col">${mxM(h)}</th>`).join('')}</tr>${table.rows.map((r,ri)=>`<tr><th scope="row">${mxM(r.label||'')}</th>${r.cells.map((c,ci)=>`<td>${c!=null&&c!==''?mxM(c):`<input class="ii" aria-label="${kind} ${esc(r.label||'row '+(ri+1))}, ${esc(table.head[ci])}" data-bind="${path}.answerVisuals.${kind}.${at}.completionCells.${ri}.${ci}" value="${esc(entries[at].completionCells?.[ri]?.[ci]??'')}">`}</td>`).join('')}</tr>`).join('')}</table></div>`:''}`;}).join('')}`).join('')}</details>`;
 }
 function mvLibraryForm(skill,index){
   const defs=Array.isArray(skill.visuals)?skill.visuals:[],base='slides.'+index;
-  return `<details class="isec mv-author"><summary>Shared skill visuals (${defs.length})</summary><p>Define givens once. Each question/example chooses its own references.</p>${defs.map((v,i)=>{if(!v||typeof v!=='object')return '<p class="mv-error">Malformed shared visual '+i+'; repair in JSON.</p>';const path=base+'.visuals.'+i,uses=mvUsers(skill,v.id).map(x=>x.owner.id||x.path);return `<details><summary>${esc(v.label||v.id)} · ${esc(v.kind)}</summary><p>Used by: ${esc(uses.join(', ')||'none')}</p>${inT('Stable visual ID',path+'.id',v.id)}${inA('Mathematical description — givens and relationships',path+'.description',v.description||'')}${inA('Caption (optional)',path+'.caption',v.caption||'')}${v.kind==='image'?`<label>Choose image<input type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" data-mv-upload="${path}.src"></label><p data-mv-upload-status role="status"></p>`:''}${v.kind==='figure'&&v.figure?.figure==='geometry'?blockFigureForm(index,{type:'figure',...v.figure},null,path+'.figure'):mxPartForm(path,v,null)}<button type="button" data-mv-delete="${i}">Delete shared visual (references will need repair)</button></details>`;}).join('')}<label>Visual type<select data-mv-new-kind><option value="figure">Existing Figure Engine</option><option value="table">Table</option><option value="image">Image</option></select></label><button type="button" data-mv-add>Add shared visual</button><p class="mv-error" data-mv-diagnostics>${esc(MathVisuals.issues({slides:[skill]},mvFigureIssues).join('\n'))}</p></details>`;
+  return `<details class="isec mv-author"><summary>Shared skill visuals (${defs.length})</summary><p>Define givens once. Each question/example chooses its own references.</p>${defs.map((v,i)=>{if(!v||typeof v!=='object')return '<p class="mv-error">Malformed shared visual '+i+'; repair in JSON.</p>';const path=base+'.visuals.'+i,uses=mvUsers(skill,v.id).map(x=>x.owner.id||x.path);return `<details><summary>${esc(v.label||v.id)} · ${esc(v.kind)}</summary><p>Used by: ${esc(uses.join(', ')||'none')}</p><p>Stable visual ID: <code>${esc(v.id)}</code></p>${inA('Mathematical description — givens and relationships',path+'.description',v.description||'')}${inA('Caption (optional)',path+'.caption',v.caption||'')}${v.kind==='image'?`<label>Choose image<input type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml" data-mv-upload="${path}.src"></label><p data-mv-upload-status role="status"></p>`:''}${mvPartEditor(path,v,index)}<button type="button" data-mv-delete="${i}">Delete shared visual (references will need repair)</button></details>`;}).join('')}<label>Visual type<select data-mv-new-kind><option value="figure">Existing Figure Engine</option><option value="table">Table</option><option value="image">Image</option></select></label><button type="button" data-mv-add>Add shared visual</button><p class="mv-error" data-mv-diagnostics>${esc(MathVisuals.issues({slides:[skill]},mvFigureIssues).join('\n'))}</p></details>`;
 }
 function mvWireEditor(){
   const ins=document.getElementById('inspector');if(!ins)return;
@@ -16411,7 +16409,7 @@ function mvWireEditor(){
   ins.querySelectorAll('[data-mv-upload]').forEach(el=>el.onchange=()=>{const file=el.files?.[0];if(file)embedImageToSlot(el.dataset.mvUpload,file,el.parentElement.nextElementSibling);});
   ins.querySelectorAll('[data-mv-delete]').forEach(b=>b.onclick=()=>{const v=skill.visuals[+b.dataset.mvDelete],uses=mvUsers(skill,v.id);if(confirm('Delete '+v.id+'? '+uses.length+' question/example references may need repair.')){skill.visuals.splice(+b.dataset.mvDelete,1);refresh();}});
   ins.querySelectorAll('[data-mv-select],[data-mv-unref]').forEach(el=>el.addEventListener(el.matches('button')?'click':'change',()=>{const o=getP(LESSON,el.dataset.mvSelect||el.dataset.mvUnref);if(!o)return;const refs=new Set(o.visualRefs||[]);el.checked?refs.add(el.dataset.mvId):refs.delete(el.dataset.mvId);o.visualRefs=[...refs];refresh();}));
-  ins.querySelectorAll('[data-mv-model]').forEach(el=>el.onchange=()=>{const o=getP(LESSON,el.dataset.mvModel),kind=el.dataset.mvKind,id=el.dataset.mvId;if(!o)return;o.answerVisuals=o.answerVisuals||{};const entries=o.answerVisuals[kind]=o.answerVisuals[kind]||[];if(el.checked){const t=id==='@questionTable'?o.table:MathVisuals.definition(skill,id);entries.push({ref:id,...(t?.head?{completionCells:t.rows.map(r=>r.cells.map(c=>c??''))}:{})});}else o.answerVisuals[kind]=entries.filter(e=>e.ref!==id);refresh();});
+  ins.querySelectorAll('[data-mv-model]').forEach(el=>el.onchange=()=>{const o=getP(LESSON,el.dataset.mvModel),kind=el.dataset.mvKind,id=el.dataset.mvId;if(!o)return;o.answerVisuals=o.answerVisuals&&typeof o.answerVisuals==='object'&&!Array.isArray(o.answerVisuals)?o.answerVisuals:{};const entries=o.answerVisuals[kind]=Array.isArray(o.answerVisuals[kind])?o.answerVisuals[kind]:[];if(el.checked){const t=id==='@questionTable'?o.table:MathVisuals.definition(skill,id);entries.push({ref:id,...(t?.head?{completionCells:t.rows.map(r=>r.cells.map(c=>c??''))}:{})});}else o.answerVisuals[kind]=entries.filter(e=>e.ref!==id);refresh();});
 }
 async function mvEmbedAssets(out){
   const manifest=[];
@@ -16852,7 +16850,7 @@ function mxPairedExample(ex,k,state,extra){
       ${mxSupportButton(ex)}</header>`}
     <section data-mx-region="working" class="mx-solution">${show('steps')?`<table class="mx-solution-table"${ex.steps?.some(s=>s?.alignmentGroup)?' data-md-owner':''} data-mx-sec="steps"><thead><tr><th scope="col">No.</th><th scope="col">Working</th>${lpTextbook()?'':'<th scope="col">No.</th>'}<th scope="col">Explanation</th></tr></thead><tbody>
       ${steps.map((st,j)=>{const o=st&&typeof st==='object'?st:{text:st};return `<tr class="mx-step" data-mx-step="${esc(o.id||'s'+(j+from))}"><td class="mx-row-number">${j+from}</td><td class="mx-stepm">${o.alignmentGroup?mdWorkingCell(o):mxWorking(o.math||'')}</td>${lpTextbook()?'':`<td class="mx-row-number mx-row-repeat">${j+from}</td>`}<td class="mx-annotation"><div class="mx-stept">${mxM(o.text||'')}</div>${o.note?`<div class="mx-stepn">${mxM(o.note)}</div>`:''}${mxParts(o.visual).length?mxCompanion(mxParts(o.visual),'paired-'+esc(ex.id||k)+'-'+j):''}</td></tr>`;}).join('')}
-    </tbody></table>`:''}${extra||''}${answer&&show('answer')?`<div class="mx-conclusion" data-mx-region="answer" data-mx-sec="answer"><span aria-hidden="true">✓</span><span${ex.visualRefs?.length?' tabindex="0" aria-label="Example conclusion; scroll horizontally if needed"':''}>${ex.resultLabel?esc(ex.resultLabel)+' ':''}${mxM(answer)}</span></div>`:''}</section></article>`;
+    </tbody></table>`:''}${extra||''}${answer&&show('answer')?`<div class="mx-conclusion" data-mx-region="answer" data-mx-sec="answer"><span aria-hidden="true">✓</span><span${ex.visualRefs?.length?' tabindex="0" role="region" aria-label="Example conclusion; scroll horizontally if needed"':''}>${ex.resultLabel?esc(ex.resultLabel)+' ':''}${mxM(answer)}</span></div>`:''}</section></article>`;
 }
 function mxSupportOpen(ex,opener){
   if(document.querySelector('[data-mx-support-dialog]'))return;
@@ -18066,7 +18064,7 @@ function mxQuestionList(questions,page,start=0){
   return (questions||[]).map((q,j)=>{
     if(q.graphResponse)return grHeader(q,j+1+start)+grResponseHtml(q,page);
     const skill=mvSkill(q),table=MathVisuals.table(skill,q);
-    const parts=(q.parts||[]).map((pt,k)=>{const extra=mvRefs(pt,'part-'+q.id+'-'+k,{skill,inherited:q.visualRefs||[]})+mvChildParts(pt,'nested-'+q.id+'-'+k,skill,[...(q.visualRefs||[]),...MathVisuals.references(pt)]),tag=extra?'div':'span';return `<div class="mx-part"><b class="mx-pl">(${esc(typeof pt==='object'&&pt.label||String.fromCharCode(97+k))})</b><${tag}>${mxM(lpBookPartText(pt))}${extra}</${tag}></div>`;}).join('');
+    const parts=(q.parts||[]).map((pt,k)=>{const extra=mvRefs(pt,'part-'+q.id+'-'+k,{skill,inherited:q.visualRefs||[]})+mvChildParts(pt,'nested-'+q.id+'-'+k,skill,[...MathVisuals.references(q),...MathVisuals.references(pt)]),tag=extra?'div':'span';return `<div class="mx-part"><b class="mx-pl">(${esc(typeof pt==='object'&&pt.label||String.fromCharCode(97+k))})</b><${tag}>${mxM(lpBookPartText(pt))}${extra}</${tag}></div>`;}).join('');
     let tbl='';
     if(table&&Array.isArray(table.head)){
       const qid=(q.id?String(q.id):'q'+(j+1));
@@ -18494,7 +18492,7 @@ function lpBookHub(opener){
   const observer=new ResizeObserver(fit);observer.observe(panel);d.querySelector('[data-book-close]').onclick=()=>d.close();d.onclose=()=>{LP_BOOK.hubStates[context]={practice:practice.value==='all'?'all':groups[+practice.value]?.key,level,kind,question:question.value,collapsed:[...collapsed],scroll:panel.scrollTop};observer.disconnect();document.removeEventListener('book-session',update);d.remove();for(const[el,top]of lessonScroll)if(el.isConnected)el.scrollTop=top;window.scrollTo(...windowScroll);if(opener?.isConnected&&!opener.hidden&&!opener.disabled)opener.focus({preventScroll:true});else document.querySelector('.lp-title')?.focus({preventScroll:true});};d.onkeydown=e=>e.stopPropagation();updateAdaptive=mdAdaptiveHub(d);d.showModal();fit();document.fonts.ready.then(()=>{if(d.isConnected)fit();});panel.scrollTop=saved?.scroll||0;d.querySelector('[data-book-close]').focus();
 }
 function lpBookComplete(){const c=LESSON.meta.completion||{},next=c.nextLesson,url=safeUrl(next?.url,'frame'),image=lpImage(lpRoleImage('completion',c.image));return `<div class="lp-book-outro"><div class="lp-completion-hero${image?'':' lp-no-image'}"><div><p class="lp-completion-kicker">Well done</p><h1 id="lpTitle" class="lp-title" tabindex="-1">Lesson complete</h1><p>${mxM(c.description||'You have completed this lesson. Keep building fluency through practice.')}</p><ul class="lp-completion-indicators">${LESSON.slides.length>1?`<li>${LESSON.slides.length} skills in this lesson</li>`:''}<li>Worked examples available to revisit</li><li>Practice questions available to revisit</li></ul></div>${image}</div>${c.practised?.length?`<section><h2>What you practised</h2><ul>${c.practised.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></section>`:''}<div class="lp-book-tools"><button class="lp-primary" data-lp-front="${esc(lpFrontPages()[0]?.id||'')}">Review lesson →</button>${lpBookAnswerButton()}</div>${url?`<a class="lp-next-lesson" href="${esc(url)}"><span>Next lesson</span><b>${esc(next.title||'Continue learning')} →</b></a>`:''}</div>`;}
-function lpBookStudentData(lesson){const out=JSON.parse(JSON.stringify(lesson));for(const p of out.meta.frontMatter||[])p.image=lpRoleImage(p.kind,p.image,out.meta);if(out.meta.artworkPack){out.meta.completion=out.meta.completion||{};out.meta.completion.image=lpRoleImage('completion',out.meta.completion.image,out.meta);}for(const s of out.slides)for(const a of s.activities||[])for(const q of a.questions||[]){delete q.teacherNote;delete q.generation;if(!out.meta.answerPolicy)continue;for(const [kind,key]of [['final','answer'],['worked','workedAnswer']]){const p=q.graphResponse&&out.meta.answerPolicy.groups?.[q.releaseGroup]?.[kind]||out.meta.answerPolicy[kind]||'autonomous';if(p==='hidden'||p==='teacher'&&(out.meta.answerPolicy.fallback?.[kind]||'hidden')==='hidden'){delete q[key];if(kind==='worked')mdStripWorked(q);for(const part of q.parts||[])if(part&&typeof part==='object')delete part[kind==='final'?'finalAnswer':'workedAnswer'];}}}return grStudentData(MathVisuals.stripAnswers(out));}
+function lpBookStudentData(lesson){const out=JSON.parse(JSON.stringify(lesson));for(const p of out.meta.frontMatter||[])p.image=lpRoleImage(p.kind,p.image,out.meta);if(out.meta.artworkPack){out.meta.completion=out.meta.completion||{};out.meta.completion.image=lpRoleImage('completion',out.meta.completion.image,out.meta);}for(const s of out.slides)for(const a of s.activities||[])for(const q of a.questions||[]){delete q.teacherNote;delete q.generation;if(!out.meta.answerPolicy)continue;for(const [kind,key]of [['final','answer'],['worked','workedAnswer']]){const p=q.graphResponse&&out.meta.answerPolicy.groups?.[q.releaseGroup]?.[kind]||out.meta.answerPolicy[kind]||'autonomous';if(p==='hidden'||p==='teacher'&&(out.meta.answerPolicy.fallback?.[kind]||'hidden')==='hidden'){delete q[key];if(kind==='worked')mdStripWorked(q);const strip=parts=>{for(const part of Array.isArray(parts)?parts:[])if(part&&typeof part==='object'){delete part[kind==='final'?'finalAnswer':'workedAnswer'];strip(part.parts);}};strip(q.parts);}}}return grStudentData(MathVisuals.stripAnswers(out));}
 function lpBookWire(){
   if(!lpTextbook())return;if(LP_STATE.end)LP_BOOK.completed=true;else if(!LP_STATE.front){const a=lpCurrent(LESSON.slides[cur]),ex=lpPracticeCurrent(LESSON.slides[cur],a)?.ex;if(a?.practiceCollectionId&&ex)LP_BOOK.recent={key:lpBookKey(a,ex),level:lpBookLevel(a,ex)};}
   document.querySelectorAll('[data-book-page]').forEach(b=>b.onclick=()=>{const skill=+b.dataset.bookSkill,a=LESSON.slides[skill].activities.find(a=>a.id===b.dataset.bookActivity);(LP_STATE.practice=LP_STATE.practice||{})[a.id]=b.dataset.bookPage;lpNavigate(skill,a.id);});

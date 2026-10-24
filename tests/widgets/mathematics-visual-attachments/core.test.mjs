@@ -6,6 +6,7 @@ let count=0;const check=(name,fn)=>{fn();count++;console.log('PASS '+name);};
 const base=JSON.parse(fs.readFileSync('tests/widgets/mathematics-visual-attachments/function-table.json','utf8'));
 check('Valid registry, existing table model and meaningful description',()=>assert.deepEqual([...v.issues(base)],[]));
 check('Legacy lesson without opt-in remains untouched',()=>{const d={meta:{},slides:[{id:'legacy',activities:[{questions:[{id:'q',figure:{old:'semantics'}}]}]}]};assert.deepEqual([...v.issues(d)],[]);assert.equal(v.stripAnswers(d),d);});
+for(const malformed of [false,0,''])check('Falsy malformed answerVisuals rejected: '+JSON.stringify(malformed),()=>{const d=structuredClone(base);d.slides[0].activities[1].questions[0].answerVisuals=malformed;assert.ok(v.issues(d).length>0);});
 for(const[name,mutate]of [
  ['duplicate ID',d=>d.slides[0].visuals.push(structuredClone(d.slides[0].visuals[0]))],
  ['missing reference',d=>d.slides[0].activities[1].questions[0].visualRefs=['missing']],

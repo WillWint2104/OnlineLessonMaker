@@ -17,11 +17,8 @@
 .mx .mx-part[data-mx-part="image"]{min-width:0;max-width:100%;}
 .mx .mx-part[data-mx-part="image"] img,.mv-evidence img{display:block;max-width:100%;height:auto;object-fit:contain;}
 .mx .mx-wexex,.mx .mx-wexwork,.mx .mx-solution,.mx .mx-example-question,.mx .mx-annotation,.mx .mx-itembd{min-width:0;max-width:100%;}
-.mx .mx-wexex:has(.mx-tblwrap) .mx-solution-table{width:100%;table-layout:fixed;}
-.mx .mx-wexex:has(.mx-tblwrap) .mx-solution-table th:first-child{width:42px;}
-.mx .mx-wexex:has(.mx-tblwrap) .mx-solution-table td{min-width:0;overflow-wrap:anywhere;}
-.mx .mx-wexex:has(.mx-tblwrap) .mx-conclusion>span{min-width:0;max-width:100%;overflow-x:auto;}
-.mx .mx-tblwrap,.mv-evidence .mx-tblwrap{min-width:0;max-width:100%;overflow-x:auto;}
+.mx .mx-conclusion>span{min-width:0;max-width:100%;overflow-x:auto;}
+.mx .mx-tblwrap,.mv-evidence .mx-tblwrap{min-width:0;max-width:100%;overflow-x:auto;contain:inline-size;}
 .mv-evidence .mx-tbl{width:max-content;min-width:100%;}
 .lp-exercise-cell:has(.mv-evidence){grid-column:1/-1;}
 .lp-answer-hub article:has(.mv-evidence){grid-column:1/-1;min-width:0;}

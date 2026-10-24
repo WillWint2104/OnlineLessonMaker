@@ -4,8 +4,8 @@ const MathVisuals=(()=>{
   const list=x=>Array.isArray(x)?x:[];
   const blank=x=>x==null||x==='';
   function definition(skill,id){return list(skill?.visuals).find(v=>v?.id===id);}
-  function references(owner,inherited=[]){return [...new Set(list(owner?.visualRefs).filter(id=>typeof id==='string'&&!inherited.includes(id)))];}
-  function table(skill,owner){return owner?.table||references(owner).map(id=>definition(skill,id)).find(v=>v?.kind==='table');}
+  function references(owner,inherited=[]){return [...new Set(list(owner?.visualRefs).filter(id=>typeof id==='string'&&!list(inherited).includes(id)))];}
+  function table(skill,owner){return owner?.table||references(owner).map(id=>definition(skill,id)).find(v=>v?.kind==='table'&&Array.isArray(v.head)&&Array.isArray(v.rows)&&v.rows.every(r=>record(r)&&Array.isArray(r.cells)&&r.cells.length===v.head.length));}
   function completed(given,cells){return {...given,rows:list(given.rows).map((r,i)=>({...r,cells:list(r.cells).map((v,j)=>blank(v)?cells?.[i]?.[j]:v)}))};}
   function imageIssue(src){
     if(typeof src!=='string'||!src.trim())return 'Image source is missing.';
@@ -50,7 +50,7 @@ const MathVisuals=(()=>{
         if(o.visualRefs!=null&&(!Array.isArray(o.visualRefs)||o.visualRefs.some(id=>typeof id!=='string')))add(p,`Question/example ${who}: visualRefs must be ID strings.`);
         if(list(o.visualRefs).length!==new Set(list(o.visualRefs)).size)add(p,`Question/example ${who}: duplicate visual reference.`);
         for(const id of list(o.visualRefs))if(!definition(skill,id))add(p,`Question/example ${who}: missing visual ${id}.`);
-        if(!o.answerVisuals)continue;
+        if(o.answerVisuals==null)continue;
         if(!record(o.answerVisuals)){add(p,`Question ${who}: answerVisuals must contain final/worked arrays.`);continue;}
         for(const kind of ['final','worked']){
           const entries=o.answerVisuals[kind];
