@@ -1,0 +1,237 @@
+{
+  "meta": {
+    "id": "b2-composite-paper",
+    "title": "Composite area and perimeter",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-composite",
+      "type": "skill",
+      "title": "Composite area and perimeter",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-composite",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-composite",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-composite",
+                  "label": "Composite area and perimeter",
+                  "tabLabel": "Composite area and perimeter",
+                  "prompt": "Use the L-shaped figure. Find its area and perimeter. All labels are lengths in cm.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "composite-example-0",
+                      "math": "$A=6\\times2+2\\times3=18$",
+                      "text": "Split the shape into two non-overlapping rectangles."
+                    },
+                    {
+                      "id": "composite-example-1",
+                      "math": "$P=6+2+4+3+2+5=22$",
+                      "text": "Add only the six exterior edges."
+                    }
+                  ],
+                  "answer": "$18$ cm²; $22$ cm.",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "composite-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-composite",
+          "title": "Practice",
+          "practiceCollectionId": "collection-composite",
+          "questions": [
+            {
+              "id": "composite-q1",
+              "archetypeId": "method-composite",
+              "level": "basic",
+              "stem": "Use the L-shaped figure. Find its area and perimeter. All labels are lengths in cm.",
+              "answer": "$18$ cm²; $22$ cm.",
+              "presentation": "multipart",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "composite-answer-0",
+                    "math": "A=6\\times2+2\\times3=18",
+                    "text": "Split the shape into two non-overlapping rectangles.",
+                    "alignmentGroup": "work"
+                  },
+                  {
+                    "id": "composite-answer-1",
+                    "math": "P=6+2+4+3+2+5=22",
+                    "text": "Add only the six exterior edges.",
+                    "alignmentGroup": "work"
+                  }
+                ]
+              },
+              "visualRefs": [
+                "composite-given-0"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "composite-given-0"
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "composite-given-0"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-composite",
+          "title": "Composite area and perimeter",
+          "members": [
+            "method-composite"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "figure",
+          "label": "L-shaped region",
+          "figure": {
+            "type": "figure",
+            "figure": "geometry",
+            "title": "L-shaped region",
+            "caption": "Lengths in centimetres. Geometry is constructed from the stated coordinates.",
+            "grid": "hidden",
+            "objects": [
+              {
+                "type": "points",
+                "from": "table",
+                "rows": [
+                  [
+                    "A",
+                    0,
+                    0
+                  ],
+                  [
+                    "B",
+                    6,
+                    0
+                  ],
+                  [
+                    "C",
+                    6,
+                    2
+                  ],
+                  [
+                    "D",
+                    2,
+                    2
+                  ],
+                  [
+                    "E",
+                    2,
+                    5
+                  ],
+                  [
+                    "F",
+                    0,
+                    5
+                  ]
+                ]
+              },
+              {
+                "type": "polygon",
+                "vertices": [
+                  "A",
+                  "B",
+                  "C",
+                  "D",
+                  "E",
+                  "F"
+                ]
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "A",
+                  "B"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "B",
+                  "C"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "C",
+                  "D"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "D",
+                  "E"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "E",
+                  "F"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              },
+              {
+                "type": "sideLabel",
+                "between": [
+                  "F",
+                  "A"
+                ],
+                "text": "auto",
+                "unit": "cm"
+              }
+            ]
+          },
+          "id": "composite-given-0",
+          "description": "The L-shaped region has exterior sides AB 6 cm, BC 2 cm, CD 4 cm, DE 3 cm, EF 2 cm and FA 5 cm. Adjacent sides are perpendicular."
+        }
+      ]
+    }
+  ]
+}

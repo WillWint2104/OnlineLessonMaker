@@ -1,0 +1,240 @@
+{
+  "meta": {
+    "id": "b2-wide-table-paper",
+    "title": "Pattern and 13-column stress table",
+    "subject": "Mathematics",
+    "context": "C2 synthetic integration verification only; no publication approval.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-wide-table",
+      "type": "skill",
+      "title": "Pattern and 13-column stress table",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-wide-table",
+          "title": "Worked example",
+          "workedExamples": [
+            {
+              "id": "group-wide-table",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-wide-table",
+                  "label": "Pattern and 13-column stress table",
+                  "tabLabel": "Pattern and 13-column stress table",
+                  "prompt": "Complete all values of 2n+1 for n from 0 to 12. Read the complete table by scrolling locally where needed.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "wide-table-example-0",
+                      "math": "$u_n=2n+1$",
+                      "text": "Substitute each column heading."
+                    },
+                    {
+                      "id": "wide-table-example-1",
+                      "math": "$u_0=1$",
+                      "text": "The first value is 1; successive values increase by 2.",
+                      "visual": [
+                        {
+                          "kind": "table",
+                          "label": "Completed example table",
+                          "stub": "$n$",
+                          "head": [
+                            "0",
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8",
+                            "9",
+                            "10",
+                            "11",
+                            "12"
+                          ],
+                          "rows": [
+                            {
+                              "label": "$2n+1$",
+                              "cells": [
+                                "1",
+                                "3",
+                                "5",
+                                "7",
+                                "9",
+                                "11",
+                                "13",
+                                "15",
+                                "17",
+                                "19",
+                                "21",
+                                "23",
+                                "25"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "answer": "$1,3,5,7,9,11,13,15,17,19,21,23,25$",
+                  "practice": {
+                    "instructions": "Synthetic B2 display audit. Use the given evidence; identify omissions rather than inventing a missing diagram."
+                  },
+                  "visualRefs": [
+                    "wide-table-given-0"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-wide-table",
+          "title": "Practice",
+          "practiceCollectionId": "collection-wide-table",
+          "questions": [
+            {
+              "id": "wide-table-q1",
+              "archetypeId": "method-wide-table",
+              "level": "basic",
+              "stem": "Complete all values of 2n+1 for n from 0 to 12. Read the complete table by scrolling locally where needed.",
+              "answer": "$1,3,5,7,9,11,13,15,17,19,21,23,25$",
+              "presentation": "extended",
+              "type": "table",
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "wide-table-answer-0",
+                    "math": "u_n=2n+1",
+                    "text": "Substitute each column heading.",
+                    "alignmentGroup": "work"
+                  },
+                  {
+                    "id": "wide-table-answer-1",
+                    "math": "u_0=1",
+                    "text": "The first value is 1; successive values increase by 2.",
+                    "alignmentGroup": "work"
+                  }
+                ]
+              },
+              "visualRefs": [
+                "wide-table-given-0"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "wide-table-given-0",
+                    "completionCells": [
+                      [
+                        "1",
+                        "3",
+                        "5",
+                        "7",
+                        "9",
+                        "11",
+                        "13",
+                        "15",
+                        "17",
+                        "19",
+                        "21",
+                        "23",
+                        "25"
+                      ]
+                    ]
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "wide-table-given-0",
+                    "completionCells": [
+                      [
+                        "1",
+                        "3",
+                        "5",
+                        "7",
+                        "9",
+                        "11",
+                        "13",
+                        "15",
+                        "17",
+                        "19",
+                        "21",
+                        "23",
+                        "25"
+                      ]
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-wide-table",
+          "title": "Pattern and 13-column stress table",
+          "members": [
+            "method-wide-table"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "table",
+          "label": "Pattern table",
+          "stub": "$n$",
+          "head": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12"
+          ],
+          "rows": [
+            {
+              "label": "$2n+1$",
+              "cells": [
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ]
+            }
+          ],
+          "id": "wide-table-given-0",
+          "description": "The row of n runs from 0 through 12. Complete the corresponding values of 2n + 1 in the blank row."
+        }
+      ]
+    }
+  ]
+}
