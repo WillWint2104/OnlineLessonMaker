@@ -23,6 +23,19 @@ async function go(p,id,kind='practice'){await p.evaluate(({id,kind})=>lpNavigate
 async function shot(p,id,state,width){
   await p.evaluate(async()=>{await document.fonts.ready;await Promise.all([...document.querySelectorAll('.mv-evidence img')].map(i=>i.decode().catch(()=>{})));});
   await p.evaluate(()=>new Promise(requestAnimationFrame));
+  const headers=await p.locator('.mv-evidence .mx-tbl th').evaluateAll(cells=>cells.flatMap(cell=>{
+    const words=[],walker=document.createTreeWalker(cell,NodeFilter.SHOW_TEXT);
+    while(walker.nextNode()){
+      const node=walker.currentNode;if(node.parentElement.closest('mjx-container'))continue;
+      for(const match of node.textContent.matchAll(/[A-Za-z]{3,}/g)){
+        const range=document.createRange();range.setStart(node,match.index);range.setEnd(node,match.index+match[0].length);
+        const lines=[...range.getClientRects()].filter(r=>r.width&&r.height).map(r=>Math.round(r.top));
+        words.push({word:match[0],lines:[...new Set(lines)]});
+      }
+    }
+    return words;
+  }));
+  if(headers.length){report.measurements.push({id,state,width,headerWords:headers});check(`Table header words stay intact ${width} ${id} ${state}`,headers.every(h=>h.lines.length<=1));}
   if(await p.locator('.lp-answer-body [data-tp-fig-kind="geometry"]').count()){
     const edges=await p.locator('.lp-answer-body .tp-fig-stage .tp-fig-poly,.lp-answer-body .tp-fig-stage .tp-fig-seg').evaluateAll(es=>es.map(e=>{const s=getComputedStyle(e);return {stroke:s.stroke,strokeOpacity:+s.strokeOpacity,opacity:+s.opacity,width:parseFloat(s.strokeWidth)};}));
     check(`Model geometry has painted edges ${width} ${id} ${state}`,edges.length>0&&edges.every(e=>e.stroke!=='none'&&e.stroke!=='transparent'&&!/(?:,|\/)\s*0(?:\.0+)?\)$/.test(e.stroke)&&e.strokeOpacity>0&&e.opacity>0&&e.width>0));

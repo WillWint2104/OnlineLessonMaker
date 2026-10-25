@@ -559,6 +559,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .mx .mx-conclusion>span{min-width:0;max-width:100%;overflow-x:auto;}
 .mx .mx-tblwrap,.mv-evidence .mx-tblwrap{min-width:0;max-width:100%;overflow-x:auto;contain:inline-size;}
 .mv-evidence .mx-tbl{width:max-content;min-width:100%;}
+/* Keep words legible; the existing table wrapper scrolls when headings need more room. */
+.mv-evidence .mx-tbl th{overflow-wrap:normal;word-break:normal;}
 .lp-exercise-cell:has(.mv-evidence){grid-column:1/-1;}
 .lp-answer-hub article:has(.mv-evidence){grid-column:1/-1;min-width:0;}
 .mv-evidence .mx-tblwrap:focus-visible{outline:2px solid #146d61;outline-offset:2px;}
