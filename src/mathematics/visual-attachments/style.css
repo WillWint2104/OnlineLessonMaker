@@ -2,14 +2,14 @@
 .mv-evidence{display:block;min-width:0;max-width:100%;margin:16px 0;overflow-wrap:anywhere;}
 .mv-evidence>.mx-part{display:block;min-width:0;max-width:100%;}
 .mv-evidence .mx-figstage{max-width:680px;margin-inline:auto;}
-.mx .mv-evidence>.mx-part[data-mx-part="figure"],.lp-answer-hub .mv-evidence>.mx-part[data-mx-part="figure"]{width:min(100%,560px);height:auto;min-height:0;aspect-ratio:var(--mx-plot-ar,4/3);margin-inline:auto;}
+.mx .mv-evidence>.mx-part[data-mx-part="figure"],:is(.lp-answer-hub,.gr-expanded) .mv-evidence>.mx-part[data-mx-part="figure"]{width:min(100%,560px);height:auto;min-height:0;aspect-ratio:var(--mx-plot-ar,4/3);margin-inline:auto;}
 .mx .mv-evidence>.mx-part[data-mx-part="figure"] .mx-figstage{inset:24px 0 0;}
-.lp-answer-hub .mv-evidence .mx-figskin.tp-slide{position:static;display:flex;flex-direction:column;height:100%;min-height:0;background:transparent;--primary:var(--mx-green);--on-surface:var(--mx-ink-body);--on-surface-variant:var(--mx-ink-2);--outline-variant:var(--mx-line);--graph-axis:var(--mx-ink);--graph-grid:var(--mx-line);}
-.lp-answer-hub .mv-evidence .tp-fig{display:flex;flex-direction:column;flex:1;min-height:0;margin:0;}
-.lp-answer-hub .mv-evidence .tp-fig-stage{flex:1;min-height:0;}
-.lp-answer-hub .mv-evidence .tp-fig-svg{width:100%;height:100%;}
-.lp-answer-hub .mv-evidence .tp-fig-ident{display:none;}
-.lp-answer-hub .mv-evidence .tp-fig-expand[hidden]{display:none!important;}
+:is(.lp-answer-hub,.gr-expanded) .mv-evidence .mx-figskin.tp-slide{position:static;display:flex;flex-direction:column;height:100%;min-height:0;background:transparent;--primary:var(--mx-green);--on-surface:var(--mx-ink-body);--on-surface-variant:var(--mx-ink-2);--outline-variant:var(--mx-line);--graph-axis:var(--mx-ink);--graph-grid:var(--mx-line);}
+:is(.lp-answer-hub,.gr-expanded) .mv-evidence .tp-fig{display:flex;flex-direction:column;flex:1;min-height:0;margin:0;}
+:is(.lp-answer-hub,.gr-expanded) .mv-evidence .tp-fig-stage{flex:1;min-height:0;}
+:is(.lp-answer-hub,.gr-expanded) .mv-evidence .tp-fig-svg{width:100%;height:100%;}
+:is(.lp-answer-hub,.gr-expanded) .mv-evidence .tp-fig-ident{display:none;}
+:is(.lp-answer-hub,.gr-expanded) .mv-evidence .tp-fig-expand[hidden]{display:none!important;}
 .mx .mx-item:has(.mv-evidence){align-items:flex-start;}
 .mv-description,.mv-caption{font:400 16px/1.5 'Hanken Grotesk',sans-serif!important;margin:8px 0;color:inherit;}
 .mv-error{color:#9e2929;white-space:pre-wrap;}

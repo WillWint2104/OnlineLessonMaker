@@ -1,0 +1,178 @@
+{
+  "meta": {
+    "id": "audit-graph-reading",
+    "title": "Graph interpretation and coordinates",
+    "subject": "Mathematics",
+    "context": "B3 original interpretation fixture; C2 graph as evidence, not a graph response.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    },
+    "completion": {
+      "description": "Audit fixture only. No publication approval."
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-graph-reading",
+      "type": "skill",
+      "title": "Graph interpretation and coordinates",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-graph-reading",
+          "title": "Representative worked example",
+          "workedExamples": [
+            {
+              "id": "group-graph-reading",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-graph-reading",
+                  "label": "Worked example",
+                  "tabLabel": "Graph interpretation and coordinates",
+                  "prompt": "Using the line shown in the representative example, state the y-intercept, gradient and endpoint coordinates.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "graph-reading-step0",
+                      "math": "$m=\\frac{5-(-5)}{3-(-2)}=2$",
+                      "text": "Use the change in y over the change in x."
+                    },
+                    {
+                      "id": "graph-reading-step1",
+                      "math": "$c=-1$",
+                      "text": "Read y where x is zero."
+                    }
+                  ],
+                  "answer": "See the part answers below.",
+                  "practice": {
+                    "instructions": "Complete the questions in your exercise book or the authored workbook. This is an audit fixture."
+                  },
+                  "visualRefs": [
+                    "given-line"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-graph-reading",
+          "title": "Practice: Graph interpretation and coordinates",
+          "practiceCollectionId": "collection-graph-reading",
+          "questions": [
+            {
+              "stem": "Using the line shown in the representative example, state the y-intercept, gradient and endpoint coordinates.",
+              "presentation": "multipart",
+              "parts": [
+                {
+                  "prompt": "State the y-intercept.",
+                  "finalAnswer": "$-1$",
+                  "workedAnswer": "The line meets the y-axis at $(0,-1)$."
+                },
+                {
+                  "prompt": "Find the gradient.",
+                  "finalAnswer": "$2$",
+                  "workedAnswer": "$\\frac{5-(-5)}{3-(-2)}=\\frac{10}{5}=2$"
+                },
+                {
+                  "prompt": "State the endpoints.",
+                  "finalAnswer": "$(-2,-5)$ and $(3,5)$.",
+                  "workedAnswer": "Read the labelled endpoints of the restricted line."
+                }
+              ],
+              "id": "graph-reading-q1",
+              "archetypeId": "method-graph-reading",
+              "level": "basic",
+              "answer": "$-1$\n$2$\n$(-2,-5)$ and $(3,5)$.",
+              "workedAnswer": "The line meets the y-axis at $(0,-1)$.\n$\\frac{5-(-5)}{3-(-2)}=\\frac{10}{5}=2$\nRead the labelled endpoints of the restricted line.",
+              "visualRefs": [
+                "given-line"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "given-line"
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "given-line"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-graph-reading",
+          "title": "Graph interpretation and coordinates",
+          "members": [
+            "method-graph-reading"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "figure",
+          "figure": {
+            "type": "figure",
+            "figure": "graph",
+            "title": "y = 2x − 1 on the authored domain −2 ≤ x ≤ 3",
+            "caption": "y = 2x − 1 on the authored domain −2 ≤ x ≤ 3",
+            "aspect": "equal",
+            "grid": "shown",
+            "callouts": "shown",
+            "curveLabels": "shown",
+            "domain": {
+              "xMin": -2,
+              "xMax": 3,
+              "yMin": "-6",
+              "yMax": 6
+            },
+            "objects": [
+              {
+                "type": "points",
+                "from": "table",
+                "rows": [
+                  [
+                    "A",
+                    -2,
+                    -5
+                  ],
+                  [
+                    "B",
+                    0,
+                    -1
+                  ],
+                  [
+                    "C",
+                    3,
+                    5
+                  ]
+                ]
+              },
+              {
+                "type": "segment",
+                "between": [
+                  "A",
+                  "C"
+                ]
+              }
+            ]
+          },
+          "role": "primary",
+          "id": "given-line",
+          "description": "Restricted straight line through A at negative two, negative five and C at three, five; B lies on the y axis at negative one."
+        }
+      ]
+    }
+  ]
+}

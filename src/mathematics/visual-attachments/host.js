@@ -32,8 +32,8 @@ function mvRefs(owner,key,options={}){
     try{return mvVisual(v,key+'-'+id,v===options.responseTable?options.tableHtml:undefined);}catch{return `<p class="mv-error" role="status">Required visual ${esc(id)} is invalid. Repair its definition in Edit mode.</p>`;}
   }).join('');
 }
-function mvAnswer(owner,kind,skill=mvSkill(owner)){
-  if(!lpBookAllowed(kind))return '';
+function mvAnswer(owner,kind,skill=mvSkill(owner),options={}){
+  if(!(options.allowed??lpBookAllowed(kind)))return '';
   return (Array.isArray(owner.answerVisuals?.[kind])?owner.answerVisuals[kind]:[]).map((entry,i)=>{
     if(!entry||typeof entry!=='object'||Array.isArray(entry))return '<p class="mv-error" role="status">Answer visual unavailable.</p>';
     const given=entry.ref==='@questionTable'?{...owner.table,kind:'table',id:'question-table',description:'The completed table uses the original headings and given values.'}:MathVisuals.definition(skill,entry.ref);
