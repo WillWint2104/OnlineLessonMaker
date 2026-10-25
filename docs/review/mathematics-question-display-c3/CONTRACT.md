@@ -14,6 +14,6 @@ No new authored graph schema or learner document version. Stable skill/activity/
 
 The authoring inspector retains its existing graph mode, axes/tools, C1 working editor, C2 visual selection and part editor. Import/edit/export/reopen preserves these fields without a universal `response.type` migration. Given evidence stays outside the response store. Model content stays outside untouched learner surfaces, even when answers are available elsewhere.
 
-Disposal uses the existing graph view lifecycle; expanded close destroys its mounted graph view, removes the dialog, repaints the compact view and restores opener focus. The header context control operates only within that dialog. No document-wide key handler or new widget registry is added.
+Disposal uses the existing graph view lifecycle; expanded close destroys its mounted graph view, closes active supplied-coordinate callouts through the existing overlay adapter, disconnects its scoped figure resize observer, removes the dialog, repaints the compact view and restores opener focus. Escape closes an active given-coordinate callout before dismissing the graph workspace. The header context control operates only within that dialog. No new document-wide key handler or widget registry is added.
 
 Limitations remain deliberate: session-only state; no automatic marking, new student function entry, equation/graph combined document, inequality-region solver, constrained geometry tools, persistent saving or remote class deployment. Browser evidence is not physical-device or screen-reader certification.

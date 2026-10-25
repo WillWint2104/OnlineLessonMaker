@@ -176,8 +176,27 @@ function grMount(root,q,page,options={}){
   }
   update();const observer=new ResizeObserver(()=>paint());observer.observe(stage);const view={root,update,destroy(){destroyed=true;observer.disconnect();plot.removeEventListener('pointerdown',down);plot.removeEventListener('pointermove',moving);plot.removeEventListener('pointerup',end);plot.removeEventListener('pointercancel',end);GR_VIEWS.delete(view);}};GR_VIEWS.add(view);return view;
 }
+function grCloseGivenCallouts(root){root.querySelectorAll('.tp-fig-callout:not([hidden]) [data-tp-focus-close]').forEach(button=>button.click());}
 function grExpand(compact,q,page,opener,response,preview){
-  const d=document.createElement('dialog');d.className='gr-expanded';mvHubTheme(d);d.style.setProperty('--gr-expanded-aspect',grAxes(q.graphResponse).ratio);d.setAttribute('aria-label','Expanded graph response');const contextId='gr-context-'+(++GR_SERIAL);d.innerHTML=`<header><h2>${esc('Question '+(Number(compact.closest('.lp-exercise-cell')?.querySelector('.mx-num')?.textContent)||1))}</h2><div class="gr-workspace-actions"><button type="button" data-gr-context aria-controls="${contextId}">Question and givens</button><button type="button" data-gr-close>Done and close</button></div></header><div class="gr-expanded-body"><details id="${contextId}" class="gr-expanded-context" open><summary>Question and givens</summary>${grContext(q,page)}</details><div class="gr-response"></div></div>`;document.body.append(d);d.showModal();const view=grMount(d.querySelector('.gr-response'),q,page,{expanded:true,response,preview});d.querySelector('[data-gr-context]').onclick=()=>{const context=d.querySelector('.gr-expanded-context');context.open=true;d.querySelector('.gr-expanded-body').scrollTop=0;context.querySelector('summary').focus({preventScroll:true});};requestAnimationFrame(()=>{if(d.isConnected)mvFitAnswers(d);});d.querySelector('[data-gr-close]').onclick=()=>d.close();d.onkeydown=e=>e.stopPropagation();d.onclose=()=>{view.destroy();d.remove();for(const v of GR_VIEWS)if(v.root===compact)v.update();if(opener.isConnected)opener.focus({preventScroll:true});};d.querySelector('[data-gr-close]').focus();
+  const d=document.createElement('dialog');d.className='gr-expanded';mvHubTheme(d);
+  d.style.setProperty('--gr-expanded-aspect',grAxes(q.graphResponse).ratio);
+  d.setAttribute('aria-label','Expanded graph response');
+  const contextId='gr-context-'+(++GR_SERIAL);
+  d.innerHTML=`<header><h2>${esc('Question '+(Number(compact.closest('.lp-exercise-cell')?.querySelector('.mx-num')?.textContent)||1))}</h2><div class="gr-workspace-actions"><button type="button" data-gr-context aria-controls="${contextId}">Question and givens</button><button type="button" data-gr-close>Done and close</button></div></header><div class="gr-expanded-body"><details id="${contextId}" class="gr-expanded-context" open><summary>Question and givens</summary>${grContext(q,page)}</details><div class="gr-response"></div></div>`;
+  document.body.append(d);d.showModal();
+  const view=grMount(d.querySelector('.gr-response'),q,page,{expanded:true,response,preview}),context=d.querySelector('.gr-expanded-context');
+  // Supplied evidence keeps its existing coordinate inspection, not graph-editing handlers.
+  wirePackOverlays(context);
+  const fit=()=>{if(d.isConnected)mvFitAnswers(context);};
+  let width;
+  const observer=new ResizeObserver(()=>{if(width===context.clientWidth)return;width=context.clientWidth;requestAnimationFrame(fit);});
+  observer.observe(context);
+  context.ontoggle=()=>{if(context.open)requestAnimationFrame(fit);else grCloseGivenCallouts(context);};
+  d.querySelector('[data-gr-context]').onclick=()=>{context.open=true;d.querySelector('.gr-expanded-body').scrollTop=0;context.querySelector('summary').focus({preventScroll:true});};
+  d.querySelector('[data-gr-close]').onclick=()=>d.close();
+  d.onkeydown=e=>{if(e.key==='Escape'&&context.querySelector('.tp-fig-callout:not([hidden])')){e.preventDefault();grCloseGivenCallouts(context);}e.stopPropagation();};
+  d.onclose=()=>{grCloseGivenCallouts(context);observer.disconnect();view.destroy();d.remove();for(const v of GR_VIEWS)if(v.root===compact)v.update();if(opener.isConnected)opener.focus({preventScroll:true});};
+  requestAnimationFrame(fit);d.querySelector('[data-gr-close]').focus();
 }
 function grWire(){grReset();for(const v of GR_VIEWS)if(!v.root.isConnected)v.destroy();document.querySelectorAll('[data-gr-question]').forEach(root=>{if([...GR_VIEWS].some(v=>v.root===root))return;const q=grFind(root.dataset.grPage,root.dataset.grQuestion);if(q?.graphResponse){try{grConfigValidate(q);grMount(root,q,root.dataset.grPage);}catch(e){root.textContent='Graph configuration needs attention: '+e.message;}}});grAlignQuestionRows();document.querySelectorAll('[data-gr-local-release]').forEach(b=>b.onclick=()=>grReleaseDialog(b));}
 function grAllowed(q,kind){const policy=LESSON.meta.answerPolicy?.groups?.[q.releaseGroup]?.[kind];if(!policy)return lpBookAllowed(kind);if(lpBookTeacher())return true;if(policy==='autonomous')return true;if(policy==='end')return LP_BOOK.completed||LP_STATE.end;if(policy==='teacher')return !document.documentElement.dataset.export&&GR_RELEASE.get(q.releaseGroup)?.[kind]===true;return false;}
