@@ -47,6 +47,11 @@
                       "id": "graph-reading-step1",
                       "math": "$c=-1$",
                       "text": "Read y where x is zero."
+                    },
+                    {
+                      "id": "read-domain",
+                      "math": "$(-2,-5),\\ (3,5)$",
+                      "text": "Read the endpoints of the supplied segment, restricted to −2 ≤ x ≤ 3."
                     }
                   ],
                   "answer": "See the part answers below.",

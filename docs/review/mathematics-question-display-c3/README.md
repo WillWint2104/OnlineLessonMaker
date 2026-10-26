@@ -29,3 +29,11 @@ Set `C3_REVIEW_DIR` to an isolated evidence folder. The C3 gate uses the actual 
 The complete applicable verification also includes the unchanged 55-gate player suite, C1/C2/micro focused gates, corpus identity and protected-source hashes. All gate output must use this task's separate review directories. Exact final-head receipts and an incremented review ZIP accompany the draft PR; preliminary run output is not an exact-head acceptance claim.
 
 Keep the PR **DRAFT**, with auto-merge disabled. No merge, deployment or new lesson publication until separate human approval. Stop for C3 visual/functional review; no B4 milestone starts automatically.
+
+## Approved visual refinement
+
+Graph-bearing paired examples reuse their existing C1 working table in a local responsive composition. A single representative graph example has one Worked example heading. Its graph is bounded by available width and its authored aspect; wide authored domains or multiple graphs flow above the full-width reasoning. Text-only and unrelated legacy examples keep their prior output. Verification examples calculate endpoints, plot and join within explicit domains; practice uses different values and remains blank initially.
+
+Graph answers put compact authorised evidence beside the working, with the model graph below that entire unit. Given and completed answer evidence retain distinct labels. Inspection reuses the same registered Figure Engine panel and delegated controls inside a native child dialog, retains the description and focus return, and cannot edit a learner response. Short-height reference summaries retain an Inspect control; C1's existing filter disclosure now also serves the graph Hub. Both adaptations must be tested together at genuine native 200%, including initial calculation visibility.
+
+Run `node scripts/verify-mathematics-graph-layout.mjs` with `C3_LAYOUT_DIR` for real integrated screenshots/measurements and inspection/disclosure checks. It is not the temporary design-proposal script. Follow it with the C3 functional gate, affected C1/C2/micro and authoring/export checks and the full player suite at the final clean head. Prior proposal captures remain historical evidence, never final implementation acceptance.

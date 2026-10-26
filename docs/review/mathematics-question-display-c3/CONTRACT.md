@@ -17,3 +17,10 @@ The authoring inspector retains its existing graph mode, axes/tools, C1 working 
 Disposal uses the existing graph view lifecycle; expanded close destroys its mounted graph view, closes active supplied-coordinate callouts through the existing overlay adapter, disconnects its scoped figure resize observer, removes the dialog, repaints the compact view and restores opener focus. Escape closes an active given-coordinate callout before dismissing the graph workspace. The header context control operates only within that dialog. No new document-wide key handler or widget registry is added.
 
 Limitations remain deliberate: session-only state; no automatic marking, new student function entry, equation/graph combined document, inequality-region solver, constrained geometry tools, persistent saving or remote class deployment. Browser evidence is not physical-device or screen-reader certification.
+# Visual refinement compatibility
+
+The approved Layout A/short-height changes introduce no JSON fields or response types. Qualifying graph worked examples reuse C1's paired primitive; text-only and unrelated legacy outputs are retained. Wide authored graph extents or multiple graphs can use full-width flow. Graph mathematics and the accepted visual-system source are unchanged.
+
+Read-only inspection is an optional internal C2-host rendering flag, used only by graph answer evidence after its existing release check. It cannot make withheld values eligible. The existing registered Figure Engine panel is moved into a native dialog and restored on close; no editable response is mounted there. Parent redraw/close disposes inspection, resize reuses the existing solver, and close returns focus to the visible inspection opener.
+
+At short heights, evidence remains named and inspectable while its inline preview starts collapsed. C1's existing filter disclosure retains practice/pathway/question controls and answer-type switching. Visual acceptance requires measuring the combined layout's first calculation and reading area, in addition to the existing policy, state and publication checks.

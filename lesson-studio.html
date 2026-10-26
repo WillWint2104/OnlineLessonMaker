@@ -543,6 +543,56 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .gr-givens>h4,.gr-response-label{font:600 16px/1.4 var(--sans,Arial,sans-serif);color:#006b5c;margin:10px 0}
 @media(max-width:650px){.gr-expanded-context>summary{top:-12px}}
 
+/* Approved C3 refinement: compose only graph-bearing worked examples. */
+.mx .mx-wexex.gr-worked-example{display:block;container:graph-example / inline-size;padding:0;background:transparent}
+.gr-worked-example>.mx-example-question{display:block;padding:14px 18px;margin-bottom:14px}
+.gr-worked-example>.mx-example-question h2{font-size:22px;margin:0 0 8px}
+.gr-example-pair{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:start}
+.gr-example-pair>.mx-solution{grid-area:auto;min-width:0;padding:0}
+.gr-example-evidence{min-width:0;border:1px solid #d6e2dc;border-radius:8px;background:#fff;padding:10px}
+.gr-example-evidence .mv-evidence{margin:0}
+.mx .gr-worked-example .gr-example-evidence .mx-part[data-mx-part="figure"]{width:min(100%,325px,calc(390px * var(--mx-plot-ar,1)));margin-inline:auto;min-height:0}
+.gr-example-wide .gr-example-evidence{max-width:100%}
+.mx .gr-worked-example.gr-example-wide .gr-example-evidence .mx-part[data-mx-part="figure"]{width:min(100%,760px)}
+.gr-worked-example .mx-solution-table .mx-row-number{width:36px;min-width:36px}
+@container graph-example (min-width:860px){.gr-worked-example:not(.gr-example-wide) .gr-example-pair{grid-template-columns:minmax(200px,.38fr) minmax(0,.62fr)}}
+
+.gr-reference-pair{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin:12px 0;align-items:start;min-width:0}
+.gr-answer-reference{min-width:0;border:1px solid #d6e2dc;border-radius:7px;background:#fff;padding:10px}
+.gr-answer-reference>summary{cursor:pointer;font:600 15px/1.5 Arial,sans-serif;color:#006b5c}
+.gr-answer-reference>summary button{font:14px/1.4 Arial,sans-serif;min-height:32px;padding:5px 8px;margin:4px 0 4px 8px;border:1px solid #bdd7cc;border-radius:5px;background:#f3faf6;color:#005e51}
+.gr-answer-reference>summary:focus-visible{outline:2px solid #007e6e;outline-offset:3px}
+.gr-answer-reference .mv-evidence{margin:10px 0 0}
+.lp-answer-hub .gr-answer .gr-answer-reference .mx-part[data-mx-part="figure"]{width:min(100%,270px,calc(390px * var(--mx-plot-ar,1)))}
+.gr-answer-question>summary{display:none}
+.gr-reference-pair+.gr-answer-model{margin-top:18px;padding-top:12px;border-top:1px solid #d6e2dc}
+.gr-reference-pair+.gr-answer-model .gr-response{max-width:440px}
+@container answer-content (min-width:860px){.gr-reference-with-work{grid-template-columns:minmax(180px,.3fr) minmax(0,.7fr)}}
+
+/* The registered Figure Engine panel is moved, never cloned or converted to a response. */
+.gr-evidence-dialog{width:min(1200px,96vw);max-width:96vw;height:94dvh;max-height:94dvh;padding:0;border:1px solid #cdded5;border-radius:10px;background:#fff;color:#17251f;display:flex;flex-direction:column;overflow:hidden}
+.gr-evidence-dialog:not([open]){display:none}.gr-evidence-dialog::backdrop{background:#173c3070}
+.gr-evidence-dialog.tp-slide .tp-fpanel-figx{position:static;display:flex;flex-direction:column;width:100%;max-width:none;flex:1;min-height:0;height:auto;max-height:none;margin:0;padding:16px;box-shadow:none;border:0}
+.gr-evidence-dialog .tp-figx-stage{flex:1;min-height:100px}.gr-evidence-dialog .tp-figx-stage svg{width:100%;height:100%}
+.gr-inspection-description{font:15px/1.5 Arial,sans-serif;margin:0;padding:8px 16px;border-top:1px solid #d6e2dc;flex:none}
+@media(max-height:560px){
+ .mx-support-dialog.lp-answer-hub.lp-graph-hub.md-adaptive-hub{height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);padding:10px 16px}
+ .lp-graph-hub.md-adaptive-hub .lp-hub-status{font:14px/1.4 Arial,sans-serif;margin:0 0 2px}
+ .lp-graph-hub.md-adaptive-hub #book-hub-title{font-size:24px;line-height:1.2}
+ .lp-graph-hub.md-adaptive-hub .lp-answer-toolbar .mx-collection-tabs button{font:16px/1.4 Arial,sans-serif;padding:6px 10px;min-height:36px}
+ .lp-graph-hub.md-adaptive-hub .lp-answer-toolbar{margin:0 0 4px}
+ .lp-graph-hub.md-adaptive-hub .md-filter-disclosure>summary{display:list-item;font:600 16px/1.5 Arial,sans-serif;color:#00685d;cursor:pointer;padding:4px 0;margin:0 0 4px}
+ .lp-graph-hub.md-adaptive-hub .md-filter-disclosure[open]{max-height:45dvh;overflow-y:auto}
+ .lp-graph-hub.md-adaptive-hub .lp-answer-body>section>h3,.lp-graph-hub .gr-answer-work>h4,.lp-graph-hub .md-steps thead{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .lp-graph-hub .gr-answer-card{padding:8px 10px!important}.lp-graph-hub .gr-answer-heading{padding-left:0}.lp-graph-hub .gr-answer-stem{font-size:16px}
+ .lp-graph-hub .gr-answer-reference{padding:4px 8px}.lp-graph-hub .gr-reference-pair{display:block;margin:6px 0}.lp-graph-hub .gr-answer-reference{margin-bottom:6px}
+ .lp-graph-hub .gr-answer-question>summary{display:list-item;cursor:pointer;font:600 15px/1.5 Arial,sans-serif;color:#00685d;padding:3px 0}
+ .lp-graph-hub .gr-answer-card details[data-book-solution]>summary{padding-bottom:4px}
+ .lp-graph-hub .gr-answer-reference>summary button{margin-top:0;margin-bottom:0}
+ .lp-graph-hub .md-steps{margin-top:4px}.lp-graph-hub .gr-question-header .gr-stem{font-size:16px;line-height:1.4}
+ .gr-evidence-dialog.tp-slide .tp-fpanel-figx{padding:10px}
+}
+
 /* GRAPH_RESPONSE_CSS_END */
 
 /* MATHEMATICS_VISUAL_ATTACHMENTS_CSS_START */
@@ -16382,13 +16432,13 @@ function mvChildParts(owner,key,skill,inherited){
   return (Array.isArray(owner.parts)?owner.parts:[]).map((pt,k)=>`<div class="mx-part"><b class="mx-pl">(${esc(pt?.label||String.fromCharCode(97+k))})</b><div>${mxM(lpBookPartText(pt))}${mvRefs(pt,key+'-'+k,{skill,inherited})}${pt&&typeof pt==='object'?mvChildParts(pt,key+'-'+k,skill,[...inherited,...MathVisuals.references(pt)]):''}</div></div>`).join('');
 }
 let MV_RENDER_ID=0;
-function mvVisual(v,key,body,readOnly=false){
+function mvVisual(v,key,body,readOnly=false,inspect=false){
   const id='mv-description-'+(++MV_RENDER_ID),description=String(v.description||''),caption=String(v.caption||'');
   let html=body??mxPart(v,key);
   if(v.kind==='table'&&!html.includes('role="region"'))html=html.replace('<div class="mx-tblwrap"','<div class="mx-tblwrap" tabindex="0" role="region" aria-label="Data table; scroll horizontally if needed"');
   html=html.replace(/loading="lazy"/g,'loading="eager"');
-  // Model evidence is inline in the existing modal; avoid an unwired nested expansion control.
-  if(readOnly)html=html.replace(/<button class="tp-fig-expand"/g,'<button hidden disabled class="tp-fig-expand"');
+  // Ordinary model evidence stays inline; the graph adapter explicitly wires optional inspection.
+  if(readOnly)html=html.replace(/<button class="tp-fig-expand"/g,inspect?'<button data-gr-inspect class="tp-fig-expand"':'<button hidden disabled class="tp-fig-expand"');
   // Accessible descriptions follow the figure into its existing expanded workspace.
   if(v.kind==='figure')html=html.replace(/<svg\b/g,`<svg aria-describedby="${id}"`);
   return `<section class="mv-evidence" data-mv-ref="${esc(v.id||key)}" aria-describedby="${id}">${html}<p id="${id}" class="mv-description">${esc(description)}</p>${caption?`<p class="mv-caption">${mxM(caption)}</p>`:''}</section>`;
@@ -16407,7 +16457,7 @@ function mvAnswer(owner,kind,skill=mvSkill(owner),options={}){
     if(!entry||typeof entry!=='object'||Array.isArray(entry))return '<p class="mv-error" role="status">Answer visual unavailable.</p>';
     const given=entry.ref==='@questionTable'?{...owner.table,kind:'table',id:'question-table',description:'The completed table uses the original headings and given values.'}:MathVisuals.definition(skill,entry.ref);
     if(!given)return '<p class="mv-error" role="status">Answer visual unavailable.</p>';
-    try{const v=entry.completionCells?MathVisuals.completed(given,entry.completionCells):given;return mvVisual(v,'answer-'+owner.id+'-'+kind+'-'+i,undefined,true);}catch{return '<p class="mv-error" role="status">Answer visual is invalid. Repair its definition in Edit mode.</p>';}
+    try{const v=entry.completionCells?MathVisuals.completed(given,entry.completionCells):given;return mvVisual(v,'answer-'+owner.id+'-'+kind+'-'+i,undefined,true,options.inspect===true);}catch{return '<p class="mv-error" role="status">Answer visual is invalid. Repair its definition in Edit mode.</p>';}
   }).join('');
 }
 function mvFitAnswers(panel){for(const figure of panel.querySelectorAll('.mv-evidence .tp-fig'))figInlineSolve(figure);}
@@ -16797,9 +16847,10 @@ if(!document.documentElement.dataset.export){const button=document.createElement
 function mdAdaptiveHub(d){
   // Native dialog tabbing may pass to browser chrome after the last working line.
   // Keep the existing middle order, but wrap both boundaries inside this Hub.
-  d.addEventListener('keydown',e=>{if(e.key!=='Tab'||e.defaultPrevented||d.classList.contains('lp-graph-hub'))return;const items=[...d.querySelectorAll('button,input,select,textarea,a[href],summary,[tabindex]')].filter(el=>el.tabIndex>=0&&!el.disabled&&el.getClientRects().length&&getComputedStyle(el).visibility!=='hidden'),first=items[0],last=items.at(-1);if(!first)return;if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
+  const visible=el=>{if(el.tabIndex<0||el.disabled||!el.getClientRects().length||getComputedStyle(el).visibility==='hidden')return false;for(let parent=el.parentElement;parent&&parent!==d;parent=parent.parentElement)if(parent.matches('details:not([open])')&&!parent.querySelector(':scope>summary')?.contains(el))return false;return true;};
+  d.addEventListener('keydown',e=>{if(e.key!=='Tab'||e.defaultPrevented)return;const items=[...d.querySelectorAll('button,input,select,textarea,a[href],summary,[tabindex]')].filter(visible),first=items[0],last=items.at(-1);if(!first)return;if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
   const toolbar=d.querySelector('.lp-answer-toolbar'),filters=d.querySelector('.lp-answer-filters'),expand=d.querySelector('.lp-answer-expand'),body=d.querySelector('.lp-answer-body'),disclosure=document.createElement('details'),summary=document.createElement('summary'),content=document.createElement('div');disclosure.className='md-filter-disclosure';content.id='md-secondary-filters';summary.setAttribute('aria-controls',content.id);content.append(filters);disclosure.append(summary,content);body.before(disclosure);d.classList.add('md-adaptive-hub');
-  let last;const media=matchMedia('(max-height: 560px)'),update=()=>{const short=media.matches&&!d.classList.contains('lp-graph-hub');if(short===last)return;last=short;const focused=document.activeElement,moving=expand.contains(focused);if(short&&(content.contains(focused)||moving))summary.focus();disclosure.open=!short;(short?content:toolbar).append(expand);if(!short&&moving)focused.focus({preventScroll:true});};const label=()=>{const level=d.querySelector('[data-book-pathway]').selectedOptions[0]?.textContent||'',question=d.querySelector('[data-book-search]').selectedOptions[0]?.textContent||'All';summary.textContent='Filters \u00b7 '+level+' \u00b7 '+(question==='All'?'All questions':'Question '+question);update();};
+  let last;const media=matchMedia('(max-height: 560px)'),update=()=>{const short=media.matches;if(short===last)return;last=short;const focused=document.activeElement,moving=expand.contains(focused);if(short&&(content.contains(focused)||moving))summary.focus();disclosure.open=!short;(short?content:toolbar).append(expand);if(!short&&moving)focused.focus({preventScroll:true});};const label=()=>{const level=d.querySelector('[data-book-pathway]').selectedOptions[0]?.textContent||'',question=d.querySelector('[data-book-search]').selectedOptions[0]?.textContent||'All';summary.textContent='Filters \u00b7 '+level+' \u00b7 '+(question==='All'?'All questions':'Question '+question);update();};
   filters.addEventListener('change',label);label();media.addEventListener('change',update);d.addEventListener('close',()=>media.removeEventListener('change',update),{once:true});return label;
 }
 
@@ -16886,12 +16937,13 @@ function mxPairedExample(ex,k,state,extra){
   const activity=lpEnabled(LESSON.slides[cur])?lpCurrent(LESSON.slides[cur]):null;
   const collection=activity&&lpCollection(LESSON.slides[cur],activity),members=collection?lpCollectionMembers(LESSON.slides[cur],collection):[];
   const number=members.length?members.findIndex(x=>x.ex===ex)+1:k+1;
-  return `<article class="mx-wexex mx-worked-example" data-mx-example="${esc(ex.id||'')}" aria-label="${esc(mxPlain(ex.label||'Worked example'))}">
+  const html=`<article class="mx-wexex mx-worked-example" data-mx-example="${esc(ex.id||'')}" aria-label="${esc(mxPlain(ex.label||'Worked example'))}">
     ${composed||`<header class="mx-example-question"><div><div class="mx-example-number">Example ${number}</div><h2 data-mx-region="title">${mxM(ex.label||'Worked example')}</h2>${q&&show('question')?`<div data-mx-region="question" data-mx-sec="question">${questionEvidence}<div class="mx-wexqb">${mxM(q)}</div>${mvRefs(ex,'example-'+ex.id)}</div>`:''}</div>
       ${mxSupportButton(ex)}</header>`}
     <section data-mx-region="working" class="mx-solution">${show('steps')?`<table class="mx-solution-table"${ex.steps?.some(s=>s?.alignmentGroup)?' data-md-owner':''} data-mx-sec="steps"><thead><tr><th scope="col">No.</th><th scope="col">Working</th>${lpTextbook()?'':'<th scope="col">No.</th>'}<th scope="col">Explanation</th></tr></thead><tbody>
       ${steps.map((st,j)=>{const o=st&&typeof st==='object'?st:{text:st};return `<tr class="mx-step" data-mx-step="${esc(o.id||'s'+(j+from))}"><td class="mx-row-number">${j+from}</td><td class="mx-stepm">${o.alignmentGroup?mdWorkingCell(o):mxWorking(o.math||'')}</td>${lpTextbook()?'':`<td class="mx-row-number mx-row-repeat">${j+from}</td>`}<td class="mx-annotation"><div class="mx-stept">${mxM(o.text||'')}</div>${o.note?`<div class="mx-stepn">${mxM(o.note)}</div>`:''}${mxParts(o.visual).length?mxCompanion(mxParts(o.visual),'paired-'+esc(ex.id||k)+'-'+j):''}</td></tr>`;}).join('')}
-    </tbody></table>`:''}${extra||''}${answer&&show('answer')?`<div class="mx-conclusion" data-mx-region="answer" data-mx-sec="answer"><span aria-hidden="true">✓</span><span${ex.visualRefs?.length?' tabindex="0" role="region" aria-label="Example conclusion; scroll horizontally if needed"':''}>${ex.resultLabel?esc(ex.resultLabel)+' ':''}${mxM(answer)}</span></div>`:''}</section></article>`;
+      </tbody></table>`:''}${extra||''}${answer&&show('answer')?`<div class="mx-conclusion" data-mx-region="answer" data-mx-sec="answer"><span aria-hidden="true">✓</span><span${ex.visualRefs?.length?' tabindex="0" role="region" aria-label="Example conclusion; scroll horizontally if needed"':''}>${ex.resultLabel?esc(ex.resultLabel)+' ':''}${mxM(answer)}</span></div>`:''}</section></article>`;
+  return grComposeExample(ex,html);
 }
 function mxSupportOpen(ex,opener){
   if(document.querySelector('[data-mx-support-dialog]'))return;
@@ -17880,11 +17932,26 @@ const grId=()=> 'graph-'+crypto.randomUUID();
 // Graph prose uses the existing inline Mathematics pipeline, not a new parser.
 function grText(value){return String(value??'').includes('$')?tpRichMath(value):mxM(value);}
 function grHeader(q,number){const [stem,...instructions]=String(q.stem||'').split('\n');return `<header class="gr-question-header">${number==null?'':`<span class="mx-num">${number}</span>`}<div><div class="gr-stem">${grText(stem)}</div>${instructions.length?`<p class="gr-instruction">${grText(instructions.join(' '))}</p>`:''}</div></header>`;}
+/** Pair only authored graph examples; all other C1 example markup stays unchanged. */
+function grComposeExample(ex,html){
+  if(!lpMathSubject()||!lpEnabled(LESSON.slides[cur]))return html;
+  const skill=mvSkill(ex),visuals=[...mxParts(ex.visual),...MathVisuals.references(ex).map(id=>MathVisuals.definition(skill,id)).filter(Boolean)];
+  if(!visuals.length||!visuals.every(v=>v.kind==='figure'&&v.figure?.figure==='graph'))return html;
+  const box=document.createElement('div');box.innerHTML=html;const article=box.firstElementChild,working=article.querySelector('.mx-solution');let header=article.querySelector('.mx-example-question');
+  if(!header||!working)return html;
+  const evidence=[...header.querySelectorAll('.mv-evidence,.mx-evidence-stage')];if(!evidence.length)return html;
+  const wide=visuals.length>1||visuals.some(v=>{const d=v.figure.domain||{};return (Number(d.xMax)-Number(d.xMin))/(Number(d.yMax)-Number(d.yMin))>1.8;});
+  article.classList.add('gr-worked-example');if(wide)article.classList.add('gr-example-wide');
+  const pair=document.createElement('div'),figure=document.createElement('section');pair.className='gr-example-pair';figure.className='gr-example-evidence';figure.setAttribute('aria-label','Worked-example graph');evidence.forEach(node=>figure.append(node));pair.append(figure,working);article.append(pair);
+  if(header.classList.contains('mx-composed-question')){const compact=document.createElement('header');compact.className='mx-example-question';for(const selector of ['.mx-example-number','[data-mx-region="title"]','.mx-wexqb','[data-mx-support]']){const node=header.querySelector(selector);if(node)compact.append(node);}header.replaceWith(compact);header=compact;}
+  const activity=skill.activities.find(a=>lpSingleExample(a)?.id===ex.id);if(activity){header.querySelector('.mx-example-number')?.remove();const title=header.querySelector('[data-mx-region="title"]');if(title)title.textContent='Worked example';}
+  return article.outerHTML;
+}
 function grLessonHas(){return (LESSON.slides||[]).some(s=>(s.activities||[]).some(a=>(a.questions||[]).some(q=>q.graphResponse)));}
 function grPartHas(q,kind){return (q.parts||[]).some(p=>p&&typeof p==='object'&&((kind==='worked'?mdHasWorking(p):p.finalAnswer)||p.answerVisuals?.[kind]?.length||grPartHas(p,kind)));}
 function grEligible(q,kind){if(!q.graphResponse)return lpBookAllowed(kind)&&!!(lpBookQuestion(q,kind)||(q.parts||[]).some(p=>p&&typeof p==='object'&&p[kind==='worked'?'workedAnswer':'finalAnswer']));const a=q.graphAnswer||{};return !!(grAllowed(q,kind)&&(kind==='worked'?a.showWorkedSolution!==false&&(mdHasWorking(q)||grPartHas(q,kind)||q.answerVisuals?.worked?.length):q.answer||grPartHas(q,kind)||q.answerVisuals?.final?.length||(a.showModelGraph!==false&&a.objects?.length)||(a.showTable!==false&&a.table?.length)));}
 function grContext(q,page,number){const skill=LESSON.slides.find(s=>s.id===page)||mvSkill(q),parts=mvChildParts(q,'graph-parts-'+q.id,skill,MathVisuals.references(q)),givens=mvRefs(q,'graph-given-'+q.id,{skill});return `<div class="gr-question-context">${grHeader(q,number)}${givens?`<section class="gr-givens" aria-label="Given information"><h4>Given information</h4>${givens}</section>`:''}${parts?`<div class="mx-parts gr-written-parts">${parts}</div><p class="gr-written-route">Record written answers in your exercise book or the lesson workbook.</p>`:''}</div>`;}
-function grPartAnswers(q,kind,skill,allowed){if(!allowed||!grPartHas(q,kind))return '';return '<div class="lp-part-answers">'+(q.parts||[]).map((p,i)=>`<section class="lp-part-answer"><b>(${esc(p?.label||String.fromCharCode(97+i))})</b><div><p>${grText(lpBookPartText(p))}</p>${p&&typeof p==='object'?mvAnswer(p,kind,skill,{allowed})+(kind==='worked'?(mdHasWorking(p)?mdWorking(p):''):lpBookWorking(p.finalAnswer||''))+grPartAnswers(p,kind,skill,allowed):''}</div></section>`).join('')+'</div>';}
+function grPartAnswers(q,kind,skill,allowed){if(!allowed||!grPartHas(q,kind))return '';return '<div class="lp-part-answers">'+(q.parts||[]).map((p,i)=>`<section class="lp-part-answer"><b>(${esc(p?.label||String.fromCharCode(97+i))})</b><div><p>${grText(lpBookPartText(p))}</p>${p&&typeof p==='object'?mvAnswer(p,kind,skill,{allowed,inspect:true})+(kind==='worked'?(mdHasWorking(p)?mdWorking(p):''):lpBookWorking(p.finalAnswer||''))+grPartAnswers(p,kind,skill,allowed):''}</div></section>`).join('')+'</div>';}
 function grHubVisible(q,kind){return grEligible(q,kind);}
 function grReset(){if(GR_LESSON===LESSON)return;for(const view of GR_VIEWS)view.destroy();GR_VIEWS.clear();GR_UI.clear();GR_RELEASE.clear();GR_LESSON=LESSON;}
 function grDefault(){return {type:'plotConstruct',axes:{xMin:-5,xMax:5,yMin:-5,yMax:5,xStep:1,yStep:1,snap:.5,aspect:'equal',xLabel:'x',yLabel:'y'},tools:['point','line','move','delete']};}
@@ -18074,20 +18141,43 @@ function grHasAttempt(page,q){const stored=tpRespGet(page,q.id);if(stored?.kind!
 function grAnswerHtml(q,page,kind,options={}){
   if(!grEligible(q,kind))return '';
   const answer=q.graphAnswer||{},skill=LESSON.slides.find(s=>s.id===page)||mvSkill(q),allowed=grAllowed(q,kind),token='gr-answer-'+(++GR_SERIAL),table=answer.showTable!==false&&answer.table?.length&&grAllowed(q,'final'),model=answer.showModelGraph!==false&&answer.objects?.length&&grAllowed(q,'final');
-  const partAnswers=grPartAnswers(q,kind,skill,allowed),working=kind==='worked'&&answer.showWorkedSolution!==false?`<section class="gr-answer-work"><h4>Worked explanation</h4>${partAnswers||(mdHasWorking(q)?mdWorking(q):'')}</section>`:'',textFinal=kind==='final'?(partAnswers||lpBookWorking(q.answer||'')):'',visuals=mvAnswer(q,kind,skill,{allowed});
+  const partAnswers=grPartAnswers(q,kind,skill,allowed),working=kind==='worked'&&answer.showWorkedSolution!==false?`<section class="gr-answer-work"><h4>Worked explanation</h4>${partAnswers||(mdHasWorking(q)?mdWorking(q):'')}</section>`:'',textFinal=kind==='final'?(partAnswers||lpBookWorking(q.answer||'')):'',visuals=mvAnswer(q,kind,skill,{allowed,inspect:true});
   const values=table?`<section class="gr-answer-table"><h4>Table of values</h4><table class="gr-table"><thead><tr><th>${grText('$x$')}</th><th>${grText('$y$')}</th></tr></thead><tbody>${answer.table.map(r=>`<tr><td>${grText('$'+String(r.x??'')+'$')}</td><td>${grText('$'+String(r.y??'')+'$')}</td></tr>`).join('')}</tbody></table></section>`:'';
   const graph=model?`<section class="gr-answer-model"><h4>Model graph</h4><div class="gr-response" data-gr-model="${token}"></div></section>`:'';
   const comparison=answer.showComparison!==false&&model?(grHasAttempt(page,q)?`<details class="gr-comparison"><summary>Compare with your attempt</summary><p>Visual comparison only; this is not automatic marking.</p><div class="gr-compare-panels"><section><h4>Your attempt</h4><div class="gr-response" data-gr-attempt="${token}"></div></section><section><h4>Model graph</h4><div class="gr-response" data-gr-comparison-model="${token}"></div></section></div></details>`:'<p class="gr-no-attempt">No attempt saved for this question.</p>'):'';
-  const content=`<div class="gr-answer" data-gr-answer="${esc(q.id)}" data-gr-answer-page="${esc(page)}"><div class="gr-answer-heading"><div class="gr-answer-stem">${grHeader(q)}</div>${kind==='worked'?'':'<span class="gr-model-badge">Model answer</span>'}</div>${visuals}${textFinal}<div class="gr-answer-grid ${working||values?'gr-answer-with-context':''}">${working||values?`<div class="gr-answer-context">${working}${values}</div>`:''}${graph}</div>${comparison}</div>`;
+  const references=visuals?`<details class="gr-answer-reference" open><summary><span>${(q.answerVisuals?.[kind]||[]).every(v=>MathVisuals.references(q).includes(v.ref)&&!v.completionCells)?'Given evidence':'Answer evidence'} — show details</span>${visuals.includes('data-gr-inspect')?'<button type="button" data-gr-reference-inspect>Inspect graph</button>':''}</summary>${visuals}</details>`:'';
+  const answerBody=references?`<div class="gr-reference-pair${working?' gr-reference-with-work':''}">${references}<div class="gr-answer-context">${textFinal}${working}${values}</div></div>${graph}`:`${textFinal}<div class="gr-answer-grid ${working||values?'gr-answer-with-context':''}">${working||values?`<div class="gr-answer-context">${working}${values}</div>`:''}${graph}</div>`;
+  const content=`<div class="gr-answer" data-gr-answer="${esc(q.id)}" data-gr-answer-page="${esc(page)}"><details class="gr-answer-question" open><summary>Question — show prompt</summary><div class="gr-answer-heading"><div class="gr-answer-stem">${grHeader(q)}</div>${kind==='worked'?'':'<span class="gr-model-badge">Model answer</span>'}</div></details>${answerBody}${comparison}</div>`;
   return kind==='worked'?`<details data-book-solution="${esc(options.key||q.id)}" ${options.collapsed?'':'open'}><summary>Worked solution</summary>${content}</details>`:content;
 }
 function grAnswerWire(panel){
+  grWireAnswerEvidence(panel);
   for(const view of GR_VIEWS)if(!view.root.isConnected)view.destroy();
   panel.querySelectorAll('[data-gr-answer]').forEach(section=>{const q=grFind(section.dataset.grAnswerPage,section.dataset.grAnswer);if(!q?.graphAnswer)return;
     try{grConfigValidate(q);const doc={objects:grCopy(q.graphAnswer.objects),rows:[]},model=section.querySelector('[data-gr-model]');if(model)grMount(model,q,section.dataset.grAnswerPage,{hideTable:true,doc});
       const comparison=section.querySelector('.gr-comparison');if(comparison)comparison.ontoggle=()=>{const roots=[comparison.querySelector('[data-gr-attempt]'),comparison.querySelector('[data-gr-comparison-model]')];if(comparison.open){for(const root of roots)if(root&&![...GR_VIEWS].some(v=>v.root===root))grMount(root,q,section.dataset.grAnswerPage,{hideTable:true,doc:root.hasAttribute('data-gr-attempt')?grCopy(grDoc(section.dataset.grAnswerPage,q)):grCopy(doc)});}else{for(const view of [...GR_VIEWS])if(roots.includes(view.root))view.destroy();for(const root of roots)root?.replaceChildren();}};
     }catch(e){section.textContent='Graph configuration needs attention: '+e.message;}
   });
+}
+/** Reuse the registered Figure Engine panel inside a native child dialog above the Hub. */
+function grInspectEvidence(opener,returnTo=opener){
+  if(document.querySelector('.gr-evidence-dialog'))return;
+  const evidence=opener.closest('.mv-evidence'),xid=opener.dataset.figxOpen,entry=FIGX[xid],overlay=evidence?.querySelector('.tp-figx'),figure=overlay?.querySelector('[data-figx]'),hub=opener.closest('.lp-answer-hub');if(!figure||!entry||!hub)return;
+  const d=document.createElement('dialog');d.className='gr-evidence-dialog tp-slide';mvHubTheme(d);const style=getComputedStyle(evidence.querySelector('.tp-slide')||evidence);for(const token of ['--primary','--on-surface','--on-surface-variant','--surface','--outline','--outline-variant','--graph-axis','--graph-grid','--graph-curve'])d.style.setProperty(token,style.getPropertyValue(token));
+  const description=document.createElement('p');description.id=xid+'-inspection-description';description.className='gr-inspection-description';description.textContent=evidence.querySelector('.mv-description')?.textContent||'';
+  const title=figure.querySelector('.tp-figx-title');title.id=xid+'-inspection-title';d.setAttribute('aria-labelledby',title.id);const svg=figure.querySelector('[data-figx-svg]'),oldDescription=svg.getAttribute('aria-describedby');svg.setAttribute('aria-describedby',description.id);d.append(figure,description);document.body.append(d);
+  const close=()=>d.close(),button=figure.querySelector('[data-tp-focus-close]'),oldClick=button.onclick;button.onclick=close;
+  let frame;const fit=()=>{cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{if(d.isConnected&&d.open)figxPaint(xid);});};const resize=new ResizeObserver(fit);resize.observe(figure.querySelector('.tp-figx-stage'));
+  const guard=new MutationObserver(()=>{if(!evidence.isConnected)d.close();});guard.observe(hub,{childList:true,subtree:true});hub.addEventListener('close',close,{once:true});
+  d.onkeydown=e=>{e.stopPropagation();if(e.key==='Escape'){e.preventDefault();d.close();}else if(e.key==='Tab'){const items=[...d.querySelectorAll('button,input,select,textarea,[tabindex]')].filter(el=>!el.disabled&&el.tabIndex>=0&&el.getClientRects().length);if(e.shiftKey&&document.activeElement===items[0]){e.preventDefault();items.at(-1)?.focus();}else if(!e.shiftKey&&document.activeElement===items.at(-1)){e.preventDefault();items[0]?.focus();}}};
+  d.addEventListener('close',()=>{cancelAnimationFrame(frame);resize.disconnect();guard.disconnect();hub.removeEventListener('close',close);button.onclick=oldClick;oldDescription==null?svg.removeAttribute('aria-describedby'):svg.setAttribute('aria-describedby',oldDescription);if(evidence.isConnected)overlay.append(figure);d.remove();if(returnTo.isConnected)returnTo.focus({preventScroll:true});else if(hub.isConnected&&hub.open)hub.querySelector('[data-book-close]').focus({preventScroll:true});},{once:true});d.showModal();figxPaint(xid);button.focus();
+}
+/** Keep short-height reference summaries and the existing filter disclosure independent. */
+function grWireAnswerEvidence(panel){
+  panel.grEvidenceCleanup?.();const media=matchMedia('(max-height:560px)'),hub=panel.closest('.lp-answer-hub');const update=()=>panel.querySelectorAll('.gr-answer-reference,.gr-answer-question').forEach(ref=>{const summary=ref.querySelector('summary');if(media.matches&&ref.contains(document.activeElement))summary.focus();ref.open=!media.matches;});update();media.addEventListener('change',update);
+  const cleanup=()=>{media.removeEventListener('change',update);hub.removeEventListener('close',cleanup);};panel.grEvidenceCleanup=cleanup;hub.addEventListener('close',cleanup,{once:true});
+  panel.querySelectorAll('[data-gr-inspect]').forEach(button=>button.onclick=()=>grInspectEvidence(button));
+  panel.querySelectorAll('[data-gr-reference-inspect]').forEach(button=>button.onclick=e=>{e.preventDefault();e.stopPropagation();const target=button.closest('.gr-answer-reference').querySelector('[data-gr-inspect]');if(target)grInspectEvidence(target,button);});
 }
 function grReleaseStatus(){const qs=(LESSON.slides||[]).flatMap(s=>(s.activities||[]).flatMap(a=>a.questions||[]));if(!qs.length||!qs.every(q=>q.graphResponse&&LESSON.meta.answerPolicy?.groups?.[q.releaseGroup]))return '';const available=qs.filter(q=>grEligible(q,'final')||grEligible(q,'worked')).length;return available===qs.length?'Answers available':available?'Some answers available':'Answers locked';}
 function grReleaseButton(){return !document.documentElement.dataset.export&&(authorMode()==='edit'||document.body.classList.contains('present'))&&LESSON.slides?.some(s=>s.activities?.some(a=>a.questions?.some(q=>q.graphResponse&&q.releaseGroup)))?'<button type="button" data-gr-local-release>Local release preview</button>':'';}
@@ -18550,7 +18640,7 @@ function lpBookHub(opener){
   const draw=()=>{d.classList.toggle('lp-graph-hub',active().some(g=>g.a.questions.some(q=>q.graphResponse&&grHubVisible(q,kind))));d.querySelector('[data-book-kind="final"]').textContent=d.classList.contains('lp-graph-hub')?'Model graphs':'Final answers';d.querySelectorAll('[data-book-kind]').forEach(b=>{b.setAttribute('aria-selected',String(b.dataset.bookKind===kind));b.tabIndex=b.dataset.bookKind===kind?0:-1;b.disabled=!grHubAny(b.dataset.bookKind);});panel.setAttribute('aria-labelledby','book-'+kind);d.querySelector('.lp-answer-expand').hidden=kind!=='worked'||!grHubAny(kind);if(!grHubAny(kind)){panel.innerHTML='<p>'+esc(lpBookLockedCopy(kind))+'</p>';return;}panel.innerHTML=active().map(g=>{const qs=g.a.questions.filter(q=>q.archetypeId===g.ex.id&&q.level===level),visible=qs.filter(q=>grHubVisible(q,kind)&&(!question.value||JSON.stringify([g.key,q.id])===question.value));if(!visible.length)return '';return `<section><h3>${esc(practiceLabel(g))} · ${label(level)}</h3><div class="lp-answer-list ${kind==='final'?'lp-answer-key':''}">${visible.map(q=>{const key=JSON.stringify([g.key,q.id]),span=q.graphResponse?(kind==='worked'?'full':'half'):kind==='worked'?lpBookSpan(q,true):'half';return `<article class="${q.graphResponse?'gr-answer-card ':''}${span==='full'?'lp-answer-full':''}" data-book-base-span="${span}" data-book-answer="${esc(q.id)}"><b class="lp-answer-no">${qs.indexOf(q)+1}</b><div>${q.graphResponse?grAnswerHtml(q,g.page,kind,{key,collapsed:collapsed.has(key)}):!lpBookAllowed(kind)?`<p>${esc(lpBookLockedCopy(kind))}</p>`:kind==='worked'?`<details data-book-solution="${esc(key)}" ${collapsed.has(key)?'':'open'}><summary>${mxM(q.stem)}</summary><div class="mx-stepm">${mvAnswer(q,kind)}${lpBookPartAnswers(q,kind)||(lpBookQuestion(q,kind)?(q.workedSolution?mdStructured(q.workedSolution):lpBookWorking(lpBookQuestion(q,kind))):'No solution authored.')}</div></details>`:(mvAnswer(q,kind)+(lpBookPartAnswers(q,kind)||mxM(lpBookQuestion(q,kind)||'No answer authored.')))}${!document.documentElement.dataset.export&&document.body.classList.contains('present')&&q.teacherNote?`<p>${esc(q.teacherNote)}</p>`:''}</div></article>`;}).join('')}</div></section>`;}).join('')||'<p>No practice answers in this selection.</p>';grAnswerWire(panel);requestAnimationFrame(()=>{mvFitAnswers(panel);});panel.querySelectorAll('[data-book-solution]').forEach(el=>el.ontoggle=()=>{el.open?collapsed.delete(el.dataset.bookSolution):collapsed.add(el.dataset.bookSolution);requestAnimationFrame(fit);});requestAnimationFrame(fit);};
   options();if(saved?.question&&[...question.options].some(o=>o.value===saved.question))question.value=saved.question;draw();practice.onchange=()=>{options();draw();panel.scrollTop=0;};pathway.onchange=()=>{level=pathway.value;options();draw();panel.scrollTop=0;};question.onchange=()=>{draw();panel.scrollTop=0;};
   d.querySelectorAll('[data-book-expand]').forEach(b=>b.onclick=()=>panel.querySelectorAll('[data-book-solution]').forEach(el=>{el.open=b.dataset.bookExpand==='true';el.open?collapsed.delete(el.dataset.bookSolution):collapsed.add(el.dataset.bookSolution);}));
-  d.querySelectorAll('[data-book-kind]').forEach((b,i)=>{b.onclick=()=>{kind=b.dataset.bookKind;options();draw();panel.scrollTop=0;};b.onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const buttons=d.querySelectorAll('[data-book-kind]'),next=e.key==='Home'?0:e.key==='End'?1:1-i;buttons[next].click();buttons[next].focus();}};});
+  d.querySelectorAll('[data-book-kind]').forEach((b,i)=>{b.onclick=()=>{const keepQuestion=d.classList.contains('lp-graph-hub')?question.value:'';kind=b.dataset.bookKind;options();if(keepQuestion&&[...question.options].some(option=>option.value===keepQuestion))question.value=keepQuestion;draw();panel.scrollTop=0;};b.onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const buttons=d.querySelectorAll('[data-book-kind]'),next=e.key==='Home'?0:e.key==='End'?1:1-i;buttons[next].click();buttons[next].focus();}};});
   const update=()=>{d.querySelector('.lp-hub-status').textContent=lpBookStatus();const top=panel.scrollTop;if(!grHubAny('final')&&!grHubAny('worked')){d.close();return;}if(!grHubAny(kind))kind=grHubAny('final')?'final':'worked';options();draw();panel.scrollTop=top;};document.addEventListener('book-session',update);
   const observer=new ResizeObserver(fit);observer.observe(panel);d.querySelector('[data-book-close]').onclick=()=>d.close();d.onclose=()=>{LP_BOOK.hubStates[context]={practice:practice.value==='all'?'all':groups[+practice.value]?.key,level,kind,question:question.value,collapsed:[...collapsed],scroll:panel.scrollTop};observer.disconnect();document.removeEventListener('book-session',update);d.remove();for(const[el,top]of lessonScroll)if(el.isConnected)el.scrollTop=top;window.scrollTo(...windowScroll);if(opener?.isConnected&&!opener.hidden&&!opener.disabled)opener.focus({preventScroll:true});else document.querySelector('.lp-title')?.focus({preventScroll:true});};d.onkeydown=e=>e.stopPropagation();updateAdaptive=mdAdaptiveHub(d);d.showModal();fit();document.fonts.ready.then(()=>{if(d.isConnected)fit();});panel.scrollTop=saved?.scroll||0;d.querySelector('[data-book-close]').focus();
 }

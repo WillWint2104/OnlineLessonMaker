@@ -1,9 +1,9 @@
 {
   "meta": {
     "id": "audit-graph-construction",
-    "title": "Graph construction, linked tables and sketches",
+    "title": "Linear graphs and equations of lines",
     "subject": "Mathematics",
-    "context": "Stage A · synthetic audit fixture, not an approved lesson",
+    "context": "C3 integrated visual verification only; no lesson publication authorised.",
     "theme": "neutral",
     "player": "activities",
     "responseMode": "paper",
@@ -20,7 +20,7 @@
     {
       "id": "skill-graph-construction",
       "type": "skill",
-      "title": "Graph construction, linked tables and sketches",
+      "title": "Constructing a straight segment",
       "practiceComposition": "micro",
       "activities": [
         {
@@ -34,20 +34,33 @@
                 {
                   "id": "method-graph-construction",
                   "label": "Worked example",
-                  "tabLabel": "Graph construction, linked tables and sketches",
-                  "prompt": "Construct the segment for $y=2x+1$ from $x=-2$ to $x=2$.",
+                  "tabLabel": "Constructing a straight segment",
+                  "prompt": "Construct the segment for $y=2x+1$, where $-2\\le x\\le2$.",
                   "solutionLayout": "paired-table",
                   "steps": [
                     {
-                      "id": "graph-construction-step0",
-                      "math": "$y=2x+1$",
-                      "text": "Choose points in the stated domain, then deliberately construct the line."
+                      "id": "calculate-endpoints",
+                      "math": "$y(-2)=2(-2)+1=-3$\n$y(2)=2(2)+1=5$",
+                      "text": "Find the endpoints: substitute each domain endpoint into the equation."
+                    },
+                    {
+                      "id": "plot",
+                      "math": "$(-2,-3),\\ (2,5)$",
+                      "text": "Plot both endpoints on the axes."
+                    },
+                    {
+                      "id": "join",
+                      "math": "$-2\\le x\\le2$",
+                      "text": "Join the endpoints with a straight segment. Do not extend beyond them."
                     }
                   ],
-                  "answer": "$y=2x+1$, for $-2≤ x≤2$.",
+                  "answer": "Endpoints $(-2,-3)$ and $(2,5)$, joined only on $-2\\le x\\le2$.",
                   "practice": {
                     "instructions": "Use the tools authored for each graph. Expand for more space."
-                  }
+                  },
+                  "visualRefs": [
+                    "demonstration-line"
+                  ]
                 }
               ]
             }
@@ -60,19 +73,18 @@
           "questions": [
             {
               "id": "graph-construction-q1",
-              "stem": "Construct the segment for $y=2x+1$ from $x=-2$ to $x=2$.",
+              "stem": "Construct the segment for $y=-x+1$, where $-2\\le x\\le2$.",
               "archetypeId": "method-graph-construction",
               "level": "basic",
               "group": "Set 1 · Construct",
-              "answer": "$y=2x+1$, for $-2≤ x≤2$.",
-              "workedAnswer": "Use $(-2,-3)$ and $(2,5)$ as endpoints.\nJoin the endpoints with one straight segment.\n$y=2x+1$, for $-2≤ x≤2$.",
+              "answer": "Join $(-2,3)$ and $(2,-1)$.",
               "graphResponse": {
                 "type": "plotConstruct",
                 "axes": {
                   "xMin": -5,
                   "xMax": 5,
-                  "yMin": -5,
-                  "yMax": 5,
+                  "yMin": -6,
+                  "yMax": 6,
                   "xStep": 1,
                   "yStep": 1,
                   "snap": 0.5,
@@ -90,12 +102,12 @@
               "graphAnswer": {
                 "objects": [
                   {
-                    "id": "model-line",
+                    "id": "practice-model",
                     "type": "line",
                     "x1": -2,
-                    "y1": -3,
+                    "y1": 3,
                     "x2": 2,
-                    "y2": 5
+                    "y2": -1
                   }
                 ],
                 "table": [],
@@ -103,6 +115,25 @@
                 "showWorkedSolution": true,
                 "showTable": true,
                 "showComparison": true
+              },
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "left",
+                    "math": "y(-2)=-(-2)+1=3",
+                    "text": "Calculate the left endpoint."
+                  },
+                  {
+                    "id": "right",
+                    "math": "y(2)=-(2)+1=-1",
+                    "text": "Calculate the right endpoint."
+                  },
+                  {
+                    "id": "segment",
+                    "math": "(-2,3),\\ (2,-1)",
+                    "text": "Plot the endpoints and join with a segment."
+                  }
+                ]
               }
             },
             {
@@ -118,8 +149,8 @@
                 "axes": {
                   "xMin": -5,
                   "xMax": 5,
-                  "yMin": -5,
-                  "yMax": 5,
+                  "yMin": -6,
+                  "yMax": 6,
                   "xStep": 1,
                   "yStep": 1,
                   "snap": 0.5,
@@ -164,8 +195,8 @@
                 "axes": {
                   "xMin": -5,
                   "xMax": 5,
-                  "yMin": -5,
-                  "yMax": 5,
+                  "yMin": -6,
+                  "yMax": 6,
                   "xStep": 1,
                   "yStep": 1,
                   "snap": 0.5,
@@ -270,8 +301,8 @@
                 "axes": {
                   "xMin": -4.5,
                   "xMax": 4.5,
-                  "yMin": -3,
-                  "yMax": 3,
+                  "yMin": -6,
+                  "yMax": 6,
                   "xStep": 0.5,
                   "yStep": 0.5,
                   "snap": 0,
@@ -347,8 +378,8 @@
                 "axes": {
                   "xMin": -5,
                   "xMax": 5,
-                  "yMin": -5,
-                  "yMax": 5,
+                  "yMin": -6,
+                  "yMax": 6,
                   "xStep": 1,
                   "yStep": 1,
                   "snap": 0.5,
@@ -438,10 +469,59 @@
       "exampleCollections": [
         {
           "id": "collection-graph-construction",
-          "title": "Graph construction, linked tables and sketches",
+          "title": "Constructing a straight segment",
           "members": [
             "method-graph-construction"
           ]
+        }
+      ],
+      "visuals": [
+        {
+          "id": "demonstration-line",
+          "kind": "figure",
+          "role": "primary",
+          "figure": {
+            "type": "figure",
+            "figure": "graph",
+            "title": "Worked example — completed segment",
+            "caption": "Worked example — completed segment",
+            "aspect": "equal",
+            "grid": "shown",
+            "callouts": "shown",
+            "curveLabels": "shown",
+            "domain": {
+              "xMin": -5,
+              "xMax": 5,
+              "yMin": -6,
+              "yMax": 6
+            },
+            "objects": [
+              {
+                "type": "points",
+                "from": "table",
+                "rows": [
+                  [
+                    "A",
+                    -2,
+                    -3
+                  ],
+                  [
+                    "B",
+                    2,
+                    5
+                  ]
+                ]
+              },
+              {
+                "type": "segment",
+                "between": [
+                  "A",
+                  "B"
+                ]
+              }
+            ]
+          },
+          "description": "Endpoints A(−2,−3), B(2,5); join only on −2 ≤ x ≤ 2. Your practice graph starts blank."
         }
       ]
     }
