@@ -2,6 +2,8 @@
 
 No new authored graph schema or learner document version. Stable skill/activity/question IDs, `graphResponse`, `graphAnswer`, optional `releaseGroup`, Graph Response V1 objects/rows/history, C2 `visualRefs`/`answerVisuals` and C1 `workedSolution.steps` retain their established meanings. Legacy `question.figure` is not reinterpreted.
 
+Graph responses remain question-owned. Imports may retain legacy nested model metadata; its known model/table/visibility fields are withheld recursively under the parent question's existing release policy. This defensive export handling does not enable a graph response or model UI on a written part.
+
 | Existing data | C3 integration |
 | --- | --- |
 | Stem/instructions/parts | Readable in compact and expanded context. Written parts/answers use existing labels and paper/workbook routes. |
