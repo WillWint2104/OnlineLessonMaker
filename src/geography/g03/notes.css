@@ -4,7 +4,7 @@
 .lp:has(.geo-g03) .lp-activity{max-width:1060px;margin:0 auto;padding:36px 44px 40px;background:#fff;}
 .lp:has(.geo-g03) .lp-header{margin-bottom:22px;}
 .lp:has(.geo-g03) .lp-title{font-family:inherit;font-size:clamp(28px,3.1vw,40px);line-height:1.2;letter-spacing:-.035em;max-width:24ch;}
-.lp:has(.geo-g03) .lp-title:focus{outline:none;}
+.lp:has(.geo-g03) .lp-title:focus{outline:2px solid #076d72;outline-offset:6px;border-radius:2px;}
 .lp:has(.geo-g03) .mx-course,.lp:has(.geo-g03) .mx-lede{font-family:inherit;}
 .lp:has(.geo-g03) .lp-location{color:#4c6374;letter-spacing:.06em;}
 .lp:has(.geo-g03) .mx-lede{font-size:18px;line-height:1.6;max-width:64ch;margin:12px 0 0;}

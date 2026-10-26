@@ -55,6 +55,7 @@ try{
   const next=q.locator('[data-lp-move="1"]');await next.focus();await q.keyboard.press('Enter');
   check(await q.locator('.geo-g03-visual').count()===0,name+' keyboard Next reaches no-image example without an empty slot');
   check(await q.locator('#lpTitle').evaluate(e=>e===document.activeElement),name+' navigation focus moves to heading');
+  check(await q.locator('#lpTitle').evaluate(e=>{const s=getComputedStyle(e);return s.outlineStyle!=='none'&&parseFloat(s.outlineWidth)>=2;}),name+' keyboard destination has a visible focus indicator');
   await shot(q,name+'-no-image');await q.locator('[data-lp-move="-1"]').click();
   check(await q.locator('.geo-g03-visual').count()===1,name+' Previous restores original concept');
   await context.close();
