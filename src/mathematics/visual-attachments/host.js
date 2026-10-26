@@ -13,13 +13,13 @@ function mvChildParts(owner,key,skill,inherited){
   return (Array.isArray(owner.parts)?owner.parts:[]).map((pt,k)=>`<div class="mx-part"><b class="mx-pl">(${esc(pt?.label||String.fromCharCode(97+k))})</b><div>${mxM(lpBookPartText(pt))}${mvRefs(pt,key+'-'+k,{skill,inherited})}${pt&&typeof pt==='object'?mvChildParts(pt,key+'-'+k,skill,[...inherited,...MathVisuals.references(pt)]):''}</div></div>`).join('');
 }
 let MV_RENDER_ID=0;
-function mvVisual(v,key,body,readOnly=false){
+function mvVisual(v,key,body,readOnly=false,inspect=false){
   const id='mv-description-'+(++MV_RENDER_ID),description=String(v.description||''),caption=String(v.caption||'');
   let html=body??mxPart(v,key);
   if(v.kind==='table'&&!html.includes('role="region"'))html=html.replace('<div class="mx-tblwrap"','<div class="mx-tblwrap" tabindex="0" role="region" aria-label="Data table; scroll horizontally if needed"');
   html=html.replace(/loading="lazy"/g,'loading="eager"');
-  // Model evidence is inline in the existing modal; avoid an unwired nested expansion control.
-  if(readOnly)html=html.replace(/<button class="tp-fig-expand"/g,'<button hidden disabled class="tp-fig-expand"');
+  // Ordinary model evidence stays inline; the graph adapter explicitly wires optional inspection.
+  if(readOnly)html=html.replace(/<button class="tp-fig-expand"/g,inspect?'<button data-gr-inspect class="tp-fig-expand"':'<button hidden disabled class="tp-fig-expand"');
   // Accessible descriptions follow the figure into its existing expanded workspace.
   if(v.kind==='figure')html=html.replace(/<svg\b/g,`<svg aria-describedby="${id}"`);
   return `<section class="mv-evidence" data-mv-ref="${esc(v.id||key)}" aria-describedby="${id}">${html}<p id="${id}" class="mv-description">${esc(description)}</p>${caption?`<p class="mv-caption">${mxM(caption)}</p>`:''}</section>`;
@@ -32,13 +32,13 @@ function mvRefs(owner,key,options={}){
     try{return mvVisual(v,key+'-'+id,v===options.responseTable?options.tableHtml:undefined);}catch{return `<p class="mv-error" role="status">Required visual ${esc(id)} is invalid. Repair its definition in Edit mode.</p>`;}
   }).join('');
 }
-function mvAnswer(owner,kind,skill=mvSkill(owner)){
-  if(!lpBookAllowed(kind))return '';
+function mvAnswer(owner,kind,skill=mvSkill(owner),options={}){
+  if(!(options.allowed??lpBookAllowed(kind)))return '';
   return (Array.isArray(owner.answerVisuals?.[kind])?owner.answerVisuals[kind]:[]).map((entry,i)=>{
     if(!entry||typeof entry!=='object'||Array.isArray(entry))return '<p class="mv-error" role="status">Answer visual unavailable.</p>';
     const given=entry.ref==='@questionTable'?{...owner.table,kind:'table',id:'question-table',description:'The completed table uses the original headings and given values.'}:MathVisuals.definition(skill,entry.ref);
     if(!given)return '<p class="mv-error" role="status">Answer visual unavailable.</p>';
-    try{const v=entry.completionCells?MathVisuals.completed(given,entry.completionCells):given;return mvVisual(v,'answer-'+owner.id+'-'+kind+'-'+i,undefined,true);}catch{return '<p class="mv-error" role="status">Answer visual is invalid. Repair its definition in Edit mode.</p>';}
+    try{const v=entry.completionCells?MathVisuals.completed(given,entry.completionCells):given;return mvVisual(v,'answer-'+owner.id+'-'+kind+'-'+i,undefined,true,options.inspect===true);}catch{return '<p class="mv-error" role="status">Answer visual is invalid. Repair its definition in Edit mode.</p>';}
   }).join('');
 }
 function mvFitAnswers(panel){for(const figure of panel.querySelectorAll('.mv-evidence .tp-fig'))figInlineSolve(figure);}

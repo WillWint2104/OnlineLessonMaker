@@ -1,0 +1,201 @@
+{
+  "meta": {
+    "id": "audit-graph-construction",
+    "title": "Wide-domain graph construction",
+    "subject": "Mathematics",
+    "context": "C3 integrated visual verification only; no lesson publication authorised.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    },
+    "completion": {
+      "description": "Audit fixture only. No publication approval."
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-graph-construction",
+      "type": "skill",
+      "title": "Wide-domain graph construction",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-graph-construction",
+          "title": "Representative worked example",
+          "workedExamples": [
+            {
+              "id": "group-graph-construction",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-graph-construction",
+                  "label": "Worked example",
+                  "tabLabel": "Constructing a straight segment",
+                  "prompt": "Construct $y=\\frac{x}{4}$ for $-12\\le x\\le12$.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "endpoints",
+                      "math": "$y(-12)=\\frac{-12}{4}=-3$\n$y(12)=\\frac{12}{4}=3$",
+                      "text": "Calculate both domain endpoints."
+                    },
+                    {
+                      "id": "plot",
+                      "math": "$(-12,-3),\\ (12,3)$",
+                      "text": "Plot the two points using the authored wide domain."
+                    },
+                    {
+                      "id": "join",
+                      "math": "$-12\\le x\\le12$",
+                      "text": "Join the endpoints without extending the segment."
+                    }
+                  ],
+                  "answer": "Segment from $(-12,-3)$ to $(12,3)$.",
+                  "practice": {
+                    "instructions": "Use the tools authored for each graph. Expand for more space."
+                  },
+                  "visualRefs": [
+                    "demonstration-line"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-graph-construction",
+          "title": "Practice: Graph construction, linked tables and sketches",
+          "practiceCollectionId": "collection-graph-construction",
+          "questions": [
+            {
+              "id": "graph-construction-q1",
+              "stem": "Construct $y=-\\frac{x}{4}$ for $-8\\le x\\le8$.",
+              "archetypeId": "method-graph-construction",
+              "level": "basic",
+              "group": "Set 1 · Construct",
+              "answer": "Join $(-8,2)$ and $(8,-2)$.",
+              "graphResponse": {
+                "type": "plotConstruct",
+                "axes": {
+                  "xMin": -12,
+                  "xMax": 12,
+                  "yMin": -4,
+                  "yMax": 4,
+                  "xStep": 2,
+                  "yStep": 1,
+                  "snap": 0.5,
+                  "aspect": "equal",
+                  "xLabel": "x",
+                  "yLabel": "y"
+                },
+                "tools": [
+                  "point",
+                  "line",
+                  "move",
+                  "delete"
+                ]
+              },
+              "graphAnswer": {
+                "objects": [
+                  {
+                    "id": "wide-practice",
+                    "type": "line",
+                    "x1": -8,
+                    "y1": 2,
+                    "x2": 8,
+                    "y2": -2
+                  }
+                ],
+                "table": [],
+                "showModelGraph": true,
+                "showWorkedSolution": true,
+                "showTable": true,
+                "showComparison": true
+              },
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "left",
+                    "math": "y(-8)=2",
+                    "text": "Left endpoint."
+                  },
+                  {
+                    "id": "right",
+                    "math": "y(8)=-2",
+                    "text": "Right endpoint."
+                  },
+                  {
+                    "id": "join",
+                    "text": "Join only within the given domain."
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-graph-construction",
+          "title": "Wide-domain graph construction",
+          "members": [
+            "method-graph-construction"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "id": "demonstration-line",
+          "kind": "figure",
+          "role": "primary",
+          "figure": {
+            "type": "figure",
+            "figure": "graph",
+            "title": "Completed segment on a wide authored domain",
+            "caption": "Completed segment on a wide authored domain",
+            "aspect": "equal",
+            "grid": "shown",
+            "callouts": "shown",
+            "curveLabels": "shown",
+            "domain": {
+              "xMin": -12,
+              "xMax": 12,
+              "yMin": -4,
+              "yMax": 4
+            },
+            "objects": [
+              {
+                "type": "points",
+                "from": "table",
+                "rows": [
+                  [
+                    "A",
+                    -12,
+                    -3
+                  ],
+                  [
+                    "B",
+                    12,
+                    3
+                  ]
+                ]
+              },
+              {
+                "type": "segment",
+                "between": [
+                  "A",
+                  "B"
+                ]
+              }
+            ]
+          },
+          "description": "A(−12,−3), B(12,3). Equal coordinate units are preserved."
+        }
+      ]
+    }
+  ]
+}

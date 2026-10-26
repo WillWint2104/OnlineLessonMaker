@@ -53,3 +53,62 @@
 @container graph-response (max-width:699px){.gr-expanded .gr-expanded-response>.gr-main>.gr-plot{order:-1;max-width:none}}
 
 .gr-continuation{fill:#007e6e}.gr-domain-end{stroke:#007e6e;stroke-width:1.8;vector-effect:non-scaling-stroke}.gr-open-end{fill:white}.gr-closed-end{fill:#007e6e}.gr-no-attempt{font:15px/1.5 Arial,sans-serif;color:#40574c;margin:14px 0 0}
+
+/* C3: only graph-containing micro cards override the ordinary dense flex row. */
+.lp-micro-practice .lp-exercise-cell:has(.gr-response){display:grid;grid-template-rows:auto auto;grid-row:auto;align-items:start}
+.gr-question-context{min-width:0;max-width:100%}.gr-question-context .mv-evidence{max-width:100%}.gr-written-parts{margin:12px 0}.gr-written-route{font:15px/1.5 var(--sans,Arial,sans-serif);color:#40574c;margin:10px 0}
+.gr-expanded-context{min-width:0;margin-bottom:18px}.gr-expanded-context>summary{position:sticky;top:-20px;z-index:2;background:#edf8f3;padding:10px;font:600 16px/1.4 Arial,sans-serif;cursor:pointer;border:1px solid #d6e2dc;border-radius:6px}.gr-expanded-context[open]>.gr-question-context{padding:14px 0}.gr-expanded>header button{white-space:nowrap;flex-shrink:0}
+.gr-answer .gr-question-header{padding-left:0}.gr-answer .md-steps{width:100%;max-width:100%}.gr-answer-work{min-width:0}.gr-answer .mv-evidence{margin:14px 0}
+.gr-expanded>header{flex-wrap:wrap}.gr-workspace-actions{display:flex;gap:8px;flex-wrap:wrap}.gr-expanded .gr-expanded-context .tp-fig-expand{display:none}
+.gr-givens>h4,.gr-response-label{font:600 16px/1.4 var(--sans,Arial,sans-serif);color:#006b5c;margin:10px 0}
+@media(max-width:650px){.gr-expanded-context>summary{top:-12px}}
+
+/* Approved C3 refinement: compose only graph-bearing worked examples. */
+.mx .mx-wexex.gr-worked-example{display:block;container:graph-example / inline-size;padding:0;background:transparent}
+.gr-worked-example>.mx-example-question{display:block;padding:14px 18px;margin-bottom:14px}
+.gr-worked-example>.mx-example-question h2{font-size:22px;margin:0 0 8px}
+.gr-example-pair{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-items:start}
+.gr-example-pair>.mx-solution{grid-area:auto;min-width:0;padding:0}
+.gr-example-evidence{min-width:0;border:1px solid #d6e2dc;border-radius:8px;background:#fff;padding:10px}
+.gr-example-evidence .mv-evidence{margin:0}
+.mx .gr-worked-example .gr-example-evidence .mx-part[data-mx-part="figure"]{width:min(100%,325px,calc(390px * var(--mx-plot-ar,1)));margin-inline:auto;min-height:0}
+.gr-example-wide .gr-example-evidence{max-width:100%}
+.mx .gr-worked-example.gr-example-wide .gr-example-evidence .mx-part[data-mx-part="figure"]{width:min(100%,760px)}
+.gr-worked-example .mx-solution-table .mx-row-number{width:36px;min-width:36px}
+@container graph-example (min-width:860px){.gr-worked-example:not(.gr-example-wide) .gr-example-pair{grid-template-columns:minmax(200px,.38fr) minmax(0,.62fr)}}
+
+.gr-reference-pair{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;margin:12px 0;align-items:start;min-width:0}
+.gr-answer-reference{min-width:0;border:1px solid #d6e2dc;border-radius:7px;background:#fff;padding:10px}
+.gr-answer-reference>summary{cursor:pointer;font:600 15px/1.5 Arial,sans-serif;color:#006b5c}
+.gr-answer-reference>summary button{font:14px/1.4 Arial,sans-serif;min-height:32px;padding:5px 8px;margin:4px 0 4px 8px;border:1px solid #bdd7cc;border-radius:5px;background:#f3faf6;color:#005e51}
+.gr-answer-reference>summary:focus-visible{outline:2px solid #007e6e;outline-offset:3px}
+.gr-answer-reference .mv-evidence{margin:10px 0 0}
+.lp-answer-hub .gr-answer .gr-answer-reference .mx-part[data-mx-part="figure"]{width:min(100%,270px,calc(390px * var(--mx-plot-ar,1)))}
+.gr-answer-question>summary{display:none}
+.gr-reference-pair+.gr-answer-model{margin-top:18px;padding-top:12px;border-top:1px solid #d6e2dc}
+.gr-reference-pair+.gr-answer-model .gr-response{max-width:440px}
+@container answer-content (min-width:860px){.gr-reference-with-work{grid-template-columns:minmax(180px,.3fr) minmax(0,.7fr)}}
+
+/* The registered Figure Engine panel is moved, never cloned or converted to a response. */
+.gr-evidence-dialog{width:min(1200px,96vw);max-width:96vw;height:94dvh;max-height:94dvh;padding:0;border:1px solid #cdded5;border-radius:10px;background:#fff;color:#17251f;display:flex;flex-direction:column;overflow:hidden}
+.gr-evidence-dialog:not([open]){display:none}.gr-evidence-dialog::backdrop{background:#173c3070}
+.gr-evidence-dialog.tp-slide .tp-fpanel-figx{position:static;display:flex;flex-direction:column;width:100%;max-width:none;flex:1;min-height:0;height:auto;max-height:none;margin:0;padding:16px;box-shadow:none;border:0}
+.gr-evidence-dialog .tp-figx-stage{flex:1;min-height:100px}.gr-evidence-dialog .tp-figx-stage svg{width:100%;height:100%}
+.gr-inspection-description{font:15px/1.5 Arial,sans-serif;margin:0;padding:8px 16px;border-top:1px solid #d6e2dc;flex:none}
+@media(max-height:560px){
+ .mx-support-dialog.lp-answer-hub.lp-graph-hub.md-adaptive-hub{height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);padding:10px 16px}
+ .lp-graph-hub.md-adaptive-hub .lp-hub-status{font:14px/1.4 Arial,sans-serif;margin:0 0 2px}
+ .lp-graph-hub.md-adaptive-hub #book-hub-title{font-size:24px;line-height:1.2}
+ .lp-graph-hub.md-adaptive-hub .lp-answer-toolbar .mx-collection-tabs button{font:16px/1.4 Arial,sans-serif;padding:6px 10px;min-height:36px}
+ .lp-graph-hub.md-adaptive-hub .lp-answer-toolbar{margin:0 0 4px}
+ .lp-graph-hub.md-adaptive-hub .md-filter-disclosure>summary{display:list-item;font:600 16px/1.5 Arial,sans-serif;color:#00685d;cursor:pointer;padding:4px 0;margin:0 0 4px}
+ .lp-graph-hub.md-adaptive-hub .md-filter-disclosure[open]{max-height:45dvh;overflow-y:auto}
+ .lp-graph-hub.md-adaptive-hub .lp-answer-body>section>h3,.lp-graph-hub .gr-answer-work>h4,.lp-graph-hub .md-steps thead{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+ .lp-graph-hub .gr-answer-card{padding:8px 10px!important}.lp-graph-hub .gr-answer-heading{padding-left:0}.lp-graph-hub .gr-answer-stem{font-size:16px}
+ .lp-graph-hub .gr-answer-reference{padding:4px 8px}.lp-graph-hub .gr-reference-pair{display:block;margin:6px 0}.lp-graph-hub .gr-answer-reference{margin-bottom:6px}
+ .lp-graph-hub .gr-answer-question>summary{display:list-item;cursor:pointer;font:600 15px/1.5 Arial,sans-serif;color:#00685d;padding:3px 0}
+ .lp-graph-hub .gr-answer-card details[data-book-solution]>summary{padding-bottom:4px}
+ .lp-graph-hub .gr-answer-reference>summary button{margin-top:0;margin-bottom:0}
+ .lp-graph-hub .md-steps{margin-top:4px}.lp-graph-hub .gr-question-header .gr-stem{font-size:16px;line-height:1.4}
+ .gr-evidence-dialog.tp-slide .tp-fpanel-figx{padding:10px}
+}

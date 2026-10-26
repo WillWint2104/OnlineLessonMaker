@@ -1,0 +1,569 @@
+{
+  "meta": {
+    "id": "audit-graph-construction",
+    "title": "Structured solution with given and model",
+    "subject": "Mathematics",
+    "context": "C3 integrated visual verification only; no lesson publication authorised.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    },
+    "completion": {
+      "description": "Audit fixture only. No publication approval."
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-graph-construction",
+      "type": "skill",
+      "title": "Parallel lines from a graph",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-graph-construction",
+          "title": "Representative worked example",
+          "workedExamples": [
+            {
+              "id": "group-graph-construction",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-graph-construction",
+                  "label": "Worked example",
+                  "tabLabel": "Parallel lines from a graph",
+                  "prompt": "Use the supplied line to find its gradient. Construct the parallel segment through $(0,1)$ for $-2\\le x\\le2$.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "rise-run",
+                      "math": "$m=\\frac{5-(-5)}{3-(-2)}=\\frac{10}{5}=2$",
+                      "text": "Read A and C from the supplied graph; divide rise by run."
+                    },
+                    {
+                      "id": "intercept",
+                      "math": "$y=2x+1$",
+                      "text": "A parallel line has the same gradient. The required y-intercept is 1."
+                    },
+                    {
+                      "id": "calculate-endpoints",
+                      "math": "$y(-2)=2(-2)+1=-3$\n$y(2)=2(2)+1=5$",
+                      "text": "Find the endpoints: substitute each domain endpoint into the equation."
+                    },
+                    {
+                      "id": "join",
+                      "math": "$(-2,-3),\\ (2,5)$",
+                      "text": "Plot these endpoints and join the required segment."
+                    }
+                  ],
+                  "answer": "Required segment: $y=2x+1$, $-2\\le x\\le2$.",
+                  "practice": {
+                    "instructions": "Use the tools authored for each graph. Expand for more space."
+                  },
+                  "visualRefs": [
+                    "given-line"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-graph-construction",
+          "title": "Practice: Graph construction, linked tables and sketches",
+          "practiceCollectionId": "collection-graph-construction",
+          "questions": [
+            {
+              "id": "graph-construction-q1",
+              "stem": "Use the supplied line to find its gradient. Construct the parallel segment through $(0,2)$ for $-1\\le x\\le1$.",
+              "archetypeId": "method-graph-construction",
+              "level": "basic",
+              "group": "Set 1 · Construct",
+              "answer": "$y=2x+2$, for $-1\\le x\\le1$.",
+              "graphResponse": {
+                "type": "plotConstruct",
+                "axes": {
+                  "xMin": -5,
+                  "xMax": 5,
+                  "yMin": -5,
+                  "yMax": 5,
+                  "xStep": 1,
+                  "yStep": 1,
+                  "snap": 0.5,
+                  "aspect": "equal",
+                  "xLabel": "x",
+                  "yLabel": "y"
+                },
+                "tools": [
+                  "point",
+                  "line",
+                  "move",
+                  "delete"
+                ]
+              },
+              "graphAnswer": {
+                "objects": [
+                  {
+                    "id": "model-line",
+                    "type": "line",
+                    "x1": -1,
+                    "y1": 0,
+                    "x2": 1,
+                    "y2": 4
+                  }
+                ],
+                "table": [],
+                "showModelGraph": true,
+                "showWorkedSolution": true,
+                "showTable": true,
+                "showComparison": true
+              },
+              "visualRefs": [
+                "given-line"
+              ],
+              "answerVisuals": {
+                "final": [
+                  {
+                    "ref": "given-line"
+                  }
+                ],
+                "worked": [
+                  {
+                    "ref": "given-line"
+                  }
+                ]
+              },
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "rise-run",
+                    "math": "m=\\frac{5-(-5)}{3-(-2)}=\\frac{10}{5}=2",
+                    "text": "Read A and C from the supplied graph; divide rise by run.",
+                    "alignmentGroup": "parallel-working"
+                  },
+                  {
+                    "id": "intercept",
+                    "math": "y=2x+2",
+                    "text": "A parallel line has the same gradient. The required y-intercept is 2.",
+                    "alignmentGroup": "parallel-working"
+                  },
+                  {
+                    "id": "endpoint-left",
+                    "math": "y(-1)=2(-1)+2=0",
+                    "text": "Calculate the y-coordinate at the left end of the domain.",
+                    "alignmentGroup": "parallel-working"
+                  },
+                  {
+                    "id": "endpoint-right",
+                    "math": "y(1)=2(1)+2=4",
+                    "text": "Calculate the y-coordinate at the right end of the domain.",
+                    "alignmentGroup": "parallel-working"
+                  },
+                  {
+                    "id": "join",
+                    "math": "(-1,0),\\ (1,4)",
+                    "text": "Plot these endpoints and join the required segment.",
+                    "alignmentGroup": "parallel-working"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "graph-construction-q2",
+              "stem": "Construct $y=(x-1)^2-3$.\nStart at the turning point and drag to a second point.",
+              "archetypeId": "method-graph-construction",
+              "level": "basic",
+              "group": "Set 1 · Construct",
+              "answer": "The axis of symmetry is $x=1$.",
+              "workedAnswer": "The turning point is $(1,-3)$.\nAt $x=2$, $y=-2$; drag from $(1,-3)$ to $(2,-2)$.\nThe axis of symmetry is $x=1$.",
+              "graphResponse": {
+                "type": "plotConstruct",
+                "axes": {
+                  "xMin": -5,
+                  "xMax": 5,
+                  "yMin": -5,
+                  "yMax": 5,
+                  "xStep": 1,
+                  "yStep": 1,
+                  "snap": 0.5,
+                  "aspect": "equal",
+                  "xLabel": "x",
+                  "yLabel": "y"
+                },
+                "tools": [
+                  "point",
+                  "parabola",
+                  "move",
+                  "delete"
+                ]
+              },
+              "graphAnswer": {
+                "objects": [
+                  {
+                    "id": "model-parabola",
+                    "type": "parabola",
+                    "h": 1,
+                    "k": -3,
+                    "a": 1
+                  }
+                ],
+                "table": [],
+                "showModelGraph": true,
+                "showWorkedSolution": true,
+                "showTable": true,
+                "showComparison": true
+              }
+            },
+            {
+              "id": "graph-construction-q3",
+              "stem": "Complete the table for $y=x^2-4$.\nThe points will appear on the graph; then draw the parabola through them.",
+              "archetypeId": "method-graph-construction",
+              "level": "basic",
+              "group": "Set 2 · Linked values and sketch",
+              "answer": "Draw the parabola through the completed points.",
+              "workedAnswer": "Square each $x$ value, then subtract $4$.\nThe turning point is $(0,-4)$.\nDraw the parabola through the completed points.",
+              "graphResponse": {
+                "type": "tableGraph",
+                "axes": {
+                  "xMin": -5,
+                  "xMax": 5,
+                  "yMin": -5,
+                  "yMax": 5,
+                  "xStep": 1,
+                  "yStep": 1,
+                  "snap": 0.5,
+                  "aspect": "equal",
+                  "xLabel": "x",
+                  "yLabel": "y"
+                },
+                "tools": [
+                  "point",
+                  "parabola",
+                  "move",
+                  "delete"
+                ],
+                "table": {
+                  "rows": [
+                    {
+                      "id": "row-0",
+                      "x": -2,
+                      "y": ""
+                    },
+                    {
+                      "id": "row-1",
+                      "x": -1,
+                      "y": ""
+                    },
+                    {
+                      "id": "row-2",
+                      "x": 0,
+                      "y": ""
+                    },
+                    {
+                      "id": "row-3",
+                      "x": 1,
+                      "y": ""
+                    },
+                    {
+                      "id": "row-4",
+                      "x": 2,
+                      "y": ""
+                    }
+                  ],
+                  "editX": false,
+                  "editY": true,
+                  "allowAdd": false,
+                  "allowDelete": false,
+                  "connection": "none"
+                }
+              },
+              "graphAnswer": {
+                "objects": [
+                  {
+                    "id": "model-table",
+                    "type": "parabola",
+                    "h": 0,
+                    "k": -4,
+                    "a": 1
+                  }
+                ],
+                "table": [
+                  {
+                    "id": "model-row-0",
+                    "x": -2,
+                    "y": 0
+                  },
+                  {
+                    "id": "model-row-1",
+                    "x": -1,
+                    "y": -3
+                  },
+                  {
+                    "id": "model-row-2",
+                    "x": 0,
+                    "y": -4
+                  },
+                  {
+                    "id": "model-row-3",
+                    "x": 1,
+                    "y": -3
+                  },
+                  {
+                    "id": "model-row-4",
+                    "x": 2,
+                    "y": 0
+                  }
+                ],
+                "showModelGraph": true,
+                "showWorkedSolution": true,
+                "showTable": true,
+                "showComparison": true
+              }
+            },
+            {
+              "id": "graph-construction-q4",
+              "stem": "Sketch $y=\\frac{1}{x}$.\nUse $-4≤ x≤-0.5$ and $0.5≤ x≤4$; leave a gap at $x=0$.",
+              "archetypeId": "method-graph-construction",
+              "level": "basic",
+              "group": "Set 2 · Linked values and sketch",
+              "answer": "Keep the two stated domains separate.",
+              "workedAnswer": "Sketch the two branches separately.\nThe graph approaches, but does not cross, $x=0$ or $y=0$.\nKeep the two stated domains separate.",
+              "graphResponse": {
+                "type": "freeSketch",
+                "axes": {
+                  "xMin": -4.5,
+                  "xMax": 4.5,
+                  "yMin": -3,
+                  "yMax": 3,
+                  "xStep": 0.5,
+                  "yStep": 0.5,
+                  "snap": 0,
+                  "aspect": 1.5,
+                  "xLabel": "x",
+                  "yLabel": "y"
+                },
+                "tools": [
+                  "sketch",
+                  "point",
+                  "move",
+                  "delete"
+                ]
+              },
+              "graphAnswer": {
+                "objects": [
+                  {
+                    "id": "model-left",
+                    "type": "function",
+                    "expr": "1/x",
+                    "domainMin": -4,
+                    "domainMax": -0.5
+                  },
+                  {
+                    "id": "model-right",
+                    "type": "function",
+                    "expr": "1/x",
+                    "domainMin": 0.5,
+                    "domainMax": 4
+                  },
+                  {
+                    "id": "reciprocal-endpoint-0",
+                    "type": "point",
+                    "x": -4,
+                    "y": -0.25
+                  },
+                  {
+                    "id": "reciprocal-endpoint-1",
+                    "type": "point",
+                    "x": -0.5,
+                    "y": -2
+                  },
+                  {
+                    "id": "reciprocal-endpoint-2",
+                    "type": "point",
+                    "x": 0.5,
+                    "y": 2
+                  },
+                  {
+                    "id": "reciprocal-endpoint-3",
+                    "type": "point",
+                    "x": 4,
+                    "y": 0.25
+                  }
+                ],
+                "table": [],
+                "showModelGraph": true,
+                "showWorkedSolution": true,
+                "showTable": true,
+                "showComparison": true
+              }
+            },
+            {
+              "id": "graph-construction-q5",
+              "stem": "Complete the values for $y=-x+2$.\nThe points appear automatically; add a segment and sketch a separate annotation.",
+              "archetypeId": "method-graph-construction",
+              "level": "basic",
+              "group": "Set 3 · Hybrid",
+              "answer": "Join $(-2,4)$ to $(3,-1)$.",
+              "workedAnswer": "Subtract each $x$ value from $2$.\nThe gradient is $-1$ and the $y$-intercept is $2$.\nJoin $(-2,4)$ to $(3,-1)$.",
+              "graphResponse": {
+                "type": "hybrid",
+                "axes": {
+                  "xMin": -5,
+                  "xMax": 5,
+                  "yMin": -5,
+                  "yMax": 5,
+                  "xStep": 1,
+                  "yStep": 1,
+                  "snap": 0.5,
+                  "aspect": "equal",
+                  "xLabel": "x",
+                  "yLabel": "y"
+                },
+                "tools": [
+                  "point",
+                  "line",
+                  "sketch",
+                  "move",
+                  "delete"
+                ],
+                "table": {
+                  "rows": [
+                    {
+                      "id": "row-0",
+                      "x": -2,
+                      "y": ""
+                    },
+                    {
+                      "id": "row-1",
+                      "x": 0,
+                      "y": ""
+                    },
+                    {
+                      "id": "row-2",
+                      "x": 1,
+                      "y": ""
+                    },
+                    {
+                      "id": "row-3",
+                      "x": 3,
+                      "y": ""
+                    }
+                  ],
+                  "editX": true,
+                  "editY": true,
+                  "allowAdd": true,
+                  "allowDelete": true,
+                  "connection": "none"
+                }
+              },
+              "graphAnswer": {
+                "objects": [
+                  {
+                    "id": "model-hybrid",
+                    "type": "line",
+                    "x1": -2,
+                    "y1": 4,
+                    "x2": 3,
+                    "y2": -1
+                  }
+                ],
+                "table": [
+                  {
+                    "id": "model-row-0",
+                    "x": -2,
+                    "y": 4
+                  },
+                  {
+                    "id": "model-row-1",
+                    "x": 0,
+                    "y": 2
+                  },
+                  {
+                    "id": "model-row-2",
+                    "x": 1,
+                    "y": 1
+                  },
+                  {
+                    "id": "model-row-3",
+                    "x": 3,
+                    "y": -1
+                  }
+                ],
+                "showModelGraph": true,
+                "showWorkedSolution": true,
+                "showTable": true,
+                "showComparison": true
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-graph-construction",
+          "title": "Parallel lines from a graph",
+          "members": [
+            "method-graph-construction"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "kind": "figure",
+          "figure": {
+            "type": "figure",
+            "figure": "graph",
+            "title": "y = 2x − 1 on the authored domain −2 ≤ x ≤ 3",
+            "caption": "y = 2x − 1 on the authored domain −2 ≤ x ≤ 3",
+            "aspect": "equal",
+            "grid": "shown",
+            "callouts": "shown",
+            "curveLabels": "shown",
+            "domain": {
+              "xMin": -2,
+              "xMax": 3,
+              "yMin": "-6",
+              "yMax": 6
+            },
+            "objects": [
+              {
+                "type": "points",
+                "from": "table",
+                "rows": [
+                  [
+                    "A",
+                    -2,
+                    -5
+                  ],
+                  [
+                    "B",
+                    0,
+                    -1
+                  ],
+                  [
+                    "C",
+                    3,
+                    5
+                  ]
+                ]
+              },
+              {
+                "type": "segment",
+                "between": [
+                  "A",
+                  "C"
+                ]
+              }
+            ]
+          },
+          "role": "primary",
+          "id": "given-line",
+          "description": "Given segment: A(−2,−5), B(0,−1), C(3,5). Read its gradient; it is not the line you must construct."
+        }
+      ]
+    }
+  ]
+}
