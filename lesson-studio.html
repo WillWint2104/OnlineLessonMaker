@@ -625,6 +625,40 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .mv-evidence .mx-tblwrap:focus-visible{outline:2px solid #146d61;outline-offset:2px;}
 
 /* MATHEMATICS_VISUAL_ATTACHMENTS_CSS_END */
+/* GEOGRAPHY_G03_CSS_START */
+/* Opt-in G03 only. No global tokens or Mathematics selectors are changed. */
+.lp:has(.geo-g03){--mx-green:#076d72;font-family:'Manrope',system-ui,sans-serif;color:#172b3d;}
+.lp:has(.geo-g03) .mx-page{background:#f5f8f9;}
+.lp:has(.geo-g03) .lp-activity{max-width:1060px;margin:0 auto;padding:36px 44px 40px;background:#fff;}
+.lp:has(.geo-g03) .lp-header{margin-bottom:22px;}
+.lp:has(.geo-g03) .lp-title{font-family:inherit;font-size:clamp(28px,3.1vw,40px);line-height:1.2;letter-spacing:-.035em;max-width:24ch;}
+.lp:has(.geo-g03) .lp-title:focus{outline:2px solid #076d72;outline-offset:6px;border-radius:2px;}
+.lp:has(.geo-g03) .mx-course,.lp:has(.geo-g03) .mx-lede{font-family:inherit;}
+.lp:has(.geo-g03) .lp-location{color:#4c6374;letter-spacing:.06em;}
+.lp:has(.geo-g03) .mx-lede{font-size:18px;line-height:1.6;max-width:64ch;margin:12px 0 0;}
+.lp:has(.geo-g03) .mx-content{background:transparent;border:0;box-shadow:none;padding:0;}
+.geo-g03{font-size:17px;line-height:1.65;min-width:0;overflow-wrap:anywhere;}
+.geo-g03 h2{font-size:19px;line-height:1.35;font-weight:750;margin:0 0 9px;letter-spacing:-.015em;}
+.geo-g03-explanation{max-width:70ch;}
+.geo-g03-explanation p{margin:0 0 15px;}
+.geo-g03-source{font-size:13px;color:#506473;}
+.geo-g03-visual{margin:25px 0 27px;max-width:860px;}
+.geo-g03-visual img{display:block;width:100%;height:auto;max-height:250px;object-fit:contain;background:#f4f9f9;border:1px solid #d8e6e7;border-radius:6px;}
+.geo-g03-visual img[hidden]{display:none;}
+.geo-g03 figcaption{margin-top:9px;color:#506473;font-size:13px;line-height:1.55;}
+.geo-g03-citation{display:block;margin-top:3px;}
+.geo-g03 a{color:#076269;text-decoration:underline;text-underline-offset:3px;}
+.geo-g03-unavailable{padding:20px;border:1px solid #b5c6ca;border-radius:4px;background:#f5f8f9;}
+.geo-g03-notes{padding:20px 24px;border-left:4px solid #087c80;background:#eef7f6;max-width:78ch;}
+.geo-g03-notes h2{font-size:17px;color:#154b50;margin-bottom:10px;}
+.geo-g03-notes ol{margin:0;padding-left:24px;}
+.geo-g03-notes li{padding-left:4px;margin:7px 0;}
+.geo-g03-check{margin-top:28px;}
+.geo-g03 :focus-visible{outline:3px solid #076d72;outline-offset:4px;}
+@media(max-width:850px){.lp:has(.geo-g03) .lp-activity{padding:28px 28px 32px;}}
+@media(max-width:560px){.lp:has(.geo-g03) .lp-activity{padding:24px 19px 28px;}.geo-g03{font-size:16px;}.lp:has(.geo-g03) .mx-lede{font-size:17px;}.geo-g03-notes{padding:17px 18px;}.geo-g03-visual{margin:21px 0;}}
+
+/* GEOGRAPHY_G03_CSS_END */
 </style>
 <!-- VENDORED-FONTS:END -->
 <!-- IMPERIUM-FONT: Playfair Display (variable woff2 400-900, vendored base64 from the theme pack; self-contained, no external host) -->
@@ -16226,6 +16260,7 @@ function rpReleaseCanvas(){
 }
 function wireResponsive(){
   lpWire();
+  geoG03Wire(document.querySelector('#slide'));
   const root=$('#slide').querySelector('.mx'); if(!root) return;
   root.querySelectorAll('[data-rp-navtoggle]').forEach(b=>b.addEventListener('click',e=>{ e.preventDefault(); rpNavToggle(); }));
   root.querySelectorAll('[data-rp-go]').forEach(b=>b.addEventListener('click',()=>{
@@ -18540,6 +18575,7 @@ function lpLearnerActivities(s){ return lpOrderedActivities(s).filter(a=>(!a.opt
 function lpActivities(s){ return authorMode()==='edit'?lpOrderedActivities(s):lpLearnerActivities(s); }
 function lpValidatePublication(d){
   lpValidate(d);
+  for(const s of d.slides||[])for(const a of s.activities||[])geoG03Validate(a,true);
   mdPreflight(d);
   mvPreflight(d);
   if(!(d.slides||[]).some(lpEnabled)&&d.meta?.player!=='activities')return;
@@ -18576,8 +18612,8 @@ function lpValidate(d){
     (s.exampleCollections||[]).forEach(c=>{id(c,'Example collection');if(!Array.isArray(c.members)||c.members.some(x=>typeof x!=='string'||!x))throw Error('Collection members must be stable example ids.');
       c.members.forEach(member=>{if(assigned.has(member))throw Error('An example cannot belong to two collection positions.');assigned.add(member);const matches=s.activities.filter(a=>lpSingleExample(a)?.id===member);if(matches.length>1)throw Error('A collection example id must identify one activity.');});});
     s.activities.forEach(a=>{
-      id(a,'Activity'); if(!a.title) throw Error('Activity '+a.id+' needs a title.');
-      const allowed=['id','title','lede','notes','notesTitle','workedExamples','examples','examplesTitle','questions','questionsTitle','practiceNote','video','optionalVideo','workspace','keyIdea','introduction','focusPoints','practiceCollectionId'];
+      id(a,'Activity'); geoG03Validate(a); if(!a.title) throw Error('Activity '+a.id+' needs a title.');
+      const allowed=[...(a.layout==='geography-notes'?['layout','image','keyNotes']:[]),'id','title','lede','notes','notesTitle','workedExamples','examples','examplesTitle','questions','questionsTitle','practiceNote','video','optionalVideo','workspace','keyIdea','introduction','focusPoints','practiceCollectionId'];
       Object.keys(a).forEach(k=>{if(!allowed.includes(k)) throw Error('Unsupported activity field: '+k+' in '+a.id);});
       ['notes','workedExamples','examples','questions'].forEach(k=>{if(a[k]!=null&&!Array.isArray(a[k])) throw Error(a.id+'.'+k+' must be an array.');});
       if(!a.introduction&&!a.optionalVideo&&!a.video&&!['notes','workedExamples','examples','questions'].some(k=>a[k]&&a[k].length)) throw Error('Activity '+a.id+' is empty.');
@@ -18780,6 +18816,7 @@ function lpWire(){
 }
 let LP_EDIT={activity:null,part:'notes',index:0};
 function lpActivitySeed(kind){
+  if(kind==='geography-notes')return {id:'activity-'+crypto.randomUUID(),layout:'geography-notes',title:'New Geography concept',notes:[{body:'Explain one geographical concept.'}],keyNotes:['Record the essential idea.']};
   const a={id:'activity-'+crypto.randomUUID(),title:{notes:'New explanation',worked:'New worked example',questions:'New practice',video:'Optional video',introduction:'Introduction'}[kind]||'New explanation'};
   if(kind==='introduction')a.introduction={keyIdea:'',why:'',method:[]};
   else if(kind==='video') a.optionalVideo=true;
@@ -18870,7 +18907,7 @@ function lpInspector(s,i){
   ins.innerHTML=`<div class="ins-h">Lesson / skill / activity</div><div class="isec">${inT('Lesson title','meta.title',LESSON.meta.title)}${inT('Subject (authoring context)','meta.subject',LESSON.meta.subject||'')}${inSel('Student responses','meta.responseMode',({type:'typed',write:'pen'}[LESSON.meta.responseMode]||LESSON.meta.responseMode||'paper'),[['paper','Exercise book'],['typed','Typed'],['pen','Pen']])}${inT('Skill title',base+'.title',s.title)}${lpMathSubject()?inSel('Practice composition',base+'.practiceComposition',s.practiceComposition||'pages',[['pages','Separate example and practice pages'],['micro','Micro: example beside practice']]):''}${lpArtworkPackForm()}${inT('Optional skill video URL',base+'.video.url',(s.video||{}).url||'','url')}
     <button class="ibtn-add" data-lp-skilladd>Add skill</button><button class="ibtn-add" data-lp-skillmove="-1"${i===0?' disabled':''}>Move skill earlier</button><button class="ibtn-add" data-lp-skillmove="1"${i===LESSON.slides.length-1?' disabled':''}>Move skill later</button><button class="ibtn-add" data-lp-skillremove${LESSON.slides.length<2?' disabled':''}>Remove skill</button></div>
     <div class="isec"><div class="isec-h">Activity order</div>${s.activities.map((x,j)=>row((j+1)+'. '+x.title,j,x===a,`data-lp-select="${j}"`)).join('')}
-    <label for="lpActivityType">Activity to add</label><select class="ii" id="lpActivityType"><option value="notes">Explanation / source</option><option value="introduction">Quick introduction</option><option value="worked">Worked examples</option><option value="questions">Practice</option><option value="video"${hasVideo?' disabled':''}>Optional skill video</option></select><button class="ibtn-add" data-lp-add>Add activity</button></div>
+    <label for="lpActivityType">Activity to add</label><select class="ii" id="lpActivityType"><option value="notes">Explanation / source</option>${/^geography$/i.test(LESSON.meta.subject||'')?'<option value="geography-notes">G03 Notes and Concepts</option>':''}<option value="introduction">Quick introduction</option><option value="worked">Worked examples</option><option value="questions">Practice</option><option value="video"${hasVideo?' disabled':''}>Optional skill video</option></select><button class="ibtn-add" data-lp-add>Add activity</button></div>
     ${a?`<div class="isec">${inT('Activity title',ab+'.title',a.title)}${inA('Introduction',ab+'.lede',a.lede||'')}<button class="ibtn-add" data-lp-reorder="-1"${ai===0?' disabled':''}>Move activity earlier</button><button class="ibtn-add" data-lp-reorder="1"${ai===s.activities.length-1?' disabled':''}>Move activity later</button><button class="ibtn-add" data-lp-remove${s.activities.length<2?' disabled':''}>Remove activity</button></div>
     ${a.introduction?`<details class="isec"><summary>Retained detailed notes — not shown on the quick introduction</summary>${content}</details>`:a.optionalVideo?`<p class="ihint">One optional video per skill. Add or clear its URL above. A missing video is omitted from the learner view; the author retains this setup slot.</p><button class="ibtn-add" data-lp-vclear>Clear video URL</button>`:`<div class="isec"><div class="isec-h">Edit content</div>${[['notes','Explanation / source'],['worked','Worked examples'],['questions','Questions']].map(([v,l])=>row(l,0,part===v,`data-lp-part="${v}"`)).join('')}</div>${a.examples?.length?'<button class="ibtn-add" data-lp-organise>Organise existing examples into editable groups</button>':''}${content}`}`:''}`;
   ins.insertAdjacentHTML('beforeend',mvLibraryForm(s,i));
@@ -18880,6 +18917,7 @@ function lpInspector(s,i){
   if(a?.video&&!a.optionalVideo)ins.insertAdjacentHTML('beforeend',inT('Activity video URL',ab+(typeof a.video==='string'?'.video':'.video.url'),typeof a.video==='string'?a.video:a.video.url||''));
   if(a?.optionalVideo||a?.video)ins.insertAdjacentHTML('beforeend',lpListForm('Focus point',ab+'.focusPoints',a.focusPoints));
 
+  if(a?.layout==='geography-notes')ins.insertAdjacentHTML('beforeend',geoG03Inspector(a,ab));
   if(a?.questions){ins.insertAdjacentHTML('beforeend',lpPracticeForm(s,a,ab,part));}
   wireInspector();lpJourneyEditorWire();if(a&&editor)editor.wire(i,context);if(a)lpCollectionWire(s,a,i);
   ins.querySelector('[data-bind="meta.responseMode"]')?.addEventListener('input',()=>{MX_RESPONSE=null;renderCanvas();});
@@ -18931,7 +18969,50 @@ function mxVideoRegion(v,label){
       :`Add this skill’s video address to <code>video.url</code> and it will appear here.`}
     </div>`;
 }
+/* GEOGRAPHY_G03_JS_START */
+/* G03 is a stateless reading composition inside the shared skill/activity player.
+   The host owns title, introduction, navigation, questions, response identity and lifecycle. */
+/** Validate opt-in reading content; publication additionally requires usable teaching assets. */
+function geoG03Validate(a, publication=false){
+  if(a.layout!=='geography-notes')return;
+  if(!Array.isArray(a.keyNotes)||a.keyNotes.some(n=>typeof n!=='string'))throw Error('G03 key notes must be an ordered text array.');
+  if(a.image!=null&&(typeof a.image!=='object'||Array.isArray(a.image)))throw Error('G03 visual must use the shared image object.');
+  for(const key of ['src','alt','caption','source','sourceUrl','rights'])if(a.image?.[key]!=null&&typeof a.image[key]!=='string')throw Error('G03 visual '+key+' must be text.');
+  if(publication){
+    if(!a.notes?.some(n=>n.body?.trim())||!a.keyNotes.some(n=>n.trim()))throw Error('G03 needs an explanation and essential notes before publication.');
+    if(a.image?.src&&(!lpImageSource(a.image)||!a.image.alt?.trim()))throw Error('G03 visual needs a safe source and meaningful alternative text before publication.');
+    if(a.image?.sourceUrl&&!safeUrl(a.image.sourceUrl,'link'))throw Error('G03 visual citation needs a safe link.');
+  }
+}
+/** Render authored explanations, one optional visual and key notes without mutating host data. */
+function geoG03Render(a,i){
+  const notes=Array.isArray(a.notes)?a.notes:[], keys=Array.isArray(a.keyNotes)?a.keyNotes:[];
+  const media=a.image, src=media&&lpImageSource(media), usable=src&&media.alt?.trim();
+  const citation=media?.sourceUrl?safeUrl(media.sourceUrl,'link'):'';
+  const visual=media?.src?`<figure class="geo-g03-visual">${usable?`<img data-g03-image src="${esc(src)}" alt="${esc(media.alt)}" decoding="async">`:''}
+    <p class="geo-g03-unavailable" role="note"${usable?' hidden':''}>Visual unavailable. ${esc(media.alt||'A description is needed before this visual can be published.')}</p>
+    ${media.caption||media.source?`<figcaption>${esc(media.caption||'')}${media.source?` <span class="geo-g03-citation">${citation?`<a href="${esc(citation)}" target="_blank" rel="noopener noreferrer">${esc(media.source)}</a>`:esc(media.source)}</span>`:''}</figcaption>`:''}</figure>`:'';
+  const questions=Array.isArray(a.questions)&&a.questions.length?`<section class="geo-g03-check" aria-label="Check your understanding"><h2>Check your understanding</h2>${mxQuestionList(a.questions,tpRespId(a)||('slide-'+i))}</section>`:'';
+  return `<div class="geo-g03" data-g03-version="1"><section class="geo-g03-explanation" aria-label="Concept explanation">${notes.map(n=>`<div>${n.term||n.title?`<h2>${esc(n.term||n.title)}</h2>`:''}<p>${esc(n.body||'')}</p>${n.source?`<p class="geo-g03-source">${esc(n.source)}</p>`:''}</div>`).join('')}</section>
+    ${visual}<section class="geo-g03-notes" aria-label="Key notes to record"><h2>Key notes to record</h2>${keys.length?`<ol>${keys.map(n=>`<li>${esc(n)}</li>`).join('')}</ol>`:'<p>No key notes authored yet.</p>'}</section>${questions}</div>`;
+}
+/** Return inspector fields bound to the existing activity object and shared list editor. */
+function geoG03Inspector(a,path){
+  const image=a.image||{};
+  return `<div class="isec"><h3>G03 concept visual (optional)</h3><p>Use one purposeful visual. Leave the source empty for a text-only page.</p>${inT('Visual source',path+'.image.src',image.src||'')}${inT('Alternative text',path+'.image.alt',image.alt||'')}${inA('Caption',path+'.image.caption',image.caption||'')}${inT('Source credit',path+'.image.source',image.source||'')}${inT('Source link',path+'.image.sourceUrl',image.sourceUrl||'')}${inT('Rights / provenance',path+'.image.rights',image.rights||'')}</div>${lpListForm('Key note to record',path+'.keyNotes',a.keyNotes)}<p class="ihint">Aim for two or three essential notes. Explanation items above remain editable using the shared controls.</p>`;
+}
+/** Attach DOM-local image fallbacks; detached host DOM owns the listeners' lifetime. */
+function geoG03Wire(root){
+  root.querySelectorAll('[data-g03-image]').forEach(img=>{
+    const unavailable=()=>{img.hidden=true;const fallback=img.parentElement.querySelector('.geo-g03-unavailable');if(fallback)fallback.hidden=false;};
+    img.addEventListener('error',unavailable,{once:true});
+    if(img.complete&&!img.naturalWidth)unavailable();
+  });
+}
+
+/* GEOGRAPHY_G03_JS_END */
 function mxSkillPage(s,i){
+  if(s.layout==='geography-notes')return geoG03Render(s,i);
   const page=tpRespId(s)||('slide-'+i);
   const notes=Array.isArray(s.notes)?s.notes:((s.notes&&Array.isArray(s.notes.concepts))?s.notes.concepts:[]);
   const groups=mxWexGroups({groups:s.workedExamples,examples:s.examples,contentTitle:'Worked examples'});

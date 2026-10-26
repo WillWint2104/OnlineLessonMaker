@@ -222,7 +222,7 @@
       "stream": "integration",
       "lane": "integration",
       "priority": 1,
-      "state": "STAGED-REVIEW",
+      "state": "MERGED",
       "dependencies": [
         "FOUND-001"
       ],
@@ -241,14 +241,17 @@
         ".github/**"
       ],
       "reviewStage": "D",
-      "waitingForHuman": true,
+      "waitingForHuman": false,
       "branch": "codex/integration-GEO-SETUP-001-stage-a",
       "worktree": "C:/Users/willi/Videos/Online Lesson Maker/review-delivery/worktrees/geography-stage-a-setup",
       "startingCommit": "400814614e821a976f4c9bae7994d9505455cf04",
       "owner": "Geography setup coordinator",
       "pr": 175,
       "blocker": null,
-      "card": "docs/development/tasks/GEO-SETUP-001.md"
+      "card": "docs/development/tasks/GEO-SETUP-001.md",
+      "mergeCommit": "dceba9757c24a703e6d3b655a2dfe90ef0a5d969",
+      "mergedAt": "2026-10-24T08:40:58Z",
+      "mergeEvidence": "https://github.com/WillWint2104/OnlineLessonMaker/pull/175"
     },
     {
       "id": "GEO-001",
@@ -285,7 +288,7 @@
       "startingCommit": null,
       "owner": null,
       "pr": null,
-      "blocker": "Setup governance approval and actual merge; separate explicit Geography Stage A launch; capacity and ownership refresh required",
+      "blocker": "Setup merged; separate explicit Geography Stage A research launch and refreshed inventory still required. G03 prototype authorisation does not launch this card.",
       "card": "docs/development/tasks/GEO-001.md",
       "launchGate": "GEOGRAPHY-STAGE-A",
       "implementationGate": {
@@ -328,7 +331,7 @@
       "startingCommit": null,
       "owner": null,
       "pr": null,
-      "blocker": "Setup governance approval and actual merge; separate explicit Geography Stage A launch; capacity and ownership refresh required",
+      "blocker": "Setup merged; separate explicit Geography Stage A research launch and refreshed inventory still required. G03 prototype authorisation does not launch this card.",
       "card": "docs/development/tasks/GEO-MAP-001.md",
       "launchGate": "GEOGRAPHY-STAGE-A",
       "implementationGate": {
@@ -371,13 +374,91 @@
       "startingCommit": null,
       "owner": null,
       "pr": null,
-      "blocker": "Setup governance approval and actual merge; separate explicit Geography Stage A launch; capacity and ownership refresh required",
+      "blocker": "Setup merged; separate explicit Geography Stage A research launch and refreshed inventory still required. G03 prototype authorisation does not launch this card.",
       "card": "docs/development/tasks/GEO-EVIDENCE-001.md",
       "launchGate": "GEOGRAPHY-STAGE-A",
       "implementationGate": {
         "checkpoint": "GEOGRAPHY-STAGE-A:A",
         "scopeReconciledWith": null
       }
+    },
+    {
+      "id": "GEO-G03-001",
+      "project": "geography-g03",
+      "stream": "integration",
+      "lane": "integration",
+      "priority": 1,
+      "state": "STAGED-REVIEW",
+      "dependencies": [
+        "GEO-SETUP-001"
+      ],
+      "approvedDependencies": [],
+      "allowedPaths": [
+        "lesson-studio.html",
+        "src/geography/g03/**",
+        "scripts/build-geography-g03.mjs",
+        "tests/widgets/geography-g03/**",
+        "docs/review/geography-g03/**",
+        "docs/development/tasks/GEO-G03-001.md",
+        "docs/development/backlog.json",
+        "AGENTS.md",
+        "docs/development/AGENTS.md",
+        "docs/development/README.md",
+        "docs/development/BACKLOG.md",
+        "docs/development/tasks/GEO-SETUP-001.md",
+        "scripts/verify-development-foundation.mjs"
+      ],
+      "protectedPaths": [
+        "src/mathematics/**",
+        "src/graph-response/**",
+        "assets/vendor/**",
+        "lessons/**",
+        "examples/**",
+        ".github/**",
+        ".coderabbit.yaml",
+        "supabase/**",
+        "docs/development/WIDGET-CONTRACT-V1.md"
+      ],
+      "reviewStage": "C",
+      "waitingForHuman": true,
+      "branch": "codex/integration-GEO-G03-001-notes",
+      "worktree": "C:/Users/willi/Videos/Online Lesson Maker/review-delivery/worktrees/geography-g03",
+      "startingCommit": "5143b6713e135f665a9c3ff01a3f2714be2c0759",
+      "owner": "G03 integration agent",
+      "pr": 180,
+      "blocker": null,
+      "card": "docs/development/tasks/GEO-G03-001.md",
+      "authorisation": "Direct user G03 prototype and draft PR instruction, attachment 94471f0b-a1ee-4571-94af-72f45c1656ed, 2026-10-26; not a research or merge approval."
+    },
+    {
+      "id": "LEGACY-VIDEO-135",
+      "project": "legacy-video-135",
+      "stream": "integration",
+      "lane": "integration",
+      "priority": 2,
+      "state": "STAGED-REVIEW",
+      "dependencies": [],
+      "approvedDependencies": [],
+      "allowedPaths": [
+        "docs/review/legacy-video-135/**"
+      ],
+      "protectedPaths": [
+        "lesson-studio.html",
+        "src/**",
+        "scripts/**",
+        ".github/**"
+      ],
+      "reviewStage": "D",
+      "waitingForHuman": true,
+      "branch": null,
+      "worktree": null,
+      "startingCommit": null,
+      "owner": null,
+      "pr": 135,
+      "blocker": null,
+      "card": "docs/development/tasks/GEO-G03-001.md",
+      "inventoryOnly": true,
+      "note": "Inventory-only reservation: PR #135 body says Draft — held for your review. No active checkout, builder or implementation authority is assigned. No change to that PR is made."
     }
   ],
   "deferredStreams": [
@@ -390,6 +471,6 @@
   ],
   "approvedCheckpoints": [],
   "approvedLaunches": [],
-  "externalFeatureBuilders": 1,
-  "externalCapacityNote": "Conservative Mathematics reservation from current user instruction; math-fractions-review checkout retained. Reconcile actual next task and paths before launch. ART-001 merged. Old PRs #99/#135 require review-capacity classification; backlog is not a complete live agent inventory."
+  "externalFeatureBuilders": 2,
+  "externalCapacityNote": "Conservative builder accounting: G03 prototype (also integration owner) + active calculator-transfer packaging = 2 of 3. Mathematics integrations #177/#178/#179 merged, retained evidence untouched. #135 dormant visual checkpoint reserves one external review project; #99 documentation/policy review is not a learner-design project. No seeded research launch."
 }

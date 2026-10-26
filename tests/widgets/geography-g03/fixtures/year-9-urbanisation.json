@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "id": "geo-g03-year-9",
+    "player": "activities",
+    "title": "Changing Places",
+    "subject": "Geography",
+    "year": "Year 9",
+    "theme": "geolearn",
+    "responseMode": "typed",
+    "colors": {
+      "accent": "#076d72"
+    },
+    "answerPolicy": {
+      "final": "hidden",
+      "worked": "hidden"
+    },
+    "frontMatter": [
+      {
+        "id": "overview-9",
+        "kind": "overview",
+        "title": "Changing Places",
+        "description": "A review lesson demonstrating the reusable G03 Notes and Concepts layout."
+      },
+      {
+        "id": "outcomes-9",
+        "kind": "outcomes",
+        "title": "Learning outcomes",
+        "intentions": [
+          "Define urbanisation as a change in population share.",
+          "Distinguish urbanisation from urban population growth."
+        ]
+      }
+    ],
+    "completion": {
+      "description": "Review the key notes and explain the concept in your own words."
+    }
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "concepts-9",
+      "title": "Understanding urbanisation",
+      "activities": [
+        {
+          "id": "urbanisation-concept",
+          "layout": "geography-notes",
+          "title": "Understanding urbanisation",
+          "lede": "Urbanisation is an increase in the proportion of people living in urban areas.",
+          "notes": [
+            {
+              "body": "Urban population growth means an increase in the number of urban residents. Urbanisation means an increase in their share of the total population. The two measures answer different questions."
+            },
+            {
+              "body": "If urban and rural populations grow at the same rate, urban numbers rise but the urban share stays the same. Definitions of urban areas also differ between countries, so comparisons need care."
+            }
+          ],
+          "image": {
+            "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMjQwIiB2aWV3Qm94PSIwIDAgNjAwIDI0MCI+PHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSIyNDAiIGZpbGw9IiNmNGY5ZjkiLz48ZyBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZmlsbD0iIzE3Mzg0OSI+PGcgZm9udC1zaXplPSIyNSI+PHRleHQgeD0iMjgiIHk9IjM5IiBmb250LXdlaWdodD0iYm9sZCI+VXJiYW5pc2F0aW9uOiBhIHJpc2luZyB1cmJhbiBzaGFyZTwvdGV4dD48dGV4dCB4PSIyOCIgeT0iODMiPkVhcmxpZXI8L3RleHQ+PHRleHQgeD0iMjgiIHk9IjE1MiI+TGF0ZXI8L3RleHQ+PHJlY3QgeD0iMTQwIiB5PSI1OSIgd2lkdGg9IjE2MCIgaGVpZ2h0PSIzMCIgcng9IjMiIGZpbGw9IiMwODdjODAiLz48cmVjdCB4PSIzMDAiIHk9IjU5IiB3aWR0aD0iMjQwIiBoZWlnaHQ9IjMwIiBmaWxsPSIjZDRlMmU0Ii8+PHJlY3QgeD0iMTQwIiB5PSIxMjgiIHdpZHRoPSIyMDAiIGhlaWdodD0iMzAiIHJ4PSIzIiBmaWxsPSIjMDg3YzgwIi8+PHJlY3QgeD0iMzQwIiB5PSIxMjgiIHdpZHRoPSIyMDAiIGhlaWdodD0iMzAiIGZpbGw9IiNkNGUyZTQiLz48dGV4dCB4PSIxNDAiIHk9IjExNiI+NDAlIHVyYmFuPC90ZXh0Pjx0ZXh0IHg9IjE0MCIgeT0iMTg1Ij41MCUgdXJiYW48L3RleHQ+PC9nPjxyZWN0IHg9IjI4IiB5PSIyMDgiIHdpZHRoPSIxNSIgaGVpZ2h0PSIxNSIgZmlsbD0iIzA4N2M4MCIvPjx0ZXh0IHg9IjUyIiB5PSIyMjEiIGZvbnQtc2l6ZT0iMjAiPlVyYmFuPC90ZXh0PjxyZWN0IHg9IjE1NSIgeT0iMjA4IiB3aWR0aD0iMTUiIGhlaWdodD0iMTUiIGZpbGw9IiNkNGUyZTQiLz48dGV4dCB4PSIxNzkiIHk9IjIyMSIgZm9udC1zaXplPSIyMCI+UnVyYWw8L3RleHQ+PHRleHQgeD0iNTcyIiB5PSIyMjEiIHRleHQtYW5jaG9yPSJlbmQiIGZvbnQtc2l6ZT0iMTkiPklsbHVzdHJhdGl2ZSBzaGFyZXM8L3RleHQ+PC9nPjwvc3ZnPg==",
+            "alt": "Illustrative comparison: the urban share rises from 40 per cent to 50 per cent; the rural share falls from 60 per cent to 50 per cent. Each bar represents the entire population at that time.",
+            "caption": "Illustrative proportions, not measured places or years. Each bar represents 100% of the population.",
+            "source": "Definitions: UN DESA World Urbanization Prospects",
+            "sourceUrl": "https://population.un.org/wup/glossary-demographic-terms",
+            "rights": "Original explanatory diagram for this review prototype; source concepts attributed. No copied source artwork."
+          },
+          "keyNotes": [
+            "Urbanisation means a rising urban share of the population.",
+            "Urban population growth means more urban residents, even if their share stays unchanged.",
+            "Check the definition of “urban” before comparing places."
+          ]
+        },
+        {
+          "id": "urbanisation-numbers",
+          "layout": "geography-notes",
+          "title": "Number and proportion",
+          "notes": [
+            {
+              "body": "Imagine a population with 40 urban and 60 rural residents. If both groups grow by 20%, there are 48 urban and 72 rural residents. The urban population has grown, but its share is still 40%. These figures are illustrative, not observations from a real place."
+            }
+          ],
+          "keyNotes": [
+            "A population count is a number of people.",
+            "A population proportion compares a group with the whole."
+          ]
+        }
+      ]
+    }
+  ]
+}

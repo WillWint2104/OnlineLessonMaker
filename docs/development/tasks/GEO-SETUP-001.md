@@ -13,3 +13,5 @@ Integration planning authorised by the user on 23 October 2026. Priority P1; Sta
 - Integration exception: coordination and validator only; Widget Contract V1 unchanged.
 
 24 October planning amendment: add the two curriculum matrices, question/application catalogues and batched production proposal; broaden GEO-001/Map/Evidence briefs accordingly. Preserve all ownership, launch, capacity and implementation gates. No root instructions, backlog/ownership data, validator, shared contract or runtime changes are part of this amendment. The original resources are unavailable by design and are not a planning prerequisite. Earlier exact-head merge receipts apply only to their recorded heads; this documentation amendment requires fresh review before any new merge candidate.
+
+26 October 2026 reconciliation: GEO-SETUP-001 actually merged in PR #175 at dceba9757c24a703e6d3b655a2dfe90ef0a5d969. Earlier proposed/staged descriptions above are historical. Direct user authority now permits only the bounded [G03 prototype](GEO-G03-001.md), not GEOGRAPHY-STAGE-A research, G06, final design approval, merge or deployment. approvedLaunches and approvedCheckpoints remain empty.
