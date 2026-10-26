@@ -18186,11 +18186,31 @@ function grReleaseDialog(opener){
   const d=document.createElement('dialog');d.className='mx-support-dialog';d.setAttribute('aria-label','Local answer release preview');d.innerHTML=`<header><h2>Local release preview</h2><button data-gr-close aria-label="Close local release preview">×</button></header><p>This changes answers on this display only. It does not publish to a class. Remote teacher release is deferred.</p>${groups.map(group=>`<section class="gr-release"><b>${esc(group)}</b><div class="gr-release-row">${['final','worked'].map(kind=>`<label><input type="checkbox" data-gr-release-kind="${kind}" data-gr-release-group="${esc(group)}" ${GR_RELEASE.get(group)?.[kind]?'checked':''}> ${kind==='final'?'Model / final answers':'Worked explanations'}</label>`).join('')}</div></section>`).join('')}<button class="lp-primary" data-gr-apply>Apply on this display</button>`;document.body.append(d);d.showModal();d.querySelector('[data-gr-close]').onclick=()=>d.close();d.querySelector('[data-gr-apply]').onclick=()=>{d.querySelectorAll('[data-gr-release-kind]').forEach(input=>{const group=input.dataset.grReleaseGroup;GR_RELEASE.set(group,{...GR_RELEASE.get(group),[input.dataset.grReleaseKind]:input.checked});});lpBookRefresh();d.close();};d.onkeydown=e=>e.stopPropagation();d.onclose=()=>{d.remove();if(opener.isConnected)opener.focus({preventScroll:true});};
 }
 function grStudentData(out){
-  for(const s of out.slides||[])for(const a of s.activities||[])for(const q of a.questions||[])if(q.graphResponse){for(const kind of ['final','worked']){const p=out.meta.answerPolicy?.groups?.[q.releaseGroup]?.[kind]||out.meta.answerPolicy?.[kind]||'autonomous',fallback=out.meta.answerPolicy?.fallback?.[kind]||'hidden',hidden=p==='hidden'||p==='teacher'&&(out.meta.answerPolicy?.groups?.[q.releaseGroup]?.[kind]||fallback)==='hidden'||p==='teacher'&&!!out.meta.answerPolicy?.groups?.[q.releaseGroup];if(hidden){const strip=o=>{delete o[kind==='final'?'answer':'workedAnswer'];delete o[kind==='final'?'finalAnswer':'workedSolution'];if(o.answerVisuals)delete o.answerVisuals[kind];
-    // Imports preserve legacy metadata on parts; withholding also covers its known model fields.
-    // This does not enable a graph response or model presentation on a written part.
-    const answer=o.graphAnswer;if(answer&&typeof answer==='object'&&!Array.isArray(answer)){if(kind==='final'){answer.objects=[];answer.table=[];answer.showModelGraph=false;answer.showTable=false;answer.showComparison=false;}else answer.showWorkedSolution=false;}
-    for(const part of o.parts||[])if(part&&typeof part==='object')strip(part);};strip(q);}}}
+  // Use the same question locations as validation: direct slide questions and activity questions.
+  MathDisplay.questions(out,q=>{
+    if(!q||typeof q!=='object'||!q.graphResponse)return;
+    for(const kind of ['final','worked']){
+      const group=out.meta.answerPolicy?.groups?.[q.releaseGroup],p=group?.[kind]||out.meta.answerPolicy?.[kind]||'autonomous',fallback=out.meta.answerPolicy?.fallback?.[kind]||'hidden';
+      const hidden=p==='hidden'||p==='teacher'&&(group?.[kind]||fallback)==='hidden'||p==='teacher'&&!!group?.[kind];
+      if(!hidden)continue;
+      const strip=o=>{
+        delete o[kind==='final'?'answer':'workedAnswer'];delete o[kind==='final'?'finalAnswer':'workedSolution'];if(o.answerVisuals)delete o.answerVisuals[kind];
+        const answer=o.graphAnswer;
+        if(answer!=null){
+          if(kind==='final'){
+            // Final release owns the entire model payload, including imported extension data.
+            // Reconstruct only inert fields on the export copy; authoring data is untouched.
+            const worked=typeof answer.showWorkedSolution==='boolean'?answer.showWorkedSolution:undefined;
+            o.graphAnswer={objects:[],table:[],showModelGraph:false,showTable:false,showComparison:false};
+            if(worked!==undefined)o.graphAnswer.showWorkedSolution=worked;
+          }else if(typeof answer==='object'&&!Array.isArray(answer))answer.showWorkedSolution=false;
+          else delete o.graphAnswer;
+        }
+        for(const part of o.parts||[])if(part&&typeof part==='object')strip(part);
+      };
+      strip(q);
+    }
+  });
   return out;
 }
 function grAuthorHtml(q){
