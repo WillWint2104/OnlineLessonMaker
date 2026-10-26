@@ -59,6 +59,33 @@ for(const kind of ['hidden','teacher'])for(const keepModel of [false,true]){cons
 // Publication accepts legacy direct-slide question data; the same policy must cover that location.
 for(const policy of ['hidden','teacher']){const v=structuredClone(fixtures.legacy),activity=v.slides[0].activities.find(a=>a.questions),q=activity.questions.shift();v.slides[0].questions=[q];q.releaseGroup='direct-set';q.answer='C3_DIRECT_FINAL';q.workedAnswer='C3_DIRECT_WORK';q.graphAnswer.objects[0].id='C3_DIRECT_MODEL';q.graphAnswer.privateExtension={model:'C3_DIRECT_EXTENSION'};q.parts=[{id:'direct-nested',prompt:'Explain the construction.',finalAnswer:'C3_DIRECT_PART_FINAL',workedAnswer:'C3_DIRECT_PART_WORK',graphAnswer:structuredClone(q.graphAnswer)}];v.meta.answerPolicy={final:'autonomous',worked:'autonomous',fallback:{final:'autonomous',worked:'autonomous'},groups:{'direct-set':{final:policy,worked:policy}}};await load(p,v);check(policy+': direct-slide graph question passes publication preflight',await p.evaluate(()=>{lpValidatePublication(LESSON);return true;}));const payload=await p.evaluate(()=>lpBookStudentData(LESSON));check(policy+': direct-slide root and nested private data are withheld',!JSON.stringify(payload).includes('C3_DIRECT_'));check(policy+': direct-slide author data remains intact',await p.evaluate(()=>JSON.stringify(LESSON.slides[0].questions[0]).includes('C3_DIRECT_EXTENSION')));const download=p.waitForEvent('download');await p.locator('[data-mx-mode="export"]').click();const file='exports/direct-slide-'+policy+'.html';await(await download).saveAs(out+'/'+file);check(policy+': actual direct-slide export contains no private canary',!fs.readFileSync(out+'/'+file,'utf8').includes('C3_DIRECT_'));report.exports.push({id:'direct-slide-'+policy,file,sha256:sha(fs.readFileSync(out+'/'+file))});}
 
+// Legacy model metadata can also be retained on written parts of graph-as-evidence questions.
+// Their ordinary whole-lesson policy must remain independent of graph-only release groups.
+for(const policy of [
+  {id:'hidden',value:'hidden',fallback:'autonomous',group:'autonomous',withheld:true},
+  {id:'teacher-hidden',value:'teacher',fallback:'hidden',group:'autonomous',withheld:true},
+  {id:'teacher-permitted',value:'teacher',fallback:'autonomous',group:'hidden',withheld:false}
+]){
+  const v=structuredClone(fixtures.evidence),q=qlist(v)[0];
+  q.releaseGroup='graph-only-group';
+  const model=structuredClone(qlist(fixtures.parts)[0].graphAnswer);
+  model.objects[0].id='C3_EVIDENCE_MODEL';
+  model.privateExtension={tag:'C3_EVIDENCE_EXTENSION'};
+  q.parts[0].graphAnswer=structuredClone(model);
+  q.parts[1].parts=[{id:'evidence-nested',prompt:'Explain the method.',graphAnswer:structuredClone(model)}];
+  v.meta.answerPolicy={final:policy.value,worked:policy.value,fallback:{final:policy.fallback,worked:policy.fallback},groups:{'graph-only-group':{final:policy.group,worked:policy.group}}};
+  await load(p,v);
+  check(policy.id+': graph-as-evidence legacy metadata passes publication preflight',await p.evaluate(()=>{lpValidatePublication(LESSON);return true;}));
+  const payload=await p.evaluate(()=>lpBookStudentData(LESSON));
+  const models=[qlist(payload)[0].parts[0].graphAnswer,qlist(payload)[0].parts[1].parts[0].graphAnswer];
+  check(policy.id+': ordinary policy controls both model scopes independently of graph groups',models.every(m=>policy.withheld?m.objects.length===0&&m.table.length===0&&!m.privateExtension&&m.showModelGraph===false&&m.showWorkedSolution===false:m.objects[0].id==='C3_EVIDENCE_MODEL'&&m.privateExtension.tag==='C3_EVIDENCE_EXTENSION'));
+  check(policy.id+': graph-as-evidence author metadata remains intact',await p.evaluate(()=>{const q=LESSON.slides[0].activities.find(a=>a.questions).questions[0];return !q.graphResponse&&q.parts[0].graphAnswer.privateExtension.tag==='C3_EVIDENCE_EXTENSION'&&q.parts[1].parts[0].graphAnswer.objects[0].id==='C3_EVIDENCE_MODEL';}));
+  const download=p.waitForEvent('download');await p.locator('[data-mx-mode="export"]').click();
+  const file='exports/evidence-model-'+policy.id+'.html';await(await download).saveAs(out+'/'+file);
+  check(policy.id+': actual graph-as-evidence export obeys ordinary model policy',fs.readFileSync(out+'/'+file,'utf8').includes('C3_EVIDENCE_EXTENSION')===!policy.withheld);
+  report.exports.push({id:'evidence-model-'+policy.id,file,sha256:sha(fs.readFileSync(out+'/'+file))});
+}
+
 for(const mode of ['paper','typed','pen'])for(const id of ['micro','evidence']){const v=structuredClone(fixtures[id]);v.meta.responseMode=mode;await load(p,v);check(`${mode}/${id}: evidence/response precedence`,await p.locator('[data-gr-question]').count()===(id==='micro'?5:0));check(`${mode}/${id}: authored evidence and written context remain present`,await p.evaluate(id=>{const q=LESSON.slides[0].activities.find(a=>a.questions).questions[0],owner=document.querySelector(id==='evidence'?'[data-book-question]':'.mx-worked-example'),evidence=owner?.querySelector('.mv-evidence');return !!evidence&&!!evidence.querySelector('.tp-fig-seg')&&evidence.querySelector('.mv-description')?.textContent===LESSON.slides[0].visuals[0].description&&(id!=='evidence'||owner.querySelectorAll('.mx-parts .mx-part').length===q.parts.length);},id));}
 
 check('A graph answer without its owning graph response remains invalid',await p.evaluate(()=>{try{grConfigValidate({graphAnswer:{objects:[]}});return false;}catch(e){return e.message.includes('needs a graph response');}}));

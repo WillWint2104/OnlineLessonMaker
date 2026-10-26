@@ -18188,13 +18188,15 @@ function grReleaseDialog(opener){
 function grStudentData(out){
   // Use the same question locations as validation: direct slide questions and activity questions.
   MathDisplay.questions(out,q=>{
-    if(!q||typeof q!=='object'||!q.graphResponse)return;
+    if(!q||typeof q!=='object')return;
+    const graphOwned=!!q.graphResponse;
     for(const kind of ['final','worked']){
-      const group=out.meta.answerPolicy?.groups?.[q.releaseGroup],p=group?.[kind]||out.meta.answerPolicy?.[kind]||'autonomous',fallback=out.meta.answerPolicy?.fallback?.[kind]||'hidden';
+      const group=graphOwned?out.meta.answerPolicy?.groups?.[q.releaseGroup]:undefined,p=group?.[kind]||out.meta.answerPolicy?.[kind]||'autonomous',fallback=out.meta.answerPolicy?.fallback?.[kind]||'hidden';
       const hidden=p==='hidden'||p==='teacher'&&(group?.[kind]||fallback)==='hidden'||p==='teacher'&&!!group?.[kind];
       if(!hidden)continue;
       const strip=o=>{
-        delete o[kind==='final'?'answer':'workedAnswer'];delete o[kind==='final'?'finalAnswer':'workedSolution'];if(o.answerVisuals)delete o.answerVisuals[kind];
+        // Ordinary written answers/visuals retain the host's existing policy handling.
+        if(graphOwned){delete o[kind==='final'?'answer':'workedAnswer'];delete o[kind==='final'?'finalAnswer':'workedSolution'];if(o.answerVisuals)delete o.answerVisuals[kind];}
         const answer=o.graphAnswer;
         if(answer!=null){
           if(kind==='final'){
