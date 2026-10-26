@@ -1,0 +1,28 @@
+// Packages a completed exact-head review run; never rebuilds or changes the player.
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+const root=process.cwd(),input=path.resolve(process.env.G03_OUT||'review-delivery/geography-g03/current');
+const report=JSON.parse(fs.readFileSync(path.join(input,'results.json')));
+const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),status=execFileSync('git',['status','--porcelain','-uno'],{encoding:'utf8'}).trim();
+const hash=b=>createHash('sha256').update(b).digest('hex');
+if(head!==report.head||report.headAfter!==head||report.trackedStatus||status||hash(fs.readFileSync('lesson-studio.html'))!==report.appSha256)throw Error('Package requires unchanged, clean, exact-head review evidence.');
+const out=path.resolve(process.env.G03_PACKAGE||'review-delivery/geography-g03/review-'+head.slice(0,7)+'-v1');
+if(fs.existsSync(out))throw Error('Choose a fresh version; existing evidence is preserved.');
+fs.mkdirSync(out,{recursive:true});fs.cpSync(input,out,{recursive:true});
+fs.copyFileSync('lesson-studio.html',path.join(out,'lesson-studio.html'));
+for(const dir of ['src/geography/g03','tests/widgets/geography-g03','docs/review/geography-g03'])fs.cpSync(dir,path.join(out,'source',dir),{recursive:true});
+fs.mkdirSync(path.join(out,'source/scripts'),{recursive:true});fs.copyFileSync('scripts/build-geography-g03.mjs',path.join(out,'source/scripts/build-geography-g03.mjs'));
+const results=path.resolve(process.env.PLAYER_REVIEW_DIR||'review-delivery/geography-g03/regression');
+if(!fs.existsSync(path.join(results,'logs/results.json')))throw Error('Shared regression evidence missing.');
+const regressions=JSON.parse(fs.readFileSync(path.join(results,'logs/results.json'))),run=JSON.parse(fs.readFileSync(path.join(results,'logs/run-info.json')));
+if(regressions.some(r=>r.status!==0)||run.head!==head||!run.exactHeadUnchanged)throw Error('Shared regressions must pass at this exact unchanged head.');
+fs.cpSync(path.join(results,'logs'),path.join(out,'regression'),{recursive:true});
+fs.copyFileSync('docs/development/backlog.json',path.join(out,'coordination-state.json'));
+fs.copyFileSync('docs/development/tasks/GEO-G03-001.md',path.join(out,'TASK.md'));
+const cards=report.captures.map(file=>`<figure><a href="${file}"><img loading="lazy" src="${file}" alt="${file.replaceAll('-',' ').replace('.png','')}"></a><figcaption>${file}</figcaption></figure>`).join('');
+fs.writeFileSync(path.join(out,'index.html'),`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>G03 learner review</title><style>body{font:16px/1.6 system-ui;color:#17303e;background:#f3f7f8;margin:0}main{max-width:1400px;margin:auto;padding:28px}h1{letter-spacing:-.03em}a{color:#066b72}code{overflow-wrap:anywhere}nav{display:flex;flex-wrap:wrap;gap:24px}section{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:22px}figure{margin:0;background:white;border:1px solid #d9e4e7;padding:12px}img{display:block;width:100%;height:auto;max-height:650px;object-fit:contain}figcaption{font-size:13px;overflow-wrap:anywhere}</style><main><h1>G03 · Notes and Concepts</h1><p>Working prototype for visual approval. Both topics use the same component in the shared learner player. No G06, merge or deployment approval.</p><p>Exact head <code>${head}</code><br>${report.checks.length} focused checks · ${regressions.length} shared regression gates · ${report.captures.length} actual learner captures · zero browser page errors.</p><nav><a href="year-10-wellbeing.html">Open Year 10 learner</a><a href="year-9-urbanisation.html">Open Year 9 learner</a><a href="year-10-wellbeing.json">Year 10 JSON</a><a href="year-9-urbanisation.json">Year 9 JSON</a><a href="results.json">Focused results</a><a href="regression/results.json">Regression results</a><a href="source/docs/review/geography-g03/README.md">Scope, sources and design differences</a></nav><p>The light shared navigation is retained; the reference's dark rail and duplicate top progress navigation are not reproduced. Captures include initial and scrolled notes views. Mobile/tablet are browser viewport checks; native 200% uses real browser zoom, not CSS scaling. Physical-device testing is not claimed.</p><section>${cards}</section></main></html>`);
+fs.writeFileSync(path.join(out,'REVIEW-RECEIPT.json'),JSON.stringify({head,appSha256:report.appSha256,base:'5143b6713e135f665a9c3ff01a3f2714be2c0759',focusedChecks:report.checks.length,regressionGates:regressions.length,captures:report.captures.length,designApproved:false,merged:false,deployed:false,scope:'GEO-G03-001 only; stop for human visual approval'},null,2));
+const files=[];function walk(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,entry.name);if(entry.isDirectory())walk(f);else files.push({file:path.relative(out,f).replaceAll('\\','/'),sha256:hash(fs.readFileSync(f)),bytes:fs.statSync(f).size});}}walk(out);
+fs.writeFileSync(path.join(out,'MANIFEST.json'),JSON.stringify({head,files},null,2));console.log(out);

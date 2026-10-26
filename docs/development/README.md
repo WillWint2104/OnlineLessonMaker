@@ -13,3 +13,5 @@ Validate with node scripts/verify-development-foundation.mjs and --self-test. Th
 Older README/HANDOFF sections mention superseded Mathematics milestones and Present controls. Current root instructions and direct task scope govern new work. Preserve historical receipts and existing lesson compatibility.
 
 The current Geography production proposal covers six teaching weeks of both Year 9 and Year 10: [coverage matrices, question catalogue and application dependencies](geography-six-week/README.md). The user has authorised curriculum redesign from the topic guidance without waiting for old school resources. Lesson sequence/timetable remain provisional, and this planning amendment grants no launch or implementation authority.
+
+26 October 2026 reconciliation: GEO-SETUP-001 actually merged in PR #175 at dceba9757c24a703e6d3b655a2dfe90ef0a5d969. Earlier proposed/staged descriptions above are historical. Direct user authority now permits only the bounded [G03 prototype](tasks/GEO-G03-001.md), not GEOGRAPHY-STAGE-A research, G06, final design approval, merge or deployment. approvedLaunches and approvedCheckpoints remain empty.

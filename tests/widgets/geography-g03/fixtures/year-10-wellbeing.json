@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "id": "geo-g03-year-10",
+    "player": "activities",
+    "title": "Human Wellbeing",
+    "subject": "Geography",
+    "year": "Year 10",
+    "theme": "geolearn",
+    "responseMode": "typed",
+    "colors": {
+      "accent": "#076d72"
+    },
+    "answerPolicy": {
+      "final": "hidden",
+      "worked": "hidden"
+    },
+    "frontMatter": [
+      {
+        "id": "overview-10",
+        "kind": "overview",
+        "title": "Human Wellbeing",
+        "description": "A review lesson demonstrating the reusable G03 Notes and Concepts layout."
+      },
+      {
+        "id": "outcomes-10",
+        "kind": "outcomes",
+        "title": "Learning outcomes",
+        "intentions": [
+          "Describe what the HDI measures.",
+          "Explain why national averages give an incomplete picture."
+        ]
+      }
+    ],
+    "completion": {
+      "description": "Review the key notes and explain the concept in your own words."
+    }
+  },
+  "slides": [
+    {
+      "type": "skill",
+      "id": "concepts-10",
+      "title": "Measuring human wellbeing",
+      "activities": [
+        {
+          "id": "hdi-concept",
+          "layout": "geography-notes",
+          "title": "Measuring human wellbeing",
+          "lede": "The Human Development Index (HDI) helps geographers compare human development.",
+          "notes": [
+            {
+              "body": "The HDI combines health, education and income. It uses life expectancy at birth; mean and expected years of schooling; and gross national income per person, adjusted for differences in purchasing power.",
+              "provenance": {
+                "checked": "2026-10-26",
+                "source": "UNDP HDI data centre"
+              }
+            },
+            {
+              "body": "The index ranges from 0 to 1. A higher value represents higher average achievement in these dimensions, but an average can hide differences within a country."
+            }
+          ],
+          "image": {
+            "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2MDAiIGhlaWdodD0iMjQwIiB2aWV3Qm94PSIwIDAgNjAwIDI0MCI+PHJlY3Qgd2lkdGg9IjYwMCIgaGVpZ2h0PSIyNDAiIGZpbGw9IiNmNGY5ZjkiLz48ZyBmb250LWZhbWlseT0iQXJpYWwsc2Fucy1zZXJpZiIgZmlsbD0iIzE3Mzg0OSI+PHBhdGggZD0iTTExNSA4Mkg0ODUiIHN0cm9rZT0iI2I3ZDNkMyIgc3Ryb2tlLXdpZHRoPSIzIi8+PGcgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIyOCIgZm9udC13ZWlnaHQ9ImJvbGQiPjxjaXJjbGUgY3g9IjExMCIgY3k9IjgyIiByPSIzMiIgZmlsbD0iI2Q2ZWRlYiIvPjxwYXRoIGQ9Ik05NCA4MmgxMWw1IC0xMiA4IDI1IDUgLTEzaDkiIHN0cm9rZT0iIzA3NmQ3MiIgc3Ryb2tlLXdpZHRoPSIzIiBmaWxsPSJub25lIi8+PHRleHQgeD0iMTEwIiB5PSIxNTEiPkhlYWx0aDwvdGV4dD48Y2lyY2xlIGN4PSIzMDAiIGN5PSI4MiIgcj0iMzIiIGZpbGw9IiNkNmVkZWIiLz48cGF0aCBkPSJNMjc2IDc3bDI0IC0xMiAyNCAxMiAtMjQgMTJ6IE0yODQgODN2MTNoMzJWODMiIHN0cm9rZT0iIzA3NmQ3MiIgc3Ryb2tlLXdpZHRoPSIzIiBmaWxsPSJub25lIi8+PHRleHQgeD0iMzAwIiB5PSIxNTEiPkVkdWNhdGlvbjwvdGV4dD48Y2lyY2xlIGN4PSI0OTAiIGN5PSI4MiIgcj0iMzIiIGZpbGw9IiNkNmVkZWIiLz48cGF0aCBkPSJNNDcyIDcwaDM2djI1aC0zNnogTTQ3OCA3N2gyNCBNNDc4IDg2aDE1IiBzdHJva2U9IiMwNzZkNzIiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIvPjx0ZXh0IHg9IjQ5MCIgeT0iMTUxIj5JbmNvbWU8L3RleHQ+PC9nPjx0ZXh0IHg9IjMwMCIgeT0iMjA3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjIyIj5UaHJlZSBkaW1lbnNpb25zIMK3IG9uZSBzdW1tYXJ5IGluZGV4PC90ZXh0PjwvZz48L3N2Zz4=",
+            "alt": "The Human Development Index combines health, education and income into one summary index.",
+            "caption": "HDI brings together three dimensions. It summarises development; it is not a complete picture of wellbeing.",
+            "source": "Concepts: UNDP Human Development Reports",
+            "sourceUrl": "https://hdr.undp.org/data-center/human-development-index",
+            "rights": "Original explanatory diagram for this review prototype; source concepts attributed. No copied source artwork."
+          },
+          "keyNotes": [
+            "HDI combines health, education and income into one index.",
+            "Higher HDI values indicate higher average achievement in these dimensions.",
+            "National averages can hide inequalities; use other evidence too."
+          ]
+        },
+        {
+          "id": "hdi-limits",
+          "layout": "geography-notes",
+          "title": "What an average can hide",
+          "lede": "A national summary does not describe every community or individual.",
+          "notes": [
+            {
+              "body": "People within the same country may have very different opportunities. Compare the national summary with evidence about places and groups before drawing a conclusion about wellbeing.",
+              "source": "Concept source: UNDP, Human Development Index data centre."
+            }
+          ],
+          "keyNotes": [
+            "A national average does not show how outcomes are distributed.",
+            "Use regional and community evidence alongside national indicators."
+          ]
+        }
+      ]
+    }
+  ]
+}
