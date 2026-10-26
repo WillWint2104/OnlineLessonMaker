@@ -78,11 +78,11 @@
           "questions": [
             {
               "id": "graph-construction-q1",
-              "stem": "Use the supplied line to find its gradient. Construct the parallel segment through $(0,1)$ for $-2\\le x\\le2$.",
+              "stem": "Use the supplied line to find its gradient. Construct the parallel segment through $(0,2)$ for $-1\\le x\\le1$.",
               "archetypeId": "method-graph-construction",
               "level": "basic",
               "group": "Set 1 · Construct",
-              "answer": "$y=2x+1$, for $-2≤ x≤2$.",
+              "answer": "$y=2x+2$, for $-1\\le x\\le1$.",
               "graphResponse": {
                 "type": "plotConstruct",
                 "axes": {
@@ -109,10 +109,10 @@
                   {
                     "id": "model-line",
                     "type": "line",
-                    "x1": -2,
-                    "y1": -3,
-                    "x2": 2,
-                    "y2": 5
+                    "x1": -1,
+                    "y1": 0,
+                    "x2": 1,
+                    "y2": 4
                   }
                 ],
                 "table": [],
@@ -146,25 +146,25 @@
                   },
                   {
                     "id": "intercept",
-                    "math": "y=2x+1",
-                    "text": "A parallel line has the same gradient. The required y-intercept is 1.",
+                    "math": "y=2x+2",
+                    "text": "A parallel line has the same gradient. The required y-intercept is 2.",
                     "alignmentGroup": "parallel-working"
                   },
                   {
                     "id": "endpoint-left",
-                    "math": "y(-2)=2(-2)+1=-3",
+                    "math": "y(-1)=2(-1)+2=0",
                     "text": "Calculate the y-coordinate at the left end of the domain.",
                     "alignmentGroup": "parallel-working"
                   },
                   {
                     "id": "endpoint-right",
-                    "math": "y(2)=2(2)+1=5",
+                    "math": "y(1)=2(1)+2=4",
                     "text": "Calculate the y-coordinate at the right end of the domain.",
                     "alignmentGroup": "parallel-working"
                   },
                   {
                     "id": "join",
-                    "math": "(-2,-3),\\ (2,5)",
+                    "math": "(-1,0),\\ (1,4)",
                     "text": "Plot these endpoints and join the required segment.",
                     "alignmentGroup": "parallel-working"
                   }
