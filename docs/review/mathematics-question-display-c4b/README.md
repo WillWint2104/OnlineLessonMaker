@@ -52,6 +52,8 @@ Class-start payloads also exclude matching final/working strings whose authored 
 
 Matching class strings include authored part final answers and structured/legacy part working under the same question-level gate. The protected C1 compatibility helper is unchanged. Choice and matching remote strings share a bounded adapter that preserves already rendered output and uses C1 inline notation for original lines when the legacy renderer leaves raw mathematics; pages-style lessons do not need unrelated figures or structured working to enable mathematical rendering.
 
+When a remote matching worked solution is present it supplies the complete working text; local part text is not appended a second time. Existing authorised C2 part visuals are still rendered alongside it. Local-only worked solutions keep their existing part presentation.
+
 ## Verification and handoff
 
 ```text
