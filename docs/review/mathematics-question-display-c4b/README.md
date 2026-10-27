@@ -54,6 +54,8 @@ Matching class strings include authored part final answers and structured/legacy
 
 When a remote matching worked solution is present it supplies the complete working text; local part text is not appended a second time. Existing authorised C2 part visuals are still rendered alongside it. Local-only worked solutions keep their existing part presentation.
 
+Matching passes its already-approved question permission through the existing part renderer; other callers retain the global-policy default. This keeps group-authorised part visuals visible under a hidden global policy without changing release rules. Remote text parses complete C1 maths spans before fallback line layout, including spans crossing newlines and prose beside continuation steps. Nested class answers keep parent labels even when only children have answers.
+
 ## Verification and handoff
 
 ```text

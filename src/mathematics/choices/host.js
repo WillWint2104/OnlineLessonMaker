@@ -27,7 +27,20 @@ function mcAuthorWire(ins,q){if(!q)return;const type=ins.querySelector('[data-mc
 function mcReleaseStatus(){const qs=LESSON.slides.flatMap(s=>(s.activities||[]).flatMap(a=>a.questions||[]));if(!qs.some(q=>q.choice||q.matching))return '';const available=qs.filter(q=>mcVisible(q,'final')||mcVisible(q,'worked')).length;return available===qs.length?'Answers available':available?'Some answers available':'Answers locked';}
 
 function mcRemote(q,kind){const value=LP_BOOK.session?.answers?.[q.id]?.[kind==='final'?'answer':'workedAnswer'];return typeof value==='string'&&value.trim()?value:'';}
-// Preserve existing remote layout when it already renders maths. Otherwise render
-// original lines with C1 before legacy prose rewrites can split powers or subscripts.
-function mcRemoteWorking(value){const text=String(value||''),root=document.createElement('div');root.innerHTML=lpBookWorking(text);const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let raw=false;while(walker.nextNode())if(walker.currentNode.data.includes('$')&&!walker.currentNode.parentElement.closest('math,.md-notation-error')){raw=true;break;}return raw?text.split('\n').map(line=>'<div class="lp-working-line" tabindex="0" aria-label="Working line"><div class="mx-worklines"><div class="mx-workline">'+(mdText(line)||'<br>')+'</div></div></div>').join(''):root.innerHTML;}
+// Parse complete notation before laying out lines; a maths span may cross a newline.
+function mcRemoteWorking(value){
+  const text=String(value||''),parsed=MathDisplay.spans(text),wrap=line=>'<div class="lp-working-line" tabindex="0" aria-label="Working line"><div class="mx-worklines"><div class="mx-workline">'+(line||'<br>')+'</div></div></div>';
+  const original=()=>{
+    if(parsed.adjacent!=null||parsed.unclosed>=0)return wrap(mdText(text));
+    const lines=[''];let at=0;
+    const plain=value=>{const pieces=value.split(/\r?\n/);lines[lines.length-1]+=mxM(pieces[0]);for(const piece of pieces.slice(1))lines.push(mxM(piece));};
+    for(const span of parsed.spans){plain(text.slice(at,span.offset-1));lines[lines.length-1]+=mdMath(span.math);at=span.offset+span.math.length+1;}plain(text.slice(at));
+    return lines.map(wrap).join('');
+  };
+  const root=document.createElement('div');root.innerHTML=lpBookWorking(text);
+  if(root.querySelector('.md-notation-error'))return original();
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  while(walker.nextNode())if(walker.currentNode.data.includes('$')&&!walker.currentNode.parentElement.closest('math'))return original();
+  return root.innerHTML;
+}
 function mcAnswerText(q){if(q.matching)return mmAnswerText(q);if(MathChoices.configIssues(q).length||MathChoices.answerIssues(q).length)return '';const ids=new Set(q.choiceAnswer.correctOptionIds);return q.choice.options.map((o,i)=>ids.has(o.id)?String.fromCharCode(65+i)+'. '+o.text:null).filter(Boolean).join('\n')+(q.answer?'\n'+q.answer:'');}
