@@ -50,6 +50,8 @@ Local release preview does not authorise export. Global teacher strings reuse th
 
 Class-start payloads also exclude matching final/working strings whose authored policy is hidden, and independent teacher-group strings (the existing class protocol cannot release those groups). This filter ignores author/local preview access. Authorised autonomous/end content remains available, and ungrouped teacher content is sent privately to the existing service for its normal locked/final/worked release. Non-matching payload handling and the service are unchanged. Browser verification starts classes and joins real exported learners against the unchanged handler, with local authentication/storage adapters, checking the uploaded and delivered payloads separately.
 
+Matching class strings include authored part final answers and structured/legacy part working under the same question-level gate. The protected C1 compatibility helper is unchanged. Choice and matching remote strings share a bounded adapter that preserves already rendered output and uses C1 inline notation for original lines when the legacy renderer leaves raw mathematics; pages-style lessons do not need unrelated figures or structured working to enable mathematical rendering.
+
 ## Verification and handoff
 
 ```text
