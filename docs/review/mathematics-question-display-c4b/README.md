@@ -48,6 +48,8 @@ Hidden and teacher-withheld mappings, final strings and working are removed from
 
 Local release preview does not authorise export. Global teacher strings reuse the existing optional client contract; relock removes access. Global session state cannot unlock independently teacher-withheld groups. Independent remote group release/backend deployment remains deferred, as in C3/C4A.
 
+Class-start payloads also exclude matching final/working strings whose authored policy is hidden, and independent teacher-group strings (the existing class protocol cannot release those groups). This filter ignores author/local preview access. Authorised autonomous/end content remains available, and ungrouped teacher content is sent privately to the existing service for its normal locked/final/worked release. Non-matching payload handling and the service are unchanged. Browser verification starts classes and joins real exported learners against the unchanged handler, with local authentication/storage adapters, checking the uploaded and delivered payloads separately.
+
 ## Verification and handoff
 
 ```text
