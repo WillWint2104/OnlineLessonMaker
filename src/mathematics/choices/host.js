@@ -33,7 +33,9 @@ function mcRemoteWorking(value){
   const original=()=>{
     if(parsed.adjacent!=null||parsed.unclosed>=0)return wrap(mdText(text));
     const lines=[''];let at=0;
-    const plain=value=>{const pieces=value.split(/\r?\n/);lines[lines.length-1]+=mxM(pieces[0]);for(const piece of pieces.slice(1))lines.push(mxM(piece));};
+    // These pieces are outside maths spans: literal dollars cannot re-enter mxM.
+    const prose=value=>value.split('$').map(piece=>mxM(piece)).join('&#36;');
+    const plain=value=>{const pieces=value.split(/\r?\n/);lines[lines.length-1]+=prose(pieces[0]);for(const piece of pieces.slice(1))lines.push(prose(piece));};
     for(const span of parsed.spans){plain(text.slice(at,span.offset-1));lines[lines.length-1]+=mdMath(span.math);at=span.offset+span.math.length+1;}plain(text.slice(at));
     return lines.map(wrap).join('');
   };
