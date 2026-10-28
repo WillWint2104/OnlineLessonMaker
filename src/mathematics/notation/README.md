@@ -23,3 +23,5 @@ Sums and products currently require both bounds. Integrals require both bounds o
 The contract does not certify the truth of arbitrary authored equations. Correctness fixtures use independent mathematical calculations. Physical pen and assistive-technology certification remain outside browser emulation.
 
 The frozen baseline fixture contains 257 trees obtained from the deployed `1c32026` parser, with its application hash and vocabulary. Pure tests enumerate local JSON fixtures and read this snapshot; they require neither Git history nor a Git repository. Operator-body and spacing-only negative tests protect interoperability with the existing Type slots.
+
+Operator diagnostics construct the same nodes as parsing and reuse the engine's existing relation set, including command aliases. They do not use a separate probe tree or command vocabulary. Operand-presence checks are structural; authored mathematical truth still needs independent verification. Unbounded integral serialization keeps its control-word boundary, including before variable and function integrands.

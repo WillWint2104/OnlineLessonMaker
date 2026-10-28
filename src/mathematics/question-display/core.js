@@ -30,7 +30,7 @@ globalThis.MathDisplay = (() => {
       if(!commands.has(name)){error(at,'Unsupported command \\'+name+'.');return;}
       if(name==='frac'){argument(at);argument(at);}
       else if(name==='sqrt'){space();if(s[i]==='['){const start=i++;row(']',start);}argument(at);}
-      else if(functions.has(name)){space();if(s[i]==='{'||s[i]==='('){const start=i++,end=s[start]==='{'?'}':')';row(end,start);}else error(at,'Function \\'+name+' needs a grouped argument.');}
+      else if(functions.has(name)){space();if(s.startsWith('\\left',i)&&!/[A-Za-z]/.test(s[i+5]||'')){i+=5;space();}if(s[i]==='{'||s[i]==='('){const start=i++,end=s[start]==='{'?'}':')';row(end,start);}else error(at,'Function \\'+name+' needs a grouped argument.');}
     }
     function row(end,start=0){const before=i;while(i<s.length){const c=s[i];if(c===end){i++;if(i===before+1)error(start,'Empty mathematical group.');return;}if('}])'.includes(c)){error(i,'Unmatched closing delimiter.');i++;continue;}if(c==='\\'){command();continue;}if('{(['.includes(c)){const at=i++;row({'{':'}','(':')','[':']'}[c],at);continue;}if(c==='^'||c==='_'){const at=i++;argument(at);continue;}if(c==='$')error(i,'Math-only expressions must not contain dollar delimiters.');i++;}if(end)error(start,'Missing closing '+end+'.');}
     row();if(typeof syntax.notationIssues==='function')errors.push(...syntax.notationIssues(s));return errors;

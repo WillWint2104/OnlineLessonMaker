@@ -27,9 +27,29 @@ for(const s of ['\\int_0^1\\,','\\int_0^1{\\,}','\\sum_{i=1}^n\\,\\,','\\prod_{i
 test('Spacing followed by mathematical content is valid',()=>{
   const tree=E.tree('\\int_0^1\\,x');assert.equal(values(tree[0].body),'\u2009x');assert.deepEqual(M.diagnoseMath('\\int_0^1\\,x',E.syntax),[]);
 });
+for(const body of ['+','-','\\pm','\\times','\\div','\\cdot','.','(+)','{−}','\\sqrt{+}','\\frac{+}{-}','{^2}','{_i}'])test('Punctuation without a value is not an integrand: '+body,()=>{
+  const s='\\int_0^1 '+body;assert.ok(M.diagnoseMath(s,E.syntax).some(e=>e.message.includes('following')));assert.throws(()=>E.tree(s),{name:'SyntaxError'});
+});
+for(const name of ['le','leq','ge','geq','ne','neq','approx','equiv'])test('Escaped relation preserves the operator-body boundary: '+name,()=>{
+  const bad='\\int_0^1\\'+name+'2';assert.ok(M.diagnoseMath(bad,E.syntax).some(e=>e.message.includes('following')));assert.throws(()=>E.tree(bad),{name:'SyntaxError'});
+  const good='\\sum_{k=1}^{5}k\\'+name+'2',tree=E.tree(good);assert.equal(values(tree[0].body),'k');assert.equal(tree.length,3);assert.deepEqual(M.diagnoseMath(good,E.syntax),[]);
+});
+for(const body of ['0','-1','\\infty','\\pi','\\sqrt{2}','\\frac{1}{2}','\\sin(x)','(x+1)','x^2'])test('A real value or expression remains a valid integrand: '+body,()=>{
+  const s='\\int_0^1 '+body;assert.ok(E.tree(s)[0].body.length);assert.deepEqual(M.diagnoseMath(s,E.syntax),[]);
+});
+for(const s of ['\\int_{+}^1 x','\\int_0^{+}x','\\sum_{+}^{5}x','\\prod_1^{-}x','\\lim_{x\\to+}x','\\lim_{+\\to0}x','\\int_0^1\\sqrt[3]{+}','\\int_0^1\\frac{x}{+}','\\int_0^1\\sin(+)'])test('Modifiers and signs cannot supply a missing mathematical value: '+s,()=>{
+  assert.ok(M.diagnoseMath(s,E.syntax).length);assert.throws(()=>E.tree(s),{name:'SyntaxError'});
+});
+test('Parenthesised complete limit approach remains valid',()=>assert.deepEqual(M.diagnoseMath('\\lim_{(x\\to0)}x',E.syntax),[]));
 test('Nested sums keep distinct bounds',()=>{const tree=E.tree('\\sum_{i=1}^{3}(\\sum_{j=1}^{i}j)');assert.equal(tree[0].t,'large');assert.equal(tree[0].body[0].t,'fence');assert.equal(values(tree[0].body[0].body[0].hi),'i');});
 for(const s of ['\\int_0^1 x\\,dx','\\int 2x\\,dx','\\sum_{k=1}^{5}k^2','\\prod_{k=1}^{4}k','\\lim_{x\\to0^{+}}\\frac1x','\\frac{d^2y}{dx^2}'])test('Canonical serialization is stable: '+s,()=>{const latex=E.latex(s);assert.equal(E.latex(latex),latex);});
 test('Thin space is retained as spacing, not comma',()=>{const tree=E.tree('x\\,dx');assert.ok(tree.some(n=>n.v==='\u2009'));assert.ok(!tree.some(n=>n.v===','));assert.equal(E.latex(tree),'x\\,dx');});
+for(const s of ['\\int x\\,dx','\\int x^2\\,dx','\\int f(x)\\,dx','\\int \\theta\\,d\\theta','\\int \\sin(x)\\,dx'])test('Unbounded integral command survives serialization: '+s,()=>{
+  const latex=E.latex(s),tree=E.tree(latex);assert.equal(tree[0].t,'large');assert.equal(tree[0].op,'∫');assert.ok(tree[0].body.length);assert.equal(E.latex(latex),latex);assert.deepEqual(M.diagnoseMath(latex,E.syntax),[]);
+});
+test('Existing Type unbounded operator followed by a sibling variable keeps its command boundary',()=>{
+  const latex=E.latex([E.N.large('∫'),E.N.ch('x')]);assert.ok(latex.startsWith('\\int '));assert.equal(values(E.tree(latex)[0].body),'x');
+});
 for(const s of ['\\sum','\\sum_{k=1} k','\\prod^4 k','\\int_0 x','\\int^2 x','\\int_{}^2 x','\\int_^2 x','\\sum_{i=1}_{j=1}^{5}i','\\prod_{i=1}^{3}^{4}i','\\lim x','\\lim_{} x','\\lim_{x=0}x','\\lim_{\\to0}x','\\lim_{x\\to}x','\\lim_{x\\to0}^{2}x','\\sum_{i=1}^{5}','\\int_0^1=2','x\\;dx'])test('Operator publication error: '+s,()=>{const errors=M.diagnoseMath(s,E.syntax);assert.ok(errors.length,s);assert.ok(errors.every(e=>e.offset>=1&&e.message));assert.throws(()=>E.tree(s));});
 for(const s of ['\\int_{0}^{1}\\frac{x}{2','\\sum_{i=1}^{5}\\frac1{}','\\begin{pmatrix}1&2\\end{pmatrix}','\\vec{x}','\\limsup_{n\\to\\infty}x','\\operatorname{foo}(x)','x$$y'])test('Generic invalid/unsupported remains diagnosed: '+s,()=>assert.ok(M.diagnoseMath(s,E.syntax).length));
 test('Original source offset survives left/right normalization',()=>{const s='\\left( x+\\sum_i x\\right)';const e=M.diagnoseMath(s,E.syntax).find(e=>e.message.includes('lower and upper'));assert.equal(e.offset,s.indexOf('\\sum')+1);});

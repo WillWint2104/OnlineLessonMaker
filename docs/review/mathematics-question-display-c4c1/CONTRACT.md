@@ -19,6 +19,8 @@ Existing public Type trees and editing slots are retained. The common parser is 
 
 The following presentation row belongs to the existing operator body slot, stopping at the enclosing delimiter or outer relation. Nested groups retain their existing structure. Spacing alone is not a body. This is a presentation tree, without inferred calculus binding or differentials. Invalid authored graph targets and misconception equations are treated as unavailable if compilation throws, preserving valid scalar grading and allowing draft submission to continue safely.
 
+Validation uses the actual Type node factory and its command/function/relation vocabulary. A sign, spacing, index or limit label alone cannot supply an integrand; comparison characters and their supported command aliases share the same body boundary. Bounds and ordinary approaches need mathematical values. This is structural validation, not a proof of arbitrary algebra. Serialization terminates an unbounded `\int` control word with a space before its body. C1 validation also recognises the `\left`-decorated function groups already emitted by Type; no additional function family is introduced.
+
 Validation continues through `MathDisplay.issues` and actual TPMath vocabulary. New operator diagnostics are shared with parsing, not copied into a competing command list. Unsupported commands and malformed delimiters remain explicit field/character diagnostics. Publication blocking occurs before answer redaction; hidden content is not a route around validation. Drafts and source strings remain recoverable.
 
 ## PR 2 — structural notation (proposed, not implemented or launched)

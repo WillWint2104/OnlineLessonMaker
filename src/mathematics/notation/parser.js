@@ -1,12 +1,21 @@
 /* Existing TPMath string grammar, with bounded canonical operator support. No renderer or evaluator. */
 globalThis.TPMathNotation=(()=>{
   const commands=['sum','prod','int','lim'];
-  function run(str,N,CMD,FNS){
+  function run(str,N,CMD,FNS,REL){
     const original=String(str==null?'':str),map=[];let s='',last=0;
     for(const match of original.matchAll(/\\(?:left|right)(?![a-zA-Z])\s*\.?/g)){for(let j=last;j<match.index;j++){map.push(j);s+=original[j];}last=match.index+match[0].length;}
     for(let j=last;j<original.length;j++){map.push(j);s+=original[j];}map.push(original.length);
     let i=0;const errors=[],error=(at,message)=>errors.push({offset:map[at]+1,message});
     const space=()=>{while(i<s.length&&/\s/.test(s[i]))i++;};
+    const hasOperand=row=>row.some(n=>{
+      if(Array.isArray(n))return hasOperand(n);
+      if(n.t==='ch')return /[\p{L}\p{N}∞]/u.test(n.v);
+      if(n.t==='frac')return hasOperand(n.num)&&hasOperand(n.den);
+      if(n.t==='sqrt'||n.t==='nroot')return hasOperand(n.rad);
+      if(n.t==='fn')return hasOperand(n.arg);
+      if(['fence','large','lim'].includes(n.t))return hasOperand(n.body);
+      return false;
+    });
     function operator(name,at){
       const values={_:null,'^':null},raw={};space();
       while(s[i]==='_'||s[i]==='^'){
@@ -14,16 +23,20 @@ globalThis.TPMathNotation=(()=>{
         space();const from=i;if(i>=s.length||'^_}])'.includes(s[i])){values[marker]=[];raw[marker]='';error(start,'Missing '+(marker==='_'?'lower':'upper')+' limit.');continue;}values[marker]=group();raw[marker]=s.slice(from,i);
         if(!values[marker].length)error(start,'Empty '+(marker==='_'?'lower':'upper')+' limit.');space();
       }
+      for(const marker of ['_','^'])if(values[marker]?.length&&!hasOperand(values[marker]))error(at,'Operator limit needs a mathematical value, not punctuation alone.');
       if(name==='lim'){
         if(values._===null||!values._.length)error(at,'Limit needs a nonempty lower approach.');
         if(values['^']!==null)error(at,'A limit approach belongs below lim, without an upper bound.');
         const approach=(raw._||'').replace(/^\{([\s\S]*)\}$/,'$1'),arrows=[...approach.matchAll(/\\(?:to|rightarrow)(?![A-Za-z])|→/g)];
         if(arrows.length!==1||!approach.slice(0,arrows[0]?.index).trim()||!approach.slice((arrows[0]?.index||0)+(arrows[0]?.[0].length||0)).trim())error(at,'Limit approach needs a variable, one arrow and a target.');
+        let terms=values._||[];while(terms.length===1&&terms[0].t==='fence')terms=terms[0].body;
+        const arrow=terms.findIndex(n=>n.t==='ch'&&n.v==='→');
+        if(arrow>=0&&(!hasOperand(terms.slice(0,arrow))||!hasOperand(terms.slice(arrow+1))))error(at,'Limit approach needs a variable and a mathematical target.');
       }else if(name==='int'){
         if((values._===null)!==(values['^']===null))error(at,'Integral needs both bounds or neither.');
       }else if(values._===null||values['^']===null)error(at,'Bounded '+name+' needs lower and upper limits.');
-      const from=i,body=row(null,true);
-      if(!body.length||!s.slice(from,i).replace(/\\(?:,|\s)/g,'').replace(/[\s{}()[\]]/g,''))error(at,'Operator needs a following mathematical expression.');
+      const body=row(null,true);
+      if(!hasOperand(body))error(at,'Operator needs a following mathematical expression.');
       return name==='lim'?N.lim(values._||[],body):N.large({sum:'∑',prod:'∏',int:'∫'}[name],values._||[],values['^']||[],body);
     }
     const chNode=c=>N.ch(c==='-'?'−':c);
@@ -49,7 +62,8 @@ globalThis.TPMathNotation=(()=>{
       const out=[];
       while(i<s.length){
         const c=s[i];
-        if(operatorBody&&')=<>≤≥≠'.includes(c))break;
+        if(operatorBody&&(c===')'||REL.has(c)))break;
+        if(operatorBody&&c==='\\'){const name=/^\\([A-Za-z]+)/.exec(s.slice(i))?.[1];if(name&&REL.has(CMD[name]))break;}
         if(end && c===end) break;
         if(c==='}'||c===']') break;
         if(c===' '||c==='\t'||c==='\n'){ i++; continue; }
@@ -65,9 +79,8 @@ globalThis.TPMathNotation=(()=>{
     }
     const tree=row(null);return {tree,errors};
   }
-  const probe=new Proxy({}, {get:()=>()=>({t:'probe'})});
-  function issues(value){return run(value,probe,{},new Set()).errors;}
-  function parse(value,N,CMD,FNS){const result=run(value,N,CMD,FNS);if(result.errors.length)throw new SyntaxError(result.errors.map(e=>e.message+' (character '+e.offset+')').join(' '));return result.tree;}
+  function issues(value,N,CMD,FNS,REL){return run(value,N,CMD,FNS,REL).errors;}
+  function parse(value,N,CMD,FNS,REL){const result=run(value,N,CMD,FNS,REL);if(result.errors.length)throw new SyntaxError(result.errors.map(e=>e.message+' (character '+e.offset+')').join(' '));return result.tree;}
   const operatorPattern=new RegExp('\\\\(?:'+commands.join('|')+')(?![A-Za-z])');
   const usesOperators=value=>operatorPattern.test(String(value??''));
   return {commands,parse,issues,usesOperators};
