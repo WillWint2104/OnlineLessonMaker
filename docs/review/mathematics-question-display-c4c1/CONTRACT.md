@@ -38,3 +38,5 @@ For every family, actual JSON/stem/options/examples/parts/structured steps/final
 ## Evidence and regression
 
 Use original Year 11–12 examples, exact AST/bound assertions, malformed/missing/duplicate limits, unsupported commands and publication diagnostics. Compare existing scalar/fraction/function parsing and unchanged existing lesson/asset bytes to baseline. Actual desktop 1536, laptop 1280 and genuine native 200% use the real player and exported learners; no substitute mock-up. Existing C1–C4B/micro/Type policies and the full exact-head regression must pass. Private fixtures and downloads are not approved new publications. Browser pen/touch is not physical-device certification.
+
+Nested limit arrows require operands in their own containing row; neighbouring outer terms cannot supply a missing side. Serialization braces a complete non-final operator node to preserve its body boundary when reparsed. Empty function groups remain invalid even with left/right decorators or spacing commands. Existing Type draft placeholders remain editable.

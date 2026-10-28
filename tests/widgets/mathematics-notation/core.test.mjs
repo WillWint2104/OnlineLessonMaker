@@ -41,6 +41,23 @@ for(const s of ['\\int_{+}^1 x','\\int_0^{+}x','\\sum_{+}^{5}x','\\prod_1^{-}x',
   assert.ok(M.diagnoseMath(s,E.syntax).length);assert.throws(()=>E.tree(s),{name:'SyntaxError'});
 });
 test('Parenthesised complete limit approach remains valid',()=>assert.deepEqual(M.diagnoseMath('\\lim_{(x\\to0)}x',E.syntax),[]));
+
+for(const approach of ['(\\to0)+x','(x\\to)+0','\\frac{\\to0}{x}+x','\\frac{x\\to}{2}+0','x^{\\to0}+x','x^{x\\to}+0','\\sqrt{\\to0}+x','\\sqrt{x\\to}+0','\\sqrt[\\to0]{x}+x','x_{x\\to}+0','((\\to0))+x'])test('Limit arrow operands must exist in their own nested row: '+approach,()=>{
+  const s='\\lim_{'+approach+'}x',errors=M.diagnoseMath(s,E.syntax);assert.ok(errors.some(e=>e.message.includes('mathematical target')&&e.offset===1));assert.throws(()=>E.tree(s),{name:'SyntaxError'});
+});
+for(const approach of ['(x\\to0)+x','\\frac{x\\to0}{2}','x^{n\\to0}','\\sqrt{x\\to0}','((x\\to0))'])test('Complete nested limit approach retains its local operands: '+approach,()=>assert.deepEqual(M.diagnoseMath('\\lim_{'+approach+'}x',E.syntax),[]));
+
+for(const s of ['\\sin\\left(\\right)','\\sin( )','\\sin(\\,)','\\sin\\left(\\,\\right)','\\sin(\\cos\\left(\\right))','\\frac{\\left.\\right.}{2}','\\frac{1}{\\left.\\,\\right.}'])test('Decorators and spacing cannot supply an empty mathematical group: '+s,()=>assert.ok(M.diagnoseMath(s,E.syntax).some(e=>e.message.includes('Empty mathematical'))));
+for(const s of ['\\sin\\left(0\\right)','\\sin\\left(\\frac{1}{2}\\right)','\\sin(\\cos\\left(x\\right))'])test('Existing decorated function with a real argument remains valid: '+s,()=>assert.deepEqual(M.diagnoseMath(s,E.syntax),[]));
+
+for(const operator of ['\\sum_{i=1}^{2}i','\\prod_{i=1}^{2}i','\\int_0^1 x\\,dx','\\int x\\,dx','\\lim_{x\\to0}x'])test('Whole operator closure and following siblings survive nested serialization: '+operator,()=>{
+  for(const suffix of ['+3','-y','=3','^2','_{n}','\\le2','\\times x','+\\int_0^1 t\\,dt'])for(const wrap of [s=>s,s=>'\\frac{'+s+'}{2}',s=>'('+s+')',s=>'\\sum_{j=1}^{3}('+s+')']){
+    const source=wrap('{'+operator+'}'+suffix),tree=E.tree(source),latex=E.latex(tree);assert.deepEqual(M.diagnoseMath(latex,E.syntax),[],source);assert.deepEqual(plain(E.tree(latex)),plain(tree),source+' -> '+latex);assert.equal(E.latex(latex),latex,source);
+  }
+});
+for(const body of ['\\theta x','\\pi x','\\alpha y','2\\pi x','\\sin(x)\\times x'])test('Existing command separators survive integral serialization: '+body,()=>{
+  const source='\\int '+body+'\\,dx',tree=E.tree(source),latex=E.latex(tree);assert.deepEqual(plain(E.tree(latex)),plain(tree));assert.deepEqual(M.diagnoseMath(latex,E.syntax),[]);
+});
 test('Nested sums keep distinct bounds',()=>{const tree=E.tree('\\sum_{i=1}^{3}(\\sum_{j=1}^{i}j)');assert.equal(tree[0].t,'large');assert.equal(tree[0].body[0].t,'fence');assert.equal(values(tree[0].body[0].body[0].hi),'i');});
 for(const s of ['\\int_0^1 x\\,dx','\\int 2x\\,dx','\\sum_{k=1}^{5}k^2','\\prod_{k=1}^{4}k','\\lim_{x\\to0^{+}}\\frac1x','\\frac{d^2y}{dx^2}'])test('Canonical serialization is stable: '+s,()=>{const latex=E.latex(s);assert.equal(E.latex(latex),latex);});
 test('Thin space is retained as spacing, not comma',()=>{const tree=E.tree('x\\,dx');assert.ok(tree.some(n=>n.v==='\u2009'));assert.ok(!tree.some(n=>n.v===','));assert.equal(E.latex(tree),'x\\,dx');});

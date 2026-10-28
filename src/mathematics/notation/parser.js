@@ -29,9 +29,12 @@ globalThis.TPMathNotation=(()=>{
         if(values['^']!==null)error(at,'A limit approach belongs below lim, without an upper bound.');
         const approach=(raw._||'').replace(/^\{([\s\S]*)\}$/,'$1'),arrows=[...approach.matchAll(/\\(?:to|rightarrow)(?![A-Za-z])|→/g)];
         if(arrows.length!==1||!approach.slice(0,arrows[0]?.index).trim()||!approach.slice((arrows[0]?.index||0)+(arrows[0]?.[0].length||0)).trim())error(at,'Limit approach needs a variable, one arrow and a target.');
-        let terms=values._||[];while(terms.length===1&&terms[0].t==='fence')terms=terms[0].body;
-        const arrow=terms.findIndex(n=>n.t==='ch'&&n.v==='→');
-        if(arrow>=0&&(!hasOperand(terms.slice(0,arrow))||!hasOperand(terms.slice(arrow+1))))error(at,'Limit approach needs a variable and a mathematical target.');
+        const validateApproach=terms=>{
+          const arrow=terms.findIndex(n=>n.t==='ch'&&n.v==='→');
+          if(arrow>=0&&(!hasOperand(terms.slice(0,arrow))||!hasOperand(terms.slice(arrow+1))))error(at,'Limit approach needs a variable and a mathematical target.');
+          for(const n of terms)if(Array.isArray(n))validateApproach(n);else for(const child of Object.values(n))if(Array.isArray(child))validateApproach(child);
+        };
+        validateApproach(values._||[]);
       }else if(name==='int'){
         if((values._===null)!==(values['^']===null))error(at,'Integral needs both bounds or neither.');
       }else if(values._===null||values['^']===null)error(at,'Bounded '+name+' needs lower and upper limits.');

@@ -14578,9 +14578,12 @@ globalThis.TPMathNotation=(()=>{
         if(values['^']!==null)error(at,'A limit approach belongs below lim, without an upper bound.');
         const approach=(raw._||'').replace(/^\{([\s\S]*)\}$/,'$1'),arrows=[...approach.matchAll(/\\(?:to|rightarrow)(?![A-Za-z])|→/g)];
         if(arrows.length!==1||!approach.slice(0,arrows[0]?.index).trim()||!approach.slice((arrows[0]?.index||0)+(arrows[0]?.[0].length||0)).trim())error(at,'Limit approach needs a variable, one arrow and a target.');
-        let terms=values._||[];while(terms.length===1&&terms[0].t==='fence')terms=terms[0].body;
-        const arrow=terms.findIndex(n=>n.t==='ch'&&n.v==='→');
-        if(arrow>=0&&(!hasOperand(terms.slice(0,arrow))||!hasOperand(terms.slice(arrow+1))))error(at,'Limit approach needs a variable and a mathematical target.');
+        const validateApproach=terms=>{
+          const arrow=terms.findIndex(n=>n.t==='ch'&&n.v==='→');
+          if(arrow>=0&&(!hasOperand(terms.slice(0,arrow))||!hasOperand(terms.slice(arrow+1))))error(at,'Limit approach needs a variable and a mathematical target.');
+          for(const n of terms)if(Array.isArray(n))validateApproach(n);else for(const child of Object.values(n))if(Array.isArray(child))validateApproach(child);
+        };
+        validateApproach(values._||[]);
       }else if(name==='int'){
         if((values._===null)!==(values['^']===null))error(at,'Integral needs both bounds or neither.');
       }else if(values._===null||values['^']===null)error(at,'Bounded '+name+' needs lower and upper limits.');
@@ -14704,7 +14707,7 @@ const TPMath=(function(){
   }
   /* ---- LaTeX + eval (lifted, complete) ---- */
   const TS={'\u2009':'\\,','−':'-','×':'\\times ','÷':'\\div ','±':'\\pm ','≤':'\\le ','≥':'\\ge ','≠':'\\ne ','≈':'\\approx ','∞':'\\infty ','π':'\\pi ','θ':'\\theta ','α':'\\alpha ','β':'\\beta ','λ':'\\lambda ','μ':'\\mu ','σ':'\\sigma ','Δ':'\\Delta ','Σ':'\\Sigma ','∈':'\\in ','∴':'\\therefore ','→':'\\to ','⇒':'\\Rightarrow ','∂':'\\partial ','·':'\\cdot '};
-  function tex(r){return r.map(n=>{switch(n.t){
+  function tex(r){return r.map((n,k)=>{switch(n.t){
     case 'ch':return TS[n.v]!==undefined?TS[n.v]:n.v;
     case 'frac':return '\\frac{'+tex(n.num)+'}{'+tex(n.den)+'}';
     case 'sqrt':return '\\sqrt{'+tex(n.rad)+'}';
@@ -14713,9 +14716,9 @@ const TPMath=(function(){
     case 'sub':return '_{'+tex(n.idx)+'}';
     case 'fence':return '\\left'+(n.l==='{'?'\\{':n.l)+tex(n.body)+'\\right'+(n.r==='}'?'\\}':n.r);
     case 'fn':return '\\'+n.name+'\\left('+tex(n.arg)+'\\right)';
-    case 'large':{const o=n.op==='∑'?'\\sum':n.op==='∏'?'\\prod':'\\int'; return o+(n.lo.length?'_{'+tex(n.lo)+'}':'')+(n.hi.length?'^{'+tex(n.hi)+'}':'')+(n.op==='∫'&&!n.lo.length&&!n.hi.length?' ':'')+tex(n.body);}
+    case 'large':{const o=n.op==='∑'?'\\sum':n.op==='∏'?'\\prod':'\\int',s=o+(n.lo.length?'_{'+tex(n.lo)+'}':'')+(n.hi.length?'^{'+tex(n.hi)+'}':'')+(n.op==='∫'&&!n.lo.length&&!n.hi.length?' ':'')+tex(n.body);return n.body.length&&k<r.length-1?'{'+s+'}':s;}
     case 'acc':return '\\'+(n.mark==='→'?'vec':'overline')+'{'+tex(n.base)+'}';
-    case 'lim':return '\\lim_{'+tex(n.under)+'}'+tex(n.body);
+    case 'lim':{const s='\\lim_{'+tex(n.under)+'}'+tex(n.body);return n.body.length&&k<r.length-1?'{'+s+'}':s;}
     case 'matrix':return '\\begin{pmatrix}'+n.rows.map(r=>r.map(tex).join(' & ')).join(' \\\\ ')+'\\end{pmatrix}';
   }return '';}).join('');}
   const FN={sin:Math.sin,cos:Math.cos,tan:Math.tan,ln:Math.log,log:x=>Math.log10(x),arcsin:Math.asin,arccos:Math.acos,arctan:Math.atan,sinh:Math.sinh,cosh:Math.cosh,tanh:Math.tanh,sqrt:Math.sqrt,abs:Math.abs};
@@ -16852,7 +16855,7 @@ globalThis.MathDisplay = (() => {
       else if(name==='sqrt'){space();if(s[i]==='['){const start=i++;row(']',start);}argument(at);}
       else if(functions.has(name)){space();if(s.startsWith('\\left',i)&&!/[A-Za-z]/.test(s[i+5]||'')){i+=5;space();}if(s[i]==='{'||s[i]==='('){const start=i++,end=s[start]==='{'?'}':')';row(end,start);}else error(at,'Function \\'+name+' needs a grouped argument.');}
     }
-    function row(end,start=0){const before=i;while(i<s.length){const c=s[i];if(c===end){i++;if(i===before+1)error(start,'Empty mathematical group.');return;}if('}])'.includes(c)){error(i,'Unmatched closing delimiter.');i++;continue;}if(c==='\\'){command();continue;}if('{(['.includes(c)){const at=i++;row({'{':'}','(':')','[':']'}[c],at);continue;}if(c==='^'||c==='_'){const at=i++;argument(at);continue;}if(c==='$')error(i,'Math-only expressions must not contain dollar delimiters.');i++;}if(end)error(start,'Missing closing '+end+'.');}
+    function row(end,start=0){const before=i;while(i<s.length){const c=s[i];if(c===end){if(!s.slice(before,i).replace(/\\(?:left|right)(?![A-Za-z])\s*\.?/g,'').replace(/\\[,;:! ]/g,'').trim())error(start,'Empty mathematical group.');i++;return;}if('}])'.includes(c)){error(i,'Unmatched closing delimiter.');i++;continue;}if(c==='\\'){command();continue;}if('{(['.includes(c)){const at=i++;row({'{':'}','(':')','[':']'}[c],at);continue;}if(c==='^'||c==='_'){const at=i++;argument(at);continue;}if(c==='$')error(i,'Math-only expressions must not contain dollar delimiters.');i++;}if(end)error(start,'Missing closing '+end+'.');}
     row();if(typeof syntax.notationIssues==='function')errors.push(...syntax.notationIssues(s));return errors;
   }
   function spans(text){const s=String(text),out=[];let start=-1;for(let i=0;i<s.length;i++){if(s[i]==='\\'){i++;continue;}if(s[i]==='$'){if(s[i+1]==='$')return {spans:out,unclosed:-1,adjacent:i};if(start<0)start=i;else{out.push({math:s.slice(start+1,i),offset:start+1});start=-1;}}}return {spans:out,unclosed:start};}
