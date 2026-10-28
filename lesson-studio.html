@@ -14716,9 +14716,9 @@ const TPMath=(function(){
     case 'sub':return '_{'+tex(n.idx)+'}';
     case 'fence':return '\\left'+(n.l==='{'?'\\{':n.l)+tex(n.body)+'\\right'+(n.r==='}'?'\\}':n.r);
     case 'fn':return '\\'+n.name+'\\left('+tex(n.arg)+'\\right)';
-    case 'large':{const o=n.op==='∑'?'\\sum':n.op==='∏'?'\\prod':'\\int',s=o+(n.lo.length?'_{'+tex(n.lo)+'}':'')+(n.hi.length?'^{'+tex(n.hi)+'}':'')+(n.op==='∫'&&!n.lo.length&&!n.hi.length?' ':'')+tex(n.body);return n.body.length&&k<r.length-1?'{'+s+'}':s;}
+    case 'large':{const o=n.op==='∑'?'\\sum':n.op==='∏'?'\\prod':'\\int',s=o+(n.lo.length?'_{'+tex(n.lo)+'}':'')+(n.hi.length?'^{'+tex(n.hi)+'}':'')+(n.op==='∫'&&!n.lo.length&&!n.hi.length?' ':'')+(n.body.length?'{'+tex(n.body)+'}':'');return n.body.length&&k<r.length-1?'{'+s+'}':s;}
     case 'acc':return '\\'+(n.mark==='→'?'vec':'overline')+'{'+tex(n.base)+'}';
-    case 'lim':{const s='\\lim_{'+tex(n.under)+'}'+tex(n.body);return n.body.length&&k<r.length-1?'{'+s+'}':s;}
+    case 'lim':{const s='\\lim_{'+tex(n.under)+'}'+(n.body.length?'{'+tex(n.body)+'}':'');return n.body.length&&k<r.length-1?'{'+s+'}':s;}
     case 'matrix':return '\\begin{pmatrix}'+n.rows.map(r=>r.map(tex).join(' & ')).join(' \\\\ ')+'\\end{pmatrix}';
   }return '';}).join('');}
   const FN={sin:Math.sin,cos:Math.cos,tan:Math.tan,ln:Math.log,log:x=>Math.log10(x),arcsin:Math.asin,arccos:Math.acos,arctan:Math.atan,sinh:Math.sinh,cosh:Math.cosh,tanh:Math.tanh,sqrt:Math.sqrt,abs:Math.abs};

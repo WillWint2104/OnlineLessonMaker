@@ -23,3 +23,7 @@ Second-review/round-trip checkpoint: fix the unbounded-integral TeX control-word
 Third-review checkpoint: validate arrow operands recursively in their containing Type rows, preserve complete operator scope before following siblings during serialization, and detect empty decorated/spaced groups in C1 publication validation. This is bounded parser/serializer and validation compatibility, not new syntax or interaction. Added nested round-trip coverage exercises five operator families, eight sibling forms and four enclosing contexts; 343 unit tests pass, including unchanged existing command separators. Exact-head browser/regression/review evidence follows after commit.
 
 The third-review development browser run passes 194 checks, with 27 captures, five learner exports and zero page errors. These are development results; the new committed head must pass final compatibility/regression and exact-head CodeRabbit before packaging.
+
+Related self-review: also brace serialized operator bodies themselves so grouped comparisons stay in the authored body. The earlier ba676e0 full/compatibility runs were stopped before editing and retained as incomplete evidence. No publication/rendering contract change; this preserves existing Type tree ownership on save/reopen.
+
+The extended scope-preservation cases pass 348 units, covering nested comparisons in operator bodies as well as following siblings. The final exact-head verification is restarted on the committed correction.

@@ -58,6 +58,11 @@ for(const operator of ['\\sum_{i=1}^{2}i','\\prod_{i=1}^{2}i','\\int_0^1 x\\,dx'
 for(const body of ['\\theta x','\\pi x','\\alpha y','2\\pi x','\\sin(x)\\times x'])test('Existing command separators survive integral serialization: '+body,()=>{
   const source='\\int '+body+'\\,dx',tree=E.tree(source),latex=E.latex(tree);assert.deepEqual(plain(E.tree(latex)),plain(tree));assert.deepEqual(M.diagnoseMath(latex,E.syntax),[]);
 });
+for(const operator of ['\\sum_{i=1}^2','\\prod_{i=1}^2','\\int_0^1','\\int ','\\lim_{x\\to0}'])test('Grouped relations remain inside the operator body after serialization: '+operator,()=>{
+  for(const body of ['x=2','x\\le2','\\int_0^1 x\\,dx=2','\\frac{x=2}{3}'])for(const suffix of ['','+3','^2']){
+    const source='{'+operator+'{'+body+'}}'+suffix,tree=E.tree(source),latex=E.latex(tree);assert.deepEqual(plain(E.tree(latex)),plain(tree),source+' -> '+latex);assert.equal(E.latex(latex),latex);assert.deepEqual(M.diagnoseMath(latex,E.syntax),[]);
+  }
+});
 test('Nested sums keep distinct bounds',()=>{const tree=E.tree('\\sum_{i=1}^{3}(\\sum_{j=1}^{i}j)');assert.equal(tree[0].t,'large');assert.equal(tree[0].body[0].t,'fence');assert.equal(values(tree[0].body[0].body[0].hi),'i');});
 for(const s of ['\\int_0^1 x\\,dx','\\int 2x\\,dx','\\sum_{k=1}^{5}k^2','\\prod_{k=1}^{4}k','\\lim_{x\\to0^{+}}\\frac1x','\\frac{d^2y}{dx^2}'])test('Canonical serialization is stable: '+s,()=>{const latex=E.latex(s);assert.equal(E.latex(latex),latex);});
 test('Thin space is retained as spacing, not comma',()=>{const tree=E.tree('x\\,dx');assert.ok(tree.some(n=>n.v==='\u2009'));assert.ok(!tree.some(n=>n.v===','));assert.equal(E.latex(tree),'x\\,dx');});
