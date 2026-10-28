@@ -17,6 +17,8 @@ Canonical author data remains strings. In prose, a JSON stem is `"Evaluate $\\in
 
 Existing public Type trees and editing slots are retained. The common parser is extracted without introducing a second language; old valid string trees are compared to baseline. Large operators, limits and matrices are display-only in this evaluator: compile must return an explicit unsupported result instead of silently dropping the operator and evaluating its body. No numerical/symbolic calculus service is implemented or claimed.
 
+The following presentation row belongs to the existing operator body slot, stopping at the enclosing delimiter or outer relation. Nested groups retain their existing structure. Spacing alone is not a body. This is a presentation tree, without inferred calculus binding or differentials. Invalid authored graph targets and misconception equations are treated as unavailable if compilation throws, preserving valid scalar grading and allowing draft submission to continue safely.
+
 Validation continues through `MathDisplay.issues` and actual TPMath vocabulary. New operator diagnostics are shared with parsing, not copied into a competing command list. Unsupported commands and malformed delimiters remain explicit field/character diagnostics. Publication blocking occurs before answer redaction; hidden content is not a route around validation. Drafts and source strings remain recoverable.
 
 ## PR 2 — structural notation (proposed, not implemented or launched)

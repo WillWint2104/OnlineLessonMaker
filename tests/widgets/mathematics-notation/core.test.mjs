@@ -1,21 +1,33 @@
-import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';import {execFileSync} from 'node:child_process';
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import vm from 'node:vm';import path from 'node:path';
 await import('../../../src/mathematics/question-display/core.js');
-const app=fs.readFileSync('lesson-studio.html','utf8'),parser=fs.readFileSync('src/mathematics/notation/parser.js','utf8'),base=execFileSync('git',['show','1c32026f3a50a2aaf1e51673220616943484921c:lesson-studio.html'],{encoding:'utf8',maxBuffer:20e6});
+const app=fs.readFileSync('lesson-studio.html','utf8'),parser=fs.readFileSync('src/mathematics/notation/parser.js','utf8'),baseline=JSON.parse(fs.readFileSync('tests/widgets/mathematics-notation/baseline-trees.json','utf8'));
 function engine(source,prelude=''){const a=source.indexOf('const TPMath=(function(){'),b=source.indexOf('/* engine-level aliases',a),box=vm.createContext({});assert.ok(a>=0&&b>a);vm.runInContext(prelude+'\n'+source.slice(a,b)+'\nglobalThis.engine=TPMath;',box);return box.engine;}
-const E=engine(app,parser),old=engine(base),M=globalThis.MathDisplay,plain=x=>JSON.parse(JSON.stringify(x)),values=row=>row.filter(n=>n.t==='ch').map(n=>n.v).join('');
+const E=engine(app,parser),M=globalThis.MathDisplay,plain=x=>JSON.parse(JSON.stringify(x)),values=row=>row.filter(n=>n.t==='ch').map(n=>n.v).join('');
 test('Existing supported lesson-fixture mathematical spans retain baseline trees',()=>{
-  const files=execFileSync('git',['ls-files','-z','--','tests/**/*.json'],{encoding:'utf8'}).split('\0').filter(Boolean);
+  const files=fs.readdirSync('tests',{recursive:true}).filter(f=>f.endsWith('.json')&&!f.split(path.sep).join('/').startsWith('widgets/mathematics-notation/')).map(f=>'tests/'+f);
   let count=0;
-  function walk(v){if(typeof v==='string'){for(const {math} of M.spans(v).spans){if(M.diagnoseMath(math,old.syntax).length)continue;assert.deepEqual(plain(E.tree(math)),plain(old.tree(math)),math);count++;}}else if(v&&typeof v==='object')Object.values(v).forEach(walk);}
+  function walk(v){if(typeof v==='string'){for(const {math} of M.spans(v).spans){if(M.diagnoseMath(math,baseline.syntax).length||!Object.hasOwn(baseline.trees,math))continue;assert.deepEqual(plain(E.tree(math)),baseline.trees[math],math);count++;}}else if(v&&typeof v==='object')Object.values(v).forEach(walk);}
   for(const file of files){const lesson=JSON.parse(fs.readFileSync(file,'utf8'));if(Array.isArray(lesson.slides))walk(lesson);}
   assert.ok(count>100,'A real existing lesson-fixture corpus was compared: '+count);
 });
 const legacy=['x^2+1','x_{n+1}','\\frac{1}{2}','\\frac{\\frac12}{3}','\\sqrt[3]{-8}','\\sin\\left(x\\right)','\\cos(x)','\\frac{d^2y}{dx^2}','\\left(2x+1\\right)^2','a\\le b','15\\%','\\{x\\in R\\}','(x-2)^2','\\left. x\\right.'];
-for(const s of legacy)test('Baseline tree retained: '+s,()=>assert.deepEqual(plain(E.tree(s)),plain(old.tree(s))));
+for(const s of legacy)test('Baseline tree retained: '+s,()=>assert.deepEqual(plain(E.tree(s)),baseline.trees[s]));
 for(const [s,op,lo,hi] of [['\\sum_{k=1}^{5}k^2','∑','k=1','5'],['\\prod^{4}_{k=1}k','∏','k=1','4'],['\\int_0^2 x\\,dx','∫','0','2'],['\\int 2x\\,dx','∫','',''],['\\int_{-2}^{3}(x+1)\\,dx','∫','−2','3']])test('Operator bounds: '+s,()=>{const n=E.tree(s)[0];assert.equal(n.t,'large');assert.equal(n.op,op);assert.equal(values(n.lo),lo);assert.equal(values(n.hi),hi);assert.deepEqual(M.diagnoseMath(s,E.syntax),[]);});
 for(const s of ['\\lim_{x\\to3}\\frac{x^2-9}{x-3}','\\lim_{x\\to0^{+}}\\frac1x','\\lim_{x\\to0^{-}}\\frac1x','\\lim_{n\\to\\infty}\\frac1n'])test('Real limit node: '+s,()=>{const n=E.tree(s)[0];assert.equal(n.t,'lim');assert.ok(n.under.some(n=>n.v==='→'));assert.deepEqual(M.diagnoseMath(s,E.syntax),[]);});
 test('One-sided marker belongs to target inside approach',()=>{const n=E.tree('\\lim_{x\\to0^{+}}\\frac1x')[0];assert.equal(n.under.at(-1).t,'sup');assert.equal(values(n.under.at(-1).exp),'+');});
-test('Nested sums keep distinct bounds',()=>{const tree=E.tree('\\sum_{i=1}^{3}(\\sum_{j=1}^{i}j)');assert.equal(tree[0].t,'large');assert.equal(tree[1].t,'fence');assert.equal(values(tree[1].body[0].hi),'i');});
+test('Integral body owns the integrand and differential, leaving equality outside',()=>{
+  const tree=E.tree('\\int_0^2 x\\,dx=2');assert.equal(values(tree[0].body),'x\u2009dx');assert.equal(values(tree.slice(1)),'=2');
+});
+test('Limit body owns its nested fraction',()=>{
+  const tree=E.tree('\\lim_{x\\to3}\\frac{x^2-9}{x-3}=6');assert.equal(tree[0].body[0].t,'frac');assert.equal(values(tree.slice(1)),'=6');
+});
+for(const s of ['\\int_0^1\\,','\\int_0^1{\\,}','\\sum_{i=1}^n\\,\\,','\\prod_{i=1}^n()','\\lim_{x\\to0}\\,','\\int_0^1\\'])test('Empty or spacing-only body is invalid: '+s,()=>{
+  assert.ok(M.diagnoseMath(s,E.syntax).some(e=>e.message.includes('following')));assert.throws(()=>E.tree(s),{name:'SyntaxError'});
+});
+test('Spacing followed by mathematical content is valid',()=>{
+  const tree=E.tree('\\int_0^1\\,x');assert.equal(values(tree[0].body),'\u2009x');assert.deepEqual(M.diagnoseMath('\\int_0^1\\,x',E.syntax),[]);
+});
+test('Nested sums keep distinct bounds',()=>{const tree=E.tree('\\sum_{i=1}^{3}(\\sum_{j=1}^{i}j)');assert.equal(tree[0].t,'large');assert.equal(tree[0].body[0].t,'fence');assert.equal(values(tree[0].body[0].body[0].hi),'i');});
 for(const s of ['\\int_0^1 x\\,dx','\\int 2x\\,dx','\\sum_{k=1}^{5}k^2','\\prod_{k=1}^{4}k','\\lim_{x\\to0^{+}}\\frac1x','\\frac{d^2y}{dx^2}'])test('Canonical serialization is stable: '+s,()=>{const latex=E.latex(s);assert.equal(E.latex(latex),latex);});
 test('Thin space is retained as spacing, not comma',()=>{const tree=E.tree('x\\,dx');assert.ok(tree.some(n=>n.v==='\u2009'));assert.ok(!tree.some(n=>n.v===','));assert.equal(E.latex(tree),'x\\,dx');});
 for(const s of ['\\sum','\\sum_{k=1} k','\\prod^4 k','\\int_0 x','\\int^2 x','\\int_{}^2 x','\\int_^2 x','\\sum_{i=1}_{j=1}^{5}i','\\prod_{i=1}^{3}^{4}i','\\lim x','\\lim_{} x','\\lim_{x=0}x','\\lim_{\\to0}x','\\lim_{x\\to}x','\\lim_{x\\to0}^{2}x','\\sum_{i=1}^{5}','\\int_0^1=2','x\\;dx'])test('Operator publication error: '+s,()=>{const errors=M.diagnoseMath(s,E.syntax);assert.ok(errors.length,s);assert.ok(errors.every(e=>e.offset>=1&&e.message));assert.throws(()=>E.tree(s));});

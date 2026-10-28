@@ -22,9 +22,9 @@ globalThis.TPMathNotation=(()=>{
       }else if(name==='int'){
         if((values._===null)!==(values['^']===null))error(at,'Integral needs both bounds or neither.');
       }else if(values._===null||values['^']===null)error(at,'Bounded '+name+' needs lower and upper limits.');
-      let next=i;while(next<s.length&&/\s/.test(s[next]))next++;
-      if(next>=s.length||'}])=<>≤≥'.includes(s[next]))error(at,'Operator needs a following mathematical expression.');
-      return name==='lim'?N.lim(values._||[]):N.large({sum:'∑',prod:'∏',int:'∫'}[name],values._||[],values['^']||[]);
+      const from=i,body=row(null,true);
+      if(!body.length||!s.slice(from,i).replace(/\\(?:,|\s)/g,'').replace(/[\s{}()[\]]/g,''))error(at,'Operator needs a following mathematical expression.');
+      return name==='lim'?N.lim(values._||[],body):N.large({sum:'∑',prod:'∏',int:'∫'}[name],values._||[],values['^']||[],body);
     }
     const chNode=c=>N.ch(c==='-'?'−':c);
     function group(){
@@ -45,10 +45,11 @@ globalThis.TPMathNotation=(()=>{
       if(CMD[name]!==undefined){ out.push(N.ch(CMD[name])); return; }
       for(const ch of name) out.push(N.ch(ch));                /* unknown command → literal letters */
     }
-    function row(end){
+    function row(end,operatorBody=false){
       const out=[];
       while(i<s.length){
         const c=s[i];
+        if(operatorBody&&')=<>≤≥≠'.includes(c))break;
         if(end && c===end) break;
         if(c==='}'||c===']') break;
         if(c===' '||c==='\t'||c==='\n'){ i++; continue; }
