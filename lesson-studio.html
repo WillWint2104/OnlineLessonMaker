@@ -14811,7 +14811,7 @@ const TPMath=(function(){
       if(!s.length)throw new Error('mismatched brackets');s.pop();
       if(s.length&&s[s.length-1].t==='fn')o.push(s.pop());}}
     while(s.length){const t=s.pop();if(t.t==='lp')throw new Error('mismatched brackets');o.push(t);}return o;}
-  function compile(row){try{const displayOnly=value=>value&&typeof value==='object'&&(Array.isArray(value)?value.some(displayOnly):['large','lim','matrix','acc','text'].includes(value.t)||value.t==='ch'&&/[ℝℤℚℕℂ∈∉∪∩{}]/u.test(value.v)||value.t==='fence'&&(value.l!== '('&&value.l!=='|'||value.r!==')'&&value.r!=='|'||value.body.some(n=>n.t==='ch'&&n.v===','))||Object.values(value).some(displayOnly));if(displayOnly(row))return {eval:()=>NaN,error:'Structural notation, accents, limits and large operators are display-only; symbolic evaluation is unsupported.'};const r=rpn(toks(row));if(!r.length)return{eval:()=>NaN,error:''};
+  function compile(row){try{const displayOnly=value=>value&&typeof value==='object'&&(Array.isArray(value)?value.some(displayOnly):['large','lim','matrix','acc','text'].includes(value.t)||value.t==='ch'&&/[ℝℤℚℕℂ∈∉∪∩{}]/u.test(value.v)||value.t==='fence'&&(!['()','[]','||'].includes(value.l+value.r)||value.body.some(n=>n.t==='ch'&&n.v===','))||Object.values(value).some(displayOnly));if(displayOnly(row))return {eval:()=>NaN,error:'Structural notation, accents, limits and large operators are display-only; symbolic evaluation is unsupported.'};const r=rpn(toks(row));if(!r.length)return{eval:()=>NaN,error:''};
     return{eval:x=>{const s=[];for(const t of r){
       if(t.t==='num')s.push(t.v);else if(t.t==='var')s.push(x);else if(t.t==='con')s.push(CO[t.v]);
       else if(t.t==='fn'){const f=FN[t.v];s.push(f?f(s.pop()):NaN);}
@@ -15824,8 +15824,11 @@ function mxNb(h){
   return out;
 }
 function mxM(v){
-  // Explicit authored math uses the existing parser/MathML renderer. Legacy prose is untouched.
-  if((LESSON.slides?.some(s=>s.practiceComposition==='micro'||s.visuals?.length)||globalThis.MathDisplay&&mdUsesStructured(LESSON)||globalThis.TPMathNotation&&(TPMathNotation.usesOperators(v)||TPMathNotation.usesStructures(v)))&&/\$[^$]+\$/.test(String(v||'')))return String(v).split(/(\$[^$]+\$)/g).map(t=>t.length>=3&&t.startsWith('$')&&t.endsWith('$')?mdMath(t.slice(1,-1)):mxM(t)).join('');
+  // Classify each dollar span independently; other prose retains the legacy formatter.
+  const source=String(v??''),parts=source.split(/(\$[^$]+\$)/g);
+  const forceMath=LESSON.slides?.some(s=>s.practiceComposition==='micro'||s.visuals?.length)||globalThis.MathDisplay&&mdUsesStructured(LESSON);
+  const isMathPart=t=>{if(!(t.length>=3&&t.startsWith('$')&&t.endsWith('$')))return false;const raw=t.slice(1,-1);return forceMath||globalThis.TPMathNotation&&(TPMathNotation.usesOperators(raw)||TPMathNotation.usesStructures(raw));};
+  if(parts.some(isMathPart))return parts.map(t=>isMathPart(t)?mdMath(t.slice(1,-1)):mxM(t)).join('');
   return mxNb(esc(v==null?'':String(v))
     .replace(/\((\d+)\/(\d+)\)/g,'<span class="mx-pfrac">$&</span>')
     .replace(/<span class="mx-pfrac">\((\d+)\/(\d+)\)<\/span>/g,
