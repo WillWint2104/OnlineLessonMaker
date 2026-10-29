@@ -1,0 +1,16 @@
+# MATH-C4C2 — structural Mathematics notation
+
+- Authority: direct user C4C-2 implementation instruction, 29 October 2026. Single integration/QA agent; baseline b8d5a18dec50f5b8978303bf6698e250946f9a1d verified against GitHub.
+- Branch: codex/integration-MATH-C4C2-structural-notation. Worktree: C:/Users/willi/Videos/Online Lesson Maker/review-delivery/worktrees/math-structural-notation-c4c2.
+- Stage: INTEGRATION. One continuing Mathematics reservation; no other agents launched. Existing Geography G03 and historical branches/evidence remain reserved and untouched.
+- Owned: src/mathematics/notation/**; tests/widgets/mathematics-notation/**; scripts/verify-mathematics-structural-notation.mjs; docs/review/mathematics-question-display-c4c2/**; this card.
+- Bounded integration exceptions: lesson-studio.html only existing TPMath matrix/accent/text MathML and serialization, structural compile refusal, command vocabulary, legacy math routing and generated parser/C1 blocks; src/mathematics/question-display/core.js only shared structural diagnostics/outer-relation safety; tests/widgets/mathematics-question-display/core.test.mjs and scripts/verify-mathematics-notation.mjs only replace newly supported structures previously used as unsupported sentinels. Both existing source builders remain unchanged.
+- Contract extension: existing canonical pmatrix/vmatrix/cases, vec, mathematical set symbols and bounded interval validation; literal text conditions only, no executable macros or alternate renderer/language/schema. Consequential unresolvable condition/interval decisions stop for human review.
+- Protected: lessons/**, examples/**, docs/lessons/**, assets/**, src/graph-response/**, visual-system.css, C2–C4B modules and policy/response models, Geography, governance/backlog, CI/services and historical review ZIPs.
+- Acceptance: matrix shape/fences/conditions/accents, stable AST and canonical round-trip, existing 257-tree baseline and C4C-1 behavior; real authoring/JSON/learner exports/Answer Hub, field diagnostics with editable invalid drafts; no numerical structural evaluation.
+- Verification: focused unit/browser/independent math; C1–C4B/micro/Type and full exact-head suite; both builders twice; desktop1536/laptop1280/1024/native200; no smartphone design work.
+- Deliver: draft PR, CodeRabbit exact-head review, versioned actual application gallery/ZIP with integrity and limitation receipts. Stop for human visual/functional approval. No merge/deploy/new lesson publication/C4C-2 follow-on.
+
+The bounded documentation exception includes `docs/review/mathematics-question-display-c4c1/CONTRACT.md` only to link the now-authorised structural contract. No governance/backlog state changed.
+
+Development checkpoint: 446 unit/compatibility tests pass, including all 257 frozen baseline trees. Focused browser development run: 195 checks, 59 real captures, five learner exports and zero page errors. Type cell editing uses established arrow navigation; matrix-local fonts now pass fence-height measurements. Exact-head verification, full regression and CodeRabbit remain required; these development counts do not claim final-head acceptance.

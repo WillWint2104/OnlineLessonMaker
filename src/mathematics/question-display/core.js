@@ -9,6 +9,7 @@ globalThis.MathDisplay = (() => {
       let c=s[i];
       if(c==='\\'){
         const token=/^\\([A-Za-z]+|.)/.exec(s.slice(i));if(!token)return null;
+        if(['begin','end'].includes(token[1])){const env=/^\{(pmatrix|vmatrix|cases)\}/.exec(s.slice(i+token[0].length));if(env){if(token[1]==='begin')stack.push('env:'+env[1]);else if(stack.pop()!=='env:'+env[1])return null;i+=token[0].length+env[0].length-1;continue;}}
         const rel={le:'≤',leq:'≤',ge:'≥',geq:'≥',ne:'≠',neq:'≠'}[token[1]];
         if(rel&&!stack.length&&!bar)return {at:i,length:token[0].length,relation:rel};
         if(['{','(','['].includes(token[1]))stack.push(token[1]);
@@ -22,6 +23,7 @@ globalThis.MathDisplay = (() => {
     }return null;
   }
   function diagnoseMath(value,syntax){
+    if(syntax.usesStructures?.(value))return Array.from(syntax.notationIssues(String(value)),e=>({...e}));
     const s=String(value),errors=[],commands=new Set(syntax.commands),functions=new Set(syntax.functions);let i=0;
     const error=(offset,message)=>errors.push({offset:offset+1,message});
     const space=()=>{while(/\s/.test(s[i]||'')&&i<s.length)i++;};

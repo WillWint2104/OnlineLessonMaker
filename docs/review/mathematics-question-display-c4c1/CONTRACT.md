@@ -42,3 +42,5 @@ Use original Year 11–12 examples, exact AST/bound assertions, malformed/missin
 Nested limit arrows require operands in their own containing row; neighbouring outer terms cannot supply a missing side. Serialization braces a complete non-final operator node to preserve its body boundary when reparsed. Empty function groups remain invalid even with left/right decorators or spacing commands. Existing Type draft placeholders remain editable.
 
 Serialized operator bodies retain explicit grouping too, including authored comparisons inside a grouped body. Operator/body grouping is round-trip preservation, not inferred mathematical semantics.
+
+C4C-2 is now authorised as one bounded follow-up. Its implemented structural contract and limitations are recorded in [C4C-2 CONTRACT.md](../mathematics-question-display-c4c2/CONTRACT.md); the earlier proposed table above remains the provenance of that scope. This does not authorise merge, deployment or lesson publication.
