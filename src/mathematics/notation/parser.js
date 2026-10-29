@@ -6,7 +6,8 @@ globalThis.TPMathNotation=(()=>{
   const usesStructures=value=>/\\[{}]/.test(String(value??''))||/\[[^\[\]]*\)|\([^()]*\]/.test(String(value??''))||/\\(?:begin|end|vec|overline|mathbb|text|cup|cap|notin)(?![A-Za-z])/.test(String(value??''))||(/[([]/.test(String(value??''))&&String(value??'').replace(/\\,/g,'').includes(','));
   function run(str,N,CMD,FNS,REL){
     const original=String(str==null?'':str),strict=usesStructures(original),map=[];let s='',last=0,condition=false;
-    for(const match of original.matchAll(/\\(?:left|right)(?![a-zA-Z])\s*\.?/g)){for(let j=last;j<match.index;j++){map.push(j);s+=original[j];}last=match.index+match[0].length;}
+    const literalText=[...original.matchAll(/\\text\s*\{[^{}]*\}/g)].map(m=>[m.index,m.index+m[0].length]);
+    for(const match of original.matchAll(/\\(?:left|right)(?![a-zA-Z])\s*\.?/g)){if(literalText.some(([a,b])=>match.index>=a&&match.index<b))continue;for(let j=last;j<match.index;j++){map.push(j);s+=original[j];}last=match.index+match[0].length;}
     for(let j=last;j<original.length;j++){map.push(j);s+=original[j];}map.push(original.length);
     let i=0;const literalBraces=[];const errors=[],error=(at,message)=>errors.push({offset:map[at]+1,message});
     const space=()=>{while(i<s.length&&/\s/.test(s[i]))i++;};
