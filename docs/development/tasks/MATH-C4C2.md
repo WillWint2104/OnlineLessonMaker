@@ -14,3 +14,5 @@
 The bounded documentation exception includes `docs/review/mathematics-question-display-c4c1/CONTRACT.md` only to link the now-authorised structural contract. No governance/backlog state changed.
 
 Development checkpoint: 446 unit/compatibility tests pass, including all 257 frozen baseline trees. Focused browser development run: 195 checks, 59 real captures, five learner exports and zero page errors. Type cell editing uses established arrow navigation; matrix-local fonts now pass fence-height measurements. Exact-head verification, full regression and CodeRabbit remain required; these development counts do not claim final-head acceptance.
+
+Self-review found a valid whitespace spelling (`\begin {pmatrix}` / `\end {pmatrix}`) could allow an internal cell equality to become C1's alignment relation. The bounded alignment scanner now accepts the parser's same whitespace spelling. Three regression cases added. The interrupted first-head verification is retained as incomplete evidence; corrected exact-head verification is restarted after committing this fix.
