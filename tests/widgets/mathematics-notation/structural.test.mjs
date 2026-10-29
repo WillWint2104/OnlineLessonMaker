@@ -24,3 +24,4 @@ for(const [s,x,expected]of [['2[x+1]',2,6],['[x+1]^2',2,9],['2\\left[x+1\\right]
 test('Existing absolute-value Type fence remains evaluable',()=>{const c=E.compile([E.N.fence('|','|',[E.N.ch('x')])]);assert.equal(c.error,null);assert.equal(c.eval(-3),3);});
 for(const source of ['(0, 1)','(3,9)','[0,1]','[x+1]'])test('Legacy routing does not promote existing grouping/coordinates: '+source,()=>assert.equal(box.TPMathNotation.usesCanonicalStructures(source),false));
 for(const source of ['[0,1)','(0,1]','[\\sqrt[3]{2},(a+b))','\\vec{v}'])test('New structural syntax routes canonically: '+source,()=>assert.equal(box.TPMathNotation.usesCanonicalStructures(source),true));
+for(const source of ['ℝ','ℤ','ℚ','ℕ','ℂ','x∈A','x∉A','ℝ∪ℕ','ℝ∩ℤ','x\\in A'])test('Supported set notation routes canonically: '+source,()=>assert.equal(box.TPMathNotation.usesCanonicalStructures(source),true));

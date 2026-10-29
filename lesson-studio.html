@@ -14557,7 +14557,7 @@ globalThis.TPMathNotation=(()=>{
   // because strict validation recognises a comma. Only new syntax needs routing.
   function usesCanonicalStructures(value){
     const s=String(value??'');
-    if(/\\(?:begin|end|vec|overline|mathbb|text|cup|cap|notin)(?![A-Za-z])|\\[{}]/.test(s))return true;
+    if(/[ℝℤℚℕℂ∈∉∪∩]/u.test(s)||/\\(?:begin|end|vec|overline|mathbb|text|cup|cap|in|notin)(?![A-Za-z])|\\[{}]/.test(s))return true;
     const stack=[];
     for(let i=0;i<s.length;i++){
       const c=s[i];
