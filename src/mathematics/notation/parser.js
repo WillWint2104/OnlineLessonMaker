@@ -4,6 +4,20 @@ globalThis.TPMathNotation=(()=>{
   const commands=[...operators,'begin','end','vec','overline','mathbb','text','cup','cap','notin'];
   const symbols={cup:'∪',cap:'∩',notin:'∉'},sets={R:'ℝ',Z:'ℤ',Q:'ℚ',N:'ℕ',C:'ℂ'};
   const usesStructures=value=>/\\[{}]/.test(String(value??''))||/\[[^\[\]]*\)|\([^()]*\]/.test(String(value??''))||/\\(?:begin|end|vec|overline|mathbb|text|cup|cap|notin)(?![A-Za-z])/.test(String(value??''))||(/[([]/.test(String(value??''))&&String(value??'').replace(/\\,/g,'').includes(','));
+  // Legacy prose already supports coordinate pairs; do not promote those merely
+  // because strict validation recognises a comma. Only new syntax needs routing.
+  function usesCanonicalStructures(value){
+    const s=String(value??'');
+    if(/\\(?:begin|end|vec|overline|mathbb|text|cup|cap|notin)(?![A-Za-z])|\\[{}]/.test(s))return true;
+    const stack=[];
+    for(let i=0;i<s.length;i++){
+      const c=s[i];
+      if(c==='\\'){const token=/^\\(?:left|right)(?![A-Za-z])/.exec(s.slice(i));if(token)i+=token[0].length-1;else i++;continue;}
+      if(c==='('||c==='[')stack.push(c);
+      else if((c===')'||c===']')&&stack.length){const open=stack.pop();if(open!==(c===')'?'(':'['))return true;}
+    }
+    return false;
+  }
   function run(str,N,CMD,FNS,REL){
     const original=String(str==null?'':str),strict=usesStructures(original),map=[];let s='',last=0,condition=false;
     const literalText=[...original.matchAll(/\\text\s*\{[^{}]*\}/g)].map(m=>[m.index,m.index+m[0].length]);
@@ -141,5 +155,5 @@ globalThis.TPMathNotation=(()=>{
   function parse(value,N,CMD,FNS,REL){const result=run(value,N,CMD,FNS,REL);if(result.errors.length)throw new SyntaxError(result.errors.map(e=>e.message+' (character '+e.offset+')').join(' '));return result.tree;}
   const operatorPattern=new RegExp('\\\\(?:'+commands.join('|')+')(?![A-Za-z])');
   const usesOperators=value=>operatorPattern.test(String(value??''));
-  return {commands,parse,issues,usesOperators,usesStructures};
+  return {commands,parse,issues,usesOperators,usesStructures,usesCanonicalStructures};
 })();

@@ -34,3 +34,5 @@ Run structural and original notation unit/browser checks, C1–C4B/micro/Type co
 Stop with a draft PR, CodeRabbit status and versioned integrity-checked review package for human approval. No merge, deployment, new lesson publication or Geography work.
 
 Visual self-review reproduced short parentheses with Chromium's generic math font. Matrix-local MathML now uses the existing Type palette stack (`LM Math`, `Cambria Math`, `STIX Two Math`, `math`) to obtain stretchy mathematical glyphs. No font size, global typography or asset changes. Real browser measurements require each visible matrix's opening fence to span at least 90% of its table height; availability still follows the established platform font fallback.
+
+Legacy routing is narrower than strict structural validation: ordinary existing coordinate/group spans keep their original formatter. Only new commands and mixed fences require promotion to canonical MathML outside already opted-in C1/micro/visual contexts. The Notes/Examples corpus guard verifies visible-character preservation across the 3,850 committed lesson strings.
