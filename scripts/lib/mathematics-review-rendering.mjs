@@ -4,7 +4,7 @@ export function inspectMathematicsRendering({label='',kind='',fields={},commands
  const root=document.querySelector('dialog.lp-answer-hub[open]')||document.querySelector('.mx-page');
  if(!root)return {label,surface:'none',questionIds:[],issues:[]};
  const surface=root.matches('dialog')?'Answer Hub':'learner page',issues=[];
- const vocabulary=new Set(commands||((typeof TPMath!=='undefined')?[...TPMath.syntax.commands,...TPMath.syntax.functions]:[]));
+ const vocabulary=new Set(['operatorname',...(commands||((typeof TPMath!=='undefined')?[...TPMath.syntax.commands,...TPMath.syntax.functions]:[]))]);
  const rendered=e=>{if(!e.getClientRects().length||['hidden','collapse'].includes(getComputedStyle(e).visibility))return false;for(let parent=e.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS'&&!parent.open&&!parent.querySelector(':scope > summary')?.contains(e))return false;return true;};
  function add(element,diagnostic,code){const owner=element.closest('[data-book-answer],[data-book-question]'),questionId=owner?.getAttribute('data-book-answer')||owner?.getAttribute('data-book-question')||null;
   const field=kind==='worked'&&!element.closest('summary')?(fields[questionId]?.worked||'workedAnswer'):kind==='final'?(fields[questionId]?.final||'answer'):'stem';

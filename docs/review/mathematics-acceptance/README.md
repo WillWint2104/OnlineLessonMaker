@@ -10,6 +10,8 @@ Baseline: c52515daf01e2c9e5b8a8eef3ba0519675ba701d. Task: MATH-ACCEPT-001. This 
 
 The strengthened reviewer was run against the original unmodified application before runtime correction: twelve `workedAnswer` failures were attributed to their question IDs, the process failed and no archive was created. That source/run is retained in external before evidence. The focused verifier separately reconstructs the approved application from Git, exports the real lesson, reproduces both levels, then tests the current app and its independent export. The HTML regression fragment is detector calibration only, not substitute visual evidence.
 
+The review follow-up also calibrates raw comparisons within prose, raw adjacent/spaced-variable mathematics, structural matrices and legacy `\operatorname` leakage. A relation or command alone no longer promotes explanatory text to a math-only line. Actual reviewer smoke runs cover authorised autonomous/end/hidden teacher fallbacks and independently locked/end/teacher question groups; the pre-release check uses the host's resolved global fallback and applicable per-question group policy without changing those policies.
+
 ## Reproduce
 
 From the task worktree, with Playwright/Chromium and Python 3 available:
