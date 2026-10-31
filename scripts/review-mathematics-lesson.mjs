@@ -82,12 +82,12 @@ try{
    if(r.member){const qs=allQuestions.filter(q=>q.archetypeId===r.member);check(await page.locator('.lp-micro-example').count()===(lesson.slides[r.slide].practiceComposition==='micro'?1:0),group+' '+r.title+': authored example composition');const railTitle=r.title.replace(/^Practice: /,'');check((await page.locator('[data-book-page][aria-current="step"]').textContent()).trim()===railTitle&&(await page.locator('.lp-footer').innerText()).includes(railTitle),group+' '+r.title+': rail, heading and footer agree');
     for(const [level,count]of Object.entries(r.counts)){await page.locator('[data-book-level="'+level+'"]').click();assert.equal(await page.locator('.lp-exercise-cell').count(),count);if(qs.some(q=>q.stem.includes('\\frac')))check(await page.locator('.lp-exercise-cell mfrac').count()>0,group+' '+r.title+' '+level+': stacked fractions');await page.locator('.lp-exercise-grid').first().scrollIntoViewIfNeeded();await inspect(page,group+' '+r.title+' '+level);if(expected.columns?.[group]&&level==='basic'){const columns=await page.locator('.lp-exercise-grid').first().evaluate(e=>{const a=[...e.querySelectorAll('.lp-exercise-cell')];return a.filter(x=>Math.abs(x.getBoundingClientRect().top-a[0].getBoundingClientRect().top)<2).length;});assert.equal(columns,expected.columns[group]);}await shot(page,group+'-'+i+'-'+level+'-grid',group,context);}
     await page.locator('[data-book-level="'+Object.keys(r.counts)[0]+'"]').click();
-    for(const kind of ['final','worked'])if(['end','hidden','teacher'].includes(lesson.meta.answerPolicy?.[kind]))check(await page.evaluate(kind=>!grHubAny(kind),kind),group+' '+r.title+': '+kind+' answers remain locked before release');
+    for(const kind of ['final','worked'])if(['end','hidden','teacher'].includes(lesson.meta.answerPolicy?.[kind]))check(await page.evaluate(kind=>!mcHubAny(kind),kind),group+' '+r.title+': '+kind+' answers remain locked before release');
    }
   }
   await navigate(page,routes.at(-1));
   for(const kind of ['final','worked']){
-   const allowed=await page.evaluate(kind=>grHubAny(kind),kind);if(!allowed){check(true,group+': '+kind+' answers correctly unavailable under authored policy');continue;}
+   const allowed=await page.evaluate(kind=>mcHubAny(kind),kind);if(!allowed){check(true,group+': '+kind+' answers correctly unavailable under authored policy');continue;}
    const eligibleIds=await page.evaluate(kind=>LESSON.slides.flatMap(s=>(s.activities||[]).filter(a=>a.practiceCollectionId).flatMap(a=>(a.questions||[]).filter(q=>mcVisible(q,kind)).map(q=>q.id))),kind),inspectedIds=new Set();
    await page.locator('[data-book-hub]').click();await page.locator('[data-book-kind="'+kind+'"]').click();
    const disclosure=page.locator('.lp-answer-hub .md-filter-disclosure:not([open]) > summary');if(await disclosure.count())await disclosure.click();

@@ -17022,7 +17022,7 @@ function mxWorking(value){
   mdScheduleAlign();return '<div class="mx-worklines" data-md-owner>'+lines.map(line=>{
     const value=line.trim(),parsed=MathDisplay.spans(value),single=parsed.spans.length===1&&value==='$'+parsed.spans[0].math+'$';
     // A later continuation does not turn explanatory text into math-only source.
-    const prose=/\b[A-Za-z]{2,}\b/.test(value.replace(/\\[A-Za-z]+|\b(?:sin|cos|tan|ln|log|abs)(?=\s*\()/g,''));
+    const prose=/\b[A-Za-z]{2,}\b\s+[A-Za-z]+\b/.test(value.replace(/\\[A-Za-z]+|\b(?:sin|cos|tan|ln|log|abs)\b/g,''));
     const mathematical=single||!value.includes('$')&&!prose&&!!value;
     return '<div class="mx-workline">'+(mathematical?mdWorkingCell({math:single?parsed.spans[0].math:value,alignmentGroup:'legacy-continuation'}):mdText(line)||'<br>')+'</div>';
   }).join('')+'</div>';
