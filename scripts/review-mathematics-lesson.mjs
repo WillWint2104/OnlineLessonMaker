@@ -90,6 +90,7 @@ try{
    const allowed=await page.evaluate(kind=>grHubAny(kind),kind);if(!allowed){check(true,group+': '+kind+' answers correctly unavailable under authored policy');continue;}
    const eligibleIds=await page.evaluate(kind=>LESSON.slides.flatMap(s=>(s.activities||[]).filter(a=>a.practiceCollectionId).flatMap(a=>(a.questions||[]).filter(q=>mcVisible(q,kind)).map(q=>q.id))),kind),inspectedIds=new Set();
    await page.locator('[data-book-hub]').click();await page.locator('[data-book-kind="'+kind+'"]').click();
+   const disclosure=page.locator('.lp-answer-hub .md-filter-disclosure:not([open]) > summary');if(await disclosure.count())await disclosure.click();
    const practices=await page.locator('[data-book-practice] option').evaluateAll(es=>es.map(e=>e.value).filter(v=>v!=='all'));
    for(const practice of practices){await page.locator('[data-book-practice]').selectOption(practice);const levels=await page.locator('[data-book-pathway] option').evaluateAll(es=>es.map(e=>e.value));
     for(const level of levels){await page.locator('[data-book-pathway]').selectOption(level);if(kind==='worked'&&await page.locator('[data-book-expand="true"]').isVisible())await page.locator('[data-book-expand="true"]').click();
