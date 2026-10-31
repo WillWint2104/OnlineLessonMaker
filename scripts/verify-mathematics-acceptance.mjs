@@ -1,0 +1,38 @@
+// PA-1/2 acceptance: real old/new application exports, not replacement markup.
+import fs from 'node:fs';import path from 'node:path';import {pathToFileURL} from 'node:url';import {execFileSync} from 'node:child_process';import {createHash} from 'node:crypto';import assert from 'node:assert/strict';import {chromium} from 'playwright';
+import {inspectMathematicsRendering} from './lib/mathematics-review-rendering.mjs';
+const out=path.resolve(process.env.ACCEPT_REVIEW_DIR||'review-delivery/acceptance/focused'),sha=b=>createHash('sha256').update(b).digest('hex'),baseline='c52515daf01e2c9e5b8a8eef3ba0519675ba701d';
+for(const d of ['captures','exports'])fs.mkdirSync(path.join(out,d),{recursive:true});
+const input='docs/review/adding-fractions-algebraic-denominators/lesson.json',lesson=JSON.parse(fs.readFileSync(input)),questions=lesson.slides.flatMap(s=>s.activities.flatMap(a=>a.questions||[])),affected=questions.filter(q=>q.archetypeId==='simplify-result-example');
+const report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),baseline,inputSha256:sha(fs.readFileSync(input)),applicationSha256:sha(fs.readFileSync('lesson-studio.html')),checks:[],captures:[],errors:[],before:[],after:[],limits:['No automatic marking or physical-device certification. Native 200% is also exercised by the full reusable lesson reviews.']};
+const check=(name,pass)=>{report.checks.push({name,passed:!!pass});assert.ok(pass,name);};
+const b=await chromium.launch(),p=await b.newPage({viewport:{width:1536,height:1100}});p.on('pageerror',e=>report.errors.push(e.message));p.on('dialog',d=>d.accept());await p.route(/^https?:/,r=>r.abort());
+async function load(file){await p.goto(pathToFileURL(path.resolve(file)).href);await p.locator('#modeSeg [data-mode=edit]').click();await p.locator('#dataBtn').click();await p.locator('#jsonArea').fill(JSON.stringify(lesson));await p.locator('#jsonLoad').click();check('Actual draft import',!(await p.locator('#jsonErr').textContent()));if(await p.locator('#modalX').isVisible())await p.locator('#modalX').click();await p.locator('[data-mx-mode=study]').click();}
+async function exportLesson(name){const wait=p.waitForEvent('download');await p.locator('[data-mx-mode=export]').click();const file=path.join(out,'exports',name+'.html');await(await wait).saveAs(file);return file;}
+async function hub(){await p.evaluate(()=>{LP_STATE.end=true;LP_STATE.front=null;renderSlide();});await p.locator('[data-book-hub]').click();await p.locator('[data-book-kind=worked]').click();await p.locator('[data-book-practice]').selectOption('2');}
+async function inspectFamily(stage,expectFailure){await hub();for(const level of ['basic','moderate']){await p.locator('[data-book-pathway]').selectOption(level);await p.locator('[data-book-expand=true]').click();const result=await p.evaluate(inspectMathematicsRendering,{label:stage+' '+level,kind:'worked'});report[stage].push(result);const count=level==='basic'?8:4;check(stage+' '+level+': expected rendered question count',result.questionIds.length===count);check(stage+' '+level+': diagnostic count',result.issues.length===(expectFailure?count:0));if(expectFailure)check('Original diagnostic identifies each worked-answer owner',result.issues.every(e=>e.questionId.startsWith('simplify-result-example-')&&e.field==='workedAnswer'));
+  for(const q of affected.filter(q=>q.level===level)){const option=await p.locator('[data-book-search] option').evaluateAll((es,id)=>es.find(e=>e.value&&JSON.parse(e.value)[1]===id)?.value,q.id);await p.locator('[data-book-search]').selectOption(option);const article=p.locator('[data-book-answer="'+q.id+'"]');if(!expectFailure){check(q.id+': prose preserved',(await article.innerText()).includes('Lowest common denominator:'));check(q.id+': equivalent fractions and intermediate working',await article.locator('mfrac').count()>=4);check(q.id+': denominator restriction preserved',(await article.textContent()).includes('\u2260'));}
+   if(q.id.endsWith('-1')){await article.scrollIntoViewIfNeeded();const file='captures/'+stage+'-'+level+'-full-working.png';await article.screenshot({path:path.join(out,file)});report.captures.push({file,sha256:sha(fs.readFileSync(path.join(out,file)))});}
+  }await p.locator('[data-book-search]').selectOption('');
+ }await p.keyboard.press('Escape');}
+try{
+ check('36 original questions; twelve affected answers',questions.length===36&&affected.length===12);
+ check('Canonical lesson unchanged from approved baseline',sha(execFileSync('git',['show',baseline+':'+input],{maxBuffer:4e6}))===report.inputSha256);
+ const old=execFileSync('git',['show',baseline+':lesson-studio.html'],{maxBuffer:8e6});fs.writeFileSync(path.join(out,'before-application.html'),old);report.beforeApplicationSha256=sha(old);
+ await load(path.join(out,'before-application.html'));const before=await exportLesson('before');await p.goto(pathToFileURL(before).href);await inspectFamily('before',true);
+ await load('lesson-studio.html');await inspectFamily('after',false);await load('lesson-studio.html');const after=await exportLesson('after');await p.goto(pathToFileURL(after).href);await inspectFamily('after',false);check('Export is independent learner',await p.locator('[data-mx-mode]').count()===0);
+ // Bounded regression strings: original representation, plain prose, pure continuation,
+ // multiple spans and adjacent structured notation all use the actual runtime.
+ const examples=[
+  ['original mixed working',affected[0].workedAnswer,['Lowest common denominator:','\u2260']],
+  ['plain explanation and continuation','Divide both sides by two.\n$x=4$\n$=2+2$',['Divide both sides by two.']],
+  ['two inline spans','Use $x$ and $y$.\n$x+y=4$\n$=2+2$',['Use','and']],
+  ['pure continuation','$x+1=3$\n$=1+2$',['=']],
+  ['raw legacy continuation','x+1=3\n=1+2',['=']],
+  ['fraction restriction','$\\frac{2}{4x}=\\frac{1}{2x}$\n$=\\frac1{2x}$\n$x\\ne0$',['\u2260']],
+ ];
+ for(const [name,source,expected]of examples){const r=await p.evaluate(source=>{const e=document.createElement('div');e.innerHTML=lpBookWorking(source);return {text:e.textContent,diagnostics:e.querySelectorAll('.md-notation-error,merror').length,math:e.querySelectorAll('math').length};},source);check(name+': valid multiline explanation',!r.diagnostics&&r.math>0&&expected.every(x=>r.text.includes(x)));}
+ const damaged=await p.evaluate(()=>{const e=document.createElement('div');e.innerHTML=lpBookWorking('Common denominator: $\\frac{1}$\n$=2$');return e.querySelectorAll('.md-notation-error,merror').length;});check('Damaged math still yields an explicit diagnostic',damaged>0);
+ await p.setContent(fs.readFileSync('tests/math-review/fixtures/broken-worked-output.html','utf8'));const broken=await p.evaluate(inspectMathematicsRendering,{label:'original output calibration',kind:'worked'});check('Reviewer rejects original output even with a clean underlying page',broken.issues.length===1&&broken.issues[0].questionId==='simplify-result-example-basic-1');report.negativeFixture=broken;
+ check('Zero page errors',!report.errors.length);check('Input JSON unchanged',sha(fs.readFileSync(input))===report.inputSha256);report.passed=true;
+}catch(e){report.failure=String(e.stack||e);process.exitCode=1;}finally{await b.close();fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({passed:report.passed,checks:report.checks.length,pageErrors:report.errors.length,failure:report.failure}));}

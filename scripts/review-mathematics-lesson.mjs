@@ -11,6 +11,7 @@ import {chromium} from 'playwright';
 import {reviewNumerical} from './lib/mathematics-review-numerical.mjs';
 import {reviewExpectations,completeAcceptance} from './lib/mathematics-review-expectations.mjs';
 import {reserveOutputs} from './lib/mathematics-review-output.mjs';
+import {inspectMathematicsRendering} from './lib/mathematics-review-rendering.mjs';
 
 const args=process.argv.slice(2),inputArg=args.shift();
 if(!inputArg||inputArg.startsWith('--'))throw Error('Usage: node scripts/review-mathematics-lesson.mjs <lesson.json> [--out directory] [--zip file.zip] [--expect file.json] [--widths 1536,1024,390] [--no-native] [--no-package] [--require-clean] [--mode complete|smoke]');
@@ -32,7 +33,8 @@ const report={format:2,reviewMode:mode,outputDirectory:out,zip,head,applicationS
 if(!fs.existsSync(path.join(out,'README.md')))fs.writeFileSync(path.join(out,'README.md'),`# ${lesson.meta?.title||'Mathematics lesson'} — real-application review\n\nOpen index.html for the gallery, learner.html for the actual export and lesson.json for the input. authoring-roundtrip.json was downloaded/reopened through the existing application. results.json identifies the tested HEAD and actual checks/limits. Local assets are included. Direct file opening works, or serve this folder with python -m http.server 8099. External video playback needs a network connection and is blocked in captures. No offline-video, automatic marking, physical-device, merge or deployment acceptance is claimed. This is review tooling; it never regenerates questions. The numerical check covers supported explicit equalities only and reports skipped content.\n`);
 report.expectations={input:fs.existsSync(expectedFile)?expectedFile:null,sha256:fs.existsSync(expectedFile)?sha(fs.readFileSync(expectedFile)):null};
 report.widths=widths;
-report.sourceHashes=Object.fromEntries(['lesson-studio.html','scripts/review-mathematics-lesson.mjs','scripts/package-mathematics-lesson.py','scripts/lib/mathematics-review-numerical.mjs','scripts/lib/mathematics-review-expectations.mjs','scripts/lib/mathematics-review-output.mjs'].map(file=>[file,sha(fs.readFileSync(file))]));
+report.rendering={inspections:[],issues:[],coverage:[]};
+report.sourceHashes=Object.fromEntries(['lesson-studio.html','scripts/review-mathematics-lesson.mjs','scripts/package-mathematics-lesson.py','scripts/lib/mathematics-review-numerical.mjs','scripts/lib/mathematics-review-expectations.mjs','scripts/lib/mathematics-review-output.mjs','scripts/lib/mathematics-review-rendering.mjs'].map(file=>[file,sha(fs.readFileSync(file))]));
 report.limitations.push('Numerical sampling is not a formal symbolic proof; domain filters do not prove that restrictions are necessary or complete.','Unverified material requires an explicit human review decision; smoke success is not a complete candidate.');
 if(fs.existsSync(expectedFile))fs.copyFileSync(expectedFile,path.join(out,'EXPECTATIONS.json'),fs.constants.COPYFILE_EXCL);
 let browser;
@@ -43,7 +45,14 @@ async function load(page,data){await page.goto(pathToFileURL(app).href);await pa
 async function download(page,selector,file){const wait=page.waitForEvent('download');await page.locator(selector).click();await(await wait).saveAs(path.join(out,file));}
 async function navigate(page,r){await page.evaluate(r=>{if(r.kind==='front')lpGoFront(r.id);else if(r.kind==='complete'){LP_STATE.end=true;LP_STATE.front=null;renderSlide();lpResetPageScroll();}else{if(r.member)(LP_STATE.practice=LP_STATE.practice||{})[r.id]=r.member;lpNavigate(r.slide,r.id);}},r);}
 async function shot(page,name,group,context){await page.evaluate(()=>document.fonts.ready);const file='captures/'+name+'.png';if(context){const session=await context.newCDPSession(page);try{const r=await session.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});fs.writeFileSync(path.join(out,file),Buffer.from(r.data,'base64'));}finally{await session.detach();}}else await page.screenshot({path:path.join(out,file)});report.captures.push({file,name,group,sha256:sha(fs.readFileSync(path.join(out,file)))});}
-async function inspect(page,label){const state=await page.evaluate(()=>{const e=document.querySelector('.mx-page');return {overflow:document.documentElement.scrollWidth>innerWidth+1||!!e&&e.scrollWidth>e.clientWidth+1,text:document.body.innerText,mathErrors:e?.querySelectorAll('merror').length||0};});check(!state.overflow,label+': no page horizontal overflow');check(!state.mathErrors&&!/operatorname|\\(?:frac|times|pm|ne)\b/.test(state.text),label+': no visible implementation syntax');}
+async function inspect(page,label,kind=''){
+ const state=await page.evaluate(()=>{const e=document.querySelector('.mx-page');return {overflow:document.documentElement.scrollWidth>innerWidth+1||!!e&&e.scrollWidth>e.clientWidth+1};});check(!state.overflow,label+': no page horizontal overflow');
+ const fields=Object.fromEntries((lesson.slides||[]).flatMap(s=>(s.activities||[]).flatMap(a=>a.questions||[])).map(q=>[q.id,{worked:q.workedSolution?'workedSolution':'workedAnswer',final:q.choice?'choiceAnswer':q.matching?'matchingAnswer':'answer'}]));
+ const rendering=await page.evaluate(inspectMathematicsRendering,{label,kind,fields});report.rendering.inspections.push(rendering);report.rendering.issues.push(...rendering.issues);
+ if(!rendering.issues.length)check(true,label+': no mathematical rendering failures');
+ else for(const issue of rendering.issues)console.error('RENDERING FAILURE '+JSON.stringify(issue));
+ return rendering;
+}
 /** Serve review-local assets with browser-correct MIME types and decoded, bounded paths. */
 function createNativeServer(directory){
  const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.gif':'image/gif','.avif':'image/avif','.woff2':'font/woff2','.woff':'font/woff','.ttf':'font/ttf','.otf':'font/otf'};
@@ -76,11 +85,26 @@ try{
     for(const kind of ['final','worked'])if(['end','hidden','teacher'].includes(lesson.meta.answerPolicy?.[kind]))check(await page.evaluate(kind=>!grHubAny(kind),kind),group+' '+r.title+': '+kind+' answers remain locked before release');
    }
   }
-  await navigate(page,routes.at(-1));for(const kind of ['final','worked']){const allowed=await page.evaluate(kind=>grHubAny(kind),kind);if(!allowed){check(true,group+': '+kind+' answers correctly unavailable under authored policy');continue;}await page.locator('[data-book-hub]').click();await page.locator('[data-book-kind="'+kind+'"]').click();check(await page.locator('.lp-answer-list article').count()>0,group+': '+kind+' answer content present');await inspect(page,group+' '+kind+' Answer Hub');check(await page.locator('.lp-answer-hub').evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight+1&&r.width<=innerWidth;}),group+': '+kind+' Answer Hub bounded');await shot(page,group+'-answer-hub-'+kind,group,context);await page.keyboard.press('Escape');}
+  await navigate(page,routes.at(-1));
+  for(const kind of ['final','worked']){
+   const allowed=await page.evaluate(kind=>grHubAny(kind),kind);if(!allowed){check(true,group+': '+kind+' answers correctly unavailable under authored policy');continue;}
+   const eligibleIds=await page.evaluate(kind=>LESSON.slides.flatMap(s=>(s.activities||[]).filter(a=>a.practiceCollectionId).flatMap(a=>(a.questions||[]).filter(q=>mcVisible(q,kind)).map(q=>q.id))),kind),inspectedIds=new Set();
+   await page.locator('[data-book-hub]').click();await page.locator('[data-book-kind="'+kind+'"]').click();
+   const practices=await page.locator('[data-book-practice] option').evaluateAll(es=>es.map(e=>e.value).filter(v=>v!=='all'));
+   for(const practice of practices){await page.locator('[data-book-practice]').selectOption(practice);const levels=await page.locator('[data-book-pathway] option').evaluateAll(es=>es.map(e=>e.value));
+    for(const level of levels){await page.locator('[data-book-pathway]').selectOption(level);if(kind==='worked'&&await page.locator('[data-book-expand="true"]').isVisible())await page.locator('[data-book-expand="true"]').click();
+     const label=group+' '+kind+' Answer Hub practice '+practice+' '+level;const inspected=await inspect(page,label,kind);for(const id of inspected.questionIds)inspectedIds.add(id);
+     check(await page.locator('.lp-answer-hub').evaluate(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight+1&&r.width<=innerWidth;}),label+': bounded');
+     await shot(page,group+'-answer-hub-'+kind+'-'+practice+'-'+level,group,context);
+    }
+   }
+   report.rendering.coverage.push({group,kind,eligibleIds,inspectedIds:[...inspectedIds]});check(eligibleIds.every(id=>inspectedIds.has(id)),group+' '+kind+': every eligible question inspected');
+   await page.keyboard.press('Escape');
+  }
  }
  for(const width of widths){const context=await browser.newContext({viewport:{width,height:width===390?844:width===1024?768:960}});try{await surface(await context.newPage(),String(width));}finally{await context.close();}}
  if(!flags['--no-native']){const profile=fs.mkdtempSync(path.join(os.tmpdir(),'math-review-zoom-'));let context;const server=createNativeServer(out);try{await new Promise(r=>server.listen(0,'127.0.0.1',r));fs.mkdirSync(path.join(profile,'Default'));fs.writeFileSync(path.join(profile,'Default/Preferences'),JSON.stringify({partition:{default_zoom_level:{x:Math.log(2)/Math.log(1.2)}}}));context=await chromium.launchPersistentContext(profile,{channel:'chromium',headless:true,viewport:null,args:['--window-size=1536,960']});const page=context.pages()[0];await surface(page,'native-200',context,'http://127.0.0.1:'+server.address().port+'/learner.html');report.nativeZoom=await page.evaluate(()=>({dpr:devicePixelRatio,width:innerWidth,cssZoom:getComputedStyle(document.documentElement).zoom}));assert.ok(Math.abs(report.nativeZoom.dpr-2)<.02);assert.ok(['1','normal'].includes(report.nativeZoom.cssZoom));check(true,'Native 200% browser zoom, not CSS zoom');}finally{try{await context?.close();}finally{await new Promise(r=>server.close(r));const real=fs.realpathSync(profile);assert.equal(path.dirname(real),fs.realpathSync(os.tmpdir()));assert.ok(path.basename(real).startsWith('math-review-zoom-'));fs.rmSync(real,{recursive:true,force:true});}}}
- check(!report.errors.length,'Zero page errors, with listeners attached before every navigation');check(sha(fs.readFileSync(app))===report.applicationSha256,'Application bytes unchanged');check(git('rev-parse','HEAD')===head,'Source HEAD unchanged');check(sha(fs.readFileSync(input))===report.sourceSha256,'Input JSON unchanged by review');report.acceptance=completeAcceptance({mode,expected,structure,numerical:numeric,widths,nativeZoom:report.nativeZoom,roundTrip:report.roundTrip,errors:report.errors,trackedSourceDirty:report.trackedSourceDirty});report.passed=true;if(mode==='complete'&&!report.acceptance.checksComplete)process.exitCode=1;
+ check(!report.errors.length,'Zero page errors, with listeners attached before every navigation');check(sha(fs.readFileSync(app))===report.applicationSha256,'Application bytes unchanged');check(git('rev-parse','HEAD')===head,'Source HEAD unchanged');check(sha(fs.readFileSync(input))===report.sourceSha256,'Input JSON unchanged by review');report.acceptance=completeAcceptance({mode,expected,structure,numerical:numeric,widths,nativeZoom:report.nativeZoom,roundTrip:report.roundTrip,errors:report.errors,trackedSourceDirty:report.trackedSourceDirty,rendering:report.rendering});report.passed=report.rendering.issues.length===0;if(report.rendering.issues.length||mode==='complete'&&!report.acceptance.checksComplete)process.exitCode=1;
 }catch(e){report.failure=String(e.stack||e);report.acceptance={outcome:'failed',completeCandidate:false,archiveIntegrity:'not-run',issues:[e.message],requiresHumanApproval:true};process.exitCode=1;}finally{await browser?.close();gallery();fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2)+'\n');}
 let packageReceipt=null;
 let packageFailure=null;
