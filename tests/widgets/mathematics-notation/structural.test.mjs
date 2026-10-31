@@ -25,3 +25,5 @@ test('Existing absolute-value Type fence remains evaluable',()=>{const c=E.compi
 for(const source of ['(0, 1)','(3,9)','[0,1]','[x+1]'])test('Legacy routing does not promote existing grouping/coordinates: '+source,()=>assert.equal(box.TPMathNotation.usesCanonicalStructures(source),false));
 for(const source of ['[0,1)','(0,1]','[\\sqrt[3]{2},(a+b))','\\vec{v}'])test('New structural syntax routes canonically: '+source,()=>assert.equal(box.TPMathNotation.usesCanonicalStructures(source),true));
 for(const source of ['ℝ','ℤ','ℚ','ℕ','ℂ','x∈A','x∉A','ℝ∪ℕ','ℝ∩ℤ','x\\in A'])test('Supported set notation routes canonically: '+source,()=>assert.equal(box.TPMathNotation.usesCanonicalStructures(source),true));
+
+for(const base of ['x∈A','x\\in A','ℝ∪ℕ'])for(const suffix of [' & B','+\\unknown{x}','+(x+1'])test('Standalone sets reject malformed mathematics: '+base+suffix,()=>{const source=base+suffix;assert.ok(M.diagnoseMath(source,E.syntax).length);assert.throws(()=>E.tree(source));});

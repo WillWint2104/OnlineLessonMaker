@@ -3,7 +3,7 @@ globalThis.TPMathNotation=(()=>{
   const operators=['sum','prod','int','lim'];
   const commands=[...operators,'begin','end','vec','overline','mathbb','text','cup','cap','notin'];
   const symbols={cup:'∪',cap:'∩',notin:'∉'},sets={R:'ℝ',Z:'ℤ',Q:'ℚ',N:'ℕ',C:'ℂ'};
-  const usesStructures=value=>/\\[{}]/.test(String(value??''))||/\[[^\[\]]*\)|\([^()]*\]/.test(String(value??''))||/\\(?:begin|end|vec|overline|mathbb|text|cup|cap|notin)(?![A-Za-z])/.test(String(value??''))||(/[([]/.test(String(value??''))&&String(value??'').replace(/\\,/g,'').includes(','));
+  const usesStructures=value=>/[ℝℤℚℕℂ∈∉∪∩]/u.test(String(value??''))||/\\[{}]/.test(String(value??''))||/\[[^\[\]]*\)|\([^()]*\]/.test(String(value??''))||/\\(?:begin|end|vec|overline|mathbb|text|cup|cap|in|notin)(?![A-Za-z])/.test(String(value??''))||(/[([]/.test(String(value??''))&&String(value??'').replace(/\\,/g,'').includes(','));
   // Legacy prose already supports coordinate pairs; do not promote those merely
   // because strict validation recognises a comma. Only new syntax needs routing.
   function usesCanonicalStructures(value){
