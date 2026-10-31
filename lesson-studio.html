@@ -17023,7 +17023,7 @@ function mxWorking(value){
     const value=line.trim(),parsed=MathDisplay.spans(value),single=parsed.spans.length===1&&value==='$'+parsed.spans[0].math+'$';
     // A later continuation does not turn explanatory text into math-only source.
     const words=value.replace(/\\text\s*\{[^{}]*\}|\\[A-Za-z]+|\{[^{}]*\}/g,'').replace(new RegExp('\\b(?:'+TPMath.syntax.functions.join('|')+')\\b','g'),'');
-    const prose=/\b[A-Za-z]{3,}\b|\b(?:if|so|we|or|by|as|at|to|in|is|it|of|on)\b/i.test(words);
+    const prose=/\b[A-Za-z]{3,}\b(?:\s+[A-Za-z]|[.!?:;])|\b(?:if|so|we|or|by|as|at|to|in|is|it|of|on)\b/i.test(words);
     const mathematical=single||!value.includes('$')&&!prose&&!!value;
     return '<div class="mx-workline">'+(mathematical?mdWorkingCell({math:single?parsed.spans[0].math:value,alignmentGroup:'legacy-continuation'}):mdText(line)||'<br>')+'</div>';
   }).join('')+'</div>';

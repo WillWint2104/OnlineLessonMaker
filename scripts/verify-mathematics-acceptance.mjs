@@ -30,6 +30,7 @@ try{
   ['pure continuation','$x+1=3$\n$=1+2$',['=']],
   ['raw legacy continuation','x+1=3\n=1+2',['=']],
   ['raw adjacent variables','xy=2\n=\\frac{xy}{2}',['=']],
+  ['raw volume product','V=abc\n=abc',['=']],
   ['raw spaced variables','ab cd=2\n=\\frac{ab cd}{2}',['=']],
   ['raw function continuation','sin x=1\n=sin x',['=']],
   ['raw comparison in explanatory prose','= Let x < 3\n$=2$',['Let x < 3']],
@@ -37,7 +38,7 @@ try{
   ['raw structural matrix','\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}\n=2',['=']],
   ['fraction restriction','$\\frac{2}{4x}=\\frac{1}{2x}$\n$=\\frac1{2x}$\n$x\\ne0$',['\u2260']],
  ];
- for(const [name,source,expected]of examples){const r=await p.evaluate(source=>{const e=document.createElement('div');e.innerHTML=lpBookWorking(source);return {text:e.textContent,diagnostics:e.querySelectorAll('.md-notation-error,merror').length,math:e.querySelectorAll('math').length};},source);check(name+': valid multiline explanation',!r.diagnostics&&r.math>0&&!/\\[A-Za-z]/.test(r.text)&&expected.every(x=>r.text.includes(x)));}
+ for(const [name,source,expected]of examples){const r=await p.evaluate(source=>{const e=document.createElement('div');e.innerHTML=lpBookWorking(source);return {text:e.textContent,diagnostics:e.querySelectorAll('.md-notation-error,merror').length,math:e.querySelectorAll('math').length,mathRows:[...e.querySelectorAll('.mx-workline')].map(line=>!!line.querySelector('math'))};},source);check(name+': valid multiline explanation',!r.diagnostics&&r.math>0&&(name!=='raw volume product'||r.mathRows.every(Boolean))&&!/\\[A-Za-z]/.test(r.text)&&expected.every(x=>r.text.includes(x)));}
  const damaged=await p.evaluate(()=>{const e=document.createElement('div');e.innerHTML=lpBookWorking('Common denominator: $\\frac{1}$\n$=2$');return e.querySelectorAll('.md-notation-error,merror').length;});check('Damaged math still yields an explicit diagnostic',damaged>0);
  const choice=JSON.parse(fs.readFileSync('tests/widgets/mathematics-choices/lesson.json','utf8')),choicePractice=choice.slides[0].activities.find(a=>a.questions);choicePractice.questions=choicePractice.questions.slice(0,1);delete choicePractice.questions[0].answer;choice.meta.answerPolicy={final:'autonomous',worked:'autonomous'};const choiceFile=path.join(out,'choice-answer-only.json');fs.writeFileSync(choiceFile,JSON.stringify(choice));
  const review=spawnSync(process.execPath,['scripts/review-mathematics-lesson.mjs',choiceFile,'--out',path.join(out,'choice-review'),'--widths','1536','--no-native','--no-package','--mode','smoke'],{encoding:'utf8',maxBuffer:4e6});fs.writeFileSync(path.join(out,'choice-review.log'),(review.stdout||'')+(review.stderr||''));check('Choice-only reviewer smoke succeeds',review.status===0);const choiceReport=JSON.parse(fs.readFileSync(path.join(out,'choice-review/results.json')));check('Choice answer without q.answer is actually inspected',choiceReport.rendering.coverage.some(c=>c.kind==='final'&&c.inspectedIds.includes(choicePractice.questions[0].id)));
