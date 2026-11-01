@@ -17025,7 +17025,11 @@ function mxWorking(value){
   const words=value=>value.replace(/\\text\s*\{[^{}]*\}|\\[A-Za-z]+|\{[^{}]*\}/g,' · ').replace(new RegExp('\\b(?:'+TPMath.syntax.functions.join('|')+')\\b','g'),' · ');
   const prose=value=>/\b(?:[A-Za-z]{3,}\s+[A-Za-z]+|[A-Za-z]+\s+[A-Za-z]{3,})\b|\b[A-Za-z]{3,}[.!?:;]|\b(?:if|so|we|or|by|as|at|to|in|is|it|of|on)\s+(?=[A-Za-z0-9])/i.test(words(value));
   const variables=new Set(),collect=node=>{if(Array.isArray(node))node.forEach(collect);else if(node&&typeof node==='object'){if(node.t==='ch'&&/^[A-Za-z]$/.test(node.v))variables.add(node.v);else Object.values(node).forEach(collect);}};
-  for(const line of lines){const raw=strip(line.trim());if(!raw.includes('$')&&!prose(raw)&&!MathDisplay.diagnoseMath(raw,TPMath.syntax).length)collect(TPMath.tree(raw));}
+  const parsedRows=lines.map((line,index)=>{const raw=strip(line.trim());if(raw.includes('$')||MathDisplay.diagnoseMath(raw,TPMath.syntax).length)return null;const tree=TPMath.tree(raw);return {index,raw,tree,source:raw.replace(/^=\s*/,''),canonical:TPMath.latex(tree).replace(/^=\s*/,'')};}).filter(Boolean);
+  // Equivalent adjacent derivation rows can establish context mutually, even
+  // when neither spaced product first survives the prose fallback. Repeated
+  // explanatory text alone is not a new mathematical representation.
+  for(const row of parsedRows)if(!prose(row.raw)||parsedRows.some(other=>Math.abs(other.index-row.index)===1&&other.canonical===row.canonical&&other.source!==row.source&&(/^=/.test(row.raw)||/^=/.test(other.raw))))collect(row.tree);
   mdScheduleAlign();return '<div class="mx-worklines" data-md-owner>'+lines.map(line=>{
     const value=line.trim(),parsed=MathDisplay.spans(value),single=parsed.spans.length===1&&value==='$'+parsed.spans[0].math+'$';
     // A later continuation does not turn explanatory text into math-only source.

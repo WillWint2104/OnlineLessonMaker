@@ -35,6 +35,8 @@ try{
   ['raw spaced variables','ab cd=2\n=\\frac{ab cd}{2}',['=']],
   ['raw independent-review multiplication','xyz \\times x\n=x^2yz',['×']],
   ['raw longer spaced factors','abcd ef\n=abcdef',['=']],
+  ['raw cold-start spaced factors','abc def\n=ab cdef',['=']],
+  ['repeated explanatory phrase','No restriction\n=No restriction\n$=2$',['No restriction']],
   ['raw function products','xyz sin x\n=xyz sin x',['=']],
   ['raw explicit division','abcd \\div x\n=\\frac{abcd}{x}',['÷']],
   ['raw function continuation','sin x=1\n=sin x',['=']],
