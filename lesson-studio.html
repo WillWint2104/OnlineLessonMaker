@@ -17033,9 +17033,11 @@ function mxWorking(value){
   // words of an instruction containing it. Reuse canonical validation/trees.
   for(const row of parsedRows){if(!prose(row.raw))collect(row.tree);else for(const part of row.raw.split(/\s+/)){if(!part||MathDisplay.diagnoseMath(part,TPMath.syntax).length)continue;const tree=TPMath.tree(part);if(operatorContext(tree))collect(tree);}}
   // Adjacent derivation rows using the same identifiers establish context
-  // mutually, independent of factor grouping/order. This is not an identity
-  // check; exact repeated explanatory text does not establish new context.
-  for(const row of parsedRows)if(row.context&&parsedRows.some(other=>Math.abs(other.index-row.index)===1&&other.context===row.context&&other.source!==row.source&&(/^=/.test(row.raw)||/^=/.test(other.raw))))collect(row.tree);
+  // mutually, independent of factor grouping/order. Both candidates must lack
+  // hard prose markers; punctuation changes or an equals sign are not evidence.
+  // This is not an identity check; exact repeated text supplies no new context.
+  const contextRows=parsedRows.filter(row=>!language(row.raw)&&!/[.!?:;]/.test(words(row.raw)));
+  for(const row of contextRows)if(row.context&&contextRows.some(other=>Math.abs(other.index-row.index)===1&&other.context===row.context&&other.source!==row.source&&(/^=/.test(row.raw)||/^=/.test(other.raw))))collect(row.tree);
   mdScheduleAlign();return '<div class="mx-worklines" data-md-owner>'+lines.map(line=>{
     const value=line.trim(),parsed=MathDisplay.spans(value),single=parsed.spans.length===1&&value==='$'+parsed.spans[0].math+'$';
     // A later continuation does not turn explanatory text into math-only source.
