@@ -17023,8 +17023,10 @@ function mxWorking(value){
   // them into apparent adjacent prose. Neighbouring parsed maths supplies the
   // variable context for whitespace-separated legacy factors.
   const words=value=>value.replace(/\\text\s*\{[^{}]*\}|\\[A-Za-z]+|\{[^{}]*\}/g,' · ').replace(new RegExp('\\b(?:'+TPMath.syntax.functions.join('|')+')\\b','g'),' · ');
-  const prose=value=>/\b(?:[A-Za-z]{3,}\s+[A-Za-z]+|[A-Za-z]+\s+[A-Za-z]{3,})\b|\b[A-Za-z]{3,}[.!?:;]|\b(?:if|so|we|or|by|as|at|to|in|is|it|of|on)\s+(?=[A-Za-z0-9])/i.test(words(value));
+  const language=value=>/\b(?:if|so|we|or|by|as|at|to|in|is|it|of|on)\s+(?=[A-Za-z0-9])/i.test(words(value));
+  const prose=value=>/\b(?:[A-Za-z]{3,}\s+[A-Za-z]+|[A-Za-z]+\s+[A-Za-z]{3,})\b|\b[A-Za-z]{3,}[.!?:;]/i.test(words(value))||language(value);
   const variables=new Set(),collect=node=>{if(Array.isArray(node))node.forEach(collect);else if(node&&typeof node==='object'){if(node.t==='ch'&&/^[A-Za-z]$/.test(node.v))variables.add(node.v);else Object.values(node).forEach(collect);}};
+  const operatorContext=node=>Array.isArray(node)?node.some(operatorContext):!!node&&typeof node==='object'&&(node.t==='ch'?/[+−×÷·*/]/.test(node.v):['frac','sqrt','nroot','fn','sup','sub','large','lim','matrix','acc'].includes(node.t)||Object.values(node).some(operatorContext));
   const parsedRows=lines.map((line,index)=>{const raw=strip(line.trim());if(raw.includes('$')||MathDisplay.diagnoseMath(raw,TPMath.syntax).length)return null;const tree=TPMath.tree(raw),body=tree[0]?.t==='ch'&&tree[0].v==='='?tree.slice(1):tree;
     // A simple variable product supplies the same context when regrouped or
     // reordered. Read existing tree nodes; this is not another syntax parser.
@@ -17033,7 +17035,7 @@ function mxWorking(value){
   // Equivalent adjacent derivation rows can establish context mutually, even
   // when neither spaced product first survives the prose fallback. Repeated
   // explanatory text alone is not a new mathematical representation.
-  for(const row of parsedRows)if(!prose(row.raw)||parsedRows.some(other=>Math.abs(other.index-row.index)===1&&other.canonical===row.canonical&&other.source!==row.source&&(/^=/.test(row.raw)||/^=/.test(other.raw))))collect(row.tree);
+  for(const row of parsedRows)if(!prose(row.raw)||operatorContext(row.tree)&&!language(row.raw)&&!/[A-Za-z][.!?:;]/.test(row.raw)||parsedRows.some(other=>Math.abs(other.index-row.index)===1&&other.canonical===row.canonical&&other.source!==row.source&&(/^=/.test(row.raw)||/^=/.test(other.raw))))collect(row.tree);
   mdScheduleAlign();return '<div class="mx-worklines" data-md-owner>'+lines.map(line=>{
     const value=line.trim(),parsed=MathDisplay.spans(value),single=parsed.spans.length===1&&value==='$'+parsed.spans[0].math+'$';
     // A later continuation does not turn explanatory text into math-only source.
