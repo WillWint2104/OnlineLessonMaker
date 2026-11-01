@@ -37,7 +37,7 @@ export function reviewExpectations(lesson,expected={}){
 }
 
 /** Candidate status is evidence completeness, never publication/human approval. */
-export function completeAcceptance({mode,expected,structure,numerical,widths,nativeZoom,roundTrip,errors,trackedSourceDirty}){
+export function completeAcceptance({mode,expected,structure,numerical,widths,nativeZoom,roundTrip,errors,trackedSourceDirty,rendering}){
  const issues=[...structure.issues];
  if(!expected.questionIds?.length||expected.questionCount!==expected.questionIds.length)issues.push('Explicit expected stable question IDs/count required');
  if(!expected.requireFullAnswers)issues.push('Full answer expectations required');
@@ -47,7 +47,9 @@ export function completeAcceptance({mode,expected,structure,numerical,widths,nat
  if(!nativeZoom||!Number.isFinite(nativeZoom.dpr)||Math.abs(nativeZoom.dpr-2)>=.02||!['1','normal'].includes(nativeZoom.cssZoom))issues.push('Native 200% browser inspection required');
  if(!roundTrip)issues.push('Actual import/export/reopen required');
  if(errors.length)issues.push('Page errors present');
+ if(!Array.isArray(rendering?.inspections)||!rendering.inspections.length||!Array.isArray(rendering?.issues))issues.push('Actual learner/Answer Hub rendering inspection required');
+ if(rendering?.issues?.length)issues.push('Mathematical rendering failures: '+rendering.issues.length+'; inspect rendering.issues for question IDs, fields and diagnostics');
  if(trackedSourceDirty)issues.push('Clean exact-head source required for complete candidate');
  const checksComplete=mode==='complete'&&issues.length===0;
- return {outcome:checksComplete?'package-pending':mode==='smoke'?'smoke-only':'incomplete',checksComplete,completeCandidate:false,archiveIntegrity:'pending',issues,requiresHumanApproval:true};
+ return {outcome:checksComplete?'package-pending':mode==='smoke'&&!rendering?.issues?.length?'smoke-only':'incomplete',checksComplete,completeCandidate:false,archiveIntegrity:'pending',issues,requiresHumanApproval:true};
 }

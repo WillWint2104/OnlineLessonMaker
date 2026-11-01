@@ -17019,7 +17019,32 @@ function mxWorking(value){
   if(lines.some(line=>/_[^_]+_/.test(line)&&!line.startsWith('$'))){const chain=lines.some(line=>/^\s*=(?!=|>)/.test(line));return '<div class="mx-worklines">'+lines.map(line=>{const match=chain&&/(^|[^<>=!])=(?!=|>)/.exec(line),at=match?match.index+match[1].length:-1;return at<0?'<div class="mx-workline">'+(mxM(line)||'<br>')+'</div>':'<div class="mx-workline" data-mx-equality><span>'+mxM(line.slice(0,at))+'</span><span>= '+mxM(line.slice(at+1))+'</span></div>';}).join('')+'</div>';}
   const chain=lines.some(line=>/^\s*=(?!=|>)/.test(strip(line)));
   if(!chain)return '<div class="mx-worklines">'+lines.map(line=>'<div class="mx-workline">'+(mxM(line)||'<br>')+'</div>').join('')+'</div>';
-  const steps=lines.map(line=>({math:strip(line),alignmentGroup:'legacy-continuation'}));mdScheduleAlign();return '<div class="mx-worklines" data-md-owner>'+steps.map(step=>'<div class="mx-workline">'+mdWorkingCell(step)+'</div>').join('')+'</div>';
+  // Keep mathematical operators/functions as boundaries, rather than deleting
+  // them into apparent adjacent prose. Neighbouring parsed maths supplies the
+  // variable context for whitespace-separated legacy factors.
+  const words=value=>value.replace(/\\text\s*\{[^{}]*\}|\\[A-Za-z]+|\{[^{}]*\}/g,' · ').replace(new RegExp('\\b(?:'+TPMath.syntax.functions.join('|')+')\\b','g'),' · ');
+  const language=value=>/\b(?:if|so|we|or|by|as|at|to|in|is|it|of|on)\s+(?=[A-Za-z0-9])/i.test(words(value));
+  const prose=value=>/\b(?:[A-Za-z]{3,}\s+[A-Za-z]+|[A-Za-z]+\s+[A-Za-z]{3,})\b|\b[A-Za-z]{3,}[.!?:;]/i.test(words(value))||language(value);
+  const variables=new Set(),collect=(node,target=variables)=>{if(Array.isArray(node))node.forEach(child=>collect(child,target));else if(node&&typeof node==='object'){if(node.t==='ch'&&/^[A-Za-z]$/.test(node.v))target.add(node.v);else Object.values(node).forEach(child=>collect(child,target));}};
+  const operatorContext=node=>Array.isArray(node)?node.some(operatorContext):!!node&&typeof node==='object'&&(node.t==='ch'?/[+−×÷·*/]/.test(node.v):['frac','sqrt','nroot','fn','sup','sub','large','lim','matrix','acc'].includes(node.t)||Object.values(node).some(operatorContext));
+  const parsedRows=lines.map((line,index)=>{const raw=strip(line.trim());if(raw.includes('$')||MathDisplay.diagnoseMath(raw,TPMath.syntax).length)return null;const tree=TPMath.tree(raw),identifiers=new Set();collect(tree,identifiers);
+    return {index,raw,tree,source:raw.replace(/^=\s*/,'').replace(/\s+/g,' '),context:[...identifiers].sort().join('')};}).filter(Boolean);
+  // An arithmetic substring supplies only its own identifiers, never all the
+  // words of an instruction containing it. Reuse canonical validation/trees.
+  for(const row of parsedRows){if(!prose(row.raw))collect(row.tree);else for(const part of row.raw.split(/\s+/)){if(!part||MathDisplay.diagnoseMath(part,TPMath.syntax).length)continue;const tree=TPMath.tree(part);if(operatorContext(tree))collect(tree);}}
+  // Adjacent derivation rows using the same identifiers establish context
+  // mutually, independent of factor grouping/order. Both candidates must lack
+  // hard prose markers; punctuation changes or an equals sign are not evidence.
+  // This is not an identity check; exact repeated text supplies no new context.
+  const contextRows=parsedRows.filter(row=>!language(row.raw)&&!/[.!?:;]/.test(words(row.raw)));
+  for(const row of contextRows)if(row.context&&contextRows.some(other=>Math.abs(other.index-row.index)===1&&other.context===row.context&&other.source!==row.source&&(/^=/.test(row.raw)||/^=/.test(other.raw))))collect(row.tree);
+  mdScheduleAlign();return '<div class="mx-worklines" data-md-owner>'+lines.map(line=>{
+    const value=line.trim(),parsed=MathDisplay.spans(value),single=parsed.spans.length===1&&value==='$'+parsed.spans[0].math+'$';
+    // A later continuation does not turn explanatory text into math-only source.
+    const factors=words(value).match(/[A-Za-z]+/g)||[],knownFactors=factors.length>0&&factors.every(factor=>[...factor].every(letter=>variables.has(letter)))&&!/[.!?:;]/.test(words(value));
+    const mathematical=single||!value.includes('$')&&(!prose(value)||knownFactors)&&!!value;
+    return '<div class="mx-workline">'+(mathematical?mdWorkingCell({math:single?parsed.spans[0].math:value,alignmentGroup:'legacy-continuation'}):mdText(line)||'<br>')+'</div>';
+  }).join('')+'</div>';
 }
 function mxWexSteps(ex,range,annotated=false){
   let steps=Array.isArray(ex.steps)?ex.steps:[];
