@@ -14,7 +14,7 @@ export function inspectMathematicsRendering({label='',kind='',fields={}}={}){
  while(walker.nextNode()){const node=walker.currentNode,e=node.parentElement;if(!e||e.closest('math,code,pre,.md-notation-error,script,style')||!rendered(e))continue;
   // Scan control words, not a supported-command allowlist. Paired backslashes
   // are escaped literal text; drive/UNC paths and authored code are not maths.
-  const leaked=[...node.data.matchAll(/\\([A-Za-z]+|.)/g)].filter(m=>/^[A-Za-z]+$/.test(m[1])&&!/(?:[A-Za-z]:|\\\\)[^\s]*$/.test(node.data.slice(0,m.index))).map(m=>m[0]);
+  const leaked=[...node.data.matchAll(/\\([A-Za-z]+|.)/g)].filter(m=>/^[A-Za-z]+$/.test(m[1])&&!/(?:^|[\s("'=])(?:[A-Za-z]:|\\\\)[^\s]*$/.test(node.data.slice(0,m.index))).map(m=>m[0]);
   if(leaked.length)add(e,'Visible unrendered mathematical command: '+[...new Set(leaked)].join(', '),'raw-math-command');
  }
  return {label,surface,questionIds:[...root.querySelectorAll('[data-book-answer],[data-book-question]')].filter(rendered).map(e=>e.getAttribute('data-book-answer')||e.getAttribute('data-book-question')),issues};
