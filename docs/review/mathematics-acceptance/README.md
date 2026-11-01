@@ -12,6 +12,8 @@ The strengthened reviewer was run against the original unmodified application be
 
 The review follow-up also calibrates raw comparisons within prose, raw adjacent/spaced-variable mathematics, structural matrices and legacy `\operatorname` leakage. A relation or command alone no longer promotes explanatory text to a math-only line. Actual reviewer smoke runs cover authorised autonomous/end/hidden teacher fallbacks and independently locked/end/teacher question groups; the pre-release check uses the host's resolved global fallback and applicable per-question group policy without changing those policies.
 
+The independent final-head review found two additional counterexamples. Visible control words are now inspected without a supported-command allowlist, including unsupported commands such as `\dfrac`; escaped backslashes, drive/UNC paths, code/pre and closed disclosures retain their exclusions. The actual complete reviewer must reject the independently accepted defective lesson, attribute its workedAnswer failure and create no candidate ZIP. Legacy working preserves command/function boundaries rather than deleting multiplication into apparent prose; the existing production tree supplies neighbouring variable context for spaced factors. The original twelve mixed explanations, explicit multiplication, longer spaced factors and function products are regression cases. No parser or notation engine is changed.
+
 ## Reproduce
 
 From the task worktree, with Playwright/Chromium and Python 3 available:

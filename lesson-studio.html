@@ -17019,12 +17019,18 @@ function mxWorking(value){
   if(lines.some(line=>/_[^_]+_/.test(line)&&!line.startsWith('$'))){const chain=lines.some(line=>/^\s*=(?!=|>)/.test(line));return '<div class="mx-worklines">'+lines.map(line=>{const match=chain&&/(^|[^<>=!])=(?!=|>)/.exec(line),at=match?match.index+match[1].length:-1;return at<0?'<div class="mx-workline">'+(mxM(line)||'<br>')+'</div>':'<div class="mx-workline" data-mx-equality><span>'+mxM(line.slice(0,at))+'</span><span>= '+mxM(line.slice(at+1))+'</span></div>';}).join('')+'</div>';}
   const chain=lines.some(line=>/^\s*=(?!=|>)/.test(strip(line)));
   if(!chain)return '<div class="mx-worklines">'+lines.map(line=>'<div class="mx-workline">'+(mxM(line)||'<br>')+'</div>').join('')+'</div>';
+  // Keep mathematical operators/functions as boundaries, rather than deleting
+  // them into apparent adjacent prose. Neighbouring parsed maths supplies the
+  // variable context for whitespace-separated legacy factors.
+  const words=value=>value.replace(/\\text\s*\{[^{}]*\}|\\[A-Za-z]+|\{[^{}]*\}/g,' · ').replace(new RegExp('\\b(?:'+TPMath.syntax.functions.join('|')+')\\b','g'),' · ');
+  const prose=value=>/\b(?:[A-Za-z]{3,}\s+[A-Za-z]+|[A-Za-z]+\s+[A-Za-z]{3,})\b|\b[A-Za-z]{3,}[.!?:;]|\b(?:if|so|we|or|by|as|at|to|in|is|it|of|on)\s+(?=[A-Za-z0-9])/i.test(words(value));
+  const variables=new Set(),collect=node=>{if(Array.isArray(node))node.forEach(collect);else if(node&&typeof node==='object'){if(node.t==='ch'&&/^[A-Za-z]$/.test(node.v))variables.add(node.v);else Object.values(node).forEach(collect);}};
+  for(const line of lines){const raw=strip(line.trim());if(!raw.includes('$')&&!prose(raw)&&!MathDisplay.diagnoseMath(raw,TPMath.syntax).length)collect(TPMath.tree(raw));}
   mdScheduleAlign();return '<div class="mx-worklines" data-md-owner>'+lines.map(line=>{
     const value=line.trim(),parsed=MathDisplay.spans(value),single=parsed.spans.length===1&&value==='$'+parsed.spans[0].math+'$';
     // A later continuation does not turn explanatory text into math-only source.
-    const words=value.replace(/\\text\s*\{[^{}]*\}|\\[A-Za-z]+|\{[^{}]*\}/g,'').replace(new RegExp('\\b(?:'+TPMath.syntax.functions.join('|')+')\\b','g'),'');
-    const prose=/\b(?:[A-Za-z]{3,}\s+[A-Za-z]+|[A-Za-z]+\s+[A-Za-z]{3,})\b|\b[A-Za-z]{3,}[.!?:;]|\b(?:if|so|we|or|by|as|at|to|in|is|it|of|on)\s+(?=[A-Za-z0-9])/i.test(words);
-    const mathematical=single||!value.includes('$')&&!prose&&!!value;
+    const factors=words(value).match(/[A-Za-z]+/g)||[],knownFactors=factors.length>0&&factors.every(factor=>[...factor].every(letter=>variables.has(letter)))&&!/[.!?:;]/.test(words(value));
+    const mathematical=single||!value.includes('$')&&(!prose(value)||knownFactors)&&!!value;
     return '<div class="mx-workline">'+(mathematical?mdWorkingCell({math:single?parsed.spans[0].math:value,alignmentGroup:'legacy-continuation'}):mdText(line)||'<br>')+'</div>';
   }).join('')+'</div>';
 }
