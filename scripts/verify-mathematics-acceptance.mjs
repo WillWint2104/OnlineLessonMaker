@@ -43,6 +43,8 @@ try{
   ['raw cancelling spaced products','abc def-abc def\n=0',['=']],
   ['explanation with arithmetic span','Use $x+1$ before continuing.\n$=2$',['Use','before continuing.']],
   ['conditional arithmetic explanation','If x+1 < 3\n$=2$',['If x+1 < 3']],
+  ['arithmetic instruction stays prose','Subtract x+1 from both sides\n$=2$',['Subtract x+1 from both sides']],
+  ['short arithmetic instruction stays prose','Add x+1\n$=2$',['Add x+1']],
   ['repeated explanatory phrase','No restriction\n=No restriction\n$=2$',['No restriction']],
   ['raw function products','xyz sin x\n=xyz sin x',['=']],
   ['raw explicit division','abcd \\div x\n=\\frac{abcd}{x}',['÷']],

@@ -17025,17 +17025,17 @@ function mxWorking(value){
   const words=value=>value.replace(/\\text\s*\{[^{}]*\}|\\[A-Za-z]+|\{[^{}]*\}/g,' · ').replace(new RegExp('\\b(?:'+TPMath.syntax.functions.join('|')+')\\b','g'),' · ');
   const language=value=>/\b(?:if|so|we|or|by|as|at|to|in|is|it|of|on)\s+(?=[A-Za-z0-9])/i.test(words(value));
   const prose=value=>/\b(?:[A-Za-z]{3,}\s+[A-Za-z]+|[A-Za-z]+\s+[A-Za-z]{3,})\b|\b[A-Za-z]{3,}[.!?:;]/i.test(words(value))||language(value);
-  const variables=new Set(),collect=node=>{if(Array.isArray(node))node.forEach(collect);else if(node&&typeof node==='object'){if(node.t==='ch'&&/^[A-Za-z]$/.test(node.v))variables.add(node.v);else Object.values(node).forEach(collect);}};
+  const variables=new Set(),collect=(node,target=variables)=>{if(Array.isArray(node))node.forEach(child=>collect(child,target));else if(node&&typeof node==='object'){if(node.t==='ch'&&/^[A-Za-z]$/.test(node.v))target.add(node.v);else Object.values(node).forEach(child=>collect(child,target));}};
   const operatorContext=node=>Array.isArray(node)?node.some(operatorContext):!!node&&typeof node==='object'&&(node.t==='ch'?/[+−×÷·*/]/.test(node.v):['frac','sqrt','nroot','fn','sup','sub','large','lim','matrix','acc'].includes(node.t)||Object.values(node).some(operatorContext));
-  const parsedRows=lines.map((line,index)=>{const raw=strip(line.trim());if(raw.includes('$')||MathDisplay.diagnoseMath(raw,TPMath.syntax).length)return null;const tree=TPMath.tree(raw),body=tree[0]?.t==='ch'&&tree[0].v==='='?tree.slice(1):tree;
-    // A simple variable product supplies the same context when regrouped or
-    // reordered. Read existing tree nodes; this is not another syntax parser.
-    const product=body.length&&body.every(n=>n.t==='ch'&&/^[A-Za-z]$/.test(n.v))?body.map(n=>n.v).sort().join(''):null;
-    return {index,raw,tree,source:raw.replace(/^=\s*/,''),canonical:product?'product:'+product:'canonical:'+TPMath.latex(tree).replace(/^=\s*/,'')};}).filter(Boolean);
-  // Equivalent adjacent derivation rows can establish context mutually, even
-  // when neither spaced product first survives the prose fallback. Repeated
-  // explanatory text alone is not a new mathematical representation.
-  for(const row of parsedRows)if(!prose(row.raw)||operatorContext(row.tree)&&!language(row.raw)&&!/[A-Za-z][.!?:;]/.test(row.raw)||parsedRows.some(other=>Math.abs(other.index-row.index)===1&&other.canonical===row.canonical&&other.source!==row.source&&(/^=/.test(row.raw)||/^=/.test(other.raw))))collect(row.tree);
+  const parsedRows=lines.map((line,index)=>{const raw=strip(line.trim());if(raw.includes('$')||MathDisplay.diagnoseMath(raw,TPMath.syntax).length)return null;const tree=TPMath.tree(raw),identifiers=new Set();collect(tree,identifiers);
+    return {index,raw,tree,source:raw.replace(/^=\s*/,'').replace(/\s+/g,' '),context:[...identifiers].sort().join('')};}).filter(Boolean);
+  // An arithmetic substring supplies only its own identifiers, never all the
+  // words of an instruction containing it. Reuse canonical validation/trees.
+  for(const row of parsedRows){if(!prose(row.raw))collect(row.tree);else for(const part of row.raw.split(/\s+/)){if(!part||MathDisplay.diagnoseMath(part,TPMath.syntax).length)continue;const tree=TPMath.tree(part);if(operatorContext(tree))collect(tree);}}
+  // Adjacent derivation rows using the same identifiers establish context
+  // mutually, independent of factor grouping/order. This is not an identity
+  // check; exact repeated explanatory text does not establish new context.
+  for(const row of parsedRows)if(row.context&&parsedRows.some(other=>Math.abs(other.index-row.index)===1&&other.context===row.context&&other.source!==row.source&&(/^=/.test(row.raw)||/^=/.test(other.raw))))collect(row.tree);
   mdScheduleAlign();return '<div class="mx-worklines" data-md-owner>'+lines.map(line=>{
     const value=line.trim(),parsed=MathDisplay.spans(value),single=parsed.spans.length===1&&value==='$'+parsed.spans[0].math+'$';
     // A later continuation does not turn explanatory text into math-only source.
