@@ -8,14 +8,16 @@ function geoG03Text(value){
   const maths=[];let masked='',at=0;
   for(let i=0;i<dollars.length-1;i++){
     const open=dollars[i],close=dollars[i+1],raw=source.slice(open+1,close),trimmed=raw.trim();
-    const number=/^[+-]?\d[\d.,]*$/.test(trimmed);
+    const unmarked=raw.replace(/\*\*|==|\[\[|\]\]/g,''),numericStart=/^\s*[+-]?\d/.test(unmarked);
+    const number=/^[+-]?\d[\d.,]*$/.test(unmarked.trim());
     // A money amount followed by ordinary words is prose, not implicit multiplication.
     // Authors can use an explicit operator for an otherwise ambiguous numeric product.
-    const words=/^\s*[+-]?\d[\d.,]*\s+([A-Za-z]{2,})\b/.exec(raw);
-    const moneyBoundary=/^\s*[+-]?\d/.test(raw)&&/\d/.test(source[close+1]||'');
-    const numericSpace=number&&raw!==trimmed;
+    const words=/^\s*[+-]?\d[\d.,]*\s+([A-Za-z]{2,})\b/.exec(unmarked);
+    const moneyBoundary=numericStart&&/\d/.test(source[close+1]||'');
+    const numericSpace=number&&unmarked!==unmarked.trim();
+    const richBoundary=numericStart&&((raw.match(/\*\*/g)||[]).length%2||(raw.match(/==/g)||[]).length%2||(raw.match(/\[\[/g)||[]).length!==(raw.match(/\]\]/g)||[]).length);
     const ordinaryWords=words&&!/^(?:sin|cos|tan|sec|csc|cot|asin|acos|atan|sinh|cosh|tanh|ln|log|exp|sqrt|abs|pi)$/.test(words[1])&&!/\\(?:times|cdot)\b/.test(raw);
-    if(!trimmed||moneyBoundary||numericSpace||ordinaryWords||MathDisplay.diagnoseMath(raw,TPMath.syntax).length)continue;
+    if(!trimmed||moneyBoundary||numericSpace||richBoundary||ordinaryWords||MathDisplay.diagnoseMath(raw,TPMath.syntax).length)continue;
     const token=prefix+maths.length+'\uE001';maths.push({token,html:tpRichMath('$'+raw+'$')});
     masked+=source.slice(at,open)+token;at=close+1;i++;
   }
