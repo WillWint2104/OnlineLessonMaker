@@ -4,7 +4,8 @@
 function geoG03Text(value){
   const source=String(value??''),dollars=[...source.matchAll(/(?<!\\)\$/g)].map(m=>m.index);
   const prose=text=>tpRich(text.replace(/\\\$/g,'$')).replace(/\^(?:\{([+-]?\d+|n)\}|([+-]?\d+|n)(?!\w|\.\d))/g,(_,braced,bare)=>`<sup>${braced||bare}</sup>`);
-  let html='',at=0;
+  let prefix='\uE000G03MATH';while(source.includes(prefix))prefix+='_';
+  const maths=[];let masked='',at=0;
   for(let i=0;i<dollars.length-1;i++){
     const open=dollars[i],close=dollars[i+1],raw=source.slice(open+1,close),trimmed=raw.trim();
     const number=/^[+-]?\d[\d.,]*$/.test(trimmed);
@@ -15,9 +16,12 @@ function geoG03Text(value){
     const numericSpace=number&&raw!==trimmed;
     const ordinaryWords=words&&!/^(?:sin|cos|tan|sec|csc|cot|asin|acos|atan|sinh|cosh|tanh|ln|log|exp|sqrt|abs|pi)$/.test(words[1])&&!/\\(?:times|cdot)\b/.test(raw);
     if(!trimmed||moneyBoundary||numericSpace||ordinaryWords||MathDisplay.diagnoseMath(raw,TPMath.syntax).length)continue;
-    html+=prose(source.slice(at,open))+tpRichMath('$'+raw+'$');at=close+1;i++;
+    const token=prefix+maths.length+'\uE001';maths.push({token,html:tpRichMath('$'+raw+'$')});
+    masked+=source.slice(at,open)+token;at=close+1;i++;
   }
-  return html+prose(source.slice(at));
+  let html=prose(masked+source.slice(at));
+  for(const item of maths)html=html.split(item.token).join(item.html);
+  return html;
 }
 /** Validate opt-in reading content; publication additionally requires usable teaching assets. */
 function geoG03Validate(a, publication=false){

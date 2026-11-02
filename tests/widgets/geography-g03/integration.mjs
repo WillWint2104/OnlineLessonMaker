@@ -96,11 +96,71 @@ try{
     {text:'Costs $100 per km^2 and $200 per km^2.',math:0,powers:['2','2'],contains:'$100 per km'},
     {text:'$\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}$',math:1},
     {text:'$\\int_0^1 x\\,dx$',math:1},
-    {text:'$2\\times abc$',math:1}
+    {text:'$2\\times abc{text:'**The share is $x$**',math:1,boldMath:1},
+    {text:'==The share is $x$==',math:1,highlightMath:1},
+    {text:'[[The share is $\\frac{40}{100}$]]',math:1,noteMath:1},
+    {text:'**One $x$** and **two $y$**',math:2,boldMath:2},
+    {text:'**Cost $100 and ratio $\\frac{40}{100}$**',math:1,boldMath:1,contains:'$100'},
+    {text:'\uE000G03MATH0\uE001 $x$',math:1,contains:'\uE000G03MATH0\uE001'}
   ];
   for(const sample of textCases){
-    const result=await p.evaluate(text=>{const e=document.createElement('div');e.innerHTML=geoG03Text(text);return {text:e.textContent,math:e.querySelectorAll('math').length,fractions:e.querySelectorAll('mfrac').length,powers:[...e.querySelectorAll('sup')].map(s=>s.textContent),unsafe:e.querySelectorAll('script,img').length};},sample.text);
-    check(result.math===sample.math&&(!sample.contains||result.text.includes(sample.contains))&&(sample.fractions==null||result.fractions===sample.fractions)&&(!sample.powers||JSON.stringify(result.powers)===JSON.stringify(sample.powers))&&!result.unsafe,'Actual prose/math renderer case: '+sample.text);
+    const result=await p.evaluate(text=>{const e=document.createElement('div');e.innerHTML=geoG03Text(text);return {text:e.textContent,math:e.querySelectorAll('math').length,fractions:e.querySelectorAll('mfrac').length,powers:[...e.querySelectorAll('sup')].map(s=>s.textContent),boldMath:e.querySelectorAll('b math').length,highlightMath:e.querySelectorAll('.tp-hl math').length,noteMath:e.querySelectorAll('.tp-noteclause math').length,unsafe:e.querySelectorAll('script,img').length};},sample.text);
+    check(result.math===sample.math&&(!sample.contains||result.text.includes(sample.contains))&&(sample.fractions==null||result.fractions===sample.fractions)&&(!sample.powers||JSON.stringify(result.powers)===JSON.stringify(sample.powers))&&['boldMath','highlightMath','noteMath'].every(k=>sample[k]==null||result[k]===sample[k])&&!result.unsafe,'Actual prose/math renderer case: '+sample.text);
+  }
+  check((await p.locator('[data-mx-example="g03-shared-example"]').innerText()).includes('Divide the urban count'),'Shared worked example accepted by inspector remains visible');
+  check(await p.locator('iframe[title="G03 existing video fixture"]').count()===1,'Shared activity video accepted by inspector remains visible');
+  const publicationIssue=await p.evaluate(()=>{try{lpValidatePublication(LESSON);return '';}catch(e){return e.message;}});
+  check(!publicationIssue,'Shared-content prose fixture passes publication preflight: '+publicationIssue);
+  const sharedDownload=p.waitForEvent('download');await p.locator('[data-mx-mode="export"]').click();
+  const sharedFile=path.join(out,'shared-content.html');await(await sharedDownload).saveAs(sharedFile);
+  const sharedContext=await browser.newContext({offline:true}),sharedPage=await sharedContext.newPage();setup(sharedPage);
+  try{
+    await sharedPage.goto(pathToFileURL(sharedFile).href);await sharedPage.evaluate(()=>lpNavigate(0,LESSON.slides[0].activities[0].id));
+    check(await sharedPage.locator('.geo-g03-explanation sup').count()===4&&await sharedPage.locator('.geo-g03-explanation mfrac').count()===1,'Complete exponents and delimited fractions survive actual standalone export/reopen');
+    check((await sharedPage.locator('.geo-g03-explanation').innerText()).includes('15/11. Costs rise from $100 to $200.'),'Standalone export preserves explanation dates and currency');
+    check(await sharedPage.locator('[data-mx-example="g03-shared-example"]').count()===1&&await sharedPage.locator('iframe[title="G03 existing video fixture"]').count()===1,'Standalone G03 retains authored shared example and video embed');
+    check(await sharedPage.evaluate(()=>LESSON.slides[0].activities[0].workedExamples[0].examples[0].id)==='g03-shared-example','Shared rendering preserves authored example identity');
+    report.exports.push({file:'integration/shared-content.html',sha256:hash(fs.readFileSync(sharedFile)),scope:'Shared notation/example/video regression; embed presence only, no video-playback certification.'});
+  }finally{await sharedContext.close();}
+  // Export actual optional-question lessons. End answers stay embedded by explicit user policy;
+  // hidden/teacher-withheld answers must be absent, including from the document source.
+  for(const policy of ['hidden','teacher','end','autonomous']){
+    const lesson=structuredClone(optional);lesson.meta.answerPolicy={final:policy,worked:policy,fallback:{final:'hidden',worked:'hidden'}};
+    await load(lesson);const wait=p.waitForEvent('download');await p.locator('[data-mx-mode="export"]').click();
+    const file=path.join(out,'optional-'+policy+'.html');await(await wait).saveAs(file);
+    const context=await browser.newContext({offline:true}),q=await context.newPage();setup(q);
+    try{
+      await q.goto(pathToFileURL(file).href);await q.evaluate(()=>lpNavigate(0,LESSON.slides[0].activities[0].id));
+      const data=await q.evaluate(()=>({question:LESSON.slides[0].activities[0].questions[0],allowed:['final','worked'].map(k=>lpBookAllowed(k))}));
+      const withheld=['hidden','teacher'].includes(policy),source=fs.readFileSync(file,'utf8');
+      check(!!data.question.answer===!withheld&&!!data.question.workedAnswer===!withheld,policy+' export projects optional answer fields correctly');
+      check(!source.includes('G03-TEACHER-ONLY-REVIEW'),policy+' export strips teacher note');
+      if(withheld)check(!source.includes('G03-FINAL-REVIEW-KEY')&&!source.includes('G03-WORKED-REVIEW-KEY'),policy+' withheld answers absent from actual export bytes');
+      check(data.allowed.every(x=>x===(policy==='autonomous')),policy+' learner respects initial release state');
+      await q.evaluate(()=>{LP_BOOK.completed=true;LP_STATE.end=true;renderSlide();});
+      check(await q.evaluate(()=>['final','worked'].every(k=>lpBookAllowed(k)))===!withheld,policy+' completion honours existing release policy');
+      check(await q.locator('[data-mx-mode="edit"]').count()===0,policy+' export has no author controls');
+      report.exports.push({file:'integration/'+path.basename(file),policy,sha256:hash(fs.readFileSync(file)),withheld});
+    }finally{await context.close();}
+  }
+  check(report.errors.length===0,'Zero integration page errors');report.complete=true;
+}finally{
+  await browser.close();report.headAfter=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+  if(report.errors.length||report.headAfter!==report.head){report.complete=false;process.exitCode=1;}
+  fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));
+  console.log(JSON.stringify({complete:report.complete,checks:report.checks.length,captures:report.captures.length,errors:report.errors}));
+}
+,math:1},
+    {text:'**The share is $x$**',math:1,boldMath:1},
+    {text:'==The share is $x$==',math:1,highlightMath:1},
+    {text:'[[The share is $\\frac{40}{100}$]]',math:1,noteMath:1},
+    {text:'**One $x$** and **two $y$**',math:2,boldMath:2},
+    {text:'**Cost $100 and ratio $\\frac{40}{100}$**',math:1,boldMath:1,contains:'$100'},
+    {text:'\uE000G03MATH0\uE001 $x$',math:1,contains:'\uE000G03MATH0\uE001'}
+  ];
+  for(const sample of textCases){
+    const result=await p.evaluate(text=>{const e=document.createElement('div');e.innerHTML=geoG03Text(text);return {text:e.textContent,math:e.querySelectorAll('math').length,fractions:e.querySelectorAll('mfrac').length,powers:[...e.querySelectorAll('sup')].map(s=>s.textContent),boldMath:e.querySelectorAll('b math').length,highlightMath:e.querySelectorAll('.tp-hl math').length,noteMath:e.querySelectorAll('.tp-noteclause math').length,unsafe:e.querySelectorAll('script,img').length};},sample.text);
+    check(result.math===sample.math&&(!sample.contains||result.text.includes(sample.contains))&&(sample.fractions==null||result.fractions===sample.fractions)&&(!sample.powers||JSON.stringify(result.powers)===JSON.stringify(sample.powers))&&['boldMath','highlightMath','noteMath'].every(k=>sample[k]==null||result[k]===sample[k])&&!result.unsafe,'Actual prose/math renderer case: '+sample.text);
   }
   check((await p.locator('[data-mx-example="g03-shared-example"]').innerText()).includes('Divide the urban count'),'Shared worked example accepted by inspector remains visible');
   check(await p.locator('iframe[title="G03 existing video fixture"]').count()===1,'Shared activity video accepted by inspector remains visible');
