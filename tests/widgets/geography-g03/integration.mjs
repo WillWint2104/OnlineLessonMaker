@@ -67,20 +67,25 @@ try{
   await load(plain);
   check(await p.locator('.lp-footer').evaluate(e=>getComputedStyle(e).fontFamily)===shellFont,'G03 leaves the shared navigation font unchanged');
   const shared=structuredClone(year9),activity=shared.slides[0].activities[0];
-  activity.notes=[{term:'Area in km^2',body:'Compare 2 km^2 with 3 km^2. <script>window.g03Unsafe=true</script>'}];
+  activity.notes=[{term:'Area in km^2',body:'Compare 2 km^2 with 3 km^2. The visit is on 15/11. Costs rise from $100 to $200. <script>window.g03Unsafe=true</script>'}];
+  shared.slides[0].visuals=[{id:'g03-unrelated-table',kind:'table',label:'Unrelated context',description:'An unrelated table supplies the formatting-context regression.',stub:'Group',head:['Count'],rows:[{label:'Urban',cells:['40']}]}];
   activity.workedExamples=[{id:'g03-shared-group',type:'extended',examples:[{id:'g03-shared-example',label:'Retained shared calculation',prompt:'Find the urban share when 40 of 100 residents are urban.',steps:[{id:'g03-shared-step',math:'40/100=0.4',text:'Divide the urban count by the whole population.'}],answer:'40%'}]}];
   activity.video={url:'https://www.youtube.com/watch?v=aqz-KE-bpKQ',title:'G03 existing video fixture'};
   await load(shared);
-  check(await p.locator('.geo-g03-explanation sup').count()===3,'G03 explanation headings and bodies use shared superscript formatting');
-  check(await p.locator('.geo-g03-explanation script').count()===0&&await p.evaluate(()=>!window.g03Unsafe),'Shared notation formatter still escapes authored HTML');
+  check(await p.locator('.geo-g03-explanation sup').count()===3,'G03 explanation headings and bodies retain the bare-power superscript convention');
+  check((await p.locator('.geo-g03-explanation').innerText()).includes('15/11. Costs rise from $100 to $200.'),'Explanation dates and currency remain prose even alongside shared visuals');
+  check(await p.locator('.geo-g03-explanation script').count()===0&&await p.evaluate(()=>!window.g03Unsafe),'Prose formatter escapes authored HTML');
   check((await p.locator('[data-mx-example="g03-shared-example"]').innerText()).includes('Divide the urban count'),'Shared worked example accepted by inspector remains visible');
   check(await p.locator('iframe[title="G03 existing video fixture"]').count()===1,'Shared activity video accepted by inspector remains visible');
+  const publicationIssue=await p.evaluate(()=>{try{lpValidatePublication(LESSON);return '';}catch(e){return e.message;}});
+  check(!publicationIssue,'Shared-content prose fixture passes publication preflight: '+publicationIssue);
   const sharedDownload=p.waitForEvent('download');await p.locator('[data-mx-mode="export"]').click();
   const sharedFile=path.join(out,'shared-content.html');await(await sharedDownload).saveAs(sharedFile);
   const sharedContext=await browser.newContext({offline:true}),sharedPage=await sharedContext.newPage();setup(sharedPage);
   try{
     await sharedPage.goto(pathToFileURL(sharedFile).href);await sharedPage.evaluate(()=>lpNavigate(0,LESSON.slides[0].activities[0].id));
     check(await sharedPage.locator('.geo-g03-explanation sup').count()===3,'Notation survives actual standalone export/reopen');
+    check((await sharedPage.locator('.geo-g03-explanation').innerText()).includes('15/11. Costs rise from $100 to $200.'),'Standalone export preserves explanation dates and currency');
     check(await sharedPage.locator('[data-mx-example="g03-shared-example"]').count()===1&&await sharedPage.locator('iframe[title="G03 existing video fixture"]').count()===1,'Standalone G03 retains authored shared example and video embed');
     check(await sharedPage.evaluate(()=>LESSON.slides[0].activities[0].workedExamples[0].examples[0].id)==='g03-shared-example','Shared rendering preserves authored example identity');
     report.exports.push({file:'integration/shared-content.html',sha256:hash(fs.readFileSync(sharedFile)),scope:'Shared notation/example/video regression; embed presence only, no video-playback certification.'});

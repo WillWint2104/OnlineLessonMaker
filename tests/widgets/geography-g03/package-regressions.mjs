@@ -3,7 +3,7 @@ import fs from 'node:fs';import path from 'node:path';import assert from 'node:a
 import {spawnSync,execFileSync} from 'node:child_process';import {randomUUID,createHash} from 'node:crypto';
 const dir=path.resolve(process.env.G03_PACKAGE_TEST_DIR||'review-delivery/geography-g03/package-tests');
 assert.equal(fs.existsSync(dir),false,'Use a fresh package-test output directory');fs.mkdirSync(dir,{recursive:true});
-const player=path.resolve(process.env.PLAYER_REVIEW_DIR),report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),cases:[]};
+const player=path.resolve(process.env.PLAYER_REVIEW_DIR||'review-delivery/geography-g03/regression'),report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),cases:[]};
 const validResults=JSON.parse(fs.readFileSync(player+'/logs/results.json')),validInfo=JSON.parse(fs.readFileSync(player+'/logs/run-info.json'));
 const invoke=(evidence,out)=>spawnSync(process.execPath,['tests/widgets/geography-g03/package.mjs'],{encoding:'utf8',env:{...process.env,PLAYER_REVIEW_DIR:evidence,G03_PACKAGE:out}});
 for(const kind of ['missing','empty','omitted','failed']){

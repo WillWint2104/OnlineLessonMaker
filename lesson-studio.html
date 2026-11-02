@@ -19310,6 +19310,8 @@ function mxVideoRegion(v,label){
 /* GEOGRAPHY_G03_JS_START */
 /* G03 is a stateless reading composition inside the shared skill/activity player.
    The host owns title, introduction, navigation, questions, response identity and lifecycle. */
+/** Format explanatory prose safely, retaining dates/currency and the existing bare-power convention. */
+function geoG03Text(value){return tpRich(String(value??'')).replace(/\^([0-9n])/g,'<sup>$1</sup>');}
 /** Validate opt-in reading content; publication additionally requires usable teaching assets. */
 function geoG03Validate(a, publication=false){
   if(a.layout!=='geography-notes')return;
@@ -19335,7 +19337,7 @@ function geoG03Render(a,i){
   // The copy preserves IDs; removing the local opt-in prevents recursive G03 dispatch.
   const shared=a.video||a.workedExamples?.length||a.examples?.length
     ?mxSkillPage({...a,layout:undefined,notes:[],questions:[]},i):'';
-  return `<div class="geo-g03" data-g03-version="1"><section class="geo-g03-explanation" aria-label="Concept explanation">${notes.map(n=>`<div>${n.term||n.title?`<h2>${mxM(n.term||n.title)}</h2>`:''}<p>${mxM(n.body||'')}</p>${n.source?`<p class="geo-g03-source">${esc(n.source)}</p>`:''}</div>`).join('')}</section>
+  return `<div class="geo-g03" data-g03-version="1"><section class="geo-g03-explanation" aria-label="Concept explanation">${notes.map(n=>`<div>${n.term||n.title?`<h2>${geoG03Text(n.term||n.title)}</h2>`:''}<p>${geoG03Text(n.body||'')}</p>${n.source?`<p class="geo-g03-source">${esc(n.source)}</p>`:''}</div>`).join('')}</section>
     ${visual}<section class="geo-g03-notes" aria-label="Key notes to record"><h2>Key notes to record</h2>${keys.length?`<ol>${keys.map(n=>`<li>${esc(n)}</li>`).join('')}</ol>`:'<p>No key notes authored yet.</p>'}</section>${shared}${questions}</div>`;
 }
 /** Return inspector fields bound to the existing activity object and shared list editor. */
