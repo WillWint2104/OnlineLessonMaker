@@ -1,7 +1,24 @@
 /* G03 is a stateless reading composition inside the shared skill/activity player.
    The host owns title, introduction, navigation, questions, response identity and lifecycle. */
-/** Format explanatory prose safely, retaining dates/currency and the existing bare-power convention. */
-function geoG03Text(value){return tpRich(String(value??'')).replace(/\^([0-9n])/g,'<sup>$1</sup>');}
+/** Keep prose/currency literal; route unambiguous authored maths to the existing renderer. */
+function geoG03Text(value){
+  const source=String(value??''),dollars=[...source.matchAll(/(?<!\\)\$/g)].map(m=>m.index);
+  const prose=text=>tpRich(text.replace(/\\\$/g,'$')).replace(/\^(?:\{([+-]?\d+|n)\}|([+-]?\d+|n)(?!\w|\.\d))/g,(_,braced,bare)=>`<sup>${braced||bare}</sup>`);
+  let html='',at=0;
+  for(let i=0;i<dollars.length-1;i++){
+    const open=dollars[i],close=dollars[i+1],raw=source.slice(open+1,close),trimmed=raw.trim();
+    const number=/^[+-]?\d[\d.,]*$/.test(trimmed);
+    // A money amount followed by ordinary words is prose, not implicit multiplication.
+    // Authors can use an explicit operator for an otherwise ambiguous numeric product.
+    const words=/^\s*[+-]?\d[\d.,]*\s+([A-Za-z]{2,})\b/.exec(raw);
+    const moneyBoundary=/^\s*[+-]?\d/.test(raw)&&/\d/.test(source[close+1]||'');
+    const numericSpace=number&&raw!==trimmed;
+    const ordinaryWords=words&&!/^(?:sin|cos|tan|sec|csc|cot|asin|acos|atan|sinh|cosh|tanh|ln|log|exp|sqrt|abs|pi)$/.test(words[1])&&!/\\(?:times|cdot)\b/.test(raw);
+    if(!trimmed||moneyBoundary||numericSpace||ordinaryWords||MathDisplay.diagnoseMath(raw,TPMath.syntax).length)continue;
+    html+=prose(source.slice(at,open))+tpRichMath('$'+raw+'$');at=close+1;i++;
+  }
+  return html+prose(source.slice(at));
+}
 /** Validate opt-in reading content; publication additionally requires usable teaching assets. */
 function geoG03Validate(a, publication=false){
   if(a.layout!=='geography-notes')return;

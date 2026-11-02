@@ -3,9 +3,9 @@ import fs from 'node:fs';import path from 'node:path';import assert from 'node:a
 import {spawnSync,execFileSync} from 'node:child_process';import {randomUUID,createHash} from 'node:crypto';
 const dir=path.resolve(process.env.G03_PACKAGE_TEST_DIR||'review-delivery/geography-g03/package-tests');
 assert.equal(fs.existsSync(dir),false,'Use a fresh package-test output directory');fs.mkdirSync(dir,{recursive:true});
-const player=path.resolve(process.env.PLAYER_REVIEW_DIR||'review-delivery/geography-g03/regression'),report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),cases:[]};
+const player=path.resolve(process.env.PLAYER_REVIEW_DIR||'review-delivery/geography-g03/regression'),focused=path.resolve(process.env.G03_OUT||'review-delivery/geography-g03/current'),report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),cases:[]};
 const validResults=JSON.parse(fs.readFileSync(player+'/logs/results.json')),validInfo=JSON.parse(fs.readFileSync(player+'/logs/run-info.json'));
-const invoke=(evidence,out)=>spawnSync(process.execPath,['tests/widgets/geography-g03/package.mjs'],{encoding:'utf8',env:{...process.env,PLAYER_REVIEW_DIR:evidence,G03_PACKAGE:out}});
+const invoke=(evidence,out,extra={})=>spawnSync(process.execPath,['tests/widgets/geography-g03/package.mjs'],{encoding:'utf8',env:{...process.env,...extra,PLAYER_REVIEW_DIR:evidence,G03_PACKAGE:out}});
 for(const kind of ['missing','empty','omitted','failed']){
   const evidence=path.join(dir,'evidence-'+kind),out=path.join(dir,'must-not-exist-'+kind);
   if(kind!=='missing'){
@@ -17,6 +17,12 @@ for(const kind of ['missing','empty','omitted','failed']){
   assert.match(run.stderr,kind==='missing'?/Shared regression evidence missing/:/regression gate/i);
   report.cases.push({case:kind,expectedFailure:true,outputCreated:false,exit:run.status});
 }
+const mismatch=path.join(dir,'fixture-mismatch'),mismatchOut=path.join(dir,'must-not-exist-fixture-mismatch');
+fs.mkdirSync(mismatch+'/integration',{recursive:true});fs.copyFileSync(focused+'/results.json',mismatch+'/results.json');
+const integration=JSON.parse(fs.readFileSync(focused+'/integration/results.json'));integration.fixtureSha256='not-the-tested-fixture';
+fs.writeFileSync(mismatch+'/integration/results.json',JSON.stringify(integration));
+const rejected=invoke(player,mismatchOut,{G03_OUT:mismatch});assert.notEqual(rejected.status,0);assert.equal(fs.existsSync(mismatchOut),false);assert.match(rejected.stderr,/same exact head and fixture/);
+report.cases.push({case:'fixture-mismatch',expectedFailure:true,outputCreated:false,exit:rejected.status});
 const probe='src/geography/g03/g03-untracked-package-probe-'+randomUUID()+'.txt';
 fs.writeFileSync(probe,'This is deliberately not part of HEAD.',{flag:'wx'});
 try{

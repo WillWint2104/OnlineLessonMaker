@@ -10,7 +10,8 @@ const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),sta
 const hash=b=>createHash('sha256').update(b).digest('hex');
 if(head!==report.head||report.headAfter!==head||report.trackedStatus||status||hash(fs.readFileSync('lesson-studio.html'))!==report.appSha256)throw Error('Package requires unchanged, clean, exact-head review evidence.');
 const integration=JSON.parse(fs.readFileSync(path.join(input,'integration/results.json')));
-if(!integration.complete||integration.errors.length||integration.head!==head||integration.headAfter!==head||integration.appSha256!==report.appSha256)throw Error('G03 integration evidence must pass at the same exact head.');
+const fixtureHash=hash(execFileSync('git',['show',head+':tests/widgets/geography-g03/fixtures/year-9-urbanisation.json']));
+if(!integration.complete||integration.errors.length||integration.head!==head||integration.headAfter!==head||integration.appSha256!==report.appSha256||integration.fixtureSha256!==fixtureHash)throw Error('G03 integration evidence must pass at the same exact head and fixture.');
 const base=execFileSync('git',['merge-base','HEAD','origin/main'],{encoding:'utf8'}).trim();
 const captures=[...report.captures,...integration.captures];
 const out=path.resolve(process.env.G03_PACKAGE||'review-delivery/geography-g03/review-'+head.slice(0,7)+'-v1');

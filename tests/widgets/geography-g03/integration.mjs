@@ -11,12 +11,13 @@ const input=path.resolve(process.env.G03_OUT||'review-delivery/geography-g03/cur
 const out=path.join(input,'integration');
 fs.mkdirSync(out,{recursive:true});
 const hash=b=>createHash('sha256').update(b).digest('hex');
-const report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),appSha256:hash(fs.readFileSync('lesson-studio.html')),checks:[],captures:[],errors:[],exports:[],limits:['Local application and offline exports only; no live classroom endpoint or physical-device certification.']};
+const fixturePath='tests/widgets/geography-g03/fixtures/year-9-urbanisation.json',fixtureBytes=fs.readFileSync(fixturePath);
+const report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),appSha256:hash(fs.readFileSync('lesson-studio.html')),fixtureSha256:hash(fixtureBytes),checks:[],captures:[],errors:[],exports:[],limits:['Local application and offline exports only; no live classroom endpoint or physical-device certification.']};
 const check=(ok,label)=>{assert.ok(ok,label);report.checks.push(label);console.log('PASS '+label);};
 const browser=await chromium.launch();
 const setup=p=>{p.on('pageerror',e=>report.errors.push(e.message));p.setDefaultTimeout(15000);};
 const p=await browser.newPage({viewport:{width:1280,height:900}});setup(p);
-const year9=JSON.parse(fs.readFileSync('tests/widgets/geography-g03/fixtures/year-9-urbanisation.json'));
+const year9=JSON.parse(fixtureBytes);
 const load=async lesson=>{
   await p.goto(pathToFileURL(path.resolve('lesson-studio.html')).href);
   await p.locator('#modeSeg [data-mode="edit"]').click();await p.locator('#dataBtn').click();
@@ -67,14 +68,40 @@ try{
   await load(plain);
   check(await p.locator('.lp-footer').evaluate(e=>getComputedStyle(e).fontFamily)===shellFont,'G03 leaves the shared navigation font unchanged');
   const shared=structuredClone(year9),activity=shared.slides[0].activities[0];
-  activity.notes=[{term:'Area in km^2',body:'Compare 2 km^2 with 3 km^2. The visit is on 15/11. Costs rise from $100 to $200. <script>window.g03Unsafe=true</script>'}];
+  activity.notes=[{term:'Area in km^2',body:'Compare 2 km^2 with 3 km^2. Scale 10^12. The visit is on 15/11. Costs rise from $100 to $200. Urban share $\\frac{40}{100}$. <script>window.g03Unsafe=true</script>'}];
   shared.slides[0].visuals=[{id:'g03-unrelated-table',kind:'table',label:'Unrelated context',description:'An unrelated table supplies the formatting-context regression.',stub:'Group',head:['Count'],rows:[{label:'Urban',cells:['40']}]}];
   activity.workedExamples=[{id:'g03-shared-group',type:'extended',examples:[{id:'g03-shared-example',label:'Retained shared calculation',prompt:'Find the urban share when 40 of 100 residents are urban.',steps:[{id:'g03-shared-step',math:'40/100=0.4',text:'Divide the urban count by the whole population.'}],answer:'40%'}]}];
   activity.video={url:'https://www.youtube.com/watch?v=aqz-KE-bpKQ',title:'G03 existing video fixture'};
   await load(shared);
-  check(await p.locator('.geo-g03-explanation sup').count()===3,'G03 explanation headings and bodies retain the bare-power superscript convention');
+  check(await p.locator('.geo-g03-explanation sup').count()===4&&await p.locator('.geo-g03-explanation sup').last().innerText()==='12','G03 formats complete bare exponents without changing their meaning');
+  check(await p.locator('.geo-g03-explanation mfrac').count()===1,'Delimited fractions use the existing mathematical renderer');
   check((await p.locator('.geo-g03-explanation').innerText()).includes('15/11. Costs rise from $100 to $200.'),'Explanation dates and currency remain prose even alongside shared visuals');
   check(await p.locator('.geo-g03-explanation script').count()===0&&await p.evaluate(()=>!window.g03Unsafe),'Prose formatter escapes authored HTML');
+  const textCases=[
+    {text:'On 15/11 costs range from $100 to $200.',math:0,contains:'$100 to $200'},
+    {text:'Cost $100 and ratio $\\frac{40}{100}$.',math:1,fractions:1,contains:'$100'},
+    {text:'$100 $x^2$',math:1,contains:'$100'},
+    {text:'Cost $200. $x^2$',math:1,contains:'$200.'},
+    {text:'$x^2$ and $\\frac{40}{100}$',math:2,fractions:1},
+    {text:'10^12 and 10^{12} and 10^-12 and 10^n',math:0,powers:['12','12','-12','n']},
+    {text:'10^1.5 and 10^12abc',math:0,powers:[],contains:'10^1.5 and 10^12abc'},
+    {text:'<script>alert(1)</script> $x$',math:1,contains:'<script>'},
+    {text:'\\$100 plus $x$',math:1,contains:'$100'},
+    {text:'$2 sin(x)$',math:1},
+    {text:'$abc def$',math:1},
+    {text:'$\\unknown{1}$',math:0,contains:'\\unknown'},
+    {text:'$40$ people',math:1},
+    {text:'$100$200',math:0,contains:'$100$200'},
+    {text:'Urban share $40/100$ with a cost of $100 to $200.',math:1,contains:'$100 to $200'},
+    {text:'Costs $100 per km^2 and $200 per km^2.',math:0,powers:['2','2'],contains:'$100 per km'},
+    {text:'$\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}$',math:1},
+    {text:'$\\int_0^1 x\\,dx$',math:1},
+    {text:'$2\\times abc$',math:1}
+  ];
+  for(const sample of textCases){
+    const result=await p.evaluate(text=>{const e=document.createElement('div');e.innerHTML=geoG03Text(text);return {text:e.textContent,math:e.querySelectorAll('math').length,fractions:e.querySelectorAll('mfrac').length,powers:[...e.querySelectorAll('sup')].map(s=>s.textContent),unsafe:e.querySelectorAll('script,img').length};},sample.text);
+    check(result.math===sample.math&&(!sample.contains||result.text.includes(sample.contains))&&(sample.fractions==null||result.fractions===sample.fractions)&&(!sample.powers||JSON.stringify(result.powers)===JSON.stringify(sample.powers))&&!result.unsafe,'Actual prose/math renderer case: '+sample.text);
+  }
   check((await p.locator('[data-mx-example="g03-shared-example"]').innerText()).includes('Divide the urban count'),'Shared worked example accepted by inspector remains visible');
   check(await p.locator('iframe[title="G03 existing video fixture"]').count()===1,'Shared activity video accepted by inspector remains visible');
   const publicationIssue=await p.evaluate(()=>{try{lpValidatePublication(LESSON);return '';}catch(e){return e.message;}});
@@ -84,7 +111,7 @@ try{
   const sharedContext=await browser.newContext({offline:true}),sharedPage=await sharedContext.newPage();setup(sharedPage);
   try{
     await sharedPage.goto(pathToFileURL(sharedFile).href);await sharedPage.evaluate(()=>lpNavigate(0,LESSON.slides[0].activities[0].id));
-    check(await sharedPage.locator('.geo-g03-explanation sup').count()===3,'Notation survives actual standalone export/reopen');
+    check(await sharedPage.locator('.geo-g03-explanation sup').count()===4&&await sharedPage.locator('.geo-g03-explanation mfrac').count()===1,'Complete exponents and delimited fractions survive actual standalone export/reopen');
     check((await sharedPage.locator('.geo-g03-explanation').innerText()).includes('15/11. Costs rise from $100 to $200.'),'Standalone export preserves explanation dates and currency');
     check(await sharedPage.locator('[data-mx-example="g03-shared-example"]').count()===1&&await sharedPage.locator('iframe[title="G03 existing video fixture"]').count()===1,'Standalone G03 retains authored shared example and video embed');
     check(await sharedPage.evaluate(()=>LESSON.slides[0].activities[0].workedExamples[0].examples[0].id)==='g03-shared-example','Shared rendering preserves authored example identity');
