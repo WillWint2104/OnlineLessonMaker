@@ -23,6 +23,30 @@ const integration=JSON.parse(fs.readFileSync(focused+'/integration/results.json'
 fs.writeFileSync(mismatch+'/integration/results.json',JSON.stringify(integration));
 const rejected=invoke(player,mismatchOut,{G03_OUT:mismatch});assert.notEqual(rejected.status,0);assert.equal(fs.existsSync(mismatchOut),false);assert.match(rejected.stderr,/same exact head and fixture/);
 report.cases.push({case:'fixture-mismatch',expectedFailure:true,outputCreated:false,exit:rejected.status});
+for(const kind of ['incomplete-focused','focused-errors','integration-errors','empty-captures','missing-capture','outside-capture','directory-capture','absolute-capture']){
+  const evidence=path.join(dir,kind),out=path.join(dir,'must-not-exist-'+kind);
+  fs.mkdirSync(evidence+'/integration',{recursive:true});
+  const focus=JSON.parse(fs.readFileSync(focused+'/results.json')),extra=JSON.parse(fs.readFileSync(focused+'/integration/results.json'));
+  if(kind==='incomplete-focused')focus.complete=false;
+  if(kind==='focused-errors')focus.errors=['Deliberate page error'];
+  if(kind==='integration-errors')extra.errors=['Deliberate page error'];
+  if(kind==='empty-captures'){focus.captures=[];extra.captures=[];}
+  if(kind==='missing-capture'){focus.captures=['missing.png'];extra.captures=[];}
+  if(kind==='outside-capture'){focus.captures=[path.relative(evidence,path.join(focused,'results.json'))];extra.captures=[];}
+  if(kind==='directory-capture'){focus.captures=['integration'];extra.captures=[];}
+  if(kind==='absolute-capture'){focus.captures=[path.join(focused,'results.json')];extra.captures=[];}
+  fs.writeFileSync(evidence+'/results.json',JSON.stringify(focus));fs.writeFileSync(evidence+'/integration/results.json',JSON.stringify(extra));
+  const run=invoke(player,out,{G03_OUT:evidence});assert.notEqual(run.status,0);assert.equal(fs.existsSync(out),false);
+  assert.match(run.stderr,kind.startsWith('focused-')||kind==='incomplete-focused'?/completed, error-free/:kind==='integration-errors'?/integration evidence/:/capture evidence/);
+  report.cases.push({case:kind,expectedFailure:true,outputCreated:false,exit:run.status});
+}
+for(const [script,evidence]of [['verify',focused],['integration',focused]]){
+  const before=fs.readFileSync(path.join(evidence,script==='verify'?'results.json':'integration/results.json'));
+  const run=spawnSync(process.execPath,['tests/widgets/geography-g03/'+script+'.mjs'],{encoding:'utf8',env:{...process.env,G03_OUT:evidence}});
+  assert.notEqual(run.status,0);assert.match(run.stderr,/previous review evidence is preserved/);
+  assert.deepEqual(fs.readFileSync(path.join(evidence,script==='verify'?'results.json':'integration/results.json')),before);
+  report.cases.push({case:script+'-preserves-existing-output',passed:true});
+}
 const probe='src/geography/g03/g03-untracked-package-probe-'+randomUUID()+'.txt';
 fs.writeFileSync(probe,'This is deliberately not part of HEAD.',{flag:'wx'});
 try{

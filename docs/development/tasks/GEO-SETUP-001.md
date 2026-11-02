@@ -1,6 +1,6 @@
 # GEO-SETUP-001 — Controlled Geography Stage A setup
 
-Integration planning authorised by the user on 23 October 2026. Priority P1; Stage D, STAGED-REVIEW. Governance proposal awaits approval. No research activation, learner implementation, merge or deployment.
+Integration planning authorised by the user on 23 October 2026. Priority P1; GEO-SETUP-001 is MERGED. The separate GEOGRAPHY-STAGE-A launch remains gated. This setup grants no research activation, learner implementation, further merge or deployment.
 
 - Production need: six-week Year 9 Changing Places and Year 10 Human Wellbeing redesign (provisional 15/18 periods), reusable capabilities and two pilot candidates.
 - Dependency: verified FOUND-001 merge (#171), separate from launch authority.
@@ -8,7 +8,7 @@ Integration planning authorised by the user on 23 October 2026. Priority P1; Sta
 - Deliverables: inactive cards, exclusive research boundaries, launch gate, historical reconciliation, validator guards and coordination receipt.
 - Acceptance: no launch manufactured; History cards unchanged; Mathematics/artwork checkouts preserved; capacity conflict recorded; Stage B separately gated.
 - Tests: validator/self-tests, repository validate, baseline-to-head ownership diff and runtime byte identity. No runtime rebuild for planning alone.
-- Stop: human governance approval. A separate post-merge launch and refreshed capacity decision are required.
+- Stop: separate human GEOGRAPHY-STAGE-A launch approval and a refreshed capacity decision. The setup merge does not grant launch authority.
 - Exact branch/worktree/base/owner in backlog; draft PR/head/review status in delivery report.
 - Integration exception: coordination and validator only; Widget Contract V1 unchanged.
 

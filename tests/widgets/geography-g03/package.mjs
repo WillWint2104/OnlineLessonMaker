@@ -8,12 +8,18 @@ const root=process.cwd(),input=path.resolve(process.env.G03_OUT||'review-deliver
 const report=JSON.parse(fs.readFileSync(path.join(input,'results.json')));
 const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),status=execFileSync('git',['status','--porcelain','-uno'],{encoding:'utf8'}).trim();
 const hash=b=>createHash('sha256').update(b).digest('hex');
-if(head!==report.head||report.headAfter!==head||report.trackedStatus||status||hash(fs.readFileSync('lesson-studio.html'))!==report.appSha256)throw Error('Package requires unchanged, clean, exact-head review evidence.');
+if(!report.complete||!Array.isArray(report.errors)||report.errors.length||head!==report.head||report.headAfter!==head||report.trackedStatus||status||hash(fs.readFileSync('lesson-studio.html'))!==report.appSha256)throw Error('Package requires completed, error-free, unchanged, clean, exact-head review evidence.');
 const integration=JSON.parse(fs.readFileSync(path.join(input,'integration/results.json')));
 const fixtureHash=hash(execFileSync('git',['show',head+':tests/widgets/geography-g03/fixtures/year-9-urbanisation.json']));
-if(!integration.complete||integration.errors.length||integration.head!==head||integration.headAfter!==head||integration.appSha256!==report.appSha256||integration.fixtureSha256!==fixtureHash)throw Error('G03 integration evidence must pass at the same exact head and fixture.');
+if(!integration.complete||!Array.isArray(integration.errors)||integration.errors.length||integration.head!==head||integration.headAfter!==head||integration.appSha256!==report.appSha256||integration.fixtureSha256!==fixtureHash)throw Error('G03 integration evidence must pass at the same exact head and fixture.');
 const base=execFileSync('git',['merge-base','HEAD','origin/main'],{encoding:'utf8'}).trim();
-const captures=[...report.captures,...integration.captures];
+if(!Array.isArray(report.captures)||!Array.isArray(integration.captures))throw Error('G03 capture evidence is missing or invalid.');
+const captures=[...report.captures,...integration.captures],captureRoot=fs.realpathSync(input);
+if(!captures.length||captures.some(file=>{
+  if(typeof file!=='string'||!file||path.isAbsolute(file)||!fs.existsSync(path.resolve(input,file)))return true;
+  const target=fs.realpathSync(path.resolve(input,file)),relative=path.relative(captureRoot,target);
+  return !relative||relative==='..'||relative.startsWith('..'+path.sep)||path.isAbsolute(relative)||!fs.statSync(target).isFile();
+}))throw Error('G03 capture evidence is missing or invalid.');
 const out=path.resolve(process.env.G03_PACKAGE||'review-delivery/geography-g03/review-'+head.slice(0,7)+'-v1');
 if(fs.existsSync(out))throw Error('Choose a fresh version; existing evidence is preserved.');
 const results=path.resolve(process.env.PLAYER_REVIEW_DIR||'review-delivery/geography-g03/regression');

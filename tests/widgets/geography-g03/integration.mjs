@@ -9,10 +9,12 @@ import {chromium} from 'playwright';
 
 const input=path.resolve(process.env.G03_OUT||'review-delivery/geography-g03/current');
 const out=path.join(input,'integration');
+assert.equal(fs.existsSync(out),false,'Use a fresh integration output; previous review evidence is preserved.');
 fs.mkdirSync(out,{recursive:true});
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const fixturePath='tests/widgets/geography-g03/fixtures/year-9-urbanisation.json',fixtureBytes=fs.readFileSync(fixturePath);
-const report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),appSha256:hash(fs.readFileSync('lesson-studio.html')),fixtureSha256:hash(fixtureBytes),checks:[],captures:[],errors:[],exports:[],limits:['Local application and offline exports only; no live classroom endpoint or physical-device certification.']};
+const report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),appSha256:hash(fs.readFileSync('lesson-studio.html')),fixtureSha256:hash(fixtureBytes),checks:[],captures:[],errors:[],exports:[],complete:false,limits:['Local application and offline exports only; no live classroom endpoint or physical-device certification.']};
+fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));
 const check=(ok,label)=>{assert.ok(ok,label);report.checks.push(label);console.log('PASS '+label);};
 const browser=await chromium.launch();
 const setup=p=>{p.on('pageerror',e=>report.errors.push(e.message));p.setDefaultTimeout(15000);};

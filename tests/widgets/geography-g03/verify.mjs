@@ -8,8 +8,10 @@ import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 import {chromium} from 'playwright';
 const root=process.cwd(),out=path.resolve(process.env.G03_OUT||'review-delivery/geography-g03/current');
+assert.equal(fs.existsSync(out),false,'Use a fresh G03_OUT; previous review evidence is preserved.');
 fs.mkdirSync(out,{recursive:true});
-const report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),appSha256:createHash('sha256').update(fs.readFileSync('lesson-studio.html')).digest('hex'),trackedStatus:execFileSync('git',['status','--porcelain','-uno'],{encoding:'utf8'}).trim(),checks:[],captures:[],errors:[],zoom:[]};
+const report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),appSha256:createHash('sha256').update(fs.readFileSync('lesson-studio.html')).digest('hex'),trackedStatus:execFileSync('git',['status','--porcelain','-uno'],{encoding:'utf8'}).trim(),checks:[],captures:[],errors:[],zoom:[],complete:false};
+fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));
 const check=(c,name)=>{assert.ok(c,name);report.checks.push(name);console.log('PASS '+name);};
 const server=http.createServer((req,res)=>{const f=path.resolve(root,'.'+decodeURIComponent(req.url.split('?')[0]));if(!f.startsWith(root+path.sep)||!fs.existsSync(f)||fs.statSync(f).isDirectory()){res.writeHead(404);res.end();return;}res.setHeader('Content-Type',f.endsWith('.html')?'text/html':f.endsWith('.woff2')?'font/woff2':'application/octet-stream');res.end(fs.readFileSync(f));});
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
@@ -80,6 +82,7 @@ try{
  check(report.errors.length===0,'Zero browser page errors');
  report.headAfter=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
  check(report.headAfter===report.head,'Source commit unchanged during review');
+ report.complete=true;
  fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));
  console.log('G03 complete: '+report.checks.length+' checks, '+report.captures.length+' screenshots.');
 }finally{await browser.close();await new Promise(r=>server.close(r));}

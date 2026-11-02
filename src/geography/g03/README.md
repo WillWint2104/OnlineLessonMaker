@@ -35,3 +35,5 @@ Packaging reads the established full-player gate identities and additionally req
 The directly read Year 9 fixture is hashed from the same buffer that is parsed. Packaging checks that hash against the fixture blob at the tested head and rejects a mismatch before creating output. The real packaging regression includes this mismatch case.
 
 No new G06, presentation consumer, map engine, general registry or theme-token framework is included.
+
+Both verifiers require fresh output directories and preserve earlier review evidence. Reports start incomplete and only become complete after successful checks. Packaging rejects incomplete/error-bearing reports and empty, missing, absolute, directory or out-of-root capture paths before creating output; capture containment uses resolved filesystem paths.
