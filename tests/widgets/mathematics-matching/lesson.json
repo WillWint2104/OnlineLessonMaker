@@ -1,0 +1,658 @@
+{
+  "meta": {
+    "id": "c4b-mathematics-matching-review",
+    "title": "Matching mathematical relationships",
+    "subject": "Mathematics",
+    "context": "C4B private verification fixture; no lesson publication authorised.",
+    "theme": "neutral",
+    "player": "activities",
+    "responseMode": "paper",
+    "practiceLayout": "textbook",
+    "answerPolicy": {
+      "final": "autonomous",
+      "worked": "autonomous"
+    },
+    "completion": {
+      "description": "Audit fixture only. No publication approval."
+    }
+  },
+  "slides": [
+    {
+      "id": "skill-mathematical-choice",
+      "type": "skill",
+      "title": "Match and explain",
+      "practiceComposition": "micro",
+      "activities": [
+        {
+          "id": "example-choice",
+          "title": "Representative worked example",
+          "workedExamples": [
+            {
+              "id": "group-equations",
+              "type": "sequence",
+              "examples": [
+                {
+                  "id": "method-choice",
+                  "label": "Worked example",
+                  "tabLabel": "Match and explain",
+                  "prompt": "Use the distributive law to match $2(x+3)$ to $2x+6$.",
+                  "solutionLayout": "paired-table",
+                  "steps": [
+                    {
+                      "id": "match-example-1",
+                      "math": "$2(x+3)=2x+2\\times3$",
+                      "text": "Multiply each term by 2."
+                    },
+                    {
+                      "id": "match-example-2",
+                      "math": "$2x+2\\times3=2x+6$",
+                      "text": "The two expressions are equivalent."
+                    }
+                  ],
+                  "answer": "$2(x+3)=2x+6$.",
+                  "practice": {
+                    "instructions": "Match each item to a labelled target. You can change or clear matches. Use your book or the workbook to explain your reasoning; compare in the Answer Hub when released."
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "practice-choice",
+          "title": "Mathematical matching",
+          "practiceCollectionId": "collection-choice",
+          "questions": [
+            {
+              "id": "match-equations",
+              "archetypeId": "method-choice",
+              "level": "basic",
+              "stem": "Match each equation to its solution.",
+              "presentation": "extended",
+              "matching": {
+                "sources": [
+                  {
+                    "id": "match-equations-source-1",
+                    "label": "1",
+                    "text": "$3x-2=10$"
+                  },
+                  {
+                    "id": "match-equations-source-2",
+                    "label": "2",
+                    "text": "$2x+3=9$"
+                  },
+                  {
+                    "id": "match-equations-source-3",
+                    "label": "3",
+                    "text": "$\\frac{x}{2}+1=4$"
+                  }
+                ],
+                "targets": [
+                  {
+                    "id": "match-equations-target-1",
+                    "label": "A",
+                    "text": "$x=3$"
+                  },
+                  {
+                    "id": "match-equations-target-2",
+                    "label": "B",
+                    "text": "$x=6$"
+                  },
+                  {
+                    "id": "match-equations-target-3",
+                    "label": "C",
+                    "text": "$x=4$"
+                  },
+                  {
+                    "id": "match-equations-target-4",
+                    "label": "D",
+                    "text": "$x=2$"
+                  }
+                ]
+              },
+              "matchingAnswer": {
+                "pairs": [
+                  {
+                    "sourceId": "match-equations-source-1",
+                    "targetId": "match-equations-target-3"
+                  },
+                  {
+                    "sourceId": "match-equations-source-2",
+                    "targetId": "match-equations-target-1"
+                  },
+                  {
+                    "sourceId": "match-equations-source-3",
+                    "targetId": "match-equations-target-2"
+                  }
+                ]
+              },
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "match-equations-step-0",
+                    "math": "3x=12\\Rightarrow x=4",
+                    "text": "Add 2 and divide by 3."
+                  },
+                  {
+                    "id": "match-equations-step-1",
+                    "math": "2x=6\\Rightarrow x=3",
+                    "text": "Subtract 3 and divide by 2."
+                  },
+                  {
+                    "id": "match-equations-step-2",
+                    "math": "\\frac{x}{2}=3\\Rightarrow x=6",
+                    "text": "Subtract 1 and multiply by 2."
+                  }
+                ]
+              },
+              "releaseGroup": "foundation-a",
+              "extensions": {
+                "reviewCategory": "retain-compatible-field"
+              }
+            },
+            {
+              "id": "match-calculations",
+              "archetypeId": "method-choice",
+              "level": "basic",
+              "stem": "Match each calculation to its result.",
+              "presentation": "extended",
+              "matching": {
+                "sources": [
+                  {
+                    "id": "match-calculations-source-1",
+                    "label": "1",
+                    "text": "$\\frac12+\\frac13$"
+                  },
+                  {
+                    "id": "match-calculations-source-2",
+                    "label": "2",
+                    "text": "$\\sqrt{49}$"
+                  },
+                  {
+                    "id": "match-calculations-source-3",
+                    "label": "3",
+                    "text": "$2^3$"
+                  }
+                ],
+                "targets": [
+                  {
+                    "id": "match-calculations-target-1",
+                    "label": "A",
+                    "text": "$\\frac56$"
+                  },
+                  {
+                    "id": "match-calculations-target-2",
+                    "label": "B",
+                    "text": "$8$"
+                  },
+                  {
+                    "id": "match-calculations-target-3",
+                    "label": "C",
+                    "text": "$7$"
+                  },
+                  {
+                    "id": "match-calculations-target-4",
+                    "label": "D",
+                    "text": "$6$"
+                  }
+                ]
+              },
+              "matchingAnswer": {
+                "pairs": [
+                  {
+                    "sourceId": "match-calculations-source-1",
+                    "targetId": "match-calculations-target-1"
+                  },
+                  {
+                    "sourceId": "match-calculations-source-2",
+                    "targetId": "match-calculations-target-3"
+                  },
+                  {
+                    "sourceId": "match-calculations-source-3",
+                    "targetId": "match-calculations-target-2"
+                  }
+                ]
+              },
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "match-calculations-step-0",
+                    "math": "\\frac12+\\frac13=\\frac36+\\frac26=\\frac56",
+                    "text": "Use a common denominator."
+                  },
+                  {
+                    "id": "match-calculations-step-1",
+                    "math": "7^2=49",
+                    "text": "The positive square root is 7."
+                  },
+                  {
+                    "id": "match-calculations-step-2",
+                    "math": "2^3=2\\times2\\times2=8",
+                    "text": "Multiply three factors of 2."
+                  }
+                ]
+              },
+              "releaseGroup": "foundation-a",
+              "extensions": {
+                "reviewCategory": "retain-compatible-field"
+              }
+            },
+            {
+              "id": "match-terms",
+              "archetypeId": "method-choice",
+              "level": "basic",
+              "stem": "Match each term to its definition.",
+              "presentation": "extended",
+              "matching": {
+                "sources": [
+                  {
+                    "id": "match-terms-source-1",
+                    "label": "1",
+                    "text": "Coefficient"
+                  },
+                  {
+                    "id": "match-terms-source-2",
+                    "label": "2",
+                    "text": "Exponent"
+                  },
+                  {
+                    "id": "match-terms-source-3",
+                    "label": "3",
+                    "text": "Constant term"
+                  }
+                ],
+                "targets": [
+                  {
+                    "id": "match-terms-target-1",
+                    "label": "A",
+                    "text": "A term with no variable"
+                  },
+                  {
+                    "id": "match-terms-target-2",
+                    "label": "B",
+                    "text": "The numerical multiplier of a variable"
+                  },
+                  {
+                    "id": "match-terms-target-3",
+                    "label": "C",
+                    "text": "The power applied to a base"
+                  }
+                ]
+              },
+              "matchingAnswer": {
+                "pairs": [
+                  {
+                    "sourceId": "match-terms-source-1",
+                    "targetId": "match-terms-target-2"
+                  },
+                  {
+                    "sourceId": "match-terms-source-2",
+                    "targetId": "match-terms-target-3"
+                  },
+                  {
+                    "sourceId": "match-terms-source-3",
+                    "targetId": "match-terms-target-1"
+                  }
+                ]
+              },
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "match-terms-step-0",
+                    "text": "In 5x, the coefficient is 5."
+                  },
+                  {
+                    "id": "match-terms-step-1",
+                    "text": "In x cubed, the exponent is 3."
+                  },
+                  {
+                    "id": "match-terms-step-2",
+                    "text": "In 2x+7, the constant term is 7."
+                  }
+                ]
+              },
+              "releaseGroup": "foundation-a",
+              "extensions": {
+                "reviewCategory": "retain-compatible-field"
+              }
+            },
+            {
+              "id": "match-expressions",
+              "archetypeId": "method-choice",
+              "level": "moderate",
+              "stem": "Match each expression to an equivalent expression.",
+              "presentation": "extended",
+              "matching": {
+                "sources": [
+                  {
+                    "id": "match-expressions-source-1",
+                    "label": "1",
+                    "text": "$2(x+3)$"
+                  },
+                  {
+                    "id": "match-expressions-source-2",
+                    "label": "2",
+                    "text": "$x(x-4)$"
+                  },
+                  {
+                    "id": "match-expressions-source-3",
+                    "label": "3",
+                    "text": "$3x+2x$"
+                  }
+                ],
+                "targets": [
+                  {
+                    "id": "match-expressions-target-1",
+                    "label": "A",
+                    "text": "$5x$"
+                  },
+                  {
+                    "id": "match-expressions-target-2",
+                    "label": "B",
+                    "text": "$2x+6$"
+                  },
+                  {
+                    "id": "match-expressions-target-3",
+                    "label": "C",
+                    "text": "$x^2-4x$"
+                  },
+                  {
+                    "id": "match-expressions-target-4",
+                    "label": "D",
+                    "text": "$x^2-4$"
+                  }
+                ]
+              },
+              "matchingAnswer": {
+                "pairs": [
+                  {
+                    "sourceId": "match-expressions-source-1",
+                    "targetId": "match-expressions-target-2"
+                  },
+                  {
+                    "sourceId": "match-expressions-source-2",
+                    "targetId": "match-expressions-target-3"
+                  },
+                  {
+                    "sourceId": "match-expressions-source-3",
+                    "targetId": "match-expressions-target-1"
+                  }
+                ]
+              },
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "match-expressions-step-0",
+                    "math": "2(x+3)=2x+6",
+                    "text": "Distribute 2 to both terms."
+                  },
+                  {
+                    "id": "match-expressions-step-1",
+                    "math": "x(x-4)=x^2-4x",
+                    "text": "Distribute x to both terms."
+                  },
+                  {
+                    "id": "match-expressions-step-2",
+                    "math": "3x+2x=5x",
+                    "text": "Collect the like terms."
+                  }
+                ]
+              },
+              "releaseGroup": "moderate-b",
+              "extensions": {
+                "reviewCategory": "retain-compatible-field"
+              }
+            },
+            {
+              "id": "match-functions",
+              "archetypeId": "method-choice",
+              "level": "moderate",
+              "stem": "Classify each function. Here the same target may be used more than once.",
+              "presentation": "extended",
+              "matching": {
+                "sources": [
+                  {
+                    "id": "match-functions-source-1",
+                    "label": "1",
+                    "text": "$y=x^2$"
+                  },
+                  {
+                    "id": "match-functions-source-2",
+                    "label": "2",
+                    "text": "$y=2x^2+1$"
+                  },
+                  {
+                    "id": "match-functions-source-3",
+                    "label": "3",
+                    "text": "$y=3x-2$"
+                  }
+                ],
+                "targets": [
+                  {
+                    "id": "match-functions-target-1",
+                    "label": "A",
+                    "text": "Linear function"
+                  },
+                  {
+                    "id": "match-functions-target-2",
+                    "label": "B",
+                    "text": "Quadratic function"
+                  }
+                ],
+                "reuseTargets": true
+              },
+              "matchingAnswer": {
+                "pairs": [
+                  {
+                    "sourceId": "match-functions-source-1",
+                    "targetId": "match-functions-target-2"
+                  },
+                  {
+                    "sourceId": "match-functions-source-2",
+                    "targetId": "match-functions-target-2"
+                  },
+                  {
+                    "sourceId": "match-functions-source-3",
+                    "targetId": "match-functions-target-1"
+                  }
+                ]
+              },
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "match-functions-step-0",
+                    "math": "y=x^2",
+                    "text": "The highest power of x is 2."
+                  },
+                  {
+                    "id": "match-functions-step-1",
+                    "math": "y=2x^2+1",
+                    "text": "The highest power remains 2."
+                  },
+                  {
+                    "id": "match-functions-step-2",
+                    "math": "y=3x-2",
+                    "text": "This has the form y=mx+b."
+                  }
+                ]
+              },
+              "releaseGroup": "moderate-b",
+              "extensions": {
+                "reviewCategory": "retain-compatible-field"
+              }
+            },
+            {
+              "id": "match-table",
+              "archetypeId": "method-choice",
+              "level": "moderate",
+              "stem": "Use the supplied table for $y=2x+1$. Match each input to its output.",
+              "presentation": "extended",
+              "matching": {
+                "sources": [
+                  {
+                    "id": "match-table-source-1",
+                    "label": "1",
+                    "text": "$x=-1$"
+                  },
+                  {
+                    "id": "match-table-source-2",
+                    "label": "2",
+                    "text": "$x=0$"
+                  },
+                  {
+                    "id": "match-table-source-3",
+                    "label": "3",
+                    "text": "$x=1$"
+                  }
+                ],
+                "targets": [
+                  {
+                    "id": "match-table-target-1",
+                    "label": "A",
+                    "text": "$3$"
+                  },
+                  {
+                    "id": "match-table-target-2",
+                    "label": "B",
+                    "text": "$-1$"
+                  },
+                  {
+                    "id": "match-table-target-3",
+                    "label": "C",
+                    "text": "$1$"
+                  }
+                ]
+              },
+              "matchingAnswer": {
+                "pairs": [
+                  {
+                    "sourceId": "match-table-source-1",
+                    "targetId": "match-table-target-2"
+                  },
+                  {
+                    "sourceId": "match-table-source-2",
+                    "targetId": "match-table-target-3"
+                  },
+                  {
+                    "sourceId": "match-table-source-3",
+                    "targetId": "match-table-target-1"
+                  }
+                ]
+              },
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "match-table-step-0",
+                    "math": "y(-1)=2(-1)+1=-1",
+                    "text": "Read the first column or substitute -1."
+                  },
+                  {
+                    "id": "match-table-step-1",
+                    "math": "y(0)=2(0)+1=1",
+                    "text": "Read the middle column."
+                  },
+                  {
+                    "id": "match-table-step-2",
+                    "math": "y(1)=2(1)+1=3",
+                    "text": "Read the final column."
+                  }
+                ]
+              },
+              "releaseGroup": "moderate-b",
+              "extensions": {
+                "reviewCategory": "retain-compatible-field"
+              },
+              "visualRefs": [
+                "matching-values"
+              ]
+            },
+            {
+              "id": "choice-linear",
+              "archetypeId": "method-choice",
+              "level": "basic",
+              "stem": "Solve $3x-2=10$.",
+              "presentation": "compact",
+              "choice": {
+                "type": "single",
+                "options": [
+                  {
+                    "id": "linear-a",
+                    "text": "$x=2$"
+                  },
+                  {
+                    "id": "linear-b",
+                    "text": "$x=3$"
+                  },
+                  {
+                    "id": "linear-c",
+                    "text": "$x=4$"
+                  },
+                  {
+                    "id": "linear-d",
+                    "text": "$x=6$"
+                  }
+                ]
+              },
+              "choiceAnswer": {
+                "correctOptionIds": [
+                  "linear-c"
+                ]
+              },
+              "workedSolution": {
+                "steps": [
+                  {
+                    "id": "linear-step-0",
+                    "math": "3x=12",
+                    "text": "Add 2 to both sides."
+                  },
+                  {
+                    "id": "linear-step-1",
+                    "math": "x=4",
+                    "text": "Divide both sides by 3."
+                  }
+                ]
+              },
+              "releaseGroup": "foundation-a",
+              "extensions": {
+                "review": "preserved"
+              }
+            }
+          ]
+        }
+      ],
+      "exampleCollections": [
+        {
+          "id": "collection-choice",
+          "title": "Choose and explain",
+          "members": [
+            "method-choice"
+          ]
+        }
+      ],
+      "visuals": [
+        {
+          "id": "matching-values",
+          "kind": "table",
+          "label": "Function values",
+          "stub": "$x$",
+          "head": [
+            "$-1$",
+            "$0$",
+            "$1$"
+          ],
+          "rows": [
+            {
+              "label": "$y$",
+              "cells": [
+                "$-1$",
+                "$1$",
+                "$3$"
+              ]
+            }
+          ],
+          "description": "The table gives y=2x+1 at x=-1, 0 and 1: y=-1, 1 and 3 respectively."
+        }
+      ]
+    }
+  ]
+}

@@ -625,6 +625,33 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .mv-evidence .mx-tblwrap:focus-visible{outline:2px solid #146d61;outline-offset:2px;}
 
 /* MATHEMATICS_VISUAL_ATTACHMENTS_CSS_END */
+/* MATHEMATICS_CHOICES_CSS_START */
+.mcq-question{align-items:flex-start}.mcq-question>.mx-itembd{min-width:0;width:100%}.mcq-options{border:0;margin:10px 0 0;padding:0;min-width:0}.mcq-options legend{font:500 .8em/1.4 var(--mx-sans,Arial,sans-serif);color:var(--mx-muted,#4a6864);margin-bottom:5px}.mcq-option{display:flex;align-items:center;gap:10px;padding:9px 10px;margin:5px 0;border:1px solid #d4e4df;border-radius:6px;cursor:pointer;min-height:44px;overflow-wrap:anywhere}.mcq-option:has(:checked){border-color:#007e6d;background:#e9f6f1}.mcq-option:focus-within{outline:2px solid #127a9b;outline-offset:1px}.mcq-option input{width:18px;height:18px;flex:0 0 18px;margin:0;accent-color:#007e6d}.mcq-letter{font:600 .8em/1.3 Arial,sans-serif;color:#486963}.mcq-text{min-width:0;overflow-x:auto}.mcq-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:7px;font:400 .75em/1.4 Arial,sans-serif;color:#49655d}.mcq-actions button{font:inherit;min-height:36px}.mcq-model ul{list-style:none;padding:0}.mcq-model li{padding:4px 0}.mcq-model>p:first-child{margin:0;color:#49655d;font-size:.8em}.mcq-invalid{color:#8d2f22;padding:12px}.mcq-editor fieldset{margin:8px 0;min-width:0}.mcq-editor input:not([type=checkbox]),.mcq-editor textarea,.mcq-editor select{box-sizing:border-box;width:100%}.mcq-editor button{margin:4px}.mcq-editor [data-mcq-diagnostics]{color:#8d2f22}
+
+.lp-micro-practice .lp-exercise-cell:has(.mcq-question){align-items:flex-start}.lp-micro-practice .lp-exercise-cell .mx-item.mcq-question{align-items:flex-start}.lp-micro-practice .lp-exercise-cell .mcq-question .mx-num{align-self:flex-start;margin-top:4px}
+
+/* MATHEMATICS_CHOICES_CSS_END */
+/* MATHEMATICS_MATCHING_CSS_START */
+.mmq-question{align-items:flex-start}.mmq-question>.mx-itembd{width:100%;min-width:0}.mmq-field{border:0;padding:0;margin:10px 0;min-width:0;container-type:inline-size}.mmq-field legend,.mmq-help,.mmq-actions{font:400 .8em/1.5 var(--mx-sans,Arial,sans-serif);color:var(--mx-muted,#496961)}.mmq-help{margin:5px 0 12px}.mmq-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px}.mmq-bank{grid-column:2;grid-row:1}.mmq-sources{grid-column:1;grid-row:1}.mmq-layout h4{font:600 .8em/1.5 Arial,sans-serif;margin:0 0 6px;color:#43645d}.mmq-target{display:flex;align-items:center;gap:12px;padding:9px 4px;border-bottom:1px solid #d6e5df;min-width:0;min-height:44px}.mmq-target>b,.mmq-row>b{font:600 .85em/1.3 Arial,sans-serif;color:#42675e;flex:none}.mmq-row{display:grid;grid-template-columns:1.5em minmax(0,1fr) auto;gap:10px;align-items:center;min-height:52px;border-bottom:1px solid #d6e5df;padding:7px 4px}.mmq-row.mmq-selected{background:#eef8f4}.mmq-text{min-width:0;max-width:100%;overflow-x:auto;overflow-wrap:anywhere}.mmq-text:focus-visible,.mmq-field select:focus-visible,.mmq-field button:focus-visible{outline:2px solid #167d9b;outline-offset:2px}.mmq-controls{display:flex;align-items:center;gap:6px}.mmq-controls select{min-height:44px;max-width:180px;width:100px;font:400 .85em/1.4 Arial,sans-serif;border:1px solid #b9d4ca;border-radius:5px;background:#fff;color:inherit;padding:5px}.mmq-controls button,.mmq-actions button{min-height:36px;font:400 .8em/1.4 Arial,sans-serif;border:1px solid #c7dcd3;background:#fff;border-radius:5px;padding:5px 8px;cursor:pointer;color:inherit}.mmq-label{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.mmq-actions{display:flex;align-items:center;gap:12px;justify-content:space-between;margin-top:10px}.mmq-answer-pair{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:baseline;padding:8px 0}.mmq-answer-pair>div{min-width:0;overflow-x:auto}.mmq-model>p{font-size:.8em;color:#48675d;margin-top:0}.mmq-invalid{color:#8d2f22;padding:12px}.mmq-editor fieldset{min-width:0;margin:8px 0}.mmq-editor input,.mmq-editor textarea,.mmq-editor select{box-sizing:border-box;width:100%}.mmq-editor button{margin:4px}.mmq-editor [data-mmq-diagnostics]{color:#8d2f22}.lp-micro-practice .lp-exercise-cell:has(.mmq-question){align-items:flex-start}.lp-micro-practice .mmq-question .mx-num{align-self:flex-start;margin-top:4px}
+@container mmq-field (max-width:560px){.mmq-layout{grid-template-columns:minmax(0,1fr);gap:14px}.mmq-bank{grid-column:1;grid-row:1}.mmq-sources{grid-column:1;grid-row:2}.mmq-controls select{width:85px}.mmq-row{gap:6px}}
+.mmq-question .mmq-field .mmq-help{font:400 13px/1.45 var(--mx-sans,Arial,sans-serif);margin:6px 0 10px}.lp-micro-practice .lp-exercise-cell .mx-item.mmq-question{align-items:flex-start}.lp-micro-practice .lp-exercise-cell .mmq-question .mx-num{align-self:flex-start}
+
+.mmq-row>b{min-width:0;overflow-wrap:anywhere}.mmq-controls{display:grid;grid-template-columns:auto auto}.mmq-selected-label{grid-column:1/-1;max-width:145px;overflow-wrap:anywhere;font:400 12px/1.4 Arial,sans-serif;color:#43645d}
+
+/* Respond to the source lane, including narrow exercise cards on a wide screen. */
+.mmq-field{container-name:mmq-field}
+.mmq-sources{container-type:inline-size}
+.mmq-row{grid-template-columns:minmax(1.5em,max-content) minmax(0,1fr) auto}
+.mmq-text,.mmq-selected-label{overflow-wrap:normal;word-break:normal}
+@container (max-width:440px){
+ .mmq-row{grid-template-columns:minmax(0,1fr);gap:8px}
+ .mmq-row>b{overflow-wrap:normal}
+ .mmq-controls{justify-self:start;max-width:100%}
+ .mmq-controls select{width:100px}
+ .mmq-selected-label{max-width:none}
+}
+
+/* MATHEMATICS_MATCHING_CSS_END */
 /* GEOGRAPHY_G03_CSS_START */
 /* Opt-in G03 only. No global tokens or Mathematics selectors are changed. */
 .lp:has(.geo-g03){--mx-green:#076d72;font-family:'Manrope',system-ui,sans-serif;color:#172b3d;}
@@ -14553,6 +14580,168 @@ function tpRich(text, opts){ opts=opts||{};
    and will reuse these exact functions. All internals are IIFE-scoped (no global collisions). MathML is
    serialised via outerHTML and re-parsed as HTML foreign content — no runtime host; the LM Math @font-face
    (in <style>) travels with Export. Public: TPMath.tree / .render / .compile / .latex (+ tpMath* aliases). */
+/* MATHEMATICS_NOTATION_START */
+/* Existing TPMath string grammar, with bounded canonical operator support. No renderer or evaluator. */
+globalThis.TPMathNotation=(()=>{
+  const operators=['sum','prod','int','lim'];
+  const commands=[...operators,'begin','end','vec','overline','mathbb','text','cup','cap','notin'];
+  const symbols={cup:'∪',cap:'∩',notin:'∉'},sets={R:'ℝ',Z:'ℤ',Q:'ℚ',N:'ℕ',C:'ℂ'};
+  const usesStructures=value=>/[ℝℤℚℕℂ∈∉∪∩]/u.test(String(value??''))||/\\[{}]/.test(String(value??''))||/\[[^\[\]]*\)|\([^()]*\]/.test(String(value??''))||/\\(?:begin|end|vec|overline|mathbb|text|cup|cap|in|notin)(?![A-Za-z])/.test(String(value??''))||(/[([]/.test(String(value??''))&&String(value??'').replace(/\\,/g,'').includes(','));
+  // Legacy prose already supports coordinate pairs; do not promote those merely
+  // because strict validation recognises a comma. Only new syntax needs routing.
+  function usesCanonicalStructures(value){
+    const s=String(value??'');
+    if(/[ℝℤℚℕℂ∈∉∪∩]/u.test(s)||/\\(?:begin|end|vec|overline|mathbb|text|cup|cap|in|notin)(?![A-Za-z])|\\[{}]/.test(s))return true;
+    const stack=[];
+    for(let i=0;i<s.length;i++){
+      const c=s[i];
+      if(c==='\\'){const token=/^\\(?:left|right)(?![A-Za-z])/.exec(s.slice(i));if(token)i+=token[0].length-1;else i++;continue;}
+      if(c==='('||c==='[')stack.push(c);
+      else if((c===')'||c===']')&&stack.length){const open=stack.pop();if(open!==(c===')'?'(':'['))return true;}
+    }
+    return false;
+  }
+  function run(str,N,CMD,FNS,REL){
+    const original=String(str==null?'':str),strict=usesStructures(original),map=[];let s='',last=0,condition=false;
+    const literalText=[...original.matchAll(/\\text\s*\{[^{}]*\}/g)].map(m=>[m.index,m.index+m[0].length]);
+    for(const match of original.matchAll(/\\(?:left|right)(?![a-zA-Z])\s*\.?/g)){if(literalText.some(([a,b])=>match.index>=a&&match.index<b))continue;for(let j=last;j<match.index;j++){map.push(j);s+=original[j];}last=match.index+match[0].length;}
+    for(let j=last;j<original.length;j++){map.push(j);s+=original[j];}map.push(original.length);
+    let i=0;const literalBraces=[];const errors=[],error=(at,message)=>errors.push({offset:map[at]+1,message});
+    const space=()=>{while(i<s.length&&/\s/.test(s[i]))i++;};
+    const hasOperand=row=>row.some(n=>{
+      if(Array.isArray(n))return hasOperand(n);
+      if(n.t==='ch')return /[\p{L}\p{N}∞]/u.test(n.v);
+      if(n.t==='frac')return hasOperand(n.num)&&hasOperand(n.den);
+      if(n.t==='sqrt'||n.t==='nroot')return hasOperand(n.rad);
+      if(n.t==='fn')return hasOperand(n.arg);
+      if(['fence','large','lim'].includes(n.t))return hasOperand(n.body);
+      if(n.t==='matrix')return n.rows.some(r=>r.some(hasOperand));
+      if(n.t==='acc')return hasOperand(n.base);
+      return false;
+    });
+    function operator(name,at){
+      const values={_:null,'^':null},raw={};space();
+      while(s[i]==='_'||s[i]==='^'){
+        const marker=s[i++],start=i;if(values[marker]!==null)error(i-1,'Duplicate '+(marker==='_'?'lower':'upper')+' limit.');
+        space();const from=i;if(i>=s.length||'^_}])'.includes(s[i])){values[marker]=[];raw[marker]='';error(start,'Missing '+(marker==='_'?'lower':'upper')+' limit.');continue;}values[marker]=group();raw[marker]=s.slice(from,i);
+        if(!values[marker].length)error(start,'Empty '+(marker==='_'?'lower':'upper')+' limit.');space();
+      }
+      for(const marker of ['_','^'])if(values[marker]?.length&&!hasOperand(values[marker]))error(at,'Operator limit needs a mathematical value, not punctuation alone.');
+      if(name==='lim'){
+        if(values._===null||!values._.length)error(at,'Limit needs a nonempty lower approach.');
+        if(values['^']!==null)error(at,'A limit approach belongs below lim, without an upper bound.');
+        const approach=(raw._||'').replace(/^\{([\s\S]*)\}$/,'$1'),arrows=[...approach.matchAll(/\\(?:to|rightarrow)(?![A-Za-z])|→/g)];
+        if(arrows.length!==1||!approach.slice(0,arrows[0]?.index).trim()||!approach.slice((arrows[0]?.index||0)+(arrows[0]?.[0].length||0)).trim())error(at,'Limit approach needs a variable, one arrow and a target.');
+        const validateApproach=terms=>{
+          const arrow=terms.findIndex(n=>n.t==='ch'&&n.v==='→');
+          if(arrow>=0&&(!hasOperand(terms.slice(0,arrow))||!hasOperand(terms.slice(arrow+1))))error(at,'Limit approach needs a variable and a mathematical target.');
+          for(const n of terms)if(Array.isArray(n))validateApproach(n);else for(const child of Object.values(n))if(Array.isArray(child))validateApproach(child);
+        };
+        validateApproach(values._||[]);
+      }else if(name==='int'){
+        if((values._===null)!==(values['^']===null))error(at,'Integral needs both bounds or neither.');
+      }else if(values._===null||values['^']===null)error(at,'Bounded '+name+' needs lower and upper limits.');
+      const body=row(null,true);
+      if(!hasOperand(body))error(at,'Operator needs a following mathematical expression.');
+      return name==='lim'?N.lim(values._||[],body):N.large({sum:'∑',prod:'∏',int:'∫'}[name],values._||[],values['^']||[],body);
+    }
+    const chNode=c=>N.ch(c==='-'?'−':c);
+    function required(at,script=false){space();const start=i;if(i>=s.length||'}])&'.includes(s[i])||s.startsWith('\\end',i)){error(at,'Missing mathematical argument.');return [];}const result=group();if(strict&&(script?!result.some(n=>n.t!=='ch'||n.v.trim()):!hasOperand(result)))error(start,'Empty mathematical argument.');return result;}
+    function environment(at){
+      space();const match=/^\{([A-Za-z]+)\}/.exec(s.slice(i));if(!match){error(at,'Environment needs a braced name.');return N.matrix([[[]]]);}i+=match[0].length;
+      const env=match[1];if(!['pmatrix','vmatrix','cases'].includes(env))error(at,'Unsupported environment '+env+'.');
+      const rows=[];let cells=[],closed=false;
+      while(i<s.length){
+        const wasCondition=condition;condition=env==='cases'&&cells.length===1;
+        const cell=row(null,false,true);condition=wasCondition;cells.push(cell);
+        if(!hasOperand(cell)&&!(env==='cases'&&cells.length===2&&cell.some(n=>n.t==='text'&&n.value.trim())))error(at,'Environment cells need a nonempty expression'+(env==='cases'?' or condition.':'.'));
+        space();
+        if(s[i]==='&'){i++;continue;}
+        if(s.startsWith('\\\\',i)){i+=2;rows.push(cells);cells=[];continue;}
+        if(s.startsWith('\\end',i)){
+          const end=/^\\end\s*\{([A-Za-z]+)\}/.exec(s.slice(i));
+          if(end){i+=end[0].length;closed=true;if(end[1]!==env)error(at,'Mismatched environment: expected '+env+', found '+end[1]+'.');}else{error(i,'Malformed environment closing command.');i=s.length;}
+          break;
+        }
+        // A malformed cell must not trap the parser at a stray delimiter.
+        if(i<s.length){error(i,'Unexpected delimiter in environment.');i++;}else break;
+      }
+      if(cells.length)rows.push(cells);
+      if(!closed)error(at,'Missing closing environment '+env+'.');
+      if(env==='cases'&&rows.some(r=>r.length!==2))error(at,'Each cases row needs an expression and a condition.');
+      else if(rows.some(r=>r.length!==rows[0].length))error(at,'Matrix rows must have equal column counts.');
+      if(env==='vmatrix'&&rows.length!==rows[0]?.length)error(at,'A determinant must be square.');
+      const node=N.matrix(rows);if(env!=='pmatrix')node.environment=env;return node;
+    }
+    function group(){
+      while(s[i]===' ')i++;
+      if(s[i]==='{'){const at=i++;const r=row('}');if(s[i]==='}')i++;else if(strict)error(at,'Missing closing }.');return r;}
+      if(s[i]==='\\'){ const t=[]; cmd(t); return t; }
+      if(i<s.length){ return [chNode(s[i++])]; }
+      return [];
+    }
+    function cmd(out){
+      const at=i++;                                             /* past backslash */
+      if(!/[a-zA-Z]/.test(s[i]||'')){ const c=s[i++];if(strict){if(c==='{')literalBraces.push(at);if(c==='}'&&literalBraces.pop()===undefined)error(at,'Unmatched escaped set brace.');if(c==='\\')error(at,'Row separators belong inside environments.');if(c===undefined)error(at,'Incomplete command.');} if([';',':','!'].includes(c))error(at,'Unsupported spacing command; use \\, for a thin space.');if(c!==undefined) out.push(N.ch(c===','?'\u2009':c)); return; }   /* \{ \$ \, → literal */
+      let name=''; while(i<s.length && /[a-zA-Z]/.test(s[i])) name+=s[i++];
+      if(operators.includes(name)){out.push(operator(name,at));return;}
+      if(name==='begin'){out.push(environment(at));return;}
+      if(name==='end'){error(at,'Closing environment without an opening environment.');return;}
+      if(name==='vec'||name==='overline'){out.push(N.acc(name==='vec'?'→':'‾',required(at)));return;}
+      if(name==='mathbb'){space();const v=/^\{([RZQNC])\}/.exec(s.slice(i));if(!v){error(at,'mathbb requires one supported number-set letter: R, Z, Q, N or C.');if(s[i]==='{')group();return;}i+=v[0].length;out.push(N.ch(sets[v[1]]));return;}
+      if(name==='text'){
+        space();const v=/^\{([^{}\\$]*)\}/.exec(s.slice(i));
+        if(!condition)error(at,'Literal text is supported only in a cases condition.');
+        if(!v){error(at,'Text conditions need braced literal text without nested commands.');if(s[i]==='{')group();return;}
+        i+=v[0].length;if(!v[1].trim())error(at,'Text condition must not be empty.');out.push({t:'text',value:v[1]});return;
+      }
+      if(Object.prototype.hasOwnProperty.call(symbols,name)){out.push(N.ch(symbols[name]));return;}
+      if(name==='frac'){ out.push(N.frac(strict?required(at):group(),strict?required(at):group())); return; }
+      if(name==='sqrt'){space();if(s[i]==='['){const start=i++;const idx=row(']');if(s[i]===']')i++;else if(strict)error(start,'Missing closing ].');if(strict&&!hasOperand(idx))error(start,'Empty root index.');out.push(N.nroot(idx,strict?required(at):group()));}else out.push(N.sqrt(strict?required(at):group()));return;}
+      if(FNS.has(name)){space();if(s[i]==='('){const start=i++;const arg=row(')');if(s[i]===')')i++;else if(strict)error(start,'Missing closing ).');if(strict&&!hasOperand(arg))error(start,'Empty mathematical function argument.');out.push(N.fn(name,arg));}else if(s[i]==='{'){out.push(N.fn(name,strict?required(at):group()));}else{if(strict)error(at,'Function needs a grouped argument.');for(const ch of name)out.push(N.ch(ch));}return;}
+      if(Object.prototype.hasOwnProperty.call(CMD,name)){ out.push(N.ch(CMD[name])); return; }
+      if(strict)error(at,'Unsupported command \\'+name+'.');
+      for(const ch of name) out.push(N.ch(ch));                /* legacy nonstructural command fallback */
+    }
+    function row(end,operatorBody=false,cell=false){
+      const out=[];
+      while(i<s.length){
+        const c=s[i];
+        if(cell&&(c==='&'||s.startsWith('\\\\',i)||s.startsWith('\\end',i)))break;
+        if(operatorBody&&(c==='&'||s.startsWith('\\\\',i)||s.startsWith('\\end',i)))break;
+        if(operatorBody&&(c===')'||REL.has(c)))break;
+        if(operatorBody&&c==='\\'){const name=/^\\([A-Za-z]+)/.exec(s.slice(i))?.[1];if(name&&REL.has(CMD[name]))break;}
+        if(end && c===end) break;
+        if(c==='}'||c===']'||c===')'&&strict){if(end||operatorBody||cell)break;if(strict)error(i,'Unmatched closing delimiter.');i++;continue;}
+        if(c===' '||c==='\t'||c==='\n'){ i++; continue; }
+        if(c==='\\'){ cmd(out); continue; }
+        if(c==='^'){const at=i++;out.push(N.sup(strict?required(at,true):group()));continue;}
+        if(c==='_'){const at=i++;out.push(N.sub(strict?required(at,true):group()));continue;}
+        if(c==='{'){const at=i++;const inner=row('}');if(s[i]==='}')i++;else if(strict)error(at,'Missing closing }.');if(strict&&!inner.length)error(at,'Empty mathematical group.');out.push(...inner);continue;}
+        if(c==='('||c==='['){
+          const at=i++,expected=c==='('?')':']',body=row(expected),close=s[i];
+          const commas=body.map((n,k)=>n.t==='ch'&&n.v===','?k:-1).filter(k=>k>=0);
+          const interval=commas.length===1&&hasOperand(body.slice(0,commas[0]))&&hasOperand(body.slice(commas[0]+1))&&!body.some(n=>n.t==='ch'&&REL.has(n.v));
+          if(close===expected||(interval&&(close===')'||close===']')))i++;
+          else if(strict)error(at,'Missing closing '+expected+' (mixed fences require exactly two interval endpoints).');
+          if(strict&&!body.length)error(at,'Empty mathematical group.');
+          out.push(N.fence(c,interval&&[')',']'].includes(close)?close:expected,body));continue;
+        }
+        if(strict&&(c==='&'||c==='$'))error(i,'Unexpected '+c+' outside its mathematical structure.');
+        i++; out.push(chNode(c));
+      }
+      return out;
+    }
+    const tree=row(null);if(strict)for(const at of literalBraces)error(at,'Missing closing escaped set brace.');return {tree,errors};
+  }
+  function issues(value,N,CMD,FNS,REL){return run(value,N,CMD,FNS,REL).errors;}
+  function parse(value,N,CMD,FNS,REL){const result=run(value,N,CMD,FNS,REL);if(result.errors.length)throw new SyntaxError(result.errors.map(e=>e.message+' (character '+e.offset+')').join(' '));return result.tree;}
+  const operatorPattern=new RegExp('\\\\(?:'+commands.join('|')+')(?![A-Za-z])');
+  const usesOperators=value=>operatorPattern.test(String(value??''));
+  return {commands,parse,issues,usesOperators,usesStructures,usesCanonicalStructures};
+})();
+
+/* MATHEMATICS_NOTATION_END */
 const TPMath=(function(){
   /* ---- node model (lifted, complete) ---- */
   const N={
@@ -14578,9 +14767,10 @@ const TPMath=(function(){
   const ROWEL=new Map(),POS=new Map();  /* stub maps — cleared each render */
   function atom(n){
     const c=n.v;
+    if(c==='\u2009'){const gap=m('mspace');gap.setAttribute('width','0.167em');return gap;}
     if(/[0-9.]/.test(c)) return mt('mn',c);
     if(BIN.has(c)||REL.has(c)||'+-*/=<>'.includes(c)) return mt('mo',c);
-    if(/[a-zA-Z]/.test(c)) return mt('mi',c);
+    if(/[a-zA-Zℝℤℚℕℂ]/.test(c)) return mt('mi',c);
     return mt('mo',c);
   }
   function renderRowML(row){
@@ -14604,6 +14794,7 @@ const TPMath=(function(){
   function renderNodeML(n){
     switch(n.t){
       case 'ch':   return atom(n);
+      case 'text': return mt('mtext',n.value);
       case 'frac': return m('mfrac', renderRowML(n.num), renderRowML(n.den));
       case 'sqrt': return m('msqrt', renderRowML(n.rad));
       case 'nroot':return m('mroot', renderRowML(n.rad), renderRowML(n.idx));
@@ -14611,17 +14802,18 @@ const TPMath=(function(){
       case 'sub':  return m('msub', mt('mi',''), renderRowML(n.idx));
       case 'fence':{ const o=mt('mo',n.l), c=mt('mo',n.r); o.setAttribute('stretchy','true'); c.setAttribute('stretchy','true'); o.setAttribute('fence','true'); c.setAttribute('fence','true'); return m('mrow', o, renderRowML(n.body), c); }
       case 'fn':{ const f=mt('mi',n.name); f.setAttribute('mathvariant','normal'); const o=mt('mo','('), c=mt('mo',')'); o.setAttribute('stretchy','true'); c.setAttribute('stretchy','true'); const ap=mt('mo','\u2061'); return m('mrow', f, ap, o, renderRowML(n.arg), c); }
-      case 'large':{ const op=mt('mo',n.op); op.setAttribute('movablelimits','false'); const uo=m('munderover', op, renderRowML(n.lo), renderRowML(n.hi)); uo.setAttribute('displaystyle','true'); return m('mrow', uo, renderRowML(n.body)); }
-      case 'acc':{ const mk=mt('mo', n.mark==='→'?'→':n.mark==='‾'?'¯':n.mark); mk.setAttribute('stretchy','true'); return m('mover', renderRowML(n.base), mk); }
+      case 'large':{ const op=mt('mo',n.op); op.setAttribute('movablelimits','false'); const uo=n.op==='∫'?(n.lo.length||n.hi.length||CUR.row===n.lo||CUR.row===n.hi?m('msubsup',op,renderRowML(n.lo),renderRowML(n.hi)):op):m('munderover',op,renderRowML(n.lo),renderRowML(n.hi)); uo.setAttribute('displaystyle','true'); return m('mrow',uo,renderRowML(n.body)); }
+      case 'acc':{ const mk=mt('mo', n.mark==='→'?'→':n.mark==='‾'?'¯':n.mark); mk.setAttribute('stretchy','true'); const accent=m('mover', renderRowML(n.base), mk);accent.setAttribute('accent','true');return accent; }
       case 'lim':{ const l=mt('mo','lim'); l.setAttribute('movablelimits','false'); const u=m('munder', l, renderRowML(n.under)); u.setAttribute('displaystyle','true'); return m('mrow', u, renderRowML(n.body)); }
-      case 'matrix':{ const table=m('mtable'); n.rows.forEach(r=>{ const tr=m('mtr'); r.forEach(cell=>tr.appendChild(m('mtd', renderRowML(cell)))); table.appendChild(tr); }); const o=mt('mo','('), c=mt('mo',')'); o.setAttribute('stretchy','true'); c.setAttribute('stretchy','true'); return m('mrow', o, table, c); }
+      case 'matrix':{ const table=m('mtable');if(n.environment==='cases'){table.setAttribute('columnalign','left left');table.setAttribute('columnspacing','1em');}n.rows.forEach(r=>{const tr=m('mtr');r.forEach(cell=>tr.appendChild(m('mtd',renderRowML(cell))));table.appendChild(tr);});const o=mt('mo',n.environment==='cases'?'{':n.environment==='vmatrix'?'|':'('),c=mt('mo',n.environment==='cases'?'':n.environment==='vmatrix'?'|':')');for(const fence of [o,c]){fence.setAttribute('stretchy','true');fence.setAttribute('fence','true');}const row=m('mrow',o,table,c);row.style.fontFamily="'LM Math','Cambria Math','STIX Two Math',math";return row; }
     }
     return mt('mi','?');
   }
   /* ---- LaTeX + eval (lifted, complete) ---- */
-  const TS={'−':'-','×':'\\times ','÷':'\\div ','±':'\\pm ','≤':'\\le ','≥':'\\ge ','≠':'\\ne ','≈':'\\approx ','∞':'\\infty ','π':'\\pi ','θ':'\\theta ','α':'\\alpha ','β':'\\beta ','λ':'\\lambda ','μ':'\\mu ','σ':'\\sigma ','Δ':'\\Delta ','Σ':'\\Sigma ','∈':'\\in ','∴':'\\therefore ','→':'\\to ','⇒':'\\Rightarrow ','∂':'\\partial ','·':'\\cdot '};
-  function tex(r){return r.map(n=>{switch(n.t){
-    case 'ch':return TS[n.v]!==undefined?TS[n.v]:n.v;
+  const TS={'\u2009':'\\,','−':'-','×':'\\times ','÷':'\\div ','±':'\\pm ','≤':'\\le ','≥':'\\ge ','≠':'\\ne ','≈':'\\approx ','∞':'\\infty ','π':'\\pi ','θ':'\\theta ','α':'\\alpha ','β':'\\beta ','λ':'\\lambda ','μ':'\\mu ','σ':'\\sigma ','Δ':'\\Delta ','Σ':'\\Sigma ','∈':'\\in ','∴':'\\therefore ','→':'\\to ','⇒':'\\Rightarrow ','∂':'\\partial ','·':'\\cdot '};
+  function tex(r){return r.map((n,k)=>{switch(n.t){
+    case 'ch':return n.v==='{'?'\\{':n.v==='}'?'\\}':TS[n.v]!==undefined?TS[n.v]:n.v;
+    case 'text':return '\\text{'+n.value+'}';
     case 'frac':return '\\frac{'+tex(n.num)+'}{'+tex(n.den)+'}';
     case 'sqrt':return '\\sqrt{'+tex(n.rad)+'}';
     case 'nroot':return '\\sqrt['+tex(n.idx)+']{'+tex(n.rad)+'}';
@@ -14629,10 +14821,10 @@ const TPMath=(function(){
     case 'sub':return '_{'+tex(n.idx)+'}';
     case 'fence':return '\\left'+(n.l==='{'?'\\{':n.l)+tex(n.body)+'\\right'+(n.r==='}'?'\\}':n.r);
     case 'fn':return '\\'+n.name+'\\left('+tex(n.arg)+'\\right)';
-    case 'large':{const o=n.op==='∑'?'\\sum':n.op==='∏'?'\\prod':'\\int'; return o+(n.lo.length?'_{'+tex(n.lo)+'}':'')+(n.hi.length?'^{'+tex(n.hi)+'}':'')+tex(n.body);}
+    case 'large':{const o=n.op==='∑'?'\\sum':n.op==='∏'?'\\prod':'\\int',s=o+(n.lo.length?'_{'+tex(n.lo)+'}':'')+(n.hi.length?'^{'+tex(n.hi)+'}':'')+(n.op==='∫'&&!n.lo.length&&!n.hi.length?' ':'')+(n.body.length?'{'+tex(n.body)+'}':'');return n.body.length&&k<r.length-1?'{'+s+'}':s;}
     case 'acc':return '\\'+(n.mark==='→'?'vec':'overline')+'{'+tex(n.base)+'}';
-    case 'lim':return '\\lim_{'+tex(n.under)+'}'+tex(n.body);
-    case 'matrix':return '\\begin{pmatrix}'+n.rows.map(r=>r.map(tex).join(' & ')).join(' \\\\ ')+'\\end{pmatrix}';
+    case 'lim':{const s='\\lim_{'+tex(n.under)+'}'+(n.body.length?'{'+tex(n.body)+'}':'');return n.body.length&&k<r.length-1?'{'+s+'}':s;}
+    case 'matrix':{const env=n.environment||'pmatrix';return '\\begin{'+env+'}'+n.rows.map(r=>r.map(tex).join(' & ')).join(' \\\\ ')+'\\end{'+env+'}';}
   }return '';}).join('');}
   const FN={sin:Math.sin,cos:Math.cos,tan:Math.tan,ln:Math.log,log:x=>Math.log10(x),arcsin:Math.asin,arccos:Math.acos,arctan:Math.atan,sinh:Math.sinh,cosh:Math.cosh,tanh:Math.tanh,sqrt:Math.sqrt,abs:Math.abs};
   const CO={pi:Math.PI,'π':Math.PI,e:Math.E};
@@ -14667,7 +14859,7 @@ const TPMath=(function(){
       if(!s.length)throw new Error('mismatched brackets');s.pop();
       if(s.length&&s[s.length-1].t==='fn')o.push(s.pop());}}
     while(s.length){const t=s.pop();if(t.t==='lp')throw new Error('mismatched brackets');o.push(t);}return o;}
-  function compile(row){try{const r=rpn(toks(row));if(!r.length)return{eval:()=>NaN,error:''};
+  function compile(row){try{const displayOnly=value=>value&&typeof value==='object'&&(Array.isArray(value)?value.some(displayOnly):['large','lim','matrix','acc','text'].includes(value.t)||value.t==='ch'&&/[ℝℤℚℕℂ∈∉∪∩{}]/u.test(value.v)||value.t==='fence'&&(!['()','[]','||'].includes(value.l+value.r)||value.body.some(n=>n.t==='ch'&&n.v===','))||Object.values(value).some(displayOnly));if(displayOnly(row))return {eval:()=>NaN,error:'Structural notation, accents, limits and large operators are display-only; symbolic evaluation is unsupported.'};const r=rpn(toks(row));if(!r.length)return{eval:()=>NaN,error:''};
     return{eval:x=>{const s=[];for(const t of r){
       if(t.t==='num')s.push(t.v);else if(t.t==='var')s.push(x);else if(t.t==='con')s.push(CO[t.v]);
       else if(t.t==='fn'){const f=FN[t.v];s.push(f?f(s.pop()):NaN);}
@@ -14678,45 +14870,7 @@ const TPMath=(function(){
      \sin(x) \cos(x) \ln(x) …  \left( \right)  — ASCII '-' renders as a real minus (−). ---- */
   const CMD={pi:'π',theta:'θ',alpha:'α',beta:'β',gamma:'γ',delta:'δ',lambda:'λ',mu:'μ',sigma:'σ',phi:'φ',omega:'ω',Delta:'Δ',Sigma:'Σ',Omega:'Ω',infty:'∞',times:'×',cdot:'·',div:'÷',pm:'±',mp:'∓',le:'≤',leq:'≤',ge:'≥',geq:'≥',ne:'≠',neq:'≠',approx:'≈',equiv:'≡',to:'→',rightarrow:'→',Rightarrow:'⇒',in:'∈',partial:'∂',therefore:'∴',circ:'∘',ldots:'…',cdots:'⋯'};
   const FNS=new Set(['sin','cos','tan','sec','csc','cot','ln','log','exp','arcsin','arccos','arctan','sinh','cosh','tanh','sqrt','abs']);
-  function parse(str){
-    const s=String(str==null?'':str).replace(/\\left(?![a-zA-Z])\s*\.?/g,'').replace(/\\right(?![a-zA-Z])\s*\.?/g,''); let i=0;   /* \left( \right) → bare delimiters → fences below */
-    const chNode=c=>N.ch(c==='-'?'−':c);
-    function group(){
-      while(s[i]===' ')i++;
-      if(s[i]==='{'){ i++; const r=row('}'); if(s[i]==='}')i++; return r; }
-      if(s[i]==='\\'){ const t=[]; cmd(t); return t; }
-      if(i<s.length){ return [chNode(s[i++])]; }
-      return [];
-    }
-    function cmd(out){
-      i++;                                                     /* past backslash */
-      if(!/[a-zA-Z]/.test(s[i]||'')){ const c=s[i++]; if(c!==undefined) out.push(N.ch(c)); return; }   /* \{ \$ \, → literal */
-      let name=''; while(i<s.length && /[a-zA-Z]/.test(s[i])) name+=s[i++];
-      if(name==='frac'){ out.push(N.frac(group(),group())); return; }
-      if(name==='sqrt'){ while(s[i]===' ')i++; if(s[i]==='['){ i++; const idx=row(']'); if(s[i]===']')i++; out.push(N.nroot(idx,group())); } else out.push(N.sqrt(group())); return; }
-      if(FNS.has(name)){ while(s[i]===' ')i++; if(s[i]==='('){ i++; const arg=row(')'); if(s[i]===')')i++; out.push(N.fn(name,arg)); } else if(s[i]==='{'){ out.push(N.fn(name,group())); } else { for(const ch of name) out.push(N.ch(ch)); } return; }
-      if(CMD[name]!==undefined){ out.push(N.ch(CMD[name])); return; }
-      for(const ch of name) out.push(N.ch(ch));                /* unknown command → literal letters */
-    }
-    function row(end){
-      const out=[];
-      while(i<s.length){
-        const c=s[i];
-        if(end && c===end) break;
-        if(c==='}'||c===']') break;
-        if(c===' '||c==='\t'||c==='\n'){ i++; continue; }
-        if(c==='\\'){ cmd(out); continue; }
-        if(c==='^'){ i++; out.push(N.sup(group())); continue; }
-        if(c==='_'){ i++; out.push(N.sub(group())); continue; }
-        if(c==='{'){ i++; const inner=row('}'); if(s[i]==='}')i++; for(const nn of inner) out.push(nn); continue; }
-        if(c==='('){ i++; const body=row(')'); if(s[i]===')')i++; out.push(N.fence('(',')',body)); continue; }   /* brackets → fence nodes so the lifted toks/compile group correctly */
-        if(c==='['){ i++; const body=row(']'); if(s[i]===']')i++; out.push(N.fence('[',']',body)); continue; }
-        i++; out.push(chNode(c));
-      }
-      return out;
-    }
-    return row(null);
-  }
+  function parse(str){return TPMathNotation.parse(str,N,CMD,FNS,REL);}
   /* ═══ interactive editor (PR3b) — lifted from the equation editor; single active instance, reuses the
      node model + renderRowML + compile/tex above (one code path). ROOT/CUR live here; a caret-aware render
      populates POS/ROWEL and places the caret. TPMath.editor(field,caret,symwell,structs,{initial,onChange})
@@ -14948,7 +15102,7 @@ const TPMath=(function(){
     math.appendChild(renderRowML(asRow(input)));
     return math.outerHTML;
   }
-  return { N, tree:parse, render, compile:input=>compile(asRow(input)), latex:input=>tex(asRow(input)), editor, syntax:{commands:[...Object.keys(CMD),...FNS,"frac","sqrt","left","right"],functions:[...FNS].filter(x=>x!=="sqrt")} };
+  return { N, tree:parse, render, compile:input=>compile(asRow(input)), latex:input=>tex(asRow(input)), editor, syntax:{commands:[...Object.keys(CMD),...FNS,"frac","sqrt","left","right",...TPMathNotation.commands],functions:[...FNS].filter(x=>x!=="sqrt"),usesStructures:TPMathNotation.usesStructures,notationIssues:value=>TPMathNotation.issues(value,N,CMD,FNS,REL)} };
 })();
 /* engine-level aliases — the capability surface named in the PR3a spec */
 function tpMathTree(str){ return TPMath.tree(str); }
@@ -15718,8 +15872,11 @@ function mxNb(h){
   return out;
 }
 function mxM(v){
-  // Explicit authored math uses the existing parser/MathML renderer. Legacy prose is untouched.
-  if((LESSON.slides?.some(s=>s.practiceComposition==='micro'||s.visuals?.length)||globalThis.MathDisplay&&mdUsesStructured(LESSON))&&/\$[^$]+\$/.test(String(v||'')))return String(v).split(/(\$[^$]+\$)/g).map(t=>t.length>=3&&t.startsWith('$')&&t.endsWith('$')?mdMath(t.slice(1,-1)):mxM(t)).join('');
+  // Classify each dollar span independently; other prose retains the legacy formatter.
+  const source=String(v??''),parts=source.split(/(\$[^$]+\$)/g);
+  const forceMath=LESSON.slides?.some(s=>s.practiceComposition==='micro'||s.visuals?.length)||globalThis.MathDisplay&&mdUsesStructured(LESSON);
+  const isMathPart=t=>{if(!(t.length>=3&&t.startsWith('$')&&t.endsWith('$')))return false;const raw=t.slice(1,-1);return forceMath||globalThis.TPMathNotation&&(TPMathNotation.usesOperators(raw)||TPMathNotation.usesCanonicalStructures(raw));};
+  if(parts.some(isMathPart))return parts.map(t=>isMathPart(t)?mdMath(t.slice(1,-1)):mxM(t)).join('');
   return mxNb(esc(v==null?'':String(v))
     .replace(/\((\d+)\/(\d+)\)/g,'<span class="mx-pfrac">$&</span>')
     .replace(/<span class="mx-pfrac">\((\d+)\/(\d+)\)<\/span>/g,
@@ -16784,6 +16941,7 @@ globalThis.MathDisplay = (() => {
       let c=s[i];
       if(c==='\\'){
         const token=/^\\([A-Za-z]+|.)/.exec(s.slice(i));if(!token)return null;
+        if(['begin','end'].includes(token[1])){const env=/^\s*\{(pmatrix|vmatrix|cases)\}/.exec(s.slice(i+token[0].length));if(env){if(token[1]==='begin')stack.push('env:'+env[1]);else if(stack.pop()!=='env:'+env[1])return null;i+=token[0].length+env[0].length-1;continue;}}
         const rel={le:'≤',leq:'≤',ge:'≥',geq:'≥',ne:'≠',neq:'≠'}[token[1]];
         if(rel&&!stack.length&&!bar)return {at:i,length:token[0].length,relation:rel};
         if(['{','(','['].includes(token[1]))stack.push(token[1]);
@@ -16797,6 +16955,7 @@ globalThis.MathDisplay = (() => {
     }return null;
   }
   function diagnoseMath(value,syntax){
+    if(syntax.usesStructures?.(value))return Array.from(syntax.notationIssues(String(value)),e=>({...e}));
     const s=String(value),errors=[],commands=new Set(syntax.commands),functions=new Set(syntax.functions);let i=0;
     const error=(offset,message)=>errors.push({offset:offset+1,message});
     const space=()=>{while(/\s/.test(s[i]||'')&&i<s.length)i++;};
@@ -16805,10 +16964,10 @@ globalThis.MathDisplay = (() => {
       if(!commands.has(name)){error(at,'Unsupported command \\'+name+'.');return;}
       if(name==='frac'){argument(at);argument(at);}
       else if(name==='sqrt'){space();if(s[i]==='['){const start=i++;row(']',start);}argument(at);}
-      else if(functions.has(name)){space();if(s[i]==='{'||s[i]==='('){const start=i++,end=s[start]==='{'?'}':')';row(end,start);}else error(at,'Function \\'+name+' needs a grouped argument.');}
+      else if(functions.has(name)){space();if(s.startsWith('\\left',i)&&!/[A-Za-z]/.test(s[i+5]||'')){i+=5;space();}if(s[i]==='{'||s[i]==='('){const start=i++,end=s[start]==='{'?'}':')';row(end,start);}else error(at,'Function \\'+name+' needs a grouped argument.');}
     }
-    function row(end,start=0){const before=i;while(i<s.length){const c=s[i];if(c===end){i++;if(i===before+1)error(start,'Empty mathematical group.');return;}if('}])'.includes(c)){error(i,'Unmatched closing delimiter.');i++;continue;}if(c==='\\'){command();continue;}if('{(['.includes(c)){const at=i++;row({'{':'}','(':')','[':']'}[c],at);continue;}if(c==='^'||c==='_'){const at=i++;argument(at);continue;}if(c==='$')error(i,'Math-only expressions must not contain dollar delimiters.');i++;}if(end)error(start,'Missing closing '+end+'.');}
-    row();return errors;
+    function row(end,start=0){const before=i;while(i<s.length){const c=s[i];if(c===end){if(!s.slice(before,i).replace(/\\(?:left|right)(?![A-Za-z])\s*\.?/g,'').replace(/\\[,;:! ]/g,'').trim())error(start,'Empty mathematical group.');i++;return;}if('}])'.includes(c)){error(i,'Unmatched closing delimiter.');i++;continue;}if(c==='\\'){command();continue;}if('{(['.includes(c)){const at=i++;row({'{':'}','(':')','[':']'}[c],at);continue;}if(c==='^'||c==='_'){const at=i++;argument(at);continue;}if(c==='$')error(i,'Math-only expressions must not contain dollar delimiters.');i++;}if(end)error(start,'Missing closing '+end+'.');}
+    row();if(typeof syntax.notationIssues==='function')errors.push(...syntax.notationIssues(s));return errors;
   }
   function spans(text){const s=String(text),out=[];let start=-1;for(let i=0;i<s.length;i++){if(s[i]==='\\'){i++;continue;}if(s[i]==='$'){if(s[i+1]==='$')return {spans:out,unclosed:-1,adjacent:i};if(start<0)start=i;else{out.push({math:s.slice(start+1,i),offset:start+1});start=-1;}}}return {spans:out,unclosed:start};}
   function fallback(solution){if(!record(solution)||!Array.isArray(solution.steps))return '';return solution.steps.flatMap(s=>record(s)?[typeof s.math==='string'?'$'+s.math+'$':null,typeof s.text==='string'?s.text:null].filter(x=>x!==null):[]).join('\n');}
@@ -16895,7 +17054,32 @@ function mxWorking(value){
   if(lines.some(line=>/_[^_]+_/.test(line)&&!line.startsWith('$'))){const chain=lines.some(line=>/^\s*=(?!=|>)/.test(line));return '<div class="mx-worklines">'+lines.map(line=>{const match=chain&&/(^|[^<>=!])=(?!=|>)/.exec(line),at=match?match.index+match[1].length:-1;return at<0?'<div class="mx-workline">'+(mxM(line)||'<br>')+'</div>':'<div class="mx-workline" data-mx-equality><span>'+mxM(line.slice(0,at))+'</span><span>= '+mxM(line.slice(at+1))+'</span></div>';}).join('')+'</div>';}
   const chain=lines.some(line=>/^\s*=(?!=|>)/.test(strip(line)));
   if(!chain)return '<div class="mx-worklines">'+lines.map(line=>'<div class="mx-workline">'+(mxM(line)||'<br>')+'</div>').join('')+'</div>';
-  const steps=lines.map(line=>({math:strip(line),alignmentGroup:'legacy-continuation'}));mdScheduleAlign();return '<div class="mx-worklines" data-md-owner>'+steps.map(step=>'<div class="mx-workline">'+mdWorkingCell(step)+'</div>').join('')+'</div>';
+  // Keep mathematical operators/functions as boundaries, rather than deleting
+  // them into apparent adjacent prose. Neighbouring parsed maths supplies the
+  // variable context for whitespace-separated legacy factors.
+  const words=value=>value.replace(/\\text\s*\{[^{}]*\}|\\[A-Za-z]+|\{[^{}]*\}/g,' · ').replace(new RegExp('\\b(?:'+TPMath.syntax.functions.join('|')+')\\b','g'),' · ');
+  const language=value=>/\b(?:if|so|we|or|by|as|at|to|in|is|it|of|on)\s+(?=[A-Za-z0-9])/i.test(words(value));
+  const prose=value=>/\b(?:[A-Za-z]{3,}\s+[A-Za-z]+|[A-Za-z]+\s+[A-Za-z]{3,})\b|\b[A-Za-z]{3,}[.!?:;]/i.test(words(value))||language(value);
+  const variables=new Set(),collect=(node,target=variables)=>{if(Array.isArray(node))node.forEach(child=>collect(child,target));else if(node&&typeof node==='object'){if(node.t==='ch'&&/^[A-Za-z]$/.test(node.v))target.add(node.v);else Object.values(node).forEach(child=>collect(child,target));}};
+  const operatorContext=node=>Array.isArray(node)?node.some(operatorContext):!!node&&typeof node==='object'&&(node.t==='ch'?/[+−×÷·*/]/.test(node.v):['frac','sqrt','nroot','fn','sup','sub','large','lim','matrix','acc'].includes(node.t)||Object.values(node).some(operatorContext));
+  const parsedRows=lines.map((line,index)=>{const raw=strip(line.trim());if(raw.includes('$')||MathDisplay.diagnoseMath(raw,TPMath.syntax).length)return null;const tree=TPMath.tree(raw),identifiers=new Set();collect(tree,identifiers);
+    return {index,raw,tree,source:raw.replace(/^=\s*/,'').replace(/\s+/g,' '),context:[...identifiers].sort().join('')};}).filter(Boolean);
+  // An arithmetic substring supplies only its own identifiers, never all the
+  // words of an instruction containing it. Reuse canonical validation/trees.
+  for(const row of parsedRows){if(!prose(row.raw))collect(row.tree);else for(const part of row.raw.split(/\s+/)){if(!part||MathDisplay.diagnoseMath(part,TPMath.syntax).length)continue;const tree=TPMath.tree(part);if(operatorContext(tree))collect(tree);}}
+  // Adjacent derivation rows using the same identifiers establish context
+  // mutually, independent of factor grouping/order. Both candidates must lack
+  // hard prose markers; punctuation changes or an equals sign are not evidence.
+  // This is not an identity check; exact repeated text supplies no new context.
+  const contextRows=parsedRows.filter(row=>!language(row.raw)&&!/[.!?:;]/.test(words(row.raw)));
+  for(const row of contextRows)if(row.context&&contextRows.some(other=>Math.abs(other.index-row.index)===1&&other.context===row.context&&other.source!==row.source&&(/^=/.test(row.raw)||/^=/.test(other.raw))))collect(row.tree);
+  mdScheduleAlign();return '<div class="mx-worklines" data-md-owner>'+lines.map(line=>{
+    const value=line.trim(),parsed=MathDisplay.spans(value),single=parsed.spans.length===1&&value==='$'+parsed.spans[0].math+'$';
+    // A later continuation does not turn explanatory text into math-only source.
+    const factors=words(value).match(/[A-Za-z]+/g)||[],knownFactors=factors.length>0&&factors.every(factor=>[...factor].every(letter=>variables.has(letter)))&&!/[.!?:;]/.test(words(value));
+    const mathematical=single||!value.includes('$')&&(!prose(value)||knownFactors)&&!!value;
+    return '<div class="mx-workline">'+(mathematical?mdWorkingCell({math:single?parsed.spans[0].math:value,alignmentGroup:'legacy-continuation'}):mdText(line)||'<br>')+'</div>';
+  }).join('')+'</div>';
 }
 function mxWexSteps(ex,range,annotated=false){
   let steps=Array.isArray(ex.steps)?ex.steps:[];
@@ -18273,9 +18457,162 @@ function grAuthorWire(ins,q){
 }
 
 /* GRAPH_RESPONSE_COMPONENT_END */
+/* MATHEMATICS_CHOICES_JS_START */
+/* Choice data/validation/projection only. Existing question host owns UI and responses. */
+globalThis.MathChoices=(()=>{
+  const record=o=>!!o&&typeof o==='object'&&!Array.isArray(o),own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k),copy=o=>JSON.parse(JSON.stringify(o));
+  const stable=s=>typeof s==='string'&&s.trim()===s&&s.length>0&&s.length<=120&&!own(Object.prototype,s);
+  function configIssues(q){
+    const errors=[],c=q.choice;if(!record(c))return ['Choice configuration must be an object.'];
+    if(!['single','multiple'].includes(c.type))errors.push('Choose single or multiple response.');
+    for(const key of Object.keys(c))if(!['type','options'].includes(key))errors.push('Unsupported choice field '+key+'; keep answers separate.');
+    if(!stable(q.id))errors.push('Choice question needs a stable question ID.');
+    for(const key of ['options','correctOptionIds','correct','correctAnswer','correctAnswers','answerKey','feedback'])if(own(q,key))errors.push('Unsupported parallel choice field '+key+'; use choice options and the separate choice answer.');
+    if(q.graphResponse||q.graphAnswer)errors.push('Choose a choice response or a graph response for this question.');
+    if(!Array.isArray(c.options)||c.options.length<2||c.options.length>12)errors.push('Author between 2 and 12 options.');
+    const ids=new Set();for(const o of Array.isArray(c.options)?c.options:[]){if(!record(o)){errors.push('Each option must be an object.');continue;}if(!stable(o.id)||ids.has(o.id))errors.push('Options need distinct stable IDs.');ids.add(o.id);if(typeof o.text!=='string'||!o.text.trim())errors.push('Each option needs mathematical or plain text.');for(const key of Object.keys(o))if(!['id','text'].includes(key))errors.push('Unsupported option field '+key+'; correctness and explanations belong in answers.');}
+    const nested=parts=>Array.isArray(parts)&&parts.some(p=>record(p)&&(own(p,'choice')||own(p,'choiceAnswer')||p.graphResponse||p.graphAnswer||nested(p.parts)));if(nested(q.parts))errors.push('Choice responses are question-owned; use C2 evidence attachments for visual parts.');
+    if(q.releaseGroup!=null&&!stable(q.releaseGroup))errors.push('Release group needs a short stable name.');
+    return errors;
+  }
+  function answerIssues(q){const a=q.choiceAnswer,ids=new Set((Array.isArray(q.choice?.options)?q.choice.options:[]).map(o=>o?.id));if(!record(a)||!Array.isArray(a.correctOptionIds))return ['Author the correct option IDs separately from options.'];const errors=[];for(const key of Object.keys(a))if(key!=='correctOptionIds')errors.push('Unsupported choice answer field '+key+'.');const selected=a.correctOptionIds;if(!selected.length||q.choice?.type==='single'&&selected.length!==1)errors.push('Single choice needs exactly one correct ID; multiple response needs at least one.');if(new Set(selected).size!==selected.length||selected.some(id=>!stable(id)||!ids.has(id)))errors.push('Correct answer IDs must be distinct existing option IDs.');return errors;}
+  function walk(lesson,visit){for(const[s,slide]of(lesson.slides||[]).entries()){for(const[i,q]of(slide.questions||[]).entries())visit(q,`slides.${s}.questions.${i}`,slide,null);for(const[a,activity]of(slide.activities||[]).entries())for(const[i,q]of(activity.questions||[]).entries())visit(q,`slides.${s}.activities.${a}.questions.${i}`,slide,activity);}}
+  function issues(lesson){const errors=[],seen=new Map();walk(lesson,(q,path,slide,activity)=>{if(!record(q))return;const key=JSON.stringify([slide.id,activity?.id,q.id]);if(seen.has(key)&&(q.choice||seen.get(key).choice))errors.push({path,message:'Duplicate question ID shares response state.'});else seen.set(key,q);if(!own(q,'choice')&&!own(q,'choiceAnswer'))return;for(const message of [...configIssues(q),...answerIssues(q)])errors.push({path,message});if(!/math/i.test(lesson.meta?.subject||'')||lesson.meta?.practiceLayout!=='textbook'||!activity?.practiceCollectionId)errors.push({path,message:'Choice responses belong to Mathematics textbook Practice questions.'});const groups=lesson.meta?.answerPolicy?.groups,group=groups?.[q.releaseGroup];if(groups!=null&&!record(groups)||group!=null&&!record(group))errors.push({path,message:'Release groups must contain policy objects.'});for(const kind of ['final','worked'])if(group?.[kind]!=null&&!['autonomous','end','hidden','teacher'].includes(group[kind]))errors.push({path,message:'Unknown '+kind+' release-group policy.'});if(!stable(slide.id)||!stable(activity?.id))errors.push({path,message:'Choice responses need stable skill and activity IDs.'});});return errors;}
+  function selection(q,value){const ids=new Set((Array.isArray(q.choice?.options)?q.choice.options:[]).map(o=>o?.id)),values=record(value)&&value.version===1&&Array.isArray(value.selectedOptionIds)?value.selectedOptionIds:[];const selected=[...new Set(values.filter(v=>typeof v==='string'&&ids.has(v)))];return q.choice?.type==='single'?selected.slice(0,1):selected;}
+  function hidden(meta,q,kind){const group=meta?.answerPolicy?.groups?.[q.releaseGroup],policy=group?.[kind]||meta?.answerPolicy?.[kind]||'autonomous';return policy==='hidden'||policy==='teacher'&&(!!group?.[kind]||(meta?.answerPolicy?.fallback?.[kind]||'hidden')==='hidden');}
+  function projectQuestion(q,meta){const out=copy(q);delete out.teacherNote;delete out.generation;for(const key of ['options','correctOptionIds','correct','correctAnswer','correctAnswers','answerKey','feedback'])delete out[key];
+    // Reconstruct the learner-visible vocabulary even when called without publication preflight.
+    out.choice={type:q.choice?.type,options:(Array.isArray(q.choice?.options)?q.choice.options:[]).filter(record).map(o=>({id:o.id,text:o.text}))};
+    function strip(o,kind){if(!record(o))return;for(const key of kind==='final'?['choiceAnswer','answer','finalAnswer','graphAnswer']:['workedAnswer','workedSolution'])delete o[key];if(record(o.answerVisuals)){delete o.answerVisuals[kind];if(!Object.keys(o.answerVisuals).length)delete o.answerVisuals;}for(const p of Array.isArray(o.parts)?o.parts:[])strip(p,kind);}
+    for(const kind of ['final','worked'])if(hidden(meta,q,kind))strip(out,kind);return out;
+  }
+  function studentData(projected,original){const sources=new Map();walk(original,(q,p)=>{if(q?.choice)sources.set(p,q);});walk(projected,(q,p)=>{const source=sources.get(p);if(!source)return;const clean=projectQuestion(source,original.meta);for(const key of Object.keys(q))delete q[key];Object.assign(q,clean);});return projected;}
+  return {configIssues,answerIssues,issues,selection,hidden,projectQuestion,studentData};
+})();
+
+/* Existing Practice/TP_RESP/TPMath/Answer Hub adapter. Session-only; no marking. */
+let MC_SERIAL=0;
+function mcPreflight(lesson){const errors=MathChoices.issues(lesson);if(errors.length)throw Error(errors.map(e=>e.path+': '+e.message).join('\n'));}
+function mcQuestion(q,page,number){const errors=MathChoices.configIssues(q);if(errors.length)return `<div class="mcq-invalid" role="status">${esc(errors.join(' '))} Repair the question in Edit mode.</div>`;
+  const entry=tpRespGet(page,q.id),selected=MathChoices.selection(q,entry?.kind==='choice'?entry.value:null),group='mcq-'+(++MC_SERIAL),multiple=q.choice.type==='multiple';
+  return `<div class="mx-item mcq-question"><span class="mx-num">${number}</span><div class="mx-itembd"><div class="mx-stem" id="${group}-stem">${mdText(q.stem||'')}</div>${mvRefs(q,'choice-'+q.id)}${mvChildParts(q,'choice-parts-'+q.id,mvSkill(q),MathVisuals.references(q))}<fieldset class="mcq-options" data-mcq="${esc(q.id)}" data-mcq-page="${esc(page)}" aria-describedby="${group}-stem"><legend>${multiple?'Select all that apply':'Select one answer'}</legend>${q.choice.options.map((o,i)=>`<label class="mcq-option"><input type="${multiple?'checkbox':'radio'}" name="${group}" value="${esc(o.id)}" ${selected.includes(o.id)?'checked':''}><span class="mcq-letter">${String.fromCharCode(65+i)}</span><span class="mcq-text">${mdText(o.text)}</span></label>`).join('')}<div class="mcq-actions"><button type="button" class="mx-tool" data-mcq-clear>Clear selection</button><span data-mcq-status role="status">${selected.length?selected.length+' selected':'No selection'}</span></div></fieldset></div></div>`;
+}
+function mcWire(){for(const field of document.querySelectorAll('[data-mcq]')){const slide=LESSON.slides[cur],activity=lpCurrent(slide),q=(activity?.questions||[]).find(q=>q.id===field.dataset.mcq);if(!q)continue;
+    const save=()=>{const selectedOptionIds=[...field.querySelectorAll('input:checked')].map(e=>e.value);tpRespSet(field.dataset.mcqPage,q.id,'choice',{version:1,selectedOptionIds});field.querySelector('[data-mcq-status]').textContent=selectedOptionIds.length?selectedOptionIds.length+' selected':'No selection';};
+    field.onchange=save;field.querySelector('[data-mcq-clear]').onclick=()=>{field.querySelectorAll('input').forEach(e=>e.checked=false);save();};field.onkeydown=e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key))e.stopPropagation();};}
+  document.querySelectorAll('[data-mcq-release]').forEach(b=>b.onclick=()=>mcReleaseDialog(b));
+}
+function mcVisible(q,kind){if(q.matching)return mmVisible(q,kind);return q.choice?!MathChoices.configIssues(q).length&&grAllowed(q,kind)&&(kind==='final'?!MathChoices.answerIssues(q).length||!!mcRemote(q,kind):mdHasWorking(q)||grPartHas(q,kind)||!!mcRemote(q,kind)):grHubVisible(q,kind);}
+function mcHubAny(kind){return(LESSON.slides||[]).some(s=>(s.activities||[]).some(a=>(a.questions||[]).some(q=>mcVisible(q,kind))));}
+function mcAnswer(q,kind,key,collapsed){if(q.matching)return mmAnswer(q,kind,key,collapsed);if(!mcVisible(q,kind))return '';if(kind==='final'&&MathChoices.answerIssues(q).length)return mcRemoteWorking(mcRemote(q,kind));if(kind==='worked')return `<details data-book-solution="${esc(key)}" ${collapsed?'':'open'}><summary>${mdText(q.stem)}</summary><div class="mx-stepm">${mvAnswer(q,kind,mvSkill(q),{allowed:true})}${mcRemote(q,kind)?mcRemoteWorking(mcRemote(q,kind)):mdWorking(q)}${lpBookPartAnswers(q,kind)}</div></details>`;const ids=new Set(q.choiceAnswer.correctOptionIds);return `<div class="mcq-model"><p>${q.choice.type==='single'?'Answer':'Answers'}</p><ul>${q.choice.options.map((o,i)=>ids.has(o.id)?`<li><b>${String.fromCharCode(65+i)}.</b> ${mdText(o.text)}</li>`:'').join('')}</ul>${q.answer?mdText(q.answer):''}${mvAnswer(q,kind,mvSkill(q),{allowed:true})}${lpBookPartAnswers(q,kind)}</div>`;}
+function mcReleaseButton(){return !document.documentElement.dataset.export&&(authorMode()==='edit'||document.body.classList.contains('present'))&&LESSON.slides.some(s=>s.activities?.some(a=>a.questions?.some(q=>(q.choice||q.matching)&&q.releaseGroup)))?'<button type="button" data-mcq-release>Local release preview</button>':grReleaseButton();}
+function mcReleaseDialog(opener){grReset();const groups=[...new Set(LESSON.slides.flatMap(s=>(s.activities||[]).flatMap(a=>(a.questions||[]).filter(q=>(q.choice||q.matching||q.graphResponse)&&q.releaseGroup).map(q=>q.releaseGroup))))];const d=document.createElement('dialog');d.className='mx-support-dialog';d.setAttribute('aria-label','Local answer release preview');d.innerHTML=`<header><h2>Local release preview</h2><button data-mcq-release-close aria-label="Close release preview">×</button></header><p>This changes answers on this display only. It does not publish answers to a class.</p>${groups.map(group=>`<section class="gr-release"><b>${esc(group)}</b>${['final','worked'].map(kind=>`<label><input type="checkbox" data-mcq-release-kind="${kind}" data-mcq-release-group="${esc(group)}" ${GR_RELEASE.get(group)?.[kind]?'checked':''}> ${kind==='final'?'Final answers':'Worked solutions'}</label>`).join('')}</section>`).join('')}<button data-mcq-release-apply>Apply on this display</button>`;document.body.append(d);d.querySelector('[data-mcq-release-close]').onclick=()=>d.close();d.querySelector('[data-mcq-release-apply]').onclick=()=>{for(const input of d.querySelectorAll('[data-mcq-release-kind]')){const group=input.dataset.mcqReleaseGroup;GR_RELEASE.set(group,{...GR_RELEASE.get(group),[input.dataset.mcqReleaseKind]:input.checked});}lpBookRefresh();d.close();};d.onkeydown=e=>e.stopPropagation();d.onclose=()=>{d.remove();opener.isConnected&&opener.focus({preventScroll:true});};d.showModal();}
+function mcAuthorHtml(q){if(Object.prototype.hasOwnProperty.call(q,'matching')&&!Object.prototype.hasOwnProperty.call(q,'choice'))return '';if(!lpMathSubject()&&!q.choice)return '';const c=q.choice,active=Object.prototype.hasOwnProperty.call(q,'choice');return `<section class="mcq-editor"><h4>Choice response</h4><label>Response format<select data-mcq-type><option value="">Written / existing response</option><option value="single" ${c?.type==='single'?'selected':''}>Single choice</option><option value="multiple" ${c?.type==='multiple'?'selected':''}>Multiple response</option>${active&&!['single','multiple'].includes(c?.type)?'<option selected value="invalid">Invalid choice — repair JSON</option>':''}</select></label>${active?`<p>Selections record attempts. Answers are released through the Answer Hub.</p>${Array.isArray(c?.options)?c.options.map((o,i)=>`<fieldset><legend>Option ${i+1}</legend><label>Stable option ID<input data-mcq-option="${i}" data-field="id" value="${esc(o?.id||'')}"></label><label>Option text (use $ for mathematics)<textarea data-mcq-option="${i}" data-field="text">${esc(o?.text||'')}</textarea></label><div data-mcq-preview="${i}">${mdText(o?.text||'')}</div><label><input type="checkbox" data-mcq-correct="${i}" ${(Array.isArray(q.choiceAnswer?.correctOptionIds)&&q.choiceAnswer.correctOptionIds.includes(o?.id))?'checked':''}> Correct answer</label>${[-1,1,'remove'].map(action=>`<button type="button" data-mcq-order="${i}" data-action="${action}" ${action===-1&&i===0||action===1&&i===c.options.length-1?'disabled':''}>${action===-1?'Move up':action===1?'Move down':'Remove option'}</button>`).join('')}</fieldset>`).join(''):'<p>Options are malformed; repair the original JSON. The draft is preserved.</p>'}<button type="button" data-mcq-add>Add option</button><label>Release group (optional)<input data-mcq-group value="${esc(q.releaseGroup||'')}"></label><p data-mcq-diagnostics role="status">${esc([...MathChoices.configIssues(q),...MathChoices.answerIssues(q)].join(' '))}</p>`:''}</section>`;}
+function mcAuthorWire(ins,q){if(!q)return;const type=ins.querySelector('[data-mcq-type]');if(!type)return;const diagnostics=()=>{const box=ins.querySelector('[data-mcq-diagnostics]');if(box)box.textContent=[...MathChoices.configIssues(q),...MathChoices.answerIssues(q)].join(' ');};
+  type.onchange=()=>{if(!type.value){delete q.choice;delete q.choiceAnswer;}else if(['single','multiple'].includes(type.value)){if(q.graphResponse||Object.prototype.hasOwnProperty.call(q,'matching')){type.value=q.choice?.type||'';alert('Remove the other response before choosing a choice response.');return;}q.choice={...(q.choice&&typeof q.choice==='object'?q.choice:{}),type:type.value};if(!Array.isArray(q.choice.options))q.choice.options=[{id:'option-'+crypto.randomUUID(),text:'First option'},{id:'option-'+crypto.randomUUID(),text:'Second option'}];q.choiceAnswer=q.choiceAnswer||{correctOptionIds:[]};}renderSlide();};
+  for(const el of ins.querySelectorAll('[data-mcq-option]'))el.oninput=()=>{const o=q.choice.options[+el.dataset.mcqOption];if(!o||typeof o!=='object')return;const previous=o.id;o[el.dataset.field]=el.value;if(el.dataset.field==='id'&&Array.isArray(q.choiceAnswer?.correctOptionIds))q.choiceAnswer.correctOptionIds=q.choiceAnswer.correctOptionIds.map(id=>id===previous?el.value:id);if(el.dataset.field==='text')ins.querySelector('[data-mcq-preview="'+el.dataset.mcqOption+'"]').innerHTML=mdText(el.value);renderCanvas();diagnostics();};
+  for(const el of ins.querySelectorAll('[data-mcq-correct]'))el.onchange=()=>{const id=q.choice.options[+el.dataset.mcqCorrect]?.id;const current=Array.isArray(q.choiceAnswer?.correctOptionIds)?q.choiceAnswer.correctOptionIds:[];q.choiceAnswer={...(q.choiceAnswer&&typeof q.choiceAnswer==='object'&&!Array.isArray(q.choiceAnswer)?q.choiceAnswer:{}),correctOptionIds:el.checked?(q.choice.type==='single'?[id]:[...new Set([...current,id])]):current.filter(x=>x!==id)};ins.querySelectorAll('[data-mcq-correct]').forEach(e=>e.checked=q.choiceAnswer.correctOptionIds.includes(q.choice.options[+e.dataset.mcqCorrect]?.id));renderCanvas();diagnostics();};
+  for(const b of ins.querySelectorAll('[data-mcq-order]'))b.onclick=()=>{const i=+b.dataset.mcqOrder;if(b.dataset.action==='remove'){const id=q.choice.options[i]?.id;q.choice.options.splice(i,1);if(Array.isArray(q.choiceAnswer?.correctOptionIds))q.choiceAnswer.correctOptionIds=q.choiceAnswer.correctOptionIds.filter(x=>x!==id);}else{const j=i+(+b.dataset.action);[q.choice.options[i],q.choice.options[j]]=[q.choice.options[j],q.choice.options[i]];}renderSlide();};
+  ins.querySelector('[data-mcq-add]')?.addEventListener('click',()=>{if(!Array.isArray(q.choice?.options))return;q.choice.options.push({id:'option-'+crypto.randomUUID(),text:'New option'});renderSlide();});const group=ins.querySelector('[data-mcq-group]');if(group)group.oninput=()=>{if(group.value)q.releaseGroup=group.value;else delete q.releaseGroup;diagnostics();};
+}
+
+function mcReleaseStatus(){const qs=LESSON.slides.flatMap(s=>(s.activities||[]).flatMap(a=>a.questions||[]));if(!qs.some(q=>q.choice||q.matching))return '';const available=qs.filter(q=>mcVisible(q,'final')||mcVisible(q,'worked')).length;return available===qs.length?'Answers available':available?'Some answers available':'Answers locked';}
+
+function mcRemote(q,kind){const value=LP_BOOK.session?.answers?.[q.id]?.[kind==='final'?'answer':'workedAnswer'];return typeof value==='string'&&value.trim()?value:'';}
+// Parse complete notation before laying out lines; a maths span may cross a newline.
+function mcRemoteWorking(value){
+  const text=String(value||''),parsed=MathDisplay.spans(text),wrap=line=>'<div class="lp-working-line" tabindex="0" aria-label="Working line"><div class="mx-worklines"><div class="mx-workline">'+(line||'<br>')+'</div></div></div>';
+  const original=()=>{
+    if(parsed.adjacent!=null||parsed.unclosed>=0)return wrap(mdText(text));
+    const lines=[''];let at=0;
+    // These pieces are outside maths spans: literal dollars cannot re-enter mxM.
+    const prose=value=>value.replaceAll('\\$','$').split('$').map(piece=>mxM(piece)).join('&#36;');
+    const plain=value=>{const pieces=value.split(/\r?\n/);lines[lines.length-1]+=prose(pieces[0]);for(const piece of pieces.slice(1))lines.push(prose(piece));};
+    for(const span of parsed.spans){plain(text.slice(at,span.offset-1));lines[lines.length-1]+=mdMath(span.math);at=span.offset+span.math.length+1;}plain(text.slice(at));
+    return lines.map(wrap).join('');
+  };
+  const root=document.createElement('div');root.innerHTML=lpBookWorking(text);
+  if(root.querySelector('.md-notation-error'))return original();
+  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+  while(walker.nextNode())if(walker.currentNode.data.includes('$')&&!walker.currentNode.parentElement.closest('math'))return original();
+  return root.innerHTML;
+}
+function mcAnswerText(q){if(q.matching)return mmAnswerText(q);if(MathChoices.configIssues(q).length||MathChoices.answerIssues(q).length)return '';const ids=new Set(q.choiceAnswer.correctOptionIds);return q.choice.options.map((o,i)=>ids.has(o.id)?String.fromCharCode(65+i)+'. '+o.text:null).filter(Boolean).join('\n')+(q.answer?'\n'+q.answer:'');}
+
+/* MATHEMATICS_CHOICES_JS_END */
+/* MATHEMATICS_MATCHING_JS_START */
+/* Authored matching and ID-only attempts; host owns storage, math, release and UI. */
+globalThis.MathMatching=(()=>{
+  const record=o=>!!o&&typeof o==='object'&&!Array.isArray(o),own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k),copy=o=>JSON.parse(JSON.stringify(o));
+  const stable=s=>typeof s==='string'&&s.trim()===s&&s.length>0&&s.length<=120&&!own(Object.prototype,s);
+  function configIssues(q){
+    const errors=[],m=q.matching,add=(path,message)=>errors.push({path,message});
+    if(!record(m))return [{path:'matching',message:'Matching configuration must be an object.'}];
+    if(!stable(q.id))add('id','Use a stable question ID.');
+    for(const k of Object.keys(m))if(!['sources','targets','reuseTargets'].includes(k))add('matching.'+k,'Unsupported matching field; keep correct pairs separate.');
+    if(own(m,'reuseTargets')&&typeof m.reuseTargets!=='boolean')add('matching.reuseTargets','Use true or false; the default is one-to-one.');
+    for(const lane of ['sources','targets']){const items=m[lane],ids=new Set(),labels=new Set();if(!Array.isArray(items)||items.length<2||items.length>12)add('matching.'+lane,'Author between 2 and 12 items.');
+      for(const [i,item]of(Array.isArray(items)?items:[]).entries()){const p='matching.'+lane+'.'+i;if(!record(item)){add(p,'Item must be an object.');continue;}if(!stable(item.id)||ids.has(item.id))add(p+'.id','Use distinct stable IDs.');ids.add(item.id);if(typeof item.label!=='string'||!item.label.trim()||item.label!==item.label.trim()||item.label.length>16||labels.has(item.label)||/[\n\r$]/.test(item.label))add(p+'.label','Use distinct short plain labels (up to 16 characters).');labels.add(item.label);if(typeof item.text!=='string'||!item.text.trim())add(p+'.text','Author mathematical or plain text.');for(const k of Object.keys(item))if(!['id','label','text'].includes(k))add(p+'.'+k,'Unsupported item field; use question-owned C2 evidence and separate answers.');}}
+    if(m.reuseTargets!==true&&Array.isArray(m.sources)&&Array.isArray(m.targets)&&m.targets.length<m.sources.length)add('matching.targets','One-to-one matching needs at least as many targets as sources.');
+    for(const k of ['choice','choiceAnswer','graphResponse','graphAnswer','correctPairs','pairs','answerKey','correct','correctAnswer','correctAnswers','feedback'])if(own(q,k))add(k,'Use one response model and keep correctness in matchingAnswer.');
+    const nested=(parts,p)=>{for(const[i,x]of(Array.isArray(parts)?parts:[]).entries())if(record(x)){const at=p+'.'+i;for(const k of ['matching','matchingAnswer','choice','choiceAnswer','graphResponse','graphAnswer'])if(own(x,k))add(at+'.'+k,'Response models are question-owned; use C2 attachments for supplied evidence.');nested(x.parts,at+'.parts');}};nested(q.parts,'parts');
+    if(q.releaseGroup!=null&&!stable(q.releaseGroup))add('releaseGroup','Use a stable release-group name.');return errors;
+  }
+  function answerIssues(q){const errors=[],a=q.matchingAnswer,m=q.matching,add=(path,message)=>errors.push({path,message});if(!record(a)||!Array.isArray(a.pairs))return [{path:'matchingAnswer.pairs',message:'Author a complete separate correct-pair map.'}];for(const k of Object.keys(a))if(k!=='pairs')add('matchingAnswer.'+k,'Unsupported correct-map field.');const sources=new Set((Array.isArray(m?.sources)?m.sources:[]).map(x=>x?.id)),targets=new Set((Array.isArray(m?.targets)?m.targets:[]).map(x=>x?.id)),seen=new Set(),used=new Set();for(const[i,pair]of a.pairs.entries()){const p='matchingAnswer.pairs.'+i;if(!record(pair)){add(p,'Correct pair must be an object.');continue;}if(!stable(pair.sourceId)||!sources.has(pair.sourceId)||seen.has(pair.sourceId))add(p+'.sourceId','Each existing source needs exactly one correct target.');seen.add(pair.sourceId);if(!stable(pair.targetId)||!targets.has(pair.targetId))add(p+'.targetId','Choose an existing target ID.');if(m?.reuseTargets!==true&&used.has(pair.targetId))add(p+'.targetId','One-to-one correct maps cannot reuse targets.');used.add(pair.targetId);for(const k of Object.keys(pair))if(!['sourceId','targetId'].includes(k))add(p+'.'+k,'Unsupported pair metadata.');}if(a.pairs.length!==sources.size||[...sources].some(id=>!seen.has(id)))add('matchingAnswer.pairs','Map every source once.');return errors;}
+  function walk(l,visit){for(const[s,slide]of(l.slides||[]).entries()){for(const[i,q]of(slide.questions||[]).entries())visit(q,`slides.${s}.questions.${i}`,slide,null);for(const[a,activity]of(slide.activities||[]).entries())for(const[i,q]of(activity.questions||[]).entries())visit(q,`slides.${s}.activities.${a}.questions.${i}`,slide,activity);}}
+  function issues(l){const out=[],seen=new Map();walk(l,(q,p,s,a)=>{if(!record(q))return;const key=JSON.stringify([String(s.id||'').trim(),String(q.id||'').trim()]);if(seen.has(key)&&(own(q,'matching')||own(seen.get(key),'matching')))out.push({path:p+'.id',message:'Duplicate question ID shares response state.'});else seen.set(key,q);if(!own(q,'matching')&&!own(q,'matchingAnswer')){const scan=(parts,path)=>{for(const[i,part]of(Array.isArray(parts)?parts:[]).entries())if(record(part)){for(const k of ['matching','matchingAnswer'])if(own(part,k))out.push({path:path+'.'+i+'.'+k,message:'Matching responses and maps are question-owned.'});scan(part.parts,path+'.'+i+'.parts');}};scan(q.parts,p+'.parts');return;}for(const e of [...configIssues(q),...answerIssues(q)])out.push({path:p+'.'+e.path,message:e.message});if(!/math/i.test(l.meta?.subject||'')||l.meta?.practiceLayout!=='textbook'||!a?.practiceCollectionId)out.push({path:p,message:'Matching belongs to Mathematics textbook Practice.'});if(!stable(s.id)||!stable(a?.id)||(l.slides||[]).filter(slide=>String(slide.id||'').trim()===String(s.id||'').trim()).flatMap(slide=>slide.activities||[]).some(other=>q.id===(other?.questions?.length?String(other.id+'-work').trim():other?.workspace?(other.workspace.id?String(other.workspace.id).trim():'workbook'):null)))out.push({path:p+'.id',message:'Use stable skill/activity/question IDs distinct from the workbook workspace ID.'});const groups=l.meta?.answerPolicy?.groups,g=groups?.[q.releaseGroup];if(groups!=null&&!record(groups)||g!=null&&!record(g))out.push({path:p+'.releaseGroup',message:'Release groups must be policy objects.'});for(const kind of ['final','worked'])if(g?.[kind]!=null&&!['autonomous','end','hidden','teacher'].includes(g[kind]))out.push({path:p+'.releaseGroup',message:'Unknown '+kind+' group policy.'});});return out;}
+  function selection(q,value){const m=q.matching,sources=new Set((Array.isArray(m?.sources)?m.sources:[]).map(x=>x?.id)),targets=new Set((Array.isArray(m?.targets)?m.targets:[]).map(x=>x?.id)),seen=new Set(),used=new Set(),pairs=[];for(const p of record(value)&&value.version===1&&Array.isArray(value.pairs)?value.pairs:[]){if(!record(p)||!sources.has(p.sourceId)||!targets.has(p.targetId)||seen.has(p.sourceId)||m?.reuseTargets!==true&&used.has(p.targetId))continue;seen.add(p.sourceId);used.add(p.targetId);pairs.push({sourceId:p.sourceId,targetId:p.targetId});}return pairs;}
+  function assign(q,value,sourceId,targetId){const pairs=selection(q,value);if(!q.matching.sources.some(s=>s.id===sourceId)||targetId&&!q.matching.targets.some(t=>t.id===targetId))return {pairs,error:'Unknown source or target.'};const occupied=pairs.find(p=>p.targetId===targetId&&p.sourceId!==sourceId);if(targetId&&q.matching.reuseTargets!==true&&occupied)return {pairs,error:'Target '+q.matching.targets.find(t=>t.id===targetId).label+' is already matched to item '+q.matching.sources.find(s=>s.id===occupied.sourceId).label+'. Clear or change that match first.'};return {pairs:[...pairs.filter(p=>p.sourceId!==sourceId),...(targetId?[{sourceId,targetId}]:[])],error:''};}
+  function projectQuestion(q,meta){const out=copy(q);function clean(o){if(!record(o))return;delete o.teacherNote;delete o.generation;for(const k of ['correctPairs','pairs','answerKey','correct','correctAnswer','correctAnswers','feedback'])delete o[k];for(const kind of ['final','worked'])if(MathChoices.hidden(meta,q,kind)){for(const k of kind==='final'?['matchingAnswer','choiceAnswer','answer','finalAnswer','graphAnswer']:['workedAnswer','workedSolution'])delete o[k];if(record(o.answerVisuals)){delete o.answerVisuals[kind];if(!Object.keys(o.answerVisuals).length)delete o.answerVisuals;}}for(const p of Array.isArray(o.parts)?o.parts:[])clean(p);}clean(out);out.matching={sources:(Array.isArray(q.matching?.sources)?q.matching.sources:[]).filter(record).map(({id,label,text})=>({id,label,text})),targets:(Array.isArray(q.matching?.targets)?q.matching.targets:[]).filter(record).map(({id,label,text})=>({id,label,text}))};if(own(q.matching||{},'reuseTargets'))out.matching.reuseTargets=q.matching.reuseTargets;return out;}
+  // The original lesson owns policy; never use a locally previewed release as export authorisation.
+  function projectLesson(projected,original){const sources=new Map();walk(original,(q,p)=>{if(q?.matching)sources.set(p,q);});walk(projected,(q,p)=>{const source=sources.get(p);if(!source)return;const clean=projectQuestion(source,original.meta);for(const k of Object.keys(q))delete q[k];Object.assign(q,clean);});return projected;}
+  return {configIssues,answerIssues,issues,selection,assign,projectQuestion,studentData:projectLesson};
+})();
+
+/* Matching uses the existing Practice host, C4A answer policy and TP_RESP. */
+let MM_SERIAL=0;
+// Ephemeral authoring identity only; no data is added to lesson JSON or learner attempts.
+const MM_AUTHOR_IDENTITIES=new WeakMap();
+function mmAuthorIdentities(q){
+ let state=MM_AUTHOR_IDENTITIES.get(q);if(!state||state.definition!==q.matching){state={definition:q.matching,sources:{ids:new Map(),refs:new WeakMap()},targets:{ids:new Map(),refs:new WeakMap()}};MM_AUTHOR_IDENTITIES.set(q,state);}
+ for(const lane of ['sources','targets']){const items=(Array.isArray(q.matching?.[lane])?q.matching[lane]:[]).filter(x=>x&&typeof x==='object'&&!Array.isArray(x)),live=new Set(items),identity=state[lane];
+  for(const[id,owner]of identity.ids)if(owner?!live.has(owner):!items.some(x=>x.id===id))identity.ids.delete(id);
+  for(const item of items)if(!identity.refs.has(item)){const id=item.id,unique=typeof id==='string'&&id&&items.filter(x=>x.id===id).length===1;if(unique&&(!identity.ids.has(id)||identity.ids.get(id)===item)){identity.ids.set(id,item);identity.refs.set(item,id);}else{identity.refs.set(item,null);if(typeof id==='string'&&id&&!identity.ids.has(id))identity.ids.set(id,null);}}
+ }return state;
+}
+function mmPreflight(l){const errors=MathMatching.issues(l);if(errors.length)throw Error(errors.map(e=>e.path+': '+e.message).join('\n'));}
+function mmQuestion(q,page,number){const errors=MathMatching.configIssues(q);if(errors.length)return `<div class="mmq-invalid" role="status">${esc(errors.map(e=>e.path+': '+e.message).join(' '))} Repair in Edit mode.</div>`;const key='mmq-'+(++MM_SERIAL),stored=tpRespGet(page,q.id),pairs=MathMatching.selection(q,stored?.kind==='matching'?stored.value:null),m=q.matching;
+ return `<div class="mx-item mmq-question"><span class="mx-num">${number}</span><div class="mx-itembd"><div class="mx-stem" id="${key}-stem">${mdText(q.stem||'')}</div>${mvRefs(q,'matching-'+q.id)}${mvChildParts(q,'matching-parts-'+q.id,mvSkill(q),MathVisuals.references(q))}<fieldset class="mmq-field" data-mmq="${esc(q.id)}" data-mmq-page="${esc(page)}" aria-describedby="${key}-stem ${key}-help"><legend>Match each item</legend><p class="mmq-help" id="${key}-help">${m.reuseTargets===true?'Targets may be used more than once.':'Use each target at most once. Targets in use are unavailable until cleared or changed.'} Choose a target label from the bank.</p><div class="mmq-layout"><section class="mmq-bank" aria-labelledby="${key}-targets"><h4 id="${key}-targets">Targets</h4>${m.targets.map(t=>`<div class="mmq-target"><b>${esc(t.label)}</b><div class="mmq-text" tabindex="0" role="region" aria-label="Target ${esc(t.label)}">${mdText(t.text)}</div></div>`).join('')}</section><section class="mmq-sources" aria-labelledby="${key}-sources"><h4 id="${key}-sources">Items</h4>${m.sources.map((s,i)=>`<div class="mmq-row"><b>${esc(s.label)}</b><div class="mmq-text" id="${key}-source-${i}" tabindex="0" role="region" aria-label="Item ${esc(s.label)}"><span id="${key}-source-${i}-text">${mdText(s.text)}</span></div><div class="mmq-controls"><label class="mmq-label" for="${key}-select-${i}">Target for item ${esc(s.label)}</label><select id="${key}-select-${i}" data-mmq-source="${esc(s.id)}" aria-describedby="${key}-source-${i}-text"><option value="">Choose…</option>${m.targets.map(t=>`<option value="${esc(t.id)}" ${pairs.some(p=>p.sourceId===s.id&&p.targetId===t.id)?'selected':''}>${esc(t.label)}</option>`).join('')}</select><button type="button" data-mmq-clear="${esc(s.id)}" aria-label="Clear match for item ${esc(s.label)}">Clear</button><span class="mmq-selected-label" data-mmq-selected hidden></span></div></div>`).join('')}</section></div><div class="mmq-actions"><button type="button" data-mmq-clear-all>Clear matches</button><span data-mmq-status role="status" aria-live="polite"></span></div></fieldset></div></div>`;
+}
+function mmWire(){for(const field of document.querySelectorAll('[data-mmq]')){const q=lpCurrent(LESSON.slides[cur])?.questions?.find(q=>q.id===field.dataset.mmq);if(!q)continue;const read=()=>{const e=tpRespGet(field.dataset.mmqPage,q.id);return {version:1,pairs:MathMatching.selection(q,e?.kind==='matching'?e.value:null)};},refresh=(message='')=>{const value=read();for(const select of field.querySelectorAll('[data-mmq-source]')){select.value=value.pairs.find(p=>p.sourceId===select.dataset.mmqSource)?.targetId||'';select.closest('.mmq-row').classList.toggle('mmq-selected',!!select.value);const selected=q.matching.targets.find(t=>t.id===select.value),label=select.parentElement.querySelector('[data-mmq-selected]');label.hidden=!selected||selected.label.length<=4;label.textContent=selected?'Target '+selected.label:'';for(const option of select.options){if(!option.value)continue;const used=value.pairs.find(p=>p.targetId===option.value&&p.sourceId!==select.dataset.mmqSource),target=q.matching.targets.find(t=>t.id===option.value);option.disabled=q.matching.reuseTargets!==true&&!!used;option.textContent=target.label+(option.disabled?' — in use by item '+q.matching.sources.find(s=>s.id===used.sourceId).label:'');}}field.querySelector('[data-mmq-status]').textContent=message||value.pairs.length+' of '+q.matching.sources.length+' matched';},save=(source,target)=>{const next=MathMatching.assign(q,read(),source,target);if(!next.error)tpRespSet(field.dataset.mmqPage,q.id,'matching',{version:1,pairs:next.pairs});refresh(next.error);};for(const select of field.querySelectorAll('[data-mmq-source]'))select.onchange=()=>save(select.dataset.mmqSource,select.value);for(const b of field.querySelectorAll('[data-mmq-clear]'))b.onclick=()=>save(b.dataset.mmqClear,'');field.querySelector('[data-mmq-clear-all]').onclick=()=>{tpRespSet(field.dataset.mmqPage,q.id,'matching',{version:1,pairs:[]});refresh();};field.onkeydown=e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','Home','End'].includes(e.key))e.stopPropagation();};refresh();}}
+function mmVisible(q,kind){return !MathMatching.configIssues(q).length&&grAllowed(q,kind)&&(kind==='final'?!MathMatching.answerIssues(q).length||!!mcRemote(q,kind):mdHasWorking(q)||grPartHas(q,kind)||!!mcRemote(q,kind));}
+function mmRemotePartVisuals(q,kind,skill=mvSkill(q)){return(Array.isArray(q.parts)?q.parts:[]).map((p,i)=>{if(!p||typeof p!=='object'||Array.isArray(p))return '';const content=mvAnswer(p,kind,skill,{allowed:true})+mmRemotePartVisuals(p,kind,skill);return content?`<section class="lp-part-answer"><b>(${esc(p.label||String.fromCharCode(97+i))})</b><div>${content}</div></section>`:'';}).join('');}
+function mmAnswer(q,kind,key,collapsed){if(!mmVisible(q,kind))return '';if(kind==='worked')return `<details data-book-solution="${esc(key)}" ${collapsed?'':'open'}><summary>${mdText(q.stem)}</summary><div class="mx-stepm">${mvAnswer(q,kind,mvSkill(q),{allowed:true})}${mcRemote(q,kind)?mcRemoteWorking(mcRemote(q,kind))+mmRemotePartVisuals(q,kind):mdWorking(q)+lpBookPartAnswers(q,kind,{allowed:true})}</div></details>`;if(MathMatching.answerIssues(q).length)return mcRemoteWorking(mcRemote(q,kind));return `<div class="mmq-model"><p>Matches</p>${q.matching.sources.map(s=>{const pair=q.matchingAnswer.pairs.find(p=>p.sourceId===s.id),t=q.matching.targets.find(t=>t.id===pair.targetId);return `<div class="mmq-answer-pair"><b>${esc(s.label)} → ${esc(t.label)}</b><div>${mdText(s.text)} <span aria-label="matches">→</span> ${mdText(t.text)}</div></div>`;}).join('')}${q.answer?mdText(q.answer):''}${mvAnswer(q,kind,mvSkill(q),{allowed:true})}${lpBookPartAnswers(q,kind,{allowed:true})}</div>`;}
+function mmAnswerText(q){if(MathMatching.configIssues(q).length||MathMatching.answerIssues(q).length)return '';return q.matching.sources.map(s=>{const p=q.matchingAnswer.pairs.find(p=>p.sourceId===s.id),t=q.matching.targets.find(t=>t.id===p.targetId);return s.label+' → '+t.label+': '+s.text+' → '+t.text;}).join('\n')+(q.answer?'\n'+q.answer:'');}
+// Upload only content the existing global class protocol can release. A local
+// author preview is not permission to send hidden or independent teacher groups.
+function mmClassParts(parts,kind){return(Array.isArray(parts)?parts:[]).map((p,i)=>{if(!p||typeof p!=='object'||Array.isArray(p))return '';const text=kind==='final'?p.finalAnswer||'':p.workedSolution?MathDisplay.fallback(p.workedSolution):p.workedAnswer||'',children=mmClassParts(p.parts,kind);return text||children?'('+(p.label||String.fromCharCode(97+i))+')\n'+[text,children].filter(Boolean).join('\n'):'';}).filter(Boolean).join('\n');}
+function mmClassAnswers(q){
+  const allowed=kind=>{const group=LESSON.meta.answerPolicy?.groups?.[q.releaseGroup]?.[kind],policy=group||LESSON.meta.answerPolicy?.[kind]||'autonomous';return policy==='autonomous'||policy==='end'||policy==='teacher'&&!group;};
+  return {answer:allowed('final')?[mmAnswerText(q),mmClassParts(q.parts,'final')].filter(Boolean).join('\n'):'',workedAnswer:allowed('worked')?[q.workedSolution?MathDisplay.fallback(q.workedSolution):q.workedAnswer||'',mmClassParts(q.parts,'worked')].filter(Boolean).join('\n'):''};
+}
+function mmCorrectTarget(q,id){return Array.isArray(q.matchingAnswer?.pairs)?q.matchingAnswer.pairs.find(p=>p&&typeof p==='object'&&p.sourceId===id)?.targetId||'':'';}
+function mmAuthorHtml(q){const own=Object.prototype.hasOwnProperty.call(q,'matching');if(!own&&(!lpMathSubject()||q.choice||q.graphResponse))return '';if(!own)return '<section class="mmq-editor"><h4>Matching response</h4><button type="button" data-mmq-enable>Add matching response</button></section>';const m=q.matching,items=lane=>Array.isArray(m?.[lane])?m[lane]:[];return `<section class="mmq-editor"><h4>Matching response</h4><button type="button" data-mmq-disable>Remove matching response</button><label>Target policy<select data-mmq-reuse><option value="one" ${m?.reuseTargets!==true?'selected':''}>One-to-one (default)</option><option value="reuse" ${m?.reuseTargets===true?'selected':''}>Reusable targets</option></select></label>${['sources','targets'].map(lane=>`<h5>${lane==='sources'?'Source items':'Target bank'}</h5>${!Array.isArray(m?.[lane])?'<p>Malformed item list; repair JSON. Draft preserved.</p>':items(lane).map((o,i)=>`<fieldset><legend>${lane==='sources'?'Item':'Target'} ${i+1}</legend>${['id','label','text'].map(f=>`<label>${f==='id'?'Stable ID':f==='label'?'Short label':'Text ($ for mathematics)'}${f==='text'?`<textarea data-mmq-edit="${lane}" data-index="${i}" data-field="${f}">${esc(o?.[f]||'')}</textarea>`:`<input data-mmq-edit="${lane}" data-index="${i}" data-field="${f}" value="${esc(o?.[f]||'')}">`}</label>`).join('')}<div data-mmq-preview="${lane}-${i}">${mdText(o?.text||'')}</div>${lane==='sources'?`<label>Correct target<select data-mmq-correct="${i}" ${MathMatching.configIssues(q).length?'disabled':''}><option value="">Choose…</option>${items('targets').filter(t=>t&&typeof t==='object').map(t=>`<option value="${esc(t.id||'')}" ${mmCorrectTarget(q,o?.id)===t.id?'selected':''}>${esc(t.label||t.id||'Unnamed target')}</option>`).join('')}</select></label>`:''}${[-1,1,'remove'].map(action=>`<button type="button" data-mmq-order="${lane}" data-index="${i}" data-action="${action}" ${action===-1&&i===0||action===1&&i===items(lane).length-1?'disabled':''}>${action===-1?'Move up':action===1?'Move down':'Remove'}</button>`).join('')}</fieldset>`).join('')}<button type="button" data-mmq-add="${lane}">Add ${lane==='sources'?'source':'target'}</button>`).join('')}<label>Release group (optional)<input data-mmq-group value="${esc(q.releaseGroup||'')}"></label><p>Preview uses the actual Practice renderer. Correct pairs are separate from student attempts.</p><p data-mmq-diagnostics role="status">${esc([...MathMatching.configIssues(q),...MathMatching.answerIssues(q)].map(e=>e.path+': '+e.message).join(' '))}</p></section>`;}
+function mmAuthorWire(ins,q){if(!q)return;const record=o=>o&&typeof o==='object'&&!Array.isArray(o),diagnostics=()=>{const box=ins.querySelector('[data-mmq-diagnostics]');if(box)box.textContent=[...MathMatching.configIssues(q),...MathMatching.answerIssues(q)].map(e=>e.path+': '+e.message).join(' ');};ins.querySelector('[data-mmq-enable]')?.addEventListener('click',()=>{if(q.choice||q.graphResponse)return;q.matching={sources:[{id:'source-'+crypto.randomUUID(),label:'1',text:'First item'},{id:'source-'+crypto.randomUUID(),label:'2',text:'Second item'}],targets:[{id:'target-'+crypto.randomUUID(),label:'A',text:'First target'},{id:'target-'+crypto.randomUUID(),label:'B',text:'Second target'}]};if(!Object.prototype.hasOwnProperty.call(q,'matchingAnswer'))q.matchingAnswer={pairs:[]};renderSlide();});ins.querySelector('[data-mmq-disable]')?.addEventListener('click',()=>{delete q.matching;delete q.matchingAnswer;MM_AUTHOR_IDENTITIES.delete(q);renderSlide();});const reuse=ins.querySelector('[data-mmq-reuse]');if(!reuse)return;reuse.onchange=()=>{if(!record(q.matching))return;q.matching.reuseTargets=reuse.value==='reuse';syncCorrect();renderCanvas();diagnostics();};
+ const syncCorrect=()=>{for(const el of ins.querySelectorAll('[data-mmq-correct]')){const sourceId=q.matching.sources[+el.dataset.mmqCorrect]?.id,key=mmCorrectTarget(q,sourceId);el.disabled=MathMatching.configIssues(q).length>0;el.innerHTML='<option value="">Choose…</option>'+(Array.isArray(q.matching.targets)?q.matching.targets:[]).filter(record).map(t=>'<option value="'+esc(t.id||'')+'" '+(t.id===key?'selected':'')+'>'+esc(t.label||t.id||'Unnamed target')+'</option>').join('');}};
+ const identities=mmAuthorIdentities(q),reservedIds={sources:identities.sources.ids,targets:identities.targets.ids};
+ for(const el of ins.querySelectorAll('[data-mmq-edit]')){el.oninput=()=>{const lane=el.dataset.mmqEdit,index=+el.dataset.index,o=q.matching?.[lane]?.[index];if(!record(o))return;const identity=identities[lane],referenceId=identity.refs.get(o)??null;const pairKey=lane==='sources'?'sourceId':'targetId';if(el.dataset.field==='id'&&el.value!==referenceId&&!q.matching[lane].some(x=>x?.id===el.value)&&(reservedIds[lane].has(el.value)&&reservedIds[lane].get(el.value)!==o||Array.isArray(q.matchingAnswer?.pairs)&&q.matchingAnswer.pairs.some(p=>record(p)&&p[pairKey]===el.value))){el.value=o.id??'';const box=ins.querySelector('[data-mmq-diagnostics]');if(box)box.textContent='matching.'+lane+'.'+index+'.id: This ID is reserved by existing answer pairs or an unfinished item edit. Restore its original item or repair the correct map first.';return;}o[el.dataset.field]=el.value;if(el.dataset.field==='id'&&el.value.trim()&&!q.matching[lane].some(x=>x!==o&&x?.id===el.value)){if(referenceId!==null&&Array.isArray(q.matchingAnswer?.pairs))for(const p of q.matchingAnswer.pairs)if(record(p)&&p[lane==='sources'?'sourceId':'targetId']===referenceId)p[lane==='sources'?'sourceId':'targetId']=el.value;if(reservedIds[lane].get(referenceId)===o)reservedIds[lane].delete(referenceId);reservedIds[lane].set(el.value,o);identity.refs.set(o,el.value);}if(el.dataset.field==='text')ins.querySelector('[data-mmq-preview="'+lane+'-'+el.dataset.index+'"]').innerHTML=mdText(el.value);syncCorrect();renderCanvas();diagnostics();};}
+ for(const select of ins.querySelectorAll('[data-mmq-correct]'))select.onchange=()=>{if(MathMatching.configIssues(q).length){diagnostics();return;}const sourceId=q.matching.sources[+select.dataset.mmqCorrect]?.id;if(!sourceId)return;const answer=record(q.matchingAnswer)?q.matchingAnswer:{},pairs=Array.isArray(answer.pairs)?answer.pairs.slice():[],index=pairs.findIndex(p=>p?.sourceId===sourceId);if(!select.value){q.matchingAnswer={...answer,pairs:pairs.filter(p=>p?.sourceId!==sourceId)};}else{const next={...(index>=0&&record(pairs[index])?pairs[index]:{}),sourceId,targetId:select.value};if(index>=0)pairs[index]=next;else pairs.push(next);q.matchingAnswer={...answer,pairs};}renderCanvas();diagnostics();};
+ for(const b of ins.querySelectorAll('[data-mmq-order]'))b.onclick=()=>{const lane=b.dataset.mmqOrder,items=q.matching?.[lane],i=+b.dataset.index;if(!Array.isArray(items))return;if(b.dataset.action==='remove'){const removed=items.splice(i,1)[0];if(lane==='sources'&&!items.some(item=>item?.id===removed?.id)&&Array.isArray(q.matchingAnswer?.pairs))q.matchingAnswer.pairs=q.matchingAnswer.pairs.filter(p=>p?.sourceId!==removed?.id);}else{const j=i+(+b.dataset.action);[items[i],items[j]]=[items[j],items[i]];}renderSlide();};
+ for(const b of ins.querySelectorAll('[data-mmq-add]'))b.onclick=()=>{const lane=b.dataset.mmqAdd,items=q.matching?.[lane];if(!Array.isArray(items))return;let n=1,label;do{label=lane==='sources'?String(n):n<=26?String.fromCharCode(64+n):'T'+n;n++;}while(items.some(o=>o?.label===label));items.push({id:(lane==='sources'?'source-':'target-')+crypto.randomUUID(),label,text:'New '+(lane==='sources'?'item':'target')});renderSlide();};const group=ins.querySelector('[data-mmq-group]');if(group)group.oninput=()=>{if(group.value)q.releaseGroup=group.value;else delete q.releaseGroup;syncCorrect();diagnostics();};
+}
+
+/* MATHEMATICS_MATCHING_JS_END */
 function mxQuestionList(questions,page,start=0){
   const paper=mxOnPaper();
   return (questions||[]).map((q,j)=>{
+    if(Object.prototype.hasOwnProperty.call(q,'matching'))return mmQuestion(q,page,j+1+start);
+    if(q.choice)return mcQuestion(q,page,j+1+start);
     if(q.graphResponse)return grContext(q,page,j+1+start)+grResponseHtml(q,page);
     const skill=mvSkill(q),table=MathVisuals.table(skill,q);
     const parts=(q.parts||[]).map((pt,k)=>{const extra=mvRefs(pt,'part-'+q.id+'-'+k,{skill,inherited:q.visualRefs||[]})+mvChildParts(pt,'nested-'+q.id+'-'+k,skill,[...MathVisuals.references(q),...MathVisuals.references(pt)]),tag=extra?'div':'span';return `<div class="mx-part"><b class="mx-pl">(${esc(typeof pt==='object'&&pt.label||String.fromCharCode(97+k))})</b><${tag}>${mxM(lpBookPartText(pt))}${extra}</${tag}></div>`;}).join('');
@@ -18577,11 +18914,12 @@ function lpValidatePublication(d){
   lpValidate(d);
   for(const s of d.slides||[])for(const a of s.activities||[])geoG03Validate(a,true);
   mdPreflight(d);
+  mcPreflight(d);mmPreflight(d);
   mvPreflight(d);
   if(!(d.slides||[]).some(lpEnabled)&&d.meta?.player!=='activities')return;
   const i=d.slides.findIndex(s=>!lpLearnerActivities(s).length);
   if(i>=0){const error=Error('Skill '+(i+1)+' “'+d.slides[i].title+'” has no learner-visible activities. Add instructional content in this skill before publishing. An empty optional video does not count.');error.skillIndex=i;throw error;}
-  for(const skill of d.slides)for(const a of skill.activities)if(a.practiceCollectionId){if(lpPracticeMembers(skill,a).some(({ex})=>!(a.questions||[]).some(q=>q.archetypeId===ex.id)))throw Error('Add at least one question for every linked practice archetype before publishing.');if((a.questions||[]).some(q=>!String(q.answer||'').trim()))throw Error('Author a final answer for every archetype practice question before publishing.');}
+  for(const skill of d.slides)for(const a of skill.activities)if(a.practiceCollectionId){if(lpPracticeMembers(skill,a).some(({ex})=>!(a.questions||[]).some(q=>q.archetypeId===ex.id)))throw Error('Add at least one question for every linked practice archetype before publishing.');if((a.questions||[]).some(q=>!q.choice&&!q.matching&&!String(q.answer||'').trim()))throw Error('Author a final answer for every archetype practice question before publishing.');}
   if(!d.slides.length)throw Error('This lesson has no skills. Add a skill with instructional content before publishing.');
 }
 function lpCurrent(s){
@@ -18659,9 +18997,9 @@ function lpBookAllowed(kind){
 }
 function lpBookQuestion(q,kind){const remote=LP_BOOK.session?.answers?.[q.id];return remote?.[kind==='final'?'answer':'workedAnswer']??(kind==='worked'?(q.workedSolution||q.workedAnswer||mdCompatibilityWorking(q)):q.answer);}
 function lpBookLockedCopy(kind){const p=lpBookPolicy(kind);return p==='end'?'Answers will become available at the end of the lesson.':p==='hidden'&&LESSON.meta.answerPolicy?.[kind]!=='teacher'?'Answers are not available in this lesson.':'Answers are locked for now. Your teacher will release them when ready.';}
-function lpBookStatus(){const graph=grReleaseStatus();if(graph)return graph;return LP_BOOK.session?.active?'Class '+LP_BOOK.session.code+' · '+(LP_BOOK.session.state==='locked'?'Waiting for teacher release':'Answers released'):lpBookAllowed('final')||lpBookAllowed('worked')?'Answers available':lpBookLockedCopy('final');}
-function lpBookShortStatus(){const graph=grReleaseStatus();if(graph)return graph;return lpBookAllowed('final')||lpBookAllowed('worked')?'Answers available':lpBookPolicy('final')==='end'?'Answers available at lesson end.':'Your teacher has not released answers yet.';}
-function lpBookAnswerButton(){const available=grHubAny('final')||grHubAny('worked');return `<div class="lp-book-status" role="status" title="${esc(lpBookStatus())}">${esc(lpBookShortStatus())}</div><button class="lp-primary" data-book-hub ${available?'':'hidden disabled'}>View released answers</button>${grReleaseButton()}${LESSON.meta.classSession?.endpoint?`<button class="mx-tool" data-book-class>${document.documentElement.dataset.export?'Join class':'Class session'}</button>`:''}${!document.documentElement.dataset.export&&document.body.classList.contains('present')?'<p>Projector view: answers on this display only; class release is separate.</p>':''}`;}
+function lpBookStatus(){const graph=mcReleaseStatus()||grReleaseStatus();if(graph)return graph;return LP_BOOK.session?.active?'Class '+LP_BOOK.session.code+' · '+(LP_BOOK.session.state==='locked'?'Waiting for teacher release':'Answers released'):lpBookAllowed('final')||lpBookAllowed('worked')?'Answers available':lpBookLockedCopy('final');}
+function lpBookShortStatus(){const graph=mcReleaseStatus()||grReleaseStatus();if(graph)return graph;return lpBookAllowed('final')||lpBookAllowed('worked')?'Answers available':lpBookPolicy('final')==='end'?'Answers available at lesson end.':'Your teacher has not released answers yet.';}
+function lpBookAnswerButton(){const available=mcHubAny('final')||mcHubAny('worked');return `<div class="lp-book-status" role="status" title="${esc(lpBookStatus())}">${esc(lpBookShortStatus())}</div><button class="lp-primary" data-book-hub ${available?'':'hidden disabled'}>View released answers</button>${mcReleaseButton()}${LESSON.meta.classSession?.endpoint?`<button class="mx-tool" data-book-class>${document.documentElement.dataset.export?'Join class':'Class session'}</button>`:''}${!document.documentElement.dataset.export&&document.body.classList.contains('present')?'<p>Projector view: answers on this display only; class release is separate.</p>':''}`;}
 // Semantic footprints; legacy width metadata remains readable without migration.
 function lpBookPresentation(q){return q.presentation||({compact:'compact',wide:'multipart',full:'extended'}[q.layout])||(q.figure||q.image||q.table||q.visualRefs?.length?'extended':q.parts?.length?'multipart':'compact');}
 function lpBookSpan(q,worked=false){
@@ -18673,7 +19011,7 @@ function lpBookSpan(q,worked=false){
 function lpBookRunSpan(qs,k){const span=qs[k].graphResponse?'half':lpBookSpan(qs[k]);if(span!=='half'||k!==qs.length-1)return span;let used=0;for(let j=0;j<k;j++){const width={compact:4,half:6,full:12}[lpBookSpan(qs[j])];if(used+width>12)used=0;used=(used+width)%12;}return used===0?'full':span;}
 function lpBookShortParts(q){return !q.stack&&q.parts?.length>1&&q.parts.every(p=>lpBookPartText(p).length<=110&&!lpBookPartText(p).includes('\n'));}
 function lpBookPartText(p){return typeof p==='string'?p:p?.prompt||p?.text||p?.stem||'';}
-function lpBookPartAnswers(q,kind){const parts=(q.parts||[]).filter(p=>p&&typeof p==='object');if(!parts.some(p=>(kind==='worked'?mdHasWorking(p):p.finalAnswer)||p.answerVisuals?.[kind]?.length||p.parts?.length))return '';return '<div class="lp-part-answers">'+(q.parts||[]).map((p,k)=>'<section class="lp-part-answer"><b>('+esc(p?.label||String.fromCharCode(97+k))+')</b><div><p>'+mxM(lpBookPartText(p))+'</p>'+mvAnswer(p,kind,mvSkill(q))+(kind==='worked'?(mdHasWorking(p)?mdWorking(p):'No part answer authored.'):lpBookWorking(p?.finalAnswer||'No part answer authored.'))+lpBookPartAnswers(p,kind)+'</div></section>').join('')+'</div>';}
+function lpBookPartAnswers(q,kind,options={}){const parts=(q.parts||[]).filter(p=>p&&typeof p==='object');if(!parts.some(p=>(kind==='worked'?mdHasWorking(p):p.finalAnswer)||p.answerVisuals?.[kind]?.length||p.parts?.length))return '';return '<div class="lp-part-answers">'+(q.parts||[]).map((p,k)=>'<section class="lp-part-answer"><b>('+esc(p?.label||String.fromCharCode(97+k))+')</b><div><p>'+mxM(lpBookPartText(p))+'</p>'+mvAnswer(p,kind,mvSkill(q),options)+(kind==='worked'?(mdHasWorking(p)?mdWorking(p):'No part answer authored.'):lpBookWorking(p?.finalAnswer||'No part answer authored.'))+lpBookPartAnswers(p,kind,options)+'</div></section>').join('')+'</div>';}
 function lpBookWorking(value){const text=String(value||'');if(/(^|\n)\s*\$?=/.test(text))return '<div class="lp-working-line" tabindex="0" aria-label="Working group">'+mxWorking(text)+'</div>';return text.split('\n').map(line=>'<div class="lp-working-line" tabindex="0" aria-label="Working line">'+mxWorking(line)+'</div>').join('');}
 
 function lpBookRuns(qs){const runs=[];for(const q of qs){const family=lpBookPresentation(q),group=q.group||'',last=runs.at(-1);if(last&&last.family===family&&last.group===group)last.questions.push(q);else runs.push({family,group,questions:[q]});}return runs;}
@@ -18683,31 +19021,31 @@ function lpTextbookPractice(s,a){
   return `<div class="lp-textbook${lpMicro(s)?' lp-micro-practice':''}">${lpMicro(s)?`<section class="lp-micro-example" aria-label="Representative worked example">${mxWexEx(ex,0,null,mxParts(ex.visual).length?mxCompanion(mxParts(ex.visual),'micro-'+ex.id):'')}</section><h2>Practice</h2>`:''}<p>${lpMicro(s)?mxM(ex.practice?.instructions||'Add skill-specific practice instructions in Edit mode.'):qs.some(q=>q.graphResponse)?esc(a.practiceNote||'Use the tools on each graph. Expand a response for more room.'): 'Work in your exercise book. Expand and simplify each product.'}</p><div class="lp-practice-toolbar"><div class="mx-collection-tabs" role="tablist" aria-label="Practice pathway">${levels.map(l=>`<button role="tab" id="book-level-${l}" aria-controls="book-exercise" aria-selected="${l===level}" tabindex="${l===level?0:-1}" data-book-level="${l}">${l==='basic'?'Foundation':l==='moderate'?'Moderate':'Advanced (optional)'}</button>`).join('')}</div></div><section id="book-exercise" role="tabpanel" aria-labelledby="book-level-${level}">${lpBookRuns(qs).map((run,j,runs)=>`<section class="lp-exercise-run">${run.group&&run.group!==runs[j-1]?.group?`<h2>${esc(run.group)}</h2>`:''}<div class="lp-exercise-grid">${run.questions.map((q,k)=>`<div class="lp-exercise-cell lp-span-${lpBookRunSpan(run.questions,k)}${lpBookShortParts(q)?' lp-short-parts':''}" data-book-question="${esc(q.id)}">${mxQuestionList([{...q,stem:q.parts?.length?q.stem:q.stem.replace(/^Expand and simplify\s+/,'')}],page,number(q)-1)}</div>`).join('')}</div></section>`).join('')}</section><section class="gr-answer-access" aria-label="Answer access"><h2>Answers</h2><div class="lp-book-tools">${lpBookAnswerButton()}</div></section></div>`;
 }
 function lpBookHub(opener){
-  if(!grHubAny('final')&&!grHubAny('worked'))return;
+  if(!mcHubAny('final')&&!mcHubAny('worked'))return;
   const d=document.createElement('dialog');d.className='mx-support-dialog lp-answer-hub';d.setAttribute('aria-labelledby','book-hub-title');mvHubTheme(d);
   const groups=LESSON.slides.flatMap(sk=>sk.activities.filter(a=>a.practiceCollectionId).flatMap(a=>lpPracticeMembers(sk,a).map(({ex})=>({a,ex,page:sk.id,skill:sk.title,key:lpBookKey(a,ex)}))));
   const a=lpCurrent(LESSON.slides[cur]),ex=!LP_STATE.end&&a?.practiceCollectionId&&lpPracticeCurrent(LESSON.slides[cur],a)?.ex,recent=LP_BOOK.recent;
   const context=JSON.stringify([LP_STATE.end?'end':a?.id,ex?lpBookKey(a,ex):recent?.key,ex?lpBookLevel(a,ex):recent?.level]),saved=LP_BOOK.hubStates[context];
   let updateAdaptive=()=>{};
   let selected=Math.max(0,groups.findIndex(g=>g.key===(ex?lpBookKey(a,ex):recent?.key))),level=saved?.level||(ex?lpBookLevel(a,ex):recent?.level||'basic'),kind=saved?.kind||(lpBookAllowed('final')?'final':lpBookAllowed('worked')?'worked':'final');
-  if(!grHubAny(kind))kind=grHubAny('final')?'final':'worked';
+  if(!mcHubAny(kind))kind=mcHubAny('final')?'final':'worked';
   const collapsed=new Set(saved?.collapsed||[]),label=l=>l==='basic'?'Foundation':l==='moderate'?'Moderate':'Advanced (optional)',practiceLabel=g=>(LESSON.slides.length>1?g.skill+' · ':'')+(g.ex.tabLabel||g.ex.label);
   const lessonScroll=[...document.querySelectorAll('.mx-page')].map(el=>[el,el.scrollTop]),windowScroll=[scrollX,scrollY];
   d.innerHTML=`<header><h2 id="book-hub-title">Answer hub</h2><button data-book-close aria-label="Close answer hub">×</button></header><p class="lp-hub-status">${esc(lpBookStatus())}</p><div class="lp-answer-toolbar"><div class="mx-collection-tabs" role="tablist" aria-label="Answer type"><button role="tab" id="book-final" aria-controls="book-answers" data-book-kind="final">Final answers</button><button role="tab" id="book-worked" aria-controls="book-answers" data-book-kind="worked">Worked solutions</button></div><div class="lp-answer-expand" hidden><button data-book-expand="false">Collapse all</button><button data-book-expand="true">Expand all</button></div></div><div class="lp-answer-filters"><label>Practice <select data-book-practice>${groups.map((g,i)=>`<option value="${i}">${esc(practiceLabel(g))}</option>`).join('')}<option value="all">All practice</option></select></label><label>Pathway <select data-book-pathway></select></label><label>Question <select data-book-search></select></label></div><div id="book-answers" class="lp-answer-body" role="tabpanel" tabindex="0" aria-label="Answer content"></div>`;
   document.body.append(d);const practice=d.querySelector('[data-book-practice]'),pathway=d.querySelector('[data-book-pathway]'),question=d.querySelector('[data-book-search]'),panel=d.querySelector('#book-answers');practice.value=saved?.practice==='all'?'all':String(saved?Math.max(0,groups.findIndex(g=>g.key===saved.practice)):selected);
   const active=()=>practice.value==='all'?groups:groups.filter((g,i)=>String(i)===practice.value);
-  const options=()=>{const gs=active(),levels=['basic','moderate','advanced'].filter(l=>gs.some(g=>g.a.questions.some(q=>q.archetypeId===g.ex.id&&q.level===l)));if(!levels.includes(level))level=levels[0];pathway.innerHTML=levels.map(l=>`<option value="${l}">${label(l)}</option>`).join('');pathway.value=level||'';question.innerHTML='<option value="">All</option>'+gs.map(g=>g.a.questions.filter(q=>q.archetypeId===g.ex.id&&q.level===level).map((q,i)=>({q,i})).filter(({q})=>grHubVisible(q,kind)).map(({q,i})=>`<option value="${esc(JSON.stringify([g.key,q.id]))}">${practice.value==='all'?esc(practiceLabel(g))+' · ':''}${i+1}</option>`).join('')).join('');};
+  const options=()=>{const gs=active(),levels=['basic','moderate','advanced'].filter(l=>gs.some(g=>g.a.questions.some(q=>q.archetypeId===g.ex.id&&q.level===l)));if(!levels.includes(level))level=levels[0];pathway.innerHTML=levels.map(l=>`<option value="${l}">${label(l)}</option>`).join('');pathway.value=level||'';question.innerHTML='<option value="">All</option>'+gs.map(g=>g.a.questions.filter(q=>q.archetypeId===g.ex.id&&q.level===level).map((q,i)=>({q,i})).filter(({q})=>mcVisible(q,kind)).map(({q,i})=>`<option value="${esc(JSON.stringify([g.key,q.id]))}">${practice.value==='all'?esc(practiceLabel(g))+' · ':''}${i+1}</option>`).join('')).join('');};
   // Measure the real column, including loaded glyphs, before promoting long working.
   const fit=()=>{mdAlign(panel);updateAdaptive();panel.querySelectorAll('[data-book-base-span]').forEach(el=>el.classList.toggle('lp-answer-full',el.dataset.bookBaseSpan==='full'));panel.querySelectorAll('.lp-answer-list:not(.lp-answer-key) article:not(.lp-answer-full)').forEach(el=>{if(getComputedStyle(el.parentElement).gridTemplateColumns.split(' ').length>1&&[...el.querySelectorAll('.lp-working-line')].some(line=>line.scrollWidth>line.clientWidth+1))el.classList.add('lp-answer-full');});};
-  const draw=()=>{d.classList.toggle('lp-graph-hub',active().some(g=>g.a.questions.some(q=>q.graphResponse&&grHubVisible(q,kind))));d.querySelector('[data-book-kind="final"]').textContent=d.classList.contains('lp-graph-hub')?'Model graphs':'Final answers';d.querySelectorAll('[data-book-kind]').forEach(b=>{b.setAttribute('aria-selected',String(b.dataset.bookKind===kind));b.tabIndex=b.dataset.bookKind===kind?0:-1;b.disabled=!grHubAny(b.dataset.bookKind);});panel.setAttribute('aria-labelledby','book-'+kind);d.querySelector('.lp-answer-expand').hidden=kind!=='worked'||!grHubAny(kind);if(!grHubAny(kind)){panel.innerHTML='<p>'+esc(lpBookLockedCopy(kind))+'</p>';return;}panel.innerHTML=active().map(g=>{const qs=g.a.questions.filter(q=>q.archetypeId===g.ex.id&&q.level===level),visible=qs.filter(q=>grHubVisible(q,kind)&&(!question.value||JSON.stringify([g.key,q.id])===question.value));if(!visible.length)return '';return `<section><h3>${esc(practiceLabel(g))} · ${label(level)}</h3><div class="lp-answer-list ${kind==='final'?'lp-answer-key':''}">${visible.map(q=>{const key=JSON.stringify([g.key,q.id]),span=q.graphResponse?(kind==='worked'?'full':'half'):kind==='worked'?lpBookSpan(q,true):'half';return `<article class="${q.graphResponse?'gr-answer-card ':''}${span==='full'?'lp-answer-full':''}" data-book-base-span="${span}" data-book-answer="${esc(q.id)}"><b class="lp-answer-no">${qs.indexOf(q)+1}</b><div>${q.graphResponse?grAnswerHtml(q,g.page,kind,{key,collapsed:collapsed.has(key)}):!lpBookAllowed(kind)?`<p>${esc(lpBookLockedCopy(kind))}</p>`:kind==='worked'?`<details data-book-solution="${esc(key)}" ${collapsed.has(key)?'':'open'}><summary>${mxM(q.stem)}</summary><div class="mx-stepm">${mvAnswer(q,kind)}${lpBookPartAnswers(q,kind)||(lpBookQuestion(q,kind)?(q.workedSolution?mdStructured(q.workedSolution):lpBookWorking(lpBookQuestion(q,kind))):'No solution authored.')}</div></details>`:(mvAnswer(q,kind)+(lpBookPartAnswers(q,kind)||mxM(lpBookQuestion(q,kind)||'No answer authored.')))}${!document.documentElement.dataset.export&&document.body.classList.contains('present')&&q.teacherNote?`<p>${esc(q.teacherNote)}</p>`:''}</div></article>`;}).join('')}</div></section>`;}).join('')||'<p>No practice answers in this selection.</p>';grAnswerWire(panel);requestAnimationFrame(()=>{mvFitAnswers(panel);});panel.querySelectorAll('[data-book-solution]').forEach(el=>el.ontoggle=()=>{el.open?collapsed.delete(el.dataset.bookSolution):collapsed.add(el.dataset.bookSolution);requestAnimationFrame(fit);});requestAnimationFrame(fit);};
+  const draw=()=>{d.classList.toggle('lp-graph-hub',active().some(g=>g.a.questions.some(q=>q.graphResponse&&mcVisible(q,kind))));d.querySelector('[data-book-kind="final"]').textContent=d.classList.contains('lp-graph-hub')?'Model graphs':'Final answers';d.querySelectorAll('[data-book-kind]').forEach(b=>{b.setAttribute('aria-selected',String(b.dataset.bookKind===kind));b.tabIndex=b.dataset.bookKind===kind?0:-1;b.disabled=!mcHubAny(b.dataset.bookKind);});panel.setAttribute('aria-labelledby','book-'+kind);d.querySelector('.lp-answer-expand').hidden=kind!=='worked'||!mcHubAny(kind);if(!mcHubAny(kind)){panel.innerHTML='<p>'+esc(lpBookLockedCopy(kind))+'</p>';return;}panel.innerHTML=active().map(g=>{const qs=g.a.questions.filter(q=>q.archetypeId===g.ex.id&&q.level===level),visible=qs.filter(q=>mcVisible(q,kind)&&(!question.value||JSON.stringify([g.key,q.id])===question.value));if(!visible.length)return '';return `<section><h3>${esc(practiceLabel(g))} · ${label(level)}</h3><div class="lp-answer-list ${kind==='final'?'lp-answer-key':''}">${visible.map(q=>{const key=JSON.stringify([g.key,q.id]),span=q.graphResponse?(kind==='worked'?'full':'half'):kind==='worked'?lpBookSpan(q,true):'half';return `<article class="${q.graphResponse?'gr-answer-card ':''}${span==='full'?'lp-answer-full':''}" data-book-base-span="${span}" data-book-answer="${esc(q.id)}"><b class="lp-answer-no">${qs.indexOf(q)+1}</b><div>${(q.choice||q.matching)?mcAnswer(q,kind,key,collapsed.has(key)):q.graphResponse?grAnswerHtml(q,g.page,kind,{key,collapsed:collapsed.has(key)}):!lpBookAllowed(kind)?`<p>${esc(lpBookLockedCopy(kind))}</p>`:kind==='worked'?`<details data-book-solution="${esc(key)}" ${collapsed.has(key)?'':'open'}><summary>${mxM(q.stem)}</summary><div class="mx-stepm">${mvAnswer(q,kind)}${lpBookPartAnswers(q,kind)||(lpBookQuestion(q,kind)?(q.workedSolution?mdStructured(q.workedSolution):lpBookWorking(lpBookQuestion(q,kind))):'No solution authored.')}</div></details>`:(mvAnswer(q,kind)+(lpBookPartAnswers(q,kind)||mxM(lpBookQuestion(q,kind)||'No answer authored.')))}${!document.documentElement.dataset.export&&document.body.classList.contains('present')&&q.teacherNote?`<p>${esc(q.teacherNote)}</p>`:''}</div></article>`;}).join('')}</div></section>`;}).join('')||'<p>No practice answers in this selection.</p>';grAnswerWire(panel);requestAnimationFrame(()=>{mvFitAnswers(panel);});panel.querySelectorAll('[data-book-solution]').forEach(el=>el.ontoggle=()=>{el.open?collapsed.delete(el.dataset.bookSolution):collapsed.add(el.dataset.bookSolution);requestAnimationFrame(fit);});requestAnimationFrame(fit);};
   options();if(saved?.question&&[...question.options].some(o=>o.value===saved.question))question.value=saved.question;draw();practice.onchange=()=>{options();draw();panel.scrollTop=0;};pathway.onchange=()=>{level=pathway.value;options();draw();panel.scrollTop=0;};question.onchange=()=>{draw();panel.scrollTop=0;};
   d.querySelectorAll('[data-book-expand]').forEach(b=>b.onclick=()=>panel.querySelectorAll('[data-book-solution]').forEach(el=>{el.open=b.dataset.bookExpand==='true';el.open?collapsed.delete(el.dataset.bookSolution):collapsed.add(el.dataset.bookSolution);}));
   d.querySelectorAll('[data-book-kind]').forEach((b,i)=>{b.onclick=()=>{const keepQuestion=d.classList.contains('lp-graph-hub')?question.value:'';kind=b.dataset.bookKind;options();if(keepQuestion&&[...question.options].some(option=>option.value===keepQuestion))question.value=keepQuestion;draw();panel.scrollTop=0;};b.onkeydown=e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();const buttons=d.querySelectorAll('[data-book-kind]'),next=e.key==='Home'?0:e.key==='End'?1:1-i;buttons[next].click();buttons[next].focus();}};});
-  const update=()=>{d.querySelector('.lp-hub-status').textContent=lpBookStatus();const top=panel.scrollTop;if(!grHubAny('final')&&!grHubAny('worked')){d.close();return;}if(!grHubAny(kind))kind=grHubAny('final')?'final':'worked';options();draw();panel.scrollTop=top;};document.addEventListener('book-session',update);
+  const update=()=>{d.querySelector('.lp-hub-status').textContent=lpBookStatus();const top=panel.scrollTop;if(!mcHubAny('final')&&!mcHubAny('worked')){d.close();return;}if(!mcHubAny(kind))kind=mcHubAny('final')?'final':'worked';options();draw();panel.scrollTop=top;};document.addEventListener('book-session',update);
   const observer=new ResizeObserver(fit);observer.observe(panel);d.querySelector('[data-book-close]').onclick=()=>d.close();d.onclose=()=>{LP_BOOK.hubStates[context]={practice:practice.value==='all'?'all':groups[+practice.value]?.key,level,kind,question:question.value,collapsed:[...collapsed],scroll:panel.scrollTop};observer.disconnect();document.removeEventListener('book-session',update);d.remove();for(const[el,top]of lessonScroll)if(el.isConnected)el.scrollTop=top;window.scrollTo(...windowScroll);if(opener?.isConnected&&!opener.hidden&&!opener.disabled)opener.focus({preventScroll:true});else document.querySelector('.lp-title')?.focus({preventScroll:true});};d.onkeydown=e=>e.stopPropagation();updateAdaptive=mdAdaptiveHub(d);d.showModal();fit();document.fonts.ready.then(()=>{if(d.isConnected)fit();});panel.scrollTop=saved?.scroll||0;d.querySelector('[data-book-close]').focus();
 }
 function lpBookComplete(){const c=LESSON.meta.completion||{},next=c.nextLesson,url=safeUrl(next?.url,'frame'),image=lpImage(lpRoleImage('completion',c.image));return `<div class="lp-book-outro"><div class="lp-completion-hero${image?'':' lp-no-image'}"><div><p class="lp-completion-kicker">Well done</p><h1 id="lpTitle" class="lp-title" tabindex="-1">Lesson complete</h1><p>${mxM(c.description||'You have completed this lesson. Keep building fluency through practice.')}</p><ul class="lp-completion-indicators">${LESSON.slides.length>1?`<li>${LESSON.slides.length} skills in this lesson</li>`:''}<li>Worked examples available to revisit</li><li>Practice questions available to revisit</li></ul></div>${image}</div>${c.practised?.length?`<section><h2>What you practised</h2><ul>${c.practised.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></section>`:''}<div class="lp-book-tools"><button class="lp-primary" data-lp-front="${esc(lpFrontPages()[0]?.id||'')}">Review lesson →</button>${lpBookAnswerButton()}</div>${url?`<a class="lp-next-lesson" href="${esc(url)}"><span>Next lesson</span><b>${esc(next.title||'Continue learning')} →</b></a>`:''}</div>`;}
-function lpBookStudentData(lesson){const out=JSON.parse(JSON.stringify(lesson));for(const p of out.meta.frontMatter||[])p.image=lpRoleImage(p.kind,p.image,out.meta);if(out.meta.artworkPack){out.meta.completion=out.meta.completion||{};out.meta.completion.image=lpRoleImage('completion',out.meta.completion.image,out.meta);}for(const s of out.slides)for(const a of s.activities||[])for(const q of a.questions||[]){delete q.teacherNote;delete q.generation;if(!out.meta.answerPolicy)continue;for(const [kind,key]of [['final','answer'],['worked','workedAnswer']]){const p=q.graphResponse&&out.meta.answerPolicy.groups?.[q.releaseGroup]?.[kind]||out.meta.answerPolicy[kind]||'autonomous';if(p==='hidden'||p==='teacher'&&(out.meta.answerPolicy.fallback?.[kind]||'hidden')==='hidden'){delete q[key];if(kind==='worked')mdStripWorked(q);const strip=parts=>{for(const part of Array.isArray(parts)?parts:[])if(part&&typeof part==='object'){delete part[kind==='final'?'finalAnswer':'workedAnswer'];strip(part.parts);}};strip(q.parts);}}}return grStudentData(MathVisuals.stripAnswers(out));}
+function lpBookStudentData(lesson){const out=JSON.parse(JSON.stringify(lesson));for(const p of out.meta.frontMatter||[])p.image=lpRoleImage(p.kind,p.image,out.meta);if(out.meta.artworkPack){out.meta.completion=out.meta.completion||{};out.meta.completion.image=lpRoleImage('completion',out.meta.completion.image,out.meta);}for(const s of out.slides)for(const a of s.activities||[])for(const q of a.questions||[]){delete q.teacherNote;delete q.generation;if(!out.meta.answerPolicy)continue;for(const [kind,key]of [['final','answer'],['worked','workedAnswer']]){const p=q.graphResponse&&out.meta.answerPolicy.groups?.[q.releaseGroup]?.[kind]||out.meta.answerPolicy[kind]||'autonomous';if(p==='hidden'||p==='teacher'&&(out.meta.answerPolicy.fallback?.[kind]||'hidden')==='hidden'){delete q[key];if(kind==='worked')mdStripWorked(q);const strip=parts=>{for(const part of Array.isArray(parts)?parts:[])if(part&&typeof part==='object'){delete part[kind==='final'?'finalAnswer':'workedAnswer'];strip(part.parts);}};strip(q.parts);}}}return MathMatching.studentData(MathChoices.studentData(grStudentData(MathVisuals.stripAnswers(out)),lesson),lesson);}
 function lpBookWire(){
   if(!lpTextbook())return;if(LP_STATE.end)LP_BOOK.completed=true;else if(!LP_STATE.front){const a=lpCurrent(LESSON.slides[cur]),ex=lpPracticeCurrent(LESSON.slides[cur],a)?.ex;if(a?.practiceCollectionId&&ex)LP_BOOK.recent={key:lpBookKey(a,ex),level:lpBookLevel(a,ex)};}
   document.querySelectorAll('[data-book-page]').forEach(b=>b.onclick=()=>{const skill=+b.dataset.bookSkill,a=LESSON.slides[skill].activities.find(a=>a.id===b.dataset.bookActivity);(LP_STATE.practice=LP_STATE.practice||{})[a.id]=b.dataset.bookPage;lpNavigate(skill,a.id);});
@@ -18723,14 +19061,14 @@ function lpBookValidate(d){
 }
 function lpBookPolicyForm(){const p=LESSON.meta.answerPolicy||{},c=LESSON.meta.completion||{},options=[['autonomous','Autonomous'],['end','End of lesson'],['teacher','Teacher release'],['hidden','Hidden']];return `<div class="isec"><h3>Mathematics practice and answers</h3>${lpArtworkPackForm()}${inSel('Practice presentation','meta.practiceLayout',LESSON.meta.practiceLayout||'legacy',[['legacy','Original linked practice'],['textbook','Textbook pages']])}${inSel('Final answers','meta.answerPolicy.final',p.final||'autonomous',options)}${inSel('Worked solutions','meta.answerPolicy.worked',p.worked||'autonomous',options)}${['final','worked'].map(k=>inSel((k==='final'?'Final answers':'Worked solutions')+' without a live class','meta.answerPolicy.fallback.'+k,p.fallback?.[k]||'hidden',options.filter(([v])=>v!=='teacher'))).join('')}<p>End-of-lesson access is a local pacing rule; these answers are included in the student file. Teacher release requires a deployed class endpoint. Choosing an available offline fallback deliberately includes those answers in the student file.</p>${inT('Class endpoint (HTTPS)','meta.classSession.endpoint',LESSON.meta.classSession?.endpoint||'')}${inT('Class public key','meta.classSession.publishableKey',LESSON.meta.classSession?.publishableKey||'')}<p>Public key only. Never paste a service-role key.</p></div><div class="isec"><h3>Lesson complete</h3>${inA('Completion message','meta.completion.description',c.description||'')}${inT('Next lesson title','meta.completion.nextLesson.title',c.nextLesson?.title||'')}${inT('Next lesson URL','meta.completion.nextLesson.url',c.nextLesson?.url||'')}${lpListForm('Practised skill','meta.completion.practised',c.practised||[])}</div>`;}
 async function lpBookApi(action,data={},token){const cfg=LESSON.meta.classSession||{};if(!cfg.endpoint)throw Error('No class endpoint is configured.');const r=await fetch(cfg.endpoint,{method:'POST',headers:{'Content-Type':'application/json',apikey:cfg.publishableKey||'',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify({action,lessonId:LESSON.meta.id,...data}),signal:AbortSignal.timeout(12000)});let result;try{result=await r.json();}catch{throw Error('Class service is unavailable.');}if(!r.ok)throw Error(result.error||'Class service is unavailable.');if(!result||typeof result.active!=='boolean')throw Error('Class service is unavailable.');return result;}
-function lpBookRefresh(){document.querySelectorAll('.lp-book-status').forEach(el=>{el.textContent=lpBookShortStatus();el.title=lpBookStatus();});document.querySelectorAll('[data-book-hub]').forEach(el=>{el.textContent='View released answers';el.disabled=!grHubAny('final')&&!grHubAny('worked');el.hidden=el.disabled;});document.dispatchEvent(new Event('book-session'));}
+function lpBookRefresh(){document.querySelectorAll('.lp-book-status').forEach(el=>{el.textContent=lpBookShortStatus();el.title=lpBookStatus();});document.querySelectorAll('[data-book-hub]').forEach(el=>{el.textContent='View released answers';el.disabled=!mcHubAny('final')&&!mcHubAny('worked');el.hidden=el.disabled;});document.dispatchEvent(new Event('book-session'));}
 function lpBookPoll(){clearTimeout(LP_BOOK.timer);const session=LP_BOOK.session;if(!session?.active&&!session?.retry)return;LP_BOOK.timer=setTimeout(async()=>{try{const next=await lpBookApi('read',{code:session.code,readerToken:session.readerToken});if(LP_BOOK.session!==session)return;const changed=session.active!==next.active||session.state!==next.state||JSON.stringify(session.answers||{})!==JSON.stringify(next.answers||{});LP_BOOK.session={...next,code:session.code,failures:0};if(changed)lpBookRefresh();}catch{if(LP_BOOK.session!==session)return;const failures=(session.failures||0)+1;LP_BOOK.session=failures>=3&&!(LP_BOOK.teacherToken&&!document.documentElement.dataset.export)?null:{...session,active:false,state:'locked',answers:{},retry:true,failures};lpBookRefresh();}lpBookPoll();},session.failures>=3?30000:5000);}
 function lpBookClass(opener){
   const lesson=LESSON,book=LP_BOOK,current=()=>LESSON===lesson&&LP_BOOK===book,teacher=!document.documentElement.dataset.export,d=document.createElement('dialog');d.className='mx-support-dialog lp-class-dialog';d.setAttribute('aria-labelledby','book-class-title');
   d.innerHTML=`<header><h2 id="book-class-title">${teacher?'Teacher class session':'Join class'}</h2><button data-book-close aria-label="Close class session">×</button></header>${teacher?'<p>Authenticated release controls are separate from this projector’s answers.</p><label>Teacher email<input type="email" autocomplete="username" data-class-email></label><label>Password<input type="password" autocomplete="current-password" data-class-password></label><button data-class-start>Sign in and start class</button><div data-class-controls hidden><p data-class-code></p><label>Answers<select data-class-state><option value="locked">Locked</option><option value="finals">Reveal final answers</option><option value="worked">Reveal worked solutions</option></select></label><button data-class-release>Publish to class</button><button data-class-end>End session</button></div>':'<label>Six-digit class code<input inputmode="numeric" autocomplete="off" maxlength="6" data-class-code-input></label><button data-class-join>Join class</button><button data-class-leave>Leave class</button>'}<p data-class-status role="status"></p>`;
   document.body.append(d);const status=d.querySelector('[data-class-status]'),run=fn=>async e=>{const button=e.currentTarget;button.disabled=true;try{await fn();}catch(error){status.textContent=error.message;}finally{button.disabled=false;show();}};
   const show=()=>{const controls=d.querySelector('[data-class-controls]'),start=d.querySelector('[data-class-start]');if(start){start.textContent=LP_BOOK.session?.active||LP_BOOK.session?.retry?'Sign in again':'Sign in and start class';start.disabled=!!book.starting;}if(controls){controls.hidden=!(LP_BOOK.session?.active||LP_BOOK.session?.retry);d.querySelector('[data-class-code]').textContent=LP_BOOK.session?.active||LP_BOOK.session?.retry?'Class code: '+LP_BOOK.session.code+' · expires '+new Date(LP_BOOK.session.expiresAt).toLocaleTimeString():'';}};show();document.addEventListener('book-session',show);
-  d.querySelector('[data-class-start]')?.addEventListener('click',run(async()=>{const reauthenticate=!!(book.session?.active||book.session?.retry);if(book.starting)throw Error('A class is already starting.');book.starting=true;try{const cfg=LESSON.meta.classSession,endpoint=new URL(cfg.endpoint),email=d.querySelector('[data-class-email]').value,password=d.querySelector('[data-class-password]').value;const r=await fetch(endpoint.origin+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json',apikey:cfg.publishableKey||''},body:JSON.stringify({email,password}),signal:AbortSignal.timeout(12000)});d.querySelector('[data-class-password]').value='';const auth=await r.json();if(!current())return;if(!r.ok||!auth.access_token)throw Error('Teacher sign-in failed.');LP_BOOK.teacherToken=auth.access_token;if(reauthenticate||book.session?.active||book.session?.retry){status.textContent='Signed in again. No new class was created; end the current class before starting another.';return;}const answers={};for(const sk of LESSON.slides)for(const a of sk.activities||[])if(a.practiceCollectionId)for(const q of a.questions||[])answers[q.id]={answer:q.answer||'',workedAnswer:mdCompatibilityWorking(q)};const session=await lpBookApi('start',{answers},LP_BOOK.teacherToken);if(!current())return;LP_BOOK.session=session;status.textContent='Class started. Share the code with students.';lpBookPoll();lpBookRefresh();}finally{book.starting=false;}}));
+  d.querySelector('[data-class-start]')?.addEventListener('click',run(async()=>{const reauthenticate=!!(book.session?.active||book.session?.retry);if(book.starting)throw Error('A class is already starting.');book.starting=true;try{const cfg=LESSON.meta.classSession,endpoint=new URL(cfg.endpoint),email=d.querySelector('[data-class-email]').value,password=d.querySelector('[data-class-password]').value;const r=await fetch(endpoint.origin+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'Content-Type':'application/json',apikey:cfg.publishableKey||''},body:JSON.stringify({email,password}),signal:AbortSignal.timeout(12000)});d.querySelector('[data-class-password]').value='';const auth=await r.json();if(!current())return;if(!r.ok||!auth.access_token)throw Error('Teacher sign-in failed.');LP_BOOK.teacherToken=auth.access_token;if(reauthenticate||book.session?.active||book.session?.retry){status.textContent='Signed in again. No new class was created; end the current class before starting another.';return;}const answers={};for(const sk of LESSON.slides)for(const a of sk.activities||[])if(a.practiceCollectionId)for(const q of a.questions||[])answers[q.id]=q.matching?mmClassAnswers(q):{answer:q.choice?mcAnswerText(q):q.answer||'',workedAnswer:mdCompatibilityWorking(q)};const session=await lpBookApi('start',{answers},LP_BOOK.teacherToken);if(!current())return;LP_BOOK.session=session;status.textContent='Class started. Share the code with students.';lpBookPoll();lpBookRefresh();}finally{book.starting=false;}}));
   d.querySelector('[data-class-release]')?.addEventListener('click',run(async()=>{const state=d.querySelector('[data-class-state]').value;const session=await lpBookApi('release',{code:LP_BOOK.session?.code,state},LP_BOOK.teacherToken);if(!current())return;LP_BOOK.session=session;status.textContent='Release state published to class.';show();lpBookPoll();lpBookRefresh();}));
   d.querySelector('[data-class-end]')?.addEventListener('click',run(async()=>{await lpBookApi('end',{code:LP_BOOK.session?.code},LP_BOOK.teacherToken);if(!current())return;LP_BOOK.session=null;clearTimeout(LP_BOOK.timer);status.textContent='Session ended. Students return to their authored fallback.';show();lpBookRefresh();}));
   d.querySelector('[data-class-join]')?.addEventListener('click',run(async()=>{const code=d.querySelector('[data-class-code-input]').value.trim();if(!/^\d{6}$/.test(code))throw Error('Enter a six-digit class code.');const session=await lpBookApi('join',{code});if(!current())return;LP_BOOK.session=session;status.textContent=session.active?'Joined class. Waiting for teacher release.':'That class has ended.';lpBookPoll();lpBookRefresh();}));
@@ -18750,7 +19088,7 @@ function lpPracticeBody(s,a){
   return `<div class="lp-practice"><div class="mx-collection-tabs" role="tablist" aria-label="Practice archetypes">${members.map(({ex})=>`<button role="tab" type="button" id="lp-practice-tab-${esc(ex.id)}" aria-controls="lp-practice-panel" aria-selected="${ex.id===selected}" tabindex="${ex.id===selected?0:-1}" data-lp-practice-tab="${esc(ex.id)}">${esc(ex.tabLabel||ex.label)}</button>`).join('')}</div><section id="lp-practice-panel" role="tabpanel" aria-labelledby="lp-practice-tab-${esc(selected)}">${a.practiceNote?`<p>${mxM(a.practiceNote)}</p>`:''}${levels||'<p>Add questions for this archetype.</p>'}</section></div>`;
 }
 function lpPracticeWire(){
-  lpBookWire();grWire();
+  lpBookWire();grWire();mcWire();mmWire();
   const s=LESSON.slides[cur],a=lpCurrent(s),members=lpPracticeMembers(s,a);
   document.querySelectorAll('[data-lp-practice-tab]').forEach((b,j)=>{b.onclick=()=>lpPracticeSelect(a,b.dataset.lpPracticeTab);b.onkeydown=e=>{let k=j;if(e.key==='ArrowRight')k=(j+1)%members.length;else if(e.key==='ArrowLeft')k=(j+members.length-1)%members.length;else if(e.key==='Home')k=0;else if(e.key==='End')k=members.length-1;else return;e.preventDefault();e.stopPropagation();lpPracticeSelect(a,members[k].ex.id);};});
   document.querySelector('[data-lp-practice]')?.addEventListener('click',e=>{const activity=e.currentTarget.dataset.lpPractice,id=e.currentTarget.dataset.lpArchetype;(LP_STATE.practice=LP_STATE.practice||{})[activity]=id;lpNavigate(cur,activity);});
@@ -18861,7 +19199,7 @@ function lpCollectionWire(s,a,i){
 function lpPracticeForm(s,a,base,part){
   const options=[['','Ordinary questions'],...(s.exampleCollections||[]).map(c=>[c.id,c.title||'Worked examples'])];
   const q=a.questions?.[LP_EDIT.index],members=lpPracticeMembers(s,a),path=base+'.questions.'+LP_EDIT.index;
-  return `<div class="isec"><h3>Matched practice</h3><label>Worked-example collection<select class="ii" data-practice-collection>${options.map(([v,l])=>`<option value="${esc(v)}"${a.practiceCollectionId===v||!a.practiceCollectionId&&!v?' selected':''}>${esc(l)}</option>`).join('')}</select></label><p>Choose the worked examples that model these questions.</p></div>${(lpMathSubject()&&lpMicro(s)?members:[]).map(({ex})=>`<div class="isec"><h3>${esc(ex.tabLabel||ex.label)} · Practice generation</h3><label>Family<select class="ii" data-micro-family="${esc(ex.id)}">${MathMicro.families.map(([id,label])=>`<option value="${id}" ${ex.practice?.generator?.family===id?'selected':''}>${esc(label)}</option>`).join('')}</select></label>${['basic','moderate'].map(level=>`<label>${level==='basic'?'Foundation':'Moderate'} count<input class="ii" type="number" min="0" max="24" data-micro-count="${esc(ex.id)}" data-level="${level}" value="${ex.practice?.generator?.counts?.[level]??(level==='basic'?8:4)}"></label>`).join('')}<label>Skill-specific instructions<textarea class="ii" data-micro-instructions="${esc(ex.id)}">${esc(ex.practice?.instructions||'')}</textarea></label><button data-micro-generate="${esc(ex.id)}">Generate realised question set</button><p>Replaces this skill’s questions with deterministic authored questions. Inspect and edit them below before publishing.</p><p data-micro-error role="status"></p></div>`).join('')}${part==='questions'&&q?`<div class="isec"><h3>Selected question</h3>${members.length?inSel('Archetype',path+'.archetypeId',q.archetypeId||'',members.map(({ex})=>[ex.id,ex.tabLabel||ex.label]))+inSel('Practice pathway',path+'.level',q.level||'basic',[['basic','Foundation'],['moderate','Moderate'],['advanced','Advanced (optional)']]):''}${inMath('Final answer',path+'.answer',q.answer||'',true)}${mdSolutionForm(path,q)}${inA('Teacher note (not published)',path+'.teacherNote',q.teacherNote||'')}${inSel('Presentation',path+'.presentation',lpBookPresentation(q),[['compact','Compact'],['multipart','Multipart / structured'],['extended','Extended']])}${inT('Section / group (optional)',path+'.group',q.group||'')}<button class="ibtn-add" data-practice-duplicate>Duplicate question</button>${grAuthorHtml(q)}</div>`:''}`;
+  return `<div class="isec"><h3>Matched practice</h3><label>Worked-example collection<select class="ii" data-practice-collection>${options.map(([v,l])=>`<option value="${esc(v)}"${a.practiceCollectionId===v||!a.practiceCollectionId&&!v?' selected':''}>${esc(l)}</option>`).join('')}</select></label><p>Choose the worked examples that model these questions.</p></div>${(lpMathSubject()&&lpMicro(s)?members:[]).map(({ex})=>`<div class="isec"><h3>${esc(ex.tabLabel||ex.label)} · Practice generation</h3><label>Family<select class="ii" data-micro-family="${esc(ex.id)}">${MathMicro.families.map(([id,label])=>`<option value="${id}" ${ex.practice?.generator?.family===id?'selected':''}>${esc(label)}</option>`).join('')}</select></label>${['basic','moderate'].map(level=>`<label>${level==='basic'?'Foundation':'Moderate'} count<input class="ii" type="number" min="0" max="24" data-micro-count="${esc(ex.id)}" data-level="${level}" value="${ex.practice?.generator?.counts?.[level]??(level==='basic'?8:4)}"></label>`).join('')}<label>Skill-specific instructions<textarea class="ii" data-micro-instructions="${esc(ex.id)}">${esc(ex.practice?.instructions||'')}</textarea></label><button data-micro-generate="${esc(ex.id)}">Generate realised question set</button><p>Replaces this skill’s questions with deterministic authored questions. Inspect and edit them below before publishing.</p><p data-micro-error role="status"></p></div>`).join('')}${part==='questions'&&q?`<div class="isec"><h3>Selected question</h3>${members.length?inSel('Archetype',path+'.archetypeId',q.archetypeId||'',members.map(({ex})=>[ex.id,ex.tabLabel||ex.label]))+inSel('Practice pathway',path+'.level',q.level||'basic',[['basic','Foundation'],['moderate','Moderate'],['advanced','Advanced (optional)']]):''}${inMath('Final answer',path+'.answer',q.answer||'',true)}${mdSolutionForm(path,q)}${inA('Teacher note (not published)',path+'.teacherNote',q.teacherNote||'')}${inSel('Presentation',path+'.presentation',lpBookPresentation(q),[['compact','Compact'],['multipart','Multipart / structured'],['extended','Extended']])}${inT('Section / group (optional)',path+'.group',q.group||'')}<button class="ibtn-add" data-practice-duplicate>Duplicate question</button>${q.matching?'':grAuthorHtml(q)}${mcAuthorHtml(q)}${mmAuthorHtml(q)}</div>`:''}`;
 }
 function lpPracticeEditorWire(s,a){
   document.querySelectorAll('[data-micro-generate]').forEach(button=>button.onclick=()=>{
@@ -18877,7 +19215,7 @@ function lpPracticeEditorWire(s,a){
     }catch(error){box.querySelector('[data-micro-error]').textContent=error.message;}
   });
   document.querySelectorAll('[data-micro-instructions]').forEach(el=>el.onchange=()=>{const ex=lpPracticeMembers(s,a).find(x=>x.ex.id===el.dataset.microInstructions)?.ex;if(ex){ex.practice=ex.practice||{};ex.practice.instructions=el.value;renderCanvas();}});
-  const ins=$('#inspector');grAuthorWire(ins,a.questions?.[LP_EDIT.index]);ins.querySelector('[data-practice-collection]')?.addEventListener('change',e=>{const id=e.currentTarget.value;if(id){a.practiceCollectionId=id;const members=lpPracticeMembers(s,a),first=members[0]?.ex.id;(a.questions||[]).forEach(q=>{if(!members.some(x=>x.ex.id===q.archetypeId))q.archetypeId=first;if(!q.level)q.level='basic';});}else delete a.practiceCollectionId;renderSlide();});
+  const ins=$('#inspector');grAuthorWire(ins,a.questions?.[LP_EDIT.index]);mcAuthorWire(ins,a.questions?.[LP_EDIT.index]);mmAuthorWire(ins,a.questions?.[LP_EDIT.index]);ins.querySelector('[data-practice-collection]')?.addEventListener('change',e=>{const id=e.currentTarget.value;if(id){a.practiceCollectionId=id;const members=lpPracticeMembers(s,a),first=members[0]?.ex.id;(a.questions||[]).forEach(q=>{if(!members.some(x=>x.ex.id===q.archetypeId))q.archetypeId=first;if(!q.level)q.level='basic';});}else delete a.practiceCollectionId;renderSlide();});
   ins.querySelector('[data-practice-duplicate]')?.addEventListener('click',()=>{const q=a.questions[LP_EDIT.index],copy=JSON.parse(JSON.stringify(q));copy.id='question-'+crypto.randomUUID();a.questions.splice(++LP_EDIT.index,0,copy);renderSlide();});
 }
 function lpInspector(s,i){
@@ -19953,10 +20291,11 @@ function gradeResponse(kind, response, spec){
   const s=spec||{}, r=response||{}, mode=s.mode||'equation';
   let ok=false, detail='';
   if(mode==='equation'||mode==='both'){
-    const tgt=(s.answer&&s.answer.equation)?TPMath.compile(s.answer.equation):null;
+    const compileAuthored=value=>{try{return TPMath.compile(value);}catch{return null;}};
+    const tgt=(s.answer&&s.answer.equation)?compileAuthored(s.answer.equation):null;
     if(tgt && !tgt.error && gqEqEqual(r.eval,tgt.eval,s.x0,s.x1)) ok=true;
     else { const mis=Array.isArray(s.misconceptions)?s.misconceptions:[];
-      for(const mc of mis){ const mf=TPMath.compile(mc.equation||''); if(mf && !mf.error && gqEqEqual(r.eval,mf.eval,s.x0,s.x1)){ detail=mc.message||''; break; } } }
+      for(const mc of mis){ const mf=compileAuthored(mc.equation||''); if(mf && !mf.error && gqEqEqual(r.eval,mf.eval,s.x0,s.x1)){ detail=mc.message||''; break; } } }
   }
   if(mode==='points' || (mode==='both' && ok)){
     const ans=(s.answer&&Array.isArray(s.answer.points))?s.answer.points:[];
@@ -22159,7 +22498,7 @@ function tpRT(){ return (TP_RUNTIME[cur]=TP_RUNTIME[cur]||{ans:{},shown:{}}); }
 /* The payload kinds. A response is not an opaque value: a typed answer, a stroke set, a graph construction
    and a table are different things, and a bundle that flattened them would lose the distinction the
    marking, replay and (later) collection all depend on. Closed vocabulary, reported, never coerced. */
-const RESP_KINDS=['text','ink','graph','geometry','table','workbook'];
+const RESP_KINDS=['text','ink','graph','geometry','table','workbook','choice','matching'];
 let TP_RESP={};                                    /* { pageId: { responseId: {kind, value} } } */
 const tpRespId=(x)=>(x&&x.id!=null)?String(x.id).trim():'';
 

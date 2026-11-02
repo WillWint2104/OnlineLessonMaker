@@ -9,6 +9,7 @@ globalThis.MathDisplay = (() => {
       let c=s[i];
       if(c==='\\'){
         const token=/^\\([A-Za-z]+|.)/.exec(s.slice(i));if(!token)return null;
+        if(['begin','end'].includes(token[1])){const env=/^\s*\{(pmatrix|vmatrix|cases)\}/.exec(s.slice(i+token[0].length));if(env){if(token[1]==='begin')stack.push('env:'+env[1]);else if(stack.pop()!=='env:'+env[1])return null;i+=token[0].length+env[0].length-1;continue;}}
         const rel={le:'≤',leq:'≤',ge:'≥',geq:'≥',ne:'≠',neq:'≠'}[token[1]];
         if(rel&&!stack.length&&!bar)return {at:i,length:token[0].length,relation:rel};
         if(['{','(','['].includes(token[1]))stack.push(token[1]);
@@ -22,6 +23,7 @@ globalThis.MathDisplay = (() => {
     }return null;
   }
   function diagnoseMath(value,syntax){
+    if(syntax.usesStructures?.(value))return Array.from(syntax.notationIssues(String(value)),e=>({...e}));
     const s=String(value),errors=[],commands=new Set(syntax.commands),functions=new Set(syntax.functions);let i=0;
     const error=(offset,message)=>errors.push({offset:offset+1,message});
     const space=()=>{while(/\s/.test(s[i]||'')&&i<s.length)i++;};
@@ -30,10 +32,10 @@ globalThis.MathDisplay = (() => {
       if(!commands.has(name)){error(at,'Unsupported command \\'+name+'.');return;}
       if(name==='frac'){argument(at);argument(at);}
       else if(name==='sqrt'){space();if(s[i]==='['){const start=i++;row(']',start);}argument(at);}
-      else if(functions.has(name)){space();if(s[i]==='{'||s[i]==='('){const start=i++,end=s[start]==='{'?'}':')';row(end,start);}else error(at,'Function \\'+name+' needs a grouped argument.');}
+      else if(functions.has(name)){space();if(s.startsWith('\\left',i)&&!/[A-Za-z]/.test(s[i+5]||'')){i+=5;space();}if(s[i]==='{'||s[i]==='('){const start=i++,end=s[start]==='{'?'}':')';row(end,start);}else error(at,'Function \\'+name+' needs a grouped argument.');}
     }
-    function row(end,start=0){const before=i;while(i<s.length){const c=s[i];if(c===end){i++;if(i===before+1)error(start,'Empty mathematical group.');return;}if('}])'.includes(c)){error(i,'Unmatched closing delimiter.');i++;continue;}if(c==='\\'){command();continue;}if('{(['.includes(c)){const at=i++;row({'{':'}','(':')','[':']'}[c],at);continue;}if(c==='^'||c==='_'){const at=i++;argument(at);continue;}if(c==='$')error(i,'Math-only expressions must not contain dollar delimiters.');i++;}if(end)error(start,'Missing closing '+end+'.');}
-    row();return errors;
+    function row(end,start=0){const before=i;while(i<s.length){const c=s[i];if(c===end){if(!s.slice(before,i).replace(/\\(?:left|right)(?![A-Za-z])\s*\.?/g,'').replace(/\\[,;:! ]/g,'').trim())error(start,'Empty mathematical group.');i++;return;}if('}])'.includes(c)){error(i,'Unmatched closing delimiter.');i++;continue;}if(c==='\\'){command();continue;}if('{(['.includes(c)){const at=i++;row({'{':'}','(':')','[':']'}[c],at);continue;}if(c==='^'||c==='_'){const at=i++;argument(at);continue;}if(c==='$')error(i,'Math-only expressions must not contain dollar delimiters.');i++;}if(end)error(start,'Missing closing '+end+'.');}
+    row();if(typeof syntax.notationIssues==='function')errors.push(...syntax.notationIssues(s));return errors;
   }
   function spans(text){const s=String(text),out=[];let start=-1;for(let i=0;i<s.length;i++){if(s[i]==='\\'){i++;continue;}if(s[i]==='$'){if(s[i+1]==='$')return {spans:out,unclosed:-1,adjacent:i};if(start<0)start=i;else{out.push({math:s.slice(start+1,i),offset:start+1});start=-1;}}}return {spans:out,unclosed:start};}
   function fallback(solution){if(!record(solution)||!Array.isArray(solution.steps))return '';return solution.steps.flatMap(s=>record(s)?[typeof s.math==='string'?'$'+s.math+'$':null,typeof s.text==='string'?s.text:null].filter(x=>x!==null):[]).join('\n');}
