@@ -26,4 +26,6 @@ Optional understanding checks use existing question capabilities and the shared 
 
 `node tests/widgets/geography-g03/verify.mjs` exercises the real editor, exported learner files, offline reopening, responsive layouts, native browser zoom, validation and keyboard navigation. Set `G03_OUT` to a dedicated evidence directory. Existing shared-player/Mathematics regression gates supplement this focused check.
 
+Then run `node tests/widgets/geography-g03/integration.mjs` with the same `G03_OUT`. It adds 1280px and text-only 1024px evidence, optional workbook response persistence across navigation/resize, image-failure provenance, and actual optional-question learner exports under hidden/teacher/end/autonomous policies. End-of-lesson keys remain embedded for authorised offline reveal; hidden and teacher-withheld keys are removed. The packager requires both reports at the same exact clean head and successful shared regressions. Final integration evidence also includes the existing Mathematics C1–C4C-2 and production-acceptance verifiers.
+
 No new G06, presentation consumer, map engine, general registry or theme-token framework is included.

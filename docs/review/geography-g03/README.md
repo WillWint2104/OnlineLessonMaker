@@ -1,5 +1,15 @@
 # G03 Notes and Concepts — human visual review
 
+## Integrated refinement — 2 November 2026
+
+Current-main integration uses `a6f3be437aeff5bc98d045a699d45f25b22cc3d9` and retains the prototype commits. One CSS insertion conflict was resolved by preserving the newer Mathematics choice/matching styles in order and appending G03. All other current-main changes, including PR #185 acceptance corrections, are retained. The final evidence records exact source hashes and tests; earlier prototype receipts remain historical.
+
+Year 9 is the primary target. The refinement narrows and aligns the reading column, reduces the heading/focus footprint, removes the diagram's redundant border and background, and improves the original proportional chart's labels. Authored teaching text, values, note order, IDs and provenance are unchanged. Year 10 HDI is compatibility-only. Colours remain temporary green/teal; no subject-theme architecture is introduced.
+
+The current references are [Urbanisation](https://www.figma.com/design/ys8201ZJcmHG8e4gsnd9RV?node-id=3-2) and [Number and Proportion](https://www.figma.com/design/ys8201ZJcmHG8e4gsnd9RV?node-id=3-56). Figma tools were unavailable and direct file access failed in this session. Actual before/after learner captures are supplied for the separate Figma review workflow. Pixel-level fidelity and final design approval are not claimed. Shared navigation, natural scrolling and the plain text-only reading layout remain intentional.
+
+The integration review includes optional shared-question state/release/export checks, source metadata/fallbacks and the complete existing player regression suite plus Mathematics acceptance verification. All are run against the final clean head identified by the external receipt. This is local application/export verification, not deployment or classroom-service/physical-device certification.
+
 Bounded implementation authorised by the user's G03 development request (attachment `94471f0b-a1ee-4571-94af-72f45c1656ed`). Preferred reference is the attached Human Wellbeing mock-up, with the explicit density/diagram/notes refinements. Final visual design is not approved.
 
 Both review lessons use the same `geography-notes` activity composition in the real shared lesson player. Year 10 explains HDI, its three dimensions and the limitations of averages. Year 9 distinguishes urbanisation from urban population growth. Each primary concept has two short explanatory paragraphs, one meaningful original diagram and three key notes. Each lesson includes a second text-only G03 concept to verify reuse, omission of the image slot and Previous/Next navigation. These are review fixtures, not newly published production lessons or complete six-week lesson packages.
