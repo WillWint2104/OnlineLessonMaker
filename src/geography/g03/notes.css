@@ -1,11 +1,10 @@
 /* Opt-in G03 only. No global tokens or Mathematics selectors are changed. */
-.lp:has(.geo-g03){--mx-green:#076d72;font-family:'Manrope',system-ui,sans-serif;color:#172b3d;}
+.lp:has(.geo-g03) .geo-g03,.lp:has(.geo-g03) .lp-title,.lp:has(.geo-g03) .mx-course,.lp:has(.geo-g03) .mx-lede{font-family:Manrope,system-ui,sans-serif;color:#172b3d;}
 .lp:has(.geo-g03) .mx-page{background:#f5f8f9;}
 .lp:has(.geo-g03) .lp-activity{max-width:1000px;margin:0 auto;padding:32px 40px 36px;background:#fff;}
 .lp:has(.geo-g03) .lp-header{max-width:760px;margin-bottom:22px;}
-.lp:has(.geo-g03) .lp-title{font-family:inherit;font-size:clamp(28px,2.6vw,34px);line-height:1.25;letter-spacing:-.025em;width:fit-content;max-width:100%;}
+.lp:has(.geo-g03) .lp-title{font-size:clamp(28px,2.6vw,34px);line-height:1.25;letter-spacing:-.025em;width:fit-content;max-width:100%;}
 .lp:has(.geo-g03) .lp-title:focus{outline:2px solid #076d72;outline-offset:4px;border-radius:2px;}
-.lp:has(.geo-g03) .mx-course,.lp:has(.geo-g03) .mx-lede{font-family:inherit;}
 .lp:has(.geo-g03) .lp-location{color:#4c6374;letter-spacing:.06em;}
 .lp:has(.geo-g03) .mx-lede{font-size:18px;line-height:1.55;margin:12px 0 0;}
 .lp:has(.geo-g03) .mx-content{background:transparent;border:0;box-shadow:none;padding:0;}

@@ -21,8 +21,12 @@ function geoG03Render(a,i){
     <p class="geo-g03-unavailable" role="note"${usable?' hidden':''}>Visual unavailable. ${esc(media.alt||'A description is needed before this visual can be published.')}</p>
     ${media.caption||media.source?`<figcaption>${esc(media.caption||'')}${media.source?` <span class="geo-g03-citation">${citation?`<a href="${esc(citation)}" target="_blank" rel="noopener noreferrer">${esc(media.source)}</a>`:esc(media.source)}</span>`:''}</figcaption>`:''}</figure>`:'';
   const questions=Array.isArray(a.questions)&&a.questions.length?`<section class="geo-g03-check" aria-label="Check your understanding"><h2>Check your understanding</h2>${mxQuestionList(a.questions,tpRespId(a)||('slide-'+i))}</section>`:'';
-  return `<div class="geo-g03" data-g03-version="1"><section class="geo-g03-explanation" aria-label="Concept explanation">${notes.map(n=>`<div>${n.term||n.title?`<h2>${esc(n.term||n.title)}</h2>`:''}<p>${esc(n.body||'')}</p>${n.source?`<p class="geo-g03-source">${esc(n.source)}</p>`:''}</div>`).join('')}</section>
-    ${visual}<section class="geo-g03-notes" aria-label="Key notes to record"><h2>Key notes to record</h2>${keys.length?`<ol>${keys.map(n=>`<li>${esc(n)}</li>`).join('')}</ol>`:'<p>No key notes authored yet.</p>'}</section>${questions}</div>`;
+  // Keep content accepted by the shared inspector on its established rendering path.
+  // The copy preserves IDs; removing the local opt-in prevents recursive G03 dispatch.
+  const shared=a.video||a.workedExamples?.length||a.examples?.length
+    ?mxSkillPage({...a,layout:undefined,notes:[],questions:[]},i):'';
+  return `<div class="geo-g03" data-g03-version="1"><section class="geo-g03-explanation" aria-label="Concept explanation">${notes.map(n=>`<div>${n.term||n.title?`<h2>${mxM(n.term||n.title)}</h2>`:''}<p>${mxM(n.body||'')}</p>${n.source?`<p class="geo-g03-source">${esc(n.source)}</p>`:''}</div>`).join('')}</section>
+    ${visual}<section class="geo-g03-notes" aria-label="Key notes to record"><h2>Key notes to record</h2>${keys.length?`<ol>${keys.map(n=>`<li>${esc(n)}</li>`).join('')}</ol>`:'<p>No key notes authored yet.</p>'}</section>${shared}${questions}</div>`;
 }
 /** Return inspector fields bound to the existing activity object and shared list editor. */
 function geoG03Inspector(a,path){

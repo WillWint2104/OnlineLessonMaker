@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 import {execFileSync} from 'node:child_process';
+import {fullPlayerGates,mathematicsGates,verifyGateEvidence} from './gate-evidence.mjs';
 const root=process.cwd(),input=path.resolve(process.env.G03_OUT||'review-delivery/geography-g03/current');
 const report=JSON.parse(fs.readFileSync(path.join(input,'results.json')));
 const head=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),status=execFileSync('git',['status','--porcelain','-uno'],{encoding:'utf8'}).trim();
@@ -16,12 +17,13 @@ const out=path.resolve(process.env.G03_PACKAGE||'review-delivery/geography-g03/r
 if(fs.existsSync(out))throw Error('Choose a fresh version; existing evidence is preserved.');
 const results=path.resolve(process.env.PLAYER_REVIEW_DIR||'review-delivery/geography-g03/regression');
 if(!fs.existsSync(path.join(results,'logs/results.json')))throw Error('Shared regression evidence missing.');
-const regressions=JSON.parse(fs.readFileSync(path.join(results,'logs/results.json'))),run=JSON.parse(fs.readFileSync(path.join(results,'logs/run-info.json')));
-if(regressions.some(r=>r.status!==0)||run.head!==head||!run.exactHeadUnchanged)throw Error('Shared regressions must pass at this exact unchanged head.');
+const {results:regressions}=verifyGateEvidence(results,fullPlayerGates(),head,report.appSha256);
+const mathematics=path.resolve(process.env.G03_MATH_REVIEW_DIR||'review-delivery/geography-g03/mathematics');
+verifyGateEvidence(mathematics,mathematicsGates,head,report.appSha256);
 fs.mkdirSync(out,{recursive:true});fs.cpSync(input,out,{recursive:true});
 fs.copyFileSync('lesson-studio.html',path.join(out,'lesson-studio.html'));
-for(const dir of ['src/geography/g03','tests/widgets/geography-g03','docs/review/geography-g03'])fs.cpSync(dir,path.join(out,'source',dir),{recursive:true});
-fs.mkdirSync(path.join(out,'source/scripts'),{recursive:true});fs.copyFileSync('scripts/build-geography-g03.mjs',path.join(out,'source/scripts/build-geography-g03.mjs'));
+const sourceFiles=execFileSync('git',['ls-tree','-r','--name-only','-z',head,'--','src/geography/g03','tests/widgets/geography-g03','docs/review/geography-g03','scripts/build-geography-g03.mjs'],{encoding:'utf8'}).split('\0').filter(Boolean);
+for(const file of sourceFiles){const target=path.join(out,'source',file);fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,execFileSync('git',['show',head+':'+file],{maxBuffer:8*1024*1024}));}
 fs.cpSync(path.join(results,'logs'),path.join(out,'regression'),{recursive:true});
 fs.copyFileSync('docs/development/backlog.json',path.join(out,'coordination-state.json'));
 fs.copyFileSync('docs/development/tasks/GEO-G03-001.md',path.join(out,'TASK.md'));
