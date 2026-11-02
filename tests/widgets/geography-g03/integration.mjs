@@ -78,6 +78,9 @@ try{
   check((await p.locator('.geo-g03-explanation').innerText()).includes('15/11. Costs rise from $100 to $200.'),'Explanation dates and currency remain prose even alongside shared visuals');
   check(await p.locator('.geo-g03-explanation script').count()===0&&await p.evaluate(()=>!window.g03Unsafe),'Prose formatter escapes authored HTML');
   const textCases=[
+    {text:'$$x$$',math:0,contains:'$$x$$'},
+    {text:'$$$x$$$',math:0,contains:'$$$x$$$'},
+    {text:'$x$ then $$y$$ then $z$',math:2,contains:'$$y$$'},
     {text:'On 15/11 costs range from $100 to $200.',math:0,contains:'$100 to $200'},
     {text:'Cost $100 and ratio $\\frac{40}{100}$.',math:1,fractions:1,contains:'$100'},
     {text:'$100 $x^2$',math:1,contains:'$100'},
