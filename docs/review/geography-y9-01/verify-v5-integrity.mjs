@@ -32,7 +32,7 @@ const protectedFiles=baseline.map((f,i)=>{check(actualBlobs[i]===f.blob,'Protect
 let app=fs.readFileSync(root+'/lesson-studio.html','utf8').replaceAll('\r\n','\n');
 const css=fs.readFileSync(root+'/src/geography/evidence/composition.css','utf8').replaceAll('\r\n','\n');
 check(app.includes('/* GEOGRAPHY_EVIDENCE_CSS_START */\n'+css+'\n/* GEOGRAPHY_EVIDENCE_CSS_END */'),'Embedded CSS matches dedicated source');
-app=app.replace(/\/\* GEOGRAPHY_EVIDENCE_CSS_START \*\/[\s\S]*?\/\* GEOGRAPHY_EVIDENCE_CSS_END \*\/\n/,'');
+app=app.replace(/\n<style>\n\/\* GEOGRAPHY_EVIDENCE_CSS_START \*\/[\s\S]*?\/\* GEOGRAPHY_EVIDENCE_CSS_END \*\/\n<\/style>/,'');
 app=app.replace("      if(a.layout==='geography-evidence'&&!/^geography$/i.test(d.meta.subject||''))throw Error('Geography evidence layout requires a Geography lesson.');\n",'');
 app=app.replace("const allowed=[...(a.layout==='geography-evidence'?['layout']:[]),","const allowed=[");
 app=app.replace('${!front&&!end&&a?.layout===\'geography-evidence\'&&/^geography$/i.test(m.subject||\'\')?\' data-lp-layout="geography-evidence"\':\'\'}','');

@@ -686,6 +686,9 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 @media(max-width:560px){.lp:has(.geo-g03) .lp-activity{padding:24px 19px 28px;}.geo-g03{font-size:16px;}.lp:has(.geo-g03) .mx-lede{font-size:17px;}.geo-g03-notes{padding:17px 18px;}.geo-g03-visual{margin:21px 0;}}
 
 /* GEOGRAPHY_G03_CSS_END */
+</style>
+<!-- VENDORED-FONTS:END -->
+<style>
 /* GEOGRAPHY_EVIDENCE_CSS_START */
 /* Explicit activity opt-in. Preserve all default player and evidence-viewer rules. */
 .lp .lp-activity[data-lp-layout="geography-evidence"]{max-width:1060px;container:geo-evidence / inline-size;--geo-font:Manrope,system-ui,sans-serif;font-family:var(--geo-font);}
@@ -724,11 +727,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 }
 
 .lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap.mx-tbl-compact .mx-tbl :is(th,td){font-size:16px;min-width:46px;padding:12px 14px;}
+/* On narrow reading regions, let every column scroll rather than occlude values. */
+@container geo-evidence (max-width:550px){
+ .lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap[data-mx-tblscroll]{mask-image:none;}
+ .lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap[data-mx-tblscroll] .mx-tbl tr>:first-child{position:static;}
+}
 .lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap[data-mx-tblscroll]::after{content:"Scroll within the table → to see all columns.";display:block;position:sticky;left:0;width:fit-content;max-width:100%;margin-top:10px;font:500 13px/1.5 var(--geo-font);color:#365d63;}
 
 /* GEOGRAPHY_EVIDENCE_CSS_END */
 </style>
-<!-- VENDORED-FONTS:END -->
 <!-- IMPERIUM-FONT: Playfair Display (variable woff2 400-900, vendored base64 from the theme pack; self-contained, no external host) -->
 <style>
 /* Shared lesson-level compositions and concise introductory activities. */

@@ -96,6 +96,15 @@ try{
   if(!state.hint)check(state.mask==='none',width+' fitted table has no stale right-edge fade');
   (report.liveTableResize??=[]).push({width,...state});
  }
+ // Preserve narrow-container compatibility without introducing a new mobile design.
+ const narrow=await ctx.newPage();setup(narrow);await narrow.setViewportSize({width:320,height:900});await narrow.goto(pathToFileURL(out+'/Y9-01-learner.html').href);await go(narrow,2,'table-investigation');
+ const narrowTable=narrow.locator('.mx-tblwrap').first();
+ check(await narrowTable.locator('tr > :first-child').first().evaluate(e=>getComputedStyle(e).position)==='static','Narrow table first column scrolls instead of covering population values');
+ for(const cell of await narrowTable.locator('td:not(:first-child)').all()){
+  const visible=await cell.evaluate(e=>{const wrap=e.closest('.mx-tblwrap');wrap.scrollLeft+=e.getBoundingClientRect().left-wrap.getBoundingClientRect().left-(wrap.clientWidth-e.clientWidth)/2;const range=document.createRange();range.selectNodeContents(e);const text=range.getBoundingClientRect(),view=wrap.getBoundingClientRect();return getComputedStyle(wrap).maskImage==='none'&&text.left>=view.left&&text.right<=view.right;});
+  check(visible,'Narrow table can expose complete numerical value '+await cell.textContent());
+ }
+ await contain(narrow,'320 compatibility table');await narrow.close();
  await q.setViewportSize({width:1536,height:1000});await go(q,2,'map-investigation');
  check(await q.locator('[data-book-hub]:visible').count()===0,'No practice model answer access before completion');
  // Use the existing image inspection affordance, never a replacement map UI.
