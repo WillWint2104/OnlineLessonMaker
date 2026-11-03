@@ -1,5 +1,5 @@
 """Independent transcription/calculation check against retained primary-source HTML."""
-import json, re, hashlib
+import json, re, hashlib, subprocess
 from pathlib import Path
 from html.parser import HTMLParser
 from decimal import Decimal, ROUND_HALF_UP
@@ -59,7 +59,29 @@ check([b['classMaxValue'] for b in bins[:5]]==[.001,500,2000,5000,8000],'Legend 
 metadata=(root/'sources/abs-grid/JPEG/apg24r_1_0_0_19115-3_metadata.xml').read_text(encoding='utf-8')
 check('CC BY 4.0' in metadata and '3577' in metadata,'Specific downloaded grid metadata confirms licence and coordinate system')
 independent=next(q for q in qs if q['id']=='y9-01-independent')
-words=len(independent['workedAnswer'].split());check(100<=words<=140,'Model independent paragraph meets its own 100–140-word brief')
-report={'complete':True,'checks':checks,'calculations':calculations,'independentModelWords':words,'method':'Separate Python HTML-parser extraction from retained official ABS table, Decimal calculations; no expected values imported from the authoring script. Manual visual map review and prose/pedagogical review are separate, not replaced by these assertions.','sourceSha256':hashlib.sha256((root/'sources/abs-regional-2023-24.html').read_bytes()).hexdigest()}
+words=len(independent['workedAnswer'].split());check(100<=words<=140,'Preserved optional extension model meets its 100–140-word brief')
+refinement=json.loads((root/'refinement-content.json').read_text(encoding='utf-8'))
+core_words=len(refinement['core']['model'].split());check(60<=core_words<=90,'Separate core teacher model meets 60–90-word expectation')
+check(sum(refinement['timingMinutes'].values())==60,'Complete revised activity budget remains 60 minutes')
+check(sum(refinement['core'][k] for k in ['planningMinutes','writingMinutes','checkingMinutes'])==8,'Independent core planning/writing/checking totals eight minutes')
+check('60–90' in next(a for s in lesson['slides'] for a in s['activities'] if a['id']=='independent')['practiceNote'],'Actual learner task states revised core writing expectation')
+check('activities' not in lesson['meta']['frontMatter'][0]['title'],'Learner inquiry narrowed to population evidence')
+before=json.loads(subprocess.check_output(['git','show',refinement['previousHead']+':docs/review/geography-y9-01/lesson.json'],cwd=root.parent.parent.parent).decode('utf-8'))
+oldqs=[q for s in before['slides'] for a in s['activities'] for q in a.get('questions',[])]
+check([q['id'] for q in qs]==[q['id'] for q in oldqs],'All six original question IDs retained in order')
+for a,b in zip(qs,oldqs): check(a['workedAnswer']==b['workedAnswer'],a['id']+' original teacher reasoning/model preserved verbatim')
+check([s['id'] for s in lesson['slides']]==[s['id'] for s in before['slides']],'Five original stage IDs retained')
+for newskill,oldskill in zip(lesson['slides'],before['slides']):
+    check([a['id'] for a in newskill['activities']]==[a['id'] for a in oldskill['activities']],newskill['id']+' activity IDs/order retained')
+    for v in newskill.get('visuals',[]):
+        old=next(x for x in oldskill['visuals'] if x['id']==v['id'])
+        if v['kind']=='image':
+            check(all(v.get(k)==old.get(k) for k in ['src','alt','sourceMetadata']),newskill['id']+' original map bytes/alternative/provenance/rights preserved')
+        else: check(v==old,newskill['id']+' complete original statistical table preserved')
+new_ex=lesson['slides'][1]['activities'][1]['workedExamples'][0]['examples'][0]
+old_ex=before['slides'][1]['activities'][1]['workedExamples'][0]['examples'][0]
+check(new_ex['steps']==old_ex['steps'] and new_ex['visual']==old_ex['visual'],'Complete worked comparison and embedded table retained')
+check(new_ex.get('visualPlacement')=='question' and 'questionComposition' not in new_ex,'Only supported existing placement changes the worked-table composition')
+report={'complete':True,'checks':checks,'calculations':calculations,'independentModelWords':words,'coreModelWords':core_words,'plannedMinutes':60,'method':'Separate Python HTML-parser extraction from retained official ABS table, Decimal calculations, and comparison with accepted v3 content. Manual visual map review and prose/pedagogical review are separate, not replaced by these assertions.','sourceSha256':hashlib.sha256((root/'sources/abs-regional-2023-24.html').read_bytes()).hexdigest()}
 (root/'content-verification.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
-print(json.dumps({'checks':len(checks),'modelWords':words,'complete':True}))
+print(json.dumps({'checks':len(checks),'coreWords':core_words,'extensionWords':words,'complete':True}))

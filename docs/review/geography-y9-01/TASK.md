@@ -15,3 +15,5 @@ Direct user authority: attachment 848c7941-a6fe-425e-ac38-b2b5c1f1f2cb, 3 Novemb
 - Widget contract: no new widget, state store or interaction. Approved existing widgets are reused without migration.
 
 This task-local coordination record avoids rewriting the protected shared governance documents and their historical G03 review records.
+
+Targeted refinement authorised by attachment 0974fbd3-f550-48d7-af47-d58953051b7a: narrow the inquiry to what the population sources establish; rebalance the mixed-ability writing task within 60 minutes; improve supported lesson composition and inspection instructions; prepare exact local Figma handoff for two evidence/reasoning screen types. Preserve map bytes, statistics, source metadata, rights and original teacher model prose. No Figma file creation/edit, shared-player implementation, merge, deployment, publication or Y9-02. Same branch, worktree and allowed paths; old packages remain immutable.

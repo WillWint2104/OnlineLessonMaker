@@ -42,6 +42,8 @@ try{
    if(a.layout==='geography-notes'){assert.deepEqual(await q.locator('.geo-g03-notes li').allTextContents(),a.keyNotes);check(true,width+' '+a.id+' ordered essential notes retained');}
    for(const img of await q.locator('.mx-page img').all())check(await img.evaluate(e=>e.complete&&e.naturalWidth>0),width+' '+a.id+' embedded evidence loads offline');
    check(await q.locator('.mx-page merror:visible,.mx-page .md-notation-error:visible').count()===0,width+' '+a.id+' has no visible notation diagnostic');
+   if(a.id==='worked'){const text=await q.locator('.mx-page').innerText();check(!text.includes('Your task')&&!text.includes('Example 1'),width+' worked comparison avoids the generic two-column task presentation');const table=q.locator('.mx-tbl').first();(report.compositionMeasurements??=[]).push({width,tableWidth:(await table.boundingBox()).width,headings:await table.locator('tr').first().innerText()});}
+   if(a.id==='independent')check((await q.locator('.mx-page').innerText()).includes('60–90 words'),width+' actual independent task presents the shorter core and optional extension');
    await shot(q,width+'-'+a.id);
    const scroll=await q.locator('.mx-page').evaluate(e=>e.scrollHeight>e.clientHeight+40);if(scroll){await q.locator('.mx-page').evaluate(e=>e.scrollTop=e.scrollHeight);await shot(q,width+'-'+a.id+'-lower');}
   }

@@ -45,7 +45,31 @@
     "y9-01-reflect source references resolve in its owning skill",
     "Legend thresholds verified independently from official ABS-owned renderer",
     "Specific downloaded grid metadata confirms licence and coordinate system",
-    "Model independent paragraph meets its own 100\u2013140-word brief"
+    "Preserved optional extension model meets its 100\u2013140-word brief",
+    "Separate core teacher model meets 60\u201390-word expectation",
+    "Complete revised activity budget remains 60 minutes",
+    "Independent core planning/writing/checking totals eight minutes",
+    "Actual learner task states revised core writing expectation",
+    "Learner inquiry narrowed to population evidence",
+    "All six original question IDs retained in order",
+    "y9-01-count-share original teacher reasoning/model preserved verbatim",
+    "y9-01-map original teacher reasoning/model preserved verbatim",
+    "y9-01-table original teacher reasoning/model preserved verbatim",
+    "y9-01-guided original teacher reasoning/model preserved verbatim",
+    "y9-01-independent original teacher reasoning/model preserved verbatim",
+    "y9-01-reflect original teacher reasoning/model preserved verbatim",
+    "Five original stage IDs retained",
+    "urban-concepts activity IDs/order retained",
+    "geographical-evidence activity IDs/order retained",
+    "investigate activity IDs/order retained",
+    "investigate original map bytes/alternative/provenance/rights preserved",
+    "investigate complete original statistical table preserved",
+    "explain activity IDs/order retained",
+    "explain original map bytes/alternative/provenance/rights preserved",
+    "explain complete original statistical table preserved",
+    "review activity IDs/order retained",
+    "Complete worked comparison and embedded table retained",
+    "Only supported existing placement changes the worked-table composition"
   ],
   "calculations": [
     {
@@ -82,6 +106,8 @@
     }
   ],
   "independentModelWords": 113,
-  "method": "Separate Python HTML-parser extraction from retained official ABS table, Decimal calculations; no expected values imported from the authoring script. Manual visual map review and prose/pedagogical review are separate, not replaced by these assertions.",
+  "coreModelWords": 82,
+  "plannedMinutes": 60,
+  "method": "Separate Python HTML-parser extraction from retained official ABS table, Decimal calculations, and comparison with accepted v3 content. Manual visual map review and prose/pedagogical review are separate, not replaced by these assertions.",
   "sourceSha256": "464da3159de52877c7f2af15f65c08bed663da41d6fd3b28d84f28ebae6a8c1f"
 }

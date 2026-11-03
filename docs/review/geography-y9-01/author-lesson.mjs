@@ -83,5 +83,26 @@ const lesson={meta:{id:'geography-y9-01-urbanisation-distribution',title:'Urbani
  {id:'explain',type:'skill',title:'Apply · geographical explanation',visuals:[mapVisual,tableVisual],activities:[influences,guided,independent]},
  {id:'review',type:'skill',title:'Reflect · check and revise',activities:[reflection]}
 ]};
+// Targeted v4 refinement: content/configuration only, preserving the verified evidence and model prose.
+lesson.meta.frontMatter[0].title='How is Australia’s population distributed, and what might explain one pattern?';
+lesson.meta.frontMatter[0].description='A 60-minute population inquiry. Sources A and B measure population, not the distribution of jobs, services or infrastructure. Those are possible explanations to test with further evidence. Follow the website and write in your exercise book: learn (10 min), understand (10), investigate (15), explain (15), reflect (10). Complete your attempt before teacher-led feedback; models remain in the separate teacher guide.';
+mapVisual.caption='Source A · June 2024 modelled population density. Adapted from ABS, Regional population 2023–24 (27 March 2025). © Commonwealth of Australia, CC BY 4.0. Full provenance: Source details.';
+mapVisual.description='Use Inspect source for the regional pattern and legend; the preview cannot supply exact cell values.';
+mapTask.practiceNote='Write in your exercise book. Read the four questions below the map first, then choose Inspect source. Select Fit source, then Zoom in (+) to read the legend and regional pattern; use the arrow keys to pan and 0 to fit again. Task shows the map-reading reminder; Source details gives provenance. Close returns to these questions. Record observations before explanations.';
+mapTask.questions[0].stem='Use Source A in Inspect source, then answer in your exercise book.';
+// Existing placement puts this single table above the preserved reasoning, without the two-column task panel.
+const comparison=example.workedExamples[0].examples[0];
+delete comparison.questionComposition;
+comparison.visualPlacement='question';
+influences.lede='Sources A and B show population evidence, not where economic activities occur. Jobs, services and infrastructure are possible influences requiring separate evidence.';
+guided.title='Plan an explanation · 3 min';
+guided.practiceNote='Plan four short points in your exercise book, using Sources A and B below. This is a plan, not a second full paragraph. Your teacher holds the model answer until after your attempt.';
+independent.title='Explain one population pattern · 8 min';
+independent.practiceNote='Core: write 60–90 words (about four or five sentences) in your exercise book. Use 2 min to select evidence and plan, 5 min to write, and 1 min to check. Sources A and B are below. Extension, if ready: add a second possible mechanism and develop the response towards 100–140 words. Complete your attempt before teacher-led feedback.';
+const independentQuestion=independent.questions[0];
+independentQuestion.stem='How is Australia’s population distributed, and what might explain one pattern? Use Sources A and B.';
+independentQuestion.parts[2]='Explain one possible influence and how it might affect the pattern. Employment, services and infrastructure are hypotheses here, not activities directly measured by A or B.';
+independentQuestion.answer='Core criteria: a located pattern and exception; an accurate labelled comparison; one qualified mechanism; a specific source limitation and proposed test. Extension: develop a second mechanism. The original longer model remains an extension example in the teacher guide.';
+independentQuestion.teacherNote+=' Core is 60–90 words, one mechanism, within 8 minutes. The preserved 113-word workedAnswer is an extension model, not the minimum expected response.';
 fs.writeFileSync(path.join(dir,'lesson.json'),JSON.stringify(lesson,null,2)+'\n');
 console.log('Authored '+lesson.slides.reduce((n,s)=>n+s.activities.length,0)+' activities; '+lesson.slides.flatMap(s=>s.activities).flatMap(a=>a.questions||[]).length+' multi-part paper tasks.');
