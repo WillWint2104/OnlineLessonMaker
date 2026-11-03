@@ -17,3 +17,12 @@ Direct user authority: attachment 848c7941-a6fe-425e-ac38-b2b5c1f1f2cb, 3 Novemb
 This task-local coordination record avoids rewriting the protected shared governance documents and their historical G03 review records.
 
 Targeted refinement authorised by attachment 0974fbd3-f550-48d7-af47-d58953051b7a: narrow the inquiry to what the population sources establish; rebalance the mixed-ability writing task within 60 minutes; improve supported lesson composition and inspection instructions; prepare exact local Figma handoff for two evidence/reasoning screen types. Preserve map bytes, statistics, source metadata, rights and original teacher model prose. No Figma file creation/edit, shared-player implementation, merge, deployment, publication or Y9-02. Same branch, worktree and allowed paths; old packages remain immutable.
+
+
+## v5 direct-application visual integration
+
+Latest direct user instruction supersedes the Figma gate and earlier content-only restriction. No Figma access, plugins, design-context dependencies or mandatory handoffs. Same single agent, branch and exclusive worktree; no other stream launched.
+
+Additional exact allowed paths: lesson-studio.html (enumerated Geography evidence activity opt-in, validation, wrapper attribute and embedded scoped CSS only); src/geography/evidence/composition.css; scripts/build-geography-evidence.mjs. Existing G03, Mathematics, History, source-inspection logic, answer/export logic, publications/assets and all historical packages remain protected. Default shared image caps remain intact; only opted-in Geography activity previews may be larger.
+
+Human checkpoint: real application screenshots at 1536/1280/1024 and genuine native 200%; functional, pedagogical and visual acceptance before any merge. Accepted v4 teaching content/evidence is frozen except the explicit layout opt-ins. No merge, deployment, publication or Y9-02.

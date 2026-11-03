@@ -1,12 +1,9 @@
 {
   "design": {
-    "references": [
-      "https://www.figma.com/design/ys8201ZJcmHG8e4gsnd9RV?node-id=3-2",
-      "https://www.figma.com/design/ys8201ZJcmHG8e4gsnd9RV?node-id=3-56"
-    ],
-    "implementation": "Existing G03 and shared source/question compositions only; temporary teal retained; no runtime/CSS/figure engine changes.",
-    "difference": "Complete lesson now adds source/question pages and a worked comparison using already existing shared forms. The ABS teaching plate is content, not a new interface.",
-    "newSharedUI": "No new shared UI implemented. The targeted review requests Figma decisions for evidence investigation and worked comparison; exact copy, assets and state requirements are in figma-handoff.html/json. Larger preview sizing and authored geographical component labels require a separately approved bounded integration task. Any future generic Geography Answer Hub composition needs separate bounded design/integration approval. Figma editing remains in the separate design chat; no editable Figma parity claim."
+    "workflow": "Real application design, actual browser screenshots, direct human functional/pedagogical/visual review, iterative correction, approval before merge. No Figma dependency or handoff.",
+    "implementation": "Explicit geography-evidence activity layout; scoped table/grid/type/preview CSS; existing shared rendering, source inspection, navigation and export reused. Temporary teal retained.",
+    "difference": "Full reading-width table, readable non-compacted numeric columns, larger authentic map preview and a responsive map/task arrangement.",
+    "boundaries": "No new engine, answer workflow, colour theme or subject-wide redesign. Existing lessons do not opt in. Global image caps and accepted G03/Mathematics/History sources unchanged."
   },
   "dot": {
     "status": "Future opportunities only; no Dot dependency or modification",

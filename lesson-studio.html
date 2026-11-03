@@ -686,6 +686,45 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 @media(max-width:560px){.lp:has(.geo-g03) .lp-activity{padding:24px 19px 28px;}.geo-g03{font-size:16px;}.lp:has(.geo-g03) .mx-lede{font-size:17px;}.geo-g03-notes{padding:17px 18px;}.geo-g03-visual{margin:21px 0;}}
 
 /* GEOGRAPHY_G03_CSS_END */
+/* GEOGRAPHY_EVIDENCE_CSS_START */
+/* Explicit activity opt-in. Preserve all default player and evidence-viewer rules. */
+.lp .lp-activity[data-lp-layout="geography-evidence"]{max-width:1060px;container:geo-evidence / inline-size;--geo-font:Manrope,system-ui,sans-serif;font-family:var(--geo-font);}
+.lp-activity[data-lp-layout="geography-evidence"] .lp-header{max-width:none;margin-bottom:24px;}
+.lp-activity[data-lp-layout="geography-evidence"] .lp-title{font:700 clamp(25px,2.2vw,30px)/1.3 var(--geo-font);letter-spacing:-.02em;color:#173b3e;}
+.lp-activity[data-lp-layout="geography-evidence"] :is(.mx-stem,.mx-parts,.mx-wexqb,.mx-stept,.mx-itembd p){font:400 17px/1.65 var(--geo-font);color:#203d41;}
+.lp-activity[data-lp-layout="geography-evidence"] :is(.mx-panelh,.mx-sk-h,.mx-parth,.mx-wexlab){font-family:var(--geo-font);color:#365d63;}
+.lp-activity[data-lp-layout="geography-evidence"] :is(.mx-wexqb,.mx-stept,.mx-lede){max-width:78ch;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-content{padding:0;background:transparent;border:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd{width:100%;min-width:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap{width:100%;max-width:100%;overflow-x:auto;margin:10px 0 18px;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl{width:100%;min-width:760px;font:400 16px/1.5 var(--geo-font);font-variant-numeric:tabular-nums;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl :is(th,td){padding:12px 14px;white-space:nowrap;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl th{font-weight:650;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl tr>:first-child{text-align:left;width:23%;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl tr>:not(:first-child){text-align:right;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap:focus-visible{outline:3px solid #076d72;outline-offset:3px;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-step{padding:16px 0;border-bottom:1px solid #dce8e4;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-stept{margin:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source){display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px 26px;grid-template-rows:auto 1fr;align-items:start;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source)>.mx-stem{grid-column:2;grid-row:1;margin:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source)>.mv-evidence{grid-column:1;grid-row:1 / span 2;margin:0;min-width:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source)>.mx-parts{grid-column:2;grid-row:2;display:flex;flex-direction:column;gap:18px;margin:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source)>.mv-evidence~.mv-evidence{grid-column:1 / -1;grid-row:auto;}
+.lp-activity[data-lp-layout="geography-evidence"] .ev-media{padding:0;background:transparent;min-height:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .ev-source .ev-media img{max-height:680px!important;}
+.lp-activity[data-lp-layout="geography-evidence"] :is(.ev-source figcaption,.mv-description,.mv-caption){font:400 13px/1.55 var(--geo-font);color:#4c6370;}
+.lp-activity[data-lp-layout="geography-evidence"] .ev-source figcaption{padding:12px 0;}
+.lp-activity[data-lp-layout="geography-evidence"] .ev-actions button{font:500 14px/1.4 var(--geo-font);min-height:42px;}
+@container geo-evidence (max-width:850px){
+ .lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source){display:flex;flex-direction:column;gap:20px;}
+ .lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source)>.mv-evidence{align-self:stretch;}
+ .lp-activity[data-lp-layout="geography-evidence"] .ev-media{justify-content:flex-start;}
+}
+
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap.mx-tbl-compact .mx-tbl :is(th,td){font-size:16px;min-width:46px;padding:12px 14px;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap[data-mx-tblscroll]::after{content:"Scroll within the table → to see all columns.";display:block;position:sticky;left:0;width:fit-content;max-width:100%;margin-top:10px;font:500 13px/1.5 var(--geo-font);color:#365d63;}
+
+/* GEOGRAPHY_EVIDENCE_CSS_END */
 </style>
 <!-- VENDORED-FONTS:END -->
 <!-- IMPERIUM-FONT: Playfair Display (variable woff2 400-900, vendored base64 from the theme pack; self-contained, no external host) -->
@@ -18951,7 +18990,8 @@ function lpValidate(d){
       c.members.forEach(member=>{if(assigned.has(member))throw Error('An example cannot belong to two collection positions.');assigned.add(member);const matches=s.activities.filter(a=>lpSingleExample(a)?.id===member);if(matches.length>1)throw Error('A collection example id must identify one activity.');});});
     s.activities.forEach(a=>{
       id(a,'Activity'); geoG03Validate(a); if(!a.title) throw Error('Activity '+a.id+' needs a title.');
-      const allowed=[...(a.layout==='geography-notes'?['layout','image','keyNotes']:[]),'id','title','lede','notes','notesTitle','workedExamples','examples','examplesTitle','questions','questionsTitle','practiceNote','video','optionalVideo','workspace','keyIdea','introduction','focusPoints','practiceCollectionId'];
+      if(a.layout==='geography-evidence'&&!/^geography$/i.test(d.meta.subject||''))throw Error('Geography evidence layout requires a Geography lesson.');
+      const allowed=[...(a.layout==='geography-evidence'?['layout']:[]),...(a.layout==='geography-notes'?['layout','image','keyNotes']:[]),'id','title','lede','notes','notesTitle','workedExamples','examples','examplesTitle','questions','questionsTitle','practiceNote','video','optionalVideo','workspace','keyIdea','introduction','focusPoints','practiceCollectionId'];
       Object.keys(a).forEach(k=>{if(!allowed.includes(k)) throw Error('Unsupported activity field: '+k+' in '+a.id);});
       ['notes','workedExamples','examples','questions'].forEach(k=>{if(a[k]!=null&&!Array.isArray(a[k])) throw Error(a.id+'.'+k+' must be an array.');});
       if(!a.introduction&&!a.optionalVideo&&!a.video&&!['notes','workedExamples','examples','questions'].some(k=>a[k]&&a[k].length)) throw Error('Activity '+a.id+' is empty.');
@@ -19110,7 +19150,7 @@ function lpRender(s,i){
   return `<div class="mx lp${lpTextbook()?' lp-textbook-shell':''}${open?' mx-navopen':''}" data-rp-type="skill" data-rp-layout="responsive" data-mx-response="${esc(mxResponseMode())}" data-mx-view="split" style="--mx-green:${accent};--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px;--mx-rep-min-h:${MX_REP_MIN_H}px">
     <header class="mx-top"><button class="mx-iconbtn" data-rp-navtoggle aria-label="Show lesson skills" aria-expanded="${open}" aria-controls="mxNav">${mxIc('menu')}</button><b class="lp-brand">${esc(m.title)}</b><div class="mx-top-sp"></div><div class="mx-modes">${document.documentElement.dataset.export?'':MX_MODES.filter(x=>x.id!=='worksheet').concat([{id:'json',label:'JSON'}]).map(x=>`<button class="mx-mode${x.state&&x.state()?' on':''}" data-mx-mode="${x.id}">${esc(x.label)}</button>`).join('')}</div></header>
     <div class="mx-body"><nav class="mx-nav" id="mxNav" aria-label="Skills and activities"><div class="mx-navhead"><div class="mx-course">Lesson outline</div><p class="mx-coursemeta">${lpMathSingle()?'Revisit any page':`${LESSON.slides.length} ${LESSON.slides.length===1?'skill':'skills'} · revisit any activity`}</p></div><ol class="mx-navlist">${rail}</ol></nav><button class="mx-scrim" data-rp-navtoggle tabindex="-1" aria-hidden="true"></button>
-    <main class="mx-main"><div class="mx-page" tabindex="-1" data-mx-surface="activity"><article class="lp-activity" data-lp-arrangement="${arrangement}" aria-labelledby="lpTitle">${errors}${lpTextbook()&&front?.kind==='overview'?'<div class="lp-book-overview"><div>':''}<header class="lp-header"><div class="lp-location">${front?esc([m.subject,m.context].filter(Boolean).join(' · ')):lpMathSingle()?'':`Skill ${i+1} of ${LESSON.slides.length} · ${esc(s.title)}`}</div>
+    <main class="mx-main"><div class="mx-page" tabindex="-1" data-mx-surface="activity"><article class="lp-activity" data-lp-arrangement="${arrangement}"${!front&&!end&&a?.layout==='geography-evidence'&&/^geography$/i.test(m.subject||'')?' data-lp-layout="geography-evidence"':''} aria-labelledby="lpTitle">${errors}${lpTextbook()&&front?.kind==='overview'?'<div class="lp-book-overview"><div>':''}<header class="lp-header"><div class="lp-location">${front?esc([m.subject,m.context].filter(Boolean).join(' · ')):lpMathSingle()?'':`Skill ${i+1} of ${LESSON.slides.length} · ${esc(s.title)}`}</div>
       ${end&&lpTextbook()?'':`<h1 id="lpTitle" class="lp-title" tabindex="-1">${esc(front?(front.title||m.title):end?(journey||lpTextbook()?'Lesson complete':'End of lesson'):(collection?collection.title||'Worked examples':a?.introduction?(a.introduction.title||s.title):a?lpTextbook()&&practiceMember?(lpMicro(s)?'':'Practice: ')+(practiceMember.ex.tabLabel||practiceMember.ex.label):a.title:'Add your first activity'))}</h1>`}${!end&&!front?lpCollectionTabs(s,a):''}${!end&&!front&&practiceTarget?`<button class="mx-tool" data-lp-practice="${esc(practiceTarget.id)}" data-lp-archetype="${esc(lpSingleExample(a).id)}">Practice this example →</button>`:''}${!end&&!front&&a&&a.lede?`<p class="mx-lede">${mxM(a.lede)}</p>`:''}
       <div class="lp-response-view">${ws?`<div class="mx-viewsw"><button type="button" data-mx-view="questions">Questions and working</button><button type="button" data-mx-view="workbook">Workbook</button></div>`:''}</div></header>
       ${front?lpFrontBody(front)+(lpTextbook()&&front.kind==='overview'?'</div>'+lpImage(lpRoleImage('overview',front.image))+'</div>':''):end&&lpTextbook()?lpBookComplete():end&&journey?`<p>You have reached the end of this lesson.</p>${lpMathSingle()?'':`<h2>Skills in this lesson</h2><ul>${LESSON.slides.map(sk=>`<li>${esc(sk.title)}</li>`).join('')}</ul>`}${LESSON.meta.completion?.description?`<p>${mxM(LESSON.meta.completion.description)}</p>`:''}${lpImage(lpRoleImage('completion',LESSON.meta.completion?.image))}<button class="lp-primary" data-lp-front="${esc(lpFrontPages()[0].id)}">Review lesson →</button>`:end?`<p>You have reached the end of the lesson. Revisit any activity using the outline. Your responses remain available in this session.</p><p>Reaching this page does not indicate assessed mastery.</p>${m.completion?.description?`<p>${mxM(m.completion.description)}</p>`:''}${lpImage(lpRoleImage('completion',m.completion?.image))}`:`<div class="mx-split${ws?'':' mx-1col'}"><section class="mx-content">${a?.introduction?lpIntroduction(a):lpVideoOnly(a)?lpVideoBody(s,a):a?.practiceCollectionId?lpPracticeBody(s,a):projection?mxSkillPage(projection,i):'<p>This skill has no activities yet.</p>'}</section>${ws?`<section class="mx-work">${rpWorkspace(ws,projection,i)}</section>`:''}</div>`}
