@@ -44,7 +44,7 @@ def main():
         d.text((px,py),label,font=font(24),fill='#173849')
     y=im.height+130
     d.text((45,y),'People per km² (ABS classes; colours blend when reduced)',font=font(22),fill='#173849')
-    classes=[('#808080','Modelled zero'),('#ffffb3','Below 500'),('#fecd5b','500–<2,000'),('#fd8c3d','2,000–<5,000'),('#f13a1f','5,000–<8,000'),('#bd0024','8,000+')]
+    classes=[('#9d9d9d','Modelled zero'),('#ffffb3','Below 500'),('#fecd5b','500–<2,000'),('#fd8c3d','2,000–<5,000'),('#f13a1f','5,000–<8,000'),('#bd0024','8,000+')]
     for i,(c,t) in enumerate(classes):
         x=45+(i%3)*440; yy=y+37+(i//3)*35
         d.rectangle((x,yy,x+26,yy+22),fill=c,outline='#556666')

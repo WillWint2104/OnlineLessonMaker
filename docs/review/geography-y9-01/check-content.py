@@ -35,6 +35,29 @@ for item in transcribed['cities']:
     calc=(change/prior*100).quantize(Decimal('.1'),rounding=ROUND_HALF_UP)
     check(calc==rate,'Independent growth-rate calculation '+item['city'])
     calculations.append({'city':item['city'],'population':str(population),'change':str(change),'prior':str(prior),'calculatedRate':str(calc),'publishedRate':str(rate)})
+
+def lesson_tables(value, location='lesson'):
+    """Find authored tables at any depth, including embedded worked-example evidence."""
+    if isinstance(value, dict):
+        if value.get('kind')=='table':
+            yield location, value
+        for key, child in value.items():
+            yield from lesson_tables(child, location+'.'+key)
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            yield from lesson_tables(child, location+'['+str(index)+']')
+
+tables=list(lesson_tables(lesson))
+check(len(tables)==3,'All three authored city tables, including worked evidence, checked against official source')
+for location, table in tables:
+    check(table['head']==['Residents, June 2024','Added residents, 2023–24','Growth, 2023–24 (%)'],location+' official population/change/rate column order')
+    rows=table['rows']
+    check(len(rows)==len(official) and {r['label'] for r in rows}==set(official),location+' each official city appears exactly once')
+    for row in rows:
+        check(len(row['cells'])==3,location+' '+row['label']+' has all three source columns')
+        for index, column in enumerate(['population','increase','rate']):
+            check(num(row['cells'][index])==official[row['label']][index],location+' direct official cell '+row['label']+' '+column)
+
 check(official['Sydney'][0]-official['Brisbane'][0]==2777170,'Sydney/Brisbane count difference 2,777,170')
 check(official['Sydney'][1]-official['Brisbane'][1]==34608,'Sydney/Brisbane added-resident difference 34,608')
 check(Decimal(40)*Decimal('1.2')==48 and Decimal(60)*Decimal('1.2')==72,'Illustrative equal-growth counts independently correct')
