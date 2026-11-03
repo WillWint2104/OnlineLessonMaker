@@ -19179,6 +19179,7 @@ function lpMove(d){
   if(d>0){LP_STATE.end=true;renderSlide();lpResetPageScroll();document.querySelector('.lp-title')?.focus({preventScroll:true});}
 }
 function lpWire(){
+  document.querySelector('[data-lp-layout="geography-evidence"]')?.addEventListener('keydown',e=>{if(e.target.closest('.mx-tblwrap')&&['ArrowLeft','ArrowRight'].includes(e.key))e.stopPropagation();});
   if(!lpEnabled(LESSON.slides[cur])){mxSupportWire(LESSON.slides[cur]);return;}
   document.querySelectorAll('[data-lp-go]').forEach(b=>b.onclick=e=>{e.stopPropagation();const [i,id]=b.dataset.lpGo.split(':');lpNavigate(+i,id);});
   document.querySelectorAll('[data-lp-move]').forEach(b=>b.onclick=e=>{e.stopPropagation();lpMove(+b.dataset.lpMove);});

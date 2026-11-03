@@ -1,4 +1,4 @@
-# Y9-01 — Urbanisation and Population Distribution
+# Y9-01 â€” Urbanisation and Population Distribution
 
 Direct user authority: attachment 848c7941-a6fe-425e-ac38-b2b5c1f1f2cb, 3 November 2026. Single-agent content production; stop for pedagogical and visual approval. No publication, merge, deployment or Y9-02.
 
@@ -26,3 +26,5 @@ Latest direct user instruction supersedes the Figma gate and earlier content-onl
 Additional exact allowed paths: lesson-studio.html (enumerated Geography evidence activity opt-in, validation, wrapper attribute and embedded scoped CSS only); src/geography/evidence/composition.css; scripts/build-geography-evidence.mjs. Existing G03, Mathematics, History, source-inspection logic, answer/export logic, publications/assets and all historical packages remain protected. Default shared image caps remain intact; only opted-in Geography activity previews may be larger.
 
 Human checkpoint: real application screenshots at 1536/1280/1024 and genuine native 200%; functional, pedagogical and visual acceptance before any merge. Accepted v4 teaching content/evidence is frozen except the explicit layout opt-ins. No merge, deployment, publication or Y9-02.
+
+Verification exposed global arrow navigation when a local table is focused. The same bounded central change contains Left/Right key propagation only inside opted-in evidence tables, preserving native horizontal scrolling and leaving all other lesson shortcuts unchanged.
