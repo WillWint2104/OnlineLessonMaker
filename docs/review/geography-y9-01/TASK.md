@@ -1,0 +1,17 @@
+# Y9-01 — Urbanisation and Population Distribution
+
+Direct user authority: attachment 848c7941-a6fe-425e-ac38-b2b5c1f1f2cb, 3 November 2026. Single-agent content production; stop for pedagogical and visual approval. No publication, merge, deployment or Y9-02.
+
+- Base: ec352e01cbb1098b9ce76c01b1b5bfe9bba3366a, verified against GitHub main.
+- Owner: current lesson-production agent.
+- Branch: codex/geography-Y9-01-urbanisation.
+- Writable checkout: C:/Users/willi/Videos/Online Lesson Maker/review-delivery/worktrees/geography-y9-01.
+- Allowed paths: docs/review/geography-y9-01/** only. Generated review delivery: review-delivery/geography-y9-01-* outside retained prior packages.
+- Protected: every other tracked path, including runtime, G03, Mathematics, schemas, CI, assets, existing lessons, RF01 and historical evidence.
+- Integration request: none; existing G03, visual attachments, questions, navigation and export only.
+- Inventory: GitHub has only open PRs #135 (dormant draft review) and #99 (old documentation); G03 #180 merged and accepted. RF01 is a separate retained candidate/design stream, not a newly launched builder. No other builder is launched here. Y9-01 is separately authorised content production, not activation of the three seeded Geography research cards. No governance arrays are edited.
+- Acceptance: complete 60-minute paper-response journey; dated official map/statistics and rights; source/model check; JSON round-trip and actual standalone export; answer-policy/export audit; desktop/laptop/native 200%; zero page errors; unchanged protected source/publications.
+- Human stop: actual lesson visual/pedagogical approval and school curriculum adoption; no formal alignment or publication-readiness claim before confirmation.
+- Widget contract: no new widget, state store or interaction. Approved existing widgets are reused without migration.
+
+This task-local coordination record avoids rewriting the protected shared governance documents and their historical G03 review records.

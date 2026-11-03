@@ -1,0 +1,33 @@
+{
+  "design": {
+    "references": [
+      "https://www.figma.com/design/ys8201ZJcmHG8e4gsnd9RV?node-id=3-2",
+      "https://www.figma.com/design/ys8201ZJcmHG8e4gsnd9RV?node-id=3-56"
+    ],
+    "implementation": "Existing G03 and shared source/question compositions only; temporary teal retained; no runtime/CSS/figure engine changes.",
+    "difference": "Complete lesson now adds source/question pages and a worked comparison using already existing shared forms. The ABS teaching plate is content, not a new interface.",
+    "newSharedUI": "None implemented or required for the paper-response candidate. Any future generic Geography Answer Hub composition needs separate bounded design/integration approval. Figma editing remains in the separate design chat; no editable Figma parity claim."
+  },
+  "dot": {
+    "status": "Future opportunities only; no Dot dependency or modification",
+    "opportunities": [
+      "Use Dot’s approved application to inspect the same dated population evidence at multiple scales, preserving source/legend/units and linked task context.",
+      "Compare a population layer with dated transport, employment or environmental evidence to test a proposed mechanism; do not infer causation from overlay alone.",
+      "If a future tool supports change, distinguish comparable dates/classifications from a single density snapshot."
+    ],
+    "integrationGate": "Verify actual application capabilities, embedding/security/accessibility, data rights and teaching benefit before a new bounded task. No new GIS or map engine here."
+  },
+  "blockers": [
+    "Human pedagogical and visual approval of this actual candidate.",
+    "School-adopted syllabus and formal curriculum mapping must be confirmed before claiming alignment.",
+    "Separate explicit lesson-publication approval; no release date or corresponding video publication is authorised."
+  ],
+  "limitations": [
+    "Paper responses are not automatically captured or marked; teacher-led feedback is required.",
+    "Generic standalone Geography questions are not indexed by the present practice-collection Answer Hub. Candidate final/worked policies are hidden, models are in the separate teacher guide, and all six answer keys are stripped from the standalone learner. No automatic completion reveal is promised.",
+    "Map is a reduced, adapted static official modelled grid: suitable for broad patterns, not exact household/cell measurements.",
+    "A dated release is deliberately used for internally consistent evidence, not latest population figures.",
+    "No physical-device, screen-reader or remote classroom-service certification; no observed classroom timing evidence.",
+    "No new smartphone development or polish."
+  ]
+}

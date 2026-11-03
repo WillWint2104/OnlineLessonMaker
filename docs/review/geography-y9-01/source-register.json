@@ -1,0 +1,97 @@
+{
+  "reviewDate": "2026-11-03",
+  "status": "Verified sources for an unpublished review candidate; school syllabus adoption and human pedagogical/visual approval outstanding",
+  "sources": [
+    {
+      "id": "A",
+      "title": "Australian population grid 2024",
+      "producer": "Australian Bureau of Statistics",
+      "release": "Regional population 2023–24, 27 March 2025",
+      "reference": "30 June 2024",
+      "url": "https://www.abs.gov.au/statistics/people/population/regional-population/2023-24",
+      "download": "https://www.abs.gov.au/statistics/people/population/regional-population/2023-24/JPEG.zip",
+      "localOriginal": "sources/abs-grid/JPEG/apg24e_1_0_0.jpg",
+      "metadata": "sources/abs-grid/JPEG/apg24r_1_0_0_19115-3_metadata.xml",
+      "classStyle": "sources/abs-map-style.json",
+      "ownerVerification": "sources/abs-map-item.json; owner abs_aus_digitalatlas; credits ABS",
+      "population": "Estimated Resident Population (usual residents). The grid distributes SA1 estimates over residential address points, Indigenous Community Points or fallback SA1 centroid points, then sums into 1 km² cells.",
+      "measure": "Modelled density, people per km²; NOT a growth rate, household count, migrant flow or urban/rural classification",
+      "geography": "Australia, National Nested Grid; 2021 SA1/ASGS Edition 3 inputs; EPSG:3577. Lesson adaptation shows mainland and Tasmania, excludes distant-island margins.",
+      "classes": [
+        "Modelled zero",
+        "Below 500",
+        "500 to below 2,000",
+        "2,000 to below 5,000",
+        "5,000 to below 8,000",
+        "8,000 or more"
+      ],
+      "adaptation": "Native JPEG reduced decode, proportional crop, resampling, state/territory region labels, title and verified legend added. No invented geometry or recolouring. Reduced cells blend: only broad patterns are assessed; exact per-cell numerical extraction is not supported.",
+      "comparability": "Same 2024 reference/release as B, but grid cells and GCCSAs are different spatial units. No one-to-one equivalence between coloured cells and complete city boundaries; no density ranking calculated from B.",
+      "limitations": "2024 ERP preliminary in this release; estimates may be revised. Modelled cell allocation and national-scale reduction limit precision. Grey is a model category, not proof of no community, activity, cultural connection or occupation. No causal/migration/job inference is established by the map.",
+      "rights": "© Commonwealth of Australia. CC BY 4.0 confirmed in supplied grid metadata and official ABS-owned item. No logo/Coat of Arms/third-party basemap reproduced.",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "publicationRequirements": "Retain ABS attribution, original release/source link, licence reference, adaptation notice and limitations. Do not imply ABS endorsement."
+    },
+    {
+      "id": "B",
+      "title": "Population change by capital city — four selected rows",
+      "producer": "Australian Bureau of Statistics",
+      "release": "Regional population 2023–24, 27 March 2025",
+      "url": "https://www.abs.gov.au/statistics/people/population/regional-population/2023-24",
+      "snapshot": "sources/abs-regional-2023-24.html",
+      "data": "sources/city-data.json",
+      "reference": "ERP at 30 June 2024; change from 30 June 2023 to 30 June 2024",
+      "population": "Usual-resident ERP. Foreign diplomatic personnel/families excluded. June 2024 preliminary in this release; June 2023 revised.",
+      "measure": "Residents (count); added residents over one year (count change); percentage increase relative to the starting population (growth rate, rounded to 1 decimal place). Not urban share or density.",
+      "geography": "Greater Capital City Statistical Areas (GCCSA), ASGS Edition 3. Sydney, Melbourne, Brisbane, Perth only; not all capitals, all urban areas, or equal-area regions.",
+      "comparability": "Within-release count/growth comparisons are valid for these defined city regions. Boundaries include non-urban land; do not treat their sum as national urban population or compare to national/DEGURBA urban percentages.",
+      "limitations": "A deliberately dated teaching snapshot, not latest population data. Later revisions must not be mixed into this table. Missing national totals, urban classifications and land areas prevent urbanisation or density calculations.",
+      "rights": "© Commonwealth of Australia, CC BY 4.0. Four factual rows transcribed; no ABS branding or third-party graphic copied.",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "publicationRequirements": "Retain source, reference periods, units, geography, selection and preliminary/revision caveat."
+    },
+    {
+      "id": "M",
+      "title": "Regional population methodology, 2023–24",
+      "producer": "ABS",
+      "release": "27 March 2025",
+      "url": "https://www.abs.gov.au/methodologies/regional-population-methodology/2023-24",
+      "snapshot": "sources/abs-methodology.html",
+      "use": "ERP definition, estimation/revision status and limits. The grid XML additionally documents the spatial allocation method.",
+      "rights": "Paraphrased factual methodology, attributed to ABS. No third-party material reproduced."
+    },
+    {
+      "id": "C",
+      "title": "World Urbanization Prospects 2025 — Glossary of Demographic Terms",
+      "producer": "UN DESA Population Division",
+      "url": "https://population.un.org/wup/glossary-demographic-terms",
+      "snapshot": "sources/un-glossary.html",
+      "use": "Concepts only: urbanisation as rising urban share, national definitions, density and settlement hierarchy. No UN numerical population series, image, logo or text block reproduced.",
+      "comparability": "National urban definitions and the Degree of Urbanization are different systems. No numerical claim about Australia’s urban share is derived from the ABS GCCSA table.",
+      "rights": "Original paraphrased explanation and previously approved original G03 illustrative diagram. No reuse claim over UN artwork."
+    },
+    {
+      "id": "R",
+      "title": "ABS copyright and creative commons",
+      "producer": "ABS",
+      "url": "https://www.abs.gov.au/website-privacy-copyright-and-disclaimer",
+      "snapshot": "sources/abs-rights.html",
+      "use": "CC BY 4.0 general licence and exclusions. Grid metadata/item additionally verifies this specific map. Logos, Coat of Arms, trademarks, microdata and third-party material are excluded from blanket reuse.",
+      "license": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    {
+      "id": "S",
+      "title": "Geography 7–10 Syllabus (2024) — implementation overview",
+      "producer": "NSW Education Standards Authority",
+      "url": "https://curriculum.nsw.edu.au/learning-areas/hsie/geography-7-10-2024/overview",
+      "snapshot": "sources/nesa-geography.html",
+      "use": "Implementation from 2027; early school implementation can occur during preparation. School adoption not supplied/verified. Existing sequence has provisional 2015 GE5-2/3/7/8 references only; candidate curriculumMappings deliberately empty.",
+      "rights": "Reference link and paraphrased implementation facts only; no official wording/diagram reproduced as lesson content."
+    }
+  ],
+  "illustrativeEvidence": {
+    "source": "Approved G03 fixture, original explanatory diagram",
+    "values": "40/60 to 48/72: hypothetical counts; 40% remains 40%. Original bar diagram 40% to 50% is a DIFFERENT illustrative scenario showing a rising share, not a time series for the 40/60 calculation.",
+    "claim": "Both explicitly labelled illustrative; no place or period assigned. Settlement arrangements diagram is original, schematic and without scale."
+  }
+}
