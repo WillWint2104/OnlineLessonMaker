@@ -28,3 +28,8 @@ Additional exact allowed paths: lesson-studio.html (enumerated Geography evidenc
 Human checkpoint: real application screenshots at 1536/1280/1024 and genuine native 200%; functional, pedagogical and visual acceptance before any merge. Accepted v4 teaching content/evidence is frozen except the explicit layout opt-ins. No merge, deployment, publication or Y9-02.
 
 Verification exposed global arrow navigation when a local table is focused. The same bounded central change contains Left/Right key propagation only inside opted-in evidence tables, preserving native horizontal scrolling and leaving all other lesson shortcuts unchanged.
+
+
+## Final marker correction and draft PR
+
+Direct user review attachment 18d445ce-8703-425d-9280-5784d5849ade accepts v5 pedagogy and composition. Only correct Manrope ligature shaping on opted-in Geography .mx-pl markers; authored (a)–(d) text/IDs and all accepted lesson content stay unchanged. Browser verification must inspect actual shaped glyph counts at 1536/1280/1024/native 200%, including other opted-in question activities. Prepare one draft PR and exact-head CodeRabbit review; keep auto-merge disabled. No merge, deploy, publication, additional design iteration or Y9-02.

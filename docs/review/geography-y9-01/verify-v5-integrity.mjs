@@ -11,6 +11,7 @@ const hash=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex'),chec
 const check=(ok,name)=>{assert(ok,name);checks.push(name);};
 const before=JSON.parse(git(['show',old+':docs/review/geography-y9-01/lesson.json']));
 const actual=JSON.parse(fs.readFileSync(dir+'/lesson.json')),normal=structuredClone(actual);
+assert.deepEqual(actual,JSON.parse(git(['show','4ab3a1e5ddb05d2803ef90ddd3ab6f0089a5874e:docs/review/geography-y9-01/lesson.json'])));checks.push('Entire accepted v5 lesson including instructions, answer policies and IDs is unchanged');
 const ids=['worked','map-investigation','table-investigation','guided','independent'];
 for(const s of normal.slides)for(const a of s.activities){
  if(ids.includes(a.id)){check(a.layout==='geography-evidence',a.id+' explicitly opts in');delete a.layout;}
