@@ -152,14 +152,14 @@ if(process.argv.includes('--self-test')){
  for(const value of [null,-1,0.5,'0'])reject('invalid external builder reservation '+JSON.stringify(value),b=>{b.externalFeatureBuilders=value;},/Invalid external builder reservation/);
  const geoActivate=(b,id='GEO-001')=>{const t=b.tasks.find(t=>t.id===id);Object.assign(t,{state:'ACTIVE',branch:'codex/'+id,worktree:'C:/test/'+id,owner:'test',startingCommit:ownership.baseline,approvedDependencies:[...t.dependencies]});};
  for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001']){
-  reject(id+' cannot bypass unmerged setup',b=>{b.approvedLaunches=['GEOGRAPHY-STAGE-A'];geoActivate(b,id);},/Geography setup must actually be merged/);
+  reject(id+' cannot bypass unmerged setup',b=>{b.tasks.find(t=>t.id==='GEO-SETUP-001').state='STAGED-REVIEW';b.approvedLaunches=['GEOGRAPHY-STAGE-A'];geoActivate(b,id);},/Geography setup must actually be merged/);
   reject(id+' cannot reuse History launch',b=>{b.tasks.find(t=>t.id==='GEO-SETUP-001').state='MERGED';b.approvedLaunches=['HUMANITIES-STAGE-A'];geoActivate(b,id);},/Explicit human Geography launch/);
   reject(id+' rejects runtime ownership',b=>b.tasks.find(t=>t.id===id).allowedPaths.push('src/map/**'),/Stage A research/);
   reject(id+' cannot advance to B',b=>b.tasks.find(t=>t.id===id).reviewStage='B',/new bounded task/);
  }
  for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])for(const state of ['QUEUED','STAGED-REVIEW']){
   reject(id+' '+state+' requires merged foundation',b=>{b.tasks[0].state='STAGED-REVIEW';b.tasks.find(t=>t.id===id).state=state;},/Foundation must actually be merged/);
-  reject(id+' '+state+' requires merged setup',b=>{b.tasks.find(t=>t.id===id).state=state;b.approvedLaunches=['GEOGRAPHY-STAGE-A'];},/Geography setup must actually be merged/);
+  reject(id+' '+state+' requires merged setup',b=>{b.tasks.find(t=>t.id==='GEO-SETUP-001').state='STAGED-REVIEW';b.tasks.find(t=>t.id===id).state=state;b.approvedLaunches=['GEOGRAPHY-STAGE-A'];},/Geography setup must actually be merged/);
   reject(id+' '+state+' requires Geography launch',b=>{b.tasks.find(t=>t.id==='GEO-SETUP-001').state='MERGED';b.tasks.find(t=>t.id===id).state=state;b.approvedLaunches=['HUMANITIES-STAGE-A'];},/Explicit human Geography launch/);
  }
  const geoReady=b=>{b.externalFeatureBuilders=0;b.tasks.find(t=>t.id==='GEO-SETUP-001').state='MERGED';b.tasks.find(t=>t.id==='GEO-SETUP-001').waitingForHuman=false;b.approvedLaunches=['GEOGRAPHY-STAGE-A'];for(const id of ['GEO-001','GEO-MAP-001','GEO-EVIDENCE-001'])geoActivate(b,id);};

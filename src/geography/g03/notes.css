@@ -1,0 +1,31 @@
+/* Opt-in G03 only. No global tokens or Mathematics selectors are changed. */
+.lp:has(.geo-g03) .geo-g03,.lp:has(.geo-g03) .lp-title,.lp:has(.geo-g03) .mx-course,.lp:has(.geo-g03) .mx-lede{font-family:Manrope,system-ui,sans-serif;color:#172b3d;}
+.lp:has(.geo-g03) .mx-page{background:#f5f8f9;}
+.lp:has(.geo-g03) .lp-activity{max-width:1000px;margin:0 auto;padding:32px 40px 36px;background:#fff;}
+.lp:has(.geo-g03) .lp-header{max-width:760px;margin-bottom:22px;}
+.lp:has(.geo-g03) .lp-title{font-size:clamp(28px,2.6vw,34px);line-height:1.25;letter-spacing:-.025em;width:fit-content;max-width:100%;}
+.lp:has(.geo-g03) .lp-title:focus{outline:2px solid #076d72;outline-offset:4px;border-radius:2px;}
+.lp:has(.geo-g03) .lp-location{color:#4c6374;letter-spacing:.06em;}
+.lp:has(.geo-g03) .mx-lede{font-size:18px;line-height:1.55;margin:12px 0 0;}
+.lp:has(.geo-g03) .mx-content{background:transparent;border:0;box-shadow:none;padding:0;}
+.geo-g03{font-size:17px;line-height:1.6;min-width:0;max-width:760px;overflow-wrap:anywhere;}
+.geo-g03 h2{font-size:19px;line-height:1.35;font-weight:750;margin:0 0 9px;letter-spacing:-.015em;}
+.geo-g03-explanation p{margin:0 0 14px;}
+.geo-g03-source{font-size:13px;color:#506473;}
+.geo-g03-visual{margin:22px 0 24px;}
+.geo-g03-visual img{display:block;width:100%;height:auto;max-height:240px;object-fit:contain;object-position:left center;}
+.geo-g03-visual img[hidden]{display:none;}
+.geo-g03 figcaption{margin-top:8px;color:#506473;font-size:13px;line-height:1.5;}
+.geo-g03-citation{display:block;margin-top:3px;}
+.geo-g03 a{color:#076269;text-decoration:underline;text-underline-offset:3px;}
+.geo-g03-unavailable{padding:20px;border:1px solid #b5c6ca;border-radius:4px;background:#f5f8f9;}
+.geo-g03-notes{padding:18px 22px;border-left:3px solid #087c80;background:#eef7f6;}
+.geo-g03-notes h2{font-size:17px;color:#154b50;margin-bottom:10px;}
+.geo-g03-notes ol{margin:0;padding-left:24px;}
+.geo-g03-notes li{padding-left:4px;margin:7px 0;}
+.geo-g03-notes li:first-child{margin-top:0;}
+.geo-g03-notes li:last-child{margin-bottom:0;}
+.geo-g03-check{margin-top:28px;}
+.geo-g03 :focus-visible{outline:3px solid #076d72;outline-offset:4px;}
+@media(max-width:850px){.lp:has(.geo-g03) .lp-activity{padding:28px 28px 32px;}}
+@media(max-width:560px){.lp:has(.geo-g03) .lp-activity{padding:24px 19px 28px;}.geo-g03{font-size:16px;}.lp:has(.geo-g03) .mx-lede{font-size:17px;}.geo-g03-notes{padding:17px 18px;}.geo-g03-visual{margin:21px 0;}}

@@ -1,6 +1,6 @@
 # Repository-wide agent rules
 
-Read [development foundation](docs/development/README.md), the task card and the nearest scoped AGENTS.md before work. Direct user instructions take precedence. Widget Contract V1 and ownership/capacity rules are adopted. FOUND-001 merged in PR #171; that verified merge grants no feature launch. Geography setup remains a proposal pending governance approval; no seeded stream is launched.
+Read [development foundation](docs/development/README.md), the task card and the nearest scoped AGENTS.md before work. Direct user instructions take precedence. Widget Contract V1 and ownership/capacity rules are adopted. FOUND-001 merged in PR #171; that verified merge grants no feature launch. GEO-SETUP-001 merged in PR #175 (dceba975); no seeded research stream is launched. Only the separately authorised G03 prototype is active under GEO-G03-001.
 
 - Learner delivery is the product. Do not add presenter, recording, teacher-presentation or HGL Studio controls. Existing legacy controls are not a mandate to expand or remove them in unrelated tasks.
 - General Mathematics architecture is frozen at production `aae1b1a891d495e31e879bcbd6a79404f576fe57`. New work is content or a bounded capability justified by a real lesson.
@@ -14,3 +14,5 @@ Read [development foundation](docs/development/README.md), the task card and the
 - Keep staged PRs DRAFT. This repository's `ready_for_review` event arms auto-merge; do not mark ready or merge before required human approval.
 - Record actual branch/head, tests, remaining limits and runnable review evidence. Never present isolated widget success as production integration acceptance.
 
+
+26 October 2026 reconciliation: GEO-SETUP-001 actually merged in PR #175 at dceba9757c24a703e6d3b655a2dfe90ef0a5d969. Earlier proposed/staged descriptions above are historical. Direct user authority now permits only the bounded [G03 prototype](docs/development/tasks/GEO-G03-001.md), not GEOGRAPHY-STAGE-A research, G06, final design approval, merge or deployment. approvedLaunches and approvedCheckpoints remain empty.

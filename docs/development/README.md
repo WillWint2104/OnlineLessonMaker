@@ -6,10 +6,12 @@ FOUND-001 merged via [PR #171](https://github.com/WillWint2104/OnlineLessonMaker
 
 Read [ownership](OWNERSHIP.md), ownership.json, [Widget Contract V1](WIDGET-CONTRACT-V1.md), [operating model](OPERATING-MODEL.md), [task template](TASK-TEMPLATE.md), backlog.json and [state rules](BACKLOG.md), then the assigned task and nearest AGENTS.md. History/Source/Map cards retain their original scope and separate HUMANITIES-STAGE-A gate. Deferred streams remain deferred.
 
-[GEO-SETUP-001](tasks/GEO-SETUP-001.md) proposes a separate [Geography research framework](GEOGRAPHY-STAGE-A.md). Read the [current coordination receipt](GEOGRAPHY-SETUP-RECEIPT.md) before any activation. Setup is integration planning only; governance approval/merge and an explicit later Geography launch are required. No learner engine or feature builder is launched.
+[GEO-SETUP-001](tasks/GEO-SETUP-001.md) records the merged setup for a separate [Geography research framework](GEOGRAPHY-STAGE-A.md). Read the [coordination receipt](GEOGRAPHY-SETUP-RECEIPT.md) with its later reconciliation before activation. Setup grants no launch: a separate explicit GEOGRAPHY-STAGE-A approval is required for seeded research. The bounded G03 prototype is separately authorised and remains in staged review; it grants no research activation, further merge or deployment.
 
 Validate with node scripts/verify-development-foundation.mjs and --self-test. The checker is read-only coordination validation, not a launcher or proof that the live agent/review inventory is complete. --setup remains the historical FOUND-001 baseline guard; use the current setup task's base and allowlist for this PR, as documented in the receipt.
 
 Older README/HANDOFF sections mention superseded Mathematics milestones and Present controls. Current root instructions and direct task scope govern new work. Preserve historical receipts and existing lesson compatibility.
 
 The current Geography production proposal covers six teaching weeks of both Year 9 and Year 10: [coverage matrices, question catalogue and application dependencies](geography-six-week/README.md). The user has authorised curriculum redesign from the topic guidance without waiting for old school resources. Lesson sequence/timetable remain provisional, and this planning amendment grants no launch or implementation authority.
+
+26 October 2026 reconciliation: GEO-SETUP-001 actually merged in PR #175 at dceba9757c24a703e6d3b655a2dfe90ef0a5d969. Earlier proposed/staged descriptions above are historical. Direct user authority now permits only the bounded [G03 prototype](tasks/GEO-G03-001.md), not GEOGRAPHY-STAGE-A research, G06, final design approval, merge or deployment. approvedLaunches and approvedCheckpoints remain empty.
