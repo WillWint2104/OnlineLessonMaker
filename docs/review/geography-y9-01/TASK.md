@@ -33,3 +33,5 @@ Verification exposed global arrow navigation when a local table is focused. The 
 ## Final marker correction and draft PR
 
 Direct user review attachment 18d445ce-8703-425d-9280-5784d5849ade accepts v5 pedagogy and composition. Only correct Manrope ligature shaping on opted-in Geography .mx-pl markers; authored (a)–(d) text/IDs and all accepted lesson content stay unchanged. Browser verification must inspect actual shaped glyph counts at 1536/1280/1024/native 200%, including other opted-in question activities. Prepare one draft PR and exact-head CodeRabbit review; keep auto-merge disabled. No merge, deploy, publication, additional design iteration or Y9-02.
+
+Exact-head CodeRabbit findings: remove obsolete handoff generator/outputs from this PR while preserving historical ZIPs; clarify portable review setup; make optional map font resolution portable without regenerating the reviewed asset; compare integrity against immutable baseline Git blobs with explicit historical evidence inputs; correct overflow detection only for opted-in Geography tables during live resize. No new layout/content/answer changes.

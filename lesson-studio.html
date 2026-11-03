@@ -16331,6 +16331,14 @@ function mxWritesResponses(s){
 function mxFitTables(root){
   (root||document).querySelectorAll('.mx-tblwrap').forEach(wrap=>{
     const tbl=wrap.querySelector('table'); if(!tbl) return;
+    // GEO_EVIDENCE_TABLE_FIT_START
+    if(wrap.closest('[data-lp-layout="geography-evidence"]')){
+      wrap.classList.remove('mx-tbl-compact');
+      const scrolls=wrap.scrollWidth>wrap.clientWidth+1;
+      wrap.toggleAttribute('data-mx-tblscroll',scrolls);
+      mvTableScrollAttributes(wrap,scrolls);return;
+    }
+    // GEO_EVIDENCE_TABLE_FIT_END
     /* The two intrinsic widths are measured ONCE and remembered, so re-running this on every resize is a
        pair of comparisons rather than a remove-measure-add cycle — which would otherwise leave a frame in
        which the table is briefly un-compacted and un-scrollable, and that frame is exactly what a

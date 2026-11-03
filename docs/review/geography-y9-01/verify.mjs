@@ -86,6 +86,16 @@ try{
    const scroll=await q.locator('.mx-page').evaluate(e=>e.scrollHeight>e.clientHeight+40);if(scroll){await q.locator('.mx-page').evaluate(e=>e.scrollTop=e.scrollHeight);await shot(q,width+'-'+a.id+'-lower');}
   }
  }
+ // Resize the same table instance; recreating the activity would hide stale cached widths.
+ await go(q,1,'worked');
+ for(const width of [1536,1280,1024,1536]){
+  await q.setViewportSize({width,height:1000});
+  await q.waitForFunction(()=>{const e=document.querySelector('.mx-tblwrap');return e&&e.hasAttribute('data-mx-tblscroll')===(e.scrollWidth>e.clientWidth+1);});
+  const state=await q.locator('.mx-tblwrap').first().evaluate(e=>({client:e.clientWidth,scroll:e.scrollWidth,hint:e.hasAttribute('data-mx-tblscroll'),mask:getComputedStyle(e).maskImage}));
+  check(state.hint===(state.scroll>state.client+1),width+' live resize keeps table scroll hint in sync with actual overflow');
+  if(!state.hint)check(state.mask==='none',width+' fitted table has no stale right-edge fade');
+  (report.liveTableResize??=[]).push({width,...state});
+ }
  await q.setViewportSize({width:1536,height:1000});await go(q,2,'map-investigation');
  check(await q.locator('[data-book-hub]:visible').count()===0,'No practice model answer access before completion');
  // Use the existing image inspection affordance, never a replacement map UI.
