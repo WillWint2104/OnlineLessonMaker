@@ -1,4 +1,4 @@
-# Y9-01 â€” Urbanisation and Population Distribution
+# Y9-01 — Urbanisation and Population Distribution
 
 Direct user authority: attachment 848c7941-a6fe-425e-ac38-b2b5c1f1f2cb, 3 November 2026. Single-agent content production; stop for pedagogical and visual approval. No publication, merge, deployment or Y9-02.
 
