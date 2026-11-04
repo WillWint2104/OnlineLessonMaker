@@ -33,6 +33,8 @@ const outputs=['teacher-guide.html','source-register.html','source-register.json
 const before=outputs.map(read);
 execFileSync(process.execPath,[path.join(dir,'review-documents.mjs'),'--teacher-guide-only'],{cwd:root,stdio:'pipe'});
 check(outputs.every((file,i)=>read(file).equals(before[i])),'Teacher-only generation reproduces the guide and preserves every other current resource byte-identically');
+execFileSync(process.execPath,[path.join(dir,'review-documents.mjs')],{cwd:root,stdio:'pipe'});
+check(outputs.every((file,i)=>read(file).equals(before[i])),'Full regeneration also preserves every accepted output byte-identically');
 const report={head:git(['rev-parse','HEAD']),startingHead:start,complete:true,approvedCriterion:approved,checks,limits:'Content assertions supplement the explicit human pedagogical decision; they do not automate historical or classroom assessment.'};
 if(process.env.Y9_OUT){fs.mkdirSync(process.env.Y9_OUT,{recursive:true});fs.writeFileSync(path.join(process.env.Y9_OUT,'criterion-verification.json'),JSON.stringify(report,null,2)+'\n');}
 console.log(JSON.stringify({head:report.head,complete:true,checks:checks.length}));

@@ -21,7 +21,8 @@ lesson=json.loads((root/'lesson.json').read_text(encoding='utf-8'))
 transcribed=json.loads((root/'sources/city-data.json').read_text(encoding='utf-8'))
 checks=[]; calculations=[]
 def check(ok,label):
-    assert ok,label
+    if not ok:
+        raise AssertionError(label)
     checks.append(label)
 def num(v): return Decimal(v.replace(',','').replace('%',''))
 official={}
