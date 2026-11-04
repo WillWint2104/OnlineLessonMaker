@@ -22,7 +22,11 @@ for(const s of normal.slides)for(const a of s.activities){
  if(a.id==='map-investigation')a.practiceNote=a.practiceNote.replace('Read the four questions for this map first','Read the four questions below the map first');
 }
 assert.deepEqual(normal,before);checks.push('Entire accepted v4 lesson deep-equal apart from five layout values and one spatial instruction');
-const preserved=['teacher-guide.html','source-register.json','source-register.html','refinement-content.json','sources/population-map-2024.jpg','sources/city-data.json'];
+const criterionBefore='Names eastern/south-eastern concentration, a contrasting broad interior region and a supported exception such as the south-west.';
+const criterionApproved='Describes a located population concentration and identifies a map-supported exception to an east-coast-only pattern, such as the south-western concentration.';
+const teacher=fs.readFileSync(dir+'/teacher-guide.html','utf8');
+check(teacher.split(criterionApproved).length===2&&teacher.replace(criterionApproved,criterionBefore)===fs.readFileSync(frozen+'/teacher-guide.html','utf8'),'Teacher guide differs only by the explicitly approved independent Secure criterion');
+const preserved=['source-register.json','source-register.html','refinement-content.json','sources/population-map-2024.jpg','sources/city-data.json'];
 for(const f of preserved){const prior=fs.readFileSync(frozen+'/'+f);check(createHash('sha256').update(prior).digest('hex')===hash(dir+'/'+f),f+' byte-identical to accepted v4');}
 // Git blob IDs compare immutable baseline content after repository EOL/filter rules.
 const baseline=execFileSync('git',['ls-tree','-rz','--full-tree',base],{cwd:root,encoding:'utf8',maxBuffer:30_000_000}).split('\0').filter(Boolean).map(row=>{const tab=row.indexOf('\t');return {file:row.slice(tab+1),blob:row.slice(0,tab).split(' ')[2]};}).filter(f=>f.file!=='lesson-studio.html');
