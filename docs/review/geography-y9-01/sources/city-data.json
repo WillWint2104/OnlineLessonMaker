@@ -1,0 +1,35 @@
+{
+  "sourceUrl": "https://www.abs.gov.au/statistics/people/population/regional-population/2023-24",
+  "release": "27 March 2025",
+  "referenceDate": "30 June 2024",
+  "changePeriod": "30 June 2023–30 June 2024",
+  "population": "Estimated Resident Population (ERP)",
+  "geography": "Greater Capital City Statistical Areas (GCCSA), ASGS Edition 3",
+  "selection": "Four selected GCCSAs, not all Australian cities or all urban residents",
+  "cities": [
+    {
+      "city": "Sydney",
+      "population": 5557233,
+      "increase": 107538,
+      "rate": 2
+    },
+    {
+      "city": "Melbourne",
+      "population": 5350705,
+      "increase": 142637,
+      "rate": 2.7
+    },
+    {
+      "city": "Brisbane",
+      "population": 2780063,
+      "increase": 72930,
+      "rate": 2.7
+    },
+    {
+      "city": "Perth",
+      "population": 2384371,
+      "increase": 72742,
+      "rate": 3.1
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+/* Explicit activity opt-in. Preserve all default player and evidence-viewer rules. */
+.lp .lp-activity[data-lp-layout="geography-evidence"]{max-width:1060px;container:geo-evidence / inline-size;--geo-font:Manrope,system-ui,sans-serif;font-family:var(--geo-font);}
+.lp-activity[data-lp-layout="geography-evidence"] .lp-header{max-width:none;margin-bottom:24px;}
+.lp-activity[data-lp-layout="geography-evidence"] .lp-title{font:700 clamp(25px,2.2vw,30px)/1.3 var(--geo-font);letter-spacing:-.02em;color:#173b3e;}
+.lp-activity[data-lp-layout="geography-evidence"] :is(.mx-stem,.mx-parts,.mx-wexqb,.mx-stept,.mx-itembd p){font:400 17px/1.65 var(--geo-font);color:#203d41;}
+.lp-activity[data-lp-layout="geography-evidence"] :is(.mx-panelh,.mx-sk-h,.mx-parth,.mx-wexlab){font-family:var(--geo-font);color:#365d63;}
+.lp-activity[data-lp-layout="geography-evidence"] :is(.mx-wexqb,.mx-stept,.mx-lede){max-width:78ch;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-content{padding:0;background:transparent;border:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd{width:100%;min-width:0;}
+/* Manrope's standard (c) ligature is a copyright glyph; these are literal part markers. */
+.lp-activity[data-lp-layout="geography-evidence"] .mx-pl{font-variant-ligatures:none;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap{width:100%;max-width:100%;overflow-x:auto;margin:10px 0 18px;mask-image:none;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl{width:100%;min-width:760px;font:400 16px/1.5 var(--geo-font);font-variant-numeric:tabular-nums;}
+/* Wrap prose at word boundaries; numerical tokens and existing .mx-nb runs stay whole. */
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl :is(th,td){padding:12px 14px;white-space:normal;max-width:36ch;overflow-wrap:normal;word-break:normal;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl th{font-weight:650;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl tr>:first-child{text-align:left;width:23%;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl tr>:not(:first-child){text-align:right;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap:focus-visible{outline:3px solid #076d72;outline-offset:3px;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-step{padding:16px 0;border-bottom:1px solid #dce8e4;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-stept{margin:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source){display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px 26px;grid-template-rows:auto 1fr;align-items:start;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source)>.mx-stem{grid-column:2;grid-row:1;margin:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source)>.mv-evidence{grid-column:1;grid-row:1 / span 2;margin:0;min-width:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source)>.mx-parts{grid-column:2;grid-row:2;display:flex;flex-direction:column;gap:18px;margin:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source)>.mv-evidence~.mv-evidence{grid-column:1 / -1;grid-row:auto;}
+.lp-activity[data-lp-layout="geography-evidence"] .ev-media{padding:0;background:transparent;min-height:0;}
+.lp-activity[data-lp-layout="geography-evidence"] .ev-source .ev-media img{max-height:680px!important;}
+.lp-activity[data-lp-layout="geography-evidence"] :is(.ev-source figcaption,.mv-description,.mv-caption){font:400 13px/1.55 var(--geo-font);color:#4c6370;}
+.lp-activity[data-lp-layout="geography-evidence"] .ev-source figcaption{padding:12px 0;}
+.lp-activity[data-lp-layout="geography-evidence"] .ev-actions button{font:500 14px/1.4 var(--geo-font);min-height:42px;}
+@container geo-evidence (max-width:850px){
+ .lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source){display:flex;flex-direction:column;gap:20px;}
+ .lp-activity[data-lp-layout="geography-evidence"] .mx-itembd:has(>.mv-evidence .ev-source)>.mv-evidence{align-self:stretch;}
+ .lp-activity[data-lp-layout="geography-evidence"] .ev-media{justify-content:flex-start;}
+}
+
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap.mx-tbl-compact .mx-tbl :is(th,td){font-size:16px;min-width:46px;padding:12px 14px;}
+/* On narrow reading regions, let every column scroll rather than occlude values. */
+@container geo-evidence (max-width:550px){
+ .lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap[data-mx-tblscroll] .mx-tbl tr>:first-child{position:static;}
+}
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap[data-mx-tblscroll]::after{content:"Scroll within the table → to see all columns.";display:block;position:sticky;left:0;width:fit-content;max-width:100%;margin-top:10px;font:500 13px/1.5 var(--geo-font);color:#365d63;}
