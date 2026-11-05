@@ -54,7 +54,8 @@ test('Actual uploadable tar matches staged inventory/hashes and rejects a tar co
 test('Workflow guards keep failed staging from upload/deploy and propose manual main-only releases',()=>{
  const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..'),workflow=fs.readFileSync(root+'/.github/workflows/deploy-pages.yml','utf8');
  assert(workflow.includes('workflow_dispatch:')&&!/^  push:/m.test(workflow));assert(workflow.includes("github.ref == 'refs/heads/main'"));assert(!workflow.includes('continue-on-error')&&!workflow.includes('always()'));
- const order=text=>{const at=marker=>{const index=text.indexOf(marker);assert(index>=0,'Workflow step missing: '+marker);return index;};assert(at('node scripts/stage-pages.mjs')<at('actions/upload-pages-artifact@v3'));assert(at('Verify actual Pages upload archive')<at('actions/deploy-pages@v4'));};
+ const order=text=>{const at=marker=>{const index=text.indexOf(marker);assert(index>=0,'Workflow step missing: '+marker);return index;};assert(at('node scripts/stage-pages.mjs')<at('actions/upload-pages-artifact@v3'));assert(at('actions/upload-pages-artifact@v3')<at('Verify actual Pages upload archive'),'Archive verification must follow upload');assert(at('Verify actual Pages upload archive')<at('actions/deploy-pages@v4'));};
  order(workflow);for(const marker of ['node scripts/stage-pages.mjs','actions/upload-pages-artifact@v3','Verify actual Pages upload archive','actions/deploy-pages@v4'])assert.throws(()=>order(workflow.replace(marker,'')),/Workflow step missing/);
+ assert.throws(()=>order(workflow.replace('actions/upload-pages-artifact@v3','__upload__').replace('Verify actual Pages upload archive','actions/upload-pages-artifact@v3').replace('__upload__','Verify actual Pages upload archive')),/Archive verification must follow upload/);
  assert(workflow.includes('path: ${{ runner.temp }}/olm-pages'));
 });
