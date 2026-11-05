@@ -33,6 +33,9 @@ test('Rejects hard-linked aliases of excluded files',()=>{
 test('Dirty tracked source and changed staged bytes fail verification',()=>{
  const f=fixture();stagePages(f.source,f.output);fs.appendFileSync(f.output+'/index.html','changed');assert.throws(()=>verifyStage(f.source,f.output),/Staged bytes differ/);fs.appendFileSync(f.source+'/index.html','changed');assert.throws(()=>stagePages(f.source,f.parent+'/new-stage'),/Tracked source must be clean/);
 });
+test('Missing public entry points fail before a payload can be produced',()=>{
+ const f=fixture();fs.unlinkSync(f.source+'/lesson-studio.html');commit(f.source);assert.throws(()=>stagePages(f.source,f.output),/Missing public entry point/);assert(!fs.existsSync(f.output));
+});
 test('Injected nested review directories and unexpected files fail validation',()=>{
  const f=fixture();stagePages(f.source,f.output);fs.mkdirSync(f.output+'/docs/review/new',{recursive:true});assert.throws(()=>verifyStage(f.source,f.output),/Excluded path/);
  const g=fixture();stagePages(g.source,g.output);fs.writeFileSync(g.output+'/unexpected.txt','extra');assert.throws(()=>verifyStage(g.source,g.output),/inventory differs/);
@@ -46,6 +49,7 @@ test('Actual uploadable tar matches staged inventory/hashes and rejects a tar co
  const gnu=execFileSync(tar,['--version'],{encoding:'utf8'}).includes('GNU tar');
  execFileSync(tar,[...(gnu?['--dereference','--hard-dereference',...(process.platform==='win32'?['--force-local']:[])]:[]),'--directory',f.output,'-cf',archive,'--exclude=.git','--exclude=.github','.']);assert.equal(verifyArtifact(archive,r).filesVerified,r.preservedFiles);
  const bad=f.parent+'/bad.tar';execFileSync('tar',['-cf',bad,'-C',f.source,'docs/review']);assert.throws(()=>verifyArtifact(bad,r),/Excluded archive path/);
+ fs.linkSync(f.output+'/index.html',f.output+'/linked.html');const linked=f.parent+'/linked.tar';execFileSync('tar',['-cf',linked,'-C',f.output,'.']);assert.throws(()=>verifyArtifact(linked,r),/link or special entry/);
 });
 test('Workflow guards keep failed staging from upload/deploy and propose manual main-only releases',()=>{
  const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..'),workflow=fs.readFileSync(root+'/.github/workflows/deploy-pages.yml','utf8');

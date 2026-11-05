@@ -30,6 +30,7 @@ function inventory(root){
   const tab=row.indexOf('\t'),[mode,type]=row.slice(0,tab).split(' ');return {file:checkedPath(row.slice(tab+1)),mode,type};
  }).sort((a,b)=>a.file<b.file?-1:a.file>b.file?1:0);
  const selected=entries.filter(e=>!excluded(e.file)),seen=new Set();
+ for(const required of ['index.html','lesson-studio.html'])assert(selected.some(e=>e.file===required),'Missing public entry point: '+required);
  for(const e of selected){
   assert(e.type==='blob'&&['100644','100755'].includes(e.mode),'Links/submodules are not deployable: '+e.file);
   const key=e.file.toLowerCase();assert(!seen.has(key),'Case-alias collision: '+e.file);seen.add(key);
