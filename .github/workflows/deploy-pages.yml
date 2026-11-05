@@ -1,16 +1,13 @@
 name: Deploy to GitHub Pages
 
-# Publishes the repo root (the app + lessons/) to GitHub Pages.
+# Publishes a verified external staging directory, excluding docs/review/**.
 # One-time setup: Settings → Pages → Source = GitHub Actions.
 #
-# Note: PRs are auto-merged by github-actions[bot] (GITHUB_TOKEN), and GitHub does NOT
-# fire workflows on GITHUB_TOKEN-driven pushes — so the push trigger below will not run
-# on auto-merged commits. Use the workflow_dispatch trigger to publish the current main:
+# Manual only: merging through a human token must not accidentally publish main.
+# Separately approve the exact main SHA before dispatching this existing workflow:
 #   gh workflow run "Deploy to GitHub Pages" --ref main
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -24,15 +21,26 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Stage and verify public payload
+        run: node scripts/stage-pages.mjs --output "$RUNNER_TEMP/olm-pages" --manifest "$RUNNER_TEMP/olm-pages-manifest.json"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: ${{ runner.temp }}/olm-pages
+      - name: Verify actual Pages upload archive
+        run: node tests/deployment/verify-staged-site.mjs --artifact-only --stage "$RUNNER_TEMP/olm-pages" --manifest "$RUNNER_TEMP/olm-pages-manifest.json" --artifact "$RUNNER_TEMP/artifact.tar"
       - id: deployment
         uses: actions/deploy-pages@v4

@@ -1,0 +1,44 @@
+name: Pages payload preflight
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/deploy-pages.yml'
+      - '.github/workflows/pages-payload.yml'
+      - 'scripts/stage-pages.mjs'
+      - 'tests/deployment/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pages-payload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Focused publication boundary tests
+        run: node --test tests/deployment/pages-payload.test.mjs
+      - name: Stage exact-head public site
+        run: node scripts/stage-pages.mjs --output "$RUNNER_TEMP/olm-pages" --manifest "$RUNNER_TEMP/olm-pages-manifest.json"
+      # This uploads a non-production preflight artifact, never deploys it.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          name: pages-payload-preflight
+          path: ${{ runner.temp }}/olm-pages
+      - name: Verify actual archive and representative browser routes
+        run: node tests/deployment/verify-staged-site.mjs --stage "$RUNNER_TEMP/olm-pages" --manifest "$RUNNER_TEMP/olm-pages-manifest.json" --artifact "$RUNNER_TEMP/artifact.tar" --report "$RUNNER_TEMP/pages-payload-report.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pages-payload-receipts
+          path: |
+            ${{ runner.temp }}/olm-pages-manifest.json
+            ${{ runner.temp }}/pages-payload-report.json
