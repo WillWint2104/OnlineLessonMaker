@@ -703,7 +703,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 .lp-activity[data-lp-layout="geography-evidence"] .mx-pl{font-variant-ligatures:none;}
 .lp-activity[data-lp-layout="geography-evidence"] .mx-tblwrap{width:100%;max-width:100%;overflow-x:auto;margin:10px 0 18px;mask-image:none;}
 .lp-activity[data-lp-layout="geography-evidence"] .mx-tbl{width:100%;min-width:760px;font:400 16px/1.5 var(--geo-font);font-variant-numeric:tabular-nums;}
-.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl :is(th,td){padding:12px 14px;white-space:nowrap;}
+/* Wrap prose at word boundaries; numerical tokens and existing .mx-nb runs stay whole. */
+.lp-activity[data-lp-layout="geography-evidence"] .mx-tbl :is(th,td){padding:12px 14px;white-space:normal;max-width:36ch;overflow-wrap:normal;word-break:normal;}
 .lp-activity[data-lp-layout="geography-evidence"] .mx-tbl th{font-weight:650;}
 .lp-activity[data-lp-layout="geography-evidence"] .mx-tbl tr>:first-child{text-align:left;width:23%;}
 .lp-activity[data-lp-layout="geography-evidence"] .mx-tbl tr>:not(:first-child){text-align:right;}
