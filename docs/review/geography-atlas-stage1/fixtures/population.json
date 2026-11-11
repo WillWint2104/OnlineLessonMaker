@@ -1,0 +1,134 @@
+{
+  "meta": {
+    "id": "atlas-stage1-abs",
+    "title": "Urbanisation in Australia",
+    "subject": "Geography",
+    "theme": "geolearn",
+    "year": "Year 9",
+    "player": "activities",
+    "responseMode": "paper",
+    "answerPolicy": {
+      "final": "hidden",
+      "worked": "hidden"
+    }
+  },
+  "slides": [
+    {
+      "id": "atlas-stage1-abs-skill",
+      "type": "skill",
+      "title": "Compare · population change",
+      "visuals": [
+        {
+          "id": "city-table",
+          "kind": "table",
+          "role": "primary",
+          "label": "B · Four selected capital-city regions (ABS, 2023–24 release)",
+          "description": "These are broad capital-city regions. The selected rows cannot establish national urban share or density.",
+          "stub": "Capital-city region",
+          "head": [
+            "Residents, June 2024",
+            "Added residents, 2023–24",
+            "Growth, 2023–24 (%)"
+          ],
+          "rows": [
+            {
+              "label": "Sydney",
+              "cells": [
+                "5,557,233",
+                "107,538",
+                "2.0"
+              ]
+            },
+            {
+              "label": "Melbourne",
+              "cells": [
+                "5,350,705",
+                "142,637",
+                "2.7"
+              ]
+            },
+            {
+              "label": "Brisbane",
+              "cells": [
+                "2,780,063",
+                "72,930",
+                "2.7"
+              ]
+            },
+            {
+              "label": "Perth",
+              "cells": [
+                "2,384,371",
+                "72,742",
+                "3.1"
+              ]
+            }
+          ],
+          "sourceMetadata": {
+            "title": "Four selected capital-city regions",
+            "date": "Preliminary estimated resident population at 30 June 2024 · change from June 2023",
+            "institution": "Australian Bureau of Statistics",
+            "url": "https://www.abs.gov.au/statistics/people/population/regional-population/2023-24",
+            "rights": "© Commonwealth of Australia, CC BY 4.0. Four factual rows transcribed; no ABS branding or third-party graphic copied.",
+            "attribution": "ABS, Regional population 2023–24 (27 March 2025). © Commonwealth of Australia, CC BY 4.0.",
+            "notes": "Publisher and release — Australian Bureau of Statistics · Regional population 2023–24, 27 March 2025\nPopulation and geography — Usual-resident ERP. Foreign diplomatic personnel/families excluded. June 2024 preliminary in this release; June 2023 revised. Greater Capital City Statistical Areas (GCCSA), ASGS Edition 3. Sydney, Melbourne, Brisbane, Perth only; not all capitals, all urban areas, or equal-area regions.\nComparison and limitations — Within-release count/growth comparisons are valid for these defined city regions. Boundaries include non-urban land; do not treat their sum as national urban population or compare to national/DEGURBA urban percentages. A deliberately dated teaching snapshot, not latest population data. Later revisions must not be mixed into this table. Missing national totals, urban classifications and land areas prevent urbanisation or density calculations.\nAdaptation and rights — © Commonwealth of Australia, CC BY 4.0. Four factual rows transcribed; no ABS branding or third-party graphic copied."
+          }
+        }
+      ],
+      "activities": [
+        {
+          "id": "atlas-stage1-abs-activity",
+          "layout": "geography-investigation",
+          "title": "Compare capital-city growth",
+          "lede": "Use the same population release to compare how much different capital-city regions grew in one year.",
+          "notesTitle": "Key concepts",
+          "notes": [
+            {
+              "term": "Numerical change",
+              "body": "The number of residents added between two dates."
+            },
+            {
+              "term": "Growth rate",
+              "body": "The change expressed as a percentage of the population at the start of the period."
+            },
+            {
+              "body": "Read the number and percentage columns separately. The same numerical change can produce different growth rates when starting populations differ."
+            }
+          ],
+          "practiceNote": "Use the selected capital-city regions in the table. The region boundaries can include non-urban land.",
+          "questionsTitle": "Investigation questions",
+          "questions": [
+            {
+              "id": "atlas-v5-capital-growth",
+              "stem": "Use Source B to compare changes in population.",
+              "parts": [
+                {
+                  "label": "a",
+                  "prompt": "Compare Melbourne and Perth. Which added more residents, and which had the higher growth rate? Use one value from each relevant column.",
+                  "guidance": "Check the Added residents column first, then compare the percentage column.",
+                  "visualRefs": [
+                    "city-table"
+                  ]
+                },
+                {
+                  "label": "b",
+                  "prompt": "Why would these rows be insufficient to calculate the share of Australians who live in urban areas?",
+                  "guidance": "Check which places are included and what their boundaries represent.",
+                  "visualRefs": [
+                    "city-table"
+                  ]
+                }
+              ],
+              "answer": "Melbourne added 142,637 residents. Perth had a higher growth rate of 3.1%.",
+              "workedAnswer": "Compare 142,637 with 72,742, then compare 2.7% with 3.1%. The table lacks the national totals and urban classification needed for urban share.",
+              "teacherNote": "ATLAS TABLE TEACHER ONLY: assess both measures and source limitations."
+            }
+          ],
+          "investigation": {
+            "sourceRef": "city-table"
+          }
+        }
+      ]
+    }
+  ]
+}

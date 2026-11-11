@@ -1,0 +1,85 @@
+/* Stage 1 is scoped to the opted-in Geography article. */
+.lp .lp-activity[data-lp-layout="geography-investigation"]{max-width:1500px;padding:clamp(12px,2vw,28px);container:geo-atlas / inline-size}
+.ga-atlas{--ga-ink:#142b32;--ga-muted:#415d64;--ga-teal:#0b6561;--ga-deep:#103f46;--ga-rule:#ccdcdd;--ga-warm:#faf4e6;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,32%);align-items:start;gap:18px;color:var(--ga-ink);font:500 15px/1.5 Manrope,system-ui,sans-serif}
+.ga-atlas[data-ga-closed="true"]{grid-template-columns:minmax(0,1fr)}
+.ga-atlas [hidden]{display:none!important}
+.ga-atlas :is(p,h1,h2,h3,dl,dd){margin:0}
+.ga-atlas :is(button,summary,a,[tabindex]):focus-visible{outline:3px solid #946515;outline-offset:2px}
+.ga-atlas button{font:750 13px/1.3 Manrope,system-ui,sans-serif;cursor:pointer}
+.ga-atlas button:disabled{cursor:default;opacity:.55}
+.ga-learning,.ga-questions{min-width:0}
+.ga-intro,.ga-source,.ga-questions{background:#fff;border:1px solid var(--ga-rule);border-radius:10px}
+.ga-intro{padding:20px 22px;margin-bottom:16px;border-top:3px solid #458882}
+.ga-intro .ga-stage{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#276762}
+.ga-intro .lp-title{margin:6px 0 8px;color:var(--ga-ink);font:800 clamp(23px,3vw,38px)/1.15 Manrope,system-ui,sans-serif;letter-spacing:-.035em}
+.ga-purpose,.ga-knowledge dd,.ga-guidance{color:var(--ga-muted)}
+.ga-knowledge{margin:13px 0 9px;padding:9px 0;border-block:1px solid #dce8e8}
+.ga-knowledge h2{margin-bottom:5px;color:#285d5b;font:800 13px Manrope,system-ui,sans-serif}
+.ga-note-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,185px),1fr));gap:9px 16px}
+.ga-knowledge dt{font-weight:800}
+.ga-knowledge dd{font-size:14px}
+.ga-knowledge .ga-explanation{grid-column:1 / -1;font-size:14px}
+.ga-knowledge small{color:var(--ga-muted)}
+.ga-guidance{margin-top:7px!important;padding-left:9px;border-left:3px solid #bb9146;font-size:14px}
+.ga-launch{display:none;text-align:right;margin-bottom:8px}
+.ga-atlas[data-ga-closed="true"] .ga-launch{display:block}
+.ga-source.ev-source{max-width:none;width:100%;margin:0;padding:0;overflow:hidden;border:1px solid var(--ga-rule);border-radius:10px}
+.ga-source-header,.ga-question-bar,.ga-question-nav,.ga-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.ga-source-header,.ga-question-bar,.ga-question-nav{justify-content:space-between;padding:10px 13px}
+.ga-source-header{background:#f6fafa;border-bottom:1px solid var(--ga-rule)}
+.ga-source-header h2,.ga-question-bar h2{font:800 16px/1.35 Manrope,system-ui,sans-serif}
+.ga-source-header p,.ga-question-bar p{font-size:12px;margin-top:3px}
+.ga-source-header p{color:var(--ga-muted)}
+.ga-actions button,.ga-launch button,.ga-question-nav button,.ga-question-bar button,.ga-reading button{padding:6px 10px;min-height:34px;border:1px solid #bdcfd0;border-radius:6px;background:#fff;color:var(--ga-deep)}
+.ga-actions button:hover,.ga-launch button:hover,.ga-question-nav button:hover:not(:disabled){background:#e9f4f1}
+.ga-map{position:relative;background:#e8f1f2}
+.ga-map img{display:block;width:100%;height:auto}
+.ga-map:has(img[hidden]) :is(.ga-location,.ga-guide){display:none}
+.ga-map .ga-location{position:absolute;left:var(--ga-x);top:var(--ga-y);transform:translate(-50%,-50%);width:27px;height:27px;padding:0;border:2px solid transparent;border-radius:50%;background:transparent;z-index:1}
+.ga-map .ga-location:hover,.ga-map .ga-location[aria-pressed="true"]{border-color:#ab7925;background:#f3d28c25}
+.ga-map .ga-guide{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ga-guide line{stroke:#a0772e;stroke-width:2;stroke-dasharray:4 4;vector-effect:non-scaling-stroke}
+.ga-reading{position:relative;background:var(--ga-deep);color:#fff;padding:9px 13px}
+.ga-reading-label{font-size:11px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#f2d89e}
+.ga-reading [data-ga-reading]{margin-top:4px}
+.ga-reading strong{font-size:18px;margin-right:6px}
+.ga-reading span,.ga-reading dt{color:#d9ece9}
+.ga-reading dl{display:flex;flex-wrap:wrap;gap:5px 13px;margin-top:4px}
+.ga-reading dt{font-size:11px}
+.ga-reading dd{font-variant-numeric:tabular-nums;font-weight:800}
+.ga-reading button{position:absolute;right:9px;top:7px;padding:4px 6px;min-height:26px;background:transparent;color:#fff;border-color:#7b9a9b;font-size:11px}
+.ga-credit{padding:8px 13px 10px;color:var(--ga-muted);font-size:12px}
+.ga-credit p:first-child{color:var(--ga-ink);font-weight:700}
+.ga-source .ev-status:empty{display:none}
+.ga-table{overflow:auto}
+.ga-table table{width:100%;border-collapse:collapse;color:var(--ga-ink);font:inherit;font-variant-numeric:tabular-nums}
+.ga-table :is(th,td){padding:10px 12px;text-align:right;border-bottom:1px solid #dce8e8}
+.ga-table :is(th,td):first-child{text-align:left}
+.ga-table thead{background:#e8f2ef;color:var(--ga-deep);font-size:13px}
+.ga-table td{white-space:nowrap}
+.ga-table tbody tr:nth-child(even){background:#f7fafa}
+.ga-questions{position:sticky;top:5px;overflow:hidden}
+.ga-question-bar{background:var(--ga-deep);color:#fff}
+.ga-question-bar p{color:#d5ebe8}
+.ga-question-bar button{background:transparent;color:#fff;border-color:#7b9a9b}
+.ga-steps{display:flex;flex-wrap:wrap;background:#f1f6f6;border-bottom:1px solid var(--ga-rule)}
+.ga-steps button{flex:1 0 auto;min-height:40px;border:0;border-bottom:3px solid transparent;background:transparent;color:var(--ga-muted);padding:5px 10px}
+.ga-steps button[aria-pressed="true"]{background:var(--ga-warm);border-bottom-color:#ad7928;color:var(--ga-ink)}
+.ga-steps button:focus-visible{outline-offset:-3px}
+.ga-task{padding:12px 13px 10px}
+.ga-stem{font-size:13px;color:var(--ga-muted);margin-bottom:7px!important}
+.ga-task h3{font:800 17px/1.4 Manrope,system-ui,sans-serif}
+.ga-task h3 span{display:inline-block;margin-right:6px;padding:1px 4px;background:var(--ga-warm);color:#72521d;font-size:13px}
+.ga-paper{margin-top:11px!important;padding:7px 8px;background:#eff6f4;border-left:3px solid #7baba5;font-size:13px}
+.ga-help{margin-top:8px;font-size:13px;color:var(--ga-deep)}
+.ga-help summary{cursor:pointer;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.ga-help p{margin-top:5px;padding:7px 9px;background:#e8f2ef;border-left:2px solid #7baba5}
+.ga-question-nav{border-top:1px solid var(--ga-rule);background:#f6f9f9}
+.ga-question-nav button:last-child{background:var(--ga-teal);color:#fff;border-color:var(--ga-teal)}
+.ga-missing{padding:10px 13px}
+@container geo-atlas (max-width: 745px){
+  .ga-atlas{grid-template-columns:minmax(0,1fr)}
+  .ga-questions{position:static}
+  .ga-launch{display:block}
+  .ga-intro{padding:13px 15px}
+}
