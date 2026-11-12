@@ -775,6 +775,89 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
   .ga-launch{display:block}
   .ga-intro{padding:13px 15px}
 }
+
+/* Only the Atlas Study shell releases the responsive canvas to the stage scroller. */
+body.respo #stage:has([data-ga-host]){
+  overflow:auto;scrollbar-gutter:stable;scroll-padding-top:74px;background:#f0f5f5;
+}
+body.respo #stage:has([data-ga-host]) :is(#canvasFit,#canvas){height:auto;overflow:visible}
+[data-ga-host]{
+  --ga-edge:clamp(16px,2.2vw,34px);--ga-line:#cbdcdd;--ga-shell-ink:#142b32;--ga-shell-teal:#0b6561;
+  min-height:100dvh;background:#f0f5f5;color:var(--ga-shell-ink);font:500 15px/1.5 Manrope,system-ui,sans-serif;
+}
+[data-ga-host] :is(.ga-top-row,.ga-page){width:min(1468px,calc(100% - 2 * var(--ga-edge)));margin-inline:auto}
+[data-ga-host] .ga-top{position:sticky;top:0;z-index:3;background:white;border-bottom:2px solid #3d7c78}
+[data-ga-host] .ga-top-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;min-height:57px;padding-block:7px}
+[data-ga-host] :is(.ga-brand,.ga-top-actions,.ga-author-actions){display:flex;align-items:center;gap:8px;min-width:0}
+[data-ga-host] .ga-brand{flex:1 1 340px;gap:12px}
+[data-ga-host] .ga-brand b{overflow-wrap:anywhere}
+[data-ga-host] .ga-brand span{
+  border-right:1px solid var(--ga-line);padding-right:12px;color:var(--ga-shell-teal);
+  font-size:12px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+}
+[data-ga-host] .ga-context{color:#415d64;font-size:13px;margin-right:4px}
+[data-ga-host] :is(.ga-top-actions,.ga-author-actions){flex-wrap:wrap}
+[data-ga-host] .ga-author-actions{gap:2px;border-left:1px solid var(--ga-line);padding-left:8px}
+[data-ga-host] :is(.ga-top-actions,.ga-outline-head,.ga-activity-nav) button{
+  min-height:36px;padding:6px 11px;background:white;border:1px solid #bdcfd0;border-radius:6px;
+  color:#103f46;font:800 13px/1.35 Manrope,system-ui,sans-serif;cursor:pointer;
+}
+[data-ga-host] .ga-top-actions [data-ga-open]{background:#e8f3f0}
+[data-ga-host] :is(.ga-top-actions,.ga-outline-head,.ga-activity-nav) button:hover:not(:disabled){background:#e4f0ed}
+[data-ga-host] .ga-outline{
+  position:fixed;inset:66px var(--ga-edge) auto auto;margin:0;padding:0;width:min(350px,calc(100% - 2 * var(--ga-edge)));
+  max-height:calc(100dvh - 82px);overflow:auto;background:#fff;color:inherit;
+  border:1px solid var(--ga-line);border-radius:10px;box-shadow:0 10px 30px #142b3226;
+}
+[data-ga-host] .ga-outline-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--ga-line)}
+[data-ga-host] .ga-outline-head h2{margin:0;font-size:17px}
+[data-ga-host] .ga-outline [data-lp-end]{width:100%;border:0;background:transparent;text-align:left;padding:9px 12px;color:inherit;font:inherit;cursor:pointer}
+[data-ga-host] .ga-outline [aria-current="step"]{background:#e8f3f0}
+[data-ga-host] .ga-page{padding:24px 0 25px;overflow:visible}
+[data-ga-host] .lp-activity[data-lp-layout="geography-investigation"]{padding:0;max-width:none;background:none;border:0;border-radius:0}
+[data-ga-host] .ga-atlas{grid-template-columns:minmax(0,1fr) minmax(345px,min(33%,490px));gap:22px}
+[data-ga-host] .ga-atlas[data-ga-closed="true"]{grid-template-columns:minmax(0,1fr)}
+[data-ga-host] .ga-atlas[data-ga-closed="true"] .ga-learning{width:min(100%,1160px);margin-inline:auto}
+[data-ga-host] .ga-intro{margin-bottom:20px;padding:23px clamp(15px,1.75vw,27px) 21px}
+[data-ga-host] .ga-intro .lp-title{font-size:clamp(28px,2.6vw,40px)}
+[data-ga-host] .ga-purpose{max-width:83ch;font-size:16px}
+[data-ga-host] .ga-knowledge{margin:16px 0 10px;padding:10px 0}
+[data-ga-host] .ga-note-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+[data-ga-host] .ga-note-grid dl+dl{padding-inline-start:16px;border-inline-start:1px solid #dce8e8}
+[data-ga-host] .ga-questions{position:sticky;top:80px;box-shadow:0 7px 22px #142b320d}
+[data-ga-host] .ga-question-bar{padding:15px 17px}
+[data-ga-host] .ga-question-bar h2{font-size:19px}
+[data-ga-host] .ga-steps button{min-height:45px}
+[data-ga-host] .ga-task{padding:15px 17px}
+[data-ga-host] .ga-task h3{font-size:clamp(18px,1.38vw,21px)}
+[data-ga-host] .ga-paper{padding:9px 10px;font-size:14px}
+[data-ga-host] .ga-question-nav{padding:10px 17px}
+[data-ga-host] .ga-table :is(th,td){padding:13px 15px}
+[data-ga-host] .ga-table tbody th{font-weight:750}
+[data-ga-host] .ga-activity-nav{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-top:20px;padding-top:13px;border-top:1px solid var(--ga-line);font-size:13px;color:#415d64;
+}
+[data-ga-host] .ga-activity-nav button{max-width:min(100%,42ch);text-align:start;overflow-wrap:anywhere}
+[data-ga-host] .ga-activity-nav button:disabled{opacity:.48;cursor:default}
+[data-ga-host] .ga-activity-nav button:last-child{background:var(--ga-shell-teal);border-color:var(--ga-shell-teal);color:white}
+[data-ga-host] .ga-activity-nav button:last-child:hover{background:#103f46}
+@container geo-atlas (max-width: 1030px){
+  [data-ga-host] .ga-atlas{grid-template-columns:minmax(0,1fr);gap:16px}
+  [data-ga-host] .ga-questions{position:static}
+}
+@media(max-width:1100px),(max-height:650px){
+  [data-ga-host] .ga-top{position:static}
+  [data-ga-host] .ga-questions{position:static}
+  body.respo #stage:has([data-ga-host]){scroll-padding-top:12px}
+}
+@media(max-width:600px){
+  [data-ga-host] .ga-page{padding-block:16px}
+  [data-ga-host] .ga-author-actions{border-left:0;padding-left:0}
+  [data-ga-host] .ga-context{display:none}
+  [data-ga-host] .ga-note-grid{grid-template-columns:minmax(0,1fr)}
+  [data-ga-host] .ga-note-grid dl+dl{padding-inline-start:0;border-inline-start:0}
+}
 /* GEOGRAPHY_ATLAS_CSS_END */
 </style>
 <style>
@@ -19172,12 +19255,57 @@ function GeoQuestionWorkspace(a,steps){
       '<p class="ga-missing">Add a question in Edit mode.</p>'}
   </aside>`;
 }
-function geoAtlasRender(skill,a,index){
+function geoAtlasRender(skill,a,index,host=false){
   return `<div class="ga-atlas" data-ga-root>
-    <div class="ga-learning"><div class="ga-launch"><button type="button" data-ga-open aria-controls="ga-questions" aria-expanded="true">Questions</button></div>
+    <div class="ga-learning">${host?'':'<div class="ga-launch"><button type="button" data-ga-open aria-controls="ga-questions" aria-expanded="true">Questions</button></div>'}
       ${GeoContentIntro(a,skill,index)}${GeoEvidenceSurface(geoAtlasSource(skill,a),a.investigation,'atlas-'+a.id)}
     </div>${GeoQuestionWorkspace(a,geoAtlasSteps(a))}
   </div>`;
+}
+
+function geoAtlasHost(skill,a,index,list,position,meta,rail,modes,errors){
+  const first=index===0&&position===0;
+  const front=first?lpFrontPages().at(-1):null;
+  const previousSkill=LESSON.slides[index-1],nextSkill=LESSON.slides[index+1];
+  const prev=list[position-1]||(lpEnabled(previousSkill)?lpActivities(previousSkill).at(-1):null);
+  const next=list[position+1]||(lpEnabled(nextSkill)?lpActivities(nextSkill)[0]:null);
+  const progress=LESSON.slides.length>1?`Skill ${index+1} of ${LESSON.slides.length} · `:'';
+  return `<div class="mx lp" data-ga-host data-rp-type="skill" data-rp-layout="responsive" data-mx-response="paper">
+    <header class="ga-top"><div class="ga-top-row">
+      <div class="ga-brand"><span>Geography</span><b>${esc(meta.title)}</b></div>
+      <div class="ga-top-actions">
+        ${meta.year||meta.context?`<span class="ga-context">${esc([meta.year,meta.context].filter(Boolean).join(' · '))}</span>`:''}
+        <button type="button" popovertarget="ga-outline">Lesson outline</button>
+        <button type="button" data-ga-open aria-controls="ga-questions" aria-expanded="true">Questions</button>
+      </div>
+      ${modes?`<div class="ga-author-actions" aria-label="Lesson Studio controls">${modes}</div>`:''}
+    </div></header>
+    <nav id="ga-outline" class="ga-outline" popover aria-labelledby="ga-outline-title">
+      <div class="ga-outline-head"><h2 id="ga-outline-title">Lesson outline</h2>
+      <button type="button" popovertarget="ga-outline" popovertargetaction="hide" autofocus>Close</button></div>
+      <ol class="mx-navlist">${rail}</ol>
+    </nav>
+    <main class="mx-main"><div class="mx-page ga-page" tabindex="-1" data-mx-surface="activity">
+      <article class="lp-activity" data-lp-layout="geography-investigation" aria-labelledby="lpTitle">
+        ${errors}${geoAtlasRender(skill,a,index,true)}
+      </article>
+      <nav class="ga-activity-nav" aria-label="Activity navigation">
+        <button type="button" data-lp-move="-1"${first&&!front?' disabled':''}>← Previous${prev||front?': '+esc(prev?.title||front?.title||'Activity'):''}</button>
+        <span aria-live="polite">${progress}Activity ${position+1} of ${list.length}</span>
+        <button type="button" data-lp-move="1">${next?'Next: '+esc(next.title):'Finish lesson'} →</button>
+      </nav>
+    </div></main>
+  </div>`;
+}
+
+function geoAtlasHostWire(host){
+  const outline=host.querySelector('#ga-outline');
+  outline.addEventListener('click',event=>{
+    if(event.target.closest('[data-lp-go],[data-lp-front],[data-lp-end]'))outline.hidePopover();
+  },true);
+  outline.addEventListener('keydown',event=>{
+    if(['ArrowLeft','ArrowRight'].includes(event.key))event.stopPropagation();
+  });
 }
 
 let geoAtlasDispose;
@@ -19185,7 +19313,8 @@ function geoAtlasMount(root,a,state){
   const controller=new AbortController();
   const {signal}=controller;
   const steps=geoAtlasSteps(a),tasks=[...root.querySelectorAll('[data-ga-task]')],tabs=[...root.querySelectorAll('[data-ga-step]')];
-  const panel=root.querySelector('#ga-questions'),launch=root.querySelector('[data-ga-open]');
+  const panel=root.querySelector('#ga-questions');
+  const launch=(root.closest('[data-ga-host]')||root).querySelector('[data-ga-open]');
   const previous=root.querySelector('[data-ga-move="-1"]'),next=root.querySelector('[data-ga-move="1"]');
   const locations=a.investigation.map?.locations||[];
   const reading=root.querySelector('[data-ga-reading]'),guide=root.querySelector('.ga-guide');
@@ -19228,8 +19357,7 @@ function geoAtlasMount(root,a,state){
   root.addEventListener('click',event=>{
     const button=event.target.closest('button');
     if(!button||!root.contains(button))return;
-    if(button.hasAttribute('data-ga-open'))showDrawer(true,true);
-    else if(button.hasAttribute('data-ga-close'))showDrawer(false,true);
+    if(button.hasAttribute('data-ga-close'))showDrawer(false,true);
     else if(button.dataset.gaStep!=null)showStep(Number(button.dataset.gaStep),true);
     else if(button.dataset.gaMove!=null)showStep(index+Number(button.dataset.gaMove),true);
     else if(button.dataset.gaLocation!=null)selectPlace(locations[Number(button.dataset.gaLocation)]);
@@ -19238,6 +19366,7 @@ function geoAtlasMount(root,a,state){
       selectPlace(null);active?.focus({preventScroll:true});
     }
   },{signal});
+  launch.addEventListener('click',()=>showDrawer(true,true),{signal});
   root.addEventListener('keydown',event=>{
     if(['ArrowLeft','ArrowRight'].includes(event.key)&&event.target.closest('.ga-table,.ga-questions,.ga-map'))event.stopPropagation();
   },{signal});
@@ -19489,7 +19618,7 @@ function lpRender(s,i){
   const collection=front?null:lpCollection(s,a),members=collection?lpCollectionMembers(s,collection):[],examplePosition=members.findIndex(x=>x.a===a);
   const practiceMember=front?null:lpPracticeCurrent(s,a),practiceMembers=front?[]:lpPracticeMembers(s,a),practicePosition=practiceMembers.findIndex(x=>x.ex.id===practiceMember?.ex.id);
   const practiceTarget=collection&&s.activities.find(x=>x.practiceCollectionId===collection.id);
-  const end=LP_STATE.end, projection=front?null:lpProjection(s), open=rpNavOpen();
+  const end=LP_STATE.end, projection=front?null:lpProjection(s);
   const atlas=!front&&!end&&geoAtlasActive(s,a,m);
   let errors=''; try{lpValidate(LESSON);}catch(e){errors=`<p class="mx-err" role="alert">${esc(e.message)}</p>`;}
   const ws=projection&&projection.workspace&&!mxOnPaper()?projection.workspace:null;
@@ -19498,8 +19627,11 @@ function lpRender(s,i){
   const arrangement=end&&lpTextbook()?'completion':front?'front':ws?'response':hasFigure(projection)?'media':projection?.workedExamples?.length||projection?.examples?.length?'solution':projection?.questions?.length&&!projection?.notes?.length?'practice':'reading';
   const accent=/^#[0-9a-f]{6}$/i.test((m.colors||{}).accent||'')?m.colors.accent:'#365d63';
   const rail=journey||lpTextbook()?lpJourneyRail(s,i,a,end):LESSON.slides.map((sk,k)=>`<li>${lpMathSingle()&&authorMode()!=='edit'?'':`<button class="mx-navitem${k===i?' on':''}" data-lp-go="${k}" aria-current="${k===i?'page':'false'}"><span class="mx-navtx">${lpMathSingle()?'<span>Skill</span>':`<span>Skill ${k+1}</span><b>${esc(sk.title)}</b>`}</span></button>`}${k===i?`<ol class="lp-activities">${sk.exampleCollections?.length?lpCollectionRail(sk,k,a,end):lpActivities(sk).map((act,j)=>`<li><button data-lp-go="${k}:${esc(act.id)}"${act===a&&!end?' aria-current="step"':''}>${j+1}. ${esc(act.title)}</button></li>`).join('')}</ol>`:''}</li>`).join('')+(authorMode()==='edit'?'':`<li><button data-lp-end${end?' aria-current="page"':''}>Lesson complete</button></li>`);
+  const modes=document.documentElement.dataset.export?'':MX_MODES.filter(x=>x.id!=='worksheet').concat([{id:'json',label:'JSON'}]).map(x=>`<button class="mx-mode${x.state&&x.state()?' on':''}" data-mx-mode="${x.id}">${esc(x.label)}</button>`).join('');
+  if(atlas&&authorMode()==='study')return geoAtlasHost(s,a,i,list,pos,m,rail,modes,errors);
+  const open=rpNavOpen();
   return `<div class="mx lp${lpTextbook()?' lp-textbook-shell':''}${open?' mx-navopen':''}" data-rp-type="skill" data-rp-layout="responsive" data-mx-response="${esc(mxResponseMode())}" data-mx-view="split" style="--mx-green:${accent};--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px;--mx-rep-min-h:${MX_REP_MIN_H}px">
-    <header class="mx-top"><button class="mx-iconbtn" data-rp-navtoggle aria-label="Show lesson skills" aria-expanded="${open}" aria-controls="mxNav">${mxIc('menu')}</button><b class="lp-brand">${esc(m.title)}</b><div class="mx-top-sp"></div><div class="mx-modes">${document.documentElement.dataset.export?'':MX_MODES.filter(x=>x.id!=='worksheet').concat([{id:'json',label:'JSON'}]).map(x=>`<button class="mx-mode${x.state&&x.state()?' on':''}" data-mx-mode="${x.id}">${esc(x.label)}</button>`).join('')}</div></header>
+    <header class="mx-top"><button class="mx-iconbtn" data-rp-navtoggle aria-label="Show lesson skills" aria-expanded="${open}" aria-controls="mxNav">${mxIc('menu')}</button><b class="lp-brand">${esc(m.title)}</b><div class="mx-top-sp"></div><div class="mx-modes">${modes}</div></header>
     <div class="mx-body"><nav class="mx-nav" id="mxNav" aria-label="Skills and activities"><div class="mx-navhead"><div class="mx-course">Lesson outline</div><p class="mx-coursemeta">${lpMathSingle()?'Revisit any page':`${LESSON.slides.length} ${LESSON.slides.length===1?'skill':'skills'} · revisit any activity`}</p></div><ol class="mx-navlist">${rail}</ol></nav><button class="mx-scrim" data-rp-navtoggle tabindex="-1" aria-hidden="true"></button>
     <main class="mx-main"><div class="mx-page" tabindex="-1" data-mx-surface="activity"><article class="lp-activity" data-lp-arrangement="${arrangement}"${!front&&!end&&a?.layout==='geography-evidence'&&/^geography$/i.test(m.subject||'')?' data-lp-layout="geography-evidence"':atlas?' data-lp-layout="geography-investigation"':''} aria-labelledby="lpTitle">${errors}${lpTextbook()&&front?.kind==='overview'?'<div class="lp-book-overview"><div>':''}${atlas?'':`<header class="lp-header"><div class="lp-location">${front?esc([m.subject,m.context].filter(Boolean).join(' · ')):lpMathSingle()?'':`Skill ${i+1} of ${LESSON.slides.length} · ${esc(s.title)}`}</div>
       ${end&&lpTextbook()?'':`<h1 id="lpTitle" class="lp-title" tabindex="-1">${esc(front?(front.title||m.title):end?(journey||lpTextbook()?'Lesson complete':'End of lesson'):(collection?collection.title||'Worked examples':a?.introduction?(a.introduction.title||s.title):a?lpTextbook()&&practiceMember?(lpMicro(s)?'':'Practice: ')+(practiceMember.ex.tabLabel||practiceMember.ex.label):a.title:'Add your first activity'))}</h1>`}${!end&&!front?lpCollectionTabs(s,a):''}${!end&&!front&&practiceTarget?`<button class="mx-tool" data-lp-practice="${esc(practiceTarget.id)}" data-lp-archetype="${esc(lpSingleExample(a).id)}">Practice this example →</button>`:''}${!end&&!front&&a&&a.lede?`<p class="mx-lede">${mxM(a.lede)}</p>`:''}
@@ -19543,6 +19675,8 @@ function lpWire(){
   if(members.length>1){const panel=document.querySelector('.lp-activity');if(panel){panel.id='lp-example-panel';panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby','lp-tab-'+lpSingleExample(a).id);}}
   document.querySelectorAll('[data-lp-example]').forEach((b,j)=>{const select=k=>{lpNavigate(cur,members[k].a.id);document.getElementById('lp-tab-'+members[k].ex.id)?.focus({preventScroll:true});};b.onclick=e=>{e.stopPropagation();select(j);};b.onkeydown=e=>{let k=j;if(e.key==='ArrowRight')k=(j+1)%members.length;else if(e.key==='ArrowLeft')k=(j+members.length-1)%members.length;else if(e.key==='Home')k=0;else if(e.key==='End')k=members.length-1;else return;e.preventDefault();e.stopPropagation();select(k);};});
   const atlas=document.querySelector('[data-ga-root]');
+  const atlasHost=atlas?.closest('[data-ga-host]');
+  if(atlasHost)geoAtlasHostWire(atlasHost);
   if(atlas){const views=LP_STATE.geoAtlas??=new Map();if(!views.has(a.id))views.set(a.id,{});geoAtlasDispose=geoAtlasMount(atlas,a,views.get(a.id));}
   mxSupportWire(a);if(lpMicro(s)&&a?.practiceCollectionId)mxSupportWire(lpPracticeCurrent(s,a)?.a);
 }

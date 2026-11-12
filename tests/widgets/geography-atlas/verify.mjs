@@ -87,14 +87,15 @@ async function inspect(page,mode='inspect'){
 }
 async function learner(page,name,size,native=false){
   const fixture=fixturesByName[name];
-  if(native){
-    await page.goto(pathToFileURL(path.join(exports,name+'-learner.html')).href,{waitUntil:'domcontentloaded',timeout:30000});
-    await page.evaluate(()=>document.fonts.ready);
-  }else{
+  if(!native){
     check(!await importLesson(page,fixture),name+' '+size+' imports through the real authoring JSON dialog');
     await study(page);
+    check(await page.locator('[data-ga-host] [data-mx-mode="edit"]').isVisible(),'Study retains the authorised Edit control '+name+' '+size);
   }
+  await page.goto(pathToFileURL(path.join(exports,name+'-learner.html')).href,{waitUntil:'domcontentloaded',timeout:30000});
+  await page.evaluate(()=>document.fonts.ready);
 
+  const host=page.locator('[data-ga-host]');
   const root=page.locator('[data-ga-root]');
   const metrics=await page.evaluate(()=>({width:innerWidth,height:innerHeight,dpr:devicePixelRatio,cssZoom:getComputedStyle(document.documentElement).zoom}));
   if(native)check(metrics.dpr===2&&['1','normal'].includes(metrics.cssZoom),'Native Chromium 200% '+name);
@@ -107,15 +108,43 @@ async function learner(page,name,size,native=false){
   }),'Visible teaching before source with interpretation and attribution '+name+' '+size);
   check(await page.evaluate(()=>Object.keys(tpRespBundle().pages).length===0),'Paper activity leaves the response store empty '+name+' '+size);
   check(await root.evaluate(element=>element.scrollWidth<=element.clientWidth+1),'No whole activity horizontal overflow '+name+' '+size);
-  await shot(page,size+'-'+name+'-introduction',{...metrics,state:'introduction'});
+  const layout=await host.evaluate(element=>{
+    const bounds=selector=>element.querySelector(selector).getBoundingClientRect();
+    const evidence=bounds(element.querySelector('.ga-map')?'.ga-map':'.ga-table');
+    const questions=bounds('.ga-questions'),source=bounds('.ga-source');
+    const stage=document.getElementById('stage'),content=element.querySelector('.ga-page'),footer=element.querySelector('.ga-activity-nav');
+    return {evidence:Math.round(evidence.width),questions:Math.round(questions.width),stacked:questions.top>=source.bottom-1,
+      outlineClosed:!element.querySelector('#ga-outline').matches(':popover-open'),rail:!!element.querySelector('.mx-nav'),
+      footerInFlow:getComputedStyle(footer).position==='static'&&footer.getBoundingClientRect().top>=Math.max(source.bottom,questions.bottom),
+      documentScroll:getComputedStyle(stage).overflowY==='auto'&&getComputedStyle(content).overflowY==='visible',
+      noOverflow:stage.scrollWidth<=stage.clientWidth+1&&document.documentElement.scrollWidth<=innerWidth+1};
+  });
+  const measure={...metrics,...layout};
+  check(layout.outlineClosed&&!layout.rail&&layout.footerInFlow&&layout.documentScroll&&layout.noOverflow,'Atlas has on-demand outline and one natural scroll surface '+name+' '+size);
+  check(size==='1536'?layout.evidence>=925&&layout.evidence<=995&&layout.questions>=385&&!layout.stacked:
+    size==='1280'?layout.evidence>=775&&layout.questions>=345&&!layout.stacked:layout.stacked&&Math.abs(layout.evidence-layout.questions)<=2,
+    'Evidence and question proportions '+name+' '+size);
+  await shot(page,size+'-'+name+'-composition',{...measure,state:'learner composition with drawer open'});
+  const outline=host.locator('#ga-outline'), outlineButton=host.locator('[popovertarget="ga-outline"]').first();
+  const source=host.locator('.ga-source'),beforeOutline=await source.boundingBox();
+  await outlineButton.press('Enter');
+  check(await outline.isVisible()&&await outline.locator('[aria-current="step"]').count()===1,'On-demand outline shows the active canonical activity '+name+' '+size);
+  assert.deepEqual(await source.boundingBox(),beforeOutline);
+  if(name==='map'&&size==='1536')await shot(page,'1536-map-outline',{...measure,state:'on-demand lesson outline'});
+  await page.keyboard.press('Escape');
+  check(await outline.isHidden()&&await outlineButton.evaluate(element=>element===document.activeElement),'Outline closes with Escape and restores keyboard focus '+name+' '+size);
   if(name==='map'){
     const map=root.locator('.ga-map img');
     await map.evaluate(img=>img.decode());
     check(await map.evaluate(img=>img.naturalWidth===1440&&img.naturalHeight===600),'Authentic accepted map aspect ratio '+size);
     await root.locator('[data-ga-location]').first().press('Enter');
     check((await root.locator('[data-ga-reading]').innerText()).includes('23.64°N'),'Authored Dhaka coordinate and reading '+size);
-    await root.locator('.ga-credit').scrollIntoViewIfNeeded();
-    await shot(page,size+'-map-evidence',{...metrics,state:'map evidence'});
+    await map.scrollIntoViewIfNeeded();
+    await shot(page,size+'-map-evidence',{...measure,state:'map evidence and selected city'});
+    if(native){
+      await root.locator('.ga-credit').scrollIntoViewIfNeeded();
+      await shot(page,size+'-map-attribution',{...measure,state:'map attribution and interpretation'});
+    }
     const dismiss=await inspect(page);
     await shot(page,size+'-map-inspect',{...metrics,state:'host source inspection'});
     await dismiss();
@@ -125,7 +154,7 @@ async function learner(page,name,size,native=false){
     await root.locator('.ga-table').focus();
     await page.keyboard.press('ArrowRight');
     check(await root.isVisible(),'Data table uses canonical rows and retains activity during arrow scrolling '+size);
-    await shot(page,size+'-table-evidence',{...metrics,state:'population table'});
+    await shot(page,size+'-table-evidence',{...measure,state:'population table'});
     const dismiss=await inspect(page,'details');
     if(size==='1536')await shot(page,'1536-table-source-details',{...metrics,state:'source provenance'});
     await dismiss();
@@ -137,9 +166,10 @@ async function learner(page,name,size,native=false){
   check(await active.locator('h3').evaluate(element=>document.activeElement===element),'Question part receives keyboard focus '+name+' '+size);
   await active.locator('summary').press('Enter');
   await shot(page,size+'-'+name+'-question-help',{...metrics,state:'question part and optional Help'});
+  const launcher=host.locator('[data-ga-open]');
   await root.locator('[data-ga-close]').press('Enter');
-  check(await root.locator('#ga-questions').isHidden()&&await root.locator('[data-ga-open]').evaluate(element=>element===document.activeElement),'Closing the drawer restores launcher focus '+name+' '+size);
-  await root.locator('[data-ga-open]').press('Enter');
+  check(await root.locator('#ga-questions').isHidden()&&await launcher.evaluate(element=>element===document.activeElement),'Closing the drawer restores launcher focus '+name+' '+size);
+  await launcher.press('Enter');
   check(await active.isVisible()&&(await active.locator('h3').innerText()).includes(q.parts[1].prompt),'Reopening preserves the active part '+name+' '+size);
   if(name==='map')check(await root.locator('[data-ga-location][aria-pressed="true"]').count()===1,'Question and drawer actions preserve map selection '+size);
   await page.locator('[data-lp-move="1"]').press('Enter');
@@ -151,6 +181,7 @@ async function learner(page,name,size,native=false){
 async function workflow(page,name){
   const data=fixturesByName[name],a=data.slides[0].activities[0],q=a.questions[0];
   check(!await importLesson(page,data),'Real Edit mode opens '+name);
+  check(await page.locator('[data-ga-host]').count()===0&&await page.locator('[data-ga-root]').count()===1,'Authoring keeps the existing editor shell with Atlas preview '+name);
   const select=page.locator('#inspector select[data-bind$=".investigation.sourceRef"]');
   check(await select.inputValue()===a.investigation.sourceRef,'Inspector exposes canonical shared source '+name);
   await shot(page,'authoring-'+name,{state:'authoring'});
@@ -172,6 +203,8 @@ async function workflow(page,name){
   assert.deepEqual(await page.evaluate(()=>LESSON),saved);
   await study(page);
   check((await page.locator('.ga-purpose').innerText()).includes('Compare the evidence carefully.'),'Reopened edit appears in the learner introduction '+name);
+  assert.equal(await importLesson(page,data),'');
+  await study(page);
   const exported=path.join(exports,name+'-learner.html');
   await save(page,'[data-mx-mode="export"]',exported);
   const html=fs.readFileSync(exported,'utf8');
@@ -190,6 +223,28 @@ async function workflow(page,name){
   await page.locator('[data-ga-move="1"]').press('Enter');
   check((await page.locator('[data-ga-task]:visible h3').innerText()).includes(q.parts[1].prompt),'Offline learner questions still work '+name);
   await shot(page,'offline-'+name,{state:'offline learner export'});
+}
+
+async function mixedNavigation(page){
+  const lesson=structuredClone(fixturesByName.map),skill=lesson.slides[0];
+  const atlas=skill.activities[0],second={id:'conclusion',title:'Reflect on the evidence',notes:[{body:'Explain the limits of the evidence.'}]};
+  skill.activities.push(second);
+  check(!await importLesson(page,lesson),'Atlas imports with an unflagged activity in the same skill');
+  await study(page);
+  const outline=page.locator('#ga-outline'),next=page.locator('[data-lp-move="1"]');
+  check((await next.innerText()).includes(second.title)&&(await page.locator('.ga-activity-nav span').innerText())==='Activity 1 of 2','Atlas displays the next canonical activity and progress');
+  await page.locator('[data-ga-location]').first().press('Enter');
+  await page.locator('[data-ga-move="1"]').press('Enter');
+  await page.locator('[popovertarget="ga-outline"]').first().press('Enter');
+  await outline.locator('[data-lp-go="0:conclusion"]').press('Enter');
+  check(await page.locator('[data-ga-host]').count()===0&&(await page.locator('#lpTitle').innerText())===second.title,'Outline uses host navigation and the unflagged activity retains its original shell');
+  await page.locator('[data-lp-move="-1"]').press('Enter');
+  check(await page.locator('[data-ga-host]').count()===1&&await page.locator('[data-ga-location][aria-pressed="true"]').count()===1&&
+    (await page.locator('[data-ga-task]:visible h3').innerText()).includes(atlas.questions[0].parts[1].prompt),
+    'Returning from an unflagged activity restores Atlas location and question part');
+  check(await page.locator('#stage').evaluate(stage=>stage.scrollTop===0),'Host navigation resets Atlas document scroll');
+  await next.press('Enter');
+  check((await page.locator('#lpTitle').innerText())===second.title,'Contextual Next follows canonical activity order');
 }
 async function compatibility(browser){
   const math=read('docs/review/adding-fractions-algebraic-denominators/lesson.json');
@@ -229,9 +284,12 @@ try{
   for(const [width,height] of [[1536,1024],[1280,800],[1024,768]]){
     const page=await browser.newPage({viewport:{width,height}});
     await setup(page);
-    for(const name of ['map','table'])await learner(page,name,String(width));
     if(width===1536){
       for(const name of ['map','table'])await workflow(page,name);
+    }
+    for(const name of ['map','table'])await learner(page,name,String(width));
+    if(width===1536){
+      await mixedNavigation(page);
       for(const [key,value] of [['subject','History'],['responseMode','typed'],['responseMode','pen'],['responseMode','both']]){
         const invalid=structuredClone(fixturesByName.map);invalid.meta[key]=value;
         const message=await importLesson(page,invalid);

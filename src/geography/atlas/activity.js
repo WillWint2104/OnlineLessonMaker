@@ -113,12 +113,57 @@ function GeoQuestionWorkspace(a,steps){
       '<p class="ga-missing">Add a question in Edit mode.</p>'}
   </aside>`;
 }
-function geoAtlasRender(skill,a,index){
+function geoAtlasRender(skill,a,index,host=false){
   return `<div class="ga-atlas" data-ga-root>
-    <div class="ga-learning"><div class="ga-launch"><button type="button" data-ga-open aria-controls="ga-questions" aria-expanded="true">Questions</button></div>
+    <div class="ga-learning">${host?'':'<div class="ga-launch"><button type="button" data-ga-open aria-controls="ga-questions" aria-expanded="true">Questions</button></div>'}
       ${GeoContentIntro(a,skill,index)}${GeoEvidenceSurface(geoAtlasSource(skill,a),a.investigation,'atlas-'+a.id)}
     </div>${GeoQuestionWorkspace(a,geoAtlasSteps(a))}
   </div>`;
+}
+
+function geoAtlasHost(skill,a,index,list,position,meta,rail,modes,errors){
+  const first=index===0&&position===0;
+  const front=first?lpFrontPages().at(-1):null;
+  const previousSkill=LESSON.slides[index-1],nextSkill=LESSON.slides[index+1];
+  const prev=list[position-1]||(lpEnabled(previousSkill)?lpActivities(previousSkill).at(-1):null);
+  const next=list[position+1]||(lpEnabled(nextSkill)?lpActivities(nextSkill)[0]:null);
+  const progress=LESSON.slides.length>1?`Skill ${index+1} of ${LESSON.slides.length} · `:'';
+  return `<div class="mx lp" data-ga-host data-rp-type="skill" data-rp-layout="responsive" data-mx-response="paper">
+    <header class="ga-top"><div class="ga-top-row">
+      <div class="ga-brand"><span>Geography</span><b>${esc(meta.title)}</b></div>
+      <div class="ga-top-actions">
+        ${meta.year||meta.context?`<span class="ga-context">${esc([meta.year,meta.context].filter(Boolean).join(' · '))}</span>`:''}
+        <button type="button" popovertarget="ga-outline">Lesson outline</button>
+        <button type="button" data-ga-open aria-controls="ga-questions" aria-expanded="true">Questions</button>
+      </div>
+      ${modes?`<div class="ga-author-actions" aria-label="Lesson Studio controls">${modes}</div>`:''}
+    </div></header>
+    <nav id="ga-outline" class="ga-outline" popover aria-labelledby="ga-outline-title">
+      <div class="ga-outline-head"><h2 id="ga-outline-title">Lesson outline</h2>
+      <button type="button" popovertarget="ga-outline" popovertargetaction="hide" autofocus>Close</button></div>
+      <ol class="mx-navlist">${rail}</ol>
+    </nav>
+    <main class="mx-main"><div class="mx-page ga-page" tabindex="-1" data-mx-surface="activity">
+      <article class="lp-activity" data-lp-layout="geography-investigation" aria-labelledby="lpTitle">
+        ${errors}${geoAtlasRender(skill,a,index,true)}
+      </article>
+      <nav class="ga-activity-nav" aria-label="Activity navigation">
+        <button type="button" data-lp-move="-1"${first&&!front?' disabled':''}>← Previous${prev||front?': '+esc(prev?.title||front?.title||'Activity'):''}</button>
+        <span aria-live="polite">${progress}Activity ${position+1} of ${list.length}</span>
+        <button type="button" data-lp-move="1">${next?'Next: '+esc(next.title):'Finish lesson'} →</button>
+      </nav>
+    </div></main>
+  </div>`;
+}
+
+function geoAtlasHostWire(host){
+  const outline=host.querySelector('#ga-outline');
+  outline.addEventListener('click',event=>{
+    if(event.target.closest('[data-lp-go],[data-lp-front],[data-lp-end]'))outline.hidePopover();
+  },true);
+  outline.addEventListener('keydown',event=>{
+    if(['ArrowLeft','ArrowRight'].includes(event.key))event.stopPropagation();
+  });
 }
 
 let geoAtlasDispose;
@@ -126,7 +171,8 @@ function geoAtlasMount(root,a,state){
   const controller=new AbortController();
   const {signal}=controller;
   const steps=geoAtlasSteps(a),tasks=[...root.querySelectorAll('[data-ga-task]')],tabs=[...root.querySelectorAll('[data-ga-step]')];
-  const panel=root.querySelector('#ga-questions'),launch=root.querySelector('[data-ga-open]');
+  const panel=root.querySelector('#ga-questions');
+  const launch=(root.closest('[data-ga-host]')||root).querySelector('[data-ga-open]');
   const previous=root.querySelector('[data-ga-move="-1"]'),next=root.querySelector('[data-ga-move="1"]');
   const locations=a.investigation.map?.locations||[];
   const reading=root.querySelector('[data-ga-reading]'),guide=root.querySelector('.ga-guide');
@@ -169,8 +215,7 @@ function geoAtlasMount(root,a,state){
   root.addEventListener('click',event=>{
     const button=event.target.closest('button');
     if(!button||!root.contains(button))return;
-    if(button.hasAttribute('data-ga-open'))showDrawer(true,true);
-    else if(button.hasAttribute('data-ga-close'))showDrawer(false,true);
+    if(button.hasAttribute('data-ga-close'))showDrawer(false,true);
     else if(button.dataset.gaStep!=null)showStep(Number(button.dataset.gaStep),true);
     else if(button.dataset.gaMove!=null)showStep(index+Number(button.dataset.gaMove),true);
     else if(button.dataset.gaLocation!=null)selectPlace(locations[Number(button.dataset.gaLocation)]);
@@ -179,6 +224,7 @@ function geoAtlasMount(root,a,state){
       selectPlace(null);active?.focus({preventScroll:true});
     }
   },{signal});
+  launch.addEventListener('click',()=>showDrawer(true,true),{signal});
   root.addEventListener('keydown',event=>{
     if(['ArrowLeft','ArrowRight'].includes(event.key)&&event.target.closest('.ga-table,.ga-questions,.ga-map'))event.stopPropagation();
   },{signal});
