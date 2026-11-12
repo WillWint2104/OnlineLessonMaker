@@ -689,6 +689,178 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 </style>
 <!-- VENDORED-FONTS:END -->
 <style>
+/* GEOGRAPHY_ATLAS_CSS_START */
+/* Stage 1 is scoped to the opted-in Geography article. */
+.lp .lp-activity[data-lp-layout="geography-investigation"]{max-width:1500px;padding:clamp(12px,2vw,28px);container:geo-atlas / inline-size}
+.ga-atlas{--ga-ink:#142b32;--ga-muted:#415d64;--ga-teal:#0b6561;--ga-deep:#103f46;--ga-rule:#ccdcdd;--ga-warm:#faf4e6;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,32%);align-items:start;gap:18px;color:var(--ga-ink);font:500 15px/1.5 Manrope,system-ui,sans-serif}
+.ga-atlas[data-ga-closed="true"]{grid-template-columns:minmax(0,1fr)}
+.ga-atlas [hidden]{display:none!important}
+.ga-atlas :is(p,h1,h2,h3,dl,dd){margin:0}
+.ga-atlas :is(button,summary,a,[tabindex]):focus-visible{outline:3px solid #946515;outline-offset:2px}
+.ga-atlas button{font:750 13px/1.3 Manrope,system-ui,sans-serif;cursor:pointer}
+.ga-atlas button:disabled{cursor:default;opacity:.55}
+.ga-learning,.ga-questions{min-width:0}
+.ga-intro,.ga-source,.ga-questions{background:#fff;border:1px solid var(--ga-rule);border-radius:10px}
+.ga-intro{padding:20px 22px;margin-bottom:16px;border-top:3px solid #458882}
+.ga-intro .ga-stage{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#276762}
+.ga-intro .lp-title{margin:6px 0 8px;color:var(--ga-ink);font:800 clamp(23px,3vw,38px)/1.15 Manrope,system-ui,sans-serif;letter-spacing:-.035em}
+.ga-purpose,.ga-knowledge dd,.ga-guidance{color:var(--ga-muted)}
+.ga-knowledge{margin:13px 0 9px;padding:9px 0;border-block:1px solid #dce8e8}
+.ga-knowledge h2{margin-bottom:5px;color:#285d5b;font:800 13px Manrope,system-ui,sans-serif}
+.ga-note-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,185px),1fr));gap:9px 16px}
+.ga-knowledge dt{font-weight:800}
+.ga-knowledge dd{font-size:14px}
+.ga-knowledge .ga-explanation{grid-column:1 / -1;font-size:14px}
+.ga-knowledge small{color:var(--ga-muted)}
+.ga-guidance{margin-top:7px!important;padding-left:9px;border-left:3px solid #bb9146;font-size:14px}
+.ga-launch{display:none;text-align:right;margin-bottom:8px}
+.ga-atlas[data-ga-closed="true"] .ga-launch{display:block}
+.ga-source.ev-source{max-width:none;width:100%;margin:0;padding:0;overflow:hidden;border:1px solid var(--ga-rule);border-radius:10px}
+.ga-source-header,.ga-question-bar,.ga-question-nav,.ga-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.ga-source-header,.ga-question-bar,.ga-question-nav{justify-content:space-between;padding:10px 13px}
+.ga-source-header{background:#f6fafa;border-bottom:1px solid var(--ga-rule)}
+.ga-source-header h2,.ga-question-bar h2{font:800 16px/1.35 Manrope,system-ui,sans-serif}
+.ga-source-header p,.ga-question-bar p{font-size:12px;margin-top:3px}
+.ga-source-header p{color:var(--ga-muted)}
+.ga-actions button,.ga-launch button,.ga-question-nav button,.ga-question-bar button,.ga-reading button{padding:6px 10px;min-height:34px;border:1px solid #bdcfd0;border-radius:6px;background:#fff;color:var(--ga-deep)}
+.ga-actions button:hover,.ga-launch button:hover,.ga-question-nav button:hover:not(:disabled){background:#e9f4f1}
+.ga-map{position:relative;background:#e8f1f2}
+.ga-map img{display:block;width:100%;height:auto}
+.ga-map:has(img[hidden]) :is(.ga-location,.ga-guide){display:none}
+.ga-map .ga-location{position:absolute;left:var(--ga-x);top:var(--ga-y);transform:translate(-50%,-50%);width:27px;height:27px;padding:0;border:2px solid transparent;border-radius:50%;background:radial-gradient(circle,#0b6561 0 4px,#fff 4px 5.5px,transparent 6px);z-index:1}
+.ga-map .ga-location:hover,.ga-map .ga-location[aria-pressed="true"]{border-color:#ab7925;background-color:#f3d28c25}
+.ga-map .ga-guide{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ga-guide line{stroke:#a0772e;stroke-width:2;stroke-dasharray:4 4;vector-effect:non-scaling-stroke}
+.ga-reading{position:relative;background:var(--ga-deep);color:#fff;padding:9px 13px}
+.ga-reading-label{font-size:11px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:#f2d89e}
+.ga-reading [data-ga-reading]{margin-top:4px}
+.ga-reading strong{font-size:18px;margin-right:6px}
+.ga-reading span,.ga-reading dt{color:#d9ece9}
+.ga-reading dl{display:flex;flex-wrap:wrap;gap:5px 13px;margin-top:4px}
+.ga-reading dt{font-size:11px}
+.ga-reading dd{font-variant-numeric:tabular-nums;font-weight:800}
+.ga-reading button{position:absolute;right:9px;top:7px;padding:4px 6px;min-height:26px;background:transparent;color:#fff;border-color:#7b9a9b;font-size:11px}
+.ga-credit{padding:8px 13px 10px;color:var(--ga-muted);font-size:12px}
+.ga-credit p:first-child{color:var(--ga-ink);font-weight:700}
+.ga-source .ev-status:empty{display:none}
+.ga-table{overflow:auto}
+.ga-table table{width:100%;border-collapse:collapse;color:var(--ga-ink);font:inherit;font-variant-numeric:tabular-nums}
+.ga-table :is(th,td){padding:10px 12px;text-align:right;border-bottom:1px solid #dce8e8}
+.ga-table :is(th,td):first-child{text-align:left}
+.ga-table thead{background:#e8f2ef;color:var(--ga-deep);font-size:13px}
+.ga-table td{white-space:nowrap}
+.ga-table tbody tr:nth-child(even){background:#f7fafa}
+.ga-questions{position:sticky;top:5px;overflow:hidden}
+.ga-question-bar{background:var(--ga-deep);color:#fff}
+.ga-question-bar p{color:#d5ebe8}
+.ga-question-bar button{background:transparent;color:#fff;border-color:#7b9a9b}
+.ga-steps{display:flex;flex-wrap:wrap;background:#f1f6f6;border-bottom:1px solid var(--ga-rule)}
+.ga-steps button{flex:1 0 auto;min-height:40px;border:0;border-bottom:3px solid transparent;background:transparent;color:var(--ga-muted);padding:5px 10px}
+.ga-steps button[aria-pressed="true"]{background:var(--ga-warm);border-bottom-color:#ad7928;color:var(--ga-ink)}
+.ga-steps button:focus-visible{outline-offset:-3px}
+.ga-task{padding:12px 13px 10px}
+.ga-stem{font-size:13px;color:var(--ga-muted);margin-bottom:7px!important}
+.ga-task h3{font:800 17px/1.4 Manrope,system-ui,sans-serif}
+.ga-task h3 span{display:inline-block;margin-right:6px;padding:1px 4px;background:var(--ga-warm);color:#72521d;font-size:13px}
+.ga-paper{margin-top:11px!important;padding:7px 8px;background:#eff6f4;border-left:3px solid #7baba5;font-size:13px}
+.ga-help{margin-top:8px;font-size:13px;color:var(--ga-deep)}
+.ga-help summary{cursor:pointer;font-weight:800;text-decoration:underline;text-underline-offset:3px}
+.ga-help p{margin-top:5px;padding:7px 9px;background:#e8f2ef;border-left:2px solid #7baba5}
+.ga-question-nav{border-top:1px solid var(--ga-rule);background:#f6f9f9}
+.ga-question-nav button:last-child{background:var(--ga-teal);color:#fff;border-color:var(--ga-teal)}
+.ga-missing{padding:10px 13px}
+@container geo-atlas (max-width: 745px){
+  .ga-atlas{grid-template-columns:minmax(0,1fr)}
+  .ga-questions{position:static}
+  .ga-launch{display:block}
+  .ga-intro{padding:13px 15px}
+}
+
+/* Only the Atlas Study shell releases the responsive canvas to the stage scroller. */
+body.respo #stage:has([data-ga-host]){
+  overflow:auto;scrollbar-gutter:stable;scroll-padding-top:74px;background:#f0f5f5;
+}
+body.respo #stage:has([data-ga-host]) :is(#canvasFit,#canvas){height:auto;overflow:visible}
+[data-ga-host]{
+  --ga-edge:clamp(16px,2.2vw,34px);--ga-line:#cbdcdd;--ga-shell-ink:#142b32;--ga-shell-teal:#0b6561;
+  min-height:100dvh;background:#f0f5f5;color:var(--ga-shell-ink);font:500 15px/1.5 Manrope,system-ui,sans-serif;
+}
+[data-ga-host] :is(.ga-top-row,.ga-page){width:min(1468px,calc(100% - 2 * var(--ga-edge)));margin-inline:auto}
+[data-ga-host] .ga-top{position:sticky;top:0;z-index:3;background:white;border-bottom:2px solid #3d7c78}
+[data-ga-host] .ga-top-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 16px;min-height:57px;padding-block:7px}
+[data-ga-host] :is(.ga-brand,.ga-top-actions,.ga-author-actions){display:flex;align-items:center;gap:8px;min-width:0}
+[data-ga-host] .ga-brand{flex:1 1 340px;gap:12px}
+[data-ga-host] .ga-brand b{overflow-wrap:anywhere}
+[data-ga-host] .ga-brand span{
+  border-right:1px solid var(--ga-line);padding-right:12px;color:var(--ga-shell-teal);
+  font-size:12px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;
+}
+[data-ga-host] .ga-context{color:#415d64;font-size:13px;margin-right:4px}
+[data-ga-host] :is(.ga-top-actions,.ga-author-actions){flex-wrap:wrap}
+[data-ga-host] .ga-author-actions{gap:2px;border-left:1px solid var(--ga-line);padding-left:8px}
+[data-ga-host] :is(.ga-top-actions,.ga-outline-head,.ga-activity-nav) button{
+  min-height:36px;padding:6px 11px;background:white;border:1px solid #bdcfd0;border-radius:6px;
+  color:#103f46;font:800 13px/1.35 Manrope,system-ui,sans-serif;cursor:pointer;
+}
+[data-ga-host] .ga-top-actions [data-ga-open]{background:#e8f3f0}
+[data-ga-host] :is(.ga-top-actions,.ga-outline-head,.ga-activity-nav) button:hover:not(:disabled){background:#e4f0ed}
+[data-ga-host] .ga-outline{
+  position:fixed;inset:66px var(--ga-edge) auto auto;margin:0;padding:0;width:min(350px,calc(100% - 2 * var(--ga-edge)));
+  max-height:calc(100dvh - 82px);overflow:auto;background:#fff;color:inherit;
+  border:1px solid var(--ga-line);border-radius:10px;box-shadow:0 10px 30px #142b3226;
+}
+[data-ga-host] .ga-outline-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--ga-line)}
+[data-ga-host] .ga-outline-head h2{margin:0;font-size:17px}
+[data-ga-host] .ga-outline [data-lp-end]{width:100%;border:0;background:transparent;text-align:left;padding:9px 12px;color:inherit;font:inherit;cursor:pointer}
+[data-ga-host] .ga-outline [aria-current="step"]{background:#e8f3f0}
+[data-ga-host] .ga-page{padding:24px 0 25px;overflow:visible}
+[data-ga-host] .lp-activity[data-lp-layout="geography-investigation"]{padding:0;max-width:none;background:none;border:0;border-radius:0}
+[data-ga-host] .ga-atlas{grid-template-columns:minmax(0,1fr) minmax(345px,min(33%,490px));gap:22px}
+[data-ga-host] .ga-atlas[data-ga-closed="true"]{grid-template-columns:minmax(0,1fr)}
+[data-ga-host] .ga-atlas[data-ga-closed="true"] .ga-learning{width:min(100%,1160px);margin-inline:auto}
+[data-ga-host] .ga-intro{margin-bottom:20px;padding:23px clamp(15px,1.75vw,27px) 21px}
+[data-ga-host] .ga-intro .lp-title{font-size:clamp(28px,2.6vw,40px)}
+[data-ga-host] .ga-purpose{max-width:83ch;font-size:16px}
+[data-ga-host] .ga-knowledge{margin:16px 0 10px;padding:10px 0}
+[data-ga-host] .ga-note-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+[data-ga-host] .ga-note-grid dl+dl{padding-inline-start:16px;border-inline-start:1px solid #dce8e8}
+[data-ga-host] .ga-questions{position:sticky;top:80px;box-shadow:0 7px 22px #142b320d}
+[data-ga-host] .ga-question-bar{padding:15px 17px}
+[data-ga-host] .ga-question-bar h2{font-size:19px}
+[data-ga-host] .ga-steps button{min-height:45px}
+[data-ga-host] .ga-task{padding:15px 17px}
+[data-ga-host] .ga-task h3{font-size:clamp(18px,1.38vw,21px)}
+[data-ga-host] .ga-paper{padding:9px 10px;font-size:14px}
+[data-ga-host] .ga-question-nav{padding:10px 17px}
+[data-ga-host] .ga-table :is(th,td){padding:13px 15px}
+[data-ga-host] .ga-table tbody th{font-weight:750}
+[data-ga-host] .ga-activity-nav{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-top:20px;padding-top:13px;border-top:1px solid var(--ga-line);font-size:13px;color:#415d64;
+}
+[data-ga-host] .ga-activity-nav button{max-width:min(100%,42ch);text-align:start;overflow-wrap:anywhere}
+[data-ga-host] .ga-activity-nav button:disabled{opacity:.48;cursor:default}
+[data-ga-host] .ga-activity-nav button:last-child{background:var(--ga-shell-teal);border-color:var(--ga-shell-teal);color:white}
+[data-ga-host] .ga-activity-nav button:last-child:hover{background:#103f46}
+@container geo-atlas (max-width: 1030px){
+  [data-ga-host] .ga-atlas{grid-template-columns:minmax(0,1fr);gap:16px}
+  [data-ga-host] .ga-questions{position:static}
+}
+@media(max-width:1100px),(max-height:650px){
+  [data-ga-host] .ga-top{position:static}
+  [data-ga-host] .ga-questions{position:static}
+  body.respo #stage:has([data-ga-host]){scroll-padding-top:12px}
+}
+@media(max-width:600px){
+  [data-ga-host] .ga-page{padding-block:16px}
+  [data-ga-host] .ga-author-actions{border-left:0;padding-left:0}
+  [data-ga-host] .ga-context{display:none}
+  [data-ga-host] .ga-note-grid{grid-template-columns:minmax(0,1fr)}
+  [data-ga-host] .ga-note-grid dl+dl{padding-inline-start:0;border-inline-start:0}
+}
+/* GEOGRAPHY_ATLAS_CSS_END */
+</style>
+<style>
 /* GEOGRAPHY_EVIDENCE_CSS_START */
 /* Explicit activity opt-in. Preserve all default player and evidence-viewer rules. */
 .lp .lp-activity[data-lp-layout="geography-evidence"]{max-width:1060px;container:geo-evidence / inline-size;--geo-font:Manrope,system-ui,sans-serif;font-family:var(--geo-font);}
@@ -12166,6 +12338,7 @@ function figFocusExit(){
 }
 function renderSlide(){ renderCanvas(); renderInspector(); mathUtilitySync(); }
 function renderCanvas(){
+  if(geoAtlasDispose){geoAtlasDispose();geoAtlasDispose=null;}
   EV_SOURCES.clear();
   figFocusExit();                                                          // the slide is about to be replaced — never strand a reparented figure
   const realEdit=(mode==='edit'), _savedMode=mode;
@@ -18966,9 +19139,325 @@ function lpOrderedActivities(s){
 }
 function lpLearnerActivities(s){ return lpOrderedActivities(s).filter(a=>(!a.optionalVideo||!!toEmbed(safeUrl((s.video||{}).url||'','embed')))&&(!lpMicro(s)||!lpCollection(s,a)||!s.activities.some(p=>p.practiceCollectionId===lpCollection(s,a)?.id))); }
 function lpActivities(s){ return authorMode()==='edit'?lpOrderedActivities(s):lpLearnerActivities(s); }
+/* GEOGRAPHY_ATLAS_JS_START */
+const GEO_ATLAS_LAYOUT='geography-investigation';
+const geoAtlasRecord=value=>!!value&&typeof value==='object'&&!Array.isArray(value);
+const geoAtlasText=value=>typeof value==='string'&&!!value.trim();
+const geoAtlasSubject=meta=>/^geography$/i.test(String(meta?.subject||'').trim());
+function geoAtlasSources(skill,a){
+  const refs=new Set((a.questions||[]).flatMap(q=>[q,...(Array.isArray(q.parts)?q.parts:[])].flatMap(owner=>MathVisuals.references(owner))));
+  return (Array.isArray(skill.visuals)?skill.visuals:[]).filter(v=>['image','table'].includes(v?.kind)&&refs.has(v.id));
+}
+const geoAtlasSource=(skill,a)=>geoAtlasSources(skill,a).find(v=>v.id===a.investigation?.sourceRef);
+
+function geoAtlasValidate(skill,a,meta,publication=false){
+  if(a.layout!==GEO_ATLAS_LAYOUT)return;
+  const fail=message=>{throw Error('Geography investigation '+a.id+': '+message);};
+  if(!geoAtlasSubject(meta)||meta.responseMode!=='paper')fail('requires a Geography lesson with paper responses.');
+  const config=a.investigation;
+  if(!geoAtlasRecord(config)||Object.keys(config).some(k=>!['sourceRef','map'].includes(k))
+    ||typeof config.sourceRef!=='string')fail('needs a source reference.');
+  if(a.introduction||a.video||a.optionalVideo||a.workedExamples?.length||a.examples?.length||a.practiceCollectionId||a.workspace)
+    fail('use notes, shared evidence and paper questions in this layout.');
+  const source=geoAtlasSource(skill,a);
+  if((publication||config.sourceRef)&&!source)fail('choose a shared image or data table attached to a question or part.');
+  if(a.questions?.some(q=>q.type==='table'||q.table||q.choice||q.matching||q.graphResponse||
+    (q.parts||[]).some(p=>!geoAtlasText(lpBookPartText(p))||p?.parts?.length||
+      (p?.guidance!=null&&typeof p.guidance!=='string'))||
+    (q.guidance!=null&&typeof q.guidance!=='string')))fail('use written questions with plain or labelled parts and optional text guidance.');
+  if(publication){
+    if(!a.questions?.length)fail('add a question before publishing.');
+    if(![source.label,source.description,source.sourceMetadata?.date,source.sourceMetadata?.attribution].every(geoAtlasText))
+      fail('add a source label, interpretation limits, date or measure, and attribution.');
+    if(source.kind==='image'&&(!evSrc(source.src)||!source.alt?.trim()||source.evidence?.inspect!==true))
+      fail('the image requires alternative text and source inspection.');
+    if(source.kind==='table'&&source.rows?.some(row=>row.cells?.some(cell=>cell==null||(typeof cell==='string'&&!cell.trim()))))
+      fail('the evidence table needs complete given values.');
+  }
+  const map=config.map;
+  if(map==null)return;
+  if((source&&source.kind!=='image')||!geoAtlasRecord(map)||Object.keys(map).some(k=>!['equator','locations'].includes(k))||
+    !geoAtlasPercent(map.equator)||!Array.isArray(map.locations)||map.locations.length>12)
+    fail('location readings require image evidence, an Equator position and up to twelve locations.');
+  const names=new Set();
+  for(const p of map.locations){
+    if(!geoAtlasRecord(p)||!geoAtlasText(p.name)||!geoAtlasText(p.country)||names.has(p.name)||
+      !geoAtlasPercent(p.x)||!geoAtlasPercent(p.y)||!Number.isFinite(p.latitude)||Math.abs(p.latitude)>90||
+      !Number.isFinite(p.longitude)||Math.abs(p.longitude)>180)
+      fail('each location needs a unique name, country, position and coordinates.');
+    names.add(p.name);
+  }
+}
+function geoAtlasPercent(value){return Number.isFinite(value)&&value>=0&&value<=100;}
+function geoAtlasActive(skill,a,meta){
+  if(!a||a.layout!==GEO_ATLAS_LAYOUT)return false;
+  try{geoAtlasValidate(skill,a,meta);return true;}catch{return false;}
+}
+
+function GeoContentIntro(a,skill,position){
+  const notes=a.notes||[];
+  const body=n=>tpRich(n.body)+(n.source?' <small>'+esc(n.source)+'</small>':'');
+  return `<section class="ga-intro" aria-labelledby="lpTitle">
+    <p class="ga-stage">Skill ${position+1} · ${esc(skill.title)}</p>
+    <h1 id="lpTitle" class="lp-title" tabindex="-1">${esc(a.title)}</h1>
+    ${a.lede?`<p class="ga-purpose">${tpRich(a.lede)}</p>`:''}
+    ${notes.length?`<section class="ga-knowledge" aria-label="Teaching notes">
+      <h2>${esc(a.notesTitle||'Key concepts')}</h2>
+      <div class="ga-note-grid">${notes.map(n=>n.term||n.title?
+        `<dl><dt>${tpRich(n.term||n.title)}</dt><dd>${body(n)}</dd></dl>`:
+        `<p class="ga-explanation">${body(n)}</p>`).join('')}</div>
+    </section>`:''}
+    ${a.practiceNote?`<p class="ga-guidance">${tpRich(a.practiceNote)}</p>`:''}
+  </section>`;
+}
+
+function GeoEvidenceSurface(v,config,key){
+  if(!v)return '<p class="ga-missing" role="status">Source unavailable. Choose shared evidence in Edit mode.</p>';
+  const m=v.sourceMetadata||{},image=v.kind==='image',src=image?evSrc(v.src):'';
+  const map=config.map,inspect=image&&src&&v.evidence?.inspect===true;
+  EV_SOURCES.set(key,image?v:{...v,alt:v.description});
+  const media=image?`<div class="ga-map">
+    ${src?`<img data-ev-image src="${esc(src)}" alt="${esc(v.alt||'Source image')}">`:'<p>Source image unavailable.</p>'}
+    ${src&&map?map.locations.map((p,i)=>`<button type="button" class="ga-location" data-ga-location="${i}" style="--ga-x:${p.x}%;--ga-y:${p.y}%" aria-label="Read coordinates for ${esc(p.name)}" aria-pressed="false"></button>`).join(''):''}
+    ${src&&map?`<svg class="ga-guide" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" hidden><line y2="${map.equator}"></line></svg>`:''}
+    </div>${src&&map?.locations.length?`<div class="ga-reading"><p class="ga-reading-label">Location reading</p><div data-ga-reading role="status">Select a highlighted city to read its coordinates.</div><button type="button" data-ga-clear hidden>Clear selection</button></div>`:''}`:
+    `<div class="ga-table" tabindex="0" role="region" aria-label="Source data table"><table aria-labelledby="ga-source-title"><thead><tr><th scope="col">${esc(v.stub||'Category')}</th>${(v.head||[]).map(t=>`<th scope="col">${esc(t)}</th>`).join('')}</tr></thead>
+      <tbody>${(v.rows||[]).map(row=>`<tr><th scope="row">${esc(row.label||'')}</th>${(row.cells||[]).map(t=>`<td>${esc(t??'')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  return `<section class="ga-source ev-source" aria-labelledby="ga-source-title">
+    <header class="ga-source-header"><div><h2 id="ga-source-title">${esc(v.label||m.title||'Source')}</h2>${m.date?`<p>${esc(m.date)}</p>`:''}</div>
+      <div class="ga-actions">${inspect?`<button type="button" data-ev-inspect="${esc(key)}">Inspect source</button>`:''}<button type="button" data-ev-details="${esc(key)}">Source details</button></div>
+    </header>
+    ${media}<p class="ev-status" aria-live="polite"></p>
+    <footer class="ga-credit">${v.description?`<p>${esc(v.description)}</p>`:''}${v.caption?`<p>${esc(v.caption)}</p>`:''}${m.attribution?`<p>${esc(m.attribution)}</p>`:''}</footer>
+  </section>`;
+}
+
+function geoAtlasSteps(a){
+  const questions=a.questions||[];
+  return questions.flatMap((q,j)=>(q.parts?.length?q.parts:[null]).map((p,i)=>{
+    const label=p==null?'':p?.label||String.fromCharCode(97+i);
+    const number=`Question ${j+1}`;
+    const caption=p==null?number:questions.length>1?`${number} · Part (${label})`:`Part ${label}`;
+    return {key:JSON.stringify([q.id,i]),id:q.id,label,caption,
+      stem:p==null?'':q.stem,text:p==null?q.stem:lpBookPartText(p),guidance:p?.guidance||q.guidance||''};
+  }));
+}
+function GeoQuestionWorkspace(a,steps){
+  return `<aside class="ga-questions" id="ga-questions" aria-labelledby="ga-questions-title">
+    <header class="ga-question-bar"><div><h2 id="ga-questions-title">${esc(a.questionsTitle||'Investigation questions')}</h2>
+    <p><span data-ga-count></span>${steps.length?' · ':''}Exercise book</p></div>
+    <button type="button" data-ga-close>Close</button></header>
+    ${steps.length?`<div class="ga-steps" role="group" aria-label="Jump to a question part">${steps.map((s,i)=>`<button type="button" data-ga-step="${i}" aria-pressed="false">${esc(s.caption)}</button>`).join('')}</div>
+      ${steps.map((s,i)=>`<section class="ga-task" data-ga-task="${i}" data-question-id="${esc(s.id)}" hidden>
+        ${s.stem?`<p class="ga-stem">${tpRich(s.stem)}</p>`:''}
+        <h3 tabindex="-1">${s.label?`<span>(${esc(s.label)})</span>`:''}${tpRich(s.text)}</h3>
+        <p class="ga-paper">Write your answer in your exercise book or on your worksheet.</p>
+        ${s.guidance?`<details class="ga-help"><summary>Need help?</summary><p>${tpRich(s.guidance)}</p></details>`:''}
+      </section>`).join('')}
+      <footer class="ga-question-nav"><button type="button" data-ga-move="-1">← Previous</button><button type="button" data-ga-move="1">Next question →</button></footer>`:
+      '<p class="ga-missing">Add a question in Edit mode.</p>'}
+  </aside>`;
+}
+function geoAtlasRender(skill,a,index,host=false){
+  return `<div class="ga-atlas" data-ga-root>
+    <div class="ga-learning">${host?'':'<div class="ga-launch"><button type="button" data-ga-open aria-controls="ga-questions" aria-expanded="true">Questions</button></div>'}
+      ${GeoContentIntro(a,skill,index)}${GeoEvidenceSurface(geoAtlasSource(skill,a),a.investigation,'atlas-'+a.id)}
+    </div>${GeoQuestionWorkspace(a,geoAtlasSteps(a))}
+  </div>`;
+}
+
+function geoAtlasHost(skill,a,index,list,position,meta,rail,modes,errors){
+  const first=index===0&&position===0;
+  const front=first?lpFrontPages().at(-1):null;
+  const previousSkill=LESSON.slides[index-1],nextSkill=LESSON.slides[index+1];
+  const prev=list[position-1]||(lpEnabled(previousSkill)?lpActivities(previousSkill).at(-1):null);
+  const next=list[position+1]||(lpEnabled(nextSkill)?lpActivities(nextSkill)[0]:null);
+  const progress=LESSON.slides.length>1?`Skill ${index+1} of ${LESSON.slides.length} · `:'';
+  return `<div class="mx lp" data-ga-host data-rp-type="skill" data-rp-layout="responsive" data-mx-response="paper">
+    <header class="ga-top"><div class="ga-top-row">
+      <div class="ga-brand"><span>Geography</span><b>${esc(meta.title)}</b></div>
+      <div class="ga-top-actions">
+        ${meta.year||meta.context?`<span class="ga-context">${esc([meta.year,meta.context].filter(Boolean).join(' · '))}</span>`:''}
+        <button type="button" popovertarget="ga-outline">Lesson outline</button>
+        <button type="button" data-ga-open aria-controls="ga-questions" aria-expanded="true">Questions</button>
+      </div>
+      ${modes?`<div class="ga-author-actions" aria-label="Lesson Studio controls">${modes}</div>`:''}
+    </div></header>
+    <nav id="ga-outline" class="ga-outline" popover aria-labelledby="ga-outline-title">
+      <div class="ga-outline-head"><h2 id="ga-outline-title">Lesson outline</h2>
+      <button type="button" popovertarget="ga-outline" popovertargetaction="hide" autofocus>Close</button></div>
+      <ol class="mx-navlist">${rail}</ol>
+    </nav>
+    <main class="mx-main"><div class="mx-page ga-page" tabindex="-1" data-mx-surface="activity">
+      <article class="lp-activity" data-lp-layout="geography-investigation" aria-labelledby="lpTitle">
+        ${errors}${geoAtlasRender(skill,a,index,true)}
+      </article>
+      <nav class="ga-activity-nav" aria-label="Activity navigation">
+        <button type="button" data-lp-move="-1"${first&&!front?' disabled':''}>← Previous${prev||front?': '+esc(prev?.title||front?.title||'Activity'):''}</button>
+        <span aria-live="polite">${progress}Activity ${position+1} of ${list.length}</span>
+        <button type="button" data-lp-move="1">${next?'Next: '+esc(next.title):'Finish lesson'} →</button>
+      </nav>
+    </div></main>
+  </div>`;
+}
+
+function geoAtlasHostWire(host){
+  const outline=host.querySelector('#ga-outline');
+  outline.addEventListener('click',event=>{
+    if(event.target.closest('[data-lp-go],[data-lp-front],[data-lp-end]'))outline.hidePopover();
+  },true);
+  outline.addEventListener('keydown',event=>{
+    if(['ArrowLeft','ArrowRight'].includes(event.key))event.stopPropagation();
+  });
+}
+
+let geoAtlasDispose;
+function geoAtlasMount(root,a,state){
+  const controller=new AbortController();
+  const {signal}=controller;
+  const steps=geoAtlasSteps(a),tasks=[...root.querySelectorAll('[data-ga-task]')],tabs=[...root.querySelectorAll('[data-ga-step]')];
+  const panel=root.querySelector('#ga-questions');
+  const launch=(root.closest('[data-ga-host]')||root).querySelector('[data-ga-open]');
+  const previous=root.querySelector('[data-ga-move="-1"]'),next=root.querySelector('[data-ga-move="1"]');
+  const locations=a.investigation.map?.locations||[];
+  const reading=root.querySelector('[data-ga-reading]'),guide=root.querySelector('.ga-guide');
+  const clear=root.querySelector('[data-ga-clear]');
+  let index=Math.max(0,steps.findIndex(s=>s.key===state.part));
+  function showStep(want,focus=false){
+    if(want<0||want>=steps.length)return;
+    index=want;
+    state.part=steps[index].key;
+    tasks.forEach((task,i)=>{task.hidden=i!==index;tabs[i].setAttribute('aria-pressed',String(i===index));});
+    previous.disabled=index===0;next.disabled=index===steps.length-1;
+    root.querySelector('[data-ga-count]').textContent=`Question ${index+1} of ${steps.length}`;
+    if(focus)tasks[index].querySelector('h3').focus();
+  }
+  function showDrawer(open,focus=false){
+    state.open=open;
+    panel.hidden=!open;
+    root.dataset.gaClosed=String(!open);
+    launch.setAttribute('aria-expanded',String(open));
+    if(focus)(open?tasks[index]?.querySelector('h3')||panel.querySelector('[data-ga-close]'):launch).focus();
+  }
+  function selectPlace(place){
+    if(!reading||!guide)return;
+    state.place=place?.name;
+    for(const button of root.querySelectorAll('[data-ga-location]')){
+      button.setAttribute('aria-pressed',String(locations[Number(button.dataset.gaLocation)]===place));
+    }
+
+    guide.toggleAttribute('hidden',!place);
+    clear.hidden=!place;
+    if(!place){reading.textContent='Select a highlighted city to read its coordinates.';return;}
+    const line=guide.querySelector('line');
+    line.setAttribute('x1',place.x);line.setAttribute('x2',place.x);line.setAttribute('y1',place.y);
+    const coord=(value,positive,negative)=>Math.abs(value).toFixed(2)+'°'+(value<0?negative:positive);
+    reading.innerHTML=`<strong>${esc(place.name)}</strong><span>${esc(place.country)}</span><dl>
+      <div><dt>Latitude</dt><dd>${coord(place.latitude,'N','S')}</dd></div>
+      <div><dt>Longitude</dt><dd>${coord(place.longitude,'E','W')}</dd></div>
+      <div><dt>Relative to the Equator</dt><dd>${place.latitude===0?'On the Equator':coord(place.latitude,' north',' south')}</dd></div></dl>`;
+  }
+  root.addEventListener('click',event=>{
+    const button=event.target.closest('button');
+    if(!button||!root.contains(button))return;
+    if(button.hasAttribute('data-ga-close'))showDrawer(false,true);
+    else if(button.dataset.gaStep!=null)showStep(Number(button.dataset.gaStep),true);
+    else if(button.dataset.gaMove!=null)showStep(index+Number(button.dataset.gaMove),true);
+    else if(button.dataset.gaLocation!=null)selectPlace(locations[Number(button.dataset.gaLocation)]);
+    else if(button.hasAttribute('data-ga-clear')){
+      const active=root.querySelector('[data-ga-location][aria-pressed="true"]');
+      selectPlace(null);active?.focus({preventScroll:true});
+    }
+  },{signal});
+  launch.addEventListener('click',()=>showDrawer(true,true),{signal});
+  root.addEventListener('keydown',event=>{
+    if(['ArrowLeft','ArrowRight'].includes(event.key)&&event.target.closest('.ga-table,.ga-questions,.ga-map'))event.stopPropagation();
+  },{signal});
+  showStep(index);
+  showDrawer(state.open!==false);
+  selectPlace(locations.find(p=>p.name===state.place));
+  return ()=>controller.abort();
+}
+
+function geoAtlasInspector(skill,a,base,skillPath){
+  const config=geoAtlasRecord(a.investigation)?a.investigation:{};
+  const source=geoAtlasSource(skill,a),sourcePath=skillPath+'.visuals.'+(skill.visuals||[]).indexOf(source);
+  const path=base+'.investigation';
+  const map=config.map;
+  const sources=[['','Choose shared evidence'],...geoAtlasSources(skill,a).map(v=>[v.id,v.label||v.id])];
+  const num=(label,key,value,min,max)=>`<label>${esc(label)}<input class="ii" type="number" min="${min}" max="${max}" step="any" data-ga-number="${esc(key)}" value="${esc(value??'')}"></label>`;
+  return `<section class="isec"><h3>Geography investigation</h3>
+    <p>Exercise-book responses. Use Introduction and Explanation for teaching notes, and Questions for the authored prompts. Attach a shared visual to a question or part before choosing it here.</p>
+    <label>Investigation source<select class="ii" data-ga-source>${sources.map(([id,label])=>`<option value="${esc(id)}"${id===(config.sourceRef||'')?' selected':''}>${esc(label)}</option>`).join('')}</select></label>
+    ${source?`${inT('Source label',sourcePath+'.label',source.label)}${inT('Source date and measure',sourcePath+'.sourceMetadata.date',source.sourceMetadata?.date)}${inA('Essential interpretation limits',sourcePath+'.description',source.description)}${inA('Concise attribution',sourcePath+'.sourceMetadata.attribution',source.sourceMetadata?.attribution)}${inA('Rights and licence',sourcePath+'.sourceMetadata.rights',source.sourceMetadata?.rights)}${inA('Technical source details',sourcePath+'.sourceMetadata.notes',source.sourceMetadata?.notes)}`:''}
+    ${inA('Teaching guidance before evidence',base+'.practiceNote',a.practiceNote)}
+    ${(a.questions||[]).map((q,i)=>inA('Optional Help for question '+(i+1),base+'.questions.'+i+'.guidance',q.guidance)+
+      (q.parts||[]).map((p,j)=>`<label>Optional Help for question ${i+1}, part ${j+1}<textarea class="ia" data-ga-help="${i}:${j}">${esc(p?.guidance||'')}</textarea></label>`).join('')).join('')}
+    ${map?`${num('Equator position (% from top)',path+'.map.equator',map.equator,0,100)}
+      ${map.locations.map((p,i)=>{const b=path+'.map.locations.'+i;return `<fieldset><legend>Location ${i+1}</legend>${inT('Place name',b+'.name',p.name)}${inT('Country',b+'.country',p.country)}
+        ${num('Position from left (%)',b+'.x',p.x,0,100)}${num('Position from top (%)',b+'.y',p.y,0,100)}
+        ${num('Latitude',b+'.latitude',p.latitude,-90,90)}${num('Longitude',b+'.longitude',p.longitude,-180,180)}
+        <button type="button" data-ga-remove-location="${i}">Remove location</button></fieldset>`;}).join('')}
+      <button type="button" data-ga-author="add-location"${map.locations.length>=12?' disabled':''}>Add location</button>
+      <button type="button" data-ga-author="remove-map">Remove location readings</button>`:
+      source?.kind==='image'?'<button type="button" data-ga-author="map">Add location readings</button>':''}
+    <button type="button" data-ga-author="off">Use standard activity layout</button>
+  </section>`;
+}
+function geoAtlasAuthorWire(ins,a,base){
+  ins.querySelectorAll('[data-ga-author],[data-ga-remove-location]').forEach(button=>button.onclick=()=>{
+    const action=button.dataset.gaAuthor;
+    if(action==='on'){a.layout=GEO_ATLAS_LAYOUT;a.investigation={sourceRef:''};}
+    else if(action==='off'){delete a.layout;delete a.investigation;}
+    else if(action==='map')a.investigation.map={equator:50,locations:[]};
+    else if(action==='remove-map')delete a.investigation.map;
+    else if(action==='add-location'){
+      const locations=a.investigation.map.locations,names=new Set(locations.map(location=>location.name));
+      let name='New location',suffix=2;
+      while(names.has(name))name='New location '+suffix++;
+      locations.push({name,country:'Country',x:50,y:50,latitude:0,longitude:0});
+    }
+    else a.investigation.map.locations.splice(Number(button.dataset.gaRemoveLocation),1);
+    renderSlide();
+  });
+  ins.querySelectorAll('[data-ga-number]').forEach(input=>input.onchange=()=>{
+    if(!Number.isFinite(input.valueAsNumber)||!input.checkValidity())return;
+    lpSet(input.dataset.gaNumber,input.valueAsNumber);renderCanvas();
+  });
+  ins.querySelectorAll('[data-ga-help]').forEach(input=>input.onchange=()=>{
+    const [i,j]=input.dataset.gaHelp.split(':').map(Number),parts=a.questions[i].parts,p=parts[j];
+    if(typeof p==='string'&&input.value){
+      parts[j]={prompt:p,guidance:input.value};
+      const path=base+'.questions.'+i+'.parts.'+j;
+      const prompt=ins.querySelector('[data-bind="'+path+'"]');
+      // The existing prompt input can keep its focus and value while its binding follows the new shape.
+      if(prompt)prompt.dataset.bind=path+'.prompt';
+    }
+    else if(geoAtlasRecord(p)){
+      if(input.value)p.guidance=input.value;
+      else delete p.guidance;
+    }
+    renderCanvas();
+  });
+  ins.querySelector('[data-ga-source]')?.addEventListener('change',event=>{
+    const select=event.currentTarget,config=a.investigation,sourceRef=select.value;
+    if(sourceRef===config.sourceRef)return;
+    if(config.map?.locations.length&&!confirm('Location readings belong to the current image. Change the source and discard its location readings?')){
+      select.value=config.sourceRef;
+      return;
+    }
+    config.sourceRef=sourceRef;
+    delete config.map;
+    const view=LP_STATE.geoAtlas?.get(a.id);
+    if(view)delete view.place;
+    renderSlide();
+    ins.querySelector('[data-ga-source]')?.focus({preventScroll:true});
+  });
+}
+/* GEOGRAPHY_ATLAS_JS_END */
 function lpValidatePublication(d){
   lpValidate(d);
-  for(const s of d.slides||[])for(const a of s.activities||[])geoG03Validate(a,true);
+  for(const s of d.slides||[])for(const a of s.activities||[]){geoG03Validate(a,true);geoAtlasValidate(s,a,d.meta,true);}
   mdPreflight(d);
   mcPreflight(d);mmPreflight(d);
   mvPreflight(d);
@@ -19008,7 +19497,7 @@ function lpValidate(d){
     s.activities.forEach(a=>{
       id(a,'Activity'); geoG03Validate(a); if(!a.title) throw Error('Activity '+a.id+' needs a title.');
       if(a.layout==='geography-evidence'&&!/^geography$/i.test(d.meta.subject||''))throw Error('Geography evidence layout requires a Geography lesson.');
-      const allowed=[...(a.layout==='geography-evidence'?['layout']:[]),...(a.layout==='geography-notes'?['layout','image','keyNotes']:[]),'id','title','lede','notes','notesTitle','workedExamples','examples','examplesTitle','questions','questionsTitle','practiceNote','video','optionalVideo','workspace','keyIdea','introduction','focusPoints','practiceCollectionId'];
+      const allowed=[...(a.layout===GEO_ATLAS_LAYOUT?['layout','investigation']:[]),...(a.layout==='geography-evidence'?['layout']:[]),...(a.layout==='geography-notes'?['layout','image','keyNotes']:[]),'id','title','lede','notes','notesTitle','workedExamples','examples','examplesTitle','questions','questionsTitle','practiceNote','video','optionalVideo','workspace','keyIdea','introduction','focusPoints','practiceCollectionId'];
       Object.keys(a).forEach(k=>{if(!allowed.includes(k)) throw Error('Unsupported activity field: '+k+' in '+a.id);});
       ['notes','workedExamples','examples','questions'].forEach(k=>{if(a[k]!=null&&!Array.isArray(a[k])) throw Error(a.id+'.'+k+' must be an array.');});
       if(!a.introduction&&!a.optionalVideo&&!a.video&&!['notes','workedExamples','examples','questions'].some(k=>a[k]&&a[k].length)) throw Error('Activity '+a.id+' is empty.');
@@ -19019,6 +19508,7 @@ function lpValidate(d){
       (a.workedExamples||[]).forEach(g=>{if(g.type&&!MX_WEX_TYPES[g.type]&&!MX_WEX_ALIAS[g.type])throw Error('Unsupported worked composition: '+g.type);parts(g.relations);parts(g.visual);});
       [...(a.examples||[]),...(a.workedExamples||[]).flatMap(g=>g.examples||[])].forEach(ex=>{parts(ex.visual);(ex.steps||[]).forEach(step=>parts(step.visual));if(ex.support){if(!Array.isArray(ex.support.steps))throw Error('Optional method needs an ordered steps array.');ex.support.steps.forEach(step=>parts(step.visual));}});
       if(a.practiceCollectionId!=null){if(typeof a.practiceCollectionId!=='string'||!a.practiceCollectionId.trim())throw Error('Practice needs a stable collection id.');const members=lpPracticeMembers(s,a);if(!members.length)throw Error('Practice needs an existing non-empty example collection.');(a.questions||[]).forEach(q=>{if(!members.some(x=>x.ex.id===q.archetypeId)||!['basic','moderate','advanced'].includes(q.level))throw Error('Practice questions need a linked archetype and Foundation/Moderate/Advanced level.');if(q.answer!=null&&typeof q.answer!=='string'||q.workedAnswer!=null&&typeof q.workedAnswer!=='string')throw Error('Practice answers must be text.');});}
+      geoAtlasValidate(s,a,d.meta);
       if(a.workspace&&a.workspace.kind!=='grid') throw Error('Only the grid response workspace is supported inside activities.');
     });
   });
@@ -19027,7 +19517,7 @@ function lpProjection(s){
   const a=lpCurrent(s); if(!a||LP_STATE.end) return null;
   const out=Object.assign({notesTitle:'Explanation',questionsTitle:'Questions'},a,{type:'skill',id:s.id});
   if(a.optionalVideo) out.video=s.video;
-  if(a.questions&&a.questions.length) out.workspace={kind:'grid',id:a.id+'-work'};
+  if(a.questions&&a.questions.length&&!geoAtlasActive(s,a,LESSON.meta)) out.workspace={kind:'grid',id:a.id+'-work'};
   return out;
 }
 function lpCollectionRail(s,i,current,end){
@@ -19156,7 +19646,8 @@ function lpRender(s,i){
   const collection=front?null:lpCollection(s,a),members=collection?lpCollectionMembers(s,collection):[],examplePosition=members.findIndex(x=>x.a===a);
   const practiceMember=front?null:lpPracticeCurrent(s,a),practiceMembers=front?[]:lpPracticeMembers(s,a),practicePosition=practiceMembers.findIndex(x=>x.ex.id===practiceMember?.ex.id);
   const practiceTarget=collection&&s.activities.find(x=>x.practiceCollectionId===collection.id);
-  const end=LP_STATE.end, projection=front?null:lpProjection(s), open=rpNavOpen();
+  const end=LP_STATE.end, projection=front?null:lpProjection(s);
+  const atlas=!front&&!end&&geoAtlasActive(s,a,m);
   let errors=''; try{lpValidate(LESSON);}catch(e){errors=`<p class="mx-err" role="alert">${esc(e.message)}</p>`;}
   const ws=projection&&projection.workspace&&!mxOnPaper()?projection.workspace:null;
   // Component roles choose the span; lesson names and content-length guesses never do.
@@ -19164,13 +19655,16 @@ function lpRender(s,i){
   const arrangement=end&&lpTextbook()?'completion':front?'front':ws?'response':hasFigure(projection)?'media':projection?.workedExamples?.length||projection?.examples?.length?'solution':projection?.questions?.length&&!projection?.notes?.length?'practice':'reading';
   const accent=/^#[0-9a-f]{6}$/i.test((m.colors||{}).accent||'')?m.colors.accent:'#365d63';
   const rail=journey||lpTextbook()?lpJourneyRail(s,i,a,end):LESSON.slides.map((sk,k)=>`<li>${lpMathSingle()&&authorMode()!=='edit'?'':`<button class="mx-navitem${k===i?' on':''}" data-lp-go="${k}" aria-current="${k===i?'page':'false'}"><span class="mx-navtx">${lpMathSingle()?'<span>Skill</span>':`<span>Skill ${k+1}</span><b>${esc(sk.title)}</b>`}</span></button>`}${k===i?`<ol class="lp-activities">${sk.exampleCollections?.length?lpCollectionRail(sk,k,a,end):lpActivities(sk).map((act,j)=>`<li><button data-lp-go="${k}:${esc(act.id)}"${act===a&&!end?' aria-current="step"':''}>${j+1}. ${esc(act.title)}</button></li>`).join('')}</ol>`:''}</li>`).join('')+(authorMode()==='edit'?'':`<li><button data-lp-end${end?' aria-current="page"':''}>Lesson complete</button></li>`);
+  const modes=document.documentElement.dataset.export?'':MX_MODES.filter(x=>x.id!=='worksheet').concat([{id:'json',label:'JSON'}]).map(x=>`<button class="mx-mode${x.state&&x.state()?' on':''}" data-mx-mode="${x.id}">${esc(x.label)}</button>`).join('');
+  if(atlas&&authorMode()==='study')return geoAtlasHost(s,a,i,list,pos,m,rail,modes,errors);
+  const open=rpNavOpen();
   return `<div class="mx lp${lpTextbook()?' lp-textbook-shell':''}${open?' mx-navopen':''}" data-rp-type="skill" data-rp-layout="responsive" data-mx-response="${esc(mxResponseMode())}" data-mx-view="split" style="--mx-green:${accent};--mx-wb-min-h:${MX_WB_MIN_H}px;--mx-split-gutter:${MX_SPLIT_GUTTER}px;--mx-rep-min-h:${MX_REP_MIN_H}px">
-    <header class="mx-top"><button class="mx-iconbtn" data-rp-navtoggle aria-label="Show lesson skills" aria-expanded="${open}" aria-controls="mxNav">${mxIc('menu')}</button><b class="lp-brand">${esc(m.title)}</b><div class="mx-top-sp"></div><div class="mx-modes">${document.documentElement.dataset.export?'':MX_MODES.filter(x=>x.id!=='worksheet').concat([{id:'json',label:'JSON'}]).map(x=>`<button class="mx-mode${x.state&&x.state()?' on':''}" data-mx-mode="${x.id}">${esc(x.label)}</button>`).join('')}</div></header>
+    <header class="mx-top"><button class="mx-iconbtn" data-rp-navtoggle aria-label="Show lesson skills" aria-expanded="${open}" aria-controls="mxNav">${mxIc('menu')}</button><b class="lp-brand">${esc(m.title)}</b><div class="mx-top-sp"></div><div class="mx-modes">${modes}</div></header>
     <div class="mx-body"><nav class="mx-nav" id="mxNav" aria-label="Skills and activities"><div class="mx-navhead"><div class="mx-course">Lesson outline</div><p class="mx-coursemeta">${lpMathSingle()?'Revisit any page':`${LESSON.slides.length} ${LESSON.slides.length===1?'skill':'skills'} · revisit any activity`}</p></div><ol class="mx-navlist">${rail}</ol></nav><button class="mx-scrim" data-rp-navtoggle tabindex="-1" aria-hidden="true"></button>
-    <main class="mx-main"><div class="mx-page" tabindex="-1" data-mx-surface="activity"><article class="lp-activity" data-lp-arrangement="${arrangement}"${!front&&!end&&a?.layout==='geography-evidence'&&/^geography$/i.test(m.subject||'')?' data-lp-layout="geography-evidence"':''} aria-labelledby="lpTitle">${errors}${lpTextbook()&&front?.kind==='overview'?'<div class="lp-book-overview"><div>':''}<header class="lp-header"><div class="lp-location">${front?esc([m.subject,m.context].filter(Boolean).join(' · ')):lpMathSingle()?'':`Skill ${i+1} of ${LESSON.slides.length} · ${esc(s.title)}`}</div>
+    <main class="mx-main"><div class="mx-page" tabindex="-1" data-mx-surface="activity"><article class="lp-activity" data-lp-arrangement="${arrangement}"${!front&&!end&&a?.layout==='geography-evidence'&&/^geography$/i.test(m.subject||'')?' data-lp-layout="geography-evidence"':atlas?' data-lp-layout="geography-investigation"':''} aria-labelledby="lpTitle">${errors}${lpTextbook()&&front?.kind==='overview'?'<div class="lp-book-overview"><div>':''}${atlas?'':`<header class="lp-header"><div class="lp-location">${front?esc([m.subject,m.context].filter(Boolean).join(' · ')):lpMathSingle()?'':`Skill ${i+1} of ${LESSON.slides.length} · ${esc(s.title)}`}</div>
       ${end&&lpTextbook()?'':`<h1 id="lpTitle" class="lp-title" tabindex="-1">${esc(front?(front.title||m.title):end?(journey||lpTextbook()?'Lesson complete':'End of lesson'):(collection?collection.title||'Worked examples':a?.introduction?(a.introduction.title||s.title):a?lpTextbook()&&practiceMember?(lpMicro(s)?'':'Practice: ')+(practiceMember.ex.tabLabel||practiceMember.ex.label):a.title:'Add your first activity'))}</h1>`}${!end&&!front?lpCollectionTabs(s,a):''}${!end&&!front&&practiceTarget?`<button class="mx-tool" data-lp-practice="${esc(practiceTarget.id)}" data-lp-archetype="${esc(lpSingleExample(a).id)}">Practice this example →</button>`:''}${!end&&!front&&a&&a.lede?`<p class="mx-lede">${mxM(a.lede)}</p>`:''}
-      <div class="lp-response-view">${ws?`<div class="mx-viewsw"><button type="button" data-mx-view="questions">Questions and working</button><button type="button" data-mx-view="workbook">Workbook</button></div>`:''}</div></header>
-      ${front?lpFrontBody(front)+(lpTextbook()&&front.kind==='overview'?'</div>'+lpImage(lpRoleImage('overview',front.image))+'</div>':''):end&&lpTextbook()?lpBookComplete():end&&journey?`<p>You have reached the end of this lesson.</p>${lpMathSingle()?'':`<h2>Skills in this lesson</h2><ul>${LESSON.slides.map(sk=>`<li>${esc(sk.title)}</li>`).join('')}</ul>`}${LESSON.meta.completion?.description?`<p>${mxM(LESSON.meta.completion.description)}</p>`:''}${lpImage(lpRoleImage('completion',LESSON.meta.completion?.image))}<button class="lp-primary" data-lp-front="${esc(lpFrontPages()[0].id)}">Review lesson →</button>`:end?`<p>You have reached the end of the lesson. Revisit any activity using the outline. Your responses remain available in this session.</p><p>Reaching this page does not indicate assessed mastery.</p>${m.completion?.description?`<p>${mxM(m.completion.description)}</p>`:''}${lpImage(lpRoleImage('completion',m.completion?.image))}`:`<div class="mx-split${ws?'':' mx-1col'}"><section class="mx-content">${a?.introduction?lpIntroduction(a):lpVideoOnly(a)?lpVideoBody(s,a):a?.practiceCollectionId?lpPracticeBody(s,a):projection?mxSkillPage(projection,i):'<p>This skill has no activities yet.</p>'}</section>${ws?`<section class="mx-work">${rpWorkspace(ws,projection,i)}</section>`:''}</div>`}
+      <div class="lp-response-view">${ws?`<div class="mx-viewsw"><button type="button" data-mx-view="questions">Questions and working</button><button type="button" data-mx-view="workbook">Workbook</button></div>`:''}</div></header>`}
+      ${atlas?geoAtlasRender(s,a,i):front?lpFrontBody(front)+(lpTextbook()&&front.kind==='overview'?'</div>'+lpImage(lpRoleImage('overview',front.image))+'</div>':''):end&&lpTextbook()?lpBookComplete():end&&journey?`<p>You have reached the end of this lesson.</p>${lpMathSingle()?'':`<h2>Skills in this lesson</h2><ul>${LESSON.slides.map(sk=>`<li>${esc(sk.title)}</li>`).join('')}</ul>`}${LESSON.meta.completion?.description?`<p>${mxM(LESSON.meta.completion.description)}</p>`:''}${lpImage(lpRoleImage('completion',LESSON.meta.completion?.image))}<button class="lp-primary" data-lp-front="${esc(lpFrontPages()[0].id)}">Review lesson →</button>`:end?`<p>You have reached the end of the lesson. Revisit any activity using the outline. Your responses remain available in this session.</p><p>Reaching this page does not indicate assessed mastery.</p>${m.completion?.description?`<p>${mxM(m.completion.description)}</p>`:''}${lpImage(lpRoleImage('completion',m.completion?.image))}`:`<div class="mx-split${ws?'':' mx-1col'}"><section class="mx-content">${a?.introduction?lpIntroduction(a):lpVideoOnly(a)?lpVideoBody(s,a):a?.practiceCollectionId?lpPracticeBody(s,a):projection?mxSkillPage(projection,i):'<p>This skill has no activities yet.</p>'}</section>${ws?`<section class="mx-work">${rpWorkspace(ws,projection,i)}</section>`:''}</div>`}
     </article></div><footer class="lp-footer"><button data-lp-move="-1"${front?lpFrontPages().indexOf(front)===0?' disabled':'':!journey&&i===0&&pos===0&&!end?' disabled':''}>← Back</button><span aria-live="polite">${front?esc(front.kind==='overview'?'Overview':'Learning outcomes'):end?'Lesson end':practiceMember?`Practice ${practicePosition+1} of ${practiceMembers.length} · ${esc(practiceMember.ex.tabLabel||practiceMember.ex.label)}`:collection?`Example ${examplePosition+1} of ${members.length}${lpMathSingle()?'':' · '+esc(s.title)}`:journey?(lpMathSingle()?esc(a?.title||''):`Skill ${i+1} of ${LESSON.slides.length}`):`Activity ${pos+1} of ${list.length}`}</span><button data-lp-move="1"${end?' disabled':''}>${front?'Next: '+esc(lpFrontPages()[lpFrontPages().indexOf(front)+1]?.title||(lpMathSingle()?'Introduction':'Skill 1')):journey?'Next: '+esc(practiceMembers[practicePosition+1]?.ex.tabLabel||practiceMembers[practicePosition+1]?.ex.label||lpNextLabel(s,a)):i===LESSON.slides.length-1&&pos===list.length-1?'Finish lesson':'Next'} →</button></footer></main></div></div>`;
 }
 function lpResetPageScroll(){Object.keys(MX_SCROLL).forEach(k=>delete MX_SCROLL[k]);document.querySelectorAll('#stage,.mx-page,.mx-content,.mx-work').forEach(el=>el.scrollTop=0);}
@@ -19208,6 +19702,10 @@ function lpWire(){
   const s=LESSON.slides[cur],a=lpCurrent(s),c=lpFront()?null:lpCollection(s,a),members=c?lpCollectionMembers(s,c):[];
   if(members.length>1){const panel=document.querySelector('.lp-activity');if(panel){panel.id='lp-example-panel';panel.setAttribute('role','tabpanel');panel.setAttribute('aria-labelledby','lp-tab-'+lpSingleExample(a).id);}}
   document.querySelectorAll('[data-lp-example]').forEach((b,j)=>{const select=k=>{lpNavigate(cur,members[k].a.id);document.getElementById('lp-tab-'+members[k].ex.id)?.focus({preventScroll:true});};b.onclick=e=>{e.stopPropagation();select(j);};b.onkeydown=e=>{let k=j;if(e.key==='ArrowRight')k=(j+1)%members.length;else if(e.key==='ArrowLeft')k=(j+members.length-1)%members.length;else if(e.key==='Home')k=0;else if(e.key==='End')k=members.length-1;else return;e.preventDefault();e.stopPropagation();select(k);};});
+  const atlas=document.querySelector('[data-ga-root]');
+  const atlasHost=atlas?.closest('[data-ga-host]');
+  if(atlasHost)geoAtlasHostWire(atlasHost);
+  if(atlas){const views=LP_STATE.geoAtlas??=new Map();if(!views.has(a.id))views.set(a.id,{});geoAtlasDispose=geoAtlasMount(atlas,a,views.get(a.id));}
   mxSupportWire(a);if(lpMicro(s)&&a?.practiceCollectionId)mxSupportWire(lpPracticeCurrent(s,a)?.a);
 }
 let LP_EDIT={activity:null,part:'notes',index:0};
@@ -19314,8 +19812,10 @@ function lpInspector(s,i){
   if(a?.optionalVideo||a?.video)ins.insertAdjacentHTML('beforeend',lpListForm('Focus point',ab+'.focusPoints',a.focusPoints));
 
   if(a?.layout==='geography-notes')ins.insertAdjacentHTML('beforeend',geoG03Inspector(a,ab));
+  if(a?.layout===GEO_ATLAS_LAYOUT)ins.insertAdjacentHTML('beforeend',geoAtlasInspector(s,a,ab,base));
+  else if(a&&!a.layout&&geoAtlasSubject(LESSON.meta)&&LESSON.meta.responseMode==='paper'&&!a.introduction&&!a.optionalVideo&&!a.video&&!a.practiceCollectionId&&!a.workspace&&!a.workedExamples?.length&&!a.examples?.length)ins.insertAdjacentHTML('beforeend','<section class="isec"><button type="button" data-ga-author="on">Use Geography investigation layout</button></section>');
   if(a?.questions){ins.insertAdjacentHTML('beforeend',lpPracticeForm(s,a,ab,part));}
-  wireInspector();lpJourneyEditorWire();if(a&&editor)editor.wire(i,context);if(a)lpCollectionWire(s,a,i);
+  wireInspector();lpJourneyEditorWire();if(a&&editor)editor.wire(i,context);if(a){lpCollectionWire(s,a,i);geoAtlasAuthorWire(ins,a,ab);}
   ins.querySelector('[data-bind="meta.responseMode"]')?.addEventListener('input',()=>{MX_RESPONSE=null;renderCanvas();});
   ins.querySelectorAll('[data-lp-select]').forEach(b=>b.onclick=()=>lpNavigate(i,s.activities[+b.dataset.lpSelect].id));
   ins.querySelector('[data-lp-add]').onclick=()=>{const kind=ins.querySelector('#lpActivityType').value;if(kind==='video'&&hasVideo)return;const next=lpActivitySeed(kind);s.activities.push(next);lpNavigate(i,next.id);};

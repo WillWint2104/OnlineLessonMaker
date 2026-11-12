@@ -1,0 +1,126 @@
+{
+  "meta": {
+    "id": "atlas-stage1-megacity",
+    "title": "Megacities: opportunities and pressures",
+    "subject": "Geography",
+    "theme": "geolearn",
+    "year": "Year 9",
+    "player": "activities",
+    "responseMode": "paper",
+    "answerPolicy": {
+      "final": "teacher",
+      "worked": "teacher",
+      "fallback": {
+        "final": "hidden",
+        "worked": "hidden"
+      }
+    }
+  },
+  "slides": [
+    {
+      "id": "atlas-stage1-megacity-skill",
+      "type": "skill",
+      "title": "Explore · location, size and change",
+      "visuals": [
+        {
+          "id": "six-locations",
+          "kind": "image",
+          "role": "primary",
+          "placement": "contained",
+          "label": "A · Six selected city locations",
+          "description": "Six selected centres. The map locates places and does not measure distance, area or population.",
+          "evidence": {
+            "inspect": true,
+            "task": "Locate Dhaka and Tokyo. Use the Equator and country key. Every symbol is the same size. Write your comparison in your exercise book."
+          },
+          "src": "docs/review/geography-atlas-stage1/fixtures/atlas-map.png",
+          "alt": "World locator with equal-size symbols for Jakarta in Indonesia, Dhaka in Bangladesh, Tokyo in Japan, Cairo in Egypt, São Paulo in Brazil and Paris in France. Dhaka and Tokyo are north of the Equator in Asia; Tokyo is farther east. The map locates selected city centres, not their boundaries or populations.",
+          "caption": "Country key: Dhaka—Bangladesh; Tokyo—Japan; Jakarta—Indonesia; Cairo—Egypt; São Paulo—Brazil; Paris—France.",
+          "sourceMetadata": {
+            "title": "Six selected city locations",
+            "date": "2025 · Population-weighted city centres",
+            "creator": "OnlineLessonMaker, derived from UN DESA and Natural Earth",
+            "institution": "UN DESA Population Division / Natural Earth",
+            "url": "https://population.un.org/wup/downloads?tab=Cities",
+            "rights": "City data ©2025 United Nations, CC BY3.0 IGO; Natural Earth relief, land and boundaries public domain. Modified selection, tint, labels and equal-angle rendering; no endorsement.",
+            "licenseUrl": "https://creativecommons.org/licenses/by/3.0/igo/",
+            "notes": "Publisher and dataset — UN DESA Population Division, World Urbanization Prospects 2025, File 19. Natural Earth shaded relief, land and administrative boundaries.\nAdaptation and rights — UN city coordinates retained. Selected locations, labels and tint adapted for the lesson. City data © United Nations, CC BY 3.0 IGO. Natural Earth base layers are public domain. No endorsement is implied.\nBase data versions — Natural Earth shaded relief SR_50M (archive 2.0.0), land 4.0.0 and administrative boundaries 5.1.1. See the linked provenance for exact revisions and hashes.\nTechnical limits — The equal-angle map is cropped to 85°N–65°S. The relief is downsampled and tinted. Labels were repositioned without changing coordinates. Generalised de facto boundaries imply no political endorsement.",
+            "attribution": "City centres © United Nations, WUP 2025, File 19 (CC BY 3.0 IGO). Base map: Natural Earth (public domain)."
+          }
+        }
+      ],
+      "activities": [
+        {
+          "id": "atlas-stage1-megacity-activity",
+          "layout": "geography-investigation",
+          "title": "Locate the selected contexts",
+          "lede": "Use a world map to describe where cities are and consider what a selection of locations can tell you.",
+          "notesTitle": "Key concepts",
+          "notes": [
+            {
+              "term": "Equator",
+              "body": "The line of latitude at 0°. It separates the Northern and Southern Hemispheres."
+            },
+            {
+              "term": "Coordinates",
+              "body": "Latitude describes position north or south of the Equator. Longitude describes position east or west of the prime meridian."
+            },
+            {
+              "body": "Compare latitude to describe relative north–south position. Compare longitude to describe relative east–west position."
+            }
+          ],
+          "practiceNote": "Use Source A and its country key. The symbols show locations, not city size.",
+          "questionsTitle": "Investigation questions",
+          "questions": [
+            {
+              "id": "y9-02-locate",
+              "stem": "Use Source A and its country key. The symbols show locations, not city size.",
+              "parts": [
+                {
+                  "label": "a",
+                  "prompt": "Locate Dhaka and Tokyo relative to the Equator and each other. Name their countries.",
+                  "visualRefs": [
+                    "six-locations"
+                  ],
+                  "guidance": "Select the two cities in turn. Compare their coordinate readings and consult the country key."
+                },
+                {
+                  "prompt": "Would these six selected locations prove that most of the world’s megacities are in Asia? Explain.",
+                  "guidance": "Think about how the places on this map were selected. What wider evidence would you need?"
+                }
+              ],
+              "answer": "Dhaka is in Bangladesh, South Asia; Tokyo is in Japan, East Asia. Both are north of the Equator and Tokyo is farther east. Six selected cities cannot establish a global majority.",
+              "workedAnswer": "Read locations and the selection boundary separately. Source A is a deliberately selected sample that includes Paris, which is below 10 million under this definition. A world-wide claim needs the complete list, not the density of symbols in this map.",
+              "teacherNote": "Y 9-02 TEACHER ONLY: assess evidence, reasoning and qualifications; accept equivalent supported wording.",
+              "stack": true
+            }
+          ],
+          "investigation": {
+            "sourceRef": "six-locations",
+            "map": {
+              "equator": 56.666666666666664,
+              "locations": [
+                {
+                  "name": "Dhaka",
+                  "country": "Bangladesh",
+                  "latitude": 23.6363759668269,
+                  "longitude": 90.6228191873401,
+                  "x": 75.17300532981669,
+                  "y": 40.909082688782064
+                },
+                {
+                  "name": "Tokyo",
+                  "country": "Japan",
+                  "latitude": 35.6669541662186,
+                  "longitude": 139.654304189319,
+                  "x": 88.79286227481082,
+                  "y": 32.88869722252093
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
