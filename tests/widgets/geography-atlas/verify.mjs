@@ -10,12 +10,16 @@ import {chromium} from 'playwright';
 
 const root=process.cwd(),out=path.resolve(process.env.ATLAS_OUT||'review-delivery/atlas-stage1-check');
 const fixtures='docs/review/geography-atlas-stage1/fixtures/';
-const baseline=execFileSync('git',['show','a51bb82abbe2e7870ba860e29796f6057a2ec216:lesson-studio.html'],{maxBuffer:25*1024*1024});
+const gitFile=(ref,file)=>execFileSync('git',['show',ref+':'+file],{maxBuffer:25*1024*1024});
+const baseline=gitFile('a51bb82abbe2e7870ba860e29796f6057a2ec216','lesson-studio.html');
+const reviewBase=process.env.ATLAS_REVIEW_BASE;
+const reviewOnly=Boolean(reviewBase)||process.env.ATLAS_REVIEW_ONLY==='1';
+const reviewApp=reviewBase?gitFile(reviewBase,'lesson-studio.html'):null;
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
 const read=file=>JSON.parse(fs.readFileSync(file,'utf8'));
 const fixturesByName={map:read(fixtures+'megacity.json'),table:read(fixtures+'population.json')};
 const report={head:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),
-  appSha256:hash(fs.readFileSync('lesson-studio.html')),checks:[],captures:[],errors:[],comparisons:[],complete:false};
+  appSha256:hash(reviewApp||fs.readFileSync('lesson-studio.html')),checks:[],captures:[],errors:[],comparisons:[],complete:false};
 const shots=path.join(out,'captures'),exports=path.join(out,'exports');
 for(const dir of [shots,exports])fs.mkdirSync(dir,{recursive:true});
 function check(condition,label){assert.ok(condition,label);report.checks.push(label);console.log('PASS '+label);}
@@ -23,6 +27,7 @@ function check(condition,label){assert.ok(condition,label);report.checks.push(la
 const server=http.createServer((request,response)=>{
   const url=new URL(request.url,'http://127.0.0.1');
   if(url.pathname==='/baseline.html'){response.setHeader('Content-Type','text/html');response.end(baseline);return;}
+  if(url.pathname==='/review-base.html'&&reviewApp){response.setHeader('Content-Type','text/html');response.end(reviewApp);return;}
   const file=path.resolve(root,'.'+decodeURIComponent(url.pathname));
   if(!file.startsWith(root+path.sep)||!fs.existsSync(file)||!fs.statSync(file).isFile()){response.writeHead(404).end();return;}
   const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.png':'image/png','.svg':'image/svg+xml','.woff2':'font/woff2'};
@@ -30,9 +35,9 @@ const server=http.createServer((request,response)=>{
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const origin='http://127.0.0.1:'+server.address().port;
-const setup=async page=>{
+const setup=async (page,answerDialog=()=>false)=>{
   page.on('pageerror',error=>report.errors.push(error.message));
-  page.on('dialog',dialog=>{console.log('Browser dialog '+dialog.message());return dialog.dismiss();});
+  page.on('dialog',dialog=>{console.log('Browser dialog '+dialog.message());return answerDialog(dialog)?dialog.accept():dialog.dismiss();});
   await page.route(/^https?:/,route=>route.request().url().startsWith(origin+'/')?route.continue():route.abort());
   page.setDefaultTimeout(10000);
 };
@@ -182,7 +187,7 @@ async function workflow(page,name){
   const data=fixturesByName[name],a=data.slides[0].activities[0],q=a.questions[0];
   check(!await importLesson(page,data),'Real Edit mode opens '+name);
   check(await page.locator('[data-ga-host]').count()===0&&await page.locator('[data-ga-root]').count()===1,'Authoring keeps the existing editor shell with Atlas preview '+name);
-  const select=page.locator('#inspector select[data-bind$=".investigation.sourceRef"]');
+  const select=page.locator('#inspector [data-ga-source]');
   check(await select.inputValue()===a.investigation.sourceRef,'Inspector exposes canonical shared source '+name);
   await shot(page,'authoring-'+name,{state:'authoring'});
   const lede=page.locator('#inspector textarea[data-bind="slides.0.activities.0.lede"]');
@@ -246,6 +251,161 @@ async function mixedNavigation(page){
   await next.press('Enter');
   check((await page.locator('#lpTitle').innerText())===second.title,'Contextual Next follows canonical activity order');
 }
+
+async function reviewRegressions(browser){
+  const fixture=name=>reviewBase?JSON.parse(gitFile(reviewBase,fixtures+name+'.json')):read(fixtures+name+'.json');
+  const map=fixture('megacity'),table=fixture('population');
+  const load=async(page,data)=>assert.equal(await importLesson(page,data,reviewBase?'review-base.html':'lesson-studio.html'),'');
+  const data=page=>page.evaluate(()=>structuredClone(LESSON));
+  const activity=lesson=>lesson.slides[0].activities[0];
+  const source=page=>page.locator('#inspector select:is([data-ga-source],[data-bind$=".investigation.sourceRef"])');
+  const readback=async(page,name)=>{
+    const file=path.join(exports,name+'.json');
+    await page.locator('[data-mx-mode="json"]').click();
+    await save(page,'#jsonDl',file);
+    const json=read(file);
+    await load(page,json);
+    assert.deepEqual(await data(page),json);
+    return json;
+  };
+  let confirmChange=false,confirmations=[];
+  const cases=[
+    ['Source change confirms and removes the old map through JSON and learner export',async page=>{
+      const draft=structuredClone(map),skill=draft.slides[0],a=activity(draft);
+      const original=structuredClone(a.investigation),oldRef=original.sourceRef;
+      skill.visuals.push({...skill.visuals[0],id:'replacement-map',label:'Replacement map'});
+      a.questions[0].parts[0].visualRefs.push('replacement-map');
+      await load(page,draft);
+      await source(page).selectOption(oldRef);
+      assert.equal(confirmations.length,0);
+      assert.deepEqual(activity(await data(page)).investigation,original);
+      await source(page).selectOption('replacement-map');
+      assert.equal(confirmations.length,1,'changing a map source requires confirmation');
+      assert.match(confirmations[0],/current image.*discard.*location readings/i);
+      assert.equal(await source(page).inputValue(),oldRef);
+      assert.deepEqual(activity(await data(page)).investigation,original);
+      confirmChange=true;
+      await source(page).selectOption('replacement-map');
+      assert.equal(confirmations.length,2);
+      assert.equal(await source(page).inputValue(),'replacement-map');
+      const saved=await readback(page,'changed-map-source');
+      assert.deepEqual(activity(saved).investigation,{sourceRef:'replacement-map'});
+      await study(page);
+      const file=path.join(exports,'changed-map-source-learner.html');
+      await save(page,'[data-mx-mode="export"]',file);
+      await page.goto(pathToFileURL(file).href);
+      assert.equal(await page.locator('[data-ga-root] .ga-source h2').textContent(),'Replacement map');
+      assert.equal(await page.locator('[data-ga-location], [data-ga-reading]').count(),0);
+    }],
+    ['Adding, removing and re-adding Help preserves prompt edits and other questions',async page=>{
+      const draft=structuredClone(map),a=activity(draft);
+      a.questions[0].parts[1]='Original prompt';
+      const other={id:'other-question',stem:'Explain the evidence.',parts:[{prompt:'Other prompt',guidance:'Other Help'}]};
+      a.questions.push(other);
+      await load(page,draft);
+      const questions=page.locator('#inspector [data-lp-part="questions"]');
+      await questions.click();
+      const help=page.locator('#inspector [data-ga-help="0:1"]');
+      const prompt=page.locator('#inspector [data-bind="slides.0.activities.0.questions.0.parts.1"], #inspector [data-bind="slides.0.activities.0.questions.0.parts.1.prompt"]');
+      const edit=async(field,value)=>{await field.fill(value);await field.press('Tab');};
+      await edit(help,'Initial Help');
+      await edit(prompt,'Updated prompt');
+      assert.deepEqual(activity(await data(page)).questions[0].parts[1],{prompt:'Updated prompt',guidance:'Initial Help'});
+      let saved=await readback(page,'help-first-edit');
+      assert.deepEqual(activity(saved).questions[0].parts[1],{prompt:'Updated prompt',guidance:'Initial Help'});
+      await questions.click();
+      await edit(help,'Revised Help');
+      await edit(prompt,'Second prompt edit');
+      await edit(help,'');
+      assert.deepEqual(activity(await data(page)).questions[0].parts[1],{prompt:'Second prompt edit'});
+      await edit(prompt,'Third prompt edit');
+      await edit(help,'Restored Help');
+      await page.locator('#inspector [data-lp-itemselect="1"]').click();
+      await edit(page.locator('#inspector [data-bind="slides.0.activities.0.questions.1.stem"]'),'A separate edit');
+      saved=await readback(page,'help-repeated-edits');
+      assert.deepEqual(activity(saved).questions[0].parts[1],{prompt:'Third prompt edit',guidance:'Restored Help'});
+      assert.deepEqual(activity(saved).questions[1],{...other,stem:'A separate edit'});
+    }],
+    ['Map viewer gives a complete task with the supplied Source A',async page=>{
+      await load(page,map);await study(page);
+      const dismiss=await inspect(page);
+      await page.locator('[data-ev-task]').click();
+      const task=await page.locator('[data-ev-task-panel]').innerText();
+      assert.match(task,/same size.*exercise book/s);
+      assert.doesNotMatch(task,/Source B/i);
+      await dismiss();
+    }],
+    ['Map targets are visible before hover, maintain equal size and show selection',async page=>{
+      await load(page,map);await study(page);
+      const markers=page.locator('.ga-location');
+      const styles=()=>markers.evaluateAll(buttons=>buttons.map(button=>{
+        const css=getComputedStyle(button),{width,height}=button.getBoundingClientRect();
+        return {width,height,background:css.backgroundImage,border:css.borderTopColor};
+      }));
+      const initial=await styles();
+      assert.equal(initial.length,2);
+      assert.ok(initial.every(m=>m.background!=='none'&&m.width===initial[0].width&&m.height===initial[0].height));
+      await page.keyboard.press('Tab');
+      await markers.first().press('Enter');
+      assert.ok(await markers.first().evaluate(button=>button.matches(':focus-visible')&&getComputedStyle(button).outlineStyle!=='none'));
+      assert.equal(await markers.first().getAttribute('aria-pressed'),'true');
+      assert.notEqual((await styles())[0].border,initial[0].border);
+      assert.match(await page.locator('[data-ga-reading]').innerText(),/23\.64°N/);
+    }],
+    ['Multipart steps identify both the question number and its part',async page=>{
+      const draft=structuredClone(map),a=activity(draft);
+      a.questions.push({id:'another-multipart',stem:'Explain this comparison.',parts:['First part','Second part']},
+        {id:'single-question',stem:'Name a limitation.'});
+      await load(page,draft);await study(page);
+      const steps=page.locator('[data-ga-step]');
+      assert.deepEqual(await steps.allTextContents(),['Question 1 · Part (a)','Question 1 · Part (b)',
+        'Question 2 · Part (a)','Question 2 · Part (b)','Question 3']);
+      await steps.nth(2).press('Enter');
+      assert.equal(await page.locator('[data-ga-task]:visible').getAttribute('data-question-id'),'another-multipart');
+    }],
+    ['Atlas table publication rejects blank and whitespace values while accepting given values',async page=>{
+      await load(page,table);
+      const validate=value=>page.evaluate(value=>{
+        const draft=structuredClone(LESSON);
+        draft.slides[0].visuals[0].rows[0].cells[0]=value;
+        try{lpValidatePublication(draft);return '';}catch(error){return error.message;}
+      },value);
+      for(const value of [' ','\t\n','\u00a0','','   '])assert.match(await validate(value),/complete given values/);
+      for(const value of ['0',' 12.4 ','Not available'])assert.equal(await validate(value),'');
+    }],
+    ['Repeated location additions and deletion produce unique deterministic names',async page=>{
+      const draft=structuredClone(map),a=activity(draft);
+      a.investigation.map.locations.push({...a.investigation.map.locations[0],name:'New location 2'});
+      const existing=a.investigation.map.locations.map(location=>location.name);
+      await load(page,draft);
+      const add=page.locator('#inspector [data-ga-author="add-location"]');
+      await add.click();await add.click();
+      const names=async()=>activity(await data(page)).investigation.map.locations.map(location=>location.name);
+      assert.deepEqual(await names(),[...existing,'New location','New location 3']);
+      await page.locator('#inspector [data-ga-remove-location="3"]').click();
+      await add.click();
+      const saved=await readback(page,'unique-location-names');
+      assert.deepEqual(activity(saved).investigation.map.locations.map(location=>location.name),[...existing,'New location 3','New location']);
+    }]
+  ];
+  report.reviewRegressions=[];
+  for(const [name,run] of cases){
+    const page=await browser.newPage({viewport:{width:1536,height:1024}});
+    try{
+      await setup(page,dialog=>{confirmations.push(dialog.message());return confirmChange;});
+      await run(page);
+      report.reviewRegressions.push({name,passed:true});
+      check(true,name);
+    }catch(error){
+      report.reviewRegressions.push({name,passed:false,error:String(error.message)});
+      console.log('FAIL '+name+'\n'+error.message);
+    }finally{
+      await page.close();
+    }
+  }
+  report.reviewBase=reviewBase||null;
+  assert.ok(report.reviewRegressions.every(result=>result.passed),'One or more Atlas review regressions failed');
+}
 async function compatibility(browser){
   const math=read('docs/review/adding-fractions-algebraic-denominators/lesson.json');
   const mathGraph=read('docs/review/mathematics-m3/workflow/graph-response-lesson.json');
@@ -280,7 +440,7 @@ async function compatibility(browser){
 }
 const browser=await chromium.launch({channel:'chromium',headless:true});
 let nativeContext,profile;
-try{
+async function fullSuite(){
   for(const [width,height] of [[1536,1024],[1280,800],[1024,768]]){
     const page=await browser.newPage({viewport:{width,height}});
     await setup(page);
@@ -306,7 +466,7 @@ try{
       check(await page.locator('[data-ga-root]').count()===0,'Unconfigured Geography remains on the original renderer');
       await page.locator('[data-mx-mode="edit"]').click();
       await page.locator('[data-ga-author="on"]').click();
-      await page.locator('#inspector [data-bind$=".investigation.sourceRef"]').selectOption(ordinary.slides[0].visuals[0].id);
+      await page.locator('#inspector [data-ga-source]').selectOption(ordinary.slides[0].visuals[0].id);
       await study(page);
       check(await page.locator('[data-ga-root] table').isVisible(),'Real inspector opt-in and source selection activate the Geography layout');
     }
@@ -320,6 +480,10 @@ try{
   await setup(nativePage);
   for(const name of ['map','table'])await learner(nativePage,name,'native200',true);
   await compatibility(browser);
+}
+try{
+  await reviewRegressions(browser);
+  if(!reviewOnly)await fullSuite();
   assert.deepEqual(report.errors,[]);
   report.complete=true;
 }finally{

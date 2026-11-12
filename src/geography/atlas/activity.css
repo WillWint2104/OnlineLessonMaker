@@ -35,8 +35,8 @@
 .ga-map{position:relative;background:#e8f1f2}
 .ga-map img{display:block;width:100%;height:auto}
 .ga-map:has(img[hidden]) :is(.ga-location,.ga-guide){display:none}
-.ga-map .ga-location{position:absolute;left:var(--ga-x);top:var(--ga-y);transform:translate(-50%,-50%);width:27px;height:27px;padding:0;border:2px solid transparent;border-radius:50%;background:transparent;z-index:1}
-.ga-map .ga-location:hover,.ga-map .ga-location[aria-pressed="true"]{border-color:#ab7925;background:#f3d28c25}
+.ga-map .ga-location{position:absolute;left:var(--ga-x);top:var(--ga-y);transform:translate(-50%,-50%);width:27px;height:27px;padding:0;border:2px solid transparent;border-radius:50%;background:radial-gradient(circle,#0b6561 0 4px,#fff 4px 5.5px,transparent 6px);z-index:1}
+.ga-map .ga-location:hover,.ga-map .ga-location[aria-pressed="true"]{border-color:#ab7925;background-color:#f3d28c25}
 .ga-map .ga-guide{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .ga-guide line{stroke:#a0772e;stroke-width:2;stroke-dasharray:4 4;vector-effect:non-scaling-stroke}
 .ga-reading{position:relative;background:var(--ga-deep);color:#fff;padding:9px 13px}

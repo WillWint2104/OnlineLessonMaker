@@ -29,7 +29,7 @@ function geoAtlasValidate(skill,a,meta,publication=false){
       fail('add a source label, interpretation limits, date or measure, and attribution.');
     if(source.kind==='image'&&(!evSrc(source.src)||!source.alt?.trim()||source.evidence?.inspect!==true))
       fail('the image requires alternative text and source inspection.');
-    if(source.kind==='table'&&source.rows?.some(row=>row.cells?.some(cell=>cell==null||cell==='')))
+    if(source.kind==='table'&&source.rows?.some(row=>row.cells?.some(cell=>cell==null||(typeof cell==='string'&&!cell.trim()))))
       fail('the evidence table needs complete given values.');
   }
   const map=config.map;
@@ -91,9 +91,12 @@ function GeoEvidenceSurface(v,config,key){
 }
 
 function geoAtlasSteps(a){
-  return (a.questions||[]).flatMap((q,j)=>(q.parts?.length?q.parts:[null]).map((p,i)=>{
+  const questions=a.questions||[];
+  return questions.flatMap((q,j)=>(q.parts?.length?q.parts:[null]).map((p,i)=>{
     const label=p==null?'':p?.label||String.fromCharCode(97+i);
-    return {key:JSON.stringify([q.id,i]),id:q.id,label,caption:q.parts?.length?`Part ${label}`:`Question ${j+1}`,
+    const number=`Question ${j+1}`;
+    const caption=p==null?number:questions.length>1?`${number} · Part (${label})`:`Part ${label}`;
+    return {key:JSON.stringify([q.id,i]),id:q.id,label,caption,
       stem:p==null?'':q.stem,text:p==null?q.stem:lpBookPartText(p),guidance:p?.guidance||q.guidance||''};
   }));
 }
@@ -239,10 +242,11 @@ function geoAtlasInspector(skill,a,base,skillPath){
   const source=geoAtlasSource(skill,a),sourcePath=skillPath+'.visuals.'+(skill.visuals||[]).indexOf(source);
   const path=base+'.investigation';
   const map=config.map;
+  const sources=[['','Choose shared evidence'],...geoAtlasSources(skill,a).map(v=>[v.id,v.label||v.id])];
   const num=(label,key,value,min,max)=>`<label>${esc(label)}<input class="ii" type="number" min="${min}" max="${max}" step="any" data-ga-number="${esc(key)}" value="${esc(value??'')}"></label>`;
   return `<section class="isec"><h3>Geography investigation</h3>
     <p>Exercise-book responses. Use Introduction and Explanation for teaching notes, and Questions for the authored prompts. Attach a shared visual to a question or part before choosing it here.</p>
-    ${inSel('Investigation source',path+'.sourceRef',config.sourceRef||'',[['','Choose shared evidence'],...geoAtlasSources(skill,a).map(v=>[v.id,v.label||v.id])])}
+    <label>Investigation source<select class="ii" data-ga-source>${sources.map(([id,label])=>`<option value="${esc(id)}"${id===(config.sourceRef||'')?' selected':''}>${esc(label)}</option>`).join('')}</select></label>
     ${source?`${inT('Source label',sourcePath+'.label',source.label)}${inT('Source date and measure',sourcePath+'.sourceMetadata.date',source.sourceMetadata?.date)}${inA('Essential interpretation limits',sourcePath+'.description',source.description)}${inA('Concise attribution',sourcePath+'.sourceMetadata.attribution',source.sourceMetadata?.attribution)}${inA('Rights and licence',sourcePath+'.sourceMetadata.rights',source.sourceMetadata?.rights)}${inA('Technical source details',sourcePath+'.sourceMetadata.notes',source.sourceMetadata?.notes)}`:''}
     ${inA('Teaching guidance before evidence',base+'.practiceNote',a.practiceNote)}
     ${(a.questions||[]).map((q,i)=>inA('Optional Help for question '+(i+1),base+'.questions.'+i+'.guidance',q.guidance)+
@@ -258,14 +262,19 @@ function geoAtlasInspector(skill,a,base,skillPath){
     <button type="button" data-ga-author="off">Use standard activity layout</button>
   </section>`;
 }
-function geoAtlasAuthorWire(ins,a){
+function geoAtlasAuthorWire(ins,a,base){
   ins.querySelectorAll('[data-ga-author],[data-ga-remove-location]').forEach(button=>button.onclick=()=>{
     const action=button.dataset.gaAuthor;
     if(action==='on'){a.layout=GEO_ATLAS_LAYOUT;a.investigation={sourceRef:''};}
     else if(action==='off'){delete a.layout;delete a.investigation;}
     else if(action==='map')a.investigation.map={equator:50,locations:[]};
     else if(action==='remove-map')delete a.investigation.map;
-    else if(action==='add-location')a.investigation.map.locations.push({name:'New location',country:'Country',x:50,y:50,latitude:0,longitude:0});
+    else if(action==='add-location'){
+      const locations=a.investigation.map.locations,names=new Set(locations.map(location=>location.name));
+      let name='New location',suffix=2;
+      while(names.has(name))name='New location '+suffix++;
+      locations.push({name,country:'Country',x:50,y:50,latitude:0,longitude:0});
+    }
     else a.investigation.map.locations.splice(Number(button.dataset.gaRemoveLocation),1);
     renderSlide();
   });
@@ -275,12 +284,31 @@ function geoAtlasAuthorWire(ins,a){
   });
   ins.querySelectorAll('[data-ga-help]').forEach(input=>input.onchange=()=>{
     const [i,j]=input.dataset.gaHelp.split(':').map(Number),parts=a.questions[i].parts,p=parts[j];
-    if(typeof p==='string'&&input.value)parts[j]={prompt:p,guidance:input.value};
+    if(typeof p==='string'&&input.value){
+      parts[j]={prompt:p,guidance:input.value};
+      const path=base+'.questions.'+i+'.parts.'+j;
+      const prompt=ins.querySelector('[data-bind="'+path+'"]');
+      // The existing prompt input can keep its focus and value while its binding follows the new shape.
+      if(prompt)prompt.dataset.bind=path+'.prompt';
+    }
     else if(geoAtlasRecord(p)){
       if(input.value)p.guidance=input.value;
       else delete p.guidance;
     }
     renderCanvas();
   });
-  ins.querySelector('[data-bind$=".investigation.sourceRef"]')?.addEventListener('change',()=>renderInspector());
+  ins.querySelector('[data-ga-source]')?.addEventListener('change',event=>{
+    const select=event.currentTarget,config=a.investigation,sourceRef=select.value;
+    if(sourceRef===config.sourceRef)return;
+    if(config.map?.locations.length&&!confirm('Location readings belong to the current image. Change the source and discard its location readings?')){
+      select.value=config.sourceRef;
+      return;
+    }
+    config.sourceRef=sourceRef;
+    delete config.map;
+    const view=LP_STATE.geoAtlas?.get(a.id);
+    if(view)delete view.place;
+    renderSlide();
+    ins.querySelector('[data-ga-source]')?.focus({preventScroll:true});
+  });
 }
